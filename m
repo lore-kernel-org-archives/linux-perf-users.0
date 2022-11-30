@@ -2,280 +2,293 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F728C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 05:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B162C4321E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 06:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233512AbiK3FOh (ORCPT
+        id S234045AbiK3G3v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Nov 2022 00:14:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57156 "EHLO
+        Wed, 30 Nov 2022 01:29:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233318AbiK3FOB (ORCPT
+        with ESMTP id S234036AbiK3G3v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2022 00:14:01 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 264D77CAB0
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 21:13:24 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id x17so25285467wrn.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 21:13:24 -0800 (PST)
+        Wed, 30 Nov 2022 01:29:51 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7212228E
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 22:29:46 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-3cb1a789dabso63831957b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Nov 2022 22:29:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w+wGZ3Sbel3UQRXBbOEy+DgtVblofGm23rCMoKJuQgI=;
-        b=bbb5xXatzlxx5fS7vkdHmpPTzOkAj5PxBk2ILGWuvWh/g9F0oTS/fodG1FthzbilGd
-         eOh1YRJEcntPyn9Ate2aiP+hzkhGolgTpDkPJ/1aLLCnl7jowAMSWNx8IS620y49G7CX
-         Hxxazn+90gT1s0x/t0sKPkkM6fDtR8nTwv7h7CvouTmST8khUg7/CEibULlAItjHBbBx
-         1NqGY2LmVP/YNN51oRcI/ifjb41zkc25/xCzn0OxNsr2Z3pCbRcapfy4IkIuVMBcVidX
-         Hs7RkEL1Z4VrKV/+ptq75As7TkZChzdQYim5oce0Q5jW8cTgvMKxBKPd1R5PpxcNnw/N
-         0HHQ==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eUHyVliKjk6E4L3Mp8lrO/R0wPtbiqqoWIvdgha/83w=;
+        b=IUFhznSFg/YWVHruqFXEx9mN+nUFOFRK2VMjAsJ82DHNc3x9ndU0ZmeeDqpsJDlQLL
+         zw7T2iY3jZ5nR+tKfRpSkq01xR++qq7Y64wMetqV3wyvw6bMUw9IMxgoQbXVY7bD8C39
+         qR1Hyo2d04eicNFPF3YkfMmhYk0Nibd/Y/KuE1I7DcigvUXX9DuprbFBvAmsBQmbF60e
+         Mr9+1G6EUX/mVWN9vXQnkG/dsg7ky/RqQKtoU7w1KPJlnXIo2lk72IhCxn3nkVK6LiP2
+         APZRj5rVwhwS7xNciDZCNm2YSmYACtdyDNeICm63N1wdUkYVkdjDeDtR3oC4VHOgwPLD
+         kPxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w+wGZ3Sbel3UQRXBbOEy+DgtVblofGm23rCMoKJuQgI=;
-        b=J48b7DzQyZ7qq9tIGOfIeDXdbyC2PyP46YKCINRB/umvAo4V2Lk2mCH6puxMm+UsJE
-         6yGxYhWMOXERyNl4CUERAW3fybLPMRH/frwn/iwII8083OEatFmsDuphLawZ6mUwzsve
-         sQDcjxCgN1j1RXxXGyfiu2H76Pn5dCzZDhYbfzLMIDsUznWqzb6AAykGWivTaO7UiFJh
-         fPdA4S2xMlH987dG0mRvRh8p6ZAomyGsOMBLnBezTQ9eYFddjW5h584V5IhUPUJwiJjy
-         pqeua49jUODtMgYFR9tvDosj77N3GtgnifVfuImSsTqjAbKHUnNaIWgs7rwxjlz1Us7d
-         a9kQ==
-X-Gm-Message-State: ANoB5pnDCJMIyt0JfEjmJ0UYVdg4rsSefchrBcMkDqbcPNtHQlwmbj1+
-        Y05CFUHBLkHIUhxwOCO/5gJWwpZ0JxKYVEHotrLk/w==
-X-Google-Smtp-Source: AA0mqf4NrJbudJHMxKNsZQpYLaQB4gnadd5Qs4iPDuy9nNKv/1oNIfVoIt1Aq7L9Y0iwqf5Nu/F+VSVcCXFaxrcEuj0=
-X-Received: by 2002:a5d:680c:0:b0:242:a38:d0c6 with SMTP id
- w12-20020a5d680c000000b002420a38d0c6mr13072467wru.375.1669785202445; Tue, 29
- Nov 2022 21:13:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20221123180208.2068936-1-namhyung@kernel.org> <20221123180208.2068936-6-namhyung@kernel.org>
- <CAP-5=fWZ27QW+XvZx0bzEMmUbyKpmmmZudB9u=SyxiLcH3CCqw@mail.gmail.com> <CAP-5=fXsWfOmavOAmxsUcX+g3cve2r20JmseDF7Bn1jO6tPX-Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fXsWfOmavOAmxsUcX+g3cve2r20JmseDF7Bn1jO6tPX-Q@mail.gmail.com>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eUHyVliKjk6E4L3Mp8lrO/R0wPtbiqqoWIvdgha/83w=;
+        b=kY+3X80YQVFHVWCHHI5Ce4lPfQOcS4C4afQhhAsCoz48pvjZaTIWLuHexOiL/bUWRE
+         otKj+o3RMqOjyTvs4UTUpyqCLYbaDbSQObdkN+JGl06Av+AFvjk3T5NDQUELEFerwJWL
+         PZXB1IqwyVtU6Kqd34sq83hNGeqRB5kM2gRBqmZ1XwGYw630sD5/n8gTREtrw/ylCaDu
+         dr3lV5WHgSXm6pnFUFMugPDWN9P2IelUc6euBmg2tFgqKDShluBz+uxsZe8fuB/gW3SJ
+         8MU47PkucEMllYImHUWRJNtoaPTpgkzUimEYS7VG3OWVLP5tMGKLMdnXR/bpelGqz9im
+         p0FQ==
+X-Gm-Message-State: ANoB5pm9uKlnARpC38AHy8F6iZqYygiGfhBhu8m/i+y58QIzAx9f6HVE
+        OCOEZBeAG5ng938UfOAfO7EOvJcJVVh5
+X-Google-Smtp-Source: AA0mqf6lLgcujZVvEK0aBOKCAjQ5A2049KaaDtdc6B10iTKGiTQMrLQR/a8qtLRq112hKs29lRpgSlfV9UJr
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:788c:ccf4:3670:3362])
+ (user=irogers job=sendgmr) by 2002:a05:6902:143:b0:6d4:e3fe:8294 with SMTP id
+ p3-20020a056902014300b006d4e3fe8294mr41396420ybh.461.1669789785706; Tue, 29
+ Nov 2022 22:29:45 -0800 (PST)
+Date:   Tue, 29 Nov 2022 22:29:31 -0800
+Message-Id: <20221130062935.2219247-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+Subject: [PATCH v2 0/4] perf use system libtraceevent
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 29 Nov 2022 21:13:11 -0800
-Message-ID: <CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com>
-Subject: Re: [PATCH 05/15] perf stat: Remove prefix argument in print_metric_headers()
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
+        Leo Yan <leo.yan@linaro.org>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 9:09 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Wed, Nov 23, 2022 at 3:23 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > It always passes a whitespace to the function, thus we can just add it to the
-> > > function body.  Furthermore, it's only used in the normal output mode.
-> > >
-> > > Well, actually CSV used it but it doesn't need to since we don't care about the
-> > > indentation or alignment in the CSV output.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Acked-by: Ian Rogers <irogers@google.com>
-> >
-> > Thanks,
-> > Ian
->
-> I suspect this may be responsible for a metric segv that I'm now
-> seeing in Arnaldo's tree:
->
-> $ gdb --args perf stat -M Backend true
-> ...
-> Performance counter stats for 'true':
->
->         4,712,355      TOPDOWN.SLOTS                    #     17.3 %
-> tma_core_bound
->
-> Program received signal SIGSEGV, Segmentation fault.
-> __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-> 77      ../sysdeps/x86_64/multiarch/strlen-evex.S: No such file or directory.
-> (gdb) bt
-> #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-> #1  0x00007ffff74749a5 in __GI__IO_fputs (str=0x0, fp=0x7ffff75f5680
-> <_IO_2_1_stderr_>)
->    at ./libio/iofputs.c:33
-> #2  0x0000555555779f28 in do_new_line_std (config=0x555555e077c0
-> <stat_config>, os=0x7fffffffbf10)
->    at util/stat-display.c:356
-> #3  0x000055555577a081 in print_metric_std (config=0x555555e077c0
-> <stat_config>,
->    ctx=0x7fffffffbf10, color=0x0, fmt=0x5555558b77b5 "%8.1f",
->    unit=0x7fffffffbb10 "%  tma_memory_bound", val=13.165355724442199)
-> at util/stat-display.c:380
-> #4  0x00005555557768b6 in generic_metric (config=0x555555e077c0 <stat_config>,
->    metric_expr=0x55555593d5b7 "((CYCLE_ACTIVITY.STALLS_MEM_ANY +
-> EXE_ACTIVITY.BOUND_ON_STORES) / (C
-> YCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring
-> * EXE_ACTIVITY.2_PORTS_UTIL)
-> + EXE_ACTIVITY.BOUND_ON_STORES))"..., metric_events=0x555555f334e0,
-> metric_refs=0x555555ec81d0,
->    name=0x555555f32e80 "TOPDOWN.SLOTS", metric_name=0x555555f26c80
-> "tma_memory_bound",
->    metric_unit=0x55555593d5b1 "100%", runtime=0, map_idx=0,
-> out=0x7fffffffbd90,
->    st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:934
-> #5  0x0000555555778cac in perf_stat__print_shadow_stats
-> (config=0x555555e077c0 <stat_config>,
->    evsel=0x555555f289d0, avg=4712355, map_idx=0, out=0x7fffffffbd90,
->    metric_events=0x555555e078e8 <stat_config+296>, st=0x555555e9e620 <rt_stat>)
->    at util/stat-shadow.c:1329
-> #6  0x000055555577b6a0 in printout (config=0x555555e077c0
-> <stat_config>, os=0x7fffffffbf10,
->    uval=4712355, run=325322, ena=325322, noise=4712355, map_idx=0) at
-> util/stat-display.c:741
-> #7  0x000055555577bc74 in print_counter_aggrdata
-> (config=0x555555e077c0 <stat_config>,
->    counter=0x555555f289d0, s=0, os=0x7fffffffbf10) at util/stat-display.c:838
-> #8  0x000055555577c1d8 in print_counter (config=0x555555e077c0 <stat_config>,
->    counter=0x555555f289d0, os=0x7fffffffbf10) at util/stat-display.c:957
-> #9  0x000055555577dba0 in evlist__print_counters (evlist=0x555555ec3610,
->    config=0x555555e077c0 <stat_config>, _target=0x555555e01c80
-> <target>, ts=0x0, argc=1,
->    argv=0x7fffffffe450) at util/stat-display.c:1413
-> #10 0x00005555555fc821 in print_counters (ts=0x0, argc=1, argv=0x7fffffffe450)
->    at builtin-stat.c:1040
-> #11 0x000055555560091a in cmd_stat (argc=1, argv=0x7fffffffe450) at
-> builtin-stat.c:2665
-> #12 0x00005555556b1eea in run_builtin (p=0x555555e11f70
-> <commands+336>, argc=4,
->    argv=0x7fffffffe450) at perf.c:322
-> #13 0x00005555556b2181 in handle_internal_command (argc=4,
-> argv=0x7fffffffe450) at perf.c:376
-> #14 0x00005555556b22d7 in run_argv (argcp=0x7fffffffe27c,
-> argv=0x7fffffffe270) at perf.c:420
-> #15 0x00005555556b26ef in main (argc=4, argv=0x7fffffffe450) at perf.c:550
-> (gdb)
->
-> Thanks,
-> Ian
+Detect whether libtraceevent is installed and if so build against
+it. If not installed, warn and build a subset of perf that works
+without libtraceevent. With nothing using the now out-of-date
+tools/lib/traceevent remove it.
 
-More specifically, I think os->prefix needs testing for NULL:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n356
-so:
-fputs(os->prefix, os->fh);
-should be:
-if (os->prefix)
-  fputs(os->prefix, os->fh);
+Discussed on LKML here:
+https://lore.kernel.org/lkml/CAP-5=fWxAjEia-Qbm0RVzKOxyiod8rUOBieqaGK=DtQboDe3Qw@mail.gmail.com/
 
-Thanks,
-Ian
+Builds upon:
+https://lore.kernel.org/lkml/20221116224631.207631-1-irogers@google.com/
 
-> > > ---
-> > >  tools/perf/util/stat-display.c | 26 ++++++++++----------------
-> > >  1 file changed, 10 insertions(+), 16 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > > index 744b7a40f59a..deed6ccf072f 100644
-> > > --- a/tools/perf/util/stat-display.c
-> > > +++ b/tools/perf/util/stat-display.c
-> > > @@ -996,10 +996,9 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
-> > >  }
-> > >
-> > >  static void print_metric_headers_std(struct perf_stat_config *config,
-> > > -                                    const char *prefix, bool no_indent)
-> > > +                                    bool no_indent)
-> > >  {
-> > > -       if (prefix)
-> > > -               fprintf(config->output, "%s", prefix);
-> > > +       fputc(' ', config->output);
-> > >
-> > >         if (!no_indent) {
-> > >                 int len = aggr_header_lens[config->aggr_mode];
-> > > @@ -1012,11 +1011,8 @@ static void print_metric_headers_std(struct perf_stat_config *config,
-> > >  }
-> > >
-> > >  static void print_metric_headers_csv(struct perf_stat_config *config,
-> > > -                                    const char *prefix,
-> > >                                      bool no_indent __maybe_unused)
-> > >  {
-> > > -       if (prefix)
-> > > -               fprintf(config->output, "%s", prefix);
-> > >         if (config->interval)
-> > >                 fputs("time,", config->output);
-> > >         if (!config->iostat_run)
-> > > @@ -1024,7 +1020,6 @@ static void print_metric_headers_csv(struct perf_stat_config *config,
-> > >  }
-> > >
-> > >  static void print_metric_headers_json(struct perf_stat_config *config,
-> > > -                                     const char *prefix __maybe_unused,
-> > >                                       bool no_indent __maybe_unused)
-> > >  {
-> > >         if (config->interval)
-> > > @@ -1032,8 +1027,7 @@ static void print_metric_headers_json(struct perf_stat_config *config,
-> > >  }
-> > >
-> > >  static void print_metric_headers(struct perf_stat_config *config,
-> > > -                                struct evlist *evlist,
-> > > -                                const char *prefix, bool no_indent)
-> > > +                                struct evlist *evlist, bool no_indent)
-> > >  {
-> > >         struct evsel *counter;
-> > >         struct outstate os = {
-> > > @@ -1047,11 +1041,11 @@ static void print_metric_headers(struct perf_stat_config *config,
-> > >         };
-> > >
-> > >         if (config->json_output)
-> > > -               print_metric_headers_json(config, prefix, no_indent);
-> > > +               print_metric_headers_json(config, no_indent);
-> > >         else if (config->csv_output)
-> > > -               print_metric_headers_csv(config, prefix, no_indent);
-> > > +               print_metric_headers_csv(config, no_indent);
-> > >         else
-> > > -               print_metric_headers_std(config, prefix, no_indent);
-> > > +               print_metric_headers_std(config, no_indent);
-> > >
-> > >         if (config->iostat_run)
-> > >                 iostat_print_header_prefix(config);
-> > > @@ -1132,7 +1126,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
-> > >         }
-> > >
-> > >         if (config->metric_only)
-> > > -               print_metric_headers(config, evlist, " ", true);
-> > > +               print_metric_headers(config, evlist, true);
-> > >         else
-> > >                 fprintf(output, " %*s %*s events\n",
-> > >                         COUNTS_LEN, "counts", config->unit_width, "unit");
-> > > @@ -1168,7 +1162,7 @@ static void print_header_std(struct perf_stat_config *config,
-> > >         fprintf(output, ":\n\n");
-> > >
-> > >         if (config->metric_only)
-> > > -               print_metric_headers(config, evlist, " ", false);
-> > > +               print_metric_headers(config, evlist, false);
-> > >  }
-> > >
-> > >  static void print_header_csv(struct perf_stat_config *config,
-> > > @@ -1178,7 +1172,7 @@ static void print_header_csv(struct perf_stat_config *config,
-> > >                              const char **argv __maybe_unused)
-> > >  {
-> > >         if (config->metric_only)
-> > > -               print_metric_headers(config, evlist, " ", true);
-> > > +               print_metric_headers(config, evlist, true);
-> > >  }
-> > >  static void print_header_json(struct perf_stat_config *config,
-> > >                               struct target *_target __maybe_unused,
-> > > @@ -1187,7 +1181,7 @@ static void print_header_json(struct perf_stat_config *config,
-> > >                               const char **argv __maybe_unused)
-> > >  {
-> > >         if (config->metric_only)
-> > > -               print_metric_headers(config, evlist, " ", true);
-> > > +               print_metric_headers(config, evlist, true);
-> > >  }
-> > >
-> > >  static void print_header(struct perf_stat_config *config,
-> > > --
-> > > 2.38.1.584.g0f3c55d4c2-goog
-> > >
+Based on discussion of the v1 patch set:
+https://lore.kernel.org/lkml/20221117224952.358639-1-irogers@google.com/
+v2 conditionally compiles a subset of perf that doesn't require
+libtraceevent to avoid having to have libtraceevent installed on a
+system.
+
+The changes build upon the fix in:
+https://lore.kernel.org/lkml/20221129192924.1580537-1-irogers@google.com/
+
+Ian Rogers (4):
+  perf util: Make header guard consistent with tool
+  perf util: Add host_is_bigendian to util.h
+  perf build: Use libtraceevent from the system
+  tools lib traceevent: Remove libtraceevent
+
+ tools/lib/traceevent/.gitignore               |    4 -
+ tools/lib/traceevent/Build                    |    8 -
+ tools/lib/traceevent/Documentation/Makefile   |  207 -
+ .../traceevent/Documentation/asciidoc.conf    |  120 -
+ .../Documentation/libtraceevent-commands.txt  |  153 -
+ .../Documentation/libtraceevent-cpus.txt      |   77 -
+ .../libtraceevent-endian_read.txt             |   78 -
+ .../libtraceevent-event_find.txt              |  103 -
+ .../Documentation/libtraceevent-event_get.txt |   99 -
+ .../libtraceevent-event_list.txt              |  122 -
+ .../libtraceevent-event_print.txt             |  130 -
+ .../libtraceevent-field_find.txt              |  118 -
+ .../libtraceevent-field_get_val.txt           |  122 -
+ .../libtraceevent-field_print.txt             |  126 -
+ .../libtraceevent-field_read.txt              |   81 -
+ .../Documentation/libtraceevent-fields.txt    |  105 -
+ .../libtraceevent-file_endian.txt             |   91 -
+ .../Documentation/libtraceevent-filter.txt    |  209 -
+ .../Documentation/libtraceevent-func_apis.txt |  183 -
+ .../Documentation/libtraceevent-func_find.txt |   88 -
+ .../Documentation/libtraceevent-handle.txt    |  101 -
+ .../libtraceevent-header_page.txt             |  102 -
+ .../libtraceevent-host_endian.txt             |  104 -
+ .../Documentation/libtraceevent-long_size.txt |   78 -
+ .../Documentation/libtraceevent-page_size.txt |   82 -
+ .../libtraceevent-parse_event.txt             |   90 -
+ .../libtraceevent-parse_head.txt              |   82 -
+ .../Documentation/libtraceevent-plugins.txt   |  122 -
+ .../libtraceevent-record_parse.txt            |  137 -
+ .../libtraceevent-reg_event_handler.txt       |  156 -
+ .../libtraceevent-reg_print_func.txt          |  155 -
+ .../Documentation/libtraceevent-set_flag.txt  |  104 -
+ .../Documentation/libtraceevent-strerror.txt  |   85 -
+ .../Documentation/libtraceevent-tseq.txt      |  158 -
+ .../Documentation/libtraceevent.txt           |  192 -
+ .../traceevent/Documentation/manpage-1.72.xsl |   14 -
+ .../traceevent/Documentation/manpage-base.xsl |   35 -
+ .../Documentation/manpage-bold-literal.xsl    |   17 -
+ .../Documentation/manpage-normal.xsl          |   13 -
+ .../Documentation/manpage-suppress-sp.xsl     |   21 -
+ tools/lib/traceevent/Makefile                 |  300 -
+ tools/lib/traceevent/event-parse-api.c        |  333 -
+ tools/lib/traceevent/event-parse-local.h      |  123 -
+ tools/lib/traceevent/event-parse.c            | 7624 -----------------
+ tools/lib/traceevent/event-parse.h            |  750 --
+ tools/lib/traceevent/event-plugin.c           |  711 --
+ tools/lib/traceevent/event-utils.h            |   67 -
+ tools/lib/traceevent/kbuffer-parse.c          |  809 --
+ tools/lib/traceevent/kbuffer.h                |   68 -
+ .../lib/traceevent/libtraceevent.pc.template  |   10 -
+ tools/lib/traceevent/parse-filter.c           | 2281 -----
+ tools/lib/traceevent/parse-utils.c            |   71 -
+ tools/lib/traceevent/plugins/Build            |   12 -
+ tools/lib/traceevent/plugins/Makefile         |  225 -
+ .../lib/traceevent/plugins/plugin_cfg80211.c  |   43 -
+ .../lib/traceevent/plugins/plugin_function.c  |  282 -
+ tools/lib/traceevent/plugins/plugin_futex.c   |  123 -
+ tools/lib/traceevent/plugins/plugin_hrtimer.c |   74 -
+ tools/lib/traceevent/plugins/plugin_jbd2.c    |   61 -
+ tools/lib/traceevent/plugins/plugin_kmem.c    |   80 -
+ tools/lib/traceevent/plugins/plugin_kvm.c     |  527 --
+ .../lib/traceevent/plugins/plugin_mac80211.c  |   88 -
+ .../traceevent/plugins/plugin_sched_switch.c  |  146 -
+ tools/lib/traceevent/plugins/plugin_scsi.c    |  434 -
+ tools/lib/traceevent/plugins/plugin_tlb.c     |   66 -
+ tools/lib/traceevent/plugins/plugin_xen.c     |  138 -
+ tools/lib/traceevent/tep_strerror.c           |   53 -
+ tools/lib/traceevent/trace-seq.c              |  249 -
+ tools/lib/traceevent/trace-seq.h              |   55 -
+ tools/perf/Build                              |   11 +-
+ tools/perf/Makefile.config                    |   37 +-
+ tools/perf/Makefile.perf                      |   99 +-
+ tools/perf/arch/x86/util/Build                |    2 +-
+ tools/perf/arch/x86/util/intel-pt.c           |    4 +
+ tools/perf/builtin-annotate.c                 |    2 +
+ tools/perf/builtin-inject.c                   |    8 +
+ tools/perf/builtin-kmem.c                     |    1 +
+ tools/perf/builtin-kvm.c                      |   12 +-
+ tools/perf/builtin-kwork.c                    |    1 +
+ tools/perf/builtin-record.c                   |    2 +
+ tools/perf/builtin-report.c                   |    9 +-
+ tools/perf/builtin-script.c                   |   19 +-
+ tools/perf/builtin-timechart.c                |    1 +
+ tools/perf/builtin-trace.c                    |    5 +-
+ tools/perf/builtin-version.c                  |    1 +
+ tools/perf/perf.c                             |   24 +-
+ .../perf/scripts/python/Perf-Trace-Util/Build |    2 +-
+ tools/perf/tests/Build                        |   12 +-
+ tools/perf/tests/builtin-test.c               |    6 +
+ tools/perf/tests/code-reading.c               |    4 +-
+ tools/perf/tests/parse-events.c               |   20 +
+ tools/perf/tests/sample-parsing.c             |    4 +-
+ tools/perf/util/Build                         |   10 +-
+ tools/perf/util/data-convert-bt.c             |    5 +-
+ tools/perf/util/data-convert-json.c           |    9 +-
+ tools/perf/util/evlist.c                      |    6 +-
+ tools/perf/util/evlist.h                      |    4 +
+ tools/perf/util/evsel.c                       |   16 +-
+ tools/perf/util/evsel.h                       |   12 +-
+ tools/perf/util/evsel_fprintf.c               |    7 +-
+ tools/perf/util/header.c                      |   19 +
+ tools/perf/util/header.h                      |    2 +
+ tools/perf/util/intel-pt.c                    |    7 +-
+ tools/perf/util/parse-events.c                |   15 +
+ tools/perf/util/parse-events.h                |    1 -
+ tools/perf/util/python.c                      |    4 +
+ tools/perf/util/scripting-engines/Build       |    6 +-
+ .../scripting-engines/trace-event-python.c    |    1 +
+ tools/perf/util/session.c                     |    2 +
+ tools/perf/util/session.h                     |    2 +
+ tools/perf/util/sort.c                        |   60 +-
+ tools/perf/util/synthetic-events.c            |    6 +
+ tools/perf/util/trace-event-info.c            |   14 +-
+ tools/perf/util/trace-event-parse.c           |    2 +
+ tools/perf/util/trace-event-read.c            |    4 +-
+ tools/perf/util/trace-event-scripting.c       |    1 +
+ tools/perf/util/trace-event.c                 |    1 -
+ tools/perf/util/trace-event.h                 |   13 +-
+ tools/perf/util/util.h                        |   25 +-
+ 119 files changed, 344 insertions(+), 20071 deletions(-)
+ delete mode 100644 tools/lib/traceevent/.gitignore
+ delete mode 100644 tools/lib/traceevent/Build
+ delete mode 100644 tools/lib/traceevent/Documentation/Makefile
+ delete mode 100644 tools/lib/traceevent/Documentation/asciidoc.conf
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-commands.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_print.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_get_val.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_print.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-fields.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-filter.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_find.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-handle.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-long_size.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-plugins.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_event_handler.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_print_func.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-set_flag.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent-tseq.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/libtraceevent.txt
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-1.72.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-base.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-bold-literal.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-normal.xsl
+ delete mode 100644 tools/lib/traceevent/Documentation/manpage-suppress-sp.xsl
+ delete mode 100644 tools/lib/traceevent/Makefile
+ delete mode 100644 tools/lib/traceevent/event-parse-api.c
+ delete mode 100644 tools/lib/traceevent/event-parse-local.h
+ delete mode 100644 tools/lib/traceevent/event-parse.c
+ delete mode 100644 tools/lib/traceevent/event-parse.h
+ delete mode 100644 tools/lib/traceevent/event-plugin.c
+ delete mode 100644 tools/lib/traceevent/event-utils.h
+ delete mode 100644 tools/lib/traceevent/kbuffer-parse.c
+ delete mode 100644 tools/lib/traceevent/kbuffer.h
+ delete mode 100644 tools/lib/traceevent/libtraceevent.pc.template
+ delete mode 100644 tools/lib/traceevent/parse-filter.c
+ delete mode 100644 tools/lib/traceevent/parse-utils.c
+ delete mode 100644 tools/lib/traceevent/plugins/Build
+ delete mode 100644 tools/lib/traceevent/plugins/Makefile
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_cfg80211.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_function.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_futex.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_hrtimer.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_jbd2.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_kmem.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_kvm.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_mac80211.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_sched_switch.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_scsi.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_tlb.c
+ delete mode 100644 tools/lib/traceevent/plugins/plugin_xen.c
+ delete mode 100644 tools/lib/traceevent/tep_strerror.c
+ delete mode 100644 tools/lib/traceevent/trace-seq.c
+ delete mode 100644 tools/lib/traceevent/trace-seq.h
+
+-- 
+2.38.1.584.g0f3c55d4c2-goog
+
