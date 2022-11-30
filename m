@@ -2,169 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796CC433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 18:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C24C433FE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 19:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbiK3S64 (ORCPT
+        id S229501AbiK3TFz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Nov 2022 13:58:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49556 "EHLO
+        Wed, 30 Nov 2022 14:05:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbiK3S6v (ORCPT
+        with ESMTP id S229528AbiK3TFm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2022 13:58:51 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF094092D
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Nov 2022 10:58:50 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id f18so6569894wrj.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Nov 2022 10:58:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=87ENfYXIDebjZ9OJXAGQbQFZb77jhLjiCr56B3zGCYY=;
-        b=awR/NO0ZrJmArjac1OjpJ/hysKu0BXmmhK8kas2lLXQ+lsZruBp/T+e8hBth93qQrB
-         d7rk8OH4vXzbf56ZmY4FgdUQ2SHYRoh2mNK64pFP3pqZf9WZtrdKJFyeU8Ku4xTNrJ3E
-         flLan7iV9TCIELgZkoDeTCLcslMoavpnvel7apsXmboEtZ/maaQMY3yPlmhrPcfPKZ8N
-         a1uJ518MPpe+qGw7dfbOQD7WaRRgoNFax++FUY5/7vH4VykzKmLN/EG6T7kGN9RnuT53
-         3+EYKu30lgSfSFDH238akOIpU//OgoPq3P/KWU27lenRibpXgP84HvhlT/Lhyk/e4cjW
-         Nz0A==
+        Wed, 30 Nov 2022 14:05:42 -0500
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E5D5444A;
+        Wed, 30 Nov 2022 11:05:40 -0800 (PST)
+Received: by mail-wm1-f44.google.com with SMTP id bg10so982101wmb.1;
+        Wed, 30 Nov 2022 11:05:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=87ENfYXIDebjZ9OJXAGQbQFZb77jhLjiCr56B3zGCYY=;
-        b=XkzgQBRYPI+y+fB4qFfNBTyC/uiaPL1k3eSdpMixPyty+ZRd7GLHQS5XMUH6opgC5c
-         Wv7nPYQXI0qoB+2eYPa001rnyHvYmFBhX36Zwz9B2EF0PO0NsHVt7mNJtQNNYDlNTJKt
-         SenDCKDjvamBp0uJv/jKXDBn870dVk3KHyVEmijKwcjGnGsdQXANE18DtKBVXR5GkVGe
-         zLJDBwL8PMV9iJ1AAX68CqoosDDCF2432P7bTORVqdgAhhzujhizj3laMnZdM28YJe2Q
-         DNNc/TLcIbPEEuzawTp7O+PLB/csCTusnCqJCLt6vjdfzxFZkIoRX/DvaYqBf1GxGlq7
-         nl8Q==
-X-Gm-Message-State: ANoB5pm40yXso7nFsBCEkJPc2+kY9fG2cEuhLE/JtXrJRJzU9TdRRkMN
-        h1hle6FiRRlYXl+WcpIBAN3R8PzQDlmLZxFgTqS5AA==
-X-Google-Smtp-Source: AA0mqf6pNJJwFRwvQ9Nbbx/FXqmlOjbohE6MouQre6Ex1OPGnWlI+tSuTGt1dEi3R3LZe0wMGhbdS/xShyGraTWY2ls=
-X-Received: by 2002:adf:e2c9:0:b0:241:db86:176d with SMTP id
- d9-20020adfe2c9000000b00241db86176dmr28759168wrj.40.1669834729092; Wed, 30
- Nov 2022 10:58:49 -0800 (PST)
+        bh=PfMWcPb5oJ92r+I85xnNHerwsoLysWjlkP0+eY0Z8Gk=;
+        b=i8FrLXlC4yGrYGa7RktOSA0SGoDIh/IgFNMXzzhw4XNf0XzpLy9QMkw9I8qGu3tMDX
+         unbI5GqU9K+eMMMIh7VwFp5qzVkBLkrLmM9iUnb8Jxgzs0d1PoK7+EcxgNtem+qoOCp8
+         br3eAOSZwqpzLh8/Lc5EClCmqtrR4ll8uF1HBfJ37pxPxZXP7gGOY0Q5JuOIUFgD/fe/
+         cTJ9mJEKKeaw+kmWw+pJCxEgvPFejxcdjpG/PU5WVVuYfhXwdQsuPP7f7BCtBs9v/4wQ
+         4ZxBkxrtaow+8jO5+L+zbgnxkf1PW3WQhWNHnvYn6j27PfaMUe4VvTqe591JB098pOnN
+         DhFQ==
+X-Gm-Message-State: ANoB5pkXEbIYzXQm3p+Gm5Y5YTjjVdt2nNsdhrqMJy3uj80otyazVSf9
+        MyC2Ox275O7PnQ1VU/upNkKIXMe//tt9j/u++yU=
+X-Google-Smtp-Source: AA0mqf4xCtbCa7lqZoiTqgMKLIGXYxvTUSoj7/fRfH4mM9B0nYCaML+09YGBiLmZU0SCmyJlfJkmd1iESK9dFY5iboM=
+X-Received: by 2002:a05:600c:6885:b0:3cf:a80d:59cd with SMTP id
+ fn5-20020a05600c688500b003cfa80d59cdmr39524591wmb.5.1669835139245; Wed, 30
+ Nov 2022 11:05:39 -0800 (PST)
 MIME-Version: 1.0
-References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com> <1669310088-13482-6-git-send-email-renyu.zj@linux.alibaba.com>
-In-Reply-To: <1669310088-13482-6-git-send-email-renyu.zj@linux.alibaba.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 30 Nov 2022 10:58:37 -0800
-Message-ID: <CAP-5=fV0WSTK=MT6K2nqsqYT6xCTg7Pv_rXahHFeRhV0ZHCiEQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] perf vendor events arm64: Add PE utilization
- metrics for neoverse-n2
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-4-irogers@google.com>
+In-Reply-To: <20221130062935.2219247-4-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 30 Nov 2022 11:05:27 -0800
+Message-ID: <CAM9d7chrsLHoGe=RcU2e5hRL22j=813j3uuEHDOPZrkpWqnSsw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf build: Use libtraceevent from the system
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 24, 2022 at 9:15 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+On Tue, Nov 29, 2022 at 10:30 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Add PE utilization related metrics.
->
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> ---
->  .../arch/arm64/arm/neoverse-n2/metrics.json        | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->
-> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> index 23c7d62..7b54819 100644
-> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> @@ -189,5 +189,50 @@
->          "MetricGroup": "Branch",
->          "MetricName": "branch_miss_pred_rate",
->          "ScaleUnit": "100%"
-> +    },
-> +    {
-> +        "MetricExpr": "instructions / CPU_CYCLES",
-> +        "PublicDescription": "The average number of instructions executed for each cycle.",
-> +        "BriefDescription": "Instructions per cycle",
-> +        "MetricGroup": "PEutilization",
-> +        "MetricName": "ipc"
-> +    },
+> Remove the LIBTRACEEVENT_DYNAMIC and LIBTRACEFS_DYNAMIC. If
+> libtraceevent isn't installed or NO_LIBTRACEEVENT=1 is passed to the
+> build, don't compile in libtraceevent and libtracefs support. This
+> also disables CONFIG_TRACE that controls "perf
+> trace". CONFIG_TRACEEVENT is used to control enablement in
+> Build/Makefiles, HAVE_LIBTRACEEVENT is used in C code. Without
+> HAVE_LIBTRACEEVENT tracepoints are disabled and as such the commands
+> kmem, kwork, lock, sched and timechart are removed. The majority of
+> commands continue to work including "perf test".
 
-A related useful metric is percentage of peak, so if the peak IPC is 8
-(usually a constant related to the number of functional units) then
-you can just compute the ratio of IPC with this.
+Maybe we can have a different approach.  I guess the trace data
+access is isolated then we can make dummy interfaces when there's
+no libtraceevent.  This way we don't need to touch every command
+and let it fail when it's asked.
 
-> +    {
-> +        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
-> +        "PublicDescription": "Architecturally executed Instructions Per Cycle (IPC)",
-> +        "BriefDescription": "Architecturally executed Instructions Per Cycle (IPC)",
+The motivation is that we should be able to run the sub-commands
+as much as possible.  In fact, we could run 'record' part only on the
+target machine and pass the data to the host for analysis with a
+full-fledged perf.  Also some commands like 'perf lock contention'
+can run with or without libtraceevent (using BPF only).
 
-
-The duplicated descriptions are unnecessary. Drop the public one for
-consistency with what we do for Intel:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#L299
-
-> +        "MetricGroup": "PEutilization",
-> +        "MetricName": "retired_ipc"
-> +    },
-> +    {
-> +        "MetricExpr": "INST_SPEC / CPU_CYCLES",
-> +        "PublicDescription": "Speculatively executed Instructions Per Cycle (IPC)",
-> +        "BriefDescription": "Speculatively executed Instructions Per Cycle (IPC)",
-> +        "MetricGroup": "PEutilization",
-> +        "MetricName": "spec_ipc"
-> +    },
-> +    {
-> +        "MetricExpr": "OP_RETIRED / OP_SPEC",
-> +        "PublicDescription": "Fraction of operations retired",
-> +        "BriefDescription": "Fraction of operations retired",
-
-Would instructions be clearer than operations here?
-
-> +        "MetricGroup": "PEutilization",
-> +        "MetricName": "retired_rate",
-> +        "ScaleUnit": "100%"
-> +    },
-> +    {
-> +        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
-
-Should OP_RETIRED be greater than OP_SPEC? In which case won't this
-metric be negative?
-
-> +        "PublicDescription": "Fraction of operations wasted",
-> +        "BriefDescription": "Fraction of operations wasted",
-> +        "MetricGroup": "PEutilization",
-> +        "MetricName": "wasted_rate",
-> +        "ScaleUnit": "100%"
-> +    },
-> +    {
-> +        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * 5))",
-> +        "PublicDescription": "Utilization of CPU",
-> +        "BriefDescription": "Utilization of CPU",
-
-Some more detail in the description would be useful.
-
-> +        "MetricGroup": "PEutilization",
-> +        "MetricName": "cpu_utilization",
-> +        "ScaleUnit": "100%"
->      }
->  ]
-> --
-> 1.8.3.1
->
+Thanks,
+Namhyung
