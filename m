@@ -2,88 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C24C433FE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 19:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C62FC4321E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Nov 2022 19:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbiK3TFz (ORCPT
+        id S229568AbiK3TgT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Nov 2022 14:05:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54766 "EHLO
+        Wed, 30 Nov 2022 14:36:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiK3TFm (ORCPT
+        with ESMTP id S229499AbiK3TgS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Nov 2022 14:05:42 -0500
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E5D5444A;
-        Wed, 30 Nov 2022 11:05:40 -0800 (PST)
-Received: by mail-wm1-f44.google.com with SMTP id bg10so982101wmb.1;
-        Wed, 30 Nov 2022 11:05:40 -0800 (PST)
+        Wed, 30 Nov 2022 14:36:18 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA4089AFE;
+        Wed, 30 Nov 2022 11:36:17 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id s7so1959675plk.5;
+        Wed, 30 Nov 2022 11:36:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=fyG8WvkPMaea4/Z35OOcdALNhvtYUcjAcZOj1KR+VQ4=;
+        b=kTuBUGuWT1T5EiBXVPP90GRGXROkfO1Lcxj+dxMPRnM+Po6lvjemlajHY81b8cmng1
+         Unz7b75KPYUDSNPmetr8diP2hmLKeNT6mRCgEooL/X1alxrz2kAsQOphtQzcvkp/lVFd
+         DAcyfgtC3KG1QKwEJCA4W4ucmh4GNaDNQDzgnYfWeuh76Sgh7YA+jMrNBcZFVwZcgSXT
+         SAvSfPI4vv2cHAdlrnmyyNZRBDXb9+dOBhQSCX8wLzxO0vLBoe7OUilwgTZA15heUdS8
+         m7KWrBIeG6cx+qOUk18qsnQa/CkBDIg3jExA+S77nCzzl80A0qtdnCJuEyWXe69M+FQu
+         I4gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PfMWcPb5oJ92r+I85xnNHerwsoLysWjlkP0+eY0Z8Gk=;
-        b=i8FrLXlC4yGrYGa7RktOSA0SGoDIh/IgFNMXzzhw4XNf0XzpLy9QMkw9I8qGu3tMDX
-         unbI5GqU9K+eMMMIh7VwFp5qzVkBLkrLmM9iUnb8Jxgzs0d1PoK7+EcxgNtem+qoOCp8
-         br3eAOSZwqpzLh8/Lc5EClCmqtrR4ll8uF1HBfJ37pxPxZXP7gGOY0Q5JuOIUFgD/fe/
-         cTJ9mJEKKeaw+kmWw+pJCxEgvPFejxcdjpG/PU5WVVuYfhXwdQsuPP7f7BCtBs9v/4wQ
-         4ZxBkxrtaow+8jO5+L+zbgnxkf1PW3WQhWNHnvYn6j27PfaMUe4VvTqe591JB098pOnN
-         DhFQ==
-X-Gm-Message-State: ANoB5pkXEbIYzXQm3p+Gm5Y5YTjjVdt2nNsdhrqMJy3uj80otyazVSf9
-        MyC2Ox275O7PnQ1VU/upNkKIXMe//tt9j/u++yU=
-X-Google-Smtp-Source: AA0mqf4xCtbCa7lqZoiTqgMKLIGXYxvTUSoj7/fRfH4mM9B0nYCaML+09YGBiLmZU0SCmyJlfJkmd1iESK9dFY5iboM=
-X-Received: by 2002:a05:600c:6885:b0:3cf:a80d:59cd with SMTP id
- fn5-20020a05600c688500b003cfa80d59cdmr39524591wmb.5.1669835139245; Wed, 30
- Nov 2022 11:05:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-4-irogers@google.com>
-In-Reply-To: <20221130062935.2219247-4-irogers@google.com>
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fyG8WvkPMaea4/Z35OOcdALNhvtYUcjAcZOj1KR+VQ4=;
+        b=WFKMWXHWXmNLVQQjgVDNLOLXtL48my6caMLaXRu7v13jEm1t6pUGqGwPhz8KielrKq
+         8buzjG0BgeeY6hy86KqAW/+5SfQOa+lOnjtnF2wWM+nwgu3WTkOChBVGrAYopWHndS1n
+         PnwD9uUKLDYeev5BA6ZyA7+oq97F3yfyYUi710lkRyukWEs6zw8IlMY+5jTewEXCdd3J
+         83MDNlcxZQJOIkHOT40Q/GH1XeBCTFq7ZEJkdkaq4fSxn/0p5meB3taxxrOwMcP5DC24
+         QvMPuIwIM03eNwrU9xcwvBJTcdVaONjHk2sZDH3LzZ9pPRMq8HcYIQjkUAaJ60eAy8H7
+         rIGA==
+X-Gm-Message-State: ANoB5plKHQrS0aSTvGK6I6sNWrM/sJC7SIQnEWJEbnjoLMjrw0/vEsse
+        ETm32JTMWYEOb4hkTnMPinZ7WqshYRU=
+X-Google-Smtp-Source: AA0mqf61fXrIlPncmomHPQnlQZs+TDlmDe/+xABJjuH7pad2RvQZlQVgHgqw9OQCsHt0bY8XCjXx4A==
+X-Received: by 2002:a17:902:d4c5:b0:189:5e92:d457 with SMTP id o5-20020a170902d4c500b001895e92d457mr29960801plg.166.1669836976603;
+        Wed, 30 Nov 2022 11:36:16 -0800 (PST)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:b6d7:38d3:afe2:969f])
+        by smtp.gmail.com with ESMTPSA id k9-20020a63ff09000000b0044046aec036sm1297683pgi.81.2022.11.30.11.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Nov 2022 11:36:15 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 30 Nov 2022 11:05:27 -0800
-Message-ID: <CAM9d7chrsLHoGe=RcU2e5hRL22j=813j3uuEHDOPZrkpWqnSsw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] perf build: Use libtraceevent from the system
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] Revert "perf stat: Rename "aggregate-number" to "cpu-count" in JSON"
+Date:   Wed, 30 Nov 2022 11:36:13 -0800
+Message-Id: <20221130193613.1046804-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.38.1.584.g0f3c55d4c2-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 10:30 PM Ian Rogers <irogers@google.com> wrote:
->
-> Remove the LIBTRACEEVENT_DYNAMIC and LIBTRACEFS_DYNAMIC. If
-> libtraceevent isn't installed or NO_LIBTRACEEVENT=1 is passed to the
-> build, don't compile in libtraceevent and libtracefs support. This
-> also disables CONFIG_TRACE that controls "perf
-> trace". CONFIG_TRACEEVENT is used to control enablement in
-> Build/Makefiles, HAVE_LIBTRACEEVENT is used in C code. Without
-> HAVE_LIBTRACEEVENT tracepoints are disabled and as such the commands
-> kmem, kwork, lock, sched and timechart are removed. The majority of
-> commands continue to work including "perf test".
+This reverts commit c4b41b83c25073c09bfcc4e5ec496c9dd316656b.
 
-Maybe we can have a different approach.  I guess the trace data
-access is isolated then we can make dummy interfaces when there's
-no libtraceevent.  This way we don't need to touch every command
-and let it fail when it's asked.
+As Ian said, the "cpu-count" is not appropriate for uncore events, also it
+caused a perf test failure.
 
-The motivation is that we should be able to run the sub-commands
-as much as possible.  In fact, we could run 'record' part only on the
-target machine and pass the data to the host for analysis with a
-full-fledged perf.  Also some commands like 'perf lock contention'
-can run with or without libtraceevent (using BPF only).
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/stat-display.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 847acdb5dc40..f1ee4b052198 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -281,19 +281,19 @@ static void print_aggr_id_json(struct perf_stat_config *config,
+ 
+ 	switch (config->aggr_mode) {
+ 	case AGGR_CORE:
+-		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"cpu-count\" : %d, ",
++		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
+ 			id.socket, id.die, id.core, nr);
+ 		break;
+ 	case AGGR_DIE:
+-		fprintf(output, "\"die\" : \"S%d-D%d\", \"cpu-count\" : %d, ",
++		fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
+ 			id.socket, id.die, nr);
+ 		break;
+ 	case AGGR_SOCKET:
+-		fprintf(output, "\"socket\" : \"S%d\", \"cpu-count\" : %d, ",
++		fprintf(output, "\"socket\" : \"S%d\", \"aggregate-number\" : %d, ",
+ 			id.socket, nr);
+ 		break;
+ 	case AGGR_NODE:
+-		fprintf(output, "\"node\" : \"N%d\", \"cpu-count\" : %d, ",
++		fprintf(output, "\"node\" : \"N%d\", \"aggregate-number\" : %d, ",
+ 			id.node, nr);
+ 		break;
+ 	case AGGR_NONE:
+-- 
+2.38.1.584.g0f3c55d4c2-goog
+
