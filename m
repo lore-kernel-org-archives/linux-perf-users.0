@@ -2,183 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837ABC47088
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Dec 2022 09:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021E8C43217
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Dec 2022 09:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbiLAJNs (ORCPT
+        id S230017AbiLAJmY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Dec 2022 04:13:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
+        Thu, 1 Dec 2022 04:42:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbiLAJNr (ORCPT
+        with ESMTP id S230203AbiLAJmT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Dec 2022 04:13:47 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2083.outbound.protection.outlook.com [40.107.243.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC6527932;
-        Thu,  1 Dec 2022 01:13:45 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gtCdNlcUNlcO9TydOfiaT3YMZwM1jHk1OkBi39i0qMGnumMoOqEcmTmlpIzuK/8NqVpcHH5Ss9/wn5zDbaubwgyZL/90t2Z8NDEDl1mbrGzze7biUoA38+suKpQiXJbmSVf+b3ayV6/X3zLGPPCjffwoTUPlW42PGspkZM9+RnDsVWY9IIUptpZHYBmXjQXxh5onWgzjpl4sYIOVEodcW/WefXIZs7Ze/9owUhJ3pHxQ+EaCi1bXDelUiREouV5wGAR4fTekZGwIrwxD4GnC5+zzriTNsTkc8wp2SgBT6t3sHJ/Kl0ZLGJfL2k13r+swITdO8pHVjh1N7IVj3mUf/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6rtS79x4RmooVY/M2/u0G0LK3iwLj2uBihwyo3YKbd8=;
- b=IRlAVjTqXtBInP0Vn9fJJw52tXgxOMLe7GEp1CTsCC00FqiSFnjgax8NM1RtX7Jjc1kJ828u9+TLObB5HR0GprnCbolMDwz0RJ4Kp1wo7YEP+dvX+07avTzkVOuZWFM3TWtzKkQpOyzKCyUS2NvE9d9e/WRmLJycYXKBPWA0goLyb4ny9O4u2VDUl/jOkNTgS2HCV692Dzhz6jXH0P580ELYO0HmyAntwWDPrdSq/KfnupY48Ozika5+ATUdy7NRy5fCgSigyqMoQNacIRLNrAh04e9LQTkJuXSwRiUbLNSbRf0f46HzrlWeFISK/7Iui0UAZhe/oTtERibIwYNQxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6rtS79x4RmooVY/M2/u0G0LK3iwLj2uBihwyo3YKbd8=;
- b=Pf/zEYVCBC3MMpU3sy9SYXnSILgRecV/RlG0iPRfilJJT1BlhvpZVJ9a3hKQIfb0MAXor7NFhDxrvP6XGQxJvVoD7WUHKd2aMZMKo+T9m6r8ft6nSbxgr7MKWLRLoznO+aWMwV4HipNqjZ/gLl/5WJ3izi37A3LFiidN+AELtNg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SN7PR12MB6767.namprd12.prod.outlook.com (2603:10b6:806:269::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Thu, 1 Dec
- 2022 09:13:44 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::aa5f:5f2c:4143:f981]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::aa5f:5f2c:4143:f981%9]) with mapi id 15.20.5857.023; Thu, 1 Dec 2022
- 09:13:43 +0000
-Message-ID: <62399b9c-d5ef-4c56-4592-d2cf1af503d6@amd.com>
-Date:   Thu, 1 Dec 2022 14:43:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH v2 2/2] perf test: Add event group test
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     acme@kernel.org, irogers@google.com, jolsa@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-        carsten.haitzler@arm.com, leo.yan@linaro.org, maddy@linux.ibm.com,
-        kjain@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        tmricht@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20221129111946.409-1-ravi.bangoria@amd.com>
- <20221129111946.409-3-ravi.bangoria@amd.com>
- <0dd566ab-38fd-2204-f59c-e74b2244828b@linux.intel.com>
-Content-Language: en-US
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <0dd566ab-38fd-2204-f59c-e74b2244828b@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0208.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e9::16) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Thu, 1 Dec 2022 04:42:19 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFF18EE66;
+        Thu,  1 Dec 2022 01:42:18 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B19Rnnu005092;
+        Thu, 1 Dec 2022 09:41:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=6sFECJHBh59XnXxMkp/AiV4JjbD3CHEwXLsKtJ4ruY4=;
+ b=GbYtmFLoldsX7qbdZMSW9ZRp5Dnz74K+kIkQ4069/xrxxgWJ+YFomQQ+CclGqv9n9W7m
+ UUoXslWVrLUjYZJaBiDZaZvcdqZqKkeV8gNNhdbj6DwFT+QCJCrwunTfHTUZHFOKJpVw
+ OCxyhj4zzTxmIy42FOCfibl12NRaAfDeMHnk5XPkVTMguIqbjwlzYdVjiUadXwK1x6st
+ PcLZnAjLYfDMTuT8FVNjkLDaM+r6rp/RvdAxp3rto5eeJyP1lk8GPi1BBnz3JsMJM0CG
+ 21upqB+LWOUbY68bxUCPp0s28WGbM5nlNFcdVWjR2ZF/yyAfHF6Pu9cpV8IVYj0qcnwn 4Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3m6snjgaeq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Dec 2022 09:41:54 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B19SfQo006657;
+        Thu, 1 Dec 2022 09:41:54 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3m6snjgadw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Dec 2022 09:41:54 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2B19ZtdY017033;
+        Thu, 1 Dec 2022 09:41:52 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 3m3ae9557w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Dec 2022 09:41:52 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B19fnbo8258178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Dec 2022 09:41:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CAC46A404D;
+        Thu,  1 Dec 2022 09:41:49 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B5D9A4040;
+        Thu,  1 Dec 2022 09:41:49 +0000 (GMT)
+Received: from li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com (unknown [9.179.5.155])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  1 Dec 2022 09:41:48 +0000 (GMT)
+Date:   Thu, 1 Dec 2022 10:41:47 +0100
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf build: Fixes for LIBTRACEEVENT_DYNAMIC
+Message-ID: <Y4h227w4T5EWrwKm@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+References: <20221129192924.1580537-1-irogers@google.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SN7PR12MB6767:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6bad2597-a255-459e-ec91-08dad37c57f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ob/TveXXa1jnu64et7xqDzs5bCY3Tiqt4wUqETOXFf1VHwreYNknnIZfxDO8+DMER+oBF2KPpNwTxKK2m/5YcvYsSSbjwG51EjGZgtcuEpzbL5yU+KoviQlHqY6xjBvmXmUd4+TCQQj34F3mk8mh2oz2knNuZrB4S0LLAI8+461j670cCK1LqmKqvxXkrbXFfNi93iCJ2oyyJBgQmZgBhaWbotMonQzPs2F7kpQt6Thd87sgCKueRQ/JyxudSkL/3GVq/AoX5HdWwAqRO4td7AsJWNAQHAmYNg/OgS+soRPJfKs+gtd3cqjreFJBdOAvwbgdd2Lhy7nEcxN1/+J8APf+lmO0YYACySpgqS40M/zkb5pn7VON8VIZxyaC4pYqEi68wGqsqeS+MwoYyWdgWsO/miZP7o2ad+RdmFEmHub5NBKWKmwVIDFgUwChdboQl+JdMNWAxT38tpAJinri5HSvjoOmVTWXOLBo7/brOZL4FLpWNeJYAnjT9DOphVeADH3af5IiYO83dBhJs0YUSs6EzXQDDih0UthLQ30nnvXyLHircg9kHjCFxL5UZJCi0gCFiWJnMo9d+RgWW6Bd269VFMMQT4kyL/Og3OuuoLhFuPk8kgfM3WY8e9XYWhOWjxsUauN4v66ruzEY70WL5805LpEN7lQmcV24aiirAWaIKLyhDkiWaIs2OZrW74djOZXjeiBUZ+YVpiTmY1WeXsFcCGJl6yE+Iw18MnZE0PSuOHPP4pbSdfeKP99nGgJp
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(451199015)(4326008)(31686004)(83380400001)(41300700001)(8676002)(6486002)(6916009)(316002)(478600001)(5660300002)(8936002)(66476007)(7416002)(66946007)(44832011)(66556008)(6506007)(6512007)(26005)(2906002)(2616005)(6666004)(38100700002)(86362001)(31696002)(36756003)(186003)(21314003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S0RvK2xaRjFEdTFaY2gydHdOYlJKSTQwSGg0a3JnNXRqTys2Wmt2b1hONExl?=
- =?utf-8?B?TDhMYVpZOTljNkR6RExYaTVqZHBuSi96QUxoYTFESy91aG4rYm5aVlRjUGpB?=
- =?utf-8?B?N0c0dDVwS0U2OGZ2YzZ4NnVPc0N4a2VqZ0dQZDhNbTRGTnZweldmY3dyUzlQ?=
- =?utf-8?B?UUhweFE4WDdrYzdKSE5SWDgrR21uVURGbTdLVmpHeS9CRW9CU0UwcWlnaDBi?=
- =?utf-8?B?OE9zcUZyMWEzeDBQaUdPZUxUL0FBWlFCWENPT2FjQzdQRzFFdlc5Y0twdTYx?=
- =?utf-8?B?NExxWG8vN1FWVGtEYjYvOEttcU1yV0pKcEFGWnF3akVrRkUxNHlyNGZvUU5Y?=
- =?utf-8?B?aVlqS05SMVlLZWZ2RHNlbUo5bEpMOC9halJVUVZEMjVUZUNvTUN6bGZhN3Ix?=
- =?utf-8?B?V1JDMzQwTWs5a0lXQkJsZC92YUpDcFZPK20yekh4SEpYQjFIZWdyL0V5cWhh?=
- =?utf-8?B?SmxDTFkzVGxMcTh6ZzYyRHR3VVQ2bTZ2U2o2cWxMc1h5cWpsbHhPcm9sbkN6?=
- =?utf-8?B?QU40Ry8ra3Y1azl2SlJ0Yy9JQTBJNXBLMDIrKzNnQVRneEJldUVRY2YvYzU5?=
- =?utf-8?B?N285cUl0RG9nbWtDSmVYcy80bkVjdk1MQ2xLSFludmwzVUdudXNBTk1jQXNS?=
- =?utf-8?B?T3N2M3ZDV0UzSm1BZnAza1RscFJVL1JGcXBvZW9PaWxIdUVnVzNEcU1Vazhz?=
- =?utf-8?B?b3N0Ti9CUUJIRit4dmtkc3YwVnpVdDB6THVtVmE3Z1lFU2ZXcm1mRVR1SXAy?=
- =?utf-8?B?Tmk5M3N5dDF5OTBORGhwakNYL05TN29YNjFYekRVZk9tN01IZjRCdXFwNmx5?=
- =?utf-8?B?WkJtTTM1OUdKUkx4SmpROExVV2EwdmpwbzNBYlByUWxlbXA4M3BLMWJqck1u?=
- =?utf-8?B?bzY5Njk1MXN1eUtHTDVwNHpPVTgrZHhSZFE0Q0doN2k0dXlHQ0VUYnVVUzd6?=
- =?utf-8?B?TTZpc3R1L0xpcFc4eUNXdml2US9DSGpVYmxNNEkyVFUveC9VWnBYNFFqTXhi?=
- =?utf-8?B?NTYyeEhiTUlXUXN2bnZHa1lVR3JGQmZld0JBN3N0eXRSelo1bEJUUjVBQyt6?=
- =?utf-8?B?MmVCdy9sZXlpdGttWWkrNU5tUldRMjc2S3ZoY1VUQXRXa29NKzdmYUV5MzVt?=
- =?utf-8?B?OHNyZ1pXcmgzdTFoM0s3ci85S0EzWXhHcXk2OUorT0ZVSmlETDNNWHkwaERw?=
- =?utf-8?B?SWxzZkI5Y0VaUHprbUJnMlc4RzI4SWRsWUJBcDNYRktLYVhleHQ1Uzlqd0ha?=
- =?utf-8?B?R1AyQUw2dEh5ekxOcit0K3ExV1ZybkFaMlQ1RG5QVXBFZUZMekpJK3ZXQ0NO?=
- =?utf-8?B?elc2SmMvZi91MXZrc0VwdTF1R1k4d0pHYzhSVU1LZVU3aTA1T3BDUGpQYXZp?=
- =?utf-8?B?dU1MUGdKOHRCbmZUK2JXNzk3MU5OeVQrajFvTk5CSUNVWmZwcmRNQkdyOFcr?=
- =?utf-8?B?R01iZm52UzRaOFBybnJ3RWl2bXhJbXZaOGw4SUZIdG1oTE1VYk5UbzBoY3g1?=
- =?utf-8?B?aURYSHIzbzVFYy9hbXdTRUM2czB4Qm0wR3ZXdU95a3RvcWtIL3JiR1hXYkcz?=
- =?utf-8?B?dk4wNGhZS1dXU1pwVGZCL3I4OFVDZmxsUHJIMDZQV281NmtJQjJkdC9kNXpS?=
- =?utf-8?B?bnNkVjVrSEpzcjhZZU5PTE1nalZrQ01xZ0xKbnNXL29ZQjNpQXBFQnFnbXlL?=
- =?utf-8?B?MlJuZHhRRW1CUnlDZnVoNmlUU0cvR3U0RCtBOGVKNGVzOVhlKzIzZUhTMDBj?=
- =?utf-8?B?MU5EOVNVd1BqSUlObTJ2dzlJM0YzcWNpbHpwK2J0L0l3TEZDQVBzeVRRdWJX?=
- =?utf-8?B?WVlCaXM3cWZqUVJpT3B2dWw2dUxYMDJRSzRaWE1ERjRQNUFqckxPWkFwQzVv?=
- =?utf-8?B?NlZXS2FUbGYwSXIwMVE1M2p5WG9WTlEzbnJHa1FYcEhtYTdsS3JjVU9UQzFr?=
- =?utf-8?B?OU41R1dXaFRqODRpYW9pbE9tbWVOYmlGTUpvWjhWcDRCeG9waVZ4dTZZSUZ5?=
- =?utf-8?B?RnN0RDA4TU1pMXFQM3R4L00wTHowZ1luSDdvRmRGd1VOd3l1Q1FSL0JLeDVn?=
- =?utf-8?B?WWZueUYrZ3hVa2ZjbkJ2KytTVFNWQ0M5ZVd2bDUzcVN2U1NzYWJmRnViSjhS?=
- =?utf-8?Q?cLldeyxRSIvMwggk5Ke2W9mUx?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bad2597-a255-459e-ec91-08dad37c57f8
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2022 09:13:43.4819
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jl0449EiGr53E9NAElO5ML9kn6qabkqtWNePN8Bh6z17CtxDuJaS9emx/wo80mw0tTDq9qHvdMg9Kbo7TvFucg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6767
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221129192924.1580537-1-irogers@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xGDwIzjJtTiZ7qfGGAgCByMWHH5hQsUf
+X-Proofpoint-GUID: _xhELqXTuaG32yICiuanVsrdm2SwtUtf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-01_04,2022-11-30_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 priorityscore=1501 adultscore=0 spamscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2212010066
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Kan,
-
-Thanks for the review.
-
->> +static int setup_uncore_event(void)
->> +{
->> +	struct perf_pmu *pmu;
->> +
->> +	if (list_empty(&pmus))
->> +		perf_pmu__scan(NULL);
->> +
->> +	perf_pmus__for_each_pmu(pmu) {
->> +		if (pmu->is_uncore) {
+On Tue, Nov 29, 2022 at 11:29:24AM -0800, Ian Rogers wrote:
+> If LIBTRACEEVENT_DYNAMIC is enabled then avoid the install step for
+> the plugins. If disabled correct DESTDIR so that the plugins are
+> installed under <lib>/traceevent/plugins.
 > 
-> Always using the first uncore PMU may trigger false alarm on some Intel
-> platforms. For example, Intel has free running uncore PMUs (e.g.,
-> uncore_imc_free_running_0), which only supports special event encoding
-> 0xff. The config 0 must fails.
-> You may want to add the below check to ignore the free running uncore PMUs.
->                         if (strstr(pmu->name, "free_running"))
->                                 continue;
+> Fixes: ef019df01e20 ("perf build: Install libtraceevent locally when building")
+> Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Makefile.perf | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> 
-> Also, some uncore PMUs only support two counters. But the test assumes
-> that the number of counters > 2. You may want to limit the size of the
-> group for 2 for a pure uncore group.
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index a17a6ea85e81..f4cd946fe91a 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -884,7 +884,7 @@ $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
+>  
+>  install-traceevent-plugins: libtraceevent_plugins
+>  	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
+> -		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
+> +		DESTDIR=$(DESTDIR_SQ) prefix= \
+>  		$(LIBTRACEEVENT_FLAGS) install
+>  endif
+>  
+> @@ -1093,7 +1093,11 @@ install-tests: all install-gtk
+>  		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+>  	$(Q)$(MAKE) -C tests/shell/coresight install-tests
+>  
+> -install-bin: install-tools install-tests install-traceevent-plugins
+> +install-bin: install-tools install-tests
+> +
+> +ifndef LIBTRACEEVENT_DYNAMIC
+> +install-bin: install-traceevent-plugins
+> +endif
+>  
+>  install: install-bin try-install-man
+>  
+> -- 
+> 2.38.1.584.g0f3c55d4c2-goog
 
-That seems hacky. Instead of ignoring, would it be possible to provide
-a list of testable pmus? Example with random values:
-
-  /* Uncore pmus that support more than 3 counters */
-  static struct uncore_pmus {
-      char *name;
-      unsigned long config;
-  } uncore_pmus[] = {
-      { "amd_l3",         0x0  },
-      { "amd_df",         0x0  },
-      { "uncore_imc_xxx", 0xff },   /* Intel */
-      { "intel_xxx_pmu2", 0xff },   /* Intel */
-      { "abc_pmu1",       0x0  },   /* Arm */
-      { "hv_24x7",        0xa  },   /* PowerPC */
-      { ...                    },
-  };
-
-  perf_pmus__for_each_pmu(pmu) {
-      if (pmu present in uncore_pmus[])
-          type[2] = pmu->type;
-          config[2] = pmu->config;
-  }
-
-Ofcourse, this should work for all architectures. Arm, PowerPC, s390 folks?
-
-Thanks,
-Ravi
+Tested-by: Alexander Gordeev <agordeev@linux.ibm.com>
