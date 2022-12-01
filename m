@@ -2,174 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43152C43217
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Dec 2022 11:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CABC43217
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Dec 2022 14:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231287AbiLALO7 (ORCPT
+        id S231716AbiLAOC2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Dec 2022 06:14:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
+        Thu, 1 Dec 2022 09:02:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbiLALOY (ORCPT
+        with ESMTP id S231253AbiLAOCZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Dec 2022 06:14:24 -0500
-Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17FC25EB9;
-        Thu,  1 Dec 2022 03:08:42 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=0;PH=DS;RN=20;SR=0;TI=SMTPD_---0VW8ayfo_1669892916;
-Received: from 30.221.148.106(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VW8ayfo_1669892916)
-          by smtp.aliyun-inc.com;
-          Thu, 01 Dec 2022 19:08:38 +0800
-Message-ID: <1a7fc9da-2589-1835-716f-d52027f0ecda@linux.alibaba.com>
-Date:   Thu, 1 Dec 2022 19:08:33 +0800
+        Thu, 1 Dec 2022 09:02:25 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D3EA47DB;
+        Thu,  1 Dec 2022 06:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669903344; x=1701439344;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CMBVReNfGbbIECAgFrlXD7Aio9U87nWLRNX1Xd13ihA=;
+  b=VazKx7XpWQHltFwb/wmxacTOSoKZOFO6P/DQNBFRgioSTgQgIeX9c0bV
+   a5VqsHn8eZECqVIaPtN4mt2CrIaAkdjatOBQ53MkNKA8bR9qaeO4aFuq+
+   zVghnMxlAnktKnrKGSoOQnYZskIm+3ZThVhuC9WqBBQfXqElEjix/ZuDN
+   jxb0KxuiU2j4TNpNNehN6BsSyyl+QByZNf6LhWwKN7tCCH7hAjLLyIxDo
+   34oSc6T7SbFyqLCXRz9XLIaZ8IYGtascIuwMlAtzfvJCJiah50EGRdXcv
+   sr5E4fAXJduZSvIEzUpueA9VhsCU0rHM2MJuYJAauxD16dV2/SVWbUHCw
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="316842478"
+X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
+   d="scan'208";a="316842478"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 06:02:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="644648929"
+X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
+   d="scan'208";a="644648929"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 01 Dec 2022 06:02:12 -0800
+Received: from [10.252.208.219] (kliang2-mobl1.ccr.corp.intel.com [10.252.208.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8AF70580A8B;
+        Thu,  1 Dec 2022 06:02:09 -0800 (PST)
+Message-ID: <7449d858-2110-1ddf-f7e1-013015cbd791@linux.intel.com>
+Date:   Thu, 1 Dec 2022 09:02:08 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.1
-Subject: Re: [PATCH v3 5/6] perf vendor events arm64: Add PE utilization
- metrics for neoverse-n2
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1669310088-13482-6-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fV0WSTK=MT6K2nqsqYT6xCTg7Pv_rXahHFeRhV0ZHCiEQ@mail.gmail.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fV0WSTK=MT6K2nqsqYT6xCTg7Pv_rXahHFeRhV0ZHCiEQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 2/2] perf test: Add event group test
+Content-Language: en-US
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     acme@kernel.org, irogers@google.com, jolsa@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+        carsten.haitzler@arm.com, leo.yan@linaro.org, maddy@linux.ibm.com,
+        kjain@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        tmricht@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+References: <20221129111946.409-1-ravi.bangoria@amd.com>
+ <20221129111946.409-3-ravi.bangoria@amd.com>
+ <0dd566ab-38fd-2204-f59c-e74b2244828b@linux.intel.com>
+ <62399b9c-d5ef-4c56-4592-d2cf1af503d6@amd.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <62399b9c-d5ef-4c56-4592-d2cf1af503d6@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2022/12/1 上午2:58, Ian Rogers 写道:
-> On Thu, Nov 24, 2022 at 9:15 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+On 2022-12-01 4:13 a.m., Ravi Bangoria wrote:
+> Hi Kan,
+> 
+> Thanks for the review.
+> 
+>>> +static int setup_uncore_event(void)
+>>> +{
+>>> +	struct perf_pmu *pmu;
+>>> +
+>>> +	if (list_empty(&pmus))
+>>> +		perf_pmu__scan(NULL);
+>>> +
+>>> +	perf_pmus__for_each_pmu(pmu) {
+>>> +		if (pmu->is_uncore) {
 >>
->> Add PE utilization related metrics.
+>> Always using the first uncore PMU may trigger false alarm on some Intel
+>> platforms. For example, Intel has free running uncore PMUs (e.g.,
+>> uncore_imc_free_running_0), which only supports special event encoding
+>> 0xff. The config 0 must fails.
+>> You may want to add the below check to ignore the free running uncore PMUs.
+>>                         if (strstr(pmu->name, "free_running"))
+>>                                 continue;
 >>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 45 ++++++++++++++++++++++
->>  1 file changed, 45 insertions(+)
 >>
->> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> index 23c7d62..7b54819 100644
->> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
->> @@ -189,5 +189,50 @@
->>          "MetricGroup": "Branch",
->>          "MetricName": "branch_miss_pred_rate",
->>          "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "instructions / CPU_CYCLES",
->> +        "PublicDescription": "The average number of instructions executed for each cycle.",
->> +        "BriefDescription": "Instructions per cycle",
->> +        "MetricGroup": "PEutilization",
->> +        "MetricName": "ipc"
->> +    },
+>> Also, some uncore PMUs only support two counters. But the test assumes
+>> that the number of counters > 2. You may want to limit the size of the
+>> group for 2 for a pure uncore group.
 > 
-> A related useful metric is percentage of peak, so if the peak IPC is 8
-> (usually a constant related to the number of functional units) then
-> you can just compute the ratio of IPC with this.
+> That seems hacky. Instead of ignoring, would it be possible to provide
+> a list of testable pmus? Example with random values:
 > 
+>   /* Uncore pmus that support more than 3 counters */
+>   static struct uncore_pmus {
+>       char *name;
+>       unsigned long config;
+>   } uncore_pmus[] = {
+>       { "amd_l3",         0x0  },
+>       { "amd_df",         0x0  },
+>       { "uncore_imc_xxx", 0xff },   /* Intel */
 
-Glad to discuss these with you.
-The peak ipc value of neoverse-n2 is 5. Maybe I should add an ipc_rate metric?
+IMC seems a safe choice. AFAIK, we should have at least uncore_imc_0 for
+all the existing Intel platforms. { "uncore_imc_0", 0x1 }
 
->> +    {
->> +        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
->> +        "PublicDescription": "Architecturally executed Instructions Per Cycle (IPC)",
->> +        "BriefDescription": "Architecturally executed Instructions Per Cycle (IPC)",
-> 
-> 
-> The duplicated descriptions are unnecessary. Drop the public one for
-> consistency with what we do for Intel:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#L299
-> 
+>       { "intel_xxx_pmu2", 0xff },   /* Intel */
 
-Sounds good, will do.
+Intel doesn't have such uncore PMUs.
 
->> +        "MetricGroup": "PEutilization",
->> +        "MetricName": "retired_ipc"
->> +    },
->> +    {
->> +        "MetricExpr": "INST_SPEC / CPU_CYCLES",
->> +        "PublicDescription": "Speculatively executed Instructions Per Cycle (IPC)",
->> +        "BriefDescription": "Speculatively executed Instructions Per Cycle (IPC)",
->> +        "MetricGroup": "PEutilization",
->> +        "MetricName": "spec_ipc"
->> +    },
->> +    {
->> +        "MetricExpr": "OP_RETIRED / OP_SPEC",
->> +        "PublicDescription": "Fraction of operations retired",
->> +        "BriefDescription": "Fraction of operations retired",
+>       { "abc_pmu1",       0x0  },   /* Arm */
+>       { "hv_24x7",        0xa  },   /* PowerPC */
+>       { ...                    },
+>   };
 > 
-> Would instructions be clearer than operations here?
+>   perf_pmus__for_each_pmu(pmu) {
+>       if (pmu present in uncore_pmus[])
+>           type[2] = pmu->type;
+>           config[2] = pmu->config;>   }
+
+
+Not sure the uncore_pmus[] can cover all possible names for all
+architectures.
+
+Maybe we should fall back to the first uncore PMU and try again if
+nothing match the uncore_pmus[].
+
+Thanks,
+Kan
 > 
-
-operation and instruction are different. OP_RETIRED counts any operation (not instruction)
-that has been architecturally executed, For example, speculatively executed operations that
-have been abandoned for a branch mispredict will not be counted. So I think operation might
-be more accurate.
-
->> +        "MetricGroup": "PEutilization",
->> +        "MetricName": "retired_rate",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
+> Ofcourse, this should work for all architectures. Arm, PowerPC, s390 folks?
 > 
-> Should OP_RETIRED be greater than OP_SPEC? In which case won't this
-> metric be negative?
-> 
-
-OP_RETIRED will not be greater than OP_SPEC. OP_SPEC counts any operation that has been
-speculatively executed. OP_SPEC is a superset of the OP_RETIRED event. There is a
-description about OP_SPEC and OP_RETIRED in this neoverse-n2 document.
-Link: https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
-
->> +        "PublicDescription": "Fraction of operations wasted",
->> +        "BriefDescription": "Fraction of operations wasted",
->> +        "MetricGroup": "PEutilization",
->> +        "MetricName": "wasted_rate",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * 5))",
->> +        "PublicDescription": "Utilization of CPU",
->> +        "BriefDescription": "Utilization of CPU",
-> 
-> Some more detail in the description would be useful.
-> 
-
-Ok, I'll describe it in more detail. CPU_utilization reflects the truly effective ratio of operation
-executed by the CPU, which means that misprediction and stall are not included. Note that stall_slot
-minus cpu_cycles is a correction to the stall_slot error count.
-
->> +        "MetricGroup": "PEutilization",
->> +        "MetricName": "cpu_utilization",
->> +        "ScaleUnit": "100%"
->>      }
->>  ]
->> --
->> 1.8.3.1
->>
+> Thanks,
+> Ravi
