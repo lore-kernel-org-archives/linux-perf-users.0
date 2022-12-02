@@ -2,111 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4C5C4321E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 17:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56195C47088
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 18:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234001AbiLBRge (ORCPT
+        id S233887AbiLBSDd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Dec 2022 12:36:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52380 "EHLO
+        Fri, 2 Dec 2022 13:03:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233973AbiLBRgd (ORCPT
+        with ESMTP id S234216AbiLBSDb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Dec 2022 12:36:33 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BCCE8E3C
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Dec 2022 09:36:28 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id y16so8887122wrm.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Dec 2022 09:36:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tMmIbi4e/X1/uiuwY8BvO8Ud6JyyRMbx0iz80rslda4=;
-        b=LcrCJ2TMz3+4QidtoXI756Tji9ADtZqJ62iUoXhSHHFiW0rmbyQRLemmBLmyKNAsa7
-         iftotDTyUGc/SP2LfHQknWNFZjbVRgzUmyLRihHVtU/RwIgZP6B5e57L1Yhm/OFRzyvp
-         CNoNSuNyKsFwifjqqi5uLPa5lvo4JwNcJrIoTVBCsOTjrR9BkkXnmnY1i7cp0PW7gJBV
-         ZKxsTg2TBOMI+rrFVte47+8f/BLpVW/fKUMPu8FhkS1PotgqaGbhs3e0ICFoPctNz/Ql
-         RvhL7THGsVk44W73zzV8Xu/Jb+2ADrbZXxD4BHpOLpGqvMsQhM11XaSTa45a8ZAqzhAq
-         kXtA==
+        Fri, 2 Dec 2022 13:03:31 -0500
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0397260B4C;
+        Fri,  2 Dec 2022 10:03:30 -0800 (PST)
+Received: by mail-wr1-f48.google.com with SMTP id y16so8995363wrm.2;
+        Fri, 02 Dec 2022 10:03:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tMmIbi4e/X1/uiuwY8BvO8Ud6JyyRMbx0iz80rslda4=;
-        b=pjk7IO0i/lO2pyYZNmpDAxm0GIzUsKuLcwRi5TFZ+WMkHVdW4TCIKF0B4qjZi8VRFn
-         ALoO9jPT7QrTLS57mNTO/b5k10EUqVdHF1gIdWWiEB9lR2JUbFyRPZbwFA15vgrHEspX
-         RUakLGe2pDK4OtT2GlO4bvNNdY8k1gqJZo4ytBwJQ8IjMMQ//fBDf+4lYghIuTwRy/4f
-         UWVkmk/ogpsuW+1ZSewHyQnFzrBofLF1zvvo8hnaVfTH2oYHXK42llI5Kc/YtDiywvU5
-         yR48GZA/ZlSzSh9sMZr3znX78fbuoVpU22ZnnmMZ2otzHW7vJA9r6WbNJYxkXOrtNQBG
-         hOsw==
-X-Gm-Message-State: ANoB5pl3Z0QnEgvxNt+6lwEQBj8wj5JtUrK72cE22Ivoc1ARS4GwoYFb
-        PsNisG6LC6kOt/aUlzl9y0ptMgg+E1auWl8af+ym1g==
-X-Google-Smtp-Source: AA0mqf429zt33NbLfsZBqEmtjy/QQWT2sYU+veHHys1lkbA96+XFEq+2NvVor/amc0cuAQW+zzn3msPfSy+bKCD4Pcc=
-X-Received: by 2002:adf:e64f:0:b0:241:e2f1:8b44 with SMTP id
- b15-20020adfe64f000000b00241e2f18b44mr31351795wrn.300.1670002586412; Fri, 02
- Dec 2022 09:36:26 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v5S9AInjAkBzgT4Ue2Z9+cewf5MRHGtio+KBn1axLoU=;
+        b=ljRwqPwIY3zJkK+ZKd+fmuYoxTbwwtPcuyB7Qx/2C590v+s04ukAE2dDkG0z8T2Jok
+         w2c6O5CXEBQUmwY+p0qNcEWIpH3Moxm8HdG1WKATf10zWtc/r9SE4Znk9op8/zevnb8g
+         1PgwqXXdRXxkZJ8/kQasd0nwfz0gM2bx0kdkR3Fl5CC0vlH49vznkj4vNudELOWmIlpT
+         kZxDdok39xvVQnMa7yIUcPTgH2Bo4yewZtayojEJ5hFiZCZCrnPzgvfPNpaYke5ibvL1
+         oZIuW2kWk0yyV9gOPUFcjl7NR8FF8V4f0JN+3rVpE8axEKWaJGSFwDYMAlRTrnT6/cWH
+         0M1g==
+X-Gm-Message-State: ANoB5plKNR1UDOj1PHwSSXKoWkpS30HUuDvqYvVCryebVqfTj524XZlh
+        wtn/85Y30JpE1lhgq+orDUn0WBy0695UcV2PRo8=
+X-Google-Smtp-Source: AA0mqf4J29r5VWt/rIsXxWUvZrIM5pOiyObcfuwEfzF4lKw4wKaW8FjVPrPCKe4pd0OWBfGxpijsqt3j8zXtDkL+T2U=
+X-Received: by 2002:a5d:5b08:0:b0:241:d7b1:b3db with SMTP id
+ bx8-20020a5d5b08000000b00241d7b1b3dbmr1829830wrb.293.1670004208244; Fri, 02
+ Dec 2022 10:03:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20221202135149.1797974-1-colin.i.king@gmail.com>
-In-Reply-To: <20221202135149.1797974-1-colin.i.king@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 2 Dec 2022 09:36:14 -0800
-Message-ID: <CAP-5=fWKbC_wOLiAnEnPV42mM9fpobJD++wKohFYVU66LdaJ-g@mail.gmail.com>
-Subject: Re: [PATCH][next] perf/x86/amd: fix potential integer overflow on
- shift of a int
-To:     Colin Ian King <colin.i.king@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <CO6PR11MB56352D2831C1554FE8C3A872EE179@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB56352D2831C1554FE8C3A872EE179@CO6PR11MB5635.namprd11.prod.outlook.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 2 Dec 2022 10:03:16 -0800
+Message-ID: <CAM9d7chqpLxZ81GRZktZf03pjZ-a7BOnD2mOCpNSDDCRZn3RMg@mail.gmail.com>
+Subject: Re: [PATCH 13/15] perf stat: Fix JSON output in metric-only mode
+To:     "Wang, Weilin" <weilin.wang@intel.com>
+Cc:     "acme@kernel.org" <acme@kernel.org>,
+        "Hunter, Adrian" <adrian.hunter@intel.com>,
+        "atrajeev@linux.vnet.ibm.com" <atrajeev@linux.vnet.ibm.com>,
+        "irogers@google.com" <irogers@google.com>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "zhengjun.xing@linux.intel.com" <zhengjun.xing@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 2, 2022 at 5:52 AM Colin Ian King <colin.i.king@gmail.com> wrote:
->
-> The left shift of int 32 bit integer constant 1 is evaluated using 32 bit
-> arithmetic and then passed as a 64 bit function argument. In the case where
-> i is 32 or more this can lead to an overflow.  Avoid this by shifting
-> using the BIT_ULL macro instead.
->
-> Fixes: 471af006a747 ("perf/x86/amd: Constrain Large Increment per Cycle events")
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Hello,
 
-Acked-by: Ian Rogers <irogers@google.com>
+On Thu, Dec 1, 2022 at 4:56 PM Wang, Weilin <weilin.wang@intel.com> wrote:
+>
+> Hi Namhyung,
+>
+>
+>
+> I encountered an issue with the metric json output, which I think might be related to this commit.
+>
+>
+>
+> This is one of the commands I tried:
+>
+>
+>
+> ./perf stat -M memory_bandwidth_total,memory_bandwidth_read,memory_bandwidth_write -a -j -- sleep 1
+>
+>
+>
+> Output before this commit:
+>
+> ====================================================
+>
+> {"counter-value" : "1117309.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.RD", "event-runtime" : 8017286783, "pcnt-running" : 100.00, "metric-value" : 124.961911, "metric-unit" : "MB/s  memory_bandwidth_read"} {"metric-value" : 237.237504, "metric-unit" : "MB/s  memory_bandwidth_total"} {"counter-value" : "1004052.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.WR", "event-runtime" : 8017286783, "pcnt-running" : 100.00, "metric-value" : 112.275593, "metric-unit" : "MB/s  memory_bandwidth_write"} {"counter-value" : "1002140370.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1002140370, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"}
+>
+> ====================================================
+>
+>
+>
+> Output after this commit:
+>
+> ====================================================
+>
+> {"counter-value" : "1374098.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.RD", "event-runtime" : 8016491003, "pcnt-running" : 100.00, "metric-value" : 153.660738, "metric-unit" : "MB/s  memory_bandwidth_read"} "metric-value" : 300.338968, "metric-unit" : "MB/s  memory_bandwidth_total"} {"counter-value" : "1311710.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.WR", "event-runtime" : 8016491003, "pcnt-running" : 100.00, "metric-value" : 146.678229, "metric-unit" : "MB/s  memory_bandwidth_write"} {"counter-value" : "1002037512.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1002037512, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"}
+>
+> ====================================================
+>
+>
+>
+> The second set of output is missing a "{" on the second line. Looks like it happens when I collect two related metrics together. Another example is:
+>
+>
+>
+> ./perf stat -M memory_bandwidth_total,memory_bandwidth_read,memory_bandwidth_write,L3_Cache_Fill_BW_1T,L3_Cache_Fill_BW -a -j -- sleep 1
+>
+>
+>
+> {"counter-value" : "944204.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.RD", "event-runtime" : 8033937053, "pcnt-running" : 100.00, "metric-value" : 105.369994, "metric-unit" : "MB/s  memory_bandwidth_read"} "metric-value" : 210.592807, "metric-unit" : "MB/s  memory_bandwidth_total"} {"counter-value" : "942679.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.WR", "event-runtime" : 8033937053, "pcnt-running" : 100.00, "metric-value" : 105.222813, "metric-unit" : "MB/s  memory_bandwidth_write"} {"counter-value" : "1004471458.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1004471458, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"} {"counter-value" : "184675.000000", "unit" : "", "event" : "LONGEST_LAT_CACHE.MISS", "event-runtime" : 88387319917, "pcnt-running" : 100.00, "metric-value" : 0.011767, "metric-unit" : "L3_Cache_Fill_BW_1T"} "metric-value" : 0.011767, "metric-unit" : "L3_Cache_Fill_BW"} {"counter-value" : "1004471458.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1004471458, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"}
+
+Thanks for your report.  It seems it misses the open bracket when the metric
+produces more than one values.  I think new_line_json() should have it.
+Will send the fix soon.
 
 Thanks,
-Ian
-
-> ---
->  arch/x86/events/amd/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index d6f3703e4119..4386b10682ce 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -1387,7 +1387,7 @@ static int __init amd_core_pmu_init(void)
->                  * numbered counter following it.
->                  */
->                 for (i = 0; i < x86_pmu.num_counters - 1; i += 2)
-> -                       even_ctr_mask |= 1 << i;
-> +                       even_ctr_mask |= BIT_ULL(i);
->
->                 pair_constraint = (struct event_constraint)
->                                     __EVENT_CONSTRAINT(0, even_ctr_mask, 0,
-> --
-> 2.38.1
->
+Namhyung
