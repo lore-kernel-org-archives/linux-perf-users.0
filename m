@@ -2,72 +2,62 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47712C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 20:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06018C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 21:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234500AbiLBUFU (ORCPT
+        id S234364AbiLBVLU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Dec 2022 15:05:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
+        Fri, 2 Dec 2022 16:11:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234159AbiLBUFT (ORCPT
+        with ESMTP id S234211AbiLBVLT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Dec 2022 15:05:19 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275BEF1148
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Dec 2022 12:05:18 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id v124-20020a1cac82000000b003cf7a4ea2caso7263335wme.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Dec 2022 12:05:18 -0800 (PST)
+        Fri, 2 Dec 2022 16:11:19 -0500
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52650B90F7;
+        Fri,  2 Dec 2022 13:11:18 -0800 (PST)
+Received: by mail-il1-x129.google.com with SMTP id h15so2583293ilh.12;
+        Fri, 02 Dec 2022 13:11:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TiUU1kGDE18WkHjFu8u7TPR9Pw0MBeKZx33kkvUGDmw=;
-        b=NgH8pUoWD1JoiRDTf1LN42P1y6eo8B9+Q3TLfBYToqYLyi5esgiLXCQ36R0GtxDQdP
-         JX0LbmYfpxKoNzUGf6psAgvqAwplupXdkSSA70hf11Gbc7B44Tv0hOLfvuiwUT74W24W
-         oVIXnG3BzsUI1lT2el9NM+nbifo+Vj1qdrRJ8F8vxanhJew++QjhGYvBL483RtgAAgb6
-         YNc/6NL+Bthgb6XsbTGIssvrdMCqZ+Nz33CDayxa6iaFiXSKtqnVN2tOgkfP4f4TOKFe
-         +s6p7lgeodGZp67nfnZIqlL7IegkniA7H28Q0wGbMVFScpbFaD6fTCInH8Q9z3Fffq+n
-         S8aw==
+        bh=u3lEvhP44/S2CiLLHgl8RRsozuWPpw/JRf0SJlW9cyA=;
+        b=iwpkj4UkgBtW022tAfrfSXwiLhxJwrx4LN6w2uzzbw6OyhP7xZZrXlBHLIum+AwxlI
+         KYW3BBqzLiXCVHXGr8RG4C9s3fpd7squHduQHtM2i5skLyyVIYTmKsQEu53pt9iEtlVy
+         OuNe/ceg/ulQA8xElq9h3/AuiMLzHvBfJ2B5jV5A6DtMdor9zjJJFDNExpfWPkD/udn4
+         T0N/hK7zzPvscpTB+9QSuJiRCUT+SVPXWHq8UNiBglDA8zM5O1EkjcnMXstAsQFpMwxo
+         SBff1c1LeYWRwbSEKdykbNQ0wJEuDWuhmmMg+x7DvUbfopuzIbtfMqcn9Smgoe41yHHW
+         yj9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TiUU1kGDE18WkHjFu8u7TPR9Pw0MBeKZx33kkvUGDmw=;
-        b=wZlj4gCGhmFg2wZ/kJuw3VLLQb8U+J8vWc2mWMCvpU8VJOu0BSLGtQWTLTWSIZskOl
-         biK6sYEh7xXRjJsB8XANmxE+XsnSZaQdD/ZcE6v7OmmORUPrqTTvGHlKMpWkb3V3uFwe
-         c1nQU+akYS/cmxBSKBq5FovL51Jo1WmFKOCrYaG08lIXRit0UjjvVjSYDQ1WyGecj7YO
-         9mFcVyKiujMTjSjSnpgYPJ3UkvFDD7xa2TFo58iMBC1BjHWrtAHwRGPmduewxWW/zLSn
-         VkVxeAev9BG3yb5Ph9KMCbZ6ocq8roNxaYcSwa+BZ3Qu4hRhBAMNMU8fvkx+5STRO+Qt
-         HS6A==
-X-Gm-Message-State: ANoB5pkwwo1Cnmv4JH4X3gnY7ZPs7Tq1ryqRqZvGiP+6y0U7R1Yv9zOL
-        0tmqWsJsZF07GNzZvMt3o/pCxK4ioO0eb7odDFdeCA==
-X-Google-Smtp-Source: AA0mqf4Y9QTurlLEnVPt8qOsLHlYLi31FrfXvEF064i0oCya4m55AizJlhB0Lg+HxS60kCG5xUE8YIKWlWiSMPWz8mE=
-X-Received: by 2002:a1c:7318:0:b0:3cf:cb16:f24a with SMTP id
- d24-20020a1c7318000000b003cfcb16f24amr55813272wmb.182.1670011516472; Fri, 02
- Dec 2022 12:05:16 -0800 (PST)
+        bh=u3lEvhP44/S2CiLLHgl8RRsozuWPpw/JRf0SJlW9cyA=;
+        b=8PR7MzkIGcLtqCAAfgVYInqpSvIkrS5h7jfJ394MjnMUp6NWpjU/2zsQn61cUbeimD
+         BApGstFJY4FYBh2IAiT1Fg1CUgU41uXGqDdg46GuEqNgGf9oM3x5xksiHeVrUF8sbqQC
+         Ea7Cr+SXglaYvrPt8VuuZfw7gTHtg4+o4QZEI++8UhuEFgRFHsT0aF8jgm3mTpvWMDPQ
+         K7tvliTMQWM0bjGM0aLwELBXp/SptyMYXhydJ83gPpUB6hjfZ76lvMighRPuMpZ3UF9h
+         ZhuWTkf9P4l5EsaQ8RqhzWZrSrESpRhVIZzG9wYPj6IzUiBwelBlLUw1GYPfIl1WDufu
+         RiNg==
+X-Gm-Message-State: ANoB5pnUlt4BdlwAr+j5LODaOOcbL/pQ7aEi26p2/GkVrqbynP5lupVF
+        vAH8Jgt3A4uqir+6F87XMKyobVSNixT22hQqAmGvtoAI
+X-Google-Smtp-Source: AA0mqf77afraC/slha5QtvDC1rfoPp+LISqCr7+o58UN5TMl/IlzcCq3CLhKEUYmMhYHqDLF8BO83t9gI67WNcbQExA=
+X-Received: by 2002:a92:a30b:0:b0:302:555a:f761 with SMTP id
+ a11-20020a92a30b000000b00302555af761mr23477136ili.323.1670015477439; Fri, 02
+ Dec 2022 13:11:17 -0800 (PST)
 MIME-Version: 1.0
-References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1669310088-13482-6-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fV0WSTK=MT6K2nqsqYT6xCTg7Pv_rXahHFeRhV0ZHCiEQ@mail.gmail.com> <1a7fc9da-2589-1835-716f-d52027f0ecda@linux.alibaba.com>
-In-Reply-To: <1a7fc9da-2589-1835-716f-d52027f0ecda@linux.alibaba.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 2 Dec 2022 12:05:04 -0800
-Message-ID: <CAP-5=fUT=u7N4GP9Y6r7dv5yTKtLqPYxYE73d7Rj8fXQ+YQidA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] perf vendor events arm64: Add PE utilization
- metrics for neoverse-n2
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+References: <20220415050003.3257645-1-mattst88@gmail.com> <20221019232952.2212729-1-mattst88@gmail.com>
+ <CAEdQ38FO0SH80SLQKpLxadOBKn7cuRmZLd=xU8jJguq+MuD+Lw@mail.gmail.com>
+In-Reply-To: <CAEdQ38FO0SH80SLQKpLxadOBKn7cuRmZLd=xU8jJguq+MuD+Lw@mail.gmail.com>
+From:   Matt Turner <mattst88@gmail.com>
+Date:   Fri, 2 Dec 2022 16:11:05 -0500
+Message-ID: <CAEdQ38G8_bNzNnvYj2RHoOEufv4P3gKKGxHNgGWGG7_gBrR4dg@mail.gmail.com>
+Subject: Re: [PATCH v2] tools: port perf ui from GTK 2 to GTK 3
+To:     linux-perf-users@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -75,180 +65,53 @@ Cc:     John Garry <john.g.garry@oracle.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        Jelle van der Waa <jvanderwaa@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 1, 2022 at 3:08 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrot=
-e:
+On Mon, Oct 31, 2022 at 10:02 AM Matt Turner <mattst88@gmail.com> wrote:
 >
->
->
-> =E5=9C=A8 2022/12/1 =E4=B8=8A=E5=8D=882:58, Ian Rogers =E5=86=99=E9=81=93=
-:
-> > On Thu, Nov 24, 2022 at 9:15 AM Jing Zhang <renyu.zj@linux.alibaba.com>=
- wrote:
-> >>
-> >> Add PE utilization related metrics.
-> >>
-> >> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> >> ---
-> >>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 45 +++++++++++++=
-+++++++++
-> >>  1 file changed, 45 insertions(+)
-> >>
-> >> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.=
-json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> >> index 23c7d62..7b54819 100644
-> >> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> >> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-> >> @@ -189,5 +189,50 @@
-> >>          "MetricGroup": "Branch",
-> >>          "MetricName": "branch_miss_pred_rate",
-> >>          "ScaleUnit": "100%"
-> >> +    },
-> >> +    {
-> >> +        "MetricExpr": "instructions / CPU_CYCLES",
-> >> +        "PublicDescription": "The average number of instructions exec=
-uted for each cycle.",
-> >> +        "BriefDescription": "Instructions per cycle",
-> >> +        "MetricGroup": "PEutilization",
-> >> +        "MetricName": "ipc"
-> >> +    },
+> On Wed, Oct 19, 2022 at 7:30 PM Matt Turner <mattst88@gmail.com> wrote:
 > >
-> > A related useful metric is percentage of peak, so if the peak IPC is 8
-> > (usually a constant related to the number of functional units) then
-> > you can just compute the ratio of IPC with this.
+> > From: Jelle van der Waa <jvanderwaa@redhat.com>
 > >
+> > GTK 2 is a legacy API and the newer version is GTK 3 which changes a fe=
+w
+> > API functions. gtk_tree_view_set_rules_hint is no longer required since
+> > theme's are now responsible to handle this, gtk_vbox_new is deprecated
+> > and replaced by passing the orientation to gtk_box_new. Apart from thes=
+e
+> > changes the accessing of the screen changed in GTK which requires using
+> > new functions for getting geometry. Lastly the GTK_STOCK_OK define is
+> > deprecated in GTK 3.
+> >
+> > Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
+> > Signed-off-by: Matt Turner <mattst88@gmail.com>
+> > ---
+> > Originally sent in 2019. I've rebased it and given it a test.
+> >
+> > One problem I've noticed is that C++ symbol names are often broken.
+> > E.g.:
+> >
+> > (perf:3254940): Gtk-WARNING **: 21:47:46.663: Failed to set text from
+> > markup due to error parsing markup: Error on line 1 char 95:
+> > =E2=80=9Cstd::char_traits<char=E2=80=9D is not a valid name: =E2=80=9C<=
+=E2=80=9D
+> >
+> > Presumably we need to call g_markup_escape_text() somewhere, but I
+> > struggled to find the right place.
+> >
+> > Without the patch, the GTK-2 version repeatedly segfaults, so this is a=
+n
+> > improvement regardless.
+> >
+> > v2: Dropped changes to test-all.c. I don't know how to build that
+> >     apparently.
 >
-> Glad to discuss these with you.
-> The peak ipc value of neoverse-n2 is 5. Maybe I should add an ipc_rate me=
-tric?
 >
-> >> +    {
-> >> +        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
-> >> +        "PublicDescription": "Architecturally executed Instructions P=
-er Cycle (IPC)",
-> >> +        "BriefDescription": "Architecturally executed Instructions Pe=
-r Cycle (IPC)",
-> >
-> >
-> > The duplicated descriptions are unnecessary. Drop the public one for
-> > consistency with what we do for Intel:
-> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#=
-L299
-> >
->
-> Sounds good, will do.
->
-> >> +        "MetricGroup": "PEutilization",
-> >> +        "MetricName": "retired_ipc"
-> >> +    },
-> >> +    {
-> >> +        "MetricExpr": "INST_SPEC / CPU_CYCLES",
-> >> +        "PublicDescription": "Speculatively executed Instructions Per=
- Cycle (IPC)",
-> >> +        "BriefDescription": "Speculatively executed Instructions Per =
-Cycle (IPC)",
-> >> +        "MetricGroup": "PEutilization",
-> >> +        "MetricName": "spec_ipc"
-> >> +    },
-> >> +    {
-> >> +        "MetricExpr": "OP_RETIRED / OP_SPEC",
-> >> +        "PublicDescription": "Fraction of operations retired",
-> >> +        "BriefDescription": "Fraction of operations retired",
-> >
-> > Would instructions be clearer than operations here?
-> >
->
-> operation and instruction are different. OP_RETIRED counts any operation =
-(not instruction)
-> that has been architecturally executed, For example, speculatively execut=
-ed operations that
-> have been abandoned for a branch mispredict will not be counted. So I thi=
-nk operation might
-> be more accurate.
+> Arnaldo, does this work better for you?
 
-Thanks, I see this note in the N2 PMU guide:
-
-"""
-For PMU event definitions, some events specifically count
-instructions, while other events count micro-operations (which are
-referred to as operations). Please be aware of the use of the word
-"operations" or "instructions" in the event description.
-"""
-
-From your explanation I wasn't sure if operation was a superset of
-instruction that included both retired and speculated ones, or whether
-operation had another meaning. I don't see operation being used in the
-micro-operation sense elsewhere in the ARM perf json, I think
-micro-operation is more consistent and also clearer:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/pmu-events/arch/arm64/arm/cortex-a75/pipeline.json?h=3Dperf/core#n27
-
-Perhaps the description can be something like:
-Of all the micro-operations issued, what percentage were retired. A
-lower number indicates bad speculation.
-
-An alternate way to add documentation is the perf wiki's glossary:
-https://perf.wiki.kernel.org/index.php/Glossary
-
-I added the Neoverse N2 PMU Guide to:
-https://perf.wiki.kernel.org/index.php/Useful_Links#Manuals
-
-Thanks,
-Ian
-
-> >> +        "MetricGroup": "PEutilization",
-> >> +        "MetricName": "retired_rate",
-> >> +        "ScaleUnit": "100%"
-> >> +    },
-> >> +    {
-> >> +        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
-> >
-> > Should OP_RETIRED be greater than OP_SPEC? In which case won't this
-> > metric be negative?
-> >
->
-> OP_RETIRED will not be greater than OP_SPEC. OP_SPEC counts any operation=
- that has been
-> speculatively executed. OP_SPEC is a superset of the OP_RETIRED event. Th=
-ere is a
-> description about OP_SPEC and OP_RETIRED in this neoverse-n2 document.
-> Link: https://documentation-service.arm.com/static/62cfe21e31ea212bb66273=
-93?token=3D
->
-> >> +        "PublicDescription": "Fraction of operations wasted",
-> >> +        "BriefDescription": "Fraction of operations wasted",
-> >> +        "MetricGroup": "PEutilization",
-> >> +        "MetricName": "wasted_rate",
-> >> +        "ScaleUnit": "100%"
-> >> +    },
-> >> +    {
-> >> +        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT - CPU_=
-CYCLES) / (CPU_CYCLES * 5))",
-> >> +        "PublicDescription": "Utilization of CPU",
-> >> +        "BriefDescription": "Utilization of CPU",
-> >
-> > Some more detail in the description would be useful.
-> >
->
-> Ok, I'll describe it in more detail. CPU_utilization reflects the truly e=
-ffective ratio of operation
-> executed by the CPU, which means that misprediction and stall are not inc=
-luded. Note that stall_slot
-> minus cpu_cycles is a correction to the stall_slot error count.
->
-> >> +        "MetricGroup": "PEutilization",
-> >> +        "MetricName": "cpu_utilization",
-> >> +        "ScaleUnit": "100%"
-> >>      }
-> >>  ]
-> >> --
-> >> 1.8.3.1
-> >>
+Ping=C2=B2
