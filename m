@@ -2,126 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33FCC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 18:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9783BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 19:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234707AbiLBSqq (ORCPT
+        id S234422AbiLBTEx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Dec 2022 13:46:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
+        Fri, 2 Dec 2022 14:04:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234711AbiLBSq2 (ORCPT
+        with ESMTP id S234497AbiLBTEw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Dec 2022 13:46:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17785DBF7C;
-        Fri,  2 Dec 2022 10:46:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BDFA6B82242;
-        Fri,  2 Dec 2022 18:46:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EEC0C433D6;
-        Fri,  2 Dec 2022 18:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670006771;
-        bh=YtK9Rbdr1BlS3FSUUNTiCqS+imWPNk+kOo2kMIyNNM8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Veqd9XW81oxxEbsNRNDEgPtmBM9t3alXRz/iHXbDe4SWPYL2PPtB5DMMcTRheaVZF
-         +VilR/FjgxMTuvnFaDiupnkksVg3HFcAHryuyd3raOqRHML2mD0Ts637Hg3+Ejktvw
-         3TkMfjqKTcazHdLwsix/z/CoXD+IQP3ZgGogrRc8kV7vrHNCKtMQlRvlU3nB51RTWm
-         PtbeYo0L8yloL0W3oSV6U3TnT2l7hqgGDJQNfm/kGslt+6omGXCkeLqWsCRF/1Kfdf
-         Wxoi2iBDnXUNRwM1k9kxKgb/la0iFU5f/EL5CZo1TKdaymorgi2gc/LHeNpgrcjvFl
-         kdOwdUGHqtyqQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CFAA34034E; Fri,  2 Dec 2022 15:46:08 -0300 (-03)
-Date:   Fri, 2 Dec 2022 15:46:08 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Fri, 2 Dec 2022 14:04:52 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 243EEE2545;
+        Fri,  2 Dec 2022 11:04:52 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id l22-20020a17090a3f1600b00212fbbcfb78so9148417pjc.3;
+        Fri, 02 Dec 2022 11:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=GpCCioLM9L47vHsyUU0BFPjstz/YfKaTI+OyQ8H60AQ=;
+        b=SBv7vN5F83mWZfY6RlGdDBnby3yPJ/hp3wy0pAFNvBUn87UE0bDK/Onk50IPd8skFi
+         3LND9ztwqJgBiwNpR5auGoLGWI3oezYu6CKeOpeVM1INsclgFIK0Ft2ZjISzjXHK6tYX
+         WyaDw2bj4Eab+EDabRP3jg2DA3uZAxJW0upZ9JdBYkTMjpAtJ4fKtR6zAZtX3Q22n3vf
+         7gkM9e+4Nczz4zjRh6ItgIK+HbuRw2ZP+2Xju5R2z2ntrC1C2qFw1PXbQPrPDLgIGsdy
+         kK0Up0g77AfQh1nZkNRLd9PP7GXrM1pZ+27ZI4yomDQirVs9jzk2ibxqhAeNeVlAThNF
+         abqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GpCCioLM9L47vHsyUU0BFPjstz/YfKaTI+OyQ8H60AQ=;
+        b=wy7NtkBtpWliSHNMGAG0toubrYynTcfpNiBaoaD/Lvzdewu7lbS2SLmuloY2bv5wZv
+         po9QqWTrMEalHaUfLx4EADrpF4BHThEcdEBF+yuogbQy94aXU8lwCkBjGYgthiw3/kBx
+         7i+uBRpF+7btERp75LSQ+hIpPO1RPQ7VxOJPqZOAb7je68k6jP88KVyCne/RHnAOX2v3
+         2SAsknek7y75Pn2aK382tVRipnBu6qAXV12ccx8CyMxKMCd8X2Wpnu0gHimcRsbv0MDj
+         93/wD5KcnTsveXmOzVrnCWjsJxfORGjd38YDYZxK1Ii0bWQ4XgswpAV5ToMTFRmqlSWe
+         oZYQ==
+X-Gm-Message-State: ANoB5plkXle5nmUVzg5PStxwttakY0S6EpHv4A1L0ZsVQ07W/+a6K/J8
+        yWrnpqJ6vxTOnCN74EBWNKUQG7DckU8=
+X-Google-Smtp-Source: AA0mqf6oQPE3WCcPYd0XtRo7kWWXhwSYNADZG0hb0w7qUerD/Af0gDxpiWKSz7AWaJg8ATOU0uovxw==
+X-Received: by 2002:a17:902:8503:b0:188:e49e:2668 with SMTP id bj3-20020a170902850300b00188e49e2668mr57385385plb.125.1670007891546;
+        Fri, 02 Dec 2022 11:04:51 -0800 (PST)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:8a28:738d:8b4c:8dca])
+        by smtp.gmail.com with ESMTPSA id w6-20020a170902a70600b0018862bb3976sm5842570plq.308.2022.12.02.11.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Dec 2022 11:04:51 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH 1/2] perf tests: Fix "perf stat JSON output linter" test
- for new output
-Message-ID: <Y4pH8NEzfAPGkyW7@kernel.org>
-References: <20221130111521.334152-1-james.clark@arm.com>
- <CAP-5=fXAhs-xgOo9GPH-w5f1QxNBCt5pdzpC5Cr7K+ovPzdgzw@mail.gmail.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        "Wang, Weilin" <weilin.wang@intel.com>
+Subject: [PATCH] perf stat: Fix multi-line metric output in JSON
+Date:   Fri,  2 Dec 2022 11:04:47 -0800
+Message-Id: <20221202190447.1588680-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXAhs-xgOo9GPH-w5f1QxNBCt5pdzpC5Cr7K+ovPzdgzw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Nov 30, 2022 at 10:18:49AM -0800, Ian Rogers escreveu:
-> On Wed, Nov 30, 2022 at 3:15 AM James Clark <james.clark@arm.com> wrote:
-> >
-> > Commit c4b41b83c250 ("perf stat: Rename "aggregate-number" to
-> > "cpu-count" in JSON") renamed a field, so update the tests to reflect
-> > this.
-> >
-> > This fixes the following failure:
-> >
-> >   $ sudo ./perf test "json output" -vvv
-> >    96: perf stat JSON output linter                                    :
-> >   --- start ---
-> >   test child forked, pid 327720
-> >   Checking json output: no args [Success]
-> >   Checking json output: system wide [Success]
-> >   Checking json output: interval [Success]
-> >   Checking json output: event [Success]
-> >   Checking json output: per thread [Success]
-> >   Checking json output: per node Test failed for input:
-> >   ...
-> >   Traceback (most recent call last):
-> >     File "./tools/perf/tests/shell/lib/perf_json_output_lint.py", line 93, in <module>
-> >       check_json_output(expected_items)
-> >     File "./tools/perf/tests/shell/lib/perf_json_output_lint.py", line 78, in check_json_output
-> >       raise RuntimeError(f'Unexpected key: key={key} value={value}')
-> >   RuntimeError: Unexpected key: key=cpu-count value=16
-> >   test child finished with -1
-> >   ---- end ----
-> >   perf stat JSON output linter: FAILED!
-> >
-> > Fixes: c4b41b83c250 ("perf stat: Rename "aggregate-number" to "cpu-count" in JSON")
-> > Signed-off-by: James Clark <james.clark@arm.com>
-> 
-> Namhyung mentioned reverting change c4b41b83c250, in which case
-> merging this would break the test again. I think the revert is better.
+When a metric produces more than one values, it missed to print the opening
+bracket.
 
-Applied the revert, with an Acked-by: you.
+Fixes: ab6baaae2735 ("perf stat: Fix JSON output in metric-only mode")
+Reported-by: "Wang, Weilin" <weilin.wang@intel.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+Weilin, could you please verify it fixes your problem?
+
+ tools/perf/util/stat-display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index f1ee4b052198..8d0bdd57163d 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -440,7 +440,7 @@ static void new_line_json(struct perf_stat_config *config, void *ctx)
+ {
+ 	struct outstate *os = ctx;
  
-> Thanks,
-> Ian
-> 
-> > ---
-> >  tools/perf/tests/shell/lib/perf_json_output_lint.py | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > index d90f8d102eb9..9c073e257d33 100644
-> > --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > @@ -54,7 +54,7 @@ def check_json_output(expected_items):
-> >            raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-> >                               f' in \'{line}\'')
-> >    checks = {
-> > -      'aggregate-number': lambda x: isfloat(x),
-> > +      'cpu-count': lambda x: isfloat(x),
-> >        'core': lambda x: True,
-> >        'counter-value': lambda x: is_counter_value(x),
-> >        'cgroup': lambda x: True,
-> > --
-> > 2.25.1
-> >
-
+-	fputc('\n', os->fh);
++	fputs("\n{", os->fh);
+ 	if (os->prefix)
+ 		fprintf(os->fh, "%s", os->prefix);
+ 	aggr_printout(config, os->evsel, os->id, os->nr);
 -- 
+2.39.0.rc0.267.gcb52ba06e7-goog
 
-- Arnaldo
