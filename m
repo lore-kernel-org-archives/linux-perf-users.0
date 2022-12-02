@@ -2,119 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56195C47088
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 18:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE14C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Dec 2022 18:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233887AbiLBSDd convert rfc822-to-8bit (ORCPT
+        id S233926AbiLBSIT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Dec 2022 13:03:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
+        Fri, 2 Dec 2022 13:08:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234216AbiLBSDb (ORCPT
+        with ESMTP id S233709AbiLBSIT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Dec 2022 13:03:31 -0500
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0397260B4C;
-        Fri,  2 Dec 2022 10:03:30 -0800 (PST)
-Received: by mail-wr1-f48.google.com with SMTP id y16so8995363wrm.2;
-        Fri, 02 Dec 2022 10:03:29 -0800 (PST)
+        Fri, 2 Dec 2022 13:08:19 -0500
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FC0AE4C9;
+        Fri,  2 Dec 2022 10:08:18 -0800 (PST)
+Received: by mail-wm1-f52.google.com with SMTP id bg10so4104311wmb.1;
+        Fri, 02 Dec 2022 10:08:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v5S9AInjAkBzgT4Ue2Z9+cewf5MRHGtio+KBn1axLoU=;
-        b=ljRwqPwIY3zJkK+ZKd+fmuYoxTbwwtPcuyB7Qx/2C590v+s04ukAE2dDkG0z8T2Jok
-         w2c6O5CXEBQUmwY+p0qNcEWIpH3Moxm8HdG1WKATf10zWtc/r9SE4Znk9op8/zevnb8g
-         1PgwqXXdRXxkZJ8/kQasd0nwfz0gM2bx0kdkR3Fl5CC0vlH49vznkj4vNudELOWmIlpT
-         kZxDdok39xvVQnMa7yIUcPTgH2Bo4yewZtayojEJ5hFiZCZCrnPzgvfPNpaYke5ibvL1
-         oZIuW2kWk0yyV9gOPUFcjl7NR8FF8V4f0JN+3rVpE8axEKWaJGSFwDYMAlRTrnT6/cWH
-         0M1g==
-X-Gm-Message-State: ANoB5plKNR1UDOj1PHwSSXKoWkpS30HUuDvqYvVCryebVqfTj524XZlh
-        wtn/85Y30JpE1lhgq+orDUn0WBy0695UcV2PRo8=
-X-Google-Smtp-Source: AA0mqf4J29r5VWt/rIsXxWUvZrIM5pOiyObcfuwEfzF4lKw4wKaW8FjVPrPCKe4pd0OWBfGxpijsqt3j8zXtDkL+T2U=
-X-Received: by 2002:a5d:5b08:0:b0:241:d7b1:b3db with SMTP id
- bx8-20020a5d5b08000000b00241d7b1b3dbmr1829830wrb.293.1670004208244; Fri, 02
- Dec 2022 10:03:28 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x6dfUvFTdecR6lpJZTGznj4d2U4D5huECioJ15GqkJU=;
+        b=iLeOESUjKvp/k8U1Q/+UxunW10X0D8M07H4RfL3PQ+T+92gBIFuiytROZpPEREwbeu
+         lMUr4Mbl2gak2fVeD82NIhd3lqjdwBpTJdiPdIcHTKH5VzGiv1OjU+BxFx4KEi3yaR+S
+         odbZW5rngkUcJ+z/CIB6aKJXD8Ics/iiKN7AHR2JopvQQ+yOwLJtiBHHu/p504JJ95qi
+         qx/ewy1AvSrdemS4mR06+KU9Ym16JALnaJulLU5tsfpwBoGnytNdotbEskB9PfIe80im
+         PtpEyrdOA3WOs9HpXat/9J/VXsXOmisK3i67srQRccBlOBjWh/6CKT/wn+xyt2bh4hWN
+         zXPw==
+X-Gm-Message-State: ANoB5pn8skG9MRGFWagF6IxG7h0x/BlYNpXWL4WINbMD/vDkW0zBMhC1
+        oc+eFFgVY7NgJTD/gJpQwt+lLpfaLPg2wmU6MS0=
+X-Google-Smtp-Source: AA0mqf6EwIMVFvNbPKMzpw/kja0QP5/Y+SftiuCe2Gtff0YClE1Y0LcHk709e5ihv/09TkbH8CrOPi73CEZp2NjE+M8=
+X-Received: by 2002:a05:600c:3586:b0:3cf:a3b0:df6a with SMTP id
+ p6-20020a05600c358600b003cfa3b0df6amr55647816wmq.126.1670004496659; Fri, 02
+ Dec 2022 10:08:16 -0800 (PST)
 MIME-Version: 1.0
-References: <CO6PR11MB56352D2831C1554FE8C3A872EE179@CO6PR11MB5635.namprd11.prod.outlook.com>
-In-Reply-To: <CO6PR11MB56352D2831C1554FE8C3A872EE179@CO6PR11MB5635.namprd11.prod.outlook.com>
+References: <20221130062935.2219247-1-irogers@google.com> <20221130062935.2219247-4-irogers@google.com>
+ <CAM9d7chrsLHoGe=RcU2e5hRL22j=813j3uuEHDOPZrkpWqnSsw@mail.gmail.com> <CAP-5=fWZVHN5tDG+eKRr7v_RXKYA_uUgY-dFH_g3Yc3mFgkXbA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWZVHN5tDG+eKRr7v_RXKYA_uUgY-dFH_g3Yc3mFgkXbA@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 2 Dec 2022 10:03:16 -0800
-Message-ID: <CAM9d7chqpLxZ81GRZktZf03pjZ-a7BOnD2mOCpNSDDCRZn3RMg@mail.gmail.com>
-Subject: Re: [PATCH 13/15] perf stat: Fix JSON output in metric-only mode
-To:     "Wang, Weilin" <weilin.wang@intel.com>
-Cc:     "acme@kernel.org" <acme@kernel.org>,
-        "Hunter, Adrian" <adrian.hunter@intel.com>,
-        "atrajeev@linux.vnet.ibm.com" <atrajeev@linux.vnet.ibm.com>,
-        "irogers@google.com" <irogers@google.com>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "zhengjun.xing@linux.intel.com" <zhengjun.xing@linux.intel.com>
+Date:   Fri, 2 Dec 2022 10:08:04 -0800
+Message-ID: <CAM9d7chsymFFq1di15w+s7jtDenV=kFnk=EDrFO_rDWcSQSa6g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] perf build: Use libtraceevent from the system
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Wed, Nov 30, 2022 at 12:13 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, Nov 30, 2022 at 11:05 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Tue, Nov 29, 2022 at 10:30 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > Remove the LIBTRACEEVENT_DYNAMIC and LIBTRACEFS_DYNAMIC. If
+> > > libtraceevent isn't installed or NO_LIBTRACEEVENT=1 is passed to the
+> > > build, don't compile in libtraceevent and libtracefs support. This
+> > > also disables CONFIG_TRACE that controls "perf
+> > > trace". CONFIG_TRACEEVENT is used to control enablement in
+> > > Build/Makefiles, HAVE_LIBTRACEEVENT is used in C code. Without
+> > > HAVE_LIBTRACEEVENT tracepoints are disabled and as such the commands
+> > > kmem, kwork, lock, sched and timechart are removed. The majority of
+> > > commands continue to work including "perf test".
+> >
+> > Maybe we can have a different approach.  I guess the trace data
+> > access is isolated then we can make dummy interfaces when there's
+> > no libtraceevent.  This way we don't need to touch every command
+> > and let it fail when it's asked.
+>
+> Sounds like a worthwhile refactor that can land on top of this change.
+>
+> > The motivation is that we should be able to run the sub-commands
+> > as much as possible.  In fact, we could run 'record' part only on the
+> > target machine and pass the data to the host for analysis with a
+> > full-fledged perf.  Also some commands like 'perf lock contention'
+> > can run with or without libtraceevent (using BPF only).
+>
+> The issue here is that perf lock contention will use evsel__new_tp and
+> internally that uses libtraceevent. As such it is removed without
+> HAVE_LIBTRACEEVENT. Without the evsel there's not much perf lock
+> contention can do, so rather than litter the code with
+> HAVE_LIBTRACEEVENT and for it to be broken, I made the choice just to
+> remove it from the no libtraceevent build for now.
 
-On Thu, Dec 1, 2022 at 4:56 PM Wang, Weilin <weilin.wang@intel.com> wrote:
->
-> Hi Namhyung,
->
->
->
-> I encountered an issue with the metric json output, which I think might be related to this commit.
->
->
->
-> This is one of the commands I tried:
->
->
->
-> ./perf stat -M memory_bandwidth_total,memory_bandwidth_read,memory_bandwidth_write -a -j -- sleep 1
->
->
->
-> Output before this commit:
->
-> ====================================================
->
-> {"counter-value" : "1117309.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.RD", "event-runtime" : 8017286783, "pcnt-running" : 100.00, "metric-value" : 124.961911, "metric-unit" : "MB/s  memory_bandwidth_read"} {"metric-value" : 237.237504, "metric-unit" : "MB/s  memory_bandwidth_total"} {"counter-value" : "1004052.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.WR", "event-runtime" : 8017286783, "pcnt-running" : 100.00, "metric-value" : 112.275593, "metric-unit" : "MB/s  memory_bandwidth_write"} {"counter-value" : "1002140370.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1002140370, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"}
->
-> ====================================================
->
->
->
-> Output after this commit:
->
-> ====================================================
->
-> {"counter-value" : "1374098.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.RD", "event-runtime" : 8016491003, "pcnt-running" : 100.00, "metric-value" : 153.660738, "metric-unit" : "MB/s  memory_bandwidth_read"} "metric-value" : 300.338968, "metric-unit" : "MB/s  memory_bandwidth_total"} {"counter-value" : "1311710.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.WR", "event-runtime" : 8016491003, "pcnt-running" : 100.00, "metric-value" : 146.678229, "metric-unit" : "MB/s  memory_bandwidth_write"} {"counter-value" : "1002037512.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1002037512, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"}
->
-> ====================================================
->
->
->
-> The second set of output is missing a "{" on the second line. Looks like it happens when I collect two related metrics together. Another example is:
->
->
->
-> ./perf stat -M memory_bandwidth_total,memory_bandwidth_read,memory_bandwidth_write,L3_Cache_Fill_BW_1T,L3_Cache_Fill_BW -a -j -- sleep 1
->
->
->
-> {"counter-value" : "944204.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.RD", "event-runtime" : 8033937053, "pcnt-running" : 100.00, "metric-value" : 105.369994, "metric-unit" : "MB/s  memory_bandwidth_read"} "metric-value" : 210.592807, "metric-unit" : "MB/s  memory_bandwidth_total"} {"counter-value" : "942679.000000", "unit" : "", "event" : "UNC_M_CAS_COUNT.WR", "event-runtime" : 8033937053, "pcnt-running" : 100.00, "metric-value" : 105.222813, "metric-unit" : "MB/s  memory_bandwidth_write"} {"counter-value" : "1004471458.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1004471458, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"} {"counter-value" : "184675.000000", "unit" : "", "event" : "LONGEST_LAT_CACHE.MISS", "event-runtime" : 88387319917, "pcnt-running" : 100.00, "metric-value" : 0.011767, "metric-unit" : "L3_Cache_Fill_BW_1T"} "metric-value" : 0.011767, "metric-unit" : "L3_Cache_Fill_BW"} {"counter-value" : "1004471458.000000", "unit" : "ns", "event" : "duration_time", "event-runtime" : 1004471458, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "(null)"}
+I don't think it needs evsel__new_tp() when BPF is used.
+The BPF program is attached to the raw tracepoint without
+perf_event and the result is written to the BPF map.
 
-Thanks for your report.  It seems it misses the open bracket when the metric
-produces more than one values.  I think new_line_json() should have it.
-Will send the fix soon.
+>
+> I think it is worth pursuing these patches in the shape they are in so
+> that we can land the removal of tools/lib/traceevent and ensure the
+> migration away from an out-of-date version of that library.
+
+Yeah, I agree that we should remove the stale libtraceevent but
+I'd like to do it with minimal changes in the perf code base.
+Let me take a look at this.
 
 Thanks,
 Namhyung
