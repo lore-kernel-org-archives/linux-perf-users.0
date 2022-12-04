@@ -2,89 +2,235 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1A6C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Dec 2022 09:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F9EC4321E
+	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Dec 2022 07:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230457AbiLCJTa (ORCPT
+        id S229833AbiLDHKu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 3 Dec 2022 04:19:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35026 "EHLO
+        Sun, 4 Dec 2022 02:10:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230232AbiLCJT3 (ORCPT
+        with ESMTP id S229703AbiLDHKu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 3 Dec 2022 04:19:29 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E391B58034;
-        Sat,  3 Dec 2022 01:19:27 -0800 (PST)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8BxE_CeFItjyvUCAA--.7138S3;
-        Sat, 03 Dec 2022 17:19:26 +0800 (CST)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuKdFItjcv4kAA--.26306S3;
-        Sat, 03 Dec 2022 17:19:25 +0800 (CST)
-Subject: Re: [PATCH v5 0/4] perf: Add more syscalls to benchmark
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Sun, 4 Dec 2022 02:10:50 -0500
+Received: from out30-8.freemail.mail.aliyun.com (out30-8.freemail.mail.aliyun.com [115.124.30.8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B4013CE9;
+        Sat,  3 Dec 2022 23:10:45 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VWJBzxR_1670137838;
+Received: from 192.168.0.101(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VWJBzxR_1670137838)
+          by smtp.aliyun-inc.com;
+          Sun, 04 Dec 2022 15:10:40 +0800
+Message-ID: <b3d6add4-a535-0652-c0e8-bb56126a6d2d@linux.alibaba.com>
+Date:   Sun, 4 Dec 2022 15:10:37 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.1
+Subject: Re: [PATCH v3 5/6] perf vendor events arm64: Add PE utilization
+ metrics for neoverse-n2
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <1668052208-14047-1-git-send-email-yangtiezhu@loongson.cn>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <c71e9666-c62a-83ae-0d7b-580dc717e9f1@loongson.cn>
-Date:   Sat, 3 Dec 2022 17:19:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <1668052208-14047-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8BxHuKdFItjcv4kAA--.26306S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7Gr43XFWUKr1DXrWrZFW3trb_yoWxKrg_Ja
-        4I9rWDGrW8XF9IyFy5Jrn8Za4Iyay7XrykZF97Wry7Kr4DXFyUJFnY9rykCFn0gF4DurZx
-        Ca9xZr93Ar4jkjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-        W7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-        AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-        6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
-        xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
-        jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-        AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-        1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-        Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-        6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
-        0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
-        CTnIWIevJa73UjIFyTuYvjxU2G-eUUUUU
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1669310088-13482-6-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fV0WSTK=MT6K2nqsqYT6xCTg7Pv_rXahHFeRhV0ZHCiEQ@mail.gmail.com>
+ <1a7fc9da-2589-1835-716f-d52027f0ecda@linux.alibaba.com>
+ <CAP-5=fUT=u7N4GP9Y6r7dv5yTKtLqPYxYE73d7Rj8fXQ+YQidA@mail.gmail.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <CAP-5=fUT=u7N4GP9Y6r7dv5yTKtLqPYxYE73d7Rj8fXQ+YQidA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 11/10/2022 11:50 AM, Tiezhu Yang wrote:
-> Tested on x86_64, arm64, mips64 and loongarch64.
->
-> Tiezhu Yang (4):
->   tools x86: Keep list sorted by number in unistd_{32,64}.h
->   perf bench syscall: Introduce bench_syscall_common()
->   perf bench syscall: Add getpgid syscall benchmark
->   perf bench syscall: Add execve syscall benchmark
->
->  tools/arch/x86/include/uapi/asm/unistd_32.h | 23 ++++++---
->  tools/arch/x86/include/uapi/asm/unistd_64.h | 23 ++++++---
->  tools/perf/bench/bench.h                    |  2 +
->  tools/perf/bench/syscall.c                  | 76 +++++++++++++++++++++++++++--
->  tools/perf/builtin-bench.c                  |  2 +
->  5 files changed, 108 insertions(+), 18 deletions(-)
->
+在 2022/12/3 上午4:05, Ian Rogers 写道:
+> On Thu, Dec 1, 2022 at 3:08 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> 在 2022/12/1 上午2:58, Ian Rogers 写道:
+>>> On Thu, Nov 24, 2022 at 9:15 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>>>
+>>>> Add PE utilization related metrics.
+>>>>
+>>>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>>>> ---
+>>>>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 45 ++++++++++++++++++++++
+>>>>  1 file changed, 45 insertions(+)
+>>>>
+>>>> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>>>> index 23c7d62..7b54819 100644
+>>>> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>>>> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>>>> @@ -189,5 +189,50 @@
+>>>>          "MetricGroup": "Branch",
+>>>>          "MetricName": "branch_miss_pred_rate",
+>>>>          "ScaleUnit": "100%"
+>>>> +    },
+>>>> +    {
+>>>> +        "MetricExpr": "instructions / CPU_CYCLES",
+>>>> +        "PublicDescription": "The average number of instructions executed for each cycle.",
+>>>> +        "BriefDescription": "Instructions per cycle",
+>>>> +        "MetricGroup": "PEutilization",
+>>>> +        "MetricName": "ipc"
+>>>> +    },
+>>>
+>>> A related useful metric is percentage of peak, so if the peak IPC is 8
+>>> (usually a constant related to the number of functional units) then
+>>> you can just compute the ratio of IPC with this.
+>>>
+>>
+>> Glad to discuss these with you.
+>> The peak ipc value of neoverse-n2 is 5. Maybe I should add an ipc_rate metric?
+>>
+>>>> +    {
+>>>> +        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
+>>>> +        "PublicDescription": "Architecturally executed Instructions Per Cycle (IPC)",
+>>>> +        "BriefDescription": "Architecturally executed Instructions Per Cycle (IPC)",
+>>>
+>>>
+>>> The duplicated descriptions are unnecessary. Drop the public one for
+>>> consistency with what we do for Intel:
+>>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#L299
+>>>
+>>
+>> Sounds good, will do.
+>>
+>>>> +        "MetricGroup": "PEutilization",
+>>>> +        "MetricName": "retired_ipc"
+>>>> +    },
+>>>> +    {
+>>>> +        "MetricExpr": "INST_SPEC / CPU_CYCLES",
+>>>> +        "PublicDescription": "Speculatively executed Instructions Per Cycle (IPC)",
+>>>> +        "BriefDescription": "Speculatively executed Instructions Per Cycle (IPC)",
+>>>> +        "MetricGroup": "PEutilization",
+>>>> +        "MetricName": "spec_ipc"
+>>>> +    },
+>>>> +    {
+>>>> +        "MetricExpr": "OP_RETIRED / OP_SPEC",
+>>>> +        "PublicDescription": "Fraction of operations retired",
+>>>> +        "BriefDescription": "Fraction of operations retired",
+>>>
+>>> Would instructions be clearer than operations here?
+>>>
+>>
+>> operation and instruction are different. OP_RETIRED counts any operation (not instruction)
+>> that has been architecturally executed, For example, speculatively executed operations that
+>> have been abandoned for a branch mispredict will not be counted. So I think operation might
+>> be more accurate.
+> 
+> Thanks, I see this note in the N2 PMU guide:
+> 
+> """
+> For PMU event definitions, some events specifically count
+> instructions, while other events count micro-operations (which are
+> referred to as operations). Please be aware of the use of the word
+> "operations" or "instructions" in the event description.
+> """
+> 
+> From your explanation I wasn't sure if operation was a superset of
+> instruction that included both retired and speculated ones, or whether
+> operation had another meaning. I don't see operation being used in the
+> micro-operation sense elsewhere in the ARM perf json, I think
+> micro-operation is more consistent and also clearer:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/arm64/arm/cortex-a75/pipeline.json?h=perf/core#n27
+> 
+> Perhaps the description can be something like:
+> Of all the micro-operations issued, what percentage were retired. A
+> lower number indicates bad speculation.
+> 
+> An alternate way to add documentation is the perf wiki's glossary:
+> https://perf.wiki.kernel.org/index.php/Glossary
+> 
+> I added the Neoverse N2 PMU Guide to:
+> https://perf.wiki.kernel.org/index.php/Useful_Links#Manuals
+> 
 
-Ping, any more comments?
+Thanks.
 
-Thanks,
-Tiezhu
+The operation here is micro-operation, perhaps it is more accurate to change it to micro-operation.
 
+Description of op_retired and op_spec:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/pmu-events/arch/arm64/common-and-microarch.json?h=perf/core#n315
+
+The event of op_retired counts Micro-operation architecturally executed. The counter counts each
+operation counted by OP_SPEC that would be executed in a simple sequential execution of the program.
+
+The event of op_spec counts Micro-operation speculatively executed. The counter counts the number
+of operations executed by the processing element, including those that are executed speculatively
+and would not be executed in a simple sequential execution of the program.
+
+So "op_retired/op_spec" is indeed "of all the micro-operations issued, what percentage were retired".
+But not "a lower number indicates bad speculation". I think "retired" here means "committed".
+
+In the N2 PMU guide:
+"""
+If the branch is mispredicted, and the instructions are speculatively executed, they will not be
+considered architecturally executed. The Arm® Architecture Reference Manual also refers to
+architecturally executed instructions as “retired” or “committed”. Speculatively executed instructions
+that are not architecturally executed will be abandoned; that is, their results will be discarded and
+not counted as part of the program flow.
+"""
+
+> 
+>>>> +        "MetricGroup": "PEutilization",
+>>>> +        "MetricName": "retired_rate",
+>>>> +        "ScaleUnit": "100%"
+>>>> +    },
+>>>> +    {
+>>>> +        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
+>>>
+>>> Should OP_RETIRED be greater than OP_SPEC? In which case won't this
+>>> metric be negative?
+>>>
+>>
+>> OP_RETIRED will not be greater than OP_SPEC. OP_SPEC counts any operation that has been
+>> speculatively executed. OP_SPEC is a superset of the OP_RETIRED event. There is a
+>> description about OP_SPEC and OP_RETIRED in this neoverse-n2 document.
+>> Link: https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
+>>
+>>>> +        "PublicDescription": "Fraction of operations wasted",
+>>>> +        "BriefDescription": "Fraction of operations wasted",
+>>>> +        "MetricGroup": "PEutilization",
+>>>> +        "MetricName": "wasted_rate",
+>>>> +        "ScaleUnit": "100%"
+>>>> +    },
+>>>> +    {
+>>>> +        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * 5))",
+>>>> +        "PublicDescription": "Utilization of CPU",
+>>>> +        "BriefDescription": "Utilization of CPU",
+>>>
+>>> Some more detail in the description would be useful.
+>>>
+>>
+>> Ok, I'll describe it in more detail. CPU_utilization reflects the truly effective ratio of operation
+>> executed by the CPU, which means that misprediction and stall are not included. Note that stall_slot
+>> minus cpu_cycles is a correction to the stall_slot error count.
+>>
+>>>> +        "MetricGroup": "PEutilization",
+>>>> +        "MetricName": "cpu_utilization",
+>>>> +        "ScaleUnit": "100%"
+>>>>      }
+>>>>  ]
+>>>> --
+>>>> 1.8.3.1
+>>>>
