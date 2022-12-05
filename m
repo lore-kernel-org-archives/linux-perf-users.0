@@ -2,106 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDDFC4321E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 13:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9951EC4321E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 13:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231783AbiLENHp (ORCPT
+        id S230317AbiLENJp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 08:07:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34450 "EHLO
+        Mon, 5 Dec 2022 08:09:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230123AbiLENHo (ORCPT
+        with ESMTP id S229938AbiLENJo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 08:07:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6DB72FB;
-        Mon,  5 Dec 2022 05:07:40 -0800 (PST)
+        Mon, 5 Dec 2022 08:09:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8606BDF4B;
+        Mon,  5 Dec 2022 05:09:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28DA6610A2;
-        Mon,  5 Dec 2022 13:07:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482DDC433D6;
-        Mon,  5 Dec 2022 13:07:39 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3E781B810A2;
+        Mon,  5 Dec 2022 13:09:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D96C433D6;
+        Mon,  5 Dec 2022 13:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670245659;
-        bh=+Cz193U0b3uUSIcs+BNCWjvCYp/tWS5mm3h5uD73XO4=;
+        s=k20201202; t=1670245779;
+        bh=JGe7A2mKPNwISfXUyKM/xAD82YV2mzxDTWEoLEbnyVM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BcH8JBk2LrNBZWvd17e1fMz7nSeYQuk9OISUT09m3KbYLxCntqDFjs7fzRB54KEfa
-         jFltoAZbNN445Y/WbjIJTqjzZgQuPcOBFeL+jGkb2H16aiG06USCk+GrSMyWQoFYoS
-         m0X7hpld8q/3fIVu6fpffU4BAG2WU/BIT/fnBKpNyNr+U+Pq77ThLwG/QvGEg905Le
-         PtEjZANouSuXw3qqiJAUVbw/4xPOWpx//QYFkrASa6/41Eyif9cGroCC2i9QTPEte8
-         OuKCsiEDh52KFF5qjjyUz8W8iBKwG1u01VoqG7TUmsVDyRxAVScaFgC411AWEBukdk
-         Y34n0Lkc7jAIA==
+        b=aMG8Li8P2nmWIjukJsiXe7RmCS1MnjA3TpdGjdg4cZmMJoreI+YRGsKMl0V2BPfn5
+         AJYIyap2lGDFIpe6Hca/nfPN70jceWnqglbSmbvt+Bc2etTh7lapPSd5zk/EapkW+p
+         QNyQdDQyCeHTZtHUbKf7qeTrT0TLkvlC8mE8cnbcmUqquwEKYv+U3QtHw2OFJTPaRn
+         tS3/XwC2MIufljrnrQDQ9t4bHwyP0hrsm4sZbdHZ6akl9TeKBylCY7B8SAywIFrgOO
+         DONXkqudP6C29gIl/0dmRE3zn/azAC7aCeHbLPKbbeIeyoVIeIdENsA3A+hnXyS2qv
+         E0UyAjlPnPy7g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0169040404; Mon,  5 Dec 2022 10:07:36 -0300 (-03)
-Date:   Mon, 5 Dec 2022 10:07:36 -0300
+        id 0720B40404; Mon,  5 Dec 2022 10:09:37 -0300 (-03)
+Date:   Mon, 5 Dec 2022 10:09:36 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 2/2] perf stat: Fix invalid output handle
-Message-ID: <Y43tGKg8bEhWglgy@kernel.org>
-References: <20221130111521.334152-1-james.clark@arm.com>
- <20221130111521.334152-2-james.clark@arm.com>
- <CAM9d7cj0Zrv32CgJ7jSjCY=CsOcF40zC2kxE+NSixG4qZDpXqQ@mail.gmail.com>
- <a0745ad9-c21e-2c93-9af4-46e60bc301fc@arm.com>
- <E93B2D0E-8862-4873-B49F-F74D83CEEDAD@linux.vnet.ibm.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: Re: [PATCH] Revert "perf stat: Rename "aggregate-number" to
+ "cpu-count" in JSON"
+Message-ID: <Y43tkBsn5gZhIkXa@kernel.org>
+References: <20221130193613.1046804-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E93B2D0E-8862-4873-B49F-F74D83CEEDAD@linux.vnet.ibm.com>
+In-Reply-To: <20221130193613.1046804-1-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Dec 04, 2022 at 10:38:28PM +0530, Athira Rajeev escreveu:
+Em Wed, Nov 30, 2022 at 11:36:13AM -0800, Namhyung Kim escreveu:
+> This reverts commit c4b41b83c25073c09bfcc4e5ec496c9dd316656b.
 > 
-> 
-> > On 01-Dec-2022, at 3:36 PM, James Clark <james.clark@arm.com> wrote:
-> > 
-> > 
-> > 
-> > On 30/11/2022 18:32, Namhyung Kim wrote:
-> >> On Wed, Nov 30, 2022 at 3:15 AM James Clark <james.clark@arm.com> wrote:
-> >>> 
-> >>> In this context, 'os' is already a pointer so the extra dereference
-> >>> isn't required. This fixes the following test failure on aarch64:
-> >>> 
-> >>>  $ ./perf test "json output" -vvv
-> >>>  92: perf stat JSON output linter                                    :
-> >>>  --- start ---
-> >>>  Checking json output: no args Test failed for input:
-> >>>  ...
-> >>>  Fatal error: glibc detected an invalid stdio handle
-> >>>  ---- end ----
-> >>>  perf stat JSON output linter: FAILED!
-> >>> 
-> >>> Fixes: e7f4da312259 ("perf stat: Pass struct outstate to printout()")
-> >>> Signed-off-by: James Clark <james.clark@arm.com>
-> >> 
-> >> Thanks for fixing this.  I'm not sure how I missed it.. :(
-> >> 
-> > 
-> > It seems to only go down that path on some configuration. At least on
-> > x86 the test was passing fine for me.
-> > 
-> >> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > Thanks for the review!
-> 
-> Faced same issue on powerpc. Tested with this change and it works with this patch.
-> 
-> Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> As Ian said, the "cpu-count" is not appropriate for uncore events, also it
+> caused a perf test failure.
 
-Thanks, applied.
+This was applied, thanks.
+
+- Arnaldo
+ 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/stat-display.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 847acdb5dc40..f1ee4b052198 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -281,19 +281,19 @@ static void print_aggr_id_json(struct perf_stat_config *config,
+>  
+>  	switch (config->aggr_mode) {
+>  	case AGGR_CORE:
+> -		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"cpu-count\" : %d, ",
+> +		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
+>  			id.socket, id.die, id.core, nr);
+>  		break;
+>  	case AGGR_DIE:
+> -		fprintf(output, "\"die\" : \"S%d-D%d\", \"cpu-count\" : %d, ",
+> +		fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
+>  			id.socket, id.die, nr);
+>  		break;
+>  	case AGGR_SOCKET:
+> -		fprintf(output, "\"socket\" : \"S%d\", \"cpu-count\" : %d, ",
+> +		fprintf(output, "\"socket\" : \"S%d\", \"aggregate-number\" : %d, ",
+>  			id.socket, nr);
+>  		break;
+>  	case AGGR_NODE:
+> -		fprintf(output, "\"node\" : \"N%d\", \"cpu-count\" : %d, ",
+> +		fprintf(output, "\"node\" : \"N%d\", \"aggregate-number\" : %d, ",
+>  			id.node, nr);
+>  		break;
+>  	case AGGR_NONE:
+> -- 
+> 2.38.1.584.g0f3c55d4c2-goog
+
+-- 
 
 - Arnaldo
