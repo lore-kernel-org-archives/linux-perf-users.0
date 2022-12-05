@@ -2,167 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAF7C4321E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 12:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2915C4321E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 12:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbiLEMtF (ORCPT
+        id S230156AbiLEMt3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 07:49:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
+        Mon, 5 Dec 2022 07:49:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbiLEMtF (ORCPT
+        with ESMTP id S230090AbiLEMt3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 07:49:05 -0500
+        Mon, 5 Dec 2022 07:49:29 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECEB273B
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 04:49:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885581A205;
+        Mon,  5 Dec 2022 04:49:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 605AFB81065
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 12:49:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EE1C433C1;
-        Mon,  5 Dec 2022 12:49:00 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4C1DCB81065;
+        Mon,  5 Dec 2022 12:49:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCBA6C43470;
+        Mon,  5 Dec 2022 12:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670244540;
-        bh=mFqYvD3gjKGJzFiKSWb9kYyT39RDNofZBd2/IEHHBJk=;
+        s=k20201202; t=1670244566;
+        bh=WVWZU6ZtReEdwq+R7Uw2OX4bdjjS/26KRvhimlJgxp8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g08hwSlB1Ay3rj2Hp7MNezdxgR06AYJAnNMmknUp1LeYKZlM/XSQnRL7HFSftc24q
-         HBCgfVhtS8ABVm2ZPlD2HEuW62wmJClVcbVZi1v/Jg0KB7yZEd8C+ZL+LSKtmkiAG+
-         cB4i7njMhHF9U5VXcoyx/clAoxqXoQlmbHy6K75Q+G+aaqR5mx78Q3v78jWh11O+sS
-         +8Ys9Z2oWBj1wFGzBSPusgQeKRy1dJBmzwHcsiRyYvWxpdprINtGoGujMq1g3tn2zz
-         nQg3aFdk812ewGX1U6Fn8nQeqvjSaWKiI01htBfEp8IKfgpb9RG9vnwmdvj3t4SgzP
-         xRoxGWNFNbT3Q==
+        b=tfwWPLTEJ8iv0zOw+gJRHiAVX3EbqRT3fQdCogL35xzUgYgFNqxBZ8EdYr7hLWtrz
+         HViZLdyPPv54G7AkzXRaBg8by6WlIu9zWoKfyAbSoLqmROUctcwSf9hfBkpOTveIdX
+         GvrvF63bQOyUulBcl2qXBEY9L6uZqv1BJZcav295Z6o/IjXfssHyOOH/Q9Amu/YIEp
+         MaszihYS3LAcajt68+rt+yEIxpIEmpAEoifNcbfh+2//ykAFHRJbIO227D4v55OMbR
+         UFUlWeD56vdPksUKsleBxs5nwMumVvKKmMk2J0OY2kD55GYN84/xpSKqIkRN/EZNWH
+         Lag+lmx/OvUWA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8165040404; Mon,  5 Dec 2022 09:48:57 -0300 (-03)
-Date:   Mon, 5 Dec 2022 09:48:57 -0300
+        id 761EF40404; Mon,  5 Dec 2022 09:49:23 -0300 (-03)
+Date:   Mon, 5 Dec 2022 09:49:23 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
-        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: Re: [V3] tools/perf: Fix printing field separator in CSV metrics
- output
-Message-ID: <Y43ouXptBn/fAdIq@kernel.org>
-References: <20221205042852.83382-1-atrajeev@linux.vnet.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, james.clark@arm.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf/tool: Add remaining branch filters to perf record
+Message-ID: <Y43o05Fhs2zXI3Nv@kernel.org>
+References: <20221205064443.533587-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221205042852.83382-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20221205064443.533587-1-anshuman.khandual@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 05, 2022 at 09:58:52AM +0530, Athira Rajeev escreveu:
-> In perf stat with CSV output option, number of fields
-> in metrics output is not matching with number of fields
-> in other event output lines.
-> 
-> Sample output below after applying patch to fix
-> printing os->prefix.
-> 
-> 	# ./perf stat -x, --per-socket -a -C 1 ls
-> 	S0,1,82.11,msec,cpu-clock,82111626,100.00,1.000,CPUs utilized
-> 	S0,1,2,,context-switches,82109314,100.00,24.358,/sec
-> 	------
-> ====>	S0,1,,,,,,,1.71,stalled cycles per insn
+Em Mon, Dec 05, 2022 at 12:14:43PM +0530, Anshuman Khandual escreveu:
+> This adds all remaining branch filters i.e no_cycles, no_flags and hw_index
+> to perf record tool. While here, also updates the documentation.
 
-Thanks, tested and applied.
+Thanks, applied.
 
 - Arnaldo
+
  
-> The above command line uses field separator as ","
-> via "-x," option and per-socket option displays
-> socket value as first field. But here the last line
-> for "stalled cycles per insn" has more separators.
-> Each csv output line is expected to have 8 field
-> separators (for the 9 fields), where as last line
-> has 9 "," in the result. Patch fixes this issue.
-> 
-> The counter stats are displayed by function
-> "perf_stat__print_shadow_stats" in code
-> "util/stat-shadow.c". While printing the stats info
-> for "stalled cycles per insn", function "new_line_csv"
-> is used as new_line callback.
-> 
-> The fields printed in each line contains:
-> "Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
-> 
-> The metric output prints Socket_id, aggr nr, ratio
-> and unit. It has to skip through remaining five fields
-> ie, Avg,unit,event_name,run,enable_percent. The csv
-> line callback uses "os->nfields" to know the number of
-> fields to skip to match with other lines.
-> Currently it is set as:
-> 	os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
-> 
-> But in case of aggregation modes, csv_sep already
-> gets printed along with each field (Function "aggr_printout"
-> in util/stat-display.c). So aggr_fields can be
-> removed from nfields. And fixed number of fields to
-> skip has to be "4". This is to skip fields for:
-> "avg, unit, event name, run, enable_percent"
-> 
-> This needs 4 csv separators. Patch removes aggr_fields
-> and uses 4 as fixed number of os->nfields to skip.
-> 
-> After the patch:
-> 
-> 	# ./perf stat -x, --per-socket -a -C 1 ls
-> 	S0,1,79.08,msec,cpu-clock,79085956,100.00,1.000,CPUs utilized
-> 	S0,1,7,,context-switches,79084176,100.00,88.514,/sec
-> 	------
-> ====>	S0,1,,,,,,0.81,stalled cycles per insn
-> 
-> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
-> Tested-by: Disha Goel<disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
-> Changelog:
-> v2 -> v3:
-> - Rebased on top of tmp.perf/core
+>  tools/perf/Documentation/perf-record.txt | 5 +++++
+>  tools/perf/util/parse-branch-options.c   | 3 +++
+>  2 files changed, 8 insertions(+)
 > 
-> v1 -> v2:
-> - Rebased on top of latest source.
-> - Added Reviewed-by and Tested-by from Kajol and
->   Disha.
-> 
->  tools/perf/util/stat-display.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index f1ee4b052198..4e9696f4096f 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -686,20 +686,9 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
->  	struct evsel *counter = os->evsel;
->  
->  	if (config->csv_output) {
-> -		static const int aggr_fields[AGGR_MAX] = {
-> -			[AGGR_NONE] = 1,
-> -			[AGGR_GLOBAL] = 0,
-> -			[AGGR_SOCKET] = 2,
-> -			[AGGR_DIE] = 2,
-> -			[AGGR_CORE] = 2,
-> -			[AGGR_THREAD] = 1,
-> -			[AGGR_UNSET] = 0,
-> -			[AGGR_NODE] = 1,
-> -		};
-> -
->  		pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
->  		nl = config->metric_only ? new_line_metric : new_line_csv;
-> -		os->nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
-> +		os->nfields = 4 + (counter->cgrp ? 1 : 0);
->  	} else if (config->json_output) {
->  		pm = config->metric_only ? print_metric_only_json : print_metric_json;
->  		nl = config->metric_only ? new_line_metric : new_line_json;
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index e41ae950fdc3..7803c0c4c8f9 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -388,6 +388,7 @@ following filters are defined:
+>          - any_call: any function call or system call
+>          - any_ret: any function return or system call return
+>          - ind_call: any indirect branch
+> +        - ind_jmp: any indirect jump
+>          - call: direct calls, including far (to/from kernel) calls
+>          - u:  only when the branch target is at the user level
+>          - k: only when the branch target is in the kernel
+> @@ -396,6 +397,10 @@ following filters are defined:
+>  	- no_tx: only when the target is not in a hardware transaction
+>  	- abort_tx: only when the target is a hardware transaction abort
+>  	- cond: conditional branches
+> +	- call_stack: save call stack
+> +	- no_flags: don't save branch flags e.g prediction, misprediction etc
+> +	- no_cycles: don't save branch cycles
+> +	- hw_index: save branch hardware index
+>  	- save_type: save branch type during sampling in case binary is not available later
+>  		     For the platforms with Intel Arch LBR support (12th-Gen+ client or
+>  		     4th-Gen Xeon+ server), the save branch type is unconditionally enabled
+> diff --git a/tools/perf/util/parse-branch-options.c b/tools/perf/util/parse-branch-options.c
+> index 31faf2bb49ff..fd67d204d720 100644
+> --- a/tools/perf/util/parse-branch-options.c
+> +++ b/tools/perf/util/parse-branch-options.c
+> @@ -30,8 +30,11 @@ static const struct branch_mode branch_modes[] = {
+>  	BRANCH_OPT("cond", PERF_SAMPLE_BRANCH_COND),
+>  	BRANCH_OPT("ind_jmp", PERF_SAMPLE_BRANCH_IND_JUMP),
+>  	BRANCH_OPT("call", PERF_SAMPLE_BRANCH_CALL),
+> +	BRANCH_OPT("no_flags", PERF_SAMPLE_BRANCH_NO_FLAGS),
+> +	BRANCH_OPT("no_cycles", PERF_SAMPLE_BRANCH_NO_CYCLES),
+>  	BRANCH_OPT("save_type", PERF_SAMPLE_BRANCH_TYPE_SAVE),
+>  	BRANCH_OPT("stack", PERF_SAMPLE_BRANCH_CALL_STACK),
+> +	BRANCH_OPT("hw_index", PERF_SAMPLE_BRANCH_HW_INDEX),
+>  	BRANCH_OPT("priv", PERF_SAMPLE_BRANCH_PRIV_SAVE),
+>  	BRANCH_END
+>  };
 > -- 
-> 2.31.1
+> 2.25.1
 
 -- 
 
