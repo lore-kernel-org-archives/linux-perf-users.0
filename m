@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0E3C4321E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 12:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10752C4321E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 12:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231764AbiLEMWP (ORCPT
+        id S231819AbiLEMk4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 07:22:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55946 "EHLO
+        Mon, 5 Dec 2022 07:40:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231744AbiLEMWO (ORCPT
+        with ESMTP id S231426AbiLEMkz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 07:22:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8FF8FADD;
-        Mon,  5 Dec 2022 04:22:12 -0800 (PST)
+        Mon, 5 Dec 2022 07:40:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DBF10B4B;
+        Mon,  5 Dec 2022 04:40:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 36C5461042;
-        Mon,  5 Dec 2022 12:22:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D6AC4347C;
-        Mon,  5 Dec 2022 12:22:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4EA7A61088;
+        Mon,  5 Dec 2022 12:40:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBB2C433C1;
+        Mon,  5 Dec 2022 12:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670242931;
-        bh=EY31gZtXFQ9Q6DW+KZ7qMsr0g+tEEkIuRpgv0YWsuGA=;
+        s=k20201202; t=1670244053;
+        bh=fKariYRutBSyoSuP7+hy8qpLdIJw9oh1VmzhVjeiWUw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CpAB0i4kbsT7Y1P3bZNUt/IOm/7FOxqBPsBaBJQHsbA29i1ZdTmiWaYTxdFnSZ9BJ
-         imxv8KhjHpEGYe0QMopQ9OgN8JJL0PmDHa4ziXvWv+0OXZ9Y0KR7A0BDgnfHBLDwWK
-         eXP1+qWN85ylSnPMmTuP03Wx1cqh6VVdUsZmy3ACIizkdYeqThDwfBAavsikSyhq2b
-         71p2o2c0p0ybCKIpDpeJG/RId9kuQU+S5PD69+DAuozDXXa68oBZy1zdROVVmJDly3
-         lK8klBNhC9H3ugi5UcVrYLrL5lSm72/IX9aJXdKAVcpYHeCtAr8NUGoBv+vgDKEeHW
-         67RgRK8IMMGEQ==
+        b=T2sXnRQdK94DC3rG7Y1YZdbJdA5SnsF3Fr+j/13QLvYz8bTgfCPVWNpQkr5Nhrdkp
+         c00WIqYSRFj5r+7EhLls6/avpZVNBpeYZzYwn4H8H9yBvGROYHM0tB/VBLQYsoFFZr
+         G7HbTNxtjTi7mvAV6fR1Ki6/zXuSSKSKS7sOiUoSn7JhUtrzdPFZNjR43vSQzi3hyc
+         lzQDXpBN79XpPqcOa9KJwWTPjOvNUUGeFZGMlCjYe0Gc0g1pAPbXWlqenfIbbIBsXH
+         0LCDYqIHFP0+W6footQfZpqdtx8Geje6eI2ozR3MxG0w4mtk7QrgjLkyLRGDklEldu
+         nkKn1d4+lNL9w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C740A40404; Mon,  5 Dec 2022 09:22:07 -0300 (-03)
-Date:   Mon, 5 Dec 2022 09:22:07 -0300
+        id 09CC740404; Mon,  5 Dec 2022 09:40:51 -0300 (-03)
+Date:   Mon, 5 Dec 2022 09:40:51 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
@@ -50,235 +50,101 @@ Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
         Athira Jajeev <atrajeev@linux.vnet.ibm.com>
 Subject: Re: [PATCH 05/15] perf stat: Remove prefix argument in
  print_metric_headers()
-Message-ID: <Y43ib0gPvjC1SicU@kernel.org>
+Message-ID: <Y43m03wU9+wENNB6@kernel.org>
 References: <20221123180208.2068936-1-namhyung@kernel.org>
  <20221123180208.2068936-6-namhyung@kernel.org>
  <CAP-5=fWZ27QW+XvZx0bzEMmUbyKpmmmZudB9u=SyxiLcH3CCqw@mail.gmail.com>
  <CAP-5=fXsWfOmavOAmxsUcX+g3cve2r20JmseDF7Bn1jO6tPX-Q@mail.gmail.com>
  <CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com>
+ <Y43ib0gPvjC1SicU@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com>
+In-Reply-To: <Y43ib0gPvjC1SicU@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Nov 29, 2022 at 09:13:11PM -0800, Ian Rogers escreveu:
-> On Tue, Nov 29, 2022 at 9:09 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Wed, Nov 23, 2022 at 3:23 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Wed, Nov 23, 2022 at 10:02 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > It always passes a whitespace to the function, thus we can just add it to the
-> > > > function body.  Furthermore, it's only used in the normal output mode.
-> > > >
-> > > > Well, actually CSV used it but it doesn't need to since we don't care about the
-> > > > indentation or alignment in the CSV output.
-> > > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > >
-> > > Acked-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks,
-> > > Ian
-> >
-> > I suspect this may be responsible for a metric segv that I'm now
-> > seeing in Arnaldo's tree:
-> >
-> > $ gdb --args perf stat -M Backend true
-> > ...
-> > Performance counter stats for 'true':
-> >
-> >         4,712,355      TOPDOWN.SLOTS                    #     17.3 %
-> > tma_core_bound
-> >
-> > Program received signal SIGSEGV, Segmentation fault.
-> > __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-> > 77      ../sysdeps/x86_64/multiarch/strlen-evex.S: No such file or directory.
-> > (gdb) bt
-> > #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-> > #1  0x00007ffff74749a5 in __GI__IO_fputs (str=0x0, fp=0x7ffff75f5680
-> > <_IO_2_1_stderr_>)
-> >    at ./libio/iofputs.c:33
-> > #2  0x0000555555779f28 in do_new_line_std (config=0x555555e077c0
-> > <stat_config>, os=0x7fffffffbf10)
-> >    at util/stat-display.c:356
-> > #3  0x000055555577a081 in print_metric_std (config=0x555555e077c0
-> > <stat_config>,
-> >    ctx=0x7fffffffbf10, color=0x0, fmt=0x5555558b77b5 "%8.1f",
-> >    unit=0x7fffffffbb10 "%  tma_memory_bound", val=13.165355724442199)
-> > at util/stat-display.c:380
-> > #4  0x00005555557768b6 in generic_metric (config=0x555555e077c0 <stat_config>,
-> >    metric_expr=0x55555593d5b7 "((CYCLE_ACTIVITY.STALLS_MEM_ANY +
-> > EXE_ACTIVITY.BOUND_ON_STORES) / (C
-> > YCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring
-> > * EXE_ACTIVITY.2_PORTS_UTIL)
-> > + EXE_ACTIVITY.BOUND_ON_STORES))"..., metric_events=0x555555f334e0,
-> > metric_refs=0x555555ec81d0,
-> >    name=0x555555f32e80 "TOPDOWN.SLOTS", metric_name=0x555555f26c80
-> > "tma_memory_bound",
-> >    metric_unit=0x55555593d5b1 "100%", runtime=0, map_idx=0,
-> > out=0x7fffffffbd90,
-> >    st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:934
-> > #5  0x0000555555778cac in perf_stat__print_shadow_stats
-> > (config=0x555555e077c0 <stat_config>,
-> >    evsel=0x555555f289d0, avg=4712355, map_idx=0, out=0x7fffffffbd90,
-> >    metric_events=0x555555e078e8 <stat_config+296>, st=0x555555e9e620 <rt_stat>)
-> >    at util/stat-shadow.c:1329
-> > #6  0x000055555577b6a0 in printout (config=0x555555e077c0
-> > <stat_config>, os=0x7fffffffbf10,
-> >    uval=4712355, run=325322, ena=325322, noise=4712355, map_idx=0) at
-> > util/stat-display.c:741
-> > #7  0x000055555577bc74 in print_counter_aggrdata
-> > (config=0x555555e077c0 <stat_config>,
-> >    counter=0x555555f289d0, s=0, os=0x7fffffffbf10) at util/stat-display.c:838
-> > #8  0x000055555577c1d8 in print_counter (config=0x555555e077c0 <stat_config>,
-> >    counter=0x555555f289d0, os=0x7fffffffbf10) at util/stat-display.c:957
-> > #9  0x000055555577dba0 in evlist__print_counters (evlist=0x555555ec3610,
-> >    config=0x555555e077c0 <stat_config>, _target=0x555555e01c80
-> > <target>, ts=0x0, argc=1,
-> >    argv=0x7fffffffe450) at util/stat-display.c:1413
-> > #10 0x00005555555fc821 in print_counters (ts=0x0, argc=1, argv=0x7fffffffe450)
-> >    at builtin-stat.c:1040
-> > #11 0x000055555560091a in cmd_stat (argc=1, argv=0x7fffffffe450) at
-> > builtin-stat.c:2665
-> > #12 0x00005555556b1eea in run_builtin (p=0x555555e11f70
-> > <commands+336>, argc=4,
-> >    argv=0x7fffffffe450) at perf.c:322
-> > #13 0x00005555556b2181 in handle_internal_command (argc=4,
-> > argv=0x7fffffffe450) at perf.c:376
-> > #14 0x00005555556b22d7 in run_argv (argcp=0x7fffffffe27c,
-> > argv=0x7fffffffe270) at perf.c:420
-> > #15 0x00005555556b26ef in main (argc=4, argv=0x7fffffffe450) at perf.c:550
-> > (gdb)
-> >
-> > Thanks,
-> > Ian
-> 
-> More specifically, I think os->prefix needs testing for NULL:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n356
-> so:
-> fputs(os->prefix, os->fh);
-> should be:
-> if (os->prefix)
->   fputs(os->prefix, os->fh);
-
-Going thru the messages, for now I just added the test.
-
-- Arnaldo
+Em Mon, Dec 05, 2022 at 09:22:07AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Nov 29, 2022 at 09:13:11PM -0800, Ian Rogers escreveu:
+> > More specifically, I think os->prefix needs testing for NULL:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n356
+> > so:
+> > fputs(os->prefix, os->fh);
+> > should be:
+> > if (os->prefix)
+> >   fputs(os->prefix, os->fh);
  
-> Thanks,
-> Ian
-> 
-> > > > ---
-> > > >  tools/perf/util/stat-display.c | 26 ++++++++++----------------
-> > > >  1 file changed, 10 insertions(+), 16 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > > > index 744b7a40f59a..deed6ccf072f 100644
-> > > > --- a/tools/perf/util/stat-display.c
-> > > > +++ b/tools/perf/util/stat-display.c
-> > > > @@ -996,10 +996,9 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
-> > > >  }
-> > > >
-> > > >  static void print_metric_headers_std(struct perf_stat_config *config,
-> > > > -                                    const char *prefix, bool no_indent)
-> > > > +                                    bool no_indent)
-> > > >  {
-> > > > -       if (prefix)
-> > > > -               fprintf(config->output, "%s", prefix);
-> > > > +       fputc(' ', config->output);
-> > > >
-> > > >         if (!no_indent) {
-> > > >                 int len = aggr_header_lens[config->aggr_mode];
-> > > > @@ -1012,11 +1011,8 @@ static void print_metric_headers_std(struct perf_stat_config *config,
-> > > >  }
-> > > >
-> > > >  static void print_metric_headers_csv(struct perf_stat_config *config,
-> > > > -                                    const char *prefix,
-> > > >                                      bool no_indent __maybe_unused)
-> > > >  {
-> > > > -       if (prefix)
-> > > > -               fprintf(config->output, "%s", prefix);
-> > > >         if (config->interval)
-> > > >                 fputs("time,", config->output);
-> > > >         if (!config->iostat_run)
-> > > > @@ -1024,7 +1020,6 @@ static void print_metric_headers_csv(struct perf_stat_config *config,
-> > > >  }
-> > > >
-> > > >  static void print_metric_headers_json(struct perf_stat_config *config,
-> > > > -                                     const char *prefix __maybe_unused,
-> > > >                                       bool no_indent __maybe_unused)
-> > > >  {
-> > > >         if (config->interval)
-> > > > @@ -1032,8 +1027,7 @@ static void print_metric_headers_json(struct perf_stat_config *config,
-> > > >  }
-> > > >
-> > > >  static void print_metric_headers(struct perf_stat_config *config,
-> > > > -                                struct evlist *evlist,
-> > > > -                                const char *prefix, bool no_indent)
-> > > > +                                struct evlist *evlist, bool no_indent)
-> > > >  {
-> > > >         struct evsel *counter;
-> > > >         struct outstate os = {
-> > > > @@ -1047,11 +1041,11 @@ static void print_metric_headers(struct perf_stat_config *config,
-> > > >         };
-> > > >
-> > > >         if (config->json_output)
-> > > > -               print_metric_headers_json(config, prefix, no_indent);
-> > > > +               print_metric_headers_json(config, no_indent);
-> > > >         else if (config->csv_output)
-> > > > -               print_metric_headers_csv(config, prefix, no_indent);
-> > > > +               print_metric_headers_csv(config, no_indent);
-> > > >         else
-> > > > -               print_metric_headers_std(config, prefix, no_indent);
-> > > > +               print_metric_headers_std(config, no_indent);
-> > > >
-> > > >         if (config->iostat_run)
-> > > >                 iostat_print_header_prefix(config);
-> > > > @@ -1132,7 +1126,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
-> > > >         }
-> > > >
-> > > >         if (config->metric_only)
-> > > > -               print_metric_headers(config, evlist, " ", true);
-> > > > +               print_metric_headers(config, evlist, true);
-> > > >         else
-> > > >                 fprintf(output, " %*s %*s events\n",
-> > > >                         COUNTS_LEN, "counts", config->unit_width, "unit");
-> > > > @@ -1168,7 +1162,7 @@ static void print_header_std(struct perf_stat_config *config,
-> > > >         fprintf(output, ":\n\n");
-> > > >
-> > > >         if (config->metric_only)
-> > > > -               print_metric_headers(config, evlist, " ", false);
-> > > > +               print_metric_headers(config, evlist, false);
-> > > >  }
-> > > >
-> > > >  static void print_header_csv(struct perf_stat_config *config,
-> > > > @@ -1178,7 +1172,7 @@ static void print_header_csv(struct perf_stat_config *config,
-> > > >                              const char **argv __maybe_unused)
-> > > >  {
-> > > >         if (config->metric_only)
-> > > > -               print_metric_headers(config, evlist, " ", true);
-> > > > +               print_metric_headers(config, evlist, true);
-> > > >  }
-> > > >  static void print_header_json(struct perf_stat_config *config,
-> > > >                               struct target *_target __maybe_unused,
-> > > > @@ -1187,7 +1181,7 @@ static void print_header_json(struct perf_stat_config *config,
-> > > >                               const char **argv __maybe_unused)
-> > > >  {
-> > > >         if (config->metric_only)
-> > > > -               print_metric_headers(config, evlist, " ", true);
-> > > > +               print_metric_headers(config, evlist, true);
-> > > >  }
-> > > >
-> > > >  static void print_header(struct perf_stat_config *config,
-> > > > --
-> > > > 2.38.1.584.g0f3c55d4c2-goog
-> > > >
+> Going thru the messages, for now I just added the test.
 
--- 
+So I added this, as the patch introducing the problem was already in
+acme/perf/core, please see if this is acceptable.
 
 - Arnaldo
+
+commit e21eb4d4fbd298a94ac200e2b6c3bea431e8cbca
+Author: Ian Rogers <irogers@google.com>
+Date:   Mon Dec 5 09:34:04 2022 -0300
+
+    perf stat: Check existence of os->prefix, fixing a segfault
+    
+    We need to check if we have a OS prefix, otherwise we stumble on a
+    metric segv that I'm now seeing in Arnaldo's tree:
+    
+      $ gdb --args perf stat -M Backend true
+      ...
+      Performance counter stats for 'true':
+    
+              4,712,355      TOPDOWN.SLOTS                    #     17.3 % tma_core_bound
+    
+      Program received signal SIGSEGV, Segmentation fault.
+      __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+      77      ../sysdeps/x86_64/multiarch/strlen-evex.S: No such file or directory.
+      (gdb) bt
+      #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+      #1  0x00007ffff74749a5 in __GI__IO_fputs (str=0x0, fp=0x7ffff75f5680 <_IO_2_1_stderr_>)
+      #2  0x0000555555779f28 in do_new_line_std (config=0x555555e077c0 <stat_config>, os=0x7fffffffbf10) at util/stat-display.c:356
+      #3  0x000055555577a081 in print_metric_std (config=0x555555e077c0 <stat_config>, ctx=0x7fffffffbf10, color=0x0, fmt=0x5555558b77b5 "%8.1f", unit=0x7fffffffbb10 "%  tma_memory_bound", val=13.165355724442199) at util/stat-display.c:380
+      #4  0x00005555557768b6 in generic_metric (config=0x555555e077c0 <stat_config>, metric_expr=0x55555593d5b7 "((CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES))"..., metric_events=0x555555f334e0, metric_refs=0x555555ec81d0, name=0x555555f32e80 "TOPDOWN.SLOTS", metric_name=0x555555f26c80 "tma_memory_bound", metric_unit=0x55555593d5b1 "100%", runtime=0, map_idx=0, out=0x7fffffffbd90, st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:934
+      #5  0x0000555555778cac in perf_stat__print_shadow_stats (config=0x555555e077c0 <stat_config>, evsel=0x555555f289d0, avg=4712355, map_idx=0, out=0x7fffffffbd90, metric_events=0x555555e078e8 <stat_config+296>, st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:1329
+      #6  0x000055555577b6a0 in printout (config=0x555555e077c0 <stat_config>, os=0x7fffffffbf10, uval=4712355, run=325322, ena=325322, noise=4712355, map_idx=0) at util/stat-display.c:741
+      #7  0x000055555577bc74 in print_counter_aggrdata (config=0x555555e077c0 <stat_config>, counter=0x555555f289d0, s=0, os=0x7fffffffbf10) at util/stat-display.c:838
+      #8  0x000055555577c1d8 in print_counter (config=0x555555e077c0 <stat_config>, counter=0x555555f289d0, os=0x7fffffffbf10) at util/stat-display.c:957
+      #9  0x000055555577dba0 in evlist__print_counters (evlist=0x555555ec3610, config=0x555555e077c0 <stat_config>, _target=0x555555e01c80 <target>, ts=0x0, argc=1, argv=0x7fffffffe450) at util/stat-display.c:1413
+      #10 0x00005555555fc821 in print_counters (ts=0x0, argc=1, argv=0x7fffffffe450) at builtin-stat.c:1040
+      #11 0x000055555560091a in cmd_stat (argc=1, argv=0x7fffffffe450) at builtin-stat.c:2665
+      #12 0x00005555556b1eea in run_builtin (p=0x555555e11f70 <commands+336>, argc=4, argv=0x7fffffffe450) at perf.c:322
+      #13 0x00005555556b2181 in handle_internal_command (argc=4, argv=0x7fffffffe450) at perf.c:376
+      #14 0x00005555556b22d7 in run_argv (argcp=0x7fffffffe27c, argv=0x7fffffffe270) at perf.c:420
+      #15 0x00005555556b26ef in main (argc=4, argv=0x7fffffffe450) at perf.c:550
+      (gdb)
+    
+    Fixes: f123b2d84ecec9a3 ("perf stat: Remove prefix argument in print_metric_headers()")
+    Acked-by: Namhyung Kim <namhyung@kernel.org>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+    Cc: Ingo Molnar <mingo@kernel.org>
+    Cc: James Clark <james.clark@arm.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Xing Zhengjun <zhengjun.xing@linux.intel.com>
+    Link: http://lore.kernel.org/lkml/CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index f1ee4b052198690f..9b7772e6abf6538f 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -353,7 +353,8 @@ static void do_new_line_std(struct perf_stat_config *config,
+ 			    struct outstate *os)
+ {
+ 	fputc('\n', os->fh);
+-	fputs(os->prefix, os->fh);
++	if (os->prefix)
++		fputs(os->prefix, os->fh);
+ 	aggr_printout(config, os->evsel, os->id, os->nr);
+ 	if (config->aggr_mode == AGGR_NONE)
+ 		fprintf(os->fh, "        ");
