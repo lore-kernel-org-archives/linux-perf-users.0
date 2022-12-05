@@ -2,149 +2,168 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10752C4321E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 12:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAF7C4321E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 12:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbiLEMk4 (ORCPT
+        id S231206AbiLEMtF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 07:40:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
+        Mon, 5 Dec 2022 07:49:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231426AbiLEMkz (ORCPT
+        with ESMTP id S230254AbiLEMtF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 07:40:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DBF10B4B;
-        Mon,  5 Dec 2022 04:40:54 -0800 (PST)
+        Mon, 5 Dec 2022 07:49:05 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ECEB273B
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 04:49:03 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4EA7A61088;
-        Mon,  5 Dec 2022 12:40:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBB2C433C1;
-        Mon,  5 Dec 2022 12:40:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 605AFB81065
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 12:49:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EE1C433C1;
+        Mon,  5 Dec 2022 12:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670244053;
-        bh=fKariYRutBSyoSuP7+hy8qpLdIJw9oh1VmzhVjeiWUw=;
+        s=k20201202; t=1670244540;
+        bh=mFqYvD3gjKGJzFiKSWb9kYyT39RDNofZBd2/IEHHBJk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T2sXnRQdK94DC3rG7Y1YZdbJdA5SnsF3Fr+j/13QLvYz8bTgfCPVWNpQkr5Nhrdkp
-         c00WIqYSRFj5r+7EhLls6/avpZVNBpeYZzYwn4H8H9yBvGROYHM0tB/VBLQYsoFFZr
-         G7HbTNxtjTi7mvAV6fR1Ki6/zXuSSKSKS7sOiUoSn7JhUtrzdPFZNjR43vSQzi3hyc
-         lzQDXpBN79XpPqcOa9KJwWTPjOvNUUGeFZGMlCjYe0Gc0g1pAPbXWlqenfIbbIBsXH
-         0LCDYqIHFP0+W6footQfZpqdtx8Geje6eI2ozR3MxG0w4mtk7QrgjLkyLRGDklEldu
-         nkKn1d4+lNL9w==
+        b=g08hwSlB1Ay3rj2Hp7MNezdxgR06AYJAnNMmknUp1LeYKZlM/XSQnRL7HFSftc24q
+         HBCgfVhtS8ABVm2ZPlD2HEuW62wmJClVcbVZi1v/Jg0KB7yZEd8C+ZL+LSKtmkiAG+
+         cB4i7njMhHF9U5VXcoyx/clAoxqXoQlmbHy6K75Q+G+aaqR5mx78Q3v78jWh11O+sS
+         +8Ys9Z2oWBj1wFGzBSPusgQeKRy1dJBmzwHcsiRyYvWxpdprINtGoGujMq1g3tn2zz
+         nQg3aFdk812ewGX1U6Fn8nQeqvjSaWKiI01htBfEp8IKfgpb9RG9vnwmdvj3t4SgzP
+         xRoxGWNFNbT3Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 09CC740404; Mon,  5 Dec 2022 09:40:51 -0300 (-03)
-Date:   Mon, 5 Dec 2022 09:40:51 -0300
+        id 8165040404; Mon,  5 Dec 2022 09:48:57 -0300 (-03)
+Date:   Mon, 5 Dec 2022 09:48:57 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH 05/15] perf stat: Remove prefix argument in
- print_metric_headers()
-Message-ID: <Y43m03wU9+wENNB6@kernel.org>
-References: <20221123180208.2068936-1-namhyung@kernel.org>
- <20221123180208.2068936-6-namhyung@kernel.org>
- <CAP-5=fWZ27QW+XvZx0bzEMmUbyKpmmmZudB9u=SyxiLcH3CCqw@mail.gmail.com>
- <CAP-5=fXsWfOmavOAmxsUcX+g3cve2r20JmseDF7Bn1jO6tPX-Q@mail.gmail.com>
- <CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com>
- <Y43ib0gPvjC1SicU@kernel.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
+        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.ibm.com
+Subject: Re: [V3] tools/perf: Fix printing field separator in CSV metrics
+ output
+Message-ID: <Y43ouXptBn/fAdIq@kernel.org>
+References: <20221205042852.83382-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y43ib0gPvjC1SicU@kernel.org>
+In-Reply-To: <20221205042852.83382-1-atrajeev@linux.vnet.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 05, 2022 at 09:22:07AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Nov 29, 2022 at 09:13:11PM -0800, Ian Rogers escreveu:
-> > More specifically, I think os->prefix needs testing for NULL:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core#n356
-> > so:
-> > fputs(os->prefix, os->fh);
-> > should be:
-> > if (os->prefix)
-> >   fputs(os->prefix, os->fh);
- 
-> Going thru the messages, for now I just added the test.
+Em Mon, Dec 05, 2022 at 09:58:52AM +0530, Athira Rajeev escreveu:
+> In perf stat with CSV output option, number of fields
+> in metrics output is not matching with number of fields
+> in other event output lines.
+> 
+> Sample output below after applying patch to fix
+> printing os->prefix.
+> 
+> 	# ./perf stat -x, --per-socket -a -C 1 ls
+> 	S0,1,82.11,msec,cpu-clock,82111626,100.00,1.000,CPUs utilized
+> 	S0,1,2,,context-switches,82109314,100.00,24.358,/sec
+> 	------
+> ====>	S0,1,,,,,,,1.71,stalled cycles per insn
 
-So I added this, as the patch introducing the problem was already in
-acme/perf/core, please see if this is acceptable.
+Thanks, tested and applied.
 
 - Arnaldo
+ 
+> The above command line uses field separator as ","
+> via "-x," option and per-socket option displays
+> socket value as first field. But here the last line
+> for "stalled cycles per insn" has more separators.
+> Each csv output line is expected to have 8 field
+> separators (for the 9 fields), where as last line
+> has 9 "," in the result. Patch fixes this issue.
+> 
+> The counter stats are displayed by function
+> "perf_stat__print_shadow_stats" in code
+> "util/stat-shadow.c". While printing the stats info
+> for "stalled cycles per insn", function "new_line_csv"
+> is used as new_line callback.
+> 
+> The fields printed in each line contains:
+> "Socket_id,aggr nr,Avg,unit,event_name,run,enable_percent,ratio,unit"
+> 
+> The metric output prints Socket_id, aggr nr, ratio
+> and unit. It has to skip through remaining five fields
+> ie, Avg,unit,event_name,run,enable_percent. The csv
+> line callback uses "os->nfields" to know the number of
+> fields to skip to match with other lines.
+> Currently it is set as:
+> 	os.nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
+> 
+> But in case of aggregation modes, csv_sep already
+> gets printed along with each field (Function "aggr_printout"
+> in util/stat-display.c). So aggr_fields can be
+> removed from nfields. And fixed number of fields to
+> skip has to be "4". This is to skip fields for:
+> "avg, unit, event name, run, enable_percent"
+> 
+> This needs 4 csv separators. Patch removes aggr_fields
+> and uses 4 as fixed number of os->nfields to skip.
+> 
+> After the patch:
+> 
+> 	# ./perf stat -x, --per-socket -a -C 1 ls
+> 	S0,1,79.08,msec,cpu-clock,79085956,100.00,1.000,CPUs utilized
+> 	S0,1,7,,context-switches,79084176,100.00,88.514,/sec
+> 	------
+> ====>	S0,1,,,,,,0.81,stalled cycles per insn
+> 
+> Fixes: 92a61f6412d3 ("perf stat: Implement CSV metrics output")
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+> Tested-by: Disha Goel<disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+> Changelog:
+> v2 -> v3:
+> - Rebased on top of tmp.perf/core
+> 
+> v1 -> v2:
+> - Rebased on top of latest source.
+> - Added Reviewed-by and Tested-by from Kajol and
+>   Disha.
+> 
+>  tools/perf/util/stat-display.c | 13 +------------
+>  1 file changed, 1 insertion(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index f1ee4b052198..4e9696f4096f 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -686,20 +686,9 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+>  	struct evsel *counter = os->evsel;
+>  
+>  	if (config->csv_output) {
+> -		static const int aggr_fields[AGGR_MAX] = {
+> -			[AGGR_NONE] = 1,
+> -			[AGGR_GLOBAL] = 0,
+> -			[AGGR_SOCKET] = 2,
+> -			[AGGR_DIE] = 2,
+> -			[AGGR_CORE] = 2,
+> -			[AGGR_THREAD] = 1,
+> -			[AGGR_UNSET] = 0,
+> -			[AGGR_NODE] = 1,
+> -		};
+> -
+>  		pm = config->metric_only ? print_metric_only_csv : print_metric_csv;
+>  		nl = config->metric_only ? new_line_metric : new_line_csv;
+> -		os->nfields = 3 + aggr_fields[config->aggr_mode] + (counter->cgrp ? 1 : 0);
+> +		os->nfields = 4 + (counter->cgrp ? 1 : 0);
+>  	} else if (config->json_output) {
+>  		pm = config->metric_only ? print_metric_only_json : print_metric_json;
+>  		nl = config->metric_only ? new_line_metric : new_line_json;
+> -- 
+> 2.31.1
 
-commit e21eb4d4fbd298a94ac200e2b6c3bea431e8cbca
-Author: Ian Rogers <irogers@google.com>
-Date:   Mon Dec 5 09:34:04 2022 -0300
+-- 
 
-    perf stat: Check existence of os->prefix, fixing a segfault
-    
-    We need to check if we have a OS prefix, otherwise we stumble on a
-    metric segv that I'm now seeing in Arnaldo's tree:
-    
-      $ gdb --args perf stat -M Backend true
-      ...
-      Performance counter stats for 'true':
-    
-              4,712,355      TOPDOWN.SLOTS                    #     17.3 % tma_core_bound
-    
-      Program received signal SIGSEGV, Segmentation fault.
-      __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-      77      ../sysdeps/x86_64/multiarch/strlen-evex.S: No such file or directory.
-      (gdb) bt
-      #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-      #1  0x00007ffff74749a5 in __GI__IO_fputs (str=0x0, fp=0x7ffff75f5680 <_IO_2_1_stderr_>)
-      #2  0x0000555555779f28 in do_new_line_std (config=0x555555e077c0 <stat_config>, os=0x7fffffffbf10) at util/stat-display.c:356
-      #3  0x000055555577a081 in print_metric_std (config=0x555555e077c0 <stat_config>, ctx=0x7fffffffbf10, color=0x0, fmt=0x5555558b77b5 "%8.1f", unit=0x7fffffffbb10 "%  tma_memory_bound", val=13.165355724442199) at util/stat-display.c:380
-      #4  0x00005555557768b6 in generic_metric (config=0x555555e077c0 <stat_config>, metric_expr=0x55555593d5b7 "((CYCLE_ACTIVITY.STALLS_MEM_ANY + EXE_ACTIVITY.BOUND_ON_STORES) / (CYCLE_ACTIVITY.STALLS_TOTAL + (EXE_ACTIVITY.1_PORTS_UTIL + tma_retiring * EXE_ACTIVITY.2_PORTS_UTIL) + EXE_ACTIVITY.BOUND_ON_STORES))"..., metric_events=0x555555f334e0, metric_refs=0x555555ec81d0, name=0x555555f32e80 "TOPDOWN.SLOTS", metric_name=0x555555f26c80 "tma_memory_bound", metric_unit=0x55555593d5b1 "100%", runtime=0, map_idx=0, out=0x7fffffffbd90, st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:934
-      #5  0x0000555555778cac in perf_stat__print_shadow_stats (config=0x555555e077c0 <stat_config>, evsel=0x555555f289d0, avg=4712355, map_idx=0, out=0x7fffffffbd90, metric_events=0x555555e078e8 <stat_config+296>, st=0x555555e9e620 <rt_stat>) at util/stat-shadow.c:1329
-      #6  0x000055555577b6a0 in printout (config=0x555555e077c0 <stat_config>, os=0x7fffffffbf10, uval=4712355, run=325322, ena=325322, noise=4712355, map_idx=0) at util/stat-display.c:741
-      #7  0x000055555577bc74 in print_counter_aggrdata (config=0x555555e077c0 <stat_config>, counter=0x555555f289d0, s=0, os=0x7fffffffbf10) at util/stat-display.c:838
-      #8  0x000055555577c1d8 in print_counter (config=0x555555e077c0 <stat_config>, counter=0x555555f289d0, os=0x7fffffffbf10) at util/stat-display.c:957
-      #9  0x000055555577dba0 in evlist__print_counters (evlist=0x555555ec3610, config=0x555555e077c0 <stat_config>, _target=0x555555e01c80 <target>, ts=0x0, argc=1, argv=0x7fffffffe450) at util/stat-display.c:1413
-      #10 0x00005555555fc821 in print_counters (ts=0x0, argc=1, argv=0x7fffffffe450) at builtin-stat.c:1040
-      #11 0x000055555560091a in cmd_stat (argc=1, argv=0x7fffffffe450) at builtin-stat.c:2665
-      #12 0x00005555556b1eea in run_builtin (p=0x555555e11f70 <commands+336>, argc=4, argv=0x7fffffffe450) at perf.c:322
-      #13 0x00005555556b2181 in handle_internal_command (argc=4, argv=0x7fffffffe450) at perf.c:376
-      #14 0x00005555556b22d7 in run_argv (argcp=0x7fffffffe27c, argv=0x7fffffffe270) at perf.c:420
-      #15 0x00005555556b26ef in main (argc=4, argv=0x7fffffffe450) at perf.c:550
-      (gdb)
-    
-    Fixes: f123b2d84ecec9a3 ("perf stat: Remove prefix argument in print_metric_headers()")
-    Acked-by: Namhyung Kim <namhyung@kernel.org>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-    Cc: Ingo Molnar <mingo@kernel.org>
-    Cc: James Clark <james.clark@arm.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Kan Liang <kan.liang@linux.intel.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Xing Zhengjun <zhengjun.xing@linux.intel.com>
-    Link: http://lore.kernel.org/lkml/CAP-5=fUOjSM5HajU9TCD6prY39LbX4OQbkEbtKPPGRBPBN=_VQ@mail.gmail.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index f1ee4b052198690f..9b7772e6abf6538f 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -353,7 +353,8 @@ static void do_new_line_std(struct perf_stat_config *config,
- 			    struct outstate *os)
- {
- 	fputc('\n', os->fh);
--	fputs(os->prefix, os->fh);
-+	if (os->prefix)
-+		fputs(os->prefix, os->fh);
- 	aggr_printout(config, os->evsel, os->id, os->nr);
- 	if (config->aggr_mode == AGGR_NONE)
- 		fprintf(os->fh, "        ");
+- Arnaldo
