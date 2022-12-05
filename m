@@ -2,123 +2,143 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D62C47089
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 23:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDD3C636F9
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 23:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234027AbiLEXA5 (ORCPT
+        id S232240AbiLEXQf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 18:00:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52238 "EHLO
+        Mon, 5 Dec 2022 18:16:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234040AbiLEXAr (ORCPT
+        with ESMTP id S233231AbiLEXQe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 18:00:47 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C24D1EAE0
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 15:00:44 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3c2837e751fso135968687b3.15
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 15:00:44 -0800 (PST)
+        Mon, 5 Dec 2022 18:16:34 -0500
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661FDFAC9;
+        Mon,  5 Dec 2022 15:16:33 -0800 (PST)
+Received: by mail-pg1-x52c.google.com with SMTP id v3so11834285pgh.4;
+        Mon, 05 Dec 2022 15:16:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=29cYpp0Ewjs+gzHUrxa4ZZynn8ecl1yz6sJ+mMKI1iY=;
-        b=dqkx3dA8M0NS4ER0/zeH9vkBKGWQA2qFb96pbTe+HXR6K5Bma3er6/Rye2j+T83NJh
-         /0hrvbMHcozNXhfKwmXHN4cX4i806/ymuNMuJudRJSgQHlBN1OOcxQcNjm3gg3DnIfAJ
-         3ApwLjyxTABgKG3eGbIfOqEUsgF2yHh3zY41Hzao63Ms3damiiKD58QcXXRdZTGXQdKv
-         JQ4/H/qq8eTcEdVBmTGQM6CaprOBkOgjxQ3PukxoWJ2+8Q2C21Zs6l/pmeEsvx+apBmE
-         A5qUGbzJjYfRGGWvzGeV04FgJ2q28hKVfaxkKf5NY8et2/ZuqGHzJUVMgv618bH+VH8R
-         Z8zg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1eMXUb35CswTS4yMhs6a5ng51PFHAvAxv8mok77/yY=;
+        b=bpq4PJbPK9gkYXgRg+nxuqvx2NBP04RUBKdEzYu9tlvBrrJG6sA9KirAUtoNNkrvv7
+         dg1iwSuojPzB5Wqn48xfpWbmGW0ccXkQE4hVBaW4/NWV6+8+KFx3674rt8VAsx5+mIcZ
+         r0Mrl3JZ/f71Ra4lgKzNyLhgN4C3hW/pvWUawAJueSAYrrJO9MSn9e+lGagdU1vPEhZr
+         /WqDbiyDynKbWqPc5lKnTbDdhuwNbPnLW0QxzuWbt0qQe5/WmWgo0wKrXhYwxAi8yFFD
+         g6tt0njpEurEPl+VXk2Xf4rsgbdLLq1DXEsuaRPGInKYL0b66DHwMJxMqODZOuM0NtIh
+         0LYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=29cYpp0Ewjs+gzHUrxa4ZZynn8ecl1yz6sJ+mMKI1iY=;
-        b=PRhz0w7wae32c3vBd3AuClv3rtZwah9MquQ2HvkD2KG/cJrrQ8xrwqf5oGF1b0LoS5
-         u8SaPIYaa0g2PcRPvOm+6u6t85hFpJXCiZSNac2DTIUpV5Rncs+VlxyFAslRvEozmpDt
-         csHoKTSBdd39ihgySsJ0fGDqac/Xdonp/gVHTJT6LYHrcBILhVssKgrmd/x1f2uLUuA1
-         Ux/U8mYMRpE3CNztgpqkZbliOxxrzLyI6/4Cu1vD/i4ZMcWNd1RE6E23aEWzN9OEQZx6
-         gcGME2nr+nEY1Qskbq1deFgofc7lwil9gVrlAGHZ95wbI/DWOt2SoQyKEK5oAGI4/obU
-         CJIw==
-X-Gm-Message-State: ANoB5pl1zO0MTbKeEVYMYmURF/ztPEO9hgHhh+gN8yEzuG0I0NoF8uXK
-        lXKXyJkDsrUrHDQO3C82sVBrEuK6+kAJ
-X-Google-Smtp-Source: AA0mqf4B9f2CkgsFsBObCG8SX92pN+WkJJT00KkEcVBC93nZPIyGaYd1Bl5QMGXw876c8d0tKTX669flR8QZ
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:d2ab:5fbb:e81a:9151])
- (user=irogers job=sendgmr) by 2002:a25:a290:0:b0:6fe:efb3:2e29 with SMTP id
- c16-20020a25a290000000b006feefb32e29mr11389698ybi.616.1670281243531; Mon, 05
- Dec 2022 15:00:43 -0800 (PST)
-Date:   Mon,  5 Dec 2022 14:59:40 -0800
-In-Reply-To: <20221205225940.3079667-1-irogers@google.com>
-Message-Id: <20221205225940.3079667-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20221205225940.3079667-1-irogers@google.com>
-X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
-Subject: [PATCH 3/3] perf build: Fix python/perf.so library's name
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l1eMXUb35CswTS4yMhs6a5ng51PFHAvAxv8mok77/yY=;
+        b=xsmYGDVKQJ9MO/cpShP7CqJgSLRWroM0Le1IRO9qXE/g20RUoKa7C6lGBcVy+uKtUc
+         OXSEh8zaTwv3Rso7++KuwV54/ERxV7e0iit64r1y/zZgcF+OskPHCzCYMgbzQs1Bv6Lp
+         RFWk2zz4sceMnNbnjMbEEaP4tj795T07yOC6Oi3Ro/I7z6OYW9tgj4i0AnxIHr1tCJhu
+         OvTbBTozwUipDZ5LGidbscjNjIuyvZv3QrhxHe3bDTheyK2+PK7LDmhLNzo/qxVdOhki
+         ZG/HY43bZvl0Lpr/nfMYxErtHeIlC477o1MskW1costn2QfGPw3llJdbyA5GcwmyQNe9
+         jNaw==
+X-Gm-Message-State: ANoB5pmYMV4jOTKoc/KZYFbJi3HkUIUwlQY/mIW+7L32hvcc6hn9xEQZ
+        Kf+HPVw1rgIl3Ddhc8VAVts=
+X-Google-Smtp-Source: AA0mqf7Zt0JiQq/jVcV4BbK4E2NDYPYC4BF9OlA7SzOMkRCGrgqSS1un9XF14Kl3g0spU2YvA+clnw==
+X-Received: by 2002:a62:60c7:0:b0:56b:94f5:400c with SMTP id u190-20020a6260c7000000b0056b94f5400cmr66412045pfb.31.1670282192786;
+        Mon, 05 Dec 2022 15:16:32 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:8f7c:b9c9:e06c:7b30])
+        by smtp.gmail.com with ESMTPSA id s13-20020a170902ea0d00b001891b01addfsm11039616plg.274.2022.12.05.15.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Dec 2022 15:16:32 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] perf stat: Update event skip condition
+Date:   Mon,  5 Dec 2022 15:16:30 -0800
+Message-Id: <20221205231630.319759-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since Python 3.3 extensions have a suffix encoding platform and
-version information. For example, the perf extension was previously
-perf.so but now maybe perf.cpython-310-x86_64-linux-gnu.so. Compute
-the extension using Python and then use this in the target name. Doing
-this avoids the "perf.so" target always being rebuilt.
+In print_counter_aggrdata(), it skips some events that has no aggregate
+count.  It's actually for system-wide per-thread mode and merged uncore
+and hybrid events.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Let's update the condition to check them explicitly.
+
+Fixes: 91f85f98da7a ("Display event stats using aggr counts")
+Reported-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Makefile.config | 4 +++-
- tools/perf/Makefile.perf   | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+Athira, could you please check this fixes the problem?
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index b34288cb1900..ede04e07e9cb 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -871,6 +871,7 @@ define disable-python_code
-   NO_LIBPYTHON := 1
- endef
+ tools/perf/util/stat-display.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 847acdb5dc40..6c0de52ac4be 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -814,7 +814,8 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	os->nr = aggr->nr;
+ 	os->evsel = counter;
  
-+PYTHON_EXTENSION_SUFFIX := '.so'
- ifdef NO_LIBPYTHON
-   $(call disable-python,Python support disabled by user)
- else
-@@ -889,7 +890,8 @@ else
-       else
-          LDFLAGS += $(PYTHON_EMBED_LDFLAGS)
-          EXTLIBS += $(PYTHON_EMBED_LIBADD)
--         LANG_BINDINGS += $(obj-perf)python/perf.so
-+         PYTHON_EXTENSION_SUFFIX := $(shell $(PYTHON) -c 'from importlib import machinery; print(machinery.EXTENSION_SUFFIXES[0])')
-+         LANG_BINDINGS += $(obj-perf)python/perf$(PYTHON_EXTENSION_SUFFIX)
-          CFLAGS += -DHAVE_LIBPYTHON_SUPPORT
-          $(call detected,CONFIG_LIBPYTHON)
-       endif
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index f0e4daeef812..869856bdfdc9 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -642,7 +642,7 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
- # Create python binding output directory if not already present
- _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+-	if (counter->supported && aggr->nr == 0)
++	/* Skip already merged uncore/hybrid events */
++	if (counter->merged_stat)
+ 		return;
  
--$(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF)
-+$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF)
- 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
-         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' \
- 	  $(PYTHON_WORD) util/setup.py \
+ 	uniquify_counter(config, counter);
+@@ -823,6 +824,13 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	ena = aggr->counts.ena;
+ 	run = aggr->counts.run;
+ 
++	/*
++	 * Skip value 0 when enabling --per-thread globally, otherwise it will
++	 * have too many 0 output.
++	 */
++	if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
++		return;
++
+ 	if (!metric_only) {
+ 		if (config->json_output)
+ 			fputc('{', output);
+@@ -899,9 +907,6 @@ static void print_aggr(struct perf_stat_config *config,
+ 		print_metric_begin(config, evlist, os, s);
+ 
+ 		evlist__for_each_entry(evlist, counter) {
+-			if (counter->merged_stat)
+-				continue;
+-
+ 			print_counter_aggrdata(config, counter, s, os);
+ 		}
+ 		print_metric_end(config, os);
+@@ -928,9 +933,6 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ 			print_metric_begin(config, evlist, os, s);
+ 
+ 			evlist__for_each_entry(evlist, counter) {
+-				if (counter->merged_stat)
+-					continue;
+-
+ 				if (counter->cgrp != os->cgrp)
+ 					continue;
+ 
 -- 
 2.39.0.rc0.267.gcb52ba06e7-goog
 
