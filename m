@@ -2,175 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC036C4321E
-	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Dec 2022 17:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D61C4321E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 02:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbiLDRI7 (ORCPT
+        id S231318AbiLECzp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Dec 2022 12:08:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44286 "EHLO
+        Sun, 4 Dec 2022 21:55:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbiLDRI6 (ORCPT
+        with ESMTP id S231140AbiLECzl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Dec 2022 12:08:58 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329F712742;
-        Sun,  4 Dec 2022 09:08:57 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B4GWZOH001398;
-        Sun, 4 Dec 2022 17:08:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=e2/hc62hPgXVhBLXRN2/ibiyGfbGy7HnDrn4qPtHh1A=;
- b=h56MZ7BoHT6sUNf4J2hBiIYjffwDrT5ye5n5HS35StRj6BK7pWqZfHsuitcphh8eOptv
- yROA8/WjcaW8wR+PHHzBp7Hksk0sVSndLmgRzUC/hhlK+ypzgkJDJ6JA52/Ga8kgUZyT
- IUYGDP6QytPC8AEGgNryeWRuqs4YXYsyr6Zkg0V48cS1lFlgpF9nAS2MMuvqYoZsRE55
- 96RNGYdSM70wD3pXhAG/XdnC6BjjoBGEfeQQfR/xBwU+mnH32RITTN3dDmPWwnSakMNK
- FZpIQtE7CJ47L4Wwd7JM39b4G1GLbKvx0RpJLpEexCLmqZUKlxoleUUMxj3Yz/kdr+Ol xA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m8g9pn0bd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Dec 2022 17:08:38 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B4CIQF9018704;
-        Sun, 4 Dec 2022 17:08:38 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m8g9pn0ay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Dec 2022 17:08:38 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2B4H58KM022921;
-        Sun, 4 Dec 2022 17:08:35 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3m7wqhs7sg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 04 Dec 2022 17:08:35 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B4H8Wrf17433226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 4 Dec 2022 17:08:32 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3FC24C040;
-        Sun,  4 Dec 2022 17:08:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C5254C044;
-        Sun,  4 Dec 2022 17:08:30 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.49.148])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sun,  4 Dec 2022 17:08:30 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH 2/2] perf stat: Fix invalid output handle
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <a0745ad9-c21e-2c93-9af4-46e60bc301fc@arm.com>
-Date:   Sun, 4 Dec 2022 22:38:28 +0530
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E93B2D0E-8862-4873-B49F-F74D83CEEDAD@linux.vnet.ibm.com>
-References: <20221130111521.334152-1-james.clark@arm.com>
- <20221130111521.334152-2-james.clark@arm.com>
- <CAM9d7cj0Zrv32CgJ7jSjCY=CsOcF40zC2kxE+NSixG4qZDpXqQ@mail.gmail.com>
- <a0745ad9-c21e-2c93-9af4-46e60bc301fc@arm.com>
-To:     James Clark <james.clark@arm.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oa5GRleBRiRA8AcXgABSaPdCgafhZn0p
-X-Proofpoint-ORIG-GUID: BEDYMFa7d07Jox-9PnlgIsC0TBD6U3kp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-04_12,2022-12-01_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 clxscore=1011 priorityscore=1501 suspectscore=0
- mlxlogscore=999 adultscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2212040155
+        Sun, 4 Dec 2022 21:55:41 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B91610FDD
+        for <linux-perf-users@vger.kernel.org>; Sun,  4 Dec 2022 18:55:40 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id k88-20020a17090a4ce100b00219d0b857bcso1473008pjh.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Dec 2022 18:55:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hSNynX4Sq04HRNzeYRW4MxMHV7orcwezehiZD+s4b+0=;
+        b=m0obYKkLHQxYAki+nPI03F2xMccBXz6NXxl1Iy+Gx+Yc1TYGtCvZneeJOA1N5uxgAj
+         R6H8k/L2ZP+B8EjHdOLnxuQZj2We7s+xCWN1/hYvah9ufORJ8Fbl50en6/xCP0p1D5uo
+         IaifvXpAc9jmIiPTAojTzEeb07UFlFCs4oFWPSwDKryd226Xm16rN5ORjISRx0myDpCd
+         gnuOlOOIO1Q7G9edm1yNan5X/rqyPPnEoe05RhReOUaUqu+WucNbLWUVUSjnp7nN9YHW
+         ACV+fxQ+tUMYFdSjK2aMuD6EiVTm6Aty75HLnm3QBSBqTVk0qY6Aa1gNPreGoZy0cFtJ
+         qzNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hSNynX4Sq04HRNzeYRW4MxMHV7orcwezehiZD+s4b+0=;
+        b=edFa4EMKxjfuoKxIG4PaZUzFIV9IKWZxAy9rqnL+CDEoJRpmWZ3Oh4shVsMNUWLlwi
+         Wn9jN7SXDz2B6jInpluazaKG7TaQB7208n8m0ep5cxcvrJped8bhxpJ6qzmKXkU0PyTL
+         fJ6gcmO3vg/p9eT/C0PfU6AFMYG6ptB9qQI+f9SEtW/NWmD+xb76sYUyEXThW1tdS70m
+         PqaohZP9W1UdRuB4Vo7B/1ypkZtOzTNziTldAa8pV51lYBAf3PV0fTz+SNUg5R5mYZgu
+         AiI2oAmRn6Us+e/fA8KT0Yr1BFbmC5MLViu+0abXprxsnpAcJq3EHO0oeAJ2GJqmE+B4
+         b2IA==
+X-Gm-Message-State: ANoB5plOLbDKHt8UvoeIcoxLugXp3KyG5B3cA6OjdEFSNkX93uw2RXVo
+        nDmUoV0zZamo/cD2uGVfPdRnIus3UqQ=
+X-Google-Smtp-Source: AA0mqf6wgzLrJTdh2WL14NZAJBkD+9JSJluXqXQ65Gd0sSrowi4XG0/7/wSKcDWa9qPnAbWAEVkOEQ==
+X-Received: by 2002:a17:90a:a095:b0:218:e358:12d2 with SMTP id r21-20020a17090aa09500b00218e35812d2mr57503605pjp.208.1670208939239;
+        Sun, 04 Dec 2022 18:55:39 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::d00])
+        by smtp.gmail.com with ESMTPSA id i9-20020a17090a058900b00210039560c0sm9849777pji.49.2022.12.04.18.55.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Dec 2022 18:55:38 -0800 (PST)
+From:   Khem Raj <raj.khem@gmail.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Khem Raj <raj.khem@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Fangrui Song <maskray@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        John Keeping <john@metanate.com>, Leo Yan <leo.yan@linaro.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [PATCH] perf python: Account for multiple words in CC
+Date:   Sun,  4 Dec 2022 18:55:34 -0800
+Message-Id: <20221205025534.150006-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.38.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Sometimes build systems may append options e.g. --sysroot etc. to CC
+variable especially in cross-compile environments like yocto project
+where CC varable is composed of cross-compiler name and some needed
+options for it to work in a relocatable environment. Therefore separate
+out the compiler name from rest of the options in CC, then add the
+options via second argument to Popen() API
 
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Fangrui Song <maskray@google.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: John Keeping <john@metanate.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Sedat Dilek <sedat.dilek@gmail.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ tools/perf/util/setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On 01-Dec-2022, at 3:36 PM, James Clark <james.clark@arm.com> wrote:
->=20
->=20
->=20
-> On 30/11/2022 18:32, Namhyung Kim wrote:
->> On Wed, Nov 30, 2022 at 3:15 AM James Clark <james.clark@arm.com> =
-wrote:
->>>=20
->>> In this context, 'os' is already a pointer so the extra dereference
->>> isn't required. This fixes the following test failure on aarch64:
->>>=20
->>>  $ ./perf test "json output" -vvv
->>>  92: perf stat JSON output linter                                    =
-:
->>>  --- start ---
->>>  Checking json output: no args Test failed for input:
->>>  ...
->>>  Fatal error: glibc detected an invalid stdio handle
->>>  ---- end ----
->>>  perf stat JSON output linter: FAILED!
->>>=20
->>> Fixes: e7f4da312259 ("perf stat: Pass struct outstate to =
-printout()")
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>=20
->> Thanks for fixing this.  I'm not sure how I missed it.. :(
->>=20
->=20
-> It seems to only go down that path on some configuration. At least on
-> x86 the test was passing fine for me.
->=20
->> Acked-by: Namhyung Kim <namhyung@kernel.org>
->=20
-> Thanks for the review!
-
-Faced same issue on powerpc. Tested with this change and it works with =
-this patch.
-
-Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
-Thanks
-Athira
->=20
->>=20
->> Thanks,
->> Namhyung
->>=20
->>=20
->>> ---
->>> tools/perf/util/stat-display.c | 2 +-
->>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>=20
->>> diff --git a/tools/perf/util/stat-display.c =
-b/tools/perf/util/stat-display.c
->>> index 847acdb5dc40..eac5ac3a734c 100644
->>> --- a/tools/perf/util/stat-display.c
->>> +++ b/tools/perf/util/stat-display.c
->>> @@ -741,7 +741,7 @@ static void printout(struct perf_stat_config =
-*config, struct outstate *os,
->>>                perf_stat__print_shadow_stats(config, counter, uval, =
-map_idx,
->>>                                              &out, =
-&config->metric_events, &rt_stat);
->>>        } else {
->>> -               pm(config, &os, /*color=3D*/NULL, /*format=3D*/NULL, =
-/*unit=3D*/"", /*val=3D*/0);
->>> +               pm(config, os, /*color=3D*/NULL, /*format=3D*/NULL, =
-/*unit=3D*/"", /*val=3D*/0);
->>>        }
->>>=20
->>>        if (!config->metric_only) {
->>> --
->>> 2.25.1
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 5b1e6468d5e8..e9be6e36408f 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -7,7 +7,7 @@ cc_is_clang = b"clang version" in Popen([cc.split()[0], "-v"], stderr=PIPE).stde
+ src_feature_tests  = getenv('srctree') + '/tools/build/feature'
+ 
+ def clang_has_option(option):
+-    cc_output = Popen([cc, option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
++    cc_output = Popen([cc.split()[0], str(cc.split()[1:]) + option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
+     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o))] == [ ]
+ 
+ if cc_is_clang:
+-- 
+2.38.1
 
