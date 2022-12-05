@@ -2,331 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42507C47089
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 22:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310AC4708C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 23:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233778AbiLEWo0 (ORCPT
+        id S233904AbiLEXAX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 17:44:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
+        Mon, 5 Dec 2022 18:00:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233443AbiLEWoZ (ORCPT
+        with ESMTP id S233908AbiLEXAV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 17:44:25 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9415EFDB
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 14:44:23 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id w15so21037437wrl.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 14:44:23 -0800 (PST)
+        Mon, 5 Dec 2022 18:00:21 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71741DF09
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 15:00:16 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id a5-20020a25af05000000b006e450a5e507so14104058ybh.22
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 15:00:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4OCax83xDsYSpyiNzI9sqYOdkCRRhZ6cCXQ1yHGNJjg=;
-        b=WAnXLY/b3nV5yl5dYmp8ymC7g0Kx6oh6t3SRZC7gUj+tPrCWXQI+bihwrEO/Qo6tEK
-         QKwzYCxY6Rtf+Ui5lyfu9C/OgLMuumwpqkydYEcgRygkHT7PJTtNb79ke3P0cQn2iVTh
-         02s3H21WbMOCe+uUYiKwPrGBKTvRxlm7sfyHSCEA5JjxFekyn70Rf9s/y0+/fAcTBXks
-         ImGbCsMQC+8i2onLiQlyKGTGZYNO9HTkt2HX8DXM1L0eo5zcO2bmKtnvJZDUGHu3l3j0
-         6SxesCX5Df88c1Cv2SyK86han8fArbcZ2A4UhGukDuZP7Pl8GIfHrEtBLUFcyxjpH0h9
-         1DVQ==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PPB6mm4TgvEyyws63dJDbYxmtsHoaTSfd5QqDu3w1uI=;
+        b=C5FPbwTLLReGGev2zyGrS3uZzYugF2818QQO5J2fo7XbqJivZvrYJ1P0C4lI3kcFuS
+         VTlWaNs8ff9Qlv8WKub2nhSjxD/H4BjEO2XZwD89hbBjnoXcXJ6FjyzePLKJEyqTC+zr
+         w54vIcSMfJ+XEXh0zTDrJsPXwabmzhoVnDlFd0VlpqeZdmpLKKjjON63et08uSV8rbCB
+         qflhvqcsPF7S1uuAjx+D8+91UcT1mXEhvBaJH3bBfQQjRHMysOWYnw5CH1cwZSO9pkDk
+         1rpS+C+TGN5n9qJNrFqJaE58+HkgF+BSNIh7tCT4Mbpi4WJGjhxQ9++mXCaSILOh4v+H
+         sHcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4OCax83xDsYSpyiNzI9sqYOdkCRRhZ6cCXQ1yHGNJjg=;
-        b=NmOEOiWzCd2C2Mzefr9oCn4hYTJGqRz3X0gHxzrbLSVdXV2uonNVItAUe84w57il5Z
-         Fa/9JzlGpR3jilF1DnHM288EvyXAWQGHyLTotzg6Em3SbUTK2RfAvJjSZQ/Azbl0q4Xr
-         2MYC3BE99C5dHtovtRXx7tsJ0ITwu1x8VziLx3c03Z2ceuEQWEeMrGjZCPZojqGzaIog
-         PNLuyy9WWcnAhWTkr9eTh5Y2GpddazYrP1KhJByD4Hn+veJlnqim8U9lvXxPzGgwLnZB
-         kltr+ZwPm4FRoacon8ePvuiQGCKHoVbgSncATASOzQ2HmGqWx+01KKqIXLEK20toRYck
-         iHMQ==
-X-Gm-Message-State: ANoB5pk7cjxSuIL1/bdQTP6lI36kSFef1K8bbuYCu6Fyz+wds07cW/LJ
-        9ktx/rYOGeUnVLJwEtKSnPZsXiwkK34O0Lp52gAUOw==
-X-Google-Smtp-Source: AA0mqf7gU/+7r0Fj2+0b35BhYbym5BUbTbio+hF2/U2DuUO1zT0jymIqa7BoPnMM54h2EvfsUmearGJhn7uuiIQpc2Q=
-X-Received: by 2002:adf:e2c9:0:b0:241:db86:176d with SMTP id
- d9-20020adfe2c9000000b00241db86176dmr41412374wrj.40.1670280261674; Mon, 05
- Dec 2022 14:44:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20221129192924.1580537-1-irogers@google.com> <Y43qt8YRP1M8lTvP@kernel.org>
-In-Reply-To: <Y43qt8YRP1M8lTvP@kernel.org>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PPB6mm4TgvEyyws63dJDbYxmtsHoaTSfd5QqDu3w1uI=;
+        b=MyAoMr1jECKEuAMuFeaaX6Ug6CY9dIsanlFnbLl2UBN0qe5tz2C3TvVhgMTZ0zUOFt
+         HZp+U6KLD7iBH6bX/qPMtOBeoGFgZeGA7RGHm1/8M/IOkp/uwTBj17va7tz5RnlGhVC7
+         p14a64tTDbNXSAXXn5XB46fApkHNSiXIqgXS8vuNgGMEbvYRLGtv1duU7qBLsZRkkmyj
+         VaeAaamp+y5oUB5kB+45lovWFwWG9s5SB/ilAKfPLG88lmyNdYqBH8Ah2A68vWnPlN46
+         Lw/aKC3GtVgQP5jB1st2MCXhT/Nv/25id4Pnsayg5C9XGtnA18TB4M9H59z7HSQ2bUev
+         PwDA==
+X-Gm-Message-State: ANoB5pnxSdQDkhs4cLVUkUs1SPw5Wg/qvqkaPDGrnNr5mPQbdb4Kw3q5
+        oOfGKGp5hGLRxrQGGGMT9+8PqoXEmT79
+X-Google-Smtp-Source: AA0mqf4/gStV2U+rF772WtObJJ72RvjxENibVb8G0GIypnoa3fG7AnxxhXmYWAKy2OxVypqvXmUdDsH+y/ul
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:d2ab:5fbb:e81a:9151])
+ (user=irogers job=sendgmr) by 2002:a25:9a43:0:b0:6cb:8f05:b35c with SMTP id
+ r3-20020a259a43000000b006cb8f05b35cmr64275847ybo.217.1670281216121; Mon, 05
+ Dec 2022 15:00:16 -0800 (PST)
+Date:   Mon,  5 Dec 2022 14:59:37 -0800
+Message-Id: <20221205225940.3079667-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
+Subject: [PATCH 0/3] libtraceevent from system and build fix
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 5 Dec 2022 14:44:09 -0800
-Message-ID: <CAP-5=fXgAhqpGUCxWM1V48TtyGTBPT-=uihoyaEDdGLZD_S4=w@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fixes for LIBTRACEEVENT_DYNAMIC
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Dec 5, 2022 at 4:57 AM Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->
-> Em Tue, Nov 29, 2022 at 11:29:24AM -0800, Ian Rogers escreveu:
-> > If LIBTRACEEVENT_DYNAMIC is enabled then avoid the install step for
-> > the plugins. If disabled correct DESTDIR so that the plugins are
-> > installed under <lib>/traceevent/plugins.
-> >
-> > Fixes: ef019df01e20 ("perf build: Install libtraceevent locally when bu=
-ilding")
-> > Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/Makefile.perf | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > index a17a6ea85e81..f4cd946fe91a 100644
-> > --- a/tools/perf/Makefile.perf
-> > +++ b/tools/perf/Makefile.perf
-> > @@ -884,7 +884,7 @@ $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugin=
-s
-> >
-> >  install-traceevent-plugins: libtraceevent_plugins
-> >       $(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=3D$(LIBTRACEEVENT_P=
-LUGINS_OUTPUT) \
-> > -             DESTDIR=3D$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix=3D \
-> > +             DESTDIR=3D$(DESTDIR_SQ) prefix=3D \
-> >               $(LIBTRACEEVENT_FLAGS) install
-> >  endif
-> >
-> > @@ -1093,7 +1093,11 @@ install-tests: all install-gtk
-> >               $(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(per=
-fexec_instdir_SQ)/tests/shell/coresight'
-> >       $(Q)$(MAKE) -C tests/shell/coresight install-tests
-> >
-> > -install-bin: install-tools install-tests install-traceevent-plugins
-> > +install-bin: install-tools install-tests
-> > +
-> > +ifndef LIBTRACEEVENT_DYNAMIC
-> > +install-bin: install-traceevent-plugins
-> > +endif
-> >
-> >  install: install-bin try-install-man
->
-> After applying this:
->
-> =E2=AC=A2[acme@toolbox perf]$ alias m
-> alias m=3D'perf stat -e cycles:u,instructions:u make -k BUILD_BPF_SKEL=3D=
-1 CORESIGHT=3D1 O=3D/tmp/build/perf -C tools/perf install-bin && git status=
- && perf test python'
-> =E2=AC=A2[acme@toolbox perf]$
->
-> =E2=AC=A2[acme@toolbox perf]$ m
-> make: Entering directory '/var/home/acme/git/perf/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h' di=
-ffers from latest version at 'arch/x86/include/asm/msr-index.h'
-> diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-i=
-ndex.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_reg=
-s.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.=
-h'
-> diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/=
-uapi/asm/perf_regs.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' di=
-ffers from latest version at 'arch/arm64/include/asm/cputype.h'
-> diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cpu=
-type.h
-> Warning: Kernel ABI header at 'tools/perf/arch/powerpc/entry/syscalls/sys=
-call.tbl' differs from latest version at 'arch/powerpc/kernel/syscalls/sysc=
-all.tbl'
-> diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/k=
-ernel/syscalls/syscall.tbl
->
->   INSTALL libsubcmd_headers
->   INSTALL traceevent_headers
->   INSTALL libapi_headers
->   INSTALL libperf_headers
->   INSTALL libsymbol_headers
->   INSTALL libbpf_headers
->   CC      /tmp/build/perf/builtin-annotate.o
->   CC      /tmp/build/perf/builtin-diff.o
->   CC      /tmp/build/perf/builtin-evlist.o
->   CC      /tmp/build/perf/builtin-sched.o
->   CC      /tmp/build/perf/builtin-buildid-list.o
->   CC      /tmp/build/perf/builtin-buildid-cache.o
->   CC      /tmp/build/perf/builtin-record.o
->   INSTALL trace_plugins
->   GEN     /tmp/build/perf/python/perf.so
->   CC      /tmp/build/perf/builtin-report.o
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-stat.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-timechart.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-top.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-script.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-kmem.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
->   CC      /tmp/build/perf/builtin-lock.o
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-kvm.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-inject.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
->   CC      /tmp/build/perf/builtin-mem.o
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
->   CC      /tmp/build/perf/builtin-c2c.o
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
->   CC      /tmp/build/perf/builtin-kwork.o
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
->   CC      /tmp/build/perf/builtin-trace.o
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> install: cannot create directory =E2=80=98/lib64/traceevent=E2=80=99: Per=
-mission denied
-> install: cannot create regular file '/lib64/traceevent/plugins': No such =
-file or directory
-> make[3]: *** [Makefile:211: install] Error 1
-> make[2]: *** [Makefile.perf:886: install-traceevent-plugins] Error 2
-> make[2]: *** Waiting for unfinished jobs....
->   CC      /tmp/build/perf/scripts/perl/Perf-Trace-Util/Context.o
->   CC      /tmp/build/perf/scripts/python/Perf-Trace-Util/Context.o
->   CC      /tmp/build/perf/bench/synthesize.o
->   CC      /tmp/build/perf/bench/inject-buildid.o
->   CC      /tmp/build/perf/ui/browsers/header.o
->   CC      /tmp/build/perf/tests/evsel-tp-sched.o
->   CC      /tmp/build/perf/arch/x86/util/intel-pt.o
->   CC      /tmp/build/perf/arch/x86/util/intel-bts.o
->   LD      /tmp/build/perf/scripts/python/Perf-Trace-Util/perf-in.o
->   LD      /tmp/build/perf/bench/perf-in.o
->   LD      /tmp/build/perf/ui/browsers/perf-in.o
->   CC      /tmp/build/perf/tests/code-reading.o
->   CC      /tmp/build/perf/tests/sample-parsing.o
->   LD      /tmp/build/perf/arch/x86/util/perf-in.o
->   CC      /tmp/build/perf/tests/topology.o
->   LD      /tmp/build/perf/ui/perf-in.o
->   CC      /tmp/build/perf/util/build-id.o
->   CC      /tmp/build/perf/tests/time-utils-test.o
->   CC      /tmp/build/perf/util/event.o
->   CC      /tmp/build/perf/tests/demangle-java-test.o
->   CC      /tmp/build/perf/tests/demangle-ocaml-test.o
->   LD      /tmp/build/perf/arch/x86/perf-in.o
->   CC      /tmp/build/perf/util/evsel.o
->   CC      /tmp/build/perf/util/evsel_fprintf.o
->   LD      /tmp/build/perf/arch/perf-in.o
->   LD      /tmp/build/perf/tests/perf-in.o
->   CC      /tmp/build/perf/util/header.o
->   CC      /tmp/build/perf/util/session.o
->   CC      /tmp/build/perf/util/s390-sample-raw.o
->   CC      /tmp/build/perf/util/amd-sample-raw.o
->   CC      /tmp/build/perf/util/ordered-events.o
->   CC      /tmp/build/perf/util/thread.o
->   CC      /tmp/build/perf/util/trace-event-parse.o
->   CC      /tmp/build/perf/util/trace-event-read.o
->   CC      /tmp/build/perf/util/trace-event-info.o
->   CC      /tmp/build/perf/util/trace-event-scripting.o
->   CC      /tmp/build/perf/util/trace-event.o
->   CC      /tmp/build/perf/util/sort.o
->   CC      /tmp/build/perf/util/hist.o
->   CC      /tmp/build/perf/util/stat.o
->   CC      /tmp/build/perf/util/synthetic-events.o
->   CC      /tmp/build/perf/util/auxtrace.o
->   CC      /tmp/build/perf/util/intel-pt.o
->   CC      /tmp/build/perf/util/intel-bts.o
->   CC      /tmp/build/perf/util/arm-spe.o
->   CC      /tmp/build/perf/util/hisi-ptt.o
->   CC      /tmp/build/perf/util/s390-cpumsf.o
->   CC      /tmp/build/perf/util/scripting-engines/trace-event-perl.o
->   CC      /tmp/build/perf/util/cs-etm.o
->   CC      /tmp/build/perf/util/scripting-engines/trace-event-python.o
->   CC      /tmp/build/perf/util/dlfilter.o
->   CC      /tmp/build/perf/util/time-utils.o
->   CC      /tmp/build/perf/util/bpf_off_cpu.o
->   CC      /tmp/build/perf/util/probe-file.o
->   CC      /tmp/build/perf/util/probe-event.o
->   LD      /tmp/build/perf/util/scripting-engines/perf-in.o
->   CC      /tmp/build/perf/util/unwind-libunwind-local.o
->   CC      /tmp/build/perf/util/unwind-libunwind.o
->   CC      /tmp/build/perf/util/data-convert-bt.o
->   CC      /tmp/build/perf/util/data-convert-json.o
->   LD      /tmp/build/perf/scripts/perl/Perf-Trace-Util/perf-in.o
->   CC      /tmp/build/perf/util/jitdump.o
->   LD      /tmp/build/perf/scripts/perf-in.o
->   CC      /tmp/build/perf/util/bpf-event.o
->   LD      /tmp/build/perf/util/perf-in.o
->   LD      /tmp/build/perf/perf-in.o
-> make[1]: *** [Makefile.perf:240: sub-make] Error 2
-> make: *** [Makefile:113: install-bin] Error 2
-> make: Leaving directory '/var/home/acme/git/perf/tools/perf'
->
->  Performance counter stats for 'make -k BUILD_BPF_SKEL=3D1 CORESIGHT=3D1 =
-O=3D/tmp/build/perf -C tools/perf install-bin':
->
->      9,363,188,016      cycles:u
->     17,153,393,661      instructions:u                   #    1.83  insn =
-per cycle
->
->        2.837743632 seconds time elapsed
->
->        2.316326000 seconds user
->        2.136834000 seconds sys
->
->
-> =E2=AC=A2[acme@toolbox perf]$
+A combination of patches previously sent here:
+https://lore.kernel.org/all/20221130062935.2219247-1-irogers@google.com/
+https://lore.kernel.org/all/20221202045743.2639466-6-irogers@google.com/
+and rebased on acme/tmp.perf/core. A fix is added to "perf build:
+Fixes for LIBTRACEEVENT_DYNAMIC" for the case where install is invoked
+without a DESTDIR.
 
-Thanks the following fixes it:
+Ian Rogers (3):
+  perf build: Fixes for LIBTRACEEVENT_DYNAMIC
+  perf build: Use libtraceevent from the system
+  perf build: Fix python/perf.so library's name
 
-```
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -884,7 +884,7 @@ $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
+ tools/perf/Build                              | 11 ++-
+ tools/perf/Makefile.config                    | 41 ++++----
+ tools/perf/Makefile.perf                      | 97 ++-----------------
+ tools/perf/arch/x86/util/Build                |  2 +-
+ tools/perf/arch/x86/util/intel-pt.c           |  4 +
+ tools/perf/builtin-annotate.c                 |  2 +
+ tools/perf/builtin-inject.c                   |  8 ++
+ tools/perf/builtin-kmem.c                     |  1 +
+ tools/perf/builtin-kvm.c                      | 12 +--
+ tools/perf/builtin-kwork.c                    |  1 +
+ tools/perf/builtin-record.c                   |  2 +
+ tools/perf/builtin-report.c                   |  9 +-
+ tools/perf/builtin-script.c                   | 19 +++-
+ tools/perf/builtin-timechart.c                |  1 +
+ tools/perf/builtin-trace.c                    |  5 +-
+ tools/perf/builtin-version.c                  |  1 +
+ tools/perf/perf.c                             | 24 +++--
+ .../perf/scripts/python/Perf-Trace-Util/Build |  2 +-
+ tools/perf/tests/Build                        | 12 +--
+ tools/perf/tests/builtin-test.c               |  6 ++
+ tools/perf/tests/parse-events.c               | 20 ++++
+ tools/perf/util/Build                         | 10 +-
+ tools/perf/util/data-convert-bt.c             |  5 +-
+ tools/perf/util/data-convert-json.c           |  9 +-
+ tools/perf/util/evlist.c                      |  6 +-
+ tools/perf/util/evlist.h                      |  4 +
+ tools/perf/util/evsel.c                       | 11 ++-
+ tools/perf/util/evsel.h                       | 12 ++-
+ tools/perf/util/evsel_fprintf.c               |  7 +-
+ tools/perf/util/header.c                      | 19 ++++
+ tools/perf/util/header.h                      |  2 +
+ tools/perf/util/intel-pt.c                    |  7 +-
+ tools/perf/util/parse-events.c                | 15 +++
+ tools/perf/util/parse-events.h                |  1 -
+ tools/perf/util/python.c                      |  4 +
+ tools/perf/util/scripting-engines/Build       |  6 +-
+ .../scripting-engines/trace-event-python.c    |  1 +
+ tools/perf/util/session.c                     |  2 +
+ tools/perf/util/session.h                     |  2 +
+ tools/perf/util/sort.c                        | 60 ++++++++++--
+ tools/perf/util/synthetic-events.c            |  6 ++
+ tools/perf/util/trace-event-parse.c           |  2 +
+ tools/perf/util/trace-event-read.c            |  1 +
+ tools/perf/util/trace-event-scripting.c       |  1 +
+ tools/perf/util/trace-event.c                 |  1 -
+ tools/perf/util/trace-event.h                 | 11 ++-
+ 46 files changed, 316 insertions(+), 169 deletions(-)
 
-install-traceevent-plugins: libtraceevent_plugins
-       $(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR)
-O=3D$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
--               DESTDIR=3D$(DESTDIR_SQ) prefix=3D \
-+               DESTDIR=3D$(DESTDIR_SQ)$(prefix) prefix=3D \
-               $(LIBTRACEEVENT_FLAGS) install
-endif
-```
+-- 
+2.39.0.rc0.267.gcb52ba06e7-goog
 
-I'll rebase on tmp.perf/core and send the outstanding patches.
-
-Thanks,
-Ian
