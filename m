@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310AC4708C
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 23:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E9C4708C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 23:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233904AbiLEXAX (ORCPT
+        id S233978AbiLEXAg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 18:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51622 "EHLO
+        Mon, 5 Dec 2022 18:00:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233908AbiLEXAV (ORCPT
+        with ESMTP id S233927AbiLEXA2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 18:00:21 -0500
+        Mon, 5 Dec 2022 18:00:28 -0500
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71741DF09
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 15:00:16 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id a5-20020a25af05000000b006e450a5e507so14104058ybh.22
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 15:00:16 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C9D1DF3F
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 15:00:27 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id k7-20020a256f07000000b006cbcc030bc8so13951488ybc.18
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 15:00:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PPB6mm4TgvEyyws63dJDbYxmtsHoaTSfd5QqDu3w1uI=;
-        b=C5FPbwTLLReGGev2zyGrS3uZzYugF2818QQO5J2fo7XbqJivZvrYJ1P0C4lI3kcFuS
-         VTlWaNs8ff9Qlv8WKub2nhSjxD/H4BjEO2XZwD89hbBjnoXcXJ6FjyzePLKJEyqTC+zr
-         w54vIcSMfJ+XEXh0zTDrJsPXwabmzhoVnDlFd0VlpqeZdmpLKKjjON63et08uSV8rbCB
-         qflhvqcsPF7S1uuAjx+D8+91UcT1mXEhvBaJH3bBfQQjRHMysOWYnw5CH1cwZSO9pkDk
-         1rpS+C+TGN5n9qJNrFqJaE58+HkgF+BSNIh7tCT4Mbpi4WJGjhxQ9++mXCaSILOh4v+H
-         sHcg==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wJd3unxth988O4ChzrsMI/KkhK+0qKkYIwY6FEhWnkw=;
+        b=FRqWAbY73AhNd8V+YTBgN6yaWg8iUzX4pU80v+SCHpgI/CTXgfdrQ3K6fT+cpHj3uK
+         EN5s0GjjgdzS3hy6tkwp/DWOzWu+WGEE2iu2CtwpTOxyXZvJlrJAR2lxwYo/kuruMZDo
+         wXqcmeVWRRne58FdQ0dMiMTDtw4d25znA2BSldV2h539ICJgz5EFcbcAWd47VKBxVWHh
+         vb1IRENH3hhu4plY23kCwlQSIOeMOPcxCGTPNVPZfP0cZyczVVfL/MnAW1TT2q0pMdvn
+         NVnISfXhPsjcX8e5ezltJY7owSrNOQW6J8CidR0+9LbOp8S0MHg6xScCsZFP4rKQX0uq
+         dgrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PPB6mm4TgvEyyws63dJDbYxmtsHoaTSfd5QqDu3w1uI=;
-        b=MyAoMr1jECKEuAMuFeaaX6Ug6CY9dIsanlFnbLl2UBN0qe5tz2C3TvVhgMTZ0zUOFt
-         HZp+U6KLD7iBH6bX/qPMtOBeoGFgZeGA7RGHm1/8M/IOkp/uwTBj17va7tz5RnlGhVC7
-         p14a64tTDbNXSAXXn5XB46fApkHNSiXIqgXS8vuNgGMEbvYRLGtv1duU7qBLsZRkkmyj
-         VaeAaamp+y5oUB5kB+45lovWFwWG9s5SB/ilAKfPLG88lmyNdYqBH8Ah2A68vWnPlN46
-         Lw/aKC3GtVgQP5jB1st2MCXhT/Nv/25id4Pnsayg5C9XGtnA18TB4M9H59z7HSQ2bUev
-         PwDA==
-X-Gm-Message-State: ANoB5pnxSdQDkhs4cLVUkUs1SPw5Wg/qvqkaPDGrnNr5mPQbdb4Kw3q5
-        oOfGKGp5hGLRxrQGGGMT9+8PqoXEmT79
-X-Google-Smtp-Source: AA0mqf4/gStV2U+rF772WtObJJ72RvjxENibVb8G0GIypnoa3fG7AnxxhXmYWAKy2OxVypqvXmUdDsH+y/ul
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wJd3unxth988O4ChzrsMI/KkhK+0qKkYIwY6FEhWnkw=;
+        b=0C/ydqoowFF5ujAsG1hFsJgMclEuKaIM5BuXTF8+9/2QGhNEFGMM0tCkKHlSdkrOVR
+         rHIPpB/5Tm+QWmgKCr0a8joAoCUYkUSKazihldas3siB60hU4xgCmi7ltdLA1YegWetS
+         Le3hS4TZUEDG30l8ddjVZlHp3+l6VeAC9tK1NXrIeLRMkypLQK76nczop4Djo+qFvsJj
+         I8+TBLd8WaZF9Uv6P6dIF0QMHa3lmGq118gDARrVixHtrBAomo+iIv+o4yrAr8IqRdJO
+         9GWLyyaamevvyhZ80Cl5FokcxRL5gmUEL58i7B+ANp0QlT5Kg0nOvTVfu43P61yOTpC3
+         He5g==
+X-Gm-Message-State: ANoB5pnymlim8+rBaKJp+UQXT76we/Gr1iaXSwCndzYQa/ygeNDSe0tR
+        P3qIFXWSUoGl9M297Me0HOVfEBDK0CIQ
+X-Google-Smtp-Source: AA0mqf6kYPN63s6r/LmOIdeoVrRTHGNcj1Yc84GK+j2U35wrcRGViI6T6nHPkyENWehvnR8R/w7RcTbddD1g
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:d2ab:5fbb:e81a:9151])
- (user=irogers job=sendgmr) by 2002:a25:9a43:0:b0:6cb:8f05:b35c with SMTP id
- r3-20020a259a43000000b006cb8f05b35cmr64275847ybo.217.1670281216121; Mon, 05
- Dec 2022 15:00:16 -0800 (PST)
-Date:   Mon,  5 Dec 2022 14:59:37 -0800
-Message-Id: <20221205225940.3079667-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:d906:0:b0:6f9:bd14:f0b4 with SMTP id
+ q6-20020a25d906000000b006f9bd14f0b4mr26845398ybg.408.1670281226358; Mon, 05
+ Dec 2022 15:00:26 -0800 (PST)
+Date:   Mon,  5 Dec 2022 14:59:38 -0800
+In-Reply-To: <20221205225940.3079667-1-irogers@google.com>
+Message-Id: <20221205225940.3079667-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20221205225940.3079667-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
-Subject: [PATCH 0/3] libtraceevent from system and build fix
+Subject: [PATCH 1/3] perf build: Fixes for LIBTRACEEVENT_DYNAMIC
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -64,72 +66,50 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         bpf@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-A combination of patches previously sent here:
-https://lore.kernel.org/all/20221130062935.2219247-1-irogers@google.com/
-https://lore.kernel.org/all/20221202045743.2639466-6-irogers@google.com/
-and rebased on acme/tmp.perf/core. A fix is added to "perf build:
-Fixes for LIBTRACEEVENT_DYNAMIC" for the case where install is invoked
-without a DESTDIR.
+If LIBTRACEEVENT_DYNAMIC is enabled then avoid the install step for
+the plugins. If disabled correct DESTDIR so that the plugins are
+installed under <lib>/traceevent/plugins.
 
-Ian Rogers (3):
-  perf build: Fixes for LIBTRACEEVENT_DYNAMIC
-  perf build: Use libtraceevent from the system
-  perf build: Fix python/perf.so library's name
+Fixes: ef019df01e20 ("perf build: Install libtraceevent locally when building")
+Reported-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.perf | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
- tools/perf/Build                              | 11 ++-
- tools/perf/Makefile.config                    | 41 ++++----
- tools/perf/Makefile.perf                      | 97 ++-----------------
- tools/perf/arch/x86/util/Build                |  2 +-
- tools/perf/arch/x86/util/intel-pt.c           |  4 +
- tools/perf/builtin-annotate.c                 |  2 +
- tools/perf/builtin-inject.c                   |  8 ++
- tools/perf/builtin-kmem.c                     |  1 +
- tools/perf/builtin-kvm.c                      | 12 +--
- tools/perf/builtin-kwork.c                    |  1 +
- tools/perf/builtin-record.c                   |  2 +
- tools/perf/builtin-report.c                   |  9 +-
- tools/perf/builtin-script.c                   | 19 +++-
- tools/perf/builtin-timechart.c                |  1 +
- tools/perf/builtin-trace.c                    |  5 +-
- tools/perf/builtin-version.c                  |  1 +
- tools/perf/perf.c                             | 24 +++--
- .../perf/scripts/python/Perf-Trace-Util/Build |  2 +-
- tools/perf/tests/Build                        | 12 +--
- tools/perf/tests/builtin-test.c               |  6 ++
- tools/perf/tests/parse-events.c               | 20 ++++
- tools/perf/util/Build                         | 10 +-
- tools/perf/util/data-convert-bt.c             |  5 +-
- tools/perf/util/data-convert-json.c           |  9 +-
- tools/perf/util/evlist.c                      |  6 +-
- tools/perf/util/evlist.h                      |  4 +
- tools/perf/util/evsel.c                       | 11 ++-
- tools/perf/util/evsel.h                       | 12 ++-
- tools/perf/util/evsel_fprintf.c               |  7 +-
- tools/perf/util/header.c                      | 19 ++++
- tools/perf/util/header.h                      |  2 +
- tools/perf/util/intel-pt.c                    |  7 +-
- tools/perf/util/parse-events.c                | 15 +++
- tools/perf/util/parse-events.h                |  1 -
- tools/perf/util/python.c                      |  4 +
- tools/perf/util/scripting-engines/Build       |  6 +-
- .../scripting-engines/trace-event-python.c    |  1 +
- tools/perf/util/session.c                     |  2 +
- tools/perf/util/session.h                     |  2 +
- tools/perf/util/sort.c                        | 60 ++++++++++--
- tools/perf/util/synthetic-events.c            |  6 ++
- tools/perf/util/trace-event-parse.c           |  2 +
- tools/perf/util/trace-event-read.c            |  1 +
- tools/perf/util/trace-event-scripting.c       |  1 +
- tools/perf/util/trace-event.c                 |  1 -
- tools/perf/util/trace-event.h                 | 11 ++-
- 46 files changed, 316 insertions(+), 169 deletions(-)
-
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index a17a6ea85e81..6689f644782f 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -884,7 +884,7 @@ $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
+ 
+ install-traceevent-plugins: libtraceevent_plugins
+ 	$(Q)$(MAKE) -C $(LIBTRACEEVENT_PLUGINS_DIR) O=$(LIBTRACEEVENT_PLUGINS_OUTPUT) \
+-		DESTDIR=$(LIBTRACEEVENT_PLUGINS_DESTDIR) prefix= \
++		DESTDIR=$(DESTDIR_SQ)$(prefix) prefix= \
+ 		$(LIBTRACEEVENT_FLAGS) install
+ endif
+ 
+@@ -1093,7 +1093,11 @@ install-tests: all install-gtk
+ 		$(INSTALL) tests/shell/coresight/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/coresight'
+ 	$(Q)$(MAKE) -C tests/shell/coresight install-tests
+ 
+-install-bin: install-tools install-tests install-traceevent-plugins
++install-bin: install-tools install-tests
++
++ifndef LIBTRACEEVENT_DYNAMIC
++install-bin: install-traceevent-plugins
++endif
+ 
+ install: install-bin try-install-man
+ 
 -- 
 2.39.0.rc0.267.gcb52ba06e7-goog
 
