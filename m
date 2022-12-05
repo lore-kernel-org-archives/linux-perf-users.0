@@ -2,114 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D61C4321E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 02:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D20DC4321E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 03:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231318AbiLECzp (ORCPT
+        id S231144AbiLEDlY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Dec 2022 21:55:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48984 "EHLO
+        Sun, 4 Dec 2022 22:41:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231140AbiLECzl (ORCPT
+        with ESMTP id S230479AbiLEDlX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Dec 2022 21:55:41 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B91610FDD
-        for <linux-perf-users@vger.kernel.org>; Sun,  4 Dec 2022 18:55:40 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id k88-20020a17090a4ce100b00219d0b857bcso1473008pjh.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Dec 2022 18:55:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hSNynX4Sq04HRNzeYRW4MxMHV7orcwezehiZD+s4b+0=;
-        b=m0obYKkLHQxYAki+nPI03F2xMccBXz6NXxl1Iy+Gx+Yc1TYGtCvZneeJOA1N5uxgAj
-         R6H8k/L2ZP+B8EjHdOLnxuQZj2We7s+xCWN1/hYvah9ufORJ8Fbl50en6/xCP0p1D5uo
-         IaifvXpAc9jmIiPTAojTzEeb07UFlFCs4oFWPSwDKryd226Xm16rN5ORjISRx0myDpCd
-         gnuOlOOIO1Q7G9edm1yNan5X/rqyPPnEoe05RhReOUaUqu+WucNbLWUVUSjnp7nN9YHW
-         ACV+fxQ+tUMYFdSjK2aMuD6EiVTm6Aty75HLnm3QBSBqTVk0qY6Aa1gNPreGoZy0cFtJ
-         qzNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hSNynX4Sq04HRNzeYRW4MxMHV7orcwezehiZD+s4b+0=;
-        b=edFa4EMKxjfuoKxIG4PaZUzFIV9IKWZxAy9rqnL+CDEoJRpmWZ3Oh4shVsMNUWLlwi
-         Wn9jN7SXDz2B6jInpluazaKG7TaQB7208n8m0ep5cxcvrJped8bhxpJ6qzmKXkU0PyTL
-         fJ6gcmO3vg/p9eT/C0PfU6AFMYG6ptB9qQI+f9SEtW/NWmD+xb76sYUyEXThW1tdS70m
-         PqaohZP9W1UdRuB4Vo7B/1ypkZtOzTNziTldAa8pV51lYBAf3PV0fTz+SNUg5R5mYZgu
-         AiI2oAmRn6Us+e/fA8KT0Yr1BFbmC5MLViu+0abXprxsnpAcJq3EHO0oeAJ2GJqmE+B4
-         b2IA==
-X-Gm-Message-State: ANoB5plOLbDKHt8UvoeIcoxLugXp3KyG5B3cA6OjdEFSNkX93uw2RXVo
-        nDmUoV0zZamo/cD2uGVfPdRnIus3UqQ=
-X-Google-Smtp-Source: AA0mqf6wgzLrJTdh2WL14NZAJBkD+9JSJluXqXQ65Gd0sSrowi4XG0/7/wSKcDWa9qPnAbWAEVkOEQ==
-X-Received: by 2002:a17:90a:a095:b0:218:e358:12d2 with SMTP id r21-20020a17090aa09500b00218e35812d2mr57503605pjp.208.1670208939239;
-        Sun, 04 Dec 2022 18:55:39 -0800 (PST)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::d00])
-        by smtp.gmail.com with ESMTPSA id i9-20020a17090a058900b00210039560c0sm9849777pji.49.2022.12.04.18.55.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Dec 2022 18:55:38 -0800 (PST)
-From:   Khem Raj <raj.khem@gmail.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     Khem Raj <raj.khem@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Fangrui Song <maskray@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        John Keeping <john@metanate.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: [PATCH] perf python: Account for multiple words in CC
-Date:   Sun,  4 Dec 2022 18:55:34 -0800
-Message-Id: <20221205025534.150006-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.38.1
+        Sun, 4 Dec 2022 22:41:23 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76F1BDEB8;
+        Sun,  4 Dec 2022 19:41:22 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 978B423A;
+        Sun,  4 Dec 2022 19:41:28 -0800 (PST)
+Received: from [10.163.44.51] (unknown [10.163.44.51])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D13B3F73B;
+        Sun,  4 Dec 2022 19:41:17 -0800 (PST)
+Message-ID: <64f7f939-0c71-e5de-9812-fd46bfdd89a8@arm.com>
+Date:   Mon, 5 Dec 2022 09:11:18 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH] perf/core: Reset remaining bits in
+ perf_clear_branch_entry_bitfields()
+Content-Language: en-US
+To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Cc:     james.clark@arm.com, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20221201055103.302019-1-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20221201055103.302019-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Sometimes build systems may append options e.g. --sysroot etc. to CC
-variable especially in cross-compile environments like yocto project
-where CC varable is composed of cross-compiler name and some needed
-options for it to work in a relocatable environment. Therefore separate
-out the compiler name from rest of the options in CC, then add the
-options via second argument to Popen() API
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Fangrui Song <maskray@google.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Keeping <john@metanate.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- tools/perf/util/setup.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index 5b1e6468d5e8..e9be6e36408f 100644
---- a/tools/perf/util/setup.py
-+++ b/tools/perf/util/setup.py
-@@ -7,7 +7,7 @@ cc_is_clang = b"clang version" in Popen([cc.split()[0], "-v"], stderr=PIPE).stde
- src_feature_tests  = getenv('srctree') + '/tools/build/feature'
- 
- def clang_has_option(option):
--    cc_output = Popen([cc, option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
-+    cc_output = Popen([cc.split()[0], str(cc.split()[1:]) + option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
-     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o))] == [ ]
- 
- if cc_is_clang:
--- 
-2.38.1
+On 12/1/22 11:21, Anshuman Khandual wrote:
+> perf_clear_branch_entry_bitfields() resets all struct perf_branch_entry bit
+> fields before capturing branch records. This resets remaining bit fields
+> except 'new_type', which is valid only when 'type' is PERF_BR_EXTEND_ABI.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: linux-perf-users@vger.kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This applies on v6.1-rc6
+> 
+> 'perf_branch_entry.new_type' can remain uninitialized as explained earlier.
+> Also there is no PERF_BR_NEW_UNKNOWN to spare, because 'perf_branch_entry.
+> new_type' enumeration starts at PERF_BR_NEW_FAULT_ALGN, to save a position
+> for the extended branch types instead.
+> 
+>  include/linux/perf_event.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 0031f7b4d9ab..c97b5f6f77a4 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1110,8 +1110,9 @@ static inline void perf_clear_branch_entry_bitfields(struct perf_branch_entry *b
+>  	br->in_tx = 0;
+>  	br->abort = 0;
+>  	br->cycles = 0;
+> -	br->type = 0;
+> +	br->type = PERF_BR_UNKNOWN;
+>  	br->spec = PERF_BR_SPEC_NA;
+> +	br->priv = PERF_BR_PRIV_UNKNOWN;
+>  	br->reserved = 0;
+>  }
+>  
 
+Hello Peter,
+
+Just wondering is there a chance that this patch could make it to v6.2-rc1 ?
+
+- Anshuman
