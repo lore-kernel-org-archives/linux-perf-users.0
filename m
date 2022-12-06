@@ -2,192 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B9C352A1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 14:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239C6C4708E
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 14:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233613AbiLFOQB (ORCPT
+        id S235037AbiLFOs7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 09:16:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58978 "EHLO
+        Tue, 6 Dec 2022 09:48:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231190AbiLFOP6 (ORCPT
+        with ESMTP id S235028AbiLFOs6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 09:15:58 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEF927FD8;
-        Tue,  6 Dec 2022 06:15:57 -0800 (PST)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B6E6j2W018855;
-        Tue, 6 Dec 2022 14:15:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=BIFSDAVv2wI7a1dgcEbJwYvbTwm8r1AUFBpBrgN4MxQ=;
- b=L86W99yVsxXZESeG9pZBWzWi1tf7cyhbDtA4J5fTQH+cjJWy9hB3yFdVIDvkpUXcMJfl
- jw4WOLFfC0l2CAIjFWbPBLHODMue95zhsqELDM5aag04hpN0sqcJJKZtAEM/Zmg4xjmD
- GFBaluCZJn6pB0xbhBLaSMHyrNJkbco2AQBJ+xIuQqcYaXb7bfIjcXrM3fHUzG/Ospll
- Bm4WcQtH+Q+yU5pb+O3XdEiZRP+JR01uU6Me1YaRDWAND8waMAtetc7m2olJnAc0wfGQ
- lQ1FEE9Yd/Avimsr9KDWaYM2zas5iny0ZT8bhwVU67DczYqWEH1W6a+ksjmKSGKlTiyO iA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ma40sdkbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Dec 2022 14:15:40 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B6Dwtrt019889;
-        Tue, 6 Dec 2022 14:15:39 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ma40sdkap-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Dec 2022 14:15:39 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2B6954Wp008303;
-        Tue, 6 Dec 2022 14:15:37 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3m9m5y1h09-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Dec 2022 14:15:37 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com ([9.149.105.160])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B6EFYbN40501616
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Dec 2022 14:15:34 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A513CA405B;
-        Tue,  6 Dec 2022 14:15:34 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A222FA4054;
-        Tue,  6 Dec 2022 14:15:31 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.125.13])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  6 Dec 2022 14:15:31 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] perf stat: Update event skip condition
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20221205231630.319759-1-namhyung@kernel.org>
-Date:   Tue, 6 Dec 2022 19:45:29 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <ED791914-FA30-410A-8BD8-735248940A72@linux.vnet.ibm.com>
-References: <20221205231630.319759-1-namhyung@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2neSzjaQHMB1SLNful9yVl1dZmRp8VLC
-X-Proofpoint-GUID: F0Xo3C86T5Jln62e6lhTz9QSGA2oYmFk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-06_09,2022-12-06_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2210170000 definitions=main-2212060115
+        Tue, 6 Dec 2022 09:48:58 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513791C905;
+        Tue,  6 Dec 2022 06:48:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670338083; x=1701874083;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KreZWgqbUXWkBrewyIR53/0zjeTOrsKtsjVNswAQ4+M=;
+  b=gewnhYgIjmkvaMQV/SOg+23XSDCu5yey/MzBSE73obvQcqdHjO9+aoRy
+   SKIQsFIiBEEalOEU47Vlx91n2GlqwIanwlFcyEF87JiNJQPNeW89BZvhG
+   qEwgdFGJSDjmoArwZc9x81jCf0qd5nSxxfsxjgQ0SiqXYFxm7Ugn4EgZD
+   7UxO2FzP2VZtb9Wirn7K4HMaAhDHWrETRek2ygENz+DZ+aC71vKAixXsv
+   CMt/HhO9OkMLtI04wib934uXKg+c61R9MPTpP7gwSnRJRgI23WlFBfqhL
+   Ib470PXDu3CQ286i1sLNeaczXVsRkV/W1bTFym7kIUkZDzfAxyAvadnUb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="296329735"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="296329735"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 06:48:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="639897403"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="639897403"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 06 Dec 2022 06:48:02 -0800
+Received: from [10.252.209.31] (kliang2-mobl1.ccr.corp.intel.com [10.252.209.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8BF40580D54;
+        Tue,  6 Dec 2022 06:47:59 -0800 (PST)
+Message-ID: <529367b6-e96a-d030-b8a2-bb4ad3d37d90@linux.intel.com>
+Date:   Tue, 6 Dec 2022 09:47:57 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v3 0/2] perf test: Add event group test
+Content-Language: en-US
+To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
+Cc:     irogers@google.com, jolsa@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+        carsten.haitzler@arm.com, leo.yan@linaro.org, maddy@linux.ibm.com,
+        kjain@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        tmricht@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+References: <20221206043237.12159-1-ravi.bangoria@amd.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20221206043237.12159-1-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 06-Dec-2022, at 4:46 AM, Namhyung Kim <namhyung@kernel.org> wrote:
->=20
-> In print_counter_aggrdata(), it skips some events that has no =
-aggregate
-> count.  It's actually for system-wide per-thread mode and merged =
-uncore
-> and hybrid events.
->=20
-> Let's update the condition to check them explicitly.
->=20
-> Fixes: 91f85f98da7a ("Display event stats using aggr counts")
-> Reported-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-> Athira, could you please check this fixes the problem?
->=20
-> tools/perf/util/stat-display.c | 16 +++++++++-------
-> 1 file changed, 9 insertions(+), 7 deletions(-)
->=20
-> diff --git a/tools/perf/util/stat-display.c =
-b/tools/perf/util/stat-display.c
-> index 847acdb5dc40..6c0de52ac4be 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -814,7 +814,8 @@ static void print_counter_aggrdata(struct =
-perf_stat_config *config,
-> 	os->nr =3D aggr->nr;
-> 	os->evsel =3D counter;
->=20
-> -	if (counter->supported && aggr->nr =3D=3D 0)
-> +	/* Skip already merged uncore/hybrid events */
-> +	if (counter->merged_stat)
-> 		return;
+On 2022-12-05 11:32 p.m., Ravi Bangoria wrote:
+> Multiple events in a group can belong to one or more pmus, however
+> there are some limitations to it. One of the limitation is, perf
+> doesn't allow creating a group of events from different hw pmus.
+> Write a simple test to create various combinations of hw, sw and
+> uncore pmu events and verify group creation succeeds or fails as
+> expected.
+> 
+> v2: https://lore.kernel.org/r/20221129111946.409-1-ravi.bangoria@amd.com
+> v2->v3:
+>  - Define a set of uncore pmus that supports more than 3 events. This
+>    will prevent false negative results by not picking random uncore
+>    pmu. Test will be skipped if no uncore pmu found.
+> 
+> Ravi Bangoria (2):
+>   perf tool: Move pmus list variable to new a file
 
-Hi Namhyung,
+a new file
 
-Thanks for the fix.
+Other than the above typo, the patch series looks good to me.
 
-This patch removes the merged_stat checks from print_aggr and =
-print_aggr_cgroup.
-We also have this check in print_counter which needs to be removed.
+Acked-by: Kan Liang <kan.liang@linux.intel.com>
 
-With that change,=20
+Thanks,
+Kan
 
-Acked-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
->=20
-> 	uniquify_counter(config, counter);
-> @@ -823,6 +824,13 @@ static void print_counter_aggrdata(struct =
-perf_stat_config *config,
-> 	ena =3D aggr->counts.ena;
-> 	run =3D aggr->counts.run;
->=20
-> +	/*
-> +	 * Skip value 0 when enabling --per-thread globally, otherwise =
-it will
-> +	 * have too many 0 output.
-> +	 */
-> +	if (val =3D=3D 0 && config->aggr_mode =3D=3D AGGR_THREAD && =
-config->system_wide)
-> +		return;
-> +
-> 	if (!metric_only) {
-> 		if (config->json_output)
-> 			fputc('{', output);
-> @@ -899,9 +907,6 @@ static void print_aggr(struct perf_stat_config =
-*config,
-> 		print_metric_begin(config, evlist, os, s);
->=20
-> 		evlist__for_each_entry(evlist, counter) {
-> -			if (counter->merged_stat)
-> -				continue;
-> -
-> 			print_counter_aggrdata(config, counter, s, os);
-> 		}
-> 		print_metric_end(config, os);
-> @@ -928,9 +933,6 @@ static void print_aggr_cgroup(struct =
-perf_stat_config *config,
-> 			print_metric_begin(config, evlist, os, s);
->=20
-> 			evlist__for_each_entry(evlist, counter) {
-> -				if (counter->merged_stat)
-> -					continue;
-> -
-> 				if (counter->cgrp !=3D os->cgrp)
-> 					continue;
->=20
-> --=20
-> 2.39.0.rc0.267.gcb52ba06e7-goog
->=20
-
+>   perf test: Add event group test
+> 
+>  tools/perf/tests/Build          |   1 +
+>  tools/perf/tests/builtin-test.c |   1 +
+>  tools/perf/tests/event_groups.c | 127 ++++++++++++++++++++++++++++++++
+>  tools/perf/tests/tests.h        |   1 +
+>  tools/perf/util/Build           |   1 +
+>  tools/perf/util/pmu.c           |   2 +-
+>  tools/perf/util/pmus.c          |   5 ++
+>  tools/perf/util/pmus.h          |   9 +++
+>  8 files changed, 146 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/tests/event_groups.c
+>  create mode 100644 tools/perf/util/pmus.c
+>  create mode 100644 tools/perf/util/pmus.h
+> 
