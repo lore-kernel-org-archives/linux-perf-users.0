@@ -2,280 +2,133 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CE5C4708C
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 02:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1832C352A1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 04:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232490AbiLFCup (ORCPT
+        id S229982AbiLFEdX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 21:50:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58768 "EHLO
+        Mon, 5 Dec 2022 23:33:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232266AbiLFCuo (ORCPT
+        with ESMTP id S229936AbiLFEdV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 21:50:44 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C1223BDF
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 18:50:43 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id v3so12190449pgh.4
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 18:50:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WEYJ73xbUUTuiFPUB3TgsG4oZgIHBL7beR0oFU4cLiY=;
-        b=OKVs83b4UGUNN2j1s6jwUm405BVfAXXNGOO/1BbcrtZTAmY2VCR5rAvmq51plcpn4W
-         rp1bENJ7GEKvgmumqJTFWD8sRRG9wP2U2feDEBgbwQAVyrkh4ooiPK8/uYsb+HBJoAMv
-         Ujxq+sjw5VSueKFqN0CCjj6UQ9fXtyA3XX7qdlD0BnZj0IafZ9h+YcaseoJBydEd8rp8
-         G6EMWuEEuAp4Hv+oikWoaGVDEV//dQqb9hiykO4O3VIhbTRF42tcJgWMT9u8weSYGMY3
-         uuWwmZ8KBepsLO1DBrslBCTZQ8yy28zfbxn35DkgV4QTYxcfbsFIKEpdWsKgrH3C14h6
-         1dUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WEYJ73xbUUTuiFPUB3TgsG4oZgIHBL7beR0oFU4cLiY=;
-        b=j9ZfWLjY8vIRuMQkJCWWWNh+xFJlvBygxsZxYW4lf2yq3bq5aMp07gZfGH7oCuvaGs
-         4Q7qHC89bp51oAcKPCdArT17IGEFg8RrkNBvoN3ry7Q7mekhoHIAmI1Y7XlG2jCiftf7
-         hDW9lA16EBjOxKJmO+PiTjZ1kzpuhp5EXXIDgGc91aWG8ypqtKbCp5nmM7Mi+NeDzkjj
-         8qBlau/eAjjVmGPD/pg+bZ19a1VIlgW3gpItSK1ftG5MPY0jtHMzlro96aCHn/78S4iA
-         QvVrSj4q01UKQkoaQZh8SVNx6CvscxT1NnTP4XDoYFruhB+ddUMujEb/QJfjYosBcEvC
-         g1Lg==
-X-Gm-Message-State: ANoB5pmj5BuOawFi9rDCWH4lU6XzlviDiQxPofGebuKRP+5OruX8xx8o
-        vz9AWMrW8HkkZrH2H/XprNwacA==
-X-Google-Smtp-Source: AA0mqf4bzqGZRywxJ9QXKAqa/GtPKIMErbmBEYPJOTEm/8DTgmSWLgq5+wobqCf0pQxYyGLrYS7SxA==
-X-Received: by 2002:a05:6a00:2883:b0:572:7b49:4f47 with SMTP id ch3-20020a056a00288300b005727b494f47mr69791918pfb.16.1670295042616;
-        Mon, 05 Dec 2022 18:50:42 -0800 (PST)
-Received: from C02CV1DAMD6P.bytedance.net ([139.177.225.255])
-        by smtp.gmail.com with ESMTPSA id c73-20020a624e4c000000b0056bc742d21esm10892043pfb.176.2022.12.05.18.50.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 18:50:42 -0800 (PST)
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chengming Zhou <zhouchengming@bytedance.com>
-Subject: [PATCH] perf/core: Fix cgroup events tracking
-Date:   Tue,  6 Dec 2022 10:50:34 +0800
-Message-Id: <20221206025034.75125-1-zhouchengming@bytedance.com>
-X-Mailer: git-send-email 2.35.1
+        Mon, 5 Dec 2022 23:33:21 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDCDADEC4;
+        Mon,  5 Dec 2022 20:33:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nu7KKRbmdfKYmpyUM0DTfpQT8cXTHzl+X2Bu5jmVSecm4oIBThLhxG2OQjJBEphwmVsC+KxjXZmFgaxfm/w9vSMLoOGE7p1eZVihHAeIqcsw/QXflG6vnL0Rsw81ZEEIctuhlYiSXEwOxN/7dRiSAabstFODiCL0n+D+peQLkip5Wk47sNJIU+7vKP6C/h8rjSEzHkuVxoB2M2nzXkkfA9x7W0jrqHT2VpQpzR9F38XiwuIvgcIlUKRZNS9obKf56FqEIhOVOenImL6XvVYnQ2w4jCvza2AZKwyREF0hyz5Tjxs5Hm0SHr4RXUVMPdVbh20gwnXByuurCNEqJm4fmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=v1SPW7myZw5C0zA/jG4JiJ2UZgw2FLqfmbLtbrytOyE=;
+ b=IXchvoMN8WFB+GmDPLzfRhQEU7aQqU91cybvYBBoHkqOa9PQGmRIAvwIDhajVhTFe/721Z5ypA6kDFNvFMFeZ2juMp8g0kgtQHTPU4ppknQ9mLRHGeXm8BaYSmuLLG0uaE1lDFAlpHYMafSIwb2LIUvAzl0V0ZUGGA2DUrk+4lZlDrVHYwUS5icl7or+pxCI+PXMTT06Dy17X7FM2/bjvYLs3avOxT6gRxf9uGMcyyFtlF9SrQkvKbwiZowlmr/OzX99I4UOj5a/NAH1fmF6reVniNIHeya2vLxRgnTgGEvfbBnvuhvq05vLXndrSBusC2H9BSCcNn0jdcMl+IhFcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=v1SPW7myZw5C0zA/jG4JiJ2UZgw2FLqfmbLtbrytOyE=;
+ b=nysRh+IXXsLM/kYgDuykaRIWeOPCX+xAkqaTVWGd9cT4RObGZbbTmR8bRGu7maSIjLoW+iY0o4ulP4dkMHBRIUFfcRhZ1SNxxFamh4XYP6C6QGadJdvdiLYcimJB5pECXtCLoRyrbkLop7Ui67LZ4NAPpccJTN08iGb+g2ugk5g=
+Received: from DM5PR07CA0097.namprd07.prod.outlook.com (2603:10b6:4:ae::26) by
+ CY8PR12MB7657.namprd12.prod.outlook.com (2603:10b6:930:9d::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5880.14; Tue, 6 Dec 2022 04:33:18 +0000
+Received: from DS1PEPF0000E659.namprd02.prod.outlook.com
+ (2603:10b6:4:ae:cafe::9f) by DM5PR07CA0097.outlook.office365.com
+ (2603:10b6:4:ae::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14 via Frontend
+ Transport; Tue, 6 Dec 2022 04:33:18 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0000E659.mail.protection.outlook.com (10.167.18.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5880.8 via Frontend Transport; Tue, 6 Dec 2022 04:33:18 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 5 Dec
+ 2022 22:33:12 -0600
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <kan.liang@linux.intel.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <mark.rutland@arm.com>,
+        <adrian.hunter@intel.com>, <alexander.shishkin@linux.intel.com>,
+        <carsten.haitzler@arm.com>, <leo.yan@linaro.org>,
+        <maddy@linux.ibm.com>, <kjain@linux.ibm.com>,
+        <atrajeev@linux.vnet.ibm.com>, <tmricht@linux.ibm.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH v3 0/2] perf test: Add event group test
+Date:   Tue, 6 Dec 2022 10:02:35 +0530
+Message-ID: <20221206043237.12159-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0000E659:EE_|CY8PR12MB7657:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74db905c-1c53-402b-20a3-08dad742ffa2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +AtZ7ww9Z/IT8EF36TWH8DX2RZjZ4FjrBsBQvM2FkfNdJN83jn7/HIy9W/HSdiMmFdHgfpnUIvcOZUlNJra5Ehj3OEG2t90UUbFgZ/qLxSsd0tZWUVTiDobVrqFY3jI7im33hbw1Dr+9A/Xsi6tG/SbBS6VQwbT/ik/NG4cR5/cv59UCNXcA1TN41uxT12herQHxHIDqLJt3g4tGItpZMAbIgwWyNuuV4M73LhyFivBClyfL7c5/KLsiuwWdfYlbzxFc7ET+KEycHiP15XsV9QCVvt90+MKBv5AQ3IsqDK/99NkCC7SboMUqu2vS3Nud0JmDhqPv7xefppmiJ3GzKcuEJWA/eFH3C7ceRAj8iZRTORoPoQs2rsNQcE1RTETqVHdgiXLSvlNdmRsqWIHaz7QPOMzBExs25aq82xdFv6uHrOl92fGTQmWI1QIRNt8XJg+rmunvkHDvtCT0PGGo7gSEVoNg5lxUOo2vi9eJW/Yn7wZMt6mA8qFCiYZsJw1pccjWzwOeg3B40LbVHbCcGekCR3/1N4lmDDofPunZTslduHpUcgEouV6AQJoem6TOobD2luzDiYTeIF9hWVrUj8XOoLfMX7Cx8JVXoaMK8kkrL5AGYsKdODRX6/NIuzSZTZic3yzzIhd7OFSxcPCg9MirO0D3IkHDdRW7F7Ks2tufOPsLq9z99V7ub52/jyerKTBXrsIyGDYOnNMa/T9MD04fcWTl3IhUl1Bi12LC2D9teTSji96sKkSD41gMG8bLDDHHOJOCBnxe6+RpdmKmEw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(136003)(396003)(346002)(451199015)(40470700004)(36840700001)(46966006)(36756003)(86362001)(356005)(81166007)(2906002)(4326008)(41300700001)(8936002)(8676002)(70586007)(70206006)(44832011)(7416002)(83380400001)(36860700001)(966005)(478600001)(40460700003)(6916009)(54906003)(2616005)(316002)(1076003)(82740400003)(40480700001)(5660300002)(82310400005)(186003)(6666004)(47076005)(426003)(16526019)(336012)(7696005)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2022 04:33:18.2193
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74db905c-1c53-402b-20a3-08dad742ffa2
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000E659.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7657
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-We encounter perf warnings when using cgroup events like:
-```
-cd /sys/fs/cgroup
-mkdir test
-perf stat -e cycles -a -G test
-```
+Multiple events in a group can belong to one or more pmus, however
+there are some limitations to it. One of the limitation is, perf
+doesn't allow creating a group of events from different hw pmus.
+Write a simple test to create various combinations of hw, sw and
+uncore pmu events and verify group creation succeeds or fails as
+expected.
 
-WARNING: CPU: 0 PID: 690 at kernel/events/core.c:849 perf_cgroup_switch+0xb2/0xc0
-[   91.393417] Call Trace:
-[   91.393772]  <TASK>
-[   91.394080]  __schedule+0x4ae/0x9f0
-[   91.394535]  ? _raw_spin_unlock_irqrestore+0x23/0x40
-[   91.395145]  ? __cond_resched+0x18/0x20
-[   91.395622]  preempt_schedule_common+0x2d/0x70
-[   91.396163]  __cond_resched+0x18/0x20
-[   91.396621]  wait_for_completion+0x2f/0x160
-[   91.397137]  ? cpu_stop_queue_work+0x9e/0x130
-[   91.397665]  affine_move_task+0x18a/0x4f0
+v2: https://lore.kernel.org/r/20221129111946.409-1-ravi.bangoria@amd.com
+v2->v3:
+ - Define a set of uncore pmus that supports more than 3 events. This
+   will prevent false negative results by not picking random uncore
+   pmu. Test will be skipped if no uncore pmu found.
 
-WARNING: CPU: 0 PID: 690 at kernel/events/core.c:829 ctx_sched_in+0x1cf/0x1e0
-[   91.430151] Call Trace:
-[   91.430490]  <TASK>
-[   91.430793]  ? ctx_sched_out+0xb7/0x1b0
-[   91.431274]  perf_cgroup_switch+0x88/0xc0
-[   91.431778]  __schedule+0x4ae/0x9f0
-[   91.432215]  ? _raw_spin_unlock_irqrestore+0x23/0x40
-[   91.432825]  ? __cond_resched+0x18/0x20
-[   91.433299]  preempt_schedule_common+0x2d/0x70
-[   91.433839]  __cond_resched+0x18/0x20
-[   91.434298]  wait_for_completion+0x2f/0x160
-[   91.434808]  ? cpu_stop_queue_work+0x9e/0x130
-[   91.435334]  affine_move_task+0x18a/0x4f0
+Ravi Bangoria (2):
+  perf tool: Move pmus list variable to new a file
+  perf test: Add event group test
 
-The above two warnings are not complete here since I remove other
-unimportant information. The problem is caused by the perf cgroup
-events tracking:
+ tools/perf/tests/Build          |   1 +
+ tools/perf/tests/builtin-test.c |   1 +
+ tools/perf/tests/event_groups.c | 127 ++++++++++++++++++++++++++++++++
+ tools/perf/tests/tests.h        |   1 +
+ tools/perf/util/Build           |   1 +
+ tools/perf/util/pmu.c           |   2 +-
+ tools/perf/util/pmus.c          |   5 ++
+ tools/perf/util/pmus.h          |   9 +++
+ 8 files changed, 146 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/tests/event_groups.c
+ create mode 100644 tools/perf/util/pmus.c
+ create mode 100644 tools/perf/util/pmus.h
 
-CPU0					CPU1
-perf_event_open()
-  perf_event_alloc()
-    account_event()
-      account_event_cpu()
-        atomic_inc(perf_cgroup_events)
-					__perf_event_task_sched_out()
-					  if (atomic_read(perf_cgroup_events))
-					    perf_cgroup_switch()
-					      // kernel/events/core.c:849
-					      WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0)
-					      if (READ_ONCE(cpuctx->cgrp) == cgrp) // false
-					        return
-					      perf_ctx_lock()
-					      ctx_sched_out()
-					      cpuctx->cgrp = cgrp
-					      ctx_sched_in()
-					        perf_cgroup_set_timestamp()
-					          // kernel/events/core.c:829
-					          WARN_ON_ONCE(!ctx->nr_cgroups)
-					      perf_ctx_unlock()
-  perf_install_in_context()
-    add_event_to_ctx()
-      list_add_event()
-        perf_cgroup_event_enable()
-          ctx->nr_cgroups++
-          cpuctx->cgrp = X
-
-We can see from above that we wrongly use percpu atomic perf_cgroup_events
-to check if we need to perf_cgroup_switch(), which should only be used
-when we know this CPU has cgroup events enabled.
-
-The commit bd2756811766 ("perf: Rewrite core context handling") change
-to have only one context per-CPU, so we can just use cpuctx->cgrp to
-check if this CPU has cgroup events enabled.
-
-So percpu atomic perf_cgroup_events is not needed.
-
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
----
- kernel/events/core.c | 42 ++++++++++--------------------------------
- 1 file changed, 10 insertions(+), 32 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index eacc3702654d..5d97a9f26003 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -380,7 +380,6 @@ enum event_type_t {
- 
- /*
-  * perf_sched_events : >0 events exist
-- * perf_cgroup_events: >0 per-cpu cgroup events exist on this cpu
-  */
- 
- static void perf_sched_delayed(struct work_struct *work);
-@@ -389,7 +388,6 @@ static DECLARE_DELAYED_WORK(perf_sched_work, perf_sched_delayed);
- static DEFINE_MUTEX(perf_sched_mutex);
- static atomic_t perf_sched_count;
- 
--static DEFINE_PER_CPU(atomic_t, perf_cgroup_events);
- static DEFINE_PER_CPU(struct pmu_event_list, pmu_sb_events);
- 
- static atomic_t nr_mmap_events __read_mostly;
-@@ -844,9 +842,16 @@ static void perf_cgroup_switch(struct task_struct *task)
- 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
- 	struct perf_cgroup *cgrp;
- 
--	cgrp = perf_cgroup_from_task(task, NULL);
-+	/*
-+	 * cpuctx->cgrp is set when the first cgroup event enabled,
-+	 * and is cleared when the last cgroup event disabled.
-+	 */
-+	if (READ_ONCE(cpuctx->cgrp) == NULL)
-+		return;
- 
- 	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
-+
-+	cgrp = perf_cgroup_from_task(task, NULL);
- 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
- 		return;
- 
-@@ -3631,8 +3636,7 @@ void __perf_event_task_sched_out(struct task_struct *task,
- 	 * to check if we have to switch out PMU state.
- 	 * cgroup event are system-wide mode only
- 	 */
--	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
--		perf_cgroup_switch(next);
-+	perf_cgroup_switch(next);
- }
- 
- static bool perf_less_group_idx(const void *l, const void *r)
-@@ -4974,15 +4978,6 @@ static void unaccount_pmu_sb_event(struct perf_event *event)
- 		detach_sb_event(event);
- }
- 
--static void unaccount_event_cpu(struct perf_event *event, int cpu)
--{
--	if (event->parent)
--		return;
--
--	if (is_cgroup_event(event))
--		atomic_dec(&per_cpu(perf_cgroup_events, cpu));
--}
--
- #ifdef CONFIG_NO_HZ_FULL
- static DEFINE_SPINLOCK(nr_freq_lock);
- #endif
-@@ -5048,8 +5043,6 @@ static void unaccount_event(struct perf_event *event)
- 			schedule_delayed_work(&perf_sched_work, HZ);
- 	}
- 
--	unaccount_event_cpu(event, event->cpu);
--
- 	unaccount_pmu_sb_event(event);
- }
- 
-@@ -11679,15 +11672,6 @@ static void account_pmu_sb_event(struct perf_event *event)
- 		attach_sb_event(event);
- }
- 
--static void account_event_cpu(struct perf_event *event, int cpu)
--{
--	if (event->parent)
--		return;
--
--	if (is_cgroup_event(event))
--		atomic_inc(&per_cpu(perf_cgroup_events, cpu));
--}
--
- /* Freq events need the tick to stay alive (see perf_event_task_tick). */
- static void account_freq_event_nohz(void)
- {
-@@ -11775,8 +11759,6 @@ static void account_event(struct perf_event *event)
- 	}
- enabled:
- 
--	account_event_cpu(event, event->cpu);
--
- 	account_pmu_sb_event(event);
- }
- 
-@@ -12822,13 +12804,11 @@ static void __perf_pmu_remove(struct perf_event_context *ctx,
- 
- 	perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu) {
- 		perf_remove_from_context(event, 0);
--		unaccount_event_cpu(event, cpu);
- 		put_pmu_ctx(event->pmu_ctx);
- 		list_add(&event->migrate_entry, events);
- 
- 		for_each_sibling_event(sibling, event) {
- 			perf_remove_from_context(sibling, 0);
--			unaccount_event_cpu(sibling, cpu);
- 			put_pmu_ctx(sibling->pmu_ctx);
- 			list_add(&sibling->migrate_entry, events);
- 		}
-@@ -12847,7 +12827,6 @@ static void __perf_pmu_install_event(struct pmu *pmu,
- 
- 	if (event->state >= PERF_EVENT_STATE_OFF)
- 		event->state = PERF_EVENT_STATE_INACTIVE;
--	account_event_cpu(event, cpu);
- 	perf_install_in_context(ctx, event, cpu);
- }
- 
-@@ -13742,8 +13721,7 @@ static int __perf_cgroup_move(void *info)
- 	struct task_struct *task = info;
- 
- 	preempt_disable();
--	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
--		perf_cgroup_switch(task);
-+	perf_cgroup_switch(task);
- 	preempt_enable();
- 
- 	return 0;
 -- 
-2.37.2
+2.38.1
 
