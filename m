@@ -2,88 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7A9C4708D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 16:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FA7C4708C
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 16:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233776AbiLFQHj (ORCPT
+        id S235368AbiLFQL3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 11:07:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
+        Tue, 6 Dec 2022 11:11:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235546AbiLFQHP (ORCPT
+        with ESMTP id S235518AbiLFQLD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 11:07:15 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E0F32B98;
-        Tue,  6 Dec 2022 08:03:26 -0800 (PST)
+        Tue, 6 Dec 2022 11:11:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3B93C6F5;
+        Tue,  6 Dec 2022 08:05:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C7572B81AA1;
-        Tue,  6 Dec 2022 16:03:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F16C433D6;
-        Tue,  6 Dec 2022 16:03:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 01293B81A10;
+        Tue,  6 Dec 2022 16:05:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 637FAC433D6;
+        Tue,  6 Dec 2022 16:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670342603;
-        bh=TqJFgSnbNlhbjhiuX1arn47XcYRFf/kK7R85AOUhw6w=;
+        s=k20201202; t=1670342742;
+        bh=dhu2N+fEW5LFXReqHPaIbjnwpjqZjO1Gm9ovtwKYHj4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MpbKpY/4NOt6CZJA27rHP/XauBm8GjJFBjXjFbrxFYlCtR2UObW8fGZXzgnL0GLKX
-         HpH9B8529EVizc8sdYoy+5w9IhIOsOMkCNoxhMY/tlKP5a20L+K+wG89EAvVtHmlrx
-         2/1KbHQ8r7O+OLf2xKkJ4YnYN+KP7FnRg7NNE2x/HW6A1TENys3b7V7ahhIx3vzISA
-         b50IBst8dERdCBlryFxZpzU1w84aKltmNo9+BfIimwsTF2OkKr6ybLbY03U+WOcv7W
-         +MtBmUMXPRskumA6wCRMRcU1BzEnkX1cljG0zCqgmLQlYsGlK0kuXLvBEzlVoo5FV4
-         ICZd19A/g/y0Q==
+        b=aASCFaFX/41rDkHGOe4s8/Szn3fOhbUbO0PzyjQK17UbveQ/fODkG9W21MpOLYCEL
+         zdOPglkViYxEIBDYBkmPAD20rti/LWZ9Z5WFRfo5otIFAeQKTyn2G1zMXk5gbYX/VU
+         JxoPxZdR5R8naILz191DccbzKbwGD0+fOBQOB/r+enn9TS/ojPQt3BlKETiIqmhnzN
+         PETmVcKDusM2qOE9dT8R6lh+SXWme02Wolp9ciEgX3TKwjZS8Ye4JcSHP61QTHb4xs
+         WYpLmiPvkelKA8XakdeX2Ehqy58uTPoqw1qSeBCX5kMJxwSmXT0N4PAewigpK8xb6V
+         6wGxUfnNAQbFA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4DB1540404; Tue,  6 Dec 2022 13:03:18 -0300 (-03)
-Date:   Tue, 6 Dec 2022 13:03:18 -0300
+        id 662F040404; Tue,  6 Dec 2022 13:05:39 -0300 (-03)
+Date:   Tue, 6 Dec 2022 13:05:39 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>, irogers@google.com,
-        jolsa@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-        mark.rutland@arm.com, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, carsten.haitzler@arm.com,
-        leo.yan@linaro.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, tmricht@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 0/2] perf test: Add event group test
-Message-ID: <Y49nxv41VMtqUSNk@kernel.org>
-References: <20221206043237.12159-1-ravi.bangoria@amd.com>
- <529367b6-e96a-d030-b8a2-bb4ad3d37d90@linux.intel.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH] perf stat: Update event skip condition
+Message-ID: <Y49oU5fJCNjAdh3S@kernel.org>
+References: <20221205231630.319759-1-namhyung@kernel.org>
+ <ED791914-FA30-410A-8BD8-735248940A72@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <529367b6-e96a-d030-b8a2-bb4ad3d37d90@linux.intel.com>
+In-Reply-To: <ED791914-FA30-410A-8BD8-735248940A72@linux.vnet.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 06, 2022 at 09:47:57AM -0500, Liang, Kan escreveu:
-> On 2022-12-05 11:32 p.m., Ravi Bangoria wrote:
-> > Multiple events in a group can belong to one or more pmus, however
-> > there are some limitations to it. One of the limitation is, perf
-> > doesn't allow creating a group of events from different hw pmus.
-> > Write a simple test to create various combinations of hw, sw and
-> > uncore pmu events and verify group creation succeeds or fails as
-> > expected.
+Em Tue, Dec 06, 2022 at 07:45:29PM +0530, Athira Rajeev escreveu:
+> 
+> 
+> > On 06-Dec-2022, at 4:46 AM, Namhyung Kim <namhyung@kernel.org> wrote:
 > > 
-> > v2: https://lore.kernel.org/r/20221129111946.409-1-ravi.bangoria@amd.com
-> > v2->v3:
-> >  - Define a set of uncore pmus that supports more than 3 events. This
-> >    will prevent false negative results by not picking random uncore
-> >    pmu. Test will be skipped if no uncore pmu found.
+> > In print_counter_aggrdata(), it skips some events that has no aggregate
+> > count.  It's actually for system-wide per-thread mode and merged uncore
+> > and hybrid events.
 > > 
-> > Ravi Bangoria (2):
-> >   perf tool: Move pmus list variable to new a file
+> > Let's update the condition to check them explicitly.
+> > 
+> > Fixes: 91f85f98da7a ("Display event stats using aggr counts")
+> > Reported-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> > Athira, could you please check this fixes the problem?
+> > 
+> > tools/perf/util/stat-display.c | 16 +++++++++-------
+> > 1 file changed, 9 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 847acdb5dc40..6c0de52ac4be 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -814,7 +814,8 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+> > 	os->nr = aggr->nr;
+> > 	os->evsel = counter;
+> > 
+> > -	if (counter->supported && aggr->nr == 0)
+> > +	/* Skip already merged uncore/hybrid events */
+> > +	if (counter->merged_stat)
+> > 		return;
 > 
-> a new file
+> Hi Namhyung,
 > 
-> Other than the above typo, the patch series looks good to me.
+> Thanks for the fix.
 > 
-> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+> This patch removes the merged_stat checks from print_aggr and print_aggr_cgroup.
+> We also have this check in print_counter which needs to be removed.
+> 
+> With that change, 
 
-Fixed that up, added your Acked-by, thanks.
+Waiting for v2 then.
+
+- Arnaldo
+ 
+> Acked-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> 
+> > 
+> > 	uniquify_counter(config, counter);
+> > @@ -823,6 +824,13 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+> > 	ena = aggr->counts.ena;
+> > 	run = aggr->counts.run;
+> > 
+> > +	/*
+> > +	 * Skip value 0 when enabling --per-thread globally, otherwise it will
+> > +	 * have too many 0 output.
+> > +	 */
+> > +	if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
+> > +		return;
+> > +
+> > 	if (!metric_only) {
+> > 		if (config->json_output)
+> > 			fputc('{', output);
+> > @@ -899,9 +907,6 @@ static void print_aggr(struct perf_stat_config *config,
+> > 		print_metric_begin(config, evlist, os, s);
+> > 
+> > 		evlist__for_each_entry(evlist, counter) {
+> > -			if (counter->merged_stat)
+> > -				continue;
+> > -
+> > 			print_counter_aggrdata(config, counter, s, os);
+> > 		}
+> > 		print_metric_end(config, os);
+> > @@ -928,9 +933,6 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+> > 			print_metric_begin(config, evlist, os, s);
+> > 
+> > 			evlist__for_each_entry(evlist, counter) {
+> > -				if (counter->merged_stat)
+> > -					continue;
+> > -
+> > 				if (counter->cgrp != os->cgrp)
+> > 					continue;
+> > 
+> > -- 
+> > 2.39.0.rc0.267.gcb52ba06e7-goog
+> > 
+
+-- 
 
 - Arnaldo
