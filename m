@@ -2,114 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239C6C4708E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 14:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7A9C4708D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 16:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235037AbiLFOs7 (ORCPT
+        id S233776AbiLFQHj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 09:48:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45314 "EHLO
+        Tue, 6 Dec 2022 11:07:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235028AbiLFOs6 (ORCPT
+        with ESMTP id S235546AbiLFQHP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 09:48:58 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513791C905;
-        Tue,  6 Dec 2022 06:48:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670338083; x=1701874083;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KreZWgqbUXWkBrewyIR53/0zjeTOrsKtsjVNswAQ4+M=;
-  b=gewnhYgIjmkvaMQV/SOg+23XSDCu5yey/MzBSE73obvQcqdHjO9+aoRy
-   SKIQsFIiBEEalOEU47Vlx91n2GlqwIanwlFcyEF87JiNJQPNeW89BZvhG
-   qEwgdFGJSDjmoArwZc9x81jCf0qd5nSxxfsxjgQ0SiqXYFxm7Ugn4EgZD
-   7UxO2FzP2VZtb9Wirn7K4HMaAhDHWrETRek2ygENz+DZ+aC71vKAixXsv
-   CMt/HhO9OkMLtI04wib934uXKg+c61R9MPTpP7gwSnRJRgI23WlFBfqhL
-   Ib470PXDu3CQ286i1sLNeaczXVsRkV/W1bTFym7kIUkZDzfAxyAvadnUb
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="296329735"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="296329735"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 06:48:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="639897403"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="639897403"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 06 Dec 2022 06:48:02 -0800
-Received: from [10.252.209.31] (kliang2-mobl1.ccr.corp.intel.com [10.252.209.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 6 Dec 2022 11:07:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E0F32B98;
+        Tue,  6 Dec 2022 08:03:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8BF40580D54;
-        Tue,  6 Dec 2022 06:47:59 -0800 (PST)
-Message-ID: <529367b6-e96a-d030-b8a2-bb4ad3d37d90@linux.intel.com>
-Date:   Tue, 6 Dec 2022 09:47:57 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
+        by ams.source.kernel.org (Postfix) with ESMTPS id C7572B81AA1;
+        Tue,  6 Dec 2022 16:03:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F16C433D6;
+        Tue,  6 Dec 2022 16:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670342603;
+        bh=TqJFgSnbNlhbjhiuX1arn47XcYRFf/kK7R85AOUhw6w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MpbKpY/4NOt6CZJA27rHP/XauBm8GjJFBjXjFbrxFYlCtR2UObW8fGZXzgnL0GLKX
+         HpH9B8529EVizc8sdYoy+5w9IhIOsOMkCNoxhMY/tlKP5a20L+K+wG89EAvVtHmlrx
+         2/1KbHQ8r7O+OLf2xKkJ4YnYN+KP7FnRg7NNE2x/HW6A1TENys3b7V7ahhIx3vzISA
+         b50IBst8dERdCBlryFxZpzU1w84aKltmNo9+BfIimwsTF2OkKr6ybLbY03U+WOcv7W
+         +MtBmUMXPRskumA6wCRMRcU1BzEnkX1cljG0zCqgmLQlYsGlK0kuXLvBEzlVoo5FV4
+         ICZd19A/g/y0Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4DB1540404; Tue,  6 Dec 2022 13:03:18 -0300 (-03)
+Date:   Tue, 6 Dec 2022 13:03:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>, irogers@google.com,
+        jolsa@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        mark.rutland@arm.com, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, carsten.haitzler@arm.com,
+        leo.yan@linaro.org, maddy@linux.ibm.com, kjain@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, tmricht@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com
 Subject: Re: [PATCH v3 0/2] perf test: Add event group test
-Content-Language: en-US
-To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
-Cc:     irogers@google.com, jolsa@redhat.com, namhyung@kernel.org,
-        peterz@infradead.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-        carsten.haitzler@arm.com, leo.yan@linaro.org, maddy@linux.ibm.com,
-        kjain@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        tmricht@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
+Message-ID: <Y49nxv41VMtqUSNk@kernel.org>
 References: <20221206043237.12159-1-ravi.bangoria@amd.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20221206043237.12159-1-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <529367b6-e96a-d030-b8a2-bb4ad3d37d90@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <529367b6-e96a-d030-b8a2-bb4ad3d37d90@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2022-12-05 11:32 p.m., Ravi Bangoria wrote:
-> Multiple events in a group can belong to one or more pmus, however
-> there are some limitations to it. One of the limitation is, perf
-> doesn't allow creating a group of events from different hw pmus.
-> Write a simple test to create various combinations of hw, sw and
-> uncore pmu events and verify group creation succeeds or fails as
-> expected.
+Em Tue, Dec 06, 2022 at 09:47:57AM -0500, Liang, Kan escreveu:
+> On 2022-12-05 11:32 p.m., Ravi Bangoria wrote:
+> > Multiple events in a group can belong to one or more pmus, however
+> > there are some limitations to it. One of the limitation is, perf
+> > doesn't allow creating a group of events from different hw pmus.
+> > Write a simple test to create various combinations of hw, sw and
+> > uncore pmu events and verify group creation succeeds or fails as
+> > expected.
+> > 
+> > v2: https://lore.kernel.org/r/20221129111946.409-1-ravi.bangoria@amd.com
+> > v2->v3:
+> >  - Define a set of uncore pmus that supports more than 3 events. This
+> >    will prevent false negative results by not picking random uncore
+> >    pmu. Test will be skipped if no uncore pmu found.
+> > 
+> > Ravi Bangoria (2):
+> >   perf tool: Move pmus list variable to new a file
 > 
-> v2: https://lore.kernel.org/r/20221129111946.409-1-ravi.bangoria@amd.com
-> v2->v3:
->  - Define a set of uncore pmus that supports more than 3 events. This
->    will prevent false negative results by not picking random uncore
->    pmu. Test will be skipped if no uncore pmu found.
+> a new file
 > 
-> Ravi Bangoria (2):
->   perf tool: Move pmus list variable to new a file
-
-a new file
-
-Other than the above typo, the patch series looks good to me.
-
-Acked-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
->   perf test: Add event group test
+> Other than the above typo, the patch series looks good to me.
 > 
->  tools/perf/tests/Build          |   1 +
->  tools/perf/tests/builtin-test.c |   1 +
->  tools/perf/tests/event_groups.c | 127 ++++++++++++++++++++++++++++++++
->  tools/perf/tests/tests.h        |   1 +
->  tools/perf/util/Build           |   1 +
->  tools/perf/util/pmu.c           |   2 +-
->  tools/perf/util/pmus.c          |   5 ++
->  tools/perf/util/pmus.h          |   9 +++
->  8 files changed, 146 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/tests/event_groups.c
->  create mode 100644 tools/perf/util/pmus.c
->  create mode 100644 tools/perf/util/pmus.h
-> 
+> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+
+Fixed that up, added your Acked-by, thanks.
+
+- Arnaldo
