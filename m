@@ -2,289 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77584C3A5A7
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 06:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673D5C3A5A7
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 08:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232414AbiLFGSc (ORCPT
+        id S234115AbiLFIa3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 01:18:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53058 "EHLO
+        Tue, 6 Dec 2022 03:30:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231497AbiLFGSb (ORCPT
+        with ESMTP id S233928AbiLFIaP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 01:18:31 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D709A26569;
-        Mon,  5 Dec 2022 22:18:29 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B64FUcA024266;
-        Tue, 6 Dec 2022 06:18:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=KO4SFPoY9HxiHfgbl+R2dykJ1y+V6osLOnZPaMBYx0c=;
- b=TarQCoSL2rm8kGoD2NhuKQffJJ+7A8FjDQJnzvK+QOcD8kS9Q9eG4IliCt8Y2uFtwPp+
- 61VLMpSfphUbxztgMCQUFkZ09Q7sgoa3akL6X3frMCXkNAWOV07CWnNTsnCvJyIpUp6v
- 6INQmDG3KW8qD0Tl6n3L1wUOiYTxcJ2UI/Nqu9SdK1Yp0jUpd5lBdmAFSf7xuDVP5Lo8
- y6KCg1Q/AXbQAEM3D3kpnzwRZQjsJWCM78k2S1rg7eD/gte4ocSyilylwsPV5pw8Y5gF
- 36oAckPzqIckPimURboWqkIWvQ2vA0Bg4RM7DZW20MCjpHvMajZInxngIMThtE7aIbWh Xg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m8g7dbe05-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Dec 2022 06:18:07 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B6623vl006528;
-        Tue, 6 Dec 2022 06:18:06 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m8g7dbdyd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Dec 2022 06:18:06 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.16.1.2) with ESMTP id 2B5K5GCr016460;
-        Tue, 6 Dec 2022 06:18:03 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3m9m6y0mn9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Dec 2022 06:18:03 +0000
-Received: from d06av23.portsmouth.uk.ibm.com ([9.149.105.59])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B66HxMN43712832
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Dec 2022 06:18:00 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C80D7A404D;
-        Tue,  6 Dec 2022 06:17:59 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8035A4040;
-        Tue,  6 Dec 2022 06:17:55 +0000 (GMT)
-Received: from [9.43.11.39] (unknown [9.43.11.39])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Dec 2022 06:17:55 +0000 (GMT)
-Message-ID: <95f8295a-9f51-c708-d0f6-e58cd907f23c@linux.ibm.com>
-Date:   Tue, 6 Dec 2022 11:47:54 +0530
+        Tue, 6 Dec 2022 03:30:15 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AAE51AD97;
+        Tue,  6 Dec 2022 00:30:13 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id b13-20020a17090a5a0d00b0021906102d05so14075761pjd.5;
+        Tue, 06 Dec 2022 00:30:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x4H9uEd2CTHNwSO9zkkhB6GGsRkjPW9q6aNFznzOIuA=;
+        b=eqXU0JrlUMmKM/33ndMGd7IBaBh2rYY1aFwhSs4o2njfDwpmTiUEQ5qiv8z5icJ+9n
+         VNM5IaLFLG16GTmtxYeYecs/Pc5+Z+OHU173oCl2VaYDlEyhVAhhJQmqm4ZWV5vqQd+o
+         lmIXdoRYO8v3J+HwnGsaXuA5kuADrEx97ogBkQcopnqQIZTqg8RjOFL6STJO6GpxExHR
+         0dxwOaVeHtVSNhZqCQs9UO6r9WzV5ySA9D4c2PE2z16E03yWfXcXvLxh+K8A4OvCR7UJ
+         +Kf2I6vfhKb90HEF1IGyDpFOsOKYrE7O6h1zreV/4Hc5KkrCzDPWVu/lcr4+UvGJPDqe
+         us2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x4H9uEd2CTHNwSO9zkkhB6GGsRkjPW9q6aNFznzOIuA=;
+        b=1BhwCg14xlHJulzGlqnR2s7OdctL/Jme7rg8Qx0XaSkvoQrRgrynMpQlS+wK+zpyMr
+         dGfHdcQMAseDYwj0+UA5AFBScLDhuVZ2LWMxn99IgSQoI5XizxoyR35voPv6/gEskTw6
+         0512+yRp6mcZYMu7lDp63hmdjt5Rt/+5u4raecNL/8YmsSbFFmw26zShMMXv3swM/XMo
+         cghKdCozl0wTwTostNZZlBaDk0ZX6vRK3FWFQU2e/TlXvN7Ov/IbxpR3Gsjc+QcPxBJt
+         +2n7ns6AFAGFpqOx3L6rK9Dl5PvgN/+Lre9Jz3wMYDwsWCGmgSNJdvE4yl8Vr5ltpG6/
+         rLqw==
+X-Gm-Message-State: ANoB5pnKaaV50UEoWqLtPaTY0PLztrtRnmAoDDCm8+5QMnnq7b1hmf+D
+        7Og389BTn3EwdFASo1oqg5EMkVWA3J4ejg==
+X-Google-Smtp-Source: AA0mqf4i9nNQHsxtunW4a6J3718BD8rfqPS2sYMY6QgGEbPHrv3j0GhcZjGlJdiD6KfpjFlUPFTXCw==
+X-Received: by 2002:a17:90b:3941:b0:215:db2e:bb17 with SMTP id oe1-20020a17090b394100b00215db2ebb17mr93396774pjb.166.1670315412841;
+        Tue, 06 Dec 2022 00:30:12 -0800 (PST)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id h15-20020a056a00000f00b00574d38f4d37sm11203330pfk.45.2022.12.06.00.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 00:30:12 -0800 (PST)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <seanjc@google.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH RESEND v3 3/3] perf/x86/intel: Expose EPT-friendly PEBS for SPR and future models
+Date:   Tue,  6 Dec 2022 16:29:44 +0800
+Message-Id: <20221206082944.59837-4-likexu@tencent.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221206082944.59837-1-likexu@tencent.com>
+References: <20221206082944.59837-1-likexu@tencent.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v3 2/2] perf test: Add event group test
-To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
-Cc:     kan.liang@linux.intel.com, irogers@google.com, jolsa@redhat.com,
-        namhyung@kernel.org, peterz@infradead.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-        carsten.haitzler@arm.com, leo.yan@linaro.org, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, tmricht@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-References: <20221206043237.12159-1-ravi.bangoria@amd.com>
- <20221206043237.12159-3-ravi.bangoria@amd.com>
-Content-Language: en-US
-From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <20221206043237.12159-3-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 4xaTP2dRexnC-5HexWwpv_U_t49lejwH
-X-Proofpoint-ORIG-GUID: BNIQBocijtwlcJbQXkJjWWrgEzNpyamM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-06_03,2022-12-05_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- clxscore=1011 impostorscore=0 priorityscore=1501 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2212060049
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Like Xu <likexu@tencent.com>
 
-On 12/6/22 10:02 AM, Ravi Bangoria wrote:
-> Multiple events in a group can belong to one or more pmus, however
-> there are some limitations to it. One of the limitation is, perf
-> doesn't allow creating a group of events from different hw pmus.
-> Write a simple test to create various combinations of hw, sw and
-> uncore pmu events and verify group creation succeeds or fails as
-> expected.
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->   tools/perf/tests/Build          |   1 +
->   tools/perf/tests/builtin-test.c |   1 +
->   tools/perf/tests/event_groups.c | 127 ++++++++++++++++++++++++++++++++
->   tools/perf/tests/tests.h        |   1 +
->   4 files changed, 130 insertions(+)
->   create mode 100644 tools/perf/tests/event_groups.c
->
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index 11b69023011b..658b5052c24d 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -67,6 +67,7 @@ perf-y += expand-cgroup.o
->   perf-y += perf-time-to-tsc.o
->   perf-y += dlfilter-test.o
->   perf-y += sigtrap.o
-> +perf-y += event_groups.o
->   
->   $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
->   	$(call rule_mkdir)
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 4c6ae59a4dfd..ddd8262bfa26 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -110,6 +110,7 @@ static struct test_suite *generic_tests[] = {
->   	&suite__perf_time_to_tsc,
->   	&suite__dlfilter,
->   	&suite__sigtrap,
-> +	&suite__event_groups,
->   	NULL,
->   };
->   
-> diff --git a/tools/perf/tests/event_groups.c b/tools/perf/tests/event_groups.c
-> new file mode 100644
-> index 000000000000..612c0444aaa8
-> --- /dev/null
-> +++ b/tools/perf/tests/event_groups.c
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <stdio.h>
-> +#include "linux/perf_event.h"
-> +#include "tests.h"
-> +#include "debug.h"
-> +#include "pmu.h"
-> +#include "pmus.h"
-> +#include "header.h"
-> +#include "../perf-sys.h"
-> +
-> +/* hw: cycles, sw: context-switch, uncore: [arch dependent] */
-> +static int types[] = {0, 1, -1};
-> +static unsigned long configs[] = {0, 3, 0};
-> +
-> +#define NR_UNCORE_PMUS 5
-> +
-> +/* Uncore pmus that support more than 3 counters */
-> +static struct uncore_pmus {
-> +	const char *name;
-> +	__u64 config;
-> +} uncore_pmus[NR_UNCORE_PMUS] = {
-> +	{ "amd_l3", 0x0 },
-> +	{ "amd_df", 0x0 },
-> +	{ "uncore_imc_0", 0x1 },         /* Intel */
-> +	{ "core_imc", 0x318 },           /* PowerPC: core_imc/CPM_STCX_FIN/ */
-> +	{ "hv_24x7", 0x22000000003 },    /* PowerPC: hv_24x7/CPM_STCX_FIN/ */
+According to Intel SDM, the EPT-friendly PEBS is supported by all the
+platforms after ICX, ADL and the future platforms with PEBS format 5.
 
+Currently the only in-kernel user of this capability is KVM, which has
+very limited support for hybrid core pmu, so ADL and its successors do
+not currently expose this capability. When both hybrid core and PEBS
+format 5 are present, KVM will decide on its own merits.
 
-For Powerpc event config values
-Acked-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-perf-users@vger.kernel.org
+Suggested-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Like Xu <likexu@tencent.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+Nit: This change is proposed to be applied via the KVM tree.
 
-> +};
-> +
-> +static int event_open(int type, unsigned long config, int group_fd)
-> +{
-> +	struct perf_event_attr attr;
-> +
-> +	memset(&attr, 0, sizeof(struct perf_event_attr));
-> +	attr.type = type;
-> +	attr.size = sizeof(struct perf_event_attr);
-> +	attr.config = config;
-> +	/*
-> +	 * When creating an event group, typically the group leader is
-> +	 * initialized with disabled set to 1 and any child events are
-> +	 * initialized with disabled set to 0. Despite disabled being 0,
-> +	 * the child events will not start until the group leader is
-> +	 * enabled.
-> +	 */
-> +	attr.disabled = group_fd == -1 ? 1 : 0;
-> +
-> +	return sys_perf_event_open(&attr, -1, 0, group_fd, 0);
-> +}
-> +
-> +static int setup_uncore_event(void)
-> +{
-> +	struct perf_pmu *pmu;
-> +	int i;
-> +
-> +	if (list_empty(&pmus))
-> +		perf_pmu__scan(NULL);
-> +
-> +	perf_pmus__for_each_pmu(pmu) {
-> +		for (i = 0; i < NR_UNCORE_PMUS; i++) {
-> +			if (!strcmp(uncore_pmus[i].name, pmu->name)) {
-> +				pr_debug("Using %s for uncore pmu event\n", pmu->name);
-> +				types[2] = pmu->type;
-> +				configs[2] = uncore_pmus[i].config;
-> +				return 0;
-> +			}
-> +		}
-> +	}
-> +	return -1;
-> +}
-> +
-> +static int run_test(int i, int j, int k)
-> +{
-> +	int erroneous = ((((1 << i) | (1 << j) | (1 << k)) & 5) == 5);
-> +	int group_fd, sibling_fd1, sibling_fd2;
-> +
-> +	group_fd = event_open(types[i], configs[i], -1);
-> +	if (group_fd == -1)
-> +		return -1;
-> +
-> +	sibling_fd1 = event_open(types[j], configs[j], group_fd);
-> +	if (sibling_fd1 == -1) {
-> +		close(group_fd);
-> +		return erroneous ? 0 : -1;
-> +	}
-> +
-> +	sibling_fd2 = event_open(types[k], configs[k], group_fd);
-> +	if (sibling_fd2 == -1) {
-> +		close(sibling_fd1);
-> +		close(group_fd);
-> +		return erroneous ? 0 : -1;
-> +	}
-> +
-> +	close(sibling_fd2);
-> +	close(sibling_fd1);
-> +	close(group_fd);
-> +	return erroneous ? -1 : 0;
-> +}
-> +
-> +static int test__event_groups(struct test_suite *text __maybe_unused, int subtest __maybe_unused)
-> +{
-> +	int i, j, k;
-> +	int ret;
-> +	int r;
-> +
-> +	ret = setup_uncore_event();
-> +	if (ret || types[2] == -1)
-> +		return TEST_SKIP;
-> +
-> +	ret = TEST_OK;
-> +	for (i = 0; i < 3; i++) {
-> +		for (j = 0; j < 3; j++) {
-> +			for (k = 0; k < 3; k++) {
-> +				r = run_test(i, j, k);
-> +				if (r)
-> +					ret = TEST_FAIL;
-> +
-> +				pr_debug("0x%x 0x%lx, 0x%x 0x%lx, 0x%x 0x%lx: %s\n",
-> +					 types[i], configs[i], types[j], configs[j],
-> +					 types[k], configs[k], r ? "Fail" : "Pass");
-> +			}
-> +		}
-> +	}
-> +	return ret;
-> +}
-> +
-> +DEFINE_SUITE("Event groups", event_groups);
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index e15f24cfc909..fb4b5ad4dd0f 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -147,6 +147,7 @@ DECLARE_SUITE(expand_cgroup_events);
->   DECLARE_SUITE(perf_time_to_tsc);
->   DECLARE_SUITE(dlfilter);
->   DECLARE_SUITE(sigtrap);
-> +DECLARE_SUITE(event_groups);
->   
->   /*
->    * PowerPC and S390 do not support creation of instruction breakpoints using the
+ arch/x86/events/intel/core.c | 1 +
+ arch/x86/events/intel/ds.c   | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 1b92bf05fd65..e7e31b9d24d3 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -6351,6 +6351,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_spr_pebs_event_constraints;
+ 		x86_pmu.extra_regs = intel_spr_extra_regs;
+ 		x86_pmu.limit_period = spr_limit_period;
++		x86_pmu.pebs_ept = 1;
+ 		x86_pmu.pebs_aliases = NULL;
+ 		x86_pmu.pebs_prec_dist = true;
+ 		x86_pmu.pebs_block = true;
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 446d2833efa7..7258dca6882f 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2303,8 +2303,10 @@ void __init intel_ds_init(void)
+ 			x86_pmu.large_pebs_flags |= PERF_SAMPLE_TIME;
+ 			break;
+ 
+-		case 4:
+ 		case 5:
++			x86_pmu.pebs_ept = 1;
++			fallthrough;
++		case 4:
+ 			x86_pmu.drain_pebs = intel_pmu_drain_pebs_icl;
+ 			x86_pmu.pebs_record_size = sizeof(struct pebs_basic);
+ 			if (x86_pmu.intel_cap.pebs_baseline) {
+-- 
+2.38.1
+
