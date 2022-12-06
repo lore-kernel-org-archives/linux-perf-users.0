@@ -2,297 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F24C352A1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 17:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FEDC47090
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 17:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235642AbiLFRB5 (ORCPT
+        id S231838AbiLFRG2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 12:01:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40170 "EHLO
+        Tue, 6 Dec 2022 12:06:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233884AbiLFRBv (ORCPT
+        with ESMTP id S229782AbiLFRGA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 12:01:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2931A28E11;
-        Tue,  6 Dec 2022 09:01:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D8ADDB81AD0;
-        Tue,  6 Dec 2022 17:01:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 547EFC433D6;
-        Tue,  6 Dec 2022 17:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670346107;
-        bh=EmuU5rS1zfGvoeMsppgTx3ItF2i/8y6u/MgH6W+ky4s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R/Dnxhw7O+rvYEcqLL4D1qUZyYeSPl/YhHa4lkANiCdRF2Lsd2UH6YHaxUREaz3aV
-         0QQmRlxYM+GzFePiyouoqeAgGayQq4EC1z4nzYoshTI2iNL9hrUClYO7UR14+6NaZD
-         yXT9CwS3LPUAMY4GnA280WE8Dc38EkLpW9DBp9TA2ETDTA1UPBudhhAFENA2IdZf0n
-         A6tG+6sZ2l7epAe9Yb09DmRu+CvbLomd/qpCG9psaXr90XIxpKeTq12wi65auCV5Mb
-         eBtt84qcMq0feSuaI7KgUCZn7zIpXY8SKqW/nxV+OHSIpWJKmBbjHXjlEpSvAxKzMT
-         Fm2sv+m6TMeqA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6759D40404; Tue,  6 Dec 2022 14:01:43 -0300 (-03)
-Date:   Tue, 6 Dec 2022 14:01:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
-Message-ID: <Y491d1wEW4TfUi5f@kernel.org>
-References: <20221205225940.3079667-1-irogers@google.com>
- <20221205225940.3079667-3-irogers@google.com>
- <Y49qiCIiyaehEOaG@kernel.org>
- <Y49rvLO2RnJBBNL/@kernel.org>
- <Y49skYa5VYPMU+RF@kernel.org>
- <Y49uKfzfCoZ1ok62@kernel.org>
- <Y49vx0v6Z7EiR8jr@kernel.org>
- <Y49wxSIK7dJ7iTDg@kernel.org>
+        Tue, 6 Dec 2022 12:06:00 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 90D701134;
+        Tue,  6 Dec 2022 09:05:59 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BD0223A;
+        Tue,  6 Dec 2022 09:06:06 -0800 (PST)
+Received: from [10.32.36.24] (e121896.Emea.Arm.com [10.32.36.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D45D63F73B;
+        Tue,  6 Dec 2022 09:05:56 -0800 (PST)
+Message-ID: <c3ca3fb5-d68f-a813-daac-a84b3cce2f6f@arm.com>
+Date:   Tue, 6 Dec 2022 17:05:54 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y49wxSIK7dJ7iTDg@kernel.org>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V5 6/7] arm64/perf: Add BRBE driver
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com
+References: <20221107062514.2851047-1-anshuman.khandual@arm.com>
+ <20221107062514.2851047-7-anshuman.khandual@arm.com>
+ <25658a70-0b37-966d-e46c-f86be2a76a8e@arm.com>
+ <54d532cc-089c-0c6c-6bf4-be840bc27826@arm.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <54d532cc-089c-0c6c-6bf4-be840bc27826@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 06, 2022 at 01:41:41PM -0300, Arnaldo Carvalho de Melo escreveu:
->  Now to look at the BUILD_BPF_SKEL=1 kaboom:
+
+
+On 30/11/2022 04:49, Anshuman Khandual wrote:
 > 
->  [acme@quaco perf]$ alias m
-> alias m='rm -rf ~/libexec/perf-core/ ; make -k NO_LIBTRACEEVENT=1 BUILD_BPF_SKEL=1 O=/tmp/build/perf -C tools/perf install-bin && perf test python'
-> [acme@quaco perf]$ m
-> make: Entering directory '/home/acme/git/perf/tools/perf'
->   BUILD:   Doing 'make -j8' parallel build
->   <SNIP>
-> /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `add_work':
-> /home/acme/git/perf/tools/perf/util/bpf_kwork.c:285: undefined reference to `perf_kwork_add_work'
-> /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `lock_contention_read':
-> /home/acme/git/perf/tools/perf/util/bpf_lock_contention.c:156: undefined reference to `is_lock_function'
-> collect2: error: ld returned 1 exit status
+> 
+> On 11/29/22 21:23, James Clark wrote:
+[...]
+> 
+> The latest code (not posted), disables TRBE completely while reading the
+> branch records during PMU interrupt. Could you please apply those changes
+> as well, or rather just use the branch instead.
+> 
+> https://gitlab.arm.com/linux-arm/linux-anshuman/-/commit/ab17879711f0e61c280ed52400ccde172b67e04a
+> 
+>>
+>> armv8pmu_brbe_enable+0xc/arm64_pmu_brbe_enable+0x0/P/-/-/0/CALL
+>> armpmu_start+0xe0/armv8pmu_brbe_enable+0x0/P/-/-/0/IND_CALL
+>> armv8pmu_brbe_reset+0x18/armpmu_start+0xd0/P/-/-/0/RET
+>> arm64_pmu_brbe_reset+0x18/armv8pmu_brbe_reset+0x10/P/-/-/0/RET
+> 
+> I am wondering how the different privilege branch record leak is possible.
+> Because arm64_pmu_brbe_enable() should start BRBE from a clean state with
+> respect to privilege level filters.
+> 
+> void arm64_pmu_brbe_enable(struct pmu_hw_events *cpuc)
+> {
+>         u64 brbfcr, brbcr;
+> 
+>         if (brbe_disabled(cpuc))
+>                 return;
+> 
+>         brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+>         brbfcr &= ~BRBFCR_EL1_BANK_MASK;
+>         brbfcr &= ~(BRBFCR_EL1_EnI | BRBFCR_EL1_PAUSED | BRBE_FCR_MASK);
+>         brbfcr |= (cpuc->brbfcr & BRBE_FCR_MASK);
+>         write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
+>         isb();
+> 
+>         brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+>         brbcr &= ~BRBE_CR_MASK;			--> Contains BRBCR_EL1_E1BRE and BRBCR_EL1_E0BRE
+>         brbcr |= BRBCR_EL1_FZP;
+>         brbcr |= (BRBCR_EL1_TS_PHYSICAL << BRBCR_EL1_TS_SHIFT);
+>         brbcr |= (cpuc->brbcr & BRBE_CR_MASK);
+>         write_sysreg_s(brbcr, SYS_BRBCR_EL1);
+>         isb();
 
-I'm adding this as a prep patch, before the 'use libtraceevent from the
-system' one:
+Yes I tracked down the problem to here as well. I added a
+arm64_pmu_brbe_reset(cpuc) to the end of arm64_pmu_brbe_enable() and it
+fixes the issue.
 
-commit 8beb33f2d34d4b37c6638004fef1345bc97804fe
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue Dec 6 13:49:04 2022 -0300
+The problem is, without ensuring that BRBFCR_EL1_PAUSED is set, there is
+no way to write to both BRBFCR and BRBCR in either order without new
+records being produced based on a partial configuration.
 
-    machine: Adopt is_lock_function() from builtin-lock.c
-    
-    It is used in bpf_lock_contention.c and builtin-lock.c will be made
-    CONFIG_LIBTRACEEVENT=y conditional, so move it to machine.c, that is
-    always available.
-    
-    This makes those 4 global variables for sched and lock text start and
-    end to move to 'struct machine' too, as conceivably we can have that
-    info for several machine instances, say some 'perf diff' like tool.
-    
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Ian Rogers <irogers@google.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Nick Desaulniers <ndesaulniers@google.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Stephane Eranian <eranian@google.com>
-    Cc: bpf@vger.kernel.org
-    Link: http://lore.kernel.org/lkml/
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+BRBFCR_EL1_PAUSED isn't set from the previous session, and there is no
+obvious place to add a paused at the end of the session with the current
+callbacks. So the easiest fix is to flush the old kernel samples after
+configuring both registers.
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 0d280093b19a55d4..15ce6358f12799e0 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -67,11 +67,6 @@ static enum {
- 	LOCK_AGGR_CALLER,
- } aggr_mode = LOCK_AGGR_ADDR;
- 
--static u64 sched_text_start;
--static u64 sched_text_end;
--static u64 lock_text_start;
--static u64 lock_text_end;
--
- static struct thread_stat *thread_stat_find(u32 tid)
- {
- 	struct rb_node *node;
-@@ -854,55 +849,6 @@ static int report_lock_release_event(struct evsel *evsel,
- 	return 0;
- }
- 
--bool is_lock_function(struct machine *machine, u64 addr)
--{
--	if (!sched_text_start) {
--		struct map *kmap;
--		struct symbol *sym;
--
--		sym = machine__find_kernel_symbol_by_name(machine,
--							  "__sched_text_start",
--							  &kmap);
--		if (!sym) {
--			/* to avoid retry */
--			sched_text_start = 1;
--			return false;
--		}
--
--		sched_text_start = kmap->unmap_ip(kmap, sym->start);
--
--		/* should not fail from here */
--		sym = machine__find_kernel_symbol_by_name(machine,
--							  "__sched_text_end",
--							  &kmap);
--		sched_text_end = kmap->unmap_ip(kmap, sym->start);
--
--		sym = machine__find_kernel_symbol_by_name(machine,
--							  "__lock_text_start",
--							  &kmap);
--		lock_text_start = kmap->unmap_ip(kmap, sym->start);
--
--		sym = machine__find_kernel_symbol_by_name(machine,
--							  "__lock_text_end",
--							  &kmap);
--		lock_text_end = kmap->unmap_ip(kmap, sym->start);
--	}
--
--	/* failed to get kernel symbols */
--	if (sched_text_start == 1)
--		return false;
--
--	/* mutex and rwsem functions are in sched text section */
--	if (sched_text_start <= addr && addr < sched_text_end)
--		return true;
--
--	/* spinlock functions are in lock text section */
--	if (lock_text_start <= addr && addr < lock_text_end)
--		return true;
--
--	return false;
--}
--
- static int get_symbol_name_offset(struct map *map, struct symbol *sym, u64 ip,
- 				  char *buf, int size)
- {
-@@ -961,7 +907,7 @@ static int lock_contention_caller(struct evsel *evsel, struct perf_sample *sampl
- 			goto next;
- 
- 		sym = node->ms.sym;
--		if (sym && !is_lock_function(machine, node->ip)) {
-+		if (sym && !machine__is_lock_function(machine, node->ip)) {
- 			get_symbol_name_offset(node->ms.map, sym, node->ip,
- 					       buf, size);
- 			return 0;
-@@ -1007,7 +953,7 @@ static u64 callchain_id(struct evsel *evsel, struct perf_sample *sample)
- 		if (++skip <= stack_skip)
- 			goto next;
- 
--		if (node->ms.sym && is_lock_function(machine, node->ip))
-+		if (node->ms.sym && machine__is_lock_function(machine, node->ip))
- 			goto next;
- 
- 		hash ^= hash_long((unsigned long)node->ip, 64);
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 4db9ad3d50c41ac7..f4ebb9a2e3809a7f 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -153,7 +153,7 @@ int lock_contention_read(struct lock_contention *con)
- 		bpf_map_lookup_elem(stack, &key, stack_trace);
- 
- 		/* skip lock internal functions */
--		while (is_lock_function(machine, stack_trace[idx]) &&
-+		while (machine__is_lock_function(machine, stack_trace[idx]) &&
- 		       idx < con->max_stack - 1)
- 			idx++;
- 
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index e3c061b1795ba377..a2346875098dca03 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -145,6 +145,4 @@ static inline int lock_contention_read(struct lock_contention *con __maybe_unuse
- 
- #endif  /* HAVE_BPF_SKEL */
- 
--bool is_lock_function(struct machine *machine, u64 addr);
--
- #endif  /* PERF_LOCK_CONTENTION_H */
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 76316e459c3de9c4..803c9d1803dd26ef 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -3336,3 +3336,43 @@ int machine__for_each_kernel_map(struct machine *machine, machine__map_t fn, voi
- 	}
- 	return err;
- }
-+
-+bool machine__is_lock_function(struct machine *machine, u64 addr)
-+{
-+	if (!machine->sched.text_start) {
-+		struct map *kmap;
-+		struct symbol *sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_start", &kmap);
-+
-+		if (!sym) {
-+			/* to avoid retry */
-+			machine->sched.text_start = 1;
-+			return false;
-+		}
-+
-+		machine->sched.text_start = kmap->unmap_ip(kmap, sym->start);
-+
-+		/* should not fail from here */
-+		sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_end", &kmap);
-+		machine->sched.text_end = kmap->unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_start", &kmap);
-+		machine->lock.text_start = kmap->unmap_ip(kmap, sym->start);
-+
-+		sym = machine__find_kernel_symbol_by_name(machine, "__lock_text_end", &kmap);
-+		machine->lock.text_end = kmap->unmap_ip(kmap, sym->start);
-+	}
-+
-+	/* failed to get kernel symbols */
-+	if (machine->sched.text_start == 1)
-+		return false;
-+
-+	/* mutex and rwsem functions are in sched text section */
-+	if (machine->sched.text_start <= addr && addr < machine->sched.text_end)
-+		return true;
-+
-+	/* spinlock functions are in lock text section */
-+	if (machine->lock.text_start <= addr && addr < machine->lock.text_end)
-+		return true;
-+
-+	return false;
-+}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 6267c1d6f2321128..d034ecaf89c193ea 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -56,6 +56,10 @@ struct machine {
- 	struct maps	  *kmaps;
- 	struct map	  *vmlinux_map;
- 	u64		  kernel_start;
-+	struct {
-+		u64	  text_start;
-+		u64	  text_end;
-+	} sched, lock;
- 	pid_t		  *current_tid;
- 	size_t		  current_tid_sz;
- 	union { /* Tool specific area */
-@@ -212,6 +216,7 @@ static inline bool machine__is_host(struct machine *machine)
- 	return machine ? machine->pid == HOST_KERNEL_ID : false;
- }
- 
-+bool machine__is_lock_function(struct machine *machine, u64 addr);
- bool machine__is(struct machine *machine, const char *arch);
- bool machine__normalized_is(struct machine *machine, const char *arch);
- int machine__nr_cpus_avail(struct machine *machine);
+I'm not sure what the BRBFCR_EL1_PAUSED value is at power on either, so
+the issue might also be present with the very first brbe session, but
+less obvious than a userspace one following a kernel one. But the flush
+solves that problem too.
+
+> }
+> 
+> Could these samples are from a previous session ? But they should have been
+> flushed in armpmu_start().
+> 
+> static void armpmu_start(struct perf_event *event, int flags)
+> {
+> 	.........
+>         if (has_branch_stack(event)) {
+>                 if (event->ctx->task && hw_events->brbe_context != event->ctx) {
+>                         armpmu->brbe_reset(hw_events);
+>                         hw_events->brbe_context = event->ctx;
+>                 }
+>                 armpmu->brbe_enable(hw_events);
+>                 hw_events->brbe_users++;
+>         }
+> 	.........
+> }
+> 
+>>
+>>
+>> [1]:
+>> https://gitlab.arm.com/linux-arm/linux-jc/-/commit/7260b7bef06ac161eac88d05266e8c5c303d9881
