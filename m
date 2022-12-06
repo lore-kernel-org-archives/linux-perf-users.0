@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B857C352A1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 09:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2792CC3A5A7
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 09:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235166AbiLFJuz (ORCPT
+        id S235160AbiLFJwU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 04:50:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
+        Tue, 6 Dec 2022 04:52:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235003AbiLFJuE (ORCPT
+        with ESMTP id S235150AbiLFJvR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 04:50:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FF713F33;
-        Tue,  6 Dec 2022 01:49:52 -0800 (PST)
+        Tue, 6 Dec 2022 04:51:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851CED79;
+        Tue,  6 Dec 2022 01:50:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1A772B818D7;
-        Tue,  6 Dec 2022 09:49:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64528C433C1;
-        Tue,  6 Dec 2022 09:49:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 201F9615FA;
+        Tue,  6 Dec 2022 09:50:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E69C0C43142;
+        Tue,  6 Dec 2022 09:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670320189;
-        bh=KT0MP4JrL6sAbW7N/GyVQgIbbitE5R7JmoiHiLy6Ys8=;
+        s=k20201202; t=1670320224;
+        bh=hy3KNMnbe22CQ1fU6zKhmEZCUxAeUJtEnsGnEUh5p2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqdmHwjRNXL7janqVfSHsH89FYgQzcuNSy77aCzLPuwfALyhHB1p2oNsZ4A+zaXSO
-         e7N4bRd7//0Ya8m2jbYv380udap+SesI8jjL+Tnlkoj4+w0EaKcqY6eKJvcjTb58vt
-         iXOwVEJmUXODczD2a/+lVuYzsTfKcEBLy1q+k7aREN+bSvARQYKDyXT3rfdP76qwgx
-         5tjHeJlbBOf1Z2SZsLPxwd/gn5iBVW44Ccm3/6fftNYA83anHg4P0BRedTtWOLiGTD
-         wc0Seq7FJOUJrr1CYaZRW4bmg+dJNZos+mvRVAHKBvazVTe5gGmsnH2kYny7UdvH2i
-         Q/kHtNJ2oz+3g==
+        b=H9SY/R7hOxHC8Y7PNysSXBLMGUrvU4t9/ZITTiGft7QHoBCdVnxNqmOLg2yfNUult
+         A8RZbblGsoZNuleQHOrp2RA9P2JVa71r8uaVEGvTQ2QYa4iBWEhNonhYvh8CvqnEJO
+         d2VOrWlCAlZS6QTYyXtkGEf6WwPPEhgMqrZQEEhlWY+PPNepWKQ5vj84UIudKxXT1n
+         c3VPoZ9/fHGJOzDfli7BDhfSGNZMrOb0gVw0jAWayUcHzxEntyi1e85Pc9MD5x8s5T
+         jbCN6Kd0yJybjdlbb+B9vTpGYG6+dFF4zZSTOeDxhvv9ps/QxaV4slKcoFvW3TfLnw
+         iKzRXdYSWSI2Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -40,12 +40,12 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Marco Elver <elver@google.com>,
         Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
         acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 11/13] perf: Fix perf_pending_task() UaF
-Date:   Tue,  6 Dec 2022 04:49:14 -0500
-Message-Id: <20221206094916.987259-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 11/12] perf: Fix perf_pending_task() UaF
+Date:   Tue,  6 Dec 2022 04:49:53 -0500
+Message-Id: <20221206094955.987437-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221206094916.987259-1-sashal@kernel.org>
-References: <20221206094916.987259-1-sashal@kernel.org>
+In-Reply-To: <20221206094955.987437-1-sashal@kernel.org>
+References: <20221206094955.987437-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -87,10 +87,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index bec18d81b116..eea9a1446310 100644
+index 60cb300fa0d0..a2bf2d1ea0b9 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2283,6 +2283,7 @@ event_sched_out(struct perf_event *event,
+@@ -2367,6 +2367,7 @@ event_sched_out(struct perf_event *event,
  		    !event->pending_work) {
  			event->pending_work = 1;
  			dec = false;
@@ -98,7 +98,7 @@ index bec18d81b116..eea9a1446310 100644
  			task_work_add(current, &event->pending_task, TWA_RESUME);
  		}
  		if (dec)
-@@ -2328,6 +2329,7 @@ group_sched_out(struct perf_event *group_event,
+@@ -2412,6 +2413,7 @@ group_sched_out(struct perf_event *group_event,
  
  #define DETACH_GROUP	0x01UL
  #define DETACH_CHILD	0x02UL
@@ -106,7 +106,7 @@ index bec18d81b116..eea9a1446310 100644
  
  /*
   * Cross CPU call to remove a performance event
-@@ -2348,12 +2350,20 @@ __perf_remove_from_context(struct perf_event *event,
+@@ -2432,12 +2434,20 @@ __perf_remove_from_context(struct perf_event *event,
  		update_cgrp_time_from_cpuctx(cpuctx, false);
  	}
  
@@ -127,7 +127,7 @@ index bec18d81b116..eea9a1446310 100644
  
  	if (!ctx->nr_events && ctx->is_active) {
  		if (ctx == &cpuctx->ctx)
-@@ -5113,9 +5123,7 @@ int perf_event_release_kernel(struct perf_event *event)
+@@ -5212,9 +5222,7 @@ int perf_event_release_kernel(struct perf_event *event)
  
  	ctx = perf_event_ctx_lock(event);
  	WARN_ON_ONCE(ctx->parent_ctx);
@@ -137,7 +137,7 @@ index bec18d81b116..eea9a1446310 100644
  	/*
  	 * Mark this event as STATE_DEAD, there is no external reference to it
  	 * anymore.
-@@ -5127,8 +5135,7 @@ int perf_event_release_kernel(struct perf_event *event)
+@@ -5226,8 +5234,7 @@ int perf_event_release_kernel(struct perf_event *event)
  	 * Thus this guarantees that we will in fact observe and kill _ALL_
  	 * child events.
  	 */
@@ -147,7 +147,7 @@ index bec18d81b116..eea9a1446310 100644
  
  	perf_event_ctx_unlock(event, ctx);
  
-@@ -6569,6 +6576,8 @@ static void perf_pending_task(struct callback_head *head)
+@@ -6662,6 +6669,8 @@ static void perf_pending_task(struct callback_head *head)
  	if (rctx >= 0)
  		perf_swevent_put_recursion_context(rctx);
  	preempt_enable_notrace();
@@ -155,7 +155,7 @@ index bec18d81b116..eea9a1446310 100644
 +	put_event(event);
  }
  
- #ifdef CONFIG_GUEST_PERF_EVENTS
+ /*              
 -- 
 2.35.1
 
