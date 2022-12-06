@@ -2,118 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B827FC352A1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 16:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5B9C352A1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 16:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231990AbiLFQXv (ORCPT
+        id S233558AbiLFQ2t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 11:23:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41122 "EHLO
+        Tue, 6 Dec 2022 11:28:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229780AbiLFQXu (ORCPT
+        with ESMTP id S232324AbiLFQ2t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 11:23:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265AECE22;
-        Tue,  6 Dec 2022 08:23:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B5BCE617D4;
-        Tue,  6 Dec 2022 16:23:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C72F2C433D6;
-        Tue,  6 Dec 2022 16:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670343829;
-        bh=ad2lDY343TkFcWm5TqcqRjN3pJz83g/1a8BC4bGnAAg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xp8z5kv0ju5bSohNsyOhDhwmxRGwI82eDsPE2xrTJSB7nziBMdGe3aT3Mu1uAFbEZ
-         ZyBeZNfB5IbtsRK2YMgxmJLg9p44Y23TPp9cFkGgX1CtGXBf9VmoJZsp/uknivFtFV
-         u/eeE5bjGXSNUtzp0RvyCZbudYVtAl6j0i4rv2oeEYGKOxA4EvDadZhvVvi4CEyH88
-         LD3w0dv2FCwtNaPZzG+UiDFqQw7UETEv87W+Rdj7k/6ECNs0/RJqJhlVL3CXhTY/Ig
-         h+I9l+Xh9xRvBJV3VgCayC+1GyglQSm/1AdGjvEX76uMHq2heXdLMXXvPMZivCIwa+
-         +OZlP3Sru+tiQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2F4F240404; Tue,  6 Dec 2022 13:23:45 -0300 (-03)
-Date:   Tue, 6 Dec 2022 13:23:45 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 6 Dec 2022 11:28:49 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1D17C9FCF;
+        Tue,  6 Dec 2022 08:28:47 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34C3723A;
+        Tue,  6 Dec 2022 08:28:53 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.39.172])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C787A3F73B;
+        Tue,  6 Dec 2022 08:28:43 -0800 (PST)
+Date:   Tue, 6 Dec 2022 16:28:38 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Rob Herring <robh@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
-Message-ID: <Y49skYa5VYPMU+RF@kernel.org>
-References: <20221205225940.3079667-1-irogers@google.com>
- <20221205225940.3079667-3-irogers@google.com>
- <Y49qiCIiyaehEOaG@kernel.org>
- <Y49rvLO2RnJBBNL/@kernel.org>
+        Jiri Olsa <jolsa@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH v3 7/8] perf: Add perf_event_attr::config3
+Message-ID: <Y49ttrv6W5k3ZNYw@FVFF77S0Q05N.cambridge.arm.com>
+References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
+ <20220825-arm-spe-v8-7-v3-7-87682f78caac@kernel.org>
+ <20221118164943.GA4872@willie-the-truck>
+ <CAL_JsqJMxEWhqZV=yqG15zvEHrBTwRVfHA6zptu2TswxRMSR0A@mail.gmail.com>
+ <877czfujdj.fsf@ubik.fi.intel.com>
+ <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y49rvLO2RnJBBNL/@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 06, 2022 at 01:20:12PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Dec 06, 2022 at 01:15:04PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Mon, Dec 05, 2022 at 02:59:39PM -0800, Ian Rogers escreveu:
-> > > Remove the LIBTRACEEVENT_DYNAMIC and LIBTRACEFS_DYNAMIC. If
-> > > libtraceevent isn't installed or NO_LIBTRACEEVENT=1 is passed to the
-> > > build, don't compile in libtraceevent and libtracefs support. This
-> > > also disables CONFIG_TRACE that controls "perf
-> > > trace". CONFIG_TRACEEVENT is used to control enablement in
-> > > Build/Makefiles, HAVE_LIBTRACEEVENT is used in C code. Without
-> > > HAVE_LIBTRACEEVENT tracepoints are disabled and as such the commands
-> > > kmem, kwork, lock, sched and timechart are removed. The majority of
-> > > commands continue to work including "perf test".
-> > 
-> > Had just this .rej and I fixed it up manually, testing now:
-> 
-> Investigating:
-> 
-> [acme@quaco perf]$ rpm -q libtraceevent-devel
-> libtraceevent-devel-1.5.3-2.fc36.x86_64
-> [acme@quaco perf]$
-> [acme@quaco perf]$ grep -i traceevent /tmp/build/perf/FEATURE-DUMP
-> feature-libtraceevent=1
-> [acme@quaco perf]$
-> 
-> [acme@quaco perf]$ alias m
-> alias m='rm -rf ~/libexec/perf-core/ ; perf stat -e cycles:u,instructions:u make -k BUILD_BPF_SKEL=1 O=/tmp/build/perf -C tools/perf install-bin && perf test python'
-> [acme@quaco perf]$
-> 
-> [acme@quaco perf]$ rpm -ql libtraceevent-devel | grep \.h$ | xargs grep tep_print_flag_sym
-> /usr/include/traceevent/event-parse.h:struct tep_print_flag_sym {
-> /usr/include/traceevent/event-parse.h:	struct tep_print_flag_sym	*next;
-> /usr/include/traceevent/event-parse.h:	struct tep_print_flag_sym	*flags;
-> /usr/include/traceevent/event-parse.h:	struct tep_print_flag_sym	*symbols;
-> [acme@quaco perf]$
-> 
-> util/scripting-engines/trace-event-perl.c:104:43: error: ‘struct tep_print_flag_sym’ declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
->   104 | static void define_symbolic_values(struct tep_print_flag_sym *field,
->       |                                           ^~~~~~~~~~~~~~~~~~
-> util/scripting-engines/trace-event-perl.c: In function ‘define_symbolic_values’:
+Peter, it looks like this series is blocked on the below now; what would you
+prefer out of:
 
-This cured it, folding into your patch:
+(a) Take this as is, and look add adding additional validation on top.
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 5b602b6d46854133..0bacb49408f84adf 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -27,6 +27,7 @@
- #include <errno.h>
- #include <linux/bitmap.h>
- #include <linux/time64.h>
-+#include <traceevent/event-parse.h>
- 
- #include <stdbool.h>
- /* perl needs the following define, right after including stdbool.h */
+(b) Add some flag to indicate a PMU driver supports config3, and have the core
+    code check that, but leave the existing fields as-is for now (and hopefully
+    follow up with further validation later for the existing fields).
+
+(c) Go audit all the existing drivers, add flags to indicate support for
+    existing fields, and have the core code check that. Atop that, add support
+    for config3 with the same sort of flag check.
+
+    I suspect that'd end up needing to go check more than config1/config2 given
+    all the filter controls and so on that drivers aren't great at checking,
+    and that might being fairly invasive.
+
+(d) Something else?
+
+I think we want to get to a point where drivers indicate what they actually
+support and the core code rejects stuff drivers don't support or recognise, but
+I think it'd be a little unreasonable to delay this series on cleaning up all
+the existing issues.
+
+I'm tempted to say (b) as that shouldn't introduce any regressions, should be a
+relatively simple change to this series, and doesn't precluse making the rest
+stricter as a follow-up. I'm happy to take a look at that (and IIUC Rob is
+too).
+
+What's your preference?
+
+Thanks,
+Mark.
+
+On Mon, Nov 28, 2022 at 11:15:21AM -0600, Rob Herring wrote:
+> On Mon, Nov 28, 2022 at 10:36 AM Alexander Shishkin
+> <alexander.shishkin@linux.intel.com> wrote:
+> >
+> > Rob Herring <robh@kernel.org> writes:
+> >
+> > > On Fri, Nov 18, 2022 at 10:49 AM Will Deacon <will@kernel.org> wrote:
+> > >>
+> > >> On Fri, Nov 04, 2022 at 10:55:07AM -0500, Rob Herring wrote:
+> > >> > @@ -515,6 +516,8 @@ struct perf_event_attr {
+> > >> >        * truncated accordingly on 32 bit architectures.
+> > >> >        */
+> > >> >       __u64   sig_data;
+> > >> > +
+> > >> > +     __u64   config3; /* extension of config2 */
+> > >>
+> > >> I need an ack from the perf core maintainers before I can take this.
+> > >
+> > > Peter, Arnaldo, Ingo,
+> > >
+> > > Can I get an ack on this please.
+> >
+> > It appears that PMUs that don't use config{1,2} and now config3 allow
+> > them to be whatever without any validation, whereas in reality we should
+> > probably -EINVAL in those cases. Should something be done about that?
+> 
+> Always the 3rd occurrence that gets to clean-up things. ;)
+> 
+> I think we'd have to add some capability flags for PMU drivers to set
+> to enable configN usage and then use those to validate configN is 0.
+> Wouldn't be too hard to do for config3 as we know there's exactly 1
+> user, but for 1,2 there's about 80 PMU drivers to check.
+> 
+> Rob
+> 
