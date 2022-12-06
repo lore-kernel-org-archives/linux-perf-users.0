@@ -2,143 +2,280 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDD3C636F9
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Dec 2022 23:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CE5C4708C
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Dec 2022 02:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232240AbiLEXQf (ORCPT
+        id S232490AbiLFCup (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Dec 2022 18:16:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
+        Mon, 5 Dec 2022 21:50:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233231AbiLEXQe (ORCPT
+        with ESMTP id S232266AbiLFCuo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Dec 2022 18:16:34 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661FDFAC9;
-        Mon,  5 Dec 2022 15:16:33 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id v3so11834285pgh.4;
-        Mon, 05 Dec 2022 15:16:33 -0800 (PST)
+        Mon, 5 Dec 2022 21:50:44 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C1223BDF
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Dec 2022 18:50:43 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id v3so12190449pgh.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Dec 2022 18:50:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1eMXUb35CswTS4yMhs6a5ng51PFHAvAxv8mok77/yY=;
-        b=bpq4PJbPK9gkYXgRg+nxuqvx2NBP04RUBKdEzYu9tlvBrrJG6sA9KirAUtoNNkrvv7
-         dg1iwSuojPzB5Wqn48xfpWbmGW0ccXkQE4hVBaW4/NWV6+8+KFx3674rt8VAsx5+mIcZ
-         r0Mrl3JZ/f71Ra4lgKzNyLhgN4C3hW/pvWUawAJueSAYrrJO9MSn9e+lGagdU1vPEhZr
-         /WqDbiyDynKbWqPc5lKnTbDdhuwNbPnLW0QxzuWbt0qQe5/WmWgo0wKrXhYwxAi8yFFD
-         g6tt0njpEurEPl+VXk2Xf4rsgbdLLq1DXEsuaRPGInKYL0b66DHwMJxMqODZOuM0NtIh
-         0LYA==
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WEYJ73xbUUTuiFPUB3TgsG4oZgIHBL7beR0oFU4cLiY=;
+        b=OKVs83b4UGUNN2j1s6jwUm405BVfAXXNGOO/1BbcrtZTAmY2VCR5rAvmq51plcpn4W
+         rp1bENJ7GEKvgmumqJTFWD8sRRG9wP2U2feDEBgbwQAVyrkh4ooiPK8/uYsb+HBJoAMv
+         Ujxq+sjw5VSueKFqN0CCjj6UQ9fXtyA3XX7qdlD0BnZj0IafZ9h+YcaseoJBydEd8rp8
+         G6EMWuEEuAp4Hv+oikWoaGVDEV//dQqb9hiykO4O3VIhbTRF42tcJgWMT9u8weSYGMY3
+         uuWwmZ8KBepsLO1DBrslBCTZQ8yy28zfbxn35DkgV4QTYxcfbsFIKEpdWsKgrH3C14h6
+         1dUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l1eMXUb35CswTS4yMhs6a5ng51PFHAvAxv8mok77/yY=;
-        b=xsmYGDVKQJ9MO/cpShP7CqJgSLRWroM0Le1IRO9qXE/g20RUoKa7C6lGBcVy+uKtUc
-         OXSEh8zaTwv3Rso7++KuwV54/ERxV7e0iit64r1y/zZgcF+OskPHCzCYMgbzQs1Bv6Lp
-         RFWk2zz4sceMnNbnjMbEEaP4tj795T07yOC6Oi3Ro/I7z6OYW9tgj4i0AnxIHr1tCJhu
-         OvTbBTozwUipDZ5LGidbscjNjIuyvZv3QrhxHe3bDTheyK2+PK7LDmhLNzo/qxVdOhki
-         ZG/HY43bZvl0Lpr/nfMYxErtHeIlC477o1MskW1costn2QfGPw3llJdbyA5GcwmyQNe9
-         jNaw==
-X-Gm-Message-State: ANoB5pmYMV4jOTKoc/KZYFbJi3HkUIUwlQY/mIW+7L32hvcc6hn9xEQZ
-        Kf+HPVw1rgIl3Ddhc8VAVts=
-X-Google-Smtp-Source: AA0mqf7Zt0JiQq/jVcV4BbK4E2NDYPYC4BF9OlA7SzOMkRCGrgqSS1un9XF14Kl3g0spU2YvA+clnw==
-X-Received: by 2002:a62:60c7:0:b0:56b:94f5:400c with SMTP id u190-20020a6260c7000000b0056b94f5400cmr66412045pfb.31.1670282192786;
-        Mon, 05 Dec 2022 15:16:32 -0800 (PST)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:8f7c:b9c9:e06c:7b30])
-        by smtp.gmail.com with ESMTPSA id s13-20020a170902ea0d00b001891b01addfsm11039616plg.274.2022.12.05.15.16.31
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WEYJ73xbUUTuiFPUB3TgsG4oZgIHBL7beR0oFU4cLiY=;
+        b=j9ZfWLjY8vIRuMQkJCWWWNh+xFJlvBygxsZxYW4lf2yq3bq5aMp07gZfGH7oCuvaGs
+         4Q7qHC89bp51oAcKPCdArT17IGEFg8RrkNBvoN3ry7Q7mekhoHIAmI1Y7XlG2jCiftf7
+         hDW9lA16EBjOxKJmO+PiTjZ1kzpuhp5EXXIDgGc91aWG8ypqtKbCp5nmM7Mi+NeDzkjj
+         8qBlau/eAjjVmGPD/pg+bZ19a1VIlgW3gpItSK1ftG5MPY0jtHMzlro96aCHn/78S4iA
+         QvVrSj4q01UKQkoaQZh8SVNx6CvscxT1NnTP4XDoYFruhB+ddUMujEb/QJfjYosBcEvC
+         g1Lg==
+X-Gm-Message-State: ANoB5pmj5BuOawFi9rDCWH4lU6XzlviDiQxPofGebuKRP+5OruX8xx8o
+        vz9AWMrW8HkkZrH2H/XprNwacA==
+X-Google-Smtp-Source: AA0mqf4bzqGZRywxJ9QXKAqa/GtPKIMErbmBEYPJOTEm/8DTgmSWLgq5+wobqCf0pQxYyGLrYS7SxA==
+X-Received: by 2002:a05:6a00:2883:b0:572:7b49:4f47 with SMTP id ch3-20020a056a00288300b005727b494f47mr69791918pfb.16.1670295042616;
+        Mon, 05 Dec 2022 18:50:42 -0800 (PST)
+Received: from C02CV1DAMD6P.bytedance.net ([139.177.225.255])
+        by smtp.gmail.com with ESMTPSA id c73-20020a624e4c000000b0056bc742d21esm10892043pfb.176.2022.12.05.18.50.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 15:16:32 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH] perf stat: Update event skip condition
-Date:   Mon,  5 Dec 2022 15:16:30 -0800
-Message-Id: <20221205231630.319759-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
+        Mon, 05 Dec 2022 18:50:42 -0800 (PST)
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [PATCH] perf/core: Fix cgroup events tracking
+Date:   Tue,  6 Dec 2022 10:50:34 +0800
+Message-Id: <20221206025034.75125-1-zhouchengming@bytedance.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In print_counter_aggrdata(), it skips some events that has no aggregate
-count.  It's actually for system-wide per-thread mode and merged uncore
-and hybrid events.
+We encounter perf warnings when using cgroup events like:
+```
+cd /sys/fs/cgroup
+mkdir test
+perf stat -e cycles -a -G test
+```
 
-Let's update the condition to check them explicitly.
+WARNING: CPU: 0 PID: 690 at kernel/events/core.c:849 perf_cgroup_switch+0xb2/0xc0
+[   91.393417] Call Trace:
+[   91.393772]  <TASK>
+[   91.394080]  __schedule+0x4ae/0x9f0
+[   91.394535]  ? _raw_spin_unlock_irqrestore+0x23/0x40
+[   91.395145]  ? __cond_resched+0x18/0x20
+[   91.395622]  preempt_schedule_common+0x2d/0x70
+[   91.396163]  __cond_resched+0x18/0x20
+[   91.396621]  wait_for_completion+0x2f/0x160
+[   91.397137]  ? cpu_stop_queue_work+0x9e/0x130
+[   91.397665]  affine_move_task+0x18a/0x4f0
 
-Fixes: 91f85f98da7a ("Display event stats using aggr counts")
-Reported-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+WARNING: CPU: 0 PID: 690 at kernel/events/core.c:829 ctx_sched_in+0x1cf/0x1e0
+[   91.430151] Call Trace:
+[   91.430490]  <TASK>
+[   91.430793]  ? ctx_sched_out+0xb7/0x1b0
+[   91.431274]  perf_cgroup_switch+0x88/0xc0
+[   91.431778]  __schedule+0x4ae/0x9f0
+[   91.432215]  ? _raw_spin_unlock_irqrestore+0x23/0x40
+[   91.432825]  ? __cond_resched+0x18/0x20
+[   91.433299]  preempt_schedule_common+0x2d/0x70
+[   91.433839]  __cond_resched+0x18/0x20
+[   91.434298]  wait_for_completion+0x2f/0x160
+[   91.434808]  ? cpu_stop_queue_work+0x9e/0x130
+[   91.435334]  affine_move_task+0x18a/0x4f0
+
+The above two warnings are not complete here since I remove other
+unimportant information. The problem is caused by the perf cgroup
+events tracking:
+
+CPU0					CPU1
+perf_event_open()
+  perf_event_alloc()
+    account_event()
+      account_event_cpu()
+        atomic_inc(perf_cgroup_events)
+					__perf_event_task_sched_out()
+					  if (atomic_read(perf_cgroup_events))
+					    perf_cgroup_switch()
+					      // kernel/events/core.c:849
+					      WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0)
+					      if (READ_ONCE(cpuctx->cgrp) == cgrp) // false
+					        return
+					      perf_ctx_lock()
+					      ctx_sched_out()
+					      cpuctx->cgrp = cgrp
+					      ctx_sched_in()
+					        perf_cgroup_set_timestamp()
+					          // kernel/events/core.c:829
+					          WARN_ON_ONCE(!ctx->nr_cgroups)
+					      perf_ctx_unlock()
+  perf_install_in_context()
+    add_event_to_ctx()
+      list_add_event()
+        perf_cgroup_event_enable()
+          ctx->nr_cgroups++
+          cpuctx->cgrp = X
+
+We can see from above that we wrongly use percpu atomic perf_cgroup_events
+to check if we need to perf_cgroup_switch(), which should only be used
+when we know this CPU has cgroup events enabled.
+
+The commit bd2756811766 ("perf: Rewrite core context handling") change
+to have only one context per-CPU, so we can just use cpuctx->cgrp to
+check if this CPU has cgroup events enabled.
+
+So percpu atomic perf_cgroup_events is not needed.
+
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
 ---
-Athira, could you please check this fixes the problem?
+ kernel/events/core.c | 42 ++++++++++--------------------------------
+ 1 file changed, 10 insertions(+), 32 deletions(-)
 
- tools/perf/util/stat-display.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 847acdb5dc40..6c0de52ac4be 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -814,7 +814,8 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	os->nr = aggr->nr;
- 	os->evsel = counter;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index eacc3702654d..5d97a9f26003 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -380,7 +380,6 @@ enum event_type_t {
  
--	if (counter->supported && aggr->nr == 0)
-+	/* Skip already merged uncore/hybrid events */
-+	if (counter->merged_stat)
+ /*
+  * perf_sched_events : >0 events exist
+- * perf_cgroup_events: >0 per-cpu cgroup events exist on this cpu
+  */
+ 
+ static void perf_sched_delayed(struct work_struct *work);
+@@ -389,7 +388,6 @@ static DECLARE_DELAYED_WORK(perf_sched_work, perf_sched_delayed);
+ static DEFINE_MUTEX(perf_sched_mutex);
+ static atomic_t perf_sched_count;
+ 
+-static DEFINE_PER_CPU(atomic_t, perf_cgroup_events);
+ static DEFINE_PER_CPU(struct pmu_event_list, pmu_sb_events);
+ 
+ static atomic_t nr_mmap_events __read_mostly;
+@@ -844,9 +842,16 @@ static void perf_cgroup_switch(struct task_struct *task)
+ 	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+ 	struct perf_cgroup *cgrp;
+ 
+-	cgrp = perf_cgroup_from_task(task, NULL);
++	/*
++	 * cpuctx->cgrp is set when the first cgroup event enabled,
++	 * and is cleared when the last cgroup event disabled.
++	 */
++	if (READ_ONCE(cpuctx->cgrp) == NULL)
++		return;
+ 
+ 	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
++
++	cgrp = perf_cgroup_from_task(task, NULL);
+ 	if (READ_ONCE(cpuctx->cgrp) == cgrp)
  		return;
  
- 	uniquify_counter(config, counter);
-@@ -823,6 +824,13 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	ena = aggr->counts.ena;
- 	run = aggr->counts.run;
+@@ -3631,8 +3636,7 @@ void __perf_event_task_sched_out(struct task_struct *task,
+ 	 * to check if we have to switch out PMU state.
+ 	 * cgroup event are system-wide mode only
+ 	 */
+-	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
+-		perf_cgroup_switch(next);
++	perf_cgroup_switch(next);
+ }
  
-+	/*
-+	 * Skip value 0 when enabling --per-thread globally, otherwise it will
-+	 * have too many 0 output.
-+	 */
-+	if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
-+		return;
-+
- 	if (!metric_only) {
- 		if (config->json_output)
- 			fputc('{', output);
-@@ -899,9 +907,6 @@ static void print_aggr(struct perf_stat_config *config,
- 		print_metric_begin(config, evlist, os, s);
+ static bool perf_less_group_idx(const void *l, const void *r)
+@@ -4974,15 +4978,6 @@ static void unaccount_pmu_sb_event(struct perf_event *event)
+ 		detach_sb_event(event);
+ }
  
- 		evlist__for_each_entry(evlist, counter) {
--			if (counter->merged_stat)
--				continue;
+-static void unaccount_event_cpu(struct perf_event *event, int cpu)
+-{
+-	if (event->parent)
+-		return;
 -
- 			print_counter_aggrdata(config, counter, s, os);
+-	if (is_cgroup_event(event))
+-		atomic_dec(&per_cpu(perf_cgroup_events, cpu));
+-}
+-
+ #ifdef CONFIG_NO_HZ_FULL
+ static DEFINE_SPINLOCK(nr_freq_lock);
+ #endif
+@@ -5048,8 +5043,6 @@ static void unaccount_event(struct perf_event *event)
+ 			schedule_delayed_work(&perf_sched_work, HZ);
+ 	}
+ 
+-	unaccount_event_cpu(event, event->cpu);
+-
+ 	unaccount_pmu_sb_event(event);
+ }
+ 
+@@ -11679,15 +11672,6 @@ static void account_pmu_sb_event(struct perf_event *event)
+ 		attach_sb_event(event);
+ }
+ 
+-static void account_event_cpu(struct perf_event *event, int cpu)
+-{
+-	if (event->parent)
+-		return;
+-
+-	if (is_cgroup_event(event))
+-		atomic_inc(&per_cpu(perf_cgroup_events, cpu));
+-}
+-
+ /* Freq events need the tick to stay alive (see perf_event_task_tick). */
+ static void account_freq_event_nohz(void)
+ {
+@@ -11775,8 +11759,6 @@ static void account_event(struct perf_event *event)
+ 	}
+ enabled:
+ 
+-	account_event_cpu(event, event->cpu);
+-
+ 	account_pmu_sb_event(event);
+ }
+ 
+@@ -12822,13 +12804,11 @@ static void __perf_pmu_remove(struct perf_event_context *ctx,
+ 
+ 	perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu) {
+ 		perf_remove_from_context(event, 0);
+-		unaccount_event_cpu(event, cpu);
+ 		put_pmu_ctx(event->pmu_ctx);
+ 		list_add(&event->migrate_entry, events);
+ 
+ 		for_each_sibling_event(sibling, event) {
+ 			perf_remove_from_context(sibling, 0);
+-			unaccount_event_cpu(sibling, cpu);
+ 			put_pmu_ctx(sibling->pmu_ctx);
+ 			list_add(&sibling->migrate_entry, events);
  		}
- 		print_metric_end(config, os);
-@@ -928,9 +933,6 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
- 			print_metric_begin(config, evlist, os, s);
+@@ -12847,7 +12827,6 @@ static void __perf_pmu_install_event(struct pmu *pmu,
  
- 			evlist__for_each_entry(evlist, counter) {
--				if (counter->merged_stat)
--					continue;
--
- 				if (counter->cgrp != os->cgrp)
- 					continue;
+ 	if (event->state >= PERF_EVENT_STATE_OFF)
+ 		event->state = PERF_EVENT_STATE_INACTIVE;
+-	account_event_cpu(event, cpu);
+ 	perf_install_in_context(ctx, event, cpu);
+ }
  
+@@ -13742,8 +13721,7 @@ static int __perf_cgroup_move(void *info)
+ 	struct task_struct *task = info;
+ 
+ 	preempt_disable();
+-	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
+-		perf_cgroup_switch(task);
++	perf_cgroup_switch(task);
+ 	preempt_enable();
+ 
+ 	return 0;
 -- 
-2.39.0.rc0.267.gcb52ba06e7-goog
+2.37.2
 
