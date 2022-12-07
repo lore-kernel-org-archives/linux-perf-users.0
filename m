@@ -2,100 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3F8C47089
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 16:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794C2C352A1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 16:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbiLGQ4N (ORCPT
+        id S229967AbiLGQ7N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 11:56:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41836 "EHLO
+        Wed, 7 Dec 2022 11:59:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbiLGQ4M (ORCPT
+        with ESMTP id S229962AbiLGQ7F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 11:56:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83AF6177A;
-        Wed,  7 Dec 2022 08:56:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 078AEB81F80;
-        Wed,  7 Dec 2022 16:56:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8DBC433C1;
-        Wed,  7 Dec 2022 16:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670432168;
-        bh=CXFA7xU5rXYsWcYNq38AVI/vKJwTiyUrhcJLpBypxuU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fxD3yn5XULK3bROFLmPw72L9p8mTSa4zlCrOxg0dhDU3IwAW9QhYbUcdTDwVa1r6e
-         IE2n0+nCyk+9SOjCrAGHlRoLoEhYzzFM0kQ3hx6rKqgBnvNJ4GgfKlOF3IkkVWdC4k
-         E8br52KvsLEfw54Ktpf8OlY5CX4yDgcitaa6Q7DQ6iAlEbWrF69a4eE5fd8lecpsB/
-         svaR4mNc42avYO9BkeLdO5492htz7K3jtJhieYPR7wSFCuYAYN8IyRuVrQBtZsVZaM
-         ScIPegUF1cGQK3GycT+c5PfJqMaiuubr+MVqRKZkqKqLVMIzK3DJdcCeqGitawQMkQ
-         e8AeEcQATZYjw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1867840404; Wed,  7 Dec 2022 13:56:06 -0300 (-03)
-Date:   Wed, 7 Dec 2022 13:56:06 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [ALMOST ready] Re: [PATCH 2/3] perf build: Use libtraceevent
- from the system
-Message-ID: <Y5DFpn4R6p+vnBRz@kernel.org>
-References: <Y49wxSIK7dJ7iTDg@kernel.org>
- <Y491d1wEW4TfUi5f@kernel.org>
- <Y4921D+36UGdhK92@kernel.org>
- <Y494TNa0ZyPH9YSD@kernel.org>
- <Y498YP2N3gvFSr/X@kernel.org>
- <CAP-5=fW2Fdfo9njgXxCVDP0dF3gTsUtaPMh88uSC5bRVjp+1Uw@mail.gmail.com>
- <Y5ChXjt0uv/yDNwV@kernel.org>
- <Y5Cjylv9dJh796dw@kernel.org>
- <20221207093958.09ae35c2@gandalf.local.home>
- <Y5C5AZ1YfthY0tx2@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Wed, 7 Dec 2022 11:59:05 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD7A16869C
+        for <linux-perf-users@vger.kernel.org>; Wed,  7 Dec 2022 08:58:43 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B7GHwOU026645;
+        Wed, 7 Dec 2022 16:58:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=r+3Om0QSsbre8QtYGLrj5cnrhs7nG4bTZt4PL+e9rtI=;
+ b=UgETVlaZx4T9tmcOVmvTlrHpGVXfUeVqawBk2yUPTGFrS28fDB4HOIuW/QkbmSnmXZjQ
+ LBdptUBLkpRcybvKwxdhDHm7jRY4EsNuyr/RqJz6NovXbZXcmrCih6vTGIkK+XHsW1yj
+ RM3QAe7gZc3CbGgEbn3ahGOYuQ5+gWxtVFnwsw7ExOWvzoOaTyVzRqXxfNvSs58B3xUl
+ ZdN5sPG1X/HMcqBRhpamGTbqhiIk90jaxW+arAst3wENaUPeHD597APOI28iikaNhVRF
+ LviF2Jpala1U2e8GacSw5fwdk4CbzBRUmdl//sfy04a3xoLfgybrnTfEpWXBvctFmEOp YQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3max7w13jj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Dec 2022 16:58:28 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B7GIe6e028005;
+        Wed, 7 Dec 2022 16:58:27 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3max7w13hx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Dec 2022 16:58:27 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2B7C42i9010326;
+        Wed, 7 Dec 2022 16:58:25 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3m9ks4386b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Dec 2022 16:58:25 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B7GwLoC38863104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Dec 2022 16:58:21 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B66620040;
+        Wed,  7 Dec 2022 16:58:21 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8964220043;
+        Wed,  7 Dec 2022 16:58:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.55.175])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Dec 2022 16:58:18 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, ravi.bangoria@amd.com
+Cc:     namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
+Subject: [PATCH] perf test: Update event group check for support of uncore event
+Date:   Wed,  7 Dec 2022 22:28:15 +0530
+Message-Id: <20221207165815.774-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Le_AnK1W45-7YbUdsTbD659nmT3rwyJn
+X-Proofpoint-ORIG-GUID: -6Hl6Qjz4-UhH_iD7v_fdfemSh8yOEJj
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y5C5AZ1YfthY0tx2@kernel.org>
-X-Url:  http://acmel.wordpress.com
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-07_08,2022-12-07_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ malwarescore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2212070143
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Dec 07, 2022 at 01:02:09PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Dec 07, 2022 at 09:39:58AM -0500, Steven Rostedt escreveu:
-> > On Wed, 7 Dec 2022 11:31:38 -0300
-> > Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Event group test checks group creation for combinations of
+hw, sw and uncore PMU events. Some of the uncore pmus may
+require additional permission to access the counters.
+For example, in case of hv_24x7, partition need to have
+permissions to access hv_24x7 pmu counters. If not, event_open
+will fail. Hence add a sanity check to see if event_open
+succeeds before proceeding with the test.
 
-> > > No distro I tested so far has a package for libtracevent in is default
-> > > repositories:
+Fixes: b20d9215a35f ("perf test: Add event group test for events in multiple PMUs")
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+Note: The patch is based on tmp.perf/core branch
+    of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
 
-> > Not sure what you mean by "default repository".
+ tools/perf/tests/event_groups.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-> > At least on Debian testing, I have libtraceevent-dev available.
+diff --git a/tools/perf/tests/event_groups.c b/tools/perf/tests/event_groups.c
+index 612c0444aaa8..029442b4e9c6 100644
+--- a/tools/perf/tests/event_groups.c
++++ b/tools/perf/tests/event_groups.c
+@@ -51,7 +51,7 @@ static int event_open(int type, unsigned long config, int group_fd)
+ static int setup_uncore_event(void)
+ {
+ 	struct perf_pmu *pmu;
+-	int i;
++	int i, fd;
+ 
+ 	if (list_empty(&pmus))
+ 		perf_pmu__scan(NULL);
+@@ -62,6 +62,18 @@ static int setup_uncore_event(void)
+ 				pr_debug("Using %s for uncore pmu event\n", pmu->name);
+ 				types[2] = pmu->type;
+ 				configs[2] = uncore_pmus[i].config;
++				/*
++				 * Check if the chosen uncore pmu event can be
++				 * used in the test. For example, incase of accessing
++				 * hv_24x7 pmu counters, partition should have
++				 * additional permissions. If not, event open will
++				 * fail. So check if the event open succeeds
++				 * before proceeding.
++				 */
++				fd = event_open(types[2], configs[2], -1);
++				if (fd < 0)
++					return -1;
++				close(fd);
+ 				return 0;
+ 			}
+ 		}
+-- 
+2.31.1
 
-> Right, I'm talking about non-bleeding edge, distros that are still
-> supported. I'm still checking, fedora is ok all the way back to 33, wrt
-> having libtraceevent available.
-
-And in some places libtraceevent is available, but then:
-
-  73     6.88 ubuntu:22.04                  : FAIL gcc version 11.3.0 (Ubuntu 11.3.0-1ubuntu1~22.04)
-    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c: In function ‘evsel__rawptr’:
-    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: error: ‘TEP_FIELD_IS_RELATIVE’ undeclared (first use in this function); did you mean ‘TEP_FIELD_IS_FLAG’?
-     2787 |                 if (field->flags & TEP_FIELD_IS_RELATIVE)
-          |                                    ^~~~~~~~~~~~~~~~~~~~~
-          |                                    TEP_FIELD_IS_FLAG
-
-Still need to look how to cover these.
-
-- Arnaldo
