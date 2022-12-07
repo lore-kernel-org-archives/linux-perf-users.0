@@ -2,30 +2,42 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCF5C4708E
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 14:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB24C352A1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 16:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbiLGOkG (ORCPT
+        id S229690AbiLGQCU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 09:40:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37008 "EHLO
+        Wed, 7 Dec 2022 11:02:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiLGOkF (ORCPT
+        with ESMTP id S229651AbiLGQCT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 09:40:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6412A975;
-        Wed,  7 Dec 2022 06:40:04 -0800 (PST)
+        Wed, 7 Dec 2022 11:02:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233E432BAB;
+        Wed,  7 Dec 2022 08:02:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5F904B81E5D;
-        Wed,  7 Dec 2022 14:40:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B274C433D6;
-        Wed,  7 Dec 2022 14:40:00 +0000 (UTC)
-Date:   Wed, 7 Dec 2022 09:39:58 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B617261AC8;
+        Wed,  7 Dec 2022 16:02:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1368C433D6;
+        Wed,  7 Dec 2022 16:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670428938;
+        bh=uMOXr6asjMdriSGzhh1L9jUcP/oV+ntlK5yoRVR1d14=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ssf2VM6aWopVI15Ca1rw1MvKdSYqXhn5m3yBXpsDE2faRXmLniOu0wTYPouspelBs
+         dmsh88Z6jfbtwZOrYsQmUslXoTaQ3OBUSrqqlKoqAQd6c4x8gQr5B9FbI4y4ytdQm4
+         Y3i7EOkuSkrvjk/BQvmhcxAWaEEldc+r3REsAGyE1Ggsdk2/H/Hx6nMEEzGJq7EIor
+         LYd48QJxRA4w8IQYsR1B0SEuvqe6jbexIgxL9UvNX3JVGc8AcxydsYXDGsC+45U3XR
+         aSyim+dyPcXEdIQqyYITJc1sCjSxHkb28/gGkRrONG6GVZ+gPi0HtsN4xfskWsgBql
+         KAjaOXyCRtCPw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AB02240404; Wed,  7 Dec 2022 13:02:09 -0300 (-03)
+Date:   Wed, 7 Dec 2022 13:02:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -38,35 +50,39 @@ Cc:     Ian Rogers <irogers@google.com>,
         bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
 Subject: Re: [ALMOST ready] Re: [PATCH 2/3] perf build: Use libtraceevent
  from the system
-Message-ID: <20221207093958.09ae35c2@gandalf.local.home>
-In-Reply-To: <Y5Cjylv9dJh796dw@kernel.org>
-References: <Y49skYa5VYPMU+RF@kernel.org>
-        <Y49uKfzfCoZ1ok62@kernel.org>
-        <Y49vx0v6Z7EiR8jr@kernel.org>
-        <Y49wxSIK7dJ7iTDg@kernel.org>
-        <Y491d1wEW4TfUi5f@kernel.org>
-        <Y4921D+36UGdhK92@kernel.org>
-        <Y494TNa0ZyPH9YSD@kernel.org>
-        <Y498YP2N3gvFSr/X@kernel.org>
-        <CAP-5=fW2Fdfo9njgXxCVDP0dF3gTsUtaPMh88uSC5bRVjp+1Uw@mail.gmail.com>
-        <Y5ChXjt0uv/yDNwV@kernel.org>
-        <Y5Cjylv9dJh796dw@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Message-ID: <Y5C5AZ1YfthY0tx2@kernel.org>
+References: <Y49vx0v6Z7EiR8jr@kernel.org>
+ <Y49wxSIK7dJ7iTDg@kernel.org>
+ <Y491d1wEW4TfUi5f@kernel.org>
+ <Y4921D+36UGdhK92@kernel.org>
+ <Y494TNa0ZyPH9YSD@kernel.org>
+ <Y498YP2N3gvFSr/X@kernel.org>
+ <CAP-5=fW2Fdfo9njgXxCVDP0dF3gTsUtaPMh88uSC5bRVjp+1Uw@mail.gmail.com>
+ <Y5ChXjt0uv/yDNwV@kernel.org>
+ <Y5Cjylv9dJh796dw@kernel.org>
+ <20221207093958.09ae35c2@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221207093958.09ae35c2@gandalf.local.home>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 7 Dec 2022 11:31:38 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Em Wed, Dec 07, 2022 at 09:39:58AM -0500, Steven Rostedt escreveu:
+> On Wed, 7 Dec 2022 11:31:38 -0300
+> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> 
+> > No distro I tested so far has a package for libtracevent in is default
+> > repositories:
+> 
+> Not sure what you mean by "default repository".
+> 
+> At least on Debian testing, I have libtraceevent-dev available.
 
-> No distro I tested so far has a package for libtracevent in is default
-> repositories:
+Right, I'm talking about non-bleeding edge, distros that are still
+supported. I'm still checking, fedora is ok all the way back to 33, wrt
+having libtraceevent available.
 
-Not sure what you mean by "default repository".
-
-At least on Debian testing, I have libtraceevent-dev available.
-
--- Steve
+- Arnaldo
