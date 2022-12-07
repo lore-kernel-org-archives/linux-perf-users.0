@@ -2,830 +2,681 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EC3C352A1
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 06:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6C2C352A1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 06:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbiLGGAA (ORCPT
+        id S229720AbiLGGGE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 01:00:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
+        Wed, 7 Dec 2022 01:06:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbiLGF7n (ORCPT
+        with ESMTP id S229676AbiLGGGC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 00:59:43 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABBC5986B
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Dec 2022 21:59:14 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id i19-20020a253b13000000b0070358cca7f7so4212200yba.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Dec 2022 21:59:14 -0800 (PST)
+        Wed, 7 Dec 2022 01:06:02 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D70B55AAC
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Dec 2022 22:06:00 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id ay40so6084842wmb.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Dec 2022 22:06:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PYbNqgEE03p3A4pTlvAUnV0fi+Mn7k/68mvpccxV7jU=;
-        b=qLed3h5rDpVylUJbc3S0BBXE10VW3t1zXnP0ieXXG1fOqNRscP2XfIToYkcin9izQy
-         XYXoMhTK9arYFa8uuXPRWtB1A/CWkm40Og0pNG+olOZWVTLi2R0857ypbl6eRLBQstR9
-         huL0K+5TQFSOt2/wjh8btYUb3Cmn2Y4RgA50mizRvokzD6zTcHxANtJ3ElAJ9YvUDuh0
-         XI656cokVDaDJA90ecQfseSO8xILtl6fzoQFtQv+J3yoJypVXh/V1nHvmTfFCvuXdC/a
-         7dUNYNx8XKBjGw4pSDONJIUVR8kYD+s6k5CspcB5va5qKDD33mS7wkZ0EngjCT57Whwv
-         ye4w==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dAEjpYydb4CkMK5QAthrsvB3rW6Y/7vqzmE8NBs4mic=;
+        b=iW+IVMkyBW0FSpCUQl40tCb4lzY7Gjhz0MEPr2BSYJf6YiLMnXPtH3sqVONM364O42
+         9AzbzGBT5NdRlRSLuxvxKC4cMP7EuFXcp64GkXMoU8woKvUGIX50jc2TDV564KsZb5+R
+         D3AvR61Bk5JVmpd+NpQnixr/YUSGtsGQ6Ji7u6XkzBazAsytslI9APt0J0Uav4Ch2yF2
+         GoGWzfJCUBuZFuVo1c/TZetHWLvr7qhrexRwARm29PowFZxAgsbKwNvdNQN+Hr+Yl49+
+         /qbQ7Tuy2PR5o9ZHN5cM6Ao+n+zvFNiZ0+4W17U4hK3TojQNUV7s4dyV37psm1j5Y824
+         kJ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PYbNqgEE03p3A4pTlvAUnV0fi+Mn7k/68mvpccxV7jU=;
-        b=OCgSdtEMsuZoMaSxk3KG+XQgguPgPv6+u6RMILnY+hgZt3vmH69vgLzBCdUG1Cj2WA
-         YaCrAgC9sWN7VS5m5d2sATnpMCKvH7890gJpphU4rfiRuE53hOZYVyYrCNUv8I4woNq5
-         k66uCc03eKBRNSenj7q3Cg3WF/Q8WZzXJpCd9rax18XryjDGYvlFN6a90EDyFRsK+HAU
-         0Oq6YRoMafFVvlC0N813v2hSWzh+KoNFLzZJFPybpUaqf3WNXddZSiLRcCGhsZMAasxP
-         LQJfDJbLYHWEx364TMfVB5WL2bv7VYGCvY8/4R+7rbDOmH1M3piv38/UUZFCtqOi9PmG
-         s+dg==
-X-Gm-Message-State: ANoB5pmotnvea3V9EKrB4kAle93gPZkh2+DfUubo5cI53WWlrvk72KEM
-        jV/fKBeKs+YgAnB9Nw40BqR/67mvGRQj
-X-Google-Smtp-Source: AA0mqf4/+95K6SCk7ZsVJu+//kAF2EH3IwsOKbbFGksHxSL/IV8jM+TVSqLTs7wMyKqQqACz4d8Bg4j/1P0c
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9924:6640:f748:d70b])
- (user=irogers job=sendgmr) by 2002:a25:d655:0:b0:6fc:1c96:c9fe with SMTP id
- n82-20020a25d655000000b006fc1c96c9femr25780434ybg.36.1670392754072; Tue, 06
- Dec 2022 21:59:14 -0800 (PST)
-Date:   Tue,  6 Dec 2022 21:59:08 -0800
-Message-Id: <20221207055908.1385448-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.39.0.rc0.267.gcb52ba06e7-goog
-Subject: [PATCH v4] perf jevents: Parse metrics during conversion
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dAEjpYydb4CkMK5QAthrsvB3rW6Y/7vqzmE8NBs4mic=;
+        b=07yx10Q2FqFdgtHIle2FAZoi3jUBuKe41H6QiV6nIRSCKIxnDn1nLJ1svh2/4kpHt0
+         AY5ugD7V5xMrQkVI8X97X65ZaBRYEvzOTDybWMslu+OhQcI1ZJFe+BcJCWmAwMH0Ut0B
+         53cND3wvBBy7UQ3AUT+O2pB5WGGTIE7CMjAZYW2e+5Fc+aHe6ETerJFq2jK924OiXAXk
+         YbAWqHg85YOjPG4OjlsiISbhzeLDbW3g+jqPCp+KO2HKtmPQJ0ZZZeme6EzEhFqd9exn
+         5n2jKIstysoCxssnGVtUEQXY20158BgLzgsfOMIDzM9ECtR7A4n2MTRc445JCKeLwUA7
+         aLCA==
+X-Gm-Message-State: ANoB5pmJ33f0cyXloQIYDXwgam5lDMpYLYPf7me2jBwoMa/pLpswbDJE
+        +5NE+HgZsqBv0aPqnJEIsO9vfers9D9NDIq32JFjaQ==
+X-Google-Smtp-Source: AA0mqf7H+Y3WWOZgdPzxT2covH+w7dO6z9JwJ1vk+wcaBjB4F8gUe77Dh2IAzkzaSJ0P2B/EDakCFstu2yOMCJQv9Q8=
+X-Received: by 2002:a05:600c:4920:b0:3cf:8b23:549c with SMTP id
+ f32-20020a05600c492000b003cf8b23549cmr55908405wmp.174.1670393158370; Tue, 06
+ Dec 2022 22:05:58 -0800 (PST)
+MIME-Version: 1.0
+References: <20221207053007.336806-1-sandipan.das@amd.com> <20221207053007.336806-5-sandipan.das@amd.com>
+In-Reply-To: <20221207053007.336806-5-sandipan.das@amd.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
+Date:   Tue, 6 Dec 2022 22:05:45 -0800
+Message-ID: <CAP-5=fUS37Xqi1x2ZDj48saFu-g5dCvwqg8Vm0DF1V0vuq4tXw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] perf vendor events amd: Add Zen 4 metrics
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
+        jhladky@redhat.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently the 'MetricExpr' json value is passed from the json
-file to the pmu-events.c. This change introduces an expression
-tree that is parsed into. The parsing is done largely by using
-operator overloading and python's 'eval' function. Two advantages
-in doing this are:
+On Tue, Dec 6, 2022 at 9:32 PM Sandipan Das <sandipan.das@amd.com> wrote:
+>
+> Add metrics taken from Section 2.1.15.2 "Performance Measurement" in
+> the Processor Programming Reference (PPR) for AMD Family 19h Model 11h
+> Revision B1 processors.
+>
+> The recommended metrics are sourced from Table 27 "Guidance for Common
+> Performance Statistics with Complex Event Selects".
+>
+> The pipeline utilization metrics are sourced from Table 28 "Guidance
+> for Pipeline Utilization Analysis Statistics". These are new to Zen 4
+> processors and useful for finding performance bottlenecks by analyzing
+> activity at different stages of the pipeline. Metric groups have been
+> added for Level 1 and Level 2 analysis.
+>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>  .../pmu-events/arch/x86/amdzen4/pipeline.json |  98 +++++
+>  .../arch/x86/amdzen4/recommended.json         | 334 ++++++++++++++++++
+>  2 files changed, 432 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/recommended.js=
+on
+>
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json b/tools=
+/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+> new file mode 100644
+> index 000000000000..23d1f35d0903
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+> @@ -0,0 +1,98 @@
+> +[
+> +  {
+> +    "MetricName": "total_dispatch_slots",
+> +    "BriefDescription": "Total dispatch slots (upto 6 instructions can b=
+e dispatched in each cycle).",
+> +    "MetricExpr": "6 * ls_not_halted_cyc"
+> +  },
+> +  {
+> +    "MetricName": "frontend_bound",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because the frontend did not supply enough instructions/ops.",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.no_ops_from_frontend,=
+ total_dispatch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "bad_speculation",
+> +    "BriefDescription": "Fraction of dispatched ops that did not retire.=
+",
+> +    "MetricExpr": "d_ratio(de_src_op_disp.all - ex_ret_ops, total_dispat=
+ch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "backend_bound",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of backend stalls.",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.backend_stalls, total=
+_dispatch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "smt_contention",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because the other thread was selected.",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.smt_contention, total=
+_dispatch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "retiring",
+> +    "BriefDescription": "Fraction of dispatch slots used by ops that ret=
+ired.",
+> +    "MetricExpr": "d_ratio(ex_ret_ops, total_dispatch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level1",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "frontend_bound_latency",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of a latency bottleneck in the frontend (such as instruction cache=
+ or TLB misses).",
+> +    "MetricExpr": "d_ratio((6 * cpu@de_no_dispatch_per_slot.no_ops_from_=
+frontend\\,cmask\\=3D0x6@), total_dispatch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level2;frontend_bound_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "frontend_bound_bandwidth",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of a bandwidth bottleneck in the frontend (such as decode or op ca=
+che fetch bandwidth).",
+> +    "MetricExpr": "d_ratio(de_no_dispatch_per_slot.no_ops_from_frontend =
+- (6 * cpu@de_no_dispatch_per_slot.no_ops_from_frontend\\,cmask\\=3D0x6@), =
+total_dispatch_slots)",
+> +    "MetricGroup": "pipeline_utilization_level2;frontend_bound_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "bad_speculation_mispredicts",
+> +    "BriefDescription": "Fraction of dispatched ops that were flushed du=
+e to branch mispredicts.",
+> +    "MetricExpr": "d_ratio(bad_speculation * ex_ret_brn_misp, ex_ret_brn=
+_misp + resyncs_or_nc_redirects)",
+> +    "MetricGroup": "pipeline_utilization_level2;bad_speculation_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "bad_speculation_pipeline_restarts",
+> +    "BriefDescription": "Fraction of dispatched ops that were flushed du=
+e to pipeline restarts (resyncs).",
+> +    "MetricExpr": "d_ratio(bad_speculation * resyncs_or_nc_redirects, ex=
+_ret_brn_misp + resyncs_or_nc_redirects)",
+> +    "MetricGroup": "pipeline_utilization_level2;bad_speculation_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "backend_bound_memory",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of stalls due to the memory subsystem.",
+> +    "MetricExpr": "backend_bound * d_ratio(ex_no_retire.load_not_complet=
+e, ex_no_retire.not_complete)",
+> +    "MetricGroup": "pipeline_utilization_level2;backend_bound_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "backend_bound_cpu",
+> +    "BriefDescription": "Fraction of dispatch slots that remained unused=
+ because of stalls not related to the memory subsystem.",
+> +    "MetricExpr": "backend_bound * (1 - d_ratio(ex_no_retire.load_not_co=
+mplete, ex_no_retire.not_complete))",
+> +    "MetricGroup": "pipeline_utilization_level2;backend_bound_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "retiring_fastpath",
+> +    "BriefDescription": "Fraction of dispatch slots used by fastpath ops=
+ that retired.",
+> +    "MetricExpr": "retiring * (1 - d_ratio(ex_ret_ucode_ops, ex_ret_ops)=
+)",
+> +    "MetricGroup": "pipeline_utilization_level2;retiring_level2",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "retiring_microcode",
+> +    "BriefDescription": "Fraction of dispatch slots used by microcode op=
+s that retired.",
+> +    "MetricExpr": "retiring * d_ratio(ex_ret_ucode_ops, ex_ret_ops)",
+> +    "MetricGroup": "pipeline_utilization_level2;retiring_level2",
+> +    "ScaleUnit": "100%"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json b/to=
+ols/perf/pmu-events/arch/x86/amdzen4/recommended.json
+> new file mode 100644
+> index 000000000000..2e3c9d8942b9
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
+> @@ -0,0 +1,334 @@
+> +[
+> +  {
+> +    "MetricName": "branch_misprediction_ratio",
+> +    "BriefDescription": "Execution-time branch misprediction ratio (non-=
+speculative).",
+> +    "MetricExpr": "d_ratio(ex_ret_brn_misp, ex_ret_brn)",
+> +    "MetricGroup": "branch_prediction",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "EventName": "all_data_cache_accesses",
+> +    "EventCode": "0x29",
+> +    "BriefDescription": "All data cache accesses.",
+> +    "UMask": "0x07"
+> +  },
+> +  {
+> +    "MetricName": "all_l2_cache_accesses",
+> +    "BriefDescription": "All L2 cache accesses.",
+> +    "MetricExpr": "l2_request_g1.all_no_prefetch + l2_pf_hit_l2.all + l2=
+_pf_miss_l2_hit_l3.all + l2_pf_miss_l2_l3.all",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_accesses_from_l1_ic_misses",
+> +    "BriefDescription": "L2 cache accesses from L1 instruction cache mis=
+ses (including prefetch).",
+> +    "MetricExpr": "l2_request_g1.cacheable_ic_read",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_accesses_from_l1_dc_misses",
+> +    "BriefDescription": "L2 cache accesses from L1 data cache misses (in=
+cluding prefetch).",
+> +    "MetricExpr": "l2_request_g1.all_dc",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_accesses_from_l2_hwpf",
+> +    "BriefDescription": "L2 cache accesses from L2 cache hardware prefet=
+cher.",
+> +    "MetricExpr": "l2_pf_hit_l2.all + l2_pf_miss_l2_hit_l3.all + l2_pf_m=
+iss_l2_l3.all",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "all_l2_cache_misses",
+> +    "BriefDescription": "All L2 cache misses.",
+> +    "MetricExpr": "l2_cache_req_stat.ic_dc_miss_in_l2 + l2_pf_miss_l2_hi=
+t_l3.all + l2_pf_miss_l2_l3.all",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_misses_from_l1_ic_miss",
+> +    "BriefDescription": "L2 cache misses from L1 instruction cache misse=
+s.",
+> +    "MetricExpr": "l2_cache_req_stat.ic_fill_miss",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_misses_from_l1_dc_miss",
+> +    "BriefDescription": "L2 cache misses from L1 data cache misses.",
+> +    "MetricExpr": "l2_cache_req_stat.ls_rd_blk_c",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_misses_from_l2_hwpf",
+> +    "BriefDescription": "L2 cache misses from L2 cache hardware prefetch=
+er.",
+> +    "MetricExpr": "l2_pf_miss_l2_hit_l3.all + l2_pf_miss_l2_l3.all",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "all_l2_cache_hits",
+> +    "BriefDescription": "All L2 cache hits.",
+> +    "MetricExpr": "l2_cache_req_stat.ic_dc_hit_in_l2 + l2_pf_hit_l2.all"=
+,
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_hits_from_l1_ic_miss",
+> +    "BriefDescription": "L2 cache hits from L1 instruction cache misses.=
+",
+> +    "MetricExpr": "l2_cache_req_stat.ic_hit_in_l2",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_hits_from_l1_dc_miss",
+> +    "BriefDescription": "L2 cache hits from L1 data cache misses.",
+> +    "MetricExpr": "l2_cache_req_stat.dc_hit_in_l2",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l2_cache_hits_from_l2_hwpf",
+> +    "BriefDescription": "L2 cache hits from L2 cache hardware prefetcher=
+.",
+> +    "MetricExpr": "l2_pf_hit_l2.all",
+> +    "MetricGroup": "l2_cache"
+> +  },
+> +  {
+> +    "MetricName": "l3_cache_accesses",
+> +    "BriefDescription": "L3 cache accesses.",
+> +    "MetricExpr": "l3_lookup_state.all_coherent_accesses_to_l3",
+> +    "MetricGroup": "l3_cache"
+> +  },
+> +  {
+> +    "MetricName": "l3_misses",
+> +    "BriefDescription": "L3 misses (including cacheline state change req=
+uests).",
+> +    "MetricExpr": "l3_lookup_state.l3_miss",
+> +    "MetricGroup": "l3_cache"
+> +  },
+> +  {
+> +    "MetricName": "l3_read_miss_latency",
+> +    "BriefDescription": "Average L3 read miss latency (in core clocks)."=
+,
+> +    "MetricExpr": "(l3_xi_sampled_latency.all * 10) / l3_xi_sampled_late=
+ncy_requests.all",
+> +    "MetricGroup": "l3_cache",
+> +    "ScaleUnit": "1core clocks"
+> +  },
+> +  {
+> +    "MetricName": "op_cache_fetch_miss_ratio",
+> +    "BriefDescription": "Op cache miss ratio for all fetches.",
+> +    "MetricExpr": "d_ratio(op_cache_hit_miss.op_cache_miss, op_cache_hit=
+_miss.all_op_cache_accesses)",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "ic_fetch_miss_ratio",
+> +    "BriefDescription": "Instruction cache miss ratio for all fetches. A=
+n instruction cache miss will not be counted by this metric if it is an OC =
+hit.",
+> +    "MetricExpr": "d_ratio(ic_tag_hit_miss.instruction_cache_miss, ic_ta=
+g_hit_miss.all_instruction_cache_accesses)",
+> +    "ScaleUnit": "100%"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_memory",
+> +    "BriefDescription": "L1 data cache fills from DRAM or MMIO in any NU=
+MA node.",
+> +    "MetricExpr": "ls_any_fills_from_sys.dram_io_all",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_remote_node",
+> +    "BriefDescription": "L1 data cache fills from a different NUMA node.=
+",
+> +    "MetricExpr": "ls_any_fills_from_sys.far_all",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_same_ccx",
+> +    "BriefDescription": "L1 data cache fills from within the same CCX.",
+> +    "MetricExpr": "ls_any_fills_from_sys.local_all",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_data_cache_fills_from_different_ccx",
+> +    "BriefDescription": "L1 data cache fills from another CCX cache in a=
+ny NUMA node.",
+> +    "MetricExpr": "ls_any_fills_from_sys.remote_cache",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "all_l1_data_cache_fills",
+> +    "BriefDescription": "All L1 data cache fills.",
+> +    "MetricExpr": "ls_any_fills_from_sys.all",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_local_l2",
+> +    "BriefDescription": "L1 demand data cache fills from local L2 cache.=
+",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.local_l2",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_same_ccx",
+> +    "BriefDescription": "L1 demand data cache fills from within the same=
+ CCX.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.local_ccx",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_near_cache",
+> +    "BriefDescription": "L1 demand data cache fills from another CCX cac=
+he in the same NUMA node.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.near_cache",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_near_memory",
+> +    "BriefDescription": "L1 demand data cache fills from DRAM or MMIO in=
+ the same NUMA node.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.dram_io_near",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_far_cache",
+> +    "BriefDescription": "L1 demand data cache fills from another CCX cac=
+he in a different NUMA node.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.far_cache",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_demand_data_cache_fills_from_far_memory",
+> +    "BriefDescription": "L1 demand data cache fills from DRAM or MMIO in=
+ a different NUMA node.",
+> +    "MetricExpr": "ls_dmnd_fills_from_sys.dram_io_far",
+> +    "MetricGroup": "l1_dcache"
+> +  },
+> +  {
+> +    "MetricName": "l1_itlb_misses",
+> +    "BriefDescription": "L1 instruction TLB misses.",
+> +    "MetricExpr": "bp_l1_tlb_miss_l2_tlb_hit + bp_l1_tlb_miss_l2_tlb_mis=
+s.all",
+> +    "MetricGroup": "tlb"
+> +  },
+> +  {
+> +    "MetricName": "l2_itlb_misses",
+> +    "BriefDescription": "L2 instruction TLB misses and instruction page =
+walks.",
+> +    "MetricExpr": "bp_l1_tlb_miss_l2_tlb_miss.all",
+> +    "MetricGroup": "tlb"
+> +  },
+> +  {
+> +    "MetricName": "l1_dtlb_misses",
+> +    "BriefDescription": "L1 data TLB misses.",
+> +    "MetricExpr": "ls_l1_d_tlb_miss.all",
+> +    "MetricGroup": "tlb"
+> +  },
+> +  {
+> +    "MetricName": "l2_dtlb_misses",
+> +    "BriefDescription": "L2 data TLB misses and data page walks.",
+> +    "MetricExpr": "ls_l1_d_tlb_miss.all_l2_miss",
+> +    "MetricGroup": "tlb"
+> +  },
+> +  {
+> +    "MetricName": "all_tlbs_flushed",
+> +    "BriefDescription": "All TLBs flushed.",
+> +    "MetricExpr": "ls_tlb_flush.all",
+> +    "MetricGroup": "tlb"
+> +  },
+> +  {
+> +    "MetricName": "macro_ops_dispatched",
+> +    "BriefDescription": "Macro-ops dispatched.",
+> +    "MetricExpr": "de_src_op_disp.all",
+> +    "MetricGroup": "decoder"
+> +  },
+> +  {
+> +    "MetricName": "sse_avx_stalls",
+> +    "BriefDescription": "Mixed SSE/AVX stalls.",
+> +    "MetricExpr": "fp_disp_faults.sse_avx_all"
+> +  },
+> +  {
+> +    "MetricName": "macro_ops_retired",
+> +    "BriefDescription": "Macro-ops retired.",
+> +    "MetricExpr": "ex_ret_ops"
+> +  },
+> +  {
+> +    "MetricName": "dram_read_data_bytes_for_local_processor",
 
-1) Broken metrics fail at compile time rather than relying on
-   `perf test` to detect. `perf test` remains relevant for checking
-   event encoding and actual metric use.
+nit: Is "bytes" redundant in the name here? It may even be confusing
+given the units.
 
-2) The conversion to a string from the tree can minimize the metric's
-   string size, for example, preferring 1e6 over 1000000, avoiding
-   multiplication by 1 and removing unnecessary whitespace. On x86
-   this reduces the string size by 2,930bytes (0.07%).
-
-In future changes it would be possible to programmatically
-generate the json expressions (a single line of text and so a
-pain to write manually) for an architecture using the expression
-tree. This could avoid copy-pasting metrics for all architecture
-variants.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-
-v4. Doesn't simplify "0*SLOTS" to 0, as the pattern is used to fix
-    Intel metrics with topdown events.
-v3. Avoids generic types on standard types like set that aren't
-    supported until Python 3.9, fixing an issue with Python 3.6
-    reported-by John Garry. v3 also fixes minor pylint issues and adds
-    a call to Simplify on the read expression tree.
-v2. Improvements to type information.
----
- tools/perf/pmu-events/Build          |   2 +-
- tools/perf/pmu-events/jevents.py     |  12 +-
- tools/perf/pmu-events/metric.py      | 501 +++++++++++++++++++++++++++
- tools/perf/pmu-events/metric_test.py | 153 ++++++++
- 4 files changed, 664 insertions(+), 4 deletions(-)
- create mode 100644 tools/perf/pmu-events/metric.py
- create mode 100644 tools/perf/pmu-events/metric_test.py
-
-diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-index 04ef95174660..15b9e8fdbffa 100644
---- a/tools/perf/pmu-events/Build
-+++ b/tools/perf/pmu-events/Build
-@@ -21,7 +21,7 @@ $(OUTPUT)pmu-events/pmu-events.c: pmu-events/empty-pmu-events.c
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,gen)cp $< $@
- else
--$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS_PY)
-+$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS_PY) pmu-events/metric.py
- 	$(call rule_mkdir)
- 	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) pmu-events/arch $@
- endif
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 0daa3e007528..4c398e0eeb2f 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -4,6 +4,7 @@
- import argparse
- import csv
- import json
-+import metric
- import os
- import sys
- from typing import (Callable, Dict, Optional, Sequence, Set, Tuple)
-@@ -268,9 +269,10 @@ class JsonEvent:
-     self.metric_name = jd.get('MetricName')
-     self.metric_group = jd.get('MetricGroup')
-     self.metric_constraint = jd.get('MetricConstraint')
--    self.metric_expr = jd.get('MetricExpr')
--    if self.metric_expr:
--      self.metric_expr = self.metric_expr.replace('\\', '\\\\')
-+    self.metric_expr = None
-+    if 'MetricExpr' in jd:
-+       self.metric_expr = metric.ParsePerfJson(jd['MetricExpr']).Simplify()
-+
-     arch_std = jd.get('ArchStdEvent')
-     if precise and self.desc and '(Precise Event)' not in self.desc:
-       extra_desc += ' (Must be precise)' if precise == '2' else (' (Precise '
-@@ -322,6 +324,10 @@ class JsonEvent:
-     s = ''
-     for attr in _json_event_attributes:
-       x = getattr(self, attr)
-+      if x and attr == 'metric_expr':
-+        # Convert parsed metric expressions into a string. Slashes
-+        # must be doubled in the file.
-+        x = x.ToPerfJson().replace('\\', '\\\\')
-       s += f'{x}\\000' if x else '\\000'
-     return s
- 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
-new file mode 100644
-index 000000000000..cc451a265751
---- /dev/null
-+++ b/tools/perf/pmu-events/metric.py
-@@ -0,0 +1,501 @@
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+"""Parse or generate representations of perf metrics."""
-+import ast
-+import decimal
-+import json
-+import re
-+from typing import Dict, List, Optional, Set, Union
-+
-+
-+class Expression:
-+  """Abstract base class of elements in a metric expression."""
-+
-+  def ToPerfJson(self) -> str:
-+    """Returns a perf json file encoded representation."""
-+    raise NotImplementedError()
-+
-+  def ToPython(self) -> str:
-+    """Returns a python expr parseable representation."""
-+    raise NotImplementedError()
-+
-+  def Simplify(self):
-+    """Returns a simplified version of self."""
-+    raise NotImplementedError()
-+
-+  def Equals(self, other) -> bool:
-+    """Returns true when two expressions are the same."""
-+    raise NotImplementedError()
-+
-+  def __str__(self) -> str:
-+    return self.ToPerfJson()
-+
-+  def __or__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('|', self, other)
-+
-+  def __ror__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('|', other, self)
-+
-+  def __xor__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('^', self, other)
-+
-+  def __and__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('&', self, other)
-+
-+  def __lt__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('<', self, other)
-+
-+  def __gt__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('>', self, other)
-+
-+  def __add__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('+', self, other)
-+
-+  def __radd__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('+', other, self)
-+
-+  def __sub__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('-', self, other)
-+
-+  def __rsub__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('-', other, self)
-+
-+  def __mul__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('*', self, other)
-+
-+  def __rmul__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('*', other, self)
-+
-+  def __truediv__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('/', self, other)
-+
-+  def __rtruediv__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('/', other, self)
-+
-+  def __mod__(self, other: Union[int, float, 'Expression']) -> 'Operator':
-+    return Operator('%', self, other)
-+
-+
-+def _Constify(val: Union[bool, int, float, Expression]) -> Expression:
-+  """Used to ensure that the nodes in the expression tree are all Expression."""
-+  if isinstance(val, bool):
-+    return Constant(1 if val else 0)
-+  if isinstance(val, (int, float)):
-+    return Constant(val)
-+  return val
-+
-+
-+# Simple lookup for operator precedence, used to avoid unnecessary
-+# brackets. Precedence matches that of python and the simple expression parser.
-+_PRECEDENCE = {
-+    '|': 0,
-+    '^': 1,
-+    '&': 2,
-+    '<': 3,
-+    '>': 3,
-+    '+': 4,
-+    '-': 4,
-+    '*': 5,
-+    '/': 5,
-+    '%': 5,
-+}
-+
-+
-+class Operator(Expression):
-+  """Represents a binary operator in the parse tree."""
-+
-+  def __init__(self, operator: str, lhs: Union[int, float, Expression],
-+               rhs: Union[int, float, Expression]):
-+    self.operator = operator
-+    self.lhs = _Constify(lhs)
-+    self.rhs = _Constify(rhs)
-+
-+  def Bracket(self,
-+              other: Expression,
-+              other_str: str,
-+              rhs: bool = False) -> str:
-+    """If necessary brackets the given other value.
-+
-+    If ``other`` is an operator then a bracket is necessary when
-+    this/self operator has higher precedence. Consider: '(a + b) * c',
-+    ``other_str`` will be 'a + b'. A bracket is necessary as without
-+    the bracket 'a + b * c' will evaluate 'b * c' first. However, '(a
-+    * b) + c' doesn't need a bracket as 'a * b' will always be
-+    evaluated first. For 'a / (b * c)' (ie the same precedence level
-+    operations) then we add the bracket to best match the original
-+    input, but not for '(a / b) * c' where the bracket is unnecessary.
-+
-+    Args:
-+      other (Expression): is a lhs or rhs operator
-+      other_str (str): ``other`` in the appropriate string form
-+      rhs (bool):  is ``other`` on the RHS
-+
-+    Returns:
-+      str: possibly bracketed other_str
-+    """
-+    if isinstance(other, Operator):
-+      if _PRECEDENCE.get(self.operator, -1) > _PRECEDENCE.get(
-+          other.operator, -1):
-+        return f'({other_str})'
-+      if rhs and _PRECEDENCE.get(self.operator, -1) == _PRECEDENCE.get(
-+          other.operator, -1):
-+        return f'({other_str})'
-+    return other_str
-+
-+  def ToPerfJson(self):
-+    return (f'{self.Bracket(self.lhs, self.lhs.ToPerfJson())} {self.operator} '
-+            f'{self.Bracket(self.rhs, self.rhs.ToPerfJson(), True)}')
-+
-+  def ToPython(self):
-+    return (f'{self.Bracket(self.lhs, self.lhs.ToPython())} {self.operator} '
-+            f'{self.Bracket(self.rhs, self.rhs.ToPython(), True)}')
-+
-+  def Simplify(self) -> Expression:
-+    lhs = self.lhs.Simplify()
-+    rhs = self.rhs.Simplify()
-+    if isinstance(lhs, Constant) and isinstance(rhs, Constant):
-+      return Constant(ast.literal_eval(lhs + self.operator + rhs))
-+
-+    if isinstance(self.lhs, Constant):
-+      if self.operator in ('+', '|') and lhs.value == '0':
-+        return rhs
-+
-+      # Simplify multiplication by 0 except for the slot event which
-+      # is deliberately introduced using this pattern.
-+      if self.operator == '*' and lhs.value == '0' and (
-+          not isinstance(rhs, Event) or 'slots' not in rhs.name.lower()):
-+        return Constant(0)
-+
-+      if self.operator == '*' and lhs.value == '1':
-+        return rhs
-+
-+    if isinstance(rhs, Constant):
-+      if self.operator in ('+', '|') and rhs.value == '0':
-+        return lhs
-+
-+      if self.operator == '*' and rhs.value == '0':
-+        return Constant(0)
-+
-+      if self.operator == '*' and self.rhs.value == '1':
-+        return lhs
-+
-+    return Operator(self.operator, lhs, rhs)
-+
-+  def Equals(self, other: Expression) -> bool:
-+    if isinstance(other, Operator):
-+      return self.operator == other.operator and self.lhs.Equals(
-+          other.lhs) and self.rhs.Equals(other.rhs)
-+    return False
-+
-+
-+class Select(Expression):
-+  """Represents a select ternary in the parse tree."""
-+
-+  def __init__(self, true_val: Union[int, float, Expression],
-+               cond: Union[int, float, Expression],
-+               false_val: Union[int, float, Expression]):
-+    self.true_val = _Constify(true_val)
-+    self.cond = _Constify(cond)
-+    self.false_val = _Constify(false_val)
-+
-+  def ToPerfJson(self):
-+    true_str = self.true_val.ToPerfJson()
-+    cond_str = self.cond.ToPerfJson()
-+    false_str = self.false_val.ToPerfJson()
-+    return f'({true_str} if {cond_str} else {false_str})'
-+
-+  def ToPython(self):
-+    return (f'Select({self.true_val.ToPython()}, {self.cond.ToPython()}, '
-+            f'{self.false_val.ToPython()})')
-+
-+  def Simplify(self) -> Expression:
-+    cond = self.cond.Simplify()
-+    true_val = self.true_val.Simplify()
-+    false_val = self.false_val.Simplify()
-+    if isinstance(cond, Constant):
-+      return false_val if cond.value == '0' else true_val
-+
-+    if true_val.Equals(false_val):
-+      return true_val
-+
-+    return Select(true_val, cond, false_val)
-+
-+  def Equals(self, other: Expression) -> bool:
-+    if isinstance(other, Select):
-+      return self.cond.Equals(other.cond) and self.false_val.Equals(
-+          other.false_val) and self.true_val.Equals(other.true_val)
-+    return False
-+
-+
-+class Function(Expression):
-+  """A function in an expression like min, max, d_ratio."""
-+
-+  def __init__(self,
-+               fn: str,
-+               lhs: Union[int, float, Expression],
-+               rhs: Optional[Union[int, float, Expression]] = None):
-+    self.fn = fn
-+    self.lhs = _Constify(lhs)
-+    self.rhs = _Constify(rhs)
-+
-+  def ToPerfJson(self):
-+    if self.rhs:
-+      return f'{self.fn}({self.lhs.ToPerfJson()}, {self.rhs.ToPerfJson()})'
-+    return f'{self.fn}({self.lhs.ToPerfJson()})'
-+
-+  def ToPython(self):
-+    if self.rhs:
-+      return f'{self.fn}({self.lhs.ToPython()}, {self.rhs.ToPython()})'
-+    return f'{self.fn}({self.lhs.ToPython()})'
-+
-+  def Simplify(self) -> Expression:
-+    lhs = self.lhs.Simplify()
-+    rhs = self.rhs.Simplify() if self.rhs else None
-+    if isinstance(lhs, Constant) and isinstance(rhs, Constant):
-+      if self.fn == 'd_ratio':
-+        if rhs.value == '0':
-+          return Constant(0)
-+        Constant(ast.literal_eval(f'{lhs} / {rhs}'))
-+      return Constant(ast.literal_eval(f'{self.fn}({lhs}, {rhs})'))
-+
-+    return Function(self.fn, lhs, rhs)
-+
-+  def Equals(self, other: Expression) -> bool:
-+    if isinstance(other, Function):
-+      return self.fn == other.fn and self.lhs.Equals(
-+          other.lhs) and self.rhs.Equals(other.rhs)
-+    return False
-+
-+
-+def _FixEscapes(s: str) -> str:
-+  s = re.sub(r'([^\\]),', r'\1\\,', s)
-+  return re.sub(r'([^\\])=', r'\1\\=', s)
-+
-+
-+class Event(Expression):
-+  """An event in an expression."""
-+
-+  def __init__(self, name: str, legacy_name: str = ''):
-+    self.name = _FixEscapes(name)
-+    self.legacy_name = _FixEscapes(legacy_name)
-+
-+  def ToPerfJson(self):
-+    result = re.sub('/', '@', self.name)
-+    return result
-+
-+  def ToPython(self):
-+    return f'Event(r"{self.name}")'
-+
-+  def Simplify(self) -> Expression:
-+    return self
-+
-+  def Equals(self, other: Expression) -> bool:
-+    return isinstance(other, Event) and self.name == other.name
-+
-+
-+class Constant(Expression):
-+  """A constant within the expression tree."""
-+
-+  def __init__(self, value: Union[float, str]):
-+    ctx = decimal.Context()
-+    ctx.prec = 20
-+    dec = ctx.create_decimal(repr(value) if isinstance(value, float) else value)
-+    self.value = dec.normalize().to_eng_string()
-+    self.value = self.value.replace('+', '')
-+    self.value = self.value.replace('E', 'e')
-+
-+  def ToPerfJson(self):
-+    return self.value
-+
-+  def ToPython(self):
-+    return f'Constant({self.value})'
-+
-+  def Simplify(self) -> Expression:
-+    return self
-+
-+  def Equals(self, other: Expression) -> bool:
-+    return isinstance(other, Constant) and self.value == other.value
-+
-+
-+class Literal(Expression):
-+  """A runtime literal within the expression tree."""
-+
-+  def __init__(self, value: str):
-+    self.value = value
-+
-+  def ToPerfJson(self):
-+    return self.value
-+
-+  def ToPython(self):
-+    return f'Literal({self.value})'
-+
-+  def Simplify(self) -> Expression:
-+    return self
-+
-+  def Equals(self, other: Expression) -> bool:
-+    return isinstance(other, Literal) and self.value == other.value
-+
-+
-+def min(lhs: Union[int, float, Expression], rhs: Union[int, float,
-+                                                       Expression]) -> Function:
-+  # pylint: disable=redefined-builtin
-+  # pylint: disable=invalid-name
-+  return Function('min', lhs, rhs)
-+
-+
-+def max(lhs: Union[int, float, Expression], rhs: Union[int, float,
-+                                                       Expression]) -> Function:
-+  # pylint: disable=redefined-builtin
-+  # pylint: disable=invalid-name
-+  return Function('max', lhs, rhs)
-+
-+
-+def d_ratio(lhs: Union[int, float, Expression],
-+            rhs: Union[int, float, Expression]) -> Function:
-+  # pylint: disable=redefined-builtin
-+  # pylint: disable=invalid-name
-+  return Function('d_ratio', lhs, rhs)
-+
-+
-+def source_count(event: Event) -> Function:
-+  # pylint: disable=redefined-builtin
-+  # pylint: disable=invalid-name
-+  return Function('source_count', event)
-+
-+
-+class Metric:
-+  """An individual metric that will specifiable on the perf command line."""
-+  groups: Set[str]
-+  expr: Expression
-+  scale_unit: str
-+  constraint: bool
-+
-+  def __init__(self,
-+               name: str,
-+               description: str,
-+               expr: Expression,
-+               scale_unit: str,
-+               constraint: bool = False):
-+    self.name = name
-+    self.description = description
-+    self.expr = expr.Simplify()
-+    # Workraound valid_only_metric hiding certain metrics based on unit.
-+    scale_unit = scale_unit.replace('/sec', ' per sec')
-+    if scale_unit[0].isdigit():
-+      self.scale_unit = scale_unit
-+    else:
-+      self.scale_unit = f'1{scale_unit}'
-+    self.constraint = constraint
-+    self.groups = set()
-+
-+  def __lt__(self, other):
-+    """Sort order."""
-+    return self.name < other.name
-+
-+  def AddToMetricGroup(self, group):
-+    """Callback used when being added to a MetricGroup."""
-+    self.groups.add(group.name)
-+
-+  def Flatten(self) -> Set['Metric']:
-+    """Return a leaf metric."""
-+    return set([self])
-+
-+  def ToPerfJson(self) -> Dict[str, str]:
-+    """Return as dictionary for Json generation."""
-+    result = {
-+        'MetricName': self.name,
-+        'MetricGroup': ';'.join(sorted(self.groups)),
-+        'BriefDescription': self.description,
-+        'MetricExpr': self.expr.ToPerfJson(),
-+        'ScaleUnit': self.scale_unit
-+    }
-+    if self.constraint:
-+      result['MetricConstraint'] = 'NO_NMI_WATCHDOG'
-+
-+    return result
-+
-+
-+class _MetricJsonEncoder(json.JSONEncoder):
-+  """Special handling for Metric objects."""
-+
-+  def default(self, o):
-+    if isinstance(o, Metric):
-+      return o.ToPerfJson()
-+    return json.JSONEncoder.default(self, o)
-+
-+
-+class MetricGroup:
-+  """A group of metrics.
-+
-+  Metric groups may be specificd on the perf command line, but within
-+  the json they aren't encoded. Metrics may be in multiple groups
-+  which can facilitate arrangements similar to trees.
-+  """
-+
-+  def __init__(self, name: str, metric_list: List[Union[Metric,
-+                                                        'MetricGroup']]):
-+    self.name = name
-+    self.metric_list = metric_list
-+    for metric in metric_list:
-+      metric.AddToMetricGroup(self)
-+
-+  def AddToMetricGroup(self, group):
-+    """Callback used when a MetricGroup is added into another."""
-+    for metric in self.metric_list:
-+      metric.AddToMetricGroup(group)
-+
-+  def Flatten(self) -> Set[Metric]:
-+    """Returns a set of all leaf metrics."""
-+    result = set()
-+    for x in self.metric_list:
-+      result = result.union(x.Flatten())
-+
-+    return result
-+
-+  def ToPerfJson(self) -> str:
-+    return json.dumps(sorted(self.Flatten()), indent=2, cls=_MetricJsonEncoder)
-+
-+  def __str__(self) -> str:
-+    return self.ToPerfJson()
-+
-+
-+class _RewriteIfExpToSelect(ast.NodeTransformer):
-+
-+  def visit_IfExp(self, node):
-+    # pylint: disable=invalid-name
-+    call = ast.Call(
-+        func=ast.Name(id='Select', ctx=ast.Load()),
-+        args=[node.body, node.test, node.orelse],
-+        keywords=[])
-+    ast.copy_location(call, node.test)
-+    return call
-+
-+
-+def ParsePerfJson(orig: str) -> Expression:
-+  """A simple json metric expression decoder.
-+
-+  Converts a json encoded metric expression by way of python's ast and
-+  eval routine. First tokens are mapped to Event calls, then
-+  accidentally converted keywords or literals are mapped to their
-+  appropriate calls. Python's ast is used to match if-else that can't
-+  be handled via operator overloading. Finally the ast is evaluated.
-+
-+  Args:
-+    orig (str): String to parse.
-+
-+  Returns:
-+    Expression: The parsed string.
-+  """
-+  # pylint: disable=eval-used
-+  py = orig.strip()
-+  py = re.sub(r'([a-zA-Z][^-+/\* \\\(\),]*(?:\\.[^-+/\* \\\(\),]*)*)',
-+              r'Event(r"\1")', py)
-+  py = re.sub(r'#Event\(r"([^"]*)"\)', r'Literal("#\1")', py)
-+  py = re.sub(r'([0-9]+)Event\(r"(e[0-9]+)"\)', r'\1\2', py)
-+  keywords = ['if', 'else', 'min', 'max', 'd_ratio', 'source_count']
-+  for kw in keywords:
-+    py = re.sub(rf'Event\(r"{kw}"\)', kw, py)
-+
-+  parsed = ast.parse(py, mode='eval')
-+  _RewriteIfExpToSelect().visit(parsed)
-+  parsed = ast.fix_missing_locations(parsed)
-+  return _Constify(eval(compile(parsed, orig, 'eval')))
-diff --git a/tools/perf/pmu-events/metric_test.py b/tools/perf/pmu-events/metric_test.py
-new file mode 100644
-index 000000000000..4741b7b6612d
---- /dev/null
-+++ b/tools/perf/pmu-events/metric_test.py
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-+import unittest
-+from metric import Constant
-+from metric import Event
-+from metric import ParsePerfJson
-+
-+
-+class TestMetricExpressions(unittest.TestCase):
-+
-+  def test_Operators(self):
-+    a = Event('a')
-+    b = Event('b')
-+    self.assertEqual((a | b).ToPerfJson(), 'a | b')
-+    self.assertEqual((a ^ b).ToPerfJson(), 'a ^ b')
-+    self.assertEqual((a & b).ToPerfJson(), 'a & b')
-+    self.assertEqual((a < b).ToPerfJson(), 'a < b')
-+    self.assertEqual((a > b).ToPerfJson(), 'a > b')
-+    self.assertEqual((a + b).ToPerfJson(), 'a + b')
-+    self.assertEqual((a - b).ToPerfJson(), 'a - b')
-+    self.assertEqual((a * b).ToPerfJson(), 'a * b')
-+    self.assertEqual((a / b).ToPerfJson(), 'a / b')
-+    self.assertEqual((a % b).ToPerfJson(), 'a % b')
-+    one = Constant(1)
-+    self.assertEqual((a + one).ToPerfJson(), 'a + 1')
-+
-+  def test_Brackets(self):
-+    a = Event('a')
-+    b = Event('b')
-+    c = Event('c')
-+    self.assertEqual((a * b + c).ToPerfJson(), 'a * b + c')
-+    self.assertEqual((a + b * c).ToPerfJson(), 'a + b * c')
-+    self.assertEqual(((a + a) + a).ToPerfJson(), 'a + a + a')
-+    self.assertEqual(((a + b) * c).ToPerfJson(), '(a + b) * c')
-+    self.assertEqual((a + (b * c)).ToPerfJson(), 'a + b * c')
-+    self.assertEqual(((a / b) * c).ToPerfJson(), 'a / b * c')
-+    self.assertEqual((a / (b * c)).ToPerfJson(), 'a / (b * c)')
-+
-+  def test_ParsePerfJson(self):
-+    # Based on an example of a real metric.
-+    before = '(a + b + c + d) / (2 * e)'
-+    after = before
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+    # Parsing should handle events with '-' in their name. Note, in
-+    # the json file the '\' are doubled to '\\'.
-+    before = r'topdown\-fe\-bound / topdown\-slots - 1'
-+    after = before
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+    # Parsing should handle escaped modifiers. Note, in the json file
-+    # the '\' are doubled to '\\'.
-+    before = r'arb@event\=0x81\,umask\=0x1@ + arb@event\=0x84\,umask\=0x1@'
-+    after = before
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+    # Parsing should handle exponents in numbers.
-+    before = r'a + 1e12 + b'
-+    after = before
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+  def test_IfElseTests(self):
-+    # if-else needs rewriting to Select and back.
-+    before = r'Event1 if #smt_on else Event2'
-+    after = f'({before})'
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+    before = r'Event1 if 0 else Event2'
-+    after = f'({before})'
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+    before = r'Event1 if 1 else Event2'
-+    after = f'({before})'
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+    # Ensure the select is evaluate last.
-+    before = r'Event1 + 1 if Event2 < 2 else Event3 + 3'
-+    after = (r'Select(Event(r"Event1") + Constant(1), Event(r"Event2") < '
-+             r'Constant(2), Event(r"Event3") + Constant(3))')
-+    self.assertEqual(ParsePerfJson(before).ToPython(), after)
-+
-+    before = r'Event1 > 1 if Event2 < 2 else Event3 > 3'
-+    after = (r'Select(Event(r"Event1") > Constant(1), Event(r"Event2") < '
-+             r'Constant(2), Event(r"Event3") > Constant(3))')
-+    self.assertEqual(ParsePerfJson(before).ToPython(), after)
-+
-+    before = r'min(a + b if c > 1 else c + d, e + f)'
-+    after = r'min((a + b if c > 1 else c + d), e + f)'
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-+  def test_ToPython(self):
-+    # pylint: disable=eval-used
-+    # Based on an example of a real metric.
-+    before = '(a + b + c + d) / (2 * e)'
-+    py = ParsePerfJson(before).ToPython()
-+    after = eval(py).ToPerfJson()
-+    self.assertEqual(before, after)
-+
-+  def test_Simplify(self):
-+    before = '1 + 2 + 3'
-+    after = '6'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a + 0'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = '0 + a'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a | 0'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = '0 | a'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a * 0'
-+    after = '0'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = '0 * a'
-+    after = '0'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a * 1'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = '1 * a'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a if 0 else b'
-+    after = 'b'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a if 1 else b'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    before = 'a if b else a'
-+    after = 'a'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+    # Pattern used to add a slots event to metrics that require it.
-+    before = '0 * SLOTS'
-+    after = '0 * SLOTS'
-+    self.assertEqual(ParsePerfJson(before).Simplify().ToPerfJson(), after)
-+
-+if __name__ == '__main__':
-+  unittest.main()
--- 
-2.39.0.rc0.267.gcb52ba06e7-goog
-
+> +    "BriefDescription": "DRAM read data bytes for local processor.",
+> +    "MetricExpr": "local_processor_read_data_beats_cs0 + local_processor=
+_read_data_beats_cs1 + local_processor_read_data_beats_cs2 + local_processo=
+r_read_data_beats_cs3 + local_processor_read_data_beats_cs4 + local_process=
+or_read_data_beats_cs5 + local_processor_read_data_beats_cs6 + local_proces=
+sor_read_data_beats_cs7 + local_processor_read_data_beats_cs8 + local_proce=
+ssor_read_data_beats_cs9 + local_processor_read_data_beats_cs10 + local_pro=
+cessor_read_data_beats_cs11",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "dram_write_data_bytes_for_local_processor",
+> +    "BriefDescription": "DRAM write data bytes for local processor.",
+> +    "MetricExpr": "local_processor_write_data_beats_cs0 + local_processo=
+r_write_data_beats_cs1 + local_processor_write_data_beats_cs2 + local_proce=
+ssor_write_data_beats_cs3 + local_processor_write_data_beats_cs4 + local_pr=
+ocessor_write_data_beats_cs5 + local_processor_write_data_beats_cs6 + local=
+_processor_write_data_beats_cs7 + local_processor_write_data_beats_cs8 + lo=
+cal_processor_write_data_beats_cs9 + local_processor_write_data_beats_cs10 =
++ local_processor_write_data_beats_cs11",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "dram_read_data_bytes_for_remote_processor",
+> +    "BriefDescription": "DRAM read data bytes for remote processor.",
+> +    "MetricExpr": "remote_processor_read_data_beats_cs0 + remote_process=
+or_read_data_beats_cs1 + remote_processor_read_data_beats_cs2 + remote_proc=
+essor_read_data_beats_cs3 + remote_processor_read_data_beats_cs4 + remote_p=
+rocessor_read_data_beats_cs5 + remote_processor_read_data_beats_cs6 + remot=
+e_processor_read_data_beats_cs7 + remote_processor_read_data_beats_cs8 + re=
+mote_processor_read_data_beats_cs9 + remote_processor_read_data_beats_cs10 =
++ remote_processor_read_data_beats_cs11",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "dram_write_data_bytes_for_remote_processor",
+> +    "BriefDescription": "DRAM write data bytes for remote processor.",
+> +    "MetricExpr": "remote_processor_write_data_beats_cs0 + remote_proces=
+sor_write_data_beats_cs1 + remote_processor_write_data_beats_cs2 + remote_p=
+rocessor_write_data_beats_cs3 + remote_processor_write_data_beats_cs4 + rem=
+ote_processor_write_data_beats_cs5 + remote_processor_write_data_beats_cs6 =
++ remote_processor_write_data_beats_cs7 + remote_processor_write_data_beats=
+_cs8 + remote_processor_write_data_beats_cs9 + remote_processor_write_data_=
+beats_cs10 + remote_processor_write_data_beats_cs11",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "local_socket_upstream_dma_read_data_bytes",
+> +    "BriefDescription": "Local socket upstream DMA read data bytes.",
+> +    "MetricExpr": "local_socket_upstream_read_beats_iom0 + local_socket_=
+upstream_read_beats_iom1 + local_socket_upstream_read_beats_iom2 + local_so=
+cket_upstream_read_beats_iom3",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "local_socket_upstream_dma_write_data_bytes",
+> +    "BriefDescription": "Local socket upstream DMA write data bytes.",
+> +    "MetricExpr": "local_socket_upstream_write_beats_iom0 + local_socket=
+_upstream_write_beats_iom1 + local_socket_upstream_write_beats_iom2 + local=
+_socket_upstream_write_beats_iom3",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "remote_socket_upstream_dma_read_data_bytes",
+> +    "BriefDescription": "Remote socket upstream DMA read data bytes.",
+> +    "MetricExpr": "remote_socket_upstream_read_beats_iom0 + remote_socke=
+t_upstream_read_beats_iom1 + remote_socket_upstream_read_beats_iom2 + remot=
+e_socket_upstream_read_beats_iom3",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "remote_socket_upstream_dma_write_data_bytes",
+> +    "BriefDescription": "Remote socket upstream DMA write data bytes.",
+> +    "MetricExpr": "remote_socket_upstream_write_beats_iom0 + remote_sock=
+et_upstream_write_beats_iom1 + remote_socket_upstream_write_beats_iom2 + re=
+mote_socket_upstream_write_beats_iom3",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "local_socket_inbound_data_bytes_to_cpu",
+> +    "BriefDescription": "Local socket inbound data bytes to the CPU (e.g=
+. read data).",
+> +    "MetricExpr": "local_socket_inf0_inbound_data_beats_ccm0 + local_soc=
+ket_inf1_inbound_data_beats_ccm0 + local_socket_inf0_inbound_data_beats_ccm=
+1 + local_socket_inf1_inbound_data_beats_ccm1 + local_socket_inf0_inbound_d=
+ata_beats_ccm2 + local_socket_inf1_inbound_data_beats_ccm2 + local_socket_i=
+nf0_inbound_data_beats_ccm3 + local_socket_inf1_inbound_data_beats_ccm3 + l=
+ocal_socket_inf0_inbound_data_beats_ccm4 + local_socket_inf1_inbound_data_b=
+eats_ccm4 + local_socket_inf0_inbound_data_beats_ccm5 + local_socket_inf1_i=
+nbound_data_beats_ccm5 + local_socket_inf0_inbound_data_beats_ccm6 + local_=
+socket_inf1_inbound_data_beats_ccm6 + local_socket_inf0_inbound_data_beats_=
+ccm7 + local_socket_inf1_inbound_data_beats_ccm7",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "3.0517578125e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "local_socket_outbound_data_bytes_from_cpu",
+> +    "BriefDescription": "Local socket outbound data bytes from the CPU (=
+e.g. write data).",
+> +    "MetricExpr": "local_socket_inf0_outbound_data_beats_ccm0 + local_so=
+cket_inf1_outbound_data_beats_ccm0 + local_socket_inf0_outbound_data_beats_=
+ccm1 + local_socket_inf1_outbound_data_beats_ccm1 + local_socket_inf0_outbo=
+und_data_beats_ccm2 + local_socket_inf1_outbound_data_beats_ccm2 + local_so=
+cket_inf0_outbound_data_beats_ccm3 + local_socket_inf1_outbound_data_beats_=
+ccm3 + local_socket_inf0_outbound_data_beats_ccm4 + local_socket_inf1_outbo=
+und_data_beats_ccm4 + local_socket_inf0_outbound_data_beats_ccm5 + local_so=
+cket_inf1_outbound_data_beats_ccm5 + local_socket_inf0_outbound_data_beats_=
+ccm6 + local_socket_inf1_outbound_data_beats_ccm6 + local_socket_inf0_outbo=
+und_data_beats_ccm7 + local_socket_inf1_outbound_data_beats_ccm7",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "remote_socket_inbound_data_bytes_to_cpu",
+> +    "BriefDescription": "Remote socket inbound data bytes to the CPU (e.=
+g. read data).",
+> +    "MetricExpr": "remote_socket_inf0_inbound_data_beats_ccm0 + remote_s=
+ocket_inf1_inbound_data_beats_ccm0 + remote_socket_inf0_inbound_data_beats_=
+ccm1 + remote_socket_inf1_inbound_data_beats_ccm1 + remote_socket_inf0_inbo=
+und_data_beats_ccm2 + remote_socket_inf1_inbound_data_beats_ccm2 + remote_s=
+ocket_inf0_inbound_data_beats_ccm3 + remote_socket_inf1_inbound_data_beats_=
+ccm3 + remote_socket_inf0_inbound_data_beats_ccm4 + remote_socket_inf1_inbo=
+und_data_beats_ccm4 + remote_socket_inf0_inbound_data_beats_ccm5 + remote_s=
+ocket_inf1_inbound_data_beats_ccm5 + remote_socket_inf0_inbound_data_beats_=
+ccm6 + remote_socket_inf1_inbound_data_beats_ccm6 + remote_socket_inf0_inbo=
+und_data_beats_ccm7 + remote_socket_inf1_inbound_data_beats_ccm7",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "3.0517578125e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "remote_socket_outbound_data_bytes_from_cpu",
+> +    "BriefDescription": "Remote socket outbound data bytes from the CPU =
+(e.g. write data).",
+> +    "MetricExpr": "remote_socket_inf0_outbound_data_beats_ccm0 + remote_=
+socket_inf1_outbound_data_beats_ccm0 + remote_socket_inf0_outbound_data_bea=
+ts_ccm1 + remote_socket_inf1_outbound_data_beats_ccm1 + remote_socket_inf0_=
+outbound_data_beats_ccm2 + remote_socket_inf1_outbound_data_beats_ccm2 + re=
+mote_socket_inf0_outbound_data_beats_ccm3 + remote_socket_inf1_outbound_dat=
+a_beats_ccm3 + remote_socket_inf0_outbound_data_beats_ccm4 + remote_socket_=
+inf1_outbound_data_beats_ccm4 + remote_socket_inf0_outbound_data_beats_ccm5=
+ + remote_socket_inf1_outbound_data_beats_ccm5 + remote_socket_inf0_outboun=
+d_data_beats_ccm6 + remote_socket_inf1_outbound_data_beats_ccm6 + remote_so=
+cket_inf0_outbound_data_beats_ccm7 + remote_socket_inf1_outbound_data_beats=
+_ccm7",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  },
+> +  {
+> +    "MetricName": "local_socket_outbound_data_bytes_from_all_links",
+> +    "BriefDescription": "Outbound data bytes from all links (local socke=
+t).",
+> +    "MetricExpr": "local_socket_outbound_data_beats_link0 + local_socket=
+_outbound_data_beats_link1 + local_socket_outbound_data_beats_link2 + local=
+_socket_outbound_data_beats_link3 + local_socket_outbound_data_beats_link4 =
++ local_socket_outbound_data_beats_link5 + local_socket_outbound_data_beats=
+_link6 + local_socket_outbound_data_beats_link7",
+> +    "MetricGroup": "data_fabric",
+> +    "PerPkg": "1",
+> +    "ScaleUnit": "6.103515625e-5MiB"
+> +  }
+> +]
+> --
+> 2.34.1
+>
