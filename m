@@ -2,50 +2,51 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE90C352A1
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 06:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E77C352A1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 06:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbiLGGxd (ORCPT
+        id S229576AbiLGG6V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 01:53:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41246 "EHLO
+        Wed, 7 Dec 2022 01:58:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbiLGGxb (ORCPT
+        with ESMTP id S229475AbiLGG6V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 01:53:31 -0500
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB70F5A2;
-        Tue,  6 Dec 2022 22:53:30 -0800 (PST)
+        Wed, 7 Dec 2022 01:58:21 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A694B99C;
+        Tue,  6 Dec 2022 22:58:19 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pr6QTxZwJgkAQfplTOUq7BGsub/DFpuqlEP2ypwoDwWBHYxty7iFp7ecur9+20GX6Y7n5It4Y6qbGpQUKGaDmiiUSxDr4wdFjuL78/GZerKvkn62sNWCpYa3X+HpIGjmiqEWJeFGKxatoWJ6fnPHlav25ro85i4NaZ8RHOI7xc7RO7wSRiFmaHEQNHl8lYnmcXVjlk9+rrO3pfi0HYch92b9y6zY0f/7YugOzcctB5RuReeuX5N8i//Ui1kO0hum5kHSNnxO7CtqFn6dI5PgM7VSLaB6nhHXsa7fp39OOy24+0o8H2+QNtpxd+8dWGWZoiglSQYjOIB4LVk46xx27A==
+ b=Rt/aXuc2VBjmC75CUe/nAxHDJBYmOJHpqsfz4yiAZ3hx/g59kJvTlHVUU6pzxwqiQwHE1BYrw4Qq2bu7UlrRDwZzQa1bflCWc3V30MiUaEDQ+g2w7R+jf0jXnzYmYeghkuVH8RqZ+I13ezsY0OtPbwILt/pzESai/CXigvRElejKs5Vnq2ThpEnau1+320O5w1wiNZiswmHqkqqSaStu76L5Q7F+L2dLVBkFkE+vxqyhNvFCbi7XAgmOMrpGxEl1l9jAcrCLP7/0I4gojoN6DKdjerhggH2o/9fygGSjM0F+egGQBKNofxVS/G7VGonUidfCgAus2pLK52SNE4tQwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GcF3f/hwZsC/P9ABjxND+i60i8orUuZeI3WcHHBUJbo=;
- b=dLo+bhxo6Qe30TFyQV+v3HUiJ1zIwEBhojai7UjOdLetB6CSJQKQBtqh9xDpG77ljjNs6fEX7xM1nXH2XApXCISzZYK+3Sc5LwzhVQHVwPwiA/tBtEydQE8nhDLkyzloamfqCvt4UKJ/xV4LoFg1oOJMd5Y9XhRIgeGZCPrdrFgpZ+YuTzR4sW/hBcRm10OjodFt2V4ddguTHjHj6D/6BwhZTU6CrR66DIuEJiX0UaGRlsvupsGmwSMx8u/1JmWvK1FkGyC1ACxva1ZrRbzCXGoAueZHmLcEKoP0O5eTeQCk8I8Dc8uUmUBl1WcaaM5pMGF9DT+fG1gISslIsiPpdw==
+ bh=/7J4kbdKBloK/TNJfSE4NfDolyISdwfJWcjviUZfsIA=;
+ b=FXRjo76m9tw1rrWILyY0LCKg8w6H6zB9hS+EMFkVH14EBZpegvlFUsecDZld/YdbmsT7QJOeL8y6yZiteUCkx1dT8vxAAiasUmv8LgXZdwhiwAHVSofLscLq2ynOVyPPAf0DG3kpn5GiM3n947htWQ/0+qyU2Ayjl+EQWSQGMNZgT7v5kXRC82J+Uy9tifUtbNpy86OsWPcc90MyyAPIWywnJs52myboWcyN8/MmDpJWIU0PARznefqPnQ08k76s2/vevlscYm8RVMCWPfkbzN7TTpmfqhhq3Kt1X70dpyhTEnMNcfAdLkEMcomIGjH7cy4I+fJgukPEbESD33dltw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GcF3f/hwZsC/P9ABjxND+i60i8orUuZeI3WcHHBUJbo=;
- b=zSX7k2VSGMsI75Dc059xCVGLVPsOt9oMclnxMPywH6UqOLRxqMnKrtg7IOEesA1MjSsJniIQFBM2EAfLCYNzwiRYtYyw66mdWPio4BG+r1yDtt2YX9SZ2lfcKJf3fXU1+dQkbHX4YSsyNLG0TL7oamRklDpYQxgbZooP9SxBdMU=
+ bh=/7J4kbdKBloK/TNJfSE4NfDolyISdwfJWcjviUZfsIA=;
+ b=Z9ZCNEurokZzVFN0jxFnKxoixPTd5OiCIVrIi0EEb0l43/ygTUR9RobNeqEZT+7BlhTqZNRy/EsE+k9z40b9H+TtbVld8Zh9RKxQo2wdQ88HpeiXGy0GB5ckTH2koer+yAj4ROQ8DmkNEVlUFbRwYcfrwwr8MRBrwJ5Nh1UQ1iM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by BL0PR12MB4995.namprd12.prod.outlook.com (2603:10b6:208:1c7::23) with
+ by IA1PR12MB6434.namprd12.prod.outlook.com (2603:10b6:208:3ae::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Wed, 7 Dec
- 2022 06:53:29 +0000
+ 2022 06:58:17 +0000
 Received: from PH7PR12MB5712.namprd12.prod.outlook.com
  ([fe80::5593:9517:a2e9:1b6b]) by PH7PR12MB5712.namprd12.prod.outlook.com
  ([fe80::5593:9517:a2e9:1b6b%3]) with mapi id 15.20.5880.014; Wed, 7 Dec 2022
- 06:53:28 +0000
-Message-ID: <e490cd35-aece-25b5-de96-b2f64f6a9b94@amd.com>
-Date:   Wed, 7 Dec 2022 12:23:14 +0530
+ 06:58:16 +0000
+Message-ID: <6675c596-eeb4-3347-ec85-2bd67b970973@amd.com>
+Date:   Wed, 7 Dec 2022 12:28:02 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [PATCH 0/4] perf vendor events amd: Add Zen 4 events and metrics
+Subject: Re: [PATCH 4/4] perf vendor events amd: Add Zen 4 metrics
+Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>
 Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
@@ -53,89 +54,216 @@ Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
         jhladky@redhat.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
 References: <20221207053007.336806-1-sandipan.das@amd.com>
- <CAP-5=fWhqWfwTwnh5SWiLamXkuZbMnefASxkLByH6a44kdc5Bg@mail.gmail.com>
-Content-Language: en-US
+ <20221207053007.336806-5-sandipan.das@amd.com>
+ <CAP-5=fUS37Xqi1x2ZDj48saFu-g5dCvwqg8Vm0DF1V0vuq4tXw@mail.gmail.com>
 From:   Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <CAP-5=fWhqWfwTwnh5SWiLamXkuZbMnefASxkLByH6a44kdc5Bg@mail.gmail.com>
+In-Reply-To: <CAP-5=fUS37Xqi1x2ZDj48saFu-g5dCvwqg8Vm0DF1V0vuq4tXw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0174.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:de::15) To PH7PR12MB5712.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN3PR01CA0014.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:95::23) To PH7PR12MB5712.namprd12.prod.outlook.com
  (2603:10b6:510:1e3::13)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|BL0PR12MB4995:EE_
-X-MS-Office365-Filtering-Correlation-Id: 569b9ccd-b7b9-4c3e-3a79-08dad81fbdf6
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|IA1PR12MB6434:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b84b891-fada-44c1-975c-08dad8206abe
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aaDwplZnuD/hk4gPtcc751lBnU7I0qEsXwtKs0nFZvCM2P8ICl7TINaCm7lTPcMkhrLp7bVs1JfJI2z+pBN3IYjNu0RoRULe+h1YM2byW0aZM72mvoYeRM6m9rFozklgGXykeueFbsAV71khH1aWsHTLr/f3i9HfD2zAud8ZLEyvHw/o9OKzLjT47XviNur8zX7bFSb/UKE2Yj2M54HRNmmA4jIzQ/QAbUiW3aNSAflKJ4aHEnsBBQeA1+8Xj9EgWG0wohRnqjDWkjF1yNFS/7MVRiQ7yzm6LhaM5mc6Nrn9M4NDL4/n47asyLvYvJpr4HzyezFUHyRWsj74bgHd5IAHSscMy/KCTi9iqz6czGtTUd9e/DR7nI3DzQEpCBbkrgwJGwjY1yFwHv6UGJNeF7LOqJXjVU6qFwxTOEmCfw+0QS0jezwUEDucl225sPdkOFq/UsnhoRSMhNaWmMK/d0wa57M8wXfaq+Nq9uqrgQsuafNeebG7zcF5GRg5L9Ab4XvCMlqySOKd8C7hlhlJ+qP+WMqxqErWASKz0LMNspBGWogNsx3HBMHbKAr9xafJ9sYyOhXV6K+dtMzukO3yUMqeylvOvZ1XNyek9ebMrbLu/sH5kzgGHWsMMH24yKY7jFSm3uth7SfKEtAu2zhgHsJhjLglc8Gr+nX+e+dcT7g8jF3TFej0Vn5sZpoBrRmkJ+hZH5lXc/Fc6NN5jjyTVlX8SWngcivI1RNKzLo/1Tj5oyhGMzI0EjsiE4p144fJbTY74PJrgGTbxAs8Isa3Og==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(346002)(396003)(376002)(366004)(451199015)(86362001)(8936002)(44832011)(31696002)(5660300002)(4744005)(2906002)(7416002)(4326008)(41300700001)(478600001)(186003)(26005)(53546011)(6506007)(6512007)(6666004)(66946007)(2616005)(66556008)(6916009)(66476007)(966005)(31686004)(6486002)(316002)(8676002)(38100700002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: tCXFHkaOF+kfu+BmwA7s0pvnn//PMdlzc4WO0mol/ycSP1se49OVJK9OvpY2peMVI5qFh2ZB5sapUwr3HdoULj8gPyzFEANdVnQ4oLvSczFhzsZqVTT98ycB0SRTa/KIOvL/xeWazGcJ73rrtl1IVL9g6wdCGRYGXxrFAcyv1RO4U2JW3GG9ELSetkYuavicxODlX7p9jo2ia9QoubU6mG0F2nJzOFEqOdjNsQnSRZk3zMeS7RGXnz1gbL26QSlkub84IKBlA8y9Ovs5my4AHIl0xkJONBjvDfuqSQHvYd5Y4gOSNQ30PACvOUzSuaiLkzby6gsLdLY9CzrcGr/X7vCEMCOagzS/V/6f3Zz6rkqGhrSb+H76vqpDOiRkwNrq+YsB2ldqzF1NNkgEO6cY9VX7lkR6g6b0rh0sEe7kbeSN0R7M3UOQoZyKxd9Zn7G6Dh8BfysqmuvWIndn+QZGTsaE7T9wxcrfDMZT5ATUyz8BiP3ZlcT7z4qPq+mlkzl6xNbpZLTqlzQsrqNq5ISHjEvAteGe059/KtQ+RGREG6/7QNqDbJLwiX6pgzT3VuCxTpI4xRHscv+V3MzwJ46KErCYWRMDXrQRshQOcItxK3g3lT7MoNO3DEWUSdR1WbqOLPYBSe8o6877L3A7ifGNUTf68BHZ7Qe2Xzv7L8IyDkcPIh9uVvA3zG1lf0F0fC2pRCX0XoqtDZjKU+jsqCaw1lbbgAE9q8MxImVGwp1sI0Q=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(451199015)(6486002)(478600001)(31696002)(8936002)(44832011)(5660300002)(7416002)(6512007)(26005)(316002)(6916009)(30864003)(53546011)(2906002)(6506007)(36756003)(4326008)(31686004)(2616005)(8676002)(66556008)(86362001)(66476007)(66946007)(6666004)(186003)(38100700002)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UDhYdENPVVY1YjZ0eXZkMVNKbmI0YXJ4a2w2akFzRUJ3aGlsRndNQTRvT2t3?=
- =?utf-8?B?NTYzcTNwRWNMalJSMjZzajBjck1qS0o0VldaN3dVa2UxOHZTb2ZyMW5qaDJC?=
- =?utf-8?B?b1E2dzRsQ2oxMGhMZmhBZGNSVUhPVXFkM2s5MExpWjZ3eGphaEltMjJ4U0Rv?=
- =?utf-8?B?bEJ1a05LUzlYVEVGWGgyUXp0R1BiQWtoWDZyTEJ5c3NrS09yTllWa2xybTVi?=
- =?utf-8?B?cWRYRTFtR1paOW81blMweHJwRU53cjBseUo1SVlLZkJrSjVOVTRFUHkwbzNQ?=
- =?utf-8?B?K0RyWGsybklET0VqQ0F3MnRtdmVQMGZYb3Z0NEN4Q1VmS0UwZVc0aTltNys5?=
- =?utf-8?B?b2lybklsaEU0aTduYjFpRzhJWkYvSHRrSW5sdnljcU1vR2lRQTB4Vjh1OW9J?=
- =?utf-8?B?cENlc0JSdm9JVlNBWFdoYWZ1ZmFjd2RJWGtzalljQkxGUlM4eGJ0YldWY1Ey?=
- =?utf-8?B?UzBLWTY1MGFxQzlmTE05ZTk2NGRiVGxlV01XS2dHd0U4cEZHS1IrdGt0Mk9x?=
- =?utf-8?B?Q2FwRWhCdjcyV29RcXlRQ3B1M0dHU1B4cTdmaHRqR2JveEV5RGVVcXdWZTI4?=
- =?utf-8?B?Wk91VkE2UDdMdldFbXF2UFdBY1NuZVRtMG9Yb0NWb1pDbnlNdmNEQlNrMlhP?=
- =?utf-8?B?UjRFUkx1N1RzbzBTVHlNb0pjVzRINS9TUGx4VGo5TE9sSlNrMG96SVpBVEZV?=
- =?utf-8?B?UG5pc3FISzh5VW1XRUozcTFiSmNkQmpqc2E5OXZNdDFHV1cvTHMzRjcwU3lS?=
- =?utf-8?B?QkJseXppZlY1eEFXYVo1M2xrU0dWcmFIQmwyTUxTT2JjWjJNSE94dnVpVUdx?=
- =?utf-8?B?WHFJRUZ6Rllqc1kzNUdJUzJVZzNRNFVIRmdyanpZYjNEK1gvSkdDNUxVWGMv?=
- =?utf-8?B?Um9uUVhza1RqR3JWcnp6M0dydlV3Ri9lalU3Z2IxVWpEaTR2a3p6ZXpaalVk?=
- =?utf-8?B?dVc4b0RpMUhnSVFzeHZnZm0wa3BHN0M2SlhUYklZamt2a21kVU9GOEdsSlQw?=
- =?utf-8?B?cTdQOVhTN3A0bHBQOWgvZ1JJTC9ycVVOQ2RtUTlUS3cvaEdFSlp1cGt0L0Q1?=
- =?utf-8?B?bFZPWFRKQVlraEc1eGRmcHV5T3RJSWR5TVRadndQMmJpNElxWXZITGR4dXZr?=
- =?utf-8?B?MVhIbUJOMkhCS2NpTjFCRDR0ZWR3R25zQ251bUY3WjZlajFtSWpiUUQrYmxN?=
- =?utf-8?B?OGFzVmtKeDlIcEhFZVlZY3AxMjBFaUNobjJ0eEFKT3h4OTJHVE1mV3BGUExP?=
- =?utf-8?B?d2JVUElDZlJJMDIvWnJ2VW5idlQ0Tm84TXYwZS9XbzVmWlFodUF1eTlKZm9E?=
- =?utf-8?B?N01DczlGNUlJdjNlTCtBSDlxVmZ1R3BLRTJNNndEVjhSYThPVEhVUDdUV2gx?=
- =?utf-8?B?RnBZeFkrbEdtMHl0cDAwS0FiTW1oeUJrWmptUlNOUUM1TldIa0xhODMrcTJh?=
- =?utf-8?B?dm4zd3BZSlN6dGJCWUdzOEFzMGhBS0JBemlIeFFVWHpmeWY3QS9XaysvM0RE?=
- =?utf-8?B?T1gwTEh2aVl3aUFzUi9YMSt6c3QzK0NVSUN1d0JXNkJIb1RoVThFdlhMRW9G?=
- =?utf-8?B?TkxHYnpDU1FrZnlHQTB5czBXSjYzQngxZEpGSjVra3N0ZjFYeUVDemdBSXIv?=
- =?utf-8?B?RjJYUThqaEh6c3VFLzMwZ2gxZURyUVFTMXZ6QUJpNHYzQnpyRFZiVllLZ01l?=
- =?utf-8?B?RTE3OG0yZDI1MWttS0dhYnFDbFlteGhQMFV1blNGZG9kMTN5d1VmY25raGcy?=
- =?utf-8?B?NXYwQWxoVUQwR09ua0VHY2dRN0JPOTJmUmk0azZ1anZaclowaktFUHMvdE4v?=
- =?utf-8?B?em9vUklQSFozb1M2UXVQTzRWYzIrVExYQzQ2bkczSjFkcDZZMENhb2RNaUxQ?=
- =?utf-8?B?MTBzMSttOExQT29od2I0TlY3Nlh3NkEvWlRmQWdIOWkwMnk5MXFSamU0bFZr?=
- =?utf-8?B?N0JvRzR3V2I0eTlLSFRRSE9qLzNNbEFWc2djZDlnQVNCUzE0UlhCYU5mcTVo?=
- =?utf-8?B?S1R4UlJOZnV5Y1NTa05MNGt5ci8zbDBsRkdvdGV1SmdnTTZ5bnBhTmJFQ2Y4?=
- =?utf-8?B?U0FVa0VXd0NudHFSdjd2aDhIUFppOHI1cEJ4a1R3RWhMTlZLaFZYdVVPOGdv?=
- =?utf-8?Q?o41FXE5VOSsiE8NelwKUQbNZG?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QlBNNHJ6ZTdUR0lmOGhSNWN3R09nMUlWVnZ6NDBnKzNhRlczT1h0Zmhlb0VJ?=
+ =?utf-8?B?TEwzbStOQnR3b1Z2bXZjSkhNb1h6Rk5NMmZoL21oYVBTQlNHL1ZwQlptZTB5?=
+ =?utf-8?B?S2hkUmZiOXlnY1ErVU1LdXJINnpycUdkcWJPZWE5WldLeW9WRUV1UW01cEhS?=
+ =?utf-8?B?bWxLWmI3b25KT1liNVkrSHRzQVZkcitsbS8zc2F0bzVtbHB1KzhTTTZBd2Vw?=
+ =?utf-8?B?S2dFclBzM0QzUEl3RkFSMmh6NVdFQVRIU2JEM2JCVEFiRnBLdmJia2VkMENn?=
+ =?utf-8?B?YzRISHg4eFZBajdpV2tVKytaY0lOUDJNYnh0VndMNm53Z1J4OGVvQVlMaUlR?=
+ =?utf-8?B?Nm5EWm1kUzVXbW1wWDdZclI1eHJYc0lIOEhRdVV6Y2g3cWxraFhubEorbXYz?=
+ =?utf-8?B?UVBPZDNHUnZRZndBN0YxNnc2eGd3ZGpiWVZzWWNvZDlEMldCZ2g1c2ZaTXUr?=
+ =?utf-8?B?NkJudzBPYTd2Rmw1aTI4K2htakcvQTBKeHByWk5jUnpXQ2dUK2crN0RlQ2lF?=
+ =?utf-8?B?U3N0d3hYRElQc2ZWbmdyRWVld0ozUWRqdjk2MjZqbmZoNCtjOERRMmE0VXJM?=
+ =?utf-8?B?Ym5VT2xMYmM4KzFNcmNyM081MmE3VUlQMHJSenNKZ3BKMnZOQlU3anRObm01?=
+ =?utf-8?B?cmpOL1ZnSkRwcXA4cG9CMUg1VWZlWE80dlh6YVhoaXNSUVcvcVZUclU4eWRH?=
+ =?utf-8?B?R1FCTXE0MEZleVJwWGtSRmFIUkpWMjAwTkRBRm1kTExiNEVmRGhIUkh1STQ2?=
+ =?utf-8?B?aEFXYzJEVGNKdllERjZBb1p5b3BSQWhFVzBNVWpVQzk0ajBPWXROaDhEYkw3?=
+ =?utf-8?B?ZVBNTDltWUpwNzF3S1M0d04vOTVPcDd5UkcyUUp4Q2Vsc2RtOWEyNTJHUURp?=
+ =?utf-8?B?TnpYdjhMMzZudmNCeERodW9PVXpUeGJQNFdENEVUc0xVMGVSUVJ6QzFTRXZ6?=
+ =?utf-8?B?RHhocDJHR0pNSllSekR4WUM2dExvU3pQL0JrL0l4SUIwTk9rYTJyc2NLUFdu?=
+ =?utf-8?B?emNnaHRjVXdnOGhTeFZwRXVJNWl2ME9SbitvaHR4TzZRRmRVY0hPU3g5OFFW?=
+ =?utf-8?B?WmJzNjQrWVR3cGtHZk5nOFh2ejJoVWJVUmozV1IrNjJtK3lPdDUyeXNBdFRB?=
+ =?utf-8?B?ZFY2MDczekpQRER5WWNyM3Q0QlJONmNFS0NlNUlRb2w1MWRVTU1JaTJ5UW04?=
+ =?utf-8?B?NjFsckFaTmFxNm9ETkcxNlBhV2RxMTk5OHJPZDlqWXRMcmRTeHo0TDM2M1pq?=
+ =?utf-8?B?UGJRWmFVeUhFVDF1KythcDlwR1pFekZPK005TVNWeWJvdVhGWmsyNXk5RGdC?=
+ =?utf-8?B?OFNRTFZKczU0ckg3ak16YVhXUUY2L1FOWUpqdkxtSEZQdExwNk45T0psSnFs?=
+ =?utf-8?B?cW1lalRXMm41Nlo0THVVNnBJVDJSait0bnlmMENHTGhKdURsV1B3cS9oQyti?=
+ =?utf-8?B?bFkxRHZDai9GZFNDNDI4RmxQeGlIajZ6YkVXVlVnbDByT09FU3N6WHpxQmdv?=
+ =?utf-8?B?YXhqSmV2WCtCcFg4cStReCtCQ21OaDFyazlYd3ZoZWZjZDdEUWM3VDNjYUV6?=
+ =?utf-8?B?S0t3b0xrd1NMelkvKzEvc1RaMWY5UlZsY2JsUmkxT0JSdDdHUkdPTnNTbS83?=
+ =?utf-8?B?ZzV4OFFvdWtiSXdQVGNrUG9nblQvTU05T1NsQUlUTkxjbVJzT09ZTFB3YTgr?=
+ =?utf-8?B?bkhjaERuVkdoSmc0ZnphM2hab1lBbSs1dHNXZ2s0Yy9FTXdMN1Z4OFdCV3l1?=
+ =?utf-8?B?VmZTNm9oT2RCdE5sdkFBeGZRVHI3bU94c0sxelJhM1RsdEVYcXNjQ1QxalRK?=
+ =?utf-8?B?TEc3N0ZNYzIyRE5EbnlzRDhZaEZJUnhqM3Z2RS9CRlU4VjJqMWxEblBSTkVt?=
+ =?utf-8?B?YkRGY3ZPa2JWems0eDFUcGtaQ3pFQmJKbFN3QzlWcUt3czgrSk4vd0gxckpv?=
+ =?utf-8?B?ZXF6dTZUaWR0UkN3UGV6bWtnSWZZVU9hSEFSaWN2MHlOTW55V2szRHZjZmxy?=
+ =?utf-8?B?QjNraXU4WllaZjl4MC9yMS9jdlNyc1JIaFFRZWlYQ2NXaWVDbmtXOWJXZm9T?=
+ =?utf-8?B?c0JJYWIwMElCTzk4OVVkUHhybEtZSnR3KzY1UForejF1SGY2NmxETVNCUGMy?=
+ =?utf-8?Q?lg8ITmTtYeIGA0crkI6GIqnrk?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 569b9ccd-b7b9-4c3e-3a79-08dad81fbdf6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b84b891-fada-44c1-975c-08dad8206abe
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2022 06:53:28.6605
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2022 06:58:16.9024
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uWxLi2RCDyZNVchw3wX9shwI2icMNeJfx55aaP6OexQVIfsEBwEO4HKjtn1na9FBA7puFI4D/7qMnLP6jkciug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4995
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9gfM3T54MD8crHV/yqmH8BCah8UYv8FDazaRBEDiJrA7muYnlwgZSETOL3JMYSDjX5fIgUI1RMCeH96SeN3Xpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6434
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 12/7/2022 11:36 AM, Ian Rogers wrote:
-> On Tue, Dec 6, 2022 at 9:30 PM Sandipan Das <sandipan.das@amd.com> wrote:
+On 12/7/2022 11:35 AM, Ian Rogers wrote:
+> On Tue, Dec 6, 2022 at 9:32 PM Sandipan Das <sandipan.das@amd.com> wrote:
 >>
->> Add events and metrics taken from the Processor Programming Reference
->> (PPR) for AMD Family 19h Model 11h Revision B1 processors which can be
->> found at: https://www.amd.com/system/files/TechDocs/55901_0.25.zip>>>
->> Sandipan Das (4):
->>   perf vendor events amd: Add Zen 4 mapping
+>> Add metrics taken from Section 2.1.15.2 "Performance Measurement" in
+>> the Processor Programming Reference (PPR) for AMD Family 19h Model 11h
+>> Revision B1 processors.
+>>
+>> The recommended metrics are sourced from Table 27 "Guidance for Common
+>> Performance Statistics with Complex Event Selects".
+>>
+>> The pipeline utilization metrics are sourced from Table 28 "Guidance
+>> for Pipeline Utilization Analysis Statistics". These are new to Zen 4
+>> processors and useful for finding performance bottlenecks by analyzing
+>> activity at different stages of the pipeline. Metric groups have been
+>> added for Level 1 and Level 2 analysis.
+>>
+>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>> ---
+>>  .../pmu-events/arch/x86/amdzen4/pipeline.json |  98 +++++
+>>  .../arch/x86/amdzen4/recommended.json         | 334 ++++++++++++++++++
+>>  2 files changed, 432 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
+>>
+<snip>
+>> +  {
+>> +    "MetricName": "dram_read_data_bytes_for_local_processor",
 > 
-> Adding the mapping first may break the build until the core events are added.
+> nit: Is "bytes" redundant in the name here? It may even be confusing
+> given the units.
 > 
 
-Agreed. Will fix this in the next version.
+Agreed. I can replace "bytes" with "mbytes" or "megabytes" for these bandwidth metrics.
 
 - Sandipan
+
+>> +    "BriefDescription": "DRAM read data bytes for local processor.",
+>> +    "MetricExpr": "local_processor_read_data_beats_cs0 + local_processor_read_data_beats_cs1 + local_processor_read_data_beats_cs2 + local_processor_read_data_beats_cs3 + local_processor_read_data_beats_cs4 + local_processor_read_data_beats_cs5 + local_processor_read_data_beats_cs6 + local_processor_read_data_beats_cs7 + local_processor_read_data_beats_cs8 + local_processor_read_data_beats_cs9 + local_processor_read_data_beats_cs10 + local_processor_read_data_beats_cs11",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "dram_write_data_bytes_for_local_processor",
+>> +    "BriefDescription": "DRAM write data bytes for local processor.",
+>> +    "MetricExpr": "local_processor_write_data_beats_cs0 + local_processor_write_data_beats_cs1 + local_processor_write_data_beats_cs2 + local_processor_write_data_beats_cs3 + local_processor_write_data_beats_cs4 + local_processor_write_data_beats_cs5 + local_processor_write_data_beats_cs6 + local_processor_write_data_beats_cs7 + local_processor_write_data_beats_cs8 + local_processor_write_data_beats_cs9 + local_processor_write_data_beats_cs10 + local_processor_write_data_beats_cs11",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "dram_read_data_bytes_for_remote_processor",
+>> +    "BriefDescription": "DRAM read data bytes for remote processor.",
+>> +    "MetricExpr": "remote_processor_read_data_beats_cs0 + remote_processor_read_data_beats_cs1 + remote_processor_read_data_beats_cs2 + remote_processor_read_data_beats_cs3 + remote_processor_read_data_beats_cs4 + remote_processor_read_data_beats_cs5 + remote_processor_read_data_beats_cs6 + remote_processor_read_data_beats_cs7 + remote_processor_read_data_beats_cs8 + remote_processor_read_data_beats_cs9 + remote_processor_read_data_beats_cs10 + remote_processor_read_data_beats_cs11",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "dram_write_data_bytes_for_remote_processor",
+>> +    "BriefDescription": "DRAM write data bytes for remote processor.",
+>> +    "MetricExpr": "remote_processor_write_data_beats_cs0 + remote_processor_write_data_beats_cs1 + remote_processor_write_data_beats_cs2 + remote_processor_write_data_beats_cs3 + remote_processor_write_data_beats_cs4 + remote_processor_write_data_beats_cs5 + remote_processor_write_data_beats_cs6 + remote_processor_write_data_beats_cs7 + remote_processor_write_data_beats_cs8 + remote_processor_write_data_beats_cs9 + remote_processor_write_data_beats_cs10 + remote_processor_write_data_beats_cs11",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "local_socket_upstream_dma_read_data_bytes",
+>> +    "BriefDescription": "Local socket upstream DMA read data bytes.",
+>> +    "MetricExpr": "local_socket_upstream_read_beats_iom0 + local_socket_upstream_read_beats_iom1 + local_socket_upstream_read_beats_iom2 + local_socket_upstream_read_beats_iom3",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "local_socket_upstream_dma_write_data_bytes",
+>> +    "BriefDescription": "Local socket upstream DMA write data bytes.",
+>> +    "MetricExpr": "local_socket_upstream_write_beats_iom0 + local_socket_upstream_write_beats_iom1 + local_socket_upstream_write_beats_iom2 + local_socket_upstream_write_beats_iom3",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "remote_socket_upstream_dma_read_data_bytes",
+>> +    "BriefDescription": "Remote socket upstream DMA read data bytes.",
+>> +    "MetricExpr": "remote_socket_upstream_read_beats_iom0 + remote_socket_upstream_read_beats_iom1 + remote_socket_upstream_read_beats_iom2 + remote_socket_upstream_read_beats_iom3",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "remote_socket_upstream_dma_write_data_bytes",
+>> +    "BriefDescription": "Remote socket upstream DMA write data bytes.",
+>> +    "MetricExpr": "remote_socket_upstream_write_beats_iom0 + remote_socket_upstream_write_beats_iom1 + remote_socket_upstream_write_beats_iom2 + remote_socket_upstream_write_beats_iom3",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "local_socket_inbound_data_bytes_to_cpu",
+>> +    "BriefDescription": "Local socket inbound data bytes to the CPU (e.g. read data).",
+>> +    "MetricExpr": "local_socket_inf0_inbound_data_beats_ccm0 + local_socket_inf1_inbound_data_beats_ccm0 + local_socket_inf0_inbound_data_beats_ccm1 + local_socket_inf1_inbound_data_beats_ccm1 + local_socket_inf0_inbound_data_beats_ccm2 + local_socket_inf1_inbound_data_beats_ccm2 + local_socket_inf0_inbound_data_beats_ccm3 + local_socket_inf1_inbound_data_beats_ccm3 + local_socket_inf0_inbound_data_beats_ccm4 + local_socket_inf1_inbound_data_beats_ccm4 + local_socket_inf0_inbound_data_beats_ccm5 + local_socket_inf1_inbound_data_beats_ccm5 + local_socket_inf0_inbound_data_beats_ccm6 + local_socket_inf1_inbound_data_beats_ccm6 + local_socket_inf0_inbound_data_beats_ccm7 + local_socket_inf1_inbound_data_beats_ccm7",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "3.0517578125e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "local_socket_outbound_data_bytes_from_cpu",
+>> +    "BriefDescription": "Local socket outbound data bytes from the CPU (e.g. write data).",
+>> +    "MetricExpr": "local_socket_inf0_outbound_data_beats_ccm0 + local_socket_inf1_outbound_data_beats_ccm0 + local_socket_inf0_outbound_data_beats_ccm1 + local_socket_inf1_outbound_data_beats_ccm1 + local_socket_inf0_outbound_data_beats_ccm2 + local_socket_inf1_outbound_data_beats_ccm2 + local_socket_inf0_outbound_data_beats_ccm3 + local_socket_inf1_outbound_data_beats_ccm3 + local_socket_inf0_outbound_data_beats_ccm4 + local_socket_inf1_outbound_data_beats_ccm4 + local_socket_inf0_outbound_data_beats_ccm5 + local_socket_inf1_outbound_data_beats_ccm5 + local_socket_inf0_outbound_data_beats_ccm6 + local_socket_inf1_outbound_data_beats_ccm6 + local_socket_inf0_outbound_data_beats_ccm7 + local_socket_inf1_outbound_data_beats_ccm7",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "remote_socket_inbound_data_bytes_to_cpu",
+>> +    "BriefDescription": "Remote socket inbound data bytes to the CPU (e.g. read data).",
+>> +    "MetricExpr": "remote_socket_inf0_inbound_data_beats_ccm0 + remote_socket_inf1_inbound_data_beats_ccm0 + remote_socket_inf0_inbound_data_beats_ccm1 + remote_socket_inf1_inbound_data_beats_ccm1 + remote_socket_inf0_inbound_data_beats_ccm2 + remote_socket_inf1_inbound_data_beats_ccm2 + remote_socket_inf0_inbound_data_beats_ccm3 + remote_socket_inf1_inbound_data_beats_ccm3 + remote_socket_inf0_inbound_data_beats_ccm4 + remote_socket_inf1_inbound_data_beats_ccm4 + remote_socket_inf0_inbound_data_beats_ccm5 + remote_socket_inf1_inbound_data_beats_ccm5 + remote_socket_inf0_inbound_data_beats_ccm6 + remote_socket_inf1_inbound_data_beats_ccm6 + remote_socket_inf0_inbound_data_beats_ccm7 + remote_socket_inf1_inbound_data_beats_ccm7",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "3.0517578125e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "remote_socket_outbound_data_bytes_from_cpu",
+>> +    "BriefDescription": "Remote socket outbound data bytes from the CPU (e.g. write data).",
+>> +    "MetricExpr": "remote_socket_inf0_outbound_data_beats_ccm0 + remote_socket_inf1_outbound_data_beats_ccm0 + remote_socket_inf0_outbound_data_beats_ccm1 + remote_socket_inf1_outbound_data_beats_ccm1 + remote_socket_inf0_outbound_data_beats_ccm2 + remote_socket_inf1_outbound_data_beats_ccm2 + remote_socket_inf0_outbound_data_beats_ccm3 + remote_socket_inf1_outbound_data_beats_ccm3 + remote_socket_inf0_outbound_data_beats_ccm4 + remote_socket_inf1_outbound_data_beats_ccm4 + remote_socket_inf0_outbound_data_beats_ccm5 + remote_socket_inf1_outbound_data_beats_ccm5 + remote_socket_inf0_outbound_data_beats_ccm6 + remote_socket_inf1_outbound_data_beats_ccm6 + remote_socket_inf0_outbound_data_beats_ccm7 + remote_socket_inf1_outbound_data_beats_ccm7",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  },
+>> +  {
+>> +    "MetricName": "local_socket_outbound_data_bytes_from_all_links",
+>> +    "BriefDescription": "Outbound data bytes from all links (local socket).",
+>> +    "MetricExpr": "local_socket_outbound_data_beats_link0 + local_socket_outbound_data_beats_link1 + local_socket_outbound_data_beats_link2 + local_socket_outbound_data_beats_link3 + local_socket_outbound_data_beats_link4 + local_socket_outbound_data_beats_link5 + local_socket_outbound_data_beats_link6 + local_socket_outbound_data_beats_link7",
+>> +    "MetricGroup": "data_fabric",
+>> +    "PerPkg": "1",
+>> +    "ScaleUnit": "6.103515625e-5MiB"
+>> +  }
+>> +]
+>> --
+>> 2.34.1
+>>
 
