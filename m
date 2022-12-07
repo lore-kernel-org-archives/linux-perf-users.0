@@ -2,213 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AF8C47089
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 04:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389FDC352A1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 05:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbiLGE0a (ORCPT
+        id S229479AbiLGFar (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Dec 2022 23:26:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56640 "EHLO
+        Wed, 7 Dec 2022 00:30:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbiLGE03 (ORCPT
+        with ESMTP id S229448AbiLGFap (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Dec 2022 23:26:29 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2078.outbound.protection.outlook.com [40.107.94.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADBF056568;
-        Tue,  6 Dec 2022 20:26:27 -0800 (PST)
+        Wed, 7 Dec 2022 00:30:45 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2067.outbound.protection.outlook.com [40.107.101.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D3A354B1B;
+        Tue,  6 Dec 2022 21:30:44 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hjAIr8f9HDKcKLpEFfTEROFGplfYIen0mDeE/EIvuKSPDhQsXJ15RhlF7tkI5jFUrv59pu/a+SBMhH1yw9HZuUfGAVcfZA/H134W3CfKTf3Pz/vigX93TX9vW0aCeTHE37yA3QfQhtaAscwj3kbtAyf4RMRxRxaa8Ge6vAaVxFnTx633/Q+wFtbtpX7vRcT6268K5Jl72xvJgEkLHAnQSVqvZL0EkODZc02FUvdPLA0v6V/svqroxjDJ7RfqtAQKMxRCd7sPmJcQyvFkLZ9s9QkNaaPePW3v4cXolJGByn5jjV9ft00HzBLQGrbaxLY8AhdWPd5ktaSGXjg/9pPTtQ==
+ b=DcTn9patkeo4fJzq1nEKqml/foxALRmYnuDnS2kQNnrUZnoTabjiCx/jO1LRLCfH1mLVyyMV8cZHfCfSmAndrABaRS0x91sqa9z1IUPOMgjWzUXU7K/7GpT2RNISunVXvMNeitM5FVreJpAYN8vJbz4QBZ+Zg1WkNkLSKWHm4BGU8p2Y+IFKm3Jm2zn+o2qWSdOgEan7qVWigaGn0Ct0gK6KdsyGGqBXrvpiHYaDfnQE1pQht78GLZFS57Jru8pXCJHTlctBe++9VYMroo4NpoHm8jjBDeC9beohDzsOw1cGMlmgLHk5XKGRSqjmUMonNDurJ1e86SpG9U4F8x/Q7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KOya5TAlyGEDmuEmlFTnzMnj4A370R/CzGThcb31XfQ=;
- b=UxA8uW9N3bjbOk1CglKg6CtYcsVCsR6Q7Ozrxhh8ynNoAYL8KMU99fsG9RCQsG50PhXFgfGCLK6e38n/u0SttKhUNunjcb6t3LeMF/vjsf7Mt+Zh9UfJ+GIuPv9Xh8XqHGkqmEJw8L/E2KVEwtxLy8oFvKCMgwm8h9JTUgrYa0XuvjgAzTJmXp5tJbT1PpqO+u5Xai3Wnop6MaNqnvCFpBT/0wmbbRrpHEc/AIHUBROchUX5uW2y/ZhzzaCet0zv1LHKt599Lu4QkcJvQREnnoTE6huZbRYSkfBxzGtR14COmZNkvg0cSxER5FswgYKGKVKvwe2eDd7wNlt3ZUPX3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=MGBFbaTvbX2b16LIoxddaSfRtYdiIdUDfF5mgs3ARjo=;
+ b=lj++rVUF7HvRJ/IGwB8fnPBbE02Wk5ybUg54oUOeuUEpX4ljxsMwaV8NS0H25D8BMoaMmFTYk+1MzDXogKIrn19ltVKlbutdJLtcFz4cuHjNMLSt/81GvpBTkMwqFZNV1USRskjtIqptrvApF0Vbpf8puX8oa3DRpb54MNA9FUPYnlpJGshfzzMWsxn678gtoqnQjxH6MywsNnWprNx4s65xroZ1X/lCOD7rUPuFuDhZlfD5KXE7VOL7npKwxgXd0jnWYnKszPvcMnDfwZ9vwmVF05MePd7hjvC2yY2djudiQJ1kaf9iTsyHwCm25GR1aTDtZGXsDV71FiJgx/HGxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KOya5TAlyGEDmuEmlFTnzMnj4A370R/CzGThcb31XfQ=;
- b=pknTCIgmaAxxEGQQud0wWAjAQTlxIZC1ljnSg3UPTNb7ZZoxGY1S3EfIutgiHcqg9pC/ZnTmDHxm/YUFK8ggeU+DmfakwJWw419vYJkTfRXwDXzUl/eolzQlsIdIvLdjWcdnNYWzzG6cROsZFLtqySb/uWVFpcaYhcVQc5qLB5s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CY8PR12MB7289.namprd12.prod.outlook.com (2603:10b6:930:56::12) with
+ bh=MGBFbaTvbX2b16LIoxddaSfRtYdiIdUDfF5mgs3ARjo=;
+ b=efGU34SSLz0s5ry05LYjWDHw33sRzaigDIUzGVcQW6d9FoYDsvjF0JCNkI3qB/ypx2O/C58Mfu7APosLv4urMsivFtgNUPspxWo+pNjMLbPEXmdHCzWnrhIG4dVhMwy2t89LdItnqTYjJCyr6+51uG//AIEbQQbFUMEJfhcNKOg=
+Received: from MW4PR03CA0031.namprd03.prod.outlook.com (2603:10b6:303:8e::6)
+ by CY8PR12MB7097.namprd12.prod.outlook.com (2603:10b6:930:63::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Wed, 7 Dec
- 2022 04:26:25 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::aa5f:5f2c:4143:f981]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::aa5f:5f2c:4143:f981%8]) with mapi id 15.20.5880.014; Wed, 7 Dec 2022
- 04:26:25 +0000
-Message-ID: <2e45a93d-56fd-b18e-de61-51ceccfee8a3@amd.com>
-Date:   Wed, 7 Dec 2022 09:56:12 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH v3 2/2] perf test: Add event group test
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        carsten.haitzler@arm.com, Leo Yan <leo.yan@linaro.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20221206043237.12159-1-ravi.bangoria@amd.com>
- <20221206043237.12159-3-ravi.bangoria@amd.com>
- <C7F7A9B0-421E-40AB-987C-6D250B9633D3@linux.vnet.ibm.com>
-Content-Language: en-US
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <C7F7A9B0-421E-40AB-987C-6D250B9633D3@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0173.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:de::17) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.13; Wed, 7 Dec
+ 2022 05:30:43 +0000
+Received: from CO1NAM11FT116.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8e:cafe::c3) by MW4PR03CA0031.outlook.office365.com
+ (2603:10b6:303:8e::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14 via Frontend
+ Transport; Wed, 7 Dec 2022 05:30:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT116.mail.protection.outlook.com (10.13.174.243) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5901.14 via Frontend Transport; Wed, 7 Dec 2022 05:30:42 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 6 Dec
+ 2022 23:30:36 -0600
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <eranian@google.com>,
+        <irogers@google.com>, <jhladky@redhat.com>,
+        <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
+        <sandipan.das@amd.com>
+Subject: [PATCH 0/4] perf vendor events amd: Add Zen 4 events and metrics
+Date:   Wed, 7 Dec 2022 11:00:03 +0530
+Message-ID: <20221207053007.336806-1-sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CY8PR12MB7289:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce64073c-abae-444f-ad56-08dad80b33c0
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT116:EE_|CY8PR12MB7097:EE_
+X-MS-Office365-Filtering-Correlation-Id: b03f7d18-653e-44fb-7f3d-08dad8142f1f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZqR3r8zDisL3XTJFF8fqw5YLsr/uWbBeheAimTyNd9wlxb1yYsu03FrnQ/pYwEdR66c+h2ULx3Xir7mGW3uC0uXoTvaOLkM3RWd0vFHQK5fqYgumr0BvIVY0s1i1cuOydZvx99/sLvvpMTIPkuNHPGpFl5fwnBsESFu01YebgtpVtdECbq2kU47SUXHQ71Fz6W+k0sBUC58MrBnqQi+F2Y7yc0VulFGe1mG1AcFbuuC1QDxoDAt+TiK62nuB0xCC+W8XOxJO9zPuMmjq6VnT6flgrpv2vFetCcvzA0YOnV7mg0/8leGC413A3Ti553D3nwZv8DDJSOMnev/j8iYkhgT08cb7C9kVc2/jhVDWnQa0K/FVyLQiOwIMruSFq7ROypWxdqSf+GzuqKcpOaLqv3u/KU2rJC8w0HDxwnseApd7PFKVe8Q8jVZQtwPgBeBlIf99BeK/SAjJuMwkUZSsLx6Q4YtVJPnx52Kfs7gjYO/lrI5W8NfE2ndrtJ5goj2LddX0HGtD662iLJQOWJyS0/d+rcLsj/bH7LvObRyH0aRYe0SIJruHSmKHHByF42fV3gNzewqwZEB+/VwHtx65lIz7qJBUUHA1Nn68ZuFvs6VdV7ZAPuVcLKwkftBtGtyCQ/ZvOI8p/MjAQUHvPHZJpI1PdMzF04tNqVmKhzOJ3OqfvN19iQxFkM3bDXB0H2+nyQaCfZTKKD4X23DA8bjHUT5qS8VpZ3041klifHyYkVM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(39860400002)(136003)(346002)(366004)(451199015)(36756003)(31686004)(4326008)(86362001)(8936002)(66476007)(66556008)(2906002)(66946007)(44832011)(31696002)(478600001)(41300700001)(8676002)(38100700002)(83380400001)(6916009)(6486002)(54906003)(316002)(2616005)(7416002)(5660300002)(186003)(53546011)(6666004)(6506007)(6512007)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Um1Qd2RuOTVqQ3dwL1ZvaWJvbElsWmtWb1BJanFHb3dQMWlWV3F0a09VTzRN?=
- =?utf-8?B?cm14ZSsxK29WbTl6VWVYd3o3NGp5cXJUNkFUQmhaUzR6QXdUdHMwOTdMZDZ5?=
- =?utf-8?B?RDUwODNaTnhRdnNkaDdscmtqQVZNNzU0bXJpZFp4L09iYlJKaWVLWC9hVzc1?=
- =?utf-8?B?bFdrYjRlcTlSOWxnMjI0MXFydVI2UTZKTTBNQTUwWFV6bGM3RFlNODkyUWQ1?=
- =?utf-8?B?cldoMDVYVDljSkp6Nkl5QVJ5MkhnZ3pRa1FaeE0xNTlLdGZ6RHZnU3h5cDhm?=
- =?utf-8?B?YnJyUmQ0MU9SQmZXM25KaUEzNzFlN3I5c2F1aGp6SlJWd09yT3ArRGlxRG12?=
- =?utf-8?B?V1NwempxUkN6eXBYT0huWWVjK1IzaWFMK3drNmhCUEFLUGJRRGRZelhlRmM4?=
- =?utf-8?B?QlZDNnN0VVRQLzdmekxMekkzQzVqYU8zTVg0UDBRSjlZcWJXSS9wQ3ZnbENr?=
- =?utf-8?B?SlNxbFNHVDdHbXFoSTlzdGtvQldFOXBuM3UzNWdMZ1hMWkhmYUR5bGsrT21V?=
- =?utf-8?B?R0wrclU2a0ZjOHVKS212TGprLzBSUHVsSWpZcFJoTFhKTi9EcE9XMmZUVkdv?=
- =?utf-8?B?WXVaYjB2YkdJeFZmT0IrVnhITDQ2dzhHRlFSbkhPMks4V0VMNlVvZEMybkV1?=
- =?utf-8?B?am9EaDJPVVh0YlM0cXJTSjlrd2cyaGlNd0pZUGx0VXhmQnQ3WlV5ZGN3dnU3?=
- =?utf-8?B?dVkvUnJzdUtnaHI0K2hEdDQxYUE1dVliYjZDY2xFcE9nMmNaeG9GZnB1OVl5?=
- =?utf-8?B?c0FDemttOW1qYUJpMjdFV2hFQlNIUktPN3RwSytiQ0Q5WlE1ZTNxbHIvTGtU?=
- =?utf-8?B?R3d5UURpMGJjblNqMWRFRm16SmxvZnVPL1lGVDJTbkNEZXkrcVhHaUpCQnBo?=
- =?utf-8?B?NTYwbjlFekp6M1JXQXc3Q3lEZHVrRFpkamlydzZPRkV1d3FzUUQxdWhSYmI0?=
- =?utf-8?B?SUdDUEh6VkZORVRpNzdmYTRVaTM3enJ4VEdtZHBsbzMzUkJFWWNLQWdWekxZ?=
- =?utf-8?B?bUxyU0o2K1FNQ3E4UitqT2h5cmxrMHFrUGhyaVVsT3ZubVZGSzgxV1dsa3dZ?=
- =?utf-8?B?bmVyK2xmWU1GWU0rcVg1dFp6Y1d0QVBjYlRUMVR4MUYwQXFxejNrRHFCVUd6?=
- =?utf-8?B?QVJqNVNVTWw3VE82MGF1YzUxOGNjUlJvcVErQWJXakFnL2lxNzJjT1F0aEtU?=
- =?utf-8?B?bEJuYWlTU0duRWJSdTdNbkt2QlRYSWdDMHBkdTRPdjRZSGpYMVVuVVJ3MHkv?=
- =?utf-8?B?WlREYUdmOGdmcHdha3NZbkNBSXVUbzhuK1VtZW1pcGRwV2FuSjhXV3ZIbzUv?=
- =?utf-8?B?aW5KWTBZMGdMbllEVWx2a0kwcU96LzRmMTBWVGpmbHFKQkRlUVh6Vy9XSU1K?=
- =?utf-8?B?YldmQU8vUHllbWNWbDVjdEltSFF0YzZsUG1qK0lzRVhPdGpBRGZUQU1ERVdx?=
- =?utf-8?B?K1M5ZjFKSDVkK2ZEV1R0Q0lpNEl3R1BuTmxIdUMyOTRGbk11VjlyT0hBMk56?=
- =?utf-8?B?WkhDOWNxektnZ3g4UlFXMGs0K2VlNTIvQXRjR0JZbnBjU1FxN1dUbWNkbkRo?=
- =?utf-8?B?V2RYSnBxOE9uaFVzcjZsY3Z1eVRQKzBkSDcyQlBCWFdrL0lCQm1YbzNwek5j?=
- =?utf-8?B?L1RVNlNQcFhzV1cyL3BRemNTTW5lc21VbHlXdEF4VDFDNmRoTVVJT0UzWXgz?=
- =?utf-8?B?bHI3WjJLajdGK1dCaWRGVDd6OFozdktDaDlNNnFCS3laZ05rTzNVYTFHNGZ4?=
- =?utf-8?B?Yzl4Q012eGRQSng2Qmhkc0ZXa0VpTzdiOXowc1UzUmhBdlJyNkh0dDRpbUFD?=
- =?utf-8?B?QzV0OVNja0FGbXQwUnVpTXE0V0FBRUp4OGZDVDRNbG8yeW5GWmJDZEFiV0hS?=
- =?utf-8?B?c0FuS2RYMmdHQ0xMRkNCVTBPSkNlZ1ZvUFJGRFoyVGFNSkltU0RrbFA3ZWhW?=
- =?utf-8?B?U1hZZ1B2WVViU1d4MFNwNThJejN5YjlXS2tJMTErK2dZaEp4MFd1K1UvWnND?=
- =?utf-8?B?STluQWNYRk9FeHRsbXRrZ0JYV3pQeWhEZU1QSndQbTVacGd6T3NDR3hUaWxE?=
- =?utf-8?B?RFdvNUFYQS80N0drQ21ZdmhLcERueVE0c2Z6YWg5V21rU2ZDaldMRDVmLzRo?=
- =?utf-8?Q?vrdjMt/VavjXEuKXGpzcYyp6a?=
+X-Microsoft-Antispam-Message-Info: 3t3+bLEe9xTn3dV6n1yGHfXFkhvgCEIS0aF0GmAKmT3dOQphlHUl/1rOjUcEre0SGThKEVHLqso3Vjpz35I5yMPR4E7mzmBLjHxET5EIG6cBpstG6YfESg/p4rwmJ4+5zINI19/Qge9yLvhMD/DMzDMlI/sNM8g2IwI2HXwhZ81CM+6fzzigqw2b+axwWtlP4kIo9zxgxvnKvM4HTo1taPkiVctv+t/QaDFKO3z145Otw922Qrr8Qe8RJHbmEnhaBxgKnEaR49qokK0fCQW6hUGk+UND8PSPRzOKf1yrmY9NTAHA06fT9l/QoRKRU9saxUhfVI9C8yGU85BLiEseYuhfzUYbh7mt5GjNCTQrdV7FV4SIocamVlijRZddlwvObO+okawjhrbHeA/p71G/x6aA7AXhA96y3VOstH3obeNf6s3yhrv86uGMlr4Z2QN5Lu86VrIaP78CBVP8SBIHCFXs+AtXZ3Isx6QTA+wc+mGgV/hS0lnQJvYOB4WfXuyNiD2gbVS1xSc8L1QQI/cm8TRDpaKLtMbUxcpQL4UxWnaVdMlarVfvSxkF54NDAjJJ/zNlrDijmhyz2ATlCX7W7WMFWuiz2sp5oeEpzgdMJdhTPeK0wud64z2fCx6ijskyOXytzPH/udq4qNKz4SGKp6NGx7TrJ8macVNdQ74qJhdk2EYJN128u5IgF8Aew8nvECN76Ypxw6KaZZ7eFtL/944e93NrSF0qPbAYXYJflGIop0Roa1lwJzaaPbX7yL9X3Rk5GVDGN414/KWTA143QA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(396003)(346002)(376002)(136003)(451199015)(36840700001)(40470700004)(46966006)(86362001)(40460700003)(83380400001)(336012)(426003)(47076005)(16526019)(966005)(478600001)(40480700001)(36756003)(26005)(1076003)(36860700001)(82740400003)(2616005)(81166007)(82310400005)(356005)(7416002)(4326008)(5660300002)(44832011)(6666004)(54906003)(186003)(70206006)(8676002)(110136005)(41300700001)(316002)(8936002)(70586007)(2906002)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce64073c-abae-444f-ad56-08dad80b33c0
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2022 04:26:25.4289
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Dec 2022 05:30:42.6322
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: b03f7d18-653e-44fb-7f3d-08dad8142f1f
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OKTIaIKgTgUa0u+Nbtgf+Wr/7Wr+d1drSOlrv/NqrcCtq/ySDB1vC/+W4xdLE+6wCoNsTrLPRkF8R5iFUMxOZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7289
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT116.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7097
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Athira,
+Add events and metrics taken from the Processor Programming Reference
+(PPR) for AMD Family 19h Model 11h Revision B1 processors which can be
+found at: https://www.amd.com/system/files/TechDocs/55901_0.25.zip
 
->> +static int setup_uncore_event(void)
->> +{
->> +	struct perf_pmu *pmu;
->> +	int i;
->> +
->> +	if (list_empty(&pmus))
->> +		perf_pmu__scan(NULL);
->> +
->> +	perf_pmus__for_each_pmu(pmu) {
->> +		for (i = 0; i < NR_UNCORE_PMUS; i++) {
->> +			if (!strcmp(uncore_pmus[i].name, pmu->name)) {
->> +				pr_debug("Using %s for uncore pmu event\n", pmu->name);
->> +				types[2] = pmu->type;
->> +				configs[2] = uncore_pmus[i].config;
-> 
-> Hi Ravi,
-> 
-> Observed failure while running the test on powerpc. It is because the uncore PMU ie hv_24x7 needs
-> performance monitoring to be enabled in powerpc. So to handle such cases, can we add an “event_open" check before
-> proceeding with the test. Below is the change on top of “tmp.perf/core” .
-> 
-> 
-> From 8b33fb900c26beafc28f75b6f64631f8fdd045c2 Mon Sep 17 00:00:00 2001
-> From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Date: Tue, 6 Dec 2022 20:17:25 +0530
-> Subject: [PATCH] perf test: Update event group check for support of uncore
->  event
-> 
-> Event group test checks group creation for combinations of
-> hw, sw and uncore PMU events. Some of the uncore pmu event
-> requires performance enablement explicitly.
+Sandipan Das (4):
+  perf vendor events amd: Add Zen 4 mapping
+  perf vendor events amd: Add Zen 4 core events
+  perf vendor events amd: Add Zen 4 uncore events
+  perf vendor events amd: Add Zen 4 metrics
 
-You need to open an event to activate hv_24x7 pmu?
+ .../pmu-events/arch/x86/amdzen4/branch.json   |   82 ++
+ .../pmu-events/arch/x86/amdzen4/cache.json    |  772 ++++++++++++
+ .../pmu-events/arch/x86/amdzen4/core.json     |  122 ++
+ .../arch/x86/amdzen4/data-fabric.json         | 1090 +++++++++++++++++
+ .../arch/x86/amdzen4/floating-point.json      |  818 +++++++++++++
+ .../pmu-events/arch/x86/amdzen4/memory.json   |  174 +++
+ .../pmu-events/arch/x86/amdzen4/other.json    |  138 +++
+ .../pmu-events/arch/x86/amdzen4/pipeline.json |   98 ++
+ .../arch/x86/amdzen4/recommended.json         |  334 +++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |    3 +-
+ 10 files changed, 3630 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/core.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/data-fabric.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
 
-> Example, hv_24x7
-> event in powerpc. Hence add a check to see if event_open
-> succeeds before proceeding.
-> 
-> Fixes: 5c88101b797d ("perf test: Add event group test for events in multiple PMUs")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/tests/event_groups.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/event_groups.c b/tools/perf/tests/event_groups.c
-> index 612c0444aaa8..ad52e1da259a 100644
-> --- a/tools/perf/tests/event_groups.c
-> +++ b/tools/perf/tests/event_groups.c
-> @@ -51,7 +51,7 @@ static int event_open(int type, unsigned long config, int group_fd)
->  static int setup_uncore_event(void)
->  {
->  	struct perf_pmu *pmu;
-> -	int i;
-> +	int i, fd;
->  
->  	if (list_empty(&pmus))
->  		perf_pmu__scan(NULL);
-> @@ -62,6 +62,10 @@ static int setup_uncore_event(void)
->  				pr_debug("Using %s for uncore pmu event\n", pmu->name);
->  				types[2] = pmu->type;
->  				configs[2] = uncore_pmus[i].config;
+-- 
+2.34.1
 
-Sure. Just add a comment here to explain why are we opening a
-standalone event here.
-
-> +				fd = event_open(types[2], configs[2], -1);
-> +				if (fd < 0)
-> +					return -1;
-> +				close(fd);
->  				return 0;
->  			}
->  		}
-
-Thanks,
-Ravi
