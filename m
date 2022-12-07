@@ -2,95 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C9AC352A1
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 13:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF6C63703
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 14:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbiLGN5O (ORCPT
+        id S229515AbiLGOWi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 08:57:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52446 "EHLO
+        Wed, 7 Dec 2022 09:22:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230156AbiLGN4t (ORCPT
+        with ESMTP id S230478AbiLGOWU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 08:56:49 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BCC5BD72;
-        Wed,  7 Dec 2022 05:56:47 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id h12so28163299wrv.10;
-        Wed, 07 Dec 2022 05:56:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RYrYY/fm6aX39Ixp9LpWPNUVB2qUa51Mk5FBV63lR/s=;
-        b=GCVATqAgYI6b2pNpJJm2LfaW175fXxR+izq/VPTFa8KVQ1yOnR5IrWn3C80fnuN0Wd
-         +/aw3SUKtWyLIhiB2VjVXAmbWiZ4jlvKIA8ZWGdxIYCNpcrE1f9WSD7Sx84CqATK9gmN
-         5qs+AihyZvqGSKKlr7le7x1WDk7tiCZmJ8ltAvXSIOTa5y8VUdkSQm6BLx7GUIuImeeo
-         PFCkCA7KhwWyX1uo6ZHwIfAGOcFC3wnt5qC1YtX2ahEylh6w80BUkvd79NeBw7a/kAv6
-         QNVpfsyEUPsCyw27ltDWSPqQc+/Ox05FGtAUrssnOiDhh/fYFOfSBYA2k4iEW38KPzzR
-         H+Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RYrYY/fm6aX39Ixp9LpWPNUVB2qUa51Mk5FBV63lR/s=;
-        b=LDu/9S4VK3sVGTg+2LGliSBMNq6NS2C6I1rzRgl8gWABZySryQVd3f9zoBrMiGx8uh
-         HmCT6F65OYKNQTZ2FkeUtP8oAlMSjh2kxjWXdk/0Tzx6muwvekj7zwlzZPk4cb7aBQp/
-         OirEXA6hHUe4VUPXXwLDkUjEgd4N9H3Y/7qSyIr/o+ogg9ZpvavA43ZiAvha4i5errKm
-         hpukETTh+no6TcczCoJPO/JY7Dmq9D7ftQIi144T9FsHJMPLhUIdtcfp46qZ9yS1Oth+
-         O4H6H0ageV8ZzVuqmN3q7nZBix/LWVkxPOxTJIMeDvCC0AtgD0lAQf2zUliv09hVdgQm
-         KZVw==
-X-Gm-Message-State: ANoB5pnbKbqWd9ajzljHOazKzRRNSqczhT9Y1fVSVk3pQUwORQZDTFz1
-        OK7z8Ft44nYfx9wzanN0CTg=
-X-Google-Smtp-Source: AA0mqf78tDp/NbW5pJ5zC7IruwhOp2apHPbj5OpwxqwSxL3nqgqQ5BfEHvDHxyaoryVf9MFVK8FeDg==
-X-Received: by 2002:adf:ebc5:0:b0:241:6c90:79e9 with SMTP id v5-20020adfebc5000000b002416c9079e9mr39623325wrn.642.1670421406257;
-        Wed, 07 Dec 2022 05:56:46 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id j10-20020a05600c1c0a00b003b49bd61b19sm2130825wms.15.2022.12.07.05.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Dec 2022 05:56:45 -0800 (PST)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 7 Dec 2022 09:22:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960E75E9F1;
+        Wed,  7 Dec 2022 06:21:27 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E917617A9;
+        Wed,  7 Dec 2022 14:21:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E0B2C43470;
+        Wed,  7 Dec 2022 14:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670422886;
+        bh=Vq+1zbnALAVR/bXbiL4kGEpeHaDup7n5+bWnDGI/Z/g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VQIgC9mEDoliWZoPRKeGCGk9NjFirB5OLWbV34iYAEeBg6hlA+dnWdT/wrRbAMFjs
+         IH2o9om063+5xJNLlgTChMqjUjiIiRw3k1eIxhGNqE1VQEi4alBmAn2mMzCgIuSx8/
+         Ck/ULY3vQR3rzY+Xjd/ZrNL7wBM/BoxXeSWuYXQuzZ3cHs+IYZVEMD7PJ40LR02r4I
+         KJUsHKqeQje/d278d14XoMmKHcyo9Ak0LxZnqQgffWJ4O7CMje7CSksjRpOb+HE5M3
+         QusnLPHQ3O5rKmU1r/LlDwNqsNGizc7b/A17Ba852BlrlVIB9Q2CW62ASMJs5DkriQ
+         fPrmWr8NUY+eg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CF83640404; Wed,  7 Dec 2022 11:21:18 -0300 (-03)
+Date:   Wed, 7 Dec 2022 11:21:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf vendor events powerpc: Fix spelling mistake "fpr" -> "for"
-Date:   Wed,  7 Dec 2022 13:56:45 +0000
-Message-Id: <20221207135645.2327224-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.38.1
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: [ALMOST ready] Re: [PATCH 2/3] perf build: Use libtraceevent from
+ the system
+Message-ID: <Y5ChXjt0uv/yDNwV@kernel.org>
+References: <Y49rvLO2RnJBBNL/@kernel.org>
+ <Y49skYa5VYPMU+RF@kernel.org>
+ <Y49uKfzfCoZ1ok62@kernel.org>
+ <Y49vx0v6Z7EiR8jr@kernel.org>
+ <Y49wxSIK7dJ7iTDg@kernel.org>
+ <Y491d1wEW4TfUi5f@kernel.org>
+ <Y4921D+36UGdhK92@kernel.org>
+ <Y494TNa0ZyPH9YSD@kernel.org>
+ <Y498YP2N3gvFSr/X@kernel.org>
+ <CAP-5=fW2Fdfo9njgXxCVDP0dF3gTsUtaPMh88uSC5bRVjp+1Uw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fW2Fdfo9njgXxCVDP0dF3gTsUtaPMh88uSC5bRVjp+1Uw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a spelling mistake in the description text. Fix it.
+Em Tue, Dec 06, 2022 at 02:22:15PM -0800, Ian Rogers escreveu:
+> On Tue, Dec 6, 2022 at 9:31 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Em Tue, Dec 06, 2022 at 02:13:48PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > I'm missing some detail, this isn't working, util/trace-event.c is still
+> > being built and linked.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/perf/pmu-events/arch/powerpc/power8/other.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > The python binding should be usable without tracepoints, in fact its
+> > first usage was just to have access to the perf metaevents, see
+> > tools/perf/python/twatch.py.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power8/other.json b/tools/perf/pmu-events/arch/powerpc/power8/other.json
-index f1f2965f6775..6de8c472ec99 100644
---- a/tools/perf/pmu-events/arch/powerpc/power8/other.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power8/other.json
-@@ -2996,7 +2996,7 @@
-   {
-     "EventCode": "0x308e",
-     "EventName": "PM_SWAP_COMPLETE_GPR",
--    "BriefDescription": "swap cast in completed fpr gpr",
-+    "BriefDescription": "swap cast in completed for gpr",
-     "PublicDescription": ""
-   },
-   {
--- 
-2.38.1
+> You're right. I'd assumed that if you were disabling libtraceevent
+> then you'd also disable python. To fix the issue above you can do:
 
+> --- a/tools/perf/util/python-ext-sources
+> +++ b/tools/perf/util/python-ext-sources
+> @@ -30,7 +30,6 @@ util/rblist.c
+> util/counts.c
+> util/print_binary.c
+> util/strlist.c
+> -util/trace-event.c
+> ../lib/rbtree.c
+> util/string.c
+> util/symbol_fprintf.c
+
+> but this needs making conditional (possibly in setup.py) on whether
+> libtraceevent is present or not.
+
+Ok, I fixed this by removing the util/trace-event.c file at setup.py
+time, and removing it from the list of dependencies for python.so build,
+etc.
+
+With what I have at tmp.perf/core I'm being able to build with
+combinations of:
+
+- Having or not libtraceevent-devel installed
+
+- Using NO_LIBTRACEEVENT=1
+
+- The default build
+
+All mixed up, but I wasn't so judicious so far, we need to add an entry
+with NO_LIBTRACEVENT=1 to tools/perf/tests/, etc.
+
+One thing I'm doing now is testing with the container builds, and I'm
+afraid we have to delay deleting the in-kernel old copy of
+tools/lib/traceevent till distros that don't ship libtraceevent as a
+separate package are EOLed.
+
+We need in those cases to fallback to tools/lib/traceevent/, with a
+warning probably.
+
+I'm now updating my container build recipes to install
+libtraceevent-devel, when available, which isn't the case, for instance,
+for almalinux:8, the first I tried updating.
+
+Please take a look at:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=tmp.perf/core
+
+The HEAD for that branch has the list of changes I made to get this
+going.
+
+Also I have the feeling the warning about libtraceevent not being
+available should be made more proeminent and detailed in what gets
+removed if this new, important dependency isn't met...
+
+I agree removing libtraceevent and adding yet another dependency to
+building perf is important since the libtraceevent maintainers took the
+decision of having it moved away from the kernel sources, but since this
+has been a no-brainer for so long, the fallout of this decision may be
+noticeable.
+
+At least by now we have clear markings of where libtraceevent is used.
+
+Thanks,
+
+- Arnaldo
