@@ -2,131 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BC0C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Dec 2022 17:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22312C10F1D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Dec 2022 18:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbiLHRmM (ORCPT
+        id S229523AbiLHS0s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Dec 2022 12:42:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50088 "EHLO
+        Thu, 8 Dec 2022 13:26:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiLHRmJ (ORCPT
+        with ESMTP id S229824AbiLHS0q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Dec 2022 12:42:09 -0500
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FD77E80C
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Dec 2022 09:42:07 -0800 (PST)
-Received: by mail-vs1-xe34.google.com with SMTP id c184so2147325vsc.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Dec 2022 09:42:07 -0800 (PST)
+        Thu, 8 Dec 2022 13:26:46 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A340AD32B;
+        Thu,  8 Dec 2022 10:26:38 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id p24so2339732plw.1;
+        Thu, 08 Dec 2022 10:26:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZLBXt2Jtw0kYFWpcJPTwwMQ6BDpS6jKcsiWh2x9aQ68=;
-        b=q1rHnTY7Tadre4D+fqST2ld7So3s26m9HTLgoPCGDo1koR1yer4RbVIKn4L+Y2qbuU
-         uW177VPnbUlziy1OucBIa1tm/gBCzOldbcB9kxUM1pn89texknSond0wO8diqwQIhcFY
-         eKL6S8X2C/FaeIVDdJixZcJvZYjmLrrgBxZ5CBtywJC7ULgeultgKTu1tVT34nc3Z4b3
-         PxJiKpJ8IAQZ9CLlkhSOj047IpG9ZjTgUPHarmjfF43MsGEmQrBKgSd+WefifG3W8q69
-         zUPZbGp5ATTqyylOG6Mmj0VZBi+kYd7T7zIFLgwfePAbUWZkUndclxJa8QjLP+t/LWaB
-         CjDw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ze6sTd98o+g+6IIqM1P3HBE6uRWEE3mJ5ZQRVJK3+kI=;
+        b=ir+BkFOqTEnIwxMwiDi1qxBss3dcDnH4LP4ATiGGOkJHtkbTjaXxCN2LVPi/O94LN5
+         Hw6lfqXHVmjrmFFioKM5dca8WX3ut2gwdqbDo5rj8T2nea5dm9CCgWIVlVmOBPJ0cs8u
+         0H67qvZ1PkYImLRJKpK0Q7Hcq/egl2NPvTYnpH2O0NTkj1jOvFNLFddpUiJVfK82D7ll
+         vcsg2xEtEZWDAIxP2z/Bh+0/U8DNPxxTvVPfHXiN5E0M7NInh28qx46egKMJ6BiHLodb
+         CxGcwO1Yc+FEVn/w/hx55yANIY2vSgWIQVJQiDBzDaKD8OGcALxu9woAg6bOFovVBBt3
+         5aKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZLBXt2Jtw0kYFWpcJPTwwMQ6BDpS6jKcsiWh2x9aQ68=;
-        b=6qHrRPqH03cEWuMMYr+w9b9PWO6hXzrHeGzTAaiCDYnsT9d7VZd5I2ydngmLVlnV2Y
-         yBJrQuz3SlzyWxw6Ezhm1UAFwKyRRllL5IaWHRSkGCqUA3fE+05r9pzfhuTRHuz4ET1T
-         hBr4/TVN8qSmmR4z3MgVEsJZa0wVjn2PP/ogjsOANKOePuwl32vR5XAOsuRXYPtb5lfm
-         J8qtoYFJQSvegUpc2Z/2TyoF30Ix7AZeXTbbbSzrRwnYMdXZ8WP7+tON9vdi1JKzUrMJ
-         is1TkXppnbUZkCogvfa4K7yGvFpb21859Oh/pB33tV+F+mFr4b+mpKissEQ7jHFracBT
-         1n9w==
-X-Gm-Message-State: ANoB5pmwZjycRADLTitRNV2dUT1vE3RgFt6OuQ5sOxmlETkPdfZqj28W
-        POB4KL7LoCIG3UMEV5jV+jZpM9lzqVoKDB5sZ/oD3A==
-X-Google-Smtp-Source: AA0mqf5988ezjzMU+pj3GZmQT8TbVYw3+msm3Gje3bceuHYPjEBbPuSHL9bVhPvP+54fI00E0UUCZLYWZcEtwKIds40=
-X-Received: by 2002:a05:6102:114b:b0:3b0:5300:a99b with SMTP id
- j11-20020a056102114b00b003b05300a99bmr43661599vsg.23.1670521326913; Thu, 08
- Dec 2022 09:42:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20221207055908.1385448-1-irogers@google.com> <Y5DQKif+PdRJblk+@kernel.org>
- <0d64e485-5acf-b7ad-e228-9bf85d8ae16d@oracle.com> <Y5DRjecE88KFc4He@kernel.org>
-In-Reply-To: <Y5DRjecE88KFc4He@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 8 Dec 2022 09:41:55 -0800
-Message-ID: <CAP-5=fWa=zNK_ecpWGoGggHCQx7z-oW0eGMQf19Maywg0QK=4g@mail.gmail.com>
-Subject: Re: [PATCH v4] perf jevents: Parse metrics during conversion
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ze6sTd98o+g+6IIqM1P3HBE6uRWEE3mJ5ZQRVJK3+kI=;
+        b=urUhWwYE6rKl+UZVfJOIN50U30uqf5E8xcxAe7geJkaYQoxMDN/L2AfvSxVQcTdBs8
+         lPSBjxd8fgYkGsGlupxZesUzmjFOVcQEO3idKBFvtk/os/yGuH2FMsDNOnjFagBVK3HF
+         9cCqqPBoKxuDhr4okJ9mQTGIkAZBUeK4sU0bY34HOxM04DCbtIJZ9MYAzQ4Jhck6nvI0
+         H4T2D22+/ocjmUCFnyEYxHoQcQPtj0HDuNSYnei5xAAJ7Wk+bkhDXzYKSS+tnHH891iQ
+         OpFeJ0uBulZF0Hyeb0AVpNXgQEYlAKNJe3R5rLxU0Pj3iF4KZPOGXwNMQ0uXvsyO5MGt
+         S4Dg==
+X-Gm-Message-State: ANoB5plgBhBdDGmzgesi3XDu1fHcUqpgQNCXqy9cXH4m0Cq4zxGpUDAo
+        65Q+NqZ3U97Wu/5mpBUlvxs=
+X-Google-Smtp-Source: AA0mqf7AFaUGxBh2S1oElEAgW5c2HAmruuZ/tSpzAO7F8OJItjGNTEszfpHSMAtxbYyoRmWNyDMKPQ==
+X-Received: by 2002:a17:90a:2d81:b0:219:9676:fef4 with SMTP id p1-20020a17090a2d8100b002199676fef4mr27870762pjd.89.1670523997544;
+        Thu, 08 Dec 2022 10:26:37 -0800 (PST)
+Received: from balhae.corp.google.com ([2620:15c:2c1:200:e288:d3e1:a97a:4b35])
+        by smtp.gmail.com with ESMTPSA id c133-20020a621c8b000000b00575cdd7c0adsm15606679pfc.80.2022.12.08.10.26.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Dec 2022 10:26:37 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.g.garry@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        bpf@vger.kernel.org
+Subject: [PATCH] perf tools: Fix a typo in BTF tracepoint name
+Date:   Thu,  8 Dec 2022 10:26:36 -0800
+Message-Id: <20221208182636.524139-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.0.rc1.256.g54fd8350bd-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Apologies, I found an issue with a double-if. Could you add the 1 line
-fix plus test:
+In the BTF, tracepoint definitions have the prefix of "btf_trace_".
+The off-cpu profilier needs to check the signature of sched_switch
+event using the definition.  But there's a typo (s/bpf/btf/) so it
+failed always.
 
-diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric=
-.py
-index cc451a265751..4797ed4fd817 100644
---- a/tools/perf/pmu-events/metric.py
-+++ b/tools/perf/pmu-events/metric.py
-@@ -462,6 +462,7 @@ class _RewriteIfExpToSelect(ast.NodeTransformer):
+Fixes: b36888f71c85 ("perf record: Handle argument change in sched_switch")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_off_cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  def visit_IfExp(self, node):
-    # pylint: disable=3Dinvalid-name
-+    self.generic_visit(node)
-    call =3D ast.Call(
-        func=3Dast.Name(id=3D'Select', ctx=3Dast.Load()),
-        args=3D[node.body, node.test, node.orelse],
-diff --git a/tools/perf/pmu-events/metric_test.py
-b/tools/perf/pmu-events/metric_test.py
-index 4741b7b6612d..6980f452df0a 100644
---- a/tools/perf/pmu-events/metric_test.py
-+++ b/tools/perf/pmu-events/metric_test.py
-@@ -87,6 +87,10 @@ class TestMetricExpressions(unittest.TestCase):
-    after =3D r'min((a + b if c > 1 else c + d), e + f)'
-    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index c257813e674e..01f70b8e705a 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -102,7 +102,7 @@ static void check_sched_switch_args(void)
+ 	const struct btf_type *t1, *t2, *t3;
+ 	u32 type_id;
+ 
+-	type_id = btf__find_by_name_kind(btf, "bpf_trace_sched_switch",
++	type_id = btf__find_by_name_kind(btf, "btf_trace_sched_switch",
+ 					 BTF_KIND_TYPEDEF);
+ 	if ((s32)type_id < 0)
+ 		return;
+-- 
+2.39.0.rc1.256.g54fd8350bd-goog
 
-+    before =3D r'a if b else c if d else e'
-+    after =3D r'(a if b else (c if d else e))'
-+    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
-+
-  def test_ToPython(self):
-    # pylint: disable=3Deval-used
-    # Based on an example of a real metric.
-
-Thanks,
-Ian
-
-On Wed, Dec 7, 2022 at 9:47 AM Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->
-> Em Wed, Dec 07, 2022 at 05:42:52PM +0000, John Garry escreveu:
-> > On 07/12/2022 17:40, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Dec 06, 2022 at 09:59:08PM -0800, Ian Rogers escreveu:
-> > > > Currently the 'MetricExpr' json value is passed from the json
-> > > > file to the pmu-events.c. This change introduces an expression
-> > > > tree that is parsed into. The parsing is done largely by using
-> > > > operator overloading and python's 'eval' function. Two advantages
-> > > > in doing this are:
-> > > John, what tag can I get from you? =F0=9F=98=84
-> > >
-> > > - Arnaldo
-> > Sure,
-> > Reviewed-by: John Garry <john.g.garry@oracle.com>
->
-> Thanks a lot!
->
-> - Arnaldo
