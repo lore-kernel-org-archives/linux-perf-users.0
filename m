@@ -2,118 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4A4C63705
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Dec 2022 19:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70746C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Dec 2022 04:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229480AbiLGT5I (ORCPT
+        id S229715AbiLHESv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 14:57:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
+        Wed, 7 Dec 2022 23:18:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiLGT5G (ORCPT
+        with ESMTP id S229593AbiLHESu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 14:57:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1FDE5E3CD;
-        Wed,  7 Dec 2022 11:57:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C7D861BAF;
-        Wed,  7 Dec 2022 19:57:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95CFCC433D7;
-        Wed,  7 Dec 2022 19:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670443024;
-        bh=AvmeQtrnl7xMXtEnD6viJTvtLqEQcfiUyyyKZl/KgUI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ObplL2g8TxTO5JJOjfNmVoA6K7NHMQs2vaoeQ8u0mEZIQu8gLeqCx6d8mgaTga/BN
-         bc376wJENHG5Zx2mALAkvG9AD8eEcU2D2t+zU/g2gWfdHcB+YvjaUhf1eAM4ah9E6g
-         HxlHuQI1pnrpq56qd7fAIykbUO5dDDDDSSM2TpXQ+cHruqik5wqddbEmqONurSgYoO
-         iIs1QIs5quM6sNqIBbuV5a9PcQuIdKGKk2qlEiYFZqBY7GCJgFBA+/Q67aNSN+fjOe
-         TkuSnoXCog3/5QBkPYZiRnsqQ73zm7umoQBu2qcR0AedfrMHeLNUMMMLfwy05q6xsL
-         0hLaOMGk22yRw==
-Received: by mail-vk1-f173.google.com with SMTP id z23so4818562vkb.12;
-        Wed, 07 Dec 2022 11:57:04 -0800 (PST)
-X-Gm-Message-State: ANoB5pmXKTUU3z7RyEUdmyfNBWmcM12whZa7hI2gKV/vMGb8SyYDmGGX
-        2RbvxMiweIn/78pHXF2wYsHQRIsvgnNpOfCNEw==
-X-Google-Smtp-Source: AA0mqf79ttTFnrHyDKt4VUK0QUXtDvssZUfj1nXbNUgEZmKUPkzsNanut9A30xKpK3IOHRfaB9JBKoN+r9dpoMCKPpw=
-X-Received: by 2002:a1f:41ca:0:b0:3bd:ce89:f4e6 with SMTP id
- o193-20020a1f41ca000000b003bdce89f4e6mr4493288vka.26.1670443023467; Wed, 07
- Dec 2022 11:57:03 -0800 (PST)
+        Wed, 7 Dec 2022 23:18:50 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9566C69AAC
+        for <linux-perf-users@vger.kernel.org>; Wed,  7 Dec 2022 20:18:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EGKJv0mOdv0EQxSAKZJ6VXamRGFl1aRVjHf9z/Dgi+++XQ/DV36OmRZnBXY6iJ4QoeCysn7I1Ff+LUXG5x8Ug5S1oukwChrT2F06zELI0p9DtxYv9uH4TxQzmtKgDQQ1K++IBJtt6NcR6HmQWsffzcJNPw1jFb+yCVFbXhsPqCNCkmqFFg/BwI54WNl/ZU+vZSemjER6NDtCxoU+EZCArJuUCrggxeSp7PAyFhiIS+fyllt9NhruFyYvjwvQTnkzh1ZwGz5gK6tuAXFT7Okk2vrD3q0gaLnrDD599Ggym8BQarcltQoChJvtTpJR866AKK3r4onMwNKABpgqljaJKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=brGDVKuQGPhzGaGA14ipo0zENoXAVq1qZ3gLOcUyS2M=;
+ b=dHh0U5cyjdqBJO4GsSYi+dyA/9MwCXDmrmOkj9VzZbCn5cUUdrAPyW71QihBNzKniZnFQTdZwRwyypiI1PY9p6HBafCfvyJQ8PIMapgbpW70P0hw/nWCGv+J9RTCI1p1a+elVJHUN5LfuwqBnID/UdO9QZMBm9Odkbg6UzBB/PE+PNOdyv88H4GC9H5ZL4b3nerOS/wjbPrs6UcOlO/0wn7eaoz4fMxHjMryT70GMdbURSPW5HwjOG028qkUj8wwyTe+hZcxmOnRDoUjuSIeCGPecH0zAforW9psIY9XYnKGEduhXCIqDtQuyachImA+Ra+Xcqtc2NnID+Fq26tB2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=brGDVKuQGPhzGaGA14ipo0zENoXAVq1qZ3gLOcUyS2M=;
+ b=Z+lznD5v9uVFwRLBNmWSSGOwsCluhfr+LoNX88s4e1GkELCRCwZzaHIq3pQw6t07bArH8QkN87AaT60DRhU8LTEoqAV7GrFnR8/fZdhVDZcF9ayzMaLX/Ns5IKXhz6ervWIvzr2WTxDmmqPG+j9IngAOan5etnUk+zAifF0YBRA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by IA0PR12MB8085.namprd12.prod.outlook.com (2603:10b6:208:400::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Thu, 8 Dec
+ 2022 04:18:45 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::aa5f:5f2c:4143:f981]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::aa5f:5f2c:4143:f981%8]) with mapi id 15.20.5880.014; Thu, 8 Dec 2022
+ 04:18:45 +0000
+Message-ID: <9c0ade1e-1c7b-90f5-0385-a568545567db@amd.com>
+Date:   Thu, 8 Dec 2022 09:48:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH] perf test: Update event group check for support of uncore
+ event
+Content-Language: en-US
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
+        jolsa@kernel.org
+Cc:     namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
+        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20221207165815.774-1-atrajeev@linux.vnet.ibm.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20221207165815.774-1-atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0146.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::31) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-References: <20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org>
- <20220825-arm-spe-v8-7-v3-7-87682f78caac@kernel.org> <20221118164943.GA4872@willie-the-truck>
- <CAL_JsqJMxEWhqZV=yqG15zvEHrBTwRVfHA6zptu2TswxRMSR0A@mail.gmail.com>
- <877czfujdj.fsf@ubik.fi.intel.com> <CAL_JsqKJYrEUzkzNMKMOGvzJN_EqacHZvBR6eVt35bRhhtRo=g@mail.gmail.com>
- <Y49ttrv6W5k3ZNYw@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <Y49ttrv6W5k3ZNYw@FVFF77S0Q05N.cambridge.arm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 7 Dec 2022 13:56:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLfZVrwFgYDwA9mz3FPp3jf0r5OOajTJ=7QvwE8P8UKyw@mail.gmail.com>
-Message-ID: <CAL_JsqLfZVrwFgYDwA9mz3FPp3jf0r5OOajTJ=7QvwE8P8UKyw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] perf: Add perf_event_attr::config3
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA0PR12MB8085:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d2bed9a-8688-4668-436e-08dad8d34c21
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tCPdlnSwqyK64FqdirwhorsTUc9at3y+Hij2zIUXFEY/GQieGDpWCES8HpFG6iZdkPLcSE/bJoJWU4N4MuCK1A7TTN4myqBe35jXEUBngbYT+48MZJ7QO8fCDx5vhTQKm4+mrBhwEs/I5FtG9r7b29o6zwbIr9W5STGCTbYkp6243+b9ruEENvlbXLgkP/Kw1BQANOVUxMVgXmcDrj2pbn53BBLN+AxnJenWcZh2h5wvSss06B3KqE1gk1M72eXLOYMpSCd/zcarSM3MCzkFD5beFf9Sqk1q3KQCkHStkoy8Nm2QWOvuUgTHlqPeBshOWX8VFsLcRDA6t20eLM/P/2MYHlWbtI1V2TMaW2pnuHrhk7FU5CIOEX9tYXLLwYPx7KxpEYhvFOV9qwOQpuy0Kri2dwUjMr4dPi+pOp1jqwF9xQmbjW3GS10JFroiBe8/UXcXdQf1E7EBtFtpHo3jLt5cB2pG0vp3nPxunb2eRtvVs5i4FI7UMwDZPtQ10jA/nLMiwM7SQ4GQUDkyzui10Dt7i0cZsWlBXcsdXuiAogLFE6V/QNNTxSIKsdAv1mgfqU6uvTCUaiXPrJiJYuROT3wX75TL5SJC20OtfTPmEwfqnuhp3PKnBHnBiz8oI9fbAITfkzQvshYpg86ONb8vfEPcaHAGKkDMO3345Emh/M+jRnivmXLTWaEsSBdan4HCEgGL3sBF1jkHL+e0uXHbKlzBNNaULeo8oRDtKwI+dMs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(346002)(366004)(39860400002)(376002)(451199015)(83380400001)(6506007)(186003)(6512007)(86362001)(2906002)(26005)(31696002)(2616005)(44832011)(316002)(4744005)(36756003)(53546011)(41300700001)(5660300002)(7416002)(8936002)(66946007)(66556008)(66476007)(31686004)(478600001)(6486002)(4326008)(8676002)(6666004)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OWRkN0Jxdkp6N0p0VVFYSXpGRjkxajJqeWdJZzNCc3BmcVdyK3JRRHJyNlEv?=
+ =?utf-8?B?bkcyOTFXdFZzSUN6MmxxZFY3N3ZlSEt4Y2FpUVA3L3VrcWplR3YzZEdUZVVC?=
+ =?utf-8?B?ZTNOYXVrZW1mRDU5L3hvV0xTYk02Z3MzQjhpUjZ6Y3FaeXN3NGJ4cFAyQ0Zu?=
+ =?utf-8?B?S25ZakdEK0F2eURVT1ZRL25nS3hpUy9iNkREOWhMZjJPN2U3My9MZUlIZjgz?=
+ =?utf-8?B?NXA3QmZkNFlaenc5UElrNGVRNmNNSTg5Tm4vc1kzV2UybmIxZUhma2lyYktu?=
+ =?utf-8?B?S2xuRStFbERGNzdvR1krM05BRXJGOHF6TWczME1XNXl2MUFzaFhFQkx0N2NL?=
+ =?utf-8?B?TXRoSDM1Nk1yMW11bGIvaEwyZHZCbnNrWllCRjdJd0pDbWlvNjdLN2J6d3lw?=
+ =?utf-8?B?YlFkQjNCSWdwL25wb3A2K3UvdWoySUhoeENBdGNoS0JkMS9jcmtUTzV4N0FD?=
+ =?utf-8?B?aUV6OWNNQnJXd2s5K0ZmTVpPZ3pRR3pBako2anJLdjZ6RjlJTG12NXE3TGRC?=
+ =?utf-8?B?ZEh3RWRCNXR5LzdhZExMOEF1Smk0K25Kb1E2ZTBLSU0xTkcrMlZIcWt4N0ND?=
+ =?utf-8?B?dUg0MkE0bi9qQk9ZYlQ2ZXYyTXdCN0U4a0NSY3ZBR1R6VjU2Y3VtVFR4a2Q4?=
+ =?utf-8?B?MXFjUXR1Y2tUL1VmRmZyT1FBVWR1UGpPSUpTbkZwR0tHY0VHT1NOdGl1dElS?=
+ =?utf-8?B?VlBhbm5PcWc3R1h2QlBJcGZzazU1cGVuK2xPdFBPSVFzemoxTHc1WFEvdkIr?=
+ =?utf-8?B?azJSaHhoNTJ2a2RId1NCN0RNUVBuclJqTzFsU28rSXZNbVJkcWcvemRTclVQ?=
+ =?utf-8?B?QWVYN3BPa0Q4cUhIbzB3VjdLdFhOS3FqRmJnRllzbFJQcUxjdTM5NkZCYlpT?=
+ =?utf-8?B?ZWthQ054clhuUHcyNlFvY2ZOZFF2ZDBDL0ZUVHdvSjRnNGZHR255OS81N3pI?=
+ =?utf-8?B?YzhnV2RtTk8wQkhSYVAxWnBVR284bUE5bnBrMVlpN281bVdqM29RZDE5cDV4?=
+ =?utf-8?B?VTlMWEdmdHN5S1l4N1Z6b2FnamNzOWc3VGFNbVRSdkhRYXJGbVAwVXozYlc3?=
+ =?utf-8?B?NHROMXQ3Y3R5OHJoV1A3Tm5QYzlmQWZJU2J1MnhjZThGR0hBZXRPbDZ6Tmor?=
+ =?utf-8?B?M2NZZjJuL091OWZudXhjUHlybWpaUCtDak12Q2hOR1ltTVhnQmFUZWt5NWJT?=
+ =?utf-8?B?aG9tb21pK3NhdWZLNGl4TXcwS01aaXdQRXdMUUxwUkdjc09YaFM0TnlOVHp6?=
+ =?utf-8?B?S3N5T2o0UmMrd3pvL2VTaDBlczRMZVVjME5vaCttYWJ3aEFVdC9BaSs3dHNu?=
+ =?utf-8?B?NHprZ3ZaeG8ydmRuVmV4bFFHZGNtRlVBcStQNHNXVElxUkVwYThieWxHL1ls?=
+ =?utf-8?B?UjIyYzkvdkd5NzVHOEhYL1p6ajZpR3VVZFF0T2ZaeVN6RXpFQTEreDN0TE1P?=
+ =?utf-8?B?aDJoMWdNMjhPWDFRc0J3a1psMXlWQmphWmhYbzdFSEFPTGdiV2VaaSsraFVh?=
+ =?utf-8?B?WERSblpQQzhvSm9tZjFqOWpyb0JNLytUb1lRcUsrQStBYzNscVY4UU52ZFpo?=
+ =?utf-8?B?UjZVTW9VYVIyR2ZSZDBaMEpTTVdMVTVBWEp0N1VnV2NOT1JFdGx1b1lLektH?=
+ =?utf-8?B?bXBCN01zSWx0YjlLQlhwV3h1QmU3RnQrRjZOcDVMVUhZL0F2R3Zmb0tiYm1H?=
+ =?utf-8?B?Mk1SVG5mc082U3lNbVAwdVhvdTdyZGYrV3pBVFg2WVVIdHZ0eTczVjhSODNV?=
+ =?utf-8?B?OGFXSHoyVTJJSlFUMnpDcDZXdnZjQkhXUFFLSm41L2k0M2dpVGxHQWY2bzFh?=
+ =?utf-8?B?OWtrbElIeU9PTWJMMndFOWdnUHdIQlJSQkpROU5tM2xqVjJoUHhSWC91R09D?=
+ =?utf-8?B?VlpJRjFHdFBNVlUrNW9DeVRZMTcvV01sc1NwYzlWcThrcmlrVlE4Z0dmQmMz?=
+ =?utf-8?B?THJmOUV5TmhWMFMzSFhXdDZmTDZNU0NFcEtiZjBFejJqdWpoVE8vVHIrS0J2?=
+ =?utf-8?B?dUtNY01uY2MxVzk0VVBKbDBVZnN0U2xGbWlSZG1UM3lYQXJwZ0cxRHdwaVdq?=
+ =?utf-8?B?T0VWck1pUGdWNkIvczZNMXlCNnVlUEh4eGpFc2lwYjQxYVI3Z1YrZ1dpc0tj?=
+ =?utf-8?Q?bK+tCMmjsM7GOBHfl2tq7RuNp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d2bed9a-8688-4668-436e-08dad8d34c21
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2022 04:18:45.6418
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RbGDSfr3dK/qR+9IXfjZkwMSJnSacSFh+hfWKwfi0NS+il19Gek37pxniF5efPR+QSWgWz/Iplu9NWvvrQjNKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8085
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 6, 2022 at 10:28 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Peter, it looks like this series is blocked on the below now; what would you
-> prefer out of:
->
-> (a) Take this as is, and look add adding additional validation on top.
->
-> (b) Add some flag to indicate a PMU driver supports config3, and have the core
->     code check that, but leave the existing fields as-is for now (and hopefully
->     follow up with further validation later for the existing fields).
+On 07-Dec-22 10:28 PM, Athira Rajeev wrote:
+> Event group test checks group creation for combinations of
+> hw, sw and uncore PMU events. Some of the uncore pmus may
+> require additional permission to access the counters.
+> For example, in case of hv_24x7, partition need to have
+> permissions to access hv_24x7 pmu counters. If not, event_open
+> will fail. Hence add a sanity check to see if event_open
+> succeeds before proceeding with the test.
+> 
+> Fixes: b20d9215a35f ("perf test: Add event group test for events in multiple PMUs")
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-That looks something like this:
+Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 853f64b6c8c2..845162b152ea 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -286,6 +286,7 @@ struct perf_event;
- #define PERF_PMU_CAP_NO_EXCLUDE                        0x0080
- #define PERF_PMU_CAP_AUX_OUTPUT                        0x0100
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE          0x0200
-+#define PERF_PMU_CAP_CONFIG3                   0x0400
-
- struct perf_output_handle;
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index aefc1e08e015..4414ae64432a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11314,6 +11314,9 @@ static int perf_try_init_event(struct pmu
-*pmu, struct perf_event *event)
-                    event_has_any_exclude_flag(event))
-                        ret = -EINVAL;
-
-+               if (!(pmu->capabilities & PERF_PMU_CAP_CONFIG3) &&
-event->attr.config3)
-+                       ret = -EINVAL;
-+
-                if (ret && event->destroy)
-                        event->destroy(event);
-        }
+Thanks,
+Ravi
