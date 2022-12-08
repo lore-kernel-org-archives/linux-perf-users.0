@@ -2,141 +2,345 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70746C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Dec 2022 04:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4057C3A5A7
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Dec 2022 06:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbiLHESv (ORCPT
+        id S229524AbiLHGvz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Dec 2022 23:18:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32958 "EHLO
+        Thu, 8 Dec 2022 01:51:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbiLHESu (ORCPT
+        with ESMTP id S229462AbiLHGvz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Dec 2022 23:18:50 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2086.outbound.protection.outlook.com [40.107.93.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9566C69AAC
-        for <linux-perf-users@vger.kernel.org>; Wed,  7 Dec 2022 20:18:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EGKJv0mOdv0EQxSAKZJ6VXamRGFl1aRVjHf9z/Dgi+++XQ/DV36OmRZnBXY6iJ4QoeCysn7I1Ff+LUXG5x8Ug5S1oukwChrT2F06zELI0p9DtxYv9uH4TxQzmtKgDQQ1K++IBJtt6NcR6HmQWsffzcJNPw1jFb+yCVFbXhsPqCNCkmqFFg/BwI54WNl/ZU+vZSemjER6NDtCxoU+EZCArJuUCrggxeSp7PAyFhiIS+fyllt9NhruFyYvjwvQTnkzh1ZwGz5gK6tuAXFT7Okk2vrD3q0gaLnrDD599Ggym8BQarcltQoChJvtTpJR866AKK3r4onMwNKABpgqljaJKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=brGDVKuQGPhzGaGA14ipo0zENoXAVq1qZ3gLOcUyS2M=;
- b=dHh0U5cyjdqBJO4GsSYi+dyA/9MwCXDmrmOkj9VzZbCn5cUUdrAPyW71QihBNzKniZnFQTdZwRwyypiI1PY9p6HBafCfvyJQ8PIMapgbpW70P0hw/nWCGv+J9RTCI1p1a+elVJHUN5LfuwqBnID/UdO9QZMBm9Odkbg6UzBB/PE+PNOdyv88H4GC9H5ZL4b3nerOS/wjbPrs6UcOlO/0wn7eaoz4fMxHjMryT70GMdbURSPW5HwjOG028qkUj8wwyTe+hZcxmOnRDoUjuSIeCGPecH0zAforW9psIY9XYnKGEduhXCIqDtQuyachImA+Ra+Xcqtc2NnID+Fq26tB2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=brGDVKuQGPhzGaGA14ipo0zENoXAVq1qZ3gLOcUyS2M=;
- b=Z+lznD5v9uVFwRLBNmWSSGOwsCluhfr+LoNX88s4e1GkELCRCwZzaHIq3pQw6t07bArH8QkN87AaT60DRhU8LTEoqAV7GrFnR8/fZdhVDZcF9ayzMaLX/Ns5IKXhz6ervWIvzr2WTxDmmqPG+j9IngAOan5etnUk+zAifF0YBRA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by IA0PR12MB8085.namprd12.prod.outlook.com (2603:10b6:208:400::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Thu, 8 Dec
- 2022 04:18:45 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::aa5f:5f2c:4143:f981]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::aa5f:5f2c:4143:f981%8]) with mapi id 15.20.5880.014; Thu, 8 Dec 2022
- 04:18:45 +0000
-Message-ID: <9c0ade1e-1c7b-90f5-0385-a568545567db@amd.com>
-Date:   Thu, 8 Dec 2022 09:48:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH] perf test: Update event group check for support of uncore
- event
-Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
-        jolsa@kernel.org
-Cc:     namhyung@kernel.org, irogers@google.com, james.clark@arm.com,
-        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20221207165815.774-1-atrajeev@linux.vnet.ibm.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20221207165815.774-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0146.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::31) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Thu, 8 Dec 2022 01:51:55 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E483F537ED;
+        Wed,  7 Dec 2022 22:51:53 -0800 (PST)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B85kc0d032758;
+        Thu, 8 Dec 2022 06:51:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=zBniRm/JnGiiCCWjzu/sY7ceVwobeiPnbEGkZ0r2klc=;
+ b=UooGpKuYZ/1uuG85PmyyXj2VRnyUMdNF/T9ebGtPXbD+UQuHLkN1DJuSh4w/RhVT4C80
+ I6BQRnFvHSt2Irm9D5mOk7wZrhy47uxjYuuDiuhZDmSNuq2t15D/8eMHtyfUoxIX6qgD
+ 6X+n3Od6dd8tHJAOzfDAwk9HXjf6ddbiP+XTJkO9/1G3PEyHfYQPtVqum/yAA5JdHZ8Y
+ Obuag0VxT87vfc4wybayhSuGb/1J32pFdNMU8KClfhrjTFmDcTpWdUwVsS5zpX3pIDT3
+ dxt6+CK+hpwUyUDqUHkA4y9GyRx6sTcD5JIV+DlJ75X8beGp7gIGzh3NXQfkEb7K+lQQ XA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mba2xs6de-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Dec 2022 06:51:43 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B86jvxK020432;
+        Thu, 8 Dec 2022 06:51:43 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mba2xs6cs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Dec 2022 06:51:43 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2B7HHex3016426;
+        Thu, 8 Dec 2022 06:51:40 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3m9m5y3y3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Dec 2022 06:51:40 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B86pclp19661076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Dec 2022 06:51:38 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49FD620043;
+        Thu,  8 Dec 2022 06:51:38 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB9B220040;
+        Thu,  8 Dec 2022 06:51:35 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.66.146])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu,  8 Dec 2022 06:51:35 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Y5DNBZNC5rBBqlJW@kernel.org>
+Date:   Thu, 8 Dec 2022 12:21:20 +0530
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Message-Id: <36CD1041-0CAE-41C1-8086-C17854531B3E@linux.vnet.ibm.com>
+References: <Y49rvLO2RnJBBNL/@kernel.org> <Y49skYa5VYPMU+RF@kernel.org>
+ <Y49uKfzfCoZ1ok62@kernel.org> <Y49vx0v6Z7EiR8jr@kernel.org>
+ <Y49wxSIK7dJ7iTDg@kernel.org> <Y491d1wEW4TfUi5f@kernel.org>
+ <Y4921D+36UGdhK92@kernel.org> <Y494TNa0ZyPH9YSD@kernel.org>
+ <Y498YP2N3gvFSr/X@kernel.org>
+ <C9F248C8-AF8D-40A1-A1AD-BCC39FBA01C7@linux.vnet.ibm.com>
+ <Y5DNBZNC5rBBqlJW@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: sBreQXTM-LoHOT5jCmKQSKPDDskpaNh3
+X-Proofpoint-ORIG-GUID: E1RQ4_TltSKrxL0X_0l3BrdHqMw-8XyP
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA0PR12MB8085:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d2bed9a-8688-4668-436e-08dad8d34c21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tCPdlnSwqyK64FqdirwhorsTUc9at3y+Hij2zIUXFEY/GQieGDpWCES8HpFG6iZdkPLcSE/bJoJWU4N4MuCK1A7TTN4myqBe35jXEUBngbYT+48MZJ7QO8fCDx5vhTQKm4+mrBhwEs/I5FtG9r7b29o6zwbIr9W5STGCTbYkp6243+b9ruEENvlbXLgkP/Kw1BQANOVUxMVgXmcDrj2pbn53BBLN+AxnJenWcZh2h5wvSss06B3KqE1gk1M72eXLOYMpSCd/zcarSM3MCzkFD5beFf9Sqk1q3KQCkHStkoy8Nm2QWOvuUgTHlqPeBshOWX8VFsLcRDA6t20eLM/P/2MYHlWbtI1V2TMaW2pnuHrhk7FU5CIOEX9tYXLLwYPx7KxpEYhvFOV9qwOQpuy0Kri2dwUjMr4dPi+pOp1jqwF9xQmbjW3GS10JFroiBe8/UXcXdQf1E7EBtFtpHo3jLt5cB2pG0vp3nPxunb2eRtvVs5i4FI7UMwDZPtQ10jA/nLMiwM7SQ4GQUDkyzui10Dt7i0cZsWlBXcsdXuiAogLFE6V/QNNTxSIKsdAv1mgfqU6uvTCUaiXPrJiJYuROT3wX75TL5SJC20OtfTPmEwfqnuhp3PKnBHnBiz8oI9fbAITfkzQvshYpg86ONb8vfEPcaHAGKkDMO3345Emh/M+jRnivmXLTWaEsSBdan4HCEgGL3sBF1jkHL+e0uXHbKlzBNNaULeo8oRDtKwI+dMs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(346002)(366004)(39860400002)(376002)(451199015)(83380400001)(6506007)(186003)(6512007)(86362001)(2906002)(26005)(31696002)(2616005)(44832011)(316002)(4744005)(36756003)(53546011)(41300700001)(5660300002)(7416002)(8936002)(66946007)(66556008)(66476007)(31686004)(478600001)(6486002)(4326008)(8676002)(6666004)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OWRkN0Jxdkp6N0p0VVFYSXpGRjkxajJqeWdJZzNCc3BmcVdyK3JRRHJyNlEv?=
- =?utf-8?B?bkcyOTFXdFZzSUN6MmxxZFY3N3ZlSEt4Y2FpUVA3L3VrcWplR3YzZEdUZVVC?=
- =?utf-8?B?ZTNOYXVrZW1mRDU5L3hvV0xTYk02Z3MzQjhpUjZ6Y3FaeXN3NGJ4cFAyQ0Zu?=
- =?utf-8?B?S25ZakdEK0F2eURVT1ZRL25nS3hpUy9iNkREOWhMZjJPN2U3My9MZUlIZjgz?=
- =?utf-8?B?NXA3QmZkNFlaenc5UElrNGVRNmNNSTg5Tm4vc1kzV2UybmIxZUhma2lyYktu?=
- =?utf-8?B?S2xuRStFbERGNzdvR1krM05BRXJGOHF6TWczME1XNXl2MUFzaFhFQkx0N2NL?=
- =?utf-8?B?TXRoSDM1Nk1yMW11bGIvaEwyZHZCbnNrWllCRjdJd0pDbWlvNjdLN2J6d3lw?=
- =?utf-8?B?YlFkQjNCSWdwL25wb3A2K3UvdWoySUhoeENBdGNoS0JkMS9jcmtUTzV4N0FD?=
- =?utf-8?B?aUV6OWNNQnJXd2s5K0ZmTVpPZ3pRR3pBako2anJLdjZ6RjlJTG12NXE3TGRC?=
- =?utf-8?B?ZEh3RWRCNXR5LzdhZExMOEF1Smk0K25Kb1E2ZTBLSU0xTkcrMlZIcWt4N0ND?=
- =?utf-8?B?dUg0MkE0bi9qQk9ZYlQ2ZXYyTXdCN0U4a0NSY3ZBR1R6VjU2Y3VtVFR4a2Q4?=
- =?utf-8?B?MXFjUXR1Y2tUL1VmRmZyT1FBVWR1UGpPSUpTbkZwR0tHY0VHT1NOdGl1dElS?=
- =?utf-8?B?VlBhbm5PcWc3R1h2QlBJcGZzazU1cGVuK2xPdFBPSVFzemoxTHc1WFEvdkIr?=
- =?utf-8?B?azJSaHhoNTJ2a2RId1NCN0RNUVBuclJqTzFsU28rSXZNbVJkcWcvemRTclVQ?=
- =?utf-8?B?QWVYN3BPa0Q4cUhIbzB3VjdLdFhOS3FqRmJnRllzbFJQcUxjdTM5NkZCYlpT?=
- =?utf-8?B?ZWthQ054clhuUHcyNlFvY2ZOZFF2ZDBDL0ZUVHdvSjRnNGZHR255OS81N3pI?=
- =?utf-8?B?YzhnV2RtTk8wQkhSYVAxWnBVR284bUE5bnBrMVlpN281bVdqM29RZDE5cDV4?=
- =?utf-8?B?VTlMWEdmdHN5S1l4N1Z6b2FnamNzOWc3VGFNbVRSdkhRYXJGbVAwVXozYlc3?=
- =?utf-8?B?NHROMXQ3Y3R5OHJoV1A3Tm5QYzlmQWZJU2J1MnhjZThGR0hBZXRPbDZ6Tmor?=
- =?utf-8?B?M2NZZjJuL091OWZudXhjUHlybWpaUCtDak12Q2hOR1ltTVhnQmFUZWt5NWJT?=
- =?utf-8?B?aG9tb21pK3NhdWZLNGl4TXcwS01aaXdQRXdMUUxwUkdjc09YaFM0TnlOVHp6?=
- =?utf-8?B?S3N5T2o0UmMrd3pvL2VTaDBlczRMZVVjME5vaCttYWJ3aEFVdC9BaSs3dHNu?=
- =?utf-8?B?NHprZ3ZaeG8ydmRuVmV4bFFHZGNtRlVBcStQNHNXVElxUkVwYThieWxHL1ls?=
- =?utf-8?B?UjIyYzkvdkd5NzVHOEhYL1p6ajZpR3VVZFF0T2ZaeVN6RXpFQTEreDN0TE1P?=
- =?utf-8?B?aDJoMWdNMjhPWDFRc0J3a1psMXlWQmphWmhYbzdFSEFPTGdiV2VaaSsraFVh?=
- =?utf-8?B?WERSblpQQzhvSm9tZjFqOWpyb0JNLytUb1lRcUsrQStBYzNscVY4UU52ZFpo?=
- =?utf-8?B?UjZVTW9VYVIyR2ZSZDBaMEpTTVdMVTVBWEp0N1VnV2NOT1JFdGx1b1lLektH?=
- =?utf-8?B?bXBCN01zSWx0YjlLQlhwV3h1QmU3RnQrRjZOcDVMVUhZL0F2R3Zmb0tiYm1H?=
- =?utf-8?B?Mk1SVG5mc082U3lNbVAwdVhvdTdyZGYrV3pBVFg2WVVIdHZ0eTczVjhSODNV?=
- =?utf-8?B?OGFXSHoyVTJJSlFUMnpDcDZXdnZjQkhXUFFLSm41L2k0M2dpVGxHQWY2bzFh?=
- =?utf-8?B?OWtrbElIeU9PTWJMMndFOWdnUHdIQlJSQkpROU5tM2xqVjJoUHhSWC91R09D?=
- =?utf-8?B?VlpJRjFHdFBNVlUrNW9DeVRZMTcvV01sc1NwYzlWcThrcmlrVlE4Z0dmQmMz?=
- =?utf-8?B?THJmOUV5TmhWMFMzSFhXdDZmTDZNU0NFcEtiZjBFejJqdWpoVE8vVHIrS0J2?=
- =?utf-8?B?dUtNY01uY2MxVzk0VVBKbDBVZnN0U2xGbWlSZG1UM3lYQXJwZ0cxRHdwaVdq?=
- =?utf-8?B?T0VWck1pUGdWNkIvczZNMXlCNnVlUEh4eGpFc2lwYjQxYVI3Z1YrZ1dpc0tj?=
- =?utf-8?Q?bK+tCMmjsM7GOBHfl2tq7RuNp?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d2bed9a-8688-4668-436e-08dad8d34c21
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2022 04:18:45.6418
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RbGDSfr3dK/qR+9IXfjZkwMSJnSacSFh+hfWKwfi0NS+il19Gek37pxniF5efPR+QSWgWz/Iplu9NWvvrQjNKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8085
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-08_04,2022-12-07_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ malwarescore=0 adultscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2212080054
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07-Dec-22 10:28 PM, Athira Rajeev wrote:
-> Event group test checks group creation for combinations of
-> hw, sw and uncore PMU events. Some of the uncore pmus may
-> require additional permission to access the counters.
-> For example, in case of hv_24x7, partition need to have
-> permissions to access hv_24x7 pmu counters. If not, event_open
-> will fail. Hence add a sanity check to see if event_open
-> succeeds before proceeding with the test.
-> 
-> Fixes: b20d9215a35f ("perf test: Add event group test for events in multiple PMUs")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-Thanks,
-Ravi
+> On 07-Dec-2022, at 10:57 PM, Arnaldo Carvalho de Melo <acme@kernel.org> w=
+rote:
+>=20
+> Em Wed, Dec 07, 2022 at 07:08:28PM +0530, Athira Rajeev escreveu:
+>>=20
+>>=20
+>>> On 06-Dec-2022, at 11:01 PM, Arnaldo Carvalho de Melo <acme@kernel.org>=
+ wrote:
+>>>=20
+>>> Em Tue, Dec 06, 2022 at 02:13:48PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:
+>>>> Em Tue, Dec 06, 2022 at 02:07:32PM -0300, Arnaldo Carvalho de Melo esc=
+reveu:
+>>>>> Em Tue, Dec 06, 2022 at 02:01:43PM -0300, Arnaldo Carvalho de Melo es=
+creveu:
+>>>>>> Em Tue, Dec 06, 2022 at 01:41:41PM -0300, Arnaldo Carvalho de Melo e=
+screveu:
+>>>>>>> Now to look at the BUILD_BPF_SKEL=3D1 kaboom:
+>>>>>>>=20
+>>>>>>> [acme@quaco perf]$ alias m
+>>>>>>> alias m=3D'rm -rf ~/libexec/perf-core/ ; make -k NO_LIBTRACEEVENT=
+=3D1 BUILD_BPF_SKEL=3D1 O=3D/tmp/build/perf -C tools/perf install-bin && pe=
+rf test python'
+>>>>>>> [acme@quaco perf]$ m
+>>>>>>> make: Entering directory '/home/acme/git/perf/tools/perf'
+>>>>>>> BUILD:   Doing 'make -j8' parallel build
+>>>>>>> <SNIP>
+>>>>>>> /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `add_work':
+>>>>>>> /home/acme/git/perf/tools/perf/util/bpf_kwork.c:285: undefined refe=
+rence to `perf_kwork_add_work'
+>>>>>>> /usr/bin/ld: /tmp/build/perf/perf-in.o: in function `lock_contentio=
+n_read':
+>>>>>=20
+>>>>> For that bpf_kwork.c see below. Now to see why the python binding is =
+not
+>>>>> building, I guess is unrelated and you have some other outstanding
+>>>>> patch?
+>>>>=20
+>>>> Its related:
+>>>>=20
+>>>> [acme@quaco perf]$ perf test -v python
+>>>> Couldn't bump rlimit(MEMLOCK), failures may take place when creating B=
+PF maps, etc
+>>>> 14: 'import perf' in python                                         :
+>>>> --- start ---
+>>>> test child forked, pid 1669872
+>>>> python usage test: "echo "import sys ; sys.path.append('/tmp/build/per=
+f/python'); import perf" | '/usr/bin/python3' "
+>>>> Traceback (most recent call last):
+>>>> File "<stdin>", line 1, in <module>
+>>>> ImportError: /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.=
+so: undefined symbol: tep_unload_plugins
+>>>> test child finished with -1
+>>>> ---- end ----
+>>>> 'import perf' in python: FAILED!
+>>>> [acme@quaco perf]$
+>>>>=20
+>>>> Now checking why NO_LIBTRACEEVENT=3D1 fails with this...
+>>>>=20
+>>>> [acme@quaco perf]$ find tools/perf/ -name "*.c" | xargs grep tep_unloa=
+d_plugins
+>>>> tools/perf/util/trace-event.c:	tep_unload_plugins(t->plugin_list, t->p=
+event);
+>>>> [acme@quaco perf]$
+>>>>=20
+>>>> [acme@quaco perf]$ grep trace-event tools/perf/util/python-ext-sources
+>>>> util/trace-event.c
+>>>> [acme@quaco perf]$
+>>>>=20
+>>>> Trying to fix...
+>>>=20
+>>> I'm missing some detail, this isn't working, util/trace-event.c is still
+>>> being built and linked.
+>>=20
+>> Hi,
+>>=20
+>> Observed similar issue with =E2=80=9Cbuiltin-trace.c=E2=80=9D
+>>=20
+>> In system without libtraceevent-devel, I could still see builtin-trace t=
+rying to get
+>> compiled and hitting error. In my understanding, CONFIG_TRACE will be
+>> disabled when libtraceevent is not present and hence builtin-trace shoul=
+d be disabled
+>> which I am not seeing.
+>>=20
+>> # rpm -qa|grep libtraceevent
+>> libtraceevent-1.2.1-1.el8.ppc64le
+>>=20
+>> # grep -i traceevent FEATURE-DUMP=20
+>> feature-libtraceevent=3D0
+>>=20
+>> Snippet from make logs:
+>>=20
+>> builtin-trace.c:266:50: error: dereferencing pointer to incomplete type =
+'struct tep_format_field'
+>>  return __tp_field__init_uint(field, format_field->size, format_field->o=
+ffset, needs_swap);
+>>                                                  ^~
+>> builtin-trace.c: In function 'evsel__syscall_arg_fmt':
+>> builtin-trace.c:361:25: error: 'struct evsel' has no member named 'tp_fo=
+rmat'
+>>   et->fmt =3D calloc(evsel->tp_format->format.nr_fields, sizeof(struct s=
+yscall_arg_fmt));
+>>=20
+>=20
+> Can you try again? tmp.perf/core? That "tmp." part means its a force
+> pushed branch, so I just force pushed with some arch specific fixes, now
+> I'm down to (removing the successful builds and unrelated failures, now
+> related to libbpf's F_DUPFD_CLOEXEC kaboom):
+
+Ok Arnaldo, Sure, I will check with updated branch
+
+
+>=20
+>   5     7.38 fedora:34                     : FAIL gcc version 11.3.1 2022=
+0421 (Red Hat 11.3.1-2) (GCC)
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c: In function =E2=80=98evse=
+l__rawptr=E2=80=99:
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: error: =E2=80=98T=
+EP_FIELD_IS_RELATIVE=E2=80=99 undeclared (first use in this function); did =
+you mean =E2=80=98TEP_FIELD_IS_FLAG=E2=80=99?
+>     2787 |                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+>          |                                    ^~~~~~~~~~~~~~~~~~~~~
+>          |                                    TEP_FIELD_IS_FLAG
+
+I observed same issue as updated here:=20
+https://lore.kernel.org/lkml/10476A85-3F75-4C91-AB5B-E5B136F31297@linux.vne=
+t.ibm.com/
+
+Looks like TEP_FIELD_IS_RELATIVE is not defined in header file of the syste=
+m installed version.
+whereas it is there in header file in tools/lib/traceevent
+
+# grep TEP_FIELD_IS_RELATIVE /usr/include/traceevent/event-parse.h
+# grep TEP_FIELD_IS_RELATIVE ../lib/traceevent/event-parse.h
+	TEP_FIELD_IS_RELATIVE	=3D 256,
+
+
+Thanks
+Athira
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: note: each undecl=
+ared identifier is reported only once for each function it appears in
+>    error: command '/usr/bin/gcc' failed with exit code 1
+>=20
+>  7     7.18 fedora:35                     : FAIL gcc version 11.3.1 20220=
+421 (Red Hat 11.3.1-2) (GCC)
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c: In function =E2=80=98evse=
+l__rawptr=E2=80=99:
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: error: =E2=80=98T=
+EP_FIELD_IS_RELATIVE=E2=80=99 undeclared (first use in this function); did =
+you mean =E2=80=98TEP_FIELD_IS_FLAG=E2=80=99?
+>     2787 |                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+>          |                                    ^~~~~~~~~~~~~~~~~~~~~
+>          |                                    TEP_FIELD_IS_FLAG
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: note: each undecl=
+ared identifier is reported only once for each function it appears in
+>    error: command '/usr/bin/gcc' failed with exit code 1
+>=20
+>  14     8.49 ubuntu:18.04-x-s390           : FAIL gcc version 7.5.0 (Ubun=
+tu 7.5.0-3ubuntu1~18.04)
+>    tests/parse-events.c:1893:12: error: 'test__checkevent_tracepoint' und=
+eclared here (not in a function); did you mean 'test__checkevent_breakpoint=
+'?
+>       .check =3D test__checkevent_tracepoint,
+>                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>                test__checkevent_breakpoint
+>    /git/perf-6.1.0-rc6/tools/build/Makefile.build:139: recipe for target =
+'tests' failed
+>    make[3]: *** [tests] Error 2
+>  16     6.38 ubuntu:22.04                  : FAIL gcc version 11.3.0 (Ubu=
+ntu 11.3.0-1ubuntu1~22.04)
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c: In function =E2=80=98evse=
+l__rawptr=E2=80=99:
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: error: =E2=80=98T=
+EP_FIELD_IS_RELATIVE=E2=80=99 undeclared (first use in this function); did =
+you mean =E2=80=98TEP_FIELD_IS_FLAG=E2=80=99?
+>     2787 |                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+>          |                                    ^~~~~~~~~~~~~~~~~~~~~
+>          |                                    TEP_FIELD_IS_FLAG
+>    /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: note: each undecl=
+ared identifier is reported only once for each function it appears in
+>    error: command '/usr/bin/gcc' failed with exit code 1
+>=20
+>=20
+>=20
+>> Thanks
+>> Athira
+>>=20
+>>>=20
+>>> The python binding should be usable without tracepoints, in fact its
+>>> first usage was just to have access to the perf metaevents, see=20
+>>> tools/perf/python/twatch.py.
+>>>=20
+>>> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+>>> index f0e4daeef8120853..5bd67d54d036f281 100644
+>>> --- a/tools/perf/Makefile.perf
+>>> +++ b/tools/perf/Makefile.perf
+>>> @@ -348,6 +348,10 @@ export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
+>>> python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r $(PYTHON_EXTBUIL=
+D) $(OUTPUT)python/perf*.so
+>>>=20
+>>> PYTHON_EXT_SRCS :=3D $(shell grep -v ^\# util/python-ext-sources)
+>>> +ifneq ($(CONFIG_TRACEEVENT),y)
+>>> +  PYTHON_EXT_SRCS :=3D $(call filter-out,$(PYTHON_EXT_SRCS),util/trace=
+-event.c)
+>>> +endif
+>>> +
+>>> PYTHON_EXT_DEPS :=3D util/python-ext-sources util/setup.py $(LIBAPI)
+>>>=20
+>>> SCRIPTS =3D $(patsubst %.sh,%,$(SCRIPT_SH))
+>>> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+>>> index 728fe2f51759eb0d..72088aec2857b316 100644
+>>> --- a/tools/perf/util/python.c
+>>> +++ b/tools/perf/util/python.c
+>>> @@ -1330,6 +1330,9 @@ static struct {
+>>> static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+>>> 				  PyObject *args, PyObject *kwargs)
+>>> {
+>>> +#ifndef HAVE_LIBTRACEEVENT
+>>> +	return NULL;
+>>> +#else
+>>> 	struct tep_event *tp_format;
+>>> 	static char *kwlist[] =3D { "sys", "name", NULL };
+>>> 	char *sys  =3D NULL;
+>>> @@ -1344,6 +1347,7 @@ static PyObject *pyrf__tracepoint(struct pyrf_evs=
+el *pevsel,
+>>> 		return _PyLong_FromLong(-1);
+>>>=20
+>>> 	return _PyLong_FromLong(tp_format->id);
+>>> +#endif // HAVE_LIBTRACEEVENT
+>>> }
+>>>=20
+>>> static PyMethodDef perf__methods[] =3D {
+>=20
+> --=20
+>=20
+> - Arnaldo
+
