@@ -2,125 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79239C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Dec 2022 07:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C236C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Dec 2022 19:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbiLIH3i (ORCPT
+        id S229938AbiLITHd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Dec 2022 02:29:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59772 "EHLO
+        Fri, 9 Dec 2022 14:07:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230184AbiLIH3M (ORCPT
+        with ESMTP id S229745AbiLITHc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Dec 2022 02:29:12 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818FE48750
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Dec 2022 23:28:02 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B972YbX033145;
-        Fri, 9 Dec 2022 07:27:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=ZovSt246CY/w7iCDgoDCzU29PGkYU975CgLk0RZzccU=;
- b=KKYi4ClpHLTcsT+NwPPvDsmY1kKC/ISerQXYRwJLvQUahaN15PoWOsgCKDmq1fyMxTiV
- sj8TeXWdTqQAcQNkncTZZlRLvvh9w06VKWxvpl4vDdnZ7di3/l6nq7gEYvlBcK6hqPHK
- SwJ90WwO6En8dNHyKPMjUaINjozBcxSxKoFyX0bKOrlI4ShzkI2qp/plJDVSGPq0fSsM
- 01XDa0xZHKNqvZgYjRdTXqWx9b3O/zUbyY2iWQ2GNeou/zDBUhH/AO4RmAFaV+jGHPRc
- bf/itrAQJQWcoWpbWotrZgAMUaXCboDvtbLTNhRsX5ybPA+FTLXTtYi4e6NvAOLdIckE TA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mbk0gadce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Dec 2022 07:27:46 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2B97H8XT021749;
-        Fri, 9 Dec 2022 07:27:45 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mbk0gadbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Dec 2022 07:27:45 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.16.1.2) with ESMTP id 2B8DnU8d018459;
-        Fri, 9 Dec 2022 07:27:42 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3m9m7rc32k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Dec 2022 07:27:42 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2B97RcrE22217354
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 9 Dec 2022 07:27:38 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C36C520049;
-        Fri,  9 Dec 2022 07:27:38 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4370D20043;
-        Fri,  9 Dec 2022 07:27:36 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.0.55])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Fri,  9 Dec 2022 07:27:36 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] perf test: Update event group check for support of uncore
- event
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <9c0ade1e-1c7b-90f5-0385-a568545567db@amd.com>
-Date:   Fri, 9 Dec 2022 12:57:34 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3C59F3E6-B7DE-485B-9483-703EBDE9AC41@linux.vnet.ibm.com>
-References: <20221207165815.774-1-atrajeev@linux.vnet.ibm.com>
- <9c0ade1e-1c7b-90f5-0385-a568545567db@amd.com>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oKrKF23C0F-EY_51NuFo0xQGfcp1tVoL
-X-Proofpoint-ORIG-GUID: fe_Auwwm9Tj4313KUasvE77sgeijWQ0B
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-09_02,2022-12-08_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- phishscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0 mlxscore=0
- clxscore=1015 adultscore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2212090060
+        Fri, 9 Dec 2022 14:07:32 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4925B1DF28;
+        Fri,  9 Dec 2022 11:07:31 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id 4so5887358pli.0;
+        Fri, 09 Dec 2022 11:07:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=KXrM2ORadkXpKfT+cxkMFP7lhWcFFSnPfGCXL/1qN8E=;
+        b=Ir6LiHW8EG6VKzSzj/thAQhYYTnx3MmaP2R6NN1ZoKIajddttTWyEY59GLL6EU9K2c
+         Qkw3/Rd7rMkb2jTrjFIFHguwhk6NVkhWDV2UtQh3YWqRTXj9lCKZ/YHgUufPkWrk6IF9
+         wVH9Y/xUjIdm293VZ14dW4611b2N0ylmpNaVNAepmhsYtU5/HdormZmqRQ/KFC0Pw12q
+         YQ9917FdBHL/3Z0l2HhjAhivWbK1wNulmORRsSwDEmnurD+4JRm70IVbe1Ngar+NsHxn
+         jM7FrWBusAU/LBqpFLgUljJNR7mAVToOsjjyqogAUJc+s50HzZTUHIfQG2X1QDnZMHva
+         62fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KXrM2ORadkXpKfT+cxkMFP7lhWcFFSnPfGCXL/1qN8E=;
+        b=q+oFKXLhRJnfcFLFGQSoTUmHXSXG9Q1rsF/3sag3GK5QCHpFRjM2RH/6/uRjy6j7hy
+         4qprOQo0zkklAlDhj1iOPIihbvRmht+0EJHXVMXLILk59CsHlNVlpjq++wlbdpvoaWcd
+         hhf8Ou3Qlmi/phA+jdcCf5uSh+M403tJ56o8JK8rUhQ8BRNFUblL3UTaau3oMBjQCI1y
+         ePC/X/YNKqYFlZEvDI/6vn2t/ZjTrd68vOr4wIW4UO3SC4zc1L8Q2FmwLQiAk8iyQAJT
+         8TXmBOG+zFPJVymlR/HcRq21npK1Z4TzkmTZXEhZTvDIkNEgc9dJnNuxq1nIsOg6TJd8
+         i1Mg==
+X-Gm-Message-State: ANoB5pnFnjrsQGMMje861FiC50p13SpXmdWA1DTHiHhWADq6V9VmFX6F
+        EsU+sGxKrNiRELaUKtVcT0E=
+X-Google-Smtp-Source: AA0mqf6ZNjEtRGQQzsAPI8MTTWIQ8Bd/pN3sBLI1fZFeE8LQOHRQdtJEuImqf7bMUmNVK6uJjUlTrw==
+X-Received: by 2002:a17:90a:e38a:b0:219:9e19:8259 with SMTP id b10-20020a17090ae38a00b002199e198259mr6957560pjz.46.1670612850547;
+        Fri, 09 Dec 2022 11:07:30 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:c952:d848:9e00:3cce])
+        by smtp.gmail.com with ESMTPSA id nd17-20020a17090b4cd100b002135de3013fsm1431432pjb.32.2022.12.09.11.07.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Dec 2022 11:07:29 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Blake Jones <blakejones@google.com>, bpf@vger.kernel.org
+Subject: [PATCH 0/4] perf lock contention: Support task/addr aggregation mode (v1)
+Date:   Fri,  9 Dec 2022 11:07:23 -0800
+Message-Id: <20221209190727.759804-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.0.rc1.256.g54fd8350bd-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
+
+This patchset adds two more aggregation modes for perf lock contention.
+
+The first one is the per-task mode with -t/--threads option.  The option
+was there already but it remained broken with BPF for a while.  Now it
+supports the output with and without BPF.
+
+  # perf lock contention -a -b -t -- sleep 1
+   contended   total wait     max wait     avg wait          pid   comm
+
+          11     11.85 us      2.23 us      1.08 us            0   swapper
+           2     11.13 us     10.22 us      5.56 us       749053   ThreadPoolForeg
+           1      8.15 us      8.15 us      8.15 us       321353   Chrome_ChildIOT
+           2      2.73 us      1.77 us      1.37 us       320761   Chrome_ChildIOT
+           1      1.40 us      1.40 us      1.40 us       320502   chrome
+           1       379 ns       379 ns       379 ns       321227   chrome
+
+The other one is the per-lock-instance mode with -l/--lock-addr option.
+If the lock has a symbol, it will be displayed as well.
+
+  # perf lock contention -a -b -l -- sleep 1
+   contended   total wait     max wait     avg wait            address   symbol
+
+           3      4.79 us      2.33 us      1.60 us   ffffffffbaed50c0   rcu_state
+           4      4.19 us      1.62 us      1.05 us   ffffffffbae07a40   jiffies_lock
+           1      1.94 us      1.94 us      1.94 us   ffff9262277861e0
+           1       387 ns       387 ns       387 ns   ffff9260bfda4f60
+
+It's based on the current acme/tmp.perf/core branch.
+You can find the code in the 'perf/lock-con-aggr-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
 
 
-> On 08-Dec-2022, at 9:48 AM, Ravi Bangoria <ravi.bangoria@amd.com> =
-wrote:
->=20
-> On 07-Dec-22 10:28 PM, Athira Rajeev wrote:
->> Event group test checks group creation for combinations of
->> hw, sw and uncore PMU events. Some of the uncore pmus may
->> require additional permission to access the counters.
->> For example, in case of hv_24x7, partition need to have
->> permissions to access hv_24x7 pmu counters. If not, event_open
->> will fail. Hence add a sanity check to see if event_open
->> succeeds before proceeding with the test.
->>=20
->> Fixes: b20d9215a35f ("perf test: Add event group test for events in =
-multiple PMUs")
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->=20
-> Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Namhyung Kim (4):
+  perf lock contention: Add lock_data.h for common data
+  perf lock contention: Implement -t/--threads option for BPF
+  perf lock contention: Add -l/--lock-addr option
+  perf test: Update perf lock contention test
 
-Thanks Ravi for checking the patch
+ tools/perf/Documentation/perf-lock.txt        |  4 +
+ tools/perf/builtin-lock.c                     | 95 ++++++++++++++-----
+ tools/perf/tests/shell/lock_contention.sh     | 48 ++++++++++
+ tools/perf/util/bpf_lock_contention.c         | 72 ++++++++++----
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 67 +++++++++----
+ tools/perf/util/bpf_skel/lock_data.h          | 30 ++++++
+ tools/perf/util/lock-contention.h             |  1 +
+ 7 files changed, 255 insertions(+), 62 deletions(-)
+ create mode 100644 tools/perf/util/bpf_skel/lock_data.h
 
-Athira
->=20
-> Thanks,
-> Ravi
+
+base-commit: b22802e295a80ec16e355d7208d2fbbd7bbc1b7a
+-- 
+2.39.0.rc1.256.g54fd8350bd-goog
 
