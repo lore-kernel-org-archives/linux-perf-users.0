@@ -2,109 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD16C4167B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 12:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD75C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 13:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232441AbiLLM71 (ORCPT
+        id S232604AbiLLNXU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Dec 2022 07:59:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
+        Mon, 12 Dec 2022 08:23:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232469AbiLLM7X (ORCPT
+        with ESMTP id S232623AbiLLNXG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Dec 2022 07:59:23 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393F56160;
-        Mon, 12 Dec 2022 04:59:21 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id m4so11995131pls.4;
-        Mon, 12 Dec 2022 04:59:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OiLHXHKbQd18qU/wJIAEe1ddmbdvgaYtPXkeXnPK4Mc=;
-        b=lLBbEI1nTIJOGEDFisYJob1XhIARuSKC0/jtyDs0opcR99IRYFPtY91txhFtVGZmSW
-         XBNleig4SV8X0ilug2GL4IS+NMfBUG9qYgHnRnig69KYgubkmifnBg9Lm3cLMBl//rG/
-         f0FBjyamlMtBahVDdXJWVOVA0yu0xhme5Ei1yq4rk7cSRumxje8jou4VAGIDooOqNDRU
-         0s+dgky3tUWgRpmuwjv+DeH9bYI6W8GPOv2FUICsFSI6AhrJXc272vMO9FUCOOdpzHRt
-         xP5FGwuaFhp/KPVqWaaesBGek/EI2MtaZmOjBwgCagpLLBZb+8JSu1dhYUV8MBK5gxd5
-         adxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OiLHXHKbQd18qU/wJIAEe1ddmbdvgaYtPXkeXnPK4Mc=;
-        b=PS6BTp4RV7ZmPz8MtZvE0TWenG9SW8F2pivTNWWYUE/PECa91BaaidqtK563cR1glk
-         +XjqgeGlW4IlNAAsyU14yLixHrOZRVMiVohVi6/yEfOsiSF7UzzGZM5Vf8JrKTtQQsps
-         871xMVql9thM6KjrIZbpuziFZ1YCpTQ0QWay/Uwp0/Oez+mu9IKzHz7eGJA4XnArt+c9
-         UWMdSUgFfcpkFW6hvMMb6sLvExRxSRWOOmL6BPIbPcu7t29T1INkkpc5YcmflTGl45wy
-         1E+H8UQFWD2TAxtpJDihDPbDnDdR6wdBQWYc1kUAEUmoaXQLRoguAKeKw5oX6vja4l0R
-         rxKg==
-X-Gm-Message-State: ANoB5pmUIeMxZawfnpvOfYqZGgYo+jWCBwEQeeHatQvN9sYP/joMFYHg
-        Fe/KS2fmQFOpu7nE4kV7uOATgfcwAlSK3Q8G
-X-Google-Smtp-Source: AA0mqf7Yz24FUgeNHPPXXOccqL227PFPrS8ouzv5RWtsGZv0wgyG8IldDLZyL3QB8JkOnU2GRBKh9w==
-X-Received: by 2002:a17:902:7598:b0:188:92d6:49c8 with SMTP id j24-20020a170902759800b0018892d649c8mr16581800pll.48.1670849960678;
-        Mon, 12 Dec 2022 04:59:20 -0800 (PST)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id jc3-20020a17090325c300b00186f608c543sm6273927plb.304.2022.12.12.04.59.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 04:59:20 -0800 (PST)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH RFC 3/8] perf: x86/core: Snyc PERF_METRICS bit together with fixed counter3
-Date:   Mon, 12 Dec 2022 20:58:39 +0800
-Message-Id: <20221212125844.41157-4-likexu@tencent.com>
-X-Mailer: git-send-email 2.38.2
-In-Reply-To: <20221212125844.41157-1-likexu@tencent.com>
+        Mon, 12 Dec 2022 08:23:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFB3C6A;
+        Mon, 12 Dec 2022 05:23:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 11146B80B9B;
+        Mon, 12 Dec 2022 13:23:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C798CC433D2;
+        Mon, 12 Dec 2022 13:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670851382;
+        bh=p5PQnuuFNi++J1xMQgmtnxT2psOn0oyxKar6oh33zsY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nHMNUGwKjZIAtAGoIE24eH6JrcKbP6cviMgEQCvlmly/N6KQ+GYj/8EYdGO6LuTBY
+         OkvfNAr4iiP6zJYu6d+yDY2z30ByhzvfZKhjk0sKG3mAPmSAywcqlLfUTrZor6VNfE
+         YCv7PyDh8EzsOQptXRmhnqeBGWS3bDEr26R6tzSNfk828KhBVCqMAKep1A2lr3tNZ3
+         EQM1bluHvb2FfhxPvPmdg+j4mF6r/aQp4JUiPK67bNa70UN6Ykvt1A0wwzpV/3XI9N
+         pGIBYcEFoYL6o5ZOq47G8MaeVIXwDfBsyf7Zs42a5/hlItvEeegl4ulLfrnGCU32TI
+         J8o8YFf31IKZw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1p4ilo-00C7Oi-IR;
+        Mon, 12 Dec 2022 13:23:00 +0000
+Date:   Mon, 12 Dec 2022 13:23:00 +0000
+Message-ID: <865yegrc23.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Like Xu <like.xu.linux@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>, kvmarm@lists.linux.dev,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH RFC 1/8] perf/core: Add *group_leader to perf_event_create_kernel_counter()
+In-Reply-To: <20221212125844.41157-2-likexu@tencent.com>
 References: <20221212125844.41157-1-likexu@tencent.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        <20221212125844.41157-2-likexu@tencent.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: like.xu.linux@gmail.com, peterz@infradead.org, seanjc@google.com, pbonzini@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, fenghua.yu@intel.com, kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
+On Mon, 12 Dec 2022 12:58:37 +0000,
+Like Xu <like.xu.linux@gmail.com> wrote:
+> 
+> From: Like Xu <likexu@tencent.com>
+> 
+> Like syscalls users, kernel-space perf_event creators may also use group
+> counters abstraction to gain pmu functionalities, and an in-kernel counter
+> groups behave much like normal 'single' counters, following the group
+> semantics-based behavior.
+> 
+> No functional changes at this time. An example will be that KVM creates
+> Intel slot event as group leader and other topdown metric events to emulate
+> MSR_PERF_METRICS pmu capability for guests.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-perf-users@vger.kernel.org
+> Signed-off-by: Like Xu <likexu@tencent.com>
+> ---
+>  arch/arm64/kvm/pmu-emul.c                 | 4 ++--
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 4 ++--
+>  arch/x86/kvm/pmu.c                        | 2 +-
+>  arch/x86/kvm/vmx/pmu_intel.c              | 2 +-
+>  include/linux/perf_event.h                | 1 +
+>  kernel/events/core.c                      | 4 +++-
+>  kernel/events/hw_breakpoint.c             | 4 ++--
+>  kernel/events/hw_breakpoint_test.c        | 2 +-
+>  kernel/watchdog_hld.c                     | 2 +-
+>  9 files changed, 14 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> index 24908400e190..11c3386bc86b 100644
+> --- a/arch/arm64/kvm/pmu-emul.c
+> +++ b/arch/arm64/kvm/pmu-emul.c
+> @@ -624,7 +624,7 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
+>  
+>  	attr.sample_period = compute_period(pmc, kvm_pmu_get_pmc_value(pmc));
+>  
+> -	event = perf_event_create_kernel_counter(&attr, -1, current,
+> +	event = perf_event_create_kernel_counter(&attr, -1, current, NULL,
+>  						 kvm_pmu_perf_overflow, pmc);
 
-When the guest uses topdown (the fixed counter 3 and perf_metrics msr),
-the sharing rule on the PERF_METRICS bit on the GLOBAL_CTRL msr does
-not change, that is, it should be updated synchronously with the fixed
-counter 3. Considering that guest topdown feature has just been enabled,
-this is not a strictly bug fix.
+Wouldn't it be better to have a separate helper that takes the group leader
+as a parameter, and reimplement perf_event_create_kernel_counter() in term
+of this helper?
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Like Xu <likexu@tencent.com>
----
- arch/x86/events/intel/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+	M.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 1b92bf05fd65..e7897fd9f7ab 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2436,6 +2436,8 @@ static void intel_pmu_disable_fixed(struct perf_event *event)
- 		 */
- 		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
- 			return;
-+
-+		intel_clear_masks(event, GLOBAL_CTRL_EN_PERF_METRICS);
- 		idx = INTEL_PMC_IDX_FIXED_SLOTS;
- 	}
- 
-@@ -2729,6 +2731,7 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- 		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
- 			return;
- 
-+		intel_set_masks(event, GLOBAL_CTRL_EN_PERF_METRICS);
- 		idx = INTEL_PMC_IDX_FIXED_SLOTS;
- 	}
- 
 -- 
-2.38.2
-
+Without deviation from the norm, progress is not possible.
