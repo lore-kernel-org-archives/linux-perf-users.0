@@ -2,93 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9520DC00145
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 15:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E50C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 15:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232554AbiLLPmo (ORCPT
+        id S232157AbiLLPqN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Dec 2022 10:42:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48364 "EHLO
+        Mon, 12 Dec 2022 10:46:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231876AbiLLPmn (ORCPT
+        with ESMTP id S232055AbiLLPqM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Dec 2022 10:42:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C8F1147;
-        Mon, 12 Dec 2022 07:42:42 -0800 (PST)
+        Mon, 12 Dec 2022 10:46:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553946320;
+        Mon, 12 Dec 2022 07:46:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5811C6112A;
-        Mon, 12 Dec 2022 15:42:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 854C0C433D2;
-        Mon, 12 Dec 2022 15:42:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 01EF4B80D53;
+        Mon, 12 Dec 2022 15:46:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B09C433D2;
+        Mon, 12 Dec 2022 15:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670859761;
-        bh=vovF8+lwpmqjcYvzWQBwv2dfMuOKmPzkgOcqouX8qGQ=;
+        s=k20201202; t=1670859968;
+        bh=2QkewT9Gyg7L5KqfYz9gcGz6oq9e3/Kl7bvOLkxlt0w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FTFsxWU2/KmSno5Nw0I1Te9qQe9dolWOvNMd6hQicz124DxVJsXyWlaostfLYiNiK
-         Y7dFcX7IitR3UqSK+KXwuNTGdvuoORAXPITyjTD1yV6EHdsbDMgTYV221Js8FsQ+Oq
-         XRZWaTwGAJEc7pfKFGYkro0/WAjgav5Q/d5MSCA6ANESxx/J2bfBYJ02QkewlcWGyS
-         At/XnGVg8eApjY+u9w1Kn2DCk6dW8gKcweCowINp+5JCUkKABOzX3gCKi4hcASvg5e
-         CtCHzhZ+Ra09gTjhav+Z/O9wMq+JHHLP8wPSSvp5c60DkDMqM6E1UN03f4BdcZS4ve
-         PtSgnAuxig+ng==
+        b=RgJwfbl8DaOqGZG+xOe96k9AqpqCKAkliJB3Ds5pxYcflQrmn3G7EcBqx3cfRaHB6
+         YtQ5i6j+ljGp+ds4Gsqh2u73Mn0ctE2TSd+YZoK16jOdoLvqFN+Ybl97p01BYdmnM2
+         9EpUfoEu1RsURfxUXHDtXKD49SGv8QZWwvuRGUhb3pzGlmeVxgSd2ekAn4sT0OfhOM
+         qmiMdcm8RI5l5+o/zZJjjqVzk58ApyPzgxVLjGTJiEgSeQBekBnbdXOY6eBSnabyXC
+         K1v5ma0txc5x5eOKxj5Oz3q50qKghGkqnhTVr3+AMg9iZnE8Yn9CcmxNepxk884y7s
+         dz9jm9SA3xfgw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 10C0540483; Mon, 12 Dec 2022 12:42:39 -0300 (-03)
-Date:   Mon, 12 Dec 2022 12:42:39 -0300
+        id 50A8540483; Mon, 12 Dec 2022 12:46:06 -0300 (-03)
+Date:   Mon, 12 Dec 2022 12:46:06 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix a typo in BTF tracepoint name
-Message-ID: <Y5dL77VtV4MZ2AkG@kernel.org>
-References: <20221208182636.524139-1-namhyung@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v4] perf jevents: Parse metrics during conversion
+Message-ID: <Y5dMvhMd7kbkAUyY@kernel.org>
+References: <20221207055908.1385448-1-irogers@google.com>
+ <Y5DQKif+PdRJblk+@kernel.org>
+ <0d64e485-5acf-b7ad-e228-9bf85d8ae16d@oracle.com>
+ <Y5DRjecE88KFc4He@kernel.org>
+ <CAP-5=fWa=zNK_ecpWGoGggHCQx7z-oW0eGMQf19Maywg0QK=4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221208182636.524139-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWa=zNK_ecpWGoGggHCQx7z-oW0eGMQf19Maywg0QK=4g@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Dec 08, 2022 at 10:26:36AM -0800, Namhyung Kim escreveu:
-> In the BTF, tracepoint definitions have the prefix of "btf_trace_".
-> The off-cpu profilier needs to check the signature of sched_switch
-> event using the definition.  But there's a typo (s/bpf/btf/) so it
-> failed always.
+Em Thu, Dec 08, 2022 at 09:41:55AM -0800, Ian Rogers escreveu:
+> Apologies, I found an issue with a double-if. Could you add the 1 line
+> fix plus test:
 
-Thanks, applied.
+Had to apply manually, the patch was munged, end result should be the
+same:
 
-- Arnaldo
 
+diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+index cc451a26575185f4..4797ed4fd817b1a0 100644
+--- a/tools/perf/pmu-events/metric.py
++++ b/tools/perf/pmu-events/metric.py
+@@ -462,6 +462,7 @@ class _RewriteIfExpToSelect(ast.NodeTransformer):
  
-> Fixes: b36888f71c85 ("perf record: Handle argument change in sched_switch")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/bpf_off_cpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+   def visit_IfExp(self, node):
+     # pylint: disable=invalid-name
++    self.generic_visit(node)
+     call = ast.Call(
+         func=ast.Name(id='Select', ctx=ast.Load()),
+         args=[node.body, node.test, node.orelse],
+diff --git a/tools/perf/pmu-events/metric_test.py b/tools/perf/pmu-events/metric_test.py
+index 4741b7b6612dc268..15315d0f716caf4e 100644
+--- a/tools/perf/pmu-events/metric_test.py
++++ b/tools/perf/pmu-events/metric_test.py
+@@ -87,6 +87,10 @@ class TestMetricExpressions(unittest.TestCase):
+     after = r'min((a + b if c > 1 else c + d), e + f)'
+     self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
+ 
++    before =3D r'a if b else c if d else e'
++    after =3D r'(a if b else (c if d else e))'
++    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
++
+   def test_ToPython(self):
+     # pylint: disable=eval-used
+     # Based on an example of a real metric.
+ 
+> diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+> index cc451a265751..4797ed4fd817 100644
+> --- a/tools/perf/pmu-events/metric.py
+> +++ b/tools/perf/pmu-events/metric.py
+> @@ -462,6 +462,7 @@ class _RewriteIfExpToSelect(ast.NodeTransformer):
 > 
-> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-> index c257813e674e..01f70b8e705a 100644
-> --- a/tools/perf/util/bpf_off_cpu.c
-> +++ b/tools/perf/util/bpf_off_cpu.c
-> @@ -102,7 +102,7 @@ static void check_sched_switch_args(void)
->  	const struct btf_type *t1, *t2, *t3;
->  	u32 type_id;
->  
-> -	type_id = btf__find_by_name_kind(btf, "bpf_trace_sched_switch",
-> +	type_id = btf__find_by_name_kind(btf, "btf_trace_sched_switch",
->  					 BTF_KIND_TYPEDEF);
->  	if ((s32)type_id < 0)
->  		return;
-> -- 
-> 2.39.0.rc1.256.g54fd8350bd-goog
+>   def visit_IfExp(self, node):
+>     # pylint: disable=invalid-name
+> +    self.generic_visit(node)
+>     call = ast.Call(
+>         func=ast.Name(id='Select', ctx=ast.Load()),
+>         args=[node.body, node.test, node.orelse],
+> diff --git a/tools/perf/pmu-events/metric_test.py
+> b/tools/perf/pmu-events/metric_test.py
+> index 4741b7b6612d..6980f452df0a 100644
+> --- a/tools/perf/pmu-events/metric_test.py
+> +++ b/tools/perf/pmu-events/metric_test.py
+> @@ -87,6 +87,10 @@ class TestMetricExpressions(unittest.TestCase):
+>     after = r'min((a + b if c > 1 else c + d), e + f)'
+>     self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
+> 
+> +    before = r'a if b else c if d else e'
+> +    after = r'(a if b else (c if d else e))'
+> +    self.assertEqual(ParsePerfJson(before).ToPerfJson(), after)
+> +
+>   def test_ToPython(self):
+>     # pylint: disable=eval-used
+>     # Based on an example of a real metric.
+> 
+> Thanks,
+> Ian
+> 
+> On Wed, Dec 7, 2022 at 9:47 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Em Wed, Dec 07, 2022 at 05:42:52PM +0000, John Garry escreveu:
+> > > On 07/12/2022 17:40, Arnaldo Carvalho de Melo wrote:
+> > > > Em Tue, Dec 06, 2022 at 09:59:08PM -0800, Ian Rogers escreveu:
+> > > > > Currently the 'MetricExpr' json value is passed from the json
+> > > > > file to the pmu-events.c. This change introduces an expression
+> > > > > tree that is parsed into. The parsing is done largely by using
+> > > > > operator overloading and python's 'eval' function. Two advantages
+> > > > > in doing this are:
+> > > > John, what tag can I get from you? 😄
+> > > >
+> > > > - Arnaldo
+> > > Sure,
+> > > Reviewed-by: John Garry <john.g.garry@oracle.com>
+> >
+> > Thanks a lot!
+> >
+> > - Arnaldo
 
 -- 
 
