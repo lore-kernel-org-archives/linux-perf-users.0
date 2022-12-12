@@ -2,161 +2,259 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01874C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Dec 2022 19:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD1DC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 12:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230152AbiLITH6 (ORCPT
+        id S232449AbiLLM7X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Dec 2022 14:07:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
+        Mon, 12 Dec 2022 07:59:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230130AbiLITHn (ORCPT
+        with ESMTP id S230113AbiLLM7R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Dec 2022 14:07:43 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474356441;
-        Fri,  9 Dec 2022 11:07:37 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id y17so5857500plp.3;
-        Fri, 09 Dec 2022 11:07:37 -0800 (PST)
+        Mon, 12 Dec 2022 07:59:17 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F483C78;
+        Mon, 12 Dec 2022 04:59:16 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so15616334pjj.2;
+        Mon, 12 Dec 2022 04:59:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JAU/j1NdwbvUI7spTdVmLXV+d6wFoRxuKA8kjpq/0+E=;
-        b=QYEKC//N4gfLrm8aFH4teGNGwE5UrwqLs52KyKuUT76LejDrqWmphcWaZYFyjhECA+
-         TZJ49uMAvsB1yPTNBuyUG7OdiLmrcImnM5gq9ZVcDTlHJJRHkh1jwHbphHNeCXGEFm3i
-         Vkbhka5SA8PbmbmOrIhSTVUYXr6ihh3f7KiVblSLaPz32acZwxkiQBbEdptB2Ls8pg4m
-         lubRcHW8lgwb2Jr1ri3unZ177hi94vHvw6x9wHqRLgETPZYXSJ6rWUhebYKRny4yY30O
-         1+BLIyvvF8AOcXq5GsfSyU2nBxtJCWlQEZwRQb+XbQcKYgxpIuYWJbmk6WK/N5rDv5Lj
-         itdQ==
+        bh=eC2iVrhN64qx0wh1++pd8s8D/4z8tTuZKSx0qqh+jVk=;
+        b=oaByAgTh/mGEsWxXHZhNoHOBQEsZc14IJwDr2btqBiJxfwbgrsIlb9Be3eeDwVB8yn
+         8lLvfVs9DcNU69/EZpheUyDC+TWzd9tcqcRnwZu9v5yKueGX//nlPtoCp+pg1dWf2WPs
+         NeY/qq2otESM0rg3evIACrKeQazyqdSa9ZFwsl8ljsDk+OQKfpAnsnMljwczl4Kap00p
+         j0+/r0QonsHnbcSKj8O4v35+txfNyJnf9UO2dBS+7JQ8O3nL3jNb2s1suZmIwpyHJka5
+         leuOe9bT/YJY0KJ5bcpEuGjGDjy92bxqn/JQKaJi42HbpmKkn4L8mg9JH+9q8W628to0
+         LHng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JAU/j1NdwbvUI7spTdVmLXV+d6wFoRxuKA8kjpq/0+E=;
-        b=ImhZpiH2sQZ8QVM7BhuEmF28BJu/CyaoAq5yFQfQD5b53ucftGYyemJIC3CwaGIARm
-         p5wg7alrEXWZld9w/Tpsmz3TO7c93Y5UXwKgqT+IWMacY04dwe9OFwebJi+sOzirrBis
-         l4eTw/adeq9JcmSQSnYsvGjqAsnRn5OEG+jNwqn1V/6tjLuJZ6Le+dAbo8JNm32MwrEG
-         xjvyEnGn3BeRFnmDNYA3vPDRct+bt9ejo/eK01g9KRDtzdZiGJHUkmCjR6y3JhDr7YAF
-         ryKqfmqh+OR23/TWcay6nMCR4XY7sn+i0HZiXEK/lyOuXkUPxneYYvwClKB6aRMfALuN
-         JpZg==
-X-Gm-Message-State: ANoB5pk9hfbnYdxQu3aM87uWdSHbRTPLqoqql8QIUNUGaZUsdiMNn+RJ
-        /3wQz1ziT3z+3W0TeBnRQTU=
-X-Google-Smtp-Source: AA0mqf4IZ4uSmOpdJ4yd9rCzWpAiCyihPyyM5pmrtlLy7TzxOhoOCIg81lc5XbVmw8G+8PBjrrB6eA==
-X-Received: by 2002:a17:90a:8684:b0:219:68f8:7aaa with SMTP id p4-20020a17090a868400b0021968f87aaamr6785914pjn.40.1670612856682;
-        Fri, 09 Dec 2022 11:07:36 -0800 (PST)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:c952:d848:9e00:3cce])
-        by smtp.gmail.com with ESMTPSA id nd17-20020a17090b4cd100b002135de3013fsm1431432pjb.32.2022.12.09.11.07.35
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eC2iVrhN64qx0wh1++pd8s8D/4z8tTuZKSx0qqh+jVk=;
+        b=CMbM1Z1x+u1DOKkCpGX7MWtRYWYQKavZLrvy5p+ytEfwMVWOPYaoQZaI+gkjcUsAgP
+         Sznb9VWjUGeA4vkTNnoSnyGRPzGaP88dJ5X5/32NmkVIOPHPSW4J1GjvI6X3pQTk2FZN
+         aMPYf4aNAM3Hucz7AYk0s64/xWiFtG54KiT3cU5wcI0sJJT+eQHu4j6t3rP4OiqxaBw9
+         7cK4OHlFbY6aY44jloaK5uCrfjf204MnNePJhJp9diIGyR/CGu6YLwbgIwC09ENn9k6m
+         C4a/NsA6Z3k8EhMswUX8eg8Ab0eMk41LqdkWmZdVCEB0ziWd35RTaH95Gelqz+gqQe69
+         qPIA==
+X-Gm-Message-State: ANoB5pmO/45ElxiFU+DcnAf78mT0SyQrRUQuzWDYSzfmNQGn+LCge6hK
+        Wy940xzu8P8cnr8neScXTm8=
+X-Google-Smtp-Source: AA0mqf4KTmGbap+xoQWGEIBCNcnSByCIwuI9ifKJmSUv2uj5R1Bvnm7bWWoLlnJCQMM8sJMN59So0A==
+X-Received: by 2002:a17:902:ba95:b0:185:441f:7091 with SMTP id k21-20020a170902ba9500b00185441f7091mr15323679pls.22.1670849956058;
+        Mon, 12 Dec 2022 04:59:16 -0800 (PST)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id jc3-20020a17090325c300b00186f608c543sm6273927plb.304.2022.12.12.04.59.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Dec 2022 11:07:36 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Blake Jones <blakejones@google.com>, bpf@vger.kernel.org
-Subject: [PATCH 4/4] perf test: Update perf lock contention test
-Date:   Fri,  9 Dec 2022 11:07:27 -0800
-Message-Id: <20221209190727.759804-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.0.rc1.256.g54fd8350bd-goog
-In-Reply-To: <20221209190727.759804-1-namhyung@kernel.org>
-References: <20221209190727.759804-1-namhyung@kernel.org>
+        Mon, 12 Dec 2022 04:59:15 -0800 (PST)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, kvmarm@lists.linux.dev,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH RFC 1/8] perf/core: Add *group_leader to perf_event_create_kernel_counter()
+Date:   Mon, 12 Dec 2022 20:58:37 +0800
+Message-Id: <20221212125844.41157-2-likexu@tencent.com>
+X-Mailer: git-send-email 2.38.2
+In-Reply-To: <20221212125844.41157-1-likexu@tencent.com>
+References: <20221212125844.41157-1-likexu@tencent.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add test cases for the task and addr aggregation modes.
+From: Like Xu <likexu@tencent.com>
 
-  $ sudo ./perf test -v contention
-   86: kernel lock contention analysis test                            :
-  --- start ---
-  test child forked, pid 680006
-  Testing perf lock record and perf lock contention
-  Testing perf lock contention --use-bpf
-  Testing perf lock record and perf lock contention at the same time
-  Testing perf lock contention --threads
-  Testing perf lock contention --lock-addr
-  test child finished with 0
-  ---- end ----
-  kernel lock contention analysis test: Ok
+Like syscalls users, kernel-space perf_event creators may also use group
+counters abstraction to gain pmu functionalities, and an in-kernel counter
+groups behave much like normal 'single' counters, following the group
+semantics-based behavior.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+No functional changes at this time. An example will be that KVM creates
+Intel slot event as group leader and other topdown metric events to emulate
+MSR_PERF_METRICS pmu capability for guests.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: kvmarm@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Signed-off-by: Like Xu <likexu@tencent.com>
 ---
- tools/perf/tests/shell/lock_contention.sh | 48 +++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ arch/arm64/kvm/pmu-emul.c                 | 4 ++--
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 4 ++--
+ arch/x86/kvm/pmu.c                        | 2 +-
+ arch/x86/kvm/vmx/pmu_intel.c              | 2 +-
+ include/linux/perf_event.h                | 1 +
+ kernel/events/core.c                      | 4 +++-
+ kernel/events/hw_breakpoint.c             | 4 ++--
+ kernel/events/hw_breakpoint_test.c        | 2 +-
+ kernel/watchdog_hld.c                     | 2 +-
+ 9 files changed, 14 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index f7bd0d8eb5c3..cc9ceb9e19ca 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -77,10 +77,58 @@ test_record_concurrent()
- 	fi
+diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+index 24908400e190..11c3386bc86b 100644
+--- a/arch/arm64/kvm/pmu-emul.c
++++ b/arch/arm64/kvm/pmu-emul.c
+@@ -624,7 +624,7 @@ static void kvm_pmu_create_perf_event(struct kvm_pmc *pmc)
+ 
+ 	attr.sample_period = compute_period(pmc, kvm_pmu_get_pmc_value(pmc));
+ 
+-	event = perf_event_create_kernel_counter(&attr, -1, current,
++	event = perf_event_create_kernel_counter(&attr, -1, current, NULL,
+ 						 kvm_pmu_perf_overflow, pmc);
+ 
+ 	if (IS_ERR(event)) {
+@@ -713,7 +713,7 @@ static struct arm_pmu *kvm_pmu_probe_armpmu(void)
+ 	attr.config = ARMV8_PMUV3_PERFCTR_CPU_CYCLES;
+ 	attr.sample_period = GENMASK(63, 0);
+ 
+-	event = perf_event_create_kernel_counter(&attr, -1, current,
++	event = perf_event_create_kernel_counter(&attr, -1, current, NULL,
+ 						 kvm_pmu_perf_overflow, &attr);
+ 
+ 	if (IS_ERR(event)) {
+diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+index d961ae3ed96e..43e54bb200cd 100644
+--- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
++++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
+@@ -952,12 +952,12 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
+ 	u64 tmp;
+ 
+ 	miss_event = perf_event_create_kernel_counter(miss_attr, plr->cpu,
+-						      NULL, NULL, NULL);
++						      NULL, NULL, NULL, NULL);
+ 	if (IS_ERR(miss_event))
+ 		goto out;
+ 
+ 	hit_event = perf_event_create_kernel_counter(hit_attr, plr->cpu,
+-						     NULL, NULL, NULL);
++						     NULL, NULL, NULL, NULL);
+ 	if (IS_ERR(hit_event))
+ 		goto out_miss;
+ 
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index eb594620dd75..f6c8180241d7 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -204,7 +204,7 @@ static int pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type, u64 config,
+ 			attr.precise_ip = 3;
+ 	}
+ 
+-	event = perf_event_create_kernel_counter(&attr, -1, current,
++	event = perf_event_create_kernel_counter(&attr, -1, current, NULL,
+ 						 kvm_perf_overflow, pmc);
+ 	if (IS_ERR(event)) {
+ 		pr_debug_ratelimited("kvm_pmu: event creation failed %ld for pmc->idx = %d\n",
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index f951dc756456..b746381307c7 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -299,7 +299,7 @@ int intel_pmu_create_guest_lbr_event(struct kvm_vcpu *vcpu)
+ 	}
+ 
+ 	event = perf_event_create_kernel_counter(&attr, -1,
+-						current, NULL, NULL);
++						current, NULL, NULL, NULL);
+ 	if (IS_ERR(event)) {
+ 		pr_debug_ratelimited("%s: failed %ld\n",
+ 					__func__, PTR_ERR(event));
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 0031f7b4d9ab..5f34e1d0bff8 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1023,6 +1023,7 @@ extern struct perf_event *
+ perf_event_create_kernel_counter(struct perf_event_attr *attr,
+ 				int cpu,
+ 				struct task_struct *task,
++				struct perf_event *group_leader,
+ 				perf_overflow_handler_t callback,
+ 				void *context);
+ extern void perf_pmu_migrate_context(struct pmu *pmu,
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7f04f995c975..f671b1a9a691 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12674,12 +12674,14 @@ SYSCALL_DEFINE5(perf_event_open,
+  * @attr: attributes of the counter to create
+  * @cpu: cpu in which the counter is bound
+  * @task: task to profile (NULL for percpu)
++ * @group_leader: event group leader
+  * @overflow_handler: callback to trigger when we hit the event
+  * @context: context data could be used in overflow_handler callback
+  */
+ struct perf_event *
+ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 				 struct task_struct *task,
++				 struct perf_event *group_leader,
+ 				 perf_overflow_handler_t overflow_handler,
+ 				 void *context)
+ {
+@@ -12694,7 +12696,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 	if (attr->aux_output)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	event = perf_event_alloc(attr, cpu, task, NULL, NULL,
++	event = perf_event_alloc(attr, cpu, task, group_leader, NULL,
+ 				 overflow_handler, context, -1);
+ 	if (IS_ERR(event)) {
+ 		err = PTR_ERR(event);
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index c3797701339c..65b5b1421e62 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -771,7 +771,7 @@ register_user_hw_breakpoint(struct perf_event_attr *attr,
+ 			    void *context,
+ 			    struct task_struct *tsk)
+ {
+-	return perf_event_create_kernel_counter(attr, -1, tsk, triggered,
++	return perf_event_create_kernel_counter(attr, -1, tsk, NULL, triggered,
+ 						context);
+ }
+ EXPORT_SYMBOL_GPL(register_user_hw_breakpoint);
+@@ -881,7 +881,7 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
+ 
+ 	cpus_read_lock();
+ 	for_each_online_cpu(cpu) {
+-		bp = perf_event_create_kernel_counter(attr, cpu, NULL,
++		bp = perf_event_create_kernel_counter(attr, cpu, NULL, NULL,
+ 						      triggered, context);
+ 		if (IS_ERR(bp)) {
+ 			err = PTR_ERR(bp);
+diff --git a/kernel/events/hw_breakpoint_test.c b/kernel/events/hw_breakpoint_test.c
+index c57610f52bb4..b3597df12284 100644
+--- a/kernel/events/hw_breakpoint_test.c
++++ b/kernel/events/hw_breakpoint_test.c
+@@ -39,7 +39,7 @@ static struct perf_event *register_test_bp(int cpu, struct task_struct *tsk, int
+ 	attr.bp_addr = (unsigned long)&break_vars[idx];
+ 	attr.bp_len = HW_BREAKPOINT_LEN_1;
+ 	attr.bp_type = HW_BREAKPOINT_RW;
+-	return perf_event_create_kernel_counter(&attr, cpu, tsk, NULL, NULL);
++	return perf_event_create_kernel_counter(&attr, cpu, tsk, NULL, NULL, NULL);
  }
  
-+test_aggr_task()
-+{
-+	echo "Testing perf lock contention --threads"
-+	perf lock contention -i ${perfdata} -t -E 1 -q 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] Recorded result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+
-+	if ! perf lock con -b true > /dev/null 2>&1 ; then
-+		return
-+	fi
-+
-+	# the perf lock contention output goes to the stderr
-+	perf lock con -a -b -t -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] BPF result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+}
-+
-+test_aggr_addr()
-+{
-+	echo "Testing perf lock contention --lock-addr"
-+	perf lock contention -i ${perfdata} -l -E 1 -q 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] Recorded result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+
-+	if ! perf lock con -b true > /dev/null 2>&1 ; then
-+		return
-+	fi
-+
-+	# the perf lock contention output goes to the stderr
-+	perf lock con -a -b -t -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
-+	if [ $(cat "${result}" | wc -l) != "1" ]; then
-+		echo "[Fail] BPF result count is not 1:" $(cat "${result}" | wc -l)
-+		err=1
-+		exit
-+	fi
-+}
-+
- check
+ static void unregister_test_bp(struct perf_event **bp)
+diff --git a/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
+index 247bf0b1582c..bb755dadba54 100644
+--- a/kernel/watchdog_hld.c
++++ b/kernel/watchdog_hld.c
+@@ -173,7 +173,7 @@ static int hardlockup_detector_event_create(void)
+ 	wd_attr->sample_period = hw_nmi_get_sample_period(watchdog_thresh);
  
- test_record
- test_bpf
- test_record_concurrent
-+test_aggr_task
-+test_aggr_addr
- 
- exit ${err}
+ 	/* Try to register using hardware perf events */
+-	evt = perf_event_create_kernel_counter(wd_attr, cpu, NULL,
++	evt = perf_event_create_kernel_counter(wd_attr, cpu, NULL, NULL,
+ 					       watchdog_overflow_callback, NULL);
+ 	if (IS_ERR(evt)) {
+ 		pr_debug("Perf event create on CPU %d failed with %ld\n", cpu,
 -- 
-2.39.0.rc1.256.g54fd8350bd-goog
+2.38.2
 
