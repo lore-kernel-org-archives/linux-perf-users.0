@@ -2,197 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA1CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 20:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF5CC4167B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 20:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233593AbiLLUfO (ORCPT
+        id S233468AbiLLU7c (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Dec 2022 15:35:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
+        Mon, 12 Dec 2022 15:59:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233572AbiLLUfL (ORCPT
+        with ESMTP id S229638AbiLLU7O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Dec 2022 15:35:11 -0500
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8D917E0C;
-        Mon, 12 Dec 2022 12:35:10 -0800 (PST)
-Received: by mail-ej1-x630.google.com with SMTP id fc4so31229471ejc.12;
-        Mon, 12 Dec 2022 12:35:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=4MmC51vNneBDxR+Ol6/nI/pLRgVHDMLqs6SDquGm7SU=;
-        b=GDz9LCcLvFDGFSfek/PatM+Iqvh4yizsaGyLAKghgvnDws86vA4AalauFzKEuBP4LD
-         ruHMk3BQGl7ucvvDhu/Xqsqpfg+dAHPXcP4TjzdW9wFPXklMZS5r0t4+WxodQzKgk8Lc
-         QmNm/++Mr8o3szSkLywm1JytqiNv/NeR6NE1npaeTcWwRWWLYsv891/DIwKTK4yzgdcS
-         diDY0lABQfOlyKYN94Ba3T0IPPfX7IgRnyMfD2TCO3afTTKcGcWwmi+0cFhBgA87MHlG
-         skLJYTDtqTn81XrPVEEVsOJ9sfjn/m9jX4+Mmnj5j/jUulHWV7sKLZ1AczY7NeO8AtHS
-         ItaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4MmC51vNneBDxR+Ol6/nI/pLRgVHDMLqs6SDquGm7SU=;
-        b=QGUlF8m9169B+CGaaDRhjg/0C/k6disx/RmwXwg1dxdHISUrNGkERyyh3T+AZv3Ua1
-         VevaVsrS35fakV3iv3YP1UOjO+zTtoVcSo9/NsfRg4I7L5M6Vn50nASlyM3Jqe2ARCWi
-         grfLlHBud6uFb68PBnSSkKmCNx8+IByVGns+kCPTvTraWHzoYHL/eluiyaSBUItrzJYQ
-         iU/lAha1Y3YJpKONdlyQR2TDmACGbLXR7evdmEDumeI0FlKgB7jEptDd+EXyTMe5ihAE
-         1XKBeeKqMzhQb8XYx3Ie+jW4I/StzzIEqs8IMzR5ugdDSmTo8q2AvY8kSsOHel9/t6s8
-         x9Fw==
-X-Gm-Message-State: ANoB5pm/cm73hY/0Vwh3WCb1GFLrDx6j4Nz67MOhB5P6SQNFHGN50w05
-        7PmUpowq5j1GywraN8ucfPQ=
-X-Google-Smtp-Source: AA0mqf4zAEoojMVYRqRR9QZUpqN+3hXQDVbkNf5ZA8xF6pemxIFOBZC7KwM2fh9jHS3/oVgTjuXsjg==
-X-Received: by 2002:a17:906:7b50:b0:7c1:65d1:c4ca with SMTP id n16-20020a1709067b5000b007c165d1c4camr7093556ejo.33.1670877308493;
-        Mon, 12 Dec 2022 12:35:08 -0800 (PST)
-Received: from gmail.com (1F2EF155.nat.pool.telekom.hu. [31.46.241.85])
-        by smtp.gmail.com with ESMTPSA id rh16-20020a17090720f000b007c0985aa6b0sm3662598ejb.191.2022.12.12.12.35.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 12:35:07 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Mon, 12 Dec 2022 21:35:05 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mon, 12 Dec 2022 15:59:14 -0500
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF8A183B6;
+        Mon, 12 Dec 2022 12:59:07 -0800 (PST)
+Received: from leknes.fjasle.eu ([46.142.98.187]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mleo0-1odmn242ug-00imxM; Mon, 12 Dec 2022 21:57:47 +0100
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+        id 770693C1BA; Mon, 12 Dec 2022 21:57:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+        t=1670878658; bh=qnQ4b4OQQYBi41zkGd5uOCUPLtZ3tfRTJtk/z24yVwk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=4x5ahCDLnX1Nwswko43mNTdERhxKyMuflqrcHjLjKRvKaeLkFF/p80sxO1Leyq3vE
+         SgfxTSm+ivpt3Ilu3P5k+ScZ9gLFNObyr7D/iamJou6F57djITqC4AiietPvAb4Np3
+         tSvtnIjNRvuVhDLdwGqgJM1IZrqJwzl6wBgsXZHs=
+Date:   Mon, 12 Dec 2022 21:57:38 +0100
+From:   Nicolas Schier <nicolas@fjasle.eu>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf event updates for v6.2
-Message-ID: <Y5eQeR2tpZ/Bos49@gmail.com>
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 3/5] tools lib subcmd: Add dependency test to
+ install_headers
+Message-ID: <Y5eVwlId2A2/pN40@fjasle.eu>
+References: <20221202045743.2639466-1-irogers@google.com>
+ <20221202045743.2639466-4-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221202045743.2639466-4-irogers@google.com>
+X-Provags-ID: V03:K1:3GmCeNNSVVdhmJX5HMTzbhSdxI6R4yUF6tJQCtwPq/TnqvO5APk
+ /+xEZtzMC83be00kVnu0kgC6dao9my0lKfrnr1YkOYOcQvaLg8Xb4nj0q1VtsXhowaQ/C3M
+ Lp+WOdtyKO9zX/bGvpytzbjN50dCkbTyUfajmSLE/HnaMQ+J62EhxWaNErXiXf4p0QSZUJd
+ LZC/vbAoFLWwVn81ixpTA==
+UI-OutboundReport: notjunk:1;M01:P0:n+AMtI/h5nQ=;uzd76xvlXBHZvc/0DeTuUmklTpb
+ 8FO3mEpw3fol4NJq85+yLNJrcHHP1fKpUs1QXjlcBU6IKe/E12GRsJ5d+HiHz4pjkQbVszauo
+ AJji12/4UPffp8K42/ei4zyYLFdHZ7kHOXGLri9P7NsnAu+SkSqvXkDX5c0zMx8hd26vk3UZQ
+ yPSLWSyd2GqEVSXagA9LdzMIjUFRmMdvQd5KN+ZvCItUd5B1FDQgT1ZnXUMoJO+yldMJORKxl
+ 6+LznW8Ix/4zQpxm99RZ2l/+D+DyWDTK2TXUtrheXC5aKMC83h/jzFUiuj67/sWXKiOMa6ih9
+ TA5nuTZjGq/J2YH/ztOBhk9XwW0YayQ3INKYlMD67JlY6MYYkym42b9AFUrA2qikNRhdLxGZI
+ 8G5Wy2yR+OLGhxJzdYwID48Hm1iPWCvAz24qtfrlBIIQRtANxOb5qAbWS/lYk6VeSEamOd4y9
+ ImkhLJ75hMsePDFLKx+pCmz1A9Qv5sL/NHtQkfDOqmoubAoLRXD2vlg5vbOARHg5gRzGIFbaQ
+ YItcecrqtpPFk0Yuz8wxVV5/VIec8ypTY0tWruX5nsSUKWUZ+V/nLdieu++oT3BShJ05Dr6eY
+ ozO0UGFk5161umJ0GpuSidNQ9PlVS8meDmaAUA+gsMT6q9dQu4up3ivjFUicK4D8/7lpZCc7J
+ PK0/aRD3OF5Qr6zMczu8CicEUcxrLXexa55HsKAmCw==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Linus,
+On Thu, Dec 01, 2022 at 08:57:41PM -0800 Ian Rogers wrote:
+> Compute the headers to be installed from their source headers and make
+> each have its own build target to install it. Using dependencies
+> avoids headers being reinstalled and getting a new timestamp which
+> then causes files that depend on the header to be rebuilt.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/subcmd/Makefile | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+> index 9a316d8b89df..b87213263a5e 100644
+> --- a/tools/lib/subcmd/Makefile
+> +++ b/tools/lib/subcmd/Makefile
+> @@ -89,10 +89,10 @@ define do_install_mkdir
+>  endef
+>  
+>  define do_install
+> -	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
+> -		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
+> +	if [ ! -d '$2' ]; then             \
+> +		$(INSTALL) -d -m 755 '$2'; \
+>  	fi;                                             \
+> -	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
+> +	$(INSTALL) $1 $(if $3,-m $3,) '$2'
 
-Please pull the latest perf/core git tree from:
+What about using '$(INSTALL) -D ...' instead of the if-mkdir-block above?
+(E.g. as in tools/debugging/Makefile.)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2022-12-12
+Kind regards,
+Nicolas
 
-   # HEAD: 17b8d847b92d815d1638f0de154654081d66b281 perf/x86/intel/uncore: Fix reference count leak in __uncore_imc_init_box()
+>  endef
+>  
+>  install_lib: $(LIBFILE)
+> @@ -100,13 +100,16 @@ install_lib: $(LIBFILE)
+>  		$(call do_install_mkdir,$(libdir_SQ)); \
+>  		cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
+>  
+> -install_headers:
+> -	$(call QUIET_INSTALL, libsubcmd_headers) \
+> -		$(call do_install,exec-cmd.h,$(prefix)/include/subcmd,644); \
+> -		$(call do_install,help.h,$(prefix)/include/subcmd,644); \
+> -		$(call do_install,pager.h,$(prefix)/include/subcmd,644); \
+> -		$(call do_install,parse-options.h,$(prefix)/include/subcmd,644); \
+> -		$(call do_install,run-command.h,$(prefix)/include/subcmd,644);
+> +HDRS := exec-cmd.h help.h pager.h parse-options.h run-command.h
+> +INSTALL_HDRS_PFX := $(DESTDIR)$(prefix)/include/subcmd
+> +INSTALL_HDRS := $(addprefix $(INSTALL_HDRS_PFX)/, $(HDRS))
+> +
+> +$(INSTALL_HDRS): $(INSTALL_HDRS_PFX)/%.h: %.h
+> +	$(call QUIET_INSTALL, $@) \
+> +		$(call do_install,$<,$(INSTALL_HDRS_PFX)/,644)
+> +
+> +install_headers: $(INSTALL_HDRS)
+> +	$(call QUIET_INSTALL, libsubcmd_headers)
+>  
+>  install: install_lib install_headers
+>  
+> -- 
+> 2.39.0.rc0.267.gcb52ba06e7-goog
 
-[ Conflict heads-up: there's going to be a trivial conflict in 
-  kernel/events/core.c when pulling this into your v6.1+ tree. ]
-
-Perf events updates for v6.2:
-
- - Thoroughly rewrite the data structures that implement perf task context handling,
-   with the goal of fixing various quirks and unfeatures both in already merged,
-   and in upcoming proposed code.
-
-   The old data structure is the per task and per cpu perf_event_contexts:
-
-         task_struct::perf_events_ctxp[] <-> perf_event_context <-> perf_cpu_context
-              ^                                 |    ^     |           ^
-              `---------------------------------'    |     `--> pmu ---'
-                                                     v           ^
-                                                perf_event ------'
-
-   In this new design this is replaced with a single task context and
-   a single CPU context, plus intermediate data-structures:
-
-         task_struct::perf_event_ctxp -> perf_event_context <- perf_cpu_context
-              ^                           |   ^ ^
-              `---------------------------'   | |
-                                              | |    perf_cpu_pmu_context <--.
-                                              | `----.    ^                  |
-                                              |      |    |                  |
-                                              |      v    v                  |
-                                              | ,--> perf_event_pmu_context  |
-                                              | |                            |
-                                              | |                            |
-                                              v v                            |
-                                         perf_event ---> pmu ----------------'
-
-   [ See commit bd2756811766 for more details. ]
-
-   This rewrite was developed by Peter Zijlstra and Ravi Bangoria.
-
- - Optimize perf_tp_event()
-
- - Update the Intel uncore PMU driver, extending it with UPI topology discovery
-   on various hardware models.
-
- - Misc fixes & cleanups
-
- Thanks,
-
-	Ingo
-
------------------->
-Alexander Antonov (11):
-      perf/x86/intel/uncore: Generalize IIO topology support
-      perf/x86/intel/uncore: Introduce UPI topology type
-      perf/x86/intel/uncore: Clear attr_update properly
-      perf/x86/intel/uncore: Disable I/O stacks to PMU mapping on ICX-D
-      perf/x86/intel/uncore: Generalize get_topology() for SKX PMUs
-      perf/x86/intel/uncore: Enable UPI topology discovery for Skylake Server
-      perf/x86/intel/uncore: Get UPI NodeID and GroupID
-      perf/x86/intel/uncore: Enable UPI topology discovery for Icelake Server
-      perf/x86/intel/uncore: Enable UPI topology discovery for Sapphire Rapids
-      perf/x86/intel/uncore: Update sysfs-devices-mapping file
-      perf/x86/intel/uncore: Make set_mapping() procedure void
-
-Chen Zhongjin (1):
-      perf: Fix possible memleak in pmu_dev_alloc()
-
-Colin Ian King (1):
-      perf: Remove unused pointer task_ctx
-
-Gaosheng Cui (1):
-      perf: Fix IS_ERR() vs NULL check in inherit_event()
-
-Peter Zijlstra (2):
-      perf: Rewrite core context handling
-      perf: Fix function pointer case
-
-Rafael Mendonca (1):
-      perf/x86: Remove unused variable 'cpu_type'
-
-Ravi Bangoria (3):
-      perf: Optimize perf_tp_event()
-      perf/amd/ibs: Make IBS a core pmu
-      perf/core: Don't allow grouping events from different hw pmus
-
-Shaokun Zhang (1):
-      perf/x86/amd: Remove the repeated declaration
-
-Xiongfeng Wang (4):
-      perf/x86/intel/uncore: Fix reference count leak in sad_cfg_iio_topology()
-      perf/x86/intel/uncore: Fix reference count leak in hswep_has_limit_sbox()
-      perf/x86/intel/uncore: Fix reference count leak in snr_uncore_mmio_map()
-      perf/x86/intel/uncore: Fix reference count leak in __uncore_imc_init_box()
-
-
- Documentation/ABI/testing/sysfs-devices-mapping |   30 +-
- arch/arm64/kernel/perf_event.c                  |   18 +-
- arch/powerpc/perf/core-book3s.c                 |    8 +-
- arch/s390/kernel/perf_pai_crypto.c              |    2 +-
- arch/s390/kernel/perf_pai_ext.c                 |    2 +-
- arch/x86/events/amd/brs.c                       |    2 +-
- arch/x86/events/amd/ibs.c                       |    4 +-
- arch/x86/events/amd/lbr.c                       |    6 +-
- arch/x86/events/core.c                          |   48 +-
- arch/x86/events/intel/core.c                    |   23 +-
- arch/x86/events/intel/ds.c                      |    4 +-
- arch/x86/events/intel/lbr.c                     |   30 +-
- arch/x86/events/intel/uncore.h                  |   24 +-
- arch/x86/events/intel/uncore_snb.c              |    3 +
- arch/x86/events/intel/uncore_snbep.c            |  495 +++++-
- arch/x86/events/perf_event.h                    |   31 +-
- drivers/perf/arm_pmu.c                          |   16 +-
- include/linux/perf/arm_pmu.h                    |    2 +-
- include/linux/perf_event.h                      |  125 +-
- include/linux/sched.h                           |    2 +-
- kernel/events/core.c                            | 2120 ++++++++++++-----------
- 21 files changed, 1765 insertions(+), 1230 deletions(-)
+-- 
+epost|xmpp: nicolas@fjasle.eu          irc://oftc.net/nsc
+↳ gpg: 18ed 52db e34f 860e e9fb  c82b 7d97 0932 55a0 ce7f
+     -- frykten for herren er opphav til kunnskap --
