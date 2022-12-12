@@ -2,43 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3CDC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 14:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA853C4167B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 14:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232072AbiLLOpQ (ORCPT
+        id S232301AbiLLOpS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Dec 2022 09:45:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
+        Mon, 12 Dec 2022 09:45:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231481AbiLLOpQ (ORCPT
+        with ESMTP id S232277AbiLLOpR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Dec 2022 09:45:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4666424;
-        Mon, 12 Dec 2022 06:45:15 -0800 (PST)
+        Mon, 12 Dec 2022 09:45:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B36765C0;
+        Mon, 12 Dec 2022 06:45:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A05C16106F;
-        Mon, 12 Dec 2022 14:45:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F50EC433EF;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 13E09B80D86;
+        Mon, 12 Dec 2022 14:45:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F53EC433F0;
         Mon, 12 Dec 2022 14:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670856314;
-        bh=EvEZt8wVyoka0T/oimTSBNVo3axkDhbQxVc0X3rYsJ4=;
+        s=k20201202; t=1670856313;
+        bh=Ug5zleVyjK5U5aBjLmguiGbM1OJF0MNqWNvW2lrwe8Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W/Q2oUGaROnOpni/I0RkyJAOhFyqcVUG+jQrSD0pua65VfaYxN1cxW13gI/ZE2Df0
-         hqJ+FTsrX4nTLPIraWjI8+ciLB3AnnDvRb9iki+Nl0DfdbndrnoEx2eIVTyHX4cMav
-         CtbI6e3teGULTdJMi6ohbudqgmmP8QXvEfQs/3UdGwygzi/YE0bIRJ+EqQBTSfL4CK
-         /u/8NXmV1dLNnCvZbHdIVXLPD/dl8UXX+6xRJtGuIjCa5gSq7mV+fpqapvi0NOAFVM
-         /kD37Xp8kFvJJL/BStqs79U5RA0Yl4WaQqlcTCIgl5d9rBEDPtIunCNXpunke8ugNu
-         Ew6QZqBO4xFIQ==
+        b=jGzPsR/b+I8XH9KBzwEYpFHj100FY7XmWbDSRknmz1lvMfK32MxmJV4vcbcNMLZ0E
+         adIeyV5tJgSWWDYIf2KgZ3QPCD22IiMatS4+nnm3Pajb/SdTzP1E93s2Jzma6+ki4b
+         JU/1VwpUxGMz4D1skUhVWx2shjd68or3Hv6YtDPNaoQCCuySTgQ5YNn47nMyzqtrH+
+         yIQLmYlng6cwBy6aTAZY2W5A1QdwcCwxy9ECJOywWZsuTmkwTzGc0L65TRjQOHRMgX
+         VLL1g8xOvRdxSbMIDJVueRv+ufOrFLFknux1YcQQMI8oKui13/ytGuNzfOcwynavZ7
+         9NQdiQLnbu1Sg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 31EF140483; Mon, 12 Dec 2022 10:51:06 -0300 (-03)
-Date:   Mon, 12 Dec 2022 10:51:06 -0300
+        id 29D5340638; Mon, 12 Dec 2022 11:13:41 -0300 (-03)
+Date:   Mon, 12 Dec 2022 11:13:41 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -50,9 +50,8 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
-Message-ID: <Y5cxyk3OdgFXlyhS@kernel.org>
-References: <Y491d1wEW4TfUi5f@kernel.org>
- <Y4921D+36UGdhK92@kernel.org>
+Message-ID: <Y5c3FSm16tIKQfgS@kernel.org>
+References: <Y4921D+36UGdhK92@kernel.org>
  <Y494TNa0ZyPH9YSD@kernel.org>
  <Y498YP2N3gvFSr/X@kernel.org>
  <C9F248C8-AF8D-40A1-A1AD-BCC39FBA01C7@linux.vnet.ibm.com>
@@ -60,133 +59,67 @@ References: <Y491d1wEW4TfUi5f@kernel.org>
  <36CD1041-0CAE-41C1-8086-C17854531B3E@linux.vnet.ibm.com>
  <Y5JfgyN59dSeKbUP@kernel.org>
  <Y5Jl8MeW90DXy1wT@kernel.org>
- <8F6F0C27-53F3-4837-A19C-845768253249@linux.vnet.ibm.com>
+ <CAP-5=fWyb+w2EP4cGBJU3RD6E_OkBZ+3w5+YyhwX7fOA-H0aWQ@mail.gmail.com>
+ <CAP-5=fXJpxq-A7VJkZv+Y0fiCuNj9bhTXJx9+FGBQtePJ92z_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8F6F0C27-53F3-4837-A19C-845768253249@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fXJpxq-A7VJkZv+Y0fiCuNj9bhTXJx9+FGBQtePJ92z_A@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 09, 2022 at 12:04:18PM +0530, Athira Rajeev escreveu:
-> 
-> 
-> > On 09-Dec-2022, at 4:02 AM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > 
-> > Em Thu, Dec 08, 2022 at 07:04:52PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Thu, Dec 08, 2022 at 12:21:20PM +0530, Athira Rajeev escreveu:
-> >>>> On 07-Dec-2022, at 10:57 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >>>> Can you try again? tmp.perf/core? That "tmp." part means its a force
-> >>>> pushed branch, so I just force pushed with some arch specific fixes, now
-> >>>> I'm down to (removing the successful builds and unrelated failures, now
-> >>>> related to libbpf's F_DUPFD_CLOEXEC kaboom):
-> >> 
-> >>> Ok Arnaldo, Sure, I will check with updated branch
-> >> 
-> >>>>  5     7.38 fedora:34                     : FAIL gcc version 11.3.1 20220421 (Red Hat 11.3.1-2) (GCC)
-> >>>>   /git/perf-6.1.0-rc6/tools/perf/util/evsel.c: In function ‘evsel__rawptr’:
-> >>>>   /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: error: ‘TEP_FIELD_IS_RELATIVE’ undeclared (first use in this function); did you mean ‘TEP_FIELD_IS_FLAG’?
-> >>>>    2787 |                 if (field->flags & TEP_FIELD_IS_RELATIVE)
-> >>>>         |                                    ^~~~~~~~~~~~~~~~~~~~~
-> >>>>         |                                    TEP_FIELD_IS_FLAG
-> >> 
-> >>> I observed same issue as updated here: 
-> >>> https://lore.kernel.org/lkml/10476A85-3F75-4C91-AB5B-E5B136F31297@linux.vnet.ibm.com/
-> >> 
-> >>> Looks like TEP_FIELD_IS_RELATIVE is not defined in header file of the system installed version.
-> >>> whereas it is there in header file in tools/lib/traceevent
-> >> 
-> >>> # grep TEP_FIELD_IS_RELATIVE /usr/include/traceevent/event-parse.h
-> >>> # grep TEP_FIELD_IS_RELATIVE ../lib/traceevent/event-parse.h
-> >>> 	TEP_FIELD_IS_RELATIVE	= 256,
-> >> 
-> >> Right, I had noticed that as well, so as a prep patch I'm adding the
-> >> patch below, before Ian's. Please check and provide an
-> >> Acked-by/Tested-by/Reviewed-by if possible.
-> > 
-> > I ended up with the one below, _after_ Ian's patch as I had some trouble grafting
-> > it before and had already tested it this way multiple times, I'm pushing
-> > this to tmp/perf.core.
-> > 
-> > - Arnaldo
-> 
-> 
-> Hi Arnaldo, Ian
-> 
-> Thanks for the fixes.
-> 
-> Since we changed “CONFIG_TRACEEVENT” to “CONFIG_LIBTRACEEVENT”, 
-> below change is also needed in “arch/powerpc/util/Build”
-> 
-> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-> index 71e57f28abda..9889245c555c 100644
-> --- a/tools/perf/arch/powerpc/util/Build
-> +++ b/tools/perf/arch/powerpc/util/Build
-> @@ -1,5 +1,5 @@
->  perf-y += header.o
-> -perf-$(CONFIG_TRACEEVENT) += kvm-stat.o
-> +perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
->  perf-y += perf_regs.o
->  perf-y += mem-events.o
->  perf-y += sym-handling.o
-> 
-> With this change, I could successfully compile in these environment:
-> - Without libtraceevent-devel installed
-> - With libtraceevent-devel installed
-> - With “make NO_LIBTRACEEVENT=1”
-> 
-> With above change,
-> Acked-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Em Thu, Dec 08, 2022 at 03:05:29PM -0800, Ian Rogers escreveu:
+> On Thu, Dec 8, 2022 at 3:00 PM Ian Rogers <irogers@google.com> wrote:
+> > On Thu, Dec 8, 2022 at 2:32 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > commit a0ec3ef4590e7e82339b6f318e671a6b69fd94e8
+> > > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > Date:   Thu Dec 8 19:28:58 2022 -0300
 
-I did that and the same thing for other architectures, thanks for
-testing!
+> > >     perf tools: Add test to check if libtracevent has TEP_FIELD_IS_RELATIVE
 
-I'll now give a try at implementing it without
-tools/build/feature/test-libtraceevent-tep_field_is_relative.c, using
-just the version of libtraceevent, as Ian suggested.
+> > Could HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE be a version rather
+> > than feature check, something like:
 
-It would be great if you could test it again then,
+> > #define MAKE_LIBTRACEEVENT_VERSION(maj, mid, min) (maj * 255 *255 +
+> > mid * 255 + min)
+> > #define HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > (LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
 
-Thanks,
+> > Note, we have LIBTRACEEVENT_VERSION computed in Makefile.config by way
+> > of pkg-config.
+ 
+> LIBTRACEEVENT_VERSION had a workaround if pkg-config wasn't present to
+> default to 1.1.0 for its use in:
+> https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irogers@google.com/
+> We should un-revert that change now the -Itools/lib issue is resolved
+> (1.1 traceevent headers compiled against newer system libtraceevent
+> library).
+
+Can you please send that un-revert as a proper patch?
+
+Meanwhile, I came up with this quick hack on top of what I had, seems to
+be enough, will test it with systems with libtraceevent <= 1.5.0, where
+TEP_FIELD_IS_RELATIVE was introduced.
+
+Will do it after removing the tools/build/feature/ TEP_FIELD_IS_RELATIVE
+big hammer check.
 
 - Arnaldo
 
-
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 88553c578ed7a1c4..78ef7115be3d91a7 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -3,7 +3,7 @@ perf-y += machine.o
- perf-y += perf_regs.o
- perf-y += tsc.o
- perf-y += pmu.o
--perf-$(CONFIG_TRACEEVENT) += kvm-stat.o
-+perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-$(CONFIG_DWARF)     += dwarf-regs.o
- perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index 71e57f28abdac7e9..9889245c555c4cfb 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -1,5 +1,5 @@
- perf-y += header.o
--perf-$(CONFIG_TRACEEVENT) += kvm-stat.o
-+perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-y += perf_regs.o
- perf-y += mem-events.o
- perf-y += sym-handling.o
-diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
-index aa8a5f05c9cb4706..db68840869979f2c 100644
---- a/tools/perf/arch/s390/util/Build
-+++ b/tools/perf/arch/s390/util/Build
-@@ -1,5 +1,5 @@
- perf-y += header.o
--perf-$(CONFIG_TRACEEVENT) += kvm-stat.o
-+perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-y += perf_regs.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e29975664f06bd61..52a4dc029111c1e2 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1197,8 +1197,8 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+     LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
+     CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
+     $(call detected,CONFIG_LIBTRACEEVENT)
+-    $(call feature_check,libtraceevent-tep_field_is_relative)
+-    ifeq ($(feature-libtraceevent-tep_field_is_relative), 1)
++    LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE := $(shell expr 1 \* 255 \* 255 + 5 \* 255 + 0) # 1.5.0
++    ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt $(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
+       CFLAGS += -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+     endif
+   else
