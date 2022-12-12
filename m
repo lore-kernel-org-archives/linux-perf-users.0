@@ -2,143 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942EDC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 19:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F07C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 19:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233305AbiLLTpk (ORCPT
+        id S229600AbiLLTu5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Dec 2022 14:45:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39282 "EHLO
+        Mon, 12 Dec 2022 14:50:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232450AbiLLTpk (ORCPT
+        with ESMTP id S229497AbiLLTuz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Dec 2022 14:45:40 -0500
+        Mon, 12 Dec 2022 14:50:55 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030AC11461;
-        Mon, 12 Dec 2022 11:45:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E301658E;
+        Mon, 12 Dec 2022 11:50:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BC50BB80E05;
-        Mon, 12 Dec 2022 19:45:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49ED6C433F0;
-        Mon, 12 Dec 2022 19:45:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 517F2B80DE1;
+        Mon, 12 Dec 2022 19:50:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EF8C433D2;
+        Mon, 12 Dec 2022 19:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670874336;
-        bh=OsDBLlHaZh13anyxhYD8NWH+ASlzd43Kdbc8VEY6kgk=;
+        s=k20201202; t=1670874651;
+        bh=GWBSlK+jG0JiF9pGcNdW2eUoYopUOb6hhGgisKcKzjM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PPNgg+ZpfBQhDSGzOEF/xH907Odul1VKVZcbcGZio+XiCH7k1F2wKUjPpHrhyoEgH
-         Nwy01EYCZqKppsWdKRSn++8Lhi10gDRv+4wQxaatkpD+FQFWUNCgLe/tVCNovjnH+p
-         jiH82WCfCVgl79QCOFcMDMGApTtia5EjQ9VQJ9mLLvhei8v7w5z7/APVZRKNE4kl06
-         kEo5IpGsErdcKNNnzPv+oCZBW/x0VYcgdBsv7IzEl5/5tgTO7EXWpbPGgWGSsLxYQX
-         tPdnmkvHJqlnHreRyh7yiUZBmh+6Bl6h6q1f3IaJJY1whDZPaIuNf/7gKevlZ7yj6r
-         p/oGLUDhqQAhw==
+        b=r/1mP/WGckFhesy8UZRRzumLWO5/MkqGC7elrabJcLmfIZ0hYSqr6DxPfKbUxq6MJ
+         1N9CcCIbTKdUOFOH11grq5cucyaoupdQ/+ogNmhuPpl+da8lXl/sz3rCxtGB5nJWSu
+         fU77envppwHa/6UlOIbRHLlcOwcsqu7QZdrZCtQQDH0C5CHqk8xgJjkdPoQ99xJB40
+         Zl4AKsGboN+28rsxNnME5m3YYGngYnCp4l+gndMKlmmWjlar/k/MkUANI4KJLw8U1R
+         ZyofQW/ovSnntONZudYfG9FRd/z8te1ZwtoSIYcJfyaYdPwV1NTp9+kIJjH9xZ5lGl
+         ojI8QEXhzelig==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C3E5140483; Mon, 12 Dec 2022 16:45:33 -0300 (-03)
-Date:   Mon, 12 Dec 2022 16:45:33 -0300
+        id 9DFC740483; Mon, 12 Dec 2022 16:50:49 -0300 (-03)
+Date:   Mon, 12 Dec 2022 16:50:49 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, Al.Grant@arm.com,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Blake Jones <blakejones@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf lock contention: Add lock_data.h for common data
-Message-ID: <Y5eE3Udv03uM4zhQ@kernel.org>
-References: <20221209190727.759804-1-namhyung@kernel.org>
- <20221209190727.759804-2-namhyung@kernel.org>
- <Y5eEJd/AhSzUfILO@kernel.org>
- <Y5eEbxVOHaUPw9UI@kernel.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        coresight@lists.linaro.org
+Subject: Re: [PATCH 0/5] perf: cs-etm: Print auxtrace info even if OpenCSD
+ isn't linked
+Message-ID: <Y5eGGb28EAK43j26@kernel.org>
+References: <20221212155513.2259623-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y5eEbxVOHaUPw9UI@kernel.org>
+In-Reply-To: <20221212155513.2259623-1-james.clark@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 12, 2022 at 04:43:43PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Dec 12, 2022 at 04:42:30PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Dec 09, 2022 at 11:07:24AM -0800, Namhyung Kim escreveu:
-> > > Accessing BPF maps should use the same data types.  Add bpf_skel/lock_data.h
-> > > to define the common data structures.  No functional changes.
-> > 
-> > You forgot to update one of the stack_id users, that field got renamed:
-> > 
-> > util/bpf_skel/lock_contention.bpf.c:144:6: error: no member named 'stack_id' in 'struct contention_key'
-> >         key.stack_id = pelem->stack_id;
-> >         ~~~ ^
-> > 1 error generated.
-> > make[2]: *** [Makefile.perf:1075: /tmp/build/perf/util/bpf_skel/.tmp/lock_contention.bpf.o] Error 1
-> > make[1]: *** [Makefile.perf:236: sub-make] Error 2
-> > make: *** [Makefile:113: install-bin] Error 2
-> > make: Leaving directory '/var/home/acme/git/perf/tools/perf'
-> > 
-> >  Performance counter stats for 'make -k NO_LIBTRACEEVENT=1 BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin':
-> > 
-> >      7,005,216,342      cycles:u
-> >     11,851,225,594      instructions:u                   #    1.69  insn per cycle
-> > 
-> >        3.168945139 seconds time elapsed
-> > 
-> >        1.730964000 seconds user
-> >        1.578932000 seconds sys
-> > 
-> > 
-> > ⬢[acme@toolbox perf]$ git log --oneline -4
-> > f6e7a5f1db49dc8e (HEAD) perf lock contention: Add lock_data.h for common data
-> > 5d9b55713c5c037f perf python: Account for multiple words in CC
-> > d9078bf3f3320457 perf off_cpu: Fix a typo in BTF tracepoint name, it should be 'btf_trace_sched_switch'
-> > 3b7ea76f0f7844f5 perf test: Update event group check for support of uncore event
-> > ⬢[acme@toolbox perf]$
-> > 
-> > After some point it builds.
-> > 
-> > I'm fixing this to keep it bisectable.
+Em Mon, Dec 12, 2022 at 03:55:08PM +0000, James Clark escreveu:
+> The auxtrace info header can be useful for debugging, and at the
+> moment it's possible to record a file without OpenCSD linked but
+> not view the header even though it should be possible to do.
 > 
-> I folded this:
+> This patchset tidies up some of the related functions and
+> improves some of the error messages before making the above
+> possible in the last commit.
 > 
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 0f63cc28ccbabd21..64fd1e040ac86e58 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -141,7 +141,7 @@ int contention_end(u64 *ctx)
->  
->  	duration = bpf_ktime_get_ns() - pelem->timestamp;
->  
-> -	key.stack_id = pelem->stack_id;
-> +	key.stack_or_task_id = pelem->stack_id;
->  	data = bpf_map_lookup_elem(&lock_stat, &key);
->  	if (!data) {
->  		struct contention_data first = {
+> Testing done:
+> 
+>  * Compiled on x86 and Arm both with and without CORESIGHT=1
+>  * Ran the Coresight tests
+> 
+> Applies to perf/core (0c3852adae8)
 
+Thanks, applied.
 
-And then fixed up this:
+- Arnaldo
 
-Could not apply 3d4947c7bd10beba... perf lock contention: Implement -t/--threads option for BPF
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$ git diff
-diff --cc tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 64fd1e040ac86e58,cd405adcd252b82d..0000000000000000
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@@ -141,7 -168,13 +168,17 @@@ int contention_end(u64 *ctx
+ 
+> James Clark (5):
+>   perf: cs-etm: Print unknown header version as an error
+>   perf: cs-etm: Remove unused stub methods
+>   perf: cs-etm: Tidy up auxtrace info header printing
+>   perf: cs-etm: Cleanup cs_etm__process_auxtrace_info()
+>   perf: cs-etm: Print auxtrace info even if OpenCSD isn't linked
+> 
+>  tools/perf/util/Build         |   1 +
+>  tools/perf/util/cs-etm-base.c | 174 ++++++++++++++++++++++++++++
+>  tools/perf/util/cs-etm.c      | 208 +++-------------------------------
+>  tools/perf/util/cs-etm.h      |  46 ++------
+>  4 files changed, 200 insertions(+), 229 deletions(-)
+>  create mode 100644 tools/perf/util/cs-etm-base.c
+> 
+> -- 
+> 2.25.1
 
-        duration = bpf_ktime_get_ns() - pelem->timestamp;
+-- 
 
-++<<<<<<< HEAD
- +      key.stack_or_task_id = pelem->stack_id;
-++=======
-+       if (aggr_mode == LOCK_AGGR_CALLER) {
-+               key.stack_or_task_id = pelem->stack_id;
-+       } else {
-+               key.stack_or_task_id = pid;
-+               update_task_data(pid);
-+       }
-+
-++>>>>>>> 3d4947c7bd10beba (perf lock contention: Implement -t/--threads option for BPF)
+- Arnaldo
