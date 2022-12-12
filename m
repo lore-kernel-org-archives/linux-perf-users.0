@@ -2,93 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D22FC00145
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 18:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFE9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Dec 2022 19:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233075AbiLLSyR (ORCPT
+        id S233215AbiLLTBC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Dec 2022 13:54:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41336 "EHLO
+        Mon, 12 Dec 2022 14:01:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232848AbiLLSxm (ORCPT
+        with ESMTP id S233286AbiLLTAa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Dec 2022 13:53:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F235B65F3
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Dec 2022 10:53:11 -0800 (PST)
+        Mon, 12 Dec 2022 14:00:30 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C231FD2F3
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Dec 2022 10:57:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 46696611D0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Dec 2022 18:53:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A451C433D2;
-        Mon, 12 Dec 2022 18:53:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 855C2B80DF9
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Dec 2022 18:57:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F2C7C433EF;
+        Mon, 12 Dec 2022 18:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670871190;
-        bh=WQA8BP7yxNp5RFg2kA+KJSFkyZ3hS2AeQuAtN3XPCn8=;
+        s=k20201202; t=1670871452;
+        bh=oLM1EmBJn70XGRt7X/jZ1WyagJTgINmDi8SvRBD1y0Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rh94Ds51rLw61oplIjfxfPNA7lYouOPaWUnZQVQxo8rgqbplh/Cux+R2dNpEVNCTA
-         cbk9NlXzFCBtGM4IlgIx+QUVofQm0IcdjE0UPpvmAGMlFCM3YSuVoq7i7krUWQWG0a
-         /JwXTV4cxM+ypxZ6gYVsYCRH8pYhW4Ngth4ng777c/SPhyPhomXFBzrdrP5a/46ml9
-         puvFDUl/LB/eWSc8gKHOu74vfxGHwPjmR7D2uvDA9wvUedIQ7PaSZ7QHjSz/f1sD4E
-         IkbNKGhxNzYvr64PgwQe3E5iFAXx9oQn/TDUfja5qY4Ns+u2KsQzJiVxvWqmQHIA6i
-         lPVNvF6pp0H+w==
+        b=mnffZYAP4zA3NP9Q+akqnk35ot/lF9sBRjGhSjIilwwEyu1Aakcx5r9OUUzPoscBC
+         1BrXkXihTZPONsWjIicjvJLYlcMCQmRNPFkYP6cBKVR7Q6C1nKsawxMifqOPo3jjol
+         sYxjvky9w90ngvV9Bvuf75lGaqsTEAVqBGo4DIeiar0zkpbAdUFEY7RqE4g5jegBlN
+         1gsNhtYbH7w7Z7RhElcX0DDWCxTsy2ssQ5pfi+OF/IxRDbE46W1QWpF05c1owGyrG9
+         5oozGAPEROul9Dmpnc5xK/jZglrLOrVeH1qhzLOGY7Lswf9WwBnwIwD9LYa/E6KdyJ
+         GCZLfIwt7J/Gg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 98B7540483; Mon, 12 Dec 2022 15:53:07 -0300 (-03)
-Date:   Mon, 12 Dec 2022 15:53:07 -0300
+        id CC2A240483; Mon, 12 Dec 2022 15:57:29 -0300 (-03)
+Date:   Mon, 12 Dec 2022 15:57:29 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Khem Raj <raj.khem@gmail.com>, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Fangrui Song <maskray@google.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        John Keeping <john@metanate.com>, Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>
-Subject: Re: [PATCH] perf python: Account for multiple words in CC
-Message-ID: <Y5d4k7fDxfRP7hcN@kernel.org>
-References: <20221205025534.150006-1-raj.khem@gmail.com>
- <7d262374-1217-d79a-ff2d-d6626a98e195@gmail.com>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     Kajol Jain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, disgoel@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] perf test bpf: Skip test if kernel-debuginfo is not
+ present
+Message-ID: <Y5d5mfyCEcUqI61Y@kernel.org>
+References: <20221028154230.140709-1-kjain@linux.ibm.com>
+ <A7B7E3F1-161D-4B1A-A4FE-E4A77EE06F1A@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7d262374-1217-d79a-ff2d-d6626a98e195@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <A7B7E3F1-161D-4B1A-A4FE-E4A77EE06F1A@linux.vnet.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 05, 2022 at 01:01:10PM -0800, Florian Fainelli escreveu:
-> On 12/4/22 18:55, Khem Raj wrote:
-> > Sometimes build systems may append options e.g. --sysroot etc. to CC
-> > variable especially in cross-compile environments like yocto project
-> > where CC varable is composed of cross-compiler name and some needed
-> > options for it to work in a relocatable environment. Therefore separate
-> > out the compiler name from rest of the options in CC, then add the
-> > options via second argument to Popen() API
+Em Thu, Nov 03, 2022 at 12:27:01PM +0530, Athira Rajeev escreveu:
+> > On 28-Oct-2022, at 9:12 PM, Kajol Jain <kjain@linux.ibm.com> wrote:
 > > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Fangrui Song <maskray@google.com>
-> > Cc: Florian Fainelli <f.fainelli@gmail.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: John Keeping <john@metanate.com>
-> > Cc: Leo Yan <leo.yan@linaro.org>
-> > Cc: Michael Petlan <mpetlan@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > Perf BPF filter test fails in environment where "kernel-debuginfo"
+> > is not installed.
+> > 
+> > Test failure logs:
+> > <<>>
+> > 42: BPF filter                            :
+> > 42.1: Basic BPF filtering                 : Ok
+> > 42.2: BPF pinning                         : Ok
+> > 42.3: BPF prologue generation             : FAILED!
+> > <<>>
+> > 
+> > Enabling verbose option provided debug logs, which says debuginfo
+> > needs to be installed. Snippet of verbose logs:
+> > 
+> > <<>>
+> > 42.3: BPF prologue generation                                       :
+> > --- start ---
+> > test child forked, pid 28218
+> > <<>>
+> > Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
+> > package.
+> > bpf_probe: failed to convert perf probe events
+> > Failed to add events selected by BPF
+> > test child finished with -1
+> > ---- end ----
+> > BPF filter subtest 3: FAILED!
+> > <<>>
+> > 
+> > Here subtest, "BPF prologue generation" failed and
+> > logs shows debuginfo is needed. After installing
+> > kernel-debuginfo package, testcase passes.
+> > 
+> > Subtest "BPF prologue generation" failed because, the "do_test"
+> > function returns "TEST_FAIL" without checking the error type
+> > returned by "parse_events_load_bpf_obj" function.
+> > Function parse_events_load_bpf_obj can also return error of type
+> > "-ENOENT" incase kernel-debuginfo package is not installed. Fix this
+> > by adding check for -ENOENT error.
+> > 
+> > Test result after the patch changes:
+> > 
+> > Test failure logs:
+> > <<>>
+> > 42: BPF filter                 :
+> > 42.1: Basic BPF filtering      : Ok
+> > 42.2: BPF pinning              : Ok
+> > 42.3: BPF prologue generation  : Skip (clang/debuginfo isn't
+> > installed or environment missing BPF support)
+> > 
+> > Fixes: ba1fae431e74bb42 ("perf test: Add 'perf test BPF'")
+> > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> > Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+> > ---
+> > tools/perf/tests/bpf.c | 6 +++++-
+> > 1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> > index 17c023823713..57cecadc1da2 100644
+> > --- a/tools/perf/tests/bpf.c
+> > +++ b/tools/perf/tests/bpf.c
+> > @@ -126,6 +126,10 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
+> > 
+> > 	err = parse_events_load_bpf_obj(&parse_state, &parse_state.list, obj, NULL);
+> > 	parse_events_error__exit(&parse_error);
+> > +	if (err == -ENOENT) {
+> > +		pr_debug("Failed to add events selected by BPF, debuginfo package not installed\n");
+> > +		return TEST_SKIP;
+> > +	}
 > 
-> FWIW:
+> Hi Kajol,
 > 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Here, you have used ENOENT to skip the test. But there could be other places in the code path for “parse_events_load_bpf_obj”
+> which also returns ENOENT. In that case, for any exit that returns ENOENT, test will get skipped.
+> 
+> Can we look at the logs, example we have this in commit logs:
+> 
+> 	Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
+> 	package.
+> 
+> so as to decide whether to skip for debug info ?
 
-Thanks, applied.
+Kajol?
 
 - Arnaldo
-
+ 
+> Thanks
+> Athira
+> 
+> > 	if (err || list_empty(&parse_state.list)) {
+> > 		pr_debug("Failed to add events selected by BPF\n");
+> > 		return TEST_FAIL;
+> > @@ -368,7 +372,7 @@ static struct test_case bpf_tests[] = {
+> > 			"clang isn't installed or environment missing BPF support"),
+> > #ifdef HAVE_BPF_PROLOGUE
+> > 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test,
+> > -			"clang isn't installed or environment missing BPF support"),
+> > +			"clang/debuginfo isn't installed or environment missing BPF support"),
+> > #else
+> > 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
+> > #endif
+> > -- 
+> > 2.31.1
