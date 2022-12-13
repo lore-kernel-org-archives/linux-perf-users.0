@@ -2,112 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCC6C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 15:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3415FC4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 15:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235577AbiLMPB2 (ORCPT
+        id S235463AbiLMPao (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 10:01:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44546 "EHLO
+        Tue, 13 Dec 2022 10:30:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbiLMPB1 (ORCPT
+        with ESMTP id S235752AbiLMPal (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 10:01:27 -0500
-X-Greylist: delayed 1806 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 13 Dec 2022 07:01:26 PST
-Received: from cczrelay01.in2p3.fr (cczrelay01.in2p3.fr [134.158.66.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84559209B8
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 07:01:26 -0800 (PST)
-Received: from [134.158.76.195] (wd-graland.ijclab.in2p3.fr [134.158.76.195])
-        (authenticated bits=0)
-        by cczrelay01.in2p3.fr (8.14.4/8.14.4) with ESMTP id 2BDEVIIH010411
-        (version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=NO)
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:31:18 +0100
-Message-ID: <58f34e62-81d7-fc71-dec2-03e88ee36392@ijclab.in2p3.fr>
-Date:   Tue, 13 Dec 2022 15:31:13 +0100
+        Tue, 13 Dec 2022 10:30:41 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 537461DA65;
+        Tue, 13 Dec 2022 07:30:40 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A74D62F4;
+        Tue, 13 Dec 2022 07:31:20 -0800 (PST)
+Received: from [10.57.9.141] (unknown [10.57.9.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E9843F71E;
+        Tue, 13 Dec 2022 07:30:38 -0800 (PST)
+Message-ID: <634087f2-1a7a-0f61-51e8-9e6068d59e9d@arm.com>
+Date:   Tue, 13 Dec 2022 15:30:37 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 0/4] Add VG register attr test with kernel version and
+ feature detection
 Content-Language: en-US
-To:     linux-perf-users@vger.kernel.org
-From:   Hadrien Grasland <hadrien.grasland@ijclab.in2p3.fr>
-Subject: A few questions from writing a perf tutorial
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20221213114739.2312862-1-james.clark@arm.com>
+ <Y5iRhKrIb5pXOaKk@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <Y5iRhKrIb5pXOaKk@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi everyone,
 
-I recently ran a perf tutorial for my colleagues (which I hope to eventually
-translate to English so it's of more general use), and noted a number of
-surprising things in the process.
 
-In the interest of fixing my understanding and reporting bugs where 
-appropriate,
-I would appreciate it if some of you would care to help me triage the 
-expected
-from the abnormal here.
+On 13/12/2022 14:51, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 13, 2022 at 11:47:35AM +0000, James Clark escreveu:
+>> I didn't get any feedback on the RFC version of this that I posted a
+>> while back [1]. I'd still like to add the test, especially now that
+>> 6.1 has been released with this new feature, so I've rebased it onto
+>> perf/core and double checked that it's still working.
+>>
+>> Applies to perf/core (0c3852adae83)
+> 
+> I'm applying this locally, would this be testable on a Firefly (roc-rk3399-pc):
 
-===
+Thanks Arnaldo. It doesn't look like rk3399 has SVE, so
+test-record-user-regs-no-sve-aarch64 will run to check that the kernel
+won't give you the new register. So I suppose the answer to the question
+is partially.
 
-Many of my issues stem from the fact that I'm providing a shared server to
-ensure that everyone is using the same version of perf, the same kernel, 
-and the
-same CPU. Which means that I need to set up the system to give participants
-fairly broad perf privileges, without wanting to giving them full root 
-access.
-That leads to various permission issues.
+For test-record-user-regs-sve-aarch64, I've been running it on a
+Graviton 3 on AWS which has SVE:
 
-I have read
-https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html#privileged-perf-users-groups
-and tried the suggested workflow of giving the perf executable various
-capabilities while making it only accessible to a "perf group". However, the
-capabilities don't seem to do anything. For example, even with 
-cap_syslog set,
-I still need kptr_restrict = 0 to see kernel symbol names in perf top and
-system-wide perf record. Ditto for cap_perfmon : even if it's set, I 
-still need
-to tune down perf_event_paranoid for system-wide profiling.
+  ubuntu@ip-10-252-130-213:~/linux$ head /proc/cpuinfo
+  processor	: 0
+  BogoMIPS	: 2100.00
+  Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp
+asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp
+sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm
+svebf16 i8mm bf16 dgh rng
+  CPU implementer	: 0x41
+  CPU architecture: 8
+  CPU variant	: 0x1
+  CPU part	: 0xd40
+  CPU revision	: 1
 
-I cross-checked with the procedure discussed in
-https://linux-audit.com/linux-capabilities-101/ that the capabilities 
-are set
-correctly on running perf processes, so I'm not sure what's going on 
-here. That
-would be the first mystery.
+  processor	: 1
 
-===
-
-The second mystery is that perf trace run as a regular user does not 
-correctly
-report thread names for all multi-threaded executables. It just reports 
-the thread
-numerical ID, which makes the output hard to read unless supplemented with a
-little `ps aux -L`. This may not be feasible when the threads being 
-monitored
-are short-lived.
-
-When perf trace is run as root, it has no such issue, which suggests 
-that this
-is a permission problem. Would you happen to know what the missing 
-permission
-is and whether/how I can give it to non-root users?
-
-===
-
-I also noticed that trying to use `--call-graph=lbr` on non-PMU events 
-(syscalls
-and tracepoints in general) fails with an "Operation not supported" 
-error. I do
-not understand why this operation is not supported, however, given that 
-from my
-limited understanding of the LBR, it should be active no matter what the 
-CPU is
-doing, and perf should always be able to sample it including on tracepoint
-events. Can someone shed some light on this?
-
-===
-
-Thanks in advance for your help!
-Hadrien Grasland
+> 
+> acme@roc-rk3399-pc:~$ head /proc/cpuinfo
+> processor	: 0
+> BogoMIPS	: 48.00
+> Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+> CPU implementer	: 0x41
+> CPU architecture: 8
+> CPU variant	: 0x0
+> CPU part	: 0xd03
+> CPU revision	: 4
+> 
+> processor	: 1
+> acme@roc-rk3399-pc:~$
+> 
+> - Arnaldo
+>  
+>> Thanks
+>> James
+>>
+>> [1]: https://lore.kernel.org/bpf/20220927154104.869029-1-james.clark@arm.com/
+>>
+>> James Clark (4):
+>>   perf test: Add ability to test exit code for attr tests
+>>   perf test: Add mechanism for skipping attr tests on auxiliary vector
+>>     values
+>>   perf test: Add mechanism for skipping attr tests on kernel versions
+>>   perf test arm64: Add attr tests for new VG register
+>>
+>>  tools/perf/tests/attr.py                      | 71 +++++++++++++++++--
+>>  .../attr/test-record-user-regs-no-sve-aarch64 |  9 +++
+>>  .../test-record-user-regs-old-sve-aarch64     | 10 +++
+>>  .../attr/test-record-user-regs-sve-aarch64    | 14 ++++
+>>  4 files changed, 99 insertions(+), 5 deletions(-)
+>>  create mode 100644 tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
+>>  create mode 100644 tools/perf/tests/attr/test-record-user-regs-old-sve-aarch64
+>>  create mode 100644 tools/perf/tests/attr/test-record-user-regs-sve-aarch64
+>>
+>> -- 
+>> 2.25.1
+> 
