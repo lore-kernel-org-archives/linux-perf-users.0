@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F900C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 23:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14551C10F1B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 23:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237079AbiLMX1d (ORCPT
+        id S237109AbiLMX14 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 18:27:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41550 "EHLO
+        Tue, 13 Dec 2022 18:27:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237047AbiLMX1Z (ORCPT
+        with ESMTP id S237078AbiLMX1d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 18:27:25 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDBC193E7
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:24 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-352e29ff8c2so189601587b3.21
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:24 -0800 (PST)
+        Tue, 13 Dec 2022 18:27:33 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29CA26AE8
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:31 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id t186-20020a2546c3000000b0071e2aff109dso14052392yba.16
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nto1ePcvoNdo0gJd4FRIsAa3aTl5xw4C0we0lXrYi4o=;
-        b=oaxFlW2ge9haPbT6hCAVVmPuTox9DW+MdJNbZ0iwTokh/4XBkQYtfdusDGVsroQCBm
-         9cjRzTm2cTtoTugbzyCsz2kAHTjET5PTm0Qk0Vytd93WKj/92dwBthyYMEWpJ4MTqXXZ
-         Kgspw5ZoKtAmQTgags/2mTbzHSF1im/xe5z7xwqmMxY+MpgtR2QCiepGpC+pSAjeR62r
-         af+wkR/DSxLYLJ6v8UzQYo8yEedKseMcvnt7JbQHB+veoq0VjssEp6Vl9Tr9PuxO2F17
-         A3OnHm0NqQzzvD7NNSu2YgWdnWtZRBASIIw6rkBU4yPgO0G6Iw9CrmSsI4xx9udJ5Lje
-         3Bjg==
+        bh=4KcsU/b3XyH2KQ+Ac23wDexbNZ59qO2HtUAGBc5g3Tc=;
+        b=YVUOxAG2O4vexzafaKXiqxFFq6XVXzwPJABTGqUVVbEO9apyo7c/MsJRdgasjmAOpn
+         px3ls4XPbyNqxVp2FxeVFfhvR/RSSY0c0A7dpd267nqfHdSr8ATTYXNxVhUx+UFadA9v
+         8gBH/HDiTN26ymg8IoNZTUnKQYjwBM1iLgXqISO8HS+d/7lZW8hfu012CgiKRwFM85oc
+         A/Kt/oFb9yD39482tBKuQAwP299lhwt6kxTPuBOwu9ckvzJllGkPvxHodK+j8iQ+KoAQ
+         ICf00f6PzpWGIWBKySR4+xb5XTL/wG622Fw670ZKbKSye5v59hTvDxMqVeoUepsaddp6
+         RpLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nto1ePcvoNdo0gJd4FRIsAa3aTl5xw4C0we0lXrYi4o=;
-        b=uWPYiLfEl/5AaO35M3fQ+Hm6A7fMBIPo4qenm5XKBcSx/5zOUPoAD/0Yr8pD8+1qBf
-         Pt09LdDqVIj61zbjLQte7jhJ6AgUQ08XDf/cZrBCCJkO4OlzqBvY+Fc+8vq+HecKNGQH
-         lPtbsetimBaYmz0oi3mJAUG/UuT7AY77T0btxmvvap2xpRmHbxPb947ITZ9vIycspw/A
-         wYfuNeqmr+mwbL6B7lDsXzRvxP+0U9BdnN82wyvMti2SO0+YlGKt9XFGOS+RqPuR57l7
-         AoasYNDfJXHgtJw2ICXjwhCPwge/otIB1oLcx/pUBuFS+vvZ4URsVlVPw7jWKpSdmuWr
-         echg==
-X-Gm-Message-State: ANoB5pnqLqYy3ayGte8u8hyQQbOYpJIhHkCVJPoraRp+T7QoSWc7EuGs
-        xYFxNfcdqMSA8AVxN7+idGWmDGYADrkq
-X-Google-Smtp-Source: AA0mqf7zKBCVtwi4aB0KEabefvL0KR/RBin8ahJp49ddNoCoU3ThDFo9mNYaPbpMu1R7lGgciCKfGEWA/gYy
+        bh=4KcsU/b3XyH2KQ+Ac23wDexbNZ59qO2HtUAGBc5g3Tc=;
+        b=cOCDSkBbtNNjm6Apv5/VVlTPBiyk1xNlxgiDVznEReJiZRhNQHXJ+MTycLNxWXTKbE
+         xnJo0qPLcFIf6bDN/tvdMrhfzZTFmHxmI7R2sV0TfAfpXtnGo441WGwwTqm7faIX9tTT
+         THqAVwn1ldPRtvenWDkmHmtoEEMTv5Pb/9vL/k3Jtb/oz58wu5x5Av89+t7MLFeCV+Vf
+         pxB63PW91KMpXKSIXYbdDv3HGlEpKaCnKMjkDtD8GG88azhmRfwjrWsBuT6eETDFog+i
+         WcsSsocOP2ERWsxCOO4FG5Q/+M/9zOZLiXhrIVtg9O+kqFab5BD8L2J7xDiOAhDE3Wrj
+         lE6g==
+X-Gm-Message-State: ANoB5pn+zdknuus7ZcjLK907ZmixzZX1Ox4sA9qPWZQoRq3dJ4I6CQp6
+        smhJ8r7UxXyJan6DGhW9c0jg9Fq9F1VF
+X-Google-Smtp-Source: AA0mqf7lGZZ4v31cMvNVbWsuRcdcUu/G5Qr1dJkHBTXk6p+od9IpIkYZyFFTc5zjUM888sTF5CpaDWTtO2s5
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:6268:b448:f7f4:4c2])
- (user=irogers job=sendgmr) by 2002:a5b:f42:0:b0:6fd:e4ef:5b1d with SMTP id
- y2-20020a5b0f42000000b006fde4ef5b1dmr25692919ybr.99.1670974043252; Tue, 13
- Dec 2022 15:27:23 -0800 (PST)
-Date:   Tue, 13 Dec 2022 15:26:48 -0800
+ (user=irogers job=sendgmr) by 2002:a05:690c:a01:b0:3b2:cbaa:6f2a with SMTP id
+ cg1-20020a05690c0a0100b003b2cbaa6f2amr2927724ywb.500.1670974051035; Tue, 13
+ Dec 2022 15:27:31 -0800 (PST)
+Date:   Tue, 13 Dec 2022 15:26:49 -0800
 In-Reply-To: <20221213232651.1269909-1-irogers@google.com>
-Message-Id: <20221213232651.1269909-3-irogers@google.com>
+Message-Id: <20221213232651.1269909-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20221213232651.1269909-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v1 2/5] perf trace-event: Add libtraceevent version tools to header
+Subject: [PATCH v1 3/5] libtraceevent: Increase libtraceevent logging when verbose
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -88,41 +88,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Allow comparisons like:
-\#if MAKE_LIBTRACEEVENT_VERSION(1, 3, 0) <= LIBTRACEEVENT_VERSION
+libtraceevent has added more levels of debug printout and with changes
+like:
+https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
+previously generated output like "registering plugin" is no longer
+displayed. This change makes it so that if perf's verbose debug output
+is enabled then the debug and info libtraceevent messages can be
+displayed.
+The code is conditionally enabled based on the libtraceevent version as
+discussed in the RFC:
+https://lore.kernel.org/lkml/20210610060643.595673-1-irogers@google.com/
 
-Based on previously reverted:
+Based on previously reverted change:
 https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irogers@google.com/
+that was reverted due to -Itools/lib being in CFLAGS meaning the
+traceevent headers couldn't be properly used from the system.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/trace-event.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/perf/util/debug.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index add6c5d9531c..1fbf4c3f8809 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -6,6 +6,19 @@
- #include <stdio.h>
- #include <linux/types.h>
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 65e6c22f38e4..cd575460818f 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -22,6 +22,7 @@
+ #include "ui/helpline.h"
+ #include "ui/ui.h"
+ #include "util/parse-sublevel-options.h"
++#include "util/trace-event.h"
  
-+#ifdef HAVE_LIBTRACEEVENT
-+#include <traceevent/event-parse.h>
+ #include <linux/ctype.h>
+ 
+@@ -228,6 +229,15 @@ int perf_debug_option(const char *str)
+ 	/* Allow only verbose value in range (0, 10), otherwise set 0. */
+ 	verbose = (verbose < 0) || (verbose > 10) ? 0 : verbose;
+ 
++#if MAKE_LIBTRACEEVENT_VERSION(1, 3, 0) <= LIBTRACEEVENT_VERSION
++	if (verbose == 1)
++		tep_set_loglevel(TEP_LOG_INFO);
++	else if (verbose == 2)
++		tep_set_loglevel(TEP_LOG_DEBUG);
++	else if (verbose >= 3)
++		tep_set_loglevel(TEP_LOG_ALL);
 +#endif
 +
-+#define MAKE_LIBTRACEEVENT_VERSION(a, b, c) ((a)*255*255+(b)*255+(c))
-+#ifndef LIBTRACEEVENT_VERSION
-+/*
-+ * If LIBTRACEEVENT_VERSION wasn't computed then set to version 1.1.0 that
-+ * previously shipped with the Linux kernel tools.
-+ */
-+#define LIBTRACEEVENT_VERSION MAKE_LIBTRACEEVENT_VERSION(1, 1, 0)
-+#endif
-+
- struct evlist;
- struct machine;
- struct perf_sample;
+ 	return 0;
+ }
+ 
 -- 
 2.39.0.314.g84b9a713c41-goog
 
