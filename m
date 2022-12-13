@@ -2,178 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C806DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 13:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A716C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 14:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235590AbiLMNjy (ORCPT
+        id S235771AbiLMOoK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 08:39:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
+        Tue, 13 Dec 2022 09:44:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235519AbiLMNjy (ORCPT
+        with ESMTP id S235837AbiLMOoJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 08:39:54 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24A18B41;
-        Tue, 13 Dec 2022 05:39:53 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 408A22F4;
-        Tue, 13 Dec 2022 05:40:33 -0800 (PST)
-Received: from [10.57.9.141] (unknown [10.57.9.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 041D13F71E;
-        Tue, 13 Dec 2022 05:39:50 -0800 (PST)
-Message-ID: <c0ebfb40-382d-8d38-a8e7-8fbaad871937@arm.com>
-Date:   Tue, 13 Dec 2022 13:39:49 +0000
+        Tue, 13 Dec 2022 09:44:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B33E2FE;
+        Tue, 13 Dec 2022 06:44:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4645FB811D8;
+        Tue, 13 Dec 2022 14:44:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C77CC433EF;
+        Tue, 13 Dec 2022 14:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670942645;
+        bh=ITWlJPRHLiVkjAwuGTarFPRTpQtiWPKN8YZPZTB5+Ec=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LXofy+aMduC6B9MfC3WZE0lQqiRZBaj4sij5umxyw1Uegbs2Vo3Izg8hmPsHhvG9E
+         VW6KtuJIkHFlM89Vs492/2iFBynyyt4LVYkmuEBshZ9NQcKQy350yuXpjSESxJCdPm
+         dlNo1FBOlWDYQ3Mo381eWPkQCacFhrHFoPZJ02sF6D+I76tyyQ95g7+6ODXx5eSdQw
+         QI9vO44PGn27xc34uZOuKfp8fitewFc1svBivOFQUPaBS5HzsjIVwK6504OAj6TRvP
+         mdCWkvRBTpUeX+ESxjeSE+NthSodHBl+EkaVu5mnOc4hDpw0Wu2NeZoLdldrHssazq
+         U0SSJXbEVtM7g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8D06E40367; Tue, 13 Dec 2022 11:44:02 -0300 (-03)
+Date:   Tue, 13 Dec 2022 11:44:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     =?iso-8859-1?Q?Adri=E1n?= Herrera Arcila <adrian.herrera@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, songliubraving@fb.com, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
+Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
+Message-ID: <Y5iPsjF/lEsEldU8@kernel.org>
+References: <20220729161244.10522-1-adrian.herrera@arm.com>
+ <20220729161244.10522-2-adrian.herrera@arm.com>
+ <e3e123db-5321-c96e-1753-27059c729640@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] perf stat: Do not delay the workload with --delay
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kevin Nomura <nomurak@google.com>
-References: <20221212230820.901382-1-namhyung@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20221212230820.901382-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e3e123db-5321-c96e-1753-27059c729640@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
+> 
+> 
+> On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
+> > The described --delay behaviour is to delay the enablement of events, but
+> > not the execution of the command, if one is passed, which is incorrectly
+> > the current behaviour.
+> > 
+> > This patch decouples the enablement from the delay, and enables events
+> > before or after launching the workload dependent on the options passed
+> > by the user. This code structure is inspired by that in perf-record, and
+> > tries to be consistent with it.
+> > 
+> > Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
+> > Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+> > Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
+> > ---
+> >  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
+> >  1 file changed, 32 insertions(+), 24 deletions(-)
+> 
+> Looks good to me. Fixes the counter delay issue and the code is pretty
+> similar to perf record now. Although I would wait for Leo's or Song's
+> comment as well because they were involved.
 
+I think I didn't notice Leo's ack, it still applies, so I'm doing it
+now.
 
-On 12/12/2022 23:08, Namhyung Kim wrote:
-> The -D/--delay option is to delay the measure after the program starts.
-> But the current code goes to sleep before starting the program so the
-> program is delayed too.  This is not the intention, let's fix it.
+- Arnaldo
+ 
+> Reviewed-by: James Clark <james.clark@arm.com>
 > 
-> Before:
-> 
->   $ time sudo ./perf stat -a -e cycles -D 3000 sleep 4
->   Events disabled
->   Events enabled
-> 
->    Performance counter stats for 'system wide':
-> 
->        4,326,949,337      cycles
-> 
->          4.007494118 seconds time elapsed
-> 
->   real	0m7.474s
->   user	0m0.356s
->   sys	0m0.120s
-> 
-> It ran the workload for 4 seconds and gave the 3 second delay.  So it
-> should skip the first 3 second and measure the last 1 second only.  But
-> as you can see, it delays 3 seconds and ran the workload after that for
-> 4 seconds.  So the total time (real) was 7 seconds.
-> 
-> After:
-> 
->   $ time sudo ./perf stat -a -e cycles -D 3000 sleep 4
->   Events disabled
->   Events enabled
-> 
->    Performance counter stats for 'system wide':
-> 
->        1,063,551,013      cycles
-> 
->          1.002769510 seconds time elapsed
-> 
->   real	0m4.484s
->   user	0m0.385s
->   sys	0m0.086s
-> 
-> The bug was introduced when it changed enablement of system-wide events
-> with a command line workload.  But it should've considered the initial
-> delay case.  The code was reworked since then (in bb8bc52e7578) so I'm
-> afraid it won't be applied cleanly.
-> 
-> Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+> > 
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 318ffd119dad..f98c823b16dd 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -559,7 +559,7 @@ static bool handle_interval(unsigned int interval, int *times)
+> >  	return false;
+> >  }
+> >  
+> > -static int enable_counters(void)
+> > +static int enable_bpf_counters(void)
+> >  {
+> >  	struct evsel *evsel;
+> >  	int err;
+> > @@ -572,28 +572,6 @@ static int enable_counters(void)
+> >  		if (err)
+> >  			return err;
+> >  	}
+> > -
+> > -	if (stat_config.initial_delay < 0) {
+> > -		pr_info(EVLIST_DISABLED_MSG);
+> > -		return 0;
+> > -	}
+> > -
+> > -	if (stat_config.initial_delay > 0) {
+> > -		pr_info(EVLIST_DISABLED_MSG);
+> > -		usleep(stat_config.initial_delay * USEC_PER_MSEC);
+> > -	}
+> > -
+> > -	/*
+> > -	 * We need to enable counters only if:
+> > -	 * - we don't have tracee (attaching to task or cpu)
+> > -	 * - we have initial delay configured
+> > -	 */
+> > -	if (!target__none(&target) || stat_config.initial_delay) {
+> > -		if (!all_counters_use_bpf)
+> > -			evlist__enable(evsel_list);
+> > -		if (stat_config.initial_delay > 0)
+> > -			pr_info(EVLIST_ENABLED_MSG);
+> > -	}
+> >  	return 0;
+> >  }
+> >  
+> > @@ -966,10 +944,24 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+> >  			return err;
+> >  	}
+> >  
+> > -	err = enable_counters();
+> > +	err = enable_bpf_counters();
+> >  	if (err)
+> >  		return -1;
+> >  
+> > +	/*
+> > +	 * Enable events manually here if perf-stat is run:
+> > +	 * 1. with a target (any of --all-cpus, --cpu, --pid or --tid)
+> > +	 * 2. without measurement delay (no --delay)
+> > +	 * 3. without all events associated to BPF
+> > +	 *
+> > +	 * This is because if run with a target, events are not enabled
+> > +	 * on exec if a workload is passed, and because there is no delay
+> > +	 * we ensure to enable them before the workload starts
+> > +	 */
+> > +	if (!target__none(&target) && !stat_config.initial_delay &&
+> > +	    !all_counters_use_bpf)
+> > +		evlist__enable(evsel_list);
+> > +
+> >  	/* Exec the command, if any */
+> >  	if (forks)
+> >  		evlist__start_workload(evsel_list);
+> > @@ -977,6 +969,22 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+> >  	t0 = rdclock();
+> >  	clock_gettime(CLOCK_MONOTONIC, &ref_time);
+> >  
+> > +	/*
+> > +	 * If a measurement delay was specified, start it, and if positive,
+> > +	 * enable events manually after. We respect the delay even if all
+> > +	 * events are associated to BPF
+> > +	 */
+> > +	if (stat_config.initial_delay) {
+> > +		/* At this point, events are guaranteed disabled */
+> > +		pr_info(EVLIST_DISABLED_MSG);
+> > +		if (stat_config.initial_delay > 0) {
+> > +			usleep(stat_config.initial_delay * USEC_PER_MSEC);
+> > +			if (!all_counters_use_bpf)
+> > +				evlist__enable(evsel_list);
+> > +			pr_info(EVLIST_ENABLED_MSG);
+> > +		}
+> > +	}
+> > +
+> >  	if (forks) {
+> >  		if (interval || timeout || evlist__ctlfd_initialized(evsel_list))
+> >  			status = dispatch_events(forks, timeout, interval, &times);
 
-Looks like the same fix as here, but it was only partially applied:
+-- 
 
-https://lore.kernel.org/linux-perf-users/20220801112726.GA73228@leoy-ThinkPad-X240s/T/#mce4ad6b17a5fa15970765bb01e7b691c7326fbb0
-
-
-> Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Reported-by: Kevin Nomura <nomurak@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-stat.c | 33 +++++++++++++++++----------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index d040fbcdcc5a..b39bf785a16e 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -540,26 +540,14 @@ static int enable_counters(void)
->  			return err;
->  	}
->  
-> -	if (stat_config.initial_delay < 0) {
-> -		pr_info(EVLIST_DISABLED_MSG);
-> -		return 0;
-> -	}
-> -
-> -	if (stat_config.initial_delay > 0) {
-> -		pr_info(EVLIST_DISABLED_MSG);
-> -		usleep(stat_config.initial_delay * USEC_PER_MSEC);
-> -	}
-> -
->  	/*
->  	 * We need to enable counters only if:
->  	 * - we don't have tracee (attaching to task or cpu)
->  	 * - we have initial delay configured
->  	 */
-> -	if (!target__none(&target) || stat_config.initial_delay) {
-> +	if (!target__none(&target)) {
->  		if (!all_counters_use_bpf)
->  			evlist__enable(evsel_list);
-> -		if (stat_config.initial_delay > 0)
-> -			pr_info(EVLIST_ENABLED_MSG);
->  	}
->  	return 0;
->  }
-> @@ -930,14 +918,27 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->  			return err;
->  	}
->  
-> -	err = enable_counters();
-> -	if (err)
-> -		return -1;
-> +	if (stat_config.initial_delay) {
-> +		pr_info(EVLIST_DISABLED_MSG);
-> +	} else {
-> +		err = enable_counters();
-> +		if (err)
-> +			return -1;
-> +	}
->  
->  	/* Exec the command, if any */
->  	if (forks)
->  		evlist__start_workload(evsel_list);
->  
-> +	if (stat_config.initial_delay > 0) {
-> +		usleep(stat_config.initial_delay * USEC_PER_MSEC);
-> +		err = enable_counters();
-> +		if (err)
-> +			return -1;
-> +
-> +		pr_info(EVLIST_ENABLED_MSG);
-> +	}
-> +
->  	t0 = rdclock();
->  	clock_gettime(CLOCK_MONOTONIC, &ref_time);
->  
+- Arnaldo
