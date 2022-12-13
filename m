@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E92C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 11:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB78C10F1D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 11:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235281AbiLMLu0 (ORCPT
+        id S235344AbiLMLu3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 06:50:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
+        Tue, 13 Dec 2022 06:50:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235280AbiLMLuY (ORCPT
+        with ESMTP id S235299AbiLMLu2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 06:50:24 -0500
+        Tue, 13 Dec 2022 06:50:28 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 982F710B67;
-        Tue, 13 Dec 2022 03:50:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0023A1057F;
+        Tue, 13 Dec 2022 03:50:26 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E0B52F4;
-        Tue, 13 Dec 2022 03:51:02 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D4FE1688;
+        Tue, 13 Dec 2022 03:51:07 -0800 (PST)
 Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4F3EB3F5A1;
-        Tue, 13 Dec 2022 03:50:20 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2A2993F5A1;
+        Tue, 13 Dec 2022 03:50:25 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org
 Cc:     James Clark <james.clark@arm.com>,
@@ -33,44 +33,107 @@ Cc:     James Clark <james.clark@arm.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v2 0/4] Add VG register attr test with kernel version and feature detection
-Date:   Tue, 13 Dec 2022 11:47:35 +0000
-Message-Id: <20221213114739.2312862-1-james.clark@arm.com>
+Subject: [PATCH v2 2/4] perf test: Add mechanism for skipping attr tests on auxiliary vector values
+Date:   Tue, 13 Dec 2022 11:47:37 +0000
+Message-Id: <20221213114739.2312862-3-james.clark@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221213114739.2312862-1-james.clark@arm.com>
+References: <20221213114739.2312862-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I didn't get any feedback on the RFC version of this that I posted a
-while back [1]. I'd still like to add the test, especially now that
-6.1 has been released with this new feature, so I've rebased it onto
-perf/core and double checked that it's still working.
+This can be used to skip tests or provide different test values on
+different platforms. For example to run a test only where Arm SVE is
+present add this to the config section:
 
-Applies to perf/core (0c3852adae83)
+  auxv    = auxv["AT_HWCAP"] & 0x200000 == 0x200000
 
-Thanks
-James
+The value is a freeform Python expression that is evaled in the context
+of a map called "auxv" that contains the decoded auxiliary vector.
 
-[1]: https://lore.kernel.org/bpf/20220927154104.869029-1-james.clark@arm.com/
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/tests/attr.py | 33 +++++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
-James Clark (4):
-  perf test: Add ability to test exit code for attr tests
-  perf test: Add mechanism for skipping attr tests on auxiliary vector
-    values
-  perf test: Add mechanism for skipping attr tests on kernel versions
-  perf test arm64: Add attr tests for new VG register
-
- tools/perf/tests/attr.py                      | 71 +++++++++++++++++--
- .../attr/test-record-user-regs-no-sve-aarch64 |  9 +++
- .../test-record-user-regs-old-sve-aarch64     | 10 +++
- .../attr/test-record-user-regs-sve-aarch64    | 14 ++++
- 4 files changed, 99 insertions(+), 5 deletions(-)
- create mode 100644 tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
- create mode 100644 tools/perf/tests/attr/test-record-user-regs-old-sve-aarch64
- create mode 100644 tools/perf/tests/attr/test-record-user-regs-sve-aarch64
-
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index cf40df472918..eceb6d022141 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
+@@ -8,7 +8,9 @@ import glob
+ import optparse
+ import tempfile
+ import logging
++import re
+ import shutil
++import subprocess
+ 
+ try:
+     import configparser
+@@ -134,6 +136,8 @@ class Event(dict):
+ #     'arch'    - architecture specific test (optional)
+ #                 comma separated list, ! at the beginning
+ #                 negates it.
++#     'auxv'    - Truthy statement that is evaled in the scope of the auxv map. When false,
++#                 the test is skipped. For example 'auxv["AT_HWCAP"] == 10'. (optional)
+ #
+ # [eventX:base]
+ #   - one or multiple instances in file
+@@ -164,6 +168,7 @@ class Test(object):
+         except:
+             self.arch  = ''
+ 
++        self.auxv = parser.get('config', 'auxv', fallback=None)
+         self.expect   = {}
+         self.result   = {}
+         log.debug("  loading expected events");
+@@ -175,7 +180,28 @@ class Test(object):
+         else:
+             return True
+ 
+-    def skip_test(self, myarch):
++    def skip_test_auxv(self):
++        def new_auxv(a, pattern):
++            items = list(filter(None, pattern.split(a)))
++            # AT_HWCAP is hex but doesn't have a prefix, so special case it
++            if items[0] == "AT_HWCAP":
++                value = int(items[-1], 16)
++            else:
++                try:
++                    value = int(items[-1], 0)
++                except:
++                    value = items[-1]
++            return (items[0], value)
++
++        if not self.auxv:
++            return False
++        auxv = subprocess.check_output("LD_SHOW_AUXV=1 sleep 0", shell=True) \
++               .decode(sys.stdout.encoding)
++        pattern = re.compile(r"[: ]+")
++        auxv = dict([new_auxv(a, pattern) for a in auxv.splitlines()])
++        return not eval(self.auxv)
++
++    def skip_test_arch(self, myarch):
+         # If architecture not set always run test
+         if self.arch == '':
+             # log.warning("test for arch %s is ok" % myarch)
+@@ -225,9 +251,12 @@ class Test(object):
+     def run_cmd(self, tempdir):
+         junk1, junk2, junk3, junk4, myarch = (os.uname())
+ 
+-        if self.skip_test(myarch):
++        if self.skip_test_arch(myarch):
+             raise Notest(self, myarch)
+ 
++        if self.skip_test_auxv():
++            raise Notest(self, "auxv skip")
++
+         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
 -- 
 2.25.1
 
