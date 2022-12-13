@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384F1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 23:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D31FC10F1B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 23:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236996AbiLMX1L (ORCPT
+        id S237037AbiLMX1Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 18:27:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
+        Tue, 13 Dec 2022 18:27:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236942AbiLMX1K (ORCPT
+        with ESMTP id S237011AbiLMX1R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 18:27:10 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D90BE1F
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:07 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-3d2994e2d7dso184412627b3.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:07 -0800 (PST)
+        Tue, 13 Dec 2022 18:27:17 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE99DF2A
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:16 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id j6-20020a05690212c600b006fc7f6e6955so18643965ybu.12
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 15:27:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FHQZUcHwOCNQCQu4EEiVjneXbxGX4iNgf8b6SmHwn0g=;
-        b=r8yHpGdZu5aIN/QCfTXrmNUZMMFwjavoMKQ1kc+qlVCoRP/pV148OkgD3Xqa+/5zy0
-         8yZIR/J9/Fpn+9ePpZX9JquD0mxHLTa1e1an62pwgckN01U9oeO0i6QgUez8Yp5Pdn6A
-         MEGpDvLHGzvOMpPEqq9xELuZsOTOkrZ0s6ikeQllHLyzGjU+5ty6H6TRteniIQ/HRnFF
-         6M5Q0TV7HFDU2IZq+E7t/NFeQDz7KxXCjg6zgNme32v7Pm/ogZ5ls/hIqpfxc+A0aRKW
-         TLdtQQHCW77xvdnfXTRJus5I3jgteloTf9YD5fpeDmorgE+RFMyKgUA494xj4CUSjPvZ
-         DnHw==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aIVRe/cOjz9L4S8nY/UBbQxzSd/MuoYQzSglM53rsyM=;
+        b=MpdcS79Frn7RTmMinJubNMYt88+6lL4Cqi6ZXslqSjEcj3Cc+ffaIF61e32yPrqXKr
+         oEEqe5WgQXYXZIwaecs50menBnE+KS4PInPrB6VEHfGFllC3dcUZC0AjLUmtokz7oV3/
+         RhB14QI8hD+y2MaD0x09hL0YwxrlvEqzZQhSdQkJ66qn7bh41UNsjNYQ7gEdWFbaCi8b
+         tXu8U1lQ///G1A7PA4TPQ5zf42wdDIUAdN19sx5NEmRQrmaqgG7w95voh5PLKyRm/2QZ
+         IrA88MyZRV0FXu4tk++gTPp87PNt4e1V5zu0CGP6d4B3B7TJdjLJUdI6eQBowjNRtpwJ
+         Ftsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FHQZUcHwOCNQCQu4EEiVjneXbxGX4iNgf8b6SmHwn0g=;
-        b=60mnO4JaoujzM3Bp7Q//3kKORfQ6ZqfXez8l1H3TFdlNyqbDzZb5tl10ifq92lPTqk
-         RiK+lzXGBA2iZBxbBeuwZ4kybb0DOGKjSRwReM3YHrHTBEWg1qq4JPe6knc21L204doD
-         NR5d83Knbl/9tjC4bYDGfQgWuZSax/D9ZjTU7/I+STy/Rg2RRChP3rjv1CB4RQlGCAJr
-         WFnpz3EUHrmu6nNT73/9VMwiYOuob2tbSUYuG62k4vRVgv6Di2ILAUa3yLMFZt699HmI
-         nrI1DhfOZilRnHb0VjBMl9AyYLrbY0Wtpp0GC/RzGJ7QHCQvFp4RPuD6Na1D7iBSmmqQ
-         ezbg==
-X-Gm-Message-State: ANoB5pmumZP0LG6yhHkjp1oVPUFlaNwl5LOqNBAzl1vT7loFH2CAU2Jd
-        beY0wLiunMaXiNa4FAyUq1SvPV1JW7xg
-X-Google-Smtp-Source: AA0mqf4QYQ47MdZiguR8J6xMAXoZ/osT9eFVfYeVRdsatT2dNIuZd/nBSaqgA1F5rxc2l32ZN0NQsCV+Dsx7
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aIVRe/cOjz9L4S8nY/UBbQxzSd/MuoYQzSglM53rsyM=;
+        b=f92nsLC+pQojq8f+aUrKN/WtLW9fJl6JoK2DUH3vQEBgStqtX3fN2RzXMGC8THJgBg
+         AAhiTm8lKjwvnmjl9sLbJEfsrZSHlF+HEV/ch6lFpwaINQOShIctO/x0YSt6EQD7vd3J
+         gnuKVQQPG5vZQNUdMnIaJ9PCc1k5gKcIwciCw1rVx8lmUjm+sBpl0A2LuKckYW2Dmxvd
+         6XwcK9tvOpmdOgNh6PUi2InK/TxeSZoRS24lPVo+tSEq45hEZCh7FxmWyJp9ObUwTxS7
+         90Ur7dZl0EyGj/gug1Psx+rwpoNnFJ1OfCqOdTPxwvll/G2YBWWr88MiMyhZ07+yHFo0
+         7f9Q==
+X-Gm-Message-State: ANoB5plcgTzV+QdgnhmLZmMjxwBR6aU/SsmaaF8IAe/UygNx9JTKM7L/
+        fcdcq1KlqG62+Ghy5P6DZ2mNgB7Or/A/
+X-Google-Smtp-Source: AA0mqf4ivmvAS6D5iJ1XqzGr6XWwaMuvq3r8JjefQy94X3aXoM7+6W4WRDSUNklgvLh5Ob22rdse41dAXKme
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:6268:b448:f7f4:4c2])
- (user=irogers job=sendgmr) by 2002:a25:414f:0:b0:713:a975:c696 with SMTP id
- o76-20020a25414f000000b00713a975c696mr3780948yba.511.1670974027010; Tue, 13
- Dec 2022 15:27:07 -0800 (PST)
-Date:   Tue, 13 Dec 2022 15:26:46 -0800
-Message-Id: <20221213232651.1269909-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:4e09:0:b0:370:202b:f085 with SMTP id
+ c9-20020a814e09000000b00370202bf085mr26434974ywb.502.1670974035210; Tue, 13
+ Dec 2022 15:27:15 -0800 (PST)
+Date:   Tue, 13 Dec 2022 15:26:47 -0800
+In-Reply-To: <20221213232651.1269909-1-irogers@google.com>
+Message-Id: <20221213232651.1269909-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20221213232651.1269909-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v1 0/5] build/libtraceevent resends
+Subject: [PATCH v1 1/5] perf build: Fix python/perf.so library's name
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -86,55 +88,53 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-All patches on the acme perf/core branch.
+Since Python 3.3 extensions have a suffix encoding platform and
+version information. For example, the perf extension was previously
+perf.so but now maybe perf.cpython-310-x86_64-linux-gnu.so. Compute
+the extension using Python and then use this in the target name. Doing
+this avoids the "perf.so" target always being rebuilt.
 
-Resend incremental build fix python plugin:
-https://lore.kernel.org/lkml/20221205225940.3079667-4-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.config | 4 +++-
+ tools/perf/Makefile.perf   | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-Break apart and resend libtraceevent debug logging support:
-https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irogers@google.com/
-
-Switch "#if HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE" to "#if
-MAKE_LIBTRACEEVENT_VERSION(1, 5, 0) <= LIBTRACEEVENT_VERSION",
-ensuring trace-event.h is included as discussed on the mailing list.
-
-Resend removal of --group option:
-https://lore.kernel.org/lkml/20220707195610.303254-1-irogers@google.com/
-
-Ian Rogers (5):
-  perf build: Fix python/perf.so library's name
-  perf trace-event: Add libtraceevent version tools to header
-  libtraceevent: Increase libtraceevent logging when verbose
-  perf trace-event: Use version check to avoid 1 define
-  perf evlist: Remove group option.
-
- tools/perf/Documentation/perf-record.txt      |  4 ----
- tools/perf/Documentation/perf-top.txt         |  7 ++----
- tools/perf/Makefile.config                    |  8 +++----
- tools/perf/Makefile.perf                      |  2 +-
- tools/perf/builtin-record.c                   |  2 --
- tools/perf/builtin-stat.c                     |  6 -----
- tools/perf/builtin-top.c                      |  2 --
- tools/perf/builtin-trace.c                    |  2 +-
- tools/perf/tests/attr/README                  |  2 --
- tools/perf/tests/attr/test-record-group       | 22 -------------------
- tools/perf/tests/attr/test-stat-group         | 17 --------------
- tools/perf/util/data-convert-bt.c             |  3 ++-
- tools/perf/util/debug.c                       | 10 +++++++++
- tools/perf/util/evlist.c                      |  2 +-
- tools/perf/util/evlist.h                      |  2 --
- tools/perf/util/evsel.c                       |  2 +-
- tools/perf/util/python.c                      | 10 +--------
- tools/perf/util/record.c                      |  7 ------
- tools/perf/util/record.h                      |  1 -
- .../util/scripting-engines/trace-event-perl.c |  2 +-
- .../scripting-engines/trace-event-python.c    |  2 +-
- tools/perf/util/sort.c                        |  3 ++-
- tools/perf/util/trace-event.h                 | 13 +++++++++++
- 23 files changed, 39 insertions(+), 92 deletions(-)
- delete mode 100644 tools/perf/tests/attr/test-record-group
- delete mode 100644 tools/perf/tests/attr/test-stat-group
-
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 52a4dc029111..83ed969b95b4 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -871,6 +871,7 @@ define disable-python_code
+   NO_LIBPYTHON := 1
+ endef
+ 
++PYTHON_EXTENSION_SUFFIX := '.so'
+ ifdef NO_LIBPYTHON
+   $(call disable-python,Python support disabled by user)
+ else
+@@ -889,7 +890,8 @@ else
+       else
+          LDFLAGS += $(PYTHON_EMBED_LDFLAGS)
+          EXTLIBS += $(PYTHON_EMBED_LIBADD)
+-         LANG_BINDINGS += $(obj-perf)python/perf.so
++         PYTHON_EXTENSION_SUFFIX := $(shell $(PYTHON) -c 'from importlib import machinery; print(machinery.EXTENSION_SUFFIXES[0])')
++         LANG_BINDINGS += $(obj-perf)python/perf$(PYTHON_EXTENSION_SUFFIX)
+          CFLAGS += -DHAVE_LIBPYTHON_SUPPORT
+          $(call detected,CONFIG_LIBPYTHON)
+       endif
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 98f629bbd1aa..9b7886ce0674 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -647,7 +647,7 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ # Create python binding output directory if not already present
+ _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+ 
+-$(OUTPUT)python/perf.so: $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF)
++$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF)
+ 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
+         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' \
+ 	  $(PYTHON_WORD) util/setup.py \
 -- 
 2.39.0.314.g84b9a713c41-goog
 
