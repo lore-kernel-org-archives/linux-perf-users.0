@@ -2,69 +2,33 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4AEC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 13:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C806DC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 13:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235520AbiLMNN5 (ORCPT
+        id S235590AbiLMNjy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 08:13:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35698 "EHLO
+        Tue, 13 Dec 2022 08:39:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234624AbiLMNNu (ORCPT
+        with ESMTP id S235519AbiLMNjy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 08:13:50 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8001F635;
-        Tue, 13 Dec 2022 05:13:49 -0800 (PST)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BDD6056017928;
-        Tue, 13 Dec 2022 13:13:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=viiIwFX8wj5VdwFsbkcZl9kNCr2kWeQfUK0ZFqAXI4c=;
- b=E2TOo1R/xczFH2rwMfnvESxJDr2gUpWoCZVSqx+5GPbqqHsbR0ECLGH8vDD8xP95KrAk
- cbgtBEpS0ger+dM9IuzUG6/jP4smUq7woKMyPQE511xR8eQ18JwD7DiOqW7l7omJHQgy
- 9xqxUXef4uc39gxMdirkBLsXdj11D92Hn+UqUi/d2XNOnE7mlFJYVrc2Sw2ZUMVdvTcK
- H9iNkV5Y0h/ZtPthfe4Lj1neSS+e0e6IOvrXT9MwAx1SPak3qRyzOMgoTnXD3ee5Oxq3
- EMgvFrEE4TwyoX7UfY9Ik+xgaOmYZGZTHSIe+Bm2LUmWCF918OAezYtSxoTtnhj7HX40 Lw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3merajjj4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Dec 2022 13:13:26 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BDD6SuL022139;
-        Tue, 13 Dec 2022 13:13:26 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3merajjj37-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Dec 2022 13:13:26 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BD4cPxU030800;
-        Tue, 13 Dec 2022 13:13:23 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3mchr5v72e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Dec 2022 13:13:23 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BDDDLbj45875690
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Dec 2022 13:13:21 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2916F20043;
-        Tue, 13 Dec 2022 13:13:21 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F399D20040;
-        Tue, 13 Dec 2022 13:13:20 +0000 (GMT)
-Received: from [9.152.212.244] (unknown [9.152.212.244])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Dec 2022 13:13:20 +0000 (GMT)
-Message-ID: <990b0e9d-93fa-464e-c72f-ce51cf4dff83@linux.ibm.com>
-Date:   Tue, 13 Dec 2022 14:13:20 +0100
+        Tue, 13 Dec 2022 08:39:54 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24A18B41;
+        Tue, 13 Dec 2022 05:39:53 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 408A22F4;
+        Tue, 13 Dec 2022 05:40:33 -0800 (PST)
+Received: from [10.57.9.141] (unknown [10.57.9.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 041D13F71E;
+        Tue, 13 Dec 2022 05:39:50 -0800 (PST)
+Message-ID: <c0ebfb40-382d-8d38-a8e7-8fbaad871937@arm.com>
+Date:   Tue, 13 Dec 2022 13:39:49 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
+ Thunderbird/102.2.2
 Subject: Re: [PATCH] perf stat: Do not delay the workload with --delay
+Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
@@ -75,30 +39,20 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org,
         Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         Kevin Nomura <nomurak@google.com>
 References: <20221212230820.901382-1-namhyung@kernel.org>
-Content-Language: en-US
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
+From:   James Clark <james.clark@arm.com>
 In-Reply-To: <20221212230820.901382-1-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: If96xoHZi7NIi1GdrRPjZ1gaIrYoa6m-
-X-Proofpoint-GUID: LvqRGN9ZCr2XcdukIknxQtbWKbtzLWcd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-13_03,2022-12-13_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 bulkscore=0 malwarescore=0
- clxscore=1011 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2210170000 definitions=main-2212130115
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 12/13/22 00:08, Namhyung Kim wrote:
+
+
+On 12/12/2022 23:08, Namhyung Kim wrote:
 > The -D/--delay option is to delay the measure after the program starts.
 > But the current code goes to sleep before starting the program so the
 > program is delayed too.  This is not the intention, let's fix it.
@@ -146,6 +100,12 @@ On 12/13/22 00:08, Namhyung Kim wrote:
 > afraid it won't be applied cleanly.
 > 
 > Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+
+Looks like the same fix as here, but it was only partially applied:
+
+https://lore.kernel.org/linux-perf-users/20220801112726.GA73228@leoy-ThinkPad-X240s/T/#mce4ad6b17a5fa15970765bb01e7b691c7326fbb0
+
+
 > Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
 > Cc: Thomas Richter <tmricht@linux.ibm.com>
 > Reported-by: Kevin Nomura <nomurak@google.com>
@@ -217,14 +177,3 @@ On 12/13/22 00:08, Namhyung Kim wrote:
 >  	t0 = rdclock();
 >  	clock_gettime(CLOCK_MONOTONIC, &ref_time);
 >  
-
-Tested successfully on s390
-
-Acked-by: Thomas Richter <tmricht@linux.ibm.com>
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
