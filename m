@@ -2,60 +2,67 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F438C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 22:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6ABCC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 22:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236287AbiLMWeJ (ORCPT
+        id S236702AbiLMWsC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 17:34:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41722 "EHLO
+        Tue, 13 Dec 2022 17:48:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236695AbiLMWeG (ORCPT
+        with ESMTP id S235490AbiLMWsB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 17:34:06 -0500
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D801D0D6;
-        Tue, 13 Dec 2022 14:34:04 -0800 (PST)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-143ffc8c2b2so14405273fac.2;
-        Tue, 13 Dec 2022 14:34:04 -0800 (PST)
+        Tue, 13 Dec 2022 17:48:01 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 618412408A
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 14:47:59 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id f18so17445586wrj.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 14:47:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/fFeUAjkN2sqCp/aWpmlhYqWcosd7bu4zCqaYFPx7tU=;
-        b=fSFyvv+rGf7AeNxmo2f8BBkjF+DdH7K8ODoyHhIQtDHrcsYEJNBf++k9FH9D/8D7+o
-         GyEzGW6O+QyCDS4jE5xbuiCHjvXJWoGaiNVBss+EZlhBCt07NzgsVPc7iIk0MZboufC8
-         ZZXe3h62JXiXsh+6k15xuByJ3xnDiDefvkCNQUH7FBM3xqTsMj1KnbYjsX7WDUY/2Ys4
-         NdOlFHFSPKFlaFqOrdbx9Lja7rLUOOjQ53c3ufSHeF3n0OR+Bwfjph0zywBU1e4E7lcT
-         HbCdcfZofTu81uf4CbVPprZayLWJsBq/orOuFi57spUXHjM8mEJOT6jjOTTn7TWqlI3T
-         K+kg==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=P2rPSpV30DMArlILJhVf/pTOykjarxMulIIIDDH7UVw=;
+        b=G6kBGUFFgfwTZSKoa0aosDD5Wxux3w3OF7RvGU0xEmTxpuBtQgm85e1jZ/rg9YrLu9
+         fPF+IPDmy2MarCLC0d1UOBcD0CQ4Sez8K3qhTbguNDoKsyZsqKNakie5Kymj86C3yI9w
+         JYCfL6I/fgNHIUfHOn2ZXxfOjAtDP/WHjBCsg3dWbawsEhu1doOivfn2bdzSnU5qy34K
+         bRqFyoY/7fRjBnjdlm7k/a7UAR5eTGZAWIoJoyKLLBSvs7Xge3iriN+PmXs7TdSsQjdC
+         pCc8V7pPIXt20wu6dTYkIwcEf8q3rL+wyFpD4knHIo5KeVP2fHrVrddQJLU79ZJzTd90
+         7eKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/fFeUAjkN2sqCp/aWpmlhYqWcosd7bu4zCqaYFPx7tU=;
-        b=BF3beeiY0abMEyDLGnj51rNuYeJeapxnr3Daln4jcRQ72k5mVZWL11U6qpa9PfR9wz
-         IoaYfrp5zHvLnMy2cnnqYTGKdY1B81rMhfbg8DTDPTzVzvJxvIS7w/WD21Z7f4uw9t73
-         thv2U3dOdlXTurknW/sArw6Oz0mxlCi5ieDsw6v5fnNAUdMrUl6vaXnuC8Ee464jIjRE
-         774MwKVnY21qdbOPzDfAcG0eUIQTz6dcU3na3IBFq22y+9wdjh5f8HOwhX+yDsUaVsg2
-         QUleDs9gF3NjK53DEB/tmLL1HPzZgoVl3QTFy94DZT64uXpJLJtbmedqDuzkCQdDNch1
-         lqmg==
-X-Gm-Message-State: ANoB5pkoMhm7luOeKZdZAQtCAfTS7/sGphGERhv6xEvUX7J2uUGC/bky
-        UoXYhLoIKGDPOBPZqx+UWwL2nfoQ3NY=
-X-Google-Smtp-Source: AA0mqf5E4RwQTasX6iyRJ7VELlNhdyDlkpvYi7MNhdNlFd0rLZjuEctPuXdf8b8hBIAygKL2/2xmxw==
-X-Received: by 2002:a05:6870:314:b0:13c:a5d1:35d7 with SMTP id m20-20020a056870031400b0013ca5d135d7mr9803405oaf.25.1670970843420;
-        Tue, 13 Dec 2022 14:34:03 -0800 (PST)
-Received: from [127.0.0.1] ([187.19.236.93])
-        by smtp.gmail.com with ESMTPSA id l32-20020a05687106a000b0014b8347e1e3sm428649oao.12.2022.12.13.14.34.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Dec 2022 14:34:03 -0800 (PST)
-Date:   Tue, 13 Dec 2022 19:33:42 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P2rPSpV30DMArlILJhVf/pTOykjarxMulIIIDDH7UVw=;
+        b=GkS8FOWiumlgxDhQs6AMIFNFD/CSeSTc7HgUoxhyXQLjjOalxQYNUboQAgwBtwpXrG
+         5VL+Fc7ifBRRK+2GUbZJV+swyQ2DIMXuH9h87hRDuXbgnkQPu+JGPxlIleyrCEDLNB6/
+         +MqZUm1q8tYH/UbtEUdNudIfBCs5hFjDE22reznYjqaOOXcqdyWk+pqGPlpgpnMGHn1C
+         zlfJKGckCl827MpLxSk+GrTRLFY8GeDtdb/LDK0xgydI9y4gQrU0hCBodstKUOVIeUtI
+         Kp1YrG/4VE7KnPo44SvODq5h2oCs1bxo4RgdbeInZGXiBJA2Y9i2L0LyKWb8VlH53T38
+         /8Iw==
+X-Gm-Message-State: ANoB5pkqBwOO6fMp73Xw4lJ2T9ADXnrXE6+xO5xk0pDoEZKj8L2GFuXQ
+        X+ZxcoMubvll153r2uA3jPLjiRYJp5xhWaPHEQdijg==
+X-Google-Smtp-Source: AA0mqf4bhFpkeK8ZTyG2hqUWEfovpOG10oszQspQQQIntPx71LnjjEFLPxDVqPiHPuPaulPAZDlkqvYO0inWLUWcJh4=
+X-Received: by 2002:adf:f3c5:0:b0:242:5caa:5fbf with SMTP id
+ g5-20020adff3c5000000b002425caa5fbfmr11175741wrp.300.1670971677544; Tue, 13
+ Dec 2022 14:47:57 -0800 (PST)
+MIME-Version: 1.0
+References: <Y491d1wEW4TfUi5f@kernel.org> <Y4921D+36UGdhK92@kernel.org>
+ <Y494TNa0ZyPH9YSD@kernel.org> <Y498YP2N3gvFSr/X@kernel.org>
+ <C9F248C8-AF8D-40A1-A1AD-BCC39FBA01C7@linux.vnet.ibm.com> <Y5DNBZNC5rBBqlJW@kernel.org>
+ <36CD1041-0CAE-41C1-8086-C17854531B3E@linux.vnet.ibm.com> <Y5JfgyN59dSeKbUP@kernel.org>
+ <Y5Jl8MeW90DXy1wT@kernel.org> <8F6F0C27-53F3-4837-A19C-845768253249@linux.vnet.ibm.com>
+ <Y5cxyk3OdgFXlyhS@kernel.org> <BB236C92-3505-4DAB-AE28-A55F74EDE161@linux.vnet.ibm.com>
+ <CAP-5=fVVPDo_3cjKmumEVKDN2Zssz-ZU=nYVQFNr1xUGHxx-PQ@mail.gmail.com> <927374FD-C6C0-42B3-9F93-5379A5898FB3@gmail.com>
+In-Reply-To: <927374FD-C6C0-42B3-9F93-5379A5898FB3@gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 13 Dec 2022 14:47:45 -0800
+Message-ID: <CAP-5=fUD+0sPu1u+MMJQ=P5haufV7ifZtt3E7PFpufY6DyX5bw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -66,48 +73,47 @@ CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP-5=fVVPDo_3cjKmumEVKDN2Zssz-ZU=nYVQFNr1xUGHxx-PQ@mail.gmail.com>
-References: <Y491d1wEW4TfUi5f@kernel.org> <Y4921D+36UGdhK92@kernel.org> <Y494TNa0ZyPH9YSD@kernel.org> <Y498YP2N3gvFSr/X@kernel.org> <C9F248C8-AF8D-40A1-A1AD-BCC39FBA01C7@linux.vnet.ibm.com> <Y5DNBZNC5rBBqlJW@kernel.org> <36CD1041-0CAE-41C1-8086-C17854531B3E@linux.vnet.ibm.com> <Y5JfgyN59dSeKbUP@kernel.org> <Y5Jl8MeW90DXy1wT@kernel.org> <8F6F0C27-53F3-4837-A19C-845768253249@linux.vnet.ibm.com> <Y5cxyk3OdgFXlyhS@kernel.org> <BB236C92-3505-4DAB-AE28-A55F74EDE161@linux.vnet.ibm.com> <CAP-5=fVVPDo_3cjKmumEVKDN2Zssz-ZU=nYVQFNr1xUGHxx-PQ@mail.gmail.com>
-Message-ID: <927374FD-C6C0-42B3-9F93-5379A5898FB3@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On December 13, 2022 7:09:07 PM GMT-03:00, Ian Rogers <irogers@google=2Eco=
-m> wrote:
->Thanks Athira and Arnaldo=2E It is a little strange to me to be using
->the shell to do a version number test=2E The intent was to be doing
->these in the code:
->#if LIBRTRACEEVENT_VERSION >=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->vs
->=2E=2E=2E
->LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE :=3D $(shell expr 1 \*
->255 \* 255 + 5 \* 255 + 0) # 1=2E5=2E0
->ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt
->$(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
->CFLAGS +=3D -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
->endif
->=2E=2E=2E
->#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
->I'm a little selfish as I'm maintaining a bazel build and a single
->version number to maintain is easier than lots of HAVE_=2E=2E=2E tests=2E=
- I'm
->happy to follow Arnaldo's lead=2E I think the test should also be
->greater-equal rather than greater-than:
->https://git=2Ekernel=2Eorg/pub/scm/libs/libtrace/libtraceevent=2Egit/tree=
-/include/traceevent/event-parse=2Eh?h=3Dlibtraceevent-v1=2E5#n128
-
-I'll fix that, and in a case like this please consider to send a patch wit=
-h your preference, I'd happily
-graft it=2E
-
-- Arnaldo=20
+On Tue, Dec 13, 2022 at 2:34 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
 >
+>
+>
+> On December 13, 2022 7:09:07 PM GMT-03:00, Ian Rogers <irogers@google.com> wrote:
+> >Thanks Athira and Arnaldo. It is a little strange to me to be using
+> >the shell to do a version number test. The intent was to be doing
+> >these in the code:
+> >#if LIBRTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >vs
+> >...
+> >LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE := $(shell expr 1 \*
+> >255 \* 255 + 5 \* 255 + 0) # 1.5.0
+> >ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt
+> >$(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
+> >CFLAGS += -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> >endif
+> >...
+> >#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> >I'm a little selfish as I'm maintaining a bazel build and a single
+> >version number to maintain is easier than lots of HAVE_... tests. I'm
+> >happy to follow Arnaldo's lead. I think the test should also be
+> >greater-equal rather than greater-than:
+> >https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/tree/include/traceevent/event-parse.h?h=libtraceevent-v1.5#n128
+>
+> I'll fix that, and in a case like this please consider to send a patch with your preference, I'd happily
+> graft it.
+>
+> - Arnaldo
+
+I can fix it. I can fold it in with:
+https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irogers@google.com/
+which I mentioned in this thread.
+
+Thanks,
+Ian
+
+> >
