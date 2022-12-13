@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B75C04FDE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 11:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B860C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 11:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235303AbiLMLu2 (ORCPT
+        id S235114AbiLMLug (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 06:50:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
+        Tue, 13 Dec 2022 06:50:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235274AbiLMLu0 (ORCPT
+        with ESMTP id S235355AbiLMLua (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 06:50:26 -0500
+        Tue, 13 Dec 2022 06:50:30 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A4B6510FFE;
-        Tue, 13 Dec 2022 03:50:24 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6BEDE11820;
+        Tue, 13 Dec 2022 03:50:29 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEC191682;
-        Tue, 13 Dec 2022 03:51:04 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFDF0168F;
+        Tue, 13 Dec 2022 03:51:09 -0800 (PST)
 Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB3683F5A1;
-        Tue, 13 Dec 2022 03:50:22 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8B9243F5A1;
+        Tue, 13 Dec 2022 03:50:27 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org
 Cc:     James Clark <james.clark@arm.com>,
@@ -33,9 +33,9 @@ Cc:     James Clark <james.clark@arm.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH v2 1/4] perf test: Add ability to test exit code for attr tests
-Date:   Tue, 13 Dec 2022 11:47:36 +0000
-Message-Id: <20221213114739.2312862-2-james.clark@arm.com>
+Subject: [PATCH v2 3/4] perf test: Add mechanism for skipping attr tests on kernel versions
+Date:   Tue, 13 Dec 2022 11:47:38 +0000
+Message-Id: <20221213114739.2312862-4-james.clark@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221213114739.2312862-1-james.clark@arm.com>
 References: <20221213114739.2312862-1-james.clark@arm.com>
@@ -45,50 +45,96 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently the return value is used to skip the test, but sometimes it
-can be useful to test if a certain command should return a certain exit
-code.
+The first two version numbers are used since that is where the ABI
+changes happen, so seems to be the most useful for now.
+
+'Until' is exclusive and 'since' is inclusive so that the same version
+number can be used to mark a point where the change comes into effect.
+
+This allows keeping the tests in a state where new tests will also pass
+on older kernels if the existence of a new feature isn't explicitly
+broadcast by the kernel. For example extended user regs are currently
+discovered by trial and error calls to perf_event_open.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/tests/attr.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/perf/tests/attr.py | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index cb39ac46bc73..cf40df472918 100644
+index eceb6d022141..ccfef861e931 100644
 --- a/tools/perf/tests/attr.py
 +++ b/tools/perf/tests/attr.py
-@@ -129,7 +129,8 @@ class Event(dict):
- #   - needs to specify:
- #     'command' - perf command name
- #     'args'    - special command arguments
--#     'ret'     - expected command return value (0 by default)
-+#     'ret'     - Skip test if Perf doesn't exit with this value (0 by default)
-+#     'test_ret'- If set to 'true', fail test instead of skipping for 'ret' argument
- #     'arch'    - architecture specific test (optional)
- #                 comma separated list, ! at the beginning
- #                 negates it.
-@@ -155,6 +156,8 @@ class Test(object):
-         except:
-             self.ret  = 0
+@@ -6,6 +6,7 @@ import os
+ import sys
+ import glob
+ import optparse
++import platform
+ import tempfile
+ import logging
+ import re
+@@ -125,6 +126,11 @@ class Event(dict):
+             if not data_equal(self[t], other[t]):
+                 log.warning("expected %s=%s, got %s" % (t, self[t], other[t]))
  
-+        self.test_ret = parser.getboolean('config', 'test_ret', fallback=False)
++def parse_version(version):
++    if not version:
++        return None
++    return [int(v) for v in version.split(".")[0:2]]
 +
-         try:
-             self.arch  = parser.get('config', 'arch')
-             log.warning("test limitation '%s'" % self.arch)
-@@ -232,7 +235,10 @@ class Test(object):
-         log.info("  '%s' ret '%s', expected '%s'" % (cmd, str(ret), str(self.ret)))
+ # Test file description needs to have following sections:
+ # [config]
+ #   - just single instance in file
+@@ -138,7 +144,9 @@ class Event(dict):
+ #                 negates it.
+ #     'auxv'    - Truthy statement that is evaled in the scope of the auxv map. When false,
+ #                 the test is skipped. For example 'auxv["AT_HWCAP"] == 10'. (optional)
+-#
++#     'kernel_since' - Inclusive kernel version from which the test will start running. Only the
++#                      first two values are supported, for example "6.1" (optional)
++#     'kernel_until' - Exclusive kernel version from which the test will stop running. (optional)
+ # [eventX:base]
+ #   - one or multiple instances in file
+ #   - expected values assignments
+@@ -169,6 +177,8 @@ class Test(object):
+             self.arch  = ''
  
-         if not data_equal(str(ret), str(self.ret)):
--            raise Unsup(self)
-+            if self.test_ret:
-+                raise Fail(self, "Perf exit code failure")
-+            else:
-+                raise Unsup(self)
+         self.auxv = parser.get('config', 'auxv', fallback=None)
++        self.kernel_since = parse_version(parser.get('config', 'kernel_since', fallback=None))
++        self.kernel_until = parse_version(parser.get('config', 'kernel_until', fallback=None))
+         self.expect   = {}
+         self.result   = {}
+         log.debug("  loading expected events");
+@@ -180,6 +190,16 @@ class Test(object):
+         else:
+             return True
  
-     def compare(self, expect, result):
-         match = {}
++    def skip_test_kernel_since(self):
++        if not self.kernel_since:
++            return False
++        return not self.kernel_since <= parse_version(platform.release())
++
++    def skip_test_kernel_until(self):
++        if not self.kernel_until:
++            return False
++        return not parse_version(platform.release()) < self.kernel_until
++
+     def skip_test_auxv(self):
+         def new_auxv(a, pattern):
+             items = list(filter(None, pattern.split(a)))
+@@ -257,6 +277,12 @@ class Test(object):
+         if self.skip_test_auxv():
+             raise Notest(self, "auxv skip")
+ 
++        if self.skip_test_kernel_since():
++            raise Notest(self, "old kernel skip")
++
++        if self.skip_test_kernel_until():
++            raise Notest(self, "new kernel skip")
++
+         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
 -- 
 2.25.1
 
