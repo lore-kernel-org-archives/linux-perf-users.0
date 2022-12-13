@@ -2,126 +2,95 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3415FC4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 15:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD358C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 16:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235463AbiLMPao (ORCPT
+        id S236120AbiLMQkq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 10:30:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60454 "EHLO
+        Tue, 13 Dec 2022 11:40:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235752AbiLMPal (ORCPT
+        with ESMTP id S234710AbiLMQko (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 10:30:41 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 537461DA65;
-        Tue, 13 Dec 2022 07:30:40 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A74D62F4;
-        Tue, 13 Dec 2022 07:31:20 -0800 (PST)
-Received: from [10.57.9.141] (unknown [10.57.9.141])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E9843F71E;
-        Tue, 13 Dec 2022 07:30:38 -0800 (PST)
-Message-ID: <634087f2-1a7a-0f61-51e8-9e6068d59e9d@arm.com>
-Date:   Tue, 13 Dec 2022 15:30:37 +0000
+        Tue, 13 Dec 2022 11:40:44 -0500
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E93E3F;
+        Tue, 13 Dec 2022 08:40:43 -0800 (PST)
+Received: by mail-wr1-f43.google.com with SMTP id h11so16225669wrw.13;
+        Tue, 13 Dec 2022 08:40:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3F6Co5g0HJu8PhXSFObDaybergLnWCfKZDoB5ZDhG3Q=;
+        b=eCxGXZLa3sVxIyXAkNErluuOgcRVRZ00PSLFWEhVPkhApLCMcdDyFLcdsLWDkU/KuD
+         uF2n3p2a7o/Mx1sV17jeu2EfItcHKJ3AFz6BWnsgAFDaygBdhghwSNTJqCDJH8j1Zj+P
+         WLk+3fJvKwWNGPM+pJVw0U/tz0OKUvDvxk4svLQ9TrjRMZokAnaEkXwkHGeAdxbjeWKo
+         LPM42HxLudrVyYDWk6/LHo33d8W+IaNV7EUHY86O6K3/ibeq1h2z3QgEkgKqvlwnI8z4
+         ij8B2n9ywQId5AjMW806eaHs8rHSyg5Qln5Ctnjr5FDsqEzj8kDg3b1yr/vuM0i53I9t
+         iR6Q==
+X-Gm-Message-State: ANoB5pmUxs3deR0WIUX90yxF4IUZT+CAq5a7vRlN3DdVrPdxlGNS45RF
+        6sXae6DkNEvhjR23o6v2YbHiWxKAihbiLJuoyXk=
+X-Google-Smtp-Source: AA0mqf7UN3ZVN8sgqMJf56eMQQKmcmbQrP0Dtm+uIEySSUo8URwHqE1Xm/cPFTx1fF4j4DQMuqczt/M6XlNDCLi7H3E=
+X-Received: by 2002:adf:dec2:0:b0:242:6f04:93a9 with SMTP id
+ i2-20020adfdec2000000b002426f0493a9mr9406130wrn.685.1670949641783; Tue, 13
+ Dec 2022 08:40:41 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v2 0/4] Add VG register attr test with kernel version and
- feature detection
-Content-Language: en-US
+References: <20220729161244.10522-1-adrian.herrera@arm.com>
+ <20220729161244.10522-2-adrian.herrera@arm.com> <e3e123db-5321-c96e-1753-27059c729640@arm.com>
+ <Y5iPsjF/lEsEldU8@kernel.org>
+In-Reply-To: <Y5iPsjF/lEsEldU8@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 13 Dec 2022 08:40:31 -0800
+Message-ID: <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20221213114739.2312862-1-james.clark@arm.com>
- <Y5iRhKrIb5pXOaKk@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <Y5iRhKrIb5pXOaKk@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc:     James Clark <james.clark@arm.com>,
+        =?UTF-8?Q?Adri=C3=A1n_Herrera_Arcila?= <adrian.herrera@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, songliubraving@fb.com, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi,
 
+On Tue, Dec 13, 2022 at 6:44 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
+> >
+> >
+> > On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
+> > > The described --delay behaviour is to delay the enablement of events, but
+> > > not the execution of the command, if one is passed, which is incorrectly
+> > > the current behaviour.
+> > >
+> > > This patch decouples the enablement from the delay, and enables events
+> > > before or after launching the workload dependent on the options passed
+> > > by the user. This code structure is inspired by that in perf-record, and
+> > > tries to be consistent with it.
+> > >
+> > > Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
+> > > Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+> > > Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
+> > > ---
+> > >  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
+> > >  1 file changed, 32 insertions(+), 24 deletions(-)
+> >
+> > Looks good to me. Fixes the counter delay issue and the code is pretty
+> > similar to perf record now. Although I would wait for Leo's or Song's
+> > comment as well because they were involved.
+>
+> I think I didn't notice Leo's ack, it still applies, so I'm doing it
+> now.
 
-On 13/12/2022 14:51, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Dec 13, 2022 at 11:47:35AM +0000, James Clark escreveu:
->> I didn't get any feedback on the RFC version of this that I posted a
->> while back [1]. I'd still like to add the test, especially now that
->> 6.1 has been released with this new feature, so I've rebased it onto
->> perf/core and double checked that it's still working.
->>
->> Applies to perf/core (0c3852adae83)
-> 
-> I'm applying this locally, would this be testable on a Firefly (roc-rk3399-pc):
+I think the BPF counters should be enabled/disabled together.
 
-Thanks Arnaldo. It doesn't look like rk3399 has SVE, so
-test-record-user-regs-no-sve-aarch64 will run to check that the kernel
-won't give you the new register. So I suppose the answer to the question
-is partially.
-
-For test-record-user-regs-sve-aarch64, I've been running it on a
-Graviton 3 on AWS which has SVE:
-
-  ubuntu@ip-10-252-130-213:~/linux$ head /proc/cpuinfo
-  processor	: 0
-  BogoMIPS	: 2100.00
-  Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp
-asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp
-sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm
-svebf16 i8mm bf16 dgh rng
-  CPU implementer	: 0x41
-  CPU architecture: 8
-  CPU variant	: 0x1
-  CPU part	: 0xd40
-  CPU revision	: 1
-
-  processor	: 1
-
-> 
-> acme@roc-rk3399-pc:~$ head /proc/cpuinfo
-> processor	: 0
-> BogoMIPS	: 48.00
-> Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
-> CPU implementer	: 0x41
-> CPU architecture: 8
-> CPU variant	: 0x0
-> CPU part	: 0xd03
-> CPU revision	: 4
-> 
-> processor	: 1
-> acme@roc-rk3399-pc:~$
-> 
-> - Arnaldo
->  
->> Thanks
->> James
->>
->> [1]: https://lore.kernel.org/bpf/20220927154104.869029-1-james.clark@arm.com/
->>
->> James Clark (4):
->>   perf test: Add ability to test exit code for attr tests
->>   perf test: Add mechanism for skipping attr tests on auxiliary vector
->>     values
->>   perf test: Add mechanism for skipping attr tests on kernel versions
->>   perf test arm64: Add attr tests for new VG register
->>
->>  tools/perf/tests/attr.py                      | 71 +++++++++++++++++--
->>  .../attr/test-record-user-regs-no-sve-aarch64 |  9 +++
->>  .../test-record-user-regs-old-sve-aarch64     | 10 +++
->>  .../attr/test-record-user-regs-sve-aarch64    | 14 ++++
->>  4 files changed, 99 insertions(+), 5 deletions(-)
->>  create mode 100644 tools/perf/tests/attr/test-record-user-regs-no-sve-aarch64
->>  create mode 100644 tools/perf/tests/attr/test-record-user-regs-old-sve-aarch64
->>  create mode 100644 tools/perf/tests/attr/test-record-user-regs-sve-aarch64
->>
->> -- 
->> 2.25.1
-> 
+Thanks,
+Namhyung
