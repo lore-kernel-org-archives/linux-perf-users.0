@@ -2,95 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD358C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 16:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32353C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Dec 2022 21:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236120AbiLMQkq convert rfc822-to-8bit (ORCPT
+        id S236344AbiLMV2i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 11:40:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44622 "EHLO
+        Tue, 13 Dec 2022 16:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234710AbiLMQko (ORCPT
+        with ESMTP id S234910AbiLMV2g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 11:40:44 -0500
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E93E3F;
-        Tue, 13 Dec 2022 08:40:43 -0800 (PST)
-Received: by mail-wr1-f43.google.com with SMTP id h11so16225669wrw.13;
-        Tue, 13 Dec 2022 08:40:43 -0800 (PST)
+        Tue, 13 Dec 2022 16:28:36 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711AD240A5
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 13:28:35 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id ay8-20020a05600c1e0800b003d0808d2826so1590374wmb.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 13:28:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sPxCch+SuJX/czcKg/x1jS3wKYQ1yhbWpMuG4i9oUWw=;
+        b=E+lkNW/vnitIH25/YnSrt7TWGivM29tl8AVsANwFHEc9rH5JKyJW7bRkbD1EqRGDfF
+         IbaXcj4hTp85nDZepnLtVL1fCB8FwovIslVrrUOWGStxH1cRsyNfYQaKraZfjbTx8zDG
+         Y6Uyb/fFOIDJ4Z+FwL4DHITXdbRlNIYY/kRFDet4bzICjNllgNH3NtqFshl1QoSaHf36
+         Cva9GMrwVGDI6RgldilFEV1lVZqc+2BDZ8j7owZX73X4ghABa3KeKjezgLW2oP653Mgu
+         MGnc51UtYncxknfwWT6Snyzc/1+oIN53DpcB/JL6LDj4IT6Sk8xxh80ao+ILw+aBlkwp
+         qcNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3F6Co5g0HJu8PhXSFObDaybergLnWCfKZDoB5ZDhG3Q=;
-        b=eCxGXZLa3sVxIyXAkNErluuOgcRVRZ00PSLFWEhVPkhApLCMcdDyFLcdsLWDkU/KuD
-         uF2n3p2a7o/Mx1sV17jeu2EfItcHKJ3AFz6BWnsgAFDaygBdhghwSNTJqCDJH8j1Zj+P
-         WLk+3fJvKwWNGPM+pJVw0U/tz0OKUvDvxk4svLQ9TrjRMZokAnaEkXwkHGeAdxbjeWKo
-         LPM42HxLudrVyYDWk6/LHo33d8W+IaNV7EUHY86O6K3/ibeq1h2z3QgEkgKqvlwnI8z4
-         ij8B2n9ywQId5AjMW806eaHs8rHSyg5Qln5Ctnjr5FDsqEzj8kDg3b1yr/vuM0i53I9t
-         iR6Q==
-X-Gm-Message-State: ANoB5pmUxs3deR0WIUX90yxF4IUZT+CAq5a7vRlN3DdVrPdxlGNS45RF
-        6sXae6DkNEvhjR23o6v2YbHiWxKAihbiLJuoyXk=
-X-Google-Smtp-Source: AA0mqf7UN3ZVN8sgqMJf56eMQQKmcmbQrP0Dtm+uIEySSUo8URwHqE1Xm/cPFTx1fF4j4DQMuqczt/M6XlNDCLi7H3E=
-X-Received: by 2002:adf:dec2:0:b0:242:6f04:93a9 with SMTP id
- i2-20020adfdec2000000b002426f0493a9mr9406130wrn.685.1670949641783; Tue, 13
- Dec 2022 08:40:41 -0800 (PST)
+        bh=sPxCch+SuJX/czcKg/x1jS3wKYQ1yhbWpMuG4i9oUWw=;
+        b=hUxw/x312D8pjT0PBraFipLJnp8LPEfAexVwyXbZdHTtD1cXwSonEJZF3Pq6VS6OUd
+         QEVm6Ibu55+kf3EP/0ZJjao8fwKs9nI56xldDmN4MZnT1pXQKv3DTJtuo5ur4nE00lwf
+         3/KwKJzIBDjDR8v0i+N49mhCiixhPSa91ueRsPXLlcjplSCi6VNgCbfnBVg2fGCWlV/K
+         rDzxmGm8/ZwLQQ+gyQe8NdCt2LZqBXM3hDpLaA7aQCL5NLDwFYLdRAQuG0441CZXclZZ
+         rQtJrjbV3OVm8PqdWRR0PkJh2Gj9kWtE9PfUI780U/cM684AxEk59k1zogOK+haj9i6M
+         9mMg==
+X-Gm-Message-State: ANoB5pn1sC8PBBRy9+G2ZBsAw1Y3jsRBYzS2Lji8jMm9gzMoVz9ulRYm
+        xclKLYhqbkY7QcS40gv/IQnMRpZM66fC6SArixPLvg==
+X-Google-Smtp-Source: AA0mqf4mbRN9RO70+dP+17nvXwqHWyjSQsBIhtnZWLOuogyyAtbhcJWpE11dGgYAj5QrifRpofLF7t15nrzEa0jLA+w=
+X-Received: by 2002:a1c:7203:0:b0:3c6:c109:2d9 with SMTP id
+ n3-20020a1c7203000000b003c6c10902d9mr13324wmc.149.1670966913709; Tue, 13 Dec
+ 2022 13:28:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20220729161244.10522-1-adrian.herrera@arm.com>
- <20220729161244.10522-2-adrian.herrera@arm.com> <e3e123db-5321-c96e-1753-27059c729640@arm.com>
- <Y5iPsjF/lEsEldU8@kernel.org>
-In-Reply-To: <Y5iPsjF/lEsEldU8@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 13 Dec 2022 08:40:31 -0800
-Message-ID: <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
-        =?UTF-8?Q?Adri=C3=A1n_Herrera_Arcila?= <adrian.herrera@arm.com>,
+References: <20221202045743.2639466-1-irogers@google.com> <20221202045743.2639466-4-irogers@google.com>
+ <Y5eVwlId2A2/pN40@fjasle.eu>
+In-Reply-To: <Y5eVwlId2A2/pN40@fjasle.eu>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 13 Dec 2022 13:28:21 -0800
+Message-ID: <CAP-5=fXeYsOs-YJH+hx=haGwJ_eqDNXYQQ30AiyDDfc5P2o84Q@mail.gmail.com>
+Subject: Re: [PATCH 3/5] tools lib subcmd: Add dependency test to install_headers
+To:     Nicolas Schier <nicolas@fjasle.eu>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.org, songliubraving@fb.com, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org
+        bpf@vger.kernel.org, llvm@lists.linux.dev,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
-
-On Tue, Dec 13, 2022 at 6:44 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Mon, Dec 12, 2022 at 12:57 PM Nicolas Schier <nicolas@fjasle.eu> wrote:
 >
-> Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
+> On Thu, Dec 01, 2022 at 08:57:41PM -0800 Ian Rogers wrote:
+> > Compute the headers to be installed from their source headers and make
+> > each have its own build target to install it. Using dependencies
+> > avoids headers being reinstalled and getting a new timestamp which
+> > then causes files that depend on the header to be rebuilt.
 > >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/subcmd/Makefile | 23 +++++++++++++----------
+> >  1 file changed, 13 insertions(+), 10 deletions(-)
 > >
-> > On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
-> > > The described --delay behaviour is to delay the enablement of events, but
-> > > not the execution of the command, if one is passed, which is incorrectly
-> > > the current behaviour.
-> > >
-> > > This patch decouples the enablement from the delay, and enables events
-> > > before or after launching the workload dependent on the options passed
-> > > by the user. This code structure is inspired by that in perf-record, and
-> > > tries to be consistent with it.
-> > >
-> > > Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
-> > > Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
-> > > Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
-> > > ---
-> > >  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
-> > >  1 file changed, 32 insertions(+), 24 deletions(-)
+> > diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+> > index 9a316d8b89df..b87213263a5e 100644
+> > --- a/tools/lib/subcmd/Makefile
+> > +++ b/tools/lib/subcmd/Makefile
+> > @@ -89,10 +89,10 @@ define do_install_mkdir
+> >  endef
 > >
-> > Looks good to me. Fixes the counter delay issue and the code is pretty
-> > similar to perf record now. Although I would wait for Leo's or Song's
-> > comment as well because they were involved.
+> >  define do_install
+> > -     if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
+> > -             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
+> > +     if [ ! -d '$2' ]; then             \
+> > +             $(INSTALL) -d -m 755 '$2'; \
+> >       fi;                                             \
+> > -     $(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
+> > +     $(INSTALL) $1 $(if $3,-m $3,) '$2'
 >
-> I think I didn't notice Leo's ack, it still applies, so I'm doing it
-> now.
+> What about using '$(INSTALL) -D ...' instead of the if-mkdir-block above?
+> (E.g. as in tools/debugging/Makefile.)
+>
+> Kind regards,
+> Nicolas
 
-I think the BPF counters should be enabled/disabled together.
+Thanks Nicolas, the reason was to keep the code consistent. That's not
+to say this is the best approach. For example, here is the same thing
+for tools/lib/api:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/l=
+ib/api/Makefile?h=3Dperf/core&id=3Df43368371888694a2eceaaad8f5e9775c092009a=
+#n84
+
+If you'd like to improve this in all the versions and send patches I'd
+be happy to take a look.
 
 Thanks,
-Namhyung
+Ian
+
+> >  endef
+> >
+> >  install_lib: $(LIBFILE)
+> > @@ -100,13 +100,16 @@ install_lib: $(LIBFILE)
+> >               $(call do_install_mkdir,$(libdir_SQ)); \
+> >               cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
+> >
+> > -install_headers:
+> > -     $(call QUIET_INSTALL, libsubcmd_headers) \
+> > -             $(call do_install,exec-cmd.h,$(prefix)/include/subcmd,644=
+); \
+> > -             $(call do_install,help.h,$(prefix)/include/subcmd,644); \
+> > -             $(call do_install,pager.h,$(prefix)/include/subcmd,644); =
+\
+> > -             $(call do_install,parse-options.h,$(prefix)/include/subcm=
+d,644); \
+> > -             $(call do_install,run-command.h,$(prefix)/include/subcmd,=
+644);
+> > +HDRS :=3D exec-cmd.h help.h pager.h parse-options.h run-command.h
+> > +INSTALL_HDRS_PFX :=3D $(DESTDIR)$(prefix)/include/subcmd
+> > +INSTALL_HDRS :=3D $(addprefix $(INSTALL_HDRS_PFX)/, $(HDRS))
+> > +
+> > +$(INSTALL_HDRS): $(INSTALL_HDRS_PFX)/%.h: %.h
+> > +     $(call QUIET_INSTALL, $@) \
+> > +             $(call do_install,$<,$(INSTALL_HDRS_PFX)/,644)
+> > +
+> > +install_headers: $(INSTALL_HDRS)
+> > +     $(call QUIET_INSTALL, libsubcmd_headers)
+> >
+> >  install: install_lib install_headers
+> >
+> > --
+> > 2.39.0.rc0.267.gcb52ba06e7-goog
+>
+> --
+> epost|xmpp: nicolas@fjasle.eu          irc://oftc.net/nsc
+> =E2=86=B3 gpg: 18ed 52db e34f 860e e9fb  c82b 7d97 0932 55a0 ce7f
+>      -- frykten for herren er opphav til kunnskap --
