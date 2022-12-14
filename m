@@ -2,201 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF2C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 00:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE98C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 03:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237050AbiLNATv (ORCPT
+        id S229694AbiLNDxA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Dec 2022 19:19:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47736 "EHLO
+        Tue, 13 Dec 2022 22:53:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237559AbiLNATa (ORCPT
+        with ESMTP id S237084AbiLNDw6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Dec 2022 19:19:30 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCFF65FB
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 16:18:40 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id f13-20020a1cc90d000000b003d08c4cf679so9503300wmb.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Dec 2022 16:18:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=E8lBAvMUbSarOvBnBi7Cy+Xm1lvvYValWY+7vlRPdgA=;
-        b=E78rr4cbJo6XYu+wDZPWGNQuktj7gpgEnD45pbxHQN63on6NbyD1u7Az5EtM7RgzxM
-         3Ufry04woZyjm6S8qtJb7uoTAZ9TW4/0nyI+jVTGgle0j9fOrqdRrey5CCC8GAglznaA
-         DKh3ts2gKmQQPYIXWsOopNEoGtXvXmQ2CklP5EuF7+1p11z9iMOseglGg6D8gA78CvlX
-         6MAKdUsaNo1yiS8aYS8g32Z0g/i57rbvIXCli90IkLBZq7hUe1MjyGOF/mR+4SR2DOhg
-         ccYklEhGXQGHZaw+ik/s2jaVkgLtQIT99w/w8b1YG8rZjbtjRJDw5UbaSh04PXoiO1uO
-         tGcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E8lBAvMUbSarOvBnBi7Cy+Xm1lvvYValWY+7vlRPdgA=;
-        b=l2BH+s7xSBJHdAv1W9O0+ot9F3Et+ofmyI/wynYrXsj+C87l72DRCzUXU/hZcZfR+D
-         KrHOlC//LbepdgCvKymUeFW/t8lT7tmAipQKh2vID/YqbGx//5W2ZgJDtG7KdcQP/V42
-         XYFmgbFQIuWVyAzr8mOHpgRh4g7/KM3wO7cXNuex+TfUVOSUkveNdaBoAJC5YxSKJ0YV
-         RXW7OkwVmVRaQxcgxh6TIvnU6iyH+LIi8FZLdofF4pRfdLxH6nk18Og1KmuG5Mda/tAt
-         hsQnyVo14YyWvWFcHxM+6LW4BYAKvChpNyRRFjfEAMhW8zavvt9QLjD+WALxc8CoQ6An
-         Un1Q==
-X-Gm-Message-State: ANoB5pkY3ZwB7Zg6rdR8WEyWDWGFvfbeZok23i9lq6/0sSQmjtDOkgHE
-        TTabJS14qY5JLSQMve1RrmPCKra6fEd18RvDZEU3kw==
-X-Google-Smtp-Source: AA0mqf5MLuP3NYBWv5mB/DHXIafSAjDm3AQT1rtH62Wy21w/CcE4rpap1LMZ66/oXUtfQT6H+J9M/dcOWOU4iC844Ss=
-X-Received: by 2002:a1c:7c05:0:b0:3cf:cb16:f24a with SMTP id
- x5-20020a1c7c05000000b003cfcb16f24amr24690wmc.182.1670977118978; Tue, 13 Dec
- 2022 16:18:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20221212230820.901382-1-namhyung@kernel.org>
-In-Reply-To: <20221212230820.901382-1-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 13 Dec 2022 16:18:26 -0800
-Message-ID: <CAP-5=fWGX12LhziS1LG7UwyEtdaJdNoiqc6KBEav0XkSOZ_bww@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: Do not delay the workload with --delay
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Tue, 13 Dec 2022 22:52:58 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81CD162EF;
+        Tue, 13 Dec 2022 19:52:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Naf5Mcnu8od26ZGy/WVxVjpxfVmtevY098CYVpzMApDb0pShnvbFo461abnbyLocBjbIa5M+hIr/Mnp7NQOX4T8+q6mRdQqDZu5OUhdTdlloeVbnC6es1rbaM2DpNk9siUad8sCLCyic+arP/9/X/Ur3GzapUVZ9XHqMeORmLBMiMBBMtiPyF04JrqfVpIwXXMrDygt0zpknxITgB7NWOn8PPdaaZkMDHx86dGDz2fugfxJo0gfKY7fmIecF/HXqJpBkBIeeXhyULHZRCabuuRyeveZCyf5MdSpbLIZx9Q2jP/pTx+ACJf93Ss+3liF6Iuyk0baxC+2j9Eiz8+d2Wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AujeIFrMzuRE6bQDiYSdICvsMZAfTwRuUDZOJRXRsVo=;
+ b=Z+WSA7DQwFwg1eMpfiWjscxhW/+hFT60igA2zCc97KK0x2hK9U7rNrSb6h1tC1aL4Aul39EBxuVIR2JlVizl3xNB9S9StEz+60ZFKVX+Hp8jzIPTJrMqZBC+nDL9escfEFho7VmXuU3b5RdNpMG5SZL9tEYoe3ZgnMN9fRsubwDF9TEFfJmn6VST/JKH4wFrKyeMtl27g0m1c7AvsagI4vTMLEBrbwAgw2JAxIctqB2hjJufuAxONO/qchZAwuhqVZM6XOupbv9Cv0XEiwSfwwWt3CdJNrlhNyfjR6+Df4Jw/lKmmDzykeBLbLcWozphv+1OnItMccPGEFZRXf+UTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AujeIFrMzuRE6bQDiYSdICvsMZAfTwRuUDZOJRXRsVo=;
+ b=dX+uOgNDydWQmZ65xcvndhDm0NyjYQs/D0O1DODE7AU8KoAxPI4y8ECpoHXieap3pihMutPx4FFNdTb7ynqLrEX9jOb10xOCt2YNKckSU5NOKRLIXf5u+E06/ruHfhb25ul5mkOL7XCrv89BVnurRK6mgQ1MXOoQLpAI4cRbthM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MN0PR12MB6319.namprd12.prod.outlook.com (2603:10b6:208:3c0::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.19; Wed, 14 Dec
+ 2022 03:52:49 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::a0e2:652:d7bd:58f]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::a0e2:652:d7bd:58f%3]) with mapi id 15.20.5924.011; Wed, 14 Dec 2022
+ 03:52:42 +0000
+Message-ID: <4990ef71-734a-10cf-e7dc-51b33b26fd18@amd.com>
+Date:   Wed, 14 Dec 2022 09:22:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH RFC 1/8] perf/core: Add *group_leader to
+ perf_event_create_kernel_counter()
+Content-Language: en-US
+To:     Like Xu <like.xu.linux@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>, kvmarm@lists.linux.dev,
         linux-perf-users@vger.kernel.org,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kevin Nomura <nomurak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20221212125844.41157-1-likexu@tencent.com>
+ <20221212125844.41157-2-likexu@tencent.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20221212125844.41157-2-likexu@tencent.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0204.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e9::14) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MN0PR12MB6319:EE_
+X-MS-Office365-Filtering-Correlation-Id: f4a4710a-8ba8-4ec7-dd3f-08dadd86a701
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +1i9XxmfQX5+6egcz9hlpQR7Ko6RId6OtaP25JE5h3qAnIJlPKsrILNwRkLGPvCjbZSdQk+PKXoBKBATsV+Amtz6cw7cILKUIH84wXQ0xvmxT1wwwJGjBBBWJzFcbFboihGsSkmzsiwalgggzbLGuUijZ1pyuWG26pVIMrW+lapM5QMGzGYQTNXr3ehOOQxWZVHQY5WecgCyxkqLSSNxSg5nnl4YUG8HZ61JvhhDZSrLaA5gv0xSBrnChRfcQrZdFRP+Hy+Hp9ZIMalmGqEev1W5C32OdzZzn47Cgn/1WoZkvu94x1/eedBgDmggCegbUw4Szqe34i09y/yV5k/izCXLPKEUhs0wYRctpTdDLXdF4ndGizTFYNme786Xf6k1Wl2BOKxbGKdSuUJjFJMEp9HqXfOty7iStqibsS/qx5h06nKX0yGhEKlg7S0jxCvuB55lk2PYekAzAQOzRiaZ6iuX6ekL2GqOdZbz0mM1nuUZMJrSwFTxKqeoCmGRdjrjes3pYrmj8w9I8/dWzMY4hzTZ8yyNZEd8HS70kc3l4e7wOcdAwbIiLi6WAqGSi0ZTkfK9Yq2CxKeFVfrnm59vi+/NN8Nxf1lGiZUNSsUZjkxz4tIU/DSBWIJlZpwV7Bi/sKGodbZd+csSTif66qaFKzr3hViN9p7TXHkus384ZkvpMT3TXBIFevwE6Gq/bcI2o7Nvj+JWT4qF/ENRqQ6YyAmSCWf5Oclc0d5WbD6QtaEbXCG7HE8j7HPbOuuvw6v55za9YjAoodAYfYclmAVG5w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(451199015)(6916009)(54906003)(316002)(5660300002)(41300700001)(66946007)(36756003)(186003)(8676002)(66556008)(66476007)(4326008)(8936002)(478600001)(6486002)(6506007)(31696002)(6666004)(26005)(86362001)(6512007)(2616005)(2906002)(38100700002)(31686004)(7416002)(44832011)(71600200004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dDJUM3krWUtRQWljN0RSUGVYamdOZG55S2lINEZYMmpWWHAraDhGNzN2Wnp4?=
+ =?utf-8?B?SzlWNDh6aFgvQ3JGZlpLQnlES2daWkNSVUI0c0pYUlVQSGdMNTlFMEI4dENC?=
+ =?utf-8?B?dEl3V0pBWDJJR3RyNzJWOHpKbmk3Z283em1McWE5ZDNaSzgzTXpSeU5QdHRN?=
+ =?utf-8?B?ZFJybGNuditFMk1iNW9HRFRWYzVpck9QTGdYWnp1L3Buc1dHMldvY0M2Ujlh?=
+ =?utf-8?B?RG1SNzFzVUd4RzNraFdmcUxlcGk4ZGVZM2RQK1BJZ2lZSkFabjNJQWdhbDU2?=
+ =?utf-8?B?V1VxNDBPOHJPM2Q0ejdMWXpla1l6cVBuZ2k3L0pkYU0xVlFOdWxUTHFwRVpp?=
+ =?utf-8?B?ZTg4Tm45Vjlpb1lKZXhDalZvb29KYUVmYlBVck4rTVJ2Qi9idUZvbEIwaDVa?=
+ =?utf-8?B?TjRPRk54cFFISHJubHQ5anZPWWFybGMwZ3BRQ2EwNVN0ci93ODVnSm0wNi9t?=
+ =?utf-8?B?aktRMUJackdBZ01WU05CTmJyK2VTNk5DVFpvSW9Vb21lZlA4eXN1c3B0cTha?=
+ =?utf-8?B?SmhLQVpHSHFPMExGb2poRmV4WExsSE11b0FHSkYvM3VXMHRLc3A1TlM0YlNN?=
+ =?utf-8?B?OXFTa3BPYUpDRTBTRy9MQVkyUXdCK1IvZ083SFF6dVlHOXdDcHZybk1wN3h0?=
+ =?utf-8?B?MkNKcU82T3phWUFIYVoxS1hVdVFMMURrSlNqeU9EeThkckwwTFlQTmlaLzJT?=
+ =?utf-8?B?NXdFWk9UWXVyRndBZ2MzQUovUWFvcWhIWlVZSjFpbWNLOFBKT2VwTWZTNlVw?=
+ =?utf-8?B?U1N0akcxVVc4ODFEeWlQUnYvNDVCTUozUXM3UXN0TUJJbm0zZi83bUl0UWY1?=
+ =?utf-8?B?SFliRFJZSmlDWUlrL3ZSeTFWR0hlSnAzNW0vanp0SFFtLzlLMnRXZ3dXR2M3?=
+ =?utf-8?B?a0xNMWRrVVJUQzlMbUVUSS9yMUU1UzNaYVNuYXNLNjVmUCtVWkZ0NDVsdVlD?=
+ =?utf-8?B?T3cvc1gvMW92bWxXV0l5a3pPblh5b3JWOTVUMjlHaXEvQlByTjMrcXRqekp2?=
+ =?utf-8?B?ZHFKQmNrWVowSCtlYWhHNXlFdE9VajA4OU0yaGpiYVg4TzR0TEdnSFFRS2hh?=
+ =?utf-8?B?SWZ4bXJtK3dicndjRTJ1cncwSDRLbEY0c2VIWTdGRzQxYUZaM1AzaU1qWTRZ?=
+ =?utf-8?B?MTJEczlCZWllNGxEbzFQbEROUU9EUHdicWM3M001M1ZCekN2bG5qOGVJc09X?=
+ =?utf-8?B?NEpySFBSYjlxbHBrUVpMNDk4RU9yYkxSTlBwNW0wdXdnRGZDOGQvRUF2a1Rn?=
+ =?utf-8?B?bzBHdW4rcjYzbll0NEx0WnBTaEhaNHEwMWhCLzI3QmEweEJVV3JaVVlwa0Rh?=
+ =?utf-8?B?cy9iTU83c0Z3YTdOVmhpMSt2aHppNmZmdWg0d3orak41WC9QUHowRkk1WTVI?=
+ =?utf-8?B?N2lwUmJ1R2M5MWtXMVh6MnBkczdDbmtsN2oxVGY1czRWendZeU5jeCtha1Ra?=
+ =?utf-8?B?aWMvQVFBdk5JNnR1c3hxMzZkeFNuaFh4VmVoS3dxM3R1N0hvYW1uSEl0QSt5?=
+ =?utf-8?B?S0JxS2ZvT0tvWjVZWHZPUTVZLytNZUJoRjR6WGFqemVxc3ZxY0hXVXRQWWxG?=
+ =?utf-8?B?M2dwbnprTDQwa1ZZeVNVTGtHeWpWK2o2VFlPVXlkQVFJV09nU3hTUnR5SS93?=
+ =?utf-8?B?MkZYdUtmWkRXZk5VY3J2Z0FRYkwwNkpIY3JSczFJdGpMelRNbGpmR2RSRm1u?=
+ =?utf-8?B?ZU41eVJxTGlyOTF3cWNETTcwS3JGQXlCWHpCQXVUQ2hIWExhRU5FV1JCV3Q0?=
+ =?utf-8?B?aVN0aWoySkNQYXMzL2EyOHVLTHEyNGY0bC8wWGprSU5qRnZ5Z2J4TjJERE1z?=
+ =?utf-8?B?R2hWZlE4Z2tCS09DcWFmRXpkd2hRNzJrYVc5cGRoSGVtWWdweGxxeFB6dmtF?=
+ =?utf-8?B?VnhGL2N0VXFRZGl0akxCUXVkbGhRYWxwTVl4WHdWUURQWjIwdTRueVBRMXE3?=
+ =?utf-8?B?QnV0R01DRXpPclRLNTd6RFZJMFZVenB1ZzlxdTRISnFsZ1lXeXFZM3hMY1d1?=
+ =?utf-8?B?ZHRxSVVVbHppOUc0VXZ6VWpZRHZ0QWhCV1dMUW9MMFArT1Frb0pFZ09STkg5?=
+ =?utf-8?B?SEVIY0FEMS84R2docVNCODljZGNKcjRUWkEveU55QmxrN3BEUEVTNk1oNjBu?=
+ =?utf-8?Q?9k/mjqRKWhCr/y7AgLC3b0YBw?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4a4710a-8ba8-4ec7-dd3f-08dadd86a701
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2022 03:52:42.6900
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a/zLWjyU6IHpInq7EZTY+BI0NGZDd2SMKumuY8DdmhiAwynbJCwZZ8mbLsQynyyIOr5mUntpSZmVhCs5/5j45A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6319
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 3:08 PM Namhyung Kim <namhyung@kernel.org> wrote:
->
-> The -D/--delay option is to delay the measure after the program starts.
-> But the current code goes to sleep before starting the program so the
-> program is delayed too.  This is not the intention, let's fix it.
->
-> Before:
->
->   $ time sudo ./perf stat -a -e cycles -D 3000 sleep 4
->   Events disabled
->   Events enabled
->
->    Performance counter stats for 'system wide':
->
->        4,326,949,337      cycles
->
->          4.007494118 seconds time elapsed
->
->   real  0m7.474s
->   user  0m0.356s
->   sys   0m0.120s
->
-> It ran the workload for 4 seconds and gave the 3 second delay.  So it
-> should skip the first 3 second and measure the last 1 second only.  But
-> as you can see, it delays 3 seconds and ran the workload after that for
-> 4 seconds.  So the total time (real) was 7 seconds.
->
-> After:
->
->   $ time sudo ./perf stat -a -e cycles -D 3000 sleep 4
->   Events disabled
->   Events enabled
->
->    Performance counter stats for 'system wide':
->
->        1,063,551,013      cycles
->
->          1.002769510 seconds time elapsed
->
->   real  0m4.484s
->   user  0m0.385s
->   sys   0m0.086s
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7f04f995c975..f671b1a9a691 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12674,12 +12674,14 @@ SYSCALL_DEFINE5(perf_event_open,
+>   * @attr: attributes of the counter to create
+>   * @cpu: cpu in which the counter is bound
+>   * @task: task to profile (NULL for percpu)
+> + * @group_leader: event group leader
+>   * @overflow_handler: callback to trigger when we hit the event
+>   * @context: context data could be used in overflow_handler callback
+>   */
+>  struct perf_event *
+>  perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+>  				 struct task_struct *task,
+> +				 struct perf_event *group_leader,
+>  				 perf_overflow_handler_t overflow_handler,
+>  				 void *context)
+>  {
+> @@ -12694,7 +12696,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+>  	if (attr->aux_output)
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	event = perf_event_alloc(attr, cpu, task, NULL, NULL,
+> +	event = perf_event_alloc(attr, cpu, task, group_leader, NULL,
+>  				 overflow_handler, context, -1);
 
-The commit message feels like it could almost be turned into a shell
-test. The test would need some fudge factors in case of load on the
-test system. Any thoughts if we could add this? We wouldn't need to
-rely on 'time' as we have tool events of user_time, system_time, etc.
+Grouping involves lot of complexities. Setting group_leader won't be sufficient.
+Please see perf_event_open() syscall code for more detail.
 
 Thanks,
-Ian
-
-> The bug was introduced when it changed enablement of system-wide events
-> with a command line workload.  But it should've considered the initial
-> delay case.  The code was reworked since then (in bb8bc52e7578) so I'm
-> afraid it won't be applied cleanly.
->
-> Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
-> Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Reported-by: Kevin Nomura <nomurak@google.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-stat.c | 33 +++++++++++++++++----------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index d040fbcdcc5a..b39bf785a16e 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -540,26 +540,14 @@ static int enable_counters(void)
->                         return err;
->         }
->
-> -       if (stat_config.initial_delay < 0) {
-> -               pr_info(EVLIST_DISABLED_MSG);
-> -               return 0;
-> -       }
-> -
-> -       if (stat_config.initial_delay > 0) {
-> -               pr_info(EVLIST_DISABLED_MSG);
-> -               usleep(stat_config.initial_delay * USEC_PER_MSEC);
-> -       }
-> -
->         /*
->          * We need to enable counters only if:
->          * - we don't have tracee (attaching to task or cpu)
->          * - we have initial delay configured
->          */
-> -       if (!target__none(&target) || stat_config.initial_delay) {
-> +       if (!target__none(&target)) {
->                 if (!all_counters_use_bpf)
->                         evlist__enable(evsel_list);
-> -               if (stat_config.initial_delay > 0)
-> -                       pr_info(EVLIST_ENABLED_MSG);
->         }
->         return 0;
->  }
-> @@ -930,14 +918,27 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->                         return err;
->         }
->
-> -       err = enable_counters();
-> -       if (err)
-> -               return -1;
-> +       if (stat_config.initial_delay) {
-> +               pr_info(EVLIST_DISABLED_MSG);
-> +       } else {
-> +               err = enable_counters();
-> +               if (err)
-> +                       return -1;
-> +       }
->
->         /* Exec the command, if any */
->         if (forks)
->                 evlist__start_workload(evsel_list);
->
-> +       if (stat_config.initial_delay > 0) {
-> +               usleep(stat_config.initial_delay * USEC_PER_MSEC);
-> +               err = enable_counters();
-> +               if (err)
-> +                       return -1;
-> +
-> +               pr_info(EVLIST_ENABLED_MSG);
-> +       }
-> +
->         t0 = rdclock();
->         clock_gettime(CLOCK_MONOTONIC, &ref_time);
->
-> --
-> 2.39.0.rc1.256.g54fd8350bd-goog
->
+Ravi
