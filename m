@@ -2,93 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE2CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 14:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF58DC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 14:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238373AbiLNO0v (ORCPT
+        id S238662AbiLNOfK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 09:26:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
+        Wed, 14 Dec 2022 09:35:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbiLNO0u (ORCPT
+        with ESMTP id S238650AbiLNOfD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 09:26:50 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0F20120355;
-        Wed, 14 Dec 2022 06:26:48 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38235FEC;
-        Wed, 14 Dec 2022 06:27:29 -0800 (PST)
-Received: from [10.57.10.207] (unknown [10.57.10.207])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 460FE3F73B;
-        Wed, 14 Dec 2022 06:26:46 -0800 (PST)
-Message-ID: <b26a4193-6d58-2bee-4d93-1337a4dbf226@arm.com>
-Date:   Wed, 14 Dec 2022 14:26:44 +0000
+        Wed, 14 Dec 2022 09:35:03 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE56BF2;
+        Wed, 14 Dec 2022 06:35:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4999061ACE;
+        Wed, 14 Dec 2022 14:35:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F887C433EF;
+        Wed, 14 Dec 2022 14:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671028501;
+        bh=m98RlXJ/WE9s7A2/YHKpBSHyNKsZEnL4fFE9zIp3ocE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DDM5pcZ0jlu38c7MLCTaHrXajkeM7tOgeVuIkw0XTQvpfpl5DlhG5EvxTtf+TYmjt
+         mrbTx5R6devy6Dax4iPppell2fc+Rj1nfJmcBGnQDfUuY5eO6hNHKtfCrbE0ED0REz
+         JkbAuYp3h6YElz/KFQ3dXPofd4Y3MmqqZGQ04ROx47diVl54m8KNOpIQwzIqcN5gCz
+         rW9x0O1hKzcg/VatoVfkINLqisaYjUrpNIcN9sqcfYpOUjmRguwT0AAi6V96+EEzNa
+         gRkLLStL0AS0wT8tf73rvaXmpb1YLvdmN90Q2XUKaL61GlkpkvXm4PvyzbXLGV+bfk
+         qnKMEj+pft67A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 84C0940367; Wed, 14 Dec 2022 11:34:58 -0300 (-03)
+Date:   Wed, 14 Dec 2022 11:34:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        hca@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        svens@linux.ibm.com
+Subject: Re: [PATCH 2/2] perf/test: Fix perf test 89 on x86
+Message-ID: <Y5nfEu+3sU/Hcoon@kernel.org>
+References: <20221213105729.1447368-1-tmricht@linux.ibm.com>
+ <20221213105729.1447368-2-tmricht@linux.ibm.com>
+ <Y5iQXJaQOrhjLZQW@kernel.org>
+ <f5e69102-ed17-1f2d-3a09-3c7968b611ff@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     =?UTF-8?Q?Adri=c3=a1n_Herrera_Arcila?= <adrian.herrera@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.org, songliubraving@fb.com, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org
-References: <20220729161244.10522-1-adrian.herrera@arm.com>
- <20220729161244.10522-2-adrian.herrera@arm.com>
- <e3e123db-5321-c96e-1753-27059c729640@arm.com> <Y5iPsjF/lEsEldU8@kernel.org>
- <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5e69102-ed17-1f2d-3a09-3c7968b611ff@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Wed, Dec 14, 2022 at 11:40:32AM +0100, Thomas Richter escreveu:
+> On 12/13/22 15:46, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Dec 13, 2022 at 11:57:29AM +0100, Thomas Richter escreveu:
+> >> perf test '89: probe libc's inet_pton & backtrace it with ping'
+> >> fails on x86. Debugging revealed a changed stack trace for the
+> >> ping command using probes:
 
+> >> ping 35729 [002]  8006.365063: probe_libc:inet_pton: (3ff9603e7c0)
+> >>                   12be50 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+> >>                   4fca main+0x139b (/usr/bin/ping)
 
-On 13/12/2022 16:40, Namhyung Kim wrote:
-> Hi,
-> 
-> On Tue, Dec 13, 2022 at 6:44 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
->>
->> Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
->>>
->>>
->>> On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
->>>> The described --delay behaviour is to delay the enablement of events, but
->>>> not the execution of the command, if one is passed, which is incorrectly
->>>> the current behaviour.
->>>>
->>>> This patch decouples the enablement from the delay, and enables events
->>>> before or after launching the workload dependent on the options passed
->>>> by the user. This code structure is inspired by that in perf-record, and
->>>> tries to be consistent with it.
->>>>
->>>> Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
->>>> Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
->>>> Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
->>>> ---
->>>>  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
->>>>  1 file changed, 32 insertions(+), 24 deletions(-)
->>>
->>> Looks good to me. Fixes the counter delay issue and the code is pretty
->>> similar to perf record now. Although I would wait for Leo's or Song's
->>> comment as well because they were involved.
->>
->> I think I didn't notice Leo's ack, it still applies, so I'm doing it
->> now.
-> 
-> I think the BPF counters should be enabled/disabled together.
+> >> The line getaddrinfo.... in the call stack is gone.
+> >> It was introduced with glibc version 2.36.8 released
+> >> with Fedora 37.
 
-I did notice that difference between the two, but I wasn't sure of the
-exact reason that it was done that way on Adrián's version. It seems
-like it's not separated in perf record so maybe you are right.
+> >> Output before on x86
+> >>  # ./perf test 89
+> >>  89: probe libc's inet_pton & backtrace it with ping   : FAILED!
+> >>  #
 
-> 
-> Thanks,
-> Namhyung
+> >> Output after on x86:
+> >>  # ./perf test 89
+> >>  89: probe libc's inet_pton & backtrace it with ping   : Ok
+> >>  #
+
+> > Not having at the current state of that script, that $expected may be a
+> > subset of the actual backtrace, i.e. will this continue working with
+> > the systems where that getaddrinfo line appear?
+ 
+> No, that is not the case.
+> Taking this into account requires a larger rework of the call stack
+> checking. Not just simple line by line matching which is done now.
+> It also raises the question of how far to go back
+> in glibc history. Different versions of glibc have different call stacks.
+ 
+> I will rethink this...
+
+One possibility is to have the options on a temp file, the previous one,
+then if it fails, remove the getaddrinfo line and try again, if it
+works, its the new glibc, test result is Ok.
+
+Add a commment stating that from circa glibc versiuon 2.36.8 the
+getaddrinfo isn't there anymore.
+
+- Arnaldo
