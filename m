@@ -2,123 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED9FC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 08:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1779FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 10:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237778AbiLNIaT (ORCPT
+        id S238010AbiLNKky (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 03:30:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48020 "EHLO
+        Wed, 14 Dec 2022 05:40:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237800AbiLNIaI (ORCPT
+        with ESMTP id S237643AbiLNKkr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 03:30:08 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7879F1FF91;
-        Wed, 14 Dec 2022 00:30:03 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HaCDbooYUSpzVoelYTnDe+7DDq/ziUBUMn713+h/Ou0YVH5PXdt/k7eSsEchhv1DwIE1HN7TaWOPYsY4uFxqIIcKQQ9v+LAyE5ziwEZ0I6/+mBCzCpRZnG90wOuSXJfeRQTe0ofJRcW3af1O6u1/jqaH9bATLEV8Z1A0H1HWLK4xlRibEpb/hUsPSLClz560Ut+zc5iVpREnDeyP20uL1E0Oc3BRdaFM4YAcGE8YjCF3PjFdUl740YzrEaw6429biLcDTVgzRle1h/KebRijWzTdOW0v7m8XMc3zsE43P9A4Ssw+oqpUysSo5oaWS4VY5Hx+YpyZpclwGBddBLZlJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ec4hqE5XZsdLwgtvKwmazpZCBKeORTgNj00h1CyEEbM=;
- b=MwB1DDihvt+G7ABs5cFl586oBDtQuB9FjIr4+LlbxL10ATs9QsybLo4jilFuiQudMVmqI3L/LKw07rLkO0sOvzMtknHeTa6DZYxlxxrpqXrMBfp7xUVStMJBl51jNEfmTp2SIpBZzeiLZistYatDYF+htCp3zsRNtdoXreAIOfLhm/XcYj738RaZKUajKwvjh2cfUyRrU3UxCX76AMvY5LR+fnHQPdrO9aGLUuu/7RK8dI3GpPWhB3Ppp+wb+XaT2mluPf30r9ZcddMpWURGA90NLoFuXLtdtOPkf0ZYfoVJY2KPz2DsvNjZXXM1d3BS0gWHo1GCvl0qMp8NZzhZeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ec4hqE5XZsdLwgtvKwmazpZCBKeORTgNj00h1CyEEbM=;
- b=oRrCYoL8J+TekcekHkNGpMCLc0uZ7GK7+cX2eqje2qlGkiY8SCCeyvcuQ3KRyoqdq6HNRm1KIjWUt9+8D2FskYWWpLda22RS551bqMEeYjsO1ulDW4oSsZQ3KQ6V29L+oLr1DzW+gkiqLlL+1zV+9jXFh69i/h087mb95REyDvs=
-Received: from MW4PR04CA0103.namprd04.prod.outlook.com (2603:10b6:303:83::18)
- by CH2PR12MB4247.namprd12.prod.outlook.com (2603:10b6:610:7c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.11; Wed, 14 Dec
- 2022 08:30:01 +0000
-Received: from CO1NAM11FT032.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:83:cafe::53) by MW4PR04CA0103.outlook.office365.com
- (2603:10b6:303:83::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.11 via Frontend
- Transport; Wed, 14 Dec 2022 08:30:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT032.mail.protection.outlook.com (10.13.174.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5924.11 via Frontend Transport; Wed, 14 Dec 2022 08:30:00 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 14 Dec
- 2022 02:29:54 -0600
-From:   Sandipan Das <sandipan.das@amd.com>
-To:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <eranian@google.com>,
-        <irogers@google.com>, <jhladky@redhat.com>,
-        <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
-        <sandipan.das@amd.com>
-Subject: [PATCH v2 4/4] perf vendor events amd: Add Zen 4 mapping
-Date:   Wed, 14 Dec 2022 13:56:52 +0530
-Message-ID: <20221214082652.419965-5-sandipan.das@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221214082652.419965-1-sandipan.das@amd.com>
-References: <20221214082652.419965-1-sandipan.das@amd.com>
+        Wed, 14 Dec 2022 05:40:47 -0500
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3189823167;
+        Wed, 14 Dec 2022 02:40:47 -0800 (PST)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BEA9ouf026381;
+        Wed, 14 Dec 2022 10:40:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=rmj01O8aWT7Pquub7N1Da9OFDIr52FoA27MQJjM3mek=;
+ b=FRxQnbYXsbHLr9dCBHW7xe4wGNGA+DuW0ogijblnicpu7AKY2QutftUicFnooPG+BAox
+ m0r05AaMHZl6v5MYODEqBODbjMtHQKX1LXSp9oTlWF0S3/yDXD+Cr5O5T2wq2/M0iI5m
+ eOOveQcqBKPhfRiOvduHWDzIGRd6/MLXONCxqdZmsUbBS8ovGxB+QrHSIonUCcmnvkom
+ ac4xKBubR+DbCgxYS6MRZMGn9E/u4swzlWvx3sXGrag8+0DRHzuDW4I4suERHXFyK6kG
+ q79sQY6hh5MznZtIQ92+TcOYAorK1ghBhX9BNbDZ1/AgKcm+4p1/e79f5JKKHiA/NjPK sg== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mfc6vh2av-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Dec 2022 10:40:38 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BEA5c46023755;
+        Wed, 14 Dec 2022 10:40:36 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3meypygxjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Dec 2022 10:40:36 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BEAeWAq46137656
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Dec 2022 10:40:32 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7FEA20040;
+        Wed, 14 Dec 2022 10:40:32 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8388E2004B;
+        Wed, 14 Dec 2022 10:40:32 +0000 (GMT)
+Received: from [9.152.212.244] (unknown [9.152.212.244])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 14 Dec 2022 10:40:32 +0000 (GMT)
+Message-ID: <f5e69102-ed17-1f2d-3a09-3c7968b611ff@linux.ibm.com>
+Date:   Wed, 14 Dec 2022 11:40:32 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH 2/2] perf/test: Fix perf test 89 on x86
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        hca@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        svens@linux.ibm.com
+References: <20221213105729.1447368-1-tmricht@linux.ibm.com>
+ <20221213105729.1447368-2-tmricht@linux.ibm.com>
+ <Y5iQXJaQOrhjLZQW@kernel.org>
+Content-Language: en-US
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <Y5iQXJaQOrhjLZQW@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT032:EE_|CH2PR12MB4247:EE_
-X-MS-Office365-Filtering-Correlation-Id: a5227d93-5271-4e7c-4606-08daddad645e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1uHZ7psAIKHOgBGMz6nfpeiELEZaM6mb6pp/3w2HToRE1JVF0GdSIbTIFOp9K4yflcg570MRTipSJJnSGSrWOiC1DwQZX8gEBGwSVbib0XUnDxHsIb4bfQr/ZVjpUG2BRCQhZ6jM+lLFn5GyVS7Ez9VmoxGC7qs9VS3pkun6LWSuzD1JAwyCMAAjrKUGfa+xzZDxQol7HlnP2hPnMYf82eeptn0E86ISozSooKx1s9Hjj4AecZI+pKF24WudfRylZszvfJiQfxO8WWiO4bLAKeuLKvyzSbK82UtZsLFBHlBroz/r7ljnYV7dRB88lLKbgKmZKizr1wX+hP5J5PdaipwqNMDJ62qv2NPfwZJWZ81RbeJDTTwurK84x4Wg2IFAE1oWsBo7Bf5oP9Obg5Uizpjefb3L93jz7scz9hgimRy9Haw6oK8RluVGGaPtoK3yctrHGN3SIEgquK6uX19oeUxCI98i1lPSYFaapf5CHPsiAd16nwORkVOEqoOI049bR4ydSGKwxow6kKWsVE0TwB+CFaVidRVg7Bnn0Z5cSnMzLSoSxuSaT5Ba0n1xQPBQ5juem4GJKnooo9upLeYqqFpVsdSSQ+oskllti5XdvRvQIF9ZBbPWIHu3TxzTFpO/2KhsNnQFfKX/QRJFtR3gCTL5SmvO3VBZGlJKQn6LfFuEytEjW+0wb7HYPibYQLKflUZghUmF8vp4RqG1xVNZF6FuIuUVBr5Y1WZdAE3tebQ=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:CA;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(39860400002)(376002)(136003)(451199015)(40470700004)(36840700001)(46966006)(86362001)(478600001)(82310400005)(16526019)(81166007)(356005)(26005)(186003)(82740400003)(8936002)(2906002)(336012)(1076003)(41300700001)(110136005)(54906003)(36756003)(40460700003)(4744005)(83380400001)(44832011)(426003)(47076005)(316002)(7416002)(70586007)(70206006)(2616005)(4326008)(8676002)(40480700001)(5660300002)(36860700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Dec 2022 08:30:00.7608
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5227d93-5271-4e7c-4606-08daddad645e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT032.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4247
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: r5Oda6Ph7KcVf90S7ur8gGOowfJsZBgB
+X-Proofpoint-ORIG-GUID: r5Oda6Ph7KcVf90S7ur8gGOowfJsZBgB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-12-14_04,2022-12-14_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ mlxscore=0 clxscore=1015 spamscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2212140080
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a regular expression in the map file so that appropriate JSON event
-files are used for AMD Zen 4 processors. Restrict the regular expression
-for AMD Zen 3 processors to known model ranges since they also belong to
-Family 19h.
+On 12/13/22 15:46, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Dec 13, 2022 at 11:57:29AM +0100, Thomas Richter escreveu:
+>> perf test '89: probe libc's inet_pton & backtrace it with ping'
+>> fails on x86. Debugging revealed a changed stack trace for the
+>> ping command using probes:
+>>
+>> ping 35729 [002]  8006.365063: probe_libc:inet_pton: (3ff9603e7c0)
+>>                   12be50 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+>>                   4fca main+0x139b (/usr/bin/ping)
+>>
+>> The line getaddrinfo.... in the call stack is gone.
+>> It was introduced with glibc version 2.36.8 released
+>> with Fedora 37.
+>>
+>> Output before on x86
+>>  # ./perf test 89
+>>  89: probe libc's inet_pton & backtrace it with ping   : FAILED!
+>>  #
+>>
+>> Output after on x86:
+>>  # ./perf test 89
+>>  89: probe libc's inet_pton & backtrace it with ping   : Ok
+>>  #
+> 
+> Not having at the current state of that script, that $expected may be a
+> subset of the actual backtrace, i.e. will this continue working with
+> the systems where that getaddrinfo line appear?
+> 
+> - Arnaldo
+>  
 
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
----
- tools/perf/pmu-events/arch/x86/mapfile.csv | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+No, that is not the case.
+Taking this into account requires a larger rework of the call stack
+checking. Not just simple line by line matching which is done now.
+It also raises the question of how far to go back
+in glibc history. Different versions of glibc have different call stacks.
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 5e609b876790..9f9f88f5d117 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -31,4 +31,5 @@ GenuineIntel-6-25,v3,westmereep-sp,core
- GenuineIntel-6-2F,v3,westmereex,core
- AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
- AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
--AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen3,core
-+AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]]),v1,amdzen3,core
-+AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen4,core
+I will rethink this...
 -- 
-2.34.1
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
