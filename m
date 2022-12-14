@@ -2,137 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50923C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 14:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE2CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 14:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238044AbiLNOWw (ORCPT
+        id S238373AbiLNO0v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 09:22:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43108 "EHLO
+        Wed, 14 Dec 2022 09:26:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237347AbiLNOWv (ORCPT
+        with ESMTP id S229867AbiLNO0u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 09:22:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D79275F9;
-        Wed, 14 Dec 2022 06:22:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5C2BB61AAF;
-        Wed, 14 Dec 2022 14:22:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F69C433D2;
-        Wed, 14 Dec 2022 14:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671027768;
-        bh=L/6XW+ZNaYBnNXDgz9LNIZ/Q7OYbAfpqXmx5Wzw2qkE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k7/zSKAJKvG7+Zwh+DD4UGlFvaZgRCvibaA0dl7Kjlnhnsy6KTWrxtQQ19tjTCgoR
-         mHSXJ9tzVfw30SaPC4zisqeZ6adHrRegKJwJC/aQ8cGImGF3wIsMFHyEPbR9yK2UjZ
-         tFR/Hgl34OUOB9K6Llbp9d4jxONI8mBHG0+urs5n7/4PgWtYE/x+ymQTgVtFbGTRff
-         RE5JjZK4Z6a4mv285VRNGlkg8ZjpfWYa+tI9fh6T39MTHmpNnW5U3F5/DoE3hLx5yJ
-         Vl87uKGKHfs5xDtSdzlo6FSKE2G70V0EwIEVry6rHsSaqEI4+T64QdfGmGiUU3g3km
-         ewwjAfGtSd+Lw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 35BAE40367; Wed, 14 Dec 2022 11:22:45 -0300 (-03)
-Date:   Wed, 14 Dec 2022 11:22:45 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        German Gomez <german.gomez@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Timothy Hayes <timothy.hayes@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        shaomin Deng <dengshaomin@cdjrlc.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 0/5] build/libtraceevent resends
-Message-ID: <Y5ncNQfPzq8qBP/f@kernel.org>
-References: <20221213232651.1269909-1-irogers@google.com>
+        Wed, 14 Dec 2022 09:26:50 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0F20120355;
+        Wed, 14 Dec 2022 06:26:48 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38235FEC;
+        Wed, 14 Dec 2022 06:27:29 -0800 (PST)
+Received: from [10.57.10.207] (unknown [10.57.10.207])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 460FE3F73B;
+        Wed, 14 Dec 2022 06:26:46 -0800 (PST)
+Message-ID: <b26a4193-6d58-2bee-4d93-1337a4dbf226@arm.com>
+Date:   Wed, 14 Dec 2022 14:26:44 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221213232651.1269909-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     =?UTF-8?Q?Adri=c3=a1n_Herrera_Arcila?= <adrian.herrera@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, songliubraving@fb.com, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org
+References: <20220729161244.10522-1-adrian.herrera@arm.com>
+ <20220729161244.10522-2-adrian.herrera@arm.com>
+ <e3e123db-5321-c96e-1753-27059c729640@arm.com> <Y5iPsjF/lEsEldU8@kernel.org>
+ <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 13, 2022 at 03:26:46PM -0800, Ian Rogers escreveu:
-> All patches on the acme perf/core branch.
-> 
-> Resend incremental build fix python plugin:
-> https://lore.kernel.org/lkml/20221205225940.3079667-4-irogers@google.com/
-> 
-> Break apart and resend libtraceevent debug logging support:
-> https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irogers@google.com/
-> 
-> Switch "#if HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE" to "#if
-> MAKE_LIBTRACEEVENT_VERSION(1, 5, 0) <= LIBTRACEEVENT_VERSION",
-> ensuring trace-event.h is included as discussed on the mailing list.
-> 
-> Resend removal of --group option:
-> https://lore.kernel.org/lkml/20220707195610.303254-1-irogers@google.com/
 
-Thanks, applied.
 
-- Arnaldo
-
- 
-> Ian Rogers (5):
->   perf build: Fix python/perf.so library's name
->   perf trace-event: Add libtraceevent version tools to header
->   libtraceevent: Increase libtraceevent logging when verbose
->   perf trace-event: Use version check to avoid 1 define
->   perf evlist: Remove group option.
+On 13/12/2022 16:40, Namhyung Kim wrote:
+> Hi,
 > 
->  tools/perf/Documentation/perf-record.txt      |  4 ----
->  tools/perf/Documentation/perf-top.txt         |  7 ++----
->  tools/perf/Makefile.config                    |  8 +++----
->  tools/perf/Makefile.perf                      |  2 +-
->  tools/perf/builtin-record.c                   |  2 --
->  tools/perf/builtin-stat.c                     |  6 -----
->  tools/perf/builtin-top.c                      |  2 --
->  tools/perf/builtin-trace.c                    |  2 +-
->  tools/perf/tests/attr/README                  |  2 --
->  tools/perf/tests/attr/test-record-group       | 22 -------------------
->  tools/perf/tests/attr/test-stat-group         | 17 --------------
->  tools/perf/util/data-convert-bt.c             |  3 ++-
->  tools/perf/util/debug.c                       | 10 +++++++++
->  tools/perf/util/evlist.c                      |  2 +-
->  tools/perf/util/evlist.h                      |  2 --
->  tools/perf/util/evsel.c                       |  2 +-
->  tools/perf/util/python.c                      | 10 +--------
->  tools/perf/util/record.c                      |  7 ------
->  tools/perf/util/record.h                      |  1 -
->  .../util/scripting-engines/trace-event-perl.c |  2 +-
->  .../scripting-engines/trace-event-python.c    |  2 +-
->  tools/perf/util/sort.c                        |  3 ++-
->  tools/perf/util/trace-event.h                 | 13 +++++++++++
->  23 files changed, 39 insertions(+), 92 deletions(-)
->  delete mode 100644 tools/perf/tests/attr/test-record-group
->  delete mode 100644 tools/perf/tests/attr/test-stat-group
+> On Tue, Dec 13, 2022 at 6:44 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+>>
+>> Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
+>>>
+>>>
+>>> On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
+>>>> The described --delay behaviour is to delay the enablement of events, but
+>>>> not the execution of the command, if one is passed, which is incorrectly
+>>>> the current behaviour.
+>>>>
+>>>> This patch decouples the enablement from the delay, and enables events
+>>>> before or after launching the workload dependent on the options passed
+>>>> by the user. This code structure is inspired by that in perf-record, and
+>>>> tries to be consistent with it.
+>>>>
+>>>> Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
+>>>> Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+>>>> Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
+>>>> ---
+>>>>  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
+>>>>  1 file changed, 32 insertions(+), 24 deletions(-)
+>>>
+>>> Looks good to me. Fixes the counter delay issue and the code is pretty
+>>> similar to perf record now. Although I would wait for Leo's or Song's
+>>> comment as well because they were involved.
+>>
+>> I think I didn't notice Leo's ack, it still applies, so I'm doing it
+>> now.
 > 
-> -- 
-> 2.39.0.314.g84b9a713c41-goog
+> I think the BPF counters should be enabled/disabled together.
 
--- 
+I did notice that difference between the two, but I wasn't sure of the
+exact reason that it was done that way on Adrián's version. It seems
+like it's not separated in perf record so maybe you are right.
 
-- Arnaldo
+> 
+> Thanks,
+> Namhyung
