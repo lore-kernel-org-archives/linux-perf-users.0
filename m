@@ -2,192 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 18:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41454C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 18:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238948AbiLNSLA (ORCPT
+        id S238637AbiLNSki (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 13:11:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40178 "EHLO
+        Wed, 14 Dec 2022 13:40:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239002AbiLNSKr (ORCPT
+        with ESMTP id S238899AbiLNSka (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 13:10:47 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F902187
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 10:10:44 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id co23so629212wrb.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 10:10:44 -0800 (PST)
+        Wed, 14 Dec 2022 13:40:30 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8427C2A733
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 10:40:24 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id ay40so12063202wmb.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 10:40:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nybxgdJczlK9xtFGjAbTfjb9qk52fvIL/a1+enwIgmM=;
-        b=rKhaXbQUggPZdCWaRsZFYOcBD7elT7dcVVUaN1vfyPFjGb2fI3BPdNaYhTmV3dAkeH
-         AbEME5Avhe7kOhXTGK0ULD4flL+51h2MXC8EGR0Uji1O7f85qriSdy+nwGZwWg/rx/hf
-         Sxx8UykaTQ//ct5rT9CwTZGcw2fZpUFPHOmLID8Uw2tnXibscF9WyVNCY25C9tR0WbS6
-         1vAueqKVhath4j5KpnK6822TBPKbPl9+49A0fwRswb9aOhefnnAEsYs5lsSfJhIuzg1T
-         bDLo57p31MqrmE2E08mIBBDAp9HLn3E8IqKpMnvZuW3qWauo2pAT9HUhGurOvYZJh4f4
-         m1uQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2xXj6E7TqJQIVDtAmPgd4vi/xIzD5cJJ8HWFRiZ4xRI=;
+        b=in2I0qEOIgJnTYP972LD+zd3oHVTu2LylyTu6b8XVVAs85I85P0u7YgS5R3LWC6MH8
+         9myZCKctu+Tu5Ka18GAHdljk9RXhsoLztjVlUt1P1Ka9l/zf42D/WDPRBUuPoLbGIPnG
+         VM2GT1CBMPtKXxXGHyXesXPI9CAd8oWFIFZKXd002ueqWcgwiDVpOJ1bcVEQIpIF3q3U
+         cwg87bFEkMjfLyh57hSS1BgZq75JvNxedGRlZg89K5ml7W4PuXpd6wttQGCWYtnuUQIY
+         BtEvI7YsW7YVwg9N3Z/XhvHpf0RRwpVvcDayNRYG6ISVPcvnRzJwCLEh6KomzSXEMYkt
+         iIZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nybxgdJczlK9xtFGjAbTfjb9qk52fvIL/a1+enwIgmM=;
-        b=K4D65szFD9f45IBljsQ3ckcUV8LkIOBT+UJ+d2cmNZOs0rNxgs+SlBE3AsaSO2Jcj/
-         8FB0AHorbGL+0vb/MZLzSIG4jLc7fek5g+HtTTG2SUOUuNkW3whuOu3qcbEdwGvNy4VL
-         AwYJqNkp2JMj8O1aHwFgh2K7lGnvDBXwXdzyt0uQA0flCyWgCR/JD6oHbZ84O0Kxwhw1
-         M4rCvYayF0WliVZT/rw/lmDdD65cPvMpXOR9FLTlNZUC/3o76/w8hPUeMTCCMHJ2mAwq
-         pdAhJoquMPxnZNd3us7v+LHpYFEG9k4bcSX/7qec/h8s8jV5veCTlT0+wkOfO2W3q5eF
-         iPVg==
-X-Gm-Message-State: ANoB5pkYgT0Ly9klabJvFUfNMV3iL76T7WiUj5cjQMDnt36yufSF05s0
-        cv4B2PD2MJIiifJMtE1WUPY4rKzXGRLKjifS6konkg==
-X-Google-Smtp-Source: AA0mqf6MNK/WLTJN3L8riDu3wQ0pF0PYVfu3IsI/9xxVW9bP9ieIXPzqBSmaRP+e8JOEzQlpXXS6Wj8B3/KM2j5KcZE=
-X-Received: by 2002:a5d:4a8c:0:b0:242:165e:7a79 with SMTP id
- o12-20020a5d4a8c000000b00242165e7a79mr28790047wrq.343.1671041443254; Wed, 14
- Dec 2022 10:10:43 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2xXj6E7TqJQIVDtAmPgd4vi/xIzD5cJJ8HWFRiZ4xRI=;
+        b=Ptade5AUlysoC6sz+A8o0UTdDmubZ7Abld5F7MyharzijZDAHSUafcetDGLd7nQRqZ
+         c4JBoNduqezdWAbmpI1qc4R1xz7N4zUd8B5RQbu+mYoQcoiiOcy36BSatl5ZDkFyn/NM
+         /ok9MpTF1lUME4Nb/ktp13ygIipFqYCXZxC7YGJQZ+oYEpySd73IHF/Ft4EBS51jP4Zr
+         sP2PKSfdH+lwMwGPYWXLTZlqXrEcqtOvS2rTzXes5jNXCI6UnvMJpBAVykpHe+xf52jD
+         nNIRoueeUyy0NtYb2Y/hBLGGw/DHzEEKD8qhdzhM521/HLc7I5MSaWLk03GE6Xd57GlZ
+         h0Vg==
+X-Gm-Message-State: ANoB5pmpugMnsE/4ZQW0D/GNUQoMecEtO3G7qTXrQo65vq91jEFcZZdb
+        D3kxn8wGzR77fVegTy+/ffTJJ71IFzD+nrHVPYAnCw==
+X-Google-Smtp-Source: AA0mqf4eBc5zW0DATSSfPquCQ1oPo3nICdqrX59QalQ07IhOwXeKFMlcXQRVYHyH4B2GEimospkT2fwN0FZHvseXAiw=
+X-Received: by 2002:a1c:7203:0:b0:3c6:c109:2d9 with SMTP id
+ n3-20020a1c7203000000b003c6c10902d9mr264937wmc.149.1671043222838; Wed, 14 Dec
+ 2022 10:40:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20221213232651.1269909-1-irogers@google.com> <Y5ncNQfPzq8qBP/f@kernel.org>
- <Y5oPQ0Cf/9JGME3n@kernel.org>
-In-Reply-To: <Y5oPQ0Cf/9JGME3n@kernel.org>
+References: <58f34e62-81d7-fc71-dec2-03e88ee36392@ijclab.in2p3.fr>
+In-Reply-To: <58f34e62-81d7-fc71-dec2-03e88ee36392@ijclab.in2p3.fr>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Dec 2022 10:10:31 -0800
-Message-ID: <CAP-5=fW8n-8ayzjLj0q588d0ZVpTPOGNGLB0Oj2GkF7f7CA=cg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/5] build/libtraceevent resends
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        German Gomez <german.gomez@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Timothy Hayes <timothy.hayes@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        shaomin Deng <dengshaomin@cdjrlc.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Date:   Wed, 14 Dec 2022 10:40:10 -0800
+Message-ID: <CAP-5=fU1TuqCzjF7k=5q2zfh_5Qz0iH1mmXKc9_MjqJGb04rNQ@mail.gmail.com>
+Subject: Re: A few questions from writing a perf tutorial
+To:     Hadrien Grasland <hadrien.grasland@ijclab.in2p3.fr>
+Cc:     linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 10:00 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Dec 13, 2022 at 7:01 AM Hadrien Grasland
+<hadrien.grasland@ijclab.in2p3.fr> wrote:
 >
-> Em Wed, Dec 14, 2022 at 11:22:45AM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Tue, Dec 13, 2022 at 03:26:46PM -0800, Ian Rogers escreveu:
-> > > All patches on the acme perf/core branch.
-> > >
-> > > Resend incremental build fix python plugin:
-> > > https://lore.kernel.org/lkml/20221205225940.3079667-4-irogers@google.=
-com/
-> > >
-> > > Break apart and resend libtraceevent debug logging support:
-> > > https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irog=
-ers@google.com/
-> > >
-> > > Switch "#if HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE" to "#if
-> > > MAKE_LIBTRACEEVENT_VERSION(1, 5, 0) <=3D LIBTRACEEVENT_VERSION",
-> > > ensuring trace-event.h is included as discussed on the mailing list.
-> > >
-> > > Resend removal of --group option:
-> > > https://lore.kernel.org/lkml/20220707195610.303254-1-irogers@google.c=
-om/
-> >
-> > Thanks, applied.
+> Hi everyone,
 >
-> Building on arm64:
->
-> /home/acme/git/perf/tools/perf/util/evsel.c: In function =E2=80=98evsel__=
-rawptr=E2=80=99:
-> /home/acme/git/perf/tools/perf/util/evsel.c:2787:65: error: operator '<=
-=3D' has no right operand
->  2787 | #if MAKE_LIBTRACEEVENT_VERSION(1, 5, 0) <=3D LIBTRACEEVENT_VERSIO=
-N
->       |                                                                 ^
-> error: command '/usr/bin/gcc' failed with exit code 1
-> cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such =
-file or directory
->
-> make[2]: *** [Makefile.perf:651: /tmp/build/perf/python/perf.cpython-310-=
-aarch64-linux-gnu.so] Error 1
-> make[2]: *** Waiting for unfinished jobs....
->   LD      /tmp/build/perf/libbpf/staticobjs/libbpf-in.o
->
-> Trying to fix...
+> I recently ran a perf tutorial for my colleagues (which I hope to eventually
+> translate to English so it's of more general use), and noted a number of
+> surprising things in the process.
 
-Thanks, I suspect the CFLAGS aren't passed through maybe, given this
-is the python code. Perhaps an include of util/trace-event.h is also
-necessary, but I thought that was already present:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/util/evsel.c?h=3Dperf/core#n43
+Sounds great! Perhaps you can land it or a link to it on the perf wiki:
+https://perf.wiki.kernel.org/index.php/Main_Page
+More languages than English is a plus!
 
-Thanks for digging into it,
+> In the interest of fixing my understanding and reporting bugs where
+> appropriate,
+> I would appreciate it if some of you would care to help me triage the
+> expected
+> from the abnormal here.
+>
+> ===
+>
+> Many of my issues stem from the fact that I'm providing a shared server to
+> ensure that everyone is using the same version of perf, the same kernel,
+> and the
+> same CPU. Which means that I need to set up the system to give participants
+> fairly broad perf privileges, without wanting to giving them full root
+> access.
+> That leads to various permission issues.
+>
+> I have read
+> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html#privileged-perf-users-groups
+> and tried the suggested workflow of giving the perf executable various
+> capabilities while making it only accessible to a "perf group". However, the
+> capabilities don't seem to do anything. For example, even with
+> cap_syslog set,
+> I still need kptr_restrict = 0 to see kernel symbol names in perf top and
+> system-wide perf record. Ditto for cap_perfmon : even if it's set, I
+> still need
+> to tune down perf_event_paranoid for system-wide profiling.
+>
+> I cross-checked with the procedure discussed in
+> https://linux-audit.com/linux-capabilities-101/ that the capabilities
+> are set
+> correctly on running perf processes, so I'm not sure what's going on
+> here. That
+> would be the first mystery.
+
+Likewise, I'm not sure what the issue is here.
+
+> ===
+>
+> The second mystery is that perf trace run as a regular user does not
+> correctly
+> report thread names for all multi-threaded executables. It just reports
+> the thread
+> numerical ID, which makes the output hard to read unless supplemented with a
+> little `ps aux -L`. This may not be feasible when the threads being
+> monitored
+> are short-lived.
+>
+> When perf trace is run as root, it has no such issue, which suggests
+> that this
+> is a permission problem. Would you happen to know what the missing
+> permission
+> is and whether/how I can give it to non-root users?
+
+I find the behavior a little mysterious too. Arnaldo likely can speak
+more that something to be aware of is that the system call
+augmentation (getting things like file names for openat calls) needs a
+BPF program to be loaded. The logic for this predates newer BPF things
+like skeletons, where we could build the BPF program into the perf
+executable, and so you must specify the BPF program as an event:
+
+$ sudo perf trace -eopenat sleep 1
+    0.000 ( 0.006 ms): sleep/1453070 openat(dfd: CWD, filename:
+0x28e12165, flags: RDONLY|CLOEXEC) = 3
+    0.018 ( 0.002 ms): sleep/1453070 openat(dfd: CWD, filename:
+0x28de63e0, flags: RDONLY|CLOEXEC) = 3
+    0.132 ( 0.004 ms): sleep/1453070 openat(dfd: CWD, filename:
+0x28bbc160, flags: RDONLY|CLOEXEC) = 3
+
+$ sudo perf trace
+-e/usr/share/doc/linux-perf/examples/bpf/augmented_raw_syscalls.c,openat
+sleep 1
+    0.000 ( 0.005 ms): sleep/1452904 openat(dfd: CWD, filename:
+"/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
+    0.016 ( 0.003 ms): sleep/1452904 openat(dfd: CWD, filename:
+"/lib/x86_64-linux-gnu/libc.so.6",flags: RDONLY|CLOEXEC) = 3
+    0.131 ( 0.003 ms): sleep/1452904 openat(dfd: CWD, filename:
+"/usr/lib/locale/locale-archive", flags: RDONLY|CLOEXEC) = 3
+
+> ===
+>
+> I also noticed that trying to use `--call-graph=lbr` on non-PMU events
+> (syscalls
+> and tracepoints in general) fails with an "Operation not supported"
+> error. I do
+> not understand why this operation is not supported, however, given that
+> from my
+> limited understanding of the LBR, it should be active no matter what the
+> CPU is
+> doing, and perf should always be able to sample it including on tracepoint
+> events. Can someone shed some light on this?
+
+I see your point, likely this needs improvements in the kernel.
+
+Thanks,
 Ian
 
-> > - Arnaldo
-> >
-> >
-> > > Ian Rogers (5):
-> > >   perf build: Fix python/perf.so library's name
-> > >   perf trace-event: Add libtraceevent version tools to header
-> > >   libtraceevent: Increase libtraceevent logging when verbose
-> > >   perf trace-event: Use version check to avoid 1 define
-> > >   perf evlist: Remove group option.
-> > >
-> > >  tools/perf/Documentation/perf-record.txt      |  4 ----
-> > >  tools/perf/Documentation/perf-top.txt         |  7 ++----
-> > >  tools/perf/Makefile.config                    |  8 +++----
-> > >  tools/perf/Makefile.perf                      |  2 +-
-> > >  tools/perf/builtin-record.c                   |  2 --
-> > >  tools/perf/builtin-stat.c                     |  6 -----
-> > >  tools/perf/builtin-top.c                      |  2 --
-> > >  tools/perf/builtin-trace.c                    |  2 +-
-> > >  tools/perf/tests/attr/README                  |  2 --
-> > >  tools/perf/tests/attr/test-record-group       | 22 -----------------=
---
-> > >  tools/perf/tests/attr/test-stat-group         | 17 --------------
-> > >  tools/perf/util/data-convert-bt.c             |  3 ++-
-> > >  tools/perf/util/debug.c                       | 10 +++++++++
-> > >  tools/perf/util/evlist.c                      |  2 +-
-> > >  tools/perf/util/evlist.h                      |  2 --
-> > >  tools/perf/util/evsel.c                       |  2 +-
-> > >  tools/perf/util/python.c                      | 10 +--------
-> > >  tools/perf/util/record.c                      |  7 ------
-> > >  tools/perf/util/record.h                      |  1 -
-> > >  .../util/scripting-engines/trace-event-perl.c |  2 +-
-> > >  .../scripting-engines/trace-event-python.c    |  2 +-
-> > >  tools/perf/util/sort.c                        |  3 ++-
-> > >  tools/perf/util/trace-event.h                 | 13 +++++++++++
-> > >  23 files changed, 39 insertions(+), 92 deletions(-)
-> > >  delete mode 100644 tools/perf/tests/attr/test-record-group
-> > >  delete mode 100644 tools/perf/tests/attr/test-stat-group
-> > >
-> > > --
-> > > 2.39.0.314.g84b9a713c41-goog
-> >
-> > --
-> >
-> > - Arnaldo
+> ===
 >
-> --
->
-> - Arnaldo
+> Thanks in advance for your help!
+> Hadrien Grasland
