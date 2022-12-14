@@ -2,102 +2,187 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF58DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 14:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B37C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 14:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238662AbiLNOfK (ORCPT
+        id S229772AbiLNOie (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 09:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
+        Wed, 14 Dec 2022 09:38:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238650AbiLNOfD (ORCPT
+        with ESMTP id S238574AbiLNOid (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 09:35:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE56BF2;
-        Wed, 14 Dec 2022 06:35:02 -0800 (PST)
+        Wed, 14 Dec 2022 09:38:33 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FA123BEA;
+        Wed, 14 Dec 2022 06:38:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4999061ACE;
-        Wed, 14 Dec 2022 14:35:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F887C433EF;
-        Wed, 14 Dec 2022 14:35:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1DF4AB81617;
+        Wed, 14 Dec 2022 14:38:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA26C433F0;
+        Wed, 14 Dec 2022 14:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671028501;
-        bh=m98RlXJ/WE9s7A2/YHKpBSHyNKsZEnL4fFE9zIp3ocE=;
+        s=k20201202; t=1671028708;
+        bh=WZ4H5X5BGlrRi+BAryxaHjIfLiqZU+/G2SVOjk9+Hqc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DDM5pcZ0jlu38c7MLCTaHrXajkeM7tOgeVuIkw0XTQvpfpl5DlhG5EvxTtf+TYmjt
-         mrbTx5R6devy6Dax4iPppell2fc+Rj1nfJmcBGnQDfUuY5eO6hNHKtfCrbE0ED0REz
-         JkbAuYp3h6YElz/KFQ3dXPofd4Y3MmqqZGQ04ROx47diVl54m8KNOpIQwzIqcN5gCz
-         rW9x0O1hKzcg/VatoVfkINLqisaYjUrpNIcN9sqcfYpOUjmRguwT0AAi6V96+EEzNa
-         gRkLLStL0AS0wT8tf73rvaXmpb1YLvdmN90Q2XUKaL61GlkpkvXm4PvyzbXLGV+bfk
-         qnKMEj+pft67A==
+        b=Gmf0+v5RvBULBu1Unid7MsChJ+rUURZXsNbEC8/kfCEuavAbK0lx4FEFvaP1dr0hX
+         Cz34jHkmTDHBowxuwRmFER/7bc0EPYWz3u6Nl/ujyIfgE33SSkLL7vEK9rIrVrbqc4
+         E+n4IxgQwo688a7aXUez7I5xKjK6b0HHOU1h74pubG7JDXfXrjFjG1R1TodqxJzlEy
+         5sp7zNzgLyRNAEBZuuaahddV2gbMyPURI10PYZ4ZPSo0/2L0eDjL8JEtrFx7WDhnzE
+         Gstpw/2a6elsg9x4I65CY23kdt6UH0mb2aPwaSLxXbwC9D0a56L4UdN65YV3xKTDOH
+         osdVoXEYODxEA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 84C0940367; Wed, 14 Dec 2022 11:34:58 -0300 (-03)
-Date:   Wed, 14 Dec 2022 11:34:58 -0300
+        id 5CE7B40367; Wed, 14 Dec 2022 11:38:26 -0300 (-03)
+Date:   Wed, 14 Dec 2022 11:38:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        hca@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        svens@linux.ibm.com
-Subject: Re: [PATCH 2/2] perf/test: Fix perf test 89 on x86
-Message-ID: <Y5nfEu+3sU/Hcoon@kernel.org>
-References: <20221213105729.1447368-1-tmricht@linux.ibm.com>
- <20221213105729.1447368-2-tmricht@linux.ibm.com>
- <Y5iQXJaQOrhjLZQW@kernel.org>
- <f5e69102-ed17-1f2d-3a09-3c7968b611ff@linux.ibm.com>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Add VG register attr test with kernel version and
+ feature detection
+Message-ID: <Y5nf4pIkqVeYd5Hg@kernel.org>
+References: <20221213114739.2312862-1-james.clark@arm.com>
+ <Y5iRhKrIb5pXOaKk@kernel.org>
+ <634087f2-1a7a-0f61-51e8-9e6068d59e9d@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f5e69102-ed17-1f2d-3a09-3c7968b611ff@linux.ibm.com>
+In-Reply-To: <634087f2-1a7a-0f61-51e8-9e6068d59e9d@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Dec 14, 2022 at 11:40:32AM +0100, Thomas Richter escreveu:
-> On 12/13/22 15:46, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Dec 13, 2022 at 11:57:29AM +0100, Thomas Richter escreveu:
-> >> perf test '89: probe libc's inet_pton & backtrace it with ping'
-> >> fails on x86. Debugging revealed a changed stack trace for the
-> >> ping command using probes:
+Em Tue, Dec 13, 2022 at 03:30:37PM +0000, James Clark escreveu:
+> 
+> 
+> On 13/12/2022 14:51, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Dec 13, 2022 at 11:47:35AM +0000, James Clark escreveu:
+> >> I didn't get any feedback on the RFC version of this that I posted a
+> >> while back [1]. I'd still like to add the test, especially now that
+> >> 6.1 has been released with this new feature, so I've rebased it onto
+> >> perf/core and double checked that it's still working.
+> >>
+> >> Applies to perf/core (0c3852adae83)
+> > 
+> > I'm applying this locally, would this be testable on a Firefly (roc-rk3399-pc):
+> 
+> Thanks Arnaldo. It doesn't look like rk3399 has SVE, so
+> test-record-user-regs-no-sve-aarch64 will run to check that the kernel
+> won't give you the new register. So I suppose the answer to the question
+> is partially.
+> 
+> For test-record-user-regs-sve-aarch64, I've been running it on a
+> Graviton 3 on AWS which has SVE:
+> 
+>   ubuntu@ip-10-252-130-213:~/linux$ head /proc/cpuinfo
+>   processor	: 0
+>   BogoMIPS	: 2100.00
+>   Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp
+> asimdhp cpuid asimdrdm jscvt fcma lrcpc dcpop sha3 sm3 sm4 asimddp
+> sha512 sve asimdfhm dit uscat ilrcpc flagm ssbs paca pacg dcpodp svei8mm
+> svebf16 i8mm bf16 dgh rng
+>   CPU implementer	: 0x41
+>   CPU architecture: 8
+>   CPU variant	: 0x1
+>   CPU part	: 0xd40
+>   CPU revision	: 1
+> 
+>   processor	: 1
 
-> >> ping 35729 [002]  8006.365063: probe_libc:inet_pton: (3ff9603e7c0)
-> >>                   12be50 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> >>                   4fca main+0x139b (/usr/bin/ping)
+Indeed:
 
-> >> The line getaddrinfo.... in the call stack is gone.
-> >> It was introduced with glibc version 2.36.8 released
-> >> with Fedora 37.
-
-> >> Output before on x86
-> >>  # ./perf test 89
-> >>  89: probe libc's inet_pton & backtrace it with ping   : FAILED!
-> >>  #
-
-> >> Output after on x86:
-> >>  # ./perf test 89
-> >>  89: probe libc's inet_pton & backtrace it with ping   : Ok
-> >>  #
-
-> > Not having at the current state of that script, that $expected may be a
-> > subset of the actual backtrace, i.e. will this continue working with
-> > the systems where that getaddrinfo line appear?
- 
-> No, that is not the case.
-> Taking this into account requires a larger rework of the call stack
-> checking. Not just simple line by line matching which is done now.
-> It also raises the question of how far to go back
-> in glibc history. Different versions of glibc have different call stacks.
- 
-> I will rethink this...
-
-One possibility is to have the options on a temp file, the previous one,
-then if it fails, remove the getaddrinfo line and try again, if it
-works, its the new glibc, test result is Ok.
-
-Add a commment stating that from circa glibc versiuon 2.36.8 the
-getaddrinfo isn't there anymore.
-
-- Arnaldo
+root@roc-rk3399-pc:~# perf test -v _attr
+ 17: Setup struct perf_event_attr                                    :
+--- start ---
+test child forked, pid 30139
+Using CPUID 0x00000000410fd080
+/home/acme/libexec/perf-core/tests/attr.py:155: DeprecationWarning: The SafeConfigParser class has been renamed to ConfigParser in Python 3.2. This alias will be removed in Python 3.12. Use ConfigParser directly instead.
+  parser = configparser.SafeConfigParser()
+running '/home/acme/libexec/perf-core/tests/attr/test-record-C0'
+/home/acme/libexec/perf-core/tests/attr.py:250: DeprecationWarning: The SafeConfigParser class has been renamed to ConfigParser in Python 3.2. This alias will be removed in Python 3.12. Use ConfigParser directly instead.
+  parser_event = configparser.SafeConfigParser()
+/home/acme/libexec/perf-core/tests/attr.py:264: DeprecationWarning: The SafeConfigParser class has been renamed to ConfigParser in Python 3.2. This alias will be removed in Python 3.12. Use ConfigParser directly instead.
+  parser_base = configparser.SafeConfigParser()
+running '/home/acme/libexec/perf-core/tests/attr/test-record-basic'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-any'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-any'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-any'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-any'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-any_call'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-any_call'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-any_ret'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-any_ret'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-hv'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-hv'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-ind_call'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-ind_call'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-k'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-k'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-u'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-branch-filter-u'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-count'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-data'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-freq'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-graph-default'
+test limitation '!aarch64'
+excluded architecture list ['aarch64']
+skipped [aarch64] '/home/acme/libexec/perf-core/tests/attr/test-record-graph-default'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-graph-default-aarch64'
+test limitation 'aarch64'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-graph-dwarf'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-graph-fp'
+test limitation '!aarch64'
+excluded architecture list ['aarch64']
+skipped [aarch64] '/home/acme/libexec/perf-core/tests/attr/test-record-graph-fp'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-graph-fp-aarch64'
+test limitation 'aarch64'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-group'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-group-sampling'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-group1'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-group2'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-no-buffering'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-no-inherit'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-no-samples'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-period'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-raw'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-spe-period'
+test limitation 'aarch64'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-spe-period'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-spe-period-term'
+test limitation 'aarch64'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-spe-period-term'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-spe-physical-address'
+test limitation 'aarch64'
+unsupp  '/home/acme/libexec/perf-core/tests/attr/test-record-spe-physical-address'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-user-regs-no-sve-aarch64'
+test limitation 'aarch64'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-user-regs-old-sve-aarch64'
+test limitation 'aarch64'
+skipped [new kernel skip] '/home/acme/libexec/perf-core/tests/attr/test-record-user-regs-old-sve-aarch64'
+running '/home/acme/libexec/perf-core/tests/attr/test-record-user-regs-sve-aarch64'
+test limitation 'aarch64'
+skipped [auxv skip] '/home/acme/libexec/perf-core/tests/attr/test-record-user-regs-sve-aarch64'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-C0'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-basic'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-default'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-detailed-1'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-detailed-2'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-detailed-3'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-group'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-group1'
+running '/home/acme/libexec/perf-core/tests/attr/test-stat-no-inherit'
+test child finished with 0
+---- end ----
+Setup struct perf_event_attr: Ok
+root@roc-rk3399-pc:~#
