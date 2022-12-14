@@ -2,141 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F46C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 15:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A26C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 16:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238488AbiLNP6P (ORCPT
+        id S238802AbiLNQBJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 10:58:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56128 "EHLO
+        Wed, 14 Dec 2022 11:01:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238489AbiLNP5a (ORCPT
+        with ESMTP id S238798AbiLNQAl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 10:57:30 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B349122BF4
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 07:57:27 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id l10so3759428plb.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 07:57:27 -0800 (PST)
+        Wed, 14 Dec 2022 11:00:41 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 115BE28E2D
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 07:59:16 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id h12so154385wrv.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 07:59:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Yzm0Z8s50B7PxlfwYMM7oE1GHaBVbWJfzBfeRipGHLY=;
-        b=D5si8z0bqc6iQSOs4DzfBe7ssxqwcUZpw/grziFTWhO9M9XiZ7KIarEabtR90rMCJe
-         b159DFIIX8t3F4lfBIN3fmZZHD7WVptLlehPQYO4LKiecXjdLa+/46Yzk+EGTUd0KqYr
-         6f+QwSb8p9AxW2xcTZdHNyKTg6b4EF4pyv9HIuxrXzCuqKUB5IHSlM7wamT8m+xrQVsc
-         QX9TNjuFRc8bhDqeV7JkA/wzNAENgLawEf/wN8l1K2dNw+Ze8gBFZpDHmGJ9cuWSdtrZ
-         aFVy+LoiJGeXKRJZeW2A6BycPJcmmtMz/X9pGMl4xmNGGpQcLpbHVpBnxU899Sxtyjwu
-         JUSg==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=l/uy268DIouOlaUX1pmogcq5YSUEqfw9Ux2GHr22Fcw=;
+        b=fNyjwLMZXubjgeSgHKjUe6T/UOZYLqSUc7aFegiHxu9AdAE6aO8SxLz8JaPnXUAWvc
+         lTwvPjzpnpHjWLz+1DgQl8/iA7YSvRsMWHZS6n1nlE4mB3/KROPxX7p47q970h26G5OE
+         KFAtcgt8BH0XaqScv2+J+esfdUdg8P/DWfDJdGhYrZ4niSIXmckAKLdJeBkZGRzd1ZqG
+         ACiroJY7RbtJBeWJ/FpWdvjKvfTSb5lLIcWzADUzlfiP87STCY/Xeui3cY6Rjsa/pi64
+         5vfzbE0QW+89V8YprvkwM0Nv22o4cATewq6dbm58IeOB8EonoBliK+AS235YjuP89lAV
+         SRVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yzm0Z8s50B7PxlfwYMM7oE1GHaBVbWJfzBfeRipGHLY=;
-        b=BXpWXVGp9qRYrr0xXFYOKHdEjHozaQGgv2rLGatFdf9zpG0+AYpVH7cbz29ksPja48
-         VVAcA/zkOs63L9K7w7eIFR5SX1l/29priLchQ+GncmiJyCjYLWeHV2pMEJwal68IM9UI
-         XzA9fc5GwUfC+bqDAwP28meJs/PtYkpjS2h3SyrnWZkVD9k+/w1Mzs99dEYJSr8qElJR
-         FXq8h9dEWtRPbhfU+p2uSjkvB/IJNVdUbFiPAe4uRZGY5KVLkQAs9gV1zR2rpsPdILnQ
-         w7oBxrQ3dxvDIxXvvkaLyAHYNKLtog9LzpiUHwq41QGwTcvUPErmbuCn25DudYKsQpFI
-         bZAA==
-X-Gm-Message-State: ANoB5pluCJPSzSWt+G5qdXfLIhd3+MFqK/m0BS8NMME0I8z+swN5fO9+
-        6GMEjxMNxixuUvbGqRG9Lv4mOw==
-X-Google-Smtp-Source: AA0mqf5m8YDzq/xZPuLE8hJmVlZd3SUP5u1iUSl4EN1k9vvaqltt4+SSILDlCBaTjX+tS2Bc190uPQ==
-X-Received: by 2002:a17:90a:cf93:b0:219:34cb:477e with SMTP id i19-20020a17090acf9300b0021934cb477emr25649406pju.44.1671033447143;
-        Wed, 14 Dec 2022 07:57:27 -0800 (PST)
-Received: from leoy-yangtze.lan (n058152048149.netvigator.com. [58.152.48.149])
-        by smtp.gmail.com with ESMTPSA id q7-20020a17090a2dc700b00219feae9486sm1627127pjm.7.2022.12.14.07.57.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Dec 2022 07:57:26 -0800 (PST)
-Date:   Wed, 14 Dec 2022 23:57:21 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        =?iso-8859-1?Q?Adri=E1n?= Herrera Arcila 
-        <adrian.herrera@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, songliubraving@fb.com,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org
-Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
-Message-ID: <Y5nyYeVWpLA/IH1E@leoy-yangtze.lan>
-References: <20220729161244.10522-1-adrian.herrera@arm.com>
- <20220729161244.10522-2-adrian.herrera@arm.com>
- <e3e123db-5321-c96e-1753-27059c729640@arm.com>
- <Y5iPsjF/lEsEldU8@kernel.org>
- <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
- <Y5ngs0bh/R8xPFvo@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l/uy268DIouOlaUX1pmogcq5YSUEqfw9Ux2GHr22Fcw=;
+        b=15xv/7rE27Nz25BXNexo+lRzXSxGYJWxG1DwNQMlAwEbKYW4pDtEzmZI8EFj8JWgrH
+         8P/ZIdGtHASigz3rmqPs7REc6hdakOBzAfr1hn1yoWT3K9KD5aQ8dBAq6fwAY2tViDSr
+         NO2p0ZHMMEISaj6Fp8YUd1D07+S0MpaljWMAgOqbDslATtbSFHOlHr9D/uOXWvKC43tl
+         Chn+of6uSswzm5Ph9qLzwwUg1cs7++LV6LvZ42Glx0DTQi2xHHrKfzuqBjJlvRaAA07s
+         HE4bHrDilgEjZBOp4pZcbthJn2MWSNLUpfDC6oby6MZz/E708s9hpByjIUgey8XaOYXm
+         akEg==
+X-Gm-Message-State: ANoB5pnqaSQ0+QvL2/nrjeXF6Ic6oBqedWMGl7Z2ajy++RtsBzKS4LqK
+        d76lxYF9eXnuN9dHE1aDKSa99iPaleFLWJYQdk7bWA==
+X-Google-Smtp-Source: AA0mqf5SbNc2kGGi/MGIcrhYYti0hAMTqIqgvSk/bgyaHMPsKSew2BOLWDL6zByhzOo1QDXjsoHulglB2tjxjFDV8kY=
+X-Received: by 2002:a5d:4acb:0:b0:242:78b7:6bf3 with SMTP id
+ y11-20020a5d4acb000000b0024278b76bf3mr6621718wrs.375.1671033554398; Wed, 14
+ Dec 2022 07:59:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y5ngs0bh/R8xPFvo@kernel.org>
+References: <20221214082652.419965-1-sandipan.das@amd.com>
+In-Reply-To: <20221214082652.419965-1-sandipan.das@amd.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 14 Dec 2022 07:59:01 -0800
+Message-ID: <CAP-5=fWm55y6LdZozX=LuLZhk+SWm_yi5tLcKgT_UJt9FETNPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] perf vendor events amd: Add Zen 4 events and metrics
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, eranian@google.com,
+        jhladky@redhat.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 14, 2022 at 11:41:55AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Dec 13, 2022 at 08:40:31AM -0800, Namhyung Kim escreveu:
-> > Hi,
-> > 
-> > On Tue, Dec 13, 2022 at 6:44 AM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
-> > > >
-> > > >
-> > > > On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
-> > > > > The described --delay behaviour is to delay the enablement of events, but
-> > > > > not the execution of the command, if one is passed, which is incorrectly
-> > > > > the current behaviour.
-> > > > >
-> > > > > This patch decouples the enablement from the delay, and enables events
-> > > > > before or after launching the workload dependent on the options passed
-> > > > > by the user. This code structure is inspired by that in perf-record, and
-> > > > > tries to be consistent with it.
-> > > > >
-> > > > > Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
-> > > > > Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
-> > > > > Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
-> > > > > ---
-> > > > >  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
-> > > > >  1 file changed, 32 insertions(+), 24 deletions(-)
-> > > >
-> > > > Looks good to me. Fixes the counter delay issue and the code is pretty
-> > > > similar to perf record now. Although I would wait for Leo's or Song's
-> > > > comment as well because they were involved.
-> > >
-> > > I think I didn't notice Leo's ack, it still applies, so I'm doing it
-> > > now.
-> > 
-> > I think the BPF counters should be enabled/disabled together.
-> 
-> Ok, so I removed this one and applied Namhyung's.
+On Wed, Dec 14, 2022 at 12:27 AM Sandipan Das <sandipan.das@amd.com> wrote:
+>
+> Add events and metrics taken from the Processor Programming Reference
+> (PPR) for AMD Family 19h Model 11h Revision B1 processors which can be
+> found at: https://www.amd.com/system/files/TechDocs/55901_0.25.zip
+>
+> Previous versions can be found at:
+> v1: https://lore.kernel.org/all/20221207053007.336806-1-sandipan.das@amd.com/
+>
+> Changes in v2:
+> - Remove "bytes" from the names of data fabric bandwidth metrics which
+>   use a scale unit.
+> - Use better group names for pipeline utilization metrics.
+> - Move patch that adds family-model mapping to the end of the series for
+>   avoiding potential build issues.
+>
+> Sandipan Das (4):
+>   perf vendor events amd: Add Zen 4 core events
+>   perf vendor events amd: Add Zen 4 uncore events
+>   perf vendor events amd: Add Zen 4 metrics
+>   perf vendor events amd: Add Zen 4 mapping
 
-I can guess why Adrián doesn't enable/disable BPF counters together :)
-
-Since 'perf stat' doesn't enable BPF counters with other normal PMU
-events in the first place, I believe this is deliberately by Song's
-patch fa853c4b839e ("perf stat: Enable counting events for BPF
-programs"), it says:
-
-"'perf stat -b' creates per-cpu perf_event and loads fentry/fexit BPF
-programs (monitor-progs) to the target BPF program (target-prog). The
-monitor-progs read perf_event before and after the target-prog, and
-aggregate the difference in a BPF map. Then the user space reads data
-from these maps".
-
-IIUC, when loading eBPF (counter) program, perf tool needs to handle
-eBPF program map specially (so that perf tool can know the latest eBPF
-program's map in kernel).
-
-I don't know anything for eBPF counter, so this is why I am still a bit
-puzzle which way is right to do (bind vs separate eBPF counters).  But
-I personally prefer to let eBPF counter to respect delay, so it's fine
-for me to apply Namhyung's patch.
+Series: Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Leo
+Ian
+
+>  .../pmu-events/arch/x86/amdzen4/branch.json   |   82 ++
+>  .../pmu-events/arch/x86/amdzen4/cache.json    |  772 ++++++++++++
+>  .../pmu-events/arch/x86/amdzen4/core.json     |  122 ++
+>  .../arch/x86/amdzen4/data-fabric.json         | 1090 +++++++++++++++++
+>  .../arch/x86/amdzen4/floating-point.json      |  818 +++++++++++++
+>  .../pmu-events/arch/x86/amdzen4/memory.json   |  174 +++
+>  .../pmu-events/arch/x86/amdzen4/other.json    |  138 +++
+>  .../pmu-events/arch/x86/amdzen4/pipeline.json |   98 ++
+>  .../arch/x86/amdzen4/recommended.json         |  334 +++++
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |    3 +-
+>  10 files changed, 3630 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/branch.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/core.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/data-fabric.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/floating-point.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/other.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
+>
+> --
+> 2.34.1
+>
