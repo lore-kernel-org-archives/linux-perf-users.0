@@ -2,141 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693F3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE96C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 17:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238778AbiLNQ1p (ORCPT
+        id S237486AbiLNRfH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 11:27:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47614 "EHLO
+        Wed, 14 Dec 2022 12:35:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238774AbiLNQ1p (ORCPT
+        with ESMTP id S229561AbiLNRfG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 11:27:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32195F98;
-        Wed, 14 Dec 2022 08:27:42 -0800 (PST)
+        Wed, 14 Dec 2022 12:35:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48384E25;
+        Wed, 14 Dec 2022 09:35:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B57661B45;
-        Wed, 14 Dec 2022 16:27:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA2EC433D2;
-        Wed, 14 Dec 2022 16:27:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D731361B79;
+        Wed, 14 Dec 2022 17:35:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1456FC433EF;
+        Wed, 14 Dec 2022 17:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671035261;
-        bh=sJ2dZlXlxbHZMLCuBdc37LA6k6jU4IYfv3YtQbdOTxw=;
+        s=k20201202; t=1671039304;
+        bh=gc8zeNDEuZKdGQgmQ907LP9lyq1u/4yg+3L7iqX/3KM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ocgdoyR03oml0AaBujgZuxX24w3KfCJBJBtRhcGRkOM71IEswAY7PsZUiZ5hGTI7X
-         AxPuWvAwN8nOAJzT9VxaMMtNIwLXR3qMsfJerjzkMM7g3dxg4QG7vS7kSfzVrDXAep
-         yh2ZpQdpghtbnmE8IDFPMV9AdM016IP0jLocXdmdBejeFpebKythqNPw06OfsaQTVH
-         TDtM45gPZWpXPrkHuF1QEtxcl8rwmP0jrGPBWp6ptWTLiaE1mnw6P/pO2P/D77UPOS
-         D3djAjY4oMrIZ8P3R+YegTOR4+8ETiOV0ox8aqnJMs/DqW9Wu1AF0ASjyssNKBnyHD
-         Qq9qhL+G5yO/A==
+        b=JCV0Fd/a9Y0U5jszw4Y4B/oOHklPRieIYq40WRRza9kmAVVjO2pZ1jZ/13nrMo1kA
+         N41D8kUyiBukl/c+nKUxJsfoEizz6H/l0o57t0zZx5ENef3YCSk1UlRSe3A7weKRw2
+         ftkY9lA9z9hOXtIAw5v7d5Jk4ls04s1AodfklQWm8ls+1lEdz9rcyqL/R5EFQUb2ct
+         cx7SB65Pk34+N8CvuiTe+rML+dSJt/UaHLq16XmZ1vBddcjlU9W9Hb3tCya99zgP6z
+         jUJF9AjVC8ThptasDNqV7hxfjv71hSyId4bPWm5yDhsVbW1Z6cAsLUt20k11l22mnT
+         b+ISWAXnCIACg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A591A40367; Wed, 14 Dec 2022 13:27:38 -0300 (-03)
-Date:   Wed, 14 Dec 2022 13:27:38 -0300
+        id 1A20440367; Wed, 14 Dec 2022 14:35:01 -0300 (-03)
+Date:   Wed, 14 Dec 2022 14:35:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] tools: perf: Use "grep -E" instead of "egrep"
-Message-ID: <Y5n5esPQ0QkBpgda@kernel.org>
-References: <1668762999-9297-1-git-send-email-yangtiezhu@loongson.cn>
- <CAP-5=fXR58DQFkUW81KUs_f9cLTX=L28H1hkxXVzX3dUdRLBjw@mail.gmail.com>
- <ab41b1fe-4a59-2a6b-ee9f-785c98c48df5@loongson.cn>
- <CAP-5=fWtFktYKch+4Sv4zSHoW8SO96yEsyQgDKApyR20UjXhSA@mail.gmail.com>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        =?iso-8859-1?Q?Adri=E1n?= Herrera Arcila 
+        <adrian.herrera@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, songliubraving@fb.com,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org
+Subject: Re: [PATCH 2/2] perf stat: fix unexpected delay behaviour
+Message-ID: <Y5oJRXnlRju3gDxl@kernel.org>
+References: <20220729161244.10522-1-adrian.herrera@arm.com>
+ <20220729161244.10522-2-adrian.herrera@arm.com>
+ <e3e123db-5321-c96e-1753-27059c729640@arm.com>
+ <Y5iPsjF/lEsEldU8@kernel.org>
+ <CAM9d7cj=Pu2QAONzd2JSVzd_X9DakeV=khcFGD_d-ES5zrx+KQ@mail.gmail.com>
+ <Y5ngs0bh/R8xPFvo@kernel.org>
+ <Y5nyYeVWpLA/IH1E@leoy-yangtze.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWtFktYKch+4Sv4zSHoW8SO96yEsyQgDKApyR20UjXhSA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y5nyYeVWpLA/IH1E@leoy-yangtze.lan>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 21, 2022 at 08:52:47AM -0800, Ian Rogers escreveu:
-> On Sun, Nov 20, 2022 at 6:59 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> >
-> >
-> > On 11/20/2022 02:17 AM, Ian Rogers wrote:
-> > > On Fri, Nov 18, 2022 at 1:17 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> > >>
-> > >> The latest version of grep claims the egrep is now obsolete so the build
-> > >> now contains warnings that look like:
-> > >>         egrep: warning: egrep is obsolescent; using grep -E
-> > >> fix this up by moving the related file to use "grep -E" instead.
-> > >>
-> > >>   sed -i "s/egrep/grep -E/g" `grep egrep -rwl tools/perf`
-> > >>
-> > >> Here are the steps to install the latest grep:
-> > >>
-> > >>   wget http://ftp.gnu.org/gnu/grep/grep-3.8.tar.gz
-> > >>   tar xf grep-3.8.tar.gz
-> > >>   cd grep-3.8 && ./configure && make
-> > >>   sudo make install
-> > >>   export PATH=/usr/local/bin:$PATH
-> > >>
-> > >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > >
-> > > Hi Tiezhu,
-> > >
-> > > installing a newer grep tool in order to build/test perf is somewhat
-> > > burdensome, as such I don't think we should merge this change. Looking
-> > > at my Debian derived distro. I have grep 3.7, so I'd need to do this.
-> > > I imagine the majority of people are using a grep earlier than 3.8. I
-> > > agree there is a problem perhaps we can:
-> > >  - rewrite to just need grep and not egrep;
-> > >  - rewrite in a stable language with regex support, perhaps python;
-> > >  - have a grep/egrep wrapper that selects based on version number.
-> > >
-> >
-> > Hi Ian,
-> >
-> > I found this issue on Linux From Scratch system which uses grep 3.8 [0],
-> > we can see the following NEWS in grep-3.8 release announcement [1]:
-> >
-> > "The egrep and fgrep commands, which have been deprecated since
-> >   release 2.5.3 (2007), now warn that they are obsolescent and should
-> >   be replaced by grep -E and grep -F."
-> >
-> > Additionally, the next grep rpm/deb version is 3.8 on Fedora [2]
-> > and Debian [3], so use "grep -E" instead of "egrep" so we won't see
-> > the warning for various versions of grep.
-> >
-> > [0] https://linuxfromscratch.org/~thomas/multilib/chapter06/grep.html
-> > [1] https://savannah.gnu.org/forum/forum.php?forum_id=10227
-> > [2] https://packages.fedoraproject.org/pkgs/grep/grep/fedora-rawhide.html
-> > [3] https://packages.debian.org/sid/grep
-> >
-> > Thanks,
-> > Tiezhu
+Em Wed, Dec 14, 2022 at 11:57:21PM +0800, Leo Yan escreveu:
+> On Wed, Dec 14, 2022 at 11:41:55AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Dec 13, 2022 at 08:40:31AM -0800, Namhyung Kim escreveu:
+> > > Hi,
+> > > 
+> > > On Tue, Dec 13, 2022 at 6:44 AM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > Em Mon, Aug 01, 2022 at 09:20:37AM +0100, James Clark escreveu:
+> > > > >
+> > > > >
+> > > > > On 29/07/2022 17:12, Adrián Herrera Arcila wrote:
+> > > > > > The described --delay behaviour is to delay the enablement of events, but
+> > > > > > not the execution of the command, if one is passed, which is incorrectly
+> > > > > > the current behaviour.
+> > > > > >
+> > > > > > This patch decouples the enablement from the delay, and enables events
+> > > > > > before or after launching the workload dependent on the options passed
+> > > > > > by the user. This code structure is inspired by that in perf-record, and
+> > > > > > tries to be consistent with it.
+> > > > > >
+> > > > > > Link: https://lore.kernel.org/linux-perf-users/7BFD066E-B0A8-49D4-B635-379328F0CF4C@fb.com
+> > > > > > Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+> > > > > > Signed-off-by: Adrián Herrera Arcila <adrian.herrera@arm.com>
+> > > > > > ---
+> > > > > >  tools/perf/builtin-stat.c | 56 ++++++++++++++++++++++-----------------
+> > > > > >  1 file changed, 32 insertions(+), 24 deletions(-)
+> > > > >
+> > > > > Looks good to me. Fixes the counter delay issue and the code is pretty
+> > > > > similar to perf record now. Although I would wait for Leo's or Song's
+> > > > > comment as well because they were involved.
+> > > >
+> > > > I think I didn't notice Leo's ack, it still applies, so I'm doing it
+> > > > now.
+> > > 
+> > > I think the BPF counters should be enabled/disabled together.
+> > 
+> > Ok, so I removed this one and applied Namhyung's.
 > 
-> Thanks Tiezhu,
+> I can guess why Adrián doesn't enable/disable BPF counters together :)
 > 
-> My grep is 3.7 and has -E support. In the changelog I see:
+> Since 'perf stat' doesn't enable BPF counters with other normal PMU
+> events in the first place, I believe this is deliberately by Song's
+> patch fa853c4b839e ("perf stat: Enable counting events for BPF
+> programs"), it says:
 > 
-> ```
-> 2021-08-14  Jim Meyering  <meyering@fb.com>
+> "'perf stat -b' creates per-cpu perf_event and loads fentry/fexit BPF
+> programs (monitor-progs) to the target BPF program (target-prog). The
+> monitor-progs read perf_event before and after the target-prog, and
+> aggregate the difference in a BPF map. Then the user space reads data
+> from these maps".
 > 
->        version 3.7
->        * NEWS: Record release date.
-> ```
+> IIUC, when loading eBPF (counter) program, perf tool needs to handle
+> eBPF program map specially (so that perf tool can know the latest eBPF
+> program's map in kernel).
 > 
-> So I'm guessing 3.8 is newer than is necessary for this change, but
-> demonstrates the warning issue your change addresses. Arnaldo's build
-> compatibility scripts should be able to spot further issues.
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+> I don't know anything for eBPF counter, so this is why I am still a bit
+> puzzle which way is right to do (bind vs separate eBPF counters).  But
+> I personally prefer to let eBPF counter to respect delay, so it's fine
+> for me to apply Namhyung's patch.
 
-Thanks, applied.
+"I'm fine" can be read as an Acked-by, right? :-)
 
 - Arnaldo
-
