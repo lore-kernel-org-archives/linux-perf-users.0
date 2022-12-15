@@ -2,303 +2,368 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB85C00145
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Dec 2022 07:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD909C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Dec 2022 07:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbiLOHN1 (ORCPT
+        id S230091AbiLOH3E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Dec 2022 02:13:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
+        Thu, 15 Dec 2022 02:29:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbiLOHMr (ORCPT
+        with ESMTP id S229927AbiLOH2w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Dec 2022 02:12:47 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728E933C14;
-        Wed, 14 Dec 2022 23:11:10 -0800 (PST)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BF6h3sK029611;
-        Thu, 15 Dec 2022 07:10:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=YoXeRK8PNf2mo1wc3dbqLnRFymgEaaTENZSaOZIK0fI=;
- b=r3hRjeoq6gXGytiBqlvvPkUzarQlBEU+mWuIBf107ijIKFtifiJ4HKKHyOSYGHYBlG/M
- IDNsJAlb7ED5WExYSE3Zx8i5VY5M0lJUk0HiBOJpdc17XV5PHDi+sSerAEsMs6tVvB3/
- FDCS0Lrn38jCGgrgPSwbDT8ZArsvmERektOZCPYUM9m/HvQYGzSGqdXyESKoJrsOmjv2
- p74iVy2dVpMNDNd8KYBQlO5emzNOKSd5Ow2sRush4voOAgwozryM30j05hE3MoJ74JWl
- fm4lHbDo3y9dL+0Uc3bW1wr+o65yfNu8o2to9Og2esC7wRTmcO9f/qLSJzzeQqful9Az zQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mfxj7gq2x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Dec 2022 07:10:50 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BF6iQUJ000408;
-        Thu, 15 Dec 2022 07:10:49 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mfxj7gq1p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Dec 2022 07:10:49 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BF5q67Z027949;
-        Thu, 15 Dec 2022 07:10:47 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3meyxm9w8u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Dec 2022 07:10:47 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BF7Af8715991544
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Dec 2022 07:10:41 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 768C420040;
-        Thu, 15 Dec 2022 07:10:41 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBBD32004B;
-        Thu, 15 Dec 2022 07:10:38 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.125.219])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu, 15 Dec 2022 07:10:38 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 2/3] perf build: Use libtraceevent from the system
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fVVPDo_3cjKmumEVKDN2Zssz-ZU=nYVQFNr1xUGHxx-PQ@mail.gmail.com>
-Date:   Thu, 15 Dec 2022 12:40:36 +0530
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Message-Id: <346AAE98-7BB0-4639-A63D-3FBC331C721A@linux.vnet.ibm.com>
-References: <Y491d1wEW4TfUi5f@kernel.org> <Y4921D+36UGdhK92@kernel.org>
- <Y494TNa0ZyPH9YSD@kernel.org> <Y498YP2N3gvFSr/X@kernel.org>
- <C9F248C8-AF8D-40A1-A1AD-BCC39FBA01C7@linux.vnet.ibm.com>
- <Y5DNBZNC5rBBqlJW@kernel.org>
- <36CD1041-0CAE-41C1-8086-C17854531B3E@linux.vnet.ibm.com>
- <Y5JfgyN59dSeKbUP@kernel.org> <Y5Jl8MeW90DXy1wT@kernel.org>
- <8F6F0C27-53F3-4837-A19C-845768253249@linux.vnet.ibm.com>
- <Y5cxyk3OdgFXlyhS@kernel.org>
- <BB236C92-3505-4DAB-AE28-A55F74EDE161@linux.vnet.ibm.com>
- <CAP-5=fVVPDo_3cjKmumEVKDN2Zssz-ZU=nYVQFNr1xUGHxx-PQ@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: CF1x41Udj_jMm7mo92TMntrTXFzl-BpG
-X-Proofpoint-GUID: L05R6ctm4kma_Jmn0QnKyE5aUhjlMdOI
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thu, 15 Dec 2022 02:28:52 -0500
+Received: from cczrelay02.in2p3.fr (cczrelay02.in2p3.fr [134.158.66.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469A52A42C
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 23:28:42 -0800 (PST)
+Received: from [192.168.0.12] (alb91-1-78-192-88-225.fbxo.proxad.net [78.192.88.225] (may be forged))
+        (authenticated bits=0)
+        by cczrelay02.in2p3.fr (8.14.4/8.14.4) with ESMTP id 2BF7SdfR031639
+        (version=TLSv1/SSLv3 cipher=AES128-GCM-SHA256 bits=128 verify=OK)
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Dec 2022 08:28:40 +0100
+Message-ID: <071405f9-5a51-4e44-251a-c431883d9e0d@ijclab.in2p3.fr>
+Date:   Thu, 15 Dec 2022 08:28:39 +0100
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-15_02,2022-12-14_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- bulkscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 suspectscore=0 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2212150050
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: A few questions from writing a perf tutorial
+From:   Hadrien Grasland <hadrien.grasland@ijclab.in2p3.fr>
+To:     linux-perf-users@vger.kernel.org
+References: <58f34e62-81d7-fc71-dec2-03e88ee36392@ijclab.in2p3.fr>
+ <CAP-5=fU1TuqCzjF7k=5q2zfh_5Qz0iH1mmXKc9_MjqJGb04rNQ@mail.gmail.com>
+ <98207a43-2952-30c0-7b13-a89f65a7aa9d@ijclab.in2p3.fr>
+Content-Language: fr
+In-Reply-To: <98207a43-2952-30c0-7b13-a89f65a7aa9d@ijclab.in2p3.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Whoops, forgot to keep the list in CC...
 
-
-> On 14-Dec-2022, at 3:39 AM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Tue, Dec 13, 2022 at 1:53 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 12-Dec-2022, at 7:21 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->>>=20
->>> Em Fri, Dec 09, 2022 at 12:04:18PM +0530, Athira Rajeev escreveu:
->>>>=20
->>>>=20
->>>>> On 09-Dec-2022, at 4:02 AM, Arnaldo Carvalho de Melo <acme@kernel.org=
-> wrote:
->>>>>=20
->>>>> Em Thu, Dec 08, 2022 at 07:04:52PM -0300, Arnaldo Carvalho de Melo es=
-creveu:
->>>>>> Em Thu, Dec 08, 2022 at 12:21:20PM +0530, Athira Rajeev escreveu:
->>>>>>>> On 07-Dec-2022, at 10:57 PM, Arnaldo Carvalho de Melo <acme@kernel=
-.org> wrote:
->>>>>>>> Can you try again? tmp.perf/core? That "tmp." part means its a for=
-ce
->>>>>>>> pushed branch, so I just force pushed with some arch specific fixe=
-s, now
->>>>>>>> I'm down to (removing the successful builds and unrelated failures=
-, now
->>>>>>>> related to libbpf's F_DUPFD_CLOEXEC kaboom):
->>>>>>=20
->>>>>>> Ok Arnaldo, Sure, I will check with updated branch
->>>>>>=20
->>>>>>>> 5     7.38 fedora:34                     : FAIL gcc version 11.3.1=
- 20220421 (Red Hat 11.3.1-2) (GCC)
->>>>>>>> /git/perf-6.1.0-rc6/tools/perf/util/evsel.c: In function =E2=80=98=
-evsel__rawptr=E2=80=99:
->>>>>>>> /git/perf-6.1.0-rc6/tools/perf/util/evsel.c:2787:36: error: =E2=80=
-=98TEP_FIELD_IS_RELATIVE=E2=80=99 undeclared (first use in this function); =
-did you mean =E2=80=98TEP_FIELD_IS_FLAG=E2=80=99?
->>>>>>>>  2787 |                 if (field->flags & TEP_FIELD_IS_RELATIVE)
->>>>>>>>       |                                    ^~~~~~~~~~~~~~~~~~~~~
->>>>>>>>       |                                    TEP_FIELD_IS_FLAG
->>>>>>=20
->>>>>>> I observed same issue as updated here:
->>>>>>> https://lore.kernel.org/lkml/10476A85-3F75-4C91-AB5B-E5B136F31297@l=
-inux.vnet.ibm.com/
->>>>>>=20
->>>>>>> Looks like TEP_FIELD_IS_RELATIVE is not defined in header file of t=
-he system installed version.
->>>>>>> whereas it is there in header file in tools/lib/traceevent
->>>>>>=20
->>>>>>> # grep TEP_FIELD_IS_RELATIVE /usr/include/traceevent/event-parse.h
->>>>>>> # grep TEP_FIELD_IS_RELATIVE ../lib/traceevent/event-parse.h
->>>>>>>  TEP_FIELD_IS_RELATIVE   =3D 256,
->>>>>>=20
->>>>>> Right, I had noticed that as well, so as a prep patch I'm adding the
->>>>>> patch below, before Ian's. Please check and provide an
->>>>>> Acked-by/Tested-by/Reviewed-by if possible.
->>>>>=20
->>>>> I ended up with the one below, _after_ Ian's patch as I had some trou=
-ble grafting
->>>>> it before and had already tested it this way multiple times, I'm push=
-ing
->>>>> this to tmp/perf.core.
->>>>>=20
->>>>> - Arnaldo
->>>>=20
->>>>=20
->>>> Hi Arnaldo, Ian
->>>>=20
->>>> Thanks for the fixes.
->>>>=20
->>>> Since we changed =E2=80=9CCONFIG_TRACEEVENT=E2=80=9D to =E2=80=9CCONFI=
-G_LIBTRACEEVENT=E2=80=9D,
->>>> below change is also needed in =E2=80=9Carch/powerpc/util/Build=E2=80=
-=9D
->>>>=20
->>>> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powe=
-rpc/util/Build
->>>> index 71e57f28abda..9889245c555c 100644
->>>> --- a/tools/perf/arch/powerpc/util/Build
->>>> +++ b/tools/perf/arch/powerpc/util/Build
->>>> @@ -1,5 +1,5 @@
->>>> perf-y +=3D header.o
->>>> -perf-$(CONFIG_TRACEEVENT) +=3D kvm-stat.o
->>>> +perf-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
->>>> perf-y +=3D perf_regs.o
->>>> perf-y +=3D mem-events.o
->>>> perf-y +=3D sym-handling.o
->>>>=20
->>>> With this change, I could successfully compile in these environment:
->>>> - Without libtraceevent-devel installed
->>>> - With libtraceevent-devel installed
->>>> - With =E2=80=9Cmake NO_LIBTRACEEVENT=3D1=E2=80=9D
->>>>=20
->>>> With above change,
->>>> Acked-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>=20
->>> I did that and the same thing for other architectures, thanks for
->>> testing!
->>>=20
->>> I'll now give a try at implementing it without
->>> tools/build/feature/test-libtraceevent-tep_field_is_relative.c, using
->>> just the version of libtraceevent, as Ian suggested.
->>>=20
->>> It would be great if you could test it again then,
->>>=20
->>=20
->> Sure Arnaldo, I will test with updated code.
->>=20
->> Thanks
->> Athira
->=20
->=20
-> Thanks Athira and Arnaldo. It is a little strange to me to be using
-
-
-Hi Arnaldo, Ian
-
-Compile tested with updated tmp.perf/core and results are good
-
-Thanks
-Athira
-
-> the shell to do a version number test. The intent was to be doing
-> these in the code:
-> #if LIBRTRACEEVENT_VERSION >=3D MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
-> vs
-> ...
-> LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE :=3D $(shell expr 1 \*
-> 255 \* 255 + 5 \* 255 + 0) # 1.5.0
-> ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt
-> $(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
-> CFLAGS +=3D -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> endif
-> ...
-> #ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> I'm a little selfish as I'm maintaining a bazel build and a single
-> version number to maintain is easier than lots of HAVE_... tests. I'm
-> happy to follow Arnaldo's lead. I think the test should also be
-> greater-equal rather than greater-than:
-> https://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git/tree/inclu=
-de/traceevent/event-parse.h?h=3Dlibtraceevent-v1.5#n128
->=20
-> Thanks,
-> Ian
->=20
->=20
-> Ian
->=20
->>> Thanks,
->>>=20
->>> - Arnaldo
->>>=20
->>>=20
->>> diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/u=
-til/Build
->>> index 88553c578ed7a1c4..78ef7115be3d91a7 100644
->>> --- a/tools/perf/arch/arm64/util/Build
->>> +++ b/tools/perf/arch/arm64/util/Build
->>> @@ -3,7 +3,7 @@ perf-y +=3D machine.o
->>> perf-y +=3D perf_regs.o
->>> perf-y +=3D tsc.o
->>> perf-y +=3D pmu.o
->>> -perf-$(CONFIG_TRACEEVENT) +=3D kvm-stat.o
->>> +perf-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
->>> perf-$(CONFIG_DWARF)     +=3D dwarf-regs.o
->>> perf-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
->>> perf-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
->>> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/power=
-pc/util/Build
->>> index 71e57f28abdac7e9..9889245c555c4cfb 100644
->>> --- a/tools/perf/arch/powerpc/util/Build
->>> +++ b/tools/perf/arch/powerpc/util/Build
->>> @@ -1,5 +1,5 @@
->>> perf-y +=3D header.o
->>> -perf-$(CONFIG_TRACEEVENT) +=3D kvm-stat.o
->>> +perf-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
->>> perf-y +=3D perf_regs.o
->>> perf-y +=3D mem-events.o
->>> perf-y +=3D sym-handling.o
->>> diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/uti=
-l/Build
->>> index aa8a5f05c9cb4706..db68840869979f2c 100644
->>> --- a/tools/perf/arch/s390/util/Build
->>> +++ b/tools/perf/arch/s390/util/Build
->>> @@ -1,5 +1,5 @@
->>> perf-y +=3D header.o
->>> -perf-$(CONFIG_TRACEEVENT) +=3D kvm-stat.o
->>> +perf-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
->>> perf-y +=3D perf_regs.o
->>>=20
->>> perf-$(CONFIG_DWARF) +=3D dwarf-regs.o
-
+Le 14/12/2022 à 22:10, Hadrien Grasland a écrit :
+> Hi Ian,
+>
+>
+>>> I recently ran a perf tutorial for my colleagues (which I hope to 
+>>> eventually
+>>> translate to English so it's of more general use), and noted a 
+>>> number of
+>>> surprising things in the process.
+>> Sounds great! Perhaps you can land it or a link to it on the perf wiki:
+>> https://perf.wiki.kernel.org/index.php/Main_Page
+>> More languages than English is a plus!
+>
+> Good idea. Although the fact that the tutorial is designed to be run 
+> on a particular server means that people will need to adapt the 
+> commands a bit, I think that's actually not that hard and it could be 
+> of general use to French speakers already that way.
+>
+> Given the size of the material ( 
+> https://grasland.pages.in2p3.fr/tp-perf/html/ ), linking will be more 
+> practical than translating it to the wiki format :)
+>
+> I tried to create an account on that wiki, but it seems human approval 
+> is required, so I'll edit in a link in once that's taken care of.
+>
+>
+>>
+>>> ===
+>>>
+>>> The second mystery is that perf trace run as a regular user does not
+>>> correctly
+>>> report thread names for all multi-threaded executables. It just reports
+>>> the thread
+>>> numerical ID, which makes the output hard to read unless 
+>>> supplemented with a
+>>> little `ps aux -L`. This may not be feasible when the threads being
+>>> monitored
+>>> are short-lived.
+>>>
+>>> When perf trace is run as root, it has no such issue, which suggests
+>>> that this
+>>> is a permission problem. Would you happen to know what the missing
+>>> permission
+>>> is and whether/how I can give it to non-root users?
+>> I find the behavior a little mysterious too. Arnaldo likely can speak
+>> more that something to be aware of is that the system call
+>> augmentation (getting things like file names for openat calls) needs a
+>> BPF program to be loaded. The logic for this predates newer BPF things
+>> like skeletons, where we could build the BPF program into the perf
+>> executable, and so you must specify the BPF program as an event:
+>>
+>> $ sudo perf trace -eopenat sleep 1
+>>      0.000 ( 0.006 ms): sleep/1453070 openat(dfd: CWD, filename:
+>> 0x28e12165, flags: RDONLY|CLOEXEC) = 3
+>>      0.018 ( 0.002 ms): sleep/1453070 openat(dfd: CWD, filename:
+>> 0x28de63e0, flags: RDONLY|CLOEXEC) = 3
+>>      0.132 ( 0.004 ms): sleep/1453070 openat(dfd: CWD, filename:
+>> 0x28bbc160, flags: RDONLY|CLOEXEC) = 3
+>>
+>> $ sudo perf trace
+>> -e/usr/share/doc/linux-perf/examples/bpf/augmented_raw_syscalls.c,openat
+>> sleep 1
+>>      0.000 ( 0.005 ms): sleep/1452904 openat(dfd: CWD, filename:
+>> "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
+>>      0.016 ( 0.003 ms): sleep/1452904 openat(dfd: CWD, filename:
+>> "/lib/x86_64-linux-gnu/libc.so.6",flags: RDONLY|CLOEXEC) = 3
+>>      0.131 ( 0.003 ms): sleep/1452904 openat(dfd: CWD, filename:
+>> "/usr/lib/locale/locale-archive", flags: RDONLY|CLOEXEC) = 3
+>
+> Could have been a BPF issue indeed, as I have not enabled unprivileged 
+> BPF on my systems. But a little "sysctl 
+> kernel.unprivileged_bpf_disabled=0" permission sledgehammer does not 
+> solve the problem, so that does not seem to be it ?
+>
+> Just to be clear, this is not about perf trace displaying syscall 
+> parameters (something I actually wished it did for a while, glad to 
+> know it's in there if a bit hidden !), but about it giving a 
+> human-readable name to the thread that initiates the syscall.
+>
+> To use my tutorial server as an example, when perf trace is run as 
+> non-root, slurmctld worker threads are named ":2301" and ":2303" by 
+> perf trace which is not very helpful.
+>
+> ===
+>
+> $  perf trace -s -a -- sleep 1 Summary of events:
+>
+>  sleep (17672), 196 events, 78.4%
+>
+>    syscall            calls  errors  total       min avg max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    clock_nanosleep        1      0  1000.193  1000.193  1000.193 
+> 1000.193      0.00%
+>    execve                10      9     1.127     0.030 0.113 0.806     
+> 68.39%
+>    openat                18      1     0.114     0.006 0.006 
+> 0.008      2.52%
+>    mmap                  19      0     0.101     0.004 0.005 
+> 0.011      6.23%
+>    fstat                 17      0     0.053     0.003 0.003 
+> 0.004      2.65%
+>    close                 19      0     0.050     0.002 0.003 
+> 0.004      3.24%
+>    mprotect               4      0     0.032     0.006 0.008 0.011     
+> 13.21%
+>    munmap                 1      0     0.016     0.016 0.016 
+> 0.016      0.00%
+>    read                   4      0     0.012     0.000 0.003 0.004     
+> 34.27%
+>    brk                    3      0     0.011     0.003 0.004 0.004     
+> 10.02%
+>    access                 1      1     0.007     0.007 0.007 
+> 0.007      0.00%
+>    arch_prctl             1      0     0.002     0.002 0.002 
+> 0.002      0.00%
+>
+>
+>  lighttpd (2088), 2 events, 0.8%
+>
+>    syscall            calls  errors  total       min avg max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    epoll_wait             1      0     0.000     0.000 0.000 
+> 0.000      0.00%
+>
+>
+>  tmux: server (16851), 16 events, 6.4%
+>
+>    syscall            calls  errors  total       min avg max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    poll                   3      0     2.369     0.000 0.790 1.200     
+> 50.01%
+>    stat                   4      0     0.039     0.006 0.010 0.018     
+> 30.30%
+>    uname                  1      0     0.003     0.003 0.003 
+> 0.003      0.00%
+>
+>
+>  slurmctld (2280), 22 events, 8.8%
+>
+>    syscall            calls  errors  total       min avg max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    clock_nanosleep       10      0   901.706     0.000    90.171 
+> 100.212     11.11%
+>    futex                  1      0     0.006     0.006 0.006 
+> 0.006      0.00%
+>
+>
+>  :2301 (2301), 4 events, 1.6%
+>
+>    syscall            calls  errors  total       min avg max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    futex                  2      0     0.003     0.000 0.002 0.003    
+> 100.00%
+>
+>
+>  :2303 (2303), 4 events, 1.6%
+>
+>    syscall            calls  errors  total       min avg max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    futex                  2      1     0.003     0.000 0.001 0.003    
+> 100.00%
+>
+> ===
+>
+> When perf trace is run as root, these threads are called "slurmctld" 
+> and "bckfl" instead, which is a lot more in line with what I would 
+> expect.
+>
+> ===
+>
+> $ sudo perf trace -s -a -- sleep 1
+>
+>  Summary of events:
+>
+>  sleep (17675), 182 events, 74.0%
+>
+>    syscall            calls  errors  total       min avg       max stddev
+>                                      (msec)    (msec)    (msec) (msec) 
+> (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> --------- ------
+>    clock_nanosleep        1      0  1000.203  1000.203  1000.203 
+> 1000.203 0.00%
+>    execve                 3      2     0.929     0.020 0.310 0.859 88.74%
+>    openat                18      1     0.050     0.002 0.003 0.006 6.70%
+>    mmap                  19      0     0.049     0.002 0.003 0.005 6.16%
+>    mprotect               4      0     0.025     0.003 0.006 0.014 40.88%
+>    close                 19      0     0.023     0.001 0.001 0.004 14.76%
+>    fstat                 17      0     0.022     0.001 0.001 
+> 0.002      3.45%
+>    munmap                 1      0     0.008     0.008 0.008 
+> 0.008      0.00%
+>    read                   4      0     0.005     0.000 0.001 0.002     
+> 38.96%
+>    brk                    3      0     0.005     0.001 0.002 0.002     
+> 20.26%
+>    access                 1      1     0.003     0.003 0.003 
+> 0.003      0.00%
+>    arch_prctl             1      0     0.001     0.001 0.001 
+> 0.001      0.00%
+>
+>  lighttpd (2088), 2 events, 0.8%
+>
+>    syscall            calls  errors  total       min       avg 
+> max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    epoll_wait             1      0     0.000     0.000     0.000 
+> 0.000      0.00%
+>
+>
+>  systemd-journal (920), 10 events, 4.1%
+>
+>    syscall            calls  errors  total       min       avg 
+> max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    ftruncate              1      0     0.008     0.008     0.008 
+> 0.008      0.00%
+>    read                   1      0     0.005     0.005     0.005 
+> 0.005      0.00%
+>    timerfd_settime        1      0     0.004     0.004     0.004 
+> 0.004      0.00%
+>    gettid                 1      0     0.003     0.003     0.003 
+> 0.003      0.00%
+>    epoll_wait             1      0     0.000     0.000     0.000 
+> 0.000      0.00%
+>
+>
+>  tmux: server (16851), 16 events, 6.5%
+>
+>    syscall            calls  errors  total       min       avg 
+> max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    poll                   3      0     2.262     0.000     0.754 
+> 1.195     50.24%
+>    openat                 1      0     0.015     0.015     0.015 
+> 0.015      0.00%
+>    read                   1      0     0.010     0.010     0.010 
+> 0.010      0.00%
+>    ioctl                  1      0     0.005     0.005     0.005 
+> 0.005      0.00%
+>    fstat                  1      0     0.003     0.003     0.003 
+> 0.003      0.00%
+>    close                  1      0     0.003     0.003     0.003 
+> 0.003      0.00%
+>
+>
+>  slurmctld (2280), 22 events, 8.9%
+>
+>    syscall            calls  errors  total       min       avg 
+> max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    clock_nanosleep       10      0   901.748     0.000    90.175 
+> 100.217     11.11%
+>    futex                  1      0     0.006     0.006     0.006 
+> 0.006      0.00%
+>
+>
+>  slurmctld (2301), 4 events, 1.6%
+>
+>    syscall            calls  errors  total       min       avg 
+> max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    futex                  2      0     0.003     0.000     0.002 
+> 0.003    100.00%
+>
+>
+>  bckfl (2303), 4 events, 1.6%
+>
+>    syscall            calls  errors  total       min       avg 
+> max       stddev
+>                                      (msec)    (msec)    (msec) 
+> (msec)        (%)
+>    --------------- --------  ------ -------- --------- --------- 
+> ---------     ------
+>    futex                  2      1     0.003     0.000     0.001 
+> 0.003    100.00%
+>
+> ===
+>
+> (Also, I see systemd-journald activity when I run perf trace as root 
+> and not when I do so as a regular user, but I guess that bit is normal 
+> permissions at work ?)
+>
+> This is not specific to slurmctld by the way, I observed similar 
+> things with the threads of one Electron app on my local development 
+> machine while trying to reproduce on a more current version of perf 
+> (the server on which I ran perf trace above runs Linux 5.14, the 
+> machine on which I reproduced runs 6.0).
+>
+> Cheers,
+> Hadrien
+>
