@@ -2,175 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41454C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Dec 2022 18:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2E4C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Dec 2022 01:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238637AbiLNSki (ORCPT
+        id S229513AbiLOBoL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Dec 2022 13:40:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53402 "EHLO
+        Wed, 14 Dec 2022 20:44:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238899AbiLNSka (ORCPT
+        with ESMTP id S229496AbiLOBoK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Dec 2022 13:40:30 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8427C2A733
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 10:40:24 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id ay40so12063202wmb.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 10:40:24 -0800 (PST)
+        Wed, 14 Dec 2022 20:44:10 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4B12D1CA
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 17:44:05 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id u15-20020a17090a3fcf00b002191825cf02so1177048pjm.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Dec 2022 17:44:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2xXj6E7TqJQIVDtAmPgd4vi/xIzD5cJJ8HWFRiZ4xRI=;
-        b=in2I0qEOIgJnTYP972LD+zd3oHVTu2LylyTu6b8XVVAs85I85P0u7YgS5R3LWC6MH8
-         9myZCKctu+Tu5Ka18GAHdljk9RXhsoLztjVlUt1P1Ka9l/zf42D/WDPRBUuPoLbGIPnG
-         VM2GT1CBMPtKXxXGHyXesXPI9CAd8oWFIFZKXd002ueqWcgwiDVpOJ1bcVEQIpIF3q3U
-         cwg87bFEkMjfLyh57hSS1BgZq75JvNxedGRlZg89K5ml7W4PuXpd6wttQGCWYtnuUQIY
-         BtEvI7YsW7YVwg9N3Z/XhvHpf0RRwpVvcDayNRYG6ISVPcvnRzJwCLEh6KomzSXEMYkt
-         iIZg==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WmAkvDBKMNNGormxiR/sVMbcrKMt/tgyZJoKB0gFsB0=;
+        b=ijXibnLuHzRzsqBDk+Xk86VZwXDIofKPWnvJrpJv5mIoZ1MCKwUyISd4IpTz6xhsB3
+         DAse7DyLkBtjgJ2Mf8YzyfA9h6QaR8xrcN4fz0VHgaMqCg4DjmIUI5/EYqX3M0I7T6TX
+         GGhS2V6XP5u5EVFXbu2f/kkDc3MQ8pRkmO4AAa/WdVE1TuW+AkdRMn0xDk51qeOke2Qi
+         dvzDkj1Oe+dsEwezKfilIZLsILhVJFfUbTj9j5fxlohHdkySCJYM7bOYVmRrMDq0AqRY
+         5jrDvk1pxjB7k/XzrPyAQgrQBncj3JbAjDmak6pkT9Uav/gvIWQN53ruIigm1x64DuE9
+         Ed4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2xXj6E7TqJQIVDtAmPgd4vi/xIzD5cJJ8HWFRiZ4xRI=;
-        b=Ptade5AUlysoC6sz+A8o0UTdDmubZ7Abld5F7MyharzijZDAHSUafcetDGLd7nQRqZ
-         c4JBoNduqezdWAbmpI1qc4R1xz7N4zUd8B5RQbu+mYoQcoiiOcy36BSatl5ZDkFyn/NM
-         /ok9MpTF1lUME4Nb/ktp13ygIipFqYCXZxC7YGJQZ+oYEpySd73IHF/Ft4EBS51jP4Zr
-         sP2PKSfdH+lwMwGPYWXLTZlqXrEcqtOvS2rTzXes5jNXCI6UnvMJpBAVykpHe+xf52jD
-         nNIRoueeUyy0NtYb2Y/hBLGGw/DHzEEKD8qhdzhM521/HLc7I5MSaWLk03GE6Xd57GlZ
-         h0Vg==
-X-Gm-Message-State: ANoB5pmpugMnsE/4ZQW0D/GNUQoMecEtO3G7qTXrQo65vq91jEFcZZdb
-        D3kxn8wGzR77fVegTy+/ffTJJ71IFzD+nrHVPYAnCw==
-X-Google-Smtp-Source: AA0mqf4eBc5zW0DATSSfPquCQ1oPo3nICdqrX59QalQ07IhOwXeKFMlcXQRVYHyH4B2GEimospkT2fwN0FZHvseXAiw=
-X-Received: by 2002:a1c:7203:0:b0:3c6:c109:2d9 with SMTP id
- n3-20020a1c7203000000b003c6c10902d9mr264937wmc.149.1671043222838; Wed, 14 Dec
- 2022 10:40:22 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WmAkvDBKMNNGormxiR/sVMbcrKMt/tgyZJoKB0gFsB0=;
+        b=mNelhj0LbTPaDuBvElV45cYFF802KF59GcLVnj/9Jf41E+V4bmoX/kgc5qaywc8rv5
+         dUlx5es1KCNEUivXjtJKUO2P3HAinPtvc2R319Xmsh7xXd23xsSczZjn/82WsIjMd9Ia
+         MUqVTzLZq91SRgreBVCfxAbJEwquwRatA5jjm9LhE7axXOv7+FXmL4VkQR3cvVBOCh2b
+         f1dhH76veK0dAoozVyF/wsb25t9fvNxbl1TxGIJLds5FqoNEFVmTzFN9oJqpRvE7iFYb
+         LJMbUe0OGAFZ3N7XSei8bnI7yiQhk6x2gjT6K7nbqOdBmVdJVuTDPEkZ7ZEWLIz63vF2
+         MqDA==
+X-Gm-Message-State: ANoB5pnV811lRKvlqjQ7OIGNgMAwX6njC1RPfZph3iIW1n4DgXIHq7YM
+        Z7T+909GqB0IujahpHSXG1DOdQ==
+X-Google-Smtp-Source: AA0mqf7+pQUOfbHT3BZLML0xqnDfuCi4zbmc2bJpy7XuurL1h+qED3gKG8yW2nFnqm74YWJZtVP6ZA==
+X-Received: by 2002:a17:90a:384e:b0:212:de1a:3505 with SMTP id l14-20020a17090a384e00b00212de1a3505mr27535065pjf.28.1671068645033;
+        Wed, 14 Dec 2022 17:44:05 -0800 (PST)
+Received: from leoy-yangtze.lan ([152.70.116.104])
+        by smtp.gmail.com with ESMTPSA id k13-20020a17090a910d00b00218b47be793sm1979303pjo.3.2022.12.14.17.43.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 17:44:04 -0800 (PST)
+Date:   Thu, 15 Dec 2022 09:43:55 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kevin Nomura <nomurak@google.com>
+Subject: Re: [PATCH] perf stat: Do not delay the workload with --delay
+Message-ID: <Y5p723KMYBI2W6vs@leoy-yangtze.lan>
+References: <20221212230820.901382-1-namhyung@kernel.org>
 MIME-Version: 1.0
-References: <58f34e62-81d7-fc71-dec2-03e88ee36392@ijclab.in2p3.fr>
-In-Reply-To: <58f34e62-81d7-fc71-dec2-03e88ee36392@ijclab.in2p3.fr>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Dec 2022 10:40:10 -0800
-Message-ID: <CAP-5=fU1TuqCzjF7k=5q2zfh_5Qz0iH1mmXKc9_MjqJGb04rNQ@mail.gmail.com>
-Subject: Re: A few questions from writing a perf tutorial
-To:     Hadrien Grasland <hadrien.grasland@ijclab.in2p3.fr>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221212230820.901382-1-namhyung@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 13, 2022 at 7:01 AM Hadrien Grasland
-<hadrien.grasland@ijclab.in2p3.fr> wrote:
->
-> Hi everyone,
->
-> I recently ran a perf tutorial for my colleagues (which I hope to eventually
-> translate to English so it's of more general use), and noted a number of
-> surprising things in the process.
+On Mon, Dec 12, 2022 at 03:08:20PM -0800, Namhyung Kim wrote:
+> The -D/--delay option is to delay the measure after the program starts.
+> But the current code goes to sleep before starting the program so the
+> program is delayed too.  This is not the intention, let's fix it.
+> 
+> Before:
+> 
+>   $ time sudo ./perf stat -a -e cycles -D 3000 sleep 4
+>   Events disabled
+>   Events enabled
+> 
+>    Performance counter stats for 'system wide':
+> 
+>        4,326,949,337      cycles
+> 
+>          4.007494118 seconds time elapsed
+> 
+>   real	0m7.474s
+>   user	0m0.356s
+>   sys	0m0.120s
+> 
+> It ran the workload for 4 seconds and gave the 3 second delay.  So it
+> should skip the first 3 second and measure the last 1 second only.  But
+> as you can see, it delays 3 seconds and ran the workload after that for
+> 4 seconds.  So the total time (real) was 7 seconds.
+> 
+> After:
+> 
+>   $ time sudo ./perf stat -a -e cycles -D 3000 sleep 4
+>   Events disabled
+>   Events enabled
+> 
+>    Performance counter stats for 'system wide':
+> 
+>        1,063,551,013      cycles
+> 
+>          1.002769510 seconds time elapsed
+> 
+>   real	0m4.484s
+>   user	0m0.385s
+>   sys	0m0.086s
+> 
+> The bug was introduced when it changed enablement of system-wide events
+> with a command line workload.  But it should've considered the initial
+> delay case.  The code was reworked since then (in bb8bc52e7578) so I'm
+> afraid it won't be applied cleanly.
+> 
+> Fixes: d0a0a511493d ("perf stat: Fix forked applications enablement of counters")
+> Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Reported-by: Kevin Nomura <nomurak@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Sounds great! Perhaps you can land it or a link to it on the perf wiki:
-https://perf.wiki.kernel.org/index.php/Main_Page
-More languages than English is a plus!
-
-> In the interest of fixing my understanding and reporting bugs where
-> appropriate,
-> I would appreciate it if some of you would care to help me triage the
-> expected
-> from the abnormal here.
->
-> ===
->
-> Many of my issues stem from the fact that I'm providing a shared server to
-> ensure that everyone is using the same version of perf, the same kernel,
-> and the
-> same CPU. Which means that I need to set up the system to give participants
-> fairly broad perf privileges, without wanting to giving them full root
-> access.
-> That leads to various permission issues.
->
-> I have read
-> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html#privileged-perf-users-groups
-> and tried the suggested workflow of giving the perf executable various
-> capabilities while making it only accessible to a "perf group". However, the
-> capabilities don't seem to do anything. For example, even with
-> cap_syslog set,
-> I still need kptr_restrict = 0 to see kernel symbol names in perf top and
-> system-wide perf record. Ditto for cap_perfmon : even if it's set, I
-> still need
-> to tune down perf_event_paranoid for system-wide profiling.
->
-> I cross-checked with the procedure discussed in
-> https://linux-audit.com/linux-capabilities-101/ that the capabilities
-> are set
-> correctly on running perf processes, so I'm not sure what's going on
-> here. That
-> would be the first mystery.
-
-Likewise, I'm not sure what the issue is here.
-
-> ===
->
-> The second mystery is that perf trace run as a regular user does not
-> correctly
-> report thread names for all multi-threaded executables. It just reports
-> the thread
-> numerical ID, which makes the output hard to read unless supplemented with a
-> little `ps aux -L`. This may not be feasible when the threads being
-> monitored
-> are short-lived.
->
-> When perf trace is run as root, it has no such issue, which suggests
-> that this
-> is a permission problem. Would you happen to know what the missing
-> permission
-> is and whether/how I can give it to non-root users?
-
-I find the behavior a little mysterious too. Arnaldo likely can speak
-more that something to be aware of is that the system call
-augmentation (getting things like file names for openat calls) needs a
-BPF program to be loaded. The logic for this predates newer BPF things
-like skeletons, where we could build the BPF program into the perf
-executable, and so you must specify the BPF program as an event:
-
-$ sudo perf trace -eopenat sleep 1
-    0.000 ( 0.006 ms): sleep/1453070 openat(dfd: CWD, filename:
-0x28e12165, flags: RDONLY|CLOEXEC) = 3
-    0.018 ( 0.002 ms): sleep/1453070 openat(dfd: CWD, filename:
-0x28de63e0, flags: RDONLY|CLOEXEC) = 3
-    0.132 ( 0.004 ms): sleep/1453070 openat(dfd: CWD, filename:
-0x28bbc160, flags: RDONLY|CLOEXEC) = 3
-
-$ sudo perf trace
--e/usr/share/doc/linux-perf/examples/bpf/augmented_raw_syscalls.c,openat
-sleep 1
-    0.000 ( 0.005 ms): sleep/1452904 openat(dfd: CWD, filename:
-"/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
-    0.016 ( 0.003 ms): sleep/1452904 openat(dfd: CWD, filename:
-"/lib/x86_64-linux-gnu/libc.so.6",flags: RDONLY|CLOEXEC) = 3
-    0.131 ( 0.003 ms): sleep/1452904 openat(dfd: CWD, filename:
-"/usr/lib/locale/locale-archive", flags: RDONLY|CLOEXEC) = 3
-
-> ===
->
-> I also noticed that trying to use `--call-graph=lbr` on non-PMU events
-> (syscalls
-> and tracepoints in general) fails with an "Operation not supported"
-> error. I do
-> not understand why this operation is not supported, however, given that
-> from my
-> limited understanding of the LBR, it should be active no matter what the
-> CPU is
-> doing, and perf should always be able to sample it including on tracepoint
-> events. Can someone shed some light on this?
-
-I see your point, likely this needs improvements in the kernel.
-
-Thanks,
-Ian
-
-> ===
->
-> Thanks in advance for your help!
-> Hadrien Grasland
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
