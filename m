@@ -2,130 +2,294 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D92EC001B2
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Dec 2022 09:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D45C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Dec 2022 11:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229979AbiLPJvT (ORCPT
+        id S230111AbiLPLZm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Dec 2022 04:51:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40122 "EHLO
+        Fri, 16 Dec 2022 06:25:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbiLPJvS (ORCPT
+        with ESMTP id S230312AbiLPLZe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Dec 2022 04:51:18 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1182447336;
-        Fri, 16 Dec 2022 01:51:18 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BG8rnPf012446;
-        Fri, 16 Dec 2022 09:50:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=ClQz4cdT35ymhgSJDcGj7sEHp4kxME25Ta9yzYQcFk0=;
- b=opb42xbxcnlkmpdOIJXo5RdNaE64QEOvKKOgNGGBu2FWkjLofSIh6MhiUUtllYS6zZ2z
- KfxLubBNtZxnhB8ysY1MS+b9saAMDZDJMrPDy1sa9sVxsxLyE4e9a9aN4LdBpefWorZu
- Ogg9ytiJQ5vit56f8rW5LBn4Yqfft7g/Q+9afiYopw2cNaKdG+TpR4usymTvqM2uZn4G
- zfG5BobPzOzXFOD39Uc/YAvbtNfz1PyuNH33bmHT4lLGoWMkb1fhNG4n/0TqGfg29Xjz
- GbE5qKZdRhmkIEz6ydPo8TVOG16yCcysEYS5A4RftpuPaMBOuZoKhNR6VNM5rLf8i0EE tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mgnjmhadv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 09:50:53 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BG9X81H013628;
-        Fri, 16 Dec 2022 09:50:52 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mgnjmhacr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 09:50:52 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BG2Z4F3006580;
-        Fri, 16 Dec 2022 09:50:48 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3mf03834u4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Dec 2022 09:50:48 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BG9oi2R46334220
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Dec 2022 09:50:44 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C105520049;
-        Fri, 16 Dec 2022 09:50:44 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 26B6920043;
-        Fri, 16 Dec 2022 09:50:43 +0000 (GMT)
-Received: from li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com (unknown [9.171.83.18])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Fri, 16 Dec 2022 09:50:43 +0000 (GMT)
-Date:   Fri, 16 Dec 2022 10:50:41 +0100
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH] tools lib perf: fix install_pkgconfig target
-Message-ID: <Y5w/cWKyb8vpNMfA@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-References: <20221202045743.2639466-1-irogers@google.com>
- <20221202045743.2639466-3-irogers@google.com>
- <Y5w+F+aqN5L1CuuG@tuxmaker.boeblingen.de.ibm.com>
+        Fri, 16 Dec 2022 06:25:34 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E0864D5F7
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Dec 2022 03:25:32 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id b13-20020a17090a5a0d00b0021906102d05so2048132pjd.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Dec 2022 03:25:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YCs56vtuJn9U3K5tw7HyOSDoCiLtIYrnD5dzO1FrD1Q=;
+        b=LdoMleDU9cqL3VAT+vVDaxOkWXo829SXCpw73rTxsPUEF8tn2jgjvR5ywHq0dAL7t8
+         0kkK/Zu73bmma8msNQ8YM8W7u2ICjxgDGHJJFPR5uPd3CQCqZPBRI0QtuvStV6W+icue
+         yH6DT/x15iLSddhx5FTM6vT8Ev8dj85nphGkLKjs7j8499Z+WeZ4p33wvprw9K8lF6eF
+         bKVD++A/zqxjCkJKdT9A62QU6lo969Wevh7b51bVDI6UQJ6JDZbSilmW3qlWZGBDuBfh
+         vnzFrsYPoMYHA3GWh/qhJr1HuvwQ0GzCKYkTUomZYLLdI2XLruKxnRJtszaswUfxwtp9
+         2bww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YCs56vtuJn9U3K5tw7HyOSDoCiLtIYrnD5dzO1FrD1Q=;
+        b=tmMOi/m7ranrMhKQZU9m8iJNRsTQaORAbwJPZNHngMws0al2ri23yXDdByZAI1rdch
+         BWopZ06G97K6EgSSlguCSZ9w0GNmXvIpefQHFpyj624HJdoRC1tHMcracqpPBpSiFQq4
+         S0V8FA/jAfAAWP4VW85zADz7NNa9sS3+rNV6AmUCMF6U4XvZcKimqWuGKPrOmvdZB8fc
+         UIq/hD67Q30IYteMPpmUCWROVcf5CoLC3/009Ngl+aO2QA4kMhjjoJRk2D8t38RKUWAT
+         +a0nKtU6b4xOSVhoXFbL5pWf/0GhZA63LdNFpSXpgP6GtQgZ67FSHWnyEx+9xbDEbvac
+         JHlg==
+X-Gm-Message-State: ANoB5pnRAXmqzBe7mY/6CtELkQuJk7UpNZZF13Kcu+bIRdlewIqYXjeg
+        T3mu9Hvfp6hc5EVL8XhR1U6w2A==
+X-Google-Smtp-Source: AA0mqf4CofgC7ykpoOrpLkXFyBA/s7PPb8V1V4ow6EADmZ9EyYfRmZrgrmoeIktlbn+/DbDXDUr1iw==
+X-Received: by 2002:a05:6a20:1588:b0:9d:efbf:7877 with SMTP id h8-20020a056a20158800b0009defbf7877mr45287630pzj.44.1671189931823;
+        Fri, 16 Dec 2022 03:25:31 -0800 (PST)
+Received: from [10.5.5.153] ([139.177.225.248])
+        by smtp.gmail.com with ESMTPSA id g26-20020aa796ba000000b0057709fce782sm1277719pfk.54.2022.12.16.03.25.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Dec 2022 03:25:31 -0800 (PST)
+Message-ID: <1a2faca7-f77b-a131-b51d-cf2705594862@bytedance.com>
+Date:   Fri, 16 Dec 2022 19:25:25 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y5w+F+aqN5L1CuuG@tuxmaker.boeblingen.de.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6I6E0drTEhUlL_a5eS5FztDa2r0zA3L7
-X-Proofpoint-GUID: rCHrUKt9wrqz0BpD_LWmPjNfS0fDuVfN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-16_06,2022-12-15_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- clxscore=1015 mlxscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2212160078
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.5.1
+Subject: Re: [PATCH v2] perf/core: Fix cgroup events tracking
+Content-Language: en-US
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, ravi.bangoria@amd.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221207124023.66252-1-zhouchengming@bytedance.com>
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <20221207124023.66252-1-zhouchengming@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit 47e02b94a4c9 ("tools lib perf: Add dependency test
-to install_headers") misses the notion of $(DESTDIR_SQ)
-for install_pkgconfig target, which leads to error:
+Hello, ping :-)
 
-install: cannot create regular file '/usr/lib64/pkgconfig/libperf.pc': Permission denied
-make: *** [Makefile:210: install_pkgconfig] Error 1
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- tools/lib/perf/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 30b7f91e7147..d8cad124e4c5 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -208,7 +208,7 @@ install_headers: $(INSTALL_HDRS) $(INSTALL_INTERNAL_HDRS)
- 
- install_pkgconfig: $(LIBPERF_PC)
- 	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
--		$(call do_install,$(LIBPERF_PC),$(libdir_SQ)/pkgconfig,644)
-+		$(call do_install,$(LIBPERF_PC),$(DESTDIR_SQ)$(libdir_SQ)/pkgconfig,644)
- 
- install_doc:
- 	$(Q)$(MAKE) -C Documentation install-man install-html install-examples
--- 
-2.34.1
-
+On 2022/12/7 20:40, Chengming Zhou wrote:
+> We encounter perf warnings when using cgroup events like:
+> ```
+> cd /sys/fs/cgroup
+> mkdir test
+> perf stat -e cycles -a -G test
+> ```
+> 
+> WARNING: CPU: 0 PID: 690 at kernel/events/core.c:849 perf_cgroup_switch+0xb2/0xc0
+> Call Trace:
+>  <TASK>
+>  __schedule+0x4ae/0x9f0
+>  ? _raw_spin_unlock_irqrestore+0x23/0x40
+>  ? __cond_resched+0x18/0x20
+>  preempt_schedule_common+0x2d/0x70
+>  __cond_resched+0x18/0x20
+>  wait_for_completion+0x2f/0x160
+>  ? cpu_stop_queue_work+0x9e/0x130
+>  affine_move_task+0x18a/0x4f0
+> 
+> WARNING: CPU: 0 PID: 690 at kernel/events/core.c:829 ctx_sched_in+0x1cf/0x1e0
+> Call Trace:
+>  <TASK>
+>  ? ctx_sched_out+0xb7/0x1b0
+>  perf_cgroup_switch+0x88/0xc0
+>  __schedule+0x4ae/0x9f0
+>  ? _raw_spin_unlock_irqrestore+0x23/0x40
+>  ? __cond_resched+0x18/0x20
+>  preempt_schedule_common+0x2d/0x70
+>  __cond_resched+0x18/0x20
+>  wait_for_completion+0x2f/0x160
+>  ? cpu_stop_queue_work+0x9e/0x130
+>  affine_move_task+0x18a/0x4f0
+> 
+> The above two warnings are not complete here since I remove other
+> unimportant information. The problem is caused by the perf cgroup
+> events tracking:
+> 
+> CPU0					CPU1
+> perf_event_open()
+>   perf_event_alloc()
+>     account_event()
+>       account_event_cpu()
+>         atomic_inc(perf_cgroup_events)
+> 					__perf_event_task_sched_out()
+> 					  if (atomic_read(perf_cgroup_events))
+> 					    perf_cgroup_switch()
+> 					      // kernel/events/core.c:849
+> 					      WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0)
+> 					      if (READ_ONCE(cpuctx->cgrp) == cgrp) // false
+> 					        return
+> 					      perf_ctx_lock()
+> 					      ctx_sched_out()
+> 					      cpuctx->cgrp = cgrp
+> 					      ctx_sched_in()
+> 					        perf_cgroup_set_timestamp()
+> 					          // kernel/events/core.c:829
+> 					          WARN_ON_ONCE(!ctx->nr_cgroups)
+> 					      perf_ctx_unlock()
+>   perf_install_in_context()
+>     cpu_function_call()
+> 					__perf_install_in_context()
+> 					  add_event_to_ctx()
+> 					    list_add_event()
+> 					      perf_cgroup_event_enable()
+> 					        ctx->nr_cgroups++
+> 					        cpuctx->cgrp = X
+> 
+> We can see from above that we wrongly use percpu atomic perf_cgroup_events
+> to check if we need to perf_cgroup_switch(), which should only be used
+> when we know this CPU has cgroup events enabled.
+> 
+> The commit bd2756811766 ("perf: Rewrite core context handling") change
+> to have only one context per-CPU, so we can just use cpuctx->cgrp to
+> check if this CPU has cgroup events enabled.
+> 
+> So percpu atomic perf_cgroup_events is not needed.
+> 
+> Fixes: bd2756811766 ("perf: Rewrite core context handling")
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+> v2:
+>  - Remove timestamps and fix race graph in commit log per Ravi Bangoria.
+>  - Add Fixes tag and Tested-by tag.
+> ---
+>  kernel/events/core.c | 42 ++++++++++--------------------------------
+>  1 file changed, 10 insertions(+), 32 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index eacc3702654d..5d97a9f26003 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -380,7 +380,6 @@ enum event_type_t {
+>  
+>  /*
+>   * perf_sched_events : >0 events exist
+> - * perf_cgroup_events: >0 per-cpu cgroup events exist on this cpu
+>   */
+>  
+>  static void perf_sched_delayed(struct work_struct *work);
+> @@ -389,7 +388,6 @@ static DECLARE_DELAYED_WORK(perf_sched_work, perf_sched_delayed);
+>  static DEFINE_MUTEX(perf_sched_mutex);
+>  static atomic_t perf_sched_count;
+>  
+> -static DEFINE_PER_CPU(atomic_t, perf_cgroup_events);
+>  static DEFINE_PER_CPU(struct pmu_event_list, pmu_sb_events);
+>  
+>  static atomic_t nr_mmap_events __read_mostly;
+> @@ -844,9 +842,16 @@ static void perf_cgroup_switch(struct task_struct *task)
+>  	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+>  	struct perf_cgroup *cgrp;
+>  
+> -	cgrp = perf_cgroup_from_task(task, NULL);
+> +	/*
+> +	 * cpuctx->cgrp is set when the first cgroup event enabled,
+> +	 * and is cleared when the last cgroup event disabled.
+> +	 */
+> +	if (READ_ONCE(cpuctx->cgrp) == NULL)
+> +		return;
+>  
+>  	WARN_ON_ONCE(cpuctx->ctx.nr_cgroups == 0);
+> +
+> +	cgrp = perf_cgroup_from_task(task, NULL);
+>  	if (READ_ONCE(cpuctx->cgrp) == cgrp)
+>  		return;
+>  
+> @@ -3631,8 +3636,7 @@ void __perf_event_task_sched_out(struct task_struct *task,
+>  	 * to check if we have to switch out PMU state.
+>  	 * cgroup event are system-wide mode only
+>  	 */
+> -	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
+> -		perf_cgroup_switch(next);
+> +	perf_cgroup_switch(next);
+>  }
+>  
+>  static bool perf_less_group_idx(const void *l, const void *r)
+> @@ -4974,15 +4978,6 @@ static void unaccount_pmu_sb_event(struct perf_event *event)
+>  		detach_sb_event(event);
+>  }
+>  
+> -static void unaccount_event_cpu(struct perf_event *event, int cpu)
+> -{
+> -	if (event->parent)
+> -		return;
+> -
+> -	if (is_cgroup_event(event))
+> -		atomic_dec(&per_cpu(perf_cgroup_events, cpu));
+> -}
+> -
+>  #ifdef CONFIG_NO_HZ_FULL
+>  static DEFINE_SPINLOCK(nr_freq_lock);
+>  #endif
+> @@ -5048,8 +5043,6 @@ static void unaccount_event(struct perf_event *event)
+>  			schedule_delayed_work(&perf_sched_work, HZ);
+>  	}
+>  
+> -	unaccount_event_cpu(event, event->cpu);
+> -
+>  	unaccount_pmu_sb_event(event);
+>  }
+>  
+> @@ -11679,15 +11672,6 @@ static void account_pmu_sb_event(struct perf_event *event)
+>  		attach_sb_event(event);
+>  }
+>  
+> -static void account_event_cpu(struct perf_event *event, int cpu)
+> -{
+> -	if (event->parent)
+> -		return;
+> -
+> -	if (is_cgroup_event(event))
+> -		atomic_inc(&per_cpu(perf_cgroup_events, cpu));
+> -}
+> -
+>  /* Freq events need the tick to stay alive (see perf_event_task_tick). */
+>  static void account_freq_event_nohz(void)
+>  {
+> @@ -11775,8 +11759,6 @@ static void account_event(struct perf_event *event)
+>  	}
+>  enabled:
+>  
+> -	account_event_cpu(event, event->cpu);
+> -
+>  	account_pmu_sb_event(event);
+>  }
+>  
+> @@ -12822,13 +12804,11 @@ static void __perf_pmu_remove(struct perf_event_context *ctx,
+>  
+>  	perf_event_groups_for_cpu_pmu(event, groups, cpu, pmu) {
+>  		perf_remove_from_context(event, 0);
+> -		unaccount_event_cpu(event, cpu);
+>  		put_pmu_ctx(event->pmu_ctx);
+>  		list_add(&event->migrate_entry, events);
+>  
+>  		for_each_sibling_event(sibling, event) {
+>  			perf_remove_from_context(sibling, 0);
+> -			unaccount_event_cpu(sibling, cpu);
+>  			put_pmu_ctx(sibling->pmu_ctx);
+>  			list_add(&sibling->migrate_entry, events);
+>  		}
+> @@ -12847,7 +12827,6 @@ static void __perf_pmu_install_event(struct pmu *pmu,
+>  
+>  	if (event->state >= PERF_EVENT_STATE_OFF)
+>  		event->state = PERF_EVENT_STATE_INACTIVE;
+> -	account_event_cpu(event, cpu);
+>  	perf_install_in_context(ctx, event, cpu);
+>  }
+>  
+> @@ -13742,8 +13721,7 @@ static int __perf_cgroup_move(void *info)
+>  	struct task_struct *task = info;
+>  
+>  	preempt_disable();
+> -	if (atomic_read(this_cpu_ptr(&perf_cgroup_events)))
+> -		perf_cgroup_switch(task);
+> +	perf_cgroup_switch(task);
+>  	preempt_enable();
+>  
+>  	return 0;
