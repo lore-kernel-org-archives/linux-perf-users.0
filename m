@@ -2,107 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCA2C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Dec 2022 13:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F1CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Dec 2022 13:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbiLPNC6 (ORCPT
+        id S230043AbiLPNpn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Dec 2022 08:02:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
+        Fri, 16 Dec 2022 08:45:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbiLPNCz (ORCPT
+        with ESMTP id S230076AbiLPNpm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Dec 2022 08:02:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB85AB48D;
-        Fri, 16 Dec 2022 05:02:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 88237620B5;
-        Fri, 16 Dec 2022 13:02:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5715C433EF;
-        Fri, 16 Dec 2022 13:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671195774;
-        bh=Zqx8PemfNkIgR0VSjlq+cSSIc1mNqP5HstKuh5k7PvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BpC4XSYaVer0QbtlOxiYn/qwe6V2XeUXMVzBAjZy3fz9wIQ4vZYOtx/SlhpFw4UrJ
-         Ar/jbSb+JqW+ms4efYSI1yfMdoil2BxaIZee6Pb4+KzxjVWx4uPTF8e7KhsE+ssFiG
-         AcgFIx6TewgsncKns95P8wb80rqcuj9dC3syZ0Bt49yf6snpzRa/tGnwfJOaxyD8By
-         iJhkjX6NZ2J7qIj2hIFrWtRpES3bffNevn4+AyqNSyuuTmnSskzWkmWeiX4ZaMWif/
-         nzhVvtxo/EE9CrXa5bY3woCBUCzQy17ORc6aoTjRybvUuTB1ImWDpSaVjO4iLWP/Hb
-         BqTiY/n9at7Hw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 46F1540367; Fri, 16 Dec 2022 10:02:51 -0300 (-03)
-Date:   Fri, 16 Dec 2022 10:02:51 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] tools lib perf: fix install_pkgconfig target
-Message-ID: <Y5xse0o0gbyFjeV7@kernel.org>
-References: <20221202045743.2639466-1-irogers@google.com>
- <20221202045743.2639466-3-irogers@google.com>
- <Y5w+F+aqN5L1CuuG@tuxmaker.boeblingen.de.ibm.com>
- <Y5w/cWKyb8vpNMfA@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+        Fri, 16 Dec 2022 08:45:42 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C47F02672;
+        Fri, 16 Dec 2022 05:45:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tRSHPghmRy6NeQCjqXSt9x2GIr1K5Rb63TLQzTSd66A=; b=NjcxNEkZKM0zzYoKl17AhzcpaX
+        c9rZzppHS4A/rfaS29uOZPqlsK2Z+5kM4l7Ao/P9SyarapNE3bZFiuFQA91jLmKC5zvO8ef+Kanxz
+        GWGSKd4ct5zXiNhMr2d1sxhRsW+YIHdP+TCToVtVnV4Pgawlc0/sEQTGkp0e+auc+JANXLuHA5m9O
+        L8nrqlCxtiuKAfkjtUAdvS0HUBytGq/iQkTSK3+9cTI7RKh5VuKq68s2D/gDbzqWukHO1HP00K813
+        F9swQwhHsc4lN4VpaWoPajRzp86q7OkUX/NilJwtl23Szf7gvwOu6jOUKdfbtTLwYdSXLd0doA2df
+        QMGYub1Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1p6B1q-00FVNs-S2; Fri, 16 Dec 2022 13:45:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E080730027E;
+        Fri, 16 Dec 2022 14:45:23 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C072D201D93F3; Fri, 16 Dec 2022 14:45:23 +0100 (CET)
+Date:   Fri, 16 Dec 2022 14:45:23 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, ravi.bangoria@amd.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf/core: Fix cgroup events tracking
+Message-ID: <Y5x2czKE+csXI9B8@hirez.programming.kicks-ass.net>
+References: <20221207124023.66252-1-zhouchengming@bytedance.com>
+ <1a2faca7-f77b-a131-b51d-cf2705594862@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y5w/cWKyb8vpNMfA@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <1a2faca7-f77b-a131-b51d-cf2705594862@bytedance.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 16, 2022 at 10:50:41AM +0100, Alexander Gordeev escreveu:
-> Commit 47e02b94a4c9 ("tools lib perf: Add dependency test
-> to install_headers") misses the notion of $(DESTDIR_SQ)
-> for install_pkgconfig target, which leads to error:
-> 
-> install: cannot create regular file '/usr/lib64/pkgconfig/libperf.pc': Permission denied
-> make: *** [Makefile:210: install_pkgconfig] Error 1
+On Fri, Dec 16, 2022 at 07:25:25PM +0800, Chengming Zhou wrote:
+> Hello, ping :-)
 
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-> ---
->  tools/lib/perf/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-> index 30b7f91e7147..d8cad124e4c5 100644
-> --- a/tools/lib/perf/Makefile
-> +++ b/tools/lib/perf/Makefile
-> @@ -208,7 +208,7 @@ install_headers: $(INSTALL_HDRS) $(INSTALL_INTERNAL_HDRS)
->  
->  install_pkgconfig: $(LIBPERF_PC)
->  	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
-> -		$(call do_install,$(LIBPERF_PC),$(libdir_SQ)/pkgconfig,644)
-> +		$(call do_install,$(LIBPERF_PC),$(DESTDIR_SQ)$(libdir_SQ)/pkgconfig,644)
->  
->  install_doc:
->  	$(Q)$(MAKE) -C Documentation install-man install-html install-examples
-> -- 
-> 2.34.1
-
--- 
-
-- Arnaldo
+I just queued it for perf/urgent. Thanks
