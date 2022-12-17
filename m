@@ -2,160 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C26C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Dec 2022 20:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DB9C3DA6E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Dec 2022 22:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229820AbiLQUhi (ORCPT
+        id S229624AbiLQWgD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Dec 2022 15:37:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40138 "EHLO
+        Sat, 17 Dec 2022 17:36:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiLQUhg (ORCPT
+        with ESMTP id S229469AbiLQWgB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Dec 2022 15:37:36 -0500
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1694A10FC5;
-        Sat, 17 Dec 2022 12:37:35 -0800 (PST)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-143ffc8c2b2so7304084fac.2;
-        Sat, 17 Dec 2022 12:37:35 -0800 (PST)
+        Sat, 17 Dec 2022 17:36:01 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 083B3B482;
+        Sat, 17 Dec 2022 14:36:00 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so9508576pjs.4;
+        Sat, 17 Dec 2022 14:36:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GV309XhbxYSSeC2+ZqrvzrEW3HmvEW82ggRkd0o8EA4=;
-        b=Q/3uiWxOsAbl/aTUptwN1WZuHTmIEqU9gfwAZFUDkmDsqIkfDkKGR7AIumTMGnVT1i
-         /TPLUihUmqsSEdhHnkh7thr8XYa820zrJXNx4CIJuiPbVvHE65BjRVVHVrpyA99lVwpa
-         JvLiJQslzNdFhFxDIkZR4sJIOo2X05t+FMsJkcdLVYQ6bVuDbjS9QeRykwrIhcTDhtoR
-         7bUh/kGWy90H4yNfr8+Y7NElrulGXbsAMPIRVVQjPnIpUzzDNoDCn0O7h39Mtmfl7Hb3
-         gegClJtXL1zN2KwZz7aOa9X8ss26pYmd8Zieg0nYxtniFLQ+MbfErqB7RgM3yg6m6U8M
-         DTHg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mHEiXf8m3ynm1qnXenv73EgPAWU2TYeSlO0zoKS2tIw=;
+        b=MROxCfXkBZ8ljulhphkiBQ81hSbnwplA/vM3btKcOgC6Adt7Mrgr1TzUp8B2T6VFe8
+         9vzGtap4aHgvvtfwjDRS7t2Tkwly/E9Ij4iyY8XBvJogOFcZPXcONE8lFQNeFXOTWXAr
+         7D2x/1qStMKhv9etxAymtROiCFQy/lf2tLTz3Nazj4F4jHI/rJcyx/yRoz+P9naNwxIn
+         e3/zVO3ze5fOggN28JZwz8ASNd8t0ktkr9dRWfBU+3Nz29xvMt9Q4uA7ReJXw6a2whUA
+         H6iOQs58EBJhJLxxKZU9hAw63iqQ71nmzbf3TPHsbujt5+8GxwsyrwfeO+LNqFxhbSNm
+         cT0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GV309XhbxYSSeC2+ZqrvzrEW3HmvEW82ggRkd0o8EA4=;
-        b=E2y7F7ba2G3tJrtx1AzGCx3x042ReDsUOZUhVDiBxdp8LSv7BG35yKBAa1NSA93nHR
-         CoKIzK846j+F7ME3QpinORLX33l5upMXVfNS+2Z55GAoMhq49rFMWgXWrQR+I5UwDOXX
-         fwfTFUE51V6nGi+naAPhQLdmqiWjQ19ldQR+b/E3Ua+6vuqr01bsw1enmEv/7acHORhZ
-         BwJK1242I22kmFwd1X9zne4FS8XaeYLqd0Fr8z8bRz1aeG1IYdPmuuIp0QeS+2PyENFu
-         vHyP3GsEf9/dCebg+6gnqMZUDJLmeE3Vd9y6uX3UZeX506njb4Afo/HuOdUAFqL+0rm9
-         PieA==
-X-Gm-Message-State: AFqh2kpI9Upf+hBEVUQVg4P4BUCZaJXQwHox2qA8IR5/mk53jpBwaRkU
-        5S+HA+uZoMBw/6LSgsPtXAM=
-X-Google-Smtp-Source: AMrXdXsNTTrT6TNzi4vJWDcbqEpMwQ2wGeFK2Ddn2yzVQcLIRTgM9q/ayZSFZp4KN0/qb8+0vI9IvQ==
-X-Received: by 2002:a05:6870:1ec5:b0:144:830f:9dac with SMTP id pc5-20020a0568701ec500b00144830f9dacmr1527900oab.31.1671309454165;
-        Sat, 17 Dec 2022 12:37:34 -0800 (PST)
-Received: from [127.0.0.1] (187-24-192-125.3g.claro.net.br. [187.24.192.125])
-        by smtp.gmail.com with ESMTPSA id t23-20020a0568080b3700b00359ba124b07sm2400158oij.36.2022.12.17.12.37.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Dec 2022 12:37:33 -0800 (PST)
-Date:   Sat, 17 Dec 2022 17:37:28 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kautuk Consul <kconsul@ventanamicro.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mHEiXf8m3ynm1qnXenv73EgPAWU2TYeSlO0zoKS2tIw=;
+        b=Chv0F6BrOeXoToWg0HfiZNWhCLy8BGPAxkwp6l38IJDsh6bT312QC3dntOt20qavp9
+         woExEPcDmFebjyU09SbanPxQW+ff0XFVfBmp1PPRJNPqW2tlhvoDMcV2zoxvEtart+if
+         WpOKuEb51eD8EHey4Lb9MgTeXDS8Fv9LRbE3JR/egsP6lJQLmvmJGNNwmZjO/k68qqd4
+         9pmB2d1RoAO47NKju9WejrT+PrOMCwKAeu9orf4+FN+NVp9OBhKwUycTHLoEk+2ah3R9
+         IansumIAXJzSE7p58XgFM06V89CRpOdi6uEOUIZSNIOVmR/Hl/CnUwXY8b9o/ycStz3G
+         dACQ==
+X-Gm-Message-State: ANoB5plSQG8Uq8yBXL9Jkuu4ppxoJY9EfRbX7v4VvmiL+TUCBGshts4Y
+        KJoQh6ez/gWD68CDDCosX2g=
+X-Google-Smtp-Source: AA0mqf5I30Y42tIYNsbMPePLQ0diPQyPoR8HuUCfg2QwxTr3wrfF+9pkaVZRjpcK6nTEWy7VYdKexQ==
+X-Received: by 2002:a17:902:ccd0:b0:188:7da8:a970 with SMTP id z16-20020a170902ccd000b001887da8a970mr43575603ple.8.1671316559298;
+        Sat, 17 Dec 2022 14:35:59 -0800 (PST)
+Received: from WRT-WX9.. ([103.135.102.144])
+        by smtp.gmail.com with ESMTPSA id u9-20020a17090341c900b001801aec1f6bsm4031660ple.141.2022.12.17.14.35.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Dec 2022 14:35:58 -0800 (PST)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.2: 1st batch
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
-References: <20221216143609.186415-1-acme@kernel.org> <CAHk-=wj+FNSnspKwVWAatD+DHz3Uy4eHxQryrfoZz6=4D=1X1w@mail.gmail.com> <Y53XHw3rlsaaUgOs@kernel.org> <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
-Message-ID: <67193F2E-ED6B-4EE3-A69E-A09DBC73AF69@gmail.com>
+        Quentin Monnet <quentin@isovalent.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v3 0/2] bpftool: improve error handing for missing .BTF section
+Date:   Sun, 18 Dec 2022 06:35:07 +0800
+Message-Id: <20221217223509.88254-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Display error message for missing ".BTF" section and clean up empty
+vmlinux.h file.
+
+v3:
+ - fix typo and make error message consistent. (Andrii Nakryiko)
+ - split out perf change.
+v2:
+ - remove vmlinux specific error info.
+ - use builtin target .DELETE_ON_ERROR: to delete empty vmlinux.h
 
 
-On December 17, 2022 4:55:25 PM GMT-03:00, Linus Torvalds <torvalds@linux-=
-foundation=2Eorg> wrote:
->On Sat, Dec 17, 2022 at 8:50 AM Arnaldo Carvalho de Melo
-><acme@kernel=2Eorg> wrote:
->>
->> The python3-setuptools package is needed to build the python binding, s=
-o
->> that one can use things like:
->
->So this fixes the error, but there's some other reason for it=2E
->
->I have
->
->  Package python3-setuptools-59=2E6=2E0-3=2Efc36=2Enoarch is already inst=
-alled=2E
->
->and with that patch the 'perf' build now works for me, but it says:
->
->    Makefile=2Econfig:898: Missing python setuptools, the python binding
->won't be built, please install python3-setuptools or equivalent
->
->and then (pre-existing)
->
->    Makefile=2Econfig:921: Python interpreter too old (older than 3=2E6)
->disabling jevent generation
->
->but I have
->
->    python3-3=2E10=2E8-3=2Efc36=2Ex86_64
->
->Now, for some reason I *also* have python2 installed, but that one is
->called "python2"=2E
->
->[ Me trying to figure things out ]
->
->Ok, so if I uninstall my old python2 install, I now get
->
->  Makefile=2Econfig:880: No python interpreter was found: disables
->Python support - please install python-devel/python-dev
->  Makefile=2Econfig:915: No python interpreter disabling jevent generatio=
-n
->
->ok, so I didn't have 'python3-devel' installed=2E Installing that fixes
->some things, but then I get
->
->  Makefile=2Econfig:889: No 'Python=2Eh' (for Python 2=2Ex support) was
->found: disables Python support - please install
->python-devel/python-dev
->
->so apparently perf really wants *both* python2 and python3 installed=2E
->Isn't that a bit excessive?
+Changbin Du (2):
+  libbpf: show error info about missing ".BTF" section
+  bpf: makefiles: do not generate empty vmlinux.h
 
-Well, perf used python2, then python3 became and option, had to be explici=
-tly selected, then the default moved to python3=2E
+ tools/bpf/bpftool/Makefile           | 3 +++
+ tools/lib/bpf/btf.c                  | 1 +
+ tools/testing/selftests/bpf/Makefile | 3 +++
+ 3 files changed, 7 insertions(+)
 
-Now probably the sensible thing is to get rid of all things related to pyt=
-hon2, I'll spend some time on this=2E=2E=2E
+-- 
+2.37.2
 
->Anyway, it's clearly something about the install on this laptop, but
->the error messages and the "this package is missing" things are
->clearly not entirely right=2E
->
->Whatever=2E It does build cleanly now for me, and I'll ignore that "No
->'Python=2Eh' (for Python 2=2Ex support)" thing=2E
-
-Ok, thanks for testing it=2E
-
-- Arnaldo=20
