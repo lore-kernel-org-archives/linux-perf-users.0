@@ -2,68 +2,60 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D454C4167B
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Dec 2022 20:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C26C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Dec 2022 20:37:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiLQTzv (ORCPT
+        id S229820AbiLQUhi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Dec 2022 14:55:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34466 "EHLO
+        Sat, 17 Dec 2022 15:37:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiLQTzt (ORCPT
+        with ESMTP id S229469AbiLQUhg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Dec 2022 14:55:49 -0500
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DAF10F7
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Dec 2022 11:55:45 -0800 (PST)
-Received: by mail-qv1-xf35.google.com with SMTP id pp21so3887632qvb.5
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Dec 2022 11:55:45 -0800 (PST)
+        Sat, 17 Dec 2022 15:37:36 -0500
+Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1694A10FC5;
+        Sat, 17 Dec 2022 12:37:35 -0800 (PST)
+Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-143ffc8c2b2so7304084fac.2;
+        Sat, 17 Dec 2022 12:37:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hEYc0QE7ZD1TAxxoapZp+W9lHOSvsVlKejfIzQTWxVE=;
-        b=ZPZZfrznc83pjOzvWQt4ilzCrQNAwVEj92xcbWzsjnssjnmIgxbAEz367jD784kfSa
-         OpMrkmPrgFZKsiNPD2Hu6r/qDj9CIg6GNPS1wJVcjxHEqNIlPrwf51FA/fdp5uWRwGY0
-         QGo3J7TSXFHIUSJgiZx34DqmYlDI3JDBT/ATk=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GV309XhbxYSSeC2+ZqrvzrEW3HmvEW82ggRkd0o8EA4=;
+        b=Q/3uiWxOsAbl/aTUptwN1WZuHTmIEqU9gfwAZFUDkmDsqIkfDkKGR7AIumTMGnVT1i
+         /TPLUihUmqsSEdhHnkh7thr8XYa820zrJXNx4CIJuiPbVvHE65BjRVVHVrpyA99lVwpa
+         JvLiJQslzNdFhFxDIkZR4sJIOo2X05t+FMsJkcdLVYQ6bVuDbjS9QeRykwrIhcTDhtoR
+         7bUh/kGWy90H4yNfr8+Y7NElrulGXbsAMPIRVVQjPnIpUzzDNoDCn0O7h39Mtmfl7Hb3
+         gegClJtXL1zN2KwZz7aOa9X8ss26pYmd8Zieg0nYxtniFLQ+MbfErqB7RgM3yg6m6U8M
+         DTHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hEYc0QE7ZD1TAxxoapZp+W9lHOSvsVlKejfIzQTWxVE=;
-        b=kQ+AASn601jcJ94VV22D0afL/PcCPzCYRKMyUB1nzP3wcVEJuXSBjfdKwFNJ/gJl/b
-         yAskFrUdYJpWTyt2wynfdtkVHq87EmOszvEkuFbBh16lwUCmt7QnY80cA3oe/v7gcFWq
-         bFJVT2QJVhhTnd/sXnsputPB3lkLiDBznW7LhNat59yNWp7lhpU2hTmJC+OoBHQfWbkb
-         7CdWA+6awR3s5VVloUPEYuFnIDQLPrWzt3Es9XqwgNTEz7leJhUW2VhNrzgxVRZ7F+0w
-         xfLOslIrYw99LXlv8IgfcGgzgp/wRo58ihSzFTPY68ajZSuh1l0UIoZs82FjFMxahfko
-         rV1g==
-X-Gm-Message-State: ANoB5plsSqUUZWLH8ET88iRbp1o5smpoBtNHNvgWWzpnO1mQQI09miwM
-        3z7glGKwyB24CdsfoLW0T9Yfvb7bwC6KAK7e
-X-Google-Smtp-Source: AA0mqf6/bxktl8fuU34lSHPswgla/7pzxFVoZvHS5zkiIc46Lwa2bt/fE9SXGA1G6ztx0AdWJcna3w==
-X-Received: by 2002:ad4:5103:0:b0:4c7:9386:bb2d with SMTP id g3-20020ad45103000000b004c79386bb2dmr16237314qvp.14.1671306943919;
-        Sat, 17 Dec 2022 11:55:43 -0800 (PST)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com. [209.85.219.41])
-        by smtp.gmail.com with ESMTPSA id do14-20020a05620a2b0e00b006fcc3858044sm4001198qkb.86.2022.12.17.11.55.42
-        for <linux-perf-users@vger.kernel.org>
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GV309XhbxYSSeC2+ZqrvzrEW3HmvEW82ggRkd0o8EA4=;
+        b=E2y7F7ba2G3tJrtx1AzGCx3x042ReDsUOZUhVDiBxdp8LSv7BG35yKBAa1NSA93nHR
+         CoKIzK846j+F7ME3QpinORLX33l5upMXVfNS+2Z55GAoMhq49rFMWgXWrQR+I5UwDOXX
+         fwfTFUE51V6nGi+naAPhQLdmqiWjQ19ldQR+b/E3Ua+6vuqr01bsw1enmEv/7acHORhZ
+         BwJK1242I22kmFwd1X9zne4FS8XaeYLqd0Fr8z8bRz1aeG1IYdPmuuIp0QeS+2PyENFu
+         vHyP3GsEf9/dCebg+6gnqMZUDJLmeE3Vd9y6uX3UZeX506njb4Afo/HuOdUAFqL+0rm9
+         PieA==
+X-Gm-Message-State: AFqh2kpI9Upf+hBEVUQVg4P4BUCZaJXQwHox2qA8IR5/mk53jpBwaRkU
+        5S+HA+uZoMBw/6LSgsPtXAM=
+X-Google-Smtp-Source: AMrXdXsNTTrT6TNzi4vJWDcbqEpMwQ2wGeFK2Ddn2yzVQcLIRTgM9q/ayZSFZp4KN0/qb8+0vI9IvQ==
+X-Received: by 2002:a05:6870:1ec5:b0:144:830f:9dac with SMTP id pc5-20020a0568701ec500b00144830f9dacmr1527900oab.31.1671309454165;
+        Sat, 17 Dec 2022 12:37:34 -0800 (PST)
+Received: from [127.0.0.1] (187-24-192-125.3g.claro.net.br. [187.24.192.125])
+        by smtp.gmail.com with ESMTPSA id t23-20020a0568080b3700b00359ba124b07sm2400158oij.36.2022.12.17.12.37.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 17 Dec 2022 11:55:42 -0800 (PST)
-Received: by mail-qv1-f41.google.com with SMTP id c14so3913551qvq.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Dec 2022 11:55:42 -0800 (PST)
-X-Received: by 2002:a05:6214:390c:b0:4c7:7282:5817 with SMTP id
- nh12-20020a056214390c00b004c772825817mr15407004qvb.94.1671306941737; Sat, 17
- Dec 2022 11:55:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20221216143609.186415-1-acme@kernel.org> <CAHk-=wj+FNSnspKwVWAatD+DHz3Uy4eHxQryrfoZz6=4D=1X1w@mail.gmail.com>
- <Y53XHw3rlsaaUgOs@kernel.org>
-In-Reply-To: <Y53XHw3rlsaaUgOs@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 17 Dec 2022 13:55:25 -0600
-X-Gmail-Original-Message-ID: <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
-Message-ID: <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.2: 1st batch
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        Sat, 17 Dec 2022 12:37:33 -0800 (PST)
+Date:   Sat, 17 Dec 2022 17:37:28 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -84,63 +76,86 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Andrii Nakryiko <andrii@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [GIT PULL] perf tools changes for v6.2: 1st batch
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
+References: <20221216143609.186415-1-acme@kernel.org> <CAHk-=wj+FNSnspKwVWAatD+DHz3Uy4eHxQryrfoZz6=4D=1X1w@mail.gmail.com> <Y53XHw3rlsaaUgOs@kernel.org> <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
+Message-ID: <67193F2E-ED6B-4EE3-A69E-A09DBC73AF69@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Dec 17, 2022 at 8:50 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+
+
+On December 17, 2022 4:55:25 PM GMT-03:00, Linus Torvalds <torvalds@linux-=
+foundation=2Eorg> wrote:
+>On Sat, Dec 17, 2022 at 8:50 AM Arnaldo Carvalho de Melo
+><acme@kernel=2Eorg> wrote:
+>>
+>> The python3-setuptools package is needed to build the python binding, s=
+o
+>> that one can use things like:
 >
-> The python3-setuptools package is needed to build the python binding, so
-> that one can use things like:
+>So this fixes the error, but there's some other reason for it=2E
+>
+>I have
+>
+>  Package python3-setuptools-59=2E6=2E0-3=2Efc36=2Enoarch is already inst=
+alled=2E
+>
+>and with that patch the 'perf' build now works for me, but it says:
+>
+>    Makefile=2Econfig:898: Missing python setuptools, the python binding
+>won't be built, please install python3-setuptools or equivalent
+>
+>and then (pre-existing)
+>
+>    Makefile=2Econfig:921: Python interpreter too old (older than 3=2E6)
+>disabling jevent generation
+>
+>but I have
+>
+>    python3-3=2E10=2E8-3=2Efc36=2Ex86_64
+>
+>Now, for some reason I *also* have python2 installed, but that one is
+>called "python2"=2E
+>
+>[ Me trying to figure things out ]
+>
+>Ok, so if I uninstall my old python2 install, I now get
+>
+>  Makefile=2Econfig:880: No python interpreter was found: disables
+>Python support - please install python-devel/python-dev
+>  Makefile=2Econfig:915: No python interpreter disabling jevent generatio=
+n
+>
+>ok, so I didn't have 'python3-devel' installed=2E Installing that fixes
+>some things, but then I get
+>
+>  Makefile=2Econfig:889: No 'Python=2Eh' (for Python 2=2Ex support) was
+>found: disables Python support - please install
+>python-devel/python-dev
+>
+>so apparently perf really wants *both* python2 and python3 installed=2E
+>Isn't that a bit excessive?
 
-So this fixes the error, but there's some other reason for it.
+Well, perf used python2, then python3 became and option, had to be explici=
+tly selected, then the default moved to python3=2E
 
-I have
+Now probably the sensible thing is to get rid of all things related to pyt=
+hon2, I'll spend some time on this=2E=2E=2E
 
-  Package python3-setuptools-59.6.0-3.fc36.noarch is already installed.
+>Anyway, it's clearly something about the install on this laptop, but
+>the error messages and the "this package is missing" things are
+>clearly not entirely right=2E
+>
+>Whatever=2E It does build cleanly now for me, and I'll ignore that "No
+>'Python=2Eh' (for Python 2=2Ex support)" thing=2E
 
-and with that patch the 'perf' build now works for me, but it says:
+Ok, thanks for testing it=2E
 
-    Makefile.config:898: Missing python setuptools, the python binding
-won't be built, please install python3-setuptools or equivalent
-
-and then (pre-existing)
-
-    Makefile.config:921: Python interpreter too old (older than 3.6)
-disabling jevent generation
-
-but I have
-
-    python3-3.10.8-3.fc36.x86_64
-
-Now, for some reason I *also* have python2 installed, but that one is
-called "python2".
-
-[ Me trying to figure things out ]
-
-Ok, so if I uninstall my old python2 install, I now get
-
-  Makefile.config:880: No python interpreter was found: disables
-Python support - please install python-devel/python-dev
-  Makefile.config:915: No python interpreter disabling jevent generation
-
-ok, so I didn't have 'python3-devel' installed. Installing that fixes
-some things, but then I get
-
-  Makefile.config:889: No 'Python.h' (for Python 2.x support) was
-found: disables Python support - please install
-python-devel/python-dev
-
-so apparently perf really wants *both* python2 and python3 installed.
-Isn't that a bit excessive?
-
-Anyway, it's clearly something about the install on this laptop, but
-the error messages and the "this package is missing" things are
-clearly not entirely right.
-
-Whatever. It does build cleanly now for me, and I'll ignore that "No
-'Python.h' (for Python 2.x support)" thing.
-
-              Linus
+- Arnaldo=20
