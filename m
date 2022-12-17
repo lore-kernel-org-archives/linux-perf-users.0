@@ -2,90 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B45C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Dec 2022 19:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD561C3DA71
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Dec 2022 09:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbiLPToz (ORCPT
+        id S229655AbiLQJdD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Dec 2022 14:44:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        Sat, 17 Dec 2022 04:33:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231967AbiLPTo2 (ORCPT
+        with ESMTP id S229548AbiLQJdB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Dec 2022 14:44:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834BEF02D;
-        Fri, 16 Dec 2022 11:44:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 010EB62204;
-        Fri, 16 Dec 2022 19:44:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5240AC433EF;
-        Fri, 16 Dec 2022 19:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671219866;
-        bh=BnRJbEfJx/6QLKG3XPWjqmbM1QmHG2gW+vKqM0IZHA8=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=oK7rjJCzkla8X7CqLGe1tBoiIJkkioH0bi7PAwhusitdl/uQHFn8XyxPN4Atyaex0
-         +U3HU/TCp9EpEp+0rC2q00kb4FETPwhHjxzZ2Cx9OBCWTbKdI0X2X55aOUwbhJhtgu
-         CN4XWEo9Ac7TljnrpZinEzGJM98ImUNMhbZg8FAbTbKPMzgiTnNB7T1jA9KciUY6NW
-         kTJ6FOmHnOYQ7iYkGVjwRIYyIzcb8+6zT46g1REoV1uzKPpc7vzj/GqB9YSeY8JGmS
-         VwkbRf7g7Mc64h8W1fI6QjPoSYfIpnRt9Y5ieA9fzyB1wEMKU/12JJbwAIDM7sWkgu
-         3faw00kJJQSDw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3F244C00445;
-        Fri, 16 Dec 2022 19:44:26 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v6.2: 1st batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20221216143609.186415-1-acme@kernel.org>
-References: <20221216143609.186415-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20221216143609.186415-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.2-1-2022-12-16
-X-PR-Tracked-Commit-Id: 4ff17c448a7b0f437a17622d67f1c5c609c3a0e9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aa4800e31c547ed00681318335ca2298c4bca33a
-Message-Id: <167121986624.10318.16082027521907568745.pr-tracker-bot@kernel.org>
-Date:   Fri, 16 Dec 2022 19:44:26 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kautuk Consul <kconsul@ventanamicro.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Sat, 17 Dec 2022 04:33:01 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3775B2935F;
+        Sat, 17 Dec 2022 01:33:00 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id c7so3241982pfc.12;
+        Sat, 17 Dec 2022 01:33:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=36Nz4DJ+RB5NaUU/Zyw08W8HOPfFS0NX9MwWlHipeNk=;
+        b=qA+Gfdg4FMuUl+yzoNxP7NW+nR2qrAE0dHiDv85L85UpUo/O24FasYg0q6Pd4kkSq+
+         dpMCQL54amyKpYpUFe/lzTeCALoGqTxc3sqFygMrGGHo9IS6BuO4S43HdUeR+yVo7ynY
+         31kptZ45ZNJhtqCF3iaw6IPgoZ7e2NjmIXdb7LzgUw3pjJXQD60WvF5dKhoJw6oh/jQs
+         +6DtElvZjYLwV75qrzVQMKYgi5fdjZbzbNwNmzM6Os+/KAn5EwYbSBixFspGQvur/ELJ
+         6QQufx7AH/AXpaxL59kxYYiB912dVe7ZKjVj638Z8ujghbXKKA93dU+ceZ9ou7PkvgXF
+         uYHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=36Nz4DJ+RB5NaUU/Zyw08W8HOPfFS0NX9MwWlHipeNk=;
+        b=sEtzO7EhIx1tEnz1Gn6jOBKNSPplHErRvuEnF+Q4NATJq8UOOcBBGUCRDp/LLqEfqL
+         /lREEAF2DOLyev8AYyaRxq+Mmzt8jXc+N697C2FXyJBDNTrLmjXBC6WTz52xIwGgythr
+         E/Il/0uxT4x22soQdn5RS0a1YPD3dBqc5zypZJqvWLwlyIj8N8RMhj8JDoZ5swuLRNYU
+         PGagNWP6LcWzpG2R/5zORdHJpSWzmGBe7bh5+5/Mxe/wKiS1rsUh7ceWXxxgaKngSr0D
+         8C71uzS2u4fdxoNENUDpwO/cY+a4UG00YrlwM+aKQn3CZL0FWVqY0rdn6yp7JSftq+0K
+         ZbBA==
+X-Gm-Message-State: ANoB5pmi7sNNeFis1Q4othK2gYXr9NMvOy+xmUWLm7oZkZKm3POK9StT
+        bVffkJcYNS1TgwwL1MxivLU=
+X-Google-Smtp-Source: AA0mqf7ZXczKLE/hOP7YBZuLgP36h8VNtTI9Wcw2gFVvS0Xx5lrLmv0rk86AD+mzxcHXvGnBSxJNkA==
+X-Received: by 2002:aa7:93da:0:b0:576:de1:cd32 with SMTP id y26-20020aa793da000000b005760de1cd32mr37301869pff.0.1671269579563;
+        Sat, 17 Dec 2022 01:32:59 -0800 (PST)
+Received: from mail.google.com ([103.135.102.144])
+        by smtp.gmail.com with ESMTPSA id l187-20020a6225c4000000b0057621a437d7sm2777156pfl.116.2022.12.17.01.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Dec 2022 01:32:58 -0800 (PST)
+Date:   Sat, 17 Dec 2022 17:32:49 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Quentin Monnet <quentin@isovalent.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] bpf: makefiles: do not generate empty vmlinux.h
+Message-ID: <20221217093249.54nmxw4stzyymbis@mail.google.com>
+References: <20221129134217.52767-1-changbin.du@gmail.com>
+ <20221129134217.52767-3-changbin.du@gmail.com>
+ <CAEf4BzZPZeeGJTZC3NSm+Km4RZirGrwr8d8dXepLmBLTiUn8Hg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZPZeeGJTZC3NSm+Km4RZirGrwr8d8dXepLmBLTiUn8Hg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri, 16 Dec 2022 11:36:09 -0300:
+On Wed, Nov 30, 2022 at 04:52:11PM -0800, Andrii Nakryiko wrote:
+> On Tue, Nov 29, 2022 at 5:42 AM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > Remove the empty vmlinux.h if bpftool failed to dump btf info.
+> > The emptry vmlinux.h can hide real error when reading output
+> 
+> typo: empty
+>
+Will be fixed, thanks.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.2-1-2022-12-16
+> > of make.
+> >
+> > This is done by adding .DELETE_ON_ERROR special target in related
+> > makefiles.
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  tools/bpf/bpftool/Makefile           | 3 +++
+> >  tools/perf/Makefile.perf             | 2 ++
+> >  tools/testing/selftests/bpf/Makefile | 3 +++
+> >  3 files changed, 8 insertions(+)
+> >
+> > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> > index 4a95c017ad4c..f6b1e65085db 100644
+> > --- a/tools/bpf/bpftool/Makefile
+> > +++ b/tools/bpf/bpftool/Makefile
+> > @@ -265,3 +265,6 @@ FORCE:
+> >  .PHONY: all FORCE bootstrap clean install-bin install uninstall
+> >  .PHONY: doc doc-clean doc-install doc-uninstall
+> >  .DEFAULT_GOAL := all
+> > +
+> > +# Delete partially updated (corrupted) files on error
+> > +.DELETE_ON_ERROR:
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index a432e59afc42..265254fc641a 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -1149,3 +1149,5 @@ FORCE:
+> >  .PHONY: libtraceevent_plugins archheaders
+> >
+> >  endif # force_fixdep
+> > +
+> > +.DELETE_ON_ERROR:
+> 
+> please split out perf changes, they should go through perf tree
+> 
+sure, I'll send a standalone patch to perf tree.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aa4800e31c547ed00681318335ca2298c4bca33a
-
-Thank you!
+> > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> > index e6cf21fad69f..f41c4b011221 100644
+> > --- a/tools/testing/selftests/bpf/Makefile
+> > +++ b/tools/testing/selftests/bpf/Makefile
+> > @@ -617,3 +617,6 @@ EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR) $(HOST_SCRATCH_DIR)      \
+> >                                liburandom_read.so)
+> >
+> >  .PHONY: docs docs-clean
+> > +
+> > +# Delete partially updated (corrupted) files on error
+> > +.DELETE_ON_ERROR:
+> > --
+> > 2.37.2
+> >
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Cheers,
+Changbin Du
