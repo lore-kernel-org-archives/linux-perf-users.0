@@ -2,124 +2,150 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F697C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 18:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A774C4167B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 19:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231860AbiLSSWM (ORCPT
+        id S232490AbiLSTdf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 13:22:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40706 "EHLO
+        Mon, 19 Dec 2022 14:33:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232302AbiLSSWI (ORCPT
+        with ESMTP id S232361AbiLSTdd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 13:22:08 -0500
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3048F614D;
-        Mon, 19 Dec 2022 10:22:07 -0800 (PST)
-Received: by mail-il1-f175.google.com with SMTP id o13so5148604ilc.7;
-        Mon, 19 Dec 2022 10:22:07 -0800 (PST)
+        Mon, 19 Dec 2022 14:33:33 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3292712AF7
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 11:33:32 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id y66-20020a25c845000000b00733b5049b6fso11791280ybf.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 11:33:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BXl9vy0f2f/11VKxHLckXglqOMtK0anh34YjL4SpoA=;
+        b=gglIK/h4ez0+aqt1O+U+ScB+Bh/FoHfv+OJW2X6p/mpdxgf9sq0WpIXhUJ5u7bEa4H
+         10mjJki54ttBlnuEVGRrt4nfvk3DPFYhdmDXX9JB4EHkXVknVwm2r+YbixMYY8N6UZas
+         5vXteQ+W/jinCVg1i3jH3Sq6GdLGbtJiJEgL0VHwTnjBd1sEoZok1EKLr4pFYMROU+p0
+         YYRYQlwDq4TmyqJr6mbWUEz8O0t2eI0OU1/lIEPwriuBAiJG2+lZYudkRgiaKxtj40mh
+         nzufqCnqhxprw5h6I+7GHHOA9d0zJQesZdwXXEQXREzaIOdk4g+/4kVnus4E4cmOz0rr
+         e0cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vCTcW0l43/XJ8Y/T8YvwdqIIDyvz92ZMBFfEAbp5qlc=;
-        b=VRRrjYoWc5u3Y6LMf0SOyl0oqaa0B80y302NTu/u7Lb6zenYaAnXzsztzM4hDrU1p6
-         cE+n68waRU435tRdvKrOXq5bm6iUec2wPffYat7BuRgQnzhYXyn1V2Bxev4qi+3q49Mu
-         vNMzMJMN8Gc15ThDMRlW7g34xh0EHiCsXHakO6fyit5lBJ6xOX3kUl0j91rsI3jwbegb
-         rVBuu7755k1zr1pCU5mK3bgdgUHdutWXmqsfy3Ir0B/a8yxRA5yGoS9YGcK2kROfhUMz
-         nnUib3ICPIbT7HpaEJmGo4XxuQyyc2KASX8dVwGml4FGKu3rBmjdCqARKDdTKE+sMF+d
-         U6Ww==
-X-Gm-Message-State: ANoB5plaNAbnjmC46FNlZN3ya4ppzePhD1Un2l79PId9z75z9fl48G+L
-        x9Shy/eSo3z3y6frRGtlZakdoTSGWFD6f7Ajhco=
-X-Google-Smtp-Source: AA0mqf5xzBrdJ+G2LZmoxl5mvXcBzdl4khxGIZaNkJCbQWUtuPzEJtz8wFjaUzNg+y1IDUNVm7l9G+2lRRo5GWnk6BQ=
-X-Received: by 2002:a92:d6d1:0:b0:303:288d:9f6a with SMTP id
- z17-20020a92d6d1000000b00303288d9f6amr21276976ilp.119.1671474126382; Mon, 19
- Dec 2022 10:22:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20221219161259.3097213-1-james.clark@arm.com> <20221219161259.3097213-2-james.clark@arm.com>
-In-Reply-To: <20221219161259.3097213-2-james.clark@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 19 Dec 2022 10:21:56 -0800
-Message-ID: <CAM9d7chFXKTcD80dLkFLwQVT9M+k0oRSB5C7gXUXUS2OZ0UusQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] perf event: Add simd_flags field to perf_sample
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, robh@kernel.org,
-        German Gomez <german.gomez@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BXl9vy0f2f/11VKxHLckXglqOMtK0anh34YjL4SpoA=;
+        b=wzE+sgf9QIxsdaG/Wo3VqKuxfB3wSCgdRw3hkMkybmu4H15JYJeC9G5c/88F3bpOyx
+         Ab+LOJgh+xMRX9NcTNZkiqJeSEDdcPiaTI7OXZk0MYhnctA1aaghPvpYga3GYJwrbwj9
+         OhMEj+wP2OxpAwP6EZ3hkE9pRoOs2QtfuYug8AYCZjf6P+bbzpNlhmVyDAV2d4E456p7
+         cTucjcSJi6ADt3VZtIoWpuzybIkb76dniHyhVVxKf66ANY02+prg6vGM400IT+MRj2IT
+         L3Izo09t1NueaBdfKTrdg1ffKAbZKS2xu+w6CR2+m5tuFus0otLTA93V1pxRy7rW4t/K
+         BmtA==
+X-Gm-Message-State: ANoB5pkLxxeZvg5xiGKnS+WPpNgasf97Hp34I//ICi7LIdIzn+pmhSi5
+        402fUbxB5NnWjr1ppPz/Y6UiBqM=
+X-Google-Smtp-Source: AA0mqf7Icw3UnigDaLBzU7ImBfrwnGJPUr76c1EwJr94knLZ93lfIm35xMaxZVPdh0LFftWlP4RFSck=
+X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
+ (user=sdf job=sendgmr) by 2002:a25:b885:0:b0:701:49ca:8ae8 with SMTP id
+ w5-20020a25b885000000b0070149ca8ae8mr21490186ybj.553.1671478411506; Mon, 19
+ Dec 2022 11:33:31 -0800 (PST)
+Date:   Mon, 19 Dec 2022 11:33:29 -0800
+In-Reply-To: <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
+Mime-Version: 1.0
+References: <000000000000a20a2e05f029c577@google.com> <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
+Message-ID: <Y6C8iQGENUk/XY/A@google.com>
+Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+From:   sdf@google.com
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+On 12/19, Peter Zijlstra wrote:
+> On Mon, Dec 19, 2022 at 12:04:43AM -0800, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following issue on:
+> >
+> > HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of  
+> https://git.kernel...
+> > git tree:       bpf
+> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
+> > kernel config:   
+> https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
+> > dashboard link:  
+> https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+> > compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU  
+> Binutils for Debian) 2.35.2
+> > syz repro:       
+> https://syzkaller.appspot.com/x/repro.syz?x=15e87100480000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ceeb13880000
+> >
+> > Downloadable assets:
+> > disk image:  
+> https://storage.googleapis.com/syzbot-assets/373a99daa295/disk-13e3c779.raw.xz
+> > vmlinux:  
+> https://storage.googleapis.com/syzbot-assets/7fa71ed0fe17/vmlinux-13e3c779.xz
+> > kernel image:  
+> https://storage.googleapis.com/syzbot-assets/2842ad5c698b/bzImage-13e3c779.xz
+> >
+> > IMPORTANT: if you fix the issue, please add the following tag to the  
+> commit:
+> > Reported-by: syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in __lock_acquire+0x3ee7/0x56d0  
+> kernel/locking/lockdep.c:4925
+> > Read of size 8 at addr ffff8880237d6018 by task syz-executor287/8300
+> >
+> > CPU: 0 PID: 8300 Comm: syz-executor287 Not tainted  
+> 6.1.0-syzkaller-09661-g13e3c7793e2f #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 10/26/2022
+> > Call Trace:
+> >  <TASK>
+> >  __dump_stack lib/dump_stack.c:88 [inline]
+> >  dump_stack_lvl+0xd1/0x138 lib/dump_stack.c:106
+> >  print_address_description mm/kasan/report.c:284 [inline]
+> >  print_report+0x15e/0x45d mm/kasan/report.c:395
+> >  kasan_report+0xbf/0x1f0 mm/kasan/report.c:495
+> >  __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+> >  lock_acquire kernel/locking/lockdep.c:5668 [inline]
+> >  lock_acquire+0x1e3/0x630 kernel/locking/lockdep.c:5633
+> >  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+> >  _raw_spin_lock_irqsave+0x3d/0x60 kernel/locking/spinlock.c:162
+> >  put_pmu_ctx kernel/events/core.c:4913 [inline]
+> >  put_pmu_ctx+0xad/0x390 kernel/events/core.c:4893
+> >  _free_event+0x3c5/0x13d0 kernel/events/core.c:5196
+> >  free_event+0x58/0xc0 kernel/events/core.c:5224
+> >  __do_sys_perf_event_open+0x66d/0x2980 kernel/events/core.c:12701
+> >  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+> >  do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+> >  entry_SYSCALL_64_after_hwframe+0x63/0xcd
 
-On Mon, Dec 19, 2022 at 8:13 AM James Clark <james.clark@arm.com> wrote:
->
-> From: German Gomez <german.gomez@arm.com>
->
-> Add new field to the struct perf_sample to store flags related to SIMD
-> ops.
->
-> It will be used to store SIMD information from SVE and NEON when
-> profiling using ARM SPE.
->
-> Signed-off-by: German Gomez <german.gomez@arm.com>
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/sample.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-> index 60ec79d4eea4..bdf52faf165f 100644
-> --- a/tools/perf/util/sample.h
-> +++ b/tools/perf/util/sample.h
-> @@ -66,6 +66,18 @@ struct aux_sample {
->         void *data;
->  };
->
-> +struct simd_flags {
-> +       u64     arch:1, /* architecture (isa) */
-> +               pred:2; /* predication */
+> Does this help?
 
-Can we reserve more bits for possible future extension or
-other arch support?  It seems to be too tight for each field.
-Do you plan to add more info to the struct in the future?
+Let's maybe try it this way:
 
-Thanks,
-Namhyung
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git  
+13e3c7793e2f
 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e47914ac8732..bbff551783e1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
+  	return event_fd;
 
-> +};
-> +
-> +/* simd architecture flags */
-> +#define SIMD_OP_FLAGS_ARCH_SVE         0x01    /* ARM SVE */
-> +
-> +/* simd predicate flags */
-> +#define SIMD_OP_FLAGS_PRED_PARTIAL     0x01    /* partial predicate */
-> +#define SIMD_OP_FLAGS_PRED_EMPTY       0x02    /* empty predicate */
-> +
->  struct perf_sample {
->         u64 ip;
->         u32 pid, tid;
-> @@ -103,6 +115,7 @@ struct perf_sample {
->         struct stack_dump user_stack;
->         struct sample_read read;
->         struct aux_sample aux_sample;
-> +       struct simd_flags simd_flags;
->  };
->
->  /*
-> --
-> 2.25.1
->
+  err_context:
+-	/* event->pmu_ctx freed by free_event() */
++	put_pmu_ctx(event->pmu_ctx);
++	event->pmu_ctx = NULL; /* _free_event() */
+  err_locked:
+  	mutex_unlock(&ctx->mutex);
+  	perf_unpin_context(ctx);
