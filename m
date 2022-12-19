@@ -2,96 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADA3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Dec 2022 22:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74BEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 02:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229937AbiLQWwE (ORCPT
+        id S229730AbiLSCwD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Dec 2022 17:52:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
+        Sun, 18 Dec 2022 21:52:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbiLQWwC (ORCPT
+        with ESMTP id S229611AbiLSCwC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Dec 2022 17:52:02 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E5AFCF3;
-        Sat, 17 Dec 2022 14:52:01 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id w26so3971691pfj.6;
-        Sat, 17 Dec 2022 14:52:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AWLW65I8qjKVa0Ai5KVgxGMrzsCA8DgxU3k5GOi6ig8=;
-        b=JdOQaL6gxjvrbbgRNKp7HR5WSKuNJ4so3SdZR78PQrOmjbj/sfRV5RZVhCflkAWioq
-         aZMZ0w8DuM3ZudF2l7CgdK6nSreJHzRfEiQkVysAtcUd3sQuuOl1xNIsHVvzC/L41iWz
-         oDsz8BlJaElg7p6IIGh4Fi2ZFdesTW+Dv06HimxsS2TUjwgUBascpgpicqqj7N+3/eoZ
-         bNX2h6Xw7i2AsWyg0Kb6AtWqhVyI8lBrqY1K/5ZqZqxRazpr9TcgfDO2Y6BpKqfT8eBM
-         FVQjjc/D84cT3noOlqH0UsGA18qNmaKyORlOWER2Nz+4lhT+3jTg0bOI/39qhVWG2Iqx
-         /6HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AWLW65I8qjKVa0Ai5KVgxGMrzsCA8DgxU3k5GOi6ig8=;
-        b=gBu8k2+9PqEfqwMyxUba0LHSi17E3ndxkzWDxIhAMdTtuDWgEHaqHpxZzpyRgj10os
-         7BiOfisdrurQxjuvYYsiaHZTvvFlOka4h0bowK2tZc6ACh7AoOhhMSH7yk2M/9YknRvM
-         tnP7bdXbiIT5u1HilvQdk8EXIBJONy0pPGxzOIwuGIMrNaXp+daHE/ut83Ff/5a9vNGd
-         rcq6k8sxGJF6pKrT3itjHaFE3urc5sQdzdHA5maafTLWRZMLUIRMd1h9CPI/88JJPqhJ
-         uzf0JY0V2LbXXx21XhzT9niQXy8jac5KpSLFqE3nhA/6a+hBY+H8mAuQ7veov0ns5Aqt
-         0aYA==
-X-Gm-Message-State: AFqh2kpTdi/bCLVTWDGQUgOfrbaUxY9iZBV/O0H/uRFADARoQng181k/
-        pRNpg02kG1gKmVQ/0n5QJGRSd34Q+ksb+A==
-X-Google-Smtp-Source: AMrXdXu5X+t9idHr7HL06hCtiQIwOE8RBSPyz+tzknz1s19c1QA5usboGiydiIShrQ9Ir9YjxNq3aw==
-X-Received: by 2002:aa7:953a:0:b0:57d:8b30:db0a with SMTP id c26-20020aa7953a000000b0057d8b30db0amr5053486pfp.9.1671317521218;
-        Sat, 17 Dec 2022 14:52:01 -0800 (PST)
-Received: from WRT-WX9.. ([103.135.102.144])
-        by smtp.gmail.com with ESMTPSA id e26-20020a63745a000000b00477bfac06b7sm3508103pgn.34.2022.12.17.14.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Dec 2022 14:52:00 -0800 (PST)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Changbin Du <changbin.du@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: [PATCH] perf: makefile: add .DELETE_ON_ERROR special target
-Date:   Sun, 18 Dec 2022 06:51:51 +0800
-Message-Id: <20221217225151.90387-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.37.2
+        Sun, 18 Dec 2022 21:52:02 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554C16474;
+        Sun, 18 Dec 2022 18:52:00 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Nb42q6KpWzJqZv;
+        Mon, 19 Dec 2022 10:50:59 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Mon, 19 Dec 2022 10:51:57 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <kim.phillips@amd.com>, <german.gomez@arm.com>,
+        <ravi.bangoria@amd.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf tool: Fix output unexpected messages in quiet mode
+Date:   Mon, 19 Dec 2022 10:49:11 +0800
+Message-ID: <20221219024911.62741-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As kbuild, this adds .DELETE_ON_ERROR special target to clean up
-partially updated files on error. A known issue is the empty vmlinux.h
-generted by bpftool if it failed to dump btf info.
+When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
+and display_attr incorrectly determines the value of debug_peo_args.
+As a result, unexpected information is displayed.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Before:
+  # perf record --quiet -- ls > /dev/null
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             128
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|PERIOD
+    read_format                      ID|LOST
+    disabled                         1
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    enable_on_exec                   1
+    task                             1
+    precise_ip                       3
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  ...
+
+After:
+  # perf record --quiet -- ls > /dev/null
+  #
+
+Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/Makefile.perf | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/debug.h | 2 +-
+ tools/perf/util/evsel.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 9b7886ce0674..13e7d26e77f0 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1151,3 +1151,6 @@ FORCE:
- .PHONY: archheaders
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index f99468a7f681..f6ab84c93ec0 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -41,7 +41,7 @@ extern int debug_data_convert;
  
- endif # force_fixdep
-+
-+# Delete partially updated (corrupted) files on error
-+.DELETE_ON_ERROR:
+ /* Special macro to print perf_event_open arguments/return value. */
+ #define pr_debug2_peo(fmt, ...) {				\
+-	if (debug_peo_args)						\
++	if (debug_peo_args > 0)						\
+ 		pr_debugN(0, pr_fmt(fmt), ##__VA_ARGS__);	\
+ 	else							\
+ 		pr_debugN(2, pr_fmt(fmt), ##__VA_ARGS__);	\
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 999dd1700502..45cf144c5d5d 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1775,7 +1775,7 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
+ 
+ static void display_attr(struct perf_event_attr *attr)
+ {
+-	if (verbose >= 2 || debug_peo_args) {
++	if (verbose >= 2 || debug_peo_args > 0) {
+ 		fprintf(stderr, "%.60s\n", graph_dotted_line);
+ 		fprintf(stderr, "perf_event_attr:\n");
+ 		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
 -- 
-2.37.2
+2.30.GIT
 
