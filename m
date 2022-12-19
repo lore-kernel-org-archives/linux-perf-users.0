@@ -2,182 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007DDC10F1B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 20:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0051C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 21:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232616AbiLSUSA (ORCPT
+        id S232054AbiLSVdl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 15:18:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43788 "EHLO
+        Mon, 19 Dec 2022 16:33:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232502AbiLSURr (ORCPT
+        with ESMTP id S229866AbiLSVdk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 15:17:47 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F0D64ED;
-        Mon, 19 Dec 2022 12:17:45 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id v23so5007547pju.3;
-        Mon, 19 Dec 2022 12:17:45 -0800 (PST)
+        Mon, 19 Dec 2022 16:33:40 -0500
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E24BCBF72
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 13:33:38 -0800 (PST)
+Received: by mail-pf1-x44a.google.com with SMTP id c71-20020a621c4a000000b0057e867fbaa3so5624840pfc.16
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 13:33:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/YKT1JJIPuRoA7Hx7R8arjPSGFufHSp1KclETKmED4=;
-        b=HVbC+Iu6DOauKYKAjXJ43ZOUiX8W5s0QydrESBi85TvL2VmyDCJR/2ymPdVYq/iDf/
-         IO6JdGU4dwlAukwN6rby4URhzT7owcP4jlDE7KILweEbgmvaWh+tGJlJzYD1tXTVYGSc
-         LWNHMvXZrUg5P/xm50ZkS7+tQkGNaKPvYW9Zn2vDbBdFSpLQ4WgcFx3BMgkEqaEOeGis
-         jWD0VFpNiPZQg5fT8EfCEAdwmkBJFsP4/GCJSNA9Dq1G7InW2qzihT9tyIqEZHighyhM
-         DI/RyyArd/3wL6L81SseIQT4GhJscNZJGGQ+Ozj6E5HBWubdlQs2B2YNCaYU0m9UzYI/
-         /Epg==
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bpSyaw7IzzUwQ80GRIZq630SjWs043p2tlSn9Ge42Ig=;
+        b=DhKrhwDhNxRtLQ4hD30ALjUurCc9f4RCZdls/fWZbnDkFGV2oPx4TdKcSwMlQzk3ie
+         A7I9+3NMTLXU8+212DBa1vNyer4MFCX0jZTcRyy4J+tyFISFRojS0FyvlGug4OkYuC9A
+         1+UZjithsMA150YT1fPGa9QahyU5h+XnRdZeLNEbw87WRYSBko7IVmUVxr/Oy2p5gWjh
+         qovD/lWHY8atDnwTtnZ7FzcssbP2IOIZ9n0RpJ/lJOC6nLG80TULDg5f6WO7KUsw2fBT
+         oGRQ7fxsCGKxCHrH13F1IIhB1x/ijKqOPM+WUJYfD7kTXGImxHm0vEQzdJYHUI0WPaqH
+         j8+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=E/YKT1JJIPuRoA7Hx7R8arjPSGFufHSp1KclETKmED4=;
-        b=X7XX/EOCfQbmZeg0Dnr/Oq/qtZc2UMRxaFSQwqe3QkjSewv4gcNcx9/zhtqf4O6NCC
-         5TXdof5GJh+qAMzcnXAdXnbdMCXFzI63M86OmbMKiaOU5LzGmckqPWsj3/1E2wfoGTZ6
-         0EUWuA/YoVD4q5pEXVLsCSdpCzRCWb9i98jVpg4J/+0RSElAyc8A3C0RofvfH0+nh1Wr
-         1qymH484eP7hEVVs7qXQqCoJR2G/aWrC5F7VHQKE/Z2i0ULKMDgtsQh5EhNpmkLh12cW
-         ABBCp6/CB9TQp85x5Wxxpqma6Ssp7XXc/x8lBJ9yO1/UY5D2+f53ETjF8IBXgvtz+8PC
-         t+4Q==
-X-Gm-Message-State: ANoB5pmZd8DZ19gwS+zUqY1UYv8o9XrY/sIfcBefOtYazmpidil+Rptn
-        Ma29RzfaflyQQaGyNm7EAZs=
-X-Google-Smtp-Source: AA0mqf61SP7/nZq9TfSNMMcb4bbYVKQVTkKEFue+8KZXn3Lu9cPuwaVOSuM5ZwGEwLEZzSwFMg1C/A==
-X-Received: by 2002:a17:90b:2d83:b0:219:e002:1ba3 with SMTP id sj3-20020a17090b2d8300b00219e0021ba3mr46689926pjb.9.1671481065326;
-        Mon, 19 Dec 2022 12:17:45 -0800 (PST)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:735a:2805:e706:5164])
-        by smtp.gmail.com with ESMTPSA id f10-20020a17090ace0a00b00219220edf0dsm6324260pju.48.2022.12.19.12.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 12:17:44 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Blake Jones <blakejones@google.com>, bpf@vger.kernel.org
-Subject: [PATCH 6/6] perf test: Update perf lock contention test
-Date:   Mon, 19 Dec 2022 12:17:32 -0800
-Message-Id: <20221219201732.460111-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-In-Reply-To: <20221219201732.460111-1-namhyung@kernel.org>
-References: <20221219201732.460111-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bpSyaw7IzzUwQ80GRIZq630SjWs043p2tlSn9Ge42Ig=;
+        b=cEyU76O8BwhC60mErPfNBASTWZEo0Pxlj0en/ts7WvrzwRckdxEg15RlfhBoBuZkO+
+         tjviUj30nELbIvOD+v9AwZGPVQ8xKaPGbqFFvlMb+wlQ854Zz6hgq3WHMmUyI0s2kPMn
+         jdEKpjIqYVLObL/2GXR71fJfHvbgyRL+p9mzOTdkNYQWNabTDEKn0L/acO5g4LvCNYHx
+         b87OMKf1GsvLcrnBpUdHuDX6I3xAisLh3Y+66+2WgoC2U88kkj9iUaB/I8ICgtNE1mzx
+         r8yz8f1gLWgdPlsw9z8xjSgxK1SJLCDl7sjQX5vrvwhjsvAMuGZ8bbmJhrN1Y5FO42FR
+         FyBQ==
+X-Gm-Message-State: ANoB5pnF5fNmHmoCltRYSBgLraiLAGbzplxwg1PFj2Lia6/FUc5qiMwH
+        ofX4i6tz1kfY6FToeQ71eAgOJ0I=
+X-Google-Smtp-Source: AA0mqf6b+8RXnM1FmTTmyMFRRumZB4F9hR7A5n1+1yLtRhrbiaNTaN+QV0AdHzB523/1wMCm59zoDpc=
+X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
+ (user=sdf job=sendgmr) by 2002:aa7:85cb:0:b0:575:871f:2e7a with SMTP id
+ z11-20020aa785cb000000b00575871f2e7amr5047278pfn.35.1671485618298; Mon, 19
+ Dec 2022 13:33:38 -0800 (PST)
+Date:   Mon, 19 Dec 2022 13:33:36 -0800
+In-Reply-To: <00000000000051b79a05f033b6e5@google.com>
+Mime-Version: 1.0
+References: <Y6C8iQGENUk/XY/A@google.com> <00000000000051b79a05f033b6e5@google.com>
+Message-ID: <Y6DYsN+G3mdKP/Bb@google.com>
+Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+From:   sdf@google.com
+To:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add more tests for the new filters.
+On 12/19, syzbot wrote:
+> Hello,
 
-  $ sudo perf test contention -v
-   87: kernel lock contention analysis test                            :
-  --- start ---
-  test child forked, pid 412379
-  Testing perf lock record and perf lock contention
-  Testing perf lock contention --use-bpf
-  Testing perf lock record and perf lock contention at the same time
-  Testing perf lock contention --threads
-  Testing perf lock contention --lock-addr
-  Testing perf lock contention --type-filter
-  Testing perf lock contention --lock-filter
-  test child finished with 0
-  ---- end ----
-  kernel lock contention analysis test: Ok
+> syzbot tried to test the proposed patch but the build/boot failed:
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/lock_contention.sh | 58 ++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+> failed to apply patch:
+> checking file kernel/events/core.c
+> patch: **** unexpected end of file in patch
 
-diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
-index cc9ceb9e19ca..b05f1b1ca6c8 100755
---- a/tools/perf/tests/shell/lock_contention.sh
-+++ b/tools/perf/tests/shell/lock_contention.sh
-@@ -115,7 +115,7 @@ test_aggr_addr()
- 	fi
- 
- 	# the perf lock contention output goes to the stderr
--	perf lock con -a -b -t -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
-+	perf lock con -a -b -l -E 1 -q -- perf bench sched messaging > /dev/null 2> ${result}
- 	if [ $(cat "${result}" | wc -l) != "1" ]; then
- 		echo "[Fail] BPF result count is not 1:" $(cat "${result}" | wc -l)
- 		err=1
-@@ -123,6 +123,60 @@ test_aggr_addr()
- 	fi
- }
- 
-+test_type_filter()
-+{
-+	echo "Testing perf lock contention --type-filter (w/ spinlock)"
-+	perf lock contention -i ${perfdata} -Y spinlock -q 2> ${result}
-+	if [ $(grep -c -v spinlock "${result}") != "0" ]; then
-+		echo "[Fail] Recorded should not have non-spinlocks:" $(cat "${result}")
-+		err=1
-+		exit
-+	fi
-+
-+	if ! perf lock con -b true > /dev/null 2>&1 ; then
-+		return
-+	fi
-+
-+	perf lock con -a -b -Y spinlock -q -- perf bench sched messaging > /dev/null 2> ${result}
-+	if [ $(grep -c -v spinlock "${result}") != "0" ]; then
-+		echo "[Fail] Recorded should not have non-spinlocks:" $(cat "${result}")
-+		err=1
-+		exit
-+	fi
-+}
-+
-+test_lock_filter()
-+{
-+	echo "Testing perf lock contention --lock-filter (w/ tasklist_lock)"
-+	perf lock contention -i ${perfdata} -l -q 2> ${result}
-+	if [ $(grep -c tasklist_lock "${result}") != "1" ]; then
-+		echo "[Skip] Could not find 'tasklist_lock'"
-+		return
-+	fi
-+
-+	perf lock contention -i ${perfdata} -L tasklist_lock -q 2> ${result}
-+
-+	# find out the type of tasklist_lock
-+	local type=$(head -1 "${result}" | awk '{ print $8 }' | sed -e 's/:.*//')
-+
-+	if [ $(grep -c -v "${type}" "${result}") != "0" ]; then
-+		echo "[Fail] Recorded should not have non-${type} locks:" $(cat "${result}")
-+		err=1
-+		exit
-+	fi
-+
-+	if ! perf lock con -b true > /dev/null 2>&1 ; then
-+		return
-+	fi
-+
-+	perf lock con -a -b -L tasklist_lock -q -- perf bench sched messaging > /dev/null 2> ${result}
-+	if [ $(grep -c -v "${type}" "${result}") != "0" ]; then
-+		echo "[Fail] Recorded should not have non-${type} locks:" $(cat "${result}")
-+		err=1
-+		exit
-+	fi
-+}
-+
- check
- 
- test_record
-@@ -130,5 +184,7 @@ test_bpf
- test_record_concurrent
- test_aggr_task
- test_aggr_addr
-+test_type_filter
-+test_lock_filter
- 
- exit ${err}
--- 
-2.39.0.314.g84b9a713c41-goog
 
+
+> Tested on:
+
+> commit:         13e3c779 Merge tag 'for-netdev' of https://git.kernel...
+> git tree:        
+> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+> dashboard link:  
+> https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+> compiler:
+> patch:           
+> https://syzkaller.appspot.com/x/patch.diff?x=15861a9f880000
+
+
+Let's try again with hopefully a better formatted patch..
+
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git  
+13e3c7793e2f
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e47914ac8732..bbff551783e1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
+  	return event_fd;
+
+  err_context:
+-	/* event->pmu_ctx freed by free_event() */
++	put_pmu_ctx(event->pmu_ctx);
++	event->pmu_ctx = NULL; /* _free_event() */
+  err_locked:
+  	mutex_unlock(&ctx->mutex);
+  	perf_unpin_context(ctx);
