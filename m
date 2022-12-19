@@ -2,138 +2,211 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59D1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 07:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F56C4167B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 08:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbiLSG77 (ORCPT
+        id S231360AbiLSIEr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 01:59:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58806 "EHLO
+        Mon, 19 Dec 2022 03:04:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231374AbiLSG76 (ORCPT
+        with ESMTP id S230226AbiLSIEq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 01:59:58 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A2162CA;
-        Sun, 18 Dec 2022 22:59:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671433194; x=1702969194;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=Nxsaw3RCZ61ommUNocIgB+tNXnRqKXLXJfUHk01BRaQ=;
-  b=IyaQg8iDhS03OFOacY87s3YebFN1WW2hdibsxqHaRL9xw2x9DGtbUV4s
-   QlaS26b7CWUlEK9eVQ8yjiBTmvYEuuDMayzUoCPfzvikLl/6HoYAaNXrs
-   velV1ddX9FhmORHU4KiKM71f26KRmYl1owzHzFaJycciXvJRP9b/LyJO1
-   2BJdTtwwrT/X5zAL0LS1P7umup6o0TW1dphtCsLl9WGh+V4L2qcnVlT+Z
-   XekGZAQ/tcSHzFSBUwkb/ENg/gRL5auzEyEGEMYRz9ZF/X3MPCR+qA0AH
-   SDbU4UtfMEhwPdv+1+Ci20gkeMfYDviLe1ChL1tRc9tEheFfnBoGQnJDl
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="306960682"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="306960682"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2022 22:59:53 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="652594336"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="652594336"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.197])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2022 22:59:49 -0800
-Message-ID: <194c676b-3a73-7f34-1f29-a157b5e4731f@intel.com>
-Date:   Mon, 19 Dec 2022 08:59:48 +0200
+        Mon, 19 Dec 2022 03:04:46 -0500
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E88E2BD1
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 00:04:44 -0800 (PST)
+Received: by mail-il1-f198.google.com with SMTP id i21-20020a056e021d1500b003041b04e3ebso6152581ila.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 00:04:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R0whHs85VeMIptQ5Z3SuFgI5wPfZDxbSvQ/o8nvL+QE=;
+        b=vnTCKIR4Pco5gArwW1ukKii+zN2hDpSsJbEh+bZLG1HcBxtWfEZb+WiBcN7rZq8msV
+         lD1bZ0JuC2WN73gSg85fycJy9iybh5W79W9T2IofSYHUEM4OfyeWu1F98DPKlcp3oZrI
+         NnN5UgwCORsf9+cPyJNvBeIFgR/N8vlsHOFyue93kPLjcE4nv12StiJL9O1588Js+ICC
+         YjfVrUl4pDJL2VjSREel7KKlnVJ2YAmYesU5BwIW0UoVOO48BSM+0gWz8KFV5AFQzack
+         flGwT3lVbdDhes03Yr7YEwOWPJugZ92ltXfi9jfOjQNznY2uIsguM8pqfG25aoVXXbUZ
+         FtzA==
+X-Gm-Message-State: ANoB5pkyMPy9itWjzMEAF0dtZ/ULw+UNaqelsjzSQsMopgKvjCsPc4Jq
+        CDliqnc/ZnxoDopM5wP12lEApWwPCH7MXosRJays+m4xPK3q
+X-Google-Smtp-Source: AA0mqf7DlY9nTflHJhdGX0QGu4CIMOuLrYbMGh5wPo9h+7ThqkkHsA9DFM5/uwaR/Mv/G6KlHcU8C9yYJ3kjAP60LSSoNW4kmK20
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] perf tool: Fix output unexpected messages in quiet mode
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        kim.phillips@amd.com, german.gomez@arm.com, ravi.bangoria@amd.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221219024911.62741-1-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20221219024911.62741-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:2808:0:b0:302:f182:1b89 with SMTP id
+ l8-20020a922808000000b00302f1821b89mr34560632ilf.249.1671437083607; Mon, 19
+ Dec 2022 00:04:43 -0800 (PST)
+Date:   Mon, 19 Dec 2022 00:04:43 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a20a2e05f029c577@google.com>
+Subject: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+From:   syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/12/22 04:49, Yang Jihong wrote:
-> When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
+Hello,
 
-Seems like redirect_to_stderr has similar issue?
+syzbot found the following issue on:
 
-> and display_attr incorrectly determines the value of debug_peo_args.
-> As a result, unexpected information is displayed.
-> 
-> Before:
->   # perf record --quiet -- ls > /dev/null
->   ------------------------------------------------------------
->   perf_event_attr:
->     size                             128
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|PERIOD
->     read_format                      ID|LOST
->     disabled                         1
->     inherit                          1
->     mmap                             1
->     comm                             1
->     freq                             1
->     enable_on_exec                   1
->     task                             1
->     precise_ip                       3
->     sample_id_all                    1
->     exclude_guest                    1
->     mmap2                            1
->     comm_exec                        1
->     ksymbol                          1
->     bpf_event                        1
->   ------------------------------------------------------------
->   ...
-> 
-> After:
->   # perf record --quiet -- ls > /dev/null
->   #
-> 
-> Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of https://git.kernel...
+git tree:       bpf
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
+dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e87100480000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ceeb13880000
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/373a99daa295/disk-13e3c779.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7fa71ed0fe17/vmlinux-13e3c779.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2842ad5c698b/bzImage-13e3c779.xz
 
-> ---
->  tools/perf/util/debug.h | 2 +-
->  tools/perf/util/evsel.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-> index f99468a7f681..f6ab84c93ec0 100644
-> --- a/tools/perf/util/debug.h
-> +++ b/tools/perf/util/debug.h
-> @@ -41,7 +41,7 @@ extern int debug_data_convert;
->  
->  /* Special macro to print perf_event_open arguments/return value. */
->  #define pr_debug2_peo(fmt, ...) {				\
-> -	if (debug_peo_args)						\
-> +	if (debug_peo_args > 0)						\
->  		pr_debugN(0, pr_fmt(fmt), ##__VA_ARGS__);	\
->  	else							\
->  		pr_debugN(2, pr_fmt(fmt), ##__VA_ARGS__);	\
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 999dd1700502..45cf144c5d5d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1775,7 +1775,7 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
->  
->  static void display_attr(struct perf_event_attr *attr)
->  {
-> -	if (verbose >= 2 || debug_peo_args) {
-> +	if (verbose >= 2 || debug_peo_args > 0) {
->  		fprintf(stderr, "%.60s\n", graph_dotted_line);
->  		fprintf(stderr, "perf_event_attr:\n");
->  		perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com
 
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+Read of size 8 at addr ffff8880237d6018 by task syz-executor287/8300
+
+CPU: 0 PID: 8300 Comm: syz-executor287 Not tainted 6.1.0-syzkaller-09661-g13e3c7793e2f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/26/2022
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd1/0x138 lib/dump_stack.c:106
+ print_address_description mm/kasan/report.c:284 [inline]
+ print_report+0x15e/0x45d mm/kasan/report.c:395
+ kasan_report+0xbf/0x1f0 mm/kasan/report.c:495
+ __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+ lock_acquire kernel/locking/lockdep.c:5668 [inline]
+ lock_acquire+0x1e3/0x630 kernel/locking/lockdep.c:5633
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x3d/0x60 kernel/locking/spinlock.c:162
+ put_pmu_ctx kernel/events/core.c:4913 [inline]
+ put_pmu_ctx+0xad/0x390 kernel/events/core.c:4893
+ _free_event+0x3c5/0x13d0 kernel/events/core.c:5196
+ free_event+0x58/0xc0 kernel/events/core.c:5224
+ __do_sys_perf_event_open+0x66d/0x2980 kernel/events/core.c:12701
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+RIP: 0033:0x7f3a2b1b3f29
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff4215df68 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 00000000000f4240 RCX: 00007f3a2b1b3f29
+RDX: 0000000000000000 RSI: 0000000000002070 RDI: 0000000020000480
+RBP: 0000000000000000 R08: 0000000000000008 R09: 0000000000000001
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000012a59
+R13: 00007fff4215df7c R14: 00007fff4215df90 R15: 00007fff4215df80
+ </TASK>
+
+Allocated by task 8300:
+ kasan_save_stack+0x22/0x40 mm/kasan/common.c:45
+ kasan_set_track+0x25/0x30 mm/kasan/common.c:52
+ ____kasan_kmalloc mm/kasan/common.c:371 [inline]
+ ____kasan_kmalloc mm/kasan/common.c:330 [inline]
+ __kasan_kmalloc+0xa5/0xb0 mm/kasan/common.c:380
+ kmalloc include/linux/slab.h:580 [inline]
+ kzalloc include/linux/slab.h:720 [inline]
+ alloc_perf_context kernel/events/core.c:4693 [inline]
+ find_get_context+0xcc/0x810 kernel/events/core.c:4763
+ __do_sys_perf_event_open+0x963/0x2980 kernel/events/core.c:12476
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+Freed by task 5310:
+ kasan_save_stack+0x22/0x40 mm/kasan/common.c:45
+ kasan_set_track+0x25/0x30 mm/kasan/common.c:52
+ kasan_save_free_info+0x2e/0x40 mm/kasan/generic.c:518
+ ____kasan_slab_free mm/kasan/common.c:236 [inline]
+ ____kasan_slab_free+0x160/0x1c0 mm/kasan/common.c:200
+ kasan_slab_free include/linux/kasan.h:177 [inline]
+ slab_free_hook mm/slub.c:1781 [inline]
+ slab_free_freelist_hook+0x8b/0x1c0 mm/slub.c:1807
+ slab_free mm/slub.c:3787 [inline]
+ __kmem_cache_free+0xaf/0x3b0 mm/slub.c:3800
+ rcu_do_batch kernel/rcu/tree.c:2244 [inline]
+ rcu_core+0x81f/0x1980 kernel/rcu/tree.c:2504
+ __do_softirq+0x1fb/0xadc kernel/softirq.c:571
+
+Last potentially related work creation:
+ kasan_save_stack+0x22/0x40 mm/kasan/common.c:45
+ __kasan_record_aux_stack+0xbc/0xd0 mm/kasan/generic.c:488
+ __call_rcu_common.constprop.0+0x99/0x820 kernel/rcu/tree.c:2753
+ put_ctx kernel/events/core.c:1180 [inline]
+ put_ctx+0x116/0x1e0 kernel/events/core.c:1173
+ perf_event_exit_task_context kernel/events/core.c:13046 [inline]
+ perf_event_exit_task+0x556/0x760 kernel/events/core.c:13073
+ do_exit+0xb4d/0x2a30 kernel/exit.c:829
+ __do_sys_exit kernel/exit.c:917 [inline]
+ __se_sys_exit kernel/exit.c:915 [inline]
+ __x64_sys_exit+0x42/0x50 kernel/exit.c:915
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+The buggy address belongs to the object at ffff8880237d6000
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 24 bytes inside of
+ 512-byte region [ffff8880237d6000, ffff8880237d6200)
+
+The buggy address belongs to the physical page:
+page:ffffea00008df500 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x237d4
+head:ffffea00008df500 order:2 compound_mapcount:0 compound_pincount:0
+anon flags: 0xfff00000010200(slab|head|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000010200 ffff888012441c80 0000000000000000 dead000000000001
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 2173, tgid 2173 (kworker/u4:3), ts 10211275854, free_ts 0
+ prep_new_page mm/page_alloc.c:2539 [inline]
+ get_page_from_freelist+0x10b5/0x2d50 mm/page_alloc.c:4291
+ __alloc_pages+0x1cb/0x5b0 mm/page_alloc.c:5558
+ alloc_pages+0x1aa/0x270 mm/mempolicy.c:2285
+ alloc_slab_page mm/slub.c:1851 [inline]
+ allocate_slab+0x25f/0x350 mm/slub.c:1998
+ new_slab mm/slub.c:2051 [inline]
+ ___slab_alloc+0xa91/0x1400 mm/slub.c:3193
+ __slab_alloc.constprop.0+0x56/0xa0 mm/slub.c:3292
+ __slab_alloc_node mm/slub.c:3345 [inline]
+ slab_alloc_node mm/slub.c:3442 [inline]
+ __kmem_cache_alloc_node+0x1a4/0x430 mm/slub.c:3491
+ kmalloc_trace+0x26/0x60 mm/slab_common.c:1062
+ kmalloc include/linux/slab.h:580 [inline]
+ kzalloc include/linux/slab.h:720 [inline]
+ alloc_bprm+0x51/0x900 fs/exec.c:1510
+ kernel_execve+0xaf/0x500 fs/exec.c:1981
+ call_usermodehelper_exec_async+0x2e7/0x580 kernel/umh.c:113
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:306
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff8880237d5f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880237d5f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880237d6000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff8880237d6080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880237d6100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
