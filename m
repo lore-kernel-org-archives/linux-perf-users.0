@@ -2,133 +2,159 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8FAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 09:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA93BC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 10:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiLSJ2J (ORCPT
+        id S231779AbiLSK2u (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 04:28:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
+        Mon, 19 Dec 2022 05:28:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiLSJ2I (ORCPT
+        with ESMTP id S231800AbiLSK2q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 04:28:08 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170FA65EB;
-        Mon, 19 Dec 2022 01:28:07 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NbDqh4KHVzmWZV;
-        Mon, 19 Dec 2022 17:26:56 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Mon, 19 Dec 2022 17:28:01 +0800
+        Mon, 19 Dec 2022 05:28:46 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF402DC;
+        Mon, 19 Dec 2022 02:28:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671445726; x=1702981726;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=d3Etqv+m4QmEFWZNJVT+7Hf9gJVW9Po0tGZX19YMuvk=;
+  b=I+EmuAbzBgeUYiNijVK7U83HrPB8vD7ds2MKJs657JWLHzuL+j5zIVGi
+   mRCc2sELv5ACLRScYqZZcqP6boUsD0HMOG46/zbTOPbJMFJFtpJOMxEtJ
+   AmVuU0yR6n/jc6tldLdhwI8aZ2E/4gbp1U6TKsE8NmY7PYdIgadobB0yz
+   m2KmGRkCf6gc6iSc14oAI5cY00+OG7KX3jumVK/EP3x+hE8XIl7zMeHH4
+   wETfBebwvryvKuPgN2WI695fa+rp37H1ZPMyihG4TuILZis/+6Dl2f1qz
+   BbjtArdiOD/DHTDHRG6BvxAKeOfwK9YuiCxZA+afQpRXCkYQDko2KLzP7
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="320491234"
+X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
+   d="scan'208";a="320491234"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 02:28:26 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="792827895"
+X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
+   d="scan'208";a="792827895"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.197])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 02:28:22 -0800
+Message-ID: <d2189ccc-26aa-250a-ad43-59d53ef01d5e@intel.com>
+Date:   Mon, 19 Dec 2022 12:28:20 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
 Subject: Re: [PATCH] perf tool: Fix output unexpected messages in quiet mode
-To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <kan.liang@linux.intel.com>, <kim.phillips@amd.com>,
-        <german.gomez@arm.com>, <ravi.bangoria@amd.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Content-Language: en-US
+To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
+        kim.phillips@amd.com, german.gomez@arm.com, ravi.bangoria@amd.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20221219024911.62741-1-yangjihong1@huawei.com>
  <194c676b-3a73-7f34-1f29-a157b5e4731f@intel.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <7aecae79-5b6d-09ea-dfd5-4d4810875f3d@huawei.com>
-Date:   Mon, 19 Dec 2022 17:28:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <194c676b-3a73-7f34-1f29-a157b5e4731f@intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+ <7aecae79-5b6d-09ea-dfd5-4d4810875f3d@huawei.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <7aecae79-5b6d-09ea-dfd5-4d4810875f3d@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On 2022/12/19 14:59, Adrian Hunter wrote:
-> On 19/12/22 04:49, Yang Jihong wrote:
->> When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
+On 19/12/22 11:28, Yang Jihong wrote:
+> Hello,
 > 
-> Seems like redirect_to_stderr has similar issue?
-The redirect_to_stderr is used only in the veprintf function:
-
-   int veprintf(int level, int var, const char *fmt, va_list args)
-   {
-           int ret = 0;
-
-           if (var >= level) {
-                   if (use_browser >= 1 && redirect_to_stderr <= 0) {
-                           ui_helpline__vshow(fmt, args);
-                   } else {
-                           ret = fprintf_time(debug_file);
-                           ret += vfprintf(debug_file, fmt, args);
-                   }
-           }
-
-           return ret;
-   }
-
-If use quiet mode, verbose sets to -1. (also assigned in the 
-perf_quiet_option function)
-Because "var >= level" is false, veprintf function returns directly, 
-which avoids this problem.
-
-However, there are cases where:
-   # perf --debug stderr=-1 report -vvv 2>/tmp/debug
-
-If stderr is -1, should we redirect pr_debug in this case?
-
-Because I'm not sure if this is a problem,
-if redirect_to_stderr needs to be fixed as well,
-let me know and I'll submit a patch to fix it.
-
-> 
->> and display_attr incorrectly determines the value of debug_peo_args.
->> As a result, unexpected information is displayed.
+> On 2022/12/19 14:59, Adrian Hunter wrote:
+>> On 19/12/22 04:49, Yang Jihong wrote:
+>>> When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
 >>
->> Before:
->>    # perf record --quiet -- ls > /dev/null
->>    ------------------------------------------------------------
->>    perf_event_attr:
->>      size                             128
->>      { sample_period, sample_freq }   4000
->>      sample_type                      IP|TID|TIME|PERIOD
->>      read_format                      ID|LOST
->>      disabled                         1
->>      inherit                          1
->>      mmap                             1
->>      comm                             1
->>      freq                             1
->>      enable_on_exec                   1
->>      task                             1
->>      precise_ip                       3
->>      sample_id_all                    1
->>      exclude_guest                    1
->>      mmap2                            1
->>      comm_exec                        1
->>      ksymbol                          1
->>      bpf_event                        1
->>    ------------------------------------------------------------
->>    ...
->>
->> After:
->>    # perf record --quiet -- ls > /dev/null
->>    #
->>
->> Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
->> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> Seems like redirect_to_stderr has similar issue?
+> The redirect_to_stderr is used only in the veprintf function:
 > 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+>   int veprintf(int level, int var, const char *fmt, va_list args)
+>   {
+>           int ret = 0;
 > 
-Thanks for reviewed-by.
+>           if (var >= level) {
+>                   if (use_browser >= 1 && redirect_to_stderr <= 0) {
+>                           ui_helpline__vshow(fmt, args);
+>                   } else {
+>                           ret = fprintf_time(debug_file);
+>                           ret += vfprintf(debug_file, fmt, args);
+>                   }
+>           }
+> 
+>           return ret;
+>   }
+> 
+> If use quiet mode, verbose sets to -1. (also assigned in the perf_quiet_option function)
+> Because "var >= level" is false, veprintf function returns directly, which avoids this problem.
+> 
+> However, there are cases where:
+>   # perf --debug stderr=-1 report -vvv 2>/tmp/debug
+> 
+> If stderr is -1, should we redirect pr_debug in this case?
 
-Thanks,
-Yang
+tools/perf/Documentation/perf.txt says debug variables are in value
+range (0, 10), so -1 is invalid anyway.
+
+> 
+> Because I'm not sure if this is a problem,
+> if redirect_to_stderr needs to be fixed as well,
+> let me know and I'll submit a patch to fix it.
+
+perf_quiet_option() sets redirect_to_stderr = -1 with the intention
+that it turns it off, but it doesn't, although it gets turned of by
+verbose = -1. Perhaps set redirect_to_stderr = 0 in perf_quiet_option() ?
+
+I see we have another problem as well: places that check "if (verbose)"
+instead of "if (verbose > 0)"
+
+> 
+>>
+>>> and display_attr incorrectly determines the value of debug_peo_args.
+>>> As a result, unexpected information is displayed.
+>>>
+>>> Before:
+>>>    # perf record --quiet -- ls > /dev/null
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      size                             128
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|PERIOD
+>>>      read_format                      ID|LOST
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      mmap                             1
+>>>      comm                             1
+>>>      freq                             1
+>>>      enable_on_exec                   1
+>>>      task                             1
+>>>      precise_ip                       3
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>      mmap2                            1
+>>>      comm_exec                        1
+>>>      ksymbol                          1
+>>>      bpf_event                        1
+>>>    ------------------------------------------------------------
+>>>    ...
+>>>
+>>> After:
+>>>    # perf record --quiet -- ls > /dev/null
+>>>    #
+>>>
+>>> Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
+>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>
+>> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+>>
+> Thanks for reviewed-by.
+> 
+> Thanks,
+> Yang
+
