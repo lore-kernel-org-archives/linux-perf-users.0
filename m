@@ -2,105 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8030C46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 16:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D16C3DA71
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 16:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231931AbiLSQON (ORCPT
+        id S231689AbiLSQbS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 11:14:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49140 "EHLO
+        Mon, 19 Dec 2022 11:31:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231809AbiLSQOB (ORCPT
+        with ESMTP id S232158AbiLSQbJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 11:14:01 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 90DE1F008;
-        Mon, 19 Dec 2022 08:14:00 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43D851688;
-        Mon, 19 Dec 2022 08:14:41 -0800 (PST)
-Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1A7873F703;
-        Mon, 19 Dec 2022 08:13:57 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     robh@kernel.org, German Gomez <german.gomez@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/4] perf arm-spe: Add SVE flags to the SPE samples
-Date:   Mon, 19 Dec 2022 16:12:57 +0000
-Message-Id: <20221219161259.3097213-4-james.clark@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221219161259.3097213-1-james.clark@arm.com>
-References: <20221219161259.3097213-1-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 19 Dec 2022 11:31:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9BEBF2
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 08:30:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1671467420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=reQXhCOfknl7qIZ+KahalTwkbNSsH6zEhtkbBHNqlQs=;
+        b=FekwPRgwNuv3hZe8zEyFvF3Y17caQmKjahyR4/GySBFjz/5DBWt9TPyeml/gMhv+hj7GjL
+        V/x5J1iLOTGED9/zr7daZYsVZNW7GE4oe7hVzOIXiwiKLsDvF8+c8CYyo/cJvD8K1VW1+1
+        imEXzrk+1Byob+wBDU90TcMSY3e6Xp0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-21-5mMGcfuiPjSHQ7j5I3QOGw-1; Mon, 19 Dec 2022 11:30:16 -0500
+X-MC-Unique: 5mMGcfuiPjSHQ7j5I3QOGw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A5183806739;
+        Mon, 19 Dec 2022 16:30:14 +0000 (UTC)
+Received: from Diego.redhat.com (unknown [10.39.208.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2FE0117582;
+        Mon, 19 Dec 2022 16:30:10 +0000 (UTC)
+From:   Michael Petlan <mpetlan@redhat.com>
+To:     linux-perf-users@vger.kernel.org, acme@redhat.com
+Cc:     disgoel@linux.vnet.ibm.com, atrajeev@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, irogers@google.com, rnsastry@linux.ibm.com
+Subject: [PATCH] perf test: Fix "all PMU test" to skip parametrized events
+Date:   Mon, 19 Dec 2022 17:30:08 +0100
+Message-Id: <20221219163008.9691-1-mpetlan@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: German Gomez <german.gomez@arm.com>
+Parametrized events are not only a powerpc domain. They occur on other
+platforms too (e.g. aarch64). They should be ignored in this testcase,
+since proper setup of the parameters is out of scope of this script.
 
-Add flags from the Scalable Vector Extension (SVE) to the SPE samples
-which are available from Armv8.3 (FEAT_SPEv1p1).
+Let's not filter them out by PMU name, but rather based on the fact
+that they expect a parameter.
 
-These will be displayed in a new SIMD sort field in a later commit.
+Fixes: 451ed8058c69 ("perf test: Fix "all PMU test" to skip hv_24x7/hv_gpci tests on powerpc")
 
-Signed-off-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/util/arm-spe.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/perf/tests/shell/stat_all_pmu.sh | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index bfae4731a47a..7b36ba6b4079 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -273,6 +273,25 @@ static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
- 	return 0;
- }
+diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+index 9c9ef33e0b3c..c77955419173 100755
+--- a/tools/perf/tests/shell/stat_all_pmu.sh
++++ b/tools/perf/tests/shell/stat_all_pmu.sh
+@@ -4,17 +4,8 @@
  
-+static struct simd_flags arm_spe__synth_simd_flags(const struct arm_spe_record *record)
-+{
-+	struct simd_flags simd_flags = {};
-+
-+	if ((record->op & ARM_SPE_OP_LDST) && (record->op & ARM_SPE_OP_SVE_LDST))
-+		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_SVE;
-+
-+	if ((record->op & ARM_SPE_OP_OTHER) && (record->op & ARM_SPE_OP_SVE_OTHER))
-+		simd_flags.arch |= SIMD_OP_FLAGS_ARCH_SVE;
-+
-+	if (record->type & ARM_SPE_SVE_PARTIAL_PRED)
-+		simd_flags.pred |= SIMD_OP_FLAGS_PRED_PARTIAL;
-+
-+	if (record->type & ARM_SPE_SVE_EMPTY_PRED)
-+		simd_flags.pred |= SIMD_OP_FLAGS_PRED_EMPTY;
-+
-+	return simd_flags;
-+}
-+
- static void arm_spe_prep_sample(struct arm_spe *spe,
- 				struct arm_spe_queue *speq,
- 				union perf_event *event,
-@@ -289,6 +308,7 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
- 	sample->tid = speq->tid;
- 	sample->period = 1;
- 	sample->cpu = speq->cpu;
-+	sample->simd_flags = arm_spe__synth_simd_flags(record);
+ set -e
  
- 	event->sample.header.type = PERF_RECORD_SAMPLE;
- 	event->sample.header.misc = sample->cpumode;
+-for p in $(perf list --raw-dump pmu); do
+-  # In powerpc, skip the events for hv_24x7 and hv_gpci.
+-  # These events needs input values to be filled in for
+-  # core, chip, partition id based on system.
+-  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
+-  # hv_gpci/event,partition_id=?/
+-  # Hence skip these events for ppc.
+-  if echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; then
+-    echo "Skipping: Event '$p' in powerpc"
+-    continue
+-  fi
++# Test all PMU events; however exclude parametrized ones (name contains '?')
++for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+   echo "Testing $p"
+   result=$(perf stat -e "$p" true 2>&1)
+   if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
 -- 
-2.25.1
+2.18.4
 
