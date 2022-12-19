@@ -2,192 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A47CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 13:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEE0C10F1B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 14:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231292AbiLSNUE (ORCPT
+        id S232269AbiLSOkV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 08:20:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38032 "EHLO
+        Mon, 19 Dec 2022 09:40:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231310AbiLSNT7 (ORCPT
+        with ESMTP id S231840AbiLSOkU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 08:19:59 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BDBFD36;
-        Mon, 19 Dec 2022 05:19:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671455999; x=1702991999;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=UQkyI/stlXl5zgcaGZsK8E2i46NUKXC9X2Pa6eGAJng=;
-  b=WjR4nmbfduPSgG8D0x3lH8LqrXIay7Q450Srb5WIChk2yyXpzxJqk87t
-   fZFrM+3KLwZruUkLF3chjQrtbyOTZ1pIR8snT5+AGoygxANiJ2Y7hYTDN
-   KMHxAi8ia4XGhtryB5J4X4lfh32rg8yEDxPzFrxLC9Js0twf234LK/ofd
-   dLNm0zm6UV/axc9/PoCkv3niBIfZ/DflOC68JMUMzG+Ev+kx77ycQNBJD
-   TJcwWCmRGAeLhX2lzOb8dhAz/7BUNzqdcHeLJjqzMoW/cBzRXumS7DPJM
-   eufLlwoeQGYL1LrZIbXBR1mTgg25I/cV3RkrssX6OrZUex53nYtdWm43I
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="405597986"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="405597986"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 05:19:58 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="600676985"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="600676985"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.197])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 05:19:54 -0800
-Message-ID: <9d9bfd6f-087b-88dc-1b7e-ada26a9318fa@intel.com>
-Date:   Mon, 19 Dec 2022 15:19:52 +0200
+        Mon, 19 Dec 2022 09:40:20 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7782E198;
+        Mon, 19 Dec 2022 06:40:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1unCginLesSkuj4hqRvXqnZG2iVnHjxMfFxmdxmFUXo=; b=nk08+RKg9qmIKScG/E8PNoDGD8
+        hdiV25CTyDmHQ5wqh92AaVFwnBpSaGTtp/E0ZrMcnU7JJg3+1wjhCzEVAeHfpeg3XKGfjhBvadv65
+        NVupC/8rK/55pvVyr4cSJw/aXhAQChsdODiZsTci9qEhAgh8eo8DHL9zTDseazd36UuENEDDzsaFI
+        xMKrEFRngTnYxOUVbQp5hMLcB3py6A80rqmWQ0wDnzLOF6QqAZjLr1oS6Xyqp2D/s0J7vlZ55EBFZ
+        B611/nI1s87XhWAkjDhtLwdFfmfoeEXpc+NVC2TeBUHLCEUY30V4NSi8+nNpYKR/nwcs6C0PEmH8p
+        DKx8N1aQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1p7HJF-00Cd4B-0L;
+        Mon, 19 Dec 2022 14:40:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AA9D33001D6;
+        Mon, 19 Dec 2022 15:40:04 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6A36020A1AB9C; Mon, 19 Dec 2022 15:40:04 +0100 (CET)
+Date:   Mon, 19 Dec 2022 15:40:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+Message-ID: <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
+References: <000000000000a20a2e05f029c577@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] perf tool: Fix output unexpected messages in quiet mode
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        kim.phillips@amd.com, german.gomez@arm.com, ravi.bangoria@amd.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221219024911.62741-1-yangjihong1@huawei.com>
- <194c676b-3a73-7f34-1f29-a157b5e4731f@intel.com>
- <7aecae79-5b6d-09ea-dfd5-4d4810875f3d@huawei.com>
- <d2189ccc-26aa-250a-ad43-59d53ef01d5e@intel.com>
- <0e06416c-fac3-1149-2660-9a1981e3460d@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <0e06416c-fac3-1149-2660-9a1981e3460d@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000a20a2e05f029c577@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/12/22 15:14, Yang Jihong wrote:
+On Mon, Dec 19, 2022 at 12:04:43AM -0800, syzbot wrote:
 > Hello,
 > 
-> On 2022/12/19 18:28, Adrian Hunter wrote:
->> On 19/12/22 11:28, Yang Jihong wrote:
->>> Hello,
->>>
->>> On 2022/12/19 14:59, Adrian Hunter wrote:
->>>> On 19/12/22 04:49, Yang Jihong wrote:
->>>>> When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
->>>>
->>>> Seems like redirect_to_stderr has similar issue?
->>> The redirect_to_stderr is used only in the veprintf function:
->>>
->>>    int veprintf(int level, int var, const char *fmt, va_list args)
->>>    {
->>>            int ret = 0;
->>>
->>>            if (var >= level) {
->>>                    if (use_browser >= 1 && redirect_to_stderr <= 0) {
->>>                            ui_helpline__vshow(fmt, args);
->>>                    } else {
->>>                            ret = fprintf_time(debug_file);
->>>                            ret += vfprintf(debug_file, fmt, args);
->>>                    }
->>>            }
->>>
->>>            return ret;
->>>    }
->>>
->>> If use quiet mode, verbose sets to -1. (also assigned in the perf_quiet_option function)
->>> Because "var >= level" is false, veprintf function returns directly, which avoids this problem.
->>>
->>> However, there are cases where:
->>>    # perf --debug stderr=-1 report -vvv 2>/tmp/debug
->>>
->>> If stderr is -1, should we redirect pr_debug in this case?
->>
->> tools/perf/Documentation/perf.txt says debug variables are in value
->> range (0, 10), so -1 is invalid anyway.
->>
-> Okay, I see.
->>>
->>> Because I'm not sure if this is a problem,
->>> if redirect_to_stderr needs to be fixed as well,
->>> let me know and I'll submit a patch to fix it.
->>
->> perf_quiet_option() sets redirect_to_stderr = -1 with the intention
->> that it turns it off, but it doesn't, although it gets turned of by
->> verbose = -1. Perhaps set redirect_to_stderr = 0 in perf_quiet_option() ?
->>
-> I think it's better to fix redirect_to_stderr and debug_peo_args in the same way (because they're similar):
+> syzbot found the following issue on:
 > 
-> Solution A:
->   diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
->   index 65e6c22f38e4..908b26e579e5 100644
->   --- a/tools/perf/util/debug.c
->   +++ b/tools/perf/util/debug.c
->   @@ -68,7 +68,7 @@ int veprintf(int level, int var, const char *fmt, va_list args)
->           int ret = 0;
+> HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of https://git.kernel...
+> git tree:       bpf
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e87100480000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ceeb13880000
 > 
->           if (var >= level) {
->   -               if (use_browser >= 1 && !redirect_to_stderr) {
->   +               if (use_browser >= 1 && redirect_to_stderr <= 0) {
->                           ui_helpline__vshow(fmt, args);
->                   } else {
->                           ret = fprintf_time(debug_file);
->   diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
->   index f99468a7f681..f6ab84c93ec0 100644
->   --- a/tools/perf/util/debug.h
->   +++ b/tools/perf/util/debug.h
->   @@ -41,7 +41,7 @@ extern int debug_data_convert;
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/373a99daa295/disk-13e3c779.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/7fa71ed0fe17/vmlinux-13e3c779.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/2842ad5c698b/bzImage-13e3c779.xz
 > 
->    /* Special macro to print perf_event_open arguments/return value. */
->    #define pr_debug2_peo(fmt, ...) {                              \
->   -       if (debug_peo_args)                                             \
->   +       if (debug_peo_args > 0)                                         \
->                   pr_debugN(0, pr_fmt(fmt), ##__VA_ARGS__);       \
->           else                                                    \
->                   pr_debugN(2, pr_fmt(fmt), ##__VA_ARGS__);       \
->   diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->   index 999dd1700502..45cf144c5d5d 100644
->   --- a/tools/perf/util/evsel.c
->   +++ b/tools/perf/util/evsel.c
->   @@ -1775,7 +1775,7 @@ static int __open_attr__fprintf(FILE *fp, const char *name, const char *val,
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com
 > 
->    static void display_attr(struct perf_event_attr *attr)
->    {
->   -       if (verbose >= 2 || debug_peo_args) {
->   +       if (verbose >= 2 || debug_peo_args > 0) {
->                   fprintf(stderr, "%.60s\n", graph_dotted_line);
->                   fprintf(stderr, "perf_event_attr:\n");
->                   perf_event_attr__fprintf(stderr, attr, __open_attr__fprintf, NULL);
+> ==================================================================
+> BUG: KASAN: use-after-free in __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+> Read of size 8 at addr ffff8880237d6018 by task syz-executor287/8300
 > 
-> or
-> Solution B:
-> 
->   diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
->   index 908b26e579e5..e3acc213edd1 100644
->   --- a/tools/perf/util/debug.c
->   +++ b/tools/perf/util/debug.c
->   @@ -241,6 +241,9 @@ int perf_quiet_option(void)
->                   opt++;
->           }
-> 
->   +       redirect_to_stderr = 0;
->   +       debug_peo_args = 0;
->   +
+> CPU: 0 PID: 8300 Comm: syz-executor287 Not tainted 6.1.0-syzkaller-09661-g13e3c7793e2f #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/26/2022
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0xd1/0x138 lib/dump_stack.c:106
+>  print_address_description mm/kasan/report.c:284 [inline]
+>  print_report+0x15e/0x45d mm/kasan/report.c:395
+>  kasan_report+0xbf/0x1f0 mm/kasan/report.c:495
+>  __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+>  lock_acquire kernel/locking/lockdep.c:5668 [inline]
+>  lock_acquire+0x1e3/0x630 kernel/locking/lockdep.c:5633
+>  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+>  _raw_spin_lock_irqsave+0x3d/0x60 kernel/locking/spinlock.c:162
+>  put_pmu_ctx kernel/events/core.c:4913 [inline]
+>  put_pmu_ctx+0xad/0x390 kernel/events/core.c:4893
+>  _free_event+0x3c5/0x13d0 kernel/events/core.c:5196
+>  free_event+0x58/0xc0 kernel/events/core.c:5224
+>  __do_sys_perf_event_open+0x66d/0x2980 kernel/events/core.c:12701
+>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>  do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+>  entry_SYSCALL_64_after_hwframe+0x63/0xcd
 
-That seems good to me.
+Does this help?
 
-> 
->> I see we have another problem as well: places that check "if (verbose)"
->> instead of "if (verbose > 0)"
-> Yes,  places that "if (verbose)" also have problems, I'll submit a patch to change them to "if (verbose > 0)"
-
-Thank you!
-
-> 
-> In addition, I found another problem, perf lock/stat/probe does not call the perf_quiet_option function when quiet is true.
-> 
-> Thanks,
-> Yang
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index e47914ac8732..bbff551783e1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	return event_fd;
+ 
+ err_context:
+-	/* event->pmu_ctx freed by free_event() */
++	put_pmu_ctx(event->pmu_ctx);
++	event->pmu_ctx = NULL; /* _free_event() */
+ err_locked:
+ 	mutex_unlock(&ctx->mutex);
+ 	perf_unpin_context(ctx);
