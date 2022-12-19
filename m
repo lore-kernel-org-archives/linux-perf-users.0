@@ -2,73 +2,166 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E61C4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 19:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F291C4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 20:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232183AbiLST40 (ORCPT
+        id S232171AbiLSURi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 14:56:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37698 "EHLO
+        Mon, 19 Dec 2022 15:17:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbiLST4R (ORCPT
+        with ESMTP id S229895AbiLSURh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 14:56:17 -0500
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A4B11C2E
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 11:56:17 -0800 (PST)
-Received: by mail-io1-f72.google.com with SMTP id f23-20020a5d8157000000b006dfb209094fso4543026ioo.18
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 11:56:16 -0800 (PST)
+        Mon, 19 Dec 2022 15:17:37 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543FDB20;
+        Mon, 19 Dec 2022 12:17:36 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id o12so10234485pjo.4;
+        Mon, 19 Dec 2022 12:17:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ydjKG6/uPmWnASJJycB3UT3EMyJQHIq9sn9NT3G23+I=;
+        b=HPkvOadAmReZaG0YjRN9WZgLPFIlfmM0EhA+AoMgCYcsD2L4GSoIEu/e+gj5ZZtrAs
+         /+jJQ455h5fR2CG1x+/5fT4P/7+/OvRrhvW43PuDYvLAsmckwkx6fOabq4RbUDGZ20ko
+         PDjZJMBoVW7VOuLm8LPRwWO11981diGE6nAVCITk9lTnxkvRxjFLYurAi5Oa8SZPS8vM
+         Q6sE4HMkiymKH28+kY2BeRuKMSm2SMVC/Zs2TOSrrHj9lDWkxuTIBvcv3KvnmLMTzgL8
+         B+dGlfAG5F+4VySpuLlJZjA1Hjj9h4FprSVH3iTJhPab6gwTQpH37K3BfK4NgKVzARJx
+         SgcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cj5G7w7wrnXTjWG4Lf9C2ODteMMiP5v7wAraEGH3U0k=;
-        b=JF5808TaP2SOTusizkMvhi3SPDX+WnAEfYUP/dm8QW4dULtrdXrBxRelvTK1saSyoQ
-         SQWEHRO2Bw0VxIGTX1YOPhV+Qe6cstmn/xlt31wn+o2GT+xGInCgCGeouD0YKjxliHcj
-         NA7iGvA1nILqQY9j4wSaPsNyx2ZK4VgL92jW9HDNvmz47NY4qLC14zO5iOAQzQsknoTQ
-         T6Yiy3xZ2Ykdzk5oFMyA6fOTzn5rSGU3QGH5w5xloeRpmV9CiifDVEoWEXJwPC7MfaBm
-         aDe8UZKYlB6f0QSclUcDJyjgd9+qaljIvuMpP7QJ2f9ZKgNRL2Lid8LB71xklcPfYdVg
-         cEjQ==
-X-Gm-Message-State: ANoB5pkQ4XVLY4+5zctzeP8DtRgBiBlFUWKNvRl3aW8a6Cy0R/nIkGhd
-        I96OkIJzF0ZCfVXfdgWXTXD4nbZfNsfDPCqXn2wgd3LOx+r2
-X-Google-Smtp-Source: AA0mqf7eE0GC/Cb+W5QzJIxt46Tbcb3KvugY9SCOhpmm/M5g7dQmZkOk8OKjjh9bxyYHJeuaULjQLcDPviCk4OX2G41hWkxQ25I2
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ydjKG6/uPmWnASJJycB3UT3EMyJQHIq9sn9NT3G23+I=;
+        b=gOg4WK1ykuCfx2868GZSvihW6RiN4Twq6rvRzp66eHQGhQviIhGsqHE0t+90ZCeIR4
+         2ufOvm6sSMkRpXduDvSCKmdkVBbFrRiG8XTWyeAhzHl+i9pfGo24w2xOZN3CFj8WzM0r
+         jxMFGlYAKE/5C6RT75J8J1nko3K1GAN1gGoVLFi2pv2o/37NNULkR8y+3VKUnZ5dDI5A
+         rkuAb9A/Evs5F5EOYB7jxJc8SOVndK9OzQ4v25f4z3k2dTOxw+D6ut9gcTantrfeUXCc
+         C1AHvMXR80uPY02jOsuIgdz4R5Wztu6g3Q8EUV9LsoX2qvVqmPrHbxdovpsl60qrLA8n
+         5A8g==
+X-Gm-Message-State: ANoB5pkmqAVAJPiw3XNQw66i3ByGWXQBJwr4+ZVGHk5f4rnfREeFBRIp
+        wlBassUhK+Co98szAMnNOjY=
+X-Google-Smtp-Source: AA0mqf4OKj13ZofBFkBbT3y3eGBqxh/6+Z4CA0EyDBZ2E6+p1BAjERR3/JpWgd8THe76BLLhnNas/g==
+X-Received: by 2002:a17:90a:7d0f:b0:219:aa6:87f with SMTP id g15-20020a17090a7d0f00b002190aa6087fmr45243319pjl.20.1671481055622;
+        Mon, 19 Dec 2022 12:17:35 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:735a:2805:e706:5164])
+        by smtp.gmail.com with ESMTPSA id f10-20020a17090ace0a00b00219220edf0dsm6324260pju.48.2022.12.19.12.17.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Dec 2022 12:17:34 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Blake Jones <blakejones@google.com>, bpf@vger.kernel.org
+Subject: [PATCH 0/6] perf lock contention: Add more filter options (v1)
+Date:   Mon, 19 Dec 2022 12:17:26 -0800
+Message-Id: <20221219201732.460111-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:13c1:b0:303:7f25:72c with SMTP id
- v1-20020a056e0213c100b003037f25072cmr7289815ilj.221.1671479776357; Mon, 19
- Dec 2022 11:56:16 -0800 (PST)
-Date:   Mon, 19 Dec 2022 11:56:16 -0800
-In-Reply-To: <Y6C8iQGENUk/XY/A@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000051b79a05f033b6e5@google.com>
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-From:   syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, peterz@infradead.org, sdf@google.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-syzbot tried to test the proposed patch but the build/boot failed:
+This patchset adds a couple of filters to perf lock contention command.
 
-failed to apply patch:
-checking file kernel/events/core.c
-patch: **** unexpected end of file in patch
+The -Y/--type-filter is to filter by lock types like spinlock or mutex.
+
+  $ sudo ./perf lock con -ab -Y spinlock -E 3 -- ./perf bench sched messaging
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
+
+       Total time: 0.167 [sec]
+   contended   total wait     max wait     avg wait         type   caller
+
+          11    669.31 us    107.17 us     60.85 us     spinlock   remove_wait_queue+0x14
+          10    586.85 us     87.62 us     58.68 us     spinlock   prepare_to_wait+0x27
+         186    497.36 us     12.94 us      2.67 us     spinlock   try_to_wake_up+0x1f5
+
+For the same workload, you can see the rwlock results only like below.
+
+  $ sudo ./perf lock con -ab -Y rwlock -E 3 -- ./perf bench sched messaging
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
+
+       Total time: 0.171 [sec]
+   contended   total wait     max wait     avg wait         type   caller
+
+          20    142.11 us     17.10 us      7.11 us     rwlock:W   do_exit+0x36d
+           3     26.49 us     12.04 us      8.83 us     rwlock:W   release_task+0x6e
+           5     12.46 us      5.12 us      2.49 us     rwlock:R   do_wait+0x8b
+
+The -L/--lock-filter is to filter by lock address or name.  You can use
+the existing -l/--lock-addr option to get the info.
+
+  $ sudo ./perf lock con -abl -- ./perf bench sched messaging 2>&1 | grep tasklist_lock
+          25     39.78 us     16.51 us      1.59 us   ffffffff9d006080   tasklist_lock
+
+And use it with -L option like below.
+
+  $ sudo ./perf lock con -ab -L tasklist_lock -- ./perf bench sched messaging 2>&1
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
+
+       Total time: 0.174 [sec]
+   contended   total wait     max wait     avg wait         type   caller
+
+          22    227.18 us     24.16 us     10.33 us     rwlock:W   do_exit+0x36d
+           3     26.12 us     18.03 us      8.71 us     rwlock:W   release_task+0x6e
+
+Passing the address is supported too.
+
+  $ sudo ./perf lock con -ab -L ffffffff9d006080 -- ./perf bench sched messaging 2>&1
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
+
+       Total time: 0.190 [sec]
+   contended   total wait     max wait     avg wait         type   caller
+
+          28    276.62 us     16.90 us      9.88 us     rwlock:W   do_exit+0x36d
+           4     22.36 us      7.04 us      5.59 us     rwlock:R   do_wait+0x8b
+           2     10.51 us      5.38 us      5.25 us     rwlock:W   release_task+0x6e
+
+You can get it from 'perf/lock-filter-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
 
 
+Namhyung Kim (6):
+  perf lock contention: Factor out lock_type_table
+  perf lock contention: Add -Y/--type-filter option
+  perf lock contention: Support lock type filtering for BPF
+  perf lock contention: Add -L/--lock-filter option
+  perf lock contention: Support lock addr/name filtering for BPF
+  perf test: Update perf lock contention test
 
-Tested on:
+ tools/perf/Documentation/perf-lock.txt        |  27 +-
+ tools/perf/builtin-lock.c                     | 305 ++++++++++++++++--
+ tools/perf/tests/shell/lock_contention.sh     |  58 +++-
+ tools/perf/util/bpf_lock_contention.c         |  55 +++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  38 ++-
+ tools/perf/util/lock-contention.h             |  10 +
+ 6 files changed, 451 insertions(+), 42 deletions(-)
 
-commit:         13e3c779 Merge tag 'for-netdev' of https://git.kernel...
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15861a9f880000
+
+base-commit: 51c4f2bf5397b34b79a6712221606e0ab2e6f7ed
+-- 
+2.39.0.314.g84b9a713c41-goog
 
