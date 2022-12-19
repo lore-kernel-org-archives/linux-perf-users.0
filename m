@@ -2,168 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A35C46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 14:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EBEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 16:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232461AbiLSO6h (ORCPT
+        id S231572AbiLSQNz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 09:58:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60630 "EHLO
+        Mon, 19 Dec 2022 11:13:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232456AbiLSO6Q (ORCPT
+        with ESMTP id S231470AbiLSQNx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 09:58:16 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA66103E;
-        Mon, 19 Dec 2022 06:55:12 -0800 (PST)
-Received: from leknes.fjasle.eu ([46.142.96.64]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MsaeR-1oslfq133D-00tyIB; Mon, 19 Dec 2022 15:44:53 +0100
-Received: from localhost.fjasle.eu (bergen.fjasle.eu [IPv6:fdda:8718:be81:0:6f0:21ff:fe91:394])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by leknes.fjasle.eu (Postfix) with ESMTPS id A7FAB3C1B9;
-        Mon, 19 Dec 2022 15:44:49 +0100 (CET)
-Authentication-Results: leknes.fjasle.eu; dkim=none; dkim-atps=neutral
-Received: by localhost.fjasle.eu (Postfix, from userid 1000)
-        id 711B377B; Mon, 19 Dec 2022 15:44:38 +0100 (CET)
-Date:   Mon, 19 Dec 2022 15:44:38 +0100
-From:   Nicolas Schier <nicolas@fjasle.eu>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mon, 19 Dec 2022 11:13:53 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF986A440;
+        Mon, 19 Dec 2022 08:13:50 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B601AD7;
+        Mon, 19 Dec 2022 08:14:31 -0800 (PST)
+Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6B5683F703;
+        Mon, 19 Dec 2022 08:13:48 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     robh@kernel.org, James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/5] tools lib subcmd: Add dependency test to
- install_headers
-Message-ID: <Y6B41hsv1KHDQMYh@bergen.fjasle.eu>
-References: <20221202045743.2639466-1-irogers@google.com>
- <20221202045743.2639466-4-irogers@google.com>
- <Y5eVwlId2A2/pN40@fjasle.eu>
- <CAP-5=fXeYsOs-YJH+hx=haGwJ_eqDNXYQQ30AiyDDfc5P2o84Q@mail.gmail.com>
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/4] Enable display of partial and empty SVE predicates from Arm SPE data
+Date:   Mon, 19 Dec 2022 16:12:54 +0000
+Message-Id: <20221219161259.3097213-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="keRu1ywOaLNQdaoA"
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXeYsOs-YJH+hx=haGwJ_eqDNXYQQ30AiyDDfc5P2o84Q@mail.gmail.com>
-Jabber-ID: nicolas@fjasle.eu
-X-Operating-System: Debian GNU/Linux bookworm/sid
-X-Provags-ID: V03:K1:yl11gYBxldkrWBmMWqPPZ7dMxGlIZugrpEYUIRHh38u8ZimLr8b
- 1zTL5CA03GKrLX5KddnhDPuoCpPPCg+XKi/89LoG0aHPG00VlmGn/jQV3VjU1FEc4f6/ABR
- jsQKfhRcYUBTk0oCwwjJI68WUTsXD6fXYAmi610sEyBVz3cb9ONljYGLMYEhu2tGphMNhD7
- bstfVrPwf9h8u+5BFyLGQ==
-UI-OutboundReport: notjunk:1;M01:P0:GHm+LHFQNqM=;mbXxJ8TCl6plJc3uEROHGtH5QWS
- ohcK7K8aIm9/1DEoWLoqekUocP4s9FK9CGV4HA77xIclj+OJXXiXRjA6ABAY9IPeU59ZZL7lw
- 45+9Y+kwa8v7RXP9Qr0bjykHxKXmHUPFYKpGfugcCylUBfRxMKjYdB01RVeA1bongbHK35cOO
- lh61W1x8L66izMQSP+DhE/KAjcac/4RDTPryPN7sxORT/gCGJVrSWF8hSaxjB1OAoO1dUWPfo
- bw8Vl9ZnIudAkhqRH99kN5wL/81yB56IjG6eNwc/eASdZov95NkMWArTEY647JbsnV7aUnPMI
- G2TMcqMoNSu8teietwr5yJGeWYAYz/eRG7An37WNzdAC6GzTTMaDF05bY29hGxipWtYGR0Nnh
- 8jZ6h3Zh0nWhdgCbog1GBMLTb1HfpCmxB/myZVhB/6UbUZm6LFn8cA98+18aJvccmtkJNjWHF
- 0fZ6nMhmzdH/LS/lyy+Dg4svw2ESUSHJSPGNhRWZzx3f3zEHfCl/LbM6th/BKIdfdoaIo4Gmj
- cC08goRSqAvozbO4clExazOPUgAOGfKYRZiS5G9EBgJMt8QqTlHb5tJDnLct9dbvXtOa6ScpH
- MkxjNDHKo1hexGbyn+ar9rK7Pgk159Zv4Ij4uAu4Xxq3BlVdX6oLNy1iq7CVO4GxXj00ciucA
- cw2LTJiz6kGQPdxaslNpEWG7i4kCB5494Khzbc2RQg==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi,
 
---keRu1ywOaLNQdaoA
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm submitting this on behalf of German who moved on to work on other
+things in Arm before he could finish it off.
 
-On Tue 13 Dec 2022 13:28:21 GMT, Ian Rogers wrote:
-> On Mon, Dec 12, 2022 at 12:57 PM Nicolas Schier <nicolas@fjasle.eu> wrote:
-> >
-> > On Thu, Dec 01, 2022 at 08:57:41PM -0800 Ian Rogers wrote:
-> > > Compute the headers to be installed from their source headers and make
-> > > each have its own build target to install it. Using dependencies
-> > > avoids headers being reinstalled and getting a new timestamp which
-> > > then causes files that depend on the header to be rebuilt.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/lib/subcmd/Makefile | 23 +++++++++++++----------
-> > >  1 file changed, 13 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-> > > index 9a316d8b89df..b87213263a5e 100644
-> > > --- a/tools/lib/subcmd/Makefile
-> > > +++ b/tools/lib/subcmd/Makefile
-> > > @@ -89,10 +89,10 @@ define do_install_mkdir
-> > >  endef
-> > >
-> > >  define do_install
-> > > -     if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-> > > -             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-> > > +     if [ ! -d '$2' ]; then             \
-> > > +             $(INSTALL) -d -m 755 '$2'; \
-> > >       fi;                                             \
-> > > -     $(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-> > > +     $(INSTALL) $1 $(if $3,-m $3,) '$2'
-> >
-> > What about using '$(INSTALL) -D ...' instead of the if-mkdir-block abov=
-e?
-> > (E.g. as in tools/debugging/Makefile.)
-> >
-> > Kind regards,
-> > Nicolas
->=20
-> Thanks Nicolas, the reason was to keep the code consistent. That's not
-> to say this is the best approach. For example, here is the same thing
-> for tools/lib/api:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools=
-/lib/api/Makefile?h=3Dperf/core&id=3Df43368371888694a2eceaaad8f5e9775c09200=
-9a#n84
->=20
-> If you'd like to improve this in all the versions and send patches I'd
-> be happy to take a look.
->=20
-> Thanks,
-> Ian
+The predicate information is available on SPE samples from 
+Armv8.3 (FEAT_SPEv1p1), this could be useful info for profiling SVE
+code as partial and empty predicates indicate that the full vector
+width isn't being used. There is a good example in the last commit
+message.
 
-Ian, while watching at tools/lib/*/Makefile I stumple across the=20
-special single-quote handling (e.g. 'DESTDIR_SQ') several times. =20
+Though currently, there isn't a suitable field to store the info
+on Perf samples, so this change also adds a new SIMD field.
+This field could be used by other architectures, but currently there
+is only one bit reserved to identify SVE. It's only added to
+struct perf_sample on the userspace side, and isn't part of the kernel
+ABI, so it doesn't survive a perf inject. Although this is the
+same behavior for some other fields like branch flags, so I don't
+think it should be an issue to do something similar here. Perhaps in
+the future we could make sure everything that is synthesised from
+auxtrace data also makes it back into the new Perf inject file without
+being lost.
 
-Top-level Makefile and kbuild are not designed to work with file or=20
-directory names containing spaces.  Do you know whether this is needed=20
-for the installation rules in tools/lib/?  I'd like to remove support=20
-for path names with spaces for a increasing simplicity and consistency.
+German Gomez (4):
+  perf event: Add simd_flags field to perf_sample
+  perf arm-spe: Refactor arm-spe to support operation packet type
+  perf arm-spe: Add SVE flags to the SPE samples
+  perf report: Add 'simd' sort field
 
-Kind regards,
-Nicolas
+ tools/perf/Documentation/perf-report.txt      |  1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 30 ++++++++++--
+ .../util/arm-spe-decoder/arm-spe-decoder.h    | 47 +++++++++++++++----
+ tools/perf/util/arm-spe.c                     | 28 +++++++++--
+ tools/perf/util/hist.c                        |  1 +
+ tools/perf/util/hist.h                        |  1 +
+ tools/perf/util/sample.h                      | 13 +++++
+ tools/perf/util/sort.c                        | 47 +++++++++++++++++++
+ tools/perf/util/sort.h                        |  2 +
+ 9 files changed, 152 insertions(+), 18 deletions(-)
 
---keRu1ywOaLNQdaoA
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+base-commit: 573de010917836f198a4e579d40674991659668b
+-- 
+2.25.1
 
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmOgeNUACgkQB1IKcBYm
-EmmqvBAAvc+hpUNMRLt4cfWfIA2KsbSBDQLjh+dWIF4bhH9lSOuSlfmwlYSaCjpG
-r656tEHGAS2oYr12RNBwDa7Rpl8M0XycHyCO39PmsUrjFDNlIrsIclhYo++9X+9G
-iJJIzy8fsBAW3apLVOv3sPnzMcv6jPj8QD4nQXtgAqBy1Nj798t416TC9gkd6ZXC
-ZBYbV2d6I4EtIbD24IK5eptBObyjSU1WlsZRlLq60JCMNjXTszsBTmN+qi91bZs0
-cctgVxhXxkB0d75w3KWHXKSbbAHurLtmIjzZMJEI3f+o+ptEwOWiP/+Sk3NXu7JX
-udi4vKNCX4TXXf3cOUmhKqGigaYpbCn4drPCa4r0kmdE7zkCeGtEuNLs8ocItiOS
-fRsxU9bTXcC/7Ox0DqX1/qBYQgHBmbF5eXqAg4UerAn4/8l4fxdXemeO/LwNVpGC
-Pkmioif0PU4wZFU27qzOqKnjgKfioLh8qLgXmTPMo8Hq7c62ytA/A35Hcn9ZEE/X
-e9F8Kg734p1LUHPTrpCfOg3Q3X0t9c2ra+4wBa8d7zhOWhFFfQDjsaIuoe8ZiSqv
-ZITXn7XySp/0sjot8HyO0a9bIZvR5RK9OfEayShgLuLIkd5yoByEjz551oh5I753
-KyeIgi+OMvO56V0n0kd2rh4O5E4IggpGJbjvG+KO4uY9L1DYYcU=
-=DYaH
------END PGP SIGNATURE-----
-
---keRu1ywOaLNQdaoA--
