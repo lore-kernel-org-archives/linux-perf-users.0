@@ -2,159 +2,197 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA93BC4332F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 10:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A69EC4167B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 13:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231779AbiLSK2u (ORCPT
+        id S231754AbiLSNBR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 05:28:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
+        Mon, 19 Dec 2022 08:01:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231800AbiLSK2q (ORCPT
+        with ESMTP id S231292AbiLSNBQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 05:28:46 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF402DC;
-        Mon, 19 Dec 2022 02:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671445726; x=1702981726;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=d3Etqv+m4QmEFWZNJVT+7Hf9gJVW9Po0tGZX19YMuvk=;
-  b=I+EmuAbzBgeUYiNijVK7U83HrPB8vD7ds2MKJs657JWLHzuL+j5zIVGi
-   mRCc2sELv5ACLRScYqZZcqP6boUsD0HMOG46/zbTOPbJMFJFtpJOMxEtJ
-   AmVuU0yR6n/jc6tldLdhwI8aZ2E/4gbp1U6TKsE8NmY7PYdIgadobB0yz
-   m2KmGRkCf6gc6iSc14oAI5cY00+OG7KX3jumVK/EP3x+hE8XIl7zMeHH4
-   wETfBebwvryvKuPgN2WI695fa+rp37H1ZPMyihG4TuILZis/+6Dl2f1qz
-   BbjtArdiOD/DHTDHRG6BvxAKeOfwK9YuiCxZA+afQpRXCkYQDko2KLzP7
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="320491234"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="320491234"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 02:28:26 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="792827895"
-X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="792827895"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.197])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 02:28:22 -0800
-Message-ID: <d2189ccc-26aa-250a-ad43-59d53ef01d5e@intel.com>
-Date:   Mon, 19 Dec 2022 12:28:20 +0200
+        Mon, 19 Dec 2022 08:01:16 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033B7F1B;
+        Mon, 19 Dec 2022 05:01:14 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id D666B609EA;
+        Mon, 19 Dec 2022 13:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1671454872; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cu7GZ5jYRiUnWJJskS+YQWDE2y6FSRRDJcyr5q4eRvk=;
+        b=Ea8AMWK2c6pj1usU+mQeE0lX/0Cb12gq0gacqNfVG2g/PgrFUvfWyCc5oOWWLXctI+Xd5Z
+        isy1pccZq3TuTQWw6n3A6DWwSs5Zfng5K9ClQk42Z1pnh8jdVzuiXJC/WsNleAy6+aXzw4
+        CNA/3LXkdlB2s6Zf+JTFZEZAg1wzH+g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1671454872;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cu7GZ5jYRiUnWJJskS+YQWDE2y6FSRRDJcyr5q4eRvk=;
+        b=GyrfcrRf0LsM/6yeSvEveTbJnO7xSQBjfc3c3RokqdQyQe9Ut5BXCWv5sxQysS//1F/9K8
+        KZnETV5uDTIs/8BQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C94A813498;
+        Mon, 19 Dec 2022 13:01:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 9YodMZhgoGOsDAAAMHmgww
+        (envelope-from <dwagner@suse.de>); Mon, 19 Dec 2022 13:01:12 +0000
+Date:   Mon, 19 Dec 2022 14:01:12 +0100
+From:   Daniel Wagner <dwagner@suse.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-trace-devel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [RFC v2] libtraceevent: Add initial support for meson
+Message-ID: <20221219130112.cttlfbtgzoot4bq7@carbon.lan>
+References: <20220707142723.8721-1-dwagner@suse.de>
+ <20221125211847.69b535ea@rorschach.local.home>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH] perf tool: Fix output unexpected messages in quiet mode
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, kan.liang@linux.intel.com,
-        kim.phillips@amd.com, german.gomez@arm.com, ravi.bangoria@amd.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221219024911.62741-1-yangjihong1@huawei.com>
- <194c676b-3a73-7f34-1f29-a157b5e4731f@intel.com>
- <7aecae79-5b6d-09ea-dfd5-4d4810875f3d@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <7aecae79-5b6d-09ea-dfd5-4d4810875f3d@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221125211847.69b535ea@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/12/22 11:28, Yang Jihong wrote:
-> Hello,
-> 
-> On 2022/12/19 14:59, Adrian Hunter wrote:
->> On 19/12/22 04:49, Yang Jihong wrote:
->>> When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
->>
->> Seems like redirect_to_stderr has similar issue?
-> The redirect_to_stderr is used only in the veprintf function:
-> 
->   int veprintf(int level, int var, const char *fmt, va_list args)
->   {
->           int ret = 0;
-> 
->           if (var >= level) {
->                   if (use_browser >= 1 && redirect_to_stderr <= 0) {
->                           ui_helpline__vshow(fmt, args);
->                   } else {
->                           ret = fprintf_time(debug_file);
->                           ret += vfprintf(debug_file, fmt, args);
->                   }
->           }
-> 
->           return ret;
->   }
-> 
-> If use quiet mode, verbose sets to -1. (also assigned in the perf_quiet_option function)
-> Because "var >= level" is false, veprintf function returns directly, which avoids this problem.
-> 
-> However, there are cases where:
->   # perf --debug stderr=-1 report -vvv 2>/tmp/debug
-> 
-> If stderr is -1, should we redirect pr_debug in this case?
+Hi Steven
 
-tools/perf/Documentation/perf.txt says debug variables are in value
-range (0, 10), so -1 is invalid anyway.
+Sorry for the late response, just got back from my vacation.
 
+On Fri, Nov 25, 2022 at 09:18:47PM -0500, Steven Rostedt wrote:
+> On Thu,  7 Jul 2022 16:27:23 +0200
+> Daniel Wagner <dwagner@suse.de> wrote:
 > 
-> Because I'm not sure if this is a problem,
-> if redirect_to_stderr needs to be fixed as well,
-> let me know and I'll submit a patch to fix it.
-
-perf_quiet_option() sets redirect_to_stderr = -1 with the intention
-that it turns it off, but it doesn't, although it gets turned of by
-verbose = -1. Perhaps set redirect_to_stderr = 0 in perf_quiet_option() ?
-
-I see we have another problem as well: places that check "if (verbose)"
-instead of "if (verbose > 0)"
-
+> > Add support for building the project with meson. It's not complete
+> > yet, for example building and installing the documentation is missing.
+> > 
+> > The rest should work as expected. The only thing I was not really
+> > clear what the purpose is the libtraceevent-dynamic-list which seems
+> > not be used or installed. The meson build will also generate the file
+> > but using the host nm and not the cross tool chain if any is used. I
+> > didn't want to invest too much time figuring out this detail if it is
+> > actually not used.
 > 
->>
->>> and display_attr incorrectly determines the value of debug_peo_args.
->>> As a result, unexpected information is displayed.
->>>
->>> Before:
->>>    # perf record --quiet -- ls > /dev/null
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      size                             128
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|PERIOD
->>>      read_format                      ID|LOST
->>>      disabled                         1
->>>      inherit                          1
->>>      mmap                             1
->>>      comm                             1
->>>      freq                             1
->>>      enable_on_exec                   1
->>>      task                             1
->>>      precise_ip                       3
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>      mmap2                            1
->>>      comm_exec                        1
->>>      ksymbol                          1
->>>      bpf_event                        1
->>>    ------------------------------------------------------------
->>>    ...
->>>
->>> After:
->>>    # perf record --quiet -- ls > /dev/null
->>>    #
->>>
->>> Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
->>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>
->> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
->>
-> Thanks for reviewed-by.
+> It came over from the perf update. See:
 > 
-> Thanks,
-> Yang
+>   f1489e5dce74a ("tools lib traceevent: Export dynamic symbols used by traceevent plugins")
+> 
+> Not sure it's still needed or not.
 
+After looking a bit closer, libtraceevent is not using this information
+itself, it's perf which uses this:
+
+  tools/perf/Makefile.perf
+
+  #
+  # The static build has no dynsym table, so this does not work for
+  # static build. Looks like linker starts to scream about that now
+  # (in Fedora 26) so we need to switch it off for static build.
+  DYNAMIC_LIST_LDFLAGS               = -Xlinker --dynamic-list=$(LIBTRACEEVENT_DYNAMIC_LIST)
+  LIBTRACEEVENT_DYNAMIC_LIST_LDFLAGS = $(if $(findstring -static,$(LDFLAGS)),,$(DYNAMIC_LIST_LDFLAGS))
+
+Right so the kernel has a copy of libtraceevent under
+tools/lib/traceevent. But I haven't really understood when this
+version of libtraceevent is used. I see in
+
+  tools/perf/Makefile.config
+
+  ifdef LIBTRACEEVENT_DYNAMIC
+    $(call feature_check,libtraceevent)
+    ifeq ($(feature-libtraceevent), 1)
+      EXTLIBS += -ltraceevent
+      LIBTRACEEVENT_VERSION := $(shell $(PKG_CONFIG) --modversion libtraceevent)
+      LIBTRACEEVENT_VERSION_1 := $(word 1, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
+      LIBTRACEEVENT_VERSION_2 := $(word 2, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
+      LIBTRACEEVENT_VERSION_3 := $(word 3, $(subst ., ,$(LIBTRACEEVENT_VERSION)))
+      LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
+      CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
+    else
+      dummy := $(error Error: No libtraceevent devel library found, please install libtraceevent-devel);
+    endif
+  endif
+
+So this clearly searches for the installed version of the library, but
+the
+
+  tools/perf/Makefile.perf
+
+  $(LIBTRACEEVENT_DYNAMIC_LIST): libtraceevent_plugins
+          $(Q)$(MAKE) -C $(TRACE_EVENT_DIR)plugins $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent-dynamic-list
+
+is creating the list from the sources shipped with the kernel? I suspect
+the idea here is to create this list and also install it and let the
+kernel use libtraceevent list. Unless I am completely confused.
+
+> > Obviously, meson is not make and there are some changes in how to use
+> > this build system. The meson documentation is outstanding good and
+> > usually has good tips and tricks to solve problems. But sure there is
+> > learning curve but hopefully not so step.
+> > 
+> > Anyway, as pure user the build steps are (in source tree builds are
+> > not supported):
+> > 
+> >   # configure using .build as build directory and install destination
+> >   # /tmp/test
+> >   meson .build --prefix=/tmp/test
+> > 
+> >   # trigger the build
+> >   ninja -C .build
+> > 
+> >   # install the library
+> >   ninja -C .build install
+> 
+> When this is all and done, it should still be part of "make".
+> 
+> That is, make could do the above for the user.
+
+Sure, this shouldn't be a big issue. Many project ship a simple Makefile
+for convenience. Though it should be kept simple and should not aim to
+support all features IMO.
+
+But given that we currently have a copy of libtraceevent in the kernel,
+I think we can't really ditch the Makefile unless we also could drop the
+copy in tools/lib/traceevent.
+
+> > +project(
+> > +    'libtraceevent', ['c'],
+> > +    meson_version: '>= 0.47.0',
+> 
+> I get a warning:
+> 
+> WARNING: Project specifies a minimum meson_version '>= 0.47.0' but uses features which were added in newer versions:
+>  * 0.50.0: {'include_directories kwarg of type string'}
+
+Meson 0.64.0 add a new warning. For libnvme I opted to update the
+minimum version requirement to 0.50.0.
+
+ Version 0.47.0 was released on 2018-07-02
+ Version 0.50.0 was released on 2019-03-10
+
+As reference Debian oldstable ships 0.49.0. Debian oldstable is
+not likely to update the libtracevent library, so I think it's also okay
+for the trace-cmd and it's library to depend on 0.50.0
+
+> > +    license: 'LGPL-2.1',
+> > +    version: '1.5.3',
+> > +    default_options: [
+> > +      'c_std=gnu99',
+> > +      'buildtype=release',
+> > +      'prefix=/usr',
+> 
+> default should be in /usr/local
+
+Sure.
+
+Thanks,
+Daniel
