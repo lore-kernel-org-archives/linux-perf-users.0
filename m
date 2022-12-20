@@ -2,70 +2,125 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F40C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 10:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C49C10F1E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 10:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233571AbiLTKFT (ORCPT
+        id S232937AbiLTKWk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 05:05:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60834 "EHLO
+        Tue, 20 Dec 2022 05:22:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233779AbiLTKE5 (ORCPT
+        with ESMTP id S233296AbiLTKWi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 05:04:57 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47CB918B1F;
-        Tue, 20 Dec 2022 02:04:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wFmQ7lRJi3uyaPcaAHBI+uNPG9r+91kEtiS0MtrW62Q=; b=ScnmtR6fKw0ny50Sd65lB+3C84
-        RcMtR5j+YKw3plF+WWUHvXhSVAXY5LxHFvM0YlSZbBCVC/+3kMn7+3uZz7Dzb9r416KpywdWCJxsj
-        Z9H6qgrAJG9oHh5mOccz4OIiPzm44i/mCbGJ8xJe4rGCkqSSLQvJqzyUjQW70Zz0pKnrNz6SiHj6R
-        FWObk0Ihgn1D4KJnB4ODt/qkjfEqJQb6ysAtNBqjY8Ju1EBQUAsUuD0zcdbs4bVdWBVjEBfgr+ewU
-        pHbjD5kkxQ6KwLEhhCGqDeA+D2v1oTEHMHzextFn2WtLNtH9JBBNZU8KJYOYFOcnFHvYgBKMNXPOs
-        TyODiHQA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1p7ZU6-00CxAQ-2C;
-        Tue, 20 Dec 2022 10:04:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EF9CE3000DD;
-        Tue, 20 Dec 2022 11:04:30 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B82CA200A4AD7; Tue, 20 Dec 2022 11:04:30 +0100 (CET)
-Date:   Tue, 20 Dec 2022 11:04:30 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-Message-ID: <Y6GIrqpDU331TTeB@hirez.programming.kicks-ass.net>
-References: <Y6Fxfw5fhHhQYaSd@hirez.programming.kicks-ass.net>
- <000000000000de0f0b05f03e6d9b@google.com>
+        Tue, 20 Dec 2022 05:22:38 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CD3129FE9;
+        Tue, 20 Dec 2022 02:22:37 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 857892F4;
+        Tue, 20 Dec 2022 02:23:18 -0800 (PST)
+Received: from [10.57.12.74] (unknown [10.57.12.74])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A50E3F71A;
+        Tue, 20 Dec 2022 02:22:34 -0800 (PST)
+Message-ID: <6f7291d7-ed3d-2ed2-654f-b8ba1a63cbad@arm.com>
+Date:   Tue, 20 Dec 2022 10:22:32 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000de0f0b05f03e6d9b@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 1/4] perf event: Add simd_flags field to perf_sample
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, robh@kernel.org,
+        German Gomez <german.gomez@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20221219161259.3097213-1-james.clark@arm.com>
+ <20221219161259.3097213-2-james.clark@arm.com>
+ <CAM9d7chFXKTcD80dLkFLwQVT9M+k0oRSB5C7gXUXUS2OZ0UusQ@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7chFXKTcD80dLkFLwQVT9M+k0oRSB5C7gXUXUS2OZ0UusQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 12:43:25AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> INFO: rcu detected stall in corrupted
-> 
-> rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { P5791 } 2673 jiffies s: 2805 root: 0x0/T
-> rcu: blocking rcu_node structures (internal RCU debug):
 
-That is an entirely different issue methinks. Let me go write up a
-Changelog for that thing and stuff it somewhere /urgent.
+
+On 19/12/2022 18:21, Namhyung Kim wrote:
+> Hi James,
+> 
+> On Mon, Dec 19, 2022 at 8:13 AM James Clark <james.clark@arm.com> wrote:
+>>
+>> From: German Gomez <german.gomez@arm.com>
+>>
+>> Add new field to the struct perf_sample to store flags related to SIMD
+>> ops.
+>>
+>> It will be used to store SIMD information from SVE and NEON when
+>> profiling using ARM SPE.
+>>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/util/sample.h | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+>> index 60ec79d4eea4..bdf52faf165f 100644
+>> --- a/tools/perf/util/sample.h
+>> +++ b/tools/perf/util/sample.h
+>> @@ -66,6 +66,18 @@ struct aux_sample {
+>>         void *data;
+>>  };
+>>
+>> +struct simd_flags {
+>> +       u64     arch:1, /* architecture (isa) */
+>> +               pred:2; /* predication */
+> 
+> Can we reserve more bits for possible future extension or
+> other arch support?  It seems to be too tight for each field.
+> Do you plan to add more info to the struct in the future?
+
+As far as I can see because this is userspace only, reserving bits
+doesn't be done ahead of time. When we need more bits we can just add
+it. It never gets written to a file either so there is no need for
+backwards compatibility.
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> +};
+>> +
+>> +/* simd architecture flags */
+>> +#define SIMD_OP_FLAGS_ARCH_SVE         0x01    /* ARM SVE */
+>> +
+>> +/* simd predicate flags */
+>> +#define SIMD_OP_FLAGS_PRED_PARTIAL     0x01    /* partial predicate */
+>> +#define SIMD_OP_FLAGS_PRED_EMPTY       0x02    /* empty predicate */
+>> +
+>>  struct perf_sample {
+>>         u64 ip;
+>>         u32 pid, tid;
+>> @@ -103,6 +115,7 @@ struct perf_sample {
+>>         struct stack_dump user_stack;
+>>         struct sample_read read;
+>>         struct aux_sample aux_sample;
+>> +       struct simd_flags simd_flags;
+>>  };
+>>
+>>  /*
+>> --
+>> 2.25.1
+>>
