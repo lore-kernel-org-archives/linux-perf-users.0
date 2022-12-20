@@ -2,83 +2,112 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AD1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 01:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D52C10F1E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 03:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232692AbiLTB6I (ORCPT
+        id S232967AbiLTD7x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 20:58:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
+        Mon, 19 Dec 2022 22:59:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232678AbiLTB6H (ORCPT
+        with ESMTP id S229571AbiLTD7w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 20:58:07 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B09D104
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 17:58:06 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id gt4so10948585pjb.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 17:58:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pwWABKvuFP4RgmKS9H+uBuAFTn5t+z05sqc7dXE4FnI=;
-        b=WlxZAD8qAm28cyRXiJvdf65gW9mHlAcE5IzwgdaHfa9fKNhIKBJThlEwzMwfjOWQlf
-         DsD47j/ZJYPxxNRlrv0CGcok80iKMWlmhVX6yGbP1YoDxDb/1N1wXHKSjZtW1rRYDVHQ
-         1yqsVlKncERtngYYNPrJ5v/PGG20EvMmK5KEG4v5maJboXDfBzwkcvJZR5tNxYdyyLMh
-         kaKU8Hpzc8oP6zHLHwZiG8DIXSxqO6CUhE+oVk6d1AbFTGAN6/LevE/I2j5CqI/xHCUi
-         8Ti1T3ai4EpQq4pfE7oEFWu7GhIwmVx9Z/ECxH2Zuk/8sM4k/wvHdVU0k86N2Ya1MUzT
-         LabQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pwWABKvuFP4RgmKS9H+uBuAFTn5t+z05sqc7dXE4FnI=;
-        b=vdoSivNXMdy7qID3nwlRvObqUrVlnerBrhtImsw/mFaeh+XRCbammBVbsmJ/z9wv0C
-         4/cLz++ALWNCS6YZGfJSWMnYWVd9Dtu4Vdmu1zM+JwbFj65MDy4OPpMLV5LNxbLvFFyY
-         7lBar3dnVIoQZNPka80qhks84jgBzQxUI29baQLVJ16k1wAPxGQslCa+xqgZv1VYJzmx
-         FvYq00CQ/sCNXhqpQ4rXzYqa7IhWRx/1+60RWTA3tXWfqhDXVl4bh8A672i8iv/iF+o2
-         JKrR0A41XGrg/brDQxfsA+FVWcE9KNADjSfbHRQ7T9lBf9sFXZWld8fQW8DXfb2HNyb3
-         y/Dw==
-X-Gm-Message-State: ANoB5plpnF9ZameLy8RlTcCXKfHLuvJsqT8w6Ohma7ouCyUFu1Pkl2T2
-        42OojO14BxT6Goqf62ILEB/SCg==
-X-Google-Smtp-Source: AA0mqf7TEFRuP19SHHJukzG4DJ/R9b3xcfnbq9/jCxFjJgqXPnpx7FEw1hzVVUm8h1VO1jj3hM4PuQ==
-X-Received: by 2002:a05:6a20:4d92:b0:ac:16ae:f46 with SMTP id gj18-20020a056a204d9200b000ac16ae0f46mr51694192pzb.15.1671501485512;
-        Mon, 19 Dec 2022 17:58:05 -0800 (PST)
-Received: from leoy-yangtze.lan ([152.70.116.104])
-        by smtp.gmail.com with ESMTPSA id e35-20020a631e23000000b004784cdc196dsm6975692pge.24.2022.12.19.17.58.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Dec 2022 17:58:04 -0800 (PST)
-Date:   Tue, 20 Dec 2022 09:57:57 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: Re: [PATCH] perf: makefile: add .DELETE_ON_ERROR special target
-Message-ID: <Y6EWpXikuoxLnajU@leoy-yangtze.lan>
-References: <20221217225151.90387-1-changbin.du@gmail.com>
+        Mon, 19 Dec 2022 22:59:52 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFABF632B;
+        Mon, 19 Dec 2022 19:59:50 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NbjVd67sbzJqV7;
+        Tue, 20 Dec 2022 11:58:49 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 20 Dec 2022 11:59:48 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <carsten.haitzler@arm.com>, <leo.yan@linaro.org>,
+        <ravi.bangoria@amd.com>, <martin.lau@kernel.org>,
+        <adrian.hunter@intel.com>, <ak@linux.intel.com>,
+        <masami.hiramatsu.pt@hitachi.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH 1/3] perf tools: Set debug_peo_args and redirect_to_stderr to correct values in perf_quiet_option
+Date:   Tue, 20 Dec 2022 11:57:00 +0800
+Message-ID: <20221220035702.188413-2-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20221220035702.188413-1-yangjihong1@huawei.com>
+References: <20221220035702.188413-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221217225151.90387-1-changbin.du@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Dec 18, 2022 at 06:51:51AM +0800, Changbin Du wrote:
-> As kbuild, this adds .DELETE_ON_ERROR special target to clean up
-> partially updated files on error. A known issue is the empty vmlinux.h
-> generted by bpftool if it failed to dump btf info.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
+and display_attr incorrectly determines the value of debug_peo_args.
+As a result, unexpected information is displayed.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Before:
+  # perf record --quiet -- ls > /dev/null
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             128
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|PERIOD
+    read_format                      ID|LOST
+    disabled                         1
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    enable_on_exec                   1
+    task                             1
+    precise_ip                       3
+    sample_id_all                    1
+    exclude_guest                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  ...
+
+After:
+  # perf record --quiet -- ls > /dev/null
+  #
+
+redirect_to_stderr is a similar problem.
+
+Fixes: f78eaef0e049 ("perf tools: Allow to force redirect pr_debug to stderr.")
+Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/util/debug.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 65e6c22f38e4..190e818a0717 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -241,6 +241,10 @@ int perf_quiet_option(void)
+ 		opt++;
+ 	}
+ 
++	/* For debug variables that are used as bool types, set to 0. */
++	redirect_to_stderr = 0;
++	debug_peo_args = 0;
++
+ 	return 0;
+ }
+ 
+-- 
+2.30.GIT
+
