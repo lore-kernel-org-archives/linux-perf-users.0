@@ -2,73 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C60C001B2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Dec 2022 22:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1212BC4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 01:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232541AbiLSWYT (ORCPT
+        id S232392AbiLTBhR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Dec 2022 17:24:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
+        Mon, 19 Dec 2022 20:37:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232438AbiLSWYS (ORCPT
+        with ESMTP id S233106AbiLTBgi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Dec 2022 17:24:18 -0500
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 593029FEE
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 14:24:17 -0800 (PST)
-Received: by mail-io1-f69.google.com with SMTP id w18-20020a5d9cd2000000b006e32359d7fcso4697132iow.15
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Dec 2022 14:24:17 -0800 (PST)
+        Mon, 19 Dec 2022 20:36:38 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99A41CFDC;
+        Mon, 19 Dec 2022 17:27:17 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id fy4so10918525pjb.0;
+        Mon, 19 Dec 2022 17:27:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VyFIxEgnWqnUvo2rmjS4K7Tu88OX44TFhCrJ6tX8KIo=;
+        b=pRhs1ishrMoO0v8GXYtYFW3V+IYFBQEmh2x+AG0gOs6cT4Uy5tiuqt4aiyOJ4DJiun
+         qWBHDzAZRkNq82gRAyZOOKcgHg8Ynw3f6FQSMYViTs2HWZloSoO+Yg2eKt9VJNo5mZgE
+         bCAy05R8dfxMCrw6+wP3K3n1C1OOIRc+hWNNrvOjkVqNo4ZW00A7/1ovOIO/QtULkWnB
+         mh1q5TY54GdeYuOJvU1couiG3TPM0EDfr4UDySQFkaljr5/BuQoriv5m44ADD6bUvjbM
+         lZYej0+R2o3mt3V8VnQFeA+soAQO3pAacWqfZeRBZVX4VZ6mZ7ERXAjCTqWEAlvD3hGd
+         OUpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=76mJq/l4HZlpTiL5oLX0kKwVOqHktPVtqBnvtIS30Wc=;
-        b=pYanMy7ypIhswXQMbA7gdCVM2n3KEq7mzcUYalFhX0yvJv3vCqE3GwIRe80ohzDxNg
-         Eb+TS1+8wWMQOOYPnt07c0hsJZlsFBOHvIg4lJ9bXjXX/RlqTlDddTHaUv6GhteM0Cex
-         /ZArzv1mEqhaK0IrTeCyLFAWTL4WOwyCoAfjb9HmY4i1PWkm7rGRSIEsueC68IxhlqXE
-         ArNw0uE/YpUo+/2MF8wm5gAPAZZCpr7PqNSaGeYHsmAipFMMuxoafem7L6WNJJX3QVWn
-         dFWAtLdIekD41Muroa/1VFrmGP3HBxniLiHHS61st7gmBG7Boo6pqzz5mfPwXoYDgza+
-         O+Ig==
-X-Gm-Message-State: ANoB5pnmzkgrbmjrUOVLVg7hhVCJwF9pe5M4daVtCv7PBYPjIBr+4pFD
-        CLvpkeo8lYLCPjDLN/S+MYQVP0620j8PF3+WhZ9p12h/DVDw
-X-Google-Smtp-Source: AA0mqf5koWrdgDmYUjh4xKAo1ta9oaVFjF3Be9Dw1NrhXCgSKhjJG/4FuFiOWekR09ThaBrobDJVV94M5L5993+HxdV02lC9kQwo
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VyFIxEgnWqnUvo2rmjS4K7Tu88OX44TFhCrJ6tX8KIo=;
+        b=PKQ0H63iDmBiqQ11wLfgSeUj7o6IM7cclQZmf2uA2Q1gzPezcWEPHUUE9Fj87uTNnf
+         4CqFa9TYqqmNa1kkgKcpR6TXCYBpMmIIoDmBZQ66K87Wd96oQn3sARFmpa3RSxZKu/OX
+         YxKTMyYaA7kbqxtBLZqdg7SyWOE51cy7FCP3HMXBn3nzWtNOLxBwcQS9WLdgR2Qk3L0d
+         vreUKkNFhdILrluzoN17ystf/qQFzdbeoXhAREkDG3c4hxBzDC7uQnfSavck1cUAEuDP
+         WJF1v5wlfWPpYxgQijSqHJrh3DG9bW9JV+5DjNVtto1su+5YXhikx2uTkg911SpyZLv7
+         Mzxg==
+X-Gm-Message-State: ANoB5plcwtY8Xwjx9aTT4ugbgnpDguwYU8j+VV4r1/bo8//WJiOlmRsb
+        LiViE+6Md8tUDVBQj4VxZK8=
+X-Google-Smtp-Source: AA0mqf4OqzW+ADzg42aFu8z0iEvFsDM+iVlEHmzssm+K1iZXv+6XSb7BY4xrtjZfxfX7dQl4HvxQgg==
+X-Received: by 2002:a17:902:e5c8:b0:189:6ab3:9e75 with SMTP id u8-20020a170902e5c800b001896ab39e75mr63049706plf.15.1671499612787;
+        Mon, 19 Dec 2022 17:26:52 -0800 (PST)
+Received: from mail.google.com ([103.135.102.144])
+        by smtp.gmail.com with ESMTPSA id l16-20020a170903121000b001745662d568sm7826467plh.278.2022.12.19.17.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Dec 2022 17:26:52 -0800 (PST)
+Date:   Tue, 20 Dec 2022 09:26:47 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] bpf: makefiles: do not generate empty vmlinux.h
+Message-ID: <20221220012647.oytzq7q6ahwfhdow@mail.google.com>
+References: <20221217223509.88254-1-changbin.du@gmail.com>
+ <20221217223509.88254-3-changbin.du@gmail.com>
+ <Y5/hqqIwJIjdBSRh@leoy-yangtze.lan>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:42c2:b0:6e0:117f:f0a7 with SMTP id
- ce2-20020a05660242c200b006e0117ff0a7mr9222393iob.127.1671488656681; Mon, 19
- Dec 2022 14:24:16 -0800 (PST)
-Date:   Mon, 19 Dec 2022 14:24:16 -0800
-In-Reply-To: <Y6DYsN+G3mdKP/Bb@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a0afac05f035c7a0@google.com>
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-From:   syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, peterz@infradead.org, sdf@google.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y5/hqqIwJIjdBSRh@leoy-yangtze.lan>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Mon, Dec 19, 2022 at 11:59:38AM +0800, Leo Yan wrote:
+> On Sun, Dec 18, 2022 at 06:35:09AM +0800, Changbin Du wrote:
+> > Remove the empty vmlinux.h if bpftool failed to dump btf info.
+> > The empty vmlinux.h can hide real error when reading output
+> > of make.
+> > 
+> > This is done by adding .DELETE_ON_ERROR special target in related
+> > makefiles.
+> 
+> We need to handle the same case for perf building, its makefile
+> linux/tools/perf/Makefile.perf also uses bpftool to generate
+> vmlinux.h, see:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/Makefile.perf#n1067
+> 
+> Please consider to use a separate patch to add the same change in
+> Makefile.perf?
+>
+It's alreay there.
+https://lore.kernel.org/lkml/20221217225151.90387-1-changbin.du@gmail.com/T/
 
-syzbot tried to test the proposed patch but the build/boot failed:
+> Thanks,
+> Leo
+> 
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  tools/bpf/bpftool/Makefile           | 3 +++
+> >  tools/testing/selftests/bpf/Makefile | 3 +++
+> >  2 files changed, 6 insertions(+)
+> > 
+> > diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> > index 787b857d3fb5..313fd1b09189 100644
+> > --- a/tools/bpf/bpftool/Makefile
+> > +++ b/tools/bpf/bpftool/Makefile
+> > @@ -289,3 +289,6 @@ FORCE:
+> >  .PHONY: all FORCE bootstrap clean install-bin install uninstall
+> >  .PHONY: doc doc-clean doc-install doc-uninstall
+> >  .DEFAULT_GOAL := all
+> > +
+> > +# Delete partially updated (corrupted) files on error
+> > +.DELETE_ON_ERROR:
+> > diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+> > index c22c43bbee19..205e8c3c346a 100644
+> > --- a/tools/testing/selftests/bpf/Makefile
+> > +++ b/tools/testing/selftests/bpf/Makefile
+> > @@ -626,3 +626,6 @@ EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR) $(HOST_SCRATCH_DIR)	\
+> >  			       liburandom_read.so)
+> >  
+> >  .PHONY: docs docs-clean
+> > +
+> > +# Delete partially updated (corrupted) files on error
+> > +.DELETE_ON_ERROR:
+> > -- 
+> > 2.37.2
+> > 
 
-failed to apply patch:
-checking file kernel/events/core.c
-patch: **** unexpected end of file in patch
-
-
-
-Tested on:
-
-commit:         13e3c779 Merge tag 'for-netdev' of https://git.kernel...
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
-compiler:       
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1451cef0480000
-
+-- 
+Cheers,
+Changbin Du
