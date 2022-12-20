@@ -2,119 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB67C4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 15:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B33C4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 17:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231790AbiLTPil (ORCPT
+        id S234024AbiLTRKw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 10:38:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37042 "EHLO
+        Tue, 20 Dec 2022 12:10:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbiLTPij (ORCPT
+        with ESMTP id S234001AbiLTRKn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 10:38:39 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFE5DEE4
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 07:38:37 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id ay40so9060863wmb.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 07:38:37 -0800 (PST)
+        Tue, 20 Dec 2022 12:10:43 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BCCBC6
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 09:10:43 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id g1so8945735pfk.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 09:10:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/34tJIyjAP7baqWGpngAiiqvT8UHp3bz8kKbMzeEnfA=;
-        b=14PCLWLvyaoEwZR603D8HJggj8rZdeGLGfIE/VDYssMSht2WCH/1E7Kt5QWRr9n9EY
-         TcF6F7/j6gsa/ZDHUWgrEuGVeurxWoywI5LwqgeHyXSNeB+aM1PomKtmFiVrJY9iFCax
-         0ChwJRiihnKqrwx9JLYyjh0jMK8zvF1LjM/bgN9KuDDWDdhHaA3V6QlIsC+3/X2MTeCS
-         YvmbF0MN8Zrd5CZaZDQiMB5R60hbYtoIn3jsJM4Vwq9Dk3R0uItZc7qOCtvqwuEVQ4mv
-         OfCq3VUlOMrFqCKovJ8HiF0YE/8hgNWYgoFFJ2tp0d8NK65qxBT9cSF5pVj981pywgSc
-         fpaw==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o6/NwTvG1ts0rBmQ9K+XNWZapy07EBTMQ36kpdSkC/M=;
+        b=SuEARZa3uOm8eCuCEdXiIA4dUUCYwaj39AXx4CUb7Emp5srU0IfqLWX6UpLoFkhSXZ
+         4Mpvt6m02Lqbp9omusDqgAq5VhcKkgz7khoAAomedfqx1V48/bPStI1ncUcCylbg3I2B
+         QvcwA7StM6sYXK6TQSvsS6bPctruF9XULezH8Lijef5n63XHHBDfj+IyhhnuHi8c11pG
+         COmMgXNoS1H6eAQYcE3YfG8lCkOqNNS5AHqbwi37wmrPl82aRzed5fYoPwcrKAG/N8oy
+         rfIY2P6TciwstqsQc+Ngkgjr0l5NSK64VOq0/LdvgV/kIm8z/2sbGCgsjdmP8Xyo6EqH
+         nA7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/34tJIyjAP7baqWGpngAiiqvT8UHp3bz8kKbMzeEnfA=;
-        b=ldme5iOZPVumqs7uWgw0wMbRgR3tC3ZZawz5K7MgSW40wLp9ajV66InB7G0QG6rhYr
-         VR+iJ/b20jMgMNCs5fTr98/WotPcp/dbCFH1Z4483HLv3qOYnlQRlDkm7BRiNxnIN32b
-         lkCq+su/EmR8YslPbuebY1zkFDptRniBIkV4E3OLALeGYztIJIw2Sl3UboBmJLaVzmxG
-         Aq+9WJmGM3s/P3K1nB8AR0ufuCla82Hpp0mX5ssySBhh7EjMjYkGF31ua0zqZns+6Qwg
-         UG7TfJneHaEg2/C4DIGeISiXAmzVf+LYF1E8D7emlGHhf1DM2qqRGzg6/ruBhpZfXazO
-         hV5Q==
-X-Gm-Message-State: AFqh2krkB5ktuIL01kGjrI/0rZa/wZlX52+GIs5101SUU+E7NCMXLLHr
-        KNQUASnWe9IXR9epqNWxFMtmirp6kDwEvMDD
-X-Google-Smtp-Source: AMrXdXuGOqlBaXnhHjBX3CP3CTvS32W4Oo+9iEk8VgNIUYzXfPokTe3bS7Lxl4mRzN6alWA3vKArHA==
-X-Received: by 2002:a05:600c:54ed:b0:3d3:3c74:dbd0 with SMTP id jb13-20020a05600c54ed00b003d33c74dbd0mr14531267wmb.13.1671550715837;
-        Tue, 20 Dec 2022 07:38:35 -0800 (PST)
-Received: from [192.168.178.32] ([51.155.200.13])
-        by smtp.gmail.com with ESMTPSA id p13-20020a05600c1d8d00b003d01b84e9b2sm16544121wms.27.2022.12.20.07.38.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Dec 2022 07:38:35 -0800 (PST)
-Message-ID: <b5fcbefa-75d5-b716-10f7-bd7ab1f6ff9b@isovalent.com>
-Date:   Tue, 20 Dec 2022 15:38:34 +0000
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o6/NwTvG1ts0rBmQ9K+XNWZapy07EBTMQ36kpdSkC/M=;
+        b=xf3a4fGc6H0eQm4JBswpdKq7fFfWViVEGqounomNeB1V2ew7hcR+ApQ7Enlf3J28HJ
+         8EWE5ztnfwv91KuYS6vV+CsLiP3LqnCiuhUOfyuT2sVUjw1zKdz5mclr5eA+HeIPLYoF
+         yvLc/+NSfdwxfMT7qrxRdAlwhqTNN3hee2DOIweCww9TRNmK02Gu/Xuo4hvx3aJ9WOS6
+         PIUwHQVxqt72NgVfuHc6RCOeFjRE2wK7L7SPNarJkVCNGqoYebs/1W/84XIj16PUkQ+L
+         LgNbMBI1jZu2/8UeCaP1OgivyvhmJVAn5TP3JpWLd1mqIkBMU1xYiuEWUgvDXtDzjKhk
+         dX8g==
+X-Gm-Message-State: ANoB5pkqtHbAnmTlAWuF/OsJOxYSuPLWvblG7t9M4uWCbmKM6lOS0f7u
+        98XWtMxGIzlFftP55CLwzSh4vODPu46I6IgUJ9pk+w==
+X-Google-Smtp-Source: AA0mqf4ZwwT4lP5lED/bdOCSru0RBf/NPcsWF81/I6R8hZ5dZvndnY8Ixug9Xf50fLBW1lod+238c4F2sWPMYEy34po=
+X-Received: by 2002:a63:2160:0:b0:46f:f26e:e8ba with SMTP id
+ s32-20020a632160000000b0046ff26ee8bamr74067527pgm.250.1671556242235; Tue, 20
+ Dec 2022 09:10:42 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v3 2/2] bpf: makefiles: do not generate empty vmlinux.h
-Content-Language: en-GB
-To:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20221217223509.88254-1-changbin.du@gmail.com>
- <20221217223509.88254-3-changbin.du@gmail.com>
-From:   Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <20221217223509.88254-3-changbin.du@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <000000000000a20a2e05f029c577@google.com> <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
+ <Y6C8iQGENUk/XY/A@google.com> <Y6Fw1ymTcFrMR3Hl@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y6Fw1ymTcFrMR3Hl@hirez.programming.kicks-ass.net>
+From:   Stanislav Fomichev <sdf@google.com>
+Date:   Tue, 20 Dec 2022 09:10:30 -0800
+Message-ID: <CAKH8qBs1UiikX=_CBzRC_2rg3sp8CU5hhB7sOkNkNBqm8OqFEw@mail.gmail.com>
+Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: multipart/mixed; boundary="0000000000000ba28505f0458408"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-2022-12-18 06:35 UTC+0800 ~ Changbin Du <changbin.du@gmail.com>
-> Remove the empty vmlinux.h if bpftool failed to dump btf info.
-> The empty vmlinux.h can hide real error when reading output
-> of make.
-> 
-> This is done by adding .DELETE_ON_ERROR special target in related
-> makefiles.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> ---
->  tools/bpf/bpftool/Makefile           | 3 +++
->  tools/testing/selftests/bpf/Makefile | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index 787b857d3fb5..313fd1b09189 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
-> @@ -289,3 +289,6 @@ FORCE:
->  .PHONY: all FORCE bootstrap clean install-bin install uninstall
->  .PHONY: doc doc-clean doc-install doc-uninstall
->  .DEFAULT_GOAL := all
-> +
-> +# Delete partially updated (corrupted) files on error
-> +.DELETE_ON_ERROR:
+--0000000000000ba28505f0458408
+Content-Type: text/plain; charset="UTF-8"
 
-Acked-by: Quentin Monnet <quentin@isovalent.com>
+On Tue, Dec 20, 2022 at 12:22 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, Dec 19, 2022 at 11:33:29AM -0800, sdf@google.com wrote:
+> > On 12/19, Peter Zijlstra wrote:
+> > > On Mon, Dec 19, 2022 at 12:04:43AM -0800, syzbot wrote:
+>
+> > > > HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of
+> > > https://git.kernel...
+> > > > git tree:       bpf
+> > > > console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
+> > > > kernel config:
+> > > https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
+> > > > dashboard link:
+> > > https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+>
+> ^ so syzbot knows what tree and config were used to trigger the report,
+> then why:
 
-Thanks!
+I haven't used it before and wasn't sure whether it would take the
+last commit from the branch of the one where it failed. Adding them
+shouldn't hurt, right?
 
+> > Let's maybe try it this way:
+> >
+> > #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+> > 13e3c7793e2f
+>
+> do you have to repeat that again in order for it to test something?
+
+Yeah, I was trying to understand why it doesn't like my patch. It
+seems I can retry with the patch attached which hopefully should fix
+the possible formatting issue; let's see.
+
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+13e3c7793e2f
+
+--0000000000000ba28505f0458408
+Content-Type: text/x-patch; charset="US-ASCII"; name="pmu.patch"
+Content-Disposition: attachment; filename="pmu.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lbwhemfp0>
+X-Attachment-Id: f_lbwhemfp0
+
+ZGlmZiAtLWdpdCBhL2tlcm5lbC9ldmVudHMvY29yZS5jIGIva2VybmVsL2V2ZW50cy9jb3JlLmMK
+aW5kZXggZTQ3OTE0YWM4NzMyLi5iYmZmNTUxNzgzZTEgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9ldmVu
+dHMvY29yZS5jCisrKyBiL2tlcm5lbC9ldmVudHMvY29yZS5jCkBAIC0xMjY4OSw3ICsxMjY4OSw4
+IEBAIFNZU0NBTExfREVGSU5FNShwZXJmX2V2ZW50X29wZW4sCiAJcmV0dXJuIGV2ZW50X2ZkOwog
+CiBlcnJfY29udGV4dDoKLQkvKiBldmVudC0+cG11X2N0eCBmcmVlZCBieSBmcmVlX2V2ZW50KCkg
+Ki8KKwlwdXRfcG11X2N0eChldmVudC0+cG11X2N0eCk7CisJZXZlbnQtPnBtdV9jdHggPSBOVUxM
+OyAvKiBfZnJlZV9ldmVudCgpICovCiBlcnJfbG9ja2VkOgogCW11dGV4X3VubG9jaygmY3R4LT5t
+dXRleCk7CiAJcGVyZl91bnBpbl9jb250ZXh0KGN0eCk7Cg==
+--0000000000000ba28505f0458408--
