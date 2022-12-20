@@ -2,246 +2,244 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BFC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 07:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A53C4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 07:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233289AbiLTHlA (ORCPT
+        id S233456AbiLTHov (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 02:41:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56240 "EHLO
+        Tue, 20 Dec 2022 02:44:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232678AbiLTHk6 (ORCPT
+        with ESMTP id S229500AbiLTHou (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 02:40:58 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29ED0F72;
-        Mon, 19 Dec 2022 23:40:49 -0800 (PST)
-Received: from leknes.fjasle.eu ([46.142.99.43]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MXop2-1pNwzJ3lO8-00YAcI; Tue, 20 Dec 2022 08:33:58 +0100
-Received: from localhost.fjasle.eu (bergen.fjasle.eu [IPv6:fdda:8718:be81:0:6f0:21ff:fe91:394])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by leknes.fjasle.eu (Postfix) with ESMTPS id 0FC3A3C0EE;
-        Tue, 20 Dec 2022 08:33:52 +0100 (CET)
-Authentication-Results: leknes.fjasle.eu; dkim=none; dkim-atps=neutral
-Received: by localhost.fjasle.eu (Postfix, from userid 1000)
-        id A79D423F; Tue, 20 Dec 2022 08:33:50 +0100 (CET)
-Date:   Tue, 20 Dec 2022 08:33:50 +0100
-From:   Nicolas Schier <nicolas@fjasle.eu>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 3/5] tools lib subcmd: Add dependency test to
- install_headers
-Message-ID: <Y6FlXj2IT/5ruI/j@bergen.fjasle.eu>
+        Tue, 20 Dec 2022 02:44:50 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80F5F02D;
+        Mon, 19 Dec 2022 23:44:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671522289; x=1703058289;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=HhcHaC7OTScndf8giR5r7aM9+a4/eGr79AWK42uFurY=;
+  b=ilm+o2CrqsaOGFBA+CROhuthZYFY129BFwIvJ1JgAIFyPidMmUOwW+Q9
+   6H4lz8yhWOumhaetLY2ZtarNG2nwlKRNJDS+RyqMqyJtk5+lpHjj1nqEW
+   Eq+S4V1Yh2fmVbu7DBW8HgkO0YeKgCm2whnUJdTAv4dFp9KLVWuaH4mKW
+   OR51wqXUiYqmCc6ayCCF6xAmRbd3Pu0O9hgaeam/Tkmpz9pQw2kIMfBbb
+   lXNWrXIRoXCY0AQbpmAiA3pjlvpeow3UoLG5LyFvTLGfSaexvqyx4mU3D
+   SGvux5rFM3encb6F2hClVdMQ1hvs5qurAw9/tQh7U44g3pfTpbLBWw2zj
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10566"; a="381775827"
+X-IronPort-AV: E=Sophos;i="5.96,258,1665471600"; 
+   d="scan'208";a="381775827"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 23:44:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10566"; a="757971844"
+X-IronPort-AV: E=Sophos;i="5.96,258,1665471600"; 
+   d="scan'208";a="757971844"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.45.157])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 23:44:44 -0800
+Message-ID: <fde42d64-390c-53c2-b5f0-5441366dbaf1@intel.com>
+Date:   Tue, 20 Dec 2022 09:44:41 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iTsQL20z2LG4ZgZl"
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXX5RsCFvGy2_CBYJczauWVemSRB=Bz3nDQ9iufuAXyHg@mail.gmail.com>
- <20221202045743.2639466-4-irogers@google.com>
-Jabber-ID: nicolas@fjasle.eu
-X-Operating-System: Debian GNU/Linux bookworm/sid
-X-Provags-ID: V03:K1:olVMs0MvHTcPOd+l3DsTa5pBjm+dogUdGH44zkKe9/7m2zeuAiX
- Tb4h6bKxmRzUqf9MEUYwvde7kUrQjhoHgyotiak1j66PXYPzYY5lO43ZaXtx0WXJ5Y1/J17
- 5DWQZqI/kzo9Wv86erKvk27BndkmA1VjA3mwBfBD0G1oZQUoIYwKiELsog5ldjTNahmbLqa
- v7Z43zcCPCh64Puv9GUaQ==
-UI-OutboundReport: notjunk:1;M01:P0:sMiFDohd1Wo=;SbjFRhEBbe8SUFWXQv+3apLh4HM
- PgkXMwlVw85ZSgTWUTzxD5qRW9l832uGEpmoGFo88bfWYAGYyhww/2W23pg4I2aJEphInDVON
- n9DUpTkWLesuzw4q7gbO6qaTcntUSkkTNxWf59LEuActoF3EIS9DfWWPR5wzaL19yz5XeeLju
- xOdna8Co55800qnui7iAexTCvf+347f4YzrxDnb0S4P8yRImKyBcux1LPNt//H1GIMUxaAdKi
- 3wwC6bJBplW5+tSHLtQbzFNBLT8WET6xgb0678bh33Zvz+avtukApSmwjxV61ErCADSHw3VUr
- e1wjCyFXeOoS3BxhElN6yzDkG3shq6vJAAX3OMPhyafu4yX0o3BsFXVuBY1sPvnqQy/jXN4U0
- w+1Uk7oB6OV+Syv7S36ZTYgCkGMRW0gT1hudac15dqHnpwzTunLN046odYABGDlkIi+njmBxv
- EW1evOCjaTOBMoRpqceeEl7GLI9rIv2E0r2tVhzOTEoV6ZKdxBw8lSWNErozmJhAA1aF5OM1S
- sQ387/XoFrHBNTWLprZO96GO6AzPG0JqoRkVnJw3fUxWdS0jvtM+VsgxtpncmYSmcIpuzBPbn
- sVqwWjXdqQd3UWwpU3WgNiDJc7+eOS0rb6KcwScD6YMvcLr1tYe3TZZsxHTmpGTeCmpHMqwpI
- W0aqWzvmMV9JHPif3SNmpkanM7250nehlwimwiEBYA==
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 2/3] perf tools: Fix usage of the verbose variable
+Content-Language: en-US
+To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, carsten.haitzler@arm.com,
+        leo.yan@linaro.org, ravi.bangoria@amd.com, martin.lau@kernel.org,
+        ak@linux.intel.com, masami.hiramatsu.pt@hitachi.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221220035702.188413-1-yangjihong1@huawei.com>
+ <20221220035702.188413-3-yangjihong1@huawei.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20221220035702.188413-3-yangjihong1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 20/12/22 05:57, Yang Jihong wrote:
+> The data type of the verbose variable is integer and can be negative,
+> replace improperly used cases in a unified manner:
+>  1. if (verbose)        => if (verbose > 0)
+>  2. if (!verbose)       => if (verbose <= 0)
+>  3. if (XX && verbose)  => if (XX && verbose > 0)
+>  4. if (XX && !verbose) => if (XX && verbose <= 0)
+> 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 
---iTsQL20z2LG4ZgZl
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On Mon 19 Dec 2022 14:48:59 GMT, Ian Rogers wrote:
-> On Mon, Dec 19, 2022 at 6:44 AM Nicolas Schier <nicolas@fjasle.eu> wrote:
->=20
-> > On Tue 13 Dec 2022 13:28:21 GMT, Ian Rogers wrote:
-> > > On Mon, Dec 12, 2022 at 12:57 PM Nicolas Schier <nicolas@fjasle.eu>
-> > wrote:
-> > > >
-> > > > On Thu, Dec 01, 2022 at 08:57:41PM -0800 Ian Rogers wrote:
-> > > > > Compute the headers to be installed from their source headers and
-> > make
-> > > > > each have its own build target to install it. Using dependencies
-> > > > > avoids headers being reinstalled and getting a new timestamp which
-> > > > > then causes files that depend on the header to be rebuilt.
-> > > > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > ---
-> > > > >  tools/lib/subcmd/Makefile | 23 +++++++++++++----------
-> > > > >  1 file changed, 13 insertions(+), 10 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-> > > > > index 9a316d8b89df..b87213263a5e 100644
-> > > > > --- a/tools/lib/subcmd/Makefile
-> > > > > +++ b/tools/lib/subcmd/Makefile
-> > > > > @@ -89,10 +89,10 @@ define do_install_mkdir
-> > > > >  endef
-> > > > >
-> > > > >  define do_install
-> > > > > -     if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-> > > > > -             $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-> > > > > +     if [ ! -d '$2' ]; then             \
-> > > > > +             $(INSTALL) -d -m 755 '$2'; \
-> > > > >       fi;                                             \
-> > > > > -     $(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-> > > > > +     $(INSTALL) $1 $(if $3,-m $3,) '$2'
-> > > >
-> > > > What about using '$(INSTALL) -D ...' instead of the if-mkdir-block
-> > above?
-> > > > (E.g. as in tools/debugging/Makefile.)
-> > > >
-> > > > Kind regards,
-> > > > Nicolas
-> > >
-> > > Thanks Nicolas, the reason was to keep the code consistent. That's not
-> > > to say this is the best approach. For example, here is the same thing
-> > > for tools/lib/api:
-> > >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/too=
-ls/lib/api/Makefile?h=3Dperf/core&id=3Df43368371888694a2eceaaad8f5e9775c092=
-009a#n84
-> > >
-> > > If you'd like to improve this in all the versions and send patches I'd
-> > > be happy to take a look.
-> > >
-> > > Thanks,
-> > > Ian
-> >
-> > Ian, while watching at tools/lib/*/Makefile I stumple across the
-> > special single-quote handling (e.g. 'DESTDIR_SQ') several times.
-> >
-> > Top-level Makefile and kbuild are not designed to work with file or
-> > directory names containing spaces.  Do you know whether this is needed
-> > for the installation rules in tools/lib/?  I'd like to remove support
-> > for path names with spaces for a increasing simplicity and consistency.
-> >
-> > Kind regards,
-> > Nicolas
-> >
->=20
-> Hi Nicolas,
->=20
-> Simplicity in the files SGTM, my own shell script norms are to be
-> cautious/defensive around the interpretation of spaces. The SQ code was
-> cargo culted and so may or may not be necessary. The installation rules a=
-re
-> dealing with user paths which may contain spaces, so I'd encourage some
-> caution. We should be able to come up with some command lines that test a=
-ll
-> cases to determine if anything suffers from the changes and whether to ca=
-re.
->=20
-> Thanks,
-> Ian
+> ---
+>  tools/perf/builtin-lock.c                   | 6 +++---
+>  tools/perf/builtin-record.c                 | 4 ++--
+>  tools/perf/builtin-script.c                 | 2 +-
+>  tools/perf/builtin-stat.c                   | 4 ++--
+>  tools/perf/dlfilters/dlfilter-test-api-v0.c | 2 +-
+>  tools/perf/tests/builtin-test.c             | 2 +-
+>  tools/perf/tests/dlfilter-test.c            | 2 +-
+>  tools/perf/util/bpf_lock_contention.c       | 2 +-
+>  tools/perf/util/dlfilter.c                  | 2 +-
+>  9 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 25c0a5e5051f..6276dfbc94a1 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -1029,7 +1029,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
+>  		if (!ls)
+>  			return -ENOMEM;
+>  
+> -		if (aggr_mode == LOCK_AGGR_CALLER && verbose) {
+> +		if (aggr_mode == LOCK_AGGR_CALLER && verbose > 0) {
+>  			ls->callstack = get_callstack(sample, max_stack_depth);
+>  			if (ls->callstack == NULL)
+>  				return -ENOMEM;
+> @@ -1214,7 +1214,7 @@ static void print_bad_events(int bad, int total)
+>  	for (i = 0; i < BROKEN_MAX; i++)
+>  		broken += bad_hist[i];
+>  
+> -	if (quiet || (broken == 0 && !verbose))
+> +	if (quiet || (broken == 0 && verbose <= 0))
+>  		return;
+>  
+>  	pr_info("\n=== output for debug===\n\n");
+> @@ -1529,7 +1529,7 @@ static void print_contention_result(struct lock_contention *con)
+>  			break;
+>  		}
+>  
+> -		if (aggr_mode == LOCK_AGGR_CALLER && verbose) {
+> +		if (aggr_mode == LOCK_AGGR_CALLER && verbose > 0) {
+>  			struct map *kmap;
+>  			struct symbol *sym;
+>  			char buf[128];
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 8ecffa696ce3..29dcd454b8e2 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3629,7 +3629,7 @@ static int record__init_thread_cpu_masks(struct record *rec, struct perf_cpu_map
+>  	for (t = 0; t < rec->nr_threads; t++) {
+>  		__set_bit(perf_cpu_map__cpu(cpus, t).cpu, rec->thread_masks[t].maps.bits);
+>  		__set_bit(perf_cpu_map__cpu(cpus, t).cpu, rec->thread_masks[t].affinity.bits);
+> -		if (verbose) {
+> +		if (verbose > 0) {
+>  			pr_debug("thread_masks[%d]: ", t);
+>  			mmap_cpu_mask__scnprintf(&rec->thread_masks[t].maps, "maps");
+>  			pr_debug("thread_masks[%d]: ", t);
+> @@ -3726,7 +3726,7 @@ static int record__init_thread_masks_spec(struct record *rec, struct perf_cpu_ma
+>  		}
+>  		rec->thread_masks = thread_masks;
+>  		rec->thread_masks[t] = thread_mask;
+> -		if (verbose) {
+> +		if (verbose > 0) {
+>  			pr_debug("thread_masks[%d]: ", t);
+>  			mmap_cpu_mask__scnprintf(&rec->thread_masks[t].maps, "maps");
+>  			pr_debug("thread_masks[%d]: ", t);
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 88888fb885c8..69394ac0a20d 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2233,7 +2233,7 @@ static void process_event(struct perf_script *script,
+>  	if (PRINT_FIELD(METRIC))
+>  		perf_sample__fprint_metric(script, thread, evsel, sample, fp);
+>  
+> -	if (verbose)
+> +	if (verbose > 0)
+>  		fflush(fp);
+>  }
+>  
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index bf640abc9c41..9f3e4b257516 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -266,7 +266,7 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
+>  		evsel__group_desc(leader, buf, sizeof(buf));
+>  		pr_warning("  %s\n", buf);
+>  
+> -		if (verbose) {
+> +		if (verbose > 0) {
+>  			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
+>  			pr_warning("     %s: %s\n", leader->name, buf);
+>  			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
+> @@ -2493,7 +2493,7 @@ int cmd_stat(int argc, const char **argv)
+>  		if (iostat_mode == IOSTAT_LIST) {
+>  			iostat_list(evsel_list, &stat_config);
+>  			goto out;
+> -		} else if (verbose)
+> +		} else if (verbose > 0)
+>  			iostat_list(evsel_list, &stat_config);
+>  		if (iostat_mode == IOSTAT_RUN && !target__has_cpu(&target))
+>  			target.system_wide = true;
+> diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> index b17eb52a0694..b1f51efd67d6 100644
+> --- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> +++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
+> @@ -119,7 +119,7 @@ struct perf_dlfilter_fns perf_dlfilter_fns;
+>  static int verbose;
+>  
+>  #define pr_debug(fmt, ...) do { \
+> -		if (verbose) \
+> +		if (verbose > 0) \
+>  			fprintf(stderr, fmt, ##__VA_ARGS__); \
+>  	} while (0)
+>  
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index f6c16ad8ed50..cfa61493c750 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -305,7 +305,7 @@ static int shell_test__run(struct test_suite *test, int subdir __maybe_unused)
+>  
+>  	path__join(script, sizeof(script) - 3, st->dir, st->file);
+>  
+> -	if (verbose)
+> +	if (verbose > 0)
+>  		strncat(script, " -v", sizeof(script) - strlen(script) - 1);
+>  
+>  	err = system(script);
+> diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
+> index 99aa72e425e4..086fd2179e41 100644
+> --- a/tools/perf/tests/dlfilter-test.c
+> +++ b/tools/perf/tests/dlfilter-test.c
+> @@ -88,7 +88,7 @@ static __printf(1, 2) int system_cmd(const char *fmt, ...)
+>  	if (ret <= 0 || ret >= MAXCMD)
+>  		return -1;
+>  
+> -	if (!verbose)
+> +	if (verbose <= 0)
+>  		strcat(cmd, REDIRECT_TO_DEV_NULL);
+>  
+>  	pr_debug("Command: %s\n", cmd);
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 8e1b791dc58f..df8dbb5191b4 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -215,7 +215,7 @@ int lock_contention_read(struct lock_contention *con)
+>  			break;
+>  		}
+>  
+> -		if (verbose) {
+> +		if (verbose > 0) {
+>  			st->callstack = memdup(stack_trace, stack_size);
+>  			if (st->callstack == NULL)
+>  				break;
+> diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+> index 54e4d4495e00..37beb7530288 100644
+> --- a/tools/perf/util/dlfilter.c
+> +++ b/tools/perf/util/dlfilter.c
+> @@ -579,7 +579,7 @@ static void list_filters(const char *dirname)
+>  		if (!get_filter_desc(dirname, entry->d_name, &desc, &long_desc))
+>  			continue;
+>  		printf("  %-36s %s\n", entry->d_name, desc ? desc : "");
+> -		if (verbose) {
+> +		if (verbose > 0) {
+>  			char *p = long_desc;
+>  			char *line;
+>  
 
-Hi Ian,
-
-looking at some of the tools/lib/*/Makefiles and your patch above, the=20
-use of DESTDIR vs. DESTDIR_SQ seems to be quite inconsistent already:
-
->  define do_install
-> -	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-> -		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-> +	if [ ! -d '$2' ]; then             \
-> +		$(INSTALL) -d -m 755 '$2'; \
->  	fi;                                             \
-> -	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-> +	$(INSTALL) $1 $(if $3,-m $3,) '$2'
-
-Here, the single-quoted DESTDIR_SQ is removed from do_install (which I=20
-think is a good thing)...
-
->  endef
-> =20
->  install_lib: $(LIBFILE)
-> @@ -100,13 +100,16 @@ install_lib: $(LIBFILE)
->  		$(call do_install_mkdir,$(libdir_SQ)); \
->  		cp -fpR $(LIBFILE) $(DESTDIR)$(libdir_SQ)
-> =20
-> -install_headers:
-> -	$(call QUIET_INSTALL, libsubcmd_headers) \
-> -		$(call do_install,exec-cmd.h,$(prefix)/include/subcmd,644); \
-> -		$(call do_install,help.h,$(prefix)/include/subcmd,644); \
-> -		$(call do_install,pager.h,$(prefix)/include/subcmd,644); \
-> -		$(call do_install,parse-options.h,$(prefix)/include/subcmd,644); \
-> -		$(call do_install,run-command.h,$(prefix)/include/subcmd,644);
-> +HDRS :=3D exec-cmd.h help.h pager.h parse-options.h run-command.h
-> +INSTALL_HDRS_PFX :=3D $(DESTDIR)$(prefix)/include/subcmd
-> +INSTALL_HDRS :=3D $(addprefix $(INSTALL_HDRS_PFX)/, $(HDRS))
-> +
-> +$(INSTALL_HDRS): $(INSTALL_HDRS_PFX)/%.h: %.h
-> +	$(call QUIET_INSTALL, $@) \
-> +		$(call do_install,$<,$(INSTALL_HDRS_PFX)/,644)
-
-=2E.. and a plain $(DESTDIR) (via $(INSTALL_HDRS_PFX)) is forwarded to=20
-do_install.  Doesn't that mean, that we end up with
-
-  $(INSTALL) $< -m 644 '$(DESTDIR)$(prefix)/include/subcmd'
-
-where neither $(DESTDIR) nor $(prefix) has the special single-quote=20
-handling?  If we would remove the single-quoting and _SQ redefinitions,=20
-it _should_ be possible (again) to have destination paths with spaces=20
-(and single quotes), iff users escape properly e.g.
-DESTDIR=3D"'/name with space'".  Perhaps a hint about that in the=20
-Documentation might then be helpful.
-
-Or do I get something completely wrong?
-
-If nobody complains, I am going to prepare a patch for removing the=20
-single-quote special handling.
-
-Kind regards,
-Nicolas
-
---iTsQL20z2LG4ZgZl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmOhZVgACgkQB1IKcBYm
-EmmSmhAA57YOl1MinlSplaZWdWN5NpBPPPEvGI6x+GQEqSP3EDguUqjDXF2HRT2c
-JyhabSzz1QnI3Dv/D+Hfu0H4x6vezixXYp2krWcjg5GBW+MAfIhr+L0pIgQXOj+1
-+pswC12cksIOhfIn1HavWHHgidFvrxjQFo/649prLznaHdWxK1UKGL9bXWIcdFcq
-ntM8RlO0ixEnAmAhYPy0+61cg7n3X3Gq1C/WIyXu9d66ORkNSKWrnztP5qWVKOe2
-eWBh/kZnj+TW67wLBOm6i7gsUYy7EXHrKad39XpTsSGmzlxXkmfGBJhTSGbMSYtA
-SI4bVPp664FkMEz9diR2iSGObWyqvStnMOeFGitkBQBJRL7Y/8wMja8zdp9AGyvj
-BB6ygJr+0wzIsgfJmcHtyEAImlANfACoyTq1LyKJIaRqZMi/OsE5yOU8HLC4iQgU
-dtHuxtV+IrE+byZa6aWIUI5itvTyMuyEUG0E5A9AofP+vg+rglsnrmGOYvIBfwvq
-SNSQoxc3vf4gKNMj6jmLlGltFUNEeKW5jzSR1Wefm9jt2rRjCOzaBtn4fM1ssqGg
-LX1KM9JLQUx7MlQrEs5R32KL5hzAq0+LDL+5oEGHuRaiyeG2tPB2cNLzV2RTHiv8
-HMv7tAK+7qX1bPaP6xmk7ahwGZe4jrYzjh1i+2+wP+LT5DC9UmI=
-=ACeV
------END PGP SIGNATURE-----
-
---iTsQL20z2LG4ZgZl--
