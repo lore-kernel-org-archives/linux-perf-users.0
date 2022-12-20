@@ -2,104 +2,91 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B38C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 18:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA589C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 18:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbiLTSdP (ORCPT
+        id S233966AbiLTSif (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 13:33:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
+        Tue, 20 Dec 2022 13:38:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbiLTSdO (ORCPT
+        with ESMTP id S231638AbiLTSif (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 13:33:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49162283
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 10:33:13 -0800 (PST)
+        Tue, 20 Dec 2022 13:38:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677DFDE9F;
+        Tue, 20 Dec 2022 10:38:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CFD6961551
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 18:33:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0170CC433EF;
-        Tue, 20 Dec 2022 18:33:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 293FCB8172E;
+        Tue, 20 Dec 2022 18:38:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ECD0C433D2;
+        Tue, 20 Dec 2022 18:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671561192;
-        bh=gN5I6bRgKG1QLSMnYZY5EBgdj4r5bB3ZFtObji42wZU=;
+        s=k20201202; t=1671561511;
+        bh=Xj/b06Er8ntqgengAsZZnDqTEhBrCfhXtWgAuFSnylU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eHj30zgG5yLuUaFIc7YN2N2wl36/Or+M0rlzNdthLR++Qp63jGIhnIRELzo/n1npz
-         4G1AzjkuMkIrVet6weWcrZscvi6U5oMf9e3V/IdvJrKCmtAEp/RUoUB9rk/ZDMlZnD
-         0b12rLfJxdwbA6hGOxl2gJAEznH+opa5fspKTSfG3G/9VrKNAeDtpj6kjJFQwuIM6/
-         oHBjtT1QKGGWjZmZZ34C9tiDc5Sr/KCy3u5eCj9lxQ6iUSWIB27AVu7aTonOdVHxzc
-         d9/yi3d93chhqLBsm80a+84K9wVdSH/XURpr5JucP+uxSj7Y/E6HFjWiA36JqLZ4PW
-         Tb0uHjKyaUR9w==
+        b=REr7hAuAOSJYgw5/ADVLCc+eloLEo7UiZFp/jMsL5nZ5RzTGZ2PspmgYejx0Nwkc7
+         W8iGTsYJiZrM5uKoX9qIrEWcHJ3X3kInoflfd5yv33UhtSq+O9tZaScahDCakkzbCK
+         zhqNu7/+Z/+Gi2G3c/bmd62tCY4z0OUr4OMz6Fxrrye/JUUGgF8Y2vZYtSfP1bZwG+
+         RXH6VteXcmeM7/PzHtYSFHQE1WenXJp/zjy00UlNDY/SltzHKJIE5pHoHtpmAAsaNC
+         NQVzs+QMfBZZhOtkw5RIGLoPUyZQ9dZSJZlCJWjBChTbJ0puddBc2sknX7KFcCUJLJ
+         xIf3POhdwCzGw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6F80740367; Tue, 20 Dec 2022 15:33:07 -0300 (-03)
-Date:   Tue, 20 Dec 2022 15:33:07 -0300
+        id 0C5A240367; Tue, 20 Dec 2022 15:38:29 -0300 (-03)
+Date:   Tue, 20 Dec 2022 15:38:29 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
-        disgoel@linux.vnet.ibm.com, atrajeev@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, irogers@google.com, rnsastry@linux.ibm.com
-Subject: Re: [PATCH] perf test: Fix "all PMU test" to skip parametrized events
-Message-ID: <Y6H/47gl3d8+A+cA@kernel.org>
-References: <20221219163008.9691-1-mpetlan@redhat.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH 2/9] perf report: Ignore SIGPIPE for srcline
+Message-ID: <Y6IBJd606FJwXKDw@kernel.org>
+References: <20221215192817.2734573-1-namhyung@kernel.org>
+ <20221215192817.2734573-3-namhyung@kernel.org>
+ <18594a2a-553a-c2b8-2c4f-6f7563ae3727@linux.intel.com>
+ <CAM9d7ciS3H=2OVGGiNg5N6NeyZtfSE6D5kCHmQu_Otem4ByuuA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221219163008.9691-1-mpetlan@redhat.com>
+In-Reply-To: <CAM9d7ciS3H=2OVGGiNg5N6NeyZtfSE6D5kCHmQu_Otem4ByuuA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Dec 19, 2022 at 05:30:08PM +0100, Michael Petlan escreveu:
-> Parametrized events are not only a powerpc domain. They occur on other
-> platforms too (e.g. aarch64). They should be ignored in this testcase,
-> since proper setup of the parameters is out of scope of this script.
+Em Fri, Dec 16, 2022 at 10:08:50AM -0800, Namhyung Kim escreveu:
+> Hi Andi,
 > 
-> Let's not filter them out by PMU name, but rather based on the fact
-> that they expect a parameter.
-
-Looks ok, applied.
-
-Thanks,
-
-- Arnaldo
- 
-> Fixes: 451ed8058c69 ("perf test: Fix "all PMU test" to skip hv_24x7/hv_gpci tests on powerpc")
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/tests/shell/stat_all_pmu.sh | 13 ++-----------
->  1 file changed, 2 insertions(+), 11 deletions(-)
+> On Thu, Dec 15, 2022 at 11:25 PM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> >
+> > On 12/15/2022 9:28 PM, Namhyung Kim wrote:
+> > > It can get SIGPIPE when it uses an external addr2line process and the
+> > > process was terminated unexpectedly.  Let's ignore the signal and move
+> > > on to the next sample.  The sample will get the default srcline value
+> > > anyway.
+> >
+> >
+> > That's a bit dangerous -- if perf report output is piped to something
+> > else you really want to stop on SIGPIPE.
 > 
-> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-> index 9c9ef33e0b3c..c77955419173 100755
-> --- a/tools/perf/tests/shell/stat_all_pmu.sh
-> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
-> @@ -4,17 +4,8 @@
->  
->  set -e
->  
-> -for p in $(perf list --raw-dump pmu); do
-> -  # In powerpc, skip the events for hv_24x7 and hv_gpci.
-> -  # These events needs input values to be filled in for
-> -  # core, chip, partition id based on system.
-> -  # Example: hv_24x7/CPM_ADJUNCT_INST,domain=?,core=?/
-> -  # hv_gpci/event,partition_id=?/
-> -  # Hence skip these events for ppc.
-> -  if echo "$p" |grep -Eq 'hv_24x7|hv_gpci' ; then
-> -    echo "Skipping: Event '$p' in powerpc"
-> -    continue
-> -  fi
-> +# Test all PMU events; however exclude parametrized ones (name contains '?')
-> +for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
->    echo "Testing $p"
->    result=$(perf stat -e "$p" true 2>&1)
->    if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
-> -- 
-> 2.18.4
+> Maybe we can handle the pipe write errors gracefully, but it'd require
+> more changes in many places.
+> 
+> >
+> > You would need to find a way to distinguish those cases.
+> 
+> Hmm.. ok.  I guess we can just drop this for now.  With checking
+> the .debug_line section, problematic cases should be gone mostly.
 
--- 
+So just skip this one, ok, I'll cherry pick the rest. Done.
 
 - Arnaldo
