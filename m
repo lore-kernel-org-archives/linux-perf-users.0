@@ -2,137 +2,282 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F1CC4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 11:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DCCC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 13:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230047AbiLTLej (ORCPT
+        id S233752AbiLTNIJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 06:34:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49026 "EHLO
+        Tue, 20 Dec 2022 08:08:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbiLTLei (ORCPT
+        with ESMTP id S231790AbiLTNIH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 06:34:38 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28472F2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 03:34:36 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id js9so12127969pjb.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 03:34:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5PyI2r45cXC4VPa82F8kchhQCGmhp0Mxv2K4MPTItM=;
-        b=L7GMgutRkj3qZcXp5mrTJlXEpwbu1F0SAXifZWMH02YWGo4hvzmU2XUWBMUyIKPJFb
-         5dml+ojCzx4kiyathxHYShcXYhTOa3u0S/BqwYKviEQrPml5/Fgy48H1wOyQ0U2GUq61
-         EsGrwuo4pQeBzGKkO4iKgeuzby26OGVIkolGy3Wl+Qdt1/BeZHkos9eNKDSG5lI/ajBG
-         ETKAidRnsolKk5Q2DxQz+AMbznaYDhMdXCIEs133YNyQWmSur5hzrrRFAI0atg89Hrz5
-         e59Bez8vgRnqVtGyF3USTpTbi06QgyvjAH4qmpuGPuyRwyUh/8+b95n0qk0JK4IMmFuD
-         yoOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5PyI2r45cXC4VPa82F8kchhQCGmhp0Mxv2K4MPTItM=;
-        b=xOZt9e1NecIc2iOEi/T4g19WPGQXaxOqaiojG5afcywYvV3ag5qRXbK3ttprTdygP1
-         jAO+ha8aVjaqip+Sa9wNTbEjhA3288i8ALURB8ZCf3/7RWsali6rriTibXGtwqBDJ4h2
-         zOrgFSp0zvYpYgLfsxZ6QIP8AUnkOskLl6VB/wiWlVc0o5x/0I6dviAv6HzUWNilRbV+
-         zpz8Tf5Chndd/CIh+u0q0UukjmErbxw+HSHdtJOQRbw1CAqNE8uK4teNT0aB8WEzQ8+t
-         /WJaPSR36Syn/5XXtVL1W/t0oV5FO4HpRB749AjVv4H42XMDQY5UtxyAfmt8zIKx3UhN
-         Ovbw==
-X-Gm-Message-State: AFqh2krZm+haVSx6BwOKSw3Kip/DSMy2SYRBp0UmNxwFzq8eDKpJuPMS
-        P0yvQm7ymJBsOqwzbFppuAL38w==
-X-Google-Smtp-Source: AMrXdXvRJRRuzf5iiZZtPcbDflEUSnOntQw6ZxrOmIwG9QK7NVw99YemyhduBzYpoEASU5mYreb0CA==
-X-Received: by 2002:a17:902:ea91:b0:189:c6fb:f933 with SMTP id x17-20020a170902ea9100b00189c6fbf933mr12287704plb.28.1671536076042;
-        Tue, 20 Dec 2022 03:34:36 -0800 (PST)
-Received: from leoy-yangtze.lan ([152.70.116.104])
-        by smtp.gmail.com with ESMTPSA id f7-20020a170902ce8700b00186b758c9fasm9178299plg.33.2022.12.20.03.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Dec 2022 03:34:35 -0800 (PST)
-Date:   Tue, 20 Dec 2022 19:34:21 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tue, 20 Dec 2022 08:08:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84910EE0E;
+        Tue, 20 Dec 2022 05:08:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D43BC61414;
+        Tue, 20 Dec 2022 13:08:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0DF8C433D2;
+        Tue, 20 Dec 2022 13:08:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671541685;
+        bh=mE5BvE/i4BNlPYZYGRNiCNfd6he/sFm8J9pnZ0DgWHs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lcs2lUJU0r2xFJK4cI2leOC6qttxLPlpSCcDQmjItc9+atxoowLCobv7FTGvh6v03
+         xowvNMefcl21T/t2fqVVSRB9zVphQJnk9I6ERFmaHGyfabmTdnCsRvUYW64mIsCf7Z
+         wnoE4wl8rbkEmw6Wg+0XLV0qa8z5Xlaf4qSYeT748AUcZUaXOOKn6gwrplrV++UUdj
+         Ve+Kq6h6elkPRt+7/nL2vKVefoIeACQHiOge6AIug8ZeIw4LsSAq6dtDqx9k3aUgZs
+         EKkIXuGH1qiZ35qh58XKYOAMKgc7kvFLpzi9BBOvc5ZTNQ/dY3eoYzmWo3fTEjPQP4
+         rto7aUYzMbkiQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3BE7C40367; Tue, 20 Dec 2022 10:08:02 -0300 (-03)
+Date:   Tue, 20 Dec 2022 10:08:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF"
- section
-Message-ID: <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
-References: <20221217223509.88254-1-changbin.du@gmail.com>
- <20221217223509.88254-2-changbin.du@gmail.com>
- <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan>
- <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        James Clark <james.clark@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kautuk Consul <kconsul@ventanamicro.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.2: 1st batch
+Message-ID: <Y6GzshPKxK2Oiqjg@kernel.org>
+References: <20221216143609.186415-1-acme@kernel.org>
+ <CAHk-=wj+FNSnspKwVWAatD+DHz3Uy4eHxQryrfoZz6=4D=1X1w@mail.gmail.com>
+ <Y53XHw3rlsaaUgOs@kernel.org>
+ <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wjpO5LBx-mVD8+GBj3u7iNJHXn5y4OreKxsoRGi+4vMCQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 09:31:14AM +0800, Changbin Du wrote:
+tldr;: if you do:
 
-[...]
+$ make -C tools clean
+$ sudo dnf remove python2 python2-devel
+$ sudo dnf install python-devel
 
-> > > Now will print below info:
-> > > libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux
-> > 
-> > Recently I encountered the same issue, it could be caused by:
-> > either missing to install tool pahole or missing to enable kernel
-> > configuration CONFIG_DEBUG_INFO_BTF.
-> > 
-> > Could we give explict info for reasoning failure?  Like:
-> > 
-> > "libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux,
-> > please install pahole and enable CONFIG_DEBUG_INFO_BTF=y for kernel building".
-> >
-> This is vmlinux special information and similar tips are removed from
-> patch V2. libbpf is common for all ELFs.
+It should build cleanly, below I looked at the various places these
+feature detections are made and found places for improving messages,
+etc.
 
-Okay, I see.  Sorry for noise.
+Ian, that "jevent generation" gets confused when python2 _and_ python3
+is installed, please take a look at that.
 
-> > > Error: failed to load BTF from /home/changbin/work/linux/vmlinux: No such file or directory
-> > 
-> > This log is confusing when we can find vmlinux file but without BTF
-> > section.  Consider to use a separate patch to detect vmlinux not
-> > found case and print out "No such file or directory"?
-> >
-> I think it's already there. If the file doesn't exist, open will fail.
+- Arnaldo
 
-[...]
+Em Sat, Dec 17, 2022 at 01:55:25PM -0600, Linus Torvalds escreveu:
+> On Sat, Dec 17, 2022 at 8:50 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > The python3-setuptools package is needed to build the python binding, so
+> > that one can use things like:
+> 
+> So this fixes the error, but there's some other reason for it.
+> 
+> I have
+> 
+>   Package python3-setuptools-59.6.0-3.fc36.noarch is already installed.
+> 
+> and with that patch the 'perf' build now works for me, but it says:
+> 
+>     Makefile.config:898: Missing python setuptools, the python binding
+> won't be built, please install python3-setuptools or equivalent
+> 
+> and then (pre-existing)
+> 
+>     Makefile.config:921: Python interpreter too old (older than 3.6)
+> disabling jevent generation
+> 
+> but I have
+> 
+>     python3-3.10.8-3.fc36.x86_64
+> 
+> Now, for some reason I *also* have python2 installed, but that one is
+> called "python2".
 
-> > > @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
-> > >  	err = 0;
-> > >  
-> > >  	if (!btf_data) {
-> > > +		pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
-> > >  		err = -ENOENT;
+> [ Me trying to figure things out ]
+> 
+> Ok, so if I uninstall my old python2 install, I now get
+> 
+>   Makefile.config:880: No python interpreter was found: disables
+> Python support - please install python-devel/python-dev
 
-btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
-section, therefore, bpftool dumps error string "No such file or
-directory".  It's confused that actually vmlinux is existed.
+>   Makefile.config:915: No python interpreter disabling jevent generation
+> 
+> ok, so I didn't have 'python3-devel' installed. Installing that fixes
+> some things, but then I get
+> 
+>   Makefile.config:889: No 'Python.h' (for Python 2.x support) was
+> found: disables Python support - please install
+> python-devel/python-dev
 
-I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
-better choice?) to replace -ENOENT at here, this can avoid bpftool to
-outputs "No such file or directory" in this case.
+Humm, I couldn't reproduce this one, as I have:
 
-Thanks,
-Leo
+⬢[acme@toolbox perf]$ grep libpython /tmp/build/perf/FEATURE-DUMP
+feature-libpython=1
+⬢[acme@toolbox perf]$
+
+And that message only happens when that feature-libpython != 1
+
+That is set by this feature query snippet:
+
+⬢[acme@toolbox perf]$ cat tools/build/feature/test-libpython.c
+// SPDX-License-Identifier: GPL-2.0
+#include <Python.h>
+
+int main(void)
+{
+	Py_Initialize();
+
+	return 0;
+}
+#undef _GNU_SOURCE
+⬢[acme@toolbox perf]$
+
+One can see the output of building it at (if you build it without O=,
+please look at tools/build/feature/test-libpython.make.output instead):
+):
+
+⬢[acme@toolbox perf]$ cat /tmp/build/perf/feature/test-libpython.make.output
+⬢[acme@toolbox perf]$
+
+In my case, it is working, so empty make.output file and the test binary
+works and links with python3 (tools/build/feature/test-libpython.bin
+when building without O=):
+
+⬢[acme@toolbox perf]$ file /tmp/build/perf/feature/test-libpython.bin
+/tmp/build/perf/feature/test-libpython.bin: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=601e3a065cc8e045e7a46199234c0bbf80707981, for GNU/Linux 3.2.0, not stripped
+⬢[acme@toolbox perf]$ ldd /tmp/build/perf/feature/test-libpython.bin
+	linux-vdso.so.1 (0x00007ffc371fe000)
+	libpython3.10.so.1.0 => /lib64/libpython3.10.so.1.0 (0x00007fddb0200000)
+	libcrypt.so.2 => /lib64/libcrypt.so.2 (0x00007fddb05f9000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007fddb0122000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fddafe00000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fddb063f000)
+⬢[acme@toolbox perf]$
+
+The needed file is available and is part of the python3-devel file:
+
+⬢[acme@toolbox perf]$ ls -la /usr/include/python3.10/Python.h
+-rw-r--r--. 1 root root 3224 Oct 11 08:21 /usr/include/python3.10/Python.h
+⬢[acme@toolbox perf]$ rpm -qf /usr/include/python3.10/Python.h
+python3-devel-3.10.8-3.fc36.x86_64
+⬢[acme@toolbox perf]$
+
+That message needs updating, its from a long time ago:
+
+9734163b6ee1425c6 tools/perf/config/Makefile (Ingo Molnar 2013-09-30 15:18:37 +0200  888)       ifneq ($(feature-libpython), 1)
+6c5aa23704e2786eb tools/perf/config/Makefile (Ingo Molnar 2015-02-28 09:33:45 +0100  889)         $(call disable-python,No 'Python.h' (for Python 2.x support) was found: disables Python support - please install python-devel/python-dev)
+6e533cf12de06368a tools/perf/config/Makefile (Jiri Olsa   2013-03-18 00:35:32 +0100  890)       else
+
+> so apparently perf really wants *both* python2 and python3 installed.
+> Isn't that a bit excessive?
+
+I'll update that message, its one or the other, and we will work to make
+it support only python3 as python2 is deprecated.
+ 
+> Anyway, it's clearly something about the install on this laptop, but
+> the error messages and the "this package is missing" things are
+> clearly not entirely right.
+
+Right, perhaps a 'make -C tools clean' may clean some previous feature
+detection that stuck somehow? I'll do continue tinkering here to see if
+I get this in a better shape.
+ 
+> Whatever. It does build cleanly now for me, and I'll ignore that "No
+> 'Python.h' (for Python 2.x support)" thing.
+
+The only time I got this message was now that I uninstalled
+python3-devel:
+
+Makefile.config:889: No 'Python.h' (for Python 2.x support) was found: disables Python support - please install python-devel/python-dev
+
+The next one I got because I have python2 installed:
+
+⬢[acme@toolbox perf]$ rpm -qa | grep python2
+python2.7-2.7.18-22.fc36.x86_64
+
+Makefile.config:921: Python interpreter too old (older than 3.6) disabling jevent generation
+
+Removing python2 I get:
+
+Makefile.config:880: No python interpreter was found: disables Python support - please install python-devel/python-dev
+Makefile.config:915: No python interpreter disabling jevent generation
+
+So you get this message:
+
+>   Makefile.config:889: No 'Python.h' (for Python 2.x support) was
+> found: disables Python support - please install
+> python-devel/python-dev
+
+When you have python2 and python3 but no python3-devel nor
+python2-devel:
+
+⬢[acme@toolbox perf]$ rpm -q python3
+python3-3.10.8-3.fc36.x86_64
+⬢[acme@toolbox perf]$ rpm -qa | grep python2
+python2.7-2.7.18-22.fc36.x86_64
+⬢[acme@toolbox perf]$ rpm -q python2-devel
+package python2-devel is not installed
+⬢[acme@toolbox perf]$ rpm -q python3-devel
+package python3-devel is not installed
+⬢[acme@toolbox perf]$ m
+make: Entering directory '/var/home/acme/git/perf/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+<SNIP>
+Makefile.config:889: No 'Python.h' (for Python 2.x support) was found: disables Python support - please install python-devel/python-dev
+Makefile.config:921: Python interpreter too old (older than 3.6) disabling jevent generation
+
+Auto-detecting system features:
+<SNIP>
+...                               libpython: [ OFF ]
+⬢[acme@toolbox perf]$
+
+If I then uninstall python2:
+
+⬢[acme@toolbox perf]$ sudo dnf remove python2
+
+It changes to:
+
+Makefile.config:880: No python interpreter was found: disables Python support - please install python-devel/python-dev
+Makefile.config:915: No python interpreter disabling jevent generation
+
+Which is more sensible, then if I install python-devel:
+
+⬢[acme@toolbox perf]$ sudo dnf install python-devel
+
+$ sudo dnf install python-devel
+
+I see no warnings, clean build and libpython detected:
+
+...                               libpython: [ on  ]
+
+
+⬢[acme@toolbox perf]$ ldd /tmp/build/perf/perf | grep python
+	libpython3.10.so.1.0 => /lib64/libpython3.10.so.1.0 (0x00007f1eea200000)
+⬢[acme@toolbox perf]$
+
+- Arnaldo
