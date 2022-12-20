@@ -2,123 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B33C4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 17:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B6CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 18:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234024AbiLTRKw (ORCPT
+        id S229791AbiLTSRo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 12:10:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
+        Tue, 20 Dec 2022 13:17:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234001AbiLTRKn (ORCPT
+        with ESMTP id S229536AbiLTSRm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 12:10:43 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10BCCBC6
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 09:10:43 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id g1so8945735pfk.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 09:10:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o6/NwTvG1ts0rBmQ9K+XNWZapy07EBTMQ36kpdSkC/M=;
-        b=SuEARZa3uOm8eCuCEdXiIA4dUUCYwaj39AXx4CUb7Emp5srU0IfqLWX6UpLoFkhSXZ
-         4Mpvt6m02Lqbp9omusDqgAq5VhcKkgz7khoAAomedfqx1V48/bPStI1ncUcCylbg3I2B
-         QvcwA7StM6sYXK6TQSvsS6bPctruF9XULezH8Lijef5n63XHHBDfj+IyhhnuHi8c11pG
-         COmMgXNoS1H6eAQYcE3YfG8lCkOqNNS5AHqbwi37wmrPl82aRzed5fYoPwcrKAG/N8oy
-         rfIY2P6TciwstqsQc+Ngkgjr0l5NSK64VOq0/LdvgV/kIm8z/2sbGCgsjdmP8Xyo6EqH
-         nA7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=o6/NwTvG1ts0rBmQ9K+XNWZapy07EBTMQ36kpdSkC/M=;
-        b=xf3a4fGc6H0eQm4JBswpdKq7fFfWViVEGqounomNeB1V2ew7hcR+ApQ7Enlf3J28HJ
-         8EWE5ztnfwv91KuYS6vV+CsLiP3LqnCiuhUOfyuT2sVUjw1zKdz5mclr5eA+HeIPLYoF
-         yvLc/+NSfdwxfMT7qrxRdAlwhqTNN3hee2DOIweCww9TRNmK02Gu/Xuo4hvx3aJ9WOS6
-         PIUwHQVxqt72NgVfuHc6RCOeFjRE2wK7L7SPNarJkVCNGqoYebs/1W/84XIj16PUkQ+L
-         LgNbMBI1jZu2/8UeCaP1OgivyvhmJVAn5TP3JpWLd1mqIkBMU1xYiuEWUgvDXtDzjKhk
-         dX8g==
-X-Gm-Message-State: ANoB5pkqtHbAnmTlAWuF/OsJOxYSuPLWvblG7t9M4uWCbmKM6lOS0f7u
-        98XWtMxGIzlFftP55CLwzSh4vODPu46I6IgUJ9pk+w==
-X-Google-Smtp-Source: AA0mqf4ZwwT4lP5lED/bdOCSru0RBf/NPcsWF81/I6R8hZ5dZvndnY8Ixug9Xf50fLBW1lod+238c4F2sWPMYEy34po=
-X-Received: by 2002:a63:2160:0:b0:46f:f26e:e8ba with SMTP id
- s32-20020a632160000000b0046ff26ee8bamr74067527pgm.250.1671556242235; Tue, 20
- Dec 2022 09:10:42 -0800 (PST)
+        Tue, 20 Dec 2022 13:17:42 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF01CE07;
+        Tue, 20 Dec 2022 10:17:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E5114B8169E;
+        Tue, 20 Dec 2022 18:17:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F88FC433EF;
+        Tue, 20 Dec 2022 18:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671560258;
+        bh=tCcCyQjvXJTLP1/+poEFAXufnkYSId0E8S1P4iv/fg8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W7JRsv4mvJHXxAPDiCFhvqRIx+Q260FI72CCbuiwmM9M2GoH2HlOwf0yZjuqQHGwJ
+         tLz0mdGE7sHVSA/lRePJb5Zw64Ynb8kf+q7DrFLn5L6VGjSHoXRfk93shbScSQGv7u
+         QVk23qTH4w731VsRCYJlzIbEWdVUilek1RAFkko++cSqt9I6aJnX732eyEoKngmlBX
+         /dl14vcTmxsOwq9kV4LkZej/XcVvt85Ja+S12BqLlDru4bAJaua+KWAIfC00aqWniU
+         t4QP3CA1IrCT1lS7sU+ODfHOAkXxD+LMpVTZvss3sUjmDaVIUAr1SlRCk8a84AWSkI
+         GQkTYXwDdEYfQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D272940367; Tue, 20 Dec 2022 15:17:30 -0300 (-03)
+Date:   Tue, 20 Dec 2022 15:17:30 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, carsten.haitzler@arm.com,
+        leo.yan@linaro.org, ravi.bangoria@amd.com, martin.lau@kernel.org,
+        ak@linux.intel.com, masami.hiramatsu.pt@hitachi.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf tools: Set debug_peo_args and
+ redirect_to_stderr to correct values in perf_quiet_option
+Message-ID: <Y6H8OvGkTuhtUbSH@kernel.org>
+References: <20221220035702.188413-1-yangjihong1@huawei.com>
+ <20221220035702.188413-2-yangjihong1@huawei.com>
+ <e2c01688-d27d-51df-65eb-f7bdd26c99d0@intel.com>
 MIME-Version: 1.0
-References: <000000000000a20a2e05f029c577@google.com> <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
- <Y6C8iQGENUk/XY/A@google.com> <Y6Fw1ymTcFrMR3Hl@hirez.programming.kicks-ass.net>
-In-Reply-To: <Y6Fw1ymTcFrMR3Hl@hirez.programming.kicks-ass.net>
-From:   Stanislav Fomichev <sdf@google.com>
-Date:   Tue, 20 Dec 2022 09:10:30 -0800
-Message-ID: <CAKH8qBs1UiikX=_CBzRC_2rg3sp8CU5hhB7sOkNkNBqm8OqFEw@mail.gmail.com>
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: multipart/mixed; boundary="0000000000000ba28505f0458408"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e2c01688-d27d-51df-65eb-f7bdd26c99d0@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---0000000000000ba28505f0458408
-Content-Type: text/plain; charset="UTF-8"
+Em Tue, Dec 20, 2022 at 09:35:36AM +0200, Adrian Hunter escreveu:
+> On 20/12/22 05:57, Yang Jihong wrote:
+> > When perf uses quiet mode, perf_quiet_option sets debug_peo_args to -1,
+> > and display_attr incorrectly determines the value of debug_peo_args.
+> > As a result, unexpected information is displayed.
+> > 
+> > Before:
+> >   # perf record --quiet -- ls > /dev/null
+> >   ------------------------------------------------------------
+> >   perf_event_attr:
+> >     size                             128
+> >     { sample_period, sample_freq }   4000
+> >     sample_type                      IP|TID|TIME|PERIOD
+> >     read_format                      ID|LOST
+> >     disabled                         1
+> >     inherit                          1
+> >     mmap                             1
+> >     comm                             1
+> >     freq                             1
+> >     enable_on_exec                   1
+> >     task                             1
+> >     precise_ip                       3
+> >     sample_id_all                    1
+> >     exclude_guest                    1
+> >     mmap2                            1
+> >     comm_exec                        1
+> >     ksymbol                          1
+> >     bpf_event                        1
+> >   ------------------------------------------------------------
+> >   ...
+> > 
+> > After:
+> >   # perf record --quiet -- ls > /dev/null
+> >   #
+> > 
+> > redirect_to_stderr is a similar problem.
+> > 
+> > Fixes: f78eaef0e049 ("perf tools: Allow to force redirect pr_debug to stderr.")
+> > Fixes: ccd26741f5e6 ("perf tool: Provide an option to print perf_event_open args and return value")
+> > Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> 
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-On Tue, Dec 20, 2022 at 12:22 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Dec 19, 2022 at 11:33:29AM -0800, sdf@google.com wrote:
-> > On 12/19, Peter Zijlstra wrote:
-> > > On Mon, Dec 19, 2022 at 12:04:43AM -0800, syzbot wrote:
->
-> > > > HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of
-> > > https://git.kernel...
-> > > > git tree:       bpf
-> > > > console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
-> > > > kernel config:
-> > > https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
-> > > > dashboard link:
-> > > https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
->
-> ^ so syzbot knows what tree and config were used to trigger the report,
-> then why:
+Thanks, applied all patches in this series.
 
-I haven't used it before and wasn't sure whether it would take the
-last commit from the branch of the one where it failed. Adding them
-shouldn't hurt, right?
+- Arnaldo
 
-> > Let's maybe try it this way:
-> >
-> > #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-> > 13e3c7793e2f
->
-> do you have to repeat that again in order for it to test something?
-
-Yeah, I was trying to understand why it doesn't like my patch. It
-seems I can retry with the patch attached which hopefully should fix
-the possible formatting issue; let's see.
-
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-13e3c7793e2f
-
---0000000000000ba28505f0458408
-Content-Type: text/x-patch; charset="US-ASCII"; name="pmu.patch"
-Content-Disposition: attachment; filename="pmu.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lbwhemfp0>
-X-Attachment-Id: f_lbwhemfp0
-
-ZGlmZiAtLWdpdCBhL2tlcm5lbC9ldmVudHMvY29yZS5jIGIva2VybmVsL2V2ZW50cy9jb3JlLmMK
-aW5kZXggZTQ3OTE0YWM4NzMyLi5iYmZmNTUxNzgzZTEgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9ldmVu
-dHMvY29yZS5jCisrKyBiL2tlcm5lbC9ldmVudHMvY29yZS5jCkBAIC0xMjY4OSw3ICsxMjY4OSw4
-IEBAIFNZU0NBTExfREVGSU5FNShwZXJmX2V2ZW50X29wZW4sCiAJcmV0dXJuIGV2ZW50X2ZkOwog
-CiBlcnJfY29udGV4dDoKLQkvKiBldmVudC0+cG11X2N0eCBmcmVlZCBieSBmcmVlX2V2ZW50KCkg
-Ki8KKwlwdXRfcG11X2N0eChldmVudC0+cG11X2N0eCk7CisJZXZlbnQtPnBtdV9jdHggPSBOVUxM
-OyAvKiBfZnJlZV9ldmVudCgpICovCiBlcnJfbG9ja2VkOgogCW11dGV4X3VubG9jaygmY3R4LT5t
-dXRleCk7CiAJcGVyZl91bnBpbl9jb250ZXh0KGN0eCk7Cg==
---0000000000000ba28505f0458408--
