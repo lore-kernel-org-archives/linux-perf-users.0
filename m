@@ -2,103 +2,74 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AD3C4332F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 08:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1886CC4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 08:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233193AbiLTIZz (ORCPT
+        id S233065AbiLTInb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 03:25:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43928 "EHLO
+        Tue, 20 Dec 2022 03:43:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232561AbiLTIZx (ORCPT
+        with ESMTP id S232394AbiLTIn1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 03:25:53 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0465FD1;
-        Tue, 20 Dec 2022 00:25:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0yOdjbyBKeATeXcB92POCQhYVLCuEOP2fcG8B0Ly8LY=; b=FAlD/xR/cOWA99CT742YXA7n9e
-        DzUMqoCklUiXSnLTnKWzIGJYqM8p+psf7dRQPHYHORdwC0pZB9FOWpr1D8Ft4cp9Rm15jVUULapmd
-        0irrxkMVKe5wHuiP8K47Y991ErPLwJxiquvUo5B/Y3XNqZn+7mak2jxDavglJj9lyOTOZXXMZAEwx
-        k8f+9N0wowB/7AgBbuoC/lDxIq3FKm3OnNJlpdff/z/iPODiuN00jyaVAkRMHIdXh7weT0/+lCf8e
-        u1LKoDhLF0Ng2/xZZPuOlS1bed2dcWA0+Qq0NLrwH4sSWxj4gwZQiwb8EAolmEgZef8WzV0OfixL7
-        NRg4eK4Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1p7Xwa-001avT-PX; Tue, 20 Dec 2022 08:25:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 34374300023;
-        Tue, 20 Dec 2022 09:25:36 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1C66320B0EF91; Tue, 20 Dec 2022 09:25:36 +0100 (CET)
-Date:   Tue, 20 Dec 2022 09:25:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        Tue, 20 Dec 2022 03:43:27 -0500
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6015916589
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 00:43:26 -0800 (PST)
+Received: by mail-il1-f199.google.com with SMTP id h9-20020a92c269000000b00303494c4f3eso7984019ild.15
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 00:43:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=77qvNoQqle0MfKLDQMi01YZLkngrkg9aZffzgWoC0vY=;
+        b=PNJSo+4q2z/5NGTh8Yc+HhLoMRMRrT77xFYGTZ4PAI8rRrp+W56lMG3OLrxmAjAyU9
+         M1lMDhFAXL5R/Bmbs8bBGDsM31dG85w8x42vd8wmF51ds9JY6qLlpfBuFdgnHolCokE2
+         C5yvzGQsk2A0yyqZszTh7Ca/gWTbAGMNi1kZfb6kNNqK7/tFWdohnkzwp8fqgA0gVSRb
+         EdzOneN2ND0+UsAlYE53f0ZkvVeEjSqZq3oBTqkrMIDs/Dxqzoc64fOYAJEwZaomVeqH
+         aGDM8dmJ1KTjFsfb7GHnqheBq+6iaZCh/7n4uJPJgYVUOxocQgyLFRtVkjtf+z8v3L5y
+         LQyg==
+X-Gm-Message-State: ANoB5pk3IJhIuF1cc4wa7eaQwmUgbitPJk7xrJ24kTgKsuy1juLWYrZm
+        KlCqhPr/NfvvEGnHX0HjaI8vUxpsv/1xTl/fF5ljQup4//nx
+X-Google-Smtp-Source: AA0mqf4KHT2PjH0rudr1knR4xY3Cueu+ZSBoGTVC3IgyDsnWzkduYtWlNbZNuj+1lcG9wQRkygZ76sBT0PKeMjXcG8DlWn7Oafxq
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:216a:b0:303:129a:8157 with SMTP id
+ s10-20020a056e02216a00b00303129a8157mr28409262ilv.38.1671525805458; Tue, 20
+ Dec 2022 00:43:25 -0800 (PST)
+Date:   Tue, 20 Dec 2022 00:43:25 -0800
+In-Reply-To: <Y6Fxfw5fhHhQYaSd@hirez.programming.kicks-ass.net>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000de0f0b05f03e6d9b@google.com>
+Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+From:   syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
         bpf@vger.kernel.org, jolsa@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-Message-ID: <Y6Fxfw5fhHhQYaSd@hirez.programming.kicks-ass.net>
-References: <000000000000a20a2e05f029c577@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000a20a2e05f029c577@google.com>
+        netdev@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Dec 19, 2022 at 12:04:43AM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of https://git.kernel...
-> git tree:       bpf
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
-> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e87100480000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ceeb13880000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/373a99daa295/disk-13e3c779.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/7fa71ed0fe17/vmlinux-13e3c779.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/2842ad5c698b/bzImage-13e3c779.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
-> Read of size 8 at addr ffff8880237d6018 by task syz-executor287/8300
+Hello,
 
-OK, lemme try this.. still think having to repeat the tree it already
-has is daft..
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: rcu detected stall in corrupted
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 13e3c7793e2f
+rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { P5791 } 2673 jiffies s: 2805 root: 0x0/T
+rcu: blocking rcu_node structures (internal RCU debug):
 
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index eacc3702654d..7da593504c5b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
- 	return event_fd;
- 
- err_context:
--	/* event->pmu_ctx freed by free_event() */
-+	put_pmu_ctx(event->pmu_ctx);
-+	event->pmu_ctx = NULL; /* _free_event() */
- err_locked:
- 	mutex_unlock(&ctx->mutex);
- 	perf_unpin_context(ctx);
+Tested on:
+
+commit:         13e3c779 Merge tag 'for-netdev' of https://git.kernel...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=121ea2e8480000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
+dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12d4ad4f880000
+
