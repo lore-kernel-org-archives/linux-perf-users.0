@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59CEC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 16:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CB1C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 16:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234740AbiLUQcB (ORCPT
+        id S234209AbiLUQw6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Dec 2022 11:32:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        Wed, 21 Dec 2022 11:52:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234641AbiLUQbS (ORCPT
+        with ESMTP id S230144AbiLUQw5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Dec 2022 11:31:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21755248D1;
-        Wed, 21 Dec 2022 08:31:17 -0800 (PST)
+        Wed, 21 Dec 2022 11:52:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D561B79B;
+        Wed, 21 Dec 2022 08:52:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D2EC9B81BA9;
-        Wed, 21 Dec 2022 16:31:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F61C43396;
-        Wed, 21 Dec 2022 16:31:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2430D6186E;
+        Wed, 21 Dec 2022 16:52:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A31C433EF;
+        Wed, 21 Dec 2022 16:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671640274;
-        bh=ytY2pnVKtBHX6tUn6fSepmOt2D0eU5Ff/O3eWDQNHF0=;
+        s=k20201202; t=1671641575;
+        bh=g/GsqyV3uErpMRQwxfVP4411/v4qwiMvBe7PcgSp8PI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OO+PTYN0WupGmezr2PigE6bA97h577cK/221c0WtQVZVAQDaT0RCP31BnELKMt3jF
-         UWKZJOnJ5ZrvEs2XSLaLAMSSXNuPlRQ/JXZ1fLgLZtDSTl9u4+DVb6I2Su853gjlKT
-         ZlieolnLr57YhARCWdzIb8Jdatan+fk2QHMYrXdZCY/vskCNXon6NWnlcr5R4k3CNc
-         aTcuKtPWGZ46x8WY6YUNHakBmLxJWOS7mh733RjQgh0mXqX+i7eoYg4ohLf8MR956t
-         /+uWpgjZ5tuju5URH6o+JYuv23yH6QREs/AxNd/j6zfmC7DvlXXTda2K7PdvdSow2K
-         B/ntAXscFPrOw==
+        b=m7/4TZsAFC2sp/ekFj4qAG9FIBbM0aPEDcX33HoLBsw1ivLHxYPZo02WYb3P+SfdW
+         VvPubxp7fiZqAb8DlUUWqbMoFEJG7r6HPOmYgsmzRTDQokx63ZSzW3TTfQZKuhVB0e
+         SVda+hXF3L6BuQzMrGDddsSmu7IGrIbDCae4f0guZ80Hm16yYjbzmuz0HdsdBvcOVq
+         CJhI3lMUSWoH5cUpVozCEtd1SApyp5BrFR/ws30U5LvNW33iOMvvk7DQ3w6kvGcB6a
+         q80O991bweQVZxibP8Fq3dH5qRVno2FTy5fsqGmyr/KWJrapA5TaeHpOHJSJur9b7d
+         Rk0AUVBi2lUnA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BABE940367; Wed, 21 Dec 2022 13:31:11 -0300 (-03)
-Date:   Wed, 21 Dec 2022 13:31:11 -0300
+        id 81C9D40367; Wed, 21 Dec 2022 13:52:52 -0300 (-03)
+Date:   Wed, 21 Dec 2022 13:52:52 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -53,76 +53,40 @@ Cc:     Ian Rogers <irogers@google.com>,
         Perry Taylor <perry.taylor@intel.com>,
         Caleb Biggers <caleb.biggers@intel.com>
 Subject: Re: [PATCH v1 00/32] Refresh Intel vendor events
-Message-ID: <Y6M0zwN+1yovTeZH@kernel.org>
+Message-ID: <Y6M55I/gDRBAfPvc@kernel.org>
 References: <20221215064755.1620246-1-irogers@google.com>
  <bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com>
+ <Y6M0zwN+1yovTeZH@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com>
+In-Reply-To: <Y6M0zwN+1yovTeZH@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Dec 15, 2022 at 12:23:14PM -0500, Liang, Kan escreveu:
-> 
-> 
-> On 2022-12-15 1:47 a.m., Ian Rogers wrote:
-> > Use new repository [1] and converter script to regenerate Intel vendor
-> > metrics. In particular this change removes unnecessary json fields and
-> > correct uncore events that previously had a buggy converter.
-> > 
-> 
-> Thanks Ian.
-> 
-> The patch series looks good to me.
-> 
-> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+Em Wed, Dec 21, 2022 at 01:31:11PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Dec 15, 2022 at 12:23:14PM -0500, Liang, Kan escreveu:
+> > On 2022-12-15 1:47 a.m., Ian Rogers wrote:
+> > > Use new repository [1] and converter script to regenerate Intel vendor
+> > > metrics. In particular this change removes unnecessary json fields and
+> > > correct uncore events that previously had a buggy converter.
 
-b4 doesn't like it, I'll apply it manually, probably some went over
-message size limits?
+> > Thanks Ian.
+
+> > The patch series looks good to me.
+
+> > Acked-by: Kan Liang <kan.liang@linux.intel.com>
+
+> b4 doesn't like it, I'll apply it manually, probably some went over
+> message size limits?
+
+Had to adjust the first one manually due, IIRC, to the hashmap changes
+that went upstream via the bpf tree, then use b4 3 times, cherrypicking
+ranges of the series to get all merged.
+
+Ian, please check what happened so that this isn't this manual next
+time.
 
 - Arnaldo
-
-⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com
-Grabbing thread from lore.kernel.org/all/bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa%40linux.intel.com/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Analyzing 7 messages in the thread
-Checking attestation on all messages, may take a moment...
----
-  ✓ [PATCH v1 1/32] perf test pmu-events: Fake PMU metric workaround
-    ✓ Signed: DKIM/google.com
-    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
-    + Link: https://lore.kernel.org/r/20221215064755.1620246-2-irogers@google.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v1 2/32] perf vendor events intel: Refresh alderlake metrics
-    ✓ Signed: DKIM/google.com
-    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
-    + Link: https://lore.kernel.org/r/20221215064755.1620246-3-irogers@google.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v1 3/32] perf vendor events intel: Refresh alderlake-n metrics
-    ✓ Signed: DKIM/google.com
-    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
-    + Link: https://lore.kernel.org/r/20221215064755.1620246-4-irogers@google.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v1 4/32] perf vendor events intel: Refresh bonnell events
-    ✓ Signed: DKIM/google.com
-    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
-    + Link: https://lore.kernel.org/r/20221215064755.1620246-5-irogers@google.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v1 5/32] perf vendor events intel: Refresh broadwell metrics and events
-    ✓ Signed: DKIM/google.com
-    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
-    + Link: https://lore.kernel.org/r/20221215064755.1620246-6-irogers@google.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ERROR: missing [6/32]!
-  ERROR: missing [7/32]!
-  ERROR: missing [8/32]!
-  ERROR: missing [9/32]!
-  ERROR: missing [10/32]!
-  ERROR: missing [11/32]!
-  ERROR: missing [12/32]!
-
