@@ -2,74 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D839C41535
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Dec 2022 19:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526DCC3DA6E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 00:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbiLTThW (ORCPT
+        id S234441AbiLUAOf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 14:37:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
+        Tue, 20 Dec 2022 19:14:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233820AbiLTThV (ORCPT
+        with ESMTP id S234442AbiLUAOC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 14:37:21 -0500
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D1D65CE
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 11:37:18 -0800 (PST)
-Received: by mail-il1-f198.google.com with SMTP id g3-20020a056e021a2300b00305e3da9585so8894328ile.16
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 11:37:18 -0800 (PST)
+        Tue, 20 Dec 2022 19:14:02 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7C9205FB;
+        Tue, 20 Dec 2022 16:13:27 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id qk9so33128844ejc.3;
+        Tue, 20 Dec 2022 16:13:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/CkWUTtnXtFdBonK+Hr2bihTCTKwFRgaMGiP5ubhFJM=;
+        b=RxemTcOkAAOCSnKpzXAa20/l/IF8AGKsxrBEYMJMESw7nLG1JJUiYFpw3WNmBHKMYx
+         2xUQwe56HvDbpg1oH5xV4EknU3X1jTx6gzFtarI2XYu9ogv3iYILKxxZxq4Xgseu0yBE
+         Ak/AW9eWEVzU+slDXruur04265h479VtK5C8T+2mby54siRIrgg5QIytIiG/1RnWs4t4
+         UyOIVDxizA9POLZ0ggM7+REZyWcgEHfMqGLws4nTrBIg9fTRIT1VoPYiB9cZ7UQn7J/h
+         s/XFzOmTRv9JQk6ec2sqdR3DPa2ZQHXJBJ3qpIhymk5AwWJ2XaqWqqGIz50dYFUBI9l7
+         cvXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xtf3kK/4JkO5DVd4qOuGUgyJBsIREUJl3kcqk4Bwjr4=;
-        b=lklMCEwv7O0h7UtfOHP6aL5qLXAkG6NIx8EghFsanSZb2Bah9HiQAeEvtIRB5RgvtL
-         o6ch5Vl0rf5RcVDkYEpRQPrc2HiEsT/RhTrkiwOWfxs9W0yzIR5QSC4jaQOISlYFqGbG
-         IoMjlkv4ZVC87dmSLU9qaNEjZRaQZR6zqBTGPM0aTYPrSM51YpFZvy4puaIj5frVxJGQ
-         PqBPsp/4f91B4V39EwIpRsFYoJCZS15CiDeLh88jcHiOHXDBssbkWTbzFitEiahfGVG3
-         ljKxjOFbpB7PmJEaWB1fYBavl5BL0qeDCFVD2Eq/JCQ/NimMFEmvymOlUdS+GtwE9iK4
-         A8tg==
-X-Gm-Message-State: ANoB5plQZYjGQ12vnqE0T6GLq9TQqjxn5Gon+oa8LTCbZXDghtNycX5G
-        xeTyga+RMOe+DIpfbTKLC2CChcVc7Y3k2M1FouZk24aF1gHp
-X-Google-Smtp-Source: AA0mqf79LM6cuQfmZgkg9I2E8BaJp2XadINP9woNrMjfuuHwCStlay7Ncmm1QjAAXXiaNN1Z3ZOaFyHazaxPHao1vnryZURMltfR
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/CkWUTtnXtFdBonK+Hr2bihTCTKwFRgaMGiP5ubhFJM=;
+        b=Sp1i1vbKEyC2ht1SB5lSz0mH76NHuFlI+8e+x79YmcpvUKrylTbNUMnnYHJ7UCQiHZ
+         WAqWNo+VAoUg8LX9H6b738r4CF3mLHv6e829D5IByoRUDnhjMyj+JyC9no8kg4sXqLX6
+         gYWfDqSmNq2LfK3ce5hxcmOoDjD19Oait6OXMGVN8Xqie6EAllC8xuZ32X/x1H1Lt9kT
+         A2+e0YoFSZJ9sGIB+mPzt6BrQMiF4fmvaV7E4NSV+Isv/aPlSc/ob/I1HKvg4HaAREYB
+         NTvInaoY4cw8vtKtsqx5KN+9cCpq07hxA/vn+dPDzzK8UQ9+oYqpPCKE2HK+IjCRxdks
+         6TOQ==
+X-Gm-Message-State: ANoB5plBEXc9ofK0FjlrTGdZId/UQnEaYTXPYPwuVhJq89AnThxaeIjz
+        HzkJ1YyZ9aS2B9gcnfG+OyIs/OpQ+6841K0tl5g=
+X-Google-Smtp-Source: AA0mqf7oW7LbTNUBSaYQWZxQTaza7/YMvZf/jqph3Skp5ZguAZC6ORw10jyzshIECGsB5Rc0GjO574CzEKp94mja9m8=
+X-Received: by 2002:a17:906:3e53:b0:7c1:1f2b:945f with SMTP id
+ t19-20020a1709063e5300b007c11f2b945fmr7436538eji.302.1671581605781; Tue, 20
+ Dec 2022 16:13:25 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:d8ca:0:b0:303:6b79:14bb with SMTP id
- l10-20020a92d8ca000000b003036b7914bbmr11203430ilo.9.1671565038025; Tue, 20
- Dec 2022 11:37:18 -0800 (PST)
-Date:   Tue, 20 Dec 2022 11:37:18 -0800
-In-Reply-To: <CAKH8qBs1UiikX=_CBzRC_2rg3sp8CU5hhB7sOkNkNBqm8OqFEw@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004f881505f047903b@google.com>
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-From:   syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, peterz@infradead.org, sdf@google.com,
-        syzkaller-bugs@googlegroups.com
+References: <20221217223509.88254-1-changbin.du@gmail.com> <20221217223509.88254-2-changbin.du@gmail.com>
+ <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan> <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
+ <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
+In-Reply-To: <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 20 Dec 2022 16:13:13 -0800
+Message-ID: <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF" section
+To:     Leo Yan <leo.yan@linaro.org>,
+        Quentin Monnet <quentin@isovalent.com>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Tue, Dec 20, 2022 at 3:34 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Tue, Dec 20, 2022 at 09:31:14AM +0800, Changbin Du wrote:
+>
+> [...]
+>
+> > > > Now will print below info:
+> > > > libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux
+> > >
+> > > Recently I encountered the same issue, it could be caused by:
+> > > either missing to install tool pahole or missing to enable kernel
+> > > configuration CONFIG_DEBUG_INFO_BTF.
+> > >
+> > > Could we give explict info for reasoning failure?  Like:
+> > >
+> > > "libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux,
+> > > please install pahole and enable CONFIG_DEBUG_INFO_BTF=y for kernel building".
+> > >
+> > This is vmlinux special information and similar tips are removed from
+> > patch V2. libbpf is common for all ELFs.
+>
+> Okay, I see.  Sorry for noise.
+>
+> > > > Error: failed to load BTF from /home/changbin/work/linux/vmlinux: No such file or directory
+> > >
+> > > This log is confusing when we can find vmlinux file but without BTF
+> > > section.  Consider to use a separate patch to detect vmlinux not
+> > > found case and print out "No such file or directory"?
+> > >
+> > I think it's already there. If the file doesn't exist, open will fail.
+>
+> [...]
+>
+> > > > @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
+> > > >   err = 0;
+> > > >
+> > > >   if (!btf_data) {
+> > > > +         pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
+> > > >           err = -ENOENT;
+>
+> btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
+> section, therefore, bpftool dumps error string "No such file or
+> directory".  It's confused that actually vmlinux is existed.
+>
+> I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
+> better choice?) to replace -ENOENT at here, this can avoid bpftool to
+> outputs "No such file or directory" in this case.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-INFO: rcu detected stall in corrupted
+The only really meaningful error code would be -ESRCH, which
+strerror() will translate to "No such process", which is also
+completely confusing.
 
-rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { P5778 } 2673 jiffies s: 2773 root: 0x0/T
-rcu: blocking rcu_node structures (internal RCU debug):
+In general, I always found these strerror() messages extremely
+unhelpful and confusing. I wonder if we should make an effort to
+actually emit symbolic names of errors instead (literally, "-ENOENT"
+in this case). This is all tooling for engineers, I find -ENOENT or
+-ESRCH much more meaningful as an error message, compared to "No such
+file" seemingly human-readable interpretation.
+
+Quenting, what do you think about the above proposal for bpftool? We
+can have some libbpf helper internally and do it in libbpf error
+messages as well and just reuse the logic in bpftool, perhaps?
 
 
-Tested on:
+Anyways, I've applied this patch set to bpf-next. Thanks.
 
-commit:         13e3c779 Merge tag 'for-netdev' of https://git.kernel...
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=12cb0e5d880000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
-dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12df6a9b880000
 
+>
+> Thanks,
+> Leo
