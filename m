@@ -2,92 +2,182 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5025C41535
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 00:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EA1C3DA6E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 02:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234029AbiLUAUW (ORCPT
+        id S233881AbiLUCmz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 19:20:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
+        Tue, 20 Dec 2022 21:42:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233331AbiLUAUT (ORCPT
+        with ESMTP id S229591AbiLUCmy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 19:20:19 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16161D0F9;
-        Tue, 20 Dec 2022 16:20:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 58D76B81ACC;
-        Wed, 21 Dec 2022 00:20:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0A345C43398;
-        Wed, 21 Dec 2022 00:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671582016;
-        bh=NGZKT5JgyDeHmjzNMFLfbkZlWq0g+q9VEW8jP0w7yPg=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=JyYpZLGj2FQj9P1yo+uw+px1Amlbltt0JRMhEBqHp6OhD5kAdXzbjY6cLzN1gXXyX
-         kBVEm+rKGuClw9R6gILdczQz8Sj1X8dDWvobRmhkdh/6rH3wWZ6NwEiF5qK6onOOd1
-         b4+4C2nXXPqoo8A86kpywA9y/Cq+evx+uKSyLKYB5KnV+vIQFo2TNvfv0IlO67MiwI
-         u/p8CCzKxwOk8u02WvEHkaveiPyYWFqIfmYuskCvmXK975ZwvZcBGrK+LSHykMCuq8
-         yCgreYgUXG8gRinvhi5Bi/ZQyFYv3Dpqf+fSw9PETC1+nqQfV5ebLTITwc2eCors/6
-         wR+8SbSA2+HbQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7052C395E0;
-        Wed, 21 Dec 2022 00:20:15 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 20 Dec 2022 21:42:54 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C745B1D0F1
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 18:42:52 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id o8-20020a17090a9f8800b00223de0364beso728646pjp.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 18:42:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OStSd32YplqutNgXvFahsrXJGNlcVFLY4LscMZH0nv0=;
+        b=sN1cz4J6eT7EFe157PmafvjLNvNPsz4rEiWWNtSqYpqGQvtGm8KN5CnOv7jf6YKehs
+         p6OmOUv53NIQgxFBpS0urwKIseyuGyzk/SW1jONEO7T/y+p1gM04ntOt1iRhemzw6gWU
+         8iFxe74N3zHDbbhULKnsXdBY7WGHFAjTmEWqabZwbBmoC6V3XZXhE18Oop3JWJaGiuKh
+         +4zfj5TZ88e2lQToLPpZ8Dd1L8DhIcj7xZ0/R+te0D1MzFhRyvYeGzHwstPKJWJDGTbH
+         ilE46U3zMaBACcbFGDzGiQbjxBnYclFHhvF4g+Dp37AKjcyhrIyXi9dZtDAL2ScsyZoK
+         PTMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OStSd32YplqutNgXvFahsrXJGNlcVFLY4LscMZH0nv0=;
+        b=ddSQQD2KV2GE9JC2ckAs5sK562xynQu3pqsLeUVlLiJ36bQRsas8TbwwPCl91Mp+QF
+         oofetPIbyYDVIp48djXRpM/bMkG+S+gAFj0mkDsmRwGIVbuXcVqhdvqoiZ7niXfPknF1
+         P19zJKp8+zyjwxwE8V3Nf5VXo4xkRn8ytcaVoJXZyK+pwBVVT7661ohMnoWbgCMqHqfz
+         FoVPKkIztcoFB6HPblS/bXFFBn9DLXee0Xb/d0X8EZCh7MfZ1JXxIZkOIX49hsVfjPGM
+         ZFX6K9c2I/PN0+d15+Z+UGrXB8S603SNDllM/+4MT4i/JiaivqYszq8fGSy2LJzp5sX8
+         1NRg==
+X-Gm-Message-State: AFqh2krBOTixIojp+ycJ3Po+cCrnUkoXJUQYDqgSsI6o0pIelMtDvIEf
+        VEuRtB6lEih85204EZj91PIt48zXVNAOrpND
+X-Google-Smtp-Source: AMrXdXv1vJnW/Jn0Li+PENUoxvt8jTtf8bCjDmR5JOo5WmyOvS1uIP4t83g1WW9EekMeo72A8LQSWw==
+X-Received: by 2002:a05:6a20:d39a:b0:9d:efbf:6618 with SMTP id iq26-20020a056a20d39a00b0009defbf6618mr605811pzb.38.1671590572269;
+        Tue, 20 Dec 2022 18:42:52 -0800 (PST)
+Received: from ?IPV6:2409:8a28:e63:2da0:b0e9:bb47:3cf6:6095? ([2409:8a28:e63:2da0:b0e9:bb47:3cf6:6095])
+        by smtp.gmail.com with ESMTPSA id h10-20020a62830a000000b00574ffc5976fsm9354886pfe.159.2022.12.20.18.42.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Dec 2022 18:42:51 -0800 (PST)
+From:   Chengming Zhou <zhouchengming@bytedance.com>
+X-Google-Original-From: Chengming Zhou <chengming.zhou@linux.dev>
+Message-ID: <3a5a4738-2868-8f2f-f8b2-a28c10fbe25b@linux.dev>
+Date:   Wed, 21 Dec 2022 10:42:39 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/2] bpftool: improve error handing for missing .BTF
- section
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167158201594.10746.1700906742257656233.git-patchwork-notify@kernel.org>
-Date:   Wed, 21 Dec 2022 00:20:15 +0000
-References: <20221217223509.88254-1-changbin.du@gmail.com>
-In-Reply-To: <20221217223509.88254-1-changbin.du@gmail.com>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        quentin@isovalent.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, shuah@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        mykolal@fb.com, linux-perf-users@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.0
+Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <000000000000a20a2e05f029c577@google.com>
+ <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello:
-
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Sun, 18 Dec 2022 06:35:07 +0800 you wrote:
-> Display error message for missing ".BTF" section and clean up empty
-> vmlinux.h file.
+On 2022/12/19 22:40, Peter Zijlstra wrote:
+> On Mon, Dec 19, 2022 at 12:04:43AM -0800, syzbot wrote:
+>> Hello,
+>>
+>> syzbot found the following issue on:
+>>
+>> HEAD commit:    13e3c7793e2f Merge tag 'for-netdev' of https://git.kernel...
+>> git tree:       bpf
+>> console+strace: https://syzkaller.appspot.com/x/log.txt?x=177df7e0480000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b0e91ad4b5f69c47
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=b8e8c01c8ade4fe6e48f
+>> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e87100480000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ceeb13880000
+>>
+>> Downloadable assets:
+>> disk image: https://storage.googleapis.com/syzbot-assets/373a99daa295/disk-13e3c779.raw.xz
+>> vmlinux: https://storage.googleapis.com/syzbot-assets/7fa71ed0fe17/vmlinux-13e3c779.xz
+>> kernel image: https://storage.googleapis.com/syzbot-assets/2842ad5c698b/bzImage-13e3c779.xz
+>>
+>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>> Reported-by: syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com
+>>
+>> ==================================================================
+>> BUG: KASAN: use-after-free in __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+>> Read of size 8 at addr ffff8880237d6018 by task syz-executor287/8300
+>>
+>> CPU: 0 PID: 8300 Comm: syz-executor287 Not tainted 6.1.0-syzkaller-09661-g13e3c7793e2f #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/26/2022
+>> Call Trace:
+>>  <TASK>
+>>  __dump_stack lib/dump_stack.c:88 [inline]
+>>  dump_stack_lvl+0xd1/0x138 lib/dump_stack.c:106
+>>  print_address_description mm/kasan/report.c:284 [inline]
+>>  print_report+0x15e/0x45d mm/kasan/report.c:395
+>>  kasan_report+0xbf/0x1f0 mm/kasan/report.c:495
+>>  __lock_acquire+0x3ee7/0x56d0 kernel/locking/lockdep.c:4925
+>>  lock_acquire kernel/locking/lockdep.c:5668 [inline]
+>>  lock_acquire+0x1e3/0x630 kernel/locking/lockdep.c:5633
+>>  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+>>  _raw_spin_lock_irqsave+0x3d/0x60 kernel/locking/spinlock.c:162
+>>  put_pmu_ctx kernel/events/core.c:4913 [inline]
+>>  put_pmu_ctx+0xad/0x390 kernel/events/core.c:4893
+>>  _free_event+0x3c5/0x13d0 kernel/events/core.c:5196
+>>  free_event+0x58/0xc0 kernel/events/core.c:5224
+>>  __do_sys_perf_event_open+0x66d/0x2980 kernel/events/core.c:12701
+>>  do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+>>  do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+>>  entry_SYSCALL_64_after_hwframe+0x63/0xcd
 > 
-> v3:
->  - fix typo and make error message consistent. (Andrii Nakryiko)
->  - split out perf change.
-> v2:
->  - remove vmlinux specific error info.
->  - use builtin target .DELETE_ON_ERROR: to delete empty vmlinux.h
+> Does this help?
 > 
-> [...]
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index e47914ac8732..bbff551783e1 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
+>  	return event_fd;
+>  
+>  err_context:
+> -	/* event->pmu_ctx freed by free_event() */
+> +	put_pmu_ctx(event->pmu_ctx);
+> +	event->pmu_ctx = NULL; /* _free_event() */
+>  err_locked:
+>  	mutex_unlock(&ctx->mutex);
+>  	perf_unpin_context(ctx);
 
-Here is the summary with links:
-  - [v3,1/2] libbpf: show error info about missing ".BTF" section
-    https://git.kernel.org/bpf/bpf-next/c/e6b4e1d759d3
-  - [v3,2/2] bpf: makefiles: do not generate empty vmlinux.h
-    https://git.kernel.org/bpf/bpf-next/c/e7f0d5cdd023
+Tested-by: Chengming Zhou <zhouchengming@bytedance.com>
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+While reviewing the code, I found perf_event_create_kernel_counter()
+has the similar problem in the "err_pmu_ctx" error handling path:
 
+CPU0					CPU1
+perf_event_create_kernel_counter()
+  // inc ctx refcnt
+  find_get_context(task, event) (1)
+
+  // inc pmu_ctx refcnt
+  pmu_ctx = find_get_pmu_context()
+
+  event->pmu_ctx = pmu_ctx
+  ...
+  goto err_pmu_ctx:
+    // dec pmu_ctx refcnt
+    put_pmu_ctx(pmu_ctx) (2)
+
+    mutex_unlock(&ctx->mutex)
+    // dec ctx refcnt
+    put_ctx(ctx)
+					perf_event_exit_task_context()
+					  mutex_lock()
+					  mutex_unlock()
+					  // last refcnt put
+					  put_ctx()
+    free_event(event)
+      if (event->pmu_ctx) // True
+        put_pmu_ctx() (3)
+          // will access freed pmu_ctx or ctx
+
+      if (event->ctx) // False
+        put_ctx()
+
+(3) has UAF problem since the pmu_ctx maybe freed in (2), so also
+should have "event->pmu_ctx = NULL;" in (2).
 
