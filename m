@@ -2,132 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAD0C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 03:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59CEC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 16:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234198AbiLUDzf (ORCPT
+        id S234740AbiLUQcB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Dec 2022 22:55:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
+        Wed, 21 Dec 2022 11:32:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229652AbiLUDzd (ORCPT
+        with ESMTP id S234641AbiLUQbS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Dec 2022 22:55:33 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5671EED1
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 19:55:32 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id b2so1629226pld.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Dec 2022 19:55:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LG53lA26L/ncngjFCHRhyvrs5xf1POMXaF/i7pP2T2w=;
-        b=jE8ug6sV2Ksmc1BjKlm2igxId/ENjDWpxJUXauuLCDWxTXh5ogm7qEZcDK557UrubC
-         CrP+Ib8pkTZdIZEdo3nkWvf5LrUWmr4jzVAoTsF/GdW73ifIopte2waaoubyn/9pOerY
-         WAfRkiwcznSlocee7G/hOSFzDtFRdLMj3soEhqVIsFxGlXL84laUyc3rDUUFohWw9FGU
-         5ITGwmYLdSoJpaDqay0DHYJdne1DhHXdxu/ZhO87WLlQPJXGXJ9pxE54c3n2Yam5WAMJ
-         Z4jmRQbXMkrl9CI0akL6yhV89RmgjdmqRaldmqh7AzpJGJFOPNEePFm2YBQD/wudUzJD
-         Jzxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LG53lA26L/ncngjFCHRhyvrs5xf1POMXaF/i7pP2T2w=;
-        b=0uKXPn9hGFj+Jz08KFXOMdhVy8SoaeK+Ae8XeGHX+f4MzSE86EYpNPds7CLqbkl3j3
-         XlIcmNTjTJBFIAxwMAysv2kfcLthb8YpdNaF1vbYijqgSe5BU+KWMtteMOcrqNZqpuQO
-         2PyvdL/7DiOGB/Yediay1zCK5hG5fa1eEXuyr9hu6T9l3TI35KV78QvWQ0t/iq+/43Xc
-         pNYgWPIJMKGfMWCRcsc6YqD10rR3k2/1VSVU768m9UxzY4BTbRQsHPF7y5aaXNXvcwQe
-         x75tobdfBHcRM2FzN0uxZXu4m4rg1Q+dHFUs4arzI7LPgTYr3+fHe9S99iXgWYgY+ZB8
-         rcKQ==
-X-Gm-Message-State: AFqh2kqiNUxSdXZXKSARl8K/Jhi5WDSTzE6UwdeJ0oEgX/2B/Yx35oAW
-        6jjU0ocP8nUQlsajNVuSdLjbaw==
-X-Google-Smtp-Source: AMrXdXucR+r5a6DTmL41q4+SegBpEAwe4Wonw64R9urkdQSpXNK8K3BOVXCMoHZst4hjRq8i7ONt9w==
-X-Received: by 2002:a17:902:7405:b0:18f:a4e1:9908 with SMTP id g5-20020a170902740500b0018fa4e19908mr661321pll.15.1671594931937;
-        Tue, 20 Dec 2022 19:55:31 -0800 (PST)
-Received: from leoy-yangtze.lan (n058152048225.netvigator.com. [58.152.48.225])
-        by smtp.gmail.com with ESMTPSA id d5-20020a170902654500b00188fcc4fc00sm10165715pln.79.2022.12.20.19.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Dec 2022 19:55:31 -0800 (PST)
-Date:   Wed, 21 Dec 2022 11:55:24 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Quentin Monnet <quentin@isovalent.com>,
-        Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+        Wed, 21 Dec 2022 11:31:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21755248D1;
+        Wed, 21 Dec 2022 08:31:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D2EC9B81BA9;
+        Wed, 21 Dec 2022 16:31:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43F61C43396;
+        Wed, 21 Dec 2022 16:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671640274;
+        bh=ytY2pnVKtBHX6tUn6fSepmOt2D0eU5Ff/O3eWDQNHF0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OO+PTYN0WupGmezr2PigE6bA97h577cK/221c0WtQVZVAQDaT0RCP31BnELKMt3jF
+         UWKZJOnJ5ZrvEs2XSLaLAMSSXNuPlRQ/JXZ1fLgLZtDSTl9u4+DVb6I2Su853gjlKT
+         ZlieolnLr57YhARCWdzIb8Jdatan+fk2QHMYrXdZCY/vskCNXon6NWnlcr5R4k3CNc
+         aTcuKtPWGZ46x8WY6YUNHakBmLxJWOS7mh733RjQgh0mXqX+i7eoYg4ohLf8MR956t
+         /+uWpgjZ5tuju5URH6o+JYuv23yH6QREs/AxNd/j6zfmC7DvlXXTda2K7PdvdSow2K
+         B/ntAXscFPrOw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BABE940367; Wed, 21 Dec 2022 13:31:11 -0300 (-03)
+Date:   Wed, 21 Dec 2022 13:31:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF"
- section
-Message-ID: <Y6KDrELoIfPbh3VN@leoy-yangtze.lan>
-References: <20221217223509.88254-1-changbin.du@gmail.com>
- <20221217223509.88254-2-changbin.du@gmail.com>
- <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan>
- <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
- <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
- <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Garry <john.g.garry@oracle.com>,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [PATCH v1 00/32] Refresh Intel vendor events
+Message-ID: <Y6M0zwN+1yovTeZH@kernel.org>
+References: <20221215064755.1620246-1-irogers@google.com>
+ <bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 04:13:13PM -0800, Andrii Nakryiko wrote:
-
-[...]
-
-> > > > > @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
-> > > > >   err = 0;
-> > > > >
-> > > > >   if (!btf_data) {
-> > > > > +         pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
-> > > > >           err = -ENOENT;
-> >
-> > btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
-> > section, therefore, bpftool dumps error string "No such file or
-> > directory".  It's confused that actually vmlinux is existed.
-> >
-> > I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
-> > better choice?) to replace -ENOENT at here, this can avoid bpftool to
-> > outputs "No such file or directory" in this case.
+Em Thu, Dec 15, 2022 at 12:23:14PM -0500, Liang, Kan escreveu:
 > 
-> The only really meaningful error code would be -ESRCH, which
-> strerror() will translate to "No such process", which is also
-> completely confusing.
-
-Or maybe -ENODATA (No data available) is a better choice?
-
-Thanks,
-Leo
-
-> In general, I always found these strerror() messages extremely
-> unhelpful and confusing. I wonder if we should make an effort to
-> actually emit symbolic names of errors instead (literally, "-ENOENT"
-> in this case). This is all tooling for engineers, I find -ENOENT or
-> -ESRCH much more meaningful as an error message, compared to "No such
-> file" seemingly human-readable interpretation.
 > 
-> Quenting, what do you think about the above proposal for bpftool? We
-> can have some libbpf helper internally and do it in libbpf error
-> messages as well and just reuse the logic in bpftool, perhaps?
+> On 2022-12-15 1:47 a.m., Ian Rogers wrote:
+> > Use new repository [1] and converter script to regenerate Intel vendor
+> > metrics. In particular this change removes unnecessary json fields and
+> > correct uncore events that previously had a buggy converter.
+> > 
 > 
-> Anyways, I've applied this patch set to bpf-next. Thanks.
+> Thanks Ian.
+> 
+> The patch series looks good to me.
+> 
+> Acked-by: Kan Liang <kan.liang@linux.intel.com>
+
+b4 doesn't like it, I'll apply it manually, probably some went over
+message size limits?
+
+- Arnaldo
+
+⬢[acme@toolbox perf]$ b4 am -ctsl --cc-trailers bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com
+Grabbing thread from lore.kernel.org/all/bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa%40linux.intel.com/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 7 messages in the thread
+Checking attestation on all messages, may take a moment...
+---
+  ✓ [PATCH v1 1/32] perf test pmu-events: Fake PMU metric workaround
+    ✓ Signed: DKIM/google.com
+    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
+    + Link: https://lore.kernel.org/r/20221215064755.1620246-2-irogers@google.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ✓ [PATCH v1 2/32] perf vendor events intel: Refresh alderlake metrics
+    ✓ Signed: DKIM/google.com
+    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
+    + Link: https://lore.kernel.org/r/20221215064755.1620246-3-irogers@google.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ✓ [PATCH v1 3/32] perf vendor events intel: Refresh alderlake-n metrics
+    ✓ Signed: DKIM/google.com
+    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
+    + Link: https://lore.kernel.org/r/20221215064755.1620246-4-irogers@google.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ✓ [PATCH v1 4/32] perf vendor events intel: Refresh bonnell events
+    ✓ Signed: DKIM/google.com
+    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
+    + Link: https://lore.kernel.org/r/20221215064755.1620246-5-irogers@google.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ✓ [PATCH v1 5/32] perf vendor events intel: Refresh broadwell metrics and events
+    ✓ Signed: DKIM/google.com
+    + Acked-by: Kan Liang <kan.liang@linux.intel.com> (✓ DKIM/intel.com)
+    + Link: https://lore.kernel.org/r/20221215064755.1620246-6-irogers@google.com
+    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+  ERROR: missing [6/32]!
+  ERROR: missing [7/32]!
+  ERROR: missing [8/32]!
+  ERROR: missing [9/32]!
+  ERROR: missing [10/32]!
+  ERROR: missing [11/32]!
+  ERROR: missing [12/32]!
+
