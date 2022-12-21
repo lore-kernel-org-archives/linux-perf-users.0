@@ -2,91 +2,126 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CB1C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 16:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4E9C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 17:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234209AbiLUQw6 (ORCPT
+        id S234564AbiLURDZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Dec 2022 11:52:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
+        Wed, 21 Dec 2022 12:03:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbiLUQw5 (ORCPT
+        with ESMTP id S234562AbiLURDQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Dec 2022 11:52:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D561B79B;
-        Wed, 21 Dec 2022 08:52:56 -0800 (PST)
+        Wed, 21 Dec 2022 12:03:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B5D140B0;
+        Wed, 21 Dec 2022 09:03:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2430D6186E;
-        Wed, 21 Dec 2022 16:52:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A31C433EF;
-        Wed, 21 Dec 2022 16:52:55 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 26644B81BE1;
+        Wed, 21 Dec 2022 17:03:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A860DC433EF;
+        Wed, 21 Dec 2022 17:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671641575;
-        bh=g/GsqyV3uErpMRQwxfVP4411/v4qwiMvBe7PcgSp8PI=;
+        s=k20201202; t=1671642192;
+        bh=U7EE+wRsWxkI1lNUdsnqBHX8mCVM3dbk+Yz0Z/0wCrA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m7/4TZsAFC2sp/ekFj4qAG9FIBbM0aPEDcX33HoLBsw1ivLHxYPZo02WYb3P+SfdW
-         VvPubxp7fiZqAb8DlUUWqbMoFEJG7r6HPOmYgsmzRTDQokx63ZSzW3TTfQZKuhVB0e
-         SVda+hXF3L6BuQzMrGDddsSmu7IGrIbDCae4f0guZ80Hm16yYjbzmuz0HdsdBvcOVq
-         CJhI3lMUSWoH5cUpVozCEtd1SApyp5BrFR/ws30U5LvNW33iOMvvk7DQ3w6kvGcB6a
-         q80O991bweQVZxibP8Fq3dH5qRVno2FTy5fsqGmyr/KWJrapA5TaeHpOHJSJur9b7d
-         Rk0AUVBi2lUnA==
+        b=dGMWvSAq73CLEixLFovtAjbFETQX2yCTBsBV8+d6f6Slk20iEbKyPCFlnjI9H6ckl
+         hwO4a5yILIwaTSmMVw5T27tIz++nOECXr+94i/+HzKPwSuJKBPt7wySEObPLuoy+yV
+         b+rlZ1pxDjbDVXZux++DsNvTshgJOdePGT3f4SzxSbMb6z9RgNqlZhApgrZrYAVxty
+         5qgN6mhq/zc995ICnrQQs5P5aLdtoaC57CtO0e4ZfkpxgcQE9mmG28h9lxPL1g5px2
+         RwSybQzP6E7hO8XLjTs/lldn0AC2yaDqZlaFxG6jHgn9KpXjoGThtEJ53HhUNybdkV
+         ybQ6QBQJ39m+Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 81C9D40367; Wed, 21 Dec 2022 13:52:52 -0300 (-03)
-Date:   Wed, 21 Dec 2022 13:52:52 -0300
+        id CB12940367; Wed, 21 Dec 2022 14:03:09 -0300 (-03)
+Date:   Wed, 21 Dec 2022 14:03:09 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Sandipan Das <sandipan.das@amd.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Garry <john.g.garry@oracle.com>,
-        Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [PATCH v1 00/32] Refresh Intel vendor events
-Message-ID: <Y6M55I/gDRBAfPvc@kernel.org>
-References: <20221215064755.1620246-1-irogers@google.com>
- <bbbe8cb7-bc12-537f-0977-e96ab7cf3cfa@linux.intel.com>
- <Y6M0zwN+1yovTeZH@kernel.org>
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, eranian@google.com, jhladky@redhat.com,
+        ravi.bangoria@amd.com, ananth.narayan@amd.com
+Subject: Re: [PATCH v2 0/4] perf vendor events amd: Add Zen 4 events and
+ metrics
+Message-ID: <Y6M8TeUR73AB+TKP@kernel.org>
+References: <20221214082652.419965-1-sandipan.das@amd.com>
+ <CAP-5=fWm55y6LdZozX=LuLZhk+SWm_yi5tLcKgT_UJt9FETNPQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y6M0zwN+1yovTeZH@kernel.org>
+In-Reply-To: <CAP-5=fWm55y6LdZozX=LuLZhk+SWm_yi5tLcKgT_UJt9FETNPQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Dec 21, 2022 at 01:31:11PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Dec 15, 2022 at 12:23:14PM -0500, Liang, Kan escreveu:
-> > On 2022-12-15 1:47 a.m., Ian Rogers wrote:
-> > > Use new repository [1] and converter script to regenerate Intel vendor
-> > > metrics. In particular this change removes unnecessary json fields and
-> > > correct uncore events that previously had a buggy converter.
+Em Wed, Dec 14, 2022 at 07:59:01AM -0800, Ian Rogers escreveu:
+> On Wed, Dec 14, 2022 at 12:27 AM Sandipan Das <sandipan.das@amd.com> wrote:
+> >
+> > Add events and metrics taken from the Processor Programming Reference
+> > (PPR) for AMD Family 19h Model 11h Revision B1 processors which can be
+> > found at: https://www.amd.com/system/files/TechDocs/55901_0.25.zip
+> >
+> > Previous versions can be found at:
+> > v1: https://lore.kernel.org/all/20221207053007.336806-1-sandipan.das@amd.com/
+> >
+> > Changes in v2:
+> > - Remove "bytes" from the names of data fabric bandwidth metrics which
+> >   use a scale unit.
+> > - Use better group names for pipeline utilization metrics.
+> > - Move patch that adds family-model mapping to the end of the series for
+> >   avoiding potential build issues.
+> >
+> > Sandipan Das (4):
+> >   perf vendor events amd: Add Zen 4 core events
+> >   perf vendor events amd: Add Zen 4 uncore events
+> >   perf vendor events amd: Add Zen 4 metrics
+> >   perf vendor events amd: Add Zen 4 mapping
+> 
+> Series: Acked-by: Ian Rogers <irogers@google.com>
 
-> > Thanks Ian.
+Please add the Acked-by:  on a separate line, like
 
-> > The patch series looks good to me.
+Series:
+Acked-by: Ian Rogers <irogers@google.com>
 
-> > Acked-by: Kan Liang <kan.liang@linux.intel.com>
+To avoid confusing b4
 
-> b4 doesn't like it, I'll apply it manually, probably some went over
-> message size limits?
+Thanks,
 
-Had to adjust the first one manually due, IIRC, to the hashmap changes
-that went upstream via the bpf tree, then use b4 3 times, cherrypicking
-ranges of the series to get all merged.
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> >  .../pmu-events/arch/x86/amdzen4/branch.json   |   82 ++
+> >  .../pmu-events/arch/x86/amdzen4/cache.json    |  772 ++++++++++++
+> >  .../pmu-events/arch/x86/amdzen4/core.json     |  122 ++
+> >  .../arch/x86/amdzen4/data-fabric.json         | 1090 +++++++++++++++++
+> >  .../arch/x86/amdzen4/floating-point.json      |  818 +++++++++++++
+> >  .../pmu-events/arch/x86/amdzen4/memory.json   |  174 +++
+> >  .../pmu-events/arch/x86/amdzen4/other.json    |  138 +++
+> >  .../pmu-events/arch/x86/amdzen4/pipeline.json |   98 ++
+> >  .../arch/x86/amdzen4/recommended.json         |  334 +++++
+> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |    3 +-
+> >  10 files changed, 3630 insertions(+), 1 deletion(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/branch.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/cache.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/core.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/data-fabric.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/floating-point.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/memory.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/other.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/pipeline.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen4/recommended.json
+> >
+> > --
+> > 2.34.1
+> >
 
-Ian, please check what happened so that this isn't this manual next
-time.
+-- 
 
 - Arnaldo
