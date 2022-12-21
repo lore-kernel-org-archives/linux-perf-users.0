@@ -1,176 +1,167 @@
-Return-Path: <linux-perf-users-owner@kernel.org>
+Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4F0C4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 17:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6FFC4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Dec 2022 22:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbiLURzG (ORCPT
+        id S234949AbiLUWed (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Dec 2022 12:55:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54440 "EHLO
+        Wed, 21 Dec 2022 17:34:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbiLURzF (ORCPT
+        with ESMTP id S234929AbiLUWec (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Dec 2022 12:55:05 -0500
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B7422BDA;
-        Wed, 21 Dec 2022 09:55:04 -0800 (PST)
-Received: by mail-vs1-f51.google.com with SMTP id m2so15446474vsv.9;
-        Wed, 21 Dec 2022 09:55:04 -0800 (PST)
+        Wed, 21 Dec 2022 17:34:32 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C230FD7E
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Dec 2022 14:34:30 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-349423f04dbso3628107b3.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Dec 2022 14:34:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:from:subject:mime-version
+         :message-id:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JIowfcxIlSOnpo+34eejAu9BpaMvt8oO2tnwfcBHK9E=;
+        b=LLSlMCImdpJICzXSFwKufVi6MbgWOiagYpMxF5WRXTuuxx0lk/yLS4q8YnUM83y4Aw
+         r5NDXNnYpJ6j74WZp71NW8W3DEp4FV5SmjL7sMiALgBNJ25bacbGZHOsGaPaEMBYfj2m
+         B5XU3CzCzwCBO3I75UME9AfZGC4bIMUOX8pHTScoEZx6gUH5Ha5GpGcIfQLrEfBn+Unb
+         Az1ZpJn1XfV9d/RQa7HHG4SdDe/rvlRENmu7kVCPt3ZqXz08nCk7ITwa9hJ3Unfc7x3G
+         LiCZusvXJE9IpIhAohHFo/UFWiahP8fOhMpCXHwHYLkI4ZPtvbsbSMN+PUdGGYePk0/1
+         X6Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1+EHTg950OODgm5W0yafui8aHdMJusC0dH+4uJ44Jio=;
-        b=PiHbb0brrZGhKpSMiZU9LB9N5Y1sDCugXgD8KA5r+NYclSeowpfCcwHOymIUuB3AkA
-         srjF9oWxk0Jh6tmo0FIwqNTRX46h+KWPXs9Dt0GqEbF1BsI+IJ8I26VMHQ3Sz8ReoMrd
-         VgGpmlxJjVRwQgc8pQpdCG8OJotMhEOQY4tJjNUIt+HQAWPJ/5AGy2CFuaSVjoP0/LG/
-         W7L+Al+ofKYUkf1lajwqCBARCIIm9FJt7cyHPuuvTkPyMq0dygCo7QqlD//n7NKNBQzR
-         Vna4dnYx7grnk7UuR5ZYn5H+zK0KTzVCSXq2RpsG573pbcJiq6YFfIl3D3blNQxCz9zH
-         wH0w==
-X-Gm-Message-State: AFqh2kp+rWm7G2ASsA9z+IMBzEFDM3wmnJ2jAopiN5c9fFZGtce9+Q/x
-        Hg8VD2Rdln5vBo0d4GLX9tyquog9idfkenI/2YM=
-X-Google-Smtp-Source: AMrXdXvcjo0kdtXNWnF54g6kqUsDb5GUgL1NC6uyXp7BWEmYvCktUq9ySLvg1y8r5oY9vEpuDaN2+x++rcuIPJnq7jw=
-X-Received: by 2002:a05:6102:126c:b0:3b3:4691:f37e with SMTP id
- q12-20020a056102126c00b003b34691f37emr312369vsg.70.1671645303271; Wed, 21 Dec
- 2022 09:55:03 -0800 (PST)
-MIME-Version: 1.0
-References: <20221219201732.460111-1-namhyung@kernel.org> <20221219201732.460111-3-namhyung@kernel.org>
- <Y6NHf1h2BKOw9J3Q@kernel.org>
-In-Reply-To: <Y6NHf1h2BKOw9J3Q@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 21 Dec 2022 09:54:51 -0800
-Message-ID: <CAM9d7chFP6LAJS0_PkThRBNk9KN6HRCyWJK=PoXMTyY92Di7YA@mail.gmail.com>
-Subject: Re: [PATCH 2/6] perf lock contention: Add -Y/--type-filter option
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        h=content-transfer-encoding:cc:to:from:subject:mime-version
+         :message-id:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JIowfcxIlSOnpo+34eejAu9BpaMvt8oO2tnwfcBHK9E=;
+        b=gZPBnXXMMLXEEbRXEEA1UU/MUegqUZNMuhvPLvfB4oZsch52WxcBmur0wMGpTJviEB
+         1Xly4WVy73E7jq07oklZyPAW3+s8jYW0Ddd9VwBW21Qqr+hgndciW9LsfxuK+uOFOCFc
+         ha63iNNR9yxK0zhe/vUMGaW8g0DRWYcSUf17Ge+xQY+n2llFQ8MOG60Nwbcx63I9TrIl
+         y+bC0jLU/IN6g744TDAYmwlNrujLXD9kw9ChpdE/vv9bwbXHgsy4Dpp88g3BVTgDt5y7
+         ypYrfpNK2c07s4CPInbxITdVs90bREAgVYeizmCnNR90wQg1p9wulQ1RwY6M65OjRHcm
+         obRQ==
+X-Gm-Message-State: AFqh2ko7sKBVX+T3gqUwue/L9NGHKyqFNkmnoLzFPKSKQ5wbsMPF6Iu1
+        OZCf41crdgTcmKW2ri83uubNWk5Va0Qg
+X-Google-Smtp-Source: AMrXdXt/1i6tEE0aK9MxTxBRxe31r3mW9upfGIUXK/yHidpIcZPyWJDOwuzvHtzQrbtXnFSQB6TM/EocWP7x
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:62bd:f120:1fd8:1d21])
+ (user=irogers job=sendgmr) by 2002:a05:6902:505:b0:70f:8944:6a8b with SMTP id
+ x5-20020a056902050500b0070f89446a8bmr305071ybs.260.1671662070033; Wed, 21 Dec
+ 2022 14:34:30 -0800 (PST)
+Date:   Wed, 21 Dec 2022 14:34:11 -0800
+Message-Id: <20221221223420.2157113-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+Subject: [PATCH v2 0/9] jevents/pmu-events improvements
+From:   Ian Rogers <irogers@google.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Blake Jones <blakejones@google.com>, bpf@vger.kernel.org
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sandipan Das <sandipan.das@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Add an optimization to jevents using the metric code, rewrite metrics
+in terms of each other in order to minimize size and improve
+readability. For example, on Power8
+other_stall_cpi is rewritten from:
+"PM_CMPLU_STALL / PM_RUN_INST_CMPL - PM_CMPLU_STALL_BRU_CRU / PM_RUN_INST_C=
+MPL - PM_CMPLU_STALL_FXU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_VSU / PM_RUN_I=
+NST_CMPL - PM_CMPLU_STALL_LSU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_NTCG_FLUS=
+H / PM_RUN_INST_CMPL - PM_CMPLU_STALL_NO_NTF / PM_RUN_INST_CMPL"
+to:
+"stall_cpi - bru_cru_stall_cpi - fxu_stall_cpi - vsu_stall_cpi - lsu_stall_=
+cpi - ntcg_flush_cpi - no_ntf_stall_cpi"
+Which more closely matches the definition on Power9.
 
-On Wed, Dec 21, 2022 at 9:50 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Mon, Dec 19, 2022 at 12:17:28PM -0800, Namhyung Kim escreveu:
+A limitation of the substitutions are that they depend on strict
+equality and the shape of the tree. This means that for "a + b + c"
+then a substitution of "a + b" will succeed while "b + c" will fail
+(the LHS for "+ c" is "a + b" not just "b").
 
-[SNIP]
-> > @@ -1465,6 +1483,21 @@ static const char *get_type_str(unsigned int flags)
-> >       return "unknown";
-> >  }
-> >
-> > +static unsigned int get_type_flag(const char *str)
-> > +{
-> > +     for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
-> > +             if (!strcmp(lock_type_table[i].name, str))
-> > +                     return lock_type_table[i].flags;
-> > +     }
-> > +     return -1U;
-> > +}
-> > +
-> > +static void lock_filter_finish(void)
-> > +{
-> > +     zfree(&filters.types);
-> > +     filters.nr_types = 0;
-> > +}
-> > +
-> >  static void sort_contention_result(void)
-> >  {
-> >       sort_result();
-> > @@ -1507,6 +1540,9 @@ static void print_contention_result(struct lock_contention *con)
-> >               if (st->broken)
-> >                       bad++;
-> >
-> > +             if (!st->wait_time_total)
-> > +                     continue;
-> > +
-> >               list_for_each_entry(key, &lock_keys, list) {
-> >                       key->print(key, st);
-> >                       pr_info(" ");
-> > @@ -1753,6 +1789,7 @@ static int __cmd_contention(int argc, const char **argv)
-> >       print_contention_result(&con);
-> >
-> >  out_delete:
-> > +     lock_filter_finish();
-> >       evlist__delete(con.evlist);
-> >       lock_contention_finish();
-> >       perf_session__delete(session);
-> > @@ -1884,6 +1921,79 @@ static int parse_max_stack(const struct option *opt, const char *str,
-> >       return 0;
-> >  }
-> >
-> > +static bool add_lock_type(unsigned int flags)
-> > +{
-> > +     unsigned int *tmp;
-> > +
-> > +     tmp = realloc(filters.types, (filters.nr_types + 1) * sizeof(*filters.types));
-> > +     if (tmp == NULL)
-> > +             return false;
-> > +
-> > +     tmp[filters.nr_types++] = flags;
-> > +     filters.types = tmp;
-> > +     return true;
-> > +}
-> > +
-> > +static int parse_lock_type(const struct option *opt __maybe_unused, const char *str,
-> > +                        int unset __maybe_unused)
-> > +{
-> > +     char *s, *tmp, *tok;
-> > +     int ret = 0;
-> > +
-> > +     s = strdup(str);
-> > +     if (s == NULL)
-> > +             return -1;
-> > +
-> > +     for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
-> > +             unsigned int flags = get_type_flag(tok);
-> > +
-> > +             if (flags == -1U) {
-> > +                     char buf[32];
-> > +
-> > +                     if (strchr(tok, ':'))
-> > +                         continue;
-> > +
-> > +                     /* try :R and :W suffixes for rwlock, rwsem, ... */
-> > +                     scnprintf(buf, sizeof(buf), "%s:R", tok);
-> > +                     flags = get_type_flag(buf);
-> > +                     if (flags != -1UL) {
-> > +                             if (!add_lock_type(flags)) {
-> > +                                     ret = -1;
-> > +                                     break;
-> > +                             }
-> > +                     }
->
->
-> clang doesn't like this:
->
->   34    97.97 fedora:36                     : FAIL clang version 14.0.5 (Fedora 14.0.5-2.fc36)
->     builtin-lock.c:2012:14: error: result of comparison of constant 18446744073709551615 with expression of type 'unsigned int' is always true [-Werror,-Wtautological-constant-out-of-range-compare]
->                             if (flags != -1UL) {
->                                 ~~~~~ ^  ~~~~
->     builtin-lock.c:2021:14: error: result of comparison of constant 18446744073709551615 with expression of type 'unsigned int' is always true [-Werror,-Wtautological-constant-out-of-range-compare]
->                             if (flags != -1UL) {
->                                 ~~~~~ ^  ~~~~
->     builtin-lock.c:2037:14: error: result of comparison of constant 18446744073709551615 with expression of type 'unsigned int' is always true [-Werror,-Wtautological-constant-out-of-range-compare]
->                             if (flags != -1UL) {
->                                 ~~~~~ ^  ~~~~
->     3 errors generated.
->
-> I applied this on top, Ack?
+Separate out the events and metrics in the pmu-events tables saving
+14.8% in the table size while making it that metrics no longer need to
+iterate over all events and vice versa. These changes remove evsel's
+direct metric support as the pmu_event no longer has a metric to
+populate it. This is a minor issue as the code wasn't working
+properly, metrics for this are rare and can still be properly ran
+using '-M'.
 
-Oh.. sorry for that.  It could be just -1U.  But I'm ok with UINT_MAX too.
+Add an ability to just build certain models into the jevents generated
+pmu-metrics.c code. This functionality is appropriate for operating
+systems like ChromeOS, that aim to minimize binary size and know all
+the target CPU models.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+v2. Rebase. Modify the code that skips rewriting a metric with the
+    same name with itself, to make the name check case insensitive.
 
-Thanks,
-Namhyung
+Ian Rogers (9):
+  perf jevents metric: Correct Function equality
+  perf jevents metric: Add ability to rewrite metrics in terms of others
+  perf jevents: Rewrite metrics in the same file with each other
+  perf pmu-events: Separate metric out of pmu_event
+  perf stat: Remove evsel metric_name/expr
+  perf jevents: Combine table prefix and suffix writing
+  perf pmu-events: Introduce pmu_metrics_table
+  perf jevents: Generate metrics and events as separate tables
+  perf jevents: Add model list option
+
+ tools/perf/arch/arm64/util/pmu.c         |  23 +-
+ tools/perf/arch/powerpc/util/header.c    |   4 +-
+ tools/perf/builtin-list.c                |  20 +-
+ tools/perf/builtin-stat.c                |   1 -
+ tools/perf/pmu-events/Build              |   3 +-
+ tools/perf/pmu-events/empty-pmu-events.c | 111 ++++++-
+ tools/perf/pmu-events/jevents.py         | 353 ++++++++++++++++++-----
+ tools/perf/pmu-events/metric.py          |  79 ++++-
+ tools/perf/pmu-events/metric_test.py     |  10 +
+ tools/perf/pmu-events/pmu-events.h       |  26 +-
+ tools/perf/tests/expand-cgroup.c         |   4 +-
+ tools/perf/tests/parse-metric.c          |   4 +-
+ tools/perf/tests/pmu-events.c            |  68 ++---
+ tools/perf/util/cgroup.c                 |   1 -
+ tools/perf/util/evsel.c                  |   2 -
+ tools/perf/util/evsel.h                  |   2 -
+ tools/perf/util/metricgroup.c            | 203 +++++++------
+ tools/perf/util/metricgroup.h            |   4 +-
+ tools/perf/util/parse-events.c           |   2 -
+ tools/perf/util/pmu.c                    |  44 +--
+ tools/perf/util/pmu.h                    |  10 +-
+ tools/perf/util/print-events.c           |  32 +-
+ tools/perf/util/print-events.h           |   3 +-
+ tools/perf/util/python.c                 |   7 -
+ tools/perf/util/stat-shadow.c            | 112 -------
+ tools/perf/util/stat.h                   |   1 -
+ 26 files changed, 666 insertions(+), 463 deletions(-)
+
+--=20
+2.39.0.314.g84b9a713c41-goog
+
