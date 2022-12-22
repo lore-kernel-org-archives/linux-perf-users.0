@@ -2,63 +2,66 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F299C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Dec 2022 19:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44250C4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Dec 2022 20:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235759AbiLVT3C (ORCPT
+        id S229660AbiLVU1w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Dec 2022 14:29:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53582 "EHLO
+        Thu, 22 Dec 2022 15:27:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235539AbiLVT2x (ORCPT
+        with ESMTP id S230148AbiLVU1v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Dec 2022 14:28:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1A6248F4;
-        Thu, 22 Dec 2022 11:28:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B94C61D43;
-        Thu, 22 Dec 2022 19:28:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D64E4C433EF;
-        Thu, 22 Dec 2022 19:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671737327;
-        bh=MUeB0rYcxx+chXDaIoYXhIqUO/+caG17xssga2eVpD0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=dhQfy/UKl6qrhKXOwV2+vIdXIqBfTCtxmZkrw+UrXPwYWLPbLvGyXMbBjGPU8Sfd1
-         bZhp79JPg5E+U0EOVltrb1NK7fmgegcHWLvFL+cyYFs7enMvznf4PiOi0I8o8OPm3/
-         fBIP7p5Crm5SnZELuYBTHk7S+yYCPLPnhVZ4NnowG25oYK8aEMzP7W3tFkE/19Jco5
-         IcHENmm5b6AI9T9JzUJPVHGGbO73qZfD67r1RjLPP+r9OhLgxrGtAPJMiXahW5CT06
-         fsiaPujLXYJLGsgbxWoyKyu+VKpbtKLFt2rjxEdUTB1i8uF/ICmwElSV5ZRP391LQ0
-         KNdwvg61CODlA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C322CC43141;
-        Thu, 22 Dec 2022 19:28:47 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools changes for v6.2: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20221222164914.508929-1-acme@kernel.org>
-References: <20221222164914.508929-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20221222164914.508929-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.2-2-2022-12-22
-X-PR-Tracked-Commit-Id: 09e6f9f98370be9a9f8978139e0eb1be87d1125f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d1ac1a2b14264e98c24db6f8c2bd452e695c7238
-Message-Id: <167173732779.14570.14395787931706934186.pr-tracker-bot@kernel.org>
-Date:   Thu, 22 Dec 2022 19:28:47 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Thu, 22 Dec 2022 15:27:51 -0500
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C0B20991;
+        Thu, 22 Dec 2022 12:27:48 -0800 (PST)
+Received: by mail-ot1-x336.google.com with SMTP id x25-20020a056830115900b00670932eff32so1745131otq.3;
+        Thu, 22 Dec 2022 12:27:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Er3i+1JlgcyOFG/kVKKJjYwxWB05X+LCSTj3O90dme8=;
+        b=K5DXoPdF6mYUCdv7slzx118lGzQ1ZtR1CdOXm8xo9Z3/ssV2GZFwafLyXuZmP8bucC
+         WsYsVLtFTaChoetHjxVJB6mH6EiadHvWAs0VXZ3uTyq6QmgpMveUYkpZX87fXwUD0eGU
+         MndWwI4RSKsspeyUCm+9mvXCdhPfokz7wEjeZKhi4+YoAbfS5wZeFDAYrfWGUm41YzhG
+         wMFJ2z7viyYcozAxuZCSHbpLOS86Fp/ARrOT8c65v7PohB1I1Hvvwq31ei0svtNRllu6
+         0p9PZgcSuXHH0T+4sxY+RptUjGBej0qMyrfE/gAlzqDsEPtx9reTBbM6To9QcH3hJt+g
+         MsZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Er3i+1JlgcyOFG/kVKKJjYwxWB05X+LCSTj3O90dme8=;
+        b=WGD5LgMqkCJ9ntJe+Z7zL3rT9hJJTUqfgOhirSE/71AG1HJHrR7RDdGJi+JzcLJAbB
+         DWbcXZMPDGUEcitWRB8uWFhiQ/BOs06jFuwi4hBqfxC6VQSYWZbqAePubH5yu/W+8MEw
+         WkwM6rF00M0jp5hOonPFaxHO9m2X9g+rBLv40u5CZkKxW6+LTKEZ70bBJ5RX/5Ldkv5P
+         NTdpeQIjzMoiWZ5DZ7lYqCr3+zz+MAZS2pvzaKeztPFHs49iNDrUzkUfsWJFe/Kra7Jw
+         NPSDm0jiIbOHwZlEi13sTRsZHvB7hDHCJn7Ccr66ocK+pbJ8t8jPkoNW/wMcl8l8IvB5
+         QeXg==
+X-Gm-Message-State: AFqh2kpIkgMEAsFrFjQKsRh/fg2DOFMP/eSg3oipj2fToZFIddLy8mDU
+        wW+z5sQnMRMwEKQYxJibnGI=
+X-Google-Smtp-Source: AMrXdXvjuc8mfbhTSza+sZFhmb4RoBau4oR/AZCMlqHQNhbcRlbzxyPJiSz7r9S7a1llxM3bXJ8Mpw==
+X-Received: by 2002:a9d:1c3:0:b0:661:dfeb:ea29 with SMTP id e61-20020a9d01c3000000b00661dfebea29mr3491346ote.14.1671740868007;
+        Thu, 22 Dec 2022 12:27:48 -0800 (PST)
+Received: from [127.0.0.1] ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id u20-20020a9d4d94000000b0066871c3adb3sm757375otk.28.2022.12.22.12.27.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Dec 2022 12:27:47 -0800 (PST)
+Date:   Thu, 22 Dec 2022 17:27:42 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Changbin Du <changbin.du@gmail.com>,
         Hans-Peter Nilsson <hp@axis.com>,
@@ -67,19 +70,48 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Sandipan Das <sandipan.das@amd.com>,
         Yang Jihong <yangjihong1@huawei.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf tools changes for v6.2: 2nd batch
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wi4u5rpaPrOokekEg_5Sud=8SZhA=KTALXNOC_S89jKBg@mail.gmail.com>
+References: <20221222164914.508929-1-acme@kernel.org> <CAHk-=wi4u5rpaPrOokekEg_5Sud=8SZhA=KTALXNOC_S89jKBg@mail.gmail.com>
+Message-ID: <DD787D2F-37D7-45CF-A310-AA5EE6F0DECA@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Thu, 22 Dec 2022 13:49:14 -0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.2-2-2022-12-22
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d1ac1a2b14264e98c24db6f8c2bd452e695c7238
+On December 22, 2022 4:14:20 PM GMT-03:00, Linus Torvalds <torvalds@linux-=
+foundation=2Eorg> wrote:
+>On Thu, Dec 22, 2022 at 8:49 AM Arnaldo Carvalho de Melo
+><acme@kernel=2Eorg> wrote:
+>>
+>>         Please consider pulling,
+>
+>I have pulled this, because it's purely tooling=2E
 
-Thank you!
+Thanks=2E
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+>HOWEVER=2E
+
+>You are now on my shit-list for violating the Christmas peace with a
+>pull request where most of the contents were not in linux-next, and
+>weren't fixes=2E
+
+>I'm PISSED=2E  Right now I am in the mindset of "I pulled this, but I
+>never *ever* want to see another pull request from this f*cker"=2E
+
+I'll get this to heart, people on the cc list: you too=2E
+
+>Get bent=2E
+
+Humpf, life sucks, I have to be like that, otherwise I'll bend again=2E=2E=
+=2E
+
+We'll be back to just getting automated responses=2E
+
+- Arnaldo=20
