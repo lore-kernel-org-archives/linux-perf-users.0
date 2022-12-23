@@ -2,63 +2,66 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1077DC4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 06:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF50C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 09:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbiLWG0f (ORCPT
+        id S236185AbiLWJ3Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Dec 2022 01:26:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
+        Fri, 23 Dec 2022 04:29:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbiLWG0d (ORCPT
+        with ESMTP id S235814AbiLWJ3L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Dec 2022 01:26:33 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC222DC0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:26:33 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id d7so4115707pll.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:26:33 -0800 (PST)
+        Fri, 23 Dec 2022 04:29:11 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD8D03721B
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Dec 2022 01:29:08 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id w26so2967784pfj.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Dec 2022 01:29:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RGmoXJ75UXpNguUssjM7gnVJdq2PHsHw6DOwMdQhd2Q=;
-        b=LiYGPk+RqxHs5M5OWdfSnYZT6kJZi867YaEu8A6+RNNoFt2PoNKtMwLDAW9Rt4Iivv
-         1qwY5zE8Rw4/08Be+4hmRMmhaUfsJwUgK1B8+bEBvvS7Xz/bUZfK7mNS7Wf1R5UYdvWF
-         TXPhqFs6tJd3F7vueo2hkRDF50OORGLirfd7x3LopSqorYYCHYZt1aLVYZLSDG2Ad4Q3
-         3Kux99K40eoK6tKRRcRyoeu+vD+Jxh9P/gwoMYXp0wPMo4EwTAWdumjrbNDdqKmTAcwG
-         wEjx/wpt+HfyDsnzwlRzIkqCIZbpX1sxg2XcYWimTnk5eDRExqL3Q1SQYz1Fjte71ov1
-         FEyg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0c5uQIzUMFPTSbbQ86A0yRd8TLwSNBpE9O+juif18EE=;
+        b=ixRPnZh7PBuHquRZp04QddLNm57wOmg8Jkw8bStWz28mynaiinHw0I/GLjIbjsiszz
+         2JAj2NStes/sKiGN4N4RxWPrwjN/QOhWky89xdRaLyWpdQIbzFfpVtT94Ex4SWb/L5qG
+         ynoh8LxGEIM7CwUU5lB1Biz0qsDCr7RfNe4MbuKQX9jUY50jr2NJahJtmbIQwlyM/NIp
+         pxDe/OFzDmvygaqHFSd/GBE0oqCcf0rbumt5mR8R599q6qiOhnGztxLEjUjbOuVufj0M
+         mLM640szQA7wCYTGuP5yPKZFEXsJkelc6fEaZzViDjO4FN6gFrrAawYAiyGUScV+xbsz
+         Ub+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RGmoXJ75UXpNguUssjM7gnVJdq2PHsHw6DOwMdQhd2Q=;
-        b=j88wwWQY0wX+OEmp6K6NQe5plfoox5GInOpA96u9yZ6AWeihJMCCZoXr64QLTvxid7
-         7thwNUFNDtgyeE7X7fv+oXUGzsxgdronqE/zLMFVoY/W0LMu6P+yYBwXKIIP5QW5kNsg
-         YEezvFuTmK9b0pQXRov97j06N/VAphfJ8by+0yXnFzd8JsO301zrJ0dezUelf6fog+mB
-         MuD27pd1CPPlmOiGDTh4934TrFBa885SUW7BXgQMFTLEjb5isXK6V/k28MQxm2njOfOA
-         BUh5l59aunAovRDu7zjQy2fb3gkiCz2nk+c0RGN6Q2mxLe/2CbWxBHUFLABqTi/64n3O
-         oxGA==
-X-Gm-Message-State: AFqh2ko2COckj38gaKThHo0Y3VxrN1koED4jhV+I5pvBwJIFpykdNr1L
-        J2TGRSSX+m2gXoRGdlnKCecalA==
-X-Google-Smtp-Source: AMrXdXtY8I/N4ldtzRd+EoFIog+Fh+aszryhhGlTn3TaciroaBWQKNCtk/Do3bV1ZV7huZPBInglgA==
-X-Received: by 2002:a17:90a:7803:b0:223:fe74:eb0b with SMTP id w3-20020a17090a780300b00223fe74eb0bmr9731120pjk.12.1671776792405;
-        Thu, 22 Dec 2022 22:26:32 -0800 (PST)
-Received: from leoy-yangtze.lan (n058152048149.netvigator.com. [58.152.48.149])
-        by smtp.gmail.com with ESMTPSA id 3-20020a17090a034300b002191e769546sm1553663pjf.4.2022.12.22.22.26.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 22:26:31 -0800 (PST)
-Date:   Fri, 23 Dec 2022 14:26:25 +0800
-From:   Leo Yan <leo.yan@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0c5uQIzUMFPTSbbQ86A0yRd8TLwSNBpE9O+juif18EE=;
+        b=3xjfWcT04GXVDEHNDWwx3GFHaQcjRw7XJu1bYa0gl2WyhBkKORS0QEk4fJxly7emfd
+         ERwE/yyT87/6CVi7uQY4vebe1MmTGGrtJdTkKnEUVEWHjLo0+nPA/DBgPLWP5wLewZ7b
+         FlrfgPemfr6xw0OzznAsH8wWCAnmGy3vM7iYyMpurhHvZrlzb5A+YsJMWKV9/cDk4qvc
+         rwLYTYBFOSC7GfdUcOjh5Ph0SAQdNR4KmF1uLIgNQvBVnCuvcAT7oHICBu905KQPB5Im
+         7lfiWuXt0IiKrOIFdJa4/am80P5CuvsKDY+BW9xebL/M/sU6TiEZ9Iwuq1dQLaMYb/vr
+         a0gA==
+X-Gm-Message-State: AFqh2kqjxmSAaDilFP6f4zzBeqRuD7juxsVc8EAqX9JAYouy6iBANlPT
+        myWX5GO5dzDTZwr4glKGDwTdYncJrdk9mgwL84mPbg==
+X-Google-Smtp-Source: AMrXdXuP5EyB+7hlNutRLuRJZ7C40I8tzH0xlF3Htp+vW28V6P245fhBRr9zDQo8gOhUG7c6p+rJKRmcloJESxOXfo0=
+X-Received: by 2002:a62:64cd:0:b0:56b:94f5:400c with SMTP id
+ y196-20020a6264cd000000b0056b94f5400cmr552324pfb.31.1671787748255; Fri, 23
+ Dec 2022 01:29:08 -0800 (PST)
+MIME-Version: 1.0
+References: <20221222160328.3639989-1-james.clark@arm.com> <20221222160328.3639989-7-james.clark@arm.com>
+In-Reply-To: <20221222160328.3639989-7-james.clark@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Fri, 23 Dec 2022 09:28:56 +0000
+Message-ID: <CAJ9a7VjbF2DFRHOtdCt=3o+iNrA++swpJBx9v5-R9Ky8tc4Mvw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] perf cs_etm: Record ts_source in AUXTRACE_INFO for
+ ETMv4 and ETE
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
         sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
         bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -69,78 +72,177 @@ Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/7] perf pmu: Add function to check if a pmu file
- exists
-Message-ID: <Y6VKEfsGu0Pteb8e@leoy-yangtze.lan>
-References: <20221222160328.3639989-1-james.clark@arm.com>
- <20221222160328.3639989-5-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221222160328.3639989-5-james.clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 22, 2022 at 04:03:24PM +0000, James Clark wrote:
+Hi,
+
+There was a discussion some time ago in one of our coresight regular
+dev meetings about this.
+
+Can we just use only the necessary bits that TS source needs and leave
+the remaining bits from the 64 as unused  for future expansion - i..e
+use this as a bitfield rather than have 64 bits occupied for what is
+effectively a 2 bit value.
+
+Perhaps call the full value something other than TS_SOURCE and have a
+TS_SOURCE field with a known safe unset value.
+
+Thanks
+
+Mike
+
+On Thu, 22 Dec 2022 at 16:07, James Clark <james.clark@arm.com> wrote:
+>
 > From: German Gomez <german.gomez@arm.com>
-> 
-> Add a utility function perf_pmu__file_exists() to check if a given pmu
-> file exists in the sysfs filesystem.
-> 
+>
+> Read the value of ts_source exposed by the driver and store it in the
+> ETMv4 and ETE header. If the interface doesn't exist (such as in older
+> Kernels), defaults to a safe value of -1.
+>
 > Signed-off-by: German Gomez <german.gomez@arm.com>
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/util/pmu.c | 14 ++++++++++++++
->  tools/perf/util/pmu.h |  2 ++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 15b852b3c401..b72b2d892949 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1739,6 +1739,20 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
->  	return ret;
+>  tools/perf/arch/arm/util/cs-etm.c | 48 +++++++++++++++++++++++++++++++
+>  tools/perf/util/cs-etm-base.c     |  2 ++
+>  tools/perf/util/cs-etm.h          |  2 ++
+>  3 files changed, 52 insertions(+)
+>
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index b526ffe550a5..481e170cd3f1 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -53,6 +53,7 @@ static const char * const metadata_etmv4_ro[] = {
+>         [CS_ETMV4_TRCIDR2]              = "trcidr/trcidr2",
+>         [CS_ETMV4_TRCIDR8]              = "trcidr/trcidr8",
+>         [CS_ETMV4_TRCAUTHSTATUS]        = "mgmt/trcauthstatus",
+> +       [CS_ETMV4_TS_SOURCE]            = "ts_source",
+>  };
+>
+>  static const char * const metadata_ete_ro[] = {
+> @@ -62,6 +63,7 @@ static const char * const metadata_ete_ro[] = {
+>         [CS_ETE_TRCIDR8]                = "trcidr/trcidr8",
+>         [CS_ETE_TRCAUTHSTATUS]          = "mgmt/trcauthstatus",
+>         [CS_ETE_TRCDEVARCH]             = "mgmt/trcdevarch",
+> +       [CS_ETE_TS_SOURCE]              = "ts_source",
+>  };
+>
+>  static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+> @@ -613,6 +615,32 @@ static int cs_etm_get_ro(struct perf_pmu *pmu, int cpu, const char *path)
+>         return val;
 >  }
->  
-> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
+>
+> +static int cs_etm_get_ro_signed(struct perf_pmu *pmu, int cpu, const char *path)
 > +{
-> +	char path[PATH_MAX];
-> +	struct stat statbuf;
+> +       char pmu_path[PATH_MAX];
+> +       int scan;
+> +       int val = 0;
 > +
-> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, pmu->name, name))
-> +		return false;
+> +       /* Get RO metadata from sysfs */
+> +       snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
 > +
-> +	if (!file_available(path))
-> +		return false;
+> +       scan = perf_pmu__scan_file(pmu, pmu_path, "%d", &val);
+> +       if (scan != 1)
+> +               pr_err("%s: error reading: %s\n", __func__, pmu_path);
 > +
-> +	return stat(path, &statbuf) == 0;
-
-Can we simply return the returned value from file_available() and skip
-calling stat()?  Because file_available() invokes access() to detect if
-a file is existed or not, so here calling stat() is redundant.
-
-Thanks,
-Leo
-
+> +       return val;
 > +}
 > +
->  static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
->  {
->  	struct perf_pmu_caps *caps = zalloc(sizeof(*caps));
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 8f39e2d17fb1..c1d138fe9602 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -230,6 +230,8 @@ bool pmu_have_event(const char *pname, const char *name);
->  
->  int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...) __scanf(3, 4);
->  
-> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name);
+> +static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, int cpu, const char *path)
+> +{
+> +       char pmu_path[PATH_MAX];
 > +
->  int perf_pmu__test(void);
->  
->  struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
-> -- 
+> +       /* Get RO metadata from sysfs */
+> +       snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
+> +
+> +       return perf_pmu__file_exists(pmu, pmu_path);
+> +}
+> +
+>  #define TRCDEVARCH_ARCHPART_SHIFT 0
+>  #define TRCDEVARCH_ARCHPART_MASK  GENMASK(11, 0)
+>  #define TRCDEVARCH_ARCHPART(x)    (((x) & TRCDEVARCH_ARCHPART_MASK) >> TRCDEVARCH_ARCHPART_SHIFT)
+> @@ -654,6 +682,16 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
+>                                                metadata_etmv4_ro[CS_ETMV4_TRCIDR8]);
+>         data[CS_ETMV4_TRCAUTHSTATUS] = cs_etm_get_ro(cs_etm_pmu, cpu,
+>                                                      metadata_etmv4_ro[CS_ETMV4_TRCAUTHSTATUS]);
+> +
+> +       /* Kernels older than 5.19 may not expose ts_source */
+> +       if (cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]))
+> +               data[CS_ETMV4_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
+> +                               metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]);
+> +       else {
+> +               pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
+> +                          cpu);
+> +               data[CS_ETMV4_TS_SOURCE] = (__u64) -1;
+> +       }
+>  }
+>
+>  static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, int cpu)
+> @@ -679,6 +717,16 @@ static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, in
+>         /* ETE uses the same registers as ETMv4 plus TRCDEVARCH */
+>         data[CS_ETE_TRCDEVARCH] = cs_etm_get_ro(cs_etm_pmu, cpu,
+>                                                 metadata_ete_ro[CS_ETE_TRCDEVARCH]);
+> +
+> +       /* Kernels older than 5.19 may not expose ts_source */
+> +       if (cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TS_SOURCE]))
+> +               data[CS_ETE_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
+> +                               metadata_ete_ro[CS_ETE_TS_SOURCE]);
+> +       else {
+> +               pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
+> +                          cpu);
+> +               data[CS_ETE_TS_SOURCE] = (__u64) -1;
+> +       }
+>  }
+>
+>  static void cs_etm_get_metadata(int cpu, u32 *offset,
+> diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
+> index 282042c6e944..5f48b756c4cf 100644
+> --- a/tools/perf/util/cs-etm-base.c
+> +++ b/tools/perf/util/cs-etm-base.c
+> @@ -36,6 +36,7 @@ static const char * const cs_etmv4_priv_fmts[] = {
+>         [CS_ETMV4_TRCIDR2]      = "     TRCIDR2                        %llx\n",
+>         [CS_ETMV4_TRCIDR8]      = "     TRCIDR8                        %llx\n",
+>         [CS_ETMV4_TRCAUTHSTATUS] = "    TRCAUTHSTATUS                  %llx\n",
+> +       [CS_ETMV4_TS_SOURCE]    = "     TS_SOURCE                      %lld\n",
+>  };
+>
+>  static const char * const cs_ete_priv_fmts[] = {
+> @@ -50,6 +51,7 @@ static const char * const cs_ete_priv_fmts[] = {
+>         [CS_ETE_TRCIDR8]        = "     TRCIDR8                        %llx\n",
+>         [CS_ETE_TRCAUTHSTATUS]  = "     TRCAUTHSTATUS                  %llx\n",
+>         [CS_ETE_TRCDEVARCH]     = "     TRCDEVARCH                     %llx\n",
+> +       [CS_ETE_TS_SOURCE]      = "     TS_SOURCE                      %lld\n",
+>  };
+>
+>  static const char * const param_unk_fmt =
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index c5925428afa9..ad790930bcbc 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -71,6 +71,7 @@ enum {
+>         CS_ETMV4_TRCIDR2,
+>         CS_ETMV4_TRCIDR8,
+>         CS_ETMV4_TRCAUTHSTATUS,
+> +       CS_ETMV4_TS_SOURCE,
+>         CS_ETMV4_PRIV_MAX,
+>  };
+>
+> @@ -92,6 +93,7 @@ enum {
+>         CS_ETE_TRCIDR8,
+>         CS_ETE_TRCAUTHSTATUS,
+>         CS_ETE_TRCDEVARCH,
+> +       CS_ETE_TS_SOURCE,
+>         CS_ETE_PRIV_MAX
+>  };
+>
+> --
 > 2.25.1
-> 
+>
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
