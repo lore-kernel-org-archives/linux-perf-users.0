@@ -2,167 +2,170 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403F0C4167B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 10:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB6FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 12:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbiLWKIP (ORCPT
+        id S236037AbiLWMjn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Dec 2022 05:08:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
+        Fri, 23 Dec 2022 07:39:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbiLWKIO (ORCPT
+        with ESMTP id S235525AbiLWMjh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Dec 2022 05:08:14 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A30E18B33
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Dec 2022 02:08:12 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id 124so3057679pfy.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Dec 2022 02:08:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vsiiQtY7KUhLsu7tHulvoDHQIbC/xIC+4feb9aIDeEg=;
-        b=lkNSnYBRTlrsKbyNti3fXQiuHh+aWeW+aWea7bV3Ik4J/xm1DLM7xcepU8VlchQ5Ew
-         adqdf2uLZGrlPzxfRPBGW64naKH2/yioLbtMcWygZtO5XLQmlkfzhYC9pY+drP0OxNt2
-         4sQWVUrw3YDUB4KOJF3256YrnCw2NMIZdye0BTGk46paswGGdeZg2rA71DLPlAgjNxOq
-         R9VuNuZ3pil/x+BkvYn6wlW4J6mRuKq5EFe13ZeGlskdeNC6Jb3lNcASjFWNn5Jzf3BC
-         T8yon+XUQ99si4h8L/yk1BdXTe/X3lodEKRusTjdWLABUp8EKJNZOtMhEkCvQq6xDyex
-         45Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vsiiQtY7KUhLsu7tHulvoDHQIbC/xIC+4feb9aIDeEg=;
-        b=hE6CFXfrPSfAuHP0lrjQXu4vWkM7ZdCVzrHEnnUlkbMduDoH7xxHJ1AV5uDvmc00Ya
-         a++eg4O0bLjqFjxRGrbvsYeu24aXLnabDHV8IJFG62iv1n/Iz46PB1lnI76092PZ6tui
-         MInAxdIf6WiWYExGAHZFl7DlOJWT0gmYsNHhzE+vqYe+WwI/gs/lDBspEqHqbGl6eWc6
-         VrJ8CF6evCZC3TlSbcbnPHhqNl5SFzdrEj8JhljsdeMyvgFlVMHDII6fhe4v8MkV7KjP
-         hC1rnIHHhZHHrAvEVCJu+e4b0fHiwb8TPowIUWCV8Fke6vTYD+/Ygu29OUmELN5XtvEu
-         L4NA==
-X-Gm-Message-State: AFqh2kpAUqhAwERERYtknMAFgeyzKoqJjvV5lUyUQDUezyfdGamycW/7
-        PcMBbSCwWKcyoJxgtos+tU81kw==
-X-Google-Smtp-Source: AMrXdXulf22YtlRSSFRXVHWoW+nmU+DzjCs4ejoTVtDRtZuWxHWxxV6sQmSO69BCOrWov5kX7LqXwQ==
-X-Received: by 2002:a62:648b:0:b0:57a:a199:93e7 with SMTP id y133-20020a62648b000000b0057aa19993e7mr10327722pfb.28.1671790092144;
-        Fri, 23 Dec 2022 02:08:12 -0800 (PST)
-Received: from [10.5.203.163] ([139.177.225.249])
-        by smtp.gmail.com with ESMTPSA id d7-20020aa797a7000000b0056b9df2a15esm2184332pfq.62.2022.12.23.02.08.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Dec 2022 02:08:11 -0800 (PST)
-Message-ID: <b4a3fc9d-bd15-0682-2c56-4e63e0fb30cd@bytedance.com>
-Date:   Fri, 23 Dec 2022 18:08:03 +0800
+        Fri, 23 Dec 2022 07:39:37 -0500
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AFA6193DB;
+        Fri, 23 Dec 2022 04:39:34 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VXwwMWV_1671799163;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VXwwMWV_1671799163)
+          by smtp.aliyun-inc.com;
+          Fri, 23 Dec 2022 20:39:30 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: [PATCH v4 0/6] Add metrics for neoverse-n2
+Date:   Fri, 23 Dec 2022 20:37:19 +0800
+Message-Id: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.0
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-References: <000000000000a20a2e05f029c577@google.com>
- <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
- <3a5a4738-2868-8f2f-f8b2-a28c10fbe25b@linux.dev>
- <Y6TFKdVJ9BY56fkI@hirez.programming.kicks-ass.net>
-From:   Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <Y6TFKdVJ9BY56fkI@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2022/12/23 04:59, Peter Zijlstra wrote:
-> On Wed, Dec 21, 2022 at 10:42:39AM +0800, Chengming Zhou wrote:
-> 
->>> Does this help?
->>>
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index e47914ac8732..bbff551783e1 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
->>>  	return event_fd;
->>>  
->>>  err_context:
->>> -	/* event->pmu_ctx freed by free_event() */
->>> +	put_pmu_ctx(event->pmu_ctx);
->>> +	event->pmu_ctx = NULL; /* _free_event() */
->>>  err_locked:
->>>  	mutex_unlock(&ctx->mutex);
->>>  	perf_unpin_context(ctx);
->>
->> Tested-by: Chengming Zhou <zhouchengming@bytedance.com>
->>
->> While reviewing the code, I found perf_event_create_kernel_counter()
->> has the similar problem in the "err_pmu_ctx" error handling path:
-> 
-> Right you are, updated the patch, thanks!
-> 
->> CPU0					CPU1
->> perf_event_create_kernel_counter()
->>   // inc ctx refcnt
->>   find_get_context(task, event) (1)
->>
->>   // inc pmu_ctx refcnt
->>   pmu_ctx = find_get_pmu_context()
->>
->>   event->pmu_ctx = pmu_ctx
->>   ...
->>   goto err_pmu_ctx:
->>     // dec pmu_ctx refcnt
->>     put_pmu_ctx(pmu_ctx) (2)
->>
->>     mutex_unlock(&ctx->mutex)
->>     // dec ctx refcnt
->>     put_ctx(ctx)
->> 					perf_event_exit_task_context()
->> 					  mutex_lock()
->> 					  mutex_unlock()
->> 					  // last refcnt put
->> 					  put_ctx()
->>     free_event(event)
->>       if (event->pmu_ctx) // True
->>         put_pmu_ctx() (3)
->>           // will access freed pmu_ctx or ctx
->>
->>       if (event->ctx) // False
->>         put_ctx()
-> 
-> This doesn't look right; iirc you can hit this without concurrency,
-> something like so:
+Changes since v3:
+- Add ipc_rate metric;
+- Drop the PublicDescription;
+- Describe PEutilization metrics in more detail;
+- Link: https://lore.kernel.org/all/1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-Right, pmu_ctx UaF can hit without concurrency.
+Changes since v2:
+- Correct the furmula of Branch metrics;
+- Add more PE utilization metrics;
+- Add more TLB metrics;
+- Add “ScaleUnit” for some metrics;
+- Add a newline at the end of the file;
+- Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-But ctx has been created with refcnt == 1, which referenced by the task,
-so the last refcnt put must be in perf_event_exit_task_context().
+Changes since v1: 
+- Corrected formula for topdown L1 due to wrong counts for stall_slot and
+  stall_slot_frontend; 
+- Link: https://lore.kernel.org/all/1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-Maybe we can improve this, don't let ctx referenced by the task? Then ctx
-can be freed when all perf_events are removed, instead of having to wait
-for the task to exit. Maybe I missed something...
 
-> 
-> 
-> 	// note that when getting here, we've not passed
-> 	// perf_install_in_context() and event->ctx == NULL.
-> err_pmu_ctx:
-> 	put_pmu_ctx();
-> 	put_ctx(); // last, actually frees ctx
+This series add six metricgroups for neoverse-n2, among which, the formula of
+topdown L1 is from ARM sbsa7.0 platform design document [0], D37-38.
 
-This put_ctx() dec refcnt from 2 to 1, perf_event_exit_task_context()
-will put the last refcnt and free it.
+However, due to the wrong count of stall_slot and stall_slot_frontend on
+neoverse-n2, the real stall_slot and real stall_slot_frontend need to
+subtract cpu_cycles,  so correct the expression of topdown metrics.
+Reference from ARM neoverse-n2 errata notice [1], D117.
 
-> 	..
-> err_alloc:
-> 	free_event()
-> 	  _free_event()
-> 	    if (event->pmu_ctx) // true, because we forgot to clear
-> 	      put_pmu_ctx() // hits 0 because double put
-> 	        // goes and touch epc->ctx and UaF
-> 
-> 
+Since neoverse-n2 does not yet support topdown L2, metricgroups such as Cache,
+TLB, Branch, InstructionsMix, and PEutilization are added to help further
+analysis of performance bottlenecks. Reference from ARM PMU guide [2][3].
+
+[0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+[1] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb?token=
+[2] https://documentation-service.arm.com/static/628f8fa3dfaf015c2b76eae8?token=
+[3] https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
+
+
+$./perf list
+...
+Metric Groups:
+
+Branch:
+  branch_miss_pred_rate
+       [The rate of branches mis-predited to the overall branches]
+  branch_mpki
+       [The rate of branches mis-predicted per kilo instructions]
+  branch_pki
+       [The rate of branches retired per kilo instructions]
+Cache:
+  l1d_cache_miss_rate
+       [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+  l1d_cache_mpki
+       [The rate of L1 D-Cache misses per kilo instructions]
+...
+
+
+$sudo ./perf stat -M TLB false_sharing 2
+
+ Performance counter stats for 'false_sharing 2':
+
+            31,561      L2D_TLB                          #     18.8 %  l2_tlb_miss_rate      (43.23%)
+             5,944      L2D_TLB_REFILL                                                       (43.23%)
+             2,248      L1I_TLB_REFILL                   #      0.1 %  l1i_tlb_miss_rate     (43.85%)
+         2,203,195      L1I_TLB                                                              (43.85%)
+       328,647,380      L1D_TLB                          #      0.0 %  l1d_tlb_miss_rate     (44.32%)
+            26,347      L1D_TLB_REFILL                                                       (44.32%)
+           747,319      L1I_TLB                          #      0.0 %  itlb_walk_rate        (43.74%)
+               310      ITLB_WALK                                                            (43.74%)
+       839,420,454      INST_RETIRED                     #     0.00 itlb_mpki                (42.77%)
+               212      ITLB_WALK                                                            (42.77%)
+               468      DTLB_WALK                        #      0.0 %  dtlb_walk_rate        (42.28%)
+       265,405,802      L1D_TLB                                                              (42.28%)
+       790,874,367      INST_RETIRED                     #     0.00 dtlb_mpki                (42.33%)
+                23      DTLB_WALK                                                            (42.33%)
+
+       0.515904553 seconds time elapsed
+
+       1.410313000 seconds user
+       0.000000000 seconds sys
+
+
+$sudo ./perf stat -M TopDownL1 false_sharing 2
+
+ Performance counter stats for 'false_sharing 2':
+
+     4,310,905,590      cpu_cycles                       #      0.0 %  bad_speculation
+                                                  #      4.0 %  retiring              (66.87%)
+    25,009,763,735      stall_slot                                                           (66.87%)
+       855,659,327      op_spec                                                              (66.87%)
+       854,335,288      op_retired                                                           (66.87%)
+     4,330,308,058      cpu_cycles                       #     27.1 %  frontend_bound        (66.99%)
+    10,207,186,460      stall_slot_frontend                                                  (66.99%)
+     4,316,583,673      cpu_cycles                       #     69.4 %  backend_bound         (66.65%)
+    14,979,136,808      stall_slot_backend                                                   (66.65%)
+
+       0.572056818 seconds time elapsed
+
+       1.572143000 seconds user
+       0.004010000 seconds sys
+
+
+Jing Zhang (6):
+  perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+  perf vendor events arm64: Add TLB metrics for neoverse-n2
+  perf vendor events arm64: Add cache metrics for neoverse-n2
+  perf vendor events arm64: Add branch metrics for neoverse-n2
+  perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+  perf vendor events arm64: Add instruction mix metrics for neoverse-n2
+
+ .../arch/arm64/arm/neoverse-n2/metrics.json        | 277 +++++++++++++++++++++
+ 1 file changed, 277 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+
+-- 
+1.8.3.1
+
