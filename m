@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19512C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 06:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1077DC4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 06:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbiLWGKq (ORCPT
+        id S229667AbiLWG0f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Dec 2022 01:10:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        Fri, 23 Dec 2022 01:26:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbiLWGKp (ORCPT
+        with ESMTP id S229483AbiLWG0d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Dec 2022 01:10:45 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF88BB7
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:10:43 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id gt4so4109424pjb.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:10:43 -0800 (PST)
+        Fri, 23 Dec 2022 01:26:33 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC222DC0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:26:33 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id d7so4115707pll.9
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:26:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tXPdrlpALcCWkBm8FPPkV2XlgJO2+LLb79iteN7EJJo=;
-        b=dGLEQau5Zp3bvpscFMxHQgEVrw/iveBPjD0OXR7qdPyUHLojRCQxTr7gwpP5ScN3B8
-         Xu6PdnRJhf0E95jDgMRinj5IheV4xSsMZy/J03g4mUa1cgbhuNK8HNCMCQXoXoXx0ndx
-         b2yH30Ey4JmJrd+tdZX8sSLcuje7Z3ovMRWbxQpOXqtJFm0mE4mazzVv3i9b8Y1UM+Ue
-         /r23SlqV65qu1p56ybQoyD5gMv0hwQqq4nWpmEJsLApPbuVdDmVkOhYJOC+thbs72+0N
-         lXu/XE052b1l7TIAkKRwM6Fc2D2KSqRfnVYnbEl+X6t3vs6aNz9kUFOHCeS7UeIkcH0e
-         LhyA==
+        bh=RGmoXJ75UXpNguUssjM7gnVJdq2PHsHw6DOwMdQhd2Q=;
+        b=LiYGPk+RqxHs5M5OWdfSnYZT6kJZi867YaEu8A6+RNNoFt2PoNKtMwLDAW9Rt4Iivv
+         1qwY5zE8Rw4/08Be+4hmRMmhaUfsJwUgK1B8+bEBvvS7Xz/bUZfK7mNS7Wf1R5UYdvWF
+         TXPhqFs6tJd3F7vueo2hkRDF50OORGLirfd7x3LopSqorYYCHYZt1aLVYZLSDG2Ad4Q3
+         3Kux99K40eoK6tKRRcRyoeu+vD+Jxh9P/gwoMYXp0wPMo4EwTAWdumjrbNDdqKmTAcwG
+         wEjx/wpt+HfyDsnzwlRzIkqCIZbpX1sxg2XcYWimTnk5eDRExqL3Q1SQYz1Fjte71ov1
+         FEyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tXPdrlpALcCWkBm8FPPkV2XlgJO2+LLb79iteN7EJJo=;
-        b=BRarYEsH77nVsn+Ff6wsR4dt8beRhZtRyqZXP7Z8v8/eJMg6HOu/XPKIPnlhziZdR3
-         +aoeBdRcXyhEzW8tRXrzHiOCRXBdfzxznB5buRZ35QwV0Z7jroLTnRXbp0ljmKKVVLhi
-         yY2ddmfm6g1j9HNugdGr14wnpb7zyNmCiGuEuEn8qSykGM3BeeYvPR+kujER2csdvMS4
-         yRAaOSCbBZI3AS88AsO1FcI6+6K1d4Gs7Ki6nRow0NlU62RFHdS5x0DSReJCazeFMaRb
-         VphRc9YwkGz6aV9/S3ki7dJQcF3ZBFIcHXLY9DYTolpnhk7eisVabuy8JflgsZ1SmDkk
-         fyLA==
-X-Gm-Message-State: AFqh2kp9HH6vm1tbAXgXShRdyuFaCKTL4Yyszuk3V9y+YtSa7gZlrLDn
-        gn9GoaAMVdmKG9Xh+niEnVJiLQ==
-X-Google-Smtp-Source: AMrXdXtwTGljJ/AUqSzEc+83rOc+y0OY4t/wqHgum5eZKlI3BX9oazUJe4IGHrQ1wvanyW9N8SKCDg==
-X-Received: by 2002:a17:902:ce10:b0:189:af28:fd8d with SMTP id k16-20020a170902ce1000b00189af28fd8dmr10843064plg.1.1671775843250;
-        Thu, 22 Dec 2022 22:10:43 -0800 (PST)
+        bh=RGmoXJ75UXpNguUssjM7gnVJdq2PHsHw6DOwMdQhd2Q=;
+        b=j88wwWQY0wX+OEmp6K6NQe5plfoox5GInOpA96u9yZ6AWeihJMCCZoXr64QLTvxid7
+         7thwNUFNDtgyeE7X7fv+oXUGzsxgdronqE/zLMFVoY/W0LMu6P+yYBwXKIIP5QW5kNsg
+         YEezvFuTmK9b0pQXRov97j06N/VAphfJ8by+0yXnFzd8JsO301zrJ0dezUelf6fog+mB
+         MuD27pd1CPPlmOiGDTh4934TrFBa885SUW7BXgQMFTLEjb5isXK6V/k28MQxm2njOfOA
+         BUh5l59aunAovRDu7zjQy2fb3gkiCz2nk+c0RGN6Q2mxLe/2CbWxBHUFLABqTi/64n3O
+         oxGA==
+X-Gm-Message-State: AFqh2ko2COckj38gaKThHo0Y3VxrN1koED4jhV+I5pvBwJIFpykdNr1L
+        J2TGRSSX+m2gXoRGdlnKCecalA==
+X-Google-Smtp-Source: AMrXdXtY8I/N4ldtzRd+EoFIog+Fh+aszryhhGlTn3TaciroaBWQKNCtk/Do3bV1ZV7huZPBInglgA==
+X-Received: by 2002:a17:90a:7803:b0:223:fe74:eb0b with SMTP id w3-20020a17090a780300b00223fe74eb0bmr9731120pjk.12.1671776792405;
+        Thu, 22 Dec 2022 22:26:32 -0800 (PST)
 Received: from leoy-yangtze.lan (n058152048149.netvigator.com. [58.152.48.149])
-        by smtp.gmail.com with ESMTPSA id d6-20020a170902654600b00188f3970d4asm1503343pln.163.2022.12.22.22.10.36
+        by smtp.gmail.com with ESMTPSA id 3-20020a17090a034300b002191e769546sm1553663pjf.4.2022.12.22.22.26.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 22:10:42 -0800 (PST)
-Date:   Fri, 23 Dec 2022 14:10:34 +0800
+        Thu, 22 Dec 2022 22:26:31 -0800 (PST)
+Date:   Fri, 23 Dec 2022 14:26:25 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
         sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
-        bbhushan2@marvell.com,
+        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -69,84 +69,78 @@ Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/7] perf: Remove remaining duplication of
- bus/event_source/devices/...
-Message-ID: <Y6VGWm0LtiVNvTmI@leoy-yangtze.lan>
+Subject: Re: [PATCH v2 4/7] perf pmu: Add function to check if a pmu file
+ exists
+Message-ID: <Y6VKEfsGu0Pteb8e@leoy-yangtze.lan>
 References: <20221222160328.3639989-1-james.clark@arm.com>
- <20221222160328.3639989-4-james.clark@arm.com>
+ <20221222160328.3639989-5-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221222160328.3639989-4-james.clark@arm.com>
+In-Reply-To: <20221222160328.3639989-5-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Dec 22, 2022 at 04:03:23PM +0000, James Clark wrote:
-> Use the new perf_pmu__pathname_scnprintf() instead. No functional
-> changes.
+On Thu, Dec 22, 2022 at 04:03:24PM +0000, James Clark wrote:
+> From: German Gomez <german.gomez@arm.com>
 > 
+> Add a utility function perf_pmu__file_exists() to check if a given pmu
+> file exists in the sysfs filesystem.
+> 
+> Signed-off-by: German Gomez <german.gomez@arm.com>
 > Signed-off-by: James Clark <james.clark@arm.com>
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
 > ---
->  tools/perf/util/pmu.c | 17 +++++------------
->  1 file changed, 5 insertions(+), 12 deletions(-)
+>  tools/perf/util/pmu.c | 14 ++++++++++++++
+>  tools/perf/util/pmu.h |  2 ++
+>  2 files changed, 16 insertions(+)
 > 
 > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index faaeec1e15aa..15b852b3c401 100644
+> index 15b852b3c401..b72b2d892949 100644
 > --- a/tools/perf/util/pmu.c
 > +++ b/tools/perf/util/pmu.c
-> @@ -574,8 +574,6 @@ static void pmu_read_sysfs(void)
->   * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
->   * may have a "cpus" file.
->   */
-> -#define SYS_TEMPLATE_ID	"./bus/event_source/devices/%s/identifier"
-> -
->  static struct perf_cpu_map *pmu_cpumask(char *name)
->  {
->  	struct perf_cpu_map *cpus;
-> @@ -616,9 +614,9 @@ static char *pmu_id(const char *name)
->  	char path[PATH_MAX], *str;
->  	size_t len;
->  
-> -	snprintf(path, PATH_MAX, SYS_TEMPLATE_ID, name);
-> +	perf_pmu__pathname_scnprintf(path, PATH_MAX, name, "identifier");
->  
-> -	if (sysfs__read_str(path, &str, &len) < 0)
-> +	if (filename__read_str(path, &str, &len) < 0)
->  		return NULL;
->  
->  	str[len - 1] = 0; /* remove line feed */
-> @@ -864,16 +862,11 @@ pmu_find_alias_name(const char *name __maybe_unused)
->  	return NULL;
+> @@ -1739,6 +1739,20 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+>  	return ret;
 >  }
 >  
-> -static int pmu_max_precise(const char *name)
-> +static int pmu_max_precise(struct perf_pmu *pmu)
+> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
+> +{
+> +	char path[PATH_MAX];
+> +	struct stat statbuf;
+> +
+> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, pmu->name, name))
+> +		return false;
+> +
+> +	if (!file_available(path))
+> +		return false;
+> +
+> +	return stat(path, &statbuf) == 0;
+
+Can we simply return the returned value from file_available() and skip
+calling stat()?  Because file_available() invokes access() to detect if
+a file is existed or not, so here calling stat() is redundant.
+
+Thanks,
+Leo
+
+> +}
+> +
+>  static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
 >  {
-> -	char path[PATH_MAX];
->  	int max_precise = -1;
+>  	struct perf_pmu_caps *caps = zalloc(sizeof(*caps));
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 8f39e2d17fb1..c1d138fe9602 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -230,6 +230,8 @@ bool pmu_have_event(const char *pname, const char *name);
 >  
-> -	scnprintf(path, PATH_MAX,
-> -		 "bus/event_source/devices/%s/caps/max_precise",
-> -		 name);
-> -
-> -	sysfs__read_int(path, &max_precise);
-> +	perf_pmu__scan_file(pmu, "caps/max_precise", "%d", &max_precise);
->  	return max_precise;
->  }
+>  int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...) __scanf(3, 4);
 >  
-> @@ -932,7 +925,7 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
->  	pmu->is_uncore = pmu_is_uncore(name);
->  	if (pmu->is_uncore)
->  		pmu->id = pmu_id(name);
-> -	pmu->max_precise = pmu_max_precise(name);
-> +	pmu->max_precise = pmu_max_precise(pmu);
->  	pmu_add_cpu_aliases(&aliases, pmu);
->  	pmu_add_sys_aliases(&aliases, pmu);
+> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name);
+> +
+>  int perf_pmu__test(void);
 >  
+>  struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
 > -- 
 > 2.25.1
 > 
