@@ -2,56 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C938C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 04:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19512C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 06:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbiLWEAD (ORCPT
+        id S229659AbiLWGKq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Dec 2022 23:00:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42228 "EHLO
+        Fri, 23 Dec 2022 01:10:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiLWEAC (ORCPT
+        with ESMTP id S229524AbiLWGKp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Dec 2022 23:00:02 -0500
+        Fri, 23 Dec 2022 01:10:45 -0500
 Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3255140B1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 19:59:58 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id q17-20020a17090aa01100b002194cba32e9so7706030pjp.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 19:59:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF88BB7
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:10:43 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id gt4so4109424pjb.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 22:10:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1oKHszNlyPRAoIoEblRlaQjb7vzsMZUlhtQ32+aR420=;
-        b=n0qfaq6rARj65lJ/ZVFLaxy257IeqtPIc09HTww6vmAwQGVqL6SYQFReXrfy2pysBd
-         ZbChMSfgm14hRYpiN708UhTlzryNEQww62F7Gnw0TNupeN6R2ChAottys+1aZNnpKLWn
-         Swb2ySRN1bAKSXkipUPajUG+UT/oXcjZt+IShgOS8agTOdo5WwwHrOuXry86amaMMJEx
-         p2Nikb3gGFKUyBezQRyokw6fxyXupzrDduhF785ZoJieh4LMWQd2F7LM38ZCmCOqMIXG
-         aZCGWYQ5/YVgM9hHTI7DRdZnhXfAraFlqCxccma+RlJpE/kJ6aDCAcrtcmZ6RTZA52ZS
-         Kh6g==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tXPdrlpALcCWkBm8FPPkV2XlgJO2+LLb79iteN7EJJo=;
+        b=dGLEQau5Zp3bvpscFMxHQgEVrw/iveBPjD0OXR7qdPyUHLojRCQxTr7gwpP5ScN3B8
+         Xu6PdnRJhf0E95jDgMRinj5IheV4xSsMZy/J03g4mUa1cgbhuNK8HNCMCQXoXoXx0ndx
+         b2yH30Ey4JmJrd+tdZX8sSLcuje7Z3ovMRWbxQpOXqtJFm0mE4mazzVv3i9b8Y1UM+Ue
+         /r23SlqV65qu1p56ybQoyD5gMv0hwQqq4nWpmEJsLApPbuVdDmVkOhYJOC+thbs72+0N
+         lXu/XE052b1l7TIAkKRwM6Fc2D2KSqRfnVYnbEl+X6t3vs6aNz9kUFOHCeS7UeIkcH0e
+         LhyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1oKHszNlyPRAoIoEblRlaQjb7vzsMZUlhtQ32+aR420=;
-        b=sTQ/+3fzmkDwl2QmrcMcI/euJ6nOnDpGTBmtoPdLckgll9ClQhNRC+KTpJ6ybZfEy4
-         l5wtME02s9VJiuyyMKscGOpn+OZwrH51PYvA2haI6r+Sax3wl2vl1qxc/OGyX3FNF1Ke
-         o9cF0EF/p9+LJqdXvkN/pIwoJIr86YnNMsljNdLUAQOX8napFw8g030Cy+2yosFkpoBs
-         a4avPQgZ59zZR2bHh5TMTiClnUzxrNPfreNl9+1XN+Bx/3BWu6be6uxDmnpzHLuQ37LQ
-         GtlYePSn3hvhUX22ZbFDLNaxR0LDUM9mn22cRJBY3pO51Lv77qh0F647xENWvtMLYneI
-         SmHQ==
-X-Gm-Message-State: AFqh2kopOPNsu3UxkVrmx6NQVjoFc6VDS8T+rCqCz/OSWCIMmW8M4ogt
-        6un+VgrsO4oIkh7a2a/bJLDw4Pk3C3lY4nu05IkrSA==
-X-Google-Smtp-Source: AMrXdXsgg1djqZ2NTqSwPGjvrhgRV4B8reoW7ugNdk5CNUZVROGIT2ufNxF43JIP54hpcyqTOSY5Hg==
-X-Received: by 2002:a05:6a20:bc95:b0:a3:1ea9:dd13 with SMTP id fx21-20020a056a20bc9500b000a31ea9dd13mr8751967pzb.30.1671767998364;
-        Thu, 22 Dec 2022 19:59:58 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tXPdrlpALcCWkBm8FPPkV2XlgJO2+LLb79iteN7EJJo=;
+        b=BRarYEsH77nVsn+Ff6wsR4dt8beRhZtRyqZXP7Z8v8/eJMg6HOu/XPKIPnlhziZdR3
+         +aoeBdRcXyhEzW8tRXrzHiOCRXBdfzxznB5buRZ35QwV0Z7jroLTnRXbp0ljmKKVVLhi
+         yY2ddmfm6g1j9HNugdGr14wnpb7zyNmCiGuEuEn8qSykGM3BeeYvPR+kujER2csdvMS4
+         yRAaOSCbBZI3AS88AsO1FcI6+6K1d4Gs7Ki6nRow0NlU62RFHdS5x0DSReJCazeFMaRb
+         VphRc9YwkGz6aV9/S3ki7dJQcF3ZBFIcHXLY9DYTolpnhk7eisVabuy8JflgsZ1SmDkk
+         fyLA==
+X-Gm-Message-State: AFqh2kp9HH6vm1tbAXgXShRdyuFaCKTL4Yyszuk3V9y+YtSa7gZlrLDn
+        gn9GoaAMVdmKG9Xh+niEnVJiLQ==
+X-Google-Smtp-Source: AMrXdXtwTGljJ/AUqSzEc+83rOc+y0OY4t/wqHgum5eZKlI3BX9oazUJe4IGHrQ1wvanyW9N8SKCDg==
+X-Received: by 2002:a17:902:ce10:b0:189:af28:fd8d with SMTP id k16-20020a170902ce1000b00189af28fd8dmr10843064plg.1.1671775843250;
+        Thu, 22 Dec 2022 22:10:43 -0800 (PST)
 Received: from leoy-yangtze.lan (n058152048149.netvigator.com. [58.152.48.149])
-        by smtp.gmail.com with ESMTPSA id d4-20020a170903230400b001896af10ca7sm1256957plh.134.2022.12.22.19.59.53
+        by smtp.gmail.com with ESMTPSA id d6-20020a170902654600b00188f3970d4asm1503343pln.163.2022.12.22.22.10.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 19:59:57 -0800 (PST)
-Date:   Fri, 23 Dec 2022 11:59:51 +0800
+        Thu, 22 Dec 2022 22:10:42 -0800 (PST)
+Date:   Fri, 23 Dec 2022 14:10:34 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
@@ -70,51 +69,84 @@ Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] perf: Use perf_pmu__open_file() and
- perf_pmu__scan_file()
-Message-ID: <Y6Unt0E4qM5oqE9+@leoy-yangtze.lan>
+Subject: Re: [PATCH v2 3/7] perf: Remove remaining duplication of
+ bus/event_source/devices/...
+Message-ID: <Y6VGWm0LtiVNvTmI@leoy-yangtze.lan>
 References: <20221222160328.3639989-1-james.clark@arm.com>
- <20221222160328.3639989-3-james.clark@arm.com>
- <Y6UkUQ9dcQQwvRpz@leoy-yangtze.lan>
+ <20221222160328.3639989-4-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y6UkUQ9dcQQwvRpz@leoy-yangtze.lan>
+In-Reply-To: <20221222160328.3639989-4-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 23, 2022 at 11:45:21AM +0800, Leo Yan wrote:
-
-[...]
-
-> > @@ -103,8 +103,9 @@ static int test__perf_evsel__roundtrip_name_test(struct test_suite *test __maybe
-> >  						 int subtest __maybe_unused)
-> >  {
-> >  	int err = 0, ret = 0;
-> > +	char cpu_atom[] = "cpu_atom";
-> >  
-> > -	if (perf_pmu__has_hybrid() && perf_pmu__hybrid_mounted("cpu_atom"))
-> > +	if (perf_pmu__has_hybrid() && perf_pmu__hybrid_mounted(cpu_atom))
+On Thu, Dec 22, 2022 at 04:03:23PM +0000, James Clark wrote:
+> Use the new perf_pmu__pathname_scnprintf() instead. No functional
+> changes.
 > 
-> After change the parameter 'name' to non const type in function
-> perf_pmu__hybrid_mounted(), at here we still can pass string "cpu_atom"
-> without warning, right?  If so, we don't need to define a local
-> variable 'cpu_atom'.
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Correct for above statement, I did experiment and confirmed building
-failure after change the parameter to non const type and directly pass
-string "cpu_atom":
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-tests/evsel-roundtrip-name.c: In function ‘test__perf_evsel__roundtrip_name_test’:
-tests/evsel-roundtrip-name.c:108:64: error: passing argument 1 of ‘perf_pmu__hybrid_mounted’ discards ‘const’ qualifier from pointer target type [-Werror=discarded-qualifiers]
-  108 |         if (perf_pmu__has_hybrid() && perf_pmu__hybrid_mounted("cpu_atom"))
-      |                                                                ^~~~~~~~~~
-
-But I still suggest we can keep const type for the parameter for
-perf_pmu__hybrid_mounted(), this is more friendly for its callers
-without define local strings.
-
-Thanks,
-Leo
+> ---
+>  tools/perf/util/pmu.c | 17 +++++------------
+>  1 file changed, 5 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index faaeec1e15aa..15b852b3c401 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -574,8 +574,6 @@ static void pmu_read_sysfs(void)
+>   * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
+>   * may have a "cpus" file.
+>   */
+> -#define SYS_TEMPLATE_ID	"./bus/event_source/devices/%s/identifier"
+> -
+>  static struct perf_cpu_map *pmu_cpumask(char *name)
+>  {
+>  	struct perf_cpu_map *cpus;
+> @@ -616,9 +614,9 @@ static char *pmu_id(const char *name)
+>  	char path[PATH_MAX], *str;
+>  	size_t len;
+>  
+> -	snprintf(path, PATH_MAX, SYS_TEMPLATE_ID, name);
+> +	perf_pmu__pathname_scnprintf(path, PATH_MAX, name, "identifier");
+>  
+> -	if (sysfs__read_str(path, &str, &len) < 0)
+> +	if (filename__read_str(path, &str, &len) < 0)
+>  		return NULL;
+>  
+>  	str[len - 1] = 0; /* remove line feed */
+> @@ -864,16 +862,11 @@ pmu_find_alias_name(const char *name __maybe_unused)
+>  	return NULL;
+>  }
+>  
+> -static int pmu_max_precise(const char *name)
+> +static int pmu_max_precise(struct perf_pmu *pmu)
+>  {
+> -	char path[PATH_MAX];
+>  	int max_precise = -1;
+>  
+> -	scnprintf(path, PATH_MAX,
+> -		 "bus/event_source/devices/%s/caps/max_precise",
+> -		 name);
+> -
+> -	sysfs__read_int(path, &max_precise);
+> +	perf_pmu__scan_file(pmu, "caps/max_precise", "%d", &max_precise);
+>  	return max_precise;
+>  }
+>  
+> @@ -932,7 +925,7 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
+>  	pmu->is_uncore = pmu_is_uncore(name);
+>  	if (pmu->is_uncore)
+>  		pmu->id = pmu_id(name);
+> -	pmu->max_precise = pmu_max_precise(name);
+> +	pmu->max_precise = pmu_max_precise(pmu);
+>  	pmu_add_cpu_aliases(&aliases, pmu);
+>  	pmu_add_sys_aliases(&aliases, pmu);
+>  
+> -- 
+> 2.25.1
+> 
