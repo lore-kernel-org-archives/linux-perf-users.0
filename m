@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057E9C3DA6E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB472C41535
 	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 12:39:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235814AbiLWMjn (ORCPT
+        id S236149AbiLWMjp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Dec 2022 07:39:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
+        Fri, 23 Dec 2022 07:39:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235667AbiLWMjl (ORCPT
+        with ESMTP id S235843AbiLWMjm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Dec 2022 07:39:41 -0500
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC9B193EA;
-        Fri, 23 Dec 2022 04:39:34 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VXwwMYd_1671799170;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VXwwMYd_1671799170)
+        Fri, 23 Dec 2022 07:39:42 -0500
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01841B7AC;
+        Fri, 23 Dec 2022 04:39:37 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VXwwMZL_1671799173;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VXwwMZL_1671799173)
           by smtp.aliyun-inc.com;
-          Fri, 23 Dec 2022 20:39:31 +0800
+          Fri, 23 Dec 2022 20:39:34 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>,
@@ -41,9 +41,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v4 1/6] perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
-Date:   Fri, 23 Dec 2022 20:37:20 +0800
-Message-Id: <1671799045-1108027-2-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v4 4/6] perf vendor events arm64: Add branch metrics for neoverse-n2
+Date:   Fri, 23 Dec 2022 20:37:23 +0800
+Message-Id: <1671799045-1108027-5-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -51,66 +51,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The formula of topdown L1 on neoverse-n2 is from ARM sbsa7.0 platform
-design document [0], D37-38.
-
-However, due to the wrong count of stall_slot and stall_slot_frontend on
-neoverse-n2, the real stall_slot and real stall_slot_frontend need to
-subtract cpu_cycles,  so correct the expression of topdown metrics.
-Reference from ARM neoverse-n2 errata notice [1], D117.
-
-Since neoverse-n2 does not yet support topdown L2, metricgroups such as
-Cache, TLB, Branch, InstructionsMix, and PEutilization will be added to
-further analysis of performance bottlenecks in the following patches.
-Reference from ARM PMU guide [2][3].
-
-[0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
-[1] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb?token=
-[2] https://documentation-service.arm.com/static/628f8fa3dfaf015c2b76eae8?token=
-[3] https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
+Add branch related metrics.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- .../arch/arm64/arm/neoverse-n2/metrics.json        | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+ .../arch/arm64/arm/neoverse-n2/metrics.json           | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-new file mode 100644
-index 0000000..c126f1bc
---- /dev/null
+index 817d80c..73d50f6 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
 +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-@@ -0,0 +1,30 @@
-+[
-+    {
-+        "MetricExpr": "(stall_slot_frontend - cpu_cycles) / (5 * cpu_cycles)",
-+        "BriefDescription": "Frontend bound L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "frontend_bound",
-+        "ScaleUnit": "100%"
+@@ -145,5 +145,24 @@
+         "MetricGroup": "Cache",
+         "MetricName": "ll_cache_read_hit_rate",
+         "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "(1 - op_retired / op_spec) * (1 - (stall_slot - cpu_cycles) / (5 * cpu_cycles))",
-+        "BriefDescription": "Bad speculation L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "bad_speculation",
-+        "ScaleUnit": "100%"
++        "MetricExpr": "BR_MIS_PRED_RETIRED / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of branches mis-predicted per kilo instructions",
++        "MetricGroup": "Branch",
++        "MetricName": "branch_mpki"
 +    },
 +    {
-+        "MetricExpr": "(op_retired / op_spec) * (1 - (stall_slot - cpu_cycles) / (5 * cpu_cycles))",
-+        "BriefDescription": "Retiring L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "retiring",
-+        "ScaleUnit": "100%"
++        "MetricExpr": "BR_RETIRED / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of branches retired per kilo instructions",
++        "MetricGroup": "Branch",
++        "MetricName": "branch_pki"
 +    },
 +    {
-+        "MetricExpr": "stall_slot_backend / (5 * cpu_cycles)",
-+        "BriefDescription": "Backend Bound L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "backend_bound",
++        "MetricExpr": "BR_MIS_PRED_RETIRED / BR_RETIRED",
++        "BriefDescription": "The rate of branches mis-predited to the overall branches",
++        "MetricGroup": "Branch",
++        "MetricName": "branch_miss_pred_rate",
 +        "ScaleUnit": "100%"
-+    }
-+]
+     }
+ ]
 -- 
 1.8.3.1
 
