@@ -2,135 +2,146 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFC6C4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Dec 2022 20:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A00C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 01:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235515AbiLVU7w (ORCPT
+        id S229587AbiLWBoK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Dec 2022 15:59:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38314 "EHLO
+        Thu, 22 Dec 2022 20:44:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235498AbiLVU7v (ORCPT
+        with ESMTP id S229524AbiLWBoJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Dec 2022 15:59:51 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50CEDF7A;
-        Thu, 22 Dec 2022 12:59:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=isp1H2MjBGYeExMIQa379ifSGa8rRrUOUtT3JOLOum8=; b=rf6fdDNmqbzdyKaJHQopu8SuYV
-        ZF9vJ2GqCUaHNwbg5dqVV8bJhoE6h2r/JLQr7CkGmFWlVD/2o7WZv88m9cXbegJg1JUkOzZRdZKF4
-        LedQdranDq1BO4BSvVhWKvvy1TgyM7IbdtRVelmZwgEzet+O/OHskhUc6988CPlIDlFXJauL3cRgC
-        m8sfFhTUrr6QLpfLzS5OPtt6m0XXf5oA0zKZAwQT22cp0uNiuZj/DFI+q4lDi3S38bAlg+1/lQ8T8
-        LDX0pc9uiQsX5U0uqO1sUvLZ6PEkBc6SjXRIhfobNORaSwoTe18qoIkfjUbDgp7lSqlZo6/x5E+qz
-        JoIxhrfg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1p8Sev-00Dy4s-0K;
-        Thu, 22 Dec 2022 20:59:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B92453003D2;
-        Thu, 22 Dec 2022 21:59:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9039820167A87; Thu, 22 Dec 2022 21:59:21 +0100 (CET)
-Date:   Thu, 22 Dec 2022 21:59:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     syzbot <syzbot+b8e8c01c8ade4fe6e48f@syzkaller.appspotmail.com>,
-        acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] KASAN: use-after-free Read in put_pmu_ctx
-Message-ID: <Y6TFKdVJ9BY56fkI@hirez.programming.kicks-ass.net>
-References: <000000000000a20a2e05f029c577@google.com>
- <Y6B3xEgkbmFUCeni@hirez.programming.kicks-ass.net>
- <3a5a4738-2868-8f2f-f8b2-a28c10fbe25b@linux.dev>
+        Thu, 22 Dec 2022 20:44:09 -0500
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F7F2316C
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 17:44:08 -0800 (PST)
+Received: by mail-vs1-xe2a.google.com with SMTP id a66so3353300vsa.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 17:44:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3pFpFEIgC/4IC5P+Ef9teMy5p6cTCuUcox13/wsQYC4=;
+        b=Ob5QkdQBgkvxno5kOdrH+pvsfq9E74IxZVy56D6UCkwiSvtY9bF6mqWkCMqm1EwYUp
+         qlk+ZYDEH3RwUvOr5leLagZBUkNpU7DTl1Iqxr0Gmu1O8Pf3IvCnWOkyOwMdm9LKE9O5
+         EQcVfbjUt8Fvj1tjGSRwWKSUDfWmeESTvWlD4XjBoqOG/7+TC57p1uEl4glLVBMppg05
+         6vCtho47QGLtEQStO2SyHIhH1JjpX3DWMPo5aNZt/IpwaeguU9U8A6Y7SSNl/d0FUUim
+         u/tNeLb7lG151p/IW8N4JNsVhLQYKjYOo3sv2T7VKDU5mx+o6ISUOgm6jkC4V2vJHu9h
+         PQBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3pFpFEIgC/4IC5P+Ef9teMy5p6cTCuUcox13/wsQYC4=;
+        b=x9DcBVuc6EFhUamlbto3ligyuuqWaS+lp+HhWTyADX/nuSXxxhLdR2ZsAc/mKZCmRO
+         M33h9iuJQzPib7lAjYnJfAocKKgUgKfx2/CqMxt1bWe96GQ2leXffSY/W2Z0w42nNvQC
+         2bxpR+l9meh7qrA7TCppi54SR4Ma1CC556jWTgKEruHxwzUjv6/U8+hCN3tGo/+Zj8ny
+         sET4+n1pErM8g65ciTKd0WNzKMfp3AMBndBryQ2+616kyG5ACl0H4zNnmShPv8NiscVq
+         Tlzy0xMKnG6jjoyX2t5z+jKuJO+tXs7OzW9jTrdlD0IUuJafY6ki7tzHlqUlXlgbaNd1
+         OKYQ==
+X-Gm-Message-State: AFqh2kp5CMMo4QzSa1P/WNeAbwez4BfhEekiA6C4Tt4GNK9PEf9fN+Ar
+        ye9Z/Vp+VOqZ7XxjmKIA9htmyGH72dP0QagHmBRYKw==
+X-Google-Smtp-Source: AMrXdXtBimHkucACeEf/XWeBaGpjfACaXJ5R4wcw7T3RKHQMTGeaiYL3M6kJn3T0HmvQyp9enrybQp/1tCRq2sx4PoA=
+X-Received: by 2002:a05:6102:2929:b0:3b0:7e4d:ab4a with SMTP id
+ cz41-20020a056102292900b003b07e4dab4amr1041844vsb.36.1671759847428; Thu, 22
+ Dec 2022 17:44:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a5a4738-2868-8f2f-f8b2-a28c10fbe25b@linux.dev>
+References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
+ <YY58idSor+lJ84KF@kernel.org> <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
+ <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk> <Ydx+mtl1c7L/bbGJ@kernel.org>
+In-Reply-To: <Ydx+mtl1c7L/bbGJ@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 22 Dec 2022 17:43:56 -0800
+Message-ID: <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
+Subject: Re: Getting the latest and greatest Linux perf features on every
+ Debian kernel
+To:     Ben Hutchings <ben@decadent.org.uk>
+Cc:     debian-kernel@lists.debian.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        waldi@debian.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 21, 2022 at 10:42:39AM +0800, Chengming Zhou wrote:
+So I wanted to say a BIG thanks to Ben as I see in the 5.16 changelog
+that the perf wrapper script for Debian is now gone!
+https://metadata.ftp-master.debian.org/changelogs//main/l/linux/linux_6.1~rc8-1~exp1_changelog
 
-> > Does this help?
-> > 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index e47914ac8732..bbff551783e1 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -12689,7 +12689,8 @@ SYSCALL_DEFINE5(perf_event_open,
-> >  	return event_fd;
-> >  
-> >  err_context:
-> > -	/* event->pmu_ctx freed by free_event() */
-> > +	put_pmu_ctx(event->pmu_ctx);
-> > +	event->pmu_ctx = NULL; /* _free_event() */
-> >  err_locked:
-> >  	mutex_unlock(&ctx->mutex);
-> >  	perf_unpin_context(ctx);
-> 
-> Tested-by: Chengming Zhou <zhouchengming@bytedance.com>
-> 
-> While reviewing the code, I found perf_event_create_kernel_counter()
-> has the similar problem in the "err_pmu_ctx" error handling path:
+```
+linux (5.16.3-1~exp1) experimental; urgency=medium
+...
+  * linux-perf: Build a single unversioned package of perf, as it is no
+    longer necessary to match the kernel version
+```
 
-Right you are, updated the patch, thanks!
+I notice from trying the experimental version the features are:
+```
+perf version 6.1.0-rc8
+                dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+   dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+        syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+               libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+           debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+               libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+              libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+              libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+            libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+             libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+            libcrypto: [ OFF ]  # HAVE_LIBCRYPTO_SUPPORT
+            libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+   libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                 zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                 lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+            get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                  bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                  aio: [ on  ]  # HAVE_AIO_SUPPORT
+                 zstd: [ OFF ]  # HAVE_ZSTD_SUPPORT
+              libpfm4: [ OFF ]  # HAVE_LIBPFM
+```
+I believe this is a step up as previously libpython was disabled.
 
-> CPU0					CPU1
-> perf_event_create_kernel_counter()
->   // inc ctx refcnt
->   find_get_context(task, event) (1)
-> 
->   // inc pmu_ctx refcnt
->   pmu_ctx = find_get_pmu_context()
-> 
->   event->pmu_ctx = pmu_ctx
->   ...
->   goto err_pmu_ctx:
->     // dec pmu_ctx refcnt
->     put_pmu_ctx(pmu_ctx) (2)
-> 
->     mutex_unlock(&ctx->mutex)
->     // dec ctx refcnt
->     put_ctx(ctx)
-> 					perf_event_exit_task_context()
-> 					  mutex_lock()
-> 					  mutex_unlock()
-> 					  // last refcnt put
-> 					  put_ctx()
->     free_event(event)
->       if (event->pmu_ctx) // True
->         put_pmu_ctx() (3)
->           // will access freed pmu_ctx or ctx
-> 
->       if (event->ctx) // False
->         put_ctx()
+I had a few things to ask wrt this thread and getting the best
+possible Debian experience:
+ - in Linux 6.2 the libtraceevent will need to become an external
+library dependency
 
-This doesn't look right; iirc you can hit this without concurrency,
-something like so:
+ - are there issues with debuginfod/zstd enablement? libbfd has
+licensing issues. libcrypto is only used by the JIT support, but still
+may be nice to enable.
 
+- wrt packaging, the kernel has a deb-pkg build target, should we move
+the debian packaging to something like a perf-deb-pkg similar to the
+perf-tar-src-pkg target? This thread was previously proposing using
+the source releases Arnaldo makes, this would be possible for a
+deb-pkg target if the logic were contained in the source tar ball. I
+believe what is currently being built is from a kernel tree, but
+perhaps a build target adds consistency with the kernel, allows
+contributors to update the Debian related files and serves as an
+example for similar packaging of other kernel tools, like bpftool.
 
-	// note that when getting here, we've not passed
-	// perf_install_in_context() and event->ctx == NULL.
-err_pmu_ctx:
-	put_pmu_ctx();
-	put_ctx(); // last, actually frees ctx
-	..
-err_alloc:
-	free_event()
-	  _free_event()
-	    if (event->pmu_ctx) // true, because we forgot to clear
-	      put_pmu_ctx() // hits 0 because double put
-	        // goes and touch epc->ctx and UaF
+ - are there some residual wrapper artifacts in the package, for example:
+```
+$ dpkg -L linux-perf
+/.
+/usr
+/usr/bin
+/usr/bin/perf
+package diverts others to: /usr/bin/perf.wrapper
+...
+package diverts others to: /usr/share/bash-completion/completions/perf.wrapper
+...
+package diverts others to: /usr/share/man/man1/perf.wrapper.1.gz
+...
+```
 
+Another BIG thank you to Ben!
 
+Ian
