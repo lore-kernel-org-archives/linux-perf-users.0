@@ -2,146 +2,415 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A00C4332F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 01:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73701C4332F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 02:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiLWBoK (ORCPT
+        id S229667AbiLWCjL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Dec 2022 20:44:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
+        Thu, 22 Dec 2022 21:39:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbiLWBoJ (ORCPT
+        with ESMTP id S229666AbiLWCjK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Dec 2022 20:44:09 -0500
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F7F2316C
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 17:44:08 -0800 (PST)
-Received: by mail-vs1-xe2a.google.com with SMTP id a66so3353300vsa.6
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 17:44:08 -0800 (PST)
+        Thu, 22 Dec 2022 21:39:10 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9219218E25
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 18:39:09 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id m4so3744435pls.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Dec 2022 18:39:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3pFpFEIgC/4IC5P+Ef9teMy5p6cTCuUcox13/wsQYC4=;
-        b=Ob5QkdQBgkvxno5kOdrH+pvsfq9E74IxZVy56D6UCkwiSvtY9bF6mqWkCMqm1EwYUp
-         qlk+ZYDEH3RwUvOr5leLagZBUkNpU7DTl1Iqxr0Gmu1O8Pf3IvCnWOkyOwMdm9LKE9O5
-         EQcVfbjUt8Fvj1tjGSRwWKSUDfWmeESTvWlD4XjBoqOG/7+TC57p1uEl4glLVBMppg05
-         6vCtho47QGLtEQStO2SyHIhH1JjpX3DWMPo5aNZt/IpwaeguU9U8A6Y7SSNl/d0FUUim
-         u/tNeLb7lG151p/IW8N4JNsVhLQYKjYOo3sv2T7VKDU5mx+o6ISUOgm6jkC4V2vJHu9h
-         PQBA==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sL/rbJ8T1w26m0FDbphKBsY/xLpZ7Is14/l1AhjpfWc=;
+        b=GP4OqcFip45zWA5hMx+m/uHfYvoszOC/e0G9Afz7+pw8JfrW7dRXtdbpKFdWmTa0yo
+         bAsQz0J3mK5cV7AGXhTy2PKR5QUfBNe6GPSKHS4fitM/rnnXZMfz014OQRt/3eH6Ozjf
+         u7GfORsmGpj/4xZair4W9nqzec7nkwEr5wF06n6GeYgTBoAYK3/uq+1JljzZgFSOslBC
+         eyl7KAhdOE7vMzdwZ6d5iSYyx3ggQUqHE8xETBed3ljsTig0OD3WbKl0fsDT0FJbzEh6
+         2hlywjaXVFPjiyf4eNgYlVYHWM+oxZbPXT0oMAU1di8D7jdEmhg0MSTc3CXvccKp1T1t
+         L+1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3pFpFEIgC/4IC5P+Ef9teMy5p6cTCuUcox13/wsQYC4=;
-        b=x9DcBVuc6EFhUamlbto3ligyuuqWaS+lp+HhWTyADX/nuSXxxhLdR2ZsAc/mKZCmRO
-         M33h9iuJQzPib7lAjYnJfAocKKgUgKfx2/CqMxt1bWe96GQ2leXffSY/W2Z0w42nNvQC
-         2bxpR+l9meh7qrA7TCppi54SR4Ma1CC556jWTgKEruHxwzUjv6/U8+hCN3tGo/+Zj8ny
-         sET4+n1pErM8g65ciTKd0WNzKMfp3AMBndBryQ2+616kyG5ACl0H4zNnmShPv8NiscVq
-         Tlzy0xMKnG6jjoyX2t5z+jKuJO+tXs7OzW9jTrdlD0IUuJafY6ki7tzHlqUlXlgbaNd1
-         OKYQ==
-X-Gm-Message-State: AFqh2kp5CMMo4QzSa1P/WNeAbwez4BfhEekiA6C4Tt4GNK9PEf9fN+Ar
-        ye9Z/Vp+VOqZ7XxjmKIA9htmyGH72dP0QagHmBRYKw==
-X-Google-Smtp-Source: AMrXdXtBimHkucACeEf/XWeBaGpjfACaXJ5R4wcw7T3RKHQMTGeaiYL3M6kJn3T0HmvQyp9enrybQp/1tCRq2sx4PoA=
-X-Received: by 2002:a05:6102:2929:b0:3b0:7e4d:ab4a with SMTP id
- cz41-20020a056102292900b003b07e4dab4amr1041844vsb.36.1671759847428; Thu, 22
- Dec 2022 17:44:07 -0800 (PST)
-MIME-Version: 1.0
-References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
- <YY58idSor+lJ84KF@kernel.org> <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
- <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk> <Ydx+mtl1c7L/bbGJ@kernel.org>
-In-Reply-To: <Ydx+mtl1c7L/bbGJ@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Dec 2022 17:43:56 -0800
-Message-ID: <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
-Subject: Re: Getting the latest and greatest Linux perf features on every
- Debian kernel
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     debian-kernel@lists.debian.org,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sL/rbJ8T1w26m0FDbphKBsY/xLpZ7Is14/l1AhjpfWc=;
+        b=p1HZClkTQ7zFC/fRyZ7uytr6Unah54UG7gcA8rGPvCkavstZ6nPnLbdjtAzwmuiExr
+         6jo1ltN+0E4Psz9BuPRluQ5QuAI8h/vFXaQVgxAEUiz+WdiPRHDX3yXpT4tflPhIR7pS
+         PcWYZV5Fj5asxihMCYI4Lo1vGQffrb5V9KnwqLcSOSenfQoqbht6nobkpvERyZb9ywS0
+         c/yg2fjxPRWLiDr70Z2If+hzMARaX8MbfAMa0oLgGtaLQxL/XweZTQ0N9ZlyyUTpPEwl
+         fCGW2vQXwCem/0U0Jk1f3ntEY15Z7WQfKeu1o+ejfUuFb5iow4hvesshkl9Dx3vHAsRs
+         zoiQ==
+X-Gm-Message-State: AFqh2komqBo1fCJjpkwpfkz6fh5FHYMp6vYcoCaAxIF+3rz2xUB3YHI9
+        cVcTb5+4AkoCvcqn3zDSTLrRtg==
+X-Google-Smtp-Source: AMrXdXutPD8Vk2CuRuy93tFMO37dNdGfW8AA3U88qflfNLQVq2l918cyzsVi6BWzt+jYQtr7whPWcQ==
+X-Received: by 2002:a17:90a:c281:b0:225:c190:3b9 with SMTP id f1-20020a17090ac28100b00225c19003b9mr1246940pjt.23.1671763148930;
+        Thu, 22 Dec 2022 18:39:08 -0800 (PST)
+Received: from leoy-yangtze.lan (n058152048149.netvigator.com. [58.152.48.149])
+        by smtp.gmail.com with ESMTPSA id a8-20020a17090a688800b002135e8074b1sm3746834pjd.55.2022.12.22.18.39.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Dec 2022 18:39:08 -0800 (PST)
+Date:   Fri, 23 Dec 2022 10:39:01 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
+        bbhushan2@marvell.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        waldi@debian.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] perf: Remove duplication around
+ EVENT_SOURCE_DEVICE_PATH
+Message-ID: <Y6UUxUEmO1ucwBzV@leoy-yangtze.lan>
+References: <20221222160328.3639989-1-james.clark@arm.com>
+ <20221222160328.3639989-2-james.clark@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221222160328.3639989-2-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-So I wanted to say a BIG thanks to Ben as I see in the 5.16 changelog
-that the perf wrapper script for Debian is now gone!
-https://metadata.ftp-master.debian.org/changelogs//main/l/linux/linux_6.1~rc8-1~exp1_changelog
+On Thu, Dec 22, 2022 at 04:03:21PM +0000, James Clark wrote:
+> The pattern for accessing EVENT_SOURCE_DEVICE_PATH is duplicated in a
+> few places, so add two utility functions to cover it. Also just use
+> perf_pmu__scan_file() instead of pmu_type() which already does the same
+> thing.
+> 
+> No functional changes.
 
-```
-linux (5.16.3-1~exp1) experimental; urgency=medium
-...
-  * linux-perf: Build a single unversioned package of perf, as it is no
-    longer necessary to match the kernel version
-```
+After I read the article: https://lwn.net/Articles/69419/, good to see
+this patch uses scnprintf() to replace snprintf().
 
-I notice from trying the experimental version the features are:
-```
-perf version 6.1.0-rc8
-                dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-   dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-        syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-               libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-           debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
-               libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-              libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-              libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-            libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-             libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-            libcrypto: [ OFF ]  # HAVE_LIBCRYPTO_SUPPORT
-            libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-   libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                 zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                 lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-            get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                  bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                  aio: [ on  ]  # HAVE_AIO_SUPPORT
-                 zstd: [ OFF ]  # HAVE_ZSTD_SUPPORT
-              libpfm4: [ OFF ]  # HAVE_LIBPFM
-```
-I believe this is a step up as previously libpython was disabled.
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/arch/arm/util/auxtrace.c |   5 +-
+>  tools/perf/arch/x86/util/pmu.c      |  12 +--
+>  tools/perf/util/pmu.c               | 110 +++++++++++-----------------
+>  tools/perf/util/pmu.h               |   5 +-
+>  4 files changed, 49 insertions(+), 83 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index deeb163999ce..3cb4a6a16112 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -55,17 +55,16 @@ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
+>  
+>  static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
+>  {
+> -	const char *sysfs = sysfs__mountpoint();
+>  	struct perf_pmu **hisi_ptt_pmus = NULL;
+>  	struct dirent *dent;
+>  	char path[PATH_MAX];
+>  	DIR *dir = NULL;
+>  	int idx = 0;
+>  
+> -	snprintf(path, PATH_MAX, "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+> +	perf_pmu__event_source_devices_scnprintf(path, PATH_MAX);
 
-I had a few things to ask wrt this thread and getting the best
-possible Debian experience:
- - in Linux 6.2 the libtraceevent will need to become an external
-library dependency
+Nitpick: since 'path' is an array, a good practice is to use
+'sizeof(path)' rather than 'PATH_MAX' for passing the length.
 
- - are there issues with debuginfod/zstd enablement? libbfd has
-licensing issues. libcrypto is only used by the JIT support, but still
-may be nice to enable.
+>  	dir = opendir(path);
+>  	if (!dir) {
+> -		pr_err("can't read directory '%s'\n", EVENT_SOURCE_DEVICE_PATH);
+> +		pr_err("can't read directory '%s'\n", path);
+>  		*err = -EINVAL;
+>  		return NULL;
+>  	}
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+> index 74d69db1ea99..e3456d4b9063 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+> @@ -15,8 +15,6 @@
+>  #include "../../../util/pmu.h"
+>  #include "../../../util/fncache.h"
+>  
+> -#define TEMPLATE_ALIAS	"%s/bus/event_source/devices/%s/alias"
+> -
+>  struct pmu_alias {
+>  	char *name;
+>  	char *alias;
+> @@ -72,18 +70,14 @@ static int setup_pmu_alias_list(void)
+>  	char path[PATH_MAX];
+>  	DIR *dir;
+>  	struct dirent *dent;
+> -	const char *sysfs = sysfs__mountpoint();
+>  	struct pmu_alias *pmu_alias;
+>  	char buf[MAX_PMU_NAME_LEN];
+>  	FILE *file;
+>  	int ret = -ENOMEM;
+>  
+> -	if (!sysfs)
+> +	if (!perf_pmu__event_source_devices_scnprintf(path, PATH_MAX))
+>  		return -1;
+>  
+> -	snprintf(path, PATH_MAX,
+> -		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+> -
+>  	dir = opendir(path);
+>  	if (!dir)
+>  		return -errno;
+> @@ -93,9 +87,7 @@ static int setup_pmu_alias_list(void)
+>  		    !strcmp(dent->d_name, ".."))
+>  			continue;
+>  
+> -		snprintf(path, PATH_MAX,
+> -			 TEMPLATE_ALIAS, sysfs, dent->d_name);
+> -
+> +		perf_pmu__pathname_scnprintf(path, PATH_MAX, dent->d_name, "alias");
+>  		if (!file_available(path))
+>  			continue;
+>  
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 2bdeb89352e7..827c1a6bb99a 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -107,14 +107,10 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
+>  static int pmu_format(const char *name, struct list_head *format)
+>  {
+>  	char path[PATH_MAX];
+> -	const char *sysfs = sysfs__mountpoint();
+>  
+> -	if (!sysfs)
+> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, name, "format"))
+>  		return -1;
+>  
+> -	snprintf(path, PATH_MAX,
+> -		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
+> -
+>  	if (!file_available(path))
+>  		return 0;
+>  
+> @@ -513,14 +509,10 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
+>  static int pmu_aliases(const char *name, struct list_head *head)
+>  {
+>  	char path[PATH_MAX];
+> -	const char *sysfs = sysfs__mountpoint();
+>  
+> -	if (!sysfs)
+> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, name, "events"))
+>  		return -1;
+>  
+> -	snprintf(path, PATH_MAX,
+> -		 "%s/bus/event_source/devices/%s/events", sysfs, name);
+> -
+>  	if (!file_available(path))
+>  		return 0;
+>  
+> @@ -554,52 +546,16 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
+>  	return 0;
+>  }
+>  
+> -/*
+> - * Reading/parsing the default pmu type value, which should be
+> - * located at:
+> - * /sys/bus/event_source/devices/<dev>/type as sysfs attribute.
+> - */
+> -static int pmu_type(const char *name, __u32 *type)
+> -{
+> -	char path[PATH_MAX];
+> -	FILE *file;
+> -	int ret = 0;
+> -	const char *sysfs = sysfs__mountpoint();
+> -
+> -	if (!sysfs)
+> -		return -1;
+> -
+> -	snprintf(path, PATH_MAX,
+> -		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
+> -
+> -	if (access(path, R_OK) < 0)
+> -		return -1;
+> -
+> -	file = fopen(path, "r");
+> -	if (!file)
+> -		return -EINVAL;
+> -
+> -	if (1 != fscanf(file, "%u", type))
+> -		ret = -1;
+> -
+> -	fclose(file);
+> -	return ret;
+> -}
+> -
+>  /* Add all pmus in sysfs to pmu list: */
+>  static void pmu_read_sysfs(void)
+>  {
+>  	char path[PATH_MAX];
+>  	DIR *dir;
+>  	struct dirent *dent;
+> -	const char *sysfs = sysfs__mountpoint();
+>  
+> -	if (!sysfs)
+> +	if (!perf_pmu__event_source_devices_scnprintf(path, PATH_MAX))
+>  		return;
+>  
+> -	snprintf(path, PATH_MAX,
+> -		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
+> -
+>  	dir = opendir(path);
+>  	if (!dir)
+>  		return;
+> @@ -696,14 +652,9 @@ static char *pmu_id(const char *name)
+>  static int is_arm_pmu_core(const char *name)
+>  {
+>  	char path[PATH_MAX];
+> -	const char *sysfs = sysfs__mountpoint();
+>  
+> -	if (!sysfs)
+> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, name, "cpus"))
+>  		return 0;
+> -
+> -	/* Look for cpu sysfs (specific to arm) */
+> -	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
+> -				sysfs, name);
+>  	return file_available(path);
+>  }
+>  
+> @@ -969,11 +920,8 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
+>  		return NULL;
+>  
+>  	/*
+> -	 * Check the type first to avoid unnecessary work.
+> +	 * Check the aliases first to avoid unnecessary work.
+>  	 */
+> -	if (pmu_type(name, &type))
+> -		return NULL;
+> -
+>  	if (pmu_aliases(name, &aliases))
+>  		return NULL;
+>  
+> @@ -983,9 +931,14 @@ static struct perf_pmu *pmu_lookup(const char *lookup_name)
+>  
+>  	pmu->cpus = pmu_cpumask(name);
+>  	pmu->name = strdup(name);
+> +
+>  	if (!pmu->name)
+>  		goto err;
+>  
+> +	/* Read type, and ensure that 1 value (type) is successfully assigned */
 
-- wrt packaging, the kernel has a deb-pkg build target, should we move
-the debian packaging to something like a perf-deb-pkg similar to the
-perf-tar-src-pkg target? This thread was previously proposing using
-the source releases Arnaldo makes, this would be possible for a
-deb-pkg target if the logic were contained in the source tar ball. I
-believe what is currently being built is from a kernel tree, but
-perhaps a build target adds consistency with the kernel, allows
-contributors to update the Debian related files and serves as an
-example for similar packaging of other kernel tools, like bpftool.
+Maybe I don't understand well, seems to me a better comment is:
 
- - are there some residual wrapper artifacts in the package, for example:
-```
-$ dpkg -L linux-perf
-/.
-/usr
-/usr/bin
-/usr/bin/perf
-package diverts others to: /usr/bin/perf.wrapper
-...
-package diverts others to: /usr/share/bash-completion/completions/perf.wrapper
-...
-package diverts others to: /usr/share/man/man1/perf.wrapper.1.gz
-...
-```
+/* Read type, and ensure that type value is successfully assigned (return 1) */
 
-Another BIG thank you to Ben!
 
-Ian
+The rest looks good to me.  With addressing above two comments:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+
+> +	if (perf_pmu__scan_file(pmu, "type", "%u", &type) != 1)
+> +		goto err;
+> +
+>  	alias_name = pmu_find_alias_name(name);
+>  	if (alias_name) {
+>  		pmu->alias_name = strdup(alias_name);
+> @@ -1786,16 +1739,11 @@ bool pmu_have_event(const char *pname, const char *name)
+>  static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+>  {
+>  	char path[PATH_MAX];
+> -	const char *sysfs;
+>  
+> -	sysfs = sysfs__mountpoint();
+> -	if (!sysfs)
+> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, pmu->name, name) ||
+> +	    !file_available(path))
+>  		return NULL;
+>  
+> -	snprintf(path, PATH_MAX,
+> -		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
+> -	if (!file_available(path))
+> -		return NULL;
+>  	return fopen(path, "r");
+>  }
+>  
+> @@ -1849,7 +1797,6 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>  {
+>  	struct stat st;
+>  	char caps_path[PATH_MAX];
+> -	const char *sysfs = sysfs__mountpoint();
+>  	DIR *caps_dir;
+>  	struct dirent *evt_ent;
+>  
+> @@ -1858,12 +1805,9 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>  
+>  	pmu->nr_caps = 0;
+>  
+> -	if (!sysfs)
+> +	if (!perf_pmu__pathname_scnprintf(caps_path, PATH_MAX, pmu->name, "caps"))
+>  		return -1;
+>  
+> -	snprintf(caps_path, PATH_MAX,
+> -		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
+> -
+>  	if (stat(caps_path, &st) < 0) {
+>  		pmu->caps_initialized = true;
+>  		return 0;	/* no error if caps does not exist */
+> @@ -1993,3 +1937,31 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+>  	*ucpus_ptr = unmatched_cpus;
+>  	return 0;
+>  }
+> +
+> +int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size)
+> +{
+> +	const char *sysfs = sysfs__mountpoint();
+> +
+> +	if (!sysfs)
+> +		return 0;
+> +	return scnprintf(pathname, size, "%s/bus/event_source/devices/", sysfs);
+> +}
+> +
+> +/*
+> + * Fill 'buf' with the path to a file or folder in 'pmu_name' in
+> + * sysfs. For example if pmu_name = "cs_etm" and 'filename' = "format"
+> + * then pathname will be filled with
+> + * "/sys/bus/event_source/devices/cs_etm/format"
+> + *
+> + * Return 0 if the sysfs mountpoint couldn't be found or if no
+> + * characters were written.
+> + */
+> +int perf_pmu__pathname_scnprintf(char *buf, size_t size,
+> +				 const char *pmu_name, const char *filename)
+> +{
+> +	char base_path[PATH_MAX];
+> +
+> +	if (!perf_pmu__event_source_devices_scnprintf(base_path, PATH_MAX))
+> +		return 0;
+> +	return scnprintf(buf, size, "%s%s/%s", base_path, pmu_name, filename);
+> +}
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 69ca0004f94f..2f2bb0286e2a 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -22,7 +22,6 @@ enum {
+>  };
+>  
+>  #define PERF_PMU_FORMAT_BITS 64
+> -#define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
+>  #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
+>  #define MAX_PMU_NAME_LEN 128
+>  
+> @@ -259,4 +258,8 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+>  
+>  char *pmu_find_real_name(const char *name);
+>  char *pmu_find_alias_name(const char *name);
+> +int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
+> +int perf_pmu__pathname_scnprintf(char *buf, size_t size,
+> +				 const char *pmu_name, const char *filename);
+> +
+>  #endif /* __PMU_H */
+> -- 
+> 2.25.1
+> 
