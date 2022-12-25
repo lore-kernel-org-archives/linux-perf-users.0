@@ -2,135 +2,82 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B2F1C3DA6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Dec 2022 12:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D32C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sun, 25 Dec 2022 11:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236213AbiLWMjr (ORCPT
+        id S229649AbiLYLwG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Dec 2022 07:39:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
+        Sun, 25 Dec 2022 06:52:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236001AbiLWMjn (ORCPT
+        with ESMTP id S230463AbiLYLvs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Dec 2022 07:39:43 -0500
-Received: from out199-8.us.a.mail.aliyun.com (out199-8.us.a.mail.aliyun.com [47.90.199.8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6A81C10B;
-        Fri, 23 Dec 2022 04:39:40 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VXwwMZu_1671799175;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VXwwMZu_1671799175)
-          by smtp.aliyun-inc.com;
-          Fri, 23 Dec 2022 20:39:35 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sun, 25 Dec 2022 06:51:48 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CC5260D
+        for <linux-perf-users@vger.kernel.org>; Sun, 25 Dec 2022 03:51:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671969106; x=1703505106;
+  h=from:to:cc:subject:references:date:in-reply-to:
+   message-id:mime-version;
+  bh=zbUwL8kVAXk9TIB67s6loBmt1rXHuZDWNi+17Ea3m80=;
+  b=eZdJvPS/nceAvVzOPKkEu78xWObEZONDRTSZb3XbsbHV5nqRXMBwFb7W
+   RZYEHsvtWGtJ1p5cPyWpyFXnWbqbJj6ZEJmzSkjSAPiAa2nDJpvVMUNzV
+   swri0eoAxFFFpAmKVkomDpN8UNYJs2Hjx2KBNhnJdR1oAbtJtyCBBKQHD
+   tyDOFXjZPZoUnzuDtUDVaeJqpShN31WxCZJ7JC9VCoK/f/aYWeyG/WHct
+   p9i+wU93Lh7ODtAlRphX/4v++HOkrOgHX+eJDAtErwpXeHh4zu/HTNm56
+   LxZr0MCB7JSBpl6qIyCwncNQg5jUAyCXqNdZjLum31+YHYmnJhxAY5Yty
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10571"; a="382762087"
+X-IronPort-AV: E=Sophos;i="5.96,273,1665471600"; 
+   d="scan'208";a="382762087"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Dec 2022 03:51:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10571"; a="630200237"
+X-IronPort-AV: E=Sophos;i="5.96,273,1665471600"; 
+   d="scan'208";a="630200237"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.54.74.11])
+  by orsmga006.jf.intel.com with ESMTP; 25 Dec 2022 03:51:45 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id B1173301B7E; Sun, 25 Dec 2022 03:51:45 -0800 (PST)
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
+        debian-kernel@lists.debian.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        waldi@debian.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v4 6/6] perf vendor events arm64: Add instruction mix metrics for neoverse-n2
-Date:   Fri, 23 Dec 2022 20:37:25 +0800
-Message-Id: <1671799045-1108027-7-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
-References: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: Getting the latest and greatest Linux perf features on every
+ Debian kernel
+References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
+        <YY58idSor+lJ84KF@kernel.org>
+        <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
+        <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk>
+        <Ydx+mtl1c7L/bbGJ@kernel.org>
+        <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
+Date:   Sun, 25 Dec 2022 03:51:45 -0800
+In-Reply-To: <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
+        (Ian Rogers's message of "Thu, 22 Dec 2022 17:43:56 -0800")
+Message-ID: <874jtjem5q.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add instruction mix related metrics.
+Ian Rogers <irogers@google.com> writes:
 
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
----
- .../arch/arm64/arm/neoverse-n2/metrics.json        | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+> So I wanted to say a BIG thanks to Ben as I see in the 5.16 changelog
+> that the perf wrapper script for Debian is now gone!
+> https://metadata.ftp-master.debian.org/changelogs//main/l/linux/linux_6.1~rc8-1~exp1_changelog
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-index 2c85e86..34647d1 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-@@ -210,5 +210,68 @@
-         "MetricGroup": "PEutilization",
-         "MetricName": "cpu_utilization",
-         "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "LD_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of load instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "load_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "ST_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of store instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "store_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "DP_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of integer data-processing instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "data_process_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "ASE_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of advanced SIMD instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "advanced_simd_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "VFP_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of floating point instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "float_point_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "CRYPTO_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of crypto instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "crypto_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "BR_IMMED_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of branch immediate instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "branch_immed_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "BR_RETURN_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of procedure return instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "branch_return_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "BR_INDIRECT_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of indirect branch instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "branch_indirect_spec_rate",
-+        "ScaleUnit": "100%"
-     }
- ]
--- 
-1.8.3.1
+Halleluja! This wrapper literally is the singlest biggest usability problem with
+perf with real users. Hopefully that change gets picked up everywhere as
+soon possible.
 
+-Andi
