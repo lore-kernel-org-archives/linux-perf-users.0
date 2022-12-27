@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2148C4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 20:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6E1C4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 20:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbiL0UYV convert rfc822-to-8bit (ORCPT
+        id S229744AbiL0UaF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Dec 2022 15:24:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
+        Tue, 27 Dec 2022 15:30:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbiL0UYV (ORCPT
+        with ESMTP id S229502AbiL0UaE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Dec 2022 15:24:21 -0500
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B7F3F15;
-        Tue, 27 Dec 2022 12:24:20 -0800 (PST)
-Received: by mail-il1-f179.google.com with SMTP id j28so7239125ila.9;
-        Tue, 27 Dec 2022 12:24:20 -0800 (PST)
+        Tue, 27 Dec 2022 15:30:04 -0500
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98EBD63FE;
+        Tue, 27 Dec 2022 12:30:03 -0800 (PST)
+Received: by mail-il1-f173.google.com with SMTP id y2so7253290ily.5;
+        Tue, 27 Dec 2022 12:30:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZYIWCf/X/Ha6fzlOLJLrAZYz4Dy2m9LBU9hsQfnPLuM=;
-        b=TIskR3Jjj8/kBB0knoI1q5fq9KAbhwDP1tnbdfq+QomShd4+FEip6YP0R4rCEpSRh7
-         KwqPn4M8/wOL9XfPgLt+GVQOwBahuBWmTx93EW9jxI9Z0ZOYFiUmRsM+DxlNsMOblCn5
-         X2pIJ6BHxZ9l51OwYh23jam45fUKGmd+jQ1xv9gL33toIQW4JkuvybSXT5uodvrvHNRw
-         Ep8hTAWylgQsTYfvzE5EnsLeBrrm/H2z7cgeI7Vl6OmrLlPPMHrxx5c/Lzm2eE/XekxP
-         fltya2cISo+hcxbigFua7eVBV1udbTr/4O76ce9u8W2Z4oxmlcN8izBJrpfZRloQn2kA
-         6xeQ==
-X-Gm-Message-State: AFqh2krm+vzAdLhHErFj1XqhjBbfiarZZxB32kp04s+AlwP3V75K/wyq
-        w4rf1/XxYLaAa7CL5qhLXnE72eXEHyVKqur5DX8=
-X-Google-Smtp-Source: AMrXdXu5ah4PmdOmI0U7aT/d7+iZsd0E6schiX4tuXFhPmzimqU3nPQeedgtbyQPTCyYmiBMReoJQX4xE3P1KeQkcJo=
-X-Received: by 2002:a92:d811:0:b0:303:7c99:eb78 with SMTP id
- y17-20020a92d811000000b003037c99eb78mr1832673ilm.88.1672172659361; Tue, 27
- Dec 2022 12:24:19 -0800 (PST)
+        bh=qmLwJ+PWqbcorDCwxmocOdJgeZdtJDX23RvZXns5ir0=;
+        b=yib27nWOshfewB/9gcylNZJw/CTBxvoQrqoQDeFFsNQJHD27Zuko60Pawy7Su05/bM
+         czvh2wpmNsZpqO4aNIPWjDXdZnLR5l0atN3IE+tj4uH/6vhfipWyNXZZugW4wOVhY26U
+         chlQe3LJyf49V4iLKq5PVs1rf6dcgAEN8NCAHBJRoWDC4LKNroHwpJwTubRd7hapLVqX
+         t0qmxV+5Tm3PqCds2hTXSe/SSKeFIDNAxnJTwZjG613q24LlJskARxuSn8lx9YTduEtl
+         KHfrut6yNPfRPY21hS28sgjm+U1Ofs4h4cU60GvL1NPC63tdw8KOXfdwnZ3FlOQL9iKX
+         d4Ng==
+X-Gm-Message-State: AFqh2kqtLIDY2mpGKEKgbPZiuDBV9t55BRvwcQBowoJ/S5nL/62Dk3uZ
+        hbu3advhM7+6M65I9oUhvZcKU1aCGXJ3Sr0RMyw=
+X-Google-Smtp-Source: AMrXdXsB3MLS/ng1XsIcpRzLrbjLFZqQgfrh6A4j+8oJXGChl1QcIpglgU/EebkQKql8MqlNf5aeD7JKett5RkenJh8=
+X-Received: by 2002:a92:da4f:0:b0:30b:e5e7:9854 with SMTP id
+ p15-20020a92da4f000000b0030be5e79854mr1406536ilq.180.1672173002819; Tue, 27
+ Dec 2022 12:30:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20221226193517.qynxfceqgzvr4qwu@tarta.nabijaczleweli.xyz>
-In-Reply-To: <20221226193517.qynxfceqgzvr4qwu@tarta.nabijaczleweli.xyz>
+References: <20221226193517.qynxfceqgzvr4qwu@tarta.nabijaczleweli.xyz> <20221226195015.venelpockrns7uk4@tarta.nabijaczleweli.xyz>
+In-Reply-To: <20221226195015.venelpockrns7uk4@tarta.nabijaczleweli.xyz>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 27 Dec 2022 12:24:07 -0800
-Message-ID: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
-Subject: Re: [PATCH] perf tui: don't ignore job control
+Date:   Tue, 27 Dec 2022 12:29:51 -0800
+Message-ID: <CAM9d7cgJr4-LvH_xFJfmMu_7Zj+BB_n0jyE_=CDY+gR+EhGxtg@mail.gmail.com>
+Subject: Re: [PATCH 2/1] perf tools: don't include signature in version strings
 To:     =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= 
         <nabijaczleweli@nabijaczleweli.xyz>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -50,144 +50,59 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Mon, Dec 26, 2022 at 11:35 AM Ahelenia Ziemiańska
+On Mon, Dec 26, 2022 at 11:50 AM Ahelenia Ziemiańska
 <nabijaczleweli@nabijaczleweli.xyz> wrote:
 >
-> In its infinite wisdom, by default, SLang sets susp undef,
-> and this can only be un-done by calling SLtty_set_suspend_state(true).
-> After every SLang_init_tty().
->
-> Additionally, no provisions are made for maintaining the teletype
-> attributes across suspend/continue (outside of curses emulation mode(?!),
-> which provides full support, naturally), so we need to save and restore
-> the flags ourselves. We need to also re-draw the screen, and raising
-> SIGWINCH, shockingly, Just Works.
->
-> The correct solution would be to Not Use SLang, but as a stop-gap,
-> this makes TUI perf report usable.
+> This explodes the build if HEAD is signed, since the generated version
+> is gpg: Signature made Mon 26 Dec 2022 20:34:48 CET, then a few more
+> lines, then the SHA.
 >
 > Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
 
-Cool, this makes Ctrl-Z and then 'fg' work.  But it comes with the
-color for a selected line depending on the timing.  Maybe we can
-reset the color before going to the background?
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
 
 > ---
->  tools/perf/ui/browsers/annotate.c |  1 +
->  tools/perf/ui/browsers/hists.c    |  2 ++
->  tools/perf/ui/browsers/scripts.c  |  1 +
->  tools/perf/ui/tui/setup.c         | 19 +++++++++++++++++++
->  4 files changed, 23 insertions(+)
+>  tools/perf/Documentation/Makefile | 2 +-
+>  tools/perf/util/PERF-VERSION-GEN  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index c03fa76c02ff..6a4ffbf66c7f 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -942,6 +942,7 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
->         /* reset abort key so that it can get Ctrl-C as a key */
->         SLang_reset_tty();
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
+> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+> index 6e7b88917ca0..ba5d942e4c6a 100644
+> --- a/tools/perf/Documentation/Makefile
+> +++ b/tools/perf/Documentation/Makefile
+> @@ -267,7 +267,7 @@ $(OUTPUT)%.xml : %.txt
+>         $(ASCIIDOC) -b docbook -d manpage \
+>                 $(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) \
+>                 -aperf_date=$(shell git log -1 --pretty="format:%cd" \
+> -                               --date=short $<) \
+> +                               --date=short --no-show-signature $<) \
+>                 -o $@+ $< && \
+>         mv $@+ $@
 >
->         return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
->  }
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index b72ee6822222..2479e6d42e7c 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3010,6 +3010,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
->         /* reset abort key so that it can get Ctrl-C as a key */
->         SLang_reset_tty();
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->
->         if (min_pcnt)
->                 browser->min_pcnt = min_pcnt;
-> @@ -3682,6 +3683,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
->         /* reset abort key so that it can get Ctrl-C as a key */
->         SLang_reset_tty();
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->
->         memset(&action, 0, sizeof(action));
->
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index 47d2c7a8cbe1..50d45054ed6c 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -166,6 +166,7 @@ void run_script(char *cmd)
->         printf("\033[c\033[H\033[J");
->         fflush(stdout);
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->         SLsmg_refresh();
->  }
->
-> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> index a3b8c397c24d..4211a161458a 100644
-> --- a/tools/perf/ui/tui/setup.c
-> +++ b/tools/perf/ui/tui/setup.c
-> @@ -2,6 +2,7 @@
->  #include <signal.h>
->  #include <stdbool.h>
->  #include <stdlib.h>
-> +#include <termios.h>
->  #include <unistd.h>
->  #include <linux/kernel.h>
->  #ifdef HAVE_BACKTRACE_SUPPORT
-> @@ -122,6 +123,21 @@ static void ui__signal(int sig)
->         exit(0);
->  }
->
-> +static void ui__sigcont(int sig)
-> +{
-> +       static struct termios tty;
-> +
-> +       if (sig == SIGTSTP) {
-> +               while (tcgetattr(SLang_TT_Read_FD, &tty) == -1 && errno == EINTR)
-> +                       ;
-> +               raise(SIGSTOP);
-> +       } else {
-> +               while (tcsetattr(SLang_TT_Read_FD, TCSADRAIN, &tty) == -1 && errno == EINTR)
-> +                       ;
-> +               raise(SIGWINCH);
-> +       }
-> +}
-> +
->  int ui__init(void)
->  {
->         int err;
-> @@ -136,6 +152,7 @@ int ui__init(void)
->         err = SLang_init_tty(-1, 0, 0);
->         if (err < 0)
->                 goto out;
-> +       SLtty_set_suspend_state(true);
->
->         err = SLkp_init();
->         if (err < 0) {
-> @@ -150,6 +167,8 @@ int ui__init(void)
->         signal(SIGINT, ui__signal);
->         signal(SIGQUIT, ui__signal);
->         signal(SIGTERM, ui__signal);
-> +       signal(SIGTSTP, ui__sigcont);
-> +       signal(SIGCONT, ui__sigcont);
->
->         perf_error__register(&perf_tui_eops);
->
+> diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
+> index 3cc42821d9b3..d7dc7c28508c 100755
+> --- a/tools/perf/util/PERF-VERSION-GEN
+> +++ b/tools/perf/util/PERF-VERSION-GEN
+> @@ -19,7 +19,7 @@ TAG=
+>  if test -d ../../.git -o -f ../../.git
+>  then
+>         TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
+> -       CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
+> +       CID=$(git log -1 --abbrev=12 --pretty=format:"%h" --no-show-signature 2>/dev/null) && CID="-g$CID"
+>  elif test -f ../../PERF-VERSION-FILE
+>  then
+>         TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
 > --
 > 2.30.2
