@@ -2,135 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCB6C4167B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Dec 2022 19:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF29C4332F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 13:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229926AbiLZTzX (ORCPT
+        id S231689AbiL0NKt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Dec 2022 14:55:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
+        Tue, 27 Dec 2022 08:10:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiLZTzW (ORCPT
+        with ESMTP id S231486AbiL0NKl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 26 Dec 2022 14:55:22 -0500
-X-Greylist: delayed 2406 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 26 Dec 2022 11:55:21 PST
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AED81176
-        for <linux-perf-users@vger.kernel.org>; Mon, 26 Dec 2022 11:55:21 -0800 (PST)
-Received: from 213.219.160.184.adsl.dyn.edpnet.net ([213.219.160.184] helo=deadeye)
-        by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1p9swI-0006KO-0B; Mon, 26 Dec 2022 20:15:10 +0100
-Received: from ben by deadeye with local (Exim 4.96)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1p9swH-000vWG-1J;
-        Mon, 26 Dec 2022 20:15:09 +0100
-Message-ID: <62af20e156e799350b0281b7769442c4f1d414a3.camel@decadent.org.uk>
-Subject: Re: Getting the latest and greatest Linux perf features on every
- Debian kernel
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Ian Rogers <irogers@google.com>
-Cc:     debian-kernel@lists.debian.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        waldi@debian.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 26 Dec 2022 20:15:00 +0100
-In-Reply-To: <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
-References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
-         <YY58idSor+lJ84KF@kernel.org>
-         <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
-         <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk>
-         <Ydx+mtl1c7L/bbGJ@kernel.org>
-         <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-58MGJ4CSzUXisgTU/9/2"
-User-Agent: Evolution 3.46.2-1 
+        Tue, 27 Dec 2022 08:10:41 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11561F0;
+        Tue, 27 Dec 2022 05:10:38 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NhFNd18Wvz16LrY;
+        Tue, 27 Dec 2022 21:09:21 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 27 Dec 2022 21:10:35 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <jiwei.sun@windriver.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf record: Fix coredump with --overwrite and --max-size
+Date:   Tue, 27 Dec 2022 13:07:01 +0000
+Message-ID: <20221227130701.124278-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 213.219.160.184
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+When --overwrite and --max-size options of perf record are used together,
+a segmentation fault occurs. The following is an example:
 
---=-58MGJ4CSzUXisgTU/9/2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  perf: Segmentation fault
+  Obtained 1 stack frames.
+  [0xc4c67f]
+  Segmentation fault (core dumped)
 
-On Thu, 2022-12-22 at 17:43 -0800, Ian Rogers wrote:
-[...]
-> I had a few things to ask wrt this thread and getting the best
-> possible Debian experience:
->  - in Linux 6.2 the libtraceevent will need to become an external
-> library dependency
+backtrace of the core file is as follows:
 
-This shouldn't be a problem; it's already packaged separately in Debian
-and we can build-depend on that.
+  #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
+  #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
+  #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
+  #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
+  #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
+  #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
+  #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
+  #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
+  #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
+  #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
+  #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
+  #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
+  #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
+  #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
 
->  - are there issues with debuginfod/zstd enablement? libbfd has
-> licensing issues. libcrypto is only used by the JIT support, but still
-> may be nice to enable.
+The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+The process is as follows:
+  __cmd_record
+    -> record__free_thread_data
+      -> zfree(&rec->thread_data)         // free rec->thread_data
+    -> record__synthesize
+      -> perf_event__synthesize_id_index
+        -> process_synthesized_event
+          -> record__write
+            -> record__bytes_written     // access rec->thread_data
 
-- debuginfod is licensed under GPLv3+, so has the same issue as libbfd
-- libzstd is licensed under GPLv2 (with most of its code also
-permissively licensed)
-- libcrypto is now licensed under Apache 2.0, which is not compatible
-with GPLv2
+In the overwrite scenario, to synthesize non-sample events,
+we do not need to check perf size limit.
 
-So I think only libzstd can be enabled in official packages.
+Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-record.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[...]
->  - are there some residual wrapper artifacts in the package, for example:
-> ```
-> $ dpkg -L linux-perf
-> /.
-> /usr
-> /usr/bin
-> /usr/bin/perf
-> package diverts others to: /usr/bin/perf.wrapper
-> ...
-> package diverts others to: /usr/share/bash-completion/completions/perf.wr=
-apper
-> ...
-> package diverts others to: /usr/share/man/man1/perf.wrapper.1.gz
-> ...
-> ```
-[...]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 29dcd454b8e2..c5f169150d63 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -260,7 +260,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+ 	else
+ 		rec->bytes_written += size;
+ 
+-	if (record__output_max_size_exceeded(rec) && !done) {
++	if (!rec->opts.tail_synthesize && record__output_max_size_exceeded(rec) && !done) {
+ 		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
+ 				" stopping session ]\n",
+ 				record__bytes_written(rec) >> 10);
+-- 
+2.17.1
 
-These diversions are present to avoid conflicts with the wrappers in
-older versions of linux-base.  We can remove them after the next stable
-release.
-
-Ben.
-
---=20
-Ben Hutchings
-Klipstein's 4th Law of Prototyping and Production:
-                               A fail-safe circuit will destroy others.
-
---=-58MGJ4CSzUXisgTU/9/2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmOp8rQACgkQ57/I7JWG
-EQlN7w//QFOk9H7e5+4Ai0zsxPAikPuU607ftTAC/+8yDSTIv/9tlw8SNK3Jznpz
-rlLgI21DNnNG6hYgPQH2FZtusZY1MrfBUnFf/AfhZVp+LfT6JjA9NjvIiH/mORDM
-uer4UrGKM+dgk6WSzSd7eU7pe458fYOZzV+hTMGXk+96mYuztvf2LUYmPUQOKs+m
-fwJg/ECedU2TZoIodf9JjK/us/KrMT8wMsmCJylbRVYS0P37d0/j7TmoKTzfBmWI
-TgU8LhlFOBI6LxsuJSwQkXt7OuVofco0m02BAoD0uljmkkjmWO/KJ5EcFuf2vstp
-14S5si76HzxXxCQIGKQ/8HaKqDC17w5CXYonj34Hw+D/r8kzAgvDJVA7MHMJwkCH
-10MZMiPBDwTwNvLFZc8RWr6NIHw1U9ZtgNUTBWK/a6dJg+8UTu/CpDzS5QyEsmUY
-AQlCeETmWjfuxLiDGhkDZJoeRm6710tw5CxyKwiYGhEFox5ndmzawojMf11afFge
-ODwiRigpoS4JIYaX1gL9Xwv2Krsam/tKQIAmZ9xBJUtZyaK7gxB0mMfvqIUyuMl+
-b5r/zZ3EKNT6I647rMbsIcDozrNv9FE4HyPtfCLp8SdSEAZQHUhK+DxCf5KghMgf
-pwMb2GjQ1lzIh14fRf1vG/f/2RB5hEFgLwTXwb9wo8y9m65lgvQ=
-=d44Z
------END PGP SIGNATURE-----
-
---=-58MGJ4CSzUXisgTU/9/2--
