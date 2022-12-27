@@ -2,225 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247AAC46467
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 21:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F197C4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 21:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230265AbiL0VIS (ORCPT
+        id S232133AbiL0VKE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Dec 2022 16:08:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46186 "EHLO
+        Tue, 27 Dec 2022 16:10:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232036AbiL0VH5 (ORCPT
+        with ESMTP id S232347AbiL0VJQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Dec 2022 16:07:57 -0500
-Received: from tarta.nabijaczleweli.xyz (unknown [139.28.40.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 00613DAB;
-        Tue, 27 Dec 2022 12:57:45 -0800 (PST)
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-        by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id C6624E2A;
-        Tue, 27 Dec 2022 21:57:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-        s=202211; t=1672174661;
-        bh=u+4jI8sJ77aO6ldqx4NYEzP0FaHDnE/y5VlgR4hoBjc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B/ibEgq982ZTO2/K+QueqWfH8IEBEYrQGQVoaF3jwenqJwLwUmhgVFj2k2vfVWB46
-         NbJ6l2rrli/dL2OEo1vwoXCzhHL+SqNLvfrKxMYWaUH/vcxW5dWT8qw1D16Rx9/VUA
-         SwRHz4WCtSXL6zbncBxty7xHcXlNTvjGjJ1pH8NjB3IxtNW8ssv89KvPSfzVI8Ejzp
-         THkAMi0dGKJuyD9J2aYt51GxabcUCwoxwonn9sdv6nf36GDYUj02p/LB9WwMuhl3VQ
-         CviQEZY4ujyyOWsFSB2dABMVvIZDFesAMVB5q5DmTOMvtI4t5oXEoAJf36Oi/BVNC5
-         /3quRgYJ5T/Xw==
-Date:   Tue, 27 Dec 2022 21:57:40 +0100
-From:   Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
-        <nabijaczleweli@nabijaczleweli.xyz>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] perf tui: don't ignore job control
-Message-ID: <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
-References: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
+        Tue, 27 Dec 2022 16:09:16 -0500
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4BE5DEB3;
+        Tue, 27 Dec 2022 13:06:06 -0800 (PST)
+Received: by mail-io1-f44.google.com with SMTP id h6so7428647iof.9;
+        Tue, 27 Dec 2022 13:06:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vv+ZjSlUuwa317vbQX/rH0BLAZD6zsIjkQVH3w5ABrI=;
+        b=ofPrzENKSDMOhKOytTnY4pk2WDF2jJNabvG1NNyZ0t+nDUODMzO0KnzFOhuIxNl/Al
+         AVlNQNEAKivhHsdAOE3zhunzNWNCKqBsSGZUT7pg0ly2T2dRVdYfTpzj5YuQZ1RsRHX4
+         inZqV5J+YOVQpMzMFf2X2Q8AX6SF7NannlgJuXLSOmePGBV1ftBp1lS5+9/Dt9lSUyXp
+         YMRl3sBOkoQcjvMlpvZckvgwk09pAFysWK6sRQZpHaMgtYaH2MwDLSFbYOsysIqRER14
+         nuOEIl3uauDrzuRqVAv1tRJkckxsrmBKWaIueqjgftUM4pabOWwAqohi2ZQV9qmi5xTa
+         4lPw==
+X-Gm-Message-State: AFqh2krwlOxHsxPMImAZHmRwl1s964f5Eni80lBVaFzAwAbBPPaqK5o2
+        nB+H1AXKc+sGMc0wyiPYeeWUSOGpSPdS0egBfou7qHhvG7Y=
+X-Google-Smtp-Source: AMrXdXvqUTIEjJrVWh/GKZcTQ0dBCWvu6Y4+VwEEP+Yr6/xefP8UNRmpiD7FCKGXfsOEVS1BrX2uGnQTfeQAIZ36d9Q=
+X-Received: by 2002:a02:8562:0:b0:38a:4fbc:b85a with SMTP id
+ g89-20020a028562000000b0038a4fbcb85amr1858364jai.277.1672175166010; Tue, 27
+ Dec 2022 13:06:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zypchkvuvqgxav6j"
-Content-Disposition: inline
-In-Reply-To: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
-User-Agent: NeoMutt/20220429
+References: <20221227130701.124278-1-yangjihong1@huawei.com>
+In-Reply-To: <20221227130701.124278-1-yangjihong1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 27 Dec 2022 13:05:54 -0800
+Message-ID: <CAM9d7chDPQ9_J5=XLWbhp2AztiyVwTaRjTf20reCdriseTvX_A@mail.gmail.com>
+Subject: Re: [PATCH] perf record: Fix coredump with --overwrite and --max-size
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, jiwei.sun@windriver.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Dec 27, 2022 at 5:10 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> When --overwrite and --max-size options of perf record are used together,
+> a segmentation fault occurs. The following is an example:
+>
+>  # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
+>   [ perf record: Woken up 1 times to write data ]
+>   perf: Segmentation fault
+>   Obtained 1 stack frames.
+>   [0xc4c67f]
+>   Segmentation fault (core dumped)
+>
+> backtrace of the core file is as follows:
+>
+>   #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
+>   #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
+>   #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
+>   #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
+>   #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
+>   #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
+>   #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
+>   #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
+>   #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
+>   #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
+>   #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
+>   #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
+>   #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
+>   #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
 
---zypchkvuvqgxav6j
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm not sure this callstack is correct.
 
-In its infinite wisdom, by default, SLang sets susp undef,
-and this can only be un-done by calling SLtty_set_suspend_state(true).
-After every SLang_init_tty().
+>
+> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+> The process is as follows:
+>   __cmd_record
+>     -> record__free_thread_data
+>       -> zfree(&rec->thread_data)         // free rec->thread_data
+>     -> record__synthesize
+>       -> perf_event__synthesize_id_index
+>         -> process_synthesized_event
+>           -> record__write
+>             -> record__bytes_written     // access rec->thread_data
+>
+> In the overwrite scenario, to synthesize non-sample events,
+> we do not need to check perf size limit.
 
-Additionally, no provisions are made for maintaining the teletype
-attributes across suspend/continue (outside of curses emulation mode(?!),
-which provides full support, naturally), so we need to save and restore
-the flags ourselves, as well as reset the text colours when going under.
-We need to also re-draw the screen, and raising SIGWINCH, shockingly,
-Just Works.
+Hmm.. I think we should prevent this kind of access after
+record__free_thread_data().  We may set nr_threads to 0
+and save the bytes_written for threads separately.
 
-The correct solution would be to Not Use SLang, but as a stop-gap,
-this makes TUI perf report usable.
-
-Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
----
-Yeah, somehow I didn't hit that in my tests, but it was relatively easy
-to trigger when I tried. A full partial write retry loop is an overkill
-here, I think, and few other places in perf actually try to resubmit
-partial writes, so.
-
- tools/perf/ui/browsers/annotate.c |  1 +
- tools/perf/ui/browsers/hists.c    |  2 ++
- tools/perf/ui/browsers/scripts.c  |  1 +
- tools/perf/ui/tui/setup.c         | 22 ++++++++++++++++++++++
- 4 files changed, 26 insertions(+)
-
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/ann=
-otate.c
-index c03fa76c02ff..6a4ffbf66c7f 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -942,6 +942,7 @@ int hist_entry__tui_annotate(struct hist_entry *he, str=
-uct evsel *evsel,
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
- 	SLang_init_tty(0, 0, 0);
-+	SLtty_set_suspend_state(true);
-=20
- 	return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
- }
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index b72ee6822222..2479e6d42e7c 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3010,6 +3010,7 @@ static int evsel__hists_browse(struct evsel *evsel, i=
-nt nr_events, const char *h
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
- 	SLang_init_tty(0, 0, 0);
-+	SLtty_set_suspend_state(true);
-=20
- 	if (min_pcnt)
- 		browser->min_pcnt =3D min_pcnt;
-@@ -3682,6 +3683,7 @@ int block_hists_tui_browse(struct block_hist *bh, str=
-uct evsel *evsel,
- 	/* reset abort key so that it can get Ctrl-C as a key */
- 	SLang_reset_tty();
- 	SLang_init_tty(0, 0, 0);
-+	SLtty_set_suspend_state(true);
-=20
- 	memset(&action, 0, sizeof(action));
-=20
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scri=
-pts.c
-index 47d2c7a8cbe1..50d45054ed6c 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -166,6 +166,7 @@ void run_script(char *cmd)
- 	printf("\033[c\033[H\033[J");
- 	fflush(stdout);
- 	SLang_init_tty(0, 0, 0);
-+	SLtty_set_suspend_state(true);
- 	SLsmg_refresh();
- }
-=20
-diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-index a3b8c397c24d..09524ba04975 100644
---- a/tools/perf/ui/tui/setup.c
-+++ b/tools/perf/ui/tui/setup.c
-@@ -2,12 +2,14 @@
- #include <signal.h>
- #include <stdbool.h>
- #include <stdlib.h>
-+#include <termios.h>
- #include <unistd.h>
- #include <linux/kernel.h>
- #ifdef HAVE_BACKTRACE_SUPPORT
- #include <execinfo.h>
- #endif
-=20
-+#include "../../util/color.h"
- #include "../../util/debug.h"
- #include "../../perf.h"
- #include "../browser.h"
-@@ -122,6 +124,23 @@ static void ui__signal(int sig)
- 	exit(0);
- }
-=20
-+static void ui__sigcont(int sig)
-+{
-+	static struct termios tty;
-+
-+	if (sig =3D=3D SIGTSTP) {
-+		while (tcgetattr(SLang_TT_Read_FD, &tty) =3D=3D -1 && errno =3D=3D EINTR)
-+			;
-+		while (write(SLang_TT_Read_FD, PERF_COLOR_RESET, sizeof(PERF_COLOR_RESET=
-) - 1) =3D=3D -1 && errno =3D=3D EINTR)
-+			;
-+		raise(SIGSTOP);
-+	} else {
-+		while (tcsetattr(SLang_TT_Read_FD, TCSADRAIN, &tty) =3D=3D -1 && errno =
-=3D=3D EINTR)
-+			;
-+		raise(SIGWINCH);
-+	}
-+}
-+
- int ui__init(void)
- {
- 	int err;
-@@ -136,6 +155,7 @@ int ui__init(void)
- 	err =3D SLang_init_tty(-1, 0, 0);
- 	if (err < 0)
- 		goto out;
-+	SLtty_set_suspend_state(true);
-=20
- 	err =3D SLkp_init();
- 	if (err < 0) {
-@@ -150,6 +170,8 @@ int ui__init(void)
- 	signal(SIGINT, ui__signal);
- 	signal(SIGQUIT, ui__signal);
- 	signal(SIGTERM, ui__signal);
-+	signal(SIGTSTP, ui__sigcont);
-+	signal(SIGCONT, ui__sigcont);
-=20
- 	perf_error__register(&perf_tui_eops);
-=20
---=20
-2.30.2
+Thanks,
+Namhyung
 
 
---zypchkvuvqgxav6j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmOrXEQACgkQvP0LAY0m
-WPErzQ/7BVoBHjawpxBVUElSwDnWp3b8eJKom09IBHgTf8p+u194W6g2UTeJUB7T
-aZpZFTtwJn8Dp4Frh6kdNbpGX4Rn70ZuIFiw/4rIUJ2SEKaSr5/f9b2h/sTwKbCP
-PBVKT1pUg/AAQFTwPRL0p0vNXjXFn+fDsWVO9zaVJuXuiVv+suxAUD2ZKiAdKvrM
-cuWrt1EKc0mFw5dIQQcnNK8FqkGW7bMjOqb+q07C9G94McDkdy35fHU/qW5Zka90
-SxDa8itNNRR/w1khKGBUGMhRf7Q8rkEzo7AQkAGpWUqlipB3oeve2a6BEWcmXPvt
-iF2NGWnz8fTiE8k14aWDlKoRt3Jm5TzVLO6qiXLEa3XhhJD3WNW6+U6uhB6JWEBU
-7nlWLslb4BrMIcbx+MVx5pZEN+Jp80VCqGLnf6AiJ/U+PkHo/Q5PQau4RmLZ9LHE
-PcKmaLVL25plsYTMauMOn49U+C4G/HZXTqePV7kLJIlJXIjgVR0ztKxZ0UF5E5ju
-B0yrWt2h2G2ctHVeEqO/TEd7kFy1RlrJsyL6W0vyfUv3+JEM08Vj5Qr+mRJd043d
-NKgX1HsCUwwILt7zzHqE8vqykJ1jUReudgNxwuxIYTZ2hxp8DBzQ+INSHCXH/b3K
-+nSs7RMxdGDv0+RyhT7w3Q3VCbitrChrbfFXpnVvGrs3/SSxTxw=
-=3TTM
------END PGP SIGNATURE-----
-
---zypchkvuvqgxav6j--
+>
+> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/builtin-record.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 29dcd454b8e2..c5f169150d63 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -260,7 +260,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+>         else
+>                 rec->bytes_written += size;
+>
+> -       if (record__output_max_size_exceeded(rec) && !done) {
+> +       if (!rec->opts.tail_synthesize && record__output_max_size_exceeded(rec) && !done) {
+>                 fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
+>                                 " stopping session ]\n",
+>                                 record__bytes_written(rec) >> 10);
+> --
+> 2.17.1
+>
