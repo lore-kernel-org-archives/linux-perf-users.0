@@ -2,131 +2,204 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F197C4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 21:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB05C4167B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 21:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232133AbiL0VKE (ORCPT
+        id S230129AbiL0VVz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Dec 2022 16:10:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
+        Tue, 27 Dec 2022 16:21:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232347AbiL0VJQ (ORCPT
+        with ESMTP id S230046AbiL0VVx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Dec 2022 16:09:16 -0500
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4BE5DEB3;
-        Tue, 27 Dec 2022 13:06:06 -0800 (PST)
-Received: by mail-io1-f44.google.com with SMTP id h6so7428647iof.9;
-        Tue, 27 Dec 2022 13:06:06 -0800 (PST)
+        Tue, 27 Dec 2022 16:21:53 -0500
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BCFCEE;
+        Tue, 27 Dec 2022 13:21:53 -0800 (PST)
+Received: by mail-io1-f48.google.com with SMTP id z144so7463965iof.3;
+        Tue, 27 Dec 2022 13:21:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vv+ZjSlUuwa317vbQX/rH0BLAZD6zsIjkQVH3w5ABrI=;
-        b=ofPrzENKSDMOhKOytTnY4pk2WDF2jJNabvG1NNyZ0t+nDUODMzO0KnzFOhuIxNl/Al
-         AVlNQNEAKivhHsdAOE3zhunzNWNCKqBsSGZUT7pg0ly2T2dRVdYfTpzj5YuQZ1RsRHX4
-         inZqV5J+YOVQpMzMFf2X2Q8AX6SF7NannlgJuXLSOmePGBV1ftBp1lS5+9/Dt9lSUyXp
-         YMRl3sBOkoQcjvMlpvZckvgwk09pAFysWK6sRQZpHaMgtYaH2MwDLSFbYOsysIqRER14
-         nuOEIl3uauDrzuRqVAv1tRJkckxsrmBKWaIueqjgftUM4pabOWwAqohi2ZQV9qmi5xTa
-         4lPw==
-X-Gm-Message-State: AFqh2krwlOxHsxPMImAZHmRwl1s964f5Eni80lBVaFzAwAbBPPaqK5o2
-        nB+H1AXKc+sGMc0wyiPYeeWUSOGpSPdS0egBfou7qHhvG7Y=
-X-Google-Smtp-Source: AMrXdXvqUTIEjJrVWh/GKZcTQ0dBCWvu6Y4+VwEEP+Yr6/xefP8UNRmpiD7FCKGXfsOEVS1BrX2uGnQTfeQAIZ36d9Q=
-X-Received: by 2002:a02:8562:0:b0:38a:4fbc:b85a with SMTP id
- g89-20020a028562000000b0038a4fbcb85amr1858364jai.277.1672175166010; Tue, 27
- Dec 2022 13:06:06 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5IOlYy/Vocy0JZQbLzUBtMxAfR7MFOMbrfriVQcYrhU=;
+        b=wCy9OejD7/KXS0Vy64FsQx6Oz6Rdwhniv3/CkV+TMhdgsz8z0tY5Ebk4fjHy1yi7IC
+         fFJlx+Y9aSqQaHaq1boEIn54kvAY5McLYQiIX9KhvBmMyhJawMsRiI1w2C/V2AXDmdy/
+         KpFUVPTc6mdq1SYl16n4UVLXz1nBD9DPeZjTqEy/YfFAQO57nbE4RNG02jZVAO3834LO
+         0lJakp1q/CuAah19fTmCJ7Sp4CaUvC9dUtHCqzxWOtEs61Ys6iwUuEtUbDAxSfz733S7
+         3SVuZyTPNA5Xpy1WNLGmgMWAPAjrbVpkSGSWI5DxpvnjM5T4OV6Tub+WSsUHnQ6/gdQF
+         Zc5g==
+X-Gm-Message-State: AFqh2krZXC+j4Ut/kwFxPfdvDCoF3n4z5DAhHsQ8GHQiP+XStVCQ0qRT
+        estzLVPXhoSu3zq6YUi+3Pj3LJm3AkKcxu1yT/Q5rydjEI8=
+X-Google-Smtp-Source: AMrXdXs9p5FP7edkZzTihAMnTd3KX9qI2wAD+xhTAgcpjCzXCjoOnToomJ4PuYxyn8AaCtpD0G4S+Xr8Ub4TsGr8ex8=
+X-Received: by 2002:a02:6005:0:b0:38a:3421:f2cb with SMTP id
+ i5-20020a026005000000b0038a3421f2cbmr1577188jac.308.1672176112197; Tue, 27
+ Dec 2022 13:21:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20221227130701.124278-1-yangjihong1@huawei.com>
-In-Reply-To: <20221227130701.124278-1-yangjihong1@huawei.com>
+References: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
+ <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
+In-Reply-To: <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 27 Dec 2022 13:05:54 -0800
-Message-ID: <CAM9d7chDPQ9_J5=XLWbhp2AztiyVwTaRjTf20reCdriseTvX_A@mail.gmail.com>
-Subject: Re: [PATCH] perf record: Fix coredump with --overwrite and --max-size
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, jiwei.sun@windriver.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 27 Dec 2022 13:21:40 -0800
+Message-ID: <CAM9d7ciUsjNGQcM4fMMGomVheV9vNCiiH87p0=a-goCYmSqFOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf tui: don't ignore job control
+To:     =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= 
+        <nabijaczleweli@nabijaczleweli.xyz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 27, 2022 at 5:10 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+On Tue, Dec 27, 2022 at 12:57 PM Ahelenia Ziemiańska
+<nabijaczleweli@nabijaczleweli.xyz> wrote:
 >
-> When --overwrite and --max-size options of perf record are used together,
-> a segmentation fault occurs. The following is an example:
+> In its infinite wisdom, by default, SLang sets susp undef,
+> and this can only be un-done by calling SLtty_set_suspend_state(true).
+> After every SLang_init_tty().
 >
->  # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
->   [ perf record: Woken up 1 times to write data ]
->   perf: Segmentation fault
->   Obtained 1 stack frames.
->   [0xc4c67f]
->   Segmentation fault (core dumped)
+> Additionally, no provisions are made for maintaining the teletype
+> attributes across suspend/continue (outside of curses emulation mode(?!),
+> which provides full support, naturally), so we need to save and restore
+> the flags ourselves, as well as reset the text colours when going under.
+> We need to also re-draw the screen, and raising SIGWINCH, shockingly,
+> Just Works.
 >
-> backtrace of the core file is as follows:
+> The correct solution would be to Not Use SLang, but as a stop-gap,
+> this makes TUI perf report usable.
 >
->   #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
->   #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
->   #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
->   #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
->   #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
->   #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
->   #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
->   #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
->   #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
->   #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
->   #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
->   #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
->   #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
->   #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
+> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
 
-I'm not sure this callstack is correct.
-
->
-> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
-> The process is as follows:
->   __cmd_record
->     -> record__free_thread_data
->       -> zfree(&rec->thread_data)         // free rec->thread_data
->     -> record__synthesize
->       -> perf_event__synthesize_id_index
->         -> process_synthesized_event
->           -> record__write
->             -> record__bytes_written     // access rec->thread_data
->
-> In the overwrite scenario, to synthesize non-sample events,
-> we do not need to check perf size limit.
-
-Hmm.. I think we should prevent this kind of access after
-record__free_thread_data().  We may set nr_threads to 0
-and save the bytes_written for threads separately.
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
 
->
-> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 > ---
->  tools/perf/builtin-record.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Yeah, somehow I didn't hit that in my tests, but it was relatively easy
+> to trigger when I tried. A full partial write retry loop is an overkill
+> here, I think, and few other places in perf actually try to resubmit
+> partial writes, so.
 >
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 29dcd454b8e2..c5f169150d63 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -260,7 +260,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
->         else
->                 rec->bytes_written += size;
+>  tools/perf/ui/browsers/annotate.c |  1 +
+>  tools/perf/ui/browsers/hists.c    |  2 ++
+>  tools/perf/ui/browsers/scripts.c  |  1 +
+>  tools/perf/ui/tui/setup.c         | 22 ++++++++++++++++++++++
+>  4 files changed, 26 insertions(+)
 >
-> -       if (record__output_max_size_exceeded(rec) && !done) {
-> +       if (!rec->opts.tail_synthesize && record__output_max_size_exceeded(rec) && !done) {
->                 fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
->                                 " stopping session ]\n",
->                                 record__bytes_written(rec) >> 10);
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index c03fa76c02ff..6a4ffbf66c7f 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -942,6 +942,7 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+>         /* reset abort key so that it can get Ctrl-C as a key */
+>         SLang_reset_tty();
+>         SLang_init_tty(0, 0, 0);
+> +       SLtty_set_suspend_state(true);
+>
+>         return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
+>  }
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> index b72ee6822222..2479e6d42e7c 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -3010,6 +3010,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+>         /* reset abort key so that it can get Ctrl-C as a key */
+>         SLang_reset_tty();
+>         SLang_init_tty(0, 0, 0);
+> +       SLtty_set_suspend_state(true);
+>
+>         if (min_pcnt)
+>                 browser->min_pcnt = min_pcnt;
+> @@ -3682,6 +3683,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+>         /* reset abort key so that it can get Ctrl-C as a key */
+>         SLang_reset_tty();
+>         SLang_init_tty(0, 0, 0);
+> +       SLtty_set_suspend_state(true);
+>
+>         memset(&action, 0, sizeof(action));
+>
+> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+> index 47d2c7a8cbe1..50d45054ed6c 100644
+> --- a/tools/perf/ui/browsers/scripts.c
+> +++ b/tools/perf/ui/browsers/scripts.c
+> @@ -166,6 +166,7 @@ void run_script(char *cmd)
+>         printf("\033[c\033[H\033[J");
+>         fflush(stdout);
+>         SLang_init_tty(0, 0, 0);
+> +       SLtty_set_suspend_state(true);
+>         SLsmg_refresh();
+>  }
+>
+> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
+> index a3b8c397c24d..09524ba04975 100644
+> --- a/tools/perf/ui/tui/setup.c
+> +++ b/tools/perf/ui/tui/setup.c
+> @@ -2,12 +2,14 @@
+>  #include <signal.h>
+>  #include <stdbool.h>
+>  #include <stdlib.h>
+> +#include <termios.h>
+>  #include <unistd.h>
+>  #include <linux/kernel.h>
+>  #ifdef HAVE_BACKTRACE_SUPPORT
+>  #include <execinfo.h>
+>  #endif
+>
+> +#include "../../util/color.h"
+>  #include "../../util/debug.h"
+>  #include "../../perf.h"
+>  #include "../browser.h"
+> @@ -122,6 +124,23 @@ static void ui__signal(int sig)
+>         exit(0);
+>  }
+>
+> +static void ui__sigcont(int sig)
+> +{
+> +       static struct termios tty;
+> +
+> +       if (sig == SIGTSTP) {
+> +               while (tcgetattr(SLang_TT_Read_FD, &tty) == -1 && errno == EINTR)
+> +                       ;
+> +               while (write(SLang_TT_Read_FD, PERF_COLOR_RESET, sizeof(PERF_COLOR_RESET) - 1) == -1 && errno == EINTR)
+> +                       ;
+> +               raise(SIGSTOP);
+> +       } else {
+> +               while (tcsetattr(SLang_TT_Read_FD, TCSADRAIN, &tty) == -1 && errno == EINTR)
+> +                       ;
+> +               raise(SIGWINCH);
+> +       }
+> +}
+> +
+>  int ui__init(void)
+>  {
+>         int err;
+> @@ -136,6 +155,7 @@ int ui__init(void)
+>         err = SLang_init_tty(-1, 0, 0);
+>         if (err < 0)
+>                 goto out;
+> +       SLtty_set_suspend_state(true);
+>
+>         err = SLkp_init();
+>         if (err < 0) {
+> @@ -150,6 +170,8 @@ int ui__init(void)
+>         signal(SIGINT, ui__signal);
+>         signal(SIGQUIT, ui__signal);
+>         signal(SIGTERM, ui__signal);
+> +       signal(SIGTSTP, ui__sigcont);
+> +       signal(SIGCONT, ui__sigcont);
+>
+>         perf_error__register(&perf_tui_eops);
+>
 > --
-> 2.17.1
+> 2.30.2
 >
