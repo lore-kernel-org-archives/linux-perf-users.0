@@ -2,232 +2,377 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34F3C4167B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Dec 2022 14:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0FEC3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Dec 2022 20:18:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233182AbiL1O5c (ORCPT
+        id S230078AbiL1USI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Dec 2022 09:57:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
+        Wed, 28 Dec 2022 15:18:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233296AbiL1O52 (ORCPT
+        with ESMTP id S230398AbiL1USF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Dec 2022 09:57:28 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1680120B4;
-        Wed, 28 Dec 2022 06:57:25 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BSCMHAJ008660;
-        Wed, 28 Dec 2022 14:57:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=/Rw5FdGe2i4qT4kYjSNPWFvOI7r+yUD4ZZsKmKmPAsE=;
- b=IiHE7lfBn/ZBtr5a2JCjV+7o+a81ZStJ0KR/jwFxp80md6mnCbUqJgDcPnKWXEyzHEUw
- DLqRgg308FG7HF4FiLLnd/k0jknBUVBD2shbo7VhxdSYVQA4Vq2BU8L16b8QPaXcBZIY
- ZhCJq0BpGcciK+ndJgno5ydHfrz90LMqMnZn7mZEcJQpHeNJtWDyK+d3YfzKXo2livQL
- ekwm9N362mzI8JCGvIOqcfA4kFnQcG4TlAK52e6Xbj2S7PAVgqHZLIVNQhjV4Xmxe+lm
- 96uxDQJutvTivlITmJDqPz8oSP7LZMHcSvGP8xaqFtYO0pAigwW1pf/vFAMyGc1KsTPJ Sw== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mramv6ae5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Dec 2022 14:57:17 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BRNHJ6g023280;
-        Wed, 28 Dec 2022 14:57:15 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3mns26uxp8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Dec 2022 14:57:14 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BSEvAZq45678904
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Dec 2022 14:57:10 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C898620040;
-        Wed, 28 Dec 2022 14:57:10 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DF3E20043;
-        Wed, 28 Dec 2022 14:57:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Dec 2022 14:57:10 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, sumanthk@linux.ibm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
-        Thomas Richter <richter@de.ibm.com>
-Subject: [PATCH v2 2/2] perf/test: Fix test case 89 for x86
-Date:   Wed, 28 Dec 2022 15:57:04 +0100
-Message-Id: <20221228145704.2702487-2-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221228145704.2702487-1-tmricht@linux.ibm.com>
-References: <20221228145704.2702487-1-tmricht@linux.ibm.com>
+        Wed, 28 Dec 2022 15:18:05 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF5A14D3C;
+        Wed, 28 Dec 2022 12:18:02 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id i17-20020a05600c355100b003d99434b1cfso1739337wmq.1;
+        Wed, 28 Dec 2022 12:18:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:from:references:cc:to:content-language:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g8rkaTGV5kgWz/i/oUJIvLo46Kp7MFdwZXdnf4YC5dM=;
+        b=Bpf4JOJXuGgUnTpMP2I+Wr9JQxGhjlZBFZsgZ/KPojfm1QU7QqCuoFtKpXQ+HH68Tx
+         /ugf4oSuAjGCRNRI8AdQ79MAHSXhDb93oo6gAx2QcJpXiWfXW6UiiZf0kLY4C0U37zdh
+         OueBF6kpp+ln8PI0OKvnn/ImGA2OHmel5Qv3o8qEhZ73mEV1xMVjerRpoyRkO1BNSqMt
+         kNBlgw476tl+Hp44CcXiPGZ+kIQ+bLaw4hvA39/6FfqBrufTRp7HYkuaFZ5m4mdg2Xu/
+         MHydyZeKcYW3T4lQFazC/5fC1d7u6t45u+vJXzkJQeGI04eSHQ37h63Ej7XcwegJhakx
+         duug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:from:references:cc:to:content-language:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g8rkaTGV5kgWz/i/oUJIvLo46Kp7MFdwZXdnf4YC5dM=;
+        b=XWl5nsN0qeRMCALk4Ok4x+UlUCuSVl2A3Gc0TnU1r/KvjxYQIlNPm4jai9JtvfFbDo
+         VVkOYQsHlMiMJqckl9rvhZliXYRdxjhVMY++DcRYsLJNK87gG6mqsXEbE+GB5BXQGibC
+         jqfhEOAFq13O0ySmkVTm5o0ogP4r9vv97Y2WxJ1SFd8wTdLfGNnf//m4TShGGyV5BISw
+         w4LXvXWRREvOH0wHYsS/RXKjjpiR42UC+Z6vivDUGYbWD9eS4kMHyNlkIlkAPs1UuInO
+         X/UH88/ifVBDf0K1m/aSxU5h1bZiLyLpJNluuRzO5zVM7ceGf/EnjMNcJxZSp67CRZTC
+         BBRQ==
+X-Gm-Message-State: AFqh2kpWQSuTmxfKo72Lir6PO1jcZuT1iUmoJfiyk302sgGCLSysFHCd
+        5FRiGJ3fzp/ICvmvd1FCQII=
+X-Google-Smtp-Source: AMrXdXt4C1atSypfLf1FGIA9woJaCmEJkZwcejW24EKwenEyDkFjfghVWK/rPlEplHjSauR1zWT7Mw==
+X-Received: by 2002:a7b:ca4f:0:b0:3d3:56ce:5673 with SMTP id m15-20020a7bca4f000000b003d356ce5673mr19131613wml.6.1672258681123;
+        Wed, 28 Dec 2022 12:18:01 -0800 (PST)
+Received: from [192.168.0.160] ([170.253.36.171])
+        by smtp.gmail.com with ESMTPSA id m18-20020a05600c3b1200b003a6125562e1sm24497939wms.46.2022.12.28.12.17.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Dec 2022 12:18:00 -0800 (PST)
+Message-ID: <55416c53-1633-2c9c-e51c-cc96e27b4b11@gmail.com>
+Date:   Wed, 28 Dec 2022 21:17:52 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: fKvMkCmmi03kKFR4a858b-az1ZhbU1i2
-X-Proofpoint-GUID: fKvMkCmmi03kKFR4a858b-az1ZhbU1i2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-28_12,2022-12-28_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 lowpriorityscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 phishscore=0 adultscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2212280124
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] perf_event_open.2: Update recent changes
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Alejandro Colomar <alx@kernel.org>
+Cc:     linux-man@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Marco Elver <elver@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org
+References: <20221228021651.1027725-1-namhyung@kernel.org>
+From:   Alejandro Colomar <alx.manpages@gmail.com>
+In-Reply-To: <20221228021651.1027725-1-namhyung@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------JIxtaj0cKvYrSFtoR5OSXCXV"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Thomas Richter <richter@de.ibm.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------JIxtaj0cKvYrSFtoR5OSXCXV
+Content-Type: multipart/mixed; boundary="------------XEuKXVjQefh4h5aD0kF1DRuo";
+ protected-headers="v1"
+From: Alejandro Colomar <alx.manpages@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>, Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Marco Elver <elver@google.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Stephane Eranian
+ <eranian@google.com>, linux-perf-users@vger.kernel.org
+Message-ID: <55416c53-1633-2c9c-e51c-cc96e27b4b11@gmail.com>
+Subject: Re: [PATCH] perf_event_open.2: Update recent changes
+References: <20221228021651.1027725-1-namhyung@kernel.org>
+In-Reply-To: <20221228021651.1027725-1-namhyung@kernel.org>
 
-perf test '89: probe libc's inet_pton & backtrace it with ping'
-fails on x86. Debugging revealed a changed stack trace for the
-ping command using probes:
+--------------XEuKXVjQefh4h5aD0kF1DRuo
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-ping 35729 [002]  8006.365063: probe_libc:inet_pton: (3ff9603e7c0)
-                  12be50 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-                  4fca main+0x139b (/usr/bin/ping)
+SGkgTmFtaHl1bmcsDQoNCk9uIDEyLzI4LzIyIDAzOjE2LCBOYW1oeXVuZyBLaW0gd3JvdGU6
+DQo+IEFkZCBtaXNzaW5nIHBlcmZfZXZlbnRfYXR0ciBmaWVsZHMsIG5ldyBldmVudCBjb2Rl
+cyBhbmQgc2FtcGxlIHR5cGUuDQo+IEFsc28gYWRkIGRlc2NyaXB0aW9ucyBmb3IgUEVSRl9G
+T1JNQVRfTE9TVC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE5hbWh5dW5nIEtpbSA8bmFtaHl1
+bmdAa2VybmVsLm9yZz4NCg0KUGxlYXNlIHNlZSBhIGZldyBjb21tZW50cyBiZWxvdy4gIFlv
+dSBjYW4gY2hlY2sgdGhhdCBzb21lIG9mIHRoZW0gdHJpZ2dlciBuZXcgDQp3YXJuaW5ncy4g
+IFNlZSB0aGUgQ09OVFJJQlVUSU5HIGZpbGUsIHNlY3Rpb24gJ0Rlc2NyaXB0aW9uOjpMaW50
+JyB0byBsZWFybiBtb3JlIA0KaG93IHRvIHJ1biB0aGVzZSBsaW50ZXJzLg0KDQpDaGVlcnMs
+DQoNCkFsZXgNCg0KPiAtLS0NCj4gICBtYW4yL3BlcmZfZXZlbnRfb3Blbi4yIHwgMTk2ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tDQo+ICAgMSBmaWxlIGNo
+YW5nZWQsIDE4NSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9tYW4yL3BlcmZfZXZlbnRfb3Blbi4yIGIvbWFuMi9wZXJmX2V2ZW50X29wZW4u
+Mg0KPiBpbmRleCA4ZTk0ZmI0YWMuLjZiZGRmNjg1NyAxMDA2NDQNCj4gLS0tIGEvbWFuMi9w
+ZXJmX2V2ZW50X29wZW4uMg0KPiArKysgYi9tYW4yL3BlcmZfZXZlbnRfb3Blbi4yDQo+IEBA
+IC0yNDUsOCArMjQ1LDEyIEBAIHN0cnVjdCBwZXJmX2V2ZW50X2F0dHIgew0KPiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5zdGVhZCBvZiBldmVudHMgKi8NCj4g
+ICAgICAgICAgICAgY2dyb3VwICAgICAgICAgOiAgMSwgIC8qIGluY2x1ZGUgY2dyb3VwIGV2
+ZW50cyAqLw0KPiAgICAgICAgICAgICB0ZXh0X3Bva2UgICAgICA6ICAxLCAgLyogaW5jbHVk
+ZSB0ZXh0IHBva2UgZXZlbnRzICovDQo+ICsgICAgICAgICAgYnVpbGRfaWQgICAgICAgOiAg
+MSwgIC8qIHVzZSBidWlsZCBpZCBpbiBtbWFwMiBldmVudHMgKi8NCj4gKyAgICAgICAgICBp
+bmhlcml0X3RocmVhZCA6ICAxLCAgLyogY2hpbGRyZW4gb25seSBpbmhlcml0IGlmIGNsb25l
+ZCB3aXRoIENMT05FX1RIUkVBRCAqLw0KPiArICAgICAgICAgIHJlbW92ZV9vbl9leGVjIDog
+IDEsICAvKiBldmVudCBpcyByZW1vdmVkIGZyb20gdGFzayBvbiBleGVjICovDQo+ICsgICAg
+ICAgICAgc2lndHJhcCAgICAgICAgOiAgMSwgIC8qIHNlbmQgc3luY2hyb25vdXMgU0lHVFJB
+UCBvbiBldmVudCAqLw0KDQpUaGUgMyBsaW5lcyBhYm92ZSBydW4gcGFzdCB0aGUgODAgY29s
+dW1uLiAgUGxlYXNlIGJyZWFrIHRoZSBjb21tZW50IGludG8gc2V2ZXJhbCANCmxpbmVzLg0K
+DQo+ICAgDQo+IC0gICAgICAgICAgX19yZXNlcnZlZF8xICAgOiAzMDsNCj4gKyAgICAgICAg
+ICBfX3Jlc2VydmVkXzEgICA6IDI2Ow0KPiAgIA0KPiAgICAgICB1bmlvbiB7DQo+ICAgICAg
+ICAgICBfX3UzMiB3YWtldXBfZXZlbnRzOyAgICAvKiB3YWtldXAgZXZlcnkgbiBldmVudHMg
+Ki8NCj4gQEAgLTI3Nyw2ICsyODEsOSBAQCBzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyIHsNCj4g
+ICAgICAgX191MzIgYXV4X3dhdGVybWFyazsgICAgICAgIC8qIGF1eCBieXRlcyBiZWZvcmUg
+d2FrZXVwICovDQo+ICAgICAgIF9fdTE2IHNhbXBsZV9tYXhfc3RhY2s7ICAgICAvKiBtYXgg
+ZnJhbWVzIGluIGNhbGxjaGFpbiAqLw0KPiAgICAgICBfX3UxNiBfX3Jlc2VydmVkXzI7ICAg
+ICAgICAgLyogYWxpZ24gdG8gdTY0ICovDQo+ICsgICAgX191MzIgYXV4X3NhbXBsZV9zaXpl
+OyAgICAgIC8qIG1heCBhdXggc2FtcGxlIHNpemUgKi8NCj4gKyAgICBfX3UzMiBfX3Jlc2Vy
+dmVkXzM7ICAgICAgICAgLyogYWxpZ24gdG8gdTY0ICovDQo+ICsgICAgX191NjQgc2lnX2Rh
+dGE7ICAgICAgICAgICAgIC8qIHVzZXIgZGF0YSBmb3Igc2lndHJhcCAqLw0KPiAgIA0KPiAg
+IH07DQo+ICAgLkVFDQo+IEBAIC01MzgsNiArNTQ1LDE5IEBAIEluZm9ybWF0aW9uYWwgc2Ft
+cGxlIHJlY29yZCB0eXBlcyBzdWNoIGFzIG1tYXAgb3IgY29tbQ0KPiAgIG11c3QgYmUgYXNz
+b2NpYXRlZCB3aXRoIGFuIGFjdGl2ZSBldmVudC4NCj4gICBUaGlzIGR1bW15IGV2ZW50IGFs
+bG93cyBnYXRoZXJpbmcgc3VjaCByZWNvcmRzIHdpdGhvdXQgcmVxdWlyaW5nDQo+ICAgYSBj
+b3VudGluZyBldmVudC4NCj4gKy5UUA0KPiArLkJSIFBFUkZfQ09VTlRfU1dfQlBGX09VVFBV
+VCAiIChzaW5jZSBMaW51eCA0LjQpIg0KPiArLlwiIGNvbW1pdCBhNDNlZWMzMDQyNTlhNmM2
+MzdmNDAxNGE2ZDQ3NjcxNTliNmEzYWEzDQo+ICtUaGlzIGlzIHVzZWQgdG8gZ2VuZXJhdGUg
+cmF3IHNhbXBsZSBkYXRhIGZyb20gQlBGLg0KPiArQlBGIHByb2dyYW1zIGNhbiB3cml0ZSB0
+byB0aGlzIGV2ZW50IHVzaW5nDQo+ICsuQiBicGZfcGVyZl9ldmVudF9vdXRwdXQNCj4gK2hl
+bHBlci4NCj4gKy5UUA0KPiArLkJSIFBFUkZfQ09VTlRfU1dfQ0dST1VQX1NXSVRDSEVTICIg
+KHNpbmNlIExpbnV4IDUuMTMpIg0KPiArLlwiIGNvbW1pdCBkMGQxZGQ2Mjg1MjdjNzdkYjIz
+OTFjZTAyOTNjMWVkMzQ0YjIzNjVmDQo+ICtUaGlzIGNvdW50cyBjb250ZXh0IHN3aXRjaGVz
+IHRvIGEgdGFzayBpbiBhIGRpZmZlcmVudCBjZ3JvdXAuDQo+ICtJbiBvdGhlciB3b3Jkcywg
+aWYgdGhlIG5leHQgdGFzayBpcyBpbiB0aGUgc2FtZSBjZ3JvdXAsIGl0IHdvbid0DQoNClBs
+ZWFzZSB1c2Ugc2VtYW50aWMgbmV3bGluZXMuICBTZWUgbWFuLXBhZ2VzKDcpOg0KDQogICAg
+VXNlIHNlbWFudGljIG5ld2xpbmVzDQogICAgICAgIEluICB0aGUgc291cmNlIG9mIGEgbWFu
+dWFsIHBhZ2UsIG5ldyBzZW50ZW5jZXMgc2hvdWxkIGJlIHN0YXJ0ZWQgb24gbmV3DQogICAg
+ICAgIGxpbmVzLCBsb25nIHNlbnRlbmNlcyBzaG91bGQgYmUgc3BsaXQgaW50byBsaW5lcyBh
+dCBjbGF1c2UgYnJlYWtzIChjb23igJANCiAgICAgICAgbWFzLCBzZW1pY29sb25zLCBjb2xv
+bnMsIGFuZCBzbyBvbiksIGFuZCBsb25nIGNsYXVzZXMgc2hvdWxkICBiZSAgc3BsaXQNCiAg
+ICAgICAgYXQgIHBocmFzZSAgYm91bmRhcmllcy4gICBUaGlzIGNvbnZlbnRpb24sIHNvbWV0
+aW1lcyBrbm93biBhcyAic2VtYW50aWMNCiAgICAgICAgbmV3bGluZXMiLCBtYWtlcyBpdCBl
+YXNpZXIgdG8gc2VlIHRoZSBlZmZlY3Qgb2YgIHBhdGNoZXMsICB3aGljaCAgb2Z0ZW4NCiAg
+ICAgICAgb3BlcmF0ZSBhdCB0aGUgbGV2ZWwgb2YgaW5kaXZpZHVhbCBzZW50ZW5jZXMsIGNs
+YXVzZXMsIG9yIHBocmFzZXMuDQoNCg0KPiArY291bnQgdGhlIHN3aXRjaC4NCj4gICAuUkUN
+Cj4gICAuUFANCj4gICAuUlMNCj4gQEAgLTg3OSw3ICs4OTksNDIgQEAgVGhpcyBjb3JyZXNw
+b25kcyB0byB0aGUNCj4gICBmaWVsZCBpbiB0aGUNCj4gICAuQiBQRVJGX1JFQ09SRF9DR1JP
+VVANCj4gICBldmVudC4NCj4gLS5SRQ0KPiArLlRQDQo+ICsuQlIgUEVSRl9TQU1QTEVfREFU
+QV9QQUdFX1NJWkUgIiAoc2luY2UgTGludXggNS4xMSkiDQo+ICsuXCIgY29tbWl0IDhkOTdl
+NzE4MTFhYWFmZTRhYmY2MTFkYzI0ODIyZmQ2ZTczZGYxYTENCj4gK1JlY29yZHMgcGFnZSBz
+aXplIG9mIGRhdGEgbGlrZSBpbg0KPiArLkJSIFBFUkZfU0FNUExFX0FERFIgLg0KPiArLlRQ
+DQo+ICsuQlIgUEVSRl9TQU1QTEVfQ09ERV9QQUdFX1NJWkUgIiAoc2luY2UgTGludXggNS4x
+MSkiDQo+ICsuXCIgY29tbWl0IDk5NWYwODhlZmViZTFlYmEwMjgyYTZmZmExMjQxMWIzN2Y4
+OTkwYzINCj4gK1JlY29yZHMgcGFnZSBzaXplIG9mIGlwIGxpa2UgaW4NCj4gKy5CUiBQRVJG
+X1NBTVBMRV9JUCAuDQo+ICsuVFANCj4gKy5CUiBQRVJGX1NBTVBMRV9XRUlHSFRfU1RSVUNU
+ICIgKHNpbmNlIExpbnV4IDUuMTIpIg0KPiArLlwiIGNvbW1pdCAyYTZjNmI3ZDdhZDM0NmYw
+Njc5ZDA5NjNjYjE5YjNmMGVhN2VmMzJjDQo+ICtSZWNvcmRzIGhhcmR3YXJlIHByb3ZpZGVk
+IHdlaWdodCB2YWx1ZXMgbGlrZSBpbg0KPiArLkJSIFBFUkZfU0FNUExFX1dFSUdIVCAsDQo+
+ICtidXQgaXQgY2FuIHJlcHJlc2VudCBtdWx0aXBsZSB2YWx1ZXMgaW4gYSBzdHJ1Y3QuDQo+
+ICtUaGlzIHNoYXJlcyB0aGUgc2FtZSBzcGFjZSBhcyB0aGUNCj4gKy5CUiBQRVJGX1NBTVBM
+RV9XRUlHSFQgLA0KPiArc28gdXNlcnMgY2FuIGFwcGx5IGVpdGhlciBvZiB0aG9zZSwgbm90
+IHRoZSBib3RoLg0KPiArV2hlbiB1c2VkLCBpdCB3b3VsZCBoYXZlIHRoZSBmb2xsb3dpbmcg
+Zm9ybWF0IGFuZA0KPiArdGhlIG1lYW5pbmcgb2YgZWFjaCBmaWVsZHMgaXMgZGVwZW5kZW50
+IHRvIHRoZQ0KPiAraGFyZHdhcmUgaW1wbGVtZW50YXRpb24uDQo+ICsuUFANCj4gKy5pbiAr
+NG4NCj4gKy5FWA0KPiArdW5pb24gcGVyZl9zYW1wbGVfd2VpZ2h0IHsNCj4gKyAgICB1NjQg
+ICAgZnVsbDsgICAgICAgICAvKiBQRVJGX1NBTVBMRV9XRUlHSFQgKi8NCj4gKyAgICBzdHJ1
+Y3Qgew0KPiArICAgICAgICB1MzIgICAgdmFyMV9kdzsgIC8qIFBFUkZfU0FNUExFX1dFSUdI
+VF9TVFJVQ1QgKi8NCj4gKyAgICAgICAgdTE2ICAgIHZhcjJfdzsNCj4gKyAgICAgICAgdTE2
+ICAgIHZhcjNfdzsNCj4gKyAgICB9Ow0KPiArfTsNCj4gKy5FRQ0KPiArLmluDQo+ICsuUFAN
+Cg0KVGhpcyAuUFAgaXMgbWVhbmluZ2xlc3MganVzdCBiZWZvcmUgYW5vdGhlciBwYXJhZ3Jh
+cGhpbmcgbWFjcm8gKC5UUCkuICBJdCBjYW4gYmUgDQpyZW1vdmVkLg0KDQo+ICAgLlRQDQo+
+ICAgLkkgcmVhZF9mb3JtYXQNCj4gICBUaGlzIGZpZWxkIHNwZWNpZmllcyB0aGUgZm9ybWF0
+IG9mIHRoZSBkYXRhIHJldHVybmVkIGJ5DQo+IEBAIC05MDgsNiArOTYzLDE1IEBAIEFkZHMg
+YSA2NC1iaXQgdW5pcXVlIHZhbHVlIHRoYXQgY29ycmVzcG9uZHMgdG8gdGhlIGV2ZW50IGdy
+b3VwLg0KPiAgIC5UUA0KPiAgIC5CIFBFUkZfRk9STUFUX0dST1VQDQo+ICAgQWxsb3dzIGFs
+bCBjb3VudGVyIHZhbHVlcyBpbiBhbiBldmVudCBncm91cCB0byBiZSByZWFkIHdpdGggb25l
+IHJlYWQuDQo+ICsuVFANCj4gKy5CIFBFUkZfRk9STUFUX0xPU1QgIiAoc2luY2UgTGludXgg
+Ni4wKSINCj4gKy5cIiBjb21taXQgMTE5YTc4NGM4MTI3MGViODhlNTczMTc0ZWQyMjA5MjI1
+ZDY0NjY1Ng0KPiArQWRkcyBhIDY0LWJpdCB2YWx1ZSB0aGF0IGlzIHRoZSBudW1iZXIgb2Yg
+bG9zdCBzYW1wbGVzIGZvciB0aGlzIGV2ZW50Lg0KPiArVGhpcyB3b3VsZCBiZSBvbmx5IG1l
+YW5pbmdmdWwgd2hlbg0KPiArLkkgc2FtcGxlX3BlcmlvZA0KPiArb3INCj4gKy5JIHNhbXBs
+ZV9mcmVxDQo+ICtpcyBzZXQuDQo+ICAgLlJFDQo+ICAgLlRQDQo+ICAgLkkgZGlzYWJsZWQN
+Cj4gQEAgLTEyNDMsNyArMTMwNyw3IEBAIFRoaXMgZW5hYmxlcyB0aGUgZ2VuZXJhdGlvbiBv
+Zg0KPiAgIC5CIFBFUkZfUkVDT1JEX0JQRl9FVkVOVA0KPiAgIHJlY29yZHMgd2hlbiBhbiBl
+QlBGIHByb2dyYW0gaXMgbG9hZGVkIG9yIHVubG9hZGVkLg0KPiAgIC5UUA0KPiAtLklSIGF1
+eGV2ZW50ICIgKHNpbmNlIExpbnV4IDUuNCkiDQo+ICsuSVIgYXV4X291dHB1dCAiIChzaW5j
+ZSBMaW51eCA1LjQpIg0KPiAgIC5cIiBjb21taXQgYWI0Mzc2MmVmMDEwOTY3ZTRjY2Q1MzYy
+N2Y3MGEyZWVjYmVhZmVmYg0KPiAgIFRoaXMgYWxsb3dzIG5vcm1hbCAobm9uLUFVWCkgZXZl
+bnRzIHRvIGdlbmVyYXRlIGRhdGEgZm9yIEFVWCBldmVudHMNCj4gICBpZiB0aGUgaGFyZHdh
+cmUgc3VwcG9ydHMgaXQuDQo+IEBAIC0xMjYxLDYgKzEzMjUsMzEgQEAgVGhpcyBlbmFibGVz
+IHRoZSBnZW5lcmF0aW9uIG9mDQo+ICAgcmVjb3JkcyB3aGVuIHRoZXJlJ3MgYSBjaGFuZ2Ug
+dG8gdGhlIGtlcm5lbCB0ZXh0DQo+ICAgKGkuZS4sIHNlbGYtbW9kaWZ5aW5nIGNvZGUpLg0K
+PiAgIC5UUA0KPiArLklSIGJ1aWxkX2lkICIgKHNpbmNlIExpbnV4IDUuMTIpIg0KPiArLlwi
+IGNvbW1pdCA4OGExNmExMzA5MzMzZTQzZDMyODYyMWVjZTNlOWZhMzcwMjdlOGViDQo+ICtU
+aGlzIGNoYW5nZXMgdGhlIGNvbnRlbnRzIGluIHRoZQ0KPiArLkIgUEVSRl9SRUNPUkRfTU1B
+UDINCj4gK3RvIGhhdmUgYSBidWlsZC1pZCBpbnN0ZWFkIG9mIGRldmljZSBhbmQgaW5vZGUg
+bnVtYmVycy4NCj4gKy5UUA0KPiArLklSIGluaGVyaXRfdGhyZWFkICIgKHNpbmNlIExpbnV4
+IDUuMTMpIg0KPiArLlwiIGNvbW1pdCAyYjI2ZjBhYTAwNDk5NWY0OWY3YjZmNDEwMGRkMGU0
+YzM5YTllZDVmDQo+ICtUaGlzIGRpc2FibGVzIHRoZSBpbmhlcml0YW5jZSBvZiB0aGUgZXZl
+bnQgdG8gYSBjaGlsZCBwcm9jZXNzLg0KPiArT25seSBuZXcgdGhyZWFkcyBpbiB0aGUgc2Ft
+ZSBwcm9jZXNzICh3aGljaCBpcyBjbG9uZWQgd2l0aA0KPiArLkIgQ0xPTkVfVEhSRUFEDQoN
+ClRoaXMgd291bGQgYWRkIGEgc3BhY2UgYmVmb3JlIHRoZSAnKScuICBZb3UgbmVlZCB0byBw
+bGFjZSBpdCBpbiB0aGUgc2FtZSBzb3VyY2UgDQpsaW5lOg0KDQouQlIgQ0xPTkVfVEhSRUFE
+ICkNCg0KPiArKSB3aWxsIGluaGVyaXQgdGhlIGV2ZW50Lg0KPiArLlRQDQo+ICsuSVIgcmVt
+b3ZlX29uX2V4ZWMgIiAoc2luY2UgTGludXggNS4xMykiDQo+ICsuXCIgY29tbWl0IDJlNDk4
+ZDBhNzRlNWI4OGE2Njg5YWUxYjgxMWYyNDdmOTFmZjE4OGUNCj4gK1RoaXMgY2xvc2VzIHRo
+ZSBldmVudCB3aGVuIGl0IHN0YXJ0cyBhIG5ldyBwcm9jZXNzIGltYWdlIGJ5DQo+ICsuQlIg
+ZXhlY3ZlICgyKQ0KPiArc3lzdGVtIGNhbGwuDQo+ICsuVFANCj4gKy5JUiBzaWd0cmFwICIg
+KHNpbmNlIExpbnV4IDUuMTMpIg0KPiArLlwiIGNvbW1pdCA5N2JhNjJiMjc4Njc0MjkzNzYy
+YzNkOTFmNzI0ZjFiYjkyMmYwNGUwDQo+ICtUaGlzIGVuYWJsZXMgc3luY2hyb25vdXMgc2ln
+bmFsIGRlbGl2ZXJ5IG9mDQo+ICsuQiBTSUdUUkFQDQo+ICtvbiBldmVudCBvdmVyZmxvdy4N
+Cj4gKy5UUA0KPiAgIC5JUiB3YWtldXBfZXZlbnRzICIsICIgd2FrZXVwX3dhdGVybWFyaw0K
+PiAgIFRoaXMgdW5pb24gc2V0cyBob3cgbWFueSBzYW1wbGVzDQo+ICAgLlJJICggd2FrZXVw
+X2V2ZW50cyApDQo+IEBAIC0xNDcxLDYgKzE1NjAsMTkgQEAgaW5jbHVkZXMNCj4gICAuQlIg
+UEVSRl9TQU1QTEVfQ0FMTENIQUlOICwNCj4gICB0aGlzIGZpZWxkIHNwZWNpZmllcyBob3cg
+bWFueSBzdGFjayBmcmFtZXMgdG8gcmVwb3J0IHdoZW4NCj4gICBnZW5lcmF0aW5nIHRoZSBj
+YWxsY2hhaW4uDQo+ICsuVFANCj4gKy5JUiBhdXhfc2FtcGxlX3NpemUgIiAoc2luY2UgTGlu
+dXggNS41KSINCj4gKy5cIiBjb21taXQgYTRmYWYwMGQ5OTRjNDBlNjRmNjU2ODA1YWMzNzVj
+NjVlMzI0ZWVmYg0KPiArV2hlbg0KPiArLkIgUEVSRl9TQU1QTEVfQVVYDQo+ICtmbGFnIGlz
+IHNldCwgc3BlY2lmeSB0aGUgZGVzaXJlZCBzaXplIG9mIEFVWCBkYXRhLg0KPiArTm90ZSB0
+aGF0IGl0IGNhbiBnZXQgc21hbGxlciBkYXRhIHRoYW4gdGhlIHNwZWNpZmllZCBzaXplLg0K
+PiArLlRQDQo+ICsuSVIgc2lnX2RhdGEgIiAoc2luY2UgTGludXggNS4xMykiDQo+ICsuXCIg
+Y29tbWl0IDk3YmE2MmIyNzg2NzQyOTM3NjJjM2Q5MWY3MjRmMWJiOTIyZjA0ZTANCj4gK1Ro
+aXMgZGF0YSB3aWxsIGJlIGNvcGllZCB0byB1c2VyJ3Mgc2lnbmFsIGhhbmRsZXIgKHRocm91
+Z2gNCj4gKy5JIHNpX3BlcmYNCj4gK2luIHRoZSBzaWdpbmZvX3QpIHRvIGRpc2FtYmlndWF0
+ZSB3aGljaCBldmVudCB0cmlnZ2VyZWQgdGhlIHNpZ25hbC4NCg0KVHlwZXMgc2hvdWxkIGJl
+IGluIGl0YWxpY3M6DQoNCi5JUiBzaWdpbmZvX3QgKQ0KDQo+ICAgLlNTIFJlYWRpbmcgcmVz
+dWx0cw0KPiAgIE9uY2UgYQ0KPiAgIC5CUiBwZXJmX2V2ZW50X29wZW4gKCkNCj4gQEAgLTE1
+MDIsNiArMTYwNCw3IEBAIHN0cnVjdCByZWFkX2Zvcm1hdCB7DQo+ICAgICAgIHN0cnVjdCB7
+DQo+ICAgICAgICAgICB1NjQgdmFsdWU7ICAgICAvKiBUaGUgdmFsdWUgb2YgdGhlIGV2ZW50
+ICovDQo+ICAgICAgICAgICB1NjQgaWQ7ICAgICAgICAvKiBpZiBQRVJGX0ZPUk1BVF9JRCAq
+Lw0KPiArICAgICAgICB1NjQgbG9zdDsgICAgICAvKiBpZiBQRVJGX0ZPUk1BVF9MT1NUICov
+DQo+ICAgICAgIH0gdmFsdWVzW25yXTsNCj4gICB9Ow0KPiAgIC5FRQ0KPiBAQCAtMTUyMCw2
+ICsxNjIzLDcgQEAgc3RydWN0IHJlYWRfZm9ybWF0IHsNCj4gICAgICAgdTY0IHRpbWVfZW5h
+YmxlZDsgIC8qIGlmIFBFUkZfRk9STUFUX1RPVEFMX1RJTUVfRU5BQkxFRCAqLw0KPiAgICAg
+ICB1NjQgdGltZV9ydW5uaW5nOyAgLyogaWYgUEVSRl9GT1JNQVRfVE9UQUxfVElNRV9SVU5O
+SU5HICovDQo+ICAgICAgIHU2NCBpZDsgICAgICAgICAgICAvKiBpZiBQRVJGX0ZPUk1BVF9J
+RCAqLw0KPiArICAgIHU2NCBsb3N0OyAgICAgICAgICAvKiBpZiBQRVJGX0ZPUk1BVF9MT1NU
+ICovDQo+ICAgfTsNCj4gICAuRUUNCj4gICAuaW4NCj4gQEAgLTE1NTEsNiArMTY1NSwxMiBA
+QCBBIGdsb2JhbGx5IHVuaXF1ZSB2YWx1ZSBmb3IgdGhpcyBwYXJ0aWN1bGFyIGV2ZW50OyBv
+bmx5IHByZXNlbnQgaWYNCj4gICAuQiBQRVJGX0ZPUk1BVF9JRA0KPiAgIHdhcyBzcGVjaWZp
+ZWQgaW4NCj4gICAuSVIgcmVhZF9mb3JtYXQgLg0KPiArLlRQDQo+ICsuSSBsb3N0DQo+ICtU
+aGUgbnVtYmVyIG9mIGxvc3Qgc2FtcGxlcyBvZiB0aGlzIGV2ZW50OyBvbmx5IHByZXNlbnQg
+aWYNCj4gKy5CIFBFUkZfRk9STUFUX0xPU1QNCj4gK3dhcyBzcGVjaWZpZWQgaW4NCj4gKy5J
+UiByZWFkX2Zvcm1hdCAuDQo+ICAgLlNTIE1NQVAgbGF5b3V0DQo+ICAgV2hlbiB1c2luZw0K
+PiAgIC5CUiBwZXJmX2V2ZW50X29wZW4gKCkNCj4gQEAgLTIwMDIsNiArMjExMiwyMiBAQCB0
+byB0aGUgYWN0dWFsIGluc3RydWN0aW9uIHRoYXQgdHJpZ2dlcmVkIHRoZSBldmVudC4NCj4g
+ICBTZWUgYWxzbw0KPiAgIC5JUiBwZXJmX2V2ZW50X2F0dHIucHJlY2lzZV9pcCAuDQo+ICAg
+LlRQDQo+ICsuQlIgUEVSRl9SRUNPUkRfTUlTQ19TV0lUQ0hfT1VUX1BSRUVNUFQgIiAoc2lu
+Y2UgTGludXggNC4xNykiDQo+ICsuXCIgY29tbWl0IDEwMTU5MmI0OTA0ZWNmNmI4ZWQyYTQ3
+ODRkNDFkMTgwMzE5ZDk1YTENCj4gK1doZW4gYQ0KPiArLkIgUEVSRl9SRUNPUkRfU1dJVENI
+DQo+ICtvcg0KPiArLkIgUEVSRl9SRUNPUkRfU1dJVENIX0NQVV9XSURFDQo+ICtyZWNvcmQg
+aXMgZ2VuZXJhdGVkLCB0aGlzIGluZGljYXRlcyB0aGUgY29udGV4dCBzd2l0Y2gNCj4gK3dh
+cyBhIHByZWVtcHRpb24uDQo+ICsuVFANCj4gKy5CUiBQRVJGX1JFQ09SRF9NSVNDX01NQVBf
+QlVJTERfSUQgIiAoc2luY2UgTGludXggNS4xMikiDQo+ICsuXCIgY29tbWl0IDg4YTE2YTEz
+MDkzMzNlNDNkMzI4NjIxZWNlM2U5ZmEzNzAyN2U4ZWINCj4gK1RoaXMgaW5kaWNhdGVzIHRo
+YXQgdGhlIGNvbnRlbnQgb2YNCj4gKy5CIFBFUkZfU0FNUExFX01NQVAyDQo+ICtjb250YWlu
+cyBidWlsZC1JRCBkYXRhIGluc3RlYWQgb2YgZGV2aWNlIG1ham9yIGFuZCBtaW5vciBudW1i
+ZXJzDQo+ICthcyB3ZWxsIGFzIHRoZSBpbm9kZSBudW1iZXIuDQo+ICsuVFANCj4gICAuQlIg
+UEVSRl9SRUNPUkRfTUlTQ19FWFRfUkVTRVJWRUQgIiAoc2luY2UgTGludXggMi42LjM1KSIN
+Cj4gICAuXCIgY29tbWl0IDE2NzZiOGEwNzdjMzUyMDg1ZDUyNTc4ZmI0ZjI5MzUwYjU4YjZl
+NzQNCj4gICBUaGlzIGluZGljYXRlcyB0aGVyZSBpcyBleHRlbmRlZCBkYXRhIGF2YWlsYWJs
+ZSAoY3VycmVudGx5IG5vdCB1c2VkKS4NCj4gQEAgLTIyMDEsNyArMjMyNyw4IEBAIHN0cnVj
+dCB7DQo+ICAgICAgIGNoYXIgICBkYXRhW3NpemVdOyAgLyogaWYgUEVSRl9TQU1QTEVfU1RB
+Q0tfVVNFUiAqLw0KPiAgICAgICB1NjQgICAgZHluX3NpemU7ICAgIC8qIGlmIFBFUkZfU0FN
+UExFX1NUQUNLX1VTRVIgJiYNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaXpl
+ICE9IDAgKi8NCj4gLSAgICB1NjQgICAgd2VpZ2h0OyAgICAgIC8qIGlmIFBFUkZfU0FNUExF
+X1dFSUdIVCAqLw0KPiArICAgIHVuaW9uIHBlcmZfc2FtcGxlX3dlaWdodDsNCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgIC8qIGlmIFBFUkZfU0FNUExFX1dFSUdIVCB8fCBQRVJGX1NB
+TVBMRV9XRUlHSFRfU1RSVUNUICovDQoNClRoZSBsaW5lIGFib3ZlIHJ1bnMgcGFzdCA4MCBj
+b2x1bW4uDQoNCj4gICAgICAgdTY0ICAgIGRhdGFfc3JjOyAgICAvKiBpZiBQRVJGX1NBTVBM
+RV9EQVRBX1NSQyAqLw0KPiAgICAgICB1NjQgICAgdHJhbnNhY3Rpb247IC8qIGlmIFBFUkZf
+U0FNUExFX1RSQU5TQUNUSU9OICovDQo+ICAgICAgIHU2NCAgICBhYmk7ICAgICAgICAgLyog
+aWYgUEVSRl9TQU1QTEVfUkVHU19JTlRSICovDQo+IEBAIC0yMjA5LDYgKzIzMzYsMTIgQEAg
+c3RydWN0IHsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAvKiBpZiBQRVJGX1NBTVBM
+RV9SRUdTX0lOVFIgKi8NCj4gICAgICAgdTY0ICAgIHBoeXNfYWRkcjsgICAvKiBpZiBQRVJG
+X1NBTVBMRV9QSFlTX0FERFIgKi8NCj4gICAgICAgdTY0ICAgIGNncm91cDsgICAgICAvKiBp
+ZiBQRVJGX1NBTVBMRV9DR1JPVVAgKi8NCj4gKyAgICB1NjQgICAgZGF0YV9wYWdlX3NpemU7
+DQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAvKiBpZiBQRVJGX1NBTVBMRV9EQVRBX1BB
+R0VfU0laRSAqLw0KDQpUaGUgbGluZSBhYm92ZSBydW5zIHBhc3QgODAgY29sdW1uLg0KDQo+
+ICsgICAgdTY0ICAgIGNvZGVfcGFnZV9zaXplOw0KPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgLyogaWYgUEVSRl9TQU1QTEVfQ09ERV9QQUdFX1NJWkUgKi8NCg0KVGhlIGxpbmUgYWJv
+dmUgcnVucyBwYXN0IDgwIGNvbHVtbi4NCg0KPiArICAgIHU2NCAgICBzaXplOyAgICAgICAg
+LyogaWYgUEVSRl9TQU1QTEVfQVVYICovDQo+ICsgICAgY2hhciAgIGRhdGFbc2l6ZV07ICAv
+KiBpZiBQRVJGX1NBTVBMRV9BVVggKi8NCj4gICB9Ow0KPiAgIC5FRQ0KPiAgIC5pbg0KPiBA
+QCAtMjQxMCw3ICsyNTQzLDcgQEAgaXMgMC4NCj4gICAuVFANCj4gICAuSSB3ZWlnaHQNCj4g
+ICBJZg0KPiAtLkIgUEVSRl9TQU1QTEVfV0VJR0hUDQo+ICsuQiBQRVJGX1NBTVBMRV9XRUlH
+SFQgIm9yIiBQRVJGX1NBTVBMRV9XRUlHSFRfU1RSVUNUDQo+ICAgaXMgZW5hYmxlZCwgdGhl
+biBhIDY0LWJpdCB2YWx1ZSBwcm92aWRlZCBieSB0aGUgaGFyZHdhcmUNCj4gICBpcyByZWNv
+cmRlZCB0aGF0IGluZGljYXRlcyBob3cgY29zdGx5IHRoZSBldmVudCB3YXMuDQo+ICAgVGhp
+cyBhbGxvd3MgZXhwZW5zaXZlIGV2ZW50cyB0byBzdGFuZCBvdXQgbW9yZSBjbGVhcmx5DQo+
+IEBAIC0yNjQzLDcgKzI3NzYsMjggQEAgSWYgdGhlDQo+ICAgZmxhZyBpcyBzZXQsDQo+ICAg
+dGhlbiB0aGUgNjQtYml0IGNncm91cCBJRCAoZm9yIHRoZSBwZXJmX2V2ZW50IHN1YnN5c3Rl
+bSkgaXMgcmVjb3JkZWQuDQo+ICAgVG8gZ2V0IHRoZSBwYXRobmFtZSBvZiB0aGUgY2dyb3Vw
+LCB0aGUgSUQgc2hvdWxkIG1hdGNoIHRvIG9uZSBpbiBhDQo+IC0uQiBQRVJGX1JFQ09SRF9D
+R1JPVVAgLg0KPiArLkJSIFBFUkZfUkVDT1JEX0NHUk9VUCAuDQo+ICsuVFANCj4gKy5JIGRh
+dGFfcGFnZV9zaXplDQo+ICtJZiB0aGUNCj4gKy5CIFBFUkZfU0FNUExFX0RBVEFfUEFHRV9T
+SVpFDQo+ICtmbGFnIGlzIHNldCwNCj4gK3RoZW4gdGhlIDY0LWJpdCBwYWdlIHNpemUgdmFs
+dWUgb2YgdGhlDQo+ICsuQiBkYXRhDQo+ICthZGRyZXNzIGlzIHJlY29yZGVkLg0KPiArLlRQ
+DQo+ICsuSSBjb2RlX3BhZ2Vfc2l6ZQ0KPiArSWYgdGhlDQo+ICsuQiBQRVJGX1NBTVBMRV9D
+T0RFX1BBR0VfU0laRQ0KPiArZmxhZyBpcyBzZXQsDQo+ICt0aGVuIHRoZSA2NC1iaXQgcGFn
+ZSBzaXplIHZhbHVlIG9mIHRoZQ0KPiArLkIgaXANCj4gK2FkZHJlc3MgaXMgcmVjb3JkZWQu
+DQo+ICsuVFANCj4gKy5JUiBzaXplICIsICIgZGF0YVtzaXplXQ0KPiArSWYNCj4gKy5CIFBF
+UkZfU0FNUExFX0FVWA0KPiAraXMgZW5hYmxlZCwgdGhlbiBhIHNuYXBzaG90IG9mIHRoZSBh
+dXggYnVmZmVyIGlzIHJlY29yZGVkLg0KPiAgIC5SRQ0KPiAgIC5UUA0KPiAgIC5CIFBFUkZf
+UkVDT1JEX01NQVAyDQo+IEBAIC0yNjUzLDcgKzI4MDcsOSBAQCBjYWxscyByZXR1cm5pbmcg
+ZXhlY3V0YWJsZSBtYXBwaW5ncy4NCj4gICBUaGUgZm9ybWF0IGlzIHNpbWlsYXIgdG8gdGhh
+dCBvZiB0aGUNCj4gICAuQiBQRVJGX1JFQ09SRF9NTUFQDQo+ICAgcmVjb3JkLCBidXQgaW5j
+bHVkZXMgZXh0cmEgdmFsdWVzIHRoYXQgYWxsb3cgdW5pcXVlbHkgaWRlbnRpZnlpbmcNCj4g
+LXNoYXJlZCBtYXBwaW5ncy4NCj4gK3NoYXJlZCBtYXBwaW5ncy4gIERlcGVuZGluZyBvbiB0
+aGUNCj4gKy5CIFBFUkZfUkVDT1JEX01JU0NfTU1BUF9CVUlMRF9JRA0KPiArYml0IGluIHRo
+ZSBoZWFkZXIsIHRoZSBleHRyYSB2YWx1ZXMgaGF2ZSBkaWZmZXJlbnQgbGF5b3V0IGFuZCBt
+ZWFuaW5ncy4NCj4gICAuSVANCj4gICAuaW4gKzRuDQo+ICAgLkVYDQo+IEBAIC0yNjY0LDEw
+ICsyODIwLDIwIEBAIHN0cnVjdCB7DQo+ICAgICAgIHU2NCAgICBhZGRyOw0KPiAgICAgICB1
+NjQgICAgbGVuOw0KPiAgICAgICB1NjQgICAgcGdvZmY7DQo+IC0gICAgdTMyICAgIG1hajsN
+Cj4gLSAgICB1MzIgICAgbWluOw0KPiAtICAgIHU2NCAgICBpbm87DQo+IC0gICAgdTY0ICAg
+IGlub19nZW5lcmF0aW9uOw0KPiArICAgIHVuaW9uIHsNCj4gKyAgICAgICAgc3RydWN0IHsN
+Cj4gKyAgICAgICAgICAgIHUzMiAgICBtYWo7DQo+ICsgICAgICAgICAgICB1MzIgICAgbWlu
+Ow0KPiArICAgICAgICAgICAgdTY0ICAgIGlubzsNCj4gKyAgICAgICAgICAgIHU2NCAgICBp
+bm9fZ2VuZXJhdGlvbjsNCj4gKyAgICAgICAgfTsNCj4gKyAgICAgICAgc3RydWN0IHsgICAv
+KiBpZiBQRVJGX1JFQ09SRF9NSVNDX01NQVBfQlVJTERfSUQgKi8NCj4gKyAgICAgICAgICAg
+IHU4ICAgICBidWlsZF9pZF9zaXplOw0KPiArICAgICAgICAgICAgdTggICAgIF9fcmVzZXJ2
+ZWRfMTsNCj4gKyAgICAgICAgICAgIHUxNiAgICBfX3Jlc2VydmVkXzI7DQo+ICsgICAgICAg
+ICAgICB1OCAgICAgYnVpbGRfaWRbMjBdOw0KPiArICAgICAgICB9Ow0KPiArICAgIH07DQo+
+ICAgICAgIHUzMiAgICBwcm90Ow0KPiAgICAgICB1MzIgICAgZmxhZ3M7DQo+ICAgICAgIGNo
+YXIgICBmaWxlbmFtZVtdOw0KPiBAQCAtMjcwNCw2ICsyODcwLDE0IEBAIGlzIHRoZSBpbm9k
+ZSBudW1iZXIuDQo+ICAgLkkgaW5vX2dlbmVyYXRpb24NCj4gICBpcyB0aGUgaW5vZGUgZ2Vu
+ZXJhdGlvbi4NCj4gICAuVFANCj4gKy5JIGJ1aWxkX2lkX3NpemUNCj4gK2lzIHRoZSBhY3R1
+YWwgc2l6ZSBvZg0KPiArLkkgYnVpbGRfaWQNCj4gK2ZpZWxkICh1cCB0byAyMCkuDQo+ICsu
+VFANCj4gKy5JIGJ1aWxkX2lkDQo+ICtpcyBhIHJhdyBkYXRhIHRvIGlkZW50aWZ5IGEgYmlu
+YXJ5Lg0KPiArLlRQDQo+ICAgLkkgcHJvdA0KPiAgIGlzIHRoZSBwcm90ZWN0aW9uIGluZm9y
+bWF0aW9uLg0KPiAgIC5UUA0KDQotLSANCjxodHRwOi8vd3d3LmFsZWphbmRyby1jb2xvbWFy
+LmVzLz4NCg==
 
-The line getaddrinfo.... in the call stack is gone.
-It was introduced with glibc version 2.36.8 released
-with Fedora 37.
+--------------XEuKXVjQefh4h5aD0kF1DRuo--
 
-To make the test case more robust to glibc changes resulting in changed
-call stacks, redesign the test completely.
-Read the output lines from the perf probe of the ping command.
-Create an array of expected patterns. Each array entry specifies a
-pattern that may appear in the perf probe output.
-Check that each probe output line is matched in the expected
-patterns array. If there is no match it is an error.
-However not every pattern in the expected pattern array must be hit
-as there may be redundant entries.
+--------------JIxtaj0cKvYrSFtoR5OSXCXV
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-This scheme does not test the sequence of the call stack entries
-but the patterns itself are long and complicated enough.
-Also each perf probe output line has to be in the expected pattern
-array for the test to pass
+-----BEGIN PGP SIGNATURE-----
 
-Output before on x86
- # ./perf test 89
- 89: probe libc's inet_pton & backtrace it with ping   : FAILED!
- #
+iQIzBAEBCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmOspHAACgkQnowa+77/
+2zKw5Q/9Gz+qhsqbmJZrM0gT0yUn/CJ+WCKp4jYjJEasaTVgCS+3jsQb3IHmbUpe
+CejohpHFKRDiInOB2Qp+WnLJGb+qslMzb9SPhvNv2EhFiDmRiWLSRyPIybTgYQfK
+mzyjjTb29y/o/+IhpPfnmFvA39F4MMgwb5jVP/qMIAbDNnzM1ulFZQq4j7sgRhOq
+vKZMMaUEQjAnz00yXOHLrBcnMLUIDpJ3VA3tMdVTQXhHIHxCejbMws7jCagD8CtP
+z9S9DMXEJKQJ/KDnuO0YYmSLhagxnjP/uw/aqpMMyWI2Cc2U+0JiTrzRQfIBv1R+
+x3CUBjkbhDS9yg1wnug1Mgax1xp7uTbSXwj2tQ7K+AUcmBSbSxPFuDu0ExRDyueV
+usqJX9RzcFJyVHg4UDTQcds0bGvb7UerHa5Fs2IjNiCXbLyDd6K87GHgcvlylYNS
+1VZTECatEIfYqLp7pedQ6mndSBQTrXlJKdUB46MB1jh+RWErxPazM5pNgIMKSFLQ
+/KPTpHsWpSfuVsH+nBDu5BGdH/myVjnTL7n0hUb9y+H9oQX5fRm9kXVkv8sDaVeQ
+v9h7SO6LE39DpTjqDGS/ES9uHhqp9QuSvtGU3Y66Web6yxKhQqAFeEUQoCYLoU1W
++vx0CbWX1eMLH7+LEjxKWVkNG0UPOQXu9AuU7dehc8j2wcJff/w=
+=1QGO
+-----END PGP SIGNATURE-----
 
-Output after on x86
- # ./perf test 89
- 89: probe libc's inet_pton & backtrace it with ping   : Ok
- #
-
-Signed-off-by: Thomas Richter <richter@de.ibm.com>
----
- .../shell/record+probe_libc_inet_pton.sh      | 70 +++++++++++++------
- 1 file changed, 47 insertions(+), 23 deletions(-)
-
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 4e9de55d871a..3baef1aa92f5 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -30,28 +30,37 @@ add_libc_inet_pton_event() {
- 
- trace_libc_inet_pton_backtrace() {
- 
--	expected=`mktemp -u /tmp/expected.XXX`
-+	declare -a expected
-+	local -i idx=0 hit maxstack=4
- 
--	echo "ping[][0-9 \.:]+$event_name: \([[:xdigit:]]+\)" > $expected
--	echo ".*inet_pton\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
-+	expected[0]='ping[][0-9 \.:]+'"$event_name"': \([[:xdigit:]]+\)'
-+	expected[1]='.*inet_pton\+0x[[:xdigit:]]+[[:space:]]\('"$libc"'|inlined\)$'
- 	case "$(uname -m)" in
- 	s390x)
--		eventattr='call-graph=dwarf,max-stack=4'
--		echo "text_to_binary_address.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
--		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
--		echo "(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
--		echo "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		eventattr='call-graph=dwarf,max-stack='"$maxstack"
-+		expected[2]='text_to_binary_address.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$'
-+		expected[3]='gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\('"$libc"'|inlined\)$'
-+		expected[4]='(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\('"$libc"'|inlined\)$'
-+		expected[5]='main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$'
- 		;;
- 	ppc64|ppc64le)
--		eventattr='max-stack=4'
--		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		eventattr='max-stack='"$maxstack"
-+		expected[2]='gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\('"$libc"'\)$'
-+		expected[3]='getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\('"$libc"'\)$'
-+		# Line valid with glibc 2.35.x with fedora 36
-+		expected[4]='.*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$'
-+		# New line introduced with glibc 2.36.x with fedora 37, replaces previous line
-+		expected[5]='[[:xdigit:]]+[[:space:]](\[unknown\]|main)\+0x[[:xdigit:]]+.*\(.*/bin/ping.*\)$'
- 		;;
- 	*)
--		eventattr='max-stack=3'
--		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		maxstack=3
-+		eventattr='max-stack='"$maxstack"
-+		expected[2]='getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\('"$libc"'\)$'
-+		# Line valid with glibc 2.35.x with fedora 36
-+		expected[3]='.*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$'
-+		# New lines introduced with glibc 2.36.x with fedora 37, replaces previous line
-+		expected[4]='[[:xdigit:]]+[[:space:]](\[unknown\]|main)\+0x[[:xdigit:]]+.*\(.*/bin/ping.*\)$'
-+		expected[5]='.*main\+0x[[:xdigit:]]+.*\('"$libc"'\)$'
- 		;;
- 	esac
- 
-@@ -60,16 +69,31 @@ trace_libc_inet_pton_backtrace() {
- 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
- 	perf script -i $perf_data > $perf_script
- 
-+	# To make the call stack checking more robust to changes in the glibc
-+	# just check that each probe output line appears in the expected
-+	# patterns array.
-+	# This scheme does not check the sequence as before but tests
-+	# that every line in the call stack is expected. Considering the
-+	# long patterns this should be save too.
- 	exec 3<$perf_script
--	exec 4<$expected
--	while read line <&3 && read -r pattern <&4; do
--		[ -z "$pattern" ] && break
--		echo $line
--		echo "$line" | grep -E -q "$pattern"
--		if [ $? -ne 0 ] ; then
--			printf "FAIL: expected backtrace entry \"%s\" got \"%s\"\n" "$pattern" "$line"
-+
-+	# Number of input lines to check, take value from max-stack attribute
-+	while read line <&3; do
-+		[ "$idx" -ge "$maxstack" ] && break
-+		[ -z "$line" ] && break
-+
-+		hit=0
-+		for pattern in "${expected[@]}"
-+		do
-+			echo "$line" | egrep -q "$pattern"
-+			[ $? -eq 0 ] && { hit=1; break; }
-+		done
-+		if [ "$hit" -eq 0 ]
-+		then
-+			printf "FAIL: missing backtrace entry for line \"%s\"\n" "$line"
- 			return 1
- 		fi
-+		((++idx))
- 	done
- 
- 	# If any statements are executed from this point onwards,
-@@ -92,6 +116,6 @@ skip_if_no_perf_probe && \
- add_libc_inet_pton_event && \
- trace_libc_inet_pton_backtrace
- err=$?
--rm -f ${perf_data} ${perf_script} ${expected}
-+rm -f ${perf_data} ${perf_script}
- delete_libc_inet_pton_event
- exit $err
--- 
-2.38.1
-
+--------------JIxtaj0cKvYrSFtoR5OSXCXV--
