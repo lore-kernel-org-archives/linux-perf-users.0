@@ -2,34 +2,34 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A76C10F1B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Dec 2022 01:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3C5C10F1B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Dec 2022 01:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232418AbiL1B6W (ORCPT
+        id S231484AbiL1B6y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Dec 2022 20:58:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43924 "EHLO
+        Tue, 27 Dec 2022 20:58:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbiL1B5t (ORCPT
+        with ESMTP id S232744AbiL1B6m (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Dec 2022 20:57:49 -0500
+        Tue, 27 Dec 2022 20:58:42 -0500
 Received: from tarta.nabijaczleweli.xyz (unknown [139.28.40.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C3F9292;
-        Tue, 27 Dec 2022 17:57:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E23B7292;
+        Tue, 27 Dec 2022 17:58:41 -0800 (PST)
 Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-        by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 67C94120C;
-        Wed, 28 Dec 2022 02:57:48 +0100 (CET)
+        by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 401901106;
+        Wed, 28 Dec 2022 02:58:41 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-        s=202211; t=1672192668;
-        bh=Xb7nUn6EDqGGST4kb/TTOlSVXa+n18Xx10sbI7pkaC4=;
+        s=202211; t=1672192721;
+        bh=T0xNNhCSq7eox6ZW7rwjelLQ+yuE6npQ6iDEXXXfl30=;
         h=Date:From:Cc:Subject:References:In-Reply-To:From;
-        b=WJ8W7cOkD3Lw2VBRVTJz9C7TXysy97mFkEQj8xQEkMWm/X/k6T2VOYZ+qILeedJT0
-         HoAnOmyrwPpQLRXtCkU9ZqfdDBokmuVUzyo4FEoi3Fj5zqoNBuBsMnQKnE8xxTXcLU
-         tnmHCeC3VWhFPkfu/zA+0JBd8OU7lnjAwSoy9fnoDqmeWE3fTm9tcg9kzihmc2m+bp
-         /E8yxp2+08AuudJc84X4xan5COazxmYRzRhyax6dQnu12gjOHRGR+EYL7eU7D03sje
-         3WtxhyNwnnvspISDmbEd/amakF6T5dG/wZblaaJYW+OdLWdqIydQwODUxS8zUtW9pa
-         eE7aMnBJ8yFqQ==
-Date:   Wed, 28 Dec 2022 02:57:47 +0100
+        b=ZTOnaPXuT3XIbwLeV/42cgze1icACWTRw/6Do4cHQZC4rcrCOSV2oMLKDwCxsnnDi
+         NBMFkQz8nQ59zuEpTcREVFSJfbUGOmgjfSJQbCJdCgxEQIGGMvUNeRR0fV7vIowW0F
+         QL9aIXvtp6LeZF2ALe5CKE/+wdHg54VVOMKbHTHMaB6OJet1RX4imW18Bm0FHL+yYe
+         i5sivRv4tNE8thKMZJiZAAp4gh31nT1CqwKeuvWgPzq/0oRxjHTlP89F3EcVOQgZWA
+         yte3vIWy86KQbZuNYSnatvL3sKSYXxVQSjKPs6LC+K9NiluMWhiTlPIBVbeZIZoIGa
+         U8ZGz7PGac86g==
+Date:   Wed, 28 Dec 2022 02:58:40 +0100
 From:   Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
         <nabijaczleweli@nabijaczleweli.xyz>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -43,13 +43,13 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: [PATCH v2 3/4] perf python: don't run the linker for clang feature
- tests
-Message-ID: <6dd7e9dd522c7c6014f8273affa7a558918b048b.1672192591.git.nabijaczleweli@nabijaczleweli.xyz>
+Subject: [PATCH v2 4/4] perf python: only check for the clang features we
+ care about removing
+Message-ID: <9756370bbcf53781b073dfc7953b76db0b69a08b.1672192591.git.nabijaczleweli@nabijaczleweli.xyz>
 References: <44bb9a29bd7a0385c25ebfd69abd0a41ac2d753b.1672187710.git.nabijaczleweli@nabijaczleweli.xyz>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gemavj4ktrh3cvwf"
+        protocol="application/pgp-signature"; boundary="vyuwmpmjt5cojxm7"
 Content-Disposition: inline
 In-Reply-To: <44bb9a29bd7a0385c25ebfd69abd0a41ac2d753b.1672187710.git.nabijaczleweli@nabijaczleweli.xyz>
 User-Agent: NeoMutt/20220429
@@ -59,65 +59,72 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---gemavj4ktrh3cvwf
+--vyuwmpmjt5cojxm7
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-This, for me, slightly-more-than-halves the time it takes to run
-  for a in "-mcet" "-fcf-protection" "-fstack-clash-protection" \
-           "-fstack-protector-strong" "-fno-semantic-interposition" \
-           "-ffat-lto-objects"; do
-    sh -c '$CC "$@"' '' "$a" -o /dev/null ../build/feature/test-hello.c; do=
-ne
-=66rom just over 600ms.
+Instead of checking for all 6 flags every time for both fields,
+only check for the ones we already know are in there.
+
+This means instead of running 2*6 processes, we run, on my Bullseye system,
+just one (for -fstack-protector-strong)! This reduces the run-time by
+appx. (2*6-1)*.05=3D550ms (or, without the -c patch, 1.1s).
 
 Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
 ---
- tools/perf/util/setup.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/setup.py | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index ba0b1e078855..0a557f2bf357 100644
+index 0a557f2bf357..f4b94c0f9055 100644
 --- a/tools/perf/util/setup.py
 +++ b/tools/perf/util/setup.py
-@@ -6,7 +6,7 @@ cc_is_clang =3D b"clang version" in Popen(["/bin/sh", "-c",=
- "$CC -v"], stderr=3DPIPE
- src_feature_tests  =3D getenv('srctree') + '/tools/build/feature'
+@@ -14,18 +14,9 @@ if cc_is_clang:
+     vars =3D get_config_vars()
+     for var in ('CFLAGS', 'OPT'):
+         vars[var] =3D sub("-specs=3D[^ ]+", "", vars[var])
+-        if not clang_has_option("-mcet"):
+-            vars[var] =3D sub("-mcet", "", vars[var])
+-        if not clang_has_option("-fcf-protection"):
+-            vars[var] =3D sub("-fcf-protection", "", vars[var])
+-        if not clang_has_option("-fstack-clash-protection"):
+-            vars[var] =3D sub("-fstack-clash-protection", "", vars[var])
+-        if not clang_has_option("-fstack-protector-strong"):
+-            vars[var] =3D sub("-fstack-protector-strong", "", vars[var])
+-        if not clang_has_option("-fno-semantic-interposition"):
+-            vars[var] =3D sub("-fno-semantic-interposition", "", vars[var])
+-        if not clang_has_option("-ffat-lto-objects"):
+-            vars[var] =3D sub("-ffat-lto-objects", "", vars[var])
++        for opt in ("-mcet", "-fcf-protection", "-fstack-clash-protection"=
+, "-fstack-protector-strong", "-fno-semantic-interposition", "-ffat-lto-obj=
+ects"):
++            if vars[var].find(opt) !=3D -1 and not clang_has_option(opt):
++                vars[var] =3D vars[var].replace(opt, "")
 =20
- def clang_has_option(option):
--    cc_output =3D Popen(["/bin/sh", "-c", '$CC "$@"', "", option, "-o", "/=
-dev/null", path.join(src_feature_tests, "test-hello.c")], stderr=3DPIPE).st=
-derr.readlines()
-+    cc_output =3D Popen(["/bin/sh", "-c", '$CC "$@"', "", option, "-c", "-=
-o", "/dev/null", path.join(src_feature_tests, "test-hello.c")], stderr=3DPI=
-PE).stderr.readlines()
-     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is n=
-ot supported" in o))] =3D=3D [ ]
+ from setuptools import setup, Extension
 =20
- if cc_is_clang:
 --=20
 2.30.2
 
-
---gemavj4ktrh3cvwf
+--vyuwmpmjt5cojxm7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmOropoACgkQvP0LAY0m
-WPF2jw/6AkulK2kjFfwEHV9b87kJ7O45cSTHu4+l9vrgvVu3ZJr6ZQDbjwGZppE8
-f+jcqMQAIQG7oHdOkGvReLU8M6nsrDYgCIpKtusuJ4GBfiRnSWAvLfpt6dNK+mjx
-r9wAtF0Y4o1INYpUhIF2BCQ4T0Wtuo/C2Az8I2C1OxHLibxe4DYc86lxR+MUauv6
-G8BCLBovebU6Sfn8DKNgEqXCac+aLsw1j9Rqb5rHY3/43Ea9PHvB5LPJk0+falm/
-3qoq7BKb7MXg1am23d+EOtIuncTrkjiuknPmuiK3Wv4WaBDp6s7l0Hay2ORFFs1B
-nAGe7gNYZ4Y2TjB6CJ18IX8zXED+THhk75Yc0IEMT2uzS6QZr8cLGBy8gKcnlTWq
-A7TZB4vuLSq12LoGGF6PNhs2STMDDF3TqqVphKDeFldElzWiK4krlI253/dMaHS5
-JzbM3HZ1SaBt1k6MZteMYu61SitmQ9EYc0/vg4ad/Q5LWLDf49/AngpIRrEBfeis
-js8E+Doqf7M2DbXt41sEOyemsYYapfqj2cqN8FafsyL+9Gnj50hxuw0aNI4PNg9/
-Eg5v0tG0uC2AquDKxeUIta0WQ0OMaVagiRVzOCIKagZv1/SEB8mQ6jErVxRpWBLc
-OlihSeVYZ1CtAiedqvxx7+NBggBr6sz1uwJgAvMM6/5bcRMn3CI=
-=bqp7
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmOros8ACgkQvP0LAY0m
+WPHFHhAArFjDykBA0LHZzcLMo3iyNVhQA9VFtxQMepwy+xju3KtPQmhhAzv8xPxU
+9G6I9L7wgc+Z3D0SbQc4hY+KMDSvDQHUIVp+tZZwOz05uBVbBa/36o4F/eVzWnnO
+eYeLuEYPrXxPeQq6DPk7gEonqNrprwWnTSTFcsJ99Qur10ge819FAkqPxbMYyVsM
+aIn5JyDky95YNc0qrx+cUba33TKDAAL6u3NROe2s9VXgjq3Rx6/6p1OOBrcOS0xD
+DfOqeQXosNJ+cKE27AhR3XAjdkZbLWC1cdomqNz2xSua6K8fuvzjTG4Ui9uwicCS
++XHpEcJjmGMDEOfU7B5WkibQIG+lP7VTfdjK+BqacQOqGK17x2gYllUvWeRUaTYA
+fpVkYJduCk3B3umgWrJujBC1zl8sfCjLLUrh1tYaCMY6LI+vsT47hpYnfgoLVtdS
+xrAeH0y5Ia9PobukkdYuYVV4lqVUhz8i/u2pJ5wBx6kLvgnAuoKfF5LHC/NVsdnf
+ZqzkvLAMCxqanJ19eqeUfP92jZxujhT7uczTt82mBST3YCwKKKPEgQFUXTBWQk+u
+OXtiwVWDM/MV0do95T3I8Xf8LobnuD8JtMgbXY4ZXhxXd2CrV5iCu1U2UbRCeMf4
+sDPcKFMi8DhX0CVZMlPCAJHAcHMPpAA1Zk6ERPaM8oGuhSlbCfQ=
+=VJVc
 -----END PGP SIGNATURE-----
 
---gemavj4ktrh3cvwf--
+--vyuwmpmjt5cojxm7--
