@@ -2,204 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB05C4167B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 27 Dec 2022 21:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308CBC10F1B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Dec 2022 00:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbiL0VVz convert rfc822-to-8bit (ORCPT
+        id S229525AbiL1Af4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 27 Dec 2022 16:21:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53626 "EHLO
+        Tue, 27 Dec 2022 19:35:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbiL0VVx (ORCPT
+        with ESMTP id S229475AbiL1Af4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 27 Dec 2022 16:21:53 -0500
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BCFCEE;
-        Tue, 27 Dec 2022 13:21:53 -0800 (PST)
-Received: by mail-io1-f48.google.com with SMTP id z144so7463965iof.3;
-        Tue, 27 Dec 2022 13:21:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5IOlYy/Vocy0JZQbLzUBtMxAfR7MFOMbrfriVQcYrhU=;
-        b=wCy9OejD7/KXS0Vy64FsQx6Oz6Rdwhniv3/CkV+TMhdgsz8z0tY5Ebk4fjHy1yi7IC
-         fFJlx+Y9aSqQaHaq1boEIn54kvAY5McLYQiIX9KhvBmMyhJawMsRiI1w2C/V2AXDmdy/
-         KpFUVPTc6mdq1SYl16n4UVLXz1nBD9DPeZjTqEy/YfFAQO57nbE4RNG02jZVAO3834LO
-         0lJakp1q/CuAah19fTmCJ7Sp4CaUvC9dUtHCqzxWOtEs61Ys6iwUuEtUbDAxSfz733S7
-         3SVuZyTPNA5Xpy1WNLGmgMWAPAjrbVpkSGSWI5DxpvnjM5T4OV6Tub+WSsUHnQ6/gdQF
-         Zc5g==
-X-Gm-Message-State: AFqh2krZXC+j4Ut/kwFxPfdvDCoF3n4z5DAhHsQ8GHQiP+XStVCQ0qRT
-        estzLVPXhoSu3zq6YUi+3Pj3LJm3AkKcxu1yT/Q5rydjEI8=
-X-Google-Smtp-Source: AMrXdXs9p5FP7edkZzTihAMnTd3KX9qI2wAD+xhTAgcpjCzXCjoOnToomJ4PuYxyn8AaCtpD0G4S+Xr8Ub4TsGr8ex8=
-X-Received: by 2002:a02:6005:0:b0:38a:3421:f2cb with SMTP id
- i5-20020a026005000000b0038a3421f2cbmr1577188jac.308.1672176112197; Tue, 27
- Dec 2022 13:21:52 -0800 (PST)
-MIME-Version: 1.0
-References: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
- <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
-In-Reply-To: <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 27 Dec 2022 13:21:40 -0800
-Message-ID: <CAM9d7ciUsjNGQcM4fMMGomVheV9vNCiiH87p0=a-goCYmSqFOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf tui: don't ignore job control
-To:     =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= 
+        Tue, 27 Dec 2022 19:35:56 -0500
+Received: from tarta.nabijaczleweli.xyz (unknown [139.28.40.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5AC8BC2A;
+        Tue, 27 Dec 2022 16:35:53 -0800 (PST)
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+        by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id B34C6DB4;
+        Wed, 28 Dec 2022 01:35:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+        s=202211; t=1672187750;
+        bh=+yuFqRfY2HLZJC2FTM5sps1/rCx07mHiCqapWOI0R/c=;
+        h=Date:From:Cc:Subject:From;
+        b=hsmtYgBQLo1Z4Qzh85AN9gMUxXyHYaoD5iz+hIUBCovvxPn6km+W6Z1C6v1MscyZh
+         Lha37KFpdbgElHnNfALmj/AhX2VXwFxgZ2vUGoLmBRzZJaEeVUVPe6tRrEgzcPEyW6
+         equ9UmhUp9IeYY8D0PfCeYpxvVomhg42/LJPGJ6PTDaMKuvjmB7KjTfzq6THmx9Itd
+         B3e5634EoqAHoDAXNs9JLN9S8ZUPw4quAzlRqd+eYHvYAEs0jsOI15Sr1IjxZ2W1kp
+         7N+AZ6KCyos8845Hofx20UxisuGi+6QxUpes/opTdX+SEfHwcXarHyZCpdKoxjA/Fz
+         NH0pbvjRY+mNQ==
+Date:   Wed, 28 Dec 2022 01:35:49 +0100
+From:   Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
         <nabijaczleweli@nabijaczleweli.xyz>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH 1/2] perf python: fix clang feature detection littering
+Message-ID: <44bb9a29bd7a0385c25ebfd69abd0a41ac2d753b.1672187710.git.nabijaczleweli@nabijaczleweli.xyz>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t3pulo24eodgyv74"
+Content-Disposition: inline
+User-Agent: NeoMutt/20220429
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 27, 2022 at 12:57 PM Ahelenia Ziemiańska
-<nabijaczleweli@nabijaczleweli.xyz> wrote:
->
-> In its infinite wisdom, by default, SLang sets susp undef,
-> and this can only be un-done by calling SLtty_set_suspend_state(true).
-> After every SLang_init_tty().
->
-> Additionally, no provisions are made for maintaining the teletype
-> attributes across suspend/continue (outside of curses emulation mode(?!),
-> which provides full support, naturally), so we need to save and restore
-> the flags ourselves, as well as reset the text colours when going under.
-> We need to also re-draw the screen, and raising SIGWINCH, shockingly,
-> Just Works.
->
-> The correct solution would be to Not Use SLang, but as a stop-gap,
-> this makes TUI perf report usable.
->
-> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
+--t3pulo24eodgyv74
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Namhyung
+This left behind tools/perf/a.out,
+not .gitignored and not removed by make clean.
+
+Fixes: commit 5508672d7f4949f15c316ffd947228f130498534 ("perf python:
+ Remove -mcet and -fcf-protection when building with clang")
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
+---
+ tools/perf/util/setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index c294db713677..58239e1cdb2a 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -16,7 +16,7 @@ cc_is_clang =3D b"clang version" in Popen([cc, "-v"], std=
+err=3DPIPE).stderr.readline
+ src_feature_tests  =3D getenv('srctree') + '/tools/build/feature'
+=20
+ def clang_has_option(option):
+-    cc_output =3D Popen([cc, cc_options + option, path.join(src_feature_te=
+sts, "test-hello.c") ], stderr=3DPIPE).stderr.readlines()
++    cc_output =3D Popen([cc, cc_options + option + "-o /dev/null", path.jo=
+in(src_feature_tests, "test-hello.c") ], stderr=3DPIPE).stderr.readlines()
+     return [o for o in cc_output if ((b"unknown argument" in o) or (b"is n=
+ot supported" in o))] =3D=3D [ ]
+=20
+ if cc_is_clang:
+--=20
+2.30.2
 
 
-> ---
-> Yeah, somehow I didn't hit that in my tests, but it was relatively easy
-> to trigger when I tried. A full partial write retry loop is an overkill
-> here, I think, and few other places in perf actually try to resubmit
-> partial writes, so.
->
->  tools/perf/ui/browsers/annotate.c |  1 +
->  tools/perf/ui/browsers/hists.c    |  2 ++
->  tools/perf/ui/browsers/scripts.c  |  1 +
->  tools/perf/ui/tui/setup.c         | 22 ++++++++++++++++++++++
->  4 files changed, 26 insertions(+)
->
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index c03fa76c02ff..6a4ffbf66c7f 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -942,6 +942,7 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
->         /* reset abort key so that it can get Ctrl-C as a key */
->         SLang_reset_tty();
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->
->         return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
->  }
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index b72ee6822222..2479e6d42e7c 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3010,6 +3010,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
->         /* reset abort key so that it can get Ctrl-C as a key */
->         SLang_reset_tty();
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->
->         if (min_pcnt)
->                 browser->min_pcnt = min_pcnt;
-> @@ -3682,6 +3683,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
->         /* reset abort key so that it can get Ctrl-C as a key */
->         SLang_reset_tty();
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->
->         memset(&action, 0, sizeof(action));
->
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index 47d2c7a8cbe1..50d45054ed6c 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -166,6 +166,7 @@ void run_script(char *cmd)
->         printf("\033[c\033[H\033[J");
->         fflush(stdout);
->         SLang_init_tty(0, 0, 0);
-> +       SLtty_set_suspend_state(true);
->         SLsmg_refresh();
->  }
->
-> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> index a3b8c397c24d..09524ba04975 100644
-> --- a/tools/perf/ui/tui/setup.c
-> +++ b/tools/perf/ui/tui/setup.c
-> @@ -2,12 +2,14 @@
->  #include <signal.h>
->  #include <stdbool.h>
->  #include <stdlib.h>
-> +#include <termios.h>
->  #include <unistd.h>
->  #include <linux/kernel.h>
->  #ifdef HAVE_BACKTRACE_SUPPORT
->  #include <execinfo.h>
->  #endif
->
-> +#include "../../util/color.h"
->  #include "../../util/debug.h"
->  #include "../../perf.h"
->  #include "../browser.h"
-> @@ -122,6 +124,23 @@ static void ui__signal(int sig)
->         exit(0);
->  }
->
-> +static void ui__sigcont(int sig)
-> +{
-> +       static struct termios tty;
-> +
-> +       if (sig == SIGTSTP) {
-> +               while (tcgetattr(SLang_TT_Read_FD, &tty) == -1 && errno == EINTR)
-> +                       ;
-> +               while (write(SLang_TT_Read_FD, PERF_COLOR_RESET, sizeof(PERF_COLOR_RESET) - 1) == -1 && errno == EINTR)
-> +                       ;
-> +               raise(SIGSTOP);
-> +       } else {
-> +               while (tcsetattr(SLang_TT_Read_FD, TCSADRAIN, &tty) == -1 && errno == EINTR)
-> +                       ;
-> +               raise(SIGWINCH);
-> +       }
-> +}
-> +
->  int ui__init(void)
->  {
->         int err;
-> @@ -136,6 +155,7 @@ int ui__init(void)
->         err = SLang_init_tty(-1, 0, 0);
->         if (err < 0)
->                 goto out;
-> +       SLtty_set_suspend_state(true);
->
->         err = SLkp_init();
->         if (err < 0) {
-> @@ -150,6 +170,8 @@ int ui__init(void)
->         signal(SIGINT, ui__signal);
->         signal(SIGQUIT, ui__signal);
->         signal(SIGTERM, ui__signal);
-> +       signal(SIGTSTP, ui__sigcont);
-> +       signal(SIGCONT, ui__sigcont);
->
->         perf_error__register(&perf_tui_eops);
->
-> --
-> 2.30.2
->
+--t3pulo24eodgyv74
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmOrj2UACgkQvP0LAY0m
+WPHYow//fy0XFEF+QnvjTzfb45o4BtmQnZjdY1QcstapWBzocqgQ+vuygxVpc7kJ
+q5WzQVBwEPgBgqnqlLH9cDsQ1W7YRzbL9/7hn3/yq84CqYAr5aGPoF1oE/yPEUO8
+9ngrEXMCfLi9U1rPfkd51y3X27J6+dnogMskoyl4vFsRdyDcsgU9APA7L2jmHyVc
+VRm5JQDLDEgJE2kajCks6r8Qpz9M1xEiFB2yIXw+9Ithl7T1LJez62CHLUiM3Tnj
+yld3e1y/VkIqPykc/gTR0Wiza4WUHyMY8ZpFB1cv8rwnr2z4hBuQQRoZ5XhUPmrI
+WXkQgkoB2yesb7fu9+f30UmHIxShr5etoeDhhzxo/y37qHm4n1DQ5Qrt4WctE7FE
+e0E7FtDRUNvrPBaRdxhVI0PGpc6XKsHHzY/LSsjhtgcO3m1o2r3GLdrFguckBdEt
+RyWHxMV4lzsBpmFAH2/QfLWQcmIa1dFSe9hP8xzoc2BOLsouo/0kadzzEIYwatSP
+00HgN8zhf/9YGX10cP1X35lpDNvx8ow02a5t/YnpSpkIToAimIlo+Xu4Bt9xvcXk
+XEcZfE1gPIiJNBwSeM6NRmDtWGCwqFirh9S4fDiEGlZElNUfyYYpV3tHtlraMSG4
+EBW22aYuAIzoAvRb5tOXVL1O4cHyFb1DSg4vlmkKPkFXIXrM+1s=
+=KmYn
+-----END PGP SIGNATURE-----
+
+--t3pulo24eodgyv74--
