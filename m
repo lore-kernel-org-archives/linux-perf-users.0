@@ -2,144 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D543FC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Dec 2022 12:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC42C3DA79
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Dec 2022 12:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbiL2MpY (ORCPT
+        id S233436AbiL2MwP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Dec 2022 07:45:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35558 "EHLO
+        Thu, 29 Dec 2022 07:52:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233326AbiL2MpV (ORCPT
+        with ESMTP id S233539AbiL2Mva (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Dec 2022 07:45:21 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482EF13D6C;
-        Thu, 29 Dec 2022 04:45:18 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NjSkK5T7kzJqkX;
-        Thu, 29 Dec 2022 20:43:53 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
+        Thu, 29 Dec 2022 07:51:30 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8A01408D;
+        Thu, 29 Dec 2022 04:51:08 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NjSs80mMqz16Lvr;
+        Thu, 29 Dec 2022 20:49:48 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 29 Dec 2022 20:44:31 +0800
-Subject: Re: [PATCH] perf record: Fix coredump with --overwrite and --max-size
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <jiwei.sun@windriver.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20221227130701.124278-1-yangjihong1@huawei.com>
- <CAM9d7chDPQ9_J5=XLWbhp2AztiyVwTaRjTf20reCdriseTvX_A@mail.gmail.com>
+ 15.1.2375.34; Thu, 29 Dec 2022 20:51:05 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <730b1733-8778-8b82-3751-a14905cef114@huawei.com>
-Date:   Thu, 29 Dec 2022 20:44:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <jiwei.sun@windriver.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v2] perf record: Fix coredump with --overwrite and --max-size
+Date:   Thu, 29 Dec 2022 12:47:28 +0000
+Message-ID: <20221229124728.66515-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7chDPQ9_J5=XLWbhp2AztiyVwTaRjTf20reCdriseTvX_A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+When --overwrite and --max-size options of perf record are used together,
+a segmentation fault occurs. The following is an example:
 
-On 2022/12/28 5:05, Namhyung Kim wrote:
-> On Tue, Dec 27, 2022 at 5:10 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> When --overwrite and --max-size options of perf record are used together,
->> a segmentation fault occurs. The following is an example:
->>
->>   # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
->>    [ perf record: Woken up 1 times to write data ]
->>    perf: Segmentation fault
->>    Obtained 1 stack frames.
->>    [0xc4c67f]
->>    Segmentation fault (core dumped)
->>
->> backtrace of the core file is as follows:
->>
->>    #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
->>    #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
->>    #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
->>    #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
->>    #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
->>    #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
->>    #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
->>    #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
->>    #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
->>    #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
->>    #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
->>    #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
->>    #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
->>    #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
-> 
-> I'm not sure this callstack is correct.
-This is the backtrace printed by using the gdb to debug the core file, 
-which should be normal.
+ # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  perf: Segmentation fault
+  Obtained 1 stack frames.
+  [0xc4c67f]
+  Segmentation fault (core dumped)
 
-The preceding example should trigger this problem as long as the perf 
-file reaches max_size.
-> 
->>
->> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
->> The process is as follows:
->>    __cmd_record
->>      -> record__free_thread_data
->>        -> zfree(&rec->thread_data)         // free rec->thread_data
->>      -> record__synthesize
->>        -> perf_event__synthesize_id_index
->>          -> process_synthesized_event
->>            -> record__write
->>              -> record__bytes_written     // access rec->thread_data
->>
->> In the overwrite scenario, to synthesize non-sample events,
->> we do not need to check perf size limit.
-> 
-> Hmm.. I think we should prevent this kind of access after
-> record__free_thread_data().  We may set nr_threads to 0
-> and save the bytes_written for threads separately.
-Ok, will change in next version.
-> 
-the value of done is 1 here, Therefore, we only need to check the value 
-of done first.
+backtrace of the core file is as follows:
 
-Thanks,
-Yang.
+  #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
+  #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
+  #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
+  #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
+  #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
+  #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
+  #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
+  #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
+  #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
+  #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
+  #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
+  #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
+  #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
+  #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
 
-> Thanks,
-> Namhyung
-> 
-> 
->>
->> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
->> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->> ---
->>   tools/perf/builtin-record.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index 29dcd454b8e2..c5f169150d63 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -260,7 +260,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
->>          else
->>                  rec->bytes_written += size;
->>
->> -       if (record__output_max_size_exceeded(rec) && !done) {
->> +       if (!rec->opts.tail_synthesize && record__output_max_size_exceeded(rec) && !done) {
->>                  fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
->>                                  " stopping session ]\n",
->>                                  record__bytes_written(rec) >> 10);
->> --
->> 2.17.1
->>
-> .
-> 
+The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+The process is as follows:
+  __cmd_record
+    -> record__free_thread_data
+      -> zfree(&rec->thread_data)         // free rec->thread_data
+    -> record__synthesize
+      -> perf_event__synthesize_id_index
+        -> process_synthesized_event
+          -> record__write
+            -> record__bytes_written     // access rec->thread_data
+
+we only need to check the value of done first.
+Also add variable check in record__bytes_written for code hardening,
+and save bytes_written separately to reduce one calculation.
+
+Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+
+Changes since v1:
+ - Add variable check in record__bytes_written for code hardening.
+ - Save bytes_written separately to reduce one calculation.
+ - Remove rec->opts.tail_synthesize check.
+
+ tools/perf/builtin-record.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 29dcd454b8e2..acba9e43e519 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -230,16 +230,29 @@ static u64 record__bytes_written(struct record *rec)
+ 	u64 bytes_written = rec->bytes_written;
+ 	struct record_thread *thread_data = rec->thread_data;
+ 
++	if (thread_data == NULL)
++		return bytes_written;
++
+ 	for (t = 0; t < rec->nr_threads; t++)
+ 		bytes_written += thread_data[t].bytes_written;
+ 
+ 	return bytes_written;
+ }
+ 
+-static bool record__output_max_size_exceeded(struct record *rec)
++static void record__check_output_max_size_exceeded(struct record *rec)
+ {
+-	return rec->output_max_size &&
+-	       (record__bytes_written(rec) >= rec->output_max_size);
++	u64 bytes_written;
++
++	if (rec->output_max_size == 0 || done)
++		return;
++
++	bytes_written = record__bytes_written(rec);
++	if (bytes_written >= rec->output_max_size) {
++		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
++			" stopping session ]\n", bytes_written >> 10);
++
++		done = 1;
++	}
+ }
+ 
+ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+@@ -260,12 +273,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+ 	else
+ 		rec->bytes_written += size;
+ 
+-	if (record__output_max_size_exceeded(rec) && !done) {
+-		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
+-				" stopping session ]\n",
+-				record__bytes_written(rec) >> 10);
+-		done = 1;
+-	}
++	record__check_output_max_size_exceeded(rec);
+ 
+ 	if (switch_output_size(rec))
+ 		trigger_hit(&switch_output_trigger);
+-- 
+2.30.GIT
+
