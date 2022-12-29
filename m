@@ -2,102 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826ABC4332F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Dec 2022 11:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D543FC4332F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Dec 2022 12:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbiL2L1t (ORCPT
+        id S230303AbiL2MpY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Dec 2022 06:27:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
+        Thu, 29 Dec 2022 07:45:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229919AbiL2L1s (ORCPT
+        with ESMTP id S233326AbiL2MpV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Dec 2022 06:27:48 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2BF13DCE;
-        Thu, 29 Dec 2022 03:27:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672313267; x=1703849267;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=izooh+aJOq0y9ZY7bsO6ygU34U8zhrGdVSoaIebW5LI=;
-  b=iJkknKiY/uwtGE6fAzcqbWT3Yf42bDd8ODErIVUb8HM3P+DCdix5puf/
-   5/rkOw1T+0CCwOo5rvh6IfmwtEx10Y56+el7CQdVfiqKXPFet78/OinyH
-   S148Y8ZvhPubBjGMkRDcy8Ce76D3Wql+4NqBiN0YpCs+TumlmYmitOzTI
-   AyqRagcSuIPcwoQ3RUqCGJCZ/ZEuqdP21pnxNeXplHDR+ksofrtoa0SQ/
-   x9Eb+aD8NEnJ0JxZdim6ZCkBpsIrUBfoLplHLcWq+XCnV4MojZaN9Kdg+
-   9thj/RDX2VbWWV2SNHQosBPPm9qVB9KbpTm8w9uYTQ7V0fsHg89R1LyQM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="383324171"
-X-IronPort-AV: E=Sophos;i="5.96,283,1665471600"; 
-   d="scan'208";a="383324171"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2022 03:27:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="653581106"
-X-IronPort-AV: E=Sophos;i="5.96,283,1665471600"; 
-   d="scan'208";a="653581106"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.63.128])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2022 03:27:44 -0800
-Message-ID: <d0cf59ae-87c3-3aab-34fa-aa88ea467423@intel.com>
-Date:   Thu, 29 Dec 2022 13:27:39 +0200
+        Thu, 29 Dec 2022 07:45:21 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482EF13D6C;
+        Thu, 29 Dec 2022 04:45:18 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NjSkK5T7kzJqkX;
+        Thu, 29 Dec 2022 20:43:53 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Thu, 29 Dec 2022 20:44:31 +0800
+Subject: Re: [PATCH] perf record: Fix coredump with --overwrite and --max-size
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <jiwei.sun@windriver.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221227130701.124278-1-yangjihong1@huawei.com>
+ <CAM9d7chDPQ9_J5=XLWbhp2AztiyVwTaRjTf20reCdriseTvX_A@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <730b1733-8778-8b82-3751-a14905cef114@huawei.com>
+Date:   Thu, 29 Dec 2022 20:44:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.1
-Subject: Re: [PATCH] perf tools: Fix resources leak in perf_data__open_dir
+In-Reply-To: <CAM9d7chDPQ9_J5=XLWbhp2AztiyVwTaRjTf20reCdriseTvX_A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-To:     Miaoqian Lin <linmq006@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221229090903.1402395-1-linmq006@gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20221229090903.1402395-1-linmq006@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29/12/22 11:09, Miaoqian Lin wrote:
-> In perf_data__open_dir(), opendir() opens the directory stream.
-> Add missing closedir() to release it after use.
+Hello,
+
+On 2022/12/28 5:05, Namhyung Kim wrote:
+> On Tue, Dec 27, 2022 at 5:10 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> When --overwrite and --max-size options of perf record are used together,
+>> a segmentation fault occurs. The following is an example:
+>>
+>>   # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
+>>    [ perf record: Woken up 1 times to write data ]
+>>    perf: Segmentation fault
+>>    Obtained 1 stack frames.
+>>    [0xc4c67f]
+>>    Segmentation fault (core dumped)
+>>
+>> backtrace of the core file is as follows:
+>>
+>>    #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
+>>    #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
+>>    #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
+>>    #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
+>>    #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
+>>    #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
+>>    #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
+>>    #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
+>>    #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
+>>    #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
+>>    #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
+>>    #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
+>>    #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
+>>    #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
 > 
-> Fixes: eb6176709b23 ("perf data: Add perf_data__open_dir_data function")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> I'm not sure this callstack is correct.
+This is the backtrace printed by using the gdb to debug the core file, 
+which should be normal.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  tools/perf/util/data.c | 2 ++
->  1 file changed, 2 insertions(+)
+The preceding example should trigger this problem as long as the perf 
+file reaches max_size.
 > 
-> diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> index a7f68c309545..fc16299c915f 100644
-> --- a/tools/perf/util/data.c
-> +++ b/tools/perf/util/data.c
-> @@ -132,6 +132,7 @@ int perf_data__open_dir(struct perf_data *data)
->  		file->size = st.st_size;
->  	}
->  
-> +	closedir(dir);
->  	if (!files)
->  		return -EINVAL;
->  
-> @@ -140,6 +141,7 @@ int perf_data__open_dir(struct perf_data *data)
->  	return 0;
->  
->  out_err:
-> +	closedir(dir);
->  	close_dir(files, nr);
->  	return ret;
->  }
+>>
+>> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+>> The process is as follows:
+>>    __cmd_record
+>>      -> record__free_thread_data
+>>        -> zfree(&rec->thread_data)         // free rec->thread_data
+>>      -> record__synthesize
+>>        -> perf_event__synthesize_id_index
+>>          -> process_synthesized_event
+>>            -> record__write
+>>              -> record__bytes_written     // access rec->thread_data
+>>
+>> In the overwrite scenario, to synthesize non-sample events,
+>> we do not need to check perf size limit.
+> 
+> Hmm.. I think we should prevent this kind of access after
+> record__free_thread_data().  We may set nr_threads to 0
+> and save the bytes_written for threads separately.
+Ok, will change in next version.
+> 
+the value of done is 1 here, Therefore, we only need to check the value 
+of done first.
 
+Thanks,
+Yang.
+
+> Thanks,
+> Namhyung
+> 
+> 
+>>
+>> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>   tools/perf/builtin-record.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 29dcd454b8e2..c5f169150d63 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -260,7 +260,7 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+>>          else
+>>                  rec->bytes_written += size;
+>>
+>> -       if (record__output_max_size_exceeded(rec) && !done) {
+>> +       if (!rec->opts.tail_synthesize && record__output_max_size_exceeded(rec) && !done) {
+>>                  fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
+>>                                  " stopping session ]\n",
+>>                                  record__bytes_written(rec) >> 10);
+>> --
+>> 2.17.1
+>>
+> .
+> 
