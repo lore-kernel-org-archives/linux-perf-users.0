@@ -2,130 +2,245 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01C9C4708E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Dec 2022 12:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B632C4167B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Dec 2022 18:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235008AbiL3M2e (ORCPT
+        id S229895AbiL3SsR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Dec 2022 07:28:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52854 "EHLO
+        Fri, 30 Dec 2022 13:48:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231197AbiL3M2b (ORCPT
+        with ESMTP id S229681AbiL3SsQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Dec 2022 07:28:31 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27262DE9A
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Dec 2022 04:28:30 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id d9so4982585pll.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Dec 2022 04:28:30 -0800 (PST)
+        Fri, 30 Dec 2022 13:48:16 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C7C1AA3F
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Dec 2022 10:48:13 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id bs20so18430675wrb.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Dec 2022 10:48:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AmLp0HHgGWL7/8ThVO7qlzgQpdCgrc/e4BU39twwl5o=;
-        b=YCjvDOWG+/INvJ696xZyzGkzht/0VZ0jxtVpzQQqvNnRKYKdrZRkmvM+arZLJjN3oA
-         6CF6peywcvKZG4CNg1Vis34T4Z4Q8UqXw1Wb1cANHksjiv0C/Z8ehL/4gMnmWY6FtErO
-         NLUSTyYZSaVakZ6+d9vNq4vpRifAOg795xhpzpcQedgian7cKysiRloHIP6gtWsyDGbo
-         GBGALstptXKLT0acl5oOw48PKIt2yqeJjDHgmG30RImLNlczZcLGtBM5JdJSQQuprlgU
-         a7wR83FuGfHTYxcO+5qX5lcyVeZdIqwfhIfIvZOsihrdGebj1ZRp5C3d804tn66BAwPk
-         3feQ==
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9eozXRH50ZlFtawl95NiG9GRbnu4peHEnmZnewSiUAg=;
+        b=GS21ZFxkhbdYarcynXAaFNuzhoC4le0yIFJKcMKSPaJIhSkB5IcETG1TYRGYVUo86G
+         5NkR3Fc99jJw75byZdoSep4Gyh3E31b/4dNHNJJQ4xHZEy+IC72ciciwIRpWgmeb9m3K
+         NHyQwTLHxQSZYxgDQtUZXdaHOLGlbev7gxSCUvBdKqYoh8zPTZQXfs3C819GGuCZzstb
+         vBHnPNajXVi9bLwY26gf+fMHZyI9SPqisPBYN7eDUaqVwxFyeA4tbgQ848FigorRdQoR
+         Mg8R5FfEHptEXinUPcssYPv3BpmnR/WYKV0ewca5hOh/uET4WV0zUqTKPTjIpB0hZ8Tn
+         +llw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AmLp0HHgGWL7/8ThVO7qlzgQpdCgrc/e4BU39twwl5o=;
-        b=X2aZkSPBOgEVWhvVOVIIvxrC9Etndb66KN7X+rxN0C3ioguIi40EdlPaMyecS7pJLH
-         M4crskDItOpqlZwF6tdONm721+D/nHy7AwaBOcdho712TEcO7PgnCQRpvR0Cqi/rccBf
-         HyiQ+HEBohpoTH4IBztcWB9RTxYTEOLjZ5mCz0gVWqoDtQM1tbjd5VNY/0qk3fhN4T77
-         Q8AdFV8I3XcBgcW0pstq59EuynoKNXurbJHv7XgJXgZq7yzMqgVGydjUyraW/doMF+NX
-         6S9giKSwtf3jGztzgVz+l536ZSd7DxC3zkuBlca6bbQhnEW/rRepLmq8B5rkzezt+z74
-         sFkg==
-X-Gm-Message-State: AFqh2kpJMoTmidqDcD4kUyNzvjSpwXfA+9nT7FJcv9b4dapicaEvdgpY
-        ZTJF1YsuJRbaF2e5BIOGnVCA6w==
-X-Google-Smtp-Source: AMrXdXu+tAe2jvcpdwNLB+QyK+2fSUNtbpNccLnuKfZH+LC4mTsNn0AXn/9QS3BA7vDZ6YCNt4ffuQ==
-X-Received: by 2002:a17:902:c942:b0:189:c93c:e5e6 with SMTP id i2-20020a170902c94200b00189c93ce5e6mr51604676pla.33.1672403309552;
-        Fri, 30 Dec 2022 04:28:29 -0800 (PST)
-Received: from leoy-yangtze.lan (n058152048149.netvigator.com. [58.152.48.149])
-        by smtp.gmail.com with ESMTPSA id i6-20020a170902c94600b00189651e5c26sm14844203pla.236.2022.12.30.04.28.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Dec 2022 04:28:28 -0800 (PST)
-Date:   Fri, 30 Dec 2022 20:28:21 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9eozXRH50ZlFtawl95NiG9GRbnu4peHEnmZnewSiUAg=;
+        b=7gDDuAlJ23ayHcjzqbCRkMWC2ztfBxW+Up5mN0j1rARjJmzEHBOLOONgKfN8hg9LXc
+         hr65cm9ZnNp6LshSAV+oAaXpjp6VYfqRoI3S1r8DZxcz2y0iEDCA9xMsuv9x/XBgFPX6
+         yXzPx7Go4SYzRESWMI3Ofy2zXFeGX3+BzVIkALC8exITC3yR4YiuD3kc3NevkWA5WVTP
+         LwnAQxsSCJWXh16BlZGrq4u3iYwfclrnjanrOj5isk6+534YDRmV0q6V2pDVuKg0Y6RQ
+         bBbzcRhS0X2p2oGYyrySXK1x3Jgt5ku34/U4ODqr/kUeZjuugt70c5usi7jdOo8ZpL2H
+         u6ag==
+X-Gm-Message-State: AFqh2kpyDr44p13p9T/6q8JrqAecGpqpMLFA1QjK5G3QxLE/SR+iAPnA
+        geGm3oF88M3ssPUtwYjdfdgRjSK3mVbJrtkXaOAlcIWxEfhrNQ==
+X-Google-Smtp-Source: AMrXdXtU0hy2t8fUNz7miGC/kPGAvnKgVJMj6SmrdA0LslGUOXR/bNkxr6H3flAsI9kGPpqZiCYjsZjfNymrLvSd4nY=
+X-Received: by 2002:adf:e944:0:b0:26d:f5d2:4ef9 with SMTP id
+ m4-20020adfe944000000b0026df5d24ef9mr954221wrn.375.1672426091977; Fri, 30 Dec
+ 2022 10:48:11 -0800 (PST)
+MIME-Version: 1.0
+References: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 30 Dec 2022 10:48:00 -0800
+Message-ID: <CAP-5=fU+4eR6ngX1Rn9fL9eAau4f9FHXx3+C2UxwbfeB7Sk0cw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/6] Add metrics for neoverse-n2
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF"
- section
-Message-ID: <Y67ZZT84OwjybzNM@leoy-yangtze.lan>
-References: <20221217223509.88254-1-changbin.du@gmail.com>
- <20221217223509.88254-2-changbin.du@gmail.com>
- <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan>
- <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
- <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
- <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
- <Y6KDrELoIfPbh3VN@leoy-yangtze.lan>
- <20221230121020.boqhrujywruq3oi2@mail.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221230121020.boqhrujywruq3oi2@mail.google.com>
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Dec 30, 2022 at 08:10:20PM +0800, Changbin Du wrote:
-> On Wed, Dec 21, 2022 at 11:55:24AM +0800, Leo Yan wrote:
-> > On Tue, Dec 20, 2022 at 04:13:13PM -0800, Andrii Nakryiko wrote:
-> > 
-> > [...]
-> > 
-> > > > > > > @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
-> > > > > > >   err = 0;
-> > > > > > >
-> > > > > > >   if (!btf_data) {
-> > > > > > > +         pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
-> > > > > > >           err = -ENOENT;
-> > > >
-> > > > btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
-> > > > section, therefore, bpftool dumps error string "No such file or
-> > > > directory".  It's confused that actually vmlinux is existed.
-> > > >
-> > > > I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
-> > > > better choice?) to replace -ENOENT at here, this can avoid bpftool to
-> > > > outputs "No such file or directory" in this case.
-> > > 
-> > > The only really meaningful error code would be -ESRCH, which
-> > > strerror() will translate to "No such process", which is also
-> > > completely confusing.
-> > 
-> > Or maybe -ENODATA (No data available) is a better choice?
-> > 
-> > Thanks,
-> > Leo
-> >
-> Yan, will you have a patch for this suggestion?
+On Fri, Dec 23, 2022 at 4:39 AM Jing Zhang <renyu.zj@linux.alibaba.com> wro=
+te:
+>
+> Changes since v3:
+> - Add ipc_rate metric;
+> - Drop the PublicDescription;
+> - Describe PEutilization metrics in more detail;
+> - Link: https://lore.kernel.org/all/1669310088-13482-1-git-send-email-ren=
+yu.zj@linux.alibaba.com/
+>
+> Changes since v2:
+> - Correct the furmula of Branch metrics;
+> - Add more PE utilization metrics;
+> - Add more TLB metrics;
+> - Add =E2=80=9CScaleUnit=E2=80=9D for some metrics;
+> - Add a newline at the end of the file;
+> - Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-reny=
+u.zj@linux.alibaba.com/
+>
+> Changes since v1:
+> - Corrected formula for topdown L1 due to wrong counts for stall_slot and
+>   stall_slot_frontend;
+> - Link: https://lore.kernel.org/all/1667214694-89839-1-git-send-email-ren=
+yu.zj@linux.alibaba.com/
+>
+>
+> This series add six metricgroups for neoverse-n2, among which, the formul=
+a of
+> topdown L1 is from ARM sbsa7.0 platform design document [0], D37-38.
+>
+> However, due to the wrong count of stall_slot and stall_slot_frontend on
+> neoverse-n2, the real stall_slot and real stall_slot_frontend need to
+> subtract cpu_cycles,  so correct the expression of topdown metrics.
+> Reference from ARM neoverse-n2 errata notice [1], D117.
+>
+> Since neoverse-n2 does not yet support topdown L2, metricgroups such as C=
+ache,
+> TLB, Branch, InstructionsMix, and PEutilization are added to help further
+> analysis of performance bottlenecks. Reference from ARM PMU guide [2][3].
+>
+> [0] https://documentation-service.arm.com/static/60250c7395978b529036da86=
+?token=3D
+> [1] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb=
+?token=3D
+> [2] https://documentation-service.arm.com/static/628f8fa3dfaf015c2b76eae8=
+?token=3D
+> [3] https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393=
+?token=3D
+>
+>
+> $./perf list
+> ...
+> Metric Groups:
+>
+> Branch:
+>   branch_miss_pred_rate
+>        [The rate of branches mis-predited to the overall branches]
+>   branch_mpki
+>        [The rate of branches mis-predicted per kilo instructions]
+>   branch_pki
+>        [The rate of branches retired per kilo instructions]
+> Cache:
+>   l1d_cache_miss_rate
+>        [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+>   l1d_cache_mpki
+>        [The rate of L1 D-Cache misses per kilo instructions]
+> ...
+>
+>
+> $sudo ./perf stat -M TLB false_sharing 2
+>
+>  Performance counter stats for 'false_sharing 2':
+>
+>             31,561      L2D_TLB                          #     18.8 %  l2=
+_tlb_miss_rate      (43.23%)
+>              5,944      L2D_TLB_REFILL                                   =
+                    (43.23%)
+>              2,248      L1I_TLB_REFILL                   #      0.1 %  l1=
+i_tlb_miss_rate     (43.85%)
+>          2,203,195      L1I_TLB                                          =
+                    (43.85%)
+>        328,647,380      L1D_TLB                          #      0.0 %  l1=
+d_tlb_miss_rate     (44.32%)
+>             26,347      L1D_TLB_REFILL                                   =
+                    (44.32%)
+>            747,319      L1I_TLB                          #      0.0 %  it=
+lb_walk_rate        (43.74%)
+>                310      ITLB_WALK                                        =
+                    (43.74%)
+>        839,420,454      INST_RETIRED                     #     0.00 itlb_=
+mpki                (42.77%)
+>                212      ITLB_WALK                                        =
+                    (42.77%)
+>                468      DTLB_WALK                        #      0.0 %  dt=
+lb_walk_rate        (42.28%)
+>        265,405,802      L1D_TLB                                          =
+                    (42.28%)
+>        790,874,367      INST_RETIRED                     #     0.00 dtlb_=
+mpki                (42.33%)
+>                 23      DTLB_WALK                                        =
+                    (42.33%)
+>
+>        0.515904553 seconds time elapsed
+>
+>        1.410313000 seconds user
+>        0.000000000 seconds sys
+>
+>
+> $sudo ./perf stat -M TopDownL1 false_sharing 2
+>
+>  Performance counter stats for 'false_sharing 2':
+>
+>      4,310,905,590      cpu_cycles                       #      0.0 %  ba=
+d_speculation
+>                                                   #      4.0 %  retiring =
+             (66.87%)
+>     25,009,763,735      stall_slot                                       =
+                    (66.87%)
+>        855,659,327      op_spec                                          =
+                    (66.87%)
+>        854,335,288      op_retired                                       =
+                    (66.87%)
+>      4,330,308,058      cpu_cycles                       #     27.1 %  fr=
+ontend_bound        (66.99%)
+>     10,207,186,460      stall_slot_frontend                              =
+                    (66.99%)
+>      4,316,583,673      cpu_cycles                       #     69.4 %  ba=
+ckend_bound         (66.65%)
+>     14,979,136,808      stall_slot_backend                               =
+                    (66.65%)
+>
+>        0.572056818 seconds time elapsed
+>
+>        1.572143000 seconds user
+>        0.004010000 seconds sys
+>
+>
+> Jing Zhang (6):
+>   perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+>   perf vendor events arm64: Add TLB metrics for neoverse-n2
+>   perf vendor events arm64: Add cache metrics for neoverse-n2
+>   perf vendor events arm64: Add branch metrics for neoverse-n2
+>   perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+>   perf vendor events arm64: Add instruction mix metrics for neoverse-n2
 
-You are welcome to send a patch, otherwise, I can cook one.
+Series:
+Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Leo
+The only observation I had is that the "per kilo instruction" in the
+names (ie ending pki) could be moved into the ScaleUnit. Which may
+make the names and the output a little cleaner.
+
+Thanks!
+Ian
+
+>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 277 +++++++++++++++=
+++++++
+>  1 file changed, 277 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metr=
+ics.json
+>
+> --
+> 1.8.3.1
+>
