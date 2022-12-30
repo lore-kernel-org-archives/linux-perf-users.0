@@ -2,209 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C82C4167B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Dec 2022 10:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B27C10F1B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Dec 2022 12:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiL3K0u (ORCPT
+        id S230434AbiL3MKV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Dec 2022 05:26:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
+        Fri, 30 Dec 2022 07:10:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiL3K0t (ORCPT
+        with ESMTP id S229513AbiL3MKU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Dec 2022 05:26:49 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BF57648;
-        Fri, 30 Dec 2022 02:26:48 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BU7iLYj040913;
-        Fri, 30 Dec 2022 10:26:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=xXY6Uc2QEJ8u+4R1yUcvmo2PgvRykdLOP/G/aMvJNNw=;
- b=JrO0Hv1wdtnVtqW2M7ROQSNTM0mNBuvetE4O8XZ86znntBz2qO/HdZfSN/SKJCWkLkMV
- hJ/2kXOd9TlHI6F5kK83OqXiLo6V1QnWXidZpzgCmQIJQA5ETj6cYHUhMLDh66ypCDS5
- 6wlbreyH8FVdcMyPkCaZt2bKotjMUhY3948/Vf6YrqL9m3r+moEKyA7ID8gJRWkf01SG
- A2CsD3hUpFpo7aCfNjmYICNneJ/F8ZHqA9ixe3WW5dF70qLARB4GpNT1QnEHLnvHo3aX
- L2zEHGX7x0np8huhEPvLO7aT719ljxjMwek3Ram/fvLq8fchyszMr6ZeiveEh5MhCwJl cQ== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3msuv4je8v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Dec 2022 10:26:40 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 2BU92Fot003534;
-        Fri, 30 Dec 2022 10:26:38 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3mnrpfr337-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Dec 2022 10:26:37 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2BUAQYTB47120726
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Dec 2022 10:26:34 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11FDC20075;
-        Fri, 30 Dec 2022 10:26:34 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E24F920073;
-        Fri, 30 Dec 2022 10:26:33 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Dec 2022 10:26:33 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf lock: Fix core dump in command perf lock contention
-Date:   Fri, 30 Dec 2022 11:26:27 +0100
-Message-Id: <20221230102627.2410847-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 30 Dec 2022 07:10:20 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB675FF3;
+        Fri, 30 Dec 2022 04:10:19 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id s7so21685996plk.5;
+        Fri, 30 Dec 2022 04:10:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4U3BkLQZ9M9DgvTBwDUlVlqOVR0cvh9rJdBcrlurSBA=;
+        b=OVIpeIKhpu5JuHGPI/aq/PokRqhuXiAFB23ZB/9r2rb7QhFDCblexWoehHQw/+egq+
+         KUWh/tl4ILetP0dL6wxrSAVzPfZ6c8YkZf4rYsfcU3Wj1kTU23+YmHCEID66sJSaHoYi
+         tOLxjvtwjHYPvkBZKTaB1Jac5HO0fjkcwm6tAY37sY9nByCEYeEjKEXKZ/ceJzOjR/U7
+         4sYNtDLsIoxCTWX6YZ4+7re8abKxFx09NkKOqJbHSColOFJHOnpdqSDYBWvLezsd40AL
+         J3QO2CuKIR956aMfXLnCEsWrJwFD2TuTC338NLKQnoJI94hqpsnec5EpVpYX3ub3/mlf
+         ow6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4U3BkLQZ9M9DgvTBwDUlVlqOVR0cvh9rJdBcrlurSBA=;
+        b=6KyNCAVdOx0jLs6+LFW27S6oA1sU0yNY/F25VU+lGfCVQstU4rcejCqsbqRc8IOYcJ
+         R8CMKSyrDq19J92Yu2V+sdhmNiQtSCWRevi89mhvkwtXsOEFf19xgx+MmVAe/n3pkhdo
+         NxDhiUNzh0VseW5sG+DJyZnRIIxZqmzdfACC5E3fBWXvxsX1i9mnVx3iMQc0AFpVQP0o
+         QLN58QVjGRHWha/2oI3hn3nynEtmJKyHfTfC9gFnlJQ4mzXqpNLUOPzxcEqYLJp1u1RJ
+         G3W8bRnmi05TMceqsdPspDKDtzuGlgrUpgphnOkIXXT5th0gYeNhZ93Zu2L+zQZyDXDo
+         wCpA==
+X-Gm-Message-State: AFqh2kp4IihnY0cKf63ULBpGCBz/gQmP5dBv+PqUW8AUolvijpWeGVNU
+        2WPw/UFm0q677UtbjtgWUiQ=
+X-Google-Smtp-Source: AMrXdXsK+oQ1/QesWLbiOJuKHPfK3TRJdiFnhPnuZUn/s2uG8ER52z8ggxCDyTRp7FDsBOkqFRtS1w==
+X-Received: by 2002:a17:902:8bc6:b0:187:16c2:d52c with SMTP id r6-20020a1709028bc600b0018716c2d52cmr35350278plo.50.1672402219123;
+        Fri, 30 Dec 2022 04:10:19 -0800 (PST)
+Received: from mail.google.com ([103.135.103.220])
+        by smtp.gmail.com with ESMTPSA id a3-20020a170902710300b00186b758c9fasm14806581pll.33.2022.12.30.04.10.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Dec 2022 04:10:18 -0800 (PST)
+Date:   Fri, 30 Dec 2022 20:10:20 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF"
+ section
+Message-ID: <20221230121020.boqhrujywruq3oi2@mail.google.com>
+References: <20221217223509.88254-1-changbin.du@gmail.com>
+ <20221217223509.88254-2-changbin.du@gmail.com>
+ <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan>
+ <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
+ <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
+ <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
+ <Y6KDrELoIfPbh3VN@leoy-yangtze.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: owIXJVDiYEEKkCgV86OK-fQdVHMPBeEt
-X-Proofpoint-ORIG-GUID: owIXJVDiYEEKkCgV86OK-fQdVHMPBeEt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-30_07,2022-12-29_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- mlxscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2212300087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y6KDrELoIfPbh3VN@leoy-yangtze.lan>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The test case perf lock contention dumps core on s390. Run the following
-commands:
- # ./perf lock record -- ./perf bench sched messaging
- # Running 'sched/messaging' benchmark:
- # 20 sender and receiver processes per group
- # 10 groups == 400 processes run
+On Wed, Dec 21, 2022 at 11:55:24AM +0800, Leo Yan wrote:
+> On Tue, Dec 20, 2022 at 04:13:13PM -0800, Andrii Nakryiko wrote:
+> 
+> [...]
+> 
+> > > > > > @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
+> > > > > >   err = 0;
+> > > > > >
+> > > > > >   if (!btf_data) {
+> > > > > > +         pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
+> > > > > >           err = -ENOENT;
+> > >
+> > > btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
+> > > section, therefore, bpftool dumps error string "No such file or
+> > > directory".  It's confused that actually vmlinux is existed.
+> > >
+> > > I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
+> > > better choice?) to replace -ENOENT at here, this can avoid bpftool to
+> > > outputs "No such file or directory" in this case.
+> > 
+> > The only really meaningful error code would be -ESRCH, which
+> > strerror() will translate to "No such process", which is also
+> > completely confusing.
+> 
+> Or maybe -ENODATA (No data available) is a better choice?
+> 
+> Thanks,
+> Leo
+>
+Yan, will you have a patch for this suggestion?
 
-     Total time: 2.799 [sec]
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.073 MB perf.data (100 samples) ]
- #
- # ./perf lock contention
- Segmentation fault (core dumped)
- #
+[snip]
 
-The function call stack is lengthy, here are the top 5 functions:
- # gdb ./perf core.24048
- GNU gdb (GDB) Fedora Linux 12.1-6.fc37
- Copyright (C) 2022 Free Software Foundation, Inc.
- Core was generated by `./perf lock contention'.
- Program terminated with signal SIGSEGV, Segmentation fault.
- #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,
-         addr=1789230) at util/machine.c:3356
-         3356 machine->sched.text_end = kmap->unmap_ip(kmap, sym->start);
-
- (gdb) where
-  #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,\
-         addr=1789230) at util/machine.c:3356
-  #1  0x000000000109f244 in callchain_id (evsel=0x30313e0,\
-         sample=0x3ffea4f77d0) at builtin-lock.c:957
-  #2  0x000000000109e094 in get_key_by_aggr_mode (key=0x3ffea4f7290,\
-         addr=27758136, evsel=0x30313e0, sample=0x3ffea4f77d0) \
-         at builtin-lock.c:586
-  #3  0x000000000109f4d0 in report_lock_contention_begin_event \
-         (evsel=0x30313e0, sample=0x3ffea4f77d0)
-         at builtin-lock.c:1004
-  #4  0x00000000010a00ae in evsel__process_contention_begin \
-         (evsel=0x30313e0, sample=0x3ffea4f77d0)
-         at builtin-lock.c:1254
-  #5  0x00000000010a0e14 in process_sample_event (tool=0x3ffea4f8480, \
-         event=0x3ff85601ef8, sample=0x3ffea4f77d0,
-         evsel=0x30313e0, machine=0x3029e28) at builtin-lock.c:1464
-          sample=0x3ffea4f77d0, evsel=0x30313e0, machine=0x3029e28) \
-	 at util/session.c:1523
-  .....
-
-The issue is in function machine__is_lock_function() in file
-./util/machine.c lines 3355:
-   /* should not fail from here */
-   sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_end",
-		                             &kmap);
-   machine->sched.text_end = kmap->unmap_ip(kmap, sym->start)
-
-On s390 the symbol __sched_text_end is *NOT* in the symbol list and the
-resulting pointer sym is set to NULL. The sym->start is then a NULL pointer
-access and generates the core dump.
-
-The reason why __sched_text_end is not in the symbol list on s390 is
-simple:
-When the symbol list is created at perf start up with function calls
-  dso__load
-  +--> dso__load_vmlinux_path
-       +--> dso__load_vmlinux
-            +--> dso__load_sym
-	         +--> dso__load_sym_internal (reads kernel symbols)
-		 +--> symbols__fixup_end
-		 +--> symbols__fixup_duplicate
-
-The issue is in function symbols__fixup_duplicate(). It deletes all
-symbols with have the same address. On s390
- # nm -g  ~/linux/vmlinux| fgrep c68390
- 0000000000c68390 T __cpuidle_text_start
- 0000000000c68390 T __sched_text_end
- #
-two symbols have identical addresses and __sched_text_end is considered
-duplicate (in ascending sort order) and removed from the symbol list.
-Therefore it is missing and an invalid pointer reference occurs.
-The code checks for symbol __sched_text_start and when it exists assumes
-symbol __sched_text_end is also in the symbol table. However this is
-not the case on s390.
-
-Same situation exists for symbol __lock_text_start:
-0000000000c68770 T __cpuidle_text_end
-0000000000c68770 T __lock_text_start
-This symbol is also removed from the symbol table but used in function
-machine__is_lock_function().
-
-To fix this and keep duplicate symbols in the symbol table, set
-symbol_conf.allow_aliases to true. This prevents the removal of duplicate
-symbols in function symbols__fixup_duplicate().
-
-Output After:
- # ./perf lock contention
- contended total wait  max wait  avg wait    type   caller
-
-        48   124.39 ms 123.99 ms   2.59 ms rwsem:W unlink_anon_vmas+0x24a
-        47    83.68 ms  83.26 ms   1.78 ms rwsem:W free_pgtables+0x132
-         5    41.22 us  10.55 us   8.24 us rwsem:W free_pgtables+0x140
-         4    40.12 us  20.55 us  10.03 us rwsem:W copy_process+0x1ac8
- #
-
-Fixes: cc2367eebb0c ("machine: Adopt is_lock_function() from builtin-lock.c")
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/builtin-lock.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 718b82bfcdff..506c2fe42d52 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1670,6 +1670,7 @@ static int __cmd_report(bool display_info)
- 
- 	/* for lock function check */
- 	symbol_conf.sort_by_name = true;
-+	symbol_conf.allow_aliases = true;
- 	symbol__init(&session->header.env);
- 
- 	if (!data.is_pipe) {
-@@ -1757,6 +1758,7 @@ static int __cmd_contention(int argc, const char **argv)
- 
- 	/* for lock function check */
- 	symbol_conf.sort_by_name = true;
-+	symbol_conf.allow_aliases = true;
- 	symbol__init(&session->header.env);
- 
- 	if (use_bpf) {
 -- 
-2.38.1
-
+Cheers,
+Changbin Du
