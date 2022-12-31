@@ -2,104 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4639C3DA7D
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Dec 2022 23:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D62C4332F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Dec 2022 05:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235665AbiL3Xc0 (ORCPT
+        id S231545AbiLaF17 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Dec 2022 18:32:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41422 "EHLO
+        Sat, 31 Dec 2022 00:27:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235664AbiL3Xc0 (ORCPT
+        with ESMTP id S231520AbiLaF16 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Dec 2022 18:32:26 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A327412D20;
-        Fri, 30 Dec 2022 15:32:24 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id co23so21064943wrb.4;
-        Fri, 30 Dec 2022 15:32:24 -0800 (PST)
+        Sat, 31 Dec 2022 00:27:58 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A63140B6
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Dec 2022 21:27:57 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id 20so10380489plo.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Dec 2022 21:27:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=I67DJyMZ2pVBI8781A9LPZqkSNUsohSh0BZqH+JheCc=;
-        b=nWx3Otszq8LNvUhzN+GkPHe49rJvZicXb/35lWUQBDolDbDSfowtvv0JzqvXuPnJ0V
-         xQICKBGUryYOphQGf6/Bed0u9HTDWwdqPVHbD3vKUK7tR+UV1b/ph8k4SX/cRVT9lvB+
-         cB+tfVcg+u5YkwozoBuGwVIUJrahnf+maImB0uyd0FhSBLDbUqgjtshFvtfnBqIrpYcS
-         rdosCBYzdycSQ+Ypbv5QKd/8oNWNYCruQLazjyL6J0PQKS9auceBKNja09ecolvjXptz
-         UqqBwPQN775CY4NICoBh/69cDhCUw1BswPZPcCklVBB2rKLmezKhDIHaBvazmPDizbsW
-         77gw==
+        d=sifive.com; s=google;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qvXUYwi5ZyU74DKdX9d8zZyO8Ta/Eto0kB/925S6woI=;
+        b=eNVSgI8Iffys1qMsVkR5qdhv5aDN9L6WgHnk771KmegnIxIojGrOuyoK/H7l8rlrbe
+         z0JsinNRo5iAZWKrEsqQciRzTfvRVJgkoU+6yj+lRCms6MsO96Dk8b1OweA28AWQ2yXt
+         amtxjM4FZx0K5IU7pwXWQoEBARvZH9eB/XAwfkIpcfcEzgoSS6zW0PMOEmAm1mvgbnuA
+         0Le//8Qj0wF2vhZ7Gn77N5TDY4GFreoykrkMxUn2vQrnSwnOFdYXiGC3Prvz8+NNRTLh
+         jYTVbxpg5Y1eiDnab3Q7O1Oe2zt5yiT2BHkJ6RW/N4BPQ9x4SRw4xvSUxCn0X/BL44m+
+         8FUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I67DJyMZ2pVBI8781A9LPZqkSNUsohSh0BZqH+JheCc=;
-        b=Hs/vzKE8y7nW3DbzTclc7zhtbaIuRANsaSXXEqytc0i9/8HSkYVtcnmvdNszqAuEVJ
-         lbZjEIR+j4E0btiM1cRZUINDbpLFd6TOHCdZGi74/ftMxphAtZAHgrS4Il2Up5aWSOgo
-         OfPyiaBreZUfSJPsInfx2j+4StEADYLi8yaSEj4Cu/pTCnmE1ryukBQ7pwvG+hQShxAL
-         4GJF3WZDj3EPl+eqyeWbwNnIVycYnJslnG4lHqumrY4QTUGMCzfO8JuZ/+URY4CmfnJ2
-         vn5hmLFEtVF+OEJNMEOmTmktlkZkXoiZoqnS3GjQ1nbI3vCq8mU5TQcIKxscvYTONdCL
-         X4bQ==
-X-Gm-Message-State: AFqh2kprMxtyvI2/2SQcTUi+bFOVdwYJ69+2I+NFwcVLX/Npag9BZFrc
-        ALLxBcPUjLwFTJ8dulRDfT4=
-X-Google-Smtp-Source: AMrXdXuvEzISEd/jtpcHkGpk9jeGiHTZ08jmZJMO986jqYdOIcSx3H7di8izv5YXBGQDXcfCayznbg==
-X-Received: by 2002:adf:a50c:0:b0:254:3dcb:dbbc with SMTP id i12-20020adfa50c000000b002543dcbdbbcmr23398533wrb.11.1672443143261;
-        Fri, 30 Dec 2022 15:32:23 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id y6-20020adfdf06000000b002879c013b8asm8049812wrl.42.2022.12.30.15.32.22
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qvXUYwi5ZyU74DKdX9d8zZyO8Ta/Eto0kB/925S6woI=;
+        b=sTgDQoX0wvPY5IJozZccBoufJjsYxX/qOZaiwqrhUE8bSvR2p+Wb3FyyxgxkuBTh/Q
+         EZKUR30bN/uKriRq4E7K+cStXqJe//kbLFbogXMJsISLINcDSlYOQkY9qpvn95Tv4YPz
+         41D3v3NglVeps5UIzu3gZlaxZruYlcvYZ0F4D6AJxZ4h/vZ2/BlLpu/lSEjQtIZgrxIn
+         ZQncr/za08dXxG0HRPW9x3K8xt3YKFa1GEFfllyhLRlOwPEx9TAJjU98Tm3N+6QA1fYk
+         as0oknfvfs8P7Ebn2VqJ6BmKR8VJX8wBc2LCYhiL/XCYvL63sJgEEDBbnCcZLx4TbCY7
+         yJ0g==
+X-Gm-Message-State: AFqh2kpJEXGLAlf6rVTZZbdeVT1Qa4yOKXwYJA6PWHvyyJywGne3uptm
+        niaBcSkGfxj39iww5ceDWSMgNC/o1yY5iFWGiy0=
+X-Google-Smtp-Source: AMrXdXsGSF4DED03XvcK7I2wPfr7RidesmY8h4auVFQgGrgKL5ewV9ZB6jZlmLnBYUDjvl/EKf/KIw==
+X-Received: by 2002:a17:903:40cb:b0:192:8502:77f9 with SMTP id t11-20020a17090340cb00b00192850277f9mr18853159pld.27.1672464477035;
+        Fri, 30 Dec 2022 21:27:57 -0800 (PST)
+Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id c16-20020a170903235000b0016d773aae60sm15836612plh.19.2022.12.30.21.27.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Dec 2022 15:32:22 -0800 (PST)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] perf-tools: Fix spelling mistake "lenght" -> "length"
-Date:   Fri, 30 Dec 2022 23:32:22 +0000
-Message-Id: <20221230233222.45385-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.30.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Fri, 30 Dec 2022 21:27:56 -0800 (PST)
+From:   Eric Lin <eric.lin@sifive.com>
+To:     peterz@infradead.org, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, palmer@dabbelt.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     paul.walmsley@sifive.com, greentime.hu@sifive.com,
+        vincent.chen@sifive.com, Eric Lin <eric.lin@sifive.com>
+Subject: [PATCH] perf tools riscv: Fix perf tool build error on riscv
+Date:   Sat, 31 Dec 2022 05:27:31 +0000
+Message-Id: <20221231052731.24908-1-eric.lin@sifive.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There is a spelling mistake in the variable expansion_lenght. Fix it.
+Since the definition of 'struct perf_sample' has been moved to sample.h,
+we need to include this header file to fix the build error as follows:
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+arch/riscv/util/unwind-libdw.c: In function 'libdw__arch_set_initial_registers':
+arch/riscv/util/unwind-libdw.c:12:50: error: invalid use of undefined type 'struct perf_sample'
+   12 |         struct regs_dump *user_regs = &ui->sample->user_regs;
+      |                                                  ^~
+
+Fixes: 9823147da6c8 ("perf tools: Move 'struct perf_sample' to a separate header file to disentangle headers")
+Signed-off-by: Eric Lin <eric.lin@sifive.com>
 ---
- tools/perf/builtin-trace.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/riscv/util/unwind-libdw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 86e06f136f40..ccd7923ae802 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3784,7 +3784,7 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
+diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/arch/riscv/util/unwind-libdw.c
+index 19536e172850..54a198714eb8 100644
+--- a/tools/perf/arch/riscv/util/unwind-libdw.c
++++ b/tools/perf/arch/riscv/util/unwind-libdw.c
+@@ -4,7 +4,7 @@
+ #include <elfutils/libdwfl.h>
+ #include "../../util/unwind-libdw.h"
+ #include "../../util/perf_regs.h"
+-#include "../../util/event.h"
++#include "../../util/sample.h"
  
- 				if (fmt->strtoul(right, right_size, &syscall_arg, &val)) {
- 					char *n, expansion[19];
--					int expansion_lenght = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
-+					int expansion_length = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
- 					int expansion_offset = right - new_filter;
- 
- 					pr_debug("%s", expansion);
-@@ -3796,7 +3796,7 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
- 					}
- 					if (new_filter != evsel->filter)
- 						free(new_filter);
--					left = n + expansion_offset + expansion_lenght;
-+					left = n + expansion_offset + expansion_length;
- 					new_filter = n;
- 				} else {
- 					pr_err("\"%.*s\" not found for \"%s\" in \"%s\", can't set filter \"%s\"\n",
+ bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+ {
 -- 
-2.30.2
+2.17.1
 
