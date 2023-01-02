@@ -2,102 +2,208 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F49C4708E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 15:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BE5C4708E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 15:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232862AbjABPGP (ORCPT
+        id S233806AbjABPdq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Jan 2023 10:06:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
+        Mon, 2 Jan 2023 10:33:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236079AbjABPGO (ORCPT
+        with ESMTP id S236328AbjABPdk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Jan 2023 10:06:14 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B73A7194
-        for <linux-perf-users@vger.kernel.org>; Mon,  2 Jan 2023 07:06:13 -0800 (PST)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pCMOB-0007AE-VQ; Mon, 02 Jan 2023 16:06:12 +0100
-Message-ID: <d372f704-fa4a-344f-7a15-d97bfb13ac1d@leemhuis.info>
-Date:   Mon, 2 Jan 2023 16:06:10 +0100
+        Mon, 2 Jan 2023 10:33:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87A39FE6;
+        Mon,  2 Jan 2023 07:33:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 546B260C2A;
+        Mon,  2 Jan 2023 15:33:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D47FC433EF;
+        Mon,  2 Jan 2023 15:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672673618;
+        bh=5pca/j7McOj+rsY0jP+gJ5eTrXjI71iO+uCVP0GTu/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=So9KnVLK934hERY7amnug0/GLUWW74/J8OGHgxmbVmPGXQk/onUsL0SqXereLtRC5
+         YBCSulVwb+HsdkCKIk2goAc05bBrxq7u8e9CNLW4NQ1n2K8/VOLCK74QY9TEcHYg7/
+         tBYqUMCA+tJnTV7Zt6/lgwTjJvCCA6IjFn2AVO85Wl+Ud4n+ab8a9rQKnGClEhzz37
+         QBXEDi3Vuy5oVTUrR4rDYOik3HFjMlCP87Yl2e267QqKYIhXWhzqT5TGH5uI8AkH8c
+         Xpsr2Gh14ISo+7MZ2HVuWJTF9/oNlSrnr1YrUrF9emS0f3Z1rH5pH4RbXZKEobvFQr
+         nOYQXyjC7pAhw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6EBE340468; Mon,  2 Jan 2023 12:33:35 -0300 (-03)
+Date:   Mon, 2 Jan 2023 12:33:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH] perf lock: Fix core dump in command perf lock contention
+Message-ID: <Y7L5T2IHdovfLgWp@kernel.org>
+References: <20221230102627.2410847-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [v6.2-rc1] Regression with installing perf tool
-Content-Language: en-US, de-DE
-To:     Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org
-References: <fa4b3115-d555-3d7f-54d1-018002e99350@secunet.com>
-From:   "Linux kernel regression tracking (#info)" 
-        <regressions@leemhuis.info>
-Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <fa4b3115-d555-3d7f-54d1-018002e99350@secunet.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672671973;3af990c7;
-X-HE-SMSGID: 1pCMOB-0007AE-VQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221230102627.2410847-1-tmricht@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; all text you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.
-See link in footer if these mails annoy you.]
+Em Fri, Dec 30, 2022 at 11:26:27AM +0100, Thomas Richter escreveu:
+> The test case perf lock contention dumps core on s390. Run the following
+> commands:
+>  # ./perf lock record -- ./perf bench sched messaging
+>  # Running 'sched/messaging' benchmark:
+>  # 20 sender and receiver processes per group
+>  # 10 groups == 400 processes run
+> 
+>      Total time: 2.799 [sec]
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.073 MB perf.data (100 samples) ]
+>  #
+>  # ./perf lock contention
+>  Segmentation fault (core dumped)
+>  #
+> 
+> The function call stack is lengthy, here are the top 5 functions:
+>  # gdb ./perf core.24048
+>  GNU gdb (GDB) Fedora Linux 12.1-6.fc37
+>  Copyright (C) 2022 Free Software Foundation, Inc.
+>  Core was generated by `./perf lock contention'.
+>  Program terminated with signal SIGSEGV, Segmentation fault.
+>  #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,
+>          addr=1789230) at util/machine.c:3356
+>          3356 machine->sched.text_end = kmap->unmap_ip(kmap, sym->start);
+> 
+>  (gdb) where
+>   #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,\
+>          addr=1789230) at util/machine.c:3356
+>   #1  0x000000000109f244 in callchain_id (evsel=0x30313e0,\
+>          sample=0x3ffea4f77d0) at builtin-lock.c:957
+>   #2  0x000000000109e094 in get_key_by_aggr_mode (key=0x3ffea4f7290,\
+>          addr=27758136, evsel=0x30313e0, sample=0x3ffea4f77d0) \
+>          at builtin-lock.c:586
+>   #3  0x000000000109f4d0 in report_lock_contention_begin_event \
+>          (evsel=0x30313e0, sample=0x3ffea4f77d0)
+>          at builtin-lock.c:1004
+>   #4  0x00000000010a00ae in evsel__process_contention_begin \
+>          (evsel=0x30313e0, sample=0x3ffea4f77d0)
+>          at builtin-lock.c:1254
+>   #5  0x00000000010a0e14 in process_sample_event (tool=0x3ffea4f8480, \
+>          event=0x3ff85601ef8, sample=0x3ffea4f77d0,
+>          evsel=0x30313e0, machine=0x3029e28) at builtin-lock.c:1464
+>           sample=0x3ffea4f77d0, evsel=0x30313e0, machine=0x3029e28) \
+> 	 at util/session.c:1523
+>   .....
+> 
+> The issue is in function machine__is_lock_function() in file
+> ./util/machine.c lines 3355:
+>    /* should not fail from here */
+>    sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_end",
+> 		                             &kmap);
+>    machine->sched.text_end = kmap->unmap_ip(kmap, sym->start)
+> 
+> On s390 the symbol __sched_text_end is *NOT* in the symbol list and the
+> resulting pointer sym is set to NULL. The sym->start is then a NULL pointer
+> access and generates the core dump.
+> 
+> The reason why __sched_text_end is not in the symbol list on s390 is
+> simple:
+> When the symbol list is created at perf start up with function calls
+>   dso__load
+>   +--> dso__load_vmlinux_path
+>        +--> dso__load_vmlinux
+>             +--> dso__load_sym
+> 	         +--> dso__load_sym_internal (reads kernel symbols)
+> 		 +--> symbols__fixup_end
+> 		 +--> symbols__fixup_duplicate
+> 
+> The issue is in function symbols__fixup_duplicate(). It deletes all
+> symbols with have the same address. On s390
+>  # nm -g  ~/linux/vmlinux| fgrep c68390
+>  0000000000c68390 T __cpuidle_text_start
+>  0000000000c68390 T __sched_text_end
+>  #
+> two symbols have identical addresses and __sched_text_end is considered
+> duplicate (in ascending sort order) and removed from the symbol list.
+> Therefore it is missing and an invalid pointer reference occurs.
+> The code checks for symbol __sched_text_start and when it exists assumes
+> symbol __sched_text_end is also in the symbol table. However this is
+> not the case on s390.
+> 
+> Same situation exists for symbol __lock_text_start:
+> 0000000000c68770 T __cpuidle_text_end
+> 0000000000c68770 T __lock_text_start
+> This symbol is also removed from the symbol table but used in function
+> machine__is_lock_function().
+> 
+> To fix this and keep duplicate symbols in the symbol table, set
+> symbol_conf.allow_aliases to true. This prevents the removal of duplicate
+> symbols in function symbols__fixup_duplicate().
+> 
+> Output After:
+>  # ./perf lock contention
+>  contended total wait  max wait  avg wait    type   caller
+> 
+>         48   124.39 ms 123.99 ms   2.59 ms rwsem:W unlink_anon_vmas+0x24a
+>         47    83.68 ms  83.26 ms   1.78 ms rwsem:W free_pgtables+0x132
+>          5    41.22 us  10.55 us   8.24 us rwsem:W free_pgtables+0x140
+>          4    40.12 us  20.55 us  10.03 us rwsem:W copy_process+0x1ac8
+>  #
+> 
+> Fixes: cc2367eebb0c ("machine: Adopt is_lock_function() from builtin-lock.c")
 
-[CCing Arnaldo]
+Humm, is that really the cset that introduces the problem? It just moves
+things around, the cset that introduced the is_lock_function() function,
+that assumed that __sched_text_end was always available was:
 
-On 02.01.23 14:16, Torsten Hilbrich wrote:
-> 
-> I recently tried a kernel build based on v6.2-rc2 and had some regression when trying to install the perf command. It seems that the commit:
-> 
-> commit 746bd29e348f99b44c14cb2b2a57f1d3efb66538
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Tue Nov 15 23:22:11 2022 -0800
-> 
->     perf build: Use tools/lib headers from install path
->     
->     Switch -I from tools/lib to the install path for the tools/lib
->     libraries. Add the include_headers build targets to prepare target, as
->     well as pmu-events.c compilation that dependes on libperf.
->     
-> Causes the the following command to fail: "make -C tools/ perf_install"
-> 
-> Full logs are attached as file.
-> 
-> The basic error is that the adding of $(LIBAPI), $(LIBSYMBOLS) and others to the prepare target seems to has problems when the subdir variable is set by the tools/Makefile.
-> 
-> The call chains seems to include
-> 
-> - "make -C tools perf_install" which calls:
-> - "make  subdir=perf --no-print-directory -C perf install" which then fails
-> 
-> The beginning of tools/scripts/Makfile.include then seems to construct a name like /build/git/linux/tools/perf/libapi/perf/ (when building in /build/git/linux) and this directory does not exist.
-> 
-> We only need the perf tool in this case, so we don't care much about the optional features which are missing.
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+commit 0d2997f750d1de394231bc22768dab94a5b5db2f
+Author: Namhyung Kim <namhyung@kernel.org>
+Date:   Wed Jun 15 09:32:22 2022 -0700
 
-#regzbot ^introduced 746bd29e348f99b44c14cb2b2a57f1d3efb66538
-#regzbot title perf build: problems when trying to install the perf command
-#regzbot ignore-activity
+    perf lock: Look up callchain for the contended locks
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+---
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (see page linked in footer for details).
+Right? Namhyung? Can you spot any problem in enabling duplicates as a
+fix?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+- Arnaldo
+
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/builtin-lock.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 718b82bfcdff..506c2fe42d52 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -1670,6 +1670,7 @@ static int __cmd_report(bool display_info)
+>  
+>  	/* for lock function check */
+>  	symbol_conf.sort_by_name = true;
+> +	symbol_conf.allow_aliases = true;
+>  	symbol__init(&session->header.env);
+>  
+>  	if (!data.is_pipe) {
+> @@ -1757,6 +1758,7 @@ static int __cmd_contention(int argc, const char **argv)
+>  
+>  	/* for lock function check */
+>  	symbol_conf.sort_by_name = true;
+> +	symbol_conf.allow_aliases = true;
+>  	symbol__init(&session->header.env);
+>  
+>  	if (use_bpf) {
+> -- 
+> 2.38.1
+
 -- 
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+
+- Arnaldo
