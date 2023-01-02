@@ -2,81 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F366C3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 14:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F49C4708E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 15:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232107AbjABOwa (ORCPT
+        id S232862AbjABPGP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Jan 2023 09:52:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
+        Mon, 2 Jan 2023 10:06:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjABOw3 (ORCPT
+        with ESMTP id S236079AbjABPGO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Jan 2023 09:52:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6307864C1;
-        Mon,  2 Jan 2023 06:52:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F1CF260C8B;
-        Mon,  2 Jan 2023 14:52:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33994C433D2;
-        Mon,  2 Jan 2023 14:52:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672671147;
-        bh=f17No9yUXQImVOsXvpfHxuqF8XaGL0fo1krEF+DvBe0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=koRcuDDXt2dS/6ATCSR7JzK2geLJV2osiVFjf7oBemkqqHnD0KIHOjipVjvDhjX19
-         MBQ/KROR4VSqfMqwYuzTHoqJKP/KTae1zsbFf/VDudebH/lKwPVtDbLJAyIitWF1L8
-         ghAjdxNS4j1jZdvJSvqrd1EL6lURZrhYNGSnJL00xxIKI9SIp77bGkfINpY0Qtoc/o
-         6Bf1JHf8TB6h+udVgR5iQl+eteZOMgk5PYUFkxWQGXiInyvyPPYeDhGi4P6fSPE0vn
-         mBT07fL5eRRJKDbyeDGf2LSjJcjclYn43WAAMP9aulaj82Uvi3doHbyBfEbLwo1LbC
-         4raNeiLGsu/sA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1495340468; Mon,  2 Jan 2023 11:52:25 -0300 (-03)
-Date:   Mon, 2 Jan 2023 11:52:25 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf help: Use HAVE_LIBTRACEEVENT to filter out
- unsupported commands
-Message-ID: <Y7LvqfynJ9oxeyjt@kernel.org>
-References: <20221226085703.95081-1-yangjihong1@huawei.com>
- <CAM9d7cjoFCqEBVwA+_D5ZNOnVcUo1Y6fysZmG0-uvqm9kUBJGA@mail.gmail.com>
+        Mon, 2 Jan 2023 10:06:14 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B73A7194
+        for <linux-perf-users@vger.kernel.org>; Mon,  2 Jan 2023 07:06:13 -0800 (PST)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pCMOB-0007AE-VQ; Mon, 02 Jan 2023 16:06:12 +0100
+Message-ID: <d372f704-fa4a-344f-7a15-d97bfb13ac1d@leemhuis.info>
+Date:   Mon, 2 Jan 2023 16:06:10 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cjoFCqEBVwA+_D5ZNOnVcUo1Y6fysZmG0-uvqm9kUBJGA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [v6.2-rc1] Regression with installing perf tool
+Content-Language: en-US, de-DE
+To:     Torsten Hilbrich <torsten.hilbrich@secunet.com>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <fa4b3115-d555-3d7f-54d1-018002e99350@secunet.com>
+From:   "Linux kernel regression tracking (#info)" 
+        <regressions@leemhuis.info>
+Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <fa4b3115-d555-3d7f-54d1-018002e99350@secunet.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672671973;3af990c7;
+X-HE-SMSGID: 1pCMOB-0007AE-VQ
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 27, 2022 at 11:34:46AM -0800, Namhyung Kim escreveu:
-> Hello,
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; all text you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.
+See link in footer if these mails annoy you.]
+
+[CCing Arnaldo]
+
+On 02.01.23 14:16, Torsten Hilbrich wrote:
 > 
-> On Mon, Dec 26, 2022 at 1:00 AM Yang Jihong <yangjihong1@huawei.com> wrote:
-> >
-> > Commands such as kmem, kwork, lock, sched, trace and timechart depend on
-> > libtraceevent, these commands need to be isolated using HAVE_LIBTRACEEVENT
-> > macro when cmdlist generation.
-> >
-> > The output of the generate-cmdlist.sh script is as follows:
-> >
-> >   # ./util/generate-cmdlist.sh
-> >   /* Automatically generated by ./util/generate-cmdlist.sh */
-> >   struct cmdname_help
-> >   {
-> >       char name[16];
-> >       char help[80];
-> >   };
+> I recently tried a kernel build based on v6.2-rc2 and had some regression when trying to install the perf command. It seems that the commit:
+> 
+> commit 746bd29e348f99b44c14cb2b2a57f1d3efb66538
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Tue Nov 15 23:22:11 2022 -0800
+> 
+>     perf build: Use tools/lib headers from install path
+>     
+>     Switch -I from tools/lib to the install path for the tools/lib
+>     libraries. Add the include_headers build targets to prepare target, as
+>     well as pmu-events.c compilation that dependes on libperf.
+>     
+> Causes the the following command to fail: "make -C tools/ perf_install"
+> 
+> Full logs are attached as file.
+> 
+> The basic error is that the adding of $(LIBAPI), $(LIBSYMBOLS) and others to the prepare target seems to has problems when the subdir variable is set by the tools/Makefile.
+> 
+> The call chains seems to include
+> 
+> - "make -C tools perf_install" which calls:
+> - "make  subdir=perf --no-print-directory -C perf install" which then fails
+> 
+> The beginning of tools/scripts/Makfile.include then seems to construct a name like /build/git/linux/tools/perf/libapi/perf/ (when building in /build/git/linux) and this directory does not exist.
+> 
+> We only need the perf tool in this case, so we don't care much about the optional features which are missing.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Thanks, applied.
+#regzbot ^introduced 746bd29e348f99b44c14cb2b2a57f1d3efb66538
+#regzbot title perf build: problems when trying to install the perf command
+#regzbot ignore-activity
 
-- Arnaldo
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (see page linked in footer for details).
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+-- 
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
