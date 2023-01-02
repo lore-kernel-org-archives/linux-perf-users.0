@@ -2,237 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E699C53210
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 14:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC47C4708E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 14:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231454AbjABOX4 (ORCPT
+        id S236201AbjABOqe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Jan 2023 09:23:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58860 "EHLO
+        Mon, 2 Jan 2023 09:46:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232479AbjABOXz (ORCPT
+        with ESMTP id S233028AbjABOqb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Jan 2023 09:23:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3E652F0
-        for <linux-perf-users@vger.kernel.org>; Mon,  2 Jan 2023 06:23:54 -0800 (PST)
+        Mon, 2 Jan 2023 09:46:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EAF910DD;
+        Mon,  2 Jan 2023 06:46:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6D2C8B80D50
-        for <linux-perf-users@vger.kernel.org>; Mon,  2 Jan 2023 14:23:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D25C433EF;
-        Mon,  2 Jan 2023 14:23:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BFC9F60FD9;
+        Mon,  2 Jan 2023 14:46:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1476C433D2;
+        Mon,  2 Jan 2023 14:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672669432;
-        bh=Ugw1X9Ve2MKmNGnrYCxIOOMY/vUqpt0fIJKRJJxuDd0=;
+        s=k20201202; t=1672670790;
+        bh=ib99j/Xg8KnJRGQY44zZ0IToYbBshf5eDR9ggpXoZDM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iIj3cFmABHKUY9rL0jZC0WsEg3/HASQacNhZWHZJJXJ7hgCrEMRbB2zwydlSAHhCJ
-         4CRWmP3eyZkpO92edX/WV9iFjP5Cz9CeMtod1LNfPS1M2iuJrwiLXDYu4kVKMyCgwb
-         MJGO21hSHN/zWQ7yAWJbVNbmZeUQvuo7KwfeALDT6AIO/e6kxIwNOsgoazr7KSLSyb
-         O0PdfQhD1BRCfquwWLnVra3IQg2bSxf6beF/UIBg7G0lVb1VULzclLnFyYpvM5oro6
-         ov7Sd6HK7gEvaMTEninw3pwOhM5+a3gOceqOXihcj4CUa2NKHHZ4bWwUk9CnCe1IE9
-         kHiDEmIXtpEeA==
+        b=D1qURN7gOSYA5/0zAam7wEX+Sz9Xh2sdVTIJI5359YPR3xJjJAx6NUFySFl6FMeir
+         WIOaA9595wr9WlwptcJv2ZVPKnIJkyy2hfSUzGqfaxkfXpPIxc6eBn+EqUdbM6MyLz
+         seku88jAtPupGF82Ob/F13MNKJjw+qLuUwLoZNmCQ5CijtaqJ0t62rgf0x6h+xvarv
+         jTO2xxIUuDiyrVVek/WxLxEVRrQpSlnJi2jN8J/V3H+2gzS2XAascPX4qtctz2FYFM
+         5fOsGY/t4mCkckoaYYiJj8Zv8jLy2Laj2LJAMuL3hUs5hS/C9gXei9Wi846luqwpbm
+         GVnqX0Z1a10YQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 030AC40468; Mon,  2 Jan 2023 11:23:48 -0300 (-03)
-Date:   Mon, 2 Jan 2023 11:23:48 -0300
+        id D13CF40468; Mon,  2 Jan 2023 11:46:27 -0300 (-03)
+Date:   Mon, 2 Jan 2023 11:46:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] perf test bpf: Skip test if kernel-debuginfo is not
- present
-Message-ID: <Y7Lo9DvCeLEEq7Ci@kernel.org>
-References: <20221028154230.140709-1-kjain@linux.ibm.com>
- <A7B7E3F1-161D-4B1A-A4FE-E4A77EE06F1A@linux.vnet.ibm.com>
- <Y5d5mfyCEcUqI61Y@kernel.org>
- <6D5F1D8A-47FF-46CF-8251-20BABDF283F6@linux.vnet.ibm.com>
- <Y5nxBuZ2AmKQh93a@kernel.org>
- <3F25062C-EA96-4745-B4E4-1A0375E29FA8@linux.vnet.ibm.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Miaoqian Lin <linmq006@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Fix resources leak in perf_data__open_dir
+Message-ID: <Y7LuQ/gM9O/EFtvD@kernel.org>
+References: <20221229090903.1402395-1-linmq006@gmail.com>
+ <d0cf59ae-87c3-3aab-34fa-aa88ea467423@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3F25062C-EA96-4745-B4E4-1A0375E29FA8@linux.vnet.ibm.com>
+In-Reply-To: <d0cf59ae-87c3-3aab-34fa-aa88ea467423@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 02, 2023 at 07:12:50PM +0530, Athira Rajeev escreveu:
-> > On 14-Dec-2022, at 9:21 PM, Arnaldo Carvalho de Melo <acme@kernel.org <mailto:acme@kernel.org>> wrote:
-> > Em Tue, Dec 13, 2022 at 03:21:03PM +0530, Athira Rajeev escreveu:
-> >>> On 13-Dec-2022, at 12:27 AM, Arnaldo Carvalho de Melo <acme@kernel.org <mailto:acme@kernel.org>> wrote:
-> >>> Em Thu, Nov 03, 2022 at 12:27:01PM +0530, Athira Rajeev escreveu:
-> >>>>> On 28-Oct-2022, at 9:12 PM, Kajol Jain <kjain@linux.ibm.com <mailto:kjain@linux.ibm.com>> wrote:
-> >>>>> 
-> >>>>> Perf BPF filter test fails in environment where "kernel-debuginfo"
-> >>>>> is not installed.
-> >>>>> 
-> >>>>> Test failure logs:
-> >>>>> <<>>
-> >>>>> 42: BPF filter                            :
-> >>>>> 42.1: Basic BPF filtering                 : Ok
-> >>>>> 42.2: BPF pinning                         : Ok
-> >>>>> 42.3: BPF prologue generation             : FAILED!
-> >>>>> <<>>
-> >>>>> 
-> >>>>> Enabling verbose option provided debug logs, which says debuginfo
-> >>>>> needs to be installed. Snippet of verbose logs:
-> >>>>> 
-> >>>>> <<>>
-> >>>>> 42.3: BPF prologue generation                                       :
-> >>>>> --- start ---
-> >>>>> test child forked, pid 28218
-> >>>>> <<>>
-> >>>>> Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
-> >>>>> package.
-> >>>>> bpf_probe: failed to convert perf probe events
-> >>>>> Failed to add events selected by BPF
-> >>>>> test child finished with -1
-> >>>>> ---- end ----
-> >>>>> BPF filter subtest 3: FAILED!
-> >>>>> <<>>
-> >>>>> 
-> >>>>> Here subtest, "BPF prologue generation" failed and
-> >>>>> logs shows debuginfo is needed. After installing
-> >>>>> kernel-debuginfo package, testcase passes.
-> >>>>> 
-> >>>>> Subtest "BPF prologue generation" failed because, the "do_test"
-> >>>>> function returns "TEST_FAIL" without checking the error type
-> >>>>> returned by "parse_events_load_bpf_obj" function.
-> >>>>> Function parse_events_load_bpf_obj can also return error of type
-> >>>>> "-ENOENT" incase kernel-debuginfo package is not installed. Fix this
-> >>>>> by adding check for -ENOENT error.
-> >>>>> 
-> >>>>> Test result after the patch changes:
-> >>>>> 
-> >>>>> Test failure logs:
-> >>>>> <<>>
-> >>>>> 42: BPF filter                 :
-> >>>>> 42.1: Basic BPF filtering      : Ok
-> >>>>> 42.2: BPF pinning              : Ok
-> >>>>> 42.3: BPF prologue generation  : Skip (clang/debuginfo isn't
-> >>>>> installed or environment missing BPF support)
-> >>>>> 
-> >>>>> Fixes: ba1fae431e74bb42 ("perf test: Add 'perf test BPF'")
-> >>>>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com <mailto:kjain@linux.ibm.com>>
-> >>>>> Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com <mailto:maddy@linux.ibm.com>>
-> >>>>> ---
-> >>>>> tools/perf/tests/bpf.c | 6 +++++-
-> >>>>> 1 file changed, 5 insertions(+), 1 deletion(-)
-> >>>>> 
-> >>>>> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-> >>>>> index 17c023823713..57cecadc1da2 100644
-> >>>>> --- a/tools/perf/tests/bpf.c
-> >>>>> +++ b/tools/perf/tests/bpf.c
-> >>>>> @@ -126,6 +126,10 @@ static int do_test(struct bpf_object *obj, int (*func)(void),
-> >>>>> 
-> >>>>> 	err = parse_events_load_bpf_obj(&parse_state, &parse_state.list, obj, NULL);
-> >>>>> 	parse_events_error__exit(&parse_error);
-> >>>>> +	if (err == -ENOENT) {
-> >>>>> +		pr_debug("Failed to add events selected by BPF, debuginfo package not installed\n");
-> >>>>> +		return TEST_SKIP;
-> >>>>> +	}
-> >>>> 
-> >>>> Hi Kajol,
-> >>>> 
-> >>>> Here, you have used ENOENT to skip the test. But there could be other places in the code path for “parse_events_load_bpf_obj”
-> >>>> which also returns ENOENT. In that case, for any exit that returns ENOENT, test will get skipped.
-> >>>> 
-> >>>> Can we look at the logs, example we have this in commit logs:
-> >>>> 
-> >>>> 	Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo
-> >>>> 	package.
-> >>>> 
-> >>>> so as to decide whether to skip for debug info ?
-> >>> 
-> >>> Kajol?
+Em Thu, Dec 29, 2022 at 01:27:39PM +0200, Adrian Hunter escreveu:
+> On 29/12/22 11:09, Miaoqian Lin wrote:
+> > In perf_data__open_dir(), opendir() opens the directory stream.
+> > Add missing closedir() to release it after use.
 > > 
-> >> Hi Arnaldo, looking for your suggestion on how to handle the case where debuginfo is missing.
-> > 
-> >> Here the bpf test fails because of missing debuginfo. The function
-> >> which goes through the debuginfo check is "parse_events_load_bpf_obj"
-> >> . parse_events_load_bpf_obj internally calls "open_debuginfo" which
-> >> returns ENOENT when debuginfo is missing. The patch fix from Kajol is
-> >> to skip the test using error code ENOENT for debuginfo.
-> > 
-> > Lets see:
-> > 
-> > root@roc-rk3399-pc:~# uname -a
-> > Linux roc-rk3399-pc 6.1.0-rc5-00123-g4dd7ff4a0311 #2 SMP PREEMPT Wed Nov 16 19:55:11 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux
-> > root@roc-rk3399-pc:~# perf probe -x ~/bin/perf open_debuginfo
-> > Added new event:
-> > probe_perf:open_debuginfo (on open_debuginfo in /home/acme/bin/perf)
-> > 
-> > You can now use it in all perf tools, such as:
-> > 
-> > 	perf record -e probe_perf:open_debuginfo -aR sleep 1
-> > 
-> > root@roc-rk3399-pc:~#
-> > 
-> > root@roc-rk3399-pc:~# perf trace --call-graph=dwarf -a -e probe_perf:* perf test bpf
-> > 40: LLVM search and compile                                         :
-> > 40.1: Basic BPF llvm compile                                        : Ok
-> > 40.3: Compile source for BPF prologue generation                    : FAILED!
-> > 40.4: Compile source for BPF relocation                             : Ok
-> > 42: BPF filter                                                      :
-> > 42.1: Basic BPF filtering                                           :     0.000 perf/38363 probe_perf:open_debuginfo(__probe_ip: 187650778659428)
-> >                                     open_debuginfo (/home/acme/bin/perf)
-> >                                     try_to_find_probe_trace_events (inlined)
-> >                                     convert_to_probe_trace_events (inlined)
-> >                                     convert_perf_probe_events (/home/acme/bin/perf)
-> >                                     bpf__probe (/home/acme/bin/perf)
-> >                                     parse_events_load_bpf_obj (/home/acme/bin/perf)
-> >                                     do_test (/home/acme/bin/perf)
-> > FAILED!
-> > 42.2: BPF pinning                                                   :  5594.218 perf/38582 probe_perf:open_debuginfo(__probe_ip: 187650778659428)
-> >                                     open_debuginfo (/home/acme/bin/perf)
-> >                                     try_to_find_probe_trace_events (inlined)
-> >                                     convert_to_probe_trace_events (inlined)
-> >                                     convert_perf_probe_events (/home/acme/bin/perf)
-> >                                     bpf__probe (/home/acme/bin/perf)
-> >                                     parse_events_load_bpf_obj (/home/acme/bin/perf)
-> >                                     do_test (/home/acme/bin/perf)
-> > FAILED!
-> > 42.3: BPF prologue generation                                       : FAILED!
-> > 63: Test libpfm4 support                                            :
-> > 99: perf stat --bpf-counters test                                   : Skip
-> > 100: perf stat --bpf-counters --for-each-cgroup test                 : Skip
-> > root@roc-rk3399-pc:~#
-> > 
-> > So that is the callchains leading to open_debuginfo(), perhaps we should
-> > return ENODATA at try_to_find_probe_trace_events() when open_debuginfo()
-> > fails?
+> > Fixes: eb6176709b23 ("perf data: Add perf_data__open_dir_data function")
+> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 > 
-> Hi Arnaldo,
-> 
-> Thanks for the suggestions. I tried with changing return code to ENODATA when open_debuginfo fails and will
-> send a separate patch addressing this change.
-> 
-> > 
-> > ⬢[acme@toolbox perf]$ find tools/perf/ -name "*.[ch]" | xargs grep try_to_find_probe_trace_events
-> > tools/perf/util/probe-event.c:static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
-> > tools/perf/util/probe-event.c:static int try_to_find_probe_trace_events(struct perf_probe_event *pev,
-> > tools/perf/util/probe-event.c:	ret = try_to_find_probe_trace_events(pev, tevs);
-> > ⬢[acme@toolbox perf]$ 
-> > 
-> > Also it returns ENOENT as well when not finding the probe point... There
-> > we should return perhaps ENOSYM?
-> 
-> ENOSYM is not defined for all the archs. 
-> 
-> 	arch/parisc/include/uapi/asm/errno.h:#define ENOSYM		215	/* symbol does not exist in executable */
-> 
-> So we need to make this error code generic to use in probe-event. Shall we make this error code
-> generic for all archs to use ?
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Try to find some other errno that is available everywhere and use
-instead, I think.
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> > ---
+> >  tools/perf/util/data.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> > index a7f68c309545..fc16299c915f 100644
+> > --- a/tools/perf/util/data.c
+> > +++ b/tools/perf/util/data.c
+> > @@ -132,6 +132,7 @@ int perf_data__open_dir(struct perf_data *data)
+> >  		file->size = st.st_size;
+> >  	}
+> >  
+> > +	closedir(dir);
+> >  	if (!files)
+> >  		return -EINVAL;
+> >  
+> > @@ -140,6 +141,7 @@ int perf_data__open_dir(struct perf_data *data)
+> >  	return 0;
+> >  
+> >  out_err:
+> > +	closedir(dir);
+> >  	close_dir(files, nr);
+> >  	return ret;
+> >  }
+
+-- 
 
 - Arnaldo
