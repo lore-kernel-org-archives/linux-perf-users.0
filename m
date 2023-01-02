@@ -2,207 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BE5C4708E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 15:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7651C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 15:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233806AbjABPdq (ORCPT
+        id S232103AbjABPe7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Jan 2023 10:33:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39300 "EHLO
+        Mon, 2 Jan 2023 10:34:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236328AbjABPdk (ORCPT
+        with ESMTP id S230340AbjABPe5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Jan 2023 10:33:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87A39FE6;
-        Mon,  2 Jan 2023 07:33:39 -0800 (PST)
+        Mon, 2 Jan 2023 10:34:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0642ECEE;
+        Mon,  2 Jan 2023 07:34:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 546B260C2A;
-        Mon,  2 Jan 2023 15:33:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D47FC433EF;
-        Mon,  2 Jan 2023 15:33:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 94B8B6100E;
+        Mon,  2 Jan 2023 15:34:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD14DC433EF;
+        Mon,  2 Jan 2023 15:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672673618;
-        bh=5pca/j7McOj+rsY0jP+gJ5eTrXjI71iO+uCVP0GTu/s=;
+        s=k20201202; t=1672673696;
+        bh=zJNTfbfKaQsZHuoRWNrWjoFueZFaKIOgRu8XXFughmo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=So9KnVLK934hERY7amnug0/GLUWW74/J8OGHgxmbVmPGXQk/onUsL0SqXereLtRC5
-         YBCSulVwb+HsdkCKIk2goAc05bBrxq7u8e9CNLW4NQ1n2K8/VOLCK74QY9TEcHYg7/
-         tBYqUMCA+tJnTV7Zt6/lgwTjJvCCA6IjFn2AVO85Wl+Ud4n+ab8a9rQKnGClEhzz37
-         QBXEDi3Vuy5oVTUrR4rDYOik3HFjMlCP87Yl2e267QqKYIhXWhzqT5TGH5uI8AkH8c
-         Xpsr2Gh14ISo+7MZ2HVuWJTF9/oNlSrnr1YrUrF9emS0f3Z1rH5pH4RbXZKEobvFQr
-         nOYQXyjC7pAhw==
+        b=bWeExQuNd/hxzvyL3CO6P9+LFR8lQ+6neY/BYDS73yDx+G3ax1cqa1aI/tKmTg+y2
+         cVcHSUzFfKW5D/u38jVNDecmfGJHlCWI17WfiCDD0z3/otl6393XLj2feKla1i6ptG
+         H9dbd3lLkbcHQFF3L5RwwdApJ0sLSOrQEUMv7PQ7bgz1TOn/ywwceB2FP557pPKWmb
+         EQEg28zOmJyhKRWXXl4SpHGtN0f3F9yhcJo58iFk8CQdj0Rd64k1QcySrhZJBfXIdP
+         K2HfEht4cvYZhj6eSEklbPzq+DWuSMMce6OS0DsOb4wI2AF2+npG086LQ5jSrSLnYr
+         Ov7bxE/LcTOgQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6EBE340468; Mon,  2 Jan 2023 12:33:35 -0300 (-03)
-Date:   Mon, 2 Jan 2023 12:33:35 -0300
+        id 2E10C40468; Mon,  2 Jan 2023 12:34:53 -0300 (-03)
+Date:   Mon, 2 Jan 2023 12:34:53 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH] perf lock: Fix core dump in command perf lock contention
-Message-ID: <Y7L5T2IHdovfLgWp@kernel.org>
-References: <20221230102627.2410847-1-tmricht@linux.ibm.com>
+To:     Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
+        <nabijaczleweli@nabijaczleweli.xyz>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] perf tools: don't include signature in version
+ strings
+Message-ID: <Y7L5nfcAH1aTh8po@kernel.org>
+References: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
+ <7c9637711271f50ec2341fb8a7c29585335dab04.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20221230102627.2410847-1-tmricht@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7c9637711271f50ec2341fb8a7c29585335dab04.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Dec 30, 2022 at 11:26:27AM +0100, Thomas Richter escreveu:
-> The test case perf lock contention dumps core on s390. Run the following
-> commands:
->  # ./perf lock record -- ./perf bench sched messaging
->  # Running 'sched/messaging' benchmark:
->  # 20 sender and receiver processes per group
->  # 10 groups == 400 processes run
+Em Tue, Dec 27, 2022 at 09:58:00PM +0100, Ahelenia Ziemiańska escreveu:
+> This explodes the build if HEAD is signed, since the generated version
+> is gpg: Signature made Mon 26 Dec 2022 20:34:48 CET, then a few more
+> lines, then the SHA.
 > 
->      Total time: 2.799 [sec]
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.073 MB perf.data (100 samples) ]
->  #
->  # ./perf lock contention
->  Segmentation fault (core dumped)
->  #
-> 
-> The function call stack is lengthy, here are the top 5 functions:
->  # gdb ./perf core.24048
->  GNU gdb (GDB) Fedora Linux 12.1-6.fc37
->  Copyright (C) 2022 Free Software Foundation, Inc.
->  Core was generated by `./perf lock contention'.
->  Program terminated with signal SIGSEGV, Segmentation fault.
->  #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,
->          addr=1789230) at util/machine.c:3356
->          3356 machine->sched.text_end = kmap->unmap_ip(kmap, sym->start);
-> 
->  (gdb) where
->   #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,\
->          addr=1789230) at util/machine.c:3356
->   #1  0x000000000109f244 in callchain_id (evsel=0x30313e0,\
->          sample=0x3ffea4f77d0) at builtin-lock.c:957
->   #2  0x000000000109e094 in get_key_by_aggr_mode (key=0x3ffea4f7290,\
->          addr=27758136, evsel=0x30313e0, sample=0x3ffea4f77d0) \
->          at builtin-lock.c:586
->   #3  0x000000000109f4d0 in report_lock_contention_begin_event \
->          (evsel=0x30313e0, sample=0x3ffea4f77d0)
->          at builtin-lock.c:1004
->   #4  0x00000000010a00ae in evsel__process_contention_begin \
->          (evsel=0x30313e0, sample=0x3ffea4f77d0)
->          at builtin-lock.c:1254
->   #5  0x00000000010a0e14 in process_sample_event (tool=0x3ffea4f8480, \
->          event=0x3ff85601ef8, sample=0x3ffea4f77d0,
->          evsel=0x30313e0, machine=0x3029e28) at builtin-lock.c:1464
->           sample=0x3ffea4f77d0, evsel=0x30313e0, machine=0x3029e28) \
-> 	 at util/session.c:1523
->   .....
-> 
-> The issue is in function machine__is_lock_function() in file
-> ./util/machine.c lines 3355:
->    /* should not fail from here */
->    sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_end",
-> 		                             &kmap);
->    machine->sched.text_end = kmap->unmap_ip(kmap, sym->start)
-> 
-> On s390 the symbol __sched_text_end is *NOT* in the symbol list and the
-> resulting pointer sym is set to NULL. The sym->start is then a NULL pointer
-> access and generates the core dump.
-> 
-> The reason why __sched_text_end is not in the symbol list on s390 is
-> simple:
-> When the symbol list is created at perf start up with function calls
->   dso__load
->   +--> dso__load_vmlinux_path
->        +--> dso__load_vmlinux
->             +--> dso__load_sym
-> 	         +--> dso__load_sym_internal (reads kernel symbols)
-> 		 +--> symbols__fixup_end
-> 		 +--> symbols__fixup_duplicate
-> 
-> The issue is in function symbols__fixup_duplicate(). It deletes all
-> symbols with have the same address. On s390
->  # nm -g  ~/linux/vmlinux| fgrep c68390
->  0000000000c68390 T __cpuidle_text_start
->  0000000000c68390 T __sched_text_end
->  #
-> two symbols have identical addresses and __sched_text_end is considered
-> duplicate (in ascending sort order) and removed from the symbol list.
-> Therefore it is missing and an invalid pointer reference occurs.
-> The code checks for symbol __sched_text_start and when it exists assumes
-> symbol __sched_text_end is also in the symbol table. However this is
-> not the case on s390.
-> 
-> Same situation exists for symbol __lock_text_start:
-> 0000000000c68770 T __cpuidle_text_end
-> 0000000000c68770 T __lock_text_start
-> This symbol is also removed from the symbol table but used in function
-> machine__is_lock_function().
-> 
-> To fix this and keep duplicate symbols in the symbol table, set
-> symbol_conf.allow_aliases to true. This prevents the removal of duplicate
-> symbols in function symbols__fixup_duplicate().
-> 
-> Output After:
->  # ./perf lock contention
->  contended total wait  max wait  avg wait    type   caller
-> 
->         48   124.39 ms 123.99 ms   2.59 ms rwsem:W unlink_anon_vmas+0x24a
->         47    83.68 ms  83.26 ms   1.78 ms rwsem:W free_pgtables+0x132
->          5    41.22 us  10.55 us   8.24 us rwsem:W free_pgtables+0x140
->          4    40.12 us  20.55 us  10.03 us rwsem:W copy_process+0x1ac8
->  #
-> 
-> Fixes: cc2367eebb0c ("machine: Adopt is_lock_function() from builtin-lock.c")
+> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Humm, is that really the cset that introduces the problem? It just moves
-things around, the cset that introduced the is_lock_function() function,
-that assumed that __sched_text_end was always available was:
-
-commit 0d2997f750d1de394231bc22768dab94a5b5db2f
-Author: Namhyung Kim <namhyung@kernel.org>
-Date:   Wed Jun 15 09:32:22 2022 -0700
-
-    perf lock: Look up callchain for the contended locks
-
----
-
-Right? Namhyung? Can you spot any problem in enabling duplicates as a
-fix?
+Thanks, applied to perf/urgent.
 
 - Arnaldo
 
-> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 > ---
->  tools/perf/builtin-lock.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  tools/perf/Documentation/Makefile | 2 +-
+>  tools/perf/util/PERF-VERSION-GEN  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 718b82bfcdff..506c2fe42d52 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1670,6 +1670,7 @@ static int __cmd_report(bool display_info)
+> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+> index 6e7b88917ca0..ba5d942e4c6a 100644
+> --- a/tools/perf/Documentation/Makefile
+> +++ b/tools/perf/Documentation/Makefile
+> @@ -267,7 +267,7 @@ $(OUTPUT)%.xml : %.txt
+>  	$(ASCIIDOC) -b docbook -d manpage \
+>  		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) \
+>  		-aperf_date=$(shell git log -1 --pretty="format:%cd" \
+> -				--date=short $<) \
+> +				--date=short --no-show-signature $<) \
+>  		-o $@+ $< && \
+>  	mv $@+ $@
 >  
->  	/* for lock function check */
->  	symbol_conf.sort_by_name = true;
-> +	symbol_conf.allow_aliases = true;
->  	symbol__init(&session->header.env);
->  
->  	if (!data.is_pipe) {
-> @@ -1757,6 +1758,7 @@ static int __cmd_contention(int argc, const char **argv)
->  
->  	/* for lock function check */
->  	symbol_conf.sort_by_name = true;
-> +	symbol_conf.allow_aliases = true;
->  	symbol__init(&session->header.env);
->  
->  	if (use_bpf) {
+> diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
+> index 3cc42821d9b3..d7dc7c28508c 100755
+> --- a/tools/perf/util/PERF-VERSION-GEN
+> +++ b/tools/perf/util/PERF-VERSION-GEN
+> @@ -19,7 +19,7 @@ TAG=
+>  if test -d ../../.git -o -f ../../.git
+>  then
+>  	TAG=$(MAKEFLAGS= make -sC ../.. kernelversion)
+> -	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
+> +	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" --no-show-signature 2>/dev/null) && CID="-g$CID"
+>  elif test -f ../../PERF-VERSION-FILE
+>  then
+>  	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
 > -- 
-> 2.38.1
+> 2.30.2
+
+
 
 -- 
 
