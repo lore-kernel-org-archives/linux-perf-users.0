@@ -2,208 +2,163 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BE5C3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 15:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4398C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 16:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232629AbjABPgF (ORCPT
+        id S236531AbjABQRK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Jan 2023 10:36:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
+        Mon, 2 Jan 2023 11:17:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232151AbjABPgE (ORCPT
+        with ESMTP id S236622AbjABQQy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Jan 2023 10:36:04 -0500
+        Mon, 2 Jan 2023 11:16:54 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE3A5FC6;
-        Mon,  2 Jan 2023 07:36:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5351AE68;
+        Mon,  2 Jan 2023 08:16:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B38B6B80D3E;
-        Mon,  2 Jan 2023 15:36:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A2FC433EF;
-        Mon,  2 Jan 2023 15:35:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9CD77B80D85;
+        Mon,  2 Jan 2023 16:16:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BEC8C433D2;
+        Mon,  2 Jan 2023 16:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672673760;
-        bh=4/As87h7nXDCo+gH2bpoZk9UnCj5V3In3mYM7gziX7g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DJ3Qj4fQyUL/IZhrvgSGrFsBNhN24gp0Yh5NEiEZytLS+VFdi1RCpJxB7Pey14NsN
-         6xaeW9w76SCPTwttFtwnqS7udaxncLrAi3RU/tL4RaexrM40axYzBZrk0BHrI3xtWv
-         nhUoYM2LL2mvJTFgPu7460wc0Mu+PGOPi3U6uaYLOrPY+4qppI5EBI+iMIPfOV/SW8
-         G7hkpuJo1OtSKKm53z5BiSXueI3/oco0bgeY5SkC9LtVR9/eI1hv5thT3ZBDF390p+
-         l+RXdWm6gqGbC128MubfyCH5iZyZoBne7aloV5ntUhImB/QCw0mz2Mx9ghl8COV9Mp
-         v4eeC/XmHEHEA==
+        s=k20201202; t=1672676210;
+        bh=fLsGwxADOfpNVMEEgkG7geJ98HrY385l+MjA+VZHbNI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BbDBibU92AFaJ7mNA2Knkils1vKWf2nhn2dOBr8a/DYTv83bmYdSM6Y6tppIJwcma
+         Y6FN+uu4t+c4nRbPkTCqo9hg2eFGsB6wsSPGQDdiOBd6OTnuH0hrcRq6nFQUl9qjgQ
+         /l8TuZf4I0vyjpdiisahUWY8pmyzOHVrFVTX54tnY2aHfmCJ1Z0bW/dOOca5oEt0Mq
+         3UC0Tli3BJRkvnQKTkiR8CCXtTudeut0q274bpOnvbkoxWKGc5xJeR8VF/WaP4L69o
+         y+23AF9XyWPn0HWGX12UXFlckRE2Yg9+XXw7imJ6QCv9wBAA1nmSKnSkmq4xJS19AQ
+         EaW+THmGW98VA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1864A40468; Mon,  2 Jan 2023 12:35:58 -0300 (-03)
-Date:   Mon, 2 Jan 2023 12:35:58 -0300
+        id 92D3440468; Mon,  2 Jan 2023 13:16:47 -0300 (-03)
+Date:   Mon, 2 Jan 2023 13:16:47 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
-        <nabijaczleweli@nabijaczleweli.xyz>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        yaowenbin <yaowenbin1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] perf tui: don't ignore job control
-Message-ID: <Y7L53knoZpMIO3z/@kernel.org>
-References: <CAM9d7ciuh1H2Mfx5ToYGT1fOm8E3jrQhkzg304JKDd7BhT=h5g@mail.gmail.com>
- <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf tools: Fix segfault when trying to process
+ tracepoints in perf.data and not linked with libtraceevent
+Message-ID: <Y7MDb7kRaHZB6APC@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0354dcae23a8713f75f4fed609e0caec3c6e3cd5.1672174189.git.nabijaczleweli@nabijaczleweli.xyz>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 27, 2022 at 09:57:40PM +0100, Ahelenia Ziemiańska escreveu:
-> In its infinite wisdom, by default, SLang sets susp undef,
-> and this can only be un-done by calling SLtty_set_suspend_state(true).
-> After every SLang_init_tty().
-> 
-> Additionally, no provisions are made for maintaining the teletype
-> attributes across suspend/continue (outside of curses emulation mode(?!),
-> which provides full support, naturally), so we need to save and restore
-> the flags ourselves, as well as reset the text colours when going under.
-> We need to also re-draw the screen, and raising SIGWINCH, shockingly,
-> Just Works.
-> 
-> The correct solution would be to Not Use SLang, but as a stop-gap,
-> this makes TUI perf report usable.
-> 
-> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
-> ---
-> Yeah, somehow I didn't hit that in my tests, but it was relatively easy
-> to trigger when I tried. A full partial write retry loop is an overkill
-> here, I think, and few other places in perf actually try to resubmit
-> partial writes, so.
+When we have a perf.data file with tracepoints, such as:
 
-We've been with this problem since forever, so I'll apply it to
-perf/core, i.e. for the next merge window, ok?
+  # perf evlist -f
+  probe_perf:lzma_decompress_to_file
+  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint eve=
+nts
+  #
 
-- Arnaldo
- 
->  tools/perf/ui/browsers/annotate.c |  1 +
->  tools/perf/ui/browsers/hists.c    |  2 ++
->  tools/perf/ui/browsers/scripts.c  |  1 +
->  tools/perf/ui/tui/setup.c         | 22 ++++++++++++++++++++++
->  4 files changed, 26 insertions(+)
-> 
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index c03fa76c02ff..6a4ffbf66c7f 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -942,6 +942,7 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
->  	/* reset abort key so that it can get Ctrl-C as a key */
->  	SLang_reset_tty();
->  	SLang_init_tty(0, 0, 0);
-> +	SLtty_set_suspend_state(true);
->  
->  	return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
->  }
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index b72ee6822222..2479e6d42e7c 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3010,6 +3010,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
->  	/* reset abort key so that it can get Ctrl-C as a key */
->  	SLang_reset_tty();
->  	SLang_init_tty(0, 0, 0);
-> +	SLtty_set_suspend_state(true);
->  
->  	if (min_pcnt)
->  		browser->min_pcnt = min_pcnt;
-> @@ -3682,6 +3683,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
->  	/* reset abort key so that it can get Ctrl-C as a key */
->  	SLang_reset_tty();
->  	SLang_init_tty(0, 0, 0);
-> +	SLtty_set_suspend_state(true);
->  
->  	memset(&action, 0, sizeof(action));
->  
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index 47d2c7a8cbe1..50d45054ed6c 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -166,6 +166,7 @@ void run_script(char *cmd)
->  	printf("\033[c\033[H\033[J");
->  	fflush(stdout);
->  	SLang_init_tty(0, 0, 0);
-> +	SLtty_set_suspend_state(true);
->  	SLsmg_refresh();
->  }
->  
-> diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> index a3b8c397c24d..09524ba04975 100644
-> --- a/tools/perf/ui/tui/setup.c
-> +++ b/tools/perf/ui/tui/setup.c
-> @@ -2,12 +2,14 @@
->  #include <signal.h>
->  #include <stdbool.h>
->  #include <stdlib.h>
-> +#include <termios.h>
->  #include <unistd.h>
->  #include <linux/kernel.h>
->  #ifdef HAVE_BACKTRACE_SUPPORT
->  #include <execinfo.h>
->  #endif
->  
-> +#include "../../util/color.h"
->  #include "../../util/debug.h"
->  #include "../../perf.h"
->  #include "../browser.h"
-> @@ -122,6 +124,23 @@ static void ui__signal(int sig)
->  	exit(0);
->  }
->  
-> +static void ui__sigcont(int sig)
-> +{
-> +	static struct termios tty;
-> +
-> +	if (sig == SIGTSTP) {
-> +		while (tcgetattr(SLang_TT_Read_FD, &tty) == -1 && errno == EINTR)
-> +			;
-> +		while (write(SLang_TT_Read_FD, PERF_COLOR_RESET, sizeof(PERF_COLOR_RESET) - 1) == -1 && errno == EINTR)
-> +			;
-> +		raise(SIGSTOP);
-> +	} else {
-> +		while (tcsetattr(SLang_TT_Read_FD, TCSADRAIN, &tty) == -1 && errno == EINTR)
-> +			;
-> +		raise(SIGWINCH);
-> +	}
-> +}
-> +
->  int ui__init(void)
->  {
->  	int err;
-> @@ -136,6 +155,7 @@ int ui__init(void)
->  	err = SLang_init_tty(-1, 0, 0);
->  	if (err < 0)
->  		goto out;
-> +	SLtty_set_suspend_state(true);
->  
->  	err = SLkp_init();
->  	if (err < 0) {
-> @@ -150,6 +170,8 @@ int ui__init(void)
->  	signal(SIGINT, ui__signal);
->  	signal(SIGQUIT, ui__signal);
->  	signal(SIGTERM, ui__signal);
-> +	signal(SIGTSTP, ui__sigcont);
-> +	signal(SIGCONT, ui__sigcont);
->  
->  	perf_error__register(&perf_tui_eops);
->  
-> -- 
-> 2.30.2
-> 
+We end up segfaulting when using perf built with NO_LIBTRACEEVENT=3D1 by
+trying to find an evsel with a NULL 'event_name' variable:
 
+  (gdb) run report --stdio -f
+  Starting program: /root/bin/perf report --stdio -f
 
+  Program received signal SIGSEGV, Segmentation fault.
+  0x000000000055219d in find_evsel (evlist=3D0xfda7b0, event_name=3D0x0) at=
+ util/sort.c:2830
+  warning: Source file is more recent than executable.
+  2830		if (event_name[0] =3D=3D '%') {
+  Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.8-=
+11.fc36.x86_64 cyrus-sasl-lib-2.1.27-18.fc36.x86_64 elfutils-debuginfod-cli=
+ent-0.188-3.fc36.x86_64 elfutils-libelf-0.188-3.fc36.x86_64 elfutils-libs-0=
+=2E188-3.fc36.x86_64 glibc-2.35-20.fc36.x86_64 keyutils-libs-1.6.1-4.fc36.x=
+86_64 krb5-libs-1.19.2-12.fc36.x86_64 libbrotli-1.0.9-7.fc36.x86_64 libcap-=
+2.48-4.fc36.x86_64 libcom_err-1.46.5-2.fc36.x86_64 libcurl-7.82.0-12.fc36.x=
+86_64 libevent-2.1.12-6.fc36.x86_64 libgcc-12.2.1-4.fc36.x86_64 libidn2-2.3=
+=2E4-1.fc36.x86_64 libnghttp2-1.51.0-1.fc36.x86_64 libpsl-0.21.1-5.fc36.x86=
+_64 libselinux-3.3-4.fc36.x86_64 libssh-0.9.6-4.fc36.x86_64 libstdc++-12.2.=
+1-4.fc36.x86_64 libunistring-1.0-1.fc36.x86_64 libunwind-1.6.2-2.fc36.x86_6=
+4 libxcrypt-4.4.33-4.fc36.x86_64 libzstd-1.5.2-2.fc36.x86_64 numactl-libs-2=
+=2E0.14-5.fc36.x86_64 opencsd-1.2.0-1.fc36.x86_64 openldap-2.6.3-1.fc36.x86=
+_64 openssl-libs-3.0.5-2.fc36.x86_64 slang-2.3.2-11.fc36.x86_64 xz-libs-5.2=
+=2E5-9.fc36.x86_64 zlib-1.2.11-33.fc36.x86_64
+  (gdb) bt
+  #0  0x000000000055219d in find_evsel (evlist=3D0xfda7b0, event_name=3D0x0=
+) at util/sort.c:2830
+  #1  0x0000000000552416 in add_dynamic_entry (evlist=3D0xfda7b0, tok=3D0xf=
+fb6eb "trace", level=3D2) at util/sort.c:2976
+  #2  0x0000000000552d26 in sort_dimension__add (list=3D0xf93e00 <perf_hpp_=
+list>, tok=3D0xffb6eb "trace", evlist=3D0xfda7b0, level=3D2) at util/sort.c=
+:3193
+  #3  0x0000000000552e1c in setup_sort_list (list=3D0xf93e00 <perf_hpp_list=
+>, str=3D0xffb6eb "trace", evlist=3D0xfda7b0) at util/sort.c:3227
+  #4  0x00000000005532fa in __setup_sorting (evlist=3D0xfda7b0) at util/sor=
+t.c:3381
+  #5  0x0000000000553cdc in setup_sorting (evlist=3D0xfda7b0) at util/sort.=
+c:3608
+  #6  0x000000000042eb9f in cmd_report (argc=3D0, argv=3D0x7fffffffe470) at=
+ builtin-report.c:1596
+  #7  0x00000000004aee7e in run_builtin (p=3D0xf64ca0 <commands+288>, argc=
+=3D3, argv=3D0x7fffffffe470) at perf.c:330
+  #8  0x00000000004af0f2 in handle_internal_command (argc=3D3, argv=3D0x7ff=
+fffffe470) at perf.c:384
+  #9  0x00000000004af241 in run_argv (argcp=3D0x7fffffffe29c, argv=3D0x7fff=
+ffffe290) at perf.c:428
+  #10 0x00000000004af5fc in main (argc=3D3, argv=3D0x7fffffffe470) at perf.=
+c:562
+  (gdb)
 
--- 
+So check if we have tracepoint events in add_dynamic_entry() and bail
+out instead:
 
-- Arnaldo
+  # perf report --stdio -f
+  This perf binary isn't linked with libtraceevent, can't process probe_per=
+f:lzma_decompress_to_file
+  Error:
+  Unknown --sort key: `trace'
+  #
+
+Fixes: 378ef0f5d9d7f465 ("perf build: Use libtraceevent from the system")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/sort.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index e188f74698dd310a..37662cdec5eefd18 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -2971,6 +2971,18 @@ static int add_dynamic_entry(struct evlist *evlist, =
+const char *tok,
+ 		ret =3D add_all_matching_fields(evlist, field_name, raw_trace, level);
+ 		goto out;
+ 	}
++#else
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type =3D=3D PERF_TYPE_TRACEPOINT) {
++			pr_err("%s %s", ret ? "," : "This perf binary isn't linked with libtrac=
+eevent, can't process", evsel__name(evsel));
++			ret =3D -ENOTSUP;
++		}
++	}
++
++	if (ret) {
++		pr_err("\n");
++		goto out;
++	}
+ #endif
+=20
+ 	evsel =3D find_evsel(evlist, event_name);
+--=20
+2.39.0
+
