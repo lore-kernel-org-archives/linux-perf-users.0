@@ -2,103 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC47C4708E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 14:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53448C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Jan 2023 14:50:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236201AbjABOqe (ORCPT
+        id S232574AbjABOuO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Jan 2023 09:46:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37634 "EHLO
+        Mon, 2 Jan 2023 09:50:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233028AbjABOqb (ORCPT
+        with ESMTP id S236318AbjABOuL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Jan 2023 09:46:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EAF910DD;
-        Mon,  2 Jan 2023 06:46:31 -0800 (PST)
+        Mon, 2 Jan 2023 09:50:11 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 983E565EE;
+        Mon,  2 Jan 2023 06:50:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BFC9F60FD9;
-        Mon,  2 Jan 2023 14:46:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1476C433D2;
-        Mon,  2 Jan 2023 14:46:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4ECB8B80D79;
+        Mon,  2 Jan 2023 14:50:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C679AC433D2;
+        Mon,  2 Jan 2023 14:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672670790;
-        bh=ib99j/Xg8KnJRGQY44zZ0IToYbBshf5eDR9ggpXoZDM=;
+        s=k20201202; t=1672671008;
+        bh=lfleuzsKM462/HhP6D3FfjsaDO3LkhbzqsrbX2KFmNU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D1qURN7gOSYA5/0zAam7wEX+Sz9Xh2sdVTIJI5359YPR3xJjJAx6NUFySFl6FMeir
-         WIOaA9595wr9WlwptcJv2ZVPKnIJkyy2hfSUzGqfaxkfXpPIxc6eBn+EqUdbM6MyLz
-         seku88jAtPupGF82Ob/F13MNKJjw+qLuUwLoZNmCQ5CijtaqJ0t62rgf0x6h+xvarv
-         jTO2xxIUuDiyrVVek/WxLxEVRrQpSlnJi2jN8J/V3H+2gzS2XAascPX4qtctz2FYFM
-         5fOsGY/t4mCkckoaYYiJj8Zv8jLy2Laj2LJAMuL3hUs5hS/C9gXei9Wi846luqwpbm
-         GVnqX0Z1a10YQ==
+        b=oloe5Yx4OcxggkdiWECe7UcqB7EV5spgYYPNgDupdbah59e2N80js9UwAvu8AiDgu
+         HCZpkbbQQ8wxc49QOyi5hO+B9APaguEJVIT1pwxUeJxjRDGusfK/L8MOVfWZj7OBBF
+         /ixN9i8YtQnlH/7n6l8tdMUK3CkOF96tGhDTvD4dJ5h8Vv24mq7Nquog6BhnmCKI2a
+         HD1jaNSA9ut6tAZ5tEsSQzMI7zOWeZ50Kp2xYqQYwjaQpb9XqzinxTFH+PJa8WcgBs
+         A4vXKt2p8LIpy/yWRRAE3nmSaDPDjs27miXQFlw7jYMUTnVxtcPO8j2kcd7fhhkX5J
+         TCsZDfd3iNv2w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D13CF40468; Mon,  2 Jan 2023 11:46:27 -0300 (-03)
-Date:   Mon, 2 Jan 2023 11:46:27 -0300
+        id 8332D40468; Mon,  2 Jan 2023 11:50:05 -0300 (-03)
+Date:   Mon, 2 Jan 2023 11:50:05 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Miaoqian Lin <linmq006@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix resources leak in perf_data__open_dir
-Message-ID: <Y7LuQ/gM9O/EFtvD@kernel.org>
-References: <20221229090903.1402395-1-linmq006@gmail.com>
- <d0cf59ae-87c3-3aab-34fa-aa88ea467423@intel.com>
+To:     Eric Lin <eric.lin@sifive.com>
+Cc:     peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, palmer@dabbelt.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+        greentime.hu@sifive.com, vincent.chen@sifive.com
+Subject: Re: [PATCH] perf tools riscv: Fix perf tool build error on riscv
+Message-ID: <Y7LvHY/V6pME33I6@kernel.org>
+References: <20221231052731.24908-1-eric.lin@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d0cf59ae-87c3-3aab-34fa-aa88ea467423@intel.com>
+In-Reply-To: <20221231052731.24908-1-eric.lin@sifive.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Dec 29, 2022 at 01:27:39PM +0200, Adrian Hunter escreveu:
-> On 29/12/22 11:09, Miaoqian Lin wrote:
-> > In perf_data__open_dir(), opendir() opens the directory stream.
-> > Add missing closedir() to release it after use.
-> > 
-> > Fixes: eb6176709b23 ("perf data: Add perf_data__open_dir_data function")
-> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+Em Sat, Dec 31, 2022 at 05:27:31AM +0000, Eric Lin escreveu:
+> Since the definition of 'struct perf_sample' has been moved to sample.h,
+> we need to include this header file to fix the build error as follows:
 > 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> arch/riscv/util/unwind-libdw.c: In function 'libdw__arch_set_initial_registers':
+> arch/riscv/util/unwind-libdw.c:12:50: error: invalid use of undefined type 'struct perf_sample'
+>    12 |         struct regs_dump *user_regs = &ui->sample->user_regs;
+>       |                                                  ^~
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> > ---
-> >  tools/perf/util/data.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-> > index a7f68c309545..fc16299c915f 100644
-> > --- a/tools/perf/util/data.c
-> > +++ b/tools/perf/util/data.c
-> > @@ -132,6 +132,7 @@ int perf_data__open_dir(struct perf_data *data)
-> >  		file->size = st.st_size;
-> >  	}
-> >  
-> > +	closedir(dir);
-> >  	if (!files)
-> >  		return -EINVAL;
-> >  
-> > @@ -140,6 +141,7 @@ int perf_data__open_dir(struct perf_data *data)
-> >  	return 0;
-> >  
-> >  out_err:
-> > +	closedir(dir);
-> >  	close_dir(files, nr);
-> >  	return ret;
-> >  }
+> Fixes: 9823147da6c8 ("perf tools: Move 'struct perf_sample' to a separate header file to disentangle headers")
+> Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> ---
+>  tools/perf/arch/riscv/util/unwind-libdw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/arch/riscv/util/unwind-libdw.c
+> index 19536e172850..54a198714eb8 100644
+> --- a/tools/perf/arch/riscv/util/unwind-libdw.c
+> +++ b/tools/perf/arch/riscv/util/unwind-libdw.c
+> @@ -4,7 +4,7 @@
+>  #include <elfutils/libdwfl.h>
+>  #include "../../util/unwind-libdw.h"
+>  #include "../../util/perf_regs.h"
+> -#include "../../util/event.h"
+> +#include "../../util/sample.h"
+>  
+>  bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
+>  {
+> -- 
+> 2.17.1
 
 -- 
 
