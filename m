@@ -2,151 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239F3C4708E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 09:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF9C3DA7D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 11:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237280AbjACJ7i (ORCPT
+        id S230323AbjACLSt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 04:59:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
+        Tue, 3 Jan 2023 06:18:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232990AbjACJ7h (ORCPT
+        with ESMTP id S237380AbjACLSr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 04:59:37 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809D7EE31;
-        Tue,  3 Jan 2023 01:59:35 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id y8so28855794wrl.13;
-        Tue, 03 Jan 2023 01:59:35 -0800 (PST)
+        Tue, 3 Jan 2023 06:18:47 -0500
+Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89026FAC4
+        for <linux-perf-users@vger.kernel.org>; Tue,  3 Jan 2023 03:18:46 -0800 (PST)
+Received: by mail-oo1-xc2d.google.com with SMTP id 187-20020a4a09c4000000b004d8f3cb09f5so3961506ooa.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jan 2023 03:18:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MLIBMGouQmobP8kVmsIkUHnUqoZi7lrFSQF4WjKTeKw=;
-        b=S9ETtDyRqt2r/bQL5jRQ3/qQYx0QJsrs2sOqucmenRibHhBr9sCwlkWx/DPoLjFF0K
-         JUm6XWrcLHjrW1AGmi9DI+XOmBc/G3in2HMrRW/mDgp0Q1SuZs+2N4OrnLAWwUpv6aMm
-         WRPoVZSB/PHoz16uGxDHkYQAIY/efeBak8gxMZ05fSKGMTeU573KvzxVHQ5ZmUtvJ7nY
-         NHdNuYqLJeKA8T63+JETFz/Q5xXT9JZat8bh+m4kbatGeSwiFgAOjHKQoLMbtSpkYP8M
-         zq6HumuTxjAbYuXvCAdK8rLb4Dc/Yhz7f9e83jQU4L2lyflz+V2eYtrfboTXoWr8b+nv
-         DVRA==
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oRW+qnZqo8xLJZmKMDcpomg1dIY+xQ+eUrRegPR4twU=;
+        b=MZug2mtY9UjN21j6Uqw6EHzBkwpv01IIfTnTxW3LcBiXiGc6UNGVOiRVRfAiL1tMFR
+         SucZlMop/N1q0AloljAYuqwFbo1zeGTGolI0uA3VXNSIhizc1Kp9DaVwtmWGdRmdIBm4
+         6y6PzpLETkgws9y9hxwYFuDOlYj+TtEuhzbuX2tP6bYTDCPkS3iUhyAZXtSgJGL8b7sx
+         GEf4ST+WdeWzFi/WfVoKrBXk6wc1lr0OHfGpkAoFuI8xV7YVQTXyvQ3o3LQTgJbnjQxN
+         EDEQGmt3RH3P+CSX+jEYHbo1FGa5Y/ur1P6Me//hq/GPtuoPGbV9KlPDmp5BpwPttZWP
+         EcEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:from:content-language:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MLIBMGouQmobP8kVmsIkUHnUqoZi7lrFSQF4WjKTeKw=;
-        b=v5o4lyx7pmnCmtKlOKfce85CLm1GhmwT3vYUaWSa066NVwAG56CFfbjv+6PW/N5SKq
-         MK6QjrlbC4d9fkW4xwnhctMs4LaIAsnXv/VrZkPfQNb73Aasoz/1rpzspXZPAjY4nqrW
-         HpPYSnUDGuJlh0jn5mVztF8/Cm9FGvAKcn/1lOtmQ7B9ybPXV9wXjCM6MTyYCJg0DX/I
-         ZrtLaPEaonMCMJ2GSp+O1Z39+VkpDBAzcy02bZkysdWQ5EPNUHzToPssM1lZF7Y6lVwr
-         eqek66CFS6in9POsp/aVM5redwUPMmZ/bt2OeKVhFFxBVtJ2Nl1Of1sbhVIiNlkZlSaf
-         wMsQ==
-X-Gm-Message-State: AFqh2krPS/ujfSJq7c7xtPgbknGVuiw+5Erf1bQfoPw9dJZpFnzAhZbd
-        rRa3fhryQbTBVxqjaBdj7Bs=
-X-Google-Smtp-Source: AMrXdXs5LlGC6+psGmG4txh5Zb59lJlJXCUcagL3nMJKopVxukDh9Zz1MSdcyC82aIbdirJ6aOJ1jg==
-X-Received: by 2002:a05:6000:1e04:b0:273:e385:1a89 with SMTP id bj4-20020a0560001e0400b00273e3851a89mr24224697wrb.67.1672739973902;
-        Tue, 03 Jan 2023 01:59:33 -0800 (PST)
-Received: from [192.168.0.160] ([170.253.36.171])
-        by smtp.gmail.com with ESMTPSA id s18-20020adfdb12000000b00241fde8fe04sm31154035wri.7.2023.01.03.01.59.32
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oRW+qnZqo8xLJZmKMDcpomg1dIY+xQ+eUrRegPR4twU=;
+        b=UJuoYB6Lf5tsbYl9oHGNxcBpKTbM4URa1FxmshZ7iRjrrzUXHCxL45tG+C9XA795Bu
+         4L4WpB/kQBRpzIS4c1Hwd20KBKM6rEp2WJAhPBz6tRZgBb9P92MuaZghZIfmaTRyPVkH
+         Mtsz4g8fuhFC/lpAEUlSBbl5OqY63ULOzQ6/v1N2Y58rT5d08jZyuTpi3lOFCiqQ76Al
+         tNyDRcS5pyW5nL6n0ipSvcmVUi9D0GYeeyRvTkRITzajUupxQJOV4cAP5C9uX0xUdAFX
+         17e9Kd401WKq9TvsGfmPYa4pXSljQhS6ubOsmNlAXJiqMp3vSh2yXAfcF55tDTL3Vyu/
+         nLPQ==
+X-Gm-Message-State: AFqh2krPViYXpzeREYyiBUL89h5IbzsrozGCtO36iYAibcvJ0HA+iqjd
+        UiR1Zmv0Jwi5pLzI5LRq4nCxkCB11E6HSg==
+X-Google-Smtp-Source: AMrXdXtGSCGvh76ORutHaf8lEbHpKWU3F6K1Tp7sDH+QWuqoaXffeB1XUIswjpdrwJ/Q/Q2+v0UO+Q==
+X-Received: by 2002:a4a:4f89:0:b0:4a0:9768:ee8a with SMTP id c131-20020a4a4f89000000b004a09768ee8amr17987425oob.1.1672744725790;
+        Tue, 03 Jan 2023 03:18:45 -0800 (PST)
+Received: from [127.0.0.1] ([187.19.237.165])
+        by smtp.gmail.com with ESMTPSA id m2-20020a4add02000000b004a3d98b2ccdsm12159033oou.42.2023.01.03.03.18.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 01:59:33 -0800 (PST)
-Message-ID: <aa0ec1ba-ad47-795f-6e36-d6c0d224f51e@gmail.com>
-Date:   Tue, 3 Jan 2023 10:59:24 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] perf_event_open.2: Update recent changes
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
+        Tue, 03 Jan 2023 03:18:45 -0800 (PST)
+Date:   Tue, 03 Jan 2023 08:18:40 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        Ian Rogers <irogers@google.com>
+CC:     Torsten Hilbrich <torsten.hilbrich@secunet.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         linux-perf-users@vger.kernel.org
-References: <20221228021651.1027725-1-namhyung@kernel.org>
- <55416c53-1633-2c9c-e51c-cc96e27b4b11@gmail.com>
- <CAM9d7ci1wwqcBtu0RxeoiNqmDMAnaUnzEv9jTbFNjw+VnGinBA@mail.gmail.com>
-Content-Language: en-US
-From:   Alejandro Colomar <alx.manpages@gmail.com>
-In-Reply-To: <CAM9d7ci1wwqcBtu0RxeoiNqmDMAnaUnzEv9jTbFNjw+VnGinBA@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------kvj0UhbbGa7HE5FTLv6sQ0ez"
+Subject: Re: [v6.2-rc1] Regression with installing perf tool
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9560b967-a2ec-c370-7ec3-115295929e27@leemhuis.info>
+References: <fa4b3115-d555-3d7f-54d1-018002e99350@secunet.com> <d372f704-fa4a-344f-7a15-d97bfb13ac1d@leemhuis.info> <CAP-5=fXkpbfxGo8ozTJRCXVm0eS6tZ+9XSLchTfcVHmvvhBq5A@mail.gmail.com> <9560b967-a2ec-c370-7ec3-115295929e27@leemhuis.info>
+Message-ID: <BA4AAC11-A1DB-4F21-B186-F9BD6220750B@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------kvj0UhbbGa7HE5FTLv6sQ0ez
-Content-Type: multipart/mixed; boundary="------------0haipMI5tcAB6M9M3w7hwWBx";
- protected-headers="v1"
-From: Alejandro Colomar <alx.manpages@gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>, linux-man@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Marco Elver <elver@google.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Stephane Eranian
- <eranian@google.com>, linux-perf-users@vger.kernel.org
-Message-ID: <aa0ec1ba-ad47-795f-6e36-d6c0d224f51e@gmail.com>
-Subject: Re: [PATCH] perf_event_open.2: Update recent changes
-References: <20221228021651.1027725-1-namhyung@kernel.org>
- <55416c53-1633-2c9c-e51c-cc96e27b4b11@gmail.com>
- <CAM9d7ci1wwqcBtu0RxeoiNqmDMAnaUnzEv9jTbFNjw+VnGinBA@mail.gmail.com>
-In-Reply-To: <CAM9d7ci1wwqcBtu0RxeoiNqmDMAnaUnzEv9jTbFNjw+VnGinBA@mail.gmail.com>
 
---------------0haipMI5tcAB6M9M3w7hwWBx
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-SGkgTmFtaHl1bmcsDQoNCk9uIDEvMy8yMyAwNDoxMywgTmFtaHl1bmcgS2ltIHdyb3RlOg0K
-PiBIaSBBbGVqYW5kcm8sDQo+IA0KPiBIYXBweSBuZXcgeWVhciENCg0KSGFwcHkgbmV3IHll
-YXIhIDopDQoNCj4+PiBAQCAtMjIwOSw2ICsyMzM2LDEyIEBAIHN0cnVjdCB7DQo+Pj4gICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLyogaWYgUEVSRl9TQU1QTEVfUkVHU19JTlRSICov
-DQo+Pj4gICAgICAgIHU2NCAgICBwaHlzX2FkZHI7ICAgLyogaWYgUEVSRl9TQU1QTEVfUEhZ
-U19BRERSICovDQo+Pj4gICAgICAgIHU2NCAgICBjZ3JvdXA7ICAgICAgLyogaWYgUEVSRl9T
-QU1QTEVfQ0dST1VQICovDQo+Pj4gKyAgICB1NjQgICAgZGF0YV9wYWdlX3NpemU7DQo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgIC8qIGlmIFBFUkZfU0FNUExFX0RBVEFfUEFHRV9T
-SVpFICovDQo+Pg0KPj4gVGhlIGxpbmUgYWJvdmUgcnVucyBwYXN0IDgwIGNvbHVtbi4NCj4+
-DQo+Pj4gKyAgICB1NjQgICAgY29kZV9wYWdlX3NpemU7DQo+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgIC8qIGlmIFBFUkZfU0FNUExFX0NPREVfUEFHRV9TSVpFICovDQo+Pg0KPj4g
-VGhlIGxpbmUgYWJvdmUgcnVucyBwYXN0IDgwIGNvbHVtbi4NCj4+DQo+IA0KPiBIbW0uLiB0
-aGV5IGRvbid0IHJ1biBwYXN0IDgwIGNvbHVtbiBieSB0aGVtc2VsdmVzLg0KPiBXaWxsIHRo
-ZXkgZ2V0IG1lcmdlZCBzb21laG93Pw0KDQpUaGV5IGRvbid0IHJ1biBwYXN0IDgwIGluIHRo
-ZSBzb3VyY2UsIGJ1dCBydW4gcGFzdCA4MCBpbiB0aGUgZm9ybWF0dGVkIHBhZ2UuIA0KQmVj
-YXVzZSB0aGVyZSdzIGFscmVhZHkgYSA3LXNwYWNlIGluZGVudGF0aW9uIGZvciBldmVyeXRo
-aW5nIGluIGEgbWFudWFsIHBhZ2UsIA0KZXhjZXB0IGZvciB0aGUgc2VjdGlvbiB0aXRsZXMu
-DQoNCkNoZWVycywNCg0KQWxleA0KDQo+IA0KPiBUaGFua3MsDQo+IE5hbWh5dW5nDQoNCi0t
-IA0KPGh0dHA6Ly93d3cuYWxlamFuZHJvLWNvbG9tYXIuZXMvPg0K
+On January 3, 2023 4:29:12 AM GMT-03:00, Thorsten Leemhuis <regressions@le=
+emhuis=2Einfo> wrote:
+>On 03=2E01=2E23 08:13, Ian Rogers wrote:
+>> On Mon, Jan 2, 2023 at 7:06 AM Linux kernel regression tracking
+>>> [CCing Arnaldo]
+>>> On 02=2E01=2E23 14:16, Torsten Hilbrich wrote:
+>>>> I recently tried a kernel build based on v6=2E2-rc2 and had some regr=
+ession when trying to install the perf command=2E It seems that the commit:
+>>>>
+>>>> commit 746bd29e348f99b44c14cb2b2a57f1d3efb66538
+>>>> Author: Ian Rogers <irogers@google=2Ecom>
+>>>> Date:   Tue Nov 15 23:22:11 2022 -0800
+>>>>
+>>>>     perf build: Use tools/lib headers from install path
+>>>>
+>>>>     Switch -I from tools/lib to the install path for the tools/lib
+>>>>     libraries=2E Add the include_headers build targets to prepare tar=
+get, as
+>>>>     well as pmu-events=2Ec compilation that dependes on libperf=2E
+>>>>
+>>>> Causes the the following command to fail: "make -C tools/ perf_instal=
+l"
+>>>>
+>>>> Full logs are attached as file=2E
+>>>>
+>>>> The basic error is that the adding of $(LIBAPI), $(LIBSYMBOLS) and ot=
+hers to the prepare target seems to has problems when the subdir variable i=
+s set by the tools/Makefile=2E
+>>>>
+>>>> The call chains seems to include
+>>>>
+>>>> - "make -C tools perf_install" which calls:
+>>>> - "make  subdir=3Dperf --no-print-directory -C perf install" which th=
+en fails
+>>>>
+>>>> The beginning of tools/scripts/Makfile=2Einclude then seems to constr=
+uct a name like /build/git/linux/tools/perf/libapi/perf/ (when building in =
+/build/git/linux) and this directory does not exist=2E
+>>>>
+>>>> We only need the perf tool in this case, so we don't care much about =
+the optional features which are missing=2E
+>>> Thanks for the report=2E To be sure the issue doesn't fall through the
+>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regressio=
+n
+>>> tracking bot:
+>>>
+>>> #regzbot ^introduced 746bd29e348f99b44c14cb2b2a57f1d3efb66538
+>>> #regzbot title perf build: problems when trying to install the perf co=
+mmand
+>>> #regzbot ignore-activity
+>>=20
+>> Thanks, hopeful fix in:
+>> https://lore=2Ekernel=2Eorg/lkml/20230103070916=2E2407873-1-irogers@goo=
+gle=2Ecom/
+>
+>In case you need to respin that patch, please add a Link: tag to the
+>start of this thread to make things easier for future code archaeologists=
+=2E
 
---------------0haipMI5tcAB6M9M3w7hwWBx--
+I'll add it when processing the patch latest today=2E
 
---------------kvj0UhbbGa7HE5FTLv6sQ0ez
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+- Arnaldo
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmOz/HwACgkQnowa+77/
-2zI4OA//QGhUdGanmLglT1a+EKN0HpxTqy/E3mvidQ0Icz+cLzP1rZWPAXktncBZ
-jlMl+mkV8J4etYHXVw5sO3JW5PHpTYKWQyxDi/GFdyrMf1vM9SNhODN/53j3Hiqi
-rpnnjg/GkaBfN7It3j8OO0Z3wrCZmanIq8xXUfvGZu5Sf532IIswWs5asQp3UrM2
-TXYy0rzwOK7AFmBdf2228v3JllngAIKnEmYdZMtlfZAr++0emJOLaY6ldZbZcaOj
-ovlhmESz20GBRDeLX7LhLPcZ9rwp2W025ka/qOt+utJg2HefqI2P87JTPam6GVTf
-CzrPZZE4TIvb1x8QVuB/kvtqeCSNkmnaA27e2WbK4BMcYT8yduAMrusZHmQ/91fc
-SnP8Zz+K+AqjDVCpvNcHFemXX0oP+6eh5wT/+NmCPbee5S9MtoYEO6xaGFRLBYr5
-xtfRvK0kk4JfoOIsc6jGHWMIMFPurtMQSE7RReNPK1brR3gNaaNidhxeStvYKp7+
-4ZPfqbHFQZTIvU+pp7UjyswpIiCxzhIDZYgUi1oL40b4c7fAygTfC20swGdox+V/
-U5G1Hf/uDYT3dULxDFfYCYlEwy9ct5xnPnUuBmtDfT3LQVcFFB3PnYd23zxLbZ4F
-ESoUzS8XYuWkG346EX9hkcM4CM7Flgjz1p8Rox4ruwt7GIoKfiM=
-=m9RN
------END PGP SIGNATURE-----
-
---------------kvj0UhbbGa7HE5FTLv6sQ0ez--
+>
+>To explain: Linus[1] and others considered proper link tags important in
+>cases like this, as they allow anyone to look into the backstory of a
+>commit weeks or years later=2E That's nothing new, the documentation[2]
+>for some time says to place tags in cases like this=2E I care personally
+>(and made it a bit more explicit in the docs a while ago), because these
+>tags make my regression tracking efforts a whole lot easier, as they
+>allow my tracking bot 'regzbot' to automatically connect reports with
+>patches posted or committed to fix tracked regressions=2E
+>
+>Apropos regzbot, let me tell regzbot to monitor that thread:
+>
+>#regzbot monitor
+>https://lore=2Ekernel=2Eorg/lkml/20230103070916=2E2407873-1-irogers@googl=
+e=2Ecom/
+>
+>Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+>[1] for details, see:
+>https://lore=2Ekernel=2Eorg/all/CAHk-=3DwjMmSZzMJ3Xnskdg4+GGz=3D5p5p+GSYy=
+FBTh0f-DgvdBWg@mail=2Egmail=2Ecom/
+>https://lore=2Ekernel=2Eorg/all/CAHk-=3Dwgs38ZrfPvy=3DnOwVkVzjpM3VFU1zobP=
+37Fwd_h9iAD5JQ@mail=2Egmail=2Ecom/
+>https://lore=2Ekernel=2Eorg/all/CAHk-=3DwjxzafG-=3DJ8oT30s7upn4RhBs6TX-uV=
+FZ5rME+L5_DoJA@mail=2Egmail=2Ecom/
+>
+>[2] see Documentation/process/submitting-patches=2Erst
+>(http://docs=2Ekernel=2Eorg/process/submitting-patches=2Ehtml) and
+>Documentation/process/5=2EPosting=2Erst
+>(https://docs=2Ekernel=2Eorg/process/5=2EPosting=2Ehtml)
