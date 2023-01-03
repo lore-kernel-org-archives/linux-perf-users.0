@@ -2,102 +2,184 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18392C46467
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 16:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF1CC3DA7D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 16:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238091AbjACQXu (ORCPT
+        id S238013AbjACQpu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 11:23:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46654 "EHLO
+        Tue, 3 Jan 2023 11:45:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238107AbjACQWq (ORCPT
+        with ESMTP id S237978AbjACQps (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 11:22:46 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F7BF10B4A;
-        Tue,  3 Jan 2023 08:22:17 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5D5C152B;
-        Tue,  3 Jan 2023 08:22:58 -0800 (PST)
-Received: from [10.32.36.24] (e121896.Emea.Arm.com [10.32.36.24])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02EE43F71A;
-        Tue,  3 Jan 2023 08:22:12 -0800 (PST)
-Message-ID: <150442e1-4717-2b18-8f7d-febbd95ae570@arm.com>
-Date:   Tue, 3 Jan 2023 16:22:11 +0000
+        Tue, 3 Jan 2023 11:45:48 -0500
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F671146C;
+        Tue,  3 Jan 2023 08:45:46 -0800 (PST)
+Received: by mail-io1-f42.google.com with SMTP id h6so16844931iof.9;
+        Tue, 03 Jan 2023 08:45:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q1rae2sovsy4pVfWNcl3s6hzHd+0nxeCVKITXKTuZ3A=;
+        b=SwWWixmSvpl7f59doik++DBsw/B6PQpBlhuTApcJVcrb94mOS4CMZ6sVrrtg0hcM1c
+         iBCylW46uqohLWqLtjrnXuU1h/8p5PcxJltLP7D6AZ4QfmMWlPoOxNIMpPJAPtHcXpCn
+         6r4iwFzY15Liekobp8pAhAycdhcKFKUSXZ0hIpuEPHl3sLg5SsNdyBkCentkbuLKrWKL
+         MTwF5b6WROyyHAeHRclqrUDSbvrHHvGXOd9q2Oob4P7ah7V05p68je6oTmkOHm/qZF/2
+         iSdKCXTvKfSr4Z3KhH7bGJGG/1tkz7pnaPlFAcSSgYNRhaQMBsekOSVBi9AMuNdJLWOQ
+         vhEg==
+X-Gm-Message-State: AFqh2kpO3P+LyyjElmS+pfU7iUFysgp3RzXfnc+8GUSsV+0EGG2vcuis
+        Pr11KOiGLbzoMeqjj3wTM+/r4an0YXs2upghtt1keVfGCik=
+X-Google-Smtp-Source: AMrXdXtHKgaYWT2qEMFhluIo+RK1qYHhyBBIM/vJuc9zfTT/hZCAkFH1zyiZoKOtnb/4inv4dtr/1WEPR79q1mqyJgk=
+X-Received: by 2002:a02:6005:0:b0:38a:3421:f2cb with SMTP id
+ i5-20020a026005000000b0038a3421f2cbmr2988404jac.308.1672764345961; Tue, 03
+ Jan 2023 08:45:45 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2 4/7] perf pmu: Add function to check if a pmu file
- exists
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
-        sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
-        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20221222160328.3639989-1-james.clark@arm.com>
- <20221222160328.3639989-5-james.clark@arm.com>
- <Y6VKEfsGu0Pteb8e@leoy-yangtze.lan>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <Y6VKEfsGu0Pteb8e@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20221230102627.2410847-1-tmricht@linux.ibm.com> <Y7L5T2IHdovfLgWp@kernel.org>
+In-Reply-To: <Y7L5T2IHdovfLgWp@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 3 Jan 2023 08:45:34 -0800
+Message-ID: <CAM9d7ch98dRk85DYF-okD4_VsU_A+EkkVOkW1-1X7GMLao0mwg@mail.gmail.com>
+Subject: Re: [PATCH] perf lock: Fix core dump in command perf lock contention
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Arnaldo,
 
+On Mon, Jan 2, 2023 at 7:33 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Fri, Dec 30, 2022 at 11:26:27AM +0100, Thomas Richter escreveu:
+> > The test case perf lock contention dumps core on s390. Run the following
+> > commands:
+> >  # ./perf lock record -- ./perf bench sched messaging
+> >  # Running 'sched/messaging' benchmark:
+> >  # 20 sender and receiver processes per group
+> >  # 10 groups == 400 processes run
+> >
+> >      Total time: 2.799 [sec]
+> >  [ perf record: Woken up 1 times to write data ]
+> >  [ perf record: Captured and wrote 0.073 MB perf.data (100 samples) ]
+> >  #
+> >  # ./perf lock contention
+> >  Segmentation fault (core dumped)
+> >  #
+> >
+> > The function call stack is lengthy, here are the top 5 functions:
+> >  # gdb ./perf core.24048
+> >  GNU gdb (GDB) Fedora Linux 12.1-6.fc37
+> >  Copyright (C) 2022 Free Software Foundation, Inc.
+> >  Core was generated by `./perf lock contention'.
+> >  Program terminated with signal SIGSEGV, Segmentation fault.
+> >  #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,
+> >          addr=1789230) at util/machine.c:3356
+> >          3356 machine->sched.text_end = kmap->unmap_ip(kmap, sym->start);
+> >
+> >  (gdb) where
+> >   #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,\
+> >          addr=1789230) at util/machine.c:3356
+> >   #1  0x000000000109f244 in callchain_id (evsel=0x30313e0,\
+> >          sample=0x3ffea4f77d0) at builtin-lock.c:957
+> >   #2  0x000000000109e094 in get_key_by_aggr_mode (key=0x3ffea4f7290,\
+> >          addr=27758136, evsel=0x30313e0, sample=0x3ffea4f77d0) \
+> >          at builtin-lock.c:586
+> >   #3  0x000000000109f4d0 in report_lock_contention_begin_event \
+> >          (evsel=0x30313e0, sample=0x3ffea4f77d0)
+> >          at builtin-lock.c:1004
+> >   #4  0x00000000010a00ae in evsel__process_contention_begin \
+> >          (evsel=0x30313e0, sample=0x3ffea4f77d0)
+> >          at builtin-lock.c:1254
+> >   #5  0x00000000010a0e14 in process_sample_event (tool=0x3ffea4f8480, \
+> >          event=0x3ff85601ef8, sample=0x3ffea4f77d0,
+> >          evsel=0x30313e0, machine=0x3029e28) at builtin-lock.c:1464
+> >           sample=0x3ffea4f77d0, evsel=0x30313e0, machine=0x3029e28) \
+> >        at util/session.c:1523
+> >   .....
+> >
+> > The issue is in function machine__is_lock_function() in file
+> > ./util/machine.c lines 3355:
+> >    /* should not fail from here */
+> >    sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_end",
+> >                                            &kmap);
+> >    machine->sched.text_end = kmap->unmap_ip(kmap, sym->start)
+> >
+> > On s390 the symbol __sched_text_end is *NOT* in the symbol list and the
+> > resulting pointer sym is set to NULL. The sym->start is then a NULL pointer
+> > access and generates the core dump.
+> >
+> > The reason why __sched_text_end is not in the symbol list on s390 is
+> > simple:
+> > When the symbol list is created at perf start up with function calls
+> >   dso__load
+> >   +--> dso__load_vmlinux_path
+> >        +--> dso__load_vmlinux
+> >             +--> dso__load_sym
+> >                +--> dso__load_sym_internal (reads kernel symbols)
+> >                +--> symbols__fixup_end
+> >                +--> symbols__fixup_duplicate
+> >
+> > The issue is in function symbols__fixup_duplicate(). It deletes all
+> > symbols with have the same address. On s390
+> >  # nm -g  ~/linux/vmlinux| fgrep c68390
+> >  0000000000c68390 T __cpuidle_text_start
+> >  0000000000c68390 T __sched_text_end
+> >  #
+> > two symbols have identical addresses and __sched_text_end is considered
+> > duplicate (in ascending sort order) and removed from the symbol list.
+> > Therefore it is missing and an invalid pointer reference occurs.
+> > The code checks for symbol __sched_text_start and when it exists assumes
+> > symbol __sched_text_end is also in the symbol table. However this is
+> > not the case on s390.
+> >
+> > Same situation exists for symbol __lock_text_start:
+> > 0000000000c68770 T __cpuidle_text_end
+> > 0000000000c68770 T __lock_text_start
+> > This symbol is also removed from the symbol table but used in function
+> > machine__is_lock_function().
+> >
+> > To fix this and keep duplicate symbols in the symbol table, set
+> > symbol_conf.allow_aliases to true. This prevents the removal of duplicate
+> > symbols in function symbols__fixup_duplicate().
+> >
+> > Output After:
+> >  # ./perf lock contention
+> >  contended total wait  max wait  avg wait    type   caller
+> >
+> >         48   124.39 ms 123.99 ms   2.59 ms rwsem:W unlink_anon_vmas+0x24a
+> >         47    83.68 ms  83.26 ms   1.78 ms rwsem:W free_pgtables+0x132
+> >          5    41.22 us  10.55 us   8.24 us rwsem:W free_pgtables+0x140
+> >          4    40.12 us  20.55 us  10.03 us rwsem:W copy_process+0x1ac8
+> >  #
+> >
+> > Fixes: cc2367eebb0c ("machine: Adopt is_lock_function() from builtin-lock.c")
+>
+> Humm, is that really the cset that introduces the problem? It just moves
+> things around, the cset that introduced the is_lock_function() function,
+> that assumed that __sched_text_end was always available was:
+>
+> commit 0d2997f750d1de394231bc22768dab94a5b5db2f
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Wed Jun 15 09:32:22 2022 -0700
+>
+>     perf lock: Look up callchain for the contended locks
+>
+> ---
+>
+> Right? Namhyung? Can you spot any problem in enabling duplicates as a
+> fix?
 
-On 23/12/2022 06:26, Leo Yan wrote:
-> On Thu, Dec 22, 2022 at 04:03:24PM +0000, James Clark wrote:
->> From: German Gomez <german.gomez@arm.com>
->>
->> Add a utility function perf_pmu__file_exists() to check if a given pmu
->> file exists in the sysfs filesystem.
->>
->> Signed-off-by: German Gomez <german.gomez@arm.com>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  tools/perf/util/pmu.c | 14 ++++++++++++++
->>  tools/perf/util/pmu.h |  2 ++
->>  2 files changed, 16 insertions(+)
->>
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index 15b852b3c401..b72b2d892949 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -1739,6 +1739,20 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
->>  	return ret;
->>  }
->>  
->> +bool perf_pmu__file_exists(struct perf_pmu *pmu, const char *name)
->> +{
->> +	char path[PATH_MAX];
->> +	struct stat statbuf;
->> +
->> +	if (!perf_pmu__pathname_scnprintf(path, PATH_MAX, pmu->name, name))
->> +		return false;
->> +
->> +	if (!file_available(path))
->> +		return false;
->> +
->> +	return stat(path, &statbuf) == 0;
-> 
-> Can we simply return the returned value from file_available() and skip
-> calling stat()?  Because file_available() invokes access() to detect if
-> a file is existed or not, so here calling stat() is redundant.
-> 
+Yep, I think that's the cset introduced the problem.
+I'm fine with the fix.
 
-Yep that works. Fixed in V3.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
