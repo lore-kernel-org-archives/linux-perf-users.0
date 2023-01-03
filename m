@@ -2,189 +2,211 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7257CC4708D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 18:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D300C54EBE
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 20:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238359AbjACSui (ORCPT
+        id S234171AbjACUxD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 13:50:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60858 "EHLO
+        Tue, 3 Jan 2023 15:53:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238705AbjACSu0 (ORCPT
+        with ESMTP id S232129AbjACUw6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 13:50:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB47124;
-        Tue,  3 Jan 2023 10:50:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 87B89614E2;
-        Tue,  3 Jan 2023 18:50:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E3DC433EF;
-        Tue,  3 Jan 2023 18:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672771821;
-        bh=lc9EWhpLl3cJRu/WOwyewFLiY3xxPhpyl6R5J9nJ08Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uX52/RRbU4FqO9YV6D1O+Ayn9r/CPtlNof6E4GlI4TlEA33SOhVG3bT3pKNWOVdo7
-         tvjJ9zs92jzmVHzVZb+uqg22k8u+TnRZoABG2CZnMO9IsA0aeh3pLWql8gE0HAec5B
-         kTiDEebz3Dl5uE/Yo4oi6wGuj0nuiBwvULJ9gxxbHWrX8BS6KcTX/Kg1AH8SbiT0Ky
-         kzi3g0rxpq9uZjQyhq7km1SyaUspiVVOh7POd90TU6ZJVRIgMExCdhkBWY/LGLcS42
-         A7YJB/piZZJjsLqR8K+SBF99lBW1WhXGQxxAby0dKSbMykBhrVLn31lsJHOvxxEAos
-         4+KMKNG0DzEiw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AB81E40468; Tue,  3 Jan 2023 15:50:17 -0300 (-03)
-Date:   Tue, 3 Jan 2023 15:50:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH] perf lock: Fix core dump in command perf lock contention
-Message-ID: <Y7R46VF87ab6o4N5@kernel.org>
-References: <20221230102627.2410847-1-tmricht@linux.ibm.com>
- <Y7L5T2IHdovfLgWp@kernel.org>
- <CAM9d7ch98dRk85DYF-okD4_VsU_A+EkkVOkW1-1X7GMLao0mwg@mail.gmail.com>
+        Tue, 3 Jan 2023 15:52:58 -0500
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB78EDFFC;
+        Tue,  3 Jan 2023 12:52:57 -0800 (PST)
+Received: by mail-il1-f171.google.com with SMTP id a9so6321030ilk.6;
+        Tue, 03 Jan 2023 12:52:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TcjxuWhsew0S4JMMZ0LVIr9mYr0ZItiOrBsIyKBjzxA=;
+        b=2NToks0C7J1Ro1UvG/6kt01FVvqSE9HR9qVAMAfaZb06yTAwrVLN65XEVXoYdk2sb/
+         FMDH86QOTkf1wdMlMR0dleIvp+iKloeh8GdzK1VfMzIR5mKBmjC5nnJFQD8eXF3nkv2c
+         dY7pzjpWv1OB2HULmgz9jZIO8vW435au8tXaxTXsClyEWgoz1g9qzlEG3Rvr13+3bRd2
+         sVlR2JmEJsANGr6A5u4z8LXD9rOrFNBNl2fwYhTpwN6SRkp5lS/7jyhfQVKayBh/JXLn
+         MlcxThMHg4KRVQgojY41+30qpXSL/0YXGHsHVLY34H6PJw+HYfF8wXBSBQUNQjTOidrU
+         gmMw==
+X-Gm-Message-State: AFqh2kqZ2tsPOgwVUCwTSoEgDRfiW27l+kCz1xXxrsewl87pch2FncLQ
+        Id3nHQnTweBl/NWr7CvSoQ==
+X-Google-Smtp-Source: AMrXdXs7CLCkBhA2bAs8+otIJJ87HLmOu2iBxk7dmL/ZdUhdNLgBmJbpCAkIQKJL5QLEGLa5kGxn6A==
+X-Received: by 2002:a05:6e02:549:b0:306:d1b4:f3c7 with SMTP id i9-20020a056e02054900b00306d1b4f3c7mr25689876ils.20.1672779176867;
+        Tue, 03 Jan 2023 12:52:56 -0800 (PST)
+Received: from robh_at_kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id c24-20020a023b18000000b00388b6508ec8sm9836486jaa.115.2023.01.03.12.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jan 2023 12:52:56 -0800 (PST)
+Received: (nullmailer pid 3961459 invoked by uid 1000);
+        Tue, 03 Jan 2023 20:52:50 -0000
+Date:   Tue, 3 Jan 2023 14:52:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yann Sionneau <ysionneau@kalray.eu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
+        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-audit@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
+        Ashley Lesdalons <alesdalons@kalray.eu>,
+        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>,
+        Guillaume Thouvenin <gthouvenin@kalray.eu>,
+        Jean-Christophe Pince <jcpince@gmail.com>,
+        Jonathan Borne <jborne@kalray.eu>,
+        Jules Maselbas <jmaselbas@kalray.eu>,
+        Julian Vetter <jvetter@kalray.eu>,
+        Julien Hascoet <jhascoet@kalray.eu>,
+        Julien Villette <jvillette@kalray.eu>,
+        Louis Morhet <lmorhet@kalray.eu>,
+        Luc Michel <lmichel@kalray.eu>,
+        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
+        Marius Gligor <mgligor@kalray.eu>,
+        Samuel Jones <sjones@kalray.eu>,
+        Thomas Costis <tcostis@kalray.eu>,
+        Vincent Chardon <vincent.chardon@elsys-design.com>
+Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
+Message-ID: <20230103205250.GB3942221-robh@kernel.org>
+References: <20230103164359.24347-1-ysionneau@kalray.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ch98dRk85DYF-okD4_VsU_A+EkkVOkW1-1X7GMLao0mwg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230103164359.24347-1-ysionneau@kalray.eu>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 03, 2023 at 08:45:34AM -0800, Namhyung Kim escreveu:
-> Hi Arnaldo,
+On Tue, Jan 03, 2023 at 05:43:34PM +0100, Yann Sionneau wrote:
+> This patch series adds support for the kv3-1 CPU architecture of the kvx family
+> found in the Coolidge (aka MPPA3-80) SoC of Kalray.
 > 
-> On Mon, Jan 2, 2023 at 7:33 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > Em Fri, Dec 30, 2022 at 11:26:27AM +0100, Thomas Richter escreveu:
-> > > The test case perf lock contention dumps core on s390. Run the following
-> > > commands:
-> > >  # ./perf lock record -- ./perf bench sched messaging
-> > >  # Running 'sched/messaging' benchmark:
-> > >  # 20 sender and receiver processes per group
-> > >  # 10 groups == 400 processes run
-> > >
-> > >      Total time: 2.799 [sec]
-> > >  [ perf record: Woken up 1 times to write data ]
-> > >  [ perf record: Captured and wrote 0.073 MB perf.data (100 samples) ]
-> > >  #
-> > >  # ./perf lock contention
-> > >  Segmentation fault (core dumped)
-> > >  #
-> > >
-> > > The function call stack is lengthy, here are the top 5 functions:
-> > >  # gdb ./perf core.24048
-> > >  GNU gdb (GDB) Fedora Linux 12.1-6.fc37
-> > >  Copyright (C) 2022 Free Software Foundation, Inc.
-> > >  Core was generated by `./perf lock contention'.
-> > >  Program terminated with signal SIGSEGV, Segmentation fault.
-> > >  #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,
-> > >          addr=1789230) at util/machine.c:3356
-> > >          3356 machine->sched.text_end = kmap->unmap_ip(kmap, sym->start);
-> > >
-> > >  (gdb) where
-> > >   #0  0x00000000011dd25c in machine__is_lock_function (machine=0x3029e28,\
-> > >          addr=1789230) at util/machine.c:3356
-> > >   #1  0x000000000109f244 in callchain_id (evsel=0x30313e0,\
-> > >          sample=0x3ffea4f77d0) at builtin-lock.c:957
-> > >   #2  0x000000000109e094 in get_key_by_aggr_mode (key=0x3ffea4f7290,\
-> > >          addr=27758136, evsel=0x30313e0, sample=0x3ffea4f77d0) \
-> > >          at builtin-lock.c:586
-> > >   #3  0x000000000109f4d0 in report_lock_contention_begin_event \
-> > >          (evsel=0x30313e0, sample=0x3ffea4f77d0)
-> > >          at builtin-lock.c:1004
-> > >   #4  0x00000000010a00ae in evsel__process_contention_begin \
-> > >          (evsel=0x30313e0, sample=0x3ffea4f77d0)
-> > >          at builtin-lock.c:1254
-> > >   #5  0x00000000010a0e14 in process_sample_event (tool=0x3ffea4f8480, \
-> > >          event=0x3ff85601ef8, sample=0x3ffea4f77d0,
-> > >          evsel=0x30313e0, machine=0x3029e28) at builtin-lock.c:1464
-> > >           sample=0x3ffea4f77d0, evsel=0x30313e0, machine=0x3029e28) \
-> > >        at util/session.c:1523
-> > >   .....
-> > >
-> > > The issue is in function machine__is_lock_function() in file
-> > > ./util/machine.c lines 3355:
-> > >    /* should not fail from here */
-> > >    sym = machine__find_kernel_symbol_by_name(machine, "__sched_text_end",
-> > >                                            &kmap);
-> > >    machine->sched.text_end = kmap->unmap_ip(kmap, sym->start)
-> > >
-> > > On s390 the symbol __sched_text_end is *NOT* in the symbol list and the
-> > > resulting pointer sym is set to NULL. The sym->start is then a NULL pointer
-> > > access and generates the core dump.
-> > >
-> > > The reason why __sched_text_end is not in the symbol list on s390 is
-> > > simple:
-> > > When the symbol list is created at perf start up with function calls
-> > >   dso__load
-> > >   +--> dso__load_vmlinux_path
-> > >        +--> dso__load_vmlinux
-> > >             +--> dso__load_sym
-> > >                +--> dso__load_sym_internal (reads kernel symbols)
-> > >                +--> symbols__fixup_end
-> > >                +--> symbols__fixup_duplicate
-> > >
-> > > The issue is in function symbols__fixup_duplicate(). It deletes all
-> > > symbols with have the same address. On s390
-> > >  # nm -g  ~/linux/vmlinux| fgrep c68390
-> > >  0000000000c68390 T __cpuidle_text_start
-> > >  0000000000c68390 T __sched_text_end
-> > >  #
-> > > two symbols have identical addresses and __sched_text_end is considered
-> > > duplicate (in ascending sort order) and removed from the symbol list.
-> > > Therefore it is missing and an invalid pointer reference occurs.
-> > > The code checks for symbol __sched_text_start and when it exists assumes
-> > > symbol __sched_text_end is also in the symbol table. However this is
-> > > not the case on s390.
-> > >
-> > > Same situation exists for symbol __lock_text_start:
-> > > 0000000000c68770 T __cpuidle_text_end
-> > > 0000000000c68770 T __lock_text_start
-> > > This symbol is also removed from the symbol table but used in function
-> > > machine__is_lock_function().
-> > >
-> > > To fix this and keep duplicate symbols in the symbol table, set
-> > > symbol_conf.allow_aliases to true. This prevents the removal of duplicate
-> > > symbols in function symbols__fixup_duplicate().
-> > >
-> > > Output After:
-> > >  # ./perf lock contention
-> > >  contended total wait  max wait  avg wait    type   caller
-> > >
-> > >         48   124.39 ms 123.99 ms   2.59 ms rwsem:W unlink_anon_vmas+0x24a
-> > >         47    83.68 ms  83.26 ms   1.78 ms rwsem:W free_pgtables+0x132
-> > >          5    41.22 us  10.55 us   8.24 us rwsem:W free_pgtables+0x140
-> > >          4    40.12 us  20.55 us  10.03 us rwsem:W copy_process+0x1ac8
-> > >  #
-> > >
-> > > Fixes: cc2367eebb0c ("machine: Adopt is_lock_function() from builtin-lock.c")
-> >
-> > Humm, is that really the cset that introduces the problem? It just moves
-> > things around, the cset that introduced the is_lock_function() function,
-> > that assumed that __sched_text_end was always available was:
-> >
-> > commit 0d2997f750d1de394231bc22768dab94a5b5db2f
-> > Author: Namhyung Kim <namhyung@kernel.org>
-> > Date:   Wed Jun 15 09:32:22 2022 -0700
-> >
-> >     perf lock: Look up callchain for the contended locks
-> >
-> > ---
-> >
-> > Right? Namhyung? Can you spot any problem in enabling duplicates as a
-> > fix?
+> This is an RFC, since kvx support is not yet upstreamed into gcc/binutils,
+> therefore this patch series cannot be merged into Linux for now.
 > 
-> Yep, I think that's the cset introduced the problem.
-> I'm fine with the fix.
+> The goal is to have preliminary reviews and to fix problems early.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> The Kalray VLIW processor family (kvx) has the following features:
+> * 32/64 bits execution mode
+> * 6-issue VLIW architecture
+> * 64 x 64bits general purpose registers
+> * SIMD instructions
+> * little-endian
+> * deep learning co-processor
+> 
+> Kalray kv3-1 core which is the third of the kvx family is embedded in Kalray
+> Coolidge SoC currently used on K200 and K200-LP boards.
+> 
+> The Coolidge SoC contains 5 clusters each of which is made of:
+> * 4MiB of on-chip memory (SMEM)
+> * 1 dedicated safety/security core (kv3-1 core).
+> * 16 PEs (Processing Elements) (kv3-1 cores).
+> * 16 Co-processors (one per PE)
+> * 2 Crypto accelerators
+> 
+> The Coolidge SoC contains the following features:
+> * 5 Clusters
+> * 2 100G Ethernet controllers
+> * 8 PCIe GEN4 controllers (Root Complex and Endpoint capable)
+> * 2 USB 2.0 controllers
+> * 1 Octal SPI-NOR flash controller
+> * 1 eMMC controller
+> * 3 Quad SPI controllers
+> * 6 UART
+> * 5 I2C controllers (3 of which are SMBus capable)
+> * 4 CAN controllers
+> * 1 OTP memory
+> 
+> A kvx toolchain can be built using:
+> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev libmpfr-dev
+> $ git clone https://github.com/kalray/build-scripts
+> $ cd build-scripts
+> $ source last.refs
+> $ ./build-kvx-xgcc.sh output
+> 
+> The kvx toolchain will be installed in the "output" directory.
+> 
+> A buildroot image (kernel+rootfs) and toolchain can be built using:
+> $ git clone -b coolidge-for-upstream https://github.com/kalray/buildroot
+> $ cd buildroot
+> $ make O=build_kvx kvx_defconfig
+> $ make O=build_kvx
+> 
+> The vmlinux image can be found in buildroot/build_kvx/images/vmlinux.
+> 
+> If you are just interested in building the Linux kernel with no rootfs you can
+> just do this with the kvx-elf- toolchain:
+> $ make ARCH=kvx O=build_kvx CROSS_COMPILE=kvx-elf- default_defconfig
+> $ make ARCH=kvx O=build_kvx CROSS_COMPILE=kvx-elf- -j$(($(nproc) + 1))
+> 
+> The vmlinux ELF can be run with qemu by doing:
+> # install dependencies: ninja pkg-config libglib-2.0-dev cmake libfdt-dev libpixman-1-dev zlib1g-dev
+> $ git clone https://github.com/kalray/qemu-builder
+> $ cd qemu-builder
+> $ git submodule update --init
+> $ make -j$(($(nproc) + 1))
+> $ ./qemu-system-kvx -m 1024 -nographic -kernel <path/to/vmlinux>
+> 
+> Yann Sionneau (25):
+>   Documentation: kvx: Add basic documentation
+>   kvx: Add ELF-related definitions
+>   kvx: Add build infrastructure
+>   kvx: Add CPU definition headers
+>   kvx: Add atomic/locking headers
+>   kvx: Add other common headers
+>   kvx: Add boot and setup routines
+>   kvx: Add exception/interrupt handling
+>   kvx: irqchip: Add support for irq controllers
+>   kvx: Add process management
+>   kvx: Add memory management
+>   kvx: Add system call support
+>   kvx: Add signal handling support
+>   kvx: Add ELF relocations and module support
+>   kvx: Add misc common routines
+>   kvx: Add some library functions
+>   kvx: Add multi-processor (SMP) support
+>   kvx: Add kvx default config file
+>   kvx: power: scall poweroff driver
+>   kvx: gdb: add kvx related gdb helpers
+>   kvx: Add support for ftrace
+>   kvx: Add support for jump labels
+>   kvx: Add debugging related support
+>   kvx: Add support for CPU Perf Monitors
+>   kvx: Add support for cpuinfo
 
-Thanks, applied.
+You should strip this series down to just what's needed to boot. You 
+don't need the last 7 patches at least.
 
-- Arnaldo
+Rob
