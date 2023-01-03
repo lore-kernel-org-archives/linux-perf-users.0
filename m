@@ -2,120 +2,243 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A11C4708E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 11:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3245C46467
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 11:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236853AbjACLkE (ORCPT
+        id S237164AbjACLtz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 06:40:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36696 "EHLO
+        Tue, 3 Jan 2023 06:49:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233358AbjACLkC (ORCPT
+        with ESMTP id S231219AbjACLty (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 06:40:02 -0500
-Received: from out199-7.us.a.mail.aliyun.com (out199-7.us.a.mail.aliyun.com [47.90.199.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30753E5F;
-        Tue,  3 Jan 2023 03:40:00 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VYn6leD_1672745994;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VYn6leD_1672745994)
-          by smtp.aliyun-inc.com;
-          Tue, 03 Jan 2023 19:39:55 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Tue, 3 Jan 2023 06:49:54 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 18E16B7B;
+        Tue,  3 Jan 2023 03:49:53 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 724111516;
+        Tue,  3 Jan 2023 03:50:34 -0800 (PST)
+Received: from [10.32.36.24] (e121896.Emea.Arm.com [10.32.36.24])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7666D3F587;
+        Tue,  3 Jan 2023 03:49:48 -0800 (PST)
+Message-ID: <5dad3c40-d4d2-57b8-e6f5-10fa5ef1a0b8@arm.com>
+Date:   Tue, 3 Jan 2023 11:49:46 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v2 6/7] perf cs_etm: Record ts_source in AUXTRACE_INFO for
+ ETMv4 and ETE
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
+        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v5 5/6] perf vendor events arm64: Add PE utilization metrics for neoverse-n2
-Date:   Tue,  3 Jan 2023 19:39:35 +0800
-Message-Id: <1672745976-2800146-6-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
-References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20221222160328.3639989-1-james.clark@arm.com>
+ <20221222160328.3639989-7-james.clark@arm.com>
+ <CAJ9a7VjbF2DFRHOtdCt=3o+iNrA++swpJBx9v5-R9Ky8tc4Mvw@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAJ9a7VjbF2DFRHOtdCt=3o+iNrA++swpJBx9v5-R9Ky8tc4Mvw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add PE utilization related metrics. In cpu_utilization metric, stall_slot
-minus cpu_cycles is a correction to the stall_slot error count.
 
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-Acked-by: Ian Rogers <irogers@google.com>
----
- .../arch/arm64/arm/neoverse-n2/metrics.json        | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-index 35e3710..94ca91f 100644
---- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
-@@ -173,5 +173,51 @@
-         "MetricGroup": "Branch",
-         "MetricName": "branch_miss_pred_rate",
-         "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "instructions / CPU_CYCLES",
-+        "BriefDescription": "The average number of instructions executed for each cycle.",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "ipc"
-+    },
-+    {
-+        "MetricExpr": "ipc / 5",
-+        "BriefDescription": "IPC percentage of peak. The peak of IPC is 5.",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "ipc_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
-+        "BriefDescription": "Architecturally executed Instructions Per Cycle (IPC)",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "retired_ipc"
-+    },
-+    {
-+        "MetricExpr": "INST_SPEC / CPU_CYCLES",
-+        "BriefDescription": "Speculatively executed Instructions Per Cycle (IPC)",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "spec_ipc"
-+    },
-+    {
-+        "MetricExpr": "OP_RETIRED / OP_SPEC",
-+        "BriefDescription": "Of all the micro-operations issued, what percentage are retired(committed)",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "retired_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
-+        "BriefDescription": "Of all the micro-operations issued, what percentage are not retired(committed)",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "wasted_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT - CPU_CYCLES) / (CPU_CYCLES * 5))",
-+        "BriefDescription": "The truly effective ratio of micro-operations executed by the CPU, which means that misprediction and stall are not included",
-+        "MetricGroup": "PEutilization",
-+        "MetricName": "cpu_utilization",
-+        "ScaleUnit": "100%"
-     }
- ]
--- 
-1.8.3.1
+On 23/12/2022 09:28, Mike Leach wrote:
+> Hi,
+> 
+> There was a discussion some time ago in one of our coresight regular
+> dev meetings about this.
+> 
+> Can we just use only the necessary bits that TS source needs and leave
+> the remaining bits from the 64 as unused  for future expansion - i..e
+> use this as a bitfield rather than have 64 bits occupied for what is
+> effectively a 2 bit value.
+> 
+> Perhaps call the full value something other than TS_SOURCE and have a
+> TS_SOURCE field with a known safe unset value.
 
+If we did that, there wouldn't be any mechanism to detect if new values
+that were added were the value 0, or just not set/implemented/saved in
+the file. The current implementation of CS_ETM_NR_TRC_PARAMS allows us
+to add new fields, and detect if they exist or not without bumping the
+header version for each new sub field.
+
+In this change HAS_PARAM() has been used to do this, but that can't be
+expanded to sub fields in the same 64 bits. I don't think space or
+performance are worth the extra complexity of dividing it up. And
+because this is just one block saved once in the header, so I'm not sure
+if it's worth it in this case. It would also make it harder to read the
+values on the raw dump mode.
+
+James
+
+> 
+> Thanks
+> 
+> Mike
+> 
+> On Thu, 22 Dec 2022 at 16:07, James Clark <james.clark@arm.com> wrote:
+>>
+>> From: German Gomez <german.gomez@arm.com>
+>>
+>> Read the value of ts_source exposed by the driver and store it in the
+>> ETMv4 and ETE header. If the interface doesn't exist (such as in older
+>> Kernels), defaults to a safe value of -1.
+>>
+>> Signed-off-by: German Gomez <german.gomez@arm.com>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/arch/arm/util/cs-etm.c | 48 +++++++++++++++++++++++++++++++
+>>  tools/perf/util/cs-etm-base.c     |  2 ++
+>>  tools/perf/util/cs-etm.h          |  2 ++
+>>  3 files changed, 52 insertions(+)
+>>
+>> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+>> index b526ffe550a5..481e170cd3f1 100644
+>> --- a/tools/perf/arch/arm/util/cs-etm.c
+>> +++ b/tools/perf/arch/arm/util/cs-etm.c
+>> @@ -53,6 +53,7 @@ static const char * const metadata_etmv4_ro[] = {
+>>         [CS_ETMV4_TRCIDR2]              = "trcidr/trcidr2",
+>>         [CS_ETMV4_TRCIDR8]              = "trcidr/trcidr8",
+>>         [CS_ETMV4_TRCAUTHSTATUS]        = "mgmt/trcauthstatus",
+>> +       [CS_ETMV4_TS_SOURCE]            = "ts_source",
+>>  };
+>>
+>>  static const char * const metadata_ete_ro[] = {
+>> @@ -62,6 +63,7 @@ static const char * const metadata_ete_ro[] = {
+>>         [CS_ETE_TRCIDR8]                = "trcidr/trcidr8",
+>>         [CS_ETE_TRCAUTHSTATUS]          = "mgmt/trcauthstatus",
+>>         [CS_ETE_TRCDEVARCH]             = "mgmt/trcdevarch",
+>> +       [CS_ETE_TS_SOURCE]              = "ts_source",
+>>  };
+>>
+>>  static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+>> @@ -613,6 +615,32 @@ static int cs_etm_get_ro(struct perf_pmu *pmu, int cpu, const char *path)
+>>         return val;
+>>  }
+>>
+>> +static int cs_etm_get_ro_signed(struct perf_pmu *pmu, int cpu, const char *path)
+>> +{
+>> +       char pmu_path[PATH_MAX];
+>> +       int scan;
+>> +       int val = 0;
+>> +
+>> +       /* Get RO metadata from sysfs */
+>> +       snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
+>> +
+>> +       scan = perf_pmu__scan_file(pmu, pmu_path, "%d", &val);
+>> +       if (scan != 1)
+>> +               pr_err("%s: error reading: %s\n", __func__, pmu_path);
+>> +
+>> +       return val;
+>> +}
+>> +
+>> +static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, int cpu, const char *path)
+>> +{
+>> +       char pmu_path[PATH_MAX];
+>> +
+>> +       /* Get RO metadata from sysfs */
+>> +       snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
+>> +
+>> +       return perf_pmu__file_exists(pmu, pmu_path);
+>> +}
+>> +
+>>  #define TRCDEVARCH_ARCHPART_SHIFT 0
+>>  #define TRCDEVARCH_ARCHPART_MASK  GENMASK(11, 0)
+>>  #define TRCDEVARCH_ARCHPART(x)    (((x) & TRCDEVARCH_ARCHPART_MASK) >> TRCDEVARCH_ARCHPART_SHIFT)
+>> @@ -654,6 +682,16 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
+>>                                                metadata_etmv4_ro[CS_ETMV4_TRCIDR8]);
+>>         data[CS_ETMV4_TRCAUTHSTATUS] = cs_etm_get_ro(cs_etm_pmu, cpu,
+>>                                                      metadata_etmv4_ro[CS_ETMV4_TRCAUTHSTATUS]);
+>> +
+>> +       /* Kernels older than 5.19 may not expose ts_source */
+>> +       if (cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]))
+>> +               data[CS_ETMV4_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
+>> +                               metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]);
+>> +       else {
+>> +               pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
+>> +                          cpu);
+>> +               data[CS_ETMV4_TS_SOURCE] = (__u64) -1;
+>> +       }
+>>  }
+>>
+>>  static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, int cpu)
+>> @@ -679,6 +717,16 @@ static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, in
+>>         /* ETE uses the same registers as ETMv4 plus TRCDEVARCH */
+>>         data[CS_ETE_TRCDEVARCH] = cs_etm_get_ro(cs_etm_pmu, cpu,
+>>                                                 metadata_ete_ro[CS_ETE_TRCDEVARCH]);
+>> +
+>> +       /* Kernels older than 5.19 may not expose ts_source */
+>> +       if (cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TS_SOURCE]))
+>> +               data[CS_ETE_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
+>> +                               metadata_ete_ro[CS_ETE_TS_SOURCE]);
+>> +       else {
+>> +               pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
+>> +                          cpu);
+>> +               data[CS_ETE_TS_SOURCE] = (__u64) -1;
+>> +       }
+>>  }
+>>
+>>  static void cs_etm_get_metadata(int cpu, u32 *offset,
+>> diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
+>> index 282042c6e944..5f48b756c4cf 100644
+>> --- a/tools/perf/util/cs-etm-base.c
+>> +++ b/tools/perf/util/cs-etm-base.c
+>> @@ -36,6 +36,7 @@ static const char * const cs_etmv4_priv_fmts[] = {
+>>         [CS_ETMV4_TRCIDR2]      = "     TRCIDR2                        %llx\n",
+>>         [CS_ETMV4_TRCIDR8]      = "     TRCIDR8                        %llx\n",
+>>         [CS_ETMV4_TRCAUTHSTATUS] = "    TRCAUTHSTATUS                  %llx\n",
+>> +       [CS_ETMV4_TS_SOURCE]    = "     TS_SOURCE                      %lld\n",
+>>  };
+>>
+>>  static const char * const cs_ete_priv_fmts[] = {
+>> @@ -50,6 +51,7 @@ static const char * const cs_ete_priv_fmts[] = {
+>>         [CS_ETE_TRCIDR8]        = "     TRCIDR8                        %llx\n",
+>>         [CS_ETE_TRCAUTHSTATUS]  = "     TRCAUTHSTATUS                  %llx\n",
+>>         [CS_ETE_TRCDEVARCH]     = "     TRCDEVARCH                     %llx\n",
+>> +       [CS_ETE_TS_SOURCE]      = "     TS_SOURCE                      %lld\n",
+>>  };
+>>
+>>  static const char * const param_unk_fmt =
+>> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+>> index c5925428afa9..ad790930bcbc 100644
+>> --- a/tools/perf/util/cs-etm.h
+>> +++ b/tools/perf/util/cs-etm.h
+>> @@ -71,6 +71,7 @@ enum {
+>>         CS_ETMV4_TRCIDR2,
+>>         CS_ETMV4_TRCIDR8,
+>>         CS_ETMV4_TRCAUTHSTATUS,
+>> +       CS_ETMV4_TS_SOURCE,
+>>         CS_ETMV4_PRIV_MAX,
+>>  };
+>>
+>> @@ -92,6 +93,7 @@ enum {
+>>         CS_ETE_TRCIDR8,
+>>         CS_ETE_TRCAUTHSTATUS,
+>>         CS_ETE_TRCDEVARCH,
+>> +       CS_ETE_TS_SOURCE,
+>>         CS_ETE_PRIV_MAX
+>>  };
+>>
+>> --
+>> 2.25.1
+>>
+> 
+> 
