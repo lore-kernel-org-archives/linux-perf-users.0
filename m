@@ -2,167 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF9C3DA7D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 11:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92110C3DA7D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 11:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbjACLSt (ORCPT
+        id S233046AbjACLj4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 06:18:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
+        Tue, 3 Jan 2023 06:39:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237380AbjACLSr (ORCPT
+        with ESMTP id S230006AbjACLj4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 06:18:47 -0500
-Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89026FAC4
-        for <linux-perf-users@vger.kernel.org>; Tue,  3 Jan 2023 03:18:46 -0800 (PST)
-Received: by mail-oo1-xc2d.google.com with SMTP id 187-20020a4a09c4000000b004d8f3cb09f5so3961506ooa.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jan 2023 03:18:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oRW+qnZqo8xLJZmKMDcpomg1dIY+xQ+eUrRegPR4twU=;
-        b=MZug2mtY9UjN21j6Uqw6EHzBkwpv01IIfTnTxW3LcBiXiGc6UNGVOiRVRfAiL1tMFR
-         SucZlMop/N1q0AloljAYuqwFbo1zeGTGolI0uA3VXNSIhizc1Kp9DaVwtmWGdRmdIBm4
-         6y6PzpLETkgws9y9hxwYFuDOlYj+TtEuhzbuX2tP6bYTDCPkS3iUhyAZXtSgJGL8b7sx
-         GEf4ST+WdeWzFi/WfVoKrBXk6wc1lr0OHfGpkAoFuI8xV7YVQTXyvQ3o3LQTgJbnjQxN
-         EDEQGmt3RH3P+CSX+jEYHbo1FGa5Y/ur1P6Me//hq/GPtuoPGbV9KlPDmp5BpwPttZWP
-         EcEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oRW+qnZqo8xLJZmKMDcpomg1dIY+xQ+eUrRegPR4twU=;
-        b=UJuoYB6Lf5tsbYl9oHGNxcBpKTbM4URa1FxmshZ7iRjrrzUXHCxL45tG+C9XA795Bu
-         4L4WpB/kQBRpzIS4c1Hwd20KBKM6rEp2WJAhPBz6tRZgBb9P92MuaZghZIfmaTRyPVkH
-         Mtsz4g8fuhFC/lpAEUlSBbl5OqY63ULOzQ6/v1N2Y58rT5d08jZyuTpi3lOFCiqQ76Al
-         tNyDRcS5pyW5nL6n0ipSvcmVUi9D0GYeeyRvTkRITzajUupxQJOV4cAP5C9uX0xUdAFX
-         17e9Kd401WKq9TvsGfmPYa4pXSljQhS6ubOsmNlAXJiqMp3vSh2yXAfcF55tDTL3Vyu/
-         nLPQ==
-X-Gm-Message-State: AFqh2krPViYXpzeREYyiBUL89h5IbzsrozGCtO36iYAibcvJ0HA+iqjd
-        UiR1Zmv0Jwi5pLzI5LRq4nCxkCB11E6HSg==
-X-Google-Smtp-Source: AMrXdXtGSCGvh76ORutHaf8lEbHpKWU3F6K1Tp7sDH+QWuqoaXffeB1XUIswjpdrwJ/Q/Q2+v0UO+Q==
-X-Received: by 2002:a4a:4f89:0:b0:4a0:9768:ee8a with SMTP id c131-20020a4a4f89000000b004a09768ee8amr17987425oob.1.1672744725790;
-        Tue, 03 Jan 2023 03:18:45 -0800 (PST)
-Received: from [127.0.0.1] ([187.19.237.165])
-        by smtp.gmail.com with ESMTPSA id m2-20020a4add02000000b004a3d98b2ccdsm12159033oou.42.2023.01.03.03.18.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 03:18:45 -0800 (PST)
-Date:   Tue, 03 Jan 2023 08:18:40 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Thorsten Leemhuis <regressions@leemhuis.info>,
-        Ian Rogers <irogers@google.com>
-CC:     Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [v6.2-rc1] Regression with installing perf tool
-User-Agent: K-9 Mail for Android
-In-Reply-To: <9560b967-a2ec-c370-7ec3-115295929e27@leemhuis.info>
-References: <fa4b3115-d555-3d7f-54d1-018002e99350@secunet.com> <d372f704-fa4a-344f-7a15-d97bfb13ac1d@leemhuis.info> <CAP-5=fXkpbfxGo8ozTJRCXVm0eS6tZ+9XSLchTfcVHmvvhBq5A@mail.gmail.com> <9560b967-a2ec-c370-7ec3-115295929e27@leemhuis.info>
-Message-ID: <BA4AAC11-A1DB-4F21-B186-F9BD6220750B@gmail.com>
+        Tue, 3 Jan 2023 06:39:56 -0500
+Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38266B6F;
+        Tue,  3 Jan 2023 03:39:54 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R431e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VYn6lZg_1672745978;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VYn6lZg_1672745978)
+          by smtp.aliyun-inc.com;
+          Tue, 03 Jan 2023 19:39:50 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: [PATCH v5 0/6] Add metrics for neoverse-n2
+Date:   Tue,  3 Jan 2023 19:39:30 +0800
+Message-Id: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Changes since v4:
+- Add MPKI/PKI “ScaleUnit”;
+- Add acked-by from Ian Rogers;
+- Link: https://lore.kernel.org/all/1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com/
+
+Changes since v3:
+- Add ipc_rate metric;
+- Drop the PublicDescription;
+- Describe PEutilization metrics in more detail;
+- Link: https://lore.kernel.org/all/1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com/
+
+Changes since v2:
+- Correct the furmula of Branch metrics;
+- Add more PE utilization metrics;
+- Add more TLB metrics;
+- Add “ScaleUnit” for some metrics;
+- Add a newline at the end of the file;
+- Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com/
+
+Changes since v1:
+- Corrected formula for topdown L1 due to wrong counts for stall_slot and
+  stall_slot_frontend; 
+- Link: https://lore.kernel.org/all/1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com/
 
 
-On January 3, 2023 4:29:12 AM GMT-03:00, Thorsten Leemhuis <regressions@le=
-emhuis=2Einfo> wrote:
->On 03=2E01=2E23 08:13, Ian Rogers wrote:
->> On Mon, Jan 2, 2023 at 7:06 AM Linux kernel regression tracking
->>> [CCing Arnaldo]
->>> On 02=2E01=2E23 14:16, Torsten Hilbrich wrote:
->>>> I recently tried a kernel build based on v6=2E2-rc2 and had some regr=
-ession when trying to install the perf command=2E It seems that the commit:
->>>>
->>>> commit 746bd29e348f99b44c14cb2b2a57f1d3efb66538
->>>> Author: Ian Rogers <irogers@google=2Ecom>
->>>> Date:   Tue Nov 15 23:22:11 2022 -0800
->>>>
->>>>     perf build: Use tools/lib headers from install path
->>>>
->>>>     Switch -I from tools/lib to the install path for the tools/lib
->>>>     libraries=2E Add the include_headers build targets to prepare tar=
-get, as
->>>>     well as pmu-events=2Ec compilation that dependes on libperf=2E
->>>>
->>>> Causes the the following command to fail: "make -C tools/ perf_instal=
-l"
->>>>
->>>> Full logs are attached as file=2E
->>>>
->>>> The basic error is that the adding of $(LIBAPI), $(LIBSYMBOLS) and ot=
-hers to the prepare target seems to has problems when the subdir variable i=
-s set by the tools/Makefile=2E
->>>>
->>>> The call chains seems to include
->>>>
->>>> - "make -C tools perf_install" which calls:
->>>> - "make  subdir=3Dperf --no-print-directory -C perf install" which th=
-en fails
->>>>
->>>> The beginning of tools/scripts/Makfile=2Einclude then seems to constr=
-uct a name like /build/git/linux/tools/perf/libapi/perf/ (when building in =
-/build/git/linux) and this directory does not exist=2E
->>>>
->>>> We only need the perf tool in this case, so we don't care much about =
-the optional features which are missing=2E
->>> Thanks for the report=2E To be sure the issue doesn't fall through the
->>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regressio=
-n
->>> tracking bot:
->>>
->>> #regzbot ^introduced 746bd29e348f99b44c14cb2b2a57f1d3efb66538
->>> #regzbot title perf build: problems when trying to install the perf co=
-mmand
->>> #regzbot ignore-activity
->>=20
->> Thanks, hopeful fix in:
->> https://lore=2Ekernel=2Eorg/lkml/20230103070916=2E2407873-1-irogers@goo=
-gle=2Ecom/
->
->In case you need to respin that patch, please add a Link: tag to the
->start of this thread to make things easier for future code archaeologists=
-=2E
+This series add six metricgroups for neoverse-n2, among which, the formula of
+topdown L1 is from ARM sbsa7.0 platform design document [0], D37-38.
 
-I'll add it when processing the patch latest today=2E
+However, due to the wrong count of stall_slot and stall_slot_frontend on
+neoverse-n2, the real stall_slot and real stall_slot_frontend need to
+subtract cpu_cycles,  so correct the expression of topdown metrics.
+Reference from ARM neoverse-n2 errata notice [1], D117.
 
-- Arnaldo
+Since neoverse-n2 does not yet support topdown L2, metricgroups such as Cache,
+TLB, Branch, InstructionsMix, and PEutilization are added to help further
+analysis of performance bottlenecks. Reference from ARM PMU guide [2][3].
 
->
->To explain: Linus[1] and others considered proper link tags important in
->cases like this, as they allow anyone to look into the backstory of a
->commit weeks or years later=2E That's nothing new, the documentation[2]
->for some time says to place tags in cases like this=2E I care personally
->(and made it a bit more explicit in the docs a while ago), because these
->tags make my regression tracking efforts a whole lot easier, as they
->allow my tracking bot 'regzbot' to automatically connect reports with
->patches posted or committed to fix tracked regressions=2E
->
->Apropos regzbot, let me tell regzbot to monitor that thread:
->
->#regzbot monitor
->https://lore=2Ekernel=2Eorg/lkml/20230103070916=2E2407873-1-irogers@googl=
-e=2Ecom/
->
->Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
->[1] for details, see:
->https://lore=2Ekernel=2Eorg/all/CAHk-=3DwjMmSZzMJ3Xnskdg4+GGz=3D5p5p+GSYy=
-FBTh0f-DgvdBWg@mail=2Egmail=2Ecom/
->https://lore=2Ekernel=2Eorg/all/CAHk-=3Dwgs38ZrfPvy=3DnOwVkVzjpM3VFU1zobP=
-37Fwd_h9iAD5JQ@mail=2Egmail=2Ecom/
->https://lore=2Ekernel=2Eorg/all/CAHk-=3DwjxzafG-=3DJ8oT30s7upn4RhBs6TX-uV=
-FZ5rME+L5_DoJA@mail=2Egmail=2Ecom/
->
->[2] see Documentation/process/submitting-patches=2Erst
->(http://docs=2Ekernel=2Eorg/process/submitting-patches=2Ehtml) and
->Documentation/process/5=2EPosting=2Erst
->(https://docs=2Ekernel=2Eorg/process/5=2EPosting=2Ehtml)
+[0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+[1] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb?token=
+[2] https://documentation-service.arm.com/static/628f8fa3dfaf015c2b76eae8?token=
+[3] https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
+
+
+$./perf list
+...
+Metric Groups:
+
+Branch:
+  branch_miss_pred_rate
+       [The rate of branches mis-predited to the overall branches]
+  branch_mpki
+       [The rate of branches mis-predicted per kilo instructions]
+  branch_pki
+       [The rate of branches retired per kilo instructions]
+Cache:
+  l1d_cache_miss_rate
+       [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+  l1d_cache_mpki
+       [The rate of L1 D-Cache misses per kilo instructions]
+...
+
+
+$sudo ./perf stat -M TLB false_sharing 2
+
+ Performance counter stats for 'false_sharing 2':
+
+            31,254      L2D_TLB                          #     19.6 %  l2_tlb_miss_rate      (42.51%)
+             6,130      L2D_TLB_REFILL                                                       (42.51%)
+             1,910      L1I_TLB_REFILL                   #      0.1 %  l1i_tlb_miss_rate     (42.93%)
+         2,306,689      L1I_TLB                                                              (42.93%)
+       324,924,247      L1D_TLB                          #      0.0 %  l1d_tlb_miss_rate     (43.98%)
+            22,688      L1D_TLB_REFILL                                                       (43.98%)
+           627,992      L1I_TLB                          #      0.0 %  itlb_walk_rate        (44.26%)
+                92      ITLB_WALK                                                            (44.26%)
+       772,445,613      INST_RETIRED                     #      0.0 MPKI  itlb_mpki          (43.94%)
+                88      ITLB_WALK                                                            (43.94%)
+               907      DTLB_WALK                        #      0.0 %  dtlb_walk_rate        (43.10%)
+       259,132,258      L1D_TLB                                                              (43.10%)
+       804,080,968      INST_RETIRED                     #      0.0 MPKI  dtlb_mpki          (42.22%)
+               937      DTLB_WALK                                                            (42.22%)
+
+       0.479544400 seconds time elapsed
+
+       1.264233000 seconds user
+       0.000000000 seconds sys
+
+
+$sudo ./perf stat -M TopDownL1 false_sharing 2
+
+ Performance counter stats for 'false_sharing 2':
+
+     4,310,905,590      cpu_cycles                       #      0.0 %  bad_speculation
+                                                  #      4.0 %  retiring              (66.87%)
+    25,009,763,735      stall_slot                                                           (66.87%)
+       855,659,327      op_spec                                                              (66.87%)
+       854,335,288      op_retired                                                           (66.87%)
+     4,330,308,058      cpu_cycles                       #     27.1 %  frontend_bound        (66.99%)
+    10,207,186,460      stall_slot_frontend                                                  (66.99%)
+     4,316,583,673      cpu_cycles                       #     69.4 %  backend_bound         (66.65%)
+    14,979,136,808      stall_slot_backend                                                   (66.65%)
+
+       0.572056818 seconds time elapsed
+
+       1.572143000 seconds user
+       0.004010000 seconds sys
+
+
+Jing Zhang (6):
+  perf vendor events arm64: Add topdown L1 metrics for neoverse-n2
+  perf vendor events arm64: Add TLB metrics for neoverse-n2
+  perf vendor events arm64: Add cache metrics for neoverse-n2
+  perf vendor events arm64: Add branch metrics for neoverse-n2
+  perf vendor events arm64: Add PE utilization metrics for neoverse-n2
+  perf vendor events arm64: Add instruction mix metrics for neoverse-n2
+
+ .../arch/arm64/arm/neoverse-n2/metrics.json        | 286 +++++++++++++++++++++
+ 1 file changed, 286 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+
+-- 
+1.8.3.1
+
