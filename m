@@ -2,186 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0B2C53210
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 15:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332B7C3DA7D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 15:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233420AbjACPEA (ORCPT
+        id S233556AbjACPQI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 10:04:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39632 "EHLO
+        Tue, 3 Jan 2023 10:16:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233197AbjACPD6 (ORCPT
+        with ESMTP id S233237AbjACPQF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 10:03:58 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A7411A00
-        for <linux-perf-users@vger.kernel.org>; Tue,  3 Jan 2023 07:03:56 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id g25-20020a7bc4d9000000b003d97c8d4941so17843608wmk.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Jan 2023 07:03:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kKYTQm49doq3QZeNRKUKNt+F+gYY9l1F+kH6s4sZsDY=;
-        b=C5o5JgpATe056oWRrmwujioyJ7WOq8ChNKjqCpuzt09p8YeYqabBW9Rqa7FvThc3wY
-         RPVUzi68gGgChAoLluP1TmZJZZ+mgi1f15GN73bg+VTfcaan+9Sw3T6N2I/S0ezF/G6L
-         7egxW4wZ+ofHIzh4QEbuJvgktidl7Hn9BzwI2SkpFRDpFFvaxJTw1XCNE42+CBO3UfHE
-         2wSQRkElfhazko9OzeCNkWr5bO1TWS0GOmVaI2JJxcqyB8N6tHLtt8ujsaxzHgZ7MFvm
-         zW3cIlAIujGgLuPQC8EaRTMBp/k2Ka8FUJHNIe5aAIziUlg/GlyXG9gHbYbnk6zvMAuJ
-         LDZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kKYTQm49doq3QZeNRKUKNt+F+gYY9l1F+kH6s4sZsDY=;
-        b=gl+WipqF6GyN1MoVGHo3M5k2Fc6VN8k8vBZ4ur0R1jl3FOwAheRxByrP++Zj4GwUSb
-         r5o7oPxAfragF51fO9N7Dn481Cy0KtqX0Ec8zhAndGIS/HzVkGieoZFKy8ZwTNvQrq3n
-         zxtU6+pfI3aoYBnQ62X6eA8iVFGvRr6i8lJez/xs4sJNiHEEtQt8dhJ6rty/fy8D8hIG
-         u6g9FHcKKb5zIxf4TrB8S54whHnASa67nDaP/biBjE1ENGvNBOmKQHpghnvfyoR+6uWZ
-         /qqqJVh24XQLLiuMaA3/oqY8zF4SbzjcMGuY87arSeE3CmGeBCrYr3UZzDq8bLqBOMGk
-         /aEQ==
-X-Gm-Message-State: AFqh2kr4MsMEHE2a/7bV/1pa2WCtZjPj7w2FN42l4Xjjd9KUm2ngUFUh
-        td262zfv24GC0RtuLTatXH23WQ==
-X-Google-Smtp-Source: AMrXdXtyC5PDiiKBdsV8joYm1O+4/YLDTbRpzINJhFu1AUyEr1TV8WE7DYKR6Df4NvCC42QIBvacxw==
-X-Received: by 2002:a05:600c:1d98:b0:3d3:48f4:7a69 with SMTP id p24-20020a05600c1d9800b003d348f47a69mr38782616wms.17.1672758234700;
-        Tue, 03 Jan 2023 07:03:54 -0800 (PST)
-Received: from [192.168.178.32] ([51.155.200.13])
-        by smtp.gmail.com with ESMTPSA id p12-20020a05600c468c00b003cf5ec79bf9sm41980076wmo.40.2023.01.03.07.03.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 07:03:54 -0800 (PST)
-Message-ID: <ea02357d-c5c7-aeff-e045-d639315d87e9@isovalent.com>
-Date:   Tue, 3 Jan 2023 15:03:53 +0000
+        Tue, 3 Jan 2023 10:16:05 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4A42C1EA;
+        Tue,  3 Jan 2023 07:16:04 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A1F91516;
+        Tue,  3 Jan 2023 07:16:45 -0800 (PST)
+Received: from [10.57.41.181] (unknown [10.57.41.181])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A5163F587;
+        Tue,  3 Jan 2023 07:16:00 -0800 (PST)
+Message-ID: <765577d3-cbdc-1371-f33e-ef6be42139dd@arm.com>
+Date:   Tue, 3 Jan 2023 15:15:58 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF"
- section
-Content-Language: en-GB
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v2 6/7] perf cs_etm: Record ts_source in AUXTRACE_INFO for
+ ETMv4 and ETE
+To:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
+        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20221217223509.88254-1-changbin.du@gmail.com>
- <20221217223509.88254-2-changbin.du@gmail.com>
- <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan>
- <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
- <Y6GdofET0gHQzRX6@leoy-yangtze.lan>
- <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
-From:   Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20221222160328.3639989-1-james.clark@arm.com>
+ <20221222160328.3639989-7-james.clark@arm.com>
+ <CAJ9a7VjbF2DFRHOtdCt=3o+iNrA++swpJBx9v5-R9Ky8tc4Mvw@mail.gmail.com>
+ <5dad3c40-d4d2-57b8-e6f5-10fa5ef1a0b8@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <5dad3c40-d4d2-57b8-e6f5-10fa5ef1a0b8@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-2022-12-20 16:13 UTC-0800 ~ Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> On Tue, Dec 20, 2022 at 3:34 AM Leo Yan <leo.yan@linaro.org> wrote:
->>
->> On Tue, Dec 20, 2022 at 09:31:14AM +0800, Changbin Du wrote:
->>
->> [...]
->>
->>>>> Now will print below info:
->>>>> libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux
->>>>
->>>> Recently I encountered the same issue, it could be caused by:
->>>> either missing to install tool pahole or missing to enable kernel
->>>> configuration CONFIG_DEBUG_INFO_BTF.
->>>>
->>>> Could we give explict info for reasoning failure?  Like:
->>>>
->>>> "libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux,
->>>> please install pahole and enable CONFIG_DEBUG_INFO_BTF=y for kernel building".
->>>>
->>> This is vmlinux special information and similar tips are removed from
->>> patch V2. libbpf is common for all ELFs.
->>
->> Okay, I see.  Sorry for noise.
->>
->>>>> Error: failed to load BTF from /home/changbin/work/linux/vmlinux: No such file or directory
->>>>
->>>> This log is confusing when we can find vmlinux file but without BTF
->>>> section.  Consider to use a separate patch to detect vmlinux not
->>>> found case and print out "No such file or directory"?
->>>>
->>> I think it's already there. If the file doesn't exist, open will fail.
->>
->> [...]
->>
->>>>> @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
->>>>>   err = 0;
->>>>>
->>>>>   if (!btf_data) {
->>>>> +         pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
->>>>>           err = -ENOENT;
->>
->> btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
->> section, therefore, bpftool dumps error string "No such file or
->> directory".  It's confused that actually vmlinux is existed.
->>
->> I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
->> better choice?) to replace -ENOENT at here, this can avoid bpftool to
->> outputs "No such file or directory" in this case.
+On 03/01/2023 11:49, James Clark wrote:
 > 
-> The only really meaningful error code would be -ESRCH, which
-> strerror() will translate to "No such process", which is also
-> completely confusing.
 > 
-> In general, I always found these strerror() messages extremely
-> unhelpful and confusing. I wonder if we should make an effort to
-> actually emit symbolic names of errors instead (literally, "-ENOENT"
-> in this case). This is all tooling for engineers, I find -ENOENT or
-> -ESRCH much more meaningful as an error message, compared to "No such
-> file" seemingly human-readable interpretation.
+> On 23/12/2022 09:28, Mike Leach wrote:
+>> Hi,
+>>
+>> There was a discussion some time ago in one of our coresight regular
+>> dev meetings about this.
+>>
+>> Can we just use only the necessary bits that TS source needs and leave
+>> the remaining bits from the 64 as unused  for future expansion - i..e
+>> use this as a bitfield rather than have 64 bits occupied for what is
+>> effectively a 2 bit value.
+>>
+>> Perhaps call the full value something other than TS_SOURCE and have a
+>> TS_SOURCE field with a known safe unset value.
 > 
-> Quenting, what do you think about the above proposal for bpftool? We
-> can have some libbpf helper internally and do it in libbpf error
-> messages as well and just reuse the logic in bpftool, perhaps?
+> If we did that, there wouldn't be any mechanism to detect if new values
+> that were added were the value 0, or just not set/implemented/saved in
+> the file. The current implementation of CS_ETM_NR_TRC_PARAMS allows us
+> to add new fields, and detect if they exist or not without bumping the
+> header version for each new sub field.
+> 
+> In this change HAS_PARAM() has been used to do this, but that can't be
+> expanded to sub fields in the same 64 bits. I don't think space or
+> performance are worth the extra complexity of dividing it up. And
+> because this is just one block saved once in the header, so I'm not sure
+> if it's worth it in this case. It would also make it harder to read the
+> values on the raw dump mode.
 
-Apologies for the delay.
-What you're proposing is to replace all messages currently looking like
-this:
+I think it is fine to use the entire field for the time source, given
+the header can be extended with new fields, without breaking
+compatibility for future additions.
 
-	$ bpftool prog
-	Error: can't get next program: Operation not permitted
+Suzuki
 
-by:
+> 
+> James
 
-	$ bpftool prog
-	Error: can't get next program: -EPERM
-
-Do I understand correctly?
-
-I think the strerror() messages are helpful in some occasions (they
-_are_ more human-friendly to many users), but it's also true that
-they're not always precise. With bpftool, "Invalid argument" is a
-classic when the program doesn't load, and may lead to confusion with
-the args passed to bpftool on the command line. Then there are the other
-corner cases like the one discussed in this thread. So, why not.
-
-If we do change, yeah I'd rather have as much of this handling in libbpf
-itself, and then adjust bpftool to handle the remaining cases, for
-consistency.
-
-Quentin
