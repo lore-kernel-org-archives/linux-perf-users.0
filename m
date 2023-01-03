@@ -2,211 +2,192 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D300C54EBE
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 20:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDEAC5479D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Jan 2023 23:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234171AbjACUxD (ORCPT
+        id S234227AbjACXrC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Jan 2023 15:53:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39198 "EHLO
+        Tue, 3 Jan 2023 18:47:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232129AbjACUw6 (ORCPT
+        with ESMTP id S237815AbjACXq7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Jan 2023 15:52:58 -0500
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB78EDFFC;
-        Tue,  3 Jan 2023 12:52:57 -0800 (PST)
-Received: by mail-il1-f171.google.com with SMTP id a9so6321030ilk.6;
-        Tue, 03 Jan 2023 12:52:57 -0800 (PST)
+        Tue, 3 Jan 2023 18:46:59 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBDD1004E;
+        Tue,  3 Jan 2023 15:46:58 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id u19so78606786ejm.8;
+        Tue, 03 Jan 2023 15:46:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3oSb7JXJVS/6HsFecUnGwQqOOB9BR+/FVmXe6sUvBjE=;
+        b=gTbDgWlCH4NUcCEHgth2YTnVqtz4s4PKz+5t3gYtxN5MZc/LvN+nJoGJJTISFRSwrs
+         w7pwymo+rn2BVMZudW2Xk6ZRv9sxlcO321RroJPRpATfUSEdl99e2+eBB6dFfFWEqyRr
+         KHR4OANaK7QgwTNcrf6CpPboBwZ+H3m74npjgBNekhmRjZBp5BDdZTG28bEyZEKLe1aj
+         LN0OAKAxx+3FOh4o6EhTjiNSXUmxihBDxy+xbXN2esrqPr8F88hN8W/l+k1QT4wDHM0C
+         ZU3GvFfRsG3VaXyuhXEpYQVBw0ikmucnv4PLXcvg0Gabb1PjMBYaokh3LO1pb323WZ+9
+         Z/AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TcjxuWhsew0S4JMMZ0LVIr9mYr0ZItiOrBsIyKBjzxA=;
-        b=2NToks0C7J1Ro1UvG/6kt01FVvqSE9HR9qVAMAfaZb06yTAwrVLN65XEVXoYdk2sb/
-         FMDH86QOTkf1wdMlMR0dleIvp+iKloeh8GdzK1VfMzIR5mKBmjC5nnJFQD8eXF3nkv2c
-         dY7pzjpWv1OB2HULmgz9jZIO8vW435au8tXaxTXsClyEWgoz1g9qzlEG3Rvr13+3bRd2
-         sVlR2JmEJsANGr6A5u4z8LXD9rOrFNBNl2fwYhTpwN6SRkp5lS/7jyhfQVKayBh/JXLn
-         MlcxThMHg4KRVQgojY41+30qpXSL/0YXGHsHVLY34H6PJw+HYfF8wXBSBQUNQjTOidrU
-         gmMw==
-X-Gm-Message-State: AFqh2kqZ2tsPOgwVUCwTSoEgDRfiW27l+kCz1xXxrsewl87pch2FncLQ
-        Id3nHQnTweBl/NWr7CvSoQ==
-X-Google-Smtp-Source: AMrXdXs7CLCkBhA2bAs8+otIJJ87HLmOu2iBxk7dmL/ZdUhdNLgBmJbpCAkIQKJL5QLEGLa5kGxn6A==
-X-Received: by 2002:a05:6e02:549:b0:306:d1b4:f3c7 with SMTP id i9-20020a056e02054900b00306d1b4f3c7mr25689876ils.20.1672779176867;
-        Tue, 03 Jan 2023 12:52:56 -0800 (PST)
-Received: from robh_at_kernel.org ([64.188.179.248])
-        by smtp.gmail.com with ESMTPSA id c24-20020a023b18000000b00388b6508ec8sm9836486jaa.115.2023.01.03.12.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jan 2023 12:52:56 -0800 (PST)
-Received: (nullmailer pid 3961459 invoked by uid 1000);
-        Tue, 03 Jan 2023 20:52:50 -0000
-Date:   Tue, 3 Jan 2023 14:52:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yann Sionneau <ysionneau@kalray.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
-        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-audit@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
-        Ashley Lesdalons <alesdalons@kalray.eu>,
-        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>,
-        Guillaume Thouvenin <gthouvenin@kalray.eu>,
-        Jean-Christophe Pince <jcpince@gmail.com>,
-        Jonathan Borne <jborne@kalray.eu>,
-        Jules Maselbas <jmaselbas@kalray.eu>,
-        Julian Vetter <jvetter@kalray.eu>,
-        Julien Hascoet <jhascoet@kalray.eu>,
-        Julien Villette <jvillette@kalray.eu>,
-        Louis Morhet <lmorhet@kalray.eu>,
-        Luc Michel <lmichel@kalray.eu>,
-        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
-        Marius Gligor <mgligor@kalray.eu>,
-        Samuel Jones <sjones@kalray.eu>,
-        Thomas Costis <tcostis@kalray.eu>,
-        Vincent Chardon <vincent.chardon@elsys-design.com>
-Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
-Message-ID: <20230103205250.GB3942221-robh@kernel.org>
-References: <20230103164359.24347-1-ysionneau@kalray.eu>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3oSb7JXJVS/6HsFecUnGwQqOOB9BR+/FVmXe6sUvBjE=;
+        b=57Q2UmTxvpuubDmxLNSh0wrvy9lWbT4yeOo87y3wZeDu/ld/x12HF5MFq5b4bJVCkf
+         MJtxCR3EWQZ5IV9rrdNmYDNqVTQn/LKcE0X296WayEKMAcCDqYdPjpdnxyKIKlcAMAGU
+         ecbhnMCAv0OfJQE0eDvC+aftYCDeuQUNnX5hUwGMgEQJfZ0VgXgFOBVdNq5JU4LgQvVS
+         rhFKioxrHMj6tIzyR/5XuzhpFeek23i270FXQhvh2Zo8MNKje9mUSMUBPr0AQZJq53BK
+         hlUzLc9GzS6XDNQtWUHOsiMDmd2+svcbVz6TjJjpa9OaUMug5d0hMRMJBykEgcOXZGTa
+         sSJg==
+X-Gm-Message-State: AFqh2kow8FDFah/O7bEibL4MExqnBpXI8ZZO/Z0+Hijqzve8o0cjnCXI
+        A6YP5tEibEKT2dUQ+6vWLV0T4ygYOLsXsxDojrM=
+X-Google-Smtp-Source: AMrXdXuhifcsN+8XoM8iEoIb5YJM9m8QkCS0hSkZA7F88v0P+GOkciVAILvtt3gP0l/69vPr+tvVBoIzvy8akGQX88U=
+X-Received: by 2002:a17:906:f43:b0:84c:95c7:304d with SMTP id
+ h3-20020a1709060f4300b0084c95c7304dmr2153565ejj.545.1672789616772; Tue, 03
+ Jan 2023 15:46:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230103164359.24347-1-ysionneau@kalray.eu>
+References: <20221217223509.88254-1-changbin.du@gmail.com> <20221217223509.88254-2-changbin.du@gmail.com>
+ <Y5/eE+ds+e+k3VJO@leoy-yangtze.lan> <20221220013114.zkkxkqh7orahxbzh@mail.google.com>
+ <Y6GdofET0gHQzRX6@leoy-yangtze.lan> <CAEf4Bzb_XOEoG9anNdzQVJRqd3G4yKJTSa9Dgc9xkMXqn-xdFg@mail.gmail.com>
+ <ea02357d-c5c7-aeff-e045-d639315d87e9@isovalent.com>
+In-Reply-To: <ea02357d-c5c7-aeff-e045-d639315d87e9@isovalent.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 3 Jan 2023 15:46:44 -0800
+Message-ID: <CAEf4BzZMJGrRhNeQeWB0fRsuRYUv01aZGhvDeFV2o5zdpRbR-w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] libbpf: show error info about missing ".BTF" section
+To:     Quentin Monnet <quentin@isovalent.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, Changbin Du <changbin.du@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 03, 2023 at 05:43:34PM +0100, Yann Sionneau wrote:
-> This patch series adds support for the kv3-1 CPU architecture of the kvx family
-> found in the Coolidge (aka MPPA3-80) SoC of Kalray.
-> 
-> This is an RFC, since kvx support is not yet upstreamed into gcc/binutils,
-> therefore this patch series cannot be merged into Linux for now.
-> 
-> The goal is to have preliminary reviews and to fix problems early.
-> 
-> The Kalray VLIW processor family (kvx) has the following features:
-> * 32/64 bits execution mode
-> * 6-issue VLIW architecture
-> * 64 x 64bits general purpose registers
-> * SIMD instructions
-> * little-endian
-> * deep learning co-processor
-> 
-> Kalray kv3-1 core which is the third of the kvx family is embedded in Kalray
-> Coolidge SoC currently used on K200 and K200-LP boards.
-> 
-> The Coolidge SoC contains 5 clusters each of which is made of:
-> * 4MiB of on-chip memory (SMEM)
-> * 1 dedicated safety/security core (kv3-1 core).
-> * 16 PEs (Processing Elements) (kv3-1 cores).
-> * 16 Co-processors (one per PE)
-> * 2 Crypto accelerators
-> 
-> The Coolidge SoC contains the following features:
-> * 5 Clusters
-> * 2 100G Ethernet controllers
-> * 8 PCIe GEN4 controllers (Root Complex and Endpoint capable)
-> * 2 USB 2.0 controllers
-> * 1 Octal SPI-NOR flash controller
-> * 1 eMMC controller
-> * 3 Quad SPI controllers
-> * 6 UART
-> * 5 I2C controllers (3 of which are SMBus capable)
-> * 4 CAN controllers
-> * 1 OTP memory
-> 
-> A kvx toolchain can be built using:
-> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev libmpfr-dev
-> $ git clone https://github.com/kalray/build-scripts
-> $ cd build-scripts
-> $ source last.refs
-> $ ./build-kvx-xgcc.sh output
-> 
-> The kvx toolchain will be installed in the "output" directory.
-> 
-> A buildroot image (kernel+rootfs) and toolchain can be built using:
-> $ git clone -b coolidge-for-upstream https://github.com/kalray/buildroot
-> $ cd buildroot
-> $ make O=build_kvx kvx_defconfig
-> $ make O=build_kvx
-> 
-> The vmlinux image can be found in buildroot/build_kvx/images/vmlinux.
-> 
-> If you are just interested in building the Linux kernel with no rootfs you can
-> just do this with the kvx-elf- toolchain:
-> $ make ARCH=kvx O=build_kvx CROSS_COMPILE=kvx-elf- default_defconfig
-> $ make ARCH=kvx O=build_kvx CROSS_COMPILE=kvx-elf- -j$(($(nproc) + 1))
-> 
-> The vmlinux ELF can be run with qemu by doing:
-> # install dependencies: ninja pkg-config libglib-2.0-dev cmake libfdt-dev libpixman-1-dev zlib1g-dev
-> $ git clone https://github.com/kalray/qemu-builder
-> $ cd qemu-builder
-> $ git submodule update --init
-> $ make -j$(($(nproc) + 1))
-> $ ./qemu-system-kvx -m 1024 -nographic -kernel <path/to/vmlinux>
-> 
-> Yann Sionneau (25):
->   Documentation: kvx: Add basic documentation
->   kvx: Add ELF-related definitions
->   kvx: Add build infrastructure
->   kvx: Add CPU definition headers
->   kvx: Add atomic/locking headers
->   kvx: Add other common headers
->   kvx: Add boot and setup routines
->   kvx: Add exception/interrupt handling
->   kvx: irqchip: Add support for irq controllers
->   kvx: Add process management
->   kvx: Add memory management
->   kvx: Add system call support
->   kvx: Add signal handling support
->   kvx: Add ELF relocations and module support
->   kvx: Add misc common routines
->   kvx: Add some library functions
->   kvx: Add multi-processor (SMP) support
->   kvx: Add kvx default config file
->   kvx: power: scall poweroff driver
->   kvx: gdb: add kvx related gdb helpers
->   kvx: Add support for ftrace
->   kvx: Add support for jump labels
->   kvx: Add debugging related support
->   kvx: Add support for CPU Perf Monitors
->   kvx: Add support for cpuinfo
+On Tue, Jan 3, 2023 at 7:03 AM Quentin Monnet <quentin@isovalent.com> wrote:
+>
+> 2022-12-20 16:13 UTC-0800 ~ Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > On Tue, Dec 20, 2022 at 3:34 AM Leo Yan <leo.yan@linaro.org> wrote:
+> >>
+> >> On Tue, Dec 20, 2022 at 09:31:14AM +0800, Changbin Du wrote:
+> >>
+> >> [...]
+> >>
+> >>>>> Now will print below info:
+> >>>>> libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux
+> >>>>
+> >>>> Recently I encountered the same issue, it could be caused by:
+> >>>> either missing to install tool pahole or missing to enable kernel
+> >>>> configuration CONFIG_DEBUG_INFO_BTF.
+> >>>>
+> >>>> Could we give explict info for reasoning failure?  Like:
+> >>>>
+> >>>> "libbpf: failed to find '.BTF' ELF section in /home/changbin/work/linux/vmlinux,
+> >>>> please install pahole and enable CONFIG_DEBUG_INFO_BTF=y for kernel building".
+> >>>>
+> >>> This is vmlinux special information and similar tips are removed from
+> >>> patch V2. libbpf is common for all ELFs.
+> >>
+> >> Okay, I see.  Sorry for noise.
+> >>
+> >>>>> Error: failed to load BTF from /home/changbin/work/linux/vmlinux: No such file or directory
+> >>>>
+> >>>> This log is confusing when we can find vmlinux file but without BTF
+> >>>> section.  Consider to use a separate patch to detect vmlinux not
+> >>>> found case and print out "No such file or directory"?
+> >>>>
+> >>> I think it's already there. If the file doesn't exist, open will fail.
+> >>
+> >> [...]
+> >>
+> >>>>> @@ -990,6 +990,7 @@ static struct btf *btf_parse_elf(const char *path, struct btf *base_btf,
+> >>>>>   err = 0;
+> >>>>>
+> >>>>>   if (!btf_data) {
+> >>>>> +         pr_warn("failed to find '%s' ELF section in %s\n", BTF_ELF_SEC, path);
+> >>>>>           err = -ENOENT;
+> >>
+> >> btf_parse_elf() returns -ENOENT when ELF file doesn't contain BTF
+> >> section, therefore, bpftool dumps error string "No such file or
+> >> directory".  It's confused that actually vmlinux is existed.
+> >>
+> >> I am wondering if we can use error -LIBBPF_ERRNO__FORMAT (or any
+> >> better choice?) to replace -ENOENT at here, this can avoid bpftool to
+> >> outputs "No such file or directory" in this case.
+> >
+> > The only really meaningful error code would be -ESRCH, which
+> > strerror() will translate to "No such process", which is also
+> > completely confusing.
+> >
+> > In general, I always found these strerror() messages extremely
+> > unhelpful and confusing. I wonder if we should make an effort to
+> > actually emit symbolic names of errors instead (literally, "-ENOENT"
+> > in this case). This is all tooling for engineers, I find -ENOENT or
+> > -ESRCH much more meaningful as an error message, compared to "No such
+> > file" seemingly human-readable interpretation.
+> >
+> > Quenting, what do you think about the above proposal for bpftool? We
+> > can have some libbpf helper internally and do it in libbpf error
+> > messages as well and just reuse the logic in bpftool, perhaps?
+>
+> Apologies for the delay.
+> What you're proposing is to replace all messages currently looking like
+> this:
+>
+>         $ bpftool prog
+>         Error: can't get next program: Operation not permitted
+>
+> by:
+>
+>         $ bpftool prog
+>         Error: can't get next program: -EPERM
+>
+> Do I understand correctly?
 
-You should strip this series down to just what's needed to boot. You 
-don't need the last 7 patches at least.
+yep, that's what I had in mind
 
-Rob
+>
+> I think the strerror() messages are helpful in some occasions (they
+> _are_ more human-friendly to many users), but it's also true that
+> they're not always precise. With bpftool, "Invalid argument" is a
+> classic when the program doesn't load, and may lead to confusion with
+> the args passed to bpftool on the command line. Then there are the other
+> corner cases like the one discussed in this thread. So, why not.
+
+maybe the right approach would be to have both symbolic error name and
+its human-readable representation, so for example above
+
+Error: can't get next program: [-EPERM] Operation not permitted
+
+or something like that? And if error value is unknown, just keep it as
+integer: "[-5555]" ?
+
+>
+> If we do change, yeah I'd rather have as much of this handling in libbpf
+> itself, and then adjust bpftool to handle the remaining cases, for
+> consistency.
+
+we can teach libbpf_strerror_r() to do this and if bpftool is going to
+use it consistently then it would get the benefit automatically
+
+>
+> Quentin
