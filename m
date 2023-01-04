@@ -2,80 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DEFC4708E
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 14:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BD0C63797
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 15:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235086AbjADOwM (ORCPT
+        id S239728AbjADP7T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 Jan 2023 09:52:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41960 "EHLO
+        Wed, 4 Jan 2023 10:59:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239498AbjADOwE (ORCPT
+        with ESMTP id S239739AbjADP6t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 Jan 2023 09:52:04 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3B66478;
-        Wed,  4 Jan 2023 06:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672843924; x=1704379924;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=elel7+bS3L05dbWw4U9vGK7LSsvQ2mQBav5PivsMYGo=;
-  b=AQvL8bPO2AGewMyQefoysKq8DALbGGbyLOfPYpxf28Vsc5sSoIUOuZwM
-   f+ejdKiLt6QiMN/tkV3IGRkW7FdO12TXm1JTUn5z70G1EjMPnxr5+Fjk4
-   VGUuTqHixn7wlbeLSU1j7/fzbNg8Mguo/XYGfDA1q3bBdFHtawkW41yEa
-   nJA+cR1sV9lz+V/gifWqrqnUT2ZSD2fuHEU6siYsfJRcwBHdtXzcPt7w5
-   m+e0q3sXB7pC9LXSIvbkL9ehiMjLECm3c8DTBSxcCyyfA3TodWUsUqUnW
-   vJz0K3GjZ8S2OeopWiFrgrf7FM5z2b0jBVUq4tnR0YbSvewcd2+lhD1dx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="384240228"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="384240228"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 06:51:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="900575821"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="900575821"
-Received: from power-sh.sh.intel.com ([10.239.183.7])
-  by fmsmga006.fm.intel.com with ESMTP; 04 Jan 2023 06:51:38 -0800
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@linux.intel.com
-Subject: [PATCH 2/2] perf/x86/rapl: Add support for Intel Emerald Rapids
-Date:   Wed,  4 Jan 2023 22:58:31 +0800
-Message-Id: <20230104145831.25498-2-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230104145831.25498-1-rui.zhang@intel.com>
-References: <20230104145831.25498-1-rui.zhang@intel.com>
+        Wed, 4 Jan 2023 10:58:49 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A551413F6B;
+        Wed,  4 Jan 2023 07:58:47 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 284635C00D1;
+        Wed,  4 Jan 2023 10:58:45 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 04 Jan 2023 10:58:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1672847925; x=1672934325; bh=H0UTR4kJze
+        AkAZivC7ap8DwhEwb/MXnY4XPO+uy9kKc=; b=U8pU6dYSVrl/CVJUPPEqx1R9Aq
+        lRxcqMgYm/TyRX26ZRhyXa5uD+cs/yqjcy+nxmXyUIG+GTv181nQJi14UJAOIAjf
+        9og92IBPb31uZ6dMCyYRlMnZEfzQ6xvntOWmT3FWGrbwUq5HC7doLJZu6KqzASKI
+        hx0t/iE+7VsGIErLSpVMU0gFj5/H+ZQaKAZypwzKqJpGCyYDp223hOv+Zz4SLqW0
+        aap4i0c2yXuHQ0fuFazE/+lmbeVPJ9sjpKCGtqT+ziNxFO9URfDlN8d6S8yyG2Kc
+        gfoSMJGJPpNha+B3JWXggdUNoTtSLSxTxQuqa+jy3h74M4/4siNT+25L+AnA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1672847925; x=1672934325; bh=H0UTR4kJzeAkAZivC7ap8DwhEwb/
+        MXnY4XPO+uy9kKc=; b=HgaFI40sC8yMY8VOy7QQ2F4//wyS3hYp0LPxGg03HAWk
+        qEtLjRM+JzoyCdjTkYPOh/vyRMocCgEQJJqgRHD5+URJ6Ih4+/PWfKLiNnp0SZ5c
+        2eVHhYC4JvCfKwLmmEFnjnFQRQl/X6q87HzGKYozVQvf+hOjcXLbChRn7u4v6rVv
+        A7h6PsV/16E/QY06UxPPdbXrMJQ3AXHk2Coz61RWuHtjaXz5GAT/CtwzH0J/hC6Z
+        8GBNd2fU1eV3VheOX6SEI3N2hK9df+iJYKLxk619yg08GulRxfRBLXa5HcZVP0mX
+        atQsepbklOuSYA/wRkqz2dILaWkGdP1/uzO37OwLPg==
+X-ME-Sender: <xms:NKK1Y48HslmbYS4XfyvkV25JDSKz4gqEZbPhEXvALJOvcqVVorgYrQ>
+    <xme:NKK1YwvOYWU86IT641Xjgz28D53RJaLRPWwjvOCq1FuTvXSRIj9DM-9LxgP0a6zpv
+    RWXh9d7Rchms20DgzA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrjeeigdekvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:NKK1Y-D0Rn03uTnG6oMJtNULtppKVKQLRwrnCdfDvZq1rkRA1aAVAg>
+    <xmx:NKK1Y4fvmlqny8-TiW5EIb1Km8tOPFA7Fqn4qJNuwbm4wf6rLLbgkw>
+    <xmx:NKK1Y9MK4-XTCquhXJiLE_n3OfFxMW22ddTI_UZsemVu5efG4lpnyQ>
+    <xmx:NaK1YztseASQahJ66RWxLZYnhH-1ueAQdizsGnk9d2-oLHJ_jMdhJw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 43F24B6008D; Wed,  4 Jan 2023 10:58:44 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1185-g841157300a-fm-20221208.002-g84115730
+Mime-Version: 1.0
+Message-Id: <7c531595-e987-422b-bcf7-48ad0ba49ce6@app.fastmail.com>
+In-Reply-To: <20230103164359.24347-1-ysionneau@kalray.eu>
+References: <20230103164359.24347-1-ysionneau@kalray.eu>
+Date:   Wed, 04 Jan 2023 16:58:25 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Yann Sionneau" <ysionneau@kalray.eu>
+Cc:     "Albert Ou" <aou@eecs.berkeley.edu>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Aneesh Kumar" <aneesh.kumar@linux.ibm.com>,
+        "Ard Biesheuvel" <ardb@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Boqun Feng" <boqun.feng@gmail.com>, bpf@vger.kernel.org,
+        "Christian Brauner" <brauner@kernel.org>,
+        devicetree@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Eric Paris" <eparis@redhat.com>, "Ingo Molnar" <mingo@redhat.com>,
+        "Jan Kiszka" <jan.kiszka@siemens.com>,
+        "Jason Baron" <jbaron@akamai.com>, "Jiri Olsa" <jolsa@kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Josh Poimboeuf" <jpoimboe@kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Kieran Bingham" <kbingham@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-audit@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "Marc Zyngier" <maz@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        "Paul Moore" <paul@paul-moore.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Waiman Long" <longman@redhat.com>,
+        "Will Deacon" <will@kernel.org>, "Alex Michon" <amichon@kalray.eu>,
+        "Ashley Lesdalons" <alesdalons@kalray.eu>,
+        "Benjamin Mugnier" <mugnier.benjamin@gmail.com>,
+        "Clement Leger" <clement.leger@bootlin.com>,
+        "Guillaume Missonnier" <gmissonnier@kalray.eu>,
+        "Guillaume Thouvenin" <gthouvenin@kalray.eu>,
+        "Jean-Christophe Pince" <jcpince@gmail.com>,
+        "Jonathan Borne" <jborne@kalray.eu>,
+        "Jules Maselbas" <jmaselbas@kalray.eu>,
+        "Julian Vetter" <jvetter@kalray.eu>,
+        "Julien Hascoet" <jhascoet@kalray.eu>,
+        "Julien Villette" <jvillette@kalray.eu>,
+        "Louis Morhet" <lmorhet@kalray.eu>,
+        "Luc Michel" <lmichel@kalray.eu>,
+        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
+        "Marius Gligor" <mgligor@kalray.eu>,
+        "Samuel Jones" <sjones@kalray.eu>,
+        "Thomas Costis" <tcostis@kalray.eu>,
+        "Vincent Chardon" <vincent.chardon@elsys-design.com>
+Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Emerald Rapids RAPL support is the same as previous Sapphire Rapids.
-Add Emerald Rapids model for RAPL.
+On Tue, Jan 3, 2023, at 17:43, Yann Sionneau wrote:
+> This patch series adds support for the kv3-1 CPU architecture of the kvx family
+> found in the Coolidge (aka MPPA3-80) SoC of Kalray.
+>
+> This is an RFC, since kvx support is not yet upstreamed into gcc/binutils,
+> therefore this patch series cannot be merged into Linux for now.
+>
+> The goal is to have preliminary reviews and to fix problems early.
+>
+> The Kalray VLIW processor family (kvx) has the following features:
+> * 32/64 bits execution mode
+> * 6-issue VLIW architecture
+> * 64 x 64bits general purpose registers
+> * SIMD instructions
+> * little-endian
+> * deep learning co-processor
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- arch/x86/events/rapl.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for posting these, I had been wondering about the
+state of the port. Overall this looks really nice, I can
+see that you and the team have looked at other ports
+and generally made the right decisions.
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 0ef255602aa8..8ccf4a36e386 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -804,6 +804,7 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_N,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&model_spr),
-+	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&model_spr),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&model_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&model_skl),
--- 
-2.25.1
+I commented on the syscall patch directly, I think it's
+important to stop using the deprecated syscalls as soon
+as possible to avoid having dependencies in too many
+libc binaries. Almost everything else can be changed
+easily as you get closer to upstream inclusion.
 
+I did not receive most of the other patches as I'm
+not subscribed to all the mainline lists. For future 
+submissions, can you add the linux-arch list to Cc for
+all patches?
+
+Reading the rest of the series through lore.kernel.org,
+most of the comments I have are for improvements that
+you may find valuable rather than serious mistakes:
+
+- the {copy_to,copy_from,clear}_user functions are
+  well worth optimizing better than the byte-at-a-time
+  version you have, even just a C version built around
+  your __get_user/__put_user inline asm should help, and
+  could be added to lib/usercopy.c.
+
+- The __raw_{read,write}{b,w,l,q} helpers should
+  normally be defined as inline asm instead of
+  volatile pointer dereferences, I've seen cases where
+  the compiler ends up splitting the access or does
+  other things you may not want on MMIO areas.
+
+- I would recomment implementing HAVE_ARCH_VMAP_STACK
+  as well as IRQ stacks, both of these help to
+  avoid data corruption from stack overflow that you
+  will eventually run into.
+
+- You use qspinlock as the only available spinlock
+  implementation, but only support running on a
+  single cluster of 16 cores. It may help to use
+  the generic ticket spinlock instead, or leave it
+  as a Kconfig option, in particular since you only
+  have the emulated xchg16() atomic for qspinlock.
+
+- Your defconfig file enables CONFIG_EMBEDDED, which
+  in turn enables CONFIG_EXPERT. This is probably
+  not what you want, so better turn off both of these.
+
+- The GENERIC_CALIBRATE_DELAY should not be necessary
+  since you have a get_cycles() based delay loop.
+  Just set loops_per_jiffy to the correct value based
+  on the frequency of the cycle counter, to save
+  a little time during boot and get a more accurate
+  delay loop.
+
+    Arnd
