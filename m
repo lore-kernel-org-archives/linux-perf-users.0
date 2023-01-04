@@ -2,191 +2,326 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7540DC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 09:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C13C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 13:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbjADJeP (ORCPT
+        id S235070AbjADNwV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 Jan 2023 04:34:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49662 "EHLO
+        Wed, 4 Jan 2023 08:52:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234222AbjADJeE (ORCPT
+        with ESMTP id S239354AbjADNwD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 Jan 2023 04:34:04 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909D4D7B;
-        Wed,  4 Jan 2023 01:34:03 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3046NQWk022379;
-        Wed, 4 Jan 2023 09:33:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=mtGAGYRS64hk/VrRNgVjHa8uSOXCKXmT/oCzpqvlFNk=;
- b=dtNkw9VRzNGOZEutdGn3quGZt3/GJLhdMvX5WyPzhdpyY64mqleZ3rwfZy5Bon5XjdLC
- R+FKUw7iKAz2Rm/TbX5MmdtzKGFlvZZn3Sg0jvANQmGFRZKH85qSC740cPxj8mntkPSS
- PZ3IBa5VLZTwhrUNKk5mZNauxNSPGvWolnP84YzpvsAzAJ8iE9dWa9NwuiEtgwOPyUtl
- 3RfjtM1WeuQIXlAuEgwOljON6zT+P45HdNj07t393ki0eBbIk/lE0GGePAd+4ETqqDEM
- /xDKQKnButnCusjLaw//fQesQWGCZhjLQuGe2t/FIK9q3oFo0N/pb2afhO8CnHPXaxjD CA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mvjd7k8ys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Jan 2023 09:33:58 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3049UDiF032012;
-        Wed, 4 Jan 2023 09:33:58 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mvjd7k8xu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Jan 2023 09:33:58 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3046YtcT010137;
-        Wed, 4 Jan 2023 09:33:56 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3mtcbfkptw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Jan 2023 09:33:55 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3049Xqhr49676796
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Jan 2023 09:33:52 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30DF320040;
-        Wed,  4 Jan 2023 09:33:52 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A61E320043;
-        Wed,  4 Jan 2023 09:33:51 +0000 (GMT)
-Received: from [9.171.83.63] (unknown [9.171.83.63])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Jan 2023 09:33:51 +0000 (GMT)
-Message-ID: <2d8265c4-6c1d-dbcd-2e85-64a3dd1ddc2c@linux.ibm.com>
-Date:   Wed, 4 Jan 2023 10:33:51 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2 2/2] perf/test: Fix test case 89 for x86
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Wed, 4 Jan 2023 08:52:03 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3195C7657;
+        Wed,  4 Jan 2023 05:52:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A15AF6173D;
+        Wed,  4 Jan 2023 13:52:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B5BC433EF;
+        Wed,  4 Jan 2023 13:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672840320;
+        bh=zESvBys6+ijsskoiD+WZAQfcK9HlkvwqKa5QFLGE1+k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RzK+HN/GgtdsCdbn2JfClMtYHrLB+Q54mgXbsqtwIx8SyQZ4JRS0hQviCOPvmn6zt
+         V8xGTINAh6SdwWQjlTaCRYWHUla2RCeaccZc3Zr1SFpOlZcWMnS22eh+AsYKaQVS8L
+         5T6pWaWNFAowfSNGGgGugaOaCxD49U+kjM4dIaNFCdH1V1boAFVvfXOataMRp87M0c
+         aRKAfm4QVy7eDdJQzSQvjdUHFBsADtopCPJ5x4Hq4GQg9pracJljqowtVUD2snqqBb
+         s1UJEU3pyaVLLLnd/P2zLZHBK4AKx1FDQ2BAMD/9E69Jepr5x5PzUQM5WopNpIDmMV
+         L7W5X66GPo1fw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0160740468; Wed,  4 Jan 2023 10:51:56 -0300 (-03)
+Date:   Wed, 4 Jan 2023 10:51:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <richter@de.ibm.com>
-References: <20221228145704.2702487-1-tmricht@linux.ibm.com>
- <20221228145704.2702487-2-tmricht@linux.ibm.com>
- <Y7QrqshCjRocRlWP@kernel.org>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <Y7QrqshCjRocRlWP@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FySZIdU29vtVcL4OFnHTZvsYy00c5QWN
-X-Proofpoint-GUID: zTuCrCJ3drGoo2IFgQp1Tuygzoxv1mr3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-04_05,2023-01-03_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 clxscore=1011
- suspectscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2301040076
+        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 3/4] perf bpf_counter: Handle unsupported cgroup events
+Message-ID: <Y7WEfDHc5xw6x3t8@kernel.org>
+References: <20230104064402.1551516-1-namhyung@kernel.org>
+ <20230104064402.1551516-4-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230104064402.1551516-4-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 1/3/23 14:20, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Dec 28, 2022 at 03:57:04PM +0100, Thomas Richter escreveu:
->> From: Thomas Richter <richter@de.ibm.com>
->>
->> perf test '89: probe libc's inet_pton & backtrace it with ping'
->> fails on x86. Debugging revealed a changed stack trace for the
->> ping command using probes:
->>
->> ping 35729 [002]  8006.365063: probe_libc:inet_pton: (3ff9603e7c0)
->>                   12be50 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
->>                   4fca main+0x139b (/usr/bin/ping)
->>
->> The line getaddrinfo.... in the call stack is gone.
->> It was introduced with glibc version 2.36.8 released
->> with Fedora 37.
+Em Tue, Jan 03, 2023 at 10:44:01PM -0800, Namhyung Kim escreveu:
+> When --for-each-cgroup option is used, it failed when any of events is not
+> supported and it exited immediately.  This is not how perf stat handles the
+> unsupported events.  Let's ignore the failure and proceed with others.
 > 
-> Humm, I'm testing and invetigating this issue and by looking at the
-> backtraces I see that it is just on the first entry that the getaddrinfo
-> isn't present, i.e. now there are two inet_pton() calls, one of them
-> doesn't come from getaddrinfo():
-> 
-> [root@quaco ~]# cat /tmp/perf.script.IUC
-> ping 623883 [006] 265438.471610: probe_libc:inet_pton: (7f32bcf314c0)
-> 	          1314c0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> 	           29510 __libc_start_call_main+0x80 (/usr/lib64/libc.so.6)
-> 
-> ping 623883 [006] 265438.471664: probe_libc:inet_pton: (7f32bcf314c0)
-> 	          1314c0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> 	           fa6c6 getaddrinfo+0x126 (/usr/lib64/libc.so.6)
-> 	            491e [unknown] (/usr/bin/ping)
-> 
-> The above is the temp file for the perf script output from the collected
-> perf.data file See the second entry? Its as we expect:
-> 
-> [root@quaco ~]# cat /tmp/expected.aT6
-> ping[][0-9 \.:]+probe_libc:inet_pton: \([[:xdigit:]]+\)
-> .*inet_pton\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/libc.so.6|inlined\)$
-> getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\(/usr/lib64/libc.so.6\)$
-> .*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$
-> [root@quaco ~]#
-> 
-> But if I just ignore that first one and match against the second event
-> instance:
-> 
-> [root@quaco ~]# perf test inet_pton
->  90: probe libc's inet_pton & backtrace it with ping                 : Ok
-> [root@quaco ~]# perf test -v inet_pton
->  90: probe libc's inet_pton & backtrace it with ping                 :
-> --- start ---
-> test child forked, pid 626199
-> ping 626222 [007] 266979.123047: probe_libc:inet_pton_1: (7f0650d314c0)
-> 1314c0 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
-> fa6c6 getaddrinfo+0x126 (/usr/lib64/libc.so.6)
-> 491e n (/usr/bin/ping)
-> test child finished with 0
-> ---- end ----
-> probe libc's inet_pton & backtrace it with ping: Ok
-> [root@quaco ~]#
-> 
-> So, can you try with the following patch in your s/390 system?
+> Before:
+>   $ sudo ./perf stat -a --bpf-counters -e L1-icache-loads,L1-dcache-loads \
+>   > --for-each-cgroup system.slice,user.slice  sleep 1
+>   Failed to open first cgroup events
 
-Thanks Arnaldo,
+Interesting, tried the above on a arm64 machine and it all works:
 
-your patch also works on my s390 system. I applied patch 1/2 which is
-necessary and then your change:
+root@roc-rk3399-pc:~# strace -e bpf,perf_event_open perf stat -a --bpf-counters -e L1-icache-loads,L1-dcache-loads --for-each-cgroup system.slice,user.slice sleep 1
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffd36afc98, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0}, 116) = 5
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffd36afee8, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0\20\0\0\0\20\0\0\0\5\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=45, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\t\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=81, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\08\0\0\08\0\0\0\t\0\0\0\0\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=89, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0\f\0\0\0\f\0\0\0\7\0\0\0\1\0\0\0\0\0\0\20"..., btf_log_buf=NULL, btf_size=43, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\t\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=81, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\5\0\0\0\0\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=77, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0(\0\0\0(\0\0\0\5\0\0\0\0\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=69, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0\f\0\0\0\f\0\0\0\10\0\0\0\1\0\0\0\0\0\0\23"..., btf_log_buf=NULL, btf_size=44, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0@G\0\0@G\0\0\2725\0\0\0\0\0\0\0\0\0\2"..., btf_log_buf=NULL, btf_size=32018, btf_log_size=0, btf_log_level=0}, 28) = 5
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffd36afb18, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="libbpf_nametest"}, 64) = 6
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=4, max_entries=1, map_flags=BPF_F_MMAPABLE, inner_map_fd=0, map_name="libbpf_mmap", map_ifindex=0, btf_fd=0, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 6
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_PERF_EVENT_ARRAY, key_size=4, value_size=4, max_entries=12, map_flags=0, inner_map_fd=0, map_name="events", map_ifindex=0, btf_fd=0, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 6
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_HASH, key_size=8, value_size=4, max_entries=2, map_flags=0, inner_map_fd=0, map_name="cgrp_idx", map_ifindex=0, btf_fd=5, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 7
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_PERCPU_ARRAY, key_size=4, value_size=24, max_entries=2, map_flags=0, inner_map_fd=0, map_name="prev_readings", map_ifindex=0, btf_fd=5, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 9
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_PERCPU_ARRAY, key_size=4, value_size=24, max_entries=4, map_flags=0, inner_map_fd=0, map_name="cgrp_readings", map_ifindex=0, btf_fd=5, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 10
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=32, max_entries=1, map_flags=0, inner_map_fd=0, map_name="libbpf_global", map_ifindex=0, btf_fd=0, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 11
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=5, insns=0xffffd36afb80, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 12
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=8, max_entries=1, map_flags=BPF_F_RDONLY_PROG|BPF_F_MMAPABLE, inner_map_fd=0, map_name="bperf_cg.rodata", map_ifindex=0, btf_fd=5, btf_key_type_id=0, btf_value_type_id=413, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 11
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=11, key=0xffffd36afcdc, value=0xffff8da49000, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_FREEZE, {map_fd=11}, 4)     = 0
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=8, max_entries=1, map_flags=BPF_F_MMAPABLE, inner_map_fd=0, map_name="bperf_cg.bss", map_ifindex=0, btf_fd=5, btf_key_type_id=0, btf_value_type_id=410, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 12
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=12, key=0xffffd36afcdc, value=0xffff8da48000, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=4, max_entries=1, map_flags=BPF_F_MMAPABLE, inner_map_fd=0, map_name="bperf_cg.data", map_ifindex=0, btf_fd=5, btf_key_type_id=0, btf_value_type_id=411, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 13
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=13, key=0xffffd36afcdc, value=0xffff8da47000, flags=BPF_ANY}, 32) = 0
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_TRACEPOINT, insn_cnt=6, insns=0xffffd36afd48, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 14
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_PERF_EVENT, insn_cnt=306, insns=0xaaaaf14b9de0, license="Dual BSD/GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(6, 1, 0), prog_flags=0, prog_name="on_cgrp_switch", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=5, func_info_rec_size=8, func_info=0xaaaaf14baec0, func_info_cnt=2, line_info_rec_size=16, line_info=0xaaaaf1491390, line_info_cnt=109, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 14
+bpf(BPF_MAP_CREATE, {map_type=BPF_MAP_TYPE_ARRAY, key_size=4, value_size=32, max_entries=1, map_flags=0, inner_map_fd=0, map_name="libbpf_det_bind", map_ifindex=0, btf_fd=0, btf_key_type_id=0, btf_value_type_id=0, btf_vmlinux_value_type_id=0, map_extra=0}, 72) = 15
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffd36af358, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 16
+bpf(BPF_PROG_BIND_MAP, 0xffffd36af288, 12) = 0
+bpf(BPF_PROG_BIND_MAP, 0xffffd36af398, 12) = 0
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT, insn_cnt=306, insns=0xaaaaf1491a70, license="Dual BSD/GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(6, 1, 0), prog_flags=0, prog_name="trigger_read", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=5, func_info_rec_size=8, func_info=0xaaaaf14b9ad0, func_info_cnt=2, line_info_rec_size=16, line_info=0xaaaaf1492710, line_info_cnt=109, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 15
+bpf(BPF_PROG_BIND_MAP, 0xffffd36af398, 12) = 0
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_SW_CGROUP_SWITCHES, sample_period=1, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, -1, 0, -1, PERF_FLAG_FD_CLOEXEC) = 16
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_SW_CGROUP_SWITCHES, sample_period=1, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, -1, 1, -1, PERF_FLAG_FD_CLOEXEC) = 17
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_SW_CGROUP_SWITCHES, sample_period=1, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, -1, 2, -1, PERF_FLAG_FD_CLOEXEC) = 18
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_SW_CGROUP_SWITCHES, sample_period=1, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, -1, 3, -1, PERF_FLAG_FD_CLOEXEC) = 19
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_SW_CGROUP_SWITCHES, sample_period=1, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, -1, 4, -1, PERF_FLAG_FD_CLOEXEC) = 20
+perf_event_open({type=PERF_TYPE_SOFTWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_SW_CGROUP_SWITCHES, sample_period=1, sample_type=0, read_format=0, disabled=1, precise_ip=0 /* arbitrary skid */, ...}, -1, 5, -1, PERF_FLAG_FD_CLOEXEC) = 21
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_TRACEPOINT, insn_cnt=2, insns=0xffffd36afe28, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 128) = 22
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=22, target_fd=-1, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = -1 EBADF (Bad file descriptor)
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=14, target_fd=16, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = 22
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=14, target_fd=17, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = 23
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=14, target_fd=18, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = 24
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=14, target_fd=19, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = 25
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=14, target_fd=20, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = 26
+bpf(BPF_LINK_CREATE, {link_create={prog_fd=14, target_fd=21, attach_type=BPF_PERF_EVENT, flags=0}}, 48) = 27
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1I, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 0, -1, PERF_FLAG_FD_CLOEXEC) = 28
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1I, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 1, -1, PERF_FLAG_FD_CLOEXEC) = 29
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1I, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 2, -1, PERF_FLAG_FD_CLOEXEC) = 30
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1I, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 3, -1, PERF_FLAG_FD_CLOEXEC) = 31
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1I, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 4, -1, PERF_FLAG_FD_CLOEXEC) = 32
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1I, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 5, -1, PERF_FLAG_FD_CLOEXEC) = 33
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=7, key=0xaaaaf14c1c58, value=0xffffd36b005c, flags=BPF_ANY}, 32) = 0
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1D, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 0, -1, PERF_FLAG_FD_CLOEXEC) = 34
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1D, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 1, -1, PERF_FLAG_FD_CLOEXEC) = 35
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1D, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 2, -1, PERF_FLAG_FD_CLOEXEC) = 36
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1D, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 3, -1, PERF_FLAG_FD_CLOEXEC) = 37
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1D, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 4, -1, PERF_FLAG_FD_CLOEXEC) = 38
+perf_event_open({type=PERF_TYPE_HW_CACHE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CACHE_RESULT_ACCESS<<16|PERF_COUNT_HW_CACHE_OP_READ<<8|PERF_COUNT_HW_CACHE_L1D, sample_period=0, sample_type=0, read_format=0, precise_ip=0 /* arbitrary skid */, exclude_guest=1, ...}, -1, 5, -1, PERF_FLAG_FD_CLOEXEC) = 39
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=6, key=0xffffd36b00b0, value=0xffffd36b0060, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_UPDATE_ELEM, {map_fd=7, key=0xaaaaf14c2278, value=0xffffd36b005c, flags=BPF_ANY}, 32) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=0}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=0}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=1}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=2}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=3}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=4}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=5}}, 80) = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=8741, si_uid=0, si_status=0, si_utime=0, si_stime=1} ---
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=0}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=1}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=2}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=3}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=4}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=5}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=0}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=1}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=2}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=3}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=4}}, 80) = 0
+bpf(BPF_PROG_TEST_RUN, {test={prog_fd=15, retval=0, data_size_in=0, data_size_out=0, data_in=NULL, data_out=NULL, repeat=0, duration=0, ctx_size_in=0, ctx_size_out=0, ctx_in=NULL, ctx_out=NULL, flags=BPF_F_TEST_RUN_ON_CPU, cpu=5}}, 80) = 0
+bpf(BPF_MAP_LOOKUP_ELEM, {map_fd=10, key=0xffffd36b0004, value=0xaaaaf14be350, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_LOOKUP_ELEM, {map_fd=10, key=0xffffd36b0004, value=0xaaaaf14be350, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_LOOKUP_ELEM, {map_fd=10, key=0xffffd36b0004, value=0xaaaaf14be350, flags=BPF_ANY}, 32) = 0
+bpf(BPF_MAP_LOOKUP_ELEM, {map_fd=10, key=0xffffd36b0004, value=0xaaaaf14be350, flags=BPF_ANY}, 32) = 0
 
-  # ./perf test  85
-  85: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-  # git am your-patch
-  # ./perf test  85
-  85: probe libc's inet_pton & backtrace it with ping                 : Ok
-  #
+ Performance counter stats for 'system wide':
 
-So for patch 2/2 your have my
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+             46116      L1-icache-loads                  system.slice
+             15864      L1-dcache-loads                  system.slice
+           8685400      L1-icache-loads                  user.slice
+           3686787      L1-dcache-loads                  user.slice
 
+       1.021264798 seconds time elapsed
+
+--- SIGCHLD {si_signo=SIGCHLD, si_code=SI_USER, si_pid=8740, si_uid=0} ---
++++ exited with 0 +++
+root@roc-rk3399-pc:~#
+root@roc-rk3399-pc:~# perf -vv
+perf version 6.2.rc2.gfb710ddee75f
+                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+            debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+               libpfm4: [ OFF ]  # HAVE_LIBPFM
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+root@roc-rk3399-pc:~#
+root@roc-rk3399-pc:~# head -8 /proc/cpuinfo
+processor	: 0
+BogoMIPS	: 48.00
+Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid
+CPU implementer	: 0x41
+CPU architecture: 8
+CPU variant	: 0x0
+CPU part	: 0xd03
+CPU revision	: 4
+root@roc-rk3399-pc:~# uname -a
+Linux roc-rk3399-pc 6.1.0-rc5-00123-g4dd7ff4a0311 #2 SMP PREEMPT Wed Nov 16 19:55:11 UTC 2022 aarch64 aarch64 aarch64 GNU/Linux
+root@roc-rk3399-pc:~#
+
+So these events are supported there, lets see with something else..
+
+Before:
+
+root@roc-rk3399-pc:~# perf stat -a --bpf-counters -e LLC-loads,LLC-stores --for-each-cgroup system.slice,user.slice sleep 1
+Failed to open first cgroup events
+root@roc-rk3399-pc:~#
+
+After:
+
+root@roc-rk3399-pc:~# perf stat -a --bpf-counters -e LLC-loads,LLC-stores --for-each-cgroup system.slice,user.slice sleep 1
+
+ Performance counter stats for 'system wide':
+
+   <not supported>      LLC-loads                        system.slice                                          
+   <not supported>      LLC-stores                       system.slice                                          
+   <not supported>      LLC-loads                        user.slice                                            
+   <not supported>      LLC-stores                       user.slice                                            
+
+       1.016196455 seconds time elapsed
+
+root@roc-rk3399-pc:~# 
+
+And with mixed supported/unsupported:
+
+root@roc-rk3399-pc:~# perf stat -a --bpf-counters -e LLC-loads,LLC-stores,L1-icache-loads,L1-dcache-loads --for-each-cgroup system.slice,user.slice sleep 1
+
+ Performance counter stats for 'system wide':
+
+   <not supported>      LLC-loads                        system.slice                                          
+   <not supported>      LLC-stores                       system.slice                                          
+            180903      L1-icache-loads                  system.slice                                          
+             66861      L1-dcache-loads                  system.slice                                          
+   <not supported>      LLC-loads                        user.slice                                            
+   <not supported>      LLC-stores                       user.slice                                            
+           2948290      L1-icache-loads                  user.slice                                            
+           1962675      L1-dcache-loads                  user.slice                                            
+
+       1.016265003 seconds time elapsed
+
+root@roc-rk3399-pc:~#
+
+Applied,
+
+- Arnaldo
+ 
+> After:
+>   $ sudo ./perf stat -a --bpf-counters -e L1-icache-loads,L1-dcache-loads \
+>   > --for-each-cgroup system.slice,user.slice  sleep 1
 > 
-> I wish 'perf script' had a --skip option that allowed us to ask for just
-> the second event, not having that I did a trick with tac + grep -m1 -B :-)
+>    Performance counter stats for 'system wide':
 > 
-> We can try to revisit your approach for the next merge window, as at
-> this point, for 6.2 we want for fixes to be as minimal as possible.
+>      <not supported>      L1-icache-loads                  system.slice
+>           29,892,418      L1-dcache-loads                  system.slice
+>      <not supported>      L1-icache-loads                  user.slice
+>           52,497,220      L1-dcache-loads                  user.slice
 > 
-
-Yes that would be good to make this test case more rebust.
+> Fixes: 944138f048f7d ("perf stat: Enable BPF counter with --for-each-cgroup")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_counter_cgroup.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+> index 3c2df7522f6f..1c82377ed78b 100644
+> --- a/tools/perf/util/bpf_counter_cgroup.c
+> +++ b/tools/perf/util/bpf_counter_cgroup.c
+> @@ -116,27 +116,19 @@ static int bperf_load_program(struct evlist *evlist)
+>  
+>  			/* open single copy of the events w/o cgroup */
+>  			err = evsel__open_per_cpu(evsel, evsel->core.cpus, -1);
+> -			if (err) {
+> -				pr_err("Failed to open first cgroup events\n");
+> -				goto out;
+> -			}
+> +			if (err == 0)
+> +				evsel->supported = true;
+>  
+>  			map_fd = bpf_map__fd(skel->maps.events);
+>  			perf_cpu_map__for_each_cpu(cpu, j, evsel->core.cpus) {
+>  				int fd = FD(evsel, j);
+>  				__u32 idx = evsel->core.idx * total_cpus + cpu.cpu;
+>  
+> -				err = bpf_map_update_elem(map_fd, &idx, &fd,
+> -							  BPF_ANY);
+> -				if (err < 0) {
+> -					pr_err("Failed to update perf_event fd\n");
+> -					goto out;
+> -				}
+> +				bpf_map_update_elem(map_fd, &idx, &fd, BPF_ANY);
+>  			}
+>  
+>  			evsel->cgrp = leader_cgrp;
+>  		}
+> -		evsel->supported = true;
+>  
+>  		if (evsel->cgrp == cgrp)
+>  			continue;
+> -- 
+> 2.39.0.314.g84b9a713c41-goog
 
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
+- Arnaldo
