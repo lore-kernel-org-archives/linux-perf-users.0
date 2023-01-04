@@ -2,39 +2,39 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4AAC4332F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 05:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A37C4332F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 05:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229480AbjADFGJ (ORCPT
+        id S229607AbjADFV3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 Jan 2023 00:06:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52404 "EHLO
+        Wed, 4 Jan 2023 00:21:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjADFGI (ORCPT
+        with ESMTP id S229457AbjADFV0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 Jan 2023 00:06:08 -0500
+        Wed, 4 Jan 2023 00:21:26 -0500
 Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223F5140CF;
-        Tue,  3 Jan 2023 21:06:05 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VYqFGmo_1672808760;
-Received: from 30.221.147.98(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VYqFGmo_1672808760)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBDDDEE2;
+        Tue,  3 Jan 2023 21:21:24 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VYqBg3p_1672809679;
+Received: from 30.221.147.98(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VYqBg3p_1672809679)
           by smtp.aliyun-inc.com;
-          Wed, 04 Jan 2023 13:06:02 +0800
-Message-ID: <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
-Date:   Wed, 4 Jan 2023 13:05:59 +0800
+          Wed, 04 Jan 2023 13:21:20 +0800
+Message-ID: <14a2ca08-e946-f319-e2a8-f5f91e1eb8e6@linux.alibaba.com>
+Date:   Wed, 4 Jan 2023 13:21:18 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.6.0
-Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
- for neoverse-n2
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
+Subject: Re: [PATCH v5 2/6] perf vendor events arm64: Add TLB metrics for
+ neoverse-n2
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -47,10 +47,10 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>
 References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
- <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com>
+ <1672745976-2800146-3-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fVP_=FcEQChQwVpis9iyZsdb6NrVJQUo4GJA4_j=knfcA@mail.gmail.com>
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com>
+In-Reply-To: <CAP-5=fVP_=FcEQChQwVpis9iyZsdb6NrVJQUo4GJA4_j=knfcA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -59,27 +59,91 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/1/3 下午7:52, John Garry 写道:
-> On 03/01/2023 11:39, Jing Zhang wrote:
->> The formula of topdown L1 on neoverse-n2 is from ARM sbsa7.0 platform
->> design document [0], D37-38.
+在 2023/1/4 上午1:14, Ian Rogers 写道:
+> On Tue, Jan 3, 2023 at 3:39 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>
+>> Add TLB related metrics.
+>>
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> Acked-by: Ian Rogers <irogers@google.com>
+>> ---
+>>  .../arch/arm64/arm/neoverse-n2/metrics.json        | 49 ++++++++++++++++++++++
+>>  1 file changed, 49 insertions(+)
+>>
+>> diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>> index c126f1bc..8a74e07 100644
+>> --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>> +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2/metrics.json
+>> @@ -26,5 +26,54 @@
+>>          "MetricGroup": "TopdownL1",
+>>          "MetricName": "backend_bound",
+>>          "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L1D_TLB_REFILL / L1D_TLB",
+>> +        "BriefDescription": "The rate of L1D TLB refill to the overall L1D TLB lookups",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "l1d_tlb_miss_rate",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L1I_TLB_REFILL / L1I_TLB",
+>> +        "BriefDescription": "The rate of L1I TLB refill to the overall L1I TLB lookups",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "l1i_tlb_miss_rate",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "L2D_TLB_REFILL / L2D_TLB",
+>> +        "BriefDescription": "The rate of L2D TLB refill to the overall L2D TLB lookups",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "l2_tlb_miss_rate",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "DTLB_WALK / INST_RETIRED * 1000",
+>> +        "BriefDescription": "The rate of TLB Walks per kilo instructions for data accesses",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "dtlb_mpki",
+>> +        "ScaleUnit": "MPKI"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "DTLB_WALK / L1D_TLB",
+>> +        "BriefDescription": "The rate of DTLB Walks to the overall L1D TLB lookups",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "dtlb_walk_rate",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "ITLB_WALK / INST_RETIRED * 1000",
+>> +        "BriefDescription": "The rate of TLB Walks per kilo instructions for instruction accesses",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "itlb_mpki",
+>> +        "ScaleUnit": "MPKI"
 > 
-> I think that I mentioned this before - if the these metrics are coming from an sbsa doc, then they are standard. As such, we can make them "arch std events" and put them in a common json such as sbsa.json, so that other cores may reuse.
+> Did you test this? IIRC if there is no number in the ScaleUnit then
+> the scale factor becomes 0 and the metric value is always multiplied
+> by zero. Perhaps:
 > 
-> You don't strictly have to do do this now, but it would be better.
+> "MetricName": "itlb_miss_rate",
+> "MetricExpr": "ITLB / INST_RETIRED"
+> "ScaleUnit": "1000MPKI"
+> 
+> Thanks,
+> Ian
 > 
 
-Hi John,
+You are absolutely right, I only tested TLB metrics. Sorry for not double checking. I will repost the corrected patches.
 
-I would really like to do this, but as discussed earlier, slot is different on each architectures.
-If I do not specify the value of the slot in sbsa.json, then in the json file of n2/v1, I need to
-overwrite each topdown "MetricExpr". In other words, the metrics placed in the sbsa.json file only
-reuse "BriefDescription", "MetricGroup" and "ScaleUnit". So I'm not sure if it's acceptable?
-
-In addition, James mentioned that if the units and names and group names of different architectures
-are not unified, it will become complicated.
-
-Perhaps we could do it later.
-
-Thanks,
-Jing
+>> +    },
+>> +    {
+>> +        "MetricExpr": "ITLB_WALK / L1I_TLB",
+>> +        "BriefDescription": "The rate of ITLB Walks to the overall L1I TLB lookups",
+>> +        "MetricGroup": "TLB",
+>> +        "MetricName": "itlb_walk_rate",
+>> +        "ScaleUnit": "100%"
+>>      }
+>>  ]
+>> --
+>> 1.8.3.1
+>>
