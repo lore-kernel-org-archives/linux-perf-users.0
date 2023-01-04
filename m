@@ -2,101 +2,78 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B77CC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 14:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22754C4708D
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Jan 2023 14:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229845AbjADOWH (ORCPT
+        id S234370AbjADOwL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 4 Jan 2023 09:22:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
+        Wed, 4 Jan 2023 09:52:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239516AbjADOVz (ORCPT
+        with ESMTP id S239483AbjADOwE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 4 Jan 2023 09:21:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C41FAA;
-        Wed,  4 Jan 2023 06:21:55 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CD971B81674;
-        Wed,  4 Jan 2023 14:21:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65CDAC433D2;
-        Wed,  4 Jan 2023 14:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672842112;
-        bh=S0pBAaBYAWYNmqrdaqt5KAjvTcU4XOUWLTxzTiYZlc0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P7/+rbmx9zgpXDCY2DL8IiEBDNoJZQz8nHuPnLxP2v+Cr9Dbj8uxTnGewRb6SPMso
-         KlyfTvck3sL5jLdaihFnx4EsmF5uAj7hOP2JoZ0MmxVlO/18ySgOT+goOPmJtIJq7j
-         JGZ7O+SsY5Uqsz2ow1+FUmWnGGS5oo3bAwnQ6uS6duUsiCuR9TqKFbYCM2lIygqMoN
-         B3I0JAfzNdnLvOkUtrSv3hPgA+JuTC7oUX+9kzm9lkqIi91EPaCBXV/MeTzka+qaPR
-         KjDj8/i+A2U0FrPRQ8GwQeuzOhjnY76JP9MVzbE5EozR7RMofDm74uhC71MN9nw5G0
-         /Ku+8JEuL228A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 71CA140468; Wed,  4 Jan 2023 11:21:50 -0300 (-03)
-Date:   Wed, 4 Jan 2023 11:21:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf bpf_counter: A set of random fixes (v1)
-Message-ID: <Y7WLfqrR6NlMQPTs@kernel.org>
-References: <20230104064402.1551516-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230104064402.1551516-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Wed, 4 Jan 2023 09:52:04 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C38F2BD9;
+        Wed,  4 Jan 2023 06:52:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672843922; x=1704379922;
+  h=from:to:cc:subject:date:message-id;
+  bh=IVgAP0seJkcpaaiACVAxhGwC/VqyuQOB1oJYl2epNdU=;
+  b=gVkd1pFhtM8uVIxGKWYaGB5l7jCQT+KcUzZHUoIyZI17jtqSQ4DZQKvY
+   Y+EV1PAJwPqIRiGUV0URbkpXXHfh+OR36+ke/S4Mr4qc+tR/P4iFRVYhs
+   mV0AE7xcFa6ipGdgHb4/gar9PQHyYMhI9zeRMlbjYjwu0cKiWXPoJkNXt
+   oU0k1fQwWwd7zTPf5yVnstEAuIU3hHKWAsLwLFesLZk6ECtCKxChzJDmd
+   vE6WDsQ+KbsT1E0vc7dw7xj7P8VNp+u9LQbvwjXbTxfquRRaI4BUhplUk
+   Y1R1rmJoXHYVmppFuutC+6FOyejnY0E3P7zpscuS4n0SwyBnA2DdB1xjA
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="384240207"
+X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
+   d="scan'208";a="384240207"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 06:51:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="900575818"
+X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
+   d="scan'208";a="900575818"
+Received: from power-sh.sh.intel.com ([10.239.183.7])
+  by fmsmga006.fm.intel.com with ESMTP; 04 Jan 2023 06:51:35 -0800
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@linux.intel.com
+Subject: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
+Date:   Wed,  4 Jan 2023 22:58:30 +0800
+Message-Id: <20230104145831.25498-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 03, 2023 at 10:43:58PM -0800, Namhyung Kim escreveu:
-> Hello,
-> 
-> This is a collection of small fixes for perf stat bpf counters (bperf).
-> 
-> The bperf framework maintains perf_attr_map in the BPF fs to share the
-> same event as much as possible.  But the size was limited to 16 and
-> perf stat with -ddd option would create more than 16 events and fails.
-> 
-> Also cgroup events with --for-each-cgroup had some other problems when
-> dealing with unsupported events and duplicate cgroups.
-> 
-> The code is available at 'perf/stat-bpf-fix-v1' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+Meteor Lake RAPL support is the same as previous Sky Lake.
+Add Meteor Lake model for RAPL.
 
-The first two are improvements, not strict fixes, so I'm leaving them
-for the next merge window.
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+ arch/x86/events/rapl.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-- Arnaldo
- 
-> Thanks,
-> Namhyung
-> 
-> Namhyung Kim (4):
->   perf bpf_counter: Add more error messages for bperf
->   perf bpf_counter: Increase perf_attr_map entries to 32
->   perf bpf_counter: Handle unsupported cgroup events
->   perf stat: Do not use the same cgroup more than once
-> 
->  tools/perf/util/bpf_counter.c        | 11 ++++++++---
->  tools/perf/util/bpf_counter_cgroup.c | 14 +++-----------
->  tools/perf/util/cgroup.c             | 23 ++++++++++++++++++-----
->  3 files changed, 29 insertions(+), 19 deletions(-)
-> 
-> 
-> base-commit: d8d85ce86dc82de4f88b821a78f533b9d5b22a45
-> -- 
-> 2.39.0.314.g84b9a713c41-goog
-
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index a829492bca4c..0ef255602aa8 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -807,6 +807,8 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&model_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&model_skl),
++	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&model_skl),
++	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&model_skl),
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
 -- 
+2.25.1
 
-- Arnaldo
