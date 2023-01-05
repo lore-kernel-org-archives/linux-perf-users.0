@@ -2,151 +2,195 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E65FC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 12:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E9FC54EBF
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 12:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbjAEMFU (ORCPT
+        id S232601AbjAEMF5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Jan 2023 07:05:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46336 "EHLO
+        Thu, 5 Jan 2023 07:05:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232810AbjAEMFJ (ORCPT
+        with ESMTP id S232700AbjAEMFz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Jan 2023 07:05:09 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC29A559CA
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 04:05:04 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 305BwtUO030458;
-        Thu, 5 Jan 2023 12:04:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=RkeNOhipKMcUPD8Qm3P5AwLCsoQDpwRJLYbcr4SzAZQ=;
- b=QN6kgCCIFkQenaD6iJUVi6ADgldTQLSpGThxbPLWdz25zElYpW7+B08ghYyJGaydZmwd
- VDGLdSXQT374aNCM86KHGqmgk7m4YoyZjVIotyf/vIdzS+1JU649L8iW3WukDcbO3ifC
- wqYRT+18idL4wjDDaC0tW35u2lOjQountc5O44rGEb0MN1LQ+O5KGQP5rApSel5DQMnU
- qvVxVyqPvPBkNY913d8+Tvwo8QjEbhPDTwJbbUmoeH96JW+tyYIDmUNwyGsvLE733rE0
- rItMVWhBAnX/PqZtdmNa0xARL5pf9TeyG3NNdvQ6MysPohqbCiZlAAEjm6HlOQtrYS1e yA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mwx5e85f9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Jan 2023 12:04:47 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 305C04Qm034500;
-        Thu, 5 Jan 2023 12:04:46 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3mwx5e85ef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Jan 2023 12:04:46 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3053rFJB001030;
-        Thu, 5 Jan 2023 12:04:44 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3mtcbfeqts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Jan 2023 12:04:44 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 305C4ea337159366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Jan 2023 12:04:40 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8A752004B;
-        Thu,  5 Jan 2023 12:04:40 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDB3020043;
-        Thu,  5 Jan 2023 12:04:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.120.85])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Jan 2023 12:04:37 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org
-Cc:     ak@linux.intel.com, namhyung@kernel.org, irogers@google.com,
-        james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: [PATCH] tools/perf: Fix bpf-script-test-prologue test compile issue with clang
-Date:   Thu,  5 Jan 2023 17:34:36 +0530
-Message-Id: <20230105120436.92051-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7cGmRhIcY4yJog4txKJk0luZ5c_vl4K1
-X-Proofpoint-GUID: yl-0TTym-C2lPItHSOUPQIVNwUecPMwK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-05_04,2023-01-04_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 spamscore=0 malwarescore=0 phishscore=0 impostorscore=0
- bulkscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301050095
+        Thu, 5 Jan 2023 07:05:55 -0500
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570B95471F;
+        Thu,  5 Jan 2023 04:05:53 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id BB1615C0153;
+        Thu,  5 Jan 2023 07:05:52 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 05 Jan 2023 07:05:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm2; t=1672920352; x=1673006752; bh=UhZB23ikgg
+        upzfYjMRU5YJTnDOqqv+WR2zf5S9u612M=; b=RS4DcE88H2bSZhCoHSBnFauHLI
+        iBC3nX2sj/ud09rEeqkh7ALUK2+vJlNREh/g8XdJcaG+kAhrVR6CKwuzuB1MCx2E
+        Fd64uqrJ/zNqGXSf/cffjs61K1WY5KqXxX3tJP0Ky+bvozO/KNcSf/waz4N6ollD
+        G/5Q5PKyhM686OqNqyPvpMU6a5D+1TDYtqua1dvkfUaVXRg5/SPfLEqQSlRKhJP8
+        3QjrIr2FCb6ie9mz4X7dvpzhtQiMlFhm2IhyzSVlBOjygSOCeocgaGES8JPsAf22
+        KW4ZMmq6cWH7gGqpOpkPQDzzRpwe+HlgYEAxcdKKq5OFQXwSp7+V/UXO7/EQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1672920352; x=1673006752; bh=UhZB23ikggupzfYjMRU5YJTnDOqq
+        v+WR2zf5S9u612M=; b=Sr04uMptHAnE4rxGGbbE3gGANmQXNawSH5VJVMuhRPJo
+        7sOz5iB7b8B3KY1JcnwE1J7eHomLLVlkcQC3m/NIDkr6OhW77G2TR4hnm/dclZwN
+        m/8Sat0FZVDEM2ggTTy8qPGr8hx9Odws7QLwpt90XoUyFqpSm7bQ8L30EJ2MNlWL
+        184gGj+kN9mBMn3xBMdccDAos+EcZpKJdohCICDIjfZd/kk5rc7Sm461pIEH3Pe1
+        pHhmXZ0oLWoMQbXd239AJTqhGTOGyUctE/Lq6/s/ON4qu24ox5vSrqErYNXvPZK7
+        Oq/3hpF9V8NglYnLd+ZiWWByYq8By36AlzxbrVESTw==
+X-ME-Sender: <xms:H722Y-iPa3z3j_Obn9xJ3y4iLVHhLZYRWE53ebwI868UqtTNDK5plw>
+    <xme:H722Y_DR7L7Ik-e0GNVxK4qRWiDzyZlVGLcd9_UeECqwuSW1v_o48jnzUAXib3fI1
+    l2hOQJUDcEf27Bnh80>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrjeekgdefjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:IL22Y2FbE7Dg5EIyTdQbXO2BylVr2xsUQ8dgioEgrBp0aBvl5yIzAw>
+    <xmx:IL22Y3R6pvyQ83oUVYNDJvXQYrV_MCh96rREY2TwUokJi-LRFkGQew>
+    <xmx:IL22Y7wfGtxDIPBbXqwUsBIkc8fSVT82W3nBfU_1b_qETo-u8EOO8g>
+    <xmx:IL22YzhCDyHE_6V7W5RQnzsUyD5S1ryM9MpvwA09NHFl1ioeyc63Vg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E6BA2B60086; Thu,  5 Jan 2023 07:05:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1185-g841157300a-fm-20221208.002-g84115730
+Mime-Version: 1.0
+Message-Id: <5b69db0b-9eed-42ce-8e93-4b656022433f@app.fastmail.com>
+In-Reply-To: <20230105104019.GA7446@tellis.lin.mbt.kalray.eu>
+References: <20230103164359.24347-1-ysionneau@kalray.eu>
+ <7c531595-e987-422b-bcf7-48ad0ba49ce6@app.fastmail.com>
+ <20230105104019.GA7446@tellis.lin.mbt.kalray.eu>
+Date:   Thu, 05 Jan 2023 13:05:32 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Jules Maselbas" <jmaselbas@kalray.eu>
+Cc:     "Yann Sionneau" <ysionneau@kalray.eu>,
+        "Albert Ou" <aou@eecs.berkeley.edu>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Aneesh Kumar" <aneesh.kumar@linux.ibm.com>,
+        "Ard Biesheuvel" <ardb@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Boqun Feng" <boqun.feng@gmail.com>, bpf@vger.kernel.org,
+        "Christian Brauner" <brauner@kernel.org>,
+        devicetree@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Eric Paris" <eparis@redhat.com>, "Ingo Molnar" <mingo@redhat.com>,
+        "Jan Kiszka" <jan.kiszka@siemens.com>,
+        "Jason Baron" <jbaron@akamai.com>, "Jiri Olsa" <jolsa@kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Josh Poimboeuf" <jpoimboe@kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Kieran Bingham" <kbingham@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-audit@redhat.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "Marc Zyngier" <maz@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        "Paul Moore" <paul@paul-moore.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Waiman Long" <longman@redhat.com>,
+        "Will Deacon" <will@kernel.org>, "Alex Michon" <amichon@kalray.eu>,
+        "Ashley Lesdalons" <alesdalons@kalray.eu>,
+        "Benjamin Mugnier" <mugnier.benjamin@gmail.com>,
+        "Clement Leger" <clement.leger@bootlin.com>,
+        "Guillaume Missonnier" <gmissonnier@kalray.eu>,
+        "Guillaume Thouvenin" <gthouvenin@kalray.eu>,
+        "Jean-Christophe Pince" <jcpince@gmail.com>,
+        "Jonathan Borne" <jborne@kalray.eu>,
+        "Julian Vetter" <jvetter@kalray.eu>,
+        "Julien Hascoet" <jhascoet@kalray.eu>,
+        "Julien Villette" <jvillette@kalray.eu>,
+        "Louis Morhet" <lmorhet@kalray.eu>,
+        "Luc Michel" <lmichel@kalray.eu>,
+        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
+        "Marius Gligor" <mgligor@kalray.eu>,
+        "Samuel Jones" <sjones@kalray.eu>,
+        "Thomas Costis" <tcostis@kalray.eu>,
+        "Vincent Chardon" <vincent.chardon@elsys-design.com>
+Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-While running perf test for bpf, observed that "BPF prologue
-generation" test case fails to compile with clang. Logs below
-from powerpc:
+On Thu, Jan 5, 2023, at 11:40, Jules Maselbas wrote:
+> On Wed, Jan 04, 2023 at 04:58:25PM +0100, Arnd Bergmann wrote:
+>> On Tue, Jan 3, 2023, at 17:43, Yann Sionneau wrote:
 
-<stdin>:33:2: error: use of undeclared identifier 'fmode_t'
-        fmode_t f_mode = (fmode_t)_f_mode;
-        ^
-<stdin>:37:6: error: use of undeclared identifier 'f_mode'; did you mean '_f_mode'?
-        if (f_mode & FMODE_WRITE)
-            ^~~~~~
-            _f_mode
-<stdin>:30:60: note: '_f_mode' declared here
-int bpf_func__null_lseek(void *ctx, int err, unsigned long _f_mode,
-                                                           ^
-2 errors generated.
+>> I commented on the syscall patch directly, I think it's
+>> important to stop using the deprecated syscalls as soon
+>> as possible to avoid having dependencies in too many
+>> libc binaries. Almost everything else can be changed
+>> easily as you get closer to upstream inclusion.
+>> 
+>> I did not receive most of the other patches as I'm
+>> not subscribed to all the mainline lists. For future 
+>> submissions, can you add the linux-arch list to Cc for
+>> all patches?
+>
+> We misused get_maintainers.pl, running it on each patch instead
+> of using it on the whole series. next time every one will be in
+> copy of every patch in the series and including linux-arch.
 
-The test code tests/bpf-script-test-prologue.c uses fmode_t.
-And the error above is for "fmode_t" which is defined in
-include/linux/types.h as part of kernel build directory:
-"/lib/modules/<kernel_version>/build" that comes from
-kernel devel [ soft link to /usr/src/<kernel_version> ].
-Clang picks this header file from "-working-directory" build
-option that specifies this build folder.
+Be careful not to make the list too long though, there is
+usually a limit of 1024 characters for the entire Cc list,
+above this your mails may get dropped by the mailing lists.
 
-But the 'commit 14e4b9f4289a ("perf trace: Raw augmented
-syscalls fix libbpf 1.0+ compatibility")', changed the
-include directory to use: "/usr/include".  Post this change,
-types.h from /usr/include/ is getting picked upwhich doesn’t
-contain definition of "fmode_t" and hence fails to compile.
+>> Reading the rest of the series through lore.kernel.org,
+>> most of the comments I have are for improvements that
+>> you may find valuable rather than serious mistakes:
+>> 
+>> - the {copy_to,copy_from,clear}_user functions are
+>>   well worth optimizing better than the byte-at-a-time
+>>   version you have, even just a C version built around
+>>   your __get_user/__put_user inline asm should help, and
+>>   could be added to lib/usercopy.c.
+>
+> right, we are using memcpy for {copy_to,copy_from}_user_page
+> which has a simple optimized version introduced in
+> (kvx: Add some library functions).
+> I wonder if it is possible to do the same for copy_*_user functions.
 
-Compilation command before this commit:
-/usr/bin/clang -D__KERNEL__ -D__NR_CPUS__=72 -DLINUX_VERSION_CODE=0x50e00 -xc  -I/root/lib/perf/include/bpf -nostdinc -I./arch/powerpc/include -I./arch/powerpc/include/generated  -I./include -I./arch/powerpc/include/uapi -I./arch/powerpc/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/<ver>/build -c - -target bpf  -g -O2 -o -
+copy_from_user_page() is only about managing cache aliases,
+not user access, and it's not used anywhere in the fast
+path, so it's a bit different.
 
-Compilation command after this commit:
-/usr/bin/clang -D__KERNEL__ -D__NR_CPUS__=72 -DLINUX_VERSION_CODE=0x50e00 -xc  -I/usr/include/ -nostdinc -I./arch/powerpc/include -I./arch/powerpc/include/generated  -I./include -I./arch/powerpc/include/uapi -I./arch/powerpc/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h  -Wno-unused-value -Wno-pointer-sign -working-directory /lib/modules/<ver>/build -c - -target bpf  -g -O2 -o -
+arch/arm/lib/copy_template.S has an example for how
+you can share the same assembler implementation between
+memcpy() and copy_from_user(), but it's not very
+intuitive.
 
-The difference is addition of -I/usr/include/  in the first line
-which is causing the error. Fix this by adding typedef for "fmode_t"
-in the testcase to solve the compile issue.
+The tricky bit with copy_from_user() is the partial copy
+that relies on copying the exact amount of data that can
+be accessed including the last byte before the end of
+the mapping, and returning the correct count of non-copied
+bytes.
 
-Fixes: 14e4b9f4289a ("perf trace: Raw augmented syscalls fix libbpf 1.0+ compatibility")
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/bpf-script-test-prologue.c | 2 ++
- 1 file changed, 2 insertions(+)
+If you want a C version, you can probably use the
+copy_from_kernel_nofault implementation mm/maccess.c
+as a template, but have to add code for the correct
+return value.
 
-diff --git a/tools/perf/tests/bpf-script-test-prologue.c b/tools/perf/tests/bpf-script-test-prologue.c
-index bd83d364cf30..91778b5c6125 100644
---- a/tools/perf/tests/bpf-script-test-prologue.c
-+++ b/tools/perf/tests/bpf-script-test-prologue.c
-@@ -20,6 +20,8 @@
- # undef if
- #endif
- 
-+typedef unsigned int __bitwise fmode_t;
-+
- #define FMODE_READ		0x1
- #define FMODE_WRITE		0x2
- 
--- 
-2.31.1
-
+    Arnd
