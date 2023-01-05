@@ -2,72 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0FBC54E76
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 09:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18746C3DA7D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 10:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231791AbjAEJzv (ORCPT
+        id S231499AbjAEKGJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Jan 2023 04:55:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
+        Thu, 5 Jan 2023 05:06:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232378AbjAEJzj (ORCPT
+        with ESMTP id S231370AbjAEKGH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Jan 2023 04:55:39 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1B3D59D02;
-        Thu,  5 Jan 2023 01:55:31 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 44C5E1EC068E;
-        Thu,  5 Jan 2023 10:55:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1672912530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Sx5RS30uf2d6PJKDBDI6SAbwke9ZdIpEgVjPdi62s44=;
-        b=hH5wxyezdKdBVaJ7FRpM+B3XvjvhSkBzUgNUrahzckjDDQqMsfOEHESn7teDH83YimEtpH
-        Md2pEPxfIFu2Aj9qAjEZeQodcgQl8CvCLKfwUUWjmYVNHnlCvfQCOnoQ0BOZEZ3TDojcn8
-        GUG9eCaUqn+9bQjbtJHguETLjYJWAE4=
-Date:   Thu, 5 Jan 2023 10:55:25 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Zhang, Rui" <rui.zhang@intel.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
-Message-ID: <Y7aejeHDpLlwwYbr@zn.tnic>
-References: <20230104145831.25498-1-rui.zhang@intel.com>
- <25d07838-3904-a086-4238-f56c9424b53a@intel.com>
- <ea9186869cca50a21efcc1a9cc4dbe5adcd1784b.camel@intel.com>
+        Thu, 5 Jan 2023 05:06:07 -0500
+Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1AB2DC8;
+        Thu,  5 Jan 2023 02:06:05 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VYvkzZr_1672913159;
+Received: from 30.221.147.24(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VYvkzZr_1672913159)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Jan 2023 18:06:01 +0800
+Message-ID: <d4d132d9-1513-6a4e-981f-aa4bc4ebbcbb@linux.alibaba.com>
+Date:   Thu, 5 Jan 2023 18:05:59 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ea9186869cca50a21efcc1a9cc4dbe5adcd1784b.camel@intel.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.0
+Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
+ for neoverse-n2
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com>
+ <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
+ <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 05, 2023 at 06:54:31AM +0000, Zhang, Rui wrote:
-> I thought of this before and got some ideas related.
-> Say, instead of maintaining the model list in a series of drivers, can
-> we have something similar to "cpu_feature" instead?
 
-Yes, you can define a synthetic X86_FEATURE flag and set it for each CPU model
-which supports the feature in arch/x86/kernel/cpu/intel.c so that at least all
-the model matching gunk is kept where it belongs, in the CPU init code and the
-other code simply tests that flag.
 
--- 
-Regards/Gruss,
-    Boris.
+在 2023/1/5 上午1:26, John Garry 写道:
+> On 04/01/2023 05:05, Jing Zhang wrote:
+>>
+>>
+>> 在 2023/1/3 下午7:52, John Garry 写道:
+>>> On 03/01/2023 11:39, Jing Zhang wrote:
+>>>> The formula of topdown L1 on neoverse-n2 is from ARM sbsa7.0 platform
+>>>> design document [0], D37-38.
+>>>
+>>> I think that I mentioned this before - if the these metrics are coming from an sbsa doc, then they are standard. As such, we can make them "arch std events" and put them in a common json such as sbsa.json, so that other cores may reuse.
+>>>
+>>> You don't strictly have to do do this now, but it would be better.
+>>>
+>>
+>> Hi John,
+> 
+> Hi Jing,
+> 
+>>
+>> I would really like to do this, but as discussed earlier, slot is different on each architectures.
+>> If I do not specify the value of the slot in sbsa.json, then in the json file of n2/v1, I need to
+>> overwrite each topdown "MetricExpr". In other words, the metrics placed in the sbsa.json file only
+>> reuse "BriefDescription", "MetricGroup" and "ScaleUnit". So I'm not sure if it's acceptable?
+> 
+> I don't see a lot of value in that really.
+> 
+> However, for this value of slot, isn't this discoverable from a system register per core? Quoting the sbsa: "The IMPLEMENTATION DEFINED constant SLOTS is discoverable from the system register PMMIR_EL1.SLOTS." Did you consider how this could be used?
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+This may be a feasible idea. The value of slots comes from the register PMMIR_EL1, which I can read in
+/sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. But how do I replace the slots in MetricExpr with the
+read slots values? Currently I understand that parameters in metricExpr only support events and constants.
+
