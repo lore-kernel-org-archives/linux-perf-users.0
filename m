@@ -2,117 +2,222 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706BAC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 21:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF0C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 23:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233772AbjAEVNn (ORCPT
+        id S236648AbjAEXm6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Jan 2023 16:13:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42012 "EHLO
+        Thu, 5 Jan 2023 18:42:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232180AbjAEVNm (ORCPT
+        with ESMTP id S236488AbjAEXmk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Jan 2023 16:13:42 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF2B6338A
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 13:13:41 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id bi26-20020a05600c3d9a00b003d3404a89faso2815232wmb.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2023 13:13:41 -0800 (PST)
+        Thu, 5 Jan 2023 18:42:40 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B8B63187
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 15:41:06 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id a184so15737011pfa.9
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2023 15:41:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQS9qhBABKhqH+642bRHtx06DBbbx6rvDuXIghN6EuI=;
-        b=nprqES6XDcZ9mIrZxT8SD3FLhunpqVW2LXbPPstn2xk1f1s88o12y+LWPDhKyfEHIN
-         XNVx3UhG/t2glTTneUFVCQn6tjzALxgfnxHn0TQsUXhpaAVehczCWfK/IwKkU9GW7C4X
-         QS5dBDraINfqAQi/pLtyZTezIYlDSDNV2XzYbbuMahUlBr/UxGeT0hPsq9xJDKZlyJfE
-         icTzS2xrd8o/smGVFc/ftfYh/4MpvHqDqH1dcvIjupkwdhHFH7voCUBdm3YsRzcIdUqt
-         YUhPcADzZwloTrzv8pt9y8avW2h+iWdSPItYZ8p9WiXFeVrEV5pHc6Gsp5IB9J3JCU7B
-         yvKw==
+        bh=igut5By295ohhbEPdn0DgsM5vVo3aXkJJjZjswdn8UY=;
+        b=qs7RYzkrlMT2Nl3hQIAyrmGqJrH24pdSDWZlzwhTjCY6nATSPnjRz6EfHi3wfuetnN
+         s60wR3yXY1JTF3+3oy0LRNs2OCgvBKmrI8RAuy/+Pz9om7nxUUri4oTIYe33DCI328W1
+         7ryeq28hbWdZ9/1juDX2pd2fmLoVn8kc1Nm6Mo4clL6dwVGc2jbU3ExkwTEn8R/+5WaM
+         ykrs8HgNXaOE8vMgwYRm8WLtugNefPG006dIHMsyK2sB0yIsckEdT87Q6QpGOyVE+/Cm
+         6at3ZsZixNLe0txQl5RwwBd5hKe1AE9P3mwZ3oKcyFoU0sCdEjBli4T3/7L2lA/qAmr1
+         nBxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mQS9qhBABKhqH+642bRHtx06DBbbx6rvDuXIghN6EuI=;
-        b=f70l1eWTRdydiud9RH/C11KHrgHpIpTLLJPizvfhg8OEkma5B6FyY4PwjLfP+7fKP2
-         SSao5MsCSZhT9I7niJ8ozX/GXmTpMVezAyBWdTlXEi5pXmrt/YILOkiCeRUedjGM2ZTQ
-         zj3Q3AYiQ0vwKM5f3CimxVu+SgZuFEPU7zFVnH+lh5QIYd3+A9+EOZ2bSLaKG++bkKVG
-         yxmlsRHlCXMfAY/GbSeitLQ5Fg8WzcOFq+U0s7e/fqNUAJASsOXQXzIHBFnCpPQJE5Ju
-         bKzWecVldo8wR+5uY7KXqvT/f3LHgAYhximKvAVZRzkTqD7huhD1D1GGY/yT+sVmpF3d
-         FMFw==
-X-Gm-Message-State: AFqh2kosYLzvt5EB5MVBCuRpxMH/iPPVCJnFmBYWd/gBRF4RtP99xQOS
-        sRxq9rEYyH5qEC0ilBqFu1XAOoW4MO8ImGUsB30U5g==
-X-Google-Smtp-Source: AMrXdXsVhhB2xAqGw/PBRO+ucelnMKPgTTTv+0uFt3SNahyKC2MlULYNt3fDuSId9ZR/d0MFIKH2lNASMCYvzTJ5sOo=
-X-Received: by 2002:a05:600c:3b04:b0:3d0:50c4:432c with SMTP id
- m4-20020a05600c3b0400b003d050c4432cmr2574532wms.67.1672953219795; Thu, 05 Jan
- 2023 13:13:39 -0800 (PST)
+        bh=igut5By295ohhbEPdn0DgsM5vVo3aXkJJjZjswdn8UY=;
+        b=eWwqzOncwWzo6/UP+lE/1ERxzpWIcENpiz3sXuqdO7TqG8RagcZfpI6oN0lsJsQ4+e
+         UfPLb0DZYJW3fs5/pKfTRga7GdsP301A7+y2sRkVJE39arJCgyqElS9d3CBpI6BWkl77
+         5pcasUbyjIi0zMOsGqljjT7ugv94LVzq871jRvfReITAtFtQv3EAcWppHKeLAMwe7DR2
+         Rh6VCZQN7ThHOzpJe7qam53oCFIIjGjooESMadmpY4eVFAho+NV8g2SSDE+VEV+S/j5f
+         yVvtXtJM7IjnYIzHX0C3cEYCSpSjp7ZODeh9h2Pphw1fgWQYOgbXWB8AO9NmJF6Y+zzh
+         komw==
+X-Gm-Message-State: AFqh2kqVknk8sdKCu/xxcf4pHlQS6d0YiZCF1oXspv20Cdm2rQg6OUqU
+        AELPBV4N2Lmc4DNdRZ/KxULDxNNWaFTWvYT8IqwocA==
+X-Google-Smtp-Source: AMrXdXugDzcPRw8akQUnimNieQGXT5vrbET6KMq++smBmLsoX9gB0xzfMyGylK18zzLyJ6rGdGEZw7/yCqdVpyI1R+I=
+X-Received: by 2002:a63:5241:0:b0:4a3:9414:d667 with SMTP id
+ s1-20020a635241000000b004a39414d667mr881249pgl.573.1672962053655; Thu, 05 Jan
+ 2023 15:40:53 -0800 (PST)
 MIME-Version: 1.0
-References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
- <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com> <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
- <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com> <d4d132d9-1513-6a4e-981f-aa4bc4ebbcbb@linux.alibaba.com>
- <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com>
-In-Reply-To: <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 5 Jan 2023 13:13:27 -0800
-Message-ID: <CAP-5=fVGmjFOZqOk0E1bcqeTHcJhEmoA-vrKcHLOs4B_ythT1g@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
- for neoverse-n2
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <20230105172243.7238-1-mike.leach@linaro.org> <CAP-5=fVbPVE4rxJ2s8phhJ5RRH4EnKaWrF2kaT0oCmK6kvhP2g@mail.gmail.com>
+In-Reply-To: <CAP-5=fVbPVE4rxJ2s8phhJ5RRH4EnKaWrF2kaT0oCmK6kvhP2g@mail.gmail.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 5 Jan 2023 23:40:42 +0000
+Message-ID: <CAJ9a7Vi7cB2t3wao9d78j3G9v4zpO8_hHf8DB4vKOzgT9O+j6g@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Fix build error when NO_LIBBPF=1
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 5, 2023 at 2:13 AM John Garry <john.g.garry@oracle.com> wrote:
+Hi,
+
+On Thu, 5 Jan 2023 at 19:03, Ian Rogers <irogers@google.com> wrote:
 >
-> On 05/01/2023 10:05, Jing Zhang wrote:
-> >> However, for this value of slot, isn't this discoverable from a system register per core? Quoting the sbsa: "The IMPLEMENTATION DEFINED constant SLOTS is discoverable from the system register PMMIR_EL1.SLOTS." Did you consider how this could be used?
-> >>
+> On Thu, Jan 5, 2023 at 9:22 AM Mike Leach <mike.leach@linaro.org> wrote:
 > >
-> > This may be a feasible idea. The value of slots comes from the register PMMIR_EL1, which I can read in
-> > /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. But how do I replace the slots in MetricExpr with the
-> > read slots values? Currently I understand that parameters in metricExpr only support events and constants.
+> > Recent updates to perf build result in the following output when cross
+> > compiling to aarch64, with libelf unavailable, and therefore
+> > NO_LIBBPF=1 set.
 > >
+> > ```
+> >   $make -C tools/perf
+> >
+> >   <cut>
+> >
+> >   Makefile.config:428: No libelf found. Disables 'probe' tool, jvmti
+> >   and BPF support in 'perf record'. Please install libelf-dev,
+> >   libelf-devel or elfutils-libelf-devel
+> >
+> >   <cut>
+> >
+> >   libbpf.c:46:10: fatal error: libelf.h: No such file or directory
+> >       46 | #include <libelf.h>
+> >          |          ^~~~~~~~~~
+> >   compilation terminated.
+> >
+> >   ./tools/build/Makefile.build:96: recipe for target
+> >   '.tools/perf/libbpf/staticobjs/libbpf.o' failed
+> >
+> > ```
+> >
+> > plus one other include error for <gelf.h>
 >
-> Maybe during runtime we could create a pseudo metric/event for SLOT.
+> Ouch, apologies for the breakage. You wouldn't happen to have
+> something like a way with say a docker image to repro the problem? The
+> make line above is somewhat minimal.
+>
 
-For Intel we do this by just having a different constant for each
-architecture. It is fairly easy to add a new "literal", so you could
-add a #slots in expr__get_literal:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/expr.c?h=perf/core#n407
-Populating it would be the challenge :-)
+Unfortunately not - I was cross compiling on my main workstation.
+However, in theory
+$make -C tools/perf NO_LIBBPF=1
+should explicitly exclude the library from the build - which without
+the fix it does not.
 
-Thanks,
-Ian
+> > The issue is that the commit noted below adds libbpf to the prepare:
+> > target but no longer accounts for the NO_LIBBPF define. Additionally
+> > changing the include directories means that even if the libbpf target
+> > build is prevented, bpf headers are missing in other parts of the build.
+> >
+> > This patch ensures that in the case of NO_LIBBPF=1, the build target is
+> > changed to a header only target, and the headers are installed, without
+> > attempting to build the libbpf.a target.
+> >
+> > Applies to perf/core
+> >
+> > Fixes: 746bd29e348f ("perf build: Use tools/lib headers from install path")
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > ---
+> >  tools/perf/Makefile.perf | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > index 13e7d26e77f0..ee08ecf469f6 100644
+> > --- a/tools/perf/Makefile.perf
+> > +++ b/tools/perf/Makefile.perf
+> > @@ -305,7 +305,11 @@ else
+> >  endif
+> >  LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
+> >  LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
+> > +ifndef NO_LIBBPF
+> >  LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
+> > +else
+> > +LIBBPF = $(LIBBPF_INCLUDE)/bpf/bpf.h
+>
+> This seems strange, don't we want to avoid libbpf targets?
+>
 
-> This metric would be created during init, and it always just returns the
-> value which was read from PMMIR_EL1.
+This is a header only target - see my continuation comment below....
+
+> > +endif
+> >  CFLAGS += -I$(LIBBPF_OUTPUT)/include
+> >
+> >  ifneq ($(OUTPUT),)
+> > @@ -826,10 +830,16 @@ $(LIBAPI)-clean:
+> >         $(call QUIET_CLEAN, libapi)
+> >         $(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
+> >
+> > +ifndef NO_LIBBPF
+> >  $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
+> >         $(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=$(FEATURE_DUMP_EXPORT) \
+> >                 O= OUTPUT=$(LIBBPF_OUTPUT)/ DESTDIR=$(LIBBPF_DESTDIR) prefix= \
+> >                 $@ install_headers
+> > +else
+> > +$(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
+> > +       $(Q)$(MAKE) -C $(LIBBPF_DIR) OUTPUT=$(LIBBPF_OUTPUT)/ \
+> > +               DESTDIR=$(LIBBPF_DESTDIR) prefix= install_headers
+> > +endif
 >
-> I'm not sure how well that would play will trying to resolve metrics
-> when building generated pmu-events.c, but I don't think it's all too
-> difficult to achieve.
+> Shouldn't we just be able to conditionalize having $(LIBBPF) as a
+> dependency for the perf binary? If there is no dependency then the
+> targets won't be built and we shouldn't need to conditionalize here.
 >
-> Have you actually read this value for the n2 core? Does look correct?
+
+I did try doing just that, but the build process does two things when
+building libbpf
+a) builds the library
+b) installs the bpf headers in the libbpf output location.
+
+Now what the original patch  - "perf build: Use tools/lib headers from
+install path"  - does is to also change the include paths to the
+compiler to pick up the headers,
+removing the line:
+
+INC_FLAGS += -I$(srctree)/tools/lib/
+
+from tools/perf/Makefile.config and adding the line
+
+CFLAGS += -I$(LIBBPF_OUTPUT)/include
+
+in tools/perf/Makefile.perf (along with similar lines for libperf, libapi etc)
+
+The result of this is that if you only remove the library build, the
+headers are not installed and other compilation units fail as the
+headers are still included even if the library is not in use.
+These were originally satisfied by the now removed INC_FLAGS +=
+-I$(srctree)/tools/lib.
+
+Thus when NO_LIBBPF=1 even though we do not build the library - we
+still need to install the headers to retain the consistency - hence a
+"header only" target, that only installs the headers without building
+the library.
+
+This avoids restoring the original -I$(srctree)/tools/lib/, which
+would potentially mess up the oher library builds that have changed
+their header include paths.
+
+Regards
+
+Mike
+
+
+> Thanks!
+> Ian
 >
-> Thanks,
-> John
+> >  $(LIBBPF)-clean:
+> >         $(call QUIET_CLEAN, libbpf)
+> > --
+> > 2.17.1
+> >
+
+
+
+--
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
