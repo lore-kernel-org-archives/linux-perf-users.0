@@ -2,224 +2,76 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D77C3DA7D
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 10:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B05C3DA7D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 11:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232688AbjAEKzP (ORCPT
+        id S232655AbjAELCV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Jan 2023 05:55:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42822 "EHLO
+        Thu, 5 Jan 2023 06:02:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232959AbjAEKzG (ORCPT
+        with ESMTP id S233245AbjAELCL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Jan 2023 05:55:06 -0500
-X-Greylist: delayed 881 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 05 Jan 2023 02:55:04 PST
-Received: from fx308.security-mail.net (smtpout30.security-mail.net [85.31.212.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBD650E75
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 02:55:04 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by fx308.security-mail.net (Postfix) with ESMTP id 898F275A641
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 11:40:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalray.eu;
-        s=sec-sig-email; t=1672915221;
-        bh=HozEVKpsnPTz1W+OmWAJHb2nflwGQpHJX/pPziyjbkU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=z8nnqsOPLAZ31pVTrEaSU8Vi1jwkux3kRJ9jir01BPlgH3Vm0rvu0GKLTqA8QcOvp
-         kLczG4JPQ06aIFlsEnPWzgHdo4KICmI9A0K7HrUsCBAfrXYX+XrUXZNvGHj/AcXF+p
-         bTvO3vB+RrFhkrZgRrmVTSG9wbJg55lN4Wsmg9nc=
-Received: from fx308 (localhost [127.0.0.1]) by fx308.security-mail.net
- (Postfix) with ESMTP id 6DB4A75AF9C; Thu,  5 Jan 2023 11:40:21 +0100 (CET)
-Received: from zimbra2.kalray.eu (unknown [217.181.231.53]) by
- fx308.security-mail.net (Postfix) with ESMTPS id 0F44375AB2B; Thu,  5 Jan
- 2023 11:40:21 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1]) by
- zimbra2.kalray.eu (Postfix) with ESMTPS id D52FF27E0373; Thu,  5 Jan 2023
- 11:40:20 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1]) by zimbra2.kalray.eu
- (Postfix) with ESMTP id B47A227E02E4; Thu,  5 Jan 2023 11:40:20 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1]) by localhost
- (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026) with ESMTP id
- h9vZft-QceM0; Thu,  5 Jan 2023 11:40:20 +0100 (CET)
-Received: from tellis.lin.mbt.kalray.eu (unknown [192.168.36.206]) by
- zimbra2.kalray.eu (Postfix) with ESMTPSA id 5854D27E02AC; Thu,  5 Jan 2023
- 11:40:20 +0100 (CET)
-X-Virus-Scanned: E-securemail
-Secumail-id: <141b8.63b6a915.e31d.0>
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu B47A227E02E4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
- s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1672915220;
- bh=rBdSTEj4sEHV5aOdgiMVbZa0c1+4vHmKGKt/utxqTFU=;
- h=Date:From:To:Message-ID:MIME-Version;
- b=pKs+CePZ3R3W41fZHlmw/owOk940TBb9jGKa8X1N/B6at/r5t/99lcM7BYNSm1sbm
- GgU4FIb/vUiDD0dGYY0QwPK6QJVEAcqdlcP4MzXTRQlqlJaTfeeQw469yNJ0IyFuvr
- H4nRIuARzCz4d0RA5Dr/HYW0RULCkMt83j3YDunc=
-Date:   Thu, 5 Jan 2023 11:40:19 +0100
-From:   Jules Maselbas <jmaselbas@kalray.eu>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Yann Sionneau <ysionneau@kalray.eu>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aneesh Kumar <aneesh.kumar@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        devicetree@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-audit@redhat.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
-        Ashley Lesdalons <alesdalons@kalray.eu>,
-        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>,
-        Guillaume Thouvenin <gthouvenin@kalray.eu>,
-        Jean-Christophe Pince <jcpince@gmail.com>,
-        Jonathan Borne <jborne@kalray.eu>,
-        Julian Vetter <jvetter@kalray.eu>,
-        Julien Hascoet <jhascoet@kalray.eu>,
-        Julien Villette <jvillette@kalray.eu>,
-        Louis Morhet <lmorhet@kalray.eu>,
-        Luc Michel <lmichel@kalray.eu>,
-        Marc =?utf-8?b?UG91bGhpw6hz?= <dkm@kataplop.net>,
-        Marius Gligor <mgligor@kalray.eu>,
-        Samuel Jones <sjones@kalray.eu>,
-        Thomas Costis <tcostis@kalray.eu>,
-        Vincent Chardon <vincent.chardon@elsys-design.com>
-Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
-Message-ID: <20230105104019.GA7446@tellis.lin.mbt.kalray.eu>
-References: <20230103164359.24347-1-ysionneau@kalray.eu>
- <7c531595-e987-422b-bcf7-48ad0ba49ce6@app.fastmail.com>
+        Thu, 5 Jan 2023 06:02:11 -0500
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD71568A4;
+        Thu,  5 Jan 2023 03:02:09 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VYviAaI_1672916524;
+Received: from 30.221.147.24(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VYviAaI_1672916524)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Jan 2023 19:02:06 +0800
+Message-ID: <23dbcc2c-4166-6502-3666-b3657483e186@linux.alibaba.com>
+Date:   Thu, 5 Jan 2023 19:02:04 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <7c531595-e987-422b-bcf7-48ad0ba49ce6@app.fastmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.0
+Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
+ for neoverse-n2
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com>
+ <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
+ <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com>
+ <d4d132d9-1513-6a4e-981f-aa4bc4ebbcbb@linux.alibaba.com>
+ <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ALTERMIMEV2_out: done
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
 
-On Wed, Jan 04, 2023 at 04:58:25PM +0100, Arnd Bergmann wrote:
-> On Tue, Jan 3, 2023, at 17:43, Yann Sionneau wrote:
-> > This patch series adds support for the kv3-1 CPU architecture of the kvx family
-> > found in the Coolidge (aka MPPA3-80) SoC of Kalray.
-> >
-> > This is an RFC, since kvx support is not yet upstreamed into gcc/binutils,
-> > therefore this patch series cannot be merged into Linux for now.
-> >
-> > The goal is to have preliminary reviews and to fix problems early.
-> >
-> > The Kalray VLIW processor family (kvx) has the following features:
-> > * 32/64 bits execution mode
-> > * 6-issue VLIW architecture
-> > * 64 x 64bits general purpose registers
-> > * SIMD instructions
-> > * little-endian
-> > * deep learning co-processor
+
+在 2023/1/5 下午6:13, John Garry 写道:
+> Maybe during runtime we could create a pseudo metric/event for SLOT. This metric would be created during init, and it always just returns the value which was read from PMMIR_EL1.
 > 
-> Thanks for posting these, I had been wondering about the
-> state of the port. Overall this looks really nice, I can
-> see that you and the team have looked at other ports
-> and generally made the right decisions.
-
-Thank you and all for the reviews. We are currently going
-through every remarks and we are trying to do our best to
-send a new patch series with everything addressed.
-
-> I commented on the syscall patch directly, I think it's
-> important to stop using the deprecated syscalls as soon
-> as possible to avoid having dependencies in too many
-> libc binaries. Almost everything else can be changed
-> easily as you get closer to upstream inclusion.
+> I'm not sure how well that would play will trying to resolve metrics when building generated pmu-events.c, but I don't think it's all too difficult to achieve.
 > 
-> I did not receive most of the other patches as I'm
-> not subscribed to all the mainline lists. For future 
-> submissions, can you add the linux-arch list to Cc for
-> all patches?
 
-We misused get_maintainers.pl, running it on each patch instead
-of using it on the whole series. next time every one will be in
-copy of every patch in the series and including linux-arch.
+I'll try it in the v7 patch. I want to release the v6 patch first, to correct a mistake I made. :)
 
-> Reading the rest of the series through lore.kernel.org,
-> most of the comments I have are for improvements that
-> you may find valuable rather than serious mistakes:
-> 
-> - the {copy_to,copy_from,clear}_user functions are
->   well worth optimizing better than the byte-at-a-time
->   version you have, even just a C version built around
->   your __get_user/__put_user inline asm should help, and
->   could be added to lib/usercopy.c.
+> Have you actually read this value for the n2 core? Does look correct?
 
-right, we are using memcpy for {copy_to,copy_from}_user_page
-which has a simple optimized version introduced in
-(kvx: Add some library functions).
-I wonder if it is possible to do the same for copy_*_user functions.
-
-> - The __raw_{read,write}{b,w,l,q} helpers should
->   normally be defined as inline asm instead of
->   volatile pointer dereferences, I've seen cases where
->   the compiler ends up splitting the access or does
->   other things you may not want on MMIO areas.
->
-> - I would recomment implementing HAVE_ARCH_VMAP_STACK
->   as well as IRQ stacks, both of these help to
->   avoid data corruption from stack overflow that you
->   will eventually run into.
-> 
-> - You use qspinlock as the only available spinlock
->   implementation, but only support running on a
->   single cluster of 16 cores. It may help to use
->   the generic ticket spinlock instead, or leave it
->   as a Kconfig option, in particular since you only
->   have the emulated xchg16() atomic for qspinlock.
-> 
-> - Your defconfig file enables CONFIG_EMBEDDED, which
->   in turn enables CONFIG_EXPERT. This is probably
->   not what you want, so better turn off both of these.
-> 
-> - The GENERIC_CALIBRATE_DELAY should not be necessary
->   since you have a get_cycles() based delay loop.
->   Just set loops_per_jiffy to the correct value based
->   on the frequency of the cycle counter, to save
->   a little time during boot and get a more accurate
->   delay loop.
->
-Ack !
-
-   Jules
-
-
-
-
+Yes, I read it in n2 and it has a value of 5 which is correct. If the
+STALL_SLOT event is not implemented, PMMIR_EL1.SLOT might read as zero.
