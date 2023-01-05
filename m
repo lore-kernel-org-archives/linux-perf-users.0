@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F96DC54EBF
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F79AC3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 09:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231379AbjAEI1Q (ORCPT
+        id S231694AbjAEJZR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Jan 2023 03:27:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
+        Thu, 5 Jan 2023 04:25:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231570AbjAEI0s (ORCPT
+        with ESMTP id S231977AbjAEJZM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Jan 2023 03:26:48 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589404C706
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 00:26:47 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id n190-20020a25dac7000000b007447d7a25e4so35656343ybf.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2023 00:26:47 -0800 (PST)
+        Thu, 5 Jan 2023 04:25:12 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1CE85473B
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 01:25:08 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id d17so15751654wrs.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2023 01:25:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7v/gEXdtTx+UxkZcAUgCVgz4MqYf6krsrfnmQSxx5Nk=;
-        b=MOmoDn853XiABNLgzeFY1zINcWjdyYDZgMjA+UzzOZtj9lI8m9iFChZ8xKfl5yhu7m
-         GgQ4eeoUjNQwcCp66d6+VkJLXk5f1vbaPSLFAy/6UxTPSUznUMcPxKpfnw2XsTl8fgsi
-         bkDwzfeHUylhi+VwwPOZh1rvzAuP2xf/p0aBbDEckSzuITvMJZGzno5h8Cz8WLU90KIv
-         95qcS0l7viSe07zEj+JjfkIKsgR4APZLrfGfEpD0xTWlxPrztm2446P9poO+EtTxj4Us
-         ChabmwB0Gr7DT0OlsTqIhWL1e6E1yn5yVkl+xeuXIf4/TFzX/r0cfmm5xtQi6gbpnaLo
-         ECOA==
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yJxb6YsgY1IN1CKBHgvi2wvMh1i9b0ozsEOL55ctxKY=;
+        b=KLHUdbae1C0mOJLmF5TVe4FUxY2qoWxHG8Sccep6Tm9jZx6DMjOx2hYGQGf9LIDXtu
+         jGwfrngwYsYzUWnRevcI0HDbXWCvCVWQLRJLEvUVqTi4/7MYnLZqNZUid9DMnQUKzHE/
+         Q+/u4ayAe8Jbw1Lnpw2iQ4V3oHouUssuyV8ItGtHrcbYCSTHbfs40TQjlYn8rVha0oYV
+         Efn6urBp1R3QgRAsntARKfKCQzW4PC3m43oOeZFf5pAWbWoNod/KX431WDSHLpjx0g/x
+         eGRQZrXPFbCdHC4mzQGMAcT8fATNzgP53nZud6CKlU2ennELNZ9qB/ieIqy0obZb13QK
+         6kBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7v/gEXdtTx+UxkZcAUgCVgz4MqYf6krsrfnmQSxx5Nk=;
-        b=QlgfibjyvjHiSYxPqIRiDSICHG5rhgtm8mO7/rT5+isv061qsVNrCEf2c615oJF6DB
-         grP9EBs07dYj7z0+GZTJmk75WF3u0+8bn87NNnW/m8CrJz3EwJBeNiX2A50x+je3KDkC
-         wf9ptpZNGhglBnR3spka8657Hbgw1EX1aNaVwhATOyzoa/6JCHgc25Y36ox37nfBi4C3
-         mX0RFcfnMC5dn40MvaZcm6JEAdL+TyOGmk+sdYQhmf2EcNhz0XRACnws2VEnu9I+7Lbz
-         c3ChOZpsw1oQuxFvqg/rVKuIbQuWB8ONb5qUVyqaGL/ULgjsfB+zoXiIYnOMgY3OUL1r
-         /znw==
-X-Gm-Message-State: AFqh2kp5TVfjz8mKCU4jUCVzzRLAAm8bTep6EnuAhCN4rUpNAvRso0+z
-        GPeE+MOBhB04Tp5mM29daAcrwo2tr1qz
-X-Google-Smtp-Source: AMrXdXuewYyrwXwhMLNamHCQBtT1ApP5gJHM/sJsyBFYGsV/bQVTiEcy1qsCqV8yZhxZzVYytEaqhDTrPA5G
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:8775:c864:37e:2f9b])
- (user=irogers job=sendgmr) by 2002:a0d:dbce:0:b0:4ad:7104:1f63 with SMTP id
- d197-20020a0ddbce000000b004ad71041f63mr1246510ywe.49.1672907206617; Thu, 05
- Jan 2023 00:26:46 -0800 (PST)
-Date:   Thu,  5 Jan 2023 00:26:09 -0800
-Message-Id: <20230105082609.344538-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v1] perf llvm: Fix inadvertent file creation
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yJxb6YsgY1IN1CKBHgvi2wvMh1i9b0ozsEOL55ctxKY=;
+        b=uBHNfyIv0oTccQdhVYxzOOgGs/qZdh/F640YzuHHnpoPTUv+E+qEA53APPTr0QjJDh
+         Xnaol9GiaRPxKeyjmOu2zdFpJ8JJpT7mcqAaZXKthVVoc+++Wwh5+EsU/863jHzvgi0V
+         a5Xo31QCPrbHZV3gus7VW5F9MOavxtD/SLkQb0L1dLg036W71ck/8cRxMc8gSHWMVwt8
+         NZkC53bjeCmwr4S9fWaMizDJwUokwtwti9sZKTZf0yQX5eWGdCtx3MKym3bUQGw+FOGx
+         6tFdxcyWi7MXJ7bkylUQ+3yQDbJdFmgPRcwxnWBh/7pfPkH9kd/6ZXuzOU6vPxX+nVpe
+         xhfg==
+X-Gm-Message-State: AFqh2krV9CuGPtWTAxqx9IwucfR1b1TpLTDq4PCL42v4jluuCV57nebz
+        ETIimm5CtPs+nGJgoO6TYoj4cANUP0RZmospu1tHbg==
+X-Google-Smtp-Source: AMrXdXsLp2YpUcmt7erpbNWwK6ldTYDjBl1h/4EzlXdVs8ChUoD9mwCoNqX8Ibl8j+i7rry7XiqUP/TwWQBb6tbicYs=
+X-Received: by 2002:a5d:4590:0:b0:27e:cf2e:ca4e with SMTP id
+ p16-20020a5d4590000000b0027ecf2eca4emr759089wrq.343.1672910706943; Thu, 05
+ Jan 2023 01:25:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20230105030434.255603-1-irogers@google.com>
+In-Reply-To: <20230105030434.255603-1-irogers@google.com>
 From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 5 Jan 2023 01:24:54 -0800
+Message-ID: <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf script flamegraph: Avoid d3-flame-graph package dependency
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,81 +60,128 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Ian Rogers <irogers@google.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
+        996839@bugs.debian.org, Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Brendan Gregg <brendan@intel.com>, spiermar@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The LLVM template is first echo-ed into command_out and then
-command_out executed. The echo surrounds the template with double
-quotes, however, the template itself may contain quotes. This is
-generally innocuous but in tools/perf/tests/bpf-script-test-prologue.c
-we see:
-...
-SEC("func=null_lseek file->f_mode offset orig")
-...
-where the first double quote ends the double quote of the echo, then
-the > redirects output into a file called f_mode.
+On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Currently flame graph generation requires a d3-flame-graph template to
+> be installed. Unfortunately this is hard to come by for things like
+> Debian [1]. If the template isn't installed warn and download it from
+> jsdelivr CDN. If downloading fails generate a minimal flame graph
+> again with the javascript coming from jsdelivr CDN.
+>
+> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/scripts/python/flamegraph.py | 63 ++++++++++++++++++-------
+>  1 file changed, 45 insertions(+), 18 deletions(-)
+>
+> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> index b6af1dd5f816..808b0e1c9be5 100755
+> --- a/tools/perf/scripts/python/flamegraph.py
+> +++ b/tools/perf/scripts/python/flamegraph.py
+> @@ -25,6 +25,27 @@ import io
+>  import argparse
+>  import json
+>  import subprocess
+> +import urllib.request
+> +
+> +minimal_html = """<head>
+> +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
 
-To avoid this inadvertent behavior substitute redirects and similar
-characters to be ASCII control codes, then substitute the output in
-the echo back again.
+(hopefully fixed Martin Spier's e-mail address)
 
-Fixes: 5eab5a7ee032 ("perf llvm: Display eBPF compiling command in debug output")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/llvm-utils.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+The @4.1.3 comes from the README.md:
+https://github.com/spiermar/d3-flame-graph/blob/master/README.md
+Does it make sense just to drop it or use @latest ? It'd be nice not
+to patch this file for every d3-flame-graph update.
 
-diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
-index 650ffe336f3a..4e8e243a6e4b 100644
---- a/tools/perf/util/llvm-utils.c
-+++ b/tools/perf/util/llvm-utils.c
-@@ -531,14 +531,37 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
- 
- 	pr_debug("llvm compiling command template: %s\n", template);
- 
-+	/*
-+	 * Below, substitute control characters for values that can cause the
-+	 * echo to misbehave, then substitute the values back.
-+	 */
- 	err = -ENOMEM;
--	if (asprintf(&command_echo, "echo -n \"%s\"", template) < 0)
-+	if (asprintf(&command_echo, "echo -n \a%s\a", template) < 0)
- 		goto errout;
- 
-+#define SWAP_CHAR(a, b) do { if (*p == a) *p = b; } while (0)
-+	for (char *p = command_echo; *p; p++) {
-+		SWAP_CHAR('<', '\001');
-+		SWAP_CHAR('>', '\002');
-+		SWAP_CHAR('"', '\003');
-+		SWAP_CHAR('\'', '\004');
-+		SWAP_CHAR('|', '\005');
-+		SWAP_CHAR('&', '\006');
-+		SWAP_CHAR('\a', '"');
-+	}
- 	err = read_from_pipe(command_echo, (void **) &command_out, NULL);
- 	if (err)
- 		goto errout;
- 
-+	for (char *p = command_out; *p; p++) {
-+		SWAP_CHAR('\001', '<');
-+		SWAP_CHAR('\002', '>');
-+		SWAP_CHAR('\003', '"');
-+		SWAP_CHAR('\004', '\'');
-+		SWAP_CHAR('\005', '|');
-+		SWAP_CHAR('\006', '&');
-+	}
-+#undef SWAP_CHAR
- 	pr_debug("llvm compiling command : %s\n", command_out);
- 
- 	err = read_from_pipe(template, &obj_buf, &obj_buf_sz);
--- 
-2.39.0.314.g84b9a713c41-goog
+Thanks,
+Ian
 
+> +</head>
+> +<body>
+> +  <div id="chart"></div>
+> +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+> +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+> +  <script type="text/javascript">
+> +  const stacks = [/** @flamegraph_json **/];
+> +  // Note, options is unused.
+> +  const options = [/** @options_json **/];
+> +
+> +  var chart = flamegraph();
+> +  d3.select("#chart")
+> +        .datum(stacks[0])
+> +        .call(chart);
+> +  </script>
+> +</body>
+> +"""
+>
+>  # pylint: disable=too-few-public-methods
+>  class Node:
+> @@ -50,15 +71,18 @@ class FlameGraphCLI:
+>          self.args = args
+>          self.stack = Node("all", "root")
+>
+> -        if self.args.format == "html" and \
+> -                not os.path.isfile(self.args.template):
+> -            print("Flame Graph template {} does not exist. Please install "
+> -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+> -                  "package, specify an existing flame graph template "
+> -                  "(--template PATH) or another output format "
+> -                  "(--format FORMAT).".format(self.args.template),
+> -                  file=sys.stderr)
+> -            sys.exit(1)
+> +        if self.args.format == "html":
+> +            if os.path.isfile(self.args.template):
+> +                self.template = f"file://{self.args.template}"
+> +            else:
+> +                print(f"""
+> +Warning: Flame Graph template '{self.args.template}'
+> +does not exist, a template will be downloaded via http. To avoid this
+> +please install a package such as the js-d3-flame-graph or
+> +libjs-d3-flame-graph, specify an existing flame graph template
+> +(--template PATH) or another output format (--format FORMAT).
+> +""", file=sys.stderr)
+> +            self.template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
+>
+>      @staticmethod
+>      def get_libtype_from_dso(dso):
+> @@ -129,15 +153,18 @@ class FlameGraphCLI:
+>              options_json = json.dumps(options)
+>
+>              try:
+> -                with io.open(self.args.template, encoding="utf-8") as template:
+> -                    output_str = (
+> -                        template.read()
+> -                        .replace("/** @options_json **/", options_json)
+> -                        .replace("/** @flamegraph_json **/", stacks_json)
+> -                    )
+> -            except IOError as err:
+> -                print("Error reading template file: {}".format(err), file=sys.stderr)
+> -                sys.exit(1)
+> +                with urllib.request.urlopen(self.template) as template:
+> +                    output_str = '\n'.join([
+> +                        l.decode('utf-8') for l in template.readlines()
+> +                    ])
+> +            except Exception as err:
+> +                print(f"Error reading template {self.template}: {err}\n"
+> +                      "a minimal flame graph will be generated", file=sys.stderr)
+> +                output_str = minimal_html
+> +
+> +            output_str = output_str.replace("/** @options_json **/", options_json)
+> +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
+> +
+>              output_fn = self.args.output or "flamegraph.html"
+>          else:
+>              output_str = stacks_json
+> --
+> 2.39.0.314.g84b9a713c41-goog
+>
