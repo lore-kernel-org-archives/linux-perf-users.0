@@ -2,162 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E6C4708E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 19:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77168C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Jan 2023 19:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234495AbjAETDE (ORCPT
+        id S235266AbjAET7j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Jan 2023 14:03:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
+        Thu, 5 Jan 2023 14:59:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234999AbjAETDD (ORCPT
+        with ESMTP id S235650AbjAET7h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Jan 2023 14:03:03 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864D75F91A
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 11:03:02 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id b24-20020a05600c4a9800b003d21efdd61dso2068043wmp.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2023 11:03:02 -0800 (PST)
+        Thu, 5 Jan 2023 14:59:37 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13BE17589
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 Jan 2023 11:59:36 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id h7-20020a17090aa88700b00225f3e4c992so3078188pjq.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Jan 2023 11:59:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        d=atishpatra.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=M3ywnK0Rwj44NUmEowj3uFpeqoi3dfNf/zj6axWlexI=;
-        b=GOodjTv4XXA0h7zfwxBAR+mgxcePBgkoSL1rN2OXga9+OyCkGuDbWRKhWN7EsNCAsl
-         nfjC8x5GiRxiOIcMrZRloa65u4rPYuSOTvs9Fpe2j3ZNMxQMJh/91HUUUUWEHHNkVOR7
-         clbW1fiA+YU3pRwo1bL8Zy0dLVFKNJQlX5nxtDjDjbkjq83y8xi/zkK7x5DvZ2IILMgJ
-         /XMmyuVpVjqp3lkW1nneMesHgFkTXv/AH2t8Ndup3fJQBgZXOLtJZ96rDKeDpm5Psa78
-         9zvKmJK52kmhNmtr9UdwuUBozaZ0yMK+B0V0QpYAksmGhN6iEwlQpHbtur0vbXYej3oF
-         4gPg==
+        bh=G6MY7nruquscISG2PiN5KCqnGZMtc/2v+wrwlGfSPyg=;
+        b=tM+6O86wCUABwOfRrnO10ks8jWIko+HiIU9L21smJibwScoqZGC6l9zhdG+9Q44WKD
+         WQNSkucPngW4fkcR+C0rfo0p61eoEvJr3OC7i3RwVno5gXeWHWcPm6esol0/J4BHZtHM
+         PqOSwfutM8YZsoqyKECRRBImJ805NqW1GsIz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=M3ywnK0Rwj44NUmEowj3uFpeqoi3dfNf/zj6axWlexI=;
-        b=FyI7PALMV7Xy6QsYWdF1wKBcxW+kVCBgkdKiVsrifCsH2LOCZGjbeqNlxXz9hy3RmK
-         F1o8XUCkVXjyp+6o77K4PO6gMdgd0LNCd/AanlLOEHWhXaLlRVTFOwruaw3bGGXy4SFD
-         VaoFkWU7bUbxhrHsG1pyP3PWevN2Neo5TBUnrpHz7VbqBD37HLQ6WhK/PmRs9ZAnhhr/
-         GuNW4d9WPTKbO92Xo67EiUUD/mJvWgJFJu4zW75BIv6rVO4lDTdFUi9pGhkYAhhmNzAO
-         6i2cCpdsdFiP6xUlgQd0NvAsjt765lUJ58nHxLhsAZRSygfXRVDxiOdB/EVl4R+91KKp
-         hIsA==
-X-Gm-Message-State: AFqh2koEGMvnKRb1e86s1V1sizVVvXDP7E1i9dEY9oS8y4bqjXD3tckW
-        5WB1HdzzctnDhRdmB4CEj4Ehv9+iFBvUOPtzJrS+iw==
-X-Google-Smtp-Source: AMrXdXszKVXQGCVA2N+u2+voiQh0jNEYJQJkgtP9T1vAZL4rMFn2cDbZZJqf84H6E8ijktUGriW7B1JNprdb0jEROtQ=
-X-Received: by 2002:a05:600c:3b04:b0:3d0:50c4:432c with SMTP id
- m4-20020a05600c3b0400b003d050c4432cmr2552732wms.67.1672945380644; Thu, 05 Jan
- 2023 11:03:00 -0800 (PST)
+        bh=G6MY7nruquscISG2PiN5KCqnGZMtc/2v+wrwlGfSPyg=;
+        b=siA2jeanL3ERvw/HByDoHFsWXIWcDTYR46rLuHK1g2HypkP5UVJvYigDG61v8MeSiP
+         3Drq3WtFXaPHhLdyAa1cZKJMgothLjaMuzV22Gk+8KmdyUrtNyorRo8zCGMk96OkajUc
+         t0g+wKG7cpTK015mFsEhvGEdb0MheWjE2cbmKuJ+1AspNDs62IXpfLdHBRAtewz2F1ei
+         5Mi6h5oRkazP299qZ5lMiDdnRehCM09+Jn1r7Lx+735+pf0uvDH/rv7BOXloVQ4h06oJ
+         /mwsq4TebS/ITkFUe/2YtQY0BK6uozCgz5an2KZvDM7ta1J+gzH2sfoejwCZwyi/jfua
+         8gXA==
+X-Gm-Message-State: AFqh2ko/89TURlZrqEK/UkeassiD/7OJQoNdCkXh2OxWtFxfyl6IVk41
+        hdxM5Rpu2Xb6zc1bOmcAHyVdDQh1Fxfu1ozoeVHFPH4tHWjomCA=
+X-Google-Smtp-Source: AMrXdXs+5alvXeD+V8cyRkDyEUifzZBODvRmhsHvz5VF8nMUcQR7V/ot79Apnn/60FnaE0jmJXBIEUPjzkZJuRGFCV8=
+X-Received: by 2002:a17:90a:bd0e:b0:225:cd98:1651 with SMTP id
+ y14-20020a17090abd0e00b00225cd981651mr3768100pjr.93.1672948776000; Thu, 05
+ Jan 2023 11:59:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20230105172243.7238-1-mike.leach@linaro.org>
-In-Reply-To: <20230105172243.7238-1-mike.leach@linaro.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 5 Jan 2023 11:02:48 -0800
-Message-ID: <CAP-5=fVbPVE4rxJ2s8phhJ5RRH4EnKaWrF2kaT0oCmK6kvhP2g@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fix build error when NO_LIBBPF=1
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Thu, 5 Jan 2023 11:59:24 -0800
+Message-ID: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
+Subject: Expected rdpmc behavior during context swtich and a RISC-V conundrum
+To:     linux-perf-users@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Anup Patel <apatel@ventanamicro.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jan 5, 2023 at 9:22 AM Mike Leach <mike.leach@linaro.org> wrote:
->
-> Recent updates to perf build result in the following output when cross
-> compiling to aarch64, with libelf unavailable, and therefore
-> NO_LIBBPF=1 set.
->
-> ```
->   $make -C tools/perf
->
->   <cut>
->
->   Makefile.config:428: No libelf found. Disables 'probe' tool, jvmti
->   and BPF support in 'perf record'. Please install libelf-dev,
->   libelf-devel or elfutils-libelf-devel
->
->   <cut>
->
->   libbpf.c:46:10: fatal error: libelf.h: No such file or directory
->       46 | #include <libelf.h>
->          |          ^~~~~~~~~~
->   compilation terminated.
->
->   ./tools/build/Makefile.build:96: recipe for target
->   '.tools/perf/libbpf/staticobjs/libbpf.o' failed
->
-> ```
->
-> plus one other include error for <gelf.h>
+Hi All,
+There was a recent uabi update[1] for RISC-V that allows the users to
+read cycle and instruction count without any checks.
+We tried to restrict that behavior to address security concerns
+earlier but it resulted in breakage for some user space
+applications[2].
+Thus, previous behavior was restored where a user on RISC-V platforms
+can directly read cycle or instruction count[3].
 
-Ouch, apologies for the breakage. You wouldn't happen to have
-something like a way with say a docker image to repro the problem? The
-make line above is somewhat minimal.
+Comparison with other ISAs w.r.t user space access of counters:
+ARM64
+  -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
+  -- Only for task bound events configured via perf.
 
-> The issue is that the commit noted below adds libbpf to the prepare:
-> target but no longer accounts for the NO_LIBBPF define. Additionally
-> changing the include directories means that even if the libbpf target
-> build is prevented, bpf headers are missing in other parts of the build.
->
-> This patch ensures that in the case of NO_LIBBPF=1, the build target is
-> changed to a header only target, and the headers are installed, without
-> attempting to build the libbpf.a target.
->
-> Applies to perf/core
->
-> Fixes: 746bd29e348f ("perf build: Use tools/lib headers from install path")
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
->  tools/perf/Makefile.perf | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 13e7d26e77f0..ee08ecf469f6 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -305,7 +305,11 @@ else
->  endif
->  LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
->  LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
-> +ifndef NO_LIBBPF
->  LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
-> +else
-> +LIBBPF = $(LIBBPF_INCLUDE)/bpf/bpf.h
+X86
+ --- rdpmc instruction
+ --- Enable/Disable via =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
+-- Before v4.0
+ -- any process (even without active perf event) rdpmc
+After v4.0
+-- Default behavior changed to support only active events in a
+process=E2=80=99s context.
+-- Configured through perf similar to ARM64
+-- Continue to maintain backward compatibility for unrestricted access
+by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
 
-This seems strange, don't we want to avoid libbpf targets?
+IMO, RISC-V should only enable user space access through perf similar
+to ARM64 and x86 (post v4.0).
+However, we do have to support the legacy behavior to avoid
+application breakage.
+As per my understanding a direct user space access can lead to the
+following problems:
 
-> +endif
->  CFLAGS += -I$(LIBBPF_OUTPUT)/include
->
->  ifneq ($(OUTPUT),)
-> @@ -826,10 +830,16 @@ $(LIBAPI)-clean:
->         $(call QUIET_CLEAN, libapi)
->         $(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
->
-> +ifndef NO_LIBBPF
->  $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
->         $(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=$(FEATURE_DUMP_EXPORT) \
->                 O= OUTPUT=$(LIBBPF_OUTPUT)/ DESTDIR=$(LIBBPF_DESTDIR) prefix= \
->                 $@ install_headers
-> +else
-> +$(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
-> +       $(Q)$(MAKE) -C $(LIBBPF_DIR) OUTPUT=$(LIBBPF_OUTPUT)/ \
-> +               DESTDIR=$(LIBBPF_DESTDIR) prefix= install_headers
-> +endif
+1) There is no context switch support, so counts from other contexts are ex=
+posed
+2) If a perf user is allocated one of these counters, the counter
+value will be written
 
-Shouldn't we just be able to conditionalize having $(LIBBPF) as a
-dependency for the perf binary? If there is no dependency then the
-targets won't be built and we shouldn't need to conditionalize here.
+Looking at the x86 code as it continues to allow the above behavior,
+rdpmc_always_available_key is enabled in the above case. However,
+during the context switch (cr4_update_pce_mm)
+only dirty counters are cleared. It only prevents leakage from perf
+task to rdpmc task.
 
-Thanks!
-Ian
+How does the context switch of counters work for users who enable
+unrestricted access by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=
+=9D ?
+Otherwise, rdpmc users likely get noise from other applications. Is
+that expected ?
+This can be a security concern also where a rogue rdpmc user
+application can monitor other critical applications to initiate side
+channel attack.
 
->  $(LIBBPF)-clean:
->         $(call QUIET_CLEAN, libbpf)
-> --
-> 2.17.1
->
+Am I missing something? Please correct my understanding of the x86
+implementation if it is wrong.
+
+[1] https://lore.kernel.org/lkml/20221201135110.3855965-1-conor.dooley@micr=
+ochip.com/
+[2] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYnzsKE?pli=
+=3D1
+[3] https://lore.kernel.org/all/YxIzgYP3MujXdqwj@aurel32.net/T/
+
+--=20
+Regards,
+Atish
