@@ -2,177 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF6AC4708D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 14:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05012C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 14:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234417AbjAFOXt (ORCPT
+        id S234975AbjAFO0A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 09:23:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
+        Fri, 6 Jan 2023 09:26:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234839AbjAFOX1 (ORCPT
+        with ESMTP id S235052AbjAFOZw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 09:23:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26047F44B;
-        Fri,  6 Jan 2023 06:23:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 45070616FE;
-        Fri,  6 Jan 2023 14:23:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9159C433D2;
-        Fri,  6 Jan 2023 14:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673014986;
-        bh=GLq2I201W/dvI6oHhthki9BIrq367DLSrcf0EBqIqAE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=NvicM3gAwQf8qOAExduvANxhpvRbAxZO+Apgfsr/RIvXzjS7hZ+jEFblXH1KYZJo3
-         U0EP59h6rECNeneqcfOCHGin8rJ2Ra1zPNS3eZwyfOJCMNO2XQyYGNUeRrFP9cLcxZ
-         3u0DMm2uGFau2NAHcXbS4mjqIUswmB2FWLsHjkyQ5t6mz6bjWgmKvm2yCid0Ga41Dw
-         d4U0FwyxV3g459s/qJ7XsIv3NQ9z9wWpvDkdsBq6qGLJc1clQJJfpVaq/FOfEwQBc5
-         ouxNOP8ShjdGO4/fDb7Jj77d2jyeewx3GqXumzKaMvVZWykGzaHgGRKSOfhUQeM8jr
-         jxrP0Nd0iWrRw==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        =?UTF-8?q?Ahelenia=20Ziemia=C5=84ska?= 
-        <nabijaczleweli@nabijaczleweli.xyz>,
-        Eric Lin <eric.lin@sifive.com>,
-        Ian Rogers <irogers@google.com>,
-        Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.2: 1st batch
-Date:   Fri,  6 Jan 2023 11:22:56 -0300
-Message-Id: <20230106142256.763489-1-acme@kernel.org>
-X-Mailer: git-send-email 2.39.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 6 Jan 2023 09:25:52 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E0243E67
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 06:25:50 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id h66-20020a252145000000b0071a7340eea9so1987947ybh.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 06:25:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kC1oBRAXE838EyqcFtArpyyQWxtXQZCkq8gbe8hpVg4=;
+        b=DQbR51Biav8RW8cOre9crR/Cih3nKjqFKDEeGB3Vzb6WLdeL6VgDdEY0m9IzEDCgrN
+         cpAKhqH/MyXqYXG58AMkrIMXmqOH9z1eFuRMnCKzMvISBKAJH+V9UESk4I5TAuvNYXEk
+         0vHO4JLod2K+wj6DvdrtkZcdxfMvdsDMRzYMnpqZ98BOvclvUDCDI4bh72+5iOY4O+DX
+         R1cMezttAzMW0x/PXmONyk0cmTVL7Ohf+gaRYzCZRwWjzu9ZtuYYU+cHiv/EHb/6fL7D
+         lREvj57YppLZcivTMT7ICPNvpU2ba2yERIkGPY2Vq1wbOYbveGs+I2+CJBR7QrAOINNZ
+         fIrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kC1oBRAXE838EyqcFtArpyyQWxtXQZCkq8gbe8hpVg4=;
+        b=l4PjDMTJmvyGsYI9MerZn5RRD1+zClMi84GY4WU5OT49GEDUSUVX0kkUBlrCSkeDXM
+         uWpsgWfHQIzPdaKSeidZ2dhE2SaONvOAUtpfWG9V+QUVeGZirl4niH/hD5nrheqq62C5
+         iSKfTFDpLzdcpe5R/JNTTo0WW8VUMrx/GdjD3uNarH8XMrFUelFCLojn6i8uo1ks+OFW
+         r3Kh74sl12WJ+R65xvGT7febC/rYyNrXUgL01gwCl9sKIw5F8EqHIo/cHoVThlDnZ9j3
+         8Yi90ws5xwZKnyWFxx877DwEZctTX2QEl0iUU7V231RNJNLGIwICYz8dYTo1KUyxVeIV
+         1XoA==
+X-Gm-Message-State: AFqh2ko6lICMyDq5XWCln75zrpz1NuiF44zIj7fkSGiM75yVnsCcWY7b
+        A1P+G4BX+cRYYbuqL5MpDftM6d/ABctR
+X-Google-Smtp-Source: AMrXdXssgHQfc2+9CJD0DISmI/eT1XOavZLaNqX+X6gT55ye+JxJrY74HJ53cDxcXjh9CaNg2Q33jZsFN+Pd
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b317:a30:653a:18e5])
+ (user=irogers job=sendgmr) by 2002:a81:9281:0:b0:391:ea94:ec9b with SMTP id
+ j123-20020a819281000000b00391ea94ec9bmr149767ywg.57.1673015149991; Fri, 06
+ Jan 2023 06:25:49 -0800 (PST)
+Date:   Fri,  6 Jan 2023 06:25:36 -0800
+Message-Id: <20230106142537.607399-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+Subject: [PATCH v2 1/2] perf build: Properly guard libbpf includes
+From:   Ian Rogers <irogers@google.com>
+To:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, acme@kernel.org, irogers@google.com,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+Including libbpf header files should be guarded by
+HAVE_LIBBPF_SUPPORT. In bpf_counter.h, move the skeleton utilities
+under HAVE_BPF_SKEL.
 
-	Please consider pulling, there are some more being tested but
-that should sit in linux-next/pending-fixes for a while.
+Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bpf_counter.h")
+Reported-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-trace.c    |  2 +
+ tools/perf/util/bpf_counter.h | 85 ++++++++++++++++++-----------------
+ 2 files changed, 46 insertions(+), 41 deletions(-)
 
-        Please let me know if you think anything should be reworked,
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 86e06f136f40..d21fe0f32a6d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -16,7 +16,9 @@
+ 
+ #include "util/record.h"
+ #include <api/fs/tracing_path.h>
++#ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
++#endif
+ #include "util/bpf_map.h"
+ #include "util/rlimit.h"
+ #include "builtin.h"
+diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+index 4dbf26408b69..9113c8bf5cb0 100644
+--- a/tools/perf/util/bpf_counter.h
++++ b/tools/perf/util/bpf_counter.h
+@@ -4,9 +4,12 @@
+ 
+ #include <linux/list.h>
+ #include <sys/resource.h>
++
++#ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
+ #include <bpf/libbpf.h>
++#endif
+ 
+ struct evsel;
+ struct target;
+@@ -42,6 +45,47 @@ int bpf_counter__read(struct evsel *evsel);
+ void bpf_counter__destroy(struct evsel *evsel);
+ int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd);
+ 
++static inline __u32 bpf_link_get_id(int fd)
++{
++	struct bpf_link_info link_info = { .id = 0, };
++	__u32 link_info_len = sizeof(link_info);
++
++	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
++	return link_info.id;
++}
++
++static inline __u32 bpf_link_get_prog_id(int fd)
++{
++	struct bpf_link_info link_info = { .id = 0, };
++	__u32 link_info_len = sizeof(link_info);
++
++	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
++	return link_info.prog_id;
++}
++
++static inline __u32 bpf_map_get_id(int fd)
++{
++	struct bpf_map_info map_info = { .id = 0, };
++	__u32 map_info_len = sizeof(map_info);
++
++	bpf_obj_get_info_by_fd(fd, &map_info, &map_info_len);
++	return map_info.id;
++}
++
++/* trigger the leader program on a cpu */
++static inline int bperf_trigger_reading(int prog_fd, int cpu)
++{
++	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
++			    .ctx_in = NULL,
++			    .ctx_size_in = 0,
++			    .flags = BPF_F_TEST_RUN_ON_CPU,
++			    .cpu = cpu,
++			    .retval = 0,
++		);
++
++	return bpf_prog_test_run_opts(prog_fd, &opts);
++}
++
+ #else /* HAVE_BPF_SKEL */
+ 
+ #include <linux/err.h>
+@@ -87,45 +131,4 @@ static inline void set_max_rlimit(void)
+ 	setrlimit(RLIMIT_MEMLOCK, &rinf);
+ }
+ 
+-static inline __u32 bpf_link_get_id(int fd)
+-{
+-	struct bpf_link_info link_info = { .id = 0, };
+-	__u32 link_info_len = sizeof(link_info);
+-
+-	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+-	return link_info.id;
+-}
+-
+-static inline __u32 bpf_link_get_prog_id(int fd)
+-{
+-	struct bpf_link_info link_info = { .id = 0, };
+-	__u32 link_info_len = sizeof(link_info);
+-
+-	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+-	return link_info.prog_id;
+-}
+-
+-static inline __u32 bpf_map_get_id(int fd)
+-{
+-	struct bpf_map_info map_info = { .id = 0, };
+-	__u32 map_info_len = sizeof(map_info);
+-
+-	bpf_obj_get_info_by_fd(fd, &map_info, &map_info_len);
+-	return map_info.id;
+-}
+-
+-/* trigger the leader program on a cpu */
+-static inline int bperf_trigger_reading(int prog_fd, int cpu)
+-{
+-	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
+-			    .ctx_in = NULL,
+-			    .ctx_size_in = 0,
+-			    .flags = BPF_F_TEST_RUN_ON_CPU,
+-			    .cpu = cpu,
+-			    .retval = 0,
+-		);
+-
+-	return bpf_prog_test_run_opts(prog_fd, &opts);
+-}
+-
+ #endif /* __PERF_BPF_COUNTER_H */
+-- 
+2.39.0.314.g84b9a713c41-goog
 
-Best regards,
-
-- Arnaldo
-
-The following changes since commit 88603b6dc419445847923fcb7fe5080067a30f98:
-
-  Linux 6.2-rc2 (2023-01-01 13:53:16 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.1-1-2023-01-06
-
-for you to fetch changes up to 481028dbf1daa2808e1be06f6a865b5fe5939efc:
-
-  perf tools: Fix build on uClibc systems by adding missing sys/types.h include (2023-01-04 16:44:01 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.2: 1st batch
-
-- Fix segfault when trying to process tracepoints present in a perf.data file
-  and not linked with libtraceevent.
-
-- Fix build on uClibc systems by adding missing sys/types.h include, that was
-  being obtained indirectly which stopped being the case when tools/lib/traceevent
-  was removed.
-
-- Don't show commands in 'perf help' that depend on linking with libtraceevent
-  when not building with that library, which is now a possibility since we
-  no longer ship a copy in tools/lib/traceevent.
-
-- Fix failure in 'perf test' entry testing the combination of 'perf probe' user
-  space function + 'perf record' + 'perf script' where it expects a backtrace
-  leading to glibc's inet_pton() from 'ping' that now happens more than once with
-  glibc 2.35 for IPv6 addreses.
-
-- Fix for the inet_pton perf test on s/390 where 'text_to_binary_address' now
-  appears on the backtrace.
-
-- Fix build error on riscv due to missing header for 'struct perf_sample'.
-
-- Fix 'make -C tools perf_install' install variant by not propagating the 'subdir'
-  to submakes for the 'install_headers' targets.
-
-- Fix handling of unsupported cgroup events when using BPF counters in 'perf stat'.
-
-- Count all cgroups, not just the last one when using 'perf stat
-  --for-each-cgroup' with --bpf-counters. This makes the output using BPF
-  counters match the output without using it, which was the intention all along,
-  the output should be the same using --bpf-counters or not.
-
-- Fix 'perf lock contention' core dump related to not finding the
-  "__sched_text_end" symbol on s/390.
-
-- Fix build failure when HEAD is signed: exclude the signature from the version
-  string.
-
-- Add missing closedir() calls to in perf_data__open_dir(), plugging a fd leak.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Ahelenia Ziemiańska (1):
-      perf tools: Don't include signature in version strings
-
-Arnaldo Carvalho de Melo (2):
-      perf tools: Fix segfault when trying to process tracepoints in perf.data and not linked with libtraceevent
-      perf test record_probe_libc_inet_pton: Fix failure due to extra inet_pton() backtrace in glibc >= 2.35
-
-Eric Lin (1):
-      perf tools riscv: Fix build error on riscv due to missing header for 'struct perf_sample'
-
-Ian Rogers (1):
-      perf build: Don't propagate subdir to submakes for install_headers
-
-Jesus Sanchez-Palencia (1):
-      perf tools: Fix build on uClibc systems by adding missing sys/types.h include
-
-Miaoqian Lin (1):
-      perf tools: Fix resources leak in perf_data__open_dir()
-
-Namhyung Kim (2):
-      perf stat: Fix handling of unsupported cgroup events when using BPF counters
-      perf stat: Fix handling of --for-each-cgroup with --bpf-counters to match non BPF mode
-
-Thomas Richter (2):
-      perf lock contention: Fix core dump related to not finding the "__sched_text_end" symbol on s/390
-      perf test record_probe_libc_inet_pton: Fix test on s/390 where 'text_to_binary_address' now appears on the backtrace
-
-Yang Jihong (1):
-      perf help: Use HAVE_LIBTRACEEVENT to filter out unsupported commands
-
- tools/perf/Documentation/Makefile                  |  2 +-
- tools/perf/Makefile.perf                           | 10 +++++-----
- tools/perf/arch/riscv/util/unwind-libdw.c          |  2 +-
- tools/perf/builtin-lock.c                          |  2 ++
- tools/perf/command-list.txt                        | 10 +++++-----
- .../tests/shell/record+probe_libc_inet_pton.sh     |  3 ++-
- tools/perf/util/PERF-VERSION-GEN                   |  2 +-
- tools/perf/util/bpf_counter_cgroup.c               | 14 +++----------
- tools/perf/util/cgroup.c                           | 23 +++++++++++++++++-----
- tools/perf/util/data.c                             |  2 ++
- tools/perf/util/generate-cmdlist.sh                | 19 ++++++++++++++++--
- tools/perf/util/sort.c                             | 12 +++++++++++
- tools/perf/util/trace-event.h                      |  1 +
- 13 files changed, 70 insertions(+), 32 deletions(-)
