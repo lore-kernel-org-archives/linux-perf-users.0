@@ -2,62 +2,63 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3302BC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97178C4708D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233538AbjAFPMx (ORCPT
+        id S229687AbjAFPNw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 10:12:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60370 "EHLO
+        Fri, 6 Jan 2023 10:13:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233792AbjAFPMt (ORCPT
+        with ESMTP id S235325AbjAFPNn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 10:12:49 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B4F81127
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 07:12:32 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id n12so1762090pjp.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 07:12:32 -0800 (PST)
+        Fri, 6 Jan 2023 10:13:43 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D2481112
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 07:13:42 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id g9-20020a25bdc9000000b0073727a20239so2132788ybk.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 07:13:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pOP2U/eNUNDM/BFzz41jwnvvD0q9z7KVLxoSLmeQ5Ik=;
-        b=iH0cdWoF7hCqRCgId3gkeJ5nhxynIfZPsMSD7cym2axK6NGs4o3XgpHZjB5bWHlgqB
-         AoNBsLh56wsCYg6PkC4kDVE/g+pjSg4Iw+mK0FMXtOl1gsPl4GvTVbS3VNycdNuFXEsn
-         a4ag/t2nRyYJu1CAmTpOpFDGkipTZNQBIkkZLuxaR79XWunm9Cvw8rrVwYzSp6GR0DKj
-         /LsAoDpBOGldlGPnbIe/ry6lRakkHOXvX2M1JpHsMsR0C35CWd7aLHINdBQl808CrHu9
-         uHxo+LDfuXIDogYoc+SbNNW8svMk8I1YLfI7Nz/PUkjiK/6uUmOXfisllo7wFfH+uXe1
-         QI0Q==
+        d=google.com; s=20210112;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1ELKsvqp/CVQlQh6V4i31lh01VunlKiC/zGB5BPQtSo=;
+        b=b1woKxlTxDe2aMky9Gxycj7tdnYGqz4wHF+OS3uMz1LMlDeH1+FDNBZHw6QGRgHJbE
+         8KrRqouh3zKL51ld/RXy0PvPwQ/BNTrQ3mOLgjhTT/8rXpw2ZFVBzsfIzg8d/8Po1Usf
+         zcdtFlfNIb+0vGlczu0pDF7irJQLaScldPBTyI7U4131OMwmPcYr88HTkl+JM8Xq+yMH
+         KcLDUd1Cw0RU8ccBM+008GgZ6idhgM1U+quqBNoEc1SU3z+gAaPQJZgfpbvtJQfM902M
+         9k1c+/R5CXLIvrS945izzUudap5Gvqigac4ZN/JCC6w5tg/19v8XvJDRQJnZEjbd/u2F
+         tA4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pOP2U/eNUNDM/BFzz41jwnvvD0q9z7KVLxoSLmeQ5Ik=;
-        b=f9ND6OKDNk4a0qzos7It/Z/4h6BOn849fhaSYUg3iaty6p1ZOE/7nYKARsZ8A6T/hO
-         KF4xKP17EO51Iyq7OHDiH4IDd9/sB7sPRLuIIOgG8dXBQ2bY+PqhieunGrLlc51nNgNN
-         gj5fHRqED9vQ4uKUQoZN4PS70UGzVkINl7hhnx/Yb8zrqtMtRUyc0j9mhjyLur3np1b1
-         iz498Gee47SmeYXSqS3cmJIJkMNfhivdZiSrOsFBDUZl/GfCMfrLK/aHxRvatfWpG1m9
-         BPC0iqnc1APEVFqLj29Gy6KxEc0Y4aF6/MGexac0KOf1FahTAizhO2zPBEZ3NzL7EKdm
-         ij2A==
-X-Gm-Message-State: AFqh2kq1lrOtsyBQ+73/3RrW4Ge0zx4cy2NInDQqs6EpIyT4PJjXvgoe
-        WGSBFzLtP4bv3Cs2iQk0h/DjpyNV/Mvn6dCjaNX0Lw==
-X-Google-Smtp-Source: AMrXdXtU5V0QpvGP+OLVqYFgiJWNnTOSLBLIFWEusuHsSsLFG6DazczNuQ1GVC5dZz7mwSfu21vgm+nI7RXXx5oI+Z4=
-X-Received: by 2002:a17:90a:5d97:b0:226:c03e:23fc with SMTP id
- t23-20020a17090a5d9700b00226c03e23fcmr716787pji.6.1673017952133; Fri, 06 Jan
- 2023 07:12:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20230106142537.607399-1-irogers@google.com> <20230106142537.607399-2-irogers@google.com>
-In-Reply-To: <20230106142537.607399-2-irogers@google.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 6 Jan 2023 15:12:21 +0000
-Message-ID: <CAJ9a7VjE4PzEe+Gu_KPi3JEw3TKQpC70yZrLRT+EmaEGDRLnEQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf build: Fix build error when NO_LIBBPF=1
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ELKsvqp/CVQlQh6V4i31lh01VunlKiC/zGB5BPQtSo=;
+        b=KiJLCPM66pG8M0cSIpaMblYzlSHp1SiApGvFb64oGkJsRjvw7Z05u2fzs7XpTy2YwS
+         U2fjEeM4lJ2ntZDNwoqc+v9dYhkRSqvsfBey1iBDn+adPmxBK0uqNRF6DDQCb72aBltC
+         P/1Mzro4h3QL//Gm42HBZkkCxr9bqoBrjVCjepjAc1547eyIgQRTsKgzGI7/qPI++Nk/
+         lEgxWyMhYc2xQRfWwfbjLCbU0KW6LUfLgp4u5tnG2gR/B8PtljZdURyPnwH42IRzFE8y
+         QeOIn7YLdfXDwUMG8nXrMvNsa1GgFen/p2qTxnn90wIo2cCm+hKu/Ahb/xV/WrLNl3k0
+         R+2A==
+X-Gm-Message-State: AFqh2krylbExw95mska1MqM9JHnNvROKYISuIhFjy30Lte4V+W8rDG4g
+        Chl2MM+OM/qG7nPmaJbMIR+tf1uNcloT
+X-Google-Smtp-Source: AMrXdXvOmlZdfXY1yS0XS9Kwv3Fztvy4P5OCtKpH7XLsXyDAs64NyLwnS9FfEtbqBZEWbJ1J9cMhjXaXt1kn
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b317:a30:653a:18e5])
+ (user=irogers job=sendgmr) by 2002:a25:5144:0:b0:753:4db:6fcc with SMTP id
+ f65-20020a255144000000b0075304db6fccmr5824670ybb.1.1673018022074; Fri, 06 Jan
+ 2023 07:13:42 -0800 (PST)
+Date:   Fri,  6 Jan 2023 07:13:20 -0800
+In-Reply-To: <20230106151320.619514-1-irogers@google.com>
+Message-Id: <20230106151320.619514-2-irogers@google.com>
+Mime-Version: 1.0
+References: <20230106151320.619514-1-irogers@google.com>
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+Subject: [PATCH v3 2/2] perf build: Fix build error when NO_LIBBPF=1
+From:   Ian Rogers <irogers@google.com>
+To:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, acme@kernel.org, irogers@google.com,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -65,100 +66,91 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 6 Jan 2023 at 14:25, Ian Rogers <irogers@google.com> wrote:
->
-> The $(LIBBPF) target should only be a dependency of prepare if the
-> static version of libbpf is needed. Add a new LIBBPF_STATIC variable
-> that is set by Makefile.config. Use LIBBPF_STATIC to determine whether
-> the CFLAGS, etc. need updating and for adding $(LIBBPF) as a prepare
-> dependency.
->
-> As Makefile.config isn't loaded for "clean" as a target, always set
-> LIBBPF_OUTPUT regardless of whether it is needed for $(LIBBPF). This
-> is done to minimize conditional logic for $(LIBBPF)-clean.
->
-> This issue and an original fix was reported by Mike Leach in:
-> https://lore.kernel.org/lkml/20230105172243.7238-1-mike.leach@linaro.org/
->
-> Fixes: 746bd29e348f ("perf build: Use tools/lib headers from install path")
-> Reported-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.config |  2 ++
->  tools/perf/Makefile.perf   | 21 ++++++++++++---------
->  2 files changed, 14 insertions(+), 9 deletions(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index c2504c39bdcb..7c00ce0a7464 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -602,6 +602,8 @@ ifndef NO_LIBELF
->            dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
->          endif
->        else
-> +        # Libbpf will be built as a static library from tools/lib/bpf.
-> +       LIBBPF_STATIC := 1
->         CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
->          CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
->          CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 13e7d26e77f0..4e370462e7e1 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -303,10 +303,12 @@ ifneq ($(OUTPUT),)
->  else
->    LIBBPF_OUTPUT = $(CURDIR)/libbpf
->  endif
-> -LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
-> -LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
-> -LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
-> -CFLAGS += -I$(LIBBPF_OUTPUT)/include
-> +ifdef LIBBPF_STATIC
-> +  LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
-> +  LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
-> +  LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
-> +  CFLAGS += -I$(LIBBPF_OUTPUT)/include
-> +endif
->
->  ifneq ($(OUTPUT),)
->    LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
-> @@ -393,10 +395,8 @@ endif
->  export PERL_PATH
->
->  PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
-> -ifndef NO_LIBBPF
-> -  ifndef LIBBPF_DYNAMIC
-> -    PERFLIBS += $(LIBBPF)
-> -  endif
-> +ifdef LIBBPF_STATIC
-> +  PERFLIBS += $(LIBBPF)
->  endif
->
->  # We choose to avoid "if .. else if .. else .. endif endif"
-> @@ -756,12 +756,15 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
->         $(arch_errno_name_array) \
->         $(sync_file_range_arrays) \
->         $(LIBAPI) \
-> -       $(LIBBPF) \
->         $(LIBPERF) \
->         $(LIBSUBCMD) \
->         $(LIBSYMBOL) \
->         bpf-skel
->
-> +ifdef LIBBPF_STATIC
-> +prepare: $(LIBBPF)
-> +endif
-> +
->  $(OUTPUT)%.o: %.c prepare FORCE
->         $(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
->
-> --
-> 2.39.0.314.g84b9a713c41-goog
->
+The $(LIBBPF) target should only be a dependency of prepare if the
+static version of libbpf is needed. Add a new LIBBPF_STATIC variable
+that is set by Makefile.config. Use LIBBPF_STATIC to determine whether
+the CFLAGS, etc. need updating and for adding $(LIBBPF) as a prepare
+dependency.
 
-Tested-by: Mike Leach <mike.leach@linaro.org>
+As Makefile.config isn't loaded for "clean" as a target, always set
+LIBBPF_OUTPUT regardless of whether it is needed for $(LIBBPF). This
+is done to minimize conditional logic for $(LIBBPF)-clean.
 
+This issue and an original fix was reported by Mike Leach in:
+https://lore.kernel.org/lkml/20230105172243.7238-1-mike.leach@linaro.org/
+
+Fixes: 746bd29e348f ("perf build: Use tools/lib headers from install path")
+Reported-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.config |  2 ++
+ tools/perf/Makefile.perf   | 21 ++++++++++++---------
+ 2 files changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index c2504c39bdcb..7c00ce0a7464 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -602,6 +602,8 @@ ifndef NO_LIBELF
+           dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
+         endif
+       else
++        # Libbpf will be built as a static library from tools/lib/bpf.
++	LIBBPF_STATIC := 1
+ 	CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
+         CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
+         CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 13e7d26e77f0..4e370462e7e1 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -303,10 +303,12 @@ ifneq ($(OUTPUT),)
+ else
+   LIBBPF_OUTPUT = $(CURDIR)/libbpf
+ endif
+-LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
+-LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
+-LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
+-CFLAGS += -I$(LIBBPF_OUTPUT)/include
++ifdef LIBBPF_STATIC
++  LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
++  LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
++  LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
++  CFLAGS += -I$(LIBBPF_OUTPUT)/include
++endif
+ 
+ ifneq ($(OUTPUT),)
+   LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
+@@ -393,10 +395,8 @@ endif
+ export PERL_PATH
+ 
+ PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
+-ifndef NO_LIBBPF
+-  ifndef LIBBPF_DYNAMIC
+-    PERFLIBS += $(LIBBPF)
+-  endif
++ifdef LIBBPF_STATIC
++  PERFLIBS += $(LIBBPF)
+ endif
+ 
+ # We choose to avoid "if .. else if .. else .. endif endif"
+@@ -756,12 +756,15 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
+ 	$(arch_errno_name_array) \
+ 	$(sync_file_range_arrays) \
+ 	$(LIBAPI) \
+-	$(LIBBPF) \
+ 	$(LIBPERF) \
+ 	$(LIBSUBCMD) \
+ 	$(LIBSYMBOL) \
+ 	bpf-skel
+ 
++ifdef LIBBPF_STATIC
++prepare: $(LIBBPF)
++endif
++
+ $(OUTPUT)%.o: %.c prepare FORCE
+ 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
+ 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.39.0.314.g84b9a713c41-goog
+
