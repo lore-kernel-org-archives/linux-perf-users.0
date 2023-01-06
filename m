@@ -2,324 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4433BC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 09:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908B1C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 10:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232487AbjAFJ6k (ORCPT
+        id S232202AbjAFKO0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 04:58:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
+        Fri, 6 Jan 2023 05:14:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233322AbjAFJ6b (ORCPT
+        with ESMTP id S229623AbjAFKOZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 04:58:31 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB33C6165
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 01:58:28 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id h7-20020a17090aa88700b00225f3e4c992so4765295pjq.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 01:58:28 -0800 (PST)
+        Fri, 6 Jan 2023 05:14:25 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D79C68C80;
+        Fri,  6 Jan 2023 02:14:24 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id z16so856931wrw.1;
+        Fri, 06 Jan 2023 02:14:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9CrjUnzx6Y0AzNC4bTmiJNh2GA82mK4lsLIP1FqHbkU=;
-        b=Pk1/5aKBsJT3eZHlz15O4D34VNL6zvi3OXcDFug+6Jrvoxw7A+4PBcW4+Obj7WwGjv
-         cJl2N9alD1MxZrPaBC07/GFkVKlcOFmz6pcQ4mPndrvGfW7A9zAiHy5NYt2B8pZ5HGWY
-         XODS1gb9Q5eLn/ydD52Suvy5PuKVenhcbziPV+lqfcXa75xC0x27SEH23bh+CYTqlKlC
-         oA6uQZSbtI9Twzbm+b1iUXd+R+NgZa8AxPoBptXJGacAhEffwwjunaUvgEY2knGKOIpu
-         x/bgBy38gENtmclOtoyjvms2R2bwzlwoyXmvhOonE5U7oofl23F8rCASUu9Lj5aInu9T
-         DzCQ==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m7mYIP03w+F2ym4rlVKOB3fADp0pcypDEHQWu+C41v0=;
+        b=d7bNkHhLBeuAUO6E2jn3Ja1ZzqIjAmQCiuXDmcLtnUv+3EcQQvTVJKLCht2qMV51vk
+         EM4XBNBKMobVt7M13fdIqMcxl4Yv61Bl1tE9wjOwx3zR92eURZyweQ/Nc1e9ITu7zThY
+         FntPU/oQDrFBIF268lOz4JnW0+eZ9gHi+sy4ln1w0jOG3UutROSrnd5DXP+euk3eHlra
+         pNxvI7CV//zUdM2eQEBtP/SV/gT5bPdnMSj11spnvzmoRn8IHTo9eJFC40HtMwFgne/D
+         DKCitKunAWo10BbzZmBp27v3JuIk7iRWju5PhvGfu++i+57lCdMX4XSL+XnkFIzTZPno
+         eSHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9CrjUnzx6Y0AzNC4bTmiJNh2GA82mK4lsLIP1FqHbkU=;
-        b=a5unQ9QApCbfPMnp7AyDEbZgcdZZ8ipdQwPYGEl/Nm7gCytUlSKiQYnXRYroIbNdIC
-         Lj/WdPZd7hDWiAztyuxtXQ+QZfUbpDzcr8qE6zZMYuxtEfuo1cn1uut139jWMBWq8A2n
-         kGKta15dYH8jSiw4knH7RDgVMZgMr87k/zdu1lZw3IOJBMlxWaYuRzsRpM/TNHmvmg9p
-         6NrhFPWw0gc1/VajIUVXQA+jviQryTp1qyuAOd0EUg9OXQ6pFmvyAkJU597mhfTKmMg5
-         4fcc7wNjgtKZj81xXzJGxM/Y8ovoY8RO2nlhnhJyPmMIx58qUsL0jodU7P51iu/W/u1I
-         ZLIw==
-X-Gm-Message-State: AFqh2ko+8Ok3nd140HlPQleRymyuax6r3DoFMGbQF9XhlpOUjbwUa8MX
-        yl8ybhyJUqP0q6aMOJM5VDv/aDZXQP1B3NEDOZr4OA==
-X-Google-Smtp-Source: AMrXdXt0NM4Sg9RjyPjiTwK8ETP4ogyEw1QoPM3sKp27jjbda4129oRr5vXkXCWIEvSGlyU0j3722ScHNflvJBBxTPg=
-X-Received: by 2002:a17:902:6b05:b0:18c:5dae:6f2 with SMTP id
- o5-20020a1709026b0500b0018c5dae06f2mr3140065plk.24.1672999108061; Fri, 06 Jan
- 2023 01:58:28 -0800 (PST)
+        bh=m7mYIP03w+F2ym4rlVKOB3fADp0pcypDEHQWu+C41v0=;
+        b=BYyBvgiaSNbkeebQzitpMMD8rC7RyU8ZPB6oYQjuWnL05Q28rzY0SprWv2/ZMdwMB5
+         4kdp/f4qLJqp5S4GfCKG5mSEPDt7Rc9Zb70QovsmA6d5SPFsECJL1w2p9VJ5f8/trIjr
+         VcoOSgPovsST996dxRGjlbg8UCXCrSGWabb5h6zo5F4EYmppYLjASNjbuLSAF/0dzDX+
+         BYs32r2sgiSa2CYZ5aCOohV/H/i14c4cRp//TVDYJtRUZyguM87JIZdPU9VmxcyfmkPc
+         fo1Yl+++gRjumD8EItBs20n3kHO5W3+BiwQ9koj8JADZqbpjUnfCjtb+KXC+JCWLbvYZ
+         kPJg==
+X-Gm-Message-State: AFqh2koU1rwok1OzqF9hdeFGWykonITJNFTYG+sckMxo/oTry1h02T6k
+        VOKGU59yT2yiTYNBRmRkM2I=
+X-Google-Smtp-Source: AMrXdXsSRUapvvCp99lwuaxUfeciu0N2k25Evk47TDaand3MgLRI15JqCWu/tqua6DPhjWpSGqR5eQ==
+X-Received: by 2002:adf:fc01:0:b0:297:dd4a:9207 with SMTP id i1-20020adffc01000000b00297dd4a9207mr13724373wrr.10.1673000062773;
+        Fri, 06 Jan 2023 02:14:22 -0800 (PST)
+Received: from gmail.com ([31.46.243.128])
+        by smtp.gmail.com with ESMTPSA id n9-20020a05600c4f8900b003d96b8e9bcasm6334403wmq.32.2023.01.06.02.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jan 2023 02:14:21 -0800 (PST)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Fri, 6 Jan 2023 11:14:17 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Zhang, Rui" <rui.zhang@intel.com>
+Cc:     "bp@alien8.de" <bp@alien8.de>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
+Message-ID: <Y7f0eRI++oXvWlrM@gmail.com>
+References: <20230104145831.25498-1-rui.zhang@intel.com>
+ <25d07838-3904-a086-4238-f56c9424b53a@intel.com>
+ <ea9186869cca50a21efcc1a9cc4dbe5adcd1784b.camel@intel.com>
+ <Y7aejeHDpLlwwYbr@zn.tnic>
+ <4cc5cd868b20366fc9d4bf157656e0c295074282.camel@intel.com>
 MIME-Version: 1.0
-References: <20230105172243.7238-1-mike.leach@linaro.org> <CAP-5=fVbPVE4rxJ2s8phhJ5RRH4EnKaWrF2kaT0oCmK6kvhP2g@mail.gmail.com>
- <CAJ9a7Vi7cB2t3wao9d78j3G9v4zpO8_hHf8DB4vKOzgT9O+j6g@mail.gmail.com> <CAP-5=fV5tiKNyJRUKC0gD_2Y=RgN=NrAtee4k1ZT1tynyJpL6w@mail.gmail.com>
-In-Reply-To: <CAP-5=fV5tiKNyJRUKC0gD_2Y=RgN=NrAtee4k1ZT1tynyJpL6w@mail.gmail.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 6 Jan 2023 09:58:17 +0000
-Message-ID: <CAJ9a7ViY=XOnp2ZJgEdR4qqXth=N4MRLHZWifJw-3-qT-md12g@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fix build error when NO_LIBBPF=1
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cc5cd868b20366fc9d4bf157656e0c295074282.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
 
-On Fri, 6 Jan 2023 at 06:24, Ian Rogers <irogers@google.com> wrote:
+* Zhang, Rui <rui.zhang@intel.com> wrote:
+
+> On Thu, 2023-01-05 at 10:55 +0100, Borislav Petkov wrote:
+> > On Thu, Jan 05, 2023 at 06:54:31AM +0000, Zhang, Rui wrote:
+> > > I thought of this before and got some ideas related.
+> > > Say, instead of maintaining the model list in a series of drivers,
+> > > can
+> > > we have something similar to "cpu_feature" instead?
+> > 
+> > Yes, you can define a synthetic X86_FEATURE flag and set it for each 
+> > CPU model which supports the feature in arch/x86/kernel/cpu/intel.c so 
+> > that at least all the model matching gunk is kept where it belongs, in 
+> > the CPU init code and the other code simply tests that flag.
+> 
+> Great, thanks for this info.
+> 
+> But I still have a question.
 >
-> On Thu, Jan 5, 2023 at 3:40 PM Mike Leach <mike.leach@linaro.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, 5 Jan 2023 at 19:03, Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Thu, Jan 5, 2023 at 9:22 AM Mike Leach <mike.leach@linaro.org> wro=
-te:
-> > > >
-> > > > Recent updates to perf build result in the following output when cr=
-oss
-> > > > compiling to aarch64, with libelf unavailable, and therefore
-> > > > NO_LIBBPF=3D1 set.
-> > > >
-> > > > ```
-> > > >   $make -C tools/perf
-> > > >
-> > > >   <cut>
-> > > >
-> > > >   Makefile.config:428: No libelf found. Disables 'probe' tool, jvmt=
-i
-> > > >   and BPF support in 'perf record'. Please install libelf-dev,
-> > > >   libelf-devel or elfutils-libelf-devel
-> > > >
-> > > >   <cut>
-> > > >
-> > > >   libbpf.c:46:10: fatal error: libelf.h: No such file or directory
-> > > >       46 | #include <libelf.h>
-> > > >          |          ^~~~~~~~~~
-> > > >   compilation terminated.
-> > > >
-> > > >   ./tools/build/Makefile.build:96: recipe for target
-> > > >   '.tools/perf/libbpf/staticobjs/libbpf.o' failed
-> > > >
-> > > > ```
-> > > >
-> > > > plus one other include error for <gelf.h>
-> > >
-> > > Ouch, apologies for the breakage. You wouldn't happen to have
-> > > something like a way with say a docker image to repro the problem? Th=
-e
-> > > make line above is somewhat minimal.
-> > >
-> >
-> > Unfortunately not - I was cross compiling on my main workstation.
-> > However, in theory
-> > $make -C tools/perf NO_LIBBPF=3D1
-> > should explicitly exclude the library from the build - which without
-> > the fix it does not.
-> >
-> > > > The issue is that the commit noted below adds libbpf to the prepare=
-:
-> > > > target but no longer accounts for the NO_LIBBPF define. Additionall=
-y
-> > > > changing the include directories means that even if the libbpf targ=
-et
-> > > > build is prevented, bpf headers are missing in other parts of the b=
-uild.
-> > > >
-> > > > This patch ensures that in the case of NO_LIBBPF=3D1, the build tar=
-get is
-> > > > changed to a header only target, and the headers are installed, wit=
-hout
-> > > > attempting to build the libbpf.a target.
-> > > >
-> > > > Applies to perf/core
-> > > >
-> > > > Fixes: 746bd29e348f ("perf build: Use tools/lib headers from instal=
-l path")
-> > > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > > > ---
-> > > >  tools/perf/Makefile.perf | 10 ++++++++++
-> > > >  1 file changed, 10 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > > > index 13e7d26e77f0..ee08ecf469f6 100644
-> > > > --- a/tools/perf/Makefile.perf
-> > > > +++ b/tools/perf/Makefile.perf
-> > > > @@ -305,7 +305,11 @@ else
-> > > >  endif
-> > > >  LIBBPF_DESTDIR =3D $(LIBBPF_OUTPUT)
-> > > >  LIBBPF_INCLUDE =3D $(LIBBPF_DESTDIR)/include
-> > > > +ifndef NO_LIBBPF
-> > > >  LIBBPF =3D $(LIBBPF_OUTPUT)/libbpf.a
-> > > > +else
-> > > > +LIBBPF =3D $(LIBBPF_INCLUDE)/bpf/bpf.h
-> > >
-> > > This seems strange, don't we want to avoid libbpf targets?
-> > >
-> >
-> > This is a header only target - see my continuation comment below....
-> >
-> > > > +endif
-> > > >  CFLAGS +=3D -I$(LIBBPF_OUTPUT)/include
-> > > >
-> > > >  ifneq ($(OUTPUT),)
-> > > > @@ -826,10 +830,16 @@ $(LIBAPI)-clean:
-> > > >         $(call QUIET_CLEAN, libapi)
-> > > >         $(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
-> > > >
-> > > > +ifndef NO_LIBBPF
-> > > >  $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
-> > > >         $(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=3D$(FEATURE_DUMP=
-_EXPORT) \
-> > > >                 O=3D OUTPUT=3D$(LIBBPF_OUTPUT)/ DESTDIR=3D$(LIBBPF_=
-DESTDIR) prefix=3D \
-> > > >                 $@ install_headers
-> > > > +else
-> > > > +$(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
-> > > > +       $(Q)$(MAKE) -C $(LIBBPF_DIR) OUTPUT=3D$(LIBBPF_OUTPUT)/ \
-> > > > +               DESTDIR=3D$(LIBBPF_DESTDIR) prefix=3D install_heade=
-rs
-> > > > +endif
-> > >
-> > > Shouldn't we just be able to conditionalize having $(LIBBPF) as a
-> > > dependency for the perf binary? If there is no dependency then the
-> > > targets won't be built and we shouldn't need to conditionalize here.
-> > >
-> >
-> > I did try doing just that, but the build process does two things when
-> > building libbpf
-> > a) builds the library
-> > b) installs the bpf headers in the libbpf output location.
-> >
-> > Now what the original patch  - "perf build: Use tools/lib headers from
-> > install path"  - does is to also change the include paths to the
-> > compiler to pick up the headers,
-> > removing the line:
-> >
-> > INC_FLAGS +=3D -I$(srctree)/tools/lib/
-> >
-> > from tools/perf/Makefile.config and adding the line
-> >
-> > CFLAGS +=3D -I$(LIBBPF_OUTPUT)/include
-> >
-> > in tools/perf/Makefile.perf (along with similar lines for libperf, liba=
-pi etc)
-> >
-> > The result of this is that if you only remove the library build, the
-> > headers are not installed and other compilation units fail as the
-> > headers are still included even if the library is not in use.
-> > These were originally satisfied by the now removed INC_FLAGS +=3D
-> > -I$(srctree)/tools/lib.
-> >
-> > Thus when NO_LIBBPF=3D1 even though we do not build the library - we
-> > still need to install the headers to retain the consistency - hence a
-> > "header only" target, that only installs the headers without building
-> > the library.
-> >
-> > This avoids restoring the original -I$(srctree)/tools/lib/, which
-> > would potentially mess up the oher library builds that have changed
-> > their header include paths.
-> >
-> > Regards
-> >
-> > Mike
->
->
-> Thanks Mike,
->
-> The -I is needed for the libbpf headers but if NO_LIBBPF is enabled
-> then the C define HAVE_LIBBPF_SUPPORT isn't and we shouldn't include
-> any of these headers. This means updating the CFLAGS for libbpf should
-> only be done if we actually build the static  libbpf.a, the dynamic
-> version's headers should already be on the include path. I sent out a
-> variant of this fix doing that here:
-> https://lore.kernel.org/lkml/20230106061631.571659-1-irogers@google.com/
->
-> Apologies again for the breakage, I can buy you a beer the next time
-> I'm home in Manchester.
-> Ian
->
+> Take RAPL feature for example, the feature is not architectural, although 
+> 80% of the platforms may follow the same behavior, but there are still 
+> cases that behave differently. And so far, there are 8 different 
+> behaviors based on different models.
+> 
+> In this case, can we have several different flags for the RAPL feature 
+> and make the RAPL driver probe on different RAPL flags? Or else, a model 
+> list is still needed.
 
-Applying your new patch to perf/core and building I get:-
+Introducing a synthethic CPU flag only makes sense for behavior that is 
+near-100% identical among models - ie. if the only thing missing is the 
+CPUID enumeration.
 
-  CC      builtin-stat.o
-In file included from builtin-stat.c:71:
-util/bpf_counter.h:7:10: fatal error: bpf/bpf.h: No such file or directory
-    7 | #include <bpf/bpf.h>
-      |          ^~~~~~~~~~~
-compilation terminated.
-/datadisk/mike/work/kernel-ups/tools/build/Makefile.build:96: recipe
-for target 'builtin-stat.o' failed
-make[3]: *** [builtin-stat.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-  LD      pmu-events/pmu-events-in.o
-Makefile.perf:673: recipe for target 'perf-in.o' failed
-make[2]: *** [perf-in.o] Error 2
-Makefile.perf:235: recipe for target 'sub-make' failed
-make[1]: *** [sub-make] Error 2
-Makefile:69: recipe for target 'all' failed
-make: *** [all] Error 2
+If RAPL details are continuously changing among CPU models, with no real 
+architected compatibility guarantees, then it probably only makes sense to 
+introduce the flag once it's enumerated at the CPUID level as well.
 
-which is a result of the bpf headers not being installed in their new
-location and the removal of the -I from the old location as mentioned
-in my last.
-So perhaps the issue is less about the build operations and more about
-the lack of #ifdef HAVE_LIBBPF_SUPPORT in certain other source files.
+Thanks,
 
-However, if I put the #ifdef HAVE_LIBBPF_SUPPORT around the #include
-of util/bpf_counter.h, then compilation fails with multiple
-
-builtin-stat.c: In function =E2=80=98read_bpf_map_counters=E2=80=99:
-builtin-stat.c:463:9: error: implicit declaration of function
-=E2=80=98bpf_counter__read=E2=80=99; did you mean =E2=80=98refcount_read=E2=
-=80=99?
-[-Werror=3Dimplicit-function-declaration]
-  463 |   err =3D bpf_counter__read(counter);
-      |         ^~~~~~~~~~~~~~~~~
-      |         refcount_read
-
-type errors.
-
-Turns out that bpf_counter.h has inline stubs for these functions
-bracketed by #ifdef HAVE_BPF_SKEL / #else / #endif, which I presume
-are used in the non-bpf case.
-
-I can get a clean build with your patch if I adjust the HAVE_BFP_SKEL
-bracketing to encompass everything (including header includes, struct
-defines and other functions) other than the stubs in the #ifdef case
-and only the stubs in the #else case  - but I have no idea if this
-will have an adverse effect on other tools which may use the same
-header.
-
-Thanks and Regards
-
-Mike
-
-> >
-> > > Thanks!
-> > > Ian
-> > >
-> > > >  $(LIBBPF)-clean:
-> > > >         $(call QUIET_CLEAN, libbpf)
-> > > > --
-> > > > 2.17.1
-> > > >
-> >
-> >
-> >
-> > --
-> > Mike Leach
-> > Principal Engineer, ARM Ltd.
-> > Manchester Design Centre. UK
-
-
-
---=20
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+	Ingo
