@@ -2,111 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6153C3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 14:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB588C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 14:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234648AbjAFOvP (ORCPT
+        id S229568AbjAFOzj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 09:51:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
+        Fri, 6 Jan 2023 09:55:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234652AbjAFOur (ORCPT
+        with ESMTP id S235562AbjAFOzg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 09:50:47 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 464544319B;
-        Fri,  6 Jan 2023 06:50:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673016647; x=1704552647;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5BzoGa93/OVMZ6VfRHCQ/6WaBQK1UUhnnBhcz48iiWQ=;
-  b=VfCItclPbii5kVDUyPwnWAeKde1/X5ulj9NQFagApUMPPbp1a2JeEdaF
-   Dl/uYeAoJY51vqA4qc1KV8x/XhL9a3MCFnvaOh+clF0FbMryuco4jbSBV
-   oBQbLLrGjx2WMMCy8w9izAMqFM82HsoIchZHH7lk66L0oGPfacgxwlTX7
-   j6ASQSgZV/RJURADa255WIcOfwxxxFaWcbXp4EpJicA2gDBMeSRNEsnn/
-   NURdMFGV5KtGy/sCnpvhFLBCDd1MK3RYxr9XeztwA8w1WEKwN93br109O
-   ZUADiJozWshFaZf45j/nQRXWBvNfyKOE0q+xqhILMyXZx6o6JxMQ90JjQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="302852687"
-X-IronPort-AV: E=Sophos;i="5.96,305,1665471600"; 
-   d="scan'208";a="302852687"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 06:50:47 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="724458448"
-X-IronPort-AV: E=Sophos;i="5.96,305,1665471600"; 
-   d="scan'208";a="724458448"
-Received: from xiangyuy-mobl.amr.corp.intel.com (HELO [10.212.251.186]) ([10.212.251.186])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 06:50:46 -0800
-Message-ID: <a375b136-c4da-0676-7a67-d2308c012b8b@intel.com>
-Date:   Fri, 6 Jan 2023 06:50:45 -0800
+        Fri, 6 Jan 2023 09:55:36 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D22158110B;
+        Fri,  6 Jan 2023 06:55:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 30257CE1D06;
+        Fri,  6 Jan 2023 14:55:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1194BC433EF;
+        Fri,  6 Jan 2023 14:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673016932;
+        bh=UyzAwDFj483hUCSJgJwOF1/K5+N5Cz7AuCJePXSb/Ak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W++K1xDs78oD3sadQHcJb/VGnRR+TjNwleDAIIMV7LiJ34YG6txNOJKG5XyfFTdOA
+         Rjg4fCFEMjCyP16hwAJ2Ym6dsdRpm/SpW1Jd0SS3VcEkX8R/vZ7lHhEa4tnfSHdsmb
+         r8P8sSxug0TnC9/JJ1vAeZ1hqwWaBE0dPT3O3yj31/vzTVu/kPEHISNgVkCPBenBxf
+         tYUAq6YlgwkdP5uJTn7wZQNIgHy5cFKRB8dXWia6ljjho3zD34S69Su+13AlOBHu8W
+         Z+CZeTH/5LkbRYhbJn9uLzP66wmUqtHuBkJE08VPJxq7z04MUsnlem+/etCUqpfK8h
+         4WAq+21OPTrQA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9396840468; Fri,  6 Jan 2023 11:55:29 -0300 (-03)
+Date:   Fri, 6 Jan 2023 11:55:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org
+Subject: Re: [PATCH v2 1/2] perf build: Properly guard libbpf includes
+Message-ID: <Y7g2YXNaP0VM+F1o@kernel.org>
+References: <20230106142537.607399-1-irogers@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
-Content-Language: en-US
-To:     "Zhang, Rui" <rui.zhang@intel.com>, "bp@alien8.de" <bp@alien8.de>
-Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-        "Bityutskiy, Artem" <artem.bityutskiy@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230104145831.25498-1-rui.zhang@intel.com>
- <25d07838-3904-a086-4238-f56c9424b53a@intel.com>
- <ea9186869cca50a21efcc1a9cc4dbe5adcd1784b.camel@intel.com>
- <Y7aejeHDpLlwwYbr@zn.tnic>
- <4cc5cd868b20366fc9d4bf157656e0c295074282.camel@intel.com>
- <Y7f6RhF8FuK9R399@zn.tnic>
- <d6ae35f1e72d4bb8e02f44fe6d9369f1a5f21619.camel@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <d6ae35f1e72d4bb8e02f44fe6d9369f1a5f21619.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230106142537.607399-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 1/6/23 06:38, Zhang, Rui wrote:
-> My original proposal is that, instead of maintaining model lists in a
-> series of different drivers, can we use feature flags instead, and
-> maintain them in a central place instead of different drivers. say,
-> something like
+Em Fri, Jan 06, 2023 at 06:25:36AM -0800, Ian Rogers escreveu:
+> Including libbpf header files should be guarded by
+> HAVE_LIBBPF_SUPPORT. In bpf_counter.h, move the skeleton utilities
+> under HAVE_BPF_SKEL.
 > 
-> static const struct x86_cpu_id intel_pm_features[] __initconst = {
->         X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,           X86_FEATURE_RAPL | X86_FEATURE_TCC_COOLING),
->         X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,           X86_FEATURE_RAPL | X86_FEATURE_UNCORE_FREQ),
->         ...
->         X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,           X86_FEATURE_RAPL | X86_FEATURE_TCC_COOLING),
->         X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,    X86_FEATURE_RAPL | X86_FEATURE_UNCORE_FREQ),
->         ...
->         {},
-> };
-> And then set the feature flags based on this, and make the drivers test
-> the feature flags.
+> Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bpf_counter.h")
+> Reported-by: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-That works if you have very few features.  SKYLAKE_X looks to have on
-the order of 15 model-specific features, or at least references in the code.
+Can this be done in a way that reduces patch size?
 
-That means that the
+- Arnaldo
 
-	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X, ...
+> ---
+>  tools/perf/builtin-trace.c    |  2 +
+>  tools/perf/util/bpf_counter.h | 85 ++++++++++++++++++-----------------
+>  2 files changed, 46 insertions(+), 41 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 86e06f136f40..d21fe0f32a6d 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -16,7 +16,9 @@
+>  
+>  #include "util/record.h"
+>  #include <api/fs/tracing_path.h>
+> +#ifdef HAVE_LIBBPF_SUPPORT
+>  #include <bpf/bpf.h>
+> +#endif
+>  #include "util/bpf_map.h"
+>  #include "util/rlimit.h"
+>  #include "builtin.h"
+> diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+> index 4dbf26408b69..9113c8bf5cb0 100644
+> --- a/tools/perf/util/bpf_counter.h
+> +++ b/tools/perf/util/bpf_counter.h
+> @@ -4,9 +4,12 @@
+>  
+>  #include <linux/list.h>
+>  #include <sys/resource.h>
+> +
+> +#ifdef HAVE_LIBBPF_SUPPORT
+>  #include <bpf/bpf.h>
+>  #include <bpf/btf.h>
+>  #include <bpf/libbpf.h>
+> +#endif
+>  
+>  struct evsel;
+>  struct target;
+> @@ -42,6 +45,47 @@ int bpf_counter__read(struct evsel *evsel);
+>  void bpf_counter__destroy(struct evsel *evsel);
+>  int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd);
+>  
+> +static inline __u32 bpf_link_get_id(int fd)
+> +{
+> +	struct bpf_link_info link_info = { .id = 0, };
+> +	__u32 link_info_len = sizeof(link_info);
+> +
+> +	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+> +	return link_info.id;
+> +}
+> +
+> +static inline __u32 bpf_link_get_prog_id(int fd)
+> +{
+> +	struct bpf_link_info link_info = { .id = 0, };
+> +	__u32 link_info_len = sizeof(link_info);
+> +
+> +	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+> +	return link_info.prog_id;
+> +}
+> +
+> +static inline __u32 bpf_map_get_id(int fd)
+> +{
+> +	struct bpf_map_info map_info = { .id = 0, };
+> +	__u32 map_info_len = sizeof(map_info);
+> +
+> +	bpf_obj_get_info_by_fd(fd, &map_info, &map_info_len);
+> +	return map_info.id;
+> +}
+> +
+> +/* trigger the leader program on a cpu */
+> +static inline int bperf_trigger_reading(int prog_fd, int cpu)
+> +{
+> +	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
+> +			    .ctx_in = NULL,
+> +			    .ctx_size_in = 0,
+> +			    .flags = BPF_F_TEST_RUN_ON_CPU,
+> +			    .cpu = cpu,
+> +			    .retval = 0,
+> +		);
+> +
+> +	return bpf_prog_test_run_opts(prog_fd, &opts);
+> +}
+> +
+>  #else /* HAVE_BPF_SKEL */
+>  
+>  #include <linux/err.h>
+> @@ -87,45 +131,4 @@ static inline void set_max_rlimit(void)
+>  	setrlimit(RLIMIT_MEMLOCK, &rinf);
+>  }
+>  
+> -static inline __u32 bpf_link_get_id(int fd)
+> -{
+> -	struct bpf_link_info link_info = { .id = 0, };
+> -	__u32 link_info_len = sizeof(link_info);
+> -
+> -	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+> -	return link_info.id;
+> -}
+> -
+> -static inline __u32 bpf_link_get_prog_id(int fd)
+> -{
+> -	struct bpf_link_info link_info = { .id = 0, };
+> -	__u32 link_info_len = sizeof(link_info);
+> -
+> -	bpf_obj_get_info_by_fd(fd, &link_info, &link_info_len);
+> -	return link_info.prog_id;
+> -}
+> -
+> -static inline __u32 bpf_map_get_id(int fd)
+> -{
+> -	struct bpf_map_info map_info = { .id = 0, };
+> -	__u32 map_info_len = sizeof(map_info);
+> -
+> -	bpf_obj_get_info_by_fd(fd, &map_info, &map_info_len);
+> -	return map_info.id;
+> -}
+> -
+> -/* trigger the leader program on a cpu */
+> -static inline int bperf_trigger_reading(int prog_fd, int cpu)
+> -{
+> -	DECLARE_LIBBPF_OPTS(bpf_test_run_opts, opts,
+> -			    .ctx_in = NULL,
+> -			    .ctx_size_in = 0,
+> -			    .flags = BPF_F_TEST_RUN_ON_CPU,
+> -			    .cpu = cpu,
+> -			    .retval = 0,
+> -		);
+> -
+> -	return bpf_prog_test_run_opts(prog_fd, &opts);
+> -}
+> -
+>  #endif /* __PERF_BPF_COUNTER_H */
+> -- 
+> 2.39.0.314.g84b9a713c41-goog
 
-list goes on for 15 features.  It's even worse than that because you'd
-*like* to be able to scan up and down the list looking for, say, "all
-the CPUs that support RAPL".  But, if you do that, you actually need a
-table -- a really wide table -- for *all* the features and a column for
-each.
+-- 
 
-What we have now isn't bad.  The only real way to fix this is to have
-the features enumerated *properly*, aka. architecturally.
-
-I get it, Intel doesn't want to dedicate CPUID bits and architecture to
-one-offs.  But, at the point that there are a dozen CPU models across
-three or four different CPU generations, it's time to revisit it.  Could
-you help our colleagues revisit it, please?
+- Arnaldo
