@@ -2,124 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA49DC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 11:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E583C3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 12:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjAFLdh (ORCPT
+        id S229472AbjAFMCu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 06:33:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34950 "EHLO
+        Fri, 6 Jan 2023 07:02:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232591AbjAFLdN (ORCPT
+        with ESMTP id S229547AbjAFMCt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 06:33:13 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E537188D;
-        Fri,  6 Jan 2023 03:33:09 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id d17so1025510wrs.2;
-        Fri, 06 Jan 2023 03:33:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OqkdQ5G9rb4qZN5W7C4j2Bu+ggdN8QmTgW7jJJOTWPo=;
-        b=Lw0UaEgaQpA0N2O0PV5PJVp7RFES+I7ywOv87/pdBuJoHEBy2cvcxSV4vLfO9/3wDR
-         tKdAVsjHm7o5eDlvLVou7792v0c0oGXw29sWl9HJrWRIju6C8ey5undQ9Kzkx6KMTd5i
-         n1C4Q2xcOwGNoMsjpGHvg7dZHlrUoMCH8cz1GsjnpBQGjpXvmbNDjKkgL2YJC85rQenn
-         2jOB5Je0NXScrZcgjIEl+8R4q3PpOmbiBbg5C220QAU5qQlqIvdqGijmqsFAlOee9kiN
-         Vil3gt9XdiMSwiCyMoP4hO2fRfeGww3Ak/H9z1KvNmxsxcPm3iaF4xqNn2LSQxfjgGy0
-         DOJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OqkdQ5G9rb4qZN5W7C4j2Bu+ggdN8QmTgW7jJJOTWPo=;
-        b=p9/5NYF9iS9swSbkKv08cYQUyAzvNr88YBDQNLkX0nXMxH26gYIdCWEroPezriXkKj
-         pONRX+exr/kHHrFqLypRc7MJuUQ47WyvNk2waoq1op714HkH/JnNJBCb6aEnkLf0ZRcZ
-         xWFxJgnR5ffMB8TwlRjWPriNRc8ehZKHDIp00qp6SBNsBmjiLNhSPhCt2mKaLnC9wfdv
-         qFAmCBzX5eiYk1P+yRwOYtUVutl6IxXNatEqBTrvsj8SrlbWZQJ0fdw7mj/uBVBAs7CJ
-         aZCjuW/1S3uBT8TevpRI3GcvnrfctTCLt7gbcOZhDUGFi6LOQ2DcMtrq2rORniUeSHyZ
-         AqDQ==
-X-Gm-Message-State: AFqh2koo5xan8sbDm6rMVUi0+MSxlYuj4uHGTEL417MNCmCtAAa47kRA
-        BoCmHeV30yK/2Y57Xld3Jyk=
-X-Google-Smtp-Source: AMrXdXue3C1pjFHQKaFnRtbMyNGy4MkodHQFfwjbhxT5GhV8IeRRXO3+QcaY52gWAEp3ZMTba7KrnA==
-X-Received: by 2002:adf:9dd1:0:b0:242:165c:95ed with SMTP id q17-20020adf9dd1000000b00242165c95edmr33567664wre.48.1673004788116;
-        Fri, 06 Jan 2023 03:33:08 -0800 (PST)
-Received: from gmail.com (1F2EF380.nat.pool.telekom.hu. [31.46.243.128])
-        by smtp.gmail.com with ESMTPSA id a11-20020a5d508b000000b002779dab8d85sm942586wrt.8.2023.01.06.03.33.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 03:33:07 -0800 (PST)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Fri, 6 Jan 2023 12:33:05 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Zhang, Rui" <rui.zhang@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
-Message-ID: <Y7gG8R8ZRWTXYSGq@gmail.com>
-References: <20230104145831.25498-1-rui.zhang@intel.com>
- <25d07838-3904-a086-4238-f56c9424b53a@intel.com>
- <ea9186869cca50a21efcc1a9cc4dbe5adcd1784b.camel@intel.com>
- <Y7aejeHDpLlwwYbr@zn.tnic>
- <4cc5cd868b20366fc9d4bf157656e0c295074282.camel@intel.com>
- <Y7f6RhF8FuK9R399@zn.tnic>
- <Y7f+UqN5qqfJUeoy@gmail.com>
- <Y7gB+uVpSJAQ6p+9@zn.tnic>
+        Fri, 6 Jan 2023 07:02:49 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C81A3728A9;
+        Fri,  6 Jan 2023 04:02:48 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58F7F11FB;
+        Fri,  6 Jan 2023 04:03:30 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.37.197])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5011E3F23F;
+        Fri,  6 Jan 2023 04:02:46 -0800 (PST)
+Date:   Fri, 6 Jan 2023 12:02:39 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Anup Patel <apatel@ventanamicro.com>
+Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V
+ conundrum
+Message-ID: <Y7gN32eHJNyWBvVD@FVFF77S0Q05N>
+References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Y7gB+uVpSJAQ6p+9@zn.tnic>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-* Borislav Petkov <bp@alien8.de> wrote:
-
-> On Fri, Jan 06, 2023 at 11:56:18AM +0100, Ingo Molnar wrote:
-> > It's a trade-off in any case: there's a point where quirk flags or even 
-> > feature flags become harder to read and harder to maintain than cleanly 
-> > separated per model driver functions.
+On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
+> Hi All,
+> There was a recent uabi update[1] for RISC-V that allows the users to
+> read cycle and instruction count without any checks.
+> We tried to restrict that behavior to address security concerns
+> earlier but it resulted in breakage for some user space
+> applications[2].
+> Thus, previous behavior was restored where a user on RISC-V platforms
+> can directly read cycle or instruction count[3].
 > 
-> Yeah, no, singular: a synthetic feature *flag*: X86_FEATURE_RAPL.
+> Comparison with other ISAs w.r.t user space access of counters:
+> ARM64
+>   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
+>   -- Only for task bound events configured via perf.
 > 
-> cpu/intel.c can set it and driver can test it.
+> X86
+>  --- rdpmc instruction
+>  --- Enable/Disable via “/sys/devices/cpu/rdpmc”
+> -- Before v4.0
+>  -- any process (even without active perf event) rdpmc
+> After v4.0
+> -- Default behavior changed to support only active events in a
+> process’s context.
+> -- Configured through perf similar to ARM64
+> -- Continue to maintain backward compatibility for unrestricted access
+> by writing 2 to “/sys/devices/cpu/rdpmc”
 > 
-> Everything else inside the driver.
+> IMO, RISC-V should only enable user space access through perf similar
+> to ARM64 and x86 (post v4.0).
+> However, we do have to support the legacy behavior to avoid
+> application breakage.
+> As per my understanding a direct user space access can lead to the
+> following problems:
 > 
-> Until Intel can get their act together and actually do a CPUID bit like AMD. :-P
+> 1) There is no context switch support, so counts from other contexts are exposed
+> 2) If a perf user is allocated one of these counters, the counter
+> value will be written
 > 
-> But when you think about it, whether the model matching happens in the driver or
-> in cpu/intel.c doesn't matter a whole lot.
+> Looking at the x86 code as it continues to allow the above behavior,
+> rdpmc_always_available_key is enabled in the above case. However,
+> during the context switch (cr4_update_pce_mm)
+> only dirty counters are cleared. It only prevents leakage from perf
+> task to rdpmc task.
 > 
-> All that matters is, they should finally give it a CPUID bit.
+> How does the context switch of counters work for users who enable
+> unrestricted access by writing 2 to “/sys/devices/cpu/rdpmc” ?
+> Otherwise, rdpmc users likely get noise from other applications. Is
+> that expected ?
 
-The other thing that matters here are the RAPL *incompatibilities* between 
-model variants, which are significant AFAICS.
+Regardless of leakage, they're also going to get random jumps in the visible
+values of the cycle count and instruction count as the task is context-switched
+(and/or if those values get reset across idle, as can happen on arm64), so
+those aren't going to be useful unless a number of other constraints apply.
 
-With a CPUID we get a kind of semi-compatible hardware interface with well 
-defined semantics & expansion.
-
-With 'non-architectural', per-model RAPL features we get very little of 
-that...
-
-Which is why it's a trade-off that is hard to judge in advance: maybe we 
-can simplify the code via a synthethic CPUID[s], maybe it will just be 
-another zoo of per-model feature flags...
-
-Likely won't be able to tell for sure until we see patches.
+AFAICT the affected package was actually a library of intrinsics; does this
+affect a real application, or was this just in tests? If it's the latter there
+might still be scope to properly lock this down...
 
 Thanks,
+Mark.
 
-	Ingo
+> This can be a security concern also where a rogue rdpmc user
+> application can monitor other critical applications to initiate side
+> channel attack.
+> 
+> Am I missing something? Please correct my understanding of the x86
+> implementation if it is wrong.
+> 
+> [1] https://lore.kernel.org/lkml/20221201135110.3855965-1-conor.dooley@microchip.com/
+> [2] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYnzsKE?pli=1
+> [3] https://lore.kernel.org/all/YxIzgYP3MujXdqwj@aurel32.net/T/
+> 
+> -- 
+> Regards,
+> Atish
