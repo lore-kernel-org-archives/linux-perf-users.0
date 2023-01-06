@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57EBC54EBE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FABC3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234772AbjAFPGB (ORCPT
+        id S235315AbjAFPGC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 10:06:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
+        Fri, 6 Jan 2023 10:06:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235017AbjAFPFx (ORCPT
+        with ESMTP id S234786AbjAFPFw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 10:05:53 -0500
-Received: from out30-6.freemail.mail.aliyun.com (out30-6.freemail.mail.aliyun.com [115.124.30.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9D9687B9;
-        Fri,  6 Jan 2023 07:05:51 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R551e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZ-UXoG_1673017546;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZ-UXoG_1673017546)
+        Fri, 6 Jan 2023 10:05:52 -0500
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669D653719;
+        Fri,  6 Jan 2023 07:05:50 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZ-UXnu_1673017545;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZ-UXnu_1673017545)
           by smtp.aliyun-inc.com;
-          Fri, 06 Jan 2023 23:05:46 +0800
+          Fri, 06 Jan 2023 23:05:45 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -41,9 +41,9 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v6 7/7] perf vendor events arm64: Add instruction mix metrics for neoverse-n2-v2
-Date:   Fri,  6 Jan 2023 23:05:29 +0800
-Message-Id: <1673017529-1429208-8-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v6 6/7] perf vendor events arm64: Add PE utilization metrics for neoverse-n2-v2
+Date:   Fri,  6 Jan 2023 23:05:28 +0800
+Message-Id: <1673017529-1429208-7-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1673017529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1673017529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -51,84 +51,71 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add instruction mix related metrics.
+Add PE utilization related metrics. In cpu_utilization metric, if it is
+neoverse-n2 judged by #slot, the real stall_slot need to subtract the
+cpu_cycles according to the neoverse-n2 errata [0].
+
+[0] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb?token=
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 Acked-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
 diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
-index 3d6ac0c..8ad15b7 100644
+index afcdb17..3d6ac0c 100644
 --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
 +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
-@@ -206,5 +206,68 @@
-         "MetricGroup": "PEutilization",
-         "MetricName": "cpu_utilization",
+@@ -160,5 +160,51 @@
+         "MetricGroup": "Branch",
+         "MetricName": "branch_miss_pred_rate",
          "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "LD_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of load instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "load_spec_rate",
++        "MetricExpr": "instructions / CPU_CYCLES",
++        "BriefDescription": "The average number of instructions executed for each cycle.",
++        "MetricGroup": "PEutilization",
++        "MetricName": "ipc"
++    },
++    {
++        "MetricExpr": "ipc / 5",
++        "BriefDescription": "IPC percentage of peak. The peak of IPC is 5.",
++        "MetricGroup": "PEutilization",
++        "MetricName": "ipc_rate",
 +        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "ST_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of store instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "store_spec_rate",
++        "MetricExpr": "INST_RETIRED / CPU_CYCLES",
++        "BriefDescription": "Architecturally executed Instructions Per Cycle (IPC)",
++        "MetricGroup": "PEutilization",
++        "MetricName": "retired_ipc"
++    },
++    {
++        "MetricExpr": "INST_SPEC / CPU_CYCLES",
++        "BriefDescription": "Speculatively executed Instructions Per Cycle (IPC)",
++        "MetricGroup": "PEutilization",
++        "MetricName": "spec_ipc"
++    },
++    {
++        "MetricExpr": "OP_RETIRED / OP_SPEC",
++        "BriefDescription": "Of all the micro-operations issued, what percentage are retired(committed)",
++        "MetricGroup": "PEutilization",
++        "MetricName": "retired_rate",
 +        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "DP_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of integer data-processing instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "data_process_spec_rate",
++        "MetricExpr": "1 - OP_RETIRED / OP_SPEC",
++        "BriefDescription": "Of all the micro-operations issued, what percentage are not retired(committed)",
++        "MetricGroup": "PEutilization",
++        "MetricName": "wasted_rate",
 +        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "ASE_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of advanced SIMD instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "advanced_simd_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "VFP_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of floating point instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "float_point_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "CRYPTO_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of crypto instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "crypto_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "BR_IMMED_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of branch immediate instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "branch_immed_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "BR_RETURN_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of procedure return instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "branch_return_spec_rate",
-+        "ScaleUnit": "100%"
-+    },
-+    {
-+        "MetricExpr": "BR_INDIRECT_SPEC / INST_SPEC",
-+        "BriefDescription": "The rate of indirect branch instructions speculatively executed to overall instructions speclatively executed",
-+        "MetricGroup": "InstructionMix",
-+        "MetricName": "branch_indirect_spec_rate",
++        "MetricExpr": "OP_RETIRED / OP_SPEC * (1 - (STALL_SLOT if (#slots - 5) else (STALL_SLOT - CPU_CYCLES)) / (#slots * CPU_CYCLES))",
++        "BriefDescription": "The truly effective ratio of micro-operations executed by the CPU, which means that misprediction and stall are not included",
++        "MetricGroup": "PEutilization",
++        "MetricName": "cpu_utilization",
 +        "ScaleUnit": "100%"
      }
  ]
