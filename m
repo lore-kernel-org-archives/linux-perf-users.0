@@ -2,56 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E77C61DB3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8864C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 21:12:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbjAFVE7 (ORCPT
+        id S235636AbjAFVMq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 16:04:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
+        Fri, 6 Jan 2023 16:12:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbjAFVE6 (ORCPT
+        with ESMTP id S229698AbjAFVMp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 16:04:58 -0500
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664063FC;
-        Fri,  6 Jan 2023 13:04:56 -0800 (PST)
-Received: by mail-wr1-f52.google.com with SMTP id bn26so2444976wrb.0;
-        Fri, 06 Jan 2023 13:04:56 -0800 (PST)
+        Fri, 6 Jan 2023 16:12:45 -0500
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A81A81C30;
+        Fri,  6 Jan 2023 13:12:41 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id bi26-20020a05600c3d9a00b003d3404a89faso4203545wmb.1;
+        Fri, 06 Jan 2023 13:12:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bU5WrWki6y78vjWxBUsXFui7/QgP/v4Ob6/7UBGO4uk=;
-        b=ZqFO2A1U+uXTSxPNAwP6EiAI+zSbidKDSmqQrb8mGvjEeU2qfE/PT2BO0geKXHp19b
-         pM+lY8SEmf8gARq9YrP3TJGBgn6x8++g2/hZuwNHszJ0rtRGmNU3bjC2rUKt1gw9SqK8
-         7Bs/1JYnEOG3WRPcqQsrdhufd94z6uKKd/b1jBHgze6Dee6iCzgp2X0dqotLSXDsGDEA
-         wbz25uxOZaKtTAvRV3dHwSJ0MmHcqX92rL+3SRd9wMc0X7EZXiME2e86ZO+gSFdJyh0p
-         gEEbdHFfjYzcD9/j56evl/rsuTbruGXkgnIxA6CdDYlDrjoLWa2aRHWcSigbpNgdc1Nx
-         AteQ==
-X-Gm-Message-State: AFqh2kp3aPwmck/z0lwWKy7TsFxDc66WUClFD+1yXGs65Rpkje8F5a0l
-        6MqMjQKJnDgyHk3poc9LYvWoFLxHAP65ZfmGZQQ=
-X-Google-Smtp-Source: AMrXdXu5yY8uRNnuPGF1u/Qv+JWdy6yPnFLq17NSk7NiUJcPmk4qHz1S9xkIw4hXtYyIg18XubWh/Y4S6+hg+LwZbb4=
-X-Received: by 2002:adf:efce:0:b0:2bb:1e37:7b8b with SMTP id
- i14-20020adfefce000000b002bb1e377b8bmr55632wrp.364.1673039094606; Fri, 06 Jan
- 2023 13:04:54 -0800 (PST)
+        bh=M0S5RcjIuN5LkBKmRcLV/E57EqVNGtJupTeqbW7E1Gw=;
+        b=62ESpyLv7zBJ3ZDrd81/QWN7Fe3qQQlJwgUECCWy3VEXd7DDJh3Sv4SF4GJ9C2pg6B
+         emaeLQzJzJ6kICaEaZhlbZZ4jf/1CYEcrG7e5NEy0fBt6VHKQ55APxpvNoLCqkfHLGC8
+         j3/6pIUTdgRoWVp302vMp6Yre0OB2InJ/F3TWDf6IZB8fwpdiOU8kAAp3E1MnD5P0GQW
+         BpopmRlXWiZcShwvl9tTVjzY4E0zS6Fk3HFuK986/eU4Tk6+EBTzLDeLBD6eis3fANOo
+         3rJ7gRqfsITxTP6In53EniTp9WT8JTE3lITgYyOakCZgDfMTCD42b7eclyG2wRZVOfvu
+         sWFQ==
+X-Gm-Message-State: AFqh2kpQbgKr7aIYUed8oS52izvE6kSdEt0HZDlcwBgtqTTtUsmlNU/N
+        lYQrWbPLQ3JHlbKc90QFgpSek/56AXCWuP3ezbI=
+X-Google-Smtp-Source: AMrXdXvUcf6XaCNU/zlLzwQ0hiws4g6C8DzMr8eSF6s+BszD7xrhT9eh8zSNNp01rrMrscbF+UDe9o0a0PewL+zC/Os=
+X-Received: by 2002:a05:600c:510f:b0:3d0:5160:e0e2 with SMTP id
+ o15-20020a05600c510f00b003d05160e0e2mr2192799wms.147.1673039559931; Fri, 06
+ Jan 2023 13:12:39 -0800 (PST)
 MIME-Version: 1.0
-References: <1668052208-14047-1-git-send-email-yangtiezhu@loongson.cn>
- <c71e9666-c62a-83ae-0d7b-580dc717e9f1@loongson.cn> <dbf82707-df17-466b-f882-aa4e25d4f629@loongson.cn>
-In-Reply-To: <dbf82707-df17-466b-f882-aa4e25d4f629@loongson.cn>
+References: <20221229124728.66515-1-yangjihong1@huawei.com>
+ <Y7MEWK/z19QCaNoi@kernel.org> <CAM9d7cjcWKBephb5p9ZPU2+wDAz04DYQJoKczORioD=es10hPw@mail.gmail.com>
+ <c65f89ef-173c-b828-f3b2-266387903149@huawei.com>
+In-Reply-To: <c65f89ef-173c-b828-f3b2-266387903149@huawei.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 6 Jan 2023 13:04:42 -0800
-Message-ID: <CAM9d7cgH0zK-DUmUV7yw1BJBvgyxWys9zPuB5Q7dQQwta=XcGA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] perf: Add more syscalls to benchmark
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
+Date:   Fri, 6 Jan 2023 13:12:28 -0800
+Message-ID: <CAM9d7chN9ecR7EgA1eN1QQXypZDwCFC-ym6BTQ0d1_XjuruLFw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf record: Fix coredump with --overwrite and --max-size
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        jiwei.sun@windriver.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -59,51 +58,96 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Thu, Jan 5, 2023 at 5:23 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+On Wed, Jan 4, 2023 at 8:09 PM Yang Jihong <yangjihong1@huawei.com> wrote:
 >
+> Hello,
 >
->
-> On 12/03/2022 05:19 PM, Tiezhu Yang wrote:
-> >
-> >
-> > On 11/10/2022 11:50 AM, Tiezhu Yang wrote:
-> >> Tested on x86_64, arm64, mips64 and loongarch64.
+> On 2023/1/4 0:50, Namhyung Kim wrote:
+> > On Mon, Jan 2, 2023 at 8:20 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 > >>
-> >> Tiezhu Yang (4):
-> >>   tools x86: Keep list sorted by number in unistd_{32,64}.h
-> >>   perf bench syscall: Introduce bench_syscall_common()
-> >>   perf bench syscall: Add getpgid syscall benchmark
-> >>   perf bench syscall: Add execve syscall benchmark
+> >> Em Thu, Dec 29, 2022 at 12:47:28PM +0000, Yang Jihong escreveu:
+> >>> When --overwrite and --max-size options of perf record are used together,
+> >>> a segmentation fault occurs. The following is an example:
+> >>>
+> >>>   # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
+> >>>    [ perf record: Woken up 1 times to write data ]
+> >>>    perf: Segmentation fault
+> >>>    Obtained 1 stack frames.
+> >>>    [0xc4c67f]
+> >>>    Segmentation fault (core dumped)
+> >>>
+> >>> backtrace of the core file is as follows:
+> >>>
+> >>>    #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
+> >>>    #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
+> >>>    #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
+> >>>    #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
+> >>>    #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
+> >>>    #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
+> >>>    #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
+> >>>    #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
+> >>>    #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
+> >>>    #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
+> >>>    #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
+> >>>    #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
+> >>>    #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
+> >>>    #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
+> >>>
+> >>> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+> >>> The process is as follows:
+> >>>    __cmd_record
+> >>>      -> record__free_thread_data
+> >>>        -> zfree(&rec->thread_data)         // free rec->thread_data
+> >>>      -> record__synthesize
+> >>>        -> perf_event__synthesize_id_index
+> >>>          -> process_synthesized_event
+> >>>            -> record__write
+> >>>              -> record__bytes_written     // access rec->thread_data
+> >>>
+> >>> we only need to check the value of done first.
+> >>> Also add variable check in record__bytes_written for code hardening,
+> >>> and save bytes_written separately to reduce one calculation.
+> >>>
+> >>> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+> >>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> >>> ---
+> >>>
+> >>> Changes since v1:
+> >>>   - Add variable check in record__bytes_written for code hardening.
+> >>>   - Save bytes_written separately to reduce one calculation.
+> >>>   - Remove rec->opts.tail_synthesize check.
 > >>
-> >>  tools/arch/x86/include/uapi/asm/unistd_32.h | 23 ++++++---
-> >>  tools/arch/x86/include/uapi/asm/unistd_64.h | 23 ++++++---
-> >>  tools/perf/bench/bench.h                    |  2 +
-> >>  tools/perf/bench/syscall.c                  | 76
-> >> +++++++++++++++++++++++++++--
-> >>  tools/perf/builtin-bench.c                  |  2 +
-> >>  5 files changed, 108 insertions(+), 18 deletions(-)
+> >> Namhyung, are you ok with this now?
 > >>
+> >> - Arnaldo
+> >>
+> >>>   tools/perf/builtin-record.c | 26 +++++++++++++++++---------
+> >>>   1 file changed, 17 insertions(+), 9 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> >>> index 29dcd454b8e2..acba9e43e519 100644
+> >>> --- a/tools/perf/builtin-record.c
+> >>> +++ b/tools/perf/builtin-record.c
+> >>> @@ -230,16 +230,29 @@ static u64 record__bytes_written(struct record *rec)
+> >>>        u64 bytes_written = rec->bytes_written;
+> >>>        struct record_thread *thread_data = rec->thread_data;
+> >>>
+> >>> +     if (thread_data == NULL)
+> >>> +             return bytes_written;
+> >>> +
 > >
-> > Ping, any more comments?
+> > Then it won't count bytes written by threads, right?
+> > I think it needs to be saved somewhere.
 > >
-> > Thanks,
-> > Tiezhu
+> I'm not sure here. Can you explain it more clearly, thanks :)
+> I can modify it accordingly.
 >
-> Hi all,
->
-> If this patch series has no value and is not acceptable,
-> or what should I do to update, please let me know.
+> I think if thread_data == NULL, it is not thread data.
+> In this case, we just return rec->bytes_written.
 
-I'm so sorry about being late a lot.
-I don't have any objection to this series.
-
-For the execve bench, I think it's actually fork + execve
-then maybe it makes sense to have a fork only bench
-to compare the execve part precisely.
-
-But it can be added later, so
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+It can be thread data but freed before tail synthesis, right?
+In that case, I think it needs to add bytes_written by threads
+to calculate the correct data size.
 
 Thanks,
 Namhyung
