@@ -2,147 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB9EC54EBD
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 20:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E77C61DB3
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 21:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjAFUig (ORCPT
+        id S230308AbjAFVE7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 15:38:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
+        Fri, 6 Jan 2023 16:04:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjAFUif (ORCPT
+        with ESMTP id S229752AbjAFVE6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 15:38:35 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FB0251
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 12:38:34 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id fc4so6008466ejc.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 12:38:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJ8vNtKBDiySoD80bt/pCXQzLAnvqyHtk0rN9WYamxc=;
-        b=YETykXwJCVB2FAsOb9VW7FY3y+9b/GBz/I6/WGyru4IVV3PIDNtIZAhXZEGGn08bA5
-         CqOnZQnXE2XBl73iQeqDQ9tgjgNIRRkeFLNw0VD2Ae0uzbBq9srrfV/jZ6HZaTPonFYS
-         zbg61IgPwyUmUwrK0g3MN/gEVDEzmiHfIA4+wl+CfSCocaPI+L1RrrueZcfmV5BzHwsR
-         aswn+5Ck1tSz3Qf0n7nbQNdANbeDMBv6yRROvHCEu4Pt7ZXtoSadMjG0cssSC+bRRqr0
-         XvCh6dnHWvUhe3TqzXuEOzbpjtG5bkz3ogFgXY8wSlk+kgGNoxvXh6LYXStsMVi5TxqV
-         3HuA==
+        Fri, 6 Jan 2023 16:04:58 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664063FC;
+        Fri,  6 Jan 2023 13:04:56 -0800 (PST)
+Received: by mail-wr1-f52.google.com with SMTP id bn26so2444976wrb.0;
+        Fri, 06 Jan 2023 13:04:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tJ8vNtKBDiySoD80bt/pCXQzLAnvqyHtk0rN9WYamxc=;
-        b=6NNkDb1ho0pjSrsXiR2dIRq2NQPNE8iht2Oy9eNx6YR3bJz970pctVC5p2zBxPU004
-         qtqQZ5G0s1SBSG3KhaKw1yV0b4IciedYkt/WKSdSnwc8t8x+ilou34X8VYcKth33kpnY
-         3cPRgVSkrg864tFH/d9WwHRRtRuiYIDCpfkZXbvOWylDRUCUrnkd8TZa91wwZ++wlnE7
-         h9cFmyRA5e5x0aSi1djfF2Gi7SJRUWFXS+vcXPLHPp+gYTYEJEuNTJAAR8fPMmU7i5xs
-         O2TZw5ZQYerzdUdEoZSAb1TtU7n34qDKD0xCaHpKH806+R0VIpk+/+EpFRxbJy1qRPH3
-         oZvA==
-X-Gm-Message-State: AFqh2kok6QAzpcfbmSH6gM1SNtLV4rpvN+VAF2CBrALx8sohas4z5xxO
-        Vm/m5nygf1z49UFs+OIqjCET3CpMKJs=
-X-Google-Smtp-Source: AMrXdXsZpnEaKnb4cD+TCmdLPKfB15hsSfc/xMcOK8q9AmVWZApn0q8dMePZg1ZuCtTYTfTCNY4U/Q==
-X-Received: by 2002:a17:906:d216:b0:7ae:ccf3:7be5 with SMTP id w22-20020a170906d21600b007aeccf37be5mr63461436ejz.32.1673037512356;
-        Fri, 06 Jan 2023 12:38:32 -0800 (PST)
-Received: from ddolgov.local (dslb-178-012-041-046.178.012.pools.vodafone-ip.de. [178.12.41.46])
-        by smtp.gmail.com with ESMTPSA id k9-20020a17090646c900b007806c1474e1sm716060ejs.127.2023.01.06.12.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 12:38:31 -0800 (PST)
-From:   Dmitrii Dolgov <9erthalion6@gmail.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     acme@kernel.org, mingo@redhat.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        Dmitrii Dolgov <9erthalion6@gmail.com>
-Subject: [RFC PATCH v1] perf record: Correct address filters for duplicated symbols
-Date:   Fri,  6 Jan 2023 21:37:51 +0100
-Message-Id: <20230106203751.403270-1-9erthalion6@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        bh=bU5WrWki6y78vjWxBUsXFui7/QgP/v4Ob6/7UBGO4uk=;
+        b=ZqFO2A1U+uXTSxPNAwP6EiAI+zSbidKDSmqQrb8mGvjEeU2qfE/PT2BO0geKXHp19b
+         pM+lY8SEmf8gARq9YrP3TJGBgn6x8++g2/hZuwNHszJ0rtRGmNU3bjC2rUKt1gw9SqK8
+         7Bs/1JYnEOG3WRPcqQsrdhufd94z6uKKd/b1jBHgze6Dee6iCzgp2X0dqotLSXDsGDEA
+         wbz25uxOZaKtTAvRV3dHwSJ0MmHcqX92rL+3SRd9wMc0X7EZXiME2e86ZO+gSFdJyh0p
+         gEEbdHFfjYzcD9/j56evl/rsuTbruGXkgnIxA6CdDYlDrjoLWa2aRHWcSigbpNgdc1Nx
+         AteQ==
+X-Gm-Message-State: AFqh2kp3aPwmck/z0lwWKy7TsFxDc66WUClFD+1yXGs65Rpkje8F5a0l
+        6MqMjQKJnDgyHk3poc9LYvWoFLxHAP65ZfmGZQQ=
+X-Google-Smtp-Source: AMrXdXu5yY8uRNnuPGF1u/Qv+JWdy6yPnFLq17NSk7NiUJcPmk4qHz1S9xkIw4hXtYyIg18XubWh/Y4S6+hg+LwZbb4=
+X-Received: by 2002:adf:efce:0:b0:2bb:1e37:7b8b with SMTP id
+ i14-20020adfefce000000b002bb1e377b8bmr55632wrp.364.1673039094606; Fri, 06 Jan
+ 2023 13:04:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1668052208-14047-1-git-send-email-yangtiezhu@loongson.cn>
+ <c71e9666-c62a-83ae-0d7b-580dc717e9f1@loongson.cn> <dbf82707-df17-466b-f882-aa4e25d4f629@loongson.cn>
+In-Reply-To: <dbf82707-df17-466b-f882-aa4e25d4f629@loongson.cn>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 6 Jan 2023 13:04:42 -0800
+Message-ID: <CAM9d7cgH0zK-DUmUV7yw1BJBvgyxWys9zPuB5Q7dQQwta=XcGA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] perf: Add more syscalls to benchmark
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It seems the logic to handle duplicated symbols is off. In case if the
-symbol index is specified it will:
+Hello,
 
-* find a match
-* continue searching
-* check that start is not null and idx is set on the next loop
-* exit with the error code 1
+On Thu, Jan 5, 2023 at 5:23 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>
+>
+> On 12/03/2022 05:19 PM, Tiezhu Yang wrote:
+> >
+> >
+> > On 11/10/2022 11:50 AM, Tiezhu Yang wrote:
+> >> Tested on x86_64, arm64, mips64 and loongarch64.
+> >>
+> >> Tiezhu Yang (4):
+> >>   tools x86: Keep list sorted by number in unistd_{32,64}.h
+> >>   perf bench syscall: Introduce bench_syscall_common()
+> >>   perf bench syscall: Add getpgid syscall benchmark
+> >>   perf bench syscall: Add execve syscall benchmark
+> >>
+> >>  tools/arch/x86/include/uapi/asm/unistd_32.h | 23 ++++++---
+> >>  tools/arch/x86/include/uapi/asm/unistd_64.h | 23 ++++++---
+> >>  tools/perf/bench/bench.h                    |  2 +
+> >>  tools/perf/bench/syscall.c                  | 76
+> >> +++++++++++++++++++++++++++--
+> >>  tools/perf/builtin-bench.c                  |  2 +
+> >>  5 files changed, 108 insertions(+), 18 deletions(-)
+> >>
+> >
+> > Ping, any more comments?
+> >
+> > Thanks,
+> > Tiezhu
+>
+> Hi all,
+>
+> If this patch series has no value and is not acceptable,
+> or what should I do to update, please let me know.
 
-My guess is the expectation was that at this point the second match is
-found (because *start is not null), although the new symbol hasn't pass
-dso_sym_match yet. Here is how it looks like:
+I'm so sorry about being late a lot.
+I don't have any objection to this series.
 
-    $ readelf -a postgres | grep simple_heap_update
-        4716: 00000000004e23e5   352 FUNC    GLOBAL DEFAULT   13 simple_heap_update
-        27829: 00000000004e23e5   352 FUNC    GLOBAL DEFAULT   13 simple_heap_update
+For the execve bench, I think it's actually fork + execve
+then maybe it makes sense to have a fork only bench
+to compare the execve part precisely.
 
-    $ perf record -p <pid> -e intel_pt// \
-        --filter 'filter simple_heap_update #1 @ postgres' -- sleep 60
+But it can be added later, so
 
-        Failed to parse address filter: 'filter simple_heap_update #1 @ postgres'
-        Filter format is: filter|start|stop|tracestop <start symbol or address> [/ <end symbol or size>] [@<file name>]
-        Where multiple filters are separated by space or comma.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Correct by returning error only after checking whether the symbol is
-matching or not. After modifications the case above seems to be working
-as expected:
-
-    $ perf record -p <pid> -e intel_pt// \
-        --filter 'filter simple_heap_update #1 @ postgres' -- sleep 60
-
-    # update heap a couple of times
-
-    $ perf script --itrace=c
-
-        branches: 4e23fe simple_heap_update+0x19 => 54829c GetCurrentCommandId+0x0
-        # [...]
-        branches: 4e23fe simple_heap_update+0x19 => 54829c GetCurrentCommandId+0x0
-        # [...]
-
-Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
----
- tools/perf/util/auxtrace.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index b59c278fe9ed..112cef56d6c2 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -2593,15 +2593,23 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
- 
- 	sym = dso__first_symbol(dso);
- 	while (sym) {
-+		/* Verify duplicates if one match was already found */
- 		if (*start) {
- 			if (!*size)
- 				*size = sym->start - *start;
--			if (idx > 0) {
--				if (*size)
--					return 1;
--			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
--				print_duplicate_syms(dso, sym_name);
--				return -EINVAL;
-+
-+			if (dso_sym_match(sym, sym_name, &cnt, idx)) {
-+				if (idx > 0) {
-+					/*
-+					 * There is already one match with the specified index, now
-+					 * we found the second one, something is wrong.
-+					 */
-+					if (*size)
-+						return 1;
-+				} else {
-+					print_duplicate_syms(dso, sym_name);
-+					return -EINVAL;
-+				}
- 			}
- 		} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
- 			*start = sym->start;
--- 
-2.31.1
-
+Thanks,
+Namhyung
