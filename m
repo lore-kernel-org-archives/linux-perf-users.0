@@ -2,350 +2,227 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4592BC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B731DC5479D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 14:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235233AbjAFOhC (ORCPT
+        id S234399AbjAFOiR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 09:37:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42112 "EHLO
+        Fri, 6 Jan 2023 09:38:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232742AbjAFOg7 (ORCPT
+        with ESMTP id S232556AbjAFOiP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 09:36:59 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31F91DEF
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 06:36:58 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id k26-20020a05600c1c9a00b003d972646a7dso3656546wms.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 06:36:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7t6rzykIBOELCK5mBc4GYz6tySTq4pRi0NO6oy4QzEQ=;
-        b=hUWwpuMRYzqfeCGM2qlcj/ubZ12hoTC9eRdDAQ8pqB/8fs1pNgp6HjzZhAp0H6KVPU
-         XarKk8JJbDIh3iWygbTPe7ZLpc/4W7pyz87ofMCedG9RM3f87gMzpPRjUiKeTjcncVGG
-         y7wYwH8LZVULUK6WW6T8N1zbjJu1HXIpnisPb15f7UGVNYC0h02RE8noeOgukrJOYwwn
-         gTtaIa6FOxjL0qGgRg/fM5zr9u2NbGfn2De+Jcs9iDZDZ6bY2+X2SFLOnXh8PZ9LGUda
-         DdveN6og2KJH7IbxnRr1bTkbABa/FtMy093DtsUpVDOJVIWOQuit9JT5pqXCf8JBXS0g
-         GHYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7t6rzykIBOELCK5mBc4GYz6tySTq4pRi0NO6oy4QzEQ=;
-        b=xjvf8Yt7MO/rrp7P3qlopS1bDGLDgikfzFCJ226S5WMNtz1ik+54UmprdYft7JwkOU
-         7Xu1Q4HSt/FVLxvqXjI08bqUphXz+Mhk4MWD1T6sB/W3tUoEf7GHJmUMbW1chA55n4jH
-         zLUADK9RG3j9KFo9pFoKXhnV6EZAdICYlc/G3AaYqkvmyrw6H7W1WhifaRQD3Usyg06n
-         ZJBHiakT5jzzolT8076UbD79DYZdhmG+/wgkkaU4/m2HBfYzeW8gQmv1C9aV16kNLm9V
-         H7873363FiKavosqyEWrC5c5ipk9Zeu4yl3kMkOknoMaPOrMHnf8zzOcZ5r05X9nlixC
-         Xc2A==
-X-Gm-Message-State: AFqh2koVyEx+bstKQObNFIUE1YVQ5WJA/Mi+0Lg66U3YF4QsQdjCPU6P
-        l8uAF+AyvjMbJD/AqwM60axDRGrWmjC3bLJ1Lr7xOw==
-X-Google-Smtp-Source: AMrXdXsZc3BRCjLW44644OHFgWWBW6jbsN53TVInU1FJFGjJVaVGanzsNiomeTF18QDchRPvA+cp6Df3P6xR7GnMqLM=
-X-Received: by 2002:a7b:c451:0:b0:3d3:4f98:f6e2 with SMTP id
- l17-20020a7bc451000000b003d34f98f6e2mr2366513wmi.174.1673015816426; Fri, 06
- Jan 2023 06:36:56 -0800 (PST)
+        Fri, 6 Jan 2023 09:38:15 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE3D2DEF;
+        Fri,  6 Jan 2023 06:38:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673015894; x=1704551894;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=PZLPz+9767EnRfwpCDP/tjc5brek05asl07y9ULD0/A=;
+  b=LFfV8FzbOaBBi44LzELzl3PC7E9PkcEnzqFTA1Y1agPvRRivSn217dNE
+   6R8YZ3NmRzp2zE4hfB8KKnoKkhZZOJk7c1LYQ7gWUPXfJOWEAqpRSqgEL
+   KmnYKi/kqP9KUblYw5f0EjxePuh+xAar/Y1IEoydnBiU50epZxOst4PRj
+   3cw+iLKYuoZ+EyvYXpnFnKbuQOIXRF9lZhIzGtxfZIYC1UBGGqK63ejYe
+   hssxfjXUiv6tNfyROi5lLRf1lx/ISs40Zr4JZGMLVRanQstpHTMD9xiFO
+   vXUd0X6BBvAUhhtCCxn5ELS9MQHCOjkmXuMkbM/CxYiE+qDiQ0U7x6exw
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="349696282"
+X-IronPort-AV: E=Sophos;i="5.96,305,1665471600"; 
+   d="scan'208";a="349696282"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 06:38:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="655968340"
+X-IronPort-AV: E=Sophos;i="5.96,305,1665471600"; 
+   d="scan'208";a="655968340"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jan 2023 06:38:13 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 6 Jan 2023 06:38:13 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 6 Jan 2023 06:38:13 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Fri, 6 Jan 2023 06:38:13 -0800
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Fri, 6 Jan 2023 06:38:12 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bw9xdtvnJNVTaUgJmdGqtwbf4mdSISlmraEXZOHGw6Wr8NIw8lxlmxTONt+4VUlSVVX1AEqMaCjEuj6rQDaKmDVRRlewX5Fq8WdX+QOOHHM3rcMqxTkQtBQqfexatlbACJP/n91m8+QWOra8ONUdCpRYTyrbsYDhDgWj/DlffzzF7Kj9AhrAOdkC2NOokWrUqHAImXwOgXIhckw5tZgDgsvkF0cWbfve3kf8RaObetT4ATzz7iCkLm0woIU8uoO9XWbuj9vlNkYg7jxBMYw8lwtvZk7+r/6UoEqK6+vPRss3225kcaf85SGYifyH3cEjDVHUYxLQHVAVjmRIUFoTdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PZLPz+9767EnRfwpCDP/tjc5brek05asl07y9ULD0/A=;
+ b=O9sgpD+D6Lhn8z2Gb69QDO4xlk85yoThhpX72M/f+G7KSOpEk14a9cb1uGqdeCUYjJIcFKAhLVR1aTNQ5ZXqBPdKM9bK6bEU4/JfUr06RyZ4Rgu9gYwG4ahOSMXfWPvrTNLmAtCx8BRgZvWo0YtKrf2OzPjqpgbc4GOJFZFAx+/PcS4dPTZ1GZsg7lM+K3eBQHLHLHiQenq8ZTNQhla73s0Dy97bc9Fe5n3W6CXagMwhs2a+l0U6e5smXOHT8FZTG2S/j6AozXuh0WxMbmFr56pBV96077gqr2v8QYULINyI2zKU6L4FLRBc7L7hfyn8CLAiik6yxeOWH2A/T02Bzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB6622.namprd11.prod.outlook.com (2603:10b6:a03:478::6)
+ by SN7PR11MB7603.namprd11.prod.outlook.com (2603:10b6:806:32b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Fri, 6 Jan
+ 2023 14:38:11 +0000
+Received: from SJ0PR11MB6622.namprd11.prod.outlook.com
+ ([fe80::e30c:74f4:5052:6fd2]) by SJ0PR11MB6622.namprd11.prod.outlook.com
+ ([fe80::e30c:74f4:5052:6fd2%6]) with mapi id 15.20.5944.019; Fri, 6 Jan 2023
+ 14:38:10 +0000
+From:   "Zhang, Rui" <rui.zhang@intel.com>
+To:     "bp@alien8.de" <bp@alien8.de>
+CC:     "Hansen, Dave" <dave.hansen@intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+        "Bityutskiy, Artem" <artem.bityutskiy@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
+Thread-Topic: [PATCH 1/2] perf/x86/rapl: Add support for Intel Meteor Lake
+Thread-Index: AQHZIF1bxwQ7XEIB0EO18Lgdi7O9X66PZGKAgAAyjYCAAVIkAIAATGEAgABCzQA=
+Date:   Fri, 6 Jan 2023 14:38:10 +0000
+Message-ID: <d6ae35f1e72d4bb8e02f44fe6d9369f1a5f21619.camel@intel.com>
+References: <20230104145831.25498-1-rui.zhang@intel.com>
+         <25d07838-3904-a086-4238-f56c9424b53a@intel.com>
+         <ea9186869cca50a21efcc1a9cc4dbe5adcd1784b.camel@intel.com>
+         <Y7aejeHDpLlwwYbr@zn.tnic>
+         <4cc5cd868b20366fc9d4bf157656e0c295074282.camel@intel.com>
+         <Y7f6RhF8FuK9R399@zn.tnic>
+In-Reply-To: <Y7f6RhF8FuK9R399@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.5-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB6622:EE_|SN7PR11MB7603:EE_
+x-ms-office365-filtering-correlation-id: 10e1e159-fafd-46cf-ac46-08daeff3a22e
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DYGSEbVCkAmTPQ7ugd/mUxzpZEA5MzmYDHnXXysywf+YRxUPVMrX2H8/apP6P7nUmU2FPCBhweaKr8j7NtJmcXaD/juRcXCTSDdobAAxjf4SmiaMcKXKx0MdfBmuPxyfClhMQk+TOdle4PCYibgA1fwg8Xe8ZYO/jauIh+LA4JjubLVf7MpGDk3JyAIsetmEOHEjxF5ff6woqtaoqxMs5vWEOkH3vPya5OHmIw1yexSzjN0RITMN2WPUE42pg1hoAJADKcZUMjOjYtC0FnOyy/3xmNQ+SsXzUrJBjyD/diE1d3lXTzCxiWmZDVePdhUriFgDcV4xdgcF+C1rwvTVAQPGBEsD6zU/AXclx5+eEW/a+udjWnXpBdHHi6iMxSnZyLo9ekayp6e2QjWl7RE2omTXD6y6tgdfSkjB4GgrubBJuAWxmw6iBM+jaLI8sTuoEDLqDUCxRtQXNLMLYQWZBcVk724udeXgjpLjLK/2T7si8uhNzSxuBgmcq6fnp0zD/bzIf03hQtZoe96FuJr9guN6bxYzN2q+nwYIDmvXb37WcbONwv+H3oIPTcN1WVlKvbZjos9wOHXMgSscTCYGRfuZswnxW7hCOESB3oA9tvF7Q982hhsvDRxGxnHukiwssRJV98VpBpQvpursQEQeS1RMNT/zQSDaqfNWvFB+BdB3N7Xb3yJbCWND6dGOn43ko8ylN1juOkYI91YvaMyqZQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB6622.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(346002)(39860400002)(396003)(136003)(366004)(451199015)(38070700005)(66946007)(122000001)(38100700002)(82960400001)(36756003)(86362001)(6506007)(2616005)(91956017)(76116006)(64756008)(478600001)(6486002)(71200400001)(186003)(6512007)(26005)(6916009)(54906003)(66446008)(66476007)(8676002)(4326008)(2906002)(316002)(66556008)(8936002)(7416002)(41300700001)(5660300002)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VDk5WG1obldvNnN6WHBzaFgxSm5KYTBKR0IveTdjOEZZLzEzdldqa09lV3Ji?=
+ =?utf-8?B?Um53U3lzR3A0cE51dzl1SEZQcTRoYjJtYlNXbEF2dG1kTk1aMW1JbklNRm5V?=
+ =?utf-8?B?dkpjL2RoNjdvTjM0RDJpdUppcERvcGVJcml4MGlULzBWQWdoaTU2VzFGNDkz?=
+ =?utf-8?B?eW11cVNoUERrNGMxaThqOXNEdDduZTFkbjlsZDMwVW1QZDNucTd1MkltQXdD?=
+ =?utf-8?B?T1ZtMkFvNnVMckpNUmQxc2M3dTlyak5TM3lhSm9HV3AzdDJtdDk5SmFMZk9J?=
+ =?utf-8?B?M3k5U0I2aTdkM0VWNlg4MDllRnpCN1o4MWtxTW1kam5WWW9TTHZOZTNpaStU?=
+ =?utf-8?B?V1RNM2VFTitNYzdaR2E5cEM3WjZ1NktVa1BBaktiVWFVRDNPV2haM0krZytr?=
+ =?utf-8?B?dmdFQnRlMmxLa1NsRW1pN2tZL3BTNFVxL0lYNGsxNmhGSVQxVmU4bmIwc1Zn?=
+ =?utf-8?B?bTdZaTJJQ1dNRVJGai9zYnJnWnBsQzlrNWw3b1RHWVdycFcyREZkRktYa2tI?=
+ =?utf-8?B?T0JnZFNKeFJETUpha2J6dHdNTkl1Rzk0VXVabllwVVVsY2lvaVoxNFpaRjdI?=
+ =?utf-8?B?ZVJPM29EMGNBQjN6WGhiNG5uZk1uS1laSHh6d3JPd0JjRXpRalFxbzY2Rndx?=
+ =?utf-8?B?U1YvNVEwWjRmTzBaNGQyczUxYkw1SEtTa2dFdHBqQ0J6U0FJTzhDN1dHeFZo?=
+ =?utf-8?B?c1NqUGh0RC9iSWtrRFhWVU1lZm9nSEw3N1JVcEsxRGxyWjFFV2oxdnJrVWdl?=
+ =?utf-8?B?eG5ZR3JUbnFyelBxenprUjlzTTNpRXhMc1F1TVFDZ0VRRXF4YzloeDArS2NY?=
+ =?utf-8?B?SWxybmpqOHVudzNOZXBGTzJxejByT3U0YmxzYmtwYnlDMmc3UzdLcW9lU0lR?=
+ =?utf-8?B?eTNjSUQzNTcwZG96a1I4L0Mra2J3Mi9jR3ZUNFFXM3gxQ29paXpYc050c3gr?=
+ =?utf-8?B?QjdFa3JtaFVwbEZTMmZrNkZnaG5rMG5aeDlUMDZUbWQ0MnNFMEk1cUtLMXdm?=
+ =?utf-8?B?SjhUOFZIS05LR3dPaEFtUVk0RStjeXY0RmlRRm1RcEJ4MVEzR3Q1TzZYRnQy?=
+ =?utf-8?B?dGdnY3NvdDQ4VVlTTlVkQ3hwYk1rb1JwMThycEI1UWhoSG1oVkVCNTN3ajFp?=
+ =?utf-8?B?Q2ZCbzBad3JjT1VlWGlJZ3dlTTJ2NUJ5OEtkZkJNRDhXcjJLME5wY21TVFZO?=
+ =?utf-8?B?UUVESXhKRm16cXdrZDc1czdVb2R4cWVGYnFLTnJXVGhrUnhRekZMclJmQ3Za?=
+ =?utf-8?B?Wk9Tam1uaStFUHBwSkYreXJUL2JBRmpHTko3OVlqS0dhem5PL0U1Qm9keEtu?=
+ =?utf-8?B?eEdHU0lKZEVwTmh3UHJGZ1g1RkpBaUxkN3FaY3ZmQmZqWDVGYWRFOGYyT1pq?=
+ =?utf-8?B?ZXpYaWNpbFJKNFBiMXN2SGFIa1JwaGtaTXJJUEo5SHp0OERuVk9ZWWplakFn?=
+ =?utf-8?B?WVNDanhyNXhvaGdaN1VEeXZYL3lBVFBWZ2dvRHlQM2g5NmU4QWtUTlVOV0dN?=
+ =?utf-8?B?RlZIRUdPYkg5QW1PMFIrSy9NQ2xPRWY0V0pqK0RraG83QVlNcFplVEVodlhX?=
+ =?utf-8?B?K2hIWG5YSVBtLy82aXZUL3VIVnV4Mlg2bHBmUFY2TmhlU0h2MGVXZk9pVjhX?=
+ =?utf-8?B?ODZRVm4zZkgyc0UwL0VDV0ZUU0xuU2YrMmdXaGM1R0Z6T0NUdEoxMENZY3FX?=
+ =?utf-8?B?OThPbm5Gdk5uOU1vSkk1WThnTDlMK3ludlQyMml0UzdPN2NrenAzZTNFNGtN?=
+ =?utf-8?B?T0cvNlJqWHk1ak1JWTlEcWdtcWVrV1Y4OGN6V1NYNUorY0NFaUxMOVhwdlla?=
+ =?utf-8?B?cU5pSWZ0YU5EOUs2T1haVnUrM0lnNURpRHVxOFppRnNuUlh4U0NDdjg1QnF5?=
+ =?utf-8?B?YjVyWEdxcm9NMytwVlRaV1U4SEVwWm12K3V3cW5xZUdwZGRsK0I0MnkySHlj?=
+ =?utf-8?B?cGl5U2FBa0RIVmh1UndPMVFEbGs4UjVsQVJtZUM5K0hEeSt4OHNTK2sySEwr?=
+ =?utf-8?B?K0hPQ3Z5aURMTVY2eUQxSkdmUG53dDRqcS9HQ05hWjM4YmdMQ1pDNFFPVnQ0?=
+ =?utf-8?B?Q3pqUDdxR0EyTk5Jb3RNd25kdk9OWjJjYS85Mjl6RG90NzZoMG5mNkJKaUdo?=
+ =?utf-8?B?SWxmSHdaSHVUaDdFdEVqVFdRQTdHcFNFVmhocWMwVCs3OVgwVytXSFNmcTRV?=
+ =?utf-8?B?Z3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0A8010C2B6E7AC4FA70097A224669F64@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20230105172243.7238-1-mike.leach@linaro.org> <CAP-5=fVbPVE4rxJ2s8phhJ5RRH4EnKaWrF2kaT0oCmK6kvhP2g@mail.gmail.com>
- <CAJ9a7Vi7cB2t3wao9d78j3G9v4zpO8_hHf8DB4vKOzgT9O+j6g@mail.gmail.com>
- <CAP-5=fV5tiKNyJRUKC0gD_2Y=RgN=NrAtee4k1ZT1tynyJpL6w@mail.gmail.com> <CAJ9a7ViY=XOnp2ZJgEdR4qqXth=N4MRLHZWifJw-3-qT-md12g@mail.gmail.com>
-In-Reply-To: <CAJ9a7ViY=XOnp2ZJgEdR4qqXth=N4MRLHZWifJw-3-qT-md12g@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 6 Jan 2023 06:36:43 -0800
-Message-ID: <CAP-5=fXYK_G1x8gQusJxNc4FCxMqhvagv79rFg6hsBpR=u_yRQ@mail.gmail.com>
-Subject: Re: [PATCH] perf build: Fix build error when NO_LIBBPF=1
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB6622.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10e1e159-fafd-46cf-ac46-08daeff3a22e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2023 14:38:10.2780
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kIfnfyis1Z98ugP8PXxbbmbXaSf1hGIH3i5GE5hojeluZ5Cx+Gno3jRr7VmK2N/a81tG7DnTVvDJlTPgqdaaHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7603
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 6, 2023 at 1:58 AM Mike Leach <mike.leach@linaro.org> wrote:
->
-> Hi Ian,
->
-> On Fri, 6 Jan 2023 at 06:24, Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Thu, Jan 5, 2023 at 3:40 PM Mike Leach <mike.leach@linaro.org> wrote=
-:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, 5 Jan 2023 at 19:03, Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Thu, Jan 5, 2023 at 9:22 AM Mike Leach <mike.leach@linaro.org> w=
-rote:
-> > > > >
-> > > > > Recent updates to perf build result in the following output when =
-cross
-> > > > > compiling to aarch64, with libelf unavailable, and therefore
-> > > > > NO_LIBBPF=3D1 set.
-> > > > >
-> > > > > ```
-> > > > >   $make -C tools/perf
-> > > > >
-> > > > >   <cut>
-> > > > >
-> > > > >   Makefile.config:428: No libelf found. Disables 'probe' tool, jv=
-mti
-> > > > >   and BPF support in 'perf record'. Please install libelf-dev,
-> > > > >   libelf-devel or elfutils-libelf-devel
-> > > > >
-> > > > >   <cut>
-> > > > >
-> > > > >   libbpf.c:46:10: fatal error: libelf.h: No such file or director=
-y
-> > > > >       46 | #include <libelf.h>
-> > > > >          |          ^~~~~~~~~~
-> > > > >   compilation terminated.
-> > > > >
-> > > > >   ./tools/build/Makefile.build:96: recipe for target
-> > > > >   '.tools/perf/libbpf/staticobjs/libbpf.o' failed
-> > > > >
-> > > > > ```
-> > > > >
-> > > > > plus one other include error for <gelf.h>
-> > > >
-> > > > Ouch, apologies for the breakage. You wouldn't happen to have
-> > > > something like a way with say a docker image to repro the problem? =
-The
-> > > > make line above is somewhat minimal.
-> > > >
-> > >
-> > > Unfortunately not - I was cross compiling on my main workstation.
-> > > However, in theory
-> > > $make -C tools/perf NO_LIBBPF=3D1
-> > > should explicitly exclude the library from the build - which without
-> > > the fix it does not.
-> > >
-> > > > > The issue is that the commit noted below adds libbpf to the prepa=
-re:
-> > > > > target but no longer accounts for the NO_LIBBPF define. Additiona=
-lly
-> > > > > changing the include directories means that even if the libbpf ta=
-rget
-> > > > > build is prevented, bpf headers are missing in other parts of the=
- build.
-> > > > >
-> > > > > This patch ensures that in the case of NO_LIBBPF=3D1, the build t=
-arget is
-> > > > > changed to a header only target, and the headers are installed, w=
-ithout
-> > > > > attempting to build the libbpf.a target.
-> > > > >
-> > > > > Applies to perf/core
-> > > > >
-> > > > > Fixes: 746bd29e348f ("perf build: Use tools/lib headers from inst=
-all path")
-> > > > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > > > > ---
-> > > > >  tools/perf/Makefile.perf | 10 ++++++++++
-> > > > >  1 file changed, 10 insertions(+)
-> > > > >
-> > > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > > > > index 13e7d26e77f0..ee08ecf469f6 100644
-> > > > > --- a/tools/perf/Makefile.perf
-> > > > > +++ b/tools/perf/Makefile.perf
-> > > > > @@ -305,7 +305,11 @@ else
-> > > > >  endif
-> > > > >  LIBBPF_DESTDIR =3D $(LIBBPF_OUTPUT)
-> > > > >  LIBBPF_INCLUDE =3D $(LIBBPF_DESTDIR)/include
-> > > > > +ifndef NO_LIBBPF
-> > > > >  LIBBPF =3D $(LIBBPF_OUTPUT)/libbpf.a
-> > > > > +else
-> > > > > +LIBBPF =3D $(LIBBPF_INCLUDE)/bpf/bpf.h
-> > > >
-> > > > This seems strange, don't we want to avoid libbpf targets?
-> > > >
-> > >
-> > > This is a header only target - see my continuation comment below....
-> > >
-> > > > > +endif
-> > > > >  CFLAGS +=3D -I$(LIBBPF_OUTPUT)/include
-> > > > >
-> > > > >  ifneq ($(OUTPUT),)
-> > > > > @@ -826,10 +830,16 @@ $(LIBAPI)-clean:
-> > > > >         $(call QUIET_CLEAN, libapi)
-> > > > >         $(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
-> > > > >
-> > > > > +ifndef NO_LIBBPF
-> > > > >  $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
-> > > > >         $(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=3D$(FEATURE_DU=
-MP_EXPORT) \
-> > > > >                 O=3D OUTPUT=3D$(LIBBPF_OUTPUT)/ DESTDIR=3D$(LIBBP=
-F_DESTDIR) prefix=3D \
-> > > > >                 $@ install_headers
-> > > > > +else
-> > > > > +$(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
-> > > > > +       $(Q)$(MAKE) -C $(LIBBPF_DIR) OUTPUT=3D$(LIBBPF_OUTPUT)/ \
-> > > > > +               DESTDIR=3D$(LIBBPF_DESTDIR) prefix=3D install_hea=
-ders
-> > > > > +endif
-> > > >
-> > > > Shouldn't we just be able to conditionalize having $(LIBBPF) as a
-> > > > dependency for the perf binary? If there is no dependency then the
-> > > > targets won't be built and we shouldn't need to conditionalize here=
-.
-> > > >
-> > >
-> > > I did try doing just that, but the build process does two things when
-> > > building libbpf
-> > > a) builds the library
-> > > b) installs the bpf headers in the libbpf output location.
-> > >
-> > > Now what the original patch  - "perf build: Use tools/lib headers fro=
-m
-> > > install path"  - does is to also change the include paths to the
-> > > compiler to pick up the headers,
-> > > removing the line:
-> > >
-> > > INC_FLAGS +=3D -I$(srctree)/tools/lib/
-> > >
-> > > from tools/perf/Makefile.config and adding the line
-> > >
-> > > CFLAGS +=3D -I$(LIBBPF_OUTPUT)/include
-> > >
-> > > in tools/perf/Makefile.perf (along with similar lines for libperf, li=
-bapi etc)
-> > >
-> > > The result of this is that if you only remove the library build, the
-> > > headers are not installed and other compilation units fail as the
-> > > headers are still included even if the library is not in use.
-> > > These were originally satisfied by the now removed INC_FLAGS +=3D
-> > > -I$(srctree)/tools/lib.
-> > >
-> > > Thus when NO_LIBBPF=3D1 even though we do not build the library - we
-> > > still need to install the headers to retain the consistency - hence a
-> > > "header only" target, that only installs the headers without building
-> > > the library.
-> > >
-> > > This avoids restoring the original -I$(srctree)/tools/lib/, which
-> > > would potentially mess up the oher library builds that have changed
-> > > their header include paths.
-> > >
-> > > Regards
-> > >
-> > > Mike
-> >
-> >
-> > Thanks Mike,
-> >
-> > The -I is needed for the libbpf headers but if NO_LIBBPF is enabled
-> > then the C define HAVE_LIBBPF_SUPPORT isn't and we shouldn't include
-> > any of these headers. This means updating the CFLAGS for libbpf should
-> > only be done if we actually build the static  libbpf.a, the dynamic
-> > version's headers should already be on the include path. I sent out a
-> > variant of this fix doing that here:
-> > https://lore.kernel.org/lkml/20230106061631.571659-1-irogers@google.com=
-/
-> >
-> > Apologies again for the breakage, I can buy you a beer the next time
-> > I'm home in Manchester.
-> > Ian
-> >
->
-> Applying your new patch to perf/core and building I get:-
->
->   CC      builtin-stat.o
-> In file included from builtin-stat.c:71:
-> util/bpf_counter.h:7:10: fatal error: bpf/bpf.h: No such file or director=
-y
->     7 | #include <bpf/bpf.h>
->       |          ^~~~~~~~~~~
-> compilation terminated.
-> /datadisk/mike/work/kernel-ups/tools/build/Makefile.build:96: recipe
-> for target 'builtin-stat.o' failed
-> make[3]: *** [builtin-stat.o] Error 1
-> make[3]: *** Waiting for unfinished jobs....
->   LD      pmu-events/pmu-events-in.o
-> Makefile.perf:673: recipe for target 'perf-in.o' failed
-> make[2]: *** [perf-in.o] Error 2
-> Makefile.perf:235: recipe for target 'sub-make' failed
-> make[1]: *** [sub-make] Error 2
-> Makefile:69: recipe for target 'all' failed
-> make: *** [all] Error 2
->
-> which is a result of the bpf headers not being installed in their new
-> location and the removal of the -I from the old location as mentioned
-> in my last.
-> So perhaps the issue is less about the build operations and more about
-> the lack of #ifdef HAVE_LIBBPF_SUPPORT in certain other source files.
->
-> However, if I put the #ifdef HAVE_LIBBPF_SUPPORT around the #include
-> of util/bpf_counter.h, then compilation fails with multiple
->
-> builtin-stat.c: In function =E2=80=98read_bpf_map_counters=E2=80=99:
-> builtin-stat.c:463:9: error: implicit declaration of function
-> =E2=80=98bpf_counter__read=E2=80=99; did you mean =E2=80=98refcount_read=
-=E2=80=99?
-> [-Werror=3Dimplicit-function-declaration]
->   463 |   err =3D bpf_counter__read(counter);
->       |         ^~~~~~~~~~~~~~~~~
->       |         refcount_read
->
-> type errors.
->
-> Turns out that bpf_counter.h has inline stubs for these functions
-> bracketed by #ifdef HAVE_BPF_SKEL / #else / #endif, which I presume
-> are used in the non-bpf case.
->
-> I can get a clean build with your patch if I adjust the HAVE_BFP_SKEL
-> bracketing to encompass everything (including header includes, struct
-> defines and other functions) other than the stubs in the #ifdef case
-> and only the stubs in the #else case  - but I have no idea if this
-> will have an adverse effect on other tools which may use the same
-> header.
->
-> Thanks and Regards
->
-> Mike
-
-Thanks Mike,
-
-With "apt remove libbpf-devel" I was able to repro this and I've sent
-out a v2 [1] adding the guards and moving the helper functions under
-HAVE_BPF_SKEL as you say. The patch was sufficient to fix the build
-for me, could you double check it? The builtin-trace fix addresses a
-missing guard not present since November 2018 in '744fafc787de perf
-trace: See if there is a map named "filtered_pids"' but builtin-trace
-has some optionality around whether it is included in a build so I
-didn't include the Fixes tag.
-
-Thanks,
-Ian
-
-[1] https://lore.kernel.org/lkml/20230106142537.607399-2-irogers@google.com=
-/
-
-> > >
-> > > > Thanks!
-> > > > Ian
-> > > >
-> > > > >  $(LIBBPF)-clean:
-> > > > >         $(call QUIET_CLEAN, libbpf)
-> > > > > --
-> > > > > 2.17.1
-> > > > >
-> > >
-> > >
-> > >
-> > > --
-> > > Mike Leach
-> > > Principal Engineer, ARM Ltd.
-> > > Manchester Design Centre. UK
->
->
->
-> --
-> Mike Leach
-> Principal Engineer, ARM Ltd.
-> Manchester Design Centre. UK
+SGksIEJvcmlzLA0KDQpPbiBGcmksIDIwMjMtMDEtMDYgYXQgMTE6MzkgKzAxMDAsIEJvcmlzbGF2
+IFBldGtvdiB3cm90ZToNCj4gT24gRnJpLCBKYW4gMDYsIDIwMjMgYXQgMDY6MDU6NDFBTSArMDAw
+MCwgWmhhbmcsIFJ1aSB3cm90ZToNCj4gPiBCdXQgSSBzdGlsbCBoYXZlIGEgcXVlc3Rpb24uDQo+
+ID4gVGFrZSBSQVBMIGZlYXR1cmUgZm9yIGV4YW1wbGUsIHRoZSBmZWF0dXJlIGlzIG5vdCBhcmNo
+aXRlY3R1cmFsLA0KPiA+IGFsdGhvdWdoIDgwJSBvZiB0aGUgcGxhdGZvcm1zIG1heSBmb2xsb3cg
+dGhlIHNhbWUgYmVoYXZpb3IsIGJ1dA0KPiA+IHRoZXJlDQo+ID4gYXJlIHN0aWxsIGNhc2VzIHRo
+YXQgYmVoYXZlIGRpZmZlcmVudGx5LiBBbmQgc28gZmFyLCB0aGVyZSBhcmUgOA0KPiA+IGRpZmZl
+cmVudCBiZWhhdmlvcnMgYmFzZWQgb24gZGlmZmVyZW50IG1vZGVscy4NCj4gPiANCj4gPiBJbiB0
+aGlzIGNhc2UsIGNhbiB3ZSBoYXZlIHNldmVyYWwgZGlmZmVyZW50IGZsYWdzIGZvciB0aGUgUkFQ
+TA0KPiA+IGZlYXR1cmUNCj4gPiBhbmQgbWFrZSB0aGUgUkFQTCBkcml2ZXIgcHJvYmUgb24gZGlm
+ZmVyZW50IFJBUEwgZmxhZ3M/IE9yIGVsc2UsIGENCj4gPiBtb2RlbCBsaXN0IGlzIHN0aWxsIG5l
+ZWRlZC4NCj4gDQo+IFdlbGwsIHlvdSBhc2tlZCBhYm91dCBkZXRlY3RpbmcgQ1BVcyBzdXBwb3J0
+aW5nIFJBUEwuDQo+IA0KPiBOb3cgeW91J3JlIGFza2luZyBhYm91dCBkaWZmZXJlbnQgUkFQTCAi
+c3ViZnVuY3Rpb25hbGl0eSIgb3INCj4gd2hhdGV2ZXIuDQo+IA0KU29ycnkgdGhhdCBJIHdhcyBu
+b3QgY2xlYXIgZW5vdWdoLg0KDQpNeSBvcmlnaW5hbCBwcm9wb3NhbCBpcyB0aGF0LCBpbnN0ZWFk
+IG9mIG1haW50YWluaW5nIG1vZGVsIGxpc3RzIGluIGENCnNlcmllcyBvZiBkaWZmZXJlbnQgZHJp
+dmVycywgY2FuIHdlIHVzZSBmZWF0dXJlIGZsYWdzIGluc3RlYWQsIGFuZA0KbWFpbnRhaW4gdGhl
+bSBpbiBhIGNlbnRyYWwgcGxhY2UgaW5zdGVhZCBvZiBkaWZmZXJlbnQgZHJpdmVycy4gc2F5LA0K
+c29tZXRoaW5nIGxpa2UNCg0Kc3RhdGljIGNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkIGludGVsX3Bt
+X2ZlYXR1cmVzW10gX19pbml0Y29uc3QgPSB7DQogICAgICAgIFg4Nl9NQVRDSF9JTlRFTF9GQU02
+X01PREVMKFNLWUxBS0VfTCwgICAgICAgICAgIFg4Nl9GRUFUVVJFX1JBUEwgfCBYODZfRkVBVFVS
+RV9UQ0NfQ09PTElORyksDQogICAgICAgIFg4Nl9NQVRDSF9JTlRFTF9GQU02X01PREVMKFNLWUxB
+S0VfWCwgICAgICAgICAgIFg4Nl9GRUFUVVJFX1JBUEwgfCBYODZfRkVBVFVSRV9VTkNPUkVfRlJF
+USksDQogICAgICAgIC4uLiANCiAgICAgICAgWDg2X01BVENIX0lOVEVMX0ZBTTZfTU9ERUwoQUxE
+RVJMQUtFLCAgICAgICAgICAgWDg2X0ZFQVRVUkVfUkFQTCB8IFg4Nl9GRUFUVVJFX1RDQ19DT09M
+SU5HKSwNCiAgICAgICAgWDg2X01BVENIX0lOVEVMX0ZBTTZfTU9ERUwoU0FQUEhJUkVSQVBJRFNf
+WCwgICAgWDg2X0ZFQVRVUkVfUkFQTCB8IFg4Nl9GRUFUVVJFX1VOQ09SRV9GUkVRKSwNCiAgICAg
+ICAgLi4uDQogICAgICAgIHt9LA0KfTsNCkFuZCB0aGVuIHNldCB0aGUgZmVhdHVyZSBmbGFncyBi
+YXNlZCBvbiB0aGlzLCBhbmQgbWFrZSB0aGUgZHJpdmVycyB0ZXN0DQp0aGUgZmVhdHVyZSBmbGFn
+cy4NCg0KVGhlIGdvYWwgb2YgdGhpcyBpcyB0byBkbyBtb2RlbCBsaXN0IHVwZGF0ZSBpbiBvbmUg
+cGxhY2UgaW5zdGVhZCBvZiA0DQpvciBtb3JlIGRpZmZlcmVudCBkcml2ZXJzIHdoZW4gYSBuZXcg
+bW9kZWwgY29tZXMuDQoNCklmIHllcywgdGhlbiwgdGhlIHNlY29uZCBxdWVzdGlvbiBpcyB0aGF0
+LCAgdGhlcmUgYXJlIGNhc2VzIGxpa2UgUkFQTA0Kd2hpY2ggaGFzIG1vZGVsIHNwZWNpZmljIGJl
+aGF2aW9yLiBUbyBtYWtlIHRoZSBkcml2ZXIgdG90YWxseSBjbGVhbiwgSScNCm0gd29uZGVyaW5n
+IGlmIHdlIGNhbiBoYXZlIGRpZmZlcmVudCBmbGFncyBmb3Igb25lIGZlYXR1cmUgc28gdGhhdCB3
+ZQ0KZG9uJ3QgbmVlZCB0byBtYWludGFpbiB0aGUgZXhjZXB0aW9ucyBpbiB0aGUgZHJpdmVyLiBT
+YXksIHNvbWV0aGluZw0KbGlrZQ0KDQpzdGF0aWMgY29uc3Qgc3RydWN0IHg4Nl9jcHVfaWQgaW50
+ZWxfcG1fZmVhdHVyZXNbXSBfX2luaXRjb25zdCA9IHsNCiAgICAgDQogICBYODZfTUFUQ0hfSU5U
+RUxfRkFNNl9NT0RFTChTS1lMQUtFX0wsICAgICAgICAgICBYODZfRkVBVFVSRV9SQVBMX0RFRg0K
+QVVMVCB8IFg4Nl9GRUFUVVJFX1RDQ19DT09MSU5HKSwNCiAgICAgICAgWDg2X01BVENIX0lOVEVM
+X0ZBTTZfTU9ERUwoU0tZTA0KQUtFX1gsICAgICAgICAgICBYODZfRkVBVFVSRV9SQVBMX0ZJWF9E
+UkFNIHwgWDg2X0ZFQVRVUkVfVU5DT1JFX0ZSRVEpLA0KIA0KLi4uIA0KICAgICANCiAgWDg2X01B
+VENIX0lOVEVMX0ZBTTZfTU9ERUwoQUxERVJMQUtFLCAgICAgICAgICAgWDg2X0ZFQVRVUkVfUkFQ
+TF9ERUZBDQpVTFQgfCBYODZfRkVBVFVSRV9UQ0NfQ09PTElORyksDQogICAgICAgIFg4Nl9NQVRD
+SF9JTlRFTF9GQU02X01PREVMKFNBUFBIDQpJUkVSQVBJRFNfWCwgICAgWDg2X0ZFQVRVUkVfUkFQ
+TF9GSVhfUFNZUyB8IFg4Nl9GRUFUVVJFX1VOQ09SRV9GUkVRKSwNCiAgDQouLi4NCiAgICAgICAg
+e30sDQp9Ow0KDQo+IFlvdSBjb3VsZCBkbyB0aGUgc3ludGhldGljIGZsYWcgZm9yIGZlYXR1cmUg
+ZGV0ZWN0aW9uIGJlY2F1c2UNCj4gYXBwYXJlbnRseSBnaXZpbmcNCj4gaXQgYSBDUFVJRCBmbGFn
+IGlzIHNvbyBleHBlbnNpdmUgKC9zYXJjYXN0aWMgZXllcm9sbCkgYW5kIHRoZW4geW91DQo+IGNh
+biBwaWNrDQo+IGFwYXJ0IHN1YmZlYXR1cmVzIGluIHRoZSBSQVBMIGNvZGUgYW5kIGRvIGZsYWdz
+IHRoZXJlLCBhd2F5IGZyb20gdGhlDQo+IHg4NiBhcmNoDQo+IGNvZGUgYmVjYXVzZSBubyBvbmUg
+c2hvdWxkIHNlZSB0aGF0Lg0KDQpJIGdvdCB5b3VyIHBvaW50Lg0KDQp0aGFua3MsDQpydWkNCg==
