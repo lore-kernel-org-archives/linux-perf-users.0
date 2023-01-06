@@ -2,139 +2,200 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A01BC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B2EC4708D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233787AbjAFP2Q (ORCPT
+        id S235688AbjAFPcr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 10:28:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
+        Fri, 6 Jan 2023 10:32:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232460AbjAFP2P (ORCPT
+        with ESMTP id S235898AbjAFPcQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 10:28:15 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0D41A820
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 07:28:14 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id 17so2020891pll.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 07:28:14 -0800 (PST)
+        Fri, 6 Jan 2023 10:32:16 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B7E75D25;
+        Fri,  6 Jan 2023 07:31:59 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id o75so2248718yba.2;
+        Fri, 06 Jan 2023 07:31:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bocA/TqNTCY9bT9BZNYWdlMWVOJ5TWiEJMmeL4GDHfk=;
-        b=U2FKuo7KGrbeB/2tfcv6s3Jn/qkHx1JmAW2EiEWH11Or4Q0M9LRUFbT9bc7NsYacya
-         Lh9rtCyQ4ztWc+xspZDiRRb52YI/tvqb8+U9uxJAnl2sVvjLwtmiNyrlkTZtgFEnBVUq
-         o8QeXSVOGQP2EPZNpakp4qrbEz7FtjZ34VudTgOMz4tYUdJzHbX4OqvVNArawjYe04hN
-         hBeH9n+1la3DmDg+8A3N5zGXbSvuHhMRQXsu5cJmgJKNmwc3KPOiQV9KEeTa8NeYb/s2
-         gm2PETvYQmcpryz/z4SL3eaDDUU2IsO0mPAc/EOhm1r1VBUEn1+xsbCQgLNkrJ5uxOvw
-         XXNw==
+        bh=dQP/5D3LqTosG+7vRYjRg9axW9DC5iFtmMm9kbIA6S4=;
+        b=fpRj6AGHA4XtKSDcDKpCmSdJ7iZtz93UjJW4eyt0E8Y0HA6m2pjJF0Edmb3yyGUSD0
+         nmFIP3HAV/4/fEsaHR1WkagVrIyNZVY53D9G8Nv0z12z73PjEF7eqOP2LabG8bdhmvpj
+         OFLbQPj/iYb4nZwJFGaL348GJbLCEjRbmnlo1XznWv2oKDpVhP9rAR6LaRR6CQKP3Q2U
+         rJGcAU4X/czptrga1MTc8GwkI6t/o1uVK/tEKXWR35Ib66nxWb74wIoi25xS1vr31uPh
+         vswd4Uxry24K6QB63vN/xRY27mEV110vK9o3DHQBzwvM0hF72hsGoYyzc92h8HF56j4/
+         4zvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bocA/TqNTCY9bT9BZNYWdlMWVOJ5TWiEJMmeL4GDHfk=;
-        b=TEQf97OgMFHhB2eqNrjvRxsiqugZU7jt96+PthYusHbaVfBzXwA0K191lKXwbAhq3n
-         GNSRtDcECGSci9RYXgyzdWB4VmHTF8Jst+1dJYxFoHwsq0N6fGtcfS6i5cVXDyZV/yEa
-         wZyz0FKeu+rh5t8rp0BfeETryWx8WYqLroF6TWN8zGoORle/DhG1iXHGhksOxUn+a3Ds
-         NkN+gvu5KixP0lq2eVUtRLQPXPr5V9gisP1tRc6VPwbxG4M2WIzeyAP8ms+BDakP7ICH
-         jaMIU2jquLaagDbVxSrtNgbDh/4jqhUxg5u40Dv6Qh/VPOBHY0oxqc559XMRglI0ukr2
-         Kpcg==
-X-Gm-Message-State: AFqh2kqT60JPkbUAHluxYukEEPULV7l2FVVqyA0GLuknIpqFEVcUE1uH
-        l2mm2MNOGd5tekkHTn3ZqWbzPrKaIg8JpBiydw8thQ==
-X-Google-Smtp-Source: AMrXdXt3aAQLn/49mU5FJAziQWZ84p9K0urbQeNMtQloyn1Vu8hBaUgWRpehschFJPekjnNzjPM/DAn5qBavwYl4QAM=
-X-Received: by 2002:a17:90a:bd12:b0:225:b164:8874 with SMTP id
- y18-20020a17090abd1200b00225b1648874mr4192893pjr.87.1673018894418; Fri, 06
- Jan 2023 07:28:14 -0800 (PST)
+        bh=dQP/5D3LqTosG+7vRYjRg9axW9DC5iFtmMm9kbIA6S4=;
+        b=CdN4LlxeG+Ip6xSvxrwgND2FnBOKb2GZtqcm2qwokbJUI0zcgkRPO2ak3OT+j6DHc3
+         7m372RX3nUSJU6RSdxzLQPJptjObDODvdTiWKtpxam+igEtU9vYCUP02kPaPbpiBpejA
+         b+SG8SqelEl5OMOds/zFtV4O1ELkr19ES6RGBqb5XFrwMCuDeuI50QUT1IVn4dcR/B53
+         g8XyiyS1WBRrQyb5doJxepZaiEHHbdtl9ZHRZLlLMykjrFDOh3KGaRra8TYBA6v5Qk66
+         FMCVdbGpSGa9N7qTl/bHfBWXoQbgQwkiQl97t4qeT5UR3UQg7kdJXA9qQKCrmPuQ3s3R
+         tKYw==
+X-Gm-Message-State: AFqh2kpjbSnTzbRB2YkaZPfVVaDBOULc9BL4A9/Ap75CrAOHGEPTDYcO
+        DvBHc5+b7FiJLK+wE3XmfqUJ8S+R+oU6xiUNL75zbKYm
+X-Google-Smtp-Source: AMrXdXt6dpj7QuAOHVjRNg3OwKlcU9IbOAIKq7saQCRvRCp7g7ul5TQRFSj/Dvy9IjJcARHHPJANMQQ2CkX89JxRfgg=
+X-Received: by 2002:a25:9bc5:0:b0:706:bb2c:837 with SMTP id
+ w5-20020a259bc5000000b00706bb2c0837mr5891970ybo.240.1673019118613; Fri, 06
+ Jan 2023 07:31:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20230106151320.619514-1-irogers@google.com>
-In-Reply-To: <20230106151320.619514-1-irogers@google.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 6 Jan 2023 15:28:03 +0000
-Message-ID: <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+References: <20230105030434.255603-1-irogers@google.com> <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
+From:   Martin Spier <spiermar@gmail.com>
+Date:   Fri, 6 Jan 2023 07:31:46 -0800
+Message-ID: <CAA6y9eV50Xw6tsq7dDJ61_uNM-yKdN8O+VU=6wcUFr7MGUbOaA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf script flamegraph: Avoid d3-flame-graph package dependency
 To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        996839@bugs.debian.org, Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Brendan Gregg <brendan@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 6 Jan 2023 at 15:13, Ian Rogers <irogers@google.com> wrote:
+On Thu, Jan 5, 2023 at 1:25 AM Ian Rogers <irogers@google.com> wrote:
 >
-> Including libbpf header files should be guarded by
-> HAVE_LIBBPF_SUPPORT. In bpf_counter.h, move the skeleton utilities
-> under HAVE_BPF_SKEL.
+> On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Currently flame graph generation requires a d3-flame-graph template to
+> > be installed. Unfortunately this is hard to come by for things like
+> > Debian [1]. If the template isn't installed warn and download it from
+> > jsdelivr CDN. If downloading fails generate a minimal flame graph
+> > again with the javascript coming from jsdelivr CDN.
+> >
+> > [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/scripts/python/flamegraph.py | 63 ++++++++++++++++++-------
+> >  1 file changed, 45 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> > index b6af1dd5f816..808b0e1c9be5 100755
+> > --- a/tools/perf/scripts/python/flamegraph.py
+> > +++ b/tools/perf/scripts/python/flamegraph.py
+> > @@ -25,6 +25,27 @@ import io
+> >  import argparse
+> >  import json
+> >  import subprocess
+> > +import urllib.request
+> > +
+> > +minimal_html = """<head>
+> > +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
 >
-> Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bpf_counter.h")
-> Reported-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-trace.c    | 2 ++
->  tools/perf/util/bpf_counter.h | 6 ++++++
->  2 files changed, 8 insertions(+)
+> (hopefully fixed Martin Spier's e-mail address)
 >
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 86e06f136f40..d21fe0f32a6d 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -16,7 +16,9 @@
+> The @4.1.3 comes from the README.md:
+> https://github.com/spiermar/d3-flame-graph/blob/master/README.md
+> Does it make sense just to drop it or use @latest ? It'd be nice not
+> to patch this file for every d3-flame-graph update.
 >
->  #include "util/record.h"
->  #include <api/fs/tracing_path.h>
-> +#ifdef HAVE_LIBBPF_SUPPORT
->  #include <bpf/bpf.h>
-> +#endif
->  #include "util/bpf_map.h"
->  #include "util/rlimit.h"
->  #include "builtin.h"
-> diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
-> index 4dbf26408b69..c6d21c07b14c 100644
-> --- a/tools/perf/util/bpf_counter.h
-> +++ b/tools/perf/util/bpf_counter.h
-> @@ -4,9 +4,12 @@
->
->  #include <linux/list.h>
->  #include <sys/resource.h>
-> +
-> +#ifdef HAVE_LIBBPF_SUPPORT
->  #include <bpf/bpf.h>
->  #include <bpf/btf.h>
->  #include <bpf/libbpf.h>
-> +#endif
->
->  struct evsel;
->  struct target;
-> @@ -87,6 +90,8 @@ static inline void set_max_rlimit(void)
->         setrlimit(RLIMIT_MEMLOCK, &rinf);
->  }
->
-> +#ifdef HAVE_BPF_SKEL
-> +
->  static inline __u32 bpf_link_get_id(int fd)
->  {
->         struct bpf_link_info link_info = { .id = 0, };
-> @@ -127,5 +132,6 @@ static inline int bperf_trigger_reading(int prog_fd, int cpu)
->
->         return bpf_prog_test_run_opts(prog_fd, &opts);
->  }
-> +#endif /* HAVE_BPF_SKEL */
->
->  #endif /* __PERF_BPF_COUNTER_H */
-> --
-> 2.39.0.314.g84b9a713c41-goog
->
+> Thanks,
+> Ian
 
+Yes, that's the right email.
 
-This version builds fine too.
+Using @latest is an option, but it might be better to just use @4 to
+avoid breaking changes. Not expecting any major releases in the near
+future.
 
-Mike
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Thanks,
+Martin
+
+>
+> > +</head>
+> > +<body>
+> > +  <div id="chart"></div>
+> > +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+> > +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+> > +  <script type="text/javascript">
+> > +  const stacks = [/** @flamegraph_json **/];
+> > +  // Note, options is unused.
+> > +  const options = [/** @options_json **/];
+> > +
+> > +  var chart = flamegraph();
+> > +  d3.select("#chart")
+> > +        .datum(stacks[0])
+> > +        .call(chart);
+> > +  </script>
+> > +</body>
+> > +"""
+> >
+> >  # pylint: disable=too-few-public-methods
+> >  class Node:
+> > @@ -50,15 +71,18 @@ class FlameGraphCLI:
+> >          self.args = args
+> >          self.stack = Node("all", "root")
+> >
+> > -        if self.args.format == "html" and \
+> > -                not os.path.isfile(self.args.template):
+> > -            print("Flame Graph template {} does not exist. Please install "
+> > -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+> > -                  "package, specify an existing flame graph template "
+> > -                  "(--template PATH) or another output format "
+> > -                  "(--format FORMAT).".format(self.args.template),
+> > -                  file=sys.stderr)
+> > -            sys.exit(1)
+> > +        if self.args.format == "html":
+> > +            if os.path.isfile(self.args.template):
+> > +                self.template = f"file://{self.args.template}"
+> > +            else:
+> > +                print(f"""
+> > +Warning: Flame Graph template '{self.args.template}'
+> > +does not exist, a template will be downloaded via http. To avoid this
+> > +please install a package such as the js-d3-flame-graph or
+> > +libjs-d3-flame-graph, specify an existing flame graph template
+> > +(--template PATH) or another output format (--format FORMAT).
+> > +""", file=sys.stderr)
+> > +            self.template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
+> >
+> >      @staticmethod
+> >      def get_libtype_from_dso(dso):
+> > @@ -129,15 +153,18 @@ class FlameGraphCLI:
+> >              options_json = json.dumps(options)
+> >
+> >              try:
+> > -                with io.open(self.args.template, encoding="utf-8") as template:
+> > -                    output_str = (
+> > -                        template.read()
+> > -                        .replace("/** @options_json **/", options_json)
+> > -                        .replace("/** @flamegraph_json **/", stacks_json)
+> > -                    )
+> > -            except IOError as err:
+> > -                print("Error reading template file: {}".format(err), file=sys.stderr)
+> > -                sys.exit(1)
+> > +                with urllib.request.urlopen(self.template) as template:
+> > +                    output_str = '\n'.join([
+> > +                        l.decode('utf-8') for l in template.readlines()
+> > +                    ])
+> > +            except Exception as err:
+> > +                print(f"Error reading template {self.template}: {err}\n"
+> > +                      "a minimal flame graph will be generated", file=sys.stderr)
+> > +                output_str = minimal_html
+> > +
+> > +            output_str = output_str.replace("/** @options_json **/", options_json)
+> > +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
+> > +
+> >              output_fn = self.args.output or "flamegraph.html"
+> >          else:
+> >              output_str = stacks_json
+> > --
+> > 2.39.0.314.g84b9a713c41-goog
+> >
