@@ -2,65 +2,77 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CB5C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 17:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAF7C61DB3
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 17:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjAFRz7 (ORCPT
+        id S234746AbjAFR6J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 12:55:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45498 "EHLO
+        Fri, 6 Jan 2023 12:58:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231451AbjAFRzw (ORCPT
+        with ESMTP id S235050AbjAFR6I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 12:55:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46DB7667;
-        Fri,  6 Jan 2023 09:55:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 42FFF61EFF;
-        Fri,  6 Jan 2023 17:55:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46341C433D2;
-        Fri,  6 Jan 2023 17:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673027748;
-        bh=yDyqLQk8mIt7ffKbCLjmkWCABDE/Fg4/y5YAaOe4z48=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LieclIEGffkCerR+zY0KpnC0MdSLjPn2M+JIZlIGqm2sT7m20b6Typ+pB+51z9qbU
-         4B6tf5JnFFH/tcKwgdvTsdwbiu4/nIPNqU0Ys/DBFenX737CERY3xMppl0GpJj3yLf
-         P8tEpLOH3V+QF5rxUfHvexh04bGpacLOdfseONoMq4iZYN8/SAA7ZfzLCOVJWcQCFG
-         UYDo+LEvUxKpdCXrwVW8fAt7DCw89Vn1exHVbtuCiur5Ch/JQ9BHrWXtdA+/4mQxu9
-         5kY91p/6jT+CYsF9qmWUJ38+LCpL9XO6AA251WJdcZlzMSQs62f5Y0K0V+J/joEK6m
-         EQzUNty8RP+0A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D373340468; Fri,  6 Jan 2023 14:55:45 -0300 (-03)
-Date:   Fri, 6 Jan 2023 14:55:45 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org
-Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
-Message-ID: <Y7hgoVKBoulCbA4l@kernel.org>
-References: <20230106151320.619514-1-irogers@google.com>
- <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
- <Y7hZccgOiueB31a+@kernel.org>
- <Y7hgKMDGzQlankL1@kernel.org>
+        Fri, 6 Jan 2023 12:58:08 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696277D9C5
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 09:58:05 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id w1so1970234wrt.8
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 09:58:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EEyqajddELNS2ob3wrwZ+OOebjp738Qmt2PuHyuqDe0=;
+        b=ZaoA+CIRyW2RqGxuFnxvY6qUO9C6dUgEwSSYsdgfJSTUOyJ6AUyr9OdmRXelVT0cxb
+         18lBrH7vC61OjY7Whr3TLGLZ/vNq8uQPOa31iPLcyrEW5pYeJc9zhNYewIEUv+s0YR3D
+         5IFvteteaMot6gYx8NDcd5u6GwfE8e1UszLlfnbsst2WAWxDB9rrCjjDMZ8GvYS5lY5f
+         4zrMZ2HQkSNv5Fpb6VTss3GfK2dYXvIdoG4Z5bAigBaQYbvMYJ2SUVm3jpAiO6qJkEw8
+         b8JgC2dS/Cwqrehc2Z/sPT7notKxLgWUqs7ort0yWmXvT2KffcvTI8VUPeR01JpdcV2m
+         iYWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EEyqajddELNS2ob3wrwZ+OOebjp738Qmt2PuHyuqDe0=;
+        b=TcBY95gFlXNYRuiYEdq27J6/dKr+tytnwN1tI73W+oZ1cgslsVl9cb4BjEcDEyMBYw
+         Xrx9E69wZuIFM7YCr6pdSrsRKOkpBMpyX60yhCzWRLCSSZgHsMySNy2rm3AHX6r0uar/
+         soP8nmW+B6LWbdJ4v/edFE62naUXmmtuEHPEyca2aB84m9JMiH8S+Yj5b7hMGk3Jpj4M
+         EJhovN4relfcFJKV7mncAqNUnyPpimGq8zDD4mMpLFIyPSaJHj1MwCYLOkgZ28AmqFWL
+         uiLY6hGkapv/Nnf4ZF+FzYEz1O7KPuZ/OylaEJDyCzn+NJJ8ib5LAgvRrMxATBYTA++o
+         4QvA==
+X-Gm-Message-State: AFqh2kqI82tbt0AHZqxJmJ6Mm9aLNDWWLaoYFqSUj6WwB0i6tAbsKAc8
+        DGK8PtTgmjaWvKS56L6eUzdhzvnzt+veaGZUNBXYVA==
+X-Google-Smtp-Source: AMrXdXt1LOTfrIm43UugIJ/U5BoMM5U0gtjDha7jualq74wFNIhK9CVGS+335Q3o3I1gK+ac6hiSBW1thSgi1kge+ns=
+X-Received: by 2002:a5d:45d0:0:b0:29c:52c7:3dce with SMTP id
+ b16-20020a5d45d0000000b0029c52c73dcemr519154wrs.375.1673027883660; Fri, 06
+ Jan 2023 09:58:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20230106151320.619514-1-irogers@google.com> <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
+ <Y7hZccgOiueB31a+@kernel.org> <Y7hgKMDGzQlankL1@kernel.org>
 In-Reply-To: <Y7hgKMDGzQlankL1@kernel.org>
-X-Url:  http://acmel.wordpress.com
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 6 Jan 2023 09:57:51 -0800
+Message-ID: <CAP-5=fU4VoYygmQ2zyqzrgJ9JhDnigWXSohF8ewm-USKi30EMw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 06, 2023 at 02:53:44PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jan 06, 2023 at 02:25:05PM -0300, Arnaldo Carvalho de Melo escreveu:
+On Fri, Jan 6, 2023 at 9:53 AM Arnaldo Carvalho de Melo <acme@kernel.org> w=
+rote:
+>
+> Em Fri, Jan 06, 2023 at 02:25:05PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
 > > Em Fri, Jan 06, 2023 at 03:28:03PM +0000, Mike Leach escreveu:
 > > > On Fri, 6 Jan 2023 at 15:13, Ian Rogers <irogers@google.com> wrote:
 > > > >
@@ -68,43 +80,59 @@ Em Fri, Jan 06, 2023 at 02:53:44PM -0300, Arnaldo Carvalho de Melo escreveu:
 > > > > HAVE_LIBBPF_SUPPORT. In bpf_counter.h, move the skeleton utilities
 > > > > under HAVE_BPF_SKEL.
 > > > >
-> > > > Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bpf_counter.h")
+> > > > Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bp=
+f_counter.h")
 > > > > Reported-by: Mike Leach <mike.leach@linaro.org>
 > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > 
+> >
 > > Thanks, applied.
-> 
+>
 > Failing on 'make -C tools/perf build-test', please run it before sending
 > patches,
-
-Its one of the two patches, I just removed the last one to try without
-it.
- 
+>
 > - Arnaldo
-> 
->       make_libbpf_dynamic_O: cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf-urgent/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.ZVxz3l2AAH DESTDIR=/tmp/tmp.PDlsV7dzQr
+>
+>       make_libbpf_dynamic_O: cd . && make LIBBPF_DYNAMIC=3D1 FEATURES_DUM=
+P=3D/var/home/acme/git/perf-urgent/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 =
+O=3D/tmp/tmp.ZVxz3l2AAH DESTDIR=3D/tmp/tmp.PDlsV7dzQr
 > ldd: /tmp/tmp.ZVxz3l2AAH/perf: No such file or directory
-> cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf-urgent/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.ZVxz3l2AAH DESTDIR=/tmp/tmp.PDlsV7dzQr
+> cd . && make LIBBPF_DYNAMIC=3D1 FEATURES_DUMP=3D/var/home/acme/git/perf-u=
+rgent/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=3D/tmp/tmp.ZVxz3l2AAH DESTD=
+IR=3D/tmp/tmp.PDlsV7dzQr
 >   BUILD:   Doing 'make -j32' parallel build
 >   HOSTCC  /tmp/tmp.ZVxz3l2AAH/fixdep.o
 >   HOSTLD  /tmp/tmp.ZVxz3l2AAH/fixdep-in.o
 >   LINK    /tmp/tmp.ZVxz3l2AAH/fixdep
-> Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
+> Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs fr=
+om latest version at 'include/uapi/linux/kvm.h'
 > diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
-> diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
-> Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/kvm.h' differs from latest version at 'arch/x86/include/uapi/asm/kvm.h'
-> diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/kvm.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
-> diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' differs from latest version at 'arch/arm64/include/asm/cputype.h'
-> diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> Warning: Kernel ABI header at 'tools/include/linux/build_bug.h' differs from latest version at 'include/linux/build_bug.h'
+> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_reg=
+s.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.=
+h'
+> diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/=
+uapi/asm/perf_regs.h
+> Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/kvm.h' dif=
+fers from latest version at 'arch/x86/include/uapi/asm/kvm.h'
+> diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi/asm/k=
+vm.h
+> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h' d=
+iffers from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
+> diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/a=
+sm/kvm.h
+> Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' di=
+ffers from latest version at 'arch/arm64/include/asm/cputype.h'
+> diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cpu=
+type.h
+> Warning: Kernel ABI header at 'tools/include/linux/build_bug.h' differs f=
+rom latest version at 'include/linux/build_bug.h'
 > diff -u tools/include/linux/build_bug.h include/linux/build_bug.h
-> Warning: Kernel ABI header at 'tools/perf/trace/beauty/include/linux/socket.h' differs from latest version at 'include/linux/socket.h'
-> diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/socket.h
-> Makefile.config:1147: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
-> 
+> Warning: Kernel ABI header at 'tools/perf/trace/beauty/include/linux/sock=
+et.h' differs from latest version at 'include/linux/socket.h'
+> diff -u tools/perf/trace/beauty/include/linux/socket.h include/linux/sock=
+et.h
+> Makefile.config:1147: No openjdk development package found, please instal=
+l JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>
 >   GEN     /tmp/tmp.ZVxz3l2AAH/common-cmds.h
 >   CC      /tmp/tmp.ZVxz3l2AAH/perf-read-vdso32
 >   CC      /tmp/tmp.ZVxz3l2AAH/dlfilters/dlfilter-test-api-v0.o
@@ -124,7 +152,7 @@ it.
 >   CC      /tmp/tmp.ZVxz3l2AAH/libsubcmd/sigchain.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/libsubcmd/subcmd-config.o
 >   INSTALL libsubcmd_headers
->   PERF_VERSION = 6.2.rc2.g449a50dbf82a
+>   PERF_VERSION =3D 6.2.rc2.g449a50dbf82a
 >   GEN     perf-archive
 >   GEN     perf-iostat
 >   INSTALL /tmp/tmp.ZVxz3l2AAH/libperf/include/perf/bpf_perf.h
@@ -541,11 +569,13 @@ it.
 >   MKDIR   /tmp/tmp.ZVxz3l2AAH/util/arm-spe-decoder/
 >   MKDIR   /tmp/tmp.ZVxz3l2AAH/util/scripting-engines/
 >   MKDIR   /tmp/tmp.ZVxz3l2AAH/util/hisi-ptt-decoder/
->   CC      /tmp/tmp.ZVxz3l2AAH/util/intel-pt-decoder/intel-pt-pkt-decoder.o
+>   CC      /tmp/tmp.ZVxz3l2AAH/util/intel-pt-decoder/intel-pt-pkt-decoder.=
+o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/arm-spe-decoder/arm-spe-decoder.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/scripting-engines/trace-event-perl.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/arm-spe-decoder/arm-spe-pkt-decoder.o
->   CC      /tmp/tmp.ZVxz3l2AAH/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.o
+>   CC      /tmp/tmp.ZVxz3l2AAH/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.=
+o
 >   MKDIR   /tmp/tmp.ZVxz3l2AAH/util/scripting-engines/
 >   MKDIR   /tmp/tmp.ZVxz3l2AAH/util/intel-pt-decoder/
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/intel-bts.o
@@ -560,7 +590,8 @@ it.
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/parse-branch-options.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/dump-insn.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/parse-regs-options.o
->   CC      /tmp/tmp.ZVxz3l2AAH/util/intel-pt-decoder/intel-pt-insn-decoder.o
+>   CC      /tmp/tmp.ZVxz3l2AAH/util/intel-pt-decoder/intel-pt-insn-decoder=
+.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/parse-sublevel-options.o
 >   LD      /tmp/tmp.ZVxz3l2AAH/util/hisi-ptt-decoder/perf-in.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/term.o
@@ -594,53 +625,84 @@ it.
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/zlib.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/lzma.o
 >   CC      /tmp/tmp.ZVxz3l2AAH/util/zstd.o
-> util/bpf-loader.c:36:5: error: no previous prototype for ‘bpf_program__set_insns’ [-Werror=missing-prototypes]
->    36 | int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
+> util/bpf-loader.c:36:5: error: no previous prototype for =E2=80=98bpf_pro=
+gram__set_insns=E2=80=99 [-Werror=3Dmissing-prototypes]
+>    36 | int bpf_program__set_insns(struct bpf_program *prog __maybe_unuse=
+d,
 >       |     ^~~~~~~~~~~~~~~~~~~~~~
-> util/bpf-loader.c:46:47: error: ‘struct libbpf_prog_handler_opts’ declared inside parameter list will not be visible outside of this definition or declaration [-Werror]
->    46 |                                  const struct libbpf_prog_handler_opts *opts __maybe_unused)
->       |                                               ^~~~~~~~~~~~~~~~~~~~~~~~
-> util/bpf-loader.c:43:5: error: no previous prototype for ‘libbpf_register_prog_handler’ [-Werror=missing-prototypes]
+
+*sigh* yet more unconditionalized use of libbpf. I suspect from the
+file this is more of a Makefile than a #define issue. I'll investigate
+and spin a v4.
+
+Thanks,
+Ian
+
+> util/bpf-loader.c:46:47: error: =E2=80=98struct libbpf_prog_handler_opts=
+=E2=80=99 declared inside parameter list will not be visible outside of thi=
+s definition or declaration [-Werror]
+>    46 |                                  const struct libbpf_prog_handler=
+_opts *opts __maybe_unused)
+>       |                                               ^~~~~~~~~~~~~~~~~~~=
+~~~~~
+> util/bpf-loader.c:43:5: error: no previous prototype for =E2=80=98libbpf_=
+register_prog_handler=E2=80=99 [-Werror=3Dmissing-prototypes]
 >    43 | int libbpf_register_prog_handler(const char *sec __maybe_unused,
 >       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > In file included from /usr/include/bpf/libbpf.h:20,
 >                  from util/bpf-loader.c:10:
-> util/bpf-loader.c: In function ‘libbpf_init’:
-> util/bpf-loader.c:179:21: error: variable ‘handler_opts’ has initializer but incomplete type
+> util/bpf-loader.c: In function =E2=80=98libbpf_init=E2=80=99:
+> util/bpf-loader.c:179:21: error: variable =E2=80=98handler_opts=E2=80=99 =
+has initializer but incomplete type
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |                     ^~~~~~~~~~~~~~~~~~~~~~~~
-> util/bpf-loader.c:179:9: error: invalid application of ‘sizeof’ to incomplete type ‘struct libbpf_prog_handler_opts’
+> util/bpf-loader.c:179:9: error: invalid application of =E2=80=98sizeof=E2=
+=80=99 to incomplete type =E2=80=98struct libbpf_prog_handler_opts=E2=80=99
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |         ^~~~~~~~~~~
-> util/bpf-loader.c:179:9: error: ‘struct libbpf_prog_handler_opts’ has no member named ‘sz’
+> util/bpf-loader.c:179:9: error: =E2=80=98struct libbpf_prog_handler_opts=
+=E2=80=99 has no member named =E2=80=98sz=E2=80=99
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |         ^~~~~~~~~~~
-> util/bpf-loader.c:179:9: error: invalid application of ‘sizeof’ to incomplete type ‘struct libbpf_prog_handler_opts’
+> util/bpf-loader.c:179:9: error: invalid application of =E2=80=98sizeof=E2=
+=80=99 to incomplete type =E2=80=98struct libbpf_prog_handler_opts=E2=80=99
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |         ^~~~~~~~~~~
-> util/bpf-loader.c:179:9: error: excess elements in struct initializer [-Werror]
+> util/bpf-loader.c:179:9: error: excess elements in struct initializer [-W=
+error]
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |         ^~~~~~~~~~~
-> util/bpf-loader.c:179:9: note: (near initialization for ‘(anonymous)’)
-> util/bpf-loader.c:180:18: error: ‘struct libbpf_prog_handler_opts’ has no member named ‘prog_prepare_load_fn’
->   180 |                 .prog_prepare_load_fn = libbpf_prog_prepare_load_fn,
+> util/bpf-loader.c:179:9: note: (near initialization for =E2=80=98(anonymo=
+us)=E2=80=99)
+> util/bpf-loader.c:180:18: error: =E2=80=98struct libbpf_prog_handler_opts=
+=E2=80=99 has no member named =E2=80=98prog_prepare_load_fn=E2=80=99
+>   180 |                 .prog_prepare_load_fn =3D libbpf_prog_prepare_loa=
+d_fn,
 >       |                  ^~~~~~~~~~~~~~~~~~~~
-> util/bpf-loader.c:180:41: error: excess elements in struct initializer [-Werror]
->   180 |                 .prog_prepare_load_fn = libbpf_prog_prepare_load_fn,
->       |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> util/bpf-loader.c:180:41: note: (near initialization for ‘(anonymous)’)
-> util/bpf-loader.c:179:9: error: invalid use of undefined type ‘struct libbpf_prog_handler_opts’
+> util/bpf-loader.c:180:41: error: excess elements in struct initializer [-=
+Werror]
+>   180 |                 .prog_prepare_load_fn =3D libbpf_prog_prepare_loa=
+d_fn,
+>       |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~=
+~~
+> util/bpf-loader.c:180:41: note: (near initialization for =E2=80=98(anonym=
+ous)=E2=80=99)
+> util/bpf-loader.c:179:9: error: invalid use of undefined type =E2=80=98st=
+ruct libbpf_prog_handler_opts=E2=80=99
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |         ^~~~~~~~~~~
-> util/bpf-loader.c:179:47: error: storage size of ‘handler_opts’ isn’t known
+> util/bpf-loader.c:179:47: error: storage size of =E2=80=98handler_opts=E2=
+=80=99 isn=E2=80=99t known
 >   179 |         LIBBPF_OPTS(libbpf_prog_handler_opts, handler_opts,
 >       |                                               ^~~~~~~~~~~~
 > cc1: all warnings being treated as errors
-> make[6]: *** [/var/home/acme/git/perf-urgent/tools/build/Makefile.build:97: /tmp/tmp.ZVxz3l2AAH/util/bpf-loader.o] Error 1
+> make[6]: *** [/var/home/acme/git/perf-urgent/tools/build/Makefile.build:9=
+7: /tmp/tmp.ZVxz3l2AAH/util/bpf-loader.o] Error 1
 > make[6]: *** Waiting for unfinished jobs....
 >   LD      /tmp/tmp.ZVxz3l2AAH/util/scripting-engines/perf-in.o
 >   LD      /tmp/tmp.ZVxz3l2AAH/util/intel-pt-decoder/perf-in.o
-> make[5]: *** [/var/home/acme/git/perf-urgent/tools/build/Makefile.build:139: util] Error 2
+> make[5]: *** [/var/home/acme/git/perf-urgent/tools/build/Makefile.build:1=
+39: util] Error 2
 > make[4]: *** [Makefile.perf:673: /tmp/tmp.ZVxz3l2AAH/perf-in.o] Error 2
 > make[4]: *** Waiting for unfinished jobs....
 > make[3]: *** [Makefile.perf:236: sub-make] Error 2
@@ -648,13 +710,10 @@ it.
 > make[1]: *** [tests/make:337: make_libbpf_dynamic_O] Error 1
 > make: *** [Makefile:103: build-test] Error 2
 > make: Leaving directory '/var/home/acme/git/perf-urgent/tools/perf'
-> 
-> real	4m10.450s
-> user	40m3.640s
-> sys	9m30.945s
-> ⬢[acme@toolbox perf-urgent]$
-> 
-
--- 
-
-- Arnaldo
+>
+> real    4m10.450s
+> user    40m3.640s
+> sys     9m30.945s
+> =E2=AC=A2[acme@toolbox perf-urgent]$
+>
+>
