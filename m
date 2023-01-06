@@ -2,90 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF81BC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 17:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12D4C54E76
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 17:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232920AbjAFRQM (ORCPT
+        id S231451AbjAFRZ2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 12:16:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        Fri, 6 Jan 2023 12:25:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235373AbjAFRQC (ORCPT
+        with ESMTP id S235695AbjAFRZN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 12:16:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF727CBEB;
-        Fri,  6 Jan 2023 09:15:58 -0800 (PST)
+        Fri, 6 Jan 2023 12:25:13 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA2C7D9D7;
+        Fri,  6 Jan 2023 09:25:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 365CFB81E25;
-        Fri,  6 Jan 2023 17:15:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F4CC433EF;
-        Fri,  6 Jan 2023 17:15:55 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 0A133CE1DAF;
+        Fri,  6 Jan 2023 17:25:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA64C433EF;
+        Fri,  6 Jan 2023 17:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673025355;
-        bh=A3es4EbINe4olkLWZ9/Udxl+akAjsizJ3K6RxnoPaQM=;
+        s=k20201202; t=1673025908;
+        bh=E0AMAcCDFiW3hKyGu+BfqHYfZVwE7Pp21GrhIKvYXUE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uKtht+MDiqyWAsBNQ3e3qS4imfYWFjPnZECMQJtN144Arlo+mFOE+Sz9ehnbYjMf1
-         etL8Xij2TWAlXN3oBUxYh+a3eIeWNApa6QYsB4sR3DZ1lTArx+YYhtUFwOw8ZdCoaK
-         Yq6FzeZe9r2ooB9Y5N2pCpYDszokS6dj3yLxyrTI1Eec3Jf3YE/7Tq7CxTWfSkT67C
-         rvIyTHFac7KkCAZzZ1Qhrao07+RfmEstOEJKyycjbT279m2c7zi90UsR7cgI3n7fSV
-         GTePZ0w0D+xMuLOR/FImqgTCQrVRTYX7S4rlfWM4C3Yv1bhdqtGjqXkUT7IIIteJdM
-         /cgXmiMDiSiQg==
+        b=sL95n0g4oKqnBJasaQSHf6Zj1FG/nGZ57LvX/UjhNsZp7C1njL8RJU86DSCdnrSuu
+         jnXIJTkHxdDJYXfFXiJ0vbwHvnho0aF66OOwWz7PJC089NC5vk8K/KU7stV218tS/G
+         91l+93BoFP+gENAHDh3rdZNLySKc8ZJhKUee9lQUMENWXRfXEehcuRk2Fsmn2/byQL
+         l1smFR5EZnaeFg/zVylCgdQgG1kAdx7a6oRr8usb0GdyOwNmtyKTDU2frKCaybAUQF
+         Bt1JGPQD1cukLzcJO3OtzQGwjVu/tiukgNXMXSQugLdhFyIaZDXqGsSXovEB9pul31
+         IP9h5sD7wXZVw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6049A40468; Fri,  6 Jan 2023 14:15:53 -0300 (-03)
-Date:   Fri, 6 Jan 2023 14:15:53 -0300
+        id 4752C40468; Fri,  6 Jan 2023 14:25:05 -0300 (-03)
+Date:   Fri, 6 Jan 2023 14:25:05 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
-        <nabijaczleweli@nabijaczleweli.xyz>,
-        Eric Lin <eric.lin@sifive.com>,
-        Ian Rogers <irogers@google.com>,
-        Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Torsten Hilbrich <torsten.hilbrich@secunet.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf tools fixes for v6.2: 1st batch
-Message-ID: <Y7hXSQcsAHfG4/yN@kernel.org>
-References: <20230106142256.763489-1-acme@kernel.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+Message-ID: <Y7hZccgOiueB31a+@kernel.org>
+References: <20230106151320.619514-1-irogers@google.com>
+ <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230106142256.763489-1-acme@kernel.org>
+In-Reply-To: <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 06, 2023 at 11:22:56AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Hi Linus,
- 
-> 	Please consider pulling, there are some more being tested but
-> that should sit in linux-next/pending-fixes for a while.
+Em Fri, Jan 06, 2023 at 03:28:03PM +0000, Mike Leach escreveu:
+> On Fri, 6 Jan 2023 at 15:13, Ian Rogers <irogers@google.com> wrote:
+> >
+> > Including libbpf header files should be guarded by
+> > HAVE_LIBBPF_SUPPORT. In bpf_counter.h, move the skeleton utilities
+> > under HAVE_BPF_SKEL.
+> >
+> > Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bpf_counter.h")
+> > Reported-by: Mike Leach <mike.leach@linaro.org>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied.
+
+- Arnaldo
+
+> > ---
+> >  tools/perf/builtin-trace.c    | 2 ++
+> >  tools/perf/util/bpf_counter.h | 6 ++++++
+> >  2 files changed, 8 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 86e06f136f40..d21fe0f32a6d 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -16,7 +16,9 @@
+> >
+> >  #include "util/record.h"
+> >  #include <api/fs/tracing_path.h>
+> > +#ifdef HAVE_LIBBPF_SUPPORT
+> >  #include <bpf/bpf.h>
+> > +#endif
+> >  #include "util/bpf_map.h"
+> >  #include "util/rlimit.h"
+> >  #include "builtin.h"
+> > diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+> > index 4dbf26408b69..c6d21c07b14c 100644
+> > --- a/tools/perf/util/bpf_counter.h
+> > +++ b/tools/perf/util/bpf_counter.h
+> > @@ -4,9 +4,12 @@
+> >
+> >  #include <linux/list.h>
+> >  #include <sys/resource.h>
+> > +
+> > +#ifdef HAVE_LIBBPF_SUPPORT
+> >  #include <bpf/bpf.h>
+> >  #include <bpf/btf.h>
+> >  #include <bpf/libbpf.h>
+> > +#endif
+> >
+> >  struct evsel;
+> >  struct target;
+> > @@ -87,6 +90,8 @@ static inline void set_max_rlimit(void)
+> >         setrlimit(RLIMIT_MEMLOCK, &rinf);
+> >  }
+> >
+> > +#ifdef HAVE_BPF_SKEL
+> > +
+> >  static inline __u32 bpf_link_get_id(int fd)
+> >  {
+> >         struct bpf_link_info link_info = { .id = 0, };
+> > @@ -127,5 +132,6 @@ static inline int bperf_trigger_reading(int prog_fd, int cpu)
+> >
+> >         return bpf_prog_test_run_opts(prog_fd, &opts);
+> >  }
+> > +#endif /* HAVE_BPF_SKEL */
+> >
+> >  #endif /* __PERF_BPF_COUNTER_H */
+> > --
+> > 2.39.0.314.g84b9a713c41-goog
+> >
 > 
->         Please let me know if you think anything should be reworked,
- 
-> The following changes since commit 88603b6dc419445847923fcb7fe5080067a30f98:
- 
->   Linux 6.2-rc2 (2023-01-01 13:53:16 -0800)
- 
-> are available in the Git repository at:
- 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.1-1-2023-01-06
+> 
+> This version builds fine too.
+> 
+> Mike
+> -- 
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Manchester Design Centre. UK
 
-Argh, I made a shell history reuse mistake just on the tag name, it
-should be, and is available now:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-1-2023-01-06
+-- 
 
 - Arnaldo
