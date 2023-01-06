@@ -2,117 +2,324 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0469DC3DA7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 09:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4433BC3DA7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 09:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbjAFJya (ORCPT
+        id S232487AbjAFJ6k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 04:54:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
+        Fri, 6 Jan 2023 04:58:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjAFJy2 (ORCPT
+        with ESMTP id S233322AbjAFJ6b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 04:54:28 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B7A8645641;
-        Fri,  6 Jan 2023 01:54:27 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AFEF11FB;
-        Fri,  6 Jan 2023 01:55:09 -0800 (PST)
-Received: from [10.57.45.115] (unknown [10.57.45.115])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4688B3F23F;
-        Fri,  6 Jan 2023 01:54:25 -0800 (PST)
-Message-ID: <44e87647-d64e-ee24-0046-06bb15f5a1f4@arm.com>
-Date:   Fri, 6 Jan 2023 09:54:23 +0000
+        Fri, 6 Jan 2023 04:58:31 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB33C6165
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 01:58:28 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id h7-20020a17090aa88700b00225f3e4c992so4765295pjq.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 01:58:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9CrjUnzx6Y0AzNC4bTmiJNh2GA82mK4lsLIP1FqHbkU=;
+        b=Pk1/5aKBsJT3eZHlz15O4D34VNL6zvi3OXcDFug+6Jrvoxw7A+4PBcW4+Obj7WwGjv
+         cJl2N9alD1MxZrPaBC07/GFkVKlcOFmz6pcQ4mPndrvGfW7A9zAiHy5NYt2B8pZ5HGWY
+         XODS1gb9Q5eLn/ydD52Suvy5PuKVenhcbziPV+lqfcXa75xC0x27SEH23bh+CYTqlKlC
+         oA6uQZSbtI9Twzbm+b1iUXd+R+NgZa8AxPoBptXJGacAhEffwwjunaUvgEY2knGKOIpu
+         x/bgBy38gENtmclOtoyjvms2R2bwzlwoyXmvhOonE5U7oofl23F8rCASUu9Lj5aInu9T
+         DzCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9CrjUnzx6Y0AzNC4bTmiJNh2GA82mK4lsLIP1FqHbkU=;
+        b=a5unQ9QApCbfPMnp7AyDEbZgcdZZ8ipdQwPYGEl/Nm7gCytUlSKiQYnXRYroIbNdIC
+         Lj/WdPZd7hDWiAztyuxtXQ+QZfUbpDzcr8qE6zZMYuxtEfuo1cn1uut139jWMBWq8A2n
+         kGKta15dYH8jSiw4knH7RDgVMZgMr87k/zdu1lZw3IOJBMlxWaYuRzsRpM/TNHmvmg9p
+         6NrhFPWw0gc1/VajIUVXQA+jviQryTp1qyuAOd0EUg9OXQ6pFmvyAkJU597mhfTKmMg5
+         4fcc7wNjgtKZj81xXzJGxM/Y8ovoY8RO2nlhnhJyPmMIx58qUsL0jodU7P51iu/W/u1I
+         ZLIw==
+X-Gm-Message-State: AFqh2ko+8Ok3nd140HlPQleRymyuax6r3DoFMGbQF9XhlpOUjbwUa8MX
+        yl8ybhyJUqP0q6aMOJM5VDv/aDZXQP1B3NEDOZr4OA==
+X-Google-Smtp-Source: AMrXdXt0NM4Sg9RjyPjiTwK8ETP4ogyEw1QoPM3sKp27jjbda4129oRr5vXkXCWIEvSGlyU0j3722ScHNflvJBBxTPg=
+X-Received: by 2002:a17:902:6b05:b0:18c:5dae:6f2 with SMTP id
+ o5-20020a1709026b0500b0018c5dae06f2mr3140065plk.24.1672999108061; Fri, 06 Jan
+ 2023 01:58:28 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v6 11/14] kernel: events: Export
- perf_report_aux_output_id()
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     mathieu.poirier@linaro.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <20221123195010.6859-1-mike.leach@linaro.org>
- <20221123195010.6859-12-mike.leach@linaro.org>
- <e3afc4ad-8a95-7d0b-832b-7f7a8be0b647@arm.com>
- <9ea2a0d8-b025-bb56-3a04-1a88e340da2d@arm.com>
-In-Reply-To: <9ea2a0d8-b025-bb56-3a04-1a88e340da2d@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20230105172243.7238-1-mike.leach@linaro.org> <CAP-5=fVbPVE4rxJ2s8phhJ5RRH4EnKaWrF2kaT0oCmK6kvhP2g@mail.gmail.com>
+ <CAJ9a7Vi7cB2t3wao9d78j3G9v4zpO8_hHf8DB4vKOzgT9O+j6g@mail.gmail.com> <CAP-5=fV5tiKNyJRUKC0gD_2Y=RgN=NrAtee4k1ZT1tynyJpL6w@mail.gmail.com>
+In-Reply-To: <CAP-5=fV5tiKNyJRUKC0gD_2Y=RgN=NrAtee4k1ZT1tynyJpL6w@mail.gmail.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Fri, 6 Jan 2023 09:58:17 +0000
+Message-ID: <CAJ9a7ViY=XOnp2ZJgEdR4qqXth=N4MRLHZWifJw-3-qT-md12g@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Fix build error when NO_LIBBPF=1
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, acme@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Peter, Ingo, Arnaldo
+Hi Ian,
 
-On 13/12/2022 10:08, Suzuki K Poulose wrote:
-> Peter,
-> 
-> On 24/11/2022 11:04, Suzuki Kuruppassery Poulose wrote:
->> Peter
->>
->>
->> On 23/11/2022 19:50, Mike Leach wrote:
->>> CoreSight trace being updated to use the perf_report_aux_output_id()
->>> in a similar way to intel-pt.
->>>
->>> This function in needs export visibility to allow it to be called from
->>> kernel loadable modules, which CoreSight may configured to be built as.
->>>
->>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
->>> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> ---
->>>   kernel/events/core.c | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index 4ec3717003d5..ad388552f1d5 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -9231,6 +9231,7 @@ void perf_report_aux_output_id(struct 
->>> perf_event *event, u64 hw_id)
->>>       perf_output_end(&handle);
->>>   }
->>> +EXPORT_SYMBOL_GPL(perf_report_aux_output_id);
->>
->> Are you happy with me picking up this change through the coresight  
->> tree ?
->>
->> Suzuki
->>
-> 
-> Please could you let me know your thoughts on this ? Coresight PMU would
-> use this to inform the dynamically allocated trace id for a CPU to the
-> perf via this HWID packet.
-> 
-> If you are happy with the above change, I could pick it up via the
-> coresight tree with your Ack. Otherwise, please could you pick it
-> up ?
+On Fri, 6 Jan 2023 at 06:24, Ian Rogers <irogers@google.com> wrote:
+>
+> On Thu, Jan 5, 2023 at 3:40 PM Mike Leach <mike.leach@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, 5 Jan 2023 at 19:03, Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Thu, Jan 5, 2023 at 9:22 AM Mike Leach <mike.leach@linaro.org> wro=
+te:
+> > > >
+> > > > Recent updates to perf build result in the following output when cr=
+oss
+> > > > compiling to aarch64, with libelf unavailable, and therefore
+> > > > NO_LIBBPF=3D1 set.
+> > > >
+> > > > ```
+> > > >   $make -C tools/perf
+> > > >
+> > > >   <cut>
+> > > >
+> > > >   Makefile.config:428: No libelf found. Disables 'probe' tool, jvmt=
+i
+> > > >   and BPF support in 'perf record'. Please install libelf-dev,
+> > > >   libelf-devel or elfutils-libelf-devel
+> > > >
+> > > >   <cut>
+> > > >
+> > > >   libbpf.c:46:10: fatal error: libelf.h: No such file or directory
+> > > >       46 | #include <libelf.h>
+> > > >          |          ^~~~~~~~~~
+> > > >   compilation terminated.
+> > > >
+> > > >   ./tools/build/Makefile.build:96: recipe for target
+> > > >   '.tools/perf/libbpf/staticobjs/libbpf.o' failed
+> > > >
+> > > > ```
+> > > >
+> > > > plus one other include error for <gelf.h>
+> > >
+> > > Ouch, apologies for the breakage. You wouldn't happen to have
+> > > something like a way with say a docker image to repro the problem? Th=
+e
+> > > make line above is somewhat minimal.
+> > >
+> >
+> > Unfortunately not - I was cross compiling on my main workstation.
+> > However, in theory
+> > $make -C tools/perf NO_LIBBPF=3D1
+> > should explicitly exclude the library from the build - which without
+> > the fix it does not.
+> >
+> > > > The issue is that the commit noted below adds libbpf to the prepare=
+:
+> > > > target but no longer accounts for the NO_LIBBPF define. Additionall=
+y
+> > > > changing the include directories means that even if the libbpf targ=
+et
+> > > > build is prevented, bpf headers are missing in other parts of the b=
+uild.
+> > > >
+> > > > This patch ensures that in the case of NO_LIBBPF=3D1, the build tar=
+get is
+> > > > changed to a header only target, and the headers are installed, wit=
+hout
+> > > > attempting to build the libbpf.a target.
+> > > >
+> > > > Applies to perf/core
+> > > >
+> > > > Fixes: 746bd29e348f ("perf build: Use tools/lib headers from instal=
+l path")
+> > > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > > > ---
+> > > >  tools/perf/Makefile.perf | 10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > >
+> > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > > index 13e7d26e77f0..ee08ecf469f6 100644
+> > > > --- a/tools/perf/Makefile.perf
+> > > > +++ b/tools/perf/Makefile.perf
+> > > > @@ -305,7 +305,11 @@ else
+> > > >  endif
+> > > >  LIBBPF_DESTDIR =3D $(LIBBPF_OUTPUT)
+> > > >  LIBBPF_INCLUDE =3D $(LIBBPF_DESTDIR)/include
+> > > > +ifndef NO_LIBBPF
+> > > >  LIBBPF =3D $(LIBBPF_OUTPUT)/libbpf.a
+> > > > +else
+> > > > +LIBBPF =3D $(LIBBPF_INCLUDE)/bpf/bpf.h
+> > >
+> > > This seems strange, don't we want to avoid libbpf targets?
+> > >
+> >
+> > This is a header only target - see my continuation comment below....
+> >
+> > > > +endif
+> > > >  CFLAGS +=3D -I$(LIBBPF_OUTPUT)/include
+> > > >
+> > > >  ifneq ($(OUTPUT),)
+> > > > @@ -826,10 +830,16 @@ $(LIBAPI)-clean:
+> > > >         $(call QUIET_CLEAN, libapi)
+> > > >         $(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
+> > > >
+> > > > +ifndef NO_LIBBPF
+> > > >  $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
+> > > >         $(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=3D$(FEATURE_DUMP=
+_EXPORT) \
+> > > >                 O=3D OUTPUT=3D$(LIBBPF_OUTPUT)/ DESTDIR=3D$(LIBBPF_=
+DESTDIR) prefix=3D \
+> > > >                 $@ install_headers
+> > > > +else
+> > > > +$(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
+> > > > +       $(Q)$(MAKE) -C $(LIBBPF_DIR) OUTPUT=3D$(LIBBPF_OUTPUT)/ \
+> > > > +               DESTDIR=3D$(LIBBPF_DESTDIR) prefix=3D install_heade=
+rs
+> > > > +endif
+> > >
+> > > Shouldn't we just be able to conditionalize having $(LIBBPF) as a
+> > > dependency for the perf binary? If there is no dependency then the
+> > > targets won't be built and we shouldn't need to conditionalize here.
+> > >
+> >
+> > I did try doing just that, but the build process does two things when
+> > building libbpf
+> > a) builds the library
+> > b) installs the bpf headers in the libbpf output location.
+> >
+> > Now what the original patch  - "perf build: Use tools/lib headers from
+> > install path"  - does is to also change the include paths to the
+> > compiler to pick up the headers,
+> > removing the line:
+> >
+> > INC_FLAGS +=3D -I$(srctree)/tools/lib/
+> >
+> > from tools/perf/Makefile.config and adding the line
+> >
+> > CFLAGS +=3D -I$(LIBBPF_OUTPUT)/include
+> >
+> > in tools/perf/Makefile.perf (along with similar lines for libperf, liba=
+pi etc)
+> >
+> > The result of this is that if you only remove the library build, the
+> > headers are not installed and other compilation units fail as the
+> > headers are still included even if the library is not in use.
+> > These were originally satisfied by the now removed INC_FLAGS +=3D
+> > -I$(srctree)/tools/lib.
+> >
+> > Thus when NO_LIBBPF=3D1 even though we do not build the library - we
+> > still need to install the headers to retain the consistency - hence a
+> > "header only" target, that only installs the headers without building
+> > the library.
+> >
+> > This avoids restoring the original -I$(srctree)/tools/lib/, which
+> > would potentially mess up the oher library builds that have changed
+> > their header include paths.
+> >
+> > Regards
+> >
+> > Mike
+>
+>
+> Thanks Mike,
+>
+> The -I is needed for the libbpf headers but if NO_LIBBPF is enabled
+> then the C define HAVE_LIBBPF_SUPPORT isn't and we shouldn't include
+> any of these headers. This means updating the CFLAGS for libbpf should
+> only be done if we actually build the static  libbpf.a, the dynamic
+> version's headers should already be on the include path. I sent out a
+> variant of this fix doing that here:
+> https://lore.kernel.org/lkml/20230106061631.571659-1-irogers@google.com/
+>
+> Apologies again for the breakage, I can buy you a beer the next time
+> I'm home in Manchester.
+> Ian
 >
 
-Please could you let us know if this is acceptable and if so, how can
-this be pushed ? CoreSight PMU (which can be built as a module) is using
-these packets to advertise the traceID allocated for a given CPU bound
-ETM (which is made dynamic due to the limited number of ids available).
-The perf tool can use these packets to then decode and separate the
-trace data from shared buffer.
+Applying your new patch to perf/core and building I get:-
 
-As of now, the series to enable the dynamic trace id allocation is
-blocked on this change.
+  CC      builtin-stat.o
+In file included from builtin-stat.c:71:
+util/bpf_counter.h:7:10: fatal error: bpf/bpf.h: No such file or directory
+    7 | #include <bpf/bpf.h>
+      |          ^~~~~~~~~~~
+compilation terminated.
+/datadisk/mike/work/kernel-ups/tools/build/Makefile.build:96: recipe
+for target 'builtin-stat.o' failed
+make[3]: *** [builtin-stat.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+  LD      pmu-events/pmu-events-in.o
+Makefile.perf:673: recipe for target 'perf-in.o' failed
+make[2]: *** [perf-in.o] Error 2
+Makefile.perf:235: recipe for target 'sub-make' failed
+make[1]: *** [sub-make] Error 2
+Makefile:69: recipe for target 'all' failed
+make: *** [all] Error 2
+
+which is a result of the bpf headers not being installed in their new
+location and the removal of the -I from the old location as mentioned
+in my last.
+So perhaps the issue is less about the build operations and more about
+the lack of #ifdef HAVE_LIBBPF_SUPPORT in certain other source files.
+
+However, if I put the #ifdef HAVE_LIBBPF_SUPPORT around the #include
+of util/bpf_counter.h, then compilation fails with multiple
+
+builtin-stat.c: In function =E2=80=98read_bpf_map_counters=E2=80=99:
+builtin-stat.c:463:9: error: implicit declaration of function
+=E2=80=98bpf_counter__read=E2=80=99; did you mean =E2=80=98refcount_read=E2=
+=80=99?
+[-Werror=3Dimplicit-function-declaration]
+  463 |   err =3D bpf_counter__read(counter);
+      |         ^~~~~~~~~~~~~~~~~
+      |         refcount_read
+
+type errors.
+
+Turns out that bpf_counter.h has inline stubs for these functions
+bracketed by #ifdef HAVE_BPF_SKEL / #else / #endif, which I presume
+are used in the non-bpf case.
+
+I can get a clean build with your patch if I adjust the HAVE_BFP_SKEL
+bracketing to encompass everything (including header includes, struct
+defines and other functions) other than the stubs in the #ifdef case
+and only the stubs in the #else case  - but I have no idea if this
+will have an adverse effect on other tools which may use the same
+header.
+
+Thanks and Regards
+
+Mike
+
+> >
+> > > Thanks!
+> > > Ian
+> > >
+> > > >  $(LIBBPF)-clean:
+> > > >         $(call QUIET_CLEAN, libbpf)
+> > > > --
+> > > > 2.17.1
+> > > >
+> >
+> >
+> >
+> > --
+> > Mike Leach
+> > Principal Engineer, ARM Ltd.
+> > Manchester Design Centre. UK
 
 
-Kind regards
-Suzuki
 
-> Suzuki
-> 
-
+--=20
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
