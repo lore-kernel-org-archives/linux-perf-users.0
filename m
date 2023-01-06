@@ -2,58 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97178C4708D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14372C54EBE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 15:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbjAFPNw (ORCPT
+        id S233742AbjAFPNx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 10:13:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60996 "EHLO
+        Fri, 6 Jan 2023 10:13:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235325AbjAFPNn (ORCPT
+        with ESMTP id S234801AbjAFPNe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 10:13:43 -0500
+        Fri, 6 Jan 2023 10:13:34 -0500
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D2481112
-        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 07:13:42 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id g9-20020a25bdc9000000b0073727a20239so2132788ybk.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 07:13:42 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876027F46F
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 07:13:33 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id n190-20020a25dac7000000b007447d7a25e4so2095366ybf.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 07:13:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1ELKsvqp/CVQlQh6V4i31lh01VunlKiC/zGB5BPQtSo=;
-        b=b1woKxlTxDe2aMky9Gxycj7tdnYGqz4wHF+OS3uMz1LMlDeH1+FDNBZHw6QGRgHJbE
-         8KrRqouh3zKL51ld/RXy0PvPwQ/BNTrQ3mOLgjhTT/8rXpw2ZFVBzsfIzg8d/8Po1Usf
-         zcdtFlfNIb+0vGlczu0pDF7irJQLaScldPBTyI7U4131OMwmPcYr88HTkl+JM8Xq+yMH
-         KcLDUd1Cw0RU8ccBM+008GgZ6idhgM1U+quqBNoEc1SU3z+gAaPQJZgfpbvtJQfM902M
-         9k1c+/R5CXLIvrS945izzUudap5Gvqigac4ZN/JCC6w5tg/19v8XvJDRQJnZEjbd/u2F
-         tA4Q==
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WQYhbBO5EgEKPlarlDf3lbw8Z+u809vOBp5gbzOXfWg=;
+        b=ZglYSagXvvcpZ/nsgRjuPaZDjdPN8PQgxIP65++2BPx/oEUTNGiJ6AoAHFhWjzunNj
+         z0Wh2NzigVLGZE5V70sHsDkSHRIlbX04YSsFY4kZj+VKrKXUSKQU/IHyWYpeZ4h6s+LM
+         HuFMdrRs+7Os/tAO0gnglPLlsTOnUvsLWM2eD5F3eYPeJZTBYEIeitL6HpEE9KDqjSpQ
+         fHJLpcogYbfis5/hdrejzsvN++vqkalAmAZWn3OYTiEmPV1uKdzaXwfIs9Cwkqa4oU3m
+         vJ6baOqAhLGcADA5RNODdFXe/HvYbRrf2AfZG0Xg+OxM7u0cMNGAGrzoIYzm23eopTfF
+         RLWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ELKsvqp/CVQlQh6V4i31lh01VunlKiC/zGB5BPQtSo=;
-        b=KiJLCPM66pG8M0cSIpaMblYzlSHp1SiApGvFb64oGkJsRjvw7Z05u2fzs7XpTy2YwS
-         U2fjEeM4lJ2ntZDNwoqc+v9dYhkRSqvsfBey1iBDn+adPmxBK0uqNRF6DDQCb72aBltC
-         P/1Mzro4h3QL//Gm42HBZkkCxr9bqoBrjVCjepjAc1547eyIgQRTsKgzGI7/qPI++Nk/
-         lEgxWyMhYc2xQRfWwfbjLCbU0KW6LUfLgp4u5tnG2gR/B8PtljZdURyPnwH42IRzFE8y
-         QeOIn7YLdfXDwUMG8nXrMvNsa1GgFen/p2qTxnn90wIo2cCm+hKu/Ahb/xV/WrLNl3k0
-         R+2A==
-X-Gm-Message-State: AFqh2krylbExw95mska1MqM9JHnNvROKYISuIhFjy30Lte4V+W8rDG4g
-        Chl2MM+OM/qG7nPmaJbMIR+tf1uNcloT
-X-Google-Smtp-Source: AMrXdXvOmlZdfXY1yS0XS9Kwv3Fztvy4P5OCtKpH7XLsXyDAs64NyLwnS9FfEtbqBZEWbJ1J9cMhjXaXt1kn
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WQYhbBO5EgEKPlarlDf3lbw8Z+u809vOBp5gbzOXfWg=;
+        b=4jOIiPNeytqKmwHKFuL+lREzmwqiHq7PeWID2XW7iKbnp24DmU/iJP7IEVmkINaBaH
+         oBjVeT/JOdggkZk4eJ+jtaB6l0Hqb1ZE77HEm9tSzOsl/JSB/m3xl8SkCH9OnmR3x2t8
+         SbJF9REcEEVU+X9V9pNQjc8uVm/JrJbOJL9QeotMqRp4T1a9xitK4WEtX0MtcN4yaPXw
+         1fg3B/tJI7LLRdJvfQuJ0adnDazlbn/eCvcNQ52hIPFm2t+oO5Cti4zVqC+qpVEnzmZp
+         fxgerKGJQLdTLvUuwdwbGB5USmvdh8+qnl2R3e8Lux21h7U78DgnUea1lh6zvo1IdJA+
+         rImg==
+X-Gm-Message-State: AFqh2kqA+mp8MbB2omdefHWLMHfgNvaXWM3sWrXR0qr0fvHfPIUU+DFv
+        R6mt3UmCBpsQSWEXh9uSmYuvgd/js0/v
+X-Google-Smtp-Source: AMrXdXv4uHiZIJSyj4+N+cNmODTWl//P88+WIKFyg84i0Dqs6IfbUibr86rm2sJOmfCfZgkb0LKGk2RcYAU8
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b317:a30:653a:18e5])
- (user=irogers job=sendgmr) by 2002:a25:5144:0:b0:753:4db:6fcc with SMTP id
- f65-20020a255144000000b0075304db6fccmr5824670ybb.1.1673018022074; Fri, 06 Jan
- 2023 07:13:42 -0800 (PST)
-Date:   Fri,  6 Jan 2023 07:13:20 -0800
-In-Reply-To: <20230106151320.619514-1-irogers@google.com>
-Message-Id: <20230106151320.619514-2-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a0d:cbd5:0:b0:469:d2b9:d8e8 with SMTP id
+ n204-20020a0dcbd5000000b00469d2b9d8e8mr5538863ywd.177.1673018012862; Fri, 06
+ Jan 2023 07:13:32 -0800 (PST)
+Date:   Fri,  6 Jan 2023 07:13:19 -0800
+Message-Id: <20230106151320.619514-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230106151320.619514-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v3 2/2] perf build: Fix build error when NO_LIBBPF=1
+Subject: [PATCH v3 1/2] perf build: Properly guard libbpf includes
 From:   Ian Rogers <irogers@google.com>
 To:     Mike Leach <mike.leach@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,91 +64,65 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The $(LIBBPF) target should only be a dependency of prepare if the
-static version of libbpf is needed. Add a new LIBBPF_STATIC variable
-that is set by Makefile.config. Use LIBBPF_STATIC to determine whether
-the CFLAGS, etc. need updating and for adding $(LIBBPF) as a prepare
-dependency.
+Including libbpf header files should be guarded by
+HAVE_LIBBPF_SUPPORT. In bpf_counter.h, move the skeleton utilities
+under HAVE_BPF_SKEL.
 
-As Makefile.config isn't loaded for "clean" as a target, always set
-LIBBPF_OUTPUT regardless of whether it is needed for $(LIBBPF). This
-is done to minimize conditional logic for $(LIBBPF)-clean.
-
-This issue and an original fix was reported by Mike Leach in:
-https://lore.kernel.org/lkml/20230105172243.7238-1-mike.leach@linaro.org/
-
-Fixes: 746bd29e348f ("perf build: Use tools/lib headers from install path")
+Fixes: d6a735ef3277 ("perf bpf_counter: Move common functions to bpf_counter.h")
 Reported-by: Mike Leach <mike.leach@linaro.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config |  2 ++
- tools/perf/Makefile.perf   | 21 ++++++++++++---------
- 2 files changed, 14 insertions(+), 9 deletions(-)
+ tools/perf/builtin-trace.c    | 2 ++
+ tools/perf/util/bpf_counter.h | 6 ++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index c2504c39bdcb..7c00ce0a7464 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -602,6 +602,8 @@ ifndef NO_LIBELF
-           dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
-         endif
-       else
-+        # Libbpf will be built as a static library from tools/lib/bpf.
-+	LIBBPF_STATIC := 1
- 	CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
-         CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
-         CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 13e7d26e77f0..4e370462e7e1 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -303,10 +303,12 @@ ifneq ($(OUTPUT),)
- else
-   LIBBPF_OUTPUT = $(CURDIR)/libbpf
- endif
--LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
--LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
--LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
--CFLAGS += -I$(LIBBPF_OUTPUT)/include
-+ifdef LIBBPF_STATIC
-+  LIBBPF_DESTDIR = $(LIBBPF_OUTPUT)
-+  LIBBPF_INCLUDE = $(LIBBPF_DESTDIR)/include
-+  LIBBPF = $(LIBBPF_OUTPUT)/libbpf.a
-+  CFLAGS += -I$(LIBBPF_OUTPUT)/include
-+endif
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 86e06f136f40..d21fe0f32a6d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -16,7 +16,9 @@
  
- ifneq ($(OUTPUT),)
-   LIBSUBCMD_OUTPUT = $(abspath $(OUTPUT))/libsubcmd
-@@ -393,10 +395,8 @@ endif
- export PERL_PATH
+ #include "util/record.h"
+ #include <api/fs/tracing_path.h>
++#ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
++#endif
+ #include "util/bpf_map.h"
+ #include "util/rlimit.h"
+ #include "builtin.h"
+diff --git a/tools/perf/util/bpf_counter.h b/tools/perf/util/bpf_counter.h
+index 4dbf26408b69..c6d21c07b14c 100644
+--- a/tools/perf/util/bpf_counter.h
++++ b/tools/perf/util/bpf_counter.h
+@@ -4,9 +4,12 @@
  
- PERFLIBS = $(LIBAPI) $(LIBPERF) $(LIBSUBCMD) $(LIBSYMBOL)
--ifndef NO_LIBBPF
--  ifndef LIBBPF_DYNAMIC
--    PERFLIBS += $(LIBBPF)
--  endif
-+ifdef LIBBPF_STATIC
-+  PERFLIBS += $(LIBBPF)
- endif
- 
- # We choose to avoid "if .. else if .. else .. endif endif"
-@@ -756,12 +756,15 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(arch_errno_name_array) \
- 	$(sync_file_range_arrays) \
- 	$(LIBAPI) \
--	$(LIBBPF) \
- 	$(LIBPERF) \
- 	$(LIBSUBCMD) \
- 	$(LIBSYMBOL) \
- 	bpf-skel
- 
-+ifdef LIBBPF_STATIC
-+prepare: $(LIBBPF)
-+endif
+ #include <linux/list.h>
+ #include <sys/resource.h>
 +
- $(OUTPUT)%.o: %.c prepare FORCE
- 	$(Q)$(MAKE) -f $(srctree)/tools/build/Makefile.build dir=$(build-dir) $@
++#ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
+ #include <bpf/libbpf.h>
++#endif
  
+ struct evsel;
+ struct target;
+@@ -87,6 +90,8 @@ static inline void set_max_rlimit(void)
+ 	setrlimit(RLIMIT_MEMLOCK, &rinf);
+ }
+ 
++#ifdef HAVE_BPF_SKEL
++
+ static inline __u32 bpf_link_get_id(int fd)
+ {
+ 	struct bpf_link_info link_info = { .id = 0, };
+@@ -127,5 +132,6 @@ static inline int bperf_trigger_reading(int prog_fd, int cpu)
+ 
+ 	return bpf_prog_test_run_opts(prog_fd, &opts);
+ }
++#endif /* HAVE_BPF_SKEL */
+ 
+ #endif /* __PERF_BPF_COUNTER_H */
 -- 
 2.39.0.314.g84b9a713c41-goog
 
