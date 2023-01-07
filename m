@@ -2,108 +2,159 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A02C61DB3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Jan 2023 21:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F163EC46467
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 Jan 2023 04:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjAFV4d (ORCPT
+        id S229901AbjAGENi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Jan 2023 16:56:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40994 "EHLO
+        Fri, 6 Jan 2023 23:13:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234603AbjAFV4a (ORCPT
+        with ESMTP id S229620AbjAGENf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Jan 2023 16:56:30 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BD25FAD;
-        Fri,  6 Jan 2023 13:56:20 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id bt23so3867233lfb.5;
-        Fri, 06 Jan 2023 13:56:20 -0800 (PST)
+        Fri, 6 Jan 2023 23:13:35 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C227265AC5
+        for <linux-perf-users@vger.kernel.org>; Fri,  6 Jan 2023 20:13:33 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id c9so2480699pfj.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 06 Jan 2023 20:13:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YJ1VHG8QdvW23DuDLj0FR+4QbFnd8LU8x0Q0vsj/g7A=;
-        b=XR6QnKRhjr9YVIh2ceB7fPSiS2E0NvSY04bzdRg0ka8DpR4RWE1IOJNn+j1qcNaCJC
-         Q2nzQng87I2Kml2/F2dFhK5Mgr/uTWveWjQx35w0eFoPumVKE08IdWUAJimaiqrM8vg8
-         XSrHSpolYohKDKG9LYxTH0VY378OLgyd17W8ivYolOJ/qNzQWPl1TaOcGJaRJQMkA0wE
-         rkuz8M2n81tFhSNKGnGEqdbOvEjYMVapT+FzEJuYcYrpRyyTBf4z3vEpkvFAwXGXqM3V
-         4rxlrQ38a4yaVOIabmJbvl210YyPHO3xiIQ1O8YDszJmGXRFVBcyn+dqNPJLlMj9jy0c
-         88Rw==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pQWRT1zBbVg0y6fDKie0cz1a4q8VBI/6TX+VABGDkME=;
+        b=vIlp3hGlUgxO+71HJ2g378GGa+buP7WDuMBWGRVmbYzXw2Yd9hhZY/hdbd6p4KgTH7
+         WcPCX1la83FBHfkilnVFcYNL8jYLAGSdGYwfzc1iahjr1xu8DiGbXYIdoPOJ8EZcXk5m
+         O1XdKJsdPSg6UYeyhTEUlcXpLW7jBu47Vi98EI0TKFdfFnD4+3Qb64SZ4KQcoidsNXHn
+         hTcBuidAnuaeyFI8cKthdoN7fy4k5Mq9g096qDVpJzygKjwV/yY2JNuywh+ueoNcuP+C
+         SG3t1FA5a8Mh0wFCAc2aPq+pJieax42WIXJssn3qJymf4KeEcPKO9+Cz2lpaSE/A0krc
+         JwDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YJ1VHG8QdvW23DuDLj0FR+4QbFnd8LU8x0Q0vsj/g7A=;
-        b=KXgExHHYJ5wsSOlYKnut42yaEMFZ0gZF0dWLIdKKADrxVtRTquCEgeOGT09hQBI5R1
-         xt7h9X9u6clBpPzouo+JiiOpmUiLSrKW9MdERsPIbXkOUosxvY6QY2bbghVv1TvMTG2K
-         6EeAD2c4pNXITJoyqiXAceJjVXAF1Rym2UhsdFaKGn5lpohf/eMEVr1sYL6SDd1lFGIL
-         vH8SKBWUo6jYXpwccEq4bcEch0Pbkib/KYa8Fmq1B7RZH368NZ5j/qyRYUmJMbwn8SkO
-         S2AJXDDiWQizBzjqF1MszfKeJ++963LYG43mYlRbYKe6nGJxJ2OhrqWObUjWYwdNMURH
-         W/dQ==
-X-Gm-Message-State: AFqh2kr25YACWBysDx813PdBuQ6xMuX91LbHxPatKgZpuDxEb8OcgSBF
-        HW7tbkzi2Yqj72siWdeeOtg=
-X-Google-Smtp-Source: AMrXdXuiFLTGHD/Jb7PNLzWczXpK9IOZHvL9ZCXGvQZb8hsNuAX0kGMNqxNRpnZnq3k4Hb5VpFKpTA==
-X-Received: by 2002:a05:6512:2308:b0:4b5:6b87:a5ce with SMTP id o8-20020a056512230800b004b56b87a5cemr17870719lfu.46.1673042179015;
-        Fri, 06 Jan 2023 13:56:19 -0800 (PST)
-Received: from localhost.localdomain ([46.147.136.10])
-        by smtp.gmail.com with ESMTPSA id p20-20020a056512235400b004cb430b5b38sm290474lfu.185.2023.01.06.13.56.17
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pQWRT1zBbVg0y6fDKie0cz1a4q8VBI/6TX+VABGDkME=;
+        b=mTNWXn87KoknUVZ12cyy3a2bBPlvm3vWrySQ1aEfCX7AjhFhtyRYTKiaF5Z2Fc77gW
+         FTbCV3z6sVn1PfYzlkAI9Wr7/Io5d50RNuIfmGVO77Bbb2bunusUR8OZ8EHL6H3Ip4s5
+         J539UconysxmSab0Ufw95mdPY0RpZxBD9Rbhn/rtbM7Gsb4vcOilIhmGRBwN7QSReZ+c
+         yiMBkAATICfvMxIw9Ka3H7t79yYQuWtuGw/XwoOqyTaWSNshiuRhylhwQNcX89Qhzdth
+         9D6GYNxzn2C4LMyrVrDkKaqR92dFbmxj5E2nqvU8dTZ/UAnatECgJq9DeOh59/JnrP+w
+         p7aw==
+X-Gm-Message-State: AFqh2kpGLCdyYNfCao0sYcRYbtjV9nCznX40biZtfjJXGgZY+bwEwtvP
+        T01z6bgpkSM2b7uYKQ+Gu+Q5xQ9wOKCcswTn3PKcVIh+
+X-Google-Smtp-Source: AMrXdXu4U4OwAfGRjWZiIXdg7FSe2JV8uBpjlvoWNFSk3JLNv/MSecSCsdBWPYHriG6Fp0QdOKAEPw==
+X-Received: by 2002:a05:6a00:2410:b0:580:ea08:5277 with SMTP id z16-20020a056a00241000b00580ea085277mr62634481pfh.16.1673064813083;
+        Fri, 06 Jan 2023 20:13:33 -0800 (PST)
+Received: from leoy-yangtze.lan ([152.70.116.104])
+        by smtp.gmail.com with ESMTPSA id p62-20020a622941000000b0058130f1eca1sm1790211pfp.182.2023.01.06.20.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 13:56:18 -0800 (PST)
-From:   Alexander Pantyukhin <apantykhin@gmail.com>
-To:     peterz@infradead.org, akpm@linux-foundation.org
-Cc:     mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Pantyukhin <apantykhin@gmail.com>
-Subject: [PATCH] tools:perf:scripts:python:intel-pt-events del unusedvar
-Date:   Sat,  7 Jan 2023 02:56:13 +0500
-Message-Id: <20230106215613.7159-1-apantykhin@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 06 Jan 2023 20:13:32 -0800 (PST)
+Date:   Sat, 7 Jan 2023 12:13:25 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [BUG] perf kmem: Broken because of missing tracepoints
+Message-ID: <Y7jxZZ+jVrldfcPx@leoy-yangtze.lan>
+References: <b5f82509-41d7-7598-6ec2-fcfa74c7ddaa@amd.com>
+ <Y7b6cmRE/+5HJLCa@kernel.org>
+ <Y7ewMG+0YKp9pgud@leoy-yangtze.lan>
+ <c4c5c3cb-f1a8-84ee-0dc8-8be0d63c820d@amd.com>
+ <Y7haGk30muVMjRhF@kernel.org>
+ <Y7heE/e+g9IbefmO@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y7heE/e+g9IbefmO@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The event_attr is never used later, the var is ok be deleted.
-Additional code simplification is to substitute string slice comparison
-with "substring" function. This case no need to know the length specific
-words.
+On Fri, Jan 06, 2023 at 02:44:51PM -0300, Arnaldo Carvalho de Melo wrote:
 
-Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
----
- tools/perf/scripts/python/intel-pt-events.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+[...]
 
-diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-index 08862a2582f4..28d08e2fb7cd 100644
---- a/tools/perf/scripts/python/intel-pt-events.py
-+++ b/tools/perf/scripts/python/intel-pt-events.py
-@@ -340,7 +340,6 @@ def print_srccode(comm, param_dict, sample, symbol, dso, with_insn):
- 	print(start_str, src_str)
- 
- def do_process_event(param_dict):
--	event_attr = param_dict["attr"]
- 	sample	   = param_dict["sample"]
- 	raw_buf	   = param_dict["raw_buf"]
- 	comm	   = param_dict["comm"]
-@@ -359,13 +358,13 @@ def do_process_event(param_dict):
- 		print(glb_switch_str[cpu])
- 		del glb_switch_str[cpu]
- 
--	if name[0:12] == "instructions":
-+	if name.startswith("instructions"):
- 		if glb_src:
- 			print_srccode(comm, param_dict, sample, symbol, dso, True)
- 		else:
- 			print_instructions_start(comm, sample)
- 			print_common_ip(param_dict, sample, symbol, dso)
--	elif name[0:8] == "branches":
-+	elif name.startswith("branches"):
- 		if glb_src:
- 			print_srccode(comm, param_dict, sample, symbol, dso, False)
- 		else:
--- 
-2.25.1
+> > > > Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> > > > Fixes: 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of tracepoints")
+> 
+> But I'm removing this Fixes: tag (leaving the reference in the 1st
+> commit log message paragraph tho), and removing the term "ABI", as AFAIK
+> tracepoints can change and tools have to adapt, right?
+> 
+> Lemme see...
+> 
+> Documentation/bpf/bpf_design_QA.rst
+> 
+> Q: Are tracepoints part of the stable ABI?
+> ------------------------------------------
+> A: NO. Tracepoints are tied to internal implementation details hence they are
+> subject to change and can break with newer kernels. BPF programs need to change
+> accordingly when this happens.
 
+Okay, it's fine for me to remove the term "ABI" in commit log.
+
+But I am confused for removing Fixes tag, this leads us to have no
+chance to backport this patch to any stable kernel branches, right?
+
+> ---
+> 
+> 
+> 
+> > > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > 
+> > > Thanks Leo. A quick test shows it fixes the issue.
+> > > 
+> > > Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> > 
+> > Thanks, applied.
+> 
+> And I retract that, we need to query for the existence of these
+> tracepoints and use it if available, as we expect a new perf tool to
+> work on an older kernel, one where the removed tracepoints may be
+> available.
+> 
+> Leo, can you try to rework this?
+
+Sure, will respin the patch.
+
+Thanks a lot for the suggestion and Ravi's testing.
+
+Leo
+
+> If you look at tools/perf/builtin-sched.c it queries for the existence
+> of:
+> 
+> static bool schedstat_events_exposed(void)
+> {
+>         /*
+>          * Select "sched:sched_stat_wait" event to check
+>          * whether schedstat tracepoints are exposed.
+>          */
+>         return IS_ERR(trace_event__tp_format("sched", "sched_stat_wait")) ?
+>                 false : true;
+> }
+> 
+>         /*
+>          * The tracepoints trace_sched_stat_{wait, sleep, iowait}
+>          * are not exposed to user if CONFIG_SCHEDSTATS is not set,
+>          * to prevent "perf sched record" execution failure, determine
+>          * whether to record schedstat events according to actual situation.
+>          */
+>         const char * const schedstat_args[] = {
+>                 "-e", "sched:sched_stat_wait",
+>                 "-e", "sched:sched_stat_sleep",
+>                 "-e", "sched:sched_stat_iowait",
+>         };
+>         unsigned int schedstat_argc = schedstat_events_exposed() ?
+>                 ARRAY_SIZE(schedstat_args) : 0;
+> 
+> So its something along those lines.
+> 
+> Thanks,
+> 
+> - Arnaldo
