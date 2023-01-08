@@ -2,102 +2,113 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DC0C53210
-	for <linux-perf-users@archiver.kernel.org>; Sun,  8 Jan 2023 06:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DEAC53210
+	for <linux-perf-users@archiver.kernel.org>; Sun,  8 Jan 2023 14:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbjAHGah (ORCPT
+        id S233104AbjAHONC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 Jan 2023 01:30:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59286 "EHLO
+        Sun, 8 Jan 2023 09:13:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbjAHGag (ORCPT
+        with ESMTP id S230478AbjAHONB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 Jan 2023 01:30:36 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B386BF62
-        for <linux-perf-users@vger.kernel.org>; Sat,  7 Jan 2023 22:30:35 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso6086301pjo.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Jan 2023 22:30:35 -0800 (PST)
+        Sun, 8 Jan 2023 09:13:01 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8DC8DFB2;
+        Sun,  8 Jan 2023 06:13:00 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id i9so8906855edj.4;
+        Sun, 08 Jan 2023 06:13:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d/O5w3F4C5T+vEj5//f116/Kvuf4mDqzw2DY/aDGU70=;
-        b=h0YZfr1bGIqdGNdQnNWhbUC97ssSwwwFneGaJtyVjLjsLRb3Uzk+VbR6g492/J8RRu
-         2V5w4tgT7C/xPpwL41UaPb+EL1hae7lmQcT49ixbMORvxjjUKeTvdPbIvVfN+IePO7Ot
-         H0XYWy8MwTo6f6075ef2swYDHzhr8HNJRdcvvwCZ89bh67oQNE3reMQDI0PHe68w50GA
-         SYjhxrxf0Mnf1rjPjhgBb3dxnDhurilsIH3ZjL+qX6/4XXfdTONytAO7hzb6mKi5dEq5
-         0QGoLQSsNV6wEVjEp+jHM5mHiexb7hjxPSlPMLg43uaDIICCOC2CzFSUGEvGDYM4HP+h
-         g/MA==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZrbqCrEQg21nkq8Yyz5Fr5Sfv2oN6ivy3M6K8VJvciM=;
+        b=exCDx1jnXH5u/B+L4J0whChijivpRrjtq58V04wHvUHbYUwKVEldSqGell8h6lCNHk
+         cek/aHqMPQtX78RZJaAZ/r161+BLhg/B8DjQN151tTt098KeNAsQ4EYZxQLJUqr5igmr
+         CyV+MuFpkFUPYKi+QFsmsriInLigbfmEqigFAnrRYUrGGruUhQdlHpj7lGmVvdVVq/tk
+         8RaN5kUDIeJSw2Va+ZzP9r+05OfbEEV4anVC3CpUMuKr8i7kUIhnUBUO+tRRlE8eTyaC
+         DP0zKnwIYySxZTrSEBujCo8n0ELDYhuUdTZmcat5286zEjprG6vPeb9lBk0VXsT+X7kI
+         tmrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d/O5w3F4C5T+vEj5//f116/Kvuf4mDqzw2DY/aDGU70=;
-        b=NVQACdYqu143x3TMPehMOrDH6R3H887yBrlyjD3mswlQwEdaTvm9HJj4WlytQMB8UG
-         saC3gwYuhxt88vGC1Mvm4eu2o+ILYsLZPCWq86ItUlY2bqakCO0o8PLBrKegxAElPy4T
-         vWHy2RXrDud86ex5o2pvM/QcAqmDoBgLd2bi+/47FWU9ANu3TaPRfaNBEZbuyqbQrDVo
-         L1y5oDErKo9yiKGr8VOcyhwqL3vSeIZ68H8ehKgzSxDBhtenesr5EdQ5rQi6Zzece9n3
-         vgaxUuiif45/sVIly0ZiAJjSOC0hIodtrKFEVZNCq+Y5XJO2l4pah19xqfcL/ddl+1+x
-         +RNQ==
-X-Gm-Message-State: AFqh2krzESIs6lnfTf+dkNl7boFuj7BQHjAryVZO6+JYCh3raAk3DsBW
-        H5HMXNZV1WKIQM+5Mq+vYVKQmQ==
-X-Google-Smtp-Source: AMrXdXvjD+zi3bYx2lRVs1KMakFn0Uys4QbCo6cqleQ1wQoWRBBEuDdsSLrxsPRqzF6lYr6pbuaRLA==
-X-Received: by 2002:a17:902:7287:b0:192:e0ab:a4c8 with SMTP id d7-20020a170902728700b00192e0aba4c8mr16267512pll.22.1673159434493;
-        Sat, 07 Jan 2023 22:30:34 -0800 (PST)
-Received: from leoy-yangtze.lan (211-23-48-221.hinet-ip.hinet.net. [211.23.48.221])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170903234100b0017f48a9e2d6sm3569125plh.292.2023.01.07.22.30.31
+        bh=ZrbqCrEQg21nkq8Yyz5Fr5Sfv2oN6ivy3M6K8VJvciM=;
+        b=3bIjY/yQpLfOvy6plb561jSTvdBbT+j+QRglg21PpV2RyN0ZZMN0499e/cG5uAqwx9
+         eGnDHPxSrxILARhUlS1luBwRAkGia88bkgXzdsIn2cahrXrRCZn7kSdISns6MvQKNj/5
+         hR/XxR5vhkRS4AIKNYgjBvtwqxMGzIha+8xZdSguhH4THsYRo5sU86pkmmRutjw5f44x
+         UoJAAPFh1rdNvp2gWSG4KsGPy2mmVu2/YS5H8DmnDkPf+0Zwq7ssBkF+dZ88gYpTghPo
+         QE+Xdx9rGZhWz8SWz9T82u1hWBdBGs7yyg7yvi9PPW5UmNOmVucg5/BVMHIJYySH95kM
+         KkfA==
+X-Gm-Message-State: AFqh2krnlX5mncH4rYBBXIie5MN02f9S5OyELe2na+rixVJkHDThlIH+
+        msBYjn8FQ3tAiOcvH2hk0ngLMHX5KwA=
+X-Google-Smtp-Source: AMrXdXu2zIzl2KwrBE8X16Uqk95LlkTXLaFHcY2YaAdjHDjnpjt5mM0cPMcf5IkA6WY7c+EFOPcQ2A==
+X-Received: by 2002:a05:6402:501f:b0:461:5e1b:85b5 with SMTP id p31-20020a056402501f00b004615e1b85b5mr64736007eda.2.1673187179092;
+        Sun, 08 Jan 2023 06:12:59 -0800 (PST)
+Received: from krava ([83.240.63.181])
+        by smtp.gmail.com with ESMTPSA id s1-20020aa7c541000000b00495c3573b36sm2603184edr.32.2023.01.08.06.12.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jan 2023 22:30:33 -0800 (PST)
-Date:   Sun, 8 Jan 2023 14:30:29 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Sun, 08 Jan 2023 06:12:58 -0800 (PST)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sun, 8 Jan 2023 15:12:55 +0100
+To:     Sohom Datta <sohomdatta1@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [BUG] perf kmem: Broken because of missing tracepoints
-Message-ID: <Y7pjBRFR6tYr/flM@leoy-yangtze.lan>
-References: <b5f82509-41d7-7598-6ec2-fcfa74c7ddaa@amd.com>
- <Y7b6cmRE/+5HJLCa@kernel.org>
- <Y7ewMG+0YKp9pgud@leoy-yangtze.lan>
- <c4c5c3cb-f1a8-84ee-0dc8-8be0d63c820d@amd.com>
- <Y7haGk30muVMjRhF@kernel.org>
- <Y7heE/e+g9IbefmO@kernel.org>
- <Y7jxZZ+jVrldfcPx@leoy-yangtze.lan>
- <b8adcc62-a403-bbb0-8540-4feea189ddc2@suse.cz>
+        Sohom Datta <sohomdatta1+git@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Prevent normalize() from reading into undefined memory
+Message-ID: <Y7rPZ21J2mnWiIcx@krava>
+References: <20221204105836.1012885-1-sohomdatta1+git@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b8adcc62-a403-bbb0-8540-4feea189ddc2@suse.cz>
+In-Reply-To: <20221204105836.1012885-1-sohomdatta1+git@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jan 07, 2023 at 07:41:25PM +0100, Vlastimil Babka wrote:
-
-[...]
-
-> > But I am confused for removing Fixes tag, this leads us to have no
-> > chance to backport this patch to any stable kernel branches, right?
+On Sun, Dec 04, 2022 at 04:28:35PM +0530, Sohom Datta wrote:
+> The current implementation does not account for a
+> trailing backslash followed by a null-byte. If a
+> null-byte is encountered following a backslash,
+> normalize() will continue reading (and potentially
+> writing) into garbage memory ignoring the EOS
+> null-byte.
 > 
-> Agree that leaving Fixes: would be appropriate to help anyone
-> backporting the original patch to notice they should consider this fix
-> too (although there's some disconnect between kernel and perf), it can't
-> hurt.
+> Signed-off-by: Sohom Datta <sohomdatta1+git@gmail.com>
 
-Thanks for the confirmation, Vlastimil.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-> Thanks everyone for fixing the fallout. I did expect some 3rd party
-> tools would need update to work with the slab tracepoints change, but
-> didn't realize it would be perf itself as well.
+thanks,
+jirka
 
-No worries, have sent a patch set to fix perf:
-https://lore.kernel.org/lkml/20230108062400.250690-1-leo.yan@linaro.org/
-
-Thanks,
-Leo
+> ---
+>  tools/perf/util/expr.l | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> index 0168a9637330..d47de5f270a8 100644
+> --- a/tools/perf/util/expr.l
+> +++ b/tools/perf/util/expr.l
+> @@ -42,8 +42,11 @@ static char *normalize(char *str, int runtime)
+>  	char *dst = str;
+>  
+>  	while (*str) {
+> -		if (*str == '\\')
+> +		if (*str == '\\') {
+>  			*dst++ = *++str;
+> +			if (!*str)
+> +				break;
+> +		}
+>  		else if (*str == '?') {
+>  			char *paramval;
+>  			int i = 0;
+> -- 
+> 2.38.1
+> 
