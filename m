@@ -2,170 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C373C54EBC
-	for <linux-perf-users@archiver.kernel.org>; Sun,  8 Jan 2023 06:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DC0C53210
+	for <linux-perf-users@archiver.kernel.org>; Sun,  8 Jan 2023 06:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjAHGY0 (ORCPT
+        id S231199AbjAHGah (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 Jan 2023 01:24:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
+        Sun, 8 Jan 2023 01:30:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231295AbjAHGYY (ORCPT
+        with ESMTP id S230092AbjAHGag (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 Jan 2023 01:24:24 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FC11EADF
-        for <linux-perf-users@vger.kernel.org>; Sat,  7 Jan 2023 22:24:21 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id b2so6146008pld.7
-        for <linux-perf-users@vger.kernel.org>; Sat, 07 Jan 2023 22:24:21 -0800 (PST)
+        Sun, 8 Jan 2023 01:30:36 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B386BF62
+        for <linux-perf-users@vger.kernel.org>; Sat,  7 Jan 2023 22:30:35 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso6086301pjo.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 07 Jan 2023 22:30:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R2N5suS0GnTvzlWBM80TjepEKKn3USjGIlHtbbXe7Gk=;
-        b=X2VGEwKYZShP9O19V2XqqSk4PNLIVEeSnmbh/ACR/NlfWmKsp3G38aCMqSap1nVK2a
-         FQo1XeubWVQ6TNNHe3InEh2m6rL9B+FeyrtmlSI3jsgHZ/0DFTPFvnYDd9ghed+9jvG/
-         jbQwcHrz26v91CmbFVV3UHpdfHMh7GNTJUKLpNQ55Yvemk6cVGG6AWriz1wgNvgQPHs3
-         N5PQS+VCO8/fXwp3Ybf17MBdxtQANLpQrc0j5UEWg2loYiZgZrpyqr9XlYDFzSIJZ4ri
-         gczowKNlErg+tmy5A05BWY9dXmvpa64N/+Tqb6aoWjzTKPdTITvi6Q68KZ7kyvG/QJAT
-         oniw==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=d/O5w3F4C5T+vEj5//f116/Kvuf4mDqzw2DY/aDGU70=;
+        b=h0YZfr1bGIqdGNdQnNWhbUC97ssSwwwFneGaJtyVjLjsLRb3Uzk+VbR6g492/J8RRu
+         2V5w4tgT7C/xPpwL41UaPb+EL1hae7lmQcT49ixbMORvxjjUKeTvdPbIvVfN+IePO7Ot
+         H0XYWy8MwTo6f6075ef2swYDHzhr8HNJRdcvvwCZ89bh67oQNE3reMQDI0PHe68w50GA
+         SYjhxrxf0Mnf1rjPjhgBb3dxnDhurilsIH3ZjL+qX6/4XXfdTONytAO7hzb6mKi5dEq5
+         0QGoLQSsNV6wEVjEp+jHM5mHiexb7hjxPSlPMLg43uaDIICCOC2CzFSUGEvGDYM4HP+h
+         g/MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R2N5suS0GnTvzlWBM80TjepEKKn3USjGIlHtbbXe7Gk=;
-        b=R0Nd+bjgAKcese2kILE+DbwRZJKszqh0CqEzgv0iDQaPU0Sv1/1IJqW6Mhhevj/ZiB
-         t2b4KLtd7rDaXDgimlT0Pi09gADzfnkAo44niuQFeRLGVYBLGiQK7Lbda8sffzwMt5Eb
-         aLpMriYsJB22fSxVqVRAzlgmmby4JvvvESt4qKUe4wRbDtjcAyijlFkplS2Z8cctIGF9
-         sjzX5hlyJNiIeC1YtaYxIkLjxi0cdxcoJBFqpvPgHC8tFDjj3xk91Qp3RKUp1gP8dDBt
-         HGWSY2DXL5HbCnyDqwPmwCb0z51vyjiRp9t4YEreHjJwcozTiOFH0choSMVEB7Hu3WPt
-         3iIw==
-X-Gm-Message-State: AFqh2krAmEgiYQpFMsRYTL4SYIqZVjQXk0jpxzmYSiVAGr81mvLKxnns
-        qJoAqvj1XwD/KWjDngQ8sq8E+w==
-X-Google-Smtp-Source: AMrXdXsrOBXEVSBC2PklQZBZlxeGCPQ0AMTx1UQywgIJ0EfG3WNgvCI32iKiRlULuaomDqfjPuvdCQ==
-X-Received: by 2002:a17:90a:d345:b0:223:f60e:87b5 with SMTP id i5-20020a17090ad34500b00223f60e87b5mr67536167pjx.20.1673159059912;
-        Sat, 07 Jan 2023 22:24:19 -0800 (PST)
-Received: from leoy-huanghe.lan (211-23-48-221.hinet-ip.hinet.net. [211.23.48.221])
-        by smtp.gmail.com with ESMTPSA id s1-20020a63f041000000b004784cdc196dsm3146510pgj.24.2023.01.07.22.24.16
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d/O5w3F4C5T+vEj5//f116/Kvuf4mDqzw2DY/aDGU70=;
+        b=NVQACdYqu143x3TMPehMOrDH6R3H887yBrlyjD3mswlQwEdaTvm9HJj4WlytQMB8UG
+         saC3gwYuhxt88vGC1Mvm4eu2o+ILYsLZPCWq86ItUlY2bqakCO0o8PLBrKegxAElPy4T
+         vWHy2RXrDud86ex5o2pvM/QcAqmDoBgLd2bi+/47FWU9ANu3TaPRfaNBEZbuyqbQrDVo
+         L1y5oDErKo9yiKGr8VOcyhwqL3vSeIZ68H8ehKgzSxDBhtenesr5EdQ5rQi6Zzece9n3
+         vgaxUuiif45/sVIly0ZiAJjSOC0hIodtrKFEVZNCq+Y5XJO2l4pah19xqfcL/ddl+1+x
+         +RNQ==
+X-Gm-Message-State: AFqh2krzESIs6lnfTf+dkNl7boFuj7BQHjAryVZO6+JYCh3raAk3DsBW
+        H5HMXNZV1WKIQM+5Mq+vYVKQmQ==
+X-Google-Smtp-Source: AMrXdXvjD+zi3bYx2lRVs1KMakFn0Uys4QbCo6cqleQ1wQoWRBBEuDdsSLrxsPRqzF6lYr6pbuaRLA==
+X-Received: by 2002:a17:902:7287:b0:192:e0ab:a4c8 with SMTP id d7-20020a170902728700b00192e0aba4c8mr16267512pll.22.1673159434493;
+        Sat, 07 Jan 2023 22:30:34 -0800 (PST)
+Received: from leoy-yangtze.lan (211-23-48-221.hinet-ip.hinet.net. [211.23.48.221])
+        by smtp.gmail.com with ESMTPSA id c1-20020a170903234100b0017f48a9e2d6sm3569125plh.292.2023.01.07.22.30.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 07 Jan 2023 22:24:19 -0800 (PST)
+        Sat, 07 Jan 2023 22:30:33 -0800 (PST)
+Date:   Sun, 8 Jan 2023 14:30:29 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
         Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 2/2] perf kmem: Support field "node" in evsel__process_alloc_event()
-Date:   Sun,  8 Jan 2023 14:24:00 +0800
-Message-Id: <20230108062400.250690-2-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230108062400.250690-1-leo.yan@linaro.org>
-References: <20230108062400.250690-1-leo.yan@linaro.org>
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: [BUG] perf kmem: Broken because of missing tracepoints
+Message-ID: <Y7pjBRFR6tYr/flM@leoy-yangtze.lan>
+References: <b5f82509-41d7-7598-6ec2-fcfa74c7ddaa@amd.com>
+ <Y7b6cmRE/+5HJLCa@kernel.org>
+ <Y7ewMG+0YKp9pgud@leoy-yangtze.lan>
+ <c4c5c3cb-f1a8-84ee-0dc8-8be0d63c820d@amd.com>
+ <Y7haGk30muVMjRhF@kernel.org>
+ <Y7heE/e+g9IbefmO@kernel.org>
+ <Y7jxZZ+jVrldfcPx@leoy-yangtze.lan>
+ <b8adcc62-a403-bbb0-8540-4feea189ddc2@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8adcc62-a403-bbb0-8540-4feea189ddc2@suse.cz>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Commit 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of
-tracepoints") adds the field "node" into the tracepoints 'kmalloc' and
-'kmem_cache_alloc', so this patch modifies the event process function to
-support the field "node".
+On Sat, Jan 07, 2023 at 07:41:25PM +0100, Vlastimil Babka wrote:
 
-If field "node" is existed by checking function evsel__field(), it stats
-the cross allocation.
+[...]
 
-When the "node" value is NUMA_NO_NODE (-1), it means the memory can be
-allocated from any memory node, in this case, we don't account it as a
-cross allocation.
+> > But I am confused for removing Fixes tag, this leads us to have no
+> > chance to backport this patch to any stable kernel branches, right?
+> 
+> Agree that leaving Fixes: would be appropriate to help anyone
+> backporting the original patch to notice they should consider this fix
+> too (although there's some disconnect between kernel and perf), it can't
+> hurt.
 
-After support the field "node" in evsel__process_alloc_event(),
-evsel__process_alloc_node_event() is duplicate with the previous one,
-so removes evsel__process_alloc_node_event().
+Thanks for the confirmation, Vlastimil.
 
-Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Fixes: 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of tracepoints")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/builtin-kmem.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+> Thanks everyone for fixing the fallout. I did expect some 3rd party
+> tools would need update to work with the slab tracepoints change, but
+> didn't realize it would be perf itself as well.
 
-diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 50a3df5dc18a..8ae0a1535293 100644
---- a/tools/perf/builtin-kmem.c
-+++ b/tools/perf/builtin-kmem.c
-@@ -26,6 +26,7 @@
- #include "util/string2.h"
- 
- #include <linux/kernel.h>
-+#include <linux/numa.h>
- #include <linux/rbtree.h>
- #include <linux/string.h>
- #include <linux/zalloc.h>
-@@ -185,22 +186,33 @@ static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *s
- 	total_allocated += bytes_alloc;
- 
- 	nr_allocs++;
--	return 0;
--}
- 
--static int evsel__process_alloc_node_event(struct evsel *evsel, struct perf_sample *sample)
--{
--	int ret = evsel__process_alloc_event(evsel, sample);
-+	/*
-+	 * Commit 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA
-+	 * version of tracepoints") adds the field "node" into the
-+	 * tracepoints 'kmalloc' and 'kmem_cache_alloc'.
-+	 *
-+	 * The legacy tracepoints 'kmalloc_node' and 'kmem_cache_alloc_node'
-+	 * also contain the field "node".
-+	 *
-+	 * If the tracepoint contains the field "node" the tool stats the
-+	 * cross allocation.
-+	 */
-+	if (evsel__field(evsel, "node")) {
-+		int node1, node2;
- 
--	if (!ret) {
--		int node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu}),
--		    node2 = evsel__intval(evsel, sample, "node");
-+		node1 = cpu__get_node((struct perf_cpu){.cpu = sample->cpu});
-+		node2 = evsel__intval(evsel, sample, "node");
- 
--		if (node1 != node2)
-+		/*
-+		 * If the field "node" is NUMA_NO_NODE (-1), we don't take it
-+		 * as a cross allocation.
-+		 */
-+		if ((node2 != NUMA_NO_NODE) && (node1 != node2))
- 			nr_cross_allocs++;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int ptr_cmp(void *, void *);
-@@ -1369,8 +1381,8 @@ static int __cmd_kmem(struct perf_session *session)
- 		/* slab allocator */
- 		{ "kmem:kmalloc",		evsel__process_alloc_event, },
- 		{ "kmem:kmem_cache_alloc",	evsel__process_alloc_event, },
--		{ "kmem:kmalloc_node",		evsel__process_alloc_node_event, },
--		{ "kmem:kmem_cache_alloc_node", evsel__process_alloc_node_event, },
-+		{ "kmem:kmalloc_node",		evsel__process_alloc_event, },
-+		{ "kmem:kmem_cache_alloc_node", evsel__process_alloc_event, },
- 		{ "kmem:kfree",			evsel__process_free_event, },
- 		{ "kmem:kmem_cache_free",	evsel__process_free_event, },
- 		/* page allocator */
--- 
-2.34.1
+No worries, have sent a patch set to fix perf:
+https://lore.kernel.org/lkml/20230108062400.250690-1-leo.yan@linaro.org/
 
+Thanks,
+Leo
