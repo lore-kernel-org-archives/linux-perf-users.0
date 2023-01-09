@@ -2,167 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A7C6379F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D615C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237206AbjAIPeW (ORCPT
+        id S235246AbjAIPju (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:34:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45534 "EHLO
+        Mon, 9 Jan 2023 10:39:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229876AbjAIPdC (ORCPT
+        with ESMTP id S237535AbjAIPjJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:33:02 -0500
+        Mon, 9 Jan 2023 10:39:09 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 009496157;
-        Mon,  9 Jan 2023 07:32:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B670261473;
+        Mon,  9 Jan 2023 07:35:36 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82571042;
-        Mon,  9 Jan 2023 07:32:43 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.37.103])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F0183F587;
-        Mon,  9 Jan 2023 07:31:59 -0800 (PST)
-Date:   Mon, 9 Jan 2023 15:31:56 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Atish Patra <atishp@atishpatra.org>,
-        linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Beeman Strong <beeman@rivosinc.com>,
-        Atish Patra <atishp@rivosinc.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Anup Patel <apatel@ventanamicro.com>
-Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V
- conundrum
-Message-ID: <Y7wzbF7cI6mLxUfE@FVFF77S0Q05N>
-References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
- <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB57C1042;
+        Mon,  9 Jan 2023 07:35:43 -0800 (PST)
+Received: from [10.57.37.91] (unknown [10.57.37.91])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 113593F587;
+        Mon,  9 Jan 2023 07:34:58 -0800 (PST)
+Message-ID: <ec5684cd-a527-4e13-2b05-31832d80535c@arm.com>
+Date:   Mon, 9 Jan 2023 15:34:57 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
+ for neoverse-n2
+Content-Language: en-US
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com>
+ <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
+ <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com>
+ <d4d132d9-1513-6a4e-981f-aa4bc4ebbcbb@linux.alibaba.com>
+ <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com>
+ <CAP-5=fVGmjFOZqOk0E1bcqeTHcJhEmoA-vrKcHLOs4B_ythT1g@mail.gmail.com>
+ <6971b848-2754-6909-d36b-ea80fe157e95@oracle.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <6971b848-2754-6909-d36b-ea80fe157e95@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 01:41:15PM +0100, Peter Zijlstra wrote:
-> On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
-> > Hi All,
-> > There was a recent uabi update[1] for RISC-V that allows the users to
-> > read cycle and instruction count without any checks.
-> > We tried to restrict that behavior to address security concerns
-> > earlier but it resulted in breakage for some user space
-> > applications[2].
-> > Thus, previous behavior was restored where a user on RISC-V platforms
-> > can directly read cycle or instruction count[3].
-> > 
-> > Comparison with other ISAs w.r.t user space access of counters:
-> > ARM64
-> >   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
-> >   -- Only for task bound events configured via perf.
-> > 
-> > X86
-> >  --- rdpmc instruction
-> >  --- Enable/Disable via “/sys/devices/cpu/rdpmc”
-> > -- Before v4.0
-> >  -- any process (even without active perf event) rdpmc
-> > After v4.0
-> > -- Default behavior changed to support only active events in a
-> > process’s context.
-> > -- Configured through perf similar to ARM64
-> > -- Continue to maintain backward compatibility for unrestricted access
-> > by writing 2 to “/sys/devices/cpu/rdpmc”
-> > 
-> > IMO, RISC-V should only enable user space access through perf similar
-> > to ARM64 and x86 (post v4.0).
-> > However, we do have to support the legacy behavior to avoid
-> > application breakage.
-> > As per my understanding a direct user space access can lead to the
-> > following problems:
-> > 
-> > 1) There is no context switch support, so counts from other contexts are exposed
-> > 2) If a perf user is allocated one of these counters, the counter
-> > value will be written
-> > 
-> > Looking at the x86 code as it continues to allow the above behavior,
-> > rdpmc_always_available_key is enabled in the above case. However,
-> > during the context switch (cr4_update_pce_mm)
-> > only dirty counters are cleared. It only prevents leakage from perf
-> > task to rdpmc task.
-> > 
-> > How does the context switch of counters work for users who enable
-> > unrestricted access by writing 2 to “/sys/devices/cpu/rdpmc” ?
-> > Otherwise, rdpmc users likely get noise from other applications. Is
-> > that expected ?
-> > This can be a security concern also where a rogue rdpmc user
-> > application can monitor other critical applications to initiate side
-> > channel attack.
-> > 
-> > Am I missing something? Please correct my understanding of the x86
-> > implementation if it is wrong.
+
+
+On 06/01/2023 10:14, John Garry wrote:
+> On 05/01/2023 21:13, Ian Rogers wrote:
+>>>> This may be a feasible idea. The value of slots comes from the
+>>>> register PMMIR_EL1, which I can read in
+>>>> /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. But how do I
+>>>> replace the slots in MetricExpr with the
+>>>> read slots values? Currently I understand that parameters in
+>>>> metricExpr only support events and constants.
+>>>>
+>>> Maybe during runtime we could create a pseudo metric/event for SLOT.
+>> For Intel we do this by just having a different constant for each
+>> architecture. It is fairly easy to add a new "literal", so you could
+>> add a #slots in expr__get_literal:
+>> https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/expr.c?h=perf*core*n407__;LyM!!ACWV5N9M2RV99hQ!IHcZFuFaLdQDQvVOnHVlbbME2S4aW8GohWUkydlejpi7ifFz61r7RutGXReRt0d88X_vDfkTySCiuD2PqOA$  Populating it would be the challenge 😄
 > 
-> So on x86 we have RDTSC and RDPMC instructions. RDTSC reads the
-> Time-Stamp-Counter which is a globally synchronized monotonic increasing
-> counter at some 'random' rate (idealized, don't ask). This thing is used
-> for time-keeping etc..
-
-For context, the arm64 equivalent would be CNTVCT_EL0, which is a constant-rate
-always-on free-running counter which is (architecturally) consistent across
-CPUs, whereas PMCCNTR_EL0 is not any of those things.
-
-> And then there's RDPMC which (optionally) allows reading the PMU
-> counters which are normally disabled and all 0.
+> Thanks for the pointer. I think that the challenge in populating it
+> really comes down to whether we would really want to make this generic.
 > 
-> Even if RDPMC is unconditionally allowed from userspace (the 2 option
-> you refer to) userspace will only be able to read these 0s unless
-> someone also programs the PMU. Linux only supports a single means of
-> doing so: perf (some people use /dev/msr to poke directly to the MSRs
-> but they get to keep all pieces).
+> I suppose that for arm64 we could have a method which accesses this
+> PMMIR_EL1 register, while for other archs we could have a weak function
+> which just returns NAN. If other archs want to use this key expr, they
+> can add their own method.
 > 
-> RDPMC is only useful if you read counters you own on yourself -- IOW
-> selfmonitoring, using the interface outlined in uapi/linux/perf_events.h
-> near struct perf_event_mmap_page.
-> 
-> Any other usage -- you get to keep the pieces.
 
-Yup.
+I wonder if it would be worthwhile and even more generic to add some
+sort of int containing file accessor construct. It could also have
+support for a default value when the file doesn't exist. For example:
 
-> Can you observe random other counters, yes, unavoidably so. The sysfs
-> control you mention was instituted to restrict this somewhat.
-> 
-> If the RISC-V counters are fundamentally the PMU counters that need to
-> be reset to trigger events, then you've managed to paint yourself into a
-> tight spot :/
-> 
-> Either you must dis-allow userspace access to these things (and break
-> them) or limit the PMU usage -- both options suck.
+  "MetricExpr": "ITLB / {file://<pmu>/caps/slots(5)}"
 
-> Now, I'm thinking that esp. something like instruction count is not
-> synchronized between cores (seems fundamentally impossible) and can only
-> be reasonably be consumed (and compared) when strictly affine to a
-> particular CPU, you can argue that applications doing this without also
-> strictly managing their affinity mask are broken anyway and therefore
-> your breakage is not in fact a breaking them -- you can't break
-> something that's already broken.
+It gets a bit fiddly because you might want to support absolute paths
+and paths relative to whatever PMU is being used. But it could prevent
+having to add some custom identifier and glue code for every possible
+file that just has an integer in it.
 
-Yup, that was my thinking too.
+It also wouldn't be possible to support the case where the file has
+bitfields in it that need to be extracted, so maybe we shouldn't do it.
 
-The intermediate option is to trap-and-emulate (as zero or some other fixed
-value), which highlghts the bug without crashing applications.
+James
 
-> 
-> Anyway, given RISC-V being a very young platform, I would try really
-> *really* *REALLY* hard to stomp on these applications and get them to
-> change in order to reclaim the PMU usage.
-
-Agreed.
-
-Thanks,
-Mark.
