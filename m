@@ -2,48 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A52C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 22:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72E9C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 23:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237586AbjAIW5u (ORCPT
+        id S234906AbjAIXid (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 17:57:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
+        Mon, 9 Jan 2023 18:38:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237614AbjAIW5r (ORCPT
+        with ESMTP id S236183AbjAIXi1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 17:57:47 -0500
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511B71CB12;
-        Mon,  9 Jan 2023 14:57:42 -0800 (PST)
-Received: by mail-io1-f42.google.com with SMTP id v65so1044485ioe.4;
-        Mon, 09 Jan 2023 14:57:42 -0800 (PST)
+        Mon, 9 Jan 2023 18:38:27 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B55A112D1B
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 15:38:25 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id j16-20020a05600c1c1000b003d9ef8c274bso4181551wms.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 15:38:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9V4h5//Bd9UpMKrMG2+TjtK29kWm5ULzWzIMWRNryEM=;
+        b=QXQzAUztRHQsHzELRUaK0C7il3idvJDISn5A+Y3vP4hCHLaWKxZ6ZOD0sjYVetESac
+         lhDZsPkeQlU5pkEMj2MPPb4CIQLqKJENYtscyqBP6kFSNTT5/rzYbNpu5oWxgZO7MYKp
+         LOmq/85+nwxingZIcC/l0N3bPCusicuKqPIOWugVVwRcLa9ufdtQfty4U9RRMUTwY9TU
+         +cvi0VxKnp28OO4E1Uk40Mj8AEa5l9DjcfjPfI1HQQmzFlzulUBVGZ5nkmpu23H2PcBt
+         3YwP5KU7qVDNT+wmV+QvxK4OyuAPdlI4peVLA/qprUE/8rpvx4bKpXOWNbPUx+YQfzax
+         f8Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=49JNs8oeXDdPVY+UK8w83HcBqSgWDBTT9wuFlozxsJw=;
-        b=vzvH5TojVkEwBCN4neb0gAeuSF0nw8Aa+I05awA1gHZA4DUjkeoqR8uUXzeXhi3JDW
-         r+s64jeZ7i6mYmZW/EBalVtzQNgxT9OIdbr9wD0yqGWlaZ936hr23xmWnKjDikwxKtqb
-         opzMxrD+wzdiezuM569KQ65JPJ3nXbB36YpwyGZFB1Cz9neP+QZkKpht9D7nW0C6DeCi
-         gGlNYFMNVu2LkQiOS5p4X4VuNxNnd9XcYm/7FZDRm9IyYT+OmFU5o/hIPhgMaPNsBtdn
-         BcB9mC42zUrPwvpuLGAw5vBg6P6ZS1umukHfZWOkjarlfe+ICwKRq4BO12VK0MG7Z5Jh
-         SLJg==
-X-Gm-Message-State: AFqh2ko/Iizk4fo+L8xOuGCUce+HV+DITiL7QFkiUCLpezaaeEawUOju
-        hBPDR3JKVx4uUdoNmqJ/G5voS8ZVKUZ/ciTbfzY=
-X-Google-Smtp-Source: AMrXdXu7LAbK4XXOCapvf/IZ/MiFBVjYePLTRSLVGhKnaD1y0a9MZJ26c2fIhsz4+dxCkoook+aFNnDURWX0JjCVEXs=
-X-Received: by 2002:a5e:c00c:0:b0:6a2:8015:afef with SMTP id
- u12-20020a5ec00c000000b006a28015afefmr6068571iol.149.1673305061518; Mon, 09
- Jan 2023 14:57:41 -0800 (PST)
+        bh=9V4h5//Bd9UpMKrMG2+TjtK29kWm5ULzWzIMWRNryEM=;
+        b=OAZhTR9PaT0fE6sSYYYp7su1uQleJTRlHVzOQn45yK63w4D6vRR3QaImclipgKj+ED
+         wvpYpi2NELJR6/5fx/IaFXPodEk5LctB/t2xyX306LtaF5bN/2hBXaE5TICs2gecXOnc
+         aa5rdQuolt3QFfQgKEgZfq/wgrA8Nuk5axMI6jrcywN6UcYDWGSjmgsvOBIgEXj/PkPU
+         AIVNvRVrqXuOhb83IUHEnXjjFCoA5aUx2nsPf01dRWBFXAxCrJivSGIDGW2SUdZ1K965
+         +FZzUdjSoziDGxi17M+DQzV9HXv/vyCYaOkc1kPOR+Y/wDTJpNi6D0FSoTZ7KXu2q5+X
+         U2Gg==
+X-Gm-Message-State: AFqh2kqGxZCghNtvDaFiFXC4bBkzs6qgdH82T3UBdGTmF9ykEYGA6Guk
+        8HsuA6VurLaz2P5B1PCVvz1ntpIuRw76EGIDmOVHcw==
+X-Google-Smtp-Source: AMrXdXsp8N9fPzF0m2WUDaHU4wjE/XziF4sQIOSQ7ApK1iwy2utrxE/hEKePYRU4kuzC2BxTgeMGwtSh8zZTbuab92I=
+X-Received: by 2002:a05:600c:5d5:b0:3cf:6a4c:af8b with SMTP id
+ p21-20020a05600c05d500b003cf6a4caf8bmr4919832wmd.115.1673307504112; Mon, 09
+ Jan 2023 15:38:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20230109223110.1201541-1-irogers@google.com>
-In-Reply-To: <20230109223110.1201541-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 9 Jan 2023 14:57:29 -0800
-Message-ID: <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
+References: <20230109223110.1201541-1-irogers@google.com> <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
+In-Reply-To: <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 9 Jan 2023 15:38:11 -0800
+Message-ID: <CAP-5=fXniy80Jpc2Hu=-GF7yDNUNHjs0=B2iqkUkMb6zArPukg@mail.gmail.com>
 Subject: Re: [PATCH v1 1/2] perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-To:     Ian Rogers <irogers@google.com>
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -67,173 +78,181 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+On Mon, Jan 9, 2023 at 2:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hi Ian,
+>
+> On Mon, Jan 9, 2023 at 2:31 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > Switch HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE to be a version number
+> > test on libtraceevent being >= to version 1.5.0. This also corrects a
+> > greater-than test to be greater-than-or-equal.
+> >
+> > Discussed here:
+> > https://lore.kernel.org/lkml/20221205225940.3079667-3-irogers@google.com/
+> >
+> > Fixes: b9a49f8cb02f ("perf tools: Check if libtracevent has TEP_FIELD_IS_RELATIVE")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/Makefile.config                             | 4 ----
+> >  tools/perf/builtin-trace.c                             | 2 +-
+> >  tools/perf/util/data-convert-bt.c                      | 2 +-
+> >  tools/perf/util/evsel.c                                | 2 +-
+> >  tools/perf/util/python.c                               | 2 +-
+> >  tools/perf/util/scripting-engines/trace-event-perl.c   | 2 +-
+> >  tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
+> >  tools/perf/util/sort.c                                 | 3 ++-
+> >  tools/perf/util/trace-event.h                          | 3 +++
+> >  9 files changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index c2504c39bdcb..f67ba8060162 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -1204,10 +1204,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+> >      LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
+> >      CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
+> >      $(call detected,CONFIG_LIBTRACEEVENT)
+> > -    LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE := $(shell expr 1 \* 255 \* 255 + 5 \* 255 + 0) # 1.5.0
+> > -    ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt $(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
+> > -      CFLAGS += -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > -    endif
+> >    else
+> >      dummy := $(warning Warning: libtraceevent is missing limiting functionality, please install libtraceevent-dev/libtraceevent-devel)
+> >    endif
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 86e06f136f40..927622ecc42e 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2729,7 +2729,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+> >                                 offset = format_field__intval(field, sample, evsel->needs_swap);
+> >                                 syscall_arg.len = offset >> 16;
+> >                                 offset &= 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> >                                         offset += field->offset + field->size;
+> >  #endif
+> > diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+> > index b842273458b8..98454f7a820c 100644
+> > --- a/tools/perf/util/data-convert-bt.c
+> > +++ b/tools/perf/util/data-convert-bt.c
+> > @@ -322,7 +322,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
+> >                 offset = tmp_val;
+> >                 len = offset >> 16;
+> >                 offset &= 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                 if (flags & TEP_FIELD_IS_RELATIVE)
+> >                         offset += fmtf->offset + fmtf->size;
+> >  #endif
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 999dd1700502..296292fa2c04 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -2784,7 +2784,7 @@ void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char
+> >         if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+> >                 offset = *(int *)(sample->raw_data + field->offset);
+> >                 offset &= 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> >                         offset += field->offset + field->size;
+> >  #endif
+> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > index 212031b97910..25a276710dfb 100644
+> > --- a/tools/perf/util/python.c
+> > +++ b/tools/perf/util/python.c
+> > @@ -442,7 +442,7 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
+> >                         offset  = val;
+> >                         len     = offset >> 16;
+> >                         offset &= 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                         if (field->flags & TEP_FIELD_IS_RELATIVE)
+> >                                 offset += field->offset + field->size;
+> >  #endif
+> > diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+> > index c097b7934fd4..5bcec514f697 100644
+> > --- a/tools/perf/util/scripting-engines/trace-event-perl.c
+> > +++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+> > @@ -393,7 +393,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+> >                         if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+> >                                 offset = *(int *)(data + field->offset);
+> >                                 offset &= 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> >                                         offset += field->offset + field->size;
+> >  #endif
+> > diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> > index e930f5f1f36d..759ed6eafa3c 100644
+> > --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> > +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> > @@ -994,7 +994,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+> >                                 offset  = val;
+> >                                 len     = offset >> 16;
+> >                                 offset &= 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> >                                         offset += field->offset + field->size;
+> >  #endif
+> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > index e188f74698dd..cfcc253239f0 100644
+> > --- a/tools/perf/util/sort.c
+> > +++ b/tools/perf/util/sort.c
+> > @@ -28,6 +28,7 @@
+> >  #include "time-utils.h"
+> >  #include "cgroup.h"
+> >  #include "machine.h"
+> > +#include "trace-event.h"
+> >  #include <linux/kernel.h>
+> >  #include <linux/string.h>
+> >
+> > @@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
+> >                 tep_read_number_field(field, a->raw_data, &dyn);
+> >                 offset = dyn & 0xffff;
+> >                 size = (dyn >> 16) & 0xffff;
+> > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> >                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> >                         offset += field->offset + field->size;
+>
+> Maybe I missed the previous discussion.
+>
+> As it's only used in the bit test, can we have something like this
+> in the header file?
+>
+> #if LIBTRACE_EVENT_VERSION < ...(1, 5, 0)
+> # define TEP_FIELD_IS_RELATIVE  0
+> #endif
+>
+> Thanks,
+> Namhyung
 
-On Mon, Jan 9, 2023 at 2:31 PM Ian Rogers <irogers@google.com> wrote:
->
-> Switch HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE to be a version number
-> test on libtraceevent being >= to version 1.5.0. This also corrects a
-> greater-than test to be greater-than-or-equal.
->
-> Discussed here:
-> https://lore.kernel.org/lkml/20221205225940.3079667-3-irogers@google.com/
->
-> Fixes: b9a49f8cb02f ("perf tools: Check if libtracevent has TEP_FIELD_IS_RELATIVE")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.config                             | 4 ----
->  tools/perf/builtin-trace.c                             | 2 +-
->  tools/perf/util/data-convert-bt.c                      | 2 +-
->  tools/perf/util/evsel.c                                | 2 +-
->  tools/perf/util/python.c                               | 2 +-
->  tools/perf/util/scripting-engines/trace-event-perl.c   | 2 +-
->  tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
->  tools/perf/util/sort.c                                 | 3 ++-
->  tools/perf/util/trace-event.h                          | 3 +++
->  9 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index c2504c39bdcb..f67ba8060162 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1204,10 +1204,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
->      LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
->      CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
->      $(call detected,CONFIG_LIBTRACEEVENT)
-> -    LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE := $(shell expr 1 \* 255 \* 255 + 5 \* 255 + 0) # 1.5.0
-> -    ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt $(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
-> -      CFLAGS += -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> -    endif
->    else
->      dummy := $(warning Warning: libtraceevent is missing limiting functionality, please install libtraceevent-dev/libtraceevent-devel)
->    endif
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 86e06f136f40..927622ecc42e 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -2729,7 +2729,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
->                                 offset = format_field__intval(field, sample, evsel->needs_swap);
->                                 syscall_arg.len = offset >> 16;
->                                 offset &= 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                                 if (field->flags & TEP_FIELD_IS_RELATIVE)
->                                         offset += field->offset + field->size;
->  #endif
-> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-> index b842273458b8..98454f7a820c 100644
-> --- a/tools/perf/util/data-convert-bt.c
-> +++ b/tools/perf/util/data-convert-bt.c
-> @@ -322,7 +322,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
->                 offset = tmp_val;
->                 len = offset >> 16;
->                 offset &= 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                 if (flags & TEP_FIELD_IS_RELATIVE)
->                         offset += fmtf->offset + fmtf->size;
->  #endif
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 999dd1700502..296292fa2c04 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2784,7 +2784,7 @@ void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char
->         if (field->flags & TEP_FIELD_IS_DYNAMIC) {
->                 offset = *(int *)(sample->raw_data + field->offset);
->                 offset &= 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                 if (field->flags & TEP_FIELD_IS_RELATIVE)
->                         offset += field->offset + field->size;
->  #endif
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 212031b97910..25a276710dfb 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -442,7 +442,7 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
->                         offset  = val;
->                         len     = offset >> 16;
->                         offset &= 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                         if (field->flags & TEP_FIELD_IS_RELATIVE)
->                                 offset += field->offset + field->size;
->  #endif
-> diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-> index c097b7934fd4..5bcec514f697 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-perl.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-> @@ -393,7 +393,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
->                         if (field->flags & TEP_FIELD_IS_DYNAMIC) {
->                                 offset = *(int *)(data + field->offset);
->                                 offset &= 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                                 if (field->flags & TEP_FIELD_IS_RELATIVE)
->                                         offset += field->offset + field->size;
->  #endif
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index e930f5f1f36d..759ed6eafa3c 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -994,7 +994,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
->                                 offset  = val;
->                                 len     = offset >> 16;
->                                 offset &= 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                                 if (field->flags & TEP_FIELD_IS_RELATIVE)
->                                         offset += field->offset + field->size;
->  #endif
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index e188f74698dd..cfcc253239f0 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -28,6 +28,7 @@
->  #include "time-utils.h"
->  #include "cgroup.h"
->  #include "machine.h"
-> +#include "trace-event.h"
->  #include <linux/kernel.h>
->  #include <linux/string.h>
->
-> @@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
->                 tep_read_number_field(field, a->raw_data, &dyn);
->                 offset = dyn & 0xffff;
->                 size = (dyn >> 16) & 0xffff;
-> -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
->                 if (field->flags & TEP_FIELD_IS_RELATIVE)
->                         offset += field->offset + field->size;
-
-Maybe I missed the previous discussion.
-
-As it's only used in the bit test, can we have something like this
-in the header file?
-
-#if LIBTRACE_EVENT_VERSION < ...(1, 5, 0)
-# define TEP_FIELD_IS_RELATIVE  0
-#endif
+We could but I think we lose some of the intention revealing-ness that
+TEP_FIELD_IS_RELATIVE is only present with libtraceevent 1.5.0 or
+newer.
 
 Thanks,
-Namhyung
+Ian
 
-
->  #endif
-> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-> index add6c5d9531c..1a1a2e6b24fb 100644
-> --- a/tools/perf/util/trace-event.h
-> +++ b/tools/perf/util/trace-event.h
-> @@ -20,6 +20,9 @@ struct trace_event {
->         struct tep_plugin_list  *plugin_list;
->  };
->
-> +/* Computes a version number comparable with LIBTRACEEVENT_VERSION from Makefile.config. */
-> +#define MAKE_LIBTRACEEVENT_VERSION(a, b, c) ((a)*255*255+(b)*255+(c))
-> +
->  typedef char *(tep_func_resolver_t)(void *priv,
->                                     unsigned long long *addrp, char **modp);
->
-> --
-> 2.39.0.314.g84b9a713c41-goog
->
+> >  #endif
+> > diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+> > index add6c5d9531c..1a1a2e6b24fb 100644
+> > --- a/tools/perf/util/trace-event.h
+> > +++ b/tools/perf/util/trace-event.h
+> > @@ -20,6 +20,9 @@ struct trace_event {
+> >         struct tep_plugin_list  *plugin_list;
+> >  };
+> >
+> > +/* Computes a version number comparable with LIBTRACEEVENT_VERSION from Makefile.config. */
+> > +#define MAKE_LIBTRACEEVENT_VERSION(a, b, c) ((a)*255*255+(b)*255+(c))
+> > +
+> >  typedef char *(tep_func_resolver_t)(void *priv,
+> >                                     unsigned long long *addrp, char **modp);
+> >
+> > --
+> > 2.39.0.314.g84b9a713c41-goog
+> >
