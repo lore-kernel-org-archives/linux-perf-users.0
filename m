@@ -2,113 +2,157 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DEAC53210
-	for <linux-perf-users@archiver.kernel.org>; Sun,  8 Jan 2023 14:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA782C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 02:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233104AbjAHONC (ORCPT
+        id S229717AbjAICqx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 Jan 2023 09:13:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57938 "EHLO
+        Sun, 8 Jan 2023 21:46:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230478AbjAHONB (ORCPT
+        with ESMTP id S230334AbjAICqx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 Jan 2023 09:13:01 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8DC8DFB2;
-        Sun,  8 Jan 2023 06:13:00 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id i9so8906855edj.4;
-        Sun, 08 Jan 2023 06:13:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrbqCrEQg21nkq8Yyz5Fr5Sfv2oN6ivy3M6K8VJvciM=;
-        b=exCDx1jnXH5u/B+L4J0whChijivpRrjtq58V04wHvUHbYUwKVEldSqGell8h6lCNHk
-         cek/aHqMPQtX78RZJaAZ/r161+BLhg/B8DjQN151tTt098KeNAsQ4EYZxQLJUqr5igmr
-         CyV+MuFpkFUPYKi+QFsmsriInLigbfmEqigFAnrRYUrGGruUhQdlHpj7lGmVvdVVq/tk
-         8RaN5kUDIeJSw2Va+ZzP9r+05OfbEEV4anVC3CpUMuKr8i7kUIhnUBUO+tRRlE8eTyaC
-         DP0zKnwIYySxZTrSEBujCo8n0ELDYhuUdTZmcat5286zEjprG6vPeb9lBk0VXsT+X7kI
-         tmrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZrbqCrEQg21nkq8Yyz5Fr5Sfv2oN6ivy3M6K8VJvciM=;
-        b=3bIjY/yQpLfOvy6plb561jSTvdBbT+j+QRglg21PpV2RyN0ZZMN0499e/cG5uAqwx9
-         eGnDHPxSrxILARhUlS1luBwRAkGia88bkgXzdsIn2cahrXrRCZn7kSdISns6MvQKNj/5
-         hR/XxR5vhkRS4AIKNYgjBvtwqxMGzIha+8xZdSguhH4THsYRo5sU86pkmmRutjw5f44x
-         UoJAAPFh1rdNvp2gWSG4KsGPy2mmVu2/YS5H8DmnDkPf+0Zwq7ssBkF+dZ88gYpTghPo
-         QE+Xdx9rGZhWz8SWz9T82u1hWBdBGs7yyg7yvi9PPW5UmNOmVucg5/BVMHIJYySH95kM
-         KkfA==
-X-Gm-Message-State: AFqh2krnlX5mncH4rYBBXIie5MN02f9S5OyELe2na+rixVJkHDThlIH+
-        msBYjn8FQ3tAiOcvH2hk0ngLMHX5KwA=
-X-Google-Smtp-Source: AMrXdXu2zIzl2KwrBE8X16Uqk95LlkTXLaFHcY2YaAdjHDjnpjt5mM0cPMcf5IkA6WY7c+EFOPcQ2A==
-X-Received: by 2002:a05:6402:501f:b0:461:5e1b:85b5 with SMTP id p31-20020a056402501f00b004615e1b85b5mr64736007eda.2.1673187179092;
-        Sun, 08 Jan 2023 06:12:59 -0800 (PST)
-Received: from krava ([83.240.63.181])
-        by smtp.gmail.com with ESMTPSA id s1-20020aa7c541000000b00495c3573b36sm2603184edr.32.2023.01.08.06.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jan 2023 06:12:58 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sun, 8 Jan 2023 15:12:55 +0100
-To:     Sohom Datta <sohomdatta1@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sohom Datta <sohomdatta1+git@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Prevent normalize() from reading into undefined memory
-Message-ID: <Y7rPZ21J2mnWiIcx@krava>
-References: <20221204105836.1012885-1-sohomdatta1+git@gmail.com>
+        Sun, 8 Jan 2023 21:46:53 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED00ABC8E;
+        Sun,  8 Jan 2023 18:46:51 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NqywZ2CmPz16MgN;
+        Mon,  9 Jan 2023 10:45:18 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Mon, 9 Jan 2023 10:46:49 +0800
+Subject: Re: [PATCH v2] perf record: Fix coredump with --overwrite and
+ --max-size
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <jiwei.sun@windriver.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20221229124728.66515-1-yangjihong1@huawei.com>
+ <Y7MEWK/z19QCaNoi@kernel.org>
+ <CAM9d7cjcWKBephb5p9ZPU2+wDAz04DYQJoKczORioD=es10hPw@mail.gmail.com>
+ <c65f89ef-173c-b828-f3b2-266387903149@huawei.com>
+ <CAM9d7chN9ecR7EgA1eN1QQXypZDwCFC-ym6BTQ0d1_XjuruLFw@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <a08af34e-acf2-d370-06bb-ea43d467f89d@huawei.com>
+Date:   Mon, 9 Jan 2023 10:46:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221204105836.1012885-1-sohomdatta1+git@gmail.com>
+In-Reply-To: <CAM9d7chN9ecR7EgA1eN1QQXypZDwCFC-ym6BTQ0d1_XjuruLFw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Dec 04, 2022 at 04:28:35PM +0530, Sohom Datta wrote:
-> The current implementation does not account for a
-> trailing backslash followed by a null-byte. If a
-> null-byte is encountered following a backslash,
-> normalize() will continue reading (and potentially
-> writing) into garbage memory ignoring the EOS
-> null-byte.
-> 
-> Signed-off-by: Sohom Datta <sohomdatta1+git@gmail.com>
+Hello,
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-> ---
->  tools/perf/util/expr.l | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+On 2023/1/7 5:12, Namhyung Kim wrote:
+> Hello,
 > 
-> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> index 0168a9637330..d47de5f270a8 100644
-> --- a/tools/perf/util/expr.l
-> +++ b/tools/perf/util/expr.l
-> @@ -42,8 +42,11 @@ static char *normalize(char *str, int runtime)
->  	char *dst = str;
->  
->  	while (*str) {
-> -		if (*str == '\\')
-> +		if (*str == '\\') {
->  			*dst++ = *++str;
-> +			if (!*str)
-> +				break;
-> +		}
->  		else if (*str == '?') {
->  			char *paramval;
->  			int i = 0;
-> -- 
-> 2.38.1
+> On Wed, Jan 4, 2023 at 8:09 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Hello,
+>>
+>> On 2023/1/4 0:50, Namhyung Kim wrote:
+>>> On Mon, Jan 2, 2023 at 8:20 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>>>
+>>>> Em Thu, Dec 29, 2022 at 12:47:28PM +0000, Yang Jihong escreveu:
+>>>>> When --overwrite and --max-size options of perf record are used together,
+>>>>> a segmentation fault occurs. The following is an example:
+>>>>>
+>>>>>    # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
+>>>>>     [ perf record: Woken up 1 times to write data ]
+>>>>>     perf: Segmentation fault
+>>>>>     Obtained 1 stack frames.
+>>>>>     [0xc4c67f]
+>>>>>     Segmentation fault (core dumped)
+>>>>>
+>>>>> backtrace of the core file is as follows:
+>>>>>
+>>>>>     #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
+>>>>>     #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
+>>>>>     #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
+>>>>>     #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
+>>>>>     #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
+>>>>>     #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
+>>>>>     #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
+>>>>>     #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
+>>>>>     #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
+>>>>>     #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
+>>>>>     #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
+>>>>>     #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
+>>>>>     #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
+>>>>>     #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
+>>>>>
+>>>>> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+>>>>> The process is as follows:
+>>>>>     __cmd_record
+>>>>>       -> record__free_thread_data
+>>>>>         -> zfree(&rec->thread_data)         // free rec->thread_data
+>>>>>       -> record__synthesize
+>>>>>         -> perf_event__synthesize_id_index
+>>>>>           -> process_synthesized_event
+>>>>>             -> record__write
+>>>>>               -> record__bytes_written     // access rec->thread_data
+>>>>>
+>>>>> we only need to check the value of done first.
+>>>>> Also add variable check in record__bytes_written for code hardening,
+>>>>> and save bytes_written separately to reduce one calculation.
+>>>>>
+>>>>> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+>>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>>>> ---
+>>>>>
+>>>>> Changes since v1:
+>>>>>    - Add variable check in record__bytes_written for code hardening.
+>>>>>    - Save bytes_written separately to reduce one calculation.
+>>>>>    - Remove rec->opts.tail_synthesize check.
+>>>>
+>>>> Namhyung, are you ok with this now?
+>>>>
+>>>> - Arnaldo
+>>>>
+>>>>>    tools/perf/builtin-record.c | 26 +++++++++++++++++---------
+>>>>>    1 file changed, 17 insertions(+), 9 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>>>>> index 29dcd454b8e2..acba9e43e519 100644
+>>>>> --- a/tools/perf/builtin-record.c
+>>>>> +++ b/tools/perf/builtin-record.c
+>>>>> @@ -230,16 +230,29 @@ static u64 record__bytes_written(struct record *rec)
+>>>>>         u64 bytes_written = rec->bytes_written;
+>>>>>         struct record_thread *thread_data = rec->thread_data;
+>>>>>
+>>>>> +     if (thread_data == NULL)
+>>>>> +             return bytes_written;
+>>>>> +
+>>>
+>>> Then it won't count bytes written by threads, right?
+>>> I think it needs to be saved somewhere.
+>>>
+>> I'm not sure here. Can you explain it more clearly, thanks :)
+>> I can modify it accordingly.
+>>
+>> I think if thread_data == NULL, it is not thread data.
+>> In this case, we just return rec->bytes_written.
 > 
+> It can be thread data but freed before tail synthesis, right?
+> In that case, I think it needs to add bytes_written by threads
+> to calculate the correct data size.
+Em... In the __cmd_record function, record__stop_threads is called 
+before record__free_thread_data, so if the thread has been freed, there 
+will be no thread data.
+I think it's okay to ignore the situation you mentioned above.
+
+Thanks,
+Yang
