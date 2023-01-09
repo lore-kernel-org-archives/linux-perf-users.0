@@ -2,210 +2,201 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B685C71131
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424C5C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237661AbjAITnT (ORCPT
+        id S237011AbjAIT5C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 14:43:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46132 "EHLO
+        Mon, 9 Jan 2023 14:57:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237679AbjAITm5 (ORCPT
+        with ESMTP id S235360AbjAIT5B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 14:42:57 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EC939FA6
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 11:42:56 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id m7so9322149wrn.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 11:42:56 -0800 (PST)
+        Mon, 9 Jan 2023 14:57:01 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5933A11C05
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 11:56:59 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso13995266pjt.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 11:56:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sm+C6Y4VHJEDtGwIvvGgY7BGxijkOAR29lDr/Tbsy3A=;
-        b=tDlDq1FkSgoi9HsSAmHq/G1pvTD21qW7XYfQnck5oYb2AhOo9kFjJMrLzYSkivk1T4
-         4BPoJn1oyAJsLYH87L+dNhESNeJXB4dkJ5TQ0Gq5UwBIuCdQEfYvPfJmGp6kowUbBj0g
-         ZOjVOa+89Z3KIgebtQN+Ug9K2zNt6viJ17kxjohRc91l1gyfcHSBGya+kQEw97VYLr77
-         DteJKaG7Pb6gW0/OgmH6lq03RZTQIqOZpYpmB7ZbU9VW1Bnp9mVIofo7kGSSBwBWglSi
-         rdV/IAq18wsDLyUVEoVIsE0ga0iIruBN10dy2evrp1LsBCBP8CleQefNS5rvS7xnkUo+
-         Ft1Q==
+        d=atishpatra.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c0/0D3Mo+wWzikUduU1CAWV0Q8LsaDVd0/kxK56kXw8=;
+        b=OwX1Qbq6gonTa1LwP39ZsEU2QCCmVCurCBjbRc9yTUKyXZH8CHaDklcQWIYMrQFNWJ
+         UrGnDfWU2LfqjqxunfcPKXvQksl7MuXGseixNYA5MxF3pr9ZOCBupn5GbsVDr/YxwU2i
+         0DwMvH2EbjOBNVkS0i5/uPqlAvdbA90lDoBOo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sm+C6Y4VHJEDtGwIvvGgY7BGxijkOAR29lDr/Tbsy3A=;
-        b=zei82IrP69XzhSnSrWBw9Q51i0J+tRwDNxg9Z9tx44h8IC0HwtqrZg/xRxNB219Xo7
-         2hO7L29X6nFS6BQhtRoubfynyopuRdLgGum9qNE6AxR+biCzagBdIrl8iB6Nc3dyOx1X
-         pF6e7JThg9qtUIboG/NR6c2rwtJBrT0U4bUSejdoTjXg/zzOBbKTqJf3CI7dRf3CdROH
-         71d7xXbOgMadl7YrpC4nYyg2nd8lPdI5Vm4N0fGAmG1N/irK99uzVR+mcjG8eeIMrtjO
-         K8aPBxs9xi08fjSXw6dVK2lubVCQMm0WlL9sPzFnhQRHK2zaYVtpTqmK+GtsLHVn1mRi
-         sk6Q==
-X-Gm-Message-State: AFqh2kpYa3ILKPIfeDm9yWyb9cUtqhq38jah0ResCEGTQBtEp6FjlrJb
-        ai3UCnQNTWQg4PbdkeC8vMwZVyAwTq2VOoaejrcQEw==
-X-Google-Smtp-Source: AMrXdXvmpe85LGRAEvZEbNLRLiITVTgyGbd3Lmkkw5o1zaaUX68O/76T6yls5toHkzKVDFagcX3kdIZLT8OIDP0ag8Q=
-X-Received: by 2002:a05:6000:12cb:b0:28c:459a:d5d with SMTP id
- l11-20020a05600012cb00b0028c459a0d5dmr1401361wrx.654.1673293374842; Mon, 09
- Jan 2023 11:42:54 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c0/0D3Mo+wWzikUduU1CAWV0Q8LsaDVd0/kxK56kXw8=;
+        b=fQiSI8rcAvXcp5LmT5XKsHx33/vrZPV7Y0NnHHvEEbYsVEeu3r2xwqQlN/L8nt16J+
+         z9q4OV5n1q0Hz3K+3+lVlV6xN2aSSjplSck8SWDF0TgwpAx7E08I+9bdoD5zLCzBBFJx
+         pGjEFmpWBXHqorEMs49PaPmcOrUjIlsbCSFaJeqwVS5VOWAm5UuMJbwFk6Yatmu7aD6T
+         NUkNi7CpIiFqmhZJxJCmLC59LQ57d/jMPN7xgbfurm/Imu8uAu2+7nN36QMnRz85rhIK
+         6dYk2HEaceRpk46j9HljCkCqNVQOV4Wx+GyxrPAcaNoeFRzhtdV9wh5PFFzg8ioZS9+Q
+         pJAw==
+X-Gm-Message-State: AFqh2kqxd+TqcOw4RbuvWuvij7P/fWhNFDoc/JTKUo5PHDjsh+Xl5wai
+        /Rz4y7Yr5sv4uV5C9XRX/UcFIdXohU78ALd5dgAl
+X-Google-Smtp-Source: AMrXdXsTJ7aO2iHHoPnOlTsETf7fuA9nWCMKbupCxgU+CEyC/kSDdnp1NEvXq0hwRCfiNrNdXwSC1KZF42ZCb3bvN1M=
+X-Received: by 2002:a17:902:6b83:b0:192:d373:2e02 with SMTP id
+ p3-20020a1709026b8300b00192d3732e02mr2064310plk.75.1673294218760; Mon, 09 Jan
+ 2023 11:56:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20230105030434.255603-1-irogers@google.com> <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
- <CAA6y9eV50Xw6tsq7dDJ61_uNM-yKdN8O+VU=6wcUFr7MGUbOaA@mail.gmail.com>
-In-Reply-To: <CAA6y9eV50Xw6tsq7dDJ61_uNM-yKdN8O+VU=6wcUFr7MGUbOaA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 9 Jan 2023 11:42:42 -0800
-Message-ID: <CAP-5=fXRr_cTYWhO4=HicrddbwVt=DpmEnvAQMY0sTsgcSx4jQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf script flamegraph: Avoid d3-flame-graph package dependency
-To:     Martin Spier <spiermar@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
+ <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 9 Jan 2023 11:56:47 -0800
+Message-ID: <CAOnJCU+qsJk9oL-2L8fJuGvpaJsyfwQ5+wFXA1L1jM6Fe=FK6A@mail.gmail.com>
+Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V conundrum
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        996839@bugs.debian.org, Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Brendan Gregg <brendan@intel.com>
+        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Anup Patel <apatel@ventanamicro.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 6, 2023 at 7:32 AM Martin Spier <spiermar@gmail.com> wrote:
+On Mon, Jan 9, 2023 at 4:41 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Thu, Jan 5, 2023 at 1:25 AM Ian Rogers <irogers@google.com> wrote:
+> On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
+> > Hi All,
+> > There was a recent uabi update[1] for RISC-V that allows the users to
+> > read cycle and instruction count without any checks.
+> > We tried to restrict that behavior to address security concerns
+> > earlier but it resulted in breakage for some user space
+> > applications[2].
+> > Thus, previous behavior was restored where a user on RISC-V platforms
+> > can directly read cycle or instruction count[3].
 > >
-> > On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Currently flame graph generation requires a d3-flame-graph template to
-> > > be installed. Unfortunately this is hard to come by for things like
-> > > Debian [1]. If the template isn't installed warn and download it from
-> > > jsdelivr CDN. If downloading fails generate a minimal flame graph
-> > > again with the javascript coming from jsdelivr CDN.
-> > >
-> > > [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/scripts/python/flamegraph.py | 63 ++++++++++++++++++-------
-> > >  1 file changed, 45 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-> > > index b6af1dd5f816..808b0e1c9be5 100755
-> > > --- a/tools/perf/scripts/python/flamegraph.py
-> > > +++ b/tools/perf/scripts/python/flamegraph.py
-> > > @@ -25,6 +25,27 @@ import io
-> > >  import argparse
-> > >  import json
-> > >  import subprocess
-> > > +import urllib.request
-> > > +
-> > > +minimal_html = """<head>
-> > > +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
+> > Comparison with other ISAs w.r.t user space access of counters:
+> > ARM64
+> >   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
+> >   -- Only for task bound events configured via perf.
 > >
-> > (hopefully fixed Martin Spier's e-mail address)
+> > X86
+> >  --- rdpmc instruction
+> >  --- Enable/Disable via =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
+> > -- Before v4.0
+> >  -- any process (even without active perf event) rdpmc
+> > After v4.0
+> > -- Default behavior changed to support only active events in a
+> > process=E2=80=99s context.
+> > -- Configured through perf similar to ARM64
+> > -- Continue to maintain backward compatibility for unrestricted access
+> > by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
 > >
-> > The @4.1.3 comes from the README.md:
-> > https://github.com/spiermar/d3-flame-graph/blob/master/README.md
-> > Does it make sense just to drop it or use @latest ? It'd be nice not
-> > to patch this file for every d3-flame-graph update.
+> > IMO, RISC-V should only enable user space access through perf similar
+> > to ARM64 and x86 (post v4.0).
+> > However, we do have to support the legacy behavior to avoid
+> > application breakage.
+> > As per my understanding a direct user space access can lead to the
+> > following problems:
 > >
-> > Thanks,
-> > Ian
+> > 1) There is no context switch support, so counts from other contexts ar=
+e exposed
+> > 2) If a perf user is allocated one of these counters, the counter
+> > value will be written
+> >
+> > Looking at the x86 code as it continues to allow the above behavior,
+> > rdpmc_always_available_key is enabled in the above case. However,
+> > during the context switch (cr4_update_pce_mm)
+> > only dirty counters are cleared. It only prevents leakage from perf
+> > task to rdpmc task.
+> >
+> > How does the context switch of counters work for users who enable
+> > unrestricted access by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=
+=80=9D ?
+> > Otherwise, rdpmc users likely get noise from other applications. Is
+> > that expected ?
+> > This can be a security concern also where a rogue rdpmc user
+> > application can monitor other critical applications to initiate side
+> > channel attack.
+> >
+> > Am I missing something? Please correct my understanding of the x86
+> > implementation if it is wrong.
 >
-> Yes, that's the right email.
+> So on x86 we have RDTSC and RDPMC instructions. RDTSC reads the
+> Time-Stamp-Counter which is a globally synchronized monotonic increasing
+> counter at some 'random' rate (idealized, don't ask). This thing is used
+> for time-keeping etc..
 >
-> Using @latest is an option, but it might be better to just use @4 to
-> avoid breaking changes. Not expecting any major releases in the near
-> future.
+> And then there's RDPMC which (optionally) allows reading the PMU
+> counters which are normally disabled and all 0.
 >
-> Thanks,
-> Martin
+> Even if RDPMC is unconditionally allowed from userspace (the 2 option
+> you refer to) userspace will only be able to read these 0s unless
+> someone also programs the PMU. Linux only supports a single means of
+> doing so: perf (some people use /dev/msr to poke directly to the MSRs
+> but they get to keep all pieces).
+>
 
-Thanks Martin! I'll leave it using @4 then. Could I trouble you for an
-Acked-by or Reviewed-by for the change? It would be nice to resolve
-the Debian bug.
+It makes sense now. Thanks!!
 
-Thanks,
-Ian
+AFAIK, the /dev/msr interface is also allowed for root users only. So that
+covers the security concerns I was asking about.
 
-> >
-> > > +</head>
-> > > +<body>
-> > > +  <div id="chart"></div>
-> > > +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
-> > > +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
-> > > +  <script type="text/javascript">
-> > > +  const stacks = [/** @flamegraph_json **/];
-> > > +  // Note, options is unused.
-> > > +  const options = [/** @options_json **/];
-> > > +
-> > > +  var chart = flamegraph();
-> > > +  d3.select("#chart")
-> > > +        .datum(stacks[0])
-> > > +        .call(chart);
-> > > +  </script>
-> > > +</body>
-> > > +"""
-> > >
-> > >  # pylint: disable=too-few-public-methods
-> > >  class Node:
-> > > @@ -50,15 +71,18 @@ class FlameGraphCLI:
-> > >          self.args = args
-> > >          self.stack = Node("all", "root")
-> > >
-> > > -        if self.args.format == "html" and \
-> > > -                not os.path.isfile(self.args.template):
-> > > -            print("Flame Graph template {} does not exist. Please install "
-> > > -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
-> > > -                  "package, specify an existing flame graph template "
-> > > -                  "(--template PATH) or another output format "
-> > > -                  "(--format FORMAT).".format(self.args.template),
-> > > -                  file=sys.stderr)
-> > > -            sys.exit(1)
-> > > +        if self.args.format == "html":
-> > > +            if os.path.isfile(self.args.template):
-> > > +                self.template = f"file://{self.args.template}"
-> > > +            else:
-> > > +                print(f"""
-> > > +Warning: Flame Graph template '{self.args.template}'
-> > > +does not exist, a template will be downloaded via http. To avoid this
-> > > +please install a package such as the js-d3-flame-graph or
-> > > +libjs-d3-flame-graph, specify an existing flame graph template
-> > > +(--template PATH) or another output format (--format FORMAT).
-> > > +""", file=sys.stderr)
-> > > +            self.template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
-> > >
-> > >      @staticmethod
-> > >      def get_libtype_from_dso(dso):
-> > > @@ -129,15 +153,18 @@ class FlameGraphCLI:
-> > >              options_json = json.dumps(options)
-> > >
-> > >              try:
-> > > -                with io.open(self.args.template, encoding="utf-8") as template:
-> > > -                    output_str = (
-> > > -                        template.read()
-> > > -                        .replace("/** @options_json **/", options_json)
-> > > -                        .replace("/** @flamegraph_json **/", stacks_json)
-> > > -                    )
-> > > -            except IOError as err:
-> > > -                print("Error reading template file: {}".format(err), file=sys.stderr)
-> > > -                sys.exit(1)
-> > > +                with urllib.request.urlopen(self.template) as template:
-> > > +                    output_str = '\n'.join([
-> > > +                        l.decode('utf-8') for l in template.readlines()
-> > > +                    ])
-> > > +            except Exception as err:
-> > > +                print(f"Error reading template {self.template}: {err}\n"
-> > > +                      "a minimal flame graph will be generated", file=sys.stderr)
-> > > +                output_str = minimal_html
-> > > +
-> > > +            output_str = output_str.replace("/** @options_json **/", options_json)
-> > > +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
-> > > +
-> > >              output_fn = self.args.output or "flamegraph.html"
-> > >          else:
-> > >              output_str = stacks_json
-> > > --
-> > > 2.39.0.314.g84b9a713c41-goog
-> > >
+> RDPMC is only useful if you read counters you own on yourself -- IOW
+> selfmonitoring, using the interface outlined in uapi/linux/perf_events.h
+> near struct perf_event_mmap_page.
+>
+> Any other usage -- you get to keep the pieces.
+>
+> Can you observe random other counters, yes, unavoidably so. The sysfs
+> control you mention was instituted to restrict this somewhat.
+>
+> If the RISC-V counters are fundamentally the PMU counters that need to
+> be reset to trigger events, then you've managed to paint yourself into a
+> tight spot :/
+>
+> Either you must dis-allow userspace access to these things (and break
+> them) or limit the PMU usage -- both options suck.
+>
+>
+> Now, I'm thinking that esp. something like instruction count is not
+> synchronized between cores (seems fundamentally impossible) and can only
+> be reasonably be consumed (and compared) when strictly affine to a
+> particular CPU, you can argue that applications doing this without also
+> strictly managing their affinity mask are broken anyway and therefore
+> your breakage is not in fact a breaking them -- you can't break
+> something that's already broken.
+>
+
+I think most broken applications were using rdcycle to measure time
+which was wrong anyways.
+It probably happened because there was no "time" CSR in the early
+hardwares. Thus, the rdtime would
+trap & emulated by the firmware which was slow. This lead to user
+space application to use rdcycle which
+was not correct either. So the existing applications are broken for
+using rdcycle as well.
+
+Since both cycle & instret behave similarly (fixed counters), they get
+enabled/disabled together.
+
+>
+> Anyway, given RISC-V being a very young platform, I would try really
+> *really* *REALLY* hard to stomp on these applications and get them to
+> change in order to reclaim the PMU usage.
+
+Yes. Thanks for your valuable input.
+
+--=20
+Regards,
+Atish
