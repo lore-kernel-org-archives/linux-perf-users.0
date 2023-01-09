@@ -2,106 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51D3C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 20:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6807DC54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 20:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237290AbjAIUlK (ORCPT
+        id S235473AbjAIUou (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 15:41:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52264 "EHLO
+        Mon, 9 Jan 2023 15:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237397AbjAIUlF (ORCPT
+        with ESMTP id S237588AbjAIUod (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 15:41:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E53D9B840;
-        Mon,  9 Jan 2023 12:40:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2F415B80FA3;
-        Mon,  9 Jan 2023 20:40:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5239C433D2;
-        Mon,  9 Jan 2023 20:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673296854;
-        bh=ntZPimoI5coAlKdMrcaOdpUwrWa2LY/Q3irbWCzsKCA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VKiqNBM4dBxXJWJ9FWSUyjYaLt41JtbYn6uU7S8SNsi2XnOXsxUuLGvoEIAC2k7tw
-         Bdqa6//ADO6mol2VUQ6zUFJ2M3ngayBPb3TDgH8PdN9BvfO3noxTuonocu5LFPy+LM
-         oqDcGN2OpC9sl5TvxLoHrZdj827WjB3C/+A05Jmduz1q0ERm+R4vZLB8WXIuh+0N7M
-         /XChEh2GtBiXguiAiCCgQQbcDm1UVVIJ0kr4JSoHUuPqik42xExbA2Rid020IVIasN
-         khTFmZy2mfZfX4194aBCmyd5gwo+2gle/4DcyFBab2pu2XnMZiAE7agSGJOagGjkqP
-         hh1nLFXHiWSAQ==
-Date:   Mon, 9 Jan 2023 20:40:47 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>
-Subject: Re: [PATCH v4 3/8] arm64/sysreg: Convert SPE registers to automatic
- generation
-Message-ID: <Y7x7z3C+voadToys@sirena.org.uk>
-References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
- <20220825-arm-spe-v8-7-v4-3-327f860daf28@kernel.org>
- <Y7xsDXFlNjiQ1AIe@sirena.org.uk>
- <CAL_JsqLFSMzmTSAjtWWotzFy=JLr+rjim4F_X5thWK9ji6z22g@mail.gmail.com>
+        Mon, 9 Jan 2023 15:44:33 -0500
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC9D4ECB8;
+        Mon,  9 Jan 2023 12:44:31 -0800 (PST)
+Received: by mail-ot1-x330.google.com with SMTP id r6-20020a056830448600b006848a91d910so2301825otv.12;
+        Mon, 09 Jan 2023 12:44:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ePA/IX1EL8d1Iza9X32BzjolB/4rRGKbpwCcOLOiZ4A=;
+        b=hj9I9N6LdA8bmryOkT6IM15+nru45NlRRM/eaZ5QNHKsreypmvOlx5cAZ/kXqaHtJY
+         XApewPY3ibQHQj5Od3n92dJVoK/qMTOpiWVE/O3ZixuMoO/NwCSsSCxdwCUrNj/FvYvE
+         A2/NVfCNSwoi2xejSUOJqz08IsIKKfjxA2g3oSGcuxYlqd7HKEZ6Z9CdmkJ/ude7qqBk
+         wg/zCNuaQCyprjlV5EsYIQZRPwdooHIb9dHC8VfxjNQgFmwq1Fz2sHOO3cY86qdQtdun
+         AIyigHJOHDwsJ4hNB8wlzIXqSUxZbbPKhiyuQYhpGqS6EFuW7Q6YyMedP+8Gmof49L59
+         IYzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ePA/IX1EL8d1Iza9X32BzjolB/4rRGKbpwCcOLOiZ4A=;
+        b=41MIGJy9PsNN7nr39+Rssw170IAzVexhQ+uT9oItaJnA6aUGMDGMHChmJ2Qh6aUDkR
+         HV7FSyZo2kxsp8zZOPv/zNGb7mO263xG0mV/dI7of6BlP/mIsC4wf3TgtV6CpAlyP1j5
+         jQdtJk1Epy5HeTAz1i8ezh0JrTaZ5a03WGmMUB/bpFUKvqxRr2A3Kqsfj5SY/+/RCq+/
+         qnEw1aHKlEWREGhR8S+QBpURsncqnOyKMyoNj6kzJpmm4hcU5fy3HjPY3SsgnNepRH4n
+         farM7AUtZBjD4vPUTGKQCCMwmjbixFzJ3luYui+XguDcCmt2vsz4UaPZHGrmDHk2QBIr
+         EISA==
+X-Gm-Message-State: AFqh2koQ2KpCw5mh26JecLX6rVEAxOU0EWZFQ1Q5FeXXe/yEWfbSKp8Q
+        YJzAWtc7ZO6hirjnV0wM3a/H1Ic4a6s2AqyYsg0N0luudpQRt/ol
+X-Google-Smtp-Source: AMrXdXuWevfq7MaXD6yeFl3FOjTb0cXp+nF6Y92mxk+aAn2xWAjKk7qNSv4APLm4uOkjHzAEB8advUpAbQrrdSiCM1g=
+X-Received: by 2002:a9d:61ca:0:b0:670:6dc1:6c2c with SMTP id
+ h10-20020a9d61ca000000b006706dc16c2cmr4065515otk.375.1673297070961; Mon, 09
+ Jan 2023 12:44:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1XIdtARmznQkOCwl"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLFSMzmTSAjtWWotzFy=JLr+rjim4F_X5thWK9ji6z22g@mail.gmail.com>
-X-Cookie: Editing is a rewording activity.
+References: <20230109093347.6639-1-apantykhin@gmail.com>
+In-Reply-To: <20230109093347.6639-1-apantykhin@gmail.com>
+From:   Alexander Pantyukhin <apantykhin@gmail.com>
+Date:   Tue, 10 Jan 2023 00:44:20 +0400
+Message-ID: <CAPi66w-mB1LSW=O7mm3jqH0FRCr9h6Y4CiXfTPA6vP=TPNSx2w@mail.gmail.com>
+Subject: Re: [PATCH] tools:perf:scripts:python:mem-phys-addr fix performance
+To:     mark.rutland@arm.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi!
+There are some things which I would like to discuss there.
 
---1XIdtARmznQkOCwl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+1) I found that if there is for example the following system_ram:
+system_ram =3D [int('00000000', 16) , int('0000ffff', 16)]
 
-On Mon, Jan 09, 2023 at 02:18:41PM -0600, Rob Herring wrote:
-> On Mon, Jan 9, 2023 at 1:33 PM Mark Brown <broonie@kernel.org> wrote:
+and the func
 
-> > What changed to invalidate my Reviewed-by?
+def is_system_ram(phys_addr):
+    #/proc/iomem is sorted
+    position =3D bisect.bisect(system_ram, phys_addr)
+    if position % 2 =3D=3D 0:
+    return False
+    return True
 
-> >    https://lore.kernel.org/all/Y2kgC9QlBwvXTLe6@sirena.org.uk/
+The value:
+is_system_ram(int('0000ffff', 16)) is False.
+It seems to be a mistake. This value is the end of the range and it
+should be a True.
+(There is another check on the 88 line: if int(m[0], 16) <=3D phys_addr
+<=3D int(m[1], 16)
+where both ranges are included in the check.)
 
-> Ugg, sorry. Nothing changed, I just forgot to add it.
+2) The script reads the whole file when parse_iomem()
+and uses this information for pmem and system_ram. What if to store
+whole info about addresses
+for all memory types?
+In This case it's possible to store the data structure like the
+following example:
 
-Ah, no worries, glad I asked before redoing the review - I'll add one
-here for the benefit of the bots:
+/proc/iomem
+00000000-0000ffff : reserved
+00010000-0009f3ff : System RAM
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Result: [(00000000, 'reserved'), (0000ffff, 'reserved'), (00010000,
+'System RAM'), (0009f3ff, 'System RAM')....]
 
---1XIdtARmznQkOCwl
-Content-Type: application/pgp-signature; name="signature.asc"
+This case the searching would be O(log(n)) for all types not just for
+"System RAM" and "Persistent Memory".
 
------BEGIN PGP SIGNATURE-----
+But the behavior of the script would be changed: the current version
+re-read the file and scan the fresh data
+when neither "System RAM" nor "Persistent Memory". But the suggested
+fix requires to call parse_iomem() when
+fresh data is required.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmO8e84ACgkQJNaLcl1U
-h9CpzAf7BoOwriuFtR17xQbp7rTn/cRof+X5gGKrd6Tu8F5Yu5rNxhiWewqU091n
-8NwzucxAPyhzP6NsCnijhrHB2yh8qv7a+z1OoDKqfkwMaZV+B9e0+DeenN2w3trL
-+fJVGjIJBLBIjM/3ExIp6OszN+Qs7Rmf1seL9DV0msIlPGKUoSDwdaDMHgeI7He5
-H6qsid510KHNcKfT06nGQC/e0hTA1k/65TsDtguxqrc4wEiFniTO3QCY1GcQ4aBX
-icbGJDuc27FMFrgYHsI8/gWorlPkki8ABGuHyEywhDIQlvyX/LIx0+GiFs2sZ8C/
-O4JqNcC8Z3FIGtXv13qYTsgwa2Hq9g==
-=GN38
------END PGP SIGNATURE-----
+If these changes are approved, I would like to fix it.
 
---1XIdtARmznQkOCwl--
+Best, Alex.
+
+=D0=BF=D0=BD, 9 =D1=8F=D0=BD=D0=B2. 2023 =D0=B3. =D0=B2 13:33, Alexander Pa=
+ntyukhin <apantykhin@gmail.com>:
+>
+> Avoid double strip() calls for getting memory type.
+>
+> Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
+> ---
+>  tools/perf/scripts/python/mem-phys-addr.py | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scri=
+pts/python/mem-phys-addr.py
+> index 1f332e72b9b0..f267d8382eda 100644
+> --- a/tools/perf/scripts/python/mem-phys-addr.py
+> +++ b/tools/perf/scripts/python/mem-phys-addr.py
+> @@ -8,7 +8,6 @@ from __future__ import print_function
+>
+>  import os
+>  import sys
+> -import struct
+>  import re
+>  import bisect
+>  import collections
+> @@ -30,12 +29,14 @@ event_name =3D None
+>  def parse_iomem():
+>         global f
+>         f =3D open('/proc/iomem', 'r')
+> -       for i, j in enumerate(f):
+> +       for _, j in enumerate(f):
+>                 m =3D re.split('-|:',j,2)
+> -               if m[2].strip() =3D=3D 'System RAM':
+> +               memory_type =3D m[2].strip()
+> +
+> +               if memory_type =3D=3D 'System RAM':
+>                         system_ram.append(int(m[0], 16))
+>                         system_ram.append(int(m[1], 16))
+> -               if m[2].strip() =3D=3D 'Persistent Memory':
+> +               elif memory_type =3D=3D 'Persistent Memory':
+>                         pmem.append(int(m[0], 16))
+>                         pmem.append(int(m[1], 16))
+>
+> @@ -75,6 +76,7 @@ def is_persistent_mem(phys_addr):
+>  def find_memory_type(phys_addr):
+>         if phys_addr =3D=3D 0:
+>                 return "N/A"
+> +
+>         if is_system_ram(phys_addr):
+>                 return "System RAM"
+>
+> --
+> 2.25.1
+>
