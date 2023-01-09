@@ -2,122 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF29C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383C3C678D9
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236528AbjAIPM5 (ORCPT
+        id S237099AbjAIPOG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:12:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
+        Mon, 9 Jan 2023 10:14:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236962AbjAIPMQ (ORCPT
+        with ESMTP id S237062AbjAIPNI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:12:16 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EDA666564;
-        Mon,  9 Jan 2023 07:11:51 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 580501042;
-        Mon,  9 Jan 2023 07:12:33 -0800 (PST)
-Received: from [10.57.37.91] (unknown [10.57.37.91])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8269F3F587;
-        Mon,  9 Jan 2023 07:11:49 -0800 (PST)
-Message-ID: <14dd06c2-39f8-ccb5-ce59-f3a1e45c94d0@arm.com>
-Date:   Mon, 9 Jan 2023 15:11:47 +0000
+        Mon, 9 Jan 2023 10:13:08 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 889E114024;
+        Mon,  9 Jan 2023 07:12:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 252366117E;
+        Mon,  9 Jan 2023 15:12:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B76C4339E;
+        Mon,  9 Jan 2023 15:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673277138;
+        bh=daZxDGs86Bk5MzJICViW/vk55hlhK8dtOjzS01jPUdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AeciNFTE67BGP9fkkAqtyDeygJS/MFRECSzsSBN2B93Jv4QgR2sVekPUYyjp6/6ty
+         Y32B5J+XlZb1gH7tErm7KYMrq5jZbXodSvGNrN9wGfRMOUKBRQwRbUTKF6kLORTpRR
+         Lbse5yYItfyjcYh/kvP4BwzNd+SesrxNdGfnGDTOKm2HFOeLJYhXAX2uY9nc/vQum6
+         kwrRJkxY9YfahipQzRaPqCaSoarFt30Q5nQIPwLQexSo5egaMP91iDSs6ZnR6FG1KH
+         JBjUeGCrRO2303DBWwJN+1Jj4Xy7hrFDbf5xFqA4EsXpIt1K5goZ3wsgC9bEhzcHeJ
+         FW/BPCXK5iKCQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C726C40468; Mon,  9 Jan 2023 12:12:15 -0300 (-03)
+Date:   Mon, 9 Jan 2023 12:12:15 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+Message-ID: <Y7wuz6EOggZ8Wysb@kernel.org>
+References: <20230106151320.619514-1-irogers@google.com>
+ <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
+ <Y7hZccgOiueB31a+@kernel.org>
+ <Y7hgKMDGzQlankL1@kernel.org>
+ <Y7hgoVKBoulCbA4l@kernel.org>
+ <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 1/2] perf kmem: Support legacy tracepoints
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-References: <20230108062400.250690-1-leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230108062400.250690-1-leo.yan@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Fri, Jan 06, 2023 at 11:06:46AM -0800, Ian Rogers escreveu:
+> So trying to get build-test working on my Debian derived distro is a
+> PITA with broken feature detection for options I don't normally use.
 
+Its really difficult to have perf building with so many dependent
+libraries, mowing out some should be in order.
 
-On 08/01/2023 06:23, Leo Yan wrote:
-> Commit 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of
-> tracepoints") removed tracepoints 'kmalloc_node' and
-> 'kmem_cache_alloc_node', these two tracepoints have disappeared in the
-> latest kernel, but we also need to consider the tool should be backward
-> compatible with old kernels.
-> 
-> If detects the tracepoint "kmem:kmalloc_node" is existed on a system,
-> this patch enables the legacy tracepoints, otherwise, it will ignore
-> them for the new kernels.
-> 
-> Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> Fixes: 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of tracepoints")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/builtin-kmem.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-> index e20656c431a4..50a3df5dc18a 100644
-> --- a/tools/perf/builtin-kmem.c
-> +++ b/tools/perf/builtin-kmem.c
-> @@ -1824,6 +1824,19 @@ static int parse_line_opt(const struct option *opt __maybe_unused,
->  	return 0;
->  }
->  
-> +static bool slab_legacy_tp_is_exposed(void)
-> +{
-> +	/*
-> +	 * The tracepoints "kmem:kmalloc_node" and
-> +	 * "kmem:kmem_cache_alloc_node" have been removed on the latest
-> +	 * kernel, if the tracepoint "kmem:kmalloc_node" is existed it
-> +	 * means the tool is running on an old kernel, we need to
-> +	 * rollback to support these legacy tracepoints.
-> +	 */
-> +	return IS_ERR(trace_event__tp_format("kmem", "kmalloc_node")) ?
-> +		false : true;
-> +}
-> +
->  static int __cmd_record(int argc, const char **argv)
->  {
->  	const char * const record_args[] = {
-> @@ -1831,22 +1844,28 @@ static int __cmd_record(int argc, const char **argv)
->  	};
->  	const char * const slab_events[] = {
->  	"-e", "kmem:kmalloc",
-> -	"-e", "kmem:kmalloc_node",
->  	"-e", "kmem:kfree",
->  	"-e", "kmem:kmem_cache_alloc",
-> -	"-e", "kmem:kmem_cache_alloc_node",
->  	"-e", "kmem:kmem_cache_free",
->  	};
-> +	const char * const slab_legacy_events[] = {
-> +	"-e", "kmem:kmalloc_node",
-> +	"-e", "kmem:kmem_cache_alloc_node",
-> +	};
+> I'll try to fix this.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+Thanks.
+ 
+> In any case I think I've spotted what is really happening here and it
+> isn't a failure but a feature :-D The build is specifying
 
-This fixes the error with mem:kmalloc_node for me.
+I get it.
 
-I was thinking that it might be best to add all events to the list
-conditionally instead of just the legacy ones. That way, the same error
-won't happen in the future. But maybe it's best to have an explicit
-error again in case the breaking change was unintentional so it's fine
-as it is I think.
+> LIBBPF_DYNAMIC=1 which means you get the libbpf headers from
+> /usr/include. I think the build is trying to do this on a system with
+> an old libbpf and hence getting the failures above. Previously, even
+> though we wanted the dynamic headers we still had a -I, this time for
+> the install_headers version. Now you really are using the system
+> version and it is broken. This means a few things:
+> - the libbpf feature test should fail if code like above is going to fail,
 
-James
+Agreed.
 
+> - we may want to contemplate supporting older libbpfs (I'd rather not),
+
+I'd rather require everybody to be up to the latest trends, but I really
+don't think that is a reasonable expectation.
+
+> - does build-test have a way to skip known issues like this?
+
+Unsure, Jiri?
+
+But yeah, previous experiences with Andrii were that we can do not too
+costly feature checks, not using .c programs that would fail if some
+required feature wasn't present but instead would just do some grep on a
+header and if some "smell" wasn't scent, just fail the cap query.
+
+- Arnaldo
