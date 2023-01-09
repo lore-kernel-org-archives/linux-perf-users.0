@@ -2,211 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584C7C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16E5C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 18:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233816AbjAIPx4 (ORCPT
+        id S231220AbjAISIm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:53:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
+        Mon, 9 Jan 2023 13:08:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230493AbjAIPxs (ORCPT
+        with ESMTP id S237510AbjAISIY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:53:48 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B0910F4;
-        Mon,  9 Jan 2023 07:53:48 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id g68so5060926pgc.11;
-        Mon, 09 Jan 2023 07:53:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kr5NMyR17w820E39Zxy+TJT5WIxXv3t9mTGHg5DI4M8=;
-        b=p925wfq85MYYr0Q3szQHiqh8M9TGBDNLmFWeMdVCKRfm+cOHibl08yqwJoSo2r7XJP
-         wq9Jltk/+brtH8hNCZXvq0DxtwSQIazxtjZdEKfg/0vGYUECRtOKJhbchra23Qxq01EI
-         LW2KfmroEgha10Hiqqq7sbs4sKftMAXbHM5UfrApMgHovRtAjqup/7ZDx5c66hJHq9Cr
-         iYTmJQehTgnexoKO7TcMDfBVxLmHJagL/RtulJH5m9HvVCQxeaP/W6dGAdxxBRvcFDn6
-         /uu4CaMMaHvzdo/E1y8HoopqpLRDOCKFzxs2QxX+RtbfC5zpKXwCLbC6QNQfLNGjuHM5
-         8s7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kr5NMyR17w820E39Zxy+TJT5WIxXv3t9mTGHg5DI4M8=;
-        b=vsVUyyhZaXC1xZa0W/BkpO28agq8dxXdBLZwJdYz8+hOKSGPkePAbr+IXJer1xGS/x
-         vIa08qKS+TyQTvnM8R3uG7GqRUPS+6gIzWiLrfTPFdU1WcAyl9kU3Wh9FZIAZu+JzHzo
-         dVDzK3utkV+zj8y4iS+c8obaR64okqEHZYm9NISdKQEpy6YKMkdAI+Cfpz/9CTWrBPPO
-         cHHwE8mEkKTaODrCdOYUxzxx42uPAUFQlKe2+YOAszc9LCC20yEsMue6PEAGX3IoZ+MY
-         nBf7hl7rmNfCFfEvDMqMo6ELbsXW4MZmF1edhQREXln6fDUnnTaF/FcFprn42l1vkL5i
-         adrg==
-X-Gm-Message-State: AFqh2kr93MOknIB1o+1etlr9ym9CmzXNP1B0/FZCyO0i3FGNkIZXOEsT
-        q7dmOOQoczYQQb/o/KO9Kk0o5oFyY6CcOaZRa+0=
-X-Google-Smtp-Source: AMrXdXu5iAQa5w4G/nXooBZotH/u8Cle9aRMcHOGEDe3ZcG1lDUD8XzrRE/n7dp+CGJamrwD1EZHy0OvHYQNsDsudys=
-X-Received: by 2002:a63:1e42:0:b0:478:9503:f498 with SMTP id
- p2-20020a631e42000000b004789503f498mr3557980pgm.96.1673279627421; Mon, 09 Jan
- 2023 07:53:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20230103164359.24347-1-ysionneau@kalray.eu> <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
- <6570d22d-ee19-f8b1-6fb4-bf8865ec4142@kalray.eu> <CAEr6+ECPFeokSULpWzYEYLROYHXNA0PtvdUchT37d4_qVA-PKQ@mail.gmail.com>
- <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu>
-In-Reply-To: <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu>
-From:   Jeff Xie <xiehuan09@gmail.com>
-Date:   Mon, 9 Jan 2023 23:53:35 +0800
-Message-ID: <CAEr6+EC0SCXLrQ2YNYyCyMK1Z9=3=ajbbLP+RKSsARGsmJO9YA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
-To:     Yann Sionneau <ysionneau@kalray.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
-        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-audit@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mon, 9 Jan 2023 13:08:24 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509BC43D89;
+        Mon,  9 Jan 2023 10:07:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BC02D61248;
+        Mon,  9 Jan 2023 18:07:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B73EDC433EF;
+        Mon,  9 Jan 2023 18:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673287633;
+        bh=ZWdxpeiZHLTpLcVujmkkgIPXWQwv7zdlyirYfgXnknU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UZ2t+25RuXg7tpdjJxEWIZVod9m8JKmzYtK1znW3OX0lEkT2EA1z7EEpoPzzCetb6
+         XqVRPvcEermbKfgpS3cq0u2Cn1ws3F+iqsy2FCCnqc23dkYG+gTdgrH+IH9Ncov28Z
+         SO0zN4FseYSfuX70IwTUspYMjzVMbMeUrKfBTv68a3yDQ+/Hgtf69S1crq3RhOE6mW
+         7TS4AM/dIPuFoEtMf8SW8P0DH1ykvnGx3Yzvn2jAvdg8tgaWStzX3G4kDvzjWLuHmQ
+         bFHRtokcNXl98HrB5GJpt1+fY3wvM0S1XvgcR/uy/8tMwAMJbZ7xuJdaHUK56VlmsY
+         t9Fbp1G9tDVvw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1599440468; Mon,  9 Jan 2023 15:07:11 -0300 (-03)
+Date:   Mon, 9 Jan 2023 15:07:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
-        Ashley Lesdalons <alesdalons@kalray.eu>,
-        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>,
-        Guillaume Thouvenin <gthouvenin@kalray.eu>,
-        Jean-Christophe Pince <jcpince@gmail.com>,
-        Jonathan Borne <jborne@kalray.eu>,
-        Jules Maselbas <jmaselbas@kalray.eu>,
-        Julian Vetter <jvetter@kalray.eu>,
-        Julien Hascoet <jhascoet@kalray.eu>,
-        Julien Villette <jvillette@kalray.eu>,
-        Louis Morhet <lmorhet@kalray.eu>,
-        Luc Michel <lmichel@kalray.eu>,
-        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
-        Marius Gligor <mgligor@kalray.eu>,
-        Samuel Jones <sjones@kalray.eu>,
-        Thomas Costis <tcostis@kalray.eu>,
-        Vincent Chardon <vincent.chardon@elsys-design.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf tools: Don't install libtraceevent plugins as its
+ not anymore in the kernel sources
+Message-ID: <Y7xXz+TSpiCbQGjw@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 11:30 PM Yann Sionneau <ysionneau@kalray.eu> wrote:
->
-> Hi Jeff,
->
-> On 1/9/23 16:11, Jeff Xie wrote:
-> > On Mon, Jan 9, 2023 at 9:21 PM Yann Sionneau <ysionneau@kalray.eu> wrot=
-e:
-> >> Hi Jeff,
-> >>
-> >> On 1/7/23 07:25, Jeff Xie wrote:
-> >>> Hi,
-> >>>
-> >>> On Wed, Jan 4, 2023 at 1:01 AM Yann Sionneau <ysionneau@kalray.eu> wr=
-ote:
-> >>>> [snip]
-> >>>>
-> >>>> A kvx toolchain can be built using:
-> >>>> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev lib=
-mpfr-dev
-> >>>> $ git clone https://github.com/kalray/build-scripts
-> >>>> $ cd build-scripts
-> >>>> $ source last.refs
-> >>>> $ ./build-kvx-xgcc.sh output
-> >>> I would like to build the kvx-xgcc to compile and test the linux
-> >>> kernel, but it reported a compile error.
-> >>> I wonder what version of gcc you are using.
-> >>>
-> >>> My build environment:
-> >>> VERSION=3D"20.04.2 LTS (Focal Fossa)"
-> >>> gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
-> >>>
-> >>>
-> >>> Compile error:
-> >>> $ ./build-kvx-xgcc.sh output
-> >>>
-> >>> ../../binutils/libiberty/fibheap.c: In function =E2=80=98fibheap_repl=
-ace_key_data=E2=80=99:
-> >>> ../../binutils/libiberty/fibheap.c:38:24: error: =E2=80=98LONG_MIN=E2=
-=80=99 undeclared
-> >>> (first use in this function)
-> >>>      38 | #define FIBHEAPKEY_MIN LONG_MIN
-> >>>         |                        ^~~~~~~~
-> >>> [snip]
-> >> What SHA1 of https://github.com/kalray/build-scripts are you using?
-> > I have executed the "source last.refs"
->
-> I was referring to the SHA1 of the repo itself (build-scripts).
->
-> `last.refs` is a symbolic link which can point to several releases,
-> depending on "when" you did the clone.
->
-> I am asking this because we recently published new toolchains.
->
-> I want to make sure which one you are trying to build.
+While doing 'make -C tools/perf build-test' one can notice error
+messages while trying to install libtraceevent plugins, stop doing that
+as libtraceevent isn't anymore a homie.
 
-Unfortunately I deleted this repo a few minutes before you asked me ;-(
-But I remember that I cloned this repo two days ago.
-it should be:  last.refs -> refs/4.11.0.refs
+These are the warnings dealt with:
 
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+    failed to find: /tmp/krava/etc/bash_completion.d/perf
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_cfg80211.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_scsi.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_xen.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_function.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_sched_switch.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_mac80211.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_kvm.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_kmem.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_hrtimer.so
+    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_jbd2.so
 
-> >> We are building our toolchain on Ubuntu 18.04 / 20.04 and 22.04 withou=
-t
-> >> issues, I don't understand why it does not work for you, although inde=
-ed
-> >> the error log you are having pops out on my search engine and seems to
-> >> be some well known issue.
-> > Yes, there are many answers on the web, but none of them solve this pro=
-blem.
-> >
-> >> If the build-script does not work for you, you can still use the
-> >> pre-built toolchains generated by the GitHub automated actions:
-> >> https://github.com/kalray/build-scripts/releases/tag/v4.11.1 ("latest"
-> >> means 22.04)
-> > Thanks, this is the final solution ;-)
-> Good to see it helped :)
->
-> Regards,
->
-> --
->
-> Yann
->
->
->
->
->
+Fixes: 4171925aa9f3f7bf ("tools lib traceevent: Remove libtraceevent")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Link: http://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.config |  8 --------
+ tools/perf/tests/make      | 12 ------------
+ 2 files changed, 20 deletions(-)
 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index c2504c39bdcb8992..156440ea019143f8 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1314,14 +1314,6 @@ tip_instdir_SQ = $(subst ','\'',$(tip_instdir))
+ 
+ export perfexec_instdir_SQ
+ 
+-# If we install to $(HOME) we keep the traceevent default:
+-# $(HOME)/.traceevent/plugins
+-# Otherwise we install plugins into the global $(libdir).
+-ifdef DESTDIR
+-plugindir=$(libdir)/traceevent/plugins
+-plugindir_SQ= $(subst ','\'',$(plugindir))
+-endif
+-
+ print_var = $(eval $(print_var_code)) $(info $(MSG))
+ define print_var_code
+     MSG = $(shell printf '...%40s: %s' $(1) $($(1)))
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 05e818a8bbad11a4..009d6efb673ce828 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -222,19 +222,7 @@ installed_files_bin := bin/perf
+ installed_files_bin += etc/bash_completion.d/perf
+ installed_files_bin += libexec/perf-core/perf-archive
+ 
+-installed_files_plugins := $(lib)/traceevent/plugins/plugin_cfg80211.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_scsi.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_xen.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_function.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_sched_switch.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_mac80211.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_kvm.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_kmem.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_hrtimer.so
+-installed_files_plugins += $(lib)/traceevent/plugins/plugin_jbd2.so
+-
+ installed_files_all := $(installed_files_bin)
+-installed_files_all += $(installed_files_plugins)
+ 
+ test_make_install       := $(call test_dest_files,$(installed_files_all))
+ test_make_install_O     := $(call test_dest_files,$(installed_files_all))
+-- 
+2.39.0
 
---=20
-Thanks,
-JeffXie
