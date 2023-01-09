@@ -2,225 +2,254 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A0BC54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46966C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237285AbjAITfA (ORCPT
+        id S235328AbjAITia (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 14:35:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40030 "EHLO
+        Mon, 9 Jan 2023 14:38:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234413AbjAITe7 (ORCPT
+        with ESMTP id S237545AbjAITi3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 14:34:59 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC13A19D
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 11:34:57 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so9971630wmb.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 11:34:57 -0800 (PST)
+        Mon, 9 Jan 2023 14:38:29 -0500
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE18F71481
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 11:38:27 -0800 (PST)
+Received: by mail-pf1-x435.google.com with SMTP id x4so2836313pfj.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 11:38:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B4GAcDOHnS45dwGYt1z3etvzuHK9xKfgR9hh2p9DLcE=;
-        b=HSrwfJ5qNjtlE7TvEa9AjxfLddO2riQHjySYFqMRi6zVB1Op7NV/whHtRu2sNKo23K
-         fPvMutXlNoMr/VAB1hCS7RsnP4OmI4ZtVWXgvedzImZKTiICqCKBOqzOXJq8tL7lbHI/
-         6Ve/HgVrkzDAub3AbSkBjkz71Hduv5PzG1Jsl6TDcSJGm5g7DCirlsTJhSCvdlEbmOaL
-         wkoqtzlcmOgC8g2WKHQOoUEzAbck4CHqIS3HaEcTah92z+CxfKWBilY9z9JXMdKBLzNJ
-         oHnHS2P9vowSUYlioAU4+MPzh/DmnCe1fm96swaMvCHNTGYd9DoVZKIWBC1glX9o24hu
-         7Bkg==
+        d=atishpatra.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZJW757By3pyCr9WhEaqzFQ75DPB5RWkfBLPhZzSAskQ=;
+        b=Uzz5Ku/PJw99Ny3hIDeY6FZm1/UfFL1eLjF+feC+LJbGzXwu7Ic3hBpQLmwcKmNHNc
+         PV06/xC6Kba44i8gHfqWiQL8EwH5BcT64CTXA1inY9LeqGWx6PhjHZbCVPa/RAndDvNJ
+         LNlegHSRZCYgM+v8GJdJfS4jWPYwj2fkm9KAU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B4GAcDOHnS45dwGYt1z3etvzuHK9xKfgR9hh2p9DLcE=;
-        b=j/z8BtKZe7zDrW95uaUErK5T7HcAnM+pyc7e68aTn/F5PWBI4DhyXOHBWeYa5rIv/w
-         dRPBmrOwefGk7XgnyOdWt2M5f7owcI9wUNNDPiFLMbPYre0U2X5+VCT4LfmS2MpchoJd
-         Ugx/hmngp5L753PfGg7Pvqi4v4D4lRiWDgFA08IHPnwC6X0Q+ALcqtZ9DfeHI1KCM3XJ
-         ALGgr9v84k730ZTkfFgIHRpDQlcBsm9XrJSTmPnbD1pm22MdWsWGYOd4tOVwN65xtR3j
-         FTt86RTvIzdRojJbaHLaYYdgIJ7FQv/WUMZH+EzvNrZPITsGcMBtwMhb6xd5CPAyRlR0
-         59vg==
-X-Gm-Message-State: AFqh2kpRyufk1Uwh3TgTZ+pKu/ozxbgswN3415ojBG0HO4o48QArbX3A
-        zKYD4bTwYqIpolMVeSLkl2iBoYT+UE7qhmisXtdjAQ==
-X-Google-Smtp-Source: AMrXdXsg9qByAuW8b6iOqbTA6nkas3ajF9dUsiYXYfSAB/ysrdu8hV8Xoh7HzvelFmhg9uzCsFPrg6L7k8AAnDb7qt8=
-X-Received: by 2002:a1c:4c04:0:b0:3d9:edae:ed7 with SMTP id
- z4-20020a1c4c04000000b003d9edae0ed7mr222654wmf.182.1673292896011; Mon, 09 Jan
- 2023 11:34:56 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZJW757By3pyCr9WhEaqzFQ75DPB5RWkfBLPhZzSAskQ=;
+        b=GqF4cIBwLlZrxilEWhWiDeDkqNXfJtHBv3258fNcdLTotU/kQs4U/P7yq06H0EgCFi
+         TIPOmajsI9+6+LIbpHXu6y2VlFxpucC9G17f2/jgZUvKmcq1zuhB7g6kB70WfBqUnMrB
+         Nb0vOvUMP6fwGdWU4ZXp185xrPSHvYec7gGwiBq7Jm1uycniSmWpczqx415hOM+Twr6i
+         s6amrOCky+9PyJfvOKFEwxwXI/DOeFJyUyexgWYYTV9PwhmEOvZCSiOWspZwtJQO8YUs
+         pJYSv+uhVCylRJ6cuuJ4zyC6lNCynHpfJ74/aTAZFgwjvgWREBXJ804OhaYk82QvhhVC
+         IqLA==
+X-Gm-Message-State: AFqh2kpRT0CJ9AA1a3XOEWUQHP4BnS6zPmIEFMbQUyipJReyZmxNCNoV
+        TVelkKLmC6+Mzc7bBtHx+ymziIy+JTkf6f3CK2Uy
+X-Google-Smtp-Source: AMrXdXv5xoh/ZOsyIbIHCfchh5eJtpYVuSbM+a3emfWlGWlYHnt3rM/q0BSzF6iR3XHFH6sBCN5tyo0i+Aur26bHC04=
+X-Received: by 2002:aa7:9d1b:0:b0:580:a13b:366a with SMTP id
+ k27-20020aa79d1b000000b00580a13b366amr3484931pfp.37.1673293107413; Mon, 09
+ Jan 2023 11:38:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20230106151320.619514-1-irogers@google.com> <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
- <Y7hZccgOiueB31a+@kernel.org> <Y7hgKMDGzQlankL1@kernel.org>
- <Y7hgoVKBoulCbA4l@kernel.org> <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
- <Y7wuz6EOggZ8Wysb@kernel.org> <Y7xYimp0h4YT72/N@krava> <CAP-5=fXwO5_kK=pMV09jdAVw386CB0JwArD0BZd=B=xCyWSP1g@mail.gmail.com>
- <CAP-5=fVa51_URGsdDFVTzpyGmdDRj_Dj2EKPuDHNQ0BYgMSzUA@mail.gmail.com>
-In-Reply-To: <CAP-5=fVa51_URGsdDFVTzpyGmdDRj_Dj2EKPuDHNQ0BYgMSzUA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 9 Jan 2023 11:34:44 -0800
-Message-ID: <CAP-5=fVtMEahrPMJNVOqsZGj-GoTxUnWsdzK7M+9F2+DhG_STQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org
+References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
+ <Y7gN32eHJNyWBvVD@FVFF77S0Q05N> <CAOnJCULGM=JvOtoRQM8gY3w3oSDhto=VwfgqcL+cb=er6d=dgQ@mail.gmail.com>
+ <Y7wyI5fBN6yOIzop@FVFF77S0Q05N>
+In-Reply-To: <Y7wyI5fBN6yOIzop@FVFF77S0Q05N>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 9 Jan 2023 11:38:15 -0800
+Message-ID: <CAOnJCUKHe2yTUET4D6k9pFH-g6mYwjdbKUAo9Kxm3_UoT-LwRQ@mail.gmail.com>
+Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V conundrum
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Anup Patel <apatel@ventanamicro.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 11:29 AM Ian Rogers <irogers@google.com> wrote:
+On Mon, Jan 9, 2023 at 7:26 AM Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> On Mon, Jan 9, 2023 at 10:37 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Jan 9, 2023 at 10:10 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> On Mon, Jan 09, 2023 at 01:06:45AM -0800, Atish Patra wrote:
+> > On Fri, Jan 6, 2023 at 4:02 AM Mark Rutland <mark.rutland@arm.com> wrot=
+e:
 > > >
-> > > On Mon, Jan 09, 2023 at 12:12:15PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > Em Fri, Jan 06, 2023 at 11:06:46AM -0800, Ian Rogers escreveu:
-> > > > > So trying to get build-test working on my Debian derived distro is a
-> > > > > PITA with broken feature detection for options I don't normally use.
+> > > On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
+> > > > Hi All,
+> > > > There was a recent uabi update[1] for RISC-V that allows the users =
+to
+> > > > read cycle and instruction count without any checks.
+> > > > We tried to restrict that behavior to address security concerns
+> > > > earlier but it resulted in breakage for some user space
+> > > > applications[2].
+> > > > Thus, previous behavior was restored where a user on RISC-V platfor=
+ms
+> > > > can directly read cycle or instruction count[3].
 > > > >
-> > > > Its really difficult to have perf building with so many dependent
-> > > > libraries, mowing out some should be in order.
+> > > > Comparison with other ISAs w.r.t user space access of counters:
+> > > > ARM64
+> > > >   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
+> > > >   -- Only for task bound events configured via perf.
 > > > >
-> > > > > I'll try to fix this.
+> > > > X86
+> > > >  --- rdpmc instruction
+> > > >  --- Enable/Disable via =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
+> > > > -- Before v4.0
+> > > >  -- any process (even without active perf event) rdpmc
+> > > > After v4.0
+> > > > -- Default behavior changed to support only active events in a
+> > > > process=E2=80=99s context.
+> > > > -- Configured through perf similar to ARM64
+> > > > -- Continue to maintain backward compatibility for unrestricted acc=
+ess
+> > > > by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
 > > > >
-> > > > Thanks.
+> > > > IMO, RISC-V should only enable user space access through perf simil=
+ar
+> > > > to ARM64 and x86 (post v4.0).
+> > > > However, we do have to support the legacy behavior to avoid
+> > > > application breakage.
+> > > > As per my understanding a direct user space access can lead to the
+> > > > following problems:
 > > > >
-> > > > > In any case I think I've spotted what is really happening here and it
-> > > > > isn't a failure but a feature :-D The build is specifying
+> > > > 1) There is no context switch support, so counts from other context=
+s are exposed
+> > > > 2) If a perf user is allocated one of these counters, the counter
+> > > > value will be written
 > > > >
-> > > > I get it.
+> > > > Looking at the x86 code as it continues to allow the above behavior=
+,
+> > > > rdpmc_always_available_key is enabled in the above case. However,
+> > > > during the context switch (cr4_update_pce_mm)
+> > > > only dirty counters are cleared. It only prevents leakage from perf
+> > > > task to rdpmc task.
 > > > >
-> > > > > LIBBPF_DYNAMIC=1 which means you get the libbpf headers from
-> > > > > /usr/include. I think the build is trying to do this on a system with
-> > > > > an old libbpf and hence getting the failures above. Previously, even
-> > > > > though we wanted the dynamic headers we still had a -I, this time for
-> > > > > the install_headers version. Now you really are using the system
-> > > > > version and it is broken. This means a few things:
-> > > > > - the libbpf feature test should fail if code like above is going to fail,
-> > > >
-> > > > Agreed.
-> > > >
-> > > > > - we may want to contemplate supporting older libbpfs (I'd rather not),
-> > > >
-> > > > I'd rather require everybody to be up to the latest trends, but I really
-> > > > don't think that is a reasonable expectation.
-> > > >
-> > > > > - does build-test have a way to skip known issues like this?
-> > > >
-> > > > Unsure, Jiri?
+> > > > How does the context switch of counters work for users who enable
+> > > > unrestricted access by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=
+=E2=80=9D ?
+> > > > Otherwise, rdpmc users likely get noise from other applications. Is
+> > > > that expected ?
 > > >
-> > > I don't think so it just triggers the build, it's up to the features check
-> > > to disable the feature if the library is not compatible with perf code
+> > > Regardless of leakage, they're also going to get random jumps in the =
+visible
+> > > values of the cycle count and instruction count as the task is contex=
+t-switched
+> > > (and/or if those values get reset across idle, as can happen on arm64=
+), so
+> > > those aren't going to be useful unless a number of other constraints =
+apply.
 > > >
-> > > could we add that specific libbpf call to the libbpf feature check?
 > >
-> > Looking at the failure closer, the failing code is code inside a
-> > feature check trying to workaround the feature not being present. We
-> > need to do something like:
+> > Agreed.
 > >
-> > ```
-> > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > index 6e9b06cf06ee..a1c3cc230273 100644
-> > --- a/tools/perf/util/bpf-loader.c
-> > +++ b/tools/perf/util/bpf-loader.c
-> > @@ -33,17 +33,18 @@
-> > #include <internal/xyarray.h>
+> > > AFAICT the affected package was actually a library of intrinsics; doe=
+s this
+> > > affect a real application, or was this just in tests? If it's the lat=
+ter there
+> > > might still be scope to properly lock this down...
+> > >
 > >
-> > #ifndef HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
-> > -int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
-> > -                          struct bpf_insn *new_insns __maybe_unused,
-> > size_t new_insn_cnt __maybe_un
-> > used)
-> > +static int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
-> > +                                 struct bpf_insn *new_insns __maybe_unused,
-> > +                                 size_t new_insn_cnt __maybe_unused)
-> > {
-> >        pr_err("%s: not support, update libbpf\n", __func__);
-> >        return -ENOTSUP;
-> > }
+> > Unfortunately, there are real applications In RISC-V started using
+> > cycle counters due to legacy reasons.
 > >
-> > -int libbpf_register_prog_handler(const char *sec __maybe_unused,
-> > -                                 enum bpf_prog_type prog_type __maybe_unused,
-> > -                                 enum bpf_attach_type exp_attach_type
-> > __maybe_unused,
-> > -                                 const struct
-> > libbpf_prog_handler_opts *opts __maybe_unused)
-> > +static int libbpf_register_prog_handler(const char *sec __maybe_unused,
-> > +                                       enum bpf_prog_type prog_type
-> > __maybe_unused,
-> > +                                       enum bpf_attach_type
-> > exp_attach_type __maybe_unused,
-> > +                                       const void *opts __maybe_unused)
-> > {
-> >        pr_err("%s: not support, update libbpf\n", __func__);
-> >        return -ENOTSUP;
-> > ```
-> >
-> > There are some other fixes necessary too. I'll try to write the fuller
-> > patch but I have no means for testing except for undefining
-> > HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS.
-> >
-> > Thanks,
-> > Ian
+> > Here is the short list from debian repo pointed out in [1]
+> > https://codesearch.debian.net/search?q=3D%22rdcycle+%250%22
 >
-> So libbpf_prog_handler_opts is missing in the failing build, this
-> points to a libbpf before 0.8. I'm somewhat concerned that to work
-> around these linkage problems we're adding runtime errors - we may
-> build but the functionality is totally crippled. Is it worth
-> maintaining these broken builds or to just upfront fail the feature
-> test?
+> The first of those is GRUB, when running bare metal.
 >
-> We can also switch the feature tests for LIBBPF_MAJOR_VERSION and
-> LIBBPF_MINOR_VERSION checks. This would have the property of letting
-> us tie the error messages to what version of libbpf is assumed.
+> The second is this library again, which is not a whole application.
 >
-> In this case we could have a feature test for the libbpf version and
-> if the version is before libbpf 0.8 fail the feature check. A quick
-> way to do this is:
-> ```
-> diff --git a/tools/build/feature/test-libbpf.c
-> b/tools/build/feature/test-libbpf.c
-> index a508756cf4cc..dadd8186b71d 100644
-> --- a/tools/build/feature/test-libbpf.c
-> +++ b/tools/build/feature/test-libbpf.c
-> @@ -1,6 +1,10 @@
-> // SPDX-License-Identifier: GPL-2.0
-> #include <bpf/libbpf.h>
+> I see that it's used in some benchmarks in real applications, e.g. firefo=
+x,
+> chrome. However, as above we know that's *broken* today.
 >
-> +#if (LIBBPF_MAJOR_VERSION == 0) && (LIBBPF_MINOR_VERSION < 8)
-> +#error At least libbpf 0.8 is assumed for Linux tools.
-> +#endif
-> +
-> int main(void)
-> {
->        return bpf_object__open("test") ? 0 : -1;
-> ```
+> Is that code actually run?
 >
+> > Looking at aarch64 code in one of the application, it seems they rely
+> > on reading "pmccntr_el0" to read time
+> > https://sources.debian.org/src/chromium/108.0.5359.124-1/third_party/ff=
+mpeg/libavutil/aarch64/timer.h/
+>
+> That part is under ifdefs for mac os:
+>
+> | #if defined(__APPLE__)
+>
+
+Yes. Sorry I missed that earlier. I checked few other application code
+which correctly
+use cntvct_el0 as you pointed out.
+
+> ... and it's nonsensical anyway, pmccntr_el0 is *not* a timer, and I don'=
+t know
+> if Mac OS would bother to context-switch the value, so it's very likely b=
+roken
+> anyhow.
+>
+> > AFAIK, any counter access from EL0 is disabled by default in
+> > reset_pmuserenr_el0 and should be enabled via the
+> > proc/sys/perf_user_access
+> > in armv8pmu_enable_user_access. Is that correct ?
+>
+> Yes, we *only* enable access for tasks doing self-monitoring via perf.
+>
+> No other useage makes sense, since the value is arbitrarily reset, and it=
+'s not
+> consistent across CPUs. It *cannot* be used as a timer.
+>
+
+Yes. That's what we were trying to convince the user space application
+maintainers too.
+
+> > I couldn't find any application actually enabling the access using
+> > perf_user_access. Maybe I am missing something?
+> > Otherwise, the above application would trap on access to pmccntr_el0.
+>
+> As above, that's on Mac OS, not Linux.
+>
+
+Yeah. My bad. Sorry for the noise :)
+
 > Thanks,
-> Ian
-
-Oh, just to note. While failing the feature test is disappointing for
-a libbpf that isn't very old, we have the newer libbpf to statically
-build in. Developers won't be impacted due to the static route. If you
-are a distro maintainer, you should just update your libbpf. So we
-could just bump the API assumption to 1.0 as I believe that'd have the
-advantage of removing feature tests, workarounds, untested code (like
-what broke here), etc.
-
-What do you think?
-
-Thanks,
-Ian
-
-> > > jirka
+> Mark.
+>
+> >
+> > [1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYnzsKE=
+?pli=3D1
+> > > Thanks,
+> > > Mark.
 > > >
+> > > > This can be a security concern also where a rogue rdpmc user
+> > > > application can monitor other critical applications to initiate sid=
+e
+> > > > channel attack.
 > > > >
-> > > > But yeah, previous experiences with Andrii were that we can do not too
-> > > > costly feature checks, not using .c programs that would fail if some
-> > > > required feature wasn't present but instead would just do some grep on a
-> > > > header and if some "smell" wasn't scent, just fail the cap query.
+> > > > Am I missing something? Please correct my understanding of the x86
+> > > > implementation if it is wrong.
 > > > >
-> > > > - Arnaldo
+> > > > [1] https://lore.kernel.org/lkml/20221201135110.3855965-1-conor.doo=
+ley@microchip.com/
+> > > > [2] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYn=
+zsKE?pli=3D1
+> > > > [3] https://lore.kernel.org/all/YxIzgYP3MujXdqwj@aurel32.net/T/
+> > > >
+> > > > --
+> > > > Regards,
+> > > > Atish
+> >
+> >
+> >
+> > --
+> > Regards,
+> > Atish
+
+
+
+--=20
+Regards,
+Atish
