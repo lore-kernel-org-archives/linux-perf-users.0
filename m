@@ -2,193 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04662C678D7
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 09:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9433CC5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 09:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234257AbjAIJLK (ORCPT
+        id S230287AbjAIJeV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 04:11:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45304 "EHLO
+        Mon, 9 Jan 2023 04:34:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236997AbjAIJKT (ORCPT
+        with ESMTP id S236633AbjAIJdx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 04:10:19 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E2AB13F81
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 01:06:58 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id x4so1463746pfj.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 01:06:58 -0800 (PST)
+        Mon, 9 Jan 2023 04:33:53 -0500
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B34F115C;
+        Mon,  9 Jan 2023 01:33:52 -0800 (PST)
+Received: by mail-lj1-x231.google.com with SMTP id s22so8255020ljp.5;
+        Mon, 09 Jan 2023 01:33:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0r+WRhyapDUj23mCaA3ejtr+rwDQ48nvv/NE42rhcUA=;
-        b=YgsCb1OAGMG4ZMs50M4Et2DamButK/KtHPAhX6PmTrN7sgL7riDbh3PgY1a5h5KbOP
-         WiqQAY65Ux2YcUmyli+t3ddUJYgg/bjeXGdDPIfF1IfRgFaNpbloFez5/14AbHz0hQ36
-         BfYgYZgRoLhLD7NxYCOmh/+vw58l2HbC81RGk=
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rNnvNTBMGELu3VN6vH0YTp6DPHz7nzIVYPeYgFskFXE=;
+        b=EXmEQcDmM1xcGRcxBdThTmqTfNWF9mMT75GsHDeDqkjbpbsVxxPy0GM4WcIlzlc39L
+         xGZ0VkakUPjNDAkdJQYvkhM+llWHwjuNY99zUnu1kJvA+MmfAqRT+TsInnocHZ27FtQc
+         JJRvAFn5DG6/Vnf2rkfyJ19yuIB/ClTTjiaugp1Jnia2JCi8XOutXj7+Dw9CUSMUMwWj
+         H56GZ8HOfhCuqp52wLJoieLB4BgFrYmfHVuETf9FQfGw1AOqGx72nStPyys1bpxIQHOQ
+         idMUJqUamtLKvddulHw66Wpj6wUl/yPWdi/BkrDmH/N2dRPfF5FS9l89TGEnRrtQzcy1
+         ujJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0r+WRhyapDUj23mCaA3ejtr+rwDQ48nvv/NE42rhcUA=;
-        b=DeSzHmj/CCVSV2ELYPLNVvWEnVKM+AkMzujFQGohpeJJyQJmp85nYCRwYGOyibzN9s
-         0m/L3/Sj63TyBhIYL0hcfXL5n0AetQ/MMlziQJQj4Jrse0Ntz9Cvm+OxLL0HrUYFbUTO
-         8Zb00NcYwcHa+wPrzdTYaDrT1mh4ntntJWMIUAs+XnQzHgN6GDvtnr8wnpU3hrYMJnQn
-         wijntLhFzwNbpOZClHLlZbBoez7+D0dw05DvkkZ1aXhB7mbeMGA+T6PTf1bC+Yiq0+li
-         UyueXM5J+hnxIyS0Pic6RZZOGsk7i7H6aaSDaYvdNigDZM0vsYjZ3qk+DMN5Ht798CTw
-         T1dQ==
-X-Gm-Message-State: AFqh2kpGufI4tyUsgVO/QYsqQeXED1EK2chAbqKPtMQAAxVlVVzOX1QL
-        CIgcWQsJ6pmp14EZbDmPO+H0TI013P8mQDFVqAyUU7nK5gP/RrU=
-X-Google-Smtp-Source: AMrXdXulPAqyOdz4UBE54Hr4oerdJvrGpRElmcRSPOcmJFO1mFZGU/P/kR8wxR5HdwO3AdkQKGIkziWYGvq4Y5hjfLE=
-X-Received: by 2002:a05:6a00:13a8:b0:583:3d00:cb97 with SMTP id
- t40-20020a056a0013a800b005833d00cb97mr932019pfg.24.1673255217606; Mon, 09 Jan
- 2023 01:06:57 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rNnvNTBMGELu3VN6vH0YTp6DPHz7nzIVYPeYgFskFXE=;
+        b=cn6qEnvxaf/ovoqEzl/UEZl15Z9rltcuY0yxPmWSdvILpop2mt4dIp4i4OMIsLOi0k
+         DhZrc9/9QaHXvy2NfSxhtStH1MD1yWGnpsECN0QLQCKWPNcJFdwvrLuRvK3fvf7xeMo4
+         G2sDrJFiqTGaFie7jxcSOb6xEMQguV0PCtlEnWuI7FDcZIo0PETmHft1qDwTdiXsfICA
+         4/kb5ocqT7bLRxED3ycikMEufnt83AT6yh/qfALh1aJeghF9mpyVO2N7dI/UbhNs1hII
+         fZuYqU2K19dQ1jRmOw3QS4loHyriRCkziB0W05TdTDIYqhOOEVQkqGjI1Z+VhUUfRj+1
+         7YSA==
+X-Gm-Message-State: AFqh2krX+p0tKpIQ4NVOEGvDybwJYZaf9Za8Xz1UiAMoFeic6Q8EjuHT
+        +z2e+6RcwM4/PMuwYPsfjTY=
+X-Google-Smtp-Source: AMrXdXvQmlqPvgR5EwzIejFMocfh26sIvUQoei5k6VehZoxaV/QM5kIzaBj79R/Y2iTTAZCts1Nivg==
+X-Received: by 2002:a05:651c:384:b0:27f:f08d:6060 with SMTP id e4-20020a05651c038400b0027ff08d6060mr6272416ljp.38.1673256830641;
+        Mon, 09 Jan 2023 01:33:50 -0800 (PST)
+Received: from localhost.localdomain ([46.147.136.10])
+        by smtp.gmail.com with ESMTPSA id p19-20020a2e8053000000b0028402d9646dsm457730ljg.37.2023.01.09.01.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 01:33:49 -0800 (PST)
+From:   Alexander Pantyukhin <apantykhin@gmail.com>
+To:     mark.rutland@arm.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Pantyukhin <apantykhin@gmail.com>
+Subject: [PATCH] tools:perf:scripts:python:mem-phys-addr fix performance
+Date:   Mon,  9 Jan 2023 14:33:47 +0500
+Message-Id: <20230109093347.6639-1-apantykhin@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
- <Y7gN32eHJNyWBvVD@FVFF77S0Q05N>
-In-Reply-To: <Y7gN32eHJNyWBvVD@FVFF77S0Q05N>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Mon, 9 Jan 2023 01:06:45 -0800
-Message-ID: <CAOnJCULGM=JvOtoRQM8gY3w3oSDhto=VwfgqcL+cb=er6d=dgQ@mail.gmail.com>
-Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V conundrum
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Beeman Strong <beeman@rivosinc.com>,
-        Atish Patra <atishp@rivosinc.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Anup Patel <apatel@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 6, 2023 at 4:02 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
-> > Hi All,
-> > There was a recent uabi update[1] for RISC-V that allows the users to
-> > read cycle and instruction count without any checks.
-> > We tried to restrict that behavior to address security concerns
-> > earlier but it resulted in breakage for some user space
-> > applications[2].
-> > Thus, previous behavior was restored where a user on RISC-V platforms
-> > can directly read cycle or instruction count[3].
-> >
-> > Comparison with other ISAs w.r.t user space access of counters:
-> > ARM64
-> >   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
-> >   -- Only for task bound events configured via perf.
-> >
-> > X86
-> >  --- rdpmc instruction
-> >  --- Enable/Disable via =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
-> > -- Before v4.0
-> >  -- any process (even without active perf event) rdpmc
-> > After v4.0
-> > -- Default behavior changed to support only active events in a
-> > process=E2=80=99s context.
-> > -- Configured through perf similar to ARM64
-> > -- Continue to maintain backward compatibility for unrestricted access
-> > by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
-> >
-> > IMO, RISC-V should only enable user space access through perf similar
-> > to ARM64 and x86 (post v4.0).
-> > However, we do have to support the legacy behavior to avoid
-> > application breakage.
-> > As per my understanding a direct user space access can lead to the
-> > following problems:
-> >
-> > 1) There is no context switch support, so counts from other contexts ar=
-e exposed
-> > 2) If a perf user is allocated one of these counters, the counter
-> > value will be written
-> >
-> > Looking at the x86 code as it continues to allow the above behavior,
-> > rdpmc_always_available_key is enabled in the above case. However,
-> > during the context switch (cr4_update_pce_mm)
-> > only dirty counters are cleared. It only prevents leakage from perf
-> > task to rdpmc task.
-> >
-> > How does the context switch of counters work for users who enable
-> > unrestricted access by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=
-=80=9D ?
-> > Otherwise, rdpmc users likely get noise from other applications. Is
-> > that expected ?
->
-> Regardless of leakage, they're also going to get random jumps in the visi=
-ble
-> values of the cycle count and instruction count as the task is context-sw=
-itched
-> (and/or if those values get reset across idle, as can happen on arm64), s=
-o
-> those aren't going to be useful unless a number of other constraints appl=
-y.
->
+Avoid double strip() calls for getting memory type.
 
-Agreed.
+Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
+---
+ tools/perf/scripts/python/mem-phys-addr.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-> AFAICT the affected package was actually a library of intrinsics; does th=
-is
-> affect a real application, or was this just in tests? If it's the latter =
-there
-> might still be scope to properly lock this down...
->
+diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
+index 1f332e72b9b0..f267d8382eda 100644
+--- a/tools/perf/scripts/python/mem-phys-addr.py
++++ b/tools/perf/scripts/python/mem-phys-addr.py
+@@ -8,7 +8,6 @@ from __future__ import print_function
+ 
+ import os
+ import sys
+-import struct
+ import re
+ import bisect
+ import collections
+@@ -30,12 +29,14 @@ event_name = None
+ def parse_iomem():
+ 	global f
+ 	f = open('/proc/iomem', 'r')
+-	for i, j in enumerate(f):
++	for _, j in enumerate(f):
+ 		m = re.split('-|:',j,2)
+-		if m[2].strip() == 'System RAM':
++		memory_type = m[2].strip()
++
++		if memory_type == 'System RAM':
+ 			system_ram.append(int(m[0], 16))
+ 			system_ram.append(int(m[1], 16))
+-		if m[2].strip() == 'Persistent Memory':
++		elif memory_type == 'Persistent Memory':
+ 			pmem.append(int(m[0], 16))
+ 			pmem.append(int(m[1], 16))
+ 
+@@ -75,6 +76,7 @@ def is_persistent_mem(phys_addr):
+ def find_memory_type(phys_addr):
+ 	if phys_addr == 0:
+ 		return "N/A"
++
+ 	if is_system_ram(phys_addr):
+ 		return "System RAM"
+ 
+-- 
+2.25.1
 
-Unfortunately, there are real applications In RISC-V started using
-cycle counters due to legacy reasons.
-
-Here is the short list from debian repo pointed out in [1]
-https://codesearch.debian.net/search?q=3D%22rdcycle+%250%22
-
-Looking at aarch64 code in one of the application, it seems they rely
-on reading "pmccntr_el0" to read time
-https://sources.debian.org/src/chromium/108.0.5359.124-1/third_party/ffmpeg=
-/libavutil/aarch64/timer.h/
-
-AFAIK, any counter access from EL0 is disabled by default in
-reset_pmuserenr_el0 and should be enabled via the
-proc/sys/perf_user_access
-in armv8pmu_enable_user_access. Is that correct ?
-
-I couldn't find any application actually enabling the access using
-perf_user_access. Maybe I am missing something?
-Otherwise, the above application would trap on access to pmccntr_el0.
-
-[1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYnzsKE?pli=
-=3D1
-> Thanks,
-> Mark.
->
-> > This can be a security concern also where a rogue rdpmc user
-> > application can monitor other critical applications to initiate side
-> > channel attack.
-> >
-> > Am I missing something? Please correct my understanding of the x86
-> > implementation if it is wrong.
-> >
-> > [1] https://lore.kernel.org/lkml/20221201135110.3855965-1-conor.dooley@=
-microchip.com/
-> > [2] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/REWcwYnzsKE=
-?pli=3D1
-> > [3] https://lore.kernel.org/all/YxIzgYP3MujXdqwj@aurel32.net/T/
-> >
-> > --
-> > Regards,
-> > Atish
-
-
-
---=20
-Regards,
-Atish
