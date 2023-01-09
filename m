@@ -2,245 +2,239 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CE0C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67214C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 20:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237292AbjAIUfL (ORCPT
+        id S232429AbjAIUks (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 15:35:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
+        Mon, 9 Jan 2023 15:40:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237389AbjAIUfG (ORCPT
+        with ESMTP id S235462AbjAIUkr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 15:35:06 -0500
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB526086B
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 12:35:05 -0800 (PST)
-Received: by mail-pj1-x1049.google.com with SMTP id b16-20020a17090a551000b00225aa26f1dbso3483124pji.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 12:35:05 -0800 (PST)
+        Mon, 9 Jan 2023 15:40:47 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8242543A05
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 12:40:45 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id p1-20020a05600c1d8100b003d8c9b191e0so8030220wms.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 12:40:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r8To9c/RhjeU3UhCcJpilZYbO96GcFeqlarqkyf14xk=;
-        b=pBt0bIydFOwdKSVmC67SAEC38M3pJdN4Rbbk1sSIr2dLWuKG+E4cAAfIKa+hVPgR6l
-         PSMauWXMYX2UXWlVwJj1DCeuZNq1JrwyrNZVSR0hHDv1QPkudW0vfVXPam8RusLj2wzi
-         twBqKGWkBWo30T5upazEELk5+hstDV4f920U2q7L11Rbpgi+FsLPFzRRLRDXBX4MtcQ3
-         Z8q3/1FewblD5NeUTT4cKaKavnfexeYXt4hAE5zVgo2DbZNcvLYZbYPtRbL1qHABKurK
-         aPy9TiloeqQbRXNC5zkauL0/6zt5hGuvCIQ628aVBWXXlUe+UOT4ywnNnnuhT12g2vtX
-         hv8g==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MCRW0UkTNlTzkZ4jOzer8zj7ypiKG1rbT29sYMJr0H0=;
+        b=SKO4ZX8fQPOxTTcMnTbp5MFbMfTEzMDNX7cwrMxkDT51AdOR0mgCK+A8X5hxt6SrEq
+         w4CKxeCPJiZxa/vofF5uHOsRmB6riV3BPAPZuZkIg3PekMR4z9IGHtAl1DQDHEw0eF4i
+         JIGunRDVUq7U+Bhpui8Rcvid0HOehY53Ify5/l6SCIlPmFXUGYBTzuqkUs7jJ45yGsnW
+         rQA3u1EPJy1VdUSMCvy8ZSG9UF63qoNWihdHPMIoKJFGKVrni57DUHimOtV975ev9H+Q
+         m011MLFr6BN52WpZwJRFNyGaYJfSbc5WUIY2pFbD5JrRQaZhHefi1LXaloaC20F484Bn
+         08hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r8To9c/RhjeU3UhCcJpilZYbO96GcFeqlarqkyf14xk=;
-        b=AhDp2+XceMvOjfZRqiGX9+tgRc/Hy41O/OoLWOCH9Mm6/aHaHNj19HAaWW/0MW8N6/
-         Iou0Ug8REaaswi07oBja/szG5I3Jr5Cn9CsaZUhspLMt0eZD0XuQOj57JPs5DM6Vus0L
-         aNnc50atJLXOQQHcpoUipn2Y23YZ/4+bXw+skcD+oNex+XKXfH1vND19B5NbixwYD4f6
-         6BO62lpnKPv4pdLUze8dnymwL1ZsYJNkHw5Er0h1HG+4d2cPz2XUwnbXZe0d49PEUDpu
-         9/tJW8vd877nRnQvH66/740ZF2YcZImc10DiEKlThgfjcd63wmnXFSvvcnaH0v/hjBKb
-         hCvA==
-X-Gm-Message-State: AFqh2kqNMGXE/TQ0jGLMmXylucdG+cxaq7qCAV2KKXKGYSzdz0wFKPSX
-        /qYjriUicFwaq0f5ErS64P3UkUZZznzH
-X-Google-Smtp-Source: AMrXdXtUZRgLPxys+vegp/cuo3pBqGhpG0+QdQhR8QR3TvP33C+w+N/SXk8YCm7Y+zwyCUW76b0oO7vVLFkn
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:59e7:81ad:bc43:d9dc])
- (user=irogers job=sendgmr) by 2002:a17:90a:b288:b0:227:f19:eb19 with SMTP id
- c8-20020a17090ab28800b002270f19eb19mr507224pjr.44.1673296504559; Mon, 09 Jan
- 2023 12:35:04 -0800 (PST)
-Date:   Mon,  9 Jan 2023 12:34:24 -0800
-In-Reply-To: <20230109203424.1157561-1-irogers@google.com>
-Message-Id: <20230109203424.1157561-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20230109203424.1157561-1-irogers@google.com>
-X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v1 3/3] perf bpf: Remove pre libbpf 1.0 conditional logic
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MCRW0UkTNlTzkZ4jOzer8zj7ypiKG1rbT29sYMJr0H0=;
+        b=kt9h9OMEOPuV/1RXAc2mtz2IrzucOtjhUft4Z9Hyg8SWJ9/uIVsJpThmlMsi0ZZuZx
+         ZRg2IlD++Y8Ut7Wyl9ac8xf1jpc3bh452HfGRs2FA07wSnOQjKs+PbfVW0bsDsymqmjO
+         Cm2w2OPtcz5eqwmpV6jO42s0wod2Cl5ChOwyaajNvwluCUf8LsEk9XYDoKrrydxVk90O
+         gaIqIBQcAkzxUCWJpKot2vrOT1zGUjHMEU3dPg0u8yOcno1fCzna8Jvv0n14KXGKQmLu
+         +OTf/FXT5wH+kT1PPSqshYymxf40N+Nu1KEchio1A0Ie6ZGf3ScQoyy8vNP/7HBfF8/k
+         TwAQ==
+X-Gm-Message-State: AFqh2kqEDwScz79eHYwnbQQlVaRceV2eaWZqnouJm9juscVn8vcJgVQk
+        Cza9ZQJxpP6GccJAT2ZcbwC2uDKEeQ0bE/ZK2PehGQ==
+X-Google-Smtp-Source: AMrXdXsHG/iZRmaXeZTbdJc8dLvE4HxpOxTVoriaJACvg5w0n2cAyT8cqtwrH/tyBJFGsjhsaYh4xJxSXcFfCetfRPY=
+X-Received: by 2002:a1c:4c04:0:b0:3d9:edae:ed7 with SMTP id
+ z4-20020a1c4c04000000b003d9edae0ed7mr230023wmf.182.1673296843828; Mon, 09 Jan
+ 2023 12:40:43 -0800 (PST)
+MIME-Version: 1.0
+References: <20230106151320.619514-1-irogers@google.com> <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
+ <Y7hZccgOiueB31a+@kernel.org> <Y7hgKMDGzQlankL1@kernel.org>
+ <Y7hgoVKBoulCbA4l@kernel.org> <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
+ <Y7wuz6EOggZ8Wysb@kernel.org> <Y7xYimp0h4YT72/N@krava> <CAP-5=fXwO5_kK=pMV09jdAVw386CB0JwArD0BZd=B=xCyWSP1g@mail.gmail.com>
+ <CAP-5=fVa51_URGsdDFVTzpyGmdDRj_Dj2EKPuDHNQ0BYgMSzUA@mail.gmail.com> <CAP-5=fVtMEahrPMJNVOqsZGj-GoTxUnWsdzK7M+9F2+DhG_STQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVtMEahrPMJNVOqsZGj-GoTxUnWsdzK7M+9F2+DhG_STQ@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>
+Date:   Mon, 9 Jan 2023 12:40:31 -0800
+Message-ID: <CAP-5=fX_MQBaER86c1UEuSMYGoQ0uv4siv==_ewr6H5xhb0XpA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Tests are no longer applicable as libbpf 1.0 can be assumed.
+On Mon, Jan 9, 2023 at 11:34 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Mon, Jan 9, 2023 at 11:29 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Mon, Jan 9, 2023 at 10:37 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Mon, Jan 9, 2023 at 10:10 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > >
+> > > > On Mon, Jan 09, 2023 at 12:12:15PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > Em Fri, Jan 06, 2023 at 11:06:46AM -0800, Ian Rogers escreveu:
+> > > > > > So trying to get build-test working on my Debian derived distro is a
+> > > > > > PITA with broken feature detection for options I don't normally use.
+> > > > >
+> > > > > Its really difficult to have perf building with so many dependent
+> > > > > libraries, mowing out some should be in order.
+> > > > >
+> > > > > > I'll try to fix this.
+> > > > >
+> > > > > Thanks.
+> > > > >
+> > > > > > In any case I think I've spotted what is really happening here and it
+> > > > > > isn't a failure but a feature :-D The build is specifying
+> > > > >
+> > > > > I get it.
+> > > > >
+> > > > > > LIBBPF_DYNAMIC=1 which means you get the libbpf headers from
+> > > > > > /usr/include. I think the build is trying to do this on a system with
+> > > > > > an old libbpf and hence getting the failures above. Previously, even
+> > > > > > though we wanted the dynamic headers we still had a -I, this time for
+> > > > > > the install_headers version. Now you really are using the system
+> > > > > > version and it is broken. This means a few things:
+> > > > > > - the libbpf feature test should fail if code like above is going to fail,
+> > > > >
+> > > > > Agreed.
+> > > > >
+> > > > > > - we may want to contemplate supporting older libbpfs (I'd rather not),
+> > > > >
+> > > > > I'd rather require everybody to be up to the latest trends, but I really
+> > > > > don't think that is a reasonable expectation.
+> > > > >
+> > > > > > - does build-test have a way to skip known issues like this?
+> > > > >
+> > > > > Unsure, Jiri?
+> > > >
+> > > > I don't think so it just triggers the build, it's up to the features check
+> > > > to disable the feature if the library is not compatible with perf code
+> > > >
+> > > > could we add that specific libbpf call to the libbpf feature check?
+> > >
+> > > Looking at the failure closer, the failing code is code inside a
+> > > feature check trying to workaround the feature not being present. We
+> > > need to do something like:
+> > >
+> > > ```
+> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+> > > index 6e9b06cf06ee..a1c3cc230273 100644
+> > > --- a/tools/perf/util/bpf-loader.c
+> > > +++ b/tools/perf/util/bpf-loader.c
+> > > @@ -33,17 +33,18 @@
+> > > #include <internal/xyarray.h>
+> > >
+> > > #ifndef HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
+> > > -int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
+> > > -                          struct bpf_insn *new_insns __maybe_unused,
+> > > size_t new_insn_cnt __maybe_un
+> > > used)
+> > > +static int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
+> > > +                                 struct bpf_insn *new_insns __maybe_unused,
+> > > +                                 size_t new_insn_cnt __maybe_unused)
+> > > {
+> > >        pr_err("%s: not support, update libbpf\n", __func__);
+> > >        return -ENOTSUP;
+> > > }
+> > >
+> > > -int libbpf_register_prog_handler(const char *sec __maybe_unused,
+> > > -                                 enum bpf_prog_type prog_type __maybe_unused,
+> > > -                                 enum bpf_attach_type exp_attach_type
+> > > __maybe_unused,
+> > > -                                 const struct
+> > > libbpf_prog_handler_opts *opts __maybe_unused)
+> > > +static int libbpf_register_prog_handler(const char *sec __maybe_unused,
+> > > +                                       enum bpf_prog_type prog_type
+> > > __maybe_unused,
+> > > +                                       enum bpf_attach_type
+> > > exp_attach_type __maybe_unused,
+> > > +                                       const void *opts __maybe_unused)
+> > > {
+> > >        pr_err("%s: not support, update libbpf\n", __func__);
+> > >        return -ENOTSUP;
+> > > ```
+> > >
+> > > There are some other fixes necessary too. I'll try to write the fuller
+> > > patch but I have no means for testing except for undefining
+> > > HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS.
+> > >
+> > > Thanks,
+> > > Ian
+> >
+> > So libbpf_prog_handler_opts is missing in the failing build, this
+> > points to a libbpf before 0.8. I'm somewhat concerned that to work
+> > around these linkage problems we're adding runtime errors - we may
+> > build but the functionality is totally crippled. Is it worth
+> > maintaining these broken builds or to just upfront fail the feature
+> > test?
+> >
+> > We can also switch the feature tests for LIBBPF_MAJOR_VERSION and
+> > LIBBPF_MINOR_VERSION checks. This would have the property of letting
+> > us tie the error messages to what version of libbpf is assumed.
+> >
+> > In this case we could have a feature test for the libbpf version and
+> > if the version is before libbpf 0.8 fail the feature check. A quick
+> > way to do this is:
+> > ```
+> > diff --git a/tools/build/feature/test-libbpf.c
+> > b/tools/build/feature/test-libbpf.c
+> > index a508756cf4cc..dadd8186b71d 100644
+> > --- a/tools/build/feature/test-libbpf.c
+> > +++ b/tools/build/feature/test-libbpf.c
+> > @@ -1,6 +1,10 @@
+> > // SPDX-License-Identifier: GPL-2.0
+> > #include <bpf/libbpf.h>
+> >
+> > +#if (LIBBPF_MAJOR_VERSION == 0) && (LIBBPF_MINOR_VERSION < 8)
+> > +#error At least libbpf 0.8 is assumed for Linux tools.
+> > +#endif
+> > +
+> > int main(void)
+> > {
+> >        return bpf_object__open("test") ? 0 : -1;
+> > ```
+> >
+> > Thanks,
+> > Ian
+>
+> Oh, just to note. While failing the feature test is disappointing for
+> a libbpf that isn't very old, we have the newer libbpf to statically
+> build in. Developers won't be impacted due to the static route. If you
+> are a distro maintainer, you should just update your libbpf. So we
+> could just bump the API assumption to 1.0 as I believe that'd have the
+> advantage of removing feature tests, workarounds, untested code (like
+> what broke here), etc.
+>
+> What do you think?
+>
+> Thanks,
+> Ian
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config    |  9 -----
- tools/perf/util/bpf-event.c   | 66 -----------------------------------
- tools/perf/util/bpf-loader.c  | 18 ----------
- tools/perf/util/bpf_counter.c | 18 ----------
- 4 files changed, 111 deletions(-)
+The removal of pre-libbpf 1.0 support is in:
+https://lore.kernel.org/lkml/20230109203424.1157561-1-irogers@google.com/
+So my proposal is that for 6.2 these two patches are sufficient. In
+perf/core (to be in 6.3) it makes sense to add both sets of patches to
+fix the build issue reported here. The problem with that is that some
+build tests will fail for 6.2 if they are testing libbpf dynamic with
+a libbpf earlier than 1.0. If that is an issue then cherry-picking the
+first or all of the pre-libbpf 1.0 removal patches should address it.
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 399e03338613..2197970bd503 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -566,15 +566,6 @@ ifndef NO_LIBELF
-       # detecting libbpf without LIBBPF_DYNAMIC, so make VF=1 shows libbpf detection status
-       $(call feature_check,libbpf)
- 
--      # Feature test requires libbpf 1.0 so we can assume the following:
--      CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
--      CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
--      CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
--      CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_MAP
--      CFLAGS += -DHAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
--      CFLAGS += -DHAVE_LIBBPF_BTF__RAW_DATA
--      CFLAGS += -DHAVE_LIBBPF_BPF_MAP_CREATE
--
-       ifdef LIBBPF_DYNAMIC
-         ifeq ($(feature-libbpf), 1)
-           EXTLIBS += -lbpf
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index cc7c1f90cf62..025f331b3867 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -22,72 +22,6 @@
- #include "record.h"
- #include "util/synthetic-events.h"
- 
--#ifndef HAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
--struct btf *btf__load_from_kernel_by_id(__u32 id)
--{
--       struct btf *btf;
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--       int err = btf__get_from_id(id, &btf);
--#pragma GCC diagnostic pop
--
--       return err ? ERR_PTR(err) : btf;
--}
--#endif
--
--#ifndef HAVE_LIBBPF_BPF_PROG_LOAD
--LIBBPF_API int bpf_load_program(enum bpf_prog_type type,
--				const struct bpf_insn *insns, size_t insns_cnt,
--				const char *license, __u32 kern_version,
--				char *log_buf, size_t log_buf_sz);
--
--int bpf_prog_load(enum bpf_prog_type prog_type,
--		  const char *prog_name __maybe_unused,
--		  const char *license,
--		  const struct bpf_insn *insns, size_t insn_cnt,
--		  const struct bpf_prog_load_opts *opts)
--{
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	return bpf_load_program(prog_type, insns, insn_cnt, license,
--				opts->kern_version, opts->log_buf, opts->log_size);
--#pragma GCC diagnostic pop
--}
--#endif
--
--#ifndef HAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
--struct bpf_program *
--bpf_object__next_program(const struct bpf_object *obj, struct bpf_program *prev)
--{
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	return bpf_program__next(prev, obj);
--#pragma GCC diagnostic pop
--}
--#endif
--
--#ifndef HAVE_LIBBPF_BPF_OBJECT__NEXT_MAP
--struct bpf_map *
--bpf_object__next_map(const struct bpf_object *obj, const struct bpf_map *prev)
--{
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	return bpf_map__next(prev, obj);
--#pragma GCC diagnostic pop
--}
--#endif
--
--#ifndef HAVE_LIBBPF_BTF__RAW_DATA
--const void *
--btf__raw_data(const struct btf *btf_ro, __u32 *size)
--{
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	return btf__get_raw_data(btf_ro, size);
--#pragma GCC diagnostic pop
--}
--#endif
--
- static int snprintf_hex(char *buf, size_t size, unsigned char *data, size_t len)
- {
- 	int ret = 0;
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 6e9b06cf06ee..44cde27d6389 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -32,24 +32,6 @@
- 
- #include <internal/xyarray.h>
- 
--#ifndef HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
--int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
--			   struct bpf_insn *new_insns __maybe_unused, size_t new_insn_cnt __maybe_unused)
--{
--	pr_err("%s: not support, update libbpf\n", __func__);
--	return -ENOTSUP;
--}
--
--int libbpf_register_prog_handler(const char *sec __maybe_unused,
--                                 enum bpf_prog_type prog_type __maybe_unused,
--                                 enum bpf_attach_type exp_attach_type __maybe_unused,
--                                 const struct libbpf_prog_handler_opts *opts __maybe_unused)
--{
--	pr_err("%s: not support, update libbpf\n", __func__);
--	return -ENOTSUP;
--}
--#endif
--
- /* temporarily disable libbpf deprecation warnings */
- #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
- 
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index eeee899fcf34..aa78a15a6f0a 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -312,24 +312,6 @@ static bool bperf_attr_map_compatible(int attr_map_fd)
- 		(map_info.value_size == sizeof(struct perf_event_attr_map_entry));
- }
- 
--#ifndef HAVE_LIBBPF_BPF_MAP_CREATE
--LIBBPF_API int bpf_create_map(enum bpf_map_type map_type, int key_size,
--                              int value_size, int max_entries, __u32 map_flags);
--int
--bpf_map_create(enum bpf_map_type map_type,
--	       const char *map_name __maybe_unused,
--	       __u32 key_size,
--	       __u32 value_size,
--	       __u32 max_entries,
--	       const struct bpf_map_create_opts *opts __maybe_unused)
--{
--#pragma GCC diagnostic push
--#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
--	return bpf_create_map(map_type, key_size, value_size, max_entries, 0);
--#pragma GCC diagnostic pop
--}
--#endif
--
- static int bperf_lock_attr_map(struct target *target)
- {
- 	char path[PATH_MAX];
--- 
-2.39.0.314.g84b9a713c41-goog
+Thanks,
+Ian
 
+> > > > jirka
+> > > >
+> > > > >
+> > > > > But yeah, previous experiences with Andrii were that we can do not too
+> > > > > costly feature checks, not using .c programs that would fail if some
+> > > > > required feature wasn't present but instead would just do some grep on a
+> > > > > header and if some "smell" wasn't scent, just fail the cap query.
+> > > > >
+> > > > > - Arnaldo
