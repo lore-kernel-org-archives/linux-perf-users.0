@@ -2,109 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D615C5479D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1F2C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235246AbjAIPju (ORCPT
+        id S237012AbjAIPlc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:39:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52120 "EHLO
+        Mon, 9 Jan 2023 10:41:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237535AbjAIPjJ (ORCPT
+        with ESMTP id S237035AbjAIPka (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:39:09 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B670261473;
-        Mon,  9 Jan 2023 07:35:36 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB57C1042;
-        Mon,  9 Jan 2023 07:35:43 -0800 (PST)
-Received: from [10.57.37.91] (unknown [10.57.37.91])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 113593F587;
-        Mon,  9 Jan 2023 07:34:58 -0800 (PST)
-Message-ID: <ec5684cd-a527-4e13-2b05-31832d80535c@arm.com>
-Date:   Mon, 9 Jan 2023 15:34:57 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
- for neoverse-n2
-Content-Language: en-US
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 9 Jan 2023 10:40:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DFC26CD;
+        Mon,  9 Jan 2023 07:38:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EA1606119C;
+        Mon,  9 Jan 2023 15:38:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25459C433D2;
+        Mon,  9 Jan 2023 15:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673278687;
+        bh=7myYQ1O115vx5+6y13iy7L0NzEU0V3HzwHUsg+NH+y8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nXLxlMiBSkNwxh8n8nZ1vVZtKrpWP6cKV3BEKLs5ZLhbBbUVBTtwGfbjczACpvhNo
+         r3k9Wb1pNjhJU5ENdo4xVolEVy2AXQ0a6vFKyFT6CWQ5es6LGXPBVOQM43ZeGt4Szi
+         CTrALVeDCveynhJWg8+SHWpKkYyIFocQ/GRdIodwJFfLQftY7PT24K+PQzEjBcYl3Q
+         S7PJPciKGxoRx3CCU2AcQrOyg8LW1JJxDniFUiOQW3rHMTta7x5excEB2BlQOhziMv
+         izWiXuQXYHROlwEynDBXcnLe48RQYBjgJfbOJAzfzk12Lmoczra+Icq/k7rwD5D7HE
+         NFQKH6qdiMZNw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6BB8640468; Mon,  9 Jan 2023 12:38:04 -0300 (-03)
+Date:   Mon, 9 Jan 2023 12:38:04 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
- <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com>
- <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
- <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com>
- <d4d132d9-1513-6a4e-981f-aa4bc4ebbcbb@linux.alibaba.com>
- <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com>
- <CAP-5=fVGmjFOZqOk0E1bcqeTHcJhEmoA-vrKcHLOs4B_ythT1g@mail.gmail.com>
- <6971b848-2754-6909-d36b-ea80fe157e95@oracle.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <6971b848-2754-6909-d36b-ea80fe157e95@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf kmem: Support legacy tracepoints
+Message-ID: <Y7w03A7f2zUWwihm@kernel.org>
+References: <20230108062400.250690-1-leo.yan@linaro.org>
+ <14dd06c2-39f8-ccb5-ce59-f3a1e45c94d0@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14dd06c2-39f8-ccb5-ce59-f3a1e45c94d0@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 06/01/2023 10:14, John Garry wrote:
-> On 05/01/2023 21:13, Ian Rogers wrote:
->>>> This may be a feasible idea. The value of slots comes from the
->>>> register PMMIR_EL1, which I can read in
->>>> /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. But how do I
->>>> replace the slots in MetricExpr with the
->>>> read slots values? Currently I understand that parameters in
->>>> metricExpr only support events and constants.
->>>>
->>> Maybe during runtime we could create a pseudo metric/event for SLOT.
->> For Intel we do this by just having a different constant for each
->> architecture. It is fairly easy to add a new "literal", so you could
->> add a #slots in expr__get_literal:
->> https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/expr.c?h=perf*core*n407__;LyM!!ACWV5N9M2RV99hQ!IHcZFuFaLdQDQvVOnHVlbbME2S4aW8GohWUkydlejpi7ifFz61r7RutGXReRt0d88X_vDfkTySCiuD2PqOA$  Populating it would be the challenge 😄
+Em Mon, Jan 09, 2023 at 03:11:47PM +0000, James Clark escreveu:
 > 
-> Thanks for the pointer. I think that the challenge in populating it
-> really comes down to whether we would really want to make this generic.
 > 
-> I suppose that for arm64 we could have a method which accesses this
-> PMMIR_EL1 register, while for other archs we could have a weak function
-> which just returns NAN. If other archs want to use this key expr, they
-> can add their own method.
+> On 08/01/2023 06:23, Leo Yan wrote:
+> > Commit 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of
+> > tracepoints") removed tracepoints 'kmalloc_node' and
+> > 'kmem_cache_alloc_node', these two tracepoints have disappeared in the
+> > latest kernel, but we also need to consider the tool should be backward
+> > compatible with old kernels.
+> > 
+> > If detects the tracepoint "kmem:kmalloc_node" is existed on a system,
+> > this patch enables the legacy tracepoints, otherwise, it will ignore
+> > them for the new kernels.
+> > 
+> > Reported-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> > Fixes: 11e9734bcb6a ("mm/slab_common: unify NUMA and UMA version of tracepoints")
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/builtin-kmem.c | 29 ++++++++++++++++++++++++++---
+> >  1 file changed, 26 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> > index e20656c431a4..50a3df5dc18a 100644
+> > --- a/tools/perf/builtin-kmem.c
+> > +++ b/tools/perf/builtin-kmem.c
+> > @@ -1824,6 +1824,19 @@ static int parse_line_opt(const struct option *opt __maybe_unused,
+> >  	return 0;
+> >  }
+> >  
+> > +static bool slab_legacy_tp_is_exposed(void)
+> > +{
+> > +	/*
+> > +	 * The tracepoints "kmem:kmalloc_node" and
+> > +	 * "kmem:kmem_cache_alloc_node" have been removed on the latest
+> > +	 * kernel, if the tracepoint "kmem:kmalloc_node" is existed it
+> > +	 * means the tool is running on an old kernel, we need to
+> > +	 * rollback to support these legacy tracepoints.
+> > +	 */
+> > +	return IS_ERR(trace_event__tp_format("kmem", "kmalloc_node")) ?
+> > +		false : true;
+> > +}
+> > +
+> >  static int __cmd_record(int argc, const char **argv)
+> >  {
+> >  	const char * const record_args[] = {
+> > @@ -1831,22 +1844,28 @@ static int __cmd_record(int argc, const char **argv)
+> >  	};
+> >  	const char * const slab_events[] = {
+> >  	"-e", "kmem:kmalloc",
+> > -	"-e", "kmem:kmalloc_node",
+> >  	"-e", "kmem:kfree",
+> >  	"-e", "kmem:kmem_cache_alloc",
+> > -	"-e", "kmem:kmem_cache_alloc_node",
+> >  	"-e", "kmem:kmem_cache_free",
+> >  	};
+> > +	const char * const slab_legacy_events[] = {
+> > +	"-e", "kmem:kmalloc_node",
+> > +	"-e", "kmem:kmem_cache_alloc_node",
+> > +	};
 > 
+> Reviewed-by: James Clark <james.clark@arm.com>
+> 
+> This fixes the error with mem:kmalloc_node for me.
+> 
+> I was thinking that it might be best to add all events to the list
+> conditionally instead of just the legacy ones. That way, the same error
+> won't happen in the future. But maybe it's best to have an explicit
+> error again in case the breaking change was unintentional so it's fine
+> as it is I think.
 
-I wonder if it would be worthwhile and even more generic to add some
-sort of int containing file accessor construct. It could also have
-support for a default value when the file doesn't exist. For example:
+Just applied this, the changes you brains stormed may come as later
+patches, thanks,
 
-  "MetricExpr": "ITLB / {file://<pmu>/caps/slots(5)}"
-
-It gets a bit fiddly because you might want to support absolute paths
-and paths relative to whatever PMU is being used. But it could prevent
-having to add some custom identifier and glue code for every possible
-file that just has an integer in it.
-
-It also wouldn't be possible to support the case where the file has
-bitfields in it that need to be extracted, so maybe we shouldn't do it.
-
-James
-
+- Arnaldo
