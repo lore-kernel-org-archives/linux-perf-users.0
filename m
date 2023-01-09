@@ -2,157 +2,262 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA782C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 02:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0457CC54EBC
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 02:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjAICqx (ORCPT
+        id S234125AbjAICxM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 Jan 2023 21:46:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
+        Sun, 8 Jan 2023 21:53:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbjAICqx (ORCPT
+        with ESMTP id S233771AbjAICxM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 Jan 2023 21:46:53 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED00ABC8E;
-        Sun,  8 Jan 2023 18:46:51 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NqywZ2CmPz16MgN;
-        Mon,  9 Jan 2023 10:45:18 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Mon, 9 Jan 2023 10:46:49 +0800
-Subject: Re: [PATCH v2] perf record: Fix coredump with --overwrite and
- --max-size
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     Arnaldo Carvalho de Melo <acme@kernel.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <jiwei.sun@windriver.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20221229124728.66515-1-yangjihong1@huawei.com>
- <Y7MEWK/z19QCaNoi@kernel.org>
- <CAM9d7cjcWKBephb5p9ZPU2+wDAz04DYQJoKczORioD=es10hPw@mail.gmail.com>
- <c65f89ef-173c-b828-f3b2-266387903149@huawei.com>
- <CAM9d7chN9ecR7EgA1eN1QQXypZDwCFC-ym6BTQ0d1_XjuruLFw@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <a08af34e-acf2-d370-06bb-ea43d467f89d@huawei.com>
-Date:   Mon, 9 Jan 2023 10:46:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Sun, 8 Jan 2023 21:53:12 -0500
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E63DD2D8;
+        Sun,  8 Jan 2023 18:53:10 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VZ5k-JK_1673232783;
+Received: from 30.221.146.193(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZ5k-JK_1673232783)
+          by smtp.aliyun-inc.com;
+          Mon, 09 Jan 2023 10:53:05 +0800
+Message-ID: <c2e5f9d7-c6d8-c70a-8eff-a8e1c5fcf0af@linux.alibaba.com>
+Date:   Mon, 9 Jan 2023 10:53:03 +0800
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7chN9ecR7EgA1eN1QQXypZDwCFC-ym6BTQ0d1_XjuruLFw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.0
+Subject: Re: [PATCH v6 1/7] perf vendor events arm64: Add common topdown L1
+ metrics
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1673017529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1673017529-1429208-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <7f60c97a-18df-4f93-0e95-2a9a6dccbda7@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <7f60c97a-18df-4f93-0e95-2a9a6dccbda7@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2023/1/7 5:12, Namhyung Kim wrote:
-> Hello,
-> 
-> On Wed, Jan 4, 2023 at 8:09 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Hello,
->>
->> On 2023/1/4 0:50, Namhyung Kim wrote:
->>> On Mon, Jan 2, 2023 at 8:20 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>>
->>>> Em Thu, Dec 29, 2022 at 12:47:28PM +0000, Yang Jihong escreveu:
->>>>> When --overwrite and --max-size options of perf record are used together,
->>>>> a segmentation fault occurs. The following is an example:
->>>>>
->>>>>    # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
->>>>>     [ perf record: Woken up 1 times to write data ]
->>>>>     perf: Segmentation fault
->>>>>     Obtained 1 stack frames.
->>>>>     [0xc4c67f]
->>>>>     Segmentation fault (core dumped)
->>>>>
->>>>> backtrace of the core file is as follows:
->>>>>
->>>>>     #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
->>>>>     #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
->>>>>     #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
->>>>>     #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
->>>>>     #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
->>>>>     #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
->>>>>     #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
->>>>>     #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
->>>>>     #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
->>>>>     #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
->>>>>     #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
->>>>>     #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
->>>>>     #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
->>>>>     #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
->>>>>
->>>>> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
->>>>> The process is as follows:
->>>>>     __cmd_record
->>>>>       -> record__free_thread_data
->>>>>         -> zfree(&rec->thread_data)         // free rec->thread_data
->>>>>       -> record__synthesize
->>>>>         -> perf_event__synthesize_id_index
->>>>>           -> process_synthesized_event
->>>>>             -> record__write
->>>>>               -> record__bytes_written     // access rec->thread_data
->>>>>
->>>>> we only need to check the value of done first.
->>>>> Also add variable check in record__bytes_written for code hardening,
->>>>> and save bytes_written separately to reduce one calculation.
->>>>>
->>>>> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
->>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>>> ---
->>>>>
->>>>> Changes since v1:
->>>>>    - Add variable check in record__bytes_written for code hardening.
->>>>>    - Save bytes_written separately to reduce one calculation.
->>>>>    - Remove rec->opts.tail_synthesize check.
->>>>
->>>> Namhyung, are you ok with this now?
->>>>
->>>> - Arnaldo
->>>>
->>>>>    tools/perf/builtin-record.c | 26 +++++++++++++++++---------
->>>>>    1 file changed, 17 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>>>> index 29dcd454b8e2..acba9e43e519 100644
->>>>> --- a/tools/perf/builtin-record.c
->>>>> +++ b/tools/perf/builtin-record.c
->>>>> @@ -230,16 +230,29 @@ static u64 record__bytes_written(struct record *rec)
->>>>>         u64 bytes_written = rec->bytes_written;
->>>>>         struct record_thread *thread_data = rec->thread_data;
->>>>>
->>>>> +     if (thread_data == NULL)
->>>>> +             return bytes_written;
->>>>> +
->>>
->>> Then it won't count bytes written by threads, right?
->>> I think it needs to be saved somewhere.
->>>
->> I'm not sure here. Can you explain it more clearly, thanks :)
->> I can modify it accordingly.
->>
->> I think if thread_data == NULL, it is not thread data.
->> In this case, we just return rec->bytes_written.
-> 
-> It can be thread data but freed before tail synthesis, right?
-> In that case, I think it needs to add bytes_written by threads
-> to calculate the correct data size.
-Em... In the __cmd_record function, record__stop_threads is called 
-before record__free_thread_data, so if the thread has been freed, there 
-will be no thread data.
-I think it's okay to ignore the situation you mentioned above.
 
-Thanks,
-Yang
+在 2023/1/6 下午11:59, John Garry 写道:
+> On 06/01/2023 15:05, Jing Zhang wrote:
+>> The metrics of topdown L1 are from ARM sbsa7.0 platform design doc[0],
+>> D37-38, which are standard. So put them in the common file sbsa.json of
+>> arm64, so that other cores besides n2/v2 can also be reused.
+>>
+>> Slots may be different in each architecture, so added "#slots" literal
+>> to get different constant for each architecture.
+>>
+>> The value of slots comes from the register PMMIR_EL1, which I can read
+>> in /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. PMMIR_EL1.SLOT
+>> might read as zero if the STALL_SLOT event is not implemented or the PMU
+>> version is lower than ID_AA64DFR0_EL1_PMUVer_V3P4.
+>>
+>> [0] https://urldefense.com/v3/__https://documentation-service.arm.com/static/60250c7395978b529036da86?token=__;!!ACWV5N9M2RV99hQ!J5JW3y6GhaJUqLfbEAzWIy4GJOhUkHQN4D5hEv3Outpzd54fN1Nt4LNKGnuRtMAepS_Nit-KLSUW98tVfFR0TmMVGQ$
+>>
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> hmmm... you have made significant changes in this version (compared to previous), so I would not have picked up this tag. That's just my opinion.
+> 
+
+Thanks for pointing it out.
+
+> As for the patchset org, I'd move the JSON change here into patch #2, and make this patch purely about add "slots" literal support for arm64.
+> 
+
+Ok, I will move the changes of sbsa.json and jevent.py to patch#2.
+
+>> ---
+>>   tools/perf/arch/arm64/util/pmu.c           | 22 ++++++++++++++++++++++
+>>   tools/perf/pmu-events/arch/arm64/sbsa.json | 30 ++++++++++++++++++++++++++++++
+>>   tools/perf/pmu-events/jevents.py           |  2 ++
+>>   tools/perf/util/expr.c                     |  5 +++++
+>>   tools/perf/util/pmu.c                      |  5 +++++
+>>   tools/perf/util/pmu.h                      |  1 +
+>>   6 files changed, 65 insertions(+)
+>>   create mode 100644 tools/perf/pmu-events/arch/arm64/sbsa.json
+>>
+>> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+>> index 477e513..227dadb 100644
+>> --- a/tools/perf/arch/arm64/util/pmu.c
+>> +++ b/tools/perf/arch/arm64/util/pmu.c
+>> @@ -3,6 +3,7 @@
+>>   #include <internal/cpumap.h>
+>>   #include "../../../util/cpumap.h"
+>>   #include "../../../util/pmu.h"
+>> +#include <api/fs/fs.h>
+>>     const struct pmu_events_table *pmu_events_table__find(void)
+>>   {
+>> @@ -24,3 +25,24 @@ const struct pmu_events_table *pmu_events_table__find(void)
+>>         return NULL;
+>>   }
+>> +
+>> +int perf_pmu__get_slots(void)
+>> +{
+>> +    char path[PATH_MAX];
+>> +    unsigned long long slots = 0;
+>> +    struct perf_pmu *pmu = NULL;
+>> +
+>> +    while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+>> +        if (is_pmu_core(pmu->name))
+>> +            break;
+>> +    }
+> 
+> There is a lot in common with arm64's pmu_events_table__find() - can you factor it out? I also prefer how we check for homogeneous CPUs in pmu_events_table__find() (which you should do, also).
+> 
+
+I'll factor out the pmu_core__find function in tools/perf/arch/arm64/util/pmu.c:
+
+static const struct perf_pmu *pmu_core__find(void)
+{
+	struct perf_pmu *pmu = NULL;
+
+	while ((pmu = perf_pmu__scan(pmu))) {
+		if (!is_pmu_core(pmu->name))
+			continue;
+
+		/*
+		 * The cpumap should cover all CPUs. Otherwise, some CPUs may
+		 * not support some events or have different event IDs.
+		 */
+		if (pmu->cpus->nr != cpu__max_cpu().cpu)
+			return NULL;
+		return pmu;
+	}
+
+	return NULL;
+}
+
+>> +    if (pmu) {
+>> +        scnprintf(path, PATH_MAX,
+>> +            EVENT_SOURCE_DEVICE_PATH "%s/caps/slots", pmu->name);
+>> +        /* The value of slots is not greater than INT_MAX, but sysfs__read_int
+>> +         * can't read value with 0x prefix, so use sysfs__read_ull instead.
+>> +         */
+>> +        sysfs__read_ull(path, &slots);
+>> +    }
+>> +    return (int)slots;
+>> +}
+>> diff --git a/tools/perf/pmu-events/arch/arm64/sbsa.json b/tools/perf/pmu-events/arch/arm64/sbsa.json
+>> new file mode 100644
+>> index 0000000..f678c37e
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
+>> @@ -0,0 +1,30 @@
+>> +[
+>> +    {
+>> +        "MetricExpr": "stall_slot_frontend / (#slots * cpu_cycles)",
+>> +        "BriefDescription": "Frontend bound L1 topdown metric",
+>> +        "MetricGroup": "TopdownL1",
+>> +        "MetricName": "frontend_bound",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "(1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
+>> +        "BriefDescription": "Bad speculation L1 topdown metric",
+>> +        "MetricGroup": "TopdownL1",
+>> +        "MetricName": "bad_speculation",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "(op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
+>> +        "BriefDescription": "Retiring L1 topdown metric",
+>> +        "MetricGroup": "TopdownL1",
+>> +        "MetricName": "retiring",
+>> +        "ScaleUnit": "100%"
+>> +    },
+>> +    {
+>> +        "MetricExpr": "stall_slot_backend / (#slots * cpu_cycles)",
+>> +        "BriefDescription": "Backend Bound L1 topdown metric",
+>> +        "MetricGroup": "TopdownL1",
+>> +        "MetricName": "backend_bound",
+>> +        "ScaleUnit": "100%"
+>> +    }
+>> +]
+>> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+>> index 4c398e0..0416b74 100755
+>> --- a/tools/perf/pmu-events/jevents.py
+>> +++ b/tools/perf/pmu-events/jevents.py
+>> @@ -358,6 +358,8 @@ def preprocess_arch_std_files(archpath: str) -> None:
+>>         for event in read_json_events(item.path, topic=''):
+>>           if event.name:
+>>             _arch_std_events[event.name.lower()] = event
+>> +        if event.metric_name:
+>> +          _arch_std_events[event.metric_name.lower()] = event
+>>       def print_events_table_prefix(tblname: str) -> None:
+>> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+>> index 00dcde3..3d67707 100644
+>> --- a/tools/perf/util/expr.c
+>> +++ b/tools/perf/util/expr.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/zalloc.h>
+>>   #include <ctype.h>
+>>   #include <math.h>
+>> +#include "pmu.h"
+>>     #ifdef PARSER_DEBUG
+>>   extern int expr_debug;
+>> @@ -448,6 +449,10 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
+>>           result = topology->core_cpus_lists;
+>>           goto out;
+>>       }
+>> +    if (!strcmp("#slots", literal)) {
+>> +        result = perf_pmu__get_slots();
+>> +        goto out;
+>> +    }
+>>         pr_err("Unrecognized literal '%s'", literal);
+>>   out:
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 2bdeb89..d4cace2 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -1993,3 +1993,8 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+>>       *ucpus_ptr = unmatched_cpus;
+>>       return 0;
+>>   }
+>> +
+>> +int __weak perf_pmu__get_slots(void)
+>> +{
+>> +    return 0;
+> 
+> should this be NAN?
+> 
+
+Will do.
+
+>> +}
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index 69ca000..a2f7df8 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -259,4 +259,5 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+>>     char *pmu_find_real_name(const char *name);
+>>   char *pmu_find_alias_name(const char *name);
+>> +int perf_pmu__get_slots(void);
+> 
+> I think that this name is a bit too vague. Maybe perf_pmu__cpu_cycles_per_slot() could be better.
+> 
+
+Does cpu_cycles_per_slot mean "cpu cycles per slot"? In the documemt, Slots mean operation width.
+If slots are 5, the largest value by which the STALL_SLOT PMU event may increment in one cycle is 5.
+So, maybe perf_pmu__cpu_slots_per_cycle() could be more accurate？
