@@ -2,201 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424C5C5479D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D7CC5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 20:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237011AbjAIT5C (ORCPT
+        id S236528AbjAIUTP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 14:57:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57444 "EHLO
+        Mon, 9 Jan 2023 15:19:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235360AbjAIT5B (ORCPT
+        with ESMTP id S237817AbjAIUS5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 14:57:01 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5933A11C05
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 11:56:59 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso13995266pjt.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 11:56:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c0/0D3Mo+wWzikUduU1CAWV0Q8LsaDVd0/kxK56kXw8=;
-        b=OwX1Qbq6gonTa1LwP39ZsEU2QCCmVCurCBjbRc9yTUKyXZH8CHaDklcQWIYMrQFNWJ
-         UrGnDfWU2LfqjqxunfcPKXvQksl7MuXGseixNYA5MxF3pr9ZOCBupn5GbsVDr/YxwU2i
-         0DwMvH2EbjOBNVkS0i5/uPqlAvdbA90lDoBOo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c0/0D3Mo+wWzikUduU1CAWV0Q8LsaDVd0/kxK56kXw8=;
-        b=fQiSI8rcAvXcp5LmT5XKsHx33/vrZPV7Y0NnHHvEEbYsVEeu3r2xwqQlN/L8nt16J+
-         z9q4OV5n1q0Hz3K+3+lVlV6xN2aSSjplSck8SWDF0TgwpAx7E08I+9bdoD5zLCzBBFJx
-         pGjEFmpWBXHqorEMs49PaPmcOrUjIlsbCSFaJeqwVS5VOWAm5UuMJbwFk6Yatmu7aD6T
-         NUkNi7CpIiFqmhZJxJCmLC59LQ57d/jMPN7xgbfurm/Imu8uAu2+7nN36QMnRz85rhIK
-         6dYk2HEaceRpk46j9HljCkCqNVQOV4Wx+GyxrPAcaNoeFRzhtdV9wh5PFFzg8ioZS9+Q
-         pJAw==
-X-Gm-Message-State: AFqh2kqxd+TqcOw4RbuvWuvij7P/fWhNFDoc/JTKUo5PHDjsh+Xl5wai
-        /Rz4y7Yr5sv4uV5C9XRX/UcFIdXohU78ALd5dgAl
-X-Google-Smtp-Source: AMrXdXsTJ7aO2iHHoPnOlTsETf7fuA9nWCMKbupCxgU+CEyC/kSDdnp1NEvXq0hwRCfiNrNdXwSC1KZF42ZCb3bvN1M=
-X-Received: by 2002:a17:902:6b83:b0:192:d373:2e02 with SMTP id
- p3-20020a1709026b8300b00192d3732e02mr2064310plk.75.1673294218760; Mon, 09 Jan
- 2023 11:56:58 -0800 (PST)
+        Mon, 9 Jan 2023 15:18:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF35F34D67;
+        Mon,  9 Jan 2023 12:18:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 29799B80FA3;
+        Mon,  9 Jan 2023 20:18:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A24C433F0;
+        Mon,  9 Jan 2023 20:18:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673295533;
+        bh=fKmzDa8xWu0AAMUhY9kDg0odlBMun7WpnzbGtGHCOBE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oDX2C9i+FDRvpquD0Tm76+Ztd1AH/yS/g3Qg7WHgxgYL29Ye/phnNYpv6xEpWwKQd
+         JFkLncU8U/jqrN9TiunGb0Sx7rtJBsQjfJUv6/3OJh1oOagbURdbzilqMRkXx05cGT
+         24r5PMAvpKBzBIKcNP6ycQLhO+AC7wPoOldLkZH/s2TmcZuCUy+nl6bew7FhvtUsP7
+         wMo43JkxcraKxsM/4ISzDPaCz++NYL2cfLYyD2xiLF8bmRIjpXGDfMcvlSDIrCmHAp
+         vIGicqV03wqm+0XB+dtNuM4qoJ+/jdj78Mp4Zn8Cn7qKSmPtFVNk0TptynUg3Awio7
+         /ZLLBqlUUNrHg==
+Received: by mail-ua1-f54.google.com with SMTP id l13so2312166uai.8;
+        Mon, 09 Jan 2023 12:18:53 -0800 (PST)
+X-Gm-Message-State: AFqh2kqyPZU5RJ8uAhWKXUAQRLKBUX0Z0lp7Ux2ppz0OtEo+T27iXfdn
+        Aq9x80pbhY3GKADzSWnY6h36QMlAc8ct6n9+Ng==
+X-Google-Smtp-Source: AMrXdXs6BTZ+8D74o0hJQvodxrknKckEnyT3FIAUEDSl4Nm2U6u2mch8LVVAz/MbaiofQWil2sRw59UL0KIBA4Gu1cs=
+X-Received: by 2002:a05:6130:2ac:b0:573:d2a:e6cf with SMTP id
+ q44-20020a05613002ac00b005730d2ae6cfmr3918699uac.36.1673295532626; Mon, 09
+ Jan 2023 12:18:52 -0800 (PST)
 MIME-Version: 1.0
-References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
- <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
-In-Reply-To: <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Mon, 9 Jan 2023 11:56:47 -0800
-Message-ID: <CAOnJCU+qsJk9oL-2L8fJuGvpaJsyfwQ5+wFXA1L1jM6Fe=FK6A@mail.gmail.com>
-Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V conundrum
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
+ <20220825-arm-spe-v8-7-v4-3-327f860daf28@kernel.org> <Y7xsDXFlNjiQ1AIe@sirena.org.uk>
+In-Reply-To: <Y7xsDXFlNjiQ1AIe@sirena.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 9 Jan 2023 14:18:41 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLFSMzmTSAjtWWotzFy=JLr+rjim4F_X5thWK9ji6z22g@mail.gmail.com>
+Message-ID: <CAL_JsqLFSMzmTSAjtWWotzFy=JLr+rjim4F_X5thWK9ji6z22g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] arm64/sysreg: Convert SPE registers to automatic generation
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Beeman Strong <beeman@rivosinc.com>,
-        Atish Patra <atishp@rivosinc.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Anup Patel <apatel@ventanamicro.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 4:41 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Jan 9, 2023 at 1:33 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
-> > Hi All,
-> > There was a recent uabi update[1] for RISC-V that allows the users to
-> > read cycle and instruction count without any checks.
-> > We tried to restrict that behavior to address security concerns
-> > earlier but it resulted in breakage for some user space
-> > applications[2].
-> > Thus, previous behavior was restored where a user on RISC-V platforms
-> > can directly read cycle or instruction count[3].
+> On Mon, Jan 09, 2023 at 01:26:19PM -0600, Rob Herring wrote:
+> > Convert all the SPE register defines to automatic generation. No
+> > functional changes.
 > >
-> > Comparison with other ISAs w.r.t user space access of counters:
-> > ARM64
-> >   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
-> >   -- Only for task bound events configured via perf.
+> > New registers and fields for SPEv1.2 are added with the conversion.
 > >
-> > X86
-> >  --- rdpmc instruction
-> >  --- Enable/Disable via =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
-> > -- Before v4.0
-> >  -- any process (even without active perf event) rdpmc
-> > After v4.0
-> > -- Default behavior changed to support only active events in a
-> > process=E2=80=99s context.
-> > -- Configured through perf similar to ARM64
-> > -- Continue to maintain backward compatibility for unrestricted access
-> > by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=80=9D
+> > Some of the PMBSR MSS field defines are kept as the automatic generation
+> > has no way to create multiple names for the same register bits. The
+> > meaning of the MSS field depends on other bits.
 > >
-> > IMO, RISC-V should only enable user space access through perf similar
-> > to ARM64 and x86 (post v4.0).
-> > However, we do have to support the legacy behavior to avoid
-> > application breakage.
-> > As per my understanding a direct user space access can lead to the
-> > following problems:
-> >
-> > 1) There is no context switch support, so counts from other contexts ar=
-e exposed
-> > 2) If a perf user is allocated one of these counters, the counter
-> > value will be written
-> >
-> > Looking at the x86 code as it continues to allow the above behavior,
-> > rdpmc_always_available_key is enabled in the above case. However,
-> > during the context switch (cr4_update_pce_mm)
-> > only dirty counters are cleared. It only prevents leakage from perf
-> > task to rdpmc task.
-> >
-> > How does the context switch of counters work for users who enable
-> > unrestricted access by writing 2 to =E2=80=9C/sys/devices/cpu/rdpmc=E2=
-=80=9D ?
-> > Otherwise, rdpmc users likely get noise from other applications. Is
-> > that expected ?
-> > This can be a security concern also where a rogue rdpmc user
-> > application can monitor other critical applications to initiate side
-> > channel attack.
-> >
-> > Am I missing something? Please correct my understanding of the x86
-> > implementation if it is wrong.
+> > Tested-by: James Clark <james.clark@arm.com>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v4:
+> >  - Rebase on v6.2-rc1
+> > v3:
+> >  - Make some fields enums and add some missing fields
 >
-> So on x86 we have RDTSC and RDPMC instructions. RDTSC reads the
-> Time-Stamp-Counter which is a globally synchronized monotonic increasing
-> counter at some 'random' rate (idealized, don't ask). This thing is used
-> for time-keeping etc..
+> What changed to invalidate my Reviewed-by?
 >
-> And then there's RDPMC which (optionally) allows reading the PMU
-> counters which are normally disabled and all 0.
->
-> Even if RDPMC is unconditionally allowed from userspace (the 2 option
-> you refer to) userspace will only be able to read these 0s unless
-> someone also programs the PMU. Linux only supports a single means of
-> doing so: perf (some people use /dev/msr to poke directly to the MSRs
-> but they get to keep all pieces).
->
+>    https://lore.kernel.org/all/Y2kgC9QlBwvXTLe6@sirena.org.uk/
 
-It makes sense now. Thanks!!
+Ugg, sorry. Nothing changed, I just forgot to add it.
 
-AFAIK, the /dev/msr interface is also allowed for root users only. So that
-covers the security concerns I was asking about.
-
-> RDPMC is only useful if you read counters you own on yourself -- IOW
-> selfmonitoring, using the interface outlined in uapi/linux/perf_events.h
-> near struct perf_event_mmap_page.
->
-> Any other usage -- you get to keep the pieces.
->
-> Can you observe random other counters, yes, unavoidably so. The sysfs
-> control you mention was instituted to restrict this somewhat.
->
-> If the RISC-V counters are fundamentally the PMU counters that need to
-> be reset to trigger events, then you've managed to paint yourself into a
-> tight spot :/
->
-> Either you must dis-allow userspace access to these things (and break
-> them) or limit the PMU usage -- both options suck.
->
->
-> Now, I'm thinking that esp. something like instruction count is not
-> synchronized between cores (seems fundamentally impossible) and can only
-> be reasonably be consumed (and compared) when strictly affine to a
-> particular CPU, you can argue that applications doing this without also
-> strictly managing their affinity mask are broken anyway and therefore
-> your breakage is not in fact a breaking them -- you can't break
-> something that's already broken.
->
-
-I think most broken applications were using rdcycle to measure time
-which was wrong anyways.
-It probably happened because there was no "time" CSR in the early
-hardwares. Thus, the rdtime would
-trap & emulated by the firmware which was slow. This lead to user
-space application to use rdcycle which
-was not correct either. So the existing applications are broken for
-using rdcycle as well.
-
-Since both cycle & instret behave similarly (fixed counters), they get
-enabled/disabled together.
-
->
-> Anyway, given RISC-V being a very young platform, I would try really
-> *really* *REALLY* hard to stomp on these applications and get them to
-> change in order to reclaim the PMU usage.
-
-Yes. Thanks for your valuable input.
-
---=20
-Regards,
-Atish
+Rob
