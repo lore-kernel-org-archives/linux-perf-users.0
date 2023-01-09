@@ -2,133 +2,128 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16E5C5479D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 18:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DB5C6379F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 18:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231220AbjAISIm (ORCPT
+        id S235462AbjAISN7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 13:08:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
+        Mon, 9 Jan 2023 13:13:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237510AbjAISIY (ORCPT
+        with ESMTP id S237507AbjAISMq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 13:08:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509BC43D89;
-        Mon,  9 Jan 2023 10:07:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BC02D61248;
-        Mon,  9 Jan 2023 18:07:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B73EDC433EF;
-        Mon,  9 Jan 2023 18:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673287633;
-        bh=ZWdxpeiZHLTpLcVujmkkgIPXWQwv7zdlyirYfgXnknU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UZ2t+25RuXg7tpdjJxEWIZVod9m8JKmzYtK1znW3OX0lEkT2EA1z7EEpoPzzCetb6
-         XqVRPvcEermbKfgpS3cq0u2Cn1ws3F+iqsy2FCCnqc23dkYG+gTdgrH+IH9Ncov28Z
-         SO0zN4FseYSfuX70IwTUspYMjzVMbMeUrKfBTv68a3yDQ+/Hgtf69S1crq3RhOE6mW
-         7TS4AM/dIPuFoEtMf8SW8P0DH1ykvnGx3Yzvn2jAvdg8tgaWStzX3G4kDvzjWLuHmQ
-         bFHRtokcNXl98HrB5GJpt1+fY3wvM0S1XvgcR/uy/8tMwAMJbZ7xuJdaHUK56VlmsY
-         t9Fbp1G9tDVvw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1599440468; Mon,  9 Jan 2023 15:07:11 -0300 (-03)
-Date:   Mon, 9 Jan 2023 15:07:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf tools: Don't install libtraceevent plugins as its
- not anymore in the kernel sources
-Message-ID: <Y7xXz+TSpiCbQGjw@kernel.org>
+        Mon, 9 Jan 2023 13:12:46 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3C46C2AD;
+        Mon,  9 Jan 2023 10:10:22 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id g10so6910890wmo.1;
+        Mon, 09 Jan 2023 10:10:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zxF7YZATLTe/2r499mkb81egJwUmg6YnWv+pLAmdBuA=;
+        b=LT3s1Qf2GSHOcHJwai64rE0RUGcxmEl0qUzuN64ss6he+dXmzR16OlfMW1f48dbLZM
+         9UJmGIL+zDWsaK2S7xqpdBc9gPfZwwoAx9RvxLALELCwoqRdiHT2htTdlsBYZQOHvn91
+         eneErjOQB8+pVtyvh59eLFohV7RCzEifjhXXQQljUxnxDFcO43xbeUkKX35s2LCYz6KA
+         qzv9hhvyTitbIfuloR6L+0yyJZVRgy4YHH0Wm7Lg3AjLVk8LK9pfdMOLguxb8xn9EgKz
+         Viil9chK1vxnLqofdWMfU19lzkKjPKpyUGTn6Kq3EA8hdzX86UVuiXW0CUC5gQKapxps
+         81yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zxF7YZATLTe/2r499mkb81egJwUmg6YnWv+pLAmdBuA=;
+        b=7KS1Sbu499PY9qj6zfx+k0a1mZJWbQPG3rVZIA2p3WovYhep3sgIpnkVyhU6f1FG0Q
+         Z9zhaHAqVwMA944vw6qjkleqGqD7+AuzfuPkO8OF+n/AN9yyZaA5ZrIGIziY3WF+IU+r
+         98Ajs/Kb8jDvnMl8TZeknCLlv4pUxnQzOysE/GTQ5Q+v8LkbfEppr4rLwO75ILn4hNxV
+         vbGiAqN9seABB15bSgvUrjpdbEuWkVyA2sU8Tisad9FNdWcBOTLBEj+RcPfdu9nhn8nw
+         xpiueAhQ9BfnU8bJaueWRQ8/6zET4zpw+gjRjvJr9tWg9w+Xto5jL3lh37KhGzUmF5nP
+         NALQ==
+X-Gm-Message-State: AFqh2kqUhciTZm9SKfUX9lWo47L5QDahlVKLwMlvG746e/p4XWf3qxJI
+        01bSNy+emyFF8QSsbPEVHEw=
+X-Google-Smtp-Source: AMrXdXvIa9uPVCNa4Yqd6q/Nhcp8uRByIR6D2fjorwhZmm9jaX0gUFKtGdAbhZckmpsO9tiHLb1WYQ==
+X-Received: by 2002:a1c:4c12:0:b0:3c6:e63e:89a6 with SMTP id z18-20020a1c4c12000000b003c6e63e89a6mr47019889wmf.2.1673287821142;
+        Mon, 09 Jan 2023 10:10:21 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id r10-20020a05600c458a00b003d35acb0fd7sm17821338wmo.34.2023.01.09.10.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 10:10:20 -0800 (PST)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Mon, 9 Jan 2023 19:10:18 +0100
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+Message-ID: <Y7xYimp0h4YT72/N@krava>
+References: <20230106151320.619514-1-irogers@google.com>
+ <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
+ <Y7hZccgOiueB31a+@kernel.org>
+ <Y7hgKMDGzQlankL1@kernel.org>
+ <Y7hgoVKBoulCbA4l@kernel.org>
+ <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
+ <Y7wuz6EOggZ8Wysb@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Y7wuz6EOggZ8Wysb@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-While doing 'make -C tools/perf build-test' one can notice error
-messages while trying to install libtraceevent plugins, stop doing that
-as libtraceevent isn't anymore a homie.
+On Mon, Jan 09, 2023 at 12:12:15PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jan 06, 2023 at 11:06:46AM -0800, Ian Rogers escreveu:
+> > So trying to get build-test working on my Debian derived distro is a
+> > PITA with broken feature detection for options I don't normally use.
+> 
+> Its really difficult to have perf building with so many dependent
+> libraries, mowing out some should be in order.
+> 
+> > I'll try to fix this.
+> 
+> Thanks.
+>  
+> > In any case I think I've spotted what is really happening here and it
+> > isn't a failure but a feature :-D The build is specifying
+> 
+> I get it.
+> 
+> > LIBBPF_DYNAMIC=1 which means you get the libbpf headers from
+> > /usr/include. I think the build is trying to do this on a system with
+> > an old libbpf and hence getting the failures above. Previously, even
+> > though we wanted the dynamic headers we still had a -I, this time for
+> > the install_headers version. Now you really are using the system
+> > version and it is broken. This means a few things:
+> > - the libbpf feature test should fail if code like above is going to fail,
+> 
+> Agreed.
+> 
+> > - we may want to contemplate supporting older libbpfs (I'd rather not),
+> 
+> I'd rather require everybody to be up to the latest trends, but I really
+> don't think that is a reasonable expectation.
+> 
+> > - does build-test have a way to skip known issues like this?
+> 
+> Unsure, Jiri?
 
-These are the warnings dealt with:
+I don't think so it just triggers the build, it's up to the features check
+to disable the feature if the library is not compatible with perf code
 
-   make_install_prefix_slash_O: make install prefix=/tmp/krava/
-    failed to find: /tmp/krava/etc/bash_completion.d/perf
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_cfg80211.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_scsi.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_xen.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_function.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_sched_switch.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_mac80211.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_kvm.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_kmem.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_hrtimer.so
-    failed to find: /tmp/krava/lib64/traceevent/plugins/plugin_jbd2.so
+could we add that specific libbpf call to the libbpf feature check?
 
-Fixes: 4171925aa9f3f7bf ("tools lib traceevent: Remove libtraceevent")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Link: http://lore.kernel.org/lkml/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Makefile.config |  8 --------
- tools/perf/tests/make      | 12 ------------
- 2 files changed, 20 deletions(-)
+jirka
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index c2504c39bdcb8992..156440ea019143f8 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1314,14 +1314,6 @@ tip_instdir_SQ = $(subst ','\'',$(tip_instdir))
- 
- export perfexec_instdir_SQ
- 
--# If we install to $(HOME) we keep the traceevent default:
--# $(HOME)/.traceevent/plugins
--# Otherwise we install plugins into the global $(libdir).
--ifdef DESTDIR
--plugindir=$(libdir)/traceevent/plugins
--plugindir_SQ= $(subst ','\'',$(plugindir))
--endif
--
- print_var = $(eval $(print_var_code)) $(info $(MSG))
- define print_var_code
-     MSG = $(shell printf '...%40s: %s' $(1) $($(1)))
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 05e818a8bbad11a4..009d6efb673ce828 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -222,19 +222,7 @@ installed_files_bin := bin/perf
- installed_files_bin += etc/bash_completion.d/perf
- installed_files_bin += libexec/perf-core/perf-archive
- 
--installed_files_plugins := $(lib)/traceevent/plugins/plugin_cfg80211.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_scsi.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_xen.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_function.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_sched_switch.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_mac80211.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_kvm.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_kmem.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_hrtimer.so
--installed_files_plugins += $(lib)/traceevent/plugins/plugin_jbd2.so
--
- installed_files_all := $(installed_files_bin)
--installed_files_all += $(installed_files_plugins)
- 
- test_make_install       := $(call test_dest_files,$(installed_files_all))
- test_make_install_O     := $(call test_dest_files,$(installed_files_all))
--- 
-2.39.0
-
+> 
+> But yeah, previous experiences with Andrii were that we can do not too
+> costly feature checks, not using .c programs that would fail if some
+> required feature wasn't present but instead would just do some grep on a
+> header and if some "smell" wasn't scent, just fail the cap query.
+> 
+> - Arnaldo
