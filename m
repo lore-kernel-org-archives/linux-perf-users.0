@@ -2,262 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0457CC54EBC
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 02:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990A2C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 07:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234125AbjAICxM (ORCPT
+        id S233751AbjAIHCL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 8 Jan 2023 21:53:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57390 "EHLO
+        Mon, 9 Jan 2023 02:02:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233771AbjAICxM (ORCPT
+        with ESMTP id S233080AbjAIHCK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 8 Jan 2023 21:53:12 -0500
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E63DD2D8;
-        Sun,  8 Jan 2023 18:53:10 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VZ5k-JK_1673232783;
-Received: from 30.221.146.193(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZ5k-JK_1673232783)
-          by smtp.aliyun-inc.com;
-          Mon, 09 Jan 2023 10:53:05 +0800
-Message-ID: <c2e5f9d7-c6d8-c70a-8eff-a8e1c5fcf0af@linux.alibaba.com>
-Date:   Mon, 9 Jan 2023 10:53:03 +0800
+        Mon, 9 Jan 2023 02:02:10 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D0285FAE
+        for <linux-perf-users@vger.kernel.org>; Sun,  8 Jan 2023 23:02:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673247729; x=1704783729;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rM7J2uzufP+jZ+wN2jsU5j3kMbDS4MhQgn1jncER2k0=;
+  b=a8BjFn4inr/iiFuBJEwveHu6DtEwiN09+xe28H9jbICtYTBsToReu2aQ
+   4Ss42NKbaQq3zFGVJA/xNbbYlHX/+6ay4OOpDA5xxjgCI2S2phJ0tkgEN
+   EfM3aqlZH86UgOwnY+el1E/efGKVoxiqhKuJ89ErdsH/shBA8+NH/DzU7
+   fqiTkfMcgIoVmQl0S6ouIzJpEY6zc7RzTBTX+W8HXNUYHZe6IlKZ84HLr
+   t8+Zt36pC358RmelWCWRpdb5rFcgn7lCeF/EZSdbXpTyUfSOu/Q4QbPnt
+   waVFkju6AEGtG3AyRkftht9Uw6n0OZsvVukJasgpHpCexN8zhguQGMkf3
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="385109666"
+X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
+   d="scan'208";a="385109666"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2023 23:02:09 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="830498656"
+X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
+   d="scan'208";a="830498656"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.220.201])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2023 23:02:07 -0800
+Message-ID: <aad6782c-fb30-ba39-ba59-775c5f227d56@intel.com>
+Date:   Mon, 9 Jan 2023 09:02:02 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.0
-Subject: Re: [PATCH v6 1/7] perf vendor events arm64: Add common topdown L1
- metrics
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1673017529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1673017529-1429208-2-git-send-email-renyu.zj@linux.alibaba.com>
- <7f60c97a-18df-4f93-0e95-2a9a6dccbda7@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <7f60c97a-18df-4f93-0e95-2a9a6dccbda7@oracle.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.1
+Subject: Re: [RFC PATCH v1] perf record: Correct address filters for
+ duplicated symbols
+To:     Dmitrii Dolgov <9erthalion6@gmail.com>,
+        linux-perf-users@vger.kernel.org
+Cc:     acme@kernel.org, mingo@redhat.com, jolsa@kernel.org,
+        irogers@google.com
+References: <20230106203751.403270-1-9erthalion6@gmail.com>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230106203751.403270-1-9erthalion6@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/1/6 下午11:59, John Garry 写道:
-> On 06/01/2023 15:05, Jing Zhang wrote:
->> The metrics of topdown L1 are from ARM sbsa7.0 platform design doc[0],
->> D37-38, which are standard. So put them in the common file sbsa.json of
->> arm64, so that other cores besides n2/v2 can also be reused.
->>
->> Slots may be different in each architecture, so added "#slots" literal
->> to get different constant for each architecture.
->>
->> The value of slots comes from the register PMMIR_EL1, which I can read
->> in /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. PMMIR_EL1.SLOT
->> might read as zero if the STALL_SLOT event is not implemented or the PMU
->> version is lower than ID_AA64DFR0_EL1_PMUVer_V3P4.
->>
->> [0] https://urldefense.com/v3/__https://documentation-service.arm.com/static/60250c7395978b529036da86?token=__;!!ACWV5N9M2RV99hQ!J5JW3y6GhaJUqLfbEAzWIy4GJOhUkHQN4D5hEv3Outpzd54fN1Nt4LNKGnuRtMAepS_Nit-KLSUW98tVfFR0TmMVGQ$
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> Acked-by: Ian Rogers <irogers@google.com>
+On 6/01/23 22:37, Dmitrii Dolgov wrote:
+> It seems the logic to handle duplicated symbols is off. In case if the
+> symbol index is specified it will:
 > 
-> hmmm... you have made significant changes in this version (compared to previous), so I would not have picked up this tag. That's just my opinion.
+> * find a match
+> * continue searching
+> * check that start is not null and idx is set on the next loop
+> * exit with the error code 1
 > 
+> My guess is the expectation was that at this point the second match is
+> found (because *start is not null), although the new symbol hasn't pass
+> dso_sym_match yet. Here is how it looks like:
 
-Thanks for pointing it out.
+If *start && idx > 0 there is no need to match anymore.  The
+code is just getting *size.  Looks to me like it should be:
 
-> As for the patchset org, I'd move the JSON change here into patch #2, and make this patch purely about add "slots" literal support for arm64.
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 265d20cc126b..c2e323cd7d49 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -2611,7 +2611,7 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
+ 				*size = sym->start - *start;
+ 			if (idx > 0) {
+ 				if (*size)
+-					return 1;
++					return 0;
+ 			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+ 				print_duplicate_syms(dso, sym_name);
+ 				return -EINVAL;
+
+
 > 
-
-Ok, I will move the changes of sbsa.json and jevent.py to patch#2.
-
->> ---
->>   tools/perf/arch/arm64/util/pmu.c           | 22 ++++++++++++++++++++++
->>   tools/perf/pmu-events/arch/arm64/sbsa.json | 30 ++++++++++++++++++++++++++++++
->>   tools/perf/pmu-events/jevents.py           |  2 ++
->>   tools/perf/util/expr.c                     |  5 +++++
->>   tools/perf/util/pmu.c                      |  5 +++++
->>   tools/perf/util/pmu.h                      |  1 +
->>   6 files changed, 65 insertions(+)
->>   create mode 100644 tools/perf/pmu-events/arch/arm64/sbsa.json
->>
->> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
->> index 477e513..227dadb 100644
->> --- a/tools/perf/arch/arm64/util/pmu.c
->> +++ b/tools/perf/arch/arm64/util/pmu.c
->> @@ -3,6 +3,7 @@
->>   #include <internal/cpumap.h>
->>   #include "../../../util/cpumap.h"
->>   #include "../../../util/pmu.h"
->> +#include <api/fs/fs.h>
->>     const struct pmu_events_table *pmu_events_table__find(void)
->>   {
->> @@ -24,3 +25,24 @@ const struct pmu_events_table *pmu_events_table__find(void)
->>         return NULL;
->>   }
->> +
->> +int perf_pmu__get_slots(void)
->> +{
->> +    char path[PATH_MAX];
->> +    unsigned long long slots = 0;
->> +    struct perf_pmu *pmu = NULL;
->> +
->> +    while ((pmu = perf_pmu__scan(pmu)) != NULL) {
->> +        if (is_pmu_core(pmu->name))
->> +            break;
->> +    }
+>     $ readelf -a postgres | grep simple_heap_update
+>         4716: 00000000004e23e5   352 FUNC    GLOBAL DEFAULT   13 simple_heap_update
+>         27829: 00000000004e23e5   352 FUNC    GLOBAL DEFAULT   13 simple_heap_update
 > 
-> There is a lot in common with arm64's pmu_events_table__find() - can you factor it out? I also prefer how we check for homogeneous CPUs in pmu_events_table__find() (which you should do, also).
+>     $ perf record -p <pid> -e intel_pt// \
+>         --filter 'filter simple_heap_update #1 @ postgres' -- sleep 60
 > 
-
-I'll factor out the pmu_core__find function in tools/perf/arch/arm64/util/pmu.c:
-
-static const struct perf_pmu *pmu_core__find(void)
-{
-	struct perf_pmu *pmu = NULL;
-
-	while ((pmu = perf_pmu__scan(pmu))) {
-		if (!is_pmu_core(pmu->name))
-			continue;
-
-		/*
-		 * The cpumap should cover all CPUs. Otherwise, some CPUs may
-		 * not support some events or have different event IDs.
-		 */
-		if (pmu->cpus->nr != cpu__max_cpu().cpu)
-			return NULL;
-		return pmu;
-	}
-
-	return NULL;
-}
-
->> +    if (pmu) {
->> +        scnprintf(path, PATH_MAX,
->> +            EVENT_SOURCE_DEVICE_PATH "%s/caps/slots", pmu->name);
->> +        /* The value of slots is not greater than INT_MAX, but sysfs__read_int
->> +         * can't read value with 0x prefix, so use sysfs__read_ull instead.
->> +         */
->> +        sysfs__read_ull(path, &slots);
->> +    }
->> +    return (int)slots;
->> +}
->> diff --git a/tools/perf/pmu-events/arch/arm64/sbsa.json b/tools/perf/pmu-events/arch/arm64/sbsa.json
->> new file mode 100644
->> index 0000000..f678c37e
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
->> @@ -0,0 +1,30 @@
->> +[
->> +    {
->> +        "MetricExpr": "stall_slot_frontend / (#slots * cpu_cycles)",
->> +        "BriefDescription": "Frontend bound L1 topdown metric",
->> +        "MetricGroup": "TopdownL1",
->> +        "MetricName": "frontend_bound",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "(1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
->> +        "BriefDescription": "Bad speculation L1 topdown metric",
->> +        "MetricGroup": "TopdownL1",
->> +        "MetricName": "bad_speculation",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "(op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
->> +        "BriefDescription": "Retiring L1 topdown metric",
->> +        "MetricGroup": "TopdownL1",
->> +        "MetricName": "retiring",
->> +        "ScaleUnit": "100%"
->> +    },
->> +    {
->> +        "MetricExpr": "stall_slot_backend / (#slots * cpu_cycles)",
->> +        "BriefDescription": "Backend Bound L1 topdown metric",
->> +        "MetricGroup": "TopdownL1",
->> +        "MetricName": "backend_bound",
->> +        "ScaleUnit": "100%"
->> +    }
->> +]
->> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
->> index 4c398e0..0416b74 100755
->> --- a/tools/perf/pmu-events/jevents.py
->> +++ b/tools/perf/pmu-events/jevents.py
->> @@ -358,6 +358,8 @@ def preprocess_arch_std_files(archpath: str) -> None:
->>         for event in read_json_events(item.path, topic=''):
->>           if event.name:
->>             _arch_std_events[event.name.lower()] = event
->> +        if event.metric_name:
->> +          _arch_std_events[event.metric_name.lower()] = event
->>       def print_events_table_prefix(tblname: str) -> None:
->> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
->> index 00dcde3..3d67707 100644
->> --- a/tools/perf/util/expr.c
->> +++ b/tools/perf/util/expr.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/zalloc.h>
->>   #include <ctype.h>
->>   #include <math.h>
->> +#include "pmu.h"
->>     #ifdef PARSER_DEBUG
->>   extern int expr_debug;
->> @@ -448,6 +449,10 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
->>           result = topology->core_cpus_lists;
->>           goto out;
->>       }
->> +    if (!strcmp("#slots", literal)) {
->> +        result = perf_pmu__get_slots();
->> +        goto out;
->> +    }
->>         pr_err("Unrecognized literal '%s'", literal);
->>   out:
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index 2bdeb89..d4cace2 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -1993,3 +1993,8 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
->>       *ucpus_ptr = unmatched_cpus;
->>       return 0;
->>   }
->> +
->> +int __weak perf_pmu__get_slots(void)
->> +{
->> +    return 0;
+>         Failed to parse address filter: 'filter simple_heap_update #1 @ postgres'
+>         Filter format is: filter|start|stop|tracestop <start symbol or address> [/ <end symbol or size>] [@<file name>]
+>         Where multiple filters are separated by space or comma.
 > 
-> should this be NAN?
+> Correct by returning error only after checking whether the symbol is
+> matching or not. After modifications the case above seems to be working
+> as expected:
 > 
-
-Will do.
-
->> +}
->> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->> index 69ca000..a2f7df8 100644
->> --- a/tools/perf/util/pmu.h
->> +++ b/tools/perf/util/pmu.h
->> @@ -259,4 +259,5 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
->>     char *pmu_find_real_name(const char *name);
->>   char *pmu_find_alias_name(const char *name);
->> +int perf_pmu__get_slots(void);
+>     $ perf record -p <pid> -e intel_pt// \
+>         --filter 'filter simple_heap_update #1 @ postgres' -- sleep 60
 > 
-> I think that this name is a bit too vague. Maybe perf_pmu__cpu_cycles_per_slot() could be better.
+>     # update heap a couple of times
 > 
+>     $ perf script --itrace=c
+> 
+>         branches: 4e23fe simple_heap_update+0x19 => 54829c GetCurrentCommandId+0x0
+>         # [...]
+>         branches: 4e23fe simple_heap_update+0x19 => 54829c GetCurrentCommandId+0x0
+>         # [...]
+> 
+> Signed-off-by: Dmitrii Dolgov <9erthalion6@gmail.com>
+> ---
+>  tools/perf/util/auxtrace.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index b59c278fe9ed..112cef56d6c2 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -2593,15 +2593,23 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
+>  
+>  	sym = dso__first_symbol(dso);
+>  	while (sym) {
+> +		/* Verify duplicates if one match was already found */
+>  		if (*start) {
+>  			if (!*size)
+>  				*size = sym->start - *start;
+> -			if (idx > 0) {
+> -				if (*size)
+> -					return 1;
+> -			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+> -				print_duplicate_syms(dso, sym_name);
+> -				return -EINVAL;
+> +
+> +			if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+> +				if (idx > 0) {
+> +					/*
+> +					 * There is already one match with the specified index, now
+> +					 * we found the second one, something is wrong.
+> +					 */
+> +					if (*size)
+> +						return 1;
+> +				} else {
+> +					print_duplicate_syms(dso, sym_name);
+> +					return -EINVAL;
+> +				}
+>  			}
+>  		} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+>  			*start = sym->start;
 
-Does cpu_cycles_per_slot mean "cpu cycles per slot"? In the documemt, Slots mean operation width.
-If slots are 5, the largest value by which the STALL_SLOT PMU event may increment in one cycle is 5.
-So, maybe perf_pmu__cpu_slots_per_cycle() could be more accurate？
