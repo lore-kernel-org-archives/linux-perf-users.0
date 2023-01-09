@@ -2,106 +2,211 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9A5C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584C7C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233713AbjAIPrq (ORCPT
+        id S233816AbjAIPx4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:47:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        Mon, 9 Jan 2023 10:53:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235107AbjAIPrP (ORCPT
+        with ESMTP id S230493AbjAIPxs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:47:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DAEBF7;
-        Mon,  9 Jan 2023 07:45:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CF6A161194;
-        Mon,  9 Jan 2023 15:45:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DC07C433EF;
-        Mon,  9 Jan 2023 15:45:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673279149;
-        bh=0nPNyYWdXzKuN9gUoFP3yifRcZrORypALWjfOptcB7w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JLKI1beTl7Osq5tXGAYh38r725biv7BCMOZa3FMfeXUmtLZKCyxJOXayZOXkk8/u7
-         RteTSjBGxqiCQ3451CLbsyWBc+sqBsrT0fo4vkSNcjNtjfGLn49zFw1jTySSr/mvoK
-         tymfhB74+1L+X1b4rpYOIECU855+566CAnAOL8iW4HbNlcyQ6iF5RH5L2Ri/JuHYnY
-         q2mAlsX3hpb8sdgXmIjfb77f2H50jftsNGcYJz8YWuqUmYwbuSH6GcYb4+h13OsnNd
-         7AL+DQspU0fem/ulThpwLPGkMquALuOhMsnFYAERUkuG3a9lyFAH+FMLN4gBzUWnW0
-         dq5el/4Rf7DJw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E9E4640468; Mon,  9 Jan 2023 12:45:46 -0300 (-03)
-Date:   Mon, 9 Jan 2023 12:45:46 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Google Summer-of-Code 2023
-Message-ID: <Y7w2qshoCEjKKVlz@kernel.org>
-References: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
+        Mon, 9 Jan 2023 10:53:48 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B0910F4;
+        Mon,  9 Jan 2023 07:53:48 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id g68so5060926pgc.11;
+        Mon, 09 Jan 2023 07:53:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kr5NMyR17w820E39Zxy+TJT5WIxXv3t9mTGHg5DI4M8=;
+        b=p925wfq85MYYr0Q3szQHiqh8M9TGBDNLmFWeMdVCKRfm+cOHibl08yqwJoSo2r7XJP
+         wq9Jltk/+brtH8hNCZXvq0DxtwSQIazxtjZdEKfg/0vGYUECRtOKJhbchra23Qxq01EI
+         LW2KfmroEgha10Hiqqq7sbs4sKftMAXbHM5UfrApMgHovRtAjqup/7ZDx5c66hJHq9Cr
+         iYTmJQehTgnexoKO7TcMDfBVxLmHJagL/RtulJH5m9HvVCQxeaP/W6dGAdxxBRvcFDn6
+         /uu4CaMMaHvzdo/E1y8HoopqpLRDOCKFzxs2QxX+RtbfC5zpKXwCLbC6QNQfLNGjuHM5
+         8s7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kr5NMyR17w820E39Zxy+TJT5WIxXv3t9mTGHg5DI4M8=;
+        b=vsVUyyhZaXC1xZa0W/BkpO28agq8dxXdBLZwJdYz8+hOKSGPkePAbr+IXJer1xGS/x
+         vIa08qKS+TyQTvnM8R3uG7GqRUPS+6gIzWiLrfTPFdU1WcAyl9kU3Wh9FZIAZu+JzHzo
+         dVDzK3utkV+zj8y4iS+c8obaR64okqEHZYm9NISdKQEpy6YKMkdAI+Cfpz/9CTWrBPPO
+         cHHwE8mEkKTaODrCdOYUxzxx42uPAUFQlKe2+YOAszc9LCC20yEsMue6PEAGX3IoZ+MY
+         nBf7hl7rmNfCFfEvDMqMo6ELbsXW4MZmF1edhQREXln6fDUnnTaF/FcFprn42l1vkL5i
+         adrg==
+X-Gm-Message-State: AFqh2kr93MOknIB1o+1etlr9ym9CmzXNP1B0/FZCyO0i3FGNkIZXOEsT
+        q7dmOOQoczYQQb/o/KO9Kk0o5oFyY6CcOaZRa+0=
+X-Google-Smtp-Source: AMrXdXu5iAQa5w4G/nXooBZotH/u8Cle9aRMcHOGEDe3ZcG1lDUD8XzrRE/n7dp+CGJamrwD1EZHy0OvHYQNsDsudys=
+X-Received: by 2002:a63:1e42:0:b0:478:9503:f498 with SMTP id
+ p2-20020a631e42000000b004789503f498mr3557980pgm.96.1673279627421; Mon, 09 Jan
+ 2023 07:53:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230103164359.24347-1-ysionneau@kalray.eu> <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
+ <6570d22d-ee19-f8b1-6fb4-bf8865ec4142@kalray.eu> <CAEr6+ECPFeokSULpWzYEYLROYHXNA0PtvdUchT37d4_qVA-PKQ@mail.gmail.com>
+ <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu>
+In-Reply-To: <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu>
+From:   Jeff Xie <xiehuan09@gmail.com>
+Date:   Mon, 9 Jan 2023 23:53:35 +0800
+Message-ID: <CAEr6+EC0SCXLrQ2YNYyCyMK1Z9=3=ajbbLP+RKSsARGsmJO9YA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
+To:     Yann Sionneau <ysionneau@kalray.eu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
+        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-audit@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
+        Ashley Lesdalons <alesdalons@kalray.eu>,
+        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>,
+        Guillaume Thouvenin <gthouvenin@kalray.eu>,
+        Jean-Christophe Pince <jcpince@gmail.com>,
+        Jonathan Borne <jborne@kalray.eu>,
+        Jules Maselbas <jmaselbas@kalray.eu>,
+        Julian Vetter <jvetter@kalray.eu>,
+        Julien Hascoet <jhascoet@kalray.eu>,
+        Julien Villette <jvillette@kalray.eu>,
+        Louis Morhet <lmorhet@kalray.eu>,
+        Luc Michel <lmichel@kalray.eu>,
+        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
+        Marius Gligor <mgligor@kalray.eu>,
+        Samuel Jones <sjones@kalray.eu>,
+        Thomas Costis <tcostis@kalray.eu>,
+        Vincent Chardon <vincent.chardon@elsys-design.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 09, 2023 at 07:28:26AM -0800, Ian Rogers escreveu:
-> Hi,
-> 
-> The Linux Foundation will apply to be a mentor organization for the
-> Google Summer-of-Code again this year. That application process starts
-> on January 23rd. For the perf tool applying as part of the Linux
-> Foundation, we have a good record of getting the contributors we ask
-> for as part of the program. Contributors are very welcome! For the
-> program we need mentors and project ideas. For mentoring the workload
-> is to review changes, to attend the office hours with the contributor
-> and to fill-in the 2 evaluations. For the project suggestions,
-> anything goes. I've included links to last year's suggestions at the
-> bottom. If you have ideas for projects then please reply to this
-> email!
-> 
-> Last year there was confusion over whether people working in industry
-> could be part of the program. Our answer was yes in terms of support,
-> but they wouldn't qualify for the GSoC funding. I'll try to make this
-> clear on our wiki, if it isn't already on the Linux Foundation's.
-> 
-> We'd like to continue having the requirements that applications have:
-> 1) what the project will be,
-> 2) a weekly time plan.
-> To make the program run more smoothly this year, we're also going to
-> add a requirement that the contributor has sent a patch to the mailing
-> list. The patch doesn't need to do very much, say a documentation
-> improvement, but I'd like to be strict and say that any application
-> not meeting this bar be rejected. Thoughts about this, improvement
-> ideas, and thoughts on what are good requirements are appreciated.
+On Mon, Jan 9, 2023 at 11:30 PM Yann Sionneau <ysionneau@kalray.eu> wrote:
+>
+> Hi Jeff,
+>
+> On 1/9/23 16:11, Jeff Xie wrote:
+> > On Mon, Jan 9, 2023 at 9:21 PM Yann Sionneau <ysionneau@kalray.eu> wrot=
+e:
+> >> Hi Jeff,
+> >>
+> >> On 1/7/23 07:25, Jeff Xie wrote:
+> >>> Hi,
+> >>>
+> >>> On Wed, Jan 4, 2023 at 1:01 AM Yann Sionneau <ysionneau@kalray.eu> wr=
+ote:
+> >>>> [snip]
+> >>>>
+> >>>> A kvx toolchain can be built using:
+> >>>> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev lib=
+mpfr-dev
+> >>>> $ git clone https://github.com/kalray/build-scripts
+> >>>> $ cd build-scripts
+> >>>> $ source last.refs
+> >>>> $ ./build-kvx-xgcc.sh output
+> >>> I would like to build the kvx-xgcc to compile and test the linux
+> >>> kernel, but it reported a compile error.
+> >>> I wonder what version of gcc you are using.
+> >>>
+> >>> My build environment:
+> >>> VERSION=3D"20.04.2 LTS (Focal Fossa)"
+> >>> gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
+> >>>
+> >>>
+> >>> Compile error:
+> >>> $ ./build-kvx-xgcc.sh output
+> >>>
+> >>> ../../binutils/libiberty/fibheap.c: In function =E2=80=98fibheap_repl=
+ace_key_data=E2=80=99:
+> >>> ../../binutils/libiberty/fibheap.c:38:24: error: =E2=80=98LONG_MIN=E2=
+=80=99 undeclared
+> >>> (first use in this function)
+> >>>      38 | #define FIBHEAPKEY_MIN LONG_MIN
+> >>>         |                        ^~~~~~~~
+> >>> [snip]
+> >> What SHA1 of https://github.com/kalray/build-scripts are you using?
+> > I have executed the "source last.refs"
+>
+> I was referring to the SHA1 of the repo itself (build-scripts).
+>
+> `last.refs` is a symbolic link which can point to several releases,
+> depending on "when" you did the clone.
+>
+> I am asking this because we recently published new toolchains.
+>
+> I want to make sure which one you are trying to build.
 
-A project like perf, being out there for quite a while, accumulates tech
-debt, such being a fact of life for any project.
+Unfortunately I deleted this repo a few minutes before you asked me ;-(
+But I remember that I cloned this repo two days ago.
+it should be:  last.refs -> refs/4.11.0.refs
 
-This being so common, I'd encourage people to try and propose to fix
-things not of their liking when trying to build, cross-build, use these
-tools.
 
-Being able to at least voice what you dislike, and possibly get some
-money out of trying to fix it, out in the open, what an opportunity!
+> >> We are building our toolchain on Ubuntu 18.04 / 20.04 and 22.04 withou=
+t
+> >> issues, I don't understand why it does not work for you, although inde=
+ed
+> >> the error log you are having pops out on my search engine and seems to
+> >> be some well known issue.
+> > Yes, there are many answers on the web, but none of them solve this pro=
+blem.
+> >
+> >> If the build-script does not work for you, you can still use the
+> >> pre-built toolchains generated by the GitHub automated actions:
+> >> https://github.com/kalray/build-scripts/releases/tag/v4.11.1 ("latest"
+> >> means 22.04)
+> > Thanks, this is the final solution ;-)
+> Good to see it helped :)
+>
+> Regards,
+>
+> --
+>
+> Yann
+>
+>
+>
+>
+>
 
-Go and try to fix things!
 
-Thanks Ian for year after year to go and take the SOC opportunity to
-improve perf.
-
-- Arnaldo
- 
-> Thanks,
-> Ian
-> 
-> https://wiki.linuxfoundation.org/gsoc/google-summer-code-2022
-> https://wiki.linuxfoundation.org/gsoc/2022-gsoc-perf
+--=20
+Thanks,
+JeffXie
