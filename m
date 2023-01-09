@@ -2,171 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9C5C5479D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 18:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DE0C5479D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjAISkS (ORCPT
+        id S234778AbjAIT0f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 13:40:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58002 "EHLO
+        Mon, 9 Jan 2023 14:26:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237743AbjAISjl (ORCPT
+        with ESMTP id S234413AbjAIT0e (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 13:39:41 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7BA39FB9
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 10:37:29 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id z5so8094209wrt.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 10:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wv9Qlp//d2HQ8m+fdxA11p5JwKQ7sVVltk9S+MocsQk=;
-        b=ik1z28ROscuLAtWReqcAjUFVbb42S1cYpK/n/PyKhtuypCrma7yZJtFIw2hMvn6NQX
-         WAS9ydDC5f9JEzO9jxU1ictaTF5sFxT0EwjoUX7TX47OwQA1/kH1+qE2uoevxWE6RTw5
-         HDYUfJP7L+uHDU6H/FEsd8dfXbw+sXsMKKctVntGogLTgy9GOlAn6O4PfyDjQNIkTAXQ
-         XO2xpkhpJ2JaEADCZyJNst7nW9Arr4QnnGrUVEr6i+uEU2U5WybbNcAuC9vGIBDYY37m
-         25auEHD034UJdMX/Oq3tuo9Pk2LZRirw0qr/XPnKLkntzeiFWZzUsVGBCgDCRYKB1SGJ
-         wxSA==
+        Mon, 9 Jan 2023 14:26:34 -0500
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DFE41664;
+        Mon,  9 Jan 2023 11:26:33 -0800 (PST)
+Received: by mail-oo1-f43.google.com with SMTP id b10-20020a4a9fca000000b004e6f734c6b4so2677354oom.9;
+        Mon, 09 Jan 2023 11:26:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Wv9Qlp//d2HQ8m+fdxA11p5JwKQ7sVVltk9S+MocsQk=;
-        b=q5+fpaWRSd0JYwZTDwlqwA2WnkH9Sbtq7ftFu5BPhZW2OKxNestX2vAcbmuw5P+JWn
-         1eRmZ45AaYtOXitsnU2anZJS7ri3ErFTW5iZG+Deo5AHALf0xzPIF9lTF8q/HZaoebXq
-         CRGT35cQWOhb9ZTzta4y6SkB+e9s5dlA4FXkCCRX1P5YWStYgUyj/WTaapGWbpHFlrmG
-         4fex8VRkRNQYrTugG53Fv29ObyiMkp+KHiZ56UbJ7KIDaYt6im7WZpxZYFq2Oh2/xCW1
-         xhHRUXFaW8WtDMLJcgj3XiQeIIFDpjeNdameKOrKxhhBo6YGA74eYa7G2wXVY6OsAx6Z
-         Yb0Q==
-X-Gm-Message-State: AFqh2koDBWpAMpZCjMHF8VgEx3roorfsS+cvF/XYwbEcjTQo69zYGLnZ
-        bPnwRubGbEafhHU5pSB0eN3e3qoJLwoyhlpw0g55Mg==
-X-Google-Smtp-Source: AMrXdXuKEofUGTCnvnhcJ2xd222r5b7LIhPALeQmr34cxE7+eoBRNoZiOfY0OTO79aG8wkaMJU7Aepv2ZoCEms+FHY8=
-X-Received: by 2002:a5d:45d0:0:b0:29c:52c7:3dce with SMTP id
- b16-20020a5d45d0000000b0029c52c73dcemr779159wrs.375.1673289447507; Mon, 09
- Jan 2023 10:37:27 -0800 (PST)
+        bh=yp8JdvF4JGjAOoO+JkWqYIq2KRzORi/rQl4T8RRSxME=;
+        b=LoIOKT6QKBAOz9G7xQClga9Y8R9jUbhStXwHe2ZHcMBIDgYeGE7baJXQvbF/WnATNM
+         NO++AxPLvhpLqxQpAwomntl5xP5dLRNraLqt3RYPvANDj4gC8dt/uTZ9ewa4R+dNR3i7
+         kACGavUNGIWB9WIHDW4fbcIE/5IdI44vGQIYQGz7ga6yNbRJi6y3J/5tQQNLyY9ZFCty
+         eyke1F1CUpwWTx/tuS4WPRt37KcT6rcMmP/Lyug4CAInELlOb8XMMlJp3LKjjMlJsazY
+         /BR53V/CM0m89eKnWy+pg9eA694qwU2IfCqs/XLOvuA4uw1fOXVidbgijWEu0h5t29QA
+         LdyQ==
+X-Gm-Message-State: AFqh2koatA5zmvxtSGMJH2VPQxpsrYHg/53xEYGlWyo3sByeXmRuwGm3
+        ACPbMX8fKhGg4aWwixhcBNrauLsTJA==
+X-Google-Smtp-Source: AMrXdXvSFir+DX3JReWJXkByMkbmVvVh/qFsGZDjfj2ioJ8TlxEwlmfZdeyAtE0+NuibVjMwKYWxZg==
+X-Received: by 2002:a4a:9613:0:b0:4a3:9f7a:add0 with SMTP id q19-20020a4a9613000000b004a39f7aadd0mr28637976ooi.5.1673292392657;
+        Mon, 09 Jan 2023 11:26:32 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id e40-20020a056820062800b004f1c4baa96bsm4640563oow.6.2023.01.09.11.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 11:26:32 -0800 (PST)
+Received: (nullmailer pid 1483603 invoked by uid 1000);
+        Mon, 09 Jan 2023 19:26:31 -0000
+From:   Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 0/8] perf: Arm SPEv1.2 support
+Date:   Mon, 09 Jan 2023 13:26:17 -0600
+Message-Id: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
 MIME-Version: 1.0
-References: <20230106151320.619514-1-irogers@google.com> <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
- <Y7hZccgOiueB31a+@kernel.org> <Y7hgKMDGzQlankL1@kernel.org>
- <Y7hgoVKBoulCbA4l@kernel.org> <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
- <Y7wuz6EOggZ8Wysb@kernel.org> <Y7xYimp0h4YT72/N@krava>
-In-Reply-To: <Y7xYimp0h4YT72/N@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 9 Jan 2023 10:37:15 -0800
-Message-ID: <CAP-5=fXwO5_kK=pMV09jdAVw386CB0JwArD0BZd=B=xCyWSP1g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFlqvGMC/33NQQrCMBAF0KuUrB1JJ20TXXkPcZGm0zZYU0k0I
+ KV3d3AnYlfD//D+LCJR9JTEsVhEpOyTnwOHalcIN9owEPiOs0CJKA3WYOMN0p0gG9DQU9fLisqm
+ RyWYtDYRtNEGNzIKz2nicvTpMcfX50Uu+Zz/rOUSJDhdt6Y7IDUHPF0pBpr2cxzEhZcybmlkTUo
+ rxK4x1skfrba0Ym10Y7DXxlnrvvS6rm9MxsJPKgEAAA==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        James Clark <james.clark@arm.com>
+X-Mailer: b4 0.12-dev
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 10:10 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Mon, Jan 09, 2023 at 12:12:15PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Fri, Jan 06, 2023 at 11:06:46AM -0800, Ian Rogers escreveu:
-> > > So trying to get build-test working on my Debian derived distro is a
-> > > PITA with broken feature detection for options I don't normally use.
-> >
-> > Its really difficult to have perf building with so many dependent
-> > libraries, mowing out some should be in order.
-> >
-> > > I'll try to fix this.
-> >
-> > Thanks.
-> >
-> > > In any case I think I've spotted what is really happening here and it
-> > > isn't a failure but a feature :-D The build is specifying
-> >
-> > I get it.
-> >
-> > > LIBBPF_DYNAMIC=1 which means you get the libbpf headers from
-> > > /usr/include. I think the build is trying to do this on a system with
-> > > an old libbpf and hence getting the failures above. Previously, even
-> > > though we wanted the dynamic headers we still had a -I, this time for
-> > > the install_headers version. Now you really are using the system
-> > > version and it is broken. This means a few things:
-> > > - the libbpf feature test should fail if code like above is going to fail,
-> >
-> > Agreed.
-> >
-> > > - we may want to contemplate supporting older libbpfs (I'd rather not),
-> >
-> > I'd rather require everybody to be up to the latest trends, but I really
-> > don't think that is a reasonable expectation.
-> >
-> > > - does build-test have a way to skip known issues like this?
-> >
-> > Unsure, Jiri?
->
-> I don't think so it just triggers the build, it's up to the features check
-> to disable the feature if the library is not compatible with perf code
->
-> could we add that specific libbpf call to the libbpf feature check?
+Peter, this series is blocked on an ack from you on patch 7. There was 
+some discussion on validation of the 'config3' attr. The options where 
+laid out by Mark here[0]. Please chime in on your preference.
 
-Looking at the failure closer, the failing code is code inside a
-feature check trying to workaround the feature not being present. We
-need to do something like:
+Will, can you pick up patches 1-6 at least if there's no progress on 
+'config3'.
 
-```
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index 6e9b06cf06ee..a1c3cc230273 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -33,17 +33,18 @@
-#include <internal/xyarray.h>
+This series adds support for Arm SPEv1.2 which is part of the
+Armv8.7/Armv9.2 architecture. There's 2 new features that affect the 
+kernel: a new event filter bit, branch 'not taken', and an inverted 
+event filter register. 
 
-#ifndef HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
--int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
--                          struct bpf_insn *new_insns __maybe_unused,
-size_t new_insn_cnt __maybe_un
-used)
-+static int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
-+                                 struct bpf_insn *new_insns __maybe_unused,
-+                                 size_t new_insn_cnt __maybe_unused)
-{
-       pr_err("%s: not support, update libbpf\n", __func__);
-       return -ENOTSUP;
-}
+Since this support adds new registers and fields, first the SPE register 
+defines are converted to automatic generation.
 
--int libbpf_register_prog_handler(const char *sec __maybe_unused,
--                                 enum bpf_prog_type prog_type __maybe_unused,
--                                 enum bpf_attach_type exp_attach_type
-__maybe_unused,
--                                 const struct
-libbpf_prog_handler_opts *opts __maybe_unused)
-+static int libbpf_register_prog_handler(const char *sec __maybe_unused,
-+                                       enum bpf_prog_type prog_type
-__maybe_unused,
-+                                       enum bpf_attach_type
-exp_attach_type __maybe_unused,
-+                                       const void *opts __maybe_unused)
-{
-       pr_err("%s: not support, update libbpf\n", __func__);
-       return -ENOTSUP;
-```
+The perf tool side changes are available here[1].
 
-There are some other fixes necessary too. I'll try to write the fuller
-patch but I have no means for testing except for undefining
-HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS.
+Tested on FVP.
 
-Thanks,
-Ian
+[0] https://lore.kernel.org/all/Y49ttrv6W5k3ZNYw@FVFF77S0Q05N.cambridge.arm.com/ 
+[1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
 
-> jirka
->
-> >
-> > But yeah, previous experiences with Andrii were that we can do not too
-> > costly feature checks, not using .c programs that would fail if some
-> > required feature wasn't present but instead would just do some grep on a
-> > header and if some "smell" wasn't scent, just fail the cap query.
-> >
-> > - Arnaldo
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Changes in v4:
+- Rebase on v6.2-rc1
+- Link to v3: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org
+
+Changes in v3:
+- Add some more missing SPE register fields and use Enums for some 
+  fields
+- Use the new PMSIDR_EL1 register Enum defines in the SPE driver
+- Link to v2: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org
+
+Changes in v2:
+- Convert the SPE register defines to automatic generation
+- Fixed access to SYS_PMSNEVFR_EL1 when not present
+- Rebase on v6.1-rc1
+- Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
+
+---
+Rob Herring (8):
+      perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+      arm64: Drop SYS_ from SPE register defines
+      arm64/sysreg: Convert SPE registers to automatic generation
+      perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+      perf: arm_spe: Use new PMSIDR_EL1 register enums
+      perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+      perf: Add perf_event_attr::config3
+      perf: arm_spe: Add support for SPEv1.2 inverted event filtering
+
+ arch/arm64/include/asm/el2_setup.h |   6 +-
+ arch/arm64/include/asm/sysreg.h    |  99 +++--------------------
+ arch/arm64/kvm/debug.c             |   2 +-
+ arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
+ arch/arm64/tools/sysreg            | 139 +++++++++++++++++++++++++++++++++
+ drivers/perf/arm_spe_pmu.c         | 156 ++++++++++++++++++++++++-------------
+ include/uapi/linux/perf_event.h    |   3 +
+ 7 files changed, 257 insertions(+), 150 deletions(-)
+---
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+change-id: 20220825-arm-spe-v8-7-fedf04e16f23
+
+Best regards,
+-- 
+Rob Herring <robh@kernel.org>
