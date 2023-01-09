@@ -2,214 +2,185 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23615C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 13:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DC4C678D6
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 13:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234962AbjAINRK (ORCPT
+        id S234855AbjAINVe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 08:17:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34344 "EHLO
+        Mon, 9 Jan 2023 08:21:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234483AbjAINRI (ORCPT
+        with ESMTP id S237216AbjAINVW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 08:17:08 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D647B1FF
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 05:17:08 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 309CLPpx016700;
-        Mon, 9 Jan 2023 13:17:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=oSa+UgGc1KQSMwPpS7EqWPgmIC25JQUHhMfRTmQ76ro=;
- b=duEZJVq5VdwkUhsUJTf/xDnNUT07oj9uSr1FTEg96VpGZGAGQmbJJR67PpZLTbPbrkQm
- oCXwtTpWi/0fX+t7CH4BQ0uNnuQgNeARcDvOwWGlkECjfK3vqbz6q+Wiqa1b7WeTjm+B
- Hhi45sRqwmrAoBdtoH7qcWhkXCeDcRCk/Ie+ZC7OYwCyPc++IBIK4C+j1EkcLchivi54
- IKTa02zI5bEV3y1oY2Wz9gEzUMuEHIh5RWYmO5UhZsMF0Ikmp88GamzwJxrsbL/xtoBI
- Elvwc6uZfJJt5J/TUjybx/MCBNUcMMiEnkumCSzjAucuHSKSVUxGkMKgMBktspo9DZEN 0w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3myj6je3u2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Jan 2023 13:16:59 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 309CC6tq004630;
-        Mon, 9 Jan 2023 13:16:59 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3myj6je3su-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Jan 2023 13:16:59 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3098Hcdx013339;
-        Mon, 9 Jan 2023 13:16:56 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3my00fk0dm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Jan 2023 13:16:56 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 309DGq4D22282886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Jan 2023 13:16:52 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAF6620040;
-        Mon,  9 Jan 2023 13:16:52 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 491CD2004D;
-        Mon,  9 Jan 2023 13:16:50 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.36.39])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon,  9 Jan 2023 13:16:50 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH 2/2] perf test bpf: Skip test if kernel-debuginfo is not
- present
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y7bIk77mdE4j8Jyi@kernel.org>
-Date:   Mon, 9 Jan 2023 18:46:49 +0530
-Cc:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        james.clark@arm.com, jolsa@kernel.org, kjain@linux.ibm.com,
-        namhyung@kernel.org, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F1FC1E7D-8E6C-42E6-9293-E7E69D0DF542@linux.vnet.ibm.com>
-References: <20230105121742.92249-1-atrajeev@linux.vnet.ibm.com>
- <20230105121742.92249-2-atrajeev@linux.vnet.ibm.com>
- <Y7bIk77mdE4j8Jyi@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: IeRmQUM0bYtezXT9kVa7RFgG5q0jXE8o
-X-Proofpoint-GUID: xYSSXg8LLAo7HEie9VcZ_V1yjn4b1r_R
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-09_06,2023-01-09_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0
- suspectscore=0 impostorscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301090094
+        Mon, 9 Jan 2023 08:21:22 -0500
+Received: from fx405.security-mail.net (smtpout140.security-mail.net [85.31.212.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D252B64CF
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 05:21:20 -0800 (PST)
+Received: from localhost (fx405.security-mail.net [127.0.0.1])
+        by fx405.security-mail.net (Postfix) with ESMTP id DFFE8335F39
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 14:21:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalray.eu;
+        s=sec-sig-email; t=1673270478;
+        bh=VTyAgBvawac4uHB7eMyMDicCX2xLvVfQ11WRs4OqUgg=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=YZ+jS6/1Ma7JCmcJ3+OEDQF6/jdcWUhHaMCMCUIMiS/QRA3hvieFeCchl43TWG6g4
+         8uzP1OQwFTqJST5NGfflnAynHPXH43mmkQhylk6XZiFnOpe64YOUPMjH/EHaBa+r6X
+         XNQwFD9kMcy8gj0OVjfaZ+Y+swU0mq962ckt9ZPA=
+Received: from fx405 (fx405.security-mail.net [127.0.0.1]) by
+ fx405.security-mail.net (Postfix) with ESMTP id 382DC335EA5; Mon,  9 Jan
+ 2023 14:21:18 +0100 (CET)
+Received: from zimbra2.kalray.eu (unknown [217.181.231.53]) by
+ fx405.security-mail.net (Postfix) with ESMTPS id 1E46D335E6D; Mon,  9 Jan
+ 2023 14:21:17 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1]) by
+ zimbra2.kalray.eu (Postfix) with ESMTPS id D765927E03FF; Mon,  9 Jan 2023
+ 14:21:16 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1]) by zimbra2.kalray.eu
+ (Postfix) with ESMTP id B3B4327E03FA; Mon,  9 Jan 2023 14:21:16 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1]) by localhost
+ (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026) with ESMTP id
+ RFDkxXP_U9mz; Mon,  9 Jan 2023 14:21:16 +0100 (CET)
+Received: from [192.168.37.161] (unknown [192.168.37.161]) by
+ zimbra2.kalray.eu (Postfix) with ESMTPSA id 46FC927E03F5; Mon,  9 Jan 2023
+ 14:21:16 +0100 (CET)
+X-Virus-Scanned: E-securemail
+Secumail-id: <18db.63bc14cd.171d3.0>
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu B3B4327E03FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
+ s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1673270476;
+ bh=pFwL+Y0S0qo0MF7wO/awAfpxvBk+/1wXJh5pVmIIW2g=;
+ h=Message-ID:Date:MIME-Version:To:From;
+ b=XjT0yLLBY18QxivMgV9uczq9z+HpKf5TnyecD/FGL3y5WOfaxlypJyAxpZ8saNN2c
+ xkoB4C8EPYxurJyqIoGRHgJxE+LjZeyAAIvw8YYk1DjcyoP679xtmnwZh9BbBCh3Ku
+ YVP4+a/ZNoUFvoUsbRjrSO4n7fz2l6dahOcJsTh0=
+Message-ID: <6570d22d-ee19-f8b1-6fb4-bf8865ec4142@kalray.eu>
+Date:   Mon, 9 Jan 2023 14:21:15 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
+Content-Language: en-us
+To:     Jeff Xie <xiehuan09@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
+        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-audit@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
+        Ashley Lesdalons <alesdalons@kalray.eu>,
+        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>,
+        Guillaume Thouvenin <gthouvenin@kalray.eu>,
+        Jean-Christophe Pince <jcpince@gmail.com>,
+        Jonathan Borne <jborne@kalray.eu>,
+        Jules Maselbas <jmaselbas@kalray.eu>,
+        Julian Vetter <jvetter@kalray.eu>,
+        Julien Hascoet <jhascoet@kalray.eu>,
+        Julien Villette <jvillette@kalray.eu>,
+        Louis Morhet <lmorhet@kalray.eu>,
+        Luc Michel <lmichel@kalray.eu>,
+        Marc =?utf-8?b?UG91bGhpw6hz?= <dkm@kataplop.net>,
+        Marius Gligor <mgligor@kalray.eu>,
+        Samuel Jones <sjones@kalray.eu>,
+        Thomas Costis <tcostis@kalray.eu>,
+        Vincent Chardon <vincent.chardon@elsys-design.com>
+References: <20230103164359.24347-1-ysionneau@kalray.eu>
+ <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
+From:   Yann Sionneau <ysionneau@kalray.eu>
+In-Reply-To: <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ALTERMIMEV2_out: done
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Jeff,
+
+On 1/7/23 07:25, Jeff Xie wrote:
+> Hi,
+>
+> On Wed, Jan 4, 2023 at 1:01 AM Yann Sionneau <ysionneau@kalray.eu> wrote:
+>> [snip]
+>>
+>> A kvx toolchain can be built using:
+>> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev libmpfr-dev
+>> $ git clone https://github.com/kalray/build-scripts
+>> $ cd build-scripts
+>> $ source last.refs
+>> $ ./build-kvx-xgcc.sh output
+> I would like to build the kvx-xgcc to compile and test the linux
+> kernel, but it reported a compile error.
+> I wonder what version of gcc you are using.
+>
+> My build environment:
+> VERSION="20.04.2 LTS (Focal Fossa)"
+> gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
+>
+>
+> Compile error:
+> $ ./build-kvx-xgcc.sh output
+>
+> ../../binutils/libiberty/fibheap.c: In function ‘fibheap_replace_key_data’:
+> ../../binutils/libiberty/fibheap.c:38:24: error: ‘LONG_MIN’ undeclared
+> (first use in this function)
+>     38 | #define FIBHEAPKEY_MIN LONG_MIN
+>        |                        ^~~~~~~~
+> [snip]
+
+What SHA1 of https://github.com/kalray/build-scripts are you using?
+
+We are building our toolchain on Ubuntu 18.04 / 20.04 and 22.04 without 
+issues, I don't understand why it does not work for you, although indeed 
+the error log you are having pops out on my search engine and seems to 
+be some well known issue.
+
+If the build-script does not work for you, you can still use the 
+pre-built toolchains generated by the GitHub automated actions: 
+https://github.com/kalray/build-scripts/releases/tag/v4.11.1 ("latest" 
+means 22.04)
+
+I hope it will work for you.
+
+Regards,
+
+-- 
+
+Yann
 
 
-> On 05-Jan-2023, at 6:24 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->=20
-> Em Thu, Jan 05, 2023 at 05:47:42PM +0530, Athira Rajeev escreveu:
->> Perf BPF filter test fails in environment where "kernel-debuginfo"
->> is not installed.
->=20
-> I'll apply this to perf/core, for the next merge window, as its more =
-an
-> improvement than a fix, i.e. we know why it fails, we're just =
-improving
-> the user reporting to make that clear at first sight.
->=20
-> - Arnaldo
 
-Hi Arnaldo,
 
-Sure, Thanks for checking
-
-Athira
->=20
->> Test failure logs:
->> <<>>
->> 42: BPF filter                            :
->> 42.1: Basic BPF filtering                 : Ok
->> 42.2: BPF pinning                         : Ok
->> 42.3: BPF prologue generation             : FAILED!
->> <<>>
->>=20
->> Enabling verbose option provided debug logs, which says debuginfo
->> needs to be installed. Snippet of verbose logs:
->>=20
->> <<>>
->> 42.3: BPF prologue generation                                       :
->> --- start ---
->> test child forked, pid 28218
->> <<>>
->> Rebuild with CONFIG_DEBUG_INFO=3Dy, or install an appropriate =
-debuginfo
->> package.
->> bpf_probe: failed to convert perf probe events
->> Failed to add events selected by BPF
->> test child finished with -1
->> ---- end ----
->> BPF filter subtest 3: FAILED!
->> <<>>
->>=20
->> Here subtest, "BPF prologue generation" failed and
->> logs shows debuginfo is needed. After installing
->> kernel-debuginfo package, testcase passes.
->>=20
->> Subtest "BPF prologue generation" failed because, the "do_test"
->> function returns "TEST_FAIL" without checking the error type
->> returned by "parse_events_load_bpf_obj" function.
->> Function parse_events_load_bpf_obj can also return error of type
->> "-ENODATA" incase kernel-debuginfo package is not installed. Fix this
->> by adding check for -ENODATA error.
->>=20
->> Test result after the patch changes:
->>=20
->> Test failure logs:
->> <<>>
->> 42: BPF filter                 :
->> 42.1: Basic BPF filtering      : Ok
->> 42.2: BPF pinning              : Ok
->> 42.3: BPF prologue generation  : Skip (clang/debuginfo isn't
->> installed or environment missing BPF support)
->>=20
->> Fixes: ba1fae431e74 ("perf test: Add 'perf test BPF'")
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> Note: This is dependent on patch 1:
->> tools/perf: Update the exit error codes in function
->> try_to_find_probe_trace_event
->>=20
->> tools/perf/tests/bpf.c | 6 +++++-
->> 1 file changed, 5 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
->> index 17c023823713..6a4235a9cf57 100644
->> --- a/tools/perf/tests/bpf.c
->> +++ b/tools/perf/tests/bpf.c
->> @@ -126,6 +126,10 @@ static int do_test(struct bpf_object *obj, int =
-(*func)(void),
->>=20
->> 	err =3D parse_events_load_bpf_obj(&parse_state, =
-&parse_state.list, obj, NULL);
->> 	parse_events_error__exit(&parse_error);
->> +	if (err =3D=3D -ENODATA) {
->> +		pr_debug("Failed to add events selected by BPF, =
-debuginfo package not installed\n");
->> +		return TEST_SKIP;
->> +	}
->> 	if (err || list_empty(&parse_state.list)) {
->> 		pr_debug("Failed to add events selected by BPF\n");
->> 		return TEST_FAIL;
->> @@ -368,7 +372,7 @@ static struct test_case bpf_tests[] =3D {
->> 			"clang isn't installed or environment missing =
-BPF support"),
->> #ifdef HAVE_BPF_PROLOGUE
->> 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test,
->> -			"clang isn't installed or environment missing =
-BPF support"),
->> +			"clang/debuginfo isn't installed or environment =
-missing BPF support"),
->> #else
->> 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in"),
->> #endif
->> --=20
->> 2.31.1
->=20
-> --=20
->=20
-> - Arnaldo
 
