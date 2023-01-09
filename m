@@ -2,56 +2,54 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DE0C5479D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DE7C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 19:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234778AbjAIT0f (ORCPT
+        id S237022AbjAIT0j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 14:26:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
+        Mon, 9 Jan 2023 14:26:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234413AbjAIT0e (ORCPT
+        with ESMTP id S235149AbjAIT0h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 14:26:34 -0500
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DFE41664;
-        Mon,  9 Jan 2023 11:26:33 -0800 (PST)
-Received: by mail-oo1-f43.google.com with SMTP id b10-20020a4a9fca000000b004e6f734c6b4so2677354oom.9;
-        Mon, 09 Jan 2023 11:26:33 -0800 (PST)
+        Mon, 9 Jan 2023 14:26:37 -0500
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8996B41677;
+        Mon,  9 Jan 2023 11:26:36 -0800 (PST)
+Received: by mail-oo1-f53.google.com with SMTP id d2-20020a4ab202000000b004ae3035538bso2670723ooo.12;
+        Mon, 09 Jan 2023 11:26:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yp8JdvF4JGjAOoO+JkWqYIq2KRzORi/rQl4T8RRSxME=;
-        b=LoIOKT6QKBAOz9G7xQClga9Y8R9jUbhStXwHe2ZHcMBIDgYeGE7baJXQvbF/WnATNM
-         NO++AxPLvhpLqxQpAwomntl5xP5dLRNraLqt3RYPvANDj4gC8dt/uTZ9ewa4R+dNR3i7
-         kACGavUNGIWB9WIHDW4fbcIE/5IdI44vGQIYQGz7ga6yNbRJi6y3J/5tQQNLyY9ZFCty
-         eyke1F1CUpwWTx/tuS4WPRt37KcT6rcMmP/Lyug4CAInELlOb8XMMlJp3LKjjMlJsazY
-         /BR53V/CM0m89eKnWy+pg9eA694qwU2IfCqs/XLOvuA4uw1fOXVidbgijWEu0h5t29QA
-         LdyQ==
-X-Gm-Message-State: AFqh2koatA5zmvxtSGMJH2VPQxpsrYHg/53xEYGlWyo3sByeXmRuwGm3
-        ACPbMX8fKhGg4aWwixhcBNrauLsTJA==
-X-Google-Smtp-Source: AMrXdXvSFir+DX3JReWJXkByMkbmVvVh/qFsGZDjfj2ioJ8TlxEwlmfZdeyAtE0+NuibVjMwKYWxZg==
-X-Received: by 2002:a4a:9613:0:b0:4a3:9f7a:add0 with SMTP id q19-20020a4a9613000000b004a39f7aadd0mr28637976ooi.5.1673292392657;
-        Mon, 09 Jan 2023 11:26:32 -0800 (PST)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZHSlQOy0DTb5kpZ2VrRAyIMZfdxCwZTHcJtASnW13Hw=;
+        b=Asn68QyM6lYSWAJb5xdbEAYQQi13DwUKGN8RhkUntZt3sWNwuj9HjCWG6QqKaOgxsg
+         5JCa/x9IQxgCDFiJgX5qbzlXNVXmJFYB1et/YZktEdbHrvE6BSZpWVhPOFjwO2TPQh2E
+         tSTsTPpHL/VNH/Uvd/8TLGHr2i1/lSgDWGNCTqzvUr7mFCikiZKElV8XUXCK2Kdbb5hy
+         oAdg203S+DCo9AqsNDs6JEEtMaw5zkNAziJbAevkJwldvOmVSXxlqjjvHtYUwjhf96Nj
+         QQc2AeKvzS0mV3/isKtkHPds7oLNeb1ArHLVWcKXMlnj2kuWyVpZyDS8OUjznf03DIqR
+         ARvw==
+X-Gm-Message-State: AFqh2kqtp8UU4q8L+KQxBXB2Ug2ilyHNqZ9Rb4rY+W64DLKruvMN8Dqh
+        WceqL8UXcB+qRZYp0pUDsnsAK7WumQ==
+X-Google-Smtp-Source: AMrXdXslv2cqi91atU/B1PN1NvgkNq9E8RL7xl+DfP3jhUzhvSFMQFy52Ps3fK8W50Elu43MF7MA+A==
+X-Received: by 2002:a4a:e383:0:b0:4f1:e731:3ee3 with SMTP id l3-20020a4ae383000000b004f1e7313ee3mr4328955oov.2.1673292395567;
+        Mon, 09 Jan 2023 11:26:35 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id e40-20020a056820062800b004f1c4baa96bsm4640563oow.6.2023.01.09.11.26.31
+        by smtp.gmail.com with ESMTPSA id p2-20020a4ab382000000b004d8c6815287sm4542966ooo.17.2023.01.09.11.26.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 11:26:32 -0800 (PST)
-Received: (nullmailer pid 1483603 invoked by uid 1000);
+        Mon, 09 Jan 2023 11:26:35 -0800 (PST)
+Received: (nullmailer pid 1483614 invoked by uid 1000);
         Mon, 09 Jan 2023 19:26:31 -0000
 From:   Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 0/8] perf: Arm SPEv1.2 support
-Date:   Mon, 09 Jan 2023 13:26:17 -0600
-Message-Id: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
+Date:   Mon, 09 Jan 2023 13:26:21 -0600
+Subject: [PATCH v4 5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAFlqvGMC/33NQQrCMBAF0KuUrB1JJ20TXXkPcZGm0zZYU0k0I
- KV3d3AnYlfD//D+LCJR9JTEsVhEpOyTnwOHalcIN9owEPiOs0CJKA3WYOMN0p0gG9DQU9fLisqm
- RyWYtDYRtNEGNzIKz2nicvTpMcfX50Uu+Zz/rOUSJDhdt6Y7IDUHPF0pBpr2cxzEhZcybmlkTUo
- rxK4x1skfrba0Ym10Y7DXxlnrvvS6rm9MxsJPKgEAAA==
+Message-Id: <20220825-arm-spe-v8-7-v4-5-327f860daf28@kernel.org>
+References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
+In-Reply-To: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -75,69 +73,76 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Peter, this series is blocked on an ack from you on patch 7. There was 
-some discussion on validation of the 'config3' attr. The options where 
-laid out by Mark here[0]. Please chime in on your preference.
-
-Will, can you pick up patches 1-6 at least if there's no progress on 
-'config3'.
-
-This series adds support for Arm SPEv1.2 which is part of the
-Armv8.7/Armv9.2 architecture. There's 2 new features that affect the 
-kernel: a new event filter bit, branch 'not taken', and an inverted 
-event filter register. 
-
-Since this support adds new registers and fields, first the SPE register 
-defines are converted to automatic generation.
-
-The perf tool side changes are available here[1].
-
-Tested on FVP.
-
-[0] https://lore.kernel.org/all/Y49ttrv6W5k3ZNYw@FVFF77S0Q05N.cambridge.arm.com/ 
-[1] https://lore.kernel.org/all/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org/
+Now that the SPE register definitions include enums for some PMSIDR_EL1
+fields, use them in the driver in place of magic values.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Changes in v4:
-- Rebase on v6.2-rc1
-- Link to v3: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v3-0-87682f78caac@kernel.org
-
-Changes in v3:
-- Add some more missing SPE register fields and use Enums for some 
-  fields
-- Use the new PMSIDR_EL1 register Enum defines in the SPE driver
-- Link to v2: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v2-0-e37322d68ac0@kernel.org
-
-Changes in v2:
-- Convert the SPE register defines to automatic generation
-- Fixed access to SYS_PMSNEVFR_EL1 when not present
-- Rebase on v6.1-rc1
-- Link to v1: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v1-0-c75b8d92e692@kernel.org
-
+v4:
+ - Rebase on v6.2-rc1
+v3: New patch
 ---
-Rob Herring (8):
-      perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
-      arm64: Drop SYS_ from SPE register defines
-      arm64/sysreg: Convert SPE registers to automatic generation
-      perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
-      perf: arm_spe: Use new PMSIDR_EL1 register enums
-      perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
-      perf: Add perf_event_attr::config3
-      perf: arm_spe: Add support for SPEv1.2 inverted event filtering
+ drivers/perf/arm_spe_pmu.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
- arch/arm64/include/asm/el2_setup.h |   6 +-
- arch/arm64/include/asm/sysreg.h    |  99 +++--------------------
- arch/arm64/kvm/debug.c             |   2 +-
- arch/arm64/kvm/hyp/nvhe/debug-sr.c |   2 +-
- arch/arm64/tools/sysreg            | 139 +++++++++++++++++++++++++++++++++
- drivers/perf/arm_spe_pmu.c         | 156 ++++++++++++++++++++++++-------------
- include/uapi/linux/perf_event.h    |   3 +
- 7 files changed, 257 insertions(+), 150 deletions(-)
----
-base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
-change-id: 20220825-arm-spe-v8-7-fedf04e16f23
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 9b4bd72087ea..af6d3867c3e7 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -1006,32 +1006,32 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 	/* This field has a spaced out encoding, so just use a look-up */
+ 	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
+ 	switch (fld) {
+-	case 0:
++	case PMSIDR_EL1_INTERVAL_256:
+ 		spe_pmu->min_period = 256;
+ 		break;
+-	case 2:
++	case PMSIDR_EL1_INTERVAL_512:
+ 		spe_pmu->min_period = 512;
+ 		break;
+-	case 3:
++	case PMSIDR_EL1_INTERVAL_768:
+ 		spe_pmu->min_period = 768;
+ 		break;
+-	case 4:
++	case PMSIDR_EL1_INTERVAL_1024:
+ 		spe_pmu->min_period = 1024;
+ 		break;
+-	case 5:
++	case PMSIDR_EL1_INTERVAL_1536:
+ 		spe_pmu->min_period = 1536;
+ 		break;
+-	case 6:
++	case PMSIDR_EL1_INTERVAL_2048:
+ 		spe_pmu->min_period = 2048;
+ 		break;
+-	case 7:
++	case PMSIDR_EL1_INTERVAL_3072:
+ 		spe_pmu->min_period = 3072;
+ 		break;
+ 	default:
+ 		dev_warn(dev, "unknown PMSIDR_EL1.Interval [%d]; assuming 8\n",
+ 			 fld);
+ 		fallthrough;
+-	case 8:
++	case PMSIDR_EL1_INTERVAL_4096:
+ 		spe_pmu->min_period = 4096;
+ 	}
+ 
+@@ -1050,10 +1050,10 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 		dev_warn(dev, "unknown PMSIDR_EL1.CountSize [%d]; assuming 2\n",
+ 			 fld);
+ 		fallthrough;
+-	case 2:
++	case PMSIDR_EL1_COUNTSIZE_12_BIT_SAT:
+ 		spe_pmu->counter_sz = 12;
+ 		break;
+-	case 3:
++	case PMSIDR_EL1_COUNTSIZE_16_BIT_SAT:
+ 		spe_pmu->counter_sz = 16;
+ 	}
+ 
 
-Best regards,
 -- 
-Rob Herring <robh@kernel.org>
+2.39.0
