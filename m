@@ -2,200 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD97C61DB3
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A7C6379F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 15:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237299AbjAIPb7 (ORCPT
+        id S237206AbjAIPeW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:31:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
+        Mon, 9 Jan 2023 10:34:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237306AbjAIPbh (ORCPT
+        with ESMTP id S229876AbjAIPdC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:31:37 -0500
-Received: from fx304.security-mail.net (smtpout30.security-mail.net [85.31.212.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5957665A5
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 07:30:54 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by fx304.security-mail.net (Postfix) with ESMTP id 7F8BE9D0A8
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 16:30:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kalray.eu;
-        s=sec-sig-email; t=1673278252;
-        bh=2Ol4WvfIDv/pCXWodkK/JAf2l0CqXaG0EOhqPlCz5xY=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=kz8ddZYg0nJtow93ucAH7WnT8Vqwhr3lvi4IHN8OoSZGNmOScb2xcOeU4ahhPcX9+
-         p9CNBdA/jH2f4K049TrCPM610wwO1NQ4J9xx87Kmzbu7GXz0K8YSAee6gE4pfS7J3i
-         nAosaoMAGS6mHOvc8xjvjf4lK/Nd1xrz4y1l10bc=
-Received: from fx304 (localhost [127.0.0.1]) by fx304.security-mail.net
- (Postfix) with ESMTP id 520CF9D07F; Mon,  9 Jan 2023 16:30:52 +0100 (CET)
-Received: from zimbra2.kalray.eu (unknown [217.181.231.53]) by
- fx304.security-mail.net (Postfix) with ESMTPS id 9D11C9D072; Mon,  9 Jan
- 2023 16:30:51 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1]) by
- zimbra2.kalray.eu (Postfix) with ESMTPS id 68AED27E0402; Mon,  9 Jan 2023
- 16:30:51 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1]) by zimbra2.kalray.eu
- (Postfix) with ESMTP id 38EF527E03FF; Mon,  9 Jan 2023 16:30:51 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1]) by localhost
- (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026) with ESMTP id
- Ax--sd_V2azt; Mon,  9 Jan 2023 16:30:51 +0100 (CET)
-Received: from [192.168.37.161] (unknown [192.168.37.161]) by
- zimbra2.kalray.eu (Postfix) with ESMTPSA id 8E4D827E03FE; Mon,  9 Jan 2023
- 16:30:50 +0100 (CET)
-X-Virus-Scanned: E-securemail
-Secumail-id: <b2fe.63bc332b.9bc13.0>
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 38EF527E03FF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
- s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1673278251;
- bh=AQRkX8OfPpkm9ao22SwrZcjsHp5YTFXu85Lp04m+1A0=;
- h=Message-ID:Date:MIME-Version:To:From;
- b=Nw9h4dkzOwPn5vuhGKIyNNJs3P3x4pfdYEE7ckz9lL13tSkmK4nwamwpUjampl3D6
- LDhJg2t6qBuoBWDfEIexbrFwLh9D9VyJiOWUlwmQC+1j7iIHZ+vEfgfvPWRc9vt9zD
- PN1+BJeuI0U91Om91ZCvoSBebX3S3D5TsBEjM/tE=
-Message-ID: <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu>
-Date:   Mon, 9 Jan 2023 16:30:50 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
-Content-Language: en-us
-To:     Jeff Xie <xiehuan09@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        Mon, 9 Jan 2023 10:33:02 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 009496157;
+        Mon,  9 Jan 2023 07:32:01 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B82571042;
+        Mon,  9 Jan 2023 07:32:43 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.37.103])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F0183F587;
+        Mon,  9 Jan 2023 07:31:59 -0800 (PST)
+Date:   Mon, 9 Jan 2023 15:31:56 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Atish Patra <atishp@atishpatra.org>,
+        linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
-        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-audit@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
-        Ashley Lesdalons <alesdalons@kalray.eu>,
-        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>,
-        Guillaume Thouvenin <gthouvenin@kalray.eu>,
-        Jean-Christophe Pince <jcpince@gmail.com>,
-        Jonathan Borne <jborne@kalray.eu>,
-        Jules Maselbas <jmaselbas@kalray.eu>,
-        Julian Vetter <jvetter@kalray.eu>,
-        Julien Hascoet <jhascoet@kalray.eu>,
-        Julien Villette <jvillette@kalray.eu>,
-        Louis Morhet <lmorhet@kalray.eu>,
-        Luc Michel <lmichel@kalray.eu>,
-        Marc =?utf-8?b?UG91bGhpw6hz?= <dkm@kataplop.net>,
-        Marius Gligor <mgligor@kalray.eu>,
-        Samuel Jones <sjones@kalray.eu>,
-        Thomas Costis <tcostis@kalray.eu>,
-        Vincent Chardon <vincent.chardon@elsys-design.com>
-References: <20230103164359.24347-1-ysionneau@kalray.eu>
- <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
- <6570d22d-ee19-f8b1-6fb4-bf8865ec4142@kalray.eu>
- <CAEr6+ECPFeokSULpWzYEYLROYHXNA0PtvdUchT37d4_qVA-PKQ@mail.gmail.com>
-From:   Yann Sionneau <ysionneau@kalray.eu>
-In-Reply-To: <CAEr6+ECPFeokSULpWzYEYLROYHXNA0PtvdUchT37d4_qVA-PKQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Beeman Strong <beeman@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Anup Patel <apatel@ventanamicro.com>
+Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V
+ conundrum
+Message-ID: <Y7wzbF7cI6mLxUfE@FVFF77S0Q05N>
+References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
+ <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ALTERMIMEV2_out: done
+In-Reply-To: <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jeff,
+On Mon, Jan 09, 2023 at 01:41:15PM +0100, Peter Zijlstra wrote:
+> On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
+> > Hi All,
+> > There was a recent uabi update[1] for RISC-V that allows the users to
+> > read cycle and instruction count without any checks.
+> > We tried to restrict that behavior to address security concerns
+> > earlier but it resulted in breakage for some user space
+> > applications[2].
+> > Thus, previous behavior was restored where a user on RISC-V platforms
+> > can directly read cycle or instruction count[3].
+> > 
+> > Comparison with other ISAs w.r.t user space access of counters:
+> > ARM64
+> >   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
+> >   -- Only for task bound events configured via perf.
+> > 
+> > X86
+> >  --- rdpmc instruction
+> >  --- Enable/Disable via “/sys/devices/cpu/rdpmc”
+> > -- Before v4.0
+> >  -- any process (even without active perf event) rdpmc
+> > After v4.0
+> > -- Default behavior changed to support only active events in a
+> > process’s context.
+> > -- Configured through perf similar to ARM64
+> > -- Continue to maintain backward compatibility for unrestricted access
+> > by writing 2 to “/sys/devices/cpu/rdpmc”
+> > 
+> > IMO, RISC-V should only enable user space access through perf similar
+> > to ARM64 and x86 (post v4.0).
+> > However, we do have to support the legacy behavior to avoid
+> > application breakage.
+> > As per my understanding a direct user space access can lead to the
+> > following problems:
+> > 
+> > 1) There is no context switch support, so counts from other contexts are exposed
+> > 2) If a perf user is allocated one of these counters, the counter
+> > value will be written
+> > 
+> > Looking at the x86 code as it continues to allow the above behavior,
+> > rdpmc_always_available_key is enabled in the above case. However,
+> > during the context switch (cr4_update_pce_mm)
+> > only dirty counters are cleared. It only prevents leakage from perf
+> > task to rdpmc task.
+> > 
+> > How does the context switch of counters work for users who enable
+> > unrestricted access by writing 2 to “/sys/devices/cpu/rdpmc” ?
+> > Otherwise, rdpmc users likely get noise from other applications. Is
+> > that expected ?
+> > This can be a security concern also where a rogue rdpmc user
+> > application can monitor other critical applications to initiate side
+> > channel attack.
+> > 
+> > Am I missing something? Please correct my understanding of the x86
+> > implementation if it is wrong.
+> 
+> So on x86 we have RDTSC and RDPMC instructions. RDTSC reads the
+> Time-Stamp-Counter which is a globally synchronized monotonic increasing
+> counter at some 'random' rate (idealized, don't ask). This thing is used
+> for time-keeping etc..
 
-On 1/9/23 16:11, Jeff Xie wrote:
-> On Mon, Jan 9, 2023 at 9:21 PM Yann Sionneau <ysionneau@kalray.eu> wrote:
->> Hi Jeff,
->>
->> On 1/7/23 07:25, Jeff Xie wrote:
->>> Hi,
->>>
->>> On Wed, Jan 4, 2023 at 1:01 AM Yann Sionneau <ysionneau@kalray.eu> wrote:
->>>> [snip]
->>>>
->>>> A kvx toolchain can be built using:
->>>> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev libmpfr-dev
->>>> $ git clone https://github.com/kalray/build-scripts
->>>> $ cd build-scripts
->>>> $ source last.refs
->>>> $ ./build-kvx-xgcc.sh output
->>> I would like to build the kvx-xgcc to compile and test the linux
->>> kernel, but it reported a compile error.
->>> I wonder what version of gcc you are using.
->>>
->>> My build environment:
->>> VERSION="20.04.2 LTS (Focal Fossa)"
->>> gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
->>>
->>>
->>> Compile error:
->>> $ ./build-kvx-xgcc.sh output
->>>
->>> ../../binutils/libiberty/fibheap.c: In function ‘fibheap_replace_key_data’:
->>> ../../binutils/libiberty/fibheap.c:38:24: error: ‘LONG_MIN’ undeclared
->>> (first use in this function)
->>>      38 | #define FIBHEAPKEY_MIN LONG_MIN
->>>         |                        ^~~~~~~~
->>> [snip]
->> What SHA1 of https://github.com/kalray/build-scripts are you using?
-> I have executed the "source last.refs"
+For context, the arm64 equivalent would be CNTVCT_EL0, which is a constant-rate
+always-on free-running counter which is (architecturally) consistent across
+CPUs, whereas PMCCNTR_EL0 is not any of those things.
 
-I was referring to the SHA1 of the repo itself (build-scripts).
+> And then there's RDPMC which (optionally) allows reading the PMU
+> counters which are normally disabled and all 0.
+> 
+> Even if RDPMC is unconditionally allowed from userspace (the 2 option
+> you refer to) userspace will only be able to read these 0s unless
+> someone also programs the PMU. Linux only supports a single means of
+> doing so: perf (some people use /dev/msr to poke directly to the MSRs
+> but they get to keep all pieces).
+> 
+> RDPMC is only useful if you read counters you own on yourself -- IOW
+> selfmonitoring, using the interface outlined in uapi/linux/perf_events.h
+> near struct perf_event_mmap_page.
+> 
+> Any other usage -- you get to keep the pieces.
 
-`last.refs` is a symbolic link which can point to several releases, 
-depending on "when" you did the clone.
+Yup.
 
-I am asking this because we recently published new toolchains.
+> Can you observe random other counters, yes, unavoidably so. The sysfs
+> control you mention was instituted to restrict this somewhat.
+> 
+> If the RISC-V counters are fundamentally the PMU counters that need to
+> be reset to trigger events, then you've managed to paint yourself into a
+> tight spot :/
+> 
+> Either you must dis-allow userspace access to these things (and break
+> them) or limit the PMU usage -- both options suck.
 
-I want to make sure which one you are trying to build.
+> Now, I'm thinking that esp. something like instruction count is not
+> synchronized between cores (seems fundamentally impossible) and can only
+> be reasonably be consumed (and compared) when strictly affine to a
+> particular CPU, you can argue that applications doing this without also
+> strictly managing their affinity mask are broken anyway and therefore
+> your breakage is not in fact a breaking them -- you can't break
+> something that's already broken.
 
->> We are building our toolchain on Ubuntu 18.04 / 20.04 and 22.04 without
->> issues, I don't understand why it does not work for you, although indeed
->> the error log you are having pops out on my search engine and seems to
->> be some well known issue.
-> Yes, there are many answers on the web, but none of them solve this problem.
->
->> If the build-script does not work for you, you can still use the
->> pre-built toolchains generated by the GitHub automated actions:
->> https://github.com/kalray/build-scripts/releases/tag/v4.11.1 ("latest"
->> means 22.04)
-> Thanks, this is the final solution ;-)
-Good to see it helped :)
+Yup, that was my thinking too.
 
-Regards,
+The intermediate option is to trap-and-emulate (as zero or some other fixed
+value), which highlghts the bug without crashing applications.
 
--- 
+> 
+> Anyway, given RISC-V being a very young platform, I would try really
+> *really* *REALLY* hard to stomp on these applications and get them to
+> change in order to reclaim the PMU usage.
 
-Yann
+Agreed.
 
-
-
-
-
+Thanks,
+Mark.
