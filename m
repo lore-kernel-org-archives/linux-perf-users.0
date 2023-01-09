@@ -2,116 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9433CC5479D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 09:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC2FC54EBD
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Jan 2023 12:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230287AbjAIJeV (ORCPT
+        id S234441AbjAIMlf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 04:34:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33962 "EHLO
+        Mon, 9 Jan 2023 07:41:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236633AbjAIJdx (ORCPT
+        with ESMTP id S229865AbjAIMl2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 04:33:53 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B34F115C;
-        Mon,  9 Jan 2023 01:33:52 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id s22so8255020ljp.5;
-        Mon, 09 Jan 2023 01:33:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rNnvNTBMGELu3VN6vH0YTp6DPHz7nzIVYPeYgFskFXE=;
-        b=EXmEQcDmM1xcGRcxBdThTmqTfNWF9mMT75GsHDeDqkjbpbsVxxPy0GM4WcIlzlc39L
-         xGZ0VkakUPjNDAkdJQYvkhM+llWHwjuNY99zUnu1kJvA+MmfAqRT+TsInnocHZ27FtQc
-         JJRvAFn5DG6/Vnf2rkfyJ19yuIB/ClTTjiaugp1Jnia2JCi8XOutXj7+Dw9CUSMUMwWj
-         H56GZ8HOfhCuqp52wLJoieLB4BgFrYmfHVuETf9FQfGw1AOqGx72nStPyys1bpxIQHOQ
-         idMUJqUamtLKvddulHw66Wpj6wUl/yPWdi/BkrDmH/N2dRPfF5FS9l89TGEnRrtQzcy1
-         ujJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rNnvNTBMGELu3VN6vH0YTp6DPHz7nzIVYPeYgFskFXE=;
-        b=cn6qEnvxaf/ovoqEzl/UEZl15Z9rltcuY0yxPmWSdvILpop2mt4dIp4i4OMIsLOi0k
-         DhZrc9/9QaHXvy2NfSxhtStH1MD1yWGnpsECN0QLQCKWPNcJFdwvrLuRvK3fvf7xeMo4
-         G2sDrJFiqTGaFie7jxcSOb6xEMQguV0PCtlEnWuI7FDcZIo0PETmHft1qDwTdiXsfICA
-         4/kb5ocqT7bLRxED3ycikMEufnt83AT6yh/qfALh1aJeghF9mpyVO2N7dI/UbhNs1hII
-         fZuYqU2K19dQ1jRmOw3QS4loHyriRCkziB0W05TdTDIYqhOOEVQkqGjI1Z+VhUUfRj+1
-         7YSA==
-X-Gm-Message-State: AFqh2krX+p0tKpIQ4NVOEGvDybwJYZaf9Za8Xz1UiAMoFeic6Q8EjuHT
-        +z2e+6RcwM4/PMuwYPsfjTY=
-X-Google-Smtp-Source: AMrXdXvQmlqPvgR5EwzIejFMocfh26sIvUQoei5k6VehZoxaV/QM5kIzaBj79R/Y2iTTAZCts1Nivg==
-X-Received: by 2002:a05:651c:384:b0:27f:f08d:6060 with SMTP id e4-20020a05651c038400b0027ff08d6060mr6272416ljp.38.1673256830641;
-        Mon, 09 Jan 2023 01:33:50 -0800 (PST)
-Received: from localhost.localdomain ([46.147.136.10])
-        by smtp.gmail.com with ESMTPSA id p19-20020a2e8053000000b0028402d9646dsm457730ljg.37.2023.01.09.01.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 01:33:49 -0800 (PST)
-From:   Alexander Pantyukhin <apantykhin@gmail.com>
-To:     mark.rutland@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Pantyukhin <apantykhin@gmail.com>
-Subject: [PATCH] tools:perf:scripts:python:mem-phys-addr fix performance
-Date:   Mon,  9 Jan 2023 14:33:47 +0500
-Message-Id: <20230109093347.6639-1-apantykhin@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 9 Jan 2023 07:41:28 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B8215F13;
+        Mon,  9 Jan 2023 04:41:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=uoWLYWZtTN5ZtWcVNElvXtV3FLHQfyD/J4yUz9n0OU4=; b=RQkP46LBZU9Ak6iH97viki6JVO
+        qWgje3MyLedr138OMO67cuuHxYhiG03oEEn4np304QhQjzvqdx8kYieVIQRS0IOioLlimzXpPBXtN
+        7+n0WJyUiA93kiggn8pkB9Of1AaAtnmxjHxR6U5WlSPOqMZg8AQ+5zEXxYZV7R9MoCGUUbUDQ9wjZ
+        u5nR3QcrcInd4ySpKw+RwQOx31pNUiXT5iFV9s7bAC5DBhd6p6x7tAb/QIXSEDZHwtUy18S30dxBU
+        wIIKISIcKuQsjAeWmpyd70lYmdrT23D5lNWEa6IH6rmP2pm69Hs8/kbOZpechHv8Onsl1YkckXwYB
+        kBkSwfTw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pErSy-002H2w-Kf; Mon, 09 Jan 2023 12:41:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8ECE2300193;
+        Mon,  9 Jan 2023 13:41:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 66397201ABB81; Mon,  9 Jan 2023 13:41:15 +0100 (CET)
+Date:   Mon, 9 Jan 2023 13:41:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Atish Patra <atishp@rivosinc.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Anup Patel <apatel@ventanamicro.com>
+Subject: Re: Expected rdpmc behavior during context swtich and a RISC-V
+ conundrum
+Message-ID: <Y7wLa7I2hlz3rKw/@hirez.programming.kicks-ass.net>
+References: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOnJCUKNFNRs6WkPNWV94BuLmT3KSPWK2FYCiD4PxPCxRs76PA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avoid double strip() calls for getting memory type.
+On Thu, Jan 05, 2023 at 11:59:24AM -0800, Atish Patra wrote:
+> Hi All,
+> There was a recent uabi update[1] for RISC-V that allows the users to
+> read cycle and instruction count without any checks.
+> We tried to restrict that behavior to address security concerns
+> earlier but it resulted in breakage for some user space
+> applications[2].
+> Thus, previous behavior was restored where a user on RISC-V platforms
+> can directly read cycle or instruction count[3].
+> 
+> Comparison with other ISAs w.r.t user space access of counters:
+> ARM64
+>   -- Enabled/Disabled via (/proc/sys/kernel/perf_user_access)
+>   -- Only for task bound events configured via perf.
+> 
+> X86
+>  --- rdpmc instruction
+>  --- Enable/Disable via “/sys/devices/cpu/rdpmc”
+> -- Before v4.0
+>  -- any process (even without active perf event) rdpmc
+> After v4.0
+> -- Default behavior changed to support only active events in a
+> process’s context.
+> -- Configured through perf similar to ARM64
+> -- Continue to maintain backward compatibility for unrestricted access
+> by writing 2 to “/sys/devices/cpu/rdpmc”
+> 
+> IMO, RISC-V should only enable user space access through perf similar
+> to ARM64 and x86 (post v4.0).
+> However, we do have to support the legacy behavior to avoid
+> application breakage.
+> As per my understanding a direct user space access can lead to the
+> following problems:
+> 
+> 1) There is no context switch support, so counts from other contexts are exposed
+> 2) If a perf user is allocated one of these counters, the counter
+> value will be written
+> 
+> Looking at the x86 code as it continues to allow the above behavior,
+> rdpmc_always_available_key is enabled in the above case. However,
+> during the context switch (cr4_update_pce_mm)
+> only dirty counters are cleared. It only prevents leakage from perf
+> task to rdpmc task.
+> 
+> How does the context switch of counters work for users who enable
+> unrestricted access by writing 2 to “/sys/devices/cpu/rdpmc” ?
+> Otherwise, rdpmc users likely get noise from other applications. Is
+> that expected ?
+> This can be a security concern also where a rogue rdpmc user
+> application can monitor other critical applications to initiate side
+> channel attack.
+> 
+> Am I missing something? Please correct my understanding of the x86
+> implementation if it is wrong.
 
-Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
----
- tools/perf/scripts/python/mem-phys-addr.py | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+So on x86 we have RDTSC and RDPMC instructions. RDTSC reads the
+Time-Stamp-Counter which is a globally synchronized monotonic increasing
+counter at some 'random' rate (idealized, don't ask). This thing is used
+for time-keeping etc..
 
-diff --git a/tools/perf/scripts/python/mem-phys-addr.py b/tools/perf/scripts/python/mem-phys-addr.py
-index 1f332e72b9b0..f267d8382eda 100644
---- a/tools/perf/scripts/python/mem-phys-addr.py
-+++ b/tools/perf/scripts/python/mem-phys-addr.py
-@@ -8,7 +8,6 @@ from __future__ import print_function
- 
- import os
- import sys
--import struct
- import re
- import bisect
- import collections
-@@ -30,12 +29,14 @@ event_name = None
- def parse_iomem():
- 	global f
- 	f = open('/proc/iomem', 'r')
--	for i, j in enumerate(f):
-+	for _, j in enumerate(f):
- 		m = re.split('-|:',j,2)
--		if m[2].strip() == 'System RAM':
-+		memory_type = m[2].strip()
-+
-+		if memory_type == 'System RAM':
- 			system_ram.append(int(m[0], 16))
- 			system_ram.append(int(m[1], 16))
--		if m[2].strip() == 'Persistent Memory':
-+		elif memory_type == 'Persistent Memory':
- 			pmem.append(int(m[0], 16))
- 			pmem.append(int(m[1], 16))
- 
-@@ -75,6 +76,7 @@ def is_persistent_mem(phys_addr):
- def find_memory_type(phys_addr):
- 	if phys_addr == 0:
- 		return "N/A"
-+
- 	if is_system_ram(phys_addr):
- 		return "System RAM"
- 
--- 
-2.25.1
+And then there's RDPMC which (optionally) allows reading the PMU
+counters which are normally disabled and all 0.
 
+Even if RDPMC is unconditionally allowed from userspace (the 2 option
+you refer to) userspace will only be able to read these 0s unless
+someone also programs the PMU. Linux only supports a single means of
+doing so: perf (some people use /dev/msr to poke directly to the MSRs
+but they get to keep all pieces).
+
+RDPMC is only useful if you read counters you own on yourself -- IOW
+selfmonitoring, using the interface outlined in uapi/linux/perf_events.h
+near struct perf_event_mmap_page.
+
+Any other usage -- you get to keep the pieces.
+
+Can you observe random other counters, yes, unavoidably so. The sysfs
+control you mention was instituted to restrict this somewhat.
+
+If the RISC-V counters are fundamentally the PMU counters that need to
+be reset to trigger events, then you've managed to paint yourself into a
+tight spot :/
+
+Either you must dis-allow userspace access to these things (and break
+them) or limit the PMU usage -- both options suck.
+
+
+Now, I'm thinking that esp. something like instruction count is not
+synchronized between cores (seems fundamentally impossible) and can only
+be reasonably be consumed (and compared) when strictly affine to a
+particular CPU, you can argue that applications doing this without also
+strictly managing their affinity mask are broken anyway and therefore
+your breakage is not in fact a breaking them -- you can't break
+something that's already broken.
+
+
+Anyway, given RISC-V being a very young platform, I would try really
+*really* *REALLY* hard to stomp on these applications and get them to
+change in order to reclaim the PMU usage.
