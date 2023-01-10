@@ -2,291 +2,153 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE88C61DB3
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 08:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16B3C46467
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 08:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbjAJIhS (ORCPT
+        id S237919AbjAJIoT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 03:37:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59280 "EHLO
+        Tue, 10 Jan 2023 03:44:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbjAJIhE (ORCPT
+        with ESMTP id S238114AbjAJIoI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 03:37:04 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F30BB1FA;
-        Tue, 10 Jan 2023 00:36:23 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF9B5AD7;
-        Tue, 10 Jan 2023 00:37:04 -0800 (PST)
-Received: from [10.162.42.6] (unknown [10.162.42.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79B663F67D;
-        Tue, 10 Jan 2023 00:36:16 -0800 (PST)
-Message-ID: <087ae743-c2fb-27b0-e9c2-dcc386f7e965@arm.com>
-Date:   Tue, 10 Jan 2023 14:06:13 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v4 4/8] perf: arm_spe: Drop BIT() and use FIELD_GET/PREP
- accessors
+        Tue, 10 Jan 2023 03:44:08 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2074.outbound.protection.outlook.com [40.107.101.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AE764D4B6;
+        Tue, 10 Jan 2023 00:44:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZbcwPSPFTgQ9VY48fyAcuQnyys7rNihqFS3vaAhzwMKjs8l+xkY7hp1geZAmGoEJjTDHPnt+ufWW1Ll55YVTyxl+isyjyH+dZUV6OEX+/J7k4sERwTeioskNKdLbljM04JpUplTD+lUaKOjFdj/WXni/QHrEj1G2/N8NJzcCynKG07YOotHXbYM5d06pwFJcPBlo6mSbKlQNQDBzjA8YtprmcUeLfcmn6Zq+16IokBwqh8jTlGIyCilihctHzH2oiZtnUU2dhuBqdAWyzI6nNNt44SQsHABIIttqHc/chwZOASggrXPz6+J9om8RTLxf7iUn400r+0088swvZKE+DQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4++ZQaDw9bbRuMsmcLm+tknDMPOm+u1j0hFd22yVWcI=;
+ b=DvPHW/Wl8ANk08xEukM7yVNtygKUJGySrNZIE7eWzqS2yhg2nGZSagS7iWwZu+kTBcrmfpVVdRZlbpNMhqc48reXRuN0TG4rDkUgFKxqEJ06K8HCj5FasLFHbCvJuZgM9iYJTNP0bhu+QkYDhMGbn0HMa51tve9XrR+yQkHPIQzsnuBxRID3v03CihKBiYIqKHmVXKHSS+B6NziHY5sYJFS6GRcJg6KQ2UoYQ/xS9GfUW8mQYFwM7woiO+WgpgBl7Rz9SLTDDuQ4Ei5mjRX1F6PWBZH9hDV9/+q2NaJQ8/5/SVC9igSwcJdjpMyKTboHjdE4gMWuqN9DCvXDPRWJ+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4++ZQaDw9bbRuMsmcLm+tknDMPOm+u1j0hFd22yVWcI=;
+ b=cdcc7zxJQ3lzfNi4aSo0/2G/DEp0YTBtZv/g+itB9MFQVZg0YgyGTu5+BAQPrypAIoyrP6rTx5fvRgL4Z1WByETArS2rdjA8lxqlrjyMx35DasVBXfooxbheDC3UPQ+3OEzpFJjSkoLP0cBCyIfX+xwdnd+wMj6npUeVBMwabI8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MN0PR12MB6103.namprd12.prod.outlook.com (2603:10b6:208:3c9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18; Tue, 10 Jan
+ 2023 08:44:00 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::a0e2:652:d7bd:58f]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::a0e2:652:d7bd:58f%4]) with mapi id 15.20.5986.018; Tue, 10 Jan 2023
+ 08:44:00 +0000
+Message-ID: <760acfd9-26a0-e028-bc29-004be0b2620c@amd.com>
+Date:   Tue, 10 Jan 2023 14:13:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [RFC 0/4] perf tool: Fix non-".text" symbol resolution for kernel
+ modules
+To:     Adrian Hunter <adrian.hunter@intel.com>, acme@kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        kan.liang@linux.intel.com, peterz@infradead.org,
+        mark.rutland@arm.com, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, james.clark@arm.com,
+        german.gomez@arm.com, leo.yan@linaro.org,
+        alexey.v.bayduraev@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230110055859.685-1-ravi.bangoria@amd.com>
+ <86f43058-a51a-42c7-4d75-564f0e8eef04@intel.com>
 Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>
-References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
- <20220825-arm-spe-v8-7-v4-4-327f860daf28@kernel.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220825-arm-spe-v8-7-v4-4-327f860daf28@kernel.org>
+In-Reply-To: <86f43058-a51a-42c7-4d75-564f0e8eef04@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0082.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:23::27) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MN0PR12MB6103:EE_
+X-MS-Office365-Filtering-Correlation-Id: b60b400f-f9e4-49b7-3322-08daf2e6d1dc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 2cHvLq7KY+8Exo42FdiA5SLEWPc951rReE8roIdSZ3/ITwZScpVJAAaxgEq5YppB7nragK9QcqOm7CSHzJaXeA/+WJdvge5/qveCyJqVPbsZZVuhXwCfTBCTuIX6GlQf0VmZ3gtmoVsadLz1UCdxPhEgQ3y0ydXzdIGBmxZJyRTwiyE+dVnmkVI1dpcHhHJL+N5T9/JnkNhe9GHi1gE2poSUbQwmARLzIO4YMXkiOFmJzt1MLomOox/0JGgirdCmwEp/yZVYauH66jggPUCmoyTfB8x1HkytotY2EDECFWt5EZC2BwpuqBF0BWz/4IHqotPGkPdZehROeO/mvafBgrR6JRvuke2SN7jlMkg9S1tY74OqPLZXpAT621N4/kdbEc5uKNXaQGrLpQv/lh1l44ZZxMDMJF1/CVEU5BFYDz7wj4b6xtlii3/Z/HzgP7vGOxaM7ux0J+FvkIpcp7vQpNRz9EN0iKhiNcWThKKodPX8zBU/VfbmFIh2jR8oCCwGgf7LaQNowdeBrmRaq940NqkaeORcfm93I8E4NJnkQQRiVHUPpvb0Hlu2uBbfxVi7GtwIKJmo8NKHAeGecreMmUd1PfC62QCsoNE/SGIMiDBUdCsvmeicg7rRJjHeQyWg9KlEbLdUg+jNdRCPPuSOmLkBqoeC0VqfDNU0XvPHVaERRSYNplV1Amz9K9b6VJAa9xvaI0JKoCi4wk8fmezXrbBeo4ORCvybLTqQrB6s0pU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(451199015)(7416002)(5660300002)(316002)(44832011)(26005)(6512007)(186003)(478600001)(6486002)(2616005)(31696002)(41300700001)(66946007)(4326008)(66556008)(66476007)(8676002)(8936002)(86362001)(36756003)(6666004)(53546011)(31686004)(6506007)(38100700002)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UXdSUnJwNFc4b1VwV3pOTHJmT1hmc2ZNZUJ4OEN1TVk1ZVAxN3RvWnhadjdC?=
+ =?utf-8?B?N2g2TlZKdDQ5WDRlMlBYLzJqU0ZlakpwMXhtV3RsTjMzOEhCM3JlK0pxNlVJ?=
+ =?utf-8?B?bEgxc2YyNjFCVTJvWkQyUjVuQzJTNzdwVzhYWGljU0E3MDBScXcvOXA0WFRx?=
+ =?utf-8?B?WVkrUjJLdndsM3FVUG5PVElnc3hrbFpFVGE2UW5pV2t3ell1akRpbkVia3pU?=
+ =?utf-8?B?N2RBWnY0RmpSd2hpV2VjcHJMWjlyUjhseEFmenNTYU9MNkV2Um13WlJMMjlH?=
+ =?utf-8?B?R0lydFJjdmcwd05jb1NWN0x6clFCQm54Q1hqVlUxdldEQWRUc0RPdjNVNkJG?=
+ =?utf-8?B?Tm56OWMvVEY5bzBTY01uVWlCTjB4Ui83VVV1UWVCLzVhYmFDaVRXd0pYazE0?=
+ =?utf-8?B?Y3BvZ1VVWDVrTS80aERVWDVobW1TYzg2Sk85OStSOFdTTnBUUndKeWFPdlBt?=
+ =?utf-8?B?OW5zMGllSVN1RUM2YXNUT3hZYVUwNklDSHNaeEFhbGVFUlYyRlE0NzdOV0hI?=
+ =?utf-8?B?bGthaVl5SFloUGpBNVM2S0t4TmdqUlpwOHRyMXJ4YjhZNXNCZ01MQnQ3V2Yy?=
+ =?utf-8?B?V2JaNnhiZFU4Z1EyeU5OeE9na0tzWVRtaTVrcUExSkl1OElEaFFkNjV5Uit2?=
+ =?utf-8?B?a1NjWVlvYUJEbklwL2dFTU5QSHFsU1A4ZjVZQ1oram5LUzY2Z2M5azVWc0hW?=
+ =?utf-8?B?MzBrNUMwSml2SzNyZUQ0c1ZmZGt3R2hFRWJjSnZQUXdSemFZVWI0STZrTWd5?=
+ =?utf-8?B?OTNlanhETHN0L2o1TE1pa0JzaUJleDEyblJ6VzBFZlA2c0hZSWxFNDVTK1Bk?=
+ =?utf-8?B?Z2FIQ0NNM3FtLzRFV1pNYVAxR05oVGZnOFlQYmJxMHhPZERYY2RJNmFBTVds?=
+ =?utf-8?B?UG05M1Jpc2M5aW1PNEM1a3Z6RFNXaW9ZZS9lZ3paaGRsaTZndzQ1YlVueERu?=
+ =?utf-8?B?dUpyMHlWVzgzWFVialZmMi9ocVIyVWx0eWRYSy96cTJCNGVkdTV4Q09PTDFw?=
+ =?utf-8?B?MHFaNnBacklTSXBwbmprZFpNSHdxMWtjK3pUWWdqc1lJaFpDa1l0cE9KUUMv?=
+ =?utf-8?B?K25DMWVKc3RWNWJncXBaazB4L3dlN1o3MURrOGRacCtNUlFsZkV2WG9pQmt1?=
+ =?utf-8?B?ZjZMdTV2aWNqckN2NFZvSlladTJPNllJdXpyb3U5VUtEQ2cxR0xDWUZBMVI5?=
+ =?utf-8?B?WktsM1ZMUVVUanF5elo3akxENUtOejdmaTNTSGlmeE9ROXRWS3RCU2pJSU1m?=
+ =?utf-8?B?MHRVUHJxZ0JndTZOU1Y5SWFKVG42ZjRpaC8xZUNVNkYralpTUloxd04zeUFG?=
+ =?utf-8?B?NW1Yb1ZwT2c1NUgyTTFYUHRCeklHR1g2dTlOUDI4VUx3VUpxK28xTUN1Zmtn?=
+ =?utf-8?B?QXpTQytlanQyODJLWUs2alEybWpoMTAvNU9UMUZWZU9KUXdsVTZCTEdhY2gw?=
+ =?utf-8?B?YjJzUWQxbVR5N3V0N3JPNElBYWFGNC9LcGpYeHJjeTVVMzQxOEJZdkt4dURo?=
+ =?utf-8?B?TkZnOUNUN25kaXg2YmNMZmxIbHA5UVc1cXdKQ0gxaFk1U1hEVVJiclMvUHBX?=
+ =?utf-8?B?VS8vOWhUTGlicmM0ZEwxWmVyMEZJQUd2VCtPT3lFVkovR29YclJuRVdmU0g4?=
+ =?utf-8?B?Wkc4QnRJOWp0S0gzWEpoN3M1di9IZTRIMkR2ZUhJZFNTWFMwdHo1T3NTU2R1?=
+ =?utf-8?B?R2gwSnVNd2lyRXdCZ0o1UlFJcm5GODA2S2NDY2lHSkE4Sk5uZWJsNW5wUHRi?=
+ =?utf-8?B?ek5BeENxY0dMRlpwWUV2Q0FPdDl4ZDVHQlRzeVhaN0lmS0VCdUUzZWNKUkZs?=
+ =?utf-8?B?S0xjU0l4WHJSbUlOczg5bWVncDJUcE05S0lOd29DSnc4R3U5d0Zlc0Zncncr?=
+ =?utf-8?B?Wms5M3lKazJldkpNZE5QS2NOVmwzUXVhUnRuQUw5NDVXREN3anRHb1VlQWdC?=
+ =?utf-8?B?R1oxRnFCVnFRdnhBUXlIY2paT0dsaVhlMzlweTVGckUzVzRoSVRwMEtPWUJr?=
+ =?utf-8?B?dXhaK0JhMFpOSFUyWjAzcm5RUUpURE1TaWd3RjIxZDB4aWE0a0c1dGJ1cjJ6?=
+ =?utf-8?B?QUJEZk9hcUxoV0hJaDJLd01xaVdPYmh4RVFxWSs0ZWdITHJlejJRdTVoS1Vy?=
+ =?utf-8?Q?7QS63oW8q6mlYuzrk/DcS5Jep?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b60b400f-f9e4-49b7-3322-08daf2e6d1dc
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2023 08:44:00.7208
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MSIVbL/vbUwJWTCUApG0cYuky3syDjxCxjfi7Y1inGDnyjisisBx+0jcN12z1/kx96zfDF6oeGmjDLQY8zRnjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6103
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Adrian,
 
+On 10-Jan-23 12:05 PM, Adrian Hunter wrote:
+> On 10/01/23 07:58, Ravi Bangoria wrote:
+>> Kernel module elf contains executable code in non-".text" sections as
+>> well, for ex: ".noinstr.text". Plus, kernel module's memory layout
+>> differs from it's binary layout because .ko elf does not contain
+>> program header table.
+> 
+> Have you looked at using perf record --kcore option.
 
-On 1/10/23 00:56, Rob Herring wrote:
-> Now that generated sysregs are in place, update the register field
-> accesses. The use of BIT() is no longer needed with the new defines. Use
-> FIELD_GET and FIELD_PREP instead of open coding masking and shifting.
-> 
-> No functional change.
-> 
-> Tested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Nice! We can also use --kallsyms with perf report and it resolves symbols
+fine.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+But what about normal perf record/report? Why I'm enforcing on normal perf-
+record/report is because, generally user don't specify these options, esp if
+he has root privileges, he expects symbol-resolution should just work fine.
+But when he sees inconsistency in symbol-resolution of the same kernel module,
+he will be clueless of what's missing. This patchset is trying to solve it,
+although I too feel adding section specific maps to perf.data is overkill as
+--kcore or --kallsyms can also resolve those symbols.
 
-> ---
-> v4:
->  - Rebase on v6.2-rc1
-> v3:
->  - no change
-> ---
->  drivers/perf/arm_spe_pmu.c | 70 ++++++++++++++++++++++------------------------
->  1 file changed, 34 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 814ed18346b6..9b4bd72087ea 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -283,18 +283,18 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
->  	struct perf_event_attr *attr = &event->attr;
->  	u64 reg = 0;
->  
-> -	reg |= ATTR_CFG_GET_FLD(attr, ts_enable) << PMSCR_EL1_TS_SHIFT;
-> -	reg |= ATTR_CFG_GET_FLD(attr, pa_enable) << PMSCR_EL1_PA_SHIFT;
-> -	reg |= ATTR_CFG_GET_FLD(attr, pct_enable) << PMSCR_EL1_PCT_SHIFT;
-> +	reg |= FIELD_PREP(PMSCR_EL1_TS, ATTR_CFG_GET_FLD(attr, ts_enable));
-> +	reg |= FIELD_PREP(PMSCR_EL1_PA, ATTR_CFG_GET_FLD(attr, pa_enable));
-> +	reg |= FIELD_PREP(PMSCR_EL1_PCT, ATTR_CFG_GET_FLD(attr, pct_enable));
->  
->  	if (!attr->exclude_user)
-> -		reg |= BIT(PMSCR_EL1_E0SPE_SHIFT);
-> +		reg |= PMSCR_EL1_E0SPE;
->  
->  	if (!attr->exclude_kernel)
-> -		reg |= BIT(PMSCR_EL1_E1SPE_SHIFT);
-> +		reg |= PMSCR_EL1_E1SPE;
->  
->  	if (get_spe_event_has_cx(event))
-> -		reg |= BIT(PMSCR_EL1_CX_SHIFT);
-> +		reg |= PMSCR_EL1_CX;
->  
->  	return reg;
->  }
-> @@ -322,7 +322,7 @@ static u64 arm_spe_event_to_pmsirr(struct perf_event *event)
->  
->  	arm_spe_event_sanitise_period(event);
->  
-> -	reg |= ATTR_CFG_GET_FLD(attr, jitter) << PMSIRR_EL1_RND_SHIFT;
-> +	reg |= FIELD_PREP(PMSIRR_EL1_RND, ATTR_CFG_GET_FLD(attr, jitter));
->  	reg |= event->hw.sample_period;
->  
->  	return reg;
-> @@ -333,18 +333,18 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
->  	struct perf_event_attr *attr = &event->attr;
->  	u64 reg = 0;
->  
-> -	reg |= ATTR_CFG_GET_FLD(attr, load_filter) << PMSFCR_EL1_LD_SHIFT;
-> -	reg |= ATTR_CFG_GET_FLD(attr, store_filter) << PMSFCR_EL1_ST_SHIFT;
-> -	reg |= ATTR_CFG_GET_FLD(attr, branch_filter) << PMSFCR_EL1_B_SHIFT;
-> +	reg |= FIELD_PREP(PMSFCR_EL1_LD, ATTR_CFG_GET_FLD(attr, load_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_ST, ATTR_CFG_GET_FLD(attr, store_filter));
-> +	reg |= FIELD_PREP(PMSFCR_EL1_B, ATTR_CFG_GET_FLD(attr, branch_filter));
->  
->  	if (reg)
-> -		reg |= BIT(PMSFCR_EL1_FT_SHIFT);
-> +		reg |= PMSFCR_EL1_FT;
->  
->  	if (ATTR_CFG_GET_FLD(attr, event_filter))
-> -		reg |= BIT(PMSFCR_EL1_FE_SHIFT);
-> +		reg |= PMSFCR_EL1_FE;
->  
->  	if (ATTR_CFG_GET_FLD(attr, min_latency))
-> -		reg |= BIT(PMSFCR_EL1_FL_SHIFT);
-> +		reg |= PMSFCR_EL1_FL;
->  
->  	return reg;
->  }
-> @@ -358,8 +358,7 @@ static u64 arm_spe_event_to_pmsevfr(struct perf_event *event)
->  static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
->  {
->  	struct perf_event_attr *attr = &event->attr;
-> -	return ATTR_CFG_GET_FLD(attr, min_latency)
-> -	       << PMSLATFR_EL1_MINLAT_SHIFT;
-> +	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
->  }
->  
->  static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
-> @@ -511,7 +510,7 @@ static void arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
->  	limit = buf->snapshot ? arm_spe_pmu_next_snapshot_off(handle)
->  			      : arm_spe_pmu_next_off(handle);
->  	if (limit)
-> -		limit |= BIT(PMBLIMITR_EL1_E_SHIFT);
-> +		limit |= PMBLIMITR_EL1_E;
->  
->  	limit += (u64)buf->base;
->  	base = (u64)buf->base + PERF_IDX2OFF(handle->head, buf);
-> @@ -570,23 +569,23 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
->  
->  	/* Service required? */
->  	pmbsr = read_sysreg_s(SYS_PMBSR_EL1);
-> -	if (!(pmbsr & BIT(PMBSR_EL1_S_SHIFT)))
-> +	if (!FIELD_GET(PMBSR_EL1_S, pmbsr))
->  		return SPE_PMU_BUF_FAULT_ACT_SPURIOUS;
->  
->  	/*
->  	 * If we've lost data, disable profiling and also set the PARTIAL
->  	 * flag to indicate that the last record is corrupted.
->  	 */
-> -	if (pmbsr & BIT(PMBSR_EL1_DL_SHIFT))
-> +	if (FIELD_GET(PMBSR_EL1_DL, pmbsr))
->  		perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED |
->  					     PERF_AUX_FLAG_PARTIAL);
->  
->  	/* Report collisions to userspace so that it can up the period */
-> -	if (pmbsr & BIT(PMBSR_EL1_COLL_SHIFT))
-> +	if (FIELD_GET(PMBSR_EL1_COLL, pmbsr))
->  		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
->  
->  	/* We only expect buffer management events */
-> -	switch (FIELD_GET(PMBSR_EL1_EC_MASK, pmbsr)) {
-> +	switch (FIELD_GET(PMBSR_EL1_EC, pmbsr)) {
->  	case PMBSR_EL1_EC_BUF:
->  		/* Handled below */
->  		break;
-> @@ -716,23 +715,22 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
->  		return -EINVAL;
->  
->  	reg = arm_spe_event_to_pmsfcr(event);
-> -	if ((reg & BIT(PMSFCR_EL1_FE_SHIFT)) &&
-> +	if ((FIELD_GET(PMSFCR_EL1_FE, reg)) &&
->  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_EVT))
->  		return -EOPNOTSUPP;
->  
-> -	if ((reg & BIT(PMSFCR_EL1_FT_SHIFT)) &&
-> +	if ((FIELD_GET(PMSFCR_EL1_FT, reg)) &&
->  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_TYP))
->  		return -EOPNOTSUPP;
->  
-> -	if ((reg & BIT(PMSFCR_EL1_FL_SHIFT)) &&
-> +	if ((FIELD_GET(PMSFCR_EL1_FL, reg)) &&
->  	    !(spe_pmu->features & SPE_PMU_FEAT_FILT_LAT))
->  		return -EOPNOTSUPP;
->  
->  	set_spe_event_has_cx(event);
->  	reg = arm_spe_event_to_pmscr(event);
->  	if (!perfmon_capable() &&
-> -	    (reg & (BIT(PMSCR_EL1_PA_SHIFT) |
-> -		    BIT(PMSCR_EL1_PCT_SHIFT))))
-> +	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
->  		return -EACCES;
->  
->  	return 0;
-> @@ -970,14 +968,14 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  
->  	/* Read PMBIDR first to determine whether or not we have access */
->  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
-> -	if (reg & BIT(PMBIDR_EL1_P_SHIFT)) {
-> +	if (FIELD_GET(PMBIDR_EL1_P, reg)) {
->  		dev_err(dev,
->  			"profiling buffer owned by higher exception level\n");
->  		return;
->  	}
->  
->  	/* Minimum alignment. If it's out-of-range, then fail the probe */
-> -	fld = (reg & PMBIDR_EL1_ALIGN_MASK) >> PMBIDR_EL1_ALIGN_SHIFT;
-> +	fld = FIELD_GET(PMBIDR_EL1_ALIGN, reg);
->  	spe_pmu->align = 1 << fld;
->  	if (spe_pmu->align > SZ_2K) {
->  		dev_err(dev, "unsupported PMBIDR.Align [%d] on CPU %d\n",
-> @@ -987,26 +985,26 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  
->  	/* It's now safe to read PMSIDR and figure out what we've got */
->  	reg = read_sysreg_s(SYS_PMSIDR_EL1);
-> -	if (reg & BIT(PMSIDR_EL1_FE_SHIFT))
-> +	if (FIELD_GET(PMSIDR_EL1_FE, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_FILT_EVT;
->  
-> -	if (reg & BIT(PMSIDR_EL1_FT_SHIFT))
-> +	if (FIELD_GET(PMSIDR_EL1_FT, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_FILT_TYP;
->  
-> -	if (reg & BIT(PMSIDR_EL1_FL_SHIFT))
-> +	if (FIELD_GET(PMSIDR_EL1_FL, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_FILT_LAT;
->  
-> -	if (reg & BIT(PMSIDR_EL1_ARCHINST_SHIFT))
-> +	if (FIELD_GET(PMSIDR_EL1_ARCHINST, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_ARCH_INST;
->  
-> -	if (reg & BIT(PMSIDR_EL1_LDS_SHIFT))
-> +	if (FIELD_GET(PMSIDR_EL1_LDS, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_LDS;
->  
-> -	if (reg & BIT(PMSIDR_EL1_ERND_SHIFT))
-> +	if (FIELD_GET(PMSIDR_EL1_ERND, reg))
->  		spe_pmu->features |= SPE_PMU_FEAT_ERND;
->  
->  	/* This field has a spaced out encoding, so just use a look-up */
-> -	fld = (reg & PMSIDR_EL1_INTERVAL_MASK) >> PMSIDR_EL1_INTERVAL_SHIFT;
-> +	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
->  	switch (fld) {
->  	case 0:
->  		spe_pmu->min_period = 256;
-> @@ -1038,7 +1036,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  	}
->  
->  	/* Maximum record size. If it's out-of-range, then fail the probe */
-> -	fld = (reg & PMSIDR_EL1_MAXSIZE_MASK) >> PMSIDR_EL1_MAXSIZE_SHIFT;
-> +	fld = FIELD_GET(PMSIDR_EL1_MAXSIZE, reg);
->  	spe_pmu->max_record_sz = 1 << fld;
->  	if (spe_pmu->max_record_sz > SZ_2K || spe_pmu->max_record_sz < 16) {
->  		dev_err(dev, "unsupported PMSIDR_EL1.MaxSize [%d] on CPU %d\n",
-> @@ -1046,7 +1044,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  		return;
->  	}
->  
-> -	fld = (reg & PMSIDR_EL1_COUNTSIZE_MASK) >> PMSIDR_EL1_COUNTSIZE_SHIFT;
-> +	fld = FIELD_GET(PMSIDR_EL1_COUNTSIZE, reg);
->  	switch (fld) {
->  	default:
->  		dev_warn(dev, "unknown PMSIDR_EL1.CountSize [%d]; assuming 2\n",
-> 
+Thanks for your feedback,
+Ravi
