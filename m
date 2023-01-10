@@ -2,151 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F1FC46467
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFC1C46467
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 20:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233014AbjAJTzb (ORCPT
+        id S231682AbjAJUAq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 14:55:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
+        Tue, 10 Jan 2023 15:00:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233719AbjAJTzO (ORCPT
+        with ESMTP id S230362AbjAJUA2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 14:55:14 -0500
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A2A6144D
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:55:12 -0800 (PST)
-Received: by mail-ua1-x930.google.com with SMTP id j14so3117749ual.10
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:55:12 -0800 (PST)
+        Tue, 10 Jan 2023 15:00:28 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DA21001
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 12:00:27 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id az7so12951808wrb.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 12:00:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sWBEBP027jXHEOv42rUgQvSGJQYUen22iKr19l7Fb5c=;
-        b=ZvDn4oLes/zIvHZnvm9rOYT4nRMF641r1zUUek8ObygdZBRDlKXPXaR3O73c5Z8N5c
-         yTZU8haKKw2Jt9Lu0nZ9R4wxDLJiZKc8zL6SJZelSJ3Mys0++GiEgBPYJVnjdny49Ubz
-         WueFGuXhgejNTzvxG72WVDyXzk+P8OFy+E26WcowRGQpDNirYzuw/jxjTUjPzKdNzODT
-         1IIFTQHLQiOGsAvACd/P1TqMk0IR67cFhcN5QGkcHANIBKYcF6oklKsEGh/toH9rc+hj
-         tx7SGz92SYR751/wWpPsA5k1SXEkz+euWt//srFjU3rruVzzEo0po4rbYqq6gVaq3BtZ
-         COGQ==
+        bh=Lap+FEQF2k7rxL4UQRH7fuZOTdN+cGPfdwGo30Wzqyg=;
+        b=HJg86IB1MT5R2Wqj6SqVsSuU2NtqeRFGCMvaU7S3h18SgX1UKuCSAyMXV+ZYho5cV6
+         RAEpipSeeTSyyJszO8K42drqmKKdb5nLPCju/76cZhNg304Y3G5UqEWz3Y0cv62JVf5V
+         4oKTJSviivlavBia5rMusO2ycOB4rc7f9i4/ZStHuHCgRtlObh3SWDNClr+d/Z7KhD4O
+         iiLo1TwhBul0+1OSqsXZMf9U8JYmxnM9crKVUXnelaPQ7sbv4W/ziGRTJ6WNTn+fhKJj
+         5HZCJwTfj9qEcyB33IgRMqSb7pG2GE/vTnPRBEAQdSJi5r+C9ZpqhsH8JOQoePq+1t9V
+         +KNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sWBEBP027jXHEOv42rUgQvSGJQYUen22iKr19l7Fb5c=;
-        b=yz4GdNArixldRdFmojsiXX3U3DMEjbnrbkbhobOfBQ++/9gsgzUePzfthlLnpzxZRe
-         aeYFHpYoErBIxxSrKT0R3qz3/AzAfXl+e+pbUHusDTdjblHx0q1t4DrVjmZmbVywG7sd
-         iBNB54rdGk4OQm4bMCWLxIbTeIL3Et579HvdnVe5d2xaq0f0zc/IU7BcsgX6QPTmDkuz
-         E/YkbBS5sMWWBnc93NHBuNOxR8oOY2e7vHFkiwCPrnndNS2O6OyMf76bofLa/AQ0ahgh
-         S9fAjNa9nEmzYAc4TvaGUz6WHR7MNFN2wGGiSzwZRAqxhCoUZhaiDIRPWfvPPaKHjro7
-         Bz1g==
-X-Gm-Message-State: AFqh2kqthdcHD6dLyCKmxPiGyO4W0kFODs/quyxhr+AmuDXUcUpLo1OT
-        lvIxM/6LG+cWwDazb8OdEOoWfWrUs0mzGp5GwSbgzw==
-X-Google-Smtp-Source: AMrXdXsKJ3C7aDvSUwLwevuHQJ81rHrWDmF5y8Qk9LmQIOGF4k3ZXY44O3j2EAQ2+FM0Kkw8jiVd4jC9tH4xM8gmIWg=
-X-Received: by 2002:ab0:152b:0:b0:418:620e:6794 with SMTP id
- o40-20020ab0152b000000b00418620e6794mr7714686uae.59.1673380511203; Tue, 10
- Jan 2023 11:55:11 -0800 (PST)
+        bh=Lap+FEQF2k7rxL4UQRH7fuZOTdN+cGPfdwGo30Wzqyg=;
+        b=WJ09ePnwKgSGdaUqsgz2D73xqErMh5OTggt7oDHB58LXfAjCUtZltQaTupgvTED8GT
+         DUvh5Kam97MFwDaYF9DnK7FCbQaZZ06D8QKSsBgviPP9XQwvB9MCCwzeD0UZ76T1pssh
+         o6FQOjafXa6iisflvELf+nsaA9WhUwEyrTqiYP7pto5pZQhAP5Pzd2OXFRsWd9VpVIVw
+         gsDhZ7m6qbBcellW9RJ5iKuK2lCGdQ+PMj1BuLVJLGfPbAZuB5OoVICNpr/LyY7Kvb7l
+         N8T+OB40XIfDDnjwMNT1A2TMQrO49OCArzZwYIq835cTfGvBgsugCaGW/RCtLd6EzI0t
+         upCA==
+X-Gm-Message-State: AFqh2kqcxWTLgrLT+zwwIvudJWH+x0msc+VTwywP0n3fi+iVVgY0VZZO
+        tKgoAeuIpfRjK2kTZCwO2Zv1J9f16Ho/M1B/yh3eig==
+X-Google-Smtp-Source: AMrXdXv8PBqo8N7wxaT8DMJKwydP5OX0tusDhDYoqCL6w+yFX45v+MZ2HinvpRypxu840u+s4BN265BjsE+RLYJg97o=
+X-Received: by 2002:a05:6000:12cb:b0:28c:459a:d5d with SMTP id
+ l11-20020a05600012cb00b0028c459a0d5dmr1571182wrx.654.1673380826237; Tue, 10
+ Jan 2023 12:00:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20230109223110.1201541-1-irogers@google.com> <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
- <CAP-5=fXniy80Jpc2Hu=-GF7yDNUNHjs0=B2iqkUkMb6zArPukg@mail.gmail.com> <CAM9d7chS+91Nep8FtsJsOdTvMJ0HhkSD1_Fn70=hWPi7a1JpfQ@mail.gmail.com>
-In-Reply-To: <CAM9d7chS+91Nep8FtsJsOdTvMJ0HhkSD1_Fn70=hWPi7a1JpfQ@mail.gmail.com>
+References: <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
+ <Y7hZccgOiueB31a+@kernel.org> <Y7hgKMDGzQlankL1@kernel.org>
+ <Y7hgoVKBoulCbA4l@kernel.org> <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
+ <Y7wuz6EOggZ8Wysb@kernel.org> <Y7xYimp0h4YT72/N@krava> <CAP-5=fXwO5_kK=pMV09jdAVw386CB0JwArD0BZd=B=xCyWSP1g@mail.gmail.com>
+ <CAP-5=fVa51_URGsdDFVTzpyGmdDRj_Dj2EKPuDHNQ0BYgMSzUA@mail.gmail.com>
+ <Y712sCnYBJobe2eY@kernel.org> <Y716Nt3c/Lc0Z4P5@kernel.org>
+In-Reply-To: <Y716Nt3c/Lc0Z4P5@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 10 Jan 2023 11:54:58 -0800
-Message-ID: <CAP-5=fUXoOFueaeSD2D9H+xoH5tKXRHK1164yPSX8_m_Nx_AeQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        German Gomez <german.gomez@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 10 Jan 2023 12:00:13 -0800
+Message-ID: <CAP-5=fV4wqgpazr0LpUzdPQ3RsKLNs8SXKttyBwvq2dhe9kPCw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <olsajiri@gmail.com>, Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 11:09 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Jan 10, 2023 at 6:46 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> On Mon, Jan 9, 2023 at 3:38 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Jan 9, 2023 at 2:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Mon, Jan 9, 2023 at 2:31 PM Ian Rogers <irogers@google.com> wrote:
-> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > > > index e188f74698dd..cfcc253239f0 100644
-> > > > --- a/tools/perf/util/sort.c
-> > > > +++ b/tools/perf/util/sort.c
-> > > > @@ -28,6 +28,7 @@
-> > > >  #include "time-utils.h"
-> > > >  #include "cgroup.h"
-> > > >  #include "machine.h"
-> > > > +#include "trace-event.h"
-> > > >  #include <linux/kernel.h>
-> > > >  #include <linux/string.h>
+> Em Tue, Jan 10, 2023 at 11:31:12AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Mon, Jan 09, 2023 at 11:29:51AM -0800, Ian Rogers escreveu:
+> > > On Mon, Jan 9, 2023 at 10:37 AM Ian Rogers <irogers@google.com> wrote:
+> > > > -int libbpf_register_prog_handler(const char *sec __maybe_unused,
+> > > > -                                 enum bpf_prog_type prog_type __maybe_unused,
+> > > > -                                 enum bpf_attach_type exp_attach_type
+> > > > __maybe_unused,
+> > > > -                                 const struct
+> > > > libbpf_prog_handler_opts *opts __maybe_unused)
+> > > > +static int libbpf_register_prog_handler(const char *sec __maybe_unused,
+> > > > +                                       enum bpf_prog_type prog_type
+> > > > __maybe_unused,
+> > > > +                                       enum bpf_attach_type
+> > > > exp_attach_type __maybe_unused,
+> > > > +                                       const void *opts __maybe_unused)
+> > > > {
+> > > >        pr_err("%s: not support, update libbpf\n", __func__);
+> > > >        return -ENOTSUP;
+> > > > ```
 > > > >
-> > > > @@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
-> > > >                 tep_read_number_field(field, a->raw_data, &dyn);
-> > > >                 offset = dyn & 0xffff;
-> > > >                 size = (dyn >> 16) & 0xffff;
-> > > > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-> > > > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
-> > > >                 if (field->flags & TEP_FIELD_IS_RELATIVE)
-> > > >                         offset += field->offset + field->size;
+> > > > There are some other fixes necessary too. I'll try to write the fuller
+> > > > patch but I have no means for testing except for undefining
+> > > > HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS.
 > > >
-> > > Maybe I missed the previous discussion.
-> > >
-> > > As it's only used in the bit test, can we have something like this
-> > > in the header file?
-> > >
-> > > #if LIBTRACE_EVENT_VERSION < ...(1, 5, 0)
-> > > # define TEP_FIELD_IS_RELATIVE  0
-> > > #endif
-> > >
-> > > Thanks,
-> > > Namhyung
-> >
-> > We could but I think we lose some of the intention revealing-ness that
-> > TEP_FIELD_IS_RELATIVE is only present with libtraceevent 1.5.0 or
-> > newer.
+> > > So libbpf_prog_handler_opts is missing in the failing build, this
+> > > points to a libbpf before 0.8. I'm somewhat concerned that to work
+> > > around these linkage problems we're adding runtime errors - we may
+> > > build but the functionality is totally crippled. Is it worth
+> > > maintaining these broken builds or to just upfront fail the feature
+> > > test?
 >
-> I'm not sure how important it is to reveal the intention.
-> I think we wanted to minimize #ifdef-ery in the .c file and
-> moved the conditionals to the header.  Maybe we can add
-> a wrapper like this.
+> > Probably better to make the feature test disable bpf support while
+> > emitting a warning that features such as a, b, and c won't we available.
 >
-> #if LIBTRACEEVENT_VERSION >= ...(1, 5, 0)
-> static inline bool is_relative_field(field)
-> {
->     return field->flags & TEP_FIELD_IS_RELATIVE;
-> }
-> #else
-> static inline bool is_relative_field(field)
-> {
->     return false;
-> }
-> #endif
+> This would be the one-liner I think is appropriate for v6.2, ok?
 >
-> Thanks,
-> Namhyung
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 9962ae23ab8c5868..5b87846759036f6f 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -589,6 +589,8 @@ ifndef NO_LIBELF
+>            $(call feature_check,libbpf-bpf_program__set_insns)
+>            ifeq ($(feature-libbpf-bpf_program__set_insns), 1)
+>              CFLAGS += -DHAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
+> +          else
+> +            dummy := $(error Error: libbpf devel library needs to be >= 0.8.0 to build with LIBBPF_DYNAMIC, update or build statically with the version that comes with the kernel sources);
 
-Sounds good. Should the change be part of this one or a follow up
-patch? A follow up patch seems cleanest, I can add it to v2.
+It is ok. The intent/result should be the same as:
+https://lore.kernel.org/lkml/20230109203424.1157561-2-irogers@google.com/
+but it doesn't change a file outside of tools/perf. I think the change
+above would be preferable for 6.3.
 
 Thanks,
 Ian
+
+>            endif
+>            $(call feature_check,libbpf-btf__raw_data)
+>            ifeq ($(feature-libbpf-btf__raw_data), 1)
