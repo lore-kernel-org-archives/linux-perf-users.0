@@ -2,132 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFC1C46467
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 20:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BACEC54EBC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 20:51:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231682AbjAJUAq (ORCPT
+        id S233928AbjAJUvk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 15:00:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
+        Tue, 10 Jan 2023 15:51:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230362AbjAJUA2 (ORCPT
+        with ESMTP id S229681AbjAJUvK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 15:00:28 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DA21001
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 12:00:27 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id az7so12951808wrb.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 12:00:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lap+FEQF2k7rxL4UQRH7fuZOTdN+cGPfdwGo30Wzqyg=;
-        b=HJg86IB1MT5R2Wqj6SqVsSuU2NtqeRFGCMvaU7S3h18SgX1UKuCSAyMXV+ZYho5cV6
-         RAEpipSeeTSyyJszO8K42drqmKKdb5nLPCju/76cZhNg304Y3G5UqEWz3Y0cv62JVf5V
-         4oKTJSviivlavBia5rMusO2ycOB4rc7f9i4/ZStHuHCgRtlObh3SWDNClr+d/Z7KhD4O
-         iiLo1TwhBul0+1OSqsXZMf9U8JYmxnM9crKVUXnelaPQ7sbv4W/ziGRTJ6WNTn+fhKJj
-         5HZCJwTfj9qEcyB33IgRMqSb7pG2GE/vTnPRBEAQdSJi5r+C9ZpqhsH8JOQoePq+1t9V
-         +KNQ==
+        Tue, 10 Jan 2023 15:51:10 -0500
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48BA16218C
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 12:50:49 -0800 (PST)
+Received: by mail-il1-f200.google.com with SMTP id i7-20020a056e021b0700b003033a763270so9342983ilv.19
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 12:50:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Lap+FEQF2k7rxL4UQRH7fuZOTdN+cGPfdwGo30Wzqyg=;
-        b=WJ09ePnwKgSGdaUqsgz2D73xqErMh5OTggt7oDHB58LXfAjCUtZltQaTupgvTED8GT
-         DUvh5Kam97MFwDaYF9DnK7FCbQaZZ06D8QKSsBgviPP9XQwvB9MCCwzeD0UZ76T1pssh
-         o6FQOjafXa6iisflvELf+nsaA9WhUwEyrTqiYP7pto5pZQhAP5Pzd2OXFRsWd9VpVIVw
-         gsDhZ7m6qbBcellW9RJ5iKuK2lCGdQ+PMj1BuLVJLGfPbAZuB5OoVICNpr/LyY7Kvb7l
-         N8T+OB40XIfDDnjwMNT1A2TMQrO49OCArzZwYIq835cTfGvBgsugCaGW/RCtLd6EzI0t
-         upCA==
-X-Gm-Message-State: AFqh2kqcxWTLgrLT+zwwIvudJWH+x0msc+VTwywP0n3fi+iVVgY0VZZO
-        tKgoAeuIpfRjK2kTZCwO2Zv1J9f16Ho/M1B/yh3eig==
-X-Google-Smtp-Source: AMrXdXv8PBqo8N7wxaT8DMJKwydP5OX0tusDhDYoqCL6w+yFX45v+MZ2HinvpRypxu840u+s4BN265BjsE+RLYJg97o=
-X-Received: by 2002:a05:6000:12cb:b0:28c:459a:d5d with SMTP id
- l11-20020a05600012cb00b0028c459a0d5dmr1571182wrx.654.1673380826237; Tue, 10
- Jan 2023 12:00:26 -0800 (PST)
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FrGb7T5CWFgT+AcNY8nFRNBTuSt+li16+JKxysSC3eM=;
+        b=5tjmnr+m0SqnGjT1RL9fs7MtF2eakBfuZwLmwqW01g0bum651MfPe2LKcLNU2BjIuA
+         f7I5M25O6Jw3M5baTjk2s0LCBvRK+2OWW8s5q1JDgAgquPOS6Jnqh1CFEJNK/Ps9O6pp
+         2OFEuhsUvMx8qDBPSnAQdREYzaent9jkGEBN0Tos/woqQEG6OOu5IcUy+It+TnElCMhn
+         t0Ou6mfHXOjrML+8DQWxTmHIJod7WRErl0X/mDi/NKO2f4YMms1xnVOxM6WZ8yJhpUyJ
+         zC3LqfrOn8qqKo2XshPHsLYtcCCvmOuQoerdzkxn4nYizqFt/rNStrOUe4PhD/N2VzFC
+         /+HQ==
+X-Gm-Message-State: AFqh2koHPGVgkVdOy2EwNhiWmdUL1Xva8x28vNYegQmWNFOpaOREcjxN
+        9H600DQ20fGs81IhC4kFrqs+jHiSgWb+FH2uSPXVu40rJ4O8
+X-Google-Smtp-Source: AMrXdXuozUlqSWHDOAO0yfa4cKVIsQ+lkXBtEtXo76WRlFEP0Wb+ediaphFRjZIocZ4NTvwt+IWxb0USvCoWS18iAXPsUO8mwnXv
 MIME-Version: 1.0
-References: <CAJ9a7ViGE3UJX02oA42A9TSTKsOozPzdHjyL+OSP4J-9dZFqrg@mail.gmail.com>
- <Y7hZccgOiueB31a+@kernel.org> <Y7hgKMDGzQlankL1@kernel.org>
- <Y7hgoVKBoulCbA4l@kernel.org> <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
- <Y7wuz6EOggZ8Wysb@kernel.org> <Y7xYimp0h4YT72/N@krava> <CAP-5=fXwO5_kK=pMV09jdAVw386CB0JwArD0BZd=B=xCyWSP1g@mail.gmail.com>
- <CAP-5=fVa51_URGsdDFVTzpyGmdDRj_Dj2EKPuDHNQ0BYgMSzUA@mail.gmail.com>
- <Y712sCnYBJobe2eY@kernel.org> <Y716Nt3c/Lc0Z4P5@kernel.org>
-In-Reply-To: <Y716Nt3c/Lc0Z4P5@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 10 Jan 2023 12:00:13 -0800
-Message-ID: <CAP-5=fV4wqgpazr0LpUzdPQ3RsKLNs8SXKttyBwvq2dhe9kPCw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org
+X-Received: by 2002:a05:6638:3f18:b0:38d:30a7:2ae0 with SMTP id
+ ck24-20020a0566383f1800b0038d30a72ae0mr6851113jab.234.1673383848565; Tue, 10
+ Jan 2023 12:50:48 -0800 (PST)
+Date:   Tue, 10 Jan 2023 12:50:48 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dde02b05f1ef09a4@google.com>
+Subject: [syzbot] WARNING: locking bug in __perf_event_task_sched_in (2)
+From:   syzbot <syzbot+d94d214ea473e218fc89@syzkaller.appspotmail.com>
+To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        bpf@vger.kernel.org, jolsa@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        netdev@vger.kernel.org, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 6:46 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Jan 10, 2023 at 11:31:12AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Mon, Jan 09, 2023 at 11:29:51AM -0800, Ian Rogers escreveu:
-> > > On Mon, Jan 9, 2023 at 10:37 AM Ian Rogers <irogers@google.com> wrote:
-> > > > -int libbpf_register_prog_handler(const char *sec __maybe_unused,
-> > > > -                                 enum bpf_prog_type prog_type __maybe_unused,
-> > > > -                                 enum bpf_attach_type exp_attach_type
-> > > > __maybe_unused,
-> > > > -                                 const struct
-> > > > libbpf_prog_handler_opts *opts __maybe_unused)
-> > > > +static int libbpf_register_prog_handler(const char *sec __maybe_unused,
-> > > > +                                       enum bpf_prog_type prog_type
-> > > > __maybe_unused,
-> > > > +                                       enum bpf_attach_type
-> > > > exp_attach_type __maybe_unused,
-> > > > +                                       const void *opts __maybe_unused)
-> > > > {
-> > > >        pr_err("%s: not support, update libbpf\n", __func__);
-> > > >        return -ENOTSUP;
-> > > > ```
-> > > >
-> > > > There are some other fixes necessary too. I'll try to write the fuller
-> > > > patch but I have no means for testing except for undefining
-> > > > HAVE_LIBBPF_BPF_PROGRAM__SET_INSNS.
-> > >
-> > > So libbpf_prog_handler_opts is missing in the failing build, this
-> > > points to a libbpf before 0.8. I'm somewhat concerned that to work
-> > > around these linkage problems we're adding runtime errors - we may
-> > > build but the functionality is totally crippled. Is it worth
-> > > maintaining these broken builds or to just upfront fail the feature
-> > > test?
->
-> > Probably better to make the feature test disable bpf support while
-> > emitting a warning that features such as a, b, and c won't we available.
->
-> This would be the one-liner I think is appropriate for v6.2, ok?
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 9962ae23ab8c5868..5b87846759036f6f 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -589,6 +589,8 @@ ifndef NO_LIBELF
->            $(call feature_check,libbpf-bpf_program__set_insns)
->            ifeq ($(feature-libbpf-bpf_program__set_insns), 1)
->              CFLAGS += -DHAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
-> +          else
-> +            dummy := $(error Error: libbpf devel library needs to be >= 0.8.0 to build with LIBBPF_DYNAMIC, update or build statically with the version that comes with the kernel sources);
+Hello,
 
-It is ok. The intent/result should be the same as:
-https://lore.kernel.org/lkml/20230109203424.1157561-2-irogers@google.com/
-but it doesn't change a file outside of tools/perf. I think the change
-above would be preferable for 6.3.
+syzbot found the following issue on:
 
-Thanks,
-Ian
+HEAD commit:    6d0c4b11e743 libbpf: Poison strlcpy()
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17764f3a480000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=46221e8203c7aca6
+dashboard link: https://syzkaller.appspot.com/bug?extid=d94d214ea473e218fc89
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
 
->            endif
->            $(call feature_check,libbpf-btf__raw_data)
->            ifeq ($(feature-libbpf-btf__raw_data), 1)
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/83567aa48724/disk-6d0c4b11.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6047fdb8660e/vmlinux-6d0c4b11.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/a94d1047d7b7/bzImage-6d0c4b11.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d94d214ea473e218fc89@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 1 PID: 6975 at kernel/locking/lockdep.c:231 hlock_class kernel/locking/lockdep.c:231 [inline]
+WARNING: CPU: 1 PID: 6975 at kernel/locking/lockdep.c:231 hlock_class kernel/locking/lockdep.c:220 [inline]
+WARNING: CPU: 1 PID: 6975 at kernel/locking/lockdep.c:231 check_wait_context kernel/locking/lockdep.c:4754 [inline]
+WARNING: CPU: 1 PID: 6975 at kernel/locking/lockdep.c:231 __lock_acquire+0xecf/0x56d0 kernel/locking/lockdep.c:5005
+Modules linked in:
+CPU: 1 PID: 6975 Comm: kworker/u4:13 Not tainted 6.2.0-rc2-syzkaller-00302-g6d0c4b11e743 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/26/2022
+Workqueue: netns cleanup_net
+RIP: 0010:hlock_class kernel/locking/lockdep.c:231 [inline]
+RIP: 0010:hlock_class kernel/locking/lockdep.c:220 [inline]
+RIP: 0010:check_wait_context kernel/locking/lockdep.c:4754 [inline]
+RIP: 0010:__lock_acquire+0xecf/0x56d0 kernel/locking/lockdep.c:5005
+Code: 28 14 73 8e e8 02 bb 6b 00 8b 05 94 78 0f 0d 85 c0 0f 85 79 f8 ff ff 48 c7 c6 40 51 4c 8a 48 c7 c7 a0 4a 4c 8a e8 51 d6 5b 08 <0f> 0b 31 c0 e9 73 f7 ff ff 48 63 5c 24 18 be 08 00 00 00 48 89 d8
+RSP: 0018:ffffc900035ef518 EFLAGS: 00010082
+RAX: 0000000000000000 RBX: 000000000000070e RCX: 0000000000000000
+RDX: ffff888079031d40 RSI: ffffffff8166724c RDI: fffff520006bde95
+RBP: 0000000000000003 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000080000002 R11: 0000000000000001 R12: 0000000000000003
+R13: ffff888079031d40 R14: ffff888079032778 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffc92edd748 CR3: 0000000044fa3000 CR4: 00000000003506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ lock_acquire kernel/locking/lockdep.c:5668 [inline]
+ lock_acquire+0x1e3/0x630 kernel/locking/lockdep.c:5633
+ rcu_lock_acquire include/linux/rcupdate.h:325 [inline]
+ rcu_read_lock include/linux/rcupdate.h:764 [inline]
+ perf_event_context_sched_in kernel/events/core.c:3913 [inline]
+ __perf_event_task_sched_in+0xe2/0x6c0 kernel/events/core.c:3980
+ perf_event_task_sched_in include/linux/perf_event.h:1328 [inline]
+ finish_task_switch.isra.0+0x5e5/0xc80 kernel/sched/core.c:5118
+ context_switch kernel/sched/core.c:5247 [inline]
+ __schedule+0xb92/0x5450 kernel/sched/core.c:6555
+ schedule+0xde/0x1b0 kernel/sched/core.c:6631
+ schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:6690
+ __mutex_lock_common kernel/locking/mutex.c:679 [inline]
+ __mutex_lock+0xa48/0x1360 kernel/locking/mutex.c:747
+ devl_lock net/devlink/core.c:54 [inline]
+ devlink_pernet_pre_exit+0x10a/0x220 net/devlink/core.c:301
+ ops_pre_exit_list net/core/net_namespace.c:159 [inline]
+ cleanup_net+0x455/0xb10 net/core/net_namespace.c:594
+ process_one_work+0x9bf/0x1710 kernel/workqueue.c:2289
+ worker_thread+0x669/0x1090 kernel/workqueue.c:2436
+ kthread+0x2e8/0x3a0 kernel/kthread.c:376
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:308
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
