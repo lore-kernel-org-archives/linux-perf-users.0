@@ -2,101 +2,195 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509D6C54EBE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 06:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A3FC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 06:36:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjAJG3T (ORCPT
+        id S229702AbjAJGgB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 01:29:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50404 "EHLO
+        Tue, 10 Jan 2023 01:36:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbjAJG3S (ORCPT
+        with ESMTP id S229662AbjAJGgA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 01:29:18 -0500
-Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7400F395D1;
-        Mon,  9 Jan 2023 22:29:17 -0800 (PST)
-Message-ID: <5e8cc542-763b-9db2-55e4-fb59920bc145@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1673332155;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8r5fNA8nobsSLbYvyb9u+9ODco9RBnJ4ampTJzFDYfg=;
-        b=JHAgrk/sFWXz8USqHZlbwdzL46r9Wd9A6x2MF7OL1T7YTsYT+8LdCAJ3NajtXxkvnm86Et
-        jr9ZrWp18QEwhRVPxVQQButU0Jnnse1XSI5W/fibYryQHlmQ2fyTyB/FeRMvFBUP9MLjY6
-        fTN71sWVP1dkLd2k91S4Q+uZPY7cPlo=
-Date:   Mon, 9 Jan 2023 22:29:11 -0800
+        Tue, 10 Jan 2023 01:36:00 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B9D6473;
+        Mon,  9 Jan 2023 22:35:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673332559; x=1704868559;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=AB1yk/QpDBPqMLxhjhl2HEk7CNQI6GOPIbl9A+smsbU=;
+  b=bsHBHi5Uq7w24U++wIeZXHR+UrqT3/LKzrMKFfIUJ6zPY2I4/NbUTFZ/
+   bupm4B2g3NaL9ApnyOYReAShSbodsg8qJrDctKJC6LqrkGoPrIHdEQLcy
+   mRV+o8kYAkwy8ldHilVnFON72d5WddvB+0eAUKzNpnRFJGMLdFaykGn0z
+   u+d8aYeZFUmlDQZrShMhNGBzBAhQtEfLOErKmX1Z6AbB+Eq2Wdt7xcbyF
+   ZdjXu7AQrsl1lBi9oxeh4nuMEp9R5+/mGSoVt3yP+CUVEWyz2hU8gBggI
+   H6pqCnxfBsuFCRgGtoBOXyJ0fJYmiIazrZsAG7HvPnjCyiHx+Gm89bDUq
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="321774901"
+X-IronPort-AV: E=Sophos;i="5.96,314,1665471600"; 
+   d="scan'208";a="321774901"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 22:35:58 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10585"; a="780963138"
+X-IronPort-AV: E=Sophos;i="5.96,314,1665471600"; 
+   d="scan'208";a="780963138"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.221.1])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 22:35:52 -0800
+Message-ID: <86f43058-a51a-42c7-4d75-564f0e8eef04@intel.com>
+Date:   Tue, 10 Jan 2023 08:35:48 +0200
 MIME-Version: 1.0
-Subject: Re: [PATCH] perf lock contention: Do not use BPF task local storage
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.1
+Subject: Re: [RFC 0/4] perf tool: Fix non-".text" symbol resolution for kernel
+ modules
+To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        kan.liang@linux.intel.com, peterz@infradead.org,
+        mark.rutland@arm.com, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, james.clark@arm.com,
+        german.gomez@arm.com, leo.yan@linaro.org,
+        alexey.v.bayduraev@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com
+References: <20230110055859.685-1-ravi.bangoria@amd.com>
 Content-Language: en-US
-To:     Hou Tao <houtao1@huawei.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        bpf@vger.kernel.org, Blake Jones <blakejones@google.com>,
-        Chris Li <chriscli@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20221118190109.1512674-1-namhyung@kernel.org>
- <dea8c3c5-0739-58c1-9a88-b989878a9b8f@linux.dev>
- <CAM9d7cjk_7-ALzW1kT961TRLpO9Wt8gNX7+rH4ay4N92g1TYkg@mail.gmail.com>
- <7ec772fb-2108-5945-a308-4bb46fcf0090@linux.dev>
- <6e4ec7a4-9ac9-417c-c11a-de59e72a6e42@huawei.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <6e4ec7a4-9ac9-417c-c11a-de59e72a6e42@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230110055859.685-1-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 1/9/23 7:29 PM, Hou Tao wrote:
-> Hi Martin,
-> 
-> On 1/10/2023 5:22 AM, Martin KaFai Lau wrote:
->> On 1/9/23 12:56 PM, Namhyung Kim wrote:
->>> Hello,
->>>
->>> On Mon, Nov 21, 2022 at 9:33 AM Martin KaFai Lau <martin.lau@linux.dev> wrote:
->>>>
->>>> On 11/18/22 11:01 AM, Namhyung Kim wrote:
->>>>> We could fix the task local storage to use the safe BPF allocator,
->>>>> but it takes time so let's change this until it happens actually.
->>>>
->>>> I also got another report on the kfree_rcu path.  I am also looking into this
->>>> direction on using the BPF allocator.
->>>
->>> Any progress on this?  Are there any concerns about the change?
->>
->> Yep, I am working on it. It is not a direct replacement from kzalloc to
->> bpf_mem_cache_alloc. eg. Some changes in the bpf mem allocator is needed to
->> ensure the free list cannot be reused before the rcu grace period. There is a
->> similar RFC patchset going into this direction that I am trying with.
->>
->> .
-> Do you mean "[RFC PATCH bpf-next 0/6] bpf: Handle reuse in bpf memory alloc"
-> [0], right ? 
-Yes, that is the RFC patch I was referring :). I was planning to comment after 
-looking at the patch in details. I have shared some of my quick thoughts in that 
-thread for the local storage usages.
+On 10/01/23 07:58, Ravi Bangoria wrote:
+> Kernel module elf contains executable code in non-".text" sections as
+> well, for ex: ".noinstr.text". Plus, kernel module's memory layout
+> differs from it's binary layout because .ko elf does not contain
+> program header table.
 
-> The main concern [1] for the proposal is the possibility of OOM
-> will increase when RCU tasks trace grace period is slow, because the immediate
-> reuse is disabled and the reuse is only possible after one RCU tasks trace grace
-> period. Using a memory cgroup and setting a hard-limit on the cgroup may reduce
-> the influence of the OOM problem, but it is not good enough. So do you have
-> other ways to mitigate the potential OOM problem ?
+Have you looked at using perf record --kcore option.
+
 > 
-> [0]: https://lore.kernel.org/bpf/20221230041151.1231169-1-houtao@huaweicloud.com/
-> [1]:
-> https://lore.kernel.org/bpf/CAADnVQ+z-Y6Yv2i-icAUy=Uyh9yiN4S1AOrLd=K8mu32TXORkw@mail.gmail.com/
+> Perf tries to solve it by creating special maps for allocated (SHF_ALLOC)
+> elf sections, but perf uses elf addresses for map address range and thus
+> these special maps remains unused because no real ip falls into their
+> address range.
+> 
+> Solve this by preparing section specific special maps using addresses
+> provided by sysfs /sys/module/.../sections/. Also save these details in
+> PERF_RECORD_KMOD_SEC_MAP format in perf.data which can be consumed at
+> perf-report time.
+> 
+> Without patchset:
+> 
+>   # perf record -a -c 5000000
+>   # perf report
+>   Overhead  Command          Shared Object           Symbol
+>     13.20%  qemu-system-x86  [unknown]               [.] 0x00005557527b1973
+>      6.58%  qemu-system-x86  [kvm_amd]               [k] 0x00000000000151e6
+>      6.36%  qemu-system-x86  [kernel.vmlinux]        [k] native_load_gdt
+>      6.21%  qemu-system-x86  [kernel.vmlinux]        [k] native_load_tr_desc
+>      4.71%  qemu-system-x86  [kvm]                   [k] vcpu_run
+>      4.52%  qemu-system-x86  [kvm_amd]               [k] svm_vcpu_run
+>      3.50%  qemu-system-x86  [kvm]                   [k] kvm_cpuid
+>      2.09%  qemu-system-x86  [kvm]                   [k] kvm_pmu_trigger_event
+>      1.98%  qemu-system-x86  [kvm_amd]               [k] 0x0000000000015171
+>      1.05%  qemu-system-x86  [kvm_amd]               [k] svm_handle_exit
+>      1.04%  qemu-system-x86  [kvm_amd]               [k] 0x00000000000151e2
+>      0.94%  qemu-system-x86  [kvm_amd]               [k] 0x0000000000015174
+> 
+>   Same perf.data with kallsyms:
+> 
+>   # perf report --kallsyms=/proc/kallsyms
+>   Overhead  Command          Shared Object           Symbol
+>     14.22%  qemu-system-x86  [kvm_amd]               [k] __svm_vcpu_run
+>     13.20%  qemu-system-x86  [unknown]               [.] 0x00005557527b1973
+>      6.36%  qemu-system-x86  [kernel.vmlinux]        [k] native_load_gdt
+>      6.21%  qemu-system-x86  [kernel.vmlinux]        [k] native_load_tr_desc
+>      4.71%  qemu-system-x86  [kvm]                   [k] vcpu_run
+>      4.52%  qemu-system-x86  [kvm_amd]               [k] svm_vcpu_run
+>      3.50%  qemu-system-x86  [kvm]                   [k] kvm_cpuid
+>      2.09%  qemu-system-x86  [kvm]                   [k] kvm_pmu_trigger_event
+>      1.05%  qemu-system-x86  [kvm_amd]               [k] svm_handle_exit
+> 
+> With patchset:
+> 
+>   # perf record -a -c 5000000
+>   # perf report
+>   Overhead  Command          Shared Object           Symbol
+>     13.44%  qemu-system-x86  [kvm-amd].noinstr.text  [k] __svm_vcpu_run
+>     13.25%  qemu-system-x86  [unknown]               [.] 0x000055f4c6563973
+>      7.13%  qemu-system-x86  [kernel.vmlinux]        [k] native_load_gdt
+>      6.00%  qemu-system-x86  [kernel.vmlinux]        [k] native_load_tr_desc
+>      5.13%  qemu-system-x86  [kvm_amd]               [k] svm_vcpu_run
+>      4.83%  qemu-system-x86  [kvm]                   [k] vcpu_run
+>      3.65%  qemu-system-x86  [kvm]                   [k] kvm_cpuid
+> 
+>   Same perf.data with kallsyms:
+> 
+>   # perf report --kallsyms=/proc/kallsyms
+>   Overhead  Command          Shared Object       Symbol
+>     13.44%  qemu-system-x86  [kernel.vmlinux]    [k] __svm_vcpu_run
+>     13.25%  qemu-system-x86  [unknown]           [.] 0x000055f4c6563973
+>      7.13%  qemu-system-x86  [kernel.vmlinux]    [k] native_load_gdt
+>      6.00%  qemu-system-x86  [kernel.vmlinux]    [k] native_load_tr_desc
+>      5.13%  qemu-system-x86  [kernel.vmlinux]    [k] svm_vcpu_run
+>      4.83%  qemu-system-x86  [kernel.vmlinux]    [k] vcpu_run
+>      3.65%  qemu-system-x86  [kernel.vmlinux]    [k] kvm_cpuid
+> 
+> This is an RFC only series. TODOs:
+>  - I'm just recording module path in PERF_RECORD_KMOD_SEC_MAP. It's very
+>    much possible that, at perf report time, a module file exists at the
+>    same path but it's internal layout is different. I think I need to add
+>    some buildid check. Any ideas?
+>  - I've enabled host perf-record/report only. It doesn't work for guest
+>    modules because host does not have access to guest sysfs. I'm yet to
+>    figure out how to fix it. May be we can add --guest-mod-sysfs option.
+>    Any ideas?
+>  - Also, I'm currently assuming that module files are not compressed.
+>  - I've seen perf build failures when compiling with NO_LIBELF=1.
+>  - I've seen perf report not honoring --kallsyms in certain conditions.
+> 
+> Prepared on top of acme/perf/core (69b41ac87e4a6)
+> 
+> Ravi Bangoria (4):
+>   perf tool: Simplify machine__create_modules() a bit
+>   perf tool: Refactor perf_event__synthesize_modules()
+>   perf tool: Introduce PERF_RECORD_KMOD_SEC_MAP
+>   perf tool: Fix non-".text" symbol resolution for kernel modules
+> 
+>  tools/lib/perf/Documentation/libperf.txt |   1 +
+>  tools/lib/perf/include/perf/event.h      |  25 +++
+>  tools/perf/builtin-annotate.c            |   1 +
+>  tools/perf/builtin-c2c.c                 |   1 +
+>  tools/perf/builtin-diff.c                |   1 +
+>  tools/perf/builtin-inject.c              |   1 +
+>  tools/perf/builtin-kmem.c                |   1 +
+>  tools/perf/builtin-mem.c                 |   1 +
+>  tools/perf/builtin-record.c              |  14 ++
+>  tools/perf/builtin-report.c              |   1 +
+>  tools/perf/builtin-script.c              |  13 ++
+>  tools/perf/builtin-trace.c               |   1 +
+>  tools/perf/util/build-id.c               |   1 +
+>  tools/perf/util/data-convert-bt.c        |   1 +
+>  tools/perf/util/data-convert-json.c      |   1 +
+>  tools/perf/util/event.c                  |  22 ++
+>  tools/perf/util/event.h                  |   5 +
+>  tools/perf/util/machine.c                | 268 ++++++++++++++++++++++-
+>  tools/perf/util/machine.h                |   2 +
+>  tools/perf/util/map.c                    |   1 +
+>  tools/perf/util/map.h                    |   4 +
+>  tools/perf/util/session.c                |  17 ++
+>  tools/perf/util/symbol-elf.c             |   9 +-
+>  tools/perf/util/symbol.c                 |   2 +-
+>  tools/perf/util/synthetic-events.c       | 136 +++++++++---
+>  tools/perf/util/tool.h                   |   3 +-
+>  26 files changed, 494 insertions(+), 39 deletions(-)
+> 
 
