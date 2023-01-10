@@ -2,130 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFF8C5479D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 01:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AD5C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 01:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjAJBc1 (ORCPT
+        id S229600AbjAJBpT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Jan 2023 20:32:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53756 "EHLO
+        Mon, 9 Jan 2023 20:45:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229747AbjAJBc1 (ORCPT
+        with ESMTP id S229573AbjAJBpT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Jan 2023 20:32:27 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F66395E3
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 17:32:26 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id w1so10206545wrt.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 17:32:26 -0800 (PST)
+        Mon, 9 Jan 2023 20:45:19 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D82195
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Jan 2023 17:45:18 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id o1-20020a17090a678100b00219cf69e5f0so14799205pjj.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Jan 2023 17:45:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p/irkPyPqsOvnRRDM/kAEyni1c1VXZytg7cWRDKGSqY=;
-        b=lJ683lm9xtHxsYycpHd/y8kUD9K9bvznIJrKSlAkJoki6kr/lQfzbqA6bd3AqtErEj
-         RLMCmtzqqa3ob2Nqlqr+6xL8XP+n+kx6Bg3tPCtIVeXLdAhgzcYjI6IsWJAiPtC5Jwkb
-         eob6DrvEcYG7JKyfIGgEoAKgtROudlHeyMyU3hzbfxgrV1uIeTH+BlWMRK7f4KJ8WxJN
-         H4w642SP7xqLSk25B4Xf2J9PfGfQavJeMnQ94G6AaMx1ehJsw+2TtZLaerrvclqqPw6V
-         +OylBY8sUtRuEQSZJ3QlTxGYt9ewQ9rc8VGqvN57NGQVJJkucyyuO11SyC7JkUsUJMuZ
-         a/fw==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=drQcN15jA9pCSZSjt4qzMvYyUPllGCNymcmpFqlpOWU=;
+        b=OsmyZtaBm9t84mXKy0SMMBIOeY51LPl623bAGY3fyEkQSwdm7pJEqRsgiJTRjnnPOh
+         2ZJ/BAeQQxb5dSY1ZpYlJ/kFq4xMCNxah8ouM1L8xgMT4wIQj2dUEqIf8SqG8uFpgcYt
+         moVZUk+YJ7ClvTkYdMn5ftVpxqW5kqdZbKaUAmDl8EJ36ECt0gUfIUzgqPzYdydOWVeF
+         DoZ5uQKkuDeqhl0buonNmY2mHSjFe7LzV+MauszDd9XLM8MgzB/3fXLRWKnzkoI2aeYA
+         P2QwDo5oHQepa/THerf1wxDw6Ij6n9Huc7LCEQZ5RYpWSiy7WvoOXoiGJmIkUtNpc3ex
+         5kbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p/irkPyPqsOvnRRDM/kAEyni1c1VXZytg7cWRDKGSqY=;
-        b=CeF6fJNgBr/P1Clg101TCypBmuJ4X1DVGhtWJGmJcjXJcKaXvv6f0tJjfy6StE6p5F
-         r2fjH2S4JpHGMW8HY9ycFtsp4x0RDDZyj8K39dthqdnEb7UNwy34uXSM3mTergIa0IMy
-         c0BG6Ox3HRPuRlHKcj7dyROtSgm+Efd3D4EFNcxSUfLREGdN55rAt5WzSkgkC3Fouy/B
-         TIIC9qcH4uL8FAzzjhR6373WOxzGkSMXfPsLcO6dRzYzlLWcjv4Y4PtI1zVubmXNZTWJ
-         fmjEoSodi1Xmy/JN8KVgAHZsB90Xd9xyeJ88Pycwm96Ia0IOpIgfPqyU4ACA18d+ugH0
-         SzLg==
-X-Gm-Message-State: AFqh2kqoC6x+ixZw9fQW7bjA3p22ZRK6Ip5gayfMjhZ0u/TZ/E33jRIV
-        39qsbSSTqzyYZvXig5TwTAWH9ESH8Kg8EcRuBBfn6A==
-X-Google-Smtp-Source: AMrXdXtvO3AMysChhPx+ZQJ9Yjf0H0UD94h+OTnvKo9Ty8ArSjFmCoZpj0fSjhKqYvreY7y/J3R7l7QGxxyWY484yt4=
-X-Received: by 2002:a5d:45d0:0:b0:29c:52c7:3dce with SMTP id
- b16-20020a5d45d0000000b0029c52c73dcemr809166wrs.375.1673314344418; Mon, 09
- Jan 2023 17:32:24 -0800 (PST)
-MIME-Version: 1.0
-References: <CAP-5=fW7La9ZNv8Z6LHRRNXne4+dWK6dR1ye2P=zETFELtK=fg@mail.gmail.com>
- <YY58idSor+lJ84KF@kernel.org> <CAP-5=fUczsXmo4xk2Yi=H6zUhmpixFaz9An=ixKotx=z0GOp0w@mail.gmail.com>
- <f59da80e6b4d053246fec4ef263ae4ca7aa1277f.camel@decadent.org.uk>
- <Ydx+mtl1c7L/bbGJ@kernel.org> <CAP-5=fUzHV765DqcTZpqCKC1Ve1H91tUfoxQE7Z2KcK5yq021A@mail.gmail.com>
- <62af20e156e799350b0281b7769442c4f1d414a3.camel@decadent.org.uk>
-In-Reply-To: <62af20e156e799350b0281b7769442c4f1d414a3.camel@decadent.org.uk>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 9 Jan 2023 17:32:11 -0800
-Message-ID: <CAP-5=fUcc-SmxqgNCnqNAc=adGdzK31eQtv8XKQLt8v4EtLguQ@mail.gmail.com>
-Subject: Re: Getting the latest and greatest Linux perf features on every
- Debian kernel
-To:     Ben Hutchings <ben@decadent.org.uk>
-Cc:     debian-kernel@lists.debian.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        waldi@debian.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=drQcN15jA9pCSZSjt4qzMvYyUPllGCNymcmpFqlpOWU=;
+        b=a+0P8EDZyV+2WqFHM5FEmw4R9L58PpppPpobMllOdcLN93qnRGmp7qCYg96nLiwH1X
+         4pl6rEOv/WR1h4LCAWdzCCQ2Lsm5P0kqEQAmED2Vq0xu+e2o96Q1rg3XNI8sCQsgTJr0
+         833Vh3zGSCVeZpbcjbM3qXWPj00zZHN7B4sjsFJ0Om5yJp8X9pSaW3vVE7bnBUQd5dBe
+         mkOVQTBq67WFcOzbzUD4nD+o+t4NtzMVwyMsOna5rQ7nsuLJ+4PCNC4zFfVpMLgCnKQx
+         /KJNRH4ChYVcw5IRc6z2ZVC1aD9XYwBEwH0W8sULdli5MFRBtDpZc5DwWJxaQiboYjHd
+         xCZA==
+X-Gm-Message-State: AFqh2kpdGB0rgs3j1EN60i9keYMu/EyNKZltEBZP4C79y7OevrOv61q+
+        E0qmMB28lwvcqMrDWw2gdAQJPQ==
+X-Google-Smtp-Source: AMrXdXuTX+q+bW/i9WBa80Mwm7w6MPhe2XnTu2YVzKgz1hvOTH6uBJ3UX7fE+0DPJUSjdDnFigkZWA==
+X-Received: by 2002:a17:903:26cf:b0:193:236:3a2b with SMTP id jg15-20020a17090326cf00b0019302363a2bmr16154130plb.3.1673315117422;
+        Mon, 09 Jan 2023 17:45:17 -0800 (PST)
+Received: from leoy-yangtze.lan (211-23-48-221.hinet-ip.hinet.net. [211.23.48.221])
+        by smtp.gmail.com with ESMTPSA id j14-20020a170903024e00b0019101215f63sm6797214plh.93.2023.01.09.17.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 17:45:16 -0800 (PST)
+Date:   Tue, 10 Jan 2023 09:45:11 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf kmem: Support legacy tracepoints
+Message-ID: <Y7zC5imskN9tvtBn@leoy-yangtze.lan>
+References: <20230108062400.250690-1-leo.yan@linaro.org>
+ <14dd06c2-39f8-ccb5-ce59-f3a1e45c94d0@arm.com>
+ <Y7w03A7f2zUWwihm@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y7w03A7f2zUWwihm@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Dec 26, 2022 at 11:15 AM Ben Hutchings <ben@decadent.org.uk> wrote:
->
-> On Thu, 2022-12-22 at 17:43 -0800, Ian Rogers wrote:
-> [...]
-> > I had a few things to ask wrt this thread and getting the best
-> > possible Debian experience:
-> >  - in Linux 6.2 the libtraceevent will need to become an external
-> > library dependency
->
-> This shouldn't be a problem; it's already packaged separately in Debian
-> and we can build-depend on that.
->
-> >  - are there issues with debuginfod/zstd enablement? libbfd has
-> > licensing issues. libcrypto is only used by the JIT support, but still
-> > may be nice to enable.
->
-> - debuginfod is licensed under GPLv3+, so has the same issue as libbfd
-> - libzstd is licensed under GPLv2 (with most of its code also
-> permissively licensed)
-> - libcrypto is now licensed under Apache 2.0, which is not compatible
-> with GPLv2
->
-> So I think only libzstd can be enabled in official packages.
->
-> [...]
-> >  - are there some residual wrapper artifacts in the package, for example:
-> > ```
-> > $ dpkg -L linux-perf
-> > /.
-> > /usr
-> > /usr/bin
-> > /usr/bin/perf
-> > package diverts others to: /usr/bin/perf.wrapper
-> > ...
-> > package diverts others to: /usr/share/bash-completion/completions/perf.wrapper
-> > ...
-> > package diverts others to: /usr/share/man/man1/perf.wrapper.1.gz
-> > ...
-> > ```
-> [...]
->
-> These diversions are present to avoid conflicts with the wrappers in
-> older versions of linux-base.  We can remove them after the next stable
-> release.
->
-> Ben.
+On Mon, Jan 09, 2023 at 12:38:04PM -0300, Arnaldo Carvalho de Melo wrote:
 
-Thanks again Ben! With the releases, the plan is to follow the kernel
-releases? We could potentially be more aggressive with the perf tool
-given its backward compatibility. That would benefit people using
-older kernels who want the latest perf tool bug fixes and features.
+[...]
 
-Ian
+> > > +	const char * const slab_legacy_events[] = {
+> > > +	"-e", "kmem:kmalloc_node",
+> > > +	"-e", "kmem:kmem_cache_alloc_node",
+> > > +	};
+> > 
+> > Reviewed-by: James Clark <james.clark@arm.com>
+> > 
+> > This fixes the error with mem:kmalloc_node for me.
 
-> --
-> Ben Hutchings
-> Klipstein's 4th Law of Prototyping and Production:
->                                A fail-safe circuit will destroy others.
+Thanks for reviewing and testing!
+
+> > I was thinking that it might be best to add all events to the list
+> > conditionally instead of just the legacy ones. That way, the same error
+> > won't happen in the future. But maybe it's best to have an explicit
+> > error again in case the breaking change was unintentional so it's fine
+> > as it is I think.
+
+Yeah, this is a good idea for refactoring.
+
+James, do you mind to send patches for this?
+
+> Just applied this, the changes you brains stormed may come as later
+> patches, thanks,
+
+Thanks, Arnaldo.
+
+Leo
