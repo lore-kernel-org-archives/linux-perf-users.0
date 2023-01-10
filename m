@@ -2,146 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48EAC54EBE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 12:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B75BC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 13:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232694AbjAJMfK (ORCPT
+        id S231796AbjAJNfm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 07:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
+        Tue, 10 Jan 2023 08:35:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238424AbjAJMfI (ORCPT
+        with ESMTP id S238608AbjAJNf0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 07:35:08 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147B941D79;
-        Tue, 10 Jan 2023 04:35:02 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id j16-20020a05600c1c1000b003d9ef8c274bso5409203wms.0;
-        Tue, 10 Jan 2023 04:35:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D3kfVuRltfmokWb+udv2UTvIYgnmu2+AHSzhy59xvOg=;
-        b=WMpCisVdoh//jn01v4b5AZrbIa++kWkYBVOUcikGNXG4V1vyqYe4AaRYHaSm+7txLm
-         1i7CfV8rHcB6resCTAGq4+3Yda0pU4acPDhaGDMiZ3PkiFFDp1Uixjg2AueIapUCPFM2
-         6Ap5mZNSV03dZTGHgtZtM3/cFaOmlSGWgWbZ6zadgSGFb0SO78AUhgKDoq+rRhYIqmOe
-         VA8mCuh5kZUueMiaUfD162kBCNqoiMfY9DEZfB8E3JCggLfe+9tYlVOofj0a3ZJaicr6
-         phmZGjm/4WPFCXJ/TxviwQGrBQMvrkdTOIkG2v0oECWiTemcTz4AH+KKEBdjZqbUVu9k
-         cZ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D3kfVuRltfmokWb+udv2UTvIYgnmu2+AHSzhy59xvOg=;
-        b=3iQqgUUt91Ouu+xIBULDZwCpwOm+ojlwuAZdh9kFgLXobdICx0geHtkPCfMzAQNSsI
-         Yb35x5Psr3nj09Rse8HpG42mqJTcQGAqRtnEgBJcmXffxu3t3vaQHFl2cJQ6+MSvSiWh
-         xq+4sh3f5Yv/bNhyq5feF1jdyfLO7RcejDPCXqS/kwNwT6xE370bGiMF8YUbJCDDkBcY
-         ti2Jwbs/QzpEoQ6/bSAZN4Oq0jvHHCr8a5pQELMlkFUlF/N87x3sRjRBZC1CtC4xOGDV
-         wKarpnYR6svrulaOTMuKYClHRHUJR1IUPWtDqSd9EetbXegRWiMRo+9sbKsjatombQOS
-         OWmg==
-X-Gm-Message-State: AFqh2kru2nSXSbN8DL9BXA8pF0B2sO3E0xbRAWWYwwwRsejIGecpUcOY
-        n0xURlP6xEMhhpzy9eKMF78=
-X-Google-Smtp-Source: AMrXdXsaxy8avAuuMof4qv+my4xLbaIUaS2ej/Po9lIOSSaGNjEiYfkexu8Olg7eG2rRufmWuR32UA==
-X-Received: by 2002:a05:600c:4e04:b0:3d2:381f:2db5 with SMTP id b4-20020a05600c4e0400b003d2381f2db5mr47969230wmq.22.1673354100432;
-        Tue, 10 Jan 2023 04:35:00 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id p9-20020a05600c358900b003cffd3c3d6csm16143437wmq.12.2023.01.10.04.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 04:34:59 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 10 Jan 2023 13:34:56 +0100
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH v1 0/3] Assume libbpf 1.0 in build
-Message-ID: <Y71bcMYQ26eroc2W@krava>
-References: <20230109203424.1157561-1-irogers@google.com>
+        Tue, 10 Jan 2023 08:35:26 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F845A89C;
+        Tue, 10 Jan 2023 05:35:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E1AF3B81662;
+        Tue, 10 Jan 2023 13:35:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78C4DC433F1;
+        Tue, 10 Jan 2023 13:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673357721;
+        bh=tulrPFJM/ETZv6f0hflSo/kFA5Xwm+nKDldQCfULQvA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c0t07xChFq6u9hvIhMUWdWsRHiBoJkhcsi02AfYkV4d3Gz1V946LKhAt4pNU0YncH
+         J7PrHG1t6Vyp88rLe55LW86lJB3dIEnnXXD8tRodrrP7YYBvfsAiHkf542eDVytk3W
+         v5CN0RzVH8I+8jG/TaGuTH/eQjgFVmvQw8EqG+5+gVasjlbzasUUnaZmKEfK4/2rLh
+         f8Y0HibH09L4XIyfFHJmgMNS2lYAIYOt0E481UdGGvuM1/F7htHa8+gQT12yZCIh2j
+         zrrLIUhi2LUlUVkGMHfcqlvqJB6VckvawkFQdt5m9qk/wyCHhMnPdnci074uN+HhwV
+         W8ZqlclfEDAOg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4CB1340468; Tue, 10 Jan 2023 10:35:19 -0300 (-03)
+Date:   Tue, 10 Jan 2023 10:35:19 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org
+Subject: Re: [PATCH v3 1/2] perf build: Properly guard libbpf includes
+Message-ID: <Y71pl/6yrhIWjYOe@kernel.org>
+References: <Y7hZccgOiueB31a+@kernel.org>
+ <Y7hgKMDGzQlankL1@kernel.org>
+ <Y7hgoVKBoulCbA4l@kernel.org>
+ <CAP-5=fXPPSHvN6VYc=8tzBz4xtKg4Ofa17zV4pAk0ycorXje8w@mail.gmail.com>
+ <Y7wuz6EOggZ8Wysb@kernel.org>
+ <Y7xYimp0h4YT72/N@krava>
+ <CAP-5=fXwO5_kK=pMV09jdAVw386CB0JwArD0BZd=B=xCyWSP1g@mail.gmail.com>
+ <CAP-5=fVa51_URGsdDFVTzpyGmdDRj_Dj2EKPuDHNQ0BYgMSzUA@mail.gmail.com>
+ <CAP-5=fVtMEahrPMJNVOqsZGj-GoTxUnWsdzK7M+9F2+DhG_STQ@mail.gmail.com>
+ <Y71J2WpaMtked02+@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230109203424.1157561-1-irogers@google.com>
+In-Reply-To: <Y71J2WpaMtked02+@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 12:34:21PM -0800, Ian Rogers wrote:
-> libbpf 1.0 was a major change in API. Perf has partially supported
-> older libbpf's but an implementation may be:
-> ..
->        pr_err("%s: not support, update libbpf\n", __func__);
->        return -ENOTSUP;
-> ..
-> 
-> Rather than build a binary that would fail at runtime it is
-> preferrential just to build libbpf statically and link against
-> that. The static version is in the kernel tools tree and newer than
-> 1.0.
-> 
-> These patches change the libbpf test to only pass when at least
-> version 1.0 is installed, then remove the conditional build and
-> feature logic.
-> 
-> The issue is discussed here:
-> https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@google.com/
-> 
-> Ian Rogers (3):
->   tools build: Pass libbpf feature only if libbpf 1.0+
->   perf build: Remove libbpf pre-1.0 feature tests
->   perf bpf: Remove pre libbpf 1.0 conditional logic
-> 
->  tools/build/feature/Makefile                  |  7 --
->  .../feature/test-libbpf-bpf_map_create.c      |  8 ---
->  .../test-libbpf-bpf_object__next_map.c        |  8 ---
->  .../test-libbpf-bpf_object__next_program.c    |  8 ---
->  .../build/feature/test-libbpf-bpf_prog_load.c |  9 ---
->  .../test-libbpf-bpf_program__set_insns.c      |  8 ---
->  .../test-libbpf-btf__load_from_kernel_by_id.c |  8 ---
->  .../build/feature/test-libbpf-btf__raw_data.c |  8 ---
->  tools/build/feature/test-libbpf.c             |  4 ++
->  tools/perf/Makefile.config                    | 37 +----------
->  tools/perf/util/bpf-event.c                   | 66 -------------------
->  tools/perf/util/bpf-loader.c                  | 18 -----
->  tools/perf/util/bpf_counter.c                 | 18 -----
->  13 files changed, 5 insertions(+), 202 deletions(-)
+Em Tue, Jan 10, 2023 at 12:19:53PM +0100, Jiri Olsa escreveu:
+> On Mon, Jan 09, 2023 at 11:34:44AM -0800, Ian Rogers wrote:
+> > Oh, just to note. While failing the feature test is disappointing for
+> > a libbpf that isn't very old, we have the newer libbpf to statically
+> > build in. Developers won't be impacted due to the static route. If you
+> > are a distro maintainer, you should just update your libbpf. So we
+> > could just bump the API assumption to 1.0 as I believe that'd have the
+> > advantage of removing feature tests, workarounds, untested code (like
+> > what broke here), etc.
 
-nice, I like that.. I was able to build perf on fedora
-with (dynamic) and without (static) libbpf 1.0 
+> > What do you think?
+ 
+> yes, seems good.. fedora has libbpf 1.0 already so should not be problem
+> there at least ;-)
 
-I hope supporting allowing dynamic link just with libbpf 1.0
-won't mess up backport world too much.. cc-ing Michael
+So, I already pushed 1/2 to perf/urgent, can I stick an Acked-by: jolsa
+to the second?
 
-other than that looks ok to me
-
-Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
-
-also for the 2 dependency patches
-
-thanks,
-jirka
-
->  delete mode 100644 tools/build/feature/test-libbpf-bpf_map_create.c
->  delete mode 100644 tools/build/feature/test-libbpf-bpf_object__next_map.c
->  delete mode 100644 tools/build/feature/test-libbpf-bpf_object__next_program.c
->  delete mode 100644 tools/build/feature/test-libbpf-bpf_prog_load.c
->  delete mode 100644 tools/build/feature/test-libbpf-bpf_program__set_insns.c
->  delete mode 100644 tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
->  delete mode 100644 tools/build/feature/test-libbpf-btf__raw_data.c
-> 
-> -- 
-> 2.39.0.314.g84b9a713c41-goog
-> 
+- Arnaldo
