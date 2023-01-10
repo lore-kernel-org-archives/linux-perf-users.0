@@ -2,268 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0EFC54EBC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F1FC46467
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232003AbjAJTvl (ORCPT
+        id S233014AbjAJTzb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 14:51:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50206 "EHLO
+        Tue, 10 Jan 2023 14:55:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbjAJTvk (ORCPT
+        with ESMTP id S233719AbjAJTzO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 14:51:40 -0500
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9E712D06
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:51:39 -0800 (PST)
-Received: by mail-vs1-xe2e.google.com with SMTP id s127so13446582vsb.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:51:39 -0800 (PST)
+        Tue, 10 Jan 2023 14:55:14 -0500
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A2A6144D
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:55:12 -0800 (PST)
+Received: by mail-ua1-x930.google.com with SMTP id j14so3117749ual.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:55:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1w2OJoXjBR0B8nOuaK35hGnXkeRm8nK9BoNjuo7/qeg=;
-        b=oFVceod6LlE9oneZeW3yiuCd8rcfhBFXbzQwjOGtCTUcRNytHWcJqRXdmsdOlLRvZJ
-         b0jnBx+bc6+TQbQewhT9blS1jV4nFXnN7KmdwwxPL4z/dHRiGi2wBVmTQjsy5bvdV5Sl
-         /3BXZxFK43N5oJy3nv+kseBAhPkyL31stuqoXI4eXo8em1uQruyyja8N4M1tAeNDQk4K
-         8jJEtXxRpr9ezudb8AlKy9WjXbgJaLSPTirEDIZiSgxg9q2lTeByweUfkKpw7B2qEf3m
-         N9iBlQTgmbkYdaQh/zftGzU/93un9E0YTHcAqIpd9fibTWgp+AxJPWNsB2sc2+NT9Q2P
-         NpWw==
+        bh=sWBEBP027jXHEOv42rUgQvSGJQYUen22iKr19l7Fb5c=;
+        b=ZvDn4oLes/zIvHZnvm9rOYT4nRMF641r1zUUek8ObygdZBRDlKXPXaR3O73c5Z8N5c
+         yTZU8haKKw2Jt9Lu0nZ9R4wxDLJiZKc8zL6SJZelSJ3Mys0++GiEgBPYJVnjdny49Ubz
+         WueFGuXhgejNTzvxG72WVDyXzk+P8OFy+E26WcowRGQpDNirYzuw/jxjTUjPzKdNzODT
+         1IIFTQHLQiOGsAvACd/P1TqMk0IR67cFhcN5QGkcHANIBKYcF6oklKsEGh/toH9rc+hj
+         tx7SGz92SYR751/wWpPsA5k1SXEkz+euWt//srFjU3rruVzzEo0po4rbYqq6gVaq3BtZ
+         COGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1w2OJoXjBR0B8nOuaK35hGnXkeRm8nK9BoNjuo7/qeg=;
-        b=IJtvkSmjnU2sKEZYUV4Lbln4DUrZPiox1Hio+RCwa5AfrEYIaHy7kW8KbKrBrRgpqr
-         wAsT+mgAHvEDJlcTesU+jYap+v/xG9el7P829+RpYHiuozlbkiDXeLtraJLKdqjgyBKk
-         tnZbzpCgbjSlDKx8cN8g/3rfNc07umtUNaVjxciSsFHhKM6eOBd4wphxEnHUOgbzJCGA
-         skNtlcj8L96k12EYm+02v4GRBvbRGcy0YG+S+0mqkazYY9UOyLmfLJ6vNm/P8gt2nS7t
-         uOTYuB1wX1nXGSF5Y6R6teQTulV2o7vbT23eki3lYxBOnr6Ed1qz34oByu2GPpA6rDu7
-         oEfQ==
-X-Gm-Message-State: AFqh2krgE3qHiAo977YeSYQglKcmZM6zwten0fJxJSmlwZFKjvA3gXon
-        8uYBrdRcdwpYkCz+uwFDAx42bJkU4rLE9IolHivGfg==
-X-Google-Smtp-Source: AMrXdXvkkTNbfCzuFJkaX44WWcXa9IfzlAb81ReeBK1G9plH5bFXNcyGY3Z09StM8T8s3K1ugNHVH8gWwzECYkzOa3M=
-X-Received: by 2002:a67:b90e:0:b0:3cb:1128:2b18 with SMTP id
- q14-20020a67b90e000000b003cb11282b18mr6521371vsn.47.1673380298490; Tue, 10
- Jan 2023 11:51:38 -0800 (PST)
+        bh=sWBEBP027jXHEOv42rUgQvSGJQYUen22iKr19l7Fb5c=;
+        b=yz4GdNArixldRdFmojsiXX3U3DMEjbnrbkbhobOfBQ++/9gsgzUePzfthlLnpzxZRe
+         aeYFHpYoErBIxxSrKT0R3qz3/AzAfXl+e+pbUHusDTdjblHx0q1t4DrVjmZmbVywG7sd
+         iBNB54rdGk4OQm4bMCWLxIbTeIL3Et579HvdnVe5d2xaq0f0zc/IU7BcsgX6QPTmDkuz
+         E/YkbBS5sMWWBnc93NHBuNOxR8oOY2e7vHFkiwCPrnndNS2O6OyMf76bofLa/AQ0ahgh
+         S9fAjNa9nEmzYAc4TvaGUz6WHR7MNFN2wGGiSzwZRAqxhCoUZhaiDIRPWfvPPaKHjro7
+         Bz1g==
+X-Gm-Message-State: AFqh2kqthdcHD6dLyCKmxPiGyO4W0kFODs/quyxhr+AmuDXUcUpLo1OT
+        lvIxM/6LG+cWwDazb8OdEOoWfWrUs0mzGp5GwSbgzw==
+X-Google-Smtp-Source: AMrXdXsKJ3C7aDvSUwLwevuHQJ81rHrWDmF5y8Qk9LmQIOGF4k3ZXY44O3j2EAQ2+FM0Kkw8jiVd4jC9tH4xM8gmIWg=
+X-Received: by 2002:ab0:152b:0:b0:418:620e:6794 with SMTP id
+ o40-20020ab0152b000000b00418620e6794mr7714686uae.59.1673380511203; Tue, 10
+ Jan 2023 11:55:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20230105030434.255603-1-irogers@google.com> <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
- <bd4a55a4-8e9c-82bf-92c8-1fa354289dce@redhat.com>
-In-Reply-To: <bd4a55a4-8e9c-82bf-92c8-1fa354289dce@redhat.com>
+References: <20230109223110.1201541-1-irogers@google.com> <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
+ <CAP-5=fXniy80Jpc2Hu=-GF7yDNUNHjs0=B2iqkUkMb6zArPukg@mail.gmail.com> <CAM9d7chS+91Nep8FtsJsOdTvMJ0HhkSD1_Fn70=hWPi7a1JpfQ@mail.gmail.com>
+In-Reply-To: <CAM9d7chS+91Nep8FtsJsOdTvMJ0HhkSD1_Fn70=hWPi7a1JpfQ@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 10 Jan 2023 11:51:26 -0800
-Message-ID: <CAP-5=fX3LaJgft8T+nYV8SHpmoAOYZ9S5-pztKF9j--Um4HKDQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf script flamegraph: Avoid d3-flame-graph package dependency
-To:     Andreas Gerstmayr <agerstmayr@redhat.com>
+Date:   Tue, 10 Jan 2023 11:54:58 -0800
+Message-ID: <CAP-5=fUXoOFueaeSD2D9H+xoH5tKXRHK1164yPSX8_m_Nx_AeQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        996839@bugs.debian.org, Brendan Gregg <brendan@intel.com>,
-        spiermar@gmail.com
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        German Gomez <german.gomez@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 10:02 AM Andreas Gerstmayr
-<agerstmayr@redhat.com> wrote:
+On Tue, Jan 10, 2023 at 11:09 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On 05.01.23 10:24, Ian Rogers wrote:
-> > On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
-> >>
-> >> Currently flame graph generation requires a d3-flame-graph template to
-> >> be installed. Unfortunately this is hard to come by for things like
-> >> Debian [1]. If the template isn't installed warn and download it from
-> >> jsdelivr CDN. If downloading fails generate a minimal flame graph
-> >> again with the javascript coming from jsdelivr CDN.
-> >>
-> >> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
-> >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
+> On Mon, Jan 9, 2023 at 3:38 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Mon, Jan 9, 2023 at 2:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hi Ian,
+> > >
+> > > On Mon, Jan 9, 2023 at 2:31 PM Ian Rogers <irogers@google.com> wrote:
+> > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > index e188f74698dd..cfcc253239f0 100644
+> > > > --- a/tools/perf/util/sort.c
+> > > > +++ b/tools/perf/util/sort.c
+> > > > @@ -28,6 +28,7 @@
+> > > >  #include "time-utils.h"
+> > > >  #include "cgroup.h"
+> > > >  #include "machine.h"
+> > > > +#include "trace-event.h"
+> > > >  #include <linux/kernel.h>
+> > > >  #include <linux/string.h>
+> > > >
+> > > > @@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
+> > > >                 tep_read_number_field(field, a->raw_data, &dyn);
+> > > >                 offset = dyn & 0xffff;
+> > > >                 size = (dyn >> 16) & 0xffff;
+> > > > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > > > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> > > >                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> > > >                         offset += field->offset + field->size;
+> > >
+> > > Maybe I missed the previous discussion.
+> > >
+> > > As it's only used in the bit test, can we have something like this
+> > > in the header file?
+> > >
+> > > #if LIBTRACE_EVENT_VERSION < ...(1, 5, 0)
+> > > # define TEP_FIELD_IS_RELATIVE  0
+> > > #endif
+> > >
+> > > Thanks,
+> > > Namhyung
+> >
+> > We could but I think we lose some of the intention revealing-ness that
+> > TEP_FIELD_IS_RELATIVE is only present with libtraceevent 1.5.0 or
+> > newer.
 >
-> I'm not entirely convinced that this perf script should make a network
-> request. In my opinion
+> I'm not sure how important it is to reveal the intention.
+> I think we wanted to minimize #ifdef-ery in the .c file and
+> moved the conditionals to the header.  Maybe we can add
+> a wrapper like this.
 >
-> * best would be if this template gets packaged in Debian
-> * alternatively print instructions how to install the template:
+> #if LIBTRACEEVENT_VERSION >= ...(1, 5, 0)
+> static inline bool is_relative_field(field)
+> {
+>     return field->flags & TEP_FIELD_IS_RELATIVE;
+> }
+> #else
+> static inline bool is_relative_field(field)
+> {
+>     return false;
+> }
+> #endif
 >
->      sudo mkdir /usr/share/d3-flame-graph
->      sudo wget -O /usr/share/d3-flame-graph/d3-flamegraph-base.html
-> https://cdn.jsdelivr.net/npm/d3-flame-graph@4/dist/templates/d3-flamegraph-base.html
->
-> * or eventually just embed the entire template (66 KB) in the Python
-> file (not sure if this is permissible though, it's basically a minified
-> HTML/JS blob)?
-> * if the above options don't work, I'd recommend asking the user before
-> making the network request, and eventually persist the template
-> somewhere so it doesn't need to be downloaded every time
->
-> What do you think?
+> Thanks,
+> Namhyung
 
-So the script following this patch is going to try 3 things:
-1) look for a local template HTML,
-2) if a local template isn't found warn and switch to downloading the
-CDN version,
-3) if the CDN version fails to download then use a minimal (embedded
-in the script) HTML file with JS dependencies coming from the CDN.
-
-For (1) there are references in the generated HTML to www.w3.org,
-meaning the HTML isn't fully hermetic - although these references may
-not matter.
-For (2) there will be a download from the CDN of the template during
-the execution of flamegraph. The template is better than (3) as it
-features additional buttons letting you zoom out, etc. The HTML will
-contain CDN references.
-For (3) the generated HTML isn't hermetic and will use the CDN.
-
-For (2) we could give a prompt before trying to download the template,
-or we could change it so that we give the wget command. I wouldn't
-have the wget command require root privileges, I'd say that the
-template could be downloaded and then the path of the download given
-as an option to the flamegraph program. Downloading the file and then
-adding an option to flamegraph seems inconvenient to the user,
-something that the use of urllib in the patch avoids - it is
-essentially just doing this for the user without storing the file on
-disk. I think I prefer to be less inconvenient, and so the state of
-the code at the moment looks best to me. Given that no choice results
-in a fully hermetic HTML file, they seem similar in this regard. Is it
-okay to try a download with urllib? Should there be a prompt? I think
-the warning is enough and allows scripts, etc. using flamegraph to
-more easily function across differing distributions.
-
-An aside, Namhyung pointed out to me that there is a "perf report -g
-folded" option, that was added in part to simplify creating
-flamegraphs:
-http://lkml.kernel.org/r/1447047946-1691-2-git-send-email-namhyung@kernel.org
-Building off of perf report may improve/simplify the flamegraph code,
-or avoid the requirement that libpython be linked against perf.
+Sounds good. Should the change be part of this one or a follow up
+patch? A follow up patch seems cleanest, I can add it to v2.
 
 Thanks,
 Ian
-
-
-
-
->
-> Cheers,
-> Andreas
->
-> >> ---
-> >>   tools/perf/scripts/python/flamegraph.py | 63 ++++++++++++++++++-------
-> >>   1 file changed, 45 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-> >> index b6af1dd5f816..808b0e1c9be5 100755
-> >> --- a/tools/perf/scripts/python/flamegraph.py
-> >> +++ b/tools/perf/scripts/python/flamegraph.py
-> >> @@ -25,6 +25,27 @@ import io
-> >>   import argparse
-> >>   import json
-> >>   import subprocess
-> >> +import urllib.request
-> >> +
-> >> +minimal_html = """<head>
-> >> +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
-> >
-> > (hopefully fixed Martin Spier's e-mail address)
-> >
-> > The @4.1.3 comes from the README.md:
-> > https://github.com/spiermar/d3-flame-graph/blob/master/README.md
-> > Does it make sense just to drop it or use @latest ? It'd be nice not
-> > to patch this file for every d3-flame-graph update.
-> >
-> > Thanks,
-> > Ian
-> >
-> >> +</head>
-> >> +<body>
-> >> +  <div id="chart"></div>
-> >> +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
-> >> +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
-> >> +  <script type="text/javascript">
-> >> +  const stacks = [/** @flamegraph_json **/];
-> >> +  // Note, options is unused.
-> >> +  const options = [/** @options_json **/];
-> >> +
-> >> +  var chart = flamegraph();
-> >> +  d3.select("#chart")
-> >> +        .datum(stacks[0])
-> >> +        .call(chart);
-> >> +  </script>
-> >> +</body>
-> >> +"""
-> >>
-> >>   # pylint: disable=too-few-public-methods
-> >>   class Node:
-> >> @@ -50,15 +71,18 @@ class FlameGraphCLI:
-> >>           self.args = args
-> >>           self.stack = Node("all", "root")
-> >>
-> >> -        if self.args.format == "html" and \
-> >> -                not os.path.isfile(self.args.template):
-> >> -            print("Flame Graph template {} does not exist. Please install "
-> >> -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
-> >> -                  "package, specify an existing flame graph template "
-> >> -                  "(--template PATH) or another output format "
-> >> -                  "(--format FORMAT).".format(self.args.template),
-> >> -                  file=sys.stderr)
-> >> -            sys.exit(1)
-> >> +        if self.args.format == "html":
-> >> +            if os.path.isfile(self.args.template):
-> >> +                self.template = f"file://{self.args.template}"
-> >> +            else:
-> >> +                print(f"""
-> >> +Warning: Flame Graph template '{self.args.template}'
-> >> +does not exist, a template will be downloaded via http. To avoid this
-> >> +please install a package such as the js-d3-flame-graph or
-> >> +libjs-d3-flame-graph, specify an existing flame graph template
-> >> +(--template PATH) or another output format (--format FORMAT).
-> >> +""", file=sys.stderr)
-> >> +            self.template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
-> >>
-> >>       @staticmethod
-> >>       def get_libtype_from_dso(dso):
-> >> @@ -129,15 +153,18 @@ class FlameGraphCLI:
-> >>               options_json = json.dumps(options)
-> >>
-> >>               try:
-> >> -                with io.open(self.args.template, encoding="utf-8") as template:
-> >> -                    output_str = (
-> >> -                        template.read()
-> >> -                        .replace("/** @options_json **/", options_json)
-> >> -                        .replace("/** @flamegraph_json **/", stacks_json)
-> >> -                    )
-> >> -            except IOError as err:
-> >> -                print("Error reading template file: {}".format(err), file=sys.stderr)
-> >> -                sys.exit(1)
-> >> +                with urllib.request.urlopen(self.template) as template:
-> >> +                    output_str = '\n'.join([
-> >> +                        l.decode('utf-8') for l in template.readlines()
-> >> +                    ])
-> >> +            except Exception as err:
-> >> +                print(f"Error reading template {self.template}: {err}\n"
-> >> +                      "a minimal flame graph will be generated", file=sys.stderr)
-> >> +                output_str = minimal_html
-> >> +
-> >> +            output_str = output_str.replace("/** @options_json **/", options_json)
-> >> +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
-> >> +
-> >>               output_fn = self.args.output or "flamegraph.html"
-> >>           else:
-> >>               output_str = stacks_json
-> >> --
-> >> 2.39.0.314.g84b9a713c41-goog
-> >>
-> >
->
-> --
-> Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower,
-> 26.floor, Handelskai 94-96, Austria
-> Commercial register: Commercial Court Vienna, FN 479668w
->
