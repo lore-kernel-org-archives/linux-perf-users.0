@@ -2,149 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F096C61DB3
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF4BC54EBC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235100AbjAJTEj (ORCPT
+        id S239757AbjAJTJx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 14:04:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39090 "EHLO
+        Tue, 10 Jan 2023 14:09:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239238AbjAJS6R (ORCPT
+        with ESMTP id S239834AbjAJTJK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 13:58:17 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6835740862;
-        Tue, 10 Jan 2023 10:57:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673377035; x=1704913035;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ICyLkNmPziZklwLAZSFBzXZ2ChVSeIYypwFGatdn6sI=;
-  b=hBc/MLYsxQpj0zAdhUtr4DxsF5QSXQE/3yoNp2fIC5zibSQ9iBfGJOre
-   77WOqg2ot/vKPQkEe/ynbYXbi5NhN0bpOK+bWVwMWiBNv1XD99dp+1bOI
-   RWd08t4zHPbmCTOR/xvbn1JvR9wMRcm7IiCM+KxZJYsruNULQoHncdh0Z
-   1aqhYXdeoszMOU8Uxb/Bj2wRJLjhd25xUrvtE6cUvh/4IZBkU+eT0L7sN
-   WC/nvg/Jx8oMdsrWW5I71oEkMzHh2RbIn2oMMN3NScfqFRac7iixAnI2V
-   f3NJgOTCvglA5LBYu7VySPdSxqRb3fLkvX4rPnOfKV0Sz39Cm7L9UQyP8
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="350453954"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="350453954"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 10:57:14 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="687666184"
-X-IronPort-AV: E=Sophos;i="5.96,315,1665471600"; 
-   d="scan'208";a="687666184"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.221.1])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2023 10:57:12 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Dmitry Dolgov <9erthalion6@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf auxtrace: Fix address filter duplicate symbol selection
-Date:   Tue, 10 Jan 2023 20:56:59 +0200
-Message-Id: <20230110185659.15979-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 10 Jan 2023 14:09:10 -0500
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9EE710CD;
+        Tue, 10 Jan 2023 11:09:09 -0800 (PST)
+Received: by mail-io1-f45.google.com with SMTP id 3so6548470iou.12;
+        Tue, 10 Jan 2023 11:09:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2m0o8gK2yZq30Jsm83JbSXnacP4P7Zm5m6HyGFlXqoA=;
+        b=GbIwcWtqwM5Os3LqwcO+RJn5z6G3zxT2KshwF9RIqbuigGXXxRAFvUqCnCq6p32pGi
+         WimPEefyGSyMJu18J8hvRwagVIqgHZV9GczkJErnagR7vT9TRRrWTwNDdDZTVUL2VNuf
+         b4vocT1U8Yc2iMajvarEn1B8uFtqgKBsEiGGSb80XoXAhNUWUwPYLzM64N/PuDmbDCrA
+         wtY7wvrFQhK7L327/cLqRauWNEFs1af3KwAI5g/G2QS0htQ0dX6gYqy6sVfavNNGVbQx
+         vRH4UZxL7KXdfcA2ruseDb00jcgZ9zSVbji3FVPjZEB61053F3+xfT6neGl3ylPt7ANL
+         KUDA==
+X-Gm-Message-State: AFqh2krXFLoHZrE3MdcLtSNTRXbrCjSrpksq2vESd9LNxwtdvP9cE+f8
+        xPihenIUVi9DaQ9vE9DwAj467B7n8gyffmOvdfs=
+X-Google-Smtp-Source: AMrXdXuYsOyiDGutknMl1DcSOlA0HW9h91IYk6ptlwofXqJ5GoWoPHpif/AfJsVRLgKnT5MVfY7lxUVGfZUuB9nA0e8=
+X-Received: by 2002:a02:ccb7:0:b0:38a:cbda:14b7 with SMTP id
+ t23-20020a02ccb7000000b0038acbda14b7mr6467761jap.202.1673377748867; Tue, 10
+ Jan 2023 11:09:08 -0800 (PST)
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <20230109223110.1201541-1-irogers@google.com> <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
+ <CAP-5=fXniy80Jpc2Hu=-GF7yDNUNHjs0=B2iqkUkMb6zArPukg@mail.gmail.com>
+In-Reply-To: <CAP-5=fXniy80Jpc2Hu=-GF7yDNUNHjs0=B2iqkUkMb6zArPukg@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 10 Jan 2023 11:08:57 -0800
+Message-ID: <CAM9d7chS+91Nep8FtsJsOdTvMJ0HhkSD1_Fn70=hWPi7a1JpfQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        German Gomez <german.gomez@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When a match has been made to the nth duplicate symbol, return
-success not error.
+On Mon, Jan 9, 2023 at 3:38 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Mon, Jan 9, 2023 at 2:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Mon, Jan 9, 2023 at 2:31 PM Ian Rogers <irogers@google.com> wrote:
+> > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > index e188f74698dd..cfcc253239f0 100644
+> > > --- a/tools/perf/util/sort.c
+> > > +++ b/tools/perf/util/sort.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include "time-utils.h"
+> > >  #include "cgroup.h"
+> > >  #include "machine.h"
+> > > +#include "trace-event.h"
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/string.h>
+> > >
+> > > @@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
+> > >                 tep_read_number_field(field, a->raw_data, &dyn);
+> > >                 offset = dyn & 0xffff;
+> > >                 size = (dyn >> 16) & 0xffff;
+> > > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> > >                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> > >                         offset += field->offset + field->size;
+> >
+> > Maybe I missed the previous discussion.
+> >
+> > As it's only used in the bit test, can we have something like this
+> > in the header file?
+> >
+> > #if LIBTRACE_EVENT_VERSION < ...(1, 5, 0)
+> > # define TEP_FIELD_IS_RELATIVE  0
+> > #endif
+> >
+> > Thanks,
+> > Namhyung
+>
+> We could but I think we lose some of the intention revealing-ness that
+> TEP_FIELD_IS_RELATIVE is only present with libtraceevent 1.5.0 or
+> newer.
 
-Example:
+I'm not sure how important it is to reveal the intention.
+I think we wanted to minimize #ifdef-ery in the .c file and
+moved the conditionals to the header.  Maybe we can add
+a wrapper like this.
 
-  Before:
+#if LIBTRACEEVENT_VERSION >= ...(1, 5, 0)
+static inline bool is_relative_field(field)
+{
+    return field->flags & TEP_FIELD_IS_RELATIVE;
+}
+#else
+static inline bool is_relative_field(field)
+{
+    return false;
+}
+#endif
 
-    $ cat file.c
-    cat: file.c: No such file or directory
-    $ cat file1.c
-    #include <stdio.h>
-
-    static void func(void)
-    {
-            printf("First func\n");
-    }
-
-    void other(void);
-
-    int main()
-    {
-            func();
-            other();
-            return 0;
-    }
-    $ cat file2.c
-    #include <stdio.h>
-
-    static void func(void)
-    {
-            printf("Second func\n");
-    }
-
-    void other(void)
-    {
-            func();
-    }
-
-    $ gcc -Wall -Wextra -o test file1.c file2.c
-    $ perf record -e intel_pt//u --filter 'filter func @ ./test' -- ./test
-    Multiple symbols with name 'func'
-    #1      0x1149  l       func
-                    which is near           main
-    #2      0x1179  l       func
-                    which is near           other
-    Disambiguate symbol name by inserting #n after the name e.g. func #2
-    Or select a global symbol by inserting #0 or #g or #G
-    Failed to parse address filter: 'filter func @ ./test'
-    Filter format is: filter|start|stop|tracestop <start symbol or address> [/ <end symbol or size>] [@<file name>]
-    Where multiple filters are separated by space or comma.
-    $ perf record -e intel_pt//u --filter 'filter func #2 @ ./test' -- ./test
-    Failed to parse address filter: 'filter func #2 @ ./test'
-    Filter format is: filter|start|stop|tracestop <start symbol or address> [/ <end symbol or size>] [@<file name>]
-    Where multiple filters are separated by space or comma.
-
-  After:
-
-    $ perf record -e intel_pt//u --filter 'filter func #2 @ ./test' -- ./test
-    First func
-    Second func
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.016 MB perf.data ]
-    $ perf script --itrace=b -Ftime,flags,ip,sym,addr --ns
-    1231062.526977619:   tr strt                               0 [unknown] =>     558495708179 func
-    1231062.526977619:   tr end  call               558495708188 func =>     558495708050 _init
-    1231062.526979286:   tr strt                               0 [unknown] =>     55849570818d func
-    1231062.526979286:   tr end  return             55849570818f func =>     55849570819d other
-
-Reported-by: Dmitry Dolgov <9erthalion6@gmail.com>
-Fixes: 1b36c03e3569 ("perf record: Add support for using symbols in address filters")
-Cc: stable@vger.kernel.org
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/auxtrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 265d20cc126b..c2e323cd7d49 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -2611,7 +2611,7 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
- 				*size = sym->start - *start;
- 			if (idx > 0) {
- 				if (*size)
--					return 1;
-+					return 0;
- 			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
- 				print_duplicate_syms(dso, sym_name);
- 				return -EINVAL;
--- 
-2.34.1
-
+Thanks,
+Namhyung
