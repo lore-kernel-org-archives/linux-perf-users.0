@@ -2,170 +2,268 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5505C46467
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0EFC54EBC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 19:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239152AbjAJTWy (ORCPT
+        id S232003AbjAJTvl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 14:22:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59142 "EHLO
+        Tue, 10 Jan 2023 14:51:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239824AbjAJTWg (ORCPT
+        with ESMTP id S231354AbjAJTvk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 14:22:36 -0500
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FBA532A8;
-        Tue, 10 Jan 2023 11:22:07 -0800 (PST)
-Received: by mail-il1-f181.google.com with SMTP id o8so6907578ilo.1;
-        Tue, 10 Jan 2023 11:22:07 -0800 (PST)
+        Tue, 10 Jan 2023 14:51:40 -0500
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9E712D06
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:51:39 -0800 (PST)
+Received: by mail-vs1-xe2e.google.com with SMTP id s127so13446582vsb.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 11:51:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1w2OJoXjBR0B8nOuaK35hGnXkeRm8nK9BoNjuo7/qeg=;
+        b=oFVceod6LlE9oneZeW3yiuCd8rcfhBFXbzQwjOGtCTUcRNytHWcJqRXdmsdOlLRvZJ
+         b0jnBx+bc6+TQbQewhT9blS1jV4nFXnN7KmdwwxPL4z/dHRiGi2wBVmTQjsy5bvdV5Sl
+         /3BXZxFK43N5oJy3nv+kseBAhPkyL31stuqoXI4eXo8em1uQruyyja8N4M1tAeNDQk4K
+         8jJEtXxRpr9ezudb8AlKy9WjXbgJaLSPTirEDIZiSgxg9q2lTeByweUfkKpw7B2qEf3m
+         N9iBlQTgmbkYdaQh/zftGzU/93un9E0YTHcAqIpd9fibTWgp+AxJPWNsB2sc2+NT9Q2P
+         NpWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5/BwFuyLCE0YC1VrRpwJaeR7r7nd3662buUSc8fCkUI=;
-        b=5VP5i27Uvdn9Lh3+qRCD+l4Igt+dpFynedHAR30bS3l+9Tu/Z9imYjsKS81nfFiHoq
-         orAAZefVx7WIPZ8sL3SH45JObW41zBClbe08k19sy6XxZxuCkiEFa4wi+xY95vpIn9UT
-         d1R5qk9EqtV0mIO3QmSg57ZjxbkZmqlHleWU6qpNJ1dYHibjbZjITRKvp9GSAonj8vNP
-         SdpndErkJAgXSfaI+h3Ow2Xu97omhd7+FkPaxCCM1Jrl8R+age8wK5wwDcE+m4BnxV7u
-         7JGZizUttDXLQUQasaMqGYmI/AaNfEtAv5Az2ylqdLb/LadtD4Leb/6mdubb89S+rx5c
-         NEMQ==
-X-Gm-Message-State: AFqh2kp35TsvyTDU2V0rhyLDz8sgS+L6p5FuYRVegFlhcYxNNIRc5gCZ
-        asWH+rMxvfTDWdjrqlWxgB1UNjN+gk2ADc8ZcxM=
-X-Google-Smtp-Source: AMrXdXsr7ZyRaSv3Qvyf8BTVSfrRv/hiuZCYOq0HzBRir5P+aNyn6502oWYzIRYKx7YcN572l8lpXKRoJiecVTnX9Ls=
-X-Received: by 2002:a92:ce03:0:b0:30a:d251:a313 with SMTP id
- b3-20020a92ce03000000b0030ad251a313mr7822836ilo.83.1673378526489; Tue, 10 Jan
- 2023 11:22:06 -0800 (PST)
+        bh=1w2OJoXjBR0B8nOuaK35hGnXkeRm8nK9BoNjuo7/qeg=;
+        b=IJtvkSmjnU2sKEZYUV4Lbln4DUrZPiox1Hio+RCwa5AfrEYIaHy7kW8KbKrBrRgpqr
+         wAsT+mgAHvEDJlcTesU+jYap+v/xG9el7P829+RpYHiuozlbkiDXeLtraJLKdqjgyBKk
+         tnZbzpCgbjSlDKx8cN8g/3rfNc07umtUNaVjxciSsFHhKM6eOBd4wphxEnHUOgbzJCGA
+         skNtlcj8L96k12EYm+02v4GRBvbRGcy0YG+S+0mqkazYY9UOyLmfLJ6vNm/P8gt2nS7t
+         uOTYuB1wX1nXGSF5Y6R6teQTulV2o7vbT23eki3lYxBOnr6Ed1qz34oByu2GPpA6rDu7
+         oEfQ==
+X-Gm-Message-State: AFqh2krgE3qHiAo977YeSYQglKcmZM6zwten0fJxJSmlwZFKjvA3gXon
+        8uYBrdRcdwpYkCz+uwFDAx42bJkU4rLE9IolHivGfg==
+X-Google-Smtp-Source: AMrXdXvkkTNbfCzuFJkaX44WWcXa9IfzlAb81ReeBK1G9plH5bFXNcyGY3Z09StM8T8s3K1ugNHVH8gWwzECYkzOa3M=
+X-Received: by 2002:a67:b90e:0:b0:3cb:1128:2b18 with SMTP id
+ q14-20020a67b90e000000b003cb11282b18mr6521371vsn.47.1673380298490; Tue, 10
+ Jan 2023 11:51:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20221229124728.66515-1-yangjihong1@huawei.com>
- <Y7MEWK/z19QCaNoi@kernel.org> <CAM9d7cjcWKBephb5p9ZPU2+wDAz04DYQJoKczORioD=es10hPw@mail.gmail.com>
- <c65f89ef-173c-b828-f3b2-266387903149@huawei.com> <CAM9d7chN9ecR7EgA1eN1QQXypZDwCFC-ym6BTQ0d1_XjuruLFw@mail.gmail.com>
- <a08af34e-acf2-d370-06bb-ea43d467f89d@huawei.com>
-In-Reply-To: <a08af34e-acf2-d370-06bb-ea43d467f89d@huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 10 Jan 2023 11:21:54 -0800
-Message-ID: <CAM9d7ci_TRrqBQVQNW8=GwakUr7SsZpYxaaty-S4bxF8zJWyqw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf record: Fix coredump with --overwrite and --max-size
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        jiwei.sun@windriver.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20230105030434.255603-1-irogers@google.com> <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
+ <bd4a55a4-8e9c-82bf-92c8-1fa354289dce@redhat.com>
+In-Reply-To: <bd4a55a4-8e9c-82bf-92c8-1fa354289dce@redhat.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 10 Jan 2023 11:51:26 -0800
+Message-ID: <CAP-5=fX3LaJgft8T+nYV8SHpmoAOYZ9S5-pztKF9j--Um4HKDQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf script flamegraph: Avoid d3-flame-graph package dependency
+To:     Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        996839@bugs.debian.org, Brendan Gregg <brendan@intel.com>,
+        spiermar@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jan 8, 2023 at 6:47 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+On Tue, Jan 10, 2023 at 10:02 AM Andreas Gerstmayr
+<agerstmayr@redhat.com> wrote:
 >
-> Hello,
+> On 05.01.23 10:24, Ian Rogers wrote:
+> > On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
+> >>
+> >> Currently flame graph generation requires a d3-flame-graph template to
+> >> be installed. Unfortunately this is hard to come by for things like
+> >> Debian [1]. If the template isn't installed warn and download it from
+> >> jsdelivr CDN. If downloading fails generate a minimal flame graph
+> >> again with the javascript coming from jsdelivr CDN.
+> >>
+> >> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
 >
-> On 2023/1/7 5:12, Namhyung Kim wrote:
-> > Hello,
-> >
-> > On Wed, Jan 4, 2023 at 8:09 PM Yang Jihong <yangjihong1@huawei.com> wrote:
-> >>
-> >> Hello,
-> >>
-> >> On 2023/1/4 0:50, Namhyung Kim wrote:
-> >>> On Mon, Jan 2, 2023 at 8:20 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >>>>
-> >>>> Em Thu, Dec 29, 2022 at 12:47:28PM +0000, Yang Jihong escreveu:
-> >>>>> When --overwrite and --max-size options of perf record are used together,
-> >>>>> a segmentation fault occurs. The following is an example:
-> >>>>>
-> >>>>>    # perf record -e sched:sched* --overwrite --max-size 1M -a -- sleep 1
-> >>>>>     [ perf record: Woken up 1 times to write data ]
-> >>>>>     perf: Segmentation fault
-> >>>>>     Obtained 1 stack frames.
-> >>>>>     [0xc4c67f]
-> >>>>>     Segmentation fault (core dumped)
-> >>>>>
-> >>>>> backtrace of the core file is as follows:
-> >>>>>
-> >>>>>     #0  0x0000000000417990 in process_locked_synthesized_event (tool=0x0, event=0x15, sample=0x1de0, machine=0xf8) at builtin-record.c:630
-> >>>>>     #1  0x000000000057ee53 in perf_event__synthesize_threads (nr_threads_synthesize=21, mmap_data=<optimized out>, needs_mmap=<optimized out>, machine=0x17ad9b0, process=<optimized out>, tool=0x0) at util/synthetic-events.c:1950
-> >>>>>     #2  __machine__synthesize_threads (nr_threads_synthesize=0, data_mmap=<optimized out>, needs_mmap=<optimized out>, process=<optimized out>, threads=0x8, target=0x8, tool=0x0, machine=0x17ad9b0) at util/synthetic-events.c:1936
-> >>>>>     #3  machine__synthesize_threads (machine=0x17ad9b0, target=0x8, threads=0x8, needs_mmap=<optimized out>, data_mmap=<optimized out>, nr_threads_synthesize=0) at util/synthetic-events.c:1947
-> >>>>>     #4  0x000000000040165d in record__synthesize (tail=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2010
-> >>>>>     #5  0x0000000000403989 in __cmd_record (argc=<optimized out>, argv=<optimized out>, rec=0xbe2520 <record>) at builtin-record.c:2810
-> >>>>>     #6  0x00000000004196ba in record__init_thread_user_masks (rec=0xbe2520 <record>, cpus=0x17a65f0) at builtin-record.c:3837
-> >>>>>     #7  record__init_thread_masks (rec=0xbe2520 <record>) at builtin-record.c:3938
-> >>>>>     #8  cmd_record (argc=1, argv=0x7ffdd692dc60) at builtin-record.c:4241
-> >>>>>     #9  0x00000000004b701d in pager_command_config (var=0x0, value=0x15 <error: Cannot access memory at address 0x15>, data=0x1de0) at perf.c:117
-> >>>>>     #10 0x00000000004b732b in get_leaf_frame_caller_aarch64 (sample=0xfffffffb, thread=0x0, usr_idx=<optimized out>) at util/arm64-frame-pointer-unwind-support.c:56
-> >>>>>     #11 0x0000000000406331 in execv_dashed_external (argv=0x7ffdd692d9e8) at perf.c:410
-> >>>>>     #12 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:431
-> >>>>>     #13 main (argc=<optimized out>, argv=0x7ffdd692d9e8) at perf.c:562
-> >>>>>
-> >>>>> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
-> >>>>> The process is as follows:
-> >>>>>     __cmd_record
-> >>>>>       -> record__free_thread_data
-> >>>>>         -> zfree(&rec->thread_data)         // free rec->thread_data
-> >>>>>       -> record__synthesize
-> >>>>>         -> perf_event__synthesize_id_index
-> >>>>>           -> process_synthesized_event
-> >>>>>             -> record__write
-> >>>>>               -> record__bytes_written     // access rec->thread_data
-> >>>>>
-> >>>>> we only need to check the value of done first.
-> >>>>> Also add variable check in record__bytes_written for code hardening,
-> >>>>> and save bytes_written separately to reduce one calculation.
-> >>>>>
-> >>>>> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
-> >>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> >>>>> ---
-> >>>>>
-> >>>>> Changes since v1:
-> >>>>>    - Add variable check in record__bytes_written for code hardening.
-> >>>>>    - Save bytes_written separately to reduce one calculation.
-> >>>>>    - Remove rec->opts.tail_synthesize check.
-> >>>>
-> >>>> Namhyung, are you ok with this now?
-> >>>>
-> >>>> - Arnaldo
-> >>>>
-> >>>>>    tools/perf/builtin-record.c | 26 +++++++++++++++++---------
-> >>>>>    1 file changed, 17 insertions(+), 9 deletions(-)
-> >>>>>
-> >>>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> >>>>> index 29dcd454b8e2..acba9e43e519 100644
-> >>>>> --- a/tools/perf/builtin-record.c
-> >>>>> +++ b/tools/perf/builtin-record.c
-> >>>>> @@ -230,16 +230,29 @@ static u64 record__bytes_written(struct record *rec)
-> >>>>>         u64 bytes_written = rec->bytes_written;
-> >>>>>         struct record_thread *thread_data = rec->thread_data;
-> >>>>>
-> >>>>> +     if (thread_data == NULL)
-> >>>>> +             return bytes_written;
-> >>>>> +
-> >>>
-> >>> Then it won't count bytes written by threads, right?
-> >>> I think it needs to be saved somewhere.
-> >>>
-> >> I'm not sure here. Can you explain it more clearly, thanks :)
-> >> I can modify it accordingly.
-> >>
-> >> I think if thread_data == NULL, it is not thread data.
-> >> In this case, we just return rec->bytes_written.
-> >
-> > It can be thread data but freed before tail synthesis, right?
-> > In that case, I think it needs to add bytes_written by threads
-> > to calculate the correct data size.
-> Em... In the __cmd_record function, record__stop_threads is called
-> before record__free_thread_data, so if the thread has been freed, there
-> will be no thread data.
-> I think it's okay to ignore the situation you mentioned above.
+> I'm not entirely convinced that this perf script should make a network
+> request. In my opinion
+>
+> * best would be if this template gets packaged in Debian
+> * alternatively print instructions how to install the template:
+>
+>      sudo mkdir /usr/share/d3-flame-graph
+>      sudo wget -O /usr/share/d3-flame-graph/d3-flamegraph-base.html
+> https://cdn.jsdelivr.net/npm/d3-flame-graph@4/dist/templates/d3-flamegraph-base.html
+>
+> * or eventually just embed the entire template (66 KB) in the Python
+> file (not sure if this is permissible though, it's basically a minified
+> HTML/JS blob)?
+> * if the above options don't work, I'd recommend asking the user before
+> making the network request, and eventually persist the template
+> somewhere so it doesn't need to be downloaded every time
+>
+> What do you think?
 
-Right, the thread data is already freed, but we need the size.
+So the script following this patch is going to try 3 things:
+1) look for a local template HTML,
+2) if a local template isn't found warn and switch to downloading the
+CDN version,
+3) if the CDN version fails to download then use a minimal (embedded
+in the script) HTML file with JS dependencies coming from the CDN.
 
-I think it didn't (and won't) update to rec->bytes_written for the data
-written by the threads (data.X file) because it's only for the main
-'data' file.  So record__bytes_written() will return a smaller number
-after the threads are gone.  But I think it should return the total
-data size.
+For (1) there are references in the generated HTML to www.w3.org,
+meaning the HTML isn't fully hermetic - although these references may
+not matter.
+For (2) there will be a download from the CDN of the template during
+the execution of flamegraph. The template is better than (3) as it
+features additional buttons letting you zoom out, etc. The HTML will
+contain CDN references.
+For (3) the generated HTML isn't hermetic and will use the CDN.
+
+For (2) we could give a prompt before trying to download the template,
+or we could change it so that we give the wget command. I wouldn't
+have the wget command require root privileges, I'd say that the
+template could be downloaded and then the path of the download given
+as an option to the flamegraph program. Downloading the file and then
+adding an option to flamegraph seems inconvenient to the user,
+something that the use of urllib in the patch avoids - it is
+essentially just doing this for the user without storing the file on
+disk. I think I prefer to be less inconvenient, and so the state of
+the code at the moment looks best to me. Given that no choice results
+in a fully hermetic HTML file, they seem similar in this regard. Is it
+okay to try a download with urllib? Should there be a prompt? I think
+the warning is enough and allows scripts, etc. using flamegraph to
+more easily function across differing distributions.
+
+An aside, Namhyung pointed out to me that there is a "perf report -g
+folded" option, that was added in part to simplify creating
+flamegraphs:
+http://lkml.kernel.org/r/1447047946-1691-2-git-send-email-namhyung@kernel.org
+Building off of perf report may improve/simplify the flamegraph code,
+or avoid the requirement that libpython be linked against perf.
 
 Thanks,
-Namhyung
+Ian
+
+
+
+
+>
+> Cheers,
+> Andreas
+>
+> >> ---
+> >>   tools/perf/scripts/python/flamegraph.py | 63 ++++++++++++++++++-------
+> >>   1 file changed, 45 insertions(+), 18 deletions(-)
+> >>
+> >> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> >> index b6af1dd5f816..808b0e1c9be5 100755
+> >> --- a/tools/perf/scripts/python/flamegraph.py
+> >> +++ b/tools/perf/scripts/python/flamegraph.py
+> >> @@ -25,6 +25,27 @@ import io
+> >>   import argparse
+> >>   import json
+> >>   import subprocess
+> >> +import urllib.request
+> >> +
+> >> +minimal_html = """<head>
+> >> +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
+> >
+> > (hopefully fixed Martin Spier's e-mail address)
+> >
+> > The @4.1.3 comes from the README.md:
+> > https://github.com/spiermar/d3-flame-graph/blob/master/README.md
+> > Does it make sense just to drop it or use @latest ? It'd be nice not
+> > to patch this file for every d3-flame-graph update.
+> >
+> > Thanks,
+> > Ian
+> >
+> >> +</head>
+> >> +<body>
+> >> +  <div id="chart"></div>
+> >> +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+> >> +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+> >> +  <script type="text/javascript">
+> >> +  const stacks = [/** @flamegraph_json **/];
+> >> +  // Note, options is unused.
+> >> +  const options = [/** @options_json **/];
+> >> +
+> >> +  var chart = flamegraph();
+> >> +  d3.select("#chart")
+> >> +        .datum(stacks[0])
+> >> +        .call(chart);
+> >> +  </script>
+> >> +</body>
+> >> +"""
+> >>
+> >>   # pylint: disable=too-few-public-methods
+> >>   class Node:
+> >> @@ -50,15 +71,18 @@ class FlameGraphCLI:
+> >>           self.args = args
+> >>           self.stack = Node("all", "root")
+> >>
+> >> -        if self.args.format == "html" and \
+> >> -                not os.path.isfile(self.args.template):
+> >> -            print("Flame Graph template {} does not exist. Please install "
+> >> -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+> >> -                  "package, specify an existing flame graph template "
+> >> -                  "(--template PATH) or another output format "
+> >> -                  "(--format FORMAT).".format(self.args.template),
+> >> -                  file=sys.stderr)
+> >> -            sys.exit(1)
+> >> +        if self.args.format == "html":
+> >> +            if os.path.isfile(self.args.template):
+> >> +                self.template = f"file://{self.args.template}"
+> >> +            else:
+> >> +                print(f"""
+> >> +Warning: Flame Graph template '{self.args.template}'
+> >> +does not exist, a template will be downloaded via http. To avoid this
+> >> +please install a package such as the js-d3-flame-graph or
+> >> +libjs-d3-flame-graph, specify an existing flame graph template
+> >> +(--template PATH) or another output format (--format FORMAT).
+> >> +""", file=sys.stderr)
+> >> +            self.template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
+> >>
+> >>       @staticmethod
+> >>       def get_libtype_from_dso(dso):
+> >> @@ -129,15 +153,18 @@ class FlameGraphCLI:
+> >>               options_json = json.dumps(options)
+> >>
+> >>               try:
+> >> -                with io.open(self.args.template, encoding="utf-8") as template:
+> >> -                    output_str = (
+> >> -                        template.read()
+> >> -                        .replace("/** @options_json **/", options_json)
+> >> -                        .replace("/** @flamegraph_json **/", stacks_json)
+> >> -                    )
+> >> -            except IOError as err:
+> >> -                print("Error reading template file: {}".format(err), file=sys.stderr)
+> >> -                sys.exit(1)
+> >> +                with urllib.request.urlopen(self.template) as template:
+> >> +                    output_str = '\n'.join([
+> >> +                        l.decode('utf-8') for l in template.readlines()
+> >> +                    ])
+> >> +            except Exception as err:
+> >> +                print(f"Error reading template {self.template}: {err}\n"
+> >> +                      "a minimal flame graph will be generated", file=sys.stderr)
+> >> +                output_str = minimal_html
+> >> +
+> >> +            output_str = output_str.replace("/** @options_json **/", options_json)
+> >> +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
+> >> +
+> >>               output_fn = self.args.output or "flamegraph.html"
+> >>           else:
+> >>               output_str = stacks_json
+> >> --
+> >> 2.39.0.314.g84b9a713c41-goog
+> >>
+> >
+>
+> --
+> Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower,
+> 26.floor, Handelskai 94-96, Austria
+> Commercial register: Commercial Court Vienna, FN 479668w
+>
