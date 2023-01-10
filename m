@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B83C54EBC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 22:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F01C46467
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 22:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234938AbjAJWUt (ORCPT
+        id S235010AbjAJWVs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 17:20:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
+        Tue, 10 Jan 2023 17:21:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234810AbjAJWUq (ORCPT
+        with ESMTP id S234901AbjAJWVV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 17:20:46 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F98263F4E
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 14:20:45 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id v9-20020a259d89000000b007b515f139e0so14321606ybp.17
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 14:20:45 -0800 (PST)
+        Tue, 10 Jan 2023 17:21:21 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683C2DF22
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 14:20:57 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-4c0fe6e3f13so142099887b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 14:20:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e+OL21tRhOI5FC8OP8rOHe4TMF297jaFfbFeRu1wlqg=;
-        b=pAopMpFhTfX0jzenqkNBx67vQjfjd9TY0dEwmq4dnUUW/5FoxhH/tVN7EA6o41wxrx
-         rsUBnMfLZxm5PQ3Gm0Z5qpVo9n/Dnw2t+GjNw3fXdMd4EbvEybnsF61808WRKPLXGEPX
-         BP/2/BT6IOMQEJFjn/Laru90RARJ4roIZIz7Einhd/Z0P1NaLFrKvEfC1eWc4LMqSZvs
-         b0T7fdriG8IC3vY8yB0wM/np9pfhaT10oOvYNSasEBMAIwRVJOVL3zjz2LA6Lhv6zmQq
-         XBNkFoUi1yjwG7YzAhVBeRgAhvFBI7sfazm/WV9x3buWT4x5HgobueNTp6jLXWkx3t0D
-         8dBQ==
+        bh=b4cDFSVYG43croOnEV27nNQKcdSJ0iRzIK+gxT25DWQ=;
+        b=oWwqPFHv+dZCSeNo+f2delVO4bkS5CysJ1Fb9cTlI9zPxRA7uKaiJ7fzrQAE/gTePN
+         yQdJfBq26Z53aSri1L4flICMFvFNUevMxBBdhNvHv8Ijb0Oku7b8R3i1GIZwAS7jcJ22
+         jMmWxbFtkBzDL/R9uaLOc+rwZEKLhEkSnycWiK+bJoz5ZUvP8k/r3gzwpyc58iJZ/qIR
+         uFv/RK4kFlujjtJHI9F8csecrHrl/8oIz/UTVfp75WDyghQbB2noKVROCgEIL9/hytzp
+         05/J55rtJDAGcO6Q4BwMKuBUc0CZ06wbMj2tK5aFbb8NTedwer0JBGvwhthbuu/kH2CO
+         qRSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e+OL21tRhOI5FC8OP8rOHe4TMF297jaFfbFeRu1wlqg=;
-        b=Gn86TO68AOGiJKg0dk+QNGThn6XHwVinJWUGEF3oGB6dfGVvGsCU6gIarUFAQqyUqQ
-         ckjOMSBNwR/Ftt2rYbJCGvT5RUTt6wktFNHYa6ESrB4uO6vk/Vm12vtyG13Otit75gdL
-         slbe2QSkpnTlgxby1WKsoZtCSf4qxT4U++RsTRlvvdB0TQH7DFAQ/erDqNL5cvQyaUEJ
-         hSJtrfsxRGxCfKQcK2L+AevH0OjrgUxIGqSYOfZPB/1x0JMEwAmZfjdW/jFFqYrKou0r
-         3uPGSDJmfFVEoNTwdxUowR46kYYcP173+XyNmPJ+JUV91qvpK87hWnxN49dOzKaJCsmH
-         I2mw==
-X-Gm-Message-State: AFqh2kq5PsSVS9AcH6W6TqJKIdBL4M83hSuMQWc0fMr8gingq5zydSki
-        +sInb5QlQCvrmn4c8y4M99R3aPovRShc
-X-Google-Smtp-Source: AMrXdXulQqaqr6Cu/NW8mUaEtU/19rWhPKAZID8kQpT+uofH5KiblfeW6JI4Cfz9L3ukAKsgfkHBgFGgaTTP
+        bh=b4cDFSVYG43croOnEV27nNQKcdSJ0iRzIK+gxT25DWQ=;
+        b=VnJZQnWdAh0FpEONJZE00oP2haFhYq1GVKvYW1A13WjGSfwG8plMO5xyNniOJQm9d1
+         kZ7lYsjbKW1MSAyGOejvh2ZPMxB718DsucyDfaYOvS+1MFkmcqrtJTE0AYGzaMazbycm
+         gWnZxeMjgnQonvDQ/tNbMi22goTRSXHQ6tBAd0Lz/UjpYY63PEDUmr+8DU19cnaekm08
+         9b6Vv7TPRzLYIEKcukkPItVMie2ge2dW/6LgnCt2AHqd3u8FPnuPJ6iSiJxClNmnq5Gu
+         2pwECUhJ5wen5HSZa5J6syuckg/fh4Q5Z+kjw5GNZiheJEl300p5dRLaKBaXTHjt8WDS
+         jOKg==
+X-Gm-Message-State: AFqh2kogua5+Tt5DznLMmILVziyxmRXACMTYtbETuXD70hIVvppxwoTH
+        aVH6sDthzqr+F5t4e3Mfk5g6lnAv4+93
+X-Google-Smtp-Source: AMrXdXvI95ryIYv3mYiLaEW52Mjy6G2g6DQ8MwrTjJmJYfZaK+uEyVB7Y9YgTbG/z/1GFMv0iQnxIls+z2Xi
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cebf:c37e:8184:56])
- (user=irogers job=sendgmr) by 2002:a25:804:0:b0:767:3057:9533 with SMTP id
- 4-20020a250804000000b0076730579533mr8371214ybi.454.1673389244250; Tue, 10 Jan
- 2023 14:20:44 -0800 (PST)
-Date:   Tue, 10 Jan 2023 14:19:59 -0800
+ (user=irogers job=sendgmr) by 2002:a25:9a02:0:b0:7ba:f028:b325 with SMTP id
+ x2-20020a259a02000000b007baf028b325mr1547877ybn.452.1673389256480; Tue, 10
+ Jan 2023 14:20:56 -0800 (PST)
+Date:   Tue, 10 Jan 2023 14:20:00 -0800
 In-Reply-To: <20230110222003.1591436-1-irogers@google.com>
-Message-Id: <20230110222003.1591436-4-irogers@google.com>
+Message-Id: <20230110222003.1591436-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230110222003.1591436-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v1 3/7] tools lib subcmd: Add run_command_strbuf
+Subject: [PATCH v1 4/7] tools lib api: Minor strbuf_read improvements
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -93,152 +93,57 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Often a command wants to be run in a shell with stdout placed in a
-string. This API mimics that of stdio's popen, running the given
-command (not argv array) with "/bin/sh -c" then appending the output
-from stdout to the buf argument.
+If a read is smaller than the remaining space, don't grow the buffer
+as it is likely we've reached the end of the file.  Make the grow
+amounts a single page rather than just over 2 once the null terminator
+is included.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/subcmd/Makefile      | 32 +++++++++++++++++++++++++++++---
- tools/lib/subcmd/run-command.c | 30 ++++++++++++++++++++++++++++++
- tools/lib/subcmd/run-command.h | 14 ++++++++++++++
- 3 files changed, 73 insertions(+), 3 deletions(-)
+ tools/lib/api/strbuf.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index b87213263a5e..23174d013519 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -13,6 +13,7 @@ CC ?= $(CROSS_COMPILE)gcc
- LD ?= $(CROSS_COMPILE)ld
- AR ?= $(CROSS_COMPILE)ar
+diff --git a/tools/lib/api/strbuf.c b/tools/lib/api/strbuf.c
+index 4639b2d02e62..eafa2c01f46a 100644
+--- a/tools/lib/api/strbuf.c
++++ b/tools/lib/api/strbuf.c
+@@ -143,25 +143,28 @@ ssize_t strbuf_read(struct strbuf *sb, int fd, ssize_t hint)
+ 	size_t oldalloc = sb->alloc;
+ 	int ret;
  
-+MKDIR = mkdir
- RM = rm -f
+-	ret = strbuf_grow(sb, hint ? hint : 8192);
++	ret = strbuf_grow(sb, hint ? hint : 4095);
+ 	if (ret)
+ 		return ret;
  
- MAKEFLAGS += --no-print-directory
-@@ -55,6 +56,17 @@ CFLAGS += -I$(srctree)/tools/include/
+ 	for (;;) {
+-		ssize_t cnt;
++		ssize_t read_size;
++		size_t sb_remaining = sb->alloc - sb->len - 1;
  
- CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
- 
-+LIBAPI_DIR      = $(srctree)/tools/lib/api/
-+ifneq ($(OUTPUT),)
-+  LIBAPI_OUTPUT = $(abspath $(OUTPUT))/libapi
-+else
-+  LIBAPI_OUTPUT = $(CURDIR)/libapi
-+endif
-+LIBAPI_DESTDIR = $(LIBAPI_OUTPUT)
-+LIBAPI_INCLUDE = $(LIBAPI_DESTDIR)/include
-+LIBAPI = $(LIBAPI_OUTPUT)/libapi.a
-+CFLAGS += -I$(LIBAPI_OUTPUT)/include
-+
- SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
- 
- ifeq ($(LP64), 1)
-@@ -76,7 +88,9 @@ include $(srctree)/tools/build/Makefile.include
- 
- all: fixdep $(LIBFILE)
- 
--$(SUBCMD_IN): FORCE
-+prepare: $(LIBAPI)
-+
-+$(SUBCMD_IN): FORCE prepare
- 	@$(MAKE) $(build)=libsubcmd
- 
- $(LIBFILE): $(SUBCMD_IN)
-@@ -113,10 +127,22 @@ install_headers: $(INSTALL_HDRS)
- 
- install: install_lib install_headers
- 
--clean:
-+$(LIBAPI_OUTPUT):
-+	$(Q)$(MKDIR) -p $@
-+
-+$(LIBAPI): FORCE | $(LIBAPI_OUTPUT)
-+	$(Q)$(MAKE) -C $(LIBAPI_DIR) O=$(LIBAPI_OUTPUT) \
-+		DESTDIR=$(LIBAPI_DESTDIR) prefix= \
-+		$@ install_headers
-+
-+$(LIBAPI)-clean:
-+	$(call QUIET_CLEAN, libapi)
-+	$(Q)$(RM) -r -- $(LIBAPI_OUTPUT)
-+
-+clean: $(LIBAPI)-clean
- 	$(call QUIET_CLEAN, libsubcmd) $(RM) $(LIBFILE); \
- 	find $(or $(OUTPUT),.) -name \*.o -or -name \*.o.cmd -or -name \*.o.d | xargs $(RM)
- 
- FORCE:
- 
--.PHONY: clean FORCE
-+.PHONY: clean FORCE prepare
-diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
-index 5cdac2162532..e90b285b6720 100644
---- a/tools/lib/subcmd/run-command.c
-+++ b/tools/lib/subcmd/run-command.c
-@@ -7,6 +7,7 @@
- #include <linux/string.h>
- #include <errno.h>
- #include <sys/wait.h>
-+#include <api/strbuf.h>
- #include "subcmd-util.h"
- #include "run-command.h"
- #include "exec-cmd.h"
-@@ -227,3 +228,32 @@ int run_command_v_opt(const char **argv, int opt)
- 	prepare_run_command_v_opt(&cmd, argv, opt);
- 	return run_command(&cmd);
- }
-+
-+int run_command_strbuf(const char *cmd, struct strbuf *buf)
-+{
-+	const char *argv[4] = {
-+		"/bin/sh",
-+		"-c",
-+		cmd,
-+		NULL
-+	};
-+	struct child_process child = {
-+		.argv = argv,
-+		.out = -1,
-+	};
-+	int err;
-+	ssize_t read_sz;
-+
-+	err = start_command(&child);
-+	if (err)
-+		return err;
-+
-+	read_sz = strbuf_read(buf, child.out, 0);
-+
-+	err = finish_command(&child);
-+	close(child.out);
-+	if (read_sz < 0)
-+		return (int)read_sz;
-+
-+	return err;
-+}
-diff --git a/tools/lib/subcmd/run-command.h b/tools/lib/subcmd/run-command.h
-index 17d969c6add3..1f7a2af9248c 100644
---- a/tools/lib/subcmd/run-command.h
-+++ b/tools/lib/subcmd/run-command.h
-@@ -58,4 +58,18 @@ int run_command(struct child_process *);
- #define RUN_COMMAND_STDOUT_TO_STDERR 4
- int run_command_v_opt(const char **argv, int opt);
- 
-+struct strbuf;
-+/**
-+ * run_command_strbuf() - Run cmd using /bin/sh and place stdout in strbuf.
-+ * @cmd: The command to run by "/bin/sh -c".
-+ * @buf: The strbuf appended to by reading stdout.
-+ *
-+ * Similar to popen with fread, run the given command reading the stdout output
-+ * to buf. As with popen, stderr output goes to the current processes stderr but
-+ * may be redirected in cmd by using "2>&1".
-+ *
-+ * Return: 0 on success or a negative error code on failure.
-+ */
-+int run_command_strbuf(const char *cmd, struct strbuf *buf);
-+
- #endif /* __SUBCMD_RUN_COMMAND_H */
+-		cnt = read(fd, sb->buf + sb->len, sb->alloc - sb->len - 1);
+-		if (cnt < 0) {
++		read_size = read(fd, sb->buf + sb->len, sb_remaining);
++		if (read_size < 0) {
+ 			if (oldalloc == 0)
+ 				strbuf_release(sb);
+ 			else
+ 				strbuf_setlen(sb, oldlen);
+-			return cnt;
++			return read_size;
+ 		}
+-		if (!cnt)
++		if (read_size == 0)
+ 			break;
+-		sb->len += cnt;
+-		ret = strbuf_grow(sb, 8192);
++		sb->len += read_size;
++		if ((size_t)read_size < sb_remaining)
++			continue;
++		ret = strbuf_grow(sb, 4095);
+ 		if (ret)
+ 			return ret;
+ 	}
 -- 
 2.39.0.314.g84b9a713c41-goog
 
