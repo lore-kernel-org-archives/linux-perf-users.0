@@ -2,32 +2,33 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BFAC6379F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 08:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810E0C46467
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Jan 2023 09:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238086AbjAJIqb (ORCPT
+        id S231500AbjAJJAB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 03:46:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
+        Tue, 10 Jan 2023 04:00:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238064AbjAJIqN (ORCPT
+        with ESMTP id S231240AbjAJI6N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 03:46:13 -0500
+        Tue, 10 Jan 2023 03:58:13 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9E6C726F5;
-        Tue, 10 Jan 2023 00:46:11 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5921C68786;
+        Tue, 10 Jan 2023 00:54:37 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA62FAD7;
-        Tue, 10 Jan 2023 00:46:52 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1557165C;
+        Tue, 10 Jan 2023 00:55:13 -0800 (PST)
 Received: from [10.162.42.6] (unknown [10.162.42.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B47043F587;
-        Tue, 10 Jan 2023 00:46:04 -0800 (PST)
-Message-ID: <c6b506d6-0dc8-8cc6-7260-804e341e5103@arm.com>
-Date:   Tue, 10 Jan 2023 14:16:01 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 513603F587;
+        Tue, 10 Jan 2023 00:54:25 -0800 (PST)
+Message-ID: <895daf8d-3303-ac70-16ab-76bead23d389@arm.com>
+Date:   Tue, 10 Jan 2023 14:24:22 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.2
-Subject: Re: [PATCH v4 5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
+Subject: Re: [PATCH v4 6/8] perf: arm_spe: Support new SPEv1.2/v8.7 'not
+ taken' event
 Content-Language: en-US
 To:     Rob Herring <robh@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -49,9 +50,9 @@ Cc:     Mark Brown <broonie@kernel.org>,
         kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
         James Clark <james.clark@arm.com>
 References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
- <20220825-arm-spe-v8-7-v4-5-327f860daf28@kernel.org>
+ <20220825-arm-spe-v8-7-v4-6-327f860daf28@kernel.org>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20220825-arm-spe-v8-7-v4-5-327f860daf28@kernel.org>
+In-Reply-To: <20220825-arm-spe-v8-7-v4-6-327f860daf28@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -61,9 +62,11 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 1/10/23 00:56, Rob Herring wrote:
-> Now that the SPE register definitions include enums for some PMSIDR_EL1
-> fields, use them in the driver in place of magic values.
+> Arm SPEv1.2 (Armv8.7/v9.2) adds a new event, 'not taken', in bit 6 of
+> the PMSEVFR_EL1 register. Update arm_spe_pmsevfr_res0() to support the
+> additional event.
 > 
+> Tested-by: James Clark <james.clark@arm.com>
 > Signed-off-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
@@ -71,67 +74,43 @@ Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
 > v4:
 >  - Rebase on v6.2-rc1
-> v3: New patch
+> v3:
+>  - No change
+> v2:
+>  - Update for v6.1 sysreg generated header changes
 > ---
->  drivers/perf/arm_spe_pmu.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  arch/arm64/include/asm/sysreg.h | 2 ++
+>  drivers/perf/arm_spe_pmu.c      | 4 +++-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 > 
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index db269eda7c1c..fc8787727792 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -221,6 +221,8 @@
+>  	 BIT_ULL(6) | BIT_ULL(4) | BIT_ULL(2) | BIT_ULL(0))
+>  #define PMSEVFR_EL1_RES0_V1P1	\
+>  	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
+> +#define PMSEVFR_EL1_RES0_V1P2	\
+> +	(PMSEVFR_EL1_RES0_V1P1 & ~BIT_ULL(6))
+>  
+>  /* Buffer error reporting */
+>  #define PMBSR_EL1_FAULT_FSC_SHIFT	PMBSR_EL1_MSS_SHIFT
 > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 9b4bd72087ea..af6d3867c3e7 100644
+> index af6d3867c3e7..82f67e941bc4 100644
 > --- a/drivers/perf/arm_spe_pmu.c
 > +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -1006,32 +1006,32 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  	/* This field has a spaced out encoding, so just use a look-up */
->  	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
->  	switch (fld) {
-> -	case 0:
-> +	case PMSIDR_EL1_INTERVAL_256:
->  		spe_pmu->min_period = 256;
->  		break;
-> -	case 2:
-> +	case PMSIDR_EL1_INTERVAL_512:
->  		spe_pmu->min_period = 512;
->  		break;
-> -	case 3:
-> +	case PMSIDR_EL1_INTERVAL_768:
->  		spe_pmu->min_period = 768;
->  		break;
-> -	case 4:
-> +	case PMSIDR_EL1_INTERVAL_1024:
->  		spe_pmu->min_period = 1024;
->  		break;
-> -	case 5:
-> +	case PMSIDR_EL1_INTERVAL_1536:
->  		spe_pmu->min_period = 1536;
->  		break;
-> -	case 6:
-> +	case PMSIDR_EL1_INTERVAL_2048:
->  		spe_pmu->min_period = 2048;
->  		break;
-> -	case 7:
-> +	case PMSIDR_EL1_INTERVAL_3072:
->  		spe_pmu->min_period = 3072;
->  		break;
+> @@ -677,9 +677,11 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
+>  	case ID_AA64DFR0_EL1_PMSVer_IMP:
+>  		return PMSEVFR_EL1_RES0_IMP;
+>  	case ID_AA64DFR0_EL1_PMSVer_V1P1:
+> +		return PMSEVFR_EL1_RES0_V1P1;
+> +	case ID_AA64DFR0_EL1_PMSVer_V1P2:
+>  	/* Return the highest version we support in default */
 >  	default:
->  		dev_warn(dev, "unknown PMSIDR_EL1.Interval [%d]; assuming 8\n",
->  			 fld);
->  		fallthrough;
-> -	case 8:
-> +	case PMSIDR_EL1_INTERVAL_4096:
->  		spe_pmu->min_period = 4096;
+> -		return PMSEVFR_EL1_RES0_V1P1;
+> +		return PMSEVFR_EL1_RES0_V1P2;
 >  	}
->  
-> @@ -1050,10 +1050,10 @@ static void __arm_spe_pmu_dev_probe(void *info)
->  		dev_warn(dev, "unknown PMSIDR_EL1.CountSize [%d]; assuming 2\n",
->  			 fld);
->  		fallthrough;
-> -	case 2:
-> +	case PMSIDR_EL1_COUNTSIZE_12_BIT_SAT:
->  		spe_pmu->counter_sz = 12;
->  		break;
-> -	case 3:
-> +	case PMSIDR_EL1_COUNTSIZE_16_BIT_SAT:
->  		spe_pmu->counter_sz = 16;
->  	}
+>  }
 >  
 > 
