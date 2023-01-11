@@ -2,180 +2,231 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FD3C5479D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 06:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB9C5479D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 07:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229793AbjAKGOu (ORCPT
+        id S230522AbjAKHG4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 01:14:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34756 "EHLO
+        Wed, 11 Jan 2023 02:06:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbjAKGOt (ORCPT
+        with ESMTP id S231640AbjAKHGz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 01:14:49 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32755EAB
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 22:14:48 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id w1so13996750wrt.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 22:14:48 -0800 (PST)
+        Wed, 11 Jan 2023 02:06:55 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37DD65FA0
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:06:54 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id l194-20020a2525cb000000b007b411fbdc13so15472856ybl.23
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:06:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RIQ7qpauSbHhO2Y1Qi2mlq/E9mQryCMm0vG6QwCfULY=;
-        b=S+Nt7OJ0/sQ41EZTkR67683caO9Eqqjv0j6r9kECCPH3A0X0bgBJNoV7qWvCkvra6R
-         KlmIfzuzpDC271S34r/R9232WpvheDpVZpVotv9HnypR5xCK1xaQGiIWqlzw01s0pD1I
-         QHrdIEkOslw9XJvAD4/DNK+jdTVrmOYOV/f456NWBYlV+6cwFYKsm6M3DvZ8+/PzIQg7
-         CpoxebS3Ynxp4+/wWmafEz7P42NVD4VwTU1WIuOW8Eb3IBOdVCIkOkZaTuo7AvnTvJ6L
-         8nEu7YzROpz0NRPn4/J4i4MiMvKOzXrqgKK7kqvCx0LSJdUZgtGpPiJebIyKiWDI8m3H
-         eqIg==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ug6Nd3EbDzaRS68tlrjiAydekO6Uv+/xgV5ztzybNo0=;
+        b=qYAKvEXuIIQCPgHBf00AlgJZWCc4I2W8jgeb3x/4hnz/BCU2243OfENJHnHBKKGzY7
+         1jj3EAOJygA27bcZMpDdQ6RitrLuiTCNDh+MzdNqoI5stXJz5EjWxW9qt0h6USGVbWTB
+         niTVMd6d8OQRchc4/7faar99Eoj3Flx/9g0klnLbXAU3YqMzWAw995HnH0MIyXwk6Nmh
+         xDBai6ZavSM4vNqCbaDgqeI2vLBttqNaAmrDC+84Peq7yR+Qjf5m+6XH5uK8h6/heu/k
+         8UiRPBVKzg7c3DgVZAZc8ACMkAdk75nQ6a26JE4/aetRFbrjY51Ut6ermdBeBOSxvM8X
+         8jIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RIQ7qpauSbHhO2Y1Qi2mlq/E9mQryCMm0vG6QwCfULY=;
-        b=twuMBTGdyL8mdJR7CaJDIR/8GNSl7duvQEyM4qzHJfK/FlMSg/Ym4RkSlC5GO9n858
-         /kyAn4lG7JXD4k8za1y3PzGqIysfubz4PKqVmVMhyAMz8MZ5BUEW0wafZWryPxQfP1jN
-         BR/jbCL421yED0c6nLZkcyDJ/1VoEX1aSExbmS2b6jBsle/NzdxqdpRlixhdfSgWLEVp
-         gmaHBrc0ItSjF+F+E8/3gBkpuoQpVjkgBP6WI9CXMUNfZq/VxwzbR16AWQbUmrwTAqCQ
-         k92AjSyOaDHF3AcBE/i5KPq6lZdXy1X1A1vZmdykXj1LpcxhdL/L0sJS6a9mPdthqRxh
-         R8Rw==
-X-Gm-Message-State: AFqh2krdr6tsSorKDWrtup3pVmbXUi6YCgEfl5+tg/zH0wtLaTh7SfBk
-        LXFbySeOpVZlvKZGzZ+OODtV/yy8EebDOBJCfvOGxQ==
-X-Google-Smtp-Source: AMrXdXvBnDPpKKrgiIU+2rNV0v16BQ2tr/0sCaT9KlYahquXg4H//4DQ2ERRzsP/ahVoZwArpvyhfN8aOfw1p2qG3ys=
-X-Received: by 2002:a5d:6e0a:0:b0:242:5caa:5fbf with SMTP id
- h10-20020a5d6e0a000000b002425caa5fbfmr1372780wrz.300.1673417686436; Tue, 10
- Jan 2023 22:14:46 -0800 (PST)
-MIME-Version: 1.0
-References: <1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1672745976-2800146-2-git-send-email-renyu.zj@linux.alibaba.com>
- <5c5716e5-b2ff-67cd-b608-4eeffa7e04bc@oracle.com> <1f3d53cb-4160-e29d-3934-d6a488d9fd49@linux.alibaba.com>
- <7aa225df-af25-a6be-9bef-c965488ba43a@oracle.com> <d4d132d9-1513-6a4e-981f-aa4bc4ebbcbb@linux.alibaba.com>
- <00bf227a-75ce-c63c-c740-89b8d2b27e1c@oracle.com> <CAP-5=fVGmjFOZqOk0E1bcqeTHcJhEmoA-vrKcHLOs4B_ythT1g@mail.gmail.com>
- <6971b848-2754-6909-d36b-ea80fe157e95@oracle.com> <ec5684cd-a527-4e13-2b05-31832d80535c@arm.com>
-In-Reply-To: <ec5684cd-a527-4e13-2b05-31832d80535c@arm.com>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ug6Nd3EbDzaRS68tlrjiAydekO6Uv+/xgV5ztzybNo0=;
+        b=oC/NJq1H5sRJcux25yrydgGpQ6i84BxbWyKS931/ZCwPo1YMEqaHtHUAVE7D7kpnCf
+         +ZAP3mZAUixWqWP1JP42qD/qZPdt72J8ZVr3cEXI8VWMqSN6cstp30b+GaFGf+89eSdc
+         2FM27OqAU/w2RE9WOOKzQnhaINw1pdq1ZxvPy0tT8H0e5IKyjmuCgWF+c2Kkm/gub1WE
+         GRTfeHx/t/yolBDqz7GK8wbDAbav/lzFrjBq2KVE+ZON5vO3EJj6l/kKZFpc8NW98haS
+         U1Cg3O7uiiBbHjQodRM+j5Xz+O02vmvKk0NIfTSnu3mxqgrpQ42o1wYIA+K8M0Qw04hq
+         C1Ww==
+X-Gm-Message-State: AFqh2krXVhGU5QUiS7M7IeMJQSwbccUneFm9XLgFIlCCzk7Fdk/fqQEC
+        jdy1x1x3G0OUv3qBjs3M7BlzBg9DSxw5
+X-Google-Smtp-Source: AMrXdXsEESmkkdzotiEZy0SnHtEXHT0MGsDo6ZfRxoLnR5PQ1g1oFZ5vEMTqAFlAHvykxZfbh3zhMMUGATNT
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cebf:c37e:8184:56])
+ (user=irogers job=sendgmr) by 2002:a25:4f03:0:b0:722:24a8:f05b with SMTP id
+ d3-20020a254f03000000b0072224a8f05bmr6659709ybb.418.1673420813425; Tue, 10
+ Jan 2023 23:06:53 -0800 (PST)
+Date:   Tue, 10 Jan 2023 23:06:39 -0800
+Message-Id: <20230111070641.1728726-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+Subject: [PATCH v2 1/3] perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 10 Jan 2023 22:14:34 -0800
-Message-ID: <CAP-5=fVLCV5bskAMDTvxZYxgbBYg9-yccF1-EhZPwAgVYU9Htg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] perf vendor events arm64: Add topdown L1 metrics
- for neoverse-n2
-To:     James Clark <james.clark@arm.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        German Gomez <german.gomez@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 7:35 AM James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 06/01/2023 10:14, John Garry wrote:
-> > On 05/01/2023 21:13, Ian Rogers wrote:
-> >>>> This may be a feasible idea. The value of slots comes from the
-> >>>> register PMMIR_EL1, which I can read in
-> >>>> /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots. But how do I
-> >>>> replace the slots in MetricExpr with the
-> >>>> read slots values? Currently I understand that parameters in
-> >>>> metricExpr only support events and constants.
-> >>>>
-> >>> Maybe during runtime we could create a pseudo metric/event for SLOT.
-> >> For Intel we do this by just having a different constant for each
-> >> architecture. It is fairly easy to add a new "literal", so you could
-> >> add a #slots in expr__get_literal:
-> >> https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kerne=
-l/git/acme/linux.git/tree/tools/perf/util/expr.c?h=3Dperf*core*n407__;LyM!!=
-ACWV5N9M2RV99hQ!IHcZFuFaLdQDQvVOnHVlbbME2S4aW8GohWUkydlejpi7ifFz61r7RutGXRe=
-Rt0d88X_vDfkTySCiuD2PqOA$  Populating it would be the challenge =F0=9F=98=
-=84
-> >
-> > Thanks for the pointer. I think that the challenge in populating it
-> > really comes down to whether we would really want to make this generic.
-> >
-> > I suppose that for arm64 we could have a method which accesses this
-> > PMMIR_EL1 register, while for other archs we could have a weak function
-> > which just returns NAN. If other archs want to use this key expr, they
-> > can add their own method.
-> >
->
-> I wonder if it would be worthwhile and even more generic to add some
-> sort of int containing file accessor construct. It could also have
-> support for a default value when the file doesn't exist. For example:
->
->   "MetricExpr": "ITLB / {file://<pmu>/caps/slots(5)}"
->
-> It gets a bit fiddly because you might want to support absolute paths
-> and paths relative to whatever PMU is being used. But it could prevent
-> having to add some custom identifier and glue code for every possible
-> file that just has an integer in it.
->
-> It also wouldn't be possible to support the case where the file has
-> bitfields in it that need to be extracted, so maybe we shouldn't do it.
->
-> James
+Switch HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE to be a version number
+test on libtraceevent being >= to version 1.5.0. This also corrects a
+greater-than test to be greater-than-or-equal.
 
-Thanks James,
+Discussed here:
+https://lore.kernel.org/lkml/20221205225940.3079667-3-irogers@google.com/
 
-I think there are many opportunities to improve the metrics. One step
-in this direction is:
-https://lore.kernel.org/lkml/20221221223420.2157113-1-irogers@google.com/
-(which is looking for reviews :-D ). Some areas we could improve include:
- - the expression code has support for longs but I don't believe any
-metrics use it.
- - the modulus is weird and again unused.
- - I think divide (/) should behave like d_ratio as aborting parsing
-is next to useless.
- - events like Intel's msr/tsc/ don't have to be programmed on every
-CPU/hyperthread and doing so is quite wasteful.
- - we may have a read but no write counter, so being able to read a
-sibling CPUs/socket's read counter may inform about writes. This isn't
-currently expressible as metrics compute based on whatever the
-aggregation mode is, you can't get a particular count.
- - perf stat record/report don't work/compute metrics, but just
-provide counters.
- - the json format should resemble sysfs rather than being a flat
-list, metrics and events in the list should be separated.
- - metrics use / as divide and so @ is used in /'s place for event
-modifiers. BPF events use / as a directory separator.
+Fixes: b9a49f8cb02f ("perf tools: Check if libtracevent has TEP_FIELD_IS_RELATIVE")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.config                             | 4 ----
+ tools/perf/builtin-trace.c                             | 2 +-
+ tools/perf/util/data-convert-bt.c                      | 2 +-
+ tools/perf/util/evsel.c                                | 2 +-
+ tools/perf/util/python.c                               | 2 +-
+ tools/perf/util/scripting-engines/trace-event-perl.c   | 2 +-
+ tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
+ tools/perf/util/sort.c                                 | 3 ++-
+ tools/perf/util/trace-event.h                          | 3 +++
+ 9 files changed, 11 insertions(+), 11 deletions(-)
 
-For the filesystems reading I think it is a good idea. I'd like to
-make it so that things like #num_dies become tool events and remove
-the notion of literals. Perhaps we can make reading a file something
-that is an event. The current event parsing logic is overly complex,
-for example the handling of '-' which has some legacy PMU separation
-properties. A proposal mentioned at LPC was to have a new event
-parsing library that doesn't carry legacy baggage. We can make metric
-code use this as the metrics encode the events. If the new library
-fails parsing the code can fall back on the existing parser. I'd like
-it if the event parsing logic more closely resembled the sysfs style.
-I'd like it if we could have events in sysfs, built into the tool (but
-with a layout resembling sysfs) and also allow events, etc. to be
-added by having say a zip of a sysfs directory/file structure. I'm
-hoping libraries like metric.py:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/perf/pmu-events/metric.py
-can be used by vendors, so that it is easy to update vendor generated
-json if/when the format changes.
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index c2504c39bdcb..f67ba8060162 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1204,10 +1204,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+     LIBTRACEEVENT_VERSION_CPP := $(shell expr $(LIBTRACEEVENT_VERSION_1) \* 255 \* 255 + $(LIBTRACEEVENT_VERSION_2) \* 255 + $(LIBTRACEEVENT_VERSION_3))
+     CFLAGS += -DLIBTRACEEVENT_VERSION=$(LIBTRACEEVENT_VERSION_CPP)
+     $(call detected,CONFIG_LIBTRACEEVENT)
+-    LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE := $(shell expr 1 \* 255 \* 255 + 5 \* 255 + 0) # 1.5.0
+-    ifeq ($(shell test $(LIBTRACEEVENT_VERSION_CPP) -gt $(LIBTRACEEVENT_VERSION_WITH_TEP_FIELD_IS_RELATIVE); echo $$?),0)
+-      CFLAGS += -DHAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+-    endif
+   else
+     dummy := $(warning Warning: libtraceevent is missing limiting functionality, please install libtraceevent-dev/libtraceevent-devel)
+   endif
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 86e06f136f40..927622ecc42e 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2729,7 +2729,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 				offset = format_field__intval(field, sample, evsel->needs_swap);
+ 				syscall_arg.len = offset >> 16;
+ 				offset &= 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 				if (field->flags & TEP_FIELD_IS_RELATIVE)
+ 					offset += field->offset + field->size;
+ #endif
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index b842273458b8..98454f7a820c 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -322,7 +322,7 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
+ 		offset = tmp_val;
+ 		len = offset >> 16;
+ 		offset &= 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 		if (flags & TEP_FIELD_IS_RELATIVE)
+ 			offset += fmtf->offset + fmtf->size;
+ #endif
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 999dd1700502..296292fa2c04 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2784,7 +2784,7 @@ void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char
+ 	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+ 		offset = *(int *)(sample->raw_data + field->offset);
+ 		offset &= 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 		if (field->flags & TEP_FIELD_IS_RELATIVE)
+ 			offset += field->offset + field->size;
+ #endif
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 212031b97910..25a276710dfb 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -442,7 +442,7 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
+ 			offset  = val;
+ 			len     = offset >> 16;
+ 			offset &= 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 			if (field->flags & TEP_FIELD_IS_RELATIVE)
+ 				offset += field->offset + field->size;
+ #endif
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index c097b7934fd4..5bcec514f697 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -393,7 +393,7 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+ 			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+ 				offset = *(int *)(data + field->offset);
+ 				offset &= 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 				if (field->flags & TEP_FIELD_IS_RELATIVE)
+ 					offset += field->offset + field->size;
+ #endif
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index e930f5f1f36d..759ed6eafa3c 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -994,7 +994,7 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 				offset  = val;
+ 				len     = offset >> 16;
+ 				offset &= 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 				if (field->flags & TEP_FIELD_IS_RELATIVE)
+ 					offset += field->offset + field->size;
+ #endif
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index e188f74698dd..cfcc253239f0 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -28,6 +28,7 @@
+ #include "time-utils.h"
+ #include "cgroup.h"
+ #include "machine.h"
++#include "trace-event.h"
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ 
+@@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
+ 		tep_read_number_field(field, a->raw_data, &dyn);
+ 		offset = dyn & 0xffff;
+ 		size = (dyn >> 16) & 0xffff;
+-#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+ 		if (field->flags & TEP_FIELD_IS_RELATIVE)
+ 			offset += field->offset + field->size;
+ #endif
+diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+index add6c5d9531c..1a1a2e6b24fb 100644
+--- a/tools/perf/util/trace-event.h
++++ b/tools/perf/util/trace-event.h
+@@ -20,6 +20,9 @@ struct trace_event {
+ 	struct tep_plugin_list	*plugin_list;
+ };
+ 
++/* Computes a version number comparable with LIBTRACEEVENT_VERSION from Makefile.config. */
++#define MAKE_LIBTRACEEVENT_VERSION(a, b, c) ((a)*255*255+(b)*255+(c))
++
+ typedef char *(tep_func_resolver_t)(void *priv,
+ 				    unsigned long long *addrp, char **modp);
+ 
+-- 
+2.39.0.314.g84b9a713c41-goog
 
-Thanks,
-Ian
