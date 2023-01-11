@@ -2,100 +2,100 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA305C5479D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFD9C46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 13:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231848AbjAKNQq (ORCPT
+        id S230124AbjAKNRj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 08:16:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
+        Wed, 11 Jan 2023 08:17:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjAKNQp (ORCPT
+        with ESMTP id S233131AbjAKNRc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 08:16:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879CA60EE;
-        Wed, 11 Jan 2023 05:16:44 -0800 (PST)
+        Wed, 11 Jan 2023 08:17:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52081AA1C
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 05:17:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3AE25B81BE6;
-        Wed, 11 Jan 2023 13:16:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3CE7C433EF;
-        Wed, 11 Jan 2023 13:16:41 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 93AE5B81BDE
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 13:17:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D76C433D2;
+        Wed, 11 Jan 2023 13:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673443001;
-        bh=xHtzKMNO2jMg6JzWjhGA9a6by3sdnOw4VBI0pKdU8G4=;
+        s=k20201202; t=1673443047;
+        bh=60gIQMYvFe3Fc0IWjiCAxr+C6fShjYaz5c0/QjpIZQg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Llgr4Hj/Pxyak6ZPTgMGr0SXsUu6sI07GwbRGOlBrwJIDt6558hUGvA4a9gRRecZS
-         QSOUZdWEXAuX4NWx+uHSktAOtTSCl4H2/tn4BME9/dpOnOZDOnX8Ud5btNjv2C8PiA
-         ZtMf0gzqtNXD6dOP/gSyrMwijSIOJmfYpLmwU7SmMQ1cr6PSvHQfQvdhO3rPvzEPNI
-         xsPlcmyABOQ7MzGGA+uVc3kndK6BuRiDVxG/FG88J1yAIXHTKQW1fGNZ1Fdakg77/V
-         8sB3W77lWdDlmNNuhBFjsByt1Z4C56MIr3jKXGIXsG7zrWzvxmyAlkgj1m4YVkJ/Yr
-         LxtA/ghwSeFGw==
+        b=FeFgxn0L7fM02KPNVsFkXBFh1nMkO7M5IXdmpRAUh2EcHUkbHq+Eq3kI4b9yJ19AB
+         za0kOPU+UDUHcgCyoiLLM8ilnTTGxD4bgQKG4dNandCPPyVrgtXex/vDJ8qNfXwUOB
+         VUiwK2LzU1nqiktfMA203ck0YyQqYzap+AtKEd4idzKwky7ZPHMk7xKh1Vdw7KojRa
+         avLJCumSYdWFc37ITGC1bI+nYltEZz4jhW7tFD03l7pra6un/NvXOTeOhtqquCg0Sd
+         13pqcOwGu2awu8qVJ00JZXkhke7I+7iAbXGyPsMcVUsEALEgxye+LRhi998lFZgpH9
+         LKr8hSNPwKy7A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4B53E40468; Wed, 11 Jan 2023 10:16:39 -0300 (-03)
-Date:   Wed, 11 Jan 2023 10:16:39 -0300
+        id 03C7B40468; Wed, 11 Jan 2023 10:17:24 -0300 (-03)
+Date:   Wed, 11 Jan 2023 10:17:24 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Dmitry Dolgov <9erthalion6@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf auxtrace: Fix address filter duplicate symbol
- selection
-Message-ID: <Y762t7QWEKPYRFC4@kernel.org>
-References: <20230110185659.15979-1-adrian.hunter@intel.com>
+To:     Dmitry Dolgov <9erthalion6@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, mingo@redhat.com,
+        jolsa@kernel.org, irogers@google.com
+Subject: Re: [RFC PATCH v1] perf record: Correct address filters for
+ duplicated symbols
+Message-ID: <Y7625DUhEE+NUfWh@kernel.org>
+References: <20230106203751.403270-1-9erthalion6@gmail.com>
+ <aad6782c-fb30-ba39-ba59-775c5f227d56@intel.com>
+ <20230110104848.hty4upem76lkxj2y@ddolgov.remote.csb>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230110185659.15979-1-adrian.hunter@intel.com>
+In-Reply-To: <20230110104848.hty4upem76lkxj2y@ddolgov.remote.csb>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 10, 2023 at 08:56:59PM +0200, Adrian Hunter escreveu:
->   After:
+Em Tue, Jan 10, 2023 at 11:48:48AM +0100, Dmitry Dolgov escreveu:
+> > On Mon, Jan 09, 2023 at 09:02:02AM +0200, Adrian Hunter wrote:
+> > On 6/01/23 22:37, Dmitrii Dolgov wrote:
+> > > It seems the logic to handle duplicated symbols is off. In case if the
+> > > symbol index is specified it will:
+> > >
+> > > * find a match
+> > > * continue searching
+> > > * check that start is not null and idx is set on the next loop
+> > > * exit with the error code 1
+> > >
+> > > My guess is the expectation was that at this point the second match is
+> > > found (because *start is not null), although the new symbol hasn't pass
+> > > dso_sym_match yet. Here is how it looks like:
+> >
+> > If *start && idx > 0 there is no need to match anymore.  The
+> > code is just getting *size.  Looks to me like it should be:
+> >
+> > diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> > index 265d20cc126b..c2e323cd7d49 100644
+> > --- a/tools/perf/util/auxtrace.c
+> > +++ b/tools/perf/util/auxtrace.c
+> > @@ -2611,7 +2611,7 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
+> >  				*size = sym->start - *start;
+> >  			if (idx > 0) {
+> >  				if (*size)
+> > -					return 1;
+> > +					return 0;
+> >  			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
+> >  				print_duplicate_syms(dso, sym_name);
+> >  				return -EINVAL;
 > 
->     $ perf record -e intel_pt//u --filter 'filter func #2 @ ./test' -- ./test
->     First func
->     Second func
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.016 MB perf.data ]
->     $ perf script --itrace=b -Ftime,flags,ip,sym,addr --ns
->     1231062.526977619:   tr strt                               0 [unknown] =>     558495708179 func
->     1231062.526977619:   tr end  call               558495708188 func =>     558495708050 _init
->     1231062.526979286:   tr strt                               0 [unknown] =>     55849570818d func
->     1231062.526979286:   tr end  return             55849570818f func =>     55849570819d other
-> 
-> Reported-by: Dmitry Dolgov <9erthalion6@gmail.com>
-> Fixes: 1b36c03e3569 ("perf record: Add support for using symbols in address filters")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Yes, if there was no intention to continue searching symbols, this would
+> work as well. Just in case I have verified this on my test, everything
+> is fine. Would you send a patch for that?
 
-Thanks, applied.
+So I'll take this as a:
 
-Dmitry, can I have your Tested-by? Checking the original thread...
+Tested-by: Dmitry Dolgov <9erthalion6@gmail.com>
+
+Ok?
 
 - Arnaldo
-
-> ---
->  tools/perf/util/auxtrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 265d20cc126b..c2e323cd7d49 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -2611,7 +2611,7 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
->  				*size = sym->start - *start;
->  			if (idx > 0) {
->  				if (*size)
-> -					return 1;
-> +					return 0;
->  			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
->  				print_duplicate_syms(dso, sym_name);
->  				return -EINVAL;
-> -- 
-> 2.34.1
