@@ -2,28 +2,28 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265FC67871
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 10:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7B1C46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 11:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbjAKK5d (ORCPT
+        id S232689AbjAKLjL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 05:57:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39762 "EHLO
+        Wed, 11 Jan 2023 06:39:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238898AbjAKK44 (ORCPT
+        with ESMTP id S232319AbjAKLiw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 05:56:56 -0500
+        Wed, 11 Jan 2023 06:38:52 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5817016595;
-        Wed, 11 Jan 2023 02:56:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DFE81ADB2;
+        Wed, 11 Jan 2023 03:35:09 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20B2BFEC;
-        Wed, 11 Jan 2023 02:57:21 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 059EEFEC;
+        Wed, 11 Jan 2023 03:35:51 -0800 (PST)
 Received: from [10.57.45.242] (unknown [10.57.45.242])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 046343F587;
-        Wed, 11 Jan 2023 02:56:35 -0800 (PST)
-Message-ID: <5acce414-eabb-3d22-4907-da6b64b85a9c@arm.com>
-Date:   Wed, 11 Jan 2023 10:56:34 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D720F3F587;
+        Wed, 11 Jan 2023 03:35:05 -0800 (PST)
+Message-ID: <4e6a0766-52d1-effa-9986-af6b3ca29f1a@arm.com>
+Date:   Wed, 11 Jan 2023 11:35:04 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
@@ -66,8 +66,10 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 10/01/2023 16:42, Tanmay Jagdale wrote:
+> Hi James,
+> 
 [...]
->>
+
 >> base-commit: 09e6f9f98370be9a9f8978139e0eb1be87d1125f
 > I have tested this patch set on our platform and able to see updated
 > timestamp values in perf script's output.
@@ -86,48 +88,11 @@ On 10/01/2023 16:42, Tanmay Jagdale wrote:
 > Idx:113; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x45
 > Idx:116; ID:12; I_ATOM_F1 : Atom format 1.; E
 > Idx:117; ID:12; I_ADDR_S_IS0 : Address, Short, IS0.; Addr=0xFFFF8000086B52D4 ~[0x152D4]
-> 
-> Since the source of timestamp is the Generic Timer block and the CPUs
-> run at higher frequencies, this behaviour could be possible on high
-> performance ARM cores.
-> 
-> Having consecutive timestamps with same value is resulting in a
-> slightly jumbled order (in nanosecs) in perf script's time column.
-> A snippet corresponding to the Coresight trace data mentioned above:
-> ...
-> perf   965/965   [001]  3182.286629044:            instructions:k:   return                               0 ffff8000086a761c coresight_timeout+0xc8
-> perf   965/965   [001]  3182.286629044:            instructions:k:   return                               0 ffff8000086a7620 coresight_timeout+0xcc
-> perf   965/965   [001]  3182.286629046:            instructions:k:   jmp                                  0 ffff8000086a75c8 coresight_timeout+0x74
-> perf   965/965   [001]  3182.286629046:            instructions:k:   jmp                                  0 ffff8000086a75cc coresight_timeout+0x78
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d0 coresight_timeout+0x7c
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d4 coresight_timeout+0x80
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d8 coresight_timeout+0x84
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75dc coresight_timeout+0x88
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e0 coresight_timeout+0x8c
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e4 coresight_timeout+0x90
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e8 coresight_timeout+0x94
-> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75ec coresight_timeout+0x98
-> 
-> Perf's do_soft_timestamp() logic in cs_etm_decoder.c file is incrementing
-> the HW timestamp based on instruction count. Since the next timestamp
-> also has the same value, it could be leading to this jumbled order.
-> 
-> We would like to know if this has been observed on other platforms ?
-> And what could be a solution in SW for this ?
 
-Nice catch. If I'm understanding this correctly it looks like the issue
-is a combination of the cycle count in the packet being ignored by Perf,
-and the instruction count being reset to 0 when a new timestamp is received.
+Hi Tanmay,
 
-It looks like it can be fixed by some combination of combining the cycle
-count and instruction count and maybe not resetting instruction count if
-the newly received timestamp is the same as the last one. I will look
-into this.
-
-We haven't noticed it on any other platforms, but we haven't been
-looking too closely at the timestamps until now. Perhaps I can add a
-test that checks if the trace in a known function goes in the correct
-time order.
+Are you able to email or send a download link with the perf archive and
+perf.data file of this recording please?
 
 Thanks
 James
