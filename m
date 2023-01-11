@@ -2,29 +2,29 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF51C5479D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 10:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41FFC46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 10:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232646AbjAKKnu (ORCPT
+        id S232575AbjAKKtV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 05:43:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
+        Wed, 11 Jan 2023 05:49:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238079AbjAKKnY (ORCPT
+        with ESMTP id S232012AbjAKKs6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 05:43:24 -0500
+        Wed, 11 Jan 2023 05:48:58 -0500
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF52F2718;
-        Wed, 11 Jan 2023 02:43:22 -0800 (PST)
-Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NsPPG1V8GzRqq2;
-        Wed, 11 Jan 2023 18:41:38 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CCE13E85;
+        Wed, 11 Jan 2023 02:48:55 -0800 (PST)
+Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NsPX64BZSzJrLp;
+        Wed, 11 Jan 2023 18:47:34 +0800 (CST)
 Received: from huawei.com (10.44.142.108) by kwepemm600006.china.huawei.com
  (7.193.23.105) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 11 Jan
- 2023 18:43:19 +0800
+ 2023 18:48:51 +0800
 From:   <luolongjun@huawei.com>
-To:     <eterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <namhyung@kernel.org>
 CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
@@ -32,14 +32,14 @@ CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <zhuling8@huawei.com>, <lizongwu@huawei.com>,
         <luolongjuna@gmail.com>, Longjun Luo <luolongjun@huawei.com>
 Subject: [PATCH] uprobes: list all active uprobes in the system
-Date:   Wed, 11 Jan 2023 18:42:24 +0800
-Message-ID: <20230111104224.1934567-1-luolongjun@huawei.com>
+Date:   Wed, 11 Jan 2023 18:48:25 +0800
+Message-ID: <20230111104825.1945418-1-luolongjun@huawei.com>
 X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.44.142.108]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemm600006.china.huawei.com (7.193.23.105)
 X-CFilter-Loop: Reflected
 Precedence: bulk
