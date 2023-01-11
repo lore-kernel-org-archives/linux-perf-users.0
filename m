@@ -2,107 +2,265 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FFBC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 07:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF51C5479D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 10:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235627AbjAKHJl (ORCPT
+        id S232646AbjAKKnu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 02:09:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34764 "EHLO
+        Wed, 11 Jan 2023 05:43:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234716AbjAKHJj (ORCPT
+        with ESMTP id S238079AbjAKKnY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 02:09:39 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA818B1ED
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:09:37 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id d15so15850066pls.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:09:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wXu3NFcy3E6k/qTfyZTmDtcSnmUuSgUYcvuwQn2oJ08=;
-        b=AaKP+UATMx3qvunIjeo8Fd8WCxjRzcQ2m4z8RrCbs9qE5GaxtYhBDFiYyuWNkKlrIT
-         4VhcL785Ej0lA/p5qdYgwYyqZp7MXoquBd3mXSN/o2A7RPnRnBvDoMcI9ZsPywKKmLpe
-         wtvZTOzq3bG95CyKDA0aWNQn8ZHZRBcjjGUACSqRsKk4so1SzGeCEB+R7H2KNpIpkEzr
-         tzyj2JmO6OCyzqc/OSdGvqI+buH7eCAwKkLGkFD/UAJfScuVIQcIQuSxvv7jNZ/przIA
-         2t0LcTa7s9dU/uJ2ndgoNFY0YrwpQbx7x1EQMlA9UDMeoyzdzXRl+gj8+ThmPR/BTdSi
-         YiMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wXu3NFcy3E6k/qTfyZTmDtcSnmUuSgUYcvuwQn2oJ08=;
-        b=lfEiEIs6iTsTHTAt5kJPmn0Jwgmm+gjWsFI1ZqsyeJc4bFjuif2rnm7oRL7VM0WRl2
-         PiMke33rDdpu5UmFX7/p8dCvW/1AYNRi1efwk0kFjK0C0pD5pdfE0nuiSf0cgxqywo7L
-         PQlG1slv9DY5B4c7bNo2bgDGlEYkpwZOcFnTGAaL1fBqNSXauZ9FH/1xB71+xxIUHLik
-         U5zPcwkYNg19Zr/aohTslod4A7bqi081t82oeAq2gCtksQExF+0uBPfFwt7el2jkuqR1
-         R9MSjeHhFweemRa8bISl7HPf25mS+DEsM1n6OTWh7WWycpQO1Qs2VIltzqIuUHvMuD04
-         dskw==
-X-Gm-Message-State: AFqh2kpIgprylDuHIKlJSya5cl9zO6L4EgxLEfolGyO8rdoAOk4aIN6I
-        T3mpy91vYL50gQwZ+dRARRmrlQ==
-X-Google-Smtp-Source: AMrXdXs6dhihzdE8mH+xS+p4iaiATH5a3EjmMV3wqpinRnkNIIzJhknQz2wZ96miw/SyXkTQh7ljNg==
-X-Received: by 2002:a17:902:7b94:b0:191:3ebd:c3a5 with SMTP id w20-20020a1709027b9400b001913ebdc3a5mr67556468pll.17.1673420977122;
-        Tue, 10 Jan 2023 23:09:37 -0800 (PST)
-Received: from leoy-yangtze.lan ([152.70.116.104])
-        by smtp.gmail.com with ESMTPSA id m18-20020a170902db1200b00192d07b8222sm9359429plx.100.2023.01.10.23.09.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 23:09:36 -0800 (PST)
-Date:   Wed, 11 Jan 2023 15:09:24 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
-        mike.leach@linaro.org, sgoutham@marvell.com, gcherian@marvell.com,
-        lcherian@marvell.com, bbhushan2@marvell.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/7] perf: Use perf_pmu__open_file() and
- perf_pmu__scan_file()
-Message-ID: <Y75gXmBZXQueCuvO@leoy-yangtze.lan>
-References: <20230103162042.423694-1-james.clark@arm.com>
- <20230103162042.423694-3-james.clark@arm.com>
+        Wed, 11 Jan 2023 05:43:24 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF52F2718;
+        Wed, 11 Jan 2023 02:43:22 -0800 (PST)
+Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NsPPG1V8GzRqq2;
+        Wed, 11 Jan 2023 18:41:38 +0800 (CST)
+Received: from huawei.com (10.44.142.108) by kwepemm600006.china.huawei.com
+ (7.193.23.105) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 11 Jan
+ 2023 18:43:19 +0800
+From:   <luolongjun@huawei.com>
+To:     <eterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sangyan@huawei.com>, <luanjianhai@huawei.com>,
+        <zhuling8@huawei.com>, <lizongwu@huawei.com>,
+        <luolongjuna@gmail.com>, Longjun Luo <luolongjun@huawei.com>
+Subject: [PATCH] uprobes: list all active uprobes in the system
+Date:   Wed, 11 Jan 2023 18:42:24 +0800
+Message-ID: <20230111104224.1934567-1-luolongjun@huawei.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230103162042.423694-3-james.clark@arm.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.44.142.108]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600006.china.huawei.com (7.193.23.105)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 03, 2023 at 04:20:36PM +0000, James Clark wrote:
-> Remove some code that duplicates existing methods. This requires that
-> some consts are removed because one of the existing helper methods takes
-> a struct perf_pmu instead of a name which has a non const name field.
-> But except for the tests, the strings were already non const.
-> 
-> No functional changes.
+From: Longjun Luo <luolongjun@huawei.com>
 
-[...]
+Since uprobes will replace instructions in the process
+memory, it is necessary to provide one way to list
+all active uprobes. One can access this file through
+/sys/kernel/debug/uprobes/list.
 
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 2f2bb0286e2a..8f39e2d17fb1 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -2,6 +2,7 @@
->  #ifndef __PMU_H
->  #define __PMU_H
->  
-> +#include <bits/types/FILE.h>
+Output looks like this
+=====================
+inode+offset/ref_ctr_offset    4160760670+0x30a10/0x0
+    ref                        1
+    register_rwsem             (unlocked)
+    consumer_rwsem             (unlocked)
+    consumers-1
+        handler                0xffffffffc03ee02e(handler) uprobe
+        ret_handler            0x0000000000000000( )
+        filter                 0xffffffffc03ee010(filter) uprobe
+    consumers-2
+        handler                0xffffffffc03e902e(handler_1) uprobe_1
+        ret_handler            0x0000000000000000( )
+        filter                 0xffffffffc03e9010(filter_1) uprobe_1
 
-Nitpick: it's good to use <stdio.h> to replace <bits/types/FILE.h>.
+Signed-off-by: Longjun Luo <luolongjun@huawei.com>
+---
+ kernel/events/uprobes.c | 120 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 109 insertions(+), 11 deletions(-)
 
-Either way, this patch looks good to me:
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index d9e357b7e17c..2fa9b910abc7 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -27,6 +27,9 @@
+ #include <linux/task_work.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/khugepaged.h>
++#include <linux/rbtree.h>
++#include <linux/debugfs.h>
++#include <linux/kallsyms.h>
+ 
+ #include <linux/uprobes.h>
+ 
+@@ -40,7 +43,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
+  */
+ #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
+ 
+-static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
++static DECLARE_RWSEM(uprobes_treelock);	/* serialize rbtree access */
+ 
+ #define UPROBES_HASH_SZ	13
+ /* serialize uprobe->pending_list */
+@@ -672,9 +675,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
+ {
+ 	struct uprobe *uprobe;
+ 
+-	spin_lock(&uprobes_treelock);
++	down_read(&uprobes_treelock);
+ 	uprobe = __find_uprobe(inode, offset);
+-	spin_unlock(&uprobes_treelock);
++	up_read(&uprobes_treelock);
+ 
+ 	return uprobe;
+ }
+@@ -704,9 +707,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
+ {
+ 	struct uprobe *u;
+ 
+-	spin_lock(&uprobes_treelock);
++	down_write(&uprobes_treelock);
+ 	u = __insert_uprobe(uprobe);
+-	spin_unlock(&uprobes_treelock);
++	up_write(&uprobes_treelock);
+ 
+ 	return u;
+ }
+@@ -938,9 +941,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+ 	if (WARN_ON(!uprobe_is_active(uprobe)))
+ 		return;
+ 
+-	spin_lock(&uprobes_treelock);
++	down_write(&uprobes_treelock);
+ 	rb_erase(&uprobe->rb_node, &uprobes_tree);
+-	spin_unlock(&uprobes_treelock);
++	up_write(&uprobes_treelock);
+ 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
+ 	put_uprobe(uprobe);
+ }
+@@ -1301,7 +1304,7 @@ static void build_probe_list(struct inode *inode,
+ 	min = vaddr_to_offset(vma, start);
+ 	max = min + (end - start) - 1;
+ 
+-	spin_lock(&uprobes_treelock);
++	down_read(&uprobes_treelock);
+ 	n = find_node_in_range(inode, min, max);
+ 	if (n) {
+ 		for (t = n; t; t = rb_prev(t)) {
+@@ -1319,7 +1322,7 @@ static void build_probe_list(struct inode *inode,
+ 			get_uprobe(u);
+ 		}
+ 	}
+-	spin_unlock(&uprobes_treelock);
++	up_read(&uprobes_treelock);
+ }
+ 
+ /* @vma contains reference counter, not the probed instruction. */
+@@ -1410,9 +1413,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
+ 	min = vaddr_to_offset(vma, start);
+ 	max = min + (end - start) - 1;
+ 
+-	spin_lock(&uprobes_treelock);
++	down_read(&uprobes_treelock);
+ 	n = find_node_in_range(inode, min, max);
+-	spin_unlock(&uprobes_treelock);
++	up_read(&uprobes_treelock);
+ 
+ 	return !!n;
+ }
+@@ -2357,3 +2360,98 @@ void __init uprobes_init(void)
+ 
+ 	BUG_ON(register_die_notifier(&uprobe_exception_nb));
+ }
++
++#ifdef CONFIG_DEBUG_FS
++
++static void *uprobe_seq_start(struct seq_file *m, loff_t *pos)
++{
++	loff_t num = *pos;
++	struct rb_node *rbp;
++
++	down_read(&uprobes_treelock);
++	for (rbp = rb_first(&uprobes_tree); rbp; rbp = rb_next(rbp)) {
++		if (num-- == 0)
++			return rbp;
++	}
++
++	return NULL;
++}
++
++static void *uprobe_seq_next(struct seq_file *f, void *v, loff_t *pos)
++{
++	++*pos;
++	return (void *)rb_next(v);
++}
++
++static void uprobe_seq_stop(struct seq_file *f, void *v)
++{
++	up_read(&uprobes_treelock);
++}
++
++static int show_uprobe(struct seq_file *m, void *v)
++{
++	struct uprobe *uprobe = rb_entry_safe(v, struct uprobe, rb_node);
++	struct uprobe_consumer *con;
++	char *modname, namebuf[KSYM_NAME_LEN];
++	const char *sym;
++	unsigned int cnt = 1;
++
++	seq_printf(m, "inode+offset/ref_ctr_offset    %lu+0x%llx/0x%llx\n",
++		uprobe->inode->i_ino, uprobe->offset, uprobe->ref_ctr_offset);
++	seq_printf(m, "    ref                        %u\n",
++		refcount_read(&uprobe->ref));
++	seq_printf(m, "    register_rwsem             %s\n",
++		rwsem_is_locked(&uprobe->register_rwsem)?"(locked)":"(unlocked)");
++	seq_printf(m, "    consumer_rwsem             %s\n",
++		rwsem_is_locked(&uprobe->consumer_rwsem)?"(locked)":"(unlocked)");
++
++	/* lock consumer_rwsem when hold uprobes_treelock */
++	down_read(&uprobe->consumer_rwsem);
++	for (con = uprobe->consumers; con; con = con->next, cnt++) {
++		seq_printf(m, "    consumers-%u\n", cnt);
++
++		modname = NULL;
++		sym = kallsyms_lookup((unsigned long)con->handler, NULL, NULL,
++			&modname, namebuf);
++		seq_printf(m, "        handler                0x%px(%s) %s\n",
++			con->handler, (sym ? sym : " "), (modname ? modname : " "));
++
++		modname = NULL;
++		sym = kallsyms_lookup((unsigned long)con->ret_handler, NULL, NULL,
++			&modname, namebuf);
++		seq_printf(m, "        ret_handler            0x%px(%s) %s\n",
++			con->ret_handler, (sym ? sym : " "), (modname ? modname : " "));
++
++		modname = NULL;
++		sym = kallsyms_lookup((unsigned long)con->filter, NULL, NULL,
++			&modname, namebuf);
++		seq_printf(m, "        filter                 0x%px(%s) %s\n",
++			con->filter, (sym ? sym : " "), (modname ? modname : " "));
++	}
++	up_read(&uprobe->consumer_rwsem);
++
++	return 0;
++}
++
++static const struct seq_operations uprobes_sops = {
++	.start = uprobe_seq_start,
++	.next  = uprobe_seq_next,
++	.stop  = uprobe_seq_stop,
++	.show  = show_uprobe,
++};
++
++DEFINE_SEQ_ATTRIBUTE(uprobes);
++
++static int __init debugfs_uprobe_init(void)
++{
++	struct dentry *dir;
++
++	dir = debugfs_create_dir("uprobes", NULL);
++
++	debugfs_create_file("list", 0400, dir, NULL, &uprobes_fops);
++
++	return 0;
++}
++late_initcall(debugfs_uprobe_init);
++
++#endif /* CONFIG_DEBUG_FS */
+-- 
+2.38.1
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
