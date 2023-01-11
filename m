@@ -2,83 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE417C54EBC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 01:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7663DC5479D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 05:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231989AbjAKBrG (ORCPT
+        id S230430AbjAKFOn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Jan 2023 20:47:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32886 "EHLO
+        Wed, 11 Jan 2023 00:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231151AbjAKBrF (ORCPT
+        with ESMTP id S236012AbjAKFNt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Jan 2023 20:47:05 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BAA63C9;
-        Tue, 10 Jan 2023 17:47:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 45B2E619D6;
-        Wed, 11 Jan 2023 01:47:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CA4C433D2;
-        Wed, 11 Jan 2023 01:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673401623;
-        bh=9wEvjZ7+McmNbo2jlG6VOYF0uVrSmbCh6cUh5UaKJ5k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k2NSqDYrGa1Q8yEa9nrREKICA0DkzvUhcUS3M8ZN8iv2F0WYvfx0w0reVAQj2qzJJ
-         sFickMGMAbggSsGFPFxpW/EX+nSFOHYWBm457on5Ihk1L9nvbVSZlZZT8uNqVgNO5i
-         LJiTPoy8TnHEKTE0hkLAzVEVrL45twRl9sHTsDMmuLHc44+eDN+L6k8AU3WEds+91L
-         dBpySKs9AdIZVLupsoFbhOqGmahXoc5xt+D0tFFSDQP+o9mDnv0QG3/ieGLNJwQLHE
-         GfizsD25hYOY3eD4AJT1U0oS6boDQKM7YAiu53qioZvobaNDnAVt38dBoQZM5lgdzo
-         8migqnt83OaIw==
-Date:   Tue, 10 Jan 2023 17:47:02 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     syzbot <syzbot+d94d214ea473e218fc89@syzkaller.appspotmail.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        bpf@vger.kernel.org, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
-        netdev@vger.kernel.org, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] WARNING: locking bug in __perf_event_task_sched_in (2)
-Message-ID: <20230110174702.72fe74c7@kernel.org>
-In-Reply-To: <000000000000dde02b05f1ef09a4@google.com>
-References: <000000000000dde02b05f1ef09a4@google.com>
+        Wed, 11 Jan 2023 00:13:49 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 11EA71A07B;
+        Tue, 10 Jan 2023 21:06:31 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3A5DFEC;
+        Tue, 10 Jan 2023 21:06:47 -0800 (PST)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B5453F71A;
+        Tue, 10 Jan 2023 21:06:01 -0800 (PST)
+Message-ID: <97d1d6a1-13b2-e971-b0c4-1d71623ca1e3@arm.com>
+Date:   Wed, 11 Jan 2023 10:35:58 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V7 0/6] arm64/perf: Enable branch stack sampling
+Content-Language: en-US
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230105031039.207972-1-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230105031039.207972-1-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 10 Jan 2023 12:50:48 -0800 syzbot wrote:
->  <TASK>
->  lock_acquire kernel/locking/lockdep.c:5668 [inline]
->  lock_acquire+0x1e3/0x630 kernel/locking/lockdep.c:5633
->  rcu_lock_acquire include/linux/rcupdate.h:325 [inline]
->  rcu_read_lock include/linux/rcupdate.h:764 [inline]
->  perf_event_context_sched_in kernel/events/core.c:3913 [inline]
->  __perf_event_task_sched_in+0xe2/0x6c0 kernel/events/core.c:3980
->  perf_event_task_sched_in include/linux/perf_event.h:1328 [inline]
->  finish_task_switch.isra.0+0x5e5/0xc80 kernel/sched/core.c:5118
->  context_switch kernel/sched/core.c:5247 [inline]
->  __schedule+0xb92/0x5450 kernel/sched/core.c:6555
->  schedule+0xde/0x1b0 kernel/sched/core.c:6631
->  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:6690
->  __mutex_lock_common kernel/locking/mutex.c:679 [inline]
->  __mutex_lock+0xa48/0x1360 kernel/locking/mutex.c:747
->  devl_lock net/devlink/core.c:54 [inline]
->  devlink_pernet_pre_exit+0x10a/0x220 net/devlink/core.c:301
->  ops_pre_exit_list net/core/net_namespace.c:159 [inline]
->  cleanup_net+0x455/0xb10 net/core/net_namespace.c:594
->  process_one_work+0x9bf/0x1710 kernel/workqueue.c:2289
->  worker_thread+0x669/0x1090 kernel/workqueue.c:2436
->  kthread+0x2e8/0x3a0 kernel/kthread.c:376
->  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:308
->  </TASK>
 
-Yes, I pooped it. We need to keep the mutex around as well as 
-the devlink instance memory, otherwise locked screams.
-Fix building..
+
+On 1/5/23 08:40, Anshuman Khandual wrote:
+> This series enables perf branch stack sampling support on arm64 platform
+> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> relevant register definitions could be accessed here.
+> 
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+> 
+> This series applies on v6.2-r2.
+> 
+> Changes in V7:
+> 
+> - Folded [PATCH 7/7] into [PATCH 3/7] which enables branch stack sampling event
+> - Defined BRBFCR_EL1_BRANCH_FILTERS, BRBCR_EL1_DEFAULT_CONFIG in the header
+> - Defined BRBFCR_EL1_DEFAULT_CONFIG in the header
+> - Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_FZP
+> - Defined BRBCR_EL1_DEFAULT_TS in the header
+> - Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_DEFAULT_TS
+> - Moved BRBCR_EL1_DEFAULT_CONFIG check inside branch_type_to_brbcr()
+> - Moved down BRBCR_EL1_CC, BRBCR_EL1_MPRED later in branch_type_to_brbcr()
+> - Also set BRBE in paused state in armv8pmu_branch_disable()
+> - Dropped brbe_paused(), set_brbe_paused() helpers
+> - Extracted error string via branch_filter_error_msg[] for armv8pmu_branch_valid()
+> - Replaced brbe_v1p1 with brbe_version in struct brbe_hw_attr
+> - Added valid_brbe_[cc, format, version]() helpers
+> - Split a separate brbe_attributes_probe() from armv8pmu_branch_probe()
+> - Capture event->attr.branch_sample_type earlier in armv8pmu_branch_valid()
+> - Defined enum brbe_bank_idx with possible values for BRBE bank indices
+> - Changed armpmu->hw_attr into armpmu->private
+> - Added missing space in stub definition for armv8pmu_branch_valid()
+> - Replaced both kmalloc() with kzalloc()
+> - Added BRBE_BANK_MAX_ENTRIES
+> - Updated comment for capture_brbe_flags()
+> - Updated comment for struct brbe_hw_attr
+> - Dropped space after type cast in couple of places
+> - Replaced inverse with negation for testing BRBCR_EL1_FZP in armv8pmu_branch_read()
+> - Captured cpuc->branches->branch_entries[idx] in a local variable
+> - Dropped saved_priv from armv8pmu_branch_read()
+> - Reorganize PERF_SAMPLE_BRANCH_NO_[CYCLES|NO_FLAGS] related configuration
+> - Replaced with FIELD_GET() and FIELD_PREP() wherever applicable
+> - Replaced BRBCR_EL1_TS_PHYSICAL with BRBCR_EL1_TS_VIRTUAL
+> - Moved valid_brbe_nr(), valid_brbe_cc(), valid_brbe_format(), valid_brbe_version()
+>   select_brbe_bank(), select_brbe_bank_index() helpers inside the C implementation
+> - Reorganized brbe_valid_nr() and dropped the pr_warn() message
+> - Changed probe sequence in brbe_attributes_probe()
+> - Added 'brbcr' argument into capture_brbe_flags() to ascertain correct state
+> - Disable BRBE before disabling the PMU event counter
+> - Enable PERF_SAMPLE_BRANCH_HV filters when is_kernel_in_hyp_mode()
+> - Guard armv8pmu_reset() & armv8pmu_sched_task() with arm_pmu_branch_stack_supported()
+
+Gentle ping, any updates on this series ?
