@@ -2,293 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3CBC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 21:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 963BCC46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 23:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235608AbjAKVf2 (ORCPT
+        id S235109AbjAKXR6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 16:35:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47718 "EHLO
+        Wed, 11 Jan 2023 18:17:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235657AbjAKVfZ (ORCPT
+        with ESMTP id S234049AbjAKXR5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 16:35:25 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D538063B7
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 13:35:20 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id e3so7128172wru.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 13:35:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CTRumCSYxwjQHKgvyvUOWpVPvyicmir2qY6A54aEAY=;
-        b=j64VYhMZ7uwSarsqos22wsDSLTgK6FrEQBQx9z/ZMErlwCEcZIHXcSDN8Cwu+Y+fTo
-         YQ1AHWKHfpsexHj5YYW2Rg2dZOrUD/vSX4RzuChqex1J1cX+LQzvkIBi4bXHaSrmVudL
-         Bc3nOZZv/UhsIo5lv/Z94c60hGayRNZ72vF4SrS65YCC37UQBSkt1KDu6FMAnw3EVUC3
-         b1bPyaUeak/tuFQDc1jLnutVVhaDgOb7V6yj68s5FDb1USmUXzwPb6reYP7h4upteRuE
-         VH0k/pgelIXLR1n0RACeHQBvxtWFfysSBagnt4STFSI2z+f9lZqJSvWZToPTNb+JOmjz
-         A5cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/CTRumCSYxwjQHKgvyvUOWpVPvyicmir2qY6A54aEAY=;
-        b=X7iu+Ja9JfMfuRtP/8KAcPB7YiVEgH84IM8t35qYqnI2F92lnOMoXvm8J3ws/RZ22v
-         SIWnjn38b4hEcleRlHnXn/rDun0+rKMdJpxb9Z85cj6SEqfjcBovAwmk5VmdP8HAD0SR
-         GOEVGHh7yr+QFNHGKGy6ZvUl+K9Och5E/KacMpYNgtDCqhRd+nhli1tIGnRZc76on4vm
-         6LweVaHW7S4u6KJvpWGQbrP1DrmC7yN96kttjkNdeP62pEZ7H+NPpf9V/Lckv2w/0vTd
-         XwsH1/CcrvDqZQSwDHatrZq1DyPO3pMlDHCy6MjIUGcWmuxRGj2cWG3fl1mxHbuJvvOr
-         wRPA==
-X-Gm-Message-State: AFqh2kow7+tK1CaHtrJC/+ph9U3obYSDDHgCUDL5qTCFQls5vwdom55l
-        WF0TdoJpu4fson48XPWxc3gUokGKWjLHMhBJIAPSIUXliH1tzg==
-X-Google-Smtp-Source: AMrXdXuovRI5dIz/4tGBehY+Oko3ogYv0mADS2oa/BYVsiUgMLw1PUZrCqaXM5P1qSqOnjgqyV860gKptnEp7e2MUSI=
-X-Received: by 2002:a05:6000:12cb:b0:28c:459a:d5d with SMTP id
- l11-20020a05600012cb00b0028c459a0d5dmr1735290wrx.654.1673472919004; Wed, 11
- Jan 2023 13:35:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20230111104825.1945418-1-luolongjun@huawei.com>
-In-Reply-To: <20230111104825.1945418-1-luolongjun@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 11 Jan 2023 13:35:05 -0800
-Message-ID: <CAP-5=fXtWMo2fqZe9sTr_3eanWsyoBLEpo-SFM+RE+V1jKYTjw@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: list all active uprobes in the system
-To:     luolongjun@huawei.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sangyan@huawei.com, luanjianhai@huawei.com, zhuling8@huawei.com,
-        lizongwu@huawei.com, luolongjuna@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Jan 2023 18:17:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE8A3AB22;
+        Wed, 11 Jan 2023 15:17:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 07D93B81CC9;
+        Wed, 11 Jan 2023 23:17:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A1B3BC433EF;
+        Wed, 11 Jan 2023 23:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673479073;
+        bh=qY4nUy6FQS12cdvVu+txdn54pNJ+w5Y0Ppt/hK/dhFU=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=vInkCHxmFJjs2rufJlSJxbtOg9wFFTYmyg8OC6Tq3VeOXbftEH0ZPmnplzD31KMwb
+         C1A0nciVvMrigSasqHPWW6AMjGZhMP50Wf9R3eifPlPxJeKJBLlZ1c6zwH4E7gfI52
+         KFG3uXMCn3L0K9a488xXzj9H7OOrcArw9bOpFzHSX3VBQ9Zemymo6I36ZAO4+R+egO
+         HF0hYOdQDfM+Vux17ajHAEwkawJZh9ps6sc+fzEYXEiEZkh4s0kNmEAAWnuDrtYWY2
+         kN6Mcx/4VOlXBWCcRADR2w/i1AwdbQNR6o2F9+2rTjLFp/BrqttuvmklbTcgstmz1A
+         tgQ9iwfobXQ9A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8C703E45233;
+        Wed, 11 Jan 2023 23:17:53 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.2: 2nd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230111174331.984275-1-acme@kernel.org>
+References: <20230111174331.984275-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230111174331.984275-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-2-2023-01-11
+X-PR-Tracked-Commit-Id: cf129830ee820f7fc90b98df193cd49d49344d09
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e8f60cd7db24f94f2dbed6bec30dd16a68fc0828
+Message-Id: <167347907356.14575.18351582562297563998.pr-tracker-bot@kernel.org>
+Date:   Wed, 11 Jan 2023 23:17:53 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Dmitry Dolgov <9erthalion6@gmail.com>,
+        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 2:49 AM <luolongjun@huawei.com> wrote:
->
-> From: Longjun Luo <luolongjun@huawei.com>
->
-> Since uprobes will replace instructions in the process
-> memory, it is necessary to provide one way to list
-> all active uprobes. One can access this file through
-> /sys/kernel/debug/uprobes/list.
->
-> Output looks like this
-> =====================
-> inode+offset/ref_ctr_offset    4160760670+0x30a10/0x0
->     ref                        1
->     register_rwsem             (unlocked)
->     consumer_rwsem             (unlocked)
->     consumers-1
->         handler                0xffffffffc03ee02e(handler) uprobe
->         ret_handler            0x0000000000000000( )
->         filter                 0xffffffffc03ee010(filter) uprobe
->     consumers-2
->         handler                0xffffffffc03e902e(handler_1) uprobe_1
->         ret_handler            0x0000000000000000( )
->         filter                 0xffffffffc03e9010(filter_1) uprobe_1
->
-> Signed-off-by: Longjun Luo <luolongjun@huawei.com>
-> ---
->  kernel/events/uprobes.c | 120 ++++++++++++++++++++++++++++++++++++----
->  1 file changed, 109 insertions(+), 11 deletions(-)
->
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index d9e357b7e17c..2fa9b910abc7 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -27,6 +27,9 @@
->  #include <linux/task_work.h>
->  #include <linux/shmem_fs.h>
->  #include <linux/khugepaged.h>
-> +#include <linux/rbtree.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/kallsyms.h>
->
->  #include <linux/uprobes.h>
->
-> @@ -40,7 +43,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
->   */
->  #define no_uprobe_events()     RB_EMPTY_ROOT(&uprobes_tree)
->
-> -static DEFINE_SPINLOCK(uprobes_treelock);      /* serialize rbtree access */
-> +static DECLARE_RWSEM(uprobes_treelock);        /* serialize rbtree access */
->
->  #define UPROBES_HASH_SZ        13
->  /* serialize uprobe->pending_list */
-> @@ -672,9 +675,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
->  {
->         struct uprobe *uprobe;
->
-> -       spin_lock(&uprobes_treelock);
-> +       down_read(&uprobes_treelock);
->         uprobe = __find_uprobe(inode, offset);
-> -       spin_unlock(&uprobes_treelock);
-> +       up_read(&uprobes_treelock);
->
->         return uprobe;
->  }
-> @@ -704,9 +707,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
->  {
->         struct uprobe *u;
->
-> -       spin_lock(&uprobes_treelock);
-> +       down_write(&uprobes_treelock);
->         u = __insert_uprobe(uprobe);
-> -       spin_unlock(&uprobes_treelock);
-> +       up_write(&uprobes_treelock);
->
->         return u;
->  }
-> @@ -938,9 +941,9 @@ static void delete_uprobe(struct uprobe *uprobe)
->         if (WARN_ON(!uprobe_is_active(uprobe)))
->                 return;
->
-> -       spin_lock(&uprobes_treelock);
-> +       down_write(&uprobes_treelock);
->         rb_erase(&uprobe->rb_node, &uprobes_tree);
-> -       spin_unlock(&uprobes_treelock);
-> +       up_write(&uprobes_treelock);
->         RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
->         put_uprobe(uprobe);
->  }
-> @@ -1301,7 +1304,7 @@ static void build_probe_list(struct inode *inode,
->         min = vaddr_to_offset(vma, start);
->         max = min + (end - start) - 1;
->
-> -       spin_lock(&uprobes_treelock);
-> +       down_read(&uprobes_treelock);
->         n = find_node_in_range(inode, min, max);
->         if (n) {
->                 for (t = n; t; t = rb_prev(t)) {
-> @@ -1319,7 +1322,7 @@ static void build_probe_list(struct inode *inode,
->                         get_uprobe(u);
->                 }
->         }
-> -       spin_unlock(&uprobes_treelock);
-> +       up_read(&uprobes_treelock);
->  }
->
->  /* @vma contains reference counter, not the probed instruction. */
-> @@ -1410,9 +1413,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
->         min = vaddr_to_offset(vma, start);
->         max = min + (end - start) - 1;
->
-> -       spin_lock(&uprobes_treelock);
-> +       down_read(&uprobes_treelock);
->         n = find_node_in_range(inode, min, max);
-> -       spin_unlock(&uprobes_treelock);
-> +       up_read(&uprobes_treelock);
->
->         return !!n;
->  }
-> @@ -2357,3 +2360,98 @@ void __init uprobes_init(void)
->
->         BUG_ON(register_die_notifier(&uprobe_exception_nb));
->  }
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +
-> +static void *uprobe_seq_start(struct seq_file *m, loff_t *pos)
-> +{
-> +       loff_t num = *pos;
-> +       struct rb_node *rbp;
-> +
-> +       down_read(&uprobes_treelock);
+The pull request you sent on Wed, 11 Jan 2023 14:43:31 -0300:
 
-Is there a missing corresponding up_read?
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-2-2023-01-11
 
-Thanks,
-Ian
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e8f60cd7db24f94f2dbed6bec30dd16a68fc0828
 
-> +       for (rbp = rb_first(&uprobes_tree); rbp; rbp = rb_next(rbp)) {
-> +               if (num-- == 0)
-> +                       return rbp;
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
-> +static void *uprobe_seq_next(struct seq_file *f, void *v, loff_t *pos)
-> +{
-> +       ++*pos;
-> +       return (void *)rb_next(v);
-> +}
-> +
-> +static void uprobe_seq_stop(struct seq_file *f, void *v)
-> +{
-> +       up_read(&uprobes_treelock);
-> +}
-> +
-> +static int show_uprobe(struct seq_file *m, void *v)
-> +{
-> +       struct uprobe *uprobe = rb_entry_safe(v, struct uprobe, rb_node);
-> +       struct uprobe_consumer *con;
-> +       char *modname, namebuf[KSYM_NAME_LEN];
-> +       const char *sym;
-> +       unsigned int cnt = 1;
-> +
-> +       seq_printf(m, "inode+offset/ref_ctr_offset    %lu+0x%llx/0x%llx\n",
-> +               uprobe->inode->i_ino, uprobe->offset, uprobe->ref_ctr_offset);
-> +       seq_printf(m, "    ref                        %u\n",
-> +               refcount_read(&uprobe->ref));
-> +       seq_printf(m, "    register_rwsem             %s\n",
-> +               rwsem_is_locked(&uprobe->register_rwsem)?"(locked)":"(unlocked)");
-> +       seq_printf(m, "    consumer_rwsem             %s\n",
-> +               rwsem_is_locked(&uprobe->consumer_rwsem)?"(locked)":"(unlocked)");
-> +
-> +       /* lock consumer_rwsem when hold uprobes_treelock */
-> +       down_read(&uprobe->consumer_rwsem);
-> +       for (con = uprobe->consumers; con; con = con->next, cnt++) {
-> +               seq_printf(m, "    consumers-%u\n", cnt);
-> +
-> +               modname = NULL;
-> +               sym = kallsyms_lookup((unsigned long)con->handler, NULL, NULL,
-> +                       &modname, namebuf);
-> +               seq_printf(m, "        handler                0x%px(%s) %s\n",
-> +                       con->handler, (sym ? sym : " "), (modname ? modname : " "));
-> +
-> +               modname = NULL;
-> +               sym = kallsyms_lookup((unsigned long)con->ret_handler, NULL, NULL,
-> +                       &modname, namebuf);
-> +               seq_printf(m, "        ret_handler            0x%px(%s) %s\n",
-> +                       con->ret_handler, (sym ? sym : " "), (modname ? modname : " "));
-> +
-> +               modname = NULL;
-> +               sym = kallsyms_lookup((unsigned long)con->filter, NULL, NULL,
-> +                       &modname, namebuf);
-> +               seq_printf(m, "        filter                 0x%px(%s) %s\n",
-> +                       con->filter, (sym ? sym : " "), (modname ? modname : " "));
-> +       }
-> +       up_read(&uprobe->consumer_rwsem);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct seq_operations uprobes_sops = {
-> +       .start = uprobe_seq_start,
-> +       .next  = uprobe_seq_next,
-> +       .stop  = uprobe_seq_stop,
-> +       .show  = show_uprobe,
-> +};
-> +
-> +DEFINE_SEQ_ATTRIBUTE(uprobes);
-> +
-> +static int __init debugfs_uprobe_init(void)
-> +{
-> +       struct dentry *dir;
-> +
-> +       dir = debugfs_create_dir("uprobes", NULL);
-> +
-> +       debugfs_create_file("list", 0400, dir, NULL, &uprobes_fops);
-> +
-> +       return 0;
-> +}
-> +late_initcall(debugfs_uprobe_init);
-> +
-> +#endif /* CONFIG_DEBUG_FS */
-> --
-> 2.38.1
->
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
