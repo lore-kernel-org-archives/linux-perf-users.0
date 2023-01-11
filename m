@@ -2,102 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7663DC5479D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 05:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB11C5479D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 05:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbjAKFOn (ORCPT
+        id S229913AbjAKF5n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 00:14:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
+        Wed, 11 Jan 2023 00:57:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236012AbjAKFNt (ORCPT
+        with ESMTP id S235813AbjAKF5b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 00:13:49 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 11EA71A07B;
-        Tue, 10 Jan 2023 21:06:31 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3A5DFEC;
-        Tue, 10 Jan 2023 21:06:47 -0800 (PST)
-Received: from [10.162.40.17] (unknown [10.162.40.17])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B5453F71A;
-        Tue, 10 Jan 2023 21:06:01 -0800 (PST)
-Message-ID: <97d1d6a1-13b2-e971-b0c4-1d71623ca1e3@arm.com>
-Date:   Wed, 11 Jan 2023 10:35:58 +0530
+        Wed, 11 Jan 2023 00:57:31 -0500
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99403B7EB;
+        Tue, 10 Jan 2023 21:57:30 -0800 (PST)
+Received: by mail-io1-f53.google.com with SMTP id r72so7218012iod.5;
+        Tue, 10 Jan 2023 21:57:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vljd4jpGI8JGO7YYKmUkcae95jo5r0whgkmYDkRel+o=;
+        b=XEaUXfV2oMGEfoypFAMmtWFPwKiL02COlAUi+zyE1R5hvjWA+r40dXGGMJtUt1X1Wx
+         WOcJFZmrcXe0X4trudv9T6LrBU7GLFUPUYhRiYOXuYbMADxaKsPQAS2YtO+CxaQOHAIj
+         kw+77Wsrwd8+c9TUSv8AwvUcOzghWmKq/G/suoeIRLwjvlY4+bDxxGyYf7zQFb9BuUs9
+         AFyfbhOfAJNDVO18+zvAeVNdLDEaMWiLOuJE84OvzWpceU/C/CNB26S9zoO1/H9IgK+0
+         c7pJQVgLBVBbVOYM2ke7ftOIGQgm2p5SD4JSgGByCJYO0G0R0vkre8R9O8QZX4wBIbnl
+         zPzw==
+X-Gm-Message-State: AFqh2kqB7BrIkjG/Dol61VZDuRBFc5WcAUmyoBgp3merohMoAYX8YLRz
+        3zkZCOb2yFcP9qatPEA68jAef0WfNKh6Uf9t2YQ=
+X-Google-Smtp-Source: AMrXdXsegqXia/vW6IrV9mzogZfZdjbpj0N5M9UIGnf6DQ9JwsRYd60BumYUKA6U7My9bYV/0IXfcRwd4eE8Hz/yXOQ=
+X-Received: by 2002:a6b:a16:0:b0:6e3:28c5:e8ee with SMTP id
+ z22-20020a6b0a16000000b006e328c5e8eemr6765804ioi.140.1673416649854; Tue, 10
+ Jan 2023 21:57:29 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH V7 0/6] arm64/perf: Enable branch stack sampling
-Content-Language: en-US
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20230109223110.1201541-1-irogers@google.com> <CAM9d7cgGq=+MC+qwRNxO=0Bn_ZMOucEzh_WWH95Lq8fsYHMb4A@mail.gmail.com>
+ <CAP-5=fXniy80Jpc2Hu=-GF7yDNUNHjs0=B2iqkUkMb6zArPukg@mail.gmail.com>
+ <CAM9d7chS+91Nep8FtsJsOdTvMJ0HhkSD1_Fn70=hWPi7a1JpfQ@mail.gmail.com> <CAP-5=fUXoOFueaeSD2D9H+xoH5tKXRHK1164yPSX8_m_Nx_AeQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fUXoOFueaeSD2D9H+xoH5tKXRHK1164yPSX8_m_Nx_AeQ@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 10 Jan 2023 21:57:17 -0800
+Message-ID: <CAM9d7ci3du09=uc05to7rLaRG7KCuwdLEFZ_492jcO7cOY7RAQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230105031039.207972-1-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20230105031039.207972-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        German Gomez <german.gomez@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Jan 10, 2023 at 11:55 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Tue, Jan 10, 2023 at 11:09 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Mon, Jan 9, 2023 at 3:38 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Mon, Jan 9, 2023 at 2:57 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > On Mon, Jan 9, 2023 at 2:31 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > > > > index e188f74698dd..cfcc253239f0 100644
+> > > > > --- a/tools/perf/util/sort.c
+> > > > > +++ b/tools/perf/util/sort.c
+> > > > > @@ -28,6 +28,7 @@
+> > > > >  #include "time-utils.h"
+> > > > >  #include "cgroup.h"
+> > > > >  #include "machine.h"
+> > > > > +#include "trace-event.h"
+> > > > >  #include <linux/kernel.h>
+> > > > >  #include <linux/string.h>
+> > > > >
+> > > > > @@ -2667,7 +2668,7 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
+> > > > >                 tep_read_number_field(field, a->raw_data, &dyn);
+> > > > >                 offset = dyn & 0xffff;
+> > > > >                 size = (dyn >> 16) & 0xffff;
+> > > > > -#ifdef HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+> > > > > +#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
+> > > > >                 if (field->flags & TEP_FIELD_IS_RELATIVE)
+> > > > >                         offset += field->offset + field->size;
+> > > >
+> > > > Maybe I missed the previous discussion.
+> > > >
+> > > > As it's only used in the bit test, can we have something like this
+> > > > in the header file?
+> > > >
+> > > > #if LIBTRACE_EVENT_VERSION < ...(1, 5, 0)
+> > > > # define TEP_FIELD_IS_RELATIVE  0
+> > > > #endif
+> > > >
+> > > > Thanks,
+> > > > Namhyung
+> > >
+> > > We could but I think we lose some of the intention revealing-ness that
+> > > TEP_FIELD_IS_RELATIVE is only present with libtraceevent 1.5.0 or
+> > > newer.
+> >
+> > I'm not sure how important it is to reveal the intention.
+> > I think we wanted to minimize #ifdef-ery in the .c file and
+> > moved the conditionals to the header.  Maybe we can add
+> > a wrapper like this.
+> >
+> > #if LIBTRACEEVENT_VERSION >= ...(1, 5, 0)
+> > static inline bool is_relative_field(field)
+> > {
+> >     return field->flags & TEP_FIELD_IS_RELATIVE;
+> > }
+> > #else
+> > static inline bool is_relative_field(field)
+> > {
+> >     return false;
+> > }
+> > #endif
+> >
+> > Thanks,
+> > Namhyung
+>
+> Sounds good. Should the change be part of this one or a follow up
+> patch? A follow up patch seems cleanest, I can add it to v2.
 
+Sounds good.
 
-On 1/5/23 08:40, Anshuman Khandual wrote:
-> This series enables perf branch stack sampling support on arm64 platform
-> via a new arch feature called Branch Record Buffer Extension (BRBE). All
-> relevant register definitions could be accessed here.
-> 
-> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
-> 
-> This series applies on v6.2-r2.
-> 
-> Changes in V7:
-> 
-> - Folded [PATCH 7/7] into [PATCH 3/7] which enables branch stack sampling event
-> - Defined BRBFCR_EL1_BRANCH_FILTERS, BRBCR_EL1_DEFAULT_CONFIG in the header
-> - Defined BRBFCR_EL1_DEFAULT_CONFIG in the header
-> - Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_FZP
-> - Defined BRBCR_EL1_DEFAULT_TS in the header
-> - Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_DEFAULT_TS
-> - Moved BRBCR_EL1_DEFAULT_CONFIG check inside branch_type_to_brbcr()
-> - Moved down BRBCR_EL1_CC, BRBCR_EL1_MPRED later in branch_type_to_brbcr()
-> - Also set BRBE in paused state in armv8pmu_branch_disable()
-> - Dropped brbe_paused(), set_brbe_paused() helpers
-> - Extracted error string via branch_filter_error_msg[] for armv8pmu_branch_valid()
-> - Replaced brbe_v1p1 with brbe_version in struct brbe_hw_attr
-> - Added valid_brbe_[cc, format, version]() helpers
-> - Split a separate brbe_attributes_probe() from armv8pmu_branch_probe()
-> - Capture event->attr.branch_sample_type earlier in armv8pmu_branch_valid()
-> - Defined enum brbe_bank_idx with possible values for BRBE bank indices
-> - Changed armpmu->hw_attr into armpmu->private
-> - Added missing space in stub definition for armv8pmu_branch_valid()
-> - Replaced both kmalloc() with kzalloc()
-> - Added BRBE_BANK_MAX_ENTRIES
-> - Updated comment for capture_brbe_flags()
-> - Updated comment for struct brbe_hw_attr
-> - Dropped space after type cast in couple of places
-> - Replaced inverse with negation for testing BRBCR_EL1_FZP in armv8pmu_branch_read()
-> - Captured cpuc->branches->branch_entries[idx] in a local variable
-> - Dropped saved_priv from armv8pmu_branch_read()
-> - Reorganize PERF_SAMPLE_BRANCH_NO_[CYCLES|NO_FLAGS] related configuration
-> - Replaced with FIELD_GET() and FIELD_PREP() wherever applicable
-> - Replaced BRBCR_EL1_TS_PHYSICAL with BRBCR_EL1_TS_VIRTUAL
-> - Moved valid_brbe_nr(), valid_brbe_cc(), valid_brbe_format(), valid_brbe_version()
->   select_brbe_bank(), select_brbe_bank_index() helpers inside the C implementation
-> - Reorganized brbe_valid_nr() and dropped the pr_warn() message
-> - Changed probe sequence in brbe_attributes_probe()
-> - Added 'brbcr' argument into capture_brbe_flags() to ascertain correct state
-> - Disable BRBE before disabling the PMU event counter
-> - Enable PERF_SAMPLE_BRANCH_HV filters when is_kernel_in_hyp_mode()
-> - Guard armv8pmu_reset() & armv8pmu_sched_task() with arm_pmu_branch_stack_supported()
-
-Gentle ping, any updates on this series ?
+Thanks,
+Namhyung
