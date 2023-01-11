@@ -2,100 +2,328 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFD9C46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 13:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E85C5479D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 13:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbjAKNRj (ORCPT
+        id S232042AbjAKNTD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 08:17:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
+        Wed, 11 Jan 2023 08:19:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233131AbjAKNRc (ORCPT
+        with ESMTP id S229993AbjAKNTC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 08:17:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52081AA1C
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 05:17:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 93AE5B81BDE
-        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 13:17:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D76C433D2;
-        Wed, 11 Jan 2023 13:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673443047;
-        bh=60gIQMYvFe3Fc0IWjiCAxr+C6fShjYaz5c0/QjpIZQg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FeFgxn0L7fM02KPNVsFkXBFh1nMkO7M5IXdmpRAUh2EcHUkbHq+Eq3kI4b9yJ19AB
-         za0kOPU+UDUHcgCyoiLLM8ilnTTGxD4bgQKG4dNandCPPyVrgtXex/vDJ8qNfXwUOB
-         VUiwK2LzU1nqiktfMA203ck0YyQqYzap+AtKEd4idzKwky7ZPHMk7xKh1Vdw7KojRa
-         avLJCumSYdWFc37ITGC1bI+nYltEZz4jhW7tFD03l7pra6un/NvXOTeOhtqquCg0Sd
-         13pqcOwGu2awu8qVJ00JZXkhke7I+7iAbXGyPsMcVUsEALEgxye+LRhi998lFZgpH9
-         LKr8hSNPwKy7A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 03C7B40468; Wed, 11 Jan 2023 10:17:24 -0300 (-03)
-Date:   Wed, 11 Jan 2023 10:17:24 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Dmitry Dolgov <9erthalion6@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, mingo@redhat.com,
-        jolsa@kernel.org, irogers@google.com
-Subject: Re: [RFC PATCH v1] perf record: Correct address filters for
- duplicated symbols
-Message-ID: <Y7625DUhEE+NUfWh@kernel.org>
-References: <20230106203751.403270-1-9erthalion6@gmail.com>
- <aad6782c-fb30-ba39-ba59-775c5f227d56@intel.com>
- <20230110104848.hty4upem76lkxj2y@ddolgov.remote.csb>
+        Wed, 11 Jan 2023 08:19:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F2B65D2
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 05:18:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673443097;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zTMWfGAiBPFZXwWQF8kE22q3w7eEUdeC1OsbaC6TZ6E=;
+        b=Reae9ZWhaid/jb2NJ5UDF0uzswRRtE1BCn1LiufkZjP2UG5tptqade3JegHtHXVcMiIojS
+        lw6wZQG5jKsTxd15Y4OStZNrTFiaM8LaefhkhfsGStz65oiB1B+vDbRm2KfgrNgwZSVkmE
+        bGUMzPLUp1kvjylKCt03bJECgN8AeaA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-187-tfYuddtCMwKZktW4SEITsQ-1; Wed, 11 Jan 2023 08:18:15 -0500
+X-MC-Unique: tfYuddtCMwKZktW4SEITsQ-1
+Received: by mail-wr1-f70.google.com with SMTP id s20-20020adfa294000000b002b81849101eso2664892wra.16
+        for <linux-perf-users@vger.kernel.org>; Wed, 11 Jan 2023 05:18:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zTMWfGAiBPFZXwWQF8kE22q3w7eEUdeC1OsbaC6TZ6E=;
+        b=PvJnksOCjlue0JjyoJu+/nEAYNTYeD4b98X06QEzLYmBocdfe9+rGnKZUBVUEHR74k
+         RKVlUpQJd3DsUj6s+iX5fvcgYxp42rApC+Sk49EclbKr9I76BTRow5dgcNkTB+uZtTSL
+         6LSN6WH/TWtXNNjSpUFDjYSoMI5a7b1bMC5r8UWbEdrkRnBqE04W+xVFwRUGrEo2QRg/
+         FENLw/9+3Z2Ma64OeZdndshD/XNYtqV/JXm0uVAmpFQ2RJPTpnZ2Nek8FOkKuLv4uZ5n
+         yUXEBQzShPDDQxpEM1Xlbw5gFsAInN6PHnxCD9LKqx1mPyuckDGIDoY3E/e6kWausKEh
+         yikA==
+X-Gm-Message-State: AFqh2kqVCUohbSqdbuSINyh/5lUiEEAjrgVGu9NxVpd2XdkPmhdT2vr+
+        eefsYN10DEtnYNda/SIbz9v0pZqIW5teduB3OaL+JzM6SWFxNdktAZ17S+9Yz+ostbHBKfr7TFg
+        4KEKbeZ/KJKByS3S/zK5FkhiuO/WR8Q==
+X-Received: by 2002:adf:d216:0:b0:2bc:854d:fc50 with SMTP id j22-20020adfd216000000b002bc854dfc50mr4280061wrh.7.1673443094702;
+        Wed, 11 Jan 2023 05:18:14 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXuNl2FDi0fKOWNnsiMV/GUZfmzpnJNXZ/u6KsR6fZaN/GQO0TXronHArzG60dycD8iFkLQS8Q==
+X-Received: by 2002:adf:d216:0:b0:2bc:854d:fc50 with SMTP id j22-20020adfd216000000b002bc854dfc50mr4280045wrh.7.1673443094360;
+        Wed, 11 Jan 2023 05:18:14 -0800 (PST)
+Received: from [192.168.31.129] (84-115-237-15.cable.dynamic.surfer.at. [84.115.237.15])
+        by smtp.gmail.com with ESMTPSA id q4-20020adff784000000b0026e94493858sm13479690wrp.106.2023.01.11.05.18.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Jan 2023 05:18:13 -0800 (PST)
+Message-ID: <928c76bf-39bc-cbc0-373e-70c5561cd5b0@redhat.com>
+Date:   Wed, 11 Jan 2023 14:18:12 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230110104848.hty4upem76lkxj2y@ddolgov.remote.csb>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v1] perf script flamegraph: Avoid d3-flame-graph package
+ dependency
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        996839@bugs.debian.org, Brendan Gregg <brendan@intel.com>,
+        spiermar@gmail.com
+References: <20230105030434.255603-1-irogers@google.com>
+ <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
+ <bd4a55a4-8e9c-82bf-92c8-1fa354289dce@redhat.com>
+ <CAP-5=fX3LaJgft8T+nYV8SHpmoAOYZ9S5-pztKF9j--Um4HKDQ@mail.gmail.com>
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+In-Reply-To: <CAP-5=fX3LaJgft8T+nYV8SHpmoAOYZ9S5-pztKF9j--Um4HKDQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 10, 2023 at 11:48:48AM +0100, Dmitry Dolgov escreveu:
-> > On Mon, Jan 09, 2023 at 09:02:02AM +0200, Adrian Hunter wrote:
-> > On 6/01/23 22:37, Dmitrii Dolgov wrote:
-> > > It seems the logic to handle duplicated symbols is off. In case if the
-> > > symbol index is specified it will:
-> > >
-> > > * find a match
-> > > * continue searching
-> > > * check that start is not null and idx is set on the next loop
-> > > * exit with the error code 1
-> > >
-> > > My guess is the expectation was that at this point the second match is
-> > > found (because *start is not null), although the new symbol hasn't pass
-> > > dso_sym_match yet. Here is how it looks like:
-> >
-> > If *start && idx > 0 there is no need to match anymore.  The
-> > code is just getting *size.  Looks to me like it should be:
-> >
-> > diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> > index 265d20cc126b..c2e323cd7d49 100644
-> > --- a/tools/perf/util/auxtrace.c
-> > +++ b/tools/perf/util/auxtrace.c
-> > @@ -2611,7 +2611,7 @@ static int find_dso_sym(struct dso *dso, const char *sym_name, u64 *start,
-> >  				*size = sym->start - *start;
-> >  			if (idx > 0) {
-> >  				if (*size)
-> > -					return 1;
-> > +					return 0;
-> >  			} else if (dso_sym_match(sym, sym_name, &cnt, idx)) {
-> >  				print_duplicate_syms(dso, sym_name);
-> >  				return -EINVAL;
+On 10.01.23 20:51, Ian Rogers wrote:
+> On Tue, Jan 10, 2023 at 10:02 AM Andreas Gerstmayr
+> <agerstmayr@redhat.com> wrote:
+>>
+>> On 05.01.23 10:24, Ian Rogers wrote:
+>>> On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> Currently flame graph generation requires a d3-flame-graph template to
+>>>> be installed. Unfortunately this is hard to come by for things like
+>>>> Debian [1]. If the template isn't installed warn and download it from
+>>>> jsdelivr CDN. If downloading fails generate a minimal flame graph
+>>>> again with the javascript coming from jsdelivr CDN.
+>>>>
+>>>> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+>>>>
+>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>
+>> I'm not entirely convinced that this perf script should make a network
+>> request. In my opinion
+>>
+>> * best would be if this template gets packaged in Debian
+>> * alternatively print instructions how to install the template:
+>>
+>>       sudo mkdir /usr/share/d3-flame-graph
+>>       sudo wget -O /usr/share/d3-flame-graph/d3-flamegraph-base.html
+>> https://cdn.jsdelivr.net/npm/d3-flame-graph@4/dist/templates/d3-flamegraph-base.html
+>>
+>> * or eventually just embed the entire template (66 KB) in the Python
+>> file (not sure if this is permissible though, it's basically a minified
+>> HTML/JS blob)?
+>> * if the above options don't work, I'd recommend asking the user before
+>> making the network request, and eventually persist the template
+>> somewhere so it doesn't need to be downloaded every time
+>>
+>> What do you think?
 > 
-> Yes, if there was no intention to continue searching symbols, this would
-> work as well. Just in case I have verified this on my test, everything
-> is fine. Would you send a patch for that?
+> So the script following this patch is going to try 3 things:
+> 1) look for a local template HTML,
+> 2) if a local template isn't found warn and switch to downloading the
+> CDN version,
+> 3) if the CDN version fails to download then use a minimal (embedded
+> in the script) HTML file with JS dependencies coming from the CDN.
+> 
+> For (1) there are references in the generated HTML to www.w3.org,
+> meaning the HTML isn't fully hermetic - although these references may
+> not matter.
 
-So I'll take this as a:
+The references to w3.org are XML namespace names. As far as I'm aware 
+they do not matter, as they are merely identifiers and are never 
+accessed [1,2]. Therefore the generated HTML file in its current form is 
+hermetic.
 
-Tested-by: Dmitry Dolgov <9erthalion6@gmail.com>
+This was a design decision from the start - the flame graph generation 
+and the resulting HTML file should not use any external resources loaded 
+over the network (the external host could be inaccessible or compromised 
+at any time). I understand that this requirement may not apply to every 
+user or company.
 
-Ok?
+> For (2) there will be a download from the CDN of the template during
+> the execution of flamegraph. The template is better than (3) as it
+> features additional buttons letting you zoom out, etc. The HTML will
+> contain CDN references.
+> For (3) the generated HTML isn't hermetic and will use the CDN.
+> 
+> For (2) we could give a prompt before trying to download the template,
+> or we could change it so that we give the wget command. I wouldn't
+> have the wget command require root privileges, I'd say that the
+> template could be downloaded and then the path of the download given
+> as an option to the flamegraph program. Downloading the file and then
+> adding an option to flamegraph seems inconvenient to the user,
+> something that the use of urllib in the patch avoids - it is
+> essentially just doing this for the user without storing the file on
+> disk. I think I prefer to be less inconvenient, and so the state of
+> the code at the moment looks best to me. Given that no choice results
+> in a fully hermetic HTML file, they seem similar in this regard. Is it
+> okay to try a download with urllib? Should there be a prompt? I think
+> the warning is enough and allows scripts, etc. using flamegraph to
+> more easily function across differing distributions.
 
-- Arnaldo
+I fully agree, your changes make the flame graph generation more 
+convenient in case the template is not installed. Also, downloading the 
+template to a local directory and having to specify the path to the 
+template every time is an inconvenience.
+
+I think it is a tradeoff between convenience and security/privacy. 
+jsdelivr can get compromised, serving malicious JS (well, in that case, 
+printing instructions to jsdelivr is also flawed :|).
+In the end it's up to the maintainers to decide.
+
+> An aside, Namhyung pointed out to me that there is a "perf report -g
+> folded" option, that was added in part to simplify creating
+> flamegraphs:
+> http://lkml.kernel.org/r/1447047946-1691-2-git-send-email-namhyung@kernel.org
+> Building off of perf report may improve/simplify the flamegraph code,
+> or avoid the requirement that libpython be linked against perf.
+
+Yep, in this case another tool is required to generate the flame graph 
+visualization, for example [3].
+
+
+[1] https://www.w3.org/TR/xml-names11/
+[2] https://developer.mozilla.org/en-US/docs/Web/SVG/Namespaces_Crash_Course
+[3] https://github.com/brendangregg/FlameGraph
+
+
+Cheers,
+Andreas
+
+> 
+> Thanks,
+> Ian
+> 
+> 
+> 
+> 
+>>
+>> Cheers,
+>> Andreas
+>>
+>>>> ---
+>>>>    tools/perf/scripts/python/flamegraph.py | 63 ++++++++++++++++++-------
+>>>>    1 file changed, 45 insertions(+), 18 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+>>>> index b6af1dd5f816..808b0e1c9be5 100755
+>>>> --- a/tools/perf/scripts/python/flamegraph.py
+>>>> +++ b/tools/perf/scripts/python/flamegraph.py
+>>>> @@ -25,6 +25,27 @@ import io
+>>>>    import argparse
+>>>>    import json
+>>>>    import subprocess
+>>>> +import urllib.request
+>>>> +
+>>>> +minimal_html = """<head>
+>>>> +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
+>>>
+>>> (hopefully fixed Martin Spier's e-mail address)
+>>>
+>>> The @4.1.3 comes from the README.md:
+>>> https://github.com/spiermar/d3-flame-graph/blob/master/README.md
+>>> Does it make sense just to drop it or use @latest ? It'd be nice not
+>>> to patch this file for every d3-flame-graph update.
+>>>
+>>> Thanks,
+>>> Ian
+>>>
+>>>> +</head>
+>>>> +<body>
+>>>> +  <div id="chart"></div>
+>>>> +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+>>>> +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+>>>> +  <script type="text/javascript">
+>>>> +  const stacks = [/** @flamegraph_json **/];
+>>>> +  // Note, options is unused.
+>>>> +  const options = [/** @options_json **/];
+>>>> +
+>>>> +  var chart = flamegraph();
+>>>> +  d3.select("#chart")
+>>>> +        .datum(stacks[0])
+>>>> +        .call(chart);
+>>>> +  </script>
+>>>> +</body>
+>>>> +"""
+>>>>
+>>>>    # pylint: disable=too-few-public-methods
+>>>>    class Node:
+>>>> @@ -50,15 +71,18 @@ class FlameGraphCLI:
+>>>>            self.args = args
+>>>>            self.stack = Node("all", "root")
+>>>>
+>>>> -        if self.args.format == "html" and \
+>>>> -                not os.path.isfile(self.args.template):
+>>>> -            print("Flame Graph template {} does not exist. Please install "
+>>>> -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+>>>> -                  "package, specify an existing flame graph template "
+>>>> -                  "(--template PATH) or another output format "
+>>>> -                  "(--format FORMAT).".format(self.args.template),
+>>>> -                  file=sys.stderr)
+>>>> -            sys.exit(1)
+>>>> +        if self.args.format == "html":
+>>>> +            if os.path.isfile(self.args.template):
+>>>> +                self.template = f"file://{self.args.template}"
+>>>> +            else:
+>>>> +                print(f"""
+>>>> +Warning: Flame Graph template '{self.args.template}'
+>>>> +does not exist, a template will be downloaded via http. To avoid this
+>>>> +please install a package such as the js-d3-flame-graph or
+>>>> +libjs-d3-flame-graph, specify an existing flame graph template
+>>>> +(--template PATH) or another output format (--format FORMAT).
+>>>> +""", file=sys.stderr)
+>>>> +            self.template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
+>>>>
+>>>>        @staticmethod
+>>>>        def get_libtype_from_dso(dso):
+>>>> @@ -129,15 +153,18 @@ class FlameGraphCLI:
+>>>>                options_json = json.dumps(options)
+>>>>
+>>>>                try:
+>>>> -                with io.open(self.args.template, encoding="utf-8") as template:
+>>>> -                    output_str = (
+>>>> -                        template.read()
+>>>> -                        .replace("/** @options_json **/", options_json)
+>>>> -                        .replace("/** @flamegraph_json **/", stacks_json)
+>>>> -                    )
+>>>> -            except IOError as err:
+>>>> -                print("Error reading template file: {}".format(err), file=sys.stderr)
+>>>> -                sys.exit(1)
+>>>> +                with urllib.request.urlopen(self.template) as template:
+>>>> +                    output_str = '\n'.join([
+>>>> +                        l.decode('utf-8') for l in template.readlines()
+>>>> +                    ])
+>>>> +            except Exception as err:
+>>>> +                print(f"Error reading template {self.template}: {err}\n"
+>>>> +                      "a minimal flame graph will be generated", file=sys.stderr)
+>>>> +                output_str = minimal_html
+>>>> +
+>>>> +            output_str = output_str.replace("/** @options_json **/", options_json)
+>>>> +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
+>>>> +
+>>>>                output_fn = self.args.output or "flamegraph.html"
+>>>>            else:
+>>>>                output_str = stacks_json
+>>>> --
+>>>> 2.39.0.314.g84b9a713c41-goog
+>>>>
+>>>
+>>
+>> --
+>> Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower,
+>> 26.floor, Handelskai 94-96, Austria
+>> Commercial register: Commercial Court Vienna, FN 479668w
+>>
+> 
+
+-- 
+Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower, 
+26.floor, Handelskai 94-96, Austria
+Commercial register: Commercial Court Vienna, FN 479668w
+
