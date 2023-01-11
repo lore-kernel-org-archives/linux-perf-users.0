@@ -2,265 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41FFC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265FC67871
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 10:57:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232575AbjAKKtV (ORCPT
+        id S231916AbjAKK5d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 05:49:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
+        Wed, 11 Jan 2023 05:57:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232012AbjAKKs6 (ORCPT
+        with ESMTP id S238898AbjAKK44 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 05:48:58 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CCE13E85;
-        Wed, 11 Jan 2023 02:48:55 -0800 (PST)
-Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NsPX64BZSzJrLp;
-        Wed, 11 Jan 2023 18:47:34 +0800 (CST)
-Received: from huawei.com (10.44.142.108) by kwepemm600006.china.huawei.com
- (7.193.23.105) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 11 Jan
- 2023 18:48:51 +0800
-From:   <luolongjun@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sangyan@huawei.com>, <luanjianhai@huawei.com>,
-        <zhuling8@huawei.com>, <lizongwu@huawei.com>,
-        <luolongjuna@gmail.com>, Longjun Luo <luolongjun@huawei.com>
-Subject: [PATCH] uprobes: list all active uprobes in the system
-Date:   Wed, 11 Jan 2023 18:48:25 +0800
-Message-ID: <20230111104825.1945418-1-luolongjun@huawei.com>
-X-Mailer: git-send-email 2.38.1
+        Wed, 11 Jan 2023 05:56:56 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5817016595;
+        Wed, 11 Jan 2023 02:56:39 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20B2BFEC;
+        Wed, 11 Jan 2023 02:57:21 -0800 (PST)
+Received: from [10.57.45.242] (unknown [10.57.45.242])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 046343F587;
+        Wed, 11 Jan 2023 02:56:35 -0800 (PST)
+Message-ID: <5acce414-eabb-3d22-4907-da6b64b85a9c@arm.com>
+Date:   Wed, 11 Jan 2023 10:56:34 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.44.142.108]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600006.china.huawei.com (7.193.23.105)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3 0/7] perf cs_etm: Basic support for virtual/kernel
+ timestamps
+Content-Language: en-US
+To:     Tanmay Jagdale <tanmay@marvell.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "leo.yan@linaro.org" <leo.yan@linaro.org>,
+        "mike.leach@linaro.org" <mike.leach@linaro.org>
+Cc:     Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Bharat Bhushan <bbhushan2@marvell.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230103162042.423694-1-james.clark@arm.com>
+ <PH0PR18MB5017223066D8744D12C1F1BAD6FF9@PH0PR18MB5017.namprd18.prod.outlook.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <PH0PR18MB5017223066D8744D12C1F1BAD6FF9@PH0PR18MB5017.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Longjun Luo <luolongjun@huawei.com>
 
-Since uprobes will replace instructions in the process
-memory, it is necessary to provide one way to list
-all active uprobes. One can access this file through
-/sys/kernel/debug/uprobes/list.
 
-Output looks like this
-=====================
-inode+offset/ref_ctr_offset    4160760670+0x30a10/0x0
-    ref                        1
-    register_rwsem             (unlocked)
-    consumer_rwsem             (unlocked)
-    consumers-1
-        handler                0xffffffffc03ee02e(handler) uprobe
-        ret_handler            0x0000000000000000( )
-        filter                 0xffffffffc03ee010(filter) uprobe
-    consumers-2
-        handler                0xffffffffc03e902e(handler_1) uprobe_1
-        ret_handler            0x0000000000000000( )
-        filter                 0xffffffffc03e9010(filter_1) uprobe_1
+On 10/01/2023 16:42, Tanmay Jagdale wrote:
+[...]
+>>
+>> base-commit: 09e6f9f98370be9a9f8978139e0eb1be87d1125f
+> I have tested this patch set on our platform and able to see updated
+> timestamp values in perf script's output.
+> 
+> $ perf record -e cs_etm/cycacc,@tmc_etr0/k -C 9 taskset -c 9 sleep 2
+> $ perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent
+> 
+> At certain points noticed that hardware emits same timestamp packets
+> but with updated cycle count (CC) values. A small snippet of the log:
+> 
+> Idx:100; ID:12; I_ADDR_S_IS0 : Address, Short, IS0.; Addr=0xFFFF8000086A761C ~[0x761C]
+> Idx:103; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x3d
+> Idx:107; ID:12; I_ATOM_F2 : Atom format 2.; EN
+> Idx:108; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x3f
+> Idx:112; ID:12; I_ATOM_F1 : Atom format 1.; N
+> Idx:113; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x45
+> Idx:116; ID:12; I_ATOM_F1 : Atom format 1.; E
+> Idx:117; ID:12; I_ADDR_S_IS0 : Address, Short, IS0.; Addr=0xFFFF8000086B52D4 ~[0x152D4]
+> 
+> Since the source of timestamp is the Generic Timer block and the CPUs
+> run at higher frequencies, this behaviour could be possible on high
+> performance ARM cores.
+> 
+> Having consecutive timestamps with same value is resulting in a
+> slightly jumbled order (in nanosecs) in perf script's time column.
+> A snippet corresponding to the Coresight trace data mentioned above:
+> ...
+> perf   965/965   [001]  3182.286629044:            instructions:k:   return                               0 ffff8000086a761c coresight_timeout+0xc8
+> perf   965/965   [001]  3182.286629044:            instructions:k:   return                               0 ffff8000086a7620 coresight_timeout+0xcc
+> perf   965/965   [001]  3182.286629046:            instructions:k:   jmp                                  0 ffff8000086a75c8 coresight_timeout+0x74
+> perf   965/965   [001]  3182.286629046:            instructions:k:   jmp                                  0 ffff8000086a75cc coresight_timeout+0x78
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d0 coresight_timeout+0x7c
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d4 coresight_timeout+0x80
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d8 coresight_timeout+0x84
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75dc coresight_timeout+0x88
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e0 coresight_timeout+0x8c
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e4 coresight_timeout+0x90
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e8 coresight_timeout+0x94
+> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75ec coresight_timeout+0x98
+> 
+> Perf's do_soft_timestamp() logic in cs_etm_decoder.c file is incrementing
+> the HW timestamp based on instruction count. Since the next timestamp
+> also has the same value, it could be leading to this jumbled order.
+> 
+> We would like to know if this has been observed on other platforms ?
+> And what could be a solution in SW for this ?
 
-Signed-off-by: Longjun Luo <luolongjun@huawei.com>
----
- kernel/events/uprobes.c | 120 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 109 insertions(+), 11 deletions(-)
+Nice catch. If I'm understanding this correctly it looks like the issue
+is a combination of the cycle count in the packet being ignored by Perf,
+and the instruction count being reset to 0 when a new timestamp is received.
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index d9e357b7e17c..2fa9b910abc7 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -27,6 +27,9 @@
- #include <linux/task_work.h>
- #include <linux/shmem_fs.h>
- #include <linux/khugepaged.h>
-+#include <linux/rbtree.h>
-+#include <linux/debugfs.h>
-+#include <linux/kallsyms.h>
- 
- #include <linux/uprobes.h>
- 
-@@ -40,7 +43,7 @@ static struct rb_root uprobes_tree = RB_ROOT;
-  */
- #define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
- 
--static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
-+static DECLARE_RWSEM(uprobes_treelock);	/* serialize rbtree access */
- 
- #define UPROBES_HASH_SZ	13
- /* serialize uprobe->pending_list */
-@@ -672,9 +675,9 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- {
- 	struct uprobe *uprobe;
- 
--	spin_lock(&uprobes_treelock);
-+	down_read(&uprobes_treelock);
- 	uprobe = __find_uprobe(inode, offset);
--	spin_unlock(&uprobes_treelock);
-+	up_read(&uprobes_treelock);
- 
- 	return uprobe;
- }
-@@ -704,9 +707,9 @@ static struct uprobe *insert_uprobe(struct uprobe *uprobe)
- {
- 	struct uprobe *u;
- 
--	spin_lock(&uprobes_treelock);
-+	down_write(&uprobes_treelock);
- 	u = __insert_uprobe(uprobe);
--	spin_unlock(&uprobes_treelock);
-+	up_write(&uprobes_treelock);
- 
- 	return u;
- }
-@@ -938,9 +941,9 @@ static void delete_uprobe(struct uprobe *uprobe)
- 	if (WARN_ON(!uprobe_is_active(uprobe)))
- 		return;
- 
--	spin_lock(&uprobes_treelock);
-+	down_write(&uprobes_treelock);
- 	rb_erase(&uprobe->rb_node, &uprobes_tree);
--	spin_unlock(&uprobes_treelock);
-+	up_write(&uprobes_treelock);
- 	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
- }
-@@ -1301,7 +1304,7 @@ static void build_probe_list(struct inode *inode,
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	down_read(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
- 	if (n) {
- 		for (t = n; t; t = rb_prev(t)) {
-@@ -1319,7 +1322,7 @@ static void build_probe_list(struct inode *inode,
- 			get_uprobe(u);
- 		}
- 	}
--	spin_unlock(&uprobes_treelock);
-+	up_read(&uprobes_treelock);
- }
- 
- /* @vma contains reference counter, not the probed instruction. */
-@@ -1410,9 +1413,9 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
- 	min = vaddr_to_offset(vma, start);
- 	max = min + (end - start) - 1;
- 
--	spin_lock(&uprobes_treelock);
-+	down_read(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
--	spin_unlock(&uprobes_treelock);
-+	up_read(&uprobes_treelock);
- 
- 	return !!n;
- }
-@@ -2357,3 +2360,98 @@ void __init uprobes_init(void)
- 
- 	BUG_ON(register_die_notifier(&uprobe_exception_nb));
- }
-+
-+#ifdef CONFIG_DEBUG_FS
-+
-+static void *uprobe_seq_start(struct seq_file *m, loff_t *pos)
-+{
-+	loff_t num = *pos;
-+	struct rb_node *rbp;
-+
-+	down_read(&uprobes_treelock);
-+	for (rbp = rb_first(&uprobes_tree); rbp; rbp = rb_next(rbp)) {
-+		if (num-- == 0)
-+			return rbp;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void *uprobe_seq_next(struct seq_file *f, void *v, loff_t *pos)
-+{
-+	++*pos;
-+	return (void *)rb_next(v);
-+}
-+
-+static void uprobe_seq_stop(struct seq_file *f, void *v)
-+{
-+	up_read(&uprobes_treelock);
-+}
-+
-+static int show_uprobe(struct seq_file *m, void *v)
-+{
-+	struct uprobe *uprobe = rb_entry_safe(v, struct uprobe, rb_node);
-+	struct uprobe_consumer *con;
-+	char *modname, namebuf[KSYM_NAME_LEN];
-+	const char *sym;
-+	unsigned int cnt = 1;
-+
-+	seq_printf(m, "inode+offset/ref_ctr_offset    %lu+0x%llx/0x%llx\n",
-+		uprobe->inode->i_ino, uprobe->offset, uprobe->ref_ctr_offset);
-+	seq_printf(m, "    ref                        %u\n",
-+		refcount_read(&uprobe->ref));
-+	seq_printf(m, "    register_rwsem             %s\n",
-+		rwsem_is_locked(&uprobe->register_rwsem)?"(locked)":"(unlocked)");
-+	seq_printf(m, "    consumer_rwsem             %s\n",
-+		rwsem_is_locked(&uprobe->consumer_rwsem)?"(locked)":"(unlocked)");
-+
-+	/* lock consumer_rwsem when hold uprobes_treelock */
-+	down_read(&uprobe->consumer_rwsem);
-+	for (con = uprobe->consumers; con; con = con->next, cnt++) {
-+		seq_printf(m, "    consumers-%u\n", cnt);
-+
-+		modname = NULL;
-+		sym = kallsyms_lookup((unsigned long)con->handler, NULL, NULL,
-+			&modname, namebuf);
-+		seq_printf(m, "        handler                0x%px(%s) %s\n",
-+			con->handler, (sym ? sym : " "), (modname ? modname : " "));
-+
-+		modname = NULL;
-+		sym = kallsyms_lookup((unsigned long)con->ret_handler, NULL, NULL,
-+			&modname, namebuf);
-+		seq_printf(m, "        ret_handler            0x%px(%s) %s\n",
-+			con->ret_handler, (sym ? sym : " "), (modname ? modname : " "));
-+
-+		modname = NULL;
-+		sym = kallsyms_lookup((unsigned long)con->filter, NULL, NULL,
-+			&modname, namebuf);
-+		seq_printf(m, "        filter                 0x%px(%s) %s\n",
-+			con->filter, (sym ? sym : " "), (modname ? modname : " "));
-+	}
-+	up_read(&uprobe->consumer_rwsem);
-+
-+	return 0;
-+}
-+
-+static const struct seq_operations uprobes_sops = {
-+	.start = uprobe_seq_start,
-+	.next  = uprobe_seq_next,
-+	.stop  = uprobe_seq_stop,
-+	.show  = show_uprobe,
-+};
-+
-+DEFINE_SEQ_ATTRIBUTE(uprobes);
-+
-+static int __init debugfs_uprobe_init(void)
-+{
-+	struct dentry *dir;
-+
-+	dir = debugfs_create_dir("uprobes", NULL);
-+
-+	debugfs_create_file("list", 0400, dir, NULL, &uprobes_fops);
-+
-+	return 0;
-+}
-+late_initcall(debugfs_uprobe_init);
-+
-+#endif /* CONFIG_DEBUG_FS */
--- 
-2.38.1
+It looks like it can be fixed by some combination of combining the cycle
+count and instruction count and maybe not resetting instruction count if
+the newly received timestamp is the same as the last one. I will look
+into this.
 
+We haven't noticed it on any other platforms, but we haven't been
+looking too closely at the timestamps until now. Perhaps I can add a
+test that checks if the trace in a known function goes in the correct
+time order.
+
+Thanks
+James
