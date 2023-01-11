@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963EBC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 07:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A1C46467
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 07:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231836AbjAKHHD (ORCPT
+        id S231695AbjAKHHM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 02:07:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33250 "EHLO
+        Wed, 11 Jan 2023 02:07:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231710AbjAKHHC (ORCPT
+        with ESMTP id S234716AbjAKHHK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 02:07:02 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CFB963BF
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:07:01 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id l194-20020a2525cb000000b007b411fbdc13so15473133ybl.23
-        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:07:01 -0800 (PST)
+        Wed, 11 Jan 2023 02:07:10 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4C4B499
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:07:09 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-482d3bf0266so152820377b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 10 Jan 2023 23:07:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QcIFJ2x72XnzKR9JnqBftaBgEZOVI/IGNNJWfUZh1kA=;
-        b=bs7xtaVlYBLFOSzJZ04j49npQTIGs/SIaSKqB8GfS5VJJg+s0RhAnjmxYleMCIVJDH
-         hx51RHmyDGfhvz+KDx8Mrc9gGchiuNDvXPc/zCpsmdWxMSFV0Me8j6yEIxDbTjSaOJ/N
-         jsRfRdUC33UIBTi0J+WY1/q0jbue1dy81BD+fTEnE9+oe4ywPKoKW/hrU8c1RS2IwSyY
-         i4VWyndqnxHly6smvSFU1oXcF9xTY8RCYnrbQuZ8FXpIAKpruu1RuxxJ9xkzksJKQMXv
-         79Wii4zxgFbH2fSaza5P3ysc0B2ov15xFaFID3cUKZjX3V8FxdpRJExilSgckqZiXd9z
-         6EMw==
+        bh=NFrSxVrfdRZYprem1a+EonI6bqjM3AdjO9gRlJ+kQ1E=;
+        b=MO/3evZ7yJJjjP0LMQV02qoI0xTtd6ha4a5z3beUr4g0O6L8XONbEla8E2UdAZJIbf
+         84d93jxMcIe/UtdsXQcdt7czglCY/neqTcmt6w5Io248fs3NJqvNmufUyQJujptJGxZy
+         3WmXrND91U9ecYTl4mOmCiwhRPOXiAh6TpgPmLbKp1sNihUYYzMD+O/diiFqdg56XIKm
+         Ln/GcLW6voOZp4w/UOreYmTpKzpxGVVN9OIN2cv4npA3nLuNohm5USCvFybojI+eWR3X
+         OunlVvkVtHpoEL4jFNB411m19HuOMIiY+maxmTRvTDXnwgqZbFtk5TsPxrk0ZiEt5cl6
+         1uxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QcIFJ2x72XnzKR9JnqBftaBgEZOVI/IGNNJWfUZh1kA=;
-        b=EAJUN8yl595T7KV9M4ciuhjoTgFPMwXoRFzB8LChCedTC4WF8bbeHG01r6GtD3Vrfx
-         30XhJ8hIApPEf69exAY3QTfoaU3rGhSXZ494wZI8SY0bmwVnSbepNNzBItIAFExk2OJl
-         b07tUxYsLR0T6sbtyso7UHhNkFi0jC41c3/M5K/drsYEITs9yX6Pm0TuDCkGC4FzRQ+l
-         //c0jsQk6tWLQlkg51117rshDSNouFMtoKH0LAFd8RYAmLdsibTOOX7A3Gl3OTF1yIcX
-         RMhRszx+3W3wnPNjZah3gG9tqxkODzmmxPWtwAwa96HZ59MCwIJqtPYzbNMCTWsae06H
-         8G9g==
-X-Gm-Message-State: AFqh2kryTl9eiwhk4n6b9BVwpXAJUGeEDJyGpYl2JhIa6WPrVL0d1DJR
-        /y8BoQbYl+9oVyWSU9opFRZy/b3DGZMk
-X-Google-Smtp-Source: AMrXdXtXbYFw9WkQGSkwH1WYAT/s011j+Z/i7YPLsq5/LNKQff45l5yk2btwJFzkpawdMZcEPh4PvZ4VHo4H
+        bh=NFrSxVrfdRZYprem1a+EonI6bqjM3AdjO9gRlJ+kQ1E=;
+        b=Sn5+PLZso29CBzHo7HJhm7pkdyLsdU2gP5ssSjHca7RIhVkEhZDj3UI49M0+isYEUT
+         qSLGQl4VNGVEuFFWOzokZuw6kQ3vt56aRmM6OFqzcvrlph2ZrvdorEbIApmcBUQgxU2x
+         4z299shIq6t/1qT15isNf1PGf5Olb7A6zIRARQrFwHLwqWsqT+ODMR5+YJzN0Tel9ER6
+         h7HOZ2h4k/J5M/0TCM9W2XR2sYioNzEY11gfXcOunzbuPKlZ+v/y1RHDOlrk9hJS1pPN
+         hGKB6s3rCBNU7IK1+Z0YwAJGKhoBCMVUImM2oz4aTYaaEHlXeER4nMIuKHl4I/hOpmZL
+         0H5g==
+X-Gm-Message-State: AFqh2kov2HthepyJ/OwrCy0QK8e9nX9veO4AQvBcItfev3IUtKYkTaPG
+        gNoqbFHij28DxxHFIyKehKUzuBpkvs6i
+X-Google-Smtp-Source: AMrXdXvQpil6jNPjSq/pZkWtOVRcWOV7+fsElOsbRFULBMoe4nkR1bf1Twel/XVb4Qj+4pg7OVSInxkCfaDU
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cebf:c37e:8184:56])
- (user=irogers job=sendgmr) by 2002:a25:e309:0:b0:700:b6ef:34a9 with SMTP id
- z9-20020a25e309000000b00700b6ef34a9mr5408985ybd.527.1673420821147; Tue, 10
- Jan 2023 23:07:01 -0800 (PST)
-Date:   Tue, 10 Jan 2023 23:06:40 -0800
+ (user=irogers job=sendgmr) by 2002:a25:3758:0:b0:7b5:f176:e485 with SMTP id
+ e85-20020a253758000000b007b5f176e485mr2208774yba.556.1673420828555; Tue, 10
+ Jan 2023 23:07:08 -0800 (PST)
+Date:   Tue, 10 Jan 2023 23:06:41 -0800
 In-Reply-To: <20230111070641.1728726-1-irogers@google.com>
-Message-Id: <20230111070641.1728726-2-irogers@google.com>
+Message-Id: <20230111070641.1728726-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20230111070641.1728726-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-Subject: [PATCH v2 2/3] perf trace: Reduce #ifdefs for TEP_FIELD_IS_RELATIVE
+Subject: [PATCH v2 3/3] perf debug: Increase libtraceevent logging when verbose
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -80,158 +80,75 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a helper function that applies the mask to test, or returns false
-if libtraceevent is too old or not present.
+libtraceevent has added more levels of debug printout and with changes
+like:
+https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
+previously generated output like "registering plugin" is no longer
+displayed. This change makes it so that if perf's verbose debug output
+is enabled then the debug and info libtraceevent messages can be
+displayed.
+
+This change was previously posted:
+https://lore.kernel.org/linux-perf-users/20210923001024.550263-4-irogers@google.com/
+and reverted:
+https://lore.kernel.org/linux-perf-users/20220109153446.160593-1-acme@kernel.org/
+The previous failure was due to -Itools/lib being on the include path
+and libtraceevent in tools/lib being version 1.1.0. This meant that
+when LIBTRACEEVENT_VERSION was 1.3.0 the #if succeeded, but the header
+file for libtraceevent (taken from tools/lib rather than the intended
+/usr/include) was for version 1.1.0 and function definitions were
+missing.
+
+Since the previous issue the -Itools/lib include path has been
+removed:
+https://lore.kernel.org/lkml/20221109184914.1357295-1-irogers@google.com/
+As well as libtraceevent 1.1.0 has been removed from tools/lib:
+https://lore.kernel.org/lkml/20221130062935.2219247-1-irogers@google.com/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-trace.c                       |  4 +---
- tools/perf/util/data-convert-bt.c                |  4 +---
- tools/perf/util/evsel.c                          |  4 +---
- tools/perf/util/python.c                         |  4 +---
- .../util/scripting-engines/trace-event-perl.c    |  4 +---
- .../util/scripting-engines/trace-event-python.c  |  4 +---
- tools/perf/util/sort.c                           |  4 +---
- tools/perf/util/trace-event.h                    | 16 ++++++++++++++++
- 8 files changed, 23 insertions(+), 21 deletions(-)
+ tools/perf/util/debug.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 927622ecc42e..a4240adbe42f 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2729,10 +2729,8 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 				offset = format_field__intval(field, sample, evsel->needs_swap);
- 				syscall_arg.len = offset >> 16;
- 				offset &= 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--				if (field->flags & TEP_FIELD_IS_RELATIVE)
-+				if (tep_field_is_relative(field->flags))
- 					offset += field->offset + field->size;
--#endif
- 			}
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 190e818a0717..88378c4c5dd9 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -19,12 +19,19 @@
+ #include "debug.h"
+ #include "print_binary.h"
+ #include "target.h"
++#include "trace-event.h"
+ #include "ui/helpline.h"
+ #include "ui/ui.h"
+ #include "util/parse-sublevel-options.h"
  
- 			val = (uintptr_t)(sample->raw_data + offset);
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index 98454f7a820c..2b732bccabad 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -322,10 +322,8 @@ static int add_tracepoint_field_value(struct ctf_writer *cw,
- 		offset = tmp_val;
- 		len = offset >> 16;
- 		offset &= 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--		if (flags & TEP_FIELD_IS_RELATIVE)
-+		if (tep_field_is_relative(flags))
- 			offset += fmtf->offset + fmtf->size;
--#endif
- 	}
+ #include <linux/ctype.h>
  
- 	if (flags & TEP_FIELD_IS_ARRAY) {
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 296292fa2c04..8550638587e5 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2784,10 +2784,8 @@ void *evsel__rawptr(struct evsel *evsel, struct perf_sample *sample, const char
- 	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
- 		offset = *(int *)(sample->raw_data + field->offset);
- 		offset &= 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--		if (field->flags & TEP_FIELD_IS_RELATIVE)
-+		if (tep_field_is_relative(field->flags))
- 			offset += field->offset + field->size;
--#endif
- 	}
- 
- 	return sample->raw_data + offset;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 25a276710dfb..d948455e5ed4 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -442,10 +442,8 @@ tracepoint_field(struct pyrf_event *pe, struct tep_format_field *field)
- 			offset  = val;
- 			len     = offset >> 16;
- 			offset &= 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--			if (field->flags & TEP_FIELD_IS_RELATIVE)
-+			if (tep_field_is_relative(field->flags))
- 				offset += field->offset + field->size;
--#endif
- 		}
- 		if (field->flags & TEP_FIELD_IS_STRING &&
- 		    is_printable_array(data + offset, len)) {
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 5bcec514f697..83fd2fd0ba16 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -393,10 +393,8 @@ static void perl_process_tracepoint(struct perf_sample *sample,
- 			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
- 				offset = *(int *)(data + field->offset);
- 				offset &= 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--				if (field->flags & TEP_FIELD_IS_RELATIVE)
-+				if (tep_field_is_relative(field->flags))
- 					offset += field->offset + field->size;
--#endif
- 			} else
- 				offset = field->offset;
- 			XPUSHs(sv_2mortal(newSVpv((char *)data + offset, 0)));
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 759ed6eafa3c..2c2697c5d025 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -994,10 +994,8 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 				offset  = val;
- 				len     = offset >> 16;
- 				offset &= 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--				if (field->flags & TEP_FIELD_IS_RELATIVE)
-+				if (tep_field_is_relative(field->flags))
- 					offset += field->offset + field->size;
--#endif
- 			}
- 			if (field->flags & TEP_FIELD_IS_STRING &&
- 			    is_printable_array(data + offset, len)) {
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index cfcc253239f0..dcc4ea96236d 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2668,10 +2668,8 @@ static int64_t __sort__hde_cmp(struct perf_hpp_fmt *fmt,
- 		tep_read_number_field(field, a->raw_data, &dyn);
- 		offset = dyn & 0xffff;
- 		size = (dyn >> 16) & 0xffff;
--#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
--		if (field->flags & TEP_FIELD_IS_RELATIVE)
-+		if (tep_field_is_relative(field->flags))
- 			offset += field->offset + field->size;
--#endif
- 		/* record max width for output */
- 		if (size > hde->dynamic_len)
- 			hde->dynamic_len = size;
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 1a1a2e6b24fb..ee968e5f6b7a 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -139,4 +139,20 @@ int common_lock_depth(struct scripting_context *context);
- #define SAMPLE_FLAGS_BUF_SIZE 64
- int perf_sample__sprintf_flags(u32 flags, char *str, size_t sz);
- 
-+#if defined(LIBTRACEEVENT_VERSION) &&  LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 5, 0)
++#ifdef HAVE_LIBTRACEEVENT
 +#include <traceevent/event-parse.h>
-+
-+static inline bool tep_field_is_relative(unsigned long flags)
-+{
-+	return (flags & TEP_FIELD_IS_RELATIVE) != 0;
-+}
 +#else
-+#include <linux/compiler.h>
-+
-+static inline bool tep_field_is_relative(unsigned long flags __maybe_unused)
-+{
-+	return false;
-+}
++#define LIBTRACEEVENT_VERSION 0
 +#endif
 +
- #endif /* _PERF_UTIL_TRACE_EVENT_H */
+ int verbose;
+ int debug_peo_args;
+ bool dump_trace = false, quiet = false;
+@@ -228,6 +235,14 @@ int perf_debug_option(const char *str)
+ 	/* Allow only verbose value in range (0, 10), otherwise set 0. */
+ 	verbose = (verbose < 0) || (verbose > 10) ? 0 : verbose;
+ 
++#if LIBTRACEEVENT_VERSION >= MAKE_LIBTRACEEVENT_VERSION(1, 3, 0)
++	if (verbose == 1)
++		tep_set_loglevel(TEP_LOG_INFO);
++	else if (verbose == 2)
++		tep_set_loglevel(TEP_LOG_DEBUG);
++	else if (verbose >= 3)
++		tep_set_loglevel(TEP_LOG_ALL);
++#endif
+ 	return 0;
+ }
+ 
 -- 
 2.39.0.314.g84b9a713c41-goog
 
