@@ -2,153 +2,224 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173D1C63797
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Jan 2023 20:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3FDC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Jan 2023 22:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241923AbjALUMZ (ORCPT
+        id S232523AbjALWKf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 Jan 2023 15:12:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
+        Thu, 12 Jan 2023 17:10:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232708AbjALT7O (ORCPT
+        with ESMTP id S232903AbjALWKH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 Jan 2023 14:59:14 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB86F5C;
-        Thu, 12 Jan 2023 11:58:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=H++Izq9gHCigzm3jyfqVQx/OXXHHURXAPu4rHKpriQs=; b=Oi0kUglcFrS3jIOUrZoDJvcOVN
-        KMsu46dZ6R4xAuLNdPZMHSde5BXLi7p5BoS3AvQIKTnK+Y7UxJNqVM2oTIBnlXrFTnLrdeXIfb+Qi
-        7AAikG9twh8Anr/sZFYaO7bb7qNnwpMCkz7DkMEjS9gx3+xe9hOodyU8GQp9X/lUnZ8sRJesyThHi
-        RIfrPCVCdHkqJ74NP1GdEPmsGlsYXN+DPENhh6IP5huV+DA0rAhflvdEIcm2geli5CAbtis/SJcyh
-        5rHDUys63xFKGoXiApF9zgw4oIsvJ6+DyPsl9rZJITMkEb2o+HPd+tXle08OBDnF39ptfNNqdFe8b
-        lJF6i9+g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pG3hG-0045ov-0L;
-        Thu, 12 Jan 2023 19:57:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 824E6303432;
-        Thu, 12 Jan 2023 20:57:13 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 0D9AD2CCF62A9; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195540.804410487@infradead.org>
-User-Agent: quilt/0.66
-Date:   Thu, 12 Jan 2023 20:43:38 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     peterz@infradead.org
-Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
-        linus.walleij@linaro.org, shawnguo@kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
-        khilman@kernel.org, krzysztof.kozlowski@linaro.org,
-        alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
-        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
-        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
-        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
-        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-        shorne@gmail.com, James.Bottomley@HansenPartnership.com,
-        deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
-        richard@nod.at, anton.ivanov@cambridgegreys.com,
-        johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, pv-drivers@vmware.com,
-        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
-        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        sudeep.holla@arm.com, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, anup@brainfault.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
-        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com,
-        rostedt@goodmis.org, mhiramat@kernel.org, frederic@kernel.org,
-        paulmck@kernel.org, pmladek@suse.com, senozhatsky@chromium.org,
-        john.ogness@linutronix.de, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, ryabinin.a.a@gmail.com, glider@google.com,
-        andreyknvl@gmail.com, dvyukov@google.com,
-        vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Marc Zyngier <maz@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v3 24/51] arm64,smp: Remove trace_.*_rcuidle() usage
-References: <20230112194314.845371875@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Thu, 12 Jan 2023 17:10:07 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBB95AC61
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2023 14:00:38 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id i17-20020a25bc11000000b007b59a5b74aaso20524576ybh.7
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Jan 2023 14:00:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hUFqBM73Q9lYPdMltK2ThCupgV9eep/CgOS8HVgc6fI=;
+        b=GAdw1Ka7cnbJBk//dl51ObqXXMMvDDovB1M6ELGF0LEwS3tdMa09jt7nUW+Z1IVbOQ
+         gQswghN2Hiez2FrURXEWkZCSk6DafmoNLtZFfDO2k0YytwL0xUYSNh6BwREORVGcUelk
+         j+V2eyneWxjqEWQ7MxTjskkl5BGL4f5n0MJjUcBMW2Eqed9DY1+OEl7UWdQ8MqSos4ym
+         mVLInsDDZOo7qpz+mM7NMbd2P8HQkPgMURuc0X4u5SEQIxk69lTrVdz9HJyfghPvtyLN
+         Gcbr17/y+EU5MTwuUv5cXjJWkBltiyG6r1OU0lnO21VqZN74F3ht2MERDZNCAgBMhExN
+         Wl/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hUFqBM73Q9lYPdMltK2ThCupgV9eep/CgOS8HVgc6fI=;
+        b=v4ornVWvo1I7KJ7mmBjZP+nOaalZmCy+PaWGn3FFbR25QS7GcmTGmX5indFUPV80XS
+         HT5XlGJBrXjd5/SGdFKV/ZYtfJG/QMKBWGvSGhIexGRLSMaIYoL3LFCMSJeH01B1gzwg
+         R0KfjmFXmfOHPLxje0nR3ox53fMiRRx8gXvjYY+P+a4P1HE3psS5ZLyJnJMArzWWNm8u
+         srLEhDeS098EDkTaXcNdzrrx8OnX0Ebi7vtgzguIpdfXhbforLei69dmuvFAJZIRVsC+
+         9QRsPdu5zF4fMsVthVoNes7FFcD8xyUIdwqX09q0TIMcUUM2v6bgP0mI5Pfzqunemhb0
+         Kf9Q==
+X-Gm-Message-State: AFqh2kqkWwS2wl3aVWSgukzlRqUy30qtqdcgo1ydpLXf/YlobjAjODV3
+        L/ut3B0Yql22FlqVjHAh47FfLEFI5/aZ
+X-Google-Smtp-Source: AMrXdXu7a+gPhbmbHAxwKTFuua6NBcl4OGgBsjJcylZB/1GuBpnOuQHXwpPlkQFnObaoDsz47eX0okUgZ18g
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:fa4e:1fbc:95a:3ea6])
+ (user=irogers job=sendgmr) by 2002:a81:88c5:0:b0:3ad:436f:4e6d with SMTP id
+ y188-20020a8188c5000000b003ad436f4e6dmr2361136ywf.412.1673560837616; Thu, 12
+ Jan 2023 14:00:37 -0800 (PST)
+Date:   Thu, 12 Jan 2023 14:00:24 -0800
+Message-Id: <20230112220024.32709-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+Subject: [PATCH v2] perf script flamegraph: Avoid d3-flame-graph package dependency
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        996839@bugs.debian.org, Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Martin Spier <spiermar@gmail.com>,
+        Brendan Gregg <brendan@intel.com>
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ever since commit d3afc7f12987 ("arm64: Allow IPIs to be handled as
-normal interrupts") this function is called in regular IRQ context.
+Currently flame graph generation requires a d3-flame-graph template to
+be installed. Unfortunately this is hard to come by for things like
+Debian [1]. If the template isn't installed then ask if it should be
+downloaded from jsdelivr CDN. The downloaded HTML file is validated
+against an md5sum. If the download fails, generate a minimal flame
+graph with the javascript coming from links to jsdelivr CDN.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Tested-by: Tony Lindgren <tony@atomide.com>
-Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
+v2. Change the warning to a prompt about downloading and add the
+    --allow-download command line flag. Add an md5sum check for the
+    downloaded HTML.
+
+[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/arm64/kernel/smp.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/scripts/python/flamegraph.py | 96 +++++++++++++++++++------
+ 1 file changed, 74 insertions(+), 22 deletions(-)
 
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -865,7 +865,7 @@ static void do_handle_IPI(int ipinr)
- 	unsigned int cpu = smp_processor_id();
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+index b6af1dd5f816..086619053e4e 100755
+--- a/tools/perf/scripts/python/flamegraph.py
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -19,12 +19,34 @@
+ # pylint: disable=missing-function-docstring
  
- 	if ((unsigned)ipinr < NR_IPI)
--		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
-+		trace_ipi_entry(ipi_types[ipinr]);
+ from __future__ import print_function
+-import sys
+-import os
+-import io
+ import argparse
++import hashlib
++import io
+ import json
++import os
+ import subprocess
++import sys
++import urllib.request
++
++minimal_html = """<head>
++  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
++</head>
++<body>
++  <div id="chart"></div>
++  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
++  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
++  <script type="text/javascript">
++  const stacks = [/** @flamegraph_json **/];
++  // Note, options is unused.
++  const options = [/** @options_json **/];
++
++  var chart = flamegraph();
++  d3.select("#chart")
++        .datum(stacks[0])
++        .call(chart);
++  </script>
++</body>
++"""
  
- 	switch (ipinr) {
- 	case IPI_RESCHEDULE:
-@@ -914,7 +914,7 @@ static void do_handle_IPI(int ipinr)
- 	}
+ # pylint: disable=too-few-public-methods
+ class Node:
+@@ -50,16 +72,6 @@ class FlameGraphCLI:
+         self.args = args
+         self.stack = Node("all", "root")
  
- 	if ((unsigned)ipinr < NR_IPI)
--		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
-+		trace_ipi_exit(ipi_types[ipinr]);
- }
+-        if self.args.format == "html" and \
+-                not os.path.isfile(self.args.template):
+-            print("Flame Graph template {} does not exist. Please install "
+-                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+-                  "package, specify an existing flame graph template "
+-                  "(--template PATH) or another output format "
+-                  "(--format FORMAT).".format(self.args.template),
+-                  file=sys.stderr)
+-            sys.exit(1)
+-
+     @staticmethod
+     def get_libtype_from_dso(dso):
+         """
+@@ -128,16 +140,52 @@ class FlameGraphCLI:
+             }
+             options_json = json.dumps(options)
  
- static irqreturn_t ipi_handler(int irq, void *data)
-
++            template_md5sum = None
++            if self.args.format == "html":
++                if os.path.isfile(self.args.template):
++                    template = f"file://{self.args.template}"
++                else:
++                    if not self.args.allow_download:
++                        print(f"""Warning: Flame Graph template '{self.args.template}'
++does not exist. To avoid this please install a package such as the
++js-d3-flame-graph or libjs-d3-flame-graph, specify an existing flame
++graph template (--template PATH) or use another output format (--format
++FORMAT).""",
++                              file=sys.stderr)
++                        s = None
++                        while s != "y" and s != "n":
++                            s = input("Do you wish to download a template from cdn.jsdelivr.net? (this warning can be suppressed with --allow-download) [yn] ").lower()
++                        if s == "n":
++                            quit()
++                    template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
++                    template_md5sum = "143e0d06ba69b8370b9848dcd6ae3f36"
++
+             try:
+-                with io.open(self.args.template, encoding="utf-8") as template:
+-                    output_str = (
+-                        template.read()
+-                        .replace("/** @options_json **/", options_json)
+-                        .replace("/** @flamegraph_json **/", stacks_json)
+-                    )
+-            except IOError as err:
+-                print("Error reading template file: {}".format(err), file=sys.stderr)
+-                sys.exit(1)
++                with urllib.request.urlopen(template) as template:
++                    output_str = "".join([
++                        l.decode("utf-8") for l in template.readlines()
++                    ])
++            except Exception as err:
++                print(f"Error reading template {template}: {err}\n"
++                      "a minimal flame graph will be generated", file=sys.stderr)
++                output_str = minimal_html
++                template_md5sum = None
++
++            if template_md5sum:
++                download_md5sum = hashlib.md5(output_str.encode("utf-8")).hexdigest()
++                if download_md5sum != template_md5sum:
++                    s = None
++                    while s != "y" and s != "n":
++                        s = input(f"""Unexpected template md5sum.
++{download_md5sum} != {template_md5sum}, for:
++{output_str}
++continue?[yn] """).lower()
++                    if s == "n":
++                        quit()
++
++            output_str = output_str.replace("/** @options_json **/", options_json)
++            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
++
+             output_fn = self.args.output or "flamegraph.html"
+         else:
+             output_str = stacks_json
+@@ -172,6 +220,10 @@ if __name__ == "__main__":
+                         choices=["blue-green", "orange"])
+     parser.add_argument("-i", "--input",
+                         help=argparse.SUPPRESS)
++    parser.add_argument("--allow-download",
++                        default=False,
++                        action="store_true",
++                        help="allow unprompted downloading of HTML template")
+ 
+     cli_args = parser.parse_args()
+     cli = FlameGraphCLI(cli_args)
+-- 
+2.39.0.314.g84b9a713c41-goog
 
