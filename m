@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8995C678D7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Jan 2023 20:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12B9C678D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Jan 2023 20:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241261AbjALUD1 (ORCPT
+        id S241289AbjALUD3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 Jan 2023 15:03:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
+        Thu, 12 Jan 2023 15:03:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235011AbjALT7T (ORCPT
+        with ESMTP id S235408AbjALT7T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Thu, 12 Jan 2023 14:59:19 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8932628;
-        Thu, 12 Jan 2023 11:58:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914CE2BEB;
+        Thu, 12 Jan 2023 11:58:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=uRuk42rt5J1sC1gDxlIXH9yiXjv0To5K12rtksbRl/w=; b=t/UiPYxuyWmQWx8O0dR9C23N3m
-        Mql6RINO7N/qRFk28GXmIaup0931S2z3tF2gEI6MdQoOij/5MpyDJ93PUuH63HNR9QrPHDhJ1A8Oe
-        r91ZkV6InpQFSdpdFg3os7aK02j12nsV24WSxmRJS0kKIVWjbMkU1+JaWypkF/gcgNI0Sb9wRM3lG
-        Y69ujB959knJ2g9LZcv0UARehKAkTXfDsgP2i97QLaacDdXSmeuMauSIsBiYlC/jtcpwExNGPGi8i
-        BrnpvX+u+TK0Yw2Bq1R5xaqa8UPNBlfJNWX8kZy4zpct/I/IMQgjZfiEDib73CDf0Fj9tlY/FPeci
-        GndVoLoA==;
+        bh=N/LoJ6QokuvkgqrdUyeUyAC9uk5r3NGpRlHTjN0UEk8=; b=T8OnHc73dEliAoWK/xch6i2J7U
+        UMPcH7C3wey9SZCz29M3TnVGeV/W9jC6hfvxLiKRMqnquFKPM6nid5EbmG5dczPvuD2DZ3rsJb8bh
+        1B5YEftBb1n98ERVSHO05+IatfdS4u87KvvQGiPoj8rifuEdsA4srZC4wIENwPRAVZsXaUzY4luW4
+        Zenh892eKzf2pgbhojQV6wJdtmIWgpRiTZY36OvBCfqI5tc8YiwERNFtaxcfar59LGMt3V5FwEWxd
+        1IYeXc/xNHpxnwh58Sqsesvu7xJ/zUZBM+XUWlSRPervhZPQ3w6Fk9QTn2mJpsRI+pQDUPSrD9z7J
+        4u6HFEyw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pG3hh-005Ok6-0o; Thu, 12 Jan 2023 19:57:37 +0000
+        id 1pG3hZ-005OdZ-8g; Thu, 12 Jan 2023 19:57:29 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0662A303469;
-        Thu, 12 Jan 2023 20:57:14 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3E001303416;
+        Thu, 12 Jan 2023 20:57:13 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 520F42CD066C8; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195541.844982902@infradead.org>
+        id D46292CCF1F75; Thu, 12 Jan 2023 20:57:07 +0100 (CET)
+Message-ID: <20230112195540.251666856@infradead.org>
 User-Agent: quilt/0.66
-Date:   Thu, 12 Jan 2023 20:43:55 +0100
+Date:   Thu, 12 Jan 2023 20:43:29 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -104,9 +104,9 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-mm@kvack.org,
         linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v3 41/51] cpuidle,clk: Remove trace_.*_rcuidle()
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3 15/51] acpi_idle: Remove tracing
 References: <20230112194314.845371875@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -114,49 +114,66 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-OMAP was the one and only user.
+All the idle routines are called with RCU disabled, as such there must
+not be any tracing inside.
+
+While there; clean-up the io-port idle thing.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/clk/clk.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/acpi/processor_idle.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -978,12 +978,12 @@ static void clk_core_disable(struct clk_
- 	if (--core->enable_count > 0)
- 		return;
- 
--	trace_clk_disable_rcuidle(core);
-+	trace_clk_disable(core);
- 
- 	if (core->ops->disable)
- 		core->ops->disable(core->hw);
- 
--	trace_clk_disable_complete_rcuidle(core);
-+	trace_clk_disable_complete(core);
- 
- 	clk_core_disable(core->parent);
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -109,8 +109,8 @@ static const struct dmi_system_id proces
+ static void __cpuidle acpi_safe_halt(void)
+ {
+ 	if (!tif_need_resched()) {
+-		safe_halt();
+-		local_irq_disable();
++		raw_safe_halt();
++		raw_local_irq_disable();
+ 	}
  }
-@@ -1037,12 +1037,12 @@ static int clk_core_enable(struct clk_co
- 		if (ret)
- 			return ret;
  
--		trace_clk_enable_rcuidle(core);
-+		trace_clk_enable(core);
+@@ -525,8 +525,11 @@ static int acpi_idle_bm_check(void)
+ 	return bm_status;
+ }
  
- 		if (core->ops->enable)
- 			ret = core->ops->enable(core->hw);
+-static void wait_for_freeze(void)
++static __cpuidle void io_idle(unsigned long addr)
+ {
++	/* IO port based C-state */
++	inb(addr);
++
+ #ifdef	CONFIG_X86
+ 	/* No delay is needed if we are in guest */
+ 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+@@ -571,9 +574,7 @@ static void __cpuidle acpi_idle_do_entry
+ 	} else if (cx->entry_method == ACPI_CSTATE_HALT) {
+ 		acpi_safe_halt();
+ 	} else {
+-		/* IO port based C-state */
+-		inb(cx->address);
+-		wait_for_freeze();
++		io_idle(cx->address);
+ 	}
  
--		trace_clk_enable_complete_rcuidle(core);
-+		trace_clk_enable_complete(core);
+ 	perf_lopwr_cb(false);
+@@ -595,8 +596,7 @@ static int acpi_idle_play_dead(struct cp
+ 		if (cx->entry_method == ACPI_CSTATE_HALT)
+ 			safe_halt();
+ 		else if (cx->entry_method == ACPI_CSTATE_SYSTEMIO) {
+-			inb(cx->address);
+-			wait_for_freeze();
++			io_idle(cx->address);
+ 		} else
+ 			return -ENODEV;
  
- 		if (ret) {
- 			clk_core_disable(core->parent);
 
 
