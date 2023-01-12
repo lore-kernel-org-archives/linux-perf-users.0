@@ -2,83 +2,76 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963BCC46467
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Jan 2023 23:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19168C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Jan 2023 03:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235109AbjAKXR6 (ORCPT
+        id S236216AbjALDks (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Jan 2023 18:17:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
+        Wed, 11 Jan 2023 22:40:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234049AbjAKXR5 (ORCPT
+        with ESMTP id S235045AbjALDkq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Jan 2023 18:17:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE8A3AB22;
-        Wed, 11 Jan 2023 15:17:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 07D93B81CC9;
-        Wed, 11 Jan 2023 23:17:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A1B3BC433EF;
-        Wed, 11 Jan 2023 23:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673479073;
-        bh=qY4nUy6FQS12cdvVu+txdn54pNJ+w5Y0Ppt/hK/dhFU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=vInkCHxmFJjs2rufJlSJxbtOg9wFFTYmyg8OC6Tq3VeOXbftEH0ZPmnplzD31KMwb
-         C1A0nciVvMrigSasqHPWW6AMjGZhMP50Wf9R3eifPlPxJeKJBLlZ1c6zwH4E7gfI52
-         KFG3uXMCn3L0K9a488xXzj9H7OOrcArw9bOpFzHSX3VBQ9Zemymo6I36ZAO4+R+egO
-         HF0hYOdQDfM+Vux17ajHAEwkawJZh9ps6sc+fzEYXEiEZkh4s0kNmEAAWnuDrtYWY2
-         kN6Mcx/4VOlXBWCcRADR2w/i1AwdbQNR6o2F9+2rTjLFp/BrqttuvmklbTcgstmz1A
-         tgQ9iwfobXQ9A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8C703E45233;
-        Wed, 11 Jan 2023 23:17:53 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.2: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230111174331.984275-1-acme@kernel.org>
-References: <20230111174331.984275-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230111174331.984275-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-2-2023-01-11
-X-PR-Tracked-Commit-Id: cf129830ee820f7fc90b98df193cd49d49344d09
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e8f60cd7db24f94f2dbed6bec30dd16a68fc0828
-Message-Id: <167347907356.14575.18351582562297563998.pr-tracker-bot@kernel.org>
-Date:   Wed, 11 Jan 2023 23:17:53 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Dmitry Dolgov <9erthalion6@gmail.com>,
-        Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Wed, 11 Jan 2023 22:40:46 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54F544352;
+        Wed, 11 Jan 2023 19:40:45 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NsqzH3cVnz16Mfg;
+        Thu, 12 Jan 2023 11:39:07 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Thu, 12 Jan 2023 11:40:42 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf/core: Fix account interrupt throttle
+Date:   Thu, 12 Jan 2023 11:38:11 +0800
+Message-ID: <20230112033811.58924-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Wed, 11 Jan 2023 14:43:31 -0300:
+In literal sense of "max_samples_per_tick", if hwc->interrupts ==
+max_samples_per_tick, it should not be throttled, therefore, the judgment
+condition should be changed to "hwc->interrupts > max_samples_per_tick".
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-2-2023-01-11
+In fact, this may cause the hardlockup to fail, The minimum value of
+max_samples_per_tick may be 1, in this case, the return value of
+__perf_event_account_interrupt function is 1.
+As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
+architecture as an example, see x86_pmu_handle_irq).
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e8f60cd7db24f94f2dbed6bec30dd16a68fc0828
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you!
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index d56328e5080e..ced98e028d86 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9414,7 +9414,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+ 	} else {
+ 		hwc->interrupts++;
+ 		if (unlikely(throttle
+-			     && hwc->interrupts >= max_samples_per_tick)) {
++			     && hwc->interrupts > max_samples_per_tick)) {
+ 			__this_cpu_inc(perf_throttled_count);
+ 			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+ 			hwc->interrupts = MAX_INTERRUPTS;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.30.GIT
+
