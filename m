@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E945C677F1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4384C74A4B
 	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Jan 2023 20:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241411AbjALUDy (ORCPT
+        id S241419AbjALUDz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 Jan 2023 15:03:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44138 "EHLO
+        Thu, 12 Jan 2023 15:03:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232835AbjALT7O (ORCPT
+        with ESMTP id S235088AbjALT7T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 Jan 2023 14:59:14 -0500
+        Thu, 12 Jan 2023 14:59:19 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11D61090;
-        Thu, 12 Jan 2023 11:58:06 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7B32734;
+        Thu, 12 Jan 2023 11:58:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=Hsr5V6aaf/kVSU2t73jNDRAWfLY8tgaZMY/8xmM8jWo=; b=gQ7Q9SfcfOCGLlvaFWMPSlQDV4
-        uKjocE/2Y34Nr3Jz761/H3K8ref7D/RHB23EoGkYYy1xOk3Feint61cmEzrTeJs9pKFsRiW2qqfOc
-        a15g0aXUVDz0ZDo2MzRyxqBDaXdm6wfbxfKkhacFzf0dnqhRTBbnGYC0Ol79TQuuLMUcvUsmgrQsq
-        Yw8OLwDnAiMOrgLy6Ivt5nddQwxIy8BHKaVFy+WqtLrCrntFsEUj0zjrnvFhZolV0YjTu4WNDYy9/
-        lDKMy9PbKPpnqJnECPubZ+WdVv92KEL7klGQq9pXFCJdS/Q4cXnTA6nMiHYLM5YqQGCUzlZ7euq5h
-        XbhFNewA==;
+        bh=BAfnvD9cLrzo61xSnZTsQNCRnrvqWps/XpXHA7FoM0k=; b=h9pA92J6I0Ai4tfamqsDsGaoNX
+        8FiSc+znckjvix+OnnY/QPlNv98oDcDymsSz48ev28CjwPJ3vGHzam4vZ15NDpv0uenxblhcshipZ
+        cDJ5dY9PuAWS5WjZmmVdgeAe/742HYNajQa3p8cXLYPc0ACiy6YXDAy3JenmXArPaGnrI2XNtAmJn
+        vjPkZLOhVLyLHmzxpX1UWcQ1/KnH4xfYvV2d4mLXnXO9ngPQkdwl6sm46WlKPWlfH1Y+ViwSBkgZj
+        4lqcNuRgO7NnElNQ9hKg9IznScF/Kg863lMBqr329R02nU8LplcHz7BXM4OcQZSXS4JeQ/Ci7T628
+        YriehVbg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pG3hb-005OeM-0G; Thu, 12 Jan 2023 19:57:31 +0000
+        id 1pG3hd-005Ofu-VU; Thu, 12 Jan 2023 19:57:34 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C84530342F;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C8D50303454;
         Thu, 12 Jan 2023 20:57:13 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 09BA02CCF1F7F; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
-Message-ID: <20230112195540.743432118@infradead.org>
+        id 364D42CCF62BD; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
+Message-ID: <20230112195541.416110581@infradead.org>
 User-Agent: quilt/0.66
-Date:   Thu, 12 Jan 2023 20:43:37 +0100
+Date:   Thu, 12 Jan 2023 20:43:48 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -104,9 +104,9 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-arch@vger.kernel.org, linux-mm@kvack.org,
         linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH v3 23/51] arm,smp: Remove trace_.*_rcuidle() usage
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3 34/51] trace: WARN on rcuidle
 References: <20230112194314.845371875@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -114,55 +114,61 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-None of these functions should ever be ran with RCU disabled anymore.
-
-Specifically, do_handle_IPI() is only called from handle_IPI() which
-explicitly does irq_enter()/irq_exit() which ensures RCU is watching.
-
-The problem with smp_cross_call() was, per commit 7c64cc0531fa ("arm: Use
-_rcuidle for smp_cross_call() tracepoints"), that
-cpuidle_enter_state_coupled() already had RCU disabled, but that's
-long been fixed by commit 1098582a0f6c ("sched,idle,rcu: Push rcu_idle
-deeper into the idle path").
+ARCH_WANTS_NO_INSTR (a superset of CONFIG_GENERIC_ENTRY) disallows any
+and all tracing when RCU isn't enabled.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- arch/arm/kernel/smp.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/tracepoint.h |   15 +++++++++++++--
+ kernel/trace/trace.c       |    3 +++
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -639,7 +639,7 @@ static void do_handle_IPI(int ipinr)
- 	unsigned int cpu = smp_processor_id();
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -178,6 +178,17 @@ static inline struct tracepoint *tracepo
+ #endif /* CONFIG_HAVE_STATIC_CALL */
  
- 	if ((unsigned)ipinr < NR_IPI)
--		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
-+		trace_ipi_entry(ipi_types[ipinr]);
- 
- 	switch (ipinr) {
- 	case IPI_WAKEUP:
-@@ -686,7 +686,7 @@ static void do_handle_IPI(int ipinr)
+ /*
++ * ARCH_WANTS_NO_INSTR archs are expected to have sanitized entry and idle
++ * code that disallow any/all tracing/instrumentation when RCU isn't watching.
++ */
++#ifdef CONFIG_ARCH_WANTS_NO_INSTR
++#define RCUIDLE_COND(rcuidle)	(rcuidle)
++#else
++/* srcu can't be used from NMI */
++#define RCUIDLE_COND(rcuidle)	(rcuidle && in_nmi())
++#endif
++
++/*
+  * it_func[0] is never NULL because there is at least one element in the array
+  * when the array itself is non NULL.
+  */
+@@ -188,8 +199,8 @@ static inline struct tracepoint *tracepo
+ 		if (!(cond))						\
+ 			return;						\
+ 									\
+-		/* srcu can't be used from NMI */			\
+-		WARN_ON_ONCE(rcuidle && in_nmi());			\
++		if (WARN_ON_ONCE(RCUIDLE_COND(rcuidle)))		\
++			return;						\
+ 									\
+ 		/* keep srcu and sched-rcu usage consistent */		\
+ 		preempt_disable_notrace();				\
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3119,6 +3119,9 @@ void __trace_stack(struct trace_array *t
+ 		return;
  	}
  
- 	if ((unsigned)ipinr < NR_IPI)
--		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
-+		trace_ipi_exit(ipi_types[ipinr]);
- }
- 
- /* Legacy version, should go away once all irqchips have been converted */
-@@ -709,7 +709,7 @@ static irqreturn_t ipi_handler(int irq,
- 
- static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
- {
--	trace_ipi_raise_rcuidle(target, ipi_types[ipinr]);
-+	trace_ipi_raise(target, ipi_types[ipinr]);
- 	__ipi_send_mask(ipi_desc[ipinr], target);
- }
- 
++	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_GENERIC_ENTRY)))
++		return;
++
+ 	/*
+ 	 * When an NMI triggers, RCU is enabled via ct_nmi_enter(),
+ 	 * but if the above rcu_is_watching() failed, then the NMI
 
 
