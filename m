@@ -2,39 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3C1C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 16:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146A5C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 17:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjAMQha (ORCPT
+        id S229526AbjAMRxt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Jan 2023 11:37:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53630 "EHLO
+        Fri, 13 Jan 2023 12:53:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230219AbjAMQhG (ORCPT
+        with ESMTP id S229712AbjAMRxI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Jan 2023 11:37:06 -0500
-Received: from out30-1.freemail.mail.aliyun.com (out30-1.freemail.mail.aliyun.com [115.124.30.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F14EAB;
-        Fri, 13 Jan 2023 08:32:56 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VZVSZBb_1673627569;
-Received: from 30.15.250.25(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZVSZBb_1673627569)
-          by smtp.aliyun-inc.com;
-          Sat, 14 Jan 2023 00:32:51 +0800
-Message-ID: <7498a6b1-01d0-0e12-82d3-c75250e09161@linux.alibaba.com>
-Date:   Sat, 14 Jan 2023 00:32:49 +0800
+        Fri, 13 Jan 2023 12:53:08 -0500
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB97990E52;
+        Fri, 13 Jan 2023 09:46:06 -0800 (PST)
+Received: by mail-io1-xd2b.google.com with SMTP id s26so2976069ioa.11;
+        Fri, 13 Jan 2023 09:46:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RmsvTUFmio4v0mKtkUrFpQ4vzBAcb82FEeJSIjEF71s=;
+        b=U/s0xMnR81/kt+dOyKNE3+SF/Xg1rMtiYJe3a91yue5+dpPLj46+WZnGexQ2L+06pj
+         l5kV3n62LNq27Brr73MhxdMLHiMgk8IVO34gr56h51iQrTHUFN0ocGcr6fPve2UuttRw
+         AGRvDVH6gNe9DwxOuxpkrKoalD1JgVVIuI6EJM8stTVbU25ceitY0SObOH5DUT4y91Fl
+         5lOkHw2rMyINmPAzbzAUUWxcmtjZhSzZYQJb2W5a3BfEhe2wkcNGLcqNDQagE+35gBW5
+         9nmGN3oh2U+WP71tceOKQoQiCfMQsRfaj85VRPDuZXKoXUBKnoWCkh5ACuIXMj96SXlF
+         oPoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RmsvTUFmio4v0mKtkUrFpQ4vzBAcb82FEeJSIjEF71s=;
+        b=iFnEHqB1ZjudjK6aqlJQ/Oky3RGCM+u1ki1xe5W+6+wdb5+1r7d/259sCfjOW4B2Kv
+         555ATe5/qHswjfq3lEBym7AvSB/P0MsuWmfrxF+i2nVcmEWmBraN6houtRiSKOx5XsOZ
+         DUbGCSHshn3VgY4Hr8jfZJMQTyFYZr1hV/8IsIZU85WFissjR7FMQ/yXSEnTJdxd63X9
+         iqfFsJT0eH6qRffgw1NDGlJ8nyuYHcWRjMjxStRcfMGtikevJe+TTMDCN8QWxp0Kn4sa
+         9YsRqxPjh/+kvle+tuftuVQPTziRcZfl6e9Vl8/JseMB2ERpRy0aSA1EEv0DPT4SxL7B
+         T0mg==
+X-Gm-Message-State: AFqh2koLscfKE7VvEC4Y6U9VhhmsyvMweAFDPFV2skccHahGZSv1EudQ
+        NposQFVAjmTsV4jsAU1S6KlZEjGXY2j2KyNCoMBMiJwj
+X-Google-Smtp-Source: AMrXdXsnqCB44MKYHXk5te+gf4YIXgwpKgqTOW3QNAIW7mAcGQ2b8EbOHH/IB8qOBZ5vCA+CdJyN3CRjrDc3nlPSdgw=
+X-Received: by 2002:a05:6602:24d2:b0:6e0:19fa:2328 with SMTP id
+ h18-20020a05660224d200b006e019fa2328mr7273105ioe.37.1673631966071; Fri, 13
+ Jan 2023 09:46:06 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v7 0/9] Add metrics for neoverse-n2-v2
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+References: <20220415050003.3257645-1-mattst88@gmail.com> <20221019232952.2212729-1-mattst88@gmail.com>
+ <CAEdQ38FO0SH80SLQKpLxadOBKn7cuRmZLd=xU8jJguq+MuD+Lw@mail.gmail.com> <CAEdQ38G8_bNzNnvYj2RHoOEufv4P3gKKGxHNgGWGG7_gBrR4dg@mail.gmail.com>
+In-Reply-To: <CAEdQ38G8_bNzNnvYj2RHoOEufv4P3gKKGxHNgGWGG7_gBrR4dg@mail.gmail.com>
+From:   Matt Turner <mattst88@gmail.com>
+Date:   Fri, 13 Jan 2023 12:45:54 -0500
+Message-ID: <CAEdQ38E8du48Q1KNnRRokftRpMmjUb-anCKX_3Q9n77KfZF-6A@mail.gmail.com>
+Subject: Re: [PATCH v2] tools: port perf ui from GTK 2 to GTK 3
+To:     linux-perf-users@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -42,47 +65,60 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1673601740-122788-1-git-send-email-renyu.zj@linux.alibaba.com>
- <d33086a5-233f-f591-c9da-5f1a2e8aaf54@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <d33086a5-233f-f591-c9da-5f1a2e8aaf54@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Jelle van der Waa <jvanderwaa@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Fri, Dec 2, 2022 at 4:11 PM Matt Turner <mattst88@gmail.com> wrote:
+>
+> On Mon, Oct 31, 2022 at 10:02 AM Matt Turner <mattst88@gmail.com> wrote:
+> >
+> > On Wed, Oct 19, 2022 at 7:30 PM Matt Turner <mattst88@gmail.com> wrote:
+> > >
+> > > From: Jelle van der Waa <jvanderwaa@redhat.com>
+> > >
+> > > GTK 2 is a legacy API and the newer version is GTK 3 which changes a =
+few
+> > > API functions. gtk_tree_view_set_rules_hint is no longer required sin=
+ce
+> > > theme's are now responsible to handle this, gtk_vbox_new is deprecate=
+d
+> > > and replaced by passing the orientation to gtk_box_new. Apart from th=
+ese
+> > > changes the accessing of the screen changed in GTK which requires usi=
+ng
+> > > new functions for getting geometry. Lastly the GTK_STOCK_OK define is
+> > > deprecated in GTK 3.
+> > >
+> > > Signed-off-by: Jelle van der Waa <jvanderwaa@redhat.com>
+> > > Signed-off-by: Matt Turner <mattst88@gmail.com>
+> > > ---
+> > > Originally sent in 2019. I've rebased it and given it a test.
+> > >
+> > > One problem I've noticed is that C++ symbol names are often broken.
+> > > E.g.:
+> > >
+> > > (perf:3254940): Gtk-WARNING **: 21:47:46.663: Failed to set text from
+> > > markup due to error parsing markup: Error on line 1 char 95:
+> > > =E2=80=9Cstd::char_traits<char=E2=80=9D is not a valid name: =E2=80=
+=9C<=E2=80=9D
+> > >
+> > > Presumably we need to call g_markup_escape_text() somewhere, but I
+> > > struggled to find the right place.
+> > >
+> > > Without the patch, the GTK-2 version repeatedly segfaults, so this is=
+ an
+> > > improvement regardless.
+> > >
+> > > v2: Dropped changes to test-all.c. I don't know how to build that
+> > >     apparently.
+> >
+> >
+> > Arnaldo, does this work better for you?
+>
+> Ping=C2=B2
 
-
-在 2023/1/13 下午5:59, John Garry 写道:
-> On 13/01/2023 09:22, Jing Zhang wrote:
->> Changes since v6:
->> - Split patch #1 into 3 smaller patches as suggested by Ian.
->> - Change perf_pmu__get_slots into perf_pmu__cpu_slots_per_cycle,
->>    per John's suggestion;
->> - Return NAN instead of 0 in perf_pmu__cpu_slots_per_cycle weak
->>    function, per John's suggestion;
->> - Factor out pmu_core__find_same function, per John's suggestion.
->> - Link:https://urldefense.com/v3/__https://lore.kernel.org/all/1673017529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com/__;!!ACWV5N9M2RV99hQ!LhBq67uDCOsz1k7ZF4aQPHF0Bp8FsMr-ZNgCnBSUKF4qJTFODfnkId7lw_NXqB4qZUCpu-jbY8z8LTckoqFGz2Q8bA$  
-> 
-> This looks fine. But for this code:
-> 
-> On 13/01/2023 09:22, Jing Zhang wrote:
->> +double perf_pmu__cpu_slots_per_cycle(void)
->> +{
->> +    char path[PATH_MAX];
->> +    unsigned long long slots = 0;
-> 
-> I would prefer if this returned NAN (and not 0) for when we can't find a pmu or the value from ./caps/slots is zero, but I am not going to get too hung up on that.
-> 
-
-Ok, I like this way too.
-
-> For series:
-> 
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
-
-Thank you very much indeed!
+Ping=C2=B3
