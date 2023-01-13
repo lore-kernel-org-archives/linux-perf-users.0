@@ -2,247 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05233C54EBD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 11:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F16BC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 15:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231338AbjAMLS5 (ORCPT
+        id S230326AbjAMPhw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Jan 2023 06:18:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        Fri, 13 Jan 2023 10:37:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241431AbjAMLSA (ORCPT
+        with ESMTP id S230274AbjAMPh2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Jan 2023 06:18:00 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4FB437D9D8;
-        Fri, 13 Jan 2023 03:12:51 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7871FEC;
-        Fri, 13 Jan 2023 03:13:32 -0800 (PST)
-Received: from [10.57.37.197] (unknown [10.57.37.197])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B50E13F587;
-        Fri, 13 Jan 2023 03:12:47 -0800 (PST)
-Message-ID: <70a94ad3-fe5d-b013-7f6b-dd83d2332e0e@arm.com>
-Date:   Fri, 13 Jan 2023 11:12:46 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3 0/7] perf cs_etm: Basic support for virtual/kernel
- timestamps
-Content-Language: en-US
-To:     Tanmay Jagdale <tanmay@marvell.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "leo.yan@linaro.org" <leo.yan@linaro.org>,
-        "mike.leach@linaro.org" <mike.leach@linaro.org>
-Cc:     Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Bharat Bhushan <bbhushan2@marvell.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230103162042.423694-1-james.clark@arm.com>
- <PH0PR18MB5017223066D8744D12C1F1BAD6FF9@PH0PR18MB5017.namprd18.prod.outlook.com>
- <5acce414-eabb-3d22-4907-da6b64b85a9c@arm.com>
- <b61039b1-1f64-ff1e-8e6a-7d8ada28656c@arm.com>
- <PH0PR18MB50178B52ED081276D2404493D6FD9@PH0PR18MB5017.namprd18.prod.outlook.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <PH0PR18MB50178B52ED081276D2404493D6FD9@PH0PR18MB5017.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+        Fri, 13 Jan 2023 10:37:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0492FBC368;
+        Fri, 13 Jan 2023 07:30:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 475E2B82170;
+        Fri, 13 Jan 2023 15:30:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A360DC433F0;
+        Fri, 13 Jan 2023 15:29:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673623799;
+        bh=Pn5X1oiGkT2ioXSPvzox4F8ZHW3ijQ1na48kZXX6018=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LoIVDCANAV18PecHmA+Nt5UTHRJraooFDQ2iwjRH9aL2jxGB0l05J1A8YmxNj0ph/
+         L26hVJQY+70da4A4wkTF2HTlZsX/l5DZY3WZ1z5rbZS2Q+ZMaJqk+ohyMoZOvpVZHc
+         URcymXgdegg88ZIPl1xQqwNhHJKFxMyGoAY5zvE81yh0fWvMpjSUVFsyJ7Xg6E32zL
+         S209VWE8+/XLRZerPQ4vwnWPx4vvwcegVsqU5ldTYDpeCrgO7G8AbzjgQwyGsY8DAn
+         W6EMlUhxAiKc+TqiS9GilVY6qWf+Q4UdOHdrMqylj4FGKY5hm9LHpZqJQhAi9tz8Pw
+         rqiNLYKCztTRg==
+Date:   Sat, 14 Jan 2023 00:29:54 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     luolongjun@huawei.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sangyan@huawei.com,
+        luanjianhai@huawei.com, zhuling8@huawei.com, lizongwu@huawei.com,
+        luolongjuna@gmail.com, rostedt@goodmis.org, mhiramat@kernel.org,
+        oleg@redhat.com
+Subject: Re: [PATCH] uprobes: list all active uprobes in the system
+Message-Id: <20230114002954.199fe4c699d2ccc0591a4b66@kernel.org>
+In-Reply-To: <b4109593-1aa9-bf7a-cb1b-3ccd586f31d6@amd.com>
+References: <20230111104825.1945418-1-luolongjun@huawei.com>
+        <b4109593-1aa9-bf7a-cb1b-3ccd586f31d6@amd.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Fri, 13 Jan 2023 09:33:41 +0530
+Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+
+> +cc: Steven, Oleg, Masami
+> 
+> On 11-Jan-23 4:18 PM, luolongjun@huawei.com wrote:
+> > From: Longjun Luo <luolongjun@huawei.com>
+> > 
+> > Since uprobes will replace instructions in the process
+> > memory, it is necessary to provide one way to list
+> > all active uprobes. One can access this file through
+> > /sys/kernel/debug/uprobes/list.
+> > 
+> > Output looks like this
+> > =====================
+> > inode+offset/ref_ctr_offset    4160760670+0x30a10/0x0
+> >     ref                        1
+> >     register_rwsem             (unlocked)
+> >     consumer_rwsem             (unlocked)
+> >     consumers-1
+> >         handler                0xffffffffc03ee02e(handler) uprobe
+> >         ret_handler            0x0000000000000000( )
+> >         filter                 0xffffffffc03ee010(filter) uprobe
+> >     consumers-2
+> >         handler                0xffffffffc03e902e(handler_1) uprobe_1
+> >         ret_handler            0x0000000000000000( )
+> >         filter                 0xffffffffc03e9010(filter_1) uprobe_1
+> 
+> You can list uprobes via /sys/kernel/tracing/uprobe_events. Any specific reason
+> to introduce another way?
+
+Note that /sys/kernel/tracing/uprobe_events is only for the uprobes defined
+by ftrace, it doesn't include the uprobes registered by out-of-tree modules.
+
+Thank you,
+
+> 
+> Thanks,
+> Ravi
 
 
-On 12/01/2023 15:33, Tanmay Jagdale wrote:
-> Hi James
-> 
->>>>> base-commit: 09e6f9f98370be9a9f8978139e0eb1be87d1125f
->>>> I have tested this patch set on our platform and able to see updated
->>>> timestamp values in perf script's output.
->>>>
->>>> $ perf record -e cs_etm/cycacc,@tmc_etr0/k -C 9 taskset -c 9 sleep 2
->>>> $ perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent
->>>>
->>>> At certain points noticed that hardware emits same timestamp packets
->>>> but with updated cycle count (CC) values. A small snippet of the log:
->>>>
->>>> Idx:100; ID:12; I_ADDR_S_IS0 : Address, Short, IS0.; Addr=0xFFFF8000086A761C ~[0x761C]
->>>> Idx:103; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x3d
->>>> Idx:107; ID:12; I_ATOM_F2 : Atom format 2.; EN
->>>> Idx:108; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x3f
->>>> Idx:112; ID:12; I_ATOM_F1 : Atom format 1.; N
->>>> Idx:113; ID:12; I_TIMESTAMP : Timestamp.; Updated val = 0x2f373e37e02; CC=0x45
->>>> Idx:116; ID:12; I_ATOM_F1 : Atom format 1.; E
->>>> Idx:117; ID:12; I_ADDR_S_IS0 : Address, Short, IS0.; Addr=0xFFFF8000086B52D4 ~[0x152D4]
->>>>
->>>> Since the source of timestamp is the Generic Timer block and the CPUs
->>>> run at higher frequencies, this behaviour could be possible on high
->>>> performance ARM cores.
->>>>
->>>> Having consecutive timestamps with same value is resulting in a
->>>> slightly jumbled order (in nanosecs) in perf script's time column.
->>>> A snippet corresponding to the Coresight trace data mentioned above:
->>>> ...
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   return                               0 ffff8000086a761c coresight_timeout+0xc8
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   return                               0 ffff8000086a7620 coresight_timeout+0xcc
->>>> perf   965/965   [001]  3182.286629046:            instructions:k:   jmp                                  0 ffff8000086a75c8 coresight_timeout+0x74
->>>> perf   965/965   [001]  3182.286629046:            instructions:k:   jmp                                  0 ffff8000086a75cc coresight_timeout+0x78
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d0 coresight_timeout+0x7c
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d4 coresight_timeout+0x80
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75d8 coresight_timeout+0x84
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75dc coresight_timeout+0x88
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e0 coresight_timeout+0x8c
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e4 coresight_timeout+0x90
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75e8 coresight_timeout+0x94
->>>> perf   965/965   [001]  3182.286629044:            instructions:k:   jcc                                  0 ffff8000086a75ec coresight_timeout+0x98
->>>>
->>>> Perf's do_soft_timestamp() logic in cs_etm_decoder.c file is incrementing
->>>> the HW timestamp based on instruction count. Since the next timestamp
->>>> also has the same value, it could be leading to this jumbled order.
->>>>
->>>> We would like to know if this has been observed on other platforms ?
->>>> And what could be a solution in SW for this ?
->>>
->>> Nice catch. If I'm understanding this correctly it looks like the issue
->>> is a combination of the cycle count in the packet being ignored by Perf,
->>> and the instruction count being reset to 0 when a new timestamp is received.
->>>
->>> It looks like it can be fixed by some combination of combining the cycle
->>> count and instruction count and maybe not resetting instruction count if
->>> the newly received timestamp is the same as the last one. I will look
->>> into this.
->>>
->>> We haven't noticed it on any other platforms, but we haven't been
->>> looking too closely at the timestamps until now. Perhaps I can add a
->>> test that checks if the trace in a known function goes in the correct
->>> time order.
->>>
->>
->> I'm thinking of something like the following patch to fix the ordering.
->> It doesn't use the cycle count, but I'm not sure if that would be
->> worthwhile in the end, considering that it would have sub nanosecond
->> resolution so wouldn't affect the Perf timestamps:
-> Thanks for coming up with a quick solution for this issue !
-> 
->>
->>
->> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> index 31fa3b45134a..08a028e3e87a 100644
->> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> @@ -112,6 +112,19 @@ int cs_etm_decoder__get_packet(struct cs_etm_packet_queue *packet_queue,
->>  	return 1;
->>  }
->>
->> +static u64 cs_etm_decoder__instr_count_to_ns(u64 instr_count)
->> +{
->> +	/*
->> +	 * Assume a maximum of 0.1ns elapsed per instruction. This would be the
->> +	 * case with a theoretical 10GHz core executing 1 instruction per cycle.
->> +	 * Used to estimate the sample time for synthesized instructions because
->> +	 * Coresight only emits a timestamp for a range of instructions rather
->> +	 * than per instruction.
->> +	 */
->> +	const int INSTR_PER_NS = 10;
->> +
->> +	return instr_count / INSTR_PER_NS;
->> +}
->>  static int cs_etm_decoder__gen_etmv3_config(struct cs_etm_trace_params *params,
->>  					    ocsd_etmv3_cfg *config)
->>  {
->> @@ -267,7 +280,7 @@ cs_etm_decoder__do_soft_timestamp(struct cs_etm_queue *etmq,
->>  	packet_queue->cs_timestamp = packet_queue->next_cs_timestamp;
->>
->>  	/* Estimate the timestamp for the next range packet */
->> -	packet_queue->next_cs_timestamp += packet_queue->instr_count;
->> +	packet_queue->next_cs_timestamp += cs_etm_decoder__instr_count_to_ns(packet_queue->instr_count);
->>  	packet_queue->instr_count = 0;
->>
->>  	/* Tell the front end which traceid_queue needs attention */
->> @@ -295,11 +308,17 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
->>  	 * hence asking the decoder to keep decoding rather than stopping.
->>  	 */
->>  	if (packet_queue->cs_timestamp) {
->> -		packet_queue->next_cs_timestamp = elem->timestamp;
->> +		/*
->> +		 * Don't allow next_cs_timestamp to be less than the last one estimated by
->> +		 * cs_etm_decoder__do_soft_timestamp() otherwise new instructions would
->> +		 * appear to go back in time. In theory this should never happen, but if
->> +		 * it did, then next_cs_timestamp should eventually catch up to real time
->> +		 * unless every single range was predicted to be too long for some reason.
->> +		 */
->> +		packet_queue->next_cs_timestamp = max(elem->timestamp, packet_queue->next_cs_timestamp);
->>  		return OCSD_RESP_CONT;
->>  	}
->>
->> -
->>  	if (!elem->timestamp) {
->>  		/*
->>  		 * Zero timestamps can be seen due to misconfiguration or hardware bugs.
->> @@ -312,7 +331,7 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
->>  					". Decoding may be improved by prepending 'Z' to your current --itrace
->> arguments.\n",
->>  					indx);
->>
->> -	} else if (packet_queue->instr_count > elem->timestamp) {
->> +	} else if (cs_etm_decoder__instr_count_to_ns(packet_queue->instr_count) > elem->timestamp) {
->>  		/*
->>  		 * Sanity check that the elem->timestamp - packet_queue->instr_count would not
->>  		 * result in an underflow. Warn and clamp at 0 if it would.
->> @@ -327,7 +346,8 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
->>  		 * which instructions started by subtracting the number of instructions
->>  		 * executed to the timestamp.
->>  		 */
->> -		packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
->> +		packet_queue->cs_timestamp = elem->timestamp -
->> +			cs_etm_decoder__instr_count_to_ns(packet_queue->instr_count);
->>  	}
->>  	packet_queue->next_cs_timestamp = elem->timestamp;
->>  	packet_queue->instr_count = 0;
-> I have tested this diff along with the patchset and found that
-> timestamps are generated/estimated in an increasing order.
-> 
-> However, found few corner cases where they weren't in order.
-> I'm currently gathering more information on these corner cases.
-> 
-> Used the following steps to find inconsistencies:
-> $ perf record -e cs_etm/@tmc_etr0/k -C 4 taskset -c 4 sleep 1
-> $ perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent > itrace
-> $ sed 's/://g' itrace | awk -F '.' ' { print $2 } ' | awk '{ if ($1 < prev) { print "line:" NR " " $0 } {prev=$1}}'
-> 
-> Setting INSTR_PER_NS to higher values (14,16,20 etc) results in
-> lower inconsistencies but it would defeat the purpose of
-> estimating values in software since we could be returning 0
-> from __instr_count_to_ns() in many cases.
-> 
-> Please share your thoughts.
-
-I believe this could be because I was adding nanosecond values
-to the raw coresight counter before it was converted which was
-a mistake. I have made another change to move the conversion
-as early as possible to avoid mistakes like this.
-
-Increasing the INSTR_PER_NS shouldn't be required because of
-the max() call, in fact INSTR_PER_NS isn't necessarily
-needed at all, I just thought it would make it more accurate.
-
-I'll test the new version on the file that you sent before
-pasting it here. If you have another recording that has more
-of the edge cases then please also upload that one too.
-
-James
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
