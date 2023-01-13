@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEBFC678D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 09:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6F9C54EBD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 09:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241189AbjAMJ2V (ORCPT
+        id S240979AbjAMJ2f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Jan 2023 04:28:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54242 "EHLO
+        Fri, 13 Jan 2023 04:28:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235391AbjAMJ1T (ORCPT
+        with ESMTP id S229462AbjAMJ1U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Jan 2023 04:27:19 -0500
-Received: from out30-7.freemail.mail.aliyun.com (out30-7.freemail.mail.aliyun.com [115.124.30.7])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725B042631;
-        Fri, 13 Jan 2023 01:22:40 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZUDRTP_1673601754;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZUDRTP_1673601754)
+        Fri, 13 Jan 2023 04:27:20 -0500
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056A843195;
+        Fri, 13 Jan 2023 01:22:44 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZUDRV0_1673601759;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZUDRV0_1673601759)
           by smtp.aliyun-inc.com;
-          Fri, 13 Jan 2023 17:22:35 +0800
+          Fri, 13 Jan 2023 17:22:39 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -41,9 +41,9 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v7 2/9] perf jevent: Add general metrics support
-Date:   Fri, 13 Jan 2023 17:22:13 +0800
-Message-Id: <1673601740-122788-3-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v7 6/9] perf vendor events arm64: Add cache metrics for neoverse-n2-v2
+Date:   Fri, 13 Jan 2023 17:22:17 +0800
+Message-Id: <1673601740-122788-7-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1673601740-122788-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1673601740-122788-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -51,29 +51,100 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add general metrics support, so that some general metrics applicable
-to multiple architectures can be defined in the public json file like
-general events, and then add general metrics through "arch_std_event"
-in json file of different architecture.
+Add cache related metrics.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- tools/perf/pmu-events/jevents.py | 2 ++
- 1 file changed, 2 insertions(+)
+ .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 4c398e0..0416b74 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -358,6 +358,8 @@ def preprocess_arch_std_files(archpath: str) -> None:
-       for event in read_json_events(item.path, topic=''):
-         if event.name:
-           _arch_std_events[event.name.lower()] = event
-+        if event.metric_name:
-+          _arch_std_events[event.metric_name.lower()] = event
- 
- 
- def print_events_table_prefix(tblname: str) -> None:
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+index 60bbd8f..08c6aaa 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+@@ -62,5 +62,82 @@
+         "MetricGroup": "TLB",
+         "MetricName": "itlb_walk_rate",
+         "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L1 I-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l1i_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
++        "BriefDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l1i_cache_miss_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L1 D-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l1d_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
++        "BriefDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l1d_cache_miss_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L2 D-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l2d_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
++        "BriefDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l2d_cache_miss_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L3 D-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l3d_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
++        "BriefDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l3d_cache_miss_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of LL Cache read misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "ll_cache_read_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
++        "BriefDescription": "The rate of LL Cache read misses to the overall LL Cache read",
++        "MetricGroup": "Cache",
++        "MetricName": "ll_cache_read_miss_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
++        "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
++        "MetricGroup": "Cache",
++        "MetricName": "ll_cache_read_hit_rate",
++        "ScaleUnit": "100%"
+     }
+ ]
 -- 
 1.8.3.1
 
