@@ -2,162 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A550CC54EBD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 07:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D66CC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Jan 2023 07:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbjAMHkk (ORCPT
+        id S238988AbjAMHuE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Jan 2023 02:40:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34610 "EHLO
+        Fri, 13 Jan 2023 02:50:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230473AbjAMHkj (ORCPT
+        with ESMTP id S236012AbjAMHtr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Jan 2023 02:40:39 -0500
+        Fri, 13 Jan 2023 02:49:47 -0500
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46690264;
-        Thu, 12 Jan 2023 23:40:37 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NtYFX5BBNznTWg;
-        Fri, 13 Jan 2023 15:38:56 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE0F1B9E6;
+        Thu, 12 Jan 2023 23:49:45 -0800 (PST)
+Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NtYNN6vt6zqVJB;
+        Fri, 13 Jan 2023 15:44:52 +0800 (CST)
+Received: from [10.110.53.113] (10.110.53.113) by
+ kwepemm600006.china.huawei.com (7.193.23.105) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 13 Jan 2023 15:40:34 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <jiwei.sun@windriver.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v3] perf record: Fix segfault with --overwrite and --max-size
-Date:   Fri, 13 Jan 2023 07:38:03 +0000
-Message-ID: <20230113073803.102950-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+ 15.1.2375.34; Fri, 13 Jan 2023 15:49:35 +0800
+Message-ID: <f4424d36-b18e-d801-8657-85565817554b@huawei.com>
+Date:   Fri, 13 Jan 2023 15:49:34 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] uprobes: list all active uprobes in the system
+To:     Ravi Bangoria <ravi.bangoria@amd.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sangyan@huawei.com>, <luanjianhai@huawei.com>,
+        <zhuling8@huawei.com>, <lizongwu@huawei.com>,
+        <luolongjuna@gmail.com>, <rostedt@goodmis.org>,
+        <mhiramat@kernel.org>, <oleg@redhat.com>
+References: <20230111104825.1945418-1-luolongjun@huawei.com>
+ <b4109593-1aa9-bf7a-cb1b-3ccd586f31d6@amd.com>
+From:   Longjun Luo <luolongjun@huawei.com>
+In-Reply-To: <b4109593-1aa9-bf7a-cb1b-3ccd586f31d6@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.110.53.113]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600006.china.huawei.com (7.193.23.105)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When --overwrite and --max-size options of perf record are used together,
-a segmentation fault occurs. The following is an example:
 
-  # perf record -e sched:sched* --overwrite --max-size 1K -a -- sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  perf: Segmentation fault
-  Obtained 12 stack frames.
-  ./perf/perf(+0x197673) [0x55f99710b673]
-  /lib/x86_64-linux-gnu/libc.so.6(+0x3ef0f) [0x7fa45f3cff0f]
-  ./perf/perf(+0x8eb40) [0x55f997002b40]
-  ./perf/perf(+0x1f6882) [0x55f99716a882]
-  ./perf/perf(+0x794c2) [0x55f996fed4c2]
-  ./perf/perf(+0x7b7c7) [0x55f996fef7c7]
-  ./perf/perf(+0x9074b) [0x55f99700474b]
-  ./perf/perf(+0x12e23c) [0x55f9970a223c]
-  ./perf/perf(+0x12e54a) [0x55f9970a254a]
-  ./perf/perf(+0x7db60) [0x55f996ff1b60]
-  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe6) [0x7fa45f3b2c86]
-  ./perf/perf(+0x7dfe9) [0x55f996ff1fe9]
-  Segmentation fault (core dumped)
+在 1/13/2023 12:03 PM, Ravi Bangoria 写道:
+> +cc: Steven, Oleg, Masami
+>
+> On 11-Jan-23 4:18 PM, luolongjun@huawei.com wrote:
+>> From: Longjun Luo <luolongjun@huawei.com>
+>>
+>> Since uprobes will replace instructions in the process
+>> memory, it is necessary to provide one way to list
+>> all active uprobes. One can access this file through
+>> /sys/kernel/debug/uprobes/list.
+>>
+>> Output looks like this
+>> =====================
+>> inode+offset/ref_ctr_offset    4160760670+0x30a10/0x0
+>>      ref                        1
+>>      register_rwsem             (unlocked)
+>>      consumer_rwsem             (unlocked)
+>>      consumers-1
+>>          handler                0xffffffffc03ee02e(handler) uprobe
+>>          ret_handler            0x0000000000000000( )
+>>          filter                 0xffffffffc03ee010(filter) uprobe
+>>      consumers-2
+>>          handler                0xffffffffc03e902e(handler_1) uprobe_1
+>>          ret_handler            0x0000000000000000( )
+>>          filter                 0xffffffffc03e9010(filter_1) uprobe_1
+> You can list uprobes via /sys/kernel/tracing/uprobe_events. Any specific reason
+> to introduce another way?
+>
+> Thanks,
+> Ravi
 
-backtrace of the core file is as follows:
+/sys/kernel/tracing/uprobe_events only lists tracing events, not all uprobe events.
+For example, if I write a kernel module to call the uprobe_register to add a new uprobe event, it will not be listed by /sys/kernel/tracing/uprobe_events.
 
-  (gdb) bt
-  #0  record__bytes_written (rec=0x55f99755a200 <record>) at builtin-record.c:234
-  #1  record__output_max_size_exceeded (rec=0x55f99755a200 <record>) at builtin-record.c:242
-  #2  record__write (map=0x0, size=12816, bf=0x55f9978da2e0, rec=0x55f99755a200 <record>) at builtin-record.c:263
-  #3  process_synthesized_event (tool=tool@entry=0x55f99755a200 <record>, event=event@entry=0x55f9978da2e0, sample=sample@entry=0x0, machine=machine@entry=0x55f997893658) at builtin-record.c:618
-  #4  0x000055f99716a883 in __perf_event__synthesize_id_index (tool=tool@entry=0x55f99755a200 <record>, process=process@entry=0x55f997002aa0 <process_synthesized_event>, evlist=0x55f9978928b0, machine=machine@entry=0x55f997893658,
-      from=from@entry=0) at util/synthetic-events.c:1895
-  #5  0x000055f99716a91f in perf_event__synthesize_id_index (tool=tool@entry=0x55f99755a200 <record>, process=process@entry=0x55f997002aa0 <process_synthesized_event>, evlist=<optimized out>, machine=machine@entry=0x55f997893658)
-      at util/synthetic-events.c:1905
-  #6  0x000055f996fed4c3 in record__synthesize (tail=tail@entry=true, rec=0x55f99755a200 <record>) at builtin-record.c:1997
-  #7  0x000055f996fef7c8 in __cmd_record (argc=argc@entry=2, argv=argv@entry=0x7ffc67551260, rec=0x55f99755a200 <record>) at builtin-record.c:2802
-  #8  0x000055f99700474c in cmd_record (argc=<optimized out>, argv=0x7ffc67551260) at builtin-record.c:4258
-  #9  0x000055f9970a223d in run_builtin (p=0x55f997564d88 <commands+264>, argc=10, argv=0x7ffc67551260) at perf.c:330
-  #10 0x000055f9970a254b in handle_internal_command (argc=10, argv=0x7ffc67551260) at perf.c:384
-  #11 0x000055f996ff1b61 in run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:428
-  #12 main (argc=<optimized out>, argv=0x7ffc67551260) at perf.c:562
+Compare it with the kprobe is like:
+/sys/kernel/tracing/uprobe_events -> /sys/kernel/tracing/kprobe_events
+/sys/kernel/debug/uprobes/list -> /sys/kernel/debug/kprobes/list
 
-The reason is that record__bytes_written accesses the freed memory rec->thread_data,
-The process is as follows:
-  __cmd_record
-    -> record__free_thread_data
-      -> zfree(&rec->thread_data)         // free rec->thread_data
-    -> record__synthesize
-      -> perf_event__synthesize_id_index
-        -> process_synthesized_event
-          -> record__write
-            -> record__bytes_written      // access rec->thread_data
+Nowadays, only the trace system uses the uprobe, so /sys/kernel/tracing/uprobe_events is enough.
 
-We add a member variable "thread_bytes_written" in the struct "record"
-to save the data size written by the threads.
+But we try to extend the usage of the uprobe, and we add many uprobe events by calling the uprobe_register.
 
-Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
-
-Changes since v2:
- - Save data size written by threads to calculate the correct total data size.
- - Update commit message.
-
-Changes since v1:
- - Add variable check in record__bytes_written for code hardening.
- - Save bytes_written separately to reduce one calculation.
- - Remove rec->opts.tail_synthesize check.
-
- tools/perf/builtin-record.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 29dcd454b8e2..8374117e66f6 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -154,6 +154,7 @@ struct record {
- 	struct perf_tool	tool;
- 	struct record_opts	opts;
- 	u64			bytes_written;
-+	u64			thread_bytes_written;
- 	struct perf_data	data;
- 	struct auxtrace_record	*itr;
- 	struct evlist	*evlist;
-@@ -226,14 +227,7 @@ static bool switch_output_time(struct record *rec)
- 
- static u64 record__bytes_written(struct record *rec)
- {
--	int t;
--	u64 bytes_written = rec->bytes_written;
--	struct record_thread *thread_data = rec->thread_data;
--
--	for (t = 0; t < rec->nr_threads; t++)
--		bytes_written += thread_data[t].bytes_written;
--
--	return bytes_written;
-+	return rec->bytes_written + rec->thread_bytes_written;
- }
- 
- static bool record__output_max_size_exceeded(struct record *rec)
-@@ -255,10 +249,12 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
- 		return -1;
- 	}
- 
--	if (map && map->file)
-+	if (map && map->file) {
- 		thread->bytes_written += size;
--	else
-+		rec->thread_bytes_written += size;
-+	} else {
- 		rec->bytes_written += size;
-+	}
- 
- 	if (record__output_max_size_exceeded(rec) && !done) {
- 		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
--- 
-2.30.GIT
+For this situation, we need a approach to see all the uprobe events in the kernel.
 
