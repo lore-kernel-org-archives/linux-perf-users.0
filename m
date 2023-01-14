@@ -2,114 +2,212 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF3AC3DA78
-	for <linux-perf-users@archiver.kernel.org>; Sat, 14 Jan 2023 13:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E79C46467
+	for <linux-perf-users@archiver.kernel.org>; Sat, 14 Jan 2023 15:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjANNKy (ORCPT
+        id S229565AbjANPEK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 14 Jan 2023 08:10:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41274 "EHLO
+        Sat, 14 Jan 2023 10:04:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjANNKx (ORCPT
+        with ESMTP id S229566AbjANPEK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 14 Jan 2023 08:10:53 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C09D65B7;
-        Sat, 14 Jan 2023 05:10:51 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id m6-20020a9d7e86000000b0066ec505ae93so13670383otp.9;
-        Sat, 14 Jan 2023 05:10:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r3MdNdF8Xsr/CFhUD2SEaMu/iBQ2k8zQdq8AYu1J6uI=;
-        b=OLi2UW1aWjvyBrAY/TiZZY1hKnBfV/RxNxbeXS+GLpx1w6Beqn/fmA/Ze8RilYSM/R
-         yL2+AXHufL/2dYE67umsxSk9jW7Q7Lebi3wt/Pv0wS8N8up/BGiV5HvGsGVvP2sVcuj8
-         D7w6d2JXEsdLu3Qgqoxw0yR+F7PHneSA5M8WG3FpqJByh9gg3YLZAwRNrmI1G/hqVsFM
-         efF3RnuzKKCdNreblBZprq8/7KP2JTwswqd1T5wl4ioxCEkxb2aNS4tssrpSR3hWXT0G
-         Mfc7tmQEdXbRa2VWO8MFbxf1hIr2B37Ve7sa7th9aaT/0ZFU2QPfwH4/SIzCG/qkLRS4
-         7q4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r3MdNdF8Xsr/CFhUD2SEaMu/iBQ2k8zQdq8AYu1J6uI=;
-        b=YCLVN9XBUBn0Gy6tgrRrVR7ltjvYJ/NFlx+hp8O7qxpgIhvBnWlcmywK4C3O2NW1Kh
-         eByN4qV2KXp60n729E0z82sslmvTzDIiJ4e1lvg0X0j+gQM+/qiBBvDQpD+coKYyIKxZ
-         ITC2xSbibTOkg3ojFjONgR6VlmUvh+gf6CFJ1mSj5T/Wpz1arCqbS5hYxYfmmMn8u3s2
-         nzMuds3cvYaAu+wwCtFMqdf+SIISPen64yWr63FoW72+ZSXGAd3qh591rRat6zkGKg/E
-         PNDyXgYKL3FR4WBpMZEhJG93lX1YvUXcEptAriYBwUO5WDvseao8l5twnAJqhA2OJi7j
-         l7/g==
-X-Gm-Message-State: AFqh2kqFGYaBVCRKrleOUpi3flm5z1cT8Zg+2ZCCp1gFclMz8b1yNuM0
-        tclFYFEiAHFqi7HERMVoH5cCru1fFB9fC4i4LyI=
-X-Google-Smtp-Source: AMrXdXtp0vKi2W4302CMvaPhUPuAY6QwMhuCCRpuhABUJqkTKmdOIAxKBAPjHcz36zLcyFEm7Cy1c0ZYVY10oeVAQm8=
-X-Received: by 2002:a9d:61ca:0:b0:670:6dc1:6c2c with SMTP id
- h10-20020a9d61ca000000b006706dc16c2cmr5073968otk.375.1673701850925; Sat, 14
- Jan 2023 05:10:50 -0800 (PST)
+        Sat, 14 Jan 2023 10:04:10 -0500
+Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDAF7A93;
+        Sat, 14 Jan 2023 07:04:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nRnb7B1cKZnECL2BKcMAOHI7QY483KI3u4D6sNuPq/0=; b=qLyb4VwUVGpRsEpYScJutMD0Ut
+        s2AiPTRTrqh7RkqmjWLuSr8eL2DjRjn6hcZSsnfY72zYIJUVmxs1BVmv6eK/Sj6lp7WJSWyVuWlHT
+        GX14P+8rs+dfueoaG22WoBNZ6Kh6I1tHlsk2o71woTvJhH+Bx5j1CVFtOyYDYLP8xg1SMcbytYE3P
+        qAkSiEL8Zt2IsLGIiOON5Rx4QxfDDik9tIHiE3gSIqPFHucdTQR8LM/v0W44zECZlh8/IQQzecFFe
+        rz8IXVmnzTZ8T0m4btgqPD4RZBOcwLRnh+6JOav+Clgz+gYZnkvNnXU67+i3A36rXHE5fT/3F6kTr
+        3jlyhaCw==;
+Received: from authenticated user
+        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <carnil@debian.org>)
+        id 1pGi4E-007Ewu-KQ; Sat, 14 Jan 2023 15:03:35 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+        id 05B93BE2DE0; Sat, 14 Jan 2023 16:03:33 +0100 (CET)
+Date:   Sat, 14 Jan 2023 16:03:32 +0100
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Ian Rogers <irogers@google.com>, 996839@bugs.debian.org
+Cc:     Andreas Gerstmayr <agerstmayr@redhat.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Brendan Gregg <brendan@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        spiermar@gmail.com, yadd@debian.org
+Subject: Re: Bug#996839: [PATCH v1] perf script flamegraph: Avoid
+ d3-flame-graph package dependency
+Message-ID: <Y8LERKrMSSXwo51j@eldamar.lan>
+References: <20230105030434.255603-1-irogers@google.com>
+ <CAP-5=fXi_9zdhTAoYApiFQoLURAvpEatFzU3uL23o3zs=z25ZQ@mail.gmail.com>
+ <bd4a55a4-8e9c-82bf-92c8-1fa354289dce@redhat.com>
+ <CAP-5=fX3LaJgft8T+nYV8SHpmoAOYZ9S5-pztKF9j--Um4HKDQ@mail.gmail.com>
+ <928c76bf-39bc-cbc0-373e-70c5561cd5b0@redhat.com>
+ <CAP-5=fWyE_cqumLFxrj_tncnhVSDpiN0cMij3iB_FMY9qmjNWw@mail.gmail.com>
+ <68e8840e-d894-c211-184d-91a06c87579c@redhat.com>
+ <f389dc6495890e42c95c7b897cbb02ad@marek.priv.at>
+ <CAP-5=fXQ01+ZvQDyD2q6wL2P6JfmnwRyEJHin1B4as9Hfq0GFw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230106215613.7159-1-apantykhin@gmail.com> <a6a2e8b1-7194-75f1-d59c-7c8bc059174a@intel.com>
-In-Reply-To: <a6a2e8b1-7194-75f1-d59c-7c8bc059174a@intel.com>
-From:   Alexander Pantyukhin <apantykhin@gmail.com>
-Date:   Sat, 14 Jan 2023 17:10:39 +0400
-Message-ID: <CAPi66w__aD7DqueUGA=yXfY-puW6nSKGSjEPA+n28U39j7r=ig@mail.gmail.com>
-Subject: Re: [PATCH] tools:perf:scripts:python:intel-pt-events del unusedvar
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     peterz@infradead.org, akpm@linux-foundation.org, mingo@redhat.com,
-        namhyung@kernel.org, jolsa@kernel.org, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXQ01+ZvQDyD2q6wL2P6JfmnwRyEJHin1B4as9Hfq0GFw@mail.gmail.com>
+X-Debian-User: carnil
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello!
+Hi,
 
->
-> On 6/01/23 23:56, Alexander Pantyukhin wrote:
-> > The event_attr is never used later, the var is ok be deleted.
-> > Additional code simplification is to substitute string slice comparison
-> > with "substring" function. This case no need to know the length specific
-> > words.
+On Thu, Jan 12, 2023 at 02:28:59PM -0800, Ian Rogers wrote:
+> On Wed, Jan 11, 2023 at 10:08 AM Andreas Gerstmayr
+> <agerstmayr@redhat.com> wrote:
 > >
-> > Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
-> > ---
-> >  tools/perf/scripts/python/intel-pt-events.py | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > On 11.01.23 18:13, Ian Rogers wrote:
+> > > On Wed, Jan 11, 2023 at 5:18 AM Andreas Gerstmayr <agerstmayr@redhat.com> wrote:
+> > >>
+> > >> On 10.01.23 20:51, Ian Rogers wrote:
+> > >>> On Tue, Jan 10, 2023 at 10:02 AM Andreas Gerstmayr
+> > >>> <agerstmayr@redhat.com> wrote:
+> > >>>>
+> > >>>> On 05.01.23 10:24, Ian Rogers wrote:
+> > >>>>> On Wed, Jan 4, 2023 at 7:04 PM Ian Rogers <irogers@google.com> wrote:
+> > >>>>>>
+> > >>>>>> Currently flame graph generation requires a d3-flame-graph template to
+> > >>>>>> be installed. Unfortunately this is hard to come by for things like
+> > >>>>>> Debian [1]. If the template isn't installed warn and download it from
+> > >>>>>> jsdelivr CDN. If downloading fails generate a minimal flame graph
+> > >>>>>> again with the javascript coming from jsdelivr CDN.
+> > >>>>>>
+> > >>>>>> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+> > >>>>>>
+> > >>>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+> > >>>>
+> > >>>> I'm not entirely convinced that this perf script should make a network
+> > >>>> request. In my opinion
+> > >>>>
+> > >>>> * best would be if this template gets packaged in Debian
+> > >>>> * alternatively print instructions how to install the template:
+> > >>>>
+> > >>>>        sudo mkdir /usr/share/d3-flame-graph
+> > >>>>        sudo wget -O /usr/share/d3-flame-graph/d3-flamegraph-base.html
+> > >>>> https://cdn.jsdelivr.net/npm/d3-flame-graph@4/dist/templates/d3-flamegraph-base.html
+> > >>>>
+> > >>>> * or eventually just embed the entire template (66 KB) in the Python
+> > >>>> file (not sure if this is permissible though, it's basically a minified
+> > >>>> HTML/JS blob)?
+> > >>>> * if the above options don't work, I'd recommend asking the user before
+> > >>>> making the network request, and eventually persist the template
+> > >>>> somewhere so it doesn't need to be downloaded every time
+> > >>>>
+> > >>>> What do you think?
+> > >>>
+> > >>> So the script following this patch is going to try 3 things:
+> > >>> 1) look for a local template HTML,
+> > >>> 2) if a local template isn't found warn and switch to downloading the
+> > >>> CDN version,
+> > >>> 3) if the CDN version fails to download then use a minimal (embedded
+> > >>> in the script) HTML file with JS dependencies coming from the CDN.
+> > >>>
+> > >>> For (1) there are references in the generated HTML to www.w3.org,
+> > >>> meaning the HTML isn't fully hermetic - although these references may
+> > >>> not matter.
+> > >>
+> > >> The references to w3.org are XML namespace names. As far as I'm aware
+> > >> they do not matter, as they are merely identifiers and are never
+> > >> accessed [1,2]. Therefore the generated HTML file in its current form is
+> > >> hermetic.
+> > >>
+> > >> This was a design decision from the start - the flame graph generation
+> > >> and the resulting HTML file should not use any external resources loaded
+> > >> over the network (the external host could be inaccessible or compromised
+> > >> at any time). I understand that this requirement may not apply to every
+> > >> user or company.
+> > >>
+> > >>> For (2) there will be a download from the CDN of the template during
+> > >>> the execution of flamegraph. The template is better than (3) as it
+> > >>> features additional buttons letting you zoom out, etc. The HTML will
+> > >>> contain CDN references.
+> > >>> For (3) the generated HTML isn't hermetic and will use the CDN.
+> > >>>
+> > >>> For (2) we could give a prompt before trying to download the template,
+> > >>> or we could change it so that we give the wget command. I wouldn't
+> > >>> have the wget command require root privileges, I'd say that the
+> > >>> template could be downloaded and then the path of the download given
+> > >>> as an option to the flamegraph program. Downloading the file and then
+> > >>> adding an option to flamegraph seems inconvenient to the user,
+> > >>> something that the use of urllib in the patch avoids - it is
+> > >>> essentially just doing this for the user without storing the file on
+> > >>> disk. I think I prefer to be less inconvenient, and so the state of
+> > >>> the code at the moment looks best to me. Given that no choice results
+> > >>> in a fully hermetic HTML file, they seem similar in this regard. Is it
+> > >>> okay to try a download with urllib? Should there be a prompt? I think
+> > >>> the warning is enough and allows scripts, etc. using flamegraph to
+> > >>> more easily function across differing distributions.
+> > >>
+> > >> I fully agree, your changes make the flame graph generation more
+> > >> convenient in case the template is not installed. Also, downloading the
+> > >> template to a local directory and having to specify the path to the
+> > >> template every time is an inconvenience.
+> > >>
+> > >> I think it is a tradeoff between convenience and security/privacy.
+> > >> jsdelivr can get compromised, serving malicious JS (well, in that case,
+> > >> printing instructions to jsdelivr is also flawed :|).
+> > >> In the end it's up to the maintainers to decide.
+> > >
+> > > Agreed. It is something of an issue with the perf tool, I think noted
+> > > by Arnaldo and Linus, that it has too many dependencies. We also have
+> > > a problem that a number of dependencies aren't license compatible for
+> > > distribution with perf's GPLv2. flamegraph.py is always installed but
+> > > it carries a dependency that can't be satisfied on Debian and
+> > > everything deriving from it. The prompting to install a package
+> > > solution, as is generally used in the build, is one approach. Using
+> > > http rather than files is the approach this change introduces, and is
+> > > an approach advocated by the d3 flamegraph README.md. Perhaps package
+> > > maintainers like Michael and Ben have opinions here.
+> > >
+> > >>> An aside, Namhyung pointed out to me that there is a "perf report -g
+> > >>> folded" option, that was added in part to simplify creating
+> > >>> flamegraphs:
+> > >>> http://lkml.kernel.org/r/1447047946-1691-2-git-send-email-namhyung@kernel.org
+> > >>> Building off of perf report may improve/simplify the flamegraph code,
+> > >>> or avoid the requirement that libpython be linked against perf.
+> > >>
+> > >> Yep, in this case another tool is required to generate the flame graph
+> > >> visualization, for example [3].
+> > >
+> > > Thanks, perhaps [3] needs updating to use it as current processing
+> > > appears to be done using perf script:
+> > > https://github.com/brendangregg/FlameGraph/blob/master/stackcollapse-perf.pl
+> > >
+> > > I think users end up trying out flamegraph as they want something
+> > > easier to read than perf report and the command ships with the tool.
+> > > flamegraph is unique in being like this and it is a pity that the
+> > > Debian half of the world has difficulty making it work.
 > >
-> > diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-> > index 08862a2582f4..28d08e2fb7cd 100644
-> > --- a/tools/perf/scripts/python/intel-pt-events.py
-> > +++ b/tools/perf/scripts/python/intel-pt-events.py
-> > @@ -340,7 +340,6 @@ def print_srccode(comm, param_dict, sample, symbol, dso, with_insn):
-> >       print(start_str, src_str)
-> >
-> >  def do_process_event(param_dict):
-> > -     event_attr = param_dict["attr"]
->
-> Should really be moved to the "Unused fields:" comment
-> section a few lines below.
+> > Maybe someone with Debian packager rights could package the template
+> > [1]? Then it'd work the same way like with RPM-based distros, and it'll
+> > also work in environments without network access.
+> 
+> I chatted a little with Arnaldo and have sent out a v2 that adds the
+> prompt as well as an md5sum check on the downloaded file. PTAL:
+> https://lore.kernel.org/lkml/20230112220024.32709-1-irogers@google.com/
 
-Fixed in the patch v2.
+Regarding having packaged the template: The request is here:
+https://bugs.debian.org/1002492 
 
->
-> >       sample     = param_dict["sample"]
-> >       raw_buf    = param_dict["raw_buf"]
-> >       comm       = param_dict["comm"]
-> > @@ -359,13 +358,13 @@ def do_process_event(param_dict):
-> >               print(glb_switch_str[cpu])
-> >               del glb_switch_str[cpu]
-> >
-> > -     if name[0:12] == "instructions":
-> > +     if name.startswith("instructions"):
-> >               if glb_src:
-> >                       print_srccode(comm, param_dict, sample, symbol, dso, True)
-> >               else:
-> >                       print_instructions_start(comm, sample)
-> >                       print_common_ip(param_dict, sample, symbol, dso)
-> > -     elif name[0:8] == "branches":
-> > +     elif name.startswith("branches"):
-> >               if glb_src:
-> >                       print_srccode(comm, param_dict, sample, symbol, dso, False)
-> >               else:
->
+Regards,
+Salvatore
