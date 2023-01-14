@@ -2,107 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF266C3DA78
-	for <linux-perf-users@archiver.kernel.org>; Sat, 14 Jan 2023 07:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EE9C46467
+	for <linux-perf-users@archiver.kernel.org>; Sat, 14 Jan 2023 13:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbjANHYM (ORCPT
+        id S229646AbjANNFw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 14 Jan 2023 02:24:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55532 "EHLO
+        Sat, 14 Jan 2023 08:05:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjANHYL (ORCPT
+        with ESMTP id S229726AbjANNFv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 14 Jan 2023 02:24:11 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D162711;
-        Fri, 13 Jan 2023 23:24:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673681050; x=1705217050;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=EbOT0F9sF7mGT+qJRKbVYwwZl+y4osdO9GuBop7zpPs=;
-  b=GJ1wcjiUSqUcF5yfaQ8sf5gxPZTPuP0h2GEa1kH5si/f/O3QQ044Vsa8
-   VPQYUJps9oErO7ozb1MxiBMOEAJKoGc4m8u8kBBUL1eXJ1ScnVxuIqdKa
-   vLqEWs7h7V2s9e6yCI2cAGn+F23MqN+7sw/kKW9R6E8+20qhL5UOOVgKI
-   xMn+/QQ8AFY6HvK9mvxz9FhPxGlcz4ZvLd2pnEfnSjlNwBGy9HUd8jGd/
-   l1tuy6Hk2r/GKaKGK3zNR2OvCTXAKPa13Syg/695jxfJdw15OUVbuNeCx
-   FBaqZWkzF0/fB6JuZ4g2HmOQVU2od8A0wQb4Sdx18pes+shUgKUpvAD9f
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="388667943"
-X-IronPort-AV: E=Sophos;i="5.97,216,1669104000"; 
-   d="scan'208";a="388667943"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 23:24:09 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="782390506"
-X-IronPort-AV: E=Sophos;i="5.97,216,1669104000"; 
-   d="scan'208";a="782390506"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.44.197])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 23:24:07 -0800
-Message-ID: <a6a2e8b1-7194-75f1-d59c-7c8bc059174a@intel.com>
-Date:   Sat, 14 Jan 2023 09:24:03 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.1
-Subject: Re: [PATCH] tools:perf:scripts:python:intel-pt-events del unusedvar
-To:     Alexander Pantyukhin <apantykhin@gmail.com>, peterz@infradead.org,
-        akpm@linux-foundation.org
+        Sat, 14 Jan 2023 08:05:51 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B168A57;
+        Sat, 14 Jan 2023 05:05:50 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id bf43so36753860lfb.6;
+        Sat, 14 Jan 2023 05:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vgp8s8P2WnixEBsyqVgrtqVW0mzwiU+P0sRoxo3EKgg=;
+        b=DqIzIVQqNhd6n7jA2tIB+KM6TbxMggUX/MlouaizxXqzrSigNfPdtP1GiYuJWHsI68
+         EoH0d+GVqWnM6IiIeHH7AloVnZ3iibSVeKZVoTNAIont4n1/b+X+9yUVQWYvzuX9QiaJ
+         vCqQzxTvoImWC1b0q1xYmob9w+mlDSzMxHNTeOHau3P76deLvuhCmNApmI0a+jgxtcqy
+         JJ7jiCjdqGOQaxS/ZymoSQZZrM6KafLZs2eqWDk4hDUdg1jsEaq/GX0EmZ6bYJXQD8Oq
+         AnEx1bq6T1aigkFKmeRmkr+22xKvgToa/jVmz/CHha43Dt5EZdIl0wlvKwj0w41WP35n
+         hlZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vgp8s8P2WnixEBsyqVgrtqVW0mzwiU+P0sRoxo3EKgg=;
+        b=NpuhKJQwOGW7XymcBuUtF+U+Giqy5toc4Xo51pHkbefyy+eSRaggmn5VovX6sLPy4o
+         tGVxQsmyZxm2sG3rW6aPSdrjHWK0eRivdsdyQzVHTFCxCuNc+IWrHyUCplGSk+yvZcVq
+         elGIxWiZjqJVFUm8H5KxyPXVFKgsAoEBRbMBNxZun+GJwegYOpp3NuKXXSFZgtJ3Dvdb
+         BZCAQlN+igR6hynAvzSfbpT1UHml5faD1eJ8EJErs1GfISFMT13CFPsKrqxzPAZlFZ6d
+         j4xwnc0hY+CdH6Pkj4quwqA3LZMJ2yTOzB7k5Kvt4pxgZGrUo8sVma2fhteTCytD5why
+         ukQw==
+X-Gm-Message-State: AFqh2kqnkcOJXXw3hOdgIIhB42/pAXZLXNhrTCwlfDwHpWTDad1NYgFj
+        QVAjp/zWUdbKZgGLwem50Mw=
+X-Google-Smtp-Source: AMrXdXseQtXtrBTBAIuP23lB4heGwwraewT2WBFbPz/oRUxG5dwQHtlgc4vN+sjWfXMJyMGsxnoD9Q==
+X-Received: by 2002:a05:6512:3415:b0:4b5:947e:68f3 with SMTP id i21-20020a056512341500b004b5947e68f3mr18870984lfr.1.1673701548196;
+        Sat, 14 Jan 2023 05:05:48 -0800 (PST)
+Received: from localhost.localdomain ([46.147.136.10])
+        by smtp.gmail.com with ESMTPSA id b17-20020a056512071100b0049c29389b98sm4288987lfs.151.2023.01.14.05.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Jan 2023 05:05:47 -0800 (PST)
+From:   Alexander Pantyukhin <apantykhin@gmail.com>
+To:     adrian.hunter@intel.com
 Cc:     mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230106215613.7159-1-apantykhin@gmail.com>
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230106215613.7159-1-apantykhin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        acme@kernel.org, akpm@linux-foundation.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Pantyukhin <apantykhin@gmail.com>
+Subject: [PATCH v2] tools:perf:scripts:python:intel-pt-events del unusedvar
+Date:   Sat, 14 Jan 2023 18:05:33 +0500
+Message-Id: <20230114130533.2877-1-apantykhin@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/01/23 23:56, Alexander Pantyukhin wrote:
-> The event_attr is never used later, the var is ok be deleted.
-> Additional code simplification is to substitute string slice comparison
-> with "substring" function. This case no need to know the length specific
-> words.
-> 
-> Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
-> ---
->  tools/perf/scripts/python/intel-pt-events.py | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-> index 08862a2582f4..28d08e2fb7cd 100644
-> --- a/tools/perf/scripts/python/intel-pt-events.py
-> +++ b/tools/perf/scripts/python/intel-pt-events.py
-> @@ -340,7 +340,6 @@ def print_srccode(comm, param_dict, sample, symbol, dso, with_insn):
->  	print(start_str, src_str)
->  
->  def do_process_event(param_dict):
-> -	event_attr = param_dict["attr"]
+The event_attr is never used later, the var is ok be deleted.
+Additional code simplification is to substitute string slice comparison
+with "substring" function. This case no need to know the length specific
+words.
 
-Should really be moved to the "Unused fields:" comment
-section a few lines below.
+Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
+---
+ tools/perf/scripts/python/intel-pt-events.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
->  	sample	   = param_dict["sample"]
->  	raw_buf	   = param_dict["raw_buf"]
->  	comm	   = param_dict["comm"]
-> @@ -359,13 +358,13 @@ def do_process_event(param_dict):
->  		print(glb_switch_str[cpu])
->  		del glb_switch_str[cpu]
->  
-> -	if name[0:12] == "instructions":
-> +	if name.startswith("instructions"):
->  		if glb_src:
->  			print_srccode(comm, param_dict, sample, symbol, dso, True)
->  		else:
->  			print_instructions_start(comm, sample)
->  			print_common_ip(param_dict, sample, symbol, dso)
-> -	elif name[0:8] == "branches":
-> +	elif name.startswith("branches"):
->  		if glb_src:
->  			print_srccode(comm, param_dict, sample, symbol, dso, False)
->  		else:
+diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
+index 08862a2582f4..dfd566369ca4 100644
+--- a/tools/perf/scripts/python/intel-pt-events.py
++++ b/tools/perf/scripts/python/intel-pt-events.py
+@@ -340,7 +340,6 @@ def print_srccode(comm, param_dict, sample, symbol, dso, with_insn):
+ 	print(start_str, src_str)
+ 
+ def do_process_event(param_dict):
+-	event_attr = param_dict["attr"]
+ 	sample	   = param_dict["sample"]
+ 	raw_buf	   = param_dict["raw_buf"]
+ 	comm	   = param_dict["comm"]
+@@ -349,6 +348,7 @@ def do_process_event(param_dict):
+ 	# callchain  = param_dict["callchain"]
+ 	# brstack    = param_dict["brstack"]
+ 	# brstacksym = param_dict["brstacksym"]
++	# event_attr = param_dict["attr"]
+ 
+ 	# Symbol and dso info are not always resolved
+ 	dso    = get_optional(param_dict, "dso")
+@@ -359,13 +359,13 @@ def do_process_event(param_dict):
+ 		print(glb_switch_str[cpu])
+ 		del glb_switch_str[cpu]
+ 
+-	if name[0:12] == "instructions":
++	if name.startswith("instructions"):
+ 		if glb_src:
+ 			print_srccode(comm, param_dict, sample, symbol, dso, True)
+ 		else:
+ 			print_instructions_start(comm, sample)
+ 			print_common_ip(param_dict, sample, symbol, dso)
+-	elif name[0:8] == "branches":
++	elif name.startswith("branches"):
+ 		if glb_src:
+ 			print_srccode(comm, param_dict, sample, symbol, dso, False)
+ 		else:
+-- 
+2.25.1
 
