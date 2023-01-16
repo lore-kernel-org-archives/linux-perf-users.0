@@ -2,96 +2,225 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0050DC46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 06:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8E8C46467
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 06:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231616AbjAPGBD (ORCPT
+        id S231846AbjAPGOn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 01:01:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
+        Mon, 16 Jan 2023 01:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbjAPGBB (ORCPT
+        with ESMTP id S231841AbjAPGOm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 01:01:01 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA6CAA
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 22:01:01 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id j34-20020a05600c1c2200b003da1b054057so7111879wms.5
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 22:01:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fSYMSZYQbmhaWaDGzPbCvqjfCdPDVqsG1KD282UM/jo=;
-        b=P1e10780iLuVAE74lAO0GA0wvE9gPO2Yv5fHoZmugNiZB8a7+3Wkp7vciY5IanI4LG
-         sWJftG6wcfzC+xFEuDV/MCqzNnLUWhAXhC9+e5Wq+92JwdDdYSIolKHIWg0z5h8R71u5
-         d4H6hpB/COkIalt0wRJntSwJnv2L/QP+cBBtrAjlYO0eB7MYs5a8GmE1cIBBUO9sOotY
-         emlEPXraQsZ1jKd/28Brh4t68RbpN2AWMIxzcVLiiIeuylZnDF7XBCfxBWbrf4WuDc1f
-         HcHhbOIdB6f+b8gu+GVj+3YKUD4kc8A9OTphe81Oln8MqxSiSKhgUIEvPLYYc0gnX78H
-         mQcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fSYMSZYQbmhaWaDGzPbCvqjfCdPDVqsG1KD282UM/jo=;
-        b=bm99AORP+f9/5XY62uZeUfcIncRNPGcSFtr96h72T2vIIb7xRVjCH6R1EXGv91zShW
-         tP05X1UAkO7QB6X7DR3BSMIEmH7US859NfR/HDJJjs4uXYx3n2bQJLEl7lf5JlDi2MtU
-         /0nUSvsDNxOg3SDShflooRDbDXe2ou6MJJz5OJfgsYZi/KxDWAhVWmJOUO7KkAITn2qi
-         p0G9PUSqViB0HXfo0YD1dK+tCTIredBm6r6ExWvfHREWJXJR069lUhWF/oCGQJXjGJwa
-         x1j/HT/Cd22GemT5kuDrGMLBIVfltM3hXL+rgmsnOJwau7n3nnmc7xRJoB4oTBH2wVse
-         0Fjw==
-X-Gm-Message-State: AFqh2krj4SivsbMRnoe+J7d5remsJBHpqgjA7qk8NRNh3RpGPTKdt8wK
-        jTkG+TaqYEbEBD3dy9slMQA+QMDE4TrMy9qSYpm7veUi/bXNSg==
-X-Google-Smtp-Source: AMrXdXvco1yNqtdR3Mn9xbyetkhMY703c/ArNTKauEXmBF0GfIp+t70iaT76VqvDwIOq/wC/yazMTuUyDBjGTO9hHSA=
-X-Received: by 2002:a05:600c:3b04:b0:3d0:50c4:432c with SMTP id
- m4-20020a05600c3b0400b003d050c4432cmr4510926wms.67.1673848859551; Sun, 15 Jan
- 2023 22:00:59 -0800 (PST)
+        Mon, 16 Jan 2023 01:14:42 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4A44483;
+        Sun, 15 Jan 2023 22:14:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673849680; x=1705385680;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fYWke13lKCI4mRfwIKwzjkt+o2kD3ODpPS5FXnrynV0=;
+  b=jKSlyF108jfoVcKLw/I39QYVahW7OwmjMo1kreWkMQVKc9FpYa91QbPE
+   lvN707oee7uCVBN4YOHFSZiiWGgV5ADudZgFEbMjmRbVExxYTc8Neb4+m
+   JlsSzSHmdy3hrNcDxdIzbNhYLDrxKLlXWrzNGXVQhyFWaabQqvlzEfP2y
+   6u7V286/9p0BhU1gawz4j4nIfpfeJRlvkFcEHSvPm7nb6nbX4I2d0F7jy
+   YfcYXm6V+It5vgdIaUpPzDhjsVZ2im6xoha7bL3dUmyMyLgPNOr9ErEBQ
+   lNcs3SaiH2b5Ne7uaymVGm4C8mbMtzH0UC869kkQwN30YdWhj7ZzMKwe0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10591"; a="307947882"
+X-IronPort-AV: E=Sophos;i="5.97,220,1669104000"; 
+   d="scan'208";a="307947882"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2023 22:14:40 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10591"; a="832725848"
+X-IronPort-AV: E=Sophos;i="5.97,220,1669104000"; 
+   d="scan'208";a="832725848"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.53.56])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2023 22:14:34 -0800
+Message-ID: <cbcb6109-0c23-9270-a534-c4fabdddfbbc@intel.com>
+Date:   Mon, 16 Jan 2023 08:14:29 +0200
 MIME-Version: 1.0
-References: <20230116012143.432435-1-qinyu32@huawei.com>
-In-Reply-To: <20230116012143.432435-1-qinyu32@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 15 Jan 2023 22:00:47 -0800
-Message-ID: <CAP-5=fV255AszHQAYFWjcEWkPCORyD35_4O+2Uxt0+4o2FyXjQ@mail.gmail.com>
-Subject: Re: [PATCH] perf docs: fix a typo in perf probe doc
-To:     qinyu <qinyu32@huawei.com>
-Cc:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org, hewenliang4@huawei.com,
-        linfeilong@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.1
+Subject: Re: [RFC 3/4] perf tool: Introduce PERF_RECORD_KMOD_SEC_MAP
+Content-Language: en-US
+To:     Ravi Bangoria <ravi.bangoria@amd.com>, acme@kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        kan.liang@linux.intel.com, peterz@infradead.org,
+        mark.rutland@arm.com, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, james.clark@arm.com,
+        german.gomez@arm.com, leo.yan@linaro.org,
+        alexey.v.bayduraev@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com
+References: <20230110055859.685-1-ravi.bangoria@amd.com>
+ <20230110055859.685-4-ravi.bangoria@amd.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230110055859.685-4-ravi.bangoria@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jan 15, 2023 at 5:15 PM qinyu <qinyu32@huawei.com> wrote:
->
-> fix a minor typo in perf probe doc.
->
-> Fixes: 631c9def804b ("perf probe: Support --line option to show probable source-code lines")
-> Signed-off-by: qinyu <qinyu32@huawei.com>
+On 10/01/23 07:58, Ravi Bangoria wrote:
+> Introduce, perf tool only, synthetic event type PERF_RECORD_KMOD_SEC_MAP.
+> Also add stub code for it. This event will be used to save/restore kernel
+> module section maps to/from perf.data file. This is needed because kernel
+> module elfs does not contain program header table and thus there is no
+> easy way to find out how kernel would have loaded module sections in the
+> memory.
 
-Acked-by: Ian Rogers <irogers@google.com>
+Currently machine__addnew_module_map() adds a map for a
+module, and then perf_event__synthesize_modules() creates
+an MMAP/MMAP2 event for it.  Why can't we do that for the
+sections?
 
-Thanks,
-Ian
-
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 > ---
->  tools/perf/Documentation/perf-probe.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-> index 7f8e8ba3a..5c43a6edc 100644
-> --- a/tools/perf/Documentation/perf-probe.txt
-> +++ b/tools/perf/Documentation/perf-probe.txt
-> @@ -222,7 +222,7 @@ probe syntax, 'SRC' means the source file path, 'ALN' is start line number,
->  and 'ALN2' is end line number in the file. It is also possible to specify how
->  many lines to show by using 'NUM'. Moreover, 'FUNC@SRC' combination is good
->  for searching a specific function when several functions share same name.
-> -So, "source.c:100-120" shows lines between 100th to l20th in source.c file. And "func:10+20" shows 20 lines from 10th line of func function.
-> +So, "source.c:100-120" shows lines between 100th to 120th in source.c file. And "func:10+20" shows 20 lines from 10th line of func function.
->
->  LAZY MATCHING
->  -------------
-> --
-> 2.33.0
->
+>  tools/lib/perf/Documentation/libperf.txt |  1 +
+>  tools/lib/perf/include/perf/event.h      | 25 ++++++++++++++++++++++++
+>  tools/perf/util/event.c                  |  1 +
+>  tools/perf/util/session.c                | 12 ++++++++++++
+>  tools/perf/util/tool.h                   |  3 ++-
+>  5 files changed, 41 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+> index a8f1a237931b..b62730b84cc5 100644
+> --- a/tools/lib/perf/Documentation/libperf.txt
+> +++ b/tools/lib/perf/Documentation/libperf.txt
+> @@ -211,6 +211,7 @@ SYNOPSIS
+>    struct perf_record_time_conv;
+>    struct perf_record_header_feature;
+>    struct perf_record_compressed;
+> +  struct perf_record_kmod_sec_maps;
+>  --
+>  
+>  DESCRIPTION
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+> index ad47d7b31046..404b23b6902b 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -438,6 +438,29 @@ struct perf_record_compressed {
+>  	char			 data[];
+>  };
+>  
+> +/* Kernel module elf section maps */
+> +struct perf_record_kmod_sec_map {
+> +	struct perf_event_header header;
+> +	/* Machine id. Same as synthesized PERF_RECORD_MMAP */
+> +	__u32			 pid;
+> +	/* Section start ip address */
+> +	__u64			 start;
+> +	/* Section length */
+> +	__u64			 len;
+> +	/* Section page offset in kernel module elf file */
+> +	__u64			 pgoff;
+> +	/* Section name length, including '\0' */
+> +	__u16			 sec_name_len;
+> +	/* Kernel module filename(path) length, including '\0' */
+> +	__u16			 filename_len;
+> +	/*
+> +	 * Section name and filename stored as: "sec_name\0filename\0". i.e:
+> +	 * data[0]: Section name
+> +	 * data[sec_name_len + 1]: File name
+> +	 */
+> +	char			 data[];
+> +};
+> +
+>  enum perf_user_event_type { /* above any possible kernel type */
+>  	PERF_RECORD_USER_TYPE_START		= 64,
+>  	PERF_RECORD_HEADER_ATTR			= 64,
+> @@ -459,6 +482,7 @@ enum perf_user_event_type { /* above any possible kernel type */
+>  	PERF_RECORD_HEADER_FEATURE		= 80,
+>  	PERF_RECORD_COMPRESSED			= 81,
+>  	PERF_RECORD_FINISHED_INIT		= 82,
+> +	PERF_RECORD_KMOD_SEC_MAP		= 83,
+>  	PERF_RECORD_HEADER_MAX
+>  };
+>  
+> @@ -499,6 +523,7 @@ union perf_event {
+>  	struct perf_record_time_conv		time_conv;
+>  	struct perf_record_header_feature	feat;
+>  	struct perf_record_compressed		pack;
+> +	struct perf_record_kmod_sec_map		kmod_sec_map;
+>  };
+>  
+>  #endif /* __LIBPERF_EVENT_H */
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index 1fa14598b916..1b03061440bc 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -77,6 +77,7 @@ static const char *perf_event__names[] = {
+>  	[PERF_RECORD_HEADER_FEATURE]		= "FEATURE",
+>  	[PERF_RECORD_COMPRESSED]		= "COMPRESSED",
+>  	[PERF_RECORD_FINISHED_INIT]		= "FINISHED_INIT",
+> +	[PERF_RECORD_KMOD_SEC_MAP]		= "KMOD_SEC_MAP",
+>  };
+>  
+>  const char *perf_event__name(unsigned int id)
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 7c021c6cedb9..4f5165cd58de 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -563,6 +563,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
+>  		tool->compressed = perf_session__process_compressed_event;
+>  	if (tool->finished_init == NULL)
+>  		tool->finished_init = process_event_op2_stub;
+> +	if (tool->kmod_sec_map == NULL)
+> +		tool->kmod_sec_map = process_event_stub;
+>  }
+>  
+>  static void swap_sample_id_all(union perf_event *event, void *data)
+> @@ -997,6 +999,12 @@ static void perf_event__time_conv_swap(union perf_event *event,
+>  	}
+>  }
+>  
+> +static void perf_event_kmod_sec_map_swap(union perf_event *event __maybe_unused,
+> +					  bool sample_id_all __maybe_unused)
+> +{
+> +	/* FIXME */
+> +}
+> +
+>  typedef void (*perf_event__swap_op)(union perf_event *event,
+>  				    bool sample_id_all);
+>  
+> @@ -1035,6 +1043,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+>  	[PERF_RECORD_STAT_ROUND]	  = perf_event__stat_round_swap,
+>  	[PERF_RECORD_EVENT_UPDATE]	  = perf_event__event_update_swap,
+>  	[PERF_RECORD_TIME_CONV]		  = perf_event__time_conv_swap,
+> +	[PERF_RECORD_KMOD_SEC_MAP]	  = perf_event_kmod_sec_map_swap,
+>  	[PERF_RECORD_HEADER_MAX]	  = NULL,
+>  };
+>  
+> @@ -1727,6 +1736,9 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+>  		return err;
+>  	case PERF_RECORD_FINISHED_INIT:
+>  		return tool->finished_init(session, event);
+> +	case PERF_RECORD_KMOD_SEC_MAP:
+> +		/* Currently PERF_RECORD_KMOD_SEC_MAP is supported only for host */
+> +		return tool->kmod_sec_map(tool, event, &sample, &session->machines.host);
+>  	default:
+>  		return -EINVAL;
+>  	}
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index c957fb849ac6..8ea7fb85c196 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -60,7 +60,8 @@ struct perf_tool {
+>  			unthrottle,
+>  			ksymbol,
+>  			bpf,
+> -			text_poke;
+> +			text_poke,
+> +			kmod_sec_map;
+>  
+>  	event_attr_op	attr;
+>  	event_attr_op	event_update;
+
