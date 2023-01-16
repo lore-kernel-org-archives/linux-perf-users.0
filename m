@@ -2,315 +2,205 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 826DFC54EBE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 12:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC25C46467
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 12:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbjAPMBl (ORCPT
+        id S230456AbjAPMto (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 07:01:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42228 "EHLO
+        Mon, 16 Jan 2023 07:49:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229947AbjAPMAy (ORCPT
+        with ESMTP id S230423AbjAPMth (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 07:00:54 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652AF1CF74
-        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jan 2023 04:00:12 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30GBonx2017528;
-        Mon, 16 Jan 2023 12:00:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=CG/kMv3O3YUEge8TnFyNBw8/+Zxwyu58fiNsJw2tjd0=;
- b=YnqNyHsuzT+9fuBuKF7eqqCvTqQL9qKOmy8sMv1qll8bXrEDx8yE8IUTvO4c5FSwkwhZ
- YxJfv6Ab968LjjkE+3LDb1R8ITUEJXEO5RLC0H0lpXFwFi166Y7L5Yqp6YoBUb8mXW+N
- n72RVWMvrKbY2I+nHEu35/k61Psx6P/G2rX69N8DnkRipsprtMavQcRasc/0HXWyORQw
- GKIJsNNkcH5h/dE+J3/8DeV7Q+Wbky5luf7dEazIkBcfZrj+8AQsVJhoswgcmAzv0u9P
- OeUWImgwxki8PDJgOXVLS29pzVTVaV07SfwY3/NigC3781tlDZsHPZx7GfsdGClQMkaQ uA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n562ng5aj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 12:00:01 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30GBpBFD019417;
-        Mon, 16 Jan 2023 12:00:00 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n562ng59e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 12:00:00 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30G1QcAq006324;
-        Mon, 16 Jan 2023 11:59:57 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3n3knfjcrb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 11:59:57 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30GBxr6e50463070
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Jan 2023 11:59:54 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D73982004E;
-        Mon, 16 Jan 2023 11:59:53 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBECD20040;
-        Mon, 16 Jan 2023 11:59:51 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.124.59])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon, 16 Jan 2023 11:59:51 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fXWCYQSpp92L64+7Piu0sfEq+RsigNLUowgCjsT218jow@mail.gmail.com>
-Date:   Mon, 16 Jan 2023 17:29:36 +0530
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <5CAD9B57-1788-4C7E-9658-7634A49D8BF0@linux.vnet.ibm.com>
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
- <Yyy0W6CnPk7BkkCU@kernel.org>
- <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
- <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
- <41461A8A-74F7-4938-9E8D-9F275114E906@linux.vnet.ibm.com>
- <CAP-5=fXWCYQSpp92L64+7Piu0sfEq+RsigNLUowgCjsT218jow@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: sSpWEnC3EcYlNc6hCYSapS2td5vca0sc
-X-Proofpoint-GUID: b8TS6CHnixIH_dx-QgVmjxV-7J8dx-nO
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-16_09,2023-01-13_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2301160085
+        Mon, 16 Jan 2023 07:49:37 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4A31E5CF
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jan 2023 04:49:35 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so23542885wmb.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 16 Jan 2023 04:49:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/VhFDx2nLBEQMMGIEbt94FqGKjkWBbT2r5ofKpofV8U=;
+        b=gep+o26ySUGKCJouCtnEiKeRZTysmrP7hZD0wbxSv7HvY7KFLTP8/Fn5K6PflMi8Bi
+         FpiwnalTbFNNXFJcc6mY16P+euUvQFx+IjH/O3Qrt7T1VP7CUMLMOI6OnhxsI4AXlc+W
+         4p0bzVDbXWzJM1hi44GXYRDBqgfToCMm+2RYRpX7ZF60shDOGJ8QhhTDFM8muolLu+Dj
+         xoywtB0tW9DREri6yudY12noIG1Bg1zh8Bi6XFW6ncQBQ/F0nCb26FrsLoFWhY9P90tH
+         TRLn4HKirSLvC7dxHagjRZ8B/2Pj3Fpoj7AUswtXBpgcLsoYlywze/d7dgDnjJTV/goM
+         RMog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/VhFDx2nLBEQMMGIEbt94FqGKjkWBbT2r5ofKpofV8U=;
+        b=H6rOwNoobU7hPRvN4td66ku50JnBaEFO82/JEZZ104XoYuhVONu5wt08boBbio5WY7
+         d/LCiA0VNkI9vsQRlRfMAJwBl9yzoIE02Uhf2lNUZREmsQRHjxhEAZYEOrUEQwdoAKWT
+         7MD+JzBoS5KfvcfbM8L9bBuRioSf40nQTLei9nETqMEtAZaCyFoUZTvpsRpquLNlCFvS
+         6mNj5l4Uwqo4WbuChfIzIMummrvlZVgRTu04AaRwELejWi//wzvRknqiNKZDkO8T+bmk
+         g7q1bq0he7b0Uj94420WqLZh+xRAizj2mkvifWXQVUjlWd5TJ2y1gNaJUfvzfAITYcyh
+         Ahqw==
+X-Gm-Message-State: AFqh2krwibDxrs5lh+MI3TpJo80e/YFwdtLQZmxF9xm5vbKi8T8m2Cl4
+        IB2aeksEdv9kR6r0dNVVHQKPxw==
+X-Google-Smtp-Source: AMrXdXsH2o1/jAjcizTMqinL9MOnwoOFTZCu6DcvFg51I/SRnTCEVPZVHyym2iPLyURuNnAqq1YwHQ==
+X-Received: by 2002:a05:600c:5405:b0:3da:632:a8d with SMTP id he5-20020a05600c540500b003da06320a8dmr17563341wmb.10.1673873374138;
+        Mon, 16 Jan 2023 04:49:34 -0800 (PST)
+Received: from linaro.org ([2a00:23c5:6809:2201:6c91:710d:9433:e868])
+        by smtp.gmail.com with ESMTPSA id fl12-20020a05600c0b8c00b003dab40f9eafsm6896832wmb.35.2023.01.16.04.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jan 2023 04:49:33 -0800 (PST)
+From:   Mike Leach <mike.leach@linaro.org>
+To:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com, Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH v7 00/15]  coresight: Add new API to allocate trace source ID values
+Date:   Mon, 16 Jan 2023 12:49:13 +0000
+Message-Id: <20230116124928.5440-1-mike.leach@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The current method for allocating trace source ID values to sources is
+to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+The STM is allocated ID 0x1.
+
+This fixed algorithm is used in both the CoreSight driver code, and by
+perf when writing the trace metadata in the AUXTRACE_INFO record.
+
+The method needs replacing as currently:-
+1. It is inefficient in using available IDs.
+2. Does not scale to larger systems with many cores and the algorithm
+has no limits so will generate invalid trace IDs for cpu number > 44.
+
+Additionally requirements to allocate additional system IDs on some
+systems have been seen.
+
+This patch set  introduces an API that allows the allocation of trace IDs
+in a dynamic manner.
+
+Architecturally reserved IDs are never allocated, and the system is
+limited to allocating only valid IDs.
+
+Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+the new API.
+
+For the ETMx.x devices IDs are allocated on certain events
+a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+sysfs TRCTRACEID register and freed when the sysfs reset is written.
+
+b) When using perf, ID is allocated on during setup AUX event, and freed on
+event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+The ID allocator is notified when perf sessions start and stop
+so CPU based IDs are kept constant throughout any perf session.
 
 
-> On 16-Jan-2023, at 11:47 AM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Sun, Jan 15, 2023 at 9:03 PM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 28-Sep-2022, at 10:24 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.com=
-> wrote:
->>>=20
->>> Hi All,
->>>=20
->>> Looking for what direction we can take here.
->>> Do we want to change all tests in tools/perf/tests/shell except test_in=
-tel_pt.sh to use "bash" or go with
->>> the approach in the patch ? Please share your comments
->>>=20
->>> Thanks
->>> Athira
->>>=20
->>=20
->> Hi All,
->>=20
->> Looking for what direction we can take here.
->> Do we want to change all tests in tools/perf/tests/shell except test_int=
-el_pt.sh to use "bash" or go with
->> the approach in the patch ? Please share your comments
->>=20
->> Thanks
->> Athira
->=20
+Note: This patchset breaks some backward compatibility for perf record and
+perf report.
 
-Thanks Ian for the response.
+The version of the AUXTRACE_INFO has been updated to reflect the fact that
+the trace source IDs are generated differently. This will
+mean older versions of perf report cannot decode the newer file.
 
-> I think some of what the patch is doing is good, some of it the
+Appies to coresight/next
 
-Ian, can I take this as an ack for the patch so that Arnaldo can pick this =
-in acme git ?
+Changes since v6:
+1) Export perf_report_aux_output_id() Acked by Peter,
+2) Update to ETMv3 docs requested by suzuki
+3) rebased and re-tested on coresight/next (6.2-rc2)
 
-> readability becomes a little harder by not being bash. I'm agnostic as
-> to which approach to take for the fix.
+Changes since v5: (requested by suzuki)
+1) Prefer odd ID values for system IDs to avoid overlap with legacy CPU IDs
+2) Some style changes
 
-May be we can take this as separate mail thread to get everyone=E2=80=99s o=
-pinion on changing all tests in "tools/perf/tests/shell" except test_intel_=
-pt.sh to use =E2=80=9Cbash" ?
+Changes since v4:
+1) update to ensure that compiling after each individual patch added still
+works - ie. git bisect not broken through the patchset..
 
->=20
-> An aside, I noticed that we do run some tests at build time:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/lib/M=
-akefile?h=3Dperf/core#n390
-> So perhaps we can have a shellcheck build option, defaulted off but
-> enabled as part of Arnaldo's regular test scripts. The shellcheck
-> build option would run shellcheck to make sure that there weren't
-> errors in the shell code, which it is far too easy to introduce.
+2) Revision to some of the now redundant code in cs-etm (James)
 
-Sure, that is a good option to have. I will check on having =E2=80=9Cshellc=
-heck" as a build option.
+3) Comments and other minor fixes requested by Suzuki.
 
-Thanks
-Athira
+Changes since v3:
+1) Fixed aarch32 build error in ETM3.x driver.
+Reported-by: kernel test robot <lkp@intel.com>
 
->=20
-> Thanks,
-> Ian
->=20
->>>> On 23-Sep-2022, at 11:54 AM, Adrian Hunter <adrian.hunter@intel.com> w=
-rote:
->>>>=20
->>>> On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
->>>>> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
->>>>>> The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D skip=
-s with below
->>>>>> error on some distros:
->>>>>=20
->>>>> I wonder if we shouldn't instead state that bash is needed?
->>>>>=20
->>>>> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*=
-.sh | grep ^#
->>>>> #!/bin/sh
->>>>> #!/bin/bash
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/bash
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/bash
->>>>> #!/bin/sh
->>>>> #!/bin/bash
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> #!/bin/sh
->>>>> =E2=AC=A2[acme@toolbox perf-urgent]$
->>>>>=20
->>>>> Opinions?
->>>>>=20
->>>>=20
->>>> Please don't change tools/perf/tests/shell/test_intel_pt.sh
->>>>=20
->>>> I started using shellcheck on that with the "perf test:
->>>> test_intel_pt.sh: Add per-thread test" patch set that I sent.
->>>>=20
->>>> FYI, if you use shellcheck on buildid.sh, it shows up issues even
->>>> after changing to bash:
->>>>=20
->>>> *** Before ***
->>>>=20
->>>> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 69:
->>>>      link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
->>>>                                     ^-------^ SC2039: In POSIX sh, str=
-ing indexing is undefined.
->>>>                                               ^-----^ SC2039: In POSIX=
- sh, string indexing is undefined.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 77:
->>>>      file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
->>>>                                     ^-------^ SC2039: In POSIX sh, str=
-ing indexing is undefined.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 123:
->>>>      echo "running: perf record $@"
->>>>                                 ^-- SC2145: Argument mixes string and =
-array. Use * or separate argument.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 124:
->>>>      ${perf} record --buildid-all -o ${data} $@ &> ${log}
->>>>                                              ^-- SC2068: Double quote =
-array expansions to avoid re-splitting elements.
->>>>                                                 ^-------^ SC2039: In P=
-OSIX sh, &> is undefined.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 126:
->>>>              echo "failed: record $@"
->>>>                                   ^-- SC2145: Argument mixes string an=
-d array. Use * or separate argument.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 131:
->>>>      check ${@: -1}
->>>>            ^------^ SC2068: Double quote array expansions to avoid re-=
-splitting elements.
->>>>            ^------^ SC2039: In POSIX sh, string indexing is undefined.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 158:
->>>> exit ${err}
->>>>   ^----^ SC2154: err is referenced but not assigned.
->>>>=20
->>>> For more information:
->>>> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansion=
-s to ...
->>>> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and ar=
-ray. ...
->>>> https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefined.
->>>>=20
->>>> *** After ***
->>>>=20
->>>> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 123:
->>>>      echo "running: perf record $@"
->>>>                                 ^-- SC2145: Argument mixes string and =
-array. Use * or separate argument.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 124:
->>>>      ${perf} record --buildid-all -o ${data} $@ &> ${log}
->>>>                                              ^-- SC2068: Double quote =
-array expansions to avoid re-splitting elements.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 126:
->>>>              echo "failed: record $@"
->>>>                                   ^-- SC2145: Argument mixes string an=
-d array. Use * or separate argument.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 131:
->>>>      check ${@: -1}
->>>>            ^------^ SC2068: Double quote array expansions to avoid re-=
-splitting elements.
->>>>=20
->>>>=20
->>>> In tools/perf/tests/shell/buildid.sh line 158:
->>>> exit ${err}
->>>>   ^----^ SC2154: err is referenced but not assigned.
->>>>=20
->>>> For more information:
->>>> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansion=
-s to ...
->>>> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and ar=
-ray. ...
->>>> https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not as=
-signed.
+Changes since v2:
+1) Improved backward compatibility: (requested by James)
+
+Using the new version of perf on an old kernel will generate a usable file
+legacy metadata values are set by the new perf and will be used if mew
+ID packets are not present in the file.
+
+Using an older version of perf / simpleperf on an updated kernel may still
+work. The trace ID allocator has been updated to use the legacy ID values
+where possible, so generated file and used trace IDs will match up to the
+point where the legacy algorithm is broken anyway.
+
+2) Various changes to the ID allocator and ID packet format.
+(suggested by Suzuki)
+
+3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+without taking the allocator spinlock. perf flow now allocates and releases ID
+values in setup_aux / free_event. Device enable and event enable use the passive
+read to set the allocated values. This simplifies the locking mechanisms on the
+perf run and fixes issues that arose with locking dependencies.
+
+Changes since v1:
+(after feedback & discussion with Mathieu & Suzuki).
+
+1) API has changed. The global trace ID map is managed internally, so it
+is no longer passed in to the API functions.
+
+2) perf record does not use sysfs to find the trace IDs. These are now
+output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+have been updated accordingly to generate and handle these events.
+
+Mike Leach (15):
+  coresight: trace-id: Add API to dynamically assign Trace ID values
+  coresight: Remove obsolete Trace ID unniqueness checks
+  coresight: perf: traceid: Add perf ID allocation and notifiers
+  coresight: stm: Update STM driver to use Trace ID API
+  coresight: etm4x: Update ETM4 driver to use Trace ID API
+  coresight: etm3x: Update ETM3 driver to use Trace ID API
+  coresight: etmX.X: stm: Remove trace_id() callback
+  coresight: trace id: Remove legacy get trace ID function.
+  perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+  perf: cs-etm: Update record event to use new Trace ID protocol
+  kernel: events: Export perf_report_aux_output_id()
+  perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+  coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+  coresight: trace-id: Add debug & test macros to Trace ID allocation
+  coresight: etm3x: docs: Alter sysfs documentation for trace id updates
+
+ .../testing/sysfs-bus-coresight-devices-etm3x |   2 +-
+ drivers/hwtracing/coresight/Makefile          |   2 +-
+ drivers/hwtracing/coresight/coresight-core.c  |  45 ---
+ .../hwtracing/coresight/coresight-etm-perf.c  |  23 ++
+ drivers/hwtracing/coresight/coresight-etm.h   |   3 +-
+ .../coresight/coresight-etm3x-core.c          |  93 +++--
+ .../coresight/coresight-etm3x-sysfs.c         |  27 +-
+ .../coresight/coresight-etm4x-core.c          |  73 +++-
+ .../coresight/coresight-etm4x-sysfs.c         |  27 +-
+ drivers/hwtracing/coresight/coresight-etm4x.h |   3 +
+ drivers/hwtracing/coresight/coresight-stm.c   |  49 +--
+ .../hwtracing/coresight/coresight-trace-id.c  | 298 ++++++++++++++++
+ .../hwtracing/coresight/coresight-trace-id.h  | 156 +++++++++
+ include/linux/coresight-pmu.h                 |  34 +-
+ include/linux/coresight.h                     |   3 -
+ kernel/events/core.c                          |   1 +
+ tools/include/linux/coresight-pmu.h           |  48 ++-
+ tools/perf/arch/arm/util/cs-etm.c             |  21 +-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+ tools/perf/util/cs-etm.c                      | 325 +++++++++++++++---
+ tools/perf/util/cs-etm.h                      |  14 +-
+ 21 files changed, 1024 insertions(+), 230 deletions(-)
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+
+-- 
+2.17.1
 
