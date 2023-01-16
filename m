@@ -2,184 +2,275 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4F9C54EBE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 05:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31DAC46467
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 05:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231506AbjAPFCL (ORCPT
+        id S231576AbjAPFDU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 00:02:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
+        Mon, 16 Jan 2023 00:03:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbjAPFCG (ORCPT
+        with ESMTP id S229644AbjAPFDS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 00:02:06 -0500
+        Mon, 16 Jan 2023 00:03:18 -0500
 Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1B96A7A
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 21:02:04 -0800 (PST)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30G2M525030325;
-        Mon, 16 Jan 2023 05:01:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=WnqHynCU2yo8nBVT1xHmuQLaLFaLfnDWykbf2G06emc=;
- b=jR1wZkMiDNptUgrZhoE2k4PqMMzlT5u95o7IZsEY4TqUyhm8N9CPCUuVtj8jF0E39YEm
- UvH6KUUdiY/qMjQT+PH20MzKe5kT9/kAcamLinw3kmcGXCsoeKqMWLBGK8eN3tnFUE+0
- DIzCntwoXBCKazYlLeHSQ1yBJ/3m5s9/w0GoQ59LHfVSnnmyyq84ZZJkneJfh2ZjK84l
- XDl4TBKILrxOUnrXz+MKxG/M4AmIcr8S4eWC2KtmNCDZWpEPOpGDuK6X/L5iTTjtOx9w
- fumggZCHMM5oaCG+/cVXACw2wWd2HJb0KS+/VAL1n85i0mQUmoc1v32je/uBCrJZVTjR iA== 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9A6270A
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 21:03:17 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30G2iqlA011720;
+        Mon, 16 Jan 2023 05:03:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
+ from : in-reply-to : date : cc : message-id : references : to :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=ZAqZaqP2qQDPTZePUkkD3giSWOpBTZB8wAGhnF0SRMo=;
+ b=tNF5FBrEF9xY0gAtlehtYhhk2VvK8P4HPTlaqkmqA3BB4JqYQMZUvb9aTwbmeCqGg8Ip
+ lugLqP7wPBTCuG7e0jP8KL3xyDs/EvRRNh5GUXEY+r8LVr18/ttpiOsvCAsUEpWkpU1r
+ /CchIrxNJpyv5RAbPOLJzslaCbMoGw4PiMj7RbNfWx0A2RMQ2MCFW9HbSj23U+c2z3ZB
+ XWzwxcgHTIIVOR0JcZCn2GyvbaG+KkmRz1RNXyVSFqX7ItGi3gvfSeLZQSlWsaoU8XzM
+ bh2HBoArMNMtHKcm1qWwIIaZIhUgyRMNCpvqvws2ESAHT3bW0O8y26tPOfvFEM7HYVYU 3A== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n48y5c4a8-1
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4ed2febm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 05:01:44 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30G4p6vd020923;
-        Mon, 16 Jan 2023 05:01:44 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n48y5c49k-1
+        Mon, 16 Jan 2023 05:03:08 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30G51EB1005797;
+        Mon, 16 Jan 2023 05:03:08 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4ed2feb7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 05:01:44 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30G1NBtf007923;
-        Mon, 16 Jan 2023 05:01:42 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3n3knfhx5q-1
+        Mon, 16 Jan 2023 05:03:08 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30F4hV5A017303;
+        Mon, 16 Jan 2023 05:03:06 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3n3m169d9g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 05:01:42 +0000
+        Mon, 16 Jan 2023 05:03:06 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30G51ddt45547896
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30G532EA50594296
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Jan 2023 05:01:39 GMT
+        Mon, 16 Jan 2023 05:03:03 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7A8520040;
-        Mon, 16 Jan 2023 05:01:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D1AB220040;
+        Mon, 16 Jan 2023 05:03:02 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BF982004E;
-        Mon, 16 Jan 2023 05:01:36 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.122.245])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Jan 2023 05:01:36 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0491D2004F;
+        Mon, 16 Jan 2023 05:03:01 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.122.245])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Mon, 16 Jan 2023 05:03:00 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
+ id test
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org
-Cc:     ak@linux.intel.com, namhyung@kernel.org, irogers@google.com,
-        james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.ibm.com
-Subject: [PATCH 2/2] tools/perf/tests: Fix build id test check for PE file
-Date:   Mon, 16 Jan 2023 10:31:31 +0530
-Message-Id: <20230116050131.17221-2-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230116050131.17221-1-atrajeev@linux.vnet.ibm.com>
-References: <20230116050131.17221-1-atrajeev@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
+Date:   Mon, 16 Jan 2023 10:32:58 +0530
+Cc:     maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Message-Id: <41461A8A-74F7-4938-9E8D-9F275114E906@linux.vnet.ibm.com>
+References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
+ <Yyy0W6CnPk7BkkCU@kernel.org>
+ <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
+ <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: c7vFXqaNjn1dTtVWjpP0f3C-2ka8wDky
-X-Proofpoint-ORIG-GUID: z6-AFH0F02N0swIbOwsA2FZffLf1xkhG
+X-Proofpoint-GUID: wan1DbpTF_F5xahTluJpMtrdBqkMA8Vp
+X-Proofpoint-ORIG-GUID: Ol9zNKtK00UCyVVecwRItO-NOn7lxwEf
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
  definitions=2023-01-16_02,2023-01-13_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- malwarescore=0 phishscore=0 clxscore=1015 spamscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301160033
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ clxscore=1011 mlxlogscore=999 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301160037
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf test "build id cache operations" fails for PE
-executable.  Logs below from powerpc system.
-Same is observed on x86 as well.
 
-<<>>
-Adding 5a0fd882b53084224ba47b624c55a469 ./tests/shell/../pe-file.exe: Ok
-build id: 5a0fd882b53084224ba47b624c55a469
-link: /tmp/perf.debug.w0V/.build-id/5a/0fd882b53084224ba47b624c55a469
-file: /tmp/perf.debug.w0V/.build-id/5a/../../root/<user>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf
-failed: file /tmp/perf.debug.w0V/.build-id/5a/../../root/<user>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf does not exist
-test child finished with -1
----- end ----
-build id cache operations: FAILED!
-<<>>
 
-The test tries to do:
+> On 28-Sep-2022, at 10:24 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> =
+wrote:
+>=20
+> Hi All,
+>=20
+> Looking for what direction we can take here.
+> Do we want to change all tests in tools/perf/tests/shell except test_inte=
+l_pt.sh to use "bash" or go with
+> the approach in the patch ? Please share your comments
+>=20
+> Thanks
+> Athira
+>=20
 
-<<>>
-mkdir /tmp/perf.debug.TeY1
-perf --buildid-dir /tmp/perf.debug.TeY1 buildid-cache -v -a ./tests/shell/../pe-file.exe
-<<>>
+Hi All,
 
-The option "--buildid-dir" sets the build id cache
-directory as /tmp/perf.debug.TeY1. The option given
-to buildid-cahe, ie "-a ./tests/shell/../pe-file.exe",
-is to add the pe-file.exe to the cache. The testcase,
-sets buildid-dir and adds the file: pe-file.exe to build
-id cache. To check if the command is run successfully,
-"check" function looks for presence of the file in buildid
-cache directory. But the check here expects the added
-file to be executable. Snippet below:
+Looking for what direction we can take here.
+Do we want to change all tests in tools/perf/tests/shell except test_intel_=
+pt.sh to use "bash" or go with
+the approach in the patch ? Please share your comments
 
-<<>>
-if [ ! -x $file ]; then
-	echo "failed: file ${file} does not exist"
-	exit 1
-fi
-<<>>
+Thanks
+Athira
 
-Buildid test is done for sha1 binary, md5 binary and also
-for PE file. The firt two binaries are created at runtime
-by compiling with "--build-id" option and hence the check
-for sha1/md5 test should use [ ! -x ]. But in case of PE
-file, the permission for this input file is rw-r--r--
-Hence the file added to build id cache has same permissoin
-
-Original file:
-ls tests/pe-file.exe | xargs stat --printf "%n %A \n"
-tests/pe-file.exe -rw-r--r--
-
-buildid cache file:
-
-ls /tmp/perf.debug.w0V/.build-id/5a/../../root/<user>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf | xargs stat --printf "%n %A \n"
-/tmp/perf.debug.w0V/.build-id/5a/../../root/<user>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf -rw-r--r--
-
-Fix the test to match with the permission of original file in
-case of FE file. ie if the "tests/pe-file.exe" file is not
-having exec permission, just check for existence of the buildid
-file using [ ! -e <file> ]
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/shell/buildid.sh | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
-index f05670d1e39e..22e5b2225abe 100755
---- a/tools/perf/tests/shell/buildid.sh
-+++ b/tools/perf/tests/shell/buildid.sh
-@@ -77,7 +77,20 @@ check()
- 	file=${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
- 	echo "file: ${file}"
- 
--	if [ ! -x $file ]; then
-+	# Check for file permission of orginal file
-+	# in case of pe-file.exe file
-+	echo $1 | grep ".exe"
-+	if [ $? -eq 0 ]; then
-+		if [ -x $1  -a ! -x $file ]; then
-+			echo "failed: file ${file} executable does not exist"
-+			exit 1
-+		fi
-+
-+		if [ ! -x $file -a ! -e $file ]; then
-+			echo "failed: file ${file} does not exist"
-+			exit 1
-+		fi
-+	elif [ ! -x $file ]; then
- 		echo "failed: file ${file} does not exist"
- 		exit 1
- 	fi
--- 
-2.31.1
+>> On 23-Sep-2022, at 11:54 AM, Adrian Hunter <adrian.hunter@intel.com> wro=
+te:
+>>=20
+>> On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
+>>> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
+>>>> The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D skips =
+with below
+>>>> error on some distros:
+>>>=20
+>>> I wonder if we shouldn't instead state that bash is needed?
+>>>=20
+>>> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*.s=
+h | grep ^#
+>>> #!/bin/sh
+>>> #!/bin/bash
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/bash
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/bash
+>>> #!/bin/sh
+>>> #!/bin/bash
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> #!/bin/sh
+>>> =E2=AC=A2[acme@toolbox perf-urgent]$
+>>>=20
+>>> Opinions?
+>>>=20
+>>=20
+>> Please don't change tools/perf/tests/shell/test_intel_pt.sh
+>>=20
+>> I started using shellcheck on that with the "perf test:=20
+>> test_intel_pt.sh: Add per-thread test" patch set that I sent.
+>>=20
+>> FYI, if you use shellcheck on buildid.sh, it shows up issues even
+>> after changing to bash:
+>>=20
+>> *** Before ***
+>>=20
+>> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 69:
+>>       link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
+>>                                      ^-------^ SC2039: In POSIX sh, stri=
+ng indexing is undefined.
+>>                                                ^-----^ SC2039: In POSIX =
+sh, string indexing is undefined.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 77:
+>>       file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
+>>                                      ^-------^ SC2039: In POSIX sh, stri=
+ng indexing is undefined.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 123:
+>>       echo "running: perf record $@"
+>>                                  ^-- SC2145: Argument mixes string and a=
+rray. Use * or separate argument.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 124:
+>>       ${perf} record --buildid-all -o ${data} $@ &> ${log}
+>>                                               ^-- SC2068: Double quote a=
+rray expansions to avoid re-splitting elements.
+>>                                                  ^-------^ SC2039: In PO=
+SIX sh, &> is undefined.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 126:
+>>               echo "failed: record $@"
+>>                                    ^-- SC2145: Argument mixes string and=
+ array. Use * or separate argument.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 131:
+>>       check ${@: -1}
+>>             ^------^ SC2068: Double quote array expansions to avoid re-s=
+plitting elements.
+>>             ^------^ SC2039: In POSIX sh, string indexing is undefined.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 158:
+>> exit ${err}
+>>    ^----^ SC2154: err is referenced but not assigned.
+>>=20
+>> For more information:
+>> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions =
+to ...
+>> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and arra=
+y. ...
+>> https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefined.
+>>=20
+>> *** After ***
+>>=20
+>> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 123:
+>>       echo "running: perf record $@"
+>>                                  ^-- SC2145: Argument mixes string and a=
+rray. Use * or separate argument.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 124:
+>>       ${perf} record --buildid-all -o ${data} $@ &> ${log}
+>>                                               ^-- SC2068: Double quote a=
+rray expansions to avoid re-splitting elements.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 126:
+>>               echo "failed: record $@"
+>>                                    ^-- SC2145: Argument mixes string and=
+ array. Use * or separate argument.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 131:
+>>       check ${@: -1}
+>>             ^------^ SC2068: Double quote array expansions to avoid re-s=
+plitting elements.
+>>=20
+>>=20
+>> In tools/perf/tests/shell/buildid.sh line 158:
+>> exit ${err}
+>>    ^----^ SC2154: err is referenced but not assigned.
+>>=20
+>> For more information:
+>> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions =
+to ...
+>> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and arra=
+y. ...
+>> https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not assi=
+gned.
+>=20
 
