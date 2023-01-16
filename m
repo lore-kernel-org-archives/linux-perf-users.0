@@ -2,270 +2,229 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2434AC46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 06:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF818C678D7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 07:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231840AbjAPGR7 (ORCPT
+        id S231872AbjAPHb2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 01:17:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54408 "EHLO
+        Mon, 16 Jan 2023 02:31:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231868AbjAPGR5 (ORCPT
+        with ESMTP id S229930AbjAPHb0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 01:17:57 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83AFB3C2C
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 22:17:56 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so18025587wma.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 22:17:56 -0800 (PST)
+        Mon, 16 Jan 2023 02:31:26 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B8B46B1;
+        Sun, 15 Jan 2023 23:31:24 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id x2-20020a17090a46c200b002295ca9855aso2095115pjg.2;
+        Sun, 15 Jan 2023 23:31:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jp0sb687cfAtkgOhH9CyeFxw4s7UGrILk9cGl0V1EFw=;
-        b=cpW+xQTnEW4v0uSMkPsOTFZMUbQZFkKTRQTvwD3uNmD5B8KuA10dVE2vUpwvbGk9Vp
-         fzXGQMEITqfZoSEQrOsVaDTCTRkvQaAxL1qzZWTJ7Z4EnP4uwMQOiJjWAOmDyDbidcsA
-         ac9aD9hE1FlWzA486SlloDzavOMlnIBe2fR8CfdaRcPFszHuGI66gjQKAKL+9J18Dl0s
-         EXMJXcnRtDDX2RYBv2JqyU4lJ4SrbD/jypKBXcWbv1gWKfSs0aefFt1AmMWADGUWdbiL
-         tR1TbvobCmzQ9GOhxwmCGzWnAm4tYgzRIRsyplNUdLFMdIApFFy8r2uEDYexGJx6mlyN
-         loKQ==
+        bh=HOOg7H5N+Z63OpUC/u+N5UvkbhcnIUC0AQSISCJusN4=;
+        b=bNV/0vag1ZvLMpWwA4mawziLzieesOHeeP/uolhRj/Qp/fgoUEgKS7N3HGAUJ0hwEi
+         NNrZZvSk5PRav8zwcMHaV79OCbj1kyAbRLaXuJBlAkL2qROgelytvjsBqXyclWatD66P
+         Ugj2u4a35Qg8LB7A0QOSbJbcpeoiYZd4m2f45lFwkXfct6yFrIw9H9B2+WHzTF0gvm5o
+         AshIWCnV/8OV2oXEADbsYpB4TvdLkd4l84BBzh3/uu9idPKpYXziuWROZgnCLNhU+sJN
+         JRZO8KK8t6UrpaZbxL3OVAvsgPDH3MoIn0oJGJSBPHnnWKgt3Ul15ZHKTohvJxgO9iV7
+         E02Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jp0sb687cfAtkgOhH9CyeFxw4s7UGrILk9cGl0V1EFw=;
-        b=JJnFJ76Sj61hc//qbpV4CAE5A2GwRdUphnAroDNk/07hGttPRRcbnbClL3vvrJt1C4
-         GI5LXxJQfQ0p7zMih5pTEOVPkN/ckzbAKsKZyEoWQh6iYoLtKV2mElCm9YEGWGzUym40
-         55lJiX9XXILQ4e+TXNl8nb+87afKW8qlxrgXWpdeSVIZRqvcBSwtKnD7qONa9jX6HedQ
-         NFrGzvfOY37AMHJqb9JHVM0m840dO/vxclWJwOe/U7Rlm4Tz4rEAqRT//RRLs8ARqUrZ
-         19VP9b5STErXSuR94oCId3UyDqXfDrlCQGhGXzqSzDKgkg3pN2TTrYOjxgPg6hboSz52
-         zjsQ==
-X-Gm-Message-State: AFqh2kqiEDdY3f4NkiTYy6OPiit2nZdN9qaderQPQWjQRFDCA4ZoMBzx
-        hU/R5hSeGqM310lQRndKm5PfD7X1ElaVUBU0lDTrOg==
-X-Google-Smtp-Source: AMrXdXs/UQTUZsYehzlgD4gQ6IXe852cPjiEO3A1MF9nbrIPmjUcZh4AcFCB9+cvn21su2lK4v8naYLha0izmn7umQ0=
-X-Received: by 2002:a05:600c:cc5:b0:3da:b40f:c734 with SMTP id
- fk5-20020a05600c0cc500b003dab40fc734mr431632wmb.115.1673849874818; Sun, 15
- Jan 2023 22:17:54 -0800 (PST)
+        bh=HOOg7H5N+Z63OpUC/u+N5UvkbhcnIUC0AQSISCJusN4=;
+        b=ngHwoVdMQSFl+TZTSIhZJpH1ygpEmiTsy9/PKXu+BHAKTGU8TlX0+GIdRzQnU5On/P
+         zcUINi/9kObNZAL/AKZGuDIwxuY3uiy6ESaN49ylhRGCb2lT5nd1en2Zy03o9QQQjhTL
+         vv3XoJNXPxzKnHJlTaRwmej3V939MS6IZ3sOmzkebvP+9WWMRqwxNbrCL+R0SjKBZk14
+         puoIkveFwnBdvbIeg8tYwAhvtwzwOpwyqIX5W4qBvWS54oM/WLo9XAi2ijYQVX/UQ+Ge
+         wBoA4HjwTjxdIaX98A3lgPElNQGG5d5T8fmOzoUtjpA3YHdEJ+QZlpqZ2tvaFL+XIyTr
+         MjbQ==
+X-Gm-Message-State: AFqh2koQ+8723qi1sLfeMOdWriT51Uj/MskCrUN5ss+WiCwTEyzMiJeV
+        O611GIIC7iZ/0VLnecoOY0GJAM9DG6OaBwq0E6Y=
+X-Google-Smtp-Source: AMrXdXsHaNFvTcwq7IYjoURTRKB9mLY6RlfohU9xRx/ch1k9FfnZTPFe5NEyMuszQC6sWUU/1ki2k4jRifdInbi8kL8=
+X-Received: by 2002:a17:90b:1112:b0:223:dd6f:13b2 with SMTP id
+ gi18-20020a17090b111200b00223dd6f13b2mr6617650pjb.56.1673854283697; Sun, 15
+ Jan 2023 23:31:23 -0800 (PST)
 MIME-Version: 1.0
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
- <Yyy0W6CnPk7BkkCU@kernel.org> <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
- <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com> <41461A8A-74F7-4938-9E8D-9F275114E906@linux.vnet.ibm.com>
-In-Reply-To: <41461A8A-74F7-4938-9E8D-9F275114E906@linux.vnet.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 15 Jan 2023 22:17:42 -0800
-Message-ID: <CAP-5=fXWCYQSpp92L64+7Piu0sfEq+RsigNLUowgCjsT218jow@mail.gmail.com>
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+References: <20230103164359.24347-1-ysionneau@kalray.eu> <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
+ <6570d22d-ee19-f8b1-6fb4-bf8865ec4142@kalray.eu> <CAEr6+ECPFeokSULpWzYEYLROYHXNA0PtvdUchT37d4_qVA-PKQ@mail.gmail.com>
+ <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu> <CAEr6+EC0SCXLrQ2YNYyCyMK1Z9=3=ajbbLP+RKSsARGsmJO9YA@mail.gmail.com>
+In-Reply-To: <CAEr6+EC0SCXLrQ2YNYyCyMK1Z9=3=ajbbLP+RKSsARGsmJO9YA@mail.gmail.com>
+From:   Jeff Xie <xiehuan09@gmail.com>
+Date:   Mon, 16 Jan 2023 15:31:11 +0800
+Message-ID: <CAEr6+EC4e5QsodG_SpTVMBoGfW1GDAgUfBphahgrqy52vXFB+Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
+To:     Yann Sionneau <ysionneau@kalray.eu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
+        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
+        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-audit@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>,
+        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
+        Ashley Lesdalons <alesdalons@kalray.eu>,
+        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
+        Clement Leger <clement.leger@bootlin.com>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>,
+        Guillaume Thouvenin <gthouvenin@kalray.eu>,
+        Jean-Christophe Pince <jcpince@gmail.com>,
+        Jonathan Borne <jborne@kalray.eu>,
+        Jules Maselbas <jmaselbas@kalray.eu>,
+        Julian Vetter <jvetter@kalray.eu>,
+        Julien Hascoet <jhascoet@kalray.eu>,
+        Julien Villette <jvillette@kalray.eu>,
+        Louis Morhet <lmorhet@kalray.eu>,
+        Luc Michel <lmichel@kalray.eu>,
+        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
+        Marius Gligor <mgligor@kalray.eu>,
+        Samuel Jones <sjones@kalray.eu>,
+        Thomas Costis <tcostis@kalray.eu>,
+        Vincent Chardon <vincent.chardon@elsys-design.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jan 15, 2023 at 9:03 PM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
+On Mon, Jan 9, 2023 at 11:53 PM Jeff Xie <xiehuan09@gmail.com> wrote:
 >
->
->
-> > On 28-Sep-2022, at 10:24 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.com=
-> wrote:
+> On Mon, Jan 9, 2023 at 11:30 PM Yann Sionneau <ysionneau@kalray.eu> wrote=
+:
 > >
-> > Hi All,
+> > Hi Jeff,
 > >
-> > Looking for what direction we can take here.
-> > Do we want to change all tests in tools/perf/tests/shell except test_in=
-tel_pt.sh to use "bash" or go with
-> > the approach in the patch ? Please share your comments
+> > On 1/9/23 16:11, Jeff Xie wrote:
+> > > On Mon, Jan 9, 2023 at 9:21 PM Yann Sionneau <ysionneau@kalray.eu> wr=
+ote:
+> > >> Hi Jeff,
+> > >>
+> > >> On 1/7/23 07:25, Jeff Xie wrote:
+> > >>> Hi,
+> > >>>
+> > >>> On Wed, Jan 4, 2023 at 1:01 AM Yann Sionneau <ysionneau@kalray.eu> =
+wrote:
+> > >>>> [snip]
+> > >>>>
+> > >>>> A kvx toolchain can be built using:
+> > >>>> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev l=
+ibmpfr-dev
+> > >>>> $ git clone https://github.com/kalray/build-scripts
+> > >>>> $ cd build-scripts
+> > >>>> $ source last.refs
+> > >>>> $ ./build-kvx-xgcc.sh output
+> > >>> I would like to build the kvx-xgcc to compile and test the linux
+> > >>> kernel, but it reported a compile error.
+> > >>> I wonder what version of gcc you are using.
+> > >>>
+> > >>> My build environment:
+> > >>> VERSION=3D"20.04.2 LTS (Focal Fossa)"
+> > >>> gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
+> > >>>
+> > >>>
+> > >>> Compile error:
+> > >>> $ ./build-kvx-xgcc.sh output
+> > >>>
+> > >>> ../../binutils/libiberty/fibheap.c: In function =E2=80=98fibheap_re=
+place_key_data=E2=80=99:
+> > >>> ../../binutils/libiberty/fibheap.c:38:24: error: =E2=80=98LONG_MIN=
+=E2=80=99 undeclared
+> > >>> (first use in this function)
+> > >>>      38 | #define FIBHEAPKEY_MIN LONG_MIN
+> > >>>         |                        ^~~~~~~~
+> > >>> [snip]
+> > >> What SHA1 of https://github.com/kalray/build-scripts are you using?
+> > > I have executed the "source last.refs"
 > >
-> > Thanks
-> > Athira
+> > I was referring to the SHA1 of the repo itself (build-scripts).
 > >
+> > `last.refs` is a symbolic link which can point to several releases,
+> > depending on "when" you did the clone.
+> >
+> > I am asking this because we recently published new toolchains.
+> >
+> > I want to make sure which one you are trying to build.
 >
-> Hi All,
->
-> Looking for what direction we can take here.
-> Do we want to change all tests in tools/perf/tests/shell except test_inte=
-l_pt.sh to use "bash" or go with
-> the approach in the patch ? Please share your comments
->
-> Thanks
-> Athira
+> Unfortunately I deleted this repo a few minutes before you asked me ;-(
+> But I remember that I cloned this repo two days ago.
+> it should be:  last.refs -> refs/4.11.0.refs
 
-I think some of what the patch is doing is good, some of it the
-readability becomes a little harder by not being bash. I'm agnostic as
-to which approach to take for the fix.
+It should be my own environmental problem.
+I reinstalled the system once and it has been able to compile normally ;-)
 
-An aside, I noticed that we do run some tests at build time:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/lib/Mak=
-efile?h=3Dperf/core#n390
-So perhaps we can have a shellcheck build option, defaulted off but
-enabled as part of Arnaldo's regular test scripts. The shellcheck
-build option would run shellcheck to make sure that there weren't
-errors in the shell code, which it is far too easy to introduce.
+In the past few days, I have reviewed almost all the codes,
+which is very meaningful for me to learn, thank you team.
 
+
+>
+> > >> We are building our toolchain on Ubuntu 18.04 / 20.04 and 22.04 with=
+out
+> > >> issues, I don't understand why it does not work for you, although in=
+deed
+> > >> the error log you are having pops out on my search engine and seems =
+to
+> > >> be some well known issue.
+> > > Yes, there are many answers on the web, but none of them solve this p=
+roblem.
+> > >
+> > >> If the build-script does not work for you, you can still use the
+> > >> pre-built toolchains generated by the GitHub automated actions:
+> > >> https://github.com/kalray/build-scripts/releases/tag/v4.11.1 ("lates=
+t"
+> > >> means 22.04)
+> > > Thanks, this is the final solution ;-)
+> > Good to see it helped :)
+> >
+> > Regards,
+> >
+> > --
+> >
+> > Yann
+> >
+> >
+> >
+> >
+> >
+>
+>
+> --
+> Thanks,
+> JeffXie
+
+
+
+--
 Thanks,
-Ian
-
-> >> On 23-Sep-2022, at 11:54 AM, Adrian Hunter <adrian.hunter@intel.com> w=
-rote:
-> >>
-> >> On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
-> >>> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
-> >>>> The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D skip=
-s with below
-> >>>> error on some distros:
-> >>>
-> >>> I wonder if we shouldn't instead state that bash is needed?
-> >>>
-> >>> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*=
-.sh | grep ^#
-> >>> #!/bin/sh
-> >>> #!/bin/bash
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/bash
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/bash
-> >>> #!/bin/sh
-> >>> #!/bin/bash
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> #!/bin/sh
-> >>> =E2=AC=A2[acme@toolbox perf-urgent]$
-> >>>
-> >>> Opinions?
-> >>>
-> >>
-> >> Please don't change tools/perf/tests/shell/test_intel_pt.sh
-> >>
-> >> I started using shellcheck on that with the "perf test:
-> >> test_intel_pt.sh: Add per-thread test" patch set that I sent.
-> >>
-> >> FYI, if you use shellcheck on buildid.sh, it shows up issues even
-> >> after changing to bash:
-> >>
-> >> *** Before ***
-> >>
-> >> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 69:
-> >>       link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
-> >>                                      ^-------^ SC2039: In POSIX sh, st=
-ring indexing is undefined.
-> >>                                                ^-----^ SC2039: In POSI=
-X sh, string indexing is undefined.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 77:
-> >>       file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/el=
-f
-> >>                                      ^-------^ SC2039: In POSIX sh, st=
-ring indexing is undefined.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 123:
-> >>       echo "running: perf record $@"
-> >>                                  ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 124:
-> >>       ${perf} record --buildid-all -o ${data} $@ &> ${log}
-> >>                                               ^-- SC2068: Double quote=
- array expansions to avoid re-splitting elements.
-> >>                                                  ^-------^ SC2039: In =
-POSIX sh, &> is undefined.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 126:
-> >>               echo "failed: record $@"
-> >>                                    ^-- SC2145: Argument mixes string a=
-nd array. Use * or separate argument.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 131:
-> >>       check ${@: -1}
-> >>             ^------^ SC2068: Double quote array expansions to avoid re=
--splitting elements.
-> >>             ^------^ SC2039: In POSIX sh, string indexing is undefined=
-.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 158:
-> >> exit ${err}
-> >>    ^----^ SC2154: err is referenced but not assigned.
-> >>
-> >> For more information:
-> >> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansion=
-s to ...
-> >> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and ar=
-ray. ...
-> >> https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefined=
-.
-> >>
-> >> *** After ***
-> >>
-> >> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 123:
-> >>       echo "running: perf record $@"
-> >>                                  ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 124:
-> >>       ${perf} record --buildid-all -o ${data} $@ &> ${log}
-> >>                                               ^-- SC2068: Double quote=
- array expansions to avoid re-splitting elements.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 126:
-> >>               echo "failed: record $@"
-> >>                                    ^-- SC2145: Argument mixes string a=
-nd array. Use * or separate argument.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 131:
-> >>       check ${@: -1}
-> >>             ^------^ SC2068: Double quote array expansions to avoid re=
--splitting elements.
-> >>
-> >>
-> >> In tools/perf/tests/shell/buildid.sh line 158:
-> >> exit ${err}
-> >>    ^----^ SC2154: err is referenced but not assigned.
-> >>
-> >> For more information:
-> >> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansion=
-s to ...
-> >> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and ar=
-ray. ...
-> >> https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not as=
-signed.
-> >
->
+JeffXie
