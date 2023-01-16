@@ -2,110 +2,89 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87EAC46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 13:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED72C677F1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 14:05:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbjAPNjM (ORCPT
+        id S231788AbjAPOFS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 08:39:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
+        Mon, 16 Jan 2023 09:05:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbjAPNjL (ORCPT
+        with ESMTP id S231775AbjAPOEW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 08:39:11 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85BB572AC;
-        Mon, 16 Jan 2023 05:39:07 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id s22so29995597ljp.5;
-        Mon, 16 Jan 2023 05:39:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkN/Q+WE6dIkvD0+yQccgtM27O8+Zp01R8sAtPJH6pc=;
-        b=JRF+zY364R4598fq1+knN3KVWirFsYO2f10SaByTH+7vxJw7Sg1SwhpkGNv23ZF0hZ
-         /c9y6uarVBG+GLvTC03lrLdafGgns3+XFUzeDi+KM5QgVItwCMVT1fEvzQAY1seupPpI
-         rUOkxdqEhrxNg3y6dD+E2xM/liQ4dH0oFag+0wgdZazEz1pyqMu9gC2VJU//7sRBW6sF
-         Q3rHhYIO5gn9yuq31ALmhD6YtXHBCqQNKp4HSAM8PfUlRtL99aPyEuH8TOmo4wIaPlaZ
-         QrQeTdgs0fmzO3FVIMBJiLHl+RYXMOam1SMQ43w7XebQrElugWRJQ6SjqSyVXHYq2aW8
-         G5Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DkN/Q+WE6dIkvD0+yQccgtM27O8+Zp01R8sAtPJH6pc=;
-        b=uTUW3BaueJqq98sSksMZPpZ/2qBNx2IhGVppy4N77nWZnXKQTqMSlZHlAs4i6zikj3
-         kUwUdPn5V11s1EJg1MMP5kldDJ5cHb9tHc8fZxZx3sxllZglfqnB1hnp0gCmx6TeSxR6
-         teK07YB07+ormNGtPD3wD4kE5ru11MEP0+ZOByDCdP08xIOU3FBsXfRX1Xif8vZIzBbC
-         HrDqKWOyAVHSXD+pCRjixtzyrWO1+CGFuJ9oUOFpP1kj0NS+bpDLxvDYjVU1HDaHe2+a
-         A/du9Cm1qSW+pcTfqwoTRRIpi9+oWT/eN6wGb1O0M+T4mDBDKfU/WBX51DmRXq66NHZ6
-         kLKw==
-X-Gm-Message-State: AFqh2koNcVSTkyFIuAWdM2EfuqEbMFOToTppJh5g/JKB7dLQmVp6g+V5
-        lDw0/DZgXAKUjQt8VXmr+dM/29kELbYRDw==
-X-Google-Smtp-Source: AMrXdXtg3uqqUWLpxccU8Re3KuNH+Npw2b0vFtJXjNAdnDYxu0RyV3HtsxP7VMGGOAB0II54C5xAFA==
-X-Received: by 2002:a2e:8796:0:b0:28b:6f54:729a with SMTP id n22-20020a2e8796000000b0028b6f54729amr2823112lji.21.1673876345780;
-        Mon, 16 Jan 2023 05:39:05 -0800 (PST)
-Received: from localhost.localdomain ([46.147.136.0])
-        by smtp.gmail.com with ESMTPSA id d4-20020a2e9284000000b0028b92cd1fd8sm132748ljh.109.2023.01.16.05.39.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jan 2023 05:39:05 -0800 (PST)
-From:   Alexander Pantyukhin <apantykhin@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Pantyukhin <apantykhin@gmail.com>
-Subject: [PATCH] /tools/../Core.py: move tasks states outside the method
-Date:   Mon, 16 Jan 2023 18:39:02 +0500
-Message-Id: <20230116133902.4143-1-apantykhin@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 16 Jan 2023 09:04:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F3B22783;
+        Mon, 16 Jan 2023 06:03:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 161D160FD4;
+        Mon, 16 Jan 2023 14:03:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36131C433F0;
+        Mon, 16 Jan 2023 14:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673877784;
+        bh=5Cxd53xslv2jhhtxfE3tjYtYEG/w3zgEtb7F0rv8y/E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=de2BgwoKZQnPgLgB7c/9H6Y8f1rRiV13YFWFWkr2SJcrnEwWwu3NOhAgvXWcmjHRj
+         Ioi93SEaw19qgfike0JvQ3Z620SmhB7v1MjFgB64lw4pXxrbBxtY0P+lmeZErmVD62
+         ltUbF+Nkf2Rn9JHRa7en/XC8UYZAFeZAigX+wQKMlF73nq+WRk+bo7bnrthwPFqsJ9
+         NJKSUt5tuXGJgcOiaPWZFzaeZH697vUG7VjMHUx86k5Oth3ExzB3tex7bLnsBKnP8P
+         tJGEpbkLCIrY3t5JLffWY9E+FfljTVfcFP4QwZ0Xp16tP9/hNquTy/bgOVkv9uGJkq
+         iRolNbO6oJfjA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 23/53] perf/x86/msr: Add Meteor Lake support
+Date:   Mon, 16 Jan 2023 09:01:23 -0500
+Message-Id: <20230116140154.114951-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230116140154.114951-1-sashal@kernel.org>
+References: <20230116140154.114951-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The states variable is invariant for the taskState method. It could be
-brought out of the taskState.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
+[ Upstream commit 6887a4d3aede084bf08b70fbc9736c69fce05d7f ]
+
+Meteor Lake is Intel's successor to Raptor lake. PPERF and SMI_COUNT MSRs
+are also supported.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Link: https://lore.kernel.org/r/20230104201349.1451191-7-kan.liang@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../Perf-Trace-Util/lib/Perf/Trace/Core.py    | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ arch/x86/events/msr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py b/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
-index 54ace2f6bc36..ecb5087e5583 100644
---- a/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
-+++ b/tools/perf/scripts/python/Perf-Trace-Util/lib/Perf/Trace/Core.py
-@@ -85,18 +85,15 @@ def trace_flag_str(value):
-     return string
- 
- 
--def taskState(state):
--	states = {
--		0 : "R",
--		1 : "S",
--		2 : "D",
--		64: "DEAD"
--	}
--
--	if state not in states:
--		return "Unknown"
-+tasks_states = {
-+    0 : "R",
-+    1 : "S",
-+    2 : "D",
-+    64: "DEAD"
-+}
- 
--	return states[state]
-+def taskState(state):
-+    return tasks_states.get(state, "Unknown")
- 
- 
- class EventHeaders:
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index ecced3a52668..074150d28fa8 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -107,6 +107,8 @@ static bool test_intel(int idx, void *data)
+ 	case INTEL_FAM6_RAPTORLAKE:
+ 	case INTEL_FAM6_RAPTORLAKE_P:
+ 	case INTEL_FAM6_RAPTORLAKE_S:
++	case INTEL_FAM6_METEORLAKE:
++	case INTEL_FAM6_METEORLAKE_L:
+ 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+ 			return true;
+ 		break;
 -- 
-2.25.1
+2.35.1
 
