@@ -2,129 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81B0C46467
-	for <linux-perf-users@archiver.kernel.org>; Sat, 14 Jan 2023 22:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A66EC46467
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 01:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbjANWkp (ORCPT
+        id S231661AbjAPBBc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 14 Jan 2023 17:40:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35252 "EHLO
+        Sun, 15 Jan 2023 20:01:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230358AbjANWkp (ORCPT
+        with ESMTP id S231523AbjAPBB2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 14 Jan 2023 17:40:45 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F049BA5FE
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Jan 2023 14:40:43 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id z5so23101050wrt.6
-        for <linux-perf-users@vger.kernel.org>; Sat, 14 Jan 2023 14:40:43 -0800 (PST)
+        Sun, 15 Jan 2023 20:01:28 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC28A25C
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 17:01:27 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-4c2d68b6969so272990547b3.7
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 17:01:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nYgARAkWs9iZ0B/4FRwpMpPs9S0XV3huLCtOhLAUC8Y=;
-        b=Ds1XNBqgWBP3mtifRGvLh1owkfZbiDW4h5dggRxSHpmJ9J2KOfn/ZCCvW0yQYjw7t2
-         BrB0oOoRzRcraQqleGmC+Mfg3hVBklyxNEiR38vK7o35DUoOnVHsDOLoGoetmLvmvGXP
-         Dc5qNQRLBi6JMugRudC6hv7Ei7YlQCQ2jVXeYk0xl7KzfmjHgEJDK7n9gIPtgpwbreqi
-         2rEySAnXmZ5CT5v6V45TREUuqDoQe3nmLgAb7HvWyPO8LunM1+DlK8f8choZ4DB2FNcO
-         OR1PSQ4yGCrITZaDbs495MdLLHG75+cv4jb21A6M966VabvXDlr4+glAmt9yJmEdZbzQ
-         fwuA==
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=U8pQIe3b3eDqKtcKxZCuszKwm9/MxIa48mrJzbJLsxM=;
+        b=CtusI77hVYkkSpzCIWPeF+5W3whQRlq36FI4PV11OBIlbXcN+zCYP3yaWmsk7Vd1nu
+         b+ML0FY6BsokaJuKNlmYiyXq4NV8XuKYSukBibTNcz6C6JUEnfg+Y3P//VQOixX9oICk
+         jlqyXPcAodOswE8wE4Emco5exeD3Ty2q/8x8oFS1zS7OkEIAGrgxfg4QRW3vJ2DnIh7P
+         DRMnFXtt8XdFejSm7KgaloK3hEX4FNwXVynqnEIE6rwtR51hoErq0b/Ia3xyEv0Z9VJJ
+         nr5LIzQKEk7QfCEQJq2K2IYTMh/5jqks3aHIZlB2qccA54ells4wK0NTvWguNUDhWnlH
+         rcjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nYgARAkWs9iZ0B/4FRwpMpPs9S0XV3huLCtOhLAUC8Y=;
-        b=byDS7lQXnRk+AR8PTOqcqbSZNb8TlsImCdQx/TnlTtBGMlinCiNK+s/GxzQkyWfa2x
-         Z9qttY41LN8FZMwfWlyxFZ11QCBZb6+oEOMjaLqUzFpLAxpGcrBq6q03PEPUVm1unFjN
-         WMbuyokhEV9eB/v5Uv/oiwgklA+mie0KJCOvsfo8VauA6/lKSND+tWyQySyfG3+hlvSu
-         BcWAyoKs082xGD8iTcusGRpTCtRHi8q+ImNcsc1tyXpYGuJSv86RCgyD4LCyekYqLWla
-         /elpGmR1JQQj86VW7mlX8sflvCMez1JM2IKSVy68E8GrrJ2if27h7Dpprf56cL+H5frJ
-         ipyw==
-X-Gm-Message-State: AFqh2kpqKtVFr1i73kzHdzBYuEfn1ywDBuJTwJmKVh3OrMSvVT/BRdJK
-        aGlvHRDcndolUBVZdV/0N6EsG/sXQiPzK27ZwgpoKQ==
-X-Google-Smtp-Source: AMrXdXvXNemnyUUfmSCSvj4wkjdakrffiCb1jSHQJNLz46dk53LCwcZ/W7SXiBwaW6CZIwIMd2/h1+8oNAvijZD9DWo=
-X-Received: by 2002:a5d:614d:0:b0:2bc:7ed4:cd50 with SMTP id
- y13-20020a5d614d000000b002bc7ed4cd50mr964423wrt.40.1673736042305; Sat, 14 Jan
- 2023 14:40:42 -0800 (PST)
-MIME-Version: 1.0
-References: <1673601740-122788-1-git-send-email-renyu.zj@linux.alibaba.com>
- <d33086a5-233f-f591-c9da-5f1a2e8aaf54@oracle.com> <7498a6b1-01d0-0e12-82d3-c75250e09161@linux.alibaba.com>
-In-Reply-To: <7498a6b1-01d0-0e12-82d3-c75250e09161@linux.alibaba.com>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U8pQIe3b3eDqKtcKxZCuszKwm9/MxIa48mrJzbJLsxM=;
+        b=4qfWZJwVXIM4Q8FBCorUMpYV+3hBwrKre8Dsb44+rSexhAMimrtNTM/CgdqLjiopP/
+         gmwgVmpJmQApAUpOdt1AGWFJ9dTMnbRVUGF32qbO+1LXJbkGOwblJrUtJsI18oIovXDp
+         9hg65WoK7SmoDPvCI2c+dbkBZI0wlfcaXYhBDNTNznR7shXg5CkvnJiInXDDduiF2do5
+         1O8T/IA/EkIlAQTAqhzr0a8EBwcmf7w78xLvZxHNE7lA8EcWklbLR6/2X2zNyNm/2HfE
+         9Mc84aEeSNtH3RQuIcZEq9Pnwxhy9bFOi5GCP9XZhqGihN0D/gFv6rXaX3ZWRAvlXcP2
+         Fmvg==
+X-Gm-Message-State: AFqh2kqBmDYkvSPo2daqBhjUPIPZsq6+EzYk00Xht1Ba6hsbdT6VGe4t
+        a44Ny8Dy/iDZSyVTNCrPJ29xrRVqtBj3
+X-Google-Smtp-Source: AMrXdXujkx7N4RtyNWtiCeKOl5a/F0OWSBlmlkj8qlxnt3ts2/0if1/DCzxf7WApBksRDBZKcdHp8F/5Miid
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:79e:5e8e:382c:e7ce])
+ (user=irogers job=sendgmr) by 2002:a81:a513:0:b0:4b5:55fb:6cbc with SMTP id
+ u19-20020a81a513000000b004b555fb6cbcmr4181643ywg.10.1673830886744; Sun, 15
+ Jan 2023 17:01:26 -0800 (PST)
+Date:   Sun, 15 Jan 2023 17:01:12 -0800
+Message-Id: <20230116010115.490713-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+Subject: [PATCH v2 0/3]  Assume libbpf 1.0+
 From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 14 Jan 2023 14:40:30 -0800
-Message-ID: <CAP-5=fVQC=cBxN_-23KRRQGpQieMt1CA2N1UL60X9SXobV3x8w@mail.gmail.com>
-Subject: Re: [PATCH v7 0/9] Add metrics for neoverse-n2-v2
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        Andres Freund <andres@anarazel.de>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 8:32 AM Jing Zhang <renyu.zj@linux.alibaba.com> wro=
-te:
->
->
->
-> =E5=9C=A8 2023/1/13 =E4=B8=8B=E5=8D=885:59, John Garry =E5=86=99=E9=81=93=
-:
-> > On 13/01/2023 09:22, Jing Zhang wrote:
-> >> Changes since v6:
-> >> - Split patch #1 into 3 smaller patches as suggested by Ian.
-> >> - Change perf_pmu__get_slots into perf_pmu__cpu_slots_per_cycle,
-> >>    per John's suggestion;
-> >> - Return NAN instead of 0 in perf_pmu__cpu_slots_per_cycle weak
-> >>    function, per John's suggestion;
-> >> - Factor out pmu_core__find_same function, per John's suggestion.
-> >> - Link:https://urldefense.com/v3/__https://lore.kernel.org/all/1673017=
-529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com/__;!!ACWV5N9M2RV99h=
-Q!LhBq67uDCOsz1k7ZF4aQPHF0Bp8FsMr-ZNgCnBSUKF4qJTFODfnkId7lw_NXqB4qZUCpu-jbY=
-8z8LTckoqFGz2Q8bA$
-> >
-> > This looks fine. But for this code:
-> >
-> > On 13/01/2023 09:22, Jing Zhang wrote:
-> >> +double perf_pmu__cpu_slots_per_cycle(void)
-> >> +{
-> >> +    char path[PATH_MAX];
-> >> +    unsigned long long slots =3D 0;
-> >
-> > I would prefer if this returned NAN (and not 0) for when we can't find =
-a pmu or the value from ./caps/slots is zero, but I am not going to get too=
- hung up on that.
-> >
->
-> Ok, I like this way too.
->
-> > For series:
-> >
-> > Reviewed-by: John Garry <john.g.garry@oracle.com>
->
-> Thank you very much indeed!
+libbpf 1.0 was a major change in API. Perf has partially supported
+older libbpf's but an implementation may be:
+..
+       pr_err("%s: not support, update libbpf\n", __func__);
+       return -ENOTSUP;
+..
 
-Aside a naming nit in 1/9 for series:
+Rather than build a binary that would fail at runtime it is
+preferrential just to build libbpf statically and link against
+that. The static version is in the kernel tools tree and newer than
+1.0.
 
-Acked-by: Ian Rogers <irogers@google.com>
+These patches change the libbpf test to only pass when at least
+version 1.0 is installed, then remove the conditional build and
+feature logic.
 
-Thanks,
-Ian
+The issue is discussed here:
+https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@google.com/
+perf bpf:
+
+A variant of this fix was added to Linux 6.2 in:
+"perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_DYNAMIC=1"
+https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
+This change goes further in removing logic that is now no longer
+necessary.
+
+v2. Rebase now that breakage fix patch is in linus/master.
+
+Ian Rogers (3):
+  tools build: Pass libbpf feature only if libbpf 1.0+
+  perf build: Remove libbpf pre-1.0 feature tests
+  perf bpf: Remove pre libbpf 1.0 conditional logic
+
+ tools/build/feature/Makefile                  |  7 --
+ .../feature/test-libbpf-bpf_map_create.c      |  8 ---
+ .../test-libbpf-bpf_object__next_map.c        |  8 ---
+ .../test-libbpf-bpf_object__next_program.c    |  8 ---
+ .../build/feature/test-libbpf-bpf_prog_load.c |  9 ---
+ .../test-libbpf-bpf_program__set_insns.c      |  8 ---
+ .../test-libbpf-btf__load_from_kernel_by_id.c |  8 ---
+ .../build/feature/test-libbpf-btf__raw_data.c |  8 ---
+ tools/build/feature/test-libbpf.c             |  4 ++
+ tools/perf/Makefile.config                    | 39 +----------
+ tools/perf/util/bpf-event.c                   | 66 -------------------
+ tools/perf/util/bpf-loader.c                  | 18 -----
+ tools/perf/util/bpf_counter.c                 | 18 -----
+ 13 files changed, 5 insertions(+), 204 deletions(-)
+ delete mode 100644 tools/build/feature/test-libbpf-bpf_map_create.c
+ delete mode 100644 tools/build/feature/test-libbpf-bpf_object__next_map.c
+ delete mode 100644 tools/build/feature/test-libbpf-bpf_object__next_program.c
+ delete mode 100644 tools/build/feature/test-libbpf-bpf_prog_load.c
+ delete mode 100644 tools/build/feature/test-libbpf-bpf_program__set_insns.c
+ delete mode 100644 tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+ delete mode 100644 tools/build/feature/test-libbpf-btf__raw_data.c
+
+-- 
+2.39.0.314.g84b9a713c41-goog
+
