@@ -2,87 +2,138 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C90AC54EBE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 14:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE38C54EBE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 14:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232300AbjAPOLh (ORCPT
+        id S230296AbjAPOio (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 09:11:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57156 "EHLO
+        Mon, 16 Jan 2023 09:38:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232254AbjAPOKv (ORCPT
+        with ESMTP id S230239AbjAPOiT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 09:10:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B67B2B097;
-        Mon, 16 Jan 2023 06:04:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 312EAB80F91;
-        Mon, 16 Jan 2023 14:04:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A04C4339C;
-        Mon, 16 Jan 2023 14:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673877859;
-        bh=1WuCNP891T2A+p3sb0RDsrJqTKSkAYppNYlowYfi06Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uk2u4WJpAf9LQkx/Qzv0saem0t32mIhA0KeScLJ3wSRsOhx7Y8NiTKZMMq02+5CjB
-         thhCbn8GTvSeqhQ7PM8hWwREYGJ4okU9F9di/taRkFPyIsjJtJPecN/plRSs5vQWuK
-         0evRav0yFF6i1At12/g2UJvujCkL6dI++vMiwBfYPUqaINKNRNH/wAlQQ6LMLxW1ft
-         TFRMooT+zaZhPDnUyWAd0nPnO3arNfaJLm/yo0os51gTdtqDauUCfDEl1ImOu/8P0n
-         ujXGGp8VN7nCJG5k9k179+EaWTkippln8B3pSiOillrGPUwMD0hUTIJbRnGpKHhka/
-         XoqnYdtBH/FTw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 11/24] perf/x86/intel/uncore: Add Emerald Rapids
-Date:   Mon, 16 Jan 2023 09:03:46 -0500
-Message-Id: <20230116140359.115716-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230116140359.115716-1-sashal@kernel.org>
-References: <20230116140359.115716-1-sashal@kernel.org>
+        Mon, 16 Jan 2023 09:38:19 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5BAE92FCF6;
+        Mon, 16 Jan 2023 06:17:21 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F94C14;
+        Mon, 16 Jan 2023 06:17:24 -0800 (PST)
+Received: from [10.57.89.182] (unknown [10.57.89.182])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE3B43F67D;
+        Mon, 16 Jan 2023 06:16:40 -0800 (PST)
+Message-ID: <1896a73b-eb7b-7ffb-272d-115a10adeb71@arm.com>
+Date:   Mon, 16 Jan 2023 14:16:39 +0000
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v7 01/15] coresight: trace-id: Add API to dynamically
+ assign Trace ID values
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, quic_jinlmao@quicinc.com
+References: <20230116124928.5440-1-mike.leach@linaro.org>
+ <20230116124928.5440-2-mike.leach@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20230116124928.5440-2-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hi Mike
 
-[ Upstream commit 5268a2842066c227e6ccd94bac562f1e1000244f ]
+On 16/01/2023 12:49, Mike Leach wrote:
+> The existing mechanism to assign Trace ID values to sources is limited
+> and does not scale for larger multicore / multi trace source systems.
+> 
+> The API introduces functions that reserve IDs based on availabilty
+> represented by a coresight_trace_id_map structure. This records the
+> used and free IDs in a bitmap.
+> 
+> CPU bound sources such as ETMs use the coresight_trace_id_get_cpu_id
+> coresight_trace_id_put_cpu_id pair of functions. The API will record
+> the ID associated with the CPU. This ensures that the same ID will be
+> re-used while perf events are active on the CPU. The put_cpu_id function
+> will pend release of the ID until all perf cs_etm sessions are complete.
+> 
+> For backward compatibility the functions will attempt to use the same
+> CPU IDs as the legacy system would have used if these are still available.
+> 
+> Non-cpu sources, such as the STM can use coresight_trace_id_get_system_id /
+> coresight_trace_id_put_system_id.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> ---
+>   drivers/hwtracing/coresight/Makefile          |   2 +-
+>   .../hwtracing/coresight/coresight-trace-id.c  | 265 ++++++++++++++++++
+>   .../hwtracing/coresight/coresight-trace-id.h  | 156 +++++++++++
+>   include/linux/coresight-pmu.h                 |  10 +
+>   4 files changed, 432 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>   create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+> 
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index b6c4a48140ec..329a0c704b87 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -6,7 +6,7 @@ obj-$(CONFIG_CORESIGHT) += coresight.o
+>   coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
+>   		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
+>   		coresight-cfg-preload.o coresight-cfg-afdo.o \
+> -		coresight-syscfg-configfs.o
+> +		coresight-syscfg-configfs.o coresight-trace-id.o
+>   obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
+>   coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
+>   		      coresight-tmc-etr.o
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+> new file mode 100644
+> index 000000000000..9b85c376cb12
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+> @@ -0,0 +1,265 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
-From the perspective of the uncore PMU, the new Emerald Rapids is the
-same as the Sapphire Rapids. The only difference is the event list,
-which will be supported in the perf tool later.
+...
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20230106160449.3566477-4-kan.liang@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/events/intel/uncore.c | 1 +
- 1 file changed, 1 insertion(+)
+> +int coresight_trace_id_read_cpu_id(int cpu)
+> +{
+> +	return _coresight_trace_id_read_cpu_id(cpu);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
+> +
+> +int coresight_trace_id_get_system_id(void)
+> +{
+> +	return coresight_trace_id_map_get_system_id(&id_map_default);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_system_id);
+> +
+> +void coresight_trace_id_put_system_id(int id)
+> +{
+> +	coresight_trace_id_map_put_system_id(&id_map_default, id);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
+> +
+> +void coresight_trace_id_perf_start(void)
+> +{
+> +	atomic_inc(&perf_cs_etm_session_active);
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
+> +
+> +void coresight_trace_id_perf_stop(void)
+> +{
+> +	if (!atomic_dec_return(&perf_cs_etm_session_active))
+> +		coresight_trace_id_release_all_pending();
+> +}
+> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
+> +
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index c72e368dd164..7e16c590f259 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1829,6 +1829,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&adl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&adl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&spr_uncore_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&spr_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&snr_uncore_init),
- 	{},
- };
--- 
-2.35.1
+This blank new line at the end of the file generates a checkpatch
+warning for me. I have fixed it locally and applied it.
+
+> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
+
 
