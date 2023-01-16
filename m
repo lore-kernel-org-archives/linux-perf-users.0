@@ -2,229 +2,258 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF818C678D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 07:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47EFC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 11:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231872AbjAPHb2 (ORCPT
+        id S229708AbjAPL2P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 02:31:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        Mon, 16 Jan 2023 06:28:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjAPHb0 (ORCPT
+        with ESMTP id S230155AbjAPL1l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 02:31:26 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B8B46B1;
-        Sun, 15 Jan 2023 23:31:24 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id x2-20020a17090a46c200b002295ca9855aso2095115pjg.2;
-        Sun, 15 Jan 2023 23:31:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HOOg7H5N+Z63OpUC/u+N5UvkbhcnIUC0AQSISCJusN4=;
-        b=bNV/0vag1ZvLMpWwA4mawziLzieesOHeeP/uolhRj/Qp/fgoUEgKS7N3HGAUJ0hwEi
-         NNrZZvSk5PRav8zwcMHaV79OCbj1kyAbRLaXuJBlAkL2qROgelytvjsBqXyclWatD66P
-         Ugj2u4a35Qg8LB7A0QOSbJbcpeoiYZd4m2f45lFwkXfct6yFrIw9H9B2+WHzTF0gvm5o
-         AshIWCnV/8OV2oXEADbsYpB4TvdLkd4l84BBzh3/uu9idPKpYXziuWROZgnCLNhU+sJN
-         JRZO8KK8t6UrpaZbxL3OVAvsgPDH3MoIn0oJGJSBPHnnWKgt3Ul15ZHKTohvJxgO9iV7
-         E02Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HOOg7H5N+Z63OpUC/u+N5UvkbhcnIUC0AQSISCJusN4=;
-        b=ngHwoVdMQSFl+TZTSIhZJpH1ygpEmiTsy9/PKXu+BHAKTGU8TlX0+GIdRzQnU5On/P
-         zcUINi/9kObNZAL/AKZGuDIwxuY3uiy6ESaN49ylhRGCb2lT5nd1en2Zy03o9QQQjhTL
-         vv3XoJNXPxzKnHJlTaRwmej3V939MS6IZ3sOmzkebvP+9WWMRqwxNbrCL+R0SjKBZk14
-         puoIkveFwnBdvbIeg8tYwAhvtwzwOpwyqIX5W4qBvWS54oM/WLo9XAi2ijYQVX/UQ+Ge
-         wBoA4HjwTjxdIaX98A3lgPElNQGG5d5T8fmOzoUtjpA3YHdEJ+QZlpqZ2tvaFL+XIyTr
-         MjbQ==
-X-Gm-Message-State: AFqh2koQ+8723qi1sLfeMOdWriT51Uj/MskCrUN5ss+WiCwTEyzMiJeV
-        O611GIIC7iZ/0VLnecoOY0GJAM9DG6OaBwq0E6Y=
-X-Google-Smtp-Source: AMrXdXsHaNFvTcwq7IYjoURTRKB9mLY6RlfohU9xRx/ch1k9FfnZTPFe5NEyMuszQC6sWUU/1ki2k4jRifdInbi8kL8=
-X-Received: by 2002:a17:90b:1112:b0:223:dd6f:13b2 with SMTP id
- gi18-20020a17090b111200b00223dd6f13b2mr6617650pjb.56.1673854283697; Sun, 15
- Jan 2023 23:31:23 -0800 (PST)
+        Mon, 16 Jan 2023 06:27:41 -0500
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0298716AD0;
+        Mon, 16 Jan 2023 03:27:35 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VZiaqYu_1673868448;
+Received: from 30.221.147.208(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZiaqYu_1673868448)
+          by smtp.aliyun-inc.com;
+          Mon, 16 Jan 2023 19:27:30 +0800
+Message-ID: <7cd44f07-b0a4-a663-8dcf-0d47000b57ea@linux.alibaba.com>
+Date:   Mon, 16 Jan 2023 19:27:28 +0800
 MIME-Version: 1.0
-References: <20230103164359.24347-1-ysionneau@kalray.eu> <CAEr6+ECRh_9App18zmcS6FUR81YYhR=n4kGdeZAtQBsdMB55_A@mail.gmail.com>
- <6570d22d-ee19-f8b1-6fb4-bf8865ec4142@kalray.eu> <CAEr6+ECPFeokSULpWzYEYLROYHXNA0PtvdUchT37d4_qVA-PKQ@mail.gmail.com>
- <bccad498-3af2-08f1-8264-cf7b438732d3@kalray.eu> <CAEr6+EC0SCXLrQ2YNYyCyMK1Z9=3=ajbbLP+RKSsARGsmJO9YA@mail.gmail.com>
-In-Reply-To: <CAEr6+EC0SCXLrQ2YNYyCyMK1Z9=3=ajbbLP+RKSsARGsmJO9YA@mail.gmail.com>
-From:   Jeff Xie <xiehuan09@gmail.com>
-Date:   Mon, 16 Jan 2023 15:31:11 +0800
-Message-ID: <CAEr6+EC4e5QsodG_SpTVMBoGfW1GDAgUfBphahgrqy52vXFB+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/25] Upstream kvx Linux port
-To:     Yann Sionneau <ysionneau@kalray.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>, bpf@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
-        Eric Paris <eparis@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Jason Baron <jbaron@akamai.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-audit@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v7 1/9] perf pmu: Add #slots literal support for arm64
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>,
-        Will Deacon <will@kernel.org>, Alex Michon <amichon@kalray.eu>,
-        Ashley Lesdalons <alesdalons@kalray.eu>,
-        Benjamin Mugnier <mugnier.benjamin@gmail.com>,
-        Clement Leger <clement.leger@bootlin.com>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>,
-        Guillaume Thouvenin <gthouvenin@kalray.eu>,
-        Jean-Christophe Pince <jcpince@gmail.com>,
-        Jonathan Borne <jborne@kalray.eu>,
-        Jules Maselbas <jmaselbas@kalray.eu>,
-        Julian Vetter <jvetter@kalray.eu>,
-        Julien Hascoet <jhascoet@kalray.eu>,
-        Julien Villette <jvillette@kalray.eu>,
-        Louis Morhet <lmorhet@kalray.eu>,
-        Luc Michel <lmichel@kalray.eu>,
-        =?UTF-8?Q?Marc_Poulhi=C3=A8s?= <dkm@kataplop.net>,
-        Marius Gligor <mgligor@kalray.eu>,
-        Samuel Jones <sjones@kalray.eu>,
-        Thomas Costis <tcostis@kalray.eu>,
-        Vincent Chardon <vincent.chardon@elsys-design.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1673601740-122788-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1673601740-122788-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAP-5=fWnOGD7CHYeq0Uino4eHte2WP5Pxz9t4YOtvgxrq-_muA@mail.gmail.com>
+ <399e8b83-ee7b-1b24-bd6b-74d274fcda46@linux.alibaba.com>
+ <CAP-5=fVMA2gkXAAZ8AyhtF4asEZi-p0uxHC-zPyOjjNaEdkS7A@mail.gmail.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <CAP-5=fVMA2gkXAAZ8AyhtF4asEZi-p0uxHC-zPyOjjNaEdkS7A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 11:53 PM Jeff Xie <xiehuan09@gmail.com> wrote:
->
-> On Mon, Jan 9, 2023 at 11:30 PM Yann Sionneau <ysionneau@kalray.eu> wrote=
-:
-> >
-> > Hi Jeff,
-> >
-> > On 1/9/23 16:11, Jeff Xie wrote:
-> > > On Mon, Jan 9, 2023 at 9:21 PM Yann Sionneau <ysionneau@kalray.eu> wr=
-ote:
-> > >> Hi Jeff,
-> > >>
-> > >> On 1/7/23 07:25, Jeff Xie wrote:
-> > >>> Hi,
-> > >>>
-> > >>> On Wed, Jan 4, 2023 at 1:01 AM Yann Sionneau <ysionneau@kalray.eu> =
-wrote:
-> > >>>> [snip]
-> > >>>>
-> > >>>> A kvx toolchain can be built using:
-> > >>>> # install dependencies: texinfo bison flex libgmp-dev libmpc-dev l=
-ibmpfr-dev
-> > >>>> $ git clone https://github.com/kalray/build-scripts
-> > >>>> $ cd build-scripts
-> > >>>> $ source last.refs
-> > >>>> $ ./build-kvx-xgcc.sh output
-> > >>> I would like to build the kvx-xgcc to compile and test the linux
-> > >>> kernel, but it reported a compile error.
-> > >>> I wonder what version of gcc you are using.
-> > >>>
-> > >>> My build environment:
-> > >>> VERSION=3D"20.04.2 LTS (Focal Fossa)"
-> > >>> gcc version 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)
-> > >>>
-> > >>>
-> > >>> Compile error:
-> > >>> $ ./build-kvx-xgcc.sh output
-> > >>>
-> > >>> ../../binutils/libiberty/fibheap.c: In function =E2=80=98fibheap_re=
-place_key_data=E2=80=99:
-> > >>> ../../binutils/libiberty/fibheap.c:38:24: error: =E2=80=98LONG_MIN=
-=E2=80=99 undeclared
-> > >>> (first use in this function)
-> > >>>      38 | #define FIBHEAPKEY_MIN LONG_MIN
-> > >>>         |                        ^~~~~~~~
-> > >>> [snip]
-> > >> What SHA1 of https://github.com/kalray/build-scripts are you using?
-> > > I have executed the "source last.refs"
-> >
-> > I was referring to the SHA1 of the repo itself (build-scripts).
-> >
-> > `last.refs` is a symbolic link which can point to several releases,
-> > depending on "when" you did the clone.
-> >
-> > I am asking this because we recently published new toolchains.
-> >
-> > I want to make sure which one you are trying to build.
->
-> Unfortunately I deleted this repo a few minutes before you asked me ;-(
-> But I remember that I cloned this repo two days ago.
-> it should be:  last.refs -> refs/4.11.0.refs
-
-It should be my own environmental problem.
-I reinstalled the system once and it has been able to compile normally ;-)
-
-In the past few days, I have reviewed almost all the codes,
-which is very meaningful for me to learn, thank you team.
 
 
->
-> > >> We are building our toolchain on Ubuntu 18.04 / 20.04 and 22.04 with=
-out
-> > >> issues, I don't understand why it does not work for you, although in=
-deed
-> > >> the error log you are having pops out on my search engine and seems =
-to
-> > >> be some well known issue.
-> > > Yes, there are many answers on the web, but none of them solve this p=
-roblem.
-> > >
-> > >> If the build-script does not work for you, you can still use the
-> > >> pre-built toolchains generated by the GitHub automated actions:
-> > >> https://github.com/kalray/build-scripts/releases/tag/v4.11.1 ("lates=
-t"
-> > >> means 22.04)
-> > > Thanks, this is the final solution ;-)
-> > Good to see it helped :)
-> >
-> > Regards,
-> >
-> > --
-> >
-> > Yann
-> >
-> >
-> >
-> >
-> >
->
->
-> --
+在 2023/1/16 下午1:59, Ian Rogers 写道:
+> On Sun, Jan 15, 2023 at 6:58 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>
+>> 在 2023/1/15 上午6:15, Ian Rogers 写道:
+>>> On Fri, Jan 13, 2023 at 1:22 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>>>
+>>>> The slots in each architecture may be different, so add #slots literal
+>>>> to obtain the slots of different architectures, and the #slots can be
+>>>> applied in the metric. Currently, The #slots just support for arm64,
+>>>> and other architectures will return NAN.
+>>>>
+>>>> On arm64, the value of slots is from the register PMMIR_EL1.SLOT, which
+>>>> I can read in /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots.
+>>>> PMMIR_EL1.SLOT might read as zero if the PMU version is lower than
+>>>> ID_AA64DFR0_EL1_PMUVer_V3P4 or the STALL_SLOT event is not implemented.
+>>>>
+>>>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>>>> ---
+>>>>  tools/perf/arch/arm64/util/pmu.c | 34 ++++++++++++++++++++++++++++++++--
+>>>>  tools/perf/util/expr.c           |  5 +++++
+>>>>  tools/perf/util/pmu.c            |  6 ++++++
+>>>>  tools/perf/util/pmu.h            |  1 +
+>>>>  4 files changed, 44 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+>>>> index 477e513..5f8667b 100644
+>>>> --- a/tools/perf/arch/arm64/util/pmu.c
+>>>> +++ b/tools/perf/arch/arm64/util/pmu.c
+>>>> @@ -3,8 +3,9 @@
+>>>>  #include <internal/cpumap.h>
+>>>>  #include "../../../util/cpumap.h"
+>>>>  #include "../../../util/pmu.h"
+>>>> +#include <api/fs/fs.h>
+>>>>
+>>>> -const struct pmu_events_table *pmu_events_table__find(void)
+>>>> +static struct perf_pmu *pmu_core__find_same(void)
+>>>
+>>> I'm not sure "find_same" is the best name here. I suspect it should be
+>>> "find_core_pmu" which would agree with is_arm_pmu_core. Unfortunately
+>>> "core" has become an overloaded term sometimes used interchangeably
+>>> with CPU, hyperthread or SMT thread, it was a model name for Intel and
+>>> it is used to distinguish a set of SMT threads running together from a
+>>> single one. Anyway, for consistency I think perf_pmu__find_core_pmu is
+>>> the most appropriate name (or pmu__find_core_pmu, I'm not sure why we
+>>> get the extra perf_ prefix sometimes, in general that indicates the
+>>> functionality is in libperf).
+>>>
+>>
+>> The reason for using "pmu_core__find_same" before is to indicate that we're
+>> only dealing with homogeneous cores. And in the tools/perf/util/pmu.c file,
+>> most of the static functions have "pmu_" prefix, maybe we can use
+>> "pmu_find_same_core_pmu"? Ian, John, what do you think?
+> 
+> I wouldn't necessarily worry about hybrid given #slots is currently
+> ARM specific. For hybrid we'd need to know the CPU for the metric. We
+> do have the list of CPUs (really hyper/SMT threads) that were
+> requested for the metric:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/expr.h?h=perf/core#n9
+> We use it to compute the #core_wide literal. We need the value early
+> before events are created, hence the string format. You could search
+> pmus looking for a PMU that isn't uncore and has matching CPUs, but
+> AMD has multiple core/hardware PMUs (hence Ravi's most recent work)
+> and so I suspect we'd need to extend PMU to make this work. We've
+> solved a similar problem to this with the source_count metric
+> function, that returns a number of aliased events. We could do
+> something like:
+> slots(INST_RETIRED.MACRO_FUSED)
+> and then from the event get the PMU, from the PMU get the CPUs, from a
+> CPU get the slots. In that case it may just be cleaner to pass the PMU
+> name to the slots function, so:
+> slots(cpu_core) or slots(cpu_atom)
+> But the parser wouldn't understand that cpu_core or cpu_atom were PMU
+> names and would try to handle them as events or metric references.
+> 
+> Again, I think ignoring the hybrid case is fine in this case. Using
+> "same" in the function name to imply "not hybrid" I don't think works,
+> so I think something like pmu__find_core_pmu is best. You could have a
+> comment and also a:
+> assert(!perf_pmu__is_hybrid(pmu->name));
+> Ultimately I'd like to get rid of all notions of hybrid and just pair
+> events with a PMU. I recently cleaned this up in builtin-list.c.
+> 
+
+Ok, you are right, I follow your suggestion and use pmu__find_core_pmu.
+
+I think “if (pmu->cpus->nr != cpu__max_cpu().cpu)” in the original code
+and “assert(!perf_pmu__is_hybrid(pmu->name))” have the same effect, so
+I will not change it.
+
 > Thanks,
-> JeffXie
-
-
-
---
-Thanks,
-JeffXie
+> Ian
+> 
+>> Thanks,
+>> Jing
+>>
+>>> Aside from that, lgtm. Thanks,
+>>> Ian
+>>>
+>>>>  {
+>>>>         struct perf_pmu *pmu = NULL;
+>>>>
+>>>> @@ -19,8 +20,37 @@ const struct pmu_events_table *pmu_events_table__find(void)
+>>>>                 if (pmu->cpus->nr != cpu__max_cpu().cpu)
+>>>>                         return NULL;
+>>>>
+>>>> -               return perf_pmu__find_table(pmu);
+>>>> +               return pmu;
+>>>>         }
+>>>>
+>>>>         return NULL;
+>>>>  }
+>>>> +
+>>>> +const struct pmu_events_table *pmu_events_table__find(void)
+>>>> +{
+>>>> +       struct perf_pmu *pmu = pmu_core__find_same();
+>>>> +
+>>>> +       if (pmu)
+>>>> +               return perf_pmu__find_table(pmu);
+>>>> +
+>>>> +       return NULL;
+>>>> +}
+>>>> +
+>>>> +double perf_pmu__cpu_slots_per_cycle(void)
+>>>> +{
+>>>> +       char path[PATH_MAX];
+>>>> +       unsigned long long slots = 0;
+>>>> +       struct perf_pmu *pmu = pmu_core__find_same();
+>>>> +
+>>>> +       if (pmu) {
+>>>> +               scnprintf(path, PATH_MAX,
+>>>> +                       EVENT_SOURCE_DEVICE_PATH "%s/caps/slots", pmu->name);
+>>>> +               /*
+>>>> +                * The value of slots is not greater than 32 bits, but sysfs__read_int
+>>>> +                * can't read value with 0x prefix, so use sysfs__read_ull instead.
+>>>> +                */
+>>>> +               sysfs__read_ull(path, &slots);
+>>>> +       }
+>>>> +
+>>>> +       return (double)slots;
+>>>> +}
+>>>> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+>>>> index 00dcde3..9d3076a 100644
+>>>> --- a/tools/perf/util/expr.c
+>>>> +++ b/tools/perf/util/expr.c
+>>>> @@ -19,6 +19,7 @@
+>>>>  #include <linux/zalloc.h>
+>>>>  #include <ctype.h>
+>>>>  #include <math.h>
+>>>> +#include "pmu.h"
+>>>>
+>>>>  #ifdef PARSER_DEBUG
+>>>>  extern int expr_debug;
+>>>> @@ -448,6 +449,10 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
+>>>>                 result = topology->core_cpus_lists;
+>>>>                 goto out;
+>>>>         }
+>>>> +       if (!strcmp("#slots", literal)) {
+>>>> +               result = perf_pmu__cpu_slots_per_cycle() ?: NAN;
+>>>> +               goto out;
+>>>> +       }
+>>>>
+>>>>         pr_err("Unrecognized literal '%s'", literal);
+>>>>  out:
+>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>>> index 2bdeb89..cbb4fbf 100644
+>>>> --- a/tools/perf/util/pmu.c
+>>>> +++ b/tools/perf/util/pmu.c
+>>>> @@ -19,6 +19,7 @@
+>>>>  #include <regex.h>
+>>>>  #include <perf/cpumap.h>
+>>>>  #include <fnmatch.h>
+>>>> +#include <math.h>
+>>>>  #include "debug.h"
+>>>>  #include "evsel.h"
+>>>>  #include "pmu.h"
+>>>> @@ -1993,3 +1994,8 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+>>>>         *ucpus_ptr = unmatched_cpus;
+>>>>         return 0;
+>>>>  }
+>>>> +
+>>>> +double __weak perf_pmu__cpu_slots_per_cycle(void)
+>>>> +{
+>>>> +       return NAN;
+>>>> +}
+>>>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>>>> index 69ca000..fd414ba 100644
+>>>> --- a/tools/perf/util/pmu.h
+>>>> +++ b/tools/perf/util/pmu.h
+>>>> @@ -259,4 +259,5 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+>>>>
+>>>>  char *pmu_find_real_name(const char *name);
+>>>>  char *pmu_find_alias_name(const char *name);
+>>>> +double perf_pmu__cpu_slots_per_cycle(void);
+>>>>  #endif /* __PMU_H */
+>>>> --
+>>>> 1.8.3.1
+>>>>
