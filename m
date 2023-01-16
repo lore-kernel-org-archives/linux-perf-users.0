@@ -2,151 +2,203 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04758C46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 04:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 385DDC46467
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 05:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbjAPEVs (ORCPT
+        id S229541AbjAPFCK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 15 Jan 2023 23:21:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
+        Mon, 16 Jan 2023 00:02:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231660AbjAPEVr (ORCPT
+        with ESMTP id S231446AbjAPFCG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 15 Jan 2023 23:21:47 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79C76EA8;
-        Sun, 15 Jan 2023 20:21:45 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gamME+x7gebsJfkm7gW8jA6COx7Xd9i0Qw8d9AcbeSlNMPCRe6OkQfOGDsmP6YSBFHtgXPMdFcHirWQl9J5uUpARSwYkrntaSSxwloToPIRMCXvZjac7GxI6n4e0IeOoijbjK9vGhMsF8n6SNsH8JzMiPUbv1QqEosHt/PVhXlUO7yzgjjCFtDHCoYPpYOz7gbS22XMfdZ54vYO45fiZvMU+dnVsVXM1/i+feNvl+Z+IDHfGwNK5Bqrjx9Okzuu88WGv4tN9HV6xWkPtTaLu+8NZrC/sAPo6DZqGZp7AfH42ITQeSd88kIE8GWDBkZxwtZvvzH0wbyLRbJjdSwTEjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FuH3PcsgZH+CZmjuGKewGk3kJHTL1KDq7PfOI0Ox8mU=;
- b=TazqxA6lQZ6dBlLiuQmfQcxEcTLqqYCM4cR/p7XH1C3dfQV5OQQOClwZhg57DtlUjEeZKOZtutjIeuislLmL9r+v0gnmM3VLuZi9LkYi95b9GAUCHr5Pi9JXJzaLpMhanHGghTp4Eyos9gwwJT08oLgf5Wj3X8vefJg94O1hHXIjsAihECDIfNpNka/Qr8HYH8C/u2zR9pWU/3MvIbx+1cK4HNyU2Ni51kFiuH2lZVlpU3Fc6wwWKy/O9PBg3BBtDTRjKBgRJHljgUQt49/11SJ0/gvDEJHUtWTY3G2DkXMogAAL5Wk+Dht5wt9V7ExVKwrR4UW8Gechf0NOBT2NEg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FuH3PcsgZH+CZmjuGKewGk3kJHTL1KDq7PfOI0Ox8mU=;
- b=WSWpKGwWRpOGsr/xh35XTFatuYQTVUTtopM/uHDdVbFvna0uNXtI0WvC97Ae0jQUJh/ZOl/OQQvy/6lTBrYIR1deoFwfZKtYpdnMSVvSiaIaRtylTvAwtql1trDu/LZTbfC2gNnthr6q0sGAXyxY17VLIb1I3FyNFS57XiVbNTk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CH0PR12MB5386.namprd12.prod.outlook.com (2603:10b6:610:d5::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.23; Mon, 16 Jan
- 2023 04:21:43 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::a0e2:652:d7bd:58f]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::a0e2:652:d7bd:58f%4]) with mapi id 15.20.5986.018; Mon, 16 Jan 2023
- 04:21:43 +0000
-Message-ID: <98570bf8-dd78-3d9c-61da-9ac6b3502fd5@amd.com>
-Date:   Mon, 16 Jan 2023 09:51:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RFC 0/4] perf tool: Fix non-".text" symbol resolution for kernel
- modules
-Content-Language: en-US
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        kan.liang@linux.intel.com, peterz@infradead.org,
-        mark.rutland@arm.com, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, james.clark@arm.com,
-        german.gomez@arm.com, leo.yan@linaro.org, adrian.hunter@intel.com,
-        alexey.v.bayduraev@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230110055859.685-1-ravi.bangoria@amd.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20230110055859.685-1-ravi.bangoria@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:99::19) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Mon, 16 Jan 2023 00:02:06 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B074270A
+        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 21:02:04 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30G2c0al010325;
+        Mon, 16 Jan 2023 05:01:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=vFP/ofaQdyiHcfaJkBrXVx2CsKRiOZMHTG2Jh6PjjMs=;
+ b=InAVUucnnQmnXPhH8QGz5hENBCYV8vEL1io/9WEICL/6N7WwulOeWOhQxhjc69dug2O0
+ riAp9WejvDuaduhubI7qm2qLrZ6Aqj49Rdws/h14yNLxpIvp7YkJ7huB+2lQf0Zc6Igp
+ CRcsraoh7cLGEzNVcTphY9eSCIX5kEKoT9RhYkPmxtRxuFpzxJsdlwtpBQ1kjiP8DsyW
+ vss475m/o3Gtx3AY0gOh0+Jv8WC0Dtc/CA4PurXvR4DvTEAU5N5lKnro8S4fXo60WKfQ
+ ge9/6npfUiln3cGrryKRI8VAUDnOsHXHMZKvtaW1JkfnMQVySL0o/wywRy0rBiYqowbS cQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4ed2fdbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Jan 2023 05:01:42 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30G4wBYS025752;
+        Mon, 16 Jan 2023 05:01:41 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4ed2fdb9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Jan 2023 05:01:41 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30G3KHNT009464;
+        Mon, 16 Jan 2023 05:01:39 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3n3m16hd08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Jan 2023 05:01:39 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30G51a2K23658776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Jan 2023 05:01:36 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED02B20040;
+        Mon, 16 Jan 2023 05:01:35 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A2D220043;
+        Mon, 16 Jan 2023 05:01:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.122.245])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 16 Jan 2023 05:01:33 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org
+Cc:     ak@linux.intel.com, namhyung@kernel.org, irogers@google.com,
+        james.clark@arm.com, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.ibm.com
+Subject: [PATCH 1/2] tools/perf: Fix the file mode with copyfile while adding file to build-id cache
+Date:   Mon, 16 Jan 2023 10:31:30 +0530
+Message-Id: <20230116050131.17221-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CH0PR12MB5386:EE_
-X-MS-Office365-Filtering-Correlation-Id: 154ac5e2-ae4c-4b68-f11b-08daf7792c00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 04SjXobykxJORNLurpVGLyAcBK6AesC+rvC7+zq5q3SKUeICxrypfkdd9nS9iLN7sTPRFtT4RiJt9GPD8+hf8HcbOMQkWcxcXFxDNqfgzaQvAtRb1MqLIuS0FPASOejfbyEfxiR09C5yqO9w74x95phzu9FWjO51glx8/UGlZB4HfkeoKZtkY94WnhRKJDy4TDFw7pD//T7r9oz/L2beBuzT+qNzCPQJhyZYQws89ark1sBZj6wlZu7H1k1QSBYVchcNSwyUZE3IwuG9XsOjNpdx3EEZn7IySP2xs+lsrk/qIpSPGYScAxi4nPgAomOP08LVMAaxuv62SHNl/sgrQ7d/IkCtDt8xxah0iyB69TdcJto8J4DFeOPKJVwO/BJlxmpWSQKLZJfO14aMyWS7yHTHeAmODNhtTXn1gW3mh1kePELY9DtPVo57fd9orjSpW5KEa2TGItcLSTRtI+w5sjigMF4TT7hQUQhUjPPR8dkpaG9iLLgs8E1mwCga8GQ001e6wK1Ud5AVOhEKCCKgSDivpyXWfU5cxGqRi4CdI3esLny2ncwlJbBLpJjzQAX74Zogujjw+rLM9xa9mqOs+MDk5Rsm8Yjx8LjXpMMT/V6b0qigzFjVCM6f0Wy5Q9sB0UkLvG9W5JoJyJRYmjMs/swuELR4h7ntgRfYsQiXLmJU4unXWMA38y8dEVH9SLkxJuGbB1O7YnEz9hvLwQ2g7eGHY++hiQ5mPzOPqloGdSI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(366004)(136003)(376002)(396003)(451199015)(86362001)(8676002)(38100700002)(31696002)(4744005)(5660300002)(7416002)(2906002)(8936002)(44832011)(6916009)(66946007)(66476007)(4326008)(66556008)(41300700001)(6512007)(6506007)(186003)(26005)(2616005)(53546011)(6666004)(316002)(478600001)(6486002)(31686004)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZlJjbVN2VU0xWk5raU5IMUlSZE9wYnV4MERaYmovUEJlQVhWZ294cWFuZjBv?=
- =?utf-8?B?RTg3QjlPbHZyVHcvbExqZUtjWCtNKzR6QmxVVVZROE83SWJMY3RjQ0dlbjNz?=
- =?utf-8?B?Y1ZFUWpUcDgyOHZISFJsM2NSamFHM3JaSmcrOTBNb3RZRmJERlBIek9TY2ZE?=
- =?utf-8?B?Y0FFQSs4WG1aSVZBM2grOTBsYlRKQmZGKzE1dHFvSkh0R0JIYWgwK3paamlL?=
- =?utf-8?B?ZExJMm9EL2RHVWc5cHY4aDhuUG51MmNhV25pUUwyRWFLVTRPc2FadnE5ajhy?=
- =?utf-8?B?VlpsV3hQV3VsbXVPWmcvbk41T2pmdkZmS2ZYeE4xSFRERmxaejdlM1JjbzRl?=
- =?utf-8?B?a2Rqbk4wMTV4TXdqOWJGYU4yVE1KWTVkZzkrdDlIVnY1WnVPaUFBa1FDeVdr?=
- =?utf-8?B?Nnh3emNHWS92U1VZVnVMekFORzhwaVpJdFNQYXYzVnhNdWhUYnpoc1FxRERF?=
- =?utf-8?B?a1A0OU9jMWUxam9uYXlCYVI5dlQvS1Z5NHhNdUg0NUhVd0x2UTZNcVFodFRY?=
- =?utf-8?B?RTFWQUorbEg4VmNxc2VuVlRVM0tKZTdmUlJZN2RXWGdDNWdRZXVCTVE4TWxn?=
- =?utf-8?B?S29qdjA5RW5oMHg4aUR4RjBWdWNGNXlXdEdaYW5wMTFOYUlTK2hQeFBwaCtF?=
- =?utf-8?B?NWhoUmxQRTJLWHpFTHlhdW8xVHdlMVZsZHVlU2EreW1uVFRSd0RTRURaS20x?=
- =?utf-8?B?aG52dVVhdWFsUStmR0FaVzFXU1BORDhnWDF5dUhrTjY3UTBORERjNG9BTlBO?=
- =?utf-8?B?SzQ0U1psK1JNcXpMMXY3UFZlajF4djFycjB4V0ViQ2YzanVTelRvbENrQTE4?=
- =?utf-8?B?cGp6UFZVbzNYK1hWeXppUEt5dXlOd2prOE1mcTQzdHZpalJicGtRZU9YeDBT?=
- =?utf-8?B?RXRRTm4yZDdMUDBpTnF4a0cwcTJic05JSnZ0dm9mZFFndEhXOGVVL0piellm?=
- =?utf-8?B?bm1wZmQzUlBTeGtvWjNhdGorUlBRbDFyQzdlR0JsTnlENTRrbktUTTRFUlRC?=
- =?utf-8?B?K0o2N3g0cmE5bFdvSWM0YUp0UHBZWGM2SlJSbjhzbWN6VUI3aHhpSEJyV1FN?=
- =?utf-8?B?ZDBuZXZxMWhuUW5CazJvcGxPQ1VVK3B3VHpSR2N2VHlSNTNkL3d4dWhleTN0?=
- =?utf-8?B?V0h2d1kwSjY4dWpueHlaZlY0OU5kV2dYMWRsUUZESXE1SzJJaVg4VWx4SThM?=
- =?utf-8?B?Y3VmUTdlQ1dPMmlFMDZLeFBJWXVtb2t1aSs5amFHV2Z5b1VkVHNYemhSOTJ1?=
- =?utf-8?B?SjlSR0kwNFlkVXkySDV4MDIyZDlqTStBb1RsSTlOY1NRbW5XQk9Ham1GTGVw?=
- =?utf-8?B?bGkxYlZuMHZDK0VNcjk4SWVOUllxZWovV0dIQkdkSXRYQ2ZLbGpOVmdobHBj?=
- =?utf-8?B?THZ1TnlnOEFXTURmQmY1SStvbGg3cHZibExGOWc2czRnMmsyak55ZUZ5NGJS?=
- =?utf-8?B?TTJoNGI0NUJISDJ1NVc2MXhMOUk5aG5uYXBYaDRSMUh1WjNTZDFHcm1WVmpH?=
- =?utf-8?B?alJRRVdUU1FRUm9kTytvV0JkKzg2UW9BeGlyTldlOU9PZVNyQlFyV0Vaekxr?=
- =?utf-8?B?ZmFpeUpTakwyZE1selZHWGc4a0J6SGpJQVFZekd3TjA1U2p5QU1BZkhtMFgw?=
- =?utf-8?B?c2p1bENDV053TloyTG1DdXFvdFBiT29YeCs0QmhDeWlTdWlpL0dTdGtZbFRD?=
- =?utf-8?B?M0diOHh1Qkx3MUllZ2RMZjdVRDYra2VVbHdscDlZTkJVRElXZytOK1ZpMFZK?=
- =?utf-8?B?cy9iRUhRa0J5MXgyWFRSTjhUWktmSXZOTThDd0t4WC9mWng4QklvTzUrNXYy?=
- =?utf-8?B?dGJrb3JZQzFKeGxVTno4RWwvdW1WWXNnbzJHbHZGcWN1ZWZSU1Rkd0VONWEr?=
- =?utf-8?B?OW5NS3daT2R4TDlJdnlaT2s2TDFWajVwRThmWkRZeGlqVXdCTTJSSjBFakI1?=
- =?utf-8?B?ekZwR3YveThTdGd5Zll0MjZPV0liT0VPM3VZbTFqc0I3QlI2bzIyOEtCM2lF?=
- =?utf-8?B?SkVzZU9kMmU0dWJyay96bG5nOXlsWTI5NXZsWGFNTWFXb2xDUnZmRDcvdTJV?=
- =?utf-8?B?RzdjNFNac3ZLbW5FUlR4Z2s4eUVzSlM2M0pzeDBkUnZ6aENoRzBjWEZmbDNG?=
- =?utf-8?Q?afYy+s/dlkPY23NpVfXXX9zRl?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 154ac5e2-ae4c-4b68-f11b-08daf7792c00
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2023 04:21:43.1927
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5PXVoK+2E7ZpuToL1hRe5c34owInQD7qwA4u1FfKxTlht7YMPVsQxBKLmEcJlG01Ui0/vStdORPwxO2DfJjqDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5386
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: gBAPYv_OXbpIQwAIMiOHGeE8EdTBm314
+X-Proofpoint-ORIG-GUID: kzRJrxQUX8P7GjwRwSXx2HS9DS83obRt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-16_02,2023-01-13_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 mlxlogscore=999 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301160033
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi all,
+The test "build id cache operations" fails on powerpc
+As below:
 
-On 10-Jan-23 11:28 AM, Ravi Bangoria wrote:
-> Kernel module elf contains executable code in non-".text" sections as
-> well, for ex: ".noinstr.text". Plus, kernel module's memory layout
-> differs from it's binary layout because .ko elf does not contain
-> program header table.
-> 
-> Perf tries to solve it by creating special maps for allocated (SHF_ALLOC)
-> elf sections, but perf uses elf addresses for map address range and thus
-> these special maps remains unused because no real ip falls into their
-> address range.
-> 
-> Solve this by preparing section specific special maps using addresses
-> provided by sysfs /sys/module/.../sections/. Also save these details in
-> PERF_RECORD_KMOD_SEC_MAP format in perf.data which can be consumed at
-> perf-report time.
+	Adding 5a0fd882b53084224ba47b624c55a469 ./tests/shell/../pe-file.exe: Ok
+	build id: 5a0fd882b53084224ba47b624c55a469
+	link: /tmp/perf.debug.ZTu/.build-id/5a/0fd882b53084224ba47b624c55a469
+	file: /tmp/perf.debug.ZTu/.build-id/5a/../../root/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf
+	failed: file /tmp/perf.debug.ZTu/.build-id/5a/../../root/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf does not exist
+	test child finished with -1
+	---- end ----
+	build id cache operations: FAILED!
 
-Do you guys feel this is worth to fix and I shall continue? Or --kcore /
---kallsyms workarounds are sufficient?
+The failing test is when trying to add pe-file.exe to
+build id cache.
 
-Thanks,
-Ravi
+Perf buildid-cache can be used to add/remove/manage
+files from the build-id cache. "-a" option is used to
+add a file to the build-id cache.
+
+Simple command to do so for a PE exe file:
+ # ls -ltr tests/pe-file.exe
+ -rw-r--r--. 1 root root 75595 Jan 10 23:35 tests/pe-file.exe
+ The file is in home directory.
+
+ # mkdir  /tmp/perf.debug.TeY1
+ # perf --buildid-dir /tmp/perf.debug.TeY1 buildid-cache -v
+   -a tests/pe-file.exe
+
+The above will create ".build-id" folder in build id
+directory, which is /tmp/perf.debug.TeY1. Also adds file
+to this folder under build id. Example:
+
+ # ls -ltr /tmp/perf.debug.TeY1/.build-id/5a/0fd882b53084224ba47b624c55a469/
+ total 76
+ -rw-r--r--. 1 root root     0 Jan 11 00:38 probes
+ -rwxr-xr-x. 1 root root 75595 Jan 11 00:38 elf
+
+We can see in the results that file mode for original
+file and file in build id directory is different. ie,
+build id file has executable permission whereas original
+file doesn’t have.
+
+The code path and function ( build_id_cache__add ) to
+add file to cache is in "util/build-id.c". In
+build_id_cache__add() function, it first attempts to link
+the original file to destination cache folder. If linking
+the file fails ( which can happen if the destination and
+source is on a different mount points ), it will copy the
+file to destination. Here copyfile() routine explicitly uses
+mode as "755" and hence file in the destination will have
+executable permission.
+
+Code snippet:
+
+ if (link(realname, filename) && errno != EEXIST &&
+                               copyfile(name, filename))
+
+Strace logs:
+
+	172285 link("/home/<user_name>/linux/tools/perf/tests/pe-file.exe", "/tmp/perf.debug.TeY1/home/<user_name>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf") = -1 EXDEV (Invalid cross-device link)
+	172285 newfstatat(AT_FDCWD, "tests/pe-file.exe", {st_mode=S_IFREG|0644, st_size=75595, ...}, 0) = 0
+	172285 openat(AT_FDCWD, "/tmp/perf.debug.TeY1/home/<user_name>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/.elf.KbAnsl", O_RDWR|O_CREAT|O_EXCL, 0600) = 3
+	172285 fchmod(3, 0755)                  = 0
+	172285 openat(AT_FDCWD, "tests/pe-file.exe", O_RDONLY) = 4
+	172285 mmap(NULL, 75595, PROT_READ, MAP_PRIVATE, 4, 0) = 0x7fffa5cd0000
+	172285 pwrite64(3, "MZ\220\0\3\0\0\0\4\0\0\0\377\377\0\0\270\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 75595, 0) = 75595
+
+Whereas if the link succeeds, it succeeds in the first
+attempt itself and the file in the build-id dir will
+have same permission as original file.
+
+Example, above uses /tmp. Instead if we use
+"--buildid-dir /home/build", linking will work here
+since mount points are same. Hence the destination file
+will not have executable permission.
+
+Since the testcase "tests/shell/buildid.sh" always looks
+for executable file, test fails in powerpc environment
+when test is run from /root.
+
+The patch adds a change in build_id_cache__add to use
+copyfile_mode which also passes the file’s original mode as
+argument. This way the destination file mode also will
+be same as original file.
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/util/build-id.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index a839b30c981b..ea9c083ab1e3 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -715,9 +715,13 @@ build_id_cache__add(const char *sbuild_id, const char *name, const char *realnam
+ 		} else if (nsi && nsinfo__need_setns(nsi)) {
+ 			if (copyfile_ns(name, filename, nsi))
+ 				goto out_free;
+-		} else if (link(realname, filename) && errno != EEXIST &&
+-				copyfile(name, filename))
+-			goto out_free;
++		} else if (link(realname, filename) && errno != EEXIST) {
++			struct stat f_stat;
++
++			if (!(stat(name, &f_stat) < 0) &&
++					copyfile_mode(name, filename, f_stat.st_mode))
++				goto out_free;
++		}
+ 	}
+ 
+ 	/* Some binaries are stripped, but have .debug files with their symbol
+-- 
+2.31.1
+
