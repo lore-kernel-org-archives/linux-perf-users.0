@@ -2,275 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31DAC46467
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 05:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698EBC54EBE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Jan 2023 05:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231576AbjAPFDU (ORCPT
+        id S231792AbjAPFPL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Jan 2023 00:03:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
+        Mon, 16 Jan 2023 00:15:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjAPFDS (ORCPT
+        with ESMTP id S231251AbjAPFPJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Jan 2023 00:03:18 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9A6270A
-        for <linux-perf-users@vger.kernel.org>; Sun, 15 Jan 2023 21:03:17 -0800 (PST)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30G2iqlA011720;
-        Mon, 16 Jan 2023 05:03:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=ZAqZaqP2qQDPTZePUkkD3giSWOpBTZB8wAGhnF0SRMo=;
- b=tNF5FBrEF9xY0gAtlehtYhhk2VvK8P4HPTlaqkmqA3BB4JqYQMZUvb9aTwbmeCqGg8Ip
- lugLqP7wPBTCuG7e0jP8KL3xyDs/EvRRNh5GUXEY+r8LVr18/ttpiOsvCAsUEpWkpU1r
- /CchIrxNJpyv5RAbPOLJzslaCbMoGw4PiMj7RbNfWx0A2RMQ2MCFW9HbSj23U+c2z3ZB
- XWzwxcgHTIIVOR0JcZCn2GyvbaG+KkmRz1RNXyVSFqX7ItGi3gvfSeLZQSlWsaoU8XzM
- bh2HBoArMNMtHKcm1qWwIIaZIhUgyRMNCpvqvws2ESAHT3bW0O8y26tPOfvFEM7HYVYU 3A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4ed2febm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 05:03:08 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30G51EB1005797;
-        Mon, 16 Jan 2023 05:03:08 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4ed2feb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 05:03:08 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30F4hV5A017303;
-        Mon, 16 Jan 2023 05:03:06 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3n3m169d9g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 05:03:06 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30G532EA50594296
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Jan 2023 05:03:03 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1AB220040;
-        Mon, 16 Jan 2023 05:03:02 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0491D2004F;
-        Mon, 16 Jan 2023 05:03:01 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.122.245])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon, 16 Jan 2023 05:03:00 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
-Date:   Mon, 16 Jan 2023 10:32:58 +0530
-Cc:     maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <41461A8A-74F7-4938-9E8D-9F275114E906@linux.vnet.ibm.com>
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
- <Yyy0W6CnPk7BkkCU@kernel.org>
- <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
- <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: wan1DbpTF_F5xahTluJpMtrdBqkMA8Vp
-X-Proofpoint-ORIG-GUID: Ol9zNKtK00UCyVVecwRItO-NOn7lxwEf
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 16 Jan 2023 00:15:09 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2105972A2;
+        Sun, 15 Jan 2023 21:15:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673846109; x=1705382109;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4YWxotzkHgTG5wQlXN7X65qn9NuDDjyO017wRvnH0sw=;
+  b=O+hbJNsSGuKmFNd6b4upzOPDrcJjN0Nln9Ao6T/az/8ryoRZUnRCONCd
+   G7axwq47hOUNOWLegeG6goY6A29Gv1BqdzM5NrqSAB0noUv3Khsph3d5v
+   BDyPnDSoEFFE4igOJ7fX+hO7hc6z0BvBi3dGonENjpyFqcQPxWg4+/si7
+   xGxlMh6VTDGdoJhvcMGcqWvwpe2Ilke9NJS5axdJNGJUrFBASzZZO+Zl8
+   8gxni8J03Fbqej+gRziTeWG5QkL4Xh6c3oEqcUF3rI37TuW1RUU/eiVHM
+   saU2UIXe6CuqfZYtd9ZlbpGDOY2B1dMc2ECU5LWlZ/vfBgwaI0oroAFDv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10591"; a="323089330"
+X-IronPort-AV: E=Sophos;i="5.97,220,1669104000"; 
+   d="scan'208";a="323089330"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2023 21:15:08 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10591"; a="636428515"
+X-IronPort-AV: E=Sophos;i="5.97,220,1669104000"; 
+   d="scan'208";a="636428515"
+Received: from ttulbure-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.53.56])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2023 21:15:05 -0800
+Message-ID: <ae03d3af-02de-0d36-4680-c4ad934da77d@intel.com>
+Date:   Mon, 16 Jan 2023 07:15:01 +0200
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-16_02,2023-01-13_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- mlxscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501 spamscore=0
- clxscore=1011 mlxlogscore=999 impostorscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2301160037
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.1
+Subject: Re: [PATCH v2] tools:perf:scripts:python:intel-pt-events del
+ unusedvar
+To:     Alexander Pantyukhin <apantykhin@gmail.com>
+Cc:     mingo@redhat.com, namhyung@kernel.org, jolsa@kernel.org,
+        acme@kernel.org, akpm@linux-foundation.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230114130533.2877-1-apantykhin@gmail.com>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230114130533.2877-1-apantykhin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 14/01/23 15:05, Alexander Pantyukhin wrote:
+> The event_attr is never used later, the var is ok be deleted.
+> Additional code simplification is to substitute string slice comparison
+> with "substring" function. This case no need to know the length specific
+> words.
+> 
+> Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
 
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> On 28-Sep-2022, at 10:24 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> =
-wrote:
->=20
-> Hi All,
->=20
-> Looking for what direction we can take here.
-> Do we want to change all tests in tools/perf/tests/shell except test_inte=
-l_pt.sh to use "bash" or go with
-> the approach in the patch ? Please share your comments
->=20
-> Thanks
-> Athira
->=20
-
-Hi All,
-
-Looking for what direction we can take here.
-Do we want to change all tests in tools/perf/tests/shell except test_intel_=
-pt.sh to use "bash" or go with
-the approach in the patch ? Please share your comments
-
-Thanks
-Athira
-
->> On 23-Sep-2022, at 11:54 AM, Adrian Hunter <adrian.hunter@intel.com> wro=
-te:
->>=20
->> On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
->>> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
->>>> The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D skips =
-with below
->>>> error on some distros:
->>>=20
->>> I wonder if we shouldn't instead state that bash is needed?
->>>=20
->>> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell/*.s=
-h | grep ^#
->>> #!/bin/sh
->>> #!/bin/bash
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/bash
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/bash
->>> #!/bin/sh
->>> #!/bin/bash
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> #!/bin/sh
->>> =E2=AC=A2[acme@toolbox perf-urgent]$
->>>=20
->>> Opinions?
->>>=20
->>=20
->> Please don't change tools/perf/tests/shell/test_intel_pt.sh
->>=20
->> I started using shellcheck on that with the "perf test:=20
->> test_intel_pt.sh: Add per-thread test" patch set that I sent.
->>=20
->> FYI, if you use shellcheck on buildid.sh, it shows up issues even
->> after changing to bash:
->>=20
->> *** Before ***
->>=20
->> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 69:
->>       link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
->>                                      ^-------^ SC2039: In POSIX sh, stri=
-ng indexing is undefined.
->>                                                ^-----^ SC2039: In POSIX =
-sh, string indexing is undefined.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 77:
->>       file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
->>                                      ^-------^ SC2039: In POSIX sh, stri=
-ng indexing is undefined.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 123:
->>       echo "running: perf record $@"
->>                                  ^-- SC2145: Argument mixes string and a=
-rray. Use * or separate argument.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 124:
->>       ${perf} record --buildid-all -o ${data} $@ &> ${log}
->>                                               ^-- SC2068: Double quote a=
-rray expansions to avoid re-splitting elements.
->>                                                  ^-------^ SC2039: In PO=
-SIX sh, &> is undefined.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 126:
->>               echo "failed: record $@"
->>                                    ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 131:
->>       check ${@: -1}
->>             ^------^ SC2068: Double quote array expansions to avoid re-s=
-plitting elements.
->>             ^------^ SC2039: In POSIX sh, string indexing is undefined.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 158:
->> exit ${err}
->>    ^----^ SC2154: err is referenced but not assigned.
->>=20
->> For more information:
->> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions =
-to ...
->> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and arra=
-y. ...
->> https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefined.
->>=20
->> *** After ***
->>=20
->> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 123:
->>       echo "running: perf record $@"
->>                                  ^-- SC2145: Argument mixes string and a=
-rray. Use * or separate argument.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 124:
->>       ${perf} record --buildid-all -o ${data} $@ &> ${log}
->>                                               ^-- SC2068: Double quote a=
-rray expansions to avoid re-splitting elements.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 126:
->>               echo "failed: record $@"
->>                                    ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 131:
->>       check ${@: -1}
->>             ^------^ SC2068: Double quote array expansions to avoid re-s=
-plitting elements.
->>=20
->>=20
->> In tools/perf/tests/shell/buildid.sh line 158:
->> exit ${err}
->>    ^----^ SC2154: err is referenced but not assigned.
->>=20
->> For more information:
->> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansions =
-to ...
->> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and arra=
-y. ...
->> https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not assi=
-gned.
->=20
+> ---
+>  tools/perf/scripts/python/intel-pt-events.py | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
+> index 08862a2582f4..dfd566369ca4 100644
+> --- a/tools/perf/scripts/python/intel-pt-events.py
+> +++ b/tools/perf/scripts/python/intel-pt-events.py
+> @@ -340,7 +340,6 @@ def print_srccode(comm, param_dict, sample, symbol, dso, with_insn):
+>  	print(start_str, src_str)
+>  
+>  def do_process_event(param_dict):
+> -	event_attr = param_dict["attr"]
+>  	sample	   = param_dict["sample"]
+>  	raw_buf	   = param_dict["raw_buf"]
+>  	comm	   = param_dict["comm"]
+> @@ -349,6 +348,7 @@ def do_process_event(param_dict):
+>  	# callchain  = param_dict["callchain"]
+>  	# brstack    = param_dict["brstack"]
+>  	# brstacksym = param_dict["brstacksym"]
+> +	# event_attr = param_dict["attr"]
+>  
+>  	# Symbol and dso info are not always resolved
+>  	dso    = get_optional(param_dict, "dso")
+> @@ -359,13 +359,13 @@ def do_process_event(param_dict):
+>  		print(glb_switch_str[cpu])
+>  		del glb_switch_str[cpu]
+>  
+> -	if name[0:12] == "instructions":
+> +	if name.startswith("instructions"):
+>  		if glb_src:
+>  			print_srccode(comm, param_dict, sample, symbol, dso, True)
+>  		else:
+>  			print_instructions_start(comm, sample)
+>  			print_common_ip(param_dict, sample, symbol, dso)
+> -	elif name[0:8] == "branches":
+> +	elif name.startswith("branches"):
+>  		if glb_src:
+>  			print_srccode(comm, param_dict, sample, symbol, dso, False)
+>  		else:
 
