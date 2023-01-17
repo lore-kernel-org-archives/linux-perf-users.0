@@ -2,346 +2,326 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A12C3DA78
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 13:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24224C678DE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 13:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235848AbjAQNPO (ORCPT
+        id S237056AbjAQNQu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Jan 2023 08:15:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52018 "EHLO
+        Tue, 17 Jan 2023 08:16:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236974AbjAQNPJ (ORCPT
+        with ESMTP id S236819AbjAQNQq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Jan 2023 08:15:09 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E74367F3
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jan 2023 05:15:06 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30HD4avE035827;
-        Tue, 17 Jan 2023 13:14:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=YIcTFtRVSv5KwrXNGVaNBuGcC2gU6jycN/k0hptijDA=;
- b=TZbcMyIMF29IuXSY/IdNZ9PRTVro72qm9i9ntIQR2NAt7R6NaK+40m3xt4UuleMM6Jm4
- N2hWrBRwSzGLAtX+8ZI3tzWcM+DPpyzlRdakiOqXoTqdIBdG1sbAdXXFIV2sZ1FwN1TW
- dteJL68kiM70hym49NzgHDjbF6UaJ0exZQxjeb8PPHDXoPXIH9+h5ylWbzipNdqa4gVC
- klSpS0F/ixhmjt6pK/W/9GVpFFJ1nxs5QkM1PACGlk5XuHVySJlzWpveQ8NMLdhbotEI
- ld/+zbS1Mzi4OvzusZTd1q87LzZctvW7vJMCGOju9BKK6Z83wpNlR1HZzIu5vnMr5JNd uA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n5qb5y5ac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Jan 2023 13:14:55 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30HCAj5i012113;
-        Tue, 17 Jan 2023 13:14:55 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n5qb5y59t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Jan 2023 13:14:55 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30H855uk023789;
-        Tue, 17 Jan 2023 13:14:52 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3n3m16kvmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Jan 2023 13:14:52 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30HDEnLa47907132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Jan 2023 13:14:49 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8AA520043;
-        Tue, 17 Jan 2023 13:14:48 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA41F2004B;
-        Tue, 17 Jan 2023 13:14:46 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.80.22])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 17 Jan 2023 13:14:46 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 1/2] tools/perf/tests: Fix string substitutions in build
- id test
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAP-5=fXS+8Wg8+Qrob+7fb5Y6FeBQphzd=Y0a1eh6xNwc-SfYA@mail.gmail.com>
-Date:   Tue, 17 Jan 2023 18:44:44 +0530
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Message-Id: <8356580F-4D16-47E2-95C7-AD43B3CD437C@linux.vnet.ibm.com>
-References: <20220921170839.21927-1-atrajeev@linux.vnet.ibm.com>
- <Yyy0W6CnPk7BkkCU@kernel.org>
- <444a5a64-7bc6-d5fd-2880-611c5cbca587@intel.com>
- <3EE5CFF3-51BC-444E-8FEF-2AC219E809F6@linux.vnet.ibm.com>
- <41461A8A-74F7-4938-9E8D-9F275114E906@linux.vnet.ibm.com>
- <CAP-5=fXWCYQSpp92L64+7Piu0sfEq+RsigNLUowgCjsT218jow@mail.gmail.com>
- <5CAD9B57-1788-4C7E-9658-7634A49D8BF0@linux.vnet.ibm.com>
- <CAP-5=fXS+8Wg8+Qrob+7fb5Y6FeBQphzd=Y0a1eh6xNwc-SfYA@mail.gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: dWhEG-OW6R1_nYtxdjDPYqJVdQVqlu5Y
-X-Proofpoint-ORIG-GUID: tYDYOrSbTNXuK-zihJdsRHZQOPQPD42k
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Tue, 17 Jan 2023 08:16:46 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CECAC4C07;
+        Tue, 17 Jan 2023 05:16:44 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 048B7C14;
+        Tue, 17 Jan 2023 05:17:26 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.31.153])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 223C03F67D;
+        Tue, 17 Jan 2023 05:16:27 -0800 (PST)
+Date:   Tue, 17 Jan 2023 13:16:21 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+        nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, shawnguo@kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
+        khilman@kernel.org, krzysztof.kozlowski@linaro.org,
+        alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+        richard@nod.at, anton.ivanov@cambridgegreys.com,
+        johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
+        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
+        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com,
+        rostedt@goodmis.org, mhiramat@kernel.org, frederic@kernel.org,
+        paulmck@kernel.org, pmladek@suse.com, senozhatsky@chromium.org,
+        john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, ryabinin.a.a@gmail.com, glider@google.com,
+        andreyknvl@gmail.com, dvyukov@google.com,
+        vincenzo.frascino@arm.com,
+        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH v3 00/51] cpuidle,rcu: Clean up the mess
+Message-ID: <Y8afpbHtDOqAHq9M@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230112194314.845371875@infradead.org>
+ <Y8WCWAuQSHN651dA@FVFF77S0Q05N.cambridge.arm.com>
+ <Y8Z31UbzG3LJgAXE@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-17_05,2023-01-17_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 bulkscore=0 malwarescore=0 mlxlogscore=999
- suspectscore=0 impostorscore=0 adultscore=0 phishscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2301170108
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8Z31UbzG3LJgAXE@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Jan 17, 2023 at 11:26:29AM +0100, Peter Zijlstra wrote:
+> On Mon, Jan 16, 2023 at 04:59:04PM +0000, Mark Rutland wrote:
+> 
+> > I'm sorry to have to bear some bad news on that front. :(
+> 
+> Moo, something had to give..
+> 
+> 
+> > IIUC what's happenign here is the PSCI cpuidle driver has entered idle and RCU
+> > is no longer watching when arm64's cpu_suspend() manipulates DAIF. Our
+> > local_daif_*() helpers poke lockdep and tracing, hence the call to
+> > trace_hardirqs_off() and the RCU usage.
+> 
+> Right, strictly speaking not needed at this point, IRQs should have been
+> traced off a long time ago.
 
+True, but there are some other calls around here that *might* end up invoking
+RCU stuff (e.g. the MTE code).
 
-> On 17-Jan-2023, at 3:30 AM, Ian Rogers <irogers@google.com> wrote:
->=20
-> On Mon, Jan 16, 2023 at 4:00 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
->>=20
->>=20
->>=20
->>> On 16-Jan-2023, at 11:47 AM, Ian Rogers <irogers@google.com> wrote:
->>>=20
->>> On Sun, Jan 15, 2023 at 9:03 PM Athira Rajeev
->>> <atrajeev@linux.vnet.ibm.com> wrote:
->>>>=20
->>>>=20
->>>>=20
->>>>> On 28-Sep-2022, at 10:24 AM, Athira Rajeev <atrajeev@linux.vnet.ibm.c=
-om> wrote:
->>>>>=20
->>>>> Hi All,
->>>>>=20
->>>>> Looking for what direction we can take here.
->>>>> Do we want to change all tests in tools/perf/tests/shell except test_=
-intel_pt.sh to use "bash" or go with
->>>>> the approach in the patch ? Please share your comments
->>>>>=20
->>>>> Thanks
->>>>> Athira
->>>>>=20
->>>>=20
->>>> Hi All,
->>>>=20
->>>> Looking for what direction we can take here.
->>>> Do we want to change all tests in tools/perf/tests/shell except test_i=
-ntel_pt.sh to use "bash" or go with
->>>> the approach in the patch ? Please share your comments
->>>>=20
->>>> Thanks
->>>> Athira
->>>=20
->>=20
->> Thanks Ian for the response.
->>=20
->>> I think some of what the patch is doing is good, some of it the
->>=20
->> Ian, can I take this as an ack for the patch so that Arnaldo can pick th=
-is in acme git ?
->=20
-> Acked-by: Ian Rogers <irogers@google.com>
->=20
-> Thanks,
-> Ian
+That all needs a noinstr cleanup too, which I'll sort out as a follow-up.
 
-Thanks Ian.
+> > I think we need RCU to be watching all the way down to cpu_suspend(), and it's
+> > cpu_suspend() that should actually enter/exit idle context. That and we need to
+> > make cpu_suspend() and the low-level PSCI invocation noinstr.
+> > 
+> > I'm not sure whether 32-bit will have a similar issue or not.
+> 
+> I'm not seeing 32bit or Risc-V have similar issues here, but who knows,
+> maybe I missed somsething.
 
-Hi Arnaldo,
+I reckon if they do, the core changes here give us the infrastructure to fix
+them if/when we get reports.
 
-I have re-posted the patch 2 ( in this series ) separately in new patchset =
-here :
-https://lore.kernel.org/linux-perf-users/20230116050131.17221-2-atrajeev@li=
-nux.vnet.ibm.com/
+> In any case, the below ought to cure the ARM64 case and remove that last
+> known RCU_NONIDLE() user as a bonus.
 
-Ack from Ian is for Patch 1. Shall I rebase to upstream and post this patch=
- 1 separately ?
+The below works for me testing on a Juno R1 board with PSCI, using defconfig +
+CONFIG_PROVE_LOCKING=y + CONFIG_DEBUG_LOCKDEP=y + CONFIG_DEBUG_ATOMIC_SLEEP=y.
+I'm not sure how to test the LPI / FFH part, but it looks good to me.
 
-Thanks
-Athira
->=20
->>> readability becomes a little harder by not being bash. I'm agnostic as
->>> to which approach to take for the fix.
->>=20
->> May be we can take this as separate mail thread to get everyone=E2=80=99=
-s opinion on changing all tests in "tools/perf/tests/shell" except test_int=
-el_pt.sh to use =E2=80=9Cbash" ?
->>=20
->>>=20
->>> An aside, I noticed that we do run some tests at build time:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/lib=
-/Makefile?h=3Dperf/core#n390
->>> So perhaps we can have a shellcheck build option, defaulted off but
->>> enabled as part of Arnaldo's regular test scripts. The shellcheck
->>> build option would run shellcheck to make sure that there weren't
->>> errors in the shell code, which it is far too easy to introduce.
->>=20
->> Sure, that is a good option to have. I will check on having =E2=80=9Cshe=
-llcheck" as a build option.
->>=20
->> Thanks
->> Athira
->>=20
->>>=20
->>> Thanks,
->>> Ian
->>>=20
->>>>>> On 23-Sep-2022, at 11:54 AM, Adrian Hunter <adrian.hunter@intel.com>=
- wrote:
->>>>>>=20
->>>>>> On 22/09/22 22:15, Arnaldo Carvalho de Melo wrote:
->>>>>>> Em Wed, Sep 21, 2022 at 10:38:38PM +0530, Athira Rajeev escreveu:
->>>>>>>> The perf test named =E2=80=9Cbuild id cache operations=E2=80=9D sk=
-ips with below
->>>>>>>> error on some distros:
->>>>>>>=20
->>>>>>> I wonder if we shouldn't instead state that bash is needed?
->>>>>>>=20
->>>>>>> =E2=AC=A2[acme@toolbox perf-urgent]$ head -1 tools/perf/tests/shell=
-/*.sh | grep ^#
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/bash
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/bash
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/bash
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/bash
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> #!/bin/sh
->>>>>>> =E2=AC=A2[acme@toolbox perf-urgent]$
->>>>>>>=20
->>>>>>> Opinions?
->>>>>>>=20
->>>>>>=20
->>>>>> Please don't change tools/perf/tests/shell/test_intel_pt.sh
->>>>>>=20
->>>>>> I started using shellcheck on that with the "perf test:
->>>>>> test_intel_pt.sh: Add per-thread test" patch set that I sent.
->>>>>>=20
->>>>>> FYI, if you use shellcheck on buildid.sh, it shows up issues even
->>>>>> after changing to bash:
->>>>>>=20
->>>>>> *** Before ***
->>>>>>=20
->>>>>> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 69:
->>>>>>     link=3D${build_id_dir}/.build-id/${id:0:2}/${id:2}
->>>>>>                                    ^-------^ SC2039: In POSIX sh, st=
-ring indexing is undefined.
->>>>>>                                              ^-----^ SC2039: In POSI=
-X sh, string indexing is undefined.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 77:
->>>>>>     file=3D${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
->>>>>>                                    ^-------^ SC2039: In POSIX sh, st=
-ring indexing is undefined.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 123:
->>>>>>     echo "running: perf record $@"
->>>>>>                                ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 124:
->>>>>>     ${perf} record --buildid-all -o ${data} $@ &> ${log}
->>>>>>                                             ^-- SC2068: Double quote=
- array expansions to avoid re-splitting elements.
->>>>>>                                                ^-------^ SC2039: In =
-POSIX sh, &> is undefined.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 126:
->>>>>>             echo "failed: record $@"
->>>>>>                                  ^-- SC2145: Argument mixes string a=
-nd array. Use * or separate argument.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 131:
->>>>>>     check ${@: -1}
->>>>>>           ^------^ SC2068: Double quote array expansions to avoid re=
--splitting elements.
->>>>>>           ^------^ SC2039: In POSIX sh, string indexing is undefined.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 158:
->>>>>> exit ${err}
->>>>>>  ^----^ SC2154: err is referenced but not assigned.
->>>>>>=20
->>>>>> For more information:
->>>>>> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansi=
-ons to ...
->>>>>> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and =
-array. ...
->>>>>> https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, &> is undefin=
-ed.
->>>>>>=20
->>>>>> *** After ***
->>>>>>=20
->>>>>> $ shellcheck -S warning tools/perf/tests/shell/buildid.sh
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 123:
->>>>>>     echo "running: perf record $@"
->>>>>>                                ^-- SC2145: Argument mixes string and=
- array. Use * or separate argument.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 124:
->>>>>>     ${perf} record --buildid-all -o ${data} $@ &> ${log}
->>>>>>                                             ^-- SC2068: Double quote=
- array expansions to avoid re-splitting elements.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 126:
->>>>>>             echo "failed: record $@"
->>>>>>                                  ^-- SC2145: Argument mixes string a=
-nd array. Use * or separate argument.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 131:
->>>>>>     check ${@: -1}
->>>>>>           ^------^ SC2068: Double quote array expansions to avoid re=
--splitting elements.
->>>>>>=20
->>>>>>=20
->>>>>> In tools/perf/tests/shell/buildid.sh line 158:
->>>>>> exit ${err}
->>>>>>  ^----^ SC2154: err is referenced but not assigned.
->>>>>>=20
->>>>>> For more information:
->>>>>> https://www.shellcheck.net/wiki/SC2068 -- Double quote array expansi=
-ons to ...
->>>>>> https://www.shellcheck.net/wiki/SC2145 -- Argument mixes string and =
-array. ...
->>>>>> https://www.shellcheck.net/wiki/SC2154 -- err is referenced but not =
-assigned.
+FWIW:
 
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+
+Sudeep, would you be able to give the LPI/FFH side a spin with the kconfig
+options above?
+
+Thanks,
+Mark.
+
+> 
+> ---
+> diff --git a/arch/arm64/kernel/cpuidle.c b/arch/arm64/kernel/cpuidle.c
+> index 41974a1a229a..42e19fff40ee 100644
+> --- a/arch/arm64/kernel/cpuidle.c
+> +++ b/arch/arm64/kernel/cpuidle.c
+> @@ -67,10 +67,10 @@ __cpuidle int acpi_processor_ffh_lpi_enter(struct acpi_lpi_state *lpi)
+>  	u32 state = lpi->address;
+>  
+>  	if (ARM64_LPI_IS_RETENTION_STATE(lpi->arch_flags))
+> -		return CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM(psci_cpu_suspend_enter,
+> +		return CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM_RCU(psci_cpu_suspend_enter,
+>  						lpi->index, state);
+>  	else
+> -		return CPU_PM_CPU_IDLE_ENTER_PARAM(psci_cpu_suspend_enter,
+> +		return CPU_PM_CPU_IDLE_ENTER_PARAM_RCU(psci_cpu_suspend_enter,
+>  					     lpi->index, state);
+>  }
+>  #endif
+> diff --git a/arch/arm64/kernel/suspend.c b/arch/arm64/kernel/suspend.c
+> index e7163f31f716..0fbdf5fe64d8 100644
+> --- a/arch/arm64/kernel/suspend.c
+> +++ b/arch/arm64/kernel/suspend.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/pgtable.h>
+> +#include <linux/cpuidle.h>
+>  #include <asm/alternative.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/cpufeature.h>
+> @@ -104,6 +105,10 @@ int cpu_suspend(unsigned long arg, int (*fn)(unsigned long))
+>  	 * From this point debug exceptions are disabled to prevent
+>  	 * updates to mdscr register (saved and restored along with
+>  	 * general purpose registers) from kernel debuggers.
+> +	 *
+> +	 * Strictly speaking the trace_hardirqs_off() here is superfluous,
+> +	 * hardirqs should be firmly off by now. This really ought to use
+> +	 * something like raw_local_daif_save().
+>  	 */
+>  	flags = local_daif_save();
+>  
+> @@ -120,6 +125,8 @@ int cpu_suspend(unsigned long arg, int (*fn)(unsigned long))
+>  	 */
+>  	arm_cpuidle_save_irq_context(&context);
+>  
+> +	ct_cpuidle_enter();
+> +
+>  	if (__cpu_suspend_enter(&state)) {
+>  		/* Call the suspend finisher */
+>  		ret = fn(arg);
+> @@ -133,8 +140,11 @@ int cpu_suspend(unsigned long arg, int (*fn)(unsigned long))
+>  		 */
+>  		if (!ret)
+>  			ret = -EOPNOTSUPP;
+> +
+> +		ct_cpuidle_exit();
+>  	} else {
+> -		RCU_NONIDLE(__cpu_suspend_exit());
+> +		ct_cpuidle_exit();
+> +		__cpu_suspend_exit();
+>  	}
+>  
+>  	arm_cpuidle_restore_irq_context(&context);
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index 4fc4e0381944..312a34ef28dc 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -69,16 +69,12 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+>  	else
+>  		pm_runtime_put_sync_suspend(pd_dev);
+>  
+> -	ct_cpuidle_enter();
+> -
+>  	state = psci_get_domain_state();
+>  	if (!state)
+>  		state = states[idx];
+>  
+>  	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+>  
+> -	ct_cpuidle_exit();
+> -
+>  	if (s2idle)
+>  		dev_pm_genpd_resume(pd_dev);
+>  	else
+> @@ -192,7 +188,7 @@ static __cpuidle int psci_enter_idle_state(struct cpuidle_device *dev,
+>  {
+>  	u32 *state = __this_cpu_read(psci_cpuidle_data.psci_states);
+>  
+> -	return CPU_PM_CPU_IDLE_ENTER_PARAM(psci_cpu_suspend_enter, idx, state[idx]);
+> +	return CPU_PM_CPU_IDLE_ENTER_PARAM_RCU(psci_cpu_suspend_enter, idx, state[idx]);
+>  }
+>  
+>  static const struct of_device_id psci_idle_state_match[] = {
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index e7bcfca4159f..f3a044fa4652 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -462,11 +462,22 @@ int psci_cpu_suspend_enter(u32 state)
+>  	if (!psci_power_state_loses_context(state)) {
+>  		struct arm_cpuidle_irq_context context;
+>  
+> +		ct_cpuidle_enter();
+>  		arm_cpuidle_save_irq_context(&context);
+>  		ret = psci_ops.cpu_suspend(state, 0);
+>  		arm_cpuidle_restore_irq_context(&context);
+> +		ct_cpuidle_exit();
+>  	} else {
+> +		/*
+> +		 * ARM64 cpu_suspend() wants to do ct_cpuidle_*() itself.
+> +		 */
+> +		if (!IS_ENABLED(CONFIG_ARM64))
+> +			ct_cpuidle_enter();
+> +
+>  		ret = cpu_suspend(state, psci_suspend_finisher);
+> +
+> +		if (!IS_ENABLED(CONFIG_ARM64))
+> +			ct_cpuidle_exit();
+>  	}
+>  
+>  	return ret;
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index 630c879143c7..3183aeb7f5b4 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -307,7 +307,7 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
+>  #define __CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter,			\
+>  				idx,					\
+>  				state,					\
+> -				is_retention)				\
+> +				is_retention, is_rcu)			\
+>  ({									\
+>  	int __ret = 0;							\
+>  									\
+> @@ -319,9 +319,11 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
+>  	if (!is_retention)						\
+>  		__ret =  cpu_pm_enter();				\
+>  	if (!__ret) {							\
+> -		ct_cpuidle_enter();					\
+> +		if (!is_rcu)						\
+> +			ct_cpuidle_enter();				\
+>  		__ret = low_level_idle_enter(state);			\
+> -		ct_cpuidle_exit();					\
+> +		if (!is_rcu)						\
+> +			ct_cpuidle_exit();				\
+>  		if (!is_retention)					\
+>  			cpu_pm_exit();					\
+>  	}								\
+> @@ -330,15 +332,21 @@ extern s64 cpuidle_governor_latency_req(unsigned int cpu);
+>  })
+>  
+>  #define CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx)	\
+> -	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 0)
+> +	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 0, 0)
+>  
+>  #define CPU_PM_CPU_IDLE_ENTER_RETENTION(low_level_idle_enter, idx)	\
+> -	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 1)
+> +	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, idx, 1, 0)
+>  
+>  #define CPU_PM_CPU_IDLE_ENTER_PARAM(low_level_idle_enter, idx, state)	\
+> -	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 0)
+> +	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 0, 0)
+> +
+> +#define CPU_PM_CPU_IDLE_ENTER_PARAM_RCU(low_level_idle_enter, idx, state)	\
+> +	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 0, 1)
+>  
+>  #define CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM(low_level_idle_enter, idx, state)	\
+> -	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 1)
+> +	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 1, 0)
+> +
+> +#define CPU_PM_CPU_IDLE_ENTER_RETENTION_PARAM_RCU(low_level_idle_enter, idx, state)	\
+> +	__CPU_PM_CPU_IDLE_ENTER(low_level_idle_enter, idx, state, 1, 1)
+>  
+>  #endif /* _LINUX_CPUIDLE_H */
