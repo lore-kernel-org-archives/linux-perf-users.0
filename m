@@ -2,168 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D308CC678DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 15:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1493C6379F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 15:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233033AbjAQPfn (ORCPT
+        id S229717AbjAQPy7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Jan 2023 10:35:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
+        Tue, 17 Jan 2023 10:54:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232536AbjAQPfh (ORCPT
+        with ESMTP id S229762AbjAQPy6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Jan 2023 10:35:37 -0500
+        Tue, 17 Jan 2023 10:54:58 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 78EE341B52;
-        Tue, 17 Jan 2023 07:35:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 29E9986AF;
+        Tue, 17 Jan 2023 07:54:57 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9822A165C;
-        Tue, 17 Jan 2023 07:36:16 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.31.153])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACA663F67D;
-        Tue, 17 Jan 2023 07:35:17 -0800 (PST)
-Date:   Tue, 17 Jan 2023 15:35:10 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
-        linus.walleij@linaro.org, shawnguo@kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
-        khilman@kernel.org, krzysztof.kozlowski@linaro.org,
-        alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
-        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
-        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
-        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
-        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-        shorne@gmail.com, James.Bottomley@hansenpartnership.com,
-        deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
-        richard@nod.at, anton.ivanov@cambridgegreys.com,
-        johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
-        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
-        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        anup@brainfault.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com,
-        atishp@atishpatra.org, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org,
-        cl@linux.com, rostedt@goodmis.org, mhiramat@kernel.org,
-        frederic@kernel.org, paulmck@kernel.org, pmladek@suse.com,
-        senozhatsky@chromium.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, ryabinin.a.a@gmail.com,
-        glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
-        vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v3 00/51] cpuidle,rcu: Clean up the mess
-Message-ID: <Y8bALvyrPpdg++/J@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230112194314.845371875@infradead.org>
- <Y8WCWAuQSHN651dA@FVFF77S0Q05N.cambridge.arm.com>
- <Y8Z31UbzG3LJgAXE@hirez.programming.kicks-ass.net>
- <Y8afpbHtDOqAHq9M@FVFF77S0Q05N.cambridge.arm.com>
- <20230117142140.g423hxisv7djudof@bogus>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1874A1FB;
+        Tue, 17 Jan 2023 07:55:39 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8854B3F67D;
+        Tue, 17 Jan 2023 07:54:55 -0800 (PST)
+Message-ID: <99a03fae-47fa-8f19-1768-4aeb28cac182@arm.com>
+Date:   Tue, 17 Jan 2023 15:54:54 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230117142140.g423hxisv7djudof@bogus>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v7 01/15] coresight: trace-id: Add API to dynamically
+ assign Trace ID values
+Content-Language: en-US
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+References: <20230116124928.5440-1-mike.leach@linaro.org>
+ <20230116124928.5440-2-mike.leach@linaro.org>
+ <1896a73b-eb7b-7ffb-272d-115a10adeb71@arm.com>
+ <CAJ9a7VixL9f2Cm7A780V311KH2G2giryeH9dG0p2e4zWBwA3iQ@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <CAJ9a7VixL9f2Cm7A780V311KH2G2giryeH9dG0p2e4zWBwA3iQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 02:21:40PM +0000, Sudeep Holla wrote:
-> On Tue, Jan 17, 2023 at 01:16:21PM +0000, Mark Rutland wrote:
-> > On Tue, Jan 17, 2023 at 11:26:29AM +0100, Peter Zijlstra wrote:
-> > > On Mon, Jan 16, 2023 at 04:59:04PM +0000, Mark Rutland wrote:
-> > > 
-> > > > I'm sorry to have to bear some bad news on that front. :(
-> > > 
-> > > Moo, something had to give..
-> > > 
-> > > 
-> > > > IIUC what's happenign here is the PSCI cpuidle driver has entered idle and RCU
-> > > > is no longer watching when arm64's cpu_suspend() manipulates DAIF. Our
-> > > > local_daif_*() helpers poke lockdep and tracing, hence the call to
-> > > > trace_hardirqs_off() and the RCU usage.
-> > > 
-> > > Right, strictly speaking not needed at this point, IRQs should have been
-> > > traced off a long time ago.
-> > 
-> > True, but there are some other calls around here that *might* end up invoking
-> > RCU stuff (e.g. the MTE code).
-> > 
-> > That all needs a noinstr cleanup too, which I'll sort out as a follow-up.
-> > 
-> > > > I think we need RCU to be watching all the way down to cpu_suspend(), and it's
-> > > > cpu_suspend() that should actually enter/exit idle context. That and we need to
-> > > > make cpu_suspend() and the low-level PSCI invocation noinstr.
-> > > > 
-> > > > I'm not sure whether 32-bit will have a similar issue or not.
-> > > 
-> > > I'm not seeing 32bit or Risc-V have similar issues here, but who knows,
-> > > maybe I missed somsething.
-> > 
-> > I reckon if they do, the core changes here give us the infrastructure to fix
-> > them if/when we get reports.
-> > 
-> > > In any case, the below ought to cure the ARM64 case and remove that last
-> > > known RCU_NONIDLE() user as a bonus.
-> > 
-> > The below works for me testing on a Juno R1 board with PSCI, using defconfig +
-> > CONFIG_PROVE_LOCKING=y + CONFIG_DEBUG_LOCKDEP=y + CONFIG_DEBUG_ATOMIC_SLEEP=y.
-> > I'm not sure how to test the LPI / FFH part, but it looks good to me.
-> > 
-> > FWIW:
-> > 
-> > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> > Tested-by: Mark Rutland <mark.rutland@arm.com>
-> > 
-> > Sudeep, would you be able to give the LPI/FFH side a spin with the kconfig
-> > options above?
-> > 
+On 17/01/2023 13:02, Mike Leach wrote:
+> On Mon, 16 Jan 2023 at 14:16, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> Hi Mike
+>>
+>> On 16/01/2023 12:49, Mike Leach wrote:
+>>> The existing mechanism to assign Trace ID values to sources is limited
+>>> and does not scale for larger multicore / multi trace source systems.
+>>>
+>>> The API introduces functions that reserve IDs based on availabilty
+>>> represented by a coresight_trace_id_map structure. This records the
+>>> used and free IDs in a bitmap.
+>>>
+>>> CPU bound sources such as ETMs use the coresight_trace_id_get_cpu_id
+>>> coresight_trace_id_put_cpu_id pair of functions. The API will record
+>>> the ID associated with the CPU. This ensures that the same ID will be
+>>> re-used while perf events are active on the CPU. The put_cpu_id function
+>>> will pend release of the ID until all perf cs_etm sessions are complete.
+>>>
+>>> For backward compatibility the functions will attempt to use the same
+>>> CPU IDs as the legacy system would have used if these are still available.
+>>>
+>>> Non-cpu sources, such as the STM can use coresight_trace_id_get_system_id /
+>>> coresight_trace_id_put_system_id.
+>>>
+>>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+>>> ---
+>>>    drivers/hwtracing/coresight/Makefile          |   2 +-
+>>>    .../hwtracing/coresight/coresight-trace-id.c  | 265 ++++++++++++++++++
+>>>    .../hwtracing/coresight/coresight-trace-id.h  | 156 +++++++++++
+>>>    include/linux/coresight-pmu.h                 |  10 +
+>>>    4 files changed, 432 insertions(+), 1 deletion(-)
+>>>    create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.c
+>>>    create mode 100644 drivers/hwtracing/coresight/coresight-trace-id.h
+>>>
+>>> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+>>> index b6c4a48140ec..329a0c704b87 100644
+>>> --- a/drivers/hwtracing/coresight/Makefile
+>>> +++ b/drivers/hwtracing/coresight/Makefile
+>>> @@ -6,7 +6,7 @@ obj-$(CONFIG_CORESIGHT) += coresight.o
+>>>    coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
+>>>                coresight-sysfs.o coresight-syscfg.o coresight-config.o \
+>>>                coresight-cfg-preload.o coresight-cfg-afdo.o \
+>>> -             coresight-syscfg-configfs.o
+>>> +             coresight-syscfg-configfs.o coresight-trace-id.o
+>>>    obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
+>>>    coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
+>>>                      coresight-tmc-etr.o
+>>> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+>>> new file mode 100644
+>>> index 000000000000..9b85c376cb12
+>>> --- /dev/null
+>>> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+>>> @@ -0,0 +1,265 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>
+>> ...
+>>
+>>> +int coresight_trace_id_read_cpu_id(int cpu)
+>>> +{
+>>> +     return _coresight_trace_id_read_cpu_id(cpu);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
+>>> +
+>>> +int coresight_trace_id_get_system_id(void)
+>>> +{
+>>> +     return coresight_trace_id_map_get_system_id(&id_map_default);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(coresight_trace_id_get_system_id);
+>>> +
+>>> +void coresight_trace_id_put_system_id(int id)
+>>> +{
+>>> +     coresight_trace_id_map_put_system_id(&id_map_default, id);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
+>>> +
+>>> +void coresight_trace_id_perf_start(void)
+>>> +{
+>>> +     atomic_inc(&perf_cs_etm_session_active);
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
+>>> +
+>>> +void coresight_trace_id_perf_stop(void)
+>>> +{
+>>> +     if (!atomic_dec_return(&perf_cs_etm_session_active))
+>>> +             coresight_trace_id_release_all_pending();
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
+>>> +
+>>
+>> This blank new line at the end of the file generates a checkpatch
+>> warning for me. I have fixed it locally and applied it.
+>>
+> OK, thanks.
 > 
-> Not sure if I have messed up something in my mail setup, but I did reply
-> earlier.
+> The only thing I get out of checkpatch.pl for this patch (and indeed
+> the entire set) is:
+> 
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
 
-Sorry, that was my bad; I had been drafting my reply for a while and forgot to
-re-check prior to sending.
+Ah, sorry. It is not the checkpatch, but git am complained. Sorry for 
+the confusion.
 
-> I did test both DT/cpuidle-psci driver and  ACPI/LPI+FFH driver
-> with the fix Peter sent. I was seeing same splat as you in both DT and
-> ACPI boot which the patch fixed it. I used the same config as described by
-> you above.
-
-Perfect; thanks!
-
-Mark.
+Cheers
+Suzuki
