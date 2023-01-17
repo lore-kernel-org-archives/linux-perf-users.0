@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E015C678D4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 07:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BD8C3DA78
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 07:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235756AbjAQHaC (ORCPT
+        id S235491AbjAQHaC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 17 Jan 2023 02:30:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34490 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235679AbjAQH37 (ORCPT
+        with ESMTP id S235686AbjAQH37 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 17 Jan 2023 02:29:59 -0500
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E85D22DC1;
-        Mon, 16 Jan 2023 23:29:55 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZm6e2H_1673940589;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZm6e2H_1673940589)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9E62385E;
+        Mon, 16 Jan 2023 23:29:56 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZm6e3K_1673940591;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZm6e3K_1673940591)
           by smtp.aliyun-inc.com;
-          Tue, 17 Jan 2023 15:29:49 +0800
+          Tue, 17 Jan 2023 15:29:51 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -41,9 +41,9 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v8 1/9] perf pmu: Add #slots literal support for arm64
-Date:   Tue, 17 Jan 2023 15:29:25 +0800
-Message-Id: <1673940573-90503-2-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v8 3/9] perf vendor events arm64: Add common topdown L1 metrics
+Date:   Tue, 17 Jan 2023 15:29:27 +0800
+Message-Id: <1673940573-90503-4-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -51,133 +51,56 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The slots in each architecture may be different, so add #slots literal
-to obtain the slots of different architectures, and the #slots can be
-applied in the metric. Currently, The #slots just support for arm64,
-and other architectures will return NAN.
+The metrics of topdown L1 are from ARM sbsa7.0 platform design doc[0],
+D37-38, which are standard. So put them in the common file sbsa.json of
+arm64, so that other cores besides n2/v2 can also be reused.
 
-On arm64, the value of slots is from the register PMMIR_EL1.SLOT, which
-I can read in /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots.
-PMMIR_EL1.SLOT might read as zero if the PMU version is lower than
-ID_AA64DFR0_EL1_PMUVer_V3P4 or the STALL_SLOT event is not implemented.
+[0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+Reviewed-by: John Garry <john.g.garry@oracle.com>
+Acked-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm64/util/pmu.c | 35 +++++++++++++++++++++++++++++++++--
- tools/perf/util/expr.c           |  5 +++++
- tools/perf/util/pmu.c            |  6 ++++++
- tools/perf/util/pmu.h            |  1 +
- 4 files changed, 45 insertions(+), 2 deletions(-)
+ tools/perf/pmu-events/arch/arm64/sbsa.json | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/sbsa.json
 
-diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
-index 477e513..9e674ca 100644
---- a/tools/perf/arch/arm64/util/pmu.c
-+++ b/tools/perf/arch/arm64/util/pmu.c
-@@ -3,8 +3,10 @@
- #include <internal/cpumap.h>
- #include "../../../util/cpumap.h"
- #include "../../../util/pmu.h"
-+#include <api/fs/fs.h>
-+#include <math.h>
- 
--const struct pmu_events_table *pmu_events_table__find(void)
-+static struct perf_pmu *pmu__find_core_pmu(void)
- {
- 	struct perf_pmu *pmu = NULL;
- 
-@@ -19,8 +21,37 @@ const struct pmu_events_table *pmu_events_table__find(void)
- 		if (pmu->cpus->nr != cpu__max_cpu().cpu)
- 			return NULL;
- 
--		return perf_pmu__find_table(pmu);
-+		return pmu;
- 	}
- 
- 	return NULL;
- }
-+
-+const struct pmu_events_table *pmu_events_table__find(void)
-+{
-+	struct perf_pmu *pmu = pmu__find_core_pmu();
-+
-+	if (pmu)
-+		return perf_pmu__find_table(pmu);
-+
-+	return NULL;
-+}
-+
-+double perf_pmu__cpu_slots_per_cycle(void)
-+{
-+	char path[PATH_MAX];
-+	unsigned long long slots = 0;
-+	struct perf_pmu *pmu = pmu__find_core_pmu();
-+
-+	if (pmu) {
-+		scnprintf(path, PATH_MAX,
-+			EVENT_SOURCE_DEVICE_PATH "%s/caps/slots", pmu->name);
-+		/*
-+		 * The value of slots is not greater than 32 bits, but sysfs__read_int
-+		 * can't read value with 0x prefix, so use sysfs__read_ull instead.
-+		 */
-+		sysfs__read_ull(path, &slots);
-+	}
-+
-+	return slots ? (double)slots : NAN;
-+}
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 00dcde3..c1da20b 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -19,6 +19,7 @@
- #include <linux/zalloc.h>
- #include <ctype.h>
- #include <math.h>
-+#include "pmu.h"
- 
- #ifdef PARSER_DEBUG
- extern int expr_debug;
-@@ -448,6 +449,10 @@ double expr__get_literal(const char *literal, const struct expr_scanner_ctx *ctx
- 		result = topology->core_cpus_lists;
- 		goto out;
- 	}
-+	if (!strcmp("#slots", literal)) {
-+		result = perf_pmu__cpu_slots_per_cycle();
-+		goto out;
-+	}
- 
- 	pr_err("Unrecognized literal '%s'", literal);
- out:
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 2bdeb89..cbb4fbf 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -19,6 +19,7 @@
- #include <regex.h>
- #include <perf/cpumap.h>
- #include <fnmatch.h>
-+#include <math.h>
- #include "debug.h"
- #include "evsel.h"
- #include "pmu.h"
-@@ -1993,3 +1994,8 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
- 	*ucpus_ptr = unmatched_cpus;
- 	return 0;
- }
-+
-+double __weak perf_pmu__cpu_slots_per_cycle(void)
-+{
-+	return NAN;
-+}
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 69ca000..fd414ba 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -259,4 +259,5 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
- 
- char *pmu_find_real_name(const char *name);
- char *pmu_find_alias_name(const char *name);
-+double perf_pmu__cpu_slots_per_cycle(void);
- #endif /* __PMU_H */
+diff --git a/tools/perf/pmu-events/arch/arm64/sbsa.json b/tools/perf/pmu-events/arch/arm64/sbsa.json
+new file mode 100644
+index 0000000..f678c37e
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
+@@ -0,0 +1,30 @@
++[
++    {
++        "MetricExpr": "stall_slot_frontend / (#slots * cpu_cycles)",
++        "BriefDescription": "Frontend bound L1 topdown metric",
++        "MetricGroup": "TopdownL1",
++        "MetricName": "frontend_bound",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "(1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
++        "BriefDescription": "Bad speculation L1 topdown metric",
++        "MetricGroup": "TopdownL1",
++        "MetricName": "bad_speculation",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "(op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
++        "BriefDescription": "Retiring L1 topdown metric",
++        "MetricGroup": "TopdownL1",
++        "MetricName": "retiring",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "stall_slot_backend / (#slots * cpu_cycles)",
++        "BriefDescription": "Backend Bound L1 topdown metric",
++        "MetricGroup": "TopdownL1",
++        "MetricName": "backend_bound",
++        "ScaleUnit": "100%"
++    }
++]
 -- 
 1.8.3.1
 
