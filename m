@@ -2,162 +2,299 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E20C678DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 14:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538D5C63797
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 15:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232433AbjAQOYE (ORCPT
+        id S229469AbjAQPTP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Jan 2023 09:24:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
+        Tue, 17 Jan 2023 10:19:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232609AbjAQOXe (ORCPT
+        with ESMTP id S233746AbjAQPS0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Jan 2023 09:23:34 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 48AEE3E617;
-        Tue, 17 Jan 2023 06:22:00 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7277412FC;
-        Tue, 17 Jan 2023 06:22:41 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B3A83F67D;
-        Tue, 17 Jan 2023 06:21:43 -0800 (PST)
-Date:   Tue, 17 Jan 2023 14:21:40 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
-        nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
-        linus.walleij@linaro.org, shawnguo@kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
-        khilman@kernel.org, krzysztof.kozlowski@linaro.org,
-        alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
-        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
-        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
-        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
-        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
-        shorne@gmail.com, James.Bottomley@hansenpartnership.com,
-        deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
-        richard@nod.at, anton.ivanov@cambridgegreys.com,
-        johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
-        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
-        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        anup@brainfault.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, jacob.jun.pan@linux.intel.com,
-        atishp@atishpatra.org, Arnd Bergmann <arnd@arndb.de>,
-        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, dennis@kernel.org, tj@kernel.org,
-        cl@linux.com, rostedt@goodmis.org, mhiramat@kernel.org,
-        frederic@kernel.org, paulmck@kernel.org, pmladek@suse.com,
-        senozhatsky@chromium.org, john.ogness@linutronix.de,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, ryabinin.a.a@gmail.com,
-        glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
-        vincenzo.frascino@arm.com,
-        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 00/51] cpuidle,rcu: Clean up the mess
-Message-ID: <20230117142140.g423hxisv7djudof@bogus>
-References: <20230112194314.845371875@infradead.org>
- <Y8WCWAuQSHN651dA@FVFF77S0Q05N.cambridge.arm.com>
- <Y8Z31UbzG3LJgAXE@hirez.programming.kicks-ass.net>
- <Y8afpbHtDOqAHq9M@FVFF77S0Q05N.cambridge.arm.com>
+        Tue, 17 Jan 2023 10:18:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB48840BEB
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jan 2023 07:17:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673968654;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6RbQc1x0le2uzXYwwuT+ggffbpp+gPJWmHQBbJWhtAw=;
+        b=VtV5x9cgrs2M/fxrx94lK4txmepBozzpoogBNN4Zh7x9rSYbTHnky9BiMgNeC9EoJyCm0w
+        7M5tPDTskOO8f273U8/L/PiSmYHK+TTUxhtkAoJuh7ByreCNTfJWCsOyhdl/7wYS8YLR6X
+        Ng+hAAu0KWnBqSBL0i7R88J1BtNaz5E=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-414-o04TTi8_PHyYHQIhQov4mw-1; Tue, 17 Jan 2023 10:17:33 -0500
+X-MC-Unique: o04TTi8_PHyYHQIhQov4mw-1
+Received: by mail-ed1-f70.google.com with SMTP id t17-20020a056402525100b0049e0d2dd9b1so4634936edd.11
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jan 2023 07:17:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6RbQc1x0le2uzXYwwuT+ggffbpp+gPJWmHQBbJWhtAw=;
+        b=lg2+iiDc95SVLkE/28UCrknPcAFwbFv8+lW90q9JG7rVBD+anorUy8JtC7yl8SAh9L
+         MLltgpdAiMkBlCtZ++Jyrc5sdMa+H4qRgRuen3yJrSKNcO8XcIvLAfnsjdHSTo9eTZs4
+         3oQdpf33+lrNb1m13pwikvg70F/yIl4YuzuNx3kTo9KZGRPOJYNISyxM36kHx1tM96Ck
+         jN/yhhL9/c75towNQwt0/xcNULD8xnlGnDdzw87N7rdaviO55RCxu8CViJNHV6Ackumq
+         9ib/p99+ZDd3blWSrDlvViVLGqgryVOixynGE3/bv9RWI1xNqlJb4nUjE+7RvjAVtEhS
+         +0hA==
+X-Gm-Message-State: AFqh2kqBLdIptfSGt2JFaLi/efs9yhfjzy8iWXJ0pyLeUfDCT++cVlgj
+        GQJ5EMPAPYGnb/CKfmtWaV7fVZngJl57S8wMPEhVxRlsIFYUARhN/O0gvIGRmPInrPjx3aD/Lnt
+        +iA73cxjBO2tfyWKHF3BKF9K2V1425w==
+X-Received: by 2002:a05:6402:602:b0:49d:f448:878c with SMTP id n2-20020a056402060200b0049df448878cmr11687937edv.2.1673968651128;
+        Tue, 17 Jan 2023 07:17:31 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtBcBkMr6etlJY7aciZ5LLC6Z+mNUrynCjhZzcnY6umb0S/UV2EsJ3yrEpUlRyDdPM9z1i52Q==
+X-Received: by 2002:a05:6402:602:b0:49d:f448:878c with SMTP id n2-20020a056402060200b0049df448878cmr11687903edv.2.1673968650747;
+        Tue, 17 Jan 2023 07:17:30 -0800 (PST)
+Received: from [192.168.31.129] (84-115-237-15.cable.dynamic.surfer.at. [84.115.237.15])
+        by smtp.gmail.com with ESMTPSA id g11-20020a056402428b00b004722d7e8c7csm12848623edc.14.2023.01.17.07.17.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jan 2023 07:17:30 -0800 (PST)
+Message-ID: <2568dad8-88b4-ebf9-3013-73cc6becdc1c@redhat.com>
+Date:   Tue, 17 Jan 2023 16:17:29 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8afpbHtDOqAHq9M@FVFF77S0Q05N.cambridge.arm.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2] perf script flamegraph: Avoid d3-flame-graph package
+ dependency
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        996839@bugs.debian.org, Martin Spier <spiermar@gmail.com>,
+        Brendan Gregg <brendan@intel.com>
+References: <20230112220024.32709-1-irogers@google.com>
+Content-Language: en-US
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+In-Reply-To: <20230112220024.32709-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 01:16:21PM +0000, Mark Rutland wrote:
-> On Tue, Jan 17, 2023 at 11:26:29AM +0100, Peter Zijlstra wrote:
-> > On Mon, Jan 16, 2023 at 04:59:04PM +0000, Mark Rutland wrote:
-> > 
-> > > I'm sorry to have to bear some bad news on that front. :(
-> > 
-> > Moo, something had to give..
-> > 
-> > 
-> > > IIUC what's happenign here is the PSCI cpuidle driver has entered idle and RCU
-> > > is no longer watching when arm64's cpu_suspend() manipulates DAIF. Our
-> > > local_daif_*() helpers poke lockdep and tracing, hence the call to
-> > > trace_hardirqs_off() and the RCU usage.
-> > 
-> > Right, strictly speaking not needed at this point, IRQs should have been
-> > traced off a long time ago.
+On 12.01.23 23:00, Ian Rogers wrote:
+> Currently flame graph generation requires a d3-flame-graph template to
+> be installed. Unfortunately this is hard to come by for things like
+> Debian [1]. If the template isn't installed then ask if it should be
+> downloaded from jsdelivr CDN. The downloaded HTML file is validated
+> against an md5sum. If the download fails, generate a minimal flame
+> graph with the javascript coming from links to jsdelivr CDN.
 > 
-> True, but there are some other calls around here that *might* end up invoking
-> RCU stuff (e.g. the MTE code).
+> v2. Change the warning to a prompt about downloading and add the
+>      --allow-download command line flag. Add an md5sum check for the
+>      downloaded HTML.
 > 
-> That all needs a noinstr cleanup too, which I'll sort out as a follow-up.
+> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
 > 
-> > > I think we need RCU to be watching all the way down to cpu_suspend(), and it's
-> > > cpu_suspend() that should actually enter/exit idle context. That and we need to
-> > > make cpu_suspend() and the low-level PSCI invocation noinstr.
-> > > 
-> > > I'm not sure whether 32-bit will have a similar issue or not.
-> > 
-> > I'm not seeing 32bit or Risc-V have similar issues here, but who knows,
-> > maybe I missed somsething.
-> 
-> I reckon if they do, the core changes here give us the infrastructure to fix
-> them if/when we get reports.
-> 
-> > In any case, the below ought to cure the ARM64 case and remove that last
-> > known RCU_NONIDLE() user as a bonus.
-> 
-> The below works for me testing on a Juno R1 board with PSCI, using defconfig +
-> CONFIG_PROVE_LOCKING=y + CONFIG_DEBUG_LOCKDEP=y + CONFIG_DEBUG_ATOMIC_SLEEP=y.
-> I'm not sure how to test the LPI / FFH part, but it looks good to me.
-> 
-> FWIW:
-> 
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> Tested-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> Sudeep, would you be able to give the LPI/FFH side a spin with the kconfig
-> options above?
-> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Not sure if I have messed up something in my mail setup, but I did reply
-earlier. I did test both DT/cpuidle-psci driver and  ACPI/LPI+FFH driver
-with the fix Peter sent. I was seeing same splat as you in both DT and
-ACPI boot which the patch fixed it. I used the same config as described by
-you above.
+Thank you for the changes. I've tested v2 with:
+
+* d3-flame-graph package installed
+* template not installed, download template from jsdelivr
+* download from jsdelivr, with --allow-download
+* invalid checksum
+* unreachable jsdelivr, creating a minimal template
+
+Everything works great except when I'm invoking "perf script flamegraph 
+-a -F 99 sleep 10" (combining perf report + perf script):
+
+[root@agerstmayr-thinkpad tmp]# perf script flamegraph -a -F 99 sleep 10
+------------------------------------------------------------
+[...]
+------------------------------------------------------------
+Warning: Flame Graph template 
+'/usr/share/d3-flame-graph/d3-flamegraph-base.html'
+does not exist. To avoid this please install a package such as the
+js-d3-flame-graph or libjs-d3-flame-graph, specify an existing flame
+graph template (--template PATH) or use another output format (--format
+FORMAT).
+Do you wish to download a template from cdn.jsdelivr.net? (this warning 
+can be suppressed with --allow-download) [yn] Traceback (most recent 
+call last):
+   File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 157, 
+in trace_end
+     s = input("Do you wish to download a template from 
+cdn.jsdelivr.net? (this warning can be suppressed with --allow-download) 
+[yn] ").lower()
+ 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 9] Bad file descriptor
+Fatal Python error: handler_call_die: problem in Python trace event handler
+Python runtime state: initialized
+
+Current thread 0x00007ff4053a3cc0 (most recent call first):
+   <no Python frame>
+
+Extension modules: systemd._journal, systemd._reader, systemd.id128 
+(total: 3)
+/usr/libexec/perf-core/scripts/python/bin/flamegraph-report: line 3: 
+2135491 Aborted                 (core dumped) perf script -s 
+"$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+
+
+iirc when running "perf script flamegraph" the perf.data gets piped to 
+stdin of the flamegraph script, so we can't ask the user in this case. 
+You can check this condition with `self.args.input == "-". Not sure 
+what's the best action in this case, maybe just exit?
+
+
+Cheers,
+Andreas
+
+
+> ---
+>   tools/perf/scripts/python/flamegraph.py | 96 +++++++++++++++++++------
+>   1 file changed, 74 insertions(+), 22 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> index b6af1dd5f816..086619053e4e 100755
+> --- a/tools/perf/scripts/python/flamegraph.py
+> +++ b/tools/perf/scripts/python/flamegraph.py
+> @@ -19,12 +19,34 @@
+>   # pylint: disable=missing-function-docstring
+>   
+>   from __future__ import print_function
+> -import sys
+> -import os
+> -import io
+>   import argparse
+> +import hashlib
+> +import io
+>   import json
+> +import os
+>   import subprocess
+> +import sys
+> +import urllib.request
+> +
+> +minimal_html = """<head>
+> +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
+> +</head>
+> +<body>
+> +  <div id="chart"></div>
+> +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+> +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+> +  <script type="text/javascript">
+> +  const stacks = [/** @flamegraph_json **/];
+> +  // Note, options is unused.
+> +  const options = [/** @options_json **/];
+> +
+> +  var chart = flamegraph();
+> +  d3.select("#chart")
+> +        .datum(stacks[0])
+> +        .call(chart);
+> +  </script>
+> +</body>
+> +"""
+>   
+>   # pylint: disable=too-few-public-methods
+>   class Node:
+> @@ -50,16 +72,6 @@ class FlameGraphCLI:
+>           self.args = args
+>           self.stack = Node("all", "root")
+>   
+> -        if self.args.format == "html" and \
+> -                not os.path.isfile(self.args.template):
+> -            print("Flame Graph template {} does not exist. Please install "
+> -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+> -                  "package, specify an existing flame graph template "
+> -                  "(--template PATH) or another output format "
+> -                  "(--format FORMAT).".format(self.args.template),
+> -                  file=sys.stderr)
+> -            sys.exit(1)
+> -
+>       @staticmethod
+>       def get_libtype_from_dso(dso):
+>           """
+> @@ -128,16 +140,52 @@ class FlameGraphCLI:
+>               }
+>               options_json = json.dumps(options)
+>   
+> +            template_md5sum = None
+> +            if self.args.format == "html":
+> +                if os.path.isfile(self.args.template):
+> +                    template = f"file://{self.args.template}"
+> +                else:
+> +                    if not self.args.allow_download:
+> +                        print(f"""Warning: Flame Graph template '{self.args.template}'
+> +does not exist. To avoid this please install a package such as the
+> +js-d3-flame-graph or libjs-d3-flame-graph, specify an existing flame
+> +graph template (--template PATH) or use another output format (--format
+> +FORMAT).""",
+> +                              file=sys.stderr)
+> +                        s = None
+> +                        while s != "y" and s != "n":
+> +                            s = input("Do you wish to download a template from cdn.jsdelivr.net? (this warning can be suppressed with --allow-download) [yn] ").lower()
+> +                        if s == "n":
+> +                            quit()
+> +                    template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
+> +                    template_md5sum = "143e0d06ba69b8370b9848dcd6ae3f36"
+> +
+>               try:
+> -                with io.open(self.args.template, encoding="utf-8") as template:
+> -                    output_str = (
+> -                        template.read()
+> -                        .replace("/** @options_json **/", options_json)
+> -                        .replace("/** @flamegraph_json **/", stacks_json)
+> -                    )
+> -            except IOError as err:
+> -                print("Error reading template file: {}".format(err), file=sys.stderr)
+> -                sys.exit(1)
+> +                with urllib.request.urlopen(template) as template:
+> +                    output_str = "".join([
+> +                        l.decode("utf-8") for l in template.readlines()
+> +                    ])
+> +            except Exception as err:
+> +                print(f"Error reading template {template}: {err}\n"
+> +                      "a minimal flame graph will be generated", file=sys.stderr)
+> +                output_str = minimal_html
+> +                template_md5sum = None
+> +
+> +            if template_md5sum:
+> +                download_md5sum = hashlib.md5(output_str.encode("utf-8")).hexdigest()
+> +                if download_md5sum != template_md5sum:
+> +                    s = None
+> +                    while s != "y" and s != "n":
+> +                        s = input(f"""Unexpected template md5sum.
+> +{download_md5sum} != {template_md5sum}, for:
+> +{output_str}
+> +continue?[yn] """).lower()
+> +                    if s == "n":
+> +                        quit()
+> +
+> +            output_str = output_str.replace("/** @options_json **/", options_json)
+> +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
+> +
+>               output_fn = self.args.output or "flamegraph.html"
+>           else:
+>               output_str = stacks_json
+> @@ -172,6 +220,10 @@ if __name__ == "__main__":
+>                           choices=["blue-green", "orange"])
+>       parser.add_argument("-i", "--input",
+>                           help=argparse.SUPPRESS)
+> +    parser.add_argument("--allow-download",
+> +                        default=False,
+> +                        action="store_true",
+> +                        help="allow unprompted downloading of HTML template")
+>   
+>       cli_args = parser.parse_args()
+>       cli = FlameGraphCLI(cli_args)
 
 -- 
-Regards,
-Sudeep
+Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower, 
+26.floor, Handelskai 94-96, Austria
+Commercial register: Commercial Court Vienna, FN 479668w
+
