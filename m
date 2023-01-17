@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BD8C3DA78
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 07:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C72C63797
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 07:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235491AbjAQHaC (ORCPT
+        id S235831AbjAQHaE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Jan 2023 02:30:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
+        Tue, 17 Jan 2023 02:30:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235686AbjAQH37 (ORCPT
+        with ESMTP id S235634AbjAQHaB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Jan 2023 02:29:59 -0500
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9E62385E;
-        Mon, 16 Jan 2023 23:29:56 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZm6e3K_1673940591;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZm6e3K_1673940591)
+        Tue, 17 Jan 2023 02:30:01 -0500
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496B722A38;
+        Mon, 16 Jan 2023 23:29:59 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZm6e4A_1673940594;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZm6e4A_1673940594)
           by smtp.aliyun-inc.com;
-          Tue, 17 Jan 2023 15:29:51 +0800
+          Tue, 17 Jan 2023 15:29:54 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -41,9 +41,9 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v8 3/9] perf vendor events arm64: Add common topdown L1 metrics
-Date:   Tue, 17 Jan 2023 15:29:27 +0800
-Message-Id: <1673940573-90503-4-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v8 6/9] perf vendor events arm64: Add cache metrics for neoverse-n2-v2
+Date:   Tue, 17 Jan 2023 15:29:30 +0800
+Message-Id: <1673940573-90503-7-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -51,56 +51,102 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The metrics of topdown L1 are from ARM sbsa7.0 platform design doc[0],
-D37-38, which are standard. So put them in the common file sbsa.json of
-arm64, so that other cores besides n2/v2 can also be reused.
-
-[0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+Add cache related metrics.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 Reviewed-by: John Garry <john.g.garry@oracle.com>
 Acked-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/arm64/sbsa.json | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/sbsa.json
+ .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/sbsa.json b/tools/perf/pmu-events/arch/arm64/sbsa.json
-new file mode 100644
-index 0000000..f678c37e
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/sbsa.json
-@@ -0,0 +1,30 @@
-+[
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+index 60bbd8f..08c6aaa 100644
+--- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+@@ -62,5 +62,82 @@
+         "MetricGroup": "TLB",
+         "MetricName": "itlb_walk_rate",
+         "ScaleUnit": "100%"
++    },
 +    {
-+        "MetricExpr": "stall_slot_frontend / (#slots * cpu_cycles)",
-+        "BriefDescription": "Frontend bound L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "frontend_bound",
++        "MetricExpr": "L1I_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L1 I-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l1i_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L1I_CACHE_REFILL / L1I_CACHE",
++        "BriefDescription": "The rate of L1 I-Cache misses to the overall L1 I-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l1i_cache_miss_rate",
 +        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "(1 - op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
-+        "BriefDescription": "Bad speculation L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "bad_speculation",
++        "MetricExpr": "L1D_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L1 D-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l1d_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L1D_CACHE_REFILL / L1D_CACHE",
++        "BriefDescription": "The rate of L1 D-Cache misses to the overall L1 D-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l1d_cache_miss_rate",
 +        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "(op_retired / op_spec) * (1 - stall_slot / (#slots * cpu_cycles))",
-+        "BriefDescription": "Retiring L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "retiring",
++        "MetricExpr": "L2D_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L2 D-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l2d_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L2D_CACHE_REFILL / L2D_CACHE",
++        "BriefDescription": "The rate of L2 D-Cache misses to the overall L2 D-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l2d_cache_miss_rate",
 +        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "stall_slot_backend / (#slots * cpu_cycles)",
-+        "BriefDescription": "Backend Bound L1 topdown metric",
-+        "MetricGroup": "TopdownL1",
-+        "MetricName": "backend_bound",
++        "MetricExpr": "L3D_CACHE_REFILL / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of L3 D-Cache misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "l3d_cache_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "L3D_CACHE_REFILL / L3D_CACHE",
++        "BriefDescription": "The rate of L3 D-Cache misses to the overall L3 D-Cache",
++        "MetricGroup": "Cache",
++        "MetricName": "l3d_cache_miss_rate",
 +        "ScaleUnit": "100%"
-+    }
-+]
++    },
++    {
++        "MetricExpr": "LL_CACHE_MISS_RD / INST_RETIRED * 1000",
++        "BriefDescription": "The rate of LL Cache read misses per kilo instructions",
++        "MetricGroup": "Cache",
++        "MetricName": "ll_cache_read_mpki",
++        "ScaleUnit": "1MPKI"
++    },
++    {
++        "MetricExpr": "LL_CACHE_MISS_RD / LL_CACHE_RD",
++        "BriefDescription": "The rate of LL Cache read misses to the overall LL Cache read",
++        "MetricGroup": "Cache",
++        "MetricName": "ll_cache_read_miss_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "(LL_CACHE_RD - LL_CACHE_MISS_RD) / LL_CACHE_RD",
++        "BriefDescription": "The rate of LL Cache read hit to the overall LL Cache read",
++        "MetricGroup": "Cache",
++        "MetricName": "ll_cache_read_hit_rate",
++        "ScaleUnit": "100%"
+     }
+ ]
 -- 
 1.8.3.1
 
