@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB29C6379F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 07:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FBDC678D4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Jan 2023 07:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235900AbjAQHaQ (ORCPT
+        id S235862AbjAQHaS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Jan 2023 02:30:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34578 "EHLO
+        Tue, 17 Jan 2023 02:30:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235859AbjAQHaE (ORCPT
+        with ESMTP id S235873AbjAQHaL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Jan 2023 02:30:04 -0500
-Received: from out199-1.us.a.mail.aliyun.com (out199-1.us.a.mail.aliyun.com [47.90.199.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6D02385E;
-        Mon, 16 Jan 2023 23:30:01 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZm6e55_1673940595;
-Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZm6e55_1673940595)
+        Tue, 17 Jan 2023 02:30:11 -0500
+Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102C925E02;
+        Mon, 16 Jan 2023 23:30:03 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0VZm6e64_1673940597;
+Received: from srmbuffer011165236051.sqa.eu95(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZm6e64_1673940597)
           by smtp.aliyun-inc.com;
-          Tue, 17 Jan 2023 15:29:55 +0800
+          Tue, 17 Jan 2023 15:29:57 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>
@@ -41,9 +41,9 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v8 7/9] perf vendor events arm64: Add branch metrics for neoverse-n2-v2
-Date:   Tue, 17 Jan 2023 15:29:31 +0800
-Message-Id: <1673940573-90503-8-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH v8 9/9] perf vendor events arm64: Add instruction mix metrics for neoverse-n2-v2
+Date:   Tue, 17 Jan 2023 15:29:33 +0800
+Message-Id: <1673940573-90503-10-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -51,43 +51,85 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add branch related metrics.
+Add instruction mix related metrics.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 Reviewed-by: John Garry <john.g.garry@oracle.com>
 Acked-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/arm64/arm/neoverse-n2-v2/metrics.json      | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
 diff --git a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
-index 08c6aaa..afcdb17 100644
+index 3d6ac0c..8ad15b7 100644
 --- a/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
 +++ b/tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
-@@ -139,5 +139,26 @@
-         "MetricGroup": "Cache",
-         "MetricName": "ll_cache_read_hit_rate",
+@@ -206,5 +206,68 @@
+         "MetricGroup": "PEutilization",
+         "MetricName": "cpu_utilization",
          "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "BR_MIS_PRED_RETIRED / INST_RETIRED * 1000",
-+        "BriefDescription": "The rate of branches mis-predicted per kilo instructions",
-+        "MetricGroup": "Branch",
-+        "MetricName": "branch_mpki",
-+        "ScaleUnit": "1MPKI"
++        "MetricExpr": "LD_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of load instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "load_spec_rate",
++        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "BR_RETIRED / INST_RETIRED * 1000",
-+        "BriefDescription": "The rate of branches retired per kilo instructions",
-+        "MetricGroup": "Branch",
-+        "MetricName": "branch_pki",
-+        "ScaleUnit": "1PKI"
++        "MetricExpr": "ST_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of store instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "store_spec_rate",
++        "ScaleUnit": "100%"
 +    },
 +    {
-+        "MetricExpr": "BR_MIS_PRED_RETIRED / BR_RETIRED",
-+        "BriefDescription": "The rate of branches mis-predited to the overall branches",
-+        "MetricGroup": "Branch",
-+        "MetricName": "branch_miss_pred_rate",
++        "MetricExpr": "DP_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of integer data-processing instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "data_process_spec_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "ASE_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of advanced SIMD instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "advanced_simd_spec_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "VFP_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of floating point instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "float_point_spec_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "CRYPTO_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of crypto instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "crypto_spec_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "BR_IMMED_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of branch immediate instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "branch_immed_spec_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "BR_RETURN_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of procedure return instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "branch_return_spec_rate",
++        "ScaleUnit": "100%"
++    },
++    {
++        "MetricExpr": "BR_INDIRECT_SPEC / INST_SPEC",
++        "BriefDescription": "The rate of indirect branch instructions speculatively executed to overall instructions speclatively executed",
++        "MetricGroup": "InstructionMix",
++        "MetricName": "branch_indirect_spec_rate",
 +        "ScaleUnit": "100%"
      }
  ]
