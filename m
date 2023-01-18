@@ -2,105 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AA1C38159
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 18:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E05C38159
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 20:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbjARSFD (ORCPT
+        id S229696AbjARUOa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Jan 2023 13:05:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55302 "EHLO
+        Wed, 18 Jan 2023 15:14:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbjARSEh (ORCPT
+        with ESMTP id S229482AbjARUO3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Jan 2023 13:04:37 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B3F5D903
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jan 2023 10:02:23 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id k8so20297983wrc.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jan 2023 10:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=m8l6H/Zs5B4MQGd630nTAm24Aa7PPunZI91/DoTYts8=;
-        b=RkXjr7lHJ3purNAEGKyte6RO0dU7BIHku1XLajH8wD4VlTGUJ+oNSGoV6TeoUknzC7
-         nfxMJWz0FMCcxY6/nFq9FBZPssMnHAI0exXolCDR9NlpUjWh1fv1OOacOOZU0k9L9FLd
-         vQSxN0prp6GMXZQa2d6teuBIpNWita/rB7WIxmsiqZG5rs3AvzSVWNDBg4M+SWkL4nPn
-         mAezwgA7ey9S7HLU9GY2tq3DwoQHcWEkEI1RwRWy0wppMa0JUebD6V/MSYW6Z26Zd/TK
-         ym+8uhc6JBHwvtO51zBx4U4UXhZsgGVPNTECDDLCNqVmMbTNfH1rpRCMfpzRiBH/jnLT
-         T4jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m8l6H/Zs5B4MQGd630nTAm24Aa7PPunZI91/DoTYts8=;
-        b=ynzHfUILJuYIP2KhVvQJ3yEtvwbVzkIChZ7w2wH7oMI5KNVSARGeUu5WIp3HNj4vIO
-         XgPMx6HgcQxbqgACxSM+w82pcnCjp2qRC4Yv8/lJex9FvCh5e0uYubvbdfbmiRSG4ZYE
-         CP+ZXDi6Alb4gmPIoduYXXxJ3Uke/hEX+78GS8zSK/AaglgzeuwfnPQtqUJIYw0PBYqL
-         BdCm7rpDpRO/RZw31NnzxFvrMZGsCQJkpMQYqZReH1jLz1Jg8clJlkVjuXjiw6sF/hRM
-         fzOGxw29hIlR5zBG/OKlV+bBivg7YKrjX6PxxdCex5Xz2SRAT1XeiL82CC6U/m1N0+a8
-         xtEw==
-X-Gm-Message-State: AFqh2koGOfXAs9SmSf5WptTc978Z13fgQzBAyYZjY3fZBifbJHF81/pp
-        AimRowLRs1Mlwjqrn84J+br7j3UdDZ4a1SstSfmFsQ==
-X-Google-Smtp-Source: AMrXdXu8hDRQ+czPoGTlX9n9vGPPlwX3WPI0/Aif+h9jtP/59bJGDwZYQkZlr3ktlPcR8jgXsFI4W88TQ8PNw85QBPY=
-X-Received: by 2002:a05:6000:5c6:b0:242:5caa:5fbf with SMTP id
- bh6-20020a05600005c600b002425caa5fbfmr197446wrb.300.1674064937432; Wed, 18
- Jan 2023 10:02:17 -0800 (PST)
+        Wed, 18 Jan 2023 15:14:29 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D1855D7E4;
+        Wed, 18 Jan 2023 12:14:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674072869; x=1705608869;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HN8PAhsHerh5dxvQkv6j43DWkYvcwpsU/FQhQ7BgyD4=;
+  b=DWowN8k6kD6q16ZL9yO8V2BbkPPVw5HjXhivLwKO5ETE8zGJGktXcl7f
+   KswKukl1ei5bDaxTJbXybRKBumfLLs0Mm5Upg0reLhV7ujnbgHhHqxTgF
+   y/9ZEIj34OKGCxoFyxjdQEy32t6kh+Q0s73vXGFKffHlFM3LtCh1R1rtf
+   TnZ+qzC3H9dvWOWiHsqxx01egdl6dK7Ej7mNJhj9JHK09+Q4CJmbl4gO4
+   +vhFXlyULzK9J8rqu8WMdlm4RNip5Ok5hAjD9SaoLTkkZ+IUYzNwnjfGF
+   LSZcwAXx36cb0muxS+LNEn9IBmAakfYM4w4VfL3hzzNMDZHJTdW69oqHi
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="389585607"
+X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
+   d="scan'208";a="389585607"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 12:14:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="988731084"
+X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
+   d="scan'208";a="988731084"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jan 2023 12:14:28 -0800
+Received: from [10.251.17.254] (kliang2-mobl1.ccr.corp.intel.com [10.251.17.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 43322580AFF;
+        Wed, 18 Jan 2023 12:14:27 -0800 (PST)
+Message-ID: <cb4b6b3c-5151-ed9d-ba17-e8a5f919f8f8@linux.intel.com>
+Date:   Wed, 18 Jan 2023 15:14:25 -0500
 MIME-Version: 1.0
-References: <20230118175632.3165217-1-kan.liang@linux.intel.com>
-In-Reply-To: <20230118175632.3165217-1-kan.liang@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 18 Jan 2023 10:02:04 -0800
-Message-ID: <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
 Subject: Re: [PATCH] perf vendor events intel: Add Emerald Rapids
-To:     kan.liang@linux.intel.com
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
 Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         artem.bityutskiy@linux.intel.com, andi.kleen@intel.com
-Content-Type: text/plain; charset="UTF-8"
+References: <20230118175632.3165217-1-kan.liang@linux.intel.com>
+ <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 18, 2023 at 9:57 AM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The event list of the Emerald Rapids is the same as the Sapphire
-> Rapids. Add the CPU model ID of Emerald Rapids into the mapfile.csv and
-> point it to the event list of Sapphire Rapids.
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-I note it currently isn't on the perfmon github:
-https://github.com/intel/perfmon/blob/main/mapfile.csv
-This will create a diff from the version of mapfile.csv generated by:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-Presumably there will be an update to solve that.
+On 2023-01-18 1:02 p.m., Ian Rogers wrote:
+> On Wed, Jan 18, 2023 at 9:57 AM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The event list of the Emerald Rapids is the same as the Sapphire
+>> Rapids. Add the CPU model ID of Emerald Rapids into the mapfile.csv and
+>> point it to the event list of Sapphire Rapids.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+>> I note it currently isn't on the perfmon github:
+> https://github.com/intel/perfmon/blob/main/mapfile.csv
+
+Right, but it will be fixed soon.
 
 Thanks,
-Ian
-
-> ---
->  tools/perf/pmu-events/arch/x86/mapfile.csv | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> index 711a4ef05fdf..5facdac6fe8e 100644
-> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> @@ -21,7 +21,7 @@ GenuineIntel-6-A[AC],v1.00,meteorlake,core
->  GenuineIntel-6-1[AEF],v3,nehalemep,core
->  GenuineIntel-6-2E,v3,nehalemex,core
->  GenuineIntel-6-2A,v17,sandybridge,core
-> -GenuineIntel-6-8F,v1.09,sapphirerapids,core
-> +GenuineIntel-6-(8F|CF),v1.09,sapphirerapids,core
->  GenuineIntel-6-(37|4A|4C|4D|5A),v14,silvermont,core
->  GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
->  GenuineIntel-6-55-[01234],v1.28,skylakex,core
-> --
-> 2.35.1
->
+Kan
+> This will create a diff from the version of mapfile.csv generated by:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> Presumably there will be an update to solve that.>
+> Thanks,
+> Ian
+> 
+>> ---
+>>  tools/perf/pmu-events/arch/x86/mapfile.csv | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+>> index 711a4ef05fdf..5facdac6fe8e 100644
+>> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+>> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+>> @@ -21,7 +21,7 @@ GenuineIntel-6-A[AC],v1.00,meteorlake,core
+>>  GenuineIntel-6-1[AEF],v3,nehalemep,core
+>>  GenuineIntel-6-2E,v3,nehalemex,core
+>>  GenuineIntel-6-2A,v17,sandybridge,core
+>> -GenuineIntel-6-8F,v1.09,sapphirerapids,core
+>> +GenuineIntel-6-(8F|CF),v1.09,sapphirerapids,core
+>>  GenuineIntel-6-(37|4A|4C|4D|5A),v14,silvermont,core
+>>  GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
+>>  GenuineIntel-6-55-[01234],v1.28,skylakex,core
+>> --
+>> 2.35.1
+>>
