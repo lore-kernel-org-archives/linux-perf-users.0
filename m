@@ -2,184 +2,271 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E480C32793
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 14:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCA1C38147
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 15:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231146AbjAROKf (ORCPT
+        id S229705AbjARPzB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Jan 2023 09:10:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37294 "EHLO
+        Wed, 18 Jan 2023 10:55:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230413AbjAROJ0 (ORCPT
+        with ESMTP id S230422AbjARPyP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Jan 2023 09:09:26 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A13832E44
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jan 2023 05:50:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 24B05B81D24
-        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jan 2023 13:50:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CE7DC433EF;
-        Wed, 18 Jan 2023 13:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674049839;
-        bh=V8VFhaNJ/NT5u9Ys9MC86vH6O+WhcQnpGpBjEMUhMFM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kfexOwdp0Q9S42G3QdwytIV/q2G5qr2PSyhC9wljbdRaBdmZJpcjMiMAkjCnNHWWj
-         MG6UynEN0pP78Ib1TRU3JesUASsALER7azPzGpipdFRi/hVYm7jNEqHeFO+xKCzAqi
-         b/9AQAq7I972E09l9Q0mDOQXS5Ud8BepU2nO8Wjo+vF93FEXC+9+X2NqVVa1km/sd5
-         1imXqbZgCgx0O2fzwFZN29mP/N8V/NmESwGE6CUiFYTWw6RXy5yRBiAvswAqMmvHxq
-         wAQih70E1hRQoXUXl4Py61Jp3PK8DWaQWCK9j+GhT8a6W7ZIQgaEx3MGhweeSEvd8N
-         dzI1CxAHmavfQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C9C0A405BE; Wed, 18 Jan 2023 10:50:36 -0300 (-03)
-Date:   Wed, 18 Jan 2023 10:50:36 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
-        james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.ibm.com
-Subject: Re: [PATCH 1/2] tools/perf: Fix the file mode with copyfile while
- adding file to build-id cache
-Message-ID: <Y8f5LNu2tmO/ceej@kernel.org>
-References: <20230116050131.17221-1-atrajeev@linux.vnet.ibm.com>
+        Wed, 18 Jan 2023 10:54:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4444E50C
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jan 2023 07:50:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674057033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kgYqGftpEGZz+nVlMbD31Pa4IzVL9LK66lldVqRNb7c=;
+        b=Eym/6x5bSo9F+RkmhFm/7G6kwy5asrk1+104O5Pt84IUgXRH6Rq7EuzO9bnwAhX7GKR4cV
+        aAXFJMEwUXCb8F87WNLkDxkCpU19krqoaXYa9euOXvyR4N49QgmLY5y50TmOuCyIz5IFvi
+        /pe8InnO/LQiKpGZYXyWoVLSdMwyFQI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-612-xOaOatC_P_uA4HcElByxJw-1; Wed, 18 Jan 2023 10:50:32 -0500
+X-MC-Unique: xOaOatC_P_uA4HcElByxJw-1
+Received: by mail-ed1-f72.google.com with SMTP id m12-20020a056402430c00b0049e4ac58509so1737654edc.16
+        for <linux-perf-users@vger.kernel.org>; Wed, 18 Jan 2023 07:50:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kgYqGftpEGZz+nVlMbD31Pa4IzVL9LK66lldVqRNb7c=;
+        b=qh9xyYzlpsdTVp5umhBP3IxFdfDNISHJB6Ksw9y3BfwiLXihAgAC5UoJUoGhBYfMZt
+         zDypACgWZ43JbEOoHAMtnW05SUyuHNueytnUEihGLim202AZpFu8/ReN67jmZECSatOA
+         F6wwRYrvEEXgTQ/ZHYy0k/y6aXxkosmHac+JMCJSD5SDsLSaxowgz+pJKCNdcYzVWsJc
+         0uAXImRHFbQX/CFXkdOkq3gJAGD2pjMNujXytIDP9kV71HtW4BEo4+WuYcpy7QVPvllB
+         IrbdhI2NgLT3bXn/c/DsvZrryO+53h9FvL+0/8aLrHAn37u/Askf0xIZoLfAqdrqUfr/
+         lpHQ==
+X-Gm-Message-State: AFqh2krLrtunysbg+uZrfErYQ+93i4eAWwR7kEZ3sg6ozCCdFpnxm/Sa
+        mPJnHqzIZlUWH2Zkp+ZgVhBE0SdMGtln+mFick4DnOfAaOhOZPghh3cOF8jGgGtN7uqD6iBpmGT
+        3zxHpdYbkuJFvthzqvdl553xtAEUTtw==
+X-Received: by 2002:a05:6402:e81:b0:498:9793:785b with SMTP id h1-20020a0564020e8100b004989793785bmr8448158eda.3.1674057030754;
+        Wed, 18 Jan 2023 07:50:30 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXuw982CP6OF7sXpPXF66Ak+EVGD7JgT//Xh3g/Uj3KPeS7JtOd63aiKaOMC+0k0mDSUC0/D7Q==
+X-Received: by 2002:a05:6402:e81:b0:498:9793:785b with SMTP id h1-20020a0564020e8100b004989793785bmr8448134eda.3.1674057030499;
+        Wed, 18 Jan 2023 07:50:30 -0800 (PST)
+Received: from [192.168.31.129] (84-115-237-15.cable.dynamic.surfer.at. [84.115.237.15])
+        by smtp.gmail.com with ESMTPSA id k24-20020a1709065fd800b0087329ff5922sm2195887ejv.139.2023.01.18.07.50.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jan 2023 07:50:30 -0800 (PST)
+Message-ID: <9dff0701-06f8-e759-7485-1f2b8a77631b@redhat.com>
+Date:   Wed, 18 Jan 2023 16:50:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230116050131.17221-1-atrajeev@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3] perf script flamegraph: Avoid d3-flame-graph package
+ dependency
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        996839@bugs.debian.org, Martin Spier <spiermar@gmail.com>,
+        Brendan Gregg <brendan@intel.com>
+References: <20230118072409.147786-1-irogers@google.com>
+From:   Andreas Gerstmayr <agerstmayr@redhat.com>
+In-Reply-To: <20230118072409.147786-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 16, 2023 at 10:31:30AM +0530, Athira Rajeev escreveu:
-> The test "build id cache operations" fails on powerpc
-> As below:
+On 18.01.23 08:24, Ian Rogers wrote:
+> Currently flame graph generation requires a d3-flame-graph template to
+> be installed. Unfortunately this is hard to come by for things like
+> Debian [1]. If the template isn't installed then ask if it should be
+> downloaded from jsdelivr CDN. The downloaded HTML file is validated
+> against an md5sum. If the download fails, generate a minimal flame
+> graph with the javascript coming from links to jsdelivr CDN.
 > 
-> 	Adding 5a0fd882b53084224ba47b624c55a469 ./tests/shell/../pe-file.exe: Ok
-> 	build id: 5a0fd882b53084224ba47b624c55a469
-> 	link: /tmp/perf.debug.ZTu/.build-id/5a/0fd882b53084224ba47b624c55a469
-> 	file: /tmp/perf.debug.ZTu/.build-id/5a/../../root/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf
-> 	failed: file /tmp/perf.debug.ZTu/.build-id/5a/../../root/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf does not exist
-> 	test child finished with -1
-> 	---- end ----
-> 	build id cache operations: FAILED!
+> v3. Adds a warning message and quits before download in live mode.
+> v2. Change the warning to a prompt about downloading and add the
+>      --allow-download command line flag. Add an md5sum check for the
+>      downloaded HTML.
 > 
-> The failing test is when trying to add pe-file.exe to
-> build id cache.
+> [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
 > 
-> Perf buildid-cache can be used to add/remove/manage
-> files from the build-id cache. "-a" option is used to
-> add a file to the build-id cache.
-> 
-> Simple command to do so for a PE exe file:
->  # ls -ltr tests/pe-file.exe
->  -rw-r--r--. 1 root root 75595 Jan 10 23:35 tests/pe-file.exe
->  The file is in home directory.
-> 
->  # mkdir  /tmp/perf.debug.TeY1
->  # perf --buildid-dir /tmp/perf.debug.TeY1 buildid-cache -v
->    -a tests/pe-file.exe
-> 
-> The above will create ".build-id" folder in build id
-> directory, which is /tmp/perf.debug.TeY1. Also adds file
-> to this folder under build id. Example:
-> 
->  # ls -ltr /tmp/perf.debug.TeY1/.build-id/5a/0fd882b53084224ba47b624c55a469/
->  total 76
->  -rw-r--r--. 1 root root     0 Jan 11 00:38 probes
->  -rwxr-xr-x. 1 root root 75595 Jan 11 00:38 elf
-> 
-> We can see in the results that file mode for original
-> file and file in build id directory is different. ie,
-> build id file has executable permission whereas original
-> file doesn’t have.
-> 
-> The code path and function ( build_id_cache__add ) to
-> add file to cache is in "util/build-id.c". In
-> build_id_cache__add() function, it first attempts to link
-> the original file to destination cache folder. If linking
-> the file fails ( which can happen if the destination and
-> source is on a different mount points ), it will copy the
-> file to destination. Here copyfile() routine explicitly uses
-> mode as "755" and hence file in the destination will have
-> executable permission.
-> 
-> Code snippet:
-> 
->  if (link(realname, filename) && errno != EEXIST &&
->                                copyfile(name, filename))
-> 
-> Strace logs:
-> 
-> 	172285 link("/home/<user_name>/linux/tools/perf/tests/pe-file.exe", "/tmp/perf.debug.TeY1/home/<user_name>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf") = -1 EXDEV (Invalid cross-device link)
-> 	172285 newfstatat(AT_FDCWD, "tests/pe-file.exe", {st_mode=S_IFREG|0644, st_size=75595, ...}, 0) = 0
-> 	172285 openat(AT_FDCWD, "/tmp/perf.debug.TeY1/home/<user_name>/linux/tools/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/.elf.KbAnsl", O_RDWR|O_CREAT|O_EXCL, 0600) = 3
-> 	172285 fchmod(3, 0755)                  = 0
-> 	172285 openat(AT_FDCWD, "tests/pe-file.exe", O_RDONLY) = 4
-> 	172285 mmap(NULL, 75595, PROT_READ, MAP_PRIVATE, 4, 0) = 0x7fffa5cd0000
-> 	172285 pwrite64(3, "MZ\220\0\3\0\0\0\4\0\0\0\377\377\0\0\270\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 75595, 0) = 75595
-> 
-> Whereas if the link succeeds, it succeeds in the first
-> attempt itself and the file in the build-id dir will
-> have same permission as original file.
-> 
-> Example, above uses /tmp. Instead if we use
-> "--buildid-dir /home/build", linking will work here
-> since mount points are same. Hence the destination file
-> will not have executable permission.
-> 
-> Since the testcase "tests/shell/buildid.sh" always looks
-> for executable file, test fails in powerpc environment
-> when test is run from /root.
-> 
-> The patch adds a change in build_id_cache__add to use
-> copyfile_mode which also passes the file’s original mode as
-> argument. This way the destination file mode also will
-> be same as original file.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
-Thanks, applied both patches, IIRC there were an Acked-by from Ian for
-this one? Or was that reference a cut'n'paste error with that other
-series for the #/bin/bash changes?
-
-- Arnaldo
-
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/build-id.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+
+I've tested the new functionality on Fedora 37 and everything works.
+
+On second thought, now the flame graph script will not only also work on 
+Debian (and derivatives), but on all distributions without needing a new 
+package for each distribution. That's a great improvement - thank you 
+for the changes!
+
+Reviewed-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+
+
+Thanks,
+Andreas
+
+
+
+>   tools/perf/scripts/python/flamegraph.py | 107 +++++++++++++++++++-----
+>   1 file changed, 85 insertions(+), 22 deletions(-)
 > 
-> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-> index a839b30c981b..ea9c083ab1e3 100644
-> --- a/tools/perf/util/build-id.c
-> +++ b/tools/perf/util/build-id.c
-> @@ -715,9 +715,13 @@ build_id_cache__add(const char *sbuild_id, const char *name, const char *realnam
->  		} else if (nsi && nsinfo__need_setns(nsi)) {
->  			if (copyfile_ns(name, filename, nsi))
->  				goto out_free;
-> -		} else if (link(realname, filename) && errno != EEXIST &&
-> -				copyfile(name, filename))
-> -			goto out_free;
-> +		} else if (link(realname, filename) && errno != EEXIST) {
-> +			struct stat f_stat;
+> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+> index b6af1dd5f816..cf7ce8229a6c 100755
+> --- a/tools/perf/scripts/python/flamegraph.py
+> +++ b/tools/perf/scripts/python/flamegraph.py
+> @@ -19,12 +19,34 @@
+>   # pylint: disable=missing-function-docstring
+>   
+>   from __future__ import print_function
+> -import sys
+> -import os
+> -import io
+>   import argparse
+> +import hashlib
+> +import io
+>   import json
+> +import os
+>   import subprocess
+> +import sys
+> +import urllib.request
 > +
-> +			if (!(stat(name, &f_stat) < 0) &&
-> +					copyfile_mode(name, filename, f_stat.st_mode))
-> +				goto out_free;
-> +		}
->  	}
->  
->  	/* Some binaries are stripped, but have .debug files with their symbol
-> -- 
-> 2.31.1
+> +minimal_html = """<head>
+> +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
+> +</head>
+> +<body>
+> +  <div id="chart"></div>
+> +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
+> +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
+> +  <script type="text/javascript">
+> +  const stacks = [/** @flamegraph_json **/];
+> +  // Note, options is unused.
+> +  const options = [/** @options_json **/];
+> +
+> +  var chart = flamegraph();
+> +  d3.select("#chart")
+> +        .datum(stacks[0])
+> +        .call(chart);
+> +  </script>
+> +</body>
+> +"""
+>   
+>   # pylint: disable=too-few-public-methods
+>   class Node:
+> @@ -50,16 +72,6 @@ class FlameGraphCLI:
+>           self.args = args
+>           self.stack = Node("all", "root")
+>   
+> -        if self.args.format == "html" and \
+> -                not os.path.isfile(self.args.template):
+> -            print("Flame Graph template {} does not exist. Please install "
+> -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
+> -                  "package, specify an existing flame graph template "
+> -                  "(--template PATH) or another output format "
+> -                  "(--format FORMAT).".format(self.args.template),
+> -                  file=sys.stderr)
+> -            sys.exit(1)
+> -
+>       @staticmethod
+>       def get_libtype_from_dso(dso):
+>           """
+> @@ -128,16 +140,63 @@ class FlameGraphCLI:
+>               }
+>               options_json = json.dumps(options)
+>   
+> +            template_md5sum = None
+> +            if self.args.format == "html":
+> +                if os.path.isfile(self.args.template):
+> +                    template = f"file://{self.args.template}"
+> +                else:
+> +                    if not self.args.allow_download:
+> +                        print(f"""Warning: Flame Graph template '{self.args.template}'
+> +does not exist. To avoid this please install a package such as the
+> +js-d3-flame-graph or libjs-d3-flame-graph, specify an existing flame
+> +graph template (--template PATH) or use another output format (--format
+> +FORMAT).""",
+> +                              file=sys.stderr)
+> +                        if self.args.input == "-":
+> +                            print("""Not attempting to download Flame Graph template as script command line
+> +input is disabled due to using live mode. If you want to download the
+> +template retry without live mode. For example, use 'perf record -a -g
+> +-F 99 sleep 60' and 'perf script report flamegraph'. Alternatively,
+> +download the template from:
+> +https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html
+> +and place it at:
+> +/usr/share/d3-flame-graph/d3-flamegraph-base.html""",
+> +                                  file=sys.stderr)
+> +                            quit()
+> +                        s = None
+> +                        while s != "y" and s != "n":
+> +                            s = input("Do you wish to download a template from cdn.jsdelivr.net? (this warning can be suppressed with --allow-download) [yn] ").lower()
+> +                        if s == "n":
+> +                            quit()
+> +                    template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
+> +                    template_md5sum = "143e0d06ba69b8370b9848dcd6ae3f36"
+> +
+>               try:
+> -                with io.open(self.args.template, encoding="utf-8") as template:
+> -                    output_str = (
+> -                        template.read()
+> -                        .replace("/** @options_json **/", options_json)
+> -                        .replace("/** @flamegraph_json **/", stacks_json)
+> -                    )
+> -            except IOError as err:
+> -                print("Error reading template file: {}".format(err), file=sys.stderr)
+> -                sys.exit(1)
+> +                with urllib.request.urlopen(template) as template:
+> +                    output_str = "".join([
+> +                        l.decode("utf-8") for l in template.readlines()
+> +                    ])
+> +            except Exception as err:
+> +                print(f"Error reading template {template}: {err}\n"
+> +                      "a minimal flame graph will be generated", file=sys.stderr)
+> +                output_str = minimal_html
+> +                template_md5sum = None
+> +
+> +            if template_md5sum:
+> +                download_md5sum = hashlib.md5(output_str.encode("utf-8")).hexdigest()
+> +                if download_md5sum != template_md5sum:
+> +                    s = None
+> +                    while s != "y" and s != "n":
+> +                        s = input(f"""Unexpected template md5sum.
+> +{download_md5sum} != {template_md5sum}, for:
+> +{output_str}
+> +continue?[yn] """).lower()
+> +                    if s == "n":
+> +                        quit()
+> +
+> +            output_str = output_str.replace("/** @options_json **/", options_json)
+> +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
+> +
+>               output_fn = self.args.output or "flamegraph.html"
+>           else:
+>               output_str = stacks_json
+> @@ -172,6 +231,10 @@ if __name__ == "__main__":
+>                           choices=["blue-green", "orange"])
+>       parser.add_argument("-i", "--input",
+>                           help=argparse.SUPPRESS)
+> +    parser.add_argument("--allow-download",
+> +                        default=False,
+> +                        action="store_true",
+> +                        help="allow unprompted downloading of HTML template")
+>   
+>       cli_args = parser.parse_args()
+>       cli = FlameGraphCLI(cli_args)
 
 -- 
+Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower, 
+26.floor, Handelskai 94-96, Austria
+Commercial register: Commercial Court Vienna, FN 479668w
 
-- Arnaldo
