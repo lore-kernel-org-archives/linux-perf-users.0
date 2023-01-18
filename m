@@ -2,296 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C4AC38159
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 07:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08852C38147
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 14:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229436AbjARH5R (ORCPT
+        id S230499AbjARODO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Jan 2023 02:57:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50690 "EHLO
+        Wed, 18 Jan 2023 09:03:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjARHxd (ORCPT
+        with ESMTP id S229872AbjAROC4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Jan 2023 02:53:33 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A364559B54
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jan 2023 23:29:21 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id k8so18471933wrc.9
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Jan 2023 23:29:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rNY6RUE7FrzMgk+W6uGQYyeAqKjNTh5GfoEKMQE7LIA=;
-        b=BqwsXWjmor6T0iJs9NLN0UA/EU66Fs3EoT1AELZcOObjlaU9QcePahWtF2yg9U2q7Q
-         55TeYlBUHbSZNzM7Ztrc4GRf0b1W6c/1PH6Ob1FPhlSkTcJo4CBvHkKe3g3LGJEyYw+q
-         RxCvLq6fF6mF3qOichTFdKVg0LW3Ibx0cCL0aTqEi4ZxXrQIfy0xPhSEPqGECBzOR8rD
-         XLr82gDHO/VQc/cxcqYg0jlZOB8L7XOsM3IurMzVYLFrenDlIj9eW7KBL4bZ/qujNgWZ
-         zCKA9c+WTfOqVX7O5LeXMt9pFJi7MniR7lDpo5kGR7nDfcjGVuS68+7ZMBWoSRI//yY5
-         qwqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rNY6RUE7FrzMgk+W6uGQYyeAqKjNTh5GfoEKMQE7LIA=;
-        b=DlpKRfDnJsAX4FLvimT5aAik4xNfN+tcmkb7HtrmWNbZMuY3qGu/5ouTzyza7KrAks
-         3GOMXLVqBuwTh5imJ54PrBAT+IgmXyl62a9XC036OZ3ygwKpie/mCScrKiBXJ/ybtSb4
-         sGuTEo1fhuImBm2IfmJu993gjx3Y6vckv5zuAr64BpYffaa2RMtvrXT8OamJCgA4ZbZK
-         bcvHgOEfUUx7ZjelUBRHG7ZEME5xgStB50OISadBkzVE/cNhEsG8nNyxX9tEMuK4eP0H
-         MgACj4EWnewOP2/amyLqa1Ef/sbUPXuJ8t/Anpy9lVlpZdUneQTXP5kCe5K2DNo8eVgW
-         l9Cw==
-X-Gm-Message-State: AFqh2krBm9pdc3liyvSOFW9qQdKNpyTlrbVFaNYYqsyl2+x0saxmjjh4
-        ORI3tHFTZVj6z7FQCrAOFPA/CfMYKzsSn8fNfKWlqg==
-X-Google-Smtp-Source: AMrXdXuw8yKdqSiq4l4w+/L3BrlumqSU8yZ9jgdGz1PAZxgQczucKPlDmrt6DLm+obCadLEht1/9+f7rGxZzRS22VR0=
-X-Received: by 2002:a05:6000:5c6:b0:242:5caa:5fbf with SMTP id
- bh6-20020a05600005c600b002425caa5fbfmr143326wrb.300.1674026959721; Tue, 17
- Jan 2023 23:29:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20230112220024.32709-1-irogers@google.com> <2568dad8-88b4-ebf9-3013-73cc6becdc1c@redhat.com>
-In-Reply-To: <2568dad8-88b4-ebf9-3013-73cc6becdc1c@redhat.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 17 Jan 2023 23:29:07 -0800
-Message-ID: <CAP-5=fW+jpi_iLCrpA2GeEQBzNYASF52qrX7ExrSNL82uaDREQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf script flamegraph: Avoid d3-flame-graph package dependency
-To:     Andreas Gerstmayr <agerstmayr@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 18 Jan 2023 09:02:56 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8332953F9A;
+        Wed, 18 Jan 2023 05:37:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FDCC617D4;
+        Wed, 18 Jan 2023 13:37:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6C1C433D2;
+        Wed, 18 Jan 2023 13:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674049035;
+        bh=0xJGKj3eRqUoWBwB+TjH6T+WceRDQEQkTnoUc5UVybU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JJE4rrtphL6e9IS0xXRTIi59Nl06Yzx++7lIR0xkpflGRDTvhL5qpX1KhZaufA6/e
+         PWP2ddV4Otbx3auIz1juBpjuGyN4Lfjq4dU23T0R3rgLIvDidvpQviKjxQQJiLm7RH
+         1W6m4T22I/hRnJA95HUDZWXHfH/nSi0WmZXbBK0Ib5Z5mp4bnh/qGAy7SAfW1rievj
+         ZflxyWBYcH+PAfay5lwQPcWpSE+aMWiIbnDVz9NrJaej1Kasp21ElOz0tTOQv5+rZ2
+         mNvdxWF13kzf+54tGC1KfaJG0NNafipHU3isqHfeWtZJXuizeN/y6ndWVgTNPuGgCg
+         OS0haJ8FVyzUg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BBAB7405BE; Wed, 18 Jan 2023 10:37:12 -0300 (-03)
+Date:   Wed, 18 Jan 2023 10:37:12 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Sohom Datta <sohomdatta1@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        996839@bugs.debian.org, Martin Spier <spiermar@gmail.com>,
-        Brendan Gregg <brendan@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sohom Datta <sohomdatta1+git@gmail.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Prevent normalize() from reading into undefined memory
+Message-ID: <Y8f2CCUYzDfXtUTG@kernel.org>
+References: <20221204105836.1012885-1-sohomdatta1+git@gmail.com>
+ <Y7rPZ21J2mnWiIcx@krava>
+ <CAP-5=fUjto38BaJX+Uj-BUOc74vg5KqZFewVCuUTW81Q=PAXHA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUjto38BaJX+Uj-BUOc74vg5KqZFewVCuUTW81Q=PAXHA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 7:17 AM Andreas Gerstmayr <agerstmayr@redhat.com> wrote:
->
-> On 12.01.23 23:00, Ian Rogers wrote:
-> > Currently flame graph generation requires a d3-flame-graph template to
-> > be installed. Unfortunately this is hard to come by for things like
-> > Debian [1]. If the template isn't installed then ask if it should be
-> > downloaded from jsdelivr CDN. The downloaded HTML file is validated
-> > against an md5sum. If the download fails, generate a minimal flame
-> > graph with the javascript coming from links to jsdelivr CDN.
+Em Sun, Jan 08, 2023 at 04:55:59PM -0800, Ian Rogers escreveu:
+> On Sun, Jan 8, 2023, 6:13 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> 
+> > On Sun, Dec 04, 2022 at 04:28:35PM +0530, Sohom Datta wrote:
+> > > The current implementation does not account for a
+> > > trailing backslash followed by a null-byte. If a
+> > > null-byte is encountered following a backslash,
+> > > normalize() will continue reading (and potentially
+> > > writing) into garbage memory ignoring the EOS
+> > > null-byte.
+> > >
+> > > Signed-off-by: Sohom Datta <sohomdatta1+git@gmail.com>
 > >
-> > v2. Change the warning to a prompt about downloading and add the
-> >      --allow-download command line flag. Add an md5sum check for the
-> >      downloaded HTML.
+> > Acked-by: Jiri Olsa <jolsa@kernel.org>
 > >
-> > [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=996839
+> > thanks,
+> > jirka
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Thank you for the changes. I've tested v2 with:
->
-> * d3-flame-graph package installed
-> * template not installed, download template from jsdelivr
-> * download from jsdelivr, with --allow-download
-> * invalid checksum
-> * unreachable jsdelivr, creating a minimal template
->
-> Everything works great except when I'm invoking "perf script flamegraph
-> -a -F 99 sleep 10" (combining perf report + perf script):
->
-> [root@agerstmayr-thinkpad tmp]# perf script flamegraph -a -F 99 sleep 10
-> ------------------------------------------------------------
-> [...]
-> ------------------------------------------------------------
-> Warning: Flame Graph template
-> '/usr/share/d3-flame-graph/d3-flamegraph-base.html'
-> does not exist. To avoid this please install a package such as the
-> js-d3-flame-graph or libjs-d3-flame-graph, specify an existing flame
-> graph template (--template PATH) or use another output format (--format
-> FORMAT).
-> Do you wish to download a template from cdn.jsdelivr.net? (this warning
-> can be suppressed with --allow-download) [yn] Traceback (most recent
-> call last):
->    File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 157,
-> in trace_end
->      s = input("Do you wish to download a template from
-> cdn.jsdelivr.net? (this warning can be suppressed with --allow-download)
-> [yn] ").lower()
->
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> OSError: [Errno 9] Bad file descriptor
-> Fatal Python error: handler_call_die: problem in Python trace event handler
-> Python runtime state: initialized
->
-> Current thread 0x00007ff4053a3cc0 (most recent call first):
->    <no Python frame>
->
-> Extension modules: systemd._journal, systemd._reader, systemd.id128
-> (total: 3)
-> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report: line 3:
-> 2135491 Aborted                 (core dumped) perf script -s
-> "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
->
->
-> iirc when running "perf script flamegraph" the perf.data gets piped to
-> stdin of the flamegraph script, so we can't ask the user in this case.
-> You can check this condition with `self.args.input == "-". Not sure
-> what's the best action in this case, maybe just exit?
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks Andreas,
+Thanks, applied. Sorry for the delay, probably I didn't saw the "perf
+tools: ' prefix in the subject and this fell thru the cracks :-\
 
-There's no way to handle command line arguments to the script in
-"live" mode and so I sent a v3 where the script warns and then
-quit()s. The only other option would have been to assume downloading,
-and we'd agreed to avoid that. Hopefully v3 is in the right shape now.
+Thanks to Ingo for pinging me about this, appreciated.
 
-Thanks again,
-Ian
-
->
-> Cheers,
-> Andreas
->
->
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
 > > ---
-> >   tools/perf/scripts/python/flamegraph.py | 96 +++++++++++++++++++------
-> >   1 file changed, 74 insertions(+), 22 deletions(-)
+> > >  tools/perf/util/expr.l | 5 ++++-
+> > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> > > index 0168a9637330..d47de5f270a8 100644
+> > > --- a/tools/perf/util/expr.l
+> > > +++ b/tools/perf/util/expr.l
+> > > @@ -42,8 +42,11 @@ static char *normalize(char *str, int runtime)
+> > >       char *dst = str;
+> > >
+> > >       while (*str) {
+> > > -             if (*str == '\\')
+> > > +             if (*str == '\\') {
+> > >                       *dst++ = *++str;
+> > > +                     if (!*str)
+> > > +                             break;
+> > > +             }
+> > >               else if (*str == '?') {
+> > >                       char *paramval;
+> > >                       int i = 0;
+> > > --
+> > > 2.38.1
+> > >
 > >
-> > diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
-> > index b6af1dd5f816..086619053e4e 100755
-> > --- a/tools/perf/scripts/python/flamegraph.py
-> > +++ b/tools/perf/scripts/python/flamegraph.py
-> > @@ -19,12 +19,34 @@
-> >   # pylint: disable=missing-function-docstring
-> >
-> >   from __future__ import print_function
-> > -import sys
-> > -import os
-> > -import io
-> >   import argparse
-> > +import hashlib
-> > +import io
-> >   import json
-> > +import os
-> >   import subprocess
-> > +import sys
-> > +import urllib.request
-> > +
-> > +minimal_html = """<head>
-> > +  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.css">
-> > +</head>
-> > +<body>
-> > +  <div id="chart"></div>
-> > +  <script type="text/javascript" src="https://d3js.org/d3.v7.js"></script>
-> > +  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/d3-flamegraph.min.js"></script>
-> > +  <script type="text/javascript">
-> > +  const stacks = [/** @flamegraph_json **/];
-> > +  // Note, options is unused.
-> > +  const options = [/** @options_json **/];
-> > +
-> > +  var chart = flamegraph();
-> > +  d3.select("#chart")
-> > +        .datum(stacks[0])
-> > +        .call(chart);
-> > +  </script>
-> > +</body>
-> > +"""
-> >
-> >   # pylint: disable=too-few-public-methods
-> >   class Node:
-> > @@ -50,16 +72,6 @@ class FlameGraphCLI:
-> >           self.args = args
-> >           self.stack = Node("all", "root")
-> >
-> > -        if self.args.format == "html" and \
-> > -                not os.path.isfile(self.args.template):
-> > -            print("Flame Graph template {} does not exist. Please install "
-> > -                  "the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) "
-> > -                  "package, specify an existing flame graph template "
-> > -                  "(--template PATH) or another output format "
-> > -                  "(--format FORMAT).".format(self.args.template),
-> > -                  file=sys.stderr)
-> > -            sys.exit(1)
-> > -
-> >       @staticmethod
-> >       def get_libtype_from_dso(dso):
-> >           """
-> > @@ -128,16 +140,52 @@ class FlameGraphCLI:
-> >               }
-> >               options_json = json.dumps(options)
-> >
-> > +            template_md5sum = None
-> > +            if self.args.format == "html":
-> > +                if os.path.isfile(self.args.template):
-> > +                    template = f"file://{self.args.template}"
-> > +                else:
-> > +                    if not self.args.allow_download:
-> > +                        print(f"""Warning: Flame Graph template '{self.args.template}'
-> > +does not exist. To avoid this please install a package such as the
-> > +js-d3-flame-graph or libjs-d3-flame-graph, specify an existing flame
-> > +graph template (--template PATH) or use another output format (--format
-> > +FORMAT).""",
-> > +                              file=sys.stderr)
-> > +                        s = None
-> > +                        while s != "y" and s != "n":
-> > +                            s = input("Do you wish to download a template from cdn.jsdelivr.net? (this warning can be suppressed with --allow-download) [yn] ").lower()
-> > +                        if s == "n":
-> > +                            quit()
-> > +                    template = "https://cdn.jsdelivr.net/npm/d3-flame-graph@4.1.3/dist/templates/d3-flamegraph-base.html"
-> > +                    template_md5sum = "143e0d06ba69b8370b9848dcd6ae3f36"
-> > +
-> >               try:
-> > -                with io.open(self.args.template, encoding="utf-8") as template:
-> > -                    output_str = (
-> > -                        template.read()
-> > -                        .replace("/** @options_json **/", options_json)
-> > -                        .replace("/** @flamegraph_json **/", stacks_json)
-> > -                    )
-> > -            except IOError as err:
-> > -                print("Error reading template file: {}".format(err), file=sys.stderr)
-> > -                sys.exit(1)
-> > +                with urllib.request.urlopen(template) as template:
-> > +                    output_str = "".join([
-> > +                        l.decode("utf-8") for l in template.readlines()
-> > +                    ])
-> > +            except Exception as err:
-> > +                print(f"Error reading template {template}: {err}\n"
-> > +                      "a minimal flame graph will be generated", file=sys.stderr)
-> > +                output_str = minimal_html
-> > +                template_md5sum = None
-> > +
-> > +            if template_md5sum:
-> > +                download_md5sum = hashlib.md5(output_str.encode("utf-8")).hexdigest()
-> > +                if download_md5sum != template_md5sum:
-> > +                    s = None
-> > +                    while s != "y" and s != "n":
-> > +                        s = input(f"""Unexpected template md5sum.
-> > +{download_md5sum} != {template_md5sum}, for:
-> > +{output_str}
-> > +continue?[yn] """).lower()
-> > +                    if s == "n":
-> > +                        quit()
-> > +
-> > +            output_str = output_str.replace("/** @options_json **/", options_json)
-> > +            output_str = output_str.replace("/** @flamegraph_json **/", stacks_json)
-> > +
-> >               output_fn = self.args.output or "flamegraph.html"
-> >           else:
-> >               output_str = stacks_json
-> > @@ -172,6 +220,10 @@ if __name__ == "__main__":
-> >                           choices=["blue-green", "orange"])
-> >       parser.add_argument("-i", "--input",
-> >                           help=argparse.SUPPRESS)
-> > +    parser.add_argument("--allow-download",
-> > +                        default=False,
-> > +                        action="store_true",
-> > +                        help="allow unprompted downloading of HTML template")
-> >
-> >       cli_args = parser.parse_args()
-> >       cli = FlameGraphCLI(cli_args)
->
-> --
-> Red Hat Austria GmbH, Registered seat: A-1200 Vienna, Millennium Tower,
-> 26.floor, Handelskai 94-96, Austria
-> Commercial register: Commercial Court Vienna, FN 479668w
->
