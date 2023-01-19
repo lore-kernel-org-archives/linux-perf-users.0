@@ -2,102 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A6CC004D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 16:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718BFC00A5A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 16:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbjASQJr (ORCPT
+        id S229844AbjASQ26 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 11:09:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35656 "EHLO
+        Thu, 19 Jan 2023 11:28:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjASQJl (ORCPT
+        with ESMTP id S229983AbjASQ2v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 11:09:41 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33B01B7
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 08:09:34 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id g10so1943037wmo.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 08:09:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlMrkR813xw68s+TrVy/K2U/XUSkpo54/blrWaVIz8=;
-        b=F8Y78D/7lzBjdsiNq9oK2Aftmae0V2KIdzDV5yS2c3II/xVuoPuP9vZUsrzfVxdKRP
-         3NO7XK9isDeRq4lGjY59X7D7klL/AWxqhuhSwJst4QRVPPz9wDlcoYKJvD48ghFGdOYE
-         Eg8mqKHPfxxA7wSRdz2uEfqK/EgMEkVCCwmuOn4L6oFlFucegxSDQruJ/beTxqg3fGWg
-         hB+dTGqwGM79sscfICtcqmWCXbwz767MyRfb03hbpgtPG7WwCrJ3C08rii/vG9ts4jBQ
-         evwulTau7Wet3DMhcSPkrLQqUX6PI/0sxOz2RXdZ5bCSIizzTh0ubm2XNzqTxvEJd+Pu
-         G85Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRlMrkR813xw68s+TrVy/K2U/XUSkpo54/blrWaVIz8=;
-        b=oZFAsk8kp2R8v9eG+c1jCy6fUp8K5XjXXet+E+eHFO7zeJSchhNTlB0vZpgGQ0F1f7
-         aZCy17I2EYi2pEx7FjHQ7yow3XqhpOunG9HsQcAHlW1A6Emrm0BfQLgvN2SBq3hxyKEO
-         8BirhWKITxT6zz1kYOVksDddhcSSTjp4I2TUU4uFuBSlfNOniVFbUn6eaS7hoFRGr+bJ
-         YGBAY7MFz/xttqSEBSGINweVm99A1AcoJX1aOsXH3lPqajFxjs8AcDrnWqiPggJxqBuQ
-         PS78sDanM+RqokKeiFw/V2tT5kKFFQ1hhtuUje0Gh4+vJ0a/NkrqqVUNPXJTP6EdH6BH
-         Mo+w==
-X-Gm-Message-State: AFqh2kpZNeq9S7WKtCNzJPYK6ciGZb5I8nAzCtrh7DM39oB51AwpOjFs
-        gWvdsQsJCSxZK4RKoUMq4dRYgKWEg/H84O5uasAc8g==
-X-Google-Smtp-Source: AMrXdXs82Lfvn39C8FUbgYvVTafPAnd33NZRzk0q5hkSRux34CNUZPOOgIn6fTLI2LgZiQwTLnCbVssAGAuKg9RyXEU=
-X-Received: by 2002:a05:600c:5405:b0:3d0:50c4:432c with SMTP id
- he5-20020a05600c540500b003d050c4432cmr671355wmb.67.1674144572770; Thu, 19 Jan
- 2023 08:09:32 -0800 (PST)
-MIME-Version: 1.0
-References: <20230114215251.271678-1-irogers@google.com>
-In-Reply-To: <20230114215251.271678-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 19 Jan 2023 08:09:21 -0800
-Message-ID: <CAP-5=fXJ3oG3GmG7puq+n9W3mQYfmdx37jq548Wf1_6hcpja2g@mail.gmail.com>
-Subject: Re: [PATCH v1] perf test workload thloop: Make count increments atomic
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 19 Jan 2023 11:28:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 299304A1DF;
+        Thu, 19 Jan 2023 08:28:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B2DA461CBA;
+        Thu, 19 Jan 2023 16:28:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4E8C433F0;
+        Thu, 19 Jan 2023 16:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674145720;
+        bh=d0+CExtO2OcCawPxA7eHa5qZ0do7CwZUvPxeHDQOWy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B8xhynKWA8UPLBqcFZeBzDg6e2/PkvCP1jlmk3DZdpoFCTJwC5kCWpYFDI8LPDEaO
+         KxVWVM1OOfTgRhPJhJVufwcywblgJdnCD/o9Hp11VCnFWz9c2LyuG5Idz5wc/dAh4G
+         m6I/jJeFbKlfmdyUeK0ii343XG8U8dJkyJFbRMrRITxunNi/fd3ZsC+hvMBU9oPqqW
+         8/q7X9XX0yfLID7WCRq4CoVX3rp3zjJFNtvGcD6moikKMdl5Z7XewU8b+XMtisRZuL
+         dolP/lvGwslC46nOHNbJPUCO/e3/3SkULKzMdFYo9D9TOKSOHICRVzlU4/hSy8OKV1
+         jaAiXTX5f7xbA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 24CB6405BE; Thu, 19 Jan 2023 13:28:36 -0300 (-03)
+Date:   Thu, 19 Jan 2023 13:28:36 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Nicolas Schier <nicolas@fjasle.eu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Qi Liu <liuqi115@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>, Xin Gao <gaoxin@cdjrlc.com>,
+        Zechuan Chen <chenzechuan1@huawei.com>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Stephane Eranian <eranian@google.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 0/7] Add and use run_command_strbuf
+Message-ID: <Y8lvtEwRBmUHnx7s@kernel.org>
+References: <20230110222003.1591436-1-irogers@google.com>
+ <CAP-5=fVQg4z-pd-ovjSPkxJ1p0fhQ4MuhWCqjN1ha52q44N6Rg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVQg4z-pd-ovjSPkxJ1p0fhQ4MuhWCqjN1ha52q44N6Rg@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jan 14, 2023 at 1:53 PM Ian Rogers <irogers@google.com> wrote:
->
-> The count variable is incremented by multiple threads, doing so
-> without an atomic operation causes thread sanitizer warnings. Switch
-> to using relaxed atomics.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/workloads/thloop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
-> index 29193b75717e..af05269c2eb8 100644
-> --- a/tools/perf/tests/workloads/thloop.c
-> +++ b/tools/perf/tests/workloads/thloop.c
-> @@ -20,7 +20,7 @@ static void sighandler(int sig __maybe_unused)
->  noinline void test_loop(void)
->  {
->         while (!done)
-> -               count++;
-> +               __atomic_fetch_add(&count, 1, __ATOMIC_RELAXED);
+Em Thu, Jan 19, 2023 at 08:05:36AM -0800, Ian Rogers escreveu:
+> On Tue, Jan 10, 2023 at 2:20 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > It is commonly useful to run a command using "/bin/sh -c" (like popen)
+> > and to place the output in a string. Move strbuf to libapi, add a new
+> > run_command that places output in a strbuf, then use it in help and
+> > llvm in perf. Some small strbuf efficiency improvements are
+> > included. Whilst adding a new function should increase lines-of-code,
+> > by sharing two similar usages in perf llvm and perf help, the overall
+> > lines-of-code is moderately reduced.
+> >
+> > First "perf llvm: Fix inadvertent file creation" is cherry-picked
+> > from:
+> > https://lore.kernel.org/lkml/20230105082609.344538-1-irogers@google.com/
+> > to avoid a merge conflict. The next patches deal with moving strbuf,
+> > adding the run_command function with Makefile dependency from
+> > libsubcmd to libapi, and improving the strbuf performance. The final
+> > two patches add usage from the perf command.
+> >
+> > Ian Rogers (7):
+> >   perf llvm: Fix inadvertent file creation
+> >   tools lib: Move strbuf to libapi
+> >   tools lib subcmd: Add run_command_strbuf
+> >   tools lib api: Minor strbuf_read improvements
+> >   tools lib api: Tweak strbuf allocation size computation
+> >   perf help: Use run_command_strbuf
+> >   perf llvm: Remove read_from_pipe
+> 
+> This isn't ready yet. Kernel test robot reported legitimate build
+> breakages in other tools outside of perf, I'm looking to address those
+> in separate patch series.
+> https://lore.kernel.org/lkml/20230116215751.633675-1-irogers@google.com/
 
-Ping. No functional change, cleans up a lot of thread sanitizer
-issues, the use of __atomic_fetch_add is consistent with other files.
+Thanks for the heads up, I recall seeing a build bot report.
 
-Thanks,
-Ian
+It's great to have that build bot testing perf patches, thanks to
+whoever put it in place!
 
->  }
->
->  static void *thfunc(void *arg)
-> --
-> 2.39.0.314.g84b9a713c41-goog
->
+- Arnaldo
