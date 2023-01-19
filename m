@@ -2,58 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D24C00A5A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 16:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A6CC004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 16:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbjASQJG (ORCPT
+        id S229814AbjASQJr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 11:09:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
+        Thu, 19 Jan 2023 11:09:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjASQId (ORCPT
+        with ESMTP id S229973AbjASQJl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 11:08:33 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C641A7ED6
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 08:08:26 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id t5so2363463wrq.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 08:08:26 -0800 (PST)
+        Thu, 19 Jan 2023 11:09:41 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33B01B7
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 08:09:34 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id g10so1943037wmo.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 08:09:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fv4FveSXLtbMs8fIyKU7U7B1TC2c3Ol7CJ/N2mCREsE=;
-        b=Z6hdEw1xC+r9OZvwDwA+B122spz7EsoHP17f0Cp0vq9QAN4CfQCci6tDWJkxfZ9fNo
-         fzLNoMg3XjnZOQI0eUNHprxoWuzAK9gnijj0wJ8SfUeGbvhQ2b+9wuuf4KylcWf0dLQb
-         BV6YyUFFWnr4hylTSaSxk+vggHHkY2yrUXDhwbKtI8GscswMZcVgWjNYfu/gIejjmr4F
-         5Zl1MjBlBade7gjOmcbOKg4GIpxkJSXMHS7LZC/aoCoejUSyCUVMH6XTFveOZojxIvTK
-         DrXT+Z97kKkkykC2hxSjWJos0PWZ77JFKJ39E+jLcUrpe/YXXu9OTBWhoZ/N6vYGUPrq
-         9tNw==
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tRlMrkR813xw68s+TrVy/K2U/XUSkpo54/blrWaVIz8=;
+        b=F8Y78D/7lzBjdsiNq9oK2Aftmae0V2KIdzDV5yS2c3II/xVuoPuP9vZUsrzfVxdKRP
+         3NO7XK9isDeRq4lGjY59X7D7klL/AWxqhuhSwJst4QRVPPz9wDlcoYKJvD48ghFGdOYE
+         Eg8mqKHPfxxA7wSRdz2uEfqK/EgMEkVCCwmuOn4L6oFlFucegxSDQruJ/beTxqg3fGWg
+         hB+dTGqwGM79sscfICtcqmWCXbwz767MyRfb03hbpgtPG7WwCrJ3C08rii/vG9ts4jBQ
+         evwulTau7Wet3DMhcSPkrLQqUX6PI/0sxOz2RXdZ5bCSIizzTh0ubm2XNzqTxvEJd+Pu
+         G85Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fv4FveSXLtbMs8fIyKU7U7B1TC2c3Ol7CJ/N2mCREsE=;
-        b=GDSdbqcn5ufMXnkqOqH/guNIsLmk4sATEuNmWyCpyBpn4hiE1NRqlAiTErM6kYhgpy
-         gQz9kUMomduWqycYL3B2w4j3QDbYyupuqnWzoszjdVdg1tFAc5aUScubS4spFGMzQIvd
-         +R8YA/LE4U4Im4QkiMTKNnPS1g1qaZyUR295ELUUNvfiL07ESw9oLGu8JRuYe4OlAfcj
-         O8GU/JVC1CqgkdEBz1EteuMV5oCmzbo73AwPnQtSZb0uJn77qZJusmaeCLtuqQ++VftB
-         WBYnK49uMlCe6DaBOPvRqfN0FIspu6XPPe4SKdEf3eM0nJTc+ondO7OF6TkWYfHox+jy
-         aI4A==
-X-Gm-Message-State: AFqh2ko/V1fAvdk39QBebaUbt9w9CIE8sZNm+BrntklemsHwepzCm/7Z
-        AXPiDrhCMmF1YwhJfneg0zC8QP+D4eOq4tOTSzZkIg==
-X-Google-Smtp-Source: AMrXdXuGSDCU/sElIGWgZvb6vilVuirMVBG1izak7wLK9Loxpwn63U0ajRG3KIbUTiISw4IRZxfZrt/XGomjC/ouxDk=
-X-Received: by 2002:a05:6000:124f:b0:2bd:df97:13f4 with SMTP id
- j15-20020a056000124f00b002bddf9713f4mr496689wrx.654.1674144504966; Thu, 19
- Jan 2023 08:08:24 -0800 (PST)
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tRlMrkR813xw68s+TrVy/K2U/XUSkpo54/blrWaVIz8=;
+        b=oZFAsk8kp2R8v9eG+c1jCy6fUp8K5XjXXet+E+eHFO7zeJSchhNTlB0vZpgGQ0F1f7
+         aZCy17I2EYi2pEx7FjHQ7yow3XqhpOunG9HsQcAHlW1A6Emrm0BfQLgvN2SBq3hxyKEO
+         8BirhWKITxT6zz1kYOVksDddhcSSTjp4I2TUU4uFuBSlfNOniVFbUn6eaS7hoFRGr+bJ
+         YGBAY7MFz/xttqSEBSGINweVm99A1AcoJX1aOsXH3lPqajFxjs8AcDrnWqiPggJxqBuQ
+         PS78sDanM+RqokKeiFw/V2tT5kKFFQ1hhtuUje0Gh4+vJ0a/NkrqqVUNPXJTP6EdH6BH
+         Mo+w==
+X-Gm-Message-State: AFqh2kpZNeq9S7WKtCNzJPYK6ciGZb5I8nAzCtrh7DM39oB51AwpOjFs
+        gWvdsQsJCSxZK4RKoUMq4dRYgKWEg/H84O5uasAc8g==
+X-Google-Smtp-Source: AMrXdXs82Lfvn39C8FUbgYvVTafPAnd33NZRzk0q5hkSRux34CNUZPOOgIn6fTLI2LgZiQwTLnCbVssAGAuKg9RyXEU=
+X-Received: by 2002:a05:600c:5405:b0:3d0:50c4:432c with SMTP id
+ he5-20020a05600c540500b003d050c4432cmr671355wmb.67.1674144572770; Thu, 19 Jan
+ 2023 08:09:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20230113185732.134861-1-irogers@google.com>
-In-Reply-To: <20230113185732.134861-1-irogers@google.com>
+References: <20230114215251.271678-1-irogers@google.com>
+In-Reply-To: <20230114215251.271678-1-irogers@google.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 19 Jan 2023 08:08:13 -0800
-Message-ID: <CAP-5=fXg28wcW93tfiN6mdFHj0+eSRE3dL3LTv53bRYuezjZDg@mail.gmail.com>
-Subject: Re: [PATCH] perf buildid: Avoid copy of uninitialized memory
+Date:   Thu, 19 Jan 2023 08:09:21 -0800
+Message-ID: <CAP-5=fXJ3oG3GmG7puq+n9W3mQYfmdx37jq548Wf1_6hcpja2g@mail.gmail.com>
+Subject: Re: [PATCH v1] perf test workload thloop: Make count increments atomic
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -61,50 +60,44 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Cc:     Stephane Eranian <eranian@google.com>
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 10:57 AM Ian Rogers <irogers@google.com> wrote:
+On Sat, Jan 14, 2023 at 1:53 PM Ian Rogers <irogers@google.com> wrote:
 >
-> build_id__init only copies the buildid data up to size leaving the
-> rest of the data array uninitialized. Copying the full array during
-> synthesis means the written event contains uninitialized memory.  This
-> was detected by the Clang/LLVM memory sanitizer.
+> The count variable is incremented by multiple threads, doing so
+> without an atomic operation causes thread sanitizer warnings. Switch
+> to using relaxed atomics.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/synthetic-events.c | 2 +-
+>  tools/perf/tests/workloads/thloop.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-> index 3ab6a92b1a6d..348d05e4ec03 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -2219,7 +2219,7 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
->
->         len = pos->long_name_len + 1;
->         len = PERF_ALIGN(len, NAME_ALIGN);
-> -       memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
-> +       memcpy(&ev.build_id.build_id, pos->bid.data, pos->bid.size);
+> diff --git a/tools/perf/tests/workloads/thloop.c b/tools/perf/tests/workloads/thloop.c
+> index 29193b75717e..af05269c2eb8 100644
+> --- a/tools/perf/tests/workloads/thloop.c
+> +++ b/tools/perf/tests/workloads/thloop.c
+> @@ -20,7 +20,7 @@ static void sighandler(int sig __maybe_unused)
+>  noinline void test_loop(void)
+>  {
+>         while (!done)
+> -               count++;
+> +               __atomic_fetch_add(&count, 1, __ATOMIC_RELAXED);
 
-Ping. Should be an uncontroversial change to fix a copy of
-uninitialized memory into the perf.data file during synthesis.
+Ping. No functional change, cleans up a lot of thread sanitizer
+issues, the use of __atomic_fetch_add is consistent with other files.
 
 Thanks,
 Ian
 
->         ev.build_id.size = pos->bid.size;
->         ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
->         ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+>  }
+>
+>  static void *thfunc(void *arg)
 > --
 > 2.39.0.314.g84b9a713c41-goog
 >
