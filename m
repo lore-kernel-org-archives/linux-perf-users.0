@@ -2,128 +2,176 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB21C46467
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 05:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82808C38159
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 05:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229797AbjATFPF (ORCPT
+        id S231500AbjATF2x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 00:15:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
+        Fri, 20 Jan 2023 00:28:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjATFOr (ORCPT
+        with ESMTP id S229960AbjATF23 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 00:14:47 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A94F30B24;
-        Thu, 19 Jan 2023 21:03:20 -0800 (PST)
+        Fri, 20 Jan 2023 00:28:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10773D09A;
+        Thu, 19 Jan 2023 21:23:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F0C14B8267E;
-        Thu, 19 Jan 2023 17:15:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F41FC433D2;
-        Thu, 19 Jan 2023 17:15:16 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7EE66B8261C;
+        Thu, 19 Jan 2023 16:59:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E00C8C433EF;
+        Thu, 19 Jan 2023 16:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674148521;
-        bh=rtOB0o7GVvlggA/TPHQGC4w4owt9Pi+Sfuf3oR1Rh8Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=M4xYxrNNGs/aDeLFzDWywmEiIJk806FJQ4ofwDBksVtNW4Q1NypdPwmlDmwVd0jHL
-         OEmTMHgEmExFX8ri6hWBIO2t8UNcCts+AG5ztYpXzHphO/UEF//nMqe7ZlYjv4oQ0c
-         O0XhQWxCdlaP8Eigf0ujBq24OqwZMQVoUKLczuKWGgaf/CstfgePJ/UzuPkcZWnNEj
-         JYXMkQ6ZOoZ0TuEBeLE89sbeMr4gaxXY0+qJPDnITzjmmoQc6Rd3ugwiMkDR/+J92b
-         FkPbE2iQVDceu+SRly8XF8IstHOxq5ljtTR2jJZHOVpqxwDSVdtL6q9MmhgIO7jprO
-         8dud3XEiJDNtQ==
+        s=k20201202; t=1674147540;
+        bh=1emhlmUjevrFlbe0JDra+yCoAjMDC5PSBtg2a3xQ8EI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u6RRFFJWQrVl9Jvt8ou4twZY9IUP6zLH/nlfXWr/Vj89DtQbzJqMNVpFBSIrYjYo6
+         wcqaNtXiXWPK2FaAikkZs1wM/NF4MGTP5gVtGD014MDvkb3y9qWfeZEMbPcX7dx6U0
+         vGDPnc2AKG+abZFmrgSDw2Tw7edNl3xmJ56GvZ2QqWTSNfvpTonfnOSiGcZuZVMg1m
+         1GMw4rdeA2k7U7aHxanpiPGxNfgrAP5GYNbDGdUXLj+Ne0mcKB37QQiu68jer0iGCP
+         twMu06rQ+7+UeeTaNWMW6euUdD/zpO/DuSQG3m1Zq1kvC2qcFwPKlR5v0LfJti265C
+         0BduxswnesIXw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 48892405BE; Thu, 19 Jan 2023 13:58:56 -0300 (-03)
+Date:   Thu, 19 Jan 2023 13:58:56 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        leo.yan@linaro.org, mike.leach@linaro.org, sgoutham@marvell.com,
+        gcherian@marvell.com, lcherian@marvell.com, bbhushan2@marvell.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Sohom Datta <sohomdatta1+git@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.2: 3rd batch
-Date:   Thu, 19 Jan 2023 14:15:10 -0300
-Message-Id: <20230119171510.166368-1-acme@kernel.org>
-X-Mailer: git-send-email 2.39.0
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/8] perf cs_etm: Basic support for virtual/kernel
+ timestamps
+Message-ID: <Y8l20EOD6vtvJw83@kernel.org>
+References: <20230119154308.3815108-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230119154308.3815108-1-james.clark@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+Em Thu, Jan 19, 2023 at 03:42:59PM +0000, James Clark escreveu:
+> Changes since v3:
+> 
+>   * Scale time estimates by INSTR_PER_NS, rather than assuming 1
+>     instruction = 1ns
+>   * Add a new commit that fixes some issues around timestamps going
+>     backwards
+>   * Use nanoseconds inside cs-etm-decoder.c, rather than storing the
+>     raw time values and converting when a sample is synthesized. This
+>     simplifies some of the code like estimating the first timestamp.
 
-	Sync of UAPI headers with the kernel sources, to address
-warnings while building perf and two small fixes for the main tools + a
-'perf test' fix related to the build-id fix.
+I would check this myself, but since Suzuki had some review comments and
+you may consider a v5, please check this:
 
-	 Please consider pulling,
+Cover: ./v4_20230119_james_clark_perf_cs_etm_basic_support_for_virtual_kernel_timestamps.cover
+ Link: https://lore.kernel.org/r/20230119154308.3815108-1-james.clark@arm.com
+       git checkout -b v4_20230119_james_clark_arm_com 69b41ac87e4a664de78a395ff97166f0b2943210
+       git am ./v4_20230119_james_clark_perf_cs_etm_basic_support_for_virtual_kernel_timestamps.mbx
+[acme@quaco perf]$        git am ./v4_20230119_james_clark_perf_cs_etm_basic_support_for_virtual_kernel_timestamps.mbx
+Applying: perf: Remove duplication around EVENT_SOURCE_DEVICE_PATH
+error: patch failed: tools/perf/util/pmu.c:1993
+error: tools/perf/util/pmu.c: patch does not apply
+error: patch failed: tools/perf/util/pmu.h:259
+error: tools/perf/util/pmu.h: patch does not apply
+Patch failed at 0001 perf: Remove duplication around EVENT_SOURCE_DEVICE_PATH
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+[acme@quaco perf]$
 
-Best regards,
+Probably a conflict with one of these:
+
+[acme@quaco perf]$ git log --oneline -5 tools/perf/util/pmu.c
+acef233b7ca749fd perf pmu: Add #slots literal support for arm64
+336b92da1aa4228a perf tool: Move pmus list variable to a new file
+49bd97c28b7e7f01 perf tools: Use dedicated non-atomic clear/set bit helpers
+e5c6109f4813246a perf list: Reorganize to use callbacks to allow honouring command line options
+eb2d4514a5971444 perf pmu: Restructure print_pmu_events() to avoid memory allocations
+[acme@quaco perf]$
+
+Update to my perf/core branch or even tmp.perf/core which is newer but
+still needs the full set of container build tests.
+
+Thanks,
 
 - Arnaldo
+   
+> ===========================
+> Changes since v2:
+> 
+>   * Remove const to non-const change and copy strings where needed
+>     instead.
+>   * Use sizeof() instead of PATH_MAX
+>   * Append "will not be set accurately." to new error message
+>   * Remove unneeded stat() call
+>   * Rebase on perf/core
+>   
+> ==========================
+> 
+> Changes since v1:
+> 
+>   * Add 3 refactor commits for sysfs reading around pmu.c as suggested
+>     by Arnaldo here [1]
+>   * The dependency on [2] has now reached mainline so is no longer
+>     blocking
+>   * Rebase on perf/core
+>   
+> [1]: https://lore.kernel.org/all/YnqVqq5QW%2Fb14oPZ@kernel.org/
+> [2]: https://lore.kernel.org/all/20220503123537.1003035-1-german.gomez@arm.com/
+> 
+> German Gomez (4):
+>   perf pmu: Add function to check if a pmu file exists
+>   perf cs_etm: Keep separate symbols for ETMv4 and ETE parameters
+>   perf cs_etm: Record ts_source in AUXTRACE_INFO for ETMv4 and ETE
+>   perf cs_etm: Set the time field in the synthetic samples
+> 
+> James Clark (4):
+>   perf: Remove duplication around EVENT_SOURCE_DEVICE_PATH
+>   perf: Use perf_pmu__open_file() and perf_pmu__scan_file()
+>   perf: Remove remaining duplication of bus/event_source/devices/...
+>   perf: cs-etm: Ensure that Coresight timestamps don't go backwards
+> 
+>  tools/perf/arch/arm/util/auxtrace.c           |   5 +-
+>  tools/perf/arch/arm/util/cs-etm.c             |  91 ++++++++-
+>  tools/perf/arch/x86/util/pmu.c                |  12 +-
+>  tools/perf/util/cputopo.c                     |   9 +-
+>  tools/perf/util/cs-etm-base.c                 |  34 +++-
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  68 +++++--
+>  tools/perf/util/cs-etm.c                      |  95 +++++++++-
+>  tools/perf/util/cs-etm.h                      |  16 +-
+>  tools/perf/util/pmu-hybrid.c                  |  27 +--
+>  tools/perf/util/pmu.c                         | 177 +++++++-----------
+>  tools/perf/util/pmu.h                         |  10 +-
+>  11 files changed, 349 insertions(+), 195 deletions(-)
+> 
+> 
+> base-commit: 69b41ac87e4a664de78a395ff97166f0b2943210
+> prerequisite-patch-id: 9722bf86e3e6d16d177ff9a1411992a795a7dcbd
+> prerequisite-patch-id: b05dbef439c2ea8465f3321532257b0ca29f21f9
+> prerequisite-patch-id: 92680a4781cbcf010fcb007e6ea030f59e9eaefc
+> prerequisite-patch-id: 8e3a73a04e4b89b503377b5fac1d89d551159393
+> prerequisite-patch-id: 09980d8fedcdaa70b220a7802428109f48448a58
+> prerequisite-patch-id: 711843c93d5d6bdf4d73e024949950f4e4de9e1a
+> -- 
+> 2.25.1
 
-The following changes since commit c1649ec55708ae42091a2f1bca1ab49ecd722d55:
+-- 
 
-  Merge tag 'nfsd-6.2-4' of git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux (2023-01-17 09:29:17 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-3-2023-01-19
-
-for you to fetch changes up to 3d9c07c4cfc06cf7927cd00c04dffd1165d03c53:
-
-  perf test build-id: Fix test check for PE file (2023-01-18 10:52:06 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.2: 3rd batch.
-
-- Prevent reading into undefined memory in the expression lexer,
-  accounting for a trailer backslash followed by the null byte.
-
-- Fix file mode when copying files to the build id cache, the problem
-  happens when the cache directory is in a different file system than the
-  file being cached, otherwise the mode was preserved as only a hard link
-  would be done to save space.
-
-- Fix a related build-id 'perf test' entry that checked that permission
-  when caching PE (Portable Executable) files, used when profiling
-  Windows executables under wine.
-
-- Sync the tools/ copies of kvm headers, build_bug.h, socket.h and
-  arm64's cputype.h with the kernel sources.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (6):
-      tools headers UAPI: Sync linux/kvm.h with the kernel sources
-      tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
-      tools kvm headers arm64: Update KVM header from the kernel sources
-      tools headers arm64: Sync arm64's cputype.h with the kernel sources
-      perf beauty: Update copy of linux/socket.h with the kernel sources
-      tools headers: Syncronize linux/build_bug.h with the kernel sources
-
-Athira Rajeev (2):
-      perf buildid-cache: Fix the file mode with copyfile() while adding file to build-id cache
-      perf test build-id: Fix test check for PE file
-
-Sohom Datta (1):
-      perf expr: Prevent normalize() from reading into undefined memory in the expression lexer
-
- tools/arch/arm64/include/asm/cputype.h         |  8 +++++++-
- tools/arch/arm64/include/uapi/asm/kvm.h        |  1 +
- tools/arch/x86/include/uapi/asm/kvm.h          |  5 +++++
- tools/include/linux/build_bug.h                |  9 +++++++++
- tools/include/uapi/linux/kvm.h                 |  3 +++
- tools/perf/tests/shell/buildid.sh              | 15 ++++++++++++++-
- tools/perf/trace/beauty/include/linux/socket.h |  5 ++++-
- tools/perf/util/build-id.c                     | 10 +++++++---
- tools/perf/util/expr.l                         |  5 ++++-
- 9 files changed, 54 insertions(+), 7 deletions(-)
+- Arnaldo
