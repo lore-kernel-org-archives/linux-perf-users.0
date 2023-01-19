@@ -2,141 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7D6C38142
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 01:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44543C38159
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 04:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjATB15 (ORCPT
+        id S230446AbjATEvZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 20:27:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        Thu, 19 Jan 2023 23:51:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjATB14 (ORCPT
+        with ESMTP id S230405AbjATEut (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 20:27:56 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED884C35;
-        Thu, 19 Jan 2023 17:27:54 -0800 (PST)
+        Thu, 19 Jan 2023 23:50:49 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E0F5DA11D;
+        Thu, 19 Jan 2023 20:43:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BAA0F61DD2;
-        Fri, 20 Jan 2023 01:27:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07CFC433D2;
-        Fri, 20 Jan 2023 01:27:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9088AB8270C;
+        Thu, 19 Jan 2023 19:09:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E06EC43392;
+        Thu, 19 Jan 2023 19:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674178073;
-        bh=trOccCtKJdAbvxVkpZn02r9ePecCo+7hkHsdUok6MFU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=efoG82ZG3fenq1hPZQJcQmo7Gq0pTmIW2z6WkYBoS3BhAL9kTQBgqUKvMJgWv12Hp
-         sQh2qU5z7cC3gkoBndc1aGBHlw37Ia+ODUV2eKRVn0p/kLmvyhuy3vpt06NpPP4Wry
-         nhuh/FPXdUYGG6sE/zIXkm3gEmVglRjV8lfg4onK005u4RF/DSGyUf1PQMOf+QHKTS
-         dWq/Og0grT4CflliqRN6o2R2gFU94hgjHiGAdzBO3pgd+7cMDH5qlbaycrWmBfc4KA
-         /GlW8jwP+r1QdbEqenkSxi5ZNptGvf+OFU8pjRLwgY0zXHVnx9FVxRDAWtcj/4CP8R
-         jx0oEgM51fHnA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4948C405BE; Thu, 19 Jan 2023 22:27:50 -0300 (-03)
-Date:   Thu, 19 Jan 2023 22:27:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        s=k20201202; t=1674155368;
+        bh=iqElF+5KvmM//jBrqlLXQndx5m+4yQtolDOFBeaA/wk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jh3PlJZ2XOmkkoQ3OVuoYo3JF6T0PRCK+Fk4Obs3I7zpaHJLpXznnDuDin/T9IJix
+         Sc+7K3ZG6nU/6XDpoCZxfxsZH9tZkLmtOb5RT85uUnGjpBh/wHjwPGT1N/phVyzuIC
+         ROaM+o6JqoMcAaoVgwsnmlW4iHATXxGDvpJBOhcAZ8FTNG4xSzyH3Rslno6+MvGq8u
+         NHf+hYe93tgZVPIs0FDdAZqf7DIzRIEd9e2Q++qTmhnjLoWsB2dIuRJntvumGOej5v
+         /afTUvIK5WOfMWi+FJwsEJrm8W3oihsiTV/G6WW/JpxMG2GxhghPV+Q5Fp+3T6blwf
+         bzblWWGT6fMZw==
+From:   Will Deacon <will@kernel.org>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Sohom Datta <sohomdatta1+git@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf tools fixes for v6.2: 3rd batch
-Message-ID: <Y8nuFmDDQU5c/4tS@kernel.org>
-References: <20230119171510.166368-1-acme@kernel.org>
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, kvmarm@lists.linux.dev,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 0/8] perf: Arm SPEv1.2 support
+Date:   Thu, 19 Jan 2023 19:08:42 +0000
+Message-Id: <167415232681.3429847.16616826041230061721.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
+References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230119171510.166368-1-acme@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Humm,
+On Mon, 09 Jan 2023 13:26:17 -0600, Rob Herring wrote:
+> Peter, this series is blocked on an ack from you on patch 7. There was
+> some discussion on validation of the 'config3' attr. The options where
+> laid out by Mark here[0]. Please chime in on your preference.
+> 
+> Will, can you pick up patches 1-6 at least if there's no progress on
+> 'config3'.
+> 
+> [...]
 
-	I'm not finding this on the lkml archives, so please ignore it
-if this is going as a duplicate for anyone :-\
+Applied first six driver changes to will (for-next/perf), thanks!
 
-Thanks,
+[1/8] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+      https://git.kernel.org/will/c/e080477a050c
+[2/8] arm64: Drop SYS_ from SPE register defines
+      https://git.kernel.org/will/c/c759ec850df8
+[3/8] arm64/sysreg: Convert SPE registers to automatic generation
+      https://git.kernel.org/will/c/956936041a56
+[4/8] perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+      https://git.kernel.org/will/c/2d347ac23362
+[5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
+      https://git.kernel.org/will/c/05e4c88e2b5c
+[6/8] perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+      https://git.kernel.org/will/c/4998897b1e96
 
-- Arnaldo
+UAPI change needs feedback from perf core maintainers.
 
-Em Thu, Jan 19, 2023 at 02:15:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Hi Linus,
-> 
-> 	Sync of UAPI headers with the kernel sources, to address
-> warnings while building perf and two small fixes for the main tools + a
-> 'perf test' fix related to the build-id fix.
-> 
-> 	 Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> The following changes since commit c1649ec55708ae42091a2f1bca1ab49ecd722d55:
-> 
->   Merge tag 'nfsd-6.2-4' of git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux (2023-01-17 09:29:17 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-3-2023-01-19
-> 
-> for you to fetch changes up to 3d9c07c4cfc06cf7927cd00c04dffd1165d03c53:
-> 
->   perf test build-id: Fix test check for PE file (2023-01-18 10:52:06 -0300)
-> 
-> ----------------------------------------------------------------
-> perf tools fixes for v6.2: 3rd batch.
-> 
-> - Prevent reading into undefined memory in the expression lexer,
->   accounting for a trailer backslash followed by the null byte.
-> 
-> - Fix file mode when copying files to the build id cache, the problem
->   happens when the cache directory is in a different file system than the
->   file being cached, otherwise the mode was preserved as only a hard link
->   would be done to save space.
-> 
-> - Fix a related build-id 'perf test' entry that checked that permission
->   when caching PE (Portable Executable) files, used when profiling
->   Windows executables under wine.
-> 
-> - Sync the tools/ copies of kvm headers, build_bug.h, socket.h and
->   arm64's cputype.h with the kernel sources.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (6):
->       tools headers UAPI: Sync linux/kvm.h with the kernel sources
->       tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
->       tools kvm headers arm64: Update KVM header from the kernel sources
->       tools headers arm64: Sync arm64's cputype.h with the kernel sources
->       perf beauty: Update copy of linux/socket.h with the kernel sources
->       tools headers: Syncronize linux/build_bug.h with the kernel sources
-> 
-> Athira Rajeev (2):
->       perf buildid-cache: Fix the file mode with copyfile() while adding file to build-id cache
->       perf test build-id: Fix test check for PE file
-> 
-> Sohom Datta (1):
->       perf expr: Prevent normalize() from reading into undefined memory in the expression lexer
-> 
->  tools/arch/arm64/include/asm/cputype.h         |  8 +++++++-
->  tools/arch/arm64/include/uapi/asm/kvm.h        |  1 +
->  tools/arch/x86/include/uapi/asm/kvm.h          |  5 +++++
->  tools/include/linux/build_bug.h                |  9 +++++++++
->  tools/include/uapi/linux/kvm.h                 |  3 +++
->  tools/perf/tests/shell/buildid.sh              | 15 ++++++++++++++-
->  tools/perf/trace/beauty/include/linux/socket.h |  5 ++++-
->  tools/perf/util/build-id.c                     | 10 +++++++---
->  tools/perf/util/expr.l                         |  5 ++++-
->  9 files changed, 54 insertions(+), 7 deletions(-)
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
