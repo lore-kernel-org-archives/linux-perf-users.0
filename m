@@ -2,223 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA08C6379F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 14:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2460C00A5A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 15:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231611AbjASO2t (ORCPT
+        id S230029AbjASPp5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 09:28:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49490 "EHLO
+        Thu, 19 Jan 2023 10:45:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbjASO2E (ORCPT
+        with ESMTP id S231304AbjASPpz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 09:28:04 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B154181015
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 06:27:45 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30JDqNgW009577;
-        Thu, 19 Jan 2023 14:27:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=pp1; bh=Dh7UHncm/WttpDpLbRcpzTOfYvM6d/XeR5Eb//MeRuc=;
- b=OgHbAoev1RnDa7boiYE6p+dWPnCw5YySJgLv9WBWD2+5WVD6H8slL3bXW236e5/Tdm59
- jlpoBVOc+dIgHCm/wSjACT3lPS/Ja32jOX0jT8Dp7w7/VdBotozv1ObdmWlgbXZiXshU
- UGhGPKSZgbXAqkJSGcQBrjHGyMa6+r70ukzGMTbbGX0ejVmS+rjyHlSrOyoqBXFDQs25
- kml0VLjQ1Yd+JApbLMyG+D9LoUdbjbhmxzQkA+/cNfQAzKi7PbmvDZ3q7Sa2MYxl2nNL
- 8bS5Q6Rn9NI8YTn0k3x8D+3wcaxN6dUEdIBFbjPJis0UUI6xZIjtlUrn3DSXwtqVklOu lQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n7746145p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Jan 2023 14:27:30 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30JEN5Ap002250;
-        Thu, 19 Jan 2023 14:27:29 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n7746144s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Jan 2023 14:27:29 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30J63EPp004700;
-        Thu, 19 Jan 2023 14:27:27 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3n3m16psjy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Jan 2023 14:27:26 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30JERNhK23658906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Jan 2023 14:27:23 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02E2C20040;
-        Thu, 19 Jan 2023 14:27:23 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 850A620043;
-        Thu, 19 Jan 2023 14:27:20 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.12.84])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Jan 2023 14:27:20 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org
-Cc:     David.Laight@ACULAB.COM, ak@linux.intel.com, namhyung@kernel.org,
-        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.ibm.com
-Subject: [PATCH V3] tools/perf/tests: Fix string substitutions in build id test
-Date:   Thu, 19 Jan 2023 19:57:19 +0530
-Message-Id: <20230119142719.32628-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NbiYcL4nhKVOdXibDdGOe_DXe9pZfXd3
-X-Proofpoint-ORIG-GUID: -OZa58uxKjTfHBRlFdUz00_m493Kd3fL
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thu, 19 Jan 2023 10:45:55 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB1688386B;
+        Thu, 19 Jan 2023 07:45:50 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B72CE1FB;
+        Thu, 19 Jan 2023 07:46:31 -0800 (PST)
+Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 340B93F445;
+        Thu, 19 Jan 2023 07:45:47 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        leo.yan@linaro.org, mike.leach@linaro.org
+Cc:     sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
+        bbhushan2@marvell.com, James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/8] perf cs_etm: Basic support for virtual/kernel timestamps
+Date:   Thu, 19 Jan 2023 15:42:59 +0000
+Message-Id: <20230119154308.3815108-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-19_09,2023-01-19_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301190113
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf test named “build id cache operations” skips with below
-error on some distros:
+Changes since v3:
 
-<<>>
- 78: build id cache operations                                       :
-test child forked, pid 111101
-WARNING: wine not found. PE binaries will not be run.
-test binaries: /tmp/perf.ex.SHA1.PKz /tmp/perf.ex.MD5.Gt3 ./tests/shell/../pe-file.exe
-DEBUGINFOD_URLS=
-Adding 4abd406f041feb4f10ecde3fc30fd0639e1a91cb /tmp/perf.ex.SHA1.PKz: Ok
-build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
-./tests/shell/buildid.sh: 69: ./tests/shell/buildid.sh: Bad substitution
-test child finished with -2
-build id cache operations: Skip
-<<>>
+  * Scale time estimates by INSTR_PER_NS, rather than assuming 1
+    instruction = 1ns
+  * Add a new commit that fixes some issues around timestamps going
+    backwards
+  * Use nanoseconds inside cs-etm-decoder.c, rather than storing the
+    raw time values and converting when a sample is synthesized. This
+    simplifies some of the code like estimating the first timestamp.
+  
+===========================
+Changes since v2:
 
-The test script "tests/shell/buildid.sh" uses some of the
-string substitution ways which are supported in bash, but not in
-"sh" or other shells. Above error on line number 69 that reports
-"Bad substitution" is:
+  * Remove const to non-const change and copy strings where needed
+    instead.
+  * Use sizeof() instead of PATH_MAX
+  * Append "will not be set accurately." to new error message
+  * Remove unneeded stat() call
+  * Rebase on perf/core
+  
+==========================
 
-<<>>
-link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
-<<>>
+Changes since v1:
 
-Here the way of getting first two characters from id ie,
-${id:0:2} and similarly expressions like ${id:2} is not
-recognised in "sh". So the line errors and instead of
-hitting failure, the test gets skipped as shown in logs.
-So the syntax issue causes test not to be executed in
-such cases. Similarly usage : "${@: -1}" [ to pick last
-argument passed to a function] in “test_record” doesn’t
-work in all distros.
+  * Add 3 refactor commits for sysfs reading around pmu.c as suggested
+    by Arnaldo here [1]
+  * The dependency on [2] has now reached mainline so is no longer
+    blocking
+  * Rebase on perf/core
+  
+[1]: https://lore.kernel.org/all/YnqVqq5QW%2Fb14oPZ@kernel.org/
+[2]: https://lore.kernel.org/all/20220503123537.1003035-1-german.gomez@arm.com/
 
-Fix this by using alternative way with shell substitution
-to pick required characters from the string. Also fix the
-usage of “${@: -1}” to work in all cases.
+German Gomez (4):
+  perf pmu: Add function to check if a pmu file exists
+  perf cs_etm: Keep separate symbols for ETMv4 and ETE parameters
+  perf cs_etm: Record ts_source in AUXTRACE_INFO for ETMv4 and ETE
+  perf cs_etm: Set the time field in the synthetic samples
 
-Another usage in “test_record” is:
-<<>>
-${perf} record --buildid-all -o ${data} $@ &> ${log}
-<<>>
+James Clark (4):
+  perf: Remove duplication around EVENT_SOURCE_DEVICE_PATH
+  perf: Use perf_pmu__open_file() and perf_pmu__scan_file()
+  perf: Remove remaining duplication of bus/event_source/devices/...
+  perf: cs-etm: Ensure that Coresight timestamps don't go backwards
 
-This causes the perf record to start in background and
-Results in the data file not being created by the time
-"check" function is invoked. Below log shows perf record
-result getting displayed after the call to "check" function.
+ tools/perf/arch/arm/util/auxtrace.c           |   5 +-
+ tools/perf/arch/arm/util/cs-etm.c             |  91 ++++++++-
+ tools/perf/arch/x86/util/pmu.c                |  12 +-
+ tools/perf/util/cputopo.c                     |   9 +-
+ tools/perf/util/cs-etm-base.c                 |  34 +++-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  68 +++++--
+ tools/perf/util/cs-etm.c                      |  95 +++++++++-
+ tools/perf/util/cs-etm.h                      |  16 +-
+ tools/perf/util/pmu-hybrid.c                  |  27 +--
+ tools/perf/util/pmu.c                         | 177 +++++++-----------
+ tools/perf/util/pmu.h                         |  10 +-
+ 11 files changed, 349 insertions(+), 195 deletions(-)
 
-<<>>
-running: perf record /tmp/perf.ex.SHA1.EAU
-build id: 4abd406f041feb4f10ecde3fc30fd0639e1a91cb
-link: /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e1a91cb
-failed: link /tmp/perf.debug.mLT/.build-id/4a/bd406f041feb4f10ecde3fc30fd0639e1a91cb does not exist
-test child finished with -1
-build id cache operations: FAILED!
-root@machine:~/athira/linux/tools/perf# Couldn't synthesize bpf events.
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.010 MB /tmp/perf.data.bFF ]
-<<>>
 
-Fix this by redirecting output instead of using “&” which
-starts the command in background.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Acked-by: Ian Rogers <irogers@google.com>
----
-Changelog:
-From v2 -> v3
-- Addressed review comments from David Laight
-  for using shell substitutions.
-
-From v1 -> v2
-- Added Acked-by from Ian.
-- Rebased to tmp.perf/urgent of:
- git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-
- tools/perf/tests/shell/buildid.sh | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
-index aaf851108ca3..0ce22ea0a7f1 100755
---- a/tools/perf/tests/shell/buildid.sh
-+++ b/tools/perf/tests/shell/buildid.sh
-@@ -66,7 +66,9 @@ check()
- 	esac
- 	echo "build id: ${id}"
- 
--	link=${build_id_dir}/.build-id/${id:0:2}/${id:2}
-+	id_file=${id#??}
-+	id_dir=${id%$id_file}
-+	link=$build_id_dir/.build-id/$id_dir/$id_file
- 	echo "link: ${link}"
- 
- 	if [ ! -h $link ]; then
-@@ -74,7 +76,7 @@ check()
- 		exit 1
- 	fi
- 
--	file=${build_id_dir}/.build-id/${id:0:2}/`readlink ${link}`/elf
-+	file=${build_id_dir}/.build-id/$id_dir/`readlink ${link}`/elf
- 	echo "file: ${file}"
- 
- 	# Check for file permission of original file
-@@ -130,20 +132,22 @@ test_record()
- {
- 	data=$(mktemp /tmp/perf.data.XXX)
- 	build_id_dir=$(mktemp -d /tmp/perf.debug.XXX)
--	log=$(mktemp /tmp/perf.log.XXX)
-+	log_out=$(mktemp /tmp/perf.log.out.XXX)
-+	log_err=$(mktemp /tmp/perf.log.err.XXX)
- 	perf="perf --buildid-dir ${build_id_dir}"
- 
- 	echo "running: perf record $@"
--	${perf} record --buildid-all -o ${data} $@ &> ${log}
-+	${perf} record --buildid-all -o ${data} $@ 1>${log_out} 2>${log_err}
- 	if [ $? -ne 0 ]; then
- 		echo "failed: record $@"
--		echo "see log: ${log}"
-+		echo "see log: ${log_err}"
- 		exit 1
- 	fi
- 
--	check ${@: -1}
-+	args="$*"
-+	check ${args##* }
- 
--	rm -f ${log}
-+	rm -f ${log_out} ${log_err}
- 	rm -rf ${build_id_dir}
- 	rm -rf ${data}
- }
+base-commit: 69b41ac87e4a664de78a395ff97166f0b2943210
+prerequisite-patch-id: 9722bf86e3e6d16d177ff9a1411992a795a7dcbd
+prerequisite-patch-id: b05dbef439c2ea8465f3321532257b0ca29f21f9
+prerequisite-patch-id: 92680a4781cbcf010fcb007e6ea030f59e9eaefc
+prerequisite-patch-id: 8e3a73a04e4b89b503377b5fac1d89d551159393
+prerequisite-patch-id: 09980d8fedcdaa70b220a7802428109f48448a58
+prerequisite-patch-id: 711843c93d5d6bdf4d73e024949950f4e4de9e1a
 -- 
-2.39.0
+2.25.1
 
