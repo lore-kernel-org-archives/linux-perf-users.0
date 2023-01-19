@@ -2,85 +2,233 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F7AC004D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1A8C004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbjASMDk (ORCPT
+        id S230295AbjASMDr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 07:03:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
+        Thu, 19 Jan 2023 07:03:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbjASMDE (ORCPT
+        with ESMTP id S231179AbjASMDP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 07:03:04 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4F86F32E
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:02:56 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-287-xAOJsk7xO263fOVjhcvUfw-1; Thu, 19 Jan 2023 12:02:54 +0000
-X-MC-Unique: xAOJsk7xO263fOVjhcvUfw-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 19 Jan
- 2023 12:02:53 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.044; Thu, 19 Jan 2023 12:02:53 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Athira Rajeev' <atrajeev@linux.vnet.ibm.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "jolsa@kernel.org" <jolsa@kernel.org>
-CC:     "irogers@google.com" <irogers@google.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "rnsastry@linux.ibm.com" <rnsastry@linux.ibm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "disgoel@linux.ibm.com" <disgoel@linux.ibm.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH V2] tools/perf/tests: Fix string substitutions in build id
- test
-Thread-Topic: [PATCH V2] tools/perf/tests: Fix string substitutions in build
- id test
-Thread-Index: AQHZK/ml5s18h1FtXky26yQzQ7zuR66lntwQ
-Date:   Thu, 19 Jan 2023 12:02:53 +0000
-Message-ID: <17bd5aca40164637bfbd47da34811a13@AcuMS.aculab.com>
-References: <20230119113054.31742-1-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230119113054.31742-1-atrajeev@linux.vnet.ibm.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 19 Jan 2023 07:03:15 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2DF75734
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:03:06 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id bj3so2213449pjb.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:03:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WOLLU2M/7ghBnIu5O679rBzqMlY9Ph9xGx8HlVfUxZ0=;
+        b=nysKV9OjD8770ltPmWSxrldVp3jHnexV+YWy/vDcSWeNyLxEyHpFfJlQ19wMEFckFy
+         ajaQ8GKgxZ5+RCVgxNDgBNBrJecBvRg5HQYZKHt1ENvARgY1ELn3Mr+W6MjYAsum6Ctr
+         4NMWi3b58bIB3CdXW52fmhg0VuEDzvDmnXtxSlFa9igRKUdDfLltJ+GF6misp2k5VQsJ
+         e154ndyAO1zbOs+QQ0bPwbslMtfMRi1/CUhLiIBy9QsATE/6Y8QNVWP4cGK1kLU4OX6n
+         yS+wcoqaM0/YucowrIL/Dqx3D0Uc+/u0eUH/rs9sLo1bdW4W7oabmczajmQwrCDW8Mtj
+         05rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WOLLU2M/7ghBnIu5O679rBzqMlY9Ph9xGx8HlVfUxZ0=;
+        b=e+wbc9F38Cp70tkTq3rh2SLrZ0AwGWOJleUjr+sutXVIUNGmx55o9LC/i3pq354sL6
+         FA8EmxtDwdHGwcRW5AqhQKKpuRnN02nXMySkYpiqtW3yX6UprVe5rvT5bGm6GASYjg6U
+         /bQQFb57jt2HKwL8H6p0tBxlfR01R5Nm5iJAAaXKd9UV2pT2/mCYP9JgDwr6yXG4b9pN
+         +nRhjrhaOHw9Y8/Izw2hUSTizwnvkRMZMZeGw4aMPs9OgSIcPJln467zC8eK7JwNTv1/
+         g+coyQhQ+Ajy9NWvBbZ5qIUVj1lqw+AXClYIF25bmXD7DJ8NDrVccBndUkBanTt/VRRq
+         2QnQ==
+X-Gm-Message-State: AFqh2kr/V1xLFnPwI204bePauKCdQU8HbartqoX6DRozo5T9HIouFgXS
+        NTZD+cfB1PQ44uo3KyK4SyqTmxjFHdN26Zm/z6tiXQ==
+X-Google-Smtp-Source: AMrXdXsiRWVwQc8CBMyT2RUu38VIhY5bzgs7N1l1NGDYntY7397ex1OKCPUEleQAWSM7ga7a1/l50WMieA3xUxGaapw=
+X-Received: by 2002:a17:90b:1901:b0:226:c03e:23fc with SMTP id
+ mp1-20020a17090b190100b00226c03e23fcmr1172874pjb.6.1674129785808; Thu, 19 Jan
+ 2023 04:03:05 -0800 (PST)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20230116124928.5440-1-mike.leach@linaro.org> <20230116124928.5440-14-mike.leach@linaro.org>
+ <b14b7507-e20a-2223-b772-fc865e5c9558@arm.com>
+In-Reply-To: <b14b7507-e20a-2223-b772-fc865e5c9558@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 19 Jan 2023 12:02:54 +0000
+Message-ID: <CAJ9a7Vj8Xx6fpaivoqe1LQWKrc4bG=jv+PmjUc+6r9FCsCKL1Q@mail.gmail.com>
+Subject: Re: [PATCH v7 13/15] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID
+ used for Trace ID
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, quic_jinlmao@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-RnJvbTogQXRoaXJhIFJhamVldg0KPiBTZW50OiAxOSBKYW51YXJ5IDIwMjMgMTE6MzENCi4uLg0K
-PiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9idWlsZGlkLnNoIGIvdG9vbHMv
-cGVyZi90ZXN0cy9zaGVsbC9idWlsZGlkLnNoDQo+IGluZGV4IGFhZjg1MTEwOGNhMy4uNDNlNDNl
-MTMxYmU3IDEwMDc1NQ0KPiAtLS0gYS90b29scy9wZXJmL3Rlc3RzL3NoZWxsL2J1aWxkaWQuc2gN
-Cj4gKysrIGIvdG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9idWlsZGlkLnNoDQo+IEBAIC02Niw3ICs2
-Niw3IEBAIGNoZWNrKCkNCj4gIAllc2FjDQo+ICAJZWNobyAiYnVpbGQgaWQ6ICR7aWR9Ig0KPiAN
-Cj4gLQlsaW5rPSR7YnVpbGRfaWRfZGlyfS8uYnVpbGQtaWQvJHtpZDowOjJ9LyR7aWQ6Mn0NCj4g
-KwlsaW5rPSR7YnVpbGRfaWRfZGlyfS8uYnVpbGQtaWQvJChlY2hvICR7aWR9fGN1dCAtYyAxLTIp
-LyQoZWNobyAke2lkfXxjdXQgLWMgMy0pDQo+ICAJZWNobyAibGluazogJHtsaW5rfSINCg0KVGhh
-dCBpcyBob3JyaWQsIHdoeSBub3QganVzdCB1c2UgdmFsaWQgc2hlbGwgc3Vic3RpdHV0aW9ucywg
-ZWc6DQoJaWRfZmlsZT0ke2lkIz8/fQ0KCWlkX2Rpcj0ke2lkJSRpZF9maWxlfQ0KCWxpbms9JGJ1
-aWxkX2lkX2Rpci8uYnVpbGQtaWQvJGlkX2Rpci8kaWRfZmlsZQ0KDQouLi4NCj4gLQljaGVjayAk
-e0A6IC0xfQ0KPiArCWNoZWNrICRsYXN0DQoNClNpbmNlIHRoaXMgaXMgdGhlIGVuZCBvZiB0aGUg
-c2hlbGwgZnVuY3Rpb24geW91IGNhbiBhdm9pZCB0aGUgZXZhbA0KYnkgZG9pbmc6DQoJc2hpZnQg
-JCgoJCMgLSAxKSkNCgljaGVjayAkMQ0Kb3IgbWF5YmU6DQoJYXJncz0iJCoiDQoJY2hlY2sgJHth
-cmdzIyMqIH0NCg0KVGhvc2Ugc2hvdWxkIGJlIG9rIGluIGFsbCBwb3NpeCBzaGVsbHMuDQoNCglE
-YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
-bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
-NzM4NiAoV2FsZXMpDQo=
+Hi Suzuki
 
+On Thu, 19 Jan 2023 at 11:02, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> Hi Mike
+>
+> On 16/01/2023 12:49, Mike Leach wrote:
+> > Use the perf_report_aux_output_id() call to output the CoreSight trace ID
+> > and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
+> > perf.data file.
+> >
+> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > ---
+> >   drivers/hwtracing/coresight/coresight-etm-perf.c |  7 +++++++
+> >   include/linux/coresight-pmu.h                    | 14 ++++++++++++++
+> >   2 files changed, 21 insertions(+)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > index bdb9ab86173a..12fff661456e 100644
+> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> > @@ -4,6 +4,7 @@
+> >    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >    */
+> >
+> > +#include <linux/bitfield.h>
+> >   #include <linux/coresight.h>
+> >   #include <linux/coresight-pmu.h>
+> >   #include <linux/cpumask.h>
+> > @@ -448,6 +449,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+> >       struct perf_output_handle *handle = &ctxt->handle;
+> >       struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+> >       struct list_head *path;
+> > +     u64 hw_id;
+> >
+> >       if (!csdev)
+> >               goto fail;
+> > @@ -493,6 +495,11 @@ static void etm_event_start(struct perf_event *event, int flags)
+> >       if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
+> >               goto fail_disable_path;
+> >
+> > +     /* output cpu / trace ID in perf record */
+> > +     hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION);
+> > +     hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_read_cpu_id(cpu));
+> > +     perf_report_aux_output_id(event, hw_id);
+> > +
+>
+> One minor nit:
+>
+> This ends up putting the HWID packet for every single time the event is
+> scheduled on the CPU and thus we have :
+>
+> $ perf report -D | grep OUTPUT_HW_ID
+> ...
+> AUX_OUTPUT_HW_ID events:         55  (18.3%)
+>
+> We could do the above step only once per CPU for the lifetime of the
+> event by book keeping the info in event_data. With that we get, one
+> record per CPU and:
+>
+> $ perf report -D | grep OUTPUT_HW_ID
+> ...
+> AUX_OUTPUT_HW_ID events:          5  ( 1.9%)
+>
+> Here is a quick patch. We can queue this separately if you all are Ok
+> with this. Thoughts ?
+>
+
+Seems reasonable given we guarantee the ID <=> CPU association for the
+lifetime of the perf session.
+
+Regards
+
+Mike
+
+> ---8>---
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index 12fff661456e..5335f3a2b010 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -495,10 +495,16 @@ static void etm_event_start(struct perf_event
+> *event, int flags)
+>          if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
+>                  goto fail_disable_path;
+>
+> -       /* output cpu / trace ID in perf record */
+> -       hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
+> CS_AUX_HW_ID_CURR_VERSION);
+> -       hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
+> coresight_trace_id_read_cpu_id(cpu));
+> -       perf_report_aux_output_id(event, hw_id);
+> +       /*
+> +        * output cpu / trace ID in perf record, once for the lifetime
+> +        * of the event.
+> +        */
+> +       if (!cpumask_test_cpu(cpu, &event_data->aux_hwid_done)) {
+> +               cpumask_set_cpu(cpu, &event_data->aux_hwid_done);
+> +               hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
+> CS_AUX_HW_ID_CURR_VERSION);
+> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
+> coresight_trace_id_read_cpu_id(cpu));
+> +               perf_report_aux_output_id(event, hw_id);
+> +       }
+>
+>   out:
+>          /* Tell the perf core the event is alive */
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h
+> b/drivers/hwtracing/coresight/coresight-etm-perf.h
+> index 468f7799ab4f..9b11bb3d96d9 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.h
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
+> @@ -55,6 +55,7 @@ struct etm_filters {
+>   struct etm_event_data {
+>          struct work_struct work;
+>          cpumask_t mask;
+> +       cpumask_t aux_hwid_done;
+>          void *snk_config;
+>          u32 cfg_hash;
+>          struct list_head * __percpu *path;
+>
+>
+>
+> >   out:
+> >       /* Tell the perf core the event is alive */
+> >       event->hw.state = 0;
+> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> > index 624f4843453e..51ac441a37c3 100644
+> > --- a/include/linux/coresight-pmu.h
+> > +++ b/include/linux/coresight-pmu.h
+> > @@ -7,6 +7,8 @@
+> >   #ifndef _LINUX_CORESIGHT_PMU_H
+> >   #define _LINUX_CORESIGHT_PMU_H
+> >
+> > +#include <linux/bits.h>
+> > +
+> >   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+> >
+> >   /*
+> > @@ -43,4 +45,16 @@
+> >   #define ETM4_CFG_BIT_RETSTK 12
+> >   #define ETM4_CFG_BIT_VMID_OPT       15
+> >
+> > +/*
+> > + * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+> > + * Used to associate a CPU with the CoreSight Trace ID.
+> > + * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
+> > + * [59:08] - Unused (SBZ)
+> > + * [63:60] - Version
+> > + */
+> > +#define CS_AUX_HW_ID_TRACE_ID_MASK   GENMASK_ULL(7, 0)
+> > +#define CS_AUX_HW_ID_VERSION_MASK    GENMASK_ULL(63, 60)
+> > +
+> > +#define CS_AUX_HW_ID_CURR_VERSION 0
+> > +
+> >   #endif
+>
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
