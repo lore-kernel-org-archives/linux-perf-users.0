@@ -2,256 +2,174 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43A2C004D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 11:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E12C004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbjASLih (ORCPT
+        id S230026AbjASMAQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 06:38:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46374 "EHLO
+        Thu, 19 Jan 2023 07:00:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbjASLiE (ORCPT
+        with ESMTP id S230108AbjASMAN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 06:38:04 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B7675A25
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 03:36:38 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30J9BwUR023471;
-        Thu, 19 Jan 2023 11:36:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type : subject :
- from : in-reply-to : date : cc : message-id : references : to :
- content-transfer-encoding : mime-version; s=pp1;
- bh=l4xtF/VBo+/kZPLf1rcGZG9RlA5279S0Iiv6wqhYaK0=;
- b=jE2h9g9HbV72Q92mQfBF75uXNFFZtJ8qdVfYZWHsaYtzRPcy6ZWBrYo1Lo+hzxurCQvy
- ZbhGhbDpGb7+wqHIxS/SrBubrX/V4+LOx8ToUdKw7qiB2iI1bajGMDx7SxnV5US26KD2
- 106MP2OdOCgh99WnT2GVgXBPeFHNz5JoUrF272ewrB5/dOV5FfHguim8dl5cmFJNa9lh
- yFF/QgzPzBS9hUoHowhsCZf19SzlCkrKS9fLNq2Pmu2uZyZvHJ4k+UPKnIqJQM57dP/Q
- 8UXOXe6+6TiDuY/dHFDmEhfUNCPPTVzcgsZ36eVQYw8+57rPOjNaPd7HCf+Vz+Pcz355 Sw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n7311b6ww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Jan 2023 11:36:22 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30JAjk9U001377;
-        Thu, 19 Jan 2023 11:36:22 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n7311b6w3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Jan 2023 11:36:21 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30J40655006282;
-        Thu, 19 Jan 2023 11:36:19 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3n3knfpkwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Jan 2023 11:36:19 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30JBaFsG49807716
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Jan 2023 11:36:15 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C109B2004B;
-        Thu, 19 Jan 2023 11:36:15 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5578F20040;
-        Thu, 19 Jan 2023 11:36:13 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.12.84])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu, 19 Jan 2023 11:36:13 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Subject: Re: [PATCH 1/2] tools/perf: Fix the file mode with copyfile while
- adding file to build-id cache
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y8f5LNu2tmO/ceej@kernel.org>
-Date:   Thu, 19 Jan 2023 17:06:11 +0530
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.ibm.com
-Message-Id: <765425A3-BA4A-4DC0-9D78-B1E428938ED2@linux.vnet.ibm.com>
-References: <20230116050131.17221-1-atrajeev@linux.vnet.ibm.com>
- <Y8f5LNu2tmO/ceej@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: J_-LFIRyoDd5E5-QRpOJb9e54u_bVs8_
-X-Proofpoint-GUID: Ohz8A8XS9YvpsKbWExP5SI-EWZrF5gL4
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Thu, 19 Jan 2023 07:00:13 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED18E6F88E;
+        Thu, 19 Jan 2023 04:00:04 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9267176A;
+        Thu, 19 Jan 2023 04:00:45 -0800 (PST)
+Received: from [10.57.75.229] (unknown [10.57.75.229])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9441D3F71A;
+        Thu, 19 Jan 2023 04:00:02 -0800 (PST)
+Message-ID: <546f218f-3ac9-8fc2-c843-2f2f16882f31@arm.com>
+Date:   Thu, 19 Jan 2023 12:00:00 +0000
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-19_09,2023-01-19_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 clxscore=1015 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301190091
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v7 00/15] coresight: Add new API to allocate trace source
+ ID values
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com
+References: <20230116124928.5440-1-mike.leach@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20230116124928.5440-1-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-> On 18-Jan-2023, at 7:20 PM, Arnaldo Carvalho de Melo <acme@kernel.org> wr=
-ote:
->=20
-> Em Mon, Jan 16, 2023 at 10:31:30AM +0530, Athira Rajeev escreveu:
->> The test "build id cache operations" fails on powerpc
->> As below:
->>=20
->> 	Adding 5a0fd882b53084224ba47b624c55a469 ./tests/shell/../pe-file.exe: Ok
->> 	build id: 5a0fd882b53084224ba47b624c55a469
->> 	link: /tmp/perf.debug.ZTu/.build-id/5a/0fd882b53084224ba47b624c55a469
->> 	file: /tmp/perf.debug.ZTu/.build-id/5a/../../root/linux/tools/perf/test=
-s/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf
->> 	failed: file /tmp/perf.debug.ZTu/.build-id/5a/../../root/linux/tools/pe=
-rf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/elf does not exist
->> 	test child finished with -1
->> 	---- end ----
->> 	build id cache operations: FAILED!
->>=20
->> The failing test is when trying to add pe-file.exe to
->> build id cache.
->>=20
->> Perf buildid-cache can be used to add/remove/manage
->> files from the build-id cache. "-a" option is used to
->> add a file to the build-id cache.
->>=20
->> Simple command to do so for a PE exe file:
->> # ls -ltr tests/pe-file.exe
->> -rw-r--r--. 1 root root 75595 Jan 10 23:35 tests/pe-file.exe
->> The file is in home directory.
->>=20
->> # mkdir  /tmp/perf.debug.TeY1
->> # perf --buildid-dir /tmp/perf.debug.TeY1 buildid-cache -v
->>   -a tests/pe-file.exe
->>=20
->> The above will create ".build-id" folder in build id
->> directory, which is /tmp/perf.debug.TeY1. Also adds file
->> to this folder under build id. Example:
->>=20
->> # ls -ltr /tmp/perf.debug.TeY1/.build-id/5a/0fd882b53084224ba47b624c55a4=
-69/
->> total 76
->> -rw-r--r--. 1 root root     0 Jan 11 00:38 probes
->> -rwxr-xr-x. 1 root root 75595 Jan 11 00:38 elf
->>=20
->> We can see in the results that file mode for original
->> file and file in build id directory is different. ie,
->> build id file has executable permission whereas original
->> file doesn=E2=80=99t have.
->>=20
->> The code path and function ( build_id_cache__add ) to
->> add file to cache is in "util/build-id.c". In
->> build_id_cache__add() function, it first attempts to link
->> the original file to destination cache folder. If linking
->> the file fails ( which can happen if the destination and
->> source is on a different mount points ), it will copy the
->> file to destination. Here copyfile() routine explicitly uses
->> mode as "755" and hence file in the destination will have
->> executable permission.
->>=20
->> Code snippet:
->>=20
->> if (link(realname, filename) && errno !=3D EEXIST &&
->>                               copyfile(name, filename))
->>=20
->> Strace logs:
->>=20
->> 	172285 link("/home/<user_name>/linux/tools/perf/tests/pe-file.exe", "/t=
-mp/perf.debug.TeY1/home/<user_name>/linux/tools/perf/tests/pe-file.exe/5a0f=
-d882b53084224ba47b624c55a469/elf") =3D -1 EXDEV (Invalid cross-device link)
->> 	172285 newfstatat(AT_FDCWD, "tests/pe-file.exe", {st_mode=3DS_IFREG|064=
-4, st_size=3D75595, ...}, 0) =3D 0
->> 	172285 openat(AT_FDCWD, "/tmp/perf.debug.TeY1/home/<user_name>/linux/to=
-ols/perf/tests/pe-file.exe/5a0fd882b53084224ba47b624c55a469/.elf.KbAnsl", O=
-_RDWR|O_CREAT|O_EXCL, 0600) =3D 3
->> 	172285 fchmod(3, 0755)                  =3D 0
->> 	172285 openat(AT_FDCWD, "tests/pe-file.exe", O_RDONLY) =3D 4
->> 	172285 mmap(NULL, 75595, PROT_READ, MAP_PRIVATE, 4, 0) =3D 0x7fffa5cd00=
-00
->> 	172285 pwrite64(3, "MZ\220\0\3\0\0\0\4\0\0\0\377\377\0\0\270\0\0\0\0\0\=
-0\0@\0\0\0\0\0\0\0"..., 75595, 0) =3D 75595
->>=20
->> Whereas if the link succeeds, it succeeds in the first
->> attempt itself and the file in the build-id dir will
->> have same permission as original file.
->>=20
->> Example, above uses /tmp. Instead if we use
->> "--buildid-dir /home/build", linking will work here
->> since mount points are same. Hence the destination file
->> will not have executable permission.
->>=20
->> Since the testcase "tests/shell/buildid.sh" always looks
->> for executable file, test fails in powerpc environment
->> when test is run from /root.
->>=20
->> The patch adds a change in build_id_cache__add to use
->> copyfile_mode which also passes the file=E2=80=99s original mode as
->> argument. This way the destination file mode also will
->> be same as original file.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->=20
-> Thanks, applied both patches, IIRC there were an Acked-by from Ian for
-> this one? Or was that reference a cut'n'paste error with that other
-> series for the #/bin/bash changes?
->=20
-> - Arnaldo
->=20
-
 Hi Arnaldo,
 
-Thanks for picking up the changes in this patch set.
+On 16/01/2023 12:49, Mike Leach wrote:
+> The current method for allocating trace source ID values to sources is
+> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> The STM is allocated ID 0x1.
+> 
+> This fixed algorithm is used in both the CoreSight driver code, and by
+> perf when writing the trace metadata in the AUXTRACE_INFO record.
+> 
+> The method needs replacing as currently:-
+> 1. It is inefficient in using available IDs.
+> 2. Does not scale to larger systems with many cores and the algorithm
+> has no limits so will generate invalid trace IDs for cpu number > 44.
+> 
+> Additionally requirements to allocate additional system IDs on some
+> systems have been seen.
+> 
+> This patch set  introduces an API that allows the allocation of trace IDs
+> in a dynamic manner.
+> 
+> Architecturally reserved IDs are never allocated, and the system is
+> limited to allocating only valid IDs.
+> 
+> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
+> the new API.
+> 
+> For the ETMx.x devices IDs are allocated on certain events
+> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
+> sysfs TRCTRACEID register and freed when the sysfs reset is written.
+> 
+> b) When using perf, ID is allocated on during setup AUX event, and freed on
+> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+> The ID allocator is notified when perf sessions start and stop
+> so CPU based IDs are kept constant throughout any perf session.
+> 
+> 
+> Note: This patchset breaks some backward compatibility for perf record and
+> perf report.
+> 
+> The version of the AUXTRACE_INFO has been updated to reflect the fact that
+> the trace source IDs are generated differently. This will
+> mean older versions of perf report cannot decode the newer file.
+> 
+> Appies to coresight/next
+> 
+> Changes since v6:
+> 1) Export perf_report_aux_output_id() Acked by Peter,
+> 2) Update to ETMv3 docs requested by suzuki
+> 3) rebased and re-tested on coresight/next (6.2-rc2)
+> 
+> Changes since v5: (requested by suzuki)
+> 1) Prefer odd ID values for system IDs to avoid overlap with legacy CPU IDs
+> 2) Some style changes
+> 
+> Changes since v4:
+> 1) update to ensure that compiling after each individual patch added still
+> works - ie. git bisect not broken through the patchset..
+> 
+> 2) Revision to some of the now redundant code in cs-etm (James)
+> 
+> 3) Comments and other minor fixes requested by Suzuki.
+> 
+> Changes since v3:
+> 1) Fixed aarch32 build error in ETM3.x driver.
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> Changes since v2:
+> 1) Improved backward compatibility: (requested by James)
+> 
+> Using the new version of perf on an old kernel will generate a usable file
+> legacy metadata values are set by the new perf and will be used if mew
+> ID packets are not present in the file.
+> 
+> Using an older version of perf / simpleperf on an updated kernel may still
+> work. The trace ID allocator has been updated to use the legacy ID values
+> where possible, so generated file and used trace IDs will match up to the
+> point where the legacy algorithm is broken anyway.
+> 
+> 2) Various changes to the ID allocator and ID packet format.
+> (suggested by Suzuki)
+> 
+> 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
+> without taking the allocator spinlock. perf flow now allocates and releases ID
+> values in setup_aux / free_event. Device enable and event enable use the passive
+> read to set the allocated values. This simplifies the locking mechanisms on the
+> perf run and fixes issues that arose with locking dependencies.
+> 
+> Changes since v1:
+> (after feedback & discussion with Mathieu & Suzuki).
+> 
+> 1) API has changed. The global trace ID map is managed internally, so it
+> is no longer passed in to the API functions.
+> 
+> 2) perf record does not use sysfs to find the trace IDs. These are now
+> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
+> have been updated accordingly to generate and handle these events.
+> 
+> Mike Leach (15):
+>    coresight: trace-id: Add API to dynamically assign Trace ID values
+>    coresight: Remove obsolete Trace ID unniqueness checks
+>    coresight: perf: traceid: Add perf ID allocation and notifiers
+>    coresight: stm: Update STM driver to use Trace ID API
+>    coresight: etm4x: Update ETM4 driver to use Trace ID API
+>    coresight: etm3x: Update ETM3 driver to use Trace ID API
+>    coresight: etmX.X: stm: Remove trace_id() callback
+>    coresight: trace id: Remove legacy get trace ID function.
+>    perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+>    perf: cs-etm: Update record event to use new Trace ID protocol
+>    kernel: events: Export perf_report_aux_output_id()
+>    perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+>    coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+>    coresight: trace-id: Add debug & test macros to Trace ID allocation
+>    coresight: etm3x: docs: Alter sysfs documentation for trace id updates
 
-I re-based the patch from the other series ( for which I had got Acked-by f=
-rom Ian ) on top of tmp.perf/urgent
-and posted it as single V2 here:
+I have pushed the kernel patches on this series to coresight tree next[0].
 
-https://lore.kernel.org/linux-perf-users/20230119113054.31742-1-atrajeev@li=
-nux.vnet.ibm.com/T/#u
+I will be sending them out to Greg for v6.3. Please could you queue the
+perf tool changes in the series ? i.e., Patches 9,10 and 12.
 
-Thanks
-Athira
 
->> ---
->> tools/perf/util/build-id.c | 10 +++++++---
->> 1 file changed, 7 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
->> index a839b30c981b..ea9c083ab1e3 100644
->> --- a/tools/perf/util/build-id.c
->> +++ b/tools/perf/util/build-id.c
->> @@ -715,9 +715,13 @@ build_id_cache__add(const char *sbuild_id, const ch=
-ar *name, const char *realnam
->> 		} else if (nsi && nsinfo__need_setns(nsi)) {
->> 			if (copyfile_ns(name, filename, nsi))
->> 				goto out_free;
->> -		} else if (link(realname, filename) && errno !=3D EEXIST &&
->> -				copyfile(name, filename))
->> -			goto out_free;
->> +		} else if (link(realname, filename) && errno !=3D EEXIST) {
->> +			struct stat f_stat;
->> +
->> +			if (!(stat(name, &f_stat) < 0) &&
->> +					copyfile_mode(name, filename, f_stat.st_mode))
->> +				goto out_free;
->> +		}
->> 	}
->>=20
->> 	/* Some binaries are stripped, but have .debug files with their symbol
->> --=20
->> 2.31.1
->=20
-> --=20
->=20
-> - Arnaldo
+[0] 
+https://git.kernel.org/pub/scm/linux/kernel/git/coresight/linux.git/log/?h=next
+
+
+Kind regards
+Suzuki
+
 
