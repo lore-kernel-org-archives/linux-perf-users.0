@@ -2,31 +2,31 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38AFC38142
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 04:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0442DC38142
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 04:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230168AbjASEG5 (ORCPT
+        id S230331AbjASEhb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Jan 2023 23:06:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
+        Wed, 18 Jan 2023 23:37:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbjASD5E (ORCPT
+        with ESMTP id S230007AbjASEgx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Jan 2023 22:57:04 -0500
-Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283B75EF86;
-        Wed, 18 Jan 2023 19:55:05 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VZs-RX4_1674100188;
-Received: from 30.0.176.247(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZs-RX4_1674100188)
+        Wed, 18 Jan 2023 23:36:53 -0500
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DB77C856;
+        Wed, 18 Jan 2023 20:33:30 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VZrzidq_1674100437;
+Received: from 30.0.176.247(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZrzidq_1674100437)
           by smtp.aliyun-inc.com;
-          Thu, 19 Jan 2023 11:49:50 +0800
-Message-ID: <b9efa4d1-2223-7f8f-ed89-62069d9d91bf@linux.alibaba.com>
-Date:   Thu, 19 Jan 2023 11:49:47 +0800
+          Thu, 19 Jan 2023 11:54:00 +0800
+Message-ID: <80e8fc50-af91-3191-dc47-83940236a49a@linux.alibaba.com>
+Date:   Thu, 19 Jan 2023 11:53:57 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.6.1
 Subject: Re: [PATCH v8 1/9] perf pmu: Add #slots literal support for arm64
-To:     John Garry <john.g.garry@oracle.com>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
@@ -43,7 +43,8 @@ Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Kilroy <andrew.kilroy@arm.com>,
         Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        John Garry <john.g.garry@oracle.com>
 References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
  <1673940573-90503-2-git-send-email-renyu.zj@linux.alibaba.com>
  <06d33eb8-d2a9-4792-fa83-c64059ab7326@oracle.com>
@@ -73,4 +74,9 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 > 
 > Reviewed-by: John Garry <john.g.garry@oracle.com>
 
-Thank you John!
+Hi Ian,
+
+Do you think there are other problems with this patch? Can I get your tags?
+
+Thanks,
+Jing
