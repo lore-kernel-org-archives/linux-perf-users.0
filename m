@@ -2,114 +2,75 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E05C38159
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Jan 2023 20:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38AFC38142
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 04:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229696AbjARUOa (ORCPT
+        id S230168AbjASEG5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Jan 2023 15:14:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
+        Wed, 18 Jan 2023 23:06:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjARUO3 (ORCPT
+        with ESMTP id S230106AbjASD5E (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Jan 2023 15:14:29 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D1855D7E4;
-        Wed, 18 Jan 2023 12:14:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674072869; x=1705608869;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HN8PAhsHerh5dxvQkv6j43DWkYvcwpsU/FQhQ7BgyD4=;
-  b=DWowN8k6kD6q16ZL9yO8V2BbkPPVw5HjXhivLwKO5ETE8zGJGktXcl7f
-   KswKukl1ei5bDaxTJbXybRKBumfLLs0Mm5Upg0reLhV7ujnbgHhHqxTgF
-   y/9ZEIj34OKGCxoFyxjdQEy32t6kh+Q0s73vXGFKffHlFM3LtCh1R1rtf
-   TnZ+qzC3H9dvWOWiHsqxx01egdl6dK7Ej7mNJhj9JHK09+Q4CJmbl4gO4
-   +vhFXlyULzK9J8rqu8WMdlm4RNip5Ok5hAjD9SaoLTkkZ+IUYzNwnjfGF
-   LSZcwAXx36cb0muxS+LNEn9IBmAakfYM4w4VfL3hzzNMDZHJTdW69oqHi
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="389585607"
-X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="389585607"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 12:14:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="988731084"
-X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="988731084"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jan 2023 12:14:28 -0800
-Received: from [10.251.17.254] (kliang2-mobl1.ccr.corp.intel.com [10.251.17.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 43322580AFF;
-        Wed, 18 Jan 2023 12:14:27 -0800 (PST)
-Message-ID: <cb4b6b3c-5151-ed9d-ba17-e8a5f919f8f8@linux.intel.com>
-Date:   Wed, 18 Jan 2023 15:14:25 -0500
+        Wed, 18 Jan 2023 22:57:04 -0500
+Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283B75EF86;
+        Wed, 18 Jan 2023 19:55:05 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0VZs-RX4_1674100188;
+Received: from 30.0.176.247(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZs-RX4_1674100188)
+          by smtp.aliyun-inc.com;
+          Thu, 19 Jan 2023 11:49:50 +0800
+Message-ID: <b9efa4d1-2223-7f8f-ed89-62069d9d91bf@linux.alibaba.com>
+Date:   Thu, 19 Jan 2023 11:49:47 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] perf vendor events intel: Add Emerald Rapids
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        artem.bityutskiy@linux.intel.com, andi.kleen@intel.com
-References: <20230118175632.3165217-1-kan.liang@linux.intel.com>
- <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v8 1/9] perf pmu: Add #slots literal support for arm64
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1673940573-90503-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <06d33eb8-d2a9-4792-fa83-c64059ab7326@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <06d33eb8-d2a9-4792-fa83-c64059ab7326@oracle.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2023-01-18 1:02 p.m., Ian Rogers wrote:
-> On Wed, Jan 18, 2023 at 9:57 AM <kan.liang@linux.intel.com> wrote:
+在 2023/1/17 下午4:45, John Garry 写道:
+> On 17/01/2023 07:29, Jing Zhang wrote:
+>> The slots in each architecture may be different, so add #slots literal
+>> to obtain the slots of different architectures, and the #slots can be
+>> applied in the metric. Currently, The #slots just support for arm64,
+>> and other architectures will return NAN.
 >>
->> From: Kan Liang <kan.liang@linux.intel.com>
+>> On arm64, the value of slots is from the register PMMIR_EL1.SLOT, which
+>> I can read in /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots.
+>> PMMIR_EL1.SLOT might read as zero if the PMU version is lower than
+>> ID_AA64DFR0_EL1_PMUVer_V3P4 or the STALL_SLOT event is not implemented.
 >>
->> The event list of the Emerald Rapids is the same as the Sapphire
->> Rapids. Add the CPU model ID of Emerald Rapids into the mapfile.csv and
->> point it to the event list of Sapphire Rapids.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
->> I note it currently isn't on the perfmon github:
-> https://github.com/intel/perfmon/blob/main/mapfile.csv
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
 
-Right, but it will be fixed soon.
-
-Thanks,
-Kan
-> This will create a diff from the version of mapfile.csv generated by:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> Presumably there will be an update to solve that.>
-> Thanks,
-> Ian
-> 
->> ---
->>  tools/perf/pmu-events/arch/x86/mapfile.csv | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
->> index 711a4ef05fdf..5facdac6fe8e 100644
->> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
->> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
->> @@ -21,7 +21,7 @@ GenuineIntel-6-A[AC],v1.00,meteorlake,core
->>  GenuineIntel-6-1[AEF],v3,nehalemep,core
->>  GenuineIntel-6-2E,v3,nehalemex,core
->>  GenuineIntel-6-2A,v17,sandybridge,core
->> -GenuineIntel-6-8F,v1.09,sapphirerapids,core
->> +GenuineIntel-6-(8F|CF),v1.09,sapphirerapids,core
->>  GenuineIntel-6-(37|4A|4C|4D|5A),v14,silvermont,core
->>  GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
->>  GenuineIntel-6-55-[01234],v1.28,skylakex,core
->> --
->> 2.35.1
->>
+Thank you John!
