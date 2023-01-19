@@ -2,97 +2,78 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0EAC00A5A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608BEC004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230457AbjASMxI (ORCPT
+        id S229593AbjASM5N (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 07:53:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
+        Thu, 19 Jan 2023 07:57:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjASMvI (ORCPT
+        with ESMTP id S229740AbjASM4T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 07:51:08 -0500
+        Thu, 19 Jan 2023 07:56:19 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DBC11EA7
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:51:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18BCB448;
+        Thu, 19 Jan 2023 04:56:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8052C60DBB
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 12:51:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD751C433EF;
-        Thu, 19 Jan 2023 12:51:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3804860ED9;
+        Thu, 19 Jan 2023 12:56:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78764C433D2;
+        Thu, 19 Jan 2023 12:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674132664;
-        bh=OzXm+bbkrmc47yMbZWYbVLwa5s7iiXkwx3w/RuvhnD8=;
+        s=k20201202; t=1674132977;
+        bh=3kufVbD63626MuiUF29s3bco7fpvpK/XaVkCc6GBB54=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OkfTJetBBWLbc1lVJC6VcF8AWbbD5gKdE+vR146K21dXdcOaYJk3y3iFm0T2ZKl7N
-         lGRlCkY02wp+vSSsFAYy/8bUsAE/vhfImVvh/hm48EOF9ih9tycDnqGAUG7qIaZgE/
-         0OZd6+FP2LnYEGKt6cGP5f5UZ84GU6AA8zU+dIMr/w2AeyTiukDZZDS+unF78+dF9F
-         NgWVnJYEIjeYcB380SsqTuwAd+OJVZYnwDXKM/GG/GPtXzTditL+lXnZNStZQfYZt5
-         wp4S4EcPTWZqgl7jkxWZIIDPXcWv6aDJSe0HNCv5ESucTWhO5vEcc5pWXc2og7KmKP
-         UZVFPY/hAN7hw==
+        b=HFNirPqW4AuWkbKl0xBZHy74XNPZuJL8lXuIPUFQ/rCYoIaS9zXCJTx4mcKxJUfT1
+         y641HzeExF9EGRIobvB2fowOBxnxMDhePlbVzcA1yZewKfzstDp8cDzWzLhLXTvt4p
+         CL2W3XxCS+abfmB1oprU1/mrBGetjh8bwUlT4tvPw/A7NRo6X6VfphKhBipZEahzgv
+         x+UBvD6B6vs9uThZoU8RK3YwKmSp2Ey6a8MxKRL6OsgqB3uMpJu6Z4lfmuKbLW+swc
+         qaO/PNiPsb8fRvyNYVMHAPBy6kYBR1DnbBnccUQ0YyjfjaEvIoqFXQWxlRwpc8lELa
+         vfxe3/N/+7Q/w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D5892405BE; Thu, 19 Jan 2023 09:51:01 -0300 (-03)
-Date:   Thu, 19 Jan 2023 09:51:01 -0300
+        id 21A74405BE; Thu, 19 Jan 2023 09:56:15 -0300 (-03)
+Date:   Thu, 19 Jan 2023 09:56:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     qinyu <qinyu32@huawei.com>, peterz@infradead.org, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org, hewenliang4@huawei.com,
-        linfeilong@huawei.com
-Subject: Re: [PATCH] perf docs: fix a typo in perf probe doc
-Message-ID: <Y8k8tfd7YlZlYgHd@kernel.org>
-References: <20230116012143.432435-1-qinyu32@huawei.com>
- <CAP-5=fV255AszHQAYFWjcEWkPCORyD35_4O+2Uxt0+4o2FyXjQ@mail.gmail.com>
+Cc:     kan.liang@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        artem.bityutskiy@linux.intel.com, andi.kleen@intel.com
+Subject: Re: [PATCH] perf vendor events intel: Add Emerald Rapids
+Message-ID: <Y8k974RqTSIle9ZQ@kernel.org>
+References: <20230118175632.3165217-1-kan.liang@linux.intel.com>
+ <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fV255AszHQAYFWjcEWkPCORyD35_4O+2Uxt0+4o2FyXjQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWMPYmofTL262HQB1jOiqRD5dKtAhaWrBbT-vq-NYsXcg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Jan 15, 2023 at 10:00:47PM -0800, Ian Rogers escreveu:
-> On Sun, Jan 15, 2023 at 5:15 PM qinyu <qinyu32@huawei.com> wrote:
+Em Wed, Jan 18, 2023 at 10:02:04AM -0800, Ian Rogers escreveu:
+> On Wed, Jan 18, 2023 at 9:57 AM <kan.liang@linux.intel.com> wrote:
 > >
-> > fix a minor typo in perf probe doc.
+> > From: Kan Liang <kan.liang@linux.intel.com>
 > >
-> > Fixes: 631c9def804b ("perf probe: Support --line option to show probable source-code lines")
-> > Signed-off-by: qinyu <qinyu32@huawei.com>
+> > The event list of the Emerald Rapids is the same as the Sapphire
+> > Rapids. Add the CPU model ID of Emerald Rapids into the mapfile.csv and
+> > point it to the event list of Sapphire Rapids.
+> >
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > 
 > Acked-by: Ian Rogers <irogers@google.com>
+> 
+> I note it currently isn't on the perfmon github:
+> https://github.com/intel/perfmon/blob/main/mapfile.csv
+> This will create a diff from the version of mapfile.csv generated by:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> Presumably there will be an update to solve that.
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Thanks,
-> Ian
-> 
-> > ---
-> >  tools/perf/Documentation/perf-probe.txt | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-> > index 7f8e8ba3a..5c43a6edc 100644
-> > --- a/tools/perf/Documentation/perf-probe.txt
-> > +++ b/tools/perf/Documentation/perf-probe.txt
-> > @@ -222,7 +222,7 @@ probe syntax, 'SRC' means the source file path, 'ALN' is start line number,
-> >  and 'ALN2' is end line number in the file. It is also possible to specify how
-> >  many lines to show by using 'NUM'. Moreover, 'FUNC@SRC' combination is good
-> >  for searching a specific function when several functions share same name.
-> > -So, "source.c:100-120" shows lines between 100th to l20th in source.c file. And "func:10+20" shows 20 lines from 10th line of func function.
-> > +So, "source.c:100-120" shows lines between 100th to 120th in source.c file. And "func:10+20" shows 20 lines from 10th line of func function.
-> >
-> >  LAZY MATCHING
-> >  -------------
-> > --
-> > 2.33.0
-> >
-
--- 
-
-- Arnaldo
