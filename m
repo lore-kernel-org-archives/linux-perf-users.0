@@ -2,174 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E12C004D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F7AC004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbjASMAQ (ORCPT
+        id S230222AbjASMDk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 07:00:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35036 "EHLO
+        Thu, 19 Jan 2023 07:03:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230108AbjASMAN (ORCPT
+        with ESMTP id S230476AbjASMDE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 07:00:13 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED18E6F88E;
-        Thu, 19 Jan 2023 04:00:04 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9267176A;
-        Thu, 19 Jan 2023 04:00:45 -0800 (PST)
-Received: from [10.57.75.229] (unknown [10.57.75.229])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9441D3F71A;
-        Thu, 19 Jan 2023 04:00:02 -0800 (PST)
-Message-ID: <546f218f-3ac9-8fc2-c843-2f2f16882f31@arm.com>
-Date:   Thu, 19 Jan 2023 12:00:00 +0000
+        Thu, 19 Jan 2023 07:03:04 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E4F86F32E
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:02:56 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-287-xAOJsk7xO263fOVjhcvUfw-1; Thu, 19 Jan 2023 12:02:54 +0000
+X-MC-Unique: xAOJsk7xO263fOVjhcvUfw-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 19 Jan
+ 2023 12:02:53 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.044; Thu, 19 Jan 2023 12:02:53 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Athira Rajeev' <atrajeev@linux.vnet.ibm.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "jolsa@kernel.org" <jolsa@kernel.org>
+CC:     "irogers@google.com" <irogers@google.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "rnsastry@linux.ibm.com" <rnsastry@linux.ibm.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "disgoel@linux.ibm.com" <disgoel@linux.ibm.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [PATCH V2] tools/perf/tests: Fix string substitutions in build id
+ test
+Thread-Topic: [PATCH V2] tools/perf/tests: Fix string substitutions in build
+ id test
+Thread-Index: AQHZK/ml5s18h1FtXky26yQzQ7zuR66lntwQ
+Date:   Thu, 19 Jan 2023 12:02:53 +0000
+Message-ID: <17bd5aca40164637bfbd47da34811a13@AcuMS.aculab.com>
+References: <20230119113054.31742-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230119113054.31742-1-atrajeev@linux.vnet.ibm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v7 00/15] coresight: Add new API to allocate trace source
- ID values
-To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com
-References: <20230116124928.5440-1-mike.leach@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20230116124928.5440-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
-
-On 16/01/2023 12:49, Mike Leach wrote:
-> The current method for allocating trace source ID values to sources is
-> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> The STM is allocated ID 0x1.
-> 
-> This fixed algorithm is used in both the CoreSight driver code, and by
-> perf when writing the trace metadata in the AUXTRACE_INFO record.
-> 
-> The method needs replacing as currently:-
-> 1. It is inefficient in using available IDs.
-> 2. Does not scale to larger systems with many cores and the algorithm
-> has no limits so will generate invalid trace IDs for cpu number > 44.
-> 
-> Additionally requirements to allocate additional system IDs on some
-> systems have been seen.
-> 
-> This patch set  introduces an API that allows the allocation of trace IDs
-> in a dynamic manner.
-> 
-> Architecturally reserved IDs are never allocated, and the system is
-> limited to allocating only valid IDs.
-> 
-> Each of the current trace sources ETM3.x, ETM4.x and STM is updated to use
-> the new API.
-> 
-> For the ETMx.x devices IDs are allocated on certain events
-> a) When using sysfs, an ID will be allocated on hardware enable, or a read of
-> sysfs TRCTRACEID register and freed when the sysfs reset is written.
-> 
-> b) When using perf, ID is allocated on during setup AUX event, and freed on
-> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
-> The ID allocator is notified when perf sessions start and stop
-> so CPU based IDs are kept constant throughout any perf session.
-> 
-> 
-> Note: This patchset breaks some backward compatibility for perf record and
-> perf report.
-> 
-> The version of the AUXTRACE_INFO has been updated to reflect the fact that
-> the trace source IDs are generated differently. This will
-> mean older versions of perf report cannot decode the newer file.
-> 
-> Appies to coresight/next
-> 
-> Changes since v6:
-> 1) Export perf_report_aux_output_id() Acked by Peter,
-> 2) Update to ETMv3 docs requested by suzuki
-> 3) rebased and re-tested on coresight/next (6.2-rc2)
-> 
-> Changes since v5: (requested by suzuki)
-> 1) Prefer odd ID values for system IDs to avoid overlap with legacy CPU IDs
-> 2) Some style changes
-> 
-> Changes since v4:
-> 1) update to ensure that compiling after each individual patch added still
-> works - ie. git bisect not broken through the patchset..
-> 
-> 2) Revision to some of the now redundant code in cs-etm (James)
-> 
-> 3) Comments and other minor fixes requested by Suzuki.
-> 
-> Changes since v3:
-> 1) Fixed aarch32 build error in ETM3.x driver.
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> Changes since v2:
-> 1) Improved backward compatibility: (requested by James)
-> 
-> Using the new version of perf on an old kernel will generate a usable file
-> legacy metadata values are set by the new perf and will be used if mew
-> ID packets are not present in the file.
-> 
-> Using an older version of perf / simpleperf on an updated kernel may still
-> work. The trace ID allocator has been updated to use the legacy ID values
-> where possible, so generated file and used trace IDs will match up to the
-> point where the legacy algorithm is broken anyway.
-> 
-> 2) Various changes to the ID allocator and ID packet format.
-> (suggested by Suzuki)
-> 
-> 3) per CPU ID info in allocator now stored as atomic type to allow a passive read
-> without taking the allocator spinlock. perf flow now allocates and releases ID
-> values in setup_aux / free_event. Device enable and event enable use the passive
-> read to set the allocated values. This simplifies the locking mechanisms on the
-> perf run and fixes issues that arose with locking dependencies.
-> 
-> Changes since v1:
-> (after feedback & discussion with Mathieu & Suzuki).
-> 
-> 1) API has changed. The global trace ID map is managed internally, so it
-> is no longer passed in to the API functions.
-> 
-> 2) perf record does not use sysfs to find the trace IDs. These are now
-> output as AUX_OUTPUT_HW_ID events. The drivers, perf record, and perf report
-> have been updated accordingly to generate and handle these events.
-> 
-> Mike Leach (15):
->    coresight: trace-id: Add API to dynamically assign Trace ID values
->    coresight: Remove obsolete Trace ID unniqueness checks
->    coresight: perf: traceid: Add perf ID allocation and notifiers
->    coresight: stm: Update STM driver to use Trace ID API
->    coresight: etm4x: Update ETM4 driver to use Trace ID API
->    coresight: etm3x: Update ETM3 driver to use Trace ID API
->    coresight: etmX.X: stm: Remove trace_id() callback
->    coresight: trace id: Remove legacy get trace ID function.
->    perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->    perf: cs-etm: Update record event to use new Trace ID protocol
->    kernel: events: Export perf_report_aux_output_id()
->    perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
->    coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
->    coresight: trace-id: Add debug & test macros to Trace ID allocation
->    coresight: etm3x: docs: Alter sysfs documentation for trace id updates
-
-I have pushed the kernel patches on this series to coresight tree next[0].
-
-I will be sending them out to Greg for v6.3. Please could you queue the
-perf tool changes in the series ? i.e., Patches 9,10 and 12.
-
-
-[0] 
-https://git.kernel.org/pub/scm/linux/kernel/git/coresight/linux.git/log/?h=next
-
-
-Kind regards
-Suzuki
-
+RnJvbTogQXRoaXJhIFJhamVldg0KPiBTZW50OiAxOSBKYW51YXJ5IDIwMjMgMTE6MzENCi4uLg0K
+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9idWlsZGlkLnNoIGIvdG9vbHMv
+cGVyZi90ZXN0cy9zaGVsbC9idWlsZGlkLnNoDQo+IGluZGV4IGFhZjg1MTEwOGNhMy4uNDNlNDNl
+MTMxYmU3IDEwMDc1NQ0KPiAtLS0gYS90b29scy9wZXJmL3Rlc3RzL3NoZWxsL2J1aWxkaWQuc2gN
+Cj4gKysrIGIvdG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9idWlsZGlkLnNoDQo+IEBAIC02Niw3ICs2
+Niw3IEBAIGNoZWNrKCkNCj4gIAllc2FjDQo+ICAJZWNobyAiYnVpbGQgaWQ6ICR7aWR9Ig0KPiAN
+Cj4gLQlsaW5rPSR7YnVpbGRfaWRfZGlyfS8uYnVpbGQtaWQvJHtpZDowOjJ9LyR7aWQ6Mn0NCj4g
+KwlsaW5rPSR7YnVpbGRfaWRfZGlyfS8uYnVpbGQtaWQvJChlY2hvICR7aWR9fGN1dCAtYyAxLTIp
+LyQoZWNobyAke2lkfXxjdXQgLWMgMy0pDQo+ICAJZWNobyAibGluazogJHtsaW5rfSINCg0KVGhh
+dCBpcyBob3JyaWQsIHdoeSBub3QganVzdCB1c2UgdmFsaWQgc2hlbGwgc3Vic3RpdHV0aW9ucywg
+ZWc6DQoJaWRfZmlsZT0ke2lkIz8/fQ0KCWlkX2Rpcj0ke2lkJSRpZF9maWxlfQ0KCWxpbms9JGJ1
+aWxkX2lkX2Rpci8uYnVpbGQtaWQvJGlkX2Rpci8kaWRfZmlsZQ0KDQouLi4NCj4gLQljaGVjayAk
+e0A6IC0xfQ0KPiArCWNoZWNrICRsYXN0DQoNClNpbmNlIHRoaXMgaXMgdGhlIGVuZCBvZiB0aGUg
+c2hlbGwgZnVuY3Rpb24geW91IGNhbiBhdm9pZCB0aGUgZXZhbA0KYnkgZG9pbmc6DQoJc2hpZnQg
+JCgoJCMgLSAxKSkNCgljaGVjayAkMQ0Kb3IgbWF5YmU6DQoJYXJncz0iJCoiDQoJY2hlY2sgJHth
+cmdzIyMqIH0NCg0KVGhvc2Ugc2hvdWxkIGJlIG9rIGluIGFsbCBwb3NpeCBzaGVsbHMuDQoNCglE
+YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
+bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
+NzM4NiAoV2FsZXMpDQo=
 
