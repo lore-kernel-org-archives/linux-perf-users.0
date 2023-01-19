@@ -2,233 +2,260 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1A8C004D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95AEC004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 12:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230295AbjASMDr (ORCPT
+        id S230321AbjASMn4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 07:03:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36488 "EHLO
+        Thu, 19 Jan 2023 07:43:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231179AbjASMDP (ORCPT
+        with ESMTP id S229767AbjASMnS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 07:03:15 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E2DF75734
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:03:06 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id bj3so2213449pjb.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 04:03:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WOLLU2M/7ghBnIu5O679rBzqMlY9Ph9xGx8HlVfUxZ0=;
-        b=nysKV9OjD8770ltPmWSxrldVp3jHnexV+YWy/vDcSWeNyLxEyHpFfJlQ19wMEFckFy
-         ajaQ8GKgxZ5+RCVgxNDgBNBrJecBvRg5HQYZKHt1ENvARgY1ELn3Mr+W6MjYAsum6Ctr
-         4NMWi3b58bIB3CdXW52fmhg0VuEDzvDmnXtxSlFa9igRKUdDfLltJ+GF6misp2k5VQsJ
-         e154ndyAO1zbOs+QQ0bPwbslMtfMRi1/CUhLiIBy9QsATE/6Y8QNVWP4cGK1kLU4OX6n
-         yS+wcoqaM0/YucowrIL/Dqx3D0Uc+/u0eUH/rs9sLo1bdW4W7oabmczajmQwrCDW8Mtj
-         05rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WOLLU2M/7ghBnIu5O679rBzqMlY9Ph9xGx8HlVfUxZ0=;
-        b=e+wbc9F38Cp70tkTq3rh2SLrZ0AwGWOJleUjr+sutXVIUNGmx55o9LC/i3pq354sL6
-         FA8EmxtDwdHGwcRW5AqhQKKpuRnN02nXMySkYpiqtW3yX6UprVe5rvT5bGm6GASYjg6U
-         /bQQFb57jt2HKwL8H6p0tBxlfR01R5Nm5iJAAaXKd9UV2pT2/mCYP9JgDwr6yXG4b9pN
-         +nRhjrhaOHw9Y8/Izw2hUSTizwnvkRMZMZeGw4aMPs9OgSIcPJln467zC8eK7JwNTv1/
-         g+coyQhQ+Ajy9NWvBbZ5qIUVj1lqw+AXClYIF25bmXD7DJ8NDrVccBndUkBanTt/VRRq
-         2QnQ==
-X-Gm-Message-State: AFqh2kr/V1xLFnPwI204bePauKCdQU8HbartqoX6DRozo5T9HIouFgXS
-        NTZD+cfB1PQ44uo3KyK4SyqTmxjFHdN26Zm/z6tiXQ==
-X-Google-Smtp-Source: AMrXdXsiRWVwQc8CBMyT2RUu38VIhY5bzgs7N1l1NGDYntY7397ex1OKCPUEleQAWSM7ga7a1/l50WMieA3xUxGaapw=
-X-Received: by 2002:a17:90b:1901:b0:226:c03e:23fc with SMTP id
- mp1-20020a17090b190100b00226c03e23fcmr1172874pjb.6.1674129785808; Thu, 19 Jan
- 2023 04:03:05 -0800 (PST)
+        Thu, 19 Jan 2023 07:43:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6069344BF3;
+        Thu, 19 Jan 2023 04:42:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF2B360DE9;
+        Thu, 19 Jan 2023 12:42:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080DAC433EF;
+        Thu, 19 Jan 2023 12:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674132120;
+        bh=292KzxUJN9VdU7M1zGSDQFahnk68KzKp/8zQpV+/Qwo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bOzOefUiKR8aX+FEeId4evHN7e/JgrqWImv4P5WaA5/ZM8s5CXfpJUVruBJnzMmBV
+         9p01WozxvRhSlWnVUKWN7oIgihNxJ8GLQuD3krjykWvODiYdNrKkep5YAQtetr/kU0
+         PfgSqCJKmE0vpZ3SxIrxEJ05z1PGPLUSfDMaNJbYZvOGfR8aB/DrAwq2aOn9u06HPG
+         npDNwR01lVQALNdAw5phf/f+R/XJq9KRyPu4d84udalZjhHD7frq0n+qDqB25uprPc
+         JU6jdK6rvEDFS25eGFyJ1T8gzdU+soOmh8JUFyqdfY1VJqlh10CAQVgVxpVA0twXjN
+         F90PWoCfBMY8g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7BCA1405BE; Thu, 19 Jan 2023 09:41:57 -0300 (-03)
+Date:   Thu, 19 Jan 2023 09:41:57 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Kilroy <andrew.kilroy@arm.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+Subject: Re: [PATCH v8 0/9] Add metrics for neoverse-n2-v2
+Message-ID: <Y8k6la+oWXm+VSX0@kernel.org>
+References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20230116124928.5440-1-mike.leach@linaro.org> <20230116124928.5440-14-mike.leach@linaro.org>
- <b14b7507-e20a-2223-b772-fc865e5c9558@arm.com>
-In-Reply-To: <b14b7507-e20a-2223-b772-fc865e5c9558@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Thu, 19 Jan 2023 12:02:54 +0000
-Message-ID: <CAJ9a7Vj8Xx6fpaivoqe1LQWKrc4bG=jv+PmjUc+6r9FCsCKL1Q@mail.gmail.com>
-Subject: Re: [PATCH v7 13/15] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID
- used for Trace ID
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, quic_jinlmao@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Suzuki
+Em Tue, Jan 17, 2023 at 03:29:24PM +0800, Jing Zhang escreveu:
+> Changes since v7:
+> - Change pmu_core__find_same to pmu__find_core_pmu as suggested by Ian.
+> - Returned NAN when can't find a pmu or the value from */caps/slots is
+>   zero, in perf_pmu__cpu_slots_per_cycle, as suggested by John.
+> - Link: https://lore.kernel.org/all/1673601740-122788-1-git-send-email-renyu.zj@linux.alibaba.com/
 
-On Thu, 19 Jan 2023 at 11:02, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> Hi Mike
->
-> On 16/01/2023 12:49, Mike Leach wrote:
-> > Use the perf_report_aux_output_id() call to output the CoreSight trace ID
-> > and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
-> > perf.data file.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-etm-perf.c |  7 +++++++
-> >   include/linux/coresight-pmu.h                    | 14 ++++++++++++++
-> >   2 files changed, 21 insertions(+)
-> >
-> > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > index bdb9ab86173a..12fff661456e 100644
-> > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > @@ -4,6 +4,7 @@
-> >    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >    */
-> >
-> > +#include <linux/bitfield.h>
-> >   #include <linux/coresight.h>
-> >   #include <linux/coresight-pmu.h>
-> >   #include <linux/cpumask.h>
-> > @@ -448,6 +449,7 @@ static void etm_event_start(struct perf_event *event, int flags)
-> >       struct perf_output_handle *handle = &ctxt->handle;
-> >       struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
-> >       struct list_head *path;
-> > +     u64 hw_id;
-> >
-> >       if (!csdev)
-> >               goto fail;
-> > @@ -493,6 +495,11 @@ static void etm_event_start(struct perf_event *event, int flags)
-> >       if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
-> >               goto fail_disable_path;
-> >
-> > +     /* output cpu / trace ID in perf record */
-> > +     hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION);
-> > +     hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_read_cpu_id(cpu));
-> > +     perf_report_aux_output_id(event, hw_id);
-> > +
->
-> One minor nit:
->
-> This ends up putting the HWID packet for every single time the event is
-> scheduled on the CPU and thus we have :
->
-> $ perf report -D | grep OUTPUT_HW_ID
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Changes since v6:
+> - Split patch 1 into 3 smaller patches as suggested by Ian.
+> - Change perf_pmu__get_slots to perf_pmu__cpu_slots_per_cycle,
+>   per John's suggestion;
+> - Return NAN instead of 0 in perf_pmu__cpu_slots_per_cycle weak
+>   function, per John's suggestion;
+> - Factor out pmu_core__find_same function, per John's suggestion.
+> - Link: https://lore.kernel.org/all/1673017529-1429208-1-git-send-email-renyu.zj@linux.alibaba.com/
+> 
+> Changes since v5:
+> - Add common topdownL1 metrics in sbsa.json as suggested by John;
+> - Correct PKI/MPKI ScaleUnit to 1PKI/1MPKI;
+> - Link: https://lore.kernel.org/all/1672745976-2800146-1-git-send-email-renyu.zj@linux.alibaba.com/
+> 
+> Changes since v4:
+> - Add MPKI/PKI “ScaleUnit”;
+> - Add acked-by from Ian Rogers;
+> - Link: https://lore.kernel.org/all/1671799045-1108027-1-git-send-email-renyu.zj@linux.alibaba.com/
+> 
+> Changes since v3:
+> - Add ipc_rate metric;
+> - Drop the PublicDescription;
+> - Describe PEutilization metrics in more detail;
+> - Link: https://lore.kernel.org/all/1669310088-13482-1-git-send-email-renyu.zj@linux.alibaba.com/
+> 
+> Changes since v2:
+> - Correct the furmula of Branch metrics;
+> - Add more PE utilization metrics;
+> - Add more TLB metrics;
+> - Add “ScaleUnit” for some metrics;
+> - Add a newline at the end of the file;
+> - Link: https://lore.kernel.org/all/1668411720-3581-1-git-send-email-renyu.zj@linux.alibaba.com/
+> 
+> Changes since v1:
+> - Corrected formula for topdown L1 due to wrong counts for stall_slot
+>   and stall_slot_frontend; 
+> - Link: https://lore.kernel.org/all/1667214694-89839-1-git-send-email-renyu.zj@linux.alibaba.com/
+> 
+> This series does the following things:
+> 
+> The slots in each architecture may be different, so add #slots literal
+> to obtain the slots of different architectures, and the #slots can be
+> applied in the topdown metric. Currently, The #slots just support for
+> arm64, and other architectures will return NAN.
+> 
+> The metrics of topdown L1 are from ARM sbsa7.0 platform design doc[0],
+> D37-38, which are standard. So put them in the common file sbsa.json of
+> arm64 and add general metric support, so that other cores besides n2/v2
+> can also be reused.
+> 
+> Then add topdownL1 metric for neoverse-n2-v2, and due to the wrong count
+> of stall_slot and stall_slot_frontend on neoverse-n2, the real stall_slot
+> and real stall_slot_frontend need to subtract cpu_cycles, so overwrite
+> the "MetricExpr" for neoverse-n2.
+> Reference from ARM neoverse-n2 errata notice [1], D117.
+> 
+> Since neoverse-n2/neoverse-v2 does not yet support topdown L2, metricgroups
+> such as Cache, TLB, Branch, InstructionsMix, and PEutilization will be added
+> to further analysis of performance bottlenecks in the following patches.
+> Reference from ARM PMU guide [2][3].
+> 
+> [0] https://documentation-service.arm.com/static/60250c7395978b529036da86?token=
+> [1] https://documentation-service.arm.com/static/636a66a64e6cf12278ad89cb?token=
+> [2] https://documentation-service.arm.com/static/628f8fa3dfaf015c2b76eae8?token=
+> [3] https://documentation-service.arm.com/static/62cfe21e31ea212bb6627393?token=
+> 
+> Tested in neoverse-n2:
+> 
+> $./perf list
 > ...
-> AUX_OUTPUT_HW_ID events:         55  (18.3%)
->
-> We could do the above step only once per CPU for the lifetime of the
-> event by book keeping the info in event_data. With that we get, one
-> record per CPU and:
->
-> $ perf report -D | grep OUTPUT_HW_ID
+> Metric Groups:
+> 
+> Branch:
+>   branch_miss_pred_rate
+>        [The rate of branches mis-predited to the overall branches]
+>   branch_mpki
+>        [The rate of branches mis-predicted per kilo instructions]
+>   branch_pki
+>        [The rate of branches retired per kilo instructions]
+> Cache:
+>   l1d_cache_miss_rate
+>        [The rate of L1 D-Cache misses to the overall L1 D-Cache]
+>   l1d_cache_mpki
+>        [The rate of L1 D-Cache misses per kilo instructions]
 > ...
-> AUX_OUTPUT_HW_ID events:          5  ( 1.9%)
->
-> Here is a quick patch. We can queue this separately if you all are Ok
-> with this. Thoughts ?
->
-
-Seems reasonable given we guarantee the ID <=> CPU association for the
-lifetime of the perf session.
-
-Regards
-
-Mike
-
-> ---8>---
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 12fff661456e..5335f3a2b010 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -495,10 +495,16 @@ static void etm_event_start(struct perf_event
-> *event, int flags)
->          if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
->                  goto fail_disable_path;
->
-> -       /* output cpu / trace ID in perf record */
-> -       hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
-> CS_AUX_HW_ID_CURR_VERSION);
-> -       hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
-> coresight_trace_id_read_cpu_id(cpu));
-> -       perf_report_aux_output_id(event, hw_id);
-> +       /*
-> +        * output cpu / trace ID in perf record, once for the lifetime
-> +        * of the event.
-> +        */
-> +       if (!cpumask_test_cpu(cpu, &event_data->aux_hwid_done)) {
-> +               cpumask_set_cpu(cpu, &event_data->aux_hwid_done);
-> +               hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
-> CS_AUX_HW_ID_CURR_VERSION);
-> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
-> coresight_trace_id_read_cpu_id(cpu));
-> +               perf_report_aux_output_id(event, hw_id);
-> +       }
->
->   out:
->          /* Tell the perf core the event is alive */
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h
-> b/drivers/hwtracing/coresight/coresight-etm-perf.h
-> index 468f7799ab4f..9b11bb3d96d9 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.h
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
-> @@ -55,6 +55,7 @@ struct etm_filters {
->   struct etm_event_data {
->          struct work_struct work;
->          cpumask_t mask;
-> +       cpumask_t aux_hwid_done;
->          void *snk_config;
->          u32 cfg_hash;
->          struct list_head * __percpu *path;
->
->
->
-> >   out:
-> >       /* Tell the perf core the event is alive */
-> >       event->hw.state = 0;
-> > diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
-> > index 624f4843453e..51ac441a37c3 100644
-> > --- a/include/linux/coresight-pmu.h
-> > +++ b/include/linux/coresight-pmu.h
-> > @@ -7,6 +7,8 @@
-> >   #ifndef _LINUX_CORESIGHT_PMU_H
-> >   #define _LINUX_CORESIGHT_PMU_H
-> >
-> > +#include <linux/bits.h>
-> > +
-> >   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
-> >
-> >   /*
-> > @@ -43,4 +45,16 @@
-> >   #define ETM4_CFG_BIT_RETSTK 12
-> >   #define ETM4_CFG_BIT_VMID_OPT       15
-> >
-> > +/*
-> > + * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
-> > + * Used to associate a CPU with the CoreSight Trace ID.
-> > + * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
-> > + * [59:08] - Unused (SBZ)
-> > + * [63:60] - Version
-> > + */
-> > +#define CS_AUX_HW_ID_TRACE_ID_MASK   GENMASK_ULL(7, 0)
-> > +#define CS_AUX_HW_ID_VERSION_MASK    GENMASK_ULL(63, 60)
-> > +
-> > +#define CS_AUX_HW_ID_CURR_VERSION 0
-> > +
-> >   #endif
->
-
+> 
+> 
+> $sudo ./perf stat -M TLB false_sharing 2
+> 
+>  Performance counter stats for 'false_sharing 2':
+> 
+>             29,940      L2D_TLB                          #     20.0 %  l2_tlb_miss_rate         (42.36%)
+>              5,998      L2D_TLB_REFILL                                                          (42.36%)
+>              1,753      L1I_TLB_REFILL                   #      0.1 %  l1i_tlb_miss_rate        (43.17%)
+>          2,173,957      L1I_TLB                                                                 (43.17%)
+>        327,944,763      L1D_TLB                          #      0.0 %  l1d_tlb_miss_rate        (43.98%)
+>             22,485      L1D_TLB_REFILL                                                          (43.98%)
+>            497,210      L1I_TLB                          #      0.0 %  itlb_walk_rate           (44.83%)
+>                 28      ITLB_WALK                                                               (44.83%)
+>        821,488,762      INST_RETIRED                     #      0.0 MPKI  itlb_mpki             (43.97%)
+>                122      ITLB_WALK                                                               (43.97%)
+>                744      DTLB_WALK                        #      0.0 %  dtlb_walk_rate           (43.01%)
+>        263,913,146      L1D_TLB                                                                 (43.01%)
+>        779,073,875      INST_RETIRED                     #      0.0 MPKI  dtlb_mpki             (42.07%)
+>              1,050      DTLB_WALK                                                               (42.07%)
+> 
+>        0.435864901 seconds time elapsed
+> 
+>        1.201384000 seconds user
+>        0.000000000 seconds sys
+> 
+> 
+> $sudo ./perf stat -M TopDownL1 false_sharing 2
+> 
+>  Performance counter stats for 'false_sharing 2':
+> 
+>      3,408,960,257      cpu_cycles                       #      0.0 %  bad_speculation
+>                                                   #      5.1 %  retiring                 (66.79%)
+>     19,576,079,610      stall_slot                                                              (66.79%)
+>        877,673,452      op_spec                                                                 (66.79%)
+>        876,324,270      op_retired                                                              (66.79%)
+>      3,406,548,064      cpu_cycles                       #     26.7 %  frontend_bound           (67.08%)
+>      7,961,814,801      stall_slot_frontend                                                     (67.08%)
+>      3,415,528,440      cpu_cycles                       #     68.8 %  backend_bound            (66.43%)
+>     11,746,647,747      stall_slot_backend                                                      (66.43%)
+> 
+>        0.455229807 seconds time elapsed
+> 
+>        1.243216000 seconds user
+>        0.000000000 seconds sys
+> 
+> $sudo ./perf stat -M branch sleep 1
+> 
+>  Performance counter stats for 'sleep 1':
+> 
+>            901,495      INST_RETIRED                     #    223.6 PKI  branch_pki
+>            201,603      BR_RETIRED
+>            901,495      INST_RETIRED                     #     10.0 MPKI  branch_mpki
+>              9,004      BR_MIS_PRED_RETIRED
+>              9,004      BR_MIS_PRED_RETIRED              #      4.5 %  branch_miss_pred_rate
+>            201,603      BR_RETIRED
+> 
+>        1.000794467 seconds time elapsed
+> 
+>        0.000905000 seconds user
+>        0.000000000 seconds sys
+> 
+> 
+> Jing Zhang (9):
+>   perf pmu: Add #slots literal support for arm64
+>   perf jevent: Add general metrics support
+>   perf vendor events arm64: Add common topdown L1 metrics
+>   perf vendor events arm64: Add topdown L1 metrics for neoverse-n2-v2
+>   perf vendor events arm64: Add TLB metrics for neoverse-n2-v2
+>   perf vendor events arm64: Add cache metrics for neoverse-n2-v2
+>   perf vendor events arm64: Add branch metrics for neoverse-n2-v2
+>   perf vendor events arm64: Add PE utilization metrics for
+>     neoverse-n2-v2
+>   perf vendor events arm64: Add instruction mix metrics for
+>     neoverse-n2-v2
+> 
+>  tools/perf/arch/arm64/util/pmu.c                   |  35 ++-
+>  .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 273 +++++++++++++++++++++
+>  tools/perf/pmu-events/arch/arm64/sbsa.json         |  30 +++
+>  tools/perf/pmu-events/jevents.py                   |   2 +
+>  tools/perf/util/expr.c                             |   5 +
+>  tools/perf/util/pmu.c                              |   6 +
+>  tools/perf/util/pmu.h                              |   1 +
+>  7 files changed, 350 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/sbsa.json
+> 
+> -- 
+> 1.8.3.1
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+
+- Arnaldo
