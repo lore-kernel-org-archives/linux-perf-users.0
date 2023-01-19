@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86961C678D6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 05:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D6C38159
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 05:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231510AbjATF3Q (ORCPT
+        id S229854AbjATF3V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 00:29:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35702 "EHLO
+        Fri, 20 Jan 2023 00:29:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231429AbjATF2e (ORCPT
+        with ESMTP id S231243AbjATF2p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 00:28:34 -0500
+        Fri, 20 Jan 2023 00:28:45 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3556C12C;
-        Thu, 19 Jan 2023 21:23:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43AF72C0F;
+        Thu, 19 Jan 2023 21:23:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AEC50B82314;
-        Thu, 19 Jan 2023 16:23:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0136FC433EF;
-        Thu, 19 Jan 2023 16:23:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C4A94B825FA;
+        Thu, 19 Jan 2023 16:27:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28611C433EF;
+        Thu, 19 Jan 2023 16:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674145432;
-        bh=4iyv9ZQaCHKEyaKr1myAy/HD5rxKaeF7tIvs7Vo9l5g=;
+        s=k20201202; t=1674145652;
+        bh=rFKR1hKMBI+MtzO4V9xJtCxqUhqcAJzkDhj8cS00xzI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Yn+ibebTUCXrBtlNavVLGTmp1RaMMMoJowna/FiWXuMtMkj8PaX8N2PzBD8B9CK0f
-         Rc5Bu7TN1e88zoRuGUGNXfD9UrcX9fMNW0iw4MtonoEZShhp4J57AUMvXjylhXy4ko
-         P9MQM8OfRBnFbJpPTaHs3s5ZGGZND/uGNP+rQzsutl4/xW59yOuZfTNusX+PttL4LR
-         qUxdrJZHDnGe2H1Z615rL22ewBSVVQBAWQwrjjnzvnygDf7qZ1zUV+BoyQPnf/tq/F
-         HogZbHDvRSNRUMymsgLrSKvgJDjkquzT8prtjpcwA1jwzKACs7Mk+O5jkfXT6j9y+H
-         6PTU8I72qZymQ==
+        b=f8trZE7TrGfyonP7IswrV7OueQT1uyfwewfYfh66CVY9NIK5grGPOzqOAtVbZzXkW
+         bvaa8xviYC+dbzeEFB4b6rz5eXP2BmbYOtNcp4iBPqK52dIhIRaWdFT9bWbWtBf/UK
+         TAmHvBCuDPUb6f7GpCFI5QKuBdaOSghJOj1cfEVyTLnZ+IHeDw30R129Oh2cOw6M5j
+         sbpAX1r+svuq9YUfY6a48qe/yO1AS7DLL3ukqWrlrB+19FSDkZD0sgOWIYRqlrlt1M
+         1JuBv6BRmiYfHMLhIMktjfW9S40j6vmkqTSomJKfeCFuslvQZYAEKnzJZldVN0QrGE
+         CV4svrcc6dSBg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 20F6E405BE; Thu, 19 Jan 2023 13:23:47 -0300 (-03)
-Date:   Thu, 19 Jan 2023 13:23:47 -0300
+        id 37660405BE; Thu, 19 Jan 2023 13:27:28 -0300 (-03)
+Date:   Thu, 19 Jan 2023 13:27:28 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -44,48 +44,47 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1] perf llvm: Fix inadvertent file creation
-Message-ID: <Y8luk2xVZFQusPUd@kernel.org>
-References: <20230105082609.344538-1-irogers@google.com>
- <CAP-5=fUCJEyrZ+bx6oMGmFm5wuF71uheM=7VD9ynjAD_TNZ78w@mail.gmail.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        German Gomez <german.gomez@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] perf tools: Remove
+ HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+Message-ID: <Y8lvcO5yAuZTzDuf@kernel.org>
+References: <20230111070641.1728726-1-irogers@google.com>
+ <CAP-5=fXPg1FDdtRgKtar+x3U91RNpPdYFJUP6XHvK1y10y=O2Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUCJEyrZ+bx6oMGmFm5wuF71uheM=7VD9ynjAD_TNZ78w@mail.gmail.com>
+In-Reply-To: <CAP-5=fXPg1FDdtRgKtar+x3U91RNpPdYFJUP6XHvK1y10y=O2Q@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jan 19, 2023 at 07:57:19AM -0800, Ian Rogers escreveu:
-> On Thu, Jan 5, 2023 at 12:26 AM Ian Rogers <irogers@google.com> wrote:
+Em Thu, Jan 19, 2023 at 08:01:32AM -0800, Ian Rogers escreveu:
+> On Tue, Jan 10, 2023 at 11:06 PM Ian Rogers <irogers@google.com> wrote:
 > >
-> > The LLVM template is first echo-ed into command_out and then
-> > command_out executed. The echo surrounds the template with double
-> > quotes, however, the template itself may contain quotes. This is
-> > generally innocuous but in tools/perf/tests/bpf-script-test-prologue.c
-> > we see:
-> > ...
-> > SEC("func=null_lseek file->f_mode offset orig")
-> > ...
-> > where the first double quote ends the double quote of the echo, then
-> > the > redirects output into a file called f_mode.
+> > Switch HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE to be a version number
+> > test on libtraceevent being >= to version 1.5.0. This also corrects a
+> > greater-than test to be greater-than-or-equal.
 > >
-> > To avoid this inadvertent behavior substitute redirects and similar
-> > characters to be ASCII control codes, then substitute the output in
-> > the echo back again.
+> > Discussed here:
+> > https://lore.kernel.org/lkml/20221205225940.3079667-3-irogers@google.com/
 > >
-> > Fixes: 5eab5a7ee032 ("perf llvm: Display eBPF compiling command in debug output")
+> > Fixes: b9a49f8cb02f ("perf tools: Check if libtracevent has TEP_FIELD_IS_RELATIVE")
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > 
-> Ping. Not really a BPF/LLVM fix, it is just doing some string
-> manipulation to avoid shell interpretation in the context of making
-> BPF/LLVM.
+> Ping. Remove one ifdef in favor of a consistent version check, gets
+> debug logging from libtraceevent going.
 
 Thanks, applied.
 
