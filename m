@@ -2,99 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44543C38159
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 04:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486EBC38159
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 05:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230446AbjATEvZ (ORCPT
+        id S230218AbjATFFI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 23:51:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
+        Fri, 20 Jan 2023 00:05:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230405AbjATEut (ORCPT
+        with ESMTP id S230281AbjATFEl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 23:50:49 -0500
+        Fri, 20 Jan 2023 00:04:41 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E0F5DA11D;
-        Thu, 19 Jan 2023 20:43:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F90A74382;
+        Thu, 19 Jan 2023 20:51:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9088AB8270C;
-        Thu, 19 Jan 2023 19:09:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E06EC43392;
-        Thu, 19 Jan 2023 19:09:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3BA5FB82623;
+        Thu, 19 Jan 2023 16:39:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DA9C433F2;
+        Thu, 19 Jan 2023 16:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674155368;
-        bh=iqElF+5KvmM//jBrqlLXQndx5m+4yQtolDOFBeaA/wk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jh3PlJZ2XOmkkoQ3OVuoYo3JF6T0PRCK+Fk4Obs3I7zpaHJLpXznnDuDin/T9IJix
-         Sc+7K3ZG6nU/6XDpoCZxfxsZH9tZkLmtOb5RT85uUnGjpBh/wHjwPGT1N/phVyzuIC
-         ROaM+o6JqoMcAaoVgwsnmlW4iHATXxGDvpJBOhcAZ8FTNG4xSzyH3Rslno6+MvGq8u
-         NHf+hYe93tgZVPIs0FDdAZqf7DIzRIEd9e2Q++qTmhnjLoWsB2dIuRJntvumGOej5v
-         /afTUvIK5WOfMWi+FJwsEJrm8W3oihsiTV/G6WW/JpxMG2GxhghPV+Q5Fp+3T6blwf
-         bzblWWGT6fMZw==
-From:   Will Deacon <will@kernel.org>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        s=k20201202; t=1674146392;
+        bh=EzuLhfS+PRjXH8DDjLzCLF1bGHoITDNogKA9OB2ppdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GTnd95ALmwH1RfdzNVzY3XsWXjhSDLkQP0z+4QwuWJH0j74kwq4YFdY8ucRi99rVM
+         j7Xvgcz8TWoGJFsqJqqdkzGPrmeRc9gk2VsuMtuePJKR3iEFczd315/xcgIZysh9IN
+         tkQiwy3tdJ4NE5Oztlscdb+w1+5x08D4ifuZzc9mjRuWqZit923u3z2C5YYrNC0uAG
+         JrsycoqXtP8nFHVGmwfeN4tiWhEk7lNhM6jqYk/yMeP698743+KyK7rNhtsPulQo5k
+         1ou5H+0GO3/OI/c7TSWrsVsXmblV2rr35xAs3Lv2JTP0mZ4M2hcjnqQs4k7Gzaw//s
+         WlXh3IaFEFwpQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 311E1405BE; Thu, 19 Jan 2023 13:39:49 -0300 (-03)
+Date:   Thu, 19 Jan 2023 13:39:49 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>, kvmarm@lists.linux.dev,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 0/8] perf: Arm SPEv1.2 support
-Date:   Thu, 19 Jan 2023 19:08:42 +0000
-Message-Id: <167415232681.3429847.16616826041230061721.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
-References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf buildid: Avoid copy of uninitialized memory
+Message-ID: <Y8lyVTwQqzWk0mLd@kernel.org>
+References: <20230113185732.134861-1-irogers@google.com>
+ <CAP-5=fXg28wcW93tfiN6mdFHj0+eSRE3dL3LTv53bRYuezjZDg@mail.gmail.com>
+ <Y8lv6oclCytPk7hN@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8lv6oclCytPk7hN@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 09 Jan 2023 13:26:17 -0600, Rob Herring wrote:
-> Peter, this series is blocked on an ack from you on patch 7. There was
-> some discussion on validation of the 'config3' attr. The options where
-> laid out by Mark here[0]. Please chime in on your preference.
+Em Thu, Jan 19, 2023 at 01:29:30PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Jan 19, 2023 at 08:08:13AM -0800, Ian Rogers escreveu:
+> > On Fri, Jan 13, 2023 at 10:57 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > build_id__init only copies the buildid data up to size leaving the
+> > > rest of the data array uninitialized. Copying the full array during
+> > > synthesis means the written event contains uninitialized memory.  This
+> > > was detected by the Clang/LLVM memory sanitizer.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/synthetic-events.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> > > index 3ab6a92b1a6d..348d05e4ec03 100644
+> > > --- a/tools/perf/util/synthetic-events.c
+> > > +++ b/tools/perf/util/synthetic-events.c
+> > > @@ -2219,7 +2219,7 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
+> > >
+> > >         len = pos->long_name_len + 1;
+> > >         len = PERF_ALIGN(len, NAME_ALIGN);
+> > > -       memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
+> > > +       memcpy(&ev.build_id.build_id, pos->bid.data, pos->bid.size);
+> > 
+> > Ping. Should be an uncontroversial change to fix a copy of
+> > uninitialized memory into the perf.data file during synthesis.
 > 
-> Will, can you pick up patches 1-6 at least if there's no progress on
-> 'config3'.
-> 
-> [...]
+> Indeed, applied.
 
-Applied first six driver changes to will (for-next/perf), thanks!
+Humm, don't we better do it as:
 
-[1/8] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
-      https://git.kernel.org/will/c/e080477a050c
-[2/8] arm64: Drop SYS_ from SPE register defines
-      https://git.kernel.org/will/c/c759ec850df8
-[3/8] arm64/sysreg: Convert SPE registers to automatic generation
-      https://git.kernel.org/will/c/956936041a56
-[4/8] perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
-      https://git.kernel.org/will/c/2d347ac23362
-[5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
-      https://git.kernel.org/will/c/05e4c88e2b5c
-[6/8] perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
-      https://git.kernel.org/will/c/4998897b1e96
++       memcpy(&ev.build_id.build_id, pos->bid.data, min(pos->bid.size, sizeof(pos->bid.data));
 
-UAPI change needs feedback from perf core maintainers.
+Lemme check what is setting that pos->bid.size....
 
-Cheers,
--- 
-Will
+Things like sysfs__read_build_id() that does such checks, but perhaps we
+should be defensive and do it in this function as well?
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+- Arnaldo
+
