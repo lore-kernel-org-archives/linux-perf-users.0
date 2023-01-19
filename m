@@ -2,168 +2,75 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5438DC00A5A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 15:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEB6C004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 15:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231350AbjASPrg (ORCPT
+        id S231533AbjASPu2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 10:47:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
+        Thu, 19 Jan 2023 10:50:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231418AbjASPrD (ORCPT
+        with ESMTP id S231547AbjASPuH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 10:47:03 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 452A4875A3;
-        Thu, 19 Jan 2023 07:46:28 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1DE21FB;
-        Thu, 19 Jan 2023 07:47:07 -0800 (PST)
-Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 401D43F445;
-        Thu, 19 Jan 2023 07:46:23 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
-        leo.yan@linaro.org, mike.leach@linaro.org
-Cc:     sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
-        bbhushan2@marvell.com, James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 8/8] perf: cs-etm: Ensure that Coresight timestamps don't go backwards
-Date:   Thu, 19 Jan 2023 15:43:07 +0000
-Message-Id: <20230119154308.3815108-9-james.clark@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230119154308.3815108-1-james.clark@arm.com>
-References: <20230119154308.3815108-1-james.clark@arm.com>
+        Thu, 19 Jan 2023 10:50:07 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45378103B
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 07:49:19 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-16-nL5EHvjbPXi_4VgMazjDCw-1; Thu, 19 Jan 2023 15:49:17 +0000
+X-MC-Unique: nL5EHvjbPXi_4VgMazjDCw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 19 Jan
+ 2023 15:49:15 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.044; Thu, 19 Jan 2023 15:49:15 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Athira Rajeev' <atrajeev@linux.vnet.ibm.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "jolsa@kernel.org" <jolsa@kernel.org>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "irogers@google.com" <irogers@google.com>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "rnsastry@linux.ibm.com" <rnsastry@linux.ibm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "disgoel@linux.ibm.com" <disgoel@linux.ibm.com>
+Subject: RE: [PATCH V3] tools/perf/tests: Fix string substitutions in build id
+ test
+Thread-Topic: [PATCH V3] tools/perf/tests: Fix string substitutions in build
+ id test
+Thread-Index: AQHZLBIrp7uRxIXInkOHsORdTF5RZK6l4s+w
+Date:   Thu, 19 Jan 2023 15:49:15 +0000
+Message-ID: <1a2f988593a4403db2a043ff42886ced@AcuMS.aculab.com>
+References: <20230119142719.32628-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230119142719.32628-1-atrajeev@linux.vnet.ibm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There are some edge cases around estimated timestamps that can result
-in them going backwards.
-
-One is that after a discontinuity, the last used timestamp is set to 0.
-The duration of the next range is then subtracted which could result in
-an earlier timestamp than the last instruction. Fix this by not
-resetting the last timestamp used on a discontinuity, and make sure that
-new estimated timestamps are clamped to be later than that.
-
-Another case is that estimated timestamps could compound over time to
-end up being more than the next real timestamp in the trace. Fix this by
-clamping the estimates in cs_etm_decoder__do_soft_timestamp() to be no
-later than it.
-
-cs_etm_decoder__do_soft_timestamp() also updated next_cs_timestamp,
-which meant that the next real timestamp was lost and not stored
-anywhere. Fix that by only updating cs_timestamp for estimates and keep
-next_cs_timestamp untouched.
-
-Finally, use next_cs_timestamp to signify if a timestamp has been
-received previously. Because cs_timestamp has the first range
-subtracted, it could technically go to 0 which would break the logic.
-
-Testing
-=======
-
-It can be verified that timestamps don't go backwards when tracing on a
-single core with the following commands. Across multiple cores it's
-expected that timestamps are interleaved:
-
- $ perf record -e cs_etm/@tmc_etr0/k -C 4 taskset -c 4 sleep 1
- $ perf script --itrace=i1ns --ns -Fcomm,tid,pid,time,cpu,event,ip,sym,addr,symoff,flags,callindent > itrace
- $ sed 's/://g' itrace | awk -F ' ' ' { print $4 } ' | awk '{ if ($1 < prev) { print "line:" NR " " $0 } {prev=$1}}'
-
-Reported-by: Tanmay Jagdale <tanmay@marvell.com>
-Signed-off-by: James Clark <james.clark@arm.com>
----
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 29 ++++++++++++-------
- 1 file changed, 19 insertions(+), 10 deletions(-)
-
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 440fe844ed17..63afa2d05b46 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -283,15 +283,17 @@ cs_etm_decoder__do_soft_timestamp(struct cs_etm_queue *etmq,
- 				  struct cs_etm_packet_queue *packet_queue,
- 				  const uint8_t trace_chan_id)
- {
-+	u64 estimated_ts;
-+
- 	/* No timestamp packet has been received, nothing to do */
--	if (!packet_queue->cs_timestamp)
-+	if (!packet_queue->next_cs_timestamp)
- 		return OCSD_RESP_CONT;
- 
--	packet_queue->cs_timestamp = packet_queue->next_cs_timestamp;
-+	estimated_ts = packet_queue->cs_timestamp +
-+			cs_etm_decoder__dec_instr_count_to_ns(&packet_queue->instr_count);
- 
--	/* Estimate the timestamp for the next range packet */
--	packet_queue->next_cs_timestamp +=
--		cs_etm_decoder__dec_instr_count_to_ns(&packet_queue->instr_count);
-+	/* Estimated TS can never be higher than the next real one in the trace */
-+	packet_queue->cs_timestamp = min(packet_queue->next_cs_timestamp, estimated_ts);
- 
- 	/* Tell the front end which traceid_queue needs attention */
- 	cs_etm__etmq_set_traceid_queue_timestamp(etmq, trace_chan_id);
-@@ -307,6 +309,7 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- {
- 	struct cs_etm_packet_queue *packet_queue;
- 	u64 converted_timestamp;
-+	u64 estimated_first_ts;
- 
- 	/* First get the packet queue for this traceID */
- 	packet_queue = cs_etm__etmq_get_packet_queue(etmq, trace_chan_id);
-@@ -325,7 +328,12 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- 	 * Function do_soft_timestamp() will report the value to the front end,
- 	 * hence asking the decoder to keep decoding rather than stopping.
- 	 */
--	if (packet_queue->cs_timestamp) {
-+	if (packet_queue->next_cs_timestamp) {
-+		/*
-+		 * What was next is now where new ranges start from, overwriting
-+		 * any previous estimate in cs_timestamp
-+		 */
-+		packet_queue->cs_timestamp = packet_queue->next_cs_timestamp;
- 		packet_queue->next_cs_timestamp = converted_timestamp;
- 		return OCSD_RESP_CONT;
- 	}
-@@ -355,10 +363,12 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- 		 * or a discontinuity.  Since timestamps packets are generated *after*
- 		 * range packets have been generated, we need to estimate the time at
- 		 * which instructions started by subtracting the number of instructions
--		 * executed to the timestamp.
-+		 * executed to the timestamp. Don't estimate earlier than the last used
-+		 * timestamp though.
- 		 */
--		packet_queue->cs_timestamp = converted_timestamp -
--						(packet_queue->instr_count / INSTR_PER_NS);
-+		estimated_first_ts = converted_timestamp -
-+					(packet_queue->instr_count / INSTR_PER_NS);
-+		packet_queue->cs_timestamp = max(packet_queue->cs_timestamp, estimated_first_ts);
- 	}
- 	packet_queue->next_cs_timestamp = converted_timestamp;
- 	packet_queue->instr_count = 0;
-@@ -373,7 +383,6 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- static void
- cs_etm_decoder__reset_timestamp(struct cs_etm_packet_queue *packet_queue)
- {
--	packet_queue->cs_timestamp = 0;
- 	packet_queue->next_cs_timestamp = 0;
- 	packet_queue->instr_count = 0;
- }
--- 
-2.25.1
+RnJvbTogQXRoaXJhIFJhamVldg0KPiBTZW50OiAxOSBKYW51YXJ5IDIwMjMgMTQ6MjcNCi4uLg0K
+PiBUaGUgdGVzdCBzY3JpcHQgInRlc3RzL3NoZWxsL2J1aWxkaWQuc2giIHVzZXMgc29tZSBvZiB0
+aGUNCj4gc3RyaW5nIHN1YnN0aXR1dGlvbiB3YXlzIHdoaWNoIGFyZSBzdXBwb3J0ZWQgaW4gYmFz
+aCwgYnV0IG5vdCBpbg0KPiAic2giIG9yIG90aGVyIHNoZWxscy4gQWJvdmUgZXJyb3Igb24gbGlu
+ZSBudW1iZXIgNjkgdGhhdCByZXBvcnRzDQo+ICJCYWQgc3Vic3RpdHV0aW9uIiBpczoNCg0KTG9v
+a3MgYmV0dGVyIC0gYXNzdW1pbmcgaXQgd29ya3MgOi0pDQoNCglEYXZpZA0KDQotDQpSZWdpc3Rl
+cmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtl
+eW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
