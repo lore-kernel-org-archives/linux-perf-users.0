@@ -2,81 +2,193 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0442DC38142
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 04:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B449CC004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 11:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbjASEhb (ORCPT
+        id S230314AbjASLDU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Jan 2023 23:37:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54778 "EHLO
+        Thu, 19 Jan 2023 06:03:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbjASEgx (ORCPT
+        with ESMTP id S230168AbjASLCs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Jan 2023 23:36:53 -0500
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DB77C856;
-        Wed, 18 Jan 2023 20:33:30 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VZrzidq_1674100437;
-Received: from 30.0.176.247(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VZrzidq_1674100437)
-          by smtp.aliyun-inc.com;
-          Thu, 19 Jan 2023 11:54:00 +0800
-Message-ID: <80e8fc50-af91-3191-dc47-83940236a49a@linux.alibaba.com>
-Date:   Thu, 19 Jan 2023 11:53:57 +0800
+        Thu, 19 Jan 2023 06:02:48 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0666F47EC9;
+        Thu, 19 Jan 2023 03:02:45 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4968E176A;
+        Thu, 19 Jan 2023 03:03:26 -0800 (PST)
+Received: from [10.57.75.229] (unknown [10.57.75.229])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8DC43F71A;
+        Thu, 19 Jan 2023 03:02:42 -0800 (PST)
+Message-ID: <b14b7507-e20a-2223-b772-fc865e5c9558@arm.com>
+Date:   Thu, 19 Jan 2023 11:02:41 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v8 1/9] perf pmu: Add #slots literal support for arm64
-To:     Ian Rogers <irogers@google.com>
-Cc:     Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Kilroy <andrew.kilroy@arm.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>
-References: <1673940573-90503-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1673940573-90503-2-git-send-email-renyu.zj@linux.alibaba.com>
- <06d33eb8-d2a9-4792-fa83-c64059ab7326@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <06d33eb8-d2a9-4792-fa83-c64059ab7326@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v7 13/15] coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID
+ used for Trace ID
+To:     Mike Leach <mike.leach@linaro.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, linux-perf-users@vger.kernel.org,
+        leo.yan@linaro.org, quic_jinlmao@quicinc.com
+References: <20230116124928.5440-1-mike.leach@linaro.org>
+ <20230116124928.5440-14-mike.leach@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20230116124928.5440-14-mike.leach@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Mike
 
-
-在 2023/1/17 下午4:45, John Garry 写道:
-> On 17/01/2023 07:29, Jing Zhang wrote:
->> The slots in each architecture may be different, so add #slots literal
->> to obtain the slots of different architectures, and the #slots can be
->> applied in the metric. Currently, The #slots just support for arm64,
->> and other architectures will return NAN.
->>
->> On arm64, the value of slots is from the register PMMIR_EL1.SLOT, which
->> I can read in /sys/bus/event_source/device/armv8_pmuv3_*/caps/slots.
->> PMMIR_EL1.SLOT might read as zero if the PMU version is lower than
->> ID_AA64DFR0_EL1_PMUVer_V3P4 or the STALL_SLOT event is not implemented.
->>
->> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
+On 16/01/2023 12:49, Mike Leach wrote:
+> Use the perf_report_aux_output_id() call to output the CoreSight trace ID
+> and associated CPU as a PERF_RECORD_AUX_OUTPUT_HW_ID record in the
+> perf.data file.
 > 
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm-perf.c |  7 +++++++
+>   include/linux/coresight-pmu.h                    | 14 ++++++++++++++
+>   2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> index bdb9ab86173a..12fff661456e 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+> @@ -4,6 +4,7 @@
+>    * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+>    */
+>   
+> +#include <linux/bitfield.h>
+>   #include <linux/coresight.h>
+>   #include <linux/coresight-pmu.h>
+>   #include <linux/cpumask.h>
+> @@ -448,6 +449,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	struct perf_output_handle *handle = &ctxt->handle;
+>   	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+>   	struct list_head *path;
+> +	u64 hw_id;
+>   
+>   	if (!csdev)
+>   		goto fail;
+> @@ -493,6 +495,11 @@ static void etm_event_start(struct perf_event *event, int flags)
+>   	if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
+>   		goto fail_disable_path;
+>   
+> +	/* output cpu / trace ID in perf record */
+> +	hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, CS_AUX_HW_ID_CURR_VERSION);
+> +	hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, coresight_trace_id_read_cpu_id(cpu));
+> +	perf_report_aux_output_id(event, hw_id);
+> +
 
-Hi Ian,
+One minor nit:
 
-Do you think there are other problems with this patch? Can I get your tags?
+This ends up putting the HWID packet for every single time the event is 
+scheduled on the CPU and thus we have :
 
-Thanks,
-Jing
+$ perf report -D | grep OUTPUT_HW_ID
+...
+AUX_OUTPUT_HW_ID events:         55  (18.3%)
+
+We could do the above step only once per CPU for the lifetime of the 
+event by book keeping the info in event_data. With that we get, one
+record per CPU and:
+
+$ perf report -D | grep OUTPUT_HW_ID
+...
+AUX_OUTPUT_HW_ID events:          5  ( 1.9%)
+
+Here is a quick patch. We can queue this separately if you all are Ok 
+with this. Thoughts ?
+
+---8>---
+
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c 
+b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 12fff661456e..5335f3a2b010 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -495,10 +495,16 @@ static void etm_event_start(struct perf_event 
+*event, int flags)
+         if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF))
+                 goto fail_disable_path;
+
+-       /* output cpu / trace ID in perf record */
+-       hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, 
+CS_AUX_HW_ID_CURR_VERSION);
+-       hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, 
+coresight_trace_id_read_cpu_id(cpu));
+-       perf_report_aux_output_id(event, hw_id);
++       /*
++        * output cpu / trace ID in perf record, once for the lifetime
++        * of the event.
++        */
++       if (!cpumask_test_cpu(cpu, &event_data->aux_hwid_done)) {
++               cpumask_set_cpu(cpu, &event_data->aux_hwid_done);
++               hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK, 
+CS_AUX_HW_ID_CURR_VERSION);
++               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, 
+coresight_trace_id_read_cpu_id(cpu));
++               perf_report_aux_output_id(event, hw_id);
++       }
+
+  out:
+         /* Tell the perf core the event is alive */
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h 
+b/drivers/hwtracing/coresight/coresight-etm-perf.h
+index 468f7799ab4f..9b11bb3d96d9 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.h
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
+@@ -55,6 +55,7 @@ struct etm_filters {
+  struct etm_event_data {
+         struct work_struct work;
+         cpumask_t mask;
++       cpumask_t aux_hwid_done;
+         void *snk_config;
+         u32 cfg_hash;
+         struct list_head * __percpu *path;
+
+
+
+>   out:
+>   	/* Tell the perf core the event is alive */
+>   	event->hw.state = 0;
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 624f4843453e..51ac441a37c3 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -7,6 +7,8 @@
+>   #ifndef _LINUX_CORESIGHT_PMU_H
+>   #define _LINUX_CORESIGHT_PMU_H
+>   
+> +#include <linux/bits.h>
+> +
+>   #define CORESIGHT_ETM_PMU_NAME "cs_etm"
+>   
+>   /*
+> @@ -43,4 +45,16 @@
+>   #define ETM4_CFG_BIT_RETSTK	12
+>   #define ETM4_CFG_BIT_VMID_OPT	15
+>   
+> +/*
+> + * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+> + * Used to associate a CPU with the CoreSight Trace ID.
+> + * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
+> + * [59:08] - Unused (SBZ)
+> + * [63:60] - Version
+> + */
+> +#define CS_AUX_HW_ID_TRACE_ID_MASK	GENMASK_ULL(7, 0)
+> +#define CS_AUX_HW_ID_VERSION_MASK	GENMASK_ULL(63, 60)
+> +
+> +#define CS_AUX_HW_ID_CURR_VERSION 0
+> +
+>   #endif
+
