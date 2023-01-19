@@ -2,128 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A906AC004D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 15:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8582EC004D4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 19 Jan 2023 15:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230432AbjASP5C (ORCPT
+        id S231309AbjASP5j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 10:57:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52970 "EHLO
+        Thu, 19 Jan 2023 10:57:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230121AbjASP5B (ORCPT
+        with ESMTP id S231288AbjASP5g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 10:57:01 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7EF323A9D;
-        Thu, 19 Jan 2023 07:57:00 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF4691758;
-        Thu, 19 Jan 2023 07:57:41 -0800 (PST)
-Received: from [10.57.75.229] (unknown [10.57.75.229])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D947E3F445;
-        Thu, 19 Jan 2023 07:56:56 -0800 (PST)
-Message-ID: <fb6564d3-c3a2-08c1-32c5-79ba22c69200@arm.com>
-Date:   Thu, 19 Jan 2023 15:56:55 +0000
+        Thu, 19 Jan 2023 10:57:36 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B3D81036
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 07:57:33 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id e3so2283147wru.13
+        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 07:57:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dMlJ2NJjcLXUx3bywthULxoc68gmDcbMG7dVreoK0ms=;
+        b=Fwxf5lPg5ufiIbwNNqoLqaEzgJnXZ/2W6Gb/VGmRrBmo2GLK0Rf0egVFm0m3g6yOuI
+         kcIzgo2LSVP+VDKUODHUvkkGtBq0EOVk8xrE30oqcTRTtLY03pklihlGn5twLlkMDbbh
+         b3zFHxyVLuSZKmYCRoSm3VTZFHCjoWjcLGMQFyO0dJDcGrcLawV1fG/5nMzDZhNvTi1v
+         q36SVefZjsmIy15U6BtckVrCDK86Hnvjx9g5DzIf+/BGoUSFQKJfNlzg/rrmoAhN9vRL
+         FyPtnTh2D5TbLpKipQwC1IrltRXYXpJ6W4MBvYimbG6AXHF2dRTN9NBXg7NL+HNHZeMi
+         +Evw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dMlJ2NJjcLXUx3bywthULxoc68gmDcbMG7dVreoK0ms=;
+        b=nubv1qacZql3x74Qf98IJwIs9SDu5MZrvYTPR5dEqWxab4ZyzUJmIqYPDOBwTztzY/
+         w0/aZlHWHdA/nI9qkRJ4L7FauGXEM6Br9H15SZzouHQuGB2kws94uzoRALs56GU0oRYq
+         c2QlG9fXHzPGD+Qfo2nAWIS2sgDdPOhxEslWFeBvN1mVaLM63e1Cl26rSquzpqBbtKB+
+         RdsEOacIywR7VOIWbBYB3lEqkLyQYa+V530fe/QcR8ne95iYytaePDAmV/BTCv6C6wwi
+         STn27ezPHkg6a4Yyy7HRjZFrW6ThkKr0DZcnPweh78WI/DL/VyT4Cs5Vfcakm49a0l5J
+         KIhA==
+X-Gm-Message-State: AFqh2koLrZJpflymimxf5kVgoXTjnJH+43csvn6qLL2kVGsvnf/+kN9w
+        YtGNn7Kpw6qdrb2RGfPycgJPiCUvg5Ufo1r3A7y6JQ==
+X-Google-Smtp-Source: AMrXdXsFhfAfshIXAkWu2W7aD4UHcJ+Dw1fXNzCOmComCE7xAZX+qctghVV11UxkyHAYmIPIY1NM5vZa2D6c4KYgZOE=
+X-Received: by 2002:a05:6000:124f:b0:2bd:df97:13f4 with SMTP id
+ j15-20020a056000124f00b002bddf9713f4mr495083wrx.654.1674143851869; Thu, 19
+ Jan 2023 07:57:31 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v4 6/8] perf cs_etm: Record ts_source in AUXTRACE_INFO for
- ETMv4 and ETE
-To:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, tanmay@marvell.com,
-        leo.yan@linaro.org, mike.leach@linaro.org
-Cc:     sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
-        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20230105082609.344538-1-irogers@google.com>
+In-Reply-To: <20230105082609.344538-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 19 Jan 2023 07:57:19 -0800
+Message-ID: <CAP-5=fUCJEyrZ+bx6oMGmFm5wuF71uheM=7VD9ynjAD_TNZ78w@mail.gmail.com>
+Subject: Re: [PATCH v1] perf llvm: Fix inadvertent file creation
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230119154308.3815108-1-james.clark@arm.com>
- <20230119154308.3815108-7-james.clark@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20230119154308.3815108-7-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, Ian Rogers <irogers@google.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/01/2023 15:43, James Clark wrote:
-> From: German Gomez <german.gomez@arm.com>
-> 
-> Read the value of ts_source exposed by the driver and store it in the
-> ETMv4 and ETE header. If the interface doesn't exist (such as in older
-> Kernels), defaults to a safe value of -1.
+On Thu, Jan 5, 2023 at 12:26 AM Ian Rogers <irogers@google.com> wrote:
+>
+> The LLVM template is first echo-ed into command_out and then
+> command_out executed. The echo surrounds the template with double
+> quotes, however, the template itself may contain quotes. This is
+> generally innocuous but in tools/perf/tests/bpf-script-test-prologue.c
+> we see:
+> ...
+> SEC("func=null_lseek file->f_mode offset orig")
+> ...
+> where the first double quote ends the double quote of the echo, then
+> the > redirects output into a file called f_mode.
+>
+> To avoid this inadvertent behavior substitute redirects and similar
+> characters to be ASCII control codes, then substitute the output in
+> the echo back again.
+>
+> Fixes: 5eab5a7ee032 ("perf llvm: Display eBPF compiling command in debug output")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Super minor nits feel free to ignore.
+Ping. Not really a BPF/LLVM fix, it is just doing some string
+manipulation to avoid shell interpretation in the context of making
+BPF/LLVM.
 
-> 
-> Signed-off-by: German Gomez <german.gomez@arm.com>
-> Signed-off-by: James Clark <james.clark@arm.com>
+Thanks,
+Ian
+
 > ---
->   tools/perf/arch/arm/util/cs-etm.c | 48 +++++++++++++++++++++++++++++++
->   tools/perf/util/cs-etm-base.c     |  2 ++
->   tools/perf/util/cs-etm.h          |  2 ++
->   3 files changed, 52 insertions(+)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index b526ffe550a5..481e170cd3f1 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -53,6 +53,7 @@ static const char * const metadata_etmv4_ro[] = {
->   	[CS_ETMV4_TRCIDR2]		= "trcidr/trcidr2",
->   	[CS_ETMV4_TRCIDR8]		= "trcidr/trcidr8",
->   	[CS_ETMV4_TRCAUTHSTATUS]	= "mgmt/trcauthstatus",
-> +	[CS_ETMV4_TS_SOURCE]		= "ts_source",
->   };
->   
->   static const char * const metadata_ete_ro[] = {
-> @@ -62,6 +63,7 @@ static const char * const metadata_ete_ro[] = {
->   	[CS_ETE_TRCIDR8]		= "trcidr/trcidr8",
->   	[CS_ETE_TRCAUTHSTATUS]		= "mgmt/trcauthstatus",
->   	[CS_ETE_TRCDEVARCH]		= "mgmt/trcdevarch",
-> +	[CS_ETE_TS_SOURCE]		= "ts_source",
->   };
->   
->   static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
-> @@ -613,6 +615,32 @@ static int cs_etm_get_ro(struct perf_pmu *pmu, int cpu, const char *path)
->   	return val;
->   }
->   
-> +static int cs_etm_get_ro_signed(struct perf_pmu *pmu, int cpu, const char *path)
-
-minor nit: This doesn't necessarily care if it is RO ?
-Also, does it make sense to rename to include cpu relation :
-
-say,  cs_etm_pmu_cpu_get_signed() ?
-
-> +{
-> +	char pmu_path[PATH_MAX];
-> +	int scan;
-> +	int val = 0;
-> +
-> +	/* Get RO metadata from sysfs */
-> +	snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
-> +
-> +	scan = perf_pmu__scan_file(pmu, pmu_path, "%d", &val);
-> +	if (scan != 1)
-> +		pr_err("%s: error reading: %s\n", __func__, pmu_path);
-> +
-> +	return val;
-> +}
-> +
-> +static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, int cpu, const char *path)
-
-nit: cs_etm_pmu_cpu_path_exists() ? To make the "cpu" relation explicit ?
-
-Otherwise looks good to me.
-
-Suzuki
-
+>  tools/perf/util/llvm-utils.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+> index 650ffe336f3a..4e8e243a6e4b 100644
+> --- a/tools/perf/util/llvm-utils.c
+> +++ b/tools/perf/util/llvm-utils.c
+> @@ -531,14 +531,37 @@ int llvm__compile_bpf(const char *path, void **p_obj_buf,
+>
+>         pr_debug("llvm compiling command template: %s\n", template);
+>
+> +       /*
+> +        * Below, substitute control characters for values that can cause the
+> +        * echo to misbehave, then substitute the values back.
+> +        */
+>         err = -ENOMEM;
+> -       if (asprintf(&command_echo, "echo -n \"%s\"", template) < 0)
+> +       if (asprintf(&command_echo, "echo -n \a%s\a", template) < 0)
+>                 goto errout;
+>
+> +#define SWAP_CHAR(a, b) do { if (*p == a) *p = b; } while (0)
+> +       for (char *p = command_echo; *p; p++) {
+> +               SWAP_CHAR('<', '\001');
+> +               SWAP_CHAR('>', '\002');
+> +               SWAP_CHAR('"', '\003');
+> +               SWAP_CHAR('\'', '\004');
+> +               SWAP_CHAR('|', '\005');
+> +               SWAP_CHAR('&', '\006');
+> +               SWAP_CHAR('\a', '"');
+> +       }
+>         err = read_from_pipe(command_echo, (void **) &command_out, NULL);
+>         if (err)
+>                 goto errout;
+>
+> +       for (char *p = command_out; *p; p++) {
+> +               SWAP_CHAR('\001', '<');
+> +               SWAP_CHAR('\002', '>');
+> +               SWAP_CHAR('\003', '"');
+> +               SWAP_CHAR('\004', '\'');
+> +               SWAP_CHAR('\005', '|');
+> +               SWAP_CHAR('\006', '&');
+> +       }
+> +#undef SWAP_CHAR
+>         pr_debug("llvm compiling command : %s\n", command_out);
+>
+>         err = read_from_pipe(template, &obj_buf, &obj_buf_sz);
+> --
+> 2.39.0.314.g84b9a713c41-goog
+>
