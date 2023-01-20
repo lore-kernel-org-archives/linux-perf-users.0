@@ -2,328 +2,182 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822F3C27C7C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 17:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88004C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 17:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230231AbjATRdc (ORCPT
+        id S229727AbjATRhz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 12:33:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49940 "EHLO
+        Fri, 20 Jan 2023 12:37:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbjATRdb (ORCPT
+        with ESMTP id S229523AbjATRhz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 12:33:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E2FDA10B;
-        Fri, 20 Jan 2023 09:33:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E70F6202E;
-        Fri, 20 Jan 2023 17:32:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959C3C433EF;
-        Fri, 20 Jan 2023 17:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674235954;
-        bh=IdUYMSt3wTGv2diJCAcwKvFCfNaWHFQmpW/zxgBkcx8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sEUTACJCTrqLyFYdY9iGjjURfV8/9YXDIqx013dd83fYyf5Oyx9e7UvZjgXdt2o8m
-         BDRDB4otAl0Mm9y2G9qfVtywTfJjw5SMe88gn2fmaYe4zFe+CBOO/hh4aPQVOAvfIH
-         +/5ZLn2fpcQK6tsh7v5tlh1zNDXJY2FKPBtIqit8e9TUoImkbDG+ROw6CI7s2ECoZF
-         fBxz39uBBTVl7Km4GD7SkKFOsnLLaydjy6tmMhXGCxudFHPrNX9kW3MaSGPmDGq54A
-         mpO5T+aLjG39w0UrNIc6sBsf5GOWNlkbMDUJHQh90HaVTYPaQH/lfsyrtGFK3TuD2/
-         HgIqX0+65+iSQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EA224405BE; Fri, 20 Jan 2023 14:32:30 -0300 (-03)
-Date:   Fri, 20 Jan 2023 14:32:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
-        leo.yan@linaro.org, mike.leach@linaro.org, sgoutham@marvell.com,
-        gcherian@marvell.com, lcherian@marvell.com, bbhushan2@marvell.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/8] perf: Use perf_pmu__open_file() and
- perf_pmu__scan_file()
-Message-ID: <Y8rQLirdlgU8nMEW@kernel.org>
-References: <20230120143702.4035046-1-james.clark@arm.com>
- <20230120143702.4035046-3-james.clark@arm.com>
- <Y8rNtO5HNcPJDpQ2@kernel.org>
+        Fri, 20 Jan 2023 12:37:55 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B6F6FD07
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 09:37:46 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id q8so4640706wmo.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 09:37:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=y1lWz+BlPgiimJpS2PC8hXxGRBmlG/i5xVJ0n8RryUo=;
+        b=gsfQ1Py0BpYwbadbxWqNucgL6zciLXY91LhqWWMauAdo730qEPEyU5XqwA+6vp1m8b
+         BXe16oRs6Rw/rWHlUVOrJ0YcsEn1BWASM6BrvPB+xYZHsQ7A50ZwU/zPMGBG9YbwlHqk
+         i9W1+pcym+Qgk4NtafxuzA/3cM0Dg7lGa/J+66JeQEWiANPGirRjunp7SCLZYL/eX0Bu
+         zh+J1nn099z8zsA+KUOblXDp/TA3qlJJF116vSduaM9RL8+3D+3cpKVyLYqFRKomCQS1
+         EFMvFxsywBlav6QAf3clYl4+V2aGROFkDW+L8/g5DhKeH0XM/32GX/pD5kcyMN/8a0Bo
+         Yv9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y1lWz+BlPgiimJpS2PC8hXxGRBmlG/i5xVJ0n8RryUo=;
+        b=t8h0JNQCuH9d2t2Da2X9GHNGiProjzoo223q4oax4yxCwTK/NAz2mOV/upNMfg4Ljl
+         IQ/um62AhhiUzr+fx0tX7EJtbVLKcBKR+gA844upyFYwGe7MHM6SeFDlJRbAuPS/rz7O
+         gs4mQW/77ROAFOkFsG/X4cmLxJSsk/Rlui0DcU0eNL8baA+L7AR6g7yaYxJZzVnEVIlo
+         fPwk2SBnuU8nQ2tTw73GMox6kq5NlDSRlODoXqOgU6YegwScmOGTps7WsD4vyuwzgiaa
+         OiVsMGxCh7g4vS2nZlNiXuQxzxhNfLj3x8bVbKUQfY+L4+Hv6m9v8tT5Hw9fzq7/tbIc
+         rbFQ==
+X-Gm-Message-State: AFqh2kqSisXSHK99CBMPiXiTTdE17fSsJ9pSNZLoJVFovVq4p7pHHwxi
+        w0sFHC81+BPDBzqmkZTtZ/iXTvNPz6r2yNvtf14pKZbesvORK9zQL2A=
+X-Google-Smtp-Source: AMrXdXsF9BBHIkP1YHcORX/IWqpnvLHDOVFz1QS7Dm4M0HgcXKWYARHlTvbMAnkbR/aXzAetlduO4QcbJRD9aM1h7g4=
+X-Received: by 2002:a05:600c:1c9a:b0:3d9:ee45:8a9e with SMTP id
+ k26-20020a05600c1c9a00b003d9ee458a9emr737147wms.174.1674236265240; Fri, 20
+ Jan 2023 09:37:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8rNtO5HNcPJDpQ2@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20230120134039.17788-1-mpetlan@redhat.com>
+In-Reply-To: <20230120134039.17788-1-mpetlan@redhat.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 20 Jan 2023 09:37:33 -0800
+Message-ID: <CAP-5=fXuNW2XYomrxViwzQThVQpwF5Cvo+UuQ_da3QiUESwAmw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf test: Fix JSON linter
+To:     Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
+        qzhao@redhat.com, cjense@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 20, 2023 at 02:21:56PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Jan 20, 2023 at 02:36:55PM +0000, James Clark escreveu:
-> > Remove some code that duplicates existing methods. Copy strings where
-> > const strings are required.
-> > 
-> > No functional changes.
-> 
-> 
-> Have you used 'perf test'?
-> 
-> [acme@quaco perf]$ perf test -v python
-> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
->  19: 'import perf' in python                                         :
-> --- start ---
-> test child forked, pid 232379
-> python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf/python'); import perf" | '/usr/bin/python3' "
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
-> ImportError: /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so: undefined symbol: perf_pmu__scan_file
-> test child finished with -1
-> ---- end ----
-> 'import perf' in python: FAILED!
-> [acme@quaco perf]$
+On Fri, Jan 20, 2023 at 5:41 AM Michael Petlan <mpetlan@redhat.com> wrote:
+>
+> Hello all.
+>
+> We have observed issues with the 'perf stat JSON output linter' testcase
+> on systems that allow topdown metrics.
+>
+> =========================
+>
+> 1) The topdown metrics handling hardcodes printing more than one metric
+> per line (refer to util/stat-shadow.c):
+>
+>     if (retiring > 0.7 && heavy_ops > 0.1)
+>         color = PERF_COLOR_GREEN;
+>     print_metric(config, ctxp, color, "%8.1f%%", "Heavy Operations",
+>             heavy_ops * 100.);
+>     if (retiring > 0.7 && light_ops > 0.6)
+>         color = PERF_COLOR_GREEN;
+>     else
+>         color = NULL;
+>     print_metric(config, ctxp, color, "%8.1f%%", "Light Operations",
+>             light_ops * 100.);
+>
+> Thus, the test cannot rely on the fact that there will be only one
+> metric per line.
 
-I added this to this cset, now it passes.
+Right, these implicit metrics are also an issue with --metric-only. It
+isn't clear from the command line flags when implicit and listed
+metrics should be generated. The topdown events (Icelake+) made the
+implicit metric problem worse, and they likely didn't exist or weren't
+tested at the time of the json output.
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index d948455e5ed43656..9e5d881b098767a3 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -20,6 +20,7 @@
- #include "stat.h"
- #include "metricgroup.h"
- #include "util/env.h"
-+#include "util/pmu.h"
- #include <internal/lib.h>
- #include "util.h"
- 
-@@ -83,7 +84,7 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
- }
- 
- /*
-- * This one is needed not to drag the PMU bandwagon, jevents generated
-+ * These ones are needed not to drag the PMU bandwagon, jevents generated
-  * pmu_sys_event_tables, etc and evsel__find_pmu() is used so far just for
-  * doing per PMU perf_event_attr.exclude_guest handling, not really needed, so
-  * far, for the perf python binding known usecases, revisit if this become
-@@ -94,6 +95,11 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel __maybe_unused)
- 	return NULL;
- }
- 
-+int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...)
-+{
-+	return EOF;
-+}
-+
- /*
-  * Add this one here not to drag util/metricgroup.c
-  */
-  
-> > Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> > Signed-off-by: James Clark <james.clark@arm.com>
-> > ---
-> >  tools/perf/util/cputopo.c    |  9 +-------
-> >  tools/perf/util/pmu-hybrid.c | 27 +++++-------------------
-> >  tools/perf/util/pmu.c        | 40 +++++++++++-------------------------
-> >  tools/perf/util/pmu.h        |  3 ++-
-> >  4 files changed, 20 insertions(+), 59 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-> > index 1a3ff6449158..e08797c3cdbc 100644
-> > --- a/tools/perf/util/cputopo.c
-> > +++ b/tools/perf/util/cputopo.c
-> > @@ -422,8 +422,6 @@ void numa_topology__delete(struct numa_topology *tp)
-> >  static int load_hybrid_node(struct hybrid_topology_node *node,
-> >  			    struct perf_pmu *pmu)
-> >  {
-> > -	const char *sysfs;
-> > -	char path[PATH_MAX];
-> >  	char *buf = NULL, *p;
-> >  	FILE *fp;
-> >  	size_t len = 0;
-> > @@ -432,12 +430,7 @@ static int load_hybrid_node(struct hybrid_topology_node *node,
-> >  	if (!node->pmu_name)
-> >  		return -1;
-> >  
-> > -	sysfs = sysfs__mountpoint();
-> > -	if (!sysfs)
-> > -		goto err;
-> > -
-> > -	snprintf(path, PATH_MAX, CPUS_TEMPLATE_CPU, sysfs, pmu->name);
-> > -	fp = fopen(path, "r");
-> > +	fp = perf_pmu__open_file(pmu, "cpus");
-> >  	if (!fp)
-> >  		goto err;
-> >  
-> > diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
-> > index f51ccaac60ee..38628805a952 100644
-> > --- a/tools/perf/util/pmu-hybrid.c
-> > +++ b/tools/perf/util/pmu-hybrid.c
-> > @@ -20,32 +20,15 @@ LIST_HEAD(perf_pmu__hybrid_pmus);
-> >  
-> >  bool perf_pmu__hybrid_mounted(const char *name)
-> >  {
-> > -	char path[PATH_MAX];
-> > -	const char *sysfs;
-> > -	FILE *file;
-> > -	int n, cpu;
-> > +	int cpu;
-> > +	char pmu_name[PATH_MAX];
-> > +	struct perf_pmu pmu = {.name = pmu_name};
-> >  
-> >  	if (strncmp(name, "cpu_", 4))
-> >  		return false;
-> >  
-> > -	sysfs = sysfs__mountpoint();
-> > -	if (!sysfs)
-> > -		return false;
-> > -
-> > -	snprintf(path, PATH_MAX, CPUS_TEMPLATE_CPU, sysfs, name);
-> > -	if (!file_available(path))
-> > -		return false;
-> > -
-> > -	file = fopen(path, "r");
-> > -	if (!file)
-> > -		return false;
-> > -
-> > -	n = fscanf(file, "%u", &cpu);
-> > -	fclose(file);
-> > -	if (n <= 0)
-> > -		return false;
-> > -
-> > -	return true;
-> > +	strlcpy(pmu_name, name, sizeof(pmu_name));
-> > +	return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
-> >  }
-> >  
-> >  struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 1edbb714ff32..a771a5972fc5 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -571,45 +571,31 @@ static void pmu_read_sysfs(void)
-> >  	closedir(dir);
-> >  }
-> >  
-> > -static struct perf_cpu_map *__pmu_cpumask(const char *path)
-> > -{
-> > -	FILE *file;
-> > -	struct perf_cpu_map *cpus;
-> > -
-> > -	file = fopen(path, "r");
-> > -	if (!file)
-> > -		return NULL;
-> > -
-> > -	cpus = perf_cpu_map__read(file);
-> > -	fclose(file);
-> > -	return cpus;
-> > -}
-> > -
-> >  /*
-> >   * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
-> >   * may have a "cpus" file.
-> >   */
-> >  #define SYS_TEMPLATE_ID	"./bus/event_source/devices/%s/identifier"
-> > -#define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
-> >  
-> >  static struct perf_cpu_map *pmu_cpumask(const char *name)
-> >  {
-> > -	char path[PATH_MAX];
-> >  	struct perf_cpu_map *cpus;
-> > -	const char *sysfs = sysfs__mountpoint();
-> >  	const char *templates[] = {
-> > -		CPUS_TEMPLATE_UNCORE,
-> > -		CPUS_TEMPLATE_CPU,
-> > +		"cpumask",
-> > +		"cpus",
-> >  		NULL
-> >  	};
-> >  	const char **template;
-> > +	char pmu_name[PATH_MAX];
-> > +	struct perf_pmu pmu = {.name = pmu_name};
-> > +	FILE *file;
-> >  
-> > -	if (!sysfs)
-> > -		return NULL;
-> > -
-> > +	strlcpy(pmu_name, name, sizeof(pmu_name));
-> >  	for (template = templates; *template; template++) {
-> > -		snprintf(path, PATH_MAX, *template, sysfs, name);
-> > -		cpus = __pmu_cpumask(path);
-> > +		file = perf_pmu__open_file(&pmu, *template);
-> > +		if (!file)
-> > +			continue;
-> > +		cpus = perf_cpu_map__read(file);
-> >  		if (cpus)
-> >  			return cpus;
-> >  	}
-> > @@ -620,13 +606,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
-> >  static bool pmu_is_uncore(const char *name)
-> >  {
-> >  	char path[PATH_MAX];
-> > -	const char *sysfs;
-> >  
-> >  	if (perf_pmu__hybrid_mounted(name))
-> >  		return false;
-> >  
-> > -	sysfs = sysfs__mountpoint();
-> > -	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
-> > +	perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpumask");
-> >  	return file_available(path);
-> >  }
-> >  
-> > @@ -1737,7 +1721,7 @@ bool pmu_have_event(const char *pname, const char *name)
-> >  	return false;
-> >  }
-> >  
-> > -static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
-> > +FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
-> >  {
-> >  	char path[PATH_MAX];
-> >  
-> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> > index 96d030c8b3b3..742d4db319a0 100644
-> > --- a/tools/perf/util/pmu.h
-> > +++ b/tools/perf/util/pmu.h
-> > @@ -7,6 +7,7 @@
-> >  #include <linux/perf_event.h>
-> >  #include <linux/list.h>
-> >  #include <stdbool.h>
-> > +#include <stdio.h>
-> >  #include "parse-events.h"
-> >  #include "pmu-events/pmu-events.h"
-> >  
-> > @@ -22,7 +23,6 @@ enum {
-> >  };
-> >  
-> >  #define PERF_PMU_FORMAT_BITS 64
-> > -#define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
-> >  #define MAX_PMU_NAME_LEN 128
-> >  
-> >  struct perf_event_attr;
-> > @@ -262,5 +262,6 @@ double perf_pmu__cpu_slots_per_cycle(void);
-> >  int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
-> >  int perf_pmu__pathname_scnprintf(char *buf, size_t size,
-> >  				 const char *pmu_name, const char *filename);
-> > +FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name);
-> >  
-> >  #endif /* __PMU_H */
-> > -- 
-> > 2.25.1
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+> 2) Since the JSON printing engine thinks that one and only one metric
+> is printed, it always closes the line by adding '}'. This is not true,
+> so I have fixed the comma printing and adjusted the engine to be
+> capable of printing 1-N metrics and then close the line.
 
--- 
+So the current printing code is messy. For example, there is a newline
+callback function, but that has little meaning for json where
+everything is on a newline. For CSV mode, adding a summary used to
+cause a column to suddenly appear on the left for the row containing
+the summary. I believe the right thing to do is a refactor and
+recently I did a similar refactor for 'perf list':
+https://lore.kernel.org/lkml/20221114210723.2749751-11-irogers@google.com/
+So it is strange that metrics are "shadows" of events, but whatever
+the point is to think about the printing API. In the change linked
+above you can see that everytime something is printed the print
+handling code is given all the information and the print handling code
+has state. Based on the state and callback's information, the print
+handling code can do nothing, properly format for CSV, json, etc. This
+gets completely away from the kind of madness of branches and
+whac-a-mole the code currently has.
 
-- Arnaldo
+I'm happy to look at doing the refactor to be similar to 'perf
+list'/builtin-list.c. Namhyung I thought might have gotten to it with
+his recent work on improving aggregation. If I hear silence then I'll
+assume that is a request I do it :-)
+
+Pragmatically in the short term we could land your changes, but I
+worry they are more of the whac-a-mole and something somewhere else
+will break. Which is why we have a test, and so I'm not overly
+worried. I can download and test too.
+
+Anyway, sorry for the issue and let me know what you think. Thanks,
+Ian
+
+
+> =========================
+>
+> On machines that don't support topdown, the problem can be shown by
+> doubling the following line in util/stat-shadow.c, so that the simple
+> 'insn per cycle' metric is printed twice:
+>
+>   print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle", ratio);
+>
+> The worst problem is that the JSON line is broken, such as:
+>
+> ... "pcnt-running" : 100.00, "metric-value" : 3.501931, "metric-unit"
+>     : "Heavy Operations"}"metric-value" : 14.007787, "metric-unit" : ...
+>                   here ^^^^^
+>
+> =========================
+>
+> The first patch solves the JSON output correctness, the second tries
+> to adjust the testcase to some extent, so that it should work on the
+> topdown-capable machines.
+>
+> However, it's highly possible that the testcase will have to be fixed
+> or maybe rewritten in future. First, it has quite naive evaluation of
+> what's expected/correct/etc. Second, it does no JSON format validation
+> at all. As a linter it should do so though.
+>
+>  ***
+>
+> For further discussion: What about removing the check for number of
+> expected elements in the line and just check for the keywords, such
+> as "metric-value", "counter-value", "event", etc. and for some values
+> that should be numeric. And, do proper JSON format sanity check?
+>
+>
+> Thank you for inputs!
+>
+> Michael
+>
+>
+>
+>
+> Michael Petlan (2):
+>   perf stat: Fix JSON metric printout for multiple metrics per line
+>   perf test: Fix JSON format linter test checks
+>
+>  .../tests/shell/lib/perf_json_output_lint.py  | 16 +++++------
+>  tools/perf/util/stat-display.c                | 28 +++++++++++--------
+>  2 files changed, 24 insertions(+), 20 deletions(-)
+>
+> --
+> 2.18.4
+>
