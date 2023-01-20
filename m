@@ -2,146 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB79C004D4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 00:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7D6C38142
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 01:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229698AbjATAlP (ORCPT
+        id S229484AbjATB15 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 19 Jan 2023 19:41:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47560 "EHLO
+        Thu, 19 Jan 2023 20:27:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbjATAlI (ORCPT
+        with ESMTP id S229560AbjATB14 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 19 Jan 2023 19:41:08 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC0CA57AB
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 16:41:01 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-4ce566db73eso35848927b3.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 19 Jan 2023 16:41:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RChfojZSEu0VpWRA0QiZt+0hmKVb1/N9i6LB2MMx+/U=;
-        b=TMRgq1lYspF4qjU1PoMZ91855bnDMMbB5ZvqtNh8zuBj9om107AphBBPpPmTuXiMQT
-         KQdgVkt13M3F8MTGeCyc39U9jpNKozdRkpMT+fzuCrJ9TmkJu+F22zR4ys2tx5zyEDnA
-         uv02szvjoHhVrdjZs9AeaNb9J5J0b/mDNQsSgGYcxmIgEFdVucpejAzv5YRqxOHy3Tsn
-         FW85FW089TjyGzTSk6SIlVWwpr+FFzGJbJkkx07EwGDJjliVmtcK1wHLpezjrMF7aeLB
-         pnZUCK7Qt8rlfz5dJaceTuKUlr0VVGLxD7S8zg/ctKMU4FlSg8aSIViy5BpLBwzBcVD4
-         Nrfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RChfojZSEu0VpWRA0QiZt+0hmKVb1/N9i6LB2MMx+/U=;
-        b=ppIy7PQoLgmJa2Xv2laHhpn1chq0XkfQAvxQGtHHak8PtLuW1Ioybptcjd+AJISyMa
-         SnkIeJEjkQdFgt0J04CkZWWC4K7Pn5czrcl5GV1EmuAM+vMTIPH9TRh4hP1p7hZlA1DS
-         0ksIHv3gm8GJ/SvAJeAlTe/zzlrc+Z5Puw+7mB9VG41tX6HtTNH+XWhRCo5MJwjpWjXW
-         WwuX39y9qzplNBkmzMpQJt7ypybt+nkxWNgBFl2QfbGB0ukPR0LI1IkXCsT1kG8QAluj
-         6i5OQ1NS/DKCMAS7J7X+QWjLEts2YDjTDygALNSkURQfhf9CNCVwlSnIdiM4t9P5Su1i
-         gP0Q==
-X-Gm-Message-State: AFqh2kpv32VX85eTLMMLipiDuvj04OwRYC5bKIQwsYiA7/ouLBHKpnMW
-        cVrh55Lct43VE2Uou1kkJ8dHSEVY1Ws=
-X-Google-Smtp-Source: AMrXdXs8FPNxBgA8z++xqECNoji6FVdv680vuxSLnYRNwmObaC4pEURTyKB1wY4wlC+eCeKQvFXrFGDfP9Q=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a81:990a:0:b0:4b6:dce2:93 with SMTP id
- q10-20020a81990a000000b004b6dce20093mr1600405ywg.164.1674175260087; Thu, 19
- Jan 2023 16:41:00 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 20 Jan 2023 00:40:51 +0000
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
-Message-ID: <20230120004051.2043777-1-seanjc@google.com>
-Subject: [PATCH] perf/x86: KVM: Disable vPMU support on hybrid CPUs (host PMUs)
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 19 Jan 2023 20:27:56 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED884C35;
+        Thu, 19 Jan 2023 17:27:54 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BAA0F61DD2;
+        Fri, 20 Jan 2023 01:27:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F07CFC433D2;
+        Fri, 20 Jan 2023 01:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674178073;
+        bh=trOccCtKJdAbvxVkpZn02r9ePecCo+7hkHsdUok6MFU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=efoG82ZG3fenq1hPZQJcQmo7Gq0pTmIW2z6WkYBoS3BhAL9kTQBgqUKvMJgWv12Hp
+         sQh2qU5z7cC3gkoBndc1aGBHlw37Ia+ODUV2eKRVn0p/kLmvyhuy3vpt06NpPP4Wry
+         nhuh/FPXdUYGG6sE/zIXkm3gEmVglRjV8lfg4onK005u4RF/DSGyUf1PQMOf+QHKTS
+         dWq/Og0grT4CflliqRN6o2R2gFU94hgjHiGAdzBO3pgd+7cMDH5qlbaycrWmBfc4KA
+         /GlW8jwP+r1QdbEqenkSxi5ZNptGvf+OFU8pjRLwgY0zXHVnx9FVxRDAWtcj/4CP8R
+         jx0oEgM51fHnA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4948C405BE; Thu, 19 Jan 2023 22:27:50 -0300 (-03)
+Date:   Thu, 19 Jan 2023 22:27:50 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jianfeng Gao <jianfeng.gao@intel.com>,
-        Andrew Cooper <Andrew.Cooper3@citrix.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Sohom Datta <sohomdatta1+git@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf tools fixes for v6.2: 3rd batch
+Message-ID: <Y8nuFmDDQU5c/4tS@kernel.org>
+References: <20230119171510.166368-1-acme@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230119171510.166368-1-acme@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Disable KVM support for virtualizing PMUs on hosts with hybrid PMUs until
-KVM gains a sane way to enumeration the hybrid vPMU to userspace and/or
-gains a mechanism to let userspace opt-in to the dangers of exposing a
-hybrid vPMU to KVM guests.
+Humm,
 
-Virtualizing a hybrid PMU, or at least part of a hybrid PMU, is possible,
-but it requires userspace to pin vCPUs to pCPUs to prevent migrating a
-vCPU between a big core and a little core, requires the VMM to accurately
-enumerate the topology to the guest (if exposing a hybrid CPU to the
-guest), and also requires the VMM to accurately enumerate the vPMU
-capabilities to the guest.
+	I'm not finding this on the lkml archives, so please ignore it
+if this is going as a duplicate for anyone :-\
 
-The last point is especially problematic, as KVM doesn't control which
-pCPU it runs on when enumerating KVM's vPMU capabilities to userspace.
-For now, simply disable vPMU support on hybrid CPUs to avoid inducing
-seemingly random #GPs in guests.
+Thanks,
 
-Reported-by: Jianfeng Gao <jianfeng.gao@intel.com>
-Cc: stable@vger.kernel.org
-Cc: Andrew Cooper <Andrew.Cooper3@citrix.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Link: https://lore.kernel.org/all/20220818181530.2355034-1-kan.liang@linux.intel.com
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
+- Arnaldo
 
-Lightly tested as I don't have hybrid hardware.  For the record, I'm not
-against supporting hybrid vPMUs in KVM, but it needs to be a dedicated
-effort and not implicitly rely on userspace to do the right thing (or get
-lucky).
-
- arch/x86/events/core.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 85a63a41c471..a67667c41cc8 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2974,17 +2974,18 @@ unsigned long perf_misc_flags(struct pt_regs *regs)
- 
- void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
- {
--	if (!x86_pmu_initialized()) {
-+	/*
-+	 * Hybrid PMUs don't play nice with virtualization unless userspace
-+	 * pins vCPUs _and_ can enumerate accurate information to the guest.
-+	 * Disable vPMU support for hybrid PMUs until KVM gains a way to let
-+	 * userspace opt into the dangers of hybrid vPMUs.
-+	 */
-+	if (!x86_pmu_initialized() || is_hybrid()) {
- 		memset(cap, 0, sizeof(*cap));
- 		return;
- 	}
- 
- 	cap->version		= x86_pmu.version;
--	/*
--	 * KVM doesn't support the hybrid PMU yet.
--	 * Return the common value in global x86_pmu,
--	 * which available for all cores.
--	 */
- 	cap->num_counters_gp	= x86_pmu.num_counters;
- 	cap->num_counters_fixed	= x86_pmu.num_counters_fixed;
- 	cap->bit_width_gp	= x86_pmu.cntval_bits;
-
-base-commit: de60733246ff4545a0483140c1f21426b8d7cb7f
--- 
-2.39.0.246.g2a6d74b583-goog
-
+Em Thu, Jan 19, 2023 at 02:15:10PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Hi Linus,
+> 
+> 	Sync of UAPI headers with the kernel sources, to address
+> warnings while building perf and two small fixes for the main tools + a
+> 'perf test' fix related to the build-id fix.
+> 
+> 	 Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> The following changes since commit c1649ec55708ae42091a2f1bca1ab49ecd722d55:
+> 
+>   Merge tag 'nfsd-6.2-4' of git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux (2023-01-17 09:29:17 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-3-2023-01-19
+> 
+> for you to fetch changes up to 3d9c07c4cfc06cf7927cd00c04dffd1165d03c53:
+> 
+>   perf test build-id: Fix test check for PE file (2023-01-18 10:52:06 -0300)
+> 
+> ----------------------------------------------------------------
+> perf tools fixes for v6.2: 3rd batch.
+> 
+> - Prevent reading into undefined memory in the expression lexer,
+>   accounting for a trailer backslash followed by the null byte.
+> 
+> - Fix file mode when copying files to the build id cache, the problem
+>   happens when the cache directory is in a different file system than the
+>   file being cached, otherwise the mode was preserved as only a hard link
+>   would be done to save space.
+> 
+> - Fix a related build-id 'perf test' entry that checked that permission
+>   when caching PE (Portable Executable) files, used when profiling
+>   Windows executables under wine.
+> 
+> - Sync the tools/ copies of kvm headers, build_bug.h, socket.h and
+>   arm64's cputype.h with the kernel sources.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (6):
+>       tools headers UAPI: Sync linux/kvm.h with the kernel sources
+>       tools headers UAPI: Sync x86's asm/kvm.h with the kernel sources
+>       tools kvm headers arm64: Update KVM header from the kernel sources
+>       tools headers arm64: Sync arm64's cputype.h with the kernel sources
+>       perf beauty: Update copy of linux/socket.h with the kernel sources
+>       tools headers: Syncronize linux/build_bug.h with the kernel sources
+> 
+> Athira Rajeev (2):
+>       perf buildid-cache: Fix the file mode with copyfile() while adding file to build-id cache
+>       perf test build-id: Fix test check for PE file
+> 
+> Sohom Datta (1):
+>       perf expr: Prevent normalize() from reading into undefined memory in the expression lexer
+> 
+>  tools/arch/arm64/include/asm/cputype.h         |  8 +++++++-
+>  tools/arch/arm64/include/uapi/asm/kvm.h        |  1 +
+>  tools/arch/x86/include/uapi/asm/kvm.h          |  5 +++++
+>  tools/include/linux/build_bug.h                |  9 +++++++++
+>  tools/include/uapi/linux/kvm.h                 |  3 +++
+>  tools/perf/tests/shell/buildid.sh              | 15 ++++++++++++++-
+>  tools/perf/trace/beauty/include/linux/socket.h |  5 ++++-
+>  tools/perf/util/build-id.c                     | 10 +++++++---
+>  tools/perf/util/expr.l                         |  5 ++++-
+>  9 files changed, 54 insertions(+), 7 deletions(-)
