@@ -2,99 +2,79 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF6BC05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 17:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F2C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 18:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjATRsB (ORCPT
+        id S230391AbjATSq7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 12:48:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
+        Fri, 20 Jan 2023 13:46:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbjATRsA (ORCPT
+        with ESMTP id S230381AbjATSqy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 12:48:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAE2F76E;
-        Fri, 20 Jan 2023 09:47:58 -0800 (PST)
+        Fri, 20 Jan 2023 13:46:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA956FD29;
+        Fri, 20 Jan 2023 10:46:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8681F6203A;
-        Fri, 20 Jan 2023 17:47:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A23C0C433EF;
-        Fri, 20 Jan 2023 17:47:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5BD3BB82793;
+        Fri, 20 Jan 2023 18:46:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 05F7CC433D2;
+        Fri, 20 Jan 2023 18:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674236878;
-        bh=jekznAemlinI9fSN2j3OXrmRYwz4z6tzRDT1A/Ec7X4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gdRX39L91h8uY/H5Xz2dC6fngxZP09+e1GDHj/zldfkoVr8Fvo9zuV+pXP37Fanne
-         i+o1PwulUUzLKJcDmLtHK8gd+8foF+QEi68lmYH2oFLva26UEQh80x5eE0rW0gORyv
-         ujZbyUv3tdGBJ+b7ZQ8nUCGViyB8ZcF1xOV2FPgWhBzGQRiUWOSpqAHdy7Io1Z1dv3
-         2hf/bmXtY3xASngDw20kRmdmE6zE4m36Sim0GtigcPu37bnNF+krn15TVZmAwPRhDN
-         EcdGGH+bi/o9k5L2cA4b4kSPY8rJaM40TdaEfJfg517lklUnHvM1ZhOVevXx6EFF/C
-         pbRtQ7g+VR+vg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B0462405BE; Fri, 20 Jan 2023 14:47:55 -0300 (-03)
-Date:   Fri, 20 Jan 2023 14:47:55 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tanmay Jagdale <tanmay@marvell.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        Bharat Bhushan <bbhushan2@marvell.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        s=k20201202; t=1674240412;
+        bh=qgmVGhk7ebaz/HhDm5NfJBCHN0VVopGRs7nDDqtp0Ug=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=StK2FBam2ep9Pu5d6nhYAkeYZiDp/L4lpdjAkxXCan5iSvyIp1Dc+hoPZq5KtN7Kx
+         bY3b0Jf6y4nongvdG09+ZqiKlU6hbSBFaXpqvxy5Z/yA0ttU8x0yAy0ztDefPSJqxI
+         3GeZKBl1pPXbDOaZucUF7kR3doiq2G4FuwaglFdOLCFxMDI4ZpV2tTm7LI1UCwmv3Q
+         ZxiLKb1D69biJjCPzehhXq4b6k+Ek8vgHn1sY4LFyU3Z7+bSXQIJO/zMjaTsiw6B0F
+         NmVwCnltN03lauYLDpLBlx3DInWG3J7T95FfAgrPGZTowET4OH/SfGXUtsyBzOvu+d
+         opnnqTS8J80ug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7BEEE54D2B;
+        Fri, 20 Jan 2023 18:46:51 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.2: 3rd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230119171510.166368-1-acme@kernel.org>
+References: <20230119171510.166368-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230119171510.166368-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-3-2023-01-19
+X-PR-Tracked-Commit-Id: 3d9c07c4cfc06cf7927cd00c04dffd1165d03c53
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4a0c7a6831a0aa56db78a80f5a3e1ad5412d0fa8
+Message-Id: <167424041193.21297.9460299615366986566.pr-tracker-bot@kernel.org>
+Date:   Fri, 20 Jan 2023 18:46:51 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "leo.yan@linaro.org" <leo.yan@linaro.org>,
-        "mike.leach@linaro.org" <mike.leach@linaro.org>
-Subject: Re: [PATCH v3 0/7] perf cs_etm: Basic support for virtual/kernel
- timestamps
-Message-ID: <Y8rTyzfQaO8S8S/v@kernel.org>
-References: <20230103162042.423694-1-james.clark@arm.com>
- <PH0PR18MB5017223066D8744D12C1F1BAD6FF9@PH0PR18MB5017.namprd18.prod.outlook.com>
- <5acce414-eabb-3d22-4907-da6b64b85a9c@arm.com>
- <b61039b1-1f64-ff1e-8e6a-7d8ada28656c@arm.com>
- <PH0PR18MB50178B52ED081276D2404493D6FD9@PH0PR18MB5017.namprd18.prod.outlook.com>
- <70a94ad3-fe5d-b013-7f6b-dd83d2332e0e@arm.com>
- <5fc1e764-bafc-34e5-5ff9-8b62af99ac10@arm.com>
- <PH0PR18MB501732D8907DC909B2ADECDFD6C59@PH0PR18MB5017.namprd18.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH0PR18MB501732D8907DC909B2ADECDFD6C59@PH0PR18MB5017.namprd18.prod.outlook.com>
-X-Url:  http://acmel.wordpress.com
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Sohom Datta <sohomdatta1+git@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 20, 2023 at 05:30:30PM +0000, Tanmay Jagdale escreveu:
-> > On 13/01/2023 11:12, James Clark wrote:
-> > > On 12/01/2023 15:33, Tanmay Jagdale wrote:
-> > I've sent v4 and I don't see any issues now with the files that you
-> > sent. There were a couple of different edge cases that I listed in the
-> > last commit message. Let me know if you find any more, otherwise if you
-> > leave your review or tested-by tag that would be great.
-> I have tested the latest v5 version on our platform with test
-> cases that run with and without filters for kernel/user space.
-> The timestamps look good on all of them.
-> 
-> Thanks for the effort !
+The pull request you sent on Thu, 19 Jan 2023 14:15:10 -0300:
 
-Can I take that as an:
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.2-3-2023-01-19
 
-Tested-by: Tanmay Jagdale <tanmay@marvell.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4a0c7a6831a0aa56db78a80f5a3e1ad5412d0fa8
 
-For all the patches in this v5 series?
+Thank you!
 
-- Arnaldo
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
