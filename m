@@ -2,248 +2,160 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CDCC25B4E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE69C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjATOlR (ORCPT
+        id S230302AbjATOlU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 09:41:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43894 "EHLO
+        Fri, 20 Jan 2023 09:41:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230437AbjATOlQ (ORCPT
+        with ESMTP id S230170AbjATOlT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 09:41:16 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1414D51C52;
-        Fri, 20 Jan 2023 06:40:54 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61C851595;
-        Fri, 20 Jan 2023 06:38:56 -0800 (PST)
-Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C0E4E3F67D;
-        Fri, 20 Jan 2023 06:38:11 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
-        leo.yan@linaro.org, mike.leach@linaro.org
-Cc:     sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
-        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
+        Fri, 20 Jan 2023 09:41:19 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD7080B97;
+        Fri, 20 Jan 2023 06:40:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674225657; x=1705761657;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iqBg1CPWUOIeSmCo4LHZfXmDvaRq/z8yWiScjetjGsM=;
+  b=K7XANq3bNl3bZQ9BmETJV5LJQGb6QEI2j9i1NMUl1nrPqQQpSGcD5Vs9
+   fP34OF0pYDP4bsz4bq16GvlpG2pCaivcU5XwrW3/XMHr5267FaHiUfEWb
+   INreD+ZHNb4vtrJoDIXvQqvTgYT0g+BxVY5DhgLE/lPUR3GYMEHs3gMOY
+   TKjx6JEazNm+n51FrPNlppkya3SQKWcXCarrLUu2YB2dMCrLzgPcUsqn3
+   7CoK//GcHtpQd7FcvYZ2nFwdkK6It4WlNwFAXnpF2rIOSFMoQ5y5f6/br
+   3ONmy4DXiEHZ1xwtl84iXGyXA3tSnkqoIPu+sYim1vLnjpRLaLWpnqdQ8
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="305957424"
+X-IronPort-AV: E=Sophos;i="5.97,232,1669104000"; 
+   d="scan'208";a="305957424"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2023 06:39:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="660597117"
+X-IronPort-AV: E=Sophos;i="5.97,232,1669104000"; 
+   d="scan'208";a="660597117"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 20 Jan 2023 06:39:45 -0800
+Received: from [10.212.214.233] (kliang2-mobl1.ccr.corp.intel.com [10.212.214.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 248F0580BB9;
+        Fri, 20 Jan 2023 06:39:43 -0800 (PST)
+Message-ID: <1dec071d-c010-cd89-9e58-d643e71e775c@linux.intel.com>
+Date:   Fri, 20 Jan 2023 09:39:41 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] perf/x86: KVM: Disable vPMU support on hybrid CPUs (host
+ PMUs)
+Content-Language: en-US
+To:     Sean Christopherson <seanjc@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/8] perf cs_etm: Keep separate symbols for ETMv4 and ETE parameters
-Date:   Fri, 20 Jan 2023 14:36:58 +0000
-Message-Id: <20230120143702.4035046-6-james.clark@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230120143702.4035046-1-james.clark@arm.com>
-References: <20230120143702.4035046-1-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jianfeng Gao <jianfeng.gao@intel.com>,
+        Andrew Cooper <Andrew.Cooper3@citrix.com>,
+        Andi Kleen <ak@linux.intel.com>
+References: <20230120004051.2043777-1-seanjc@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230120004051.2043777-1-seanjc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: German Gomez <german.gomez@arm.com>
 
-Previously, adding a new parameter at the end of ETMv4 meant adding it
-somewhere in the middle of ETE, which is not supported by the current
-header version.
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: German Gomez <german.gomez@arm.com>
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/arch/arm/util/cs-etm.c | 43 ++++++++++++++++++++++++++-----
- tools/perf/util/cs-etm-base.c     | 32 +++++++++++++++++------
- tools/perf/util/cs-etm.c          | 12 ++++-----
- tools/perf/util/cs-etm.h          | 11 +++++++-
- 4 files changed, 76 insertions(+), 22 deletions(-)
+On 2023-01-19 7:40 p.m., Sean Christopherson wrote:
+> Disable KVM support for virtualizing PMUs on hosts with hybrid PMUs until
+> KVM gains a sane way to enumeration the hybrid vPMU to userspace and/or
+> gains a mechanism to let userspace opt-in to the dangers of exposing a
+> hybrid vPMU to KVM guests.
+> 
+> Virtualizing a hybrid PMU, or at least part of a hybrid PMU, is possible,
+> but it requires userspace to pin vCPUs to pCPUs to prevent migrating a
+> vCPU between a big core and a little core, requires the VMM to accurately
+> enumerate the topology to the guest (if exposing a hybrid CPU to the
+> guest), and also requires the VMM to accurately enumerate the vPMU
+> capabilities to the guest.
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index a346d5f3dafa..b526ffe550a5 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -53,7 +53,15 @@ static const char * const metadata_etmv4_ro[] = {
- 	[CS_ETMV4_TRCIDR2]		= "trcidr/trcidr2",
- 	[CS_ETMV4_TRCIDR8]		= "trcidr/trcidr8",
- 	[CS_ETMV4_TRCAUTHSTATUS]	= "mgmt/trcauthstatus",
--	[CS_ETE_TRCDEVARCH]		= "mgmt/trcdevarch"
-+};
-+
-+static const char * const metadata_ete_ro[] = {
-+	[CS_ETE_TRCIDR0]		= "trcidr/trcidr0",
-+	[CS_ETE_TRCIDR1]		= "trcidr/trcidr1",
-+	[CS_ETE_TRCIDR2]		= "trcidr/trcidr2",
-+	[CS_ETE_TRCIDR8]		= "trcidr/trcidr8",
-+	[CS_ETE_TRCAUTHSTATUS]		= "mgmt/trcauthstatus",
-+	[CS_ETE_TRCDEVARCH]		= "mgmt/trcdevarch",
- };
- 
- static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
-@@ -617,7 +625,7 @@ static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu)
- {
- 	struct cs_etm_recording *ptr = container_of(itr, struct cs_etm_recording, itr);
- 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
--	int trcdevarch = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETE_TRCDEVARCH]);
-+	int trcdevarch = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TRCDEVARCH]);
- 
- 	/*
- 	 * ETE if ARCHVER is 5 (ARCHVER is 4 for ETM) and ARCHPART is 0xA13.
-@@ -648,6 +656,31 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
- 						     metadata_etmv4_ro[CS_ETMV4_TRCAUTHSTATUS]);
- }
- 
-+static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, int cpu)
-+{
-+	struct cs_etm_recording *ptr = container_of(itr, struct cs_etm_recording, itr);
-+	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
-+
-+	/* Get trace configuration register */
-+	data[CS_ETE_TRCCONFIGR] = cs_etmv4_get_config(itr);
-+	/* Get traceID from the framework */
-+	data[CS_ETE_TRCTRACEIDR] = coresight_get_trace_id(cpu);
-+	/* Get read-only information from sysFS */
-+	data[CS_ETE_TRCIDR0] = cs_etm_get_ro(cs_etm_pmu, cpu,
-+					     metadata_ete_ro[CS_ETE_TRCIDR0]);
-+	data[CS_ETE_TRCIDR1] = cs_etm_get_ro(cs_etm_pmu, cpu,
-+					     metadata_ete_ro[CS_ETE_TRCIDR1]);
-+	data[CS_ETE_TRCIDR2] = cs_etm_get_ro(cs_etm_pmu, cpu,
-+					     metadata_ete_ro[CS_ETE_TRCIDR2]);
-+	data[CS_ETE_TRCIDR8] = cs_etm_get_ro(cs_etm_pmu, cpu,
-+					     metadata_ete_ro[CS_ETE_TRCIDR8]);
-+	data[CS_ETE_TRCAUTHSTATUS] = cs_etm_get_ro(cs_etm_pmu, cpu,
-+						   metadata_ete_ro[CS_ETE_TRCAUTHSTATUS]);
-+	/* ETE uses the same registers as ETMv4 plus TRCDEVARCH */
-+	data[CS_ETE_TRCDEVARCH] = cs_etm_get_ro(cs_etm_pmu, cpu,
-+						metadata_ete_ro[CS_ETE_TRCDEVARCH]);
-+}
-+
- static void cs_etm_get_metadata(int cpu, u32 *offset,
- 				struct auxtrace_record *itr,
- 				struct perf_record_auxtrace_info *info)
-@@ -661,11 +694,7 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
- 	/* first see what kind of tracer this cpu is affined to */
- 	if (cs_etm_is_ete(itr, cpu)) {
- 		magic = __perf_cs_ete_magic;
--		/* ETE uses the same registers as ETMv4 plus TRCDEVARCH */
--		cs_etm_save_etmv4_header(&info->priv[*offset], itr, cpu);
--		info->priv[*offset + CS_ETE_TRCDEVARCH] =
--			cs_etm_get_ro(cs_etm_pmu, cpu,
--				      metadata_etmv4_ro[CS_ETE_TRCDEVARCH]);
-+		cs_etm_save_ete_header(&info->priv[*offset], itr, cpu);
- 
- 		/* How much space was used */
- 		increment = CS_ETE_PRIV_MAX;
-diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
-index 597542410854..282042c6e944 100644
---- a/tools/perf/util/cs-etm-base.c
-+++ b/tools/perf/util/cs-etm-base.c
-@@ -36,7 +36,20 @@ static const char * const cs_etmv4_priv_fmts[] = {
- 	[CS_ETMV4_TRCIDR2]	= "	TRCIDR2			       %llx\n",
- 	[CS_ETMV4_TRCIDR8]	= "	TRCIDR8			       %llx\n",
- 	[CS_ETMV4_TRCAUTHSTATUS] = "	TRCAUTHSTATUS		       %llx\n",
--	[CS_ETE_TRCDEVARCH]	= "	TRCDEVARCH                     %llx\n"
-+};
-+
-+static const char * const cs_ete_priv_fmts[] = {
-+	[CS_ETM_MAGIC]		= "	Magic number		       %llx\n",
-+	[CS_ETM_CPU]		= "	CPU			       %lld\n",
-+	[CS_ETM_NR_TRC_PARAMS]	= "	NR_TRC_PARAMS		       %llx\n",
-+	[CS_ETE_TRCCONFIGR]	= "	TRCCONFIGR		       %llx\n",
-+	[CS_ETE_TRCTRACEIDR]	= "	TRCTRACEIDR		       %llx\n",
-+	[CS_ETE_TRCIDR0]	= "	TRCIDR0			       %llx\n",
-+	[CS_ETE_TRCIDR1]	= "	TRCIDR1			       %llx\n",
-+	[CS_ETE_TRCIDR2]	= "	TRCIDR2			       %llx\n",
-+	[CS_ETE_TRCIDR8]	= "	TRCIDR8			       %llx\n",
-+	[CS_ETE_TRCAUTHSTATUS]	= "	TRCAUTHSTATUS		       %llx\n",
-+	[CS_ETE_TRCDEVARCH]	= "	TRCDEVARCH                     %llx\n",
- };
- 
- static const char * const param_unk_fmt =
-@@ -96,19 +109,22 @@ static int cs_etm__print_cpu_metadata_v1(u64 *val, int *offset)
- 			else
- 				fprintf(stdout, cs_etm_priv_fmts[j], val[i]);
- 		}
--	} else if (magic == __perf_cs_etmv4_magic || magic == __perf_cs_ete_magic) {
--		/*
--		 * ETE and ETMv4 can be printed in the same block because the number of parameters
--		 * is saved and they share the list of parameter names. ETE is also only supported
--		 * in V1 files.
--		 */
-+	} else if (magic == __perf_cs_etmv4_magic) {
- 		for (j = 0; j < total_params; j++, i++) {
- 			/* if newer record - could be excess params */
--			if (j >= CS_ETE_PRIV_MAX)
-+			if (j >= CS_ETMV4_PRIV_MAX)
- 				fprintf(stdout, param_unk_fmt, j, val[i]);
- 			else
- 				fprintf(stdout, cs_etmv4_priv_fmts[j], val[i]);
- 		}
-+	} else if (magic == __perf_cs_ete_magic) {
-+		for (j = 0; j < total_params; j++, i++) {
-+			/* if newer record - could be excess params */
-+			if (j >= CS_ETE_PRIV_MAX)
-+				fprintf(stdout, param_unk_fmt, j, val[i]);
-+			else
-+				fprintf(stdout, cs_ete_priv_fmts[j], val[i]);
-+		}
- 	} else {
- 		/* failure - note bad magic value and error out */
- 		fprintf(stdout, magic_unk_fmt, magic);
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 33303d03c2fa..879576d5f899 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -464,12 +464,12 @@ static void cs_etm__set_trace_param_ete(struct cs_etm_trace_params *t_params,
- 	u64 **metadata = etm->metadata;
- 
- 	t_params[idx].protocol = CS_ETM_PROTO_ETE;
--	t_params[idx].ete.reg_idr0 = metadata[idx][CS_ETMV4_TRCIDR0];
--	t_params[idx].ete.reg_idr1 = metadata[idx][CS_ETMV4_TRCIDR1];
--	t_params[idx].ete.reg_idr2 = metadata[idx][CS_ETMV4_TRCIDR2];
--	t_params[idx].ete.reg_idr8 = metadata[idx][CS_ETMV4_TRCIDR8];
--	t_params[idx].ete.reg_configr = metadata[idx][CS_ETMV4_TRCCONFIGR];
--	t_params[idx].ete.reg_traceidr = metadata[idx][CS_ETMV4_TRCTRACEIDR];
-+	t_params[idx].ete.reg_idr0 = metadata[idx][CS_ETE_TRCIDR0];
-+	t_params[idx].ete.reg_idr1 = metadata[idx][CS_ETE_TRCIDR1];
-+	t_params[idx].ete.reg_idr2 = metadata[idx][CS_ETE_TRCIDR2];
-+	t_params[idx].ete.reg_idr8 = metadata[idx][CS_ETE_TRCIDR8];
-+	t_params[idx].ete.reg_configr = metadata[idx][CS_ETE_TRCCONFIGR];
-+	t_params[idx].ete.reg_traceidr = metadata[idx][CS_ETE_TRCTRACEIDR];
- 	t_params[idx].ete.reg_devarch = metadata[idx][CS_ETE_TRCDEVARCH];
- }
- 
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 5da50d5dae6b..c5925428afa9 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -82,7 +82,16 @@ enum {
-  * added in header V1
-  */
- enum {
--	CS_ETE_TRCDEVARCH = CS_ETMV4_PRIV_MAX,
-+	/* Dynamic, configurable parameters */
-+	CS_ETE_TRCCONFIGR = CS_ETM_COMMON_BLK_MAX_V1,
-+	CS_ETE_TRCTRACEIDR,
-+	/* RO, taken from sysFS */
-+	CS_ETE_TRCIDR0,
-+	CS_ETE_TRCIDR1,
-+	CS_ETE_TRCIDR2,
-+	CS_ETE_TRCIDR8,
-+	CS_ETE_TRCAUTHSTATUS,
-+	CS_ETE_TRCDEVARCH,
- 	CS_ETE_PRIV_MAX
- };
- 
--- 
-2.25.1
+Current kernel only return the common counters to KVM, which is
+available on both e-core and p-core. In theory, there should be no
+problem with the migration between cores. You don't have to pin vCPU.
+The only problem is that you probably can only use the architecture events.
 
+There is nothing wrong for the information provided by the kernel. I
+think it should be a KVM issue (my guess is the CPUID enumeration.) we
+should fix rather than simply disable the PMU for entire hybrid machines.
+
+Thanks,
+Kan
+> 
+> The last point is especially problematic, as KVM doesn't control which
+> pCPU it runs on when enumerating KVM's vPMU capabilities to userspace.
+> For now, simply disable vPMU support on hybrid CPUs to avoid inducing
+> seemingly random #GPs in guests.
+> 
+> Reported-by: Jianfeng Gao <jianfeng.gao@intel.com>
+> Cc: stable@vger.kernel.org
+> Cc: Andrew Cooper <Andrew.Cooper3@citrix.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Link: https://lore.kernel.org/all/20220818181530.2355034-1-kan.liang@linux.intel.com
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+> 
+> Lightly tested as I don't have hybrid hardware.  For the record, I'm not
+> against supporting hybrid vPMUs in KVM, but it needs to be a dedicated
+> effort and not implicitly rely on userspace to do the right thing (or get
+> lucky).
+> 
+>  arch/x86/events/core.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 85a63a41c471..a67667c41cc8 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2974,17 +2974,18 @@ unsigned long perf_misc_flags(struct pt_regs *regs)
+>  
+>  void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+>  {
+> -	if (!x86_pmu_initialized()) {
+> +	/*
+> +	 * Hybrid PMUs don't play nice with virtualization unless userspace
+> +	 * pins vCPUs _and_ can enumerate accurate information to the guest.
+> +	 * Disable vPMU support for hybrid PMUs until KVM gains a way to let
+> +	 * userspace opt into the dangers of hybrid vPMUs.
+> +	 */
+> +	if (!x86_pmu_initialized() || is_hybrid()) {
+>  		memset(cap, 0, sizeof(*cap));
+>  		return;
+>  	}
+>  
+>  	cap->version		= x86_pmu.version;
+> -	/*
+> -	 * KVM doesn't support the hybrid PMU yet.
+> -	 * Return the common value in global x86_pmu,
+> -	 * which available for all cores.
+> -	 */
+>  	cap->num_counters_gp	= x86_pmu.num_counters;
+>  	cap->num_counters_fixed	= x86_pmu.num_counters_fixed;
+>  	cap->bit_width_gp	= x86_pmu.cntval_bits;
+> 
+> base-commit: de60733246ff4545a0483140c1f21426b8d7cb7f
