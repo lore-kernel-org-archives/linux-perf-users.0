@@ -2,89 +2,346 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0546C05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 17:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35665C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 17:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbjATRj6 (ORCPT
+        id S229511AbjATRnw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 12:39:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57604 "EHLO
+        Fri, 20 Jan 2023 12:43:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbjATRj4 (ORCPT
+        with ESMTP id S229518AbjATRnv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 12:39:56 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11DBB5FDD
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 09:39:55 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id z5so5501958wrt.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 09:39:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=177H3aE/gx4vdhNPl1GvfGMYEJuaLzpSE2GgxhCmBlc=;
-        b=RjVYCgDOvY+fWK49/7NF5YasI2KbKC/7zS7TAuHnAfOlTFhFGBetNxgtovE+28IU0b
-         Saws/n6Rk7Fjk5IuUwAMF1dUNGDKxDB2u6HVzGJB9MqGyrLBoG/nVNAHyp1nWfNynP5w
-         I8FGcfiHoYzShW0jao1qlx7/SzPvhCz4K+ls48ormJUnSsc+NMLkHuGZ/IHAAGF7Oywb
-         RX9wEVReB6mLPBpCzW2wMkSjmqAV51Rf6/GYaRpK6IvqdxztgTE4zQsHXG7gWMLr4mPc
-         JAELG2cBHV8HTpES5Va1+Ra/ZQTb8DB2uqrIqSWfKVwXP9Ug0HTThsAL/JkLDzO1oLkt
-         Ofxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=177H3aE/gx4vdhNPl1GvfGMYEJuaLzpSE2GgxhCmBlc=;
-        b=MNHd/cGKQj70QNolZGrI3SBIQRK7W87dW7dfexekLTQTjPVKWYfPR7SGGwfWM0SKJx
-         R816UbhwQ0AyvqfzRZQ5Rgyznn+c616uSBcGGABmqWwYdREcP21NKwx9XxQ1PYLGs5gm
-         qAd8Tac1y2Zvjb2TFPaHAxedX2P0/FZRK3REDtA9p6vg2hq4U0Amo92V8hF268gBoFtl
-         SrSPHtzMPEYepaBnrC/s6ADXCf5UY7XLNa67uVuPSb+xlu4oQCdTzaibG86Nmin64Im0
-         f16+eQNr4C32aeKgDWlRX4Uk6eefyCoe6RHUpvuWPVFMGjQl7htZlkVIgy09mBggI+nQ
-         Cbbw==
-X-Gm-Message-State: AFqh2krqXXB/+bXI+t6dtziYmquVgMnnSUaSlIvp6vitgtyesrnK/zuq
-        re6BmgJ22EHYLjLFXF99ZMKyzdnY9Dk0EuGw4hCbFg==
-X-Google-Smtp-Source: AMrXdXseY93oSeZNttsxTrgs3mqFO1Nxo85jcQgRK5AQqaBmrcq+Dmq7M8ASsDS9tiR0H9uBz/0WiYVHojsW+i4yKzk=
-X-Received: by 2002:adf:e2cd:0:b0:2bd:f8da:9be0 with SMTP id
- d13-20020adfe2cd000000b002bdf8da9be0mr516838wrj.375.1674236393299; Fri, 20
- Jan 2023 09:39:53 -0800 (PST)
+        Fri, 20 Jan 2023 12:43:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E53BD45F50;
+        Fri, 20 Jan 2023 09:43:49 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 74BFE62019;
+        Fri, 20 Jan 2023 17:43:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80657C433EF;
+        Fri, 20 Jan 2023 17:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674236628;
+        bh=eQ8Ti0BGT1cK+eneWTl/IMTZV9chY9vkpdu4/jCchwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=guQYVHqwYCvg9Lt54u5WqKSoHbg9GRY+Xad47vicy2VVPiNaWEUbtgMyZgvdg/bbo
+         lsn0NgH+L8EiEHBtbJx1sfQa9Drx/tO2cBvrqQ5IouKBwsS8VDQy9M96wg5dllj/1G
+         rs/hWtOi/PpgqNQIWatgY7WscslFEWeM33hgbK9bf2nuvZdjgXwb//1XwBj2IN5c9J
+         aYnh9qmT6DuCzubU9lOpFMX50jsnzKwWlXuYHT2o7Pkm3MT9w3klE2lhwdJVBR7cGE
+         tCVN1kuHDV7FF6eowJjickSZwSBMcs3C9bZOIO40/C+kneyQ0sl/oH8ajifUD2z3lJ
+         GrLG9l/apyk5g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D58CA405BE; Fri, 20 Jan 2023 14:43:44 -0300 (-03)
+Date:   Fri, 20 Jan 2023 14:43:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        leo.yan@linaro.org, mike.leach@linaro.org, sgoutham@marvell.com,
+        gcherian@marvell.com, lcherian@marvell.com, bbhushan2@marvell.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/8] perf: Use perf_pmu__open_file() and
+ perf_pmu__scan_file()
+Message-ID: <Y8rS0BOUeXaGvwPv@kernel.org>
+References: <20230120143702.4035046-1-james.clark@arm.com>
+ <20230120143702.4035046-3-james.clark@arm.com>
+ <Y8rNtO5HNcPJDpQ2@kernel.org>
+ <Y8rQLirdlgU8nMEW@kernel.org>
 MIME-Version: 1.0
-References: <CAGm1_kv1AiMfq489W5ig05Zqq52Z5zmOxQPrjhb0ci=TSQtPkw@mail.gmail.com>
-In-Reply-To: <CAGm1_kv1AiMfq489W5ig05Zqq52Z5zmOxQPrjhb0ci=TSQtPkw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 20 Jan 2023 09:39:41 -0800
-Message-ID: <CAP-5=fUdMw=-V3Lfh5gkOf-LbaDksji1OnDonqAhRPP2ORj1Gg@mail.gmail.com>
-Subject: Re: Profiling ftdi_sio driver
-To:     Yegor Yefremov <yegorslists@googlemail.com>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8rQLirdlgU8nMEW@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 3:55 AM Yegor Yefremov
-<yegorslists@googlemail.com> wrote:
->
-> HI,
->
-> I have network performance degradation on TI's am335x platform when
-> enabling the low_latency flag on a number of FTDI ports.
->
-> When I start perf to record minicom's activity, I see no traces of the
-> musb or ftdi_sio drivers:
->
-> perf record -o /tmp/perf.data -p 315 -gR -- sleep 10
->
-> But when I examine the perf.data with -D option, I can see that such
-> events were recorded. What do I need to see this info in the call
-> graph?
+Em Fri, Jan 20, 2023 at 02:32:30PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Jan 20, 2023 at 02:21:56PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Fri, Jan 20, 2023 at 02:36:55PM +0000, James Clark escreveu:
+> > > Remove some code that duplicates existing methods. Copy strings where
+> > > const strings are required.
+> > > 
+> > > No functional changes.
+> > 
+> > 
+> > Have you used 'perf test'?
+> > 
+> > [acme@quaco perf]$ perf test -v python
+> > Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+> >  19: 'import perf' in python                                         :
+> > --- start ---
+> > test child forked, pid 232379
+> > python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf/python'); import perf" | '/usr/bin/python3' "
+> > Traceback (most recent call last):
+> >   File "<stdin>", line 1, in <module>
+> > ImportError: /tmp/build/perf/python/perf.cpython-310-x86_64-linux-gnu.so: undefined symbol: perf_pmu__scan_file
+> > test child finished with -1
+> > ---- end ----
+> > 'import perf' in python: FAILED!
+> > [acme@quaco perf]$
+> 
+> I added this to this cset, now it passes.
 
-Hi Yegor,
+So, what I have is now at my tmp.perf/core branch, pending container
+testing, later today probably will move to perf/core, so that it gets
+exposure on linux-next for v6.3.
 
-you forgot a "-a" system wide collection flag. You are just profiling
-the sleep command, and it of course does very little.
+For your convenience:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=tmp.perf/core
 
 Thanks,
-Ian
 
-> Regards,
-> Yegor
+- Arnaldo
+ 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index d948455e5ed43656..9e5d881b098767a3 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -20,6 +20,7 @@
+>  #include "stat.h"
+>  #include "metricgroup.h"
+>  #include "util/env.h"
+> +#include "util/pmu.h"
+>  #include <internal/lib.h>
+>  #include "util.h"
+>  
+> @@ -83,7 +84,7 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+>  }
+>  
+>  /*
+> - * This one is needed not to drag the PMU bandwagon, jevents generated
+> + * These ones are needed not to drag the PMU bandwagon, jevents generated
+>   * pmu_sys_event_tables, etc and evsel__find_pmu() is used so far just for
+>   * doing per PMU perf_event_attr.exclude_guest handling, not really needed, so
+>   * far, for the perf python binding known usecases, revisit if this become
+> @@ -94,6 +95,11 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel __maybe_unused)
+>  	return NULL;
+>  }
+>  
+> +int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt, ...)
+> +{
+> +	return EOF;
+> +}
+> +
+>  /*
+>   * Add this one here not to drag util/metricgroup.c
+>   */
+>   
+> > > Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> > > Signed-off-by: James Clark <james.clark@arm.com>
+> > > ---
+> > >  tools/perf/util/cputopo.c    |  9 +-------
+> > >  tools/perf/util/pmu-hybrid.c | 27 +++++-------------------
+> > >  tools/perf/util/pmu.c        | 40 +++++++++++-------------------------
+> > >  tools/perf/util/pmu.h        |  3 ++-
+> > >  4 files changed, 20 insertions(+), 59 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+> > > index 1a3ff6449158..e08797c3cdbc 100644
+> > > --- a/tools/perf/util/cputopo.c
+> > > +++ b/tools/perf/util/cputopo.c
+> > > @@ -422,8 +422,6 @@ void numa_topology__delete(struct numa_topology *tp)
+> > >  static int load_hybrid_node(struct hybrid_topology_node *node,
+> > >  			    struct perf_pmu *pmu)
+> > >  {
+> > > -	const char *sysfs;
+> > > -	char path[PATH_MAX];
+> > >  	char *buf = NULL, *p;
+> > >  	FILE *fp;
+> > >  	size_t len = 0;
+> > > @@ -432,12 +430,7 @@ static int load_hybrid_node(struct hybrid_topology_node *node,
+> > >  	if (!node->pmu_name)
+> > >  		return -1;
+> > >  
+> > > -	sysfs = sysfs__mountpoint();
+> > > -	if (!sysfs)
+> > > -		goto err;
+> > > -
+> > > -	snprintf(path, PATH_MAX, CPUS_TEMPLATE_CPU, sysfs, pmu->name);
+> > > -	fp = fopen(path, "r");
+> > > +	fp = perf_pmu__open_file(pmu, "cpus");
+> > >  	if (!fp)
+> > >  		goto err;
+> > >  
+> > > diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
+> > > index f51ccaac60ee..38628805a952 100644
+> > > --- a/tools/perf/util/pmu-hybrid.c
+> > > +++ b/tools/perf/util/pmu-hybrid.c
+> > > @@ -20,32 +20,15 @@ LIST_HEAD(perf_pmu__hybrid_pmus);
+> > >  
+> > >  bool perf_pmu__hybrid_mounted(const char *name)
+> > >  {
+> > > -	char path[PATH_MAX];
+> > > -	const char *sysfs;
+> > > -	FILE *file;
+> > > -	int n, cpu;
+> > > +	int cpu;
+> > > +	char pmu_name[PATH_MAX];
+> > > +	struct perf_pmu pmu = {.name = pmu_name};
+> > >  
+> > >  	if (strncmp(name, "cpu_", 4))
+> > >  		return false;
+> > >  
+> > > -	sysfs = sysfs__mountpoint();
+> > > -	if (!sysfs)
+> > > -		return false;
+> > > -
+> > > -	snprintf(path, PATH_MAX, CPUS_TEMPLATE_CPU, sysfs, name);
+> > > -	if (!file_available(path))
+> > > -		return false;
+> > > -
+> > > -	file = fopen(path, "r");
+> > > -	if (!file)
+> > > -		return false;
+> > > -
+> > > -	n = fscanf(file, "%u", &cpu);
+> > > -	fclose(file);
+> > > -	if (n <= 0)
+> > > -		return false;
+> > > -
+> > > -	return true;
+> > > +	strlcpy(pmu_name, name, sizeof(pmu_name));
+> > > +	return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
+> > >  }
+> > >  
+> > >  struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+> > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > > index 1edbb714ff32..a771a5972fc5 100644
+> > > --- a/tools/perf/util/pmu.c
+> > > +++ b/tools/perf/util/pmu.c
+> > > @@ -571,45 +571,31 @@ static void pmu_read_sysfs(void)
+> > >  	closedir(dir);
+> > >  }
+> > >  
+> > > -static struct perf_cpu_map *__pmu_cpumask(const char *path)
+> > > -{
+> > > -	FILE *file;
+> > > -	struct perf_cpu_map *cpus;
+> > > -
+> > > -	file = fopen(path, "r");
+> > > -	if (!file)
+> > > -		return NULL;
+> > > -
+> > > -	cpus = perf_cpu_map__read(file);
+> > > -	fclose(file);
+> > > -	return cpus;
+> > > -}
+> > > -
+> > >  /*
+> > >   * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
+> > >   * may have a "cpus" file.
+> > >   */
+> > >  #define SYS_TEMPLATE_ID	"./bus/event_source/devices/%s/identifier"
+> > > -#define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
+> > >  
+> > >  static struct perf_cpu_map *pmu_cpumask(const char *name)
+> > >  {
+> > > -	char path[PATH_MAX];
+> > >  	struct perf_cpu_map *cpus;
+> > > -	const char *sysfs = sysfs__mountpoint();
+> > >  	const char *templates[] = {
+> > > -		CPUS_TEMPLATE_UNCORE,
+> > > -		CPUS_TEMPLATE_CPU,
+> > > +		"cpumask",
+> > > +		"cpus",
+> > >  		NULL
+> > >  	};
+> > >  	const char **template;
+> > > +	char pmu_name[PATH_MAX];
+> > > +	struct perf_pmu pmu = {.name = pmu_name};
+> > > +	FILE *file;
+> > >  
+> > > -	if (!sysfs)
+> > > -		return NULL;
+> > > -
+> > > +	strlcpy(pmu_name, name, sizeof(pmu_name));
+> > >  	for (template = templates; *template; template++) {
+> > > -		snprintf(path, PATH_MAX, *template, sysfs, name);
+> > > -		cpus = __pmu_cpumask(path);
+> > > +		file = perf_pmu__open_file(&pmu, *template);
+> > > +		if (!file)
+> > > +			continue;
+> > > +		cpus = perf_cpu_map__read(file);
+> > >  		if (cpus)
+> > >  			return cpus;
+> > >  	}
+> > > @@ -620,13 +606,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
+> > >  static bool pmu_is_uncore(const char *name)
+> > >  {
+> > >  	char path[PATH_MAX];
+> > > -	const char *sysfs;
+> > >  
+> > >  	if (perf_pmu__hybrid_mounted(name))
+> > >  		return false;
+> > >  
+> > > -	sysfs = sysfs__mountpoint();
+> > > -	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
+> > > +	perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpumask");
+> > >  	return file_available(path);
+> > >  }
+> > >  
+> > > @@ -1737,7 +1721,7 @@ bool pmu_have_event(const char *pname, const char *name)
+> > >  	return false;
+> > >  }
+> > >  
+> > > -static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+> > > +FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+> > >  {
+> > >  	char path[PATH_MAX];
+> > >  
+> > > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> > > index 96d030c8b3b3..742d4db319a0 100644
+> > > --- a/tools/perf/util/pmu.h
+> > > +++ b/tools/perf/util/pmu.h
+> > > @@ -7,6 +7,7 @@
+> > >  #include <linux/perf_event.h>
+> > >  #include <linux/list.h>
+> > >  #include <stdbool.h>
+> > > +#include <stdio.h>
+> > >  #include "parse-events.h"
+> > >  #include "pmu-events/pmu-events.h"
+> > >  
+> > > @@ -22,7 +23,6 @@ enum {
+> > >  };
+> > >  
+> > >  #define PERF_PMU_FORMAT_BITS 64
+> > > -#define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
+> > >  #define MAX_PMU_NAME_LEN 128
+> > >  
+> > >  struct perf_event_attr;
+> > > @@ -262,5 +262,6 @@ double perf_pmu__cpu_slots_per_cycle(void);
+> > >  int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
+> > >  int perf_pmu__pathname_scnprintf(char *buf, size_t size,
+> > >  				 const char *pmu_name, const char *filename);
+> > > +FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name);
+> > >  
+> > >  #endif /* __PMU_H */
+> > > -- 
+> > > 2.25.1
+> > > 
+> > 
+> > -- 
+> > 
+> > - Arnaldo
+> 
+> -- 
+> 
+> - Arnaldo
+
+-- 
+
+- Arnaldo
