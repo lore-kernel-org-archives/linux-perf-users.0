@@ -2,160 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE69C25B4E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A93C27C7C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbjATOlU (ORCPT
+        id S231137AbjATOlY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 09:41:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45236 "EHLO
+        Fri, 20 Jan 2023 09:41:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbjATOlT (ORCPT
+        with ESMTP id S230437AbjATOlV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 09:41:19 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD7080B97;
-        Fri, 20 Jan 2023 06:40:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674225657; x=1705761657;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iqBg1CPWUOIeSmCo4LHZfXmDvaRq/z8yWiScjetjGsM=;
-  b=K7XANq3bNl3bZQ9BmETJV5LJQGb6QEI2j9i1NMUl1nrPqQQpSGcD5Vs9
-   fP34OF0pYDP4bsz4bq16GvlpG2pCaivcU5XwrW3/XMHr5267FaHiUfEWb
-   INreD+ZHNb4vtrJoDIXvQqvTgYT0g+BxVY5DhgLE/lPUR3GYMEHs3gMOY
-   TKjx6JEazNm+n51FrPNlppkya3SQKWcXCarrLUu2YB2dMCrLzgPcUsqn3
-   7CoK//GcHtpQd7FcvYZ2nFwdkK6It4WlNwFAXnpF2rIOSFMoQ5y5f6/br
-   3ONmy4DXiEHZ1xwtl84iXGyXA3tSnkqoIPu+sYim1vLnjpRLaLWpnqdQ8
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="305957424"
-X-IronPort-AV: E=Sophos;i="5.97,232,1669104000"; 
-   d="scan'208";a="305957424"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2023 06:39:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="660597117"
-X-IronPort-AV: E=Sophos;i="5.97,232,1669104000"; 
-   d="scan'208";a="660597117"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 20 Jan 2023 06:39:45 -0800
-Received: from [10.212.214.233] (kliang2-mobl1.ccr.corp.intel.com [10.212.214.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 248F0580BB9;
-        Fri, 20 Jan 2023 06:39:43 -0800 (PST)
-Message-ID: <1dec071d-c010-cd89-9e58-d643e71e775c@linux.intel.com>
-Date:   Fri, 20 Jan 2023 09:39:41 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] perf/x86: KVM: Disable vPMU support on hybrid CPUs (host
- PMUs)
-Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>,
+        Fri, 20 Jan 2023 09:41:21 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0B05BD05EA;
+        Fri, 20 Jan 2023 06:40:59 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7BBB1596;
+        Fri, 20 Jan 2023 06:39:00 -0800 (PST)
+Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 52B493F67D;
+        Fri, 20 Jan 2023 06:38:16 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        leo.yan@linaro.org, mike.leach@linaro.org
+Cc:     sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
+        bbhushan2@marvell.com, German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jianfeng Gao <jianfeng.gao@intel.com>,
-        Andrew Cooper <Andrew.Cooper3@citrix.com>,
-        Andi Kleen <ak@linux.intel.com>
-References: <20230120004051.2043777-1-seanjc@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230120004051.2043777-1-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 6/8] perf cs_etm: Record ts_source in AUXTRACE_INFO for ETMv4 and ETE
+Date:   Fri, 20 Jan 2023 14:36:59 +0000
+Message-Id: <20230120143702.4035046-7-james.clark@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230120143702.4035046-1-james.clark@arm.com>
+References: <20230120143702.4035046-1-james.clark@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: German Gomez <german.gomez@arm.com>
 
+Read the value of ts_source exposed by the driver and store it in the
+ETMv4 and ETE header. If the interface doesn't exist (such as in older
+Kernels), defaults to a safe value of -1.
 
-On 2023-01-19 7:40 p.m., Sean Christopherson wrote:
-> Disable KVM support for virtualizing PMUs on hosts with hybrid PMUs until
-> KVM gains a sane way to enumeration the hybrid vPMU to userspace and/or
-> gains a mechanism to let userspace opt-in to the dangers of exposing a
-> hybrid vPMU to KVM guests.
-> 
-> Virtualizing a hybrid PMU, or at least part of a hybrid PMU, is possible,
-> but it requires userspace to pin vCPUs to pCPUs to prevent migrating a
-> vCPU between a big core and a little core, requires the VMM to accurately
-> enumerate the topology to the guest (if exposing a hybrid CPU to the
-> guest), and also requires the VMM to accurately enumerate the vPMU
-> capabilities to the guest.
+Signed-off-by: German Gomez <german.gomez@arm.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/arch/arm/util/cs-etm.c | 48 +++++++++++++++++++++++++++++++
+ tools/perf/util/cs-etm-base.c     |  2 ++
+ tools/perf/util/cs-etm.h          |  2 ++
+ 3 files changed, 52 insertions(+)
 
-Current kernel only return the common counters to KVM, which is
-available on both e-core and p-core. In theory, there should be no
-problem with the migration between cores. You don't have to pin vCPU.
-The only problem is that you probably can only use the architecture events.
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index b526ffe550a5..481e170cd3f1 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -53,6 +53,7 @@ static const char * const metadata_etmv4_ro[] = {
+ 	[CS_ETMV4_TRCIDR2]		= "trcidr/trcidr2",
+ 	[CS_ETMV4_TRCIDR8]		= "trcidr/trcidr8",
+ 	[CS_ETMV4_TRCAUTHSTATUS]	= "mgmt/trcauthstatus",
++	[CS_ETMV4_TS_SOURCE]		= "ts_source",
+ };
+ 
+ static const char * const metadata_ete_ro[] = {
+@@ -62,6 +63,7 @@ static const char * const metadata_ete_ro[] = {
+ 	[CS_ETE_TRCIDR8]		= "trcidr/trcidr8",
+ 	[CS_ETE_TRCAUTHSTATUS]		= "mgmt/trcauthstatus",
+ 	[CS_ETE_TRCDEVARCH]		= "mgmt/trcdevarch",
++	[CS_ETE_TS_SOURCE]		= "ts_source",
+ };
+ 
+ static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+@@ -613,6 +615,32 @@ static int cs_etm_get_ro(struct perf_pmu *pmu, int cpu, const char *path)
+ 	return val;
+ }
+ 
++static int cs_etm_get_ro_signed(struct perf_pmu *pmu, int cpu, const char *path)
++{
++	char pmu_path[PATH_MAX];
++	int scan;
++	int val = 0;
++
++	/* Get RO metadata from sysfs */
++	snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
++
++	scan = perf_pmu__scan_file(pmu, pmu_path, "%d", &val);
++	if (scan != 1)
++		pr_err("%s: error reading: %s\n", __func__, pmu_path);
++
++	return val;
++}
++
++static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, int cpu, const char *path)
++{
++	char pmu_path[PATH_MAX];
++
++	/* Get RO metadata from sysfs */
++	snprintf(pmu_path, PATH_MAX, "cpu%d/%s", cpu, path);
++
++	return perf_pmu__file_exists(pmu, pmu_path);
++}
++
+ #define TRCDEVARCH_ARCHPART_SHIFT 0
+ #define TRCDEVARCH_ARCHPART_MASK  GENMASK(11, 0)
+ #define TRCDEVARCH_ARCHPART(x)    (((x) & TRCDEVARCH_ARCHPART_MASK) >> TRCDEVARCH_ARCHPART_SHIFT)
+@@ -654,6 +682,16 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
+ 					       metadata_etmv4_ro[CS_ETMV4_TRCIDR8]);
+ 	data[CS_ETMV4_TRCAUTHSTATUS] = cs_etm_get_ro(cs_etm_pmu, cpu,
+ 						     metadata_etmv4_ro[CS_ETMV4_TRCAUTHSTATUS]);
++
++	/* Kernels older than 5.19 may not expose ts_source */
++	if (cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]))
++		data[CS_ETMV4_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
++				metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]);
++	else {
++		pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
++			   cpu);
++		data[CS_ETMV4_TS_SOURCE] = (__u64) -1;
++	}
+ }
+ 
+ static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, int cpu)
+@@ -679,6 +717,16 @@ static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, in
+ 	/* ETE uses the same registers as ETMv4 plus TRCDEVARCH */
+ 	data[CS_ETE_TRCDEVARCH] = cs_etm_get_ro(cs_etm_pmu, cpu,
+ 						metadata_ete_ro[CS_ETE_TRCDEVARCH]);
++
++	/* Kernels older than 5.19 may not expose ts_source */
++	if (cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TS_SOURCE]))
++		data[CS_ETE_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
++				metadata_ete_ro[CS_ETE_TS_SOURCE]);
++	else {
++		pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
++			   cpu);
++		data[CS_ETE_TS_SOURCE] = (__u64) -1;
++	}
+ }
+ 
+ static void cs_etm_get_metadata(int cpu, u32 *offset,
+diff --git a/tools/perf/util/cs-etm-base.c b/tools/perf/util/cs-etm-base.c
+index 282042c6e944..5f48b756c4cf 100644
+--- a/tools/perf/util/cs-etm-base.c
++++ b/tools/perf/util/cs-etm-base.c
+@@ -36,6 +36,7 @@ static const char * const cs_etmv4_priv_fmts[] = {
+ 	[CS_ETMV4_TRCIDR2]	= "	TRCIDR2			       %llx\n",
+ 	[CS_ETMV4_TRCIDR8]	= "	TRCIDR8			       %llx\n",
+ 	[CS_ETMV4_TRCAUTHSTATUS] = "	TRCAUTHSTATUS		       %llx\n",
++	[CS_ETMV4_TS_SOURCE]	= "	TS_SOURCE		       %lld\n",
+ };
+ 
+ static const char * const cs_ete_priv_fmts[] = {
+@@ -50,6 +51,7 @@ static const char * const cs_ete_priv_fmts[] = {
+ 	[CS_ETE_TRCIDR8]	= "	TRCIDR8			       %llx\n",
+ 	[CS_ETE_TRCAUTHSTATUS]	= "	TRCAUTHSTATUS		       %llx\n",
+ 	[CS_ETE_TRCDEVARCH]	= "	TRCDEVARCH                     %llx\n",
++	[CS_ETE_TS_SOURCE]	= "	TS_SOURCE                      %lld\n",
+ };
+ 
+ static const char * const param_unk_fmt =
+diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+index c5925428afa9..ad790930bcbc 100644
+--- a/tools/perf/util/cs-etm.h
++++ b/tools/perf/util/cs-etm.h
+@@ -71,6 +71,7 @@ enum {
+ 	CS_ETMV4_TRCIDR2,
+ 	CS_ETMV4_TRCIDR8,
+ 	CS_ETMV4_TRCAUTHSTATUS,
++	CS_ETMV4_TS_SOURCE,
+ 	CS_ETMV4_PRIV_MAX,
+ };
+ 
+@@ -92,6 +93,7 @@ enum {
+ 	CS_ETE_TRCIDR8,
+ 	CS_ETE_TRCAUTHSTATUS,
+ 	CS_ETE_TRCDEVARCH,
++	CS_ETE_TS_SOURCE,
+ 	CS_ETE_PRIV_MAX
+ };
+ 
+-- 
+2.25.1
 
-There is nothing wrong for the information provided by the kernel. I
-think it should be a KVM issue (my guess is the CPUID enumeration.) we
-should fix rather than simply disable the PMU for entire hybrid machines.
-
-Thanks,
-Kan
-> 
-> The last point is especially problematic, as KVM doesn't control which
-> pCPU it runs on when enumerating KVM's vPMU capabilities to userspace.
-> For now, simply disable vPMU support on hybrid CPUs to avoid inducing
-> seemingly random #GPs in guests.
-> 
-> Reported-by: Jianfeng Gao <jianfeng.gao@intel.com>
-> Cc: stable@vger.kernel.org
-> Cc: Andrew Cooper <Andrew.Cooper3@citrix.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Link: https://lore.kernel.org/all/20220818181530.2355034-1-kan.liang@linux.intel.com
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
-> 
-> Lightly tested as I don't have hybrid hardware.  For the record, I'm not
-> against supporting hybrid vPMUs in KVM, but it needs to be a dedicated
-> effort and not implicitly rely on userspace to do the right thing (or get
-> lucky).
-> 
->  arch/x86/events/core.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 85a63a41c471..a67667c41cc8 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2974,17 +2974,18 @@ unsigned long perf_misc_flags(struct pt_regs *regs)
->  
->  void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
->  {
-> -	if (!x86_pmu_initialized()) {
-> +	/*
-> +	 * Hybrid PMUs don't play nice with virtualization unless userspace
-> +	 * pins vCPUs _and_ can enumerate accurate information to the guest.
-> +	 * Disable vPMU support for hybrid PMUs until KVM gains a way to let
-> +	 * userspace opt into the dangers of hybrid vPMUs.
-> +	 */
-> +	if (!x86_pmu_initialized() || is_hybrid()) {
->  		memset(cap, 0, sizeof(*cap));
->  		return;
->  	}
->  
->  	cap->version		= x86_pmu.version;
-> -	/*
-> -	 * KVM doesn't support the hybrid PMU yet.
-> -	 * Return the common value in global x86_pmu,
-> -	 * which available for all cores.
-> -	 */
->  	cap->num_counters_gp	= x86_pmu.num_counters;
->  	cap->num_counters_fixed	= x86_pmu.num_counters_fixed;
->  	cap->bit_width_gp	= x86_pmu.cntval_bits;
-> 
-> base-commit: de60733246ff4545a0483140c1f21426b8d7cb7f
