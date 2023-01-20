@@ -2,142 +2,128 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66F3C27C76
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 12:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0120C27C7C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 13:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbjATMg0 (ORCPT
+        id S229991AbjATNla (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 07:36:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
+        Fri, 20 Jan 2023 08:41:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbjATMgT (ORCPT
+        with ESMTP id S229641AbjATNl3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 07:36:19 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B164BC895;
-        Fri, 20 Jan 2023 04:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674218154; x=1705754154;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=usKQ9P+Ke/475dpAvzHSLqve+rQfd02M1v4DhbzDTsE=;
-  b=YMWiOHr2oT+n4EWDUwhX/9KeSFE9aZCWIiS+TBci4MYorF03v1fd8Ycx
-   GAFvJJD5RibI2H/5X58h1mFB5tHvSEev+3aRnSxwjiCJw6YBzgp7V7TbN
-   fPvVp1OWM1J7oh+KaYEosWh7QBMLhWjb5O3GBp3i3Fqukwj8lm58CEumF
-   zTMGgpHtmESF7OuO26nVQaliQs+hUqyc3hoqp0VRnENXUIAOMpTwVKmfu
-   2B5+V4ThnyXQr7mWCEM9h7rJu4fOEH2BmouBgmSGdw0ZbajZSC4AXoR7V
-   ivV8B4EEPpUPwMNcJf5DuwkBs9pXgILdsDEvmkqdQhNNcie3tPhYeOH9i
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="387935315"
-X-IronPort-AV: E=Sophos;i="5.97,232,1669104000"; 
-   d="scan'208";a="387935315"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2023 04:35:38 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="692847463"
-X-IronPort-AV: E=Sophos;i="5.97,232,1669104000"; 
-   d="scan'208";a="692847463"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.223.163])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2023 04:35:36 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 10/10] perf symbols: Check SHT_RELA and SHT_REL type earlier
-Date:   Fri, 20 Jan 2023 14:34:56 +0200
-Message-Id: <20230120123456.12449-11-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230120123456.12449-1-adrian.hunter@intel.com>
-References: <20230120123456.12449-1-adrian.hunter@intel.com>
-MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+        Fri, 20 Jan 2023 08:41:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB27949037
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 05:40:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674222046;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=jk3Jhe3pV2lehKoaoy4oIX5gegI9rdM3yt0E7sYV+1c=;
+        b=irED+003LxS65pRDGP7SIeVX2q/ZVjRsQSdQEqkQMnq4TvQ3YcKGifzZhE3hzKhyp4OYJV
+        X+8wiJ9aKzF8OFKYIgmoJZWVrt5PvOd8HhbKoiJjG5341kJRyF/RGP3K6olHIsi3A3+/NQ
+        3It9qtTVqhT358hyJG1POVLOQhaeMMA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-636-m41axH9-N1C1HVYMiTXj4A-1; Fri, 20 Jan 2023 08:40:43 -0500
+X-MC-Unique: m41axH9-N1C1HVYMiTXj4A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DFA08101A521;
+        Fri, 20 Jan 2023 13:40:42 +0000 (UTC)
+Received: from Diego.redhat.com (unknown [10.39.208.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5E8302166B2B;
+        Fri, 20 Jan 2023 13:40:41 +0000 (UTC)
+From:   Michael Petlan <mpetlan@redhat.com>
+To:     linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc:     acme@redhat.com, qzhao@redhat.com, cjense@google.com
+Subject: [PATCH 0/2] perf test: Fix JSON linter
+Date:   Fri, 20 Jan 2023 14:40:37 +0100
+Message-Id: <20230120134039.17788-1-mpetlan@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Make the code more readable by checking for SHT_RELA and SHT_REL type
-earlier.
+Hello all.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/symbol-elf.c | 54 ++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+We have observed issues with the 'perf stat JSON output linter' testcase
+on systems that allow topdown metrics.
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index e274f646ac32..aa62735aea7b 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -434,6 +434,10 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 			return 0;
- 	}
- 
-+	if (shdr_rel_plt.sh_type != SHT_RELA &&
-+	    shdr_rel_plt.sh_type != SHT_REL)
-+		return 0;
-+
- 	if (shdr_rel_plt.sh_link != dynsym_idx)
- 		goto out_elf_end;
- 
-@@ -466,34 +470,30 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 
- 	ri.is_rela = shdr_rel_plt.sh_type == SHT_RELA;
- 
--	if (shdr_rel_plt.sh_type == SHT_RELA ||
--	    shdr_rel_plt.sh_type == SHT_REL) {
--		for (idx = 0; idx < nr_rel_entries; idx++) {
--			const char *elf_name = NULL;
--			char *demangled = NULL;
--
--			gelf_getsym(syms, get_rel_symidx(&ri, idx), &sym);
--
--			elf_name = elf_sym__name(&sym, symstrs);
--			demangled = demangle_sym(dso, 0, elf_name);
--			if (demangled != NULL)
--				elf_name = demangled;
--			if (*elf_name)
--				snprintf(sympltname, sizeof(sympltname), "%s@plt", elf_name);
--			else
--				snprintf(sympltname, sizeof(sympltname),
--					 "offset_%#" PRIx64 "@plt", plt_offset);
--			free(demangled);
--
--			f = symbol__new(plt_offset, plt_entry_size,
--					STB_GLOBAL, STT_FUNC, sympltname);
--			if (!f)
--				goto out_elf_end;
-+	for (idx = 0; idx < nr_rel_entries; idx++) {
-+		const char *elf_name = NULL;
-+		char *demangled = NULL;
- 
--			plt_offset += plt_entry_size;
--			symbols__insert(&dso->symbols, f);
--			++nr;
--		}
-+		gelf_getsym(syms, get_rel_symidx(&ri, idx), &sym);
-+
-+		elf_name = elf_sym__name(&sym, symstrs);
-+		demangled = demangle_sym(dso, 0, elf_name);
-+		if (demangled)
-+			elf_name = demangled;
-+		if (*elf_name)
-+			snprintf(sympltname, sizeof(sympltname), "%s@plt", elf_name);
-+		else
-+			snprintf(sympltname, sizeof(sympltname),
-+				 "offset_%#" PRIx64 "@plt", plt_offset);
-+		free(demangled);
-+
-+		f = symbol__new(plt_offset, plt_entry_size, STB_GLOBAL, STT_FUNC, sympltname);
-+		if (!f)
-+			goto out_elf_end;
-+
-+		plt_offset += plt_entry_size;
-+		symbols__insert(&dso->symbols, f);
-+		++nr;
- 	}
- 
- 	err = 0;
--- 
-2.34.1
+=========================
+
+1) The topdown metrics handling hardcodes printing more than one metric
+per line (refer to util/stat-shadow.c):
+
+    if (retiring > 0.7 && heavy_ops > 0.1)
+        color = PERF_COLOR_GREEN;
+    print_metric(config, ctxp, color, "%8.1f%%", "Heavy Operations",
+            heavy_ops * 100.);
+    if (retiring > 0.7 && light_ops > 0.6)
+        color = PERF_COLOR_GREEN;
+    else
+        color = NULL;
+    print_metric(config, ctxp, color, "%8.1f%%", "Light Operations",
+            light_ops * 100.);
+
+Thus, the test cannot rely on the fact that there will be only one
+metric per line.
+
+2) Since the JSON printing engine thinks that one and only one metric
+is printed, it always closes the line by adding '}'. This is not true,
+so I have fixed the comma printing and adjusted the engine to be
+capable of printing 1-N metrics and then close the line.
+
+=========================
+
+On machines that don't support topdown, the problem can be shown by
+doubling the following line in util/stat-shadow.c, so that the simple
+'insn per cycle' metric is printed twice:
+
+  print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle", ratio);
+
+The worst problem is that the JSON line is broken, such as:
+
+... "pcnt-running" : 100.00, "metric-value" : 3.501931, "metric-unit"
+    : "Heavy Operations"}"metric-value" : 14.007787, "metric-unit" : ...
+                  here ^^^^^
+
+=========================
+
+The first patch solves the JSON output correctness, the second tries
+to adjust the testcase to some extent, so that it should work on the
+topdown-capable machines.
+
+However, it's highly possible that the testcase will have to be fixed
+or maybe rewritten in future. First, it has quite naive evaluation of
+what's expected/correct/etc. Second, it does no JSON format validation
+at all. As a linter it should do so though.
+
+ ***
+
+For further discussion: What about removing the check for number of
+expected elements in the line and just check for the keywords, such
+as "metric-value", "counter-value", "event", etc. and for some values
+that should be numeric. And, do proper JSON format sanity check?
+
+
+Thank you for inputs!
+
+Michael
+
+
+
+
+Michael Petlan (2):
+  perf stat: Fix JSON metric printout for multiple metrics per line
+  perf test: Fix JSON format linter test checks
+
+ .../tests/shell/lib/perf_json_output_lint.py  | 16 +++++------
+ tools/perf/util/stat-display.c                | 28 +++++++++++--------
+ 2 files changed, 24 insertions(+), 20 deletions(-)
+
+--
+2.18.4
 
