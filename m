@@ -2,117 +2,105 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D103C05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 13:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F52C27C7C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbjATNli (ORCPT
+        id S230431AbjATONO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 08:41:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49994 "EHLO
+        Fri, 20 Jan 2023 09:13:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbjATNlh (ORCPT
+        with ESMTP id S230429AbjATONB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 08:41:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE2E5421A
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 05:40:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674222049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=tQ8W8SPPlCoUCN3wenGWtKLQcEnJNAQjktmRuE7o6pM=;
-        b=H9/YSqfcXS6gB6XJjWq/yZkG49IDTAakjDXn7mc/v8nxsKYu2BPWJjaEPGyvj96lQr8PFe
-        Q1s+wbom+vXGG40QdzihbYYRUvBOtRwmEu6fo84Q01gjP+Nca9eWZ/NjRNmDUhJhIBWB0w
-        SZHcFWoaRoKlT1PUCymZzM5X/75VolM=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-10-XU9SgbAbNk-QNJwRguIt3Q-1; Fri, 20 Jan 2023 08:40:47 -0500
-X-MC-Unique: XU9SgbAbNk-QNJwRguIt3Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 20 Jan 2023 09:13:01 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13431C63A1;
+        Fri, 20 Jan 2023 06:11:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BE70E29DD998;
-        Fri, 20 Jan 2023 13:40:46 +0000 (UTC)
-Received: from Diego.redhat.com (unknown [10.39.208.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2BE3B2166B2A;
-        Fri, 20 Jan 2023 13:40:44 +0000 (UTC)
-From:   Michael Petlan <mpetlan@redhat.com>
-To:     linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     acme@redhat.com, qzhao@redhat.com, cjense@google.com
-Subject: [PATCH 2/2] perf test: Fix JSON format linter test checks
-Date:   Fri, 20 Jan 2023 14:40:39 +0100
-Message-Id: <20230120134039.17788-3-mpetlan@redhat.com>
-In-Reply-To: <20230120134039.17788-1-mpetlan@redhat.com>
-References: <20230120134039.17788-1-mpetlan@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DA1A61F5F;
+        Fri, 20 Jan 2023 14:11:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA54C433EF;
+        Fri, 20 Jan 2023 14:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674223894;
+        bh=4XdmM2RXn8ZvAQ6RSJXIviUo0OKUUjP7H8qXfzZ5bIs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r0GJQ0bJOBQGdq7DbMq58XBLT0BRIXBSn8IYngaXuViqzB3ctAL3bZ6916b597WII
+         8iwGWF305zWu7JBfpQYRdmxuLKSYn0U/UolNnWexjkMgPT9YprVrhz0t9mSJPP/USi
+         2BfSFM2s+r8VJQDDz73qvckIjxQvV3zBuI55dToTNBNpg0elKns6MM9+zHp1BdU5Zv
+         6ijqAgoc0MYl1JnhPmzl24rTKcfw+akChyTsIMKwOWHwp1cJ6S/fAPtJFz6ulv1Pzy
+         vS9JbrVt0bIKsfMUl+EXNk7oyzK81oetZOHij7FLw8U06MiS/PWCPadxzV+8vxD//P
+         qRARiEsvqS91Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 27063405BE; Fri, 20 Jan 2023 11:11:31 -0300 (-03)
+Date:   Fri, 20 Jan 2023 11:11:31 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 00/10] perf symbols: Improve dso__synthesize_plt_symbols()
+Message-ID: <Y8qhE6Sd66l8Coaj@kernel.org>
+References: <20230120123456.12449-1-adrian.hunter@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230120123456.12449-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The test fails on CPUs with topdown metrics, where it is common to print
-two metrics per line. Since these are included in default event set for
-`perf stat -- something`, it causes the "no args" subtest to fail due to
-unexpected member count. We need to accept 7 or 9 members in that case.
+Em Fri, Jan 20, 2023 at 02:34:46PM +0200, Adrian Hunter escreveu:
+> Hi
+> 
+> This is the first of 2 patchsets to improve dso__synthesize_plt_symbols().
+> This patchset is really preparation for the 2nd patchset, which focuses
+> on getting rid of unknown symbols that show up in Intel PT traces.
+> The 2nd patchset is still under development.
+> 
+> These patches are small and staightforward. Only the new Symbols test is
+> slightly interesting because it provides a way to see what symbols
+> perf discovers for any given dso. The test fails initially, but
+> should pass after patch 7 "perf symbols: Add symbol for .plt header".
 
-Coming to that, counting commas in the JSON line and consider it a number
-of elements is incorrect and misleading. There should be +1 element than
-the count of commas, while also, commas can potentially appear in the
-event names. Count " : " substrings rather, since these better fit to
-what should be actually counted.
+Looks nice, I've test build, one by one and used the test with a
+different --dso, etc. I'll keep it today locally for further container
+tests and to give time to others to look at it, I'll have it in
+tmp.perf/core soon.
 
-Fixes: 0c343af2a2f8 ("perf test: JSON format checking")
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
----
- .../tests/shell/lib/perf_json_output_lint.py     | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index d90f8d102eb9..4f1bbb3f07ec 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -40,17 +40,17 @@ def is_counter_value(num):
-   return isfloat(num) or num == '<not counted>' or num == '<not supported>'
+- Arnaldo
  
- def check_json_output(expected_items):
--  if expected_items != -1:
-+  if expected_items:
-     for line in Lines:
-       if 'failed' not in line:
-         count = 0
--        count = line.count(',')
--        if count != expected_items and count >= 1 and count <= 3 and 'metric-value' in line:
-+        count = line.count(' : ')
-+        if count not in expected_items and count >= 2 and count <= 4 and 'metric-value' in line:
-           # Events that generate >1 metric may have isolated metric
-           # values and possibly other prefixes like interval, core and
-           # aggregate-number.
-           continue
--        if count != expected_items:
-+        if count not in expected_items:
-           raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-                              f' in \'{line}\'')
-   checks = {
-@@ -82,14 +82,14 @@ def check_json_output(expected_items):
- 
- try:
-   if args.no_args or args.system_wide or args.event:
--    expected_items = 6
-+    expected_items = [7, 9]
-   elif args.interval or args.per_thread or args.system_wide_no_aggr:
--    expected_items = 7
-+    expected_items = [8, 10]
-   elif args.per_core or args.per_socket or args.per_node or args.per_die:
--    expected_items = 8
-+    expected_items = [9, 11]
-   else:
-     # If no option is specified, don't check the number of items.
--    expected_items = -1
-+    expected_items = []
-   check_json_output(expected_items)
- except:
-   print('Test failed for input:\n' + '\n'.join(Lines))
+> 
+> Adrian Hunter (10):
+>       perf test: Add Symbols test
+>       perf symbols: Factor out get_plt_sizes()
+>       perf symbols: Check plt_entry_size is not zero
+>       perf symbols: Add dso__find_symbol_nocache()
+>       perf symbols: Slightly simplify 'err' usage in dso__synthesize_plt_symbols()
+>       perf symbols: Do not check ss->dynsym twice
+>       perf symbols: Add symbol for .plt header
+>       perf symbols: Allow for .plt entries with no symbol
+>       perf symbols: Combine handling for SHT_RELA and SHT_REL
+>       perf symbols: Check SHT_RELA and SHT_REL type earlier
+> 
+>  tools/perf/Documentation/perf-test.txt |   3 +
+>  tools/perf/tests/Build                 |   1 +
+>  tools/perf/tests/builtin-test.c        |   3 +
+>  tools/perf/tests/symbols.c             | 150 ++++++++++++++++++++++++++
+>  tools/perf/tests/tests.h               |   3 +
+>  tools/perf/util/symbol-elf.c           | 190 +++++++++++++++++----------------
+>  tools/perf/util/symbol.c               |   5 +
+>  tools/perf/util/symbol.h               |   1 +
+>  8 files changed, 262 insertions(+), 94 deletions(-)
+>  create mode 100644 tools/perf/tests/symbols.c
+> 
+> 
+> Regards
+> Adrian
+
 -- 
-2.18.4
 
+- Arnaldo
