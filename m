@@ -2,97 +2,249 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C7AC05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B03C05027
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 14:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjATO36 (ORCPT
+        id S229595AbjATOjz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 09:29:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60886 "EHLO
+        Fri, 20 Jan 2023 09:39:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231214AbjATO3z (ORCPT
+        with ESMTP id S229540AbjATOjz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 09:29:55 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA40CFD1E
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 06:29:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4405BCE28B5
-        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 14:29:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 682A7C433D2;
-        Fri, 20 Jan 2023 14:29:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674224961;
-        bh=IBjuEA1LYU7gz0sqSmBd2iSa+BLtKQyEXGOlz3negME=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sQBdHtotEDhbBlIuQFXXRtgly8zOJJoZ6Iciib1jvWIjAOMsHBdSvF9ncEfibNEer
-         cqPl9o/UQwVf6EL6NMLWWs2JZVe4YE3X4oEYj1rnQ4gibzpmvTS8JZXgycYA4XvXyE
-         5Pv1gFlIia3/uO0RMly2xM+K4OGm5qVLhn5xzB1cT2HLoo/MCkvSg+qDPR2EcuXvpv
-         zgixVJq5yReDkLg6H7fp9bxaMU5THMpKGl5BUfVORmitGOFKIpOTpo39rAM5EGiaxi
-         tZK7Zs6fVc1iA46v8TZdZ1M03RZBBF1hc1X5sQ+1LcU1u2dS6AYTsg9Wf35Q+E2Yhf
-         jrzM0iFWFP18Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 34352405BE; Fri, 20 Jan 2023 11:29:19 -0300 (-03)
-Date:   Fri, 20 Jan 2023 11:29:19 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Athira Rajeev' <atrajeev@linux.vnet.ibm.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "irogers@google.com" <irogers@google.com>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
-        "rnsastry@linux.ibm.com" <rnsastry@linux.ibm.com>,
-        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
-        "disgoel@linux.ibm.com" <disgoel@linux.ibm.com>
-Subject: Re: [PATCH V3] tools/perf/tests: Fix string substitutions in build
- id test
-Message-ID: <Y8qlP+mmgW0M80u3@kernel.org>
-References: <20230119142719.32628-1-atrajeev@linux.vnet.ibm.com>
- <1a2f988593a4403db2a043ff42886ced@AcuMS.aculab.com>
- <Y8l3C8LOohZvQOKH@kernel.org>
- <8c433a543cda48e5b736312903355918@AcuMS.aculab.com>
+        Fri, 20 Jan 2023 09:39:55 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 54BB072C36;
+        Fri, 20 Jan 2023 06:39:16 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDA7D1516;
+        Fri, 20 Jan 2023 06:38:42 -0800 (PST)
+Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 74A7A3F67D;
+        Fri, 20 Jan 2023 06:37:58 -0800 (PST)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, tanmay@marvell.com,
+        leo.yan@linaro.org, mike.leach@linaro.org
+Cc:     sgoutham@marvell.com, gcherian@marvell.com, lcherian@marvell.com,
+        bbhushan2@marvell.com, James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 2/8] perf: Use perf_pmu__open_file() and perf_pmu__scan_file()
+Date:   Fri, 20 Jan 2023 14:36:55 +0000
+Message-Id: <20230120143702.4035046-3-james.clark@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230120143702.4035046-1-james.clark@arm.com>
+References: <20230120143702.4035046-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c433a543cda48e5b736312903355918@AcuMS.aculab.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 20, 2023 at 08:51:59AM +0000, David Laight escreveu:
-> From: Arnaldo Carvalho de Melo
-> > Sent: 19 January 2023 17:00
-> > 
-> > Em Thu, Jan 19, 2023 at 03:49:15PM +0000, David Laight escreveu:
-> > > From: Athira Rajeev
-> > > > Sent: 19 January 2023 14:27
-> > > ...
-> > > > The test script "tests/shell/buildid.sh" uses some of the
-> > > > string substitution ways which are supported in bash, but not in
-> > > > "sh" or other shells. Above error on line number 69 that reports
-> > > > "Bad substitution" is:
-> > >
-> > > Looks better - assuming it works :-)
-> > 
-> > :-)
-> > 
-> > Can I take this as an:
-> > 
-> > Acked-by: David Laight <David.Laight@ACULAB.COM>
-> 
-> I'm not sure that is worth anything.
-> You can add a Reviewed-by
+Remove some code that duplicates existing methods. Copy strings where
+const strings are required.
 
-Thanks, I'll then add:
+No functional changes.
 
-Reviewed-by: David Laight <David.Laight@ACULAB.COM>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/cputopo.c    |  9 +-------
+ tools/perf/util/pmu-hybrid.c | 27 +++++-------------------
+ tools/perf/util/pmu.c        | 40 +++++++++++-------------------------
+ tools/perf/util/pmu.h        |  3 ++-
+ 4 files changed, 20 insertions(+), 59 deletions(-)
 
-- Arnaldo
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index 1a3ff6449158..e08797c3cdbc 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -422,8 +422,6 @@ void numa_topology__delete(struct numa_topology *tp)
+ static int load_hybrid_node(struct hybrid_topology_node *node,
+ 			    struct perf_pmu *pmu)
+ {
+-	const char *sysfs;
+-	char path[PATH_MAX];
+ 	char *buf = NULL, *p;
+ 	FILE *fp;
+ 	size_t len = 0;
+@@ -432,12 +430,7 @@ static int load_hybrid_node(struct hybrid_topology_node *node,
+ 	if (!node->pmu_name)
+ 		return -1;
+ 
+-	sysfs = sysfs__mountpoint();
+-	if (!sysfs)
+-		goto err;
+-
+-	snprintf(path, PATH_MAX, CPUS_TEMPLATE_CPU, sysfs, pmu->name);
+-	fp = fopen(path, "r");
++	fp = perf_pmu__open_file(pmu, "cpus");
+ 	if (!fp)
+ 		goto err;
+ 
+diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
+index f51ccaac60ee..38628805a952 100644
+--- a/tools/perf/util/pmu-hybrid.c
++++ b/tools/perf/util/pmu-hybrid.c
+@@ -20,32 +20,15 @@ LIST_HEAD(perf_pmu__hybrid_pmus);
+ 
+ bool perf_pmu__hybrid_mounted(const char *name)
+ {
+-	char path[PATH_MAX];
+-	const char *sysfs;
+-	FILE *file;
+-	int n, cpu;
++	int cpu;
++	char pmu_name[PATH_MAX];
++	struct perf_pmu pmu = {.name = pmu_name};
+ 
+ 	if (strncmp(name, "cpu_", 4))
+ 		return false;
+ 
+-	sysfs = sysfs__mountpoint();
+-	if (!sysfs)
+-		return false;
+-
+-	snprintf(path, PATH_MAX, CPUS_TEMPLATE_CPU, sysfs, name);
+-	if (!file_available(path))
+-		return false;
+-
+-	file = fopen(path, "r");
+-	if (!file)
+-		return false;
+-
+-	n = fscanf(file, "%u", &cpu);
+-	fclose(file);
+-	if (n <= 0)
+-		return false;
+-
+-	return true;
++	strlcpy(pmu_name, name, sizeof(pmu_name));
++	return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
+ }
+ 
+ struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 1edbb714ff32..a771a5972fc5 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -571,45 +571,31 @@ static void pmu_read_sysfs(void)
+ 	closedir(dir);
+ }
+ 
+-static struct perf_cpu_map *__pmu_cpumask(const char *path)
+-{
+-	FILE *file;
+-	struct perf_cpu_map *cpus;
+-
+-	file = fopen(path, "r");
+-	if (!file)
+-		return NULL;
+-
+-	cpus = perf_cpu_map__read(file);
+-	fclose(file);
+-	return cpus;
+-}
+-
+ /*
+  * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
+  * may have a "cpus" file.
+  */
+ #define SYS_TEMPLATE_ID	"./bus/event_source/devices/%s/identifier"
+-#define CPUS_TEMPLATE_UNCORE	"%s/bus/event_source/devices/%s/cpumask"
+ 
+ static struct perf_cpu_map *pmu_cpumask(const char *name)
+ {
+-	char path[PATH_MAX];
+ 	struct perf_cpu_map *cpus;
+-	const char *sysfs = sysfs__mountpoint();
+ 	const char *templates[] = {
+-		CPUS_TEMPLATE_UNCORE,
+-		CPUS_TEMPLATE_CPU,
++		"cpumask",
++		"cpus",
+ 		NULL
+ 	};
+ 	const char **template;
++	char pmu_name[PATH_MAX];
++	struct perf_pmu pmu = {.name = pmu_name};
++	FILE *file;
+ 
+-	if (!sysfs)
+-		return NULL;
+-
++	strlcpy(pmu_name, name, sizeof(pmu_name));
+ 	for (template = templates; *template; template++) {
+-		snprintf(path, PATH_MAX, *template, sysfs, name);
+-		cpus = __pmu_cpumask(path);
++		file = perf_pmu__open_file(&pmu, *template);
++		if (!file)
++			continue;
++		cpus = perf_cpu_map__read(file);
+ 		if (cpus)
+ 			return cpus;
+ 	}
+@@ -620,13 +606,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
+ static bool pmu_is_uncore(const char *name)
+ {
+ 	char path[PATH_MAX];
+-	const char *sysfs;
+ 
+ 	if (perf_pmu__hybrid_mounted(name))
+ 		return false;
+ 
+-	sysfs = sysfs__mountpoint();
+-	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
++	perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpumask");
+ 	return file_available(path);
+ }
+ 
+@@ -1737,7 +1721,7 @@ bool pmu_have_event(const char *pname, const char *name)
+ 	return false;
+ }
+ 
+-static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
++FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ {
+ 	char path[PATH_MAX];
+ 
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 96d030c8b3b3..742d4db319a0 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -7,6 +7,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/list.h>
+ #include <stdbool.h>
++#include <stdio.h>
+ #include "parse-events.h"
+ #include "pmu-events/pmu-events.h"
+ 
+@@ -22,7 +23,6 @@ enum {
+ };
+ 
+ #define PERF_PMU_FORMAT_BITS 64
+-#define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
+ #define MAX_PMU_NAME_LEN 128
+ 
+ struct perf_event_attr;
+@@ -262,5 +262,6 @@ double perf_pmu__cpu_slots_per_cycle(void);
+ int perf_pmu__event_source_devices_scnprintf(char *pathname, size_t size);
+ int perf_pmu__pathname_scnprintf(char *buf, size_t size,
+ 				 const char *pmu_name, const char *filename);
++FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name);
+ 
+ #endif /* __PMU_H */
+-- 
+2.25.1
+
