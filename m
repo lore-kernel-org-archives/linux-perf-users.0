@@ -2,91 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D6C38159
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 05:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B554C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Jan 2023 08:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjATF3V (ORCPT
+        id S229456AbjATIwG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Jan 2023 00:29:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33570 "EHLO
+        Fri, 20 Jan 2023 03:52:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231243AbjATF2p (ORCPT
+        with ESMTP id S229447AbjATIwG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Jan 2023 00:28:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43AF72C0F;
-        Thu, 19 Jan 2023 21:23:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C4A94B825FA;
-        Thu, 19 Jan 2023 16:27:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28611C433EF;
-        Thu, 19 Jan 2023 16:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674145652;
-        bh=rFKR1hKMBI+MtzO4V9xJtCxqUhqcAJzkDhj8cS00xzI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f8trZE7TrGfyonP7IswrV7OueQT1uyfwewfYfh66CVY9NIK5grGPOzqOAtVbZzXkW
-         bvaa8xviYC+dbzeEFB4b6rz5eXP2BmbYOtNcp4iBPqK52dIhIRaWdFT9bWbWtBf/UK
-         TAmHvBCuDPUb6f7GpCFI5QKuBdaOSghJOj1cfEVyTLnZ+IHeDw30R129Oh2cOw6M5j
-         sbpAX1r+svuq9YUfY6a48qe/yO1AS7DLL3ukqWrlrB+19FSDkZD0sgOWIYRqlrlt1M
-         1JuBv6BRmiYfHMLhIMktjfW9S40j6vmkqTSomJKfeCFuslvQZYAEKnzJZldVN0QrGE
-         CV4svrcc6dSBg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37660405BE; Thu, 19 Jan 2023 13:27:28 -0300 (-03)
-Date:   Thu, 19 Jan 2023 13:27:28 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        German Gomez <german.gomez@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] perf tools: Remove
- HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
-Message-ID: <Y8lvcO5yAuZTzDuf@kernel.org>
-References: <20230111070641.1728726-1-irogers@google.com>
- <CAP-5=fXPg1FDdtRgKtar+x3U91RNpPdYFJUP6XHvK1y10y=O2Q@mail.gmail.com>
+        Fri, 20 Jan 2023 03:52:06 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6E374960
+        for <linux-perf-users@vger.kernel.org>; Fri, 20 Jan 2023 00:52:04 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-313--Lfi9qISPHGbgb-YRNfUNQ-1; Fri, 20 Jan 2023 08:52:01 +0000
+X-MC-Unique: -Lfi9qISPHGbgb-YRNfUNQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Fri, 20 Jan
+ 2023 08:51:59 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.044; Fri, 20 Jan 2023 08:51:59 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnaldo Carvalho de Melo' <acme@kernel.org>
+CC:     'Athira Rajeev' <atrajeev@linux.vnet.ibm.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "irogers@google.com" <irogers@google.com>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "maddy@linux.ibm.com" <maddy@linux.ibm.com>,
+        "rnsastry@linux.ibm.com" <rnsastry@linux.ibm.com>,
+        "kjain@linux.ibm.com" <kjain@linux.ibm.com>,
+        "disgoel@linux.ibm.com" <disgoel@linux.ibm.com>
+Subject: RE: [PATCH V3] tools/perf/tests: Fix string substitutions in build id
+ test
+Thread-Topic: [PATCH V3] tools/perf/tests: Fix string substitutions in build
+ id test
+Thread-Index: AQHZLBIrp7uRxIXInkOHsORdTF5RZK6l4s+wgAAT9YCAAQmokA==
+Date:   Fri, 20 Jan 2023 08:51:59 +0000
+Message-ID: <8c433a543cda48e5b736312903355918@AcuMS.aculab.com>
+References: <20230119142719.32628-1-atrajeev@linux.vnet.ibm.com>
+ <1a2f988593a4403db2a043ff42886ced@AcuMS.aculab.com>
+ <Y8l3C8LOohZvQOKH@kernel.org>
+In-Reply-To: <Y8l3C8LOohZvQOKH@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXPg1FDdtRgKtar+x3U91RNpPdYFJUP6XHvK1y10y=O2Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jan 19, 2023 at 08:01:32AM -0800, Ian Rogers escreveu:
-> On Tue, Jan 10, 2023 at 11:06 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Switch HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE to be a version number
-> > test on libtraceevent being >= to version 1.5.0. This also corrects a
-> > greater-than test to be greater-than-or-equal.
-> >
-> > Discussed here:
-> > https://lore.kernel.org/lkml/20221205225940.3079667-3-irogers@google.com/
-> >
-> > Fixes: b9a49f8cb02f ("perf tools: Check if libtracevent has TEP_FIELD_IS_RELATIVE")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+From: Arnaldo Carvalho de Melo
+> Sent: 19 January 2023 17:00
 > 
-> Ping. Remove one ifdef in favor of a consistent version check, gets
-> debug logging from libtraceevent going.
+> Em Thu, Jan 19, 2023 at 03:49:15PM +0000, David Laight escreveu:
+> > From: Athira Rajeev
+> > > Sent: 19 January 2023 14:27
+> > ...
+> > > The test script "tests/shell/buildid.sh" uses some of the
+> > > string substitution ways which are supported in bash, but not in
+> > > "sh" or other shells. Above error on line number 69 that reports
+> > > "Bad substitution" is:
+> >
+> > Looks better - assuming it works :-)
+> 
+> :-)
+> 
+> Can I take this as an:
+> 
+> Acked-by: David Laight <David.Laight@ACULAB.COM>
 
-Thanks, applied.
+I'm not sure that is worth anything.
+You can add a Reviewed-by
 
-- Arnaldo
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
