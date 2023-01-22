@@ -2,114 +2,89 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC8C25B4E
-	for <linux-perf-users@archiver.kernel.org>; Sun, 22 Jan 2023 12:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16EDC38142
+	for <linux-perf-users@archiver.kernel.org>; Sun, 22 Jan 2023 21:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229763AbjAVMVH (ORCPT
+        id S230186AbjAVVLq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 22 Jan 2023 07:21:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60090 "EHLO
+        Sun, 22 Jan 2023 16:11:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjAVMVH (ORCPT
+        with ESMTP id S230160AbjAVVLp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 22 Jan 2023 07:21:07 -0500
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34FE24ECF;
-        Sun, 22 Jan 2023 04:21:05 -0800 (PST)
-Received: (Authenticated sender: didi.debian@cknow.org)
-        by mail.gandi.net (Postfix) with ESMTPSA id 81EA11BF205;
-        Sun, 22 Jan 2023 12:21:00 +0000 (UTC)
-From:   Diederik de Haas <didi.debian@cknow.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Sun, 22 Jan 2023 16:11:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9B314E8A;
+        Sun, 22 Jan 2023 13:11:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CC30060C6C;
+        Sun, 22 Jan 2023 21:11:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C06C433D2;
+        Sun, 22 Jan 2023 21:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674421903;
+        bh=FafjG3X/vdoJPsflhPttxNdSKifAkgdt8Z7YJK9fMHk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aVa6eMXPCj6uxiJwSHdCQg0nP1Q2LUh1XQq9diOYCLjmBaEk/R9KofvXcyGgqOtIB
+         Xol1ZatQRux9+GNoYOsguEiEvetQi0CicD/lAwJf4HmyiR1V4Gx7m9zHdOxpZ/D5eZ
+         rSUyXU5EiyoH6pBNMfiC5G29XzII8OjX8EtJ4APYj6uxMqt1gZgvp8MQYkpXK5zIjd
+         FY41SMhzyRNiLYZZoNTblztMLRyd5zWTTJGsaPWSeX9/h/ihpGCaW5t3c2DGzWSviC
+         MkpKbU/N1Zcy1Mp8Pw1/4kzOF7rUeEjtnddN9IuCIj8OJe2plEHDtQYnhUlxScJszi
+         bek3kpDhfAgBQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 47016405BE; Sun, 22 Jan 2023 18:11:40 -0300 (-03)
+Date:   Sun, 22 Jan 2023 18:11:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Diederik de Haas <didi.debian@cknow.org>,
-        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
-        SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH v2] perf: Various spelling fixes
-Date:   Sun, 22 Jan 2023 13:20:32 +0100
-Message-Id: <20230122122034.48020-1-didi.debian@cknow.org>
-X-Mailer: git-send-email 2.39.0
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 00/10] perf symbols: Improve dso__synthesize_plt_symbols()
+Message-ID: <Y82mjOIHnC2g5sqY@kernel.org>
+References: <20230120123456.12449-1-adrian.hunter@intel.com>
+ <CAP-5=fUwkghLbz7O4peCSMbt2LjAtUwi+tB3_wgnZrjkg9jn9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUwkghLbz7O4peCSMbt2LjAtUwi+tB3_wgnZrjkg9jn9w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fix various spelling errors as reported by Debian's lintian tool.
+Em Sat, Jan 21, 2023 at 09:53:53AM -0800, Ian Rogers escreveu:
+> On Fri, Jan 20, 2023 at 4:35 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >
+> > Hi
+> >
+> > This is the first of 2 patchsets to improve dso__synthesize_plt_symbols().
+> > This patchset is really preparation for the 2nd patchset, which focuses
+> > on getting rid of unknown symbols that show up in Intel PT traces.
+> > The 2nd patchset is still under development.
+> >
+> > These patches are small and staightforward. Only the new Symbols test is
+> > slightly interesting because it provides a way to see what symbols
+> > perf discovers for any given dso. The test fails initially, but
+> > should pass after patch 7 "perf symbols: Add symbol for .plt header".
+> >
+> >
+> > Adrian Hunter (10):
+> >       perf test: Add Symbols test
+> >       perf symbols: Factor out get_plt_sizes()
+> >       perf symbols: Check plt_entry_size is not zero
+> >       perf symbols: Add dso__find_symbol_nocache()
+> >       perf symbols: Slightly simplify 'err' usage in dso__synthesize_plt_symbols()
+> >       perf symbols: Do not check ss->dynsym twice
+> >       perf symbols: Add symbol for .plt header
+> >       perf symbols: Allow for .plt entries with no symbol
+> >       perf symbols: Combine handling for SHT_RELA and SHT_REL
+> >       perf symbols: Check SHT_RELA and SHT_REL type earlier
+ 
+> Acked-by: Ian Rogers <irogers@google.com>
 
-"amount of times" -> "number of times"
-ocurrence -> occurrence
-upto -> up to
+Thanks, added to the tested patches, will push to perf/core shortly.
 
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
----
- tools/perf/Documentation/perf-bench.txt | 2 +-
- tools/perf/builtin-bench.c              | 2 +-
- tools/perf/builtin-script.c             | 2 +-
- tools/perf/util/evswitch.h              | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index a0529c7fa5ef..f04f0eaded98 100644
---- a/tools/perf/Documentation/perf-bench.txt
-+++ b/tools/perf/Documentation/perf-bench.txt
-@@ -18,7 +18,7 @@ COMMON OPTIONS
- --------------
- -r::
- --repeat=::
--Specify amount of times to repeat the run (default 10).
-+Specify number of times to repeat the run (default 10).
- 
- -f::
- --format=::
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index 334ab897aae3..bd4fd94a2ce0 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -150,7 +150,7 @@ unsigned int bench_repeat = 10; /* default number of times to repeat the run */
- 
- static const struct option bench_options[] = {
- 	OPT_STRING('f', "format", &bench_format_str, "default|simple", "Specify the output formatting style"),
--	OPT_UINTEGER('r', "repeat",  &bench_repeat,   "Specify amount of times to repeat the run"),
-+	OPT_UINTEGER('r', "repeat",  &bench_repeat,   "Specify number of times to repeat the run"),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 69394ac0a20d..8901acdd7f5b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1301,7 +1301,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 		goto out;
- 
- 	/*
--	 * Print final block upto sample
-+	 * Print final block up to sample
- 	 *
- 	 * Due to pipeline delays the LBRs might be missing a branch
- 	 * or two, which can result in very large or negative blocks
-diff --git a/tools/perf/util/evswitch.h b/tools/perf/util/evswitch.h
-index fd30460b6218..8ffdbe526d98 100644
---- a/tools/perf/util/evswitch.h
-+++ b/tools/perf/util/evswitch.h
-@@ -22,9 +22,9 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
- 
- #define OPTS_EVSWITCH(evswitch)								  \
- 	OPT_STRING(0, "switch-on", &(evswitch)->on_name,				  \
--		   "event", "Consider events after the ocurrence of this event"),	  \
-+		   "event", "Consider events after the occurrence of this event"),	  \
- 	OPT_STRING(0, "switch-off", &(evswitch)->off_name,				  \
--		   "event", "Stop considering events after the ocurrence of this event"), \
-+		   "event", "Stop considering events after the occurrence of this event"), \
- 	OPT_BOOLEAN(0, "show-on-off-events", &(evswitch)->show_on_off_events,		  \
- 		    "Show the on/off switch events, used with --switch-on and --switch-off")
- 
--- 
-2.39.0
-
+- Arnaldo
