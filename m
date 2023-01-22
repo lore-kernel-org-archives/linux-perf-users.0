@@ -2,113 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12625C38142
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Jan 2023 20:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC8C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Sun, 22 Jan 2023 12:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjAUUyK (ORCPT
+        id S229763AbjAVMVH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 21 Jan 2023 15:54:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56350 "EHLO
+        Sun, 22 Jan 2023 07:21:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjAUUyK (ORCPT
+        with ESMTP id S229744AbjAVMVH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 Jan 2023 15:54:10 -0500
-Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A061BACF;
-        Sat, 21 Jan 2023 12:54:08 -0800 (PST)
+        Sun, 22 Jan 2023 07:21:07 -0500
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34FE24ECF;
+        Sun, 22 Jan 2023 04:21:05 -0800 (PST)
 Received: (Authenticated sender: didi.debian@cknow.org)
-        by mail.gandi.net (Postfix) with ESMTPSA id A1261240002;
-        Sat, 21 Jan 2023 20:54:00 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 81EA11BF205;
+        Sun, 22 Jan 2023 12:21:00 +0000 (UTC)
 From:   Diederik de Haas <didi.debian@cknow.org>
-To:     Edward <edward.baker@intel.com>, Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] tools/perf: Various spelling fixes
-Date:   Sat, 21 Jan 2023 21:53:51 +0100
-Message-ID: <3632669.kckeHSHuci@prancing-pony>
-Organization: Connecting Knowledge
-In-Reply-To: <CAP-5=fX1-3ZnXk8G2fB0q9F3MjjA+zWWm1LbuYGc5nL5v3bXYg@mail.gmail.com>
-References: <20230121184648.38487-1-didi.debian@cknow.org>
- <CAP-5=fX1-3ZnXk8G2fB0q9F3MjjA+zWWm1LbuYGc5nL5v3bXYg@mail.gmail.com>
+        Diederik de Haas <didi.debian@cknow.org>,
+        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
+        SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Subject: [PATCH v2] perf: Various spelling fixes
+Date:   Sun, 22 Jan 2023 13:20:32 +0100
+Message-Id: <20230122122034.48020-1-didi.debian@cknow.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3011192.r6BZ94o73H";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---nextPart3011192.r6BZ94o73H
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Edward <edward.baker@intel.com>, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] tools/perf: Various spelling fixes
-Date: Sat, 21 Jan 2023 21:53:51 +0100
-Message-ID: <3632669.kckeHSHuci@prancing-pony>
-Organization: Connecting Knowledge
-MIME-Version: 1.0
+Fix various spelling errors as reported by Debian's lintian tool.
 
-On Saturday, 21 January 2023 20:25:46 CET Ian Rogers wrote:
-> The JSON files are generated from Intel information here:
-> https://github.com/intel/perfmon/
-> Fixing the spelling in the tree means that when we update the
-> incorrect spelling will be generated again. Intel are looking at the
-> matter, I've added Edward Baker to the e-mail. To make it clearer,
-> could you separate the JSON fixes from the tool fixes?
+"amount of times" -> "number of times"
+ocurrence -> occurrence
+upto -> up to
 
-Yes, I'll send a v2 patch with the JSON files excluded.
-And I'll send a PR to the GH repo.
+Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+---
+ tools/perf/Documentation/perf-bench.txt | 2 +-
+ tools/perf/builtin-bench.c              | 2 +-
+ tools/perf/builtin-script.c             | 2 +-
+ tools/perf/util/evswitch.h              | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-> Could you also add the mistakes found by this list to:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scri
-> pts/spelling.txt which will mean the checkpatch.pl tool will flag the
-> mistakes should regressions happen.
-
-Ha! That's based on Debian's lintian tool (too) :-D
-I'll make/send a separate patch to include the ones lintian found.
-Lintian found several more, but I filtered the list I send to belong to `tools/
-perf` hoping/assuming the To list wouldn't be so long (which didn't work out 
-as well as I hoped ;-)).
-
-> Beside those 2 suggestions, the corrections look great and thank you
-> for taking the time to do this.
-
-Cool :-)
-
-Cheers,
-  Diederik
---nextPart3011192.r6BZ94o73H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCY8xQ3wAKCRDXblvOeH7b
-btaFAP0aytxwzb1318rBtyA4fWX3O+MuUiW9DjObjWT1iTj5QgD+ItsnE9DSLTBH
-TVIP87d6fJOpqWWuOnip2nxC2ZOOdQM=
-=IdbN
------END PGP SIGNATURE-----
-
---nextPart3011192.r6BZ94o73H--
-
-
+diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
+index a0529c7fa5ef..f04f0eaded98 100644
+--- a/tools/perf/Documentation/perf-bench.txt
++++ b/tools/perf/Documentation/perf-bench.txt
+@@ -18,7 +18,7 @@ COMMON OPTIONS
+ --------------
+ -r::
+ --repeat=::
+-Specify amount of times to repeat the run (default 10).
++Specify number of times to repeat the run (default 10).
+ 
+ -f::
+ --format=::
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index 334ab897aae3..bd4fd94a2ce0 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -150,7 +150,7 @@ unsigned int bench_repeat = 10; /* default number of times to repeat the run */
+ 
+ static const struct option bench_options[] = {
+ 	OPT_STRING('f', "format", &bench_format_str, "default|simple", "Specify the output formatting style"),
+-	OPT_UINTEGER('r', "repeat",  &bench_repeat,   "Specify amount of times to repeat the run"),
++	OPT_UINTEGER('r', "repeat",  &bench_repeat,   "Specify number of times to repeat the run"),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 69394ac0a20d..8901acdd7f5b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1301,7 +1301,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 		goto out;
+ 
+ 	/*
+-	 * Print final block upto sample
++	 * Print final block up to sample
+ 	 *
+ 	 * Due to pipeline delays the LBRs might be missing a branch
+ 	 * or two, which can result in very large or negative blocks
+diff --git a/tools/perf/util/evswitch.h b/tools/perf/util/evswitch.h
+index fd30460b6218..8ffdbe526d98 100644
+--- a/tools/perf/util/evswitch.h
++++ b/tools/perf/util/evswitch.h
+@@ -22,9 +22,9 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
+ 
+ #define OPTS_EVSWITCH(evswitch)								  \
+ 	OPT_STRING(0, "switch-on", &(evswitch)->on_name,				  \
+-		   "event", "Consider events after the ocurrence of this event"),	  \
++		   "event", "Consider events after the occurrence of this event"),	  \
+ 	OPT_STRING(0, "switch-off", &(evswitch)->off_name,				  \
+-		   "event", "Stop considering events after the ocurrence of this event"), \
++		   "event", "Stop considering events after the occurrence of this event"), \
+ 	OPT_BOOLEAN(0, "show-on-off-events", &(evswitch)->show_on_off_events,		  \
+ 		    "Show the on/off switch events, used with --switch-on and --switch-off")
+ 
+-- 
+2.39.0
 
