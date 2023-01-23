@@ -2,181 +2,153 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6C2C05027
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 06:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FF6C05027
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 08:33:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbjAWGsx (ORCPT
+        id S231131AbjAWIdA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Jan 2023 01:48:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
+        Mon, 23 Jan 2023 03:33:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbjAWGsw (ORCPT
+        with ESMTP id S230107AbjAWIdA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Jan 2023 01:48:52 -0500
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F911204A
-        for <linux-perf-users@vger.kernel.org>; Sun, 22 Jan 2023 22:48:51 -0800 (PST)
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-4d59d518505so159504117b3.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 22 Jan 2023 22:48:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tCvFemEDKg4uFHgscFbWDBK/LbOfRLQaDJ94Ppnt7hs=;
-        b=Yc598FRrkAOBrPcQLyesRDMZ1F8ydLWjqRrLlVkgCxC/GxM/UFlq3J3U1cLk8bM8Pp
-         PtYdpsGQYZre4qE+EAcQtOqE9rXIMpeJksxLat1Vhw2UvgBJZB4jtwvE9tsBgu8zVL40
-         94x4SW0Y1UgYthqN4Hiiv9RGafxfcXkgmPI+uTtVALy80ERvNLlgg9B8WN86/WKw6SEh
-         tm43D4Rjeg/RgwrK+CGVwSHBsvZV2+B2DkQPRqmBuJGe+OkAuQmCPhPbv/sYdM5OK8FH
-         Xd5rfKrTRLGpsgSntHgIScyvcbG74UMbebfYyX2UlIAxU6zOKYm51yFlKT7EfxLYOEXq
-         dYaA==
-X-Gm-Message-State: AFqh2krAtJXpQDZvOZ7uLlX0MJtzBKEG2+UPAPFMzTYJDChojWzMvj5U
-        DW4M+9KLE95AGEoeHIRB0HSqQpNGGfEEC1PjiLg=
-X-Google-Smtp-Source: AMrXdXsEvSzQP6wvqhA6KI3sM1kcHWcsL9AsT1cI8cFjNZx86n7NVrEfb7+yV58E9eBHWgV18tcdn/xcCtIMtrTFP6U=
-X-Received: by 2002:a0d:dd41:0:b0:500:e6a3:a141 with SMTP id
- g62-20020a0ddd41000000b00500e6a3a141mr1183281ywe.470.1674456530410; Sun, 22
- Jan 2023 22:48:50 -0800 (PST)
+        Mon, 23 Jan 2023 03:33:00 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A18E1CAFC;
+        Mon, 23 Jan 2023 00:32:58 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30N7MpYB005165;
+        Mon, 23 Jan 2023 08:32:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=vTAjVjUD2Bx8RbzMfrZSM1izm0jUPvkT5n1cgO3yShM=;
+ b=adw36Si9MumagBZ/6Ml+Xxz4gUVhUl9dXP9OgkP03pfBl4Zkge3bhIteH6C/H6TDaGR4
+ MZablMRy2v5TQdSof12JjOB44+84XgNQFowsig13IYGvoKyNlPGXpddZogZViTGuzR4t
+ AV7lfEpOi+MyNMbgah4gj+CYKhtuihduvyGDN9YnVGKkUobg7xOPurlNvl9QarLbVE+3
+ U/GLfxrfC0lQTJXXVITWFGfM3mGfVUHZYaF52sKRJIM1huc+S7F4/HwiZ5qtb2i7yPr4
+ Xk3nry5pxvBMYONYi1w0IsUZJ/p1/4Cal5gUKeH/LaZZ3qCdNq8Umij9HvM/AcFqno9d jw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3n9nsyhcdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Jan 2023 08:32:49 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30N5Uh6d010402;
+        Mon, 23 Jan 2023 08:32:47 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3n87p6j12w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Jan 2023 08:32:47 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30N8WhdG22872482
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Jan 2023 08:32:44 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C67F620040;
+        Mon, 23 Jan 2023 08:32:43 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98FAE20043;
+        Mon, 23 Jan 2023 08:32:42 +0000 (GMT)
+Received: from li-NotSettable.ibm.com (unknown [9.124.31.208])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Jan 2023 08:32:42 +0000 (GMT)
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bpf@vger.kernel.org>
+Subject: [PATCH] perf test: Switch basic bpf filtering test to use syscall tracepoint
+Date:   Mon, 23 Jan 2023 14:02:24 +0530
+Message-Id: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20230120134039.17788-1-mpetlan@redhat.com> <CAP-5=fXuNW2XYomrxViwzQThVQpwF5Cvo+UuQ_da3QiUESwAmw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXuNW2XYomrxViwzQThVQpwF5Cvo+UuQ_da3QiUESwAmw@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sun, 22 Jan 2023 22:48:37 -0800
-Message-ID: <CAM9d7cg76WWpvEthT_MHvvdfJUY6kjFV2RNMzCr_HDiaCz5Ofg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] perf test: Fix JSON linter
-To:     Ian Rogers <irogers@google.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-        qzhao@redhat.com, cjense@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dWMEpBmkTrARYmSKd-G7m-vXpKRLgCki
+X-Proofpoint-ORIG-GUID: dWMEpBmkTrARYmSKd-G7m-vXpKRLgCki
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-23_05,2023-01-20_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 clxscore=1011 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301230080
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 9:37 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Fri, Jan 20, 2023 at 5:41 AM Michael Petlan <mpetlan@redhat.com> wrote:
-> >
-> > Hello all.
-> >
-> > We have observed issues with the 'perf stat JSON output linter' testcase
-> > on systems that allow topdown metrics.
-> >
-> > =========================
-> >
-> > 1) The topdown metrics handling hardcodes printing more than one metric
-> > per line (refer to util/stat-shadow.c):
-> >
-> >     if (retiring > 0.7 && heavy_ops > 0.1)
-> >         color = PERF_COLOR_GREEN;
-> >     print_metric(config, ctxp, color, "%8.1f%%", "Heavy Operations",
-> >             heavy_ops * 100.);
-> >     if (retiring > 0.7 && light_ops > 0.6)
-> >         color = PERF_COLOR_GREEN;
-> >     else
-> >         color = NULL;
-> >     print_metric(config, ctxp, color, "%8.1f%%", "Light Operations",
-> >             light_ops * 100.);
-> >
-> > Thus, the test cannot rely on the fact that there will be only one
-> > metric per line.
->
-> Right, these implicit metrics are also an issue with --metric-only. It
-> isn't clear from the command line flags when implicit and listed
-> metrics should be generated. The topdown events (Icelake+) made the
-> implicit metric problem worse, and they likely didn't exist or weren't
-> tested at the time of the json output.
->
-> > 2) Since the JSON printing engine thinks that one and only one metric
-> > is printed, it always closes the line by adding '}'. This is not true,
-> > so I have fixed the comma printing and adjusted the engine to be
-> > capable of printing 1-N metrics and then close the line.
->
-> So the current printing code is messy. For example, there is a newline
-> callback function, but that has little meaning for json where
-> everything is on a newline. For CSV mode, adding a summary used to
-> cause a column to suddenly appear on the left for the row containing
-> the summary. I believe the right thing to do is a refactor and
-> recently I did a similar refactor for 'perf list':
-> https://lore.kernel.org/lkml/20221114210723.2749751-11-irogers@google.com/
-> So it is strange that metrics are "shadows" of events, but whatever
-> the point is to think about the printing API. In the change linked
-> above you can see that everytime something is printed the print
-> handling code is given all the information and the print handling code
-> has state. Based on the state and callback's information, the print
-> handling code can do nothing, properly format for CSV, json, etc. This
-> gets completely away from the kind of madness of branches and
-> whac-a-mole the code currently has.
+BPF filtering tests can sometime fail. Running the test in verbose mode
+shows the following:
+  $ sudo perf test 42
+  42: BPF filter                                                      :
+  42.1: Basic BPF filtering                                           : FAILED!
+  42.2: BPF pinning                                                   : Skip
+  42.3: BPF prologue generation                                       : Skip
+  $ perf --version
+  perf version 4.18.0-425.3.1.el8.ppc64le
+  $ sudo perf test -v 42
+  42: BPF filter                                                      :
+  42.1: Basic BPF filtering                                           :
+  --- start ---
+  test child forked, pid 711060
+  ...
+  bpf: config 'func=do_epoll_wait' is ok
+  Looking at the vmlinux_path (8 entries long)
+  Using /usr/lib/debug/lib/modules/4.18.0-425.3.1.el8.ppc64le/vmlinux for symbols
+  Open Debuginfo file: /usr/lib/debug/.build-id/81/56f5a07f92ccb62c5600ba0e4aacfb5f3a7534.debug
+  Try to find probe point from debuginfo.
+  Matched function: do_epoll_wait [4ef8cb0]
+  found inline addr: 0xc00000000061dbe4
+  Probe point found: __se_compat_sys_epoll_pwait+196
+  found inline addr: 0xc00000000061d9f4
+  Probe point found: __se_sys_epoll_pwait+196
+  found inline addr: 0xc00000000061d824
+  Probe point found: __se_sys_epoll_wait+36
+  Found 3 probe_trace_events.
+  Opening /sys/kernel/tracing//kprobe_events write=1
+  ...
+  BPF filter result incorrect, expected 56, got 56 samples
+  test child finished with -1
+  ---- end ----
+  BPF filter subtest 1: FAILED!
 
-Maybe we could reuse the tools/bpf/bpftool/json_writer.[ch].
-It'd be nice to think about it as objects and attributes.
+The statement above about the result being incorrect looks weird, and it
+is due to that particular perf build missing commit 3e11300cdfd5f1
+("perf test: Fix bpf test sample mismatch reporting"). In reality, due
+to commit 4b04e0decd2518 ("perf test: Fix basic bpf filtering test"),
+perf expects there to be 56*3 samples.
 
-Thanks,
-Namhyung
+However, the number of samples we receive is going to be dependent on
+where the probes are installed, which is dependent on where
+do_epoll_wait gets inlined. On s390x, it looks like probes at all the
+inlined locations are hit. But, that is not the case on ppc64le.
 
+Fix this by switching the test to instead use the syscall tracepoint.
+This ensures that we will only ever install a single event enabling us
+to reliably determine the sample count.
 
->
-> I'm happy to look at doing the refactor to be similar to 'perf
-> list'/builtin-list.c. Namhyung I thought might have gotten to it with
-> his recent work on improving aggregation. If I hear silence then I'll
-> assume that is a request I do it :-)
->
-> Pragmatically in the short term we could land your changes, but I
-> worry they are more of the whac-a-mole and something somewhere else
-> will break. Which is why we have a test, and so I'm not overly
-> worried. I can download and test too.
->
-> Anyway, sorry for the issue and let me know what you think. Thanks,
-> Ian
->
->
-> > =========================
-> >
-> > On machines that don't support topdown, the problem can be shown by
-> > doubling the following line in util/stat-shadow.c, so that the simple
-> > 'insn per cycle' metric is printed twice:
-> >
-> >   print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle", ratio);
-> >
-> > The worst problem is that the JSON line is broken, such as:
-> >
-> > ... "pcnt-running" : 100.00, "metric-value" : 3.501931, "metric-unit"
-> >     : "Heavy Operations"}"metric-value" : 14.007787, "metric-unit" : ...
-> >                   here ^^^^^
-> >
-> > =========================
-> >
-> > The first patch solves the JSON output correctness, the second tries
-> > to adjust the testcase to some extent, so that it should work on the
-> > topdown-capable machines.
-> >
-> > However, it's highly possible that the testcase will have to be fixed
-> > or maybe rewritten in future. First, it has quite naive evaluation of
-> > what's expected/correct/etc. Second, it does no JSON format validation
-> > at all. As a linter it should do so though.
-> >
-> >  ***
-> >
-> > For further discussion: What about removing the check for number of
-> > expected elements in the line and just check for the keywords, such
-> > as "metric-value", "counter-value", "event", etc. and for some values
-> > that should be numeric. And, do proper JSON format sanity check?
-> >
-> >
-> > Thank you for inputs!
-> >
-> > Michael
-> >
-> >
-> >
-> >
-> > Michael Petlan (2):
-> >   perf stat: Fix JSON metric printout for multiple metrics per line
-> >   perf test: Fix JSON format linter test checks
-> >
-> >  .../tests/shell/lib/perf_json_output_lint.py  | 16 +++++------
-> >  tools/perf/util/stat-display.c                | 28 +++++++++++--------
-> >  2 files changed, 24 insertions(+), 20 deletions(-)
-> >
-> > --
-> > 2.18.4
-> >
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+---
+ tools/perf/tests/bpf-script-example.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
+index 7981c69ed1b456..b638cc99d5ae56 100644
+--- a/tools/perf/tests/bpf-script-example.c
++++ b/tools/perf/tests/bpf-script-example.c
+@@ -43,7 +43,7 @@ struct {
+ 	__type(value, int);
+ } flip_table SEC(".maps");
+ 
+-SEC("func=do_epoll_wait")
++SEC("syscalls:sys_enter_epoll_pwait")
+ int bpf_func__SyS_epoll_pwait(void *ctx)
+ {
+ 	int ind =0;
+
+base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+-- 
+2.39.1
+
