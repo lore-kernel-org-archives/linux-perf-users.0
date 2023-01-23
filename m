@@ -2,270 +2,186 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E97C05027
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 13:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA6FC38142
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 13:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230224AbjAWN0q (ORCPT
+        id S231848AbjAWNi3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Jan 2023 08:26:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50408 "EHLO
+        Mon, 23 Jan 2023 08:38:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbjAWN0p (ORCPT
+        with ESMTP id S231852AbjAWNi2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Jan 2023 08:26:45 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA89524135;
-        Mon, 23 Jan 2023 05:26:43 -0800 (PST)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30N9QlH0008883;
-        Mon, 23 Jan 2023 13:25:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=q5sQ7F7y3oqVxmhsM77aYE5YMDJmMiUFn67QHZbMQMY=;
- b=tvCSNJ2cSfHqxf1S7EEu8Hn8gHI/m6kkBPN0x8K/8M/b1RYvnGB8ITiwbJfqtpwyth0U
- JUccCNfg7H78MCsm+thTg2CwpNFrOZrv1imhiAeOM9tnS8LyxctGKadFTei3AQg+Qmdr
- LjZMYzVRJ1kkVEbxrAcd+uP9xc9VIJVcdcY2eNrkxaUALQTNj9YjO4mKc9zfpOKR+6ni
- Lr8hSIwBvJgEsuKVVchtqjOYpew3nX/6ZWW5sR6rp9SvN9oBaS2ITycYzoSpF9oAitJD
- Klof7P+iy4e4bDdqXT+D3X8hF31b0UfassgU1YwIgl1AEWjWlozOUMu5o5wMFC5lhPqA pA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n88kttm2w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Jan 2023 13:25:57 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30NBOTQo004087;
-        Mon, 23 Jan 2023 13:25:56 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2043.outbound.protection.outlook.com [104.47.56.43])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3n86g9s5q9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Jan 2023 13:25:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QfwUYGTVQPgs+nJE4ahAC7lEEBClFt6DDsb0fONowur0S1ILwHHFoYY1ciVGljdfVQbUljEvRnismr5AkjXx5q/KSi2TI9QxlcBle5lViHA+YLLwxwYiz6uPFez52FVoDdmB67byqbkGLK78ijQNYGpFUCiEC2JzjwJhTejZKsRKsdvScFfvCVx5Y7HRz96VwwZkjACUQqT6+z+4KECHC804rR4UPY3yUbPVfv1nFYGdbpNN95qefGHR3GkJh0pF8crhLfEDhKt3U7HddqdTHYa4wYgvn5CM7t+XHBzcagDTDvxL6677on2/JMFanYTdEs3KjI+Ku8ncXXgworgckQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q5sQ7F7y3oqVxmhsM77aYE5YMDJmMiUFn67QHZbMQMY=;
- b=hmN7tfmVFAZr72rrTlvbKMeWwkRrygIHstb36gBOfuEZ/P+y2IMiXlAZHs858iSjaKJ2+goxyVQ9uU327kmLAMFkHY7MdNcpQNLl1SfhSJsDxaS6hWnL7Rn+UwOlBW9uW8nqsnFQmlGxoKcAcTYe4hCAeQaL++IYuYGJmMVK+hKzM0xeP2dyP9TAAdg4AOgtVjgNJ82WSEQJcBHM0rtTAIFQHqbfEZaQ3o41AZEHRKEJ6oPlUdpIQdN9oc2ZDb+swJwE6Z+/kMpB3N/cJ3gUVLF1K+5YyegUs8sxdQ+/sV5zq2pYj58w1h//Wf91Nwfo2Yjq3x6fWMWZ3J5EXZGltA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q5sQ7F7y3oqVxmhsM77aYE5YMDJmMiUFn67QHZbMQMY=;
- b=DIA0OctBadRL30WBStubzMWXC2iHEpCSTN59rR/XmuwgMMZY+6m8y4taAhw7TdB+jPfMCldnv/PQzCGQVhaz9HklbRrnqPSgrWZx5JLh3P/ezbkNVoWo11Gwj1BDsWsKz+7fON3xgnRr2b/Rq8ghhH3sNpgy7i8KT+p9WTSI9F4=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by SA1PR10MB5687.namprd10.prod.outlook.com (2603:10b6:806:23f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.9; Mon, 23 Jan
- 2023 13:25:53 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::1040:f0e3:c129:cff]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::1040:f0e3:c129:cff%8]) with mapi id 15.20.6043.009; Mon, 23 Jan 2023
- 13:25:53 +0000
-Message-ID: <791915a9-0c2b-796a-b788-f026e071859b@oracle.com>
-Date:   Mon, 23 Jan 2023 13:25:46 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v2 0/9] jevents/pmu-events improvements
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Mon, 23 Jan 2023 08:38:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A559822A0E
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 05:38:24 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 18C8EB80D70
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 13:38:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 670EBC4339C;
+        Mon, 23 Jan 2023 13:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674481101;
+        bh=iVTPu5o2+GTQBTYXbgoB5OgqTtwoF9QZUUwguQ6Ioac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gyNIM5r1lUFo76JHe7cbL9wN3fgaOw/0m2EwTR6pZBC30jFY1wxUT6DToIuRb0v8M
+         ZStV7t+Wy08UGzjzyKvdfqkMDh4YTifcy5aMh6YLdi3ZQJyTXXeTjIOnCsDdLw10PD
+         ASGnhYjMQaWpCC7w9y5nIL5nsGJNkBrY2Nfy4MA/oNdcE04LO770uXBzB6rQp9/fG1
+         KwTlASC40UhpB+4so9yU9Xg8bOas663rbBVKONhvBiVWWgxQXyVpUC6JywbmgVBxPE
+         mu3cGMJnLxuuuGT7dbCtUq7wV8cjGy9yKb6XINfmMWuNKDyB+QPuJZj8KTH6rV7aBV
+         fqvoRJgf7nFrA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D9782405BE; Mon, 23 Jan 2023 10:38:18 -0300 (-03)
+Date:   Mon, 23 Jan 2023 10:38:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-References: <20221221223420.2157113-1-irogers@google.com>
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20221221223420.2157113-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LNXP265CA0078.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::18) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        linux-perf-users@vger.kernel.org, acme@redhat.com,
+        qzhao@redhat.com, cjense@google.com
+Subject: Re: [PATCH 0/2] perf test: Fix JSON linter
+Message-ID: <Y86NygSi+UdmmmTw@kernel.org>
+References: <20230120134039.17788-1-mpetlan@redhat.com>
+ <CAP-5=fXuNW2XYomrxViwzQThVQpwF5Cvo+UuQ_da3QiUESwAmw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA1PR10MB5687:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0a1b8d5-5221-4a9a-c07b-08dafd455a0f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oYpS+mBBBt446nNCVsBBWYsn+WNcq2GfSatfPCPmDz4qpU/54sDV6PjVXZgqY1RS7Mtm7qQKWOUVUeekvX/pdjjeq5ec47oHG0HN8qSPfpstxbFWSMfYySFH2MfQlN3G9aqs4NFNcLZR8O0HhnDOjbTlLSqoM22/rtizOsXXcz+pjTmtXabwCEqkeOtejkcOuej+qO0cDLq+HDt1LcFUulhhQyMZ3nEnHv98G2Zden6rqHTl58Irxp7BkjwNs6SkJxmrjWOmTZAbjfASjz6i4mwsCMQuS17i3b49ZaIe3fzwZcvrdWC850If/aAxZyuNzC2Qy/Is9Y4cn4xnKJ8sX3KDWTXA4AwPBOMeL/gXlAtuLOyN/0KWn/zTrCA6J6ya1/CUAE/d1RhseX3adJxv+50h0QEMA4sf3ccTg2YM5yO2I9ah5551wYwdtgRN//WXtMgi6CWX5PiKG7t7bXoOhNF5DmfxtOYEm5SMV1q5NZpI7PpOleSbXdZV6llDose1vL5rDtwCsoQzUIVGFkDtZAuHLxZX8HcQg9hTyu0TFuAPXFu7oMAeN4ORXEpw0Vm2UgEuc//pRaZQqwzvW3yioDhWg6ovERXl5V1f/OzrhGpl7+7c/KnSzInDGw857fWI7WYF4I1cDw7NXZYdh3Wmh3Mu/3XN8Oo+vuigYiksWah3zHAFGN/FR2Cb8VmhbNOjvjtT5Nmz8ZOEV6OtBRmvyvvKLbxsWaIWYz7OJtu3KncJo9D3ZGD6MsC+VPExPBAi
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(376002)(366004)(136003)(39860400002)(451199015)(2906002)(86362001)(31696002)(6486002)(478600001)(66476007)(4326008)(41300700001)(26005)(186003)(53546011)(8676002)(66556008)(2616005)(36916002)(66946007)(316002)(110136005)(6666004)(921005)(54906003)(7416002)(38100700002)(5660300002)(7406005)(83380400001)(8936002)(6506007)(31686004)(6512007)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?clc1NDNUakxXM013bFV4eVBPZGl0MkxKdWFhNkg4OURTMk4wVEdmT3ZjeHhW?=
- =?utf-8?B?emd4R3lkeUYrRTFONy9RbS9WQXVKMVpjZ2RaY080UU1Xb1oweGVjVHRtRjRG?=
- =?utf-8?B?UnNSZm9jdkM3QU92TEY3SHBJbXJGQ3M2a3MzNUdJRWxTVEhrRFNoTHJjajQ0?=
- =?utf-8?B?bDgzMW5HZjVvRFZKM3FKdGJSZmlnUW1YYUhiUWlEOWJ5S3BON2Mxdm9NdTZF?=
- =?utf-8?B?UU4zdzMyQi9wRENVSjU3Y3hUT2RYNGc3NnNDVDc0TXlJUFQxWWEvZm95Umpq?=
- =?utf-8?B?dlZLaGNUSGJnc0Z0RmxncHNQUDBMOUEwY2luaGwrcjdVSm9vRFR2Nm00YnhW?=
- =?utf-8?B?YStBZzBuZ2pKVjRXOUhqekgralZrdGlxM3FGclppcklPMlhRMzNkVzgvbWsy?=
- =?utf-8?B?Y0hRUTZmNldJTXQ4VUh5cU15bEFtYWZhMllaV3lxay92cFNVVVltSFkzZjNy?=
- =?utf-8?B?WnJPRVBDdlE2UDVoOEdEeUdrQ2Y1Ym5aekNiZlB6U2xueXRJcTB4ZEM2MC8x?=
- =?utf-8?B?YjJJSFVHZ3JSR0FLZXJKUkpSd0VJUXZoSWxiL2theS9yWkVQaXQ0bk5PTGRw?=
- =?utf-8?B?bU5mZEhhU3JnSnN1d3kzREJNOFp0L0tjV2ZvWm1uNE9iekkvYStOZy9tcU5u?=
- =?utf-8?B?V29mS20zbURGditpU0J6Vlh4cE9VL2x5MlVENXZlYlhNbjFrN3BiVlAvYUNx?=
- =?utf-8?B?YzdHSHU2enJ4eWhuV3prT3VZTmRMbWFPVzBaR0pIa1R0QzloTjhQR1MxSi8v?=
- =?utf-8?B?aytGR0tEWVdkclFabTdzdUpuZnBUbGYrd1BsZ00vM0IxcFd1c0JuOGFST2Zn?=
- =?utf-8?B?dTZPNjRSOHN6cS83N1NlMWJHUmFHVDhLb2R5U285alRyck9ReEdqeXN3ZElh?=
- =?utf-8?B?dTlIdTMyYkg1aFZ2ZEZhSy9aUE4rN3hqVm9RVVMvWjFNWU9BMW5wMytXK3h2?=
- =?utf-8?B?V1I1Vm9YdXo5Q1BqT3ZvREc0RDByVlRWbnQwcDZOMU9Scm9Ubmg1ZXVaTkZ1?=
- =?utf-8?B?dDZqclUvL3F1RkRVTlIzSGFJNEdOMHYzS3lhS0oyQUFTNkFUVnJuNnpPVTJO?=
- =?utf-8?B?RURLUVhxZ2ExdlcreXpCZnJPQjJIWWJPZEpHcVNEUmJxVk1tckY3ci9KTG1s?=
- =?utf-8?B?ZkRvTDVLYStnVlhESHkwMVFDZTJPbFk0MUU1YjRWRnRiNWZaY2F2aFk0R3BL?=
- =?utf-8?B?cGwzV0pEYW4ySTg5c1RoMU1kQ1RYKzBWVkc0UjJhQU4vSlo4QlIyYkt4TWUw?=
- =?utf-8?B?QktqMDBEMnZRUGJ6NGFnci9kcFpMUHNpcnZJdFRkQ2J5dGpWa0hLZklxSDcx?=
- =?utf-8?B?S3lQZVlOdkpCdDB4ZmRIb1ZLWE5RYmdpb1o2RVpma2VpNEp4VlZGTnVYSytR?=
- =?utf-8?B?VnppUS94TU1LQ3p6cy9wUzNHd2pKZllyWmNqT2xzYldCZGVvQy9QRWRzVDJR?=
- =?utf-8?B?dW1pQ0ZLTW1FU2puQUM1QlUyZ3NmZ2g0dTFSMUZ1VytpZWlleXZ5eUFWc3d3?=
- =?utf-8?B?QnJEazVnSWF6QVVUZGNYL1hGUThHc3h0cnlHNmhLelUyUFpZODZ2c05aV0JM?=
- =?utf-8?B?MWhVTDF6b0ZJbDFYc09yb0JWSTlLajdmK0hoZlY4d21acCtwQVp2aXhVVjdK?=
- =?utf-8?B?VGY0TW1XSVdPUXJUQTY4aDBPOVJ2cTc3MVN5ZUk5cTJBU3NPc0hidXN6QWQ5?=
- =?utf-8?B?cVUvU00ydk42b0VsaVBMaTR1VTI1R2hDQXlpYUt2VkNUblhKNHlwVURseEdM?=
- =?utf-8?B?UlNzcWZzeXhnakducUlqZVRrK3dhR3FlRzE3aks3VG9ZSWxSUWdYdEZHR2h4?=
- =?utf-8?B?c3VJM3F2WGtFU2dzYmNhbVlGR3RjMDVadVl5VlJuNDZSWW1xOUxVMWtVOUVZ?=
- =?utf-8?B?dGdmKzBrU1hkSDJYWjRBZEhXOTRnNHcrR3FJdGJ0enFESUJzbDJoUkdhem1Y?=
- =?utf-8?B?bzkxZDl1NGlvRHVVZ3V2T3pqalJFeGsrVzRVQW9PZjVYY0tKYkR0T0M3dnhu?=
- =?utf-8?B?OFNSRnk1dzNIeFdlVmtMMVlTMU11dWRwNTJoODRDM2VSK04rbW5WN2t1TkJE?=
- =?utf-8?B?VytPeXN4Z3BDeUYwTGxmRkk3TmtOSEVZeEhLUEo2bUsxNGcvQ1IwaHBRNWlC?=
- =?utf-8?B?VDl4NWFzeVBVN0hLc1lIUXkwYUhEU3BlZVN2TUNQSm9OamE4bEtDdUJOVDZE?=
- =?utf-8?B?aUE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?a1p3QjNzK0JyNHdqUTdUOWxtL1VvMkVQaXdOSmU5dlZ5dkJwMi9FdVhDMS9y?=
- =?utf-8?B?cUEyV3pweE5IRUZVd1d5UTRMYmt1M1hkajdnU1A3QUtxVFFablVtMVBvQktD?=
- =?utf-8?B?TFpuWXdBeHNsOVFiRk1keU1rTEY0QVpHM245RVRNM2FVUW4ycVRnQjkxaGd4?=
- =?utf-8?B?OW93cVpEc2hiWFFOS0NYVURjMGFmcUhNSS8xVGI0ODMvMjBtc05EYXlkLzRP?=
- =?utf-8?B?UEJZcHkwK25qZm9BUVRzbks4S1A4SzVYRjFiNW9NQ3FFYTlQZDhEOFF4c25i?=
- =?utf-8?B?bzBCZW5tcVFXSDE3Y2ZtNW9jZDI5WTY3RXZheGRXTjRKckxObHBycjdkQytC?=
- =?utf-8?B?V29BNHRoeHVEaUs5eHRuV0traGh4SU5xVkNaMElpNU9RKzNiRTJYV0Z3U2pz?=
- =?utf-8?B?b2xMNzd5ODZGS1ZpaGxHQ2t1bzNzeGRub3JwZmRhdENoRjgwVmpBckVjVWFk?=
- =?utf-8?B?RVhzWUZHQTZ4R2w2TFFHRmVXT3g1THFIZHZ4cmhNcEx0Y3VJM3lOWkxzSXFj?=
- =?utf-8?B?Z2VObVFYaGJOY1RjZTMxVk9sVTVIWTZGSnQyMjNjYTJhdEd5eUFGYWY0UHVP?=
- =?utf-8?B?OUVtV3VjWWRVNVRlTXN4b2w0d3pBcSt0RmUrL2x1dEtSZ3UyeE81dEdnL1lm?=
- =?utf-8?B?QzA1SkdnU0F2MVorZTZ5aHFmSWhhUzl1UmkwY3hNRTJkZURIaWRqekY0U1ZQ?=
- =?utf-8?B?Sk1DVnJraHF6ZDFlR2tHVHY4WGNXK3BoZ1dnL2hiKzFPQlJ5eStqRWZnNnBp?=
- =?utf-8?B?aHR4UTZTdlV4a2pRWFJ2ZzNiTmx5c0tXS2NmallTRG44SU1OeENDZ0diUzlt?=
- =?utf-8?B?V2FiZ1FtcldkcHkwUExhTk54RGVZNTJ1TDFTSXQzTk9NVVRaalVRUVJGVVNa?=
- =?utf-8?B?bDl5ODhXeFpodE50Mjh6NHY0eTlNSE1CYUJyVzZ4VjN1WUNxWk9hcHk1bDFr?=
- =?utf-8?B?Mkx3d2ZnZlcydFZHYXpGSmVCMytXOUFXM28wTys5dXZpVXlxb0VhampwendS?=
- =?utf-8?B?bG4vMUE3dWFBczk0M1RsbUs4Sks2UVZNcWVvOFZHbHcwMzFuNjNmUXVITVlt?=
- =?utf-8?B?eVlQRmwxS2pxN3d0RCswS1RFM0JBWmF2MTU2ckZWNHhlTHdFSlVnS0c5Rkkr?=
- =?utf-8?B?V21jdkNEd1VRcWlOZXJETVNNS2YyUDRYKzExL0hhb2QrbkZCRXlYSVBvYjA4?=
- =?utf-8?B?cm1zZlNxVm9uQStyL291V3JMS0NYQlJwT3JVVFV4NHlFa3lacHRkVStVOGtN?=
- =?utf-8?B?d2hMYXgzTW9WbVFrRkdCS1FDMW9CbTlPVXliODRSRjVsMkZjTEtvRjlTcjcy?=
- =?utf-8?B?MC9lZWJpcGI2a3B1M0J6S2N0S3RXdmZ0dE8rSm43MUVOOEEvdmw5eFJUNE56?=
- =?utf-8?B?bDloKzQzWWE1dUo5N3pJSVpKVVlBSFpHZFZhVDhDMzBsN3VJUjRINjhLTWhH?=
- =?utf-8?B?OFNpK21ZeGp1V1d3cUhCTStJYnBNTDlkSEw3TVV5b0I2Z3Z0UWx6TlpzYXRV?=
- =?utf-8?B?R3YxVGlGei9MejlRTmFHWWFSUFg1cENtaGZxQUJxOG1mSnlYVjN5MWVBTzhu?=
- =?utf-8?B?bXc2QzNZalRiSC9xaGo0dEJ6ZmZnTFNNbUx5RVFpSzBTMllGVHdLRGVFQzds?=
- =?utf-8?B?VC80MjRhWnB3bVZGcGNCTEw5YzFaUGV4dkFhdVFqSmZQZS8rNVJsMFNBTHht?=
- =?utf-8?Q?Ej+slPMkLivu2foWL+0t?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0a1b8d5-5221-4a9a-c07b-08dafd455a0f
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2023 13:25:53.4241
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8nyAYkXHeeYL7aZ3k/rq5oN1scQUlFi1VtnvSxz9KetftkN6mZrXB4x9etsBq1q2Z8VAm8m2qJzbW+ABMS7xqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5687
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-23_10,2023-01-23_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 mlxscore=0 suspectscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301230127
-X-Proofpoint-GUID: I7ouWE1ZRdJiHsP0jN5uTGnAjDtxWNoX
-X-Proofpoint-ORIG-GUID: I7ouWE1ZRdJiHsP0jN5uTGnAjDtxWNoX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXuNW2XYomrxViwzQThVQpwF5Cvo+UuQ_da3QiUESwAmw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/12/2022 22:34, Ian Rogers wrote:
-> Add an optimization to jevents using the metric code, rewrite metrics
-> in terms of each other in order to minimize size and improve
-> readability. For example, on Power8
-> other_stall_cpi is rewritten from:
-> "PM_CMPLU_STALL / PM_RUN_INST_CMPL - PM_CMPLU_STALL_BRU_CRU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_FXU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_VSU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_LSU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_NTCG_FLUSH / PM_RUN_INST_CMPL - PM_CMPLU_STALL_NO_NTF / PM_RUN_INST_CMPL"
-> to:
-> "stall_cpi - bru_cru_stall_cpi - fxu_stall_cpi - vsu_stall_cpi - lsu_stall_cpi - ntcg_flush_cpi - no_ntf_stall_cpi"
-> Which more closely matches the definition on Power9.
+Em Fri, Jan 20, 2023 at 09:37:33AM -0800, Ian Rogers escreveu:
+> On Fri, Jan 20, 2023 at 5:41 AM Michael Petlan <mpetlan@redhat.com> wrote:
+> >
+> > Hello all.
+> >
+> > We have observed issues with the 'perf stat JSON output linter' testcase
+> > on systems that allow topdown metrics.
+> >
+> > =========================
+> >
+> > 1) The topdown metrics handling hardcodes printing more than one metric
+> > per line (refer to util/stat-shadow.c):
+> >
+> >     if (retiring > 0.7 && heavy_ops > 0.1)
+> >         color = PERF_COLOR_GREEN;
+> >     print_metric(config, ctxp, color, "%8.1f%%", "Heavy Operations",
+> >             heavy_ops * 100.);
+> >     if (retiring > 0.7 && light_ops > 0.6)
+> >         color = PERF_COLOR_GREEN;
+> >     else
+> >         color = NULL;
+> >     print_metric(config, ctxp, color, "%8.1f%%", "Light Operations",
+> >             light_ops * 100.);
+> >
+> > Thus, the test cannot rely on the fact that there will be only one
+> > metric per line.
 > 
-> A limitation of the substitutions are that they depend on strict
-> equality and the shape of the tree. This means that for "a + b + c"
-> then a substitution of "a + b" will succeed while "b + c" will fail
-> (the LHS for "+ c" is "a + b" not just "b").
+> Right, these implicit metrics are also an issue with --metric-only. It
+> isn't clear from the command line flags when implicit and listed
+> metrics should be generated. The topdown events (Icelake+) made the
+> implicit metric problem worse, and they likely didn't exist or weren't
+> tested at the time of the json output.
 > 
-> Separate out the events and metrics in the pmu-events tables saving
-> 14.8% in the table size while making it that metrics no longer need to
-> iterate over all events and vice versa. These changes remove evsel's
-> direct metric support as the pmu_event no longer has a metric to
-> populate it. This is a minor issue as the code wasn't working
-> properly, metrics for this are rare and can still be properly ran
-> using '-M'.
+> > 2) Since the JSON printing engine thinks that one and only one metric
+> > is printed, it always closes the line by adding '}'. This is not true,
+> > so I have fixed the comma printing and adjusted the engine to be
+> > capable of printing 1-N metrics and then close the line.
 > 
-> Add an ability to just build certain models into the jevents generated
-> pmu-metrics.c code. This functionality is appropriate for operating
-> systems like ChromeOS, that aim to minimize binary size and know all
-> the target CPU models.
-
- From a glance, this does not look like it would work for arm64. As I 
-see in the code, we check the model in the arch folder for the test to 
-see if built. For arm64, as it uses arch/implementator/model folder org, 
-and not just arch/model (like x86)
-
-So on the assumption that it does not work for arm64 (or just any arch 
-which uses arch/implementator/model folder org), it would be nice to 
-have that feature also. Or maybe also support not just specifying model 
-but also implementator.
-
+> So the current printing code is messy. For example, there is a newline
+> callback function, but that has little meaning for json where
+> everything is on a newline. For CSV mode, adding a summary used to
+> cause a column to suddenly appear on the left for the row containing
+> the summary. I believe the right thing to do is a refactor and
+> recently I did a similar refactor for 'perf list':
+> https://lore.kernel.org/lkml/20221114210723.2749751-11-irogers@google.com/
+> So it is strange that metrics are "shadows" of events, but whatever
+> the point is to think about the printing API. In the change linked
+> above you can see that everytime something is printed the print
+> handling code is given all the information and the print handling code
+> has state. Based on the state and callback's information, the print
+> handling code can do nothing, properly format for CSV, json, etc. This
+> gets completely away from the kind of madness of branches and
+> whac-a-mole the code currently has.
 > 
-> v2. Rebase. Modify the code that skips rewriting a metric with the
->      same name with itself, to make the name check case insensitive.
+> I'm happy to look at doing the refactor to be similar to 'perf
+> list'/builtin-list.c. Namhyung I thought might have gotten to it with
+> his recent work on improving aggregation. If I hear silence then I'll
+> assume that is a request I do it :-)
+
+Yeah, go for it :-)
+ 
+> Pragmatically in the short term we could land your changes, but I
+
+Ok, I saw Namhyung's Ack and will apply both, we can go from there.
+
+- Arnaldo
+
+> worry they are more of the whac-a-mole and something somewhere else
+> will break. Which is why we have a test, and so I'm not overly
+> worried. I can download and test too.
 > 
+> Anyway, sorry for the issue and let me know what you think. Thanks,
+> Ian
+> 
+> 
+> > =========================
+> >
+> > On machines that don't support topdown, the problem can be shown by
+> > doubling the following line in util/stat-shadow.c, so that the simple
+> > 'insn per cycle' metric is printed twice:
+> >
+> >   print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle", ratio);
+> >
+> > The worst problem is that the JSON line is broken, such as:
+> >
+> > ... "pcnt-running" : 100.00, "metric-value" : 3.501931, "metric-unit"
+> >     : "Heavy Operations"}"metric-value" : 14.007787, "metric-unit" : ...
+> >                   here ^^^^^
+> >
+> > =========================
+> >
+> > The first patch solves the JSON output correctness, the second tries
+> > to adjust the testcase to some extent, so that it should work on the
+> > topdown-capable machines.
+> >
+> > However, it's highly possible that the testcase will have to be fixed
+> > or maybe rewritten in future. First, it has quite naive evaluation of
+> > what's expected/correct/etc. Second, it does no JSON format validation
+> > at all. As a linter it should do so though.
+> >
+> >  ***
+> >
+> > For further discussion: What about removing the check for number of
+> > expected elements in the line and just check for the keywords, such
+> > as "metric-value", "counter-value", "event", etc. and for some values
+> > that should be numeric. And, do proper JSON format sanity check?
+> >
+> >
+> > Thank you for inputs!
+> >
+> > Michael
+> >
+> >
+> >
+> >
+> > Michael Petlan (2):
+> >   perf stat: Fix JSON metric printout for multiple metrics per line
+> >   perf test: Fix JSON format linter test checks
+> >
+> >  .../tests/shell/lib/perf_json_output_lint.py  | 16 +++++------
+> >  tools/perf/util/stat-display.c                | 28 +++++++++++--------
+> >  2 files changed, 24 insertions(+), 20 deletions(-)
+> >
+> > --
+> > 2.18.4
+> >
 
+-- 
 
-Unfortunately you might need another rebase as this does not apply to 
-acme perf/core (if that is what you want), now for me at:
-
-5670ebf54bd2 (HEAD, origin/tmp.perf/core, origin/perf/core, perf/core)
-perf cs-etm: Ensure that Coresight timestamps don't go backwards
-
-> Ian Rogers (9):
->    perf jevents metric: Correct Function equality
->    perf jevents metric: Add ability to rewrite metrics in terms of others
->    perf jevents: Rewrite metrics in the same file with each other
->    perf pmu-events: Separate metric out of pmu_event
->    perf stat: Remove evsel metric_name/expr
->    perf jevents: Combine table prefix and suffix writing
->    perf pmu-events: Introduce pmu_metrics_table
->    perf jevents: Generate metrics and events as separate tables
->    perf jevents: Add model list option
-
-Thanks,
-John
+- Arnaldo
