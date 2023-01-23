@@ -2,129 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E0AC05027
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 11:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F73C05027
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 12:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjAWLlv (ORCPT
+        id S232001AbjAWM6p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Jan 2023 06:41:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
+        Mon, 23 Jan 2023 07:58:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229868AbjAWLlu (ORCPT
+        with ESMTP id S231996AbjAWM6o (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Jan 2023 06:41:50 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE761352C;
-        Mon, 23 Jan 2023 03:41:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BElcCOJTdrcOanesXl7wLvueYCq0G60+MFFN+WYtDtA=; b=RpZeumbGz/v753aDcq7BZ8VMDW
-        P0dHsJdfsj0mbkSUiEvB2/SWcM4WISJcrZRy/ogId6xwr6OTspMHOm349/cb8wmjxPp/kevZvrrYS
-        AQzh0klcsOtjvuUwl7nnpVlGHe6QMd/rbVOmedF9v8+wiVlNz1hZQfRe28LuW8HzW+au8KXYm6Cl1
-        jOF0As3eoNZ694+yAgp2bO+LLIDmcENAqEdf2teIMI8aaiNXaH/tyew1nxSAS+4krFssMGJE4dgml
-        7DgqaSA+9McmVf4ap26m7GE3miawTrQbVAcx9sOaSTOo+fUw9AjgNW8ZBw6fLXIcOB4OUQDzQLQxw
-        83azSlDQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pJvCA-001Woo-16;
-        Mon, 23 Jan 2023 11:41:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C91F6300327;
-        Mon, 23 Jan 2023 12:41:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9FE5821477E2D; Mon, 23 Jan 2023 12:41:29 +0100 (CET)
-Date:   Mon, 23 Jan 2023 12:41:29 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [perf] lockdep warning between cpu_add_remove_lock and
- &dev->mutex.
-Message-ID: <Y85yadQes4fSwCZm@hirez.programming.kicks-ass.net>
-References: <8c3fc3d1-8fed-be22-e0e7-ef1e1ea723ce@I-love.SAKURA.ne.jp>
+        Mon, 23 Jan 2023 07:58:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D9110E9;
+        Mon, 23 Jan 2023 04:58:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9268560EF8;
+        Mon, 23 Jan 2023 12:58:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C932CC433D2;
+        Mon, 23 Jan 2023 12:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674478723;
+        bh=iqF4YslRUAOR8em9VxtEx6LNWXvY7IrQ9E5c6+BFk0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sLSkM4a7cfgHy6X48ai/sKQ8h0q2CPGhVzFjtpYM+HhP5bGwzhSY6wU+xBRrOq3aX
+         HvehlCCyhdJ19nF4mc0OdYwHm2xCSZehb409VJIpq53hIFWp7N4s3RPnkOTDeo+3WP
+         nN9eh9T9kImOTbUktrXoLWqaZo4UMgiPVwIOfgXwTTTLfvLZ038n6OdF7AQ+stSOk7
+         rj9/o7bGh8bZaCUF3xURM+0UypDj1j6LuW77UlwMS/RUpjQk67/wNSPOBFySXVElVS
+         PbkvnvWx2OJfhFgjTykorxxaBIWwlrA70tqc7KwZ37Vo+IW1FjDkna/r0XFAcOg88k
+         Jrkp0TzDBGUww==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DF79F405BE; Mon, 23 Jan 2023 09:58:39 -0300 (-03)
+Date:   Mon, 23 Jan 2023 09:58:39 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] perf test: Switch basic bpf filtering test to use
+ syscall tracepoint
+Message-ID: <Y86Ef0KKlor+XsXm@kernel.org>
+References: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8c3fc3d1-8fed-be22-e0e7-ef1e1ea723ce@I-love.SAKURA.ne.jp>
+In-Reply-To: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 07:39:24PM +0900, Tetsuo Handa wrote:
-> Hello.
+Em Mon, Jan 23, 2023 at 02:02:24PM +0530, Naveen N. Rao escreveu:
+> BPF filtering tests can sometime fail. Running the test in verbose mode
+> shows the following:
+
+Thanks, applied.
+
+- Arnaldo
+
+>   $ sudo perf test 42
+>   42: BPF filter                                                      :
+>   42.1: Basic BPF filtering                                           : FAILED!
+>   42.2: BPF pinning                                                   : Skip
+>   42.3: BPF prologue generation                                       : Skip
+>   $ perf --version
+>   perf version 4.18.0-425.3.1.el8.ppc64le
+>   $ sudo perf test -v 42
+>   42: BPF filter                                                      :
+>   42.1: Basic BPF filtering                                           :
+>   --- start ---
+>   test child forked, pid 711060
+>   ...
+>   bpf: config 'func=do_epoll_wait' is ok
+>   Looking at the vmlinux_path (8 entries long)
+>   Using /usr/lib/debug/lib/modules/4.18.0-425.3.1.el8.ppc64le/vmlinux for symbols
+>   Open Debuginfo file: /usr/lib/debug/.build-id/81/56f5a07f92ccb62c5600ba0e4aacfb5f3a7534.debug
+>   Try to find probe point from debuginfo.
+>   Matched function: do_epoll_wait [4ef8cb0]
+>   found inline addr: 0xc00000000061dbe4
+>   Probe point found: __se_compat_sys_epoll_pwait+196
+>   found inline addr: 0xc00000000061d9f4
+>   Probe point found: __se_sys_epoll_pwait+196
+>   found inline addr: 0xc00000000061d824
+>   Probe point found: __se_sys_epoll_wait+36
+>   Found 3 probe_trace_events.
+>   Opening /sys/kernel/tracing//kprobe_events write=1
+>   ...
+>   BPF filter result incorrect, expected 56, got 56 samples
+>   test child finished with -1
+>   ---- end ----
+>   BPF filter subtest 1: FAILED!
 > 
-> I tried to apply below patch, and hit lockdep warning during boot.
-> Can you break this dependency?
+> The statement above about the result being incorrect looks weird, and it
+> is due to that particular perf build missing commit 3e11300cdfd5f1
+> ("perf test: Fix bpf test sample mismatch reporting"). In reality, due
+> to commit 4b04e0decd2518 ("perf test: Fix basic bpf filtering test"),
+> perf expects there to be 56*3 samples.
+> 
+> However, the number of samples we receive is going to be dependent on
+> where the probes are installed, which is dependent on where
+> do_epoll_wait gets inlined. On s390x, it looks like probes at all the
+> inlined locations are hit. But, that is not the case on ppc64le.
+> 
+> Fix this by switching the test to instead use the syscall tracepoint.
+> This ensures that we will only ever install a single event enabling us
+> to reliably determine the sample count.
+> 
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
 
-  cpu_add_remove_lock
-    cpu_hotplug_lock
-      pmus_lock
-        dev->mutex		(pmu_dev_alloc)
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/bpf-script-example.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
+> index 7981c69ed1b456..b638cc99d5ae56 100644
+> --- a/tools/perf/tests/bpf-script-example.c
+> +++ b/tools/perf/tests/bpf-script-example.c
+> @@ -43,7 +43,7 @@ struct {
+>  	__type(value, int);
+>  } flip_table SEC(".maps");
+>  
+> -SEC("func=do_epoll_wait")
+> +SEC("syscalls:sys_enter_epoll_pwait")
+>  int bpf_func__SyS_epoll_pwait(void *ctx)
+>  {
+>  	int ind =0;
+> 
+> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+> -- 
+> 2.39.1
+> 
 
-vs
+-- 
 
-  dev->mutex
-    cpu_add_remove_lock		(pci_device_probe)
-
-
-Possibly something like this might do -- I'm not entirely sure it's
-fully correct, needs a bit of auditing.
-
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index eacc3702654d..d6b2265a9982 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13570,9 +13570,9 @@ static void perf_event_exit_cpu_context(int cpu)
- {
- 	struct perf_cpu_context *cpuctx;
- 	struct perf_event_context *ctx;
-+	int idx = srcu_read_lock(&pmus_srcu);
- 
- 	// XXX simplify cpuctx->online
--	mutex_lock(&pmus_lock);
- 	cpuctx = per_cpu_ptr(&perf_cpu_context, cpu);
- 	ctx = &cpuctx->ctx;
- 
-@@ -13581,7 +13581,7 @@ static void perf_event_exit_cpu_context(int cpu)
- 	cpuctx->online = 0;
- 	mutex_unlock(&ctx->mutex);
- 	cpumask_clear_cpu(cpu, perf_online_mask);
--	mutex_unlock(&pmus_lock);
-+	srcu_read_unlock(&pmus_srcu, idx);
- }
- #else
- 
-@@ -13593,10 +13594,11 @@ int perf_event_init_cpu(unsigned int cpu)
- {
- 	struct perf_cpu_context *cpuctx;
- 	struct perf_event_context *ctx;
-+	int idx;
- 
- 	perf_swevent_init_cpu(cpu);
- 
--	mutex_lock(&pmus_lock);
-+	idx = srcu_read_lock(&pmus_srcu);
- 	cpumask_set_cpu(cpu, perf_online_mask);
- 	cpuctx = per_cpu_ptr(&perf_cpu_context, cpu);
- 	ctx = &cpuctx->ctx;
-@@ -13604,7 +13606,7 @@ int perf_event_init_cpu(unsigned int cpu)
- 	mutex_lock(&ctx->mutex);
- 	cpuctx->online = 1;
- 	mutex_unlock(&ctx->mutex);
--	mutex_unlock(&pmus_lock);
-+	srcu_read_unlock(&pmus_srcu, idx);
- 
- 	return 0;
- }
+- Arnaldo
