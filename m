@@ -2,103 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8212FC25B50
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3936DC25B50
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Jan 2023 21:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232194AbjAWSCm (ORCPT
+        id S232588AbjAWVNQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Jan 2023 13:02:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41014 "EHLO
+        Mon, 23 Jan 2023 16:13:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233321AbjAWSCl (ORCPT
+        with ESMTP id S231674AbjAWVNP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Jan 2023 13:02:41 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 42474301B2;
-        Mon, 23 Jan 2023 10:02:40 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4E4DC14;
-        Mon, 23 Jan 2023 10:03:21 -0800 (PST)
-Received: from [10.57.75.85] (unknown [10.57.75.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8362B3F71E;
-        Mon, 23 Jan 2023 10:02:37 -0800 (PST)
-Message-ID: <0a5019bd-8666-45b1-bcaa-e3bacc869bc8@arm.com>
-Date:   Mon, 23 Jan 2023 18:02:36 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH] perf: cs-etm: Improve missing sink warning message
-To:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
+        Mon, 23 Jan 2023 16:13:15 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A0B38026
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 13:13:15 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id jl3so12725160plb.8
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 13:13:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lnbo6gUHJR5pYy4aLoTMzmw2ofFdXg+9MZ+Z4rKqpeM=;
+        b=DvkmHWYt2TVGKHIUWumHUCiqAw1NmzJoDmElCvjsvM9WzIdKa3W5gemYewsDOGfyVk
+         wrLyAfKOZDz44CAephEEyuzXqKC2Rk4h+ZZLpqKIRJbip8T9PFvpH248Gz/QsWMMsJlc
+         f9VuJ+3f/quFIJrX9NhW6R3tf+0Ls6/sNmotcAUTTMRzqso0dt5GyCewqmIyVXQm3Wbm
+         e/u0D+mlS8afBmjLyUEoYvDolXmDRMJcuf9iRjbbSjv1Ep8kGiqfiFPAsueU59gHBw7G
+         MQQoGvrwueOws0cmWWG7ApJDplGlume7/M7dABuHF8ZhhysG/gpY5y2MtLlGTyg3FYQO
+         LrXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Lnbo6gUHJR5pYy4aLoTMzmw2ofFdXg+9MZ+Z4rKqpeM=;
+        b=qFEbJXHrOzpFq6wH9pSFAWAP0RzQMhyudw4D+8ZslxdSQHvDpf7vYsO6Fq7KHDSzGb
+         Fl+GGIjpz6XCl/fswypdkzJaw+2DVzlfdTPcninLTKGwRiL8gBkcdeQF2LP3nVYySYfy
+         X5fqWR6QT8yBqwdhpRtSLqbWkQlw3Gl+u3Jh8LT5UVuqf9ERwX/ofdLTCyQZC1GC8/h3
+         5QbYXVkotU37HzKPRfP+vmnhy0xz+fRhMaaysnCdqRsscESB5jdzkCmziy3gFuvmksTk
+         9l7NCkc/8zVrl/Pw7ORnUonnKvqxkHggMz28K5x81g+bFPlyfU9K/CYt7Jm0YIdACWOj
+         YmfQ==
+X-Gm-Message-State: AFqh2koqlpGTWycsZGxq3Re85ViVsyRFKt1S9PpaPBsfnPovrse3kXwD
+        vbvBsAX9qCm/2305RBmJB1ejKas+i4lCMA==
+X-Google-Smtp-Source: AMrXdXsO744Pt5y+0B1eTvjr42h5fBAQQXGqKhFXHo38AsUROeBW4jFuDUXO4r7nRVbetEFn9OEFog==
+X-Received: by 2002:a17:902:ebc9:b0:194:8260:cc50 with SMTP id p9-20020a170902ebc900b001948260cc50mr27593491plg.43.1674508394205;
+        Mon, 23 Jan 2023 13:13:14 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::aee3])
+        by smtp.gmail.com with ESMTPSA id jh20-20020a170903329400b001783f964fe3sm150487plb.113.2023.01.23.13.13.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jan 2023 13:13:13 -0800 (PST)
+From:   Khem Raj <raj.khem@gmail.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Khem Raj <raj.khem@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230123161114.261255-1-james.clark@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20230123161114.261255-1-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] perf cpumap: Make counter as unsigned ints
+Date:   Mon, 23 Jan 2023 13:13:10 -0800
+Message-Id: <20230123211310.127532-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.39.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 23/01/2023 16:11, James Clark wrote:
-> Make the sink error message more similar to the event error message that
-> reminds about missing kernel support. The available sinks are also
-> determined by the hardware so mention that too.
-> 
-> Also, usually it's not necessary to specify the sink, so add that as a
-> hint.
-> 
-> Now the error for a made up sink looks like this:
-> 
->    $ perf record -e cs_etm/@abc/
->    Couldn't find sink "abc" on event cs_etm/@abc/.
->    Missing kernel or device support? Errno: 2 (No such file or directory)
-> 
->    Hint: An appropriate sink will picked automatically if none is specified.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->   tools/perf/arch/arm/util/cs-etm.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 481e170cd3f1..c6195a7a3cbf 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -283,7 +283,9 @@ static int cs_etm_set_sink_attr(struct perf_pmu *pmu,
->   
->   		ret = perf_pmu__scan_file(pmu, path, "%x", &hash);
->   		if (ret != 1) {
-> -			pr_err("failed to set sink \"%s\" on event %s with %d (%s)\n",
-> +			pr_err("Couldn't find sink \"%s\" on event %s\n"
+These are loop counters which is inherently unsigned. Therefore make
+them unsigned. Moreover it also fixes alloc-size-larger-than
+error with gcc-13, where malloc can be called with (-1) due to tmp_len
+being an int type.
 
-Could this be tied to "errno == ENOENT" ?  Otherwise, this could be 
-guiding the user to wrong direction.
+Fixes
+| cpumap.c:366:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+|   366 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+|       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> +			       "Missing kernel or device support? errno: %d (%s)\n\n"
-> +			       "Hint: An appropriate sink will picked automatically if one isn't specified.\n",
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/lib/perf/cpumap.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-minor nit: "... sink will *be* picked.." ?
-
-Otherwise, looks good to me.
-
-Suzuki
-
->   			       sink, evsel__name(evsel), errno,
->   			       str_error_r(errno, msg, sizeof(msg)));
->   			return ret;
-> 
-> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 6cd0be7c1bb4..d960880dd903 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -351,8 +351,8 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+ 					 struct perf_cpu_map *other)
+ {
+ 	struct perf_cpu *tmp_cpus;
+-	int tmp_len;
+-	int i, j, k;
++	unsigned int tmp_len;
++	unsigned int i, j, k;
+ 	struct perf_cpu_map *merged;
+ 
+ 	if (perf_cpu_map__is_subset(orig, other))
+@@ -369,7 +369,7 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+ 
+ 	/* Standard merge algorithm from wikipedia */
+ 	i = j = k = 0;
+-	while (i < orig->nr && j < other->nr) {
++	while (i < (unsigned int)orig->nr && j < (unsigned int)other->nr) {
+ 		if (orig->map[i].cpu <= other->map[j].cpu) {
+ 			if (orig->map[i].cpu == other->map[j].cpu)
+ 				j++;
+@@ -378,10 +378,10 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+ 			tmp_cpus[k++] = other->map[j++];
+ 	}
+ 
+-	while (i < orig->nr)
++	while (i < (unsigned int)orig->nr)
+ 		tmp_cpus[k++] = orig->map[i++];
+ 
+-	while (j < other->nr)
++	while (j < (unsigned int)other->nr)
+ 		tmp_cpus[k++] = other->map[j++];
+ 	assert(k <= tmp_len);
+ 
+-- 
+2.39.1
 
