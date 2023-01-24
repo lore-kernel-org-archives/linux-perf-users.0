@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C46CC25B4E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 06:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6831C54EB4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 06:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232900AbjAXGew (ORCPT
+        id S232862AbjAXGfC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 01:34:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50764 "EHLO
+        Tue, 24 Jan 2023 01:35:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233369AbjAXGeu (ORCPT
+        with ESMTP id S233073AbjAXGez (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 01:34:50 -0500
+        Tue, 24 Jan 2023 01:34:55 -0500
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76CB53CE36
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:22 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id d17-20020a5b0611000000b00801a0e3e117so11369887ybq.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0193E604
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:34 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id n8-20020a258d08000000b007facaf67acfso15361351ybl.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OBn5Y2//Eo6oNIMMK9wBJfM2lVt0TpL9hFeMLIkCb84=;
-        b=VbiAlV566W8BcZzTiYIJsdKZM9D4RJcp+8b9AmI3YWoFQS0vWZcmYp39M6IyCyJMQ8
-         5k3Fmj7omdaZFFvPPfxuEphMIxDSXtLFV4VgKMnalM88qGLbXcY+1Fml8hNOCZpFGFF0
-         YOcQFiyoHRRHmc5fT9jZSvSYIKeI4D9ogMYGDZFr/4NKvNipo0ZS8FyIomcMZtwAool5
-         pZybwJMm17m/oTPBm7LGHEOVkExhFJJIMCML8mU56T85eJS5eAHYicSL3LSSSZwNflaw
-         NDBn9khAlYqQa47cK8utfNv/urMigVllQJVZQc8lTFGc8sW0pJn1ZeNZGjagP7LjrTtq
-         sQCA==
+        bh=MxI5oPJ3cq0K+5Os4jMfPPdT2CCa4+RQl8NewShLZ1k=;
+        b=QcL+ZQJPpdPJeyeTX72i49hgimTb0fFpL+iy8cNYa14cICCBX6O6B5T0GphRgj9LEM
+         J56k+rR4PbYalwXQ0bAd3urfnDGaJy28JKC9XMDWOqdIDRZnbVMZduQMe1fYHBZy3VXe
+         cKVRmrM7kftixRvWRMmEzNqc0AQzvT2x0R1fiIGPcP/9iNioecViCLKnXLYVFF3VUa3c
+         vD+itFUV5prKBRYb+EMXmJM0e+wEewImeOAjzjUR37J80RAKBVu72u9eWYgly+/+YX+4
+         wi52tLNtDmJI2a1n7EoaInYb3e0iIOSOCliRoqXcbTiUmDKf4lMKR5zRsLcJlGlRASpa
+         x98Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OBn5Y2//Eo6oNIMMK9wBJfM2lVt0TpL9hFeMLIkCb84=;
-        b=nUXkjg+VZkM/zPOk3P6Gvcgc6dqIH/3k54hhAZJpr55jogTETamZAT9U70RXmYb+Ep
-         8pQMZHIMSa1JLJPoSgAKPgIESKUajVbmdq1Nlt2Nu4QLTeMSdCNUaw5KqAcR7KXvcsEP
-         bXZEpWENwJdTIP57Y45RWwR+AJnYE4WvUx5qRCHTQ36zlL2ZkhNJR34RfTBgu8sjNeKg
-         8+D3V2dYJdj3BxST8IUIWfPzpsDTUaIhtW34mcVlJMw10J4FauxzET1FZIsdmXXEcGeK
-         0D+VlaXGsAVW+EbY2O9psKdSWpiXkSmapCvJRXiFcNEpVC+iMQvYoZyhoK1ZqbWiGL36
-         4QFA==
-X-Gm-Message-State: AFqh2krIQa8rtg5FIfAulxLgJnVNPtlq/or6xEI3oC4CjaikJ2jahktN
-        9PJ+ZrG0IsotK/KPH7hqytchLqUY5xaY
-X-Google-Smtp-Source: AMrXdXtjzAnFGUH+D3iFKg8PZ4idgaV33fF0x9+0tKZVdRtaLfAFWr+Vz22S7lqRjhACrGvGvfCVpesFvrjK
+        bh=MxI5oPJ3cq0K+5Os4jMfPPdT2CCa4+RQl8NewShLZ1k=;
+        b=5rGhjJ43FFDntBUyOIkX5cmmYQszSkpYTprXyHtUKPKfS20Dh3RU3kA0Wx+Q7MuOn1
+         Bib3E8fjhakiSYdhP2UCbQcsFt5kVfFISfg/5kbYDG/KKDzjOPo1hTTUcBqyreOJAGqc
+         eA/Ynvn8dk1e+HW74k1FwHI8bQhdJMuWGkAXme1LI/8cwziWymIGRWtm5yiUt1ze8mYR
+         C5M7JQDI/up27QC+nYS31yNvRKpKhRUapYimv+jBaCq3g8OgF6qPmGoullrCAEhu05Ju
+         XQfugAI66KBOrxxzxc/M7KCfB0k1Z1hnaG+t99o3bxMQzWDF+8Qzi4f7OJraFYRqkpgi
+         p5YQ==
+X-Gm-Message-State: AFqh2koMd1UNBfHLHmGDeNjQV5VrWMqXl+2bN1w00l9596PUbrlVULH7
+        xKvswIPp6V7spYdeY8UxjutE33IbIg8B
+X-Google-Smtp-Source: AMrXdXuYfN4d0MK2UH9HwYS5h5VOVVypdFuHlEkLzQbckgvPAZRQbPea4EAmOqVX6fYwt9MK+jMEfFLer4SI
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:460d:1b4a:acb8:ae9a])
- (user=irogers job=sendgmr) by 2002:a05:690c:dc3:b0:4fc:f2fc:526 with SMTP id
- db3-20020a05690c0dc300b004fcf2fc0526mr2042491ywb.116.1674542058813; Mon, 23
- Jan 2023 22:34:18 -0800 (PST)
-Date:   Mon, 23 Jan 2023 22:33:15 -0800
+ (user=irogers job=sendgmr) by 2002:a25:1856:0:b0:732:edd2:4138 with SMTP id
+ 83-20020a251856000000b00732edd24138mr1978744yby.448.1674542073924; Mon, 23
+ Jan 2023 22:34:33 -0800 (PST)
+Date:   Mon, 23 Jan 2023 22:33:17 -0800
 In-Reply-To: <20230124063320.668917-1-irogers@google.com>
-Message-Id: <20230124063320.668917-7-irogers@google.com>
+Message-Id: <20230124063320.668917-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20230124063320.668917-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
-Subject: [PATCH v3 06/11] perf pmu-events: Remove now unused event and metric variables
+Subject: [PATCH v3 08/11] perf jevents: Combine table prefix and suffix writing
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -89,549 +89,107 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Previous changes separated the uses of pmu_event and pmu_metric,
-however, both structures contained all the variables of event and
-metric. This change removes the event variables from metric and the
-metric variables from event.
-
-Note, this change removes the setting of evsel's metric_name/expr as
-these fields are no longer part of struct pmu_event. The metric
-remains but is no longer implicitly requested when the event is. This
-impacts a few Intel uncore events, however, as the ScaleUnit is shared
-by the event and the metric this utility is questionable. Also the
-MetricNames look broken (contain spaces) in some cases and when trying
-to use the functionality with '-e' the metrics fail but regular
-metrics with '-M' work. For example, on SkylakeX '-M' works:
-
-```
-$ perf stat -M LLC_MISSES.PCIE_WRITE -a sleep 1
-
- Performance counter stats for 'system wide':
-
-                 0      UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 #  57896.0 Bytes  LLC_MISSES.PCIE_WRITE  (49.84%)
-             7,174      UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1                                        (49.85%)
-                 0      UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3                                        (50.16%)
-                63      UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0                                        (50.15%)
-
-       1.004576381 seconds time elapsed
-```
-
-whilst the event '-e' version is broken even with --group/-g (fwiw, we should also remove -g [1]):
-
-```
-$ perf stat -g -e LLC_MISSES.PCIE_WRITE -g -a sleep 1
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART2 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART1 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART3 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-Add UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.PART0 event to groups to get metric expression for LLC_MISSES.PCIE_WRITE
-
- Performance counter stats for 'system wide':
-
-            27,316 Bytes LLC_MISSES.PCIE_WRITE
-
-       1.004505469 seconds time elapsed
-```
-
-The code also carries warnings where the user is supposed to select
-events for metrics [2] but given the lack of use of such a feature,
-let's clean the code and just remove.
-
-[1] https://lore.kernel.org/lkml/20220707195610.303254-1-irogers@google.com/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/util/stat-shadow.c?id=01b8957b738f42f96a130079bc951b3cc78c5b8a#n425
+Combine into a single function to simplify, in a later change, writing
+metrics separately.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-list.c          | 20 ++---------------
- tools/perf/pmu-events/jevents.py   | 20 +++++++++++++----
- tools/perf/pmu-events/pmu-events.h | 22 +++++--------------
- tools/perf/tests/pmu-events.c      | 27 -----------------------
- tools/perf/util/parse-events.c     |  2 --
- tools/perf/util/pmu.c              | 35 +++---------------------------
- tools/perf/util/pmu.h              |  9 --------
- tools/perf/util/print-events.c     | 32 +++++++--------------------
- tools/perf/util/print-events.h     |  3 +--
- 9 files changed, 36 insertions(+), 134 deletions(-)
+ tools/perf/pmu-events/jevents.py | 36 +++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 137d73edb541..791f513ae5b4 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -99,8 +99,7 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 				const char *scale_unit __maybe_unused,
- 				bool deprecated, const char *event_type_desc,
- 				const char *desc, const char *long_desc,
--				const char *encoding_desc,
--				const char *metric_name, const char *metric_expr)
-+				const char *encoding_desc)
- {
- 	struct print_state *print_state = ps;
- 	int pos;
-@@ -159,10 +158,6 @@ static void default_print_event(void *ps, const char *pmu_name, const char *topi
- 	if (print_state->detailed && encoding_desc) {
- 		printf("%*s", 8, "");
- 		wordwrap(encoding_desc, 8, pager_get_columns(), 0);
--		if (metric_name)
--			printf(" MetricName: %s", metric_name);
--		if (metric_expr)
--			printf(" MetricExpr: %s", metric_expr);
- 		putchar('\n');
- 	}
- }
-@@ -308,8 +303,7 @@ static void json_print_event(void *ps, const char *pmu_name, const char *topic,
- 			     const char *scale_unit,
- 			     bool deprecated, const char *event_type_desc,
- 			     const char *desc, const char *long_desc,
--			     const char *encoding_desc,
--			     const char *metric_name, const char *metric_expr)
-+			     const char *encoding_desc)
- {
- 	struct json_print_state *print_state = ps;
- 	bool need_sep = false;
-@@ -366,16 +360,6 @@ static void json_print_event(void *ps, const char *pmu_name, const char *topic,
- 				  encoding_desc);
- 		need_sep = true;
- 	}
--	if (metric_name) {
--		fix_escape_printf(&buf, "%s\t\"MetricName\": \"%S\"", need_sep ? ",\n" : "",
--				  metric_name);
--		need_sep = true;
--	}
--	if (metric_expr) {
--		fix_escape_printf(&buf, "%s\t\"MetricExpr\": \"%S\"", need_sep ? ",\n" : "",
--				  metric_expr);
--		need_sep = true;
--	}
- 	printf("%s}", need_sep ? "\n" : "");
- 	strbuf_release(&buf);
- }
 diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 8df14ab14fcf..4cdbf34b7298 100755
+index 4cdbf34b7298..5f8d490c7269 100755
 --- a/tools/perf/pmu-events/jevents.py
 +++ b/tools/perf/pmu-events/jevents.py
-@@ -37,6 +37,11 @@ _json_event_attributes = [
-     'metric_constraint', 'metric_expr', 'long_desc'
- ]
+@@ -19,10 +19,10 @@ _sys_event_tables = []
+ # JsonEvent. Architecture standard events are in json files in the top
+ # f'{_args.starting_dir}/{_args.arch}' directory.
+ _arch_std_events = {}
+-# Track whether an events table is currently being defined and needs closing.
+-_close_table = False
+ # Events to write out when the table is closed
+ _pending_events = []
++# Name of table to be written out
++_pending_events_tblname = None
+ # Global BigCString shared by all structures.
+ _bcs = None
+ # Order specific JsonEvent attributes will be visited.
+@@ -378,24 +378,13 @@ def preprocess_arch_std_files(archpath: str) -> None:
+           _arch_std_events[event.metric_name.lower()] = event
  
-+# Attributes that are in pmu_metric rather than pmu_event.
-+_json_metric_attributes = [
-+    'metric_name', 'metric_group', 'metric_constraint', 'metric_expr', 'desc',
-+    'long_desc', 'unit', 'compat', 'aggr_mode'
-+]
  
- def removesuffix(s: str, suffix: str) -> str:
-   """Remove the suffix from a string
-@@ -569,21 +574,28 @@ static void decompress_event(int offset, struct pmu_event *pe)
- \tconst char *p = &big_c_string[offset];
- """)
-   for attr in _json_event_attributes:
--    _args.output_file.write(f"""
-+    if attr in _json_metric_attributes and 'metric_' in attr:
-+      _args.output_file.write(f'\n\t/* Skip {attr} */\n')
-+    else:
-+      _args.output_file.write(f"""
- \tpe->{attr} = (*p == '\\0' ? NULL : p);
- """)
-     if attr == _json_event_attributes[-1]:
-       continue
-     _args.output_file.write('\twhile (*p++);')
-   _args.output_file.write("""}
--static void decompress_metric(int offset, struct pmu_metric *pe)
+-def print_events_table_prefix(tblname: str) -> None:
+-  """Called when a new events table is started."""
+-  global _close_table
+-  if _close_table:
+-    raise IOError('Printing table prefix but last table has no suffix')
+-  _args.output_file.write(f'static const struct compact_pmu_event {tblname}[] = {{\n')
+-  _close_table = True
+-
+-
+ def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
+   """Add contents of file to _pending_events table."""
+-  if not _close_table:
+-    raise IOError('Table entries missing prefix')
+   for e in read_json_events(item.path, topic):
+     _pending_events.append(e)
+ 
+ 
+-def print_events_table_suffix() -> None:
++def print_pending_events() -> None:
+   """Optionally close events table."""
+ 
+   def event_cmp_key(j: JsonEvent) -> Tuple[bool, str, str, str, str]:
+@@ -407,17 +396,19 @@ def print_events_table_suffix() -> None:
+     return (j.desc is not None, fix_none(j.topic), fix_none(j.name), fix_none(j.pmu),
+             fix_none(j.metric_name))
+ 
+-  global _close_table
+-  if not _close_table:
++  global _pending_events
++  if not _pending_events:
+     return
+ 
+-  global _pending_events
++  global _pending_events_tblname
++  _args.output_file.write(
++      f'static const struct compact_pmu_event {_pending_events_tblname}[] = {{\n')
 +
-+static void decompress_metric(int offset, struct pmu_metric *pm)
- {
- \tconst char *p = &big_c_string[offset];
- """)
-   for attr in _json_event_attributes:
--    _args.output_file.write(f"""
--\tpe->{attr} = (*p == '\\0' ? NULL : p);
-+    if attr in _json_metric_attributes:
-+      _args.output_file.write(f"""
-+\tpm->{attr} = (*p == '\\0' ? NULL : p);
- """)
-+    else:
-+      _args.output_file.write(f'\n\t/* Skip {attr} */\n')
-     if attr == _json_event_attributes[-1]:
-       continue
-     _args.output_file.write('\twhile (*p++);')
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index e2cd3e61acef..dca32979d6a4 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -23,29 +23,19 @@ struct pmu_event {
- 	const char *unit;
- 	const char *perpkg;
- 	const char *aggr_mode;
--	const char *metric_expr;
--	const char *metric_name;
--	const char *metric_group;
- 	const char *deprecated;
--	const char *metric_constraint;
- };
+   for event in sorted(_pending_events, key=event_cmp_key):
+     _args.output_file.write(event.to_c_string())
+-    _pending_events = []
++  _pending_events = []
  
- struct pmu_metric {
--	const char *name;
--	const char *compat;
--	const char *event;
--	const char *desc;
--	const char *topic;
--	const char *long_desc;
--	const char *pmu;
--	const char *unit;
--	const char *perpkg;
--	const char *aggr_mode;
--	const char *metric_expr;
- 	const char *metric_name;
- 	const char *metric_group;
--	const char *deprecated;
-+	const char *metric_expr;
-+	const char *unit;
-+	const char *compat;
-+	const char *aggr_mode;
- 	const char *metric_constraint;
-+	const char *desc;
-+	const char *long_desc;
- };
+   _args.output_file.write('};\n\n')
+-  _close_table = False
  
- struct pmu_events_table;
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index e5fb3d5a06c3..c2b3ada57cbc 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -337,36 +337,12 @@ static int compare_pmu_events(const struct pmu_event *e1, const struct pmu_event
- 		return -1;
- 	}
+ def get_topic(topic: str) -> str:
+   if topic.endswith('metrics.json'):
+@@ -455,12 +446,13 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
  
--	if (!is_same(e1->metric_expr, e2->metric_expr)) {
--		pr_debug2("testing event e1 %s: mismatched metric_expr, %s vs %s\n",
--			  e1->name, e1->metric_expr, e2->metric_expr);
--		return -1;
--	}
--
--	if (!is_same(e1->metric_name, e2->metric_name)) {
--		pr_debug2("testing event e1 %s: mismatched metric_name, %s vs %s\n",
--			  e1->name,	e1->metric_name, e2->metric_name);
--		return -1;
--	}
--
--	if (!is_same(e1->metric_group, e2->metric_group)) {
--		pr_debug2("testing event e1 %s: mismatched metric_group, %s vs %s\n",
--			  e1->name, e1->metric_group, e2->metric_group);
--		return -1;
--	}
--
- 	if (!is_same(e1->deprecated, e2->deprecated)) {
- 		pr_debug2("testing event e1 %s: mismatched deprecated, %s vs %s\n",
- 			  e1->name, e1->deprecated, e2->deprecated);
- 		return -1;
- 	}
+   # model directory, reset topic
+   if item.is_dir() and is_leaf_dir(item.path):
+-    print_events_table_suffix()
++    print_pending_events()
  
--	if (!is_same(e1->metric_constraint, e2->metric_constraint)) {
--		pr_debug2("testing event e1 %s: mismatched metric_constant, %s vs %s\n",
--			  e1->name, e1->metric_constraint, e2->metric_constraint);
--		return -1;
--	}
--
- 	return 0;
- }
+     tblname = file_name_to_table_name(parents, item.name)
+     if item.name == 'sys':
+       _sys_event_tables.append(tblname)
+-    print_events_table_prefix(tblname)
++    global _pending_events_tblname
++    _pending_events_tblname = tblname
+     return
  
-@@ -432,9 +408,6 @@ static int test__pmu_event_table_core_callback(const struct pmu_event *pe,
- 	struct perf_pmu_test_event const **test_event_table;
- 	bool found = false;
+   # base dir or too deep
+@@ -809,7 +801,7 @@ struct compact_pmu_event {
+   for arch in archs:
+     arch_path = f'{_args.starting_dir}/{arch}'
+     ftw(arch_path, [], process_one_file)
+-    print_events_table_suffix()
++    print_pending_events()
  
--	if (!pe->name)
--		return 0;
--
- 	if (pe->pmu)
- 		test_event_table = &uncore_events[0];
- 	else
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 21cce83462b3..0336ff27c15f 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1570,8 +1570,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	evsel->scale = info.scale;
- 	evsel->per_pkg = info.per_pkg;
- 	evsel->snapshot = info.snapshot;
--	evsel->metric_expr = info.metric_expr;
--	evsel->metric_name = info.metric_name;
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 3a67b17b4a16..f8c214d8815f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -280,10 +280,6 @@ static void perf_pmu_update_alias(struct perf_pmu_alias *old,
- 	perf_pmu_assign_str(old->name, "long_desc", &old->long_desc,
- 			    &newalias->long_desc);
- 	perf_pmu_assign_str(old->name, "topic", &old->topic, &newalias->topic);
--	perf_pmu_assign_str(old->name, "metric_expr", &old->metric_expr,
--			    &newalias->metric_expr);
--	perf_pmu_assign_str(old->name, "metric_name", &old->metric_name,
--			    &newalias->metric_name);
- 	perf_pmu_assign_str(old->name, "value", &old->str, &newalias->str);
- 	old->scale = newalias->scale;
- 	old->per_pkg = newalias->per_pkg;
-@@ -299,8 +295,6 @@ void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
- 	zfree(&newalias->long_desc);
- 	zfree(&newalias->topic);
- 	zfree(&newalias->str);
--	zfree(&newalias->metric_expr);
--	zfree(&newalias->metric_name);
- 	zfree(&newalias->pmu_name);
- 	parse_events_terms__purge(&newalias->terms);
- 	free(newalias);
-@@ -337,16 +331,13 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 	int num;
- 	char newval[256];
- 	char *long_desc = NULL, *topic = NULL, *unit = NULL, *perpkg = NULL,
--	     *metric_expr = NULL, *metric_name = NULL, *deprecated = NULL,
--	     *pmu_name = NULL;
-+	     *deprecated = NULL, *pmu_name = NULL;
- 
- 	if (pe) {
- 		long_desc = (char *)pe->long_desc;
- 		topic = (char *)pe->topic;
- 		unit = (char *)pe->unit;
- 		perpkg = (char *)pe->perpkg;
--		metric_expr = (char *)pe->metric_expr;
--		metric_name = (char *)pe->metric_name;
- 		deprecated = (char *)pe->deprecated;
- 		pmu_name = (char *)pe->pmu;
- 	}
-@@ -401,8 +392,6 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 		perf_pmu__parse_snapshot(alias, dir, name);
- 	}
- 
--	alias->metric_expr = metric_expr ? strdup(metric_expr) : NULL;
--	alias->metric_name = metric_name ? strdup(metric_name): NULL;
- 	alias->desc = desc ? strdup(desc) : NULL;
- 	alias->long_desc = long_desc ? strdup(long_desc) :
- 				desc ? strdup(desc) : NULL;
-@@ -756,9 +745,6 @@ static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
- 	struct pmu_add_cpu_aliases_map_data *data = vdata;
- 	const char *pname = pe->pmu ? pe->pmu : data->cpu_name;
- 
--	if (!pe->name)
--		return 0;
--
- 	if (data->pmu->is_uncore && pmu_uncore_alias_match(pname, data->name))
- 		goto new_alias;
- 
-@@ -813,12 +799,6 @@ static int pmu_add_sys_aliases_iter_fn(const struct pmu_event *pe,
- 	struct pmu_sys_event_iter_data *idata = data;
- 	struct perf_pmu *pmu = idata->pmu;
- 
--	if (!pe->name) {
--		if (pe->metric_group || pe->metric_name)
--			return 0;
--		return -EINVAL;
--	}
--
- 	if (!pe->compat || !pe->pmu)
- 		return 0;
- 
-@@ -1400,8 +1380,6 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
- 	info->unit     = NULL;
- 	info->scale    = 0.0;
- 	info->snapshot = false;
--	info->metric_expr = NULL;
--	info->metric_name = NULL;
- 
- 	list_for_each_entry_safe(term, h, head_terms, list) {
- 		alias = pmu_find_alias(pmu, term);
-@@ -1417,8 +1395,6 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
- 
- 		if (alias->per_pkg)
- 			info->per_pkg = true;
--		info->metric_expr = alias->metric_expr;
--		info->metric_name = alias->metric_name;
- 
- 		list_del_init(&term->list);
- 		parse_events_term__delete(term);
-@@ -1634,8 +1610,7 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 	for (j = 0; j < len; j++) {
- 		const char *name, *alias = NULL, *scale_unit = NULL,
- 			*desc = NULL, *long_desc = NULL,
--			*encoding_desc = NULL, *topic = NULL,
--			*metric_name = NULL, *metric_expr = NULL;
-+			*encoding_desc = NULL, *topic = NULL;
- 		bool deprecated = false;
- 		size_t buf_used;
- 
-@@ -1673,8 +1648,6 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 			buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
- 					"%s/%s/", aliases[j].pmu->name,
- 					aliases[j].event->str) + 1;
--			metric_name = aliases[j].event->metric_name;
--			metric_expr = aliases[j].event->metric_expr;
- 			deprecated = aliases[j].event->deprecated;
- 		}
- 		print_cb->print_event(print_state,
-@@ -1687,9 +1660,7 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 				"Kernel PMU event",
- 				desc,
- 				long_desc,
--				encoding_desc,
--				metric_name,
--				metric_expr);
-+				encoding_desc);
- 	}
- 	if (printed && pager_in_use())
- 		printf("\n");
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 2bdc560f19c7..64c596a358cc 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -132,8 +132,6 @@ extern struct perf_pmu perf_pmu__fake;
- 
- struct perf_pmu_info {
- 	const char *unit;
--	const char *metric_expr;
--	const char *metric_name;
- 	double scale;
- 	bool per_pkg;
- 	bool snapshot;
-@@ -187,13 +185,6 @@ struct perf_pmu_alias {
- 	 * default.
- 	 */
- 	bool deprecated;
--	/**
--	 * @metric_expr: A metric expression associated with an event. Doing
--	 * this makes little sense due to scale and unit applying to both.
--	 */
--	char *metric_expr;
--	/** @metric_name: A name for the metric. unit applying to both. */
--	char *metric_name;
- 	/** @pmu_name: The name copied from struct perf_pmu. */
- 	char *pmu_name;
- };
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 2646ae18d9f9..62e9ea7dcf40 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -101,9 +101,7 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
- 					"Tracepoint event",
- 					/*desc=*/NULL,
- 					/*long_desc=*/NULL,
--					/*encoding_desc=*/NULL,
--					/*metric_name=*/NULL,
--					/*metric_expr=*/NULL);
-+					/*encoding_desc=*/NULL);
- 		}
- 		free(dir_path);
- 		free(evt_namelist);
-@@ -195,9 +193,7 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
- 				"SDT event",
- 				/*desc=*/NULL,
- 				/*long_desc=*/NULL,
--				/*encoding_desc=*/NULL,
--				/*metric_name=*/NULL,
--				/*metric_expr=*/NULL);
-+				/*encoding_desc=*/NULL);
- 
- 		free(evt_name);
- 	}
-@@ -255,9 +251,7 @@ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_sta
- 				event_type_descriptors[PERF_TYPE_HW_CACHE],
- 				/*desc=*/NULL,
- 				/*long_desc=*/NULL,
--				/*encoding_desc=*/NULL,
--				/*metric_name=*/NULL,
--				/*metric_expr=*/NULL);
-+				/*encoding_desc=*/NULL);
- 	}
- 	strlist__delete(evt_name_list);
- 	return 0;
-@@ -277,9 +271,7 @@ void print_tool_events(const struct print_callbacks *print_cb, void *print_state
- 				"Tool event",
- 				/*desc=*/NULL,
- 				/*long_desc=*/NULL,
--				/*encoding_desc=*/NULL,
--				/*metric_name=*/NULL,
--				/*metric_expr=*/NULL);
-+				/*encoding_desc=*/NULL);
- 	}
- }
- 
-@@ -331,9 +323,7 @@ void print_symbol_events(const struct print_callbacks *print_cb, void *print_sta
- 				event_type_descriptors[type],
- 				/*desc=*/NULL,
- 				/*long_desc=*/NULL,
--				/*encoding_desc=*/NULL,
--				/*metric_name=*/NULL,
--				/*metric_expr=*/NULL);
-+				/*encoding_desc=*/NULL);
- 	}
- 	strlist__delete(evt_name_list);
- }
-@@ -364,9 +354,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 			event_type_descriptors[PERF_TYPE_RAW],
- 			/*desc=*/NULL,
- 			/*long_desc=*/NULL,
--			/*encoding_desc=*/NULL,
--			/*metric_name=*/NULL,
--			/*metric_expr=*/NULL);
-+			/*encoding_desc=*/NULL);
- 
- 	print_cb->print_event(print_state,
- 			/*topic=*/NULL,
-@@ -378,9 +366,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 			event_type_descriptors[PERF_TYPE_RAW],
- 			"(see 'man perf-list' on how to encode it)",
- 			/*long_desc=*/NULL,
--			/*encoding_desc=*/NULL,
--			/*metric_name=*/NULL,
--			/*metric_expr=*/NULL);
-+			/*encoding_desc=*/NULL);
- 
- 	print_cb->print_event(print_state,
- 			/*topic=*/NULL,
-@@ -392,9 +378,7 @@ void print_events(const struct print_callbacks *print_cb, void *print_state)
- 			event_type_descriptors[PERF_TYPE_BREAKPOINT],
- 			/*desc=*/NULL,
- 			/*long_desc=*/NULL,
--			/*encoding_desc=*/NULL,
--			/*metric_name=*/NULL,
--			/*metric_expr=*/NULL);
-+			/*encoding_desc=*/NULL);
- 
- 	print_tracepoint_events(print_cb, print_state);
- 
-diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-events.h
-index c237e53c4487..716dcf4b4859 100644
---- a/tools/perf/util/print-events.h
-+++ b/tools/perf/util/print-events.h
-@@ -16,8 +16,7 @@ struct print_callbacks {
- 			const char *scale_unit,
- 			bool deprecated, const char *event_type_desc,
- 			const char *desc, const char *long_desc,
--			const char *encoding_desc,
--			const char *metric_name, const char *metric_expr);
-+			const char *encoding_desc);
- 	void (*print_metric)(void *print_state,
- 			const char *group,
- 			const char *name,
+   print_mapping_table(archs)
+   print_system_mapping_table()
 -- 
 2.39.0.246.g2a6d74b583-goog
 
