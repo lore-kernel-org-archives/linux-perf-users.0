@@ -2,109 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4802C54E94
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 21:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFE9C54E94
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 22:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjAXVu4 (ORCPT
+        id S235224AbjAXWpQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 16:50:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35144 "EHLO
+        Tue, 24 Jan 2023 17:45:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229779AbjAXVuy (ORCPT
+        with ESMTP id S235223AbjAXWpO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 16:50:54 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539C446D71
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 13:50:53 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id r2so15238157wrv.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 13:50:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JdGIK9fuLzovgW08Fh17fW35j9gyLSLJ6qwS42nXVqM=;
-        b=cQpPIiBTzpS8cMDYtf4PjumELI5IzfBWpNIjtFDJeenn2/l1Iu53R4EWUmWUsQRyha
-         Ex3nZ2dLgPHCTGrtrAuMilERJt8/AYsDBa7/2265hPkti3LZZ5whIwBwNZzCVlXDcD4K
-         zKtHdVr3rRjLt/RdtViPFECo6koBSfkipGbht7JrMa7WtJaF4N+eD8R5AxA9CUDxD1GB
-         vmEyv2rKPIzzAKu0tHaI07qBx3RVf0CJq0oYdpseHchqHhKTTjzcVoRg4t0Bi7ie1ODl
-         HOpx7vEQ11C7gkzkUJxuFWIPcn1VlHtfVY+dcOCEl3nDT6oQ1vnLTPi0DN/N5JB4eaFm
-         z2BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JdGIK9fuLzovgW08Fh17fW35j9gyLSLJ6qwS42nXVqM=;
-        b=nShuNKX5/rpqcvUpbZuSt8GyG6SFtaeiluUND+Lzccy8jr2bmU8MorB/MFa5Cpw9cI
-         yX+DiPJGCa8GVuGF55Q/Ixq3HwY7FhY5Nv4sDfLTl9lIJdSXY6T0i8YgSx8CNs+Tlj7I
-         VVtPbCKlt5mMQWgv5jzGe6qRdEFwDdyzAEISUuhsLAWhoDbPkz8X4BixG0i+YR/M46Am
-         dPpxO0Go2ObWm52NoYN5I0JyL/FzoYBzhEgE+cHhfht/peYYxr1W9cCod+kD3QrYFxb5
-         /K9t4fPaLQPumFIEEJWnj+t9fIMxHBuJZ37FLhm0GEDrM4/qCmRl/4QZB1KFoxxvY5Mm
-         tjZA==
-X-Gm-Message-State: AFqh2kr1qBK9xzjaLzjqMXqstiR1Ew0bLtXuVdmKjaPIrSz77r3C7OrX
-        84/9u+dX+8vHItNVDqiqOigGOaZbR39Rjfr8pMYH3wS1XWLwNn7KYAA=
-X-Google-Smtp-Source: AMrXdXsTeUF6GDOjMGYSnhvd1fkdYuuWLfRK1pvF4sBCp7ZE9wBl5fyVrgjmB81WZzXz4NCjIiDsaWFLA+vXVhdvqRU=
-X-Received: by 2002:a05:6000:1d9b:b0:2bc:aa47:bf7a with SMTP id
- bk27-20020a0560001d9b00b002bcaa47bf7amr765242wrb.343.1674597051614; Tue, 24
- Jan 2023 13:50:51 -0800 (PST)
+        Tue, 24 Jan 2023 17:45:14 -0500
+X-Greylist: delayed 518 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 24 Jan 2023 14:45:13 PST
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110CABBB2
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 14:45:12 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 1557F8C1411
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 22:35:36 +0000 (UTC)
+Received: from pdx1-sub0-mail-a306.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id B0F388C0C92
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 22:35:35 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1674599735; a=rsa-sha256;
+        cv=none;
+        b=bgyb15ENRL8H/hKQIgyM3uy4c98oMU3OIpe0NseqVOiVX6eRmxIBka1Z/8m4HBsRyLPl4H
+        DZijtIvi0afmbrkU20LEiWH7P5e+9+jZK362LaE1YawmdCHVXyfxqgJIn2fDUOT9xc12nT
+        VVF/9mLCA4bOgBSaciROkoSfjAzPSNiAQapce4qItbDs3/blqlojBPQAAygGd4auIz0RXW
+        JIq+ZdcTB4sJbelrWp0HuUQM/TcyBKz/nM+BxAV0ZYq+fDH16j8AztI+lEK+5/DjTOKpFI
+        FgS6PKifv4uQ2qoRrFVauP3iftpaVRqLM2qYDhzgcANwEzXJvSylYIsVdfOD9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1674599735;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         dkim-signature; bh=0+ddPJb+zJ+MbSfxufS7SFMyh6w2pn/FBUTVrzUXLsI=;
+        b=bQ36b3aedpyaEICveV1NwOczYCt8lx5ZXGPraTgFYplFX5pqDS7RM5z0xJHRFiXfK2TZFT
+        DACNxTQlhc9N0G/Mv0K05G/45OXGeRjEEEQ5JaJv0U5UwMSrQhcWm+SlVy0vqvIEF4L10x
+        ubs2fqEyF96GQ5fj37h2kys3Q36RE+WhElF/pqGdpCE9t3yNdISu69XxH2ejj9ERXERIZb
+        UTMj2jU2WStVa6hvFCp6HiVKda9GbNpELX/O/UIoMDImRhjZRMOFsR9oqSR591ToUXx4nG
+        xQTK+CUOAbVLD2Vul+Pfrccc4SywUrRXG6H6JJqMiABQQ1sVLBk0k6VRLFF4lQ==
+ARC-Authentication-Results: i=1;
+        rspamd-55978756d7-w5djg;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Language-Lyrical: 2742c7562fc391f9_1674599735944_1554686273
+X-MC-Loop-Signature: 1674599735944:1474463778
+X-MC-Ingress-Time: 1674599735944
+Received: from pdx1-sub0-mail-a306.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.97.74.44 (trex/6.7.1);
+        Tue, 24 Jan 2023 22:35:35 +0000
+Received: from kmjvbox (c-76-102-200-71.hsd1.ca.comcast.net [76.102.200.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kjlx@templeofstupid.com)
+        by pdx1-sub0-mail-a306.dreamhost.com (Postfix) with ESMTPSA id 4P1hd22XcPzkm
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 14:35:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+        s=dreamhost; t=1674599734;
+        bh=0+ddPJb+zJ+MbSfxufS7SFMyh6w2pn/FBUTVrzUXLsI=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=AaFTNpWBxQPJHMXLLBcTebA4aRJ+hUQTYpRSjhlAoCif7jsgVkh9kEOwZKqCUGelU
+         aHIvYUmHJnewioA+PH5fqjULC0J5dwyRj27/WY3+pR3HQHQwhNZ26U5kupPsTdZnpO
+         pRCV0kL2OguWmeFyH5S6zk1T/OOUdvit4PtvxRdo=
+Received: from johansen (uid 1000)
+        (envelope-from kjlx@templeofstupid.com)
+        id e006a
+        by kmjvbox (DragonFly Mail Agent v0.12);
+        Tue, 24 Jan 2023 14:35:31 -0800
+Date:   Tue, 24 Jan 2023 14:35:31 -0800
+From:   Krister Johansen <kjlx@templeofstupid.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        David Reaver <me@davidreaver.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/util: Symbol lookup can fail if multiple segmets match
+ stext
+Message-ID: <20230124223531.GB1962@templeofstupid.com>
 MIME-Version: 1.0
-References: <20230120153706.20388-1-mike.leach@linaro.org> <77f9eab5-4fb2-cf96-9628-2a816d519d61@arm.com>
-In-Reply-To: <77f9eab5-4fb2-cf96-9628-2a816d519d61@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 24 Jan 2023 13:50:38 -0800
-Message-ID: <CAP-5=fWNT9XXMN+97TcprxWA+FRJpAy4T=XC9RHrOdKfcKi8_w@mail.gmail.com>
-Subject: Re: [PATCH] perf: cs-etm: Update decoder code for OpenCSD version 1.4
-To:     James Clark <james.clark@arm.com>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, acme@kernel.org,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 7:47 AM James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 20/01/2023 15:37, Mike Leach wrote:
-> > OpenCSD version 1.4 is released with support for FEAT_ITE.
-> > This adds a new packet type, with associated output element ID in
-> > the packet type enum - OCSD_GEN_TRC_ELEM_INSTRUMENTATION.
-> >
-> > As we just ignore this packet in perf, add to the switch statement
-> > to avoid the "enum not handled in switch error", but conditionally
-> > so as not to break the perf build for older OpenCSD installations.
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > ---
-> >  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> > index fa3aa9c0fb2e..48e7121880a9 100644
-> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> > @@ -604,6 +604,9 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
-> >       case OCSD_GEN_TRC_ELEM_CUSTOM:
-> >       case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
-> >       case OCSD_GEN_TRC_ELEM_MEMTRANS:
-> > +#if (OCSD_VER_NUM >= 0x010400)
-> > +     case OCSD_GEN_TRC_ELEM_INSTRUMENTATION:
-> > +#endif
-> >       default:
-> >               break;
-> >       }
->
-> Checked the build with both old and new versions of OpenCSD and it's ok:
->
-> Reviewed-by: James Clark <james.clark@arm.com>
+This problem was encountered on an arm64 system with a lot of memory.
+Without kernel debug symbols installed, and with both kcore and kallsyms
+available, perf managed to get confused and returned "unknown" for all
+of the kernel symbols that it tried to look up.
 
-Acked-by: Ian Rogers <irogers@google.com>
+On this system, stext fell within the vmalloc segment.  The kcore symbol
+matching code tries to find the first segment that contains stext and
+uses that to replace the segment generated from just the kallsyms
+information.  In this case, however, there were two: a very large
+vmalloc segment, and the text segment.  This caused perf to get confused
+because multiple overlapping segments were inserted into the RB tree
+that holds the discovered segments.  However, that alone wasn't
+sufficient to cause the problem. Even when we could find the segment,
+the offsets were adjusted in such a way that the newly generated symbols
+didn't line up with the instruction addresses in the trace.  The most
+obvious solution would be to consult which segment type is text from
+kcore, but this information is not exposed to users.
 
-Thanks,
-Ian
+Instead, select the smallest matching segment that contains stext
+instead of the first matching segment.  This allows us to match the text
+segment instead of vmalloc, if one is contained within the other.
+
+Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+---
+ tools/perf/util/symbol.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index a3a165ae933a..14ac4189eaff 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1368,10 +1368,16 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 
+ 	/* Find the kernel map using the '_stext' symbol */
+ 	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
++		u64 replacement_size = 0;
+ 		list_for_each_entry(new_map, &md.maps, node) {
+-			if (stext >= new_map->start && stext < new_map->end) {
++			u64 new_size = new_map->end - new_map->start;
++
++			if (!(stext >= new_map->start && stext < new_map->end))
++				continue;
++
++			if (!replacement_map || new_size < replacement_size) {
+ 				replacement_map = new_map;
+-				break;
++				replacement_size = new_size;
+ 			}
+ 		}
+ 	}
+-- 
+2.25.1
+
