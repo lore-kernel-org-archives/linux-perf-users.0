@@ -2,143 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8153DC25B4E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 16:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6687BC25B4E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 17:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234531AbjAXQu2 (ORCPT
+        id S234688AbjAXRDN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 11:50:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54288 "EHLO
+        Tue, 24 Jan 2023 12:03:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234519AbjAXQu1 (ORCPT
+        with ESMTP id S234608AbjAXRCi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 11:50:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AA7C652
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 08:49:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674578980;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pbevOo+CJ0VDN/kJgrYAU4atNu/bDAyPgkeHnTX+gQQ=;
-        b=YaFZvIGDy4Y+oSDuspPi7WYz9Q3GfKzuoaGHiKAodf3Mt/i7p3cdzTXMkF41otXRN9Qd3o
-        JhbewDg7HsPv1jsRU/cta1hNVDAY44tKSRTF3Uh5U8QFO2FswtDdl9WG0WyaO8Wkg1b2NK
-        GfSlnjcVEtw7gqhg8/XDTJ7dpTtggqU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-245-PQIvaidwNPyPklhdXOESVA-1; Tue, 24 Jan 2023 11:49:35 -0500
-X-MC-Unique: PQIvaidwNPyPklhdXOESVA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 08AE43C18345;
-        Tue, 24 Jan 2023 16:49:12 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D99DC492C18;
-        Tue, 24 Jan 2023 16:49:09 +0000 (UTC)
-Date:   Tue, 24 Jan 2023 17:49:07 +0100 (CET)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     Namhyung Kim <namhyung@gmail.com>
-cc:     linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
-        qzhao@redhat.com, cjense@google.com
-Subject: Re: [PATCH 2/2] perf test: Fix JSON format linter test checks
-In-Reply-To: <CAM9d7ch-if6Ov9dT+zHtYzVOdOjGOe=YsQvmb_5AOdbK9NDmZQ@mail.gmail.com>
-Message-ID: <alpine.LRH.2.20.2301241747420.5281@Diego>
-References: <20230120134039.17788-1-mpetlan@redhat.com> <20230120134039.17788-3-mpetlan@redhat.com> <CAM9d7ch-if6Ov9dT+zHtYzVOdOjGOe=YsQvmb_5AOdbK9NDmZQ@mail.gmail.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Tue, 24 Jan 2023 12:02:38 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6994DCF0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 09:02:35 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so13296265wma.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 09:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hww7XDIMPWfn/YjbvHbaubFFaqHXt1LFf2Mw/SUUACI=;
+        b=D0HV8kuuS7LPC8j01FGHyV/OJ14aoIKR9xmDoLNywLaPP8exhXgNj8J7vLP/710sdJ
+         6hkdDS86LvDiLkTv3w1u1XkL/TSjddwN3+k22/9oWsMgUt6HBsUp0HQpzhHm8eEvrMfk
+         5Cg0iqfKke65C9q1yp3heUtGlDMf3E/f5z9R5jGFDhRn/zf2MOB0mP2bH5T8PQ4AYsY1
+         cYAlLNgw7M6uolipz/Q+P5P85fPm+5mDe2Z+sGUrucUtWaONkEry3s3jJ0HI1xjfB19D
+         cLb6pScHeC9GcJ5PiIGVU9V9AhGAQqrgZ+chRPI/LbyA+5FC2FP75KW9I3/sP8lDe24H
+         LlRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hww7XDIMPWfn/YjbvHbaubFFaqHXt1LFf2Mw/SUUACI=;
+        b=xNHB9WWeowk2yzRiag8MEr9/Bq3NpnSD/prf0kBPNrV0cPs+/rChnhvRX+xsDLwOJx
+         dC8zkEDEzG91Z6lMC6Lp7un1XRGo3iL2WO5NI8Cdhg98VNrqqMYA93jxjvZD9Uchnvta
+         t39I1b4LCXOBx8eryNM+3XRytuJYc34QBYgIvpa3vDLgrajPoOxa+Il4yUeio6zIvLJI
+         WU88gSzUuyssGiAQ5AALBbZgOPNRQG+gvudsL42pYnHZt/cuzzmZh95DTQVLKiMRnvEX
+         eiu5yhRuO1sUjLaylZ/WMV2wwyXkvuAIDzSmP+vZYRQOkBr2U3/uD+/fxzVIirEY6on9
+         /gKg==
+X-Gm-Message-State: AFqh2kpp3vkykZR4JDf+uxxh9qDtFEWXGsNNbilNnH1zkHJ1sQHw+1Tw
+        d+4gqOPwaEhRHiQnC6JruW8neRkJYFwmSxoTzuvJjiEpkG3fRsQOBUQ=
+X-Google-Smtp-Source: AMrXdXsR1Do4oiIIMFlvlXMzmKJJ0iQOxUxHrLHzPQkGQkWVV9JOR6OzlzLYiffmmDljt6dxnrAd0OlaH4h9O4L4Z64=
+X-Received: by 2002:a05:600c:1c9a:b0:3d9:ee45:8a9e with SMTP id
+ k26-20020a05600c1c9a00b003d9ee458a9emr1353464wms.174.1674579753898; Tue, 24
+ Jan 2023 09:02:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+References: <20230123211310.127532-1-raj.khem@gmail.com>
+In-Reply-To: <20230123211310.127532-1-raj.khem@gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 24 Jan 2023 09:02:22 -0800
+Message-ID: <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
+Subject: Re: [PATCH] perf cpumap: Make counter as unsigned ints
+To:     Khem Raj <raj.khem@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, 22 Jan 2023, Namhyung Kim wrote:
-> On Fri, Jan 20, 2023 at 6:00 AM Michael Petlan <mpetlan@redhat.com> wrote:
-> >
-> > The test fails on CPUs with topdown metrics, where it is common to print
-> > two metrics per line. Since these are included in default event set for
-> > `perf stat -- something`, it causes the "no args" subtest to fail due to
-> > unexpected member count. We need to accept 7 or 9 members in that case.
-> >
-> > Coming to that, counting commas in the JSON line and consider it a number
-> > of elements is incorrect and misleading. There should be +1 element than
-> > the count of commas, while also, commas can potentially appear in the
-> > event names. Count " : " substrings rather, since these better fit to
-> > what should be actually counted.
-> 
-> I'm also curious if ":" could appear in the event/metric names.
-> Probably more chances to have ":" than "," in the name, no?
+On Mon, Jan 23, 2023 at 1:13 PM Khem Raj <raj.khem@gmail.com> wrote:
+>
+> These are loop counters which is inherently unsigned. Therefore make
+> them unsigned. Moreover it also fixes alloc-size-larger-than
+> error with gcc-13, where malloc can be called with (-1) due to tmp_len
+> being an int type.
+>
+> Fixes
+> | cpumap.c:366:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+> |   366 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+> |       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/perf/cpumap.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 6cd0be7c1bb4..d960880dd903 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -351,8 +351,8 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+>                                          struct perf_cpu_map *other)
+>  {
+>         struct perf_cpu *tmp_cpus;
+> -       int tmp_len;
+> -       int i, j, k;
+> +       unsigned int tmp_len;
+> +       unsigned int i, j, k;
+>         struct perf_cpu_map *merged;
+>
+>         if (perf_cpu_map__is_subset(orig, other))
+> @@ -369,7 +369,7 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+>
+>         /* Standard merge algorithm from wikipedia */
+>         i = j = k = 0;
+> -       while (i < orig->nr && j < other->nr) {
+> +       while (i < (unsigned int)orig->nr && j < (unsigned int)other->nr) {
 
-Yes, ':' can appear in the event names, but not " : " (with the spaces
-around).
+Rather than cast 'nr' why not add the unsigned to the declaration?
 
-Michael
+Thanks,
+Ian
 
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> >
-> > Fixes: 0c343af2a2f8 ("perf test: JSON format checking")
-> >
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> > ---
-> >  .../tests/shell/lib/perf_json_output_lint.py     | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > index d90f8d102eb9..4f1bbb3f07ec 100644
-> > --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> > @@ -40,17 +40,17 @@ def is_counter_value(num):
-> >    return isfloat(num) or num == '<not counted>' or num == '<not supported>'
-> >
-> >  def check_json_output(expected_items):
-> > -  if expected_items != -1:
-> > +  if expected_items:
-> >      for line in Lines:
-> >        if 'failed' not in line:
-> >          count = 0
-> > -        count = line.count(',')
-> > -        if count != expected_items and count >= 1 and count <= 3 and 'metric-value' in line:
-> > +        count = line.count(' : ')
-> > +        if count not in expected_items and count >= 2 and count <= 4 and 'metric-value' in line:
-> >            # Events that generate >1 metric may have isolated metric
-> >            # values and possibly other prefixes like interval, core and
-> >            # aggregate-number.
-> >            continue
-> > -        if count != expected_items:
-> > +        if count not in expected_items:
-> >            raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
-> >                               f' in \'{line}\'')
-> >    checks = {
-> > @@ -82,14 +82,14 @@ def check_json_output(expected_items):
-> >
-> >  try:
-> >    if args.no_args or args.system_wide or args.event:
-> > -    expected_items = 6
-> > +    expected_items = [7, 9]
-> >    elif args.interval or args.per_thread or args.system_wide_no_aggr:
-> > -    expected_items = 7
-> > +    expected_items = [8, 10]
-> >    elif args.per_core or args.per_socket or args.per_node or args.per_die:
-> > -    expected_items = 8
-> > +    expected_items = [9, 11]
-> >    else:
-> >      # If no option is specified, don't check the number of items.
-> > -    expected_items = -1
-> > +    expected_items = []
-> >    check_json_output(expected_items)
-> >  except:
-> >    print('Test failed for input:\n' + '\n'.join(Lines))
-> > --
-> > 2.18.4
-> >
-> 
-> 
-
+>                 if (orig->map[i].cpu <= other->map[j].cpu) {
+>                         if (orig->map[i].cpu == other->map[j].cpu)
+>                                 j++;
+> @@ -378,10 +378,10 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+>                         tmp_cpus[k++] = other->map[j++];
+>         }
+>
+> -       while (i < orig->nr)
+> +       while (i < (unsigned int)orig->nr)
+>                 tmp_cpus[k++] = orig->map[i++];
+>
+> -       while (j < other->nr)
+> +       while (j < (unsigned int)other->nr)
+>                 tmp_cpus[k++] = other->map[j++];
+>         assert(k <= tmp_len);
+>
+> --
+> 2.39.1
+>
