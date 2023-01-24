@@ -2,126 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1EBC54E94
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 18:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9B9C25B4E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 18:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232827AbjAXShR (ORCPT
+        id S233149AbjAXSjE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 13:37:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41124 "EHLO
+        Tue, 24 Jan 2023 13:39:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbjAXShQ (ORCPT
+        with ESMTP id S233756AbjAXSiq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 13:37:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227A41DBAE;
-        Tue, 24 Jan 2023 10:37:15 -0800 (PST)
+        Tue, 24 Jan 2023 13:38:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BAE460AE;
+        Tue, 24 Jan 2023 10:38:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C2EE6B81626;
-        Tue, 24 Jan 2023 18:37:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5274CC433D2;
-        Tue, 24 Jan 2023 18:37:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C7F8A60BA7;
+        Tue, 24 Jan 2023 18:38:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB102C433D2;
+        Tue, 24 Jan 2023 18:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674585432;
-        bh=hCdYGWDy8HIpUL6sAKMF4dNeucZnRYc0zxhb/g2N3z8=;
+        s=k20201202; t=1674585516;
+        bh=TsH9ZYVr7F77egUw3aUTU+8IVwlO2olc5hJ5RHnht/o=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=arMTQO4Fc6t55X9qOMySU3mPdMhJJLF2z4i9492+03LnHUekQ/IHmuVQ3e3+1ZYAH
-         MAsgcs8JpMgc/mk1uGiVsRwuyU/TtZbRgdJvQS3ZnO6o3+qsSBERLSY0acvgCcKIN1
-         hNkX7zP55w2p0N6Vh91vB0bgux2qRZHnQfLrjko5ZPmMPrmEY/sfyU/lBpWeH1VPlp
-         0piapnpjfw5EhP0EP6SIii1yD7SCmjVFxTxR/JL6Y78MSK9/v5DMgHHGyOGVbBrVgs
-         cHeU9LNuC91YZW5++Cbqzdc7RaEZJegC9WsSziEOkE+PhWue6jIF5oeQOT8daB7pYP
-         9eFVVFaPukZ/w==
+        b=f/0mF177Cuz36iVBj/t9EF83p69DWu1SGGMlE/aXElJWFNPBcK+L6GaHVpowvl926
+         aMzvGkDi2cn5hoi7C0uTecLyVS9JZ7aUAGLVtBuCeg/br+ZzQYlFD2TPdJQltNWihh
+         SQzJpQsF96lzr46o2wb9HYDs58BOTpGCBaoFnuufQONuYTnf+7RBTqXyPsUKqSBGkp
+         kGwdCGkfT0TmLOjlQn4e1hgQeFPS6BGl8KNe5AZbg8qWS6bq681LXZodoAs5b8Q8Ug
+         Sjp3BIanMKmO+2nfWv2rAO2fVPSN6eJfxVCOXexBluaWbj4ltlI/QQwvB6VtN1JdTi
+         x2IyXhG5WC7Bw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 80E1E405BE; Tue, 24 Jan 2023 15:37:10 -0300 (-03)
-Date:   Tue, 24 Jan 2023 15:37:10 -0300
+        id 5D3BD405BE; Tue, 24 Jan 2023 15:38:33 -0300 (-03)
+Date:   Tue, 24 Jan 2023 15:38:33 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.or, linux-kernel@vger.kernel.org,
-        leo.yan@linaro.com, Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf mem/c2c: Document that SPE is used for mem and c2c
- on Arm
-Message-ID: <Y9AlVmA+dZLm2uwi@kernel.org>
-References: <20230124145929.557891-1-james.clark@arm.com>
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v2] perf buildid: Avoid copy of uninitialized memory
+Message-ID: <Y9AlqSH4kBVddKqg@kernel.org>
+References: <20230120185828.43231-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230124145929.557891-1-james.clark@arm.com>
+In-Reply-To: <20230120185828.43231-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 24, 2023 at 02:59:29PM +0000, James Clark escreveu:
-> Setup is non-trivial so also link to the full SPE docs.
+Em Fri, Jan 20, 2023 at 10:58:28AM -0800, Ian Rogers escreveu:
+> build_id__init only copies the buildid data up to size leaving the
+> rest of the data array uninitialized. Copying the full array during
+> synthesis means the written event contains uninitialized
+> memory. Ensure the size is less that the buffer size and only copy the
+> bytes that were initialized. This was detected by the Clang/LLVM
+> memory sanitizer.
+> 
+> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> v2. Avoids the potential for copying too much as suggested by Arnaldo.
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/Documentation/perf-c2c.txt | 8 ++++++--
->  tools/perf/Documentation/perf-mem.txt | 7 ++++++-
->  2 files changed, 12 insertions(+), 3 deletions(-)
+>  tools/perf/util/synthetic-events.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-> index af5c3106f468..4e8c263e1721 100644
-> --- a/tools/perf/Documentation/perf-c2c.txt
-> +++ b/tools/perf/Documentation/perf-c2c.txt
-> @@ -22,7 +22,11 @@ you to track down the cacheline contentions.
->  On Intel, the tool is based on load latency and precise store facility events
->  provided by Intel CPUs. On PowerPC, the tool uses random instruction sampling
->  with thresholding feature. On AMD, the tool uses IBS op pmu (due to hardware
-> -limitations, perf c2c is not supported on Zen3 cpus).
-> +limitations, perf c2c is not supported on Zen3 cpus). On Arm64 it uses SPE to
-> +sample load and store operations, therefore hardware and kernel support is
-> +required. See linkperf:perf-arm-spe[1] for a setup guide. Due to the
-> +statistical nature of Arm SPE sampling, not every memory operation will be
-> +sampled.
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index 3ab6a92b1a6d..9ab9308ee80c 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -2219,8 +2219,8 @@ int perf_event__synthesize_build_id(struct perf_tool *tool, struct dso *pos, u16
 >  
->  These events provide:
->    - memory address of the access
-> @@ -333,4 +337,4 @@ Check Joe's blog on c2c tool for detailed use case explanation:
->  
->  SEE ALSO
->  --------
-> -linkperf:perf-record[1], linkperf:perf-mem[1]
-> +linkperf:perf-record[1], linkperf:perf-mem[1], linkperf:perf-arm-spe[1]
-> diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-> index 005c95580b1e..19862572e3f2 100644
-> --- a/tools/perf/Documentation/perf-mem.txt
-> +++ b/tools/perf/Documentation/perf-mem.txt
-> @@ -23,6 +23,11 @@ Note that on Intel systems the memory latency reported is the use-latency,
->  not the pure load (or store latency). Use latency includes any pipeline
->  queueing delays in addition to the memory subsystem latency.
->  
-> +On Arm64 this uses SPE to sample load and store operations, therefore hardware
-> +and kernel support is required. See linkperf:perf-arm-spe[1] for a setup guide.
-> +Due to the statistical nature of SPE sampling, not every memory operation will
-> +be sampled.
-> +
->  OPTIONS
->  -------
->  <command>...::
-> @@ -93,4 +98,4 @@ all perf record options.
->  
->  SEE ALSO
->  --------
-> -linkperf:perf-record[1], linkperf:perf-report[1]
-> +linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
-> 
-> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+>  	len = pos->long_name_len + 1;
+>  	len = PERF_ALIGN(len, NAME_ALIGN);
+> -	memcpy(&ev.build_id.build_id, pos->bid.data, sizeof(pos->bid.data));
+> -	ev.build_id.size = pos->bid.size;
+> +	ev.build_id.size = min(pos->bid.size, sizeof(pos->bid.data));
+> +	memcpy(&ev.build_id.build_id, pos->bid.data, ev.build_id.size);
+>  	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
+>  	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
+>  	ev.build_id.pid = machine->pid;
 > -- 
-> 2.39.1
+> 2.39.0.246.g2a6d74b583-goog
 > 
 
 -- 
