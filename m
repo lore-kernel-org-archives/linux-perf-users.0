@@ -2,103 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764DDC25B4E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 15:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C55C54E94
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 15:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234742AbjAXPAI (ORCPT
+        id S235067AbjAXPbK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 10:00:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        Tue, 24 Jan 2023 10:31:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235296AbjAXPAE (ORCPT
+        with ESMTP id S234976AbjAXPbJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 10:00:04 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 94CB6AD0C;
-        Tue, 24 Jan 2023 06:59:59 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 212254B3;
-        Tue, 24 Jan 2023 07:00:41 -0800 (PST)
-Received: from e126815.warwick.arm.com (e126815.arm.com [10.32.32.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8CA603F5A1;
-        Tue, 24 Jan 2023 06:59:57 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.or
-Cc:     linux-kernel@vger.kernel.org, leo.yan@linaro.com,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 24 Jan 2023 10:31:09 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 371C2213A;
+        Tue, 24 Jan 2023 07:31:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674574268; x=1706110268;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=LYBqnbp7RgPa9rBpiZ++vb4CG6oJaSkh3E7AYQvH3A4=;
+  b=Gdn2Vwxr7uhMjBKoWAM2XD5rhtxs7tXIc414MJupihAX87kxDnkDTQf0
+   ZLN56a3Ns52JiXmoACOIeR4sJE3rqDn31oNjVNjEP0X7AP8cOadBtifzy
+   yJhIVK/blCzr9e+ceHm5GoGr+RRvJNQZjfuhyIY1yIhG5hpOsLJ9N7OAD
+   9CBv+KI3PYSOQnBYSQDMszZiOpHgH8JBYLwLlfm6CssQqUjkKgIwMVViM
+   0oR0nClAWc9I61SzkJRa/qmi4vYiIUPoVCsfQP+fNAE8U+stt3t3MLK2N
+   lAtfdIlOfJaECO/aNqFmzx7suwTtlRCQuKfrbID94ySNdfTLZ45TZJcUe
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="327575987"
+X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
+   d="scan'208";a="327575987"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 07:31:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="770356043"
+X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
+   d="scan'208";a="770356043"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Jan 2023 07:31:03 -0800
+Received: from [10.251.2.31] (kliang2-mobl1.ccr.corp.intel.com [10.251.2.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8254B580B9A;
+        Tue, 24 Jan 2023 07:31:01 -0800 (PST)
+Message-ID: <8eda340a-8c5d-a801-54eb-501c44a68d89@linux.intel.com>
+Date:   Tue, 24 Jan 2023 10:31:00 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] perf/x86: KVM: Disable vPMU support on hybrid CPUs (host
+ PMUs)
+Content-Language: en-US
+To:     Andi Kleen <ak@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf mem/c2c: Document that SPE is used for mem and c2c on Arm
-Date:   Tue, 24 Jan 2023 14:59:29 +0000
-Message-Id: <20230124145929.557891-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.39.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jianfeng Gao <jianfeng.gao@intel.com>,
+        Andrew Cooper <Andrew.Cooper3@citrix.com>
+References: <20230120004051.2043777-1-seanjc@google.com>
+ <1dec071d-c010-cd89-9e58-d643e71e775c@linux.intel.com>
+ <Y8rQJf3ki8a1aRjW@google.com>
+ <50e840ea-ce9c-9290-2187-d3ff0d9a6709@linux.intel.com>
+ <Y8r604tRexxWlF8F@google.com>
+ <e161b7c0-f0be-23c8-9a25-002260c2a085@linux.intel.com>
+ <67facb87-f835-abcd-3d1b-527531b26e52@linux.intel.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <67facb87-f835-abcd-3d1b-527531b26e52@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Setup is non-trivial so also link to the full SPE docs.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/Documentation/perf-c2c.txt | 8 ++++++--
- tools/perf/Documentation/perf-mem.txt | 7 ++++++-
- 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index af5c3106f468..4e8c263e1721 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -22,7 +22,11 @@ you to track down the cacheline contentions.
- On Intel, the tool is based on load latency and precise store facility events
- provided by Intel CPUs. On PowerPC, the tool uses random instruction sampling
- with thresholding feature. On AMD, the tool uses IBS op pmu (due to hardware
--limitations, perf c2c is not supported on Zen3 cpus).
-+limitations, perf c2c is not supported on Zen3 cpus). On Arm64 it uses SPE to
-+sample load and store operations, therefore hardware and kernel support is
-+required. See linkperf:perf-arm-spe[1] for a setup guide. Due to the
-+statistical nature of Arm SPE sampling, not every memory operation will be
-+sampled.
- 
- These events provide:
-   - memory address of the access
-@@ -333,4 +337,4 @@ Check Joe's blog on c2c tool for detailed use case explanation:
- 
- SEE ALSO
- --------
--linkperf:perf-record[1], linkperf:perf-mem[1]
-+linkperf:perf-record[1], linkperf:perf-mem[1], linkperf:perf-arm-spe[1]
-diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-index 005c95580b1e..19862572e3f2 100644
---- a/tools/perf/Documentation/perf-mem.txt
-+++ b/tools/perf/Documentation/perf-mem.txt
-@@ -23,6 +23,11 @@ Note that on Intel systems the memory latency reported is the use-latency,
- not the pure load (or store latency). Use latency includes any pipeline
- queueing delays in addition to the memory subsystem latency.
- 
-+On Arm64 this uses SPE to sample load and store operations, therefore hardware
-+and kernel support is required. See linkperf:perf-arm-spe[1] for a setup guide.
-+Due to the statistical nature of SPE sampling, not every memory operation will
-+be sampled.
-+
- OPTIONS
- -------
- <command>...::
-@@ -93,4 +98,4 @@ all perf record options.
- 
- SEE ALSO
- --------
--linkperf:perf-record[1], linkperf:perf-report[1]
-+linkperf:perf-record[1], linkperf:perf-report[1], linkperf:perf-arm-spe[1]
+On 2023-01-23 8:04 p.m., Andi Kleen wrote:
+> 
+>> If I understand correct, the workaround in KVM is to add a white/black
+>> list to filter the events. I think we can do the same thing for the
+>> hybrid machine for now.
+>> https://lore.kernel.org/lkml/CAOyeoRUUK+T_71J=+zcToyL93LkpARpsuWSfZS7jbJq=wd1rQg@mail.gmail.com/
+> 
+> 
+> This will make everyone who actually wants to use the PMU sad.
 
-base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
--- 
-2.39.1
+Yes, but we still have all the architecture events work. I think it
+should be good enough as a short-term solution, when the hybrid is not
+completely supported in KVM.
+> 
+> It's reasonable if the vCPUs are not bound, but if they are bound it
+> would be better to expose it with a suitable CPUID for the types.
+> 
+
+Yes, and also the CPUID leaf 0x23H support to enumerate the PMU features
+of each types.
+
+
+Thanks,
+Kan
 
