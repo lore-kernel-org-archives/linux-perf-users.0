@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6831C54EB4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F04BC54EED
 	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Jan 2023 06:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232862AbjAXGfC (ORCPT
+        id S232912AbjAXGfB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 01:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
+        Tue, 24 Jan 2023 01:35:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233073AbjAXGez (ORCPT
+        with ESMTP id S232862AbjAXGew (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 01:34:55 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0193E604
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:34 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id n8-20020a258d08000000b007facaf67acfso15361351ybl.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:34 -0800 (PST)
+        Tue, 24 Jan 2023 01:34:52 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FC814E85
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:27 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-434eb7c6fa5so144340267b3.14
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Jan 2023 22:34:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MxI5oPJ3cq0K+5Os4jMfPPdT2CCa4+RQl8NewShLZ1k=;
-        b=QcL+ZQJPpdPJeyeTX72i49hgimTb0fFpL+iy8cNYa14cICCBX6O6B5T0GphRgj9LEM
-         J56k+rR4PbYalwXQ0bAd3urfnDGaJy28JKC9XMDWOqdIDRZnbVMZduQMe1fYHBZy3VXe
-         cKVRmrM7kftixRvWRMmEzNqc0AQzvT2x0R1fiIGPcP/9iNioecViCLKnXLYVFF3VUa3c
-         vD+itFUV5prKBRYb+EMXmJM0e+wEewImeOAjzjUR37J80RAKBVu72u9eWYgly+/+YX+4
-         wi52tLNtDmJI2a1n7EoaInYb3e0iIOSOCliRoqXcbTiUmDKf4lMKR5zRsLcJlGlRASpa
-         x98Q==
+        bh=mV7cd0PttK0+CvZwdwIN1L+qh3nyibbPKOb9QqB52t0=;
+        b=Rsz1NCmD4FsTwujPvvNFULUb3G6Qt8mtfR3s9eM19Q/3ptMnz7GtWJABmlo355EwF9
+         /9tolkcmpwpltwOuoPPmSHGI+g6qGwGL+oI6n6IeNAmSSrilJtpY7va0Usz6K+1lebwR
+         UyD23kOD7mUwrZosJB1/nZ1Yf+2ShsVW3nN5o6+FeehqGYqB5mHyUafslJmskwDtmSlA
+         AeHRnCsSvgzegm1pWJG357rG5UXlMnveRnv2UUFoV5QS5Zo4llus3J26YnsTnQEbDmjQ
+         pI4a7tVg+edZxMmLkCwMJ54Q6ym0Li5gma1j41eYKJgGXc8KpTn1mjD7Wt3ecTfXjj7v
+         /gtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MxI5oPJ3cq0K+5Os4jMfPPdT2CCa4+RQl8NewShLZ1k=;
-        b=5rGhjJ43FFDntBUyOIkX5cmmYQszSkpYTprXyHtUKPKfS20Dh3RU3kA0Wx+Q7MuOn1
-         Bib3E8fjhakiSYdhP2UCbQcsFt5kVfFISfg/5kbYDG/KKDzjOPo1hTTUcBqyreOJAGqc
-         eA/Ynvn8dk1e+HW74k1FwHI8bQhdJMuWGkAXme1LI/8cwziWymIGRWtm5yiUt1ze8mYR
-         C5M7JQDI/up27QC+nYS31yNvRKpKhRUapYimv+jBaCq3g8OgF6qPmGoullrCAEhu05Ju
-         XQfugAI66KBOrxxzxc/M7KCfB0k1Z1hnaG+t99o3bxMQzWDF+8Qzi4f7OJraFYRqkpgi
-         p5YQ==
-X-Gm-Message-State: AFqh2koMd1UNBfHLHmGDeNjQV5VrWMqXl+2bN1w00l9596PUbrlVULH7
-        xKvswIPp6V7spYdeY8UxjutE33IbIg8B
-X-Google-Smtp-Source: AMrXdXuYfN4d0MK2UH9HwYS5h5VOVVypdFuHlEkLzQbckgvPAZRQbPea4EAmOqVX6fYwt9MK+jMEfFLer4SI
+        bh=mV7cd0PttK0+CvZwdwIN1L+qh3nyibbPKOb9QqB52t0=;
+        b=GukriZN0vANI6p/CkiCNLO+B3RvGtb0tZlTjwN1HDtyDBuTmW3RZr36vPDTnOzBnk+
+         OvBgJH1qkP0/Q3IdGhO0pCORLD7jJHvmcIFxotFR/t24Zm2524MmxfuifZSo4cd8c/2y
+         jYJ1cg4Uyvfhw5/5sY05RT/B5cI8JvJBHmEU0YU30vv6c5KhIdj1VQv2KfEtnAg5YEKs
+         TCHTvws9PQ5VG33AUwQgWap9wX8+zfr7hpMB6av5FoK1c10adPWcAjgfP15sKLxiKrsB
+         pRc6fjZ0PorEu0N8mXvvyaYBhHUyRzinioF0c6tM95X2Sw/1M1bnHHoUtvXp4Ae4sq84
+         gUWg==
+X-Gm-Message-State: AFqh2koKhQn2PRSfidIUt8MBG1VG1jpcG9HuBoyzfNw7sUgMFdcolte3
+        ms0WN3F+zdIt3sMTo1fDQITqG0pbQYQJ
+X-Google-Smtp-Source: AMrXdXsPa4iefJ/f/nMKz0OxMzz8uNqcasB4ILJr+Oz387qo8FN3KAiJaOsPzKCmQQnLJPABw4nQpOS9vHGB
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:460d:1b4a:acb8:ae9a])
- (user=irogers job=sendgmr) by 2002:a25:1856:0:b0:732:edd2:4138 with SMTP id
- 83-20020a251856000000b00732edd24138mr1978744yby.448.1674542073924; Mon, 23
- Jan 2023 22:34:33 -0800 (PST)
-Date:   Mon, 23 Jan 2023 22:33:17 -0800
+ (user=irogers job=sendgmr) by 2002:a81:7047:0:b0:4bc:e7dc:16bc with SMTP id
+ l68-20020a817047000000b004bce7dc16bcmr3185257ywc.368.1674542066399; Mon, 23
+ Jan 2023 22:34:26 -0800 (PST)
+Date:   Mon, 23 Jan 2023 22:33:16 -0800
 In-Reply-To: <20230124063320.668917-1-irogers@google.com>
-Message-Id: <20230124063320.668917-9-irogers@google.com>
+Message-Id: <20230124063320.668917-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20230124063320.668917-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
-Subject: [PATCH v3 08/11] perf jevents: Combine table prefix and suffix writing
+Subject: [PATCH v3 07/11] perf stat: Remove evsel metric_name/expr
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -89,107 +89,232 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Combine into a single function to simplify, in a later change, writing
-metrics separately.
+Metrics are their own unit and these variables held broken metrics
+previously and now just hold the value NULL. Remove code that used
+these variables.
 
+Reviewed-by: John Garry <john.g.garry@oracle.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/jevents.py | 36 +++++++++++++-------------------
- 1 file changed, 14 insertions(+), 22 deletions(-)
+ tools/perf/builtin-stat.c     |   1 -
+ tools/perf/util/cgroup.c      |   1 -
+ tools/perf/util/evsel.c       |   2 -
+ tools/perf/util/evsel.h       |   2 -
+ tools/perf/util/python.c      |   7 ---
+ tools/perf/util/stat-shadow.c | 112 ----------------------------------
+ tools/perf/util/stat.h        |   1 -
+ 7 files changed, 126 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 4cdbf34b7298..5f8d490c7269 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -19,10 +19,10 @@ _sys_event_tables = []
- # JsonEvent. Architecture standard events are in json files in the top
- # f'{_args.starting_dir}/{_args.arch}' directory.
- _arch_std_events = {}
--# Track whether an events table is currently being defined and needs closing.
--_close_table = False
- # Events to write out when the table is closed
- _pending_events = []
-+# Name of table to be written out
-+_pending_events_tblname = None
- # Global BigCString shared by all structures.
- _bcs = None
- # Order specific JsonEvent attributes will be visited.
-@@ -378,24 +378,13 @@ def preprocess_arch_std_files(archpath: str) -> None:
-           _arch_std_events[event.metric_name.lower()] = event
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 9f3e4b257516..5d18a5a6f662 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2524,7 +2524,6 @@ int cmd_stat(int argc, const char **argv)
+ 					&stat_config.metric_events);
+ 		zfree(&metrics);
+ 	}
+-	perf_stat__collect_metric_expr(evsel_list);
+ 	perf_stat__init_shadow_stats();
  
+ 	if (add_default_attributes())
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index cd978c240e0d..bfb13306d82c 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -481,7 +481,6 @@ int evlist__expand_cgroup(struct evlist *evlist, const char *str,
+ 		nr_cgroups++;
  
--def print_events_table_prefix(tblname: str) -> None:
--  """Called when a new events table is started."""
--  global _close_table
--  if _close_table:
--    raise IOError('Printing table prefix but last table has no suffix')
--  _args.output_file.write(f'static const struct compact_pmu_event {tblname}[] = {{\n')
--  _close_table = True
+ 		if (metric_events) {
+-			perf_stat__collect_metric_expr(tmp_list);
+ 			if (metricgroup__copy_metric_events(tmp_list, cgrp,
+ 							    metric_events,
+ 							    &orig_metric_events) < 0)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 8550638587e5..a90e998826e0 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -285,8 +285,6 @@ void evsel__init(struct evsel *evsel,
+ 	evsel->sample_size = __evsel__sample_size(attr->sample_type);
+ 	evsel__calc_id_pos(evsel);
+ 	evsel->cmdline_group_boundary = false;
+-	evsel->metric_expr   = NULL;
+-	evsel->metric_name   = NULL;
+ 	evsel->metric_events = NULL;
+ 	evsel->per_pkg_mask  = NULL;
+ 	evsel->collect_stat  = false;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index d572be41b960..24cb807ef6ce 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -105,8 +105,6 @@ struct evsel {
+ 	 * metric fields are similar, but needs more care as they can have
+ 	 * references to other metric (evsel).
+ 	 */
+-	const char *		metric_expr;
+-	const char *		metric_name;
+ 	struct evsel		**metric_events;
+ 	struct evsel		*metric_leader;
+ 
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 9e5d881b0987..42e8b813d010 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -76,13 +76,6 @@ const char *perf_env__arch(struct perf_env *env __maybe_unused)
+ 	return NULL;
+ }
+ 
+-/*
+- * Add this one here not to drag util/stat-shadow.c
+- */
+-void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+-{
+-}
 -
+ /*
+  * These ones are needed not to drag the PMU bandwagon, jevents generated
+  * pmu_sys_event_tables, etc and evsel__find_pmu() is used so far just for
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index cadb2df23c87..35ea4813f468 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -346,114 +346,6 @@ static const char *get_ratio_color(enum grc_type type, double ratio)
+ 	return color;
+ }
+ 
+-static struct evsel *perf_stat__find_event(struct evlist *evsel_list,
+-						const char *name)
+-{
+-	struct evsel *c2;
 -
- def add_events_table_entries(item: os.DirEntry, topic: str) -> None:
-   """Add contents of file to _pending_events table."""
--  if not _close_table:
--    raise IOError('Table entries missing prefix')
-   for e in read_json_events(item.path, topic):
-     _pending_events.append(e)
+-	evlist__for_each_entry (evsel_list, c2) {
+-		if (!strcasecmp(c2->name, name) && !c2->collect_stat)
+-			return c2;
+-	}
+-	return NULL;
+-}
+-
+-/* Mark MetricExpr target events and link events using them to them. */
+-void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+-{
+-	struct evsel *counter, *leader, **metric_events, *oc;
+-	bool found;
+-	struct expr_parse_ctx *ctx;
+-	struct hashmap_entry *cur;
+-	size_t bkt;
+-	int i;
+-
+-	ctx = expr__ctx_new();
+-	if (!ctx) {
+-		pr_debug("expr__ctx_new failed");
+-		return;
+-	}
+-	evlist__for_each_entry(evsel_list, counter) {
+-		bool invalid = false;
+-
+-		leader = evsel__leader(counter);
+-		if (!counter->metric_expr)
+-			continue;
+-
+-		expr__ctx_clear(ctx);
+-		metric_events = counter->metric_events;
+-		if (!metric_events) {
+-			if (expr__find_ids(counter->metric_expr,
+-					   counter->name,
+-					   ctx) < 0)
+-				continue;
+-
+-			metric_events = calloc(sizeof(struct evsel *),
+-					       hashmap__size(ctx->ids) + 1);
+-			if (!metric_events) {
+-				expr__ctx_free(ctx);
+-				return;
+-			}
+-			counter->metric_events = metric_events;
+-		}
+-
+-		i = 0;
+-		hashmap__for_each_entry(ctx->ids, cur, bkt) {
+-			const char *metric_name = cur->pkey;
+-
+-			found = false;
+-			if (leader) {
+-				/* Search in group */
+-				for_each_group_member (oc, leader) {
+-					if (!strcasecmp(oc->name,
+-							metric_name) &&
+-						!oc->collect_stat) {
+-						found = true;
+-						break;
+-					}
+-				}
+-			}
+-			if (!found) {
+-				/* Search ignoring groups */
+-				oc = perf_stat__find_event(evsel_list,
+-							   metric_name);
+-			}
+-			if (!oc) {
+-				/* Deduping one is good enough to handle duplicated PMUs. */
+-				static char *printed;
+-
+-				/*
+-				 * Adding events automatically would be difficult, because
+-				 * it would risk creating groups that are not schedulable.
+-				 * perf stat doesn't understand all the scheduling constraints
+-				 * of events. So we ask the user instead to add the missing
+-				 * events.
+-				 */
+-				if (!printed ||
+-				    strcasecmp(printed, metric_name)) {
+-					fprintf(stderr,
+-						"Add %s event to groups to get metric expression for %s\n",
+-						metric_name,
+-						counter->name);
+-					free(printed);
+-					printed = strdup(metric_name);
+-				}
+-				invalid = true;
+-				continue;
+-			}
+-			metric_events[i++] = oc;
+-			oc->collect_stat = true;
+-		}
+-		metric_events[i] = NULL;
+-		if (invalid) {
+-			free(metric_events);
+-			counter->metric_events = NULL;
+-			counter->metric_expr = NULL;
+-		}
+-	}
+-	expr__ctx_free(ctx);
+-}
+-
+ static double runtime_stat_avg(struct runtime_stat *st,
+ 			       enum stat_type type, int map_idx,
+ 			       struct runtime_stat_data *rsd)
+@@ -1299,10 +1191,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 			color = NULL;
+ 		print_metric(config, ctxp, color, "%8.1f%%", "Core Bound",
+ 				core_bound * 100.);
+-	} else if (evsel->metric_expr) {
+-		generic_metric(config, evsel->metric_expr, evsel->metric_events, NULL,
+-			       evsel->name, evsel->metric_name, NULL, 1,
+-			       map_idx, out, st);
+ 	} else if (runtime_stat_n(st, STAT_NSECS, map_idx, &rsd) != 0) {
+ 		char unit = ' ';
+ 		char unit_buf[10] = "/sec";
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 499c3bf81333..b1c29156c560 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -257,7 +257,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct perf_stat_output_ctx *out,
+ 				   struct rblist *metric_events,
+ 				   struct runtime_stat *st);
+-void perf_stat__collect_metric_expr(struct evlist *);
  
- 
--def print_events_table_suffix() -> None:
-+def print_pending_events() -> None:
-   """Optionally close events table."""
- 
-   def event_cmp_key(j: JsonEvent) -> Tuple[bool, str, str, str, str]:
-@@ -407,17 +396,19 @@ def print_events_table_suffix() -> None:
-     return (j.desc is not None, fix_none(j.topic), fix_none(j.name), fix_none(j.pmu),
-             fix_none(j.metric_name))
- 
--  global _close_table
--  if not _close_table:
-+  global _pending_events
-+  if not _pending_events:
-     return
- 
--  global _pending_events
-+  global _pending_events_tblname
-+  _args.output_file.write(
-+      f'static const struct compact_pmu_event {_pending_events_tblname}[] = {{\n')
-+
-   for event in sorted(_pending_events, key=event_cmp_key):
-     _args.output_file.write(event.to_c_string())
--    _pending_events = []
-+  _pending_events = []
- 
-   _args.output_file.write('};\n\n')
--  _close_table = False
- 
- def get_topic(topic: str) -> str:
-   if topic.endswith('metrics.json'):
-@@ -455,12 +446,13 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
- 
-   # model directory, reset topic
-   if item.is_dir() and is_leaf_dir(item.path):
--    print_events_table_suffix()
-+    print_pending_events()
- 
-     tblname = file_name_to_table_name(parents, item.name)
-     if item.name == 'sys':
-       _sys_event_tables.append(tblname)
--    print_events_table_prefix(tblname)
-+    global _pending_events_tblname
-+    _pending_events_tblname = tblname
-     return
- 
-   # base dir or too deep
-@@ -809,7 +801,7 @@ struct compact_pmu_event {
-   for arch in archs:
-     arch_path = f'{_args.starting_dir}/{arch}'
-     ftw(arch_path, [], process_one_file)
--    print_events_table_suffix()
-+    print_pending_events()
- 
-   print_mapping_table(archs)
-   print_system_mapping_table()
+ int evlist__alloc_stats(struct perf_stat_config *config,
+ 			struct evlist *evlist, bool alloc_raw);
 -- 
 2.39.0.246.g2a6d74b583-goog
 
