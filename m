@@ -2,198 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42807C27C76
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 19:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84324C54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 21:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbjAYTYo (ORCPT
+        id S235993AbjAYVAF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 14:24:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        Wed, 25 Jan 2023 16:00:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235093AbjAYTYn (ORCPT
+        with ESMTP id S229475AbjAYVAF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 14:24:43 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E43683EA;
-        Wed, 25 Jan 2023 11:24:35 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id d9so18824158pll.9;
-        Wed, 25 Jan 2023 11:24:35 -0800 (PST)
+        Wed, 25 Jan 2023 16:00:05 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B374222E7
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 13:00:03 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id d14so14637746wrr.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 13:00:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ujiGpL29kziCWkNZQbKbe7voLq0Mqz36QhUqxaZlsdM=;
-        b=JHuIDbTOkriV+7vCGtCkabHvcDkLESfQRA7thPAEAEF+H4JuF/cNVzNRdXIRsZs7ZH
-         E4CcOLUY2LIWLiNdrPuexD+wmk4hG6NI8Bp3CeJGaqHwOIkTnwN7nWmJsi63lrdRErc2
-         E9UB+XcLSo6SbOCVMscCUjvTLpn7t88KQMn+FQtUALsYFMmogsPFFIXAF/JX6lqRKt7j
-         Mfe4e+z/Q9WedfmQZWXv4MEk+bA/fX7hVrhvUR5AofRgzaG4njUoSBrqHgEtsOq6lz8T
-         7M2rFinedK7XXRPtZ8njOCSyELxH15USKqB/lz68alIq8GBoQSkrkpJe1vRLXZDFUJeN
-         R1Jg==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cyEAQDH7E/qL1ZNisInxETPwt2MInuGBwA3D/H45OPs=;
+        b=rANiYl6msoZZ9RXrwEoPX4db/SpSbab/elvw3avjyMrFDRkRHR0XyL4Ljpq9WURa3d
+         FeQ4A6Tl+rmuluexZBNtkyqjsqfqUvDzcZCZR/jXu/l9+Sg/QlLEyDDQv0fj1Sp4ctc7
+         nsXGfzTAkJ847IikGBIdnqPALWrsUWVuFj4Zlyq1NbXSBCKIAg9fTMN0/S2Jp4/IpLt1
+         PmRT/hQ3X58c2HmHc47WrO8oUVZXReFPKtKlF6DU1XV4NMze0vXrV2AFNsE/NlMUScUa
+         1I5jFcMy5aqWJy1E/ve0nLVhM2MqWLkOUngT7OkA/718xd6+vZKK94yRS/dh7I6v8C6w
+         qHaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ujiGpL29kziCWkNZQbKbe7voLq0Mqz36QhUqxaZlsdM=;
-        b=s5w+TdTbUgj/FpFmO38MHS7LNgoz6QZC0WiEVXn0WYGmQ1V6nMqr4eJs+PkRGVYXWa
-         URr99azKqIkXqlnd98egPWgTdyXu53UDYd7bti+8BLxej3XgT3T5aZHmQ0IqFtct/AQc
-         v9/x+J5UfF8f3O0CfqLRpVizYw0Ro4Sh993MGsHUujgZrN5g5z5fkjlEc6P128BrL/EL
-         RWK+W4Ec5YwLCIyCkVoUrSk6apaVQyOoepmKGp/znPOmzQwJ4FlyIAICHfrXeKNW200H
-         UpAqVQhsS6uIFYThRcYrFS2TO9QTfk/5NCd/RCPqPTk6Vvxa/31rKTgaRME+QuP616zd
-         mtIQ==
-X-Gm-Message-State: AFqh2kpjdwcJ8MXyzXDFproDnRoNsw+wk9YeXJEITaIfzrvUGjbmVCJp
-        2hz4Kr6QyS1vhwFYX6E2vuo=
-X-Google-Smtp-Source: AMrXdXs66379RJjn3gx3zcd7OM9OrtJLjL+TLhKUxwLwik3Svcsffp1m6Vw/cD69o5b80o2s7aCBUw==
-X-Received: by 2002:a17:902:b68f:b0:193:30be:d146 with SMTP id c15-20020a170902b68f00b0019330bed146mr31649213pls.63.1674674674428;
-        Wed, 25 Jan 2023 11:24:34 -0800 (PST)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:29ee:2efb:110e:b369])
-        by smtp.gmail.com with ESMTPSA id p5-20020a170903248500b00189a50d2a3esm3972667plw.241.2023.01.25.11.24.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 11:24:33 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: [PATCH v2] perf stat: Hide invalid uncore event output for aggr mode
-Date:   Wed, 25 Jan 2023 11:24:31 -0800
-Message-Id: <20230125192431.2929677-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cyEAQDH7E/qL1ZNisInxETPwt2MInuGBwA3D/H45OPs=;
+        b=7JRbJSC1+JBVscEaq2n15UTOgWhLgWP5RxqeLbrvCvxDWxJOw3SHfySjocb+GKYhoE
+         1z4orbS2vjNF6tEMS1gagZOCTf6CRii/IaaWxD17S5fGcdf214OO0RZRdZYTmz2pSnec
+         ipEpTo2KLMW690igOf9vhRHFmSxe+nr5DQpPrK9Hab1DoKWhrNRfXPYqRIFy2taVHZ4X
+         T1yvkti8vi4CrGNkDQ2smXYvseZIHeePhUvWCDwFS7noLAKLoh70u+yfR+ugEdPnuHSw
+         JazE7tT6THMQyqY3EIZEF5ZkC6afRzUq4EEQ5FyLG//Kr173uaQtecyGNg277ukB1AO+
+         NR8w==
+X-Gm-Message-State: AFqh2kpPNcvM4TnpWWXTwv0YDJTHt5qbha0VeppS1Y7HluroeXe+TKpj
+        pxsAaXsJ7IiuIV2d5Y8gB8ao5ONQypnOS7Uxu2RJ8w==
+X-Google-Smtp-Source: AMrXdXs7dWV8A/t/ikdu5AMRyrGVHYZUrx779Ld0nKLH1tQqOTuv6MYAlwVaJTnBQyms+562QDGQQmL8v9nxrMPgPg8=
+X-Received: by 2002:a05:6000:5c6:b0:242:5caa:5fbf with SMTP id
+ bh6-20020a05600005c600b002425caa5fbfmr752607wrb.300.1674680401707; Wed, 25
+ Jan 2023 13:00:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230123211310.127532-1-raj.khem@gmail.com> <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
+ <CAMKF1soqvBXcGUjpkN6wuxV8kZbFmqYBwB02Q5PB6qBAinjvOQ@mail.gmail.com>
+In-Reply-To: <CAMKF1soqvBXcGUjpkN6wuxV8kZbFmqYBwB02Q5PB6qBAinjvOQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 25 Jan 2023 12:59:49 -0800
+Message-ID: <CAP-5=fVp=X8pxC_cc3o_AoCvjxVOOTsztNcexY4NHh6uxPOJ4g@mail.gmail.com>
+Subject: Re: [PATCH] perf cpumap: Make counter as unsigned ints
+To:     Khem Raj <raj.khem@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The current display code for perf stat iterates given cpus and build the
-aggr map to collect the event data for the aggregation mode.
+On Wed, Jan 25, 2023 at 11:04 AM Khem Raj <raj.khem@gmail.com> wrote:
+>
+> On Tue, Jan 24, 2023 at 9:02 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Mon, Jan 23, 2023 at 1:13 PM Khem Raj <raj.khem@gmail.com> wrote:
+> > >
+> > > These are loop counters which is inherently unsigned. Therefore make
+> > > them unsigned. Moreover it also fixes alloc-size-larger-than
+> > > error with gcc-13, where malloc can be called with (-1) due to tmp_len
+> > > being an int type.
+> > >
+> > > Fixes
+> > > | cpumap.c:366:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+> > > |   366 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+> > > |       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >
+> > > Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/lib/perf/cpumap.c | 10 +++++-----
+> > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> > > index 6cd0be7c1bb4..d960880dd903 100644
+> > > --- a/tools/lib/perf/cpumap.c
+> > > +++ b/tools/lib/perf/cpumap.c
+> > > @@ -351,8 +351,8 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> > >                                          struct perf_cpu_map *other)
+> > >  {
+> > >         struct perf_cpu *tmp_cpus;
+> > > -       int tmp_len;
+> > > -       int i, j, k;
+> > > +       unsigned int tmp_len;
+> > > +       unsigned int i, j, k;
+> > >         struct perf_cpu_map *merged;
+> > >
+> > >         if (perf_cpu_map__is_subset(orig, other))
+> > > @@ -369,7 +369,7 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> > >
+> > >         /* Standard merge algorithm from wikipedia */
+> > >         i = j = k = 0;
+> > > -       while (i < orig->nr && j < other->nr) {
+> > > +       while (i < (unsigned int)orig->nr && j < (unsigned int)other->nr) {
+> >
+> > Rather than cast 'nr' why not add the unsigned to the declaration?
+> >
+>
+> if type of nr is changed from int to unsigned int, this will ensue a
+> lot of changes including function signature changes, I am not
+> sure if that is the best approach.
 
-But uncore events have their own cpu maps and it won't guarantee that
-it'd match to the aggr map.  For example, per-package uncore events
-would generate a single value for each socket.  When user asks per-core
-aggregation mode, the output would contain 0 values for other cores.
+All non-libperf accesses to 'nr' should go through perf_cpu_map__nr:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/include/perf/cpumap.h?h=perf/core#n25
+Fwiw, this is done as there is some hope of 1 day landing a better
+reference count checker.
 
-Thus it needs to check the uncore PMU's cpumask and if it matches to the
-current aggregation id.
+We should migrate all __nr users to being unsigned. The use of __nr is
+somewhat confusing, the dummy "program me on any CPU" cpu map has an
+nr of 1, while the nr for being on all CPUs will be the number of CPUs
+in the system, possibly +1 for the dummy case. I'm reminded that
+cpumap needs its API clearing up, perf_cpu_map__empty being especially
+confusing.
 
-Before:
-  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+Thanks,
+Ian
 
-   Performance counter stats for 'system wide':
-
-  S0-D0-C0              1               3.73 Joules power/energy-pkg/
-  S0-D0-C1              0      <not counted> Joules power/energy-pkg/
-  S0-D0-C2              0      <not counted> Joules power/energy-pkg/
-  S0-D0-C3              0      <not counted> Joules power/energy-pkg/
-
-         1.001404046 seconds time elapsed
-
-  Some events weren't counted. Try disabling the NMI watchdog:
-  	echo 0 > /proc/sys/kernel/nmi_watchdog
-  	perf stat ...
-  	echo 1 > /proc/sys/kernel/nmi_watchdog
-
-The core 1, 2 and 3 should not be printed because the event is handled
-in a cpu in the core 0 only.  With this change, the output becomes like
-below.
-
-After:
-  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
-
-   Performance counter stats for 'system wide':
-
-  S0-D0-C0              1               2.09 Joules power/energy-pkg/
-
-Fixes: b89761351089 ("perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events")
-Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-* rename to 'should_skip_zero_counter'
-* check pmu->cpus instead
-* add kernel-doc style comments
-* add Ian's Tested-by tag
-
- tools/perf/util/stat-display.c | 51 ++++++++++++++++++++++++++++++----
- 1 file changed, 46 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 8bd8b0142630..1b5cb20efd23 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -787,6 +787,51 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
- 		uniquify_event_name(counter);
- }
- 
-+/**
-+ * should_skip_zero_count() - Check if the event should print 0 values.
-+ * @config: The perf stat configuration (including aggregation mode).
-+ * @counter: The evsel with its associated cpumap.
-+ * @id: The aggregation id that is being queried.
-+ *
-+ * Due to mismatch between the event cpumap or thread-map and the
-+ * aggregation mode, sometimes it'd iterate the counter with the map
-+ * which does not contain any values.
-+ *
-+ * For example, uncore events have dedicated CPUs to manage them,
-+ * result for other CPUs should be zero and skipped.
-+ *
-+ * Return: %true if the value should NOT be printed, %false if the value
-+ * needs to be printed like "<not counted>" or "<not supported>".
-+ */
-+static bool should_skip_zero_counter(struct perf_stat_config *config,
-+				     struct evsel *counter,
-+				     const struct aggr_cpu_id *id)
-+{
-+	struct perf_cpu cpu;
-+	int idx;
-+
-+	/*
-+	 * Skip value 0 when enabling --per-thread globally,
-+	 * otherwise it will have too many 0 output.
-+	 */
-+	if (config->aggr_mode == AGGR_THREAD && config->system_wide)
-+		return true;
-+	/*
-+	 * Skip value 0 when it's an uncore event and the given aggr id
-+	 * does not belong to the PMU cpumask.
-+	 */
-+	if (!counter->pmu || !counter->pmu->is_uncore)
-+		return false;
-+
-+	perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
-+		struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
-+
-+		if (aggr_cpu_id__equal(id, &own_id))
-+			return false;
-+	}
-+	return true;
-+}
-+
- static void print_counter_aggrdata(struct perf_stat_config *config,
- 				   struct evsel *counter, int s,
- 				   struct outstate *os)
-@@ -814,11 +859,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	ena = aggr->counts.ena;
- 	run = aggr->counts.run;
- 
--	/*
--	 * Skip value 0 when enabling --per-thread globally, otherwise it will
--	 * have too many 0 output.
--	 */
--	if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
-+	if (val == 0 && should_skip_zero_counter(config, counter, &id))
- 		return;
- 
- 	if (!metric_only) {
--- 
-2.39.1.456.gfc5497dd1b-goog
-
+> > Thanks,
+> > Ian
+> >
+> > >                 if (orig->map[i].cpu <= other->map[j].cpu) {
+> > >                         if (orig->map[i].cpu == other->map[j].cpu)
+> > >                                 j++;
+> > > @@ -378,10 +378,10 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> > >                         tmp_cpus[k++] = other->map[j++];
+> > >         }
+> > >
+> > > -       while (i < orig->nr)
+> > > +       while (i < (unsigned int)orig->nr)
+> > >                 tmp_cpus[k++] = orig->map[i++];
+> > >
+> > > -       while (j < other->nr)
+> > > +       while (j < (unsigned int)other->nr)
+> > >                 tmp_cpus[k++] = other->map[j++];
+> > >         assert(k <= tmp_len);
+> > >
+> > > --
+> > > 2.39.1
+> > >
