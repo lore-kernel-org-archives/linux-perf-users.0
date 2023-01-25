@@ -2,158 +2,172 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C78AC61D9D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 09:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9511C54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 12:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235408AbjAYJnu (ORCPT
+        id S235310AbjAYMfQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 04:43:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56934 "EHLO
+        Wed, 25 Jan 2023 07:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235371AbjAYJnh (ORCPT
+        with ESMTP id S230160AbjAYMfP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 04:43:37 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C25D5648B;
-        Wed, 25 Jan 2023 01:43:08 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id DD33E21C75;
-        Wed, 25 Jan 2023 09:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1674639786; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/H7fv8j3//amIhsuvsnszBORL7yxYM5gHjte1pGnd6k=;
-        b=cJ84t8+Z/oyAwTTCtaCrRcZJz3vmv0agsy9pwxx1mjpy2wVyb9bbJa/fovrQrusm/Svjk5
-        J6I5Atn+BG/uY1djc0bMaR2EhFHHAjtT6MjckOpioFidRZmoo/SxgZTemFBWI/hmnJ034Z
-        w1GOPFueJOKBcny/L6MDveuVWEd9TYY=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8FA761358F;
-        Wed, 25 Jan 2023 09:43:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id usqPIqr50GPHIgAAMHmgww
-        (envelope-from <mhocko@suse.com>); Wed, 25 Jan 2023 09:43:06 +0000
-Date:   Wed, 25 Jan 2023 10:43:05 +0100
-From:   Michal Hocko <mhocko@suse.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
-        jglisse@google.com, vbabka@suse.cz, hannes@cmpxchg.org,
-        mgorman@techsingularity.net, dave@stgolabs.net,
-        willy@infradead.org, liam.howlett@oracle.com, peterz@infradead.org,
-        ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
-        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
-        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
-        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
-        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
-        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
-        jannh@google.com, shakeelb@google.com, tatashin@google.com,
-        edumazet@google.com, gthelen@google.com, gurua@google.com,
-        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
-        leewalsh@google.com, posk@google.com, will@kernel.org,
-        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
-        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        qianweili@huawei.com, wangzhou1@hisilicon.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-        airlied@gmail.com, daniel@ffwll.ch,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, l.stach@pengutronix.de,
-        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
-        matthias.bgg@gmail.com, robdclark@gmail.com,
-        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
-        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
-        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
-        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
-        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
-        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
-        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, miklos@szeredi.hu,
-        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
-        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
-        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
-        loongarch@lists.linux.dev, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
-        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        devel@lists.orangefs.org, kexec@lists.infradead.org,
-        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
-        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 6/6] mm: export dump_mm()
-Message-ID: <Y9D5qS02j/fPLP/6@dhcp22.suse.cz>
-References: <20230125083851.27759-1-surenb@google.com>
- <20230125083851.27759-7-surenb@google.com>
+        Wed, 25 Jan 2023 07:35:15 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C2B1CF59;
+        Wed, 25 Jan 2023 04:35:14 -0800 (PST)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PBaMN4019043;
+        Wed, 25 Jan 2023 12:35:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=LGod0DSUnYmavsx4AKzFufAQIzxD17jONrKB6uaXPnY=;
+ b=n8JhDgN/+hEEhl7BtbrMuRPJ5OBZQz2kUnxPwvDPvMh8B9Y5YoEDs+bfbNx6wmcNJQka
+ 0MwJ3eQSPYUqJd1rStpf1OP5iq3c5Ozbzj4AtDBJ3Lq8Xu3kdVqWrtzKq+QwOEoiy7JP
+ +PcP7lqPXF3oXjEcXlQ76to2f5GvciMD9GPSqag63/xmPF3Pd5F+O9s7HrPTjtA00heB
+ mmJWFHZ1eldT+c617gfIwIHiLKDvQBL1JQMj1NHe4kgJXyMcu+ip8BbzVVJZvZ94RtiQ
+ /5Ad47ZlEamGvagPgfiDIHyIAhCwVPUUZQ1GuK7cDo9vveasD0laaRR6rNc3zm4njx6L ww== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nac20uusn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 12:35:09 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30P1FJbr010329;
+        Wed, 25 Jan 2023 12:35:06 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3n87p6n3rr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 12:35:06 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30PCZ3W346727676
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Jan 2023 12:35:03 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8795C20049;
+        Wed, 25 Jan 2023 12:35:03 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E5AE20040;
+        Wed, 25 Jan 2023 12:35:02 +0000 (GMT)
+Received: from li-NotSettable.ibm.com.com (unknown [9.43.44.248])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 25 Jan 2023 12:35:01 +0000 (GMT)
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: [PATCH] perf test: Fix dwarf unwind test
+Date:   Wed, 25 Jan 2023 18:04:42 +0530
+Message-Id: <20230125123442.107156-1-naveen.n.rao@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230125083851.27759-7-surenb@google.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: GkR9415fmCKHV4UH46j1dizefkCj4KBE
+X-Proofpoint-ORIG-GUID: GkR9415fmCKHV4UH46j1dizefkCj4KBE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-25_07,2023-01-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 spamscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301250110
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed 25-01-23 00:38:51, Suren Baghdasaryan wrote:
-> mmap_assert_write_locked() is used in vm_flags modifiers. Because
-> mmap_assert_write_locked() uses dump_mm() and vm_flags are sometimes
-> modified from from inside a module, it's necessary to export
-> dump_mm() function.
-> 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Dwarf unwind perf test can sometimes fail:
+  $ perf test -v 74
+  Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+   74: Test dwarf unwind                                               :
+  --- start ---
+  test child forked, pid 3785254
+  Problems creating module maps, continuing anyway...
+  Problems creating module maps, continuing anyway...
+  unwind: test__arch_unwind_sample:ip = 0x102d0ad4c (0x36ad4c)
+  unwind: access_mem addr 0x7fffc33128c8, val 1031c3228, offset 120
+  unwind: access_mem addr 0x7fffc33128d0, val 12427cc70, offset 128
+  <snip>
+  unwind: test_dwarf_unwind__krava_3:ip = 0x102b8768b (0x1e768b)
+  unwind: access_mem addr 0x7fffc3313048, val 7fffc3313050, offset 2040
+  unwind: access_mem addr 0x7fffc3313060, val 102b8777c, offset 2064
+  unwind: test_dwarf_unwind__krava_2:ip = 0x102b8770b (0x1e770b)
+  unwind: access_mem addr 0x7fffc3313088, val 7fffc3313090, offset 2104
+  unwind: access_mem addr 0x7fffc33130a0, val 102b87890, offset 2128
+  unwind: test_dwarf_unwind__krava_1:ip = 0x102b8777b (0x1e777b)
+  unwind: access_mem addr 0x7fffc3313108, val 10323a274, offset 2232
+  unwind: access_mem addr 0x7fffc3313110, val ffffffffffffffff, offset 2240
+  unwind: access_mem addr 0x7fffc3313118, val 102c08ed0, offset 2248
+  unwind: access_mem addr 0x7fffc3313120, val 1031db000, offset 2256
+  unwind: access_mem addr 0x7fffc3313128, val 7fffc3313130, offset 2264
+  unwind: access_mem addr 0x7fffc3313140, val 102b45ee8, offset 2288
+  unwind: '':ip = 0x102b8788f (0x1e788f)
+  failed: got unresolved address 0x102b8788f
+  unwind: failed with 'no error'
+  got wrong number of stack entries 0 != 8
+  test child finished with -1
+  ---- end ----
+  Test dwarf unwind: FAILED!
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+We expect to resolve test__dwarf_unwind as the last symbol, but that
+function can be optimized away:
+  $ objdump -tT /usr/bin/perf | grep dwarf_unwind
+  000000000083b018 g    DO .data	0000000000000040  Base        tests__dwarf_unwind
+  00000000001e7750 g    DF .text	0000000000000068  Base        0x60 test_dwarf_unwind__krava_1
+  00000000001e76e0 g    DF .text	0000000000000068  Base        0x60 test_dwarf_unwind__krava_2
+  00000000001e7620 g    DF .text	00000000000000b4  Base        0x60 test_dwarf_unwind__krava_3
+  00000000001e74f0 g    DF .text	0000000000000128  Base        0x60 test_dwarf_unwind__compare
+  00000000001e7350 g    DF .text	000000000000019c  Base        0x60 test_dwarf_unwind__thread
+  000000000083b000 g    DO .data	0000000000000018  Base        suite__dwarf_unwind
 
-> ---
->  mm/debug.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/mm/debug.c b/mm/debug.c
-> index 9d3d893dc7f4..96d594e16292 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -215,6 +215,7 @@ void dump_mm(const struct mm_struct *mm)
->  		mm->def_flags, &mm->def_flags
->  	);
->  }
-> +EXPORT_SYMBOL(dump_mm);
->  
->  static bool page_init_poisoning __read_mostly = true;
->  
-> -- 
-> 2.39.1
+Fix this similar to commit fdf7c49c200d1b ("perf tests: Fix dwarf unwind
+for stripped binaries") by marking the function as a global and adding
+the 'noinline' attribute to it.
 
+With this patch:
+  $ objdump -tT perf | grep dwarf_unwind
+  000000000083b018 g    DO .data	0000000000000040  Base        tests__dwarf_unwind
+  00000000001e80f0 g    DF .text	0000000000000068  Base        0x60 test_dwarf_unwind__krava_1
+  00000000001e8080 g    DF .text	0000000000000068  Base        0x60 test_dwarf_unwind__krava_2
+  00000000001e7fc0 g    DF .text	00000000000000b4  Base        0x60 test_dwarf_unwind__krava_3
+  00000000001e7e90 g    DF .text	0000000000000128  Base        0x60 test_dwarf_unwind__compare
+  00000000001e7cf0 g    DF .text	000000000000019c  Base        0x60 test_dwarf_unwind__thread
+  00000000001e8160 g    DF .text	0000000000000248  Base        0x60 test__dwarf_unwind
+  000000000083b000 g    DO .data	0000000000000018  Base        suite__dwarf_unwind
+  $ ./perf test 74
+   74: Test dwarf unwind                                               : Ok
+
+Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+---
+ tools/perf/tests/dwarf-unwind.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
+index afdca7f2959f07..ee983b677a6ae0 100644
+--- a/tools/perf/tests/dwarf-unwind.c
++++ b/tools/perf/tests/dwarf-unwind.c
+@@ -67,6 +67,7 @@ int test_dwarf_unwind__compare(void *p1, void *p2);
+ int test_dwarf_unwind__krava_3(struct thread *thread);
+ int test_dwarf_unwind__krava_2(struct thread *thread);
+ int test_dwarf_unwind__krava_1(struct thread *thread);
++int test__dwarf_unwind(struct test_suite *test, int subtest);
+ 
+ #define MAX_STACK 8
+ 
+@@ -195,8 +196,8 @@ NO_TAIL_CALL_ATTRIBUTE noinline int test_dwarf_unwind__krava_1(struct thread *th
+ 	return ret;
+ }
+ 
+-static int test__dwarf_unwind(struct test_suite *test __maybe_unused,
+-			      int subtest __maybe_unused)
++noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
++				int subtest __maybe_unused)
+ {
+ 	struct machine *machine;
+ 	struct thread *thread;
+
+base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
 -- 
-Michal Hocko
-SUSE Labs
+2.39.1
+
