@@ -2,255 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E9BC54E94
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 18:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA30C54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 18:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbjAYS2D (ORCPT
+        id S235528AbjAYSch (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 13:28:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
+        Wed, 25 Jan 2023 13:32:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjAYS2C (ORCPT
+        with ESMTP id S235311AbjAYScg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 13:28:02 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23392659E;
-        Wed, 25 Jan 2023 10:28:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 25 Jan 2023 13:32:36 -0500
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7792FEF82
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 10:32:35 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 9500C881121
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 18:32:34 +0000 (UTC)
+Received: from pdx1-sub0-mail-a306.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 32691881E11
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 18:32:34 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1674671554; a=rsa-sha256;
+        cv=none;
+        b=AFUy1M/CUH/b/XtJkNFTA7aHmXRVtlHsMQr+1MAkKPBh7cms33z4shsnvS3dhW1vnzLlGM
+        AFwBHTQ+NG5b9jzBhbPf5fEWKNxre0vTtdtGD87qEambEfkAcElQ4rjBZ9myi4KHjJfoJl
+        IhEtCwguYvPCGK531LN9RqE5m+cZ1HnxBJySXF8MLgsUlplqhbTBB/HUnUjtA1eNibK3Fc
+        coCnNkdj0JWesVy6XXM3psnl9c06ZoVYeXpgNz9jEOKUmCN8xLygQ9+Mst8rwsxv8Lhtyg
+        B+4NTsSDmvti7/7F3N/i7mrxUaBc9O7IDuPFq5VNvxpzr1J33w+8c3kpA/gU9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1674671554;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=RklJeSBsXo3eoBMozqg37WAfagKIJsfsLub9jJTlyS0=;
+        b=VLbPo2n/njUZrvXU3fIXRwPTcU1ObmSar48bwv10Rp/gl3v2SSUpf+oKd43PbKteq3X+kZ
+        tNRn/2cHqGtg8A8EkbBqOlFnMmCnE0a9VqP45bpFkpPqW3rIUIeVP/bMAidcU0zlFnn0z3
+        iJFrWQJPgAQS3/vFELXPpYBXEfiINZiVOlOqr/GqXdj46c7bZi8CLv27HmdzXK7hhZQtPE
+        MhRw0J/B7zfxrpP/RkqbWcWUukLcIr2YIXMrTLM4K8U4o3/d43EiHP9yBPca4LvV7J5NB2
+        82S8FQ+XRx8QhtcLWobGLw3yTtnZdXK6rPE9XgdXCD/fHlZCpEGpoaXb4FN3ow==
+ARC-Authentication-Results: i=1;
+        rspamd-65f5b7cf85-vh5f4;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Relation-Abaft: 0fdb42fc4f10a978_1674671554441_541052541
+X-MC-Loop-Signature: 1674671554440:415703858
+X-MC-Ingress-Time: 1674671554440
+Received: from pdx1-sub0-mail-a306.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.103.24.31 (trex/6.7.1);
+        Wed, 25 Jan 2023 18:32:34 +0000
+Received: from kmjvbox (c-76-102-200-71.hsd1.ca.comcast.net [76.102.200.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ACB31615B1;
-        Wed, 25 Jan 2023 18:28:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B501EC433EF;
-        Wed, 25 Jan 2023 18:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674671280;
-        bh=JmhFCqmWydMTxh/c48YRkP4MJHYPmVstf/yF2eb9KAE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fUCc6Y0WRGqJzjnMLWWIED10gJVAsHBw+0QjObgG6RtycqnNqptBbdWIsEFUM0Uqp
-         aS0UW2f8MNw7Pxs/AKJ9ZZN3KTMPybvhe72fgu10pvLTYZAGK9jdKw1oI3Cab96Skm
-         AVJqnAaMr6AXU6O4PeovhKQAuqt1lUlSigCo28IA6fyTDsGfnJvSmjfodw3QzQuPG6
-         eW8KDqgdYWFtQSr/xsw0vg51/tris3Y+lwrCZd/1yqnmLk6ik3FjxMzLF1av4w6HU5
-         w6ZaJfQfYmksnO73DvhS5a4tdbdUcemj7wQ4jWHSu+LSDD5rY4MC8h4qWcAnnmWOjn
-         uoxIX3bGSfSsQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E5414405BE; Wed, 25 Jan 2023 15:27:50 -0300 (-03)
-Date:   Wed, 25 Jan 2023 15:27:50 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        (Authenticated sender: kjlx@templeofstupid.com)
+        by pdx1-sub0-mail-a306.dreamhost.com (Postfix) with ESMTPSA id 4P2CB93dQDzXJ
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 10:32:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+        s=dreamhost; t=1674671553;
+        bh=RklJeSBsXo3eoBMozqg37WAfagKIJsfsLub9jJTlyS0=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=N/714JzxOON/lNp5Lt6uyGnicVW6JvwaCA6YQbKmc4DCcuKtK3cTWOyDCGP0gW219
+         kLVElSeK0dBdv4Qry5EE10vpE/CaHFWD0JgR4g7GAHFLHpK9VE+ryBNWoJMIKg6it5
+         5JMtkc+4WV1psHPnlsxKGS9cK0mGd3GhoGVL4otA=
+Received: from johansen (uid 1000)
+        (envelope-from kjlx@templeofstupid.com)
+        id e00e2
+        by kmjvbox (DragonFly Mail Agent v0.12);
+        Wed, 25 Jan 2023 10:32:31 -0800
+Date:   Wed, 25 Jan 2023 10:32:31 -0800
+From:   Krister Johansen <kjlx@templeofstupid.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        David Reaver <me@davidreaver.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH] perf stat: Hide invalid uncore event output for aggr mode
-Message-ID: <Y9F0piZlJqVSNkma@kernel.org>
-References: <20230125081251.1244997-1-namhyung@kernel.org>
- <CAP-5=fVS8EGLk1mgo2fqg4pLn2MOSELJBQ9jfyaiS7bKq-D57w@mail.gmail.com>
- <CAM9d7ci44XtW19qzwmncWfUBJnBq4TaPkAgP8Nh6yAM90hiSXw@mail.gmail.com>
- <CAP-5=fUM2_M7LQa8KArn+NoMU-Jkev8FyO67E4tZ+KmG5tk6vA@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf/util: Symbol lookup can fail if multiple segmets
+ match stext
+Message-ID: <20230125183231.GB1963@templeofstupid.com>
+References: <20230124223531.GB1962@templeofstupid.com>
+ <65cb75e0-4c0b-9384-1f6b-77a0053d8109@intel.com>
+ <231b238b-d464-464e-01d1-a2d5374a79ea@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUM2_M7LQa8KArn+NoMU-Jkev8FyO67E4tZ+KmG5tk6vA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <231b238b-d464-464e-01d1-a2d5374a79ea@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jan 25, 2023 at 10:25:23AM -0800, Ian Rogers escreveu:
-> On Wed, Jan 25, 2023 at 10:18 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Wed, Jan 25, 2023 at 9:33 AM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > On Wed, Jan 25, 2023 at 12:12 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > The current display code for perf stat iterates given cpus and build the
-> > > > aggr map to collect the event data for the aggregation mode.
-> > > >
-> > > > But uncore events have their own cpu maps and it won't guarantee that
-> > > > it'd match to the aggr map.  For example, per-package uncore events
-> > > > would generate a single value for each socket.  When user asks per-core
-> > > > aggregation mode, the output would contain 0 values for other cores.
-> > > >
-> > > > Thus it needs to check the uncore PMU's cpumask and if it matches to the
-> > > > current aggregation id.
-> > > >
-> > > > Before:
-> > > >   $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
-> > > >
-> > > >    Performance counter stats for 'system wide':
-> > > >
-> > > >   S0-D0-C0              1               3.73 Joules power/energy-pkg/
-> > > >   S0-D0-C1              0      <not counted> Joules power/energy-pkg/
-> > > >   S0-D0-C2              0      <not counted> Joules power/energy-pkg/
-> > > >   S0-D0-C3              0      <not counted> Joules power/energy-pkg/
-> > > >
-> > > >          1.001404046 seconds time elapsed
-> > > >
-> > > >   Some events weren't counted. Try disabling the NMI watchdog:
-> > > >         echo 0 > /proc/sys/kernel/nmi_watchdog
-> > > >         perf stat ...
-> > > >         echo 1 > /proc/sys/kernel/nmi_watchdog
-> > > >
-> > > > The core 1, 2 and 3 should not be printed because the event is handled
-> > > > in a cpu in the core 0 only.  With this change, the output becomes like
-> > > > below.
-> > > >
-> > > > After:
-> > > >   $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
-> > > >
-> > > >    Performance counter stats for 'system wide':
-> > > >
-> > > >   S0-D0-C0              1               2.09 Joules power/energy-pkg/
-> > > >
-> > > > Fixes: b89761351089 ("perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events")
-> > >
-> > > Thanks! Tested further with mixed core and uncore events like:
-> > > $ perf stat -A -a -e power/energy-pkg/,cycles sleep 1
-> > > and the "<not counted>" are now nicely gone.
-> >
-> > Thanks for the test!
-> >
-> > >
-> > > > Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
-> > > > Cc: Michael Petlan <mpetlan@redhat.com>
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/stat-display.c | 37 ++++++++++++++++++++++++++++------
-> > > >  1 file changed, 31 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > > > index 8bd8b0142630..b9dcb13650d0 100644
-> > > > --- a/tools/perf/util/stat-display.c
-> > > > +++ b/tools/perf/util/stat-display.c
-> > > > @@ -787,6 +787,22 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
-> > > >                 uniquify_event_name(counter);
-> > > >  }
-> > > >
-> > > > +static bool check_uncore_event_aggr(struct perf_stat_config *config,
-> > > > +                                   struct evsel *counter,
-> > > > +                                   struct aggr_cpu_id *id)
-> > >
-> > > nit: const *s
-> > > nit: check_uncore_event_aggr isn't particularly intention revealing,
-> > > perhaps something more like should_print_counter. Perhaps some
-> > > kernel-doc like:
-> >
-> > It sounds like a generic name.  My intention was to check the uncore events
-> > specifically.  But maybe we can add other conditions like global per-thread
-> > aggregation mode.
-> >
-> > How about this?
-> >
-> > /*
-> >  * When the event count is zero, check if the event should not be printed.
-> >  * For example, uncore events have dedicated CPUs to manage them,
-> >  * result for other CPUs should be zero and skipped.
-> >  */
-> > static bool should_skip_zero_counter(...)
+Hi Adrian,
+
+On Wed, Jan 25, 2023 at 09:37:59AM +0200, Adrian Hunter wrote:
+> On 25/01/23 09:29, Adrian Hunter wrote:
 > 
-> lgtm, I like the idea one day there will be kernel-doc everywhere, but
-> that may just be me :-)
-
-Nope, trying to add kernel doc style is preferred, albeit difficult to
-enforce and keep consistent :-\
-
-- Arnaldo
-
-> Thanks!
+> Also subject line has spelling mistake, and should identify kcore
+> as the issue e.g.
 > 
-> > > /**
-> > >  * should_print_counter() - Based on id, should the current counter's
-> > > value be printed.
-> > >  * @config: The perf stat configuration with knowledge of the aggregation mode.
-> > >  * @counter: The counter with its associated cpumap.
-> > >  * @id: The aggregation type that is being queried for printing.
-> > >  *
-> > >  * An evlist can have evsels with different cpumaps, for example, by
-> > > mixing core and uncore events.
-> > >  * When displaying one counter the other counter shouldn't be printed.
-> > > Check the counter's cpumap
-> > >  * to see whether for any CPU it is associated with the counter should
-> > > be printed.
-> > >  *
-> > >  * Return: true for counters that should be printed.
-> > >  */
-> > >
-> > > > +{
-> > > > +       struct perf_cpu cpu;
-> > > > +       int idx;
-> > > > +
-> > > > +       perf_cpu_map__for_each_cpu(cpu, idx, counter->core.own_cpus) {
-> > >
-> > > I know this is pre-existing, sorry to whine. I think we need to
-> > > document cpus vs own_cpus in the perf_evsel. Normally own_cpus ==
-> > > cpus, but in a case like this the difference matters and I have a hard
-> > > time understanding what "own" is supposed to be conveying, and why
-> > > here we don't use cpus. I also lose what the connection is with
-> > > perf_evlist all_cpus, does that union own_cpus or cpus? At least there
-> > > is a comment there :-D Honestly, why do we need to even have 2 cpu
-> > > maps in an evsel?
-> >
-> > Right, maybe we can use pmu->cpus instead of evsel->core.own_cpus.
-> > IIUC ->cpus is from the user and ->own_cpus is from the hardware.
-> > I agree with you that having 2 cpu maps is confusing and it's been a
-> > source of subtle bugs.
-> >
-> > Let me see what I can do..
-> >
-> > Thanks,
-> > Namhyung
-> >
-> > >
-> > > > +               struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
-> > > > +
-> > > > +               if (aggr_cpu_id__equal(id, &own_id))
-> > > > +                       return true;
-> > > > +       }
-> > > > +       return false;
-> > > > +}
-> > > > +
-> > > >  static void print_counter_aggrdata(struct perf_stat_config *config,
-> > > >                                    struct evsel *counter, int s,
-> > > >                                    struct outstate *os)
-> > > > @@ -814,12 +830,21 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
-> > > >         ena = aggr->counts.ena;
-> > > >         run = aggr->counts.run;
-> > > >
-> > > > -       /*
-> > > > -        * Skip value 0 when enabling --per-thread globally, otherwise it will
-> > > > -        * have too many 0 output.
-> > > > -        */
-> > > > -       if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
-> > > > -               return;
-> > > > +       if (val == 0) {
-> > > > +               /*
-> > > > +                * Skip value 0 when enabling --per-thread globally,
-> > > > +                * otherwise it will have too many 0 output.
-> > > > +                */
-> > > > +               if (config->aggr_mode == AGGR_THREAD && config->system_wide)
-> > > > +                       return;
-> > > > +               /*
-> > > > +                * Skip value 0 when it's an uncore event and the given aggr id
-> > > > +                * does not belong to the PMU cpumask.
-> > > > +                */
-> > > > +               if (counter->core.requires_cpu &&
-> > > > +                   !check_uncore_event_aggr(config, counter, &id))
-> > > > +                       return;
-> > > > +       }
-> > > >
-> > > >         if (!metric_only) {
-> > > >                 if (config->json_output)
-> > > > --
-> > > > 2.39.1.405.gd4c25cc71f-goog
-> > > >
+> perf symbol: Symbol lookup with kcore can fail if multiple segments match stext
+> 
+> > On 25/01/23 00:35, Krister Johansen wrote:
+> >> This problem was encountered on an arm64 system with a lot of memory.
+> >> Without kernel debug symbols installed, and with both kcore and kallsyms
+> >> available, perf managed to get confused and returned "unknown" for all
+> >> of the kernel symbols that it tried to look up.
+> >>
+> >> On this system, stext fell within the vmalloc segment.  The kcore symbol
+> >> matching code tries to find the first segment that contains stext and
+> >> uses that to replace the segment generated from just the kallsyms
+> >> information.  In this case, however, there were two: a very large
+> >> vmalloc segment, and the text segment.  This caused perf to get confused
+> >> because multiple overlapping segments were inserted into the RB tree
+> >> that holds the discovered segments.  However, that alone wasn't
+> >> sufficient to cause the problem. Even when we could find the segment,
+> >> the offsets were adjusted in such a way that the newly generated symbols
+> >> didn't line up with the instruction addresses in the trace.  The most
+> >> obvious solution would be to consult which segment type is text from
+> >> kcore, but this information is not exposed to users.
+> >>
+> >> Instead, select the smallest matching segment that contains stext
+> >> instead of the first matching segment.  This allows us to match the text
+> >> segment instead of vmalloc, if one is contained within the other.
+> >>
+> >> Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+> >> ---
+> >>  tools/perf/util/symbol.c | 10 ++++++++--
+> >>  1 file changed, 8 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> >> index a3a165ae933a..14ac4189eaff 100644
+> >> --- a/tools/perf/util/symbol.c
+> >> +++ b/tools/perf/util/symbol.c
+> >> @@ -1368,10 +1368,16 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+> >>  
+> >>  	/* Find the kernel map using the '_stext' symbol */
+> >>  	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
+> >> +		u64 replacement_size = 0;
+> > 
+> > We'd usually put a blank line here
+> > 
+> >>  		list_for_each_entry(new_map, &md.maps, node) {
+> >> -			if (stext >= new_map->start && stext < new_map->end) {
+> >> +			u64 new_size = new_map->end - new_map->start;
+> >> +
+> >> +			if (!(stext >= new_map->start && stext < new_map->end))
+> >> +				continue;
+> >> +
+> > 
+> > Really needs a comment, and please be specific e.g.
+> > 
+> >  ARM64 vmalloc segment overlaps the kernel text segment, so
+> >  choosing the smaller segment will get the kernel text.
+> > 
+> > 
+> > 
+> >> +			if (!replacement_map || new_size < replacement_size) {
+> >>  				replacement_map = new_map;
+> >> -				break;
+> >> +				replacement_size = new_size;
+> >>  			}
+> >>  		}
+> >>  	}
 
--- 
+Thanks for all the feedback.  I'll incorporate these changes and send
+out a v2 shortly.
 
-- Arnaldo
+-K
