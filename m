@@ -2,157 +2,198 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA3C54E94
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 19:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42807C27C76
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 19:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236157AbjAYTXk (ORCPT
+        id S230347AbjAYTYo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 14:23:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39082 "EHLO
+        Wed, 25 Jan 2023 14:24:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236213AbjAYTXS (ORCPT
+        with ESMTP id S235093AbjAYTYn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 14:23:18 -0500
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A17CC3C
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:23:01 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-4fd37a1551cso253471547b3.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:23:01 -0800 (PST)
+        Wed, 25 Jan 2023 14:24:43 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E43683EA;
+        Wed, 25 Jan 2023 11:24:35 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id d9so18824158pll.9;
+        Wed, 25 Jan 2023 11:24:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PCnMypYs8jymH6Ufuva+9r/69Y/DZs8kYxwQEYrzQFk=;
-        b=hXTUs83qvSMCw0sqrewtph/1zyRGQA8EwV9VOqASoIhN1O27YlTeLHvU30LwpkaPKE
-         6ZtbduOBpeU0Mk6yScQyxHGjdOZ8W8NbAK7HCSbKR2qQVwpslpoP2Mqh8DnM60UrkSEV
-         Fy/rJx/xAj6ReR1yQheSDvUeiLsUOZe36GsXUe+/pA5dp4+pot+ScO1k5jhTafZOkoJo
-         vEjMe7B3/0BupSIQn5CSlkYjolaKBFMYB73xyId061H8p1ZYZbkvvK9SPdZltanRDpUl
-         vOuM+M/xFo7tmOP85pcv8h038+SVqlBqYWxO3Lgun0O5W06va+PJHK2pFsHgrhvmIiGL
-         lvow==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=ujiGpL29kziCWkNZQbKbe7voLq0Mqz36QhUqxaZlsdM=;
+        b=JHuIDbTOkriV+7vCGtCkabHvcDkLESfQRA7thPAEAEF+H4JuF/cNVzNRdXIRsZs7ZH
+         E4CcOLUY2LIWLiNdrPuexD+wmk4hG6NI8Bp3CeJGaqHwOIkTnwN7nWmJsi63lrdRErc2
+         E9UB+XcLSo6SbOCVMscCUjvTLpn7t88KQMn+FQtUALsYFMmogsPFFIXAF/JX6lqRKt7j
+         Mfe4e+z/Q9WedfmQZWXv4MEk+bA/fX7hVrhvUR5AofRgzaG4njUoSBrqHgEtsOq6lz8T
+         7M2rFinedK7XXRPtZ8njOCSyELxH15USKqB/lz68alIq8GBoQSkrkpJe1vRLXZDFUJeN
+         R1Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PCnMypYs8jymH6Ufuva+9r/69Y/DZs8kYxwQEYrzQFk=;
-        b=uq6zivLKyRmmZZuAvec8A42ODoPvVRL+73DtXlgn/tQ4781SKwO1sdnuBnERQncKcG
-         IEIwHE4uzIPih9dWn98siQl3jNLLcStHIatNmWjL98ZukUOflWoabWi6bM8MLnuNd60R
-         BbDEpJZo/D88nQz82uVPkRlzx8OAcVOxy5UbBsKo5+u5nLVX/vLPsYeKuogvvO/UxY3Q
-         Povnz5Z46URg1vJowjhBDUcSvFCLnXCC3Fw4pfVkj3JP2+Ze7Tv5BIn3wtxnEKVUuxqT
-         l3mjIi7zkOCXEC0IrN6FOYOb1e5gLACNvp4WukzpWTMELb10874POzfEs/BIEiXbbyeK
-         HLgQ==
-X-Gm-Message-State: AO0yUKUj7gruOsCQLM+Iggdp1WCmpIeVmoDo1P2ZPSPXBej1KlU8Rodc
-        K+nzffg6/dIjafupgFpCQIw4Je4kjCBtUgnDGSUuswf8ouGmoPIzq/g=
-X-Google-Smtp-Source: AK7set/Rj29H3r8vHaYccCmp943Un+QyMRF/w8dcRdt99GFw8apI+/L+5tSmXBTsBLdlTBniti7hA8kyFbpjr3H10kc=
-X-Received: by 2002:a0d:d456:0:b0:507:26dc:ebd with SMTP id
- w83-20020a0dd456000000b0050726dc0ebdmr298632ywd.455.1674674569763; Wed, 25
- Jan 2023 11:22:49 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ujiGpL29kziCWkNZQbKbe7voLq0Mqz36QhUqxaZlsdM=;
+        b=s5w+TdTbUgj/FpFmO38MHS7LNgoz6QZC0WiEVXn0WYGmQ1V6nMqr4eJs+PkRGVYXWa
+         URr99azKqIkXqlnd98egPWgTdyXu53UDYd7bti+8BLxej3XgT3T5aZHmQ0IqFtct/AQc
+         v9/x+J5UfF8f3O0CfqLRpVizYw0Ro4Sh993MGsHUujgZrN5g5z5fkjlEc6P128BrL/EL
+         RWK+W4Ec5YwLCIyCkVoUrSk6apaVQyOoepmKGp/znPOmzQwJ4FlyIAICHfrXeKNW200H
+         UpAqVQhsS6uIFYThRcYrFS2TO9QTfk/5NCd/RCPqPTk6Vvxa/31rKTgaRME+QuP616zd
+         mtIQ==
+X-Gm-Message-State: AFqh2kpjdwcJ8MXyzXDFproDnRoNsw+wk9YeXJEITaIfzrvUGjbmVCJp
+        2hz4Kr6QyS1vhwFYX6E2vuo=
+X-Google-Smtp-Source: AMrXdXs66379RJjn3gx3zcd7OM9OrtJLjL+TLhKUxwLwik3Svcsffp1m6Vw/cD69o5b80o2s7aCBUw==
+X-Received: by 2002:a17:902:b68f:b0:193:30be:d146 with SMTP id c15-20020a170902b68f00b0019330bed146mr31649213pls.63.1674674674428;
+        Wed, 25 Jan 2023 11:24:34 -0800 (PST)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:29ee:2efb:110e:b369])
+        by smtp.gmail.com with ESMTPSA id p5-20020a170903248500b00189a50d2a3esm3972667plw.241.2023.01.25.11.24.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 11:24:33 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH v2] perf stat: Hide invalid uncore event output for aggr mode
+Date:   Wed, 25 Jan 2023 11:24:31 -0800
+Message-Id: <20230125192431.2929677-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 MIME-Version: 1.0
-References: <20230125083851.27759-1-surenb@google.com> <20230125083851.27759-2-surenb@google.com>
- <Y9F19QEDX5d/44EV@casper.infradead.org>
-In-Reply-To: <Y9F19QEDX5d/44EV@casper.infradead.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 25 Jan 2023 11:22:38 -0800
-Message-ID: <CAJuCfpH+LMFX=TT04gSMA05cz_-CXMum6fobRrduWvzm1HWPmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
-        jglisse@google.com, mhocko@suse.com, vbabka@suse.cz,
-        hannes@cmpxchg.org, mgorman@techsingularity.net, dave@stgolabs.net,
-        liam.howlett@oracle.com, peterz@infradead.org,
-        ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
-        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
-        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
-        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
-        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
-        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
-        jannh@google.com, shakeelb@google.com, tatashin@google.com,
-        edumazet@google.com, gthelen@google.com, gurua@google.com,
-        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
-        leewalsh@google.com, posk@google.com, will@kernel.org,
-        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
-        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        qianweili@huawei.com, wangzhou1@hisilicon.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-        airlied@gmail.com, daniel@ffwll.ch,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, l.stach@pengutronix.de,
-        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
-        matthias.bgg@gmail.com, robdclark@gmail.com,
-        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
-        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
-        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
-        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
-        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
-        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
-        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, miklos@szeredi.hu,
-        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
-        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
-        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
-        loongarch@lists.linux.dev, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
-        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        devel@lists.orangefs.org, kexec@lists.infradead.org,
-        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
-        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 10:33 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Wed, Jan 25, 2023 at 12:38:46AM -0800, Suren Baghdasaryan wrote:
-> > +/* Use when VMA is not part of the VMA tree and needs no locking */
-> > +static inline void init_vm_flags(struct vm_area_struct *vma,
-> > +                              unsigned long flags)
-> > +{
-> > +     vma->vm_flags = flags;
->
-> vm_flags are supposed to have type vm_flags_t.  That's not been
-> fully realised yet, but perhaps we could avoid making it worse?
->
-> >       pgprot_t vm_page_prot;
-> > -     unsigned long vm_flags;         /* Flags, see mm.h. */
-> > +
-> > +     /*
-> > +      * Flags, see mm.h.
-> > +      * WARNING! Do not modify directly.
-> > +      * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
-> > +      */
-> > +     unsigned long vm_flags;
->
-> Including changing this line to vm_flags_t
+The current display code for perf stat iterates given cpus and build the
+aggr map to collect the event data for the aggregation mode.
 
-Good point. Will make the change. Thanks!
+But uncore events have their own cpu maps and it won't guarantee that
+it'd match to the aggr map.  For example, per-package uncore events
+would generate a single value for each socket.  When user asks per-core
+aggregation mode, the output would contain 0 values for other cores.
+
+Thus it needs to check the uncore PMU's cpumask and if it matches to the
+current aggregation id.
+
+Before:
+  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+
+   Performance counter stats for 'system wide':
+
+  S0-D0-C0              1               3.73 Joules power/energy-pkg/
+  S0-D0-C1              0      <not counted> Joules power/energy-pkg/
+  S0-D0-C2              0      <not counted> Joules power/energy-pkg/
+  S0-D0-C3              0      <not counted> Joules power/energy-pkg/
+
+         1.001404046 seconds time elapsed
+
+  Some events weren't counted. Try disabling the NMI watchdog:
+  	echo 0 > /proc/sys/kernel/nmi_watchdog
+  	perf stat ...
+  	echo 1 > /proc/sys/kernel/nmi_watchdog
+
+The core 1, 2 and 3 should not be printed because the event is handled
+in a cpu in the core 0 only.  With this change, the output becomes like
+below.
+
+After:
+  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+
+   Performance counter stats for 'system wide':
+
+  S0-D0-C0              1               2.09 Joules power/energy-pkg/
+
+Fixes: b89761351089 ("perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events")
+Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+* rename to 'should_skip_zero_counter'
+* check pmu->cpus instead
+* add kernel-doc style comments
+* add Ian's Tested-by tag
+
+ tools/perf/util/stat-display.c | 51 ++++++++++++++++++++++++++++++----
+ 1 file changed, 46 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 8bd8b0142630..1b5cb20efd23 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -787,6 +787,51 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
+ 		uniquify_event_name(counter);
+ }
+ 
++/**
++ * should_skip_zero_count() - Check if the event should print 0 values.
++ * @config: The perf stat configuration (including aggregation mode).
++ * @counter: The evsel with its associated cpumap.
++ * @id: The aggregation id that is being queried.
++ *
++ * Due to mismatch between the event cpumap or thread-map and the
++ * aggregation mode, sometimes it'd iterate the counter with the map
++ * which does not contain any values.
++ *
++ * For example, uncore events have dedicated CPUs to manage them,
++ * result for other CPUs should be zero and skipped.
++ *
++ * Return: %true if the value should NOT be printed, %false if the value
++ * needs to be printed like "<not counted>" or "<not supported>".
++ */
++static bool should_skip_zero_counter(struct perf_stat_config *config,
++				     struct evsel *counter,
++				     const struct aggr_cpu_id *id)
++{
++	struct perf_cpu cpu;
++	int idx;
++
++	/*
++	 * Skip value 0 when enabling --per-thread globally,
++	 * otherwise it will have too many 0 output.
++	 */
++	if (config->aggr_mode == AGGR_THREAD && config->system_wide)
++		return true;
++	/*
++	 * Skip value 0 when it's an uncore event and the given aggr id
++	 * does not belong to the PMU cpumask.
++	 */
++	if (!counter->pmu || !counter->pmu->is_uncore)
++		return false;
++
++	perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
++		struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
++
++		if (aggr_cpu_id__equal(id, &own_id))
++			return false;
++	}
++	return true;
++}
++
+ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 				   struct evsel *counter, int s,
+ 				   struct outstate *os)
+@@ -814,11 +859,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	ena = aggr->counts.ena;
+ 	run = aggr->counts.run;
+ 
+-	/*
+-	 * Skip value 0 when enabling --per-thread globally, otherwise it will
+-	 * have too many 0 output.
+-	 */
+-	if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
++	if (val == 0 && should_skip_zero_counter(config, counter, &id))
+ 		return;
+ 
+ 	if (!metric_only) {
+-- 
+2.39.1.456.gfc5497dd1b-goog
+
