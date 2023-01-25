@@ -2,322 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB9DC27C76
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 14:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF0C27C76
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 16:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235277AbjAYOrM (ORCPT
+        id S236032AbjAYQus (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 09:47:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
+        Wed, 25 Jan 2023 11:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234493AbjAYOrL (ORCPT
+        with ESMTP id S235772AbjAYQuQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 09:47:11 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED38182
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 06:47:10 -0800 (PST)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PD0PB7024723;
-        Wed, 25 Jan 2023 14:46:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=CvlcmbH0qTInX0A+nwgYbdcXh2tOkhnQ6lhXSXZM6FU=;
- b=lKyyMA2xeIRY47hvgl2urA0Oz1h2PMDNiin8eRDUInUdAEqm0Su7PEC512YfKV4VcQVe
- ivWUU5EK0FNw3Y1VbX9A3DVsbGPPUV/A0XUBzhgWjqq/SrXeLWeFA9OqpOm/0729iT+3
- T9bn5/xVyU9qRgA65syOnkL7BUjVGa8bSwieus18ZF6b7FdTF2cSAyA8/COeSev0GdWk
- s+SpmzokQUGDel1JCbvXiED5I0Bj54AxcOv6FCExZmlRATBYDDu0yLcJhV9bubhhFkl5
- tGDB+HwGVq8+e6g6USg9nTK2Nnm4ouvPb6pgqFg7ZjELxmk0SgSOHiIc5J+cVnCYU8Xj +w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nac9670p0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 14:46:49 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30PD75PC020825;
-        Wed, 25 Jan 2023 14:46:49 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nac9670ng-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 14:46:49 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30OFtTpa015310;
-        Wed, 25 Jan 2023 14:46:47 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3n87p6br4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 14:46:47 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30PEkhin23855678
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Jan 2023 14:46:43 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A67002004F;
-        Wed, 25 Jan 2023 14:46:43 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7343C20040;
-        Wed, 25 Jan 2023 14:46:39 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.36.173])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Wed, 25 Jan 2023 14:46:39 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] tools/perf: Disable perf probe when libtraceevent is
- missing
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y8qlIuDCpkj523xE@kernel.org>
-Date:   Wed, 25 Jan 2023 20:16:36 +0530
-Cc:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <70A54F83-E7C5-4821-BA6A-D51A555DAAC0@linux.vnet.ibm.com>
-References: <20230120120256.34694-1-atrajeev@linux.vnet.ibm.com>
- <Y8qlIuDCpkj523xE@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: X2gwQaKGkU_-oCxsBOWcavd6pYcG2u-r
-X-Proofpoint-ORIG-GUID: 6uaTiR7StDtWRh5Qz6umKYnQa_LcPOLt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-25_08,2023-01-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- malwarescore=0 spamscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301250129
+        Wed, 25 Jan 2023 11:50:16 -0500
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6B6B462
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 08:50:15 -0800 (PST)
+Received: by mail-ua1-x934.google.com with SMTP id u29so3900743uaa.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 08:50:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9oBkpwDuDP6Raat/HRHsNpx8MqzIjjZSJojQEumXoyE=;
+        b=telMSbMEB1I/JdT8E+AOlYPkvLPDxj1UCnywL1f/zz+GxB6zyzUgN+Q3Q48l8AYc8X
+         qS5rmRFlzboD9JIVNM4srPZju+Dc0OvfYTnyPjpp4sHdEutwmKfLXtqzcN+4YmFBRVgu
+         A3oTpxaFO/E/7LaM1iu3pe6Iv0CmRV+MC10+sbVUAqr2eeBPD17IhS27buTMH3bCJoMu
+         fEQq5XzvwDAqtF1fp8r2H4g3vh98tijISo+CkjBRkXWvZWGfdkjpWZzF8VgIKtCc5sLs
+         +bZFNae0CmrxcmnBVuga8Dg0CQRlWnW+6m8p+riuFjzQ8BSrHATHKU3+MoO2RS3dWuby
+         cPfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9oBkpwDuDP6Raat/HRHsNpx8MqzIjjZSJojQEumXoyE=;
+        b=Wgf0+ElCJiBPAAFaUrCOBGcwfCT7IHLhviFPxn4O8tAEk3mfaNvXdkBfYbio7UxsW/
+         hskJtP38pzMT20amW/XcLo/opTl9hSKhLwYRZbTrp2y6ZPTrO6GccqC/SLdx8VtzsQnb
+         PkhS6kvmmCmdJKGQ14ipJ/F4EIeM451Xv32KQbzEQxAGS0WKzjcN6xE/LWMWt+lEg5CJ
+         //MR4jeUDZ+9kJ+QNfVa5QGY6ztVN75wPwqv+bTfsUFcoCo8r1zwjbWW7QXz9JHmHgj8
+         u0Nqf3KSFyqzz7vkvSnXU0kuu6a2LSt3RDBF6sBb3+x+wDAhLsN+s68GcvCyac5T+dfW
+         1gaQ==
+X-Gm-Message-State: AFqh2koOWkrhpJO/m8LsyDpDWXHNFttBUXlQ3IR95y8aUAbAmjx2g4m7
+        tgphhAkzz8Dae087QOmcfct1QF3jvIV04nib/FlqjWHZyM4nd3JBKyw=
+X-Google-Smtp-Source: AMrXdXsah5c2WKVW38d6ZSr7pPop+n/mEJC53KDRGLQOXrHcU20AK6F0ktCN8HrtzVAtxjIN7wyafP19A/nGyLOtNU8=
+X-Received: by 2002:a81:1d2:0:b0:433:f1c0:3f1c with SMTP id
+ 201-20020a8101d2000000b00433f1c03f1cmr4401576ywb.438.1674665403087; Wed, 25
+ Jan 2023 08:50:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20230125083851.27759-1-surenb@google.com> <20230125083851.27759-2-surenb@google.com>
+ <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Wed, 25 Jan 2023 08:49:50 -0800
+Message-ID: <CAJuCfpEcVCZaCGzc-Wim25eaV5e6YG1YJAAdKwZ6JHViB0z8aw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
+        jglisse@google.com, mhocko@suse.com, vbabka@suse.cz,
+        hannes@cmpxchg.org, mgorman@techsingularity.net, dave@stgolabs.net,
+        willy@infradead.org, liam.howlett@oracle.com,
+        ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
+        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
+        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
+        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
+        jannh@google.com, shakeelb@google.com, tatashin@google.com,
+        edumazet@google.com, gthelen@google.com, gurua@google.com,
+        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
+        leewalsh@google.com, posk@google.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        qianweili@huawei.com, wangzhou1@hisilicon.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+        airlied@gmail.com, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, l.stach@pengutronix.de,
+        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
+        matthias.bgg@gmail.com, robdclark@gmail.com,
+        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
+        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
+        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
+        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
+        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
+        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
+        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, miklos@szeredi.hu,
+        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
+        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
+        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
+        loongarch@lists.linux.dev, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        devel@lists.orangefs.org, kexec@lists.infradead.org,
+        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
+        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Jan 25, 2023 at 1:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Jan 25, 2023 at 12:38:46AM -0800, Suren Baghdasaryan wrote:
+>
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index 2d6d790d9bed..6c7c70bf50dd 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -491,7 +491,13 @@ struct vm_area_struct {
+> >        * See vmf_insert_mixed_prot() for discussion.
+> >        */
+> >       pgprot_t vm_page_prot;
+> > -     unsigned long vm_flags;         /* Flags, see mm.h. */
+> > +
+> > +     /*
+> > +      * Flags, see mm.h.
+> > +      * WARNING! Do not modify directly.
+> > +      * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
+> > +      */
+> > +     unsigned long vm_flags;
+>
+> We have __private and ACCESS_PRIVATE() to help with enforcing this.
 
+Thanks for pointing this out, Peter! I guess for that I'll need to
+convert all read accesses and provide get_vm_flags() too? That will
+cause some additional churt (a quick search shows 801 hits over 248
+files) but maybe it's worth it? I think Michal suggested that too in
+another patch. Should I do that while we are at it?
 
-> On 20-Jan-2023, at 7:58 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->=20
-> Em Fri, Jan 20, 2023 at 05:32:56PM +0530, Athira Rajeev escreveu:
->> While parsing the tracepoint events in parse_events_add_tracepoint()
->> function, code checks for HAVE_LIBTRACEEVENT support. This is needed
->> since libtraceevent is necessary for tracepoint. But while adding
->> probe points, check for LIBTRACEEVENT is not done in case of perf =
-probe.
->> Hence, in environment with missing libtraceevent-devel, it is
->> observed that adding a probe point works even though its not
->> supported.
->=20
->> Example:
->> Adding probe point:
->> 	./perf probe 'vfs_getname=3Dgetname_flags:72 =
-pathname=3Dresult->name:string'
->> 	Added new event:
->> 	  probe:vfs_getname    (on getname_flags:72 with =
-pathname=3Dresult->name:string)
->=20
->> 	You can now use it in all perf tools, such as:
->=20
->> 		perf record -e probe:vfs_getname -aR sleep 1
->=20
->> But trying perf record:
->> 	./perf  record -e probe:vfs_getname -aR sleep 1
->> 	event syntax error: 'probe:vfs_getname'
->> 				\___ unsupported tracepoint
->> 	libtraceevent is necessary for tracepoint support
->> 	Run 'perf list' for a list of valid events
->>=20
->> Fix this by wrapping "builtin-probe" compilation and
->> "perf probe" usage under "CONFIG_LIBTRACEEVENT" check.
->=20
-> Humm, but 'perf probe' continues to work, as uou demoed above, the
-> problem is with the suggestion to use other perf tools that need to
-> parse tracefs and without libtraceevent, currently can't do it:
->=20
-> [root@quaco ~]# perf probe 'vfs_getname=3Dgetname_flags:72 =
-pathname=3Dresult->name:string'
-> Added new event:
->  probe:vfs_getname    (on getname_flags:72 with =
-pathname=3Dresult->name:string)
->=20
-> You can now use it in all perf tools, such as:
->=20
-> 	perf record -e probe:vfs_getname -aR sleep 1
->=20
-> [root@quaco ~]# perf probe -l
->  probe:vfs_getname    (on getname_flags:72@fs/namei.c with pathname)
-> [root@quaco ~]# perf trace -e probe:vfs_getname
-> perf: 'trace' is not a perf-command. See 'perf --help'.
-> [root@quaco ~]# cd /sys/kernel/tracing/events/probe/vfs_getname/
-> [root@quaco vfs_getname]# ls
-> enable  filter  format  hist  id  trigger
-> [root@quaco vfs_getname]# ls -la
-> total 0
-> drwxr-x---. 2 root root 0 Jan 20 11:18 .
-> drwxr-x---. 3 root root 0 Jan 20 11:18 ..
-> -rw-r-----. 1 root root 0 Jan 20 11:18 enable
-> -rw-r-----. 1 root root 0 Jan 20 11:18 filter
-> -r--r-----. 1 root root 0 Jan 20 11:18 format
-> -r--r-----. 1 root root 0 Jan 20 11:18 hist
-> -r--r-----. 1 root root 0 Jan 20 11:18 id
-> -rw-r-----. 1 root root 0 Jan 20 11:18 trigger
-> [root@quaco vfs_getname]#
->=20
-> But we can go on from there:
->=20
-> [root@quaco tracing]# pwd
-> /sys/kernel/tracing
-> [root@quaco tracing]# echo 1 > =
-/sys/kernel/tracing/events/probe/vfs_getname/enable
-> [root@quaco tracing]# echo 1 > tracing_on
-> [root@quaco tracing]# head trace_pipe
->    systemd-oomd-979     [003] ..... 96369.978971: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) =
-pathname=3D"/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service"
->    systemd-oomd-979     [003] ..... 96369.979022: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) =
-pathname=3D"/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/me=
-mory.current"
->    systemd-oomd-979     [003] ..... 96369.979084: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) pathname=3D""
->    systemd-oomd-979     [003] ..... 96369.979162: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) =
-pathname=3D"/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/me=
-mory.min"
->    systemd-oomd-979     [003] ..... 96369.979197: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) pathname=3D""
->    systemd-oomd-979     [003] ..... 96369.979267: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) =
-pathname=3D"/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/me=
-mory.low"
->    systemd-oomd-979     [003] ..... 96369.979303: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) pathname=3D""
->    systemd-oomd-979     [003] ..... 96369.979372: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) =
-pathname=3D"/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/me=
-mory.swap.current"
->    systemd-oomd-979     [003] ..... 96369.979406: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) pathname=3D""
->    systemd-oomd-979     [003] ..... 96369.979475: vfs_getname: =
-(getname_flags.part.0+0x6b/0x1c0) =
-pathname=3D"/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/me=
-mory.stat"
-> [root@quaco tracing]#
->=20
-> So you could instead replace the suggestion from:
->=20
-> "
->       You can now use it in all perf tools, such as:
->=20
->               perf record -e probe:vfs_getname -aR sleep 1
-> "
->=20
-> To:
->=20
-> "
-> 	perf is not linked with libtraceevent, to use the new probe you
-> 	can use tracefs:
->=20
-> 		cd /sys/kernel/tracing/
-> 		echo 1 > events/probe/vfs_getname/enable
-> 		echo 1 > tracing_on
-> 		cat trace_pipe
-> "
->=20
-> wdyt?
-
-Hi Arnaldo,
-
-Thanks for the suggestion. The idea to change usage message based on =
-presence of libtraceevent is good.
-I could try change with HAVE_LIBTRACEEVENT condition. Sample snippet =
-below:
-
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index ed73d0b89ca2..f010d0e43577 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -383,9 +383,17 @@ static int perf_add_probe_events(struct =
-perf_probe_event *pevs, int npevs)
-=20
-        /* Note that it is possible to skip all events because of =
-blacklist */
-        if (event) {
-+#ifndef HAVE_LIBTRACEEVENT
-+               pr_info("\nperf is not linked with libtraceevent, to use =
-the new probe you can use tracefs:\n\n");
-+               pr_info("\tcd /sys/kernel/tracing/\n");
-+               pr_info("\techo 1 > events/%s/%s/enable\n", group, =
-event);
-+               pr_info("\techo 1 > tracing_on\n");
-+               pr_info("\tcat trace_pipe\n");
-+#else
-                /* Show how to use the event. */
-                pr_info("\nYou can now use it in all perf tools, such =
-as:\n\n");
-                pr_info("\tperf record -e %s:%s -aR sleep 1\n\n", group, =
-event);
-+#endif
-        }
-=20
- out_cleanup:
-
-I will re-work on patch changes and also test for other options ( perf =
-probe with different group =E2=80=9CGROUP" values etc) to make sure this =
-works via tracefs.
-Arnaldo, the above approach looks fine to proceed with ?
-
-Thanks
-Athira
-
-
->=20
-> - Arnaldo
->=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/Build  | 4 +++-
->> tools/perf/perf.c | 2 ++
->> 2 files changed, 5 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/tools/perf/Build b/tools/perf/Build
->> index 6dd67e502295..a138a2304929 100644
->> --- a/tools/perf/Build
->> +++ b/tools/perf/Build
->> @@ -33,7 +33,9 @@ ifeq ($(CONFIG_LIBTRACEEVENT),y)
->>   perf-$(CONFIG_TRACE) +=3D trace/beauty/
->> endif
->>=20
->> -perf-$(CONFIG_LIBELF) +=3D builtin-probe.o
->> +ifeq ($(CONFIG_LIBTRACEEVENT),y)
->> +  perf-$(CONFIG_LIBELF) +=3D builtin-probe.o
->> +endif
->>=20
->> perf-y +=3D bench/
->> perf-y +=3D tests/
->> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
->> index 82bbe0ca858b..7b0d79284d5a 100644
->> --- a/tools/perf/perf.c
->> +++ b/tools/perf/perf.c
->> @@ -80,9 +80,11 @@ static struct cmd_struct commands[] =3D {
->> #ifdef HAVE_LIBTRACEEVENT
->> 	{ "sched",	cmd_sched,	0 },
->> #endif
->> +#ifdef HAVE_LIBTRACEEVENT
->> #ifdef HAVE_LIBELF_SUPPORT
->> 	{ "probe",	cmd_probe,	0 },
->> #endif
->> +#endif
->> #ifdef HAVE_LIBTRACEEVENT
->> 	{ "kmem",	cmd_kmem,	0 },
->> 	{ "lock",	cmd_lock,	0 },
->> --=20
->> 2.39.0
->=20
-> --=20
->=20
-> - Arnaldo
-
+>
