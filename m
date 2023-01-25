@@ -2,137 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6530BC38142
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 01:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B63CC27C76
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 04:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230432AbjAYBBr (ORCPT
+        id S229758AbjAYE4h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 20:01:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56740 "EHLO
+        Tue, 24 Jan 2023 23:56:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbjAYBBq (ORCPT
+        with ESMTP id S229528AbjAYE4g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 20:01:46 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E2222A27
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 17:01:45 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id f12-20020a7bc8cc000000b003daf6b2f9b9so225068wml.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 17:01:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r258p27VavUNvApfuYJcsJzQa0lc+7UlWV5c3aqUTJw=;
-        b=qOfrqmoggV+NhgdLNj+4I+cqsC/GmmuaYUu4cySkOHOl5laGmw66Mwe5G6WbI5LCZx
-         H5CStENsfDnAvA6gOw2zJSisHxoiPGuUNUuCyOKHtjVwQtBuCDaksqLhNZe+Ed7esPtQ
-         v00bA6TNDWBW8QrzfcKXXQ6O5T6XszMgHfmvHcnH+O+dfTBSeP2py5vF2sfQUu6RiLQV
-         HECtvTtlMfuzU3kyqLzupTnpY4V9NoD4DwVf3/N0w6qoQbEd/LaUEqJ3+DeX6TY6Ux8D
-         X4TN8LqK6cDQglZfSInL91buXsSjW953HY+6R4/28UmCipJpz4Yln6hPYIJZqc7c+dWO
-         1O/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r258p27VavUNvApfuYJcsJzQa0lc+7UlWV5c3aqUTJw=;
-        b=dt6oZR/GPNsy2iEfyJlZ9ASx/HO121fvyLkxHDXB5HC6DjxFNm/G+b1jPBu3NhZZK0
-         wQ5gLRdz8Fjvt8Bsu5bUjqOc38YJBPPp+T2e8JqcxStOM6l4O0bMCHcv1i1uguD4P43y
-         6h2rnPdgfS+eWNxTwev5JjGB51FxLjYkKyvJ2lapP/EvTIsoWS0Zqdifg/PUEzc4c6Cz
-         gT6QmEQsRXCmWV43SGewLPKPQXgu7+KhggI9KBI+L83M03jZk/QDirg8Y7REeOwoAmhj
-         hh5iyB3gBtqrLc1e8DalzQQBaejRZFW0umobfLLKW/3nUQVmXhKWtwMfS33LjS2gyi0U
-         rkcA==
-X-Gm-Message-State: AFqh2kqjsH5UlCUakMBpLnoEP5sFvNZbn7OqO666Jr2CV6xx6t/Lk9mi
-        WoGlvYqTJPql7YBD0eWv1WLcjEZYgqP/sbmxqPcSEbbPxw7eQc1DQMYPzQ==
-X-Google-Smtp-Source: AMrXdXs9t/+WWaJ1ixe14hbVHXiGhPAO7RO71szJsKK6e75z0WMrgDSVYGu6ZRu8sffLubZZdJs7G4hXoCkJehuhYz0=
-X-Received: by 2002:a05:600c:6020:b0:3da:1bb6:ed44 with SMTP id
- az32-20020a05600c602000b003da1bb6ed44mr2202939wmb.149.1674608503357; Tue, 24
- Jan 2023 17:01:43 -0800 (PST)
+        Tue, 24 Jan 2023 23:56:36 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D74442DD;
+        Tue, 24 Jan 2023 20:56:30 -0800 (PST)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30P12O6A001128;
+        Wed, 25 Jan 2023 04:55:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Ek4ViFzg+L03Mc5P/M4v2C+tRZPLaPHa8rW/eFrxnwg=;
+ b=gU5VuJTEr7iJC4Ffg5FwnOdJiUaZa0wWfSXxALBwh7QayOar6JQuBkASYS1dAG0nJ4eO
+ 8Sm2o1JbaB7bZKT2BIlVlKqpm4JlUiCDTfN8sKr9OELSomuOS3qAFxI3LO3Qvc5nuNJP
+ oqL29cGmh3mkEOQXAFYI3289I8O9+RH8g+hA/a43YBe9OxnIU1ynpfPbVLp/9I7pUFTs
+ I662tv9ZWnYa3YVF/4g/zguX23vOGw86W8u4B6nV7b+AB9cdZSmBXL5e68Y1EfISm9yE
+ 9sfotJ76W5lfgXftwNKezqlPC3m2TraKsw4brVsonuWd+5WwWwyMxHp5VVCVEuY4zuBp Wg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nacg19j8w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 04:55:32 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30P4tVUH025163;
+        Wed, 25 Jan 2023 04:55:31 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nacg19j89-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 04:55:31 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30P0cds4022756;
+        Wed, 25 Jan 2023 04:55:28 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3n87p6bb6e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 04:55:28 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30P4tQFP24052368
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Jan 2023 04:55:26 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 354C02004B;
+        Wed, 25 Jan 2023 04:55:26 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3C9D20043;
+        Wed, 25 Jan 2023 04:55:18 +0000 (GMT)
+Received: from [9.43.112.104] (unknown [9.43.112.104])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 25 Jan 2023 04:55:18 +0000 (GMT)
+Message-ID: <f9d26106-95d2-69ae-b7ed-1b47449dacd1@linux.ibm.com>
+Date:   Wed, 25 Jan 2023 10:25:17 +0530
 MIME-Version: 1.0
-References: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
- <Y7w2qshoCEjKKVlz@kernel.org>
-In-Reply-To: <Y7w2qshoCEjKKVlz@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 24 Jan 2023 17:01:31 -0800
-Message-ID: <CAP-5=fUeC2nhUhFN69+sL687csSsoi5=ZEkRH70vUy+kTiF52g@mail.gmail.com>
-Subject: Re: Google Summer-of-Code 2023
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v3 01/11] perf jevents metric: Correct Function equality
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sandipan Das <sandipan.das@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+References: <20230124063320.668917-1-irogers@google.com>
+ <20230124063320.668917-2-irogers@google.com>
+From:   kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20230124063320.668917-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: H6q3uzCcb05eZCYrpofTEMW9O5tQk3l7
+X-Proofpoint-GUID: J2kNzcWzCCLoXPTMiPA2OWng92lTLNZ6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-25_01,2023-01-24_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ clxscore=1011 impostorscore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301250039
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 7:45 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> Em Mon, Jan 09, 2023 at 07:28:26AM -0800, Ian Rogers escreveu:
-> > Hi,
-> >
-> > The Linux Foundation will apply to be a mentor organization for the
-> > Google Summer-of-Code again this year. That application process starts
-> > on January 23rd. For the perf tool applying as part of the Linux
-> > Foundation, we have a good record of getting the contributors we ask
-> > for as part of the program. Contributors are very welcome! For the
-> > program we need mentors and project ideas. For mentoring the workload
-> > is to review changes, to attend the office hours with the contributor
-> > and to fill-in the 2 evaluations. For the project suggestions,
-> > anything goes. I've included links to last year's suggestions at the
-> > bottom. If you have ideas for projects then please reply to this
-> > email!
-> >
-> > Last year there was confusion over whether people working in industry
-> > could be part of the program. Our answer was yes in terms of support,
-> > but they wouldn't qualify for the GSoC funding. I'll try to make this
-> > clear on our wiki, if it isn't already on the Linux Foundation's.
-> >
-> > We'd like to continue having the requirements that applications have:
-> > 1) what the project will be,
-> > 2) a weekly time plan.
-> > To make the program run more smoothly this year, we're also going to
-> > add a requirement that the contributor has sent a patch to the mailing
-> > list. The patch doesn't need to do very much, say a documentation
-> > improvement, but I'd like to be strict and say that any application
-> > not meeting this bar be rejected. Thoughts about this, improvement
-> > ideas, and thoughts on what are good requirements are appreciated.
->
-> A project like perf, being out there for quite a while, accumulates tech
-> debt, such being a fact of life for any project.
->
-> This being so common, I'd encourage people to try and propose to fix
-> things not of their liking when trying to build, cross-build, use these
-> tools.
->
-> Being able to at least voice what you dislike, and possibly get some
-> money out of trying to fix it, out in the open, what an opportunity!
->
-> Go and try to fix things!
->
-> Thanks Ian for year after year to go and take the SOC opportunity to
-> improve perf.
->
-> - Arnaldo
 
-The GSoC 2023 wiki for perf is now available:
-https://wiki.linuxfoundation.org/gsoc/2023-gsoc-perf
 
-GSoC 2023 is trying to further broaden who can participate, and
-"newcomers" are eligible. I asked for some clarity on what qualifies
-as a newcomer and got the following reply:
+On 1/24/23 12:03, Ian Rogers wrote:
+> rhs may not be defined, say for source_count, so add a guard.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/metric.py | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/metric.py b/tools/perf/pmu-events/metric.py
+> index 4797ed4fd817..2f2fd220e843 100644
+> --- a/tools/perf/pmu-events/metric.py
+> +++ b/tools/perf/pmu-events/metric.py
+> @@ -261,8 +261,10 @@ class Function(Expression):
+>  
+>    def Equals(self, other: Expression) -> bool:
+>      if isinstance(other, Function):
+> -      return self.fn == other.fn and self.lhs.Equals(
+> -          other.lhs) and self.rhs.Equals(other.rhs)
+> +      result = self.fn == other.fn and self.lhs.Equals(other.lhs)
+> +      if self.rhs:
+> +        result = result and self.rhs.Equals(other.rhs)
+> +      return result
+>      return False
+>  
+>  
 
-"Newcomer" means newcomer in free software coding not newcomer in IT
-in general, so people who have only worked in closed-source before or
-people who were only managing in open-source but not coding are
-eligible.
+Patch looks good to me.
+
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 
 Thanks,
-Ian
-
-
-
-
-> > Thanks,
-> > Ian
-> >
-> > https://wiki.linuxfoundation.org/gsoc/google-summer-code-2022
-> > https://wiki.linuxfoundation.org/gsoc/2022-gsoc-perf
+Kajol Jain
