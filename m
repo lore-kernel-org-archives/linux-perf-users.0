@@ -2,168 +2,146 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C841C27C76
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 18:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE89C54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 19:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229449AbjAYSmg (ORCPT
+        id S235962AbjAYTEm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 13:42:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37358 "EHLO
+        Wed, 25 Jan 2023 14:04:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234138AbjAYSmO (ORCPT
+        with ESMTP id S229496AbjAYTEl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 13:42:14 -0500
-Received: from cheetah.elm.relay.mailchannels.net (cheetah.elm.relay.mailchannels.net [23.83.212.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A27045BF2
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 10:42:13 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 2F233261B75
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 18:34:21 +0000 (UTC)
-Received: from pdx1-sub0-mail-a306.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id AD0C5261C1A
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 18:34:20 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1674671660; a=rsa-sha256;
-        cv=none;
-        b=0luErxAMt3W3ZSOvJyiv3FsI+fhutYfPb3GZHOnpa7Sa+/JE4Mkh6rpFsZkp+1eB5LUsUO
-        PTcGnQ8nOQ6IbopCl+v4gSjJcl/kaO+sfbX0ukokfhHVZB55xzvhykhj7RC5lSXA7STLMU
-        GcjjB4JVLElqycqi6c/6+g+EW/uDi0jSZaoGYKl9Oy5m1y54XL+vrMfGK8XDQQfyAL1dtu
-        Q/eiPTdjzTUreQxr8PSXhQ5Hen/k/lzJvJxVXWugoEAyRoxLFcYvh5WxIHketgw0nV79Jf
-        2eeJpvUbOZJ5CPJqWao/C41lySlw6aDZkoN5DMYOg8UYTlTcl5k81spIylB2Fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1674671660;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=LkeKleEDMVCNjKIW3DlOQ6z6V0h2UxZNTVRuJ7I3Uy8=;
-        b=9b+dRayTVO5vP+Ooh/SVmg1/2w3VDFte7IS3TN7QPedXbakdR/OPXkEQDbpbdzNtOd3zKk
-        AXAMeuvi6VKPpnoWFi5ggaF+7GjhCgDgjArMXcwnABoS8VCyesgfz3sTaJr9DUV+Stqb2g
-        Ti+HzuwnjgBpspPbZu/Q8km/3Vh5CI2WUOfK2hCbJbNnuydC9oT0X1rqmLEEHAAueReaix
-        bfY+mrTvVQOh6CQ44mQ0aXDuNTTqL//r+Ex61odOaJH3rzA2i2e8i7uU/5jIolIX4K1t4M
-        Wyv1n0AON9PJgXXJX1+D12mAJvdosyDWf526pBS4Unvd2PvCpCLPY2eeWovv4A==
-ARC-Authentication-Results: i=1;
-        rspamd-65f5b7cf85-mb8bs;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Good
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-White-Industry: 36124741546cf338_1674671660973_2937313759
-X-MC-Loop-Signature: 1674671660973:3685007118
-X-MC-Ingress-Time: 1674671660973
-Received: from pdx1-sub0-mail-a306.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.103.24.99 (trex/6.7.1);
-        Wed, 25 Jan 2023 18:34:20 +0000
-Received: from kmjvbox (c-76-102-200-71.hsd1.ca.comcast.net [76.102.200.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: kjlx@templeofstupid.com)
-        by pdx1-sub0-mail-a306.dreamhost.com (Postfix) with ESMTPSA id 4P2CDD23QfzRn
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 10:34:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-        s=dreamhost; t=1674671660;
-        bh=LkeKleEDMVCNjKIW3DlOQ6z6V0h2UxZNTVRuJ7I3Uy8=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=A8KtaZKkUDU0VW7aIb+A21v1hNAq7FyF4xiS1eKqVQk6vPU1pXyTxmJU9gWvgmZqx
-         OjDqxyi79pRvB7gFUN/YSUa4QXEzipJyUuzJtWNxbeSWC+a9CeJku6mn2AxP7S8xU6
-         C3EA/6ipl+na3DRKPqwSFTFHVdzkUQe9aiUjbYBE=
-Received: from johansen (uid 1000)
-        (envelope-from kjlx@templeofstupid.com)
-        id e00e2
-        by kmjvbox (DragonFly Mail Agent v0.12);
-        Wed, 25 Jan 2023 10:34:18 -0800
-Date:   Wed, 25 Jan 2023 10:34:18 -0800
-From:   Krister Johansen <kjlx@templeofstupid.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 25 Jan 2023 14:04:41 -0500
+Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3622D70
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:04:40 -0800 (PST)
+Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-142b72a728fso22511942fac.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MAm8oFJIN+njE4D1eVlT36zKC60roHSvUUiYhJwShb0=;
+        b=H6XLnE/uYvmsEf/bjVZ2AnKOAzdssOPFnLizxMGHUrk87CuGLsvppKiIOiUVeawD3z
+         IAAb61rTFhplFMiUvFrgnB0jD3bgGExbkHoYZfa3K4qOmd74W0u3MT2EBIcZ46rmH4mA
+         s4cIwZU/X+0uhsqaVMFIs5zuQPT7Spp13f9DpBj0Q48GJJrzkqk8eSzyaPbU4Ke2MWu+
+         uaE4ImhZVp7NPy/Haq08Jd54pLpOmixOKB398yi0FiZXEr8IPFQB+qX50f8FI70OFkdV
+         cXI+PM45yCzlHBAZpOKCffMztEm8cbE+iVhoZkX2F1yWbf4OqhR0oeqCrrdmEVuUi4ZY
+         olzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MAm8oFJIN+njE4D1eVlT36zKC60roHSvUUiYhJwShb0=;
+        b=q1i8SnF4gmiRQqV/fST4ZNz1re1cy6Fs+DisRdfCZT/LfFCg8TRx7HpFSuCcBmGPfN
+         hqrvNA/FVqWJa2qDdC4j9DNFBRdFGGezeoQCuEYkm34Fpxe/q9KX7Wk/gHpXZWJzwe+g
+         Qd5+OY2WL7cfSv31KHNaY9hda00wjLT6DONXvBabJSeyBmBSAHqXjsQzqFqBbOll2VPt
+         H9YWcoMOwp3hfN0qZjsJ+lkT26IFchxNgNlrWgtzt2vpPH1Xn/rIXh5hapGBu+YWflC5
+         SwH+AhtqQihLPg+xuk/OleOK5x1+nHR+9iz4brEb8f5orKwmqP9DdCXsKG/IlW0L7Jzf
+         fX8g==
+X-Gm-Message-State: AO0yUKXQXjitm4F2PnWbNTqMFXhhO0+1xgMmAZgqcbyPK0Li4MZsOG3A
+        KkAX9PaooNe2WCWwh+cej/4OMq6IfI8/O7Yveu+caMizzt8=
+X-Google-Smtp-Source: AK7set8R4hpbp3+DqFVqW1vCtWsjljiFWnWmnUJKE+iEjppTSTI6ywQ6x9sUXU5t0iVs4LK5Dpp3acdemo48tF7u/cM=
+X-Received: by 2002:a05:6870:5253:b0:163:35c5:e085 with SMTP id
+ o19-20020a056870525300b0016335c5e085mr205115oai.55.1674673479876; Wed, 25 Jan
+ 2023 11:04:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20230123211310.127532-1-raj.khem@gmail.com> <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
+In-Reply-To: <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
+From:   Khem Raj <raj.khem@gmail.com>
+Date:   Wed, 25 Jan 2023 11:04:13 -0800
+Message-ID: <CAMKF1soqvBXcGUjpkN6wuxV8kZbFmqYBwB02Q5PB6qBAinjvOQ@mail.gmail.com>
+Subject: Re: [PATCH] perf cpumap: Make counter as unsigned ints
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        David Reaver <me@davidreaver.com>
-Subject: [PATCH v2] perf/util: Symbol lookup with kcore can fail if multiple
- segments match stext
-Message-ID: <20230125183418.GD1963@templeofstupid.com>
-References: <20230124223531.GB1962@templeofstupid.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230124223531.GB1962@templeofstupid.com>
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This problem was encountered on an arm64 system with a lot of memory.
-Without kernel debug symbols installed, and with both kcore and kallsyms
-available, perf managed to get confused and returned "unknown" for all
-of the kernel symbols that it tried to look up.
+On Tue, Jan 24, 2023 at 9:02 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Mon, Jan 23, 2023 at 1:13 PM Khem Raj <raj.khem@gmail.com> wrote:
+> >
+> > These are loop counters which is inherently unsigned. Therefore make
+> > them unsigned. Moreover it also fixes alloc-size-larger-than
+> > error with gcc-13, where malloc can be called with (-1) due to tmp_len
+> > being an int type.
+> >
+> > Fixes
+> > | cpumap.c:366:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
+> > |   366 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
+> > |       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/lib/perf/cpumap.c | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> > index 6cd0be7c1bb4..d960880dd903 100644
+> > --- a/tools/lib/perf/cpumap.c
+> > +++ b/tools/lib/perf/cpumap.c
+> > @@ -351,8 +351,8 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> >                                          struct perf_cpu_map *other)
+> >  {
+> >         struct perf_cpu *tmp_cpus;
+> > -       int tmp_len;
+> > -       int i, j, k;
+> > +       unsigned int tmp_len;
+> > +       unsigned int i, j, k;
+> >         struct perf_cpu_map *merged;
+> >
+> >         if (perf_cpu_map__is_subset(orig, other))
+> > @@ -369,7 +369,7 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> >
+> >         /* Standard merge algorithm from wikipedia */
+> >         i = j = k = 0;
+> > -       while (i < orig->nr && j < other->nr) {
+> > +       while (i < (unsigned int)orig->nr && j < (unsigned int)other->nr) {
+>
+> Rather than cast 'nr' why not add the unsigned to the declaration?
+>
 
-On this system, stext fell within the vmalloc segment.  The kcore symbol
-matching code tries to find the first segment that contains stext and
-uses that to replace the segment generated from just the kallsyms
-information.  In this case, however, there were two: a very large
-vmalloc segment, and the text segment.  This caused perf to get confused
-because multiple overlapping segments were inserted into the RB tree
-that holds the discovered segments.  However, that alone wasn't
-sufficient to cause the problem. Even when we could find the segment,
-the offsets were adjusted in such a way that the newly generated symbols
-didn't line up with the instruction addresses in the trace.  The most
-obvious solution would be to consult which segment type is text from
-kcore, but this information is not exposed to users.
+if type of nr is changed from int to unsigned int, this will ensue a
+lot of changes including function signature changes, I am not
+sure if that is the best approach.
 
-Instead, select the smallest matching segment that contains stext
-instead of the first matching segment.  This allows us to match the text
-segment instead of vmalloc, if one is contained within the other.
-
-Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
----
-v2:
-  - Correct whitespace, add comments, and fix-up subject. (Feedback from Adrian
-    Hunter)
----
- tools/perf/util/symbol.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index a3a165ae933a..98014f937568 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1368,10 +1368,23 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 
- 	/* Find the kernel map using the '_stext' symbol */
- 	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
-+		u64 replacement_size = 0;
-+
- 		list_for_each_entry(new_map, &md.maps, node) {
--			if (stext >= new_map->start && stext < new_map->end) {
-+			u64 new_size = new_map->end - new_map->start;
-+
-+			if (!(stext >= new_map->start && stext < new_map->end))
-+				continue;
-+
-+			/*
-+			 * On some architectures, ARM64 for example, the kernel
-+			 * text can get allocated inside of the vmalloc segment.
-+			 * Select the smallest matching segment, in case stext
-+			 * falls within more than one in the list.
-+			 */
-+			if (!replacement_map || new_size < replacement_size) {
- 				replacement_map = new_map;
--				break;
-+				replacement_size = new_size;
- 			}
- 		}
- 	}
--- 
-2.25.1
-
+> Thanks,
+> Ian
+>
+> >                 if (orig->map[i].cpu <= other->map[j].cpu) {
+> >                         if (orig->map[i].cpu == other->map[j].cpu)
+> >                                 j++;
+> > @@ -378,10 +378,10 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
+> >                         tmp_cpus[k++] = other->map[j++];
+> >         }
+> >
+> > -       while (i < orig->nr)
+> > +       while (i < (unsigned int)orig->nr)
+> >                 tmp_cpus[k++] = orig->map[i++];
+> >
+> > -       while (j < other->nr)
+> > +       while (j < (unsigned int)other->nr)
+> >                 tmp_cpus[k++] = other->map[j++];
+> >         assert(k <= tmp_len);
+> >
+> > --
+> > 2.39.1
+> >
