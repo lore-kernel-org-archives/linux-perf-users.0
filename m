@@ -2,146 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE89C54E94
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 19:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A6DC54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 19:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235962AbjAYTEm (ORCPT
+        id S236077AbjAYTWh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 14:04:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54282 "EHLO
+        Wed, 25 Jan 2023 14:22:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjAYTEl (ORCPT
+        with ESMTP id S236073AbjAYTW2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 14:04:41 -0500
-Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE3622D70
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:04:40 -0800 (PST)
-Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-142b72a728fso22511942fac.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:04:40 -0800 (PST)
+        Wed, 25 Jan 2023 14:22:28 -0500
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA6E5CE5E
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:22:19 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-4fd37a1551cso253446317b3.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 11:22:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MAm8oFJIN+njE4D1eVlT36zKC60roHSvUUiYhJwShb0=;
-        b=H6XLnE/uYvmsEf/bjVZ2AnKOAzdssOPFnLizxMGHUrk87CuGLsvppKiIOiUVeawD3z
-         IAAb61rTFhplFMiUvFrgnB0jD3bgGExbkHoYZfa3K4qOmd74W0u3MT2EBIcZ46rmH4mA
-         s4cIwZU/X+0uhsqaVMFIs5zuQPT7Spp13f9DpBj0Q48GJJrzkqk8eSzyaPbU4Ke2MWu+
-         uaE4ImhZVp7NPy/Haq08Jd54pLpOmixOKB398yi0FiZXEr8IPFQB+qX50f8FI70OFkdV
-         cXI+PM45yCzlHBAZpOKCffMztEm8cbE+iVhoZkX2F1yWbf4OqhR0oeqCrrdmEVuUi4ZY
-         olzg==
+        bh=azRxZ4iz/UmvW0JqPrqtZcKNmaFt9MhDUKzgc4KSKbs=;
+        b=idbJO946IIJ5xclJl8K3ScrKphDS9TF1tg1AgsB8MPco32Ta3+qR61NnmqeUtsnx6v
+         goCUeETP5lzAzmASwAR43MDdzy2mxaLRi4K6yZE3Q+T5C1FUbuWCmQDSDtqKn5s2e6iw
+         g3L5+Ey8VBu5ZDVtB0a1Axssd66xmU+yYweeF+hE6jQwYilC1xMJq5jCj+NjIEVUsfL4
+         tw7nY9DM/DzPYd8vrkO+1JZY6FVSYBMjhRJz+WIxF8k5j1BI+Qpdb88Is7APtmnyodC7
+         tcl2VYHmnzhTEoT5QVoxpB++zHDpcXCuz10aLB8wrCQNw685txpV1MvZDG3GANSg7b1j
+         9Xwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=MAm8oFJIN+njE4D1eVlT36zKC60roHSvUUiYhJwShb0=;
-        b=q1i8SnF4gmiRQqV/fST4ZNz1re1cy6Fs+DisRdfCZT/LfFCg8TRx7HpFSuCcBmGPfN
-         hqrvNA/FVqWJa2qDdC4j9DNFBRdFGGezeoQCuEYkm34Fpxe/q9KX7Wk/gHpXZWJzwe+g
-         Qd5+OY2WL7cfSv31KHNaY9hda00wjLT6DONXvBabJSeyBmBSAHqXjsQzqFqBbOll2VPt
-         H9YWcoMOwp3hfN0qZjsJ+lkT26IFchxNgNlrWgtzt2vpPH1Xn/rIXh5hapGBu+YWflC5
-         SwH+AhtqQihLPg+xuk/OleOK5x1+nHR+9iz4brEb8f5orKwmqP9DdCXsKG/IlW0L7Jzf
-         fX8g==
-X-Gm-Message-State: AO0yUKXQXjitm4F2PnWbNTqMFXhhO0+1xgMmAZgqcbyPK0Li4MZsOG3A
-        KkAX9PaooNe2WCWwh+cej/4OMq6IfI8/O7Yveu+caMizzt8=
-X-Google-Smtp-Source: AK7set8R4hpbp3+DqFVqW1vCtWsjljiFWnWmnUJKE+iEjppTSTI6ywQ6x9sUXU5t0iVs4LK5Dpp3acdemo48tF7u/cM=
-X-Received: by 2002:a05:6870:5253:b0:163:35c5:e085 with SMTP id
- o19-20020a056870525300b0016335c5e085mr205115oai.55.1674673479876; Wed, 25 Jan
- 2023 11:04:39 -0800 (PST)
+        bh=azRxZ4iz/UmvW0JqPrqtZcKNmaFt9MhDUKzgc4KSKbs=;
+        b=P5oipU318IcZIcDAicoKVvWx6AbG24cM1AO0tAHokabIv64p5+LgfvqZ0YtAbCkKBm
+         vupmzCp9iTAtLIss0ditXUQk3VpVlbmmrz0I37LBx5p2gTb90XfDUkST5PCH0AKGQKUS
+         f15gbCFQ3HRxBValWX6OBZxanu0CCBfrKekJ4BDde6/EZa5W0l5qNXUf+Prh4+PhpT5X
+         Y2sCq75jJnIdFj/ZWtUePisvm9u8JK53LjvvcFC+UNOzTTNEf9scsoOCHy5BlpX6rY49
+         eI21dZW4aht/U7a6NpegwZqUTk/JRHa1MV9u18NGWDZiuk21Ql/uMc34eT11MrCCaw2Y
+         NrmA==
+X-Gm-Message-State: AO0yUKUGgUNvKW50J78NXsfv3RwZ2NFF0xF98ZgmPHf4tYOrlGA0uZ66
+        ztGOaU/XU6lyDQ9/Q6m7X1oZvS0kdQYAjVPHvBplx3BGCg6dZkoY0iPU6A==
+X-Google-Smtp-Source: AK7set9Keebho/efVX9+GO9rxFk2PCEOZWbQBvt6Ld/Tpsz3uuvCSMXu6oGPdxC/ITtQ87qnzhMkMAEzeywlAhveKx4=
+X-Received: by 2002:a25:c247:0:b0:80b:6201:bee7 with SMTP id
+ s68-20020a25c247000000b0080b6201bee7mr946541ybf.340.1674674527537; Wed, 25
+ Jan 2023 11:22:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20230123211310.127532-1-raj.khem@gmail.com> <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
-In-Reply-To: <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
-From:   Khem Raj <raj.khem@gmail.com>
-Date:   Wed, 25 Jan 2023 11:04:13 -0800
-Message-ID: <CAMKF1soqvBXcGUjpkN6wuxV8kZbFmqYBwB02Q5PB6qBAinjvOQ@mail.gmail.com>
-Subject: Re: [PATCH] perf cpumap: Make counter as unsigned ints
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
+References: <20230125083851.27759-1-surenb@google.com> <20230125083851.27759-2-surenb@google.com>
+ <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net> <CAJuCfpEcVCZaCGzc-Wim25eaV5e6YG1YJAAdKwZ6JHViB0z8aw@mail.gmail.com>
+ <Y9F28J9njAtwifuL@casper.infradead.org>
+In-Reply-To: <Y9F28J9njAtwifuL@casper.infradead.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Wed, 25 Jan 2023 11:21:56 -0800
+Message-ID: <CAJuCfpHO7g-5GZep0e7r=dFTBhVHpN3R_pHMGOqetgrKyYzMFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, akpm@linux-foundation.org,
+        michel@lespinasse.org, jglisse@google.com, mhocko@suse.com,
+        vbabka@suse.cz, hannes@cmpxchg.org, mgorman@techsingularity.net,
+        dave@stgolabs.net, liam.howlett@oracle.com, ldufour@linux.ibm.com,
+        paulmck@kernel.org, luto@kernel.org, songliubraving@fb.com,
+        peterx@redhat.com, david@redhat.com, dhowells@redhat.com,
+        hughd@google.com, bigeasy@linutronix.de, kent.overstreet@linux.dev,
+        punit.agrawal@bytedance.com, lstoakes@gmail.com,
+        peterjung1337@gmail.com, rientjes@google.com,
+        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
+        jannh@google.com, shakeelb@google.com, tatashin@google.com,
+        edumazet@google.com, gthelen@google.com, gurua@google.com,
+        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
+        leewalsh@google.com, posk@google.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        qianweili@huawei.com, wangzhou1@hisilicon.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+        airlied@gmail.com, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, l.stach@pengutronix.de,
+        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
+        matthias.bgg@gmail.com, robdclark@gmail.com,
+        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
+        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
+        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
+        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
+        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
+        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
+        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, miklos@szeredi.hu,
+        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
+        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
+        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
+        loongarch@lists.linux.dev, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        devel@lists.orangefs.org, kexec@lists.infradead.org,
+        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
+        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
+        kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 9:02 AM Ian Rogers <irogers@google.com> wrote:
+On Wed, Jan 25, 2023 at 10:37 AM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> On Mon, Jan 23, 2023 at 1:13 PM Khem Raj <raj.khem@gmail.com> wrote:
+> On Wed, Jan 25, 2023 at 08:49:50AM -0800, Suren Baghdasaryan wrote:
+> > On Wed, Jan 25, 2023 at 1:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > +     /*
+> > > > +      * Flags, see mm.h.
+> > > > +      * WARNING! Do not modify directly.
+> > > > +      * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
+> > > > +      */
+> > > > +     unsigned long vm_flags;
+> > >
+> > > We have __private and ACCESS_PRIVATE() to help with enforcing this.
 > >
-> > These are loop counters which is inherently unsigned. Therefore make
-> > them unsigned. Moreover it also fixes alloc-size-larger-than
-> > error with gcc-13, where malloc can be called with (-1) due to tmp_len
-> > being an int type.
-> >
-> > Fixes
-> > | cpumap.c:366:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
-> > |   366 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> > |       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/lib/perf/cpumap.c | 10 +++++-----
-> >  1 file changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > index 6cd0be7c1bb4..d960880dd903 100644
-> > --- a/tools/lib/perf/cpumap.c
-> > +++ b/tools/lib/perf/cpumap.c
-> > @@ -351,8 +351,8 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-> >                                          struct perf_cpu_map *other)
-> >  {
-> >         struct perf_cpu *tmp_cpus;
-> > -       int tmp_len;
-> > -       int i, j, k;
-> > +       unsigned int tmp_len;
-> > +       unsigned int i, j, k;
-> >         struct perf_cpu_map *merged;
-> >
-> >         if (perf_cpu_map__is_subset(orig, other))
-> > @@ -369,7 +369,7 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-> >
-> >         /* Standard merge algorithm from wikipedia */
-> >         i = j = k = 0;
-> > -       while (i < orig->nr && j < other->nr) {
-> > +       while (i < (unsigned int)orig->nr && j < (unsigned int)other->nr) {
+> > Thanks for pointing this out, Peter! I guess for that I'll need to
+> > convert all read accesses and provide get_vm_flags() too? That will
+> > cause some additional churt (a quick search shows 801 hits over 248
+> > files) but maybe it's worth it? I think Michal suggested that too in
+> > another patch. Should I do that while we are at it?
 >
-> Rather than cast 'nr' why not add the unsigned to the declaration?
+> Here's a trick I saw somewhere in the VFS:
 >
+>         union {
+>                 const vm_flags_t vm_flags;
+>                 vm_flags_t __private __vm_flags;
+>         };
+>
+> Now it can be read by anybody but written only by those using
+> ACCESS_PRIVATE.
 
-if type of nr is changed from int to unsigned int, this will ensue a
-lot of changes including function signature changes, I am not
-sure if that is the best approach.
-
-> Thanks,
-> Ian
->
-> >                 if (orig->map[i].cpu <= other->map[j].cpu) {
-> >                         if (orig->map[i].cpu == other->map[j].cpu)
-> >                                 j++;
-> > @@ -378,10 +378,10 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-> >                         tmp_cpus[k++] = other->map[j++];
-> >         }
-> >
-> > -       while (i < orig->nr)
-> > +       while (i < (unsigned int)orig->nr)
-> >                 tmp_cpus[k++] = orig->map[i++];
-> >
-> > -       while (j < other->nr)
-> > +       while (j < (unsigned int)other->nr)
-> >                 tmp_cpus[k++] = other->map[j++];
-> >         assert(k <= tmp_len);
-> >
-> > --
-> > 2.39.1
-> >
+Huh, this is quite nice! I think it does not save us from the cases
+when vma->vm_flags is passed by a reference and modified indirectly,
+like in ksm_madvise()? Though maybe such usecases are so rare (I found
+only 2 cases) that we can ignore this?
