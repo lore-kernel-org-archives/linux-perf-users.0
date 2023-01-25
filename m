@@ -2,411 +2,225 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10F6C54EED
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 00:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA338C54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 00:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234670AbjAYA1E (ORCPT
+        id S230009AbjAYAhS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Jan 2023 19:27:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
+        Tue, 24 Jan 2023 19:37:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234653AbjAYA1D (ORCPT
+        with ESMTP id S229953AbjAYAhS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Jan 2023 19:27:03 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F384DCF9
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 16:26:30 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso198572wms.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 16:26:30 -0800 (PST)
+        Tue, 24 Jan 2023 19:37:18 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06983C282
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 16:37:15 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id c10-20020a05600c0a4a00b003db0636ff84so229679wmq.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Jan 2023 16:37:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/S6M5fE5dqraQtTu0ARhI5S8I+Yd8ezbJtEp3cGiW8=;
-        b=tC/FehMrzOya4va7khNvmhYMEXBTP1T0sO2jImqR0q0yGg4NLpl+tDjFG53x2oXX/B
-         y9NBHw0GS1ITLxbX9yxpvARTknNbrXAGpL1Fmmrqn5sBUcYHKxGM5i/xi+Wx7v+WCgOU
-         79URds/ARRXJTSqi6YDAPTlpnJOtk+mmnSPDQCjz/VD11qpfW951jsUhYTa+uJwWcZ2X
-         PNXsVPSg7CrIX5UxDXtrOo7YCjPvVI2pyDeXu8TYcOIHiS5Te3cAJCY136kReEyOcE5Y
-         p2z076nNgM6AcuXq9vN5LkTC4sL9UzaKPJXoiqEPAhEs5+AhpnE83r1rvtsRMibcnbcA
-         Vbdg==
+        bh=g4Wb+bpQZUnuTNyGXIvMs5HIWXZWGaHBxLMtrVvV/BE=;
+        b=pjrFeepiiZUG2XtwxDkMyqR8/hvfkY9agqMqj27ha01EgmCKQeArZ1iEvDd3YiOXj+
+         KXaZ66CsGBjoA03O9yR6cK61NTg7pVTc9VxIEjbv6ElsoVT4YmxSsek+s61OnmHO2U9b
+         BJOWm4eEKvtMZRDzVGbzkzFXhWePYYPMPFbyagxYqfclFms8EeEKCrm2Q28h+zDIQHUF
+         rpKuSyIx/mrhPq0unS1BIPEh3CRQnn8CxwCXjMLoqL+ifVyVP3bHmQ79/Fzdn/OD+WYA
+         g6nvpu5Dsk2zTZlPbXiy6qz01+R7Q/nOCS5pXNZmnpfnXED34Gb0/Z0VR5FEQBEkE5dK
+         wpXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=e/S6M5fE5dqraQtTu0ARhI5S8I+Yd8ezbJtEp3cGiW8=;
-        b=5gJdDYXnovzDzUy6IgxZmu7Armtr1qwoZDfW1zJK6x3U2aFmg6ewc+XRBb59ShI4ag
-         ch3BIxt0+kn9+uA+xw6Tk8ghqg2Fxln9gPKlFUlNGDWt+src0NYwoUfBcz6FlgR6HZoC
-         E0i0i3VLIhEPS8AeKUBt9Q043O3rXmEwwj+7KU9mPhAd6K+QCv5dT84TymP7sFwB+168
-         vmTISpcJXbMobjDQFkWgdU6vWU59wp9xd2E+oyOMV9ch9pDUbT7mgWAeuy6v1DUAqqkj
-         WnU5jryQ5hU4Q0myxl75Dq3WXs5FqxyszYws2TRvlABeR/ygF5NulVzos5nWC9tX/t7v
-         PqDg==
-X-Gm-Message-State: AFqh2kq4QXFl/6XXvfSM2+t2cwhMjh5jRxsDPmaQJ4ft/JC8kNqWlwLB
-        UCZsYOvL7Kq2592QY4VPvn2UJeiEWIQkDhd73is2sw==
-X-Google-Smtp-Source: AMrXdXuESg3r3peBwy1TTVjQgH0Rn2Ls5wrk4pfXBaUH5URXrLdhQyhtyE6mc5eokCAjkts6426e1bhEOmf74v6F6xM=
+        bh=g4Wb+bpQZUnuTNyGXIvMs5HIWXZWGaHBxLMtrVvV/BE=;
+        b=7KRmdzgCDuI2FuUy8VYR+iGU8WMf4qHgwQ5U4QrZwAZJ3TrdR7hm533yrtv4MWga/d
+         pM0TZtQiG+kLnL3WbH+kYAcKBgLbP/AtfQwQHakD3yTEB6V83Doj4+TKVNw1Kz0Do0fP
+         qcu/k/mftiMv0fQCWa/SErzy40aqf/etE1msQGxunInJ6F2cWnYJ6wkbp6qEcraVG4Y+
+         P7CcxfpkCuc/qwh8wnpHS9o21SqKjvINFSJ5QFPJZjaVR3102VWF0DLP7LqxgzAoqdiL
+         LyfetAOJgmXkSAp+kBtU/LpaFLC0LiG95coB9y/WqqvVGt+TuY5GcVK8GDSg03EksbfR
+         KBxg==
+X-Gm-Message-State: AFqh2kpFrXHbUYi4XxwdAVYeWaRfV30m49JJ46PcF5ctccg4LjtzCjUp
+        a3s6GbtqmiIgjqcDRYBkbb+pvYwC79IoxKy+Tus0Gg==
+X-Google-Smtp-Source: AMrXdXs4C5YzkW6c68HcuqU2D+OJbmnHxVKPIknKE7o2PXqO5Qu+JLIwyAIxHyWeBT6YXYD6JqIKtMvHID9i9asSFBg=
 X-Received: by 2002:a05:600c:1c9a:b0:3d9:ee45:8a9e with SMTP id
- k26-20020a05600c1c9a00b003d9ee458a9emr1409128wms.174.1674606386686; Tue, 24
- Jan 2023 16:26:26 -0800 (PST)
+ k26-20020a05600c1c9a00b003d9ee458a9emr1410146wms.174.1674607034233; Tue, 24
+ Jan 2023 16:37:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20230105203231.1598936-1-namhyung@kernel.org> <CAM9d7cgJFZhSCnFcYU-5veSpJEyR3=OF_7KBtZLNwq2W2hYd-w@mail.gmail.com>
-In-Reply-To: <CAM9d7cgJFZhSCnFcYU-5veSpJEyR3=OF_7KBtZLNwq2W2hYd-w@mail.gmail.com>
+References: <20230120134039.17788-1-mpetlan@redhat.com> <CAP-5=fXuNW2XYomrxViwzQThVQpwF5Cvo+UuQ_da3QiUESwAmw@mail.gmail.com>
+ <alpine.LRH.2.20.2301241751180.5281@Diego>
+In-Reply-To: <alpine.LRH.2.20.2301241751180.5281@Diego>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 24 Jan 2023 16:26:14 -0800
-Message-ID: <CAP-5=fWF0u58zeJHhVDvKs8RFjoJmo6pZHPoKOjfU-jMzn1a8w@mail.gmail.com>
-Subject: Re: [RFC/PATCH] perf lock contention: Add -o/--lock-owner option
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <song@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, bpf@vger.kernel.org
+Date:   Tue, 24 Jan 2023 16:37:01 -0800
+Message-ID: <CAP-5=fUr8KV1Q9qsQXqg7czbkG7Xh7GKBosx8ahtVuahSdJgVw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf test: Fix JSON linter
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, acme@redhat.com,
+        qzhao@redhat.com, cjense@google.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 9:59 AM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Jan 24, 2023 at 9:39 AM Michael Petlan <mpetlan@redhat.com> wrote:
 >
-> Hello,
+> On Fri, 20 Jan 2023, Ian Rogers wrote:
+> > On Fri, Jan 20, 2023 at 5:41 AM Michael Petlan <mpetlan@redhat.com> wrote:
+> > >
+> > > Hello all.
+> > >
+> > > We have observed issues with the 'perf stat JSON output linter' testcase
+> > > on systems that allow topdown metrics.
+> > >
+> > > =========================
+> > >
+> [...]
+> > > 2) Since the JSON printing engine thinks that one and only one metric
+> > > is printed, it always closes the line by adding '}'. This is not true,
+> > > so I have fixed the comma printing and adjusted the engine to be
+> > > capable of printing 1-N metrics and then close the line.
+> >
+> > So the current printing code is messy. For example, there is a newline
+> > callback function, but that has little meaning for json where
+> > everything is on a newline. For CSV mode, adding a summary used to
+> > cause a column to suddenly appear on the left for the row containing
+> > the summary. I believe the right thing to do is a refactor and
+> > recently I did a similar refactor for 'perf list':
+> > https://lore.kernel.org/lkml/20221114210723.2749751-11-irogers@google.com/
+> > So it is strange that metrics are "shadows" of events, but whatever
+> > the point is to think about the printing API. In the change linked
+> > above you can see that everytime something is printed the print
+> > handling code is given all the information and the print handling code
+> > has state. Based on the state and callback's information, the print
+> > handling code can do nothing, properly format for CSV, json, etc. This
+> > gets completely away from the kind of madness of branches and
+> > whac-a-mole the code currently has.
+> >
+> > I'm happy to look at doing the refactor to be similar to 'perf
+> > list'/builtin-list.c. Namhyung I thought might have gotten to it with
+> > his recent work on improving aggregation. If I hear silence then I'll
+> > assume that is a request I do it :-)
+> >
+> > Pragmatically in the short term we could land your changes, but I
+> > worry they are more of the whac-a-mole and something somewhere else
+> > will break. Which is why we have a test, and so I'm not overly
+> > worried. I can download and test too.
+> >
+> > Anyway, sorry for the issue and let me know what you think. Thanks,
+> > Ian
 >
-> Any feedback on this?
+> Hello.
 >
-> On Thu, Jan 5, 2023 at 12:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > When there're many lock contentions in the system, people sometimes
-> > want to know who caused the contention, IOW who's the owner of the
-> > locks.
-> >
-> > The -o/--lock-owner option tries to follow the lock owners for the
-> > contended mutexes and rwsems from BPF, and then attributes the
-> > contention time to the owner instead of the waiter.  It's a best
-> > effort approach to get the owner info at the time of the contention
-> > and doesn't guarantee to have the precise tracking of owners if it's
-> > changing over time.
-> >
-> > Currently it only handles mutex and rwsem that have owner field in
-> > their struct and it basically points to a task_struct that owns the
-> > lock at the moment.
-> >
-> > Technically its type is atomic_long_t and it comes with some LSB bits
-> > used for other meaninigs.  So it needs to clear them when casting it
-> > to a pointer to task_struct.
-> >
-> > Also the atomic_long_t is a typedef of the atomic 32 or 64 bit types
-> > depending on arch which is a wrapper struct for the counter value.
-> > I'm not aware of proper ways to access those kernel atomic types from
-> > BPF so I just read the internal counter value directly.  Please let me
-> > know if there's a better way.
-> >
-> > When -o/--lock-owner option is used, it goes to the task aggregation
-> > mode like -t/--threads option does.  However it cannot get the owner
-> > for other lock types like spinlock and sometimes even for mutex.
-> >
-> >   $ sudo ./perf lock con -abo -- ./perf bench sched pipe
-> >   # Running 'sched/pipe' benchmark:
-> >   # Executed 1000000 pipe operations between two processes
-> >
-> >        Total time: 4.766 [sec]
-> >
-> >          4.766540 usecs/op
-> >            209795 ops/sec
-> >    contended   total wait     max wait     avg wait          pid   owner
-> >
-> >          403    565.32 us     26.81 us      1.40 us           -1   Unknown
-> >            4     27.99 us      8.57 us      7.00 us      1583145   sched-pipe
-> >            1      8.25 us      8.25 us      8.25 us      1583144   sched-pipe
-> >            1      2.03 us      2.03 us      2.03 us         5068   chrome
-> >
-> > As you can see, the owner is unknown for the most cases.  But if we
-> > filter only for the mutex locks, it'd more likely get the onwers.
-> >
-> >   $ sudo ./perf lock con -abo -Y mutex -- ./perf bench sched pipe
-> >   # Running 'sched/pipe' benchmark:
-> >   # Executed 1000000 pipe operations between two processes
-> >
-> >        Total time: 4.910 [sec]
-> >
-> >          4.910435 usecs/op
-> >            203647 ops/sec
-> >    contended   total wait     max wait     avg wait          pid   owner
-> >
-> >            2     15.50 us      8.29 us      7.75 us      1582852   sched-pipe
-> >            7      7.20 us      2.47 us      1.03 us           -1   Unknown
-> >            1      6.74 us      6.74 us      6.74 us      1582851   sched-pipe
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> I think that applying the patchset won't make things worse, eventhough
+> we know it would deserve a better solution for the whole print engine.
+>
+> Yes, we have a test, but maybe that's what should be improved first,
+> since it does not actually verify the format correctness. I have hit
+> the problem because of failing test, but the fail cause was that there
+> were too many commas, but strings like
+>
+>   "Heavy Operations"}"metric-value"
+>
+> are still OK according to the linter.
+>
+> Proper JSON linter might be in some library, but we don't want to add
+> too many dependencies I guess.
+>
+> Maybe some simple JSON linter I used when preparing the patchset would
+> be enough for our perf-stat output... I'll convert it to Python and
+> post it to see.
 
-Nothing to add on the coding side, and as the commit message says this
-can only be a best effort.
+I've been trying to tidy up the libraries under tools/lib recently,
+and their build. I'm hoping that with this we can have more statically
+built in libraries rather than a big monolithic application. In part
+for testing reasons, but also separation of concerns and the like.
+Fwiw, we did have a json reader library from jsmn in the pmu-events
+jevents.c code in the past. As it was never updated and had become
+forked, I wasn't a huge fan of it.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+> =============================
+>
+> Finally, speaking of tests, I think that thinking of integrating the
+> external perf testsuite [1] might be a better approach than adding
+> new shell-based tests such as "perf stat tests", etc. Tests like that
+> have been already written, see [1].
+>
+> Some years ago, I was trying to add it to perf-test, however it was
+> unsuccessful, but since then, many shell-based tests were added
+> instead and I think they slightly duplicate the work already done.
+>
+> Thoughts?
+> Michael
+>
+> [1] https://github.com/rfmvh/perftool-testsuite
+
+As someone who maintains a build, I'd love to see all of the perf
+testing in the kernel tree :-) What do you think would be the best
+strategy to integrate the test suite? Perhaps create a new directory
+under perf/tools/tests/shell, add the tests there and then add a
+wrapper shell script that invokes them all as one large shell test.
+From this we can work to have smaller tests, better output within perf
+test, etc. I think it'd be best for you to do an initial push, but I'd
+be willing to help from then on.
 
 Thanks,
 Ian
 
-> > ---
-> >  tools/perf/Documentation/perf-lock.txt        |  5 ++
-> >  tools/perf/builtin-lock.c                     | 49 ++++++++++++---
-> >  tools/perf/util/bpf_lock_contention.c         |  1 +
-> >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 60 +++++++++++++++++--
-> >  tools/perf/util/lock-contention.h             |  1 +
-> >  5 files changed, 102 insertions(+), 14 deletions(-)
 > >
-> > diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-> > index 0f9f720e599d..a41c8acc7002 100644
-> > --- a/tools/perf/Documentation/perf-lock.txt
-> > +++ b/tools/perf/Documentation/perf-lock.txt
-> > @@ -172,6 +172,11 @@ CONTENTION OPTIONS
-> >  --lock-addr::
-> >         Show lock contention stat by address
 > >
-> > +-o::
-> > +--lock-owner::
-> > +       Show lock contention stat by owners.  Implies --threads and
-> > +       requires --use-bpf.
-> > +
-> >  -Y::
-> >  --type-filter=<value>::
-> >         Show lock contention only for given lock types (comma separated list).
-> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> > index 718b82bfcdff..5a3ed5a2bd3d 100644
-> > --- a/tools/perf/builtin-lock.c
-> > +++ b/tools/perf/builtin-lock.c
-> > @@ -58,6 +58,7 @@ static struct rb_root         thread_stats;
-> >  static bool combine_locks;
-> >  static bool show_thread_stats;
-> >  static bool show_lock_addrs;
-> > +static bool show_lock_owner;
-> >  static bool use_bpf;
-> >  static unsigned long bpf_map_entries = 10240;
-> >  static int max_stack_depth = CONTENTION_STACK_DEPTH;
-> > @@ -1567,7 +1568,8 @@ static void print_contention_result(struct lock_contention *con)
+> > > =========================
+> > >
+> > > On machines that don't support topdown, the problem can be shown by
+> > > doubling the following line in util/stat-shadow.c, so that the simple
+> > > 'insn per cycle' metric is printed twice:
+> > >
+> > >   print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle", ratio);
+> > >
+> > > The worst problem is that the JSON line is broken, such as:
+> > >
+> > > ... "pcnt-running" : 100.00, "metric-value" : 3.501931, "metric-unit"
+> > >     : "Heavy Operations"}"metric-value" : 14.007787, "metric-unit" : ...
+> > >                   here ^^^^^
+> > >
+> > > =========================
+> > >
+> > > The first patch solves the JSON output correctness, the second tries
+> > > to adjust the testcase to some extent, so that it should work on the
+> > > topdown-capable machines.
+> > >
+> > > However, it's highly possible that the testcase will have to be fixed
+> > > or maybe rewritten in future. First, it has quite naive evaluation of
+> > > what's expected/correct/etc. Second, it does no JSON format validation
+> > > at all. As a linter it should do so though.
+> > >
+> > >  ***
+> > >
+> > > For further discussion: What about removing the check for number of
+> > > expected elements in the line and just check for the keywords, such
+> > > as "metric-value", "counter-value", "event", etc. and for some values
+> > > that should be numeric. And, do proper JSON format sanity check?
+> > >
+> > >
+> > > Thank you for inputs!
+> > >
+> > > Michael
+> > >
+> > >
+> > >
+> > >
+> > > Michael Petlan (2):
+> > >   perf stat: Fix JSON metric printout for multiple metrics per line
+> > >   perf test: Fix JSON format linter test checks
+> > >
+> > >  .../tests/shell/lib/perf_json_output_lint.py  | 16 +++++------
+> > >  tools/perf/util/stat-display.c                | 28 +++++++++++--------
+> > >  2 files changed, 24 insertions(+), 20 deletions(-)
+> > >
+> > > --
+> > > 2.18.4
+> > >
 > >
-> >                 switch (aggr_mode) {
-> >                 case LOCK_AGGR_TASK:
-> > -                       pr_info("  %10s   %s\n\n", "pid", "comm");
-> > +                       pr_info("  %10s   %s\n\n", "pid",
-> > +                               show_lock_owner ? "owner" : "comm");
-> >                         break;
-> >                 case LOCK_AGGR_CALLER:
-> >                         pr_info("  %10s   %s\n\n", "type", "caller");
-> > @@ -1607,7 +1609,8 @@ static void print_contention_result(struct lock_contention *con)
-> >                 case LOCK_AGGR_TASK:
-> >                         pid = st->addr;
-> >                         t = perf_session__findnew(session, pid);
-> > -                       pr_info("  %10d   %s\n", pid, thread__comm_str(t));
-> > +                       pr_info("  %10d   %s\n",
-> > +                               pid, pid == -1 ? "Unknown" : thread__comm_str(t));
-> >                         break;
-> >                 case LOCK_AGGR_ADDR:
-> >                         pr_info("  %016llx   %s\n", (unsigned long long)st->addr,
-> > @@ -1718,6 +1721,37 @@ static void sighandler(int sig __maybe_unused)
-> >  {
-> >  }
 > >
-> > +static int check_lock_contention_options(const struct option *options,
-> > +                                        const char * const *usage)
-> > +
-> > +{
-> > +       if (show_thread_stats && show_lock_addrs) {
-> > +               pr_err("Cannot use thread and addr mode together\n");
-> > +               parse_options_usage(usage, options, "threads", 0);
-> > +               parse_options_usage(NULL, options, "lock-addr", 0);
-> > +               return -1;
-> > +       }
-> > +
-> > +       if (show_lock_owner && !use_bpf) {
-> > +               pr_err("Lock owners are available only with BPF\n");
-> > +               parse_options_usage(usage, options, "lock-owner", 0);
-> > +               parse_options_usage(NULL, options, "use-bpf", 0);
-> > +               return -1;
-> > +       }
-> > +
-> > +       if (show_lock_owner && show_lock_addrs) {
-> > +               pr_err("Cannot use owner and addr mode together\n");
-> > +               parse_options_usage(usage, options, "lock-owner", 0);
-> > +               parse_options_usage(NULL, options, "lock-addr", 0);
-> > +               return -1;
-> > +       }
-> > +
-> > +       if (show_lock_owner)
-> > +               show_thread_stats = true;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static int __cmd_contention(int argc, const char **argv)
-> >  {
-> >         int err = -EINVAL;
-> > @@ -1742,6 +1776,7 @@ static int __cmd_contention(int argc, const char **argv)
-> >                 .max_stack = max_stack_depth,
-> >                 .stack_skip = stack_skip,
-> >                 .filters = &filters,
-> > +               .owner = show_lock_owner,
-> >         };
-> >
-> >         session = perf_session__new(use_bpf ? NULL : &data, &eops);
-> > @@ -2188,6 +2223,7 @@ int cmd_lock(int argc, const char **argv)
-> >                      "Filter specific type of locks", parse_lock_type),
-> >         OPT_CALLBACK('L', "lock-filter", NULL, "ADDRS/NAMES",
-> >                      "Filter specific address/symbol of locks", parse_lock_addr),
-> > +       OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owners instead of waiters"),
-> >         OPT_PARENT(lock_options)
-> >         };
-> >
-> > @@ -2258,14 +2294,9 @@ int cmd_lock(int argc, const char **argv)
-> >                                              contention_usage, 0);
-> >                 }
-> >
-> > -               if (show_thread_stats && show_lock_addrs) {
-> > -                       pr_err("Cannot use thread and addr mode together\n");
-> > -                       parse_options_usage(contention_usage, contention_options,
-> > -                                           "threads", 0);
-> > -                       parse_options_usage(NULL, contention_options,
-> > -                                           "lock-addr", 0);
-> > +               if (check_lock_contention_options(contention_options,
-> > +                                                 contention_usage) < 0)
-> >                         return -1;
-> > -               }
-> >
-> >                 rc = __cmd_contention(argc, argv);
-> >         } else {
-> > diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> > index 0236334fd69b..709d418be873 100644
-> > --- a/tools/perf/util/bpf_lock_contention.c
-> > +++ b/tools/perf/util/bpf_lock_contention.c
-> > @@ -146,6 +146,7 @@ int lock_contention_prepare(struct lock_contention *con)
-> >         /* these don't work well if in the rodata section */
-> >         skel->bss->stack_skip = con->stack_skip;
-> >         skel->bss->aggr_mode = con->aggr_mode;
-> > +       skel->bss->lock_owner = con->owner;
-> >
-> >         lock_contention_bpf__attach(skel);
-> >         return 0;
-> > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > index ad0ca5d50557..a035a267b08e 100644
-> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > @@ -10,6 +10,14 @@
-> >  /* default buffer size */
-> >  #define MAX_ENTRIES  10240
-> >
-> > +/* lock contention flags from include/trace/events/lock.h */
-> > +#define LCB_F_SPIN     (1U << 0)
-> > +#define LCB_F_READ     (1U << 1)
-> > +#define LCB_F_WRITE    (1U << 2)
-> > +#define LCB_F_RT       (1U << 3)
-> > +#define LCB_F_PERCPU   (1U << 4)
-> > +#define LCB_F_MUTEX    (1U << 5)
-> > +
-> >  struct tstamp_data {
-> >         __u64 timestamp;
-> >         __u64 lock;
-> > @@ -83,6 +91,7 @@ int has_task;
-> >  int has_type;
-> >  int has_addr;
-> >  int stack_skip;
-> > +int lock_owner;
-> >
-> >  /* determine the key of lock stat */
-> >  int aggr_mode;
-> > @@ -131,17 +140,24 @@ static inline int can_record(u64 *ctx)
-> >         return 1;
-> >  }
-> >
-> > -static inline void update_task_data(__u32 pid)
-> > +static inline int update_task_data(struct task_struct *task)
-> >  {
-> >         struct contention_task_data *p;
-> > +       int pid, err;
-> > +
-> > +       err = bpf_core_read(&pid, sizeof(pid), &task->pid);
-> > +       if (err)
-> > +               return -1;
-> >
-> >         p = bpf_map_lookup_elem(&task_data, &pid);
-> >         if (p == NULL) {
-> > -               struct contention_task_data data;
-> > +               struct contention_task_data data = {};
-> >
-> > -               bpf_get_current_comm(data.comm, sizeof(data.comm));
-> > +               BPF_CORE_READ_STR_INTO(&data.comm, task, comm);
-> >                 bpf_map_update_elem(&task_data, &pid, &data, BPF_NOEXIST);
-> >         }
-> > +
-> > +       return 0;
-> >  }
-> >
-> >  SEC("tp_btf/contention_begin")
-> > @@ -178,6 +194,38 @@ int contention_begin(u64 *ctx)
-> >                                                   BPF_F_FAST_STACK_CMP | stack_skip);
-> >                 if (pelem->stack_id < 0)
-> >                         lost++;
-> > +       } else if (aggr_mode == LOCK_AGGR_TASK) {
-> > +               struct task_struct *task;
-> > +
-> > +               if (lock_owner) {
-> > +                       if (pelem->flags & LCB_F_MUTEX) {
-> > +                               struct mutex *lock = (void *)pelem->lock;
-> > +                               unsigned long owner = BPF_CORE_READ(lock, owner.counter);
-> > +
-> > +                               task = (void *)(owner & ~7UL);
-> > +                       } else if (pelem->flags == LCB_F_READ || pelem->flags == LCB_F_WRITE) {
-> > +                               struct rw_semaphore *lock = (void *)pelem->lock;
-> > +                               unsigned long owner = BPF_CORE_READ(lock, owner.counter);
-> > +
-> > +                               task = (void *)(owner & ~7UL);
-> > +                       } else {
-> > +                               task = NULL;
-> > +                       }
-> > +
-> > +                       /* The flags is not used anymore.  Pass the owner pid. */
-> > +                       if (task)
-> > +                               pelem->flags = BPF_CORE_READ(task, pid);
-> > +                       else
-> > +                               pelem->flags = -1U;
-> > +
-> > +               } else {
-> > +                       task = bpf_get_current_task_btf();
-> > +               }
-> > +
-> > +               if (task) {
-> > +                       if (update_task_data(task) < 0 && lock_owner)
-> > +                               pelem->flags = -1U;
-> > +               }
-> >         }
-> >
-> >         return 0;
-> > @@ -207,8 +255,10 @@ int contention_end(u64 *ctx)
-> >                 key.aggr_key = pelem->stack_id;
-> >                 break;
-> >         case LOCK_AGGR_TASK:
-> > -               key.aggr_key = pid;
-> > -               update_task_data(pid);
-> > +               if (lock_owner)
-> > +                       key.aggr_key = pelem->flags;
-> > +               else
-> > +                       key.aggr_key = pid;
-> >                 break;
-> >         case LOCK_AGGR_ADDR:
-> >                 key.aggr_key = pelem->lock;
-> > diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> > index b99e83fccf5c..862b0617698a 100644
-> > --- a/tools/perf/util/lock-contention.h
-> > +++ b/tools/perf/util/lock-contention.h
-> > @@ -128,6 +128,7 @@ struct lock_contention {
-> >         int max_stack;
-> >         int stack_skip;
-> >         int aggr_mode;
-> > +       int owner;
-> >  };
-> >
-> >  #ifdef HAVE_BPF_SKEL
-> > --
-> > 2.39.0.314.g84b9a713c41-goog
-> >
+>
