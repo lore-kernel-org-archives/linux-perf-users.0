@@ -2,143 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42D4C54E94
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 07:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8947C54E94
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 08:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230160AbjAYHiQ (ORCPT
+        id S234845AbjAYIM4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 02:38:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37700 "EHLO
+        Wed, 25 Jan 2023 03:12:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235102AbjAYHiK (ORCPT
+        with ESMTP id S234640AbjAYIMz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 02:38:10 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC48635AA;
-        Tue, 24 Jan 2023 23:38:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674632287; x=1706168287;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=td2yaLP75K7hdcR8vRnyCdAYZQaUWatMbukN3aHfTn0=;
-  b=EEMpObBHffWjkMi1GohQFpPW4WpfsfzKK7EaPXFDiurxd7Dp1DPNnQkU
-   fPF53sWlKPIRwvSSX3NIxCC6xB30Y6yRz4l25Dct202jYIng8k6dUWeQC
-   LEaoUCSjDZw0IR83+ZtLgQIYAoRTNwYqkI5HWlH6hqNZgJn7idsv2AjqA
-   XWtB2RkdW854R5xvGUZh/cpBhhxZFuP0aJUbwH5Qgy6pmIsz6BUN9BBwh
-   xZQbcsfeWdn/sPNAvLtoVR0gWo71fU70XQ3zlF9GV9OyNXsxXFzcLh5lG
-   zKAb32oLqlfKZm02D5R+wez1rKxC8rwyuOBIgzG8URQs6ESZNNJx24Ii1
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="310075307"
-X-IronPort-AV: E=Sophos;i="5.97,244,1669104000"; 
-   d="scan'208";a="310075307"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 23:38:07 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10600"; a="655719572"
-X-IronPort-AV: E=Sophos;i="5.97,244,1669104000"; 
-   d="scan'208";a="655719572"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.208.193])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 23:38:03 -0800
-Message-ID: <231b238b-d464-464e-01d1-a2d5374a79ea@intel.com>
-Date:   Wed, 25 Jan 2023 09:37:59 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.7.1
-Subject: Re: [PATCH] perf/util: Symbol lookup can fail if multiple segmets
- match stext
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Krister Johansen <kjlx@templeofstupid.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        David Reaver <me@davidreaver.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 25 Jan 2023 03:12:55 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2F58A75;
+        Wed, 25 Jan 2023 00:12:54 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id 5so11869567plo.3;
+        Wed, 25 Jan 2023 00:12:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=dz5A2+hnEs/TwXVPFfFU6bx14y/lc5WXCpWs10bBDqM=;
+        b=iXPa1+kxoWTwOCe5ehYgKWhQRJqeN3VcuVAIISKDjU6u45Z1jC/vRleCX8uRrdCd90
+         Edgqo96OZFSR5caNAqRnVmaxv6fTzgd4B4CafII8OwaafU9hZnazbQ+JnPvCeImdUXhP
+         MacF+RIwZ259Ii4On0zq2za1MJ7kw0W02dCRNvunZhMmtjzH4jl1hLMxM7lESSrwLZyU
+         1hQ0ZMi8WhmWzQyhVU3K7VIN9tDsz3Z3JFQlgaLFJK4QvdP0d0GSkJphlUcbLxdSCmD6
+         gtuo+cE8ySGDyBZZLaWVWa/V2HbkS3gjMIe39YrWCG5ueF9K9kml/NMREBGVKXgZlbHR
+         nITA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dz5A2+hnEs/TwXVPFfFU6bx14y/lc5WXCpWs10bBDqM=;
+        b=V2fw3KnGSGmzfglnWJWHeFbrtvHLSSB+3p+mcm56ACUxC02E6+Vn97ignptviGWfD2
+         pu9tnZa+jJZ9hYft1xSXdAPBYSvogoiK5WxoMgIgbPVGJJwzyXkT0UWM/ps03oniogwc
+         fmldPoUEol8z3b4aZsivjfhhPqrMm4n5gunX9FHksgdw1G20mJ6y9YJrDszekGo2gFXI
+         oy0PP8vwTfW330fxpXSbvRSZj+1j2dqfoOtTNO5DSe5lYGw/190/l8n2JKS9ZCzfxRy0
+         24Dw5jyCqyatqcxHFP9QCdbrcmdZWnBEsbwirZm88L+inpEAboFWY1VRAAVerP6cHHif
+         ft6Q==
+X-Gm-Message-State: AFqh2krCfU1oGlLbHsqfQOgQqPtDQkrxzLQuIl/xvDUtdoZkELw1/Aig
+        +l4/fK4MU52gzdSO1la5shk=
+X-Google-Smtp-Source: AMrXdXu+Obv6+t6XFycPBaTAs5DSdUd2i91WLyKPwzmCyG4EDIRDrcl5Y5T6OfknsSzwNmDfebKUsg==
+X-Received: by 2002:a17:902:e847:b0:194:7cd3:329a with SMTP id t7-20020a170902e84700b001947cd3329amr40518184plg.10.1674634373648;
+        Wed, 25 Jan 2023 00:12:53 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:269f:fac5:4c75:d85e])
+        by smtp.gmail.com with ESMTPSA id p4-20020a170902bd0400b0017f756563bcsm2992139pls.47.2023.01.25.00.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 00:12:53 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20230124223531.GB1962@templeofstupid.com>
- <65cb75e0-4c0b-9384-1f6b-77a0053d8109@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <65cb75e0-4c0b-9384-1f6b-77a0053d8109@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCH] perf stat: Hide invalid uncore event output for aggr mode
+Date:   Wed, 25 Jan 2023 00:12:51 -0800
+Message-Id: <20230125081251.1244997-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.1.405.gd4c25cc71f-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25/01/23 09:29, Adrian Hunter wrote:
+The current display code for perf stat iterates given cpus and build the
+aggr map to collect the event data for the aggregation mode.
 
-Also subject line has spelling mistake, and should identify kcore
-as the issue e.g.
+But uncore events have their own cpu maps and it won't guarantee that
+it'd match to the aggr map.  For example, per-package uncore events
+would generate a single value for each socket.  When user asks per-core
+aggregation mode, the output would contain 0 values for other cores.
 
-perf symbol: Symbol lookup with kcore can fail if multiple segments match stext
+Thus it needs to check the uncore PMU's cpumask and if it matches to the
+current aggregation id.
 
-> On 25/01/23 00:35, Krister Johansen wrote:
->> This problem was encountered on an arm64 system with a lot of memory.
->> Without kernel debug symbols installed, and with both kcore and kallsyms
->> available, perf managed to get confused and returned "unknown" for all
->> of the kernel symbols that it tried to look up.
->>
->> On this system, stext fell within the vmalloc segment.  The kcore symbol
->> matching code tries to find the first segment that contains stext and
->> uses that to replace the segment generated from just the kallsyms
->> information.  In this case, however, there were two: a very large
->> vmalloc segment, and the text segment.  This caused perf to get confused
->> because multiple overlapping segments were inserted into the RB tree
->> that holds the discovered segments.  However, that alone wasn't
->> sufficient to cause the problem. Even when we could find the segment,
->> the offsets were adjusted in such a way that the newly generated symbols
->> didn't line up with the instruction addresses in the trace.  The most
->> obvious solution would be to consult which segment type is text from
->> kcore, but this information is not exposed to users.
->>
->> Instead, select the smallest matching segment that contains stext
->> instead of the first matching segment.  This allows us to match the text
->> segment instead of vmalloc, if one is contained within the other.
->>
->> Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
->> ---
->>  tools/perf/util/symbol.c | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
->> index a3a165ae933a..14ac4189eaff 100644
->> --- a/tools/perf/util/symbol.c
->> +++ b/tools/perf/util/symbol.c
->> @@ -1368,10 +1368,16 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->>  
->>  	/* Find the kernel map using the '_stext' symbol */
->>  	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
->> +		u64 replacement_size = 0;
-> 
-> We'd usually put a blank line here
-> 
->>  		list_for_each_entry(new_map, &md.maps, node) {
->> -			if (stext >= new_map->start && stext < new_map->end) {
->> +			u64 new_size = new_map->end - new_map->start;
->> +
->> +			if (!(stext >= new_map->start && stext < new_map->end))
->> +				continue;
->> +
-> 
-> Really needs a comment, and please be specific e.g.
-> 
->  ARM64 vmalloc segment overlaps the kernel text segment, so
->  choosing the smaller segment will get the kernel text.
-> 
-> 
-> 
->> +			if (!replacement_map || new_size < replacement_size) {
->>  				replacement_map = new_map;
->> -				break;
->> +				replacement_size = new_size;
->>  			}
->>  		}
->>  	}
-> 
+Before:
+  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+
+   Performance counter stats for 'system wide':
+
+  S0-D0-C0              1               3.73 Joules power/energy-pkg/
+  S0-D0-C1              0      <not counted> Joules power/energy-pkg/
+  S0-D0-C2              0      <not counted> Joules power/energy-pkg/
+  S0-D0-C3              0      <not counted> Joules power/energy-pkg/
+
+         1.001404046 seconds time elapsed
+
+  Some events weren't counted. Try disabling the NMI watchdog:
+  	echo 0 > /proc/sys/kernel/nmi_watchdog
+  	perf stat ...
+  	echo 1 > /proc/sys/kernel/nmi_watchdog
+
+The core 1, 2 and 3 should not be printed because the event is handled
+in a cpu in the core 0 only.  With this change, the output becomes like
+below.
+
+After:
+  $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+
+   Performance counter stats for 'system wide':
+
+  S0-D0-C0              1               2.09 Joules power/energy-pkg/
+
+Fixes: b89761351089 ("perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events")
+Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/stat-display.c | 37 ++++++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 8bd8b0142630..b9dcb13650d0 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -787,6 +787,22 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
+ 		uniquify_event_name(counter);
+ }
+ 
++static bool check_uncore_event_aggr(struct perf_stat_config *config,
++				    struct evsel *counter,
++				    struct aggr_cpu_id *id)
++{
++	struct perf_cpu cpu;
++	int idx;
++
++	perf_cpu_map__for_each_cpu(cpu, idx, counter->core.own_cpus) {
++		struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
++
++		if (aggr_cpu_id__equal(id, &own_id))
++			return true;
++	}
++	return false;
++}
++
+ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 				   struct evsel *counter, int s,
+ 				   struct outstate *os)
+@@ -814,12 +830,21 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	ena = aggr->counts.ena;
+ 	run = aggr->counts.run;
+ 
+-	/*
+-	 * Skip value 0 when enabling --per-thread globally, otherwise it will
+-	 * have too many 0 output.
+-	 */
+-	if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
+-		return;
++	if (val == 0) {
++		/*
++		 * Skip value 0 when enabling --per-thread globally,
++		 * otherwise it will have too many 0 output.
++		 */
++		if (config->aggr_mode == AGGR_THREAD && config->system_wide)
++			return;
++		/*
++		 * Skip value 0 when it's an uncore event and the given aggr id
++		 * does not belong to the PMU cpumask.
++		 */
++		if (counter->core.requires_cpu &&
++		    !check_uncore_event_aggr(config, counter, &id))
++			return;
++	}
+ 
+ 	if (!metric_only) {
+ 		if (config->json_output)
+-- 
+2.39.1.405.gd4c25cc71f-goog
 
