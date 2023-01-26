@@ -2,183 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E81C61DB3
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 17:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0002CC54EAA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 19:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232075AbjAZRH4 (ORCPT
+        id S232438AbjAZTKR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Jan 2023 12:07:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45396 "EHLO
+        Thu, 26 Jan 2023 14:10:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231989AbjAZRHq (ORCPT
+        with ESMTP id S232434AbjAZTKQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Jan 2023 12:07:46 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B280D10EC;
-        Thu, 26 Jan 2023 09:07:43 -0800 (PST)
-Received: from mercury (dyndsl-037-138-191-219.ewe-ip-backbone.de [37.138.191.219])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7FE346602E7E;
-        Thu, 26 Jan 2023 17:07:41 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1674752861;
-        bh=TJwB9xWefUtenAJhobcnuA3/dr44yh/1qZH05naV3dA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HIAeawkSMl4wLK9atphFO2PYIuQtn0mXWrQTGJkp27Vvwen4RmNJXIKy0KOcMN2qu
-         MGji/BoqRh//5quIKkg+7Jg9a4rlT6zYnOxKnHRve8IRt32uZ0O2J9C6ByA7KSG9ni
-         ooI+f+xDzdj/4Xv/XqAW1ZMOqMbxlnaE69Ns4AaVsCb09DHvVD+xjXrJ7HkcJ65ZDs
-         0FKkR9qOOchTbFQKw+Lbe8GJsd/K96q/WWSPWtyPUY4G0yRJ/G34tsJUBI/vL5q95x
-         a6dIJ/I/0Glk/75yhzfiBv6PLPN/HUTuWOcS4vpdAGRdicde5HTb77Vj3shLRE2rZN
-         snAuQFm3yL5CQ==
-Received: by mercury (Postfix, from userid 1000)
-        id 8DAD710609C7; Thu, 26 Jan 2023 18:07:39 +0100 (CET)
-Date:   Thu, 26 Jan 2023 18:07:39 +0100
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
-        jglisse@google.com, mhocko@suse.com, vbabka@suse.cz,
-        hannes@cmpxchg.org, mgorman@techsingularity.net, dave@stgolabs.net,
-        willy@infradead.org, liam.howlett@oracle.com, peterz@infradead.org,
-        ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
-        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
-        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
-        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
-        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
-        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
-        jannh@google.com, shakeelb@google.com, tatashin@google.com,
-        edumazet@google.com, gthelen@google.com, gurua@google.com,
-        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
-        leewalsh@google.com, posk@google.com, will@kernel.org,
-        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
-        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        qianweili@huawei.com, wangzhou1@hisilicon.com,
-        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
-        airlied@gmail.com, daniel@ffwll.ch,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, l.stach@pengutronix.de,
-        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
-        matthias.bgg@gmail.com, robdclark@gmail.com,
-        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
-        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
-        ray.huang@amd.com, kraxel@redhat.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@foss.st.com, tfiga@chromium.org,
-        m.szyprowski@samsung.com, mchehab@kernel.org,
-        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
-        jejb@linux.ibm.com, martin.petersen@oracle.com,
-        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
-        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
-        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
-        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, miklos@szeredi.hu,
-        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
-        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
-        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
-        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
-        loongarch@lists.linux.dev, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
-        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
-        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        devel@lists.orangefs.org, kexec@lists.infradead.org,
-        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
-        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
-        kernel-team@android.com
-Subject: Re: [PATCH v2 3/6] mm: replace vma->vm_flags direct modifications
- with modifier calls
-Message-ID: <20230126170739.mlka2jivn3mfstyf@mercury.elektranox.org>
-References: <20230125083851.27759-1-surenb@google.com>
- <20230125083851.27759-4-surenb@google.com>
+        Thu, 26 Jan 2023 14:10:16 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2A83C34
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Jan 2023 11:10:15 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id q5so2827226wrv.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 26 Jan 2023 11:10:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZVlCpe2YPL2TN3TFT9AqKB26L5YrQ2SxKcA4F5aIVA=;
+        b=bqiPNBtPCGC3Dt5ZQRSVrAtgB5YTmuDiUyV/bySZ3En9FH7ZiSa+3d475afcxorzQL
+         BcBlMbWZDlAEDRT8ehVmM0H18jLP84kk0FLIv0Th5HBB0ttBFsp/BuxMDv0O7yaMozMF
+         u1EioQKIUN1hAO89sTx5webSx+SGSqK0BjKDDCKwf+LEh2Mt9LZT2Ou2rHrOOliSxMQQ
+         8BdQXRmTW/3GxO7FNLYC3jipX4GwYJxCAGpsd/nkLjiI4K5ulSdS9vB+ajB9oebDL2Um
+         7//AfPRGk5idWtx1cFt6Rx2JCbX9hZ4je6PhcI3I+7Tzg6wmnKIK8YZAHi+zpsRa8JdP
+         qOsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XZVlCpe2YPL2TN3TFT9AqKB26L5YrQ2SxKcA4F5aIVA=;
+        b=L8dNmnEAAXYQ6sm1+ki8tNoxDjdGSNiI0GoCZu/dubs4zubLL/V8qf3nO+TzmodKLD
+         JwNOmiJ6lXWZFdOJKyrtl03w4MIQoXBtaw7nYfs6Nu5/vtEfsfj/cOlBTEW5mpsS2j8T
+         3a/Bz/AIz8Vz/L2KZljm7Me8E4U07ezUfyeJxBES6Wagj4phwooPA4Opiy4BHM6Vb+Lk
+         JrvnvIgzhY4mvGWfOez+ZD6Tp+Dyidl8xLrstnAFC2vyOou62musGAuI7FzuH7HtAWHH
+         Cjb8Jd1/ghhoQru8DJCcik+FurDnJ8WQcQdRGl0PhFMfckzFtOmyNCE+NaQUqOX/pbAj
+         JrlA==
+X-Gm-Message-State: AO0yUKVsv3MyRCXwX7B07v9PFsmoY9tdSHJNQWKroHKXrasuUlofvOcb
+        JMvDTQQ5zlenuSoGtpF/61bWki2GB1+b/JNsYPHEcQ==
+X-Google-Smtp-Source: AK7set/mmUq2VJuJRVgzRa/6Xnzlcx41hw/h5rvmYu2jYOJyL5sIkbF+l18j3dzlNgKOqoIJLVRMJ/NxowqhDSYUYuY=
+X-Received: by 2002:a5d:5341:0:b0:2bf:b79f:73f0 with SMTP id
+ t1-20020a5d5341000000b002bfb79f73f0mr345146wrv.654.1674760213868; Thu, 26 Jan
+ 2023 11:10:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qcyccrleajamxo75"
-Content-Disposition: inline
-In-Reply-To: <20230125083851.27759-4-surenb@google.com>
+References: <20230126011854.198243-1-irogers@google.com> <20230126011854.198243-3-irogers@google.com>
+ <e74b8293-5d30-7522-6e5e-a7c7994039c5@oracle.com>
+In-Reply-To: <e74b8293-5d30-7522-6e5e-a7c7994039c5@oracle.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 26 Jan 2023 11:10:01 -0800
+Message-ID: <CAP-5=fUrHqAtP-yRDYi4G4oo-PX-2YF8tyB=BBk2t0iM_U3__g@mail.gmail.com>
+Subject: Re: [PATCH v4 02/12] perf jevents metric: Add ability to rewrite
+ metrics in terms of others
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sandipan Das <sandipan.das@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Jan 26, 2023 at 7:59 AM John Garry <john.g.garry@oracle.com> wrote:
+>
+> On 26/01/2023 01:18, Ian Rogers wrote:
+> > Add RewriteMetricsInTermsOfOthers that iterates over pairs of names
+> > and expressions trying to replace an expression, within the current
+> > expression, with its name.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> hmmm ... did you test this for many python versions?
+>
+> Maybe this patch causes this error:
+>
+> Traceback (most recent call last):
+>   File "pmu-events/jevents.py", line 7, in <module>
+>     import metric
+>   File "/home/john/acme/tools/perf/pmu-events/metric.py", line 549, in
+> <module>
+>     def RewriteMetricsInTermsOfOthers(metrics: list[Tuple[str, Expression]]
+> TypeError: 'type' object is not subscriptable
+> make[3]: *** [pmu-events/Build:26: pmu-events/pmu-events.c] Error 1
+> make[2]: *** [Makefile.perf:676: pmu-events/pmu-events-in.o] Error 2
+> make[2]: *** Waiting for unfinished jobs....
+>
+> I have python 3.6.15
+>
+> Thanks,
+> John
 
---qcyccrleajamxo75
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Apologies, I have to test python3.6 with docker and so if I think the
+change is small enough.. My error, will spin v5.
 
-Hi,
+Thanks,
+Ian
 
-On Wed, Jan 25, 2023 at 12:38:48AM -0800, Suren Baghdasaryan wrote:
-> Replace direct modifications to vma->vm_flags with calls to modifier
-> functions to be able to track flag changes and to keep vma locking
-> correctness.
->=20
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> ---
-> [...]
->  drivers/hsi/clients/cmt_speech.c                   |  2 +-
->  120 files changed, 188 insertions(+), 199 deletions(-)
-> [...]
-> diff --git a/drivers/hsi/clients/cmt_speech.c b/drivers/hsi/clients/cmt_s=
-peech.c
-> index 8069f795c864..952a31e742a1 100644
-> --- a/drivers/hsi/clients/cmt_speech.c
-> +++ b/drivers/hsi/clients/cmt_speech.c
-> @@ -1264,7 +1264,7 @@ static int cs_char_mmap(struct file *file, struct v=
-m_area_struct *vma)
->  	if (vma_pages(vma) !=3D 1)
->  		return -EINVAL;
-> =20
-> -	vma->vm_flags |=3D VM_IO | VM_DONTDUMP | VM_DONTEXPAND;
-> +	set_vm_flags(vma, VM_IO | VM_DONTDUMP | VM_DONTEXPAND);
->  	vma->vm_ops =3D &cs_char_vm_ops;
->  	vma->vm_private_data =3D file->private_data;
-> =20
-
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
--- Sebastian
-
---qcyccrleajamxo75
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmPSs1EACgkQ2O7X88g7
-+pquLBAAkw9lw9lxNRCI6jvqLy98JsUBgSQigNB6Eh8JVWsySHMm1OszFCcvTpoc
-vinC/VPMOa6JwEw5e9naXRF2UJahO+Cx+e5MYIKos3QyIUPfi0YM7Cv96h6+c4l/
-NdcxLS8+9ElitTuA47UVgPSeZwzdZ1kU5VUV1X2fx+6aGA+dBfWVBgWDqU6AB0Sa
-ehU4betso5Ypl26YEmLPHmY+8Xx2jXNwwBEgsHgO2/YjRn9YPDeMAqb4lWs99h0d
-nUV1VqwTClRrExtNDvidHryknmyCIBpYt38gn0i9+uIf9mFoBmUDN+/zAdRguGBT
-r1CQAwvRvHmEyGJ4dp1nijyt/PWxDBlCWytlmzXrK/rkeH8sQCRdCr9L83/d5DM0
-iU98ehmbH9kx8rD4y0L91xmsnegNYNKSfAvz3EP4KYFOHjTw2SOCYoazPu3z62bN
-d3HL+08LeZpm1XwVPydZqBd5UpBK8NaQYCJ3BjsLUefsSJE+SWzsnoYFnbUrL1X9
-1XfU6LGtVvjCPUsjk7oqh5PjtRGQsdtUhSZJLwNzTeh4I0nSzL1pj8vRFZ7UTcV4
-RmFYsjBbKhja2fC13eM4tKzfx53harnHVNuUPw2aoLKshpkQaOTUqWBnRXtbJZkb
-dSRKObxfPlHVI+awnfN6owpXF86Owew2+XJcXILOPxaBk8PI/Ns=
-=/0TB
------END PGP SIGNATURE-----
-
---qcyccrleajamxo75--
+>
