@@ -2,160 +2,186 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F11C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 19:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64BFC05027
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 20:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232575AbjAZTmo (ORCPT
+        id S232094AbjAZUGN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Jan 2023 14:42:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45962 "EHLO
+        Thu, 26 Jan 2023 15:06:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232509AbjAZTmm (ORCPT
+        with ESMTP id S229546AbjAZUGM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Jan 2023 14:42:42 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ACCD10A96;
-        Thu, 26 Jan 2023 11:42:35 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id j5so2510653pjn.5;
-        Thu, 26 Jan 2023 11:42:35 -0800 (PST)
+        Thu, 26 Jan 2023 15:06:12 -0500
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FDB312F;
+        Thu, 26 Jan 2023 12:06:08 -0800 (PST)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-16332831ed0so3778783fac.10;
+        Thu, 26 Jan 2023 12:06:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=BuaqGXOr0ykBCTuoaAAMQk3i6JDBx0lzbqRkLeeKldg=;
-        b=hbza4nhDguQDOSfw6mb7peB+5XpyN67HuIOoylMEKAFEf0fCdq5s/kohRNVhHg9l68
-         z6bKNCHMV+z5vbNYwKth07Jx5yS7a+A5GGqzw0uDzwGzGOP2PQNy9kdlcrPV5nXzZks/
-         8lK2XZdzD+o4w4G2VfH1A4+r3xiH/ECahluzrVcSjQRbY0+GgZzcikHjyiLQIG52VziD
-         sjyZE4tcN6tG0wdXXwObOZCMG2h6YdcO10deqzmazbcqoj/kbLpqSIBvO6OA0+ysQuUm
-         10tej21AD1+wvLotjIdc7kT1DJORb0xnLTrg3apvOOp4H+/kmn+xafZteofhAlGAocHq
-         Y5Rw==
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VZC1AGCo1iw/OKKcaY6DIjrVBaw9CD8BZwmjFFL+xHo=;
+        b=X5vU4GaXJPB2qwx+vMr/yc/UHmvP/Hd0vOupJATNOpGml2lexhBNdE4M+RpELn5c9a
+         4K5lpfyekqdUC6q1RPr2eDpsVNAF8JXnjiwW7IY8tDbP4uCpJAXoS8+Ckq1t8l5QrCEF
+         tSOBI1txVx24XP1soQCDIt4VHq9ykolvHstCvAj9uMbNujCzoopqkSeh/w2jEl748q/z
+         zQ+CyFBmE2WKuYu9ePfaDilWfFP5gqBrOkLoGtYU4osbEuWyKOth+FErDn7KwjJeRjkY
+         63GlJBkbY9hR/JVzSDUPkVEbx4kk7W8jY6POr39HDDfup+sy6+BIVVfNStyH/jR98/Iu
+         lSDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BuaqGXOr0ykBCTuoaAAMQk3i6JDBx0lzbqRkLeeKldg=;
-        b=NMcUrnZm6VsxUxrSktikcoftmN6ljqbiDu/vcPmMz1z31eGCzMWfiLRJVMaSJqRUdA
-         6WReHRFwD7NKqq08cMvFSlcNHltuvF7hA6aGo7lX3jfNVrdzHtQFX/ZQcHdiPfzDDniE
-         3BPG8xhdRFtB6aayZzUgX27q8SKBC2eKcu1Zs0DLJT4kRa1VxnuPR8R29+jX/l12ycAY
-         iyp5bpHpwreZlgRWYWGgCdSrr0H+i6cvS+9FKdZ20GBSlfbTZdPrWmXfxXnf7PTzWleI
-         KIMezCXNBfd3L8QHqBSudQ6cidxSEYtoZW+uXBpt8ih4+owvk61Qu0xqNZDLr53ta4nW
-         AQmw==
-X-Gm-Message-State: AFqh2krm+lPrseMWq6svIbDibBf4jUGabV4dcW6i1OLIA/VyVip6mig0
-        UCnmm+KGhLXj5OnCT8fmdtk=
-X-Google-Smtp-Source: AMrXdXt4etOhvMJDbSwS/e6LkG8PqVZ4j72ffOhxh4TBixgd7wyLwWhMxf7TJMMAA1w5bThI6wSRMw==
-X-Received: by 2002:a05:6a20:6725:b0:b8:587f:e0ad with SMTP id q37-20020a056a20672500b000b8587fe0admr37937551pzh.29.1674762154558;
-        Thu, 26 Jan 2023 11:42:34 -0800 (PST)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:1f5d:eee8:d409:8a17])
-        by smtp.gmail.com with ESMTPSA id o13-20020a637e4d000000b004cd2eebc551sm1032286pgn.62.2023.01.26.11.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 11:42:33 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VZC1AGCo1iw/OKKcaY6DIjrVBaw9CD8BZwmjFFL+xHo=;
+        b=duFsou+12Z/HLdgkU+dQpM5kui1NR9Pbkq740Mb8+DmSVwOCPtbinegr9qE3jXHb6x
+         uDk0LzeYPDBwOekqtbfn4d1rQpBgdoRjZprtGp6X2B/j3nCD8L/yO0bMo5fVhMsQwmKo
+         IgbDkEWbj8LwHcAMtWVvw8K3DV0HpxgKgdsE9KebagkfM8fYg2My8xPsc0kZggHhozaJ
+         SajV1lIoRuOKXlOs+bdyd+XVZhPahk9iyXQeumNtSk5ybWnaYPQEtInKWf7JlIMV2Npb
+         6e6JKr1dOZBCUM8iU/d+pI4EvXcSUt6WhVQbRn0DWiEF6tn+yY41OvbjPtVixoMy4CN5
+         jihg==
+X-Gm-Message-State: AFqh2krqAxF27WiuffbhUHmLQta0En9P0ypXM8nHtN5z+t1WQGRneW+s
+        2JGwrOpPx4Sx/ZrHzwe76Eo=
+X-Google-Smtp-Source: AMrXdXtszIHqhqe+4mhgCtIGAy5dqKQXMr4pslFhJZP1eax3dRLbVBtv1sSpkTbg0jWKAZPRBRPajA==
+X-Received: by 2002:a05:6870:280a:b0:150:c4e4:4489 with SMTP id gz10-20020a056870280a00b00150c4e44489mr19376533oab.49.1674763567892;
+        Thu, 26 Jan 2023 12:06:07 -0800 (PST)
+Received: from [127.0.0.1] ([187.19.237.165])
+        by smtp.gmail.com with ESMTPSA id x2-20020a4aca82000000b00502189f6bdbsm874248ooq.44.2023.01.26.12.06.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 12:06:07 -0800 (PST)
+Date:   Thu, 26 Jan 2023 17:06:01 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+CC:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: [PATCH] perf script: Add 'cgroup' field for output
-Date:   Thu, 26 Jan 2023 11:42:30 -0800
-Message-Id: <20230126194230.3339019-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+Subject: Re: [PATCH] perf script: Add 'cgroup' field for output
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20230126194230.3339019-1-namhyung@kernel.org>
+References: <20230126194230.3339019-1-namhyung@kernel.org>
+Message-ID: <ACACAC8D-3390-4D47-B227-5C3182109847@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There's no field for the cgroup, let's add one.  To do that, users need to
-specify --all-cgroup option for perf record to capture the cgroup info.
 
-  $ perf record --all-cgroups -- true
 
-  $ perf script -F comm,pid,cgroup
-            true 337112  /user.slice/user-657345.slice/user@657345.service/...
-            true 337112  /user.slice/user-657345.slice/user@657345.service/...
-            true 337112  /user.slice/user-657345.slice/user@657345.service/...
-            true 337112  /user.slice/user-657345.slice/user@657345.service/...
+On January 26, 2023 4:42:30 PM GMT-03:00, Namhyung Kim <namhyung@kernel=2E=
+org> wrote:
+>There's no field for the cgroup, let's add one=2E  To do that, users need=
+ to
+>specify --all-cgroup option for perf record to capture the cgroup info=2E
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-script.txt |  2 +-
- tools/perf/builtin-script.c              | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 8d77182fbf31..82c4dcb9c42e 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -134,7 +134,7 @@ OPTIONS
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
--        machine_pid, vcpu.
-+        machine_pid, vcpu, cgroup.
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 69394ac0a20d..79976dde99b3 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -59,6 +59,7 @@
- #include "util/dlfilter.h"
- #include "util/record.h"
- #include "util/util.h"
-+#include "util/cgroup.h"
- #include "perf.h"
- 
- #include <linux/ctype.h>
-@@ -130,6 +131,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
- 	PERF_OUTPUT_MACHINE_PID     = 1ULL << 37,
- 	PERF_OUTPUT_VCPU            = 1ULL << 38,
-+	PERF_OUTPUT_CGROUP          = 1ULL << 39,
- };
- 
- struct perf_script {
-@@ -200,6 +202,7 @@ struct output_option {
- 	{.str = "brstackinsnlen", .field = PERF_OUTPUT_BRSTACKINSNLEN},
- 	{.str = "machine_pid", .field = PERF_OUTPUT_MACHINE_PID},
- 	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
-+	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
- };
- 
- enum {
-@@ -2220,6 +2223,17 @@ static void process_event(struct perf_script *script,
- 	if (PRINT_FIELD(CODE_PAGE_SIZE))
- 		fprintf(fp, " %s", get_page_size_name(sample->code_page_size, str));
- 
-+	if (PRINT_FIELD(CGROUP)) {
-+		const char *cgrp_name;
-+		struct cgroup *cgrp = cgroup__find(machine->env,
-+						   sample->cgroup);
-+		if (cgrp != NULL)
-+			cgrp_name = cgrp->name;
-+		else
-+			cgrp_name = "unknown";
-+		fprintf(fp, " %s", cgrp_name);
-+	}
-+
- 	perf_sample__fprintf_ipc(sample, attr, fp);
- 
- 	fprintf(fp, "\n");
-@@ -3856,7 +3870,7 @@ int cmd_script(int argc, const char **argv)
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
- 		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
--		     "code_page_size,ins_lat",
-+		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup",
- 		     parse_output_fields),
- 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
- 		    "system-wide collection from all CPUs"),
--- 
-2.39.1.456.gfc5497dd1b-goog
+This information about the new field being only available when --all-cgrou=
+p is specified should be in the documentation (man page) and probably in th=
+e tool itself, refusing it when the needed command line isn't present=2E
 
+- Arnaldo=20
+
+>
+>  $ perf record --all-cgroups -- true
+>
+>  $ perf script -F comm,pid,cgroup
+>            true 337112  /user=2Eslice/user-657345=2Eslice/user@657345=2E=
+service/=2E=2E=2E
+>            true 337112  /user=2Eslice/user-657345=2Eslice/user@657345=2E=
+service/=2E=2E=2E
+>            true 337112  /user=2Eslice/user-657345=2Eslice/user@657345=2E=
+service/=2E=2E=2E
+>            true 337112  /user=2Eslice/user-657345=2Eslice/user@657345=2E=
+service/=2E=2E=2E
+>
+>Signed-off-by: Namhyung Kim <namhyung@kernel=2Eorg>
+>---
+> tools/perf/Documentation/perf-script=2Etxt |  2 +-
+> tools/perf/builtin-script=2Ec              | 16 +++++++++++++++-
+> 2 files changed, 16 insertions(+), 2 deletions(-)
+>
+>diff --git a/tools/perf/Documentation/perf-script=2Etxt b/tools/perf/Docu=
+mentation/perf-script=2Etxt
+>index 8d77182fbf31=2E=2E82c4dcb9c42e 100644
+>--- a/tools/perf/Documentation/perf-script=2Etxt
+>+++ b/tools/perf/Documentation/perf-script=2Etxt
+>@@ -134,7 +134,7 @@ OPTIONS
+>         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-o=
+utput,
+>         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnl=
+en, synth,
+>         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page=
+_size, ins_lat,
+>-        machine_pid, vcpu=2E
+>+        machine_pid, vcpu, cgroup=2E
+>         Field list can be prepended with the type, trace, sw or hw,
+>         to indicate to which event type the field list applies=2E
+>         e=2Eg=2E, -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trac=
+e
+>diff --git a/tools/perf/builtin-script=2Ec b/tools/perf/builtin-script=2E=
+c
+>index 69394ac0a20d=2E=2E79976dde99b3 100644
+>--- a/tools/perf/builtin-script=2Ec
+>+++ b/tools/perf/builtin-script=2Ec
+>@@ -59,6 +59,7 @@
+> #include "util/dlfilter=2Eh"
+> #include "util/record=2Eh"
+> #include "util/util=2Eh"
+>+#include "util/cgroup=2Eh"
+> #include "perf=2Eh"
+>=20
+> #include <linux/ctype=2Eh>
+>@@ -130,6 +131,7 @@ enum perf_output_field {
+> 	PERF_OUTPUT_BRSTACKINSNLEN  =3D 1ULL << 36,
+> 	PERF_OUTPUT_MACHINE_PID     =3D 1ULL << 37,
+> 	PERF_OUTPUT_VCPU            =3D 1ULL << 38,
+>+	PERF_OUTPUT_CGROUP          =3D 1ULL << 39,
+> };
+>=20
+> struct perf_script {
+>@@ -200,6 +202,7 @@ struct output_option {
+> 	{=2Estr =3D "brstackinsnlen", =2Efield =3D PERF_OUTPUT_BRSTACKINSNLEN},
+> 	{=2Estr =3D "machine_pid", =2Efield =3D PERF_OUTPUT_MACHINE_PID},
+> 	{=2Estr =3D "vcpu", =2Efield =3D PERF_OUTPUT_VCPU},
+>+	{=2Estr =3D "cgroup", =2Efield =3D PERF_OUTPUT_CGROUP},
+> };
+>=20
+> enum {
+>@@ -2220,6 +2223,17 @@ static void process_event(struct perf_script *scri=
+pt,
+> 	if (PRINT_FIELD(CODE_PAGE_SIZE))
+> 		fprintf(fp, " %s", get_page_size_name(sample->code_page_size, str));
+>=20
+>+	if (PRINT_FIELD(CGROUP)) {
+>+		const char *cgrp_name;
+>+		struct cgroup *cgrp =3D cgroup__find(machine->env,
+>+						   sample->cgroup);
+>+		if (cgrp !=3D NULL)
+>+			cgrp_name =3D cgrp->name;
+>+		else
+>+			cgrp_name =3D "unknown";
+>+		fprintf(fp, " %s", cgrp_name);
+>+	}
+>+
+> 	perf_sample__fprintf_ipc(sample, attr, fp);
+>=20
+> 	fprintf(fp, "\n");
+>@@ -3856,7 +3870,7 @@ int cmd_script(int argc, const char **argv)
+> 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
+> 		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
+> 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
+>-		     "code_page_size,ins_lat",
+>+		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup",
+> 		     parse_output_fields),
+> 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+> 		    "system-wide collection from all CPUs"),
