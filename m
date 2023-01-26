@@ -2,164 +2,267 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84324C54E94
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Jan 2023 21:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6626C27C76
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 00:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235993AbjAYVAF (ORCPT
+        id S229721AbjAZAJm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 16:00:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
+        Wed, 25 Jan 2023 19:09:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjAYVAF (ORCPT
+        with ESMTP id S229472AbjAZAJl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 16:00:05 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B374222E7
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 13:00:03 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id d14so14637746wrr.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 13:00:03 -0800 (PST)
+        Wed, 25 Jan 2023 19:09:41 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23448611D4;
+        Wed, 25 Jan 2023 16:09:40 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id v6-20020a17090ad58600b00229eec90a7fso5054447pju.0;
+        Wed, 25 Jan 2023 16:09:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cyEAQDH7E/qL1ZNisInxETPwt2MInuGBwA3D/H45OPs=;
-        b=rANiYl6msoZZ9RXrwEoPX4db/SpSbab/elvw3avjyMrFDRkRHR0XyL4Ljpq9WURa3d
-         FeQ4A6Tl+rmuluexZBNtkyqjsqfqUvDzcZCZR/jXu/l9+Sg/QlLEyDDQv0fj1Sp4ctc7
-         nsXGfzTAkJ847IikGBIdnqPALWrsUWVuFj4Zlyq1NbXSBCKIAg9fTMN0/S2Jp4/IpLt1
-         PmRT/hQ3X58c2HmHc47WrO8oUVZXReFPKtKlF6DU1XV4NMze0vXrV2AFNsE/NlMUScUa
-         1I5jFcMy5aqWJy1E/ve0nLVhM2MqWLkOUngT7OkA/718xd6+vZKK94yRS/dh7I6v8C6w
-         qHaQ==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=l5XuXmavpSaZYzYj4+k/+ajUmojV5SNgAjFshG+/OWQ=;
+        b=JJADm9ZcnjTK0j/Sr1kLk1GqTvHwQGpWMGC7gvei5tGEnhaAAnFHBqxI6DqWCdoa7A
+         mjoNooUzGz5GEmEO1x5QYv7TQspVC6pwjZr4duM0aUgz3V9mY7ct6Be4rbo/VWZ1Xkfe
+         wY+4plFaObGBcG5K+tUM61g15IEISVBg6N9AcLMxUByzzweq/jzeofGn1Zw/rM2SMGW4
+         VzW0qY/SmKGZAaBg5BWKlE1p73zx0gKfGe2fMjhF/t6swa0FXQYRvXjmhN1rKETljPlC
+         iDPLKobdir4TYjVrbSnnMiW+VLWtFUy1erqEZdhb2D1jsp1RdGAPeth+4JD2x2mUHyS9
+         0ejQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cyEAQDH7E/qL1ZNisInxETPwt2MInuGBwA3D/H45OPs=;
-        b=7JRbJSC1+JBVscEaq2n15UTOgWhLgWP5RxqeLbrvCvxDWxJOw3SHfySjocb+GKYhoE
-         1z4orbS2vjNF6tEMS1gagZOCTf6CRii/IaaWxD17S5fGcdf214OO0RZRdZYTmz2pSnec
-         ipEpTo2KLMW690igOf9vhRHFmSxe+nr5DQpPrK9Hab1DoKWhrNRfXPYqRIFy2taVHZ4X
-         T1yvkti8vi4CrGNkDQ2smXYvseZIHeePhUvWCDwFS7noLAKLoh70u+yfR+ugEdPnuHSw
-         JazE7tT6THMQyqY3EIZEF5ZkC6afRzUq4EEQ5FyLG//Kr173uaQtecyGNg277ukB1AO+
-         NR8w==
-X-Gm-Message-State: AFqh2kpPNcvM4TnpWWXTwv0YDJTHt5qbha0VeppS1Y7HluroeXe+TKpj
-        pxsAaXsJ7IiuIV2d5Y8gB8ao5ONQypnOS7Uxu2RJ8w==
-X-Google-Smtp-Source: AMrXdXs7dWV8A/t/ikdu5AMRyrGVHYZUrx779Ld0nKLH1tQqOTuv6MYAlwVaJTnBQyms+562QDGQQmL8v9nxrMPgPg8=
-X-Received: by 2002:a05:6000:5c6:b0:242:5caa:5fbf with SMTP id
- bh6-20020a05600005c600b002425caa5fbfmr752607wrb.300.1674680401707; Wed, 25
- Jan 2023 13:00:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20230123211310.127532-1-raj.khem@gmail.com> <CAP-5=fWoQrn3i-Vpec0w8y4djq=PLhbR6TTeQ4XxKaR-bBDZAw@mail.gmail.com>
- <CAMKF1soqvBXcGUjpkN6wuxV8kZbFmqYBwB02Q5PB6qBAinjvOQ@mail.gmail.com>
-In-Reply-To: <CAMKF1soqvBXcGUjpkN6wuxV8kZbFmqYBwB02Q5PB6qBAinjvOQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 25 Jan 2023 12:59:49 -0800
-Message-ID: <CAP-5=fVp=X8pxC_cc3o_AoCvjxVOOTsztNcexY4NHh6uxPOJ4g@mail.gmail.com>
-Subject: Re: [PATCH] perf cpumap: Make counter as unsigned ints
-To:     Khem Raj <raj.khem@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l5XuXmavpSaZYzYj4+k/+ajUmojV5SNgAjFshG+/OWQ=;
+        b=ocilVDfpmaJntchqI7wKCNBF2dM33In+vVZZqRfT84CGVlw9ZN2Ccndpu+i85NN6Xi
+         XO+lluytXdgdFDIIMn5p0OtKENXchUJbUdus9pbyb0XWTAmxWC5lvB/y3xV2BnFMt1eM
+         H0r+LCqBDfU/8pGTV7XsTVV4ql442LtL0mpk4o30uUwryw3dUDpxje/lKrYKx9TwtFZs
+         Y37HzByeaJqAIQ8gLpq90DAPSCYDNh3DRnSpX4ZWFmvc+JmfF/QgdcTevSxRkD5ndVgk
+         3GJzlSWlr2NTRBwjP6rIvvv+hcB/g2VxHWBbqyVdnXTkd2b+AT32r317nLCpRvjMNRzM
+         F6Ew==
+X-Gm-Message-State: AFqh2koExvBRNiUrzYhOw1SrmPynllbEEAYIM7RESJ0M76+mbE1gJvoK
+        riy10UktPoX1gM/O3e+vbrw=
+X-Google-Smtp-Source: AMrXdXvhZRnZ/1zz5oVxrQPA1vnOuc3g4M3uAzkecsih4IdzeoRh7kmCZWOTCu07b6YkpYL9KitACA==
+X-Received: by 2002:a05:6a20:8e05:b0:af:ae14:9ecb with SMTP id y5-20020a056a208e0500b000afae149ecbmr52912491pzj.17.1674691779457;
+        Wed, 25 Jan 2023 16:09:39 -0800 (PST)
+Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:29ee:2efb:110e:b369])
+        by smtp.gmail.com with ESMTPSA id j13-20020a170902c3cd00b00177faf558b5sm4216160plj.250.2023.01.25.16.09.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 16:09:38 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        bpf@vger.kernel.org
+Subject: [PATCH] perf lock contention: Add -S/--callstack-filter option
+Date:   Wed, 25 Jan 2023 16:09:36 -0800
+Message-Id: <20230126000936.3017683-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 11:04 AM Khem Raj <raj.khem@gmail.com> wrote:
->
-> On Tue, Jan 24, 2023 at 9:02 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Jan 23, 2023 at 1:13 PM Khem Raj <raj.khem@gmail.com> wrote:
-> > >
-> > > These are loop counters which is inherently unsigned. Therefore make
-> > > them unsigned. Moreover it also fixes alloc-size-larger-than
-> > > error with gcc-13, where malloc can be called with (-1) due to tmp_len
-> > > being an int type.
-> > >
-> > > Fixes
-> > > | cpumap.c:366:20: error: argument 1 range [18446744065119617024, 18446744073709551612] exceeds maximum object size 9223372036854775807 [-Werror=alloc-size-larger-than=]
-> > > |   366 |         tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
-> > > |       |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >
-> > > Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/lib/perf/cpumap.c | 10 +++++-----
-> > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > > index 6cd0be7c1bb4..d960880dd903 100644
-> > > --- a/tools/lib/perf/cpumap.c
-> > > +++ b/tools/lib/perf/cpumap.c
-> > > @@ -351,8 +351,8 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-> > >                                          struct perf_cpu_map *other)
-> > >  {
-> > >         struct perf_cpu *tmp_cpus;
-> > > -       int tmp_len;
-> > > -       int i, j, k;
-> > > +       unsigned int tmp_len;
-> > > +       unsigned int i, j, k;
-> > >         struct perf_cpu_map *merged;
-> > >
-> > >         if (perf_cpu_map__is_subset(orig, other))
-> > > @@ -369,7 +369,7 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-> > >
-> > >         /* Standard merge algorithm from wikipedia */
-> > >         i = j = k = 0;
-> > > -       while (i < orig->nr && j < other->nr) {
-> > > +       while (i < (unsigned int)orig->nr && j < (unsigned int)other->nr) {
-> >
-> > Rather than cast 'nr' why not add the unsigned to the declaration?
-> >
->
-> if type of nr is changed from int to unsigned int, this will ensue a
-> lot of changes including function signature changes, I am not
-> sure if that is the best approach.
+The -S/--callstack-filter is to limit display entries having the given
+string in the callstack (not only in the caller in the output).
 
-All non-libperf accesses to 'nr' should go through perf_cpu_map__nr:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/lib/perf/include/perf/cpumap.h?h=perf/core#n25
-Fwiw, this is done as there is some hope of 1 day landing a better
-reference count checker.
+The following example shows lock contention results if the callstack
+has 'net' substring somewhere.  Note that the caller '__dev_queue_xmit'
+does not match to it, but it has 'inet6_csk_xmit' in the callstack.
 
-We should migrate all __nr users to being unsigned. The use of __nr is
-somewhat confusing, the dummy "program me on any CPU" cpu map has an
-nr of 1, while the nr for being on all CPUs will be the number of CPUs
-in the system, possibly +1 for the dummy case. I'm reminded that
-cpumap needs its API clearing up, perf_cpu_map__empty being especially
-confusing.
+This applies even if you don't use -v option to show the full callstack.
 
-Thanks,
-Ian
+  $ sudo ./perf lock con -abv -S net sleep 1
+  ...
+   contended   total wait     max wait     avg wait         type   caller
 
-> > Thanks,
-> > Ian
-> >
-> > >                 if (orig->map[i].cpu <= other->map[j].cpu) {
-> > >                         if (orig->map[i].cpu == other->map[j].cpu)
-> > >                                 j++;
-> > > @@ -378,10 +378,10 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
-> > >                         tmp_cpus[k++] = other->map[j++];
-> > >         }
-> > >
-> > > -       while (i < orig->nr)
-> > > +       while (i < (unsigned int)orig->nr)
-> > >                 tmp_cpus[k++] = orig->map[i++];
-> > >
-> > > -       while (j < other->nr)
-> > > +       while (j < (unsigned int)other->nr)
-> > >                 tmp_cpus[k++] = other->map[j++];
-> > >         assert(k <= tmp_len);
-> > >
-> > > --
-> > > 2.39.1
-> > >
+           5     70.20 us     16.13 us     14.04 us     spinlock   __dev_queue_xmit+0xb6d
+                          0xffffffffa5dd1c60  _raw_spin_lock+0x30
+                          0xffffffffa5b8f6ed  __dev_queue_xmit+0xb6d
+                          0xffffffffa5cd8267  ip6_finish_output2+0x2c7
+                          0xffffffffa5cdac14  ip6_finish_output+0x1d4
+                          0xffffffffa5cdb477  ip6_xmit+0x457
+                          0xffffffffa5d1fd17  inet6_csk_xmit+0xd7
+                          0xffffffffa5c5f4aa  __tcp_transmit_skb+0x54a
+                          0xffffffffa5c6467d  tcp_keepalive_timer+0x2fd
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-lock.txt |  6 +++
+ tools/perf/builtin-lock.c              | 68 +++++++++++++++++++++++++-
+ tools/perf/util/bpf_lock_contention.c  |  2 +-
+ tools/perf/util/lock-contention.h      |  1 +
+ 4 files changed, 75 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+index 0f9f720e599d..11b8901d8d13 100644
+--- a/tools/perf/Documentation/perf-lock.txt
++++ b/tools/perf/Documentation/perf-lock.txt
+@@ -187,6 +187,12 @@ CONTENTION OPTIONS
+ --lock-filter=<value>::
+ 	Show lock contention only for given lock addresses or names (comma separated list).
+ 
++-S::
++--callstack-filter=<value>::
++	Show lock contention only if the callstack contains the given string.
++	Note that it matches the substring so 'rq' would match both 'raw_spin_rq_lock'
++	and 'irq_enter_rcu'.
++
+ 
+ SEE ALSO
+ --------
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 506c2fe42d52..216a9a252bf4 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -63,11 +63,22 @@ static unsigned long bpf_map_entries = 10240;
+ static int max_stack_depth = CONTENTION_STACK_DEPTH;
+ static int stack_skip = CONTENTION_STACK_SKIP;
+ static int print_nr_entries = INT_MAX / 2;
++static LIST_HEAD(callstack_filters);
++
++struct callstack_filter {
++	struct list_head list;
++	char name[];
++};
+ 
+ static struct lock_filter filters;
+ 
+ static enum lock_aggr_mode aggr_mode = LOCK_AGGR_ADDR;
+ 
++static bool needs_callstack(void)
++{
++	return verbose > 0 || !list_empty(&callstack_filters);
++}
++
+ static struct thread_stat *thread_stat_find(u32 tid)
+ {
+ 	struct rb_node *node;
+@@ -1060,7 +1071,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
+ 		if (!ls)
+ 			return -ENOMEM;
+ 
+-		if (aggr_mode == LOCK_AGGR_CALLER && verbose > 0) {
++		if (aggr_mode == LOCK_AGGR_CALLER && needs_callstack()) {
+ 			ls->callstack = get_callstack(sample, max_stack_depth);
+ 			if (ls->callstack == NULL)
+ 				return -ENOMEM;
+@@ -1595,6 +1606,31 @@ static void print_contention_result(struct lock_contention *con)
+ 		if (!st->wait_time_total)
+ 			continue;
+ 
++		if (aggr_mode == LOCK_AGGR_CALLER && !list_empty(&callstack_filters)) {
++			struct map *kmap;
++			struct symbol *sym;
++			u64 ip;
++
++			for (int i = 0; i < max_stack_depth; i++) {
++				struct callstack_filter *filter;
++
++				if (!st->callstack || !st->callstack[i])
++					break;
++
++				ip = st->callstack[i];
++				sym = machine__find_kernel_symbol(con->machine, ip, &kmap);
++				if (sym == NULL)
++					continue;
++
++				list_for_each_entry(filter, &callstack_filters, list) {
++					if (strstr(sym->name, filter->name))
++						goto found;
++				}
++			}
++			continue;
++		}
++
++found:
+ 		list_for_each_entry(key, &lock_keys, list) {
+ 			key->print(key, st);
+ 			pr_info(" ");
+@@ -1743,6 +1779,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 		.max_stack = max_stack_depth,
+ 		.stack_skip = stack_skip,
+ 		.filters = &filters,
++		.save_callstack = needs_callstack(),
+ 	};
+ 
+ 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
+@@ -2123,6 +2160,33 @@ static int parse_lock_addr(const struct option *opt __maybe_unused, const char *
+ 	return ret;
+ }
+ 
++static int parse_call_stack(const struct option *opt __maybe_unused, const char *str,
++			   int unset __maybe_unused)
++{
++	char *s, *tmp, *tok;
++	int ret = 0;
++
++	s = strdup(str);
++	if (s == NULL)
++		return -1;
++
++	for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
++		struct callstack_filter *entry;
++
++		entry = malloc(sizeof(*entry) + strlen(tok) + 1);
++		if (entry == NULL) {
++			pr_err("Memory allocation failure\n");
++			return -1;
++		}
++
++		strcpy(entry->name, tok);
++		list_add_tail(&entry->list, &callstack_filters);
++	}
++
++	free(s);
++	return ret;
++}
++
+ int cmd_lock(int argc, const char **argv)
+ {
+ 	const struct option lock_options[] = {
+@@ -2190,6 +2254,8 @@ int cmd_lock(int argc, const char **argv)
+ 		     "Filter specific type of locks", parse_lock_type),
+ 	OPT_CALLBACK('L', "lock-filter", NULL, "ADDRS/NAMES",
+ 		     "Filter specific address/symbol of locks", parse_lock_addr),
++	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
++		     "Filter specific function in the callstack", parse_call_stack),
+ 	OPT_PARENT(lock_options)
+ 	};
+ 
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index 0236334fd69b..4902ac331f41 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -268,7 +268,7 @@ int lock_contention_read(struct lock_contention *con)
+ 			break;
+ 		}
+ 
+-		if (verbose > 0) {
++		if (con->save_callstack) {
+ 			st->callstack = memdup(stack_trace, stack_size);
+ 			if (st->callstack == NULL)
+ 				break;
+diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+index b99e83fccf5c..17e594d57a61 100644
+--- a/tools/perf/util/lock-contention.h
++++ b/tools/perf/util/lock-contention.h
+@@ -128,6 +128,7 @@ struct lock_contention {
+ 	int max_stack;
+ 	int stack_skip;
+ 	int aggr_mode;
++	bool save_callstack;
+ };
+ 
+ #ifdef HAVE_BPF_SKEL
+-- 
+2.39.1.456.gfc5497dd1b-goog
+
