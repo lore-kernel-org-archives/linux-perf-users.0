@@ -2,167 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4804BC05027
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 14:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9921C636CD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 14:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjAZOUa (ORCPT
+        id S231970AbjAZOs6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Jan 2023 09:20:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        Thu, 26 Jan 2023 09:48:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231578AbjAZOU2 (ORCPT
+        with ESMTP id S229473AbjAZOsz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Jan 2023 09:20:28 -0500
+        Thu, 26 Jan 2023 09:48:55 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C4C5B95;
-        Thu, 26 Jan 2023 06:20:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606A94489;
+        Thu, 26 Jan 2023 06:48:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D4F71617FE;
-        Thu, 26 Jan 2023 14:20:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CF4C433EF;
-        Thu, 26 Jan 2023 14:20:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0DA61856;
+        Thu, 26 Jan 2023 14:48:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05241C4339B;
+        Thu, 26 Jan 2023 14:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674742812;
-        bh=0gXWAG3HpQenfONyLXdhDKUli2Bo4Uhdo9PrFLTy79U=;
+        s=k20201202; t=1674744532;
+        bh=WNohoknU9nLfbwIXeO77neZ4yMyv64MASZK2UIAfOfc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Di5FbnDS9IrLIy3Qguh0lMbFBe4bJSqS/l3RAASfKfNH1svLVK5jIH4Wjx0Qm7lcs
-         p1ANYjqQnfYnxcGRR3hAFwSmbx7h+hpr8Z4tZZTDzQROrpG0qD7Vaf1OfCZ9Uvs+AG
-         tdF/Segi7SvyPLuSXD0gaULEqWFYRz58MyilF5I8LCXgmljMCMVU+uTw4Baa1b6Bwl
-         5GxnpltqOr4V//yI/aBZ83AFdyOWCWdjAHpgSqID/KujYWxtJTWL2Wkt69aTbBzjLW
-         9TdyQMIjh6spUOVsL5qyxZ5sUEJYrdkLy4Vjaqr6j9W9qsu8+p6CBUrtcOxOt3BjVS
-         +L/UXKiSp2Oiw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 71802405BE; Thu, 26 Jan 2023 11:20:09 -0300 (-03)
-Date:   Thu, 26 Jan 2023 11:20:09 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [PATCH v4 11/12] perf jevents: Add model list option
-Message-ID: <Y9KMGa1jGW3aLVZG@kernel.org>
-References: <20230126011854.198243-1-irogers@google.com>
- <20230126011854.198243-12-irogers@google.com>
- <10ae719f-2549-a367-2d2b-48671a00135e@oracle.com>
+        b=OyaVsT5ePzTFS76R1FH5KLxOUgzscan6sLv55lgf+totKkalpj5P4hTJ0CFzpg2nB
+         FjnAcEI6WBL0tfwF/TTw8b+wwY6a9pfQDEoFaNDhDzv4Bx4E//TKL2HIis05iqFTqA
+         6cWnwUhcKJagQmydnhE9MWdKN98RZA7QH0/g2op6Qc+WX5kkWc6P8AxP1IQok4d4Iv
+         rC+rDq5bfpCpp87TX2zmlNbavkxhh4pjEZT5VQ1/5GQQQR5j3P3SiDxYUla0TLmDmY
+         tHoanGw9DWG+oAt/RnrhsxsQ7gltrsJN75kvWssUX4MOKayClNcjWM9UluK5fqquNs
+         P9OGQuC06AeFQ==
+Date:   Thu, 26 Jan 2023 16:48:04 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     akpm@linux-foundation.org, michel@lespinasse.org,
+        jglisse@google.com, mhocko@suse.com, vbabka@suse.cz,
+        hannes@cmpxchg.org, mgorman@techsingularity.net, dave@stgolabs.net,
+        willy@infradead.org, liam.howlett@oracle.com, peterz@infradead.org,
+        ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
+        songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+        dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+        kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
+        lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
+        axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
+        jannh@google.com, shakeelb@google.com, tatashin@google.com,
+        edumazet@google.com, gthelen@google.com, gurua@google.com,
+        arjunroy@google.com, soheil@google.com, hughlynch@google.com,
+        leewalsh@google.com, posk@google.com, will@kernel.org,
+        aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
+        chenhuacai@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        qianweili@huawei.com, wangzhou1@hisilicon.com,
+        herbert@gondor.apana.org.au, davem@davemloft.net, vkoul@kernel.org,
+        airlied@gmail.com, daniel@ffwll.ch,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, l.stach@pengutronix.de,
+        krzysztof.kozlowski@linaro.org, patrik.r.jakobsson@gmail.com,
+        matthias.bgg@gmail.com, robdclark@gmail.com,
+        quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
+        tomba@kernel.org, hjc@rock-chips.com, heiko@sntech.de,
+        ray.huang@amd.com, kraxel@redhat.com, sre@kernel.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        tfiga@chromium.org, m.szyprowski@samsung.com, mchehab@kernel.org,
+        dimitri.sivanich@hpe.com, zhangfei.gao@linaro.org,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        dgilbert@interlog.com, hdegoede@redhat.com, mst@redhat.com,
+        jasowang@redhat.com, alex.williamson@redhat.com, deller@gmx.de,
+        jayalk@intworks.biz, viro@zeniv.linux.org.uk, nico@fluxnic.net,
+        xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, miklos@szeredi.hu,
+        mike.kravetz@oracle.com, muchun.song@linux.dev, bhe@redhat.com,
+        andrii@kernel.org, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, perex@perex.cz, tiwai@suse.com,
+        haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-graphics-maintainer@vmware.com,
+        linux-ia64@vger.kernel.org, linux-arch@vger.kernel.org,
+        loongarch@lists.linux.dev, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sgx@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-crypto@vger.kernel.org, nvdimm@lists.linux.dev,
+        dmaengine@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-samsung-soc@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-accelerators@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+        target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        devel@lists.orangefs.org, kexec@lists.infradead.org,
+        linux-xfs@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
+        selinux@vger.kernel.org, alsa-devel@alsa-project.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v2 6/6] mm: export dump_mm()
+Message-ID: <Y9KSpNJ4y0GMwkrW@kernel.org>
+References: <20230125083851.27759-1-surenb@google.com>
+ <20230125083851.27759-7-surenb@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <10ae719f-2549-a367-2d2b-48671a00135e@oracle.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230125083851.27759-7-surenb@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jan 26, 2023 at 01:44:39PM +0000, John Garry escreveu:
-> On 26/01/2023 01:18, Ian Rogers wrote:
-> > This allows the set of generated jevents events and metrics be limited
-> > to a subset of the model names. Appropriate if trying to minimize the
-> > binary size where only a set of models are possible.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+On Wed, Jan 25, 2023 at 12:38:51AM -0800, Suren Baghdasaryan wrote:
+> mmap_assert_write_locked() is used in vm_flags modifiers. Because
+> mmap_assert_write_locked() uses dump_mm() and vm_flags are sometimes
+> modified from from inside a module, it's necessary to export
+> dump_mm() function.
 > 
-> Thanks for this:
-> 
-> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 
-Thanks for reviewing the series John, I see there are a few patches for
-which you didn't provide your Reviewed-by, are you planning to review
-those as well?
+Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-- Arnaldo
- 
-> > ---
-> >   tools/perf/pmu-events/Build      |  3 ++-
-> >   tools/perf/pmu-events/jevents.py | 14 ++++++++++++++
-> >   2 files changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> > index 15b9e8fdbffa..a14de24ecb69 100644
-> > --- a/tools/perf/pmu-events/Build
-> > +++ b/tools/perf/pmu-events/Build
-> > @@ -10,6 +10,7 @@ JEVENTS_PY	=  pmu-events/jevents.py
-> >   ifeq ($(JEVENTS_ARCH),)
-> >   JEVENTS_ARCH=$(SRCARCH)
-> >   endif
-> > +JEVENTS_MODEL ?= all
-> >   #
-> >   # Locate/process JSON files in pmu-events/arch/
-> > @@ -23,5 +24,5 @@ $(OUTPUT)pmu-events/pmu-events.c: pmu-events/empty-pmu-events.c
-> >   else
-> >   $(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS_PY) pmu-events/metric.py
-> >   	$(call rule_mkdir)
-> > -	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) pmu-events/arch $@
-> > +	$(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
-> >   endif
-> > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > index 627ee817f57f..2bcd07ce609f 100755
-> > --- a/tools/perf/pmu-events/jevents.py
-> > +++ b/tools/perf/pmu-events/jevents.py
-> > @@ -599,6 +599,8 @@ const struct pmu_events_map pmu_events_map[] = {
-> >               else:
-> >                 metric_tblname = 'NULL'
-> >                 metric_size = '0'
-> > +            if event_size == '0' and metric_size == '0':
-> > +              continue
-> >               cpuid = row[0].replace('\\', '\\\\')
-> >               _args.output_file.write(f"""{{
-> >   \t.arch = "{arch}",
-> > @@ -888,12 +890,24 @@ def main() -> None:
-> >             action: Callable[[Sequence[str], os.DirEntry], None]) -> None:
-> >       """Replicate the directory/file walking behavior of C's file tree walk."""
-> >       for item in os.scandir(path):
-> > +      if _args.model != 'all' and item.is_dir():
-> > +        # Check if the model matches one in _args.model.
-> > +        if len(parents) == _args.model.split(',')[0].count('/'):
-> > +          # We're testing the correct directory.
-> > +          item_path = '/'.join(parents) + ('/' if len(parents) > 0 else '') + item.name
-> > +          if 'test' not in item_path and item_path not in _args.model.split(','):
-> > +            continue
-> >         action(parents, item)
-> >         if item.is_dir():
-> >           ftw(item.path, parents + [item.name], action)
-> >     ap = argparse.ArgumentParser()
-> >     ap.add_argument('arch', help='Architecture name like x86')
-> > +  ap.add_argument('model', help='''Select a model such as skylake to
-> > +reduce the code size.  Normally set to "all". For architectures like
-> > +ARM64 with an implementor/model, the model must include the implementor
+> ---
+>  mm/debug.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> mega-nit: /s/ARM64/arm64/
+> diff --git a/mm/debug.c b/mm/debug.c
+> index 9d3d893dc7f4..96d594e16292 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -215,6 +215,7 @@ void dump_mm(const struct mm_struct *mm)
+>  		mm->def_flags, &mm->def_flags
+>  	);
+>  }
+> +EXPORT_SYMBOL(dump_mm);
+>  
+>  static bool page_init_poisoning __read_mostly = true;
+>  
+> -- 
+> 2.39.1
 > 
-> it just makes grepping easier (without -i, of course)
-> 
-> > +such as "arm/cortex-a34".''',
-> > +                  default='all')
-> >     ap.add_argument(
-> >         'starting_dir',
-> >         type=dir_path,
-> 
-
--- 
-
-- Arnaldo
