@@ -2,267 +2,202 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6626C27C76
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 00:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB75CC27C76
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Jan 2023 00:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbjAZAJm (ORCPT
+        id S235277AbjAZALA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Jan 2023 19:09:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
+        Wed, 25 Jan 2023 19:11:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjAZAJl (ORCPT
+        with ESMTP id S235319AbjAZAK7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Jan 2023 19:09:41 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23448611D4;
-        Wed, 25 Jan 2023 16:09:40 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id v6-20020a17090ad58600b00229eec90a7fso5054447pju.0;
-        Wed, 25 Jan 2023 16:09:40 -0800 (PST)
+        Wed, 25 Jan 2023 19:10:59 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAF564684
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 16:10:53 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id m5-20020a05600c4f4500b003db03b2559eso121764wmq.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 25 Jan 2023 16:10:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=l5XuXmavpSaZYzYj4+k/+ajUmojV5SNgAjFshG+/OWQ=;
-        b=JJADm9ZcnjTK0j/Sr1kLk1GqTvHwQGpWMGC7gvei5tGEnhaAAnFHBqxI6DqWCdoa7A
-         mjoNooUzGz5GEmEO1x5QYv7TQspVC6pwjZr4duM0aUgz3V9mY7ct6Be4rbo/VWZ1Xkfe
-         wY+4plFaObGBcG5K+tUM61g15IEISVBg6N9AcLMxUByzzweq/jzeofGn1Zw/rM2SMGW4
-         VzW0qY/SmKGZAaBg5BWKlE1p73zx0gKfGe2fMjhF/t6swa0FXQYRvXjmhN1rKETljPlC
-         iDPLKobdir4TYjVrbSnnMiW+VLWtFUy1erqEZdhb2D1jsp1RdGAPeth+4JD2x2mUHyS9
-         0ejQ==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=swgkYLU18wTX9WUg/6sua2FIBoQ4pd74osZm7oskNfg=;
+        b=MLLVGGQOM6dbb1NxGWWPqGQremCBNhw2PL4IMm2AH/xLp7c+0phbM3tecE3VIJVfw/
+         KK2uRw+Bmn+ujvPMzVca7GYYLTSj17dZ0gEvAxo5uVwcXj7Dux2GcWdxuLgTysg8pnua
+         9R6Iz8/tWnRry6rdTGNR/LdJIzhwtAADXO1RUG7UL4MpJBTzDQ1t7vbGdqiE4wSnidg0
+         GPevBDgY1y1L8+pDacupmUMK5ZuXOG6bdkjspEfSAM+VjVeVvBajCyDahsakjV4Pl11L
+         ON1mwWlHt2KG9uiqMsgIJjJvO11yqD28u7FJDNjJhRRhitqzRZxTpgX5x4b3dgAIu6Aq
+         66Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l5XuXmavpSaZYzYj4+k/+ajUmojV5SNgAjFshG+/OWQ=;
-        b=ocilVDfpmaJntchqI7wKCNBF2dM33In+vVZZqRfT84CGVlw9ZN2Ccndpu+i85NN6Xi
-         XO+lluytXdgdFDIIMn5p0OtKENXchUJbUdus9pbyb0XWTAmxWC5lvB/y3xV2BnFMt1eM
-         H0r+LCqBDfU/8pGTV7XsTVV4ql442LtL0mpk4o30uUwryw3dUDpxje/lKrYKx9TwtFZs
-         Y37HzByeaJqAIQ8gLpq90DAPSCYDNh3DRnSpX4ZWFmvc+JmfF/QgdcTevSxRkD5ndVgk
-         3GJzlSWlr2NTRBwjP6rIvvv+hcB/g2VxHWBbqyVdnXTkd2b+AT32r317nLCpRvjMNRzM
-         F6Ew==
-X-Gm-Message-State: AFqh2koExvBRNiUrzYhOw1SrmPynllbEEAYIM7RESJ0M76+mbE1gJvoK
-        riy10UktPoX1gM/O3e+vbrw=
-X-Google-Smtp-Source: AMrXdXvhZRnZ/1zz5oVxrQPA1vnOuc3g4M3uAzkecsih4IdzeoRh7kmCZWOTCu07b6YkpYL9KitACA==
-X-Received: by 2002:a05:6a20:8e05:b0:af:ae14:9ecb with SMTP id y5-20020a056a208e0500b000afae149ecbmr52912491pzj.17.1674691779457;
-        Wed, 25 Jan 2023 16:09:39 -0800 (PST)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:29ee:2efb:110e:b369])
-        by smtp.gmail.com with ESMTPSA id j13-20020a170902c3cd00b00177faf558b5sm4216160plj.250.2023.01.25.16.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 16:09:38 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=swgkYLU18wTX9WUg/6sua2FIBoQ4pd74osZm7oskNfg=;
+        b=0z9aliuez51sybYmOXAf3ReQi5/qmFeprzXQQMbOimYE5OS+UKYOkrCoCJSu9wtq9S
+         SguuZiLhrYwt4FUZ1u8r59AdKU4X++cHvd25/66c+nzbaqf+CWICvEhMY6Q7i7OC8hWX
+         /LYC5c0SOAXQnJtJYO19nOU5Eg0NgMINTJybUNFPvSJXIlyWPpMF3yh693vIrUX5Cd0K
+         2xhnXQaB1uQU9dXuCmO4KCn1JOmgxGERu8kRLNOUY9MzaZ3aFJkkGNAwSbwuMKTx3tB8
+         YdNinpWRPjHDs6AB+r6cYq/VTV47Dv2ciJLXhNFNoMJ/TdTD/9f5+w/2mKYdWkk7l/y1
+         RMIw==
+X-Gm-Message-State: AFqh2kpPE6OzDNO677YlLeFPY3KcxFahmSTnqEb1PPyvYVa24CDtQrWh
+        CTCnMq8ppBCoyCQdogihGYmtl4UNWoZM0jdx7bK3vg==
+X-Google-Smtp-Source: AMrXdXsICClNLo8x1QPYuM4hD8UlHeaJyEblCizCVyxsNcPHXKpMBzfewCKT2YoGMZGcnz6Rq5PQxCNR1W+qyHMmaq0=
+X-Received: by 2002:a1c:7404:0:b0:3da:b40f:c734 with SMTP id
+ p4-20020a1c7404000000b003dab40fc734mr2805519wmc.115.1674691851605; Wed, 25
+ Jan 2023 16:10:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20230125192431.2929677-1-namhyung@kernel.org>
+In-Reply-To: <20230125192431.2929677-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 25 Jan 2023 16:10:39 -0800
+Message-ID: <CAP-5=fXOhOCq3TS6RFUTsEZBXnzG74T=NiLvQCf+t0QHctSrZQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf stat: Hide invalid uncore event output for aggr mode
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        bpf@vger.kernel.org
-Subject: [PATCH] perf lock contention: Add -S/--callstack-filter option
-Date:   Wed, 25 Jan 2023 16:09:36 -0800
-Message-Id: <20230126000936.3017683-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-perf-users@vger.kernel.org,
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The -S/--callstack-filter is to limit display entries having the given
-string in the callstack (not only in the caller in the output).
+On Wed, Jan 25, 2023 at 11:24 AM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> The current display code for perf stat iterates given cpus and build the
+> aggr map to collect the event data for the aggregation mode.
+>
+> But uncore events have their own cpu maps and it won't guarantee that
+> it'd match to the aggr map.  For example, per-package uncore events
+> would generate a single value for each socket.  When user asks per-core
+> aggregation mode, the output would contain 0 values for other cores.
+>
+> Thus it needs to check the uncore PMU's cpumask and if it matches to the
+> current aggregation id.
+>
+> Before:
+>   $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+>
+>    Performance counter stats for 'system wide':
+>
+>   S0-D0-C0              1               3.73 Joules power/energy-pkg/
+>   S0-D0-C1              0      <not counted> Joules power/energy-pkg/
+>   S0-D0-C2              0      <not counted> Joules power/energy-pkg/
+>   S0-D0-C3              0      <not counted> Joules power/energy-pkg/
+>
+>          1.001404046 seconds time elapsed
+>
+>   Some events weren't counted. Try disabling the NMI watchdog:
+>         echo 0 > /proc/sys/kernel/nmi_watchdog
+>         perf stat ...
+>         echo 1 > /proc/sys/kernel/nmi_watchdog
+>
+> The core 1, 2 and 3 should not be printed because the event is handled
+> in a cpu in the core 0 only.  With this change, the output becomes like
+> below.
+>
+> After:
+>   $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+>
+>    Performance counter stats for 'system wide':
+>
+>   S0-D0-C0              1               2.09 Joules power/energy-pkg/
+>
+> Fixes: b89761351089 ("perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events")
+> Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+> Cc: Michael Petlan <mpetlan@redhat.com>
+> Tested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-The following example shows lock contention results if the callstack
-has 'net' substring somewhere.  Note that the caller '__dev_queue_xmit'
-does not match to it, but it has 'inet6_csk_xmit' in the callstack.
+Acked-by: Ian Rogers <irogers@google.com>
 
-This applies even if you don't use -v option to show the full callstack.
+Thanks,
+Ian
 
-  $ sudo ./perf lock con -abv -S net sleep 1
-  ...
-   contended   total wait     max wait     avg wait         type   caller
-
-           5     70.20 us     16.13 us     14.04 us     spinlock   __dev_queue_xmit+0xb6d
-                          0xffffffffa5dd1c60  _raw_spin_lock+0x30
-                          0xffffffffa5b8f6ed  __dev_queue_xmit+0xb6d
-                          0xffffffffa5cd8267  ip6_finish_output2+0x2c7
-                          0xffffffffa5cdac14  ip6_finish_output+0x1d4
-                          0xffffffffa5cdb477  ip6_xmit+0x457
-                          0xffffffffa5d1fd17  inet6_csk_xmit+0xd7
-                          0xffffffffa5c5f4aa  __tcp_transmit_skb+0x54a
-                          0xffffffffa5c6467d  tcp_keepalive_timer+0x2fd
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-lock.txt |  6 +++
- tools/perf/builtin-lock.c              | 68 +++++++++++++++++++++++++-
- tools/perf/util/bpf_lock_contention.c  |  2 +-
- tools/perf/util/lock-contention.h      |  1 +
- 4 files changed, 75 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
-index 0f9f720e599d..11b8901d8d13 100644
---- a/tools/perf/Documentation/perf-lock.txt
-+++ b/tools/perf/Documentation/perf-lock.txt
-@@ -187,6 +187,12 @@ CONTENTION OPTIONS
- --lock-filter=<value>::
- 	Show lock contention only for given lock addresses or names (comma separated list).
- 
-+-S::
-+--callstack-filter=<value>::
-+	Show lock contention only if the callstack contains the given string.
-+	Note that it matches the substring so 'rq' would match both 'raw_spin_rq_lock'
-+	and 'irq_enter_rcu'.
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 506c2fe42d52..216a9a252bf4 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -63,11 +63,22 @@ static unsigned long bpf_map_entries = 10240;
- static int max_stack_depth = CONTENTION_STACK_DEPTH;
- static int stack_skip = CONTENTION_STACK_SKIP;
- static int print_nr_entries = INT_MAX / 2;
-+static LIST_HEAD(callstack_filters);
-+
-+struct callstack_filter {
-+	struct list_head list;
-+	char name[];
-+};
- 
- static struct lock_filter filters;
- 
- static enum lock_aggr_mode aggr_mode = LOCK_AGGR_ADDR;
- 
-+static bool needs_callstack(void)
-+{
-+	return verbose > 0 || !list_empty(&callstack_filters);
-+}
-+
- static struct thread_stat *thread_stat_find(u32 tid)
- {
- 	struct rb_node *node;
-@@ -1060,7 +1071,7 @@ static int report_lock_contention_begin_event(struct evsel *evsel,
- 		if (!ls)
- 			return -ENOMEM;
- 
--		if (aggr_mode == LOCK_AGGR_CALLER && verbose > 0) {
-+		if (aggr_mode == LOCK_AGGR_CALLER && needs_callstack()) {
- 			ls->callstack = get_callstack(sample, max_stack_depth);
- 			if (ls->callstack == NULL)
- 				return -ENOMEM;
-@@ -1595,6 +1606,31 @@ static void print_contention_result(struct lock_contention *con)
- 		if (!st->wait_time_total)
- 			continue;
- 
-+		if (aggr_mode == LOCK_AGGR_CALLER && !list_empty(&callstack_filters)) {
-+			struct map *kmap;
-+			struct symbol *sym;
-+			u64 ip;
-+
-+			for (int i = 0; i < max_stack_depth; i++) {
-+				struct callstack_filter *filter;
-+
-+				if (!st->callstack || !st->callstack[i])
-+					break;
-+
-+				ip = st->callstack[i];
-+				sym = machine__find_kernel_symbol(con->machine, ip, &kmap);
-+				if (sym == NULL)
-+					continue;
-+
-+				list_for_each_entry(filter, &callstack_filters, list) {
-+					if (strstr(sym->name, filter->name))
-+						goto found;
-+				}
-+			}
-+			continue;
-+		}
-+
-+found:
- 		list_for_each_entry(key, &lock_keys, list) {
- 			key->print(key, st);
- 			pr_info(" ");
-@@ -1743,6 +1779,7 @@ static int __cmd_contention(int argc, const char **argv)
- 		.max_stack = max_stack_depth,
- 		.stack_skip = stack_skip,
- 		.filters = &filters,
-+		.save_callstack = needs_callstack(),
- 	};
- 
- 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
-@@ -2123,6 +2160,33 @@ static int parse_lock_addr(const struct option *opt __maybe_unused, const char *
- 	return ret;
- }
- 
-+static int parse_call_stack(const struct option *opt __maybe_unused, const char *str,
-+			   int unset __maybe_unused)
-+{
-+	char *s, *tmp, *tok;
-+	int ret = 0;
-+
-+	s = strdup(str);
-+	if (s == NULL)
-+		return -1;
-+
-+	for (tok = strtok_r(s, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
-+		struct callstack_filter *entry;
-+
-+		entry = malloc(sizeof(*entry) + strlen(tok) + 1);
-+		if (entry == NULL) {
-+			pr_err("Memory allocation failure\n");
-+			return -1;
-+		}
-+
-+		strcpy(entry->name, tok);
-+		list_add_tail(&entry->list, &callstack_filters);
-+	}
-+
-+	free(s);
-+	return ret;
-+}
-+
- int cmd_lock(int argc, const char **argv)
- {
- 	const struct option lock_options[] = {
-@@ -2190,6 +2254,8 @@ int cmd_lock(int argc, const char **argv)
- 		     "Filter specific type of locks", parse_lock_type),
- 	OPT_CALLBACK('L', "lock-filter", NULL, "ADDRS/NAMES",
- 		     "Filter specific address/symbol of locks", parse_lock_addr),
-+	OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
-+		     "Filter specific function in the callstack", parse_call_stack),
- 	OPT_PARENT(lock_options)
- 	};
- 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 0236334fd69b..4902ac331f41 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -268,7 +268,7 @@ int lock_contention_read(struct lock_contention *con)
- 			break;
- 		}
- 
--		if (verbose > 0) {
-+		if (con->save_callstack) {
- 			st->callstack = memdup(stack_trace, stack_size);
- 			if (st->callstack == NULL)
- 				break;
-diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-index b99e83fccf5c..17e594d57a61 100644
---- a/tools/perf/util/lock-contention.h
-+++ b/tools/perf/util/lock-contention.h
-@@ -128,6 +128,7 @@ struct lock_contention {
- 	int max_stack;
- 	int stack_skip;
- 	int aggr_mode;
-+	bool save_callstack;
- };
- 
- #ifdef HAVE_BPF_SKEL
--- 
-2.39.1.456.gfc5497dd1b-goog
-
+> ---
+> * rename to 'should_skip_zero_counter'
+> * check pmu->cpus instead
+> * add kernel-doc style comments
+> * add Ian's Tested-by tag
+>
+>  tools/perf/util/stat-display.c | 51 ++++++++++++++++++++++++++++++----
+>  1 file changed, 46 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 8bd8b0142630..1b5cb20efd23 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -787,6 +787,51 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
+>                 uniquify_event_name(counter);
+>  }
+>
+> +/**
+> + * should_skip_zero_count() - Check if the event should print 0 values.
+> + * @config: The perf stat configuration (including aggregation mode).
+> + * @counter: The evsel with its associated cpumap.
+> + * @id: The aggregation id that is being queried.
+> + *
+> + * Due to mismatch between the event cpumap or thread-map and the
+> + * aggregation mode, sometimes it'd iterate the counter with the map
+> + * which does not contain any values.
+> + *
+> + * For example, uncore events have dedicated CPUs to manage them,
+> + * result for other CPUs should be zero and skipped.
+> + *
+> + * Return: %true if the value should NOT be printed, %false if the value
+> + * needs to be printed like "<not counted>" or "<not supported>".
+> + */
+> +static bool should_skip_zero_counter(struct perf_stat_config *config,
+> +                                    struct evsel *counter,
+> +                                    const struct aggr_cpu_id *id)
+> +{
+> +       struct perf_cpu cpu;
+> +       int idx;
+> +
+> +       /*
+> +        * Skip value 0 when enabling --per-thread globally,
+> +        * otherwise it will have too many 0 output.
+> +        */
+> +       if (config->aggr_mode == AGGR_THREAD && config->system_wide)
+> +               return true;
+> +       /*
+> +        * Skip value 0 when it's an uncore event and the given aggr id
+> +        * does not belong to the PMU cpumask.
+> +        */
+> +       if (!counter->pmu || !counter->pmu->is_uncore)
+> +               return false;
+> +
+> +       perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
+> +               struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
+> +
+> +               if (aggr_cpu_id__equal(id, &own_id))
+> +                       return false;
+> +       }
+> +       return true;
+> +}
+> +
+>  static void print_counter_aggrdata(struct perf_stat_config *config,
+>                                    struct evsel *counter, int s,
+>                                    struct outstate *os)
+> @@ -814,11 +859,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+>         ena = aggr->counts.ena;
+>         run = aggr->counts.run;
+>
+> -       /*
+> -        * Skip value 0 when enabling --per-thread globally, otherwise it will
+> -        * have too many 0 output.
+> -        */
+> -       if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
+> +       if (val == 0 && should_skip_zero_counter(config, counter, &id))
+>                 return;
+>
+>         if (!metric_only) {
+> --
+> 2.39.1.456.gfc5497dd1b-goog
+>
