@@ -2,90 +2,210 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBFFC38142
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 15:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA161C38142
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 16:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233732AbjA0Pey (ORCPT
+        id S234883AbjA0QYq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Jan 2023 10:34:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32826 "EHLO
+        Fri, 27 Jan 2023 11:24:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234608AbjA0Pex (ORCPT
+        with ESMTP id S234913AbjA0QYj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Jan 2023 10:34:53 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C49C80003;
-        Fri, 27 Jan 2023 07:34:52 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FB132B;
-        Fri, 27 Jan 2023 07:35:34 -0800 (PST)
-Received: from [10.57.48.133] (unknown [10.57.48.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94B4B3F64C;
-        Fri, 27 Jan 2023 07:34:50 -0800 (PST)
-Message-ID: <a1f864b8-d0c1-79d9-f976-64ebec9f3714@arm.com>
-Date:   Fri, 27 Jan 2023 15:34:49 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 3/4] perf session: Avoid calling lseek(2) for pipe
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Stephane Eranian <eranian@google.com>,
+        Fri, 27 Jan 2023 11:24:39 -0500
+Received: from mail-ed1-x549.google.com (mail-ed1-x549.google.com [IPv6:2a00:1450:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA7086268
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jan 2023 08:24:32 -0800 (PST)
+Received: by mail-ed1-x549.google.com with SMTP id q20-20020a056402519400b0049e5b8c71b3so3883825edd.17
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Jan 2023 08:24:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+ZA1LVGRnTSLVUFMxUOcf61woTjOoeoiKjydCG1Ukv0=;
+        b=fYvcrw82fbpBOjdM7Tufn3QIumdGltcGOVcJOL3P91Mb+xN6AWlMaU0wegl4Bp5KLz
+         oNHmAmw9YROlzBPiV0oWvxpRdsFJcDiqZ7aSNfalpbRwE0u7DdLVObfFpbFnn2ofMWSZ
+         dn48cTiy+XGJ1NtCdRitiY7fn40MvVkGGeg+HdRJvaxsy1nKpxfFjKR+73oBXa+uENDb
+         ninwsim5zsfTBvw+FSH4bUOiwB32kJknPOY3XrWX6tGbwgDQlPNsCfNi8C5fU4tsQn0A
+         lu9VjPCECckHi2eIpzFGrrg+7W32eKTyjhD0TsX0d5tXIrnuh2a9yftLUCIgSPMKhYqV
+         mYGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+ZA1LVGRnTSLVUFMxUOcf61woTjOoeoiKjydCG1Ukv0=;
+        b=zSogaObG4fC4UNoFnISjJ6LhOjiFbHa4rtVBA6MV4VIcRM+lpkjvshtDmzOB2L0pZq
+         ogQFt5bd/4G8q2igVh9C3a70yaUXAlgYPlh30YMdW/2LwJoW0hk4l8sml85R4S0RBJqO
+         viEJ2B47cHuwNw1edv6QbDT70lJpv2gLgqBiEkH2jEn9pgnHsknV4aqYcwPI1/tQkwnZ
+         5exhF3Hrdy1GXW7TM/jSM9ofmq0HukwDu83GA2OZ4296FfvzJlCTqB3r34l1mHoc/jrC
+         NRC6Gq9qMFKOSI2QP9T9ZpdkWWTZ49BXHjzYfR781RGJ3JFKlAAIEaOehSQNlPJr2Kvm
+         JE+w==
+X-Gm-Message-State: AO0yUKU97AAM96Ofu4IkpeKvFtWs8PX3vfQ436EDYkiBmFa1MYwWOK9L
+        c5gm9x9RcYzrv776RoaU8nggcx5MVQ==
+X-Google-Smtp-Source: AK7set8YHy438BZhhkjF7XYU2ntCzTZyFaOVgFf6XEuswyclRtH3xR47q+7qczMrGZHXmH37zPgtdrEU5g==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:19a:e00e:4f5d:59d8])
+ (user=elver job=sendgmr) by 2002:a05:6402:b63:b0:4a0:e4bd:6ea4 with SMTP id
+ cb3-20020a0564020b6300b004a0e4bd6ea4mr1477810edb.35.1674836671255; Fri, 27
+ Jan 2023 08:24:31 -0800 (PST)
+Date:   Fri, 27 Jan 2023 17:24:09 +0100
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+Message-ID: <20230127162409.2505312-1-elver@google.com>
+Subject: [PATCH v2] perf: Allow restricted kernel breakpoints on user addresses
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-References: <20230127001951.3432374-1-namhyung@kernel.org>
- <20230127001951.3432374-4-namhyung@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230127001951.3432374-4-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrey Konovalov <andreyknvl@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Allow the creation of restricted breakpoint perf events that also fire
+in the kernel (perf_event_attr::exclude_kernel=0), if:
 
+  1. No sample information is requested; samples may contain IPs,
+     registers, or other information that may disclose kernel addresses.
 
-On 27/01/2023 00:19, Namhyung Kim wrote:
-> We should not call lseek(2) for pipes as it won't work.  And we already
-> in the proper place to read the data for AUXTRACE.  Add the comment like
-> in the PERF_RECORD_HEADER_TRACING_DATA.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/session.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 7c021c6cedb9..fdfe772f2699 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1699,8 +1699,13 @@ static s64 perf_session__process_user_event(struct perf_session *session,
->  	case PERF_RECORD_AUXTRACE_INFO:
->  		return tool->auxtrace_info(session, event);
->  	case PERF_RECORD_AUXTRACE:
-> -		/* setup for reading amidst mmap */
-> -		lseek(fd, file_offset + event->header.size, SEEK_SET);
-> +		/*
-> +		 * Setup for reading amidst mmap, but only when we
-> +		 * are in 'file' mode.  The 'pipe' fd is in proper
-> +		 * place already.
-> +		 */
-> +		if (!perf_data__is_pipe(session->data))
-> +			lseek(fd, file_offset + event->header.size, SEEK_SET);
+  2. The breakpoint (viz. data watchpoint) is on a user address.
 
-I'm not sure if it means anything, but Arm SPE works both with and
-without this change, although I did have to skip the build-id inject part:
+The rules constrain the allowable perf events such that no sensitive
+kernel information can be disclosed.
 
-  perf record -o- -e arm_spe// stress -c 1 -t 1 | \
-    perf report -i- --itrace=i1000
+Despite no explicit kernel information disclosure, the following
+questions may need answers:
 
+ 1. Q: Is obtaining information that the kernel accessed a particular
+    user's known memory location revealing new information?
 
->  		return tool->auxtrace(session, event);
->  	case PERF_RECORD_AUXTRACE_ERROR:
->  		perf_session__auxtrace_error_inc(session, event);
+    A: Given the kernel's user space ABI, there should be no "surprise
+    accesses" to user space memory in the first place.
+
+ 2. Q: Does causing breakpoints on user memory accesses by the kernel
+    potentially impact timing in a sensitive way?
+
+    A: Since hardware breakpoints trigger regardless of the state of
+    perf_event_attr::exclude_kernel, but are filtered in the perf
+    subsystem, this possibility already exists independent of the
+    proposed change.
+
+Motivation:  Data breakpoints on user addresses that also fire in the
+kernel provide complete coverage to track and debug accesses, not just
+in user space but also through the kernel. For example, tracking where
+user space invokes syscalls with pointers to specific memory.
+
+Breakpoints can be used for more complex dynamic analysis, such as race
+detection, memory-safety error detection, or data-flow analysis. Larger
+deployment by linking such dynamic analysis into binaries in production
+only becomes possible when no additional capabilities are required by
+unprivileged users. To improve coverage, it should then also be possible
+to enable breakpoints on user addresses that fire in the kernel with no
+additional capabilities.
+
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+
+Changelog
+~~~~~~~~~
+
+v2:
+* Commit message (motivation, more explanation).
+* Apply ack.
+
+v1: https://lkml.kernel.org/r/20220902100057.404817-1-elver@google.com
+* Rebase.
+
+RFC: https://lkml.kernel.org/r/20220601093502.364142-1-elver@google.com
+---
+ include/linux/perf_event.h |  8 +-------
+ kernel/events/core.c       | 38 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index c6a3bac76966..a95a6b889b00 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1463,13 +1463,7 @@ static inline int perf_is_paranoid(void)
+ 	return sysctl_perf_event_paranoid > -1;
+ }
+ 
+-static inline int perf_allow_kernel(struct perf_event_attr *attr)
+-{
+-	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+-		return -EACCES;
+-
+-	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+-}
++extern int perf_allow_kernel(struct perf_event_attr *attr);
+ 
+ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ {
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index d56328e5080e..0f1fc9aef294 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3174,6 +3174,12 @@ static int perf_event_modify_attr(struct perf_event *event,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (!event->attr.exclude_kernel) {
++		err = perf_allow_kernel(attr);
++		if (err)
++			return err;
++	}
++
+ 	WARN_ON_ONCE(event->ctx->parent_ctx);
+ 
+ 	mutex_lock(&event->child_mutex);
+@@ -12289,6 +12295,38 @@ perf_check_permission(struct perf_event_attr *attr, struct task_struct *task)
+ 	return is_capable || ptrace_may_access(task, ptrace_mode);
+ }
+ 
++/*
++ * Check if unprivileged users are allowed to set up breakpoints on user
++ * addresses that also count when the kernel accesses them.
++ */
++static bool perf_allow_kernel_breakpoint(struct perf_event_attr *attr)
++{
++	if (attr->type != PERF_TYPE_BREAKPOINT)
++		return false;
++
++	/*
++	 * The sample may contain IPs, registers, or other information that may
++	 * disclose kernel addresses or timing information. Disallow any kind of
++	 * additional sample information.
++	 */
++	if (attr->sample_type)
++		return false;
++
++	/*
++	 * Only allow kernel breakpoints on user addresses.
++	 */
++	return access_ok((void __user *)(unsigned long)attr->bp_addr, attr->bp_len);
++}
++
++int perf_allow_kernel(struct perf_event_attr *attr)
++{
++	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable() &&
++	    !perf_allow_kernel_breakpoint(attr))
++		return -EACCES;
++
++	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
++}
++
+ /**
+  * sys_perf_event_open - open a performance event, associate it to a task/cpu
+  *
+-- 
+2.39.1.456.gfc5497dd1b-goog
+
