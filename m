@@ -2,134 +2,263 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B941C38142
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 07:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E4AC38142
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 12:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232141AbjA0HWf (ORCPT
+        id S233973AbjA0M1r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Jan 2023 02:22:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
+        Fri, 27 Jan 2023 07:27:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230225AbjA0HWe (ORCPT
+        with ESMTP id S233512AbjA0M1a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Jan 2023 02:22:34 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E740E4F86D;
-        Thu, 26 Jan 2023 23:22:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674804153; x=1706340153;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1eorRSMffSeomkyqosY3JnKoG42HN4ninV9IzSPav20=;
-  b=DAojCyNvxxGMKi05I4V+C9MkGcc3VT9a3KX7C6WvYbublM3zXzzqoLGW
-   F+LrD7NSB+tm5uHoGZwafXDmTB88cJqRwVm5lT6oXe1yGuny29cOT4QFP
-   YKTLe8iTcYZ3fgaJqhKq2kvPlZ5lA8FLodSilJaeQRBpB1fCUgRBXsy6R
-   PigZ2GaVQisBP9mAGm/OU+ifS4Gpw04HSFyUP13OEMVHDqoCqCB3my6Sr
-   /z8lBiag/j3DOuEZIxJafjA1lBXMsml2UcgN7Amnc9h9/WShE8DRGr/1e
-   tPtcrUwuHYPJrcKSD6llG8WKeLOVJ9/ulBaNk0GIDn1w2pi9DlQR4DqDF
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="324728461"
-X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
-   d="scan'208";a="324728461"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 23:22:19 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="726602682"
-X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
-   d="scan'208";a="726602682"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.171])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 23:22:16 -0800
-Message-ID: <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
-Date:   Fri, 27 Jan 2023 09:22:07 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.7.1
-Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Fri, 27 Jan 2023 07:27:30 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C6F7EFEF;
+        Fri, 27 Jan 2023 04:26:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 49606CE2873;
+        Fri, 27 Jan 2023 12:26:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F046C433EF;
+        Fri, 27 Jan 2023 12:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674822366;
+        bh=iakeOrzI/W8rfMPsrOF2YoP11AIuovtuYrPuqj0PvAg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ATs/GnBb/0aQEDen1l3xPzAaoG30eoC8QNJ9+GqELRyxNT6PJ7BVmL1SlZBOx40xn
+         RMbwcroJXeq4VzOhKRjYUF7kTQAIJsw9CTl0MCFT+FJ3ezUf5eAXn5RjP/S9G18cqT
+         ulwFSwsXU1yYncFJQB0qGzq5/rz1h41UrTIWDkX5uxcYoTTvUIBBFQTLrJPAt9OuFp
+         AYTeUJFYuVEIglUjWwCjMCz0IqPWFo08qpURgcx8U8k/iLjQ7Vk4op0VL30wOgvVGX
+         IhIafcpzI9U2QZ6qH5cPC6FYFLoq3zyH8583+tX5599Va1inGXv9iXgG+HK+qvb/OO
+         5fG2w2CAeI5sA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1BE0B405BE; Fri, 27 Jan 2023 09:26:03 -0300 (-03)
+Date:   Fri, 27 Jan 2023 09:26:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Michael Petlan <mpetlan@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
+        qzhao@redhat.com, cjense@google.com,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20230127001951.3432374-1-namhyung@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230127001951.3432374-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 2/2] perf test: Fix JSON format linter test checks
+Message-ID: <Y9PC2+Yqh3W8wyNU@kernel.org>
+References: <20230120134039.17788-1-mpetlan@redhat.com>
+ <20230120134039.17788-3-mpetlan@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230120134039.17788-3-mpetlan@redhat.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 27/01/23 02:19, Namhyung Kim wrote:
-> Hello,
+Em Fri, Jan 20, 2023 at 02:40:39PM +0100, Michael Petlan escreveu:
+> The test fails on CPUs with topdown metrics, where it is common to print
+> two metrics per line. Since these are included in default event set for
+> `perf stat -- something`, it causes the "no args" subtest to fail due to
+> unexpected member count. We need to accept 7 or 9 members in that case.
 > 
-> I found some problems in Intel-PT and auxtrace in general with pipe.
-> In the past it used to work with pipe, but recent code fails.
+> Coming to that, counting commas in the JSON line and consider it a number
+> of elements is incorrect and misleading. There should be +1 element than
+> the count of commas, while also, commas can potentially appear in the
+> event names. Count " : " substrings rather, since these better fit to
+> what should be actually counted.
 
-Pipe mode is a problem for Intel PT and possibly other auxtrace users.
-Essentially the auxtrace buffers do not behave like the regular perf
-event buffers.  That is because the head and tail are updated by
-software, but in the auxtrace case the data is written by hardware.
-So the head and tail do not get updated as data is written.  In the
-Intel PT case, the head and tail are updated only when the trace is
-disabled by software, for example:
-    - full-trace, system wide : when buffer passes watermark
-    - full-trace, not system-wide : when buffer passes watermark or
-    context switches
-    - snapshot mode : as above but also when a snapshot is made
-    - sample mode : as above but also when a sample is made
+Before I apply this first patch I can run, as root, the 'perf test' JSON
+lint 100 times without problems:
 
-That means finished-round ordering doesn't work.  An auxtrace buffer
-can turn up that has data that extends back in time, possibly to the
-very beginning of tracing.
+[root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
+1 98: perf stat JSON output linter                                    : Ok
+2 98: perf stat JSON output linter                                    : Ok
+3 98: perf stat JSON output linter                                    : Ok
+4 98: perf stat JSON output linter                                    : Ok
+<SNIP>
+96 98: perf stat JSON output linter                                    : Ok
+97 98: perf stat JSON output linter                                    : Ok
+98 98: perf stat JSON output linter                                    : Ok
+99 98: perf stat JSON output linter                                    : Ok
+100 98: perf stat JSON output linter                                    : Ok
+[root@quaco ~]#
 
-For a perf.data file, that problem is solved by going through the trace
-and queuing up the auxtrace buffers in advance.
+After applying it it fails seemingly randomly, I'll remove both patches
+from my tmp.perf/core branch and investigate.
 
-For pipe mode, the order of events and timestamps can presumably
-be messed up.
+[acme@quaco perf]$ git log --oneline -1
+fdafd42aac3629db (HEAD) perf stat: Fix JSON metric printout for multiple metrics per line
+[acme@quaco perf]$ perf -v
+perf version 6.2.rc5.gfdafd42aac36
+[acme@quaco perf]$
+[root@quaco ~]# perf -v
+perf version 6.2.rc5.gfdafd42aac36
+[root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
+[root@quaco ~]# perf -v
+perf version 6.2.rc5.gfdafd42aac36
+[root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
+1 98: perf stat JSON output linter                                    : Ok
+2 98: perf stat JSON output linter                                    : Ok
+3 98: perf stat JSON output linter                                    : FAILED!
+4 98: perf stat JSON output linter                                    : Ok
+5 98: perf stat JSON output linter                                    : Ok
+6 98: perf stat JSON output linter                                    : Ok
+7 98: perf stat JSON output linter                                    : FAILED!
+8 98: perf stat JSON output linter                                    : Ok
+9 98: perf stat JSON output linter                                    : Ok
+10 98: perf stat JSON output linter                                    : Ok
+11 98: perf stat JSON output linter                                    : Ok
+12 98: perf stat JSON output linter                                    : Ok
+13 98: perf stat JSON output linter                                    : Ok
+14 98: perf stat JSON output linter                                    : Ok
+15 98: perf stat JSON output linter                                    : Ok
+16 98: perf stat JSON output linter                                    : FAILED!
+17 98: perf stat JSON output linter                                    : Ok
+18 98: perf stat JSON output linter                                    : Ok
+19 98: perf stat JSON output linter                                    : Ok
+20 98: perf stat JSON output linter                                    : FAILED!
+21 98: perf stat JSON output linter                                    : Ok
+22 98: perf stat JSON output linter                                    : Ok
+23 98: perf stat JSON output linter                                    : FAILED!
+24 98: perf stat JSON output linter                                    : Ok
+25 98: perf stat JSON output linter                                    : Ok
+26 98: perf stat JSON output linter                                    : Ok
+27 98: perf stat JSON output linter                                    : Ok
+28 98: perf stat JSON output linter                                    : FAILED!
+29 98: perf stat JSON output linter                                    : Ok
+30 98: perf stat JSON output linter                                    : Ok
+31 98: perf stat JSON output linter                                    : FAILED!
+32 98: perf stat JSON output linter                                    : FAILED!
+33 98: perf stat JSON output linter                                    : FAILED!
+34 98: perf stat JSON output linter                                    : Ok
+35 98: perf stat JSON output linter                                    : Ok
+36 98: perf stat JSON output linter                                    : Ok
+37 98: perf stat JSON output linter                                    : Ok
+38 98: perf stat JSON output linter                                    : FAILED!
+39 98: perf stat JSON output linter                                    : FAILED!
+40 98: perf stat JSON output linter                                    : FAILED!
+41 98: perf stat JSON output linter                                    : Ok
+42 98: perf stat JSON output linter                                    : Ok
+43 98: perf stat JSON output linter                                    : Ok
+44 98: perf stat JSON output linter                                    : Ok
+45 98: perf stat JSON output linter                                    : Ok
+46 98: perf stat JSON output linter                                    : FAILED!
+47 98: perf stat JSON output linter                                    : Ok
+48 98: perf stat JSON output linter                                    : FAILED!
+49 98: perf stat JSON output linter                                    : FAILED!
+50 98: perf stat JSON output linter                                    : FAILED!
+51 98: perf stat JSON output linter                                    : FAILED!
+52 98: perf stat JSON output linter                                    : Ok
+53 98: perf stat JSON output linter                                    : FAILED!
+54 98: perf stat JSON output linter                                    : Ok
+55 98: perf stat JSON output linter                                    : Ok
+56 98: perf stat JSON output linter                                    : FAILED!
+57 98: perf stat JSON output linter                                    : Ok
+58 98: perf stat JSON output linter                                    : Ok
+59 98: perf stat JSON output linter                                    : FAILED!
+60 98: perf stat JSON output linter                                    : Ok
+61 98: perf stat JSON output linter                                    : FAILED!
+62 98: perf stat JSON output linter                                    : Ok
+63 98: perf stat JSON output linter                                    : Ok
+64 98: perf stat JSON output linter                                    : Ok
+65 98: perf stat JSON output linter                                    : Ok
+66 98: perf stat JSON output linter                                    : Ok
+67 98: perf stat JSON output linter                                    : Ok
+68 98: perf stat JSON output linter                                    : Ok
+69 98: perf stat JSON output linter                                    : Ok
+70 98: perf stat JSON output linter                                    : Ok
+71 98: perf stat JSON output linter                                    : FAILED!
+72 98: perf stat JSON output linter                                    : FAILED!
+73 98: perf stat JSON output linter                                    : Ok
+74 98: perf stat JSON output linter                                    : FAILED!
+75 98: perf stat JSON output linter                                    : Ok
+76 98: perf stat JSON output linter                                    : FAILED!
+77 98: perf stat JSON output linter                                    : Ok
+78 98: perf stat JSON output linter                                    : FAILED!
+79 98: perf stat JSON output linter                                    : FAILED!
+80 98: perf stat JSON output linter                                    : FAILED!
+81 98: perf stat JSON output linter                                    : Ok
+82 98: perf stat JSON output linter                                    : FAILED!
+83 98: perf stat JSON output linter                                    : FAILED!
+84 98: perf stat JSON output linter                                    : Ok
+85 98: perf stat JSON output linter                                    : Ok
+86 98: perf stat JSON output linter                                    : Ok
+87 98: perf stat JSON output linter                                    : FAILED!
+88 98: perf stat JSON output linter                                    : FAILED!
+89 98: perf stat JSON output linter                                    : Ok
+90 98: perf stat JSON output linter                                    : FAILED!
+91 98: perf stat JSON output linter                                    : FAILED!
+92 98: perf stat JSON output linter                                    : Ok
+93 98: perf stat JSON output linter                                    : FAILED!
+94 98: perf stat JSON output linter                                    : FAILED!
+95 98: perf stat JSON output linter                                    : FAILED!
+96 98: perf stat JSON output linter                                    : FAILED!
+97 98: perf stat JSON output linter                                    : FAILED!
+98 98: perf stat JSON output linter                                    : Ok
+99 98: perf stat JSON output linter                                    : Ok
+100 98: perf stat JSON output linter                                    : FAILED!
+[root@quaco ~]#
 
-For Intel PT, it is a bit of a surprise that there is not 
-validation to error out in pipe mode.
+ 
+> Fixes: 0c343af2a2f8 ("perf test: JSON format checking")
+> 
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> ---
+>  .../tests/shell/lib/perf_json_output_lint.py     | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> index d90f8d102eb9..4f1bbb3f07ec 100644
+> --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> @@ -40,17 +40,17 @@ def is_counter_value(num):
+>    return isfloat(num) or num == '<not counted>' or num == '<not supported>'
+>  
+>  def check_json_output(expected_items):
+> -  if expected_items != -1:
+> +  if expected_items:
+>      for line in Lines:
+>        if 'failed' not in line:
+>          count = 0
+> -        count = line.count(',')
+> -        if count != expected_items and count >= 1 and count <= 3 and 'metric-value' in line:
+> +        count = line.count(' : ')
+> +        if count not in expected_items and count >= 2 and count <= 4 and 'metric-value' in line:
+>            # Events that generate >1 metric may have isolated metric
+>            # values and possibly other prefixes like interval, core and
+>            # aggregate-number.
+>            continue
+> -        if count != expected_items:
+> +        if count not in expected_items:
+>            raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
+>                               f' in \'{line}\'')
+>    checks = {
+> @@ -82,14 +82,14 @@ def check_json_output(expected_items):
+>  
+>  try:
+>    if args.no_args or args.system_wide or args.event:
+> -    expected_items = 6
+> +    expected_items = [7, 9]
+>    elif args.interval or args.per_thread or args.system_wide_no_aggr:
+> -    expected_items = 7
+> +    expected_items = [8, 10]
+>    elif args.per_core or args.per_socket or args.per_node or args.per_die:
+> -    expected_items = 8
+> +    expected_items = [9, 11]
+>    else:
+>      # If no option is specified, don't check the number of items.
+> -    expected_items = -1
+> +    expected_items = []
+>    check_json_output(expected_items)
+>  except:
+>    print('Test failed for input:\n' + '\n'.join(Lines))
+> -- 
+> 2.18.4
+> 
 
-At the least, a warning is needed, and the above explanation needs
-to be added to the documentation.
+-- 
 
->                                                                As it
-> also touches the generic code, other auxtrace users like ARM SPE will
-> be affected too.  I added a test case to verify it works with pipes.
-> 
-> At last, I can run this command without a problem.
-> 
->   $ perf record -o- -e intel_pt// true | perf inject -b | perf report -i- --itrace=i1000
-> 
-> The code is available at 'perf/auxtrace-pipe-v1' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> 
-> Thanks,
-> Namhyung
-> 
-> Namhyung Kim (4):
->   perf inject: Use perf_data__read() for auxtrace
->   perf intel-pt: Do not try to queue auxtrace data on pipe
->   perf session: Avoid calling lseek(2) for pipe
->   perf test: Add pipe mode test to the Intel PT test suite
-> 
->  tools/perf/builtin-inject.c             |  6 +++---
->  tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
->  tools/perf/util/auxtrace.c              |  3 +++
->  tools/perf/util/session.c               |  9 +++++++--
->  4 files changed, 30 insertions(+), 5 deletions(-)
-> 
-> 
-> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
-> prerequisite-patch-id: 4ccdf9c974a3909075051f4ffe498faecab7567b
-
+- Arnaldo
