@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E4AC38142
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 12:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2719EC54EAA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 12:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233973AbjA0M1r (ORCPT
+        id S230044AbjA0MaL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Jan 2023 07:27:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35182 "EHLO
+        Fri, 27 Jan 2023 07:30:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233512AbjA0M1a (ORCPT
+        with ESMTP id S231910AbjA0MaK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Jan 2023 07:27:30 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C6F7EFEF;
-        Fri, 27 Jan 2023 04:26:13 -0800 (PST)
+        Fri, 27 Jan 2023 07:30:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CC2EF;
+        Fri, 27 Jan 2023 04:30:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 49606CE2873;
-        Fri, 27 Jan 2023 12:26:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F046C433EF;
-        Fri, 27 Jan 2023 12:26:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7B88CB82050;
+        Fri, 27 Jan 2023 12:30:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2078C433D2;
+        Fri, 27 Jan 2023 12:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674822366;
-        bh=iakeOrzI/W8rfMPsrOF2YoP11AIuovtuYrPuqj0PvAg=;
+        s=k20201202; t=1674822604;
+        bh=vH2S3QTL88n8UkKlzXAG+HLWuxF+TDSqv4WGt7x7NKY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ATs/GnBb/0aQEDen1l3xPzAaoG30eoC8QNJ9+GqELRyxNT6PJ7BVmL1SlZBOx40xn
-         RMbwcroJXeq4VzOhKRjYUF7kTQAIJsw9CTl0MCFT+FJ3ezUf5eAXn5RjP/S9G18cqT
-         ulwFSwsXU1yYncFJQB0qGzq5/rz1h41UrTIWDkX5uxcYoTTvUIBBFQTLrJPAt9OuFp
-         AYTeUJFYuVEIglUjWwCjMCz0IqPWFo08qpURgcx8U8k/iLjQ7Vk4op0VL30wOgvVGX
-         IhIafcpzI9U2QZ6qH5cPC6FYFLoq3zyH8583+tX5599Va1inGXv9iXgG+HK+qvb/OO
-         5fG2w2CAeI5sA==
+        b=PdeoVrfTGv8Z2UEsUYqY5j2xlNjlukeIpc6w73uHkA8HWvJsbSV9jozKLUZdzR+b+
+         oxm0ZkMa1phas/Z4CAG1ez4LyXrRvzZHoCimyWp+PbsBFjL6GOE7GEk3I538ahyKuI
+         SrJ5stOb7faFgEJ6XhK/H1FQJRPUr5y61due82yOV1htLYsh07UYlj3mFkaIt8VLfe
+         NKhHK3c/bs38YIIAObak4fxQohu3oWpG3IUT04gAVHzbojZM4CV8Z/FsntTGgCEEzo
+         b/V090NvLJkj2JaUevNWVXl5/8NrZq+7Ohonq86K4LjfTyVjlstEWLMiK/dn81OHqN
+         CF5MtkWZ9a4FQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1BE0B405BE; Fri, 27 Jan 2023 09:26:03 -0300 (-03)
-Date:   Fri, 27 Jan 2023 09:26:03 -0300
+        id 1A409405BE; Fri, 27 Jan 2023 09:30:01 -0300 (-03)
+Date:   Fri, 27 Jan 2023 09:30:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Michael Petlan <mpetlan@redhat.com>
 Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
@@ -46,219 +46,180 @@ Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>
 Subject: Re: [PATCH 2/2] perf test: Fix JSON format linter test checks
-Message-ID: <Y9PC2+Yqh3W8wyNU@kernel.org>
+Message-ID: <Y9PDycrODMfeUSA2@kernel.org>
 References: <20230120134039.17788-1-mpetlan@redhat.com>
  <20230120134039.17788-3-mpetlan@redhat.com>
+ <Y9PC2+Yqh3W8wyNU@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230120134039.17788-3-mpetlan@redhat.com>
+In-Reply-To: <Y9PC2+Yqh3W8wyNU@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 20, 2023 at 02:40:39PM +0100, Michael Petlan escreveu:
-> The test fails on CPUs with topdown metrics, where it is common to print
-> two metrics per line. Since these are included in default event set for
-> `perf stat -- something`, it causes the "no args" subtest to fail due to
-> unexpected member count. We need to accept 7 or 9 members in that case.
+Em Fri, Jan 27, 2023 at 09:26:03AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Jan 20, 2023 at 02:40:39PM +0100, Michael Petlan escreveu:
+> > The test fails on CPUs with topdown metrics, where it is common to print
+> > two metrics per line. Since these are included in default event set for
+> > `perf stat -- something`, it causes the "no args" subtest to fail due to
+> > unexpected member count. We need to accept 7 or 9 members in that case.
+> > 
+> > Coming to that, counting commas in the JSON line and consider it a number
+> > of elements is incorrect and misleading. There should be +1 element than
+> > the count of commas, while also, commas can potentially appear in the
+> > event names. Count " : " substrings rather, since these better fit to
+> > what should be actually counted.
 > 
-> Coming to that, counting commas in the JSON line and consider it a number
-> of elements is incorrect and misleading. There should be +1 element than
-> the count of commas, while also, commas can potentially appear in the
-> event names. Count " : " substrings rather, since these better fit to
-> what should be actually counted.
+> Before I apply this first patch I can run, as root, the 'perf test' JSON
+> lint 100 times without problems:
+> 
+> [root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
+> 1 98: perf stat JSON output linter                                    : Ok
+> 2 98: perf stat JSON output linter                                    : Ok
+> 3 98: perf stat JSON output linter                                    : Ok
+> 4 98: perf stat JSON output linter                                    : Ok
+> <SNIP>
+> 96 98: perf stat JSON output linter                                    : Ok
+> 97 98: perf stat JSON output linter                                    : Ok
+> 98 98: perf stat JSON output linter                                    : Ok
+> 99 98: perf stat JSON output linter                                    : Ok
+> 100 98: perf stat JSON output linter                                    : Ok
+> [root@quaco ~]#
+> 
+> After applying it it fails seemingly randomly, I'll remove both patches
+> from my tmp.perf/core branch and investigate.
+> 
+> [acme@quaco perf]$ git log --oneline -1
+> fdafd42aac3629db (HEAD) perf stat: Fix JSON metric printout for multiple metrics per line
+> [acme@quaco perf]$ perf -v
+> perf version 6.2.rc5.gfdafd42aac36
+> [acme@quaco perf]$
+> [root@quaco ~]# perf -v
+> perf version 6.2.rc5.gfdafd42aac36
+> [root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
+> [root@quaco ~]# perf -v
+> perf version 6.2.rc5.gfdafd42aac36
+> [root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
+> 1 98: perf stat JSON output linter                                    : Ok
+> 2 98: perf stat JSON output linter                                    : Ok
+> 3 98: perf stat JSON output linter                                    : FAILED!
+> 4 98: perf stat JSON output linter                                    : Ok
 
-Before I apply this first patch I can run, as root, the 'perf test' JSON
-lint 100 times without problems:
-
-[root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
-1 98: perf stat JSON output linter                                    : Ok
-2 98: perf stat JSON output linter                                    : Ok
-3 98: perf stat JSON output linter                                    : Ok
-4 98: perf stat JSON output linter                                    : Ok
-<SNIP>
-96 98: perf stat JSON output linter                                    : Ok
-97 98: perf stat JSON output linter                                    : Ok
-98 98: perf stat JSON output linter                                    : Ok
-99 98: perf stat JSON output linter                                    : Ok
-100 98: perf stat JSON output linter                                    : Ok
-[root@quaco ~]#
-
-After applying it it fails seemingly randomly, I'll remove both patches
-from my tmp.perf/core branch and investigate.
+BTW, after applying the second patch, the one for 'perf test', the
+problem persists:
 
 [acme@quaco perf]$ git log --oneline -1
-fdafd42aac3629db (HEAD) perf stat: Fix JSON metric printout for multiple metrics per line
+320cd37176508ec2 (HEAD, acme/tmp.perf/core, acme.korg/tmp.perf/core) perf test: Fix JSON format linter test checks
 [acme@quaco perf]$ perf -v
-perf version 6.2.rc5.gfdafd42aac36
+perf version 6.2.rc5.g320cd3717650
 [acme@quaco perf]$
 [root@quaco ~]# perf -v
-perf version 6.2.rc5.gfdafd42aac36
-[root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
-[root@quaco ~]# perf -v
-perf version 6.2.rc5.gfdafd42aac36
+perf version 6.2.rc5.g320cd3717650
 [root@quaco ~]# for a in $(seq 100) ; do echo -n $a ; perf test 98 ; done
 1 98: perf stat JSON output linter                                    : Ok
-2 98: perf stat JSON output linter                                    : Ok
-3 98: perf stat JSON output linter                                    : FAILED!
+2 98: perf stat JSON output linter                                    : FAILED!
+3 98: perf stat JSON output linter                                    : Ok
 4 98: perf stat JSON output linter                                    : Ok
-5 98: perf stat JSON output linter                                    : Ok
+5 98: perf stat JSON output linter                                    : FAILED!
 6 98: perf stat JSON output linter                                    : Ok
 7 98: perf stat JSON output linter                                    : FAILED!
 8 98: perf stat JSON output linter                                    : Ok
 9 98: perf stat JSON output linter                                    : Ok
-10 98: perf stat JSON output linter                                    : Ok
-11 98: perf stat JSON output linter                                    : Ok
-12 98: perf stat JSON output linter                                    : Ok
+10 98: perf stat JSON output linter                                    : FAILED!
+11 98: perf stat JSON output linter                                    : FAILED!
+12 98: perf stat JSON output linter                                    : FAILED!
 13 98: perf stat JSON output linter                                    : Ok
 14 98: perf stat JSON output linter                                    : Ok
-15 98: perf stat JSON output linter                                    : Ok
+15 98: perf stat JSON output linter                                    : FAILED!
 16 98: perf stat JSON output linter                                    : FAILED!
-17 98: perf stat JSON output linter                                    : Ok
-18 98: perf stat JSON output linter                                    : Ok
-19 98: perf stat JSON output linter                                    : Ok
-20 98: perf stat JSON output linter                                    : FAILED!
-21 98: perf stat JSON output linter                                    : Ok
-22 98: perf stat JSON output linter                                    : Ok
-23 98: perf stat JSON output linter                                    : FAILED!
-24 98: perf stat JSON output linter                                    : Ok
-25 98: perf stat JSON output linter                                    : Ok
-26 98: perf stat JSON output linter                                    : Ok
-27 98: perf stat JSON output linter                                    : Ok
-28 98: perf stat JSON output linter                                    : FAILED!
-29 98: perf stat JSON output linter                                    : Ok
-30 98: perf stat JSON output linter                                    : Ok
-31 98: perf stat JSON output linter                                    : FAILED!
-32 98: perf stat JSON output linter                                    : FAILED!
-33 98: perf stat JSON output linter                                    : FAILED!
-34 98: perf stat JSON output linter                                    : Ok
-35 98: perf stat JSON output linter                                    : Ok
-36 98: perf stat JSON output linter                                    : Ok
-37 98: perf stat JSON output linter                                    : Ok
-38 98: perf stat JSON output linter                                    : FAILED!
-39 98: perf stat JSON output linter                                    : FAILED!
-40 98: perf stat JSON output linter                                    : FAILED!
-41 98: perf stat JSON output linter                                    : Ok
-42 98: perf stat JSON output linter                                    : Ok
-43 98: perf stat JSON output linter                                    : Ok
-44 98: perf stat JSON output linter                                    : Ok
-45 98: perf stat JSON output linter                                    : Ok
-46 98: perf stat JSON output linter                                    : FAILED!
-47 98: perf stat JSON output linter                                    : Ok
-48 98: perf stat JSON output linter                                    : FAILED!
-49 98: perf stat JSON output linter                                    : FAILED!
-50 98: perf stat JSON output linter                                    : FAILED!
-51 98: perf stat JSON output linter                                    : FAILED!
-52 98: perf stat JSON output linter                                    : Ok
-53 98: perf stat JSON output linter                                    : FAILED!
-54 98: perf stat JSON output linter                                    : Ok
-55 98: perf stat JSON output linter                                    : Ok
-56 98: perf stat JSON output linter                                    : FAILED!
-57 98: perf stat JSON output linter                                    : Ok
-58 98: perf stat JSON output linter                                    : Ok
-59 98: perf stat JSON output linter                                    : FAILED!
-60 98: perf stat JSON output linter                                    : Ok
-61 98: perf stat JSON output linter                                    : FAILED!
-62 98: perf stat JSON output linter                                    : Ok
-63 98: perf stat JSON output linter                                    : Ok
-64 98: perf stat JSON output linter                                    : Ok
-65 98: perf stat JSON output linter                                    : Ok
-66 98: perf stat JSON output linter                                    : Ok
-67 98: perf stat JSON output linter                                    : Ok
-68 98: perf stat JSON output linter                                    : Ok
-69 98: perf stat JSON output linter                                    : Ok
-70 98: perf stat JSON output linter                                    : Ok
-71 98: perf stat JSON output linter                                    : FAILED!
-72 98: perf stat JSON output linter                                    : FAILED!
-73 98: perf stat JSON output linter                                    : Ok
-74 98: perf stat JSON output linter                                    : FAILED!
-75 98: perf stat JSON output linter                                    : Ok
-76 98: perf stat JSON output linter                                    : FAILED!
-77 98: perf stat JSON output linter                                    : Ok
-78 98: perf stat JSON output linter                                    : FAILED!
-79 98: perf stat JSON output linter                                    : FAILED!
-80 98: perf stat JSON output linter                                    : FAILED!
-81 98: perf stat JSON output linter                                    : Ok
-82 98: perf stat JSON output linter                                    : FAILED!
-83 98: perf stat JSON output linter                                    : FAILED!
-84 98: perf stat JSON output linter                                    : Ok
-85 98: perf stat JSON output linter                                    : Ok
-86 98: perf stat JSON output linter                                    : Ok
-87 98: perf stat JSON output linter                                    : FAILED!
-88 98: perf stat JSON output linter                                    : FAILED!
-89 98: perf stat JSON output linter                                    : Ok
-90 98: perf stat JSON output linter                                    : FAILED!
-91 98: perf stat JSON output linter                                    : FAILED!
-92 98: perf stat JSON output linter                                    : Ok
-93 98: perf stat JSON output linter                                    : FAILED!
-94 98: perf stat JSON output linter                                    : FAILED!
-95 98: perf stat JSON output linter                                    : FAILED!
-96 98: perf stat JSON output linter                                    : FAILED!
-97 98: perf stat JSON output linter                                    : FAILED!
-98 98: perf stat JSON output linter                                    : Ok
-99 98: perf stat JSON output linter                                    : Ok
-100 98: perf stat JSON output linter                                    : FAILED!
+17 98: perf stat JSON output linter                                    : FAILED!
+18 98: perf stat JSON output linter                                    :^C
 [root@quaco ~]#
 
- 
-> Fixes: 0c343af2a2f8 ("perf test: JSON format checking")
-> 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  .../tests/shell/lib/perf_json_output_lint.py     | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> index d90f8d102eb9..4f1bbb3f07ec 100644
-> --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> @@ -40,17 +40,17 @@ def is_counter_value(num):
->    return isfloat(num) or num == '<not counted>' or num == '<not supported>'
->  
->  def check_json_output(expected_items):
-> -  if expected_items != -1:
-> +  if expected_items:
->      for line in Lines:
->        if 'failed' not in line:
->          count = 0
-> -        count = line.count(',')
-> -        if count != expected_items and count >= 1 and count <= 3 and 'metric-value' in line:
-> +        count = line.count(' : ')
-> +        if count not in expected_items and count >= 2 and count <= 4 and 'metric-value' in line:
->            # Events that generate >1 metric may have isolated metric
->            # values and possibly other prefixes like interval, core and
->            # aggregate-number.
->            continue
-> -        if count != expected_items:
-> +        if count not in expected_items:
->            raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
->                               f' in \'{line}\'')
->    checks = {
-> @@ -82,14 +82,14 @@ def check_json_output(expected_items):
->  
->  try:
->    if args.no_args or args.system_wide or args.event:
-> -    expected_items = 6
-> +    expected_items = [7, 9]
->    elif args.interval or args.per_thread or args.system_wide_no_aggr:
-> -    expected_items = 7
-> +    expected_items = [8, 10]
->    elif args.per_core or args.per_socket or args.per_node or args.per_die:
-> -    expected_items = 8
-> +    expected_items = [9, 11]
->    else:
->      # If no option is specified, don't check the number of items.
-> -    expected_items = -1
-> +    expected_items = []
->    check_json_output(expected_items)
->  except:
->    print('Test failed for input:\n' + '\n'.join(Lines))
-> -- 
-> 2.18.4
-> 
+When it works:
 
--- 
+[root@quaco ~]# perf test -v 98
+ 98: perf stat JSON output linter                                    :
+--- start ---
+test child forked, pid 62202
+Checking json output: no args [Success]
+Checking json output: system wide [Success]
+Checking json output: interval [Success]
+Checking json output: event [Success]
+Checking json output: per thread [Success]
+Checking json output: per node [Success]
+Checking json output: system wide Checking json output: system wide no aggregation [Success]
+Checking json output: per core [Success]
+Checking json output: per die [Success]
+Checking json output: per socket [Success]
+test child finished with 0
+---- end ----
+perf stat JSON output linter: Ok
+[root@quaco ~]#
 
-- Arnaldo
+When it fails:
+
+[root@quaco ~]# perf test -v 98
+ 98: perf stat JSON output linter                                    :
+--- start ---
+test child forked, pid 62270
+Checking json output: no args [Success]
+Checking json output: system wide [Success]
+Checking json output: interval [Success]
+Checking json output: event [Success]
+Checking json output: per thread Test failed for input:
+{"thread" : "rcu_preempt-16", "counter-value" : "0.018340", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 19071, "pcnt-running" : 100.00, "metric-value" : 0.001758, "metric-unit" : "CPUs utilized"}
+
+{"thread" : "gnome-terminal--2977", "counter-value" : "0.061868", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 62075, "pcnt-running" : 100.00, "metric-value" : 0.005930, "metric-unit" : "CPUs utilized"}
+
+{"thread" : "perf-62294", "counter-value" : "9.398635", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 9398904, "pcnt-running" : 100.00, "metric-value" : 0.900916, "metric-unit" : "CPUs utilized"}
+
+{"thread" : "rcu_preempt-16", "counter-value" : "4.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 15203, "pcnt-running" : 100.00, "metric-value" : 218.102508, "metric-unit" : "K/sec"}
+
+{"thread" : "gnome-terminal--2977", "counter-value" : "1.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 62075, "pcnt-running" : 100.00, "metric-value" : 16.163445, "metric-unit" : "K/sec"}
+
+{"thread" : "perf-62294", "counter-value" : "1.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 9388658, "pcnt-running" : 100.00, "metric-value" : 106.398429, "metric-unit" : "/sec"}
+
+{"thread" : "rcu_preempt-16", "counter-value" : "1.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 12511, "pcnt-running" : 100.00, "metric-value" : 54.525627, "metric-unit" : "K/sec"}
+
+{"thread" : "perf-62294", "counter-value" : "2.000000", "unit" : "", "event" : "page-faults", "event-runtime" : 9427495, "pcnt-running" : 100.00, "metric-value" : 212.796858, "metric-unit" : "/sec"}
+
+{"thread" : "rcu_preempt-16", "counter-value" : "41498.000000", "unit" : "", "event" : "cycles", "event-runtime" : 20944, "pcnt-running" : 100.00, "metric-value" : 2.262704, "metric-unit" : "GHz"}
+
+{"thread" : "ksoftirqd/1-22", "counter-value" : "23883.000000", "unit" : "", "event" : "cycles", "event-runtime" : 9949, "pcnt-running" : 100.00}
+
+{"thread" : "perf-62294", "counter-value" : "36686750.000000", "unit" : "", "event" : "cycles", "event-runtime" : 9439269, "pcnt-running" : 100.00, "metric-value" : 3.903413, "metric-unit" : "GHz"}
+
+{"thread" : "rcu_preempt-16", "counter-value" : "25086.000000", "unit" : "", "event" : "instructions", "event-runtime" : 20944, "pcnt-running" : 100.00, "metric-value" : 0.604511, "metric-unit" : "insn per cycle"}
+
+{"thread" : "ksoftirqd/1-22", "counter-value" : "13360.000000", "unit" : "", "event" : "instructions", "event-runtime" : 9949, "pcnt-running" : 100.00, "metric-value" : 0.559394, "metric-unit" : "insn per cycle"}
+
+{"thread" : "perf-62294", "counter-value" : "7905940.000000", "unit" : "", "event" : "instructions", "event-runtime" : 9438686, "pcnt-running" : 100.00, "metric-value" : 0.215499, "metric-unit" : "insn per cycle"}
+
+{"thread" : "rcu_preempt-16", "counter-value" : "3951.000000", "unit" : "", "event" : "branches", "event-runtime" : 16533, "pcnt-running" : 100.00, "metric-value" : 215.430752, "metric-unit" : "M/sec"}
+
+{"thread" : "ksoftirqd/1-22", "counter-value" : "2822.000000", "unit" : "", "event" : "branches", "event-runtime" : 9949, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "/sec"}
+
+{"thread" : "perf-62294", "counter-value" : "1691804.000000", "unit" : "", "event" : "branches", "event-runtime" : 9474118, "pcnt-running" : 100.00, "metric-value" : 180.005288, "metric-unit" : "M/sec"}
+
+{"thread" : "rcu_preempt-16", "counter-value" : "279.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 16533, "pcnt-running" : 100.00, "metric-value" : 7.061503, "metric-unit" : "of all branches"}
+
+{"thread" : "ksoftirqd/1-22", "counter-value" : "153.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 9949, "pcnt-running" : 100.00, "metric-value" : 5.421687, "metric-unit" : "of all branches"}
+
+{"thread" : "kworker/1:2-events-752", "counter-value" : "121.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 9850, "pcnt-running" : 100.00, "metric-value" : 0.000000, "metric-unit" : "of all branches"}
+
+{"thread" : "perf-62294", "counter-value" : "52693.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 9451948, "pcnt-running" : 100.00, "metric-value" : 3.114604, "metric-unit" : "of all branches"}
+
+Traceback (most recent call last):
+  File "/home/acme/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py", line 93, in <module>
+    check_json_output(expected_items)
+  File "/home/acme/libexec/perf-core/tests/shell/lib/perf_json_output_lint.py", line 54, in check_json_output
+    raise RuntimeError(f'wrong number of fields. counted {count} expected {expected_items}'
+RuntimeError: wrong number of fields. counted 6 expected [8, 10] in '{"thread" : "ksoftirqd/1-22", "counter-value" : "23883.000000", "unit" : "", "event" : "cycles", "event-runtime" : 9949, "pcnt-running" : 100.00}
+'
+test child finished with -1
+---- end ----
+perf stat JSON output linter: FAILED!
+[root@quaco ~]#
