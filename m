@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB390C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 20:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD49BC38142
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 21:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231630AbjA0U4s (ORCPT
+        id S231774AbjA0VAA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Jan 2023 15:56:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57536 "EHLO
+        Fri, 27 Jan 2023 16:00:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231731AbjA0U4j (ORCPT
+        with ESMTP id S229933AbjA0U77 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Jan 2023 15:56:39 -0500
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0107284FA7;
-        Fri, 27 Jan 2023 12:56:35 -0800 (PST)
-Received: by mail-oi1-f175.google.com with SMTP id 25so1640057oij.13;
-        Fri, 27 Jan 2023 12:56:35 -0800 (PST)
+        Fri, 27 Jan 2023 15:59:59 -0500
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1212078AC7;
+        Fri, 27 Jan 2023 12:59:58 -0800 (PST)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-15085b8a2f7so8143232fac.2;
+        Fri, 27 Jan 2023 12:59:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V8VMvEIlksojIPK+k+dQrshS7s0qt34621V8kUWytFU=;
-        b=hsLMgXh/SBJxX5YtaL2yTDP8HoLAMseQfp3gdvZ/8o7GEU6HxS66pXHBQxK20/mWNj
-         YHrYPFVVd6xyr6G+x3D5xamR/5cYs9fkpAkUXE7B8pMJ5nmmi2elBvxgfxbCUhHVmUvO
-         UVuvBa9vKvm404eJMxzrqXzLj8vbjK2/O9dPxACXeaOgskU9PvxGPpguwXjXFFSp+GnP
-         uUe6Une3nAEuXGl2QiegMChGWI06MZCUHxTdenlywjsLGORCwVY6nte1E7ggqA6moMt8
-         ubww3EkRawnskZuVJbkCldmcZGJDYPDoScf4nkBNoD0ae5CDzLWopnsPO3vUNvgAjmfX
-         +6+A==
-X-Gm-Message-State: AFqh2kqU4e1Jv5knTrNpFwNexpOwus1ej12eLf3+7Mi7k1TmY2ZzQAhG
-        1dtzKYlrr+kQoWUTwQ1LL46FqAk7Jw==
-X-Google-Smtp-Source: AMrXdXs/OCh6QKC+GiDIJTQxk+b6Mswhyo37IPis43vdZ2dPaji5FVVdjT0F5Mebp7rDPuocpruYNQ==
-X-Received: by 2002:a05:6808:b37:b0:36e:b267:4d16 with SMTP id t23-20020a0568080b3700b0036eb2674d16mr13761487oij.6.1674852995068;
-        Fri, 27 Jan 2023 12:56:35 -0800 (PST)
+        bh=UgCIzyZ1uXoig+M3du7hOj+YSCBLDMUCra02vD8O8os=;
+        b=BHtDZ/DddZTTKlp2i3zDeFyrJXEfigDbsrSLvL+cEwjBBBEfjwNag256Mkl8l0MO/4
+         4OPiAUP3g1guKWzQmnCYFQzQM6kzl89NZJ3+QtfI0tR+QPjXz09v88tICLOeYmTUFhgp
+         Zce2XkDjHRWAnCTbL3j4Uwv6LWkQHrOqgWnZwLDwJ5BaVVcld9B09FPDqDtAdE9w/wFR
+         2VE6GoM6ibZcGZJNl5/0S9rkoMmhrSB3AvrXpETkKDkm34U2RILUpk341XzwsLubXPc5
+         S1RNre2wibQvt+tFprqhv3HIxFVEGnAqLyUsjv4245Wbx4q/8cbh8b62qTcbTIC8cUY4
+         DypQ==
+X-Gm-Message-State: AO0yUKVjC6xMihqLYxJr444qRHPn1VPGzJOu9qDUHAj3x3jDhb6BJ0h9
+        8V0rOkYdYixfHghPt2rqSg==
+X-Google-Smtp-Source: AK7set9yiHwcCjUqkk9qrXPSP2PS8fDIfxq4G9mbG19hiKCSbd8EpZfLDrnJm/GFw1JgRGB1IDQkPg==
+X-Received: by 2002:a05:6870:3312:b0:163:4aa1:a92a with SMTP id x18-20020a056870331200b001634aa1a92amr4569506oae.10.1674853197128;
+        Fri, 27 Jan 2023 12:59:57 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id r132-20020acac18a000000b0035c422bb303sm1985437oif.19.2023.01.27.12.56.34
+        by smtp.gmail.com with ESMTPSA id p1-20020a4aa241000000b004fde329b944sm2082031ool.28.2023.01.27.12.59.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 12:56:34 -0800 (PST)
-Received: (nullmailer pid 668789 invoked by uid 1000);
-        Fri, 27 Jan 2023 20:56:33 -0000
+        Fri, 27 Jan 2023 12:59:56 -0800 (PST)
+Received: (nullmailer pid 673390 invoked by uid 1000);
+        Fri, 27 Jan 2023 20:59:56 -0000
 From:   Rob Herring <robh@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -51,9 +51,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>
 Cc:     James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf arm-spe: Only warn once for each unsupported address packet
-Date:   Fri, 27 Jan 2023 14:55:46 -0600
-Message-Id: <20230127205546.667740-1-robh@kernel.org>
+Subject: [PATCH] perf arm-spe: Add raw decoding for SPEv1.2 previous branch address
+Date:   Fri, 27 Jan 2023 14:59:51 -0600
+Message-Id: <20230127205951.673253-1-robh@kernel.org>
 X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -61,34 +61,54 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Unknown address packet indexes are not an error as the Arm architecture
-can (and has with SPEv1.2) define new ones and implementation defined
-ones are also allowed. The error message for every occurrence of the
-packet is needlessly noisy as well. Change the message to print just
-once for each unknown index.
+Arm SPEv1.2 adds a new optional address packet type: previous branch
+target. The recorded address is the target virtual address of the most
+recently taken branch in program order.
+
+Add support for decoding the address packet in raw dumps.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 4 +++-
+ tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 091987dd3966..40dcedfd75cd 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -68,7 +68,11 @@ static u64 arm_spe_calc_ip(int index, u64 payload)
- 		/* Clean highest byte */
- 		payload = SPE_ADDR_PKT_ADDR_GET_BYTES_0_6(payload);
- 	} else {
--		pr_err("unsupported address packet index: 0x%x\n", index);
-+		static u32 seen_idx = 0;
-+		if (!(seen_idx & BIT(index))) {
-+			seen_idx |= BIT(index);
-+			pr_warning("ignoring unsupported address packet index: 0x%x\n", index);
-+		}
- 	}
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+index 2f311189c6e8..e92e1a7c8a8e 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+@@ -422,16 +422,18 @@ static int arm_spe_pkt_desc_addr(const struct arm_spe_pkt *packet,
+ 	int ch, pat;
+ 	u64 payload = packet->payload;
+ 	int err = 0;
++	static const char *idx_name[] = {"PC", "TGT", "VA", "PA", "LBR" };
  
- 	return payload;
+ 	switch (idx) {
+ 	case SPE_ADDR_PKT_HDR_INDEX_INS:
+ 	case SPE_ADDR_PKT_HDR_INDEX_BRANCH:
++	case SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH:
+ 		ns = !!SPE_ADDR_PKT_GET_NS(payload);
+ 		el = SPE_ADDR_PKT_GET_EL(payload);
+ 		payload = SPE_ADDR_PKT_ADDR_GET_BYTES_0_6(payload);
+ 		arm_spe_pkt_out_string(&err, &buf, &buf_len,
+ 				"%s 0x%llx el%d ns=%d",
+-				(idx == 1) ? "TGT" : "PC", payload, el, ns);
++				idx_name[idx], payload, el, ns);
+ 		break;
+ 	case SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT:
+ 		arm_spe_pkt_out_string(&err, &buf, &buf_len,
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+index 9b970e7bf1e2..f75ed3a8a050 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
+@@ -65,6 +65,7 @@ struct arm_spe_pkt {
+ #define SPE_ADDR_PKT_HDR_INDEX_BRANCH		0x1
+ #define SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT	0x2
+ #define SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS	0x3
++#define SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH	0x4
+ 
+ /* Address packet payload */
+ #define SPE_ADDR_PKT_ADDR_BYTE7_SHIFT		56
 -- 
 2.39.0
 
