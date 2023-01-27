@@ -2,46 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FA5C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBFFC38142
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 15:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232940AbjA0Pck (ORCPT
+        id S233732AbjA0Pey (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Jan 2023 10:32:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58644 "EHLO
+        Fri, 27 Jan 2023 10:34:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232439AbjA0Pck (ORCPT
+        with ESMTP id S234608AbjA0Pex (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Jan 2023 10:32:40 -0500
+        Fri, 27 Jan 2023 10:34:53 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2990D21959;
-        Fri, 27 Jan 2023 07:32:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C49C80003;
+        Fri, 27 Jan 2023 07:34:52 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B75F32B;
-        Fri, 27 Jan 2023 07:33:20 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0FB132B;
+        Fri, 27 Jan 2023 07:35:34 -0800 (PST)
 Received: from [10.57.48.133] (unknown [10.57.48.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 348363F64C;
-        Fri, 27 Jan 2023 07:32:37 -0800 (PST)
-Message-ID: <37242bcd-57f5-65c8-3c5e-e90c434f5e18@arm.com>
-Date:   Fri, 27 Jan 2023 15:32:35 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94B4B3F64C;
+        Fri, 27 Jan 2023 07:34:50 -0800 (PST)
+Message-ID: <a1f864b8-d0c1-79d9-f976-64ebec9f3714@arm.com>
+Date:   Fri, 27 Jan 2023 15:34:49 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
-Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
+Subject: Re: [PATCH 3/4] perf session: Avoid calling lseek(2) for pipe
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Stephane Eranian <eranian@google.com>
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
 References: <20230127001951.3432374-1-namhyung@kernel.org>
+ <20230127001951.3432374-4-namhyung@kernel.org>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230127001951.3432374-1-namhyung@kernel.org>
+In-Reply-To: <20230127001951.3432374-4-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -51,40 +52,40 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 27/01/2023 00:19, Namhyung Kim wrote:
-> Hello,
+> We should not call lseek(2) for pipes as it won't work.  And we already
+> in the proper place to read the data for AUXTRACE.  Add the comment like
+> in the PERF_RECORD_HEADER_TRACING_DATA.
 > 
-> I found some problems in Intel-PT and auxtrace in general with pipe.
-> In the past it used to work with pipe, but recent code fails.  As it
-> also touches the generic code, other auxtrace users like ARM SPE will
-> be affected too.  I added a test case to verify it works with pipes.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/session.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> At last, I can run this command without a problem.
-> 
->   $ perf record -o- -e intel_pt// true | perf inject -b | perf report -i- --itrace=i1000
-> 
-> The code is available at 'perf/auxtrace-pipe-v1' branch in
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> 
-> Thanks,
-> Namhyung
-> 
-> Namhyung Kim (4):
->   perf inject: Use perf_data__read() for auxtrace
->   perf intel-pt: Do not try to queue auxtrace data on pipe
->   perf session: Avoid calling lseek(2) for pipe
->   perf test: Add pipe mode test to the Intel PT test suite
-> 
->  tools/perf/builtin-inject.c             |  6 +++---
->  tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
->  tools/perf/util/auxtrace.c              |  3 +++
->  tools/perf/util/session.c               |  9 +++++++--
->  4 files changed, 30 insertions(+), 5 deletions(-)
-> 
-> 
-For the whole set:
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 7c021c6cedb9..fdfe772f2699 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1699,8 +1699,13 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+>  	case PERF_RECORD_AUXTRACE_INFO:
+>  		return tool->auxtrace_info(session, event);
+>  	case PERF_RECORD_AUXTRACE:
+> -		/* setup for reading amidst mmap */
+> -		lseek(fd, file_offset + event->header.size, SEEK_SET);
+> +		/*
+> +		 * Setup for reading amidst mmap, but only when we
+> +		 * are in 'file' mode.  The 'pipe' fd is in proper
+> +		 * place already.
+> +		 */
+> +		if (!perf_data__is_pipe(session->data))
+> +			lseek(fd, file_offset + event->header.size, SEEK_SET);
 
-Reviewed-by: James Clark <james.clark@arm.com>
+I'm not sure if it means anything, but Arm SPE works both with and
+without this change, although I did have to skip the build-id inject part:
 
-> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
-> prerequisite-patch-id: 4ccdf9c974a3909075051f4ffe498faecab7567b
+  perf record -o- -e arm_spe// stress -c 1 -t 1 | \
+    perf report -i- --itrace=i1000
+
+
+>  		return tool->auxtrace(session, event);
+>  	case PERF_RECORD_AUXTRACE_ERROR:
+>  		perf_session__auxtrace_error_inc(session, event);
