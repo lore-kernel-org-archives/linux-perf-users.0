@@ -2,60 +2,53 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CCDC54EAA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 00:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B941C38142
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 07:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233081AbjA0AUp (ORCPT
+        id S232141AbjA0HWf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Jan 2023 19:20:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56926 "EHLO
+        Fri, 27 Jan 2023 02:22:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232911AbjA0AUj (ORCPT
+        with ESMTP id S230225AbjA0HWe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Jan 2023 19:20:39 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB0A3B0EC;
-        Thu, 26 Jan 2023 16:20:01 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id z1-20020a17090a66c100b00226f05b9595so3398828pjl.0;
-        Thu, 26 Jan 2023 16:20:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HRrV7TjTlPA/BkPaOPUYQ8wwbHiOpKT0qv7GK3Tslrg=;
-        b=JPVvykV4MhgTf7Tw6GyypSnxNUhsiEiGHYhsEUqj/dj/oY4wZ6DjIqykUAAQRoi9aM
-         etlaTcQ17oDUiRwR/JpFDZcivnt3IE+Fydm9QJOrqIncAHnAhvNAJ0YFCXzUjLmKGFko
-         SnTKNCgB+gb7avdiA1X8r17hkBzJBoGAsR3ZtaYrADLWrWU2OLYh30c69NfAg7QpvbNB
-         C+5DEdUXbdHap9B0da+1KD03J5KYkgx4EgtR0rkY53+7do8BysYsPzKZBzrqyK64JJn7
-         O0gXL5ApOoj8XukHkGKGrgrg8YmwkAaNq7ddEWxAXB3UgpR+MSnRzf9i4CO7OzlyELzY
-         RfCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HRrV7TjTlPA/BkPaOPUYQ8wwbHiOpKT0qv7GK3Tslrg=;
-        b=xp5EdG48cM9z/BuIRqcyhZUwxhC2Kg7yU0s81HB2jcvp4Kqp4a9XwutyzicPgpGWUG
-         +QKmB5NSS+lDe7YN2TIUkQb8RGmEQa9Wr0iuOdyA/s0Mo5EKjRi3iHZU56GnxLu+F2Nl
-         /qa8898CMSniDzzs0w1c8In1vaJnFebZVyi52KaVqjoepIUZtl5Bu7PGvpgjBnkQWm6w
-         n/7IK0gwId3Y7GNGExQrd9cV16hkvN7wD3GDlpdDsbMWSxuvr8/LLyBr4pcnBh679RYx
-         J7WXEW7T7VkuXxp61EdfFR0N/il6ocszCBHJ75/X/CWPrnj4bcXkeoPJOGcfrWXu7r9+
-         Iv4w==
-X-Gm-Message-State: AFqh2krsrufWwEGXxGATq2YiEjlCZoODNA9ULMFDC5XTnqejZFZWrxaB
-        +vzLRtFPXc615XSnD8rbOow=
-X-Google-Smtp-Source: AMrXdXt150PwiZkkD0pHSBQ3CST0AJEU92tONX9WSdl1dAeFrnlea4VXE1Z24xjN26lvrT9LNFb4dw==
-X-Received: by 2002:a17:90b:1c0e:b0:22b:b5c7:4fc with SMTP id oc14-20020a17090b1c0e00b0022bb5c704fcmr25339679pjb.46.1674778800033;
-        Thu, 26 Jan 2023 16:20:00 -0800 (PST)
-Received: from youngsil.svl.corp.google.com ([2620:15c:2d4:203:1f5d:eee8:d409:8a17])
-        by smtp.gmail.com with ESMTPSA id v15-20020a17090a088f00b00229f7376247sm1567270pjc.57.2023.01.26.16.19.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 16:19:59 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
+        Fri, 27 Jan 2023 02:22:34 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E740E4F86D;
+        Thu, 26 Jan 2023 23:22:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674804153; x=1706340153;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1eorRSMffSeomkyqosY3JnKoG42HN4ninV9IzSPav20=;
+  b=DAojCyNvxxGMKi05I4V+C9MkGcc3VT9a3KX7C6WvYbublM3zXzzqoLGW
+   F+LrD7NSB+tm5uHoGZwafXDmTB88cJqRwVm5lT6oXe1yGuny29cOT4QFP
+   YKTLe8iTcYZ3fgaJqhKq2kvPlZ5lA8FLodSilJaeQRBpB1fCUgRBXsy6R
+   PigZ2GaVQisBP9mAGm/OU+ifS4Gpw04HSFyUP13OEMVHDqoCqCB3my6Sr
+   /z8lBiag/j3DOuEZIxJafjA1lBXMsml2UcgN7Amnc9h9/WShE8DRGr/1e
+   tPtcrUwuHYPJrcKSD6llG8WKeLOVJ9/ulBaNk0GIDn1w2pi9DlQR4DqDF
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="324728461"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="324728461"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 23:22:19 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="726602682"
+X-IronPort-AV: E=Sophos;i="5.97,250,1669104000"; 
+   d="scan'208";a="726602682"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.171])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 23:22:16 -0800
+Message-ID: <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
+Date:   Fri, 27 Jan 2023 09:22:07 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.7.1
+Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -63,61 +56,80 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
         James Clark <james.clark@arm.com>,
         Stephane Eranian <eranian@google.com>
-Subject: [PATCH 4/4] perf test: Add pipe mode test to the Intel PT test suite
-Date:   Thu, 26 Jan 2023 16:19:51 -0800
-Message-Id: <20230127001951.3432374-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
-In-Reply-To: <20230127001951.3432374-1-namhyung@kernel.org>
 References: <20230127001951.3432374-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230127001951.3432374-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The test_pipe() function will check perf report and perf inject with
-pipe input.
+On 27/01/23 02:19, Namhyung Kim wrote:
+> Hello,
+> 
+> I found some problems in Intel-PT and auxtrace in general with pipe.
+> In the past it used to work with pipe, but recent code fails.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Pipe mode is a problem for Intel PT and possibly other auxtrace users.
+Essentially the auxtrace buffers do not behave like the regular perf
+event buffers.  That is because the head and tail are updated by
+software, but in the auxtrace case the data is written by hardware.
+So the head and tail do not get updated as data is written.  In the
+Intel PT case, the head and tail are updated only when the trace is
+disabled by software, for example:
+    - full-trace, system wide : when buffer passes watermark
+    - full-trace, not system-wide : when buffer passes watermark or
+    context switches
+    - snapshot mode : as above but also when a snapshot is made
+    - sample mode : as above but also when a sample is made
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index f5ed7b1af419..4ddb17cb83c5 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -620,6 +620,22 @@ test_event_trace()
- 	return 0
- }
- 
-+test_pipe()
-+{
-+	echo "--- Test with pipe mode ---"
-+	# Check if it works with pipe
-+	if ! perf_record_no_bpf -o- -e intel_pt//u uname | perf report -q -i- --itrace=i10000 ; then
-+		echo "perf record + report failed with pipe mode"
-+		return 1
-+	fi
-+	if ! perf_record_no_bpf -o- -e intel_pt//u uname | perf inject -b > /dev/null ; then
-+		echo "perf record + inject failed with pipe mode"
-+		return 1
-+	fi
-+	echo OK
-+	return 0
-+}
-+
- count_result()
- {
- 	if [ "$1" -eq 2 ] ; then
-@@ -647,6 +663,7 @@ test_virtual_lbr			|| ret=$? ; count_result $ret ; ret=0
- test_power_event			|| ret=$? ; count_result $ret ; ret=0
- test_no_tnt				|| ret=$? ; count_result $ret ; ret=0
- test_event_trace			|| ret=$? ; count_result $ret ; ret=0
-+test_pipe				|| ret=$? ; count_result $ret ; ret=0
- 
- cleanup
- 
--- 
-2.39.1.456.gfc5497dd1b-goog
+That means finished-round ordering doesn't work.  An auxtrace buffer
+can turn up that has data that extends back in time, possibly to the
+very beginning of tracing.
+
+For a perf.data file, that problem is solved by going through the trace
+and queuing up the auxtrace buffers in advance.
+
+For pipe mode, the order of events and timestamps can presumably
+be messed up.
+
+For Intel PT, it is a bit of a surprise that there is not 
+validation to error out in pipe mode.
+
+At the least, a warning is needed, and the above explanation needs
+to be added to the documentation.
+
+>                                                                As it
+> also touches the generic code, other auxtrace users like ARM SPE will
+> be affected too.  I added a test case to verify it works with pipes.
+> 
+> At last, I can run this command without a problem.
+> 
+>   $ perf record -o- -e intel_pt// true | perf inject -b | perf report -i- --itrace=i1000
+> 
+> The code is available at 'perf/auxtrace-pipe-v1' branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> Thanks,
+> Namhyung
+> 
+> Namhyung Kim (4):
+>   perf inject: Use perf_data__read() for auxtrace
+>   perf intel-pt: Do not try to queue auxtrace data on pipe
+>   perf session: Avoid calling lseek(2) for pipe
+>   perf test: Add pipe mode test to the Intel PT test suite
+> 
+>  tools/perf/builtin-inject.c             |  6 +++---
+>  tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
+>  tools/perf/util/auxtrace.c              |  3 +++
+>  tools/perf/util/session.c               |  9 +++++++--
+>  4 files changed, 30 insertions(+), 5 deletions(-)
+> 
+> 
+> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+> prerequisite-patch-id: 4ccdf9c974a3909075051f4ffe498faecab7567b
 
