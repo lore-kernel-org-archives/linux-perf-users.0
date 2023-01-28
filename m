@@ -2,92 +2,173 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96175C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Jan 2023 23:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C8AC38142
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Jan 2023 01:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232696AbjA0XI4 (ORCPT
+        id S231939AbjA1B1L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Jan 2023 18:08:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56908 "EHLO
+        Fri, 27 Jan 2023 20:27:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232699AbjA0XIz (ORCPT
+        with ESMTP id S229725AbjA1B1L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Jan 2023 18:08:55 -0500
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FA71E5DF;
-        Fri, 27 Jan 2023 15:08:49 -0800 (PST)
-Received: by mail-io1-f41.google.com with SMTP id h184so2491922iof.9;
-        Fri, 27 Jan 2023 15:08:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=msAyX3ByOsUek5ziG1EnXhB9F97GMAyCutt3DTEavEI=;
-        b=lz5zaOsAqO23QNq8IYi4OVFsifK10KDDcXRe6P3EGDPUjTDX/EhTqsO+jllX+2891f
-         QC7RfGiAtOdyQxZL+GWTVEVqFXGLAkmpF6V5hb8TOTNwajHwvDW7+X1wuLOU/A3J5vY4
-         aXxRgPBWtbkiHKj2ryg0trjxjzAGcWvxry0yQSmh+rLEFcYIPwk/ZPmAcbd/ToZt3+bu
-         YVB1JKWbIV91k/PLxOMQxUhRMWQ9Ns4d0De5R6X6vdRdJ9GWnAP4Ky8kX/WHacGEIX3Z
-         xLB4XQ/NJ8GOiu0ccqRJAsHi2WyOrhDmW+OwG6PZmcWCMr/hQbUw5Xb+TSRr3pW5wL1d
-         E0uQ==
-X-Gm-Message-State: AFqh2krrxBICRNQ8r4kNaZGk+nxCQ6MMToA2lnQhTIdxkKOAhkC3gUp3
-        vLo157MiYLwAlsRxdu2Xc2me5TNyMyEdD77XwEM=
-X-Google-Smtp-Source: AMrXdXuMNiQzt+xeryqjTx8FNgLd+ZcquxV496yLzsQm6UltcFeIU+br+BbXlRQfDqV5YMRC7In5Dc/vsBmsrjaQV34=
-X-Received: by 2002:a05:6638:36c6:b0:39e:8c9c:7e37 with SMTP id
- t6-20020a05663836c600b0039e8c9c7e37mr4970613jau.77.1674860929026; Fri, 27 Jan
- 2023 15:08:49 -0800 (PST)
+        Fri, 27 Jan 2023 20:27:11 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14E0410BB;
+        Fri, 27 Jan 2023 17:27:08 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4P3cFn6WrBzJrRc;
+        Sat, 28 Jan 2023 09:25:33 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Sat, 28 Jan 2023 09:27:05 +0800
+Subject: Re: [PATCH v3] perf record: Fix segfault with --overwrite and
+ --max-size
+To:     <acme@kernel.org>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230113073803.102950-1-yangjihong1@huawei.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <jiwei.sun@windriver.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <29a8e0bc-e90b-b371-962b-58a4b8c87f20@huawei.com>
+Date:   Sat, 28 Jan 2023 09:27:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <20230127001951.3432374-1-namhyung@kernel.org> <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
- <317a91ff-70c5-57a5-8447-7543057e4055@arm.com>
-In-Reply-To: <317a91ff-70c5-57a5-8447-7543057e4055@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 27 Jan 2023 15:08:37 -0800
-Message-ID: <CAM9d7chU6kTdG0y65_UaD_hW75GezzNJF1ZwjNWq8BUpACAGTA@mail.gmail.com>
-Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
-To:     James Clark <james.clark@arm.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20230113073803.102950-1-yangjihong1@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+Hello,
 
-On Fri, Jan 27, 2023 at 6:42 AM James Clark <james.clark@arm.com> wrote:
->
->
->
-> On 27/01/2023 07:22, Adrian Hunter wrote:
-> > On 27/01/23 02:19, Namhyung Kim wrote:
-> >> Hello,
-> >>
-> >> I found some problems in Intel-PT and auxtrace in general with pipe.
-> >> In the past it used to work with pipe, but recent code fails.
-> >
-> > Pipe mode is a problem for Intel PT and possibly other auxtrace users.
->
-> Just some info from my side: For Arm Coresight we ended up deprecating
-> pipe mode, then not supporting it altogether. First was when we added an
-> optional step to peek through all of the data to help with an edge case.
-> Then we added a requirement to receive a HW_ID packet before decoding
-> which necessitated the peek. You can't peek in pipe mode because you
-> need to be able to seek, so it's not supported at all anymore.
->
-> For Arm SPE I never tested it with piped data. I suppose I could add a
-> test at some point, but I don't really see the usecase.
-
-Yeah, it'd be great if we can have a test for Arm SPE.
-
-Anyway, my work env (Google) requires the pipe mode due to the
-restriction in disk usage.  Without the pipe support, it's not possible
-to run `perf record` in production.
+The data written by the thread (data.X file) has been saved as 
+recommended in v2 patch. Please check whether it is feasible. Thank you.
 
 Thanks,
-Namhyung
+Yang
+
+On 2023/1/13 15:38, Yang Jihong wrote:
+> When --overwrite and --max-size options of perf record are used together,
+> a segmentation fault occurs. The following is an example:
+> 
+>    # perf record -e sched:sched* --overwrite --max-size 1K -a -- sleep 1
+>    [ perf record: Woken up 1 times to write data ]
+>    perf: Segmentation fault
+>    Obtained 12 stack frames.
+>    ./perf/perf(+0x197673) [0x55f99710b673]
+>    /lib/x86_64-linux-gnu/libc.so.6(+0x3ef0f) [0x7fa45f3cff0f]
+>    ./perf/perf(+0x8eb40) [0x55f997002b40]
+>    ./perf/perf(+0x1f6882) [0x55f99716a882]
+>    ./perf/perf(+0x794c2) [0x55f996fed4c2]
+>    ./perf/perf(+0x7b7c7) [0x55f996fef7c7]
+>    ./perf/perf(+0x9074b) [0x55f99700474b]
+>    ./perf/perf(+0x12e23c) [0x55f9970a223c]
+>    ./perf/perf(+0x12e54a) [0x55f9970a254a]
+>    ./perf/perf(+0x7db60) [0x55f996ff1b60]
+>    /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe6) [0x7fa45f3b2c86]
+>    ./perf/perf(+0x7dfe9) [0x55f996ff1fe9]
+>    Segmentation fault (core dumped)
+> 
+> backtrace of the core file is as follows:
+> 
+>    (gdb) bt
+>    #0  record__bytes_written (rec=0x55f99755a200 <record>) at builtin-record.c:234
+>    #1  record__output_max_size_exceeded (rec=0x55f99755a200 <record>) at builtin-record.c:242
+>    #2  record__write (map=0x0, size=12816, bf=0x55f9978da2e0, rec=0x55f99755a200 <record>) at builtin-record.c:263
+>    #3  process_synthesized_event (tool=tool@entry=0x55f99755a200 <record>, event=event@entry=0x55f9978da2e0, sample=sample@entry=0x0, machine=machine@entry=0x55f997893658) at builtin-record.c:618
+>    #4  0x000055f99716a883 in __perf_event__synthesize_id_index (tool=tool@entry=0x55f99755a200 <record>, process=process@entry=0x55f997002aa0 <process_synthesized_event>, evlist=0x55f9978928b0, machine=machine@entry=0x55f997893658,
+>        from=from@entry=0) at util/synthetic-events.c:1895
+>    #5  0x000055f99716a91f in perf_event__synthesize_id_index (tool=tool@entry=0x55f99755a200 <record>, process=process@entry=0x55f997002aa0 <process_synthesized_event>, evlist=<optimized out>, machine=machine@entry=0x55f997893658)
+>        at util/synthetic-events.c:1905
+>    #6  0x000055f996fed4c3 in record__synthesize (tail=tail@entry=true, rec=0x55f99755a200 <record>) at builtin-record.c:1997
+>    #7  0x000055f996fef7c8 in __cmd_record (argc=argc@entry=2, argv=argv@entry=0x7ffc67551260, rec=0x55f99755a200 <record>) at builtin-record.c:2802
+>    #8  0x000055f99700474c in cmd_record (argc=<optimized out>, argv=0x7ffc67551260) at builtin-record.c:4258
+>    #9  0x000055f9970a223d in run_builtin (p=0x55f997564d88 <commands+264>, argc=10, argv=0x7ffc67551260) at perf.c:330
+>    #10 0x000055f9970a254b in handle_internal_command (argc=10, argv=0x7ffc67551260) at perf.c:384
+>    #11 0x000055f996ff1b61 in run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:428
+>    #12 main (argc=<optimized out>, argv=0x7ffc67551260) at perf.c:562
+> 
+> The reason is that record__bytes_written accesses the freed memory rec->thread_data,
+> The process is as follows:
+>    __cmd_record
+>      -> record__free_thread_data
+>        -> zfree(&rec->thread_data)         // free rec->thread_data
+>      -> record__synthesize
+>        -> perf_event__synthesize_id_index
+>          -> process_synthesized_event
+>            -> record__write
+>              -> record__bytes_written      // access rec->thread_data
+> 
+> We add a member variable "thread_bytes_written" in the struct "record"
+> to save the data size written by the threads.
+> 
+> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+> 
+> Changes since v2:
+>   - Save data size written by threads to calculate the correct total data size.
+>   - Update commit message.
+> 
+> Changes since v1:
+>   - Add variable check in record__bytes_written for code hardening.
+>   - Save bytes_written separately to reduce one calculation.
+>   - Remove rec->opts.tail_synthesize check.
+> 
+>   tools/perf/builtin-record.c | 16 ++++++----------
+>   1 file changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 29dcd454b8e2..8374117e66f6 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -154,6 +154,7 @@ struct record {
+>   	struct perf_tool	tool;
+>   	struct record_opts	opts;
+>   	u64			bytes_written;
+> +	u64			thread_bytes_written;
+>   	struct perf_data	data;
+>   	struct auxtrace_record	*itr;
+>   	struct evlist	*evlist;
+> @@ -226,14 +227,7 @@ static bool switch_output_time(struct record *rec)
+>   
+>   static u64 record__bytes_written(struct record *rec)
+>   {
+> -	int t;
+> -	u64 bytes_written = rec->bytes_written;
+> -	struct record_thread *thread_data = rec->thread_data;
+> -
+> -	for (t = 0; t < rec->nr_threads; t++)
+> -		bytes_written += thread_data[t].bytes_written;
+> -
+> -	return bytes_written;
+> +	return rec->bytes_written + rec->thread_bytes_written;
+>   }
+>   
+>   static bool record__output_max_size_exceeded(struct record *rec)
+> @@ -255,10 +249,12 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
+>   		return -1;
+>   	}
+>   
+> -	if (map && map->file)
+> +	if (map && map->file) {
+>   		thread->bytes_written += size;
+> -	else
+> +		rec->thread_bytes_written += size;
+> +	} else {
+>   		rec->bytes_written += size;
+> +	}
+>   
+>   	if (record__output_max_size_exceeded(rec) && !done) {
+>   		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
+> 
