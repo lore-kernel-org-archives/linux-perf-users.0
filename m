@@ -2,146 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665BEC64EC3
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE9BC54EAA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 18:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237855AbjA3ST7 (ORCPT
+        id S235687AbjA3SfN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:19:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        Mon, 30 Jan 2023 13:35:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237635AbjA3STr (ORCPT
+        with ESMTP id S235932AbjA3SfL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 13:19:47 -0500
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EEE537572
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jan 2023 10:19:44 -0800 (PST)
-Received: by mail-il1-x12e.google.com with SMTP id i17so5326423ils.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jan 2023 10:19:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jp7aHBUW1jeQF5BaTlNM3qh6OpGZbn+TcSkRCqi1rpA=;
-        b=JlFJKGfQVP+ZJ4ZfNW/30qCZgXd85FdLu28kwHbW4K1QjzS8W8lPA1dmvs5YOKPx6i
-         g1rcxZPr0uXfhgIhiLKW8LXNCCrvkBLjT4uSE+KGpkgENyGFJ+6UWb7/TicE8j2x4K5X
-         uq8913H01SJ5Bpwu5jHe99aWe8Tt7mzxcAlH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jp7aHBUW1jeQF5BaTlNM3qh6OpGZbn+TcSkRCqi1rpA=;
-        b=wT+dBSKRuoRGDcqisAh3F4xMjESo/e2TCz0GdcWP2PVifffh6l5/9G8LFHy3vyqFz8
-         D5V39JSS0f7VLWJZ4+MbtBQBmJDLtFbFV7Gw+QLDYmMhzujVda10U4SxrJFlq9sWrivO
-         7ROAaa7Sn1p3fWEiW9fZywM3uypjECaj/2MrnZQQs/urd2Dev8aO7pcyroRCvDpzw3Mx
-         GxCzT8Cj4OX9nTtUg/QtaPBPlM66ajV2q/Ru/RlXP9NaGvk/3wjAurDgDS3ireoECsxG
-         6m/QdVR3wPlPDxuICibP+qf5zHr/SLHJW5k/g/FMKCmhSPUIsHzxuCNDiqCHBY9BeLEM
-         ffjQ==
-X-Gm-Message-State: AFqh2kobGaBdDTxzqnB3YGG2iaQbfXWym9RWY2g6uR5OaE8me+eGL/Ca
-        WNrh+R5L8opyEMgJ3vG9BZqvFQ==
-X-Google-Smtp-Source: AMrXdXtNYZmSI/B6owkdukXiEncZXYpEnMelEao+FAikw603ox7t8fW0hkOpMTlEEpNU5qPt5EQaHQ==
-X-Received: by 2002:a92:de09:0:b0:30e:f1e5:3e4a with SMTP id x9-20020a92de09000000b0030ef1e53e4amr33574012ilm.28.1675102783894;
-        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
-Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/9] perf docs: use canonical ftrace path
-Date:   Mon, 30 Jan 2023 11:19:10 -0700
-Message-Id: <20230130181915.1113313-5-zwisler@google.com>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
-In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
-References: <20230130181915.1113313-1-zwisler@google.com>
+        Mon, 30 Jan 2023 13:35:11 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38041134;
+        Mon, 30 Jan 2023 10:35:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675103710; x=1706639710;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=U7G2OF6NcSz+fRV4Opwe5468B/UHNZt27GJPYnCXJCo=;
+  b=U+9KpDXMvGS5+UTAHXpYRyHLSrRqcECIwLUOy7DDrpDZvr/ra0ju0dDp
+   jIXgNEd1OOrsMhrvhvba0pqrQu7TtCJoo6QMESy8sm6prh6mv2FkCxhc6
+   pyFghR/V8GfkciBihKY7lzVQHpLj9Sp8doE8UHFkCsIP7ro/TuSi2OBEV
+   uFr1wLsRSopUjU+xInUWS5Xc0sePTQKdTyvBONKmA8lHnSQ4P4NfC6vGA
+   9rTpaSs3HcmuucMy/8+2jUGJ2FaRxbEgf6DhCgCV2NoZ1LgVRhfEU+VUD
+   YVUr1LV0OFKIJ6hRpiTnou/MBtQ4ofHmOgOZ2VUPtiAkEo35SZLHXiv4b
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="390003698"
+X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
+   d="scan'208";a="390003698"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 10:35:09 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="806784851"
+X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
+   d="scan'208";a="806784851"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.33.106])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 10:35:07 -0800
+Message-ID: <5aeab2b5-7349-d220-652b-75360ef6d723@intel.com>
+Date:   Mon, 30 Jan 2023 20:35:03 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.7.1
+Subject: Re: [PATCH 2/9] perf symbols: Add support for x86 .plt.sec
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20230127170222.9895-1-adrian.hunter@intel.com>
+ <20230127170222.9895-3-adrian.hunter@intel.com>
+ <CAM9d7chny89+rtP6orSJOKrAqb4GbzCG53KV4O1J9mhKvCcWnQ@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7chny89+rtP6orSJOKrAqb4GbzCG53KV4O1J9mhKvCcWnQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+On 30/01/23 19:34, Namhyung Kim wrote:
+> Hi Adrian,
+> 
+> On Fri, Jan 27, 2023 at 9:02 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> The section .plt.sec was originally added for MPX and was first called
+>> .plt.bnd. While MPX has been deprecated, .plt.sec is now also used for IBT.
+>> On x86_64, IBT seems to be enabled by default, but can be switched off
+>> using gcc option -fcf-protection=none. On 32-bit, option -z ibt will
+>> enable IBT.
+>>
+>> With .plt.sec, calls are made into .plt.sec instead of .plt, so it
+>> makes more sense to put the symbols there instead of .plt. A notable
+>> difference is that .plt.sec does not have a header entry.
+>>
+>> For x86, when synthesizing symbols for plt, use offset and entry size of
+>> .plt.sec instead of .plt when there is a .plt.sec section.
+>>
+>> Example on Ubuntu 22.04 gcc 11.3:
+>>
+>>   Before:
+>>
+>>     $ cat tstpltlib.c
+>>     void fn1(void) {}
+>>     void fn2(void) {}
+>>     void fn3(void) {}
+>>     void fn4(void) {}
+>>     $ cat tstplt.c
+>>     void fn1(void);
+>>     void fn2(void);
+>>     void fn3(void);
+>>     void fn4(void);
+>>
+>>     int main()
+>>     {
+>>             fn4();
+>>             fn1();
+>>             fn2();
+>>             fn3();
+>>             return 0;
+>>     }
+>>     $ gcc --version
+>>     gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+>>     Copyright (C) 2021 Free Software Foundation, Inc.
+>>     This is free software; see the source for copying conditions.  There is NO
+>>     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>>     $ gcc -Wall -Wextra -shared -o libtstpltlib.so tstpltlib.c
+>>     $ gcc -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
+>>     $ readelf -SW tstplt | grep 'plt\|Name'
+>>       [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
+>>       [11] .rela.plt         RELA            0000000000000698 000698 000060 18  AI  6  24  8
+>>       [13] .plt              PROGBITS        0000000000001020 001020 000050 10  AX  0   0 16
+>>       [14] .plt.got          PROGBITS        0000000000001070 001070 000010 10  AX  0   0 16
+>>       [15] .plt.sec          PROGBITS        0000000000001080 001080 000040 10  AX  0   0 16
+> 
+> On my machine, it's not enabled by default.  And it doesn't create .plt.sec
+> even if I pass -fcf-protection=full option.
+> 
+> $ gcc --version
+> gcc (Debian 12.2.0-10) 12.2.0
+> Copyright (C) 2022 Free Software Foundation, Inc.
+> This is free software; see the source for copying conditions.  There is NO
+> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> 
+> $ gcc -Wall -Wextra -shared -fcf-protection=full -o libtstplt.so tstpltlib.c
+> $ gcc -Wall -Wextra -fcf-protection=full -o tstplt tstplt.c -L.
+> -ltstpltlib -Wl,-rpath,$(pwd)
+> $ readelf -SW tstplt | grep 'plt\|Name'
+>    [Nr] Name              Type            Address          Off    Size
+>   ES Flg Lk Inf Al
+>    [11] .rela.plt         RELA            0000000000000688 000688
+> 000060 18  AI  6  24  8
+>    [13] .plt              PROGBITS        0000000000001020 001020
+> 000050 10  AX  0   0 16
+>    [14] .plt.got          PROGBITS        0000000000001070 001070
+> 000008 08  AX  0   0  8
+>    [24] .got.plt          PROGBITS        0000000000003fe8 002fe8
+> 000038 08  WA  0   0  8
 
-But, from Documentation/trace/ftrace.rst:
+That is interesting.  What does it say with -v i.e.
 
-  Before 4.1, all ftrace tracing control files were within the debugfs
-  file system, which is typically located at /sys/kernel/debug/tracing.
-  For backward compatibility, when mounting the debugfs file system,
-  the tracefs file system will be automatically mounted at:
+	gcc -v -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
 
-  /sys/kernel/debug/tracing
+And what is the distribution?
 
-A few spots in the perf docs still refer to this older debugfs path, so
-let's update them to avoid confusion.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
----
- tools/perf/Documentation/perf-list.txt          | 2 +-
- tools/perf/Documentation/perf-script-perl.txt   | 2 +-
- tools/perf/Documentation/perf-script-python.txt | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 57384a97c04f..6c83459d3192 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -228,7 +228,7 @@ This can be overridden by setting the kernel.perf_event_paranoid
- sysctl to -1, which allows non root to use these events.
- 
- For accessing trace point events perf needs to have read access to
--/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
-+/sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
- setting.
- 
- TRACING
-diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
-index fa4f39d305a7..5b479f5e62ff 100644
---- a/tools/perf/Documentation/perf-script-perl.txt
-+++ b/tools/perf/Documentation/perf-script-perl.txt
-@@ -55,7 +55,7 @@ Traces meant to be processed using a script should be recorded with
- the above option: -a to enable system-wide collection.
- 
- The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
-+(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
- 
- ----
-  format:
-diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-index cf4b7f4b625a..6a8581012e16 100644
---- a/tools/perf/Documentation/perf-script-python.txt
-+++ b/tools/perf/Documentation/perf-script-python.txt
-@@ -319,7 +319,7 @@ So those are the essential steps in writing and running a script.  The
- process can be generalized to any tracepoint or set of tracepoints
- you're interested in - basically find the tracepoint(s) you're
- interested in by looking at the list of available events shown by
--'perf list' and/or look in /sys/kernel/debug/tracing/events/ for
-+'perf list' and/or look in /sys/kernel/tracing/events/ for
- detailed event and field info, record the corresponding trace data
- using 'perf record', passing it the list of interesting events,
- generate a skeleton script using 'perf script -g python' and modify the
-@@ -449,7 +449,7 @@ Traces meant to be processed using a script should be recorded with
- the above option: -a to enable system-wide collection.
- 
- The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
-+(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
- 
- ----
-  format:
--- 
-2.39.1.456.gfc5497dd1b-goog
 
