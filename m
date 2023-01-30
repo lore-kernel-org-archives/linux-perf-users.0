@@ -2,205 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E66C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 05:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E676C54EED
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 06:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235413AbjA3FtY (ORCPT
+        id S235649AbjA3GAL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 00:49:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36558 "EHLO
+        Mon, 30 Jan 2023 01:00:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjA3FtX (ORCPT
+        with ESMTP id S231377AbjA3GAK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 00:49:23 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2047.outbound.protection.outlook.com [40.107.93.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DDE3A86;
-        Sun, 29 Jan 2023 21:49:22 -0800 (PST)
+        Mon, 30 Jan 2023 01:00:10 -0500
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2042.outbound.protection.outlook.com [40.107.102.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6AA7244AA;
+        Sun, 29 Jan 2023 22:00:04 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fonMIBt1yP7YCMBfnD6BnTBucoCI7BaWJIpL0cWPI8D+xmkitgr01m3YS0m01CGXqwF9viYN+msF7YzmiqH0Zrpl+DiHilAsXSEy0V9OMT5a0yd4z1nnnx8qDbsu2r8yU9GT8fpOjAJ9cNeIXveZ6C4iO8aq66e2On1I9LSafsrD/p1i5XVeQ+wadVjoB7OfcW9dQUPwxw3KFxaF/FYhVmWWJl5u6GVbX5Ckm3N7rz5mbuEc2v4SDEPZVL5ktH2ezLtO922Q/gK6XxEGXcBKwJ+JCr7aBBCJ7HE7BRaXqSVxhXj78ZfmwBUoZ98r1hEjh5YcOh+9rbsYoE9sTZs+pg==
+ b=LC9A9LroOOHDLjZ+KQE6fXjUKqss6PUPnHe19OUi/1sW17k6vGc/BuTPTmbcUrBBzIyissH/eU8lgbK2Wx3atzhHgKowQByIqSXtJu9wUlqfX83EU9b4PljqSx4WtqWjiiVD53YoOEaNXYDMuEcgFyH7cY05DoL9SMhZaBXePpjRchZqR/CYH0Xa3XCNTzXVpmNAq27lX1CUC8+FuJhhblayRF6etrcDUDx1FnNeA981D63p43V1h4B4gkf4rGJA50gFq3uv2CUT5/kpjmCTjAx5UBjhGLmJQscrfCQVi9052Zr99Ka7NlyUJJNOPNgYFNbZtAT3XBCYukW4HD+Jag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/m27PHhmgLI6k1k5GtC2gNu12WqxA4VqoTOePD0gnqQ=;
- b=ExHBe5iWawpQI8PEqlUG18WG2KUzgh4dGsz+6BqMCwEAYVPWg0dCBur7iKsgsfrmf087KY6LjpIpuvnHpt5MQiceiXZXtA+xzIqqdCll+/yR2l3jGuRQ0NCf3YBYSUKWznOpJN3ZqT+DybrEK3aSrptTxO5AICmEC90q3dKibEB2lQdDqMJkBJ1Wvw7kGGvK4lZEunycbRR/ObPAfJhXLV/5My9IHr8ajlFugAyUOK4xUBPzvIVRThWY6w91mUMxBqpam56GTl7vKIDwoO4Q45jQOAvBVtcITgGEZb5NMyhsyjOd/NG/AuV/XCLKwcvRY4NpfoNZ2OE6f7LzAK3zsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=ipCtlDJKfgtvYn9LBcC1LJMdwUzqfN/blraq8fSSNMg=;
+ b=kHPFCcZVAAWMMYJwVmrptp56qrtDCzNs8k08Ke5UL3WNa0zDH7zOHJTXOwgK7p9bLW4OEPs2Zp154W17ncVjSNvQZb12HX59gzFvkHNZCLXFXFcd3LYXxZt5of2/PGkzVAb4oReXXY9pW98Z0LTnygvqZE+MxUc7J6Nmk7kOXIbYN0MHsD+COrG2okdP6iRo/Q3GjezKCnadkJkVo4qhiiuXIbP1EAuLV/5qCVfRLBTODDx1MqnY0n511mUu1+c03opBKUsNihjZVodlCwvMP/qIsZ2DWMeQyRryQP9lQSQ3VgUa9p3CuaWaHN/Yu8oF+ltVR7AnBPVgre++umN9rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/m27PHhmgLI6k1k5GtC2gNu12WqxA4VqoTOePD0gnqQ=;
- b=KGyXvBfUisQriRZI6MwE7D0FYPKt6mPwe3lYfu+933utxOCoiLLdfa1G37lrV5ZUY7SuQU0LyUhBAtTDVzaztWz+h2yfQJAq4kE/81oFFkRb249Py6XICmrzNInwpLSxVhs4sBLVqSo0iCrNYCtiZfgzVTyzIC0aMDJJufx2Dy0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CH2PR12MB4264.namprd12.prod.outlook.com (2603:10b6:610:a4::15) with
+ bh=ipCtlDJKfgtvYn9LBcC1LJMdwUzqfN/blraq8fSSNMg=;
+ b=iMsLBvUu6+qqkLH1O4c8iH4mxVemslu8DJiJnoH5Rod7gtfSD3QI5GaUUB96c19z2h4HucH7E8vSSHTMusdE9XpleN+J7qk70vKEBQC6sV1uARkrXSAoVccqVH5hJ0GbPw883RaiyWe8TlifPp3f1J6EzGTEs+arqGypIzcP8FQ=
+Received: from DM6PR02CA0123.namprd02.prod.outlook.com (2603:10b6:5:1b4::25)
+ by SA1PR12MB7443.namprd12.prod.outlook.com (2603:10b6:806:2b7::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
- 2023 05:49:18 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::a0e2:652:d7bd:58f]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::a0e2:652:d7bd:58f%7]) with mapi id 15.20.6043.023; Mon, 30 Jan 2023
- 05:49:17 +0000
-Message-ID: <2cb6bb4b-fd04-556e-0790-524bf174cf89@amd.com>
-Date:   Mon, 30 Jan 2023 11:19:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 1/1] perf: Fix warning from concurrent read/write of
- perf_event_pmu_context
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, peterz@infradead.org
-Cc:     syzbot+697196bc0265049822bd@syzkaller.appspotmail.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-References: <20230127143141.1782804-1-james.clark@arm.com>
- <20230127143141.1782804-2-james.clark@arm.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20230127143141.1782804-2-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0013.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:95::9) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.33; Mon, 30 Jan
+ 2023 06:00:01 +0000
+Received: from DM6NAM11FT025.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:1b4:cafe::99) by DM6PR02CA0123.outlook.office365.com
+ (2603:10b6:5:1b4::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36 via Frontend
+ Transport; Mon, 30 Jan 2023 06:00:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT025.mail.protection.outlook.com (10.13.172.197) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6043.21 via Frontend Transport; Mon, 30 Jan 2023 06:00:01 +0000
+Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Sun, 29 Jan
+ 2023 23:59:24 -0600
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <x86@kernel.org>
+CC:     <peterz@infradead.org>, <bp@alien8.de>, <acme@kernel.org>,
+        <namhyung@kernel.org>, <jolsa@kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>,
+        <dave.hansen@linux.intel.com>, <james.clark@arm.com>,
+        <irogers@google.com>, <eranian@google.com>,
+        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
+        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
+Subject: [PATCH v3 0/2] tools perf: Add branch speculation info
+Date:   Mon, 30 Jan 2023 11:29:14 +0530
+Message-ID: <cover.1675057032.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CH2PR12MB4264:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7ab1cab0-f02a-44cf-c691-08db0285b9cc
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT025:EE_|SA1PR12MB7443:EE_
+X-MS-Office365-Filtering-Correlation-Id: 592f0a5d-0e54-4630-9f14-08db0287399d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /8Z2ByTSQMh0fhluFQHJX/TnIXuLJHkfilI1W4rB6q2xryYldHFx7qiSSpO7fpJCUAxsmXGy8q3RTROsozDC0qFETN4Z6Y9HS8BxL+0cUlsZzxQNQ5Rz+RcHlgBvnU8kyoK0GWA8AoENVToY3CyCKuM3DH58coznS0hC9EQASFcS5QOktvIPGy7MiYDiyk0M+pI2SRFpQY/un41fKBx6HXQKGWlL8GxdsdUWeVKZ3SEZXtGntjZfhv9mPtI0SOTVdvgBOa72KC+6uDltSo34Z0wHT20tOSeBoGMRRTzMFuEJr2MwNjZ6SsfaSkjpH6CpNwyEUV4r+rAFFKi6BnlsIuEW6xcGe4KJMtGKNU0JJI6DF17FgUPcXsfSsplUu0SV6qtgLWvbMgdo7z7Ol0q1c8ubykraPaHeGtKnpZawP+sonwy8s9dmTG6Sl/qRdaFAfwp4wr8+Y/Gzko+zKOuo/xSPrL4xP+u0IeDG6fQoYboQrsKwhfsm5laYlnDw40qtJUiYmx+twNnCpteuLa7rOVnJOITXRLtvEJKs9/15n6mb36BE4ZcEGE04AmbfVn3hU4Qs+ms1jhmnRS3vwY7o4LjH8VPCUqfPeZYPPsmhSlX4nAH5szVl1NiXTp3K3DnKRplRdi0BkpwnUmUyekiOGce8C/rbTWtzVervf3dpjzflA72VXtbS4fHcEEF3w/xczG3yk4YB8Z9unZA7je6ve4DrKraai2yNeNyL0gxf0HiGog2hJ5I2kkFPJjNZgKXxKU6bk2BHXcSPc2pTs6j9XB4aRzyNNYxsIu0FgO6S/kw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(376002)(396003)(136003)(39860400002)(346002)(451199018)(8936002)(41300700001)(31696002)(44832011)(86362001)(5660300002)(7416002)(83380400001)(2616005)(45080400002)(316002)(54906003)(66946007)(38100700002)(66556008)(66476007)(4326008)(8676002)(6666004)(6512007)(26005)(186003)(6506007)(966005)(53546011)(36756003)(6486002)(478600001)(31686004)(2906002)(99710200001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UDN5cHFnODVjWlY4VGZDYW9rbWR1WXd0bmlUamZlTGh6VGVybG5pRi9mZEcv?=
- =?utf-8?B?eUJ1T2U2SWZvbkdBU0dwOVJMa0s2QkU4MVQ2SkpZY1dQS3JycC8xS1ptSDE2?=
- =?utf-8?B?bkt5MElnWkhxOUYra2I0TmlMaHkvaEUvek10QjRLaTFMZ1A4eVpzaHZKSjlY?=
- =?utf-8?B?S1Z1bFBlUkt3bC9WVFNERW96UHZZMjgwNFFkc1UrWTdMZGdUcjF0NjBqK0x1?=
- =?utf-8?B?K0VwbUlleUpySjRsR2lPcnoveWdLUW1KRExRYkpMbUh1K1ROU2g2U0N3MjNU?=
- =?utf-8?B?TjE2YVAxc0lxR3pzVlRxdFpiT210d21WS1QwV09RY0pqNGt0cUErK0ZiR25a?=
- =?utf-8?B?cEdDZ3RtQzc1Qzl0bUpYY2xVQVhjZklqbTJCbWtyUGVSLzhLaVpCL0VzWVR2?=
- =?utf-8?B?SjR3TEVnb09FQVdYcStMM3R6M2tua0FqSGxsRjZoSUlqanRZQ1pNS2szVTJt?=
- =?utf-8?B?dDVtclFTSU14Q0Zvc2dRZGJTUFVlaG55SHJsSDlXYmpsNXo3UDgyWXh5WUhz?=
- =?utf-8?B?bWZ3cEk4bmZVRE5FNVl6S1FKb0NFMmZhZ3dBOFJpTGRYTGpDZC9VOG1ORWx0?=
- =?utf-8?B?N3NwYmg3OVBQSkQwYVI4OW1ycVBhcWg4WHFQSnlFZTNQaUttUnh1V0w2MEla?=
- =?utf-8?B?ZFNPSGdsalg4N3NIM0hvZkZsUzFMNGFmcmdlTjdUY2lBRnhXcUFrMjFtNEk4?=
- =?utf-8?B?NUFYWExSQ2xoL04wa2JrblFoUU1tUEtTbjhCTDV3WnBNVnRPYUVNOHZaeFVh?=
- =?utf-8?B?SzViS0YyZ2RrMkxET1FxL2FLd2FBWjVSd1BYNkdFOUF0OUJTZVRkMXA5OCtU?=
- =?utf-8?B?REdxTGlFaW8vNTBqRmtwK3ROZWQwNGRnZHdrWEJMdUJvUEV4MjVaV1lGdXdH?=
- =?utf-8?B?NS9Jay9zeGRtTHN2NlJ5NjJlM0lBYW9XMXBIcVcxMDI0WDNQL0lSUkNNckRu?=
- =?utf-8?B?VjFrQUlRSVdmRjA3TFNDREZrdG1OUjZjMldDK2RVbHA0VWxTbWRISi95VDM1?=
- =?utf-8?B?WU9VZlBrd3RCT2x1cEdlZFFLOGJWdlpYTDI1b0tqS0gxVXRxcnBDUVc2ZFRR?=
- =?utf-8?B?RUc5UUJMYmVuRzgyNWFpNXV1ZXVVUlRIbDU4MnJleVhEdUdvREQ3ckphYXpi?=
- =?utf-8?B?WEdkc3NrM1FVN3R5UElxc2hrNXFPVlZhSTVJSU53d0dYOVZDK0ozODE5NTlG?=
- =?utf-8?B?ZHpUMEhwdGo5M3YvWWRnSW55WmUrazAvL2Ric21TcVg1cFdxUm1VZTJYcW5z?=
- =?utf-8?B?aDBiUUUwOXowSW9uYm9WYVFpVDI3OFFrME9kYkw1c2VRcW5PNmtYaXUzS3do?=
- =?utf-8?B?OXJWelVITkRFUkp0aVYvMk55cXIxU3dxOUl1dWM1bWxPTDdjWXNNeCtpVXRq?=
- =?utf-8?B?STVxTkYwbXlISU5EZVVzQ2VQY29vOEU3ZmJXZVFMdnNWWXlCM1RGaVVLMjl5?=
- =?utf-8?B?MWk1ZVBaRzZ6citBMmJFT2xxZmlhdTNDVEtSd1ZrSTNwVW1lYjlQelRYQk9x?=
- =?utf-8?B?R1dFbkM0dkh1UTFZNWQyTk1wNTE1ZGxxZlNsckZPZDYxMC82YkxJUFhpUzJK?=
- =?utf-8?B?LzRzRlFydjBNdFQwSE5FL0IwZjluSWk4a1AwY2ttTktCWW1BQ1JCOFM0eVQy?=
- =?utf-8?B?NEt6WWV3TUF0WEVCVnY3aXp4dnVGaWZtYlRzTXFNWXJxa1lLc0hHbm1URGQx?=
- =?utf-8?B?ZkMrOVJFem5kUjNqczZURmgvVVMzTmxsUkQ5ZWw2S3psT2tYaXBadmU4RzZ1?=
- =?utf-8?B?blRZRTU4UVZpOTJVNnZFY21QcDg4NFIvUGhkUmNDVkRJYXhvOTFkbUtTZ003?=
- =?utf-8?B?czA3KzBFZmR4bXR6VjlLUWZTaXNvRC9TNnhXVU1TOHFaU3daTDByb3paWndS?=
- =?utf-8?B?Zm41WVpURTdaaWhrMlFza1lSeklqQTdYYkdTYzhIWldMUTRubVRHT1pEZHhP?=
- =?utf-8?B?NjRtMlZ2Q2lZUHJDb1l0WkZyYkp4ck0rbGlJVzZpZktSdjl2Nlg5R0pndXBv?=
- =?utf-8?B?NWtJWW1tMlg4YmZBNG5taUM3Ty9NenY3WGc5QU9KK281cHNpOFBaUnh3QWZ2?=
- =?utf-8?B?UG13L012MW9IdStvalhXSE5xeXZnZ0Y4ZEp4YlRiK3krZ0NXREhoOEZrWGpk?=
- =?utf-8?Q?y1vX/hZ/MFSag4b3RXDe+FhZ2?=
+X-Microsoft-Antispam-Message-Info: A0vIm5p6g3aV33pYUy5a/Ye1grGsI8qCumgpYyHfyPNDP2A2lEARUI3yV24SnEP+KtKyQKJWTf0zsFZg0A2rAbrWQeYojTYRoguGfk4RWyufmA+QMvPgQFWNnPKrJJ0OEdyjkFGFT2+uj2S3ylcTC83ZquWSXS6CC1AAe6f4ptKDnfEB+G8BVQDc7ju99715iyoCEEYHWVTKMDoOdNO4g/Ei0qq0vehOSO6SySZT/SFfj4PY6sRgkgoWjqyStk+TBMBv4X9spdkp/Uf5OSHCQpHe4HQx/u5o1VfcQPY0WEJ3OJ2OhetOWR8xXDPTIfkpTFeealQJOPSX5Y0SNUkKBByxQa2ALv+H1cSdKzYM4Uy/AmWV7C80NgnvAtHo5sFVmhYQM4TZDOSoiFhRNbkfSX6XKsXvVLeiGaRqcqS53UquPr+5Mn9VdN4POyoK2zt1S9qypS/n+bRGBug7iL/Bz05bK5q90QWTrbR9cyN8Tw4Z6YT3LE7G6MhMJV2p8ZyzbMWVx8Skt0P0vfdXU1mtxGhI0zo/H5EI/RADLDqp103kOHQf69DlDoX3jRi844BYAN9z/ebNUEKEsrLKJDugLACLjmn3jWQz9KI0DqKNqSKSo9ZHhtav/T76Q57krBI9M4voiDc42HsmZgQhuL87XCJJUtEh7vpjokl3s8wS99R2ZNMqVFsdRc2y8gfqWxZWg9TbSZ/39b8iPrPSW2XfZaIm7YPPQWHL66lMUof4rVn0QTtnmVlT4wDsLwikgGpVvLwlNg8C3wTAryWrVJgHVbfNIOYy5yAFDKc3XbdCVE6vDYuUdSsLnkU0v219FdNB
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(136003)(396003)(346002)(376002)(451199018)(46966006)(36840700001)(40470700004)(5660300002)(7416002)(8936002)(41300700001)(2906002)(44832011)(70586007)(8676002)(4326008)(70206006)(316002)(54906003)(110136005)(7696005)(478600001)(966005)(36860700001)(6666004)(16526019)(40460700003)(186003)(26005)(336012)(83380400001)(2616005)(82310400005)(426003)(356005)(82740400003)(40480700001)(86362001)(47076005)(81166007)(36756003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ab1cab0-f02a-44cf-c691-08db0285b9cc
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 05:49:17.7604
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 06:00:01.2903
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: 592f0a5d-0e54-4630-9f14-08db0287399d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ty4xgf1T9CZtqAHE9gqG1hJgD6h3C8uBWa6WeuFkw2BGTKOV2m/fUN20dC3H/WISE33BZOYAkUz4pN0JJq++Mw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4264
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT025.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7443
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+AMD Last Branch Record Extension Version 2 (LbrExtV2) provides branch
+speculation information and the perf UAPI is extended to provide this in
+a generic way. Make perf tool show this additional information.
 
-On 27-Jan-23 8:01 PM, James Clark wrote:
-> When running two Perf sessions, the following warning can appear:
-> 
->   WARNING: CPU: 1 PID: 2245 at kernel/events/core.c:4925 put_pmu_ctx+0x1f0/0x278
->   Modules linked in: xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat iptable_mangle iptable_nat nf_nat nf_conntrack libcrc32c nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables iptable_filter bridge stp llc coresight_stm stm_core coresight_etm4x coresight_tmc coresight_replicator coresight_funnel coresight_tpiu coresight arm_spe_pmu ip_tables x_tables ipv6 xhci_pci xhci_pci_renesas r8169
->   CPU: 1 PID: 2245 Comm: perf Not tainted 6.2.0-rc4+ #1
->   pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->   pc : put_pmu_ctx+0x1f0/0x278
->   lr : put_pmu_ctx+0x1b4/0x278
->   sp : ffff80000dfcbc20
->   x29: ffff80000dfcbca0 x28: ffff008004f00000 x27: ffff00800763a928
->   x26: ffff00800763a928 x25: 00000000000000c0 x24: 0000000000000000
->   x23: 00000000000a0003 x22: ffff00837df74088 x21: ffff80000dfcbd18
->   x20: 0000000000000000 x19: ffff00800763a6c0 x18: 0000000000000000
->   x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
->   x14: 0000000000000000 x13: ffff80000dfc8000 x12: ffff80000dfcc000
->   x11: be58ab6d2939e700 x10: be58ab6d2939e700 x9 : 0000000000000000
->   x8 : 0000000000000001 x7 : 0000000000000000 x6 : 0000000000000000
->   x5 : ffff00800093c9c0 x4 : 0000000000000000 x3 : ffff80000dfcbca0
->   x2 : ffff008004f00000 x1 : ffff8000082403c4 x0 : 0000000000000000
->   Call trace:
->    put_pmu_ctx+0x1f0/0x278
->    _free_event+0x2bc/0x3d0
->    perf_event_release_kernel+0x444/0x4bc
->    perf_release+0x20/0x30
->    __fput+0xe4/0x25c
->    ____fput+0x1c/0x28
->    task_work_run+0xc4/0xe8
->    do_notify_resume+0x10c/0x164
->    el0_svc+0xb4/0xdc
->    el0t_64_sync_handler+0x84/0xf0
->    el0t_64_sync+0x190/0x194
-> 
-> This is because there is no locking around the access of "if
-> (!epc->ctx)" in find_get_pmu_context() and when it is set to NULL in
-> put_pmu_ctx().
-> 
-> The decrement of the reference count in put_pmu_ctx() also happens
-> outside of the spinlock, leading to the possibility of this order of
-> events, and the context being cleared in put_pmu_ctx(), after its
-> refcount is non zero:
-> 
->  CPU0                                   CPU1
->  find_get_pmu_context()
->    if (!epc->ctx) == false
->                                         put_pmu_ctx()
->                                         atomic_dec_and_test(&epc->refcount) == true
->                                         epc->refcount == 0
->      atomic_inc(&epc->refcount);
->      epc->refcount == 1
->                                         list_del_init(&epc->pmu_ctx_entry);
-> 	                                      epc->ctx = NULL;
-> 
-> Another issue is that WARN_ON for no active PMU events in put_pmu_ctx()
-> is outside of the lock. If the perf_event_pmu_context is an embedded
-> one, even after clearing it, it won't be deleted and can be re-used. So
-> the warning can trigger. For this reason it also needs to be moved
-> inside the lock.
-> 
-> The above warning is very quick to trigger on Arm by running these two
-> commands at the same time:
-> 
->   while true; do perf record -- ls; done
->   while true; do perf record -- ls; done
+The UAPI changes can be found in commit 93315e46b000 ("perf/core: Add
+speculation info to branch entries").
 
-These dose not trigger WARN_ON on my x86 machine, however, the C reproducer
-provided by syzbot[1] does trigger it.
+Previous versions can be found at:
+v2: https://lore.kernel.org/all/cover.1664356751.git.sandipan.das@amd.com/
+v1: https://lore.kernel.org/all/cover.1660217326.git.sandipan.das@amd.com/
 
-[1]: https://syzkaller.appspot.com/text?tag=ReproC&x=17beacbc480000
+Changes in v3:
+- Drop tools-side UAPI changes as they have already been added by other
+  commits.
+- Rebase on top of latest perf/core.
 
-Thanks,
-Ravi
+Changes in v2:
+- Drop msr-index.h related changes for now.
+- Rebase on top of latest perf/core.
+- Fix UAPI breakage introduced by the ARM64 BRBE changes to perf branch
+  entry.
+
+Sandipan Das (2):
+  perf script: Show branch speculation info
+  perf session: Show branch speculation info in raw dump
+
+ tools/perf/builtin-script.c |  5 +++--
+ tools/perf/util/branch.c    | 15 +++++++++++++++
+ tools/perf/util/branch.h    |  2 ++
+ tools/perf/util/evsel.c     | 15 ++++++++++++---
+ tools/perf/util/session.c   |  5 +++--
+ 5 files changed, 35 insertions(+), 7 deletions(-)
+
+-- 
+2.34.1
+
