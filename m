@@ -2,198 +2,177 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6882FC61D97
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 17:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282E1C61D97
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 18:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjA3RgZ (ORCPT
+        id S237564AbjA3STq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 12:36:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51660 "EHLO
+        Mon, 30 Jan 2023 13:19:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237818AbjA3RgA (ORCPT
+        with ESMTP id S234038AbjA3STm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 12:36:00 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7C9BB80;
-        Mon, 30 Jan 2023 09:35:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675100158; x=1706636158;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=RdadY7n7+q4UkWkrD7WyOBDORBaYWzj8UsjFJAsxf84=;
-  b=NJFFNNBxMZqGdldWonbOl2EnUn2i0WrEr5Vua2lls5rPcZH0IhqclgoA
-   2Z7v1fCQ68EtjCUG2riSa3EzOoVHysYz9embo7J1hG8oqgQx55Mkn/sxz
-   c4D67OD+awUINXKL6eGWKHogK/VUXH1229rXwnXkhko/s9fcmeD4l8wN7
-   gMfow5pZNWMHbRCsNaeR9oyfEJN1IBBxymDLxabOLD62Wtc2IyfY+qrEm
-   Uo9NeftNlPLOfVhf7cnBIqV+8ZYTj+8KujidmyGAOZiK1ELv1lbcl+e54
-   r6Y76oAcKfdPiInb2L7UWdhFnbjb88Lybm9UIkdIjfdYYAeELC0312Xwc
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="311246854"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="311246854"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 09:35:56 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="788105520"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="788105520"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.33.106])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 09:35:48 -0800
-Message-ID: <5676a1b7-885c-e8d9-1809-8bedcf1ff995@intel.com>
-Date:   Mon, 30 Jan 2023 19:35:39 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.7.1
-Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Mon, 30 Jan 2023 13:19:42 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2336B3C2BA
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jan 2023 10:19:41 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id h18so2709357ilj.6
+        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jan 2023 10:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAFjNasnKQN5LUWGdN7AtadW817QQm7F4FvMhjCHwb0=;
+        b=RfZdv5XTG+8uD8qkRBhdwNBF0cK8e8hji8B33Gj95Q6avMrpQVnYUAuUvQ6T7IR8+p
+         MYCxMzFUWeWWkyawSiU0lbQwLFknwHfAQy3hsCbXbZdWrjCG2Tc3YHS7D6WPN1oWkG0f
+         eFMyiUb05xok2QkhaK8jh7WLReqLeYSqv2qpU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CAFjNasnKQN5LUWGdN7AtadW817QQm7F4FvMhjCHwb0=;
+        b=NqjwSN78CnEIbqlPDdcoD8a2jKj+tcf+rS7p2W/Le8UguaNxqADIZhSmycMSAXVw7O
+         FP2PJJoYIoTQflLNHshEx9VKSv+vxbXtfAc8vEf9bMAob4/KVoA4hpFRAEEGdZRG+ekN
+         ziEsjuIvM97Y/oxNkgdJcdQai6FXZ7c9OVkNw/klsfHmOPAI3/1BKWgzOZr3D/ivZmyD
+         kv+SSHNLMisE1KUL3qNaTdCX9J/q1Ltrhn8ZP6AiT4gOpfYB2XryiLsdVH1ULapS473w
+         tzscSkF+eG60x3xVO4eaImtIAmBlJ7H8/k96NdUk2MAc1FvY5Hsngk0S11wO7dDDvzIJ
+         eNdw==
+X-Gm-Message-State: AO0yUKUoYoCOBVbcPP6uLmr/Upxi11GCnc8ZQqQDi6jZM40jFsHi4DSw
+        3pMUOHTqtBIBHe3nAsIPDGEBOg==
+X-Google-Smtp-Source: AK7set+mwFjhaqPt63RqulQxBusxgMUOOgqwMk/p2L94uGQONgxdBYrhcYQqNFbg7qLSnkSytLx+CQ==
+X-Received: by 2002:a05:6e02:1541:b0:310:c510:780c with SMTP id j1-20020a056e02154100b00310c510780cmr12382570ilu.11.1675102780494;
+        Mon, 30 Jan 2023 10:19:40 -0800 (PST)
+Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jan 2023 10:19:40 -0800 (PST)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>, Huang Rui <ray.huang@amd.com>,
+        Ingo Molnar <mingo@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20230127001951.3432374-1-namhyung@kernel.org>
- <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
- <CAM9d7cg_7LNKrXtBuo2QUR1Voi9NKM98qYLC+pznMf4-5yo4Dg@mail.gmail.com>
- <Y9fREY3BxROqYYBO@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <Y9fREY3BxROqYYBO@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Todd E Brandt <todd.e.brandt@linux.intel.com>,
+        Tycho Andersen <tycho@tycho.pizza>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/9] use canonical ftrace path whenever possible
+Date:   Mon, 30 Jan 2023 11:19:06 -0700
+Message-Id: <20230130181915.1113313-1-zwisler@google.com>
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 30/01/23 16:15, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jan 27, 2023 at 02:54:36PM -0800, Namhyung Kim escreveu:
->> Hi Adrian,
->>
->> On Thu, Jan 26, 2023 at 11:22 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> On 27/01/23 02:19, Namhyung Kim wrote:
->>>> Hello,
->>>>
->>>> I found some problems in Intel-PT and auxtrace in general with pipe.
->>>> In the past it used to work with pipe, but recent code fails.
->>>
->>> Pipe mode is a problem for Intel PT and possibly other auxtrace users.
->>> Essentially the auxtrace buffers do not behave like the regular perf
->>> event buffers.  That is because the head and tail are updated by
->>> software, but in the auxtrace case the data is written by hardware.
->>> So the head and tail do not get updated as data is written.  In the
->>> Intel PT case, the head and tail are updated only when the trace is
->>> disabled by software, for example:
->>>     - full-trace, system wide : when buffer passes watermark
->>>     - full-trace, not system-wide : when buffer passes watermark or
->>>     context switches
->>>     - snapshot mode : as above but also when a snapshot is made
->>>     - sample mode : as above but also when a sample is made
->>>
->>> That means finished-round ordering doesn't work.  An auxtrace buffer
->>> can turn up that has data that extends back in time, possibly to the
->>> very beginning of tracing.
->>
->> Ok, IIUC we want to process the main buffer and auxtrace buffer
->> together in time order but there's no guarantee to get the auxtrace
->> data in time, right?
+The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 
-Yes
+But, from Documentation/trace/ftrace.rst:
 
->>
->> I wonder if it's possible to use 2 pass processing for pipe mode.
->> We may keep the events in the ordered queue and auxtrace queue
->> in the first pass, and process together from the beginning in the
->> second pass. But I guess the data size would be a problem.
->>
->> Or, assuming that the auxtrace buffer comes later than (or equal to)
->> the main buffer, we may start processing the main buffer as soon as
->> every auxtrace queue gets some data.  Thoughts?
+  Before 4.1, all ftrace tracing control files were within the debugfs
+  file system, which is typically located at /sys/kernel/debug/tracing.
+  For backward compatibility, when mounting the debugfs file system,
+  the tracefs file system will be automatically mounted at:
 
-That sounds like it would require figuring out a timestamp up to
-which there is Intel PT trace data in all queues.  That would
-be very complicated.
+  /sys/kernel/debug/tracing
 
->>
->>>
->>> For a perf.data file, that problem is solved by going through the trace
->>> and queuing up the auxtrace buffers in advance.
->>>
->>> For pipe mode, the order of events and timestamps can presumably
->>> be messed up.
->>>
->>> For Intel PT, it is a bit of a surprise that there is not
->>> validation to error out in pipe mode.
->>
->> What kind of validation do you have in mind?  Checking pid/tid?
+There are many places where this older debugfs path is still used in
+code comments, selftests, examples and tools, so let's update them to
+avoid confusion.
 
-Validation to kill pipe mode for Intel PT entirely.  But a warning
-is ok.
+I've broken up the series as best I could by maintainer or directory,
+and I've only sent people the patches that I think they care about to
+avoid spamming everyone.
 
->>
->>>
->>> At the least, a warning is needed, and the above explanation needs
->>> to be added to the documentation.
->>
->> Thanks, I'll add it to the documentation.
-> 
-> Ok, so I'll wait for v2 of this patch series, Adrian, apart from what
-> you mentioned, are you ok with the patches, or a subset of them? The
-> first ones looks ok, right?
+Ross Zwisler (9):
+  tracing: always use canonical ftrace path
+  bpf: use canonical ftrace path
+  selftests/bpf: use canonical ftrace path
+  perf docs: use canonical ftrace path
+  tools/power: use canonical ftrace path
+  selftests: use canonical ftrace path
+  tools/virtio: use canonical ftrace path
+  leaking_addresses: also skip canonical ftrace path
+  tools/kvm_stat: use canonical ftrace path
 
-Yes they are ok.
+ include/linux/kernel.h                        |  2 +-
+ include/linux/tracepoint.h                    |  4 ++--
+ include/uapi/linux/bpf.h                      |  8 ++++----
+ kernel/trace/Kconfig                          | 20 +++++++++----------
+ kernel/trace/kprobe_event_gen_test.c          |  2 +-
+ kernel/trace/ring_buffer.c                    |  2 +-
+ kernel/trace/synth_event_gen_test.c           |  2 +-
+ kernel/trace/trace.c                          |  2 +-
+ samples/bpf/cpustat_kern.c                    |  4 ++--
+ samples/bpf/hbm.c                             |  4 ++--
+ samples/bpf/ibumad_kern.c                     |  4 ++--
+ samples/bpf/lwt_len_hist.sh                   |  2 +-
+ samples/bpf/offwaketime_kern.c                |  2 +-
+ samples/bpf/task_fd_query_user.c              |  4 ++--
+ samples/bpf/test_lwt_bpf.sh                   |  2 +-
+ samples/bpf/test_overhead_tp_kern.c           |  4 ++--
+ samples/user_events/example.c                 |  4 ++--
+ scripts/leaking_addresses.pl                  |  1 +
+ scripts/tracing/draw_functrace.py             |  6 +++---
+ scripts/tracing/ftrace-bisect.sh              |  4 ++--
+ tools/include/uapi/linux/bpf.h                |  8 ++++----
+ tools/kvm/kvm_stat/kvm_stat                   |  2 +-
+ tools/lib/api/fs/tracing_path.c               |  4 ++--
+ tools/lib/traceevent/event-parse.c            |  8 ++++----
+ tools/perf/Documentation/perf-list.txt        |  2 +-
+ tools/perf/Documentation/perf-script-perl.txt |  2 +-
+ .../perf/Documentation/perf-script-python.txt |  4 ++--
+ tools/power/pm-graph/sleepgraph.py            |  4 ++--
+ .../x86/amd_pstate_tracer/amd_pstate_trace.py |  4 ++--
+ .../intel_pstate_tracer.py                    | 10 +++++-----
+ .../selftests/bpf/get_cgroup_id_user.c        |  2 +-
+ .../bpf/prog_tests/kprobe_multi_test.c        |  2 +-
+ .../bpf/prog_tests/task_fd_query_tp.c         |  2 +-
+ .../bpf/prog_tests/tp_attach_query.c          |  2 +-
+ .../selftests/bpf/prog_tests/trace_printk.c   |  2 +-
+ .../selftests/bpf/prog_tests/trace_vprintk.c  |  2 +-
+ .../selftests/bpf/progs/test_stacktrace_map.c |  2 +-
+ .../selftests/bpf/progs/test_tracepoint.c     |  2 +-
+ tools/testing/selftests/bpf/test_ftrace.sh    |  2 +-
+ tools/testing/selftests/bpf/test_tunnel.sh    |  8 ++++----
+ tools/testing/selftests/bpf/trace_helpers.c   |  4 ++--
+ .../testing/selftests/user_events/dyn_test.c  |  2 +-
+ .../selftests/user_events/ftrace_test.c       | 10 +++++-----
+ .../testing/selftests/user_events/perf_test.c |  8 ++++----
+ tools/testing/selftests/vm/protection_keys.c  |  4 ++--
+ tools/tracing/latency/latency-collector.c     |  2 +-
+ tools/virtio/virtio-trace/README              |  2 +-
+ tools/virtio/virtio-trace/trace-agent.c       |  2 +-
+ 48 files changed, 96 insertions(+), 95 deletions(-)
 
-> 
-> - Arnaldo
->  
->> How about showing something like this for pipe mode?
->>
->>   WARNING: Intel-PT with pipe mode may not work correctly.
-
-Perhaps:
-
-WARNING: Intel PT with pipe mode is not recommended. The output cannot be relied upon. In particular, time stamps and the order of events may be incorrect.
-
->>
->> Thanks,
->> Namhyung
->>
->>
->>>
->>>>                                                                As it
->>>> also touches the generic code, other auxtrace users like ARM SPE will
->>>> be affected too.  I added a test case to verify it works with pipes.
->>>>
->>>> At last, I can run this command without a problem.
->>>>
->>>>   $ perf record -o- -e intel_pt// true | perf inject -b | perf report -i- --itrace=i1000
->>>>
->>>> The code is available at 'perf/auxtrace-pipe-v1' branch in
->>>>
->>>>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
->>>>
->>>> Thanks,
->>>> Namhyung
->>>>
->>>> Namhyung Kim (4):
->>>>   perf inject: Use perf_data__read() for auxtrace
->>>>   perf intel-pt: Do not try to queue auxtrace data on pipe
->>>>   perf session: Avoid calling lseek(2) for pipe
->>>>   perf test: Add pipe mode test to the Intel PT test suite
->>>>
->>>>  tools/perf/builtin-inject.c             |  6 +++---
->>>>  tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
->>>>  tools/perf/util/auxtrace.c              |  3 +++
->>>>  tools/perf/util/session.c               |  9 +++++++--
->>>>  4 files changed, 30 insertions(+), 5 deletions(-)
->>>>
->>>>
->>>> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
->>>> prerequisite-patch-id: 4ccdf9c974a3909075051f4ffe498faecab7567b
->>>
-> 
+-- 
+2.39.1.456.gfc5497dd1b-goog
 
