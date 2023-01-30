@@ -2,133 +2,198 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3A6C54EED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 17:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6882FC61D97
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 17:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236122AbjA3Rfx (ORCPT
+        id S230290AbjA3RgZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 12:35:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51338 "EHLO
+        Mon, 30 Jan 2023 12:36:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237910AbjA3Rfl (ORCPT
+        with ESMTP id S237818AbjA3RgA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 12:35:41 -0500
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF294520B;
-        Mon, 30 Jan 2023 09:35:08 -0800 (PST)
-Received: by mail-wm1-f46.google.com with SMTP id j32-20020a05600c1c2000b003dc4fd6e61dso3740369wms.5;
-        Mon, 30 Jan 2023 09:35:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EHjZ+YN0j4sLX2KHlCojw242O/2EHaDDkDQJJPYtaLQ=;
-        b=OHR1HHrnyewta5PX324PMuUipBvZZEmlPwmSCWynFvinnfaP1FAF5tbiBLSelOCH0y
-         6pF3aUJyU6ApuHLiTJUB/G9H+180PRP00xvE5HAvDIWYdl4asMm1zqIiAD5lt6gAAypr
-         Lcu0VY0ADFJuYMXuGTeDAEm3Hv3u8kInUpUntHpHbjqZ48qf0v9KRSzZQwDxrx8Dp4lB
-         PxsGee6HBy6jjfINYWFaImKuyaFLhIeKMzf/wi2wtMt+nwyqSZyDCvm/j2HRmnwjmQx2
-         +kKyeeH7HpNfi1AgSD9ZRiAMG3swRme8G4fpp849jDybmaM/HNluj4bNxg4XUg5MKbfp
-         o3Fg==
-X-Gm-Message-State: AO0yUKWLOC/2PJ5v5tmaWc0LTP7awX67huUc9O4Ke4vi1UHXUW+xa0OF
-        +6Wh8caQEVrF/NmP0dCqgBZzY9yF9wsz960uSsw=
-X-Google-Smtp-Source: AK7set9WP8nYtp2JJtUO/vZuxso2tWygrLPvcMPpqRYgEEqBa3pbZZPMgzcWdGcfXGOr6j4rP6f1f3EfZoO2M5fdEb8=
-X-Received: by 2002:a05:600c:3481:b0:3dc:5844:6394 with SMTP id
- a1-20020a05600c348100b003dc58446394mr320269wmq.131.1675100095555; Mon, 30 Jan
- 2023 09:34:55 -0800 (PST)
+        Mon, 30 Jan 2023 12:36:00 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7C9BB80;
+        Mon, 30 Jan 2023 09:35:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675100158; x=1706636158;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RdadY7n7+q4UkWkrD7WyOBDORBaYWzj8UsjFJAsxf84=;
+  b=NJFFNNBxMZqGdldWonbOl2EnUn2i0WrEr5Vua2lls5rPcZH0IhqclgoA
+   2Z7v1fCQ68EtjCUG2riSa3EzOoVHysYz9embo7J1hG8oqgQx55Mkn/sxz
+   c4D67OD+awUINXKL6eGWKHogK/VUXH1229rXwnXkhko/s9fcmeD4l8wN7
+   gMfow5pZNWMHbRCsNaeR9oyfEJN1IBBxymDLxabOLD62Wtc2IyfY+qrEm
+   Uo9NeftNlPLOfVhf7cnBIqV+8ZYTj+8KujidmyGAOZiK1ELv1lbcl+e54
+   r6Y76oAcKfdPiInb2L7UWdhFnbjb88Lybm9UIkdIjfdYYAeELC0312Xwc
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="311246854"
+X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
+   d="scan'208";a="311246854"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 09:35:56 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="788105520"
+X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
+   d="scan'208";a="788105520"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.33.106])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 09:35:48 -0800
+Message-ID: <5676a1b7-885c-e8d9-1809-8bedcf1ff995@intel.com>
+Date:   Mon, 30 Jan 2023 19:35:39 +0200
 MIME-Version: 1.0
-References: <20230127170222.9895-1-adrian.hunter@intel.com> <20230127170222.9895-3-adrian.hunter@intel.com>
-In-Reply-To: <20230127170222.9895-3-adrian.hunter@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 30 Jan 2023 09:34:44 -0800
-Message-ID: <CAM9d7chny89+rtP6orSJOKrAqb4GbzCG53KV4O1J9mhKvCcWnQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] perf symbols: Add support for x86 .plt.sec
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.7.1
+Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20230127001951.3432374-1-namhyung@kernel.org>
+ <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
+ <CAM9d7cg_7LNKrXtBuo2QUR1Voi9NKM98qYLC+pznMf4-5yo4Dg@mail.gmail.com>
+ <Y9fREY3BxROqYYBO@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <Y9fREY3BxROqYYBO@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
+On 30/01/23 16:15, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jan 27, 2023 at 02:54:36PM -0800, Namhyung Kim escreveu:
+>> Hi Adrian,
+>>
+>> On Thu, Jan 26, 2023 at 11:22 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>>
+>>> On 27/01/23 02:19, Namhyung Kim wrote:
+>>>> Hello,
+>>>>
+>>>> I found some problems in Intel-PT and auxtrace in general with pipe.
+>>>> In the past it used to work with pipe, but recent code fails.
+>>>
+>>> Pipe mode is a problem for Intel PT and possibly other auxtrace users.
+>>> Essentially the auxtrace buffers do not behave like the regular perf
+>>> event buffers.  That is because the head and tail are updated by
+>>> software, but in the auxtrace case the data is written by hardware.
+>>> So the head and tail do not get updated as data is written.  In the
+>>> Intel PT case, the head and tail are updated only when the trace is
+>>> disabled by software, for example:
+>>>     - full-trace, system wide : when buffer passes watermark
+>>>     - full-trace, not system-wide : when buffer passes watermark or
+>>>     context switches
+>>>     - snapshot mode : as above but also when a snapshot is made
+>>>     - sample mode : as above but also when a sample is made
+>>>
+>>> That means finished-round ordering doesn't work.  An auxtrace buffer
+>>> can turn up that has data that extends back in time, possibly to the
+>>> very beginning of tracing.
+>>
+>> Ok, IIUC we want to process the main buffer and auxtrace buffer
+>> together in time order but there's no guarantee to get the auxtrace
+>> data in time, right?
 
-On Fri, Jan 27, 2023 at 9:02 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> The section .plt.sec was originally added for MPX and was first called
-> .plt.bnd. While MPX has been deprecated, .plt.sec is now also used for IBT.
-> On x86_64, IBT seems to be enabled by default, but can be switched off
-> using gcc option -fcf-protection=none. On 32-bit, option -z ibt will
-> enable IBT.
->
-> With .plt.sec, calls are made into .plt.sec instead of .plt, so it
-> makes more sense to put the symbols there instead of .plt. A notable
-> difference is that .plt.sec does not have a header entry.
->
-> For x86, when synthesizing symbols for plt, use offset and entry size of
-> .plt.sec instead of .plt when there is a .plt.sec section.
->
-> Example on Ubuntu 22.04 gcc 11.3:
->
->   Before:
->
->     $ cat tstpltlib.c
->     void fn1(void) {}
->     void fn2(void) {}
->     void fn3(void) {}
->     void fn4(void) {}
->     $ cat tstplt.c
->     void fn1(void);
->     void fn2(void);
->     void fn3(void);
->     void fn4(void);
->
->     int main()
->     {
->             fn4();
->             fn1();
->             fn2();
->             fn3();
->             return 0;
->     }
->     $ gcc --version
->     gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
->     Copyright (C) 2021 Free Software Foundation, Inc.
->     This is free software; see the source for copying conditions.  There is NO
->     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
->     $ gcc -Wall -Wextra -shared -o libtstpltlib.so tstpltlib.c
->     $ gcc -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
->     $ readelf -SW tstplt | grep 'plt\|Name'
->       [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
->       [11] .rela.plt         RELA            0000000000000698 000698 000060 18  AI  6  24  8
->       [13] .plt              PROGBITS        0000000000001020 001020 000050 10  AX  0   0 16
->       [14] .plt.got          PROGBITS        0000000000001070 001070 000010 10  AX  0   0 16
->       [15] .plt.sec          PROGBITS        0000000000001080 001080 000040 10  AX  0   0 16
+Yes
 
-On my machine, it's not enabled by default.  And it doesn't create .plt.sec
-even if I pass -fcf-protection=full option.
+>>
+>> I wonder if it's possible to use 2 pass processing for pipe mode.
+>> We may keep the events in the ordered queue and auxtrace queue
+>> in the first pass, and process together from the beginning in the
+>> second pass. But I guess the data size would be a problem.
+>>
+>> Or, assuming that the auxtrace buffer comes later than (or equal to)
+>> the main buffer, we may start processing the main buffer as soon as
+>> every auxtrace queue gets some data.  Thoughts?
 
-$ gcc --version
-gcc (Debian 12.2.0-10) 12.2.0
-Copyright (C) 2022 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+That sounds like it would require figuring out a timestamp up to
+which there is Intel PT trace data in all queues.  That would
+be very complicated.
 
-$ gcc -Wall -Wextra -shared -fcf-protection=full -o libtstplt.so tstpltlib.c
-$ gcc -Wall -Wextra -fcf-protection=full -o tstplt tstplt.c -L.
--ltstpltlib -Wl,-rpath,$(pwd)
-$ readelf -SW tstplt | grep 'plt\|Name'
-   [Nr] Name              Type            Address          Off    Size
-  ES Flg Lk Inf Al
-   [11] .rela.plt         RELA            0000000000000688 000688
-000060 18  AI  6  24  8
-   [13] .plt              PROGBITS        0000000000001020 001020
-000050 10  AX  0   0 16
-   [14] .plt.got          PROGBITS        0000000000001070 001070
-000008 08  AX  0   0  8
-   [24] .got.plt          PROGBITS        0000000000003fe8 002fe8
-000038 08  WA  0   0  8
+>>
+>>>
+>>> For a perf.data file, that problem is solved by going through the trace
+>>> and queuing up the auxtrace buffers in advance.
+>>>
+>>> For pipe mode, the order of events and timestamps can presumably
+>>> be messed up.
+>>>
+>>> For Intel PT, it is a bit of a surprise that there is not
+>>> validation to error out in pipe mode.
+>>
+>> What kind of validation do you have in mind?  Checking pid/tid?
 
-Thanks,
-Namhyung
+Validation to kill pipe mode for Intel PT entirely.  But a warning
+is ok.
+
+>>
+>>>
+>>> At the least, a warning is needed, and the above explanation needs
+>>> to be added to the documentation.
+>>
+>> Thanks, I'll add it to the documentation.
+> 
+> Ok, so I'll wait for v2 of this patch series, Adrian, apart from what
+> you mentioned, are you ok with the patches, or a subset of them? The
+> first ones looks ok, right?
+
+Yes they are ok.
+
+> 
+> - Arnaldo
+>  
+>> How about showing something like this for pipe mode?
+>>
+>>   WARNING: Intel-PT with pipe mode may not work correctly.
+
+Perhaps:
+
+WARNING: Intel PT with pipe mode is not recommended. The output cannot be relied upon. In particular, time stamps and the order of events may be incorrect.
+
+>>
+>> Thanks,
+>> Namhyung
+>>
+>>
+>>>
+>>>>                                                                As it
+>>>> also touches the generic code, other auxtrace users like ARM SPE will
+>>>> be affected too.  I added a test case to verify it works with pipes.
+>>>>
+>>>> At last, I can run this command without a problem.
+>>>>
+>>>>   $ perf record -o- -e intel_pt// true | perf inject -b | perf report -i- --itrace=i1000
+>>>>
+>>>> The code is available at 'perf/auxtrace-pipe-v1' branch in
+>>>>
+>>>>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>>>>
+>>>> Thanks,
+>>>> Namhyung
+>>>>
+>>>> Namhyung Kim (4):
+>>>>   perf inject: Use perf_data__read() for auxtrace
+>>>>   perf intel-pt: Do not try to queue auxtrace data on pipe
+>>>>   perf session: Avoid calling lseek(2) for pipe
+>>>>   perf test: Add pipe mode test to the Intel PT test suite
+>>>>
+>>>>  tools/perf/builtin-inject.c             |  6 +++---
+>>>>  tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
+>>>>  tools/perf/util/auxtrace.c              |  3 +++
+>>>>  tools/perf/util/session.c               |  9 +++++++--
+>>>>  4 files changed, 30 insertions(+), 5 deletions(-)
+>>>>
+>>>>
+>>>> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+>>>> prerequisite-patch-id: 4ccdf9c974a3909075051f4ffe498faecab7567b
+>>>
+> 
+
