@@ -2,371 +2,206 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AEBC54EED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 10:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB97AC54EAA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 10:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235861AbjA3KEc (ORCPT
+        id S236259AbjA3KfS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 05:04:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39214 "EHLO
+        Mon, 30 Jan 2023 05:35:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236382AbjA3KEU (ORCPT
+        with ESMTP id S236338AbjA3KfQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 05:04:20 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 987CC24100;
-        Mon, 30 Jan 2023 02:04:08 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AE7BFEC;
-        Mon, 30 Jan 2023 02:04:50 -0800 (PST)
-Received: from [10.57.46.210] (unknown [10.57.46.210])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92AF93F71E;
-        Mon, 30 Jan 2023 02:04:05 -0800 (PST)
-Message-ID: <c6605d52-b9e1-e8d3-ed29-562146f64eea@arm.com>
-Date:   Mon, 30 Jan 2023 10:04:03 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [6.1.7][6.2-rc5] perf all metrics test: FAILED!
+        Mon, 30 Jan 2023 05:35:16 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2067.outbound.protection.outlook.com [40.107.93.67])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB6675279;
+        Mon, 30 Jan 2023 02:35:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AiMff9enSF+EpPDqBeRwIy//jn0isW/DldpE5QCoC1GLUO2Dr95IMh7QkvszR4DPXi2rscnghP71TfRfKksS1ELhCDVq5FuYnEGN2cammOuPDiXxewWeEmI3yrR4wT3AqT/fTbzOavrQs9C7VUHVkO63jpMyCJxpp24V4M75Jsx32oMNpHOCkcmSgO8gc/zPA8wLnMh7ABveggq1JaXe/AHg5hSi9jQztURC1RcDiI1jBsnXx3B9mY0juQh0gtT+EAOVpzR5ja77eYg00OhatrdhV+1zFtEBY12iHxY2Hd4NWo9p43w7JWcKdReiCbvpGpzHTHPcUjtNCkeHBlmQtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jHA4oOJc/kK+Q8zXYnkafNCUrlsob5GpLZXCCH3bcq0=;
+ b=fCUVkkQmzGg0WXFmGpx2a6PfX47QK3GTTkTfecpqvkG88VSI1ut+KnBeFFcCc6R8b9JV7hr0MYpFPJonSAQ3gbJVhFIcgyT8u/DzFqihrg0Gtl5b2fscye3nNmMIz1429YIf0QtIMGipH7xOZecycoZ44585jR7LrLrucHjRcPFhTg3EbWF+SKSZgHkPy6WtDsUWcZjivegOm2oigTL1RO0Aws4+MGH/IOHTOwlkpOp5FJFqB0tNfKCSjNkig4S56brM5Dx8Jq/aiVkd/QXwtxXqceZX+MJNaMVN6lY2T+SxBp9aMa/WRkPb4pOtvHICEziSRMOu2fiXQ/rmQ59MEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jHA4oOJc/kK+Q8zXYnkafNCUrlsob5GpLZXCCH3bcq0=;
+ b=OI1o0XCjJQ3mDwgWekroxCEDK5D++0s/+HBHQeMrKQqZtv1Qh108RLZX6kr+F9gH/etFK5waudvKZJlXGyfqEEb1LOldzA2OdvLI3Z7f66mIyyAemcgqhhG/6NgL9KLEuBhDsT6NufWs0YxdwohZ1rLJpRi5PWKu+PDbr0eGHJY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by SN7PR12MB8057.namprd12.prod.outlook.com (2603:10b6:806:34a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
+ 2023 10:35:13 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::5593:9517:a2e9:1b6b]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::5593:9517:a2e9:1b6b%8]) with mapi id 15.20.6043.036; Mon, 30 Jan 2023
+ 10:35:13 +0000
+Message-ID: <08385b8c-0fae-3249-3dfb-5a7800928213@amd.com>
+Date:   Mon, 30 Jan 2023 16:04:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v3 1/2] perf script: Show branch speculation info
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org
+Cc:     peterz@infradead.org, bp@alien8.de, acme@kernel.org,
+        namhyung@kernel.org, jolsa@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        james.clark@arm.com, irogers@google.com, eranian@google.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+References: <cover.1675057032.git.sandipan.das@amd.com>
+ <87c48949f5a442dda6d4dc75d4a4303973eb04b2.1675057032.git.sandipan.das@amd.com>
 Content-Language: en-US
-To:     sedat.dilek@gmail.com, Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        llvm@lists.linux.dev, Ben Hutchings <benh@debian.org>
-References: <CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com>
- <CAP-5=fULKkEYXOVV5tXd8J0occGJwgV+BiJLkA=exW=bfgyEBw@mail.gmail.com>
- <CA+icZUUOZoLOFiBcYkccWPSusk9G_Rhf3DOZYWat-K+VfWFHQw@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CA+icZUUOZoLOFiBcYkccWPSusk9G_Rhf3DOZYWat-K+VfWFHQw@mail.gmail.com>
+From:   Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <87c48949f5a442dda6d4dc75d4a4303973eb04b2.1675057032.git.sandipan.das@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0192.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:be::16) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|SN7PR12MB8057:EE_
+X-MS-Office365-Filtering-Correlation-Id: 464fdb62-ad7a-47c5-71e7-08db02adab6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JItmQqA6gaHUOzMSoEdEkInb+z6XMcxFDgbaMV5yy2vd9wPrsgya5ebS1Rq3aHP/5GAzcIcTq/au5DH/M/ScpBAHH1REhOX/2u0COsB5sRrLgdGj9llXnEWRh+N5JHF6DDlxOAoigJlR5cqwXUoJuA2tY9Gjbk529Q+eou/Hn1E+P+IEv3gckq7NA61jDs5Ncku3jYdJftL03sm5cVAOXUjpnE8y9tx4/mjLcIJ1Rdvp7nsJbG0+rzrscyxL1V8FtRFRrJvT+DA7sWw7LjpY6M1lg0aXvqak83wX2RjDpcWyC3u4XmWcqDOGlokA+ryRMEj5caZVW9I6GAYXXYM8MXfX+FeD9VV+uYMHDtoRknDVwf8Vm/jTaAjQgY8DO3g2VqbEUjPMl8Gbrm/qs7623XSRdXrbpA8fydI8uvqs03Wogmte9S7YjTsLOOIGfTH6uwytH0b/Qpgcw1EZtQAGYsCqtEJVQ4WCRt1GTK/+Ni0vOdY3krf+iy9P663SRVZVBx5IF/QjZhaKK6nFeNQCy597G0d1TpJaJ7vBXgjxOu7ikMBSZqie1bN+gsfhyTCh3wFhiR+5IzWP3BZSg8LQkbv6Hpnm8j4Y4pHaXXIf0Zq2ZH3ljWrrKSH8BenVyiD49WSgkNDDHaYEccoSyK+NcsDz7ALbv88VuSgXj5eEDjS/+EcabGiIaSFhC1qqIrKAmOYe46lzyh9sw44Pz7VpEYS6ymwwFWW650RAkWfAKYg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(451199018)(2906002)(316002)(186003)(44832011)(6512007)(5660300002)(26005)(6506007)(53546011)(36756003)(7416002)(2616005)(6666004)(38100700002)(6486002)(31696002)(31686004)(83380400001)(86362001)(478600001)(4326008)(66476007)(66556008)(8676002)(66946007)(8936002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dk4vR25VZkhqU0VZOGZmOGQ1eEpRZHBjOVF1TzNBRDRGenRlN3lZdmpVSkJY?=
+ =?utf-8?B?cWlKeCtrZkE2NE5JdWJUeENGSGVxTlFFK014VS8wY25Zb1d0SGttTGZvZkdY?=
+ =?utf-8?B?VWVwblMvczFubG9mTmFoYkJHT0hxaG9pTzVCMUQvaHJXeER6T3lOYXduWTlw?=
+ =?utf-8?B?eDFZT0NRQ2dNVVFmVXpvclZhVGJHMVVPM1N6SlZLT0IrMWZ5SmJiNlVjdEdT?=
+ =?utf-8?B?cEZIb3NYWjB4TEsrMEIvb1dvR0JQbWMyUUE1QzM5SUlRVkFCVndrNkl1bjgv?=
+ =?utf-8?B?emZGVEs2T3BrOHdqR3E3T0UweHh6aE1nS1lKMTNjdElUVjBQWitKNkZXYndB?=
+ =?utf-8?B?dzJrandCVlVMNzNuR25RbnUwamRiaFRCdEJRSnpBdVNhNXF4c0drTTZBRDZD?=
+ =?utf-8?B?dHkyeDM4cFpBd20rdURPOUE1alJIR3EzdDExVmdWZ3AveFNKRDB2NUNVU0Ir?=
+ =?utf-8?B?WDc3THpxdm1KL3hrdGhHcWxIdkdwUEsxMW02dzNPU3cwekwvSVpIeE02eDdy?=
+ =?utf-8?B?NW9BQkdZbGVPN3BKUDlBRGJSWmNhZHdmN1g3YXZQdUhqaFpSTEg2Wk9uTjdO?=
+ =?utf-8?B?YWJsUEtLSldTNDdpc2pVNmNMUm1NYWZLUXEyclR3djJrS2ZVaHZHZnViRG9n?=
+ =?utf-8?B?WWY4ZWNmbW9tRkh4M1paUzZQRUFISVY5Mm9ScGVWL3RPemF5VnplQ052emdQ?=
+ =?utf-8?B?bnRINkZUVFNGTjIyRXIzM1ZleUlzcG5OUk5hbGlpSlgwYUJmd256OE5OTmo4?=
+ =?utf-8?B?T0RaNUpWdzlHdFFiVHBQRXI5Q1FQY3BQQ0kyMkNPRFFGM1BRemR6TkNOc0NP?=
+ =?utf-8?B?L0xURnJxWkFpcjdtekhnRFg5eTVCcCtsVVE0cEVyQzdUWDk1MWs4dUtnd29M?=
+ =?utf-8?B?VXJXOE1qaDhVSUp3cDhCVGl4WTVrSlpMd0Z4THVSUStwVllMMVRONmlxTXdC?=
+ =?utf-8?B?RGlxUVAySElUd2EzQm5XVjBPbWtqR3JJZkpwcUV2bXYxTW5XdGUwL0pYMGd1?=
+ =?utf-8?B?eUFMN2tmTDI5dW5YczM2cWk0QVI2eXl1WGlzS0owMEtvZTZBK29QOUlPWUp6?=
+ =?utf-8?B?bG11U2huWGVmMDJ6RnVaV0loWWtKTnU0UkQ4akgySWdmSmVFbzRIeUhHdWp3?=
+ =?utf-8?B?THhzRGlEdlU5MmFsNnlZRGpWUWdqSzdsNUxCNTM3cCt1RkZSdUVVeUZWdDdq?=
+ =?utf-8?B?QjN1Z1Y4ZWNtRnJBNDYvTzBTOFc3QlZQRk5xMWFKVTlvT3lLZGJkMHJOQUh1?=
+ =?utf-8?B?eTNEZHV2bU5MQVhkOXVIK2Jheklnelp5TlZianJVeDZ6bjY0OFdtUkpHMXdQ?=
+ =?utf-8?B?dEJ6OHNtSFBSd0ZJOWV6WTNOdDU0eGk4Z0gvYVplNXBJOEdiWnh1L0RtNmkx?=
+ =?utf-8?B?K05DcGxsazZheTNkTUlxTTZ5TGRsejRENXM4cGRzMzFNOW8xVGVUUnQwRVRz?=
+ =?utf-8?B?dFpvekFGaHBsR1hEL2YxdmZNbWxKSHVVRk4wQjhVWjd2MDFvOFJxbHFhOGxz?=
+ =?utf-8?B?UVJSRU5ZVG9BMHRhb0p4QmhjSkxqSEcwWTUrS2t0MVBJandUdjdZSXRqc0Ey?=
+ =?utf-8?B?eDRNL2h1WEZUQzFXbW04SVRBa2J1M1dFeXZ2UTZWRDdTM0VDdThmUEFGbFFP?=
+ =?utf-8?B?b3RjSGNsdk9zUkhtaERNNnRPRitDam01czNvZk14MUR2Q1hkcTY3TE9heTRt?=
+ =?utf-8?B?aFhMcU9abTMya1k5Mmlnb3ZidDJnTnJRblQxNUNSUXBkSnpaa0R2U1NVWm5L?=
+ =?utf-8?B?NHVJWllnZW56MmRaOVJBYnlXdmN0bEFHYndMejVjalVUY2dkQi9GQ1RTUm5N?=
+ =?utf-8?B?cGU4emJ2SnJ3YURwL0ZXQSttT2tnV0Rid09HTTNkTVUvYjBZdGsza3owSDhI?=
+ =?utf-8?B?YlZrUnRUWlE4WUJkNlUrMk1oRUs5aWRVdzhrNzlCR3pUajFpYzl5VW5xcEIx?=
+ =?utf-8?B?eGhVTVRIeGRidEVoc3I4YUJZT0t1SWZ4T2FMVzQ5TXBZNXgvYlF0WU1yWWR6?=
+ =?utf-8?B?R0g1djFkNFlzaUlzMU5tOFR1WTlqSEUrb2hWSHVKdGFDd0hHc0E3eWJVUFND?=
+ =?utf-8?B?QmRVUDMyOU8ranpmSXVaanE0SmU5OFkyL21LeWpUdkhiZXNCY1RORUd4eU14?=
+ =?utf-8?Q?D3ODkwdPKakQLExE6SGwUVW8Z?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 464fdb62-ad7a-47c5-71e7-08db02adab6c
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 10:35:13.3227
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: L8xtGqMM4Q+dFkkkvEe1bhJq6rUwN0VK9aVh3nNoS1ZHBzEi3/V00EmOkDshSkwiHWksioOxjpu2N5p5mxG/6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8057
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 30/01/2023 02:24, Sedat Dilek wrote:
-> ?
+On 1/30/2023 11:29 AM, Sandipan Das wrote:
+> Show the branch speculation info if provided by the branch recording
+> hardware feature. This can be useful for optimizing code further.
 > 
-> On Mon, Jan 30, 2023 at 12:21 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Sun, Jan 29, 2023 at 1:59 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->>>
->>> [ CC LLVM linux folks + Ben from Debian kernel team ]
->>>
->>> Hi,
->>>
->>> I am playing with LLVM version 16.0.0-rc1 which was released yesterday and PERF.
->>>
->>> After building my selfmade LLVM toolchain, I built perf and run some
->>> perf tests here on my Intel SandyBridge CPU (details see below).
->>>
->>> perf all metrics test: FAILED!
->>>
->>> ...with both Debian's perf version 6.1.7 and my selfmade version 6.2-rc5.
->>>
->>> Just noticed:
->>>
->>> Couldn't bump rlimit(MEMLOCK), failures may take place when creating
->>> BPF maps, etc
->>>
->>> Run the below tests with `sudo` - made this go away - still FAILED.
->>>
->>> But maybe I am missing to activate some sysfs/debug or whatever other stuff?
->>
->> Hi Sedat,
->>
->> things have been improving wrt metrics and so this failure may have
->> just been because of the addition of a previously missing metric. The
->> rlimit thing shouldn't affect things but maybe file descriptors?
->> Looking at the test output the issue is:
->>
->> ```
->> Metric 'tma_dram_bound' not printed in:
->> # Running 'internals/synthesize' benchmark:
->> Computing performance of single threaded perf event synthesis by
->> synthesizing events on the perf process itself:
->>   Average synthesis took: 207.680 usec (+- 0.176 usec)
->>   Average num. events: 30.000 (+- 0.000)
->>   Average time per event 6.923 usec
->>   Average data synthesis took: 217.833 usec (+- 0.202 usec)
->>   Average num. events: 161.000 (+- 0.000)
->>   Average time per event 1.353 usec
->>
->>  Performance counter stats for 'perf bench internals synthesize':
->>
->>      <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
->>                          (0,00%)
->>      <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
->>                          (0,00%)
->>      <not counted>      CPU_CLK_UNHALTED.THREAD
->>                          (0,00%)
->>      <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
->>                             (0,00%)
->> ```
->>
->> So the test was checking to see whether the tma_dram_bound metric
->> could be computed on your Sandybridge and it failed. The event counts
->> below show that every event came back "<not counted>" which is usually
->> indicative of a permissions problem - it is also not surprising given
->> this that the metric wasn't computed. You could try repeating the
->> command the test is trying with something like "perf stat -M
->> tma_dram_bound -a sleep 1", but running as root should have resolved
->> that issue. Does that give you enough to keep exploring?
->>
+> The speculation info is appended to the end of the list of fields so any
+> existing tools that use "/" as a delimiter for access fields via an index
+> remain unaffected. Also show "-" instead of "N/A" when speculation info
+> is unavailable because "/" is used as the field separator.
 > 
-> Hi Ian,
+> E.g.
 > 
-> Thanks for your feedback!
+>   $ perf record -j any,u,save_type ./test_branch
+>   $ perf script --fields brstacksym
 > 
-> I booted into my Debian kernel - just to see what happens.
+> Before:
 > 
-> # cat /proc/version
-> Linux version 6.1.0-2-amd64 (debian-kernel@lists.debian.org) (gcc-12
-> (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1
-> SMP PREEMPT_DYNAMIC Debian 6.1.7-1 (2023-01-18)
+>   [...]
+>   check_match+0x60/strcmp+0x0/P/-/-/0/CALL
+>   do_lookup_x+0x3c5/check_match+0x0/P/-/-/0/CALL
+>   [...]
 > 
-> All things run as root...
+> After:
 > 
-> # echo 0 | tee /proc/sys/kernel/kptr_restrict
-> /proc/sys/kernel/perf_event_paranoid
-> 0
+>   [...]
+>   check_match+0x60/strcmp+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
+>   do_lookup_x+0x3c5/check_match+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
+>   [...]
 > 
-> # /usr/bin/perf test 10 92 98 99 100 101
-> 10: PMU events                                                      :
-> 10.1: PMU event table sanity                                        : Ok
-> 10.2: PMU event map aliases                                         : Ok
-> 10.3: Parsing of PMU event table metrics                            : Ok
-> 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> 92: perf record tests                                               : Ok
-> 98: perf stat tests                                                 : Ok
-> 99: perf all metricgroups test                                      : Ok
-> 100: perf all metrics test                                           : FAILED!
-> 101: perf all PMU test                                               : Ok
-> 
-> # perf stat -M tma_dram_bound -a sleep 1
-> 
-> Performance counter stats for 'system wide':
-> 
->     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
->                   (0,00%)
->     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
->                      (0,00%)
->     <not counted>      CPU_CLK_UNHALTED.THREAD
->               (0,00%)
->     <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
->                         (0,00%)
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>  tools/perf/builtin-script.c |  5 +++--
+>  tools/perf/util/branch.c    | 15 +++++++++++++++
+>  tools/perf/util/branch.h    |  2 ++
+>  tools/perf/util/evsel.c     | 15 ++++++++++++---
+>  4 files changed, 32 insertions(+), 5 deletions(-)
 > 
 
-Hi Sedat,
+Sorry but I realized later that this change breaks the builtin branch test.
+The additional change below fixes that.
 
-I also had this failure and did a git bisect, but it led me to the
-conclusion that it is a stale build issue rather than a regression.
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index 59195eb80052..1c49d8293003 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -30,14 +30,14 @@ test_user_branches() {
+        #       brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
 
-There was a recent commit that renamed/removed some json PMU files which
-the build system can't cope with. I think the tests end up iterating
-over a different set of event names than were generated by the build system.
+        set -x
+-       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL$"        $TMPDIR/perf.script
+-       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL$"      $TMPDIR/perf.script
+-       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL$"    $TMPDIR/perf.script
+-       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL$"    $TMPDIR/perf.script
+-       grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET$"               $TMPDIR/perf.script
+-       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET$"     $TMPDIR/perf.script
+-       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND$"  $TMPDIR/perf.script
+-       grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND$"            $TMPDIR/perf.script
++       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"     $TMPDIR/perf.script
++       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"   $TMPDIR/perf.script
++       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$" $TMPDIR/perf.script
++       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$" $TMPDIR/perf.script
++       grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"            $TMPDIR/perf.script
++       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"  $TMPDIR/perf.script
++       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"       $TMPDIR/perf.script
++       grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"         $TMPDIR/perf.script
+        set +x
 
-If you do a clean build the issue should go away. I don't know if there
-is anything more we can do to stop this from happening.
+        # some branch types are still not being tested:
+@@ -57,7 +57,7 @@ test_filter() {
 
-James
+        # fail if we find any branch type that doesn't match any of the expected ones
+        # also consider UNKNOWN branch types (-)
+-       if grep -E -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
++       if grep -E -vm1 "^[^ ]*/($expect|-|( *))/.*$" $TMPDIR/perf.script; then
+                return 1
+        fi
+ }
 
->       1,002148600 seconds time elapsed
-> 
-> Hmm... looking at... Metric 'tma_l3_bound' ...
-> 
-> Running...
-> 
-> # perf stat --verbose -M tma_l3_bound -a sleep 1
-> Using CPUID GenuineIntel-6-2A-7
-> metric expr (MEM_LOAD_UOPS_RETIRED.LLC_HIT /
-> (MEM_LOAD_UOPS_RETIRED.LLC_HIT + 7 *
-> MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS)) *
-> CYCLE_ACTIVITY.STALLS_L2_PENDING / CLKS for tma_l3_bound
-> metric expr CPU_CLK_UNHALTED.THREAD for CLKS
-> 
-> found event MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> found event CYCLE_ACTIVITY.STALLS_L2_PENDING
-> found event CPU_CLK_UNHALTED.THREAD
-> found event MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> 
-> Parsing metric events
-> '{MEM_LOAD_UOPS_RETIRED.LLC_HIT/metric-id=MEM_LOAD_UOPS_RETIRED.LLC_HIT/,CYCLE_ACTIVITY.STALLS_L2_PENDING/metric-id=CYCLE_ACTIVITY.STALLS_L2_PEND
-> ING/,CPU_CLK_UNHALTED.THREAD/metric-id=CPU_CLK_UNHALTED.THREAD/,MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS/metric-id=MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS/}:W'
-> MEM_LOAD_UOPS_RETIRED.LLC_HIT -> cpu/event=0xd1,period=0xc365,umask=0x4/
-> CYCLE_ACTIVITY.STALLS_L2_PENDING ->
-> cpu/event=0xa3,cmask=0x5,period=0x1e8483,umask=0x5/
-> CPU_CLK_UNHALTED.THREAD -> cpu/event=0x3c,period=0x1e8483/
-> MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS -> cpu/event=0xd4,period=0x186a7,umask=0x2/
-> 
-> Control descriptor is not initialized
-> 
-> MEM_LOAD_UOPS_RETIRED.LLC_HIT: 0 4007421228 0
-> CYCLE_ACTIVITY.STALLS_L2_PENDING: 0 4007421228 0
-> CPU_CLK_UNHALTED.THREAD: 0 4007421228 0
-> MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS: 0 4007421228 0
-> 
-> Performance counter stats for 'system wide':
-> 
->     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
->                   (0,00%)
->     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
->                      (0,00%)
->     <not counted>      CPU_CLK_UNHALTED.THREAD
->               (0,00%)
->     <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
->                         (0,00%)
-> 
->       1,002310013 seconds time elapsed
-> 
-> So those events/metric-ids resulting in "<not counted>" are all found.
-> 
-> What means "Control descriptor is not initialized"?
-> 
-> To summarize:
-> 
-> Those two tests in "100: perf all metrics test" FAILED:
-> 
-> 1. tma_dram_bound
-> 2. tma_l3_bound
-> 
-> Best regards,
-> -Sedat-
-> 
->> Thanks,
->> Ian
->>
->>> Last perf version which was OK:
->>>
->>> ~/bin/perf -v
->>> perf version 6.0.0
->>>
->>> echo "linux-perf: Adjust limited access to performance monitoring and
->>> observability operations"
->>> echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
->>> /proc/sys/kernel/perf_event_paranoid
->>> 0
->>>
->>> ~/bin/perf test 10 86 92 93 94 95
->>> 10: PMU events                                                      :
->>> 10.1: PMU event table sanity                                        : Ok
->>> 10.2: PMU event map aliases                                         : Ok
->>> 10.3: Parsing of PMU event table metrics                            : Ok
->>> 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
->>> 86: perf record tests                                               : Ok
->>> 92: perf stat tests                                                 : Ok
->>> 93: perf all metricgroups test                                      : Ok
->>> 94: perf all metrics test                                           : Ok
->>> 95: perf all PMU test                                               : Ok
->>>
->>> echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
->>> /proc/sys/kernel/perf_event_paranoid
->>> echo "linux-perf: Reset limited access to performance monitoring and
->>> observability operations"
->>>
->>> If you need further information, please let me know.
->>>
->>> Thanks.
->>>
->>> Regards,
->>> -Sedat-
->>>
->>> P.S. Instructions
->>>
->>> [ REPRODUCER ]
->>>
->>> LLVM_MVER="16"
->>>
->>> # Debian LLVM
->>> ##LLVM_TOOLCHAIN_PATH="/usr/lib/llvm-${LLVM_MVER}/bin"
->>> # Selfmade LLVM
->>> LLVM_TOOLCHAIN_PATH="/opt/llvm/bin"
->>> if [ -d ${LLVM_TOOLCHAIN_PATH} ]; then
->>>    export PATH="${LLVM_TOOLCHAIN_PATH}:${PATH}"
->>> fi
->>>
->>> PYTHON_VER="3.11"
->>> MAKE="make"
->>> MAKE_OPTS="V=1 -j1 HOSTCC=clang-$LLVM_MVER HOSTLD=ld.lld
->>> HOSTAR=llvm-ar CC=clang-$LLVM_MVER LD=ld.lld AR=llvm-ar
->>> STRIP=llvm-strip"
->>>
->>> echo "LLVM MVER ........ $LLVM_MVER"
->>> echo "Path settings .... $PATH"
->>> echo "Python version ... $PYTHON_VER"
->>> echo "make line ........ $MAKE $MAKE_OPTS"
->>>
->>> LANG=C LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
->>>
->>> LANG=C LC_ALL=C $MAKE $MAKE_OPTS -C tools/perf
->>> PYTHON=python${PYTHON_VER} install-bin 2>&1 | tee
->>> ../make-log_perf-install_bin_python${PYTHON_VER}_llvm${LLVM_MVER}.txt
->>>
->>>
->>> [ TESTS ]
->>>
->>> [ TESTS - START ]
->>>
->>> echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
->>> /proc/sys/kernel/perf_event_paranoid
->>>
->>> [ TESTS - DEBIAN ]
->>>
->>> /usr/bin/perf -v
->>> perf version 6.1.7
->>>
->>> /usr/bin/perf test 10 92 98 99 100 101
->>>
->>>  10: PMU events                                                      :
->>>  10.1: PMU event table sanity                                        : Ok
->>>  10.2: PMU event map aliases                                         : Ok
->>>  10.3: Parsing of PMU event table metrics                            : Ok
->>>  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
->>>  92: perf record tests                                               : Ok
->>>  98: perf stat tests                                                 : Ok
->>>  99: perf all metricgroups test                                      : Ok
->>> 100: perf all metrics test                                           : FAILED!
->>> 101: perf all PMU test                                               : Ok
->>>
->>> [ TESTS - DILEKS ]
->>>
->>> ~/bin/perf -v
->>> perf version 6.2.0-rc5
->>>
->>> ~/bin/perf test 7 87 93 94 95 96
->>>
->>>   7: PMU events                                                      :
->>>   7.1: PMU event table sanity                                        : Ok
->>>   7.2: PMU event map aliases                                         : Ok
->>>   7.3: Parsing of PMU event table metrics                            : Ok
->>>   7.4: Parsing of PMU event table metrics with fake PMUs             : Ok
->>>  87: perf record tests                                               : Ok
->>>  93: perf stat tests                                                 : Ok
->>>  94: perf all metricgroups test                                      : Ok
->>>  95: perf all metrics test                                           : FAILED!
->>>  96: perf all PMU test                                               : Ok
->>>
->>> [ TESTS - FAILED ]
->>>
->>> /usr/bin/perf test --verbose 100 2>&1 | tee
->>> perf-test-verbose-100-perf-all-metrics-test_debian-perf-6-1-7.txt
->>>
->>> ~/bin/perf test --verbose 95 2>&1 | tee
->>> perf-test-verbose-95-perf-all-metrics-test_dileks-perf-6-2-rc5.txt
->>>
->>> [ TESTS - STOP ]
->>>
->>> echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
->>> /proc/sys/kernel/perf_event_paranoid
->>>
->>> - EOT -
+
+- Sandipan
