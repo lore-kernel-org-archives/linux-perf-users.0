@@ -2,170 +2,233 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6176C54EED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 14:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A219C54EAA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 15:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237286AbjA3OPw (ORCPT
+        id S232470AbjA3PXT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 09:15:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59752 "EHLO
+        Mon, 30 Jan 2023 10:23:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237341AbjA3OPv (ORCPT
+        with ESMTP id S238032AbjA3PXP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 09:15:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386E13BDB8;
-        Mon, 30 Jan 2023 06:15:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B79F261047;
-        Mon, 30 Jan 2023 14:15:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E455EC433EF;
-        Mon, 30 Jan 2023 14:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675088149;
-        bh=1TPEq50BwTQPmWyFZ+PLnU1UmPOhK0Av22uGK6NAEVY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mTIuQ1Ob+B8K1/QzmPWSTUBK/9sEIJKaYsBabVNdrmJL3013Nlc0WBlOnplfAynCK
-         H+HcTHukJ8ndyNC80dpSmUzOGA5AUhkYv2CXHazlphU6M/7KYxNy8rkiCHSopP4YzJ
-         nw4qqrTEJO6PFWVHMuohQhaMio7E9avhj/rnOXA1nc5Y5AuN62WXvo5RkTemVE4LbJ
-         QCzQ8ew/311vXYIqMEeyICfc7YG8gKMXAXE0I5/VgDw54DZQNZhbIAyK2uRP+Sg1lf
-         xFbFSH8SaBwXKtmxXgj2uuVhDJF36bwN4eeN9+QoNq4dDwxA9DhW0yEd0RwIidGL2G
-         rEXXn93ZjY3PA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C6865405BE; Mon, 30 Jan 2023 11:15:45 -0300 (-03)
-Date:   Mon, 30 Jan 2023 11:15:45 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Mon, 30 Jan 2023 10:23:15 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A123623850;
+        Mon, 30 Jan 2023 07:23:14 -0800 (PST)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30UASxVd001074;
+        Mon, 30 Jan 2023 15:22:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=gCXnxHeMBmrxc2gB9gfXee/1ulQwGglMjV2TymW/kk4=;
+ b=SLQvkHSTlTuU4DPJqNU1g2+OHdwj3pR18/EEQ8SN6HYk+cuIiiorard2gnsvwExp6+PC
+ 41fzHM9bKwIRyQijsJtCY8cJWkSUGKQBzz791Slt6+1EaOEj3X5OCkFMXt+l74onPHTd
+ zTTbUqqA9e1Blhf497zSX4UvOnbJW9xLMa+9oxZobde1LPegB4qAjtAr6RtzbpOgeV89
+ J329PtFLSrtPQztL18AXrtS0txr5V20bmrZ+69NfhUp8ceyh9z2+1lwgu18FYjhZQYNm
+ cWj6RtrTWDrBbKkqqv+ZP6eSnO7eAReATW2Emdoq4kN8k7IFxxeuTm0bVZXjrIqVYz2l qQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ncvmhk4g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Jan 2023 15:22:25 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30UE7YeE018595;
+        Mon, 30 Jan 2023 15:22:24 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3nct5bh1ek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Jan 2023 15:22:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VI27jo7T1xmDU0asFyV2tZxwbkOAKFFJSLuYZfHmX+7YVl557NwZa+mqzvv3JEzXiwGdakQAepzvDSchn9GrDp+U+G2BRLUdxcfdn6H6xwSiZLyr3K9LebJOlzmO5cJO2G7MzscRi1PvvrgW2LpJvC3tbJ0MJb+ynpVHe7RK7hqGTLHkTVXM+HanMoPzOS98but7abPa4BSFIuXQjJOw9dhIVScpWcDC/B9atp1kItCJY9+NSfik9NAlFCqhVZCtz8YC8fsSDcYDGTLVAXKSlEl8ZfaOH2LyUQDei4WTD0V/dnGb+oxqLbVMKgo+SJo8umH0d/vGvfcU2azskH5wYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gCXnxHeMBmrxc2gB9gfXee/1ulQwGglMjV2TymW/kk4=;
+ b=UrpncxIw+yhALZB/O+8R9i2WXmVRe9aD6K73UxBCkz65NriQBUVLP7e8OUp0naJib793YWuu6aFgTFbFMwMJoHeVBQVQ3XFFSgTCtoNXd7riXT+sesc5wrmPrjeizKNcNNHLzniX9zXOCIgUqA/MAGlUDyTBgY2fi2E4QlTE2WZH03nn5DdHHhJywNXBAdgDjmrC6HUJojepj19UoRzjCipt9spUxQl2pyidLSSPd1ipJSt9PHyItKLUQvrh4qoHrLJEIufk3X+O9vhzWP3VCzlvjwjJ3KdxUJJK87kp34TqZnOnUFT7XOyF/qZuMqW5sg5SxCJNll5Zu8ypLWyNHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCXnxHeMBmrxc2gB9gfXee/1ulQwGglMjV2TymW/kk4=;
+ b=R9jEbQ4QKI+UFLvNJOcHHgItTvYGfJt8dojFDp+vhSR+z3sKI6tB1PDsr0ZkJklD9R8rmpgaokd180YhGdJ3Y3oTCzE5+Muh+v6cLM42in3mBQYn9IKXzA8JaYtyMi2r+df8CUZ7LWvD1SLWCA9ZlKa0pzMBWBj/8v7awezZIZE=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by PH0PR10MB5548.namprd10.prod.outlook.com (2603:10b6:510:db::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.20; Mon, 30 Jan
+ 2023 15:22:22 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::fff7:981:3ae6:92eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::fff7:981:3ae6:92eb%7]) with mapi id 15.20.6064.017; Mon, 30 Jan 2023
+ 15:22:21 +0000
+Message-ID: <c18b2293-5f34-28b9-25de-c92c25d5c3f0@oracle.com>
+Date:   Mon, 30 Jan 2023 15:22:14 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v5 00/15] jevents/pmu-events improvements
+To:     Ian Rogers <irogers@google.com>
+Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
-Message-ID: <Y9fREY3BxROqYYBO@kernel.org>
-References: <20230127001951.3432374-1-namhyung@kernel.org>
- <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
- <CAM9d7cg_7LNKrXtBuo2QUR1Voi9NKM98qYLC+pznMf4-5yo4Dg@mail.gmail.com>
+        Sandipan Das <sandipan.das@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+References: <20230126233645.200509-1-irogers@google.com>
+ <56f1ed31-886d-358d-cfcc-0ab9fe7a76d8@oracle.com>
+ <CAP-5=fWc1UcjZT-8YcqHaiSEUGJCMNd4Syx3-MVhnk5PGUDPMQ@mail.gmail.com>
+Content-Language: en-US
+From:   John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <CAP-5=fWc1UcjZT-8YcqHaiSEUGJCMNd4Syx3-MVhnk5PGUDPMQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR02CA0075.eurprd02.prod.outlook.com
+ (2603:10a6:208:154::16) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM9d7cg_7LNKrXtBuo2QUR1Voi9NKM98qYLC+pznMf4-5yo4Dg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH0PR10MB5548:EE_
+X-MS-Office365-Filtering-Correlation-Id: 365c3fb1-b802-49a3-185e-08db02d5c850
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Yrf/2SNaEDLt9b0Kv1uKIgFsK9cpIyCtD2qI+XrF+K5rfHCpzxE8W09wxVoHaob+9Kvq0AnySx2fxRwASotB978bmgObWyIMhypQGDsF0RdNadbhnP3aOasrx2XDI3Lb54jwz3s40DwRJ15/rZvdo/uk7g8su0hUK/YoNI7TCGIlDZeY7dRlhZ/CrirSb0rJsMUq8flw0x+Th/IzTYprAg1ezDe3diRxxPlascOu617yEMqOLgOtcdhREzjIQxH1mVLQdjb0lxU4CJkiKwnVxz80q5F5TnBbgZdq32BiwT0Fii6Rb9CC5Iq6GTRas4fUDpKHUfkT5AaBLVFKsAmUKiqKuOGU6Kpc6GhfiOm3PjAJNA+LwAYUxdXwynOXBITYNgSHLYTouLVEe8C/Qn6cCC+ze98WKwJ9QXx8xkKcMoKHvl0secMP+6AXKu24KgK0f1pspMC4DUk0d7oLTWMcFXiL9aL+PHwWQW4xJiVUQ6b3ZKMJUmOSw6kHhaLF+IQnaefLqEgZCvEhjcfabAUeoMEaiadUlPEftgv3RJSOuwvB/ezL39OQoU2NKwP4rwLWAIgPNpyj/zdjQ+Ba37DrSnpxaAgCtpYFSuxJ2504A7EM1uM2UJ2wimoRQuZKCKsCHQuUGcM8Cw+wd5XFt5mFSMYDIlwhm4KD6UIckCa7w7e7BKT+7lFUfM96PaNg+OHC04NDNmLbpVjMoFCzGj2TLS+TPpgG/QsL1qlXz8EC4sc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(136003)(376002)(366004)(39860400002)(346002)(451199018)(478600001)(6486002)(41300700001)(36916002)(53546011)(6666004)(6506007)(2616005)(31686004)(26005)(6512007)(186003)(54906003)(83380400001)(316002)(66946007)(66556008)(38100700002)(8676002)(66476007)(6916009)(4326008)(36756003)(5660300002)(2906002)(86362001)(31696002)(8936002)(7406005)(7416002)(4744005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R0RLR0NWTzd2MFQ5RGR3SElQbW9vMWhJL0tMZmgrUlJ5dHBjOVNuYTc0Uktm?=
+ =?utf-8?B?cHA3dTR4NE9TOHZ6QXk0L2owbFh0eXNvSGM2bmtmaTNrOGFNSHp5QWNkS0VF?=
+ =?utf-8?B?QlZ6dkRVb1ZkV3h6ekVSb3N3ZDFmb1IzTDVnVDRXUXVVclFKdGQ1SkpaNFpa?=
+ =?utf-8?B?cUpkbDBMZC95azl3TkhLT0pNMmx4QTh1MEFUMDlSSU1RQnFwcGNtSnRqSnBX?=
+ =?utf-8?B?Q0tkTm9aRWV0dHdUL2J5ZllDRklPb2h5ZGVSbEduUloyMGs2OGw0S2FjbkJI?=
+ =?utf-8?B?M1pRektNTmYrd0x4dlEvY2VpOThWd0tvZW5VQnVJd04rV2hCZUlFNUlEN2Nj?=
+ =?utf-8?B?cHZBSGMxZU9zd0tEcG9idG9RNFJFcFJsaVFPUS8yaEkyTUVKaXRkVjlWNm1L?=
+ =?utf-8?B?L1ZNL2J6QjFtUVVOS1ZNYW05RVJ6MGVleUgzaHVXdG9oOW1YSkFBWTV5YUNh?=
+ =?utf-8?B?MWpTUWJhZk1MTFlteUFDOThVRld6aHpIRUE5ZHkyZE5GYlRldTRGVkxqVmhZ?=
+ =?utf-8?B?SlZxakQ0aHhVN25tcmUwK0lNUlFKZ0E5VFg2eUlZWE93Z0d6VHhDZSt3c2to?=
+ =?utf-8?B?dm5xbTVURUJjOW5teVgweHRaUjdhejBVeEFyYWdEdCtlTzlBaDlXUjVSRlNv?=
+ =?utf-8?B?L3M1SGV2L2lNNmVtR0h3ZllGcVZWRy96L2tRS2xSeWdUUVNudXpEWVJ1SGda?=
+ =?utf-8?B?eXE5cE1BZW9KMFpncnFnNGhCZVA2SlpvRnNRSk80RlBwM2xZeURaOWgwbE5V?=
+ =?utf-8?B?M29RUkpOK0M3LzZyRUQyaVdNeS95K0cvVzlWTU92NDNEdlF2VlpQalU0a054?=
+ =?utf-8?B?U0pHYldOMHJuYzVHdC9Xbm5oeUhKZzlnejNmcXJFZnRkVFJKZVZZWXRJclc3?=
+ =?utf-8?B?WkJBNnljUmpJUWlXanVRQ0F0WEdSK1ZiemtTMVdlREJxOTd4ck5MSDM0NzN6?=
+ =?utf-8?B?cWtYdlAzRnNuT0E5dUpGSjZSbGNnQ1M5ZTJoeFJ0bmZrTUZ1azJRa0pPWnEw?=
+ =?utf-8?B?VEhnM3FPQWlEMmg5WS9RdXlTL1VacTJ2bTBTTzJJeThPY2sxa2hUUVZFaDNW?=
+ =?utf-8?B?OXRkV3o5Q0Fsc01HWVdxREJ0b3JjMmRvV0c1Uy82VllSVXU2d2RWYlJvVE9H?=
+ =?utf-8?B?dnN4ZFQxWGNnU1JOWFp5N29WL041U2RKdGdVcVoydExjczdGNDk5WmlMSGZi?=
+ =?utf-8?B?SW1GU3lYcHovc2hHSkRUajU1N1JXNFRkLzVrNUdDT0E1YXpncjNabzFtbFNQ?=
+ =?utf-8?B?S21VcFA0Y0hyQlVKaVhUbjJIWi8zc1lVVzBJOGl1emFDL3JtMW9CWnRqd2NN?=
+ =?utf-8?B?L3BFZU1DU3hHcjh4cFdwaVRldWRHbStIR1B1aS9NelFlNkZVS0xjeDZWeEZl?=
+ =?utf-8?B?T0x6aHFDc09Dc0wwajV0Z1RMTHk3ME11bjZPbGZxY2JZTUpYOUJCRHlNcUdR?=
+ =?utf-8?B?ZjgrYTZSNG5nb0tuRmVNRHBKUW1PUnlDV2lsNUg1OUlYK0lQbmZlYkdqamRi?=
+ =?utf-8?B?Q093a1pqZ09OQ2FPT21kSEtjS1hlS29pbnRueTlOT2hTajFER0tUbnpEd1Vp?=
+ =?utf-8?B?WHJ2ZjF3S055cjdEVWk0ZVRucE5iL3BYUnFCellFcklnMHN5TnZaM0hqWGtZ?=
+ =?utf-8?B?UG92aG1Yd2EwVmMwUVZCUlltYWd3d2Ztd0gyRmN0SDJDbXN4Z2xJMk9sdDBR?=
+ =?utf-8?B?bVltZTM3ci93d1l4eWhzbkpxOHBWYXNMMXBNT2JOMHF5MHdOQlpRR1o4QmVQ?=
+ =?utf-8?B?aGwrbDlrOFZJV1Z4U3hUVzIyaWpzR1E0Z1grQTdTaXc4eWlsV2t0c251Rysw?=
+ =?utf-8?B?Ynpob25FVkczbFlCT1ZvbHY0clNxRmFlT3NrOHliRE9KVGVtRmFEaThRbXVX?=
+ =?utf-8?B?SlVpZW5UbnBSUDVoTytwWGdQN1dyNzE5N3lnNzFheEZvK2Zyb0UzZXhEWUJX?=
+ =?utf-8?B?WFI2NkFXam40dXN2ZE05aGlXOWlXUllkeUswbWRvNks5aEY4UWU3SmZTNWN6?=
+ =?utf-8?B?QUhuU2M2eE51QW9GT0hTZXZaTlpJNHdvOHBrK29MdUdHd2gyWi9aVjZYVDht?=
+ =?utf-8?B?WjBUWWN4N0w3U2Voc3g0dkN6TUYzRG1sU2cyem1MekpNcGdsckp2ZStsejJa?=
+ =?utf-8?B?bXlzaExPZjhiQ21Odk1BME8vN2JtcGFvSjZKd2UxbHFJbDV2S0VlSVJNSW1i?=
+ =?utf-8?B?MEE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?KzlBNmt6aktMQ01yQmFxdkljZ3JJelZramNUT1RVUmFvVUtzSXZTbXZvUVY4?=
+ =?utf-8?B?bVhXY1FsN3hIVG9icE1MUTc2VWJtRlkwL0FybDN1RWxaTk44Y1MyMHlsaEZk?=
+ =?utf-8?B?RmNwMXlhSk92enFCVkxnc1N5ZEcyRXlxVDRYMW9xdVo3TGgyUnd6aXhBS0Nt?=
+ =?utf-8?B?bXZpVVNEZWFyK0hpMmtFUDlnRi94NWtkQ2tyUnBMZ0tzMk1JVURDZTBqZEhj?=
+ =?utf-8?B?Y2psdkFlYWI3VEVGeDlzRmNPd3Rvc0hDWW04Y20xSVpGaTFsWVhMd0FNYW5U?=
+ =?utf-8?B?eFFtMFdoMUhJL1B3Vk16akVvUVp5YitveGJCZEN4ZkJodDhQUGlEMkRzVElS?=
+ =?utf-8?B?OHNuMm5uWUNSbkI2U0k0UE1McmFpbHRaRXpLLzV1dDZNUm5LeGMrbGh1VVpq?=
+ =?utf-8?B?SWN6RjNodFl4THR3OEUzL0M0S01yanFoWGVQVzVOSFY2dmZmdkFoUHEyOHpF?=
+ =?utf-8?B?YTg1WmxmSUJVdWxrTGVDVHExM0NOMzB4bmdwQjRrT2pPUGFsMWNFbm9XeG9Q?=
+ =?utf-8?B?RHNvZW5oYTdENkdlSW9STDE4QUwzUlNnT096NCtpVVdYRW44MDhJR292enRN?=
+ =?utf-8?B?eXNIczRjbnJxQnhUaGJJWSs2U1Q4Uk52VWh6M2VQOFAzMURGSk5sdXZJZWlS?=
+ =?utf-8?B?YlQ3VE91eG9qYXY0U3lwcitGc3BCNXpINmhTc1JkN0VSa2xUUndtL0ZvMHY0?=
+ =?utf-8?B?c1lZOHBWY252UDBZOHhLNmxuSHpSbDF0YWxNZjZSRlFaM1VRUHZDYjhuN1Zi?=
+ =?utf-8?B?cTVSeU9ZYkNPallRUnpJKy9velBKYjM5Z3RGTzBNbTFaUThHdnhWT3Byc2Na?=
+ =?utf-8?B?TERDZlhpaERHL2o2bXZrVGswejE4MGJoa0x6TWtNL0lyVnZNcEwrVFF2RlJD?=
+ =?utf-8?B?QjZoKytWUlV4MmYxbnY3MVE5ZnRRTk9veXRhMThjblFuZEtudytqNlpMeEtC?=
+ =?utf-8?B?RkowcDdFU24zdjlvMlNnSlUzYndzZSsvbllZQlNja2ZLeUpYY3FBZThCS0Vz?=
+ =?utf-8?B?YmJQSmxPeC85UDR0RjBOdHNhZVZCd3BiRW53bFE3czA0TXZ2Nk9wMEp5VnRt?=
+ =?utf-8?B?RzNLWnBSU3gyMENGYmI2VEYrckRmT0kxcXF5Szk3dk5xREhEMXB6WGRURGpS?=
+ =?utf-8?B?S05MWU1vd0R0dUxkN1JLeXBwVHlGLzRoWlB3OVFRc2k0VlJRRE9BWnA5MXhE?=
+ =?utf-8?B?SmhBNE9lL1UzKzJZMFAyUDY1R1JvM1p2aGU0MnFjaEZMZW9HVXcrL3BIS0lk?=
+ =?utf-8?B?dGhKKzlYQ1pIOEFVLzI4bGVVcEJUQ0RMSm5YUnZRektSL3JuNjVocDRBUHNG?=
+ =?utf-8?B?VnRaNHVXNGpDSjVreVNkVERwbW1OeFkrczYzRzF4WEIrUVIvaldkNGhlQ0tj?=
+ =?utf-8?B?elU2RS9mQkR6NC92K0JWVXJFbTM1M2RpQ09VUHdCUThvaGFTaWpGUlFKbXFi?=
+ =?utf-8?B?NGk2MC92bmdQU0d3RHk5ZHFBRk1BMSs2TGZXTllFczlmZldMME1XN0FtemMr?=
+ =?utf-8?B?V0IzK0NOQjgzUG4xWjlhbEw2Zno1YlRvNno2a3EyR0RRMlN0UjJ0MHE0QmpB?=
+ =?utf-8?B?RDFRTkhtNTlmT2pkUVlLRnY4VUNXdkduaGU5a3doMWZ1WTkvU1hDeGI0VUht?=
+ =?utf-8?B?L0tjWCtrME1EeXZSUWMwc1FiSDJkQ0NZVkgwUzhzajIrajNyakJod3oyUHVm?=
+ =?utf-8?Q?aBJ9vWRmGw5byTq+qgh2?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 365c3fb1-b802-49a3-185e-08db02d5c850
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 15:22:21.7694
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OGOeHI7d+qfd6tjCNAH/oVRL6fuYgozAZP/LiEVGcNk6OKtJeMxWyIVZHWjBVwfMwKSodKQd8RX4ap53UmyzYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5548
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-30_14,2023-01-30_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301300148
+X-Proofpoint-ORIG-GUID: amchwIK_Q_JlmJPv5AwwE8ElCjQ2sdob
+X-Proofpoint-GUID: amchwIK_Q_JlmJPv5AwwE8ElCjQ2sdob
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jan 27, 2023 at 02:54:36PM -0800, Namhyung Kim escreveu:
-> Hi Adrian,
+On 27/01/2023 13:48, Ian Rogers wrote:
+> On Fri, Jan 27, 2023, 5:20 AM John Garry <john.g.garry@oracle.com 
+> <mailto:john.g.garry@oracle.com>> wrote:
 > 
-> On Thu, Jan 26, 2023 at 11:22 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >
-> > On 27/01/23 02:19, Namhyung Kim wrote:
-> > > Hello,
-> > >
-> > > I found some problems in Intel-PT and auxtrace in general with pipe.
-> > > In the past it used to work with pipe, but recent code fails.
-> >
-> > Pipe mode is a problem for Intel PT and possibly other auxtrace users.
-> > Essentially the auxtrace buffers do not behave like the regular perf
-> > event buffers.  That is because the head and tail are updated by
-> > software, but in the auxtrace case the data is written by hardware.
-> > So the head and tail do not get updated as data is written.  In the
-> > Intel PT case, the head and tail are updated only when the trace is
-> > disabled by software, for example:
-> >     - full-trace, system wide : when buffer passes watermark
-> >     - full-trace, not system-wide : when buffer passes watermark or
-> >     context switches
-> >     - snapshot mode : as above but also when a snapshot is made
-> >     - sample mode : as above but also when a sample is made
-> >
-> > That means finished-round ordering doesn't work.  An auxtrace buffer
-> > can turn up that has data that extends back in time, possibly to the
-> > very beginning of tracing.
+>     On 26/01/2023 23:36, Ian Rogers wrote:
 > 
-> Ok, IIUC we want to process the main buffer and auxtrace buffer
-> together in time order but there's no guarantee to get the auxtrace
-> data in time, right?
+>     Hi Ian,
 > 
-> I wonder if it's possible to use 2 pass processing for pipe mode.
-> We may keep the events in the ordered queue and auxtrace queue
-> in the first pass, and process together from the beginning in the
-> second pass. But I guess the data size would be a problem.
+>     At a glance, none of this series has your Signed-off-by tag..
 > 
-> Or, assuming that the auxtrace buffer comes later than (or equal to)
-> the main buffer, we may start processing the main buffer as soon as
-> every auxtrace queue gets some data.  Thoughts?
+>     Thanks,
+>     John
 > 
-> >
-> > For a perf.data file, that problem is solved by going through the trace
-> > and queuing up the auxtrace buffers in advance.
-> >
-> > For pipe mode, the order of events and timestamps can presumably
-> > be messed up.
-> >
-> > For Intel PT, it is a bit of a surprise that there is not
-> > validation to error out in pipe mode.
 > 
-> What kind of validation do you have in mind?  Checking pid/tid?
 > 
-> >
-> > At the least, a warning is needed, and the above explanation needs
-> > to be added to the documentation.
-> 
-> Thanks, I'll add it to the documentation.
+> Thanks John, will fix. Is there anything else?
 
-Ok, so I'll wait for v2 of this patch series, Adrian, apart from what
-you mentioned, are you ok with the patches, or a subset of them? The
-first ones looks ok, right?
+Do you think that pmu-events/__pycache__/metric.cpython-36.pyc should be 
+deleted with a make clean? I would expect stuff like this to be deleted 
+(with a clean), but I am not sure if we have a policy on this (pyc files)
 
-- Arnaldo
- 
-> How about showing something like this for pipe mode?
-> 
->   WARNING: Intel-PT with pipe mode may not work correctly.
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> >
-> > >                                                                As it
-> > > also touches the generic code, other auxtrace users like ARM SPE will
-> > > be affected too.  I added a test case to verify it works with pipes.
-> > >
-> > > At last, I can run this command without a problem.
-> > >
-> > >   $ perf record -o- -e intel_pt// true | perf inject -b | perf report -i- --itrace=i1000
-> > >
-> > > The code is available at 'perf/auxtrace-pipe-v1' branch in
-> > >
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> > > Namhyung Kim (4):
-> > >   perf inject: Use perf_data__read() for auxtrace
-> > >   perf intel-pt: Do not try to queue auxtrace data on pipe
-> > >   perf session: Avoid calling lseek(2) for pipe
-> > >   perf test: Add pipe mode test to the Intel PT test suite
-> > >
-> > >  tools/perf/builtin-inject.c             |  6 +++---
-> > >  tools/perf/tests/shell/test_intel_pt.sh | 17 +++++++++++++++++
-> > >  tools/perf/util/auxtrace.c              |  3 +++
-> > >  tools/perf/util/session.c               |  9 +++++++--
-> > >  4 files changed, 30 insertions(+), 5 deletions(-)
-> > >
-> > >
-> > > base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
-> > > prerequisite-patch-id: 4ccdf9c974a3909075051f4ffe498faecab7567b
-> >
-
--- 
-
-- Arnaldo
+Thanks,
+John
