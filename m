@@ -2,49 +2,46 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0762CC54EED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 10:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E750DC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 12:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235718AbjA3K4z (ORCPT
+        id S230374AbjA3MHg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 05:56:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
+        Mon, 30 Jan 2023 07:07:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235715AbjA3K4y (ORCPT
+        with ESMTP id S232072AbjA3MHg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 05:56:54 -0500
+        Mon, 30 Jan 2023 07:07:36 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBBB917CCD;
-        Mon, 30 Jan 2023 02:56:53 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E9F836089;
+        Mon, 30 Jan 2023 04:06:52 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8750016F2;
-        Mon, 30 Jan 2023 02:57:35 -0800 (PST)
-Received: from [10.57.46.210] (unknown [10.57.46.210])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9AA23F71E;
-        Mon, 30 Jan 2023 02:56:50 -0800 (PST)
-Message-ID: <43ff6d3d-2047-1b2f-12ab-849a915a6e2f@arm.com>
-Date:   Mon, 30 Jan 2023 10:56:49 +0000
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A6D31713;
+        Mon, 30 Jan 2023 04:06:38 -0800 (PST)
+Received: from [10.57.46.219] (unknown [10.57.46.219])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D3383F71E;
+        Mon, 30 Jan 2023 04:05:54 -0800 (PST)
+Message-ID: <f17a40d4-2a37-fe7a-eac9-4ac1215e2c20@arm.com>
+Date:   Mon, 30 Jan 2023 12:05:53 +0000
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.2
-Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
+Subject: Re: [PATCH] perf: cs-etm: Update decoder code for OpenCSD version 1.4
 Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Denis Nikitin <denik@chromium.org>,
-        Stephane Eranian <eranian@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>
-References: <20230127001951.3432374-1-namhyung@kernel.org>
- <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
- <317a91ff-70c5-57a5-8447-7543057e4055@arm.com>
- <CAM9d7chU6kTdG0y65_UaD_hW75GezzNJF1ZwjNWq8BUpACAGTA@mail.gmail.com>
+To:     "acme@kernel.org" <acme@kernel.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, Ian Rogers <irogers@google.com>
+References: <20230120153706.20388-1-mike.leach@linaro.org>
+ <77f9eab5-4fb2-cf96-9628-2a816d519d61@arm.com>
+ <CAP-5=fWNT9XXMN+97TcprxWA+FRJpAy4T=XC9RHrOdKfcKi8_w@mail.gmail.com>
 From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAM9d7chU6kTdG0y65_UaD_hW75GezzNJF1ZwjNWq8BUpACAGTA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWNT9XXMN+97TcprxWA+FRJpAy4T=XC9RHrOdKfcKi8_w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -53,60 +50,57 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 27/01/2023 23:08, Namhyung Kim wrote:
-> Hi James,
-> 
-> On Fri, Jan 27, 2023 at 6:42 AM James Clark <james.clark@arm.com> wrote:
+On 24/01/2023 21:50, Ian Rogers wrote:
+> On Fri, Jan 20, 2023 at 7:47 AM James Clark <james.clark@arm.com> wrote:
 >>
 >>
 >>
->> On 27/01/2023 07:22, Adrian Hunter wrote:
->>> On 27/01/23 02:19, Namhyung Kim wrote:
->>>> Hello,
->>>>
->>>> I found some problems in Intel-PT and auxtrace in general with pipe.
->>>> In the past it used to work with pipe, but recent code fails.
+>> On 20/01/2023 15:37, Mike Leach wrote:
+>>> OpenCSD version 1.4 is released with support for FEAT_ITE.
+>>> This adds a new packet type, with associated output element ID in
+>>> the packet type enum - OCSD_GEN_TRC_ELEM_INSTRUMENTATION.
 >>>
->>> Pipe mode is a problem for Intel PT and possibly other auxtrace users.
+>>> As we just ignore this packet in perf, add to the switch statement
+>>> to avoid the "enum not handled in switch error", but conditionally
+>>> so as not to break the perf build for older OpenCSD installations.
+>>>
+>>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+>>> ---
+>>>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+>>> index fa3aa9c0fb2e..48e7121880a9 100644
+>>> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+>>> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+>>> @@ -604,6 +604,9 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+>>>       case OCSD_GEN_TRC_ELEM_CUSTOM:
+>>>       case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
+>>>       case OCSD_GEN_TRC_ELEM_MEMTRANS:
+>>> +#if (OCSD_VER_NUM >= 0x010400)
+>>> +     case OCSD_GEN_TRC_ELEM_INSTRUMENTATION:
+>>> +#endif
+>>>       default:
+>>>               break;
+>>>       }
 >>
->> Just some info from my side: For Arm Coresight we ended up deprecating
->> pipe mode, then not supporting it altogether. First was when we added an
->> optional step to peek through all of the data to help with an edge case.
->> Then we added a requirement to receive a HW_ID packet before decoding
->> which necessitated the peek. You can't peek in pipe mode because you
->> need to be able to seek, so it's not supported at all anymore.
+>> Checked the build with both old and new versions of OpenCSD and it's ok:
 >>
->> For Arm SPE I never tested it with piped data. I suppose I could add a
->> test at some point, but I don't really see the usecase.
+>> Reviewed-by: James Clark <james.clark@arm.com>
 > 
-> Yeah, it'd be great if we can have a test for Arm SPE.
+> Acked-by: Ian Rogers <irogers@google.com>
 > 
+> Thanks,
+> Ian
 
-Ok thanks I will put it on the list of things to do.
+Hi Arnaldo,
 
-> Anyway, my work env (Google) requires the pipe mode due to the
-> restriction in disk usage.  Without the pipe support, it's not possible
-> to run `perf record` in production.
-> 
+Is it ok to merge this change? If anyone is building with the latest
+OpenCSD they will get a build error on the unhandled switch case, and we
+just got it in our CI too.
 
-Makes sense. Unfortunately at the moment with Coresight, because of the
-lack of appropriate timestamps we're waiting for the end of the file
-before starting decoding. So you're not really any better off using
-piped mode, unless you have a lot more memory than disk space?
+I suppose we could disable the warning around this switch, but it's
+pretty rare to add new packets so might be best to leave it.
 
-Since this commit [1] and Arm v8.4 we can actually start making use of
-the timestamps and do a streaming decode again. So I will also add it to
-the list to look into that for Coresight again. Are you using an old
-version of Perf or not using Coresight at all? I know Denis at Google is
-using Coresight, but only with files rather than pipes.
-
-One other thing, have you used the --switch-output mode to perf record
-before? I would have said it would give you some of the benefits of
-piped mode, but is more likely to work with Coresight. But last time I
-checked it's not working either. Not very helpful I know, but something
-to keep in mind.
-
+Thanks
 James
-
-[1]:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=a7fe9a443b6064c68f86a2ee09bdfa7736660ef3
