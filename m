@@ -2,150 +2,239 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BCFC54EAA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 20:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5478DC636CD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 22:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjA3UJW (ORCPT
+        id S229716AbjA3WXP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 15:09:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55214 "EHLO
+        Mon, 30 Jan 2023 17:23:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235081AbjA3UJV (ORCPT
+        with ESMTP id S229468AbjA3WXO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 15:09:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45FF434C06;
-        Mon, 30 Jan 2023 12:09:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D39D761251;
-        Mon, 30 Jan 2023 20:09:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18659C433EF;
-        Mon, 30 Jan 2023 20:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675109353;
-        bh=lYpvEwgqu8muRzn2ZBfUUeLCMSfrhWuoPpSDmY5HUKY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jgrx3dRmkh1AU5AtQJA6aaDO5GzHZq3TFRNO30hUbUiSCaPsk8M6EFTEZwiBNAuxt
-         ZUORfPdB7rhiusmzV0ig6hb/UlPE1y6vbDGqiFfrcjftZlwV23VdYqPSLFF8CEXK2T
-         L8uwsoYT0ID1Pg28PhGFYGaIdoiNApGzM8ZzOubxy7LoqUSeYfnjKwej7jGo/sZY7i
-         E9320cZubpkfEkAhD2vsyrUNudcYVBK7MxYZRj+y/Rl8tpgFzVrYOWnbJuuycpwXxm
-         M0I4RI74OkbcYJtgs77s2MrIHrC74We21dSqh6+3p7u+OnGDLNEFb9CneGt5vkbFD1
-         brYLX29sKyKoA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 35784405BE; Mon, 30 Jan 2023 17:09:10 -0300 (-03)
-Date:   Mon, 30 Jan 2023 17:09:10 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, bp@alien8.de,
-        namhyung@kernel.org, jolsa@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
-        james.clark@arm.com, irogers@google.com, eranian@google.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 1/2] perf script: Show branch speculation info
-Message-ID: <Y9gj5spCa8JcTY/X@kernel.org>
-References: <cover.1675057032.git.sandipan.das@amd.com>
- <87c48949f5a442dda6d4dc75d4a4303973eb04b2.1675057032.git.sandipan.das@amd.com>
- <08385b8c-0fae-3249-3dfb-5a7800928213@amd.com>
+        Mon, 30 Jan 2023 17:23:14 -0500
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C15010E3;
+        Mon, 30 Jan 2023 14:23:13 -0800 (PST)
+Received: by mail-wm1-f51.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so11137102wma.1;
+        Mon, 30 Jan 2023 14:23:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WxCgMXneIJ9ziSZEeYzUWb1GGx/ja4tXlCSNQctdDWY=;
+        b=LSzWQ/s3xDmvKu7IDrG74RAPayG9uQTh3+V1v4iAWVOmYTEnjjT14cz8KtDxUgs5sJ
+         eDk8giyVqgIQNmfvZ9qsMbckzsotPuPlZBKEBnIwQWqZhthfBaY+sJArX2/w22CDTVn0
+         6i2dfkk2iDLfktVgXGkaKlbsA40btaVIl3JfGZsdfVswFLbqg4Eg1EX3Pj0D2XGq0nAI
+         YnbzzcLtfvaTbtspZZHu88HUwuzUKKkA9Sq+VbK7v4faEHmZWsL9ViO6Nb7UAvFdh8r1
+         U3ssUFzWHndNvSiiG1Qxv3CtqPMKstbEVXjTyuIOdg0h/nhf8aUkHZ/4EsbvnQUKiELe
+         FCbw==
+X-Gm-Message-State: AO0yUKU/NrSdslz4pza+Zj8UAgakx5oihZtQRSjAc4pCCHRVV71Rn0XD
+        qstElGysZ9IHAguEjyFgX2ipkK2xSaOEs9sJTQA=
+X-Google-Smtp-Source: AK7set+jTQgsZucYhJSE46JbedmKGW4tY+jZrJ3K6NlfVXU0FZqV6SKEo9O9VlWPzfcVRyTSIemqmoGzkIMdUhOZMd0=
+X-Received: by 2002:a05:600c:b9b:b0:3dc:587d:69b with SMTP id
+ fl27-20020a05600c0b9b00b003dc587d069bmr443192wmb.28.1675117391527; Mon, 30
+ Jan 2023 14:23:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08385b8c-0fae-3249-3dfb-5a7800928213@amd.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230127170222.9895-1-adrian.hunter@intel.com>
+ <20230127170222.9895-3-adrian.hunter@intel.com> <CAM9d7chny89+rtP6orSJOKrAqb4GbzCG53KV4O1J9mhKvCcWnQ@mail.gmail.com>
+ <5aeab2b5-7349-d220-652b-75360ef6d723@intel.com>
+In-Reply-To: <5aeab2b5-7349-d220-652b-75360ef6d723@intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 30 Jan 2023 14:22:59 -0800
+Message-ID: <CAM9d7ch2T1B_A_meyZi5A+kpwmzCY-eAKuZv5OVYGonBrhXqgQ@mail.gmail.com>
+Subject: Re: [PATCH 2/9] perf symbols: Add support for x86 .plt.sec
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 30, 2023 at 04:04:58PM +0530, Sandipan Das escreveu:
-> On 1/30/2023 11:29 AM, Sandipan Das wrote:
-> > Show the branch speculation info if provided by the branch recording
-> > hardware feature. This can be useful for optimizing code further.
-> > 
-> > The speculation info is appended to the end of the list of fields so any
-> > existing tools that use "/" as a delimiter for access fields via an index
-> > remain unaffected. Also show "-" instead of "N/A" when speculation info
-> > is unavailable because "/" is used as the field separator.
-> > 
-> > E.g.
-> > 
-> >   $ perf record -j any,u,save_type ./test_branch
-> >   $ perf script --fields brstacksym
-> > 
-> > Before:
-> > 
-> >   [...]
-> >   check_match+0x60/strcmp+0x0/P/-/-/0/CALL
-> >   do_lookup_x+0x3c5/check_match+0x0/P/-/-/0/CALL
-> >   [...]
-> > 
-> > After:
-> > 
-> >   [...]
-> >   check_match+0x60/strcmp+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
-> >   do_lookup_x+0x3c5/check_match+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
-> >   [...]
-> > 
-> > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> > ---
-> >  tools/perf/builtin-script.c |  5 +++--
-> >  tools/perf/util/branch.c    | 15 +++++++++++++++
-> >  tools/perf/util/branch.h    |  2 ++
-> >  tools/perf/util/evsel.c     | 15 ++++++++++++---
-> >  4 files changed, 32 insertions(+), 5 deletions(-)
-> > 
-> 
-> Sorry but I realized later that this change breaks the builtin branch test.
-> The additional change below fixes that.
+On Mon, Jan 30, 2023 at 10:35 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 30/01/23 19:34, Namhyung Kim wrote:
+> > Hi Adrian,
+> >
+> > On Fri, Jan 27, 2023 at 9:02 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> The section .plt.sec was originally added for MPX and was first called
+> >> .plt.bnd. While MPX has been deprecated, .plt.sec is now also used for IBT.
+> >> On x86_64, IBT seems to be enabled by default, but can be switched off
+> >> using gcc option -fcf-protection=none. On 32-bit, option -z ibt will
+> >> enable IBT.
+> >>
+> >> With .plt.sec, calls are made into .plt.sec instead of .plt, so it
+> >> makes more sense to put the symbols there instead of .plt. A notable
+> >> difference is that .plt.sec does not have a header entry.
+> >>
+> >> For x86, when synthesizing symbols for plt, use offset and entry size of
+> >> .plt.sec instead of .plt when there is a .plt.sec section.
+> >>
+> >> Example on Ubuntu 22.04 gcc 11.3:
+> >>
+> >>   Before:
+> >>
+> >>     $ cat tstpltlib.c
+> >>     void fn1(void) {}
+> >>     void fn2(void) {}
+> >>     void fn3(void) {}
+> >>     void fn4(void) {}
+> >>     $ cat tstplt.c
+> >>     void fn1(void);
+> >>     void fn2(void);
+> >>     void fn3(void);
+> >>     void fn4(void);
+> >>
+> >>     int main()
+> >>     {
+> >>             fn4();
+> >>             fn1();
+> >>             fn2();
+> >>             fn3();
+> >>             return 0;
+> >>     }
+> >>     $ gcc --version
+> >>     gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+> >>     Copyright (C) 2021 Free Software Foundation, Inc.
+> >>     This is free software; see the source for copying conditions.  There is NO
+> >>     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> >>     $ gcc -Wall -Wextra -shared -o libtstpltlib.so tstpltlib.c
+> >>     $ gcc -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
+> >>     $ readelf -SW tstplt | grep 'plt\|Name'
+> >>       [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
+> >>       [11] .rela.plt         RELA            0000000000000698 000698 000060 18  AI  6  24  8
+> >>       [13] .plt              PROGBITS        0000000000001020 001020 000050 10  AX  0   0 16
+> >>       [14] .plt.got          PROGBITS        0000000000001070 001070 000010 10  AX  0   0 16
+> >>       [15] .plt.sec          PROGBITS        0000000000001080 001080 000040 10  AX  0   0 16
+> >
+> > On my machine, it's not enabled by default.  And it doesn't create .plt.sec
+> > even if I pass -fcf-protection=full option.
+> >
+> > $ gcc --version
+> > gcc (Debian 12.2.0-10) 12.2.0
+> > Copyright (C) 2022 Free Software Foundation, Inc.
+> > This is free software; see the source for copying conditions.  There is NO
+> > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> >
+> > $ gcc -Wall -Wextra -shared -fcf-protection=full -o libtstplt.so tstpltlib.c
+> > $ gcc -Wall -Wextra -fcf-protection=full -o tstplt tstplt.c -L.
+> > -ltstpltlib -Wl,-rpath,$(pwd)
+> > $ readelf -SW tstplt | grep 'plt\|Name'
+> >    [Nr] Name              Type            Address          Off    Size
+> >   ES Flg Lk Inf Al
+> >    [11] .rela.plt         RELA            0000000000000688 000688
+> > 000060 18  AI  6  24  8
+> >    [13] .plt              PROGBITS        0000000000001020 001020
+> > 000050 10  AX  0   0 16
+> >    [14] .plt.got          PROGBITS        0000000000001070 001070
+> > 000008 08  AX  0   0  8
+> >    [24] .got.plt          PROGBITS        0000000000003fe8 002fe8
+> > 000038 08  WA  0   0  8
+>
+> That is interesting.  What does it say with -v i.e.
+>
+>         gcc -v -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
 
-Please wait a bit for people to be able to review the other patches and
-then submit a v2 series.
+Using built-in specs.
+COLLECT_GCC=gcc
+COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/12/lto-wrapper
+OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+OFFLOAD_TARGET_DEFAULT=1
+Target: x86_64-linux-gnu
+Configured with: ../src/configure -v --with-pkgversion='Debian
+12.2.0-10' --with-bugurl=file:///usr/share/doc/gcc-12/README.Bugs
+--enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2
+--prefix=/usr --with-gcc-major-version-only --program-suffix=-12
+--program-prefix=x86_64-linux-gnu- --enable-shared
+--enable-linker-build-id --libexecdir=/usr/lib
+--without-included-gettext --enable-threads=posix --libdir=/usr/lib
+--enable-nls --enable-clocale=gnu --enable-libstdcxx-debug
+--enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new
+--enable-gnu-unique-object --disable-vtable-verify --enable-plugin
+--enable-default-pie --with-system-zlib
+--enable-libphobos-checking=release --with-target-system-zlib=auto
+--enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet
+--with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32
+--enable-multilib --with-tune=generic
+--enable-offload-targets=nvptx-none=/build/gcc-12-hWCYKv/gcc-12-12.2.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-12-hWCYKv/gcc-12-12.2.0/debian/tmp-gcn/usr
+--enable-offload-defaulted --without-cuda-driver
+--enable-checking=release --build=x86_64-linux-gnu
+--host=x86_64-linux-gnu --target=x86_64-linux-gnu
+Thread model: posix
+Supported LTO compression algorithms: zlib zstd
+gcc version 12.2.0 (Debian 12.2.0-10)
+COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
+'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt-'
+ /usr/lib/gcc/x86_64-linux-gnu/12/cc1 -quiet -v -imultiarch
+x86_64-linux-gnu tstplt.c -quiet -dumpdir tstplt- -dumpbase tstplt.c
+-dumpbase-ext .c -mtune=generic -march=x86-64 -Wall -Wextra -version
+-fcf-protection=full -fasynchronous-unwind-tables -o /tmp/ccKPWeTD.s
+GNU C17 (Debian 12.2.0-10) version 12.2.0 (x86_64-linux-gnu)
+    compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version
+4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
 
-- Arnaldo
- 
-> diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-> index 59195eb80052..1c49d8293003 100755
-> --- a/tools/perf/tests/shell/test_brstack.sh
-> +++ b/tools/perf/tests/shell/test_brstack.sh
-> @@ -30,14 +30,14 @@ test_user_branches() {
->         #       brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
-> 
->         set -x
-> -       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL$"        $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL$"      $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL$"    $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL$"    $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET$"               $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET$"     $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND$"  $TMPDIR/perf.script
-> -       grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND$"            $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"     $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"   $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$" $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$" $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"            $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"  $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"       $TMPDIR/perf.script
-> +       grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"         $TMPDIR/perf.script
->         set +x
-> 
->         # some branch types are still not being tested:
-> @@ -57,7 +57,7 @@ test_filter() {
-> 
->         # fail if we find any branch type that doesn't match any of the expected ones
->         # also consider UNKNOWN branch types (-)
-> -       if grep -E -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
-> +       if grep -E -vm1 "^[^ ]*/($expect|-|( *))/.*$" $TMPDIR/perf.script; then
->                 return 1
->         fi
->  }
-> 
-> 
-> - Sandipan
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
+ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/12/include-fixed"
+ignoring nonexistent directory
+"/usr/lib/gcc/x86_64-linux-gnu/12/../../../../x86_64-linux-gnu/include"
+#include "..." search starts here:
+#include <...> search starts here:
+ /usr/lib/gcc/x86_64-linux-gnu/12/include
+ /usr/local/include
+ /usr/include/x86_64-linux-gnu
+ /usr/include
+End of search list.
+GNU C17 (Debian 12.2.0-10) version 12.2.0 (x86_64-linux-gnu)
+    compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version
+4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
 
--- 
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 0bf64a455b69fb48d1b44a013a099136
+COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
+'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt-'
+ as -v --64 -o /tmp/cc0IMyNr.o /tmp/ccKPWeTD.s
+GNU assembler version 2.39.50 (x86_64-linux-gnu) using BFD version
+(GNU Binutils for Debian) 2.39.50.20221208
+COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/
+LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/12/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/12/../../../:/lib/:/usr/lib/
+COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
+'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt.'
+ /usr/lib/gcc/x86_64-linux-gnu/12/collect2 -plugin
+/usr/lib/gcc/x86_64-linux-gnu/12/liblto_plugin.so
+-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/12/lto-wrapper
+-plugin-opt=-fresolution=/tmp/ccU2c2jz.res
+-plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s
+-plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc
+-plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m
+elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker
+/lib64/ld-linux-x86-64.so.2 -pie -o tstplt
+/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/Scrt1.o
+/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/crti.o
+/usr/lib/gcc/x86_64-linux-gnu/12/crtbeginS.o -L.
+-L/usr/lib/gcc/x86_64-linux-gnu/12
+-L/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu
+-L/usr/lib/gcc/x86_64-linux-gnu/12/../../../../lib
+-L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu
+-L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/12/../../..
+/tmp/cc0IMyNr.o -ltstpltlib -rpath=/home/namhyung/tmp/plt-test -lgcc
+--push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state
+--as-needed -lgcc_s --pop-state
+/usr/lib/gcc/x86_64-linux-gnu/12/crtendS.o
+/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/crtn.o
+COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
+'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt.'
 
-- Arnaldo
+
+>
+> And what is the distribution?
+
+It's a Debian (Testing) with some customization.
+
+Thanks,
+Namhyung
