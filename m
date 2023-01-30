@@ -2,138 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FF2C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBF9C54EAA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 14:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232613AbjA3NaM (ORCPT
+        id S236829AbjA3OAW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 08:30:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45518 "EHLO
+        Mon, 30 Jan 2023 09:00:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229965AbjA3NaL (ORCPT
+        with ESMTP id S236838AbjA3OAR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 08:30:11 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A978F12065;
-        Mon, 30 Jan 2023 05:30:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675085410; x=1706621410;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=D8qB1QFXEHT142JKdp5bZBH2VTLcpAaYZPx8rFj2xf0=;
-  b=hQjNJhGoVFMVUN2p9Dzz9w6aD5m0MatbcTTNJMicRGTcelbDDWK7yqji
-   uA4IzHr061+wzYr2FSZk8SCNPF6wWyHJCmb0o++IWgjBde35nUp4M2Cnq
-   Q8ndEeuZf401dFxFFpHnKzSxgJEG3wwJFeDiOJ8supXadeugtbq05ERpM
-   a0WH9PBPoQ21xRjIl0yt8hIQambMbNN9h1VHM5b5pBcKzV0QEf1BWiPPT
-   ptAU11ieTl7may4ci4doK1INrYYEAvf+UKw2f39Nsu3ql9V6WtjMoZQ1h
-   btGpOVpYsBcXv8WaD3ODy+w8Ohn26ihbvuW78s77NjhMGe8KaGkbbc7hz
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="328831210"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="328831210"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 05:30:02 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="772504414"
-X-IronPort-AV: E=Sophos;i="5.97,258,1669104000"; 
-   d="scan'208";a="772504414"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.33.106])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2023 05:29:58 -0800
-Message-ID: <7b5f872a-f52e-7129-e956-90e97ec7d911@intel.com>
-Date:   Mon, 30 Jan 2023 15:29:54 +0200
+        Mon, 30 Jan 2023 09:00:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C5D3CDD7;
+        Mon, 30 Jan 2023 06:00:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C0F0EB81181;
+        Mon, 30 Jan 2023 14:00:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392C7C433D2;
+        Mon, 30 Jan 2023 13:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675087199;
+        bh=quv2gJS96/kOS1MFut+Kr8y2xgXp9TjMtnbVARKYfnA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uzvOKTqQcQtzIIYAvD3n65utmLEdbE58vLC9z8CbeuI/5qddveBKaGeXNbT4OaHgZ
+         YimHeCEjCEiFBh8l1MMolnCghKtIA450S8/uzLCwajTPROvYYcelpreaYahekalF5d
+         EzDvzS7i8xsGStq90NxuXGM40m9mWlVXXx22AlcVijXSi0TmjpDhjSaI2M3xo/262F
+         +aNSjnUO7vpKBEInm90075StyXYX4cqGAmu8ZJFPQL2iInWCAVGwYs3QUdXlbNe3Er
+         CO10wLAfbhGO8OmCkcyqrHWL8UALZfAkhApa59UQeAK6S6CHsXyt7lCNNsLD6dLZZC
+         B0lzuMnILBFjg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 00BFC405BE; Mon, 30 Jan 2023 10:59:54 -0300 (-03)
+Date:   Mon, 30 Jan 2023 10:59:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH] perf: cs-etm: Update decoder code for OpenCSD version 1.4
+Message-ID: <Y9fNWrBIN8o1Ww25@kernel.org>
+References: <20230120153706.20388-1-mike.leach@linaro.org>
+ <77f9eab5-4fb2-cf96-9628-2a816d519d61@arm.com>
+ <CAP-5=fWNT9XXMN+97TcprxWA+FRJpAy4T=XC9RHrOdKfcKi8_w@mail.gmail.com>
+ <f17a40d4-2a37-fe7a-eac9-4ac1215e2c20@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.7.1
-Subject: Re: [PATCH v2] perf/util: Symbol lookup with kcore can fail if
- multiple segments match stext
-Content-Language: en-US
-To:     Krister Johansen <kjlx@templeofstupid.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        David Reaver <me@davidreaver.com>
-References: <20230124223531.GB1962@templeofstupid.com>
- <20230125183418.GD1963@templeofstupid.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230125183418.GD1963@templeofstupid.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f17a40d4-2a37-fe7a-eac9-4ac1215e2c20@arm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25/01/23 20:34, Krister Johansen wrote:
-> This problem was encountered on an arm64 system with a lot of memory.
-> Without kernel debug symbols installed, and with both kcore and kallsyms
-> available, perf managed to get confused and returned "unknown" for all
-> of the kernel symbols that it tried to look up.
+Em Mon, Jan 30, 2023 at 12:05:53PM +0000, James Clark escreveu:
+> On 24/01/2023 21:50, Ian Rogers wrote:
+> > On Fri, Jan 20, 2023 at 7:47 AM James Clark <james.clark@arm.com> wrote:
+> >> On 20/01/2023 15:37, Mike Leach wrote:
+> >>> OpenCSD version 1.4 is released with support for FEAT_ITE.
+> >>> This adds a new packet type, with associated output element ID in
+> >>> the packet type enum - OCSD_GEN_TRC_ELEM_INSTRUMENTATION.
+> >>>
+> >>> As we just ignore this packet in perf, add to the switch statement
+> >>> to avoid the "enum not handled in switch error", but conditionally
+> >>> so as not to break the perf build for older OpenCSD installations.
+> >>>
+> >>> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> >>> ---
+> >>>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 3 +++
+> >>>  1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> >>> index fa3aa9c0fb2e..48e7121880a9 100644
+> >>> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> >>> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> >>> @@ -604,6 +604,9 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+> >>>       case OCSD_GEN_TRC_ELEM_CUSTOM:
+> >>>       case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
+> >>>       case OCSD_GEN_TRC_ELEM_MEMTRANS:
+> >>> +#if (OCSD_VER_NUM >= 0x010400)
+> >>> +     case OCSD_GEN_TRC_ELEM_INSTRUMENTATION:
+> >>> +#endif
+> >>>       default:
+> >>>               break;
+> >>>       }
+> >>
+> >> Checked the build with both old and new versions of OpenCSD and it's ok:
+> >>
+> >> Reviewed-by: James Clark <james.clark@arm.com>
+> > 
+> > Acked-by: Ian Rogers <irogers@google.com>
+> > 
+> > Thanks,
+> > Ian
 > 
-> On this system, stext fell within the vmalloc segment.  The kcore symbol
-> matching code tries to find the first segment that contains stext and
-> uses that to replace the segment generated from just the kallsyms
-> information.  In this case, however, there were two: a very large
-> vmalloc segment, and the text segment.  This caused perf to get confused
-> because multiple overlapping segments were inserted into the RB tree
-> that holds the discovered segments.  However, that alone wasn't
-> sufficient to cause the problem. Even when we could find the segment,
-> the offsets were adjusted in such a way that the newly generated symbols
-> didn't line up with the instruction addresses in the trace.  The most
-> obvious solution would be to consult which segment type is text from
-> kcore, but this information is not exposed to users.
+> Hi Arnaldo,
 > 
-> Instead, select the smallest matching segment that contains stext
-> instead of the first matching segment.  This allows us to match the text
-> segment instead of vmalloc, if one is contained within the other.
+> Is it ok to merge this change? If anyone is building with the latest
+> OpenCSD they will get a build error on the unhandled switch case, and we
+> just got it in our CI too.
 > 
-> Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+> I suppose we could disable the warning around this switch, but it's
+> pretty rare to add new packets so might be best to leave it.
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Thanks, applied.
 
-> ---
-> v2:
->   - Correct whitespace, add comments, and fix-up subject. (Feedback from Adrian
->     Hunter)
-> ---
->  tools/perf/util/symbol.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index a3a165ae933a..98014f937568 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1368,10 +1368,23 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
->  
->  	/* Find the kernel map using the '_stext' symbol */
->  	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
-> +		u64 replacement_size = 0;
-> +
->  		list_for_each_entry(new_map, &md.maps, node) {
-> -			if (stext >= new_map->start && stext < new_map->end) {
-> +			u64 new_size = new_map->end - new_map->start;
-> +
-> +			if (!(stext >= new_map->start && stext < new_map->end))
-> +				continue;
-> +
-> +			/*
-> +			 * On some architectures, ARM64 for example, the kernel
-> +			 * text can get allocated inside of the vmalloc segment.
-> +			 * Select the smallest matching segment, in case stext
-> +			 * falls within more than one in the list.
-> +			 */
-> +			if (!replacement_map || new_size < replacement_size) {
->  				replacement_map = new_map;
-> -				break;
-> +				replacement_size = new_size;
->  			}
->  		}
->  	}
-
+- Arnaldo
