@@ -2,173 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DB8C54EAA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 07:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81CC54EAA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 08:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbjA3HAK (ORCPT
+        id S234136AbjA3I7C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 02:00:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38012 "EHLO
+        Mon, 30 Jan 2023 03:59:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjA3HAJ (ORCPT
+        with ESMTP id S233298AbjA3I7B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 02:00:09 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9ED6181
-        for <linux-perf-users@vger.kernel.org>; Sun, 29 Jan 2023 23:00:07 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id m199so12841446ybm.4
-        for <linux-perf-users@vger.kernel.org>; Sun, 29 Jan 2023 23:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=YevmuFxSkxWTJZuYLK3auP/ln6gsEkZmPuZuK5JXHz4=;
-        b=HL6O2If/EMA+SEG6je5PgALJBHlr/+R+3PY2wdrQCU3wvO9mnmNvsh9aaO61I3fyRc
-         3ARc+UhmJQykTUsq3E314Br0WN3CblaHfMif44cYVUTS+SeHQMrM9XVnK8DE0ZU4tt+c
-         xxyxHwQ/LuwXZ12Fd5RGe53VTMYoc582L0SYAWF1qL1mqMeyWwiMTeQ7jRKgBB7/MM6r
-         mTEyRdG5YraqNhOi8rU1PoD2EKphgFISOD+8sAlVbWuME75/xSKv2YwfFINjanPqjbjs
-         1O9IfN0C9E8ZEQ7ZGjuazrp69RKxYInh728ZYOt3cbbL1sm+BZjy3Mic68SyTtVzrAtG
-         9jGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YevmuFxSkxWTJZuYLK3auP/ln6gsEkZmPuZuK5JXHz4=;
-        b=fmxK9laFH3c5kYjl+N5XcwkpdjBk8Gvu16Q+oa0YfkX3husb9/b27a3hurR/+/TyJk
-         hjABlN0cHiNdDd6WroOG0ozC4CeCbcZaBBebtgHAwYquiJTtaf7GA4tpN3yxZwhZ3m6l
-         lYTOTcaOAMytE4ST7cnxwuDqZngviDk3qZKEnoBS+LysPPabjDCm89X7VDasbjDcsC3x
-         4QCFewvISVB3Er91PBryWb68+W7/m9pj9VT1f8Jqk3Up7z5ncVswA7OYVsL+T6UtUl9M
-         fCIvelGl77buKqIGBhbIQUWKiPkntYHm5JQfwqWhcaTCTqvFcCc3ddfRRhB17uGn3+HV
-         3ivg==
-X-Gm-Message-State: AO0yUKVlzGe85CT+z4VpqDCDFI80+4DHxzztJSBx3QZOUoFW7/kcrOP4
-        EZnJJCLUKezLK823p6a3JfSPh1Y7hS7QJtrGwe4Psw==
-X-Google-Smtp-Source: AK7set/6nLkKwtzlCdEbCgY14b7QoEWPAMsdcvj1ZwHpsPZB0mZjRgHUb2s7USI9RwXd/4jaqZH9cAJsNT+VZ7eeSbQ=
-X-Received: by 2002:a5b:92:0:b0:80b:d161:ace9 with SMTP id b18-20020a5b0092000000b0080bd161ace9mr1690523ybp.143.1675062005661;
- Sun, 29 Jan 2023 23:00:05 -0800 (PST)
+        Mon, 30 Jan 2023 03:59:01 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7554827991;
+        Mon, 30 Jan 2023 00:59:00 -0800 (PST)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30U8dNVp003841;
+        Mon, 30 Jan 2023 08:58:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=JKrTBhIka4PJq34qWzVGBeakgXLIvGGhUIdQ2PtP3Wo=;
+ b=SgoI9+ylsM5DZmsM+QsWoOiyXjm6hWRmi2a64xadLvOFKCpJFN21eWs+Q+idRrDEAU/4
+ rJZBa0L2iVkgzE1Dn3Tcvs0YlHho+yts+rFfHzY4PvCRnYYmqG1R9NpsrWGt05T8rv5X
+ lEc1RsNym/VVo/FeDW+QTK/1gyA3wCyp8rDtAfbaNTTNEmp3L7bL3ii03vM2MjRbXhs5
+ wPsIeye1L/WlVnswc1sNVH0UMygvirfypCYjePIo7IALoDf6ABJNUh9j+EmqWmb1zKMv
+ kXxqTl1+QvDwFUoyvBMSvvapvLkXo/7ZVNpLdZI9mISSmeZDDVqJuWOtX3Wrc0SKZX5b dg== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nddgsjuqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Jan 2023 08:58:57 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30U4vO8S026916;
+        Mon, 30 Jan 2023 08:58:55 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3ncvs7hyt2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Jan 2023 08:58:55 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30U8wruI43254210
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Jan 2023 08:58:53 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 501BA20040;
+        Mon, 30 Jan 2023 08:58:53 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F194820043;
+        Mon, 30 Jan 2023 08:58:50 +0000 (GMT)
+Received: from [9.43.101.243] (unknown [9.43.101.243])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Jan 2023 08:58:50 +0000 (GMT)
+Message-ID: <70b60459-2e7a-1944-77dc-54fef2e00975@linux.ibm.com>
+Date:   Mon, 30 Jan 2023 14:28:49 +0530
 MIME-Version: 1.0
-References: <20230127162409.2505312-1-elver@google.com> <Y9QUi7oU3nbdIV1J@FVFF77S0Q05N>
-In-Reply-To: <Y9QUi7oU3nbdIV1J@FVFF77S0Q05N>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 30 Jan 2023 08:00:00 +0100
-Message-ID: <CANpmjNNGCf_NqS96iB+YLU1M+JSFy2tRRbuLfarkUchfesk2=A@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Allow restricted kernel breakpoints on user addresses
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] perf test: Switch basic bpf filtering test to use syscall
+ tracepoint
+Content-Language: en-US
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Disha Goel <disgoel@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        bpf@vger.kernel.org
+References: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
+From:   kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 7dSqWuNS5E9S8z7_SrItYqzDQSXr_pHv
+X-Proofpoint-GUID: 7dSqWuNS5E9S8z7_SrItYqzDQSXr_pHv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-30_07,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 mlxscore=0 malwarescore=0 suspectscore=0 spamscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301300081
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 27 Jan 2023 at 19:14, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi Marco,
->
-> Apologies for having not replies on v1...
->
-> On Fri, Jan 27, 2023 at 05:24:09PM +0100, Marco Elver wrote:
-> > Allow the creation of restricted breakpoint perf events that also fire
-> > in the kernel (perf_event_attr::exclude_kernel=0), if:
-> >
-> >   1. No sample information is requested; samples may contain IPs,
-> >      registers, or other information that may disclose kernel addresses.
-> >
-> >   2. The breakpoint (viz. data watchpoint) is on a user address.
->
-> I think there's a potential problem here w.r.t. what constitutes a "user
-> address". Below, the patch assumes that any address which access_ok() is happy
-> with is a user address, but that's not always the case, and it's not
-> necessarily always safe to allow watchpoints on such addresses.
 
-Isn't that a deficiency with access_ok()?
 
-https://www.kernel.org/doc/html/latest/core-api/mm-api.html#c.access_ok
-"Checks if a pointer to a block of memory in user space is valid. [...]"
+On 1/23/23 14:02, Naveen N. Rao wrote:
+> BPF filtering tests can sometime fail. Running the test in verbose mode
+> shows the following:
+>   $ sudo perf test 42
+>   42: BPF filter                                                      :
+>   42.1: Basic BPF filtering                                           : FAILED!
+>   42.2: BPF pinning                                                   : Skip
+>   42.3: BPF prologue generation                                       : Skip
+>   $ perf --version
+>   perf version 4.18.0-425.3.1.el8.ppc64le
+>   $ sudo perf test -v 42
+>   42: BPF filter                                                      :
+>   42.1: Basic BPF filtering                                           :
+>   --- start ---
+>   test child forked, pid 711060
+>   ...
+>   bpf: config 'func=do_epoll_wait' is ok
+>   Looking at the vmlinux_path (8 entries long)
+>   Using /usr/lib/debug/lib/modules/4.18.0-425.3.1.el8.ppc64le/vmlinux for symbols
+>   Open Debuginfo file: /usr/lib/debug/.build-id/81/56f5a07f92ccb62c5600ba0e4aacfb5f3a7534.debug
+>   Try to find probe point from debuginfo.
+>   Matched function: do_epoll_wait [4ef8cb0]
+>   found inline addr: 0xc00000000061dbe4
+>   Probe point found: __se_compat_sys_epoll_pwait+196
+>   found inline addr: 0xc00000000061d9f4
+>   Probe point found: __se_sys_epoll_pwait+196
+>   found inline addr: 0xc00000000061d824
+>   Probe point found: __se_sys_epoll_wait+36
+>   Found 3 probe_trace_events.
+>   Opening /sys/kernel/tracing//kprobe_events write=1
+>   ...
+>   BPF filter result incorrect, expected 56, got 56 samples
+>   test child finished with -1
+>   ---- end ----
+>   BPF filter subtest 1: FAILED!
 
-> For example, UEFI runtime services may live in low adddresses below
-> TASK_SIZE_MAX, and there are times when we run code in an idmap (or other
-> low-half mapping) when we cannot safely take an exception for things like idle,
-> suspend, kexec, pagetable rewriting on arm64, etc.
->
-> So I think this may introduce functional issues (e.g. a mechanism to crash the
-> kernel) in addition to any potential information disclosure, and I would not
-> want this to be generally available to unprivileged users.
->
-> Most of those happen in kernel threads, but they can also happen in the context
-> of user threads (e.g. if triggering suspend/idle via sysfs), so special care
-> will be needed, as above.
+Patch looks good to me.
 
-These are good points.
-
-> > The rules constrain the allowable perf events such that no sensitive
-> > kernel information can be disclosed.
-> >
-> > Despite no explicit kernel information disclosure, the following
-> > questions may need answers:
-> >
-> >  1. Q: Is obtaining information that the kernel accessed a particular
-> >     user's known memory location revealing new information?
-> >
-> >     A: Given the kernel's user space ABI, there should be no "surprise
-> >     accesses" to user space memory in the first place.
->
-> I think that may be true for userspace, but not true for other transient
-> mappings in the low half of the address space. Ignoring the functional concern
-> above, for idmap'd code this would at least provide a mechanism to probe for
-> the phyiscal address of that code (and by extension, reveal the phyiscal
-> location of the entire kernel).
-
-This again feels like a deficiency with access_ok(). Is there a better
-primitive than access_ok(), or can we have something that gives us the
-guarantee that whatever it says is "ok" is a userspace address?
-
-> >  2. Q: Does causing breakpoints on user memory accesses by the kernel
-> >     potentially impact timing in a sensitive way?
-> >
-> >     A: Since hardware breakpoints trigger regardless of the state of
-> >     perf_event_attr::exclude_kernel, but are filtered in the perf
-> >     subsystem, this possibility already exists independent of the
-> >     proposed change.
->
-> Hmm... arm64's HW breakpoints and watchpoints have HW privilege filters, so I'm
-> not sure the above statement is generally/necessarily true.
-
-Right, I can see this being a valid concern on those architectures
-that do support HW privilege filters.
-
-> > Motivation:  Data breakpoints on user addresses that also fire in the
-> > kernel provide complete coverage to track and debug accesses, not just
-> > in user space but also through the kernel. For example, tracking where
-> > user space invokes syscalls with pointers to specific memory.
-> >
-> > Breakpoints can be used for more complex dynamic analysis, such as race
-> > detection, memory-safety error detection, or data-flow analysis. Larger
-> > deployment by linking such dynamic analysis into binaries in production
-> > only becomes possible when no additional capabilities are required by
-> > unprivileged users. To improve coverage, it should then also be possible
-> > to enable breakpoints on user addresses that fire in the kernel with no
-> > additional capabilities.
->
-> I can understand the argument for watchpoints (modulo my concerns above), but
-> there's no need to support instruction breakpoints, right? i.e. there's no
-> legitimate reason for a user to want to monitor a given user address
-> system-wide, regardless of what's running?
->
-> IIUC this only makes sense for watchpoints, and only in the context of a given
-> task.
-
-Right, there shouldn't be a need for instruction breakpoints, the
-kernel shouldn't be executing user code.
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 
 Thanks,
--- Marco
+Kajol Jain
+> 
+> The statement above about the result being incorrect looks weird, and it
+> is due to that particular perf build missing commit 3e11300cdfd5f1
+> ("perf test: Fix bpf test sample mismatch reporting"). In reality, due
+> to commit 4b04e0decd2518 ("perf test: Fix basic bpf filtering test"),
+> perf expects there to be 56*3 samples.
+> 
+> However, the number of samples we receive is going to be dependent on
+> where the probes are installed, which is dependent on where
+> do_epoll_wait gets inlined. On s390x, it looks like probes at all the
+> inlined locations are hit. But, that is not the case on ppc64le.
+> 
+> Fix this by switching the test to instead use the syscall tracepoint.
+> This ensures that we will only ever install a single event enabling us
+> to reliably determine the sample count.
+> 
+> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/bpf-script-example.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
+> index 7981c69ed1b456..b638cc99d5ae56 100644
+> --- a/tools/perf/tests/bpf-script-example.c
+> +++ b/tools/perf/tests/bpf-script-example.c
+> @@ -43,7 +43,7 @@ struct {
+>  	__type(value, int);
+>  } flip_table SEC(".maps");
+>  
+> -SEC("func=do_epoll_wait")
+> +SEC("syscalls:sys_enter_epoll_pwait")
+>  int bpf_func__SyS_epoll_pwait(void *ctx)
+>  {
+>  	int ind =0;
+> 
+> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
