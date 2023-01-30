@@ -2,187 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B08C54EED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 10:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0762CC54EED
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 10:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235944AbjA3KqQ (ORCPT
+        id S235718AbjA3K4z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 05:46:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39168 "EHLO
+        Mon, 30 Jan 2023 05:56:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235351AbjA3KqQ (ORCPT
+        with ESMTP id S235715AbjA3K4y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 05:46:16 -0500
+        Mon, 30 Jan 2023 05:56:54 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81BFA302A0;
-        Mon, 30 Jan 2023 02:46:14 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBBB917CCD;
+        Mon, 30 Jan 2023 02:56:53 -0800 (PST)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 460BD16A3;
-        Mon, 30 Jan 2023 02:46:56 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.13.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDCED3F71E;
-        Mon, 30 Jan 2023 02:46:11 -0800 (PST)
-Date:   Mon, 30 Jan 2023 10:46:09 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-Subject: Re: [PATCH v2] perf: Allow restricted kernel breakpoints on user
- addresses
-Message-ID: <Y9ef8cKrE4RJsrO+@FVFF77S0Q05N>
-References: <20230127162409.2505312-1-elver@google.com>
- <Y9QUi7oU3nbdIV1J@FVFF77S0Q05N>
- <CANpmjNNGCf_NqS96iB+YLU1M+JSFy2tRRbuLfarkUchfesk2=A@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8750016F2;
+        Mon, 30 Jan 2023 02:57:35 -0800 (PST)
+Received: from [10.57.46.210] (unknown [10.57.46.210])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9AA23F71E;
+        Mon, 30 Jan 2023 02:56:50 -0800 (PST)
+Message-ID: <43ff6d3d-2047-1b2f-12ab-849a915a6e2f@arm.com>
+Date:   Mon, 30 Jan 2023 10:56:49 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNNGCf_NqS96iB+YLU1M+JSFy2tRRbuLfarkUchfesk2=A@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Denis Nikitin <denik@chromium.org>,
+        Stephane Eranian <eranian@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>
+References: <20230127001951.3432374-1-namhyung@kernel.org>
+ <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
+ <317a91ff-70c5-57a5-8447-7543057e4055@arm.com>
+ <CAM9d7chU6kTdG0y65_UaD_hW75GezzNJF1ZwjNWq8BUpACAGTA@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAM9d7chU6kTdG0y65_UaD_hW75GezzNJF1ZwjNWq8BUpACAGTA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 08:00:00AM +0100, Marco Elver wrote:
-> On Fri, 27 Jan 2023 at 19:14, Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > Hi Marco,
-> >
-> > Apologies for having not replies on v1...
-> >
-> > On Fri, Jan 27, 2023 at 05:24:09PM +0100, Marco Elver wrote:
-> > > Allow the creation of restricted breakpoint perf events that also fire
-> > > in the kernel (perf_event_attr::exclude_kernel=0), if:
-> > >
-> > >   1. No sample information is requested; samples may contain IPs,
-> > >      registers, or other information that may disclose kernel addresses.
-> > >
-> > >   2. The breakpoint (viz. data watchpoint) is on a user address.
-> >
-> > I think there's a potential problem here w.r.t. what constitutes a "user
-> > address". Below, the patch assumes that any address which access_ok() is happy
-> > with is a user address, but that's not always the case, and it's not
-> > necessarily always safe to allow watchpoints on such addresses.
+
+
+On 27/01/2023 23:08, Namhyung Kim wrote:
+> Hi James,
 > 
-> Isn't that a deficiency with access_ok()?
+> On Fri, Jan 27, 2023 at 6:42 AM James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 27/01/2023 07:22, Adrian Hunter wrote:
+>>> On 27/01/23 02:19, Namhyung Kim wrote:
+>>>> Hello,
+>>>>
+>>>> I found some problems in Intel-PT and auxtrace in general with pipe.
+>>>> In the past it used to work with pipe, but recent code fails.
+>>>
+>>> Pipe mode is a problem for Intel PT and possibly other auxtrace users.
+>>
+>> Just some info from my side: For Arm Coresight we ended up deprecating
+>> pipe mode, then not supporting it altogether. First was when we added an
+>> optional step to peek through all of the data to help with an edge case.
+>> Then we added a requirement to receive a HW_ID packet before decoding
+>> which necessitated the peek. You can't peek in pipe mode because you
+>> need to be able to seek, so it's not supported at all anymore.
+>>
+>> For Arm SPE I never tested it with piped data. I suppose I could add a
+>> test at some point, but I don't really see the usecase.
 > 
-> https://www.kernel.org/doc/html/latest/core-api/mm-api.html#c.access_ok
-> "Checks if a pointer to a block of memory in user space is valid. [...]"
-
-Arguably yes, but it's not really solvable in the current API design.
-
-One issue is that this is contextual, and access_ok() is implicitly limited to
-some scenarios but not others. It's not meant to work for arbitrarty pointers
-in arbitrary contexts (as e.g. it has no way of distinguishing an idmap from
-userspace).
-
-We largely don't take implicit context into account in access_ok(), other than
-the tag removal stuff we do on arm64 (and on x86 for LAM), and I don't think
-anyone was all that happy about extending it for that.
-
-> > For example, UEFI runtime services may live in low adddresses below
-> > TASK_SIZE_MAX, and there are times when we run code in an idmap (or other
-> > low-half mapping) when we cannot safely take an exception for things like idle,
-> > suspend, kexec, pagetable rewriting on arm64, etc.
-> >
-> > So I think this may introduce functional issues (e.g. a mechanism to crash the
-> > kernel) in addition to any potential information disclosure, and I would not
-> > want this to be generally available to unprivileged users.
-> >
-> > Most of those happen in kernel threads, but they can also happen in the context
-> > of user threads (e.g. if triggering suspend/idle via sysfs), so special care
-> > will be needed, as above.
+> Yeah, it'd be great if we can have a test for Arm SPE.
 > 
-> These are good points.
+
+Ok thanks I will put it on the list of things to do.
+
+> Anyway, my work env (Google) requires the pipe mode due to the
+> restriction in disk usage.  Without the pipe support, it's not possible
+> to run `perf record` in production.
 > 
-> > > The rules constrain the allowable perf events such that no sensitive
-> > > kernel information can be disclosed.
-> > >
-> > > Despite no explicit kernel information disclosure, the following
-> > > questions may need answers:
-> > >
-> > >  1. Q: Is obtaining information that the kernel accessed a particular
-> > >     user's known memory location revealing new information?
-> > >
-> > >     A: Given the kernel's user space ABI, there should be no "surprise
-> > >     accesses" to user space memory in the first place.
-> >
-> > I think that may be true for userspace, but not true for other transient
-> > mappings in the low half of the address space. Ignoring the functional concern
-> > above, for idmap'd code this would at least provide a mechanism to probe for
-> > the phyiscal address of that code (and by extension, reveal the phyiscal
-> > location of the entire kernel).
-> 
-> This again feels like a deficiency with access_ok(). Is there a better
-> primitive than access_ok(), or can we have something that gives us the
-> guarantee that whatever it says is "ok" is a userspace address?
 
-I don't think so, since this is contextual and temporal -- a helper can't give
-a single correct answert in all cases because it could change.
+Makes sense. Unfortunately at the moment with Coresight, because of the
+lack of appropriate timestamps we're waiting for the end of the file
+before starting decoding. So you're not really any better off using
+piped mode, unless you have a lot more memory than disk space?
 
-In the cases we switch to another mapping, we could try to ensure that we
-enable/disable potentially unsafe watchpoints/breakpoints.
+Since this commit [1] and Arm v8.4 we can actually start making use of
+the timestamps and do a streaming decode again. So I will also add it to
+the list to look into that for Coresight again. Are you using an old
+version of Perf or not using Coresight at all? I know Denis at Google is
+using Coresight, but only with files rather than pipes.
 
-Taking a look at arm64, our idmap code might actually be ok, since we usually
-mask all the DAIF bits (and the 'D' or 'Debug' bit masks HW
-breakpoints/watchpoints). For EFI we largely switch to another thread (but not
-always), so that would need some auditing.
+One other thing, have you used the --switch-output mode to perf record
+before? I would have said it would give you some of the benefits of
+piped mode, but is more likely to work with Coresight. But last time I
+checked it's not working either. Not very helpful I know, but something
+to keep in mind.
 
-So if this only needs to work in per-task mode rather than system-wide mode, I
-reckon we can have some save/restore logic around those special cases where we
-transiently install a mapping, which would protect us.
+James
 
-For the threads that run with special mappings in the low half, I'm not sure
-what to do. If we've ruled out system-wide monitoring I believe those would be
-protected from unprivileged users.
-
-Thanks,
-Mark.
-
-> > >  2. Q: Does causing breakpoints on user memory accesses by the kernel
-> > >     potentially impact timing in a sensitive way?
-> > >
-> > >     A: Since hardware breakpoints trigger regardless of the state of
-> > >     perf_event_attr::exclude_kernel, but are filtered in the perf
-> > >     subsystem, this possibility already exists independent of the
-> > >     proposed change.
-> >
-> > Hmm... arm64's HW breakpoints and watchpoints have HW privilege filters, so I'm
-> > not sure the above statement is generally/necessarily true.
-> 
-> Right, I can see this being a valid concern on those architectures
-> that do support HW privilege filters.
-> 
-> > > Motivation:  Data breakpoints on user addresses that also fire in the
-> > > kernel provide complete coverage to track and debug accesses, not just
-> > > in user space but also through the kernel. For example, tracking where
-> > > user space invokes syscalls with pointers to specific memory.
-> > >
-> > > Breakpoints can be used for more complex dynamic analysis, such as race
-> > > detection, memory-safety error detection, or data-flow analysis. Larger
-> > > deployment by linking such dynamic analysis into binaries in production
-> > > only becomes possible when no additional capabilities are required by
-> > > unprivileged users. To improve coverage, it should then also be possible
-> > > to enable breakpoints on user addresses that fire in the kernel with no
-> > > additional capabilities.
-> >
-> > I can understand the argument for watchpoints (modulo my concerns above), but
-> > there's no need to support instruction breakpoints, right? i.e. there's no
-> > legitimate reason for a user to want to monitor a given user address
-> > system-wide, regardless of what's running?
-> >
-> > IIUC this only makes sense for watchpoints, and only in the context of a given
-> > task.
-> 
-> Right, there shouldn't be a need for instruction breakpoints, the
-> kernel shouldn't be executing user code.
-> 
-> Thanks,
-> -- Marco
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=a7fe9a443b6064c68f86a2ee09bdfa7736660ef3
