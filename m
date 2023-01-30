@@ -2,167 +2,371 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81CC54EAA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 08:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AEBC54EED
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Jan 2023 10:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234136AbjA3I7C (ORCPT
+        id S235861AbjA3KEc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 03:59:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
+        Mon, 30 Jan 2023 05:04:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233298AbjA3I7B (ORCPT
+        with ESMTP id S236382AbjA3KEU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 03:59:01 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7554827991;
-        Mon, 30 Jan 2023 00:59:00 -0800 (PST)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30U8dNVp003841;
-        Mon, 30 Jan 2023 08:58:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=JKrTBhIka4PJq34qWzVGBeakgXLIvGGhUIdQ2PtP3Wo=;
- b=SgoI9+ylsM5DZmsM+QsWoOiyXjm6hWRmi2a64xadLvOFKCpJFN21eWs+Q+idRrDEAU/4
- rJZBa0L2iVkgzE1Dn3Tcvs0YlHho+yts+rFfHzY4PvCRnYYmqG1R9NpsrWGt05T8rv5X
- lEc1RsNym/VVo/FeDW+QTK/1gyA3wCyp8rDtAfbaNTTNEmp3L7bL3ii03vM2MjRbXhs5
- wPsIeye1L/WlVnswc1sNVH0UMygvirfypCYjePIo7IALoDf6ABJNUh9j+EmqWmb1zKMv
- kXxqTl1+QvDwFUoyvBMSvvapvLkXo/7ZVNpLdZI9mISSmeZDDVqJuWOtX3Wrc0SKZX5b dg== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nddgsjuqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Jan 2023 08:58:57 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30U4vO8S026916;
-        Mon, 30 Jan 2023 08:58:55 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3ncvs7hyt2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Jan 2023 08:58:55 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30U8wruI43254210
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Jan 2023 08:58:53 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 501BA20040;
-        Mon, 30 Jan 2023 08:58:53 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F194820043;
-        Mon, 30 Jan 2023 08:58:50 +0000 (GMT)
-Received: from [9.43.101.243] (unknown [9.43.101.243])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Jan 2023 08:58:50 +0000 (GMT)
-Message-ID: <70b60459-2e7a-1944-77dc-54fef2e00975@linux.ibm.com>
-Date:   Mon, 30 Jan 2023 14:28:49 +0530
+        Mon, 30 Jan 2023 05:04:20 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 987CC24100;
+        Mon, 30 Jan 2023 02:04:08 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AE7BFEC;
+        Mon, 30 Jan 2023 02:04:50 -0800 (PST)
+Received: from [10.57.46.210] (unknown [10.57.46.210])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92AF93F71E;
+        Mon, 30 Jan 2023 02:04:05 -0800 (PST)
+Message-ID: <c6605d52-b9e1-e8d3-ed29-562146f64eea@arm.com>
+Date:   Mon, 30 Jan 2023 10:04:03 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] perf test: Switch basic bpf filtering test to use syscall
- tracepoint
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [6.1.7][6.2-rc5] perf all metrics test: FAILED!
 Content-Language: en-US
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Disha Goel <disgoel@linux.vnet.ibm.com>,
+To:     sedat.dilek@gmail.com, Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20230123083224.276404-1-naveen.n.rao@linux.vnet.ibm.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        llvm@lists.linux.dev, Ben Hutchings <benh@debian.org>
+References: <CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com>
+ <CAP-5=fULKkEYXOVV5tXd8J0occGJwgV+BiJLkA=exW=bfgyEBw@mail.gmail.com>
+ <CA+icZUUOZoLOFiBcYkccWPSusk9G_Rhf3DOZYWat-K+VfWFHQw@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CA+icZUUOZoLOFiBcYkccWPSusk9G_Rhf3DOZYWat-K+VfWFHQw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7dSqWuNS5E9S8z7_SrItYqzDQSXr_pHv
-X-Proofpoint-GUID: 7dSqWuNS5E9S8z7_SrItYqzDQSXr_pHv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-30_07,2023-01-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 malwarescore=0 suspectscore=0 spamscore=0
- adultscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- clxscore=1011 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301300081
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 1/23/23 14:02, Naveen N. Rao wrote:
-> BPF filtering tests can sometime fail. Running the test in verbose mode
-> shows the following:
->   $ sudo perf test 42
->   42: BPF filter                                                      :
->   42.1: Basic BPF filtering                                           : FAILED!
->   42.2: BPF pinning                                                   : Skip
->   42.3: BPF prologue generation                                       : Skip
->   $ perf --version
->   perf version 4.18.0-425.3.1.el8.ppc64le
->   $ sudo perf test -v 42
->   42: BPF filter                                                      :
->   42.1: Basic BPF filtering                                           :
->   --- start ---
->   test child forked, pid 711060
->   ...
->   bpf: config 'func=do_epoll_wait' is ok
->   Looking at the vmlinux_path (8 entries long)
->   Using /usr/lib/debug/lib/modules/4.18.0-425.3.1.el8.ppc64le/vmlinux for symbols
->   Open Debuginfo file: /usr/lib/debug/.build-id/81/56f5a07f92ccb62c5600ba0e4aacfb5f3a7534.debug
->   Try to find probe point from debuginfo.
->   Matched function: do_epoll_wait [4ef8cb0]
->   found inline addr: 0xc00000000061dbe4
->   Probe point found: __se_compat_sys_epoll_pwait+196
->   found inline addr: 0xc00000000061d9f4
->   Probe point found: __se_sys_epoll_pwait+196
->   found inline addr: 0xc00000000061d824
->   Probe point found: __se_sys_epoll_wait+36
->   Found 3 probe_trace_events.
->   Opening /sys/kernel/tracing//kprobe_events write=1
->   ...
->   BPF filter result incorrect, expected 56, got 56 samples
->   test child finished with -1
->   ---- end ----
->   BPF filter subtest 1: FAILED!
+On 30/01/2023 02:24, Sedat Dilek wrote:
+> ?
+> 
+> On Mon, Jan 30, 2023 at 12:21 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Sun, Jan 29, 2023 at 1:59 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>>>
+>>> [ CC LLVM linux folks + Ben from Debian kernel team ]
+>>>
+>>> Hi,
+>>>
+>>> I am playing with LLVM version 16.0.0-rc1 which was released yesterday and PERF.
+>>>
+>>> After building my selfmade LLVM toolchain, I built perf and run some
+>>> perf tests here on my Intel SandyBridge CPU (details see below).
+>>>
+>>> perf all metrics test: FAILED!
+>>>
+>>> ...with both Debian's perf version 6.1.7 and my selfmade version 6.2-rc5.
+>>>
+>>> Just noticed:
+>>>
+>>> Couldn't bump rlimit(MEMLOCK), failures may take place when creating
+>>> BPF maps, etc
+>>>
+>>> Run the below tests with `sudo` - made this go away - still FAILED.
+>>>
+>>> But maybe I am missing to activate some sysfs/debug or whatever other stuff?
+>>
+>> Hi Sedat,
+>>
+>> things have been improving wrt metrics and so this failure may have
+>> just been because of the addition of a previously missing metric. The
+>> rlimit thing shouldn't affect things but maybe file descriptors?
+>> Looking at the test output the issue is:
+>>
+>> ```
+>> Metric 'tma_dram_bound' not printed in:
+>> # Running 'internals/synthesize' benchmark:
+>> Computing performance of single threaded perf event synthesis by
+>> synthesizing events on the perf process itself:
+>>   Average synthesis took: 207.680 usec (+- 0.176 usec)
+>>   Average num. events: 30.000 (+- 0.000)
+>>   Average time per event 6.923 usec
+>>   Average data synthesis took: 217.833 usec (+- 0.202 usec)
+>>   Average num. events: 161.000 (+- 0.000)
+>>   Average time per event 1.353 usec
+>>
+>>  Performance counter stats for 'perf bench internals synthesize':
+>>
+>>      <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
+>>                          (0,00%)
+>>      <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
+>>                          (0,00%)
+>>      <not counted>      CPU_CLK_UNHALTED.THREAD
+>>                          (0,00%)
+>>      <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
+>>                             (0,00%)
+>> ```
+>>
+>> So the test was checking to see whether the tma_dram_bound metric
+>> could be computed on your Sandybridge and it failed. The event counts
+>> below show that every event came back "<not counted>" which is usually
+>> indicative of a permissions problem - it is also not surprising given
+>> this that the metric wasn't computed. You could try repeating the
+>> command the test is trying with something like "perf stat -M
+>> tma_dram_bound -a sleep 1", but running as root should have resolved
+>> that issue. Does that give you enough to keep exploring?
+>>
+> 
+> Hi Ian,
+> 
+> Thanks for your feedback!
+> 
+> I booted into my Debian kernel - just to see what happens.
+> 
+> # cat /proc/version
+> Linux version 6.1.0-2-amd64 (debian-kernel@lists.debian.org) (gcc-12
+> (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1
+> SMP PREEMPT_DYNAMIC Debian 6.1.7-1 (2023-01-18)
+> 
+> All things run as root...
+> 
+> # echo 0 | tee /proc/sys/kernel/kptr_restrict
+> /proc/sys/kernel/perf_event_paranoid
+> 0
+> 
+> # /usr/bin/perf test 10 92 98 99 100 101
+> 10: PMU events                                                      :
+> 10.1: PMU event table sanity                                        : Ok
+> 10.2: PMU event map aliases                                         : Ok
+> 10.3: Parsing of PMU event table metrics                            : Ok
+> 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+> 92: perf record tests                                               : Ok
+> 98: perf stat tests                                                 : Ok
+> 99: perf all metricgroups test                                      : Ok
+> 100: perf all metrics test                                           : FAILED!
+> 101: perf all PMU test                                               : Ok
+> 
+> # perf stat -M tma_dram_bound -a sleep 1
+> 
+> Performance counter stats for 'system wide':
+> 
+>     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
+>                   (0,00%)
+>     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
+>                      (0,00%)
+>     <not counted>      CPU_CLK_UNHALTED.THREAD
+>               (0,00%)
+>     <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
+>                         (0,00%)
+> 
 
-Patch looks good to me.
+Hi Sedat,
 
-Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+I also had this failure and did a git bisect, but it led me to the
+conclusion that it is a stale build issue rather than a regression.
 
-Thanks,
-Kajol Jain
+There was a recent commit that renamed/removed some json PMU files which
+the build system can't cope with. I think the tests end up iterating
+over a different set of event names than were generated by the build system.
+
+If you do a clean build the issue should go away. I don't know if there
+is anything more we can do to stop this from happening.
+
+James
+
+>       1,002148600 seconds time elapsed
 > 
-> The statement above about the result being incorrect looks weird, and it
-> is due to that particular perf build missing commit 3e11300cdfd5f1
-> ("perf test: Fix bpf test sample mismatch reporting"). In reality, due
-> to commit 4b04e0decd2518 ("perf test: Fix basic bpf filtering test"),
-> perf expects there to be 56*3 samples.
+> Hmm... looking at... Metric 'tma_l3_bound' ...
 > 
-> However, the number of samples we receive is going to be dependent on
-> where the probes are installed, which is dependent on where
-> do_epoll_wait gets inlined. On s390x, it looks like probes at all the
-> inlined locations are hit. But, that is not the case on ppc64le.
+> Running...
 > 
-> Fix this by switching the test to instead use the syscall tracepoint.
-> This ensures that we will only ever install a single event enabling us
-> to reliably determine the sample count.
+> # perf stat --verbose -M tma_l3_bound -a sleep 1
+> Using CPUID GenuineIntel-6-2A-7
+> metric expr (MEM_LOAD_UOPS_RETIRED.LLC_HIT /
+> (MEM_LOAD_UOPS_RETIRED.LLC_HIT + 7 *
+> MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS)) *
+> CYCLE_ACTIVITY.STALLS_L2_PENDING / CLKS for tma_l3_bound
+> metric expr CPU_CLK_UNHALTED.THREAD for CLKS
 > 
-> Reported-by: Disha Goel <disgoel@linux.vnet.ibm.com>
-> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-> ---
->  tools/perf/tests/bpf-script-example.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> found event MEM_LOAD_UOPS_RETIRED.LLC_HIT
+> found event CYCLE_ACTIVITY.STALLS_L2_PENDING
+> found event CPU_CLK_UNHALTED.THREAD
+> found event MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
 > 
-> diff --git a/tools/perf/tests/bpf-script-example.c b/tools/perf/tests/bpf-script-example.c
-> index 7981c69ed1b456..b638cc99d5ae56 100644
-> --- a/tools/perf/tests/bpf-script-example.c
-> +++ b/tools/perf/tests/bpf-script-example.c
-> @@ -43,7 +43,7 @@ struct {
->  	__type(value, int);
->  } flip_table SEC(".maps");
->  
-> -SEC("func=do_epoll_wait")
-> +SEC("syscalls:sys_enter_epoll_pwait")
->  int bpf_func__SyS_epoll_pwait(void *ctx)
->  {
->  	int ind =0;
+> Parsing metric events
+> '{MEM_LOAD_UOPS_RETIRED.LLC_HIT/metric-id=MEM_LOAD_UOPS_RETIRED.LLC_HIT/,CYCLE_ACTIVITY.STALLS_L2_PENDING/metric-id=CYCLE_ACTIVITY.STALLS_L2_PEND
+> ING/,CPU_CLK_UNHALTED.THREAD/metric-id=CPU_CLK_UNHALTED.THREAD/,MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS/metric-id=MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS/}:W'
+> MEM_LOAD_UOPS_RETIRED.LLC_HIT -> cpu/event=0xd1,period=0xc365,umask=0x4/
+> CYCLE_ACTIVITY.STALLS_L2_PENDING ->
+> cpu/event=0xa3,cmask=0x5,period=0x1e8483,umask=0x5/
+> CPU_CLK_UNHALTED.THREAD -> cpu/event=0x3c,period=0x1e8483/
+> MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS -> cpu/event=0xd4,period=0x186a7,umask=0x2/
 > 
-> base-commit: 5670ebf54bd26482f57a094c53bdc562c106e0a9
+> Control descriptor is not initialized
+> 
+> MEM_LOAD_UOPS_RETIRED.LLC_HIT: 0 4007421228 0
+> CYCLE_ACTIVITY.STALLS_L2_PENDING: 0 4007421228 0
+> CPU_CLK_UNHALTED.THREAD: 0 4007421228 0
+> MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS: 0 4007421228 0
+> 
+> Performance counter stats for 'system wide':
+> 
+>     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
+>                   (0,00%)
+>     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
+>                      (0,00%)
+>     <not counted>      CPU_CLK_UNHALTED.THREAD
+>               (0,00%)
+>     <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
+>                         (0,00%)
+> 
+>       1,002310013 seconds time elapsed
+> 
+> So those events/metric-ids resulting in "<not counted>" are all found.
+> 
+> What means "Control descriptor is not initialized"?
+> 
+> To summarize:
+> 
+> Those two tests in "100: perf all metrics test" FAILED:
+> 
+> 1. tma_dram_bound
+> 2. tma_l3_bound
+> 
+> Best regards,
+> -Sedat-
+> 
+>> Thanks,
+>> Ian
+>>
+>>> Last perf version which was OK:
+>>>
+>>> ~/bin/perf -v
+>>> perf version 6.0.0
+>>>
+>>> echo "linux-perf: Adjust limited access to performance monitoring and
+>>> observability operations"
+>>> echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
+>>> /proc/sys/kernel/perf_event_paranoid
+>>> 0
+>>>
+>>> ~/bin/perf test 10 86 92 93 94 95
+>>> 10: PMU events                                                      :
+>>> 10.1: PMU event table sanity                                        : Ok
+>>> 10.2: PMU event map aliases                                         : Ok
+>>> 10.3: Parsing of PMU event table metrics                            : Ok
+>>> 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>>> 86: perf record tests                                               : Ok
+>>> 92: perf stat tests                                                 : Ok
+>>> 93: perf all metricgroups test                                      : Ok
+>>> 94: perf all metrics test                                           : Ok
+>>> 95: perf all PMU test                                               : Ok
+>>>
+>>> echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
+>>> /proc/sys/kernel/perf_event_paranoid
+>>> echo "linux-perf: Reset limited access to performance monitoring and
+>>> observability operations"
+>>>
+>>> If you need further information, please let me know.
+>>>
+>>> Thanks.
+>>>
+>>> Regards,
+>>> -Sedat-
+>>>
+>>> P.S. Instructions
+>>>
+>>> [ REPRODUCER ]
+>>>
+>>> LLVM_MVER="16"
+>>>
+>>> # Debian LLVM
+>>> ##LLVM_TOOLCHAIN_PATH="/usr/lib/llvm-${LLVM_MVER}/bin"
+>>> # Selfmade LLVM
+>>> LLVM_TOOLCHAIN_PATH="/opt/llvm/bin"
+>>> if [ -d ${LLVM_TOOLCHAIN_PATH} ]; then
+>>>    export PATH="${LLVM_TOOLCHAIN_PATH}:${PATH}"
+>>> fi
+>>>
+>>> PYTHON_VER="3.11"
+>>> MAKE="make"
+>>> MAKE_OPTS="V=1 -j1 HOSTCC=clang-$LLVM_MVER HOSTLD=ld.lld
+>>> HOSTAR=llvm-ar CC=clang-$LLVM_MVER LD=ld.lld AR=llvm-ar
+>>> STRIP=llvm-strip"
+>>>
+>>> echo "LLVM MVER ........ $LLVM_MVER"
+>>> echo "Path settings .... $PATH"
+>>> echo "Python version ... $PYTHON_VER"
+>>> echo "make line ........ $MAKE $MAKE_OPTS"
+>>>
+>>> LANG=C LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
+>>>
+>>> LANG=C LC_ALL=C $MAKE $MAKE_OPTS -C tools/perf
+>>> PYTHON=python${PYTHON_VER} install-bin 2>&1 | tee
+>>> ../make-log_perf-install_bin_python${PYTHON_VER}_llvm${LLVM_MVER}.txt
+>>>
+>>>
+>>> [ TESTS ]
+>>>
+>>> [ TESTS - START ]
+>>>
+>>> echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
+>>> /proc/sys/kernel/perf_event_paranoid
+>>>
+>>> [ TESTS - DEBIAN ]
+>>>
+>>> /usr/bin/perf -v
+>>> perf version 6.1.7
+>>>
+>>> /usr/bin/perf test 10 92 98 99 100 101
+>>>
+>>>  10: PMU events                                                      :
+>>>  10.1: PMU event table sanity                                        : Ok
+>>>  10.2: PMU event map aliases                                         : Ok
+>>>  10.3: Parsing of PMU event table metrics                            : Ok
+>>>  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>>>  92: perf record tests                                               : Ok
+>>>  98: perf stat tests                                                 : Ok
+>>>  99: perf all metricgroups test                                      : Ok
+>>> 100: perf all metrics test                                           : FAILED!
+>>> 101: perf all PMU test                                               : Ok
+>>>
+>>> [ TESTS - DILEKS ]
+>>>
+>>> ~/bin/perf -v
+>>> perf version 6.2.0-rc5
+>>>
+>>> ~/bin/perf test 7 87 93 94 95 96
+>>>
+>>>   7: PMU events                                                      :
+>>>   7.1: PMU event table sanity                                        : Ok
+>>>   7.2: PMU event map aliases                                         : Ok
+>>>   7.3: Parsing of PMU event table metrics                            : Ok
+>>>   7.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+>>>  87: perf record tests                                               : Ok
+>>>  93: perf stat tests                                                 : Ok
+>>>  94: perf all metricgroups test                                      : Ok
+>>>  95: perf all metrics test                                           : FAILED!
+>>>  96: perf all PMU test                                               : Ok
+>>>
+>>> [ TESTS - FAILED ]
+>>>
+>>> /usr/bin/perf test --verbose 100 2>&1 | tee
+>>> perf-test-verbose-100-perf-all-metrics-test_debian-perf-6-1-7.txt
+>>>
+>>> ~/bin/perf test --verbose 95 2>&1 | tee
+>>> perf-test-verbose-95-perf-all-metrics-test_dileks-perf-6-2-rc5.txt
+>>>
+>>> [ TESTS - STOP ]
+>>>
+>>> echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
+>>> /proc/sys/kernel/perf_event_paranoid
+>>>
+>>> - EOT -
