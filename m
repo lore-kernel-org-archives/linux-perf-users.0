@@ -2,638 +2,211 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B144C636CD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 06:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01325C38142
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 08:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbjAaGVZ (ORCPT
+        id S229828AbjAaIZ4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 Jan 2023 01:21:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58388 "EHLO
+        Tue, 31 Jan 2023 03:25:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjAaGVY (ORCPT
+        with ESMTP id S229891AbjAaIZy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Jan 2023 01:21:24 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F96EC64F;
-        Mon, 30 Jan 2023 22:21:21 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id y25so22661506lfa.9;
-        Mon, 30 Jan 2023 22:21:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=f6Is7KM5zmeFXD7hOBr1/TGrRHSgw7daDOHfpd/pmBY=;
-        b=c1stl2B+ssb9W4yPN37bmYQ8+Sf1LQpyCcoAS1J0Hkz9P2syCk0AGEtSs3ow1jXyPY
-         1Tkf9wLbSbkUPH/EHal+J+MxXIObC2EZHyxzpSxA7WCF/NuKtoXJkkS4/NJeKi+HOPWB
-         vu9GElyu9p2CNy+QBJyHikOB+j0VLKxx1zlXxQOf8wjYIkxy86YEFxPAEwHM/xEAK4Cs
-         AU8yhblcEGGYft5qVzi25NCPOsOm9ksn76m8JCHLFWo1NCjZU3w1HR2yHqOaMLz4GbRd
-         D7dN7Ym41/tlahN6tQcqN3pDQTiIOIYHhZogBjE2HqkeINJkndQvg9qQBDsrF0w02kVR
-         eKgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f6Is7KM5zmeFXD7hOBr1/TGrRHSgw7daDOHfpd/pmBY=;
-        b=L3a14ApHO5MMhYG1D+Lz6wdN+zPKcYLrs2jpAaQXBTeq5/gn7icPx9xgCMuls9n0Jl
-         /UO7rW+2vwaILBFXEteNJdiTdGBYqk/9gRo+zpP8vubmHlhxEhTDiAcEGhlgKFDEK/it
-         jnjYrLUIJ7RD/6hHC1d68dzZvYIOVr9M7H+I+P7Ij2islbIR+7RtMgm/UrfeJkXfIy3g
-         nmBKpSOUsroQG8pnwiga7njHp+C+ZXAsLNZ4JImJvUkuILszmBZWZ3ujPBEwR9abcSwv
-         vP6g3k2Gl29eZzw7GomVpWv7tffYjyV/LlCz2RtElt/G0GHpia1xxQ08eqfK7DmP6+OI
-         p3rg==
-X-Gm-Message-State: AO0yUKUJJ6ukDE8Q9d+0fpm1HC6X8qRKltUN7ysk8h3gr6L2C0+l5bGy
-        JNMLJeGFySSRU5fwbZbZw70jhvhFgEnMPM4ZfIs=
-X-Google-Smtp-Source: AK7set8W9xTKv0vm3GohaFXv3HXqP0UiwvWS5snF01BZYoksODu1LwXZMainURDftNSh9kqt1dWvvRpwdoH4X2e4v2U=
-X-Received: by 2002:ac2:5966:0:b0:4d8:4f46:f0b8 with SMTP id
- h6-20020ac25966000000b004d84f46f0b8mr3104100lfp.75.1675146079300; Mon, 30 Jan
- 2023 22:21:19 -0800 (PST)
-MIME-Version: 1.0
-References: <CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com>
- <CAP-5=fULKkEYXOVV5tXd8J0occGJwgV+BiJLkA=exW=bfgyEBw@mail.gmail.com>
- <CA+icZUUOZoLOFiBcYkccWPSusk9G_Rhf3DOZYWat-K+VfWFHQw@mail.gmail.com>
- <c6605d52-b9e1-e8d3-ed29-562146f64eea@arm.com> <CAP-5=fWcb8m9vkfqSC9H2Gqi2dBjbPuGb2F27Fq-ejmR25foQw@mail.gmail.com>
- <CA+icZUWKFCdhQ9XN0wLN6BF5ft3WaNrtXDb9D8ckNOPG9gUf+g@mail.gmail.com>
- <CAP-5=fUSyN5wCn5miG79cT30YruJjkAYMeR58XXgRBQw-6hHkQ@mail.gmail.com> <CA+icZUUwxnuJrhmMvrPwP1=wXySpOymHigaq8EDFbmgST-VM0A@mail.gmail.com>
-In-Reply-To: <CA+icZUUwxnuJrhmMvrPwP1=wXySpOymHigaq8EDFbmgST-VM0A@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 31 Jan 2023 07:20:42 +0100
-Message-ID: <CA+icZUXinB=QCSEkhsaL2Ry1F7mKYKWmd0-jvuQseFohZ7UhpA@mail.gmail.com>
-Subject: Re: [6.1.7][6.2-rc5] perf all metrics test: FAILED!
-To:     Ian Rogers <irogers@google.com>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        "Xing, Zhengjun" <zhengjun.xing@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 31 Jan 2023 03:25:54 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2081.outbound.protection.outlook.com [40.107.95.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0987F42BE7;
+        Tue, 31 Jan 2023 00:25:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P2o6Vk2aaHCDxgF0abF0EvYTz+o2XX7GMKdfyVoJ9gCAEX69mWsv57Zw4hIvCEhgQfE0OG52oV9eOSizm6NMIfcw4htojG2EvlNG6Yc4bksSU1Eb8jlmfy5p62H+2ljXfQRlZqvj06K3nRhdzi4nG3hcnwR1GB/GTcP0R9O7DnZ5ixm/AWdd5g/2ggn4GfEtLEjbu27/OuiZ5Ful9H7LS1ASDO0gYBuMSnOc1mFDwytHT+eFjhgRkeYpSADnLC1t3m6xyRoG9gBhHoFP6Ld9/oaLd/K/ey5pQ7dSh9+XN8uaJkYj3/415FpDRvUA9UYJuW47U07RFCglJbbJ2SzXJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LDzqzMhYnbhNGLmSPH0FcZPDDZRS+ARYxJlLaQgPMwE=;
+ b=ciDP1QWfJgm2EZMH7iVoZGuLcmXdFLGYAcxcqcK3N6cPmbY2aGfhMdjKvg0F7pr9WMZbGZ+FExtnY2T/izdYfMLO6hysLj3H7c7cokXnEDI8wOw/SlYdNpuLUNBXUkx4lyxYGHKrTkzDmOb7t+jWYa6f/bMKxIGY7n/EdJY1npOjmjpa7Kvs2nOY5LftIv/WE0PhWP/oQsPvf3WBr8lAocRHlIhNq+OjRaYQH4hB4AC03lagpdg5L5rkRgd6LDBo26LmVRbwKzkpMWosNo/3jz2DIFTbolJztNWeQ8JoEsTDa/j+mG7Rl0+oxPv/L0L5w9Oiek52V0zNPwkg80UgSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LDzqzMhYnbhNGLmSPH0FcZPDDZRS+ARYxJlLaQgPMwE=;
+ b=fCrjfY2rFLfEm1WdIEY8fFUXnX2MrNDLZHOJHOzeds1BaYUhAj6GQk8vAyTotnzf9lCkdu62dYjrULEvliun/jQ/uNzLWjCk62SX7SajqGtrhzk1A63m2Zgvs5PhsFNiA5SMCELeyOIchCE923g0ZGAfTYRMJNIByE8c6M5PS+M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MW4PR12MB6780.namprd12.prod.outlook.com (2603:10b6:303:20e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Tue, 31 Jan
+ 2023 08:25:49 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::25e3:3a9c:e866:787]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::25e3:3a9c:e866:787%7]) with mapi id 15.20.6043.036; Tue, 31 Jan 2023
+ 08:25:49 +0000
+Message-ID: <fcf5ee96-178d-061a-ccbe-9be925b1b708@amd.com>
+Date:   Tue, 31 Jan 2023 13:55:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 1/1] perf: Fix warning from concurrent read/write of
+ perf_event_pmu_context
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, peterz@infradead.org
+Cc:     syzbot+697196bc0265049822bd@syzkaller.appspotmail.com,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        llvm@lists.linux.dev, Ben Hutchings <benh@debian.org>,
-        James Clark <james.clark@arm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230127143141.1782804-1-james.clark@arm.com>
+ <20230127143141.1782804-2-james.clark@arm.com>
+ <2cb6bb4b-fd04-556e-0790-524bf174cf89@amd.com>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <2cb6bb4b-fd04-556e-0790-524bf174cf89@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0065.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:99::16) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW4PR12MB6780:EE_
+X-MS-Office365-Filtering-Correlation-Id: d54ccb56-8f20-4500-d533-08db0364c23e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: arbEy5LfgFtxm+9DAxmfhtrJHXx08a0bED6tMzmRw/YJVNVeD0X8V9pbcm9twwpPozJe++YgTAjJmeaTxwngZrdG4g1VXIJlCZDIhcGckUllHWwSrdjgxZxR/pXUqWLVptnmJuMPoOR9AusAgK+SEIjE+Oyr3z+Lfcc03ylSmK4pMLFeEP1cSd15lrKYlbAUMMGQ/OogNXlpdKFTI4FSNWrEOLdwdeVx38obXAUMolv2VzI+dzoE+vaYSXxTFd326SsZjljhmSXy3Ew5+avGfLnM/2GXAmLtMDPKBH0CQNxTdZ65O0GdEGN4aYKk/t+aaED+Rn7d/ofc92Pb1iBAJOM4nQn+UVCYRCh/Ff2e1l47WqRkuu8TziCyQCddTREHxv0A/4I1ggCH4NjD98YH/DEc+k4TcWmoT5qtWaZ+vL02/Fdy45UTxJVEBPQ0hUu0Kta65bcMTnRdX3kXNQbum1R8zuhaGelY5cE4QR/qsWWDj/jsEHhoTVBGCNaYoP4K0dCOFUazPLFnAUjdnzGa9JEDFvTa83hOJlHCRp7xZ6SeKjHhWLKw+eWroqRtRXaKCW0znNDvVSNhQYrqUu2VY2qBNRqpPu98bAUSMMFdNHj2gdlR5TYM7tYEVBB07ui0um/0Q1GEWnDs3rf/Mr+oqOyUeorsEb7ueKskQWuaFN2YhVV5bEh6HrvYkxPzB4MUQZW685EkZsn4m9bbzKVYFNRL7cgQxWaFeHjC3Mkx4yfSBb4v5bK12MWZ2yy2EYvMHI7WbI5oOsVvsrEsOVBWEJYHxQQHQeFLnaKBlVWXmlU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(451199018)(45080400002)(2906002)(316002)(6486002)(6506007)(44832011)(6512007)(26005)(186003)(53546011)(5660300002)(7416002)(36756003)(54906003)(2616005)(966005)(6666004)(38100700002)(31696002)(31686004)(83380400001)(86362001)(478600001)(4326008)(66556008)(66476007)(8676002)(66946007)(8936002)(41300700001)(99710200001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SlhhK1J5YWMxdVFNTEt3QWptSlNJaGFJcFZrbFRSVHdXLzhTMDZYbHIvTk8x?=
+ =?utf-8?B?aVl0NTMrQjBZUVhsTi9DSXpINkRsY0M2QjJ1cmFibVExUXV4MWJkOU82SzFz?=
+ =?utf-8?B?YmMzMU9pSlYxTkVKM05PSXFqdE1hU2JoQld4aWxTK3dNaThERFdpY1pQUUY5?=
+ =?utf-8?B?WUhFTXIyNloxWGNqN0RMSHFXZ0NJMnc2cXl1WE5DckM3KzhXaFBqZElIMGIx?=
+ =?utf-8?B?RkFFa2o5SjVWNEhoRXhhQS91YlUvMVdHYTFkL3BjcmIrWUVkQ0NWc09NcWN4?=
+ =?utf-8?B?MXI5YUpsTkRQbnYxUFhqY0ZtNm0xVlovcTFISTl1SnExeTZ6ZEdOeDlydzdl?=
+ =?utf-8?B?Z2tnMFpsRE0ra29Ec2RFL0dyYlVsem9zMVAvVmNZQktwc3g2SXlLMkVWYWd2?=
+ =?utf-8?B?NjNpK1psckVFSU8vNExWN0hVWHFMRzA0WllITGcrekozSjhGWExBelRwS1ho?=
+ =?utf-8?B?TzZpZU9CWHZKbHk4QUF5TFhaMkFiTTJWSnppUXlmQ1RTaVQxQmlmQ2ZJRjN1?=
+ =?utf-8?B?VW43bFM0a3dNbjdWWXBUUlh6WUR4S2dnK0xHU25XUlE0dGFDY1VKeW1xajlR?=
+ =?utf-8?B?ZWo1eE15RzVOWFZhcTdnNTVXWVpETkJ4d25acEtTY0FTcWZaTXRza0pyY0pl?=
+ =?utf-8?B?VktjeEc1TGQ0T1Z2cG8zZ0d6L3lOMXBveTMrRDg3d3NZeVYvMUptRW1KK01j?=
+ =?utf-8?B?b3pBOUdIblFsMmpyM1RuUlE2QWdiVk5YUDBmcjVjK3BXY2c2NlJjTTJrWFV0?=
+ =?utf-8?B?VkxsSWo3azlIbUVNYXBCU1FGb25WZDdVVHd2REltUnZRdG5rOWZCZk5MS0hI?=
+ =?utf-8?B?TmxlbGZzc3pYY2RVOEZuMjhwcUtIck53NlFtS3JTSkV6bTcvRGxWSmR5dmZv?=
+ =?utf-8?B?WjVpdWcyWUFEVkFOWWM2U3lGdThHR2F0ZFJ4V3VWUDk1R3E2WGx3YTRMZjR3?=
+ =?utf-8?B?MnhEZUNGTkdxY3FJTnRWSmkxVmRNMFlDT0hGZnU0RWpZQVpWV1hFeW5lSUZK?=
+ =?utf-8?B?bURqMUVUc2o5R2djKzg3dnd5QUIwNXNEcHVkTmsrTE93ZkVvN2dBNHQyWHRp?=
+ =?utf-8?B?UEdqZjBHTm9kRzVJUFR2U1NtOU0rU254a2c2NUFUdlBIOUFtdGVTU0hLbHNq?=
+ =?utf-8?B?b0syVWZTRnh6N2RhMmxsZGZYS1ZoclpRcXhJZGxvTld4bllzZjgzZ1RLdEpN?=
+ =?utf-8?B?cTJvWTIxTGVuQTdPVFc0SkdLMFdCZFRBVFlQYXdzaXFDL1NrTmgxUWR4VWpE?=
+ =?utf-8?B?TTE2SE1GOVJHQzQrazdxbGwrMEpvS1dzZ1dKRUE3TE1BWEJMNHg5NE5QZmJL?=
+ =?utf-8?B?QmlrTWc5VEpad2VpNWh4VmtPYnMzWlcxQ3crU2NGWXdaMlRyUXdYMXg2Qmdu?=
+ =?utf-8?B?QVQ4MjVLYnR0MkxqZk1PQjhnZFJCQmFqakdtMitOOExtSEdzVEFrSDRWNlZU?=
+ =?utf-8?B?a1FOdVVrc2ZMZXhsdjFTYVh1WmRNb1RnZ3UwWkJ3WHdJa0crRjVmWHQ2cTJv?=
+ =?utf-8?B?TUhncndRdmpkcmhnMmxHdGU1dnpWWVdUbVdpSFl1bmFqNU1xUlAwWW5xYStV?=
+ =?utf-8?B?RDhBdWpaSFJMVlNEZnZBZlNoYm9DdVJZNUR2RCt3WkJ1WnFmRjZXMGU2VVMr?=
+ =?utf-8?B?Vzl3YUhXcnZPMENoaVFzYVZkVnZPR1N6TGZhUndkc0ZGVSt6S0FuQTE4SVNk?=
+ =?utf-8?B?cG5HdElkU3ZwamdVMmd5V0ZxNEZqcURGcEFQZTI3WXM2aVZTV2JFWkJUMHhr?=
+ =?utf-8?B?WHlmZHhBMWp1ZlRwQTVXdmErRVE0UGVTZUdUWEE0SG1LdXVGTFVMZllzbDZ4?=
+ =?utf-8?B?ckUrSU1iSlRRbWNKZ2JaS0gyNW5Bb0JmUWhsUDNVcmJKZ2FlaTVyUnNvMUIw?=
+ =?utf-8?B?aDBCV2NuM3gxNlFFejE4RkJtZjMxdXp1ZUhkdUhiZ2J1QWt0ZW44alc5NGI1?=
+ =?utf-8?B?WUFya3MwQmNpZ1ViT1ZScytmU0I4UU1RQUtNdXcxOHg5enJiR2tBSDZLdnBL?=
+ =?utf-8?B?VGtYNGVoY201eGRTY1YvSmdjb3duZE56a3JjVlFPekRjMC8vcDRaVkJIZk9m?=
+ =?utf-8?B?U0pGYjRYQTdDYzVXYmtFVXFmL1VJR09LbTVpejEwVCtBNU5qY1pRT2ZUYy93?=
+ =?utf-8?Q?d5FTYGMTyL8swKXE+H4wjzEMb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d54ccb56-8f20-4500-d533-08db0364c23e
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jan 2023 08:25:49.4817
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ga+qTFSA3M7cs15tmBcMtmCeTKDr9zsuZe3/ZAhd5pQZhBIJnGSfEtk6+rwf80CzioKrtD92fxqnivR7aleZ1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6780
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 7:14 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Tue, Jan 31, 2023 at 4:55 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Mon, Jan 30, 2023 at 7:45 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > >
-> > > On Tue, Jan 31, 2023 at 1:20 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Mon, Jan 30, 2023 at 2:04 AM James Clark <james.clark@arm.com> wrote:
-> > > > >
-> > > > >
-> > > > >
-> > > > > On 30/01/2023 02:24, Sedat Dilek wrote:
-> > > > > > ?
-> > > > > >
-> > > > > > On Mon, Jan 30, 2023 at 12:21 AM Ian Rogers <irogers@google.com> wrote:
-> > > > > >>
-> > > > > >> On Sun, Jan 29, 2023 at 1:59 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > > > > >>>
-> > > > > >>> [ CC LLVM linux folks + Ben from Debian kernel team ]
-> > > > > >>>
-> > > > > >>> Hi,
-> > > > > >>>
-> > > > > >>> I am playing with LLVM version 16.0.0-rc1 which was released yesterday and PERF.
-> > > > > >>>
-> > > > > >>> After building my selfmade LLVM toolchain, I built perf and run some
-> > > > > >>> perf tests here on my Intel SandyBridge CPU (details see below).
-> > > > > >>>
-> > > > > >>> perf all metrics test: FAILED!
-> > > > > >>>
-> > > > > >>> ...with both Debian's perf version 6.1.7 and my selfmade version 6.2-rc5.
-> > > > > >>>
-> > > > > >>> Just noticed:
-> > > > > >>>
-> > > > > >>> Couldn't bump rlimit(MEMLOCK), failures may take place when creating
-> > > > > >>> BPF maps, etc
-> > > > > >>>
-> > > > > >>> Run the below tests with `sudo` - made this go away - still FAILED.
-> > > > > >>>
-> > > > > >>> But maybe I am missing to activate some sysfs/debug or whatever other stuff?
-> > > > > >>
-> > > > > >> Hi Sedat,
-> > > > > >>
-> > > > > >> things have been improving wrt metrics and so this failure may have
-> > > > > >> just been because of the addition of a previously missing metric. The
-> > > > > >> rlimit thing shouldn't affect things but maybe file descriptors?
-> > > > > >> Looking at the test output the issue is:
-> > > > > >>
-> > > > > >> ```
-> > > > > >> Metric 'tma_dram_bound' not printed in:
-> > > > > >> # Running 'internals/synthesize' benchmark:
-> > > > > >> Computing performance of single threaded perf event synthesis by
-> > > > > >> synthesizing events on the perf process itself:
-> > > > > >>   Average synthesis took: 207.680 usec (+- 0.176 usec)
-> > > > > >>   Average num. events: 30.000 (+- 0.000)
-> > > > > >>   Average time per event 6.923 usec
-> > > > > >>   Average data synthesis took: 217.833 usec (+- 0.202 usec)
-> > > > > >>   Average num. events: 161.000 (+- 0.000)
-> > > > > >>   Average time per event 1.353 usec
-> > > > > >>
-> > > > > >>  Performance counter stats for 'perf bench internals synthesize':
-> > > > > >>
-> > > > > >>      <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> > > > > >>                          (0,00%)
-> > > > > >>      <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > > > >>                          (0,00%)
-> > > > > >>      <not counted>      CPU_CLK_UNHALTED.THREAD
-> > > > > >>                          (0,00%)
-> > > > > >>      <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> > > > > >>                             (0,00%)
-> > > > > >> ```
-> > > > > >>
-> > > > > >> So the test was checking to see whether the tma_dram_bound metric
-> > > > > >> could be computed on your Sandybridge and it failed. The event counts
-> > > > > >> below show that every event came back "<not counted>" which is usually
-> > > > > >> indicative of a permissions problem - it is also not surprising given
-> > > > > >> this that the metric wasn't computed. You could try repeating the
-> > > > > >> command the test is trying with something like "perf stat -M
-> > > > > >> tma_dram_bound -a sleep 1", but running as root should have resolved
-> > > > > >> that issue. Does that give you enough to keep exploring?
-> > > > > >>
-> > > > > >
-> > > > > > Hi Ian,
-> > > > > >
-> > > > > > Thanks for your feedback!
-> > > > > >
-> > > > > > I booted into my Debian kernel - just to see what happens.
-> > > > > >
-> > > > > > # cat /proc/version
-> > > > > > Linux version 6.1.0-2-amd64 (debian-kernel@lists.debian.org) (gcc-12
-> > > > > > (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1
-> > > > > > SMP PREEMPT_DYNAMIC Debian 6.1.7-1 (2023-01-18)
-> > > > > >
-> > > > > > All things run as root...
-> > > > > >
-> > > > > > # echo 0 | tee /proc/sys/kernel/kptr_restrict
-> > > > > > /proc/sys/kernel/perf_event_paranoid
-> > > > > > 0
-> > > > > >
-> > > > > > # /usr/bin/perf test 10 92 98 99 100 101
-> > > > > > 10: PMU events                                                      :
-> > > > > > 10.1: PMU event table sanity                                        : Ok
-> > > > > > 10.2: PMU event map aliases                                         : Ok
-> > > > > > 10.3: Parsing of PMU event table metrics                            : Ok
-> > > > > > 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > > > > 92: perf record tests                                               : Ok
-> > > > > > 98: perf stat tests                                                 : Ok
-> > > > > > 99: perf all metricgroups test                                      : Ok
-> > > > > > 100: perf all metrics test                                           : FAILED!
-> > > > > > 101: perf all PMU test                                               : Ok
-> > > > > >
-> > > > > > # perf stat -M tma_dram_bound -a sleep 1
-> > > > > >
-> > > > > > Performance counter stats for 'system wide':
-> > > > > >
-> > > > > >     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> > > > > >                   (0,00%)
-> > > > > >     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > > > >                      (0,00%)
-> > > > > >     <not counted>      CPU_CLK_UNHALTED.THREAD
-> > > > > >               (0,00%)
-> > > > > >     <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> > > > > >                         (0,00%)
-> > > > > >
-> > > > >
-> > > > > Hi Sedat,
-> > > > >
-> > > > > I also had this failure and did a git bisect, but it led me to the
-> > > > > conclusion that it is a stale build issue rather than a regression.
-> > > > >
-> > > > > There was a recent commit that renamed/removed some json PMU files which
-> > > > > the build system can't cope with. I think the tests end up iterating
-> > > > > over a different set of event names than were generated by the build system.
-> > > > >
-> > > > > If you do a clean build the issue should go away. I don't know if there
-> > > > > is anything more we can do to stop this from happening.
-> > > > >
-> > > > > James
-> > > >
-> > > > So I think this is a kernel bug triggering a perf tool bug. The kernel
-> > > > bug can be worked around in the perf tool. I only had an Ivybridge to
-> > > > test with (hence slightly different events) but what I see is both
-> > > > tma_dram_bound and tma_l3_bound using the same 4 events. I could work
-> > > > around the "<not counted>" by adding the --metric-no-group flag:
-> > > >
-> > > > ```
-> > > > $ perf stat -M tma_l3_bound --metric-no-group -a sleep 1
-> > > >
-> > > > Performance counter stats for 'system wide':
-> > > >
-> > > >           400,404      MEM_LOAD_UOPS_RETIRED.LLC_HIT    #      4.3 %
-> > > > tma_l3_bound             (74.99%)
-> > > >       128,937,891      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > >                         (87.46%)
-> > > >           167,459      MEM_LOAD_UOPS_RETIRED.LLC_MISS
-> > > >                         (74.99%)
-> > > >       759,574,967      CPU_CLK_UNHALTED.THREAD
-> > > >                         (87.47%)
-> > > >
-> > > >       1.001526438 seconds time elapsed
-> > > >
-> > > > $ perf stat -M tma_dram_bound -a --metric-no-group sleep 1
-> > > >
-> > > > Performance counter stats for 'system wide':
-> > > >
-> > > >           259,954      MEM_LOAD_UOPS_RETIRED.LLC_HIT    #     15.2 %
-> > > > tma_dram_bound           (74.99%)
-> > > >       118,807,043      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > >                         (87.46%)
-> > > >           111,699      MEM_LOAD_UOPS_RETIRED.LLC_MISS
-> > > >                         (74.95%)
-> > > >       587,571,060      CPU_CLK_UNHALTED.THREAD
-> > > >                         (87.45%)
-> > > >
-> > > >       1.001518093 seconds time elapsed
-> > > > ```
-> > > >
-> > > > The issue is that perf metrics use weak groups of events. A weak group
-> > > > is the same as a group of events initially. We want to use groups of
-> > > > events with metrics so that all the counters are scheduled in and out
-> > > > at the same time, and not multiplexed independently. Imagine measuring
-> > > > IPC but the counts for instructions and cycles are measured at
-> > > > different periods, the resultant IPC value would be unlikely to be
-> > > > accurate. If perf_event_open fails then the perf tool retries the
-> > > > events without the group. If I try just 3 of the events in a weak
-> > > > group then the failure can be seen:
-> > > >
-> > > > ```
-> > > > $ perf stat -e "{MEM_LOAD_UOPS_RETIRED.LLC_HIT,MEM_LOAD_UOPS_RETIRED.LLC_MISS,CYCLE_ACTIVITY.STALLS_L2_PENDING}:W"
-> > > > -a sleep 1
-> > > >
-> > > > Performance counter stats for 'system wide':
-> > > >
-> > > >     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> > > >                         (0.00%)
-> > > >     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_MISS
-> > > >                         (0.00%)
-> > > >     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > >                         (0.00%)
-> > > >
-> > > >       1.001458485 seconds time elapsed
-> > > > ```
-> > > >
-> > > > The kernel should have failed the perf_event_open on opening the third
-> > > > event and then measured without the group, which it can do with
-> > > > multiplexing as in the following:
-> > > >
-> > > > ```
-> > > > $ perf stat -e "MEM_LOAD_UOPS_RETIRED.LLC_HIT,MEM_LOAD_UOPS_RETIRED.LLC_MISS,CYCLE_ACTIVITY.STALLS_L2_PENDING"
-> > > > -a sleep 1
-> > > >
-> > > > Performance counter stats for 'system wide':
-> > > >
-> > > >         1,239,397      MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> > > >                         (79.06%)
-> > > >           174,826      MEM_LOAD_UOPS_RETIRED.LLC_MISS
-> > > >                         (64.60%)
-> > > >       124,026,024      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > >                         (81.16%)
-> > > >
-> > > >       1.001483434 seconds time elapsed
-> > > > ```
-> > > >
-> > > > When the --metric-no-group flag is given to perf then it doesn't
-> > > > produce the initial weak group, which works around the bug of the
-> > > > kernel not failing on the 3rd perf_event_open. I've added Kan and
-> > > > Zhengjun to the e-mail as they work on the Intel kernel PMU code.
-> > > >
-> > > > There's a question about what we should do in the perf test about
-> > > > this? I have a few solutions:
-> > > >
-> > > > 1) try metric tests again with the --metric-no-group flag and don't
-> > > > fail the test if this succeeds. This allows kernel bugs to hide, so
-> > > > I'm not a huge fan.
-> > > >
-> > > > 2) add a new metric flag/constraint to say not to group, this way the
-> > > > metric will automatically apply the "--metric-no-group" flag. It is a
-> > > > bit of work to wire this up but this kind of failure is common enough
-> > > > in PMUs that it is probably worthwhile. We also need to add the flag
-> > > > to metrics and I'm not sure how to get a good list of the metrics that
-> > > > currently fail and require it. This is okay but error prone.
-> > > >
-> > > > 3) fix the kernel bug and let the perf test fail until an adequate
-> > > > kernel is installed. Probably the best option.
-> > > >
-> > >
-> > > Hi Ian,
-> > >
-> > > I can confirm:
-> > >
-> > > $ echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
-> > > /proc/sys/kernel/perf_event_paranoid
-> > > 0
-> > >
-> > > $ ~/bin/perf stat -M tma_l3_bound --metric-no-group -a sleep 1
-> > >
-> > > Performance counter stats for 'system wide':
-> > >
-> > >         2.058.892      MEM_LOAD_UOPS_RETIRED.LLC_HIT    #      1,5 %
-> > > tma_l3_bound             (99,30%)
-> > >       173.254.697      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > >                         (99,10%)
-> > >     2.396.130.501      CPU_CLK_UNHALTED.THREAD
-> > >                         (99,60%)
-> > >         1.110.486      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> > >                            (99,53%)
-> > >
-> > >       1,001989022 seconds time elapsed
-> > >
-> > > $ ~/bin/perf stat -M tma_dram_bound --metric-no-group -a sleep 1
-> > >
-> > > Performance counter stats for 'system wide':
-> > >
-> > >         1.729.208      MEM_LOAD_UOPS_RETIRED.LLC_HIT    #      1,2 %
-> > > tma_dram_bound           (99,50%)
-> > >        50.346.734      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > >                         (99,50%)
-> > >     2.354.963.862      CPU_CLK_UNHALTED.THREAD
-> > >                         (99,80%)
-> > >           306.500      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> > >                            (99,61%)
-> > >
-> > >       1,001981392 seconds time elapsed
-> > >
-> > > Thanks!
-> >
-> > Thanks, apparently it is an issue with SandyBridge/IvyBridge that some
-> > counters on one hyperthread will limit what can be on the other. I
-> > believe that's the comment related to EXCL access here:
-> > https://github.com/torvalds/linux/blob/master/arch/x86/events/intel/core.c#L124
-> > So you may have more success with the metric if you disable
-> > hyperthreading, but I imagine that's not a popular option.
-> >
->
-> Hi Ian,
->
-> LOL.
->
-> Yesterday, I played a bit with perf... and did some research.
->
-> I was thinking more of the "formula" in the metrics calculation is
-> somehow BROKEN (not executed properly).
->
-> The first thing to fix the issue was to recompile perf with throwing
-> out the blocks in snb-metrics JSON file containing the two tests.
->
-> AFFAICS, stackoverflow or wherever I found something about haswell vs.
-> sandy bridge and topic "SMT / HT (hyper-threading)".
-> That's why my initial LOL...
->
-> I am not in front of my Linux machine, I guess it was...
->
-> Link: https://stackoverflow.com/questions/33677367/understanding-cycle-activity-haswell-performance-monitoring-events
->
+On 30-Jan-23 11:19 AM, Ravi Bangoria wrote:
+> Hi James,
+> 
+> On 27-Jan-23 8:01 PM, James Clark wrote:
+>> When running two Perf sessions, the following warning can appear:
+>>
+>>   WARNING: CPU: 1 PID: 2245 at kernel/events/core.c:4925 put_pmu_ctx+0x1f0/0x278
+>>   Modules linked in: xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nf_reject_ipv4 xt_tcpudp ip6table_mangle ip6table_nat iptable_mangle iptable_nat nf_nat nf_conntrack libcrc32c nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables iptable_filter bridge stp llc coresight_stm stm_core coresight_etm4x coresight_tmc coresight_replicator coresight_funnel coresight_tpiu coresight arm_spe_pmu ip_tables x_tables ipv6 xhci_pci xhci_pci_renesas r8169
+>>   CPU: 1 PID: 2245 Comm: perf Not tainted 6.2.0-rc4+ #1
+>>   pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>   pc : put_pmu_ctx+0x1f0/0x278
+>>   lr : put_pmu_ctx+0x1b4/0x278
+>>   sp : ffff80000dfcbc20
+>>   x29: ffff80000dfcbca0 x28: ffff008004f00000 x27: ffff00800763a928
+>>   x26: ffff00800763a928 x25: 00000000000000c0 x24: 0000000000000000
+>>   x23: 00000000000a0003 x22: ffff00837df74088 x21: ffff80000dfcbd18
+>>   x20: 0000000000000000 x19: ffff00800763a6c0 x18: 0000000000000000
+>>   x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+>>   x14: 0000000000000000 x13: ffff80000dfc8000 x12: ffff80000dfcc000
+>>   x11: be58ab6d2939e700 x10: be58ab6d2939e700 x9 : 0000000000000000
+>>   x8 : 0000000000000001 x7 : 0000000000000000 x6 : 0000000000000000
+>>   x5 : ffff00800093c9c0 x4 : 0000000000000000 x3 : ffff80000dfcbca0
+>>   x2 : ffff008004f00000 x1 : ffff8000082403c4 x0 : 0000000000000000
+>>   Call trace:
+>>    put_pmu_ctx+0x1f0/0x278
+>>    _free_event+0x2bc/0x3d0
+>>    perf_event_release_kernel+0x444/0x4bc
+>>    perf_release+0x20/0x30
+>>    __fput+0xe4/0x25c
+>>    ____fput+0x1c/0x28
+>>    task_work_run+0xc4/0xe8
+>>    do_notify_resume+0x10c/0x164
+>>    el0_svc+0xb4/0xdc
+>>    el0t_64_sync_handler+0x84/0xf0
+>>    el0t_64_sync+0x190/0x194
+>>
+>> This is because there is no locking around the access of "if
+>> (!epc->ctx)" in find_get_pmu_context() and when it is set to NULL in
+>> put_pmu_ctx().
+>>
+>> The decrement of the reference count in put_pmu_ctx() also happens
+>> outside of the spinlock, leading to the possibility of this order of
+>> events, and the context being cleared in put_pmu_ctx(), after its
+>> refcount is non zero:
+>>
+>>  CPU0                                   CPU1
+>>  find_get_pmu_context()
+>>    if (!epc->ctx) == false
+>>                                         put_pmu_ctx()
+>>                                         atomic_dec_and_test(&epc->refcount) == true
+>>                                         epc->refcount == 0
+>>      atomic_inc(&epc->refcount);
+>>      epc->refcount == 1
+>>                                         list_del_init(&epc->pmu_ctx_entry);
+>> 	                                      epc->ctx = NULL;
+>>
+>> Another issue is that WARN_ON for no active PMU events in put_pmu_ctx()
+>> is outside of the lock. If the perf_event_pmu_context is an embedded
+>> one, even after clearing it, it won't be deleted and can be re-used. So
+>> the warning can trigger. For this reason it also needs to be moved
+>> inside the lock.
+>>
+>> The above warning is very quick to trigger on Arm by running these two
+>> commands at the same time:
+>>
+>>   while true; do perf record -- ls; done
+>>   while true; do perf record -- ls; done
+> 
+> These dose not trigger WARN_ON on my x86 machine, however, the C reproducer
+> provided by syzbot[1] does trigger it.
+> 
+> [1]: https://syzkaller.appspot.com/text?tag=ReproC&x=17beacbc480000
 
-To quote from the above Link:
+Unless I'm missing some subtle scenario, the patch looks fine to me.
 
-> There are three important differences:
->
-> Some of the Haswell events can only valid when HT is disabled. All SNB events are valid even when HT is enabled.
->
-> CYCLE_ACTIVITY.STALLS_L2_PENDING on HSW counts the number of load misses at L2, but on SNB, it counts the number of cycles during which there was at least one demand load miss at L2.
->
-> The HSW events include all accesses, not just demand loads. In contrast, the SNB events only occur for demand loads.
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
--Sedat-
-
-> Hope I have not to disable HT in my BIOS before running these tests.
-> Can I do this in runtime (proc / sysfs / etc.)?
->
-> Furthermore, I passed * mitigations=off * as kernel-boot-parameter for
-> testing purposes.
-> ( I wanted to test it for a long time - independent of this issue. )
->
-> Of course, I played with perf -e
-> MEM_LOAD_UOPS_RETIRED.LLC_HIT,MEM_LOAD_UOPS_RETIRED.LLC_MISS,CYCLE_ACTIVITY.STALLS_L2_PENDING
-> ... (comma-separated, no "...", no {...}), passing -C 1 (number of
-> CPUs), etc.
-> Had to check my bash-history...
->
-> Again as noone explained:
->
-> Control descriptor is not initialized
->
-> In some tests I have seen this (all with passing -v or -vv for more
-> verbosity) - in some not.
->
-> Worth reading: Brendan Gregg's Homepage!
->
-> https://www.brendangregg.com/linuxperf.html
->
-> https://www.brendangregg.com/perf.html
->
-> Thanks Ian for digging into this!
->
-> If you have any news or anything for testing, please let me know.
->
-> BR,
-> -Sedat-
->
-> >
-> > > BR,
-> > > -Sedat-
-> > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > > >       1,002148600 seconds time elapsed
-> > > > > >
-> > > > > > Hmm... looking at... Metric 'tma_l3_bound' ...
-> > > > > >
-> > > > > > Running...
-> > > > > >
-> > > > > > # perf stat --verbose -M tma_l3_bound -a sleep 1
-> > > > > > Using CPUID GenuineIntel-6-2A-7
-> > > > > > metric expr (MEM_LOAD_UOPS_RETIRED.LLC_HIT /
-> > > > > > (MEM_LOAD_UOPS_RETIRED.LLC_HIT + 7 *
-> > > > > > MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS)) *
-> > > > > > CYCLE_ACTIVITY.STALLS_L2_PENDING / CLKS for tma_l3_bound
-> > > > > > metric expr CPU_CLK_UNHALTED.THREAD for CLKS
-> > > > > >
-> > > > > > found event MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> > > > > > found event CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > > > > found event CPU_CLK_UNHALTED.THREAD
-> > > > > > found event MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> > > > > >
-> > > > > > Parsing metric events
-> > > > > > '{MEM_LOAD_UOPS_RETIRED.LLC_HIT/metric-id=MEM_LOAD_UOPS_RETIRED.LLC_HIT/,CYCLE_ACTIVITY.STALLS_L2_PENDING/metric-id=CYCLE_ACTIVITY.STALLS_L2_PEND
-> > > > > > ING/,CPU_CLK_UNHALTED.THREAD/metric-id=CPU_CLK_UNHALTED.THREAD/,MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS/metric-id=MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS/}:W'
-> > > > > > MEM_LOAD_UOPS_RETIRED.LLC_HIT -> cpu/event=0xd1,period=0xc365,umask=0x4/
-> > > > > > CYCLE_ACTIVITY.STALLS_L2_PENDING ->
-> > > > > > cpu/event=0xa3,cmask=0x5,period=0x1e8483,umask=0x5/
-> > > > > > CPU_CLK_UNHALTED.THREAD -> cpu/event=0x3c,period=0x1e8483/
-> > > > > > MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS -> cpu/event=0xd4,period=0x186a7,umask=0x2/
-> > > > > >
-> > > > > > Control descriptor is not initialized
-> > > > > >
-> > > > > > MEM_LOAD_UOPS_RETIRED.LLC_HIT: 0 4007421228 0
-> > > > > > CYCLE_ACTIVITY.STALLS_L2_PENDING: 0 4007421228 0
-> > > > > > CPU_CLK_UNHALTED.THREAD: 0 4007421228 0
-> > > > > > MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS: 0 4007421228 0
-> > > > > >
-> > > > > > Performance counter stats for 'system wide':
-> > > > > >
-> > > > > >     <not counted>      MEM_LOAD_UOPS_RETIRED.LLC_HIT
-> > > > > >                   (0,00%)
-> > > > > >     <not counted>      CYCLE_ACTIVITY.STALLS_L2_PENDING
-> > > > > >                      (0,00%)
-> > > > > >     <not counted>      CPU_CLK_UNHALTED.THREAD
-> > > > > >               (0,00%)
-> > > > > >     <not counted>      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
-> > > > > >                         (0,00%)
-> > > > > >
-> > > > > >       1,002310013 seconds time elapsed
-> > > > > >
-> > > > > > So those events/metric-ids resulting in "<not counted>" are all found.
-> > > > > >
-> > > > > > What means "Control descriptor is not initialized"?
-> > > > > >
-> > > > > > To summarize:
-> > > > > >
-> > > > > > Those two tests in "100: perf all metrics test" FAILED:
-> > > > > >
-> > > > > > 1. tma_dram_bound
-> > > > > > 2. tma_l3_bound
-> > > > > >
-> > > > > > Best regards,
-> > > > > > -Sedat-
-> > > > > >
-> > > > > >> Thanks,
-> > > > > >> Ian
-> > > > > >>
-> > > > > >>> Last perf version which was OK:
-> > > > > >>>
-> > > > > >>> ~/bin/perf -v
-> > > > > >>> perf version 6.0.0
-> > > > > >>>
-> > > > > >>> echo "linux-perf: Adjust limited access to performance monitoring and
-> > > > > >>> observability operations"
-> > > > > >>> echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
-> > > > > >>> /proc/sys/kernel/perf_event_paranoid
-> > > > > >>> 0
-> > > > > >>>
-> > > > > >>> ~/bin/perf test 10 86 92 93 94 95
-> > > > > >>> 10: PMU events                                                      :
-> > > > > >>> 10.1: PMU event table sanity                                        : Ok
-> > > > > >>> 10.2: PMU event map aliases                                         : Ok
-> > > > > >>> 10.3: Parsing of PMU event table metrics                            : Ok
-> > > > > >>> 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > > > >>> 86: perf record tests                                               : Ok
-> > > > > >>> 92: perf stat tests                                                 : Ok
-> > > > > >>> 93: perf all metricgroups test                                      : Ok
-> > > > > >>> 94: perf all metrics test                                           : Ok
-> > > > > >>> 95: perf all PMU test                                               : Ok
-> > > > > >>>
-> > > > > >>> echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
-> > > > > >>> /proc/sys/kernel/perf_event_paranoid
-> > > > > >>> echo "linux-perf: Reset limited access to performance monitoring and
-> > > > > >>> observability operations"
-> > > > > >>>
-> > > > > >>> If you need further information, please let me know.
-> > > > > >>>
-> > > > > >>> Thanks.
-> > > > > >>>
-> > > > > >>> Regards,
-> > > > > >>> -Sedat-
-> > > > > >>>
-> > > > > >>> P.S. Instructions
-> > > > > >>>
-> > > > > >>> [ REPRODUCER ]
-> > > > > >>>
-> > > > > >>> LLVM_MVER="16"
-> > > > > >>>
-> > > > > >>> # Debian LLVM
-> > > > > >>> ##LLVM_TOOLCHAIN_PATH="/usr/lib/llvm-${LLVM_MVER}/bin"
-> > > > > >>> # Selfmade LLVM
-> > > > > >>> LLVM_TOOLCHAIN_PATH="/opt/llvm/bin"
-> > > > > >>> if [ -d ${LLVM_TOOLCHAIN_PATH} ]; then
-> > > > > >>>    export PATH="${LLVM_TOOLCHAIN_PATH}:${PATH}"
-> > > > > >>> fi
-> > > > > >>>
-> > > > > >>> PYTHON_VER="3.11"
-> > > > > >>> MAKE="make"
-> > > > > >>> MAKE_OPTS="V=1 -j1 HOSTCC=clang-$LLVM_MVER HOSTLD=ld.lld
-> > > > > >>> HOSTAR=llvm-ar CC=clang-$LLVM_MVER LD=ld.lld AR=llvm-ar
-> > > > > >>> STRIP=llvm-strip"
-> > > > > >>>
-> > > > > >>> echo "LLVM MVER ........ $LLVM_MVER"
-> > > > > >>> echo "Path settings .... $PATH"
-> > > > > >>> echo "Python version ... $PYTHON_VER"
-> > > > > >>> echo "make line ........ $MAKE $MAKE_OPTS"
-> > > > > >>>
-> > > > > >>> LANG=C LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
-> > > > > >>>
-> > > > > >>> LANG=C LC_ALL=C $MAKE $MAKE_OPTS -C tools/perf
-> > > > > >>> PYTHON=python${PYTHON_VER} install-bin 2>&1 | tee
-> > > > > >>> ../make-log_perf-install_bin_python${PYTHON_VER}_llvm${LLVM_MVER}.txt
-> > > > > >>>
-> > > > > >>>
-> > > > > >>> [ TESTS ]
-> > > > > >>>
-> > > > > >>> [ TESTS - START ]
-> > > > > >>>
-> > > > > >>> echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
-> > > > > >>> /proc/sys/kernel/perf_event_paranoid
-> > > > > >>>
-> > > > > >>> [ TESTS - DEBIAN ]
-> > > > > >>>
-> > > > > >>> /usr/bin/perf -v
-> > > > > >>> perf version 6.1.7
-> > > > > >>>
-> > > > > >>> /usr/bin/perf test 10 92 98 99 100 101
-> > > > > >>>
-> > > > > >>>  10: PMU events                                                      :
-> > > > > >>>  10.1: PMU event table sanity                                        : Ok
-> > > > > >>>  10.2: PMU event map aliases                                         : Ok
-> > > > > >>>  10.3: Parsing of PMU event table metrics                            : Ok
-> > > > > >>>  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > > > >>>  92: perf record tests                                               : Ok
-> > > > > >>>  98: perf stat tests                                                 : Ok
-> > > > > >>>  99: perf all metricgroups test                                      : Ok
-> > > > > >>> 100: perf all metrics test                                           : FAILED!
-> > > > > >>> 101: perf all PMU test                                               : Ok
-> > > > > >>>
-> > > > > >>> [ TESTS - DILEKS ]
-> > > > > >>>
-> > > > > >>> ~/bin/perf -v
-> > > > > >>> perf version 6.2.0-rc5
-> > > > > >>>
-> > > > > >>> ~/bin/perf test 7 87 93 94 95 96
-> > > > > >>>
-> > > > > >>>   7: PMU events                                                      :
-> > > > > >>>   7.1: PMU event table sanity                                        : Ok
-> > > > > >>>   7.2: PMU event map aliases                                         : Ok
-> > > > > >>>   7.3: Parsing of PMU event table metrics                            : Ok
-> > > > > >>>   7.4: Parsing of PMU event table metrics with fake PMUs             : Ok
-> > > > > >>>  87: perf record tests                                               : Ok
-> > > > > >>>  93: perf stat tests                                                 : Ok
-> > > > > >>>  94: perf all metricgroups test                                      : Ok
-> > > > > >>>  95: perf all metrics test                                           : FAILED!
-> > > > > >>>  96: perf all PMU test                                               : Ok
-> > > > > >>>
-> > > > > >>> [ TESTS - FAILED ]
-> > > > > >>>
-> > > > > >>> /usr/bin/perf test --verbose 100 2>&1 | tee
-> > > > > >>> perf-test-verbose-100-perf-all-metrics-test_debian-perf-6-1-7.txt
-> > > > > >>>
-> > > > > >>> ~/bin/perf test --verbose 95 2>&1 | tee
-> > > > > >>> perf-test-verbose-95-perf-all-metrics-test_dileks-perf-6-2-rc5.txt
-> > > > > >>>
-> > > > > >>> [ TESTS - STOP ]
-> > > > > >>>
-> > > > > >>> echo 1 | sudo tee /proc/sys/kernel/kptr_restrict
-> > > > > >>> /proc/sys/kernel/perf_event_paranoid
-> > > > > >>>
-> > > > > >>> - EOT -
+Thanks,
+Ravi
