@@ -2,84 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB62CC636CC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 11:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D326C636CC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 11:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231630AbjAaLA0 (ORCPT
+        id S231300AbjAaLtV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 Jan 2023 06:00:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44376 "EHLO
+        Tue, 31 Jan 2023 06:49:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbjAaLAO (ORCPT
+        with ESMTP id S231861AbjAaLtS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Jan 2023 06:00:14 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB1D47EF9;
-        Tue, 31 Jan 2023 03:00:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zjviUSUPr5M8hEPUfDl2kMa5y6J74xGv1mMvHMYGeQU=; b=u3V83LfwHGcN3YHWzUJSjDkE4W
-        Rjp+BcNBTwC2wF1ciJukeW5Ghiv6xb57TSa3joTm1KuD6wdMZePGwdRqL/Qj3PC72oNM6VWY4oPbZ
-        PPPFvGDFPmFbLwHNAxIhXNAefNDVw5afGB5qFZF6En/nPS6noPNPpOom+yz4nuvog5SdI0OmiDM91
-        DjdqCRajfOTnBEKABuQXka+KnKpY4g73CyMC3od5EqU/wQhhJdh6ECbuIunzr3LXwgFUoh/brpEvB
-        YHNYRigFClK7uQcJOWxO876TQv+sqFIRJhiD4I0Hu0/RZDPDwP8b1H0cgMFAcbpinmz2MTrVZNvoE
-        R4EsFuKw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pMoMP-00BFNS-Hw; Tue, 31 Jan 2023 10:59:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9924130012F;
-        Tue, 31 Jan 2023 11:59:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 80E98240A5DF8; Tue, 31 Jan 2023 11:59:31 +0100 (CET)
-Date:   Tue, 31 Jan 2023 11:59:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jianfeng Gao <jianfeng.gao@intel.com>,
-        Andrew Cooper <Andrew.Cooper3@citrix.com>
-Subject: Re: [PATCH] perf/x86: KVM: Disable vPMU support on hybrid CPUs (host
- PMUs)
-Message-ID: <Y9j0kwYiqYdQpx28@hirez.programming.kicks-ass.net>
-References: <20230120004051.2043777-1-seanjc@google.com>
- <1dec071d-c010-cd89-9e58-d643e71e775c@linux.intel.com>
- <Y8rQJf3ki8a1aRjW@google.com>
- <50e840ea-ce9c-9290-2187-d3ff0d9a6709@linux.intel.com>
- <Y8r604tRexxWlF8F@google.com>
- <e161b7c0-f0be-23c8-9a25-002260c2a085@linux.intel.com>
- <67facb87-f835-abcd-3d1b-527531b26e52@linux.intel.com>
- <8eda340a-8c5d-a801-54eb-501c44a68d89@linux.intel.com>
+        Tue, 31 Jan 2023 06:49:18 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 981C85B93;
+        Tue, 31 Jan 2023 03:49:16 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 599F52F4;
+        Tue, 31 Jan 2023 03:49:58 -0800 (PST)
+Received: from [10.57.78.39] (unknown [10.57.78.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6C713F71E;
+        Tue, 31 Jan 2023 03:49:14 -0800 (PST)
+Message-ID: <2864f28e-dd2f-5a9c-922f-5c044a864beb@arm.com>
+Date:   Tue, 31 Jan 2023 11:49:13 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8eda340a-8c5d-a801-54eb-501c44a68d89@linux.intel.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v7 00/15] coresight: Add new API to allocate trace source
+ ID values
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+        James Clark <james.clark@arm.com>
+References: <20230116124928.5440-1-mike.leach@linaro.org>
+ <546f218f-3ac9-8fc2-c843-2f2f16882f31@arm.com>
+ <5b7df6df-0c2d-6953-0f50-e85745cb1f4b@arm.com>
+In-Reply-To: <5b7df6df-0c2d-6953-0f50-e85745cb1f4b@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 10:31:00AM -0500, Liang, Kan wrote:
+Hi Arnaldo
 
-> Yes, and also the CPUID leaf 0x23H support to enumerate the PMU features
-> of each types.
+On 24/01/2023 11:36, Suzuki K Poulose wrote:
+> Hi Arnaldo
+> 
+> Gentle ping.
+> 
+> On 19/01/2023 12:00, Suzuki K Poulose wrote:
+>> Hi Arnaldo,
+>>
+>> On 16/01/2023 12:49, Mike Leach wrote:
+>>> The current method for allocating trace source ID values to sources is
+>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+>>> The STM is allocated ID 0x1.
+>>>
+>>> This fixed algorithm is used in both the CoreSight driver code, and by
+>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
+>>>
+>>> The method needs replacing as currently:-
+>>> 1. It is inefficient in using available IDs.
+>>> 2. Does not scale to larger systems with many cores and the algorithm
+>>> has no limits so will generate invalid trace IDs for cpu number > 44.
+>>>
+>>> Additionally requirements to allocate additional system IDs on some
+>>> systems have been seen.
+>>>
+>>> This patch set  introduces an API that allows the allocation of trace 
+>>> IDs
+>>> in a dynamic manner.
+>>>
+>>> Architecturally reserved IDs are never allocated, and the system is
+>>> limited to allocating only valid IDs.
+>>>
+>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated 
+>>> to use
+>>> the new API.
+>>>
+>>> For the ETMx.x devices IDs are allocated on certain events
+>>> a) When using sysfs, an ID will be allocated on hardware enable, or a 
+>>> read of
+>>> sysfs TRCTRACEID register and freed when the sysfs reset is written.
+>>>
+>>> b) When using perf, ID is allocated on during setup AUX event, and 
+>>> freed on
+>>> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+>>> The ID allocator is notified when perf sessions start and stop
+>>> so CPU based IDs are kept constant throughout any perf session.
+>>>
+>>>
+>>> Note: This patchset breaks some backward compatibility for perf 
+>>> record and
+>>> perf report.
+>>>
+>>> The version of the AUXTRACE_INFO has been updated to reflect the fact 
+>>> that
+>>> the trace source IDs are generated differently. This will
+>>> mean older versions of perf report cannot decode the newer file.
+>>>
+>>> Appies to coresight/next
+>>>
+> 
+> ...
+> 
+>>> Mike Leach (15):
+>>>    coresight: trace-id: Add API to dynamically assign Trace ID values
+>>>    coresight: Remove obsolete Trace ID unniqueness checks
+>>>    coresight: perf: traceid: Add perf ID allocation and notifiers
+>>>    coresight: stm: Update STM driver to use Trace ID API
+>>>    coresight: etm4x: Update ETM4 driver to use Trace ID API
+>>>    coresight: etm3x: Update ETM3 driver to use Trace ID API
+>>>    coresight: etmX.X: stm: Remove trace_id() callback
+>>>    coresight: trace id: Remove legacy get trace ID function.
+>>>    perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+>>>    perf: cs-etm: Update record event to use new Trace ID protocol
+>>>    kernel: events: Export perf_report_aux_output_id()
+>>>    perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+>>>    coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+>>>    coresight: trace-id: Add debug & test macros to Trace ID allocation
+>>>    coresight: etm3x: docs: Alter sysfs documentation for trace id 
+>>> updates
+>>
+>> I have pushed the kernel patches on this series to coresight tree 
+>> next[0].
+>>
+>> I will be sending them out to Greg for v6.3. Please could you queue the
+>> perf tool changes in the series ? i.e., Patches 9,10 and 12.
+>>
+>>
+>> [0] 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/coresight/linux.git/log/?h=next
+>>
+> 
+> Please could you pick up the perf tool changes above ?
 
-Note that this is not enough or even useful. There is nothing that stops
-a vCPU from migrating between types at every instruction. There simply
-is no relation between a vCPU and a type, so knowing what a type does or
-does not support is useless information.
+Please could you confirm if you are able to queue the perf tool changes 
+? Or would you like me route it via coresight tree ?
+
+Kind regards
+Suzuki
+
