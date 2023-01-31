@@ -2,120 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8FAC54EAA
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 00:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F54EC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 02:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjAaAjr (ORCPT
+        id S230120AbjAaCNs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Jan 2023 19:39:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
+        Mon, 30 Jan 2023 21:13:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjAaAjp (ORCPT
+        with ESMTP id S229953AbjAaCNr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Jan 2023 19:39:45 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A238298D1
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jan 2023 16:39:44 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso9465988wms.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 30 Jan 2023 16:39:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6AfmE3NriTDZXeBtPjgO5/cFK1t9ckr012YHXC87X88=;
-        b=atG3rW3Qq1QGQMTcmfDo7Fkt2jfEqLzTNzH/DGSkqLEzUcFKVz9LPmDmg9nYE9j122
-         f52ewBWuv5abxIoF/Zlf+uaLuVozSK5l5PdKeg5aTD4U2r8xcMjzVNE8g1MdxLFRgnPU
-         OWKunZLpyW48NzPeyrYKOGOFteyAi7CjZmxjXtZ7RMFOEeVYp3Lh3quhdstnaWxcX4Q3
-         pNdsrFvjw7c2MoXa/HvcECRTxuPCE5wfAHZ0N99pC/vSxPMqVDbljTdqPQeOKTLziCkV
-         Im8Pwoits5fwpIIIZoAvKWcGDj3KVV8YgCJroq8GPDtVj/o+iDDebPGsgKebl1hInui7
-         5ZfQ==
+        Mon, 30 Jan 2023 21:13:47 -0500
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F1EE2F79A;
+        Mon, 30 Jan 2023 18:13:46 -0800 (PST)
+Received: by mail-wm1-f49.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so11419579wma.1;
+        Mon, 30 Jan 2023 18:13:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6AfmE3NriTDZXeBtPjgO5/cFK1t9ckr012YHXC87X88=;
-        b=NgzoB3QftlLvywGwj8QZF+RqzYScIxCtp/yfqN5Srn6br7muaSdu0hqj7dSXivGhMi
-         rxSxctvL/D60FCAfU3L/rBf6oR/0nF/BoQHnazfubo+lW0e9OapVLkfTPJkHd8k1CRfV
-         3b30vqpX25Sn63Dqb2c4nEqmziVgkSHDhjOhd3zm4Xc4UrHfy3vCPvbgLKCH7l5xyKgC
-         Odl+g1u387zk/7gArdwO5cfhP384SDDUUtUWeLsZL2yd0hfRQ0jk0+xzZBIGJy4J0N48
-         9SxyU6MvoifSxBeJMJ6UAGQrRf6+UgMF1nyY7rPKlnHSpBImQbABl1F1bUTyIVl0a/Av
-         OqTA==
-X-Gm-Message-State: AO0yUKXbY0RnNi3MWGg18ayLtMtEnR/BHmCiXguULaG8TeQrViwnWIG9
-        hRryzx/exusLBhJ34NHJWus6uWgN6IqX/ZVSO/4Pow==
-X-Google-Smtp-Source: AK7set8dbrb84Sq6Vq89iS+Rfc/IidveFR9I6gsKg0LdArFqaNehK7b3xc+T8mhT2oN98RrBoyaXefpNBRjJnygEtIw=
-X-Received: by 2002:a1c:2b07:0:b0:3dc:19fc:3059 with SMTP id
- r7-20020a1c2b07000000b003dc19fc3059mr1488017wmr.188.1675125582994; Mon, 30
- Jan 2023 16:39:42 -0800 (PST)
+        bh=I9pRDoiS5AR3g6YwrAuc/Yjjp7F1D+mNr/yQup2Qmh0=;
+        b=M50QAdnil0fuf2dpP7I1PUWzZ7WL4VyzZJa1sOHtWq6EoDBHjCaI/4+yxXkLrvsX6b
+         r/x38WA5APdNpQ040JJszfPlJz2VcHOP7x8SuEQ07NC1saXds77p6y+7I9dOl6OCl50z
+         b0B+5dML3Q0LOj8e+oulVwqn5YwOVNNL0lauuD5sbYedrz0KJF/GwX2hRtFBG0cPA8yB
+         o/KNNNTNJR4pyjIDjE+eWZrV/9NZoG0ng/VDCpp0bV/u0MQbpSUN+egFKcjvbSrhYTEF
+         q/iTZwtzHU0pWAo7+U/u/eJDRFoa0547YL0kJxtiPYvN4doCQ3BcRR8p7BUH7kc25i7z
+         3PaA==
+X-Gm-Message-State: AFqh2kpd8PpedzWpAad5jHQoscNbag8JvgzmAkMt+obcl/ciw9/0eIkI
+        VOT7Gzh97natCQKbnS4ecx6Et48W5kRtoYgpxHw=
+X-Google-Smtp-Source: AMrXdXtyZe/SUBPmb3AbkrfmeHyqkCfWDG8LGaxhGnCCaQwspwbUktIL2RmxPn7fOp/5FYv0C6etUZJsOi4WXgjsYkU=
+X-Received: by 2002:a05:600c:538e:b0:3db:1a:3490 with SMTP id
+ hg14-20020a05600c538e00b003db001a3490mr2110585wmb.158.1675131224803; Mon, 30
+ Jan 2023 18:13:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20230126233645.200509-1-irogers@google.com> <56f1ed31-886d-358d-cfcc-0ab9fe7a76d8@oracle.com>
- <CAP-5=fWc1UcjZT-8YcqHaiSEUGJCMNd4Syx3-MVhnk5PGUDPMQ@mail.gmail.com> <c18b2293-5f34-28b9-25de-c92c25d5c3f0@oracle.com>
-In-Reply-To: <c18b2293-5f34-28b9-25de-c92c25d5c3f0@oracle.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 30 Jan 2023 16:39:31 -0800
-Message-ID: <CAP-5=fWvdOFG0r5eibOy4Ai2EF2zcKZBsFU+vSDBPasvjFepVg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/15] jevents/pmu-events improvements
-To:     John Garry <john.g.garry@oracle.com>
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
+References: <20230127001951.3432374-1-namhyung@kernel.org> <bda606c2-2b1b-de9f-1386-8ee2bf925b4b@intel.com>
+ <317a91ff-70c5-57a5-8447-7543057e4055@arm.com> <CAM9d7chU6kTdG0y65_UaD_hW75GezzNJF1ZwjNWq8BUpACAGTA@mail.gmail.com>
+ <43ff6d3d-2047-1b2f-12ab-849a915a6e2f@arm.com>
+In-Reply-To: <43ff6d3d-2047-1b2f-12ab-849a915a6e2f@arm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 30 Jan 2023 18:13:32 -0800
+Message-ID: <CAM9d7cju5-Zvb19wmzUHpMKL_Hzf8+vOvaAx4Ob2dDhwbJ5ynA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf intel-pt: Fix the pipe mode (v1)
+To:     James Clark <james.clark@arm.com>
+Cc:     Denis Nikitin <denik@chromium.org>,
         Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 7:22 AM John Garry <john.g.garry@oracle.com> wrote:
+On Mon, Jan 30, 2023 at 2:56 AM James Clark <james.clark@arm.com> wrote:
 >
-> On 27/01/2023 13:48, Ian Rogers wrote:
-> > On Fri, Jan 27, 2023, 5:20 AM John Garry <john.g.garry@oracle.com
-> > <mailto:john.g.garry@oracle.com>> wrote:
-> >
-> >     On 26/01/2023 23:36, Ian Rogers wrote:
-> >
-> >     Hi Ian,
-> >
-> >     At a glance, none of this series has your Signed-off-by tag..
-> >
-> >     Thanks,
-> >     John
-> >
-> >
-> >
-> > Thanks John, will fix. Is there anything else?
 >
-> Do you think that pmu-events/__pycache__/metric.cpython-36.pyc should be
-> deleted with a make clean? I would expect stuff like this to be deleted
-> (with a clean), but I am not sure if we have a policy on this (pyc files)
+>
+> On 27/01/2023 23:08, Namhyung Kim wrote:
+> > Hi James,
+> >
+> > On Fri, Jan 27, 2023 at 6:42 AM James Clark <james.clark@arm.com> wrote:
+> >>
+> >>
+> >>
+> >> On 27/01/2023 07:22, Adrian Hunter wrote:
+> >>> On 27/01/23 02:19, Namhyung Kim wrote:
+> >>>> Hello,
+> >>>>
+> >>>> I found some problems in Intel-PT and auxtrace in general with pipe.
+> >>>> In the past it used to work with pipe, but recent code fails.
+> >>>
+> >>> Pipe mode is a problem for Intel PT and possibly other auxtrace users.
+> >>
+> >> Just some info from my side: For Arm Coresight we ended up deprecating
+> >> pipe mode, then not supporting it altogether. First was when we added an
+> >> optional step to peek through all of the data to help with an edge case.
+> >> Then we added a requirement to receive a HW_ID packet before decoding
+> >> which necessitated the peek. You can't peek in pipe mode because you
+> >> need to be able to seek, so it's not supported at all anymore.
+> >>
+> >> For Arm SPE I never tested it with piped data. I suppose I could add a
+> >> test at some point, but I don't really see the usecase.
+> >
+> > Yeah, it'd be great if we can have a test for Arm SPE.
+> >
+>
+> Ok thanks I will put it on the list of things to do.
+>
+> > Anyway, my work env (Google) requires the pipe mode due to the
+> > restriction in disk usage.  Without the pipe support, it's not possible
+> > to run `perf record` in production.
+> >
+>
+> Makes sense. Unfortunately at the moment with Coresight, because of the
+> lack of appropriate timestamps we're waiting for the end of the file
+> before starting decoding. So you're not really any better off using
+> piped mode, unless you have a lot more memory than disk space?
+>
+> Since this commit [1] and Arm v8.4 we can actually start making use of
+> the timestamps and do a streaming decode again. So I will also add it to
+> the list to look into that for Coresight again. Are you using an old
+> version of Perf or not using Coresight at all? I know Denis at Google is
+> using Coresight, but only with files rather than pipes.
 
-Should they be covered by the existing clean target?
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.perf?h=perf/core#n1102
+I'm not aware of usage of Coresight yet in my boundary, but others
+may be using it.
+
+>
+> One other thing, have you used the --switch-output mode to perf record
+> before? I would have said it would give you some of the benefits of
+> piped mode, but is more likely to work with Coresight. But last time I
+> checked it's not working either. Not very helpful I know, but something
+> to keep in mind.
+
+I don't think it'd work because it still occupies the same space.
+So far, the pipe mode worked well but I think it needs some
+more improvements.
+
+Anyway, thanks for your suggestion and review!
 
 Thanks,
-Ian
-
-> Thanks,
-> John
+Namhyung
