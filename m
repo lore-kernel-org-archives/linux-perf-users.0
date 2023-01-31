@@ -2,252 +2,319 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B057C38142
-	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 10:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD23EC38142
+	for <linux-perf-users@archiver.kernel.org>; Tue, 31 Jan 2023 10:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjAaKOm (ORCPT
+        id S230432AbjAaKSJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 31 Jan 2023 05:14:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42674 "EHLO
+        Tue, 31 Jan 2023 05:18:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbjAaKOl (ORCPT
+        with ESMTP id S230461AbjAaKSH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 31 Jan 2023 05:14:41 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4AD2386D;
-        Tue, 31 Jan 2023 02:14:40 -0800 (PST)
+        Tue, 31 Jan 2023 05:18:07 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A7A10C4;
+        Tue, 31 Jan 2023 02:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675160080; x=1706696080;
+  t=1675160282; x=1706696282;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=nuYafO8zujKiFRDpdMj6I0Lu2+ld0/WjvR6y0Q7UeUY=;
-  b=hFZKU0E+EQt/YGfmBhsybo2XLrCKPC9lUp/1Kx99TSSYvYMwdKx74chK
-   G1WQzVBIfWkutHo8vYQ3+l0Im292C+FGPjZklAbBpbhk6FskGHaIgmqzV
-   65EhVhTkYBjtkBxjwcHRxVL9xPoEdTx1LNF9eSHi0xzjVInehvhjkABUC
-   qGjQ+W1HB6HgINtNgz5pUlwZACMW/a7dQ1hS5NZ0c4n/haWl47AE6cgdF
-   AlvxSXrHcwFJjIqFuwmYNxjbEbTfhXFqsBmkzO0x6Apj9kzOiClJ9rGH6
-   4cO/fRcmBHuLeBxCEtHh9Zwxrnv0RG6sTz+FqpHV66ydp0lUvjIWbwGYK
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="327818491"
+  bh=o3QoCbR4jTslkyBD3vSoJKDE4L3p29KDEGVEZAblG2s=;
+  b=XCuWcVYnYcHLHQbFSqcUmIu2F/CuMmUXWRcRcazoAfh3nCUZMaaactcD
+   76Tw8owLPFZb2csccoH0197l2ikb69Xam5ssHCHUCIvDLY+YwukuznQZD
+   to3WMd9vVFzUYUmam0rfDJt22/fiQcf5KrAejRvpZpoVglPLHbZ+7y+7u
+   WnI9q8rFAc9WjfNOHk/du3uUSlnmMsgfmJeUlGHROZi5QQFMhj5eA1NfT
+   rHIQscK7B3SVqTfUg1mIJQKDY7dJL8mWnRhICAMlyt1T2cyz5ZQIgYO0F
+   61/QP5fuCbn4qGJm6SqPS6fjPoxIB9Pwou5ucxMGlUwvE9sVft+fNmCUq
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="308147203"
 X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
-   d="scan'208";a="327818491"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 02:14:39 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="641922201"
+   d="scan'208";a="308147203"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 02:18:01 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="909855244"
 X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
-   d="scan'208";a="641922201"
+   d="scan'208";a="909855244"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.47.218])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 02:14:33 -0800
-Message-ID: <aaeb7dc0-59e9-cd42-cf5b-e6a08b38670a@intel.com>
-Date:   Tue, 31 Jan 2023 12:14:30 +0200
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 02:17:59 -0800
+Message-ID: <b0a66e24-29c1-45e6-1578-5302127a926e@intel.com>
+Date:   Tue, 31 Jan 2023 12:17:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.7.1
-Subject: Re: [PATCH 2/9] perf symbols: Add support for x86 .plt.sec
+Subject: Re: [PATCH 9/9] perf symbols: Get symbols for .plt.got for x86-64
 Content-Language: en-US
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <20230127170222.9895-1-adrian.hunter@intel.com>
- <20230127170222.9895-3-adrian.hunter@intel.com>
- <CAM9d7chny89+rtP6orSJOKrAqb4GbzCG53KV4O1J9mhKvCcWnQ@mail.gmail.com>
- <5aeab2b5-7349-d220-652b-75360ef6d723@intel.com>
- <CAM9d7ch2T1B_A_meyZi5A+kpwmzCY-eAKuZv5OVYGonBrhXqgQ@mail.gmail.com>
+ <20230127170222.9895-10-adrian.hunter@intel.com>
+ <Y9hSCR6WvpI4b5Cm@google.com>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7ch2T1B_A_meyZi5A+kpwmzCY-eAKuZv5OVYGonBrhXqgQ@mail.gmail.com>
+In-Reply-To: <Y9hSCR6WvpI4b5Cm@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 31/01/23 00:22, Namhyung Kim wrote:
-> On Mon, Jan 30, 2023 at 10:35 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On 31/01/23 01:26, Namhyung Kim wrote:
+> On Fri, Jan 27, 2023 at 07:02:22PM +0200, Adrian Hunter wrote:
+>> For x86_64, determine a symbol for .plt.got entries. That requires
+>> computing the target offset and finding that in .rela.dyn, which in
+>> turn means .rela.dyn needs to be sorted by offset.
 >>
->> On 30/01/23 19:34, Namhyung Kim wrote:
->>> Hi Adrian,
->>>
->>> On Fri, Jan 27, 2023 at 9:02 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>>
->>>> The section .plt.sec was originally added for MPX and was first called
->>>> .plt.bnd. While MPX has been deprecated, .plt.sec is now also used for IBT.
->>>> On x86_64, IBT seems to be enabled by default, but can be switched off
->>>> using gcc option -fcf-protection=none. On 32-bit, option -z ibt will
->>>> enable IBT.
->>>>
->>>> With .plt.sec, calls are made into .plt.sec instead of .plt, so it
->>>> makes more sense to put the symbols there instead of .plt. A notable
->>>> difference is that .plt.sec does not have a header entry.
->>>>
->>>> For x86, when synthesizing symbols for plt, use offset and entry size of
->>>> .plt.sec instead of .plt when there is a .plt.sec section.
->>>>
->>>> Example on Ubuntu 22.04 gcc 11.3:
->>>>
->>>>   Before:
->>>>
->>>>     $ cat tstpltlib.c
->>>>     void fn1(void) {}
->>>>     void fn2(void) {}
->>>>     void fn3(void) {}
->>>>     void fn4(void) {}
->>>>     $ cat tstplt.c
->>>>     void fn1(void);
->>>>     void fn2(void);
->>>>     void fn3(void);
->>>>     void fn4(void);
->>>>
->>>>     int main()
->>>>     {
->>>>             fn4();
->>>>             fn1();
->>>>             fn2();
->>>>             fn3();
->>>>             return 0;
->>>>     }
->>>>     $ gcc --version
->>>>     gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
->>>>     Copyright (C) 2021 Free Software Foundation, Inc.
->>>>     This is free software; see the source for copying conditions.  There is NO
->>>>     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
->>>>     $ gcc -Wall -Wextra -shared -o libtstpltlib.so tstpltlib.c
->>>>     $ gcc -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
->>>>     $ readelf -SW tstplt | grep 'plt\|Name'
->>>>       [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al
->>>>       [11] .rela.plt         RELA            0000000000000698 000698 000060 18  AI  6  24  8
->>>>       [13] .plt              PROGBITS        0000000000001020 001020 000050 10  AX  0   0 16
->>>>       [14] .plt.got          PROGBITS        0000000000001070 001070 000010 10  AX  0   0 16
->>>>       [15] .plt.sec          PROGBITS        0000000000001080 001080 000040 10  AX  0   0 16
->>>
->>> On my machine, it's not enabled by default.  And it doesn't create .plt.sec
->>> even if I pass -fcf-protection=full option.
->>>
->>> $ gcc --version
->>> gcc (Debian 12.2.0-10) 12.2.0
->>> Copyright (C) 2022 Free Software Foundation, Inc.
->>> This is free software; see the source for copying conditions.  There is NO
->>> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
->>>
->>> $ gcc -Wall -Wextra -shared -fcf-protection=full -o libtstplt.so tstpltlib.c
->>> $ gcc -Wall -Wextra -fcf-protection=full -o tstplt tstplt.c -L.
->>> -ltstpltlib -Wl,-rpath,$(pwd)
->>> $ readelf -SW tstplt | grep 'plt\|Name'
->>>    [Nr] Name              Type            Address          Off    Size
->>>   ES Flg Lk Inf Al
->>>    [11] .rela.plt         RELA            0000000000000688 000688
->>> 000060 18  AI  6  24  8
->>>    [13] .plt              PROGBITS        0000000000001020 001020
->>> 000050 10  AX  0   0 16
->>>    [14] .plt.got          PROGBITS        0000000000001070 001070
->>> 000008 08  AX  0   0  8
->>>    [24] .got.plt          PROGBITS        0000000000003fe8 002fe8
->>> 000038 08  WA  0   0  8
+>> Example:
 >>
->> That is interesting.  What does it say with -v i.e.
+>>   In this example, the GNU C Library is using .plt.got for malloc and
+>>   free.
 >>
->>         gcc -v -Wall -Wextra -o tstplt tstplt.c -L . -ltstpltlib -Wl,-rpath=$(pwd)
-> 
-> Using built-in specs.
-> COLLECT_GCC=gcc
-> COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/12/lto-wrapper
-> OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
-> OFFLOAD_TARGET_DEFAULT=1
-> Target: x86_64-linux-gnu
-> Configured with: ../src/configure -v --with-pkgversion='Debian
-> 12.2.0-10' --with-bugurl=file:///usr/share/doc/gcc-12/README.Bugs
-> --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++,m2
-> --prefix=/usr --with-gcc-major-version-only --program-suffix=-12
-> --program-prefix=x86_64-linux-gnu- --enable-shared
-> --enable-linker-build-id --libexecdir=/usr/lib
-> --without-included-gettext --enable-threads=posix --libdir=/usr/lib
-> --enable-nls --enable-clocale=gnu --enable-libstdcxx-debug
-> --enable-libstdcxx-time=yes --with-default-libstdcxx-abi=new
-> --enable-gnu-unique-object --disable-vtable-verify --enable-plugin
-> --enable-default-pie --with-system-zlib
-> --enable-libphobos-checking=release --with-target-system-zlib=auto
-> --enable-objc-gc=auto --enable-multiarch --disable-werror --enable-cet
-> --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32
-> --enable-multilib --with-tune=generic
-> --enable-offload-targets=nvptx-none=/build/gcc-12-hWCYKv/gcc-12-12.2.0/debian/tmp-nvptx/usr,amdgcn-amdhsa=/build/gcc-12-hWCYKv/gcc-12-12.2.0/debian/tmp-gcn/usr
-> --enable-offload-defaulted --without-cuda-driver
-> --enable-checking=release --build=x86_64-linux-gnu
-> --host=x86_64-linux-gnu --target=x86_64-linux-gnu
-> Thread model: posix
-> Supported LTO compression algorithms: zlib zstd
-> gcc version 12.2.0 (Debian 12.2.0-10)
-> COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
-> 'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt-'
->  /usr/lib/gcc/x86_64-linux-gnu/12/cc1 -quiet -v -imultiarch
-> x86_64-linux-gnu tstplt.c -quiet -dumpdir tstplt- -dumpbase tstplt.c
-> -dumpbase-ext .c -mtune=generic -march=x86-64 -Wall -Wextra -version
-> -fcf-protection=full -fasynchronous-unwind-tables -o /tmp/ccKPWeTD.s
-> GNU C17 (Debian 12.2.0-10) version 12.2.0 (x86_64-linux-gnu)
->     compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version
-> 4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
-> 
-> GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-> ignoring nonexistent directory "/usr/local/include/x86_64-linux-gnu"
-> ignoring nonexistent directory "/usr/lib/gcc/x86_64-linux-gnu/12/include-fixed"
-> ignoring nonexistent directory
-> "/usr/lib/gcc/x86_64-linux-gnu/12/../../../../x86_64-linux-gnu/include"
-> #include "..." search starts here:
-> #include <...> search starts here:
->  /usr/lib/gcc/x86_64-linux-gnu/12/include
->  /usr/local/include
->  /usr/include/x86_64-linux-gnu
->  /usr/include
-> End of search list.
-> GNU C17 (Debian 12.2.0-10) version 12.2.0 (x86_64-linux-gnu)
->     compiled by GNU C version 12.2.0, GMP version 6.2.1, MPFR version
-> 4.1.0, MPC version 1.2.1, isl version isl-0.25-GMP
-> 
-> GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
-> Compiler executable checksum: 0bf64a455b69fb48d1b44a013a099136
-> COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
-> 'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt-'
->  as -v --64 -o /tmp/cc0IMyNr.o /tmp/ccKPWeTD.s
-> GNU assembler version 2.39.50 (x86_64-linux-gnu) using BFD version
-> (GNU Binutils for Debian) 2.39.50.20221208
-> COMPILER_PATH=/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/
-> LIBRARY_PATH=/usr/lib/gcc/x86_64-linux-gnu/12/:/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/:/usr/lib/gcc/x86_64-linux-gnu/12/../../../../lib/:/lib/x86_64-linux-gnu/:/lib/../lib/:/usr/lib/x86_64-linux-gnu/:/usr/lib/../lib/:/usr/lib/gcc/x86_64-linux-gnu/12/../../../:/lib/:/usr/lib/
-> COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
-> 'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt.'
->  /usr/lib/gcc/x86_64-linux-gnu/12/collect2 -plugin
-> /usr/lib/gcc/x86_64-linux-gnu/12/liblto_plugin.so
-> -plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/12/lto-wrapper
-> -plugin-opt=-fresolution=/tmp/ccU2c2jz.res
-> -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s
-> -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc
-> -plugin-opt=-pass-through=-lgcc_s --build-id --eh-frame-hdr -m
-> elf_x86_64 --hash-style=gnu --as-needed -dynamic-linker
-> /lib64/ld-linux-x86-64.so.2 -pie -o tstplt
-> /usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/Scrt1.o
-> /usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/crti.o
-> /usr/lib/gcc/x86_64-linux-gnu/12/crtbeginS.o -L.
-> -L/usr/lib/gcc/x86_64-linux-gnu/12
-> -L/usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu
-> -L/usr/lib/gcc/x86_64-linux-gnu/12/../../../../lib
-> -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu
-> -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-linux-gnu/12/../../..
-> /tmp/cc0IMyNr.o -ltstpltlib -rpath=/home/namhyung/tmp/plt-test -lgcc
-> --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state
-> --as-needed -lgcc_s --pop-state
-> /usr/lib/gcc/x86_64-linux-gnu/12/crtendS.o
-> /usr/lib/gcc/x86_64-linux-gnu/12/../../../x86_64-linux-gnu/crtn.o
-> COLLECT_GCC_OPTIONS='-Wall' '-Wextra' '-fcf-protection=full' '-v' '-o'
-> 'tstplt' '-L.' '-mtune=generic' '-march=x86-64' '-dumpdir' 'tstplt.'
-> 
-> 
+>>   Before:
 >>
->> And what is the distribution?
+>>     $ gcc --version
+>>     gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
+>>     Copyright (C) 2021 Free Software Foundation, Inc.
+>>     This is free software; see the source for copying conditions.  There is NO
+>>     warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>>     $ perf record -e intel_pt//u uname
+>>     Linux
+>>     [ perf record: Woken up 1 times to write data ]
+>>     [ perf record: Captured and wrote 0.027 MB perf.data ]
+>>     $ perf script --itrace=be --ns -F-event,+addr,-period,-comm,-tid,-cpu > /tmp/cmp1.txt
+>>
+>>   After:
+>>
+>>     $ perf script --itrace=be --ns -F-event,+addr,-period,-comm,-tid,-cpu > /tmp/cmp2.txt
+>>     $ diff /tmp/cmp1.txt /tmp/cmp2.txt | head -12
+>>     15509,15510c15509,15510
+>>     < 27046.755390907:      7f0b2943e3ab _nl_normalize_codeset+0x5b (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b29428380 offset_0x28380@plt+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     < 27046.755390907:      7f0b29428384 offset_0x28380@plt+0x4 (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b294a5120 malloc+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     ---
+>>     > 27046.755390907:      7f0b2943e3ab _nl_normalize_codeset+0x5b (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b29428380 malloc@plt+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     > 27046.755390907:      7f0b29428384 malloc@plt+0x4 (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b294a5120 malloc+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     15821,15822c15821,15822
+>>     < 27046.755394865:      7f0b2943850c _nl_load_locale_from_archive+0x5bc (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b29428370 offset_0x28370@plt+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     < 27046.755394865:      7f0b29428374 offset_0x28370@plt+0x4 (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b294a5460 cfree@GLIBC_2.2.5+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     ---
+>>     > 27046.755394865:      7f0b2943850c _nl_load_locale_from_archive+0x5bc (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b29428370 free@plt+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>     > 27046.755394865:      7f0b29428374 free@plt+0x4 (/usr/lib/x86_64-linux-gnu/libc.so.6) =>     7f0b294a5460 cfree@GLIBC_2.2.5+0x0 (/usr/lib/x86_64-linux-gnu/libc.so.6)
+>>
+>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>> ---
+>>  tools/perf/util/symbol-elf.c | 158 ++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 154 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+>> index 254116d40e59..4fc8e7fc10f4 100644
+>> --- a/tools/perf/util/symbol-elf.c
+>> +++ b/tools/perf/util/symbol-elf.c
+>> @@ -466,28 +466,178 @@ static bool machine_is_x86(GElf_Half e_machine)
+>>  	return e_machine == EM_386 || e_machine == EM_X86_64;
+>>  }
+>>  
+>> +struct rela_dyn {
+>> +	GElf_Addr	offset;
+>> +	u32		sym_idx;
+>> +};
+>> +
+>> +struct rela_dyn_info {
+>> +	struct dso	*dso;
+>> +	Elf_Data	*plt_got_data;
+>> +	u32		nr_entries;
+>> +	struct rela_dyn	*sorted;
+>> +	Elf_Data	*dynsym_data;
+>> +	Elf_Data	*dynstr_data;
+>> +	Elf_Data	*rela_dyn_data;
+>> +};
+>> +
+>> +static void exit_rela_dyn(struct rela_dyn_info *di)
+>> +{
+>> +	free(di->sorted);
+>> +}
+>> +
+>> +static int cmp_offset(const void *a, const void *b)
+>> +{
+>> +	const struct rela_dyn *va = a;
+>> +	const struct rela_dyn *vb = b;
+>> +
+>> +	return va->offset < vb->offset ? -1 : (va->offset > vb->offset ? 1 : 0);
+>> +}
+>> +
+>> +static int sort_rela_dyn(struct rela_dyn_info *di)
+>> +{
+>> +	u32 i, n;
+>> +
+>> +	di->sorted = calloc(di->nr_entries, sizeof(di->sorted[0]));
+>> +	if (!di->sorted)
+>> +		return -1;
+>> +
+>> +	/* Get data for sorting: the offset and symbol index */
+>> +	for (i = 0, n = 0; i < di->nr_entries; i++) {
+>> +		GElf_Rela rela;
+>> +		u32 sym_idx;
+>> +
+>> +		gelf_getrela(di->rela_dyn_data, i, &rela);
+>> +		sym_idx = GELF_R_SYM(rela.r_info);
+>> +		if (sym_idx) {
+>> +			di->sorted[n].sym_idx = sym_idx;
+>> +			di->sorted[n].offset = rela.r_offset;
+>> +			n += 1;
+>> +		}
+>> +	}
+>> +
+>> +	/* Sort by offset */
+>> +	di->nr_entries = n;
+>> +	qsort(di->sorted, n, sizeof(di->sorted[0]), cmp_offset);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void get_rela_dyn_info(Elf *elf, GElf_Ehdr *ehdr, struct rela_dyn_info *di, Elf_Scn *scn)
+>> +{
+>> +	GElf_Shdr rela_dyn_shdr;
+>> +	GElf_Shdr shdr;
+>> +
+>> +	di->plt_got_data = elf_getdata(scn, NULL);
+>> +
+>> +	scn = elf_section_by_name(elf, ehdr, &rela_dyn_shdr, ".rela.dyn", NULL);
+>> +	if (!scn || !rela_dyn_shdr.sh_link || !rela_dyn_shdr.sh_entsize)
+>> +		return;
+>> +
+>> +	di->nr_entries = rela_dyn_shdr.sh_size / rela_dyn_shdr.sh_entsize;
+>> +	di->rela_dyn_data = elf_getdata(scn, NULL);
+>> +
+>> +	scn = elf_getscn(elf, rela_dyn_shdr.sh_link);
+>> +	if (!scn || !gelf_getshdr(scn, &shdr) || !shdr.sh_link)
+>> +		return;
+>> +
+>> +	di->dynsym_data = elf_getdata(scn, NULL);
+>> +	di->dynstr_data = elf_getdata(elf_getscn(elf, shdr.sh_link), NULL);
+>> +
+>> +	if (!di->plt_got_data || !di->dynstr_data || !di->dynsym_data || !di->rela_dyn_data)
+>> +		return;
+>> +
+>> +	/* Sort into offset order */
+>> +	sort_rela_dyn(di);
+>> +}
+>> +
+>> +/* Get instruction displacement from a plt entry for x86_64 */
+>> +static u32 get_x86_64_plt_disp(const u8 *p)
+>> +{
+>> +	u8 endbr64[] = {0xf3, 0x0f, 0x1e, 0xfa};
+>> +	int n = 0;
+>> +
+>> +	/* Skip endbr64 */
+>> +	if (!memcmp(p, endbr64, sizeof(endbr64)))
+>> +		n += sizeof(endbr64);
+>> +	/* Skip bnd prefix */
+>> +	if (p[n] == 0xf2)
+>> +		n += 1;
+>> +	/* jmp with 4-byte displacement */
+>> +	if (p[n] == 0xff && p[n + 1] == 0x25) {
+>> +		n += 2;
+>> +		/* Also add offset from start of entry to end of instruction */
+>> +		return n + 4 + le32toh(*(const u32 *)(p + n));
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>> +static bool get_plt_got_name(GElf_Shdr *shdr, size_t i,
+>> +			     struct rela_dyn_info *di,
+>> +			     char *buf, size_t buf_sz)
+>> +{
+>> +	void *p = di->plt_got_data->d_buf + i;
+>> +	u32 disp = get_x86_64_plt_disp(p);
+>> +	struct rela_dyn vi, *vr;
+>> +	const char *sym_name;
+>> +	char *demangled;
+>> +	GElf_Sym sym;
+>> +
+>> +	if (!di->sorted || !disp)
+>> +		return false;
+>> +
+>> +	/* Compute target offset of the .plt.got entry */
+>> +	vi.offset = shdr->sh_offset + di->plt_got_data->d_off + i + disp;
+>> +
+>> +	/* Find that offset in .rela.dyn (sorted by offset) */
+>> +	vr = bsearch(&vi, di->sorted, di->nr_entries, sizeof(di->sorted[0]), cmp_offset);
+>> +	if (!vr)
+>> +		return false;
+>> +
+>> +	/* Get the associated symbol */
+>> +	gelf_getsym(di->dynsym_data, vr->sym_idx, &sym);
+>> +	sym_name = elf_sym__name(&sym, di->dynstr_data);
+>> +	demangled = demangle_sym(di->dso, 0, sym_name);
+>> +	if (demangled != NULL)
+>> +		sym_name = demangled;
+>> +
+>> +	snprintf(buf, buf_sz, "%s@plt", sym_name);
+>> +
+>> +	free(demangled);
+>> +
+>> +	return *sym_name;
+>> +}
+>> +
+>>  static int dso__synthesize_plt_got_symbols(struct dso *dso, Elf *elf,
+>>  					   GElf_Ehdr *ehdr,
+>>  					   char *buf, size_t buf_sz)
+>>  {
+>> +	struct rela_dyn_info di = { .dso = dso };
+>>  	struct symbol *sym;
+>>  	GElf_Shdr shdr;
+>>  	Elf_Scn *scn;
+>> +	int err = -1;
+>>  	size_t i;
+>>  
+>>  	scn = elf_section_by_name(elf, ehdr, &shdr, ".plt.got", NULL);
+>>  	if (!scn || !shdr.sh_entsize)
+>>  		return 0;
+>>  
+>> +	if (ehdr->e_machine == EM_X86_64)
+>> +		get_rela_dyn_info(elf, ehdr, &di, scn);
 > 
-> It's a Debian (Testing) with some customization.
+> What about EM_386?  Now I'm seeing segfaults on 32 bit test programs
+> with .plt.got section.
 
-Seems to need also options -z ibt and/or -z ibtplt
+Thanks for looking at this.
 
-I will send a V2 with updated examples.
+Looks like a late change in get_plt_got_name() did not
+get tested for 32-bit.  It should be checking di->sorted
+first.  EM_386 is not supported by this logic.
+
+I will send a V2
+
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> +
+>>  	for (i = 0; i < shdr.sh_size; i += shdr.sh_entsize) {
+>> -		snprintf(buf, buf_sz, "offset_%#zx@plt", shdr.sh_offset + i);
+>> +		if (!get_plt_got_name(&shdr, i, &di, buf, buf_sz))
+>> +			snprintf(buf, buf_sz, "offset_%#zx@plt", shdr.sh_offset + i);
+>>  		sym = symbol__new(shdr.sh_offset + i, shdr.sh_entsize, STB_GLOBAL, STT_FUNC, buf);
+>>  		if (!sym)
+>> -			return -1;
+>> +			goto out;
+>>  		symbols__insert(&dso->symbols, sym);
+>>  	}
+>> -
+>> -	return 0;
+>> +	err = 0;
+>> +out:
+>> +	exit_rela_dyn(&di);
+>> +	return err;
+>>  }
+>>  
+>>  /*
+>> -- 
+>> 2.34.1
+>>
+>>
 
