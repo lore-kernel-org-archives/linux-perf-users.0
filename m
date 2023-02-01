@@ -2,130 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68304C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 12:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B1BC636D7
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 13:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbjBAMB3 (ORCPT
+        id S231535AbjBAN6O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 07:01:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60448 "EHLO
+        Wed, 1 Feb 2023 08:58:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231478AbjBAMBN (ORCPT
+        with ESMTP id S231482AbjBAN6K (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 07:01:13 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9E32BF23
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Feb 2023 04:01:05 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id t12so19104413lji.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Feb 2023 04:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XkDaAs7NEt8L2ex9bykzKZqXj4em5dtmEAnn6lTD46I=;
-        b=fYBQpmj9+BCFujF4ggobCLF8XcT7axTJSwBqGi4rHoqTmgZG3IV/eTiVL8hjJBWqxB
-         cCItiSoVjZfEwznFZWj914HVyfoIwkePYVADQsQpNd7zQjY2m39QG4VL8t5PtpjGQ6Uj
-         4fFqQ3ZKZUFm9//ZLWqnF8CN+KC+vnv9uv2Zwv9PiTcAM/mHP3dw9DeHjsPDel8ioSbk
-         2Uxa1Irw1zYCEW17iQkT6X8OzIsQyeNiruRCkJya8biexSSyFupnHPGdoM//rC/KNWN2
-         2wN7p2lN6oSIsg3ZnTV51I8FUU3ctF8Mu4k+FOQ5tnhOcinfq7J5uqKAQ6eLfBt8Z0P9
-         j4rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XkDaAs7NEt8L2ex9bykzKZqXj4em5dtmEAnn6lTD46I=;
-        b=H1XPqs8Cg//rR0VsxrjUU9CheyZc91HS7QFd5r5H3JLRheYEUkJzD6leCiJ/sAiFpu
-         CAUDWR9GIuxV/S8bYbefhjltzTd5Yw82hMNJa/Ryt48rYJU5+aCVLlWoEphFNyXDJQLy
-         JmZk7aGF0R3gboDMc02AAAopJ27Hub5Of4Vd38bAvVe5tbGL/NyAuki1p51TpMtiadil
-         qGiBjEoedfvU1mqeFLVjgVNj14QwkR90Kf/tfvQ9SGWbd47NiFIPIpM3xtHpBsQgbbDN
-         Ol6vmga18mpPl1FhHa3qYRSz2nzVEKFqLCNtGyE6sd6e+rF2q9X9C2V7x414W72NuARJ
-         OW8Q==
-X-Gm-Message-State: AO0yUKXTMtsMOjF/94iG0vXgJRmMUmBn8tRC4WsdvoZE1WAQrPJ1T2J9
-        zB1ABhSChk8B+xXzirTGQEFUFXGfPdbLPstJcsFlSg==
-X-Google-Smtp-Source: AK7set+zVln3WH05zdXmKTDplM012eLlf6r2VhDXYbH6vrJMeKcnnpLEzXKgjxgvPsUsRQCoWkdKb7pqe3DO1S9pXCQ=
-X-Received: by 2002:a05:651c:200a:b0:290:7c00:8cee with SMTP id
- s10-20020a05651c200a00b002907c008ceemr241094ljo.144.1675252864135; Wed, 01
- Feb 2023 04:01:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20230127162409.2505312-1-elver@google.com> <Y9QUi7oU3nbdIV1J@FVFF77S0Q05N>
- <CANpmjNNGCf_NqS96iB+YLU1M+JSFy2tRRbuLfarkUchfesk2=A@mail.gmail.com>
- <Y9ef8cKrE4RJsrO+@FVFF77S0Q05N> <CANpmjNOEG2KPN+NaF37E-d8tbAExKvjVMAXUORC10iG=Bmk=vA@mail.gmail.com>
- <CACT4Y+Yriv_JYXm9N1YAMh+YuiT57irnF-vyCqxnTTux-2Ffwg@mail.gmail.com> <Y9pS4MNnFWOEO2Fr@FVFF77S0Q05N>
-In-Reply-To: <Y9pS4MNnFWOEO2Fr@FVFF77S0Q05N>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 1 Feb 2023 13:00:51 +0100
-Message-ID: <CACT4Y+Y3E7nu7PGj3m6+83Hs_D=3dVZe4rBh5-Pn=Gsm07r-=g@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Allow restricted kernel breakpoints on user addresses
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Marco Elver <elver@google.com>,
+        Wed, 1 Feb 2023 08:58:10 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4213693F0;
+        Wed,  1 Feb 2023 05:57:47 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F0C40617B2;
+        Wed,  1 Feb 2023 13:57:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C58C433EF;
+        Wed,  1 Feb 2023 13:57:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675259864;
+        bh=SpI7KwADUFU7LsbCXaag3YbpvOzij0u/n2sLMpli8zM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=J+gWjVwhlExx/kQG6HBH333Bk6FbQ3RN+UdWZ0kJIewW9wN3j8Mf3kQteaovGFv86
+         u2oE9NGNpu9NmrB/ownkgk2gQKCRIj2OedRN4vuA9WhTshG4lufDkeknzyQkpY6UdY
+         AS6p64fr4NTxNvP/d5OkLNkzWL0qydlmOkQsI5l0bUeDwiPxwZB8EHJbZUyDFuFtbI
+         sEijVQfSNJq7AqeMorekg6Z+53JqVokPn71gIEW/2r6QhiHNzBidvbYlGC3TeIdTsU
+         cmSJkCagjvADr3IrUJ8WtYRbFaLwYhz0B0axL1N+J6ahLdweQ+b24KAxeJAbjW5ard
+         H//g0Cj7MvffA==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [RFC 0/5] mm/bpf/perf: Store build id in file object
+Date:   Wed,  1 Feb 2023 14:57:32 +0100
+Message-Id: <20230201135737.800527-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.39.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 1 Feb 2023 at 12:54, Mark Rutland <mark.rutland@arm.com> wrote:
->
-> Hi Dmitry,
->
-> We raced to reply here, so there's more detail in my reply to Marco. I'm
-> providing minimal detail here, sorry for being terse! :)
->
-> On Wed, Feb 01, 2023 at 10:53:44AM +0100, Dmitry Vyukov wrote:
-> > On Wed, 1 Feb 2023 at 10:34, Marco Elver <elver@google.com> wrote:
-> > >
-> > > On Mon, 30 Jan 2023 at 11:46, Mark Rutland <mark.rutland@arm.com> wrote:
-> > > [...]
-> > > > > This again feels like a deficiency with access_ok(). Is there a better
-> > > > > primitive than access_ok(), or can we have something that gives us the
-> > > > > guarantee that whatever it says is "ok" is a userspace address?
-> > > >
-> > > > I don't think so, since this is contextual and temporal -- a helper can't give
-> > > > a single correct answert in all cases because it could change.
-> > >
-> > > That's fair, but unfortunate. Just curious: would
-> > > copy_from_user_nofault() reliably fail if it tries to access one of
-> > > those mappings but where access_ok() said "ok"?
-> >
-> > I also wonder if these special mappings are ever accessible in a user
-> > task context?
->
-> No. The special mappings are actually distinct page tables from the user page
-> tables, so whenever userspace is executing and can issue a syscall, the user
-> page tables are installed.
->
-> The special mappings are only installed for transient periods within the
-> context of a user task. There *might* be some latent issues with work happening
-> in IPI context (e.g. perf user backtrace) on some architectures.
->
-> > If yes, can a racing process_vm_readv/writev mess with these special mappings?
->
-> No; those happen in task context, and cannot be invoked within the critical
-> section where the page tables with the special mappings are installed.
->
-> > We could use copy_from_user() to probe that the watchpoint address is
-> > legit. But I think the memory can be potentially PROT_NONE but still
-> > legit, so copy_from_user() won't work for these corner cases.
->
-> Please see my other reply; ahead-of-time checks cannot help here. An address
-> might be a legitimate user address and *also* transiently be a special mapping
-> (since the two aare in entirely separate page tables).
+hi,
+we have a use cases for bpf programs to use binary file's build id.
 
-This brings more clarity. Thanks for the explanations.
+After some attempts to add helpers/kfuncs [1] [2] Andrii had an idea [3]
+to store build id directly in the file object. That would solve our use
+case and might be beneficial for other profiling/tracing use cases with
+bpf programs.
 
-If addresses overlap, then it seems that the kernel must disable all
-watchpoints while the mapping is installed. This patch tries to relax
-checks, but CAP_ADMIN can install such watchpoints today. And they can
-unintentionally break kernel, or produce false watchpoint triggers.
-And if all watchpoints are disabled while the mapping is installed,
-then this patch should be OK, right?
+This RFC patchset adds new config CONFIG_FILE_BUILD_ID option, which adds
+build id object pointer to the file object when enabled. The build id is
+read/populated when the file is mmap-ed.
+
+I also added bpf and perf changes that would benefit from this.
+
+I'm not sure what's the policy on adding stuff to file object, so apologies
+if that's out of line. I'm open to any feedback or suggestions if there's
+better place or way to do this.
+
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/bpf/20221108222027.3409437-1-jolsa@kernel.org/
+[2] https://lore.kernel.org/bpf/20221128132915.141211-1-jolsa@kernel.org/
+[3] https://lore.kernel.org/bpf/CAEf4BzaZCUoxN_X2ALXwQeFTCwtL17R4P_B_-hUCcidfyO2xyQ@mail.gmail.com/
+---
+Jiri Olsa (5):
+      mm: Store build id in file object
+      bpf: Use file object build id in stackmap
+      perf: Use file object build id in perf_event_mmap_event
+      selftests/bpf: Add file_build_id test
+      selftests/bpf: Add iter_task_vma_buildid test
+
+ fs/file_table.c                                               |  3 +++
+ include/linux/buildid.h                                       | 17 +++++++++++++++++
+ include/linux/fs.h                                            |  3 +++
+ kernel/bpf/stackmap.c                                         |  8 ++++++++
+ kernel/events/core.c                                          | 43 +++++++++++++++++++++++++++++++++++++++----
+ lib/buildid.c                                                 | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ mm/Kconfig                                                    |  7 +++++++
+ mm/mmap.c                                                     | 15 +++++++++++++++
+ tools/testing/selftests/bpf/prog_tests/bpf_iter.c             | 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/prog_tests/file_build_id.c        | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/file_build_id.c             | 34 ++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/trace_helpers.c                   | 35 +++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/trace_helpers.h                   |  1 +
+ 14 files changed, 413 insertions(+), 4 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/file_build_id.c
+ create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
+ create mode 100644 tools/testing/selftests/bpf/progs/file_build_id.c
