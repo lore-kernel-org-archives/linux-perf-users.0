@@ -2,246 +2,243 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F67FC05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 18:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28067C38142
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 19:07:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229654AbjBASaY (ORCPT
+        id S231335AbjBATHC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 13:30:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35464 "EHLO
+        Wed, 1 Feb 2023 14:07:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjBASaX (ORCPT
+        with ESMTP id S229451AbjBATHB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 13:30:23 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444B42BEF0;
-        Wed,  1 Feb 2023 10:30:22 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 311Hwort012244;
-        Wed, 1 Feb 2023 18:29:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=HP55g50lOVvAEC1nVDoErMpMBD+pIIG1ta2lf4MKC/U=;
- b=Y1w597PHmO+gM36CP9tItRPNy+cRocQag7oAHIdGqOId2r5xwpl0GkHqoMpVdz9hAzFv
- LbXeZDjcoZLrZMnh/ikV5WK3goKX0nC0Z4TM0nqzCvYgwZ6xF0Z36koESIkhL6UZv71s
- OR6D/Hpz9fhwRprtHxQjnVnRtkqFMkjvX2/OPNFESwlMeNJaEFDq810nhuPV5wMTZSIE
- rH1snRZ++gabxyW68MMBHOYlnvN+qEdFhri6DBh6+wV+2QWP3fzjUAiEtszHKi9SJpRW
- 39f8GRVgGa1F9q9bmPq04VIWnjZF2tqeQzgB7vNxd6IzAShB3AsBagZUxOJfGvmY0bhh pw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3nfkfe1fas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Feb 2023 18:29:41 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 311IGAxV036014;
-        Wed, 1 Feb 2023 18:29:40 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2172.outbound.protection.outlook.com [104.47.56.172])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3nct57we6u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Feb 2023 18:29:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z4nh9mDzosACxVxB6JqTR2zkXxdBEMhEww7z8m4hPrLX83g2hsAWn2FylUgMovrSQEPmqJx9RJ6VptONR7Rs2xwBEJQboCPeFWSxSTDo6oXaknYBYEbcmMTloqJ7G2lEfLELMbZxbX3ZY7dwElEaEop7X53nHhCpizWP/G1D9CyXGWT2BtjphVeU4wplzTgwdsT45ZwGXXg+kU97Io2bDxoL81QYGT3B5fTFYdkzHbhDON7z6cEwV8d5fVQ7mShtdRzSkLxWfgZeaRHDMOLwuI5a4E6ISH2o0qsQrKpaMOKKZoweKONKC+fANMMlNBJHLy+wBNi/jjXgr8tYLqBzYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HP55g50lOVvAEC1nVDoErMpMBD+pIIG1ta2lf4MKC/U=;
- b=cu7kjBvLQk+KNQ/V1hhZNnNxoCajLeuuSQjMoTw3Rkc8fW3QjMfexn45MCyKjdfIMaSvkYnjPWLDNg36QV4HbudLE42VgJpdoaFHo9n6CSS3NQh8QaQhzy906SqrfX4FNXzdeVmscdfcPVGTQmk+xlEm8B6dyOi3DMCdf3198LngggmXNbBl4gP8B+qbLcq7YhOSyBBKy/sY+dDMFE4iuSG+CBuylELW/QpqBcVe0jhUHRBNfnlPlQGVDfK2P8b08eyWlucus3FYZZQ5dE+45zLOxl88q9FAQ8vP6xXzjrx4Jvx7TIM0LJPaqtQ3Bl7Xaa/TZpcF0OIlaaHxz8tLvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HP55g50lOVvAEC1nVDoErMpMBD+pIIG1ta2lf4MKC/U=;
- b=MLQXF9e2Se2aBf/epxs7bmRYmJKCeq7ZLBYuDzlhmtqKRBTXuGVsFTKqRa3SP/8e3ZDkVJ50H34ifzgAqGiCtyWLjXZ3hfCGHf7pvuE8mai828I4B/MN2IXPsL21cWIbadUsC4pW48I8/i/7aX//iDv4uyWE7ANC93nyJv2cU7M=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by BN0PR10MB4918.namprd10.prod.outlook.com (2603:10b6:408:12e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.22; Wed, 1 Feb
- 2023 18:29:38 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::fff7:981:3ae6:92eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::fff7:981:3ae6:92eb%8]) with mapi id 15.20.6064.025; Wed, 1 Feb 2023
- 18:29:37 +0000
-Message-ID: <d885941e-a22b-4bda-cf56-968e6d6dc069@oracle.com>
-Date:   Wed, 1 Feb 2023 18:29:31 +0000
+        Wed, 1 Feb 2023 14:07:01 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8D911666;
+        Wed,  1 Feb 2023 11:07:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675278420; x=1706814420;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BeV+g4xcrdhiBAPU8q3kcX0q9z2wYQxEEkxTU/6a/uA=;
+  b=fgRKPy54Z3Xlf4VZqBWW6OVAHUMNwshmgfnbqWobYPvBXr0iMLg5Arxq
+   UiVqJ60ZsdHYiDZa1UyH/Hm7HvLg0T+5V4Wg6gJaSPQUyPvI7vOEDu3nS
+   2nxPe9w/ojhFC1PkWW+f8HgDBUAVWeRnIU2WuJoEGwFWzMoUpYN5a1eIv
+   ky9BRoxmhob4v7ToHqhk42pqKRC2Doo8qECvKxvxMqBOlHnzN67liiLdq
+   nZC5dFi4LUaf0t69SfR8KTJQK1JzezVEzrix4d+EQIv/LTgGPeJQFiQGf
+   Xt3lBgCvym+B43sVVxHQyOPtTQ3SyhW8oy2LRTldjq24oayplVjIinh5K
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="311889601"
+X-IronPort-AV: E=Sophos;i="5.97,265,1669104000"; 
+   d="scan'208";a="311889601"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 11:06:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="697384825"
+X-IronPort-AV: E=Sophos;i="5.97,265,1669104000"; 
+   d="scan'208";a="697384825"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 01 Feb 2023 11:06:57 -0800
+Received: from [10.255.230.85] (kliang2-mobl1.ccr.corp.intel.com [10.255.230.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id F3647580514;
+        Wed,  1 Feb 2023 11:06:55 -0800 (PST)
+Message-ID: <df8d710c-2543-520e-fe82-dbc8b2a47950@linux.intel.com>
+Date:   Wed, 1 Feb 2023 14:06:54 -0500
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH v5 10/15] perf jevents: Generate metrics and events as
- separate tables
+Subject: Re: [6.1.7][6.2-rc5] perf all metrics test: FAILED!
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+Cc:     sedat.dilek@gmail.com, "Xing, Zhengjun" <zhengjun.xing@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-References: <20230126233645.200509-1-irogers@google.com>
- <20230126233645.200509-11-irogers@google.com>
- <8f53bb96-8213-12f1-f91c-7fb311e4c9a4@oracle.com>
- <CAP-5=fUTT1gh0xd-um7NSyg=XuayjWzF90W6Dp4=DOvwyGcmNw@mail.gmail.com>
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <CAP-5=fUTT1gh0xd-um7NSyg=XuayjWzF90W6Dp4=DOvwyGcmNw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        llvm@lists.linux.dev, Ben Hutchings <benh@debian.org>,
+        James Clark <james.clark@arm.com>,
+        Stephane Eranian <eranian@google.com>
+References: <CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com>
+ <CAP-5=fULKkEYXOVV5tXd8J0occGJwgV+BiJLkA=exW=bfgyEBw@mail.gmail.com>
+ <CA+icZUUOZoLOFiBcYkccWPSusk9G_Rhf3DOZYWat-K+VfWFHQw@mail.gmail.com>
+ <c6605d52-b9e1-e8d3-ed29-562146f64eea@arm.com>
+ <CAP-5=fWcb8m9vkfqSC9H2Gqi2dBjbPuGb2F27Fq-ejmR25foQw@mail.gmail.com>
+ <CA+icZUWKFCdhQ9XN0wLN6BF5ft3WaNrtXDb9D8ckNOPG9gUf+g@mail.gmail.com>
+ <CAP-5=fUSyN5wCn5miG79cT30YruJjkAYMeR58XXgRBQw-6hHkQ@mail.gmail.com>
+ <20b09a5b-99b3-75b8-3ec8-e978965497f2@linux.intel.com>
+ <CAP-5=fXHDuB5G+ujVCoe81H+-Y=J8ig6TZ-dGZHknskb7Z53ig@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fXHDuB5G+ujVCoe81H+-Y=J8ig6TZ-dGZHknskb7Z53ig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0314.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:197::13) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|BN0PR10MB4918:EE_
-X-MS-Office365-Filtering-Correlation-Id: fe8bd2e9-bc33-44fd-c68b-08db04824656
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S4zmZzYgwICS2sqFS2FaVPZwjCoehpjK8y2bDIoj34xsRDXfeer+sow0HUAMcaaGipTgiWs5316EoTd70s05K8kyYYRTePm5IMSY2A5R03pp9ok0virAHdIjy7OffJCdHSpwOBhyZjKwqB9Tj6UGzxPoD/A1p30kmnsoE+2cmrhGii+r7qywQvaI4jHcBq+c32ddChrIcWJ0bTNSHoBr+ty7S/CjhTvodkQUVnhi58lmnfBjFyNCW8663GMP1LiaEpDrrbvuD5f4eH2McDVddZ4id0X3zLil1LWbULfoBAZO392toWx31lqcIqXCj5kQv1/Zviq6Gb/ho3aNEfagHLUxdRhioZgxxCPyGSXHmRel8rCyTbIeqASCSRWxnI6dqFIiBfxERoBaG/QRB2jU1m5GeOUhdygCxEBAoyWovktVZumejPiq8QtmP6ViPhSJvXcuL96wdPem0gwh40f28HCk399bO5A0tjMqSGTYOmL8V/Btu8CLKK8ef+vhYmWdUe+Xk3v8GFw0757mAFyR0tK/PwgE66RlzXKNsbh9nYHmCeinYovNR86pQ1AABS1/WT/ShA+Z4MjJLHBUSWSSXlz3RdheyAm49eGvC/9KUhrxgzpnm1JjRoIEFtNy0yMjwDL66a7L9GEX0T2H02vTExXJ9OgHtmi1iAPgGoSV+MQAGUr5fUvRuIoVOJegtHEyEX6B9xxaDG8urZoymflf6qKFl1Pu4krCAMldR4Oc26E=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(396003)(39860400002)(376002)(366004)(346002)(451199018)(2616005)(6666004)(54906003)(41300700001)(8936002)(6916009)(66946007)(66476007)(4326008)(316002)(8676002)(53546011)(36916002)(186003)(6512007)(6506007)(26005)(6486002)(478600001)(66556008)(31696002)(86362001)(36756003)(5660300002)(7406005)(2906002)(7416002)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?akx0SVdqL2graDBia1ZqMG5weE02NlpOUEcwMnF6UENzcW9qNDEyM0x0aGJJ?=
- =?utf-8?B?NTdUdXNrTVh1Q3p5MjV2ZEJjaFdVR1ZlU2t0d0MxeTluOERTODBpVFV0RnJZ?=
- =?utf-8?B?VktudWNlaXFtU0NwSGRBak5CRjR3aGR4dHgzbXA1anlBRHQ2SVZYOC83ZEJG?=
- =?utf-8?B?eU5BZnAyVFRwYWpSaHhUN0o0TXNGMytFeHgwRzNiWThITkdNRkg2NVorZWI0?=
- =?utf-8?B?OWRrNktTWEZnZWpvK2oraWcrTC8zSm5PVHQ2RnhBa2I5VElxY1p6NlV6dkh3?=
- =?utf-8?B?dC80MG1WVDBTb0lnMEJldkc3dEpveVowTFlrZ0dwS0ZHVlZQK1djdnU1ekxS?=
- =?utf-8?B?aDQxMEkwN2FBQXNTaUdwcmdHRXp4L3FaMWV3ZG94RHhBMWlYV2tLTWJoSzY0?=
- =?utf-8?B?SmtnZ0drWEpLcXRTaWxKek9OTmZYYlJYUWduOTgvaDNhaHh1Qmh4VFJpNVky?=
- =?utf-8?B?akhsWUlaQzZsZUpMM2JqWDlra2dZZno3SUVWRGs5bFRmZGtpeWI5cnRvNmFy?=
- =?utf-8?B?Qk1sc3IrQm5pUThHUE5IQ0ZwMUFRRmpiZkdqVU9sM284SlV5SEl2VlkvSUhn?=
- =?utf-8?B?T2pQa1ltdHFvZVo3Y0dnVkJlMXROblljVVNGSTV5cmlnSHFuaEY3cTNLWFpq?=
- =?utf-8?B?ZnpzWFFYSDFVcjlvaGtQczkyNGVqOVg5UjVJRXlkejRtclVIRXdhK2grSTN1?=
- =?utf-8?B?UlZWOFRPcGtuQWtubWZiRGtORGV3dHlnYXBIelpQRE4zRVpBdXlTWVY3eWhV?=
- =?utf-8?B?Z3RRU25oU29UYm0vcUZORHlxUVAxYytPY2pnSE9STjdEMzg3VWc3UVBaVnMx?=
- =?utf-8?B?U0hzc1p1VVJXUVJDRXZWTEJTTi9GUnJNUlVCNCtzTjNsWHh2a1hCODhCUXdF?=
- =?utf-8?B?RUN6cGdHU0VEblpNRXZ0UTA4bnVPY3k5RkVhOTR1U3pYcVVSaXI1UkNHUkFB?=
- =?utf-8?B?bFZiVVB5YkFqakEzZ0VRWWFkUW9RbzM1MmRxM2o0RHZ2aEFnKys5dmhYTnJB?=
- =?utf-8?B?MVFza2I2dGl2VU5mQVNwS3RyVVF2QjhzcHpUZ0pTREUvZDVHVmVMNysrZHNj?=
- =?utf-8?B?RlQwVTByZytMVURiZnRQeEZ6SHZrYTZyZVhVYjIybzNTZjAxMlVJb2RnampH?=
- =?utf-8?B?S1krcjV6UCtFL2NFQ1h3ck5DeThUYUtQanUxY1IzL2pYRnJ5WWtNRUNoVXNm?=
- =?utf-8?B?WS81Qm0vV3hHZnN4SytranNIdTF3cmIrOEJIZVZ2eHVvVjI0RmZvbGI5S1Jv?=
- =?utf-8?B?UWxESzRZVThzcVlsRmxMSVo4enNkdyt1ZWhpcWtuNVRiU3VRenB1ZCtMOWUr?=
- =?utf-8?B?bElQNTA5VVJrR2hMT1R5UTFaN0N2OGRrVy9JMjFpTWV4RUtFTnpIWEtIRUk2?=
- =?utf-8?B?aCthOVdsZDFlMnowWk5PQXJvMllJN2t2NlNFWWE2aTB1Zkp1WGxnS2FOU2hB?=
- =?utf-8?B?ZjRrMmc0WWdJYzczTm9UcGJ1VFFReVpkdkQ1dGZGcDdtcG5kVDRkU2NlRzJp?=
- =?utf-8?B?VVNmYVdsVnBzdi91NEVlWmoxdldrOEo3Smh3RHpiZm5YQ2kxSEZCeGx6WXhL?=
- =?utf-8?B?Qk45d1l3U2psUGpDMEZaQ0c4Uy9vNG8remF6Nld5Vkl4ZlFFdTZyby9YdENN?=
- =?utf-8?B?ak1sbU1CcUozQ1dud3p2T2dvQndBdityTVZISnlrK3Z4eXhzcWlvcnZwSEpM?=
- =?utf-8?B?UWJKeGM5RFFERjVqdGl6UnV1ZndMTWtlU1p2NklHSGZ6SU02YnR6cjJtVlUv?=
- =?utf-8?B?cmdjQkpGOWhEcURVRi9IdlZzNTVkYld0RjEvU21DZEZUMFIxWVphQkFuVEt1?=
- =?utf-8?B?NzVCR2ZWOXdwSUV1SGd1SkVzQjI4M1Awd3FTKzFCRjNCVzkrazdrbW8yREN0?=
- =?utf-8?B?TWp0YVpweUNLeGVTMXRkZ0JVNGY1UWFYZUtOemtGbEkwVTdoMXZEVTREMmdh?=
- =?utf-8?B?M2dHclJRSHJxanAzVXpIZnhRbFJWbzRjN0ZsaXptWkJ4NGlaWE5wWTN1YmRS?=
- =?utf-8?B?S2NZL0VOOTRlN0s5enkxZnpuZVRpOXNwdEt1dFBVYlNlUllUU2VFUDNRaWZu?=
- =?utf-8?B?UVBpYUtyeVdzc2hEeW1VTlhmclJiV0lmS3ppT3JTM3N5cVBVU21wdUNjdUZ0?=
- =?utf-8?B?Y3lRMzBWMHBjQTh6Nm5XQ2dEWmkrK0FTZ080Q3dmeSt2SVhuL29pY3E2eVJa?=
- =?utf-8?B?OEE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?TUU0RmhtVCtmVVh1UDRHekZwVHM3OW9hOHhPb3FpM2o1Tm12Y1pyL0VucmdW?=
- =?utf-8?B?eUdTR3BHeTRiZTZWTTNpWkgrdUEvSEszQnhhSVB6dWpVOWlsNlFURjhrOG1r?=
- =?utf-8?B?MkJFVStmUTY4b2VlVVdkZ2RXMnRmUGVNYllYa0J0Y1VZcGNkSDhtbTJGcFd0?=
- =?utf-8?B?YUxua1RRb01La0g0VUtPYzFBV0sxMmc3S2RUUVd2Q3VidGoxNHhQVVNNZGcy?=
- =?utf-8?B?dENXOFZwci9CWWF5V2hvRTNwcUpWQ2FDWmxUd3huSGVuYzl2aWVHNVYxYzM0?=
- =?utf-8?B?YlY5VGdQTzk3Tmx5MWNhTVVIMVAxSWFhUjNvNTlkMTMzQVVuSnpQM0lHbFZQ?=
- =?utf-8?B?eGRRa3lLTUZBTDRTMGQ0Ylk3cGZReHdlby8wTExCN3NsaytoVzdPY2N0YVdK?=
- =?utf-8?B?OGdTUmpBRzdLZzB4NXpBeFRaMzRWM3ZIeXNXalZxQVdUMHJaVkJpd1ZQRERF?=
- =?utf-8?B?SkIxZW5jMlRMTXV0R2FsUmtTdW1lRVZUbHZuTGtmeDhiQ0dHRldubkdxclJs?=
- =?utf-8?B?cTVmTlZHV2tNMUJuVXlSVk5KelRyTFFGTXZza2FMYXdtbUo1c21MVHRWRVhv?=
- =?utf-8?B?YXNkOSt5c0ZkNXhLQSt6bDJVMFJUbVFJNmZMRWQ5SGR2QzBqemRGYVJSbDdj?=
- =?utf-8?B?N3ZLWHc4UkdHRVpVMHdQNkMzL21iUEF3ekN3RjBjU2F4VUN0ZGVXZjYzdHRU?=
- =?utf-8?B?UlFaNUVxc3kwRi9RR1B4R2F3c0g0TlJTRkE1SEs4ajYrNzZLSkplVWJkaGtX?=
- =?utf-8?B?Mm10eURoUk1YODkzMU5jaGVDZzN1QzQyYVpFdDE2NDRoRk5RRFZCS3VoVFRm?=
- =?utf-8?B?U3U2RDc3U21JMTBmTHBJSlJpK091d25WaFRNek1xTHJNMVZpbVR1R1NzKzM4?=
- =?utf-8?B?cENuUWxtNWplYmZQNHBzYzE1OU1WZFZ5dXpyQXJFMm9jOU1uYkVsL0JmMlM3?=
- =?utf-8?B?S0huS0tQd2pRbkEvL0xVaEJyMHVabWVxLy9uZUU4WEdoUDJGdXI2S3gwWFZM?=
- =?utf-8?B?VWZScnZDcUR1OUt1eTI5UndndDNmVEgzdGRQWk5va3NZUk9WYkgwdFpjK3FQ?=
- =?utf-8?B?R1BpcEZZSmRNZWJOeWhvZ2FIYm5kWDNRWVNmdTdZZGorZTJoa0kzaWJBdXM5?=
- =?utf-8?B?NHZQaWIyUzV3Z2czOFJDL09kQ3ZuTmpNRVVqTHFIdWJrbnl4M01wVjZzcGxn?=
- =?utf-8?B?b1ZYOVgram1MNU10aWdNTWFxV3pTVWE0TFlXb1hIM3J2OE9yU1lXVWl6K0t4?=
- =?utf-8?B?QkJ4R0ZxODNMa3o2cXZtSEhUT3RVMFlBZ2Jxam1RTEI0ZFIyd1hXRkx4YzhR?=
- =?utf-8?B?Y0d6NTVxNlRyK2lzMW52by91UVNBOUFibDREN1krYzVSOVVmTUhiQkxLbkF3?=
- =?utf-8?B?M0UvUzdmZmZZRXZZMGYyNVREREI0ZGtPVXpHMXhXM3VnT040ZFNGTll6Wk95?=
- =?utf-8?B?SnBhR2xBb0srK2g4M1RPelR4OEZJL3BuQVhNZGhKTTcyd0d0a29ZcjdUSUlO?=
- =?utf-8?B?b0V3L3RLWHZqaUs1eGlzaFdWRjNhYmF0N1JGaEJYRHU5OHJUWFFXbld6aDdW?=
- =?utf-8?B?UWR1dEtpcnFsZkRUbFZHc0kxSmVMcGNjZitjNmpNbm9Bc01XUjVIQXljTjhz?=
- =?utf-8?B?ZEIxUFNZNEpCYVhsWlNOazZtODNEa01nTXNNS1NrSjZocDNsdXFoSkJKTUtK?=
- =?utf-8?Q?yW9NZlISMfZiXStfFCl0?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fe8bd2e9-bc33-44fd-c68b-08db04824656
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2023 18:29:37.7752
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0K9zGnh5ui57M9Sr5naVIua+okobmQam+vDv0so0jICnaDP0ydFS7mCmCPRc5PxoEqRnsNHqIyhdiMvtutsEtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4918
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-01_04,2023-01-31_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302010158
-X-Proofpoint-GUID: nPPCeD5Cx4CjYKU-WP5kj9RXF5CW3BGb
-X-Proofpoint-ORIG-GUID: nPPCeD5Cx4CjYKU-WP5kj9RXF5CW3BGb
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 30/01/2023 22:54, Ian Rogers wrote:
->> This is almost identical to generated perf_pmu__find_events_table(),
->> except we return a pmu_metrics_table * (instead of a pmu_events_table *)
->> and also return the metric table member (instead of event table). But
->> the definitions are:
->>
->> /* Struct used to make the PMU event table implementation opaque to
->> callers. */
->> struct pmu_events_table {
->>           const struct compact_pmu_event *entries;
->>           size_t length;
->> };
->>
->> /* Struct used to make the PMU metric table implementation opaque to
->> callers. */
->> struct pmu_metrics_table {
->>           const struct compact_pmu_event *entries;
->>           size_t length;
->> };
->>
->> Those structs are defined to be the same thing, so I am failing to see
->> the point in a) separate structure types b) why so much duplication
->>
->> As for b), I know that they are generated and the python code may be
->> simpler this way (is it?), but still...
-> Agreed. The point is to separate the two tables for the typing at the
-> API layer, internally the representation is the same. When we decode
-> one we get a pmu_event and the other we get a pmu_metric, so we don't
-> want to allow the tables to be switched - hence two types.
 
-I do see the advantage of stronger types but it does seem a bit odd to 
-achieve it like this.
+
+On 2023-02-01 12:02 p.m., Ian Rogers wrote:
+> On Wed, Feb 1, 2023 at 7:28 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>> Hi Ian,
+>>
+>> On 2023-01-30 10:55 p.m., Ian Rogers wrote:
+>>>>> There's a question about what we should do in the perf test about
+>>>>> this? I have a few solutions:
+>>>>>
+>>>>> 1) try metric tests again with the --metric-no-group flag and don't
+>>>>> fail the test if this succeeds. This allows kernel bugs to hide, so
+>>>>> I'm not a huge fan.
+>>>>>
+>>>>> 2) add a new metric flag/constraint to say not to group, this way the
+>>>>> metric will automatically apply the "--metric-no-group" flag. It is a
+>>>>> bit of work to wire this up but this kind of failure is common enough
+>>>>> in PMUs that it is probably worthwhile. We also need to add the flag
+>>>>> to metrics and I'm not sure how to get a good list of the metrics that
+>>>>> currently fail and require it. This is okay but error prone.
+>>>>>
+>>>>> 3) fix the kernel bug and let the perf test fail until an adequate
+>>>>> kernel is installed. Probably the best option.
+>>>>>
+>>>> Hi Ian,
+>>>>
+>>>> I can confirm:
+>>>>
+>>>> $ echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
+>>>> /proc/sys/kernel/perf_event_paranoid
+>>>> 0
+>>>>
+>>>> $ ~/bin/perf stat -M tma_l3_bound --metric-no-group -a sleep 1
+>>>>
+>>>> Performance counter stats for 'system wide':
+>>>>
+>>>>         2.058.892      MEM_LOAD_UOPS_RETIRED.LLC_HIT    #      1,5 %
+>>>> tma_l3_bound             (99,30%)
+>>>>       173.254.697      CYCLE_ACTIVITY.STALLS_L2_PENDING
+>>>>                         (99,10%)
+>>>>     2.396.130.501      CPU_CLK_UNHALTED.THREAD
+>>>>                         (99,60%)
+>>>>         1.110.486      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
+>>>>                            (99,53%)
+>>>>
+>>>>       1,001989022 seconds time elapsed
+>>>>
+>>>> $ ~/bin/perf stat -M tma_dram_bound --metric-no-group -a sleep 1
+>>>>
+>>>> Performance counter stats for 'system wide':
+>>>>
+>>>>         1.729.208      MEM_LOAD_UOPS_RETIRED.LLC_HIT    #      1,2 %
+>>>> tma_dram_bound           (99,50%)
+>>>>        50.346.734      CYCLE_ACTIVITY.STALLS_L2_PENDING
+>>>>                         (99,50%)
+>>>>     2.354.963.862      CPU_CLK_UNHALTED.THREAD
+>>>>                         (99,80%)
+>>>>           306.500      MEM_LOAD_UOPS_MISC_RETIRED.LLC_MISS
+>>>>                            (99,61%)
+>>>>
+>>>>       1,001981392 seconds time elapsed
+>>>>
+>>>> Thanks!
+>>> Thanks, apparently it is an issue with SandyBridge/IvyBridge that some
+>>> counters on one hyperthread will limit what can be on the other. I
+>>> believe that's the comment related to EXCL access here:
+>>> https://github.com/torvalds/linux/blob/master/arch/x86/events/intel/core.c#L124
+>>> So you may have more success with the metric if you disable
+>>> hyperthreading, but I imagine that's not a popular option.
+>>
+>> Thanks for debugging the issue. Yes, it's caused by the HT workaround
+>> for SNB/IVB/HSW.
+>>
+>> The weak group check in the kernel is in validate_group(). It only does
+>> a sanity check. It doesn't check all the workarounds and the current
+>> status of counters (e.g., whether the fixed counter is occupied by NMI
+>> watchdog.) It's possible that a false positive is returned to the perf
+>> tool. I once tried to fix the NMI watchdog check in the kernel, but the
+>> proposal was rejected. So the metric constraint is introduced.
+>>
+>> For this issue, I think the above option2 should be a better and
+>> practical choice. The issue is only observed on old machines, which
+>> usually has a stable kernel running on it. I don't think the user wants
+>> to update their kernel just to workaround an issue for several metrics.
+>> But it should be much easier for them to update the perf tool.
+>>
+>> We know that the below events are the problematic events.
+>> /* MEM_UOPS_RETIRED.* */
+>> /* MEM_LOAD_UOPS_RETIRED.* */
+>> /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+>> /* MEM_LOAD_UOPS_LLC_MISS_RETIRED.* */
+>> Can we update the convertor script and apply the "--metric-no-group"
+>> flag or add a new constraint if the above events are detected in
+>> SNB/IVB/HSW?
+>>
+>> Thanks,
+>> Kan
+> 
+> Thanks Kan,
+> 
+> We absolutely can do that! In this case should it be --metric-no-group
+> only when SMT is enabled? I can do some patches but would like to know
+> about whether we need SMT and not SMT versions of --metric-no-group.
+
+The kernel workaround is disabled when SMT is off. So I think we only
+need SMT version of --metric-no-group.
+https://lore.kernel.org/all/1416251225-17721-13-git-send-email-eranian@google.com/T/#u
+
+> Also, should we just have a list of metrics that need the flag or try
+> to automate detection? 
+
+I don't think Intel will update the metrics or events for the old
+SNB/IVB/HSW platforms. Hard code a list of metrics may be simpler than
+automated detection.
+
+> Some warts in detection are the names of the
+> events that vary between Ivybridge and Sandybridge, and how to
+> determine which events conflict. For example, the perfmon event data:
+> 
+> MEM_LOAD_UOPS_RETIRED.LLC_HIT
+> https://github.com/intel/perfmon/blob/main/IVB/events/ivybridge_core.json#L5368
+> MEM_LOAD_UOPS_RETIRED.LLC_MISS
+> https://github.com/intel/perfmon/blob/main/IVB/events/ivybridge_core.json#L5431
+> CYCLE_ACTIVITY.STALLS_L2_PENDING
+> https://github.com/intel/perfmon/blob/main/IVB/events/ivybridge_core.json#L3541
+>
+
+The problematic events should have the same name among platforms. If the
+event name doesn't work, the event encoding is exactly the same among
+those platforms.
+
+
+> The events list all counters, there are no errata fields.. Should the
+> event data be updated and then in the converter script handle that? If
+> I get shown an example I can modify the script accordingly.
+
+If it can helps the converter script, I think we can update the errata
+field.
+
+Here are the errata information.
+ * SNB: BJ122
+ * IVB: BV98
+ * HSW: HSD29
+
+Here is the details regarding the issue. (Please search BV98)
+https://www.intel.com/content/www/us/en/content-details/619604/desktop-3rd-generation-intel-core-processor-family-specification-update.html
+> 
+> It is also hard for me to test anything other than SMT on Ivybridge.
+> 
+
+I think it's OK to only test on Ivybridge.
+The original kernel patch indicates the issue is the same among SNB, IVB
+and HSW.
+https://lore.kernel.org/all/1416251225-17721-7-git-send-email-eranian@google.com/T/#u
 
 Thanks,
-John
+Kan
