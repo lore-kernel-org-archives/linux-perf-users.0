@@ -2,128 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F72C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 09:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD1DC05027
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 10:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231611AbjBAJyA (ORCPT
+        id S230414AbjBAKt1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 04:54:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
+        Wed, 1 Feb 2023 05:49:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230461AbjBAJx7 (ORCPT
+        with ESMTP id S230369AbjBAKt1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 04:53:59 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635174957D
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Feb 2023 01:53:58 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id o5so4071209ljj.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Feb 2023 01:53:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hXBLBJgX4EaRecabGDlsbhKYn/5vHTxOlvqGwGoHBPg=;
-        b=kGuhkOUGRiUBb82xnq/SP0PH18a2BT8S1d4JOz6WZAZJ1pjUkuD2ixPSt46h0gUfdn
-         J3o7C+wF049nP5XsvuPSv8RTjjoa+/1JV25eSAFAAv2IOBY89cp3vnPTRwYpWB2pc5H6
-         amZqseA7VDjMshiL4mh2kEhmuLUFXriQM27ALI2dFc8fl17ujHHsZznv3QFMa4A7hrgi
-         XUJIrFiCgPSrYWwCLPGPLNvO0v5FGURdM1IFSgnm93n1+YkLwpLK3thl+ZyURoKwx/zO
-         ocsJuUvX9Dq8NAHuAgOXho0n+QyU73sM+n8n5iF30fuV/k+QzbmwhlTNOMaOXeEE4xlr
-         hIgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hXBLBJgX4EaRecabGDlsbhKYn/5vHTxOlvqGwGoHBPg=;
-        b=E+gRpISbVRuRodxvJ7cuszV1HCeDD+kCC2kK65H8akOdCRyL7jRL9luCPYmUTeijkN
-         zXNwAYKoO0bfEzldQwabdBf+wlsRznOnp4mtuzaGBEv1ZbYDqe9MOjI8xoG1L8jV5O4K
-         R16AzKaUVRFM+wF6sMs05L10Pn3Xi/n1TzYybotUc7eNiVQy1WfLH5C5YwPWhME4HCjk
-         eE/OgW/VrcAcyZfrmzWMbTH2TQb0gGVpoQX9ut/ASn2+mOacBebyz0MzF6We2h32ZEob
-         3C8uN1v3Iu5sQZt7PbZXdtvo0SKMXBcj5hx3RwjqJtwZaHdm1mRM9K6KEDhQ+39N9a/q
-         eEsA==
-X-Gm-Message-State: AO0yUKUV1h3QpFThjop1JEMKlZHiT4668yLjtkJ22iE012/d/ORAYLOx
-        i4YuPiAaqGKnM2PQHvW2M5tglO4PkzdaGb8/QjcMkQ==
-X-Google-Smtp-Source: AK7set/SnkQ6D+DOsTEIwKu7gH1tVuc4Aop2ZxyXy/5CnDm05inFo7TpmqVd2reBirxiOQVXt78QUDARAskOvz3HHq0=
-X-Received: by 2002:a05:651c:231b:b0:290:7402:78a1 with SMTP id
- bi27-20020a05651c231b00b00290740278a1mr233501ljb.183.1675245236576; Wed, 01
- Feb 2023 01:53:56 -0800 (PST)
+        Wed, 1 Feb 2023 05:49:27 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E59405B97;
+        Wed,  1 Feb 2023 02:49:25 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8315B2F4;
+        Wed,  1 Feb 2023 02:50:07 -0800 (PST)
+Received: from [10.57.49.213] (unknown [10.57.49.213])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D48DD3F882;
+        Wed,  1 Feb 2023 02:49:23 -0800 (PST)
+Message-ID: <a5d842e2-a877-14fa-77a3-2d991da105ee@arm.com>
+Date:   Wed, 1 Feb 2023 10:49:22 +0000
 MIME-Version: 1.0
-References: <20230127162409.2505312-1-elver@google.com> <Y9QUi7oU3nbdIV1J@FVFF77S0Q05N>
- <CANpmjNNGCf_NqS96iB+YLU1M+JSFy2tRRbuLfarkUchfesk2=A@mail.gmail.com>
- <Y9ef8cKrE4RJsrO+@FVFF77S0Q05N> <CANpmjNOEG2KPN+NaF37E-d8tbAExKvjVMAXUORC10iG=Bmk=vA@mail.gmail.com>
-In-Reply-To: <CANpmjNOEG2KPN+NaF37E-d8tbAExKvjVMAXUORC10iG=Bmk=vA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 1 Feb 2023 10:53:44 +0100
-Message-ID: <CACT4Y+Yriv_JYXm9N1YAMh+YuiT57irnF-vyCqxnTTux-2Ffwg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Allow restricted kernel breakpoints on user addresses
-To:     Marco Elver <elver@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 1/1] perf: Fix warning from concurrent read/write of
+ perf_event_pmu_context
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-perf-users@vger.kernel.org, ravi.bangoria@amd.com,
+        syzbot+697196bc0265049822bd@syzkaller.appspotmail.com,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org
+References: <20230127143141.1782804-1-james.clark@arm.com>
+ <20230127143141.1782804-2-james.clark@arm.com>
+ <Y9kYKBMBEa7j+O3n@hirez.programming.kicks-ass.net>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <Y9kYKBMBEa7j+O3n@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 1 Feb 2023 at 10:34, Marco Elver <elver@google.com> wrote:
->
-> On Mon, 30 Jan 2023 at 11:46, Mark Rutland <mark.rutland@arm.com> wrote:
-> [...]
-> > > This again feels like a deficiency with access_ok(). Is there a better
-> > > primitive than access_ok(), or can we have something that gives us the
-> > > guarantee that whatever it says is "ok" is a userspace address?
-> >
-> > I don't think so, since this is contextual and temporal -- a helper can't give
-> > a single correct answert in all cases because it could change.
->
-> That's fair, but unfortunate. Just curious: would
-> copy_from_user_nofault() reliably fail if it tries to access one of
-> those mappings but where access_ok() said "ok"?
 
-I also wonder if these special mappings are ever accessible in a user
-task context?
-If yes, can a racing process_vm_readv/writev mess with these special mappings?
 
-We could use copy_from_user() to probe that the watchpoint address is
-legit. But I think the memory can be potentially PROT_NONE but still
-legit, so copy_from_user() won't work for these corner cases.
+On 31/01/2023 13:31, Peter Zijlstra wrote:
+> On Fri, Jan 27, 2023 at 02:31:41PM +0000, James Clark wrote:
+> 
+>> @@ -4897,32 +4895,32 @@ static void free_epc_rcu(struct rcu_head *head)
+>>  static void put_pmu_ctx(struct perf_event_pmu_context *epc)
+>>  {
+>>  	unsigned long flags;
+>> +	struct perf_event_context *ctx = epc->ctx;
+>>  
+>> -	if (!atomic_dec_and_test(&epc->refcount))
+>> +	/*
+>> +	 * XXX
+>> +	 *
+>> +	 * lockdep_assert_held(&ctx->mutex);
+>> +	 *
+>> +	 * can't because of the call-site in _free_event()/put_event()
+>> +	 * which isn't always called under ctx->mutex.
+>> +	 */
+>> +	raw_spin_lock_irqsave(&ctx->lock, flags);
+>> +	if (!atomic_dec_and_test(&epc->refcount)) {
+>> +		raw_spin_unlock_irqrestore(&ctx->lock, flags);
+>>  		return;
+>> +	}
+> 
+> This is a bit of an anti-pattern and better donw using dec_and_lock. As
+> such, I'll fold the below into it.
+> 
 
-> Though that would probably restrict us to only creating watchpoints
-> for addresses that are actually mapped in the task.
->
-> > In the cases we switch to another mapping, we could try to ensure that we
-> > enable/disable potentially unsafe watchpoints/breakpoints.
->
-> That seems it'd be too hard to reason that it's 100% safe, everywhere,
-> on every arch. I'm still convinced we can prohibit creation of such
-> watchpoints in the first place, but need something other than
-> access_ok().
->
-> > Taking a look at arm64, our idmap code might actually be ok, since we usually
-> > mask all the DAIF bits (and the 'D' or 'Debug' bit masks HW
-> > breakpoints/watchpoints). For EFI we largely switch to another thread (but not
-> > always), so that would need some auditing.
-> >
-> > So if this only needs to work in per-task mode rather than system-wide mode, I
-> > reckon we can have some save/restore logic around those special cases where we
-> > transiently install a mapping, which would protect us.
->
-> It should only work in per-task mode.
->
-> > For the threads that run with special mappings in the low half, I'm not sure
-> > what to do. If we've ruled out system-wide monitoring I believe those would be
-> > protected from unprivileged users.
->
-> Can the task actually access those special mappings, or is it only
-> accessible by the kernel?
->
-> Thanks,
-> -- Marco
+Yep that looks better. Thanks Peter.
+
+> --- a/include/linux/spinlock.h
+> +++ b/include/linux/spinlock.h
+> @@ -476,6 +476,15 @@ extern int _atomic_dec_and_lock_irqsave(
+>  #define atomic_dec_and_lock_irqsave(atomic, lock, flags) \
+>  		__cond_lock(lock, _atomic_dec_and_lock_irqsave(atomic, lock, &(flags)))
+>  
+> +extern int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock);
+> +#define atomic_dec_and_raw_lock(atomic, lock) \
+> +		__cond_lock(lock, _atomic_dec_and_raw_lock(atomic, lock))
+> +
+> +extern int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lock,
+> +					unsigned long *flags);
+> +#define atomic_dec_and_raw_lock_irqsave(atomic, lock, flags) \
+> +		__cond_lock(lock, _atomic_dec_and_raw_lock_irqsave(atomic, lock, &(flags)))
+> +
+>  int __alloc_bucket_spinlocks(spinlock_t **locks, unsigned int *lock_mask,
+>  			     size_t max_size, unsigned int cpu_mult,
+>  			     gfp_t gfp, const char *name,
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4901,11 +4901,8 @@ static void put_pmu_ctx(struct perf_even
+>  	 * can't because of the call-site in _free_event()/put_event()
+>  	 * which isn't always called under ctx->mutex.
+>  	 */
+> -	raw_spin_lock_irqsave(&ctx->lock, flags);
+> -	if (!atomic_dec_and_test(&epc->refcount)) {
+> -		raw_spin_unlock_irqrestore(&ctx->lock, flags);
+> +	if (!atomic_dec_and_raw_lock_irqsave(&epc->refcount, &ctx->lock, flags))
+>  		return;
+> -	}
+>  
+>  	WARN_ON_ONCE(list_empty(&epc->pmu_ctx_entry));
+>  
+> --- a/lib/dec_and_lock.c
+> +++ b/lib/dec_and_lock.c
+> @@ -49,3 +49,34 @@ int _atomic_dec_and_lock_irqsave(atomic_
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(_atomic_dec_and_lock_irqsave);
+> +
+> +int _atomic_dec_and_raw_lock(atomic_t *atomic, raw_spinlock_t *lock)
+> +{
+> +	/* Subtract 1 from counter unless that drops it to 0 (ie. it was 1) */
+> +	if (atomic_add_unless(atomic, -1, 1))
+> +		return 0;
+> +
+> +	/* Otherwise do it the slow way */
+> +	raw_spin_lock(lock);
+> +	if (atomic_dec_and_test(atomic))
+> +		return 1;
+> +	raw_spin_unlock(lock);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(_atomic_dec_and_raw_lock);
+> +
+> +int _atomic_dec_and_raw_lock_irqsave(atomic_t *atomic, raw_spinlock_t *lock,
+> +				     unsigned long *flags)
+> +{
+> +	/* Subtract 1 from counter unless that drops it to 0 (ie. it was 1) */
+> +	if (atomic_add_unless(atomic, -1, 1))
+> +		return 0;
+> +
+> +	/* Otherwise do it the slow way */
+> +	raw_spin_lock_irqsave(lock, *flags);
+> +	if (atomic_dec_and_test(atomic))
+> +		return 1;
+> +	raw_spin_unlock_irqrestore(lock, *flags);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(_atomic_dec_and_raw_lock_irqsave);
