@@ -2,42 +2,49 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BC6C05027
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 20:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CC2C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 23:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231860AbjBBU16 (ORCPT
+        id S232844AbjBBXvX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Feb 2023 15:27:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33444 "EHLO
+        Thu, 2 Feb 2023 18:51:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbjBBU15 (ORCPT
+        with ESMTP id S233200AbjBBXvW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Feb 2023 15:27:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F6A922038;
-        Thu,  2 Feb 2023 12:27:55 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9B8D6B82778;
-        Thu,  2 Feb 2023 20:27:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6710C433EF;
-        Thu,  2 Feb 2023 20:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675369673;
-        bh=/yv6z44DjS37fPnTEcfK9tOUPF+JjplCO3q90mk7/Nc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rFUOLQ7F6AYZI1xbHoOpVL9ux3EJlQ9bQW12TYvSvyFVAHHLXu0xL83sTnwOl7acU
-         8KKUYvjR5OU0cctleDSHDeMl6I/77YbfQOM8+mfNBvCq7BjrOd/mJM1rr88Szysx4d
-         yohKE5NqpsIxdR5eYQqX4OpvAtjvRK17Sjwk72y1LA0oaNCf6lnuw9X6dsXNqKccoa
-         Y6plnDhy3Mo11kk/kaqRP2dv101IDrZRZAu9LWpci2Tm5yXevcL5eZXqCLTWd2BhL7
-         exT00cbSb7RN58KHIYoSQENrQJt3GZf27YLBlVlHnqPo5hVhZsALrlDVYOD34gF37S
-         c5ZL/usVQQ8hA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 05C42405BE; Thu,  2 Feb 2023 17:27:49 -0300 (-03)
-Date:   Thu, 2 Feb 2023 17:27:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
+        Thu, 2 Feb 2023 18:51:22 -0500
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C68C027D5D;
+        Thu,  2 Feb 2023 15:51:14 -0800 (PST)
+Received: by mail-wr1-f49.google.com with SMTP id bt17so183715wrb.8;
+        Thu, 02 Feb 2023 15:51:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ewHdaytvVfnqlQKmlRbhoIktyo1A9LRMYTCmiTMnw6w=;
+        b=R4NzcbC6q9jW/OJfaWNwtbobUL3pS0ftwmOv2HlmcA7wUnzNom3snD8bqWNMYKOF5D
+         iYR/e+5zeLyOr5SkRyzyWk9Cs4YPZ4f4TU5QYEX676MffKQot0RefNsia2lPYl1pDWd9
+         MNYxWY/Vp0AlnbV3Fns5IOX0ZwLKlOOetSVM2YtNDrSrYVTmOjm2mGWWjKiFeawJlutu
+         hDJobeU630SETfUV+eOUFySJpMr01Hn/TJ65pPLNDeMlRyr24ZZj3fMmDz4zyxOPGTlp
+         xfplJNtek3Y2XGQ8OD82ZS4JAnqcOrEQfquV1n30CZRbJA2nvZkNsLC07u8D9pmc1Meo
+         Xacw==
+X-Gm-Message-State: AO0yUKXKlW5HXBupgtw5Nc2APodK5L5uX+US2N16YTzhFQVmYj0uawHh
+        ORAJP56YXsRJAtbWHQea6yrSUA6DNRFg9bh+OpzOSBlx
+X-Google-Smtp-Source: AK7set+xvztwvVJ6dgd8m0crQQvz0LSjsNd1124nnni+rgebUeSiioUYHF0JRKTf1bRQLphdKFHmrxjyGxSmXkpXYlQ=
+X-Received: by 2002:a5d:60c9:0:b0:2b2:51aa:db8b with SMTP id
+ x9-20020a5d60c9000000b002b251aadb8bmr238535wrt.576.1675381873092; Thu, 02 Feb
+ 2023 15:51:13 -0800 (PST)
+MIME-Version: 1.0
+References: <20230202050455.2187592-1-namhyung@kernel.org> <20230202050455.2187592-3-namhyung@kernel.org>
+ <Y9wcxfrL3J+nfp0P@kernel.org>
+In-Reply-To: <Y9wcxfrL3J+nfp0P@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 2 Feb 2023 15:51:01 -0800
+Message-ID: <CAM9d7cjeCvRtNuMUadpftYym85FA_Ri0A8qufn40jkVm51cwmA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] perf lock contention: Use lock_stat_find{,new}
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -45,171 +52,44 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
         Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf lock contention: Use lock_stat_find{,new}
-Message-ID: <Y9wcxfrL3J+nfp0P@kernel.org>
-References: <20230202050455.2187592-1-namhyung@kernel.org>
- <20230202050455.2187592-3-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230202050455.2187592-3-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 01, 2023 at 09:04:53PM -0800, Namhyung Kim escreveu:
-> This is a preparation work to support complex keys of BPF maps.  Now it
-> has single value key according to the aggregation mode like stack_id or
-> pid.  But we want to use a combination of those keys.
-> 
-> Then lock_contention_read() should still aggregate the result based on
-> the key that was requested by user.  The other key info will be used for
-> filtering.
-> 
-> So instead of creating a lock_stat entry always, Check if it's already
-> there using lock_stat_find() first.
+Hi Arnaldo,
 
-Hey, try building without libtraceevent-devel installed, should be
-equivalent to NO_LIBTRACEEVENT=1.
+On Thu, Feb 2, 2023 at 12:27 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Feb 01, 2023 at 09:04:53PM -0800, Namhyung Kim escreveu:
+> > This is a preparation work to support complex keys of BPF maps.  Now it
+> > has single value key according to the aggregation mode like stack_id or
+> > pid.  But we want to use a combination of those keys.
+> >
+> > Then lock_contention_read() should still aggregate the result based on
+> > the key that was requested by user.  The other key info will be used for
+> > filtering.
+> >
+> > So instead of creating a lock_stat entry always, Check if it's already
+> > there using lock_stat_find() first.
+>
+> Hey, try building without libtraceevent-devel installed, should be
+> equivalent to NO_LIBTRACEEVENT=1.
+>
+> At this point I think you should move bpf_lock_contention.o to inside
+> that CONFIG_LIBTRACEEVENT if block.
+>
+> perf-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
+>
+> ifeq ($(CONFIG_LIBTRACEEVENT),y)
+>   perf-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork.o
+> endif
+>
+> I'm removing this series from tmp.perf/core for now.
 
-At this point I think you should move bpf_lock_contention.o to inside
-that CONFIG_LIBTRACEEVENT if block.
+Thanks for the suggestion.  I've tested it builds with the change.
+Will send v2.
 
-perf-$(CONFIG_PERF_BPF_SKEL) += bpf_lock_contention.o
-
-ifeq ($(CONFIG_LIBTRACEEVENT),y)
-  perf-$(CONFIG_PERF_BPF_SKEL) += bpf_kwork.o
-endif
-
-I'm removing this series from tmp.perf/core for now.
-
-- Arnaldo
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-lock.c             |  4 +--
->  tools/perf/util/bpf_lock_contention.c | 41 ++++++++++++++++-----------
->  tools/perf/util/lock-contention.h     |  3 ++
->  3 files changed, 30 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 216a9a252bf4..0593c6e636c6 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -465,7 +465,7 @@ static struct lock_stat *pop_from_result(void)
->  	return container_of(node, struct lock_stat, rb);
->  }
->  
-> -static struct lock_stat *lock_stat_find(u64 addr)
-> +struct lock_stat *lock_stat_find(u64 addr)
->  {
->  	struct hlist_head *entry = lockhashentry(addr);
->  	struct lock_stat *ret;
-> @@ -477,7 +477,7 @@ static struct lock_stat *lock_stat_find(u64 addr)
->  	return NULL;
->  }
->  
-> -static struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags)
-> +struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags)
->  {
->  	struct hlist_head *entry = lockhashentry(addr);
->  	struct lock_stat *ret, *new;
-> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-> index 967ce168f163..c6f2db603d5a 100644
-> --- a/tools/perf/util/bpf_lock_contention.c
-> +++ b/tools/perf/util/bpf_lock_contention.c
-> @@ -254,12 +254,34 @@ int lock_contention_read(struct lock_contention *con)
->  	prev_key = NULL;
->  	while (!bpf_map_get_next_key(fd, prev_key, &key)) {
->  		s32 stack_id;
-> +		const char *name;
->  
->  		/* to handle errors in the loop body */
->  		err = -1;
->  
->  		bpf_map_lookup_elem(fd, &key, &data);
-> -		st = zalloc(sizeof(*st));
-> +
-> +		if (con->save_callstack) {
-> +			stack_id = key.aggr_key;
-> +			bpf_map_lookup_elem(stack, &stack_id, stack_trace);
-> +		}
-> +
-> +		st = lock_stat_find(key.aggr_key);
-> +		if (st != NULL) {
-> +			st->wait_time_total += data.total_time;
-> +			if (st->wait_time_max < data.max_time)
-> +				st->wait_time_max = data.max_time;
-> +			if (st->wait_time_min > data.min_time)
-> +				st->wait_time_min = data.min_time;
-> +
-> +			st->nr_contended += data.count;
-> +			if (st->nr_contended)
-> +				st->avg_wait_time = st->wait_time_total / st->nr_contended;
-> +			goto next;
-> +		}
-> +
-> +		name = lock_contention_get_name(con, &key, stack_trace);
-> +		st = lock_stat_findnew(key.aggr_key, name, data.flags);
->  		if (st == NULL)
->  			break;
->  
-> @@ -272,14 +294,6 @@ int lock_contention_read(struct lock_contention *con)
->  			st->avg_wait_time = data.total_time / data.count;
->  
->  		st->flags = data.flags;
-> -		st->addr = key.aggr_key;
-> -
-> -		stack_id = key.aggr_key;
-> -		bpf_map_lookup_elem(stack, &stack_id, stack_trace);
-> -
-> -		st->name = strdup(lock_contention_get_name(con, &key, stack_trace));
-> -		if (st->name == NULL)
-> -			break;
->  
->  		if (con->save_callstack) {
->  			st->callstack = memdup(stack_trace, stack_size);
-> @@ -287,19 +301,14 @@ int lock_contention_read(struct lock_contention *con)
->  				break;
->  		}
->  
-> -		hlist_add_head(&st->hash_entry, con->result);
-> +next:
->  		prev_key = &key;
->  
-> -		/* we're fine now, reset the values */
-> -		st = NULL;
-> +		/* we're fine now, reset the error */
->  		err = 0;
->  	}
->  
->  	free(stack_trace);
-> -	if (st) {
-> -		free(st->name);
-> -		free(st);
-> -	}
->  
->  	return err;
->  }
-> diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
-> index 17e594d57a61..39d5bfc77f4e 100644
-> --- a/tools/perf/util/lock-contention.h
-> +++ b/tools/perf/util/lock-contention.h
-> @@ -65,6 +65,9 @@ struct lock_stat {
->   */
->  #define MAX_LOCK_DEPTH 48
->  
-> +struct lock_stat *lock_stat_find(u64 addr);
-> +struct lock_stat *lock_stat_findnew(u64 addr, const char *name, int flags);
-> +
->  /*
->   * struct lock_seq_stat:
->   * Place to put on state of one lock sequence
-> -- 
-> 2.39.1.456.gfc5497dd1b-goog
-> 
-
--- 
-
-- Arnaldo
+Thanks,
+Namhyung
