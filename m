@@ -2,212 +2,159 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431B1C05027
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 08:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB3BC05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 08:39:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232089AbjBBIHx (ORCPT
+        id S232118AbjBBIjR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Feb 2023 03:07:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
+        Thu, 2 Feb 2023 03:39:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232057AbjBBIHv (ORCPT
+        with ESMTP id S232102AbjBBIjN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Feb 2023 03:07:51 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71725841AB;
-        Thu,  2 Feb 2023 00:07:50 -0800 (PST)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3127vrc2030763;
-        Thu, 2 Feb 2023 08:07:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=kHKUuSYm3LymHhPCVgFFgfXxLfapU3xg+Ifkfu8XDK8=;
- b=sLUudWI8Tf+aEK0KWmW6KhNl6Fck+49UIavJwP/VvGe2K1pUIiKIz+su38gLtaN+jBLi
- jMTdRFSkOLjk4s4PQtf3CuVtBO1odrrPRgaNJ7g0PbQhqpcyA+xNIPyFiCSMkCnecz0M
- NLvvOBNTElnfKgZPden3UhKm761H8f7HTiarNpeVMR+CTLv3ThWTafc9or1DPN93X78j
- mKW9hj0TT2aRjt7WbSb6pUJ3dXuLaFVks1bId8QaRq6fl8dnQ3ZEVTg82UgNOc/01flq
- Lx2CqYSFruWphGiE//+a675BgoVe3vSAcqqnZfcvLjlaHEdp3BU5LhM03fU4pypCkGL9 AA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ng98fr6wr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 08:07:06 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31280nfx003066;
-        Thu, 2 Feb 2023 08:07:05 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ng98fr6vn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 08:07:05 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31200lw5027465;
-        Thu, 2 Feb 2023 08:07:03 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3ncvttwvsr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 08:07:03 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 312870M944761368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Feb 2023 08:07:00 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B7C5420040;
-        Thu,  2 Feb 2023 08:07:00 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1ABE2004B;
-        Thu,  2 Feb 2023 08:06:53 +0000 (GMT)
-Received: from [9.43.0.232] (unknown [9.43.0.232])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  2 Feb 2023 08:06:53 +0000 (GMT)
-Message-ID: <8d72c776-cb5f-adfe-ba5c-9f258d8720fe@linux.ibm.com>
-Date:   Thu, 2 Feb 2023 13:36:52 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v5 00/15] jevents/pmu-events improvements
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Thu, 2 Feb 2023 03:39:13 -0500
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2059.outbound.protection.outlook.com [40.107.15.59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3C383485;
+        Thu,  2 Feb 2023 00:39:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9P+a34t4t321zQK8zpLWIs92APkv+7CVNBrq4p784zQ=;
+ b=nkaS4XQIxuOkht1f5GMHxVbY/7t/mcufsud9KUOQKhkfm5B/r9KPcIsMRMj8wnBp/6WSdLzvCMmB99ZwXzCdwnZhujZWxL6+opo69zHsgYCbW/d4ENqb4gV7G0ZtrcB9x88VAG/KDD6l9TyF3dCTF4U0BkKElKzs3Mp5jCISQx8=
+Received: from DU2PR04CA0185.eurprd04.prod.outlook.com (2603:10a6:10:28d::10)
+ by DBBPR08MB6233.eurprd08.prod.outlook.com (2603:10a6:10:204::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.25; Thu, 2 Feb
+ 2023 08:39:03 +0000
+Received: from DBAEUR03FT026.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:28d:cafe::1a) by DU2PR04CA0185.outlook.office365.com
+ (2603:10a6:10:28d::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.27 via Frontend
+ Transport; Thu, 2 Feb 2023 08:39:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+ pr=C
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DBAEUR03FT026.mail.protection.outlook.com (100.127.142.242) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6064.24 via Frontend Transport; Thu, 2 Feb 2023 08:39:02 +0000
+Received: ("Tessian outbound 43b0faad5a68:v132"); Thu, 02 Feb 2023 08:39:02 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 8f332296d75d2633
+X-CR-MTA-TID: 64aa7808
+Received: from da1a0e406134.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id D78B9949-EF06-464C-92B4-B7198CFC8F48.1;
+        Thu, 02 Feb 2023 08:38:52 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id da1a0e406134.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 02 Feb 2023 08:38:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IfG0+ZlKBJJqGswB7tCQuaDEjCL3fURB/B7i0jly5Vq5jwqXwH6GmbwU8FXH/GVz0JXPPwtXc58x3HO0sL94aPuISdmJP6FSb4Iny9nFHQChSJMr9Tf77aauCrVWJPGjq1R0sgMJgNchr5dYUyMBvL2MrdimNPZGcUoLLgf1fxaYT9e0a2dAalZnP5tysrgPc8zTBaJq9eS8X5S2rGxazt/EiOW/ncMwrw5AqkgcRu3jzmbNIgLd3sHd7IvppZyq6EU7tcVolMdztVV4C6d0sBz2P7bKeEx7gQ5y3mY5W/ij7HsdO6L/SwkB3RurV4D4soqCRo1a/DkLWa8rLVsHgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9P+a34t4t321zQK8zpLWIs92APkv+7CVNBrq4p784zQ=;
+ b=RkWVMwTAWcT34KrOZHrWWPCqnVnlEXluRnUJvVcKSzKHhtSnYeIGHlbNs9hXS9ftdnjOR/iT1gC1iPtNf1w711GaMOTpNN15GZI4RPZ2y9nW4g0nMxw1qlOrwAaF4SNidXXrKZGveUgEI1b151LfGDBBs2gbExDTWnESS5E2okQK373CfxUBAVw8qT9Gp9D4kEE0fCdXxrTkObGkDCouJhVkWejybmZHBXbwC0fhBPWQeVMMIjyI6RnYygHSAXMJdqWogX51afqfDG2UxPLxMyI2AJZbbH+rc82C1sBZ4dvQwOW/FFRjlPOzhK3JBpZyzvUgqP3Se9dkLUOaGFhX6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9P+a34t4t321zQK8zpLWIs92APkv+7CVNBrq4p784zQ=;
+ b=nkaS4XQIxuOkht1f5GMHxVbY/7t/mcufsud9KUOQKhkfm5B/r9KPcIsMRMj8wnBp/6WSdLzvCMmB99ZwXzCdwnZhujZWxL6+opo69zHsgYCbW/d4ENqb4gV7G0ZtrcB9x88VAG/KDD6l9TyF3dCTF4U0BkKElKzs3Mp5jCISQx8=
+Received: from DBBPR08MB4313.eurprd08.prod.outlook.com (2603:10a6:10:c9::19)
+ by VE1PR08MB5664.eurprd08.prod.outlook.com (2603:10a6:800:1ae::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.22; Thu, 2 Feb
+ 2023 08:38:47 +0000
+Received: from DBBPR08MB4313.eurprd08.prod.outlook.com
+ ([fe80::376f:ee94:cf8a:a720]) by DBBPR08MB4313.eurprd08.prod.outlook.com
+ ([fe80::376f:ee94:cf8a:a720%7]) with mapi id 15.20.6064.025; Thu, 2 Feb 2023
+ 08:38:46 +0000
+From:   Carsten Haitzler <Carsten.Haitzler@arm.com>
+To:     Diederik de Haas <didi.debian@cknow.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Mark Rutland <Mark.Rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-References: <20230126233645.200509-1-irogers@google.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <20230126233645.200509-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WehzE3LcxbUa5cRYGgq377huCWqAsiNf
-X-Proofpoint-GUID: x7-IN_h9wAfUmeFLrekZ37zv9MgerZzI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-01_15,2023-01-31_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302020076
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] Script style improvements in lib/coresight.sh
+Thread-Topic: [PATCH 0/2] Script style improvements in lib/coresight.sh
+Thread-Index: AQHZNoc4GUrdVc9Pzkib9K6RU7qH7q67VngA
+Date:   Thu, 2 Feb 2023 08:38:46 +0000
+Message-ID: <b13301b1-104f-ebb5-6b2a-3d6cc3eba8a3@arm.com>
+References: <20230201214945.127474-1-didi.debian@cknow.org>
+In-Reply-To: <20230201214945.127474-1-didi.debian@cknow.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: DBBPR08MB4313:EE_|VE1PR08MB5664:EE_|DBAEUR03FT026:EE_|DBBPR08MB6233:EE_
+X-MS-Office365-Filtering-Correlation-Id: 734c8a41-5114-4697-16bf-08db04f8f01c
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: LW67s9v6GnGVeRLV+nnjypWcqkhJjQT6RHYft9P1gXg4fkKiEPCtbRgGC69J0Vb40bI2EtCkCTUe0fTAC3o3rY9tOWRWZMpZHSEHiKgi9WSSpXD/9ig1rNztJwJLb3l5ELsKEMmOQZu1m2XG8tdOlF32q9MtHf0Kzy1EkvDQ3LOmqG0xZmKOP/N/Ejc7d0JfdPCnueUxAxv/jIre0hTUVOB2GtIlDHixLK8ttpLXLaoQ6LDhotR4GCByP22Kz7zdXKqCX4GWTjw4a/20M01NWxiHQXFYfyY+pnypsm79M8mv6w/Ak8Lh5vHeTmcR4JudPJwcMZTbC1gYa5krz+55zcPkEEjga7cXaDhA9iroIeni/glQI0PkSF+oDFepzs98gQKkOJgWZnTp7B10CbVKb5M0AaxbA0GC1WwhLMyTq9gtBZ0BDlNllJCt07b5g7XTtKgGTP22tzf9oiadaIVoIpQA3Het5pWcBNvk993yKH4qo66WG7DOGZdjFrfqR35IYfe8LJcjgHBftfiTWfGQXmyKNzOtUuy7H1HbNGqGVEUOUZMDe8HqcfmYHSodrhJxmbRvXf3zUBWbT7cFVt2+snAjk2UjDtHLfviVzDxEbxvbj8uh0lUhxd9I/qHQk7Cw8tTdJ9HdPNPmIxJvF9BIF7E0iBf/raabtBbajzjMQvw/RU946Ui7WA9DO8YhX1dKV7Kyw5U/f+0KsWK/KajmlW9HcNTjCoBEpMS6Uz3PmGANmmnnFCIvos5EqZ5/4QQopWP1xoIZ4wY3g4zqLk/8TA==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4313.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(451199018)(31686004)(38070700005)(83380400001)(71200400001)(4744005)(6506007)(2906002)(36756003)(186003)(31696002)(26005)(86362001)(53546011)(8676002)(6512007)(4326008)(6486002)(41300700001)(5660300002)(478600001)(110136005)(122000001)(2616005)(91956017)(316002)(76116006)(54906003)(66946007)(66446008)(8936002)(64756008)(38100700002)(66556008)(66476007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5F0F3AA8039921419D6B2104230C9608@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5664
+Original-Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DBAEUR03FT026.eop-EUR03.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: edcc2ac6-589c-42e2-c1b5-08db04f8e670
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nQnAzse7jTjLGwbrzbeMD7BvUySIeHQqtX+JBBcoydB8YtSdsJWP2li4DcF3RagRryD6grFDGsT55FXJ3cgY+cqp6YnpQhugx96c5GbVaPezDzC7IwbYadAaYK1yJ3arbXW1v8MmxL7xb3GBQWRUlyNtpNxXWh3XrzsWGrj8yU2I1sx5s4bSmeCxvv4Soi4FgiURF9KEQwG+8afbUZPD9ahvLhyVWqxRtzd8tdsWRtSUo20hz68JjYa3ks5ZrsVgWngrREcLHDxGZhbzt/2h0cDbr0FLnorKbhR3zQIuIyoXFjSolT/2hqBvagOiMJoW+pJdF+6o7mD64PrF9Q5hHVaRdwItHMAM1SC4OA3Xe1w6G21DVN3QcVbFV2U7DzlpQqCmyw/6XIKTAz+cw4v9D2Eduq3M4f3y6CGhrU3k6jrUGfvO8A8vWsT5crfC9UEsa6fGyJX8K/Tw8/6MbUp7KMsiUZQ3dKbDmwyvaynwLL0KSRSNiMcCzRFgCtXaLO8bxjvgvVAuEz8gVEmFVBJI8zBMQqrhzUvkmDOSM1h2PI58A0ztV7PihQJcKemrBLWH/axn8xK26H+FdyLWKcYSap3yOR3XBFGV+V+bqoGchlsbG+UwZ8g9bLWSnbG5XmuVNPNrCAcNxWwzgwcKvc4T4uDsUhAnCyTQ08AuGzT52w+wYiFpwf08nPUdUzXszOljmJ8bn2uI/wAPu7G5SZiNOJy064mOG/rqVPyg+Y8PcKA=
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(396003)(376002)(136003)(346002)(451199018)(46966006)(36840700001)(40470700004)(356005)(40480700001)(36756003)(31696002)(86362001)(36860700001)(82310400005)(82740400003)(81166007)(70586007)(26005)(8676002)(110136005)(450100002)(70206006)(4326008)(54906003)(316002)(4744005)(2906002)(41300700001)(8936002)(47076005)(336012)(2616005)(83380400001)(478600001)(40460700003)(53546011)(6512007)(186003)(6486002)(6506007)(5660300002)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2023 08:39:02.9674
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 734c8a41-5114-4697-16bf-08db04f8f01c
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: DBAEUR03FT026.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6233
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Patchset looks goot to me
-
-Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
-
-On 1/27/23 05:06, Ian Rogers wrote:
-> Add an optimization to jevents using the metric code, rewrite metrics
-> in terms of each other in order to minimize size and improve
-> readability. For example, on Power8
-> other_stall_cpi is rewritten from:
-> "PM_CMPLU_STALL / PM_RUN_INST_CMPL - PM_CMPLU_STALL_BRU_CRU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_FXU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_VSU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_LSU / PM_RUN_INST_CMPL - PM_CMPLU_STALL_NTCG_FLUSH / PM_RUN_INST_CMPL - PM_CMPLU_STALL_NO_NTF / PM_RUN_INST_CMPL"
-> to:
-> "stall_cpi - bru_cru_stall_cpi - fxu_stall_cpi - vsu_stall_cpi - lsu_stall_cpi - ntcg_flush_cpi - no_ntf_stall_cpi"
-> Which more closely matches the definition on Power9.
-> 
-> A limitation of the substitutions are that they depend on strict
-> equality and the shape of the tree. This means that for "a + b + c"
-> then a substitution of "a + b" will succeed while "b + c" will fail
-> (the LHS for "+ c" is "a + b" not just "b").
-> 
-> Separate out the events and metrics in the pmu-events tables saving
-> 14.8% in the table size while making it that metrics no longer need to
-> iterate over all events and vice versa. These changes remove evsel's
-> direct metric support as the pmu_event no longer has a metric to
-> populate it. This is a minor issue as the code wasn't working
-> properly, metrics for this are rare and can still be properly ran
-> using '-M'.
-> 
-> Add an ability to just build certain models into the jevents generated
-> pmu-metrics.c code. This functionality is appropriate for operating
-> systems like ChromeOS, that aim to minimize binary size and know all
-> the target CPU models.
-> 
-> v5. s/list/List/ in a type annotation to fix Python 3.6 as reported by
->     John Garry <john.g.garry@oracle.com>. Fix a bug in metric_test.py
->     where a bad character was imported. To avoid similar regressions,
->     run metric_test.py before generating pmu-events.c.
-> v4. Better support the implementor/model style --model argument for
->     jevents.py. Add #slots test fix. On some patches add reviewed-by
->     John Garry <john.g.garry@oracle.com> and Kajol
->     Jain<kjain@linux.ibm.com>.
-> v3. Rebase an incorporate review comments from John Garry
->     <john.g.garry@oracle.com>, in particular breaking apart patch 4
->     into 3 patches. The no jevents breakage and then later fix is
->     avoided in this series too.
-> v2. Rebase. Modify the code that skips rewriting a metric with the
->     same name with itself, to make the name check case insensitive.
-> 
-> Ian Rogers (15):
->   perf jevents metric: Correct Function equality
->   perf jevents metric: Add ability to rewrite metrics in terms of others
->   perf jevents: Rewrite metrics in the same file with each other
->   perf pmu-events: Add separate metric from pmu_event
->   perf pmu-events: Separate the metrics from events for no jevents
->   perf pmu-events: Remove now unused event and metric variables
->   perf stat: Remove evsel metric_name/expr
->   perf jevents: Combine table prefix and suffix writing
->   perf pmu-events: Introduce pmu_metrics_table
->   perf jevents: Generate metrics and events as separate tables
->   perf jevents: Add model list option
->   perf pmu-events: Fix testing with JEVENTS_ARCH=all
->   perf jevents: Correct bad character encoding
->   tools build: Add test echo-cmd
->   perf jevents: Run metric_test.py at compile-time
-> 
->  tools/build/Makefile.build               |   1 +
->  tools/perf/arch/arm64/util/pmu.c         |  11 +-
->  tools/perf/arch/powerpc/util/header.c    |   4 +-
->  tools/perf/builtin-list.c                |  20 +-
->  tools/perf/builtin-stat.c                |   1 -
->  tools/perf/pmu-events/Build              |  16 +-
->  tools/perf/pmu-events/empty-pmu-events.c | 108 ++++++-
->  tools/perf/pmu-events/jevents.py         | 357 +++++++++++++++++++----
->  tools/perf/pmu-events/metric.py          |  79 ++++-
->  tools/perf/pmu-events/metric_test.py     |  15 +-
->  tools/perf/pmu-events/pmu-events.h       |  26 +-
->  tools/perf/tests/expand-cgroup.c         |   4 +-
->  tools/perf/tests/parse-metric.c          |   4 +-
->  tools/perf/tests/pmu-events.c            |  69 ++---
->  tools/perf/util/cgroup.c                 |   1 -
->  tools/perf/util/evsel.c                  |   2 -
->  tools/perf/util/evsel.h                  |   2 -
->  tools/perf/util/expr.h                   |   1 +
->  tools/perf/util/expr.l                   |   8 +-
->  tools/perf/util/metricgroup.c            | 207 +++++++------
->  tools/perf/util/metricgroup.h            |   4 +-
->  tools/perf/util/parse-events.c           |   2 -
->  tools/perf/util/pmu.c                    |  44 +--
->  tools/perf/util/pmu.h                    |  10 +-
->  tools/perf/util/print-events.c           |  32 +-
->  tools/perf/util/print-events.h           |   3 +-
->  tools/perf/util/python.c                 |   7 -
->  tools/perf/util/stat-shadow.c            | 112 -------
->  tools/perf/util/stat.h                   |   1 -
->  29 files changed, 681 insertions(+), 470 deletions(-)
->  mode change 100644 => 100755 tools/perf/pmu-events/metric_test.py
-> 
+T24gMi8xLzIzIDIxOjQ5LCBEaWVkZXJpayBkZSBIYWFzIHdyb3RlOg0KPiBUaGVzZSAyIHBhdGNo
+ZXMgaW1wcm92ZSB0aGUgZWZmaWNpZW5jeSBhbmQgcXVhbGl0eSBvZiB0aGUNCj4gbGliL2NvcmVz
+aWdodC5zaCBzY3JpcHQuDQo+DQo+IFRoZSBmaXJzdCBvbmUgdXNlcyBncmVwJ3MgYC1jYCBwYXJh
+bWV0ZXIgdG8gY291bnQgdGhlIHJlc3VsdHMgaW5zdGVhZCBvZg0KPiBwaXBpbmcgaXQgdG8gYHdj
+IC1sYC4NCj4gVGhlIHNlY29uZCBvbmUgcmVwbGFjZXMgdGhlIHVzZSBvZiBiYWNrdGlja3MgKGAu
+Li5gKSB3aXRoICQoLi4uKSBhcyB0aGUNCj4gZm9ybWVyIGhhcyBzZXZlcmFsIHBvdGVudGlhbCBp
+c3N1ZXMgd2hpbGUgdGhlIGxhdHRlciBkb2VzIG5vdC4NCj4NCj4gRGllZGVyaWsgZGUgSGFhcyAo
+Mik6DQo+ICAgIHBlcmYgdGVzdDogUmVwbGFjZSAnZ3JlcCB8IHdjIC1sJyB3aXRoICdncmVwIC1j
+Jw0KPiAgICBwZXJmIHRlc3Q6IFJlcGxhY2UgbGVnYWN5IGAuLi5gIHdpdGggJCguLi4pDQo+DQo+
+ICAgdG9vbHMvcGVyZi90ZXN0cy9zaGVsbC9saWIvY29yZXNpZ2h0LnNoIHwgMTggKysrKysrKysr
+LS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlv
+bnMoLSkNCj4NCkFDSyB0byBhbGwgb2YgdGhpcyBzZXJpZXMuDQoNCklNUE9SVEFOVCBOT1RJQ0U6
+IFRoZSBjb250ZW50cyBvZiB0aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGNvbmZp
+ZGVudGlhbCBhbmQgbWF5IGFsc28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFyZSBub3QgdGhlIGlu
+dGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGltbWVkaWF0ZWx5IGFu
+ZCBkbyBub3QgZGlzY2xvc2UgdGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBwZXJzb24sIHVzZSBp
+dCBmb3IgYW55IHB1cnBvc2UsIG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9ybWF0aW9uIGluIGFu
+eSBtZWRpdW0uIFRoYW5rIHlvdS4NCg==
