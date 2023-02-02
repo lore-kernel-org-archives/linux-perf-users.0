@@ -2,139 +2,103 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00192C05027
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139EDC636CD
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbjBBBA5 (ORCPT
+        id S229649AbjBBBFW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 20:00:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
+        Wed, 1 Feb 2023 20:05:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbjBBBA5 (ORCPT
+        with ESMTP id S229548AbjBBBFV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:00:57 -0500
+        Wed, 1 Feb 2023 20:05:21 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E005C0F9;
-        Wed,  1 Feb 2023 17:00:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56AD76A69;
+        Wed,  1 Feb 2023 17:05:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 66D59619BA;
-        Thu,  2 Feb 2023 01:00:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9989CC433D2;
-        Thu,  2 Feb 2023 01:00:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DDA6C619BF;
+        Thu,  2 Feb 2023 01:05:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165CBC433D2;
+        Thu,  2 Feb 2023 01:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675299654;
-        bh=wPPcyoksH9Ff/Pc0cGKVYYC4iNhKHyL6DmBiuX/Ypi0=;
+        s=k20201202; t=1675299919;
+        bh=H1y6Z1HA81YIsbsvUefZwr5ZCwOaYjAnlrJr9bYlWwE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pauJBK1JegDeIVnk3kBO/3jkwiE5BhBFMkTkNjOVIJMogulN4zUs2qdshzkfZGZ3t
-         jpmqtNkbFIdakbOTdbagpF9P0uSXHft/WDb3W7ndXPfRaUYX9D4Ga25h1iPEdwG+l1
-         20lSYX53+5ioynsEy4LMYwJWwQh3HHTysQqAd8Caw0SxA9gYHby7J5U0ULfnatDv3B
-         sucLihTlK4SkBqljONcuDfqQBGBz4DBWyDV5hPKpwj72AaGFy7UzFy4eCCMt4LUvnY
-         QRsH6sC71mhQZMOArq7drcYsyuuoIPbGrR4GeufAD5OdH/0QIwfPqoxMwxc9T6N4As
-         mdsK1c4Lz7YUA==
+        b=tZ8P9i6w0heFH3F+q8F9WsKxI4nZ9osUwXK2d3RPLUHWcHJWN/x9dSRK5+6sxe2ic
+         aJcLPpOj2k4IQdD1P/Qow5YhljLokXRofP3843Tyzjid9an+lFaQwHv9wkk9KzA9t2
+         tXrm8/SETneNP3YEpOP8iN/JTKga7F/Oje6THCdSPtf5X9OQ43vxfkCjwl+LjXqjoY
+         1js/F2jXbG9h9NNxZLjkFOUea8fYIxoH2DR05EAjPee+/MAEwyPjebY+8uh5pV61zG
+         5OmRZyuPa7i/limbKyJ+CXIOuDIsegys+wZ4+KFT7tD69eNBvFayUq9lO7OHWYo7c2
+         ZILgA9s9TH9LQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7A6A1405BE; Wed,  1 Feb 2023 22:00:51 -0300 (-03)
-Date:   Wed, 1 Feb 2023 22:00:51 -0300
+        id 59EB5405BE; Wed,  1 Feb 2023 22:05:16 -0300 (-03)
+Date:   Wed, 1 Feb 2023 22:05:16 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Krister Johansen <kjlx@templeofstupid.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        David Reaver <me@davidreaver.com>
-Subject: Re: [PATCH v2] perf/util: Symbol lookup with kcore can fail if
- multiple segments match stext
-Message-ID: <Y9sLQ1Iy5LJAaJ8L@kernel.org>
-References: <20230124223531.GB1962@templeofstupid.com>
- <20230125183418.GD1963@templeofstupid.com>
- <7b5f872a-f52e-7129-e956-90e97ec7d911@intel.com>
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, bp@alien8.de,
+        namhyung@kernel.org, jolsa@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        james.clark@arm.com, irogers@google.com, eranian@google.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v3 0/2] tools perf: Add branch speculation info
+Message-ID: <Y9sMTJpltOp43wy0@kernel.org>
+References: <cover.1675057032.git.sandipan.das@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7b5f872a-f52e-7129-e956-90e97ec7d911@intel.com>
+In-Reply-To: <cover.1675057032.git.sandipan.das@amd.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 30, 2023 at 03:29:54PM +0200, Adrian Hunter escreveu:
-> On 25/01/23 20:34, Krister Johansen wrote:
-> > This problem was encountered on an arm64 system with a lot of memory.
-> > Without kernel debug symbols installed, and with both kcore and kallsyms
-> > available, perf managed to get confused and returned "unknown" for all
-> > of the kernel symbols that it tried to look up.
-> > 
-> > On this system, stext fell within the vmalloc segment.  The kcore symbol
-> > matching code tries to find the first segment that contains stext and
-> > uses that to replace the segment generated from just the kallsyms
-> > information.  In this case, however, there were two: a very large
-> > vmalloc segment, and the text segment.  This caused perf to get confused
-> > because multiple overlapping segments were inserted into the RB tree
-> > that holds the discovered segments.  However, that alone wasn't
-> > sufficient to cause the problem. Even when we could find the segment,
-> > the offsets were adjusted in such a way that the newly generated symbols
-> > didn't line up with the instruction addresses in the trace.  The most
-> > obvious solution would be to consult which segment type is text from
-> > kcore, but this information is not exposed to users.
-> > 
-> > Instead, select the smallest matching segment that contains stext
-> > instead of the first matching segment.  This allows us to match the text
-> > segment instead of vmalloc, if one is contained within the other.
-> > 
-> > Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+Em Mon, Jan 30, 2023 at 11:29:14AM +0530, Sandipan Das escreveu:
+> AMD Last Branch Record Extension Version 2 (LbrExtV2) provides branch
+> speculation information and the perf UAPI is extended to provide this in
+> a generic way. Make perf tool show this additional information.
 > 
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> The UAPI changes can be found in commit 93315e46b000 ("perf/core: Add
+> speculation info to branch entries").
+> 
+> Previous versions can be found at:
+> v2: https://lore.kernel.org/all/cover.1664356751.git.sandipan.das@amd.com/
+> v1: https://lore.kernel.org/all/cover.1660217326.git.sandipan.das@amd.com/
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> > ---
-> > v2:
-> >   - Correct whitespace, add comments, and fix-up subject. (Feedback from Adrian
-> >     Hunter)
-> > ---
-> >  tools/perf/util/symbol.c | 17 +++++++++++++++--
-> >  1 file changed, 15 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index a3a165ae933a..98014f937568 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -1368,10 +1368,23 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
-> >  
-> >  	/* Find the kernel map using the '_stext' symbol */
-> >  	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
-> > +		u64 replacement_size = 0;
-> > +
-> >  		list_for_each_entry(new_map, &md.maps, node) {
-> > -			if (stext >= new_map->start && stext < new_map->end) {
-> > +			u64 new_size = new_map->end - new_map->start;
-> > +
-> > +			if (!(stext >= new_map->start && stext < new_map->end))
-> > +				continue;
-> > +
-> > +			/*
-> > +			 * On some architectures, ARM64 for example, the kernel
-> > +			 * text can get allocated inside of the vmalloc segment.
-> > +			 * Select the smallest matching segment, in case stext
-> > +			 * falls within more than one in the list.
-> > +			 */
-> > +			if (!replacement_map || new_size < replacement_size) {
-> >  				replacement_map = new_map;
-> > -				break;
-> > +				replacement_size = new_size;
-> >  			}
-> >  		}
-> >  	}
+> Changes in v3:
+> - Drop tools-side UAPI changes as they have already been added by other
+>   commits.
+> - Rebase on top of latest perf/core.
+> 
+> Changes in v2:
+> - Drop msr-index.h related changes for now.
+> - Rebase on top of latest perf/core.
+> - Fix UAPI breakage introduced by the ARM64 BRBE changes to perf branch
+>   entry.
+> 
+> Sandipan Das (2):
+>   perf script: Show branch speculation info
+>   perf session: Show branch speculation info in raw dump
+> 
+>  tools/perf/builtin-script.c |  5 +++--
+>  tools/perf/util/branch.c    | 15 +++++++++++++++
+>  tools/perf/util/branch.h    |  2 ++
+>  tools/perf/util/evsel.c     | 15 ++++++++++++---
+>  tools/perf/util/session.c   |  5 +++--
+>  5 files changed, 35 insertions(+), 7 deletions(-)
+> 
+> -- 
+> 2.34.1
 > 
 
 -- 
