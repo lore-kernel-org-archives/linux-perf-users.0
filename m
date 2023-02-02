@@ -2,184 +2,203 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28ADEC636CD
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B33C05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjBBB0b (ORCPT
+        id S230508AbjBBBb0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 20:26:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
+        Wed, 1 Feb 2023 20:31:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229609AbjBBB0a (ORCPT
+        with ESMTP id S231546AbjBBBbW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:26:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36CAD6A708;
-        Wed,  1 Feb 2023 17:26:28 -0800 (PST)
+        Wed, 1 Feb 2023 20:31:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829857642C;
+        Wed,  1 Feb 2023 17:31:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E6C50B8239F;
-        Thu,  2 Feb 2023 01:26:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCFCC433D2;
-        Thu,  2 Feb 2023 01:26:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 207EF619C6;
+        Thu,  2 Feb 2023 01:31:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26975C433D2;
+        Thu,  2 Feb 2023 01:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675301185;
-        bh=GjlSobq/0GLs0kIZ/OZh8aH3S8Ty/OXrrUrXTz8KksA=;
+        s=k20201202; t=1675301463;
+        bh=oniJMuB4yn490Q9EidMEJVoZxaBryjDo6MkhyhExUOA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZeCvZd9REBiD84Q5ZNaFE5kPtPAMz5l5l2td0C4D154tkyrzguI1h0IfRbUdqo9wc
-         DbYaR16ilYBEgKZvfGDoTrNl1zVvNAscEqFPvs1q24LAti4uCD1wLQCjDMcfAOIRlg
-         0CnRDo1pey/b7jQFHml7LUifX3B8Fz5y6TloGy7EXWMnaccDWm3PDG3ZQB/RZoNNrq
-         UenRrRkcR9WYE10T1jJD6GyKTJqO17gJNhNylBjcsT1eg9fnx3mXfCN2/tqtuYGLkz
-         gEvtlLgkJQM+OuahD3ukr6siy4qS8oATZ6o3qT4sspbj4TE0F9KlCRFYughC5i6tAy
-         ZGJoitbxg+rlA==
+        b=IynEMLoFAInKXkRhJsTclye0kiyVyqSziqRn7QugRzCLhDLJx4q8Bm9AJjIcchJNs
+         yPE5xX+fqmP7awqossoCNmIDUcZ1gYcUzS+FKgnyBAlyAKiRS7SJRmKkmMagZOUA25
+         b15DqzN0cSYf8EjvCcYSFMg1gUGVuv67SskS6VqIsoCRWadaVjZm94L4ZiZ2tfzi0O
+         IGrXleOjV1XPcHO1EoCfYPCT8tyH6Lxaplh9LCIAdk9MyyBp7nnNUsOk7jn9vRbsRv
+         CR+yfqA1zhJ4xf3ctklpdNnvzoqOZpQRWn9ykseLus45YkZGvy1iuQPLgP6kcQp1sa
+         XWhrFiZs0dEHw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE73E405BE; Wed,  1 Feb 2023 22:26:22 -0300 (-03)
-Date:   Wed, 1 Feb 2023 22:26:22 -0300
+        id B77C4405BE; Wed,  1 Feb 2023 22:31:00 -0300 (-03)
+Date:   Wed, 1 Feb 2023 22:31:00 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf script: Add 'cgroup' field for output
-Message-ID: <Y9sRPi3hr/tvpyaM@kernel.org>
-References: <20230126213610.3381147-1-namhyung@kernel.org>
+        Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH v2] perf stat: Hide invalid uncore event output for aggr
+ mode
+Message-ID: <Y9sSVPLuK1OO+wR/@kernel.org>
+References: <20230125192431.2929677-1-namhyung@kernel.org>
+ <CAP-5=fXOhOCq3TS6RFUTsEZBXnzG74T=NiLvQCf+t0QHctSrZQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230126213610.3381147-1-namhyung@kernel.org>
+In-Reply-To: <CAP-5=fXOhOCq3TS6RFUTsEZBXnzG74T=NiLvQCf+t0QHctSrZQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jan 26, 2023 at 01:36:10PM -0800, Namhyung Kim escreveu:
-> There's no field for the cgroup, let's add one.  To do that, users need to
-> specify --all-cgroup option for perf record to capture the cgroup info.
-> 
->   $ perf record --all-cgroups -- true
-> 
->   $ perf script -F comm,pid,cgroup
->             true 337112  /user.slice/user-657345.slice/user@657345.service/...
->             true 337112  /user.slice/user-657345.slice/user@657345.service/...
->             true 337112  /user.slice/user-657345.slice/user@657345.service/...
->             true 337112  /user.slice/user-657345.slice/user@657345.service/...
-> 
-> If it's recorded without the --all-cgroups, it'd complain.
-> 
->   $ perf script -F comm,pid,cgroup
->   Samples for 'cycles:u' event do not have CGROUP attribute set. Cannot print 'cgroup' field.
->   Hint: run 'perf record --all-cgroups ...'
+Em Wed, Jan 25, 2023 at 04:10:39PM -0800, Ian Rogers escreveu:
+> On Wed, Jan 25, 2023 at 11:24 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The current display code for perf stat iterates given cpus and build the
+> > aggr map to collect the event data for the aggregation mode.
+> >
+> > But uncore events have their own cpu maps and it won't guarantee that
+> > it'd match to the aggr map.  For example, per-package uncore events
+> > would generate a single value for each socket.  When user asks per-core
+> > aggregation mode, the output would contain 0 values for other cores.
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-script.txt |  5 ++++-
->  tools/perf/builtin-script.c              | 22 +++++++++++++++++++++-
->  2 files changed, 25 insertions(+), 2 deletions(-)
+ >
+> > Thus it needs to check the uncore PMU's cpumask and if it matches to the
+> > current aggregation id.
+> >
+> > Before:
+> >   $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+> >
+> >    Performance counter stats for 'system wide':
+> >
+> >   S0-D0-C0              1               3.73 Joules power/energy-pkg/
+> >   S0-D0-C1              0      <not counted> Joules power/energy-pkg/
+> >   S0-D0-C2              0      <not counted> Joules power/energy-pkg/
+> >   S0-D0-C3              0      <not counted> Joules power/energy-pkg/
+> >
+> >          1.001404046 seconds time elapsed
+> >
+> >   Some events weren't counted. Try disabling the NMI watchdog:
+> >         echo 0 > /proc/sys/kernel/nmi_watchdog
+> >         perf stat ...
+> >         echo 1 > /proc/sys/kernel/nmi_watchdog
+> >
+> > The core 1, 2 and 3 should not be printed because the event is handled
+> > in a cpu in the core 0 only.  With this change, the output becomes like
+> > below.
+> >
+> > After:
+> >   $ sudo ./perf stat -a --per-core -e power/energy-pkg/ sleep 1
+> >
+> >    Performance counter stats for 'system wide':
+> >
+> >   S0-D0-C0              1               2.09 Joules power/energy-pkg/
+> >
+> > Fixes: b89761351089 ("perf stat: Update event skip condition for system-wide per-thread mode and merged uncore and hybrid events")
+> > Cc: Athira Jajeev <atrajeev@linux.vnet.ibm.com>
+> > Cc: Michael Petlan <mpetlan@redhat.com>
+> > Tested-by: Ian Rogers <irogers@google.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> index 8d77182fbf31..a2ebadc9d948 100644
-> --- a/tools/perf/Documentation/perf-script.txt
-> +++ b/tools/perf/Documentation/perf-script.txt
-> @@ -134,7 +134,7 @@ OPTIONS
->          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
->          brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
->          phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-> -        machine_pid, vcpu.
-> +        machine_pid, vcpu, cgroup.
->          Field list can be prepended with the type, trace, sw or hw,
->          to indicate to which event type the field list applies.
->          e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-> @@ -231,6 +231,9 @@ OPTIONS
->  	perf inject to insert a perf.data file recorded inside a virtual machine into
->  	a perf.data file recorded on the host at the same time.
->  
-> +	The cgroup fields requires sample having the cgroup id which is saved
-> +	when "--all-cgroups" option is passed to 'perf record'.
-> +
->  	Finally, a user may not set fields to none for all event types.
->  	i.e., -F "" is not allowed.
->  
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 69394ac0a20d..731821fd0d3e 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -59,6 +59,7 @@
->  #include "util/dlfilter.h"
->  #include "util/record.h"
->  #include "util/util.h"
-> +#include "util/cgroup.h"
->  #include "perf.h"
->  
->  #include <linux/ctype.h>
-> @@ -130,6 +131,7 @@ enum perf_output_field {
->  	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
->  	PERF_OUTPUT_MACHINE_PID     = 1ULL << 37,
->  	PERF_OUTPUT_VCPU            = 1ULL << 38,
-> +	PERF_OUTPUT_CGROUP          = 1ULL << 39,
->  };
->  
->  struct perf_script {
-> @@ -200,6 +202,7 @@ struct output_option {
->  	{.str = "brstackinsnlen", .field = PERF_OUTPUT_BRSTACKINSNLEN},
->  	{.str = "machine_pid", .field = PERF_OUTPUT_MACHINE_PID},
->  	{.str = "vcpu", .field = PERF_OUTPUT_VCPU},
-> +	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
->  };
->  
->  enum {
-> @@ -542,6 +545,12 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
->  	    evsel__check_stype(evsel, PERF_SAMPLE_WEIGHT_STRUCT, "WEIGHT_STRUCT", PERF_OUTPUT_INS_LAT))
->  		return -EINVAL;
->  
-> +	if (PRINT_FIELD(CGROUP) &&
-> +	    evsel__check_stype(evsel, PERF_SAMPLE_CGROUP, "CGROUP", PERF_OUTPUT_CGROUP)) {
-> +		pr_err("Hint: run 'perf record --all-cgroups ...'\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -2220,6 +2229,17 @@ static void process_event(struct perf_script *script,
->  	if (PRINT_FIELD(CODE_PAGE_SIZE))
->  		fprintf(fp, " %s", get_page_size_name(sample->code_page_size, str));
->  
-> +	if (PRINT_FIELD(CGROUP)) {
-> +		const char *cgrp_name;
-> +		struct cgroup *cgrp = cgroup__find(machine->env,
-> +						   sample->cgroup);
-> +		if (cgrp != NULL)
-> +			cgrp_name = cgrp->name;
-> +		else
-> +			cgrp_name = "unknown";
-> +		fprintf(fp, " %s", cgrp_name);
-> +	}
-> +
->  	perf_sample__fprintf_ipc(sample, attr, fp);
->  
->  	fprintf(fp, "\n");
-> @@ -3856,7 +3876,7 @@ int cmd_script(int argc, const char **argv)
->  		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
->  		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
->  		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
-> -		     "code_page_size,ins_lat",
-> +		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup",
->  		     parse_output_fields),
->  	OPT_BOOLEAN('a', "all-cpus", &system_wide,
->  		    "system-wide collection from all CPUs"),
-> -- 
-> 2.39.1.456.gfc5497dd1b-goog
+> Acked-by: Ian Rogers <irogers@google.com>
 > 
+> Thanks,
+> Ian
+> 
+> > ---
+> > * rename to 'should_skip_zero_counter'
+> > * check pmu->cpus instead
+> > * add kernel-doc style comments
+> > * add Ian's Tested-by tag
+> >
+> >  tools/perf/util/stat-display.c | 51 ++++++++++++++++++++++++++++++----
+> >  1 file changed, 46 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 8bd8b0142630..1b5cb20efd23 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -787,6 +787,51 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
+> >                 uniquify_event_name(counter);
+> >  }
+> >
+> > +/**
+> > + * should_skip_zero_count() - Check if the event should print 0 values.
+> > + * @config: The perf stat configuration (including aggregation mode).
+> > + * @counter: The evsel with its associated cpumap.
+> > + * @id: The aggregation id that is being queried.
+> > + *
+> > + * Due to mismatch between the event cpumap or thread-map and the
+> > + * aggregation mode, sometimes it'd iterate the counter with the map
+> > + * which does not contain any values.
+> > + *
+> > + * For example, uncore events have dedicated CPUs to manage them,
+> > + * result for other CPUs should be zero and skipped.
+> > + *
+> > + * Return: %true if the value should NOT be printed, %false if the value
+> > + * needs to be printed like "<not counted>" or "<not supported>".
+> > + */
+> > +static bool should_skip_zero_counter(struct perf_stat_config *config,
+> > +                                    struct evsel *counter,
+> > +                                    const struct aggr_cpu_id *id)
+> > +{
+> > +       struct perf_cpu cpu;
+> > +       int idx;
+> > +
+> > +       /*
+> > +        * Skip value 0 when enabling --per-thread globally,
+> > +        * otherwise it will have too many 0 output.
+> > +        */
+> > +       if (config->aggr_mode == AGGR_THREAD && config->system_wide)
+> > +               return true;
+> > +       /*
+> > +        * Skip value 0 when it's an uncore event and the given aggr id
+> > +        * does not belong to the PMU cpumask.
+> > +        */
+> > +       if (!counter->pmu || !counter->pmu->is_uncore)
+> > +               return false;
+> > +
+> > +       perf_cpu_map__for_each_cpu(cpu, idx, counter->pmu->cpus) {
+> > +               struct aggr_cpu_id own_id = config->aggr_get_id(config, cpu);
+> > +
+> > +               if (aggr_cpu_id__equal(id, &own_id))
+> > +                       return false;
+> > +       }
+> > +       return true;
+> > +}
+> > +
+> >  static void print_counter_aggrdata(struct perf_stat_config *config,
+> >                                    struct evsel *counter, int s,
+> >                                    struct outstate *os)
+> > @@ -814,11 +859,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+> >         ena = aggr->counts.ena;
+> >         run = aggr->counts.run;
+> >
+> > -       /*
+> > -        * Skip value 0 when enabling --per-thread globally, otherwise it will
+> > -        * have too many 0 output.
+> > -        */
+> > -       if (val == 0 && config->aggr_mode == AGGR_THREAD && config->system_wide)
+> > +       if (val == 0 && should_skip_zero_counter(config, counter, &id))
+> >                 return;
+> >
+> >         if (!metric_only) {
+> > --
+> > 2.39.1.456.gfc5497dd1b-goog
+> >
 
 -- 
 
