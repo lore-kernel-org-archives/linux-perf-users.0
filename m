@@ -2,113 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B746EC05027
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 02:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BC9C05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 02:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230156AbjBBCiF (ORCPT
+        id S230432AbjBBCzn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 21:38:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
+        Wed, 1 Feb 2023 21:55:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjBBCiE (ORCPT
+        with ESMTP id S229479AbjBBCzm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 21:38:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C235313D7D;
-        Wed,  1 Feb 2023 18:38:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 75736B8239B;
-        Thu,  2 Feb 2023 02:38:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E80ECC433EF;
-        Thu,  2 Feb 2023 02:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675305480;
-        bh=m0oALI10K5jRJIt1Mci3LOCOhnyCnOFYCba3RlhkNM4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lFXGYyFk6+CDFHI++Y7r2Y0UBThKzmZNCdYCETNP5ES/I0YeifUCsd9HkPz44MoN1
-         wecPr+Vg2aI2Oewahmtv6BClqrNcZYpwtvzBwAk90dxVYlOV/gfDbvUVXVMARm3rSa
-         3xviyK/Qucb2ncZ7Txuetk3FbqCvYdnbDXiCAk0qo8+vF7Qkoxr7q1Ge8y0C7WgPZ6
-         CBn2PRfYuWU6d5LjLk5iN1l/ZvhZey788zyzW/RV5EMRVovtN3Gr5m+CX7bh82ZMQx
-         zmXAoxnCkr3jMdO0rQh2Zr1HaiLhZHpt80OM9R5gz5GSZwQFQltRyiiSXgKGm0VOt5
-         qXxbc/CRSIbvw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CA09B405BE; Wed,  1 Feb 2023 23:37:56 -0300 (-03)
-Date:   Wed, 1 Feb 2023 23:37:56 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, bp@alien8.de,
-        namhyung@kernel.org, jolsa@kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
-        james.clark@arm.com, irogers@google.com, eranian@google.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 1/2] perf script: Show branch speculation info
-Message-ID: <Y9siBA2xfhFeWJku@kernel.org>
-References: <cover.1675057032.git.sandipan.das@amd.com>
- <87c48949f5a442dda6d4dc75d4a4303973eb04b2.1675057032.git.sandipan.das@amd.com>
- <08385b8c-0fae-3249-3dfb-5a7800928213@amd.com>
- <Y9gj5spCa8JcTY/X@kernel.org>
- <Y9sOH5p6ffMi91wd@kernel.org>
- <Y9shRsZuhGgpNi25@kernel.org>
+        Wed, 1 Feb 2023 21:55:42 -0500
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7346A728CA;
+        Wed,  1 Feb 2023 18:55:41 -0800 (PST)
+Received: by mail-wr1-f44.google.com with SMTP id t18so512126wro.1;
+        Wed, 01 Feb 2023 18:55:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W9EyjIfbgptUK2LF3a5kUjyxnjAVq3qXJFHfKvB2EjI=;
+        b=osETY1mJFb80FK1f4Ue19oEOS/pVKRrsMk+Hq+DCKJOUSFvrcML4lVkTd7RbguoPzb
+         GtgNfs9PIWpNyONn4TYsQievYkSABB2bX8zsAZ1mgiHbUAQfNPQSWe6MnZCzE3cq+TwD
+         s8ykX5wRUatxNw3sjXyUhY/HAQ6EWY5mTAwseUl+QL9nYYXtwQQ3HYaUlkJBdcE75uPv
+         YtZDWOdP1NO+63AlNXhvyP2qS5jQzfiSoyrnqhW81gBnVtILhsH2Bmrz2L0dD9/fpoP/
+         Pr8w/sW4wB1E78kXyT5TQGw/enQP7PIAOhfqLIffyzgfaqNetx+33+sid7Wm3e80lQlc
+         RxrA==
+X-Gm-Message-State: AO0yUKW/jYFcPIVdyftCb5GCYcZo2x4uCP7y+/czdN+cb6nvpsNhZcJt
+        c+UP+dw4H1qqVkPeupoFIXudMdUzh2Yh/NtnxblGwSjp
+X-Google-Smtp-Source: AK7set9pN1Xwh2+NZpOZEphmJ3EBcZWVA9ozm4WKeqHyI35rya+xVuCT51sRxFmOVcgWgFLGGEp9jIGBPWoXvxP6fgo=
+X-Received: by 2002:a5d:6605:0:b0:2bf:c1b3:e015 with SMTP id
+ n5-20020a5d6605000000b002bfc1b3e015mr223798wru.220.1675306539694; Wed, 01 Feb
+ 2023 18:55:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y9shRsZuhGgpNi25@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <Y01Mof9qMpFToRWY@kernel.org> <20230129232145.31307-1-hcvcastro@gmail.com>
+ <Y9sQNUqaLqFCf0dN@kernel.org>
+In-Reply-To: <Y9sQNUqaLqFCf0dN@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 1 Feb 2023 18:55:27 -0800
+Message-ID: <CAM9d7cjLsnn5df60jNW5x-r514Z_tfy-r7By0PgZ9LDUhe=bAQ@mail.gmail.com>
+Subject: Re: [PATCH v3] perf: fix the probe finder location (.dwo files)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Henry Castro <hcvcastro@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 01, 2023 at 11:34:46PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Feb 01, 2023 at 10:13:03PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Mon, Jan 30, 2023 at 05:09:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Mon, Jan 30, 2023 at 04:04:58PM +0530, Sandipan Das escreveu:
-> > > > Sorry but I realized later that this change breaks the builtin branch test.
-> > > > The additional change below fixes that.
-> > > 
-> > > Please wait a bit for people to be able to review the other patches and
-> > > then submit a v2 series.
-> > 
-> > So I applied it manually, no need to send v2.
-> 
-> Please send v2 after figuring out why 'perf test "Sample parsing"'
-> fails,
-> 
-> I removed both patches for now.
+Hello,
 
-Triple checking:
+On Wed, Feb 1, 2023 at 5:22 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Sun, Jan 29, 2023 at 07:21:28PM -0400, Henry Castro escreveu:
+> > If the file object is compiled using -gsplit-dwarf,
+> > the probe finder location will fail.
+> >
+> > Signed-off-by: Henry Castro <hcvcastro@gmail.com>
+> > ---
+> >
+> > Hi,
+> >
+> > Polite ping?  Any feedback?
+>
+> Namhyung, are you ok now? Masami, can you please take a look and provide
+> an Acked-by or Reviewed-by?
 
-[acme@quaco perf]$ git log --oneline -1
-24a617c84f0da540 (HEAD -> perf/core) perf session: Show branch speculation info in raw dump
-[acme@quaco perf]$ perf -v
-perf version 6.2.rc5.g24a617c84f0d
-[acme@quaco perf]$ perf test "Sample testing"
-[acme@quaco perf]$ perf test "Sample parsing"
- 27: Sample parsing                                                  : FAILED!
- 80: x86 Sample parsing                                              : Ok
-[acme@quaco perf]$ git reset --hard HEAD~
-HEAD is now at 1fad7c0ae6516706 perf script: Show branch speculation info
+Sorry about that.  I completely missed this..
+Now it looks ok, but it'd be nice if Masami could review this.
 
-[acme@quaco perf]$ git log --oneline -1
-1fad7c0ae6516706 (HEAD -> perf/core) perf script: Show branch speculation info
-[acme@quaco perf]$ perf -v
-perf version 6.2.rc5.g1fad7c0ae651
-[acme@quaco perf]$ perf test 27
- 27: Sample parsing                                                  : FAILED!
-[acme@quaco perf]$ git reset --hard HEAD~
-HEAD is now at d4a6f399c89520ba perf bench syscall: Add execve syscall benchmark
-[acme@quaco perf]$
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-[acme@quaco perf]$ git log --oneline -1
-d4a6f399c89520ba (HEAD -> perf/core, five/perf/core) perf bench syscall: Add execve syscall benchmark
-[acme@quaco perf]$ perf -v
-perf version 6.2.rc5.gd4a6f399c895
-[acme@quaco perf]$ perf test 27
- 27: Sample parsing                                                  : Ok
-[acme@quaco perf]$
+Thanks,
+Namhyung
 
-- Arnaldo
+
+> >  tools/perf/util/probe-finder.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> > index 50d861a80f57..5f6781e712db 100644
+> > --- a/tools/perf/util/probe-finder.c
+> > +++ b/tools/perf/util/probe-finder.c
+> > @@ -1200,6 +1200,20 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
+> >                       continue;
+> >               }
+> >
+> > +#if _ELFUTILS_PREREQ(0, 171)
+> > +             {
+> > +                     uint8_t unit_type;
+> > +                     Dwarf_Die cudie, subdie;
+> > +
+> > +                     /* Check separate debug information file. */
+> > +                     if (dwarf_cu_info(pf->cu_die.cu, NULL,
+> > +                                       &unit_type, &cudie,
+> > +                                       &subdie, NULL,
+> > +                                       NULL, NULL) == 0
+> > +                         && unit_type == DW_UT_skeleton)
+> > +                             pf->cu_die = subdie;
+> > +             }
+> > +#endif
+> >               /* Check if target file is included. */
+> >               if (pp->file)
+> >                       pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
+> > --
+> > 2.20.1
+> >
+>
+> --
+>
+> - Arnaldo
