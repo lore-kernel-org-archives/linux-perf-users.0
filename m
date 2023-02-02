@@ -2,204 +2,255 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFEBCC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 12:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F7CC05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 12:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbjBBM15 (ORCPT
+        id S232127AbjBBMx1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Feb 2023 07:27:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58302 "EHLO
+        Thu, 2 Feb 2023 07:53:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232075AbjBBM1x (ORCPT
+        with ESMTP id S229666AbjBBMx0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Feb 2023 07:27:53 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB638B32D;
-        Thu,  2 Feb 2023 04:27:50 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KRIp6BDTCE6H6HVbm6o5uW5q0gB3+u49iuJxSWIp6C5p9oi66ikqFdMvY4Lc7nf4kMnrA9J6hVczVxKhdh/8iKNNr4dtCnYX+J0ERPg7BckBKF7chwaknwsPCWq5PCQOhvIyweLGLD+zzMp4zECXTxp4CGPwZjJ2uIJ+NKpIAjuIUd05ERRZa5/h+LAucpaKrDqQFMZOB7PlyYdPcS1WOn8h8PvUlY2bMuEDFTq4yxoDAsQpraM+q44QGt3C9vaZ2IIsbPn1zqfpp63QD01J9SdARBj26WY+QrKReewGB/z0GdVY6Tw1TZ/8Gmsq2V9Csj5qUCf8n8NKkUQo1VeJQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7YfGmaFE7m5rxYqbGSHX8cAe16dJevny0odHsvL9mwA=;
- b=hc083eL/Af++BlgaW2hnr+et4qMHqxP2bgdRWX6SlV9ZvAw2ajMBZOMT8fvhMm7FCzp3VMfjHx6ZPqrIXK+FzuN4Fbw+pKj/apjb/dJyesXQxlS9suXGEm9pY78UgrKqBuCyyAx6zGIWVBgo93b1OiQdPtTp5a/9ZZz3bwbGUnwY9VJEQRzUvFCCfQv5/gNbVHOK3mIy1dIMJ8Zm1BsO+ec5lxTJ8WUqKdms2w9iZzmm0F5dUu4521NFOxzDwBzwjhuWKsZiWFEpNqwA1LmvtTXTzs7/ffhuh68LtHyHRAvLWgDoP6rE4VKQb61N3+seUN0rnGrgOE2UW1fMhXyh7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7YfGmaFE7m5rxYqbGSHX8cAe16dJevny0odHsvL9mwA=;
- b=Y0c/cMff+FV7GOfVk4rgHal1wzDzSAaKnBf3zuwiRzMnlCmWRIQn2M5td4g5nMWVYsXKk3yyC+q81QYrsqIh7a8mF9tfwnkuskfhhlPiB69yyvOs7ZcIjgWaeE40eCHhSenhTsgBaD+JInYLQvF7fQjjuAQbakfml1HC7ahgH8A=
-Received: from DM6PR11CA0013.namprd11.prod.outlook.com (2603:10b6:5:190::26)
- by CH3PR12MB8329.namprd12.prod.outlook.com (2603:10b6:610:12e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.25; Thu, 2 Feb
- 2023 12:27:49 +0000
-Received: from DS1PEPF0000E632.namprd02.prod.outlook.com
- (2603:10b6:5:190:cafe::f8) by DM6PR11CA0013.outlook.office365.com
- (2603:10b6:5:190::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.27 via Frontend
- Transport; Thu, 2 Feb 2023 12:27:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0000E632.mail.protection.outlook.com (10.167.17.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6064.21 via Frontend Transport; Thu, 2 Feb 2023 12:27:49 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 2 Feb
- 2023 06:27:42 -0600
-From:   Sandipan Das <sandipan.das@amd.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <x86@kernel.org>
-CC:     <peterz@infradead.org>, <bp@alien8.de>, <acme@kernel.org>,
-        <namhyung@kernel.org>, <jolsa@kernel.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>,
-        <dave.hansen@linux.intel.com>, <james.clark@arm.com>,
-        <irogers@google.com>, <eranian@google.com>, <maddy@linux.ibm.com>,
-        <kjain@linux.ibm.com>, <tmricht@linux.ibm.com>,
-        <ananth.narayan@amd.com>, <ravi.bangoria@amd.com>,
-        <santosh.shukla@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH v4 4/4] perf test brstack: Update regex to include spec field
-Date:   Thu, 2 Feb 2023 17:56:17 +0530
-Message-ID: <048d67c9de3cc8e3dbf19aaa7ff718dec91364c5.1675333809.git.sandipan.das@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1675333809.git.sandipan.das@amd.com>
-References: <cover.1675333809.git.sandipan.das@amd.com>
+        Thu, 2 Feb 2023 07:53:26 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C1D402F6;
+        Thu,  2 Feb 2023 04:53:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E6FD8B82655;
+        Thu,  2 Feb 2023 12:53:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E356C433D2;
+        Thu,  2 Feb 2023 12:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675342392;
+        bh=lIYG9G3eXXBiCdhqDyaNCFdjb7UufWLfQlCBOY72k3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V70IZs8WbeayTGg04pECw3Da2UlQG3GhOi/bQtUxZGCglwBd8S7HFVKdiGQH4AVC1
+         gFeJ/g6YEew3OKIkoYZ9ucHAq5GS6AYy7/ewU4H5D5MEKs+17FIl/30fGHsDNEJgZJ
+         sqs5Z+fM8/G7rsMp2/h5ooEYetWeVg/KFn7I4dlHVTLgJb7KLPCj+cqtJgf8KM8GN9
+         0LRbrUCTDY2pppGRssHityIFpwIQLi69kuwPJ22BebVTi4Eph5j9/ndAPtrsK752Ou
+         /ig4iiJ99LNh4FJWv1cK4Y2L2IPBSjqTeUvpMC1npdAFG2RAiPUDyBEDKVRkjJ/eRE
+         vzRgHzEEnmw0A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9F313405BE; Thu,  2 Feb 2023 09:53:09 -0300 (-03)
+Date:   Thu, 2 Feb 2023 09:53:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: Re: [PATCH 1/4] perf lock contention: Factor out
+ lock_contention_get_name()
+Message-ID: <Y9uyNSA+UVjGBgpi@kernel.org>
+References: <20230202050455.2187592-1-namhyung@kernel.org>
+ <20230202050455.2187592-2-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0000E632:EE_|CH3PR12MB8329:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f4c1739-9984-47af-e547-08db0518e580
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LoKEP9fn9M4+APSWqABLnMf1blGzF/bt+KbayVAAN2Po3O0BQQbcFb6WnJW9bqC96YrYiFLenXuVtHQ14ontfk0JED+X8IY/Cy+4tPqIONBgUIpPwy47dFWey5RcSXN+z2y+l2MlihWxVIdzZRqs8beQ5mwR4owIysIvj7P5PJcM/i5dsXT91KKc4DnK5ive0jAkKxuHkforgL5WaQd3SwgDRdVnHg17kkauvuqQC7kYU0JgUBA8y8mf9Jv4gPqhb0ZCz1vrs3yiRtG/xVzHRRpPz0OPWsjDBgA0Y1uYhCHcY6QVQCgvtm53tJODpU57uApY02mSqR2IB5mUJKQS34TAoNmSyHj66i01GL5Twhqf0+nw8IODT140qWd4UvsgMhJewl9n8R3QjzYje5oZNKOovjgwtYYAuFrh+pWvFKqOEhwlxah2+S9U0RU1K2VdtDWJNlAAXFSsgNONSGcDp/uzV6U7SqaGt2gUSsnO63n5S48/Lqf0c16sslrbaZXyM/GwqWbIuO7JRBmW4kraJg5T+nwWkwtIPECxyTcEwDfETeUW//v4uq6AnNG6YYq8QtFA/eGvcctfjcIN6yTHFoEVY/BvKpyxbiqfcc088F6cfqZoYK+0JSVJk0J36VMx/M7hIoPNQlmh8gA3ENlti8j3F+gCKVXkoVeFCKwPQBj4Xk1dCi/ZjvJD6WIwRbHPG6N3RayIfl5xzi4hECue5AuvGzu9ibYSRiFQrLqDMZg=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(376002)(346002)(396003)(39860400002)(136003)(451199018)(36840700001)(40470700004)(46966006)(316002)(356005)(110136005)(8936002)(2906002)(81166007)(82740400003)(5660300002)(478600001)(8676002)(7416002)(4326008)(36860700001)(86362001)(70586007)(70206006)(83380400001)(6666004)(47076005)(426003)(44832011)(41300700001)(336012)(40480700001)(82310400005)(54906003)(40460700003)(2616005)(36756003)(186003)(26005)(16526019)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2023 12:27:49.0059
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f4c1739-9984-47af-e547-08db0518e580
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF0000E632.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8329
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230202050455.2187592-2-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-With the addition of new branch flags, the "brstacksym" fields in perf
-script output now shows speculation information after the branch type.
-Change the regular expressions accordingly for the test to pass. Since
-branch speculation information may vary across platforms, the test does
-not look for specific values.
+Em Wed, Feb 01, 2023 at 09:04:52PM -0800, Namhyung Kim escreveu:
+> The lock_contention_get_name() returns a name for the lock stat entry
+> based on the current aggregation mode.  As it's called sequentially in a
+> single thread, it can return the address of a static buffer for symbol
+> and offset of the caller.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_lock_contention.c | 113 ++++++++++++++------------
+>  1 file changed, 63 insertions(+), 50 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+> index 4902ac331f41..967ce168f163 100644
+> --- a/tools/perf/util/bpf_lock_contention.c
+> +++ b/tools/perf/util/bpf_lock_contention.c
+> @@ -163,9 +163,68 @@ int lock_contention_stop(void)
+>  	return 0;
+>  }
+>  
+> +static const char *lock_contention_get_name(struct lock_contention *con,
+> +					    struct contention_key *key,
+> +					    u64 *stack_trace)
+> +{
+> +	int idx = 0;
+> +	u64 addr;
+> +	const char *name = "";
+> +	static char name_buf[KSYM_NAME_LEN];
+> +	struct symbol *sym;
+> +	struct map *kmap;
+> +	struct machine *machine = con->machine;
+> +
+> +	if (con->aggr_mode == LOCK_AGGR_TASK) {
+> +		struct contention_task_data task;
+> +		struct thread *t;
+> +		int pid = key->aggr_key;
+> +		int task_fd = bpf_map__fd(skel->maps.task_data);
+> +
 
-E.g.
+I'm processing this as-is, but please consider to reduce the number of
+lines by declaring variables where they are needed, for instance, the
+'t' variable is only used inside the next if block, so it could have
+been:
 
-  $ perf test -v 110
+> +		/* do not update idle comm which contains CPU number */
+> +		if (pid) {
+> +			bpf_map_lookup_elem(task_fd, &pid, &task);
+> +			t = __machine__findnew_thread(machine, /*pid=*/-1, pid);
 
-Before:
++			struct thread *t = __machine__findnew_thread(machine, /*pid=*/-1, pid);
 
-  110: Check branch stack sampling                                     :
-  --- start ---
-  test child forked, pid 54154
-  Testing user branch stack sampling
-  + grep -E -m1 ^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL$ /tmp/__perf_test.program.AfhUI/perf.script
-  + cleanup
-  + rm -rf /tmp/__perf_test.program.AfhUI
-  test child finished with -1
-  ---- end ----
-  Check branch stack sampling: FAILED!
+But since __machine__findnew_thread() can fail, please check for that
+and send a new patch series... Humm, you're just factoring out, the
+problem was there before, so, to make progress, I'll process it as is
+and later we can add fixes, can you please look into that?
 
-After:
+> +			thread__set_comm(t, task.comm, /*timestamp=*/0);
 
-  110: Check branch stack sampling                                     :
-  --- start ---
-  test child forked, pid 43716
-  Testing user branch stack sampling
-  + grep -E -m1 ^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_bench+0x66/brstack_foo+0x0/P/-/-/0/IND_CALL/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_foo+0x1b/brstack_bar+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_bench+0x58/brstack_foo+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_bench+0x5d/brstack_bar+0x0/P/-/-/0/CALL/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_bar+0x31/brstack_foo+0x20/P/-/-/0/RET/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_foo+0x36/brstack_bench+0x5d/P/-/-/0/RET/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack_bench+0x76/brstack_bench+0x7d/P/-/-/0/COND/NON_SPEC_CORRECT_PATH
-  + grep -E -m1 ^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$ /tmp/__perf_test.program.xgzAi/perf.script
-  brstack+0x5a/brstack+0x41/P/-/-/0/UNCOND/NON_SPEC_CORRECT_PATH
-  + set +x
-  Testing branch stack filtering permutation (any_call,CALL|IND_CALL|COND_CALL|SYSCALL|IRQ)
-  Testing branch stack filtering permutation (call,CALL|SYSCALL)
-  Testing branch stack filtering permutation (cond,COND)
-  Testing branch stack filtering permutation (any_ret,RET|COND_RET|SYSRET|ERET)
-  Testing branch stack filtering permutation (call,cond,CALL|SYSCALL|COND)
-  Testing branch stack filtering permutation (any_call,cond,CALL|IND_CALL|COND_CALL|IRQ|SYSCALL|COND)
-  Testing branch stack filtering permutation (cond,any_call,any_ret,COND|CALL|IND_CALL|COND_CALL|SYSCALL|IRQ|RET|COND_RET|SYSRET|ERET)
-  test child finished with 0
-  ---- end ----
-  Check branch stack sampling: Ok
+thread__set_comm() can fail as well.
 
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
----
- tools/perf/tests/shell/test_brstack.sh | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+> +			name = task.comm;
+> +		}
+> +		return name;
+> +	}
+> +
+> +	if (con->aggr_mode == LOCK_AGGR_ADDR) {
+> +		sym = machine__find_kernel_symbol(machine, key->aggr_key, &kmap);
+> +		if (sym)
+> +			name = sym->name;
 
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 59195eb80052..1c49d8293003 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -30,14 +30,14 @@ test_user_branches() {
- 	# 	brstack_foo+0x14/brstack_bar+0x40/P/-/-/0/CALL
- 
- 	set -x
--	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL$"	$TMPDIR/perf.script
--	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
--	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL$"	$TMPDIR/perf.script
--	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL$"	$TMPDIR/perf.script
--	grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET$"		$TMPDIR/perf.script
--	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET$"	$TMPDIR/perf.script
--	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND$"	$TMPDIR/perf.script
--	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND$"		$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/IND_CALL/.*$"	$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_foo\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bar\+[^ ]*/CALL/.*$"	$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_bar\+[^ ]*/brstack_foo\+[^ ]*/RET/.*$"		$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_foo\+[^ ]*/brstack_bench\+[^ ]*/RET/.*$"	$TMPDIR/perf.script
-+	grep -E -m1 "^brstack_bench\+[^ ]*/brstack_bench\+[^ ]*/COND/.*$"	$TMPDIR/perf.script
-+	grep -E -m1 "^brstack\+[^ ]*/brstack\+[^ ]*/UNCOND/.*$"		$TMPDIR/perf.script
- 	set +x
- 
- 	# some branch types are still not being tested:
-@@ -57,7 +57,7 @@ test_filter() {
- 
- 	# fail if we find any branch type that doesn't match any of the expected ones
- 	# also consider UNKNOWN branch types (-)
--	if grep -E -vm1 "^[^ ]*/($expect|-|( *))$" $TMPDIR/perf.script; then
-+	if grep -E -vm1 "^[^ ]*/($expect|-|( *))/.*$" $TMPDIR/perf.script; then
- 		return 1
- 	fi
- }
+Here you check :-)
+
+> +		return name;
+> +	}
+> +
+> +	/* LOCK_AGGR_CALLER: skip lock internal functions */
+> +	while (machine__is_lock_function(machine, stack_trace[idx]) &&
+> +	       idx < con->max_stack - 1)
+> +		idx++;
+> +
+> +	addr = stack_trace[idx];
+> +	sym = machine__find_kernel_symbol(machine, addr, &kmap);
+> +
+> +	if (sym) {
+> +		unsigned long offset;
+> +
+> +		offset = kmap->map_ip(kmap, addr) - sym->start;
+> +
+> +		if (offset == 0)
+> +			return sym->name;
+> +
+> +		snprintf(name_buf, sizeof(name_buf), "%s+%#lx", sym->name, offset);
+> +	} else {
+> +		snprintf(name_buf, sizeof(name_buf), "%#lx", (unsigned long)addr);
+> +	}
+> +
+> +	return name_buf;
+> +}
+> +
+>  int lock_contention_read(struct lock_contention *con)
+>  {
+> -	int fd, stack, task_fd, err = 0;
+> +	int fd, stack, err = 0;
+>  	struct contention_key *prev_key, key;
+>  	struct contention_data data = {};
+>  	struct lock_stat *st = NULL;
+> @@ -175,7 +234,6 @@ int lock_contention_read(struct lock_contention *con)
+>  
+>  	fd = bpf_map__fd(skel->maps.lock_stat);
+>  	stack = bpf_map__fd(skel->maps.stacks);
+> -	task_fd = bpf_map__fd(skel->maps.task_data);
+>  
+>  	con->lost = skel->bss->lost;
+>  
+> @@ -195,9 +253,6 @@ int lock_contention_read(struct lock_contention *con)
+>  
+>  	prev_key = NULL;
+>  	while (!bpf_map_get_next_key(fd, prev_key, &key)) {
+> -		struct map *kmap;
+> -		struct symbol *sym;
+> -		int idx = 0;
+>  		s32 stack_id;
+>  
+>  		/* to handle errors in the loop body */
+> @@ -219,61 +274,19 @@ int lock_contention_read(struct lock_contention *con)
+>  		st->flags = data.flags;
+>  		st->addr = key.aggr_key;
+>  
+> -		if (con->aggr_mode == LOCK_AGGR_TASK) {
+> -			struct contention_task_data task;
+> -			struct thread *t;
+> -			int pid = key.aggr_key;
+> -
+> -			/* do not update idle comm which contains CPU number */
+> -			if (st->addr) {
+> -				bpf_map_lookup_elem(task_fd, &pid, &task);
+> -				t = __machine__findnew_thread(machine, /*pid=*/-1, pid);
+> -				thread__set_comm(t, task.comm, /*timestamp=*/0);
+> -			}
+> -			goto next;
+> -		}
+> -
+> -		if (con->aggr_mode == LOCK_AGGR_ADDR) {
+> -			sym = machine__find_kernel_symbol(machine, st->addr, &kmap);
+> -			if (sym)
+> -				st->name = strdup(sym->name);
+> -			goto next;
+> -		}
+> -
+>  		stack_id = key.aggr_key;
+>  		bpf_map_lookup_elem(stack, &stack_id, stack_trace);
+>  
+> -		/* skip lock internal functions */
+> -		while (machine__is_lock_function(machine, stack_trace[idx]) &&
+> -		       idx < con->max_stack - 1)
+> -			idx++;
+> -
+> -		st->addr = stack_trace[idx];
+> -		sym = machine__find_kernel_symbol(machine, st->addr, &kmap);
+> -
+> -		if (sym) {
+> -			unsigned long offset;
+> -			int ret = 0;
+> -
+> -			offset = kmap->map_ip(kmap, st->addr) - sym->start;
+> -
+> -			if (offset)
+> -				ret = asprintf(&st->name, "%s+%#lx", sym->name, offset);
+> -			else
+> -				st->name = strdup(sym->name);
+> -
+> -			if (ret < 0 || st->name == NULL)
+> -				break;
+> -		} else if (asprintf(&st->name, "%#lx", (unsigned long)st->addr) < 0) {
+> +		st->name = strdup(lock_contention_get_name(con, &key, stack_trace));
+> +		if (st->name == NULL)
+>  			break;
+> -		}
+>  
+>  		if (con->save_callstack) {
+>  			st->callstack = memdup(stack_trace, stack_size);
+>  			if (st->callstack == NULL)
+>  				break;
+>  		}
+> -next:
+> +
+>  		hlist_add_head(&st->hash_entry, con->result);
+>  		prev_key = &key;
+>  
+> -- 
+> 2.39.1.456.gfc5497dd1b-goog
+> 
+
 -- 
-2.34.1
 
+- Arnaldo
