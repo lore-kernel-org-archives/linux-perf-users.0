@@ -2,112 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DEFC636CD
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2337BC636D3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231330AbjBBBWI (ORCPT
+        id S231479AbjBBBY3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 20:22:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35496 "EHLO
+        Wed, 1 Feb 2023 20:24:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231371AbjBBBWG (ORCPT
+        with ESMTP id S231129AbjBBBY2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:22:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A71757AE;
-        Wed,  1 Feb 2023 17:22:00 -0800 (PST)
+        Wed, 1 Feb 2023 20:24:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478B36953C;
+        Wed,  1 Feb 2023 17:24:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 387B1619A5;
-        Thu,  2 Feb 2023 01:22:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A33FC4339B;
-        Thu,  2 Feb 2023 01:21:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C8723619A5;
+        Thu,  2 Feb 2023 01:24:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06833C433D2;
+        Thu,  2 Feb 2023 01:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675300919;
-        bh=ZqssXvl/r9Caev0Gff135a6zz+FodrS97LdDXa2bXnU=;
+        s=k20201202; t=1675301064;
+        bh=0olKIEXlGYrwFqAEVWyZ4+1JT7fDrX0LKVYxyS71g94=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CajBJa3NCdeeMJh1dvzhLPkNKv8kRN/a83tCFUzCHTDeZYO+ib0oJpYvWwJvvY/yY
-         4l/t+8wTf41TMJhLyZ5HAfna1l9K72QXliarXZEOK0faXoPZTV3ORmQ83uV5Kx14BA
-         K0HQCfDg5bFl8x4xGMD+l5hUbhsblxxOZc0f/7JHLztpXYurmdEbwkIjix3loTWX/w
-         a9TPLOMouerbgZ+mhBoXK7IO1hwkYaY6Z+mF0p7rqFg/E+EXoPB5nesZCGzoeQ61Sm
-         wrPM007WQgv2GLawk89yFDm/YWBzKReBSoBT+kdCkIu7MLTz1wXkYy9IyoWwz23jlX
-         Uy3rj6u//NoWg==
+        b=CdFpLw1Eolk1Uo6H6TSxuS+L3IciPSn7VYzv1ZUKrYTX1irXDQeUUZjDLnTLhZ4Ar
+         Nmc1iQbxgLFYf5Rt7uj+ZLYCvz0BUP/K6XbEaZPYg1kE7k2pGXAlAJbPVrKwqTAQZ4
+         Zq3ABZ4p8xjAtumTCoJvz9lVdOFeJ16iZa6bFTDwuVRDnHj8THZg0YpXCpkyTDaUN+
+         e0CUu/lMKA+5tYTRmJRf2JGoAc10uGFn//eEh5xi3TukMumfEMKCwP1OpzJ7pUfv8z
+         s+stTvX5DqzWZ71kYEddlIGJhcNj7KF78ms3f0+k5VqfzsoUlfgZNTrda8KfD6Ffc8
+         byMvqTaRV19FQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2068A405BE; Wed,  1 Feb 2023 22:21:57 -0300 (-03)
-Date:   Wed, 1 Feb 2023 22:21:57 -0300
+        id 86159405BE; Wed,  1 Feb 2023 22:24:21 -0300 (-03)
+Date:   Wed, 1 Feb 2023 22:24:21 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Henry Castro <hcvcastro@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf: fix the probe finder location (.dwo files)
-Message-ID: <Y9sQNUqaLqFCf0dN@kernel.org>
-References: <Y01Mof9qMpFToRWY@kernel.org>
- <20230129232145.31307-1-hcvcastro@gmail.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/9] perf docs: use canonical ftrace path
+Message-ID: <Y9sQxX70vviNj+mn@kernel.org>
+References: <20230130181915.1113313-1-zwisler@google.com>
+ <20230130181915.1113313-5-zwisler@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230129232145.31307-1-hcvcastro@gmail.com>
+In-Reply-To: <20230130181915.1113313-5-zwisler@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Jan 29, 2023 at 07:21:28PM -0400, Henry Castro escreveu:
-> If the file object is compiled using -gsplit-dwarf,
-> the probe finder location will fail.
+Em Mon, Jan 30, 2023 at 11:19:10AM -0700, Ross Zwisler escreveu:
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 > 
-> Signed-off-by: Henry Castro <hcvcastro@gmail.com>
-> ---
+> But, from Documentation/trace/ftrace.rst:
 > 
-> Hi,
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
 > 
-> Polite ping?  Any feedback?
+>   /sys/kernel/debug/tracing
+> 
+> A few spots in the perf docs still refer to this older debugfs path, so
+> let's update them to avoid confusion.
 
-Namhyung, are you ok now? Masami, can you please take a look and provide
-an Acked-by or Reviewed-by?
+Thanks, applied.
 
 - Arnaldo
+
  
-> Regards
-> Henry
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> ---
+>  tools/perf/Documentation/perf-list.txt          | 2 +-
+>  tools/perf/Documentation/perf-script-perl.txt   | 2 +-
+>  tools/perf/Documentation/perf-script-python.txt | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 > 
->  tools/perf/util/probe-finder.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 50d861a80f57..5f6781e712db 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1200,6 +1200,20 @@ static int debuginfo__find_probe_location(struct debuginfo *dbg,
->  			continue;
->  		}
-> 
-> +#if _ELFUTILS_PREREQ(0, 171)
-> +		{
-> +			uint8_t unit_type;
-> +			Dwarf_Die cudie, subdie;
-> +
-> +			/* Check separate debug information file. */
-> +			if (dwarf_cu_info(pf->cu_die.cu, NULL,
-> +					  &unit_type, &cudie,
-> +					  &subdie, NULL,
-> +					  NULL, NULL) == 0
-> +			    && unit_type == DW_UT_skeleton)
-> +				pf->cu_die = subdie;
-> +		}
-> +#endif
->  		/* Check if target file is included. */
->  		if (pp->file)
->  			pf->fname = cu_find_realpath(&pf->cu_die, pp->file);
-> --
-> 2.20.1
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+> index 57384a97c04f..6c83459d3192 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -228,7 +228,7 @@ This can be overridden by setting the kernel.perf_event_paranoid
+>  sysctl to -1, which allows non root to use these events.
+>  
+>  For accessing trace point events perf needs to have read access to
+> -/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
+> +/sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
+>  setting.
+>  
+>  TRACING
+> diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
+> index fa4f39d305a7..5b479f5e62ff 100644
+> --- a/tools/perf/Documentation/perf-script-perl.txt
+> +++ b/tools/perf/Documentation/perf-script-perl.txt
+> @@ -55,7 +55,7 @@ Traces meant to be processed using a script should be recorded with
+>  the above option: -a to enable system-wide collection.
+>  
+>  The format file for the sched_wakeup event defines the following fields
+> -(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
+> +(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
+>  
+>  ----
+>   format:
+> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
+> index cf4b7f4b625a..6a8581012e16 100644
+> --- a/tools/perf/Documentation/perf-script-python.txt
+> +++ b/tools/perf/Documentation/perf-script-python.txt
+> @@ -319,7 +319,7 @@ So those are the essential steps in writing and running a script.  The
+>  process can be generalized to any tracepoint or set of tracepoints
+>  you're interested in - basically find the tracepoint(s) you're
+>  interested in by looking at the list of available events shown by
+> -'perf list' and/or look in /sys/kernel/debug/tracing/events/ for
+> +'perf list' and/or look in /sys/kernel/tracing/events/ for
+>  detailed event and field info, record the corresponding trace data
+>  using 'perf record', passing it the list of interesting events,
+>  generate a skeleton script using 'perf script -g python' and modify the
+> @@ -449,7 +449,7 @@ Traces meant to be processed using a script should be recorded with
+>  the above option: -a to enable system-wide collection.
+>  
+>  The format file for the sched_wakeup event defines the following fields
+> -(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
+> +(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
+>  
+>  ----
+>   format:
+> -- 
+> 2.39.1.456.gfc5497dd1b-goog
 > 
 
 -- 
