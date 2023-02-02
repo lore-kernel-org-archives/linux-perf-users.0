@@ -2,199 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A5AC64EC3
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 04:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A47DC05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 05:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231245AbjBBESL (ORCPT
+        id S229761AbjBBFFA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 23:18:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
+        Thu, 2 Feb 2023 00:05:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231376AbjBBESI (ORCPT
+        with ESMTP id S229651AbjBBFFA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 23:18:08 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0AA4559B
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Feb 2023 20:17:59 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3124CitY015373;
-        Thu, 2 Feb 2023 04:17:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=UJyx33X2mEFICKmRbx6pJHu3630595wm5XGur++GdNw=;
- b=LEC/R8+vpe2FLWoRKJrfK9WkXmPCZ/h44Mtd2gS+sW3tjGD5dN+rnTgp02c2cSfgXkvV
- /xsSyidRis01UMVzLAWqMa+GiJebLbYVdpfLpQ/B9Z7jS1uVFD78gjyMoQd8uCtXBf76
- V8dYx/d8eZkCflIYtEf7zvIkMTq0W3JJEqb+7OjL3HnLiavJ9UWpLZ6htLocFPmB57Av
- OYMBBAcXMC12X6ksXrhUVO8zYgP3SERsngi8HWzXVZD3SZ64RjMdsjXRis5g2owl1Yg6
- 6w5UAc6bVKyvHmospTxGTXlvBxJcunrg1WTt4+5LNr7n4kR9Iv/9uumtsqskItnQzuT4 HQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ng5ga8m4s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 04:17:41 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3124FUHG020865;
-        Thu, 2 Feb 2023 04:17:41 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ng5ga8m43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 04:17:41 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 311Kddn1013277;
-        Thu, 2 Feb 2023 04:17:38 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3ncvtydnp7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Feb 2023 04:17:38 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3124HZaS47251948
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 Feb 2023 04:17:35 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F50120043;
-        Thu,  2 Feb 2023 04:17:35 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFA3020040;
-        Thu,  2 Feb 2023 04:17:32 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.7.19])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu,  2 Feb 2023 04:17:32 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] tools/perf: Fix usage of perf probe when libtraceevent is
- missing
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y9sIyTLHssijIFLT@kernel.org>
-Date:   Thu, 2 Feb 2023 09:47:32 +0530
-Cc:     Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, james.clark@arm.com,
-        mpe@ellerman.id.au, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2874491F-C1DA-4EFB-96CC-7772D6A7A61A@linux.vnet.ibm.com>
-References: <20230131134748.54567-1-atrajeev@linux.vnet.ibm.com>
- <Y9sIyTLHssijIFLT@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XewyGZcKMJuUQPijdG0WMAishWfPMMwF
-X-Proofpoint-ORIG-GUID: WyV9akE3EBXrSvQQcDIM-TgoLByYfhcz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-01_04,2023-01-31_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- suspectscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302020031
+        Thu, 2 Feb 2023 00:05:00 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B6813D6F;
+        Wed,  1 Feb 2023 21:04:59 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id b5so734530plz.5;
+        Wed, 01 Feb 2023 21:04:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=R0tc7/8E01DSEPlgGlBLAhea+NkOTJGGCeqxDO2l9is=;
+        b=aYKDxdFzWm0VsQWWGRFnUmPGy5i3KtoBAa5VGTHfg7T6ts0uICPU4COZjD0ANDl2q7
+         sT4hjskqYL+57eAT8sQilzV1p7sNWrseUvS4rgaTcCqsnDfLW0073AZHfBGq5Zsauc3D
+         ZFDRC5ew/sj2xrzl+2qdPJpR05ZU5z5MoP08hOI68X/+n/mjWkSG8gHtwDz7W7SJ3r56
+         itPamYEmXl7Yp8jhDjiivuY/R/xrYvlEnSH4tTbisrLZ2c0B8+0V7ONFmWd3ulHKoDvo
+         hTP1ILuSptmwCJOUZiArTwpvy+/QBKtmspZYaB6aWdzHy7dRceLx5TPXJcN6/gAnrHdN
+         AxFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R0tc7/8E01DSEPlgGlBLAhea+NkOTJGGCeqxDO2l9is=;
+        b=AWorGOX7gnOVqRyHdzWSUyOIfgKRcjP4say+RmBXs5hh0G2Yq8RCQoa1ZEVW0Wbsk0
+         zEYdqs92zpIYkZ1BpQ+ri2glZEXkUDbcDE9wnMjhVrquX0blorqyvfjLGOl7mjfmEmNx
+         nTdJmcFRapNojqQtoeCOAwHips5ZV5NWpr5JCJmcepjQZolo2KTskk8gUNckcmgyWmyQ
+         O93Zc7Uh4CGZEzjoIFYhcgi0OXw+ujmOjCZ0Yj0VO97jDw7+yNxvK2RaxD5VIqkKracD
+         RPXvtPIkDV3Fm5wbdgba6VETqdBAZ5NlI2mhFUDCGUe3Wu4uqBBW78PD0/vkT0NRIS15
+         Fv7A==
+X-Gm-Message-State: AO0yUKUrv4xYRjaqFRJLSRSDZMVI3Qs9Apra9o6EqkS3K70flvzKTNkk
+        O1jInIyfT7zpEb4M7MC4Pko=
+X-Google-Smtp-Source: AK7set/6PXGlxwyxrWotnkRud7UNs3S4vvWO0Nh1F7lFki7c2O8vL8XJnIv/ScKPYPvl6ByiTdnF5Q==
+X-Received: by 2002:a17:90b:1b09:b0:22c:8baa:c7e6 with SMTP id nu9-20020a17090b1b0900b0022c8baac7e6mr5166978pjb.20.1675314298419;
+        Wed, 01 Feb 2023 21:04:58 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:8899:7288:e54d:8b87])
+        by smtp.gmail.com with ESMTPSA id t3-20020a17090aba8300b0022bb3ee9b68sm2238374pjr.13.2023.02.01.21.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Feb 2023 21:04:57 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Subject: [PATCH 0/4] perf lock contention: Improve aggr x filter combination (v1)
+Date:   Wed,  1 Feb 2023 21:04:51 -0800
+Message-Id: <20230202050455.2187592-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
+
+The callstack filter can be useful to debug lock issues but it has a
+limitation that it only works with caller aggregation mode (which is the
+default setting).  IOW it cannot filter by callstack when showing tasks
+or lock addresses/names.
+
+But sometimes users want to use the filter for other aggregation mode.
+Like "show me lock addresses/names from this caller only" or "show me
+tasks having these callers".
+
+When it's using tracepoint events from the data file, the situation is
+good since the tracepoints have all the necessary info.  But when using
+BPF it needs to extend the key of lock stat BPF map to have more than
+one info like 'pid + stack_id' or 'lock_addr + stack_id'.  As callstack
+filter works in userspace, it should save the both info.
+
+With this change we can now use the -S/--callstack-filter with the
+-t/--threads option or -l/--lock-addr option.  It's also possible to use
+it with other filter options.
+
+The following example shows the top 5 tasks that have contention
+somewhere in the epoll handling.
+
+  $ sudo perf lock con -abt -S epoll -E5 -- sleep 1
+   contended   total wait     max wait     avg wait          pid   comm
+
+           2     58.64 us     32.38 us     29.32 us      1514752   Chrome_IOThread
+           3     29.31 us     12.65 us      9.77 us         3773   Xorg
+           1     17.45 us     17.45 us     17.45 us      1514906   Chrome_ChildIOT
+           1     15.41 us     15.41 us     15.41 us      1515382   Chrome_ChildIOT
+           1     12.52 us     12.52 us     12.52 us       293878   IPC I/O Parent
+
+You get get the code at 'perf/lock-filter-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+Namhyung Kim (4):
+  perf lock contention: Factor out lock_contention_get_name()
+  perf lock contention: Use lock_stat_find{,new}
+  perf lock contention: Support filters for different aggregation
+  perf test: Add more test cases for perf lock contention
+
+ tools/perf/builtin-lock.c                     |  79 ++++----
+ tools/perf/tests/shell/lock_contention.sh     |  66 ++++++-
+ tools/perf/util/bpf_lock_contention.c         | 178 +++++++++++-------
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  15 +-
+ tools/perf/util/bpf_skel/lock_data.h          |   4 +-
+ tools/perf/util/lock-contention.h             |   5 +
+ 6 files changed, 234 insertions(+), 113 deletions(-)
 
 
-> On 02-Feb-2023, at 6:20 AM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->=20
-> Em Tue, Jan 31, 2023 at 07:17:48PM +0530, Athira Rajeev escreveu:
->> While parsing the tracepoint events in parse_events_add_tracepoint()
->> function, code checks for HAVE_LIBTRACEEVENT support. This is needed
->> since libtraceevent is necessary for tracepoint. But while adding
->> probe points, check for LIBTRACEEVENT is not done in case of perf =
-probe.
->> Hence, in environment with missing libtraceevent-devel, it is
->> observed that adding a probe point shows below message though it
->> can't be used via perf record.
->=20
-> Thanks, applied.
->=20
-> - Arnaldo
-
-Thanks Arnaldo
-
-Athira
->=20
->=20
->> Example:
->> Adding probe point:
->> 	./perf probe 'vfs_getname=3Dgetname_flags:72 =
-pathname=3Dresult->name:string'
->> 	Added new event:
->> 	  probe:vfs_getname    (on getname_flags:72 with =
-pathname=3Dresult->name:string)
->>=20
->> 	You can now use it in all perf tools, such as:
->>=20
->> 		perf record -e probe:vfs_getname -aR sleep 1
->>=20
->> But trying perf record:
->> 	./perf  record -e probe:vfs_getname -aR sleep 1
->> 	event syntax error: 'probe:vfs_getname'
->> 				\___ unsupported tracepoint
->> 	libtraceevent is necessary for tracepoint support
->> 	Run 'perf list' for a list of valid events
->>=20
->> The builtin tool like perf record needs libtraceevent to
->> parse tracefs. But still the probe can be used by enabling
->> via tracefs. Patch fixes the probe usage message to the user
->> based on presence of libtraceevent. With the fix,
->>=20
->> # ./perf probe 'pmu:myprobe=3Dschedule'
->> Added new event:
->>   pmu:myprobe          (on schedule)
->>=20
->> perf is not linked with libtraceevent, to use the new probe you can =
-use tracefs:
->>=20
->> 	cd /sys/kernel/tracing/
->> 	echo 1 > events/pmu/myprobe/enable
->> 	echo 1 > tracing_on
->> 	cat trace_pipe
->> 	Before removing the probe, echo 0 > events/pmu/myprobe/enable
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/builtin-probe.c | 9 +++++++++
->> 1 file changed, 9 insertions(+)
->>=20
->> diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
->> index ed73d0b89ca2..e72f6cea76f7 100644
->> --- a/tools/perf/builtin-probe.c
->> +++ b/tools/perf/builtin-probe.c
->> @@ -383,9 +383,18 @@ static int perf_add_probe_events(struct =
-perf_probe_event *pevs, int npevs)
->>=20
->> 	/* Note that it is possible to skip all events because of =
-blacklist */
->> 	if (event) {
->> +#ifndef HAVE_LIBTRACEEVENT
->> +		pr_info("\nperf is not linked with libtraceevent, to use =
-the new probe you can use tracefs:\n\n");
->> +		pr_info("\tcd /sys/kernel/tracing/\n");
->> +		pr_info("\techo 1 > events/%s/%s/enable\n", group, =
-event);
->> +		pr_info("\techo 1 > tracing_on\n");
->> +		pr_info("\tcat trace_pipe\n");
->> +		pr_info("\tBefore removing the probe, echo 0 > =
-events/%s/%s/enable\n", group, event);
->> +#else
->> 		/* Show how to use the event. */
->> 		pr_info("\nYou can now use it in all perf tools, such =
-as:\n\n");
->> 		pr_info("\tperf record -e %s:%s -aR sleep 1\n\n", group, =
-event);
->> +#endif
->> 	}
->>=20
->> out_cleanup:
->> --=20
->> 2.39.0
->>=20
->=20
-> --=20
->=20
-> - Arnaldo
+base-commit: 7cfa9f5e440054db7c7e28e83a045d36993ff958
+-- 
+2.39.1.456.gfc5497dd1b-goog
 
