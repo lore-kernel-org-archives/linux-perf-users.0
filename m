@@ -2,84 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D932C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 13:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8640C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 13:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjBBNCM (ORCPT
+        id S231889AbjBBNEX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Feb 2023 08:02:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
+        Thu, 2 Feb 2023 08:04:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229991AbjBBNCL (ORCPT
+        with ESMTP id S232040AbjBBNEW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Feb 2023 08:02:11 -0500
+        Thu, 2 Feb 2023 08:04:22 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208498EB77;
-        Thu,  2 Feb 2023 05:01:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0B78E4A7;
+        Thu,  2 Feb 2023 05:04:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E51E3B82659;
-        Thu,  2 Feb 2023 13:00:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBFAC433EF;
-        Thu,  2 Feb 2023 13:00:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B8F4EB82159;
+        Thu,  2 Feb 2023 13:04:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32376C433EF;
+        Thu,  2 Feb 2023 13:04:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675342858;
-        bh=I0+XpsfrXiVq4NvEITPXhBwMxT7p8ZjJTJTvge/hres=;
+        s=k20201202; t=1675343055;
+        bh=yUVM3WLXNypwBHB8GqC6IeD6PXsyotuZI3Y/nrlc7yg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BAjsjxwkjObm/cxEp/X8gz+pQL/2Nk3RGbA2VMYjM0TqAuYA294c0hFu9HHWMRS6r
-         tZEiNpA1cgPxGr7P5wfL2gFJSMaNdXQZgWggexxz4YX98CFDj07L5kw9spE7cPex6R
-         ccxKEElIpl2ejeLQMjmYajDjhy1Ctma2FFS+mDr9Fiky5DMeIfLzq0mg/lPsmSEGEB
-         DQgRhBGi6YxjUAObefBiGqJkNIXIGIF3YIp7hE4uVXwndSUg94lr1W2ovq4Grl7gNw
-         Zpih1ZcNj1V4dkiAKyHXj4xcqamUips8kuwVuVs3HwddmpGU7t7on0kTNYkoRKcBvD
-         FFmbvzjCXfkBw==
+        b=V1HMe1Q+jFkkWbvWwukx7s4dD5Lw7QVNoB51ZAxboi/8pg0HD2z7C6Ll2oXSSYGpK
+         ipbT7WqvfOQx16iqvIxptetN4Q7HRqL012FFgyo9Qug/MVhdGVDMep8WHuU/wTR+RI
+         TpuVcyaOuT7/fwNUUblCYI5BteInXY5jDmutK4lcrMxc+1fyl4daPDRC++NDKz5OO1
+         LXBG9Dr8ulRR0+qN5FgF28HR8yc1wl7t38BAIkCW5qqfqSd8Q3ZQ57QO/pFmTVAwug
+         s72NbzBR6/YTkMEb5Mf62AyOfjexatq0IBUwF2T2NHyu3K5e+HFQDqQRzk6DKKwxl8
+         JH2QAAMsU3nzw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DDE5C405BE; Thu,  2 Feb 2023 10:00:55 -0300 (-03)
-Date:   Thu, 2 Feb 2023 10:00:55 -0300
+        id A98F6405BE; Thu,  2 Feb 2023 10:04:12 -0300 (-03)
+Date:   Thu, 2 Feb 2023 10:04:12 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Carsten Haitzler <Carsten.Haitzler@arm.com>
-Cc:     Diederik de Haas <didi.debian@cknow.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Script style improvements in lib/coresight.sh
-Message-ID: <Y9u0B2RBiZYrJ5Kk@kernel.org>
-References: <20230201214945.127474-1-didi.debian@cknow.org>
- <b13301b1-104f-ebb5-6b2a-3d6cc3eba8a3@arm.com>
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, bp@alien8.de,
+        namhyung@kernel.org, jolsa@kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, dave.hansen@linux.intel.com,
+        james.clark@arm.com, irogers@google.com, eranian@google.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, tmricht@linux.ibm.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v4 0/4] tools perf: Add branch speculation info
+Message-ID: <Y9u0zJA05JNHpB+i@kernel.org>
+References: <cover.1675333809.git.sandipan.das@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b13301b1-104f-ebb5-6b2a-3d6cc3eba8a3@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1675333809.git.sandipan.das@amd.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Feb 02, 2023 at 08:38:46AM +0000, Carsten Haitzler escreveu:
-> On 2/1/23 21:49, Diederik de Haas wrote:
-> > These 2 patches improve the efficiency and quality of the
-> > lib/coresight.sh script.
-> >
-> > The first one uses grep's `-c` parameter to count the results instead of
-> > piping it to `wc -l`.
-> > The second one replaces the use of backticks (`...`) with $(...) as the
-> > former has several potential issues while the latter does not.
-> >
-> > Diederik de Haas (2):
-> >    perf test: Replace 'grep | wc -l' with 'grep -c'
-> >    perf test: Replace legacy `...` with $(...)
-> >
-> >   tools/perf/tests/shell/lib/coresight.sh | 18 +++++++++---------
-> >   1 file changed, 9 insertions(+), 9 deletions(-)
-> >
-> ACK to all of this series.
+Em Thu, Feb 02, 2023 at 05:56:13PM +0530, Sandipan Das escreveu:
+> AMD Last Branch Record Extension Version 2 (LbrExtV2) provides branch
+> speculation information and the perf UAPI is extended to provide this in
+> a generic way. Make perf tool show this additional information.
+> 
+> The UAPI changes can be found in commit 93315e46b000 ("perf/core: Add
+> speculation info to branch entries").
+> 
+> Requesting help from folks having access to big-endian systems to test
+> changes in the sample parsing test as I was only able to test these in
+> a ppc64 simulator.
 
-Thanks, added to the two patches, that I processed yesterday, still in
-tmp.perf/core.
+I'll try folding some of these patches as 'perf test' must pass after
+each of them, so that we keep the codebase bisectable.
+
+Right now, after appling the first patch on this v4 series:
+
+⬢[acme@toolbox perf]$ perf test 27
+ 27: Sample parsing                                                  : FAILED!
+⬢[acme@toolbox perf]$
+
+- Arnaldo
+ 
+> Previous versions can be found at:
+> v3: https://lore.kernel.org/all/cover.1675057032.git.sandipan.das@amd.com/
+> v2: https://lore.kernel.org/all/cover.1664356751.git.sandipan.das@amd.com/
+> v1: https://lore.kernel.org/all/cover.1660217326.git.sandipan.das@amd.com/
+> 
+> Changes in v4:
+> - Update tests that were failing due to changes in perf output and
+>   sample parsing (thanks to Arnaldo for reporting).
+> 
+> Changes in v3:
+> - Drop tools-side UAPI changes as they have already been added by other
+>   commits.
+> - Rebase on top of latest perf/core.
+> 
+> Changes in v2:
+> - Drop msr-index.h related changes for now.
+> - Rebase on top of latest perf/core.
+> - Fix UAPI breakage introduced by the ARM64 BRBE changes to perf branch
+>   entry.
+> 
+> Sandipan Das (4):
+>   perf script: Show branch speculation info
+>   perf session: Show branch speculation info in raw dump
+>   perf test sample-parsing: Update expected branch flags
+>   perf test brstack: Update regex to include spec field
+> 
+>  tools/perf/builtin-script.c            |  5 +++--
+>  tools/perf/tests/sample-parsing.c      |  2 +-
+>  tools/perf/tests/shell/test_brstack.sh | 18 +++++++++---------
+>  tools/perf/util/branch.c               | 15 +++++++++++++++
+>  tools/perf/util/branch.h               |  2 ++
+>  tools/perf/util/evsel.c                | 15 ++++++++++++---
+>  tools/perf/util/session.c              |  5 +++--
+>  7 files changed, 45 insertions(+), 17 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
+
+-- 
 
 - Arnaldo
