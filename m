@@ -2,178 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF6CC636CD
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 00:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00192C05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 01:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjBBA56 (ORCPT
+        id S229630AbjBBBA5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 19:57:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
+        Wed, 1 Feb 2023 20:00:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbjBBA55 (ORCPT
+        with ESMTP id S229563AbjBBBA5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 19:57:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521CE5C0ED
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Feb 2023 16:57:55 -0800 (PST)
+        Wed, 1 Feb 2023 20:00:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E005C0F9;
+        Wed,  1 Feb 2023 17:00:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 04130B82396
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Feb 2023 00:57:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0B3C433D2;
-        Thu,  2 Feb 2023 00:57:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 66D59619BA;
+        Thu,  2 Feb 2023 01:00:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9989CC433D2;
+        Thu,  2 Feb 2023 01:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675299472;
-        bh=s42/VVaCIYQ0nI3ZhFObWiwS/t5JoeInmu8DKR5/Gvw=;
+        s=k20201202; t=1675299654;
+        bh=wPPcyoksH9Ff/Pc0cGKVYYC4iNhKHyL6DmBiuX/Ypi0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u24iMQwqDSuzKZUdgG4vRc5KYHyIRIAXyne/t58zIEX0bNEE3TvoQ6BFouO3wn+S7
-         fJt4S+81W6EAnIprfJzDdBzVc39e+520QTJqFfp3zVkFD9ONRKILhpB+KvwR/lt+Qh
-         MA4I3m9uTqWbuJZ1fdDZSv9vbKjBwTvQtILUniBzpv1k0w+dS4vCe3u9bQVEz7litB
-         PdL82IekoPyqW5vFSp1Q4yu7ndewa0vFnAAPSuX54bXTe3sKH23c08OtaTAblL2sz2
-         IojsSC5V3gqi4HSQ3aXAMXpwga1RWjWSBm0VMGWMcXPCZ4zpeTO2gj87tCBQFWERaz
-         0gPk+cvQAhkdQ==
+        b=pauJBK1JegDeIVnk3kBO/3jkwiE5BhBFMkTkNjOVIJMogulN4zUs2qdshzkfZGZ3t
+         jpmqtNkbFIdakbOTdbagpF9P0uSXHft/WDb3W7ndXPfRaUYX9D4Ga25h1iPEdwG+l1
+         20lSYX53+5ioynsEy4LMYwJWwQh3HHTysQqAd8Caw0SxA9gYHby7J5U0ULfnatDv3B
+         sucLihTlK4SkBqljONcuDfqQBGBz4DBWyDV5hPKpwj72AaGFy7UzFy4eCCMt4LUvnY
+         QRsH6sC71mhQZMOArq7drcYsyuuoIPbGrR4GeufAD5OdH/0QIwfPqoxMwxc9T6N4As
+         mdsK1c4Lz7YUA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7F094405BE; Wed,  1 Feb 2023 21:57:49 -0300 (-03)
-Date:   Wed, 1 Feb 2023 21:57:49 -0300
+        id 7A6A1405BE; Wed,  1 Feb 2023 22:00:51 -0300 (-03)
+Date:   Wed, 1 Feb 2023 22:00:51 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
-        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: Re: [PATCH] tests/bpf: Fix the bpf test to check for libtraceevent
- support
-Message-ID: <Y9sKjYV8b37vstQ0@kernel.org>
-References: <20230131135001.54578-1-atrajeev@linux.vnet.ibm.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Krister Johansen <kjlx@templeofstupid.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        David Reaver <me@davidreaver.com>
+Subject: Re: [PATCH v2] perf/util: Symbol lookup with kcore can fail if
+ multiple segments match stext
+Message-ID: <Y9sLQ1Iy5LJAaJ8L@kernel.org>
+References: <20230124223531.GB1962@templeofstupid.com>
+ <20230125183418.GD1963@templeofstupid.com>
+ <7b5f872a-f52e-7129-e956-90e97ec7d911@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230131135001.54578-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <7b5f872a-f52e-7129-e956-90e97ec7d911@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jan 31, 2023 at 07:20:01PM +0530, Athira Rajeev escreveu:
-> "bpf" tests fails in environment with missing libtraceevent
-> support as below:
+Em Mon, Jan 30, 2023 at 03:29:54PM +0200, Adrian Hunter escreveu:
+> On 25/01/23 20:34, Krister Johansen wrote:
+> > This problem was encountered on an arm64 system with a lot of memory.
+> > Without kernel debug symbols installed, and with both kcore and kallsyms
+> > available, perf managed to get confused and returned "unknown" for all
+> > of the kernel symbols that it tried to look up.
+> > 
+> > On this system, stext fell within the vmalloc segment.  The kcore symbol
+> > matching code tries to find the first segment that contains stext and
+> > uses that to replace the segment generated from just the kallsyms
+> > information.  In this case, however, there were two: a very large
+> > vmalloc segment, and the text segment.  This caused perf to get confused
+> > because multiple overlapping segments were inserted into the RB tree
+> > that holds the discovered segments.  However, that alone wasn't
+> > sufficient to cause the problem. Even when we could find the segment,
+> > the offsets were adjusted in such a way that the newly generated symbols
+> > didn't line up with the instruction addresses in the trace.  The most
+> > obvious solution would be to consult which segment type is text from
+> > kcore, but this information is not exposed to users.
+> > 
+> > Instead, select the smallest matching segment that contains stext
+> > instead of the first matching segment.  This allows us to match the text
+> > segment instead of vmalloc, if one is contained within the other.
+> > 
+> > Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
 > 
->  # ./perf test 36
->  36: BPF filter                                                      :
->  36.1: Basic BPF filtering                                           : FAILED!
->  36.2: BPF pinning                                                   : FAILED!
->  36.3: BPF prologue generation                                       : FAILED!
-> 
-> The environment has clang but missing the libtraceevent
-> devel. Hence perf is compiled without libtraceevent support.
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Detailed logs:
-> 	./perf test -v "Basic BPF filtering"
-> 
-> 	Failed to add BPF event syscalls:sys_enter_epoll_pwait
-> 	bpf: tracepoint call back failed, stop iterate
-> 	Failed to add events selected by BPF
-> 
-> The bpf tests tris to add probe event which fails
-> at "parse_events_add_tracepoint" function due to missing
-> libtraceevent. Add check for "HAVE_LIBTRACEEVENT" in the
-> "tests/bpf.c" before proceeding with the test.
-> 
-> With the change,
-> 
-> 	# ./perf test 36
->  	36: BPF filter                                                      :
->  	36.1: Basic BPF filtering                                           : Skip (not compiled in or missing libtraceevent support)
->  	36.2: BPF pinning                                                   : Skip (not compiled in or missing libtraceevent support)
->  	36.3: BPF prologue generation                                       : Skip (not compiled in or missing libtraceevent support)
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/tests/bpf.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
-> index 17c023823713..4af39528f611 100644
-> --- a/tools/perf/tests/bpf.c
-> +++ b/tools/perf/tests/bpf.c
-> @@ -23,7 +23,7 @@
->  #define NR_ITERS       111
->  #define PERF_TEST_BPF_PATH "/sys/fs/bpf/perf_test"
->  
-> -#ifdef HAVE_LIBBPF_SUPPORT
-> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  #include <linux/bpf.h>
->  #include <bpf/bpf.h>
->  
-> @@ -330,10 +330,10 @@ static int test__bpf(int i)
->  static int test__basic_bpf_test(struct test_suite *test __maybe_unused,
->  				int subtest __maybe_unused)
->  {
-> -#ifdef HAVE_LIBBPF_SUPPORT
-> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  	return test__bpf(0);
->  #else
-> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
-> +	pr_debug("Skip BPF test because BPF or libtraceevent support is not compiled\n");
->  	return TEST_SKIP;
->  #endif
->  }
-> @@ -341,10 +341,10 @@ static int test__basic_bpf_test(struct test_suite *test __maybe_unused,
->  static int test__bpf_pinning(struct test_suite *test __maybe_unused,
->  			     int subtest __maybe_unused)
->  {
-> -#ifdef HAVE_LIBBPF_SUPPORT
-> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  	return test__bpf(1);
->  #else
-> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
-> +	pr_debug("Skip BPF test because BPF or libtraceevent support is not compiled\n");
->  	return TEST_SKIP;
->  #endif
->  }
-> @@ -352,17 +352,17 @@ static int test__bpf_pinning(struct test_suite *test __maybe_unused,
->  static int test__bpf_prologue_test(struct test_suite *test __maybe_unused,
->  				   int subtest __maybe_unused)
->  {
-> -#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
-> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE) && defined(HAVE_LIBTRACEEVENT)
->  	return test__bpf(2);
->  #else
-> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
-> +	pr_debug("Skip BPF test because BPF or libtraceevent support is not compiled\n");
->  	return TEST_SKIP;
->  #endif
->  }
->  
->  
->  static struct test_case bpf_tests[] = {
-> -#ifdef HAVE_LIBBPF_SUPPORT
-> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  	TEST_CASE("Basic BPF filtering", basic_bpf_test),
->  	TEST_CASE_REASON("BPF pinning", bpf_pinning,
->  			"clang isn't installed or environment missing BPF support"),
-> @@ -373,9 +373,9 @@ static struct test_case bpf_tests[] = {
->  	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
->  #endif
->  #else
-> -	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not compiled in"),
-> -	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
-> -	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in"),
-> +	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not compiled in or missing libtraceevent support"),
-> +	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in or missing libtraceevent support"),
-> +	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, "not compiled in or missing libtraceevent support"),
->  #endif
->  	{ .name = NULL, }
->  };
-> -- 
-> 2.39.0
+> > ---
+> > v2:
+> >   - Correct whitespace, add comments, and fix-up subject. (Feedback from Adrian
+> >     Hunter)
+> > ---
+> >  tools/perf/util/symbol.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index a3a165ae933a..98014f937568 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -1368,10 +1368,23 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+> >  
+> >  	/* Find the kernel map using the '_stext' symbol */
+> >  	if (!kallsyms__get_function_start(kallsyms_filename, "_stext", &stext)) {
+> > +		u64 replacement_size = 0;
+> > +
+> >  		list_for_each_entry(new_map, &md.maps, node) {
+> > -			if (stext >= new_map->start && stext < new_map->end) {
+> > +			u64 new_size = new_map->end - new_map->start;
+> > +
+> > +			if (!(stext >= new_map->start && stext < new_map->end))
+> > +				continue;
+> > +
+> > +			/*
+> > +			 * On some architectures, ARM64 for example, the kernel
+> > +			 * text can get allocated inside of the vmalloc segment.
+> > +			 * Select the smallest matching segment, in case stext
+> > +			 * falls within more than one in the list.
+> > +			 */
+> > +			if (!replacement_map || new_size < replacement_size) {
+> >  				replacement_map = new_map;
+> > -				break;
+> > +				replacement_size = new_size;
+> >  			}
+> >  		}
+> >  	}
 > 
 
 -- 
