@@ -2,111 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBA2C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Feb 2023 21:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C05C636CD
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 00:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbjBAVuw (ORCPT
+        id S229609AbjBBAlC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 16:50:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
+        Wed, 1 Feb 2023 19:41:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231276AbjBAVuu (ORCPT
+        with ESMTP id S229457AbjBBAlA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 16:50:50 -0500
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::221])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D81BA86BF;
-        Wed,  1 Feb 2023 13:50:46 -0800 (PST)
-Received: (Authenticated sender: didi.debian@cknow.org)
-        by mail.gandi.net (Postfix) with ESMTPSA id 7CDE3240002;
-        Wed,  1 Feb 2023 21:50:42 +0000 (UTC)
-From:   Diederik de Haas <didi.debian@cknow.org>
-To:     Carsten Haitzler <carsten.haitzler@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Diederik de Haas <didi.debian@cknow.org>
-Subject: [PATCH 2/2] perf test: Replace legacy `...` with $(...)
-Date:   Wed,  1 Feb 2023 22:49:45 +0100
-Message-Id: <20230201214945.127474-3-didi.debian@cknow.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230201214945.127474-1-didi.debian@cknow.org>
-References: <20230201214945.127474-1-didi.debian@cknow.org>
+        Wed, 1 Feb 2023 19:41:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBF2BD
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Feb 2023 16:40:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF418619AC
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Feb 2023 00:40:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A270C433EF;
+        Thu,  2 Feb 2023 00:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675298457;
+        bh=+638RvD+o/lvgldQGllUcA183Rg0ykBFb7o+NSPTUtw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MGrW5dfLVI1DywUJCS8E98Zp62gAT/ebwCVOl7A/pSdej6qE4eGfZ1BmatXoQKMC+
+         mY9MA6JUgn0oAWesxFRBlPgyufc9vgiL/CW4Il4PetzieU/l3z/8dSVkuQ6DO12NqV
+         iTBmKDFhrkySLZvx0h/V4sCupJCWCY+PD6QSZZe253z2sYyGIp3QWPWc9TjZWq1bMV
+         nU2ARofjGDz3ryGOzZ1194bt+y8U8m17I11hOmeLNu8ywl8GmRlPbds7eX7Fq3gS9P
+         is+r3E+XukAqo1aj8bPFPZ7qLdfkOgJp/LQBn9Lvoaysqb2bqbsioyfN2l7GWsYggw
+         IhLatb5PCduuQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 965F6405BE; Wed,  1 Feb 2023 21:40:54 -0300 (-03)
+Date:   Wed, 1 Feb 2023 21:40:54 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
+        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.ibm.com
+Subject: Re: [PATCH 1/2] tests/shell: Add check for perf data file in
+ record+probe_libc_inet_pton test
+Message-ID: <Y9sGlo2tnSvYX2uF@kernel.org>
+References: <20230201180421.59640-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230201180421.59640-1-atrajeev@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As detailed in https://www.shellcheck.net/wiki/SC2006:
+Em Wed, Feb 01, 2023 at 11:34:20PM +0530, Athira Rajeev escreveu:
+> "probe libc's inet_pton & backtrace it with ping" test
+> installs a uprobe and uses perf record/script to check
+> the backtrace. Currently even if the "perf record" fails,
+> the test reports success. Logs below:
+> 
+>  # ./perf test -v "probe libc's inet_pton & backtrace it with ping"
+>  81: probe libc's inet_pton & backtrace it with ping                 :
+> --- start ---
 
-The use of `...` is legacy syntax with several issues:
-1. It has a series of undefined behaviors related to quoting in POSIX.
-2. It imposes a custom escaping mode with surprising results.
-3. It's exceptionally hard to nest.
+Please add spaces before --- as this separates the commit log message
+from the patch and ends up chopped up when I use git-am.
 
-$(...) command substitution has none of these problems,
-and is therefore strongly encouraged.
+I'm fixing it now.
 
-Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
----
- tools/perf/tests/shell/lib/coresight.sh | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+- Arnaldo
 
-diff --git a/tools/perf/tests/shell/lib/coresight.sh b/tools/perf/tests/shell/lib/coresight.sh
-index 7e27e5c5bc9c..6c3d34ec64d8 100644
---- a/tools/perf/tests/shell/lib/coresight.sh
-+++ b/tools/perf/tests/shell/lib/coresight.sh
-@@ -58,9 +58,9 @@ perf_dump_aux_verify() {
- 	# compiler may produce different code depending on the compiler and
- 	# optimization options, so this is rough just to see if we're
- 	# either missing almost all the data or all of it
--	ATOM_FX_NUM=`grep -c I_ATOM_F "$DUMP"`
--	ASYNC_NUM=`grep -c I_ASYNC "$DUMP"`
--	TRACE_INFO_NUM=`grep -c I_TRACE_INFO "$DUMP"`
-+	ATOM_FX_NUM=$(grep -c I_ATOM_F "$DUMP")
-+	ASYNC_NUM=$(grep -c I_ASYNC "$DUMP")
-+	TRACE_INFO_NUM=$(grep -c I_TRACE_INFO "$DUMP")
- 	rm -f "$DUMP"
- 
- 	# Arguments provide minimums for a pass
-@@ -96,18 +96,18 @@ perf_dump_aux_tid_verify() {
- 
- 	# The TID test tools will print a TID per stdout line that are being
- 	# tested
--	TIDS=`cat "$2"`
-+	TIDS=$(cat "$2")
- 	# Scan the perf report to find the TIDs that are actually CID in hex
- 	# and build a list of the ones found
--	FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
-+	FOUND_TIDS=$(perf report --stdio --dump -i "$1" | \
- 			grep -o "CID=0x[0-9a-z]\+" | sed 's/CID=//g' | \
--			uniq | sort | uniq`
-+			uniq | sort | uniq)
- 	# No CID=xxx found - maybe your kernel is reporting these as
- 	# VMID=xxx so look there
- 	if test -z "$FOUND_TIDS"; then
--		FOUND_TIDS=`perf report --stdio --dump -i "$1" | \
-+		FOUND_TIDS=$(perf report --stdio --dump -i "$1" | \
- 				grep -o "VMID=0x[0-9a-z]\+" | sed 's/VMID=//g' | \
--				uniq | sort | uniq`
-+				uniq | sort | uniq)
- 	fi
- 
- 	# Iterate over the list of TIDs that the test says it has and find
-@@ -116,7 +116,7 @@ perf_dump_aux_tid_verify() {
- 	for TID2 in $TIDS; do
- 		FOUND=""
- 		for TIDHEX in $FOUND_TIDS; do
--			TID=`printf "%i" $TIDHEX`
-+			TID=$(printf "%i" $TIDHEX)
- 			if test "$TID" -eq "$TID2"; then
- 				FOUND="y"
- 				break
+> test child forked, pid 304211
+> failed to open /tmp/perf.data.Btf: No such file or directory
+> test child finished with 0
+> ---- end ----
+> probe libc's inet_pton & backtrace it with ping: Ok
+> 
+> Fix this by adding check for presence of perf.data file
+> before proceeding with "perf script".
+> 
+> With the patch changes, test reports fail correctly.
+> 
+>  # ./perf test -v "probe libc's inet_pton & backtrace it with ping"
+>  81: probe libc's inet_pton & backtrace it with ping                 :
+> --- start ---
+> test child forked, pid 304358
+> FAIL: perf record failed to create "/tmp/perf.data.Uoi"
+> test child finished with -1
+> ---- end ----
+> probe libc's inet_pton & backtrace it with ping: FAILED!
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> index 57e7a6a470c9..08cdd902d0cf 100755
+> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> @@ -58,6 +58,11 @@ trace_libc_inet_pton_backtrace() {
+>  	perf_data=`mktemp -u /tmp/perf.data.XXX`
+>  	perf_script=`mktemp -u /tmp/perf.script.XXX`
+>  	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
+> +	# check if perf data file got created in above step.
+> +	if [ ! -e $perf_data ]; then
+> +		printf "FAIL: perf record failed to create \"%s\" \n" "$perf_data"
+> +		return 1
+> +	fi
+>  	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
+>  
+>  	exec 3<$perf_script
+> -- 
+> 2.39.0
+> 
+
 -- 
-2.39.1
 
+- Arnaldo
