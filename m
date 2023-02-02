@@ -2,121 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C05C636CD
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 00:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55555C636CD
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Feb 2023 00:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbjBBAlC (ORCPT
+        id S229660AbjBBAq2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Feb 2023 19:41:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
+        Wed, 1 Feb 2023 19:46:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjBBAlA (ORCPT
+        with ESMTP id S229546AbjBBAq1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Feb 2023 19:41:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBF2BD
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Feb 2023 16:40:58 -0800 (PST)
+        Wed, 1 Feb 2023 19:46:27 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B5C3C295;
+        Wed,  1 Feb 2023 16:46:26 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF418619AC
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Feb 2023 00:40:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A270C433EF;
-        Thu,  2 Feb 2023 00:40:57 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 13FE5CE269F;
+        Thu,  2 Feb 2023 00:46:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1704DC433D2;
+        Thu,  2 Feb 2023 00:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675298457;
-        bh=+638RvD+o/lvgldQGllUcA183Rg0ykBFb7o+NSPTUtw=;
+        s=k20201202; t=1675298783;
+        bh=xk6f4NHas/vT/Qe7b8z9Hi0bMapUpjdB9ydGAUQ5Ocw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MGrW5dfLVI1DywUJCS8E98Zp62gAT/ebwCVOl7A/pSdej6qE4eGfZ1BmatXoQKMC+
-         mY9MA6JUgn0oAWesxFRBlPgyufc9vgiL/CW4Il4PetzieU/l3z/8dSVkuQ6DO12NqV
-         iTBmKDFhrkySLZvx0h/V4sCupJCWCY+PD6QSZZe253z2sYyGIp3QWPWc9TjZWq1bMV
-         nU2ARofjGDz3ryGOzZ1194bt+y8U8m17I11hOmeLNu8ywl8GmRlPbds7eX7Fq3gS9P
-         is+r3E+XukAqo1aj8bPFPZ7qLdfkOgJp/LQBn9Lvoaysqb2bqbsioyfN2l7GWsYggw
-         IhLatb5PCduuQ==
+        b=IivLYCFt96qUfOs4fVGoC5rgdG4i6lQiSf5clLOhito5sc2MJErMOUXJQj4VxNt7C
+         Kp4M7MS9mfqwxQpsVVV/4YHGJDoWELKE3/32AJjHiwlXHKDc5dRdaYpblSlrtmkRew
+         MqYwJXC529Dso0kabD6QmKlWbc2wodyuYh8lsk96qZae1nPyGecyP7nmU3W0/ytQFP
+         PBnuAjerep2WYl5Nwr9fJuhDCQadNvLtCgR5iklxQQ7Y5YBYVl4aRXJfjaGgKX+4Mh
+         wFWk+9+KvSbB3OokfG80ZcEYIZFoRxbDMBKK/smxo+hPv/NbPSzB49PEkLoNOQL30n
+         /t8YhC04snewg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 965F6405BE; Wed,  1 Feb 2023 21:40:54 -0300 (-03)
-Date:   Wed, 1 Feb 2023 21:40:54 -0300
+        id EFE54405BE; Wed,  1 Feb 2023 21:46:20 -0300 (-03)
+Date:   Wed, 1 Feb 2023 21:46:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
-        irogers@google.com, james.clark@arm.com, mpe@ellerman.id.au,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: Re: [PATCH 1/2] tests/shell: Add check for perf data file in
- record+probe_libc_inet_pton test
-Message-ID: <Y9sGlo2tnSvYX2uF@kernel.org>
-References: <20230201180421.59640-1-atrajeev@linux.vnet.ibm.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V2 0/9] perf symbols: Improve
+ dso__synthesize_plt_symbols() for x86
+Message-ID: <Y9sH3DD4QVKGkoru@kernel.org>
+References: <20230131131625.6964-1-adrian.hunter@intel.com>
+ <CAM9d7cj=8YQEnaqwxNpvPjPpcF2d0cyvb=jq6fM20U0de5tO+w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230201180421.59640-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAM9d7cj=8YQEnaqwxNpvPjPpcF2d0cyvb=jq6fM20U0de5tO+w@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 01, 2023 at 11:34:20PM +0530, Athira Rajeev escreveu:
-> "probe libc's inet_pton & backtrace it with ping" test
-> installs a uprobe and uses perf record/script to check
-> the backtrace. Currently even if the "perf record" fails,
-> the test reports success. Logs below:
+Em Tue, Jan 31, 2023 at 10:59:58PM -0800, Namhyung Kim escreveu:
+> Hi Adrian,
 > 
->  # ./perf test -v "probe libc's inet_pton & backtrace it with ping"
->  81: probe libc's inet_pton & backtrace it with ping                 :
-> --- start ---
+> On Tue, Jan 31, 2023 at 5:16 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >
+> > Hi
+> >
+> > This is version 2 of the second of 2 patchsets to improve
+> > dso__synthesize_plt_symbols().
+> > This patchset focuses on getting rid of unknown symbols that show up in
+> > Intel PT traces.
+> >
+> > x86 has 2 more plt's, namely .plt.sec and .plt.got, so support is added for
+> > synthesizing symbols for them.  Special handing is needed for IFUNC symbols,
+> > and it is also possible to have a .plt for static executables, so support is
+> > added for that.
+> >
+> >
+> > Changes in V2:
+> >
+> >     perf symbols: Add support for x86 .plt.sec
+> >         Amend commit message and example about -z plt
+> >
+> >     perf symbols: Get symbols for .plt.got for x86-64
+> >         Fix get_plt_got_name() not to segfault with EM_386
+> >
+> >
+> > Adrian Hunter (9):
+> >       perf symbols: Correct plt entry sizes for x86
+> >       perf symbols: Add support for x86 .plt.sec
+> >       perf symbols: Sort plt relocations for x86
+> >       perf symbols: Record whether a symbol is an alias for an IFUNC symbol
+> >       perf symbols: Add support for IFUNC symbols for x86_64
+> >       perf symbols: Allow for .plt without header
+> >       perf symbols: Allow for static executables with .plt
+> >       perf symbols: Start adding support for .plt.got for x86
+> >       perf symbols: Get symbols for .plt.got for x86-64
+> 
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
-Please add spaces before --- as this separates the commit log message
-from the patch and ends up chopped up when I use git-am.
-
-I'm fixing it now.
+Thanks, applied.
 
 - Arnaldo
 
-> test child forked, pid 304211
-> failed to open /tmp/perf.data.Btf: No such file or directory
-> test child finished with 0
-> ---- end ----
-> probe libc's inet_pton & backtrace it with ping: Ok
+ 
+> Thanks,
+> Namhyung
 > 
-> Fix this by adding check for presence of perf.data file
-> before proceeding with "perf script".
 > 
-> With the patch changes, test reports fail correctly.
-> 
->  # ./perf test -v "probe libc's inet_pton & backtrace it with ping"
->  81: probe libc's inet_pton & backtrace it with ping                 :
-> --- start ---
-> test child forked, pid 304358
-> FAIL: perf record failed to create "/tmp/perf.data.Uoi"
-> test child finished with -1
-> ---- end ----
-> probe libc's inet_pton & backtrace it with ping: FAILED!
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> index 57e7a6a470c9..08cdd902d0cf 100755
-> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> @@ -58,6 +58,11 @@ trace_libc_inet_pton_backtrace() {
->  	perf_data=`mktemp -u /tmp/perf.data.XXX`
->  	perf_script=`mktemp -u /tmp/perf.script.XXX`
->  	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
-> +	# check if perf data file got created in above step.
-> +	if [ ! -e $perf_data ]; then
-> +		printf "FAIL: perf record failed to create \"%s\" \n" "$perf_data"
-> +		return 1
-> +	fi
->  	perf script -i $perf_data | tac | grep -m1 ^ping -B9 | tac > $perf_script
->  
->  	exec 3<$perf_script
-> -- 
-> 2.39.0
-> 
+> >
+> >  tools/perf/util/symbol-elf.c | 365 ++++++++++++++++++++++++++++++++++++++++---
+> >  tools/perf/util/symbol.c     |   4 +
+> >  tools/perf/util/symbol.h     |   2 +
+> >  tools/perf/util/symsrc.h     |   1 +
+> >  4 files changed, 350 insertions(+), 22 deletions(-)
+> >
+> >
+> > Regards
+> > Adrian
 
 -- 
 
