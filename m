@@ -2,100 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85558C636D6
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 10:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969C1C636CC
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 11:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233074AbjBCKEJ (ORCPT
+        id S231545AbjBCLcE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Feb 2023 05:04:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54320 "EHLO
+        Fri, 3 Feb 2023 06:32:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232957AbjBCKEI (ORCPT
+        with ESMTP id S229782AbjBCLcD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Feb 2023 05:04:08 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5043110AA0;
-        Fri,  3 Feb 2023 02:03:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YH/8ltZNkKStUJrvFHYeArjsVizSPTMYIhZUjUhNtIY=; b=RjeqYQeuDIs31bqFuDOVNCpJXy
-        SpNnas9yZLnzPYarE3/z3e3WDDvHc3fZjPegGCVejqoPSEvAdO6tM9i+qeJPWqxks6FUe+3fVl7f4
-        eQn3pkY4Hh65yDr6yK2jG++5WK86Yz5gf2vwUdjDJqSDfJcZlR5hgRa1Lx+f0v4rDPE8aCc090skS
-        zbesIES7PWXubGSCZbntIyLgwn0pRnbuFjGeEws9uXjnYe2Glq+Wjoolll9ad525ijsVTVxSPnulC
-        x2FY8YQQ08BQCGSwlC+xkiJP1OsnN5Jg+7so+8vNHwar2Tv8+QOkJJYhhsI6ETPcb+76oWBMHfGaq
-        9N2l/kgQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pNsuh-00EDRc-Qr; Fri, 03 Feb 2023 10:03:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E2ED5300129;
-        Fri,  3 Feb 2023 11:03:21 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 794802136B38A; Fri,  3 Feb 2023 11:03:21 +0100 (CET)
-Date:   Fri, 3 Feb 2023 11:03:21 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Fri, 3 Feb 2023 06:32:03 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB948AE;
+        Fri,  3 Feb 2023 03:32:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 85CCD61EEC;
+        Fri,  3 Feb 2023 11:32:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161EDC433EF;
+        Fri,  3 Feb 2023 11:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675423921;
+        bh=EMT4gAM6DFLAx01b5MmVLLZlp58/tPr8Emh4r7uLVYk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dMdHRcJF0hM4pWxTxwwRi/eNiQXUxWBkgsUhUIZkbdeVM6RlvKD1XanvN2qCMldP0
+         WpG/weQPZik2iwR1ER4nF/qxq5Om2uVH1wxDBGJ1DfAPTrQ6O7lcUzUPLl3mTsWo8G
+         fpuXxJhL6L5yCeg1Qf76ED2fit5W1fb+yN0lZ0cCC9ODEphO0B6Tt9Aw64NOtqi+Ov
+         gORw+HTwcqx4wdctW26BiNxLuZdOPODLg114LRgU3Ozmj80q9ZR6sGmc/OwajvvjiA
+         9s9aRKr6a2w5tAL3IDcEc+yAn/OYIj2aZhNDQQ+oLAPMnO2cFBkDp5aOFB/n5bAb5G
+         dHswfjIH8AVzw==
+Date:   Fri, 3 Feb 2023 11:31:54 +0000
+From:   Will Deacon <will@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, mark.rutland@arm.com,
+        llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [RFC 0/5] mm/bpf/perf: Store build id in file object
-Message-ID: <Y9zb6fUH3mAoPUzz@hirez.programming.kicks-ass.net>
-References: <20230201135737.800527-1-jolsa@kernel.org>
- <CAADnVQ+im7FwSqDcTLmMvfRcT9unwdHBeWG9Snw7W5Q-bcdWvg@mail.gmail.com>
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
+Message-ID: <20230203113153.GA5927@willie-the-truck>
+References: <20230123125956.1350336-6-anshuman.khandual@arm.com>
+ <202301310047.b5iv9hM8-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADnVQ+im7FwSqDcTLmMvfRcT9unwdHBeWG9Snw7W5Q-bcdWvg@mail.gmail.com>
+In-Reply-To: <202301310047.b5iv9hM8-lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 02, 2023 at 03:15:39AM -0800, Alexei Starovoitov wrote:
-> On Wed, Feb 1, 2023 at 5:57 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > hi,
-> > we have a use cases for bpf programs to use binary file's build id.
-> >
-> > After some attempts to add helpers/kfuncs [1] [2] Andrii had an idea [3]
-> > to store build id directly in the file object. That would solve our use
-> > case and might be beneficial for other profiling/tracing use cases with
-> > bpf programs.
-> >
-> > This RFC patchset adds new config CONFIG_FILE_BUILD_ID option, which adds
-> > build id object pointer to the file object when enabled. The build id is
-> > read/populated when the file is mmap-ed.
-> >
-> > I also added bpf and perf changes that would benefit from this.
-> >
-> > I'm not sure what's the policy on adding stuff to file object, so apologies
-> > if that's out of line. I'm open to any feedback or suggestions if there's
-> > better place or way to do this.
+On Tue, Jan 31, 2023 at 12:28:17AM +0800, kernel test robot wrote:
+> Hi Anshuman,
 > 
-> struct file represents all files while build_id is for executables only,
-> and not all executables, but those currently running, so
-> I think it's cleaner to put it into vm_area_struct.
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on arm64/for-next/core]
+> [also build test WARNING on tip/perf/core acme/perf/core linus/master v6.2-rc6 next-20230130]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230123-210254
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+> patch link:    https://lore.kernel.org/r/20230123125956.1350336-6-anshuman.khandual%40arm.com
+> patch subject: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
+> config: arm64-randconfig-r016-20230130 (https://download.01.org/0day-ci/archive/20230131/202301310047.b5iv9hM8-lkp@intel.com/config)
+> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 4196ca3278f78c6e19246e54ab0ecb364e37d66a)
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # install arm64 cross compiling tool for clang build
+>         # apt-get install binutils-aarch64-linux-gnu
+>         # https://github.com/intel-lab-lkp/linux/commit/0deba04ac45f8632b8579cb5cbf908b9f4428402
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230123-210254
+>         git checkout 0deba04ac45f8632b8579cb5cbf908b9f4428402
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 prepare
+> 
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from arch/arm64/kernel/asm-offsets.c:15:
+>    In file included from include/linux/kvm_host.h:45:
+>    In file included from arch/arm64/include/asm/kvm_host.h:36:
+>    In file included from include/kvm/arm_pmu.h:11:
+> >> arch/arm64/include/asm/perf_event.h:280:20: warning: function 'has_branch_stack' has internal linkage but is not defined [-Wundefined-internal]
+>    static inline bool has_branch_stack(struct perf_event *event);
+>                       ^
+>    arch/arm64/include/asm/perf_event.h:284:16: note: used here
+>            WARN_ON_ONCE(!has_branch_stack(event));
+>                          ^
+>    1 warning generated.
+> --
+>    In file included from arch/arm64/kernel/asm-offsets.c:15:
+>    In file included from include/linux/kvm_host.h:45:
+>    In file included from arch/arm64/include/asm/kvm_host.h:36:
+>    In file included from include/kvm/arm_pmu.h:11:
+> >> arch/arm64/include/asm/perf_event.h:280:20: warning: function 'has_branch_stack' has internal linkage but is not defined [-Wundefined-internal]
+>    static inline bool has_branch_stack(struct perf_event *event);
+>                       ^
+>    arch/arm64/include/asm/perf_event.h:284:16: note: used here
+>            WARN_ON_ONCE(!has_branch_stack(event));
+>                          ^
+>    1 warning generated.
 
-There can be many vm_area_structs per file, and like for struct file,
-there's vm_area_structs for non-executable ranges too.
+This looks like it should be fixed. I'd also like to see Mark's ack on the
+final series, since he had some detailed comments on the previous version.
 
-Given there's only one buildid per file, struct file seems most
-appropriate to me.
+Will
