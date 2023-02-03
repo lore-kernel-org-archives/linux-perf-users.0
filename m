@@ -2,126 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969C1C636CC
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 11:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC14C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 14:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231545AbjBCLcE (ORCPT
+        id S233378AbjBCOSf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Feb 2023 06:32:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35878 "EHLO
+        Fri, 3 Feb 2023 09:18:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbjBCLcD (ORCPT
+        with ESMTP id S233171AbjBCOSU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Feb 2023 06:32:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB948AE;
-        Fri,  3 Feb 2023 03:32:01 -0800 (PST)
+        Fri, 3 Feb 2023 09:18:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E849D28219;
+        Fri,  3 Feb 2023 06:17:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 85CCD61EEC;
-        Fri,  3 Feb 2023 11:32:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161EDC433EF;
-        Fri,  3 Feb 2023 11:31:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B3FC361F59;
+        Fri,  3 Feb 2023 14:17:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C73C4339B;
+        Fri,  3 Feb 2023 14:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675423921;
-        bh=EMT4gAM6DFLAx01b5MmVLLZlp58/tPr8Emh4r7uLVYk=;
+        s=k20201202; t=1675433861;
+        bh=dQBAdVTSaFMdrkvi5jooHf8C4M5IX9U6/h+idH3Nbps=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dMdHRcJF0hM4pWxTxwwRi/eNiQXUxWBkgsUhUIZkbdeVM6RlvKD1XanvN2qCMldP0
-         WpG/weQPZik2iwR1ER4nF/qxq5Om2uVH1wxDBGJ1DfAPTrQ6O7lcUzUPLl3mTsWo8G
-         fpuXxJhL6L5yCeg1Qf76ED2fit5W1fb+yN0lZ0cCC9ODEphO0B6Tt9Aw64NOtqi+Ov
-         gORw+HTwcqx4wdctW26BiNxLuZdOPODLg114LRgU3Ozmj80q9ZR6sGmc/OwajvvjiA
-         9s9aRKr6a2w5tAL3IDcEc+yAn/OYIj2aZhNDQQ+oLAPMnO2cFBkDp5aOFB/n5bAb5G
-         dHswfjIH8AVzw==
-Date:   Fri, 3 Feb 2023 11:31:54 +0000
-From:   Will Deacon <will@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Mark Brown <broonie@kernel.org>,
+        b=ZVWZzcnghKdg0dcklR0v569t1WKulSoyQWtEqY/qXe081bk8UBFN2dqBqSTlzqjm1
+         R6qznfa0ME2eSHQUhD5H1yPVy757rEMBPtndsxKyBf9hIhWvHjH14996mD+az34rFZ
+         PwKUl4/3l4Wugvno+SBkVx/OLVOEfDIRCRhMyDfK6edS2gk1TinIaXQOKu9SS6O7SL
+         T7111Hholhsg05kf+SQDgcrK89ZVTZKnTQtRie5O9qG4Ik5M3fjJhTweQpw5awZTsa
+         +14SN9B0nOyC+ghju15RUbDzISVBXGuzMa8BqrTETscXSGVEaKu5yur1oiGJDPxkUc
+         2+snMF9UrV4NA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A7345405BE; Fri,  3 Feb 2023 11:17:38 -0300 (-03)
+Date:   Fri, 3 Feb 2023 11:17:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
-Message-ID: <20230203113153.GA5927@willie-the-truck>
-References: <20230123125956.1350336-6-anshuman.khandual@arm.com>
- <202301310047.b5iv9hM8-lkp@intel.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sandipan Das <sandipan.das@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [PATCH v1] perf pmu: Fix aarch64 build
+Message-ID: <Y90XgtX9uv26UAQa@kernel.org>
+References: <20230203014014.75720-1-irogers@google.com>
+ <CAP-5=fX0ohsCUspm7NowDy2bmSr2cJfp=iaStK4EAdVy7zBHGA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202301310047.b5iv9hM8-lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAP-5=fX0ohsCUspm7NowDy2bmSr2cJfp=iaStK4EAdVy7zBHGA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 12:28:17AM +0800, kernel test robot wrote:
-> Hi Anshuman,
+Em Thu, Feb 02, 2023 at 05:41:22PM -0800, Ian Rogers escreveu:
+> On Thu, Feb 2, 2023 at 5:40 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > ARM64 overrides a weak function but a previous change had broken the
+> > build.
+> >
+> > Fixes: 8cefeb8bd336 ("perf pmu-events: Introduce pmu_metrics_table")
 > 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on arm64/for-next/core]
-> [also build test WARNING on tip/perf/core acme/perf/core linus/master v6.2-rc6 next-20230130]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230123-210254
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-> patch link:    https://lore.kernel.org/r/20230123125956.1350336-6-anshuman.khandual%40arm.com
-> patch subject: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
-> config: arm64-randconfig-r016-20230130 (https://download.01.org/0day-ci/archive/20230131/202301310047.b5iv9hM8-lkp@intel.com/config)
-> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 4196ca3278f78c6e19246e54ab0ecb364e37d66a)
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # install arm64 cross compiling tool for clang build
->         # apt-get install binutils-aarch64-linux-gnu
->         # https://github.com/intel-lab-lkp/linux/commit/0deba04ac45f8632b8579cb5cbf908b9f4428402
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230123-210254
->         git checkout 0deba04ac45f8632b8579cb5cbf908b9f4428402
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 prepare
-> 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from arch/arm64/kernel/asm-offsets.c:15:
->    In file included from include/linux/kvm_host.h:45:
->    In file included from arch/arm64/include/asm/kvm_host.h:36:
->    In file included from include/kvm/arm_pmu.h:11:
-> >> arch/arm64/include/asm/perf_event.h:280:20: warning: function 'has_branch_stack' has internal linkage but is not defined [-Wundefined-internal]
->    static inline bool has_branch_stack(struct perf_event *event);
->                       ^
->    arch/arm64/include/asm/perf_event.h:284:16: note: used here
->            WARN_ON_ONCE(!has_branch_stack(event));
->                          ^
->    1 warning generated.
-> --
->    In file included from arch/arm64/kernel/asm-offsets.c:15:
->    In file included from include/linux/kvm_host.h:45:
->    In file included from arch/arm64/include/asm/kvm_host.h:36:
->    In file included from include/kvm/arm_pmu.h:11:
-> >> arch/arm64/include/asm/perf_event.h:280:20: warning: function 'has_branch_stack' has internal linkage but is not defined [-Wundefined-internal]
->    static inline bool has_branch_stack(struct perf_event *event);
->                       ^
->    arch/arm64/include/asm/perf_event.h:284:16: note: used here
->            WARN_ON_ONCE(!has_branch_stack(event));
->                          ^
->    1 warning generated.
+> As 8cefeb8bd336 ("perf pmu-events: Introduce pmu_metrics_table") is
+> only on tmp.perf/core then it may be best to just squash this fix into
+> that.
 
-This looks like it should be fixed. I'd also like to see Mark's ack on the
-final series, since he had some detailed comments on the previous version.
+Yeah, that was my intention, I'll fold it there to keep bisection,
+thanks for fixing it so fast, I'll double check on my rk3399 board and
+on again on the cross-build container.
 
-Will
+- Arnaldo
+
+> 
+> Thanks,
+> Ian
+> 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/arm64/util/pmu.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+> > index 2779840d8896..fa143acb4c8d 100644
+> > --- a/tools/perf/arch/arm64/util/pmu.c
+> > +++ b/tools/perf/arch/arm64/util/pmu.c
+> > @@ -22,6 +22,8 @@ static struct perf_pmu *pmu__find_core_pmu(void)
+> >                         return NULL;
+> >
+> >                 return pmu;
+> > +       }
+> > +       return NULL;
+> >  }
+> >
+> >  const struct pmu_metrics_table *pmu_metrics_table__find(void)
+> > --
+> > 2.39.1.519.gcb327c4b5f-goog
+> >
+
+-- 
+
+- Arnaldo
