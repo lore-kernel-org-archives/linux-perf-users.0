@@ -2,123 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F01C636D3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 01:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B04C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 02:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231970AbjBCBlo (ORCPT
+        id S229469AbjBCCNb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Feb 2023 20:41:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60418 "EHLO
+        Thu, 2 Feb 2023 21:13:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231917AbjBCBlj (ORCPT
+        with ESMTP id S229699AbjBCCNa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Feb 2023 20:41:39 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A1887D17
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Feb 2023 17:41:36 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id h12so3371636wrv.10
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Feb 2023 17:41:36 -0800 (PST)
+        Thu, 2 Feb 2023 21:13:30 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396594FC13;
+        Thu,  2 Feb 2023 18:13:29 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id o13so3706236pjg.2;
+        Thu, 02 Feb 2023 18:13:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rothOJAx61IhY6WBzLgJ0pLvV1L69tGtBH8EM756NO8=;
-        b=JGGtJ43mQQSjD5iDplV0TKr5vkx/VXre07uHn16ZwJoqK0iPdnRFzazXeDBOc7drVf
-         iA0hyjJJhKMHtfH3J1Dlkupz5f3mvNhyF4tWWBBqrdkFifGWfW9vpiP1LYtm1tANuk5x
-         CDkTWs5aoqcOApygErzXmNuu4KVA8GufFtqBRQC7GQDvOiJnodRDgjgOpWpiY69JlNvB
-         hDUGM9TfhF2P6C/nUPpC3ICMfxp6eOUe40TgBJKFqZfK5ZUtLJYNCc+2Ua8JNjpE5nZD
-         DOTe6XGkYm+xIa2VVRfMFDypR9RQhzOvDmr5R+sFK2m6siyVBbM+pn0sDza4ltIdKkYe
-         /KRA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=PC+7eG5v0On9Uzu9MVNYf6K7hpU6NVQjdEiMJ0VLGkE=;
+        b=keeD+V9wpUp/nx8XgqGbTDMyVi0M+fEtrWsSUmBnyKxJ4GDuH5fRH5bva6YnBJQ7Te
+         3R+y3OR1wV7+BPGIVYvb9dVndsyhG06OhrzRJRuOaK9wbxkkupuyZfImtnGbQ+873biL
+         Ab4xrFrOT7STQQ8uA6Opqf8YhfTIW7YSovexF6s0EiXIMfh72FFHcZdStvshG7ZqRd3t
+         o6UjYhBPrdTtnzP4dOxB1MZh1WnlmnbX9k/Dr5n7ZLTLr39PtlFVZL/CRKJOT/KeNIvK
+         PGoFwfPPw8iRgJ/CR41VFOiCs6tEqOAiU6zT8MbvX73I16AaXbmu0AxQuEBj0AvSGEoN
+         IHnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rothOJAx61IhY6WBzLgJ0pLvV1L69tGtBH8EM756NO8=;
-        b=DPt69QLXEvM/WM33/6lmEPm7XWFuHX8H7zeNsNOEv/N1c3oY98tF0t2Nby1W2G5rpg
-         c3qcSkv7N4/DJyRD3NN2jrYRGdMsYG9AysgkvCtNuW+7bkawI/8WPmVhjnNCDks7H6/p
-         kITbIbwsomoE2df3kME0y1h8D9D0NoZ5CDWSbKATsQdLnAIJ+eiVYmmuACpJfpPtz10Q
-         Fe/r+NYOp4XgeXVM18Ifi8p5lonx853OZrbuPzEsbBpSG4jp9mPmH4UbSOV8+xrS7s/4
-         tNatXl1T3vJKK3T4kf91u+kzsTh3T+3c/Q0CA6BvJLKmDmqhY/9ReT12BlyTMkdctBfO
-         BGnQ==
-X-Gm-Message-State: AO0yUKWZYRcsCeN6TlFRMk3LvCS9TgzrRhaT/q3lb/ol42/F8aH5WfjX
-        6UNFafUA4woyZcPFOQIOd/qATZ54IIZGCkSasxOXKQ==
-X-Google-Smtp-Source: AK7set9KcFxcgBgOvFlB4117j0vmSRXNYNO65A30gArABQfkcUEfrN38aSMQU2A/k5B0ndvaCL9HCt0EhVPjdSUZ6Oc=
-X-Received: by 2002:adf:e351:0:b0:2bf:eba5:b652 with SMTP id
- n17-20020adfe351000000b002bfeba5b652mr196573wrj.19.1675388494864; Thu, 02 Feb
- 2023 17:41:34 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PC+7eG5v0On9Uzu9MVNYf6K7hpU6NVQjdEiMJ0VLGkE=;
+        b=W0tQZ9R+dYg1UyIvmT8vHDWBY3pwcjVZXZdSQ4PuIit9oQchhwpCLuvlh/Z10wooAd
+         6BpjvhPTNHHOTXOvX+syFNAjE+8JyzutMqfLzUXFdoIUIywHO4skhI7X9MCSggl3jeHO
+         Ng3HQXrVUpKU/6Pa0l4bX5YiiBYWW6PHh0tGJLjJJCZ8OYkcuUfC41besOh3WsTEDOiO
+         AZC9kMBFgvu9xfazF9777kJYLqaseY7/UvYnuwapsxfFwrI5hcAOBjx2gmcKmD/ScQe+
+         KxX6mk43L/LkBElzOk5zwZoxyLRygwM7yWW1h5JvunJfMtFKBaKurpJf/mulXoQty6TJ
+         s9Lg==
+X-Gm-Message-State: AO0yUKUPqZclwn9+ttbfF8XZWMZqAdQpL+Lvb14Mp77n4lXQqeUqWULe
+        ClLLJaQtfs01jzVFmBqErVMxUYDS68M=
+X-Google-Smtp-Source: AK7set87d/ZMAvBdw3n2FldFklqJRVFQHeTMq32URlTMIzi6XUEgshQfFV8JHTzbVRAq2OrBUaqp7g==
+X-Received: by 2002:a17:90a:19d7:b0:22c:6d7c:c521 with SMTP id 23-20020a17090a19d700b0022c6d7cc521mr8593408pjj.45.1675390408407;
+        Thu, 02 Feb 2023 18:13:28 -0800 (PST)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:6755:96ed:3f18:dac4])
+        by smtp.gmail.com with ESMTPSA id fs23-20020a17090af29700b0022c942b8683sm497249pjb.56.2023.02.02.18.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Feb 2023 18:13:27 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     acme@kernel.org, jolsa@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, irogers@google.com,
+        linux-kernel@vger.kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, song@kernel.org,
+        haoluo@google.com, bpf@vger.kernel.org, juri.lelli@redhat.com
+Subject: [PATCH v2 0/3] perf lock contention: Improve aggr x filter combination
+Date:   Thu,  2 Feb 2023 18:13:21 -0800
+Message-Id: <20230203021324.143540-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
 MIME-Version: 1.0
-References: <20230203014014.75720-1-irogers@google.com>
-In-Reply-To: <20230203014014.75720-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 2 Feb 2023 17:41:22 -0800
-Message-ID: <CAP-5=fX0ohsCUspm7NowDy2bmSr2cJfp=iaStK4EAdVy7zBHGA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu: Fix aarch64 build
-To:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sandipan Das <sandipan.das@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 2, 2023 at 5:40 PM Ian Rogers <irogers@google.com> wrote:
->
-> ARM64 overrides a weak function but a previous change had broken the
-> build.
->
-> Fixes: 8cefeb8bd336 ("perf pmu-events: Introduce pmu_metrics_table")
+Hello,
 
-As 8cefeb8bd336 ("perf pmu-events: Introduce pmu_metrics_table") is
-only on tmp.perf/core then it may be best to just squash this fix into
-that.
+The callstack filter can be useful to debug lock issues but it has a
+limitation that it only works with caller aggregation mode (which is the
+default setting).  IOW it cannot filter by callstack when showing tasks
+or lock addresses/names.
+
+But sometimes users want to use the filter for other aggregation mode.
+Like "show me lock addresses/names from this caller only" or "show me
+tasks having these callers".
+
+When it's using tracepoint events from the data file, the situation is
+good since the tracepoints have all the necessary info.  But when using
+BPF it needs to extend the key of lock stat BPF map to have more than
+one info like 'pid + stack_id' or 'lock_addr + stack_id'.  As callstack
+filter works in userspace, it should save the both info.
+
+With this change we can now use the -S/--callstack-filter with the
+-t/--threads option or -l/--lock-addr option.  It's also possible to use
+it with other filter options.
+
+The following example shows the top 5 tasks that have contention
+somewhere in the epoll handling.
+
+  $ sudo perf lock con -abt -S epoll -E5 -- sleep 1
+   contended   total wait     max wait     avg wait          pid   comm
+
+           2     58.64 us     32.38 us     29.32 us      1514752   Chrome_IOThread
+           3     29.31 us     12.65 us      9.77 us         3773   Xorg
+           1     17.45 us     17.45 us     17.45 us      1514906   Chrome_ChildIOT
+           1     15.41 us     15.41 us     15.41 us      1515382   Chrome_ChildIOT
+           1     12.52 us     12.52 us     12.52 us       293878   IPC I/O Parent
+
+You get get the code at 'perf/lock-filter-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
-Ian
+Namhyung
 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/arm64/util/pmu.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
-> index 2779840d8896..fa143acb4c8d 100644
-> --- a/tools/perf/arch/arm64/util/pmu.c
-> +++ b/tools/perf/arch/arm64/util/pmu.c
-> @@ -22,6 +22,8 @@ static struct perf_pmu *pmu__find_core_pmu(void)
->                         return NULL;
->
->                 return pmu;
-> +       }
-> +       return NULL;
->  }
->
->  const struct pmu_metrics_table *pmu_metrics_table__find(void)
-> --
-> 2.39.1.519.gcb327c4b5f-goog
->
+Namhyung Kim (3):
+  perf lock contention: Factor out lock_contention_get_name()
+  perf lock contention: Use lock_stat_find{,new}
+  perf lock contention: Support filters for different aggregation
+
+ tools/perf/builtin-lock.c                     |  79 ++++----
+ tools/perf/util/Build                         |   5 +-
+ tools/perf/util/bpf_lock_contention.c         | 180 +++++++++++-------
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  15 +-
+ tools/perf/util/bpf_skel/lock_data.h          |   4 +-
+ tools/perf/util/lock-contention.h             |   5 +
+ 6 files changed, 178 insertions(+), 110 deletions(-)
+
+-- 
+2.39.1.519.gcb327c4b5f-goog
+
