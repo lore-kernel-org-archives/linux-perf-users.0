@@ -2,117 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F6BC636D4
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 16:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BE6C05027
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Feb 2023 16:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232530AbjBCQYW (ORCPT
+        id S233627AbjBCQ4s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Feb 2023 11:24:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
+        Fri, 3 Feb 2023 11:56:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231629AbjBCQYU (ORCPT
+        with ESMTP id S233628AbjBCQ4p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Feb 2023 11:24:20 -0500
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62197A145A;
-        Fri,  3 Feb 2023 08:24:19 -0800 (PST)
-Received: by mail-ot1-f53.google.com with SMTP id e12-20020a0568301e4c00b0068bc93e7e34so1499328otj.4;
-        Fri, 03 Feb 2023 08:24:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jLYnCQyeaEFRYpdwDRzWM+QNJiylMM8MiQQoWzGLB1E=;
-        b=1H7GvAVV/ZRPXsYfiZkqRiNsUzYUXORxcQBABncir4lMvKSBcCTZGjniWqU9r+HXbI
-         S6wy4XPzUZHzuTIAbtf/QPTIjP7RNRbBRJAvhnRJP3113OBnsQimSkW2A05CKI6WG4G1
-         0Xbv3JEBCtEt4oXKGptqSPWIfO64AOhSQhUmfv+qMh0sKcdc4nSig7dfcL4d1REjuGXr
-         Cjnv8yP8Y1CpS9Mb9ml2xRTWqMFCRxG29fsQ0e+YiOKj5JRkh+2HKYmP+4ZCIfd3Wn8u
-         pRTN4hezYQvMM+Q7X6touRL0Jys9dPrWhpSCGkRVThYjh2HtjULr7FeVLaTth/HLGXyI
-         F7qA==
-X-Gm-Message-State: AO0yUKV918JjcXdSwzfxA7G8xBDOwCkPtHwAdCirVsaJBGZ9t9Kiuxju
-        2C+Me4QiB8sW6LiilB8S4g==
-X-Google-Smtp-Source: AK7set9QioEE/PM5u0iYo9g/U2ZPZTBowfiB9/BrKUMguMO9j2THXRLKmTwSGAMdI7jsdBHUJKjsIA==
-X-Received: by 2002:a9d:4a4:0:b0:675:fef1:e2a6 with SMTP id 33-20020a9d04a4000000b00675fef1e2a6mr2106366otm.35.1675441458581;
-        Fri, 03 Feb 2023 08:24:18 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id l28-20020a056830335c00b00684ccbfe012sm1276802ott.27.2023.02.03.08.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 08:24:18 -0800 (PST)
-Received: (nullmailer pid 133229 invoked by uid 1000);
-        Fri, 03 Feb 2023 16:24:17 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 3 Feb 2023 11:56:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16716A8A09;
+        Fri,  3 Feb 2023 08:56:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 99BE0B82B5F;
+        Fri,  3 Feb 2023 16:56:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D92F2C4339C;
+        Fri,  3 Feb 2023 16:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675443392;
+        bh=h7/viEQOihIqILr+s/nTh73JPYHxsBqSaGRcETP5tcc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WfZv1S4za0O8S3xKBAkzhmkDpjjZ5oMqlrzwy1eL1z0Jm58kGxDHxDlxOhtb1hnXR
+         hCTWoVCsZtuRXqIGYrcEG/YZn1c6u+7K9wxU1h4DsqhD0Bxf7clbr94+M5BnLM4l38
+         fD8c3ajfVnCwOqWCi7qlkAP1Vwe5/cfogMlFwkdQKmmoaekXC2n+PgLCp7f2wFzhqI
+         WOmwdh0YG4lOxcEQlhhKDW45HxHbtLnetEj29k/r4ezpHUErFZMfjP57XRUXkVQjCC
+         jaNlj/nIqFmsjWXpNXckrtCZQilOvm8SYQIqqnG2tVkaEUNtLp0TLxBgqmyLbfuV0+
+         jR7bn63bl+pWQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 99CD8405BE; Fri,  3 Feb 2023 13:56:28 -0300 (-03)
+Date:   Fri, 3 Feb 2023 13:56:28 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf arm-spe: Add raw decoding for SPEv1.2 previous branch address
-Date:   Fri,  3 Feb 2023 10:24:01 -0600
-Message-Id: <20230203162401.132931-1-robh@kernel.org>
-X-Mailer: git-send-email 2.39.0
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sandipan Das <sandipan.das@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        linuxppc-dev@lists.ozlabs.org, Kajol Jain <kjain@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [PATCH v1] perf pmu: Fix aarch64 build
+Message-ID: <Y908vNzJp7cVM8gN@kernel.org>
+References: <20230203014014.75720-1-irogers@google.com>
+ <CAP-5=fX0ohsCUspm7NowDy2bmSr2cJfp=iaStK4EAdVy7zBHGA@mail.gmail.com>
+ <Y90XgtX9uv26UAQa@kernel.org>
+ <Y90bsM4DGL+WV8m0@kernel.org>
+ <Y90b7shHtOCQL3ma@kernel.org>
+ <Y90di+N7TODkFvMV@kernel.org>
+ <Y90rtA95mWW5Othk@kernel.org>
+ <Y90v+jTe6z1dSFE0@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y90v+jTe6z1dSFE0@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arm SPEv1.2 adds a new optional address packet type: previous branch
-target. The recorded address is the target virtual address of the most
-recently taken branch in program order.
+Em Fri, Feb 03, 2023 at 01:02:02PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Feb 03, 2023 at 12:43:48PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > I tried bisecting, but at this cset:
+> > 
+> > acme@roc-rk3399-pc:~/git/perf$ git log --oneline -1
+> > d22e569cd33d (HEAD) perf pmu-events: Separate the metrics from events for no jevents
+> > acme@roc-rk3399-pc:~/git/perf$
+> > 
+> > I'm getting this:
+> > 
+> >   CC      /tmp/build/perf/pmu-events/pmu-events.o
+> > pmu-events/pmu-events.c:3637:32: error: no previous prototype for ‘perf_pmu__find_table’ [-Werror=missing-prototypes]
+> >  3637 | const struct pmu_events_table *perf_pmu__find_table(struct perf_pmu *pmu)
+> >       |                                ^~~~~~~~~~~~~~~~~~~~
+> >   CC      /tmp/build/perf/builtin-ftrace.o
+> >   CC      /tmp/build/perf/builtin-help.o
+> >   CC      /tmp/build/perf/builtin-buildid-list.o
+> > cc1: all warnings being treated as errors
+> > make[3]: *** [/home/acme/git/perf/tools/build/Makefile.build:97: /tmp/build/perf/pmu-events/pmu-events.o] Error 1
+> > make[2]: *** [Makefile.perf:676: /tmp/build/perf/pmu-events/pmu-events-in.o] Error 2
+> > make[2]: *** Waiting for unfinished jobs....
+> >   CC      /tmp/build/perf/builtin-buildid-cache.o
+> > 
+> > <SNIP>
+> > 
+> >   CC      /tmp/build/perf/tests/attr.o
+> > arch/arm64/util/pmu.c: In function ‘pmu_events_table__find’:
+> > arch/arm64/util/pmu.c:35:24: error: implicit declaration of function ‘perf_pmu__find_table’; did you mean ‘perf_pmu__find_by_type’? [-Werror=implicit-function-declaration]
+> >    35 |                 return perf_pmu__find_table(pmu);
+> >       |                        ^~~~~~~~~~~~~~~~~~~~
+> >       |                        perf_pmu__find_by_type
+> > arch/arm64/util/pmu.c:35:24: error: returning ‘int’ from a function with return type ‘const struct pmu_events_table *’ makes pointer from integer without a cast [-Werror=int-conversion]
+> >    35 |                 return perf_pmu__find_table(pmu);
+> >       |                        ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > cc1: all warnings being treated as errors
+> > make[6]: *** [/home/acme/git/perf/tools/build/Makefile.build:97: /tmp/build/perf/arch/arm64/util/pmu.o] Error 1
+> > make[5]: *** [/home/acme/git/perf/tools/build/Makefile.build:139: util] Error 2
+> > make[4]: *** [/home/acme/git/perf/tools/build/Makefile.build:139: arm64] Error 2
+> > make[3]: *** [/home/acme/git/perf/tools/build/Makefile.build:139: arch] Error 2
+> > make[3]: *** Waiting for unfinished jobs....
+> >   CC      /tmp/build/perf/tests/vmlinux-kallsyms.o
+> > 
+> > -----
+> > 
+> > I'm building with:
+> 
+> So:
+> 
+> acme@roc-rk3399-pc:~/git/perf$ find tools/perf/ -name "*.[ch]" | xargs grep -w perf_pmu__find_table
+> tools/perf/arch/arm64/util/pmu.c:		return perf_pmu__find_table(pmu);
+> tools/perf/pmu-events/pmu-events.c:const struct pmu_events_table *perf_pmu__find_table(struct perf_pmu *pmu)
+> acme@roc-rk3399-pc:~/git/perf$
+> acme@roc-rk3399-pc:~/git/perf$ git log --oneline -1
+> d22e569cd33d (HEAD) perf pmu-events: Separate the metrics from events for no jevents
+> acme@roc-rk3399-pc:~/git/perf$
+> 
+> Tring to fix...
 
-Add support for decoding the address packet in raw dumps.
+tools/perf/pmu-events/pmu-events.c was a leftover from a previous build,
+strange as I build using O=, not to clutter the source dir, so perhaps
+handling that is missing, I'll check.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Use "PBT" instead of "LBR"
----
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c | 4 +++-
- tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Fixed aarch64 specific one with:
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-index 2f311189c6e8..fed4741f372e 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-@@ -422,16 +422,18 @@ static int arm_spe_pkt_desc_addr(const struct arm_spe_pkt *packet,
- 	int ch, pat;
- 	u64 payload = packet->payload;
- 	int err = 0;
-+	static const char *idx_name[] = {"PC", "TGT", "VA", "PA", "PBT"};
+diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+index 801bf52e2ea6..b4eaf00ec5a8 100644
+--- a/tools/perf/arch/arm64/util/pmu.c
++++ b/tools/perf/arch/arm64/util/pmu.c
+@@ -32,7 +32,7 @@ const struct pmu_events_table *pmu_events_table__find(void)
+ 	struct perf_pmu *pmu = pmu__find_core_pmu();
  
- 	switch (idx) {
- 	case SPE_ADDR_PKT_HDR_INDEX_INS:
- 	case SPE_ADDR_PKT_HDR_INDEX_BRANCH:
-+	case SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH:
- 		ns = !!SPE_ADDR_PKT_GET_NS(payload);
- 		el = SPE_ADDR_PKT_GET_EL(payload);
- 		payload = SPE_ADDR_PKT_ADDR_GET_BYTES_0_6(payload);
- 		arm_spe_pkt_out_string(&err, &buf, &buf_len,
- 				"%s 0x%llx el%d ns=%d",
--				(idx == 1) ? "TGT" : "PC", payload, el, ns);
-+				idx_name[idx], payload, el, ns);
- 		break;
- 	case SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT:
- 		arm_spe_pkt_out_string(&err, &buf, &buf_len,
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-index 9b970e7bf1e2..f75ed3a8a050 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-@@ -65,6 +65,7 @@ struct arm_spe_pkt {
- #define SPE_ADDR_PKT_HDR_INDEX_BRANCH		0x1
- #define SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT	0x2
- #define SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS	0x3
-+#define SPE_ADDR_PKT_HDR_INDEX_PREV_BRANCH	0x4
+ 	if (pmu)
+-		return perf_pmu__find_table(pmu);
++		return perf_pmu__find_events_table(pmu);
  
- /* Address packet payload */
- #define SPE_ADDR_PKT_ADDR_BYTE7_SHIFT		56
--- 
-2.39.0
+ 	return NULL;
+ }
 
+
+---
+
+Continuing...
