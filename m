@@ -2,115 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C6C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Feb 2023 10:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DA2C636CC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Feb 2023 13:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjBDKhF (ORCPT
+        id S233736AbjBDNpF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Feb 2023 05:37:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
+        Sat, 4 Feb 2023 08:45:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjBDKhF (ORCPT
+        with ESMTP id S232230AbjBDNpE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Feb 2023 05:37:05 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C135928869;
-        Sat,  4 Feb 2023 02:36:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sBVk4y8jI2P1MdjQADO2i5z2S1Y3e8OF8T5i6YaW5/s=; b=ZM0DdM2Rzq+Q8iGa8KVah+nR3U
-        ZlmIlYPU71shYc60APr0n98pmiA6Urlnc7GE543r1mS2t/EFtQDoSGfPRply+hI+NILtEqMtHaYPi
-        AES8YK/07g1WXZQuXNMs4goEcmx7otMwxOhMz64Or7GZnvzXxN9BeoChlm6fQTZJOagGMDq6orDdo
-        0VJUqvKdWYbkONExbY2a1ZrWu8iDZUM/yqaKXLnVWqQYKRJGL8XBFVtUfstneJm5rLOmMWDFQyuzD
-        LE8zFkiMae8j97fE+UBlPS/R0scF61voClAExpmvWV3+c5oBTgE6dyEDZ8khDYGC/uwSWy8C/3BmA
-        +47zhm0g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pOFuW-00F6RS-Kl; Sat, 04 Feb 2023 10:36:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 84D3B30068D;
-        Sat,  4 Feb 2023 11:36:43 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6125F20AF917C; Sat,  4 Feb 2023 11:36:43 +0100 (CET)
-Date:   Sat, 4 Feb 2023 11:36:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        James Clark <james.clark@arm.com>
-Subject: Re: [PATCH v4 7/8] perf: Add perf_event_attr::config3
-Message-ID: <Y941O6eVNfpS3F5b@hirez.programming.kicks-ass.net>
-References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
- <20220825-arm-spe-v8-7-v4-7-327f860daf28@kernel.org>
+        Sat, 4 Feb 2023 08:45:04 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E21206B4;
+        Sat,  4 Feb 2023 05:45:03 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A4DD71EC06C0;
+        Sat,  4 Feb 2023 14:45:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1675518301;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EpYaQjX7l2yY8w86H3eHS5+rQ43naFp29YMcKhsM2ds=;
+        b=RdvOxbM9Dt12QRKP1fyud4ytknv9qeAqjlacryu0vlZHg+RjUu3v8ut+DFrAA8LTFUHkdb
+        gITDCdzkdmhfRrepGEhJDAWoqe/j1Hu+hwmzpgd4uJtaXYDvUOgLvdbvy4eH1KcU7kb8Tq
+        1JZ1hZ7IR8BoGGu+GGEPSFnpvZlUl5I=
+Date:   Sat, 4 Feb 2023 14:44:57 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     silviazhao-oc <silviazhao-oc@zhaoxin.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cobechen@zhaoxin.com, louisqi@zhaoxin.com, silviazhao@zhaoxin.com,
+        tonywwang@zhaoxin.com, kevinbrace@gmx.com,
+        8vvbbqzo567a@nospam.xutrox.com
+Subject: Re: [PATCH] x86/perf/zhaoxin: Add stepping check for ZX-C
+Message-ID: <Y95hWVFyw7TM1WSB@zn.tnic>
+References: <20230202091738.5947-1-silviazhao-oc@zhaoxin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220825-arm-spe-v8-7-v4-7-327f860daf28@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230202091738.5947-1-silviazhao-oc@zhaoxin.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 01:26:23PM -0600, Rob Herring wrote:
-> Arm SPEv1.2 adds another 64-bits of event filtering control. As the
-> existing perf_event_attr::configN fields are all used up for SPE PMU, an
-> additional field is needed. Add a new 'config3' field.
+On Thu, Feb 02, 2023 at 05:17:38PM +0800, silviazhao-oc wrote:
+> Nano processor may not fully support rdpmc instruction, it works well
+> for reading general pmc counter, but will lead GP(general protection)
+> when accessing fixed pmc counter. Furthermore, family/mode information
+> is same between Nano processor and ZX-C processor, it leads to zhaoxin
+> pmu driver is wrongly loaded for Nano processor, which resulting boot
+> kernal fail.
 > 
-> Tested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> To solve this problem, stepping information will be checked to distinguish
+> between Nano processor and ZX-C processor.
+> 
+> Fixes: 3a4ac121c2ca (“x86/perf: Add hardware performance events support for Zhaoxin CPU”)
+> Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=212389
+> Reported-by: Kevin Brace <kevinbrace@gmx.com>
+> 
+> Signed-off-by: silviazhao-oc <silviazhao-oc@zhaoxin.com>
+
+Please use your proper name in the Signed-off-by.
+
 > ---
-> There's still an unresolved discussion about validating 'config3' with
-> the options laid out here[1].
+>  arch/x86/events/zhaoxin/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> v4:
->  - Rebase on v6.2-rc1
-> v3:
->  - No change
-> v2:
->  - Drop tools/ side update
-> 
-> [1] https://lore.kernel.org/all/Y49ttrv6W5k3ZNYw@FVFF77S0Q05N.cambridge.arm.com/
-> ---
->  include/uapi/linux/perf_event.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index ccb7f5dad59b..37675437b768 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -374,6 +374,7 @@ enum perf_event_read_format {
->  #define PERF_ATTR_SIZE_VER5	112	/* add: aux_watermark */
->  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
->  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
-> +#define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+> diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+> index 949d845c922b..cef1de251613 100644
+> --- a/arch/x86/events/zhaoxin/core.c
+> +++ b/arch/x86/events/zhaoxin/core.c
+> @@ -541,7 +541,8 @@ __init int zhaoxin_pmu_init(void)
 >  
->  /*
->   * Hardware event_id to monitor via a performance monitoring event:
-> @@ -515,6 +516,8 @@ struct perf_event_attr {
->  	 * truncated accordingly on 32 bit architectures.
->  	 */
->  	__u64	sig_data;
-> +
-> +	__u64	config3; /* extension of config2 */
->  };
+>  	switch (boot_cpu_data.x86) {
+>  	case 0x06:
+> -		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
+> +		if ((boot_cpu_data.x86_model == 0x0f && boot_cpu_data.x86_stepping >= 0x0e) ||
+> +			boot_cpu_data.x86_model == 0x19) {
+>  
+>  			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
 
-Yeah, that was bound to happen I suppose..
+Last time we talked:
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+https://lore.kernel.org/r/3c7da7fd-402f-c74f-c96c-0e88828eab58@zhaoxin.com
+
+you said that Nano #GPs when trying to RDPMC the fixed counters. Which
+sounds like an erratum.
+
+We do those by adding a X86_BUG flag, set that flag for Nano and then
+test it where needed. Grep the source tree for examples.
+
+Please do that above too unstead of testing steppings.
+
+Also, I'd like to know why do steppings < 0xe mean Nano and why isn't
+there a more reliable way to detect it?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
