@@ -2,176 +2,170 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2CEC05027
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 04:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C597C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 06:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjBFElM (ORCPT
+        id S229616AbjBFGGB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Feb 2023 23:41:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33470 "EHLO
+        Mon, 6 Feb 2023 01:06:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbjBFElK (ORCPT
+        with ESMTP id S229545AbjBFGGA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Feb 2023 23:41:10 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8990113C1
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Feb 2023 20:40:46 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3161HG7U022945;
-        Mon, 6 Feb 2023 04:40:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=RV7WUkegwLiL+5H2WOWRskyGI+Aqqf6qVmM1XCFZL4w=;
- b=lYFvjvxQaSc04i2Oa7qs+04vsEZvCmZ1KBAnoi4Rc9YGMxToZO9+1NuNBMezesK3kcDJ
- IKgqsxFM1DELn6TDHzZLDsYgexTHEvymybeUA4ENOhEfj6hD+zv0L3fJ7cL103TFnrIr
- m/9dkIFKXpNoiFvzLBs16ob060iVArXZNABmwr2F0Pjwz15dKA5zEF0Bk785gvYkuSgK
- NY2ikn1G8N6WcqboLe95i6l5wWZg6DGb2VhWPmq5dgW1RdOXfghUwdKXvH8n4CQFlN06
- 5hO3pfsqGLjZJhHOZ8xggPcetQrpdFofZwYv3FHyaUQYYx6AVgUKgPXAwcYnfEkF99oO mA== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nj16rdddx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 04:40:38 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3160sh11022813;
-        Mon, 6 Feb 2023 04:40:35 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfhd82-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 04:40:35 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3164eVQk46858706
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Feb 2023 04:40:31 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C86832004B;
-        Mon,  6 Feb 2023 04:40:31 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87D6F20043;
-        Mon,  6 Feb 2023 04:40:30 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.64.42])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon,  6 Feb 2023 04:40:30 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] tools/perf/tests: Add system wide check for perf bench
- workload in all metric test
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230202164413.56743-1-kjain@linux.ibm.com>
-Date:   Mon, 6 Feb 2023 10:10:28 +0530
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3BB099AB-5FB4-40FF-A281-C06A42FBEBC7@linux.vnet.ibm.com>
-References: <20230202164413.56743-1-kjain@linux.ibm.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hpv7KVvmI5IwzfXBm52H9-hTvdVzdYkM
-X-Proofpoint-GUID: hpv7KVvmI5IwzfXBm52H9-hTvdVzdYkM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-06_02,2023-02-03_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0 impostorscore=0
- spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302060039
+        Mon, 6 Feb 2023 01:06:00 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA08115CB7;
+        Sun,  5 Feb 2023 22:05:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P7C2PWo2wPRTx4EzX5+BK8XHsy+oEAnuBhJY0hWtF0+abYj6+Toaatiie0ZV2fH8h/FQq6anmbHxI87t7/FxU/ZPWS3heDj3fGtrEwWqA/h6O9dEcF/5PvB9l6GJxYK2mAwbGRKYNbd0X1ObuaEsQF+8WffXb7YvpXjYbQTHWnZHfGRm1MO3eqPPWaMR6STnnJJGQI/OWD6OeoCi+/+ditknOwq9vm75o1hSmjkeuA1+qJH64lb0VAjAkn+vfJz19sVdy/cCrzeJwa1c8/Q+gOd6F8hlUjr2tL8+paWH+MC5M3ktmntXjf5ScQhYUdXo/DSW4b7gGiMudN1ZFBKdhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O68SHyCE2lCLQjd3HOqsi5ztI1D0/EwYpE5COY+eFWo=;
+ b=cEeY+7IgDC2x3PQqZgRD0YJi/TXe3sikfXuVCtQ6z378KlAd2pc/AnERw/kEmxuRSfSikmu+rD3WnJV8TB8SzGg319w2dP1bb0d/sGKFS5LU+0zZ09Szayog1bpSPWvIZgWnn3RyOmm/v3BfVI7GJ73dcVN9cLLrlZiL47ktxDRn5TQjM4b0Mc9Z0j1fduotGusM7w3JQr5mCdV1pYB9guYWsbVIfYA6CCvFOVOaUFTJYZHvs0rVDqmPwRtrbkymYT20Oqi2PAViJYPdD1vkcclfYoymEJ+fG19i/Tjh6x8adUi9bvjFiH7h/o08D9I60s3DXDLjfRmc4DORzQAvtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O68SHyCE2lCLQjd3HOqsi5ztI1D0/EwYpE5COY+eFWo=;
+ b=qvX46DhaDUpHCIThEpjU2zVWHazTkRVOYvIIV1FUBeoKiS2HcBbmNSqCwlqZvfIFs58z48ZQfGWcNwYUjbKgc+R9Fb1go9s0zaEbsTE/RwZ5YCPxTAe6IoCm70J0mp0fHnkKDxG3FjBmjT1+hcrbjc+K4bN8mDlrMDt0D2XsE28=
+Received: from DM6PR03CA0089.namprd03.prod.outlook.com (2603:10b6:5:333::22)
+ by LV2PR12MB5992.namprd12.prod.outlook.com (2603:10b6:408:14e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.29; Mon, 6 Feb
+ 2023 06:05:56 +0000
+Received: from DM6NAM11FT044.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:333:cafe::64) by DM6PR03CA0089.outlook.office365.com
+ (2603:10b6:5:333::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34 via Frontend
+ Transport; Mon, 6 Feb 2023 06:05:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT044.mail.protection.outlook.com (10.13.173.185) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6043.25 via Frontend Transport; Mon, 6 Feb 2023 06:05:56 +0000
+Received: from brahmaputra.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 6 Feb
+ 2023 00:05:49 -0600
+From:   Manali Shukla <manali.shukla@amd.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <seanjc@google.com>,
+        <pbonzini@redhat.com>, <jpoimboe@kernel.org>,
+        <pawan.kumar.gupta@linux.intel.com>, <babu.moger@amd.com>,
+        <sandipan.das@amd.com>, <jmattson@google.com>,
+        <thomas.lendacky@amd.com>, <nikunj@amd.com>,
+        <ravi.bangoria@amd.com>, <eranian@google.com>,
+        <irogers@google.com>, <kvm@vger.kernel.org>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <manali.shukla@amd.com>
+Subject: [RFC PATCH kernel 0/2] PreventHostIBS feature for SEV-ES and SNP guests
+Date:   Mon, 6 Feb 2023 06:05:43 +0000
+Message-ID: <20230206060545.628502-1-manali.shukla@amd.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT044:EE_|LV2PR12MB5992:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60104523-b530-424d-7135-08db08083601
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Rwx950G/xX/c6oE8Nfe7LtcewYb+scongiVqtal+8RQdyJd94IiEIGKYBlx4mYKPF4z3OaZIIihIV+QWwI1dc4RfjUCHgixhCF7AFlvbvkfUYLRSY0LitnsAVmXbAeI6Gsu1PI5jtP1m45QtX72o+mCs71Mz5LVmvkTbvAeIWwODl2JG2vYN5VS7GSektOBx4Al5ZqD2WasWQz+Hv6ZSmF/pQ4Flc/wDaNz8CnuL24u47CTKtNpHg9eTXx1FqvBW9aviA6jDP4QBP03iZCvndW7AQVWmKWQvuFuLaMLqONNYkHOonQWqaua8gA+ffaRWl89KXk3xVQGMJleQvV2Vt3xzhvo8BpZOpFR0YumLB1XR8ywepvI4NsX7nsiUk/nwhNC5X52+yY1s3mTd+6ca9uGRk/IKphybiZz6tl3XDFg20WDQqXT/H4Ue+cKTJs/MMUqXY4OS0ljlqasu2WcAnS+aKvHsmoWiXl283Y31etnV9aMCpYx/Vy6IEF1TbqKPjp7Dp4RN01Fjur0aq0RrkgrkaPEj5pjUM2P3PtObaEu01aVoNrFhFfEjeoIkkUiFssAITTeH/Z9i/fBXPqF4LLXUaXmv+Wj4WyNHbxgANHQIIuxPuy6tDX3k6YkveXih+EHG8hoM3bE927zsObF7596KB0sTVijJCd5IPzfoAe1W4IsWfDq8L2mQoemHK3q2VOR1Av57DYarhC21PAqwEBCDDk+rKuPguldfU52achE=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(396003)(39860400002)(136003)(376002)(346002)(451199018)(46966006)(40470700004)(36840700001)(36756003)(478600001)(26005)(2906002)(186003)(1076003)(16526019)(6916009)(41300700001)(44832011)(8676002)(8936002)(6666004)(70206006)(4326008)(70586007)(7696005)(54906003)(7416002)(82740400003)(316002)(5660300002)(2616005)(82310400005)(40460700003)(40480700001)(83380400001)(356005)(86362001)(81166007)(47076005)(426003)(336012)(36860700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2023 06:05:56.1100
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60104523-b530-424d-7135-08db08083601
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT044.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5992
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Adds support for PreventHostIBS feature for SEV-ES and SNP guests.
+Currently, the hypervisor is able to inspect instruction based samples
+from the guest and gather execution information.  With enablement of
+PreventHostIBS feature, SEV-ES and SNP guests may choose to disallow
+use of instruction based sampling by the hypervisor in order to limit
+the information gathered about their execution.  (More information in
+Section 15.36.17 APM Volume 2)
 
+While implementing this feature, unknown NMIs were being seen. On
+further investigation, a race was found effecting the IBS FETCH/OP
+MSR.
 
-> On 02-Feb-2023, at 10:14 PM, Kajol Jain <kjain@linux.ibm.com> wrote:
->=20
-> Testcase stat_all_metrics.sh fails in powerpc:
->=20
-> 92: perf all metrics test : FAILED!
->=20
-> Logs with verbose:
->=20
-> [command]# ./perf test 92 -vv
-> 92: perf all metrics test                                           :
-> --- start ---
-> test child forked, pid 13262
-> Testing BRU_STALL_CPI
-> Testing COMPLETION_STALL_CPI
-> ----
-> Testing TOTAL_LOCAL_NODE_PUMPS_P23
-> Metric 'TOTAL_LOCAL_NODE_PUMPS_P23' not printed in:
-> Error:
-> Invalid event (hv_24x7/PM_PB_LNS_PUMP23,chip=3D3/) in per-thread mode, =
-enable system wide with '-a'.
-> Testing TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01
-> Metric 'TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01' not printed in:
-> Error:
-> Invalid event (hv_24x7/PM_PB_RTY_LNS_PUMP01,chip=3D3/) in per-thread =
-mode, enable system wide with '-a'.
-> ----
->=20
-> Based on above logs, we could see some of the hv-24x7 metric events =
-fails,
-> and logs suggest to run the metric event with -a option.
-> This change happened after the commit a4b8cfcabb1d ("perf stat: Delay =
-metric
-> parsing"), which delayed the metric parsing phase and now before =
-metric parsing
-> phase perf tool identifies, whether target is system-wide or not. With =
-this
-> change, perf_event_open will fails with workload monitoring for uncore =
-events
-> as expected.
->=20
-> The perf all metric test case fails as some of the hv-24x7 metric =
-events
-> may need bigger workload to get the data. And the added perf bench
-> workload in 'perf all metric test case' will not run for hv-24x7 =
-without=20
-> -a option.
->=20
-> Fix this issue by adding system wide check for perf bench workload.
->=20
-> Result with the patch changes in powerpc:
->=20
-> 92: perf all metrics test : Ok
->=20
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+ENABLE bit and VALID bit for IBS_FETCH_CTL are contained in the same
+MSR and same is the case with IBS_OP_CTL.
 
-Looks good to me
+Consider the following scenario:
+- The IBS MSR which has ENABLE bit set and VALID bit clear is read.
+- During the process of clearing the ENABLE bit and writing the IBS
+  MSR to disable IBS, an IBS event can occur that sets the VALID bit.
+- The write operation on IBS MSR can clear the newly set VALID bit.
+- Since this situation is occurring in the CLGI/STGI window
+  (PreventHostIBS window), the actual NMI is not taken.
+- Once VMRUN is issued, it will exit with VMEXIT_NMI and as soon as
+  STGI is executed, the pending NMI will trigger.
+- The IBS NMI handler checks for the VALID bit to determine if the NMI
+  is generated because of IBS.
+- Since VALID bit is now clear, it doesn't recognize that an IBS event
+  is occurred which in turn generates the dazed and confused unknown
+  NMI messages.
 
-Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Per-cpu ibs_flags which indicates whether PreventHostIBS window is
+active/inactive are added to avoid the above mentioned race.
 
-> ---
-> tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
-> 1 file changed, 7 insertions(+)
->=20
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh =
-b/tools/perf/tests/shell/stat_all_metrics.sh
-> index 6e79349e42be..d49832a316d9 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -23,6 +23,13 @@ for m in $(perf list --raw-dump metrics); do
->   then
->     continue
->   fi
-> +  # Failed again, possibly the event is uncore pmu event which will =
-need
-> +  # system wide monitoring with workload, so retry with -a option
-> +  result=3D$(perf stat -M "$m" -a perf bench internals synthesize =
-2>&1)
-> +  if [[ "$result" =3D~ "${m:0:50}" ]]
-> +  then
-> +    continue
-> +  fi
->   echo "Metric '$m' not printed in:"
->   echo "$result"
->   if [[ "$err" !=3D "1" ]]
-> --=20
-> 2.39.0
->=20
+An active PreventHostIBS window is set before calling VMRUN and
+cleared after STGI. PreventHostIBS window check is added to
+perf_ibs_handle_irq(), to avoid unknown NMIs and treat them as handled
+when window is active.
+
+There are 2 patches in this series.
+1) Add amd_prevent_hostibs_window() function to set per-cpu ibs_flags
+based on an active/inactive PreventHostIBS window.
+2) Enable PreventHostIBS for SEV-ES and SNP guests.
+
+Testing done:
+- Executed program symbols in guest are not captured in host when
+  PreventHostIBS feature is enabled.
+- Generated 1000+ NMIs using cpuid command, no unknown NMIs are seen
+  after enablement of PreventHostIBS feature.
+
+Qemu commandline to enable PreventHostIBS on guest.
+
+qemu-system-x86_64 -enable-kvm -cpu EPYC-v4,+nohostibs \ ..
+
+Manali Shukla (2):
+  perf/x86/amd: Add amd_prevent_hostibs_window() to set per-cpu
+    ibs_flags
+  KVM: SEV: PreventHostIBS enablement for SEV-ES and SNP guest
+
+ arch/x86/events/amd/ibs.c          | 64 ++++++++++++++++++++++++++++++
+ arch/x86/include/asm/cpufeatures.h |  1 +
+ arch/x86/include/asm/perf_event.h  | 20 ++++++++++
+ arch/x86/kvm/svm/sev.c             | 10 +++++
+ arch/x86/kvm/svm/svm.c             | 39 +++++++++++++++++-
+ arch/x86/kvm/svm/svm.h             |  1 +
+ 6 files changed, 133 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
 
