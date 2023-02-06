@@ -2,257 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09069C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 03:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62EBC05027
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 04:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjBFD5u (ORCPT
+        id S229488AbjBFEQh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Feb 2023 22:57:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50328 "EHLO
+        Sun, 5 Feb 2023 23:16:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjBFD5t (ORCPT
+        with ESMTP id S229452AbjBFEQg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Feb 2023 22:57:49 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C44695
-        for <linux-perf-users@vger.kernel.org>; Sun,  5 Feb 2023 19:57:45 -0800 (PST)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3161Ajdq012608;
-        Mon, 6 Feb 2023 03:57:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=vjtRInHXVDB03tKrSCHvhhkkcNWvvJsK5v55rAshvQ4=;
- b=i1y96ScvpL2CjlbFxVS6cOpjYsMn4aKB8r/am8XWCKF1aEE2fU9J4dvQDKhs1C7emrzn
- blUmDC4HsRLBLYjl/LbPIaMbod+eFwXU5OwE1tNcSll+Iv4BqqXp0TO6Tuz40Ottc2oF
- Mbc5I0UfAf+rOZ71DsVHBdYayZaoUoEZO/swT1l+6VYJAPYT8LTxom70jtC2kAOeklMj
- 9x+qsaE7u1e5NkmvwBRaRKmVoQm4FXwuiKCQ5ua2ZORqjD/D6MTG9fzxXJP4tYpZDhJL
- iDF3syIULvhC+l9bI4eEv0THmI0IVOcv5Du3kpZKRAUteiMSwfouYlcgttNVfLzElXvE Ng== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nj1h1v8u3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 03:57:24 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3163tgAK013681;
-        Mon, 6 Feb 2023 03:57:24 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nj1h1v8tm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 03:57:23 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3158T8Fw017531;
-        Mon, 6 Feb 2023 03:57:21 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfhck3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Feb 2023 03:57:21 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3163vHlC26149590
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Feb 2023 03:57:17 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C73CC20043;
-        Mon,  6 Feb 2023 03:57:17 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49DAA20040;
-        Mon,  6 Feb 2023 03:57:15 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.64.42])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Mon,  6 Feb 2023 03:57:15 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] tests/bpf: Fix the bpf test to check for libtraceevent
- support
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y9sKjYV8b37vstQ0@kernel.org>
-Date:   Mon, 6 Feb 2023 09:27:13 +0530
-Cc:     Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Sun, 5 Feb 2023 23:16:36 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD2A79027;
+        Sun,  5 Feb 2023 20:16:34 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67FE2113E;
+        Sun,  5 Feb 2023 20:17:16 -0800 (PST)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A4DA3F71E;
+        Sun,  5 Feb 2023 20:16:28 -0800 (PST)
+Message-ID: <143549b7-6f16-209f-b1be-c8202fd55d05@arm.com>
+Date:   Mon, 6 Feb 2023 09:46:25 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
+Content-Language: en-US
+To:     Will Deacon <will@kernel.org>, kernel test robot <lkp@intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, mark.rutland@arm.com,
+        llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Mark Brown <broonie@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <628A923D-A993-4A35-A90E-8F6798549FD0@linux.vnet.ibm.com>
-References: <20230131135001.54578-1-atrajeev@linux.vnet.ibm.com>
- <Y9sKjYV8b37vstQ0@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6iK2RjkfbkvGBXbDjbX7EF51HXPDJXh2
-X-Proofpoint-ORIG-GUID: DB9w8iX3AFRqthha26pYMCjwSxawRckX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-06_02,2023-02-03_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 mlxscore=0 phishscore=0
- suspectscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302060030
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230123125956.1350336-6-anshuman.khandual@arm.com>
+ <202301310047.b5iv9hM8-lkp@intel.com>
+ <20230203113153.GA5927@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20230203113153.GA5927@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On 02-Feb-2023, at 6:27 AM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->=20
-> Em Tue, Jan 31, 2023 at 07:20:01PM +0530, Athira Rajeev escreveu:
->> "bpf" tests fails in environment with missing libtraceevent
->> support as below:
->>=20
->> # ./perf test 36
->> 36: BPF filter                                                      :
->> 36.1: Basic BPF filtering                                           : =
-FAILED!
->> 36.2: BPF pinning                                                   : =
-FAILED!
->> 36.3: BPF prologue generation                                       : =
-FAILED!
->>=20
->> The environment has clang but missing the libtraceevent
->> devel. Hence perf is compiled without libtraceevent support.
->=20
-> Thanks, applied.
+On 2/3/23 17:01, Will Deacon wrote:
+> On Tue, Jan 31, 2023 at 12:28:17AM +0800, kernel test robot wrote:
+>> Hi Anshuman,
+>>
+>> Thank you for the patch! Perhaps something to improve:
+>>
+>> [auto build test WARNING on arm64/for-next/core]
+>> [also build test WARNING on tip/perf/core acme/perf/core linus/master v6.2-rc6 next-20230130]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use '--base' as documented in
+>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230123-210254
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+>> patch link:    https://lore.kernel.org/r/20230123125956.1350336-6-anshuman.khandual%40arm.com
+>> patch subject: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
+>> config: arm64-randconfig-r016-20230130 (https://download.01.org/0day-ci/archive/20230131/202301310047.b5iv9hM8-lkp@intel.com/config)
+>> compiler: clang version 16.0.0 (https://github.com/llvm/llvm-project 4196ca3278f78c6e19246e54ab0ecb364e37d66a)
+>> reproduce (this is a W=1 build):
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # install arm64 cross compiling tool for clang build
+>>         # apt-get install binutils-aarch64-linux-gnu
+>>         # https://github.com/intel-lab-lkp/linux/commit/0deba04ac45f8632b8579cb5cbf908b9f4428402
+>>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>>         git fetch --no-tags linux-review Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230123-210254
+>>         git checkout 0deba04ac45f8632b8579cb5cbf908b9f4428402
+>>         # save the config file
+>>         mkdir build_dir && cp config build_dir/.config
+>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
+>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 prepare
+>>
+>> If you fix the issue, kindly add following tag where applicable
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> All warnings (new ones prefixed by >>):
+>>
+>>    In file included from arch/arm64/kernel/asm-offsets.c:15:
+>>    In file included from include/linux/kvm_host.h:45:
+>>    In file included from arch/arm64/include/asm/kvm_host.h:36:
+>>    In file included from include/kvm/arm_pmu.h:11:
+>>>> arch/arm64/include/asm/perf_event.h:280:20: warning: function 'has_branch_stack' has internal linkage but is not defined [-Wundefined-internal]
+>>    static inline bool has_branch_stack(struct perf_event *event);
+>>                       ^
+>>    arch/arm64/include/asm/perf_event.h:284:16: note: used here
+>>            WARN_ON_ONCE(!has_branch_stack(event));
+>>                          ^
+>>    1 warning generated.
+>> --
+>>    In file included from arch/arm64/kernel/asm-offsets.c:15:
+>>    In file included from include/linux/kvm_host.h:45:
+>>    In file included from arch/arm64/include/asm/kvm_host.h:36:
+>>    In file included from include/kvm/arm_pmu.h:11:
+>>>> arch/arm64/include/asm/perf_event.h:280:20: warning: function 'has_branch_stack' has internal linkage but is not defined [-Wundefined-internal]
+>>    static inline bool has_branch_stack(struct perf_event *event);
+>>                       ^
+>>    arch/arm64/include/asm/perf_event.h:284:16: note: used here
+>>            WARN_ON_ONCE(!has_branch_stack(event));
+>>                          ^
+>>    1 warning generated.
+> 
+> This looks like it should be fixed. I'd also like to see Mark's ack on the
 
-Hi,
+This build warning is triggered when CONFIG_PERF_EVENTS is not enabled, when
+all the fallback stubs in there try to use has_branch_stack() which does not
+get defined. The following change, fixes the problem.
 
-Thanks for checking
+diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+index 97db96326e13..1f68c125eb1a 100644
+--- a/arch/arm64/include/asm/perf_event.h
++++ b/arch/arm64/include/asm/perf_event.h
+@@ -277,8 +277,6 @@ struct pmu_hw_events;
+ struct arm_pmu;
+ struct perf_event;
+ 
+-static inline bool has_branch_stack(struct perf_event *event);
+-
+ #ifdef CONFIG_ARM64_BRBE
+ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event);
+ bool armv8pmu_branch_valid(struct perf_event *event);
+@@ -289,6 +287,9 @@ void armv8pmu_branch_reset(void);
+ int armv8pmu_private_alloc(struct arm_pmu *arm_pmu);
+ void armv8pmu_private_free(struct arm_pmu *arm_pmu);
+ #else
++#ifdef CONFIG_PERF_EVENTS
++static inline bool has_branch_stack(struct perf_event *event);
++
+ static inline void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+ {
+        WARN_ON_ONCE(!has_branch_stack(event));
+@@ -316,3 +317,4 @@ static inline int armv8pmu_private_alloc(struct arm_pmu *arm_pmu) { return 0; }
+ static inline void armv8pmu_private_free(struct arm_pmu *arm_pmu) { }
+ #endif
+ #endif
++#endif
 
-Arnaldo, this is applied to tmp.perf/core branch ?
-
-Athira=20
->=20
-> - Arnaldo
->=20
->=20
->> Detailed logs:
->> 	./perf test -v "Basic BPF filtering"
->>=20
->> 	Failed to add BPF event syscalls:sys_enter_epoll_pwait
->> 	bpf: tracepoint call back failed, stop iterate
->> 	Failed to add events selected by BPF
->>=20
->> The bpf tests tris to add probe event which fails
->> at "parse_events_add_tracepoint" function due to missing
->> libtraceevent. Add check for "HAVE_LIBTRACEEVENT" in the
->> "tests/bpf.c" before proceeding with the test.
->>=20
->> With the change,
->>=20
->> 	# ./perf test 36
->> 	36: BPF filter                                                   =
-   :
->> 	36.1: Basic BPF filtering                                        =
-   : Skip (not compiled in or missing libtraceevent support)
->> 	36.2: BPF pinning                                                =
-   : Skip (not compiled in or missing libtraceevent support)
->> 	36.3: BPF prologue generation                                    =
-   : Skip (not compiled in or missing libtraceevent support)
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/tests/bpf.c | 22 +++++++++++-----------
->> 1 file changed, 11 insertions(+), 11 deletions(-)
->>=20
->> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
->> index 17c023823713..4af39528f611 100644
->> --- a/tools/perf/tests/bpf.c
->> +++ b/tools/perf/tests/bpf.c
->> @@ -23,7 +23,7 @@
->> #define NR_ITERS       111
->> #define PERF_TEST_BPF_PATH "/sys/fs/bpf/perf_test"
->>=20
->> -#ifdef HAVE_LIBBPF_SUPPORT
->> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->> #include <linux/bpf.h>
->> #include <bpf/bpf.h>
->>=20
->> @@ -330,10 +330,10 @@ static int test__bpf(int i)
->> static int test__basic_bpf_test(struct test_suite *test =
-__maybe_unused,
->> 				int subtest __maybe_unused)
->> {
->> -#ifdef HAVE_LIBBPF_SUPPORT
->> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->> 	return test__bpf(0);
->> #else
->> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
->> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
-not compiled\n");
->> 	return TEST_SKIP;
->> #endif
->> }
->> @@ -341,10 +341,10 @@ static int test__basic_bpf_test(struct =
-test_suite *test __maybe_unused,
->> static int test__bpf_pinning(struct test_suite *test __maybe_unused,
->> 			     int subtest __maybe_unused)
->> {
->> -#ifdef HAVE_LIBBPF_SUPPORT
->> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->> 	return test__bpf(1);
->> #else
->> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
->> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
-not compiled\n");
->> 	return TEST_SKIP;
->> #endif
->> }
->> @@ -352,17 +352,17 @@ static int test__bpf_pinning(struct test_suite =
-*test __maybe_unused,
->> static int test__bpf_prologue_test(struct test_suite *test =
-__maybe_unused,
->> 				   int subtest __maybe_unused)
->> {
->> -#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
->> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE) && =
-defined(HAVE_LIBTRACEEVENT)
->> 	return test__bpf(2);
->> #else
->> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
->> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
-not compiled\n");
->> 	return TEST_SKIP;
->> #endif
->> }
->>=20
->>=20
->> static struct test_case bpf_tests[] =3D {
->> -#ifdef HAVE_LIBBPF_SUPPORT
->> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->> 	TEST_CASE("Basic BPF filtering", basic_bpf_test),
->> 	TEST_CASE_REASON("BPF pinning", bpf_pinning,
->> 			"clang isn't installed or environment missing =
-BPF support"),
->> @@ -373,9 +373,9 @@ static struct test_case bpf_tests[] =3D {
->> 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in"),
->> #endif
->> #else
->> -	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
-compiled in"),
->> -	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
->> -	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in"),
->> +	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
-compiled in or missing libtraceevent support"),
->> +	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in or =
-missing libtraceevent support"),
->> +	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in or missing libtraceevent support"),
->> #endif
->> 	{ .name =3D NULL, }
->> };
->> --=20
->> 2.39.0
->>=20
->=20
-> --=20
->=20
-> - Arnaldo
-
+> final series, since he had some detailed comments on the previous version.
+> 
+> Will
