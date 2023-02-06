@@ -2,233 +2,257 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858DDC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 03:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09069C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 03:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229447AbjBFDkn (ORCPT
+        id S229478AbjBFD5u (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Feb 2023 22:40:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
+        Sun, 5 Feb 2023 22:57:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjBFDkm (ORCPT
+        with ESMTP id S229452AbjBFD5t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Feb 2023 22:40:42 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6D316AC7;
-        Sun,  5 Feb 2023 19:40:35 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4P9Bk70DdbzkXrj;
-        Mon,  6 Feb 2023 11:35:59 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Mon, 6 Feb 2023 11:40:32 +0800
-Subject: Re: [PATCH v3] perf record: Fix segfault with --overwrite and
- --max-size
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     <acme@kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <jiwei.sun@windriver.com>
-References: <20230113073803.102950-1-yangjihong1@huawei.com>
- <29a8e0bc-e90b-b371-962b-58a4b8c87f20@huawei.com>
- <ee213278-7e76-586b-0564-843dc7a3c84f@huawei.com>
- <CAM9d7cj1v09Q0_AF2Oaa4+UU_YWB8OaaoeOZ-igoMTTFg4VZGg@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <0c93a024-b60c-8ea6-37a3-a55e951dbd12@huawei.com>
-Date:   Mon, 6 Feb 2023 11:40:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAM9d7cj1v09Q0_AF2Oaa4+UU_YWB8OaaoeOZ-igoMTTFg4VZGg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Sun, 5 Feb 2023 22:57:49 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C44695
+        for <linux-perf-users@vger.kernel.org>; Sun,  5 Feb 2023 19:57:45 -0800 (PST)
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3161Ajdq012608;
+        Mon, 6 Feb 2023 03:57:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=vjtRInHXVDB03tKrSCHvhhkkcNWvvJsK5v55rAshvQ4=;
+ b=i1y96ScvpL2CjlbFxVS6cOpjYsMn4aKB8r/am8XWCKF1aEE2fU9J4dvQDKhs1C7emrzn
+ blUmDC4HsRLBLYjl/LbPIaMbod+eFwXU5OwE1tNcSll+Iv4BqqXp0TO6Tuz40Ottc2oF
+ Mbc5I0UfAf+rOZ71DsVHBdYayZaoUoEZO/swT1l+6VYJAPYT8LTxom70jtC2kAOeklMj
+ 9x+qsaE7u1e5NkmvwBRaRKmVoQm4FXwuiKCQ5ua2ZORqjD/D6MTG9fzxXJP4tYpZDhJL
+ iDF3syIULvhC+l9bI4eEv0THmI0IVOcv5Du3kpZKRAUteiMSwfouYlcgttNVfLzElXvE Ng== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nj1h1v8u3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Feb 2023 03:57:24 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3163tgAK013681;
+        Mon, 6 Feb 2023 03:57:24 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nj1h1v8tm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Feb 2023 03:57:23 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3158T8Fw017531;
+        Mon, 6 Feb 2023 03:57:21 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfhck3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Feb 2023 03:57:21 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3163vHlC26149590
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Feb 2023 03:57:17 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C73CC20043;
+        Mon,  6 Feb 2023 03:57:17 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49DAA20040;
+        Mon,  6 Feb 2023 03:57:15 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.64.42])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Mon,  6 Feb 2023 03:57:15 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH] tests/bpf: Fix the bpf test to check for libtraceevent
+ support
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Y9sKjYV8b37vstQ0@kernel.org>
+Date:   Mon, 6 Feb 2023 09:27:13 +0530
+Cc:     Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>, disgoel@linux.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <628A923D-A993-4A35-A90E-8F6798549FD0@linux.vnet.ibm.com>
+References: <20230131135001.54578-1-atrajeev@linux.vnet.ibm.com>
+ <Y9sKjYV8b37vstQ0@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 6iK2RjkfbkvGBXbDjbX7EF51HXPDJXh2
+X-Proofpoint-ORIG-GUID: DB9w8iX3AFRqthha26pYMCjwSxawRckX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-06_02,2023-02-03_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 mlxscore=0 phishscore=0
+ suspectscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302060030
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2023/2/6 10:44, Namhyung Kim wrote:
-> Hello,
-> 
-> On Sun, Feb 5, 2023 at 5:29 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Hello,
->>
->> Ping again, please take time to review, thanks.
-> 
-> Sorry for the late reply.  Now it looks good to me.
-Thanks for the review.
 
-Thanks,
-Yang.
-> 
->>
->>
->> Thanks,
->> Yang
->>
->>
->> On 2023/1/28 9:27, Yang Jihong wrote:
->>> Hello,
->>>
->>> The data written by the thread (data.X file) has been saved as
->>> recommended in v2 patch. Please check whether it is feasible. Thank you.
->>>
->>> Thanks,
->>> Yang
->>>
->>> On 2023/1/13 15:38, Yang Jihong wrote:
->>>> When --overwrite and --max-size options of perf record are used together,
->>>> a segmentation fault occurs. The following is an example:
->>>>
->>>>     # perf record -e sched:sched* --overwrite --max-size 1K -a -- sleep 1
->>>>     [ perf record: Woken up 1 times to write data ]
->>>>     perf: Segmentation fault
->>>>     Obtained 12 stack frames.
->>>>     ./perf/perf(+0x197673) [0x55f99710b673]
->>>>     /lib/x86_64-linux-gnu/libc.so.6(+0x3ef0f) [0x7fa45f3cff0f]
->>>>     ./perf/perf(+0x8eb40) [0x55f997002b40]
->>>>     ./perf/perf(+0x1f6882) [0x55f99716a882]
->>>>     ./perf/perf(+0x794c2) [0x55f996fed4c2]
->>>>     ./perf/perf(+0x7b7c7) [0x55f996fef7c7]
->>>>     ./perf/perf(+0x9074b) [0x55f99700474b]
->>>>     ./perf/perf(+0x12e23c) [0x55f9970a223c]
->>>>     ./perf/perf(+0x12e54a) [0x55f9970a254a]
->>>>     ./perf/perf(+0x7db60) [0x55f996ff1b60]
->>>>     /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xe6)
->>>> [0x7fa45f3b2c86]
->>>>     ./perf/perf(+0x7dfe9) [0x55f996ff1fe9]
->>>>     Segmentation fault (core dumped)
->>>>
->>>> backtrace of the core file is as follows:
->>>>
->>>>     (gdb) bt
->>>>     #0  record__bytes_written (rec=0x55f99755a200 <record>) at
->>>> builtin-record.c:234
->>>>     #1  record__output_max_size_exceeded (rec=0x55f99755a200 <record>)
->>>> at builtin-record.c:242
->>>>     #2  record__write (map=0x0, size=12816, bf=0x55f9978da2e0,
->>>> rec=0x55f99755a200 <record>) at builtin-record.c:263
->>>>     #3  process_synthesized_event (tool=tool@entry=0x55f99755a200
->>>> <record>, event=event@entry=0x55f9978da2e0, sample=sample@entry=0x0,
->>>> machine=machine@entry=0x55f997893658) at builtin-record.c:618
->>>>     #4  0x000055f99716a883 in __perf_event__synthesize_id_index
->>>> (tool=tool@entry=0x55f99755a200 <record>,
->>>> process=process@entry=0x55f997002aa0 <process_synthesized_event>,
->>>> evlist=0x55f9978928b0, machine=machine@entry=0x55f997893658,
->>>>         from=from@entry=0) at util/synthetic-events.c:1895
->>>>     #5  0x000055f99716a91f in perf_event__synthesize_id_index
->>>> (tool=tool@entry=0x55f99755a200 <record>,
->>>> process=process@entry=0x55f997002aa0 <process_synthesized_event>,
->>>> evlist=<optimized out>, machine=machine@entry=0x55f997893658)
->>>>         at util/synthetic-events.c:1905
->>>>     #6  0x000055f996fed4c3 in record__synthesize (tail=tail@entry=true,
->>>> rec=0x55f99755a200 <record>) at builtin-record.c:1997
->>>>     #7  0x000055f996fef7c8 in __cmd_record (argc=argc@entry=2,
->>>> argv=argv@entry=0x7ffc67551260, rec=0x55f99755a200 <record>) at
->>>> builtin-record.c:2802
->>>>     #8  0x000055f99700474c in cmd_record (argc=<optimized out>,
->>>> argv=0x7ffc67551260) at builtin-record.c:4258
->>>>     #9  0x000055f9970a223d in run_builtin (p=0x55f997564d88
->>>> <commands+264>, argc=10, argv=0x7ffc67551260) at perf.c:330
->>>>     #10 0x000055f9970a254b in handle_internal_command (argc=10,
->>>> argv=0x7ffc67551260) at perf.c:384
->>>>     #11 0x000055f996ff1b61 in run_argv (argcp=<synthetic pointer>,
->>>> argv=<synthetic pointer>) at perf.c:428
->>>>     #12 main (argc=<optimized out>, argv=0x7ffc67551260) at perf.c:562
->>>>
->>>> The reason is that record__bytes_written accesses the freed memory
->>>> rec->thread_data,
->>>> The process is as follows:
->>>>     __cmd_record
->>>>       -> record__free_thread_data
->>>>         -> zfree(&rec->thread_data)         // free rec->thread_data
->>>>       -> record__synthesize
->>>>         -> perf_event__synthesize_id_index
->>>>           -> process_synthesized_event
->>>>             -> record__write
->>>>               -> record__bytes_written      // access rec->thread_data
->>>>
->>>> We add a member variable "thread_bytes_written" in the struct "record"
->>>> to save the data size written by the threads.
->>>>
->>>> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output
->>>> file size")
->>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks,
-> Namhyung
-> 
-> 
->>>> ---
->>>>
->>>> Changes since v2:
->>>>    - Save data size written by threads to calculate the correct total
->>>> data size.
->>>>    - Update commit message.
->>>>
->>>> Changes since v1:
->>>>    - Add variable check in record__bytes_written for code hardening.
->>>>    - Save bytes_written separately to reduce one calculation.
->>>>    - Remove rec->opts.tail_synthesize check.
->>>>
->>>>    tools/perf/builtin-record.c | 16 ++++++----------
->>>>    1 file changed, 6 insertions(+), 10 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>>> index 29dcd454b8e2..8374117e66f6 100644
->>>> --- a/tools/perf/builtin-record.c
->>>> +++ b/tools/perf/builtin-record.c
->>>> @@ -154,6 +154,7 @@ struct record {
->>>>        struct perf_tool    tool;
->>>>        struct record_opts    opts;
->>>>        u64            bytes_written;
->>>> +    u64            thread_bytes_written;
->>>>        struct perf_data    data;
->>>>        struct auxtrace_record    *itr;
->>>>        struct evlist    *evlist;
->>>> @@ -226,14 +227,7 @@ static bool switch_output_time(struct record *rec)
->>>>    static u64 record__bytes_written(struct record *rec)
->>>>    {
->>>> -    int t;
->>>> -    u64 bytes_written = rec->bytes_written;
->>>> -    struct record_thread *thread_data = rec->thread_data;
->>>> -
->>>> -    for (t = 0; t < rec->nr_threads; t++)
->>>> -        bytes_written += thread_data[t].bytes_written;
->>>> -
->>>> -    return bytes_written;
->>>> +    return rec->bytes_written + rec->thread_bytes_written;
->>>>    }
->>>>    static bool record__output_max_size_exceeded(struct record *rec)
->>>> @@ -255,10 +249,12 @@ static int record__write(struct record *rec,
->>>> struct mmap *map __maybe_unused,
->>>>            return -1;
->>>>        }
->>>> -    if (map && map->file)
->>>> +    if (map && map->file) {
->>>>            thread->bytes_written += size;
->>>> -    else
->>>> +        rec->thread_bytes_written += size;
->>>> +    } else {
->>>>            rec->bytes_written += size;
->>>> +    }
->>>>        if (record__output_max_size_exceeded(rec) && !done) {
->>>>            fprintf(stderr, "[ perf record: perf size limit reached (%"
->>>> PRIu64 " KB),"
->>>>
->>>
->>> .
-> 
-> .
-> 
+> On 02-Feb-2023, at 6:27 AM, Arnaldo Carvalho de Melo <acme@kernel.org> =
+wrote:
+>=20
+> Em Tue, Jan 31, 2023 at 07:20:01PM +0530, Athira Rajeev escreveu:
+>> "bpf" tests fails in environment with missing libtraceevent
+>> support as below:
+>>=20
+>> # ./perf test 36
+>> 36: BPF filter                                                      :
+>> 36.1: Basic BPF filtering                                           : =
+FAILED!
+>> 36.2: BPF pinning                                                   : =
+FAILED!
+>> 36.3: BPF prologue generation                                       : =
+FAILED!
+>>=20
+>> The environment has clang but missing the libtraceevent
+>> devel. Hence perf is compiled without libtraceevent support.
+>=20
+> Thanks, applied.
+
+Hi,
+
+Thanks for checking
+
+Arnaldo, this is applied to tmp.perf/core branch ?
+
+Athira=20
+>=20
+> - Arnaldo
+>=20
+>=20
+>> Detailed logs:
+>> 	./perf test -v "Basic BPF filtering"
+>>=20
+>> 	Failed to add BPF event syscalls:sys_enter_epoll_pwait
+>> 	bpf: tracepoint call back failed, stop iterate
+>> 	Failed to add events selected by BPF
+>>=20
+>> The bpf tests tris to add probe event which fails
+>> at "parse_events_add_tracepoint" function due to missing
+>> libtraceevent. Add check for "HAVE_LIBTRACEEVENT" in the
+>> "tests/bpf.c" before proceeding with the test.
+>>=20
+>> With the change,
+>>=20
+>> 	# ./perf test 36
+>> 	36: BPF filter                                                   =
+   :
+>> 	36.1: Basic BPF filtering                                        =
+   : Skip (not compiled in or missing libtraceevent support)
+>> 	36.2: BPF pinning                                                =
+   : Skip (not compiled in or missing libtraceevent support)
+>> 	36.3: BPF prologue generation                                    =
+   : Skip (not compiled in or missing libtraceevent support)
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/perf/tests/bpf.c | 22 +++++++++++-----------
+>> 1 file changed, 11 insertions(+), 11 deletions(-)
+>>=20
+>> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+>> index 17c023823713..4af39528f611 100644
+>> --- a/tools/perf/tests/bpf.c
+>> +++ b/tools/perf/tests/bpf.c
+>> @@ -23,7 +23,7 @@
+>> #define NR_ITERS       111
+>> #define PERF_TEST_BPF_PATH "/sys/fs/bpf/perf_test"
+>>=20
+>> -#ifdef HAVE_LIBBPF_SUPPORT
+>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>> #include <linux/bpf.h>
+>> #include <bpf/bpf.h>
+>>=20
+>> @@ -330,10 +330,10 @@ static int test__bpf(int i)
+>> static int test__basic_bpf_test(struct test_suite *test =
+__maybe_unused,
+>> 				int subtest __maybe_unused)
+>> {
+>> -#ifdef HAVE_LIBBPF_SUPPORT
+>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>> 	return test__bpf(0);
+>> #else
+>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
+>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
+not compiled\n");
+>> 	return TEST_SKIP;
+>> #endif
+>> }
+>> @@ -341,10 +341,10 @@ static int test__basic_bpf_test(struct =
+test_suite *test __maybe_unused,
+>> static int test__bpf_pinning(struct test_suite *test __maybe_unused,
+>> 			     int subtest __maybe_unused)
+>> {
+>> -#ifdef HAVE_LIBBPF_SUPPORT
+>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>> 	return test__bpf(1);
+>> #else
+>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
+>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
+not compiled\n");
+>> 	return TEST_SKIP;
+>> #endif
+>> }
+>> @@ -352,17 +352,17 @@ static int test__bpf_pinning(struct test_suite =
+*test __maybe_unused,
+>> static int test__bpf_prologue_test(struct test_suite *test =
+__maybe_unused,
+>> 				   int subtest __maybe_unused)
+>> {
+>> -#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
+>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE) && =
+defined(HAVE_LIBTRACEEVENT)
+>> 	return test__bpf(2);
+>> #else
+>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
+>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
+not compiled\n");
+>> 	return TEST_SKIP;
+>> #endif
+>> }
+>>=20
+>>=20
+>> static struct test_case bpf_tests[] =3D {
+>> -#ifdef HAVE_LIBBPF_SUPPORT
+>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>> 	TEST_CASE("Basic BPF filtering", basic_bpf_test),
+>> 	TEST_CASE_REASON("BPF pinning", bpf_pinning,
+>> 			"clang isn't installed or environment missing =
+BPF support"),
+>> @@ -373,9 +373,9 @@ static struct test_case bpf_tests[] =3D {
+>> 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
+"not compiled in"),
+>> #endif
+>> #else
+>> -	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
+compiled in"),
+>> -	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
+>> -	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
+"not compiled in"),
+>> +	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
+compiled in or missing libtraceevent support"),
+>> +	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in or =
+missing libtraceevent support"),
+>> +	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
+"not compiled in or missing libtraceevent support"),
+>> #endif
+>> 	{ .name =3D NULL, }
+>> };
+>> --=20
+>> 2.39.0
+>>=20
+>=20
+> --=20
+>=20
+> - Arnaldo
+
