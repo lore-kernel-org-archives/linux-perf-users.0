@@ -2,239 +2,415 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93BFC05027
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 06:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F350AC05027
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Feb 2023 06:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbjBFGGe (ORCPT
+        id S229753AbjBFGxJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Feb 2023 01:06:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55344 "EHLO
+        Mon, 6 Feb 2023 01:53:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbjBFGGd (ORCPT
+        with ESMTP id S229693AbjBFGxI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Feb 2023 01:06:33 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20625.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::625])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D522F15CB7;
-        Sun,  5 Feb 2023 22:06:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SPQi0EUTxANsl1ghJskY4ImUlJ1U6N3bq3UkVP9GAudQHhwjK0OwfGTnvXfhmEkFuYKE+8vBXKthS8wUwn16W7bzK2iwvE3r3n57Jo5mBkgHrpWenSGiE+Ss3HGNRZpr0SSd1MmktUXnignEQLCj6OD24pznsgofK0MjpY+wxVGq4V9jgzmtEqZyeHxXJCkR/hfuJ+EgT0Z0zeIfYlcoxw6e0/8p805lQVB1YQA7HLr5pNOtKGNKFDmZswQiEdPqLMucX2m1H+iRPj54OjXl2tZtW3e85uliY723+lywxCAMPRVD/vUWKUOY2r5Aeb/NbJKQY7R6rXGbNSeqU4EnBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yrHQWAsMXo/ODo6YB767R3B13h+9ApjBys6yYfgSTwg=;
- b=mmZ5+peDzqTRRx4BoTrEpnXV9iC2REObD/lo6P5RblNmFAy6lpoPaFr1Xhv3z4bQfILqmW/1Two0VjEtEtsSK+qXDoViah6AblwF7GJfk+CB6MNFh3MKMp0H7khhnUEwAnuZduVgo7nztOZSxiK5N8uo3IeEdPOH5gxlGVMfasFlYO4RNby+1Gw17JVloUatTU/Aqctaa2l38pWmO/OSfIwgjn9j7i7ZFv3sfafJUpC7PuzRvIH2+71mSBmeqMVBWi/5CUjtSRWm5x5PdolEQ67Nny01qr/+H42V6BW9U3aulUgAmVrGdjZX8zmOGF9d33xaLeqKXsm6UroMHSYDiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yrHQWAsMXo/ODo6YB767R3B13h+9ApjBys6yYfgSTwg=;
- b=efO3luZhJoz2/benujdAzvhEIBpAvzRFtfh+OdUxu7JHSTjHJaPep1mYoAi33GQRZ7TR0VJP8LHgMqBBPkuBLrT+YFxlhaPLQv9Lrc/UXQTQeWrBEqewIOhxC8ZbOIox26VAZbOg/lOkxe405G5Dnd0c9/J+KacS5Li1IuMLXM8=
-Received: from DS7PR05CA0048.namprd05.prod.outlook.com (2603:10b6:8:2f::19) by
- DM6PR12MB4484.namprd12.prod.outlook.com (2603:10b6:5:28f::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6064.34; Mon, 6 Feb 2023 06:06:24 +0000
-Received: from DM6NAM11FT094.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:2f:cafe::60) by DS7PR05CA0048.outlook.office365.com
- (2603:10b6:8:2f::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.14 via Frontend
- Transport; Mon, 6 Feb 2023 06:06:24 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT094.mail.protection.outlook.com (10.13.172.195) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6064.34 via Frontend Transport; Mon, 6 Feb 2023 06:06:24 +0000
-Received: from brahmaputra.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 6 Feb
- 2023 00:06:17 -0600
-From:   Manali Shukla <manali.shukla@amd.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <seanjc@google.com>,
-        <pbonzini@redhat.com>, <jpoimboe@kernel.org>,
-        <pawan.kumar.gupta@linux.intel.com>, <babu.moger@amd.com>,
-        <sandipan.das@amd.com>, <jmattson@google.com>,
-        <thomas.lendacky@amd.com>, <nikunj@amd.com>,
-        <ravi.bangoria@amd.com>, <eranian@google.com>,
-        <irogers@google.com>, <kvm@vger.kernel.org>, <x86@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <manali.shukla@amd.com>
-Subject: [RFC PATCH kernel 2/2] KVM: SEV: PreventHostIBS enablement for SEV-ES and SNP guest
-Date:   Mon, 6 Feb 2023 06:05:45 +0000
-Message-ID: <20230206060545.628502-3-manali.shukla@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230206060545.628502-1-manali.shukla@amd.com>
-References: <20230206060545.628502-1-manali.shukla@amd.com>
+        Mon, 6 Feb 2023 01:53:08 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4389C7691;
+        Sun,  5 Feb 2023 22:53:06 -0800 (PST)
+Received: from dggpeml500019.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4P9H3262JJznW2L;
+        Mon,  6 Feb 2023 14:50:54 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ dggpeml500019.china.huawei.com (7.185.36.137) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Mon, 6 Feb 2023 14:53:03 +0800
+From:   Jie Zhan <zhanjie9@hisilicon.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>,
+        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <john.g.garry@oracle.com>, <james.clark@arm.com>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <corbet@lwn.net>, <jonathan.cameron@huawei.com>
+CC:     <zhangshaokun@hisilicon.com>, <shenyang39@huawei.com>,
+        <hejunhao3@huawei.com>, <yangyicong@hisilicon.com>,
+        <prime.zeng@huawei.com>, <zhanjie9@hisilicon.com>,
+        <suntao25@huawei.com>, <jiazhao4@hisilicon.com>,
+        <linuxarm@huawei.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>
+Subject: [RFC PATCH v1 3/4] perf tool: Add HiSilicon PMCU data recording support
+Date:   Mon, 6 Feb 2023 14:51:45 +0800
+Message-ID: <20230206065146.645505-4-zhanjie9@hisilicon.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20230206065146.645505-1-zhanjie9@hisilicon.com>
+References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT094:EE_|DM6PR12MB4484:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d1eed82-6680-4292-83e6-08db080846cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: caMx9yF2ZYtx31yhZ68Yq8m1eeveFt22WLQKppN4U4JppNsa7HCIiLmOakRLKDfgYgb4sb3KEi3h8bVBpXObkb3gsgxTXWEOvcZel9PaKHV07HOHiAGFsI4zEW5mRq7iTpNlMo6zhZRpWENyUmb5cOmtekwfpfsw0rPNhxYZIDQH8Rf6751kgtVvw4cvIlaVz7nQy+fHVZgxoU8rngkBcV8it5mGnIJoNmRXK1QP9KCqnJ4SmOaq1NfhwB71KIUwd9iTim7VtLaCfEEdf7CLCTuEIsUCMNbKJup8C/bw2blHs2IgqwAyTCYlf/CWVp7uHANpLeaz36Fg/SIwpTt360r1RzFUIagHCCUndx6Wh4bzK7006K0byMtqwX7oAhdwwIeEwpWj5NtwEVPRIrosB1IaP5NuyijKWx/taxriifRu+vXkX4R6hOgBlorzPb7C3yrcVHRPZSPyGxvwYanWQq1wL3Z0PI1iffqYglxKtbZUOINK3jLn0ieEbP+3JG6Oeij2cEvntMNtKN+Und39x4RXOf6mZ2UKhC+1Pa12pwtcabqXWHV2RTHi+VmuP9XDcu+L2mN5t9da8xW/B/xOApc0SlvmeXmoUlgVDgUeaUeZ1qKY5KjBe6h24dZLuoasgSaHZzyejLjM0K3L9D3XmhSlibR6MItG2UX0bqHMtNheW/MYA96gLUfpfx3T/Gleh3a1JuS4fKI5ueoHLqDW/OL+lhbuV35gKroKnc29O14=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(346002)(376002)(136003)(396003)(451199018)(46966006)(36840700001)(40470700004)(356005)(81166007)(82740400003)(47076005)(82310400005)(6666004)(1076003)(186003)(26005)(40460700003)(16526019)(36756003)(478600001)(86362001)(83380400001)(8676002)(336012)(2616005)(426003)(70206006)(70586007)(6916009)(4326008)(316002)(36860700001)(7416002)(54906003)(7696005)(44832011)(2906002)(41300700001)(8936002)(5660300002)(40480700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2023 06:06:24.2844
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d1eed82-6680-4292-83e6-08db080846cc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT094.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4484
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.165.2]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500019.china.huawei.com (7.185.36.137)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently, the hypervisor is able to inspect instruction based samples
-from a guest and gather execution information. SEV-ES and SNP guests
-can disallow the use of instruction based sampling by hypervisor by
-enabling the PreventHostIBS feature for the guest.  (More information
-in Section 15.36.17 APM Volume 2)
+Support for HiSilicon PMCU data recording using 'perf-record'.
 
-The MSR_AMD64_IBSFETCHCTL[IbsFetchEn] and MSR_AMD64_IBSOPCTL[IbsOpEn]
-bits need to be disabled before VMRUN is called when PreventHostIBS
-feature is enabled. If either of these bits are not 0, VMRUN will fail
-with VMEXIT_INVALID error code.
+Users can start PMCU profiling through 'perf-record'. Event numbers are
+passed by a sysfs interface. The following optional parameters can be
+passed through 'perf-record':
+- nr_sample: number of samples to take
+- sample_period_ms: time in ms for PMU counters to stay on for an event
+- pmccfiltr: bits[31-24] of system register PMCCFILTR_EL0
 
-Because of an IBS race condition when disabling IBS, KVM needs to
-indicate when it is in a PreventHostIBS window. Activate the window
-based on whether IBS is currently active or inactive.
+Example usage:
 
-Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+1. Enter event numbers in the 'user_events' file:
+
+	echo "0x10 0x11" > /sys/devices/hisi_pmcu_sccl3/user_events
+
+2. Start the sampling with 'perf-record':
+
+	perf record -e hisi_pmcu_sccl3/nr_sample=1000,sample_period_ms=1/
+
+In this example, the PMCU takes 1000 samples of event 0x0010 and 0x0011
+with a sampling period of 1ms. Data will be written to a 'perf.data' file.
+
+Co-developed-by: Yang Shen <shenyang39@huawei.com>
+Signed-off-by: Yang Shen <shenyang39@huawei.com>
+Signed-off-by: Jie Zhan <zhanjie9@hisilicon.com>
 ---
- arch/x86/include/asm/cpufeatures.h |  1 +
- arch/x86/kvm/svm/sev.c             | 10 ++++++++
- arch/x86/kvm/svm/svm.c             | 39 ++++++++++++++++++++++++++++--
- arch/x86/kvm/svm/svm.h             |  1 +
- 4 files changed, 49 insertions(+), 2 deletions(-)
+ tools/perf/arch/arm/util/auxtrace.c    |  61 +++++++++++
+ tools/perf/arch/arm64/util/Build       |   2 +-
+ tools/perf/arch/arm64/util/hisi-pmcu.c | 145 +++++++++++++++++++++++++
+ tools/perf/util/auxtrace.h             |   1 +
+ tools/perf/util/hisi-pmcu.h            |  17 +++
+ 5 files changed, 225 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/arm64/util/hisi-pmcu.c
+ create mode 100644 tools/perf/util/hisi-pmcu.h
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 61012476d66e..1812e74f846a 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -425,6 +425,7 @@
- #define X86_FEATURE_SEV_ES		(19*32+ 3) /* AMD Secure Encrypted Virtualization - Encrypted State */
- #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
- #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
-+#define X86_FEATURE_PREVENT_HOST_IBS	(19*32+15) /* "" AMD prevent host ibs */
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index deeb163999ce..05307c325137 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -17,6 +17,7 @@
+ #include "cs-etm.h"
+ #include "arm-spe.h"
+ #include "hisi-ptt.h"
++#include "hisi-pmcu.h"
  
- /*
-  * BUG word(s)
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 86d6897f4806..b348b8931721 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -569,6 +569,12 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
- 	if (svm->vcpu.guest_debug || (svm->vmcb->save.dr7 & ~DR7_FIXED_1))
- 		return -EINVAL;
+ static struct perf_pmu **find_all_arm_spe_pmus(int *nr_spes, int *err)
+ {
+@@ -99,6 +100,52 @@ static struct perf_pmu **find_all_hisi_ptt_pmus(int *nr_ptts, int *err)
+ 	return hisi_ptt_pmus;
+ }
  
-+	if (sev_es_guest(svm->vcpu.kvm) &&
-+	    guest_cpuid_has(&svm->vcpu, X86_FEATURE_PREVENT_HOST_IBS)) {
-+		save->sev_features |= BIT(6);
-+		svm->prevent_hostibs_enabled = true;
++static struct perf_pmu **find_all_hisi_pmcu_pmus(int *nr_pmcus, int *err)
++{
++	const char *sysfs = sysfs__mountpoint();
++	struct perf_pmu **hisi_pmcu_pmus = NULL;
++	struct dirent *dent;
++	char path[PATH_MAX];
++	DIR *dir = NULL;
++	int idx = 0;
++
++	snprintf(path, PATH_MAX, "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
++	dir = opendir(path);
++	if (!dir) {
++		pr_err("can't read directory '%s'\n", EVENT_SOURCE_DEVICE_PATH);
++		*err = -EINVAL;
++		return NULL;
 +	}
 +
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, HISI_PMCU_PMU_NAME))
++			(*nr_pmcus)++;
++	}
++
++	if (!(*nr_pmcus))
++		goto out;
++
++	hisi_pmcu_pmus = zalloc(sizeof(struct perf_pmu *) * (*nr_pmcus));
++	if (!hisi_pmcu_pmus) {
++		pr_err("hisi_pmcu alloc failed\n");
++		*err = -ENOMEM;
++		goto out;
++	}
++
++	rewinddir(dir);
++	while ((dent = readdir(dir))) {
++		if (strstr(dent->d_name, HISI_PMCU_PMU_NAME) && idx < *nr_pmcus) {
++			hisi_pmcu_pmus[idx] = perf_pmu__find(dent->d_name);
++			if (hisi_pmcu_pmus[idx])
++				idx++;
++		}
++	}
++
++out:
++	closedir(dir);
++	return hisi_pmcu_pmus;
++}
++
+ static struct perf_pmu *find_pmu_for_event(struct perf_pmu **pmus,
+ 					   int pmu_nr, struct evsel *evsel)
+ {
+@@ -121,13 +168,16 @@ struct auxtrace_record
+ 	struct perf_pmu	*cs_etm_pmu = NULL;
+ 	struct perf_pmu **arm_spe_pmus = NULL;
+ 	struct perf_pmu **hisi_ptt_pmus = NULL;
++	struct perf_pmu **hisi_pmcu_pmus = NULL;
+ 	struct evsel *evsel;
+ 	struct perf_pmu *found_etm = NULL;
+ 	struct perf_pmu *found_spe = NULL;
+ 	struct perf_pmu *found_ptt = NULL;
++	struct perf_pmu *found_pmcu = NULL;
+ 	int auxtrace_event_cnt = 0;
+ 	int nr_spes = 0;
+ 	int nr_ptts = 0;
++	int nr_pmcus = 0;
+ 
+ 	if (!evlist)
+ 		return NULL;
+@@ -135,6 +185,7 @@ struct auxtrace_record
+ 	cs_etm_pmu = perf_pmu__find(CORESIGHT_ETM_PMU_NAME);
+ 	arm_spe_pmus = find_all_arm_spe_pmus(&nr_spes, err);
+ 	hisi_ptt_pmus = find_all_hisi_ptt_pmus(&nr_ptts, err);
++	hisi_pmcu_pmus = find_all_hisi_pmcu_pmus(&nr_pmcus, err);
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (cs_etm_pmu && !found_etm)
+@@ -145,10 +196,14 @@ struct auxtrace_record
+ 
+ 		if (hisi_ptt_pmus && !found_ptt)
+ 			found_ptt = find_pmu_for_event(hisi_ptt_pmus, nr_ptts, evsel);
++
++		if (hisi_pmcu_pmus && !found_pmcu)
++			found_pmcu = find_pmu_for_event(hisi_pmcu_pmus, nr_pmcus, evsel);
+ 	}
+ 
+ 	free(arm_spe_pmus);
+ 	free(hisi_ptt_pmus);
++	free(hisi_pmcu_pmus);
+ 
+ 	if (found_etm)
+ 		auxtrace_event_cnt++;
+@@ -159,6 +214,9 @@ struct auxtrace_record
+ 	if (found_ptt)
+ 		auxtrace_event_cnt++;
+ 
++	if (found_pmcu)
++		auxtrace_event_cnt++;
++
+ 	if (auxtrace_event_cnt > 1) {
+ 		pr_err("Concurrent AUX trace operation not currently supported\n");
+ 		*err = -EOPNOTSUPP;
+@@ -174,6 +232,9 @@ struct auxtrace_record
+ 
+ 	if (found_ptt)
+ 		return hisi_ptt_recording_init(err, found_ptt);
++
++	if (found_pmcu)
++		return hisi_pmcu_recording_init(err, found_pmcu);
+ #endif
+ 
  	/*
- 	 * SEV-ES will use a VMSA that is pointed to by the VMCB, not
- 	 * the traditional VMSA that is part of the VMCB. Copy the
-@@ -2158,6 +2164,10 @@ void __init sev_set_cpu_caps(void)
- 		kvm_cpu_cap_clear(X86_FEATURE_SEV);
- 	if (!sev_es_enabled)
- 		kvm_cpu_cap_clear(X86_FEATURE_SEV_ES);
+diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
+index 337aa9bdf905..daba9e6ae054 100644
+--- a/tools/perf/arch/arm64/util/Build
++++ b/tools/perf/arch/arm64/util/Build
+@@ -11,4 +11,4 @@ perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+ perf-$(CONFIG_AUXTRACE) += ../../arm/util/pmu.o \
+ 			      ../../arm/util/auxtrace.o \
+ 			      ../../arm/util/cs-etm.o \
+-			      arm-spe.o mem-events.o hisi-ptt.o
++			      arm-spe.o mem-events.o hisi-ptt.o hisi-pmcu.o
+diff --git a/tools/perf/arch/arm64/util/hisi-pmcu.c b/tools/perf/arch/arm64/util/hisi-pmcu.c
+new file mode 100644
+index 000000000000..7c33abf1182d
+--- /dev/null
++++ b/tools/perf/arch/arm64/util/hisi-pmcu.c
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * HiSilicon Performance Monitor Control Unit (PMCU) support
++ *
++ * Copyright (C) 2022 HiSilicon Limited
++ */
 +
-+	/* Enable PreventhostIBS feature for SEV-ES and higher guests */
-+	if (sev_es_enabled)
-+		kvm_cpu_cap_set(X86_FEATURE_PREVENT_HOST_IBS);
- }
- 
- void __init sev_hardware_setup(void)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 9a194aa1a75a..47c1e0fff23e 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3914,10 +3914,39 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu, bool spec_ctrl_in
- 
- 	guest_state_enter_irqoff();
- 
--	if (sev_es_guest(vcpu->kvm))
-+	if (sev_es_guest(vcpu->kvm)) {
-+		bool ibs_fetch_active, ibs_op_active;
-+		u64 ibs_fetch_ctl, ibs_op_ctl;
++#include <linux/kernel.h>
++#include <linux/log2.h>
++#include <linux/types.h>
++#include <linux/zalloc.h>
++#include <time.h>
++#include <math.h>
++#include <internal/lib.h>
++#include <internal/threadmap.h>
 +
-+		if (svm->prevent_hostibs_enabled) {
-+			/*
-+			 * With PreventHostIBS enabled, IBS profiling cannot
-+			 * be active when VMRUN is executed. Disable IBS before
-+			 * executing VMRUN and, because of a race condition,
-+			 * enable the PreventHostIBS window if IBS profiling was
-+			 * active.
-+			 */
-+			ibs_fetch_active =
-+				amd_disable_ibs_fetch(&ibs_fetch_ctl);
-+			ibs_op_active =
-+				amd_disable_ibs_op(&ibs_op_ctl);
++#include "../../../util/auxtrace.h"
++#include "../../../util/debug.h"
++#include "../../../util/event.h"
++#include "../../../util/evlist.h"
++#include "../../../util/hisi-pmcu.h"
++#include "../../../util/pmu.h"
++#include "../../../util/record.h"
++#include "../../../util/session.h"
++#include "../../../util/thread_map.h"
 +
-+			amd_prevent_hostibs_window(ibs_fetch_active ||
-+						   ibs_op_active);
++#define KiB(x) ((x) * 1024)
++#define MiB(x) ((x) * 1024 * 1024)
++#define HISI_PMCU_DATA_ALIGNMENT	4
++
++struct hisi_pmcu_record {
++	struct auxtrace_record itr;
++	struct perf_pmu *hisi_pmcu_pmu;
++	struct evlist *evlist;
++};
++
++static int hisi_pmcu_recording_options(struct auxtrace_record *itr,
++				       struct evlist *evlist,
++				       struct record_opts *opts)
++{
++	struct hisi_pmcu_record *pmcu_record =
++			container_of(itr, struct hisi_pmcu_record, itr);
++	struct perf_pmu *hisi_pmcu_pmu = pmcu_record->hisi_pmcu_pmu;
++	struct evsel *hisi_pmcu_evsel = NULL;
++	struct evsel *evsel;
++
++	if (!perf_event_paranoid_check(-1))
++		return -EPERM;
++
++	pmcu_record->evlist = evlist;
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type == hisi_pmcu_pmu->type) {
++			if (hisi_pmcu_evsel) {
++				pr_err("Only one event allowed on a PMCU\n");
++				return -EINVAL;
++			}
++			evsel->core.attr.sample_period = 1;
++			evsel->core.attr.freq = false;
++			evsel->needs_auxtrace_mmap = true;
++			opts->full_auxtrace = true;
++			hisi_pmcu_evsel = evsel;
 +		}
-+
- 		__svm_sev_es_vcpu_run(svm, spec_ctrl_intercepted);
--	else
-+
-+		if (svm->prevent_hostibs_enabled) {
-+			if (ibs_fetch_active)
-+				amd_restore_ibs_fetch(ibs_fetch_ctl);
-+
-+			if (ibs_op_active)
-+				amd_restore_ibs_op(ibs_op_ctl);
-+		}
-+	} else {
- 		__svm_vcpu_run(svm, spec_ctrl_intercepted);
 +	}
- 
- 	guest_state_exit_irqoff();
- }
-@@ -4008,6 +4037,12 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	/* Any pending NMI will happen here */
- 
-+	/*
-+	 * Disable the PreventHostIBS window since any pending IBS NMIs will
-+	 * have been handled.
-+	 */
-+	amd_prevent_hostibs_window(false);
 +
- 	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
- 		kvm_after_interrupt(vcpu);
++	opts->auxtrace_mmap_pages = MiB(16) / page_size;
++
++	/*
++	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
++	 * must come first.
++	 */
++	evlist__to_front(evlist, hisi_pmcu_evsel);
++	evsel__set_sample_bit(hisi_pmcu_evsel, TIME);
++
++	return 0;
++}
++
++static size_t hisi_pmcu_info_priv_size(struct auxtrace_record *itr __maybe_unused,
++				       struct evlist *evlist __maybe_unused)
++{
++	return HISI_PMCU_AUXTRACE_PRIV_SIZE;
++}
++
++static int hisi_pmcu_info_fill(struct auxtrace_record *itr,
++			       struct perf_session *session,
++			       struct perf_record_auxtrace_info *auxtrace_info,
++			       size_t priv_size)
++{
++	struct hisi_pmcu_record *pmcu_record =
++			container_of(itr, struct hisi_pmcu_record, itr);
++	struct perf_pmu *hisi_pmcu_pmu = pmcu_record->hisi_pmcu_pmu;
++
++	if (priv_size != HISI_PMCU_AUXTRACE_PRIV_SIZE)
++		return -EINVAL;
++
++	if (!session->evlist->core.nr_mmaps)
++		return -EINVAL;
++
++	auxtrace_info->type = PERF_AUXTRACE_HISI_PMCU;
++	auxtrace_info->priv[0] = hisi_pmcu_pmu->type;
++
++	return 0;
++}
++
++static void hisi_pmcu_record_free(struct auxtrace_record *itr)
++{
++	struct hisi_pmcu_record *pmcu_record =
++			container_of(itr, struct hisi_pmcu_record, itr);
++
++	free(pmcu_record);
++}
++
++static u64 hisi_pmcu_reference(struct auxtrace_record *itr __maybe_unused)
++{
++	return 0;
++}
++
++struct auxtrace_record *hisi_pmcu_recording_init(int *err,
++						 struct perf_pmu *hisi_pmcu_pmu)
++{
++	struct hisi_pmcu_record *pmcu_record;
++
++	if (!hisi_pmcu_pmu) {
++		*err = -ENODEV;
++		return NULL;
++	}
++
++	pmcu_record = zalloc(sizeof(*pmcu_record));
++	if (!pmcu_record) {
++		*err = -ENOMEM;
++		return NULL;
++	}
++
++	pmcu_record->hisi_pmcu_pmu = hisi_pmcu_pmu;
++	pmcu_record->itr.recording_options = hisi_pmcu_recording_options;
++	pmcu_record->itr.info_priv_size = hisi_pmcu_info_priv_size;
++	pmcu_record->itr.info_fill = hisi_pmcu_info_fill;
++	pmcu_record->itr.free = hisi_pmcu_record_free;
++	pmcu_record->itr.reference = hisi_pmcu_reference;
++	pmcu_record->itr.read_finish = auxtrace_record__read_finish;
++	pmcu_record->itr.alignment = HISI_PMCU_DATA_ALIGNMENT;
++	pmcu_record->itr.pmu = hisi_pmcu_pmu;
++
++	*err = 0;
++	return &pmcu_record->itr;
++}
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 6a0f9b98f059..89b2b14407f5 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -49,6 +49,7 @@ enum auxtrace_type {
+ 	PERF_AUXTRACE_ARM_SPE,
+ 	PERF_AUXTRACE_S390_CPUMSF,
+ 	PERF_AUXTRACE_HISI_PTT,
++	PERF_AUXTRACE_HISI_PMCU,
+ };
  
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 4826e6cc611b..71f32fcfd219 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -254,6 +254,7 @@ struct vcpu_svm {
- 	bool pause_filter_enabled         : 1;
- 	bool pause_threshold_enabled      : 1;
- 	bool vgif_enabled                 : 1;
-+	bool prevent_hostibs_enabled      : 1;
- 
- 	u32 ldr_reg;
- 	u32 dfr_reg;
+ enum itrace_period_type {
+diff --git a/tools/perf/util/hisi-pmcu.h b/tools/perf/util/hisi-pmcu.h
+new file mode 100644
+index 000000000000..d46d523a3aee
+--- /dev/null
++++ b/tools/perf/util/hisi-pmcu.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * HiSilicon Performance Monitor Control Unit (PMCU) support
++ *
++ * Copyright (C) 2022 HiSilicon Limited
++ */
++
++#ifndef INCLUDE__PERF_HISI_PMCU_H__
++#define INCLUDE__PERF_HISI_PMCU_H__
++
++#define HISI_PMCU_PMU_NAME		"hisi_pmcu"
++#define HISI_PMCU_AUXTRACE_PRIV_SIZE	sizeof(u64)
++
++struct auxtrace_record *hisi_pmcu_recording_init(int *err,
++					struct perf_pmu *hisi_pmcu_pmu);
++
++#endif
 -- 
-2.34.1
+2.30.0
 
