@@ -2,154 +2,278 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0C9C636D3
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 03:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D67FC636CC
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 05:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230302AbjBGD4W (ORCPT
+        id S229556AbjBGFQJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Feb 2023 22:56:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
+        Tue, 7 Feb 2023 00:16:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbjBGDz7 (ORCPT
+        with ESMTP id S229478AbjBGFQI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Feb 2023 22:55:59 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACEFC37541;
-        Mon,  6 Feb 2023 19:55:28 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id rm7-20020a17090b3ec700b0022c05558d22so13497293pjb.5;
-        Mon, 06 Feb 2023 19:55:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mqI9CX9OCLRhinZW0rV2yxCcmMTFndJVCdpXa5ZUnco=;
-        b=o8ui0BwXjQb6Xz0+sV/XmAtBjIzgRNhLYPdfI9IHudkrwl5gTXpIpMOvolOaL9acRP
-         XCdxnPWLWgJw0ORyp798XI/vdNQuP73eC52jwImCAT0YkmN/TUT0tUbkJMmm/mxAgpS0
-         XwxXjspo5I4w92K8TbwcdAFn+fv7U2jGlSP77xhKOI9/9crgO40/0FZOrKoybVWuIL8t
-         fgIES6vwRi5iZ+RJVoHMkoDuT77EbnvzOn3Wgu+tVadR852ojkBEAyXwqTWHEvQ+/F9D
-         oEoa54gTUp2x7VmLp0YL5AnlSdnytBXcKlTuEBzoyN6tEHrZwBETmGO0jD6Kw2tysYBO
-         mLpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mqI9CX9OCLRhinZW0rV2yxCcmMTFndJVCdpXa5ZUnco=;
-        b=FqKLPSr6YSBVPN7QFrgMu3ZfT2gOq9KxJ8qV2CvYR24T+OWQx8g+BSzt7L2JfIa1rX
-         d+8reyEYiJ0P8zkhu+5n4+PxzCGB+Jb1aszv0NQKS/acON/ToWtk2FLFUcByXuIG9XOA
-         jNq+DHHhz8A4UYOhJ1qgCzerIfqBrry5Q+yq0fA3Ybkd4DYAP4UV8rf42ozaK07Lyf8G
-         kuqsMERA0oXmVohheDuu5qnq49ocLdd0UphQRxD9Whl1gRZ8DxbiUAYHi5IVJXYA+9Vp
-         OAbCs+Iy+p7zRvqAb1zsDvHUrzaOzOxPE3G1gUxk84XPsZZtHQOJ9sthzBqPRSkOR7RZ
-         h51w==
-X-Gm-Message-State: AO0yUKUbIAeiYS24QtrKikq7vQU6wk8V/lcNJRtnx0VA7BZqaGF1bfxA
-        CPZ/0w3XsakVYh3N0R1Fv/A=
-X-Google-Smtp-Source: AK7set8xEIMQnqgw2pXG5HFkn5MnGyHjDBNyhDZPYQWQM7saiWZRxmBOABnr1379qxiruU1f4ByBsQ==
-X-Received: by 2002:a17:903:32c9:b0:196:1425:740c with SMTP id i9-20020a17090332c900b001961425740cmr1762111plr.62.1675742128059;
-        Mon, 06 Feb 2023 19:55:28 -0800 (PST)
-Received: from strix-laptop.hitronhub.home ([123.110.9.95])
-        by smtp.googlemail.com with ESMTPSA id q4-20020a170902b10400b0019682e27995sm7647655plr.223.2023.02.06.19.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Feb 2023 19:55:27 -0800 (PST)
-From:   Chih-En Lin <shiyn.lin@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Zach O'Keefe" <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>,
-        Chih-En Lin <shiyn.lin@gmail.com>
-Subject: [PATCH v4 14/14] mm: fork: Enable COW PTE to fork system call
-Date:   Tue,  7 Feb 2023 11:51:39 +0800
-Message-Id: <20230207035139.272707-15-shiyn.lin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230207035139.272707-1-shiyn.lin@gmail.com>
-References: <20230207035139.272707-1-shiyn.lin@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 7 Feb 2023 00:16:08 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14201114A
+        for <linux-perf-users@vger.kernel.org>; Mon,  6 Feb 2023 21:16:02 -0800 (PST)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3175EEPp012079;
+        Tue, 7 Feb 2023 05:15:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to; s=pp1;
+ bh=kLAHXoROcthUw+s0d/BLz09IJXX+QYDtx8qTUnd0TG8=;
+ b=L9qKSPuyajrh/3qCgjqQHboIiSF53fFVePoHY8gkjbsCozwQ1CSDWQkFyDPjp9HnUbTw
+ m9O1gph4987hhuz2ypJ84TOVqWRCImL03f4ffDlz0GIChAIBxH5ESxNdVTwAlRBuIPy2
+ LmB10rHxf83QBUmaTzzpmEv94PGB7C35xUHFDSfdtTp6Sv12S8sUcw4qKYMb/HkCLAO1
+ fS2dK+snpXJni3Bgpim6rrrtS6VvLG50BlHmhJInqhntReeXs7Li9YcGQyNyvAUtZgH9
+ dE7QR6fpkqe90r4hXuCJBA+lFCEFuj7Q+ThI5UuvXe4iF6XPELg/wISNWqPV8VaQ8jxa SA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nkgahg0sa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Feb 2023 05:15:45 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3175Finm016594;
+        Tue, 7 Feb 2023 05:15:44 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nkgahg0rp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Feb 2023 05:15:44 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 316EUuCi017531;
+        Tue, 7 Feb 2023 05:15:42 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfj8bh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Feb 2023 05:15:42 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3175FcKv24576334
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Feb 2023 05:15:38 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C9A020040;
+        Tue,  7 Feb 2023 05:15:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB94220043;
+        Tue,  7 Feb 2023 05:15:35 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.62.201])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 Feb 2023 05:15:35 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: [PATCH] tests/bpf: Fix the bpf test to check for libtraceevent
+ support
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <Y+ERXfJpXXv7xRxx@kernel.org>
+Date:   Tue, 7 Feb 2023 10:45:33 +0530
+Cc:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+        Nageswara Sastry <rnsastry@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        James Clark <james.clark@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
+        linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <82A58226-5598-4CD9-ADD1-4B8B3E80289A@linux.vnet.ibm.com>
+References: <20230131135001.54578-1-atrajeev@linux.vnet.ibm.com>
+ <Y9sKjYV8b37vstQ0@kernel.org>
+ <628A923D-A993-4A35-A90E-8F6798549FD0@linux.vnet.ibm.com>
+ <Y+ERXfJpXXv7xRxx@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: UI4RfovFzUk-EL5KVXGSNn3Zu9oOsEoz
+X-Proofpoint-GUID: nET1bBW6jTfpoHjI1tJv8-09-tXOG51N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-06_07,2023-02-06_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ impostorscore=0 phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2302070044
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch enables the Copy-On-Write (COW) mechanism to the PTE table
-in fork system call. To let the process do COW PTE fork, use
-prctl(PR_SET_COW_PTE), it will set the MMF_COW_PTE_READY flag to the
-process for enabling COW PTE during the next time of fork.
 
-It uses the MMF_COW_PTE flag to distinguish the normal page table
-and the COW one. Moreover, it is difficult to distinguish whether all
-the page tables is out of COW state. So the MMF_COW_PTE flag won't be
-disabled after setup.
 
-Signed-off-by: Chih-En Lin <shiyn.lin@gmail.com>
----
- kernel/fork.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> On 06-Feb-2023, at 8:10 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
+wrote:
+>=20
+> Em Mon, Feb 06, 2023 at 09:27:13AM +0530, Athira Rajeev escreveu:
+>>> On 02-Feb-2023, at 6:27 AM, Arnaldo Carvalho de Melo =
+<acme@kernel.org> wrote:
+>>>=20
+>>> Em Tue, Jan 31, 2023 at 07:20:01PM +0530, Athira Rajeev escreveu:
+>>>> "bpf" tests fails in environment with missing libtraceevent
+>>>> support as below:
+>>>>=20
+>>>> # ./perf test 36
+>>>> 36: BPF filter                                                      =
+:
+>>>> 36.1: Basic BPF filtering                                           =
+: FAILED!
+>>>> 36.2: BPF pinning                                                   =
+: FAILED!
+>>>> 36.3: BPF prologue generation                                       =
+: FAILED!
+>>>>=20
+>>>> The environment has clang but missing the libtraceevent
+>>>> devel. Hence perf is compiled without libtraceevent support.
+>>>=20
+>>> Thanks, applied.
+>>=20
+>> Hi,
+>>=20
+>> Thanks for checking
+>>=20
+>> Arnaldo, this is applied to tmp.perf/core branch ?
+>=20
+> I thought I had this in :-\ Now its in tmp.perf/core.
+>=20
+> - Arnaldo
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 9f7fe3541897..94c35c8b31b1 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2678,6 +2678,13 @@ pid_t kernel_clone(struct kernel_clone_args *args)
- 			trace = 0;
- 	}
- 
-+#ifdef CONFIG_COW_PTE
-+	if (current->mm && test_bit(MMF_COW_PTE_READY, &current->mm->flags)) {
-+		clear_bit(MMF_COW_PTE_READY, &current->mm->flags);
-+		set_bit(MMF_COW_PTE, &current->mm->flags);
-+	}
-+#endif
-+
- 	p = copy_process(NULL, trace, NUMA_NO_NODE, args);
- 	add_latent_entropy();
- 
--- 
-2.34.1
+Hi Arnaldo,=20
+
+Thanks for picking it.
+
+Athira
+>=20
+>> Athira=20
+>>>=20
+>>> - Arnaldo
+>>>=20
+>>>=20
+>>>> Detailed logs:
+>>>> 	./perf test -v "Basic BPF filtering"
+>>>>=20
+>>>> 	Failed to add BPF event syscalls:sys_enter_epoll_pwait
+>>>> 	bpf: tracepoint call back failed, stop iterate
+>>>> 	Failed to add events selected by BPF
+>>>>=20
+>>>> The bpf tests tris to add probe event which fails
+>>>> at "parse_events_add_tracepoint" function due to missing
+>>>> libtraceevent. Add check for "HAVE_LIBTRACEEVENT" in the
+>>>> "tests/bpf.c" before proceeding with the test.
+>>>>=20
+>>>> With the change,
+>>>>=20
+>>>> 	# ./perf test 36
+>>>> 	36: BPF filter                                                   =
+   :
+>>>> 	36.1: Basic BPF filtering                                        =
+   : Skip (not compiled in or missing libtraceevent support)
+>>>> 	36.2: BPF pinning                                                =
+   : Skip (not compiled in or missing libtraceevent support)
+>>>> 	36.3: BPF prologue generation                                    =
+   : Skip (not compiled in or missing libtraceevent support)
+>>>>=20
+>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>>> ---
+>>>> tools/perf/tests/bpf.c | 22 +++++++++++-----------
+>>>> 1 file changed, 11 insertions(+), 11 deletions(-)
+>>>>=20
+>>>> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+>>>> index 17c023823713..4af39528f611 100644
+>>>> --- a/tools/perf/tests/bpf.c
+>>>> +++ b/tools/perf/tests/bpf.c
+>>>> @@ -23,7 +23,7 @@
+>>>> #define NR_ITERS       111
+>>>> #define PERF_TEST_BPF_PATH "/sys/fs/bpf/perf_test"
+>>>>=20
+>>>> -#ifdef HAVE_LIBBPF_SUPPORT
+>>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>>>> #include <linux/bpf.h>
+>>>> #include <bpf/bpf.h>
+>>>>=20
+>>>> @@ -330,10 +330,10 @@ static int test__bpf(int i)
+>>>> static int test__basic_bpf_test(struct test_suite *test =
+__maybe_unused,
+>>>> 				int subtest __maybe_unused)
+>>>> {
+>>>> -#ifdef HAVE_LIBBPF_SUPPORT
+>>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>>>> 	return test__bpf(0);
+>>>> #else
+>>>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
+>>>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
+not compiled\n");
+>>>> 	return TEST_SKIP;
+>>>> #endif
+>>>> }
+>>>> @@ -341,10 +341,10 @@ static int test__basic_bpf_test(struct =
+test_suite *test __maybe_unused,
+>>>> static int test__bpf_pinning(struct test_suite *test =
+__maybe_unused,
+>>>> 			     int subtest __maybe_unused)
+>>>> {
+>>>> -#ifdef HAVE_LIBBPF_SUPPORT
+>>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>>>> 	return test__bpf(1);
+>>>> #else
+>>>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
+>>>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
+not compiled\n");
+>>>> 	return TEST_SKIP;
+>>>> #endif
+>>>> }
+>>>> @@ -352,17 +352,17 @@ static int test__bpf_pinning(struct =
+test_suite *test __maybe_unused,
+>>>> static int test__bpf_prologue_test(struct test_suite *test =
+__maybe_unused,
+>>>> 				   int subtest __maybe_unused)
+>>>> {
+>>>> -#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
+>>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE) && =
+defined(HAVE_LIBTRACEEVENT)
+>>>> 	return test__bpf(2);
+>>>> #else
+>>>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
+>>>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
+not compiled\n");
+>>>> 	return TEST_SKIP;
+>>>> #endif
+>>>> }
+>>>>=20
+>>>>=20
+>>>> static struct test_case bpf_tests[] =3D {
+>>>> -#ifdef HAVE_LIBBPF_SUPPORT
+>>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+>>>> 	TEST_CASE("Basic BPF filtering", basic_bpf_test),
+>>>> 	TEST_CASE_REASON("BPF pinning", bpf_pinning,
+>>>> 			"clang isn't installed or environment missing =
+BPF support"),
+>>>> @@ -373,9 +373,9 @@ static struct test_case bpf_tests[] =3D {
+>>>> 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
+"not compiled in"),
+>>>> #endif
+>>>> #else
+>>>> -	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
+compiled in"),
+>>>> -	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
+>>>> -	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
+"not compiled in"),
+>>>> +	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
+compiled in or missing libtraceevent support"),
+>>>> +	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in or =
+missing libtraceevent support"),
+>>>> +	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
+"not compiled in or missing libtraceevent support"),
+>>>> #endif
+>>>> 	{ .name =3D NULL, }
+>>>> };
+>>>> --=20
+>>>> 2.39.0
+>>>>=20
+>>>=20
+>>> --=20
+>>>=20
+>>> - Arnaldo
+>>=20
+>=20
+> --=20
+>=20
+> - Arnaldo
 
