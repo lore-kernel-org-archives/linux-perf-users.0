@@ -2,103 +2,156 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9FDC636CD
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 12:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38EBC636CC
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 14:05:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbjBGMnB (ORCPT
+        id S231422AbjBGOFQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Feb 2023 07:43:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35408 "EHLO
+        Tue, 7 Feb 2023 09:05:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231387AbjBGMnB (ORCPT
+        with ESMTP id S232514AbjBGOFH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Feb 2023 07:43:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29EE35BD;
-        Tue,  7 Feb 2023 04:42:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F70661380;
-        Tue,  7 Feb 2023 12:42:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0853DC433EF;
-        Tue,  7 Feb 2023 12:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675773778;
-        bh=JVybZG/af25FtT5MIn8vwGANiFyx3YmRZsIluskfyi4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V5/W1xnxs1ZmPu/CLYT6v+6ppZS1ZtONnX/OGJjnqE4/ATQoY0qPJbGFg7Duc7WWa
-         ZriJFVwo95o/jKuBCYdlQt+NMWPyjjUanDvOMTktIZQnf1AMQwQb0Uy7z4DxG3YzmV
-         PdVFpHQFo3yAhpHwE65VfOZ1Eq86VVGFdAQ8dBSjjL3VIbEns1jlxEloRZiyJyLoOY
-         ESZl8hXM3PTViqlwBKSS6uL/iWdFWh1BuSXDLaTp9oqUqs97+1cqqVsrkHXV9Yd80s
-         IKyGKdyWwitqfIes/7M7H9sbwfdN7PUJDI5q4/CsJWhWnExFtsGEN+zvX5NXW0BS+Z
-         Kb8lxOzKop6Iw==
-Date:   Tue, 7 Feb 2023 12:42:51 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Ingo Molnar <mingo@redhat.com>, James Morse <james.morse@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     kernel-team@android.com, Mark Brown <broonie@kernel.org>,
-        linux-kernel@vger.kernel.org, James Clark <james.clark@arm.com>,
-        kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 0/8] perf: Arm SPEv1.2 support
-Message-ID: <20230207124250.GA12385@willie-the-truck>
-References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
- <167577072188.364892.17496441030141801452.b4-ty@kernel.org>
+        Tue, 7 Feb 2023 09:05:07 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDF744B6;
+        Tue,  7 Feb 2023 06:05:06 -0800 (PST)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 317CCL72008904;
+        Tue, 7 Feb 2023 14:05:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=M9UwC4YSVpfyHNddSzSo9Og0mScJAzhIdyg9OzhqzsM=;
+ b=Z1KzKeyj2SvApOFfxzDu9Vy5dLwZWE3IT9Rdxtol0+ysL29FL6GU0ddnPE6C2vbPGB4P
+ 8SK2CNwhto7DTy/yStUjbXlqenFnNpdEj3ScIj/k3NdbvIJ6jcpxjndlWXfPYLQVP80e
+ chvO2gSgNYBP64Sb+CufuBh4s4w4rZrhT73lDiTm5G7LLMtVicUILUrG7+svgwbd7vMK
+ GnDzuno+75xTy0SLB7CBtSLfgC8gAtaYQ5cMnHON3aCeEwnXiuAgqQcJbWj15I6zNEPy
+ QuT8RHPhkWFUOYfCWkBnE0zos6D8MM3lyfDuf48VKpitmdCTUFBsfnHk26yn9auwNIkz ZQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nkpeju10m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Feb 2023 14:05:03 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 317DAs2f029407;
+        Tue, 7 Feb 2023 14:05:03 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nkpeju0xu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Feb 2023 14:05:03 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 316JlULJ007292;
+        Tue, 7 Feb 2023 14:05:00 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfjmj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Feb 2023 14:05:00 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 317E4v5i23527898
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Feb 2023 14:04:57 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 239502004B;
+        Tue,  7 Feb 2023 14:04:57 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE14420043;
+        Tue,  7 Feb 2023 14:04:56 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Feb 2023 14:04:56 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel-next@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        irogers@google.com, hca@linux.ibm.com, egorenar@linux.ibm.com,
+        gor@linux.ibm.com
+Cc:     svens@linux.ibm.com, sumanthk@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] tools/perf: Fix perf tool build error in util/pfm.c
+Date:   Tue,  7 Feb 2023 15:04:47 +0100
+Message-Id: <20230207140447.1827741-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <167577072188.364892.17496441030141801452.b4-ty@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: hs2Suvv3UqTF_WDP4tmJwdub4uzBInD2
+X-Proofpoint-GUID: 25Spd2cM0vz6PRHfomnQnrKPx86uXk8F
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-07_05,2023-02-06_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 mlxscore=0 adultscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302070126
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 12:39:43PM +0000, Will Deacon wrote:
-> On Mon, 09 Jan 2023 13:26:17 -0600, Rob Herring wrote:
-> > Peter, this series is blocked on an ack from you on patch 7. There was
-> > some discussion on validation of the 'config3' attr. The options where
-> > laid out by Mark here[0]. Please chime in on your preference.
-> > 
-> > Will, can you pick up patches 1-6 at least if there's no progress on
-> > 'config3'.
-> > 
-> > [...]
-> 
-> Applied to will (for-next/perf), thanks!
-> 
-> [1/8] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
->       (no commit info)
-> [2/8] arm64: Drop SYS_ from SPE register defines
->       (no commit info)
-> [3/8] arm64/sysreg: Convert SPE registers to automatic generation
->       (no commit info)
-> [4/8] perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
->       (no commit info)
-> [5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
->       (no commit info)
-> [6/8] perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
->       (no commit info)
-> [7/8] perf: Add perf_event_attr::config3
->       https://git.kernel.org/will/c/09519ec3b19e
-> [8/8] perf: arm_spe: Add support for SPEv1.2 inverted event filtering
->       https://git.kernel.org/will/c/8d9190f00a97
+I have downloaded linux-next and build the perf tool using
 
-I should've trimmed this, but just in case of confusion: I'd already picked
-up 1-6 prior to Peter's ack on the UAPI change. So now the whole series
-should be in tomorrow's -next with any luck.
+ # make LIBPFM4=1
 
-Thanks!
+to have libpfm4 support built into perf. The build fails:
 
-Will
+ # make LIBPFM4=1
+....
+INSTALL libbpf_headers
+  CC      util/pfm.o
+util/pfm.c: In function ‘print_libpfm_event’:
+util/pfm.c:189:9: error: too many arguments to function ‘print_cb->print_event’
+  189 |         print_cb->print_event(print_state,
+      |         ^~~~~~~~
+util/pfm.c:220:25: error: too many arguments to function ‘print_cb->print_event’
+  220 |                         print_cb->print_event(print_state,
+
+The build error is caused by
+commit d9dc8874d6ce ("perf pmu-events: Remove now unused event and metric variables")
+which changes the function prototype of
+  struct print_callbacks {
+      ...
+      void (*print_event)(...);  --> last two parameters removed.
+  };
+
+but does not adjust the usage of this function prototype in util/pfm.c.
+In file util/pfm.c function print_event() is still invoked with 13 parameters
+instead of 11. The compile fails.
+
+When I adjust the file util/pfm.c as in this patch, the build works file.
+Please check this patch for correctness, I have just fixed the compile
+issue.
+
+Fixes d9dc8874d6ce ("perf pmu-events: Remove now unused event and metric variables")
+Cc: irogers@google.com
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/pfm.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+index ac3227ba769c..b59ba825ddc9 100644
+--- a/tools/perf/util/pfm.c
++++ b/tools/perf/util/pfm.c
+@@ -193,8 +193,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
+ 			/*scale_unit=*/NULL,
+ 			/*deprecated=*/NULL, "PFM event",
+ 			info->desc, /*long_desc=*/NULL,
+-			/*encoding_desc=*/buf->buf,
+-			/*metric_name=*/NULL, /*metric_expr=*/NULL);
++			/*encoding_desc=*/buf->buf);
+ 
+ 	pfm_for_each_event_attr(j, info) {
+ 		pfm_event_attr_info_t ainfo;
+@@ -224,8 +223,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
+ 					/*scale_unit=*/NULL,
+ 					/*deprecated=*/NULL, "PFM event",
+ 					ainfo.desc, /*long_desc=*/NULL,
+-					/*encoding_desc=*/buf->buf,
+-					/*metric_name=*/NULL, /*metric_expr=*/NULL);
++					/*encoding_desc=*/buf->buf);
+ 		}
+ 	}
+ }
+-- 
+2.39.1
+
