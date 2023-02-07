@@ -2,87 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32207C05027
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 03:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365B9C636CD
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 03:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjBGDEI (ORCPT
+        id S229601AbjBGDvP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Feb 2023 22:04:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54980 "EHLO
+        Mon, 6 Feb 2023 22:51:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230214AbjBGDDs (ORCPT
+        with ESMTP id S229839AbjBGDvO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Feb 2023 22:03:48 -0500
+        Mon, 6 Feb 2023 22:51:14 -0500
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62E361B2;
-        Mon,  6 Feb 2023 19:03:37 -0800 (PST)
-Received: from dggpeml500019.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4P9nxz6qR0zfYyd;
-        Tue,  7 Feb 2023 11:03:19 +0800 (CST)
-Received: from [10.67.101.98] (10.67.101.98) by dggpeml500019.china.huawei.com
- (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 7 Feb
- 2023 11:03:35 +0800
-Message-ID: <08a68444-efb0-9d2e-7e70-0e495ad6ddc1@hisilicon.com>
-Date:   Tue, 7 Feb 2023 11:03:35 +0800
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A14421E;
+        Mon,  6 Feb 2023 19:51:12 -0800 (PST)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4P9pyh2Z32znW3W;
+        Tue,  7 Feb 2023 11:49:00 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 7 Feb 2023 11:51:10 +0800
+From:   Yicong Yang <yangyicong@huawei.com>
+To:     <acme@kernel.org>, <mark.rutland@arm.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <yao.jin@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>, <yangyicong@hisilicon.com>,
+        <linuxarm@huawei.com>, <prime.zeng@hisilicon.com>
+Subject: [PATCH] perf tools: Fix auto-complete on aarch64
+Date:   Tue, 7 Feb 2023 11:50:57 +0800
+Message-ID: <20230207035057.43394-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [RFC PATCH v1 1/4] docs: perf: Add documentation for HiSilicon
- PMCU
-To:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <corbet@lwn.net>, <jonathan.cameron@huawei.com>
-CC:     <zhangshaokun@hisilicon.com>, <shenyang39@huawei.com>,
-        <hejunhao3@huawei.com>, <yangyicong@hisilicon.com>,
-        <prime.zeng@huawei.com>, <suntao25@huawei.com>,
-        <jiazhao4@hisilicon.com>, <linuxarm@huawei.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
- <20230206065146.645505-2-zhanjie9@hisilicon.com>
-From:   Jie Zhan <zhanjie9@hisilicon.com>
-In-Reply-To: <20230206065146.645505-2-zhanjie9@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.98]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500019.china.huawei.com (7.185.36.137)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.50.163.32]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-On 06/02/2023 14:51, Jie Zhan wrote:
+On aarch64 CPU related events are not under event_source/devices/cpu/events,
+they're under event_source/devices/armv8_pmuv3_0/events on my machine.
+Using current auto-complete script will generate below error:
 
-> +
-> +2. Profiling with ``perf-record``.
-> +
-> +   The command to start the sampling is::
-> +
-> +        perf record -e hisi_pmcu_sccl3/<configs>/
-> +
-> +   Users can pass the following optional parameters to ``<configs>``:
-> +
-> +   - nr_sample: number of samples to take. This defaults to 128.
-> +   - sample_period_ms: time interval in microseconds for PMU counters to keep
+[root@localhost bin]# perf stat -e
+ls: cannot access '/sys/bus/event_source/devices/cpu/events': No such file or directory
 
-Spot a typo before causing any confusion. This should be "milliseconds" 
-rather than "microseconds".
+Fix this by not test /sys/bus/event_source/devices/cpu/events on aarch64
+machine.
 
-Jie
+Fixes: 74cd5815d9af ("perf tool: Improve bash command line auto-complete for multiple events with comma")
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ tools/perf/perf-completion.sh | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-> +     counting for each event. This defaults to 3, i.e. 3ms, and its max
-> +     value is 85,899, i.e. 85 seconds.
-> +   - pmccfiltr: bits 31-24 of the sysreg PMCCFILTR_EL0, which controls how the
-> +     cycle counter increments. This defaults to 0x00. Please refer to the
-> +     "Performance Monitors external register descriptions" of *Arm Architecture
-> +     Reference Manual for A-profile architecture* on how to configure
-> +     PMCCFILTR_EL0.
-> +
-> ...
+diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
+index fdf75d45efff..978249d7868c 100644
+--- a/tools/perf/perf-completion.sh
++++ b/tools/perf/perf-completion.sh
+@@ -165,7 +165,12 @@ __perf_main ()
+ 
+ 		local cur1=${COMP_WORDS[COMP_CWORD]}
+ 		local raw_evts=$($cmd list --raw-dump)
+-		local arr s tmp result
++		local arr s tmp result cpu_evts
++
++		# aarch64 doesn't have /sys/bus/event_source/devices/cpu/events
++		if [[ `uname -m` != aarch64 ]]; then
++			cpu_evts=$(ls /sys/bus/event_source/devices/cpu/events)
++		fi
+ 
+ 		if [[ "$cur1" == */* && ${cur1#*/} =~ ^[A-Z] ]]; then
+ 			OLD_IFS="$IFS"
+@@ -183,9 +188,9 @@ __perf_main ()
+ 				fi
+ 			done
+ 
+-			evts=${result}" "$(ls /sys/bus/event_source/devices/cpu/events)
++			evts=${result}" "${cpu_evts}
+ 		else
+-			evts=${raw_evts}" "$(ls /sys/bus/event_source/devices/cpu/events)
++			evts=${raw_evts}" "${cpu_evts}
+ 		fi
+ 
+ 		if [[ "$cur1" == , ]]; then
+-- 
+2.24.0
+
