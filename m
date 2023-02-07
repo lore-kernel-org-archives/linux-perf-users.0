@@ -2,278 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D67FC636CC
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 05:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469C8C636CC
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 08:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjBGFQJ (ORCPT
+        id S231225AbjBGImg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Feb 2023 00:16:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
+        Tue, 7 Feb 2023 03:42:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjBGFQI (ORCPT
+        with ESMTP id S229924AbjBGImg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Feb 2023 00:16:08 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14201114A
-        for <linux-perf-users@vger.kernel.org>; Mon,  6 Feb 2023 21:16:02 -0800 (PST)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3175EEPp012079;
-        Tue, 7 Feb 2023 05:15:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=kLAHXoROcthUw+s0d/BLz09IJXX+QYDtx8qTUnd0TG8=;
- b=L9qKSPuyajrh/3qCgjqQHboIiSF53fFVePoHY8gkjbsCozwQ1CSDWQkFyDPjp9HnUbTw
- m9O1gph4987hhuz2ypJ84TOVqWRCImL03f4ffDlz0GIChAIBxH5ESxNdVTwAlRBuIPy2
- LmB10rHxf83QBUmaTzzpmEv94PGB7C35xUHFDSfdtTp6Sv12S8sUcw4qKYMb/HkCLAO1
- fS2dK+snpXJni3Bgpim6rrrtS6VvLG50BlHmhJInqhntReeXs7Li9YcGQyNyvAUtZgH9
- dE7QR6fpkqe90r4hXuCJBA+lFCEFuj7Q+ThI5UuvXe4iF6XPELg/wISNWqPV8VaQ8jxa SA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nkgahg0sa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Feb 2023 05:15:45 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3175Finm016594;
-        Tue, 7 Feb 2023 05:15:44 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nkgahg0rp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Feb 2023 05:15:44 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 316EUuCi017531;
-        Tue, 7 Feb 2023 05:15:42 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nhemfj8bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Feb 2023 05:15:42 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3175FcKv24576334
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Feb 2023 05:15:38 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C9A020040;
-        Tue,  7 Feb 2023 05:15:38 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB94220043;
-        Tue,  7 Feb 2023 05:15:35 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.62.201])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue,  7 Feb 2023 05:15:35 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: [PATCH] tests/bpf: Fix the bpf test to check for libtraceevent
- support
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <Y+ERXfJpXXv7xRxx@kernel.org>
-Date:   Tue, 7 Feb 2023 10:45:33 +0530
-Cc:     Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-        Nageswara Sastry <rnsastry@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <82A58226-5598-4CD9-ADD1-4B8B3E80289A@linux.vnet.ibm.com>
-References: <20230131135001.54578-1-atrajeev@linux.vnet.ibm.com>
- <Y9sKjYV8b37vstQ0@kernel.org>
- <628A923D-A993-4A35-A90E-8F6798549FD0@linux.vnet.ibm.com>
- <Y+ERXfJpXXv7xRxx@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UI4RfovFzUk-EL5KVXGSNn3Zu9oOsEoz
-X-Proofpoint-GUID: nET1bBW6jTfpoHjI1tJv8-09-tXOG51N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-06_07,2023-02-06_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
- impostorscore=0 phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302070044
+        Tue, 7 Feb 2023 03:42:36 -0500
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B74F0144AA
+        for <linux-perf-users@vger.kernel.org>; Tue,  7 Feb 2023 00:42:33 -0800 (PST)
+X-ASG-Debug-ID: 1675759350-1eb14e7e420af50001-i5rUwQ
+Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id lk2joHE7hInOTlC7 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 07 Feb 2023 16:42:30 +0800 (CST)
+X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX2.zhaoxin.com
+ (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 7 Feb
+ 2023 16:42:30 +0800
+Received: from [10.29.8.47] (10.29.8.47) by ZXBJMBX02.zhaoxin.com
+ (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 7 Feb
+ 2023 16:42:28 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Message-ID: <950c6d27-bc91-01e0-ba26-d09ad4bf7934@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.47
+Date:   Tue, 7 Feb 2023 16:42:26 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] x86/perf/zhaoxin: Add stepping check for ZX-C
+Content-Language: en-US
+X-ASG-Orig-Subj: Re: [PATCH] x86/perf/zhaoxin: Add stepping check for ZX-C
+To:     Borislav Petkov <bp@alien8.de>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
+        <silviazhao@zhaoxin.com>, <tonywwang@zhaoxin.com>,
+        <kevinbrace@gmx.com>, <8vvbbqzo567a@nospam.xutrox.com>
+References: <20230202091738.5947-1-silviazhao-oc@zhaoxin.com>
+ <Y95hWVFyw7TM1WSB@zn.tnic> <51ab21ee-403b-f4ce-9a7e-2580ab7e8118@zhaoxin.com>
+ <Y+DM8BZUi6a10hXY@zn.tnic> <1d808c21-f54d-1506-d95a-0276430aea8d@zhaoxin.com>
+ <Y+Dgx7EeRufHdx17@zn.tnic>
+From:   silviazhaooc <silviazhao-oc@zhaoxin.com>
+In-Reply-To: <Y+Dgx7EeRufHdx17@zn.tnic>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.29.8.47]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
+X-Barracuda-Start-Time: 1675759350
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1785
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.4071 1.0000 0.0000
+X-Barracuda-Spam-Score: 0.00
+X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.104443
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+On 2023/2/6 19:13, Borislav Petkov wrote:
+> Hi Silvia,
+> 
+> On Mon, Feb 06, 2023 at 06:55:21PM +0800, silviazhaooc wrote:
+>> Thanks for your reply.
+> 
+> You're welcome.
+> 
+> First of all, please do not top-post when replying on a public mailing
+> list but put your reply under the text you're replying to. Like the rest
+> of us do.
+> 
+Sorry, I'm a newbie in Linux. Thanks for your reminding.
 
-> On 06-Feb-2023, at 8:10 PM, Arnaldo Carvalho de Melo <acme@kernel.org> =
-wrote:
->=20
-> Em Mon, Feb 06, 2023 at 09:27:13AM +0530, Athira Rajeev escreveu:
->>> On 02-Feb-2023, at 6:27 AM, Arnaldo Carvalho de Melo =
-<acme@kernel.org> wrote:
->>>=20
->>> Em Tue, Jan 31, 2023 at 07:20:01PM +0530, Athira Rajeev escreveu:
->>>> "bpf" tests fails in environment with missing libtraceevent
->>>> support as below:
->>>>=20
->>>> # ./perf test 36
->>>> 36: BPF filter                                                      =
-:
->>>> 36.1: Basic BPF filtering                                           =
-: FAILED!
->>>> 36.2: BPF pinning                                                   =
-: FAILED!
->>>> 36.3: BPF prologue generation                                       =
-: FAILED!
->>>>=20
->>>> The environment has clang but missing the libtraceevent
->>>> devel. Hence perf is compiled without libtraceevent support.
->>>=20
->>> Thanks, applied.
->>=20
->> Hi,
->>=20
->> Thanks for checking
->>=20
->> Arnaldo, this is applied to tmp.perf/core branch ?
->=20
-> I thought I had this in :-\ Now its in tmp.perf/core.
->=20
-> - Arnaldo
+>> As I mentioned before, Nano has several series. We cannot test if all of
+>> them have the bug.
+> 
+> If you cannot test if all of them have the bug, then testing the
+> stepping as you do is wrong too.
+> 
+> You need an unambiguous way to differentiate between ZXC and Nano CPUs.
+> 
+> If steppings >= 0xe belong solely to ZXC, then state that in a comment
+> above it so that you can exclude Nano.
+> 
+> If Nano starts using those steppings later, though, then that check will
+> become wrong too.
+> 
+> So I need a statement: "this is how you detect a ZXC CPU unambiguously"
+> and then use that method when enabling PMU support on it and *only* on
+> it.
+> 
+> Makes more sense?
+> 
+Yes, that makes sense.
 
-Hi Arnaldo,=20
+I have carefully checked our product manual for Nano and ZXC FMS.
 
-Thanks for picking it.
+For ZXC, there are 2 kinds of FMS：
 
-Athira
->=20
->> Athira=20
->>>=20
->>> - Arnaldo
->>>=20
->>>=20
->>>> Detailed logs:
->>>> 	./perf test -v "Basic BPF filtering"
->>>>=20
->>>> 	Failed to add BPF event syscalls:sys_enter_epoll_pwait
->>>> 	bpf: tracepoint call back failed, stop iterate
->>>> 	Failed to add events selected by BPF
->>>>=20
->>>> The bpf tests tris to add probe event which fails
->>>> at "parse_events_add_tracepoint" function due to missing
->>>> libtraceevent. Add check for "HAVE_LIBTRACEEVENT" in the
->>>> "tests/bpf.c" before proceeding with the test.
->>>>=20
->>>> With the change,
->>>>=20
->>>> 	# ./perf test 36
->>>> 	36: BPF filter                                                   =
-   :
->>>> 	36.1: Basic BPF filtering                                        =
-   : Skip (not compiled in or missing libtraceevent support)
->>>> 	36.2: BPF pinning                                                =
-   : Skip (not compiled in or missing libtraceevent support)
->>>> 	36.3: BPF prologue generation                                    =
-   : Skip (not compiled in or missing libtraceevent support)
->>>>=20
->>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>> ---
->>>> tools/perf/tests/bpf.c | 22 +++++++++++-----------
->>>> 1 file changed, 11 insertions(+), 11 deletions(-)
->>>>=20
->>>> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
->>>> index 17c023823713..4af39528f611 100644
->>>> --- a/tools/perf/tests/bpf.c
->>>> +++ b/tools/perf/tests/bpf.c
->>>> @@ -23,7 +23,7 @@
->>>> #define NR_ITERS       111
->>>> #define PERF_TEST_BPF_PATH "/sys/fs/bpf/perf_test"
->>>>=20
->>>> -#ifdef HAVE_LIBBPF_SUPPORT
->>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->>>> #include <linux/bpf.h>
->>>> #include <bpf/bpf.h>
->>>>=20
->>>> @@ -330,10 +330,10 @@ static int test__bpf(int i)
->>>> static int test__basic_bpf_test(struct test_suite *test =
-__maybe_unused,
->>>> 				int subtest __maybe_unused)
->>>> {
->>>> -#ifdef HAVE_LIBBPF_SUPPORT
->>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->>>> 	return test__bpf(0);
->>>> #else
->>>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
->>>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
-not compiled\n");
->>>> 	return TEST_SKIP;
->>>> #endif
->>>> }
->>>> @@ -341,10 +341,10 @@ static int test__basic_bpf_test(struct =
-test_suite *test __maybe_unused,
->>>> static int test__bpf_pinning(struct test_suite *test =
-__maybe_unused,
->>>> 			     int subtest __maybe_unused)
->>>> {
->>>> -#ifdef HAVE_LIBBPF_SUPPORT
->>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->>>> 	return test__bpf(1);
->>>> #else
->>>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
->>>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
-not compiled\n");
->>>> 	return TEST_SKIP;
->>>> #endif
->>>> }
->>>> @@ -352,17 +352,17 @@ static int test__bpf_pinning(struct =
-test_suite *test __maybe_unused,
->>>> static int test__bpf_prologue_test(struct test_suite *test =
-__maybe_unused,
->>>> 				   int subtest __maybe_unused)
->>>> {
->>>> -#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE)
->>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_BPF_PROLOGUE) && =
-defined(HAVE_LIBTRACEEVENT)
->>>> 	return test__bpf(2);
->>>> #else
->>>> -	pr_debug("Skip BPF test because BPF support is not compiled\n");
->>>> +	pr_debug("Skip BPF test because BPF or libtraceevent support is =
-not compiled\n");
->>>> 	return TEST_SKIP;
->>>> #endif
->>>> }
->>>>=20
->>>>=20
->>>> static struct test_case bpf_tests[] =3D {
->>>> -#ifdef HAVE_LIBBPF_SUPPORT
->>>> +#if defined(HAVE_LIBBPF_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->>>> 	TEST_CASE("Basic BPF filtering", basic_bpf_test),
->>>> 	TEST_CASE_REASON("BPF pinning", bpf_pinning,
->>>> 			"clang isn't installed or environment missing =
-BPF support"),
->>>> @@ -373,9 +373,9 @@ static struct test_case bpf_tests[] =3D {
->>>> 	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in"),
->>>> #endif
->>>> #else
->>>> -	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
-compiled in"),
->>>> -	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in"),
->>>> -	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in"),
->>>> +	TEST_CASE_REASON("Basic BPF filtering", basic_bpf_test, "not =
-compiled in or missing libtraceevent support"),
->>>> +	TEST_CASE_REASON("BPF pinning", bpf_pinning, "not compiled in or =
-missing libtraceevent support"),
->>>> +	TEST_CASE_REASON("BPF prologue generation", bpf_prologue_test, =
-"not compiled in or missing libtraceevent support"),
->>>> #endif
->>>> 	{ .name =3D NULL, }
->>>> };
->>>> --=20
->>>> 2.39.0
->>>>=20
->>>=20
->>> --=20
->>>=20
->>> - Arnaldo
->>=20
->=20
-> --=20
->=20
-> - Arnaldo
+1. Family=6, Model=0x19, Stepping=0-3
 
+2. Family=6, Model=F, Stepping=E-F
+
+For Nano, there is only one kind of FMS:
+
+Family=6, Model=F, Stepping=[0-A]/[C-D]
+
+So model = 0xf, steppings >= 0xe or model = 0x19 belong solely to ZXC.
+Nano is an old CPU series which has been stopped production several 
+years ago. It will not use the steppings which belong to ZXC.This is an 
+unambiguous way to differentiate between ZXC and Nano CPUs.
+
+Do I need to add the statements in the source code and re-commit the patch?
+
+Thx.
+
+> Thx.
+> 
