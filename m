@@ -2,100 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5485EC636D4
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 18:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBE8C636CC
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 22:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231944AbjBGSaj (ORCPT
+        id S229980AbjBGWUx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Feb 2023 13:30:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56264 "EHLO
+        Tue, 7 Feb 2023 17:20:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232065AbjBGSai (ORCPT
+        with ESMTP id S229935AbjBGWUw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Feb 2023 13:30:38 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC8A1AE;
-        Tue,  7 Feb 2023 10:30:37 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7506F1EC06BD;
-        Tue,  7 Feb 2023 19:30:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1675794635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=unM+sDz7KgSXzbCVAYLEm70N3Pk5L+izixqtsNk9evU=;
-        b=jqOfvXZWlZZ51s5K/7R3yT8hL3AqyHKQZ3bIkq0eaVq15t//WOPnNVaGPmIII/m8WGa1E6
-        MxjFJsICorR7ddXyzmsv8qP6e+DKVUHSH4IslgjmaR+6FrvlF38vbgTg5CM86QYiP8HPg8
-        m0gd1b6vez7jLIDA/L8mE0q0D7oEhiE=
-Date:   Tue, 7 Feb 2023 19:30:31 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     silviazhaooc <silviazhao-oc@zhaoxin.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cobechen@zhaoxin.com, louisqi@zhaoxin.com, silviazhao@zhaoxin.com,
-        tonywwang@zhaoxin.com, kevinbrace@gmx.com,
-        8vvbbqzo567a@nospam.xutrox.com
-Subject: Re: [PATCH] x86/perf/zhaoxin: Add stepping check for ZX-C
-Message-ID: <Y+KYx5XcE1IAPPoQ@zn.tnic>
-References: <20230202091738.5947-1-silviazhao-oc@zhaoxin.com>
- <Y95hWVFyw7TM1WSB@zn.tnic>
- <51ab21ee-403b-f4ce-9a7e-2580ab7e8118@zhaoxin.com>
- <Y+DM8BZUi6a10hXY@zn.tnic>
- <1d808c21-f54d-1506-d95a-0276430aea8d@zhaoxin.com>
- <Y+Dgx7EeRufHdx17@zn.tnic>
- <950c6d27-bc91-01e0-ba26-d09ad4bf7934@zhaoxin.com>
+        Tue, 7 Feb 2023 17:20:52 -0500
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D45402F1;
+        Tue,  7 Feb 2023 14:20:38 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-520dad0a7d2so213673127b3.5;
+        Tue, 07 Feb 2023 14:20:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6OBgEG4l01lhqajOHblxU1C+eiQQ6UiZVRxQ4THUYV8=;
+        b=7QRHga+cHibGix3DXCjpIuQ0IwZZep4aftHBkSo9R3qJ04W2KEO1e65zhUazD6mPhI
+         cAwMrUQ17oWymxFO9ZjDiW46FgbGudUL+VoD/bfKx+E7oqv1rmhC0PWa9Um3Wt+PO8XU
+         hDsJsY/I3dqESdgCd6IUAkT3ovPVCDQkTAx9bWQoJ5DjbAET3nizxW/9hOc4QnSaJCo2
+         1tF9ZQJOZpja6Q3LDrftUPSR7ofLlAqtYVjZ/4H1CGi57a5Izs87FOZRCJoWKVOlMByS
+         /z6hLMaGW/U/Zq4pxP6Hp1fEfB3IefqX/jJMvY2qX9ddSw0SYq6ALooXmejo+DgIygAt
+         6gUQ==
+X-Gm-Message-State: AO0yUKVd6jJtnxarXTo0bR3hJResEwAUGIKkroF1lUdFI4vaG3Avflty
+        yfQGVCeLgX/wcwsP02oI6fD7GiaO4CVCMZ6xRsqDDakh
+X-Google-Smtp-Source: AK7set/cxwex6mwPyNRHHtnaVTXqiNJ1UGJxRliLiUmTAM1G33g8S2TkpqMsoeAvAUi4vvttpzPbutWX2zcZgfr8MvI=
+X-Received: by 2002:a81:6dcc:0:b0:526:c7d5:dddd with SMTP id
+ i195-20020a816dcc000000b00526c7d5ddddmr516406ywc.401.1675808437584; Tue, 07
+ Feb 2023 14:20:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <950c6d27-bc91-01e0-ba26-d09ad4bf7934@zhaoxin.com>
+References: <20230207002403.63590-1-namhyung@kernel.org> <20230207002403.63590-3-namhyung@kernel.org>
+ <Y+JqNuGA5tavdPce@kernel.org>
+In-Reply-To: <Y+JqNuGA5tavdPce@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 7 Feb 2023 14:20:26 -0800
+Message-ID: <CAM9d7ciLYdbH=K78cwy9L7Ppo0rhAsqKuJkpzfYExpNMk6FQwA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] perf lock contention: Add -o/--lock-owner option
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Song Liu <song@kernel.org>, Hao Luo <haoluo@google.com>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 04:42:26PM +0800, silviazhaooc wrote:
-> Sorry, I'm a newbie in Linux. Thanks for your reminding.
+Hi Arnaldo,
 
-No worries. :)
+On Tue, Feb 7, 2023 at 7:11 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Mon, Feb 06, 2023 at 04:24:02PM -0800, Namhyung Kim escreveu:
+> > When there're many lock contentions in the system, people sometimes
+> > want to know who caused the contention, IOW who's the owner of the
+> > locks.
+> >
+> > The -o/--lock-owner option tries to follow the lock owners for the
+> > contended mutexes and rwsems from BPF, and then attributes the
+> > contention time to the owner instead of the waiter.  It's a best
+> > effort approach to get the owner info at the time of the contention
+> > and doesn't guarantee to have the precise tracking of owners if it's
+> > changing over time.
+>
+> Having this in the documentation as limitations of the approach helps,
+> but I'm not seeing this on this specific patch, where I think it should
+> be.
+>
+> Furthermore probably its a good idea to have this as a warning on the
+> actual output of the tool, no?
+>
+> Generally having cool commit log messages, as this one has, is great,
+> but people have difficulty looking at docs, imagine expecting them to
+> read commit log messages... :-)
 
-> I have carefully checked our product manual for Nano and ZXC FMS.
-> 
-> For ZXC, there are 2 kinds of FMS：
-> 
-> 1. Family=6, Model=0x19, Stepping=0-3
-> 
-> 2. Family=6, Model=F, Stepping=E-F
-> 
-> For Nano, there is only one kind of FMS:
-> 
-> Family=6, Model=F, Stepping=[0-A]/[C-D]
-> 
-> So model = 0xf, steppings >= 0xe or model = 0x19 belong solely to ZXC.
-> Nano is an old CPU series which has been stopped production several years
-> ago.
+I see.  I'll add this limitation to the doc and tool output.
 
-Good, which sounds like there won't be any more Nano steppings.
-
-> It will not use the steppings which belong to ZXC.This is an
-> unambiguous way to differentiate between ZXC and Nano CPUs.
-> 
-> Do I need to add the statements in the source code and re-commit the patch?
-
-Yes please. That would explain in a clear way why it is ok to test those
-models/steppings. If it turns out that we need this Nano - ZXC
-distinction more often, we can do something more involved later.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Namhyung
