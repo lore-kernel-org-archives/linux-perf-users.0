@@ -2,137 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 469C8C636CC
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 08:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2706DC636CD
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Feb 2023 12:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231225AbjBGImg (ORCPT
+        id S231724AbjBGMkG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Feb 2023 03:42:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
+        Tue, 7 Feb 2023 07:40:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjBGImg (ORCPT
+        with ESMTP id S231387AbjBGMkE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Feb 2023 03:42:36 -0500
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B74F0144AA
-        for <linux-perf-users@vger.kernel.org>; Tue,  7 Feb 2023 00:42:33 -0800 (PST)
-X-ASG-Debug-ID: 1675759350-1eb14e7e420af50001-i5rUwQ
-Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id lk2joHE7hInOTlC7 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 07 Feb 2023 16:42:30 +0800 (CST)
-X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX2.zhaoxin.com
- (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 7 Feb
- 2023 16:42:30 +0800
-Received: from [10.29.8.47] (10.29.8.47) by ZXBJMBX02.zhaoxin.com
- (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 7 Feb
- 2023 16:42:28 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
-Message-ID: <950c6d27-bc91-01e0-ba26-d09ad4bf7934@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.47
-Date:   Tue, 7 Feb 2023 16:42:26 +0800
+        Tue, 7 Feb 2023 07:40:04 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1041E2B9;
+        Tue,  7 Feb 2023 04:40:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A93C261382;
+        Tue,  7 Feb 2023 12:39:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E75C433EF;
+        Tue,  7 Feb 2023 12:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675773599;
+        bh=7by+fir+EmCj5L49mAAWb22FxiRQuZkPRSWw9oP+oaQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HwYOF0TwDnRlDDVd8N8VWSJbmC3+Rji0VmkDLqYPN+Vun8a83Dwl6LTYTU4/Y4Uda
+         wTvOo3U1BgjfSkWp8ZvhJCkKgIfZ9w3HEt4lydQafC4+oDcofOPokRdbqg7jctQDJt
+         4rZwzdJ8/DrJNcufxd7zONTpTaJEwp78Kh7GOqmNzEL24eoHKVZyt15jnBqV7s2DIo
+         AF66AeFn2OPFI2x/zd3hgmA0dZqZScjAEYo6RgErxwhiJuivVrd2bP5+GzsBk348XA
+         iGby1t8UYsuZsUoDKVyLelnqZrNyjn8sDgmEZTRl64w0h1XErlEoja2eK3vYzS1hZx
+         lnP7+e1hbyLzg==
+From:   Will Deacon <will@kernel.org>
+To:     Ingo Molnar <mingo@redhat.com>, James Morse <james.morse@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        James Clark <james.clark@arm.com>, kvmarm@lists.linux.dev,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 0/8] perf: Arm SPEv1.2 support
+Date:   Tue,  7 Feb 2023 12:39:43 +0000
+Message-Id: <167577072188.364892.17496441030141801452.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
+References: <20220825-arm-spe-v8-7-v4-0-327f860daf28@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] x86/perf/zhaoxin: Add stepping check for ZX-C
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH] x86/perf/zhaoxin: Add stepping check for ZX-C
-To:     Borislav Petkov <bp@alien8.de>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
-        <silviazhao@zhaoxin.com>, <tonywwang@zhaoxin.com>,
-        <kevinbrace@gmx.com>, <8vvbbqzo567a@nospam.xutrox.com>
-References: <20230202091738.5947-1-silviazhao-oc@zhaoxin.com>
- <Y95hWVFyw7TM1WSB@zn.tnic> <51ab21ee-403b-f4ce-9a7e-2580ab7e8118@zhaoxin.com>
- <Y+DM8BZUi6a10hXY@zn.tnic> <1d808c21-f54d-1506-d95a-0276430aea8d@zhaoxin.com>
- <Y+Dgx7EeRufHdx17@zn.tnic>
-From:   silviazhaooc <silviazhao-oc@zhaoxin.com>
-In-Reply-To: <Y+Dgx7EeRufHdx17@zn.tnic>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.29.8.47]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- ZXBJMBX02.zhaoxin.com (10.29.252.6)
-X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
-X-Barracuda-Start-Time: 1675759350
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1785
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.4071 1.0000 0.0000
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.104443
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 2023/2/6 19:13, Borislav Petkov wrote:
-> Hi Silvia,
+On Mon, 09 Jan 2023 13:26:17 -0600, Rob Herring wrote:
+> Peter, this series is blocked on an ack from you on patch 7. There was
+> some discussion on validation of the 'config3' attr. The options where
+> laid out by Mark here[0]. Please chime in on your preference.
 > 
-> On Mon, Feb 06, 2023 at 06:55:21PM +0800, silviazhaooc wrote:
->> Thanks for your reply.
+> Will, can you pick up patches 1-6 at least if there's no progress on
+> 'config3'.
 > 
-> You're welcome.
-> 
-> First of all, please do not top-post when replying on a public mailing
-> list but put your reply under the text you're replying to. Like the rest
-> of us do.
-> 
-Sorry, I'm a newbie in Linux. Thanks for your reminding.
+> [...]
 
->> As I mentioned before, Nano has several series. We cannot test if all of
->> them have the bug.
-> 
-> If you cannot test if all of them have the bug, then testing the
-> stepping as you do is wrong too.
-> 
-> You need an unambiguous way to differentiate between ZXC and Nano CPUs.
-> 
-> If steppings >= 0xe belong solely to ZXC, then state that in a comment
-> above it so that you can exclude Nano.
-> 
-> If Nano starts using those steppings later, though, then that check will
-> become wrong too.
-> 
-> So I need a statement: "this is how you detect a ZXC CPU unambiguously"
-> and then use that method when enabling PMU support on it and *only* on
-> it.
-> 
-> Makes more sense?
-> 
-Yes, that makes sense.
+Applied to will (for-next/perf), thanks!
 
-I have carefully checked our product manual for Nano and ZXC FMS.
+[1/8] perf: arm_spe: Use feature numbering for PMSEVFR_EL1 defines
+      (no commit info)
+[2/8] arm64: Drop SYS_ from SPE register defines
+      (no commit info)
+[3/8] arm64/sysreg: Convert SPE registers to automatic generation
+      (no commit info)
+[4/8] perf: arm_spe: Drop BIT() and use FIELD_GET/PREP accessors
+      (no commit info)
+[5/8] perf: arm_spe: Use new PMSIDR_EL1 register enums
+      (no commit info)
+[6/8] perf: arm_spe: Support new SPEv1.2/v8.7 'not taken' event
+      (no commit info)
+[7/8] perf: Add perf_event_attr::config3
+      https://git.kernel.org/will/c/09519ec3b19e
+[8/8] perf: arm_spe: Add support for SPEv1.2 inverted event filtering
+      https://git.kernel.org/will/c/8d9190f00a97
 
-For ZXC, there are 2 kinds of FMS：
+Cheers,
+-- 
+Will
 
-1. Family=6, Model=0x19, Stepping=0-3
-
-2. Family=6, Model=F, Stepping=E-F
-
-For Nano, there is only one kind of FMS:
-
-Family=6, Model=F, Stepping=[0-A]/[C-D]
-
-So model = 0xf, steppings >= 0xe or model = 0x19 belong solely to ZXC.
-Nano is an old CPU series which has been stopped production several 
-years ago. It will not use the steppings which belong to ZXC.This is an 
-unambiguous way to differentiate between ZXC and Nano CPUs.
-
-Do I need to add the statements in the source code and re-commit the patch?
-
-Thx.
-
-> Thx.
-> 
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
