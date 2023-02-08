@@ -2,122 +2,159 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0990C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DD3C636CC
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 13:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbjBHNjW (ORCPT
+        id S230359AbjBHNlC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 08:39:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41082 "EHLO
+        Wed, 8 Feb 2023 08:41:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230506AbjBHNjV (ORCPT
+        with ESMTP id S230103AbjBHNlB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 08:39:21 -0500
+        Wed, 8 Feb 2023 08:41:01 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36F662BEF6;
-        Wed,  8 Feb 2023 05:39:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0EFD28233;
+        Wed,  8 Feb 2023 05:41:00 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AC2AA616D5;
-        Wed,  8 Feb 2023 13:39:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79DAC433D2;
-        Wed,  8 Feb 2023 13:39:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CB1C616A1;
+        Wed,  8 Feb 2023 13:41:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C50EC433D2;
+        Wed,  8 Feb 2023 13:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675863559;
-        bh=pv3vPHLrKcGHa0YzJtDB1Xj9xGNQLf1z6+qJ21VD+og=;
+        s=k20201202; t=1675863659;
+        bh=7/tvZ9J/REDGlSch/BHsKdos9GpewUiG+Hb47gElvJE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EBdrWuLrzQOjHoat5//Vgiv1nXrIYSRoHUW/uNMxJ0k8bWa7VpDt5v4SIOwTwb/z2
-         dFzbCjFDNqQnoqB1F/9Bi08a4eqnhZCmpuYSMuyVA/OGHVz1EJgkWdMsuJ5B1f3NSD
-         MvO8t4L5FGZkev5afdwf6PTojqllihh0IFzRnR8dhXSREyIEmlcopUzKehmRU3VQ48
-         ey5y2BogeQkSaogaIyxtW7dzkKR184+9h9WKCelkQsFuTuDzby916PluXNIjBJ8mHJ
-         TO8OUaPr9PbjwxoX7ppFYPzMTBGOnMGY5EwfRp+DqpIYly8zLQMeWX2msZB+Wct+Ch
-         DqBC8gDcxbj5Q==
+        b=baYZQ5tjfFuHy3xtoLVDXZCEu9VGH/IL685HwFTmRpa8TJ2YIfxX4KMryKOznB+8U
+         +CjKZmkXV59TzodRuCfzQhTM4dvrt18W5QP2yGr3n0jYe1W9fIbof8E9g6HEcV1n6V
+         +/alGFP7ikBNU4JRvDFRrnsyeTf1oWXadATFi2rJEgCoYQPDvzaSArnwEyYMb/Rv+B
+         YZKzCtqTYg7Dvyz9KuNCqV5CANEhDRLa0mbChPr3SwingJYIijqmo2gnS0fteqGnes
+         BLWz/1gxu3R9K0e+sWoqf5IsOe6Xm+Kv5O1+fs8QnfQzTpPRXSqWYiLquWTZzlTcr9
+         8fQ/M0tH97BGg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9A2A5405BE; Wed,  8 Feb 2023 10:39:16 -0300 (-03)
-Date:   Wed, 8 Feb 2023 10:39:16 -0300
+        id 1D4EF405BE; Wed,  8 Feb 2023 10:40:57 -0300 (-03)
+Date:   Wed, 8 Feb 2023 10:40:57 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Yicong Yang <yangyicong@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, yangyicong@hisilicon.com,
-        linuxarm@huawei.com, prime.zeng@hisilicon.com,
-        mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, yao.jin@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Fix auto-complete on aarch64
-Message-ID: <Y+OmBGCL3DyKd28V@kernel.org>
-References: <20230207035057.43394-1-yangyicong@huawei.com>
- <0ded9983-8a37-d6c9-3de8-cbde6a4ce1e7@arm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel-next@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, hca@linux.ibm.com,
+        egorenar@linux.ibm.com, gor@linux.ibm.com, svens@linux.ibm.com,
+        sumanthk@linux.ibm.com
+Subject: Re: [PATCH] tools/perf: Fix perf tool build error in util/pfm.c
+Message-ID: <Y+OmaXOdMEM4II57@kernel.org>
+References: <20230207140447.1827741-1-tmricht@linux.ibm.com>
+ <Y+JoGRdML/Ckkwvb@kernel.org>
+ <CAP-5=fU6vHFp1YeY9RyAUE_rS5PMECcUWdnMhR-QsMnAN0wy7g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0ded9983-8a37-d6c9-3de8-cbde6a4ce1e7@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU6vHFp1YeY9RyAUE_rS5PMECcUWdnMhR-QsMnAN0wy7g@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 08, 2023 at 10:35:17AM +0000, James Clark escreveu:
+Em Tue, Feb 07, 2023 at 09:58:48PM -0800, Ian Rogers escreveu:
+> On Tue, Feb 7, 2023 at 7:02 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Em Tue, Feb 07, 2023 at 03:04:47PM +0100, Thomas Richter escreveu:
+> > > I have downloaded linux-next and build the perf tool using
+> > >
+> > >  # make LIBPFM4=1
+> > >
+> > > to have libpfm4 support built into perf. The build fails:
+> > >
+> > >  # make LIBPFM4=1
+> >
+> > Ian,
+> >
+> >         Can you please take a look? Should we go this way or have some
+> > feature test to check how that function signature should look?
+> >
+> > - Arnaldo
 > 
+> Tested-by: Ian Rogers <irogers@google.com>
 > 
-> On 07/02/2023 03:50, Yicong Yang wrote:
-> > From: Yicong Yang <yangyicong@hisilicon.com>
-> > 
-> > On aarch64 CPU related events are not under event_source/devices/cpu/events,
-> > they're under event_source/devices/armv8_pmuv3_0/events on my machine.
-> > Using current auto-complete script will generate below error:
-> > 
-> > [root@localhost bin]# perf stat -e
-> > ls: cannot access '/sys/bus/event_source/devices/cpu/events': No such file or directory
-> > 
-> > Fix this by not test /sys/bus/event_source/devices/cpu/events on aarch64
-> > machine.
-> > 
-> > Fixes: 74cd5815d9af ("perf tool: Improve bash command line auto-complete for multiple events with comma")
-> > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> > ---
-> >  tools/perf/perf-completion.sh | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > 
-> 
-> Reviewed-by: James Clark <james.clark@arm.com>
+> Wrt tests, there is make_with_libpfm4 in tools/perf/tests/make.
 
-Thanks, applied.
+I meant if we should support older versions or state that to build with
+libbpf we need to have the version with this new signature.
+
+I'll apply and test build it here.
 
 - Arnaldo
-
  
-> > diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
-> > index fdf75d45efff..978249d7868c 100644
-> > --- a/tools/perf/perf-completion.sh
-> > +++ b/tools/perf/perf-completion.sh
-> > @@ -165,7 +165,12 @@ __perf_main ()
-> >  
-> >  		local cur1=${COMP_WORDS[COMP_CWORD]}
-> >  		local raw_evts=$($cmd list --raw-dump)
-> > -		local arr s tmp result
-> > +		local arr s tmp result cpu_evts
-> > +
-> > +		# aarch64 doesn't have /sys/bus/event_source/devices/cpu/events
-> > +		if [[ `uname -m` != aarch64 ]]; then
-> > +			cpu_evts=$(ls /sys/bus/event_source/devices/cpu/events)
-> > +		fi
-> >  
-> >  		if [[ "$cur1" == */* && ${cur1#*/} =~ ^[A-Z] ]]; then
-> >  			OLD_IFS="$IFS"
-> > @@ -183,9 +188,9 @@ __perf_main ()
-> >  				fi
-> >  			done
-> >  
-> > -			evts=${result}" "$(ls /sys/bus/event_source/devices/cpu/events)
-> > +			evts=${result}" "${cpu_evts}
-> >  		else
-> > -			evts=${raw_evts}" "$(ls /sys/bus/event_source/devices/cpu/events)
-> > +			evts=${raw_evts}" "${cpu_evts}
-> >  		fi
-> >  
-> >  		if [[ "$cur1" == , ]]; then
+> Thanks,
+> Ian
+> 
+> > > ....
+> > > INSTALL libbpf_headers
+> > >   CC      util/pfm.o
+> > > util/pfm.c: In function ‘print_libpfm_event’:
+> > > util/pfm.c:189:9: error: too many arguments to function ‘print_cb->print_event’
+> > >   189 |         print_cb->print_event(print_state,
+> > >       |         ^~~~~~~~
+> > > util/pfm.c:220:25: error: too many arguments to function ‘print_cb->print_event’
+> > >   220 |                         print_cb->print_event(print_state,
+> > >
+> > > The build error is caused by
+> > > commit d9dc8874d6ce ("perf pmu-events: Remove now unused event and metric variables")
+> > > which changes the function prototype of
+> > >   struct print_callbacks {
+> > >       ...
+> > >       void (*print_event)(...);  --> last two parameters removed.
+> > >   };
+> > >
+> > > but does not adjust the usage of this function prototype in util/pfm.c.
+> > > In file util/pfm.c function print_event() is still invoked with 13 parameters
+> > > instead of 11. The compile fails.
+> > >
+> > > When I adjust the file util/pfm.c as in this patch, the build works file.
+> > > Please check this patch for correctness, I have just fixed the compile
+> > > issue.
+> > >
+> > > Fixes d9dc8874d6ce ("perf pmu-events: Remove now unused event and metric variables")
+> > > Cc: irogers@google.com
+> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > ---
+> > >  tools/perf/util/pfm.c | 6 ++----
+> > >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+> > > index ac3227ba769c..b59ba825ddc9 100644
+> > > --- a/tools/perf/util/pfm.c
+> > > +++ b/tools/perf/util/pfm.c
+> > > @@ -193,8 +193,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
+> > >                       /*scale_unit=*/NULL,
+> > >                       /*deprecated=*/NULL, "PFM event",
+> > >                       info->desc, /*long_desc=*/NULL,
+> > > -                     /*encoding_desc=*/buf->buf,
+> > > -                     /*metric_name=*/NULL, /*metric_expr=*/NULL);
+> > > +                     /*encoding_desc=*/buf->buf);
+> > >
+> > >       pfm_for_each_event_attr(j, info) {
+> > >               pfm_event_attr_info_t ainfo;
+> > > @@ -224,8 +223,7 @@ print_libpfm_event(const struct print_callbacks *print_cb, void *print_state,
+> > >                                       /*scale_unit=*/NULL,
+> > >                                       /*deprecated=*/NULL, "PFM event",
+> > >                                       ainfo.desc, /*long_desc=*/NULL,
+> > > -                                     /*encoding_desc=*/buf->buf,
+> > > -                                     /*metric_name=*/NULL, /*metric_expr=*/NULL);
+> > > +                                     /*encoding_desc=*/buf->buf);
+> > >               }
+> > >       }
+> > >  }
+> > > --
+> > > 2.39.1
+> > >
+> >
+> > --
+> >
+> > - Arnaldo
 
 -- 
 
