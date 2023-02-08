@@ -2,99 +2,69 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0AC64EC5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 16:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132EDC05027
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 20:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231648AbjBHQlE (ORCPT
+        id S229822AbjBHUGu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 11:41:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48428 "EHLO
+        Wed, 8 Feb 2023 15:06:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231665AbjBHQkh (ORCPT
+        with ESMTP id S231976AbjBHUGt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 11:40:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35F44DE20;
-        Wed,  8 Feb 2023 08:40:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8C581B81ED3;
-        Wed,  8 Feb 2023 16:40:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 301B6C4339B;
-        Wed,  8 Feb 2023 16:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675874431;
-        bh=D2OluPc0dSUTVeREFrJP8sxggpzYpEkdyv/n/Ex2PR8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qUR+O+i3QT60DVzFb997p8CERl6JUrJxpLq5j88dGj4FXvajmMtafGxrgPPy9dpeo
-         LCANYlg3q60bIn2MC554uv4V1Oexes0X0DNPmRrKSwVqAmIeQ4Gjp3SZVn7IfeeiKR
-         /Ozjweo4Ke3eIBnl+PkmD320fU9dn4sCXsYVJDcOZNPYZ58BcysKzCgUjMtEhfpXJ/
-         FhPibkZ7HAAV48awWs5eDcKKtww85lGSH6+tanzN4ADwbLFOx8RdI5MOEZeEUAWNYw
-         0tfB7UdDzuvMfvt36NsweiD/WlEdWu3bFehmQbsBZxbnqk1Mbk6JonGeQjyP+Ia2DA
-         WIB0KgKgFSMqA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pPnUi-008iHd-Px;
-        Wed, 08 Feb 2023 16:40:28 +0000
-Date:   Wed, 08 Feb 2023 16:40:28 +0000
-Message-ID: <86fsbgyutf.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zaid Al-Bassam <zalbassam@google.com>
-Cc:     Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 8 Feb 2023 15:06:49 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 93BEF44A5;
+        Wed,  8 Feb 2023 12:06:47 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0D471477;
+        Wed,  8 Feb 2023 12:07:29 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.30.155])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 397CB3F703;
+        Wed,  8 Feb 2023 12:06:45 -0800 (PST)
+Date:   Wed, 8 Feb 2023 20:06:42 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Will Deacon <will@kernel.org>, kernel test robot <lkp@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH 0/8] perf: arm: Make PMUv3 driver available for aarch32
-In-Reply-To: <20230126204444.2204061-1-zalbassam@google.com>
-References: <20230126204444.2204061-1-zalbassam@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: zalbassam@google.com, jesussanp@google.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
+Message-ID: <Y+QA0tRk2VVJ4gwu@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230123125956.1350336-6-anshuman.khandual@arm.com>
+ <202301310047.b5iv9hM8-lkp@intel.com>
+ <20230203113153.GA5927@willie-the-truck>
+ <143549b7-6f16-209f-b1be-c8202fd55d05@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <143549b7-6f16-209f-b1be-c8202fd55d05@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 26 Jan 2023 20:44:36 +0000,
-Zaid Al-Bassam <zalbassam@google.com> wrote:
+On Mon, Feb 06, 2023 at 09:46:25AM +0530, Anshuman Khandual wrote:
+> On 2/3/23 17:01, Will Deacon wrote:
+> > On Tue, Jan 31, 2023 at 12:28:17AM +0800, kernel test robot wrote:
+
+[...]
+
+> > This looks like it should be fixed. I'd also like to see Mark's ack on the
 > 
-> Currently, PMUv3 driver is only available for ARMv8 aarch64
-> platforms, ARMv8 running in aarch32 mode dont have access to
-> the driver. This is, especially, a problem for ARMv8 platforms
-> that only have aarch32 support, like the Cortex-A32.
+> This build warning is triggered when CONFIG_PERF_EVENTS is not enabled, when
+> all the fallback stubs in there try to use has_branch_stack() which does not
+> get defined. The following change, fixes the problem.
 
-FWIW, I've pushed out my own interpretation of this series to [1],
-including the changes I suggested. The results seems to correctly work
-in a 32bit guest on a 64bit host, which is what I (used to) care
-about.
+I expect that you'll post a v9 with that folded in, and I've just made some
+comments on v7 which I expect will require some changes, so I'm going to wait
+for v9 for further review to keep this manageable.
 
-Feel free to pick it up.
-
-	M.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=arm/pmuv3
-
--- 
-Without deviation from the norm, progress is not possible.
+Thanks,
+Mark.
