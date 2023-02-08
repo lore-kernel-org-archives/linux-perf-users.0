@@ -2,114 +2,100 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C799C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 08:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A00AC636CC
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 10:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjBHI1c (ORCPT
+        id S229478AbjBHKgL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 03:27:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
+        Wed, 8 Feb 2023 05:36:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjBHI1b (ORCPT
+        with ESMTP id S231393AbjBHKgG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 03:27:31 -0500
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AC2E04E
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Feb 2023 00:27:28 -0800 (PST)
-X-ASG-Debug-ID: 1675844843-086e23137e022e0001-i5rUwQ
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id 3J9LMXbM7YTxfFn4 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 08 Feb 2023 16:27:23 +0800 (CST)
-X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Wed, 8 Feb
- 2023 16:27:22 +0800
-Received: from silvia-OptiPlex-3010.zhaoxin.com (10.29.8.47) by
- ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Wed, 8 Feb 2023 16:27:22 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-From:   silviazhao <silviazhao-oc@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
-        <silviazhao@zhaoxin.com>, <tonywwang@zhaoxin.com>,
-        <kevinbrace@gmx.com>, <7vvbbqzo567a@nospam.xutrox.com>
-Subject: [PATCH V2] x86/perf/zhaoxin: Add stepping check for ZXC
-Date:   Wed, 8 Feb 2023 16:27:22 +0800
-X-ASG-Orig-Subj: [PATCH V2] x86/perf/zhaoxin: Add stepping check for ZXC
-Message-ID: <20230208082722.14219-1-silviazhao-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 8 Feb 2023 05:36:06 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EB0347ECC;
+        Wed,  8 Feb 2023 02:35:45 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C8BE1477;
+        Wed,  8 Feb 2023 02:36:03 -0800 (PST)
+Received: from [10.57.48.140] (unknown [10.57.48.140])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB3863F8C6;
+        Wed,  8 Feb 2023 02:35:18 -0800 (PST)
+Message-ID: <0ded9983-8a37-d6c9-3de8-cbde6a4ce1e7@arm.com>
+Date:   Wed, 8 Feb 2023 10:35:17 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.29.8.47]
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- ZXBJMBX02.zhaoxin.com (10.29.252.6)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1675844843
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1768
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.104486
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] perf tools: Fix auto-complete on aarch64
+Content-Language: en-US
+To:     Yicong Yang <yangyicong@huawei.com>, acme@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, yangyicong@hisilicon.com,
+        linuxarm@huawei.com, prime.zeng@hisilicon.com,
+        mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, yao.jin@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230207035057.43394-1-yangyicong@huawei.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230207035057.43394-1-yangyicong@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some of Nano series processors will lead GP when accessing
-PMC fixed counter. Meanwhile, their hardware support for PMC
-has not announced externally. So exclude Nano CPUs from ZXC
-by checking stepping information. This is an unambiguous way
-to differentiate between ZXC and Nano CPUs.
 
-Following are Nano and ZXC FMS information:
-Nano FMS: Family=6, Model=F, Stepping=[0-A][C-D]
-ZXC FMS:  Family=6, Model=F, Stepping=E-F OR
-          Family=6, Model=0x19, Stepping=0-3
 
-Fixes: 3a4ac121c2ca ("x86/perf: Add hardware performance events support for Zhaoxin CPU.")
-Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=212389
-Reported-by: Kevin Brace <kevinbrace@gmx.com>
+On 07/02/2023 03:50, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> On aarch64 CPU related events are not under event_source/devices/cpu/events,
+> they're under event_source/devices/armv8_pmuv3_0/events on my machine.
+> Using current auto-complete script will generate below error:
+> 
+> [root@localhost bin]# perf stat -e
+> ls: cannot access '/sys/bus/event_source/devices/cpu/events': No such file or directory
+> 
+> Fix this by not test /sys/bus/event_source/devices/cpu/events on aarch64
+> machine.
+> 
+> Fixes: 74cd5815d9af ("perf tool: Improve bash command line auto-complete for multiple events with comma")
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  tools/perf/perf-completion.sh | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
 
-Signed-off-by: silviazhao <silviazhao-oc@zhaoxin.com>
----
-v1 -> v2: Add some statements for Nano and ZXC FMS information.
----
- arch/x86/events/zhaoxin/core.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Reviewed-by: James Clark <james.clark@arm.com>
 
-diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
-index 949d845c922b..3e9acdaeed1e 100644
---- a/arch/x86/events/zhaoxin/core.c
-+++ b/arch/x86/events/zhaoxin/core.c
-@@ -541,7 +541,13 @@ __init int zhaoxin_pmu_init(void)
- 
- 	switch (boot_cpu_data.x86) {
- 	case 0x06:
--		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
-+		/*
-+		 * Support Zhaoxin CPU from ZXC series, exclude Nano series through FMS.
-+		 * Nano FMS: Family=6, Model=F, Stepping=[0-A][C-D]
-+		 * ZXC FMS: Family=6, Model=F, Stepping=E-F OR Family=6, Model=0x19, Stepping=0-3
-+		 */
-+		if ((boot_cpu_data.x86_model == 0x0f && boot_cpu_data.x86_stepping >= 0x0e) ||
-+			boot_cpu_data.x86_model == 0x19) {
- 
- 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
- 
--- 
-2.17.1
-
+> diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
+> index fdf75d45efff..978249d7868c 100644
+> --- a/tools/perf/perf-completion.sh
+> +++ b/tools/perf/perf-completion.sh
+> @@ -165,7 +165,12 @@ __perf_main ()
+>  
+>  		local cur1=${COMP_WORDS[COMP_CWORD]}
+>  		local raw_evts=$($cmd list --raw-dump)
+> -		local arr s tmp result
+> +		local arr s tmp result cpu_evts
+> +
+> +		# aarch64 doesn't have /sys/bus/event_source/devices/cpu/events
+> +		if [[ `uname -m` != aarch64 ]]; then
+> +			cpu_evts=$(ls /sys/bus/event_source/devices/cpu/events)
+> +		fi
+>  
+>  		if [[ "$cur1" == */* && ${cur1#*/} =~ ^[A-Z] ]]; then
+>  			OLD_IFS="$IFS"
+> @@ -183,9 +188,9 @@ __perf_main ()
+>  				fi
+>  			done
+>  
+> -			evts=${result}" "$(ls /sys/bus/event_source/devices/cpu/events)
+> +			evts=${result}" "${cpu_evts}
+>  		else
+> -			evts=${raw_evts}" "$(ls /sys/bus/event_source/devices/cpu/events)
+> +			evts=${raw_evts}" "${cpu_evts}
+>  		fi
+>  
+>  		if [[ "$cur1" == , ]]; then
