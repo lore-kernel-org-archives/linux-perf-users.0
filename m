@@ -2,141 +2,317 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8850C636D6
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 21:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C488C636D4
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 23:52:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231527AbjBHV4H (ORCPT
+        id S230089AbjBHXw4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 16:56:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33274 "EHLO
+        Wed, 8 Feb 2023 18:52:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbjBHV4G (ORCPT
+        with ESMTP id S230050AbjBHXwz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 16:56:06 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF97D279B9
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Feb 2023 13:56:00 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id k13so644253plg.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Feb 2023 13:56:00 -0800 (PST)
+        Wed, 8 Feb 2023 18:52:55 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1588116ADA;
+        Wed,  8 Feb 2023 15:52:54 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id dr8so1584859ejc.12;
+        Wed, 08 Feb 2023 15:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WrzQdBMb984GoLwSermZKSUJHb2Pj08MtfAszXlgQ/k=;
-        b=X3Q+qaLof/eu0DFR89m7gQn/6gT+BTyfg6uW5GUTN9076Tc/H7WEg3Rn9nCbIYk9to
-         sFk8ItAXccaAM10ROnONd4cmr4F88/N/PKhJCEuuN9EngNYzN+wCkhiXHHzrGbjsOj5c
-         Fg/zSiwQZc1Cmg5B1mowGhhJdKsrlLIIiw04r+NUiQpcTf70tDIcsvZo1+IibxXFTIoO
-         KITAEPIX3cfaqDGsEv9ZT1g8yQ0DzXX01fusCwzAB58px3qFyBiOcYoSAo4QBTjxdgE9
-         Yd6KmjOmsP61c2aSSvYd/3vLMvRKxtMs2KdH2Z3v/xZQWAiBS5fNRul6faGsMl5rMtTY
-         /WHQ==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=g7flmy3/jyFAU4sjWzJzGvCMw9yaMqfZS+04g1NY/TE=;
+        b=Ac19gV4JVm98yvL3KzN2TixhwIUbkj9aMrZn/qmddD9VfS2zkLoJN2p5iZELDdEmCm
+         1nhWn5VXYdY05fShRkrKDumjYjNjvW/EWJwmXqFKVTZZUz/xuhATAw5M8viT0xiLb8iE
+         K0hT9wtXh85YS7T3g9ZbQ34lyS+LmnxNIFRxjrDpYyPTLmYDOKSjUa3hZS3/NLPW7y+Q
+         3YF6sQFlIr0iZZcwlaSyx7ZdbKoUyRGYQSyxwiNTvvHEHoHPil5TSuC2vNBfxKrC2BH/
+         JlQsc+/JynNioS/wKM/98dRwF6lVDEbC9/i9OSG9a58F/vWkKtTgLg5L2dofoIo0Kisu
+         z4Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WrzQdBMb984GoLwSermZKSUJHb2Pj08MtfAszXlgQ/k=;
-        b=kGemG25ZvOei7Gg6uULys9vKgJ2WesK6P3YI7b2uiW29oyVLLxK8Z3IjU4Cd7N4jdT
-         8fOa8iIeYaPv7mOpOvpwgZ7GktmpW2Uit5ftgYWu8fUvbBMBn29gMs79ThnRsGqfywGL
-         TeiM1UJHQnHmGm3p0TuyhtO7rf9VbS04JDrkQcxk/nXZ9/nkyRIFnh5qx+penA9wCVOl
-         px2V3XceormQ49erGiDSzUWFu1DSUOZ9Rg12jSZrrcf+yqNVSmT2zah1DKmXbpx7LBtj
-         Naya+oRbkS9HYB2DpVtHsXsNDiOrAD6yuNwZuZrEVqKMGa7cH0gHb2vsiOwR3EIsr/gm
-         7wDw==
-X-Gm-Message-State: AO0yUKWuJ4QclyyX/NyFNWTAJdq8/fxYe/PGF4Hk4xaCx65rHrYr1JOU
-        r/qMbLcjdYlYRcdBdlv1nd5H
-X-Google-Smtp-Source: AK7set94ohGg+ZPN8FmhK2vwun0FMjWaJ4yRKKML6EHTABq5z5LP5TMYNz3fYPfypqrE+agTNEfmnw==
-X-Received: by 2002:a17:902:a604:b0:198:d5cc:44a8 with SMTP id u4-20020a170902a60400b00198d5cc44a8mr352677plq.19.1675893360186;
-        Wed, 08 Feb 2023 13:56:00 -0800 (PST)
-Received: from google.com (238.76.127.34.bc.googleusercontent.com. [34.127.76.238])
-        by smtp.gmail.com with ESMTPSA id 25-20020aa79119000000b0058d8f23af26sm3938910pfh.157.2023.02.08.13.55.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 13:55:59 -0800 (PST)
-Date:   Wed, 8 Feb 2023 21:55:50 +0000
-From:   John Stultz <jstultz@google.com>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
-        Andrii Nakryiko <andrii@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kajetan Puchalski <kajetan.puchalski@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Qais Yousef <qyousef@google.com>,
-        Daniele Di Proietto <ddiproietto@google.com>
-Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
- 16 with TASK_COMM_LEN
-Message-ID: <Y+QaZtz55LIirsUO@google.com>
-References: <20211120112738.45980-1-laoar.shao@gmail.com>
- <20211120112738.45980-8-laoar.shao@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g7flmy3/jyFAU4sjWzJzGvCMw9yaMqfZS+04g1NY/TE=;
+        b=WJmDPBdj3GHYoFjNdKmBZHb4Ab8o1TdMF/V6Zr8YmLqjV68fftdB+DY+cvgRViQC0x
+         PxygV2MTieabEfvV+2I6pAjSX8uGsvzoeozF5ap6Fs0O+m6kQFGXJ62JjgHxtTP+Ci0l
+         K/s9JKNjW6d8oFcVXDx2sCeWEdq9l7DfZ2rsJgHVm87oPlkq/ffEXyTDab1Z0O63zfEw
+         9xFJXXVRJ9DlgRzXRo0A9v3IMjRbUXt7/LiR7XF6yjlAejlsZcyLJDi9wC+mlPYHa6gX
+         wOhI9FFKIhlGb34OLynJG/EdNdaLIZ1/QDP61900kORH5OWpa9VA+uGWhUp8c2tu1jv5
+         mTGQ==
+X-Gm-Message-State: AO0yUKUZoyIfXE5xYJtCIoSnNG5fDRo4mbr8ITbIYU6t9W7vrXi2QLij
+        hvKxEOsc9udXqFzcFmnH+c0J2RefYp9q2/N/HEA=
+X-Google-Smtp-Source: AK7set83cYNIyE0vnJy611lFInZnOWMfKBNkj2YIsRgSBoiLIL9IVj9F3ehVTlCCPCJGIuFu+WIQNl29TZr3aodpGB0=
+X-Received: by 2002:a17:906:5a60:b0:8aa:bdec:d9ae with SMTP id
+ my32-20020a1709065a6000b008aabdecd9aemr1309150ejc.12.1675900372409; Wed, 08
+ Feb 2023 15:52:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211120112738.45980-8-laoar.shao@gmail.com>
+References: <20230201135737.800527-1-jolsa@kernel.org> <20230201135737.800527-2-jolsa@kernel.org>
+In-Reply-To: <20230201135737.800527-2-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 8 Feb 2023 15:52:40 -0800
+Message-ID: <CAEf4BzZHwXiLPuaAwz3vexzaJbBC90p5pCawbrsu4-Rk3XZOYw@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/5] mm: Store build id in file object
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Nov 20, 2021 at 11:27:38AM +0000, Yafang Shao wrote:
-> As the sched:sched_switch tracepoint args are derived from the kernel,
-> we'd better make it same with the kernel. So the macro TASK_COMM_LEN is
-> converted to type enum, then all the BPF programs can get it through BTF.
-> 
-> The BPF program which wants to use TASK_COMM_LEN should include the header
-> vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
-> type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
-> need to include linux/bpf.h again.
-> 
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Petr Mladek <pmladek@suse.com>
+On Wed, Feb 1, 2023 at 5:57 AM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Storing build id in file object for elf executable with build
+> id defined. The build id is stored when file is mmaped.
+>
+> The build id object assignment to the file is locked with existing
+> file->f_mapping semaphore.
+>
+> It's hidden behind new config option CONFIG_FILE_BUILD_ID.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->  include/linux/sched.h                                   | 9 +++++++--
->  tools/testing/selftests/bpf/progs/test_stacktrace_map.c | 6 +++---
->  tools/testing/selftests/bpf/progs/test_tracepoint.c     | 6 +++---
->  3 files changed, 13 insertions(+), 8 deletions(-)
+>  fs/file_table.c         |  3 +++
+>  include/linux/buildid.h | 17 ++++++++++++++++
+>  include/linux/fs.h      |  3 +++
+>  lib/buildid.c           | 44 +++++++++++++++++++++++++++++++++++++++++
+>  mm/Kconfig              |  7 +++++++
+>  mm/mmap.c               | 15 ++++++++++++++
+>  6 files changed, 89 insertions(+)
+>
+> diff --git a/fs/file_table.c b/fs/file_table.c
+> index dd88701e54a9..d1c814cdb623 100644
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -28,6 +28,7 @@
+>  #include <linux/ima.h>
+>  #include <linux/swap.h>
+>  #include <linux/kmemleak.h>
+> +#include <linux/buildid.h>
+>
+>  #include <linux/atomic.h>
+>
+> @@ -47,6 +48,7 @@ static void file_free_rcu(struct rcu_head *head)
+>  {
+>         struct file *f = container_of(head, struct file, f_rcuhead);
+>
+> +       file_build_id_free(f);
+>         put_cred(f->f_cred);
+>         kmem_cache_free(filp_cachep, f);
+>  }
+> @@ -412,6 +414,7 @@ void __init files_init(void)
+>         filp_cachep = kmem_cache_create("filp", sizeof(struct file), 0,
+>                         SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT, NULL);
+>         percpu_counter_init(&nr_files, 0, GFP_KERNEL);
+> +       build_id_init();
+>  }
+>
+>  /*
+> diff --git a/include/linux/buildid.h b/include/linux/buildid.h
+> index 3b7a0ff4642f..7c818085ad2c 100644
+> --- a/include/linux/buildid.h
+> +++ b/include/linux/buildid.h
+> @@ -3,9 +3,15 @@
+>  #define _LINUX_BUILDID_H
+>
+>  #include <linux/mm_types.h>
+> +#include <linux/slab.h>
+>
+>  #define BUILD_ID_SIZE_MAX 20
+>
+> +struct build_id {
+> +       u32 sz;
+> +       char data[BUILD_ID_SIZE_MAX];
 
-Hey all,
-  I know this is a little late, but I recently got a report that
-this change was causiing older versions of perfetto to stop
-working. 
+don't know if 21 vs 24 matters for kmem_cache_create(), but we don't
+need 4 bytes to store build_id size, given max size is 20, so maybe
+use u8 for sz?
 
-Apparently newer versions of perfetto has worked around this
-via the following changes:
-  https://android.googlesource.com/platform/external/perfetto/+/c717c93131b1b6e3705a11092a70ac47c78b731d%5E%21/
-  https://android.googlesource.com/platform/external/perfetto/+/160a504ad5c91a227e55f84d3e5d3fe22af7c2bb%5E%21/
+> +};
+> +
+>  int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+>                    __u32 *size);
+>  int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
+> @@ -17,4 +23,15 @@ void init_vmlinux_build_id(void);
+>  static inline void init_vmlinux_build_id(void) { }
+>  #endif
+>
+> +#ifdef CONFIG_FILE_BUILD_ID
+> +void __init build_id_init(void);
+> +void build_id_free(struct build_id *bid);
+> +int vma_get_build_id(struct vm_area_struct *vma, struct build_id **bidp);
+> +void file_build_id_free(struct file *f);
+> +#else
+> +static inline void __init build_id_init(void) { }
+> +static inline void build_id_free(struct build_id *bid) { }
+> +static inline void file_build_id_free(struct file *f) { }
+> +#endif /* CONFIG_FILE_BUILD_ID */
+> +
+>  #endif
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index c1769a2c5d70..9ad5e5fbf680 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -975,6 +975,9 @@ struct file {
+>         struct address_space    *f_mapping;
+>         errseq_t                f_wb_err;
+>         errseq_t                f_sb_err; /* for syncfs */
+> +#ifdef CONFIG_FILE_BUILD_ID
+> +       struct build_id         *f_bid;
 
-But for older versions of perfetto, reverting upstream commit
-3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16
-with TASK_COMM_LEN") is necessary to get it back to working.
+naming nit: anything wrong with f_buildid or f_build_id? all the
+related APIs use fully spelled out "build_id"
 
-I haven't dug very far into the details, and obviously this doesn't
-break with the updated perfetto, but from a high level this does
-seem to be a breaking-userland regression.
+> +#endif
+>  } __randomize_layout
+>    __attribute__((aligned(4))); /* lest something weird decides that 2 is OK */
+>
+> diff --git a/lib/buildid.c b/lib/buildid.c
+> index dfc62625cae4..7f6c3ca7b257 100644
+> --- a/lib/buildid.c
+> +++ b/lib/buildid.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pagemap.h>
+> +#include <linux/slab.h>
+>
+>  #define BUILD_ID 3
+>
+> @@ -189,3 +190,46 @@ void __init init_vmlinux_build_id(void)
+>         build_id_parse_buf(&__start_notes, vmlinux_build_id, size);
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_FILE_BUILD_ID
+> +
+> +/* SLAB cache for build_id structures */
+> +static struct kmem_cache *build_id_cachep;
+> +
+> +int vma_get_build_id(struct vm_area_struct *vma, struct build_id **bidp)
+> +{
+> +       struct build_id *bid;
+> +       int err;
+> +
+> +       bid = kmem_cache_alloc(build_id_cachep, GFP_KERNEL);
+> +       if (!bid)
+> +               return -ENOMEM;
+> +       err = build_id_parse(vma, bid->data, &bid->sz);
+> +       if (err) {
+> +               build_id_free(bid);
+> +               /* ignore parsing error */
+> +               return 0;
+> +       }
+> +       *bidp = bid;
+> +       return 0;
+> +}
+> +
+> +void file_build_id_free(struct file *f)
+> +{
+> +       build_id_free(f->f_bid);
+> +}
+> +
+> +void build_id_free(struct build_id *bid)
+> +{
+> +       if (!bid)
+> +               return;
+> +       kmem_cache_free(build_id_cachep, bid);
+> +}
+> +
+> +void __init build_id_init(void)
+> +{
+> +       build_id_cachep = kmem_cache_create("build_id", sizeof(struct build_id), 0,
+> +                               SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT, NULL);
+> +}
+> +
+> +#endif /* CONFIG_FILE_BUILD_ID */
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index ff7b209dec05..68911c3780c4 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -1183,6 +1183,13 @@ config LRU_GEN_STATS
+>           This option has a per-memcg and per-node memory overhead.
+>  # }
+>
+> +config FILE_BUILD_ID
+> +       bool "Store build id in file object"
+> +       default n
+> +       help
+> +         Store build id in file object for elf executable with build id
+> +         defined. The build id is stored when file is mmaped.
+> +
+>  source "mm/damon/Kconfig"
+>
+>  endmenu
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 425a9349e610..a06f744206e3 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -2530,6 +2530,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+>         pgoff_t vm_pgoff;
+>         int error;
+>         MA_STATE(mas, &mm->mm_mt, addr, end - 1);
+> +       struct build_id *bid = NULL;
+>
+>         /* Check against address space limit. */
+>         if (!may_expand_vm(mm, vm_flags, len >> PAGE_SHIFT)) {
+> @@ -2626,6 +2627,13 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+>                 if (error)
+>                         goto unmap_and_free_vma;
+>
+> +#ifdef CONFIG_FILE_BUILD_ID
+> +               if (vma->vm_flags & VM_EXEC && !file->f_bid) {
+> +                       error = vma_get_build_id(vma, &bid);
+> +                       if (error)
+> +                               goto close_and_free_vma;
 
-So I wanted to reach out to see if there was more context for this
-breakage? I don't want to raise a unnecessary stink if this was
-an unfortuante but forced situation.
+do we want to fail mmap_region() if we get -ENOMEM from
+vma_get_build_id()? can't we just store ERR_PTR(error) in f_bid field?
+So we'll have f_bid == NULL for non-exec files, ERR_PTR() for when we
+tried and failed to get build ID, and a valid pointer if we succeeded?
 
-thanks
--john
+> +               }
+> +#endif
+>                 /*
+>                  * Expansion is handled above, merging is handled below.
+>                  * Drivers should not alter the address of the VMA.
+> @@ -2699,6 +2707,12 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+>                 if (vma->vm_flags & VM_SHARED)
+>                         mapping_allow_writable(vma->vm_file->f_mapping);
+>
+> +#ifdef CONFIG_FILE_BUILD_ID
+> +               if (bid && !file->f_bid)
+> +                       file->f_bid = bid;
+> +               else
+> +                       build_id_free(bid);
+> +#endif
+>                 flush_dcache_mmap_lock(vma->vm_file->f_mapping);
+>                 vma_interval_tree_insert(vma, &vma->vm_file->f_mapping->i_mmap);
+>                 flush_dcache_mmap_unlock(vma->vm_file->f_mapping);
+> @@ -2759,6 +2773,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+>                 mapping_unmap_writable(file->f_mapping);
+>  free_vma:
+>         vm_area_free(vma);
+> +       build_id_free(bid);
+>  unacct_error:
+>         if (charged)
+>                 vm_unacct_memory(charged);
+> --
+> 2.39.1
+>
