@@ -2,168 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB42C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 05:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C799C05027
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 08:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbjBHF7G (ORCPT
+        id S230337AbjBHI1c (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 00:59:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        Wed, 8 Feb 2023 03:27:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjBHF7F (ORCPT
+        with ESMTP id S229632AbjBHI1b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 00:59:05 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56492EB49
-        for <linux-perf-users@vger.kernel.org>; Tue,  7 Feb 2023 21:59:04 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id z13so5074564wmp.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Feb 2023 21:59:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8oN9MLzU3wEGmWRqNJyRnSlrR9sdEtbSX9/vop1S28=;
-        b=BRTRBC/Bg+WXOmrXhXu6+bY4BmKsC+FwM6up81I4n8n8t8+OIoKlsgrFfsvdoYcanC
-         U3U5Ktu9HM7eHllGOHnR05dFkY2SIO4VVX7VHCwJFk1Mn74NEdDnhXkslZJaX0zP2pOQ
-         ad8Y8uON0Nhfa0Q7bpEh9mI2UQq1AIdTq0dU2BS1gagrKO9F/dtT/tVW2PBtSjS84/sZ
-         YN+beCvSry1dcC2oQ9plqII8AdZRKWuVS+Tik+c67E8wbnEds1dc5EZ1VtZ5os7EkrPg
-         1LqUi11DXGTnAE78RgSSWPaYwq8FrZujROK16vSDOEq4g5Udzs+VXWmVgi4/M/76QZ0/
-         OtaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W8oN9MLzU3wEGmWRqNJyRnSlrR9sdEtbSX9/vop1S28=;
-        b=z3Sqb5Cu+NqyvMQ1koCETJoXc8AQA49G8XUCeNi8Zyddl/G1AH4WdIK5X2jr16gYMt
-         BRoz7C6AgCrYNDEOc4NQN9xp0SSwkoTO1OqT9aC5PeaW1yAPovgwefUSCRT72WeTU33H
-         z9xkhQ9/cevXrRKH++viyYwJxCxLT051pUhRG0/TTJvHkZ0IseOBzHsVW3MyfvH4g4eV
-         8uMbMUvPvynX6LIQ6oRxz8Uy+4a+b0VD6xgYMfOFHN8Mw21M2oL5fZzQGqGGQ97xF1FQ
-         EYvZXiMRyvx89YJBvstfkPzmWyyrF4bsi1WmYbHnHh9GjsI9QDDWHTEH+cSCtogA9qRs
-         YWkQ==
-X-Gm-Message-State: AO0yUKWwle6Fu7bL80bUHY4dvNpYtOcGKoZFZIKl5Z22wkHGKvB9Aeuu
-        n5or4hq+Bfr0f+wDBPIaoXFZP3xpDWRADV/lRIWuDg==
-X-Google-Smtp-Source: AK7set+H+Sx5l3kuIAhJ4wLueh4sGvHEb87JuXXJ6O3Q6ph+Mjp4NKuWNS1P/vBuV3QlXX3aMBnWWk+nHDfpBkJC/xs=
-X-Received: by 2002:a05:600c:1d1e:b0:3dc:4a00:cd6e with SMTP id
- l30-20020a05600c1d1e00b003dc4a00cd6emr123690wms.169.1675835942630; Tue, 07
- Feb 2023 21:59:02 -0800 (PST)
+        Wed, 8 Feb 2023 03:27:31 -0500
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7AC2E04E
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Feb 2023 00:27:28 -0800 (PST)
+X-ASG-Debug-ID: 1675844843-086e23137e022e0001-i5rUwQ
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id 3J9LMXbM7YTxfFn4 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 08 Feb 2023 16:27:23 +0800 (CST)
+X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Wed, 8 Feb
+ 2023 16:27:22 +0800
+Received: from silvia-OptiPlex-3010.zhaoxin.com (10.29.8.47) by
+ ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Wed, 8 Feb 2023 16:27:22 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+From:   silviazhao <silviazhao-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <tglx@linutronix.de>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
+        <silviazhao@zhaoxin.com>, <tonywwang@zhaoxin.com>,
+        <kevinbrace@gmx.com>, <7vvbbqzo567a@nospam.xutrox.com>
+Subject: [PATCH V2] x86/perf/zhaoxin: Add stepping check for ZXC
+Date:   Wed, 8 Feb 2023 16:27:22 +0800
+X-ASG-Orig-Subj: [PATCH V2] x86/perf/zhaoxin: Add stepping check for ZXC
+Message-ID: <20230208082722.14219-1-silviazhao-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20230207140447.1827741-1-tmricht@linux.ibm.com> <Y+JoGRdML/Ckkwvb@kernel.org>
-In-Reply-To: <Y+JoGRdML/Ckkwvb@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 7 Feb 2023 21:58:48 -0800
-Message-ID: <CAP-5=fU6vHFp1YeY9RyAUE_rS5PMECcUWdnMhR-QsMnAN0wy7g@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Fix perf tool build error in util/pfm.c
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel-next@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, hca@linux.ibm.com,
-        egorenar@linux.ibm.com, gor@linux.ibm.com, svens@linux.ibm.com,
-        sumanthk@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.29.8.47]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1675844843
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1768
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.104486
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 7, 2023 at 7:02 AM Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->
-> Em Tue, Feb 07, 2023 at 03:04:47PM +0100, Thomas Richter escreveu:
-> > I have downloaded linux-next and build the perf tool using
-> >
-> >  # make LIBPFM4=3D1
-> >
-> > to have libpfm4 support built into perf. The build fails:
-> >
-> >  # make LIBPFM4=3D1
->
-> Ian,
->
->         Can you please take a look? Should we go this way or have some
-> feature test to check how that function signature should look?
->
-> - Arnaldo
+Some of Nano series processors will lead GP when accessing
+PMC fixed counter. Meanwhile, their hardware support for PMC
+has not announced externally. So exclude Nano CPUs from ZXC
+by checking stepping information. This is an unambiguous way
+to differentiate between ZXC and Nano CPUs.
 
-Tested-by: Ian Rogers <irogers@google.com>
+Following are Nano and ZXC FMS information:
+Nano FMS: Family=6, Model=F, Stepping=[0-A][C-D]
+ZXC FMS:  Family=6, Model=F, Stepping=E-F OR
+          Family=6, Model=0x19, Stepping=0-3
 
-Wrt tests, there is make_with_libpfm4 in tools/perf/tests/make.
+Fixes: 3a4ac121c2ca ("x86/perf: Add hardware performance events support for Zhaoxin CPU.")
+Reported-by: Arjan <8vvbbqzo567a@nospam.xutrox.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=212389
+Reported-by: Kevin Brace <kevinbrace@gmx.com>
 
-Thanks,
-Ian
+Signed-off-by: silviazhao <silviazhao-oc@zhaoxin.com>
+---
+v1 -> v2: Add some statements for Nano and ZXC FMS information.
+---
+ arch/x86/events/zhaoxin/core.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> > ....
-> > INSTALL libbpf_headers
-> >   CC      util/pfm.o
-> > util/pfm.c: In function =E2=80=98print_libpfm_event=E2=80=99:
-> > util/pfm.c:189:9: error: too many arguments to function =E2=80=98print_=
-cb->print_event=E2=80=99
-> >   189 |         print_cb->print_event(print_state,
-> >       |         ^~~~~~~~
-> > util/pfm.c:220:25: error: too many arguments to function =E2=80=98print=
-_cb->print_event=E2=80=99
-> >   220 |                         print_cb->print_event(print_state,
-> >
-> > The build error is caused by
-> > commit d9dc8874d6ce ("perf pmu-events: Remove now unused event and metr=
-ic variables")
-> > which changes the function prototype of
-> >   struct print_callbacks {
-> >       ...
-> >       void (*print_event)(...);  --> last two parameters removed.
-> >   };
-> >
-> > but does not adjust the usage of this function prototype in util/pfm.c.
-> > In file util/pfm.c function print_event() is still invoked with 13 para=
-meters
-> > instead of 11. The compile fails.
-> >
-> > When I adjust the file util/pfm.c as in this patch, the build works fil=
-e.
-> > Please check this patch for correctness, I have just fixed the compile
-> > issue.
-> >
-> > Fixes d9dc8874d6ce ("perf pmu-events: Remove now unused event and metri=
-c variables")
-> > Cc: irogers@google.com
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > ---
-> >  tools/perf/util/pfm.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
-> > index ac3227ba769c..b59ba825ddc9 100644
-> > --- a/tools/perf/util/pfm.c
-> > +++ b/tools/perf/util/pfm.c
-> > @@ -193,8 +193,7 @@ print_libpfm_event(const struct print_callbacks *pr=
-int_cb, void *print_state,
-> >                       /*scale_unit=3D*/NULL,
-> >                       /*deprecated=3D*/NULL, "PFM event",
-> >                       info->desc, /*long_desc=3D*/NULL,
-> > -                     /*encoding_desc=3D*/buf->buf,
-> > -                     /*metric_name=3D*/NULL, /*metric_expr=3D*/NULL);
-> > +                     /*encoding_desc=3D*/buf->buf);
-> >
-> >       pfm_for_each_event_attr(j, info) {
-> >               pfm_event_attr_info_t ainfo;
-> > @@ -224,8 +223,7 @@ print_libpfm_event(const struct print_callbacks *pr=
-int_cb, void *print_state,
-> >                                       /*scale_unit=3D*/NULL,
-> >                                       /*deprecated=3D*/NULL, "PFM event=
-",
-> >                                       ainfo.desc, /*long_desc=3D*/NULL,
-> > -                                     /*encoding_desc=3D*/buf->buf,
-> > -                                     /*metric_name=3D*/NULL, /*metric_=
-expr=3D*/NULL);
-> > +                                     /*encoding_desc=3D*/buf->buf);
-> >               }
-> >       }
-> >  }
-> > --
-> > 2.39.1
-> >
->
-> --
->
-> - Arnaldo
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index 949d845c922b..3e9acdaeed1e 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -541,7 +541,13 @@ __init int zhaoxin_pmu_init(void)
+ 
+ 	switch (boot_cpu_data.x86) {
+ 	case 0x06:
+-		if (boot_cpu_data.x86_model == 0x0f || boot_cpu_data.x86_model == 0x19) {
++		/*
++		 * Support Zhaoxin CPU from ZXC series, exclude Nano series through FMS.
++		 * Nano FMS: Family=6, Model=F, Stepping=[0-A][C-D]
++		 * ZXC FMS: Family=6, Model=F, Stepping=E-F OR Family=6, Model=0x19, Stepping=0-3
++		 */
++		if ((boot_cpu_data.x86_model == 0x0f && boot_cpu_data.x86_stepping >= 0x0e) ||
++			boot_cpu_data.x86_model == 0x19) {
+ 
+ 			x86_pmu.max_period = x86_pmu.cntval_mask >> 1;
+ 
+-- 
+2.17.1
+
