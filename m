@@ -2,100 +2,128 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A00AC636CC
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 10:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63BAC05027
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 11:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjBHKgL (ORCPT
+        id S231169AbjBHLV0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 05:36:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
+        Wed, 8 Feb 2023 06:21:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231393AbjBHKgG (ORCPT
+        with ESMTP id S231379AbjBHLVM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 05:36:06 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EB0347ECC;
-        Wed,  8 Feb 2023 02:35:45 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C8BE1477;
-        Wed,  8 Feb 2023 02:36:03 -0800 (PST)
-Received: from [10.57.48.140] (unknown [10.57.48.140])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB3863F8C6;
-        Wed,  8 Feb 2023 02:35:18 -0800 (PST)
-Message-ID: <0ded9983-8a37-d6c9-3de8-cbde6a4ce1e7@arm.com>
-Date:   Wed, 8 Feb 2023 10:35:17 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] perf tools: Fix auto-complete on aarch64
-Content-Language: en-US
-To:     Yicong Yang <yangyicong@huawei.com>, acme@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, yangyicong@hisilicon.com,
-        linuxarm@huawei.com, prime.zeng@hisilicon.com,
-        mark.rutland@arm.com, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, yao.jin@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230207035057.43394-1-yangyicong@huawei.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230207035057.43394-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Feb 2023 06:21:12 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBF449405;
+        Wed,  8 Feb 2023 03:20:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 435E4615FC;
+        Wed,  8 Feb 2023 11:20:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C1E4C433D2;
+        Wed,  8 Feb 2023 11:20:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675855219;
+        bh=B6zrD3MUb4KtKj9xfIe7UkOC0UIDN9V3CX8L2Her3GU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aWxLzIYYde9IiprCgOyv9OMXKegfvQyUEOixFqlEkX2XfCCFIGDz4bmWGktTPsikQ
+         E5/kt7GfLGfuqb9ld8GSk74tHMWQ2se+9SVmO9xsiW9XUtJa/k/D8UGcvA3Xo8t4So
+         lh+aiOr7TChS/1mdrm3zVIGf6eX/TyC0HNRG629pi+Y13pVPbVuo5w6Bhm2g72pAZL
+         msu+rL/AXB1bDzTFdMUliSA0quO2kp+rxCp4Q0EJtZJA+X0qNS9X05rZzfKBMpzaW4
+         mkWPEKQGNS9CcvvT3l5ACVcJVR3mIqrodWR33V+FEAfhGKhydboVL4rCAoODRawMBw
+         NqHT970latq/w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pPiUr-008dkz-Ci;
+        Wed, 08 Feb 2023 11:20:17 +0000
+Date:   Wed, 08 Feb 2023 11:20:16 +0000
+Message-ID: <86mt5oz9n3.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zaid Al-Bassam <zalbassam@google.com>
+Cc:     Jesus Sanchez-Palencia <jesussanp@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH 3/8] perf: pmuv3: Add common defines for the PMU version
+In-Reply-To: <20230126204444.2204061-4-zalbassam@google.com>
+References: <20230126204444.2204061-1-zalbassam@google.com>
+        <20230126204444.2204061-4-zalbassam@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: zalbassam@google.com, jesussanp@google.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 07/02/2023 03:50, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
+On Thu, 26 Jan 2023 20:44:39 +0000,
+Zaid Al-Bassam <zalbassam@google.com> wrote:
 > 
-> On aarch64 CPU related events are not under event_source/devices/cpu/events,
-> they're under event_source/devices/armv8_pmuv3_0/events on my machine.
-> Using current auto-complete script will generate below error:
+> The current PMU version defines are available for arm64 only,
+> As we want to add PMUv3 support to arm (32-bit), this patch makes
+> these defines available for both arm/arm64 by defining them in
+> the common arm_pmuv3.h header.
 > 
-> [root@localhost bin]# perf stat -e
-> ls: cannot access '/sys/bus/event_source/devices/cpu/events': No such file or directory
-> 
-> Fix this by not test /sys/bus/event_source/devices/cpu/events on aarch64
-> machine.
-> 
-> Fixes: 74cd5815d9af ("perf tool: Improve bash command line auto-complete for multiple events with comma")
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> Signed-off-by: Zaid Al-Bassam <zalbassam@google.com>
 > ---
->  tools/perf/perf-completion.sh | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+>  drivers/perf/arm_pmuv3.c       | 8 ++++----
+>  include/linux/perf/arm_pmuv3.h | 6 ++++++
+>  2 files changed, 10 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 94e4098b662d..505f0758260c 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -392,7 +392,7 @@ static const struct attribute_group armv8_pmuv3_caps_attr_group = {
+>   */
+>  static bool armv8pmu_has_long_event(struct arm_pmu *cpu_pmu)
+>  {
+> -	return (cpu_pmu->pmuver >= ID_AA64DFR0_EL1_PMUVer_V3P5);
+> +	return (cpu_pmu->pmuver >= ARMV8_PMU_DFR_VER_V3P5);
 
-Reviewed-by: James Clark <james.clark@arm.com>
+This doesn't really makes any sense. As per the architecture spec,
+PMUv3p5 on AArch32 cannot expose the top 32 bits (DDI0487I.a, G8.4.10
+"PMEVCNTR<n>, Performance Monitors Event Count Registers, n = 0 -
+30"):
 
-> diff --git a/tools/perf/perf-completion.sh b/tools/perf/perf-completion.sh
-> index fdf75d45efff..978249d7868c 100644
-> --- a/tools/perf/perf-completion.sh
-> +++ b/tools/perf/perf-completion.sh
-> @@ -165,7 +165,12 @@ __perf_main ()
->  
->  		local cur1=${COMP_WORDS[COMP_CWORD]}
->  		local raw_evts=$($cmd list --raw-dump)
-> -		local arr s tmp result
-> +		local arr s tmp result cpu_evts
-> +
-> +		# aarch64 doesn't have /sys/bus/event_source/devices/cpu/events
-> +		if [[ `uname -m` != aarch64 ]]; then
-> +			cpu_evts=$(ls /sys/bus/event_source/devices/cpu/events)
-> +		fi
->  
->  		if [[ "$cur1" == */* && ${cur1#*/} =~ ^[A-Z] ]]; then
->  			OLD_IFS="$IFS"
-> @@ -183,9 +188,9 @@ __perf_main ()
->  				fi
->  			done
->  
-> -			evts=${result}" "$(ls /sys/bus/event_source/devices/cpu/events)
-> +			evts=${result}" "${cpu_evts}
->  		else
-> -			evts=${raw_evts}" "$(ls /sys/bus/event_source/devices/cpu/events)
-> +			evts=${raw_evts}" "${cpu_evts}
->  		fi
->  
->  		if [[ "$cur1" == , ]]; then
+<quote>
+There is no means to access bits [63:32] directly from AArch32 state.
+</quote>
+
+So on AArch32, this should always return false, no ifs, no buts.
+
+Also, turning the architectural symbols (ID_AA64DFR0_EL1_*) into
+custom stuff is a total non-starter. We generate these names and want
+to use them everywhere.
+
+Either you abstract them in the architecture specific headers, or you
+define the AArch64 name in the AArch32 code.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
