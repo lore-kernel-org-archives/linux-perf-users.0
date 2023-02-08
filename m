@@ -2,176 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636F1C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 03:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB42C05027
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 05:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjBHDpF (ORCPT
+        id S229630AbjBHF7G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Feb 2023 22:45:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51080 "EHLO
+        Wed, 8 Feb 2023 00:59:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjBHDpE (ORCPT
+        with ESMTP id S229573AbjBHF7F (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Feb 2023 22:45:04 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35DA412C
-        for <linux-perf-users@vger.kernel.org>; Tue,  7 Feb 2023 19:45:03 -0800 (PST)
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3183VWJH009523;
-        Wed, 8 Feb 2023 03:44:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=urNmqWzZ1vTXPmzRqLRyvBLP3bDtXum804ZouZ0vCn4=;
- b=HfN32PmZlGaf2YPMcmEN6M8LRYBvHshNQaKm+kR0165Txczg23qk4W3ETC4/u91Rq7w+
- CvWEO4DxC50YzWQtCQCEkX2rU/QAcHnoPd+cVKgV0w+OihL8Rn++7HwLsCy9rjzOKoYg
- AtSi8HZlt0GJuwsmdUn1TOVNT4J5rnWVdQqb87LgBeSCOn82+Ym5jSuSYtjpAv9hBLLk
- Pt6vvucFwbVuQX/hj5MyEFeikB3xqKRtCtk8ri1/+X0pYDxiAzxOv0iVymYQkKpmiHmf
- et5aYAsh4jisvpsyqufSid/8qfDqEpo5eMhifmDygncfV7hYUdSQP9205hyXgFpSxFjJ 3g== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nm3wk88gg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Feb 2023 03:44:57 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 317ErpJ8005776;
-        Wed, 8 Feb 2023 03:44:55 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3nhf06k29d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Feb 2023 03:44:55 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3183iqMP24904394
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Feb 2023 03:44:53 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E56BF20043;
-        Wed,  8 Feb 2023 03:44:52 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D30B20040;
-        Wed,  8 Feb 2023 03:44:51 +0000 (GMT)
-Received: from [9.43.70.241] (unknown [9.43.70.241])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Feb 2023 03:44:50 +0000 (GMT)
-Message-ID: <157932b6-be9b-dc92-be91-ba070ebddc75@linux.ibm.com>
-Date:   Wed, 8 Feb 2023 09:14:49 +0530
+        Wed, 8 Feb 2023 00:59:05 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56492EB49
+        for <linux-perf-users@vger.kernel.org>; Tue,  7 Feb 2023 21:59:04 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id z13so5074564wmp.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Feb 2023 21:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W8oN9MLzU3wEGmWRqNJyRnSlrR9sdEtbSX9/vop1S28=;
+        b=BRTRBC/Bg+WXOmrXhXu6+bY4BmKsC+FwM6up81I4n8n8t8+OIoKlsgrFfsvdoYcanC
+         U3U5Ktu9HM7eHllGOHnR05dFkY2SIO4VVX7VHCwJFk1Mn74NEdDnhXkslZJaX0zP2pOQ
+         ad8Y8uON0Nhfa0Q7bpEh9mI2UQq1AIdTq0dU2BS1gagrKO9F/dtT/tVW2PBtSjS84/sZ
+         YN+beCvSry1dcC2oQ9plqII8AdZRKWuVS+Tik+c67E8wbnEds1dc5EZ1VtZ5os7EkrPg
+         1LqUi11DXGTnAE78RgSSWPaYwq8FrZujROK16vSDOEq4g5Udzs+VXWmVgi4/M/76QZ0/
+         OtaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W8oN9MLzU3wEGmWRqNJyRnSlrR9sdEtbSX9/vop1S28=;
+        b=z3Sqb5Cu+NqyvMQ1koCETJoXc8AQA49G8XUCeNi8Zyddl/G1AH4WdIK5X2jr16gYMt
+         BRoz7C6AgCrYNDEOc4NQN9xp0SSwkoTO1OqT9aC5PeaW1yAPovgwefUSCRT72WeTU33H
+         z9xkhQ9/cevXrRKH++viyYwJxCxLT051pUhRG0/TTJvHkZ0IseOBzHsVW3MyfvH4g4eV
+         8uMbMUvPvynX6LIQ6oRxz8Uy+4a+b0VD6xgYMfOFHN8Mw21M2oL5fZzQGqGGQ97xF1FQ
+         EYvZXiMRyvx89YJBvstfkPzmWyyrF4bsi1WmYbHnHh9GjsI9QDDWHTEH+cSCtogA9qRs
+         YWkQ==
+X-Gm-Message-State: AO0yUKWwle6Fu7bL80bUHY4dvNpYtOcGKoZFZIKl5Z22wkHGKvB9Aeuu
+        n5or4hq+Bfr0f+wDBPIaoXFZP3xpDWRADV/lRIWuDg==
+X-Google-Smtp-Source: AK7set+H+Sx5l3kuIAhJ4wLueh4sGvHEb87JuXXJ6O3Q6ph+Mjp4NKuWNS1P/vBuV3QlXX3aMBnWWk+nHDfpBkJC/xs=
+X-Received: by 2002:a05:600c:1d1e:b0:3dc:4a00:cd6e with SMTP id
+ l30-20020a05600c1d1e00b003dc4a00cd6emr123690wms.169.1675835942630; Tue, 07
+ Feb 2023 21:59:02 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] tools/perf/tests: Add system wide check for perf bench
- workload in all metric test
-Content-Language: en-US
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-References: <20230202164413.56743-1-kjain@linux.ibm.com>
- <3BB099AB-5FB4-40FF-A281-C06A42FBEBC7@linux.vnet.ibm.com>
-From:   kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <3BB099AB-5FB4-40FF-A281-C06A42FBEBC7@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: CilQz_nhCCzZoAbMteP2NBnVmUwN472J
-X-Proofpoint-GUID: CilQz_nhCCzZoAbMteP2NBnVmUwN472J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-02-07_15,2023-02-06_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- spamscore=0 priorityscore=1501 adultscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302080030
+References: <20230207140447.1827741-1-tmricht@linux.ibm.com> <Y+JoGRdML/Ckkwvb@kernel.org>
+In-Reply-To: <Y+JoGRdML/Ckkwvb@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 7 Feb 2023 21:58:48 -0800
+Message-ID: <CAP-5=fU6vHFp1YeY9RyAUE_rS5PMECcUWdnMhR-QsMnAN0wy7g@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: Fix perf tool build error in util/pfm.c
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel-next@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, hca@linux.ibm.com,
+        egorenar@linux.ibm.com, gor@linux.ibm.com, svens@linux.ibm.com,
+        sumanthk@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, Feb 7, 2023 at 7:02 AM Arnaldo Carvalho de Melo <acme@kernel.org> w=
+rote:
+>
+> Em Tue, Feb 07, 2023 at 03:04:47PM +0100, Thomas Richter escreveu:
+> > I have downloaded linux-next and build the perf tool using
+> >
+> >  # make LIBPFM4=3D1
+> >
+> > to have libpfm4 support built into perf. The build fails:
+> >
+> >  # make LIBPFM4=3D1
+>
+> Ian,
+>
+>         Can you please take a look? Should we go this way or have some
+> feature test to check how that function signature should look?
+>
+> - Arnaldo
 
+Tested-by: Ian Rogers <irogers@google.com>
 
-On 2/6/23 10:10, Athira Rajeev wrote:
-> 
-> 
->> On 02-Feb-2023, at 10:14 PM, Kajol Jain <kjain@linux.ibm.com> wrote:
->>
->> Testcase stat_all_metrics.sh fails in powerpc:
->>
->> 92: perf all metrics test : FAILED!
->>
->> Logs with verbose:
->>
->> [command]# ./perf test 92 -vv
->> 92: perf all metrics test                                           :
->> --- start ---
->> test child forked, pid 13262
->> Testing BRU_STALL_CPI
->> Testing COMPLETION_STALL_CPI
->> ----
->> Testing TOTAL_LOCAL_NODE_PUMPS_P23
->> Metric 'TOTAL_LOCAL_NODE_PUMPS_P23' not printed in:
->> Error:
->> Invalid event (hv_24x7/PM_PB_LNS_PUMP23,chip=3/) in per-thread mode, enable system wide with '-a'.
->> Testing TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01
->> Metric 'TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01' not printed in:
->> Error:
->> Invalid event (hv_24x7/PM_PB_RTY_LNS_PUMP01,chip=3/) in per-thread mode, enable system wide with '-a'.
->> ----
->>
->> Based on above logs, we could see some of the hv-24x7 metric events fails,
->> and logs suggest to run the metric event with -a option.
->> This change happened after the commit a4b8cfcabb1d ("perf stat: Delay metric
->> parsing"), which delayed the metric parsing phase and now before metric parsing
->> phase perf tool identifies, whether target is system-wide or not. With this
->> change, perf_event_open will fails with workload monitoring for uncore events
->> as expected.
->>
->> The perf all metric test case fails as some of the hv-24x7 metric events
->> may need bigger workload to get the data. And the added perf bench
->> workload in 'perf all metric test case' will not run for hv-24x7 without 
->> -a option.
->>
->> Fix this issue by adding system wide check for perf bench workload.
->>
->> Result with the patch changes in powerpc:
->>
->> 92: perf all metrics test : Ok
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> 
-> Looks good to me
-> 
-> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-
-Hi Arnaldo,
-   Let me know if patch looks fine to you.
+Wrt tests, there is make_with_libpfm4 in tools/perf/tests/make.
 
 Thanks,
-Kajol Jain
+Ian
 
-> 
->> ---
->> tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
->> 1 file changed, 7 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
->> index 6e79349e42be..d49832a316d9 100755
->> --- a/tools/perf/tests/shell/stat_all_metrics.sh
->> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
->> @@ -23,6 +23,13 @@ for m in $(perf list --raw-dump metrics); do
->>   then
->>     continue
->>   fi
->> +  # Failed again, possibly the event is uncore pmu event which will need
->> +  # system wide monitoring with workload, so retry with -a option
->> +  result=$(perf stat -M "$m" -a perf bench internals synthesize 2>&1)
->> +  if [[ "$result" =~ "${m:0:50}" ]]
->> +  then
->> +    continue
->> +  fi
->>   echo "Metric '$m' not printed in:"
->>   echo "$result"
->>   if [[ "$err" != "1" ]]
->> -- 
->> 2.39.0
->>
-> 
+> > ....
+> > INSTALL libbpf_headers
+> >   CC      util/pfm.o
+> > util/pfm.c: In function =E2=80=98print_libpfm_event=E2=80=99:
+> > util/pfm.c:189:9: error: too many arguments to function =E2=80=98print_=
+cb->print_event=E2=80=99
+> >   189 |         print_cb->print_event(print_state,
+> >       |         ^~~~~~~~
+> > util/pfm.c:220:25: error: too many arguments to function =E2=80=98print=
+_cb->print_event=E2=80=99
+> >   220 |                         print_cb->print_event(print_state,
+> >
+> > The build error is caused by
+> > commit d9dc8874d6ce ("perf pmu-events: Remove now unused event and metr=
+ic variables")
+> > which changes the function prototype of
+> >   struct print_callbacks {
+> >       ...
+> >       void (*print_event)(...);  --> last two parameters removed.
+> >   };
+> >
+> > but does not adjust the usage of this function prototype in util/pfm.c.
+> > In file util/pfm.c function print_event() is still invoked with 13 para=
+meters
+> > instead of 11. The compile fails.
+> >
+> > When I adjust the file util/pfm.c as in this patch, the build works fil=
+e.
+> > Please check this patch for correctness, I have just fixed the compile
+> > issue.
+> >
+> > Fixes d9dc8874d6ce ("perf pmu-events: Remove now unused event and metri=
+c variables")
+> > Cc: irogers@google.com
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > ---
+> >  tools/perf/util/pfm.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+> > index ac3227ba769c..b59ba825ddc9 100644
+> > --- a/tools/perf/util/pfm.c
+> > +++ b/tools/perf/util/pfm.c
+> > @@ -193,8 +193,7 @@ print_libpfm_event(const struct print_callbacks *pr=
+int_cb, void *print_state,
+> >                       /*scale_unit=3D*/NULL,
+> >                       /*deprecated=3D*/NULL, "PFM event",
+> >                       info->desc, /*long_desc=3D*/NULL,
+> > -                     /*encoding_desc=3D*/buf->buf,
+> > -                     /*metric_name=3D*/NULL, /*metric_expr=3D*/NULL);
+> > +                     /*encoding_desc=3D*/buf->buf);
+> >
+> >       pfm_for_each_event_attr(j, info) {
+> >               pfm_event_attr_info_t ainfo;
+> > @@ -224,8 +223,7 @@ print_libpfm_event(const struct print_callbacks *pr=
+int_cb, void *print_state,
+> >                                       /*scale_unit=3D*/NULL,
+> >                                       /*deprecated=3D*/NULL, "PFM event=
+",
+> >                                       ainfo.desc, /*long_desc=3D*/NULL,
+> > -                                     /*encoding_desc=3D*/buf->buf,
+> > -                                     /*metric_name=3D*/NULL, /*metric_=
+expr=3D*/NULL);
+> > +                                     /*encoding_desc=3D*/buf->buf);
+> >               }
+> >       }
+> >  }
+> > --
+> > 2.39.1
+> >
+>
+> --
+>
+> - Arnaldo
