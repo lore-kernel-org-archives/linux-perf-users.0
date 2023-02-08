@@ -2,127 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F229C05027
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 20:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8850C636D6
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Feb 2023 21:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232185AbjBHUmk (ORCPT
+        id S231527AbjBHV4H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 15:42:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50378 "EHLO
+        Wed, 8 Feb 2023 16:56:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232172AbjBHUmj (ORCPT
+        with ESMTP id S230303AbjBHV4G (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 15:42:39 -0500
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643323401B
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Feb 2023 12:42:38 -0800 (PST)
-Received: by mail-pj1-x1049.google.com with SMTP id pv1-20020a17090b3c8100b0022c1ab71110so1812737pjb.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Feb 2023 12:42:38 -0800 (PST)
+        Wed, 8 Feb 2023 16:56:06 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF97D279B9
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Feb 2023 13:56:00 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id k13so644253plg.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Feb 2023 13:56:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=zVWDTl0p8IeLDiHH3ugnUoxZ7xfcxn6x+ZxiZsMm1KE=;
-        b=WPwZTTT6W7rLlFyK6g3SZsOgRN4KF7X/gJI2mYv+nPqGya9GQYbpivlSLH7pxH9ReX
-         Ycdy8GW7qw+hGfGzLdCkUTd5iDSAauj/h6Ta0mQ+tV54mqO68SlssteuZua90Gqp8+iR
-         1Ezxx37QtpW0xG/k04jRWUcTDKBevogtVIw3hP6+4gpF/SE7hg7D5qWj+sMmB/YrhzrK
-         HPK/ZXkpi1YeeeU1K1SP+96nsuGS+m/RLcT629dZDIFpVqGIWFK3/0hEEUd0eeVgJeV0
-         9ZWh2ox8GKZgGtzKvqPkjzx6S+JtjJl+pmb6UWELdgL0+6zcJQx6M3FuA0dmRmJKUNtq
-         tT6g==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WrzQdBMb984GoLwSermZKSUJHb2Pj08MtfAszXlgQ/k=;
+        b=X3Q+qaLof/eu0DFR89m7gQn/6gT+BTyfg6uW5GUTN9076Tc/H7WEg3Rn9nCbIYk9to
+         sFk8ItAXccaAM10ROnONd4cmr4F88/N/PKhJCEuuN9EngNYzN+wCkhiXHHzrGbjsOj5c
+         Fg/zSiwQZc1Cmg5B1mowGhhJdKsrlLIIiw04r+NUiQpcTf70tDIcsvZo1+IibxXFTIoO
+         KITAEPIX3cfaqDGsEv9ZT1g8yQ0DzXX01fusCwzAB58px3qFyBiOcYoSAo4QBTjxdgE9
+         Yd6KmjOmsP61c2aSSvYd/3vLMvRKxtMs2KdH2Z3v/xZQWAiBS5fNRul6faGsMl5rMtTY
+         /WHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zVWDTl0p8IeLDiHH3ugnUoxZ7xfcxn6x+ZxiZsMm1KE=;
-        b=twn7RNIi7a17CAHZFlzwQzeDqP+XQJPEWVP1dy3SYjvR5WTqeQ/VapA/3svu6Bg/Yl
-         PW8mPrIiIhy2nlBAF09vwXBfinLileAdJrP2wzT8gyYjEr0mtamM+yQz5Klyqgz2oNF/
-         WeMHIcJB7rlNtZGrssjsPiz8F7dXfwCHdm5OKZbIzJv8Zmt5/jgL0ciA7Oddo2QE1Y8Q
-         NaDKmdQq1TZ6LtX+/9XeFsVX4XbeKptp5xd13+JsyeNajgUvRDLgJUUlrAQ/M3m0f8C9
-         A9FiId5i1e/YGN4oRhDnEVeGB87dgFX81EbTlpck28tWLvwALeTr/etktUbBNgNR9qSH
-         v9rg==
-X-Gm-Message-State: AO0yUKVL2AJ6Tl4SKd/1ivHuJa2KUw/yJuhGZRMKxvN2TQ5C7Jpq+NKW
-        YbzCUAHcXRHD6D4ZrNY94fJ7wwzf+/Y=
-X-Google-Smtp-Source: AK7set/9M5lzkaYsVmbNoMuDWODbJ+CjIGMp3PmwMVqe+KA05wUxJoqkdvyG+iyqxk3/KTf1kMRS0WpkVGc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:701b:0:b0:4fb:3ee3:3a6a with SMTP id
- l27-20020a63701b000000b004fb3ee33a6amr384194pgc.125.1675888957652; Wed, 08
- Feb 2023 12:42:37 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Wed,  8 Feb 2023 20:42:30 +0000
-In-Reply-To: <20230208204230.1360502-1-seanjc@google.com>
-Mime-Version: 1.0
-References: <20230208204230.1360502-1-seanjc@google.com>
-X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
-Message-ID: <20230208204230.1360502-3-seanjc@google.com>
-Subject: [PATCH v2 2/2] perf/x86: Refuse to export capabilities for hybrid PMUs
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Jianfeng Gao <jianfeng.gao@intel.com>,
-        Andrew Cooper <Andrew.Cooper3@citrix.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WrzQdBMb984GoLwSermZKSUJHb2Pj08MtfAszXlgQ/k=;
+        b=kGemG25ZvOei7Gg6uULys9vKgJ2WesK6P3YI7b2uiW29oyVLLxK8Z3IjU4Cd7N4jdT
+         8fOa8iIeYaPv7mOpOvpwgZ7GktmpW2Uit5ftgYWu8fUvbBMBn29gMs79ThnRsGqfywGL
+         TeiM1UJHQnHmGm3p0TuyhtO7rf9VbS04JDrkQcxk/nXZ9/nkyRIFnh5qx+penA9wCVOl
+         px2V3XceormQ49erGiDSzUWFu1DSUOZ9Rg12jSZrrcf+yqNVSmT2zah1DKmXbpx7LBtj
+         Naya+oRbkS9HYB2DpVtHsXsNDiOrAD6yuNwZuZrEVqKMGa7cH0gHb2vsiOwR3EIsr/gm
+         7wDw==
+X-Gm-Message-State: AO0yUKWuJ4QclyyX/NyFNWTAJdq8/fxYe/PGF4Hk4xaCx65rHrYr1JOU
+        r/qMbLcjdYlYRcdBdlv1nd5H
+X-Google-Smtp-Source: AK7set94ohGg+ZPN8FmhK2vwun0FMjWaJ4yRKKML6EHTABq5z5LP5TMYNz3fYPfypqrE+agTNEfmnw==
+X-Received: by 2002:a17:902:a604:b0:198:d5cc:44a8 with SMTP id u4-20020a170902a60400b00198d5cc44a8mr352677plq.19.1675893360186;
+        Wed, 08 Feb 2023 13:56:00 -0800 (PST)
+Received: from google.com (238.76.127.34.bc.googleusercontent.com. [34.127.76.238])
+        by smtp.gmail.com with ESMTPSA id 25-20020aa79119000000b0058d8f23af26sm3938910pfh.157.2023.02.08.13.55.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Feb 2023 13:55:59 -0800 (PST)
+Date:   Wed, 8 Feb 2023 21:55:50 +0000
+From:   John Stultz <jstultz@google.com>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, oliver.sang@intel.com, lkp@intel.com,
+        Andrii Nakryiko <andrii@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Qais Yousef <qyousef@google.com>,
+        Daniele Di Proietto <ddiproietto@google.com>
+Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
+ 16 with TASK_COMM_LEN
+Message-ID: <Y+QaZtz55LIirsUO@google.com>
+References: <20211120112738.45980-1-laoar.shao@gmail.com>
+ <20211120112738.45980-8-laoar.shao@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211120112738.45980-8-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that KVM disables vPMU support on hybrid CPUs, WARN and return zeros
-if perf_get_x86_pmu_capability() is invoked on a hybrid CPU.  The helper
-doesn't provide an accurate accounting of the PMU capabilities for hybrid
-CPUs and needs to be enhanced if KVM, or anything else outside of perf,
-wants to act on the PMU capabilities.
+On Sat, Nov 20, 2021 at 11:27:38AM +0000, Yafang Shao wrote:
+> As the sched:sched_switch tracepoint args are derived from the kernel,
+> we'd better make it same with the kernel. So the macro TASK_COMM_LEN is
+> converted to type enum, then all the BPF programs can get it through BTF.
+> 
+> The BPF program which wants to use TASK_COMM_LEN should include the header
+> vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
+> type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
+> need to include linux/bpf.h again.
+> 
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> ---
+>  include/linux/sched.h                                   | 9 +++++++--
+>  tools/testing/selftests/bpf/progs/test_stacktrace_map.c | 6 +++---
+>  tools/testing/selftests/bpf/progs/test_tracepoint.c     | 6 +++---
+>  3 files changed, 13 insertions(+), 8 deletions(-)
 
-Cc: stable@vger.kernel.org
-Cc: Andrew Cooper <Andrew.Cooper3@citrix.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Link: https://lore.kernel.org/all/20220818181530.2355034-1-kan.liang@linux.intel.com
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/events/core.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Hey all,
+  I know this is a little late, but I recently got a report that
+this change was causiing older versions of perfetto to stop
+working. 
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 85a63a41c471..d096b04bf80e 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2974,17 +2974,19 @@ unsigned long perf_misc_flags(struct pt_regs *regs)
- 
- void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
- {
--	if (!x86_pmu_initialized()) {
-+	/* This API doesn't currently support enumerating hybrid PMUs. */
-+	if (WARN_ON_ONCE(cpu_feature_enabled(X86_FEATURE_HYBRID_CPU)) ||
-+	    !x86_pmu_initialized()) {
- 		memset(cap, 0, sizeof(*cap));
- 		return;
- 	}
- 
-+	/*
-+	 * Note, hybrid CPU models get tracked as having hybrid PMUs even when
-+	 * all E-cores are disabled via BIOS.  When E-cores are disabled, the
-+	 * base PMU holds the correct number of counters for P-cores.
-+	 */
- 	cap->version		= x86_pmu.version;
--	/*
--	 * KVM doesn't support the hybrid PMU yet.
--	 * Return the common value in global x86_pmu,
--	 * which available for all cores.
--	 */
- 	cap->num_counters_gp	= x86_pmu.num_counters;
- 	cap->num_counters_fixed	= x86_pmu.num_counters_fixed;
- 	cap->bit_width_gp	= x86_pmu.cntval_bits;
--- 
-2.39.1.519.gcb327c4b5f-goog
+Apparently newer versions of perfetto has worked around this
+via the following changes:
+  https://android.googlesource.com/platform/external/perfetto/+/c717c93131b1b6e3705a11092a70ac47c78b731d%5E%21/
+  https://android.googlesource.com/platform/external/perfetto/+/160a504ad5c91a227e55f84d3e5d3fe22af7c2bb%5E%21/
 
+But for older versions of perfetto, reverting upstream commit
+3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16
+with TASK_COMM_LEN") is necessary to get it back to working.
+
+I haven't dug very far into the details, and obviously this doesn't
+break with the updated perfetto, but from a high level this does
+seem to be a breaking-userland regression.
+
+So I wanted to reach out to see if there was more context for this
+breakage? I don't want to raise a unnecessary stink if this was
+an unfortuante but forced situation.
+
+thanks
+-john
