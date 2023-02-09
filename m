@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD011C05027
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 14:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034C1C636D6
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 14:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbjBIOFJ (ORCPT
+        id S230413AbjBIOSd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Feb 2023 09:05:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35260 "EHLO
+        Thu, 9 Feb 2023 09:18:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230440AbjBIOFH (ORCPT
+        with ESMTP id S230071AbjBIOSc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Feb 2023 09:05:07 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29C34B740;
-        Thu,  9 Feb 2023 06:05:03 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id bg5-20020a05600c3c8500b003e00c739ce4so1587793wmb.5;
-        Thu, 09 Feb 2023 06:05:03 -0800 (PST)
+        Thu, 9 Feb 2023 09:18:32 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6A82E823;
+        Thu,  9 Feb 2023 06:18:30 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id j29-20020a05600c1c1d00b003dc52fed235so1646194wms.1;
+        Thu, 09 Feb 2023 06:18:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FnUKwrf3QmUwHRYbPJhz1oxuhL0RjLzvi0U8XbLlOpg=;
-        b=RnfF8r6WdKv8s7KDGECSXbdB+Dek6BzSaaDqDq42vhSJ7zuuK7XDZovNmyitEjA2zS
-         UKSbw03VN/NKFo5OKrh1NqG7I8uCfs4LYo4HEZPKZr7L4Epo2bXLBpUrUTJgpReErF+E
-         mN/EDanqdDS54R3YVZ20ue01rk9K3nosbqM7I8bnH3tvH7c76KRnX0L67kyAXiIggrcd
-         lrpDewkEcV/xw0Jzk/qJwswf8D/+xzJmz8slTGA7ltTCL7fJveqpfPXdUhmyObv9K3ix
-         PpUmVpAqJc6lClWSquZT8nI4aE/jQbB+JOeUwINSRfzXLXfZpmwkch38I863B+HY0LiA
-         R/hw==
+        bh=n6rfU3Snjl72LWDE6qX15Ocps4cU89fmRgYsFNMufWk=;
+        b=ptrgdRIUbWXZm/c9lvzocxPMYQ+eryxsewr3pbMPofs6WTJXzB1Ds06zzWNlpBFdfE
+         y52VbKkz22dnSCkSuVB6Kqy3Bn0EYvx/voJ6fcGkXc58mN+umM38sBmb1NfC6eTgR5/g
+         Qf4APaaY5Q4j3X5wFir1KJ4coiw/6UX1yJdqYkpE8FxOrw5mgdwYIa0ulh3uF+ZoVJ+5
+         ZQwXYAh9ubL1aXAeRfScDXJx+1YpSXNUVuWCwt2sfQeC6U5GThIdQyWV3OUK6IRbji9x
+         ErxpRJynYb6LskLmbQBbz9a93hHFi7tmhPeCzwsN8HHYsmcdIEvrpMGPKtABOHieEgSX
+         jkiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FnUKwrf3QmUwHRYbPJhz1oxuhL0RjLzvi0U8XbLlOpg=;
-        b=P0Vz/OUfHYaThOXqYfktEBO4TXDVu74g8QC/4vMov3rmrxERDjmRMEhyon6b8rcoYe
-         IdQ0gm8buU5Bfoay6vWW2Omh//ZhO9kSaMqRt6okywNMmON47HZdVdLspuT2hAxoPOOW
-         Z5+lUah4sMII2x+kyP0n9vQyxsqaY9mvXkgz6vHtk3c6IIYECLq+do3UwFYiDqht7ayP
-         L+C+iFys/Ov8E+ufXxxVASYGvYSe+0FjV8I320Jb2agZjKxriwQm4c5ab7ZfuiHn+Kds
-         lS4GzzwgMnINMogupPJDjprMj0HUwZ528fPC4DQf7PhM7KBPQoBTKiP+Xnx50PHmPyfx
-         GNVA==
-X-Gm-Message-State: AO0yUKXP7SiqcKexubn1/COkoMrjiakaxRY6b6nVhGd2mBKX7o9DOwgJ
-        iR9eQb78SZCYhwuZVR54BehU7r5qvt5eAYSI
-X-Google-Smtp-Source: AK7set/JJyWcN/ZigLNQVpbyMC5FbBQwDmTp/uGnEBqtMWRRn8UgHASP8FT2mp83fiKVHo+M2g04Rw==
-X-Received: by 2002:a05:600c:998:b0:3dc:59ee:7978 with SMTP id w24-20020a05600c099800b003dc59ee7978mr10073277wmp.38.1675951502499;
-        Thu, 09 Feb 2023 06:05:02 -0800 (PST)
+        bh=n6rfU3Snjl72LWDE6qX15Ocps4cU89fmRgYsFNMufWk=;
+        b=yf4AAuEn8AoNkJoA6DsVt3yXwDWzQK3iCZDwMlc7gHDCX9GcuULMjmd3AxIBKXW8BK
+         h1svAFYUUJYhBMAnxNQmxRcmHSfTjcOOHPyoLNiYY1QhYL2MnEu7XKlKY003l7jEvM4p
+         MXfixi7HJ0DC34xn4pQD7dhwCc9avFi2Mz4lnFRE9MsrcxOtWpjtTBjBE9L2wT43dXpw
+         4QW+w5E3y80VQYRSmjMUZ5Owhh30HJB7h3dOnAOLC2CdshfM3e4FUwe6mrMzvyEjE+4o
+         H6JpwtIIMgL0+9JXF4y0Tj5e1BwDbAtXnZdocjYIezWnY+1kixuAXvxvAOrxjEZn+cES
+         uVFA==
+X-Gm-Message-State: AO0yUKUnc93qe0TOUt+PEoNyjQnSqeod7S98TQky8gsmOvIokxbLbfB/
+        LrjLNSPjZglkwmz6T5ouUBY=
+X-Google-Smtp-Source: AK7set/oU2MQE6PRrUGZeem/G28nDvWH2jZGBGq/aX3yec9+KFq5SeSvdk3RbW/QsABFEFJLifd0VA==
+X-Received: by 2002:a05:600c:4d21:b0:3de:e447:8025 with SMTP id u33-20020a05600c4d2100b003dee4478025mr9943371wmp.21.1675952309295;
+        Thu, 09 Feb 2023 06:18:29 -0800 (PST)
 Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id n13-20020a05600c3b8d00b003dc434900e1sm2144836wms.34.2023.02.09.06.05.01
+        by smtp.gmail.com with ESMTPSA id o41-20020a05600c512900b003dc4aae4739sm5886452wms.27.2023.02.09.06.18.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 06:05:02 -0800 (PST)
+        Thu, 09 Feb 2023 06:18:28 -0800 (PST)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 9 Feb 2023 15:04:59 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
+Date:   Thu, 9 Feb 2023 15:18:26 +0100
+To:     Alexei Starovoitov <ast@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>,
         Hao Luo <haoluo@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -62,7 +61,8 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     bpf@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
         Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
@@ -70,116 +70,100 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         KP Singh <kpsingh@chromium.org>,
         Stanislav Fomichev <sdf@google.com>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH RFC 1/5] mm: Store build id in file object
-Message-ID: <Y+T9iwfvj23gtDMA@krava>
+Subject: Re: [RFC 0/5] mm/bpf/perf: Store build id in file object
+Message-ID: <Y+UAsr8A+xT0bUY/@krava>
 References: <20230201135737.800527-1-jolsa@kernel.org>
- <20230201135737.800527-2-jolsa@kernel.org>
- <CAEf4BzZHwXiLPuaAwz3vexzaJbBC90p5pCawbrsu4-Rk3XZOYw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzZHwXiLPuaAwz3vexzaJbBC90p5pCawbrsu4-Rk3XZOYw@mail.gmail.com>
+In-Reply-To: <20230201135737.800527-1-jolsa@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 03:52:40PM -0800, Andrii Nakryiko wrote:
-
-SNIP
-
-> > diff --git a/include/linux/buildid.h b/include/linux/buildid.h
-> > index 3b7a0ff4642f..7c818085ad2c 100644
-> > --- a/include/linux/buildid.h
-> > +++ b/include/linux/buildid.h
-> > @@ -3,9 +3,15 @@
-> >  #define _LINUX_BUILDID_H
-> >
-> >  #include <linux/mm_types.h>
-> > +#include <linux/slab.h>
-> >
-> >  #define BUILD_ID_SIZE_MAX 20
-> >
-> > +struct build_id {
-> > +       u32 sz;
-> > +       char data[BUILD_ID_SIZE_MAX];
+On Wed, Feb 01, 2023 at 02:57:32PM +0100, Jiri Olsa wrote:
+> hi,
+> we have a use cases for bpf programs to use binary file's build id.
 > 
-> don't know if 21 vs 24 matters for kmem_cache_create(), but we don't
-> need 4 bytes to store build_id size, given max size is 20, so maybe
-> use u8 for sz?
-
-ok
-
+> After some attempts to add helpers/kfuncs [1] [2] Andrii had an idea [3]
+> to store build id directly in the file object. That would solve our use
+> case and might be beneficial for other profiling/tracing use cases with
+> bpf programs.
 > 
-> > +};
-> > +
-> >  int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
-> >                    __u32 *size);
-> >  int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
-> > @@ -17,4 +23,15 @@ void init_vmlinux_build_id(void);
-> >  static inline void init_vmlinux_build_id(void) { }
-> >  #endif
-> >
-> > +#ifdef CONFIG_FILE_BUILD_ID
-> > +void __init build_id_init(void);
-> > +void build_id_free(struct build_id *bid);
-> > +int vma_get_build_id(struct vm_area_struct *vma, struct build_id **bidp);
-> > +void file_build_id_free(struct file *f);
-> > +#else
-> > +static inline void __init build_id_init(void) { }
-> > +static inline void build_id_free(struct build_id *bid) { }
-> > +static inline void file_build_id_free(struct file *f) { }
-> > +#endif /* CONFIG_FILE_BUILD_ID */
-> > +
-> >  #endif
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index c1769a2c5d70..9ad5e5fbf680 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -975,6 +975,9 @@ struct file {
-> >         struct address_space    *f_mapping;
-> >         errseq_t                f_wb_err;
-> >         errseq_t                f_sb_err; /* for syncfs */
-> > +#ifdef CONFIG_FILE_BUILD_ID
-> > +       struct build_id         *f_bid;
+> This RFC patchset adds new config CONFIG_FILE_BUILD_ID option, which adds
+> build id object pointer to the file object when enabled. The build id is
+> read/populated when the file is mmap-ed.
 > 
-> naming nit: anything wrong with f_buildid or f_build_id? all the
-> related APIs use fully spelled out "build_id"
-
-ok
-
-SNIP
-
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 425a9349e610..a06f744206e3 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -2530,6 +2530,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
-> >         pgoff_t vm_pgoff;
-> >         int error;
-> >         MA_STATE(mas, &mm->mm_mt, addr, end - 1);
-> > +       struct build_id *bid = NULL;
-> >
-> >         /* Check against address space limit. */
-> >         if (!may_expand_vm(mm, vm_flags, len >> PAGE_SHIFT)) {
-> > @@ -2626,6 +2627,13 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
-> >                 if (error)
-> >                         goto unmap_and_free_vma;
-> >
-> > +#ifdef CONFIG_FILE_BUILD_ID
-> > +               if (vma->vm_flags & VM_EXEC && !file->f_bid) {
-> > +                       error = vma_get_build_id(vma, &bid);
-> > +                       if (error)
-> > +                               goto close_and_free_vma;
+> I also added bpf and perf changes that would benefit from this.
 > 
-> do we want to fail mmap_region() if we get -ENOMEM from
-> vma_get_build_id()? can't we just store ERR_PTR(error) in f_bid field?
-> So we'll have f_bid == NULL for non-exec files, ERR_PTR() for when we
-> tried and failed to get build ID, and a valid pointer if we succeeded?
+> I'm not sure what's the policy on adding stuff to file object, so apologies
+> if that's out of line. I'm open to any feedback or suggestions if there's
+> better place or way to do this.
 
-I guess we can do that.. might be handy for debugging
+hi,
+Matthew suggested on irc to consider inode for storing build id
 
-also build_id_parse might fail on missing build id, so you're right,
-we should not fail mmap_region in here
+I tried that and it seems to have better stats wrt allocated build
+id objects, because inode is being shared among file objects
+
+I took /proc/slabinfo output after running bpf tests
+
+- build id stored in file:
+
+  # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
+  build_id             668    775    160   25    1 : tunables    0    0    0 : slabdata     31     31      0
+
+- build id stored in inode:
+
+  # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
+  build_id             222    225    160   25    1 : tunables    0    0    0 : slabdata      9      9      0
+
+
+I'm stranger to inode/fs/mm code so I'll spend some time checking on
+what I possibly broke in there before I send it, but I'd appreciate
+any early feedback ;-)
+
+the code is in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  inode_build_id
+
+I'll send another version with inode if there's no objection
 
 thanks,
 jirka
+
+
+> 
+> thanks,
+> jirka
+> 
+> 
+> [1] https://lore.kernel.org/bpf/20221108222027.3409437-1-jolsa@kernel.org/
+> [2] https://lore.kernel.org/bpf/20221128132915.141211-1-jolsa@kernel.org/
+> [3] https://lore.kernel.org/bpf/CAEf4BzaZCUoxN_X2ALXwQeFTCwtL17R4P_B_-hUCcidfyO2xyQ@mail.gmail.com/
+> ---
+> Jiri Olsa (5):
+>       mm: Store build id in file object
+>       bpf: Use file object build id in stackmap
+>       perf: Use file object build id in perf_event_mmap_event
+>       selftests/bpf: Add file_build_id test
+>       selftests/bpf: Add iter_task_vma_buildid test
+> 
+>  fs/file_table.c                                               |  3 +++
+>  include/linux/buildid.h                                       | 17 +++++++++++++++++
+>  include/linux/fs.h                                            |  3 +++
+>  kernel/bpf/stackmap.c                                         |  8 ++++++++
+>  kernel/events/core.c                                          | 43 +++++++++++++++++++++++++++++++++++++++----
+>  lib/buildid.c                                                 | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  mm/Kconfig                                                    |  7 +++++++
+>  mm/mmap.c                                                     | 15 +++++++++++++++
+>  tools/testing/selftests/bpf/prog_tests/bpf_iter.c             | 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/testing/selftests/bpf/prog_tests/file_build_id.c        | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/testing/selftests/bpf/progs/file_build_id.c             | 34 ++++++++++++++++++++++++++++++++++
+>  tools/testing/selftests/bpf/trace_helpers.c                   | 35 +++++++++++++++++++++++++++++++++++
+>  tools/testing/selftests/bpf/trace_helpers.h                   |  1 +
+>  14 files changed, 413 insertions(+), 4 deletions(-)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/file_build_id.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/file_build_id.c
