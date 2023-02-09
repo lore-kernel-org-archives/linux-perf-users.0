@@ -2,117 +2,75 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCC6C636CC
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 02:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FFAC05027
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 02:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232033AbjBICdw (ORCPT
+        id S232236AbjBICvd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 21:33:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
+        Wed, 8 Feb 2023 21:51:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232000AbjBICdu (ORCPT
+        with ESMTP id S232245AbjBICum (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 21:33:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E367D28843;
-        Wed,  8 Feb 2023 18:33:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 634686185A;
-        Thu,  9 Feb 2023 02:33:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDBC0C433EF;
-        Thu,  9 Feb 2023 02:33:45 +0000 (UTC)
-Date:   Wed, 8 Feb 2023 21:33:43 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     John Stultz <jstultz@google.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kajetan Puchalski <kajetan.puchalski@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Qais Yousef <qyousef@google.com>,
-        Daniele Di Proietto <ddiproietto@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
- 16 with TASK_COMM_LEN
-Message-ID: <20230208213343.40ee15a5@gandalf.local.home>
-In-Reply-To: <20230208212858.477cd05e@gandalf.local.home>
-References: <20211120112738.45980-1-laoar.shao@gmail.com>
-        <20211120112738.45980-8-laoar.shao@gmail.com>
-        <Y+QaZtz55LIirsUO@google.com>
-        <CAADnVQ+nf8MmRWP+naWwZEKBFOYr7QkZugETgAVfjKcEVxmOtg@mail.gmail.com>
-        <CANDhNCo_=Q3pWc7h=ruGyHdRVGpsMKRY=C2AtZgLDwtGzRz8Kw@mail.gmail.com>
-        <20230208212858.477cd05e@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 8 Feb 2023 21:50:42 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A01D1708;
+        Wed,  8 Feb 2023 18:48:21 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 304C7150C;
+        Wed,  8 Feb 2023 18:49:03 -0800 (PST)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2291C3F71E;
+        Wed,  8 Feb 2023 18:48:14 -0800 (PST)
+Message-ID: <6fd66a78-6c18-3b61-483b-0e821082aaac@arm.com>
+Date:   Thu, 9 Feb 2023 08:18:11 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH V8 5/6] arm64/perf: Add branch stack support in ARMV8 PMU
+Content-Language: en-US
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>, kernel test robot <lkp@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        catalin.marinas@arm.com, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230123125956.1350336-6-anshuman.khandual@arm.com>
+ <202301310047.b5iv9hM8-lkp@intel.com>
+ <20230203113153.GA5927@willie-the-truck>
+ <143549b7-6f16-209f-b1be-c8202fd55d05@arm.com>
+ <Y+QA0tRk2VVJ4gwu@FVFF77S0Q05N.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <Y+QA0tRk2VVJ4gwu@FVFF77S0Q05N.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 8 Feb 2023 21:28:58 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> And this breaks much more than android. It will break trace-cmd, rasdaemon
-> and perf (if it's not using BTF). This change very much "Breaks userspace!"
-> And requires a kernel workaround, not a user space one.
-
-OK, so it doesn't break perf, trace-cmd and rasdaemon, because the enum is
-only needed in the print_fmt part. It can handle it in the field portion.
-
-That is:
 
 
-system: sched
-name: sched_switch
-ID: 285
-format:
-	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-	field:int common_pid;	offset:4;	size:4;	signed:1;
+On 2/9/23 01:36, Mark Rutland wrote:
+> On Mon, Feb 06, 2023 at 09:46:25AM +0530, Anshuman Khandual wrote:
+>> On 2/3/23 17:01, Will Deacon wrote:
+>>> On Tue, Jan 31, 2023 at 12:28:17AM +0800, kernel test robot wrote:
+> 
+> [...]
+> 
+>>> This looks like it should be fixed. I'd also like to see Mark's ack on the
+>>
+>> This build warning is triggered when CONFIG_PERF_EVENTS is not enabled, when
+>> all the fallback stubs in there try to use has_branch_stack() which does not
+>> get defined. The following change, fixes the problem.
+> 
+> I expect that you'll post a v9 with that folded in, and I've just made some
+> comments on v7 which I expect will require some changes, so I'm going to wait
+> for v9 for further review to keep this manageable.
 
-	field:char prev_comm[TASK_COMM_LEN];	offset:8;	size:16;	signed:0;
-                             ^^^^^^^^^^^^^^                          ^^
-                            is ignored                             is used
-
-
-	field:pid_t prev_pid;	offset:24;	size:4;	signed:1;
-	field:int prev_prio;	offset:28;	size:4;	signed:1;
-	field:long prev_state;	offset:32;	size:8;	signed:1;
-	field:char next_comm[TASK_COMM_LEN];	offset:40;	size:16;	signed:0;
-	field:pid_t next_pid;	offset:56;	size:4;	signed:1;
-	field:int next_prio;	offset:60;	size:4;	signed:1;
-
-print fmt: "prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d", REC->prev_comm, REC->prev_pid, REC->prev_prio, (REC->prev_state & ((((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x00000040) + 1) << 1) - 1)) ? __print_flags(REC->prev_state & ((((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x00000040) + 1) << 1) - 1), "|", { 0x00000001, "S" }, { 0x00000002, "D" }, { 0x00000004, "T" }, { 0x00000008, "t" }, { 0x00000010, "X" }, { 0x00000020, "Z" }, { 0x00000040, "P" }, { 0x00000080, "I" }) : "R", REC->prev_state & (((0x00000000 | 0x00000001 | 0x00000002 | 0x00000004 | 0x00000008 | 0x00000010 | 0x00000020 | 0x00000040) + 1) << 1) ? "+" : "", REC->next_comm, REC->next_pid, REC->next_prio
-
-   ^^^^^^^
-
-Is what requires the conversions. So I take that back. It only breaks
-perfetto, and that's because it writes its own parser and doesn't use
-libtraceevent.
-
--- Steve
-
-
+Sure, will work on a V9 and post when ready.
