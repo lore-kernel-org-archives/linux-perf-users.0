@@ -2,215 +2,290 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3621DC636D6
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 17:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BAC6379F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 18:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbjBIRRD (ORCPT
+        id S229735AbjBISQh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Feb 2023 12:17:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45462 "EHLO
+        Thu, 9 Feb 2023 13:16:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjBIRRC (ORCPT
+        with ESMTP id S229865AbjBISQf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Feb 2023 12:17:02 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BF4658F2;
-        Thu,  9 Feb 2023 09:17:00 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id dr8so8381634ejc.12;
-        Thu, 09 Feb 2023 09:17:00 -0800 (PST)
+        Thu, 9 Feb 2023 13:16:35 -0500
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDAF68AC4
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Feb 2023 10:16:33 -0800 (PST)
+Received: by mail-qv1-xf32.google.com with SMTP id u16so1591352qvp.12
+        for <linux-perf-users@vger.kernel.org>; Thu, 09 Feb 2023 10:16:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hOaWLeC8ipHRmcLbRfn6JATZO77iIGtuyhLGc5wCYsg=;
-        b=eMz4/BTebHTthy7QIrMrF8piEjMCHk5gkyR04gPH0mQnoNxtk+juSI73WZpFmbv2gf
-         FuQFYTsppEmm2CuV586y5L0Zop+4pJCnUHDtqT3b1tZbv9JE4w8f8tC43Bd7PWCBOhlA
-         AsdznGOUVVgd38zrLID94UUU38wQwt+tzDz5OCKpX0LKf0HG/twtUODLrFm2TzC4gIbn
-         eKt3ivD976xMgctdzkH8i6UWi2e8vGsJhFXzQSHSRHiNdET92IQNqFeDURxJh9zasCwY
-         ba/IBqZzqb1CVIjc4JYx/HTf8p3zctAx4W8wNNb3BsvxutDM41yczWIevc6TIF0h5mL3
-         NXgQ==
+        d=soleen.com; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D17ul6Jv4BBsV+2Jo6JXzyrGGRmbOMiujl+Liy7jNKU=;
+        b=Ym+CXKOtcv8hciunQy57PF9+Z0g9lkZnEGbxg0LeHnfu/JqGR+eXCyBLaJNHe2a1gB
+         RA77v7i9vAW3zCN/HYYrnibeS1rILcYRPWFAbU/mBmjZZm0l8+f1M417b/mqwPOPVQDY
+         uEBxLZpogxT1gue/5pPtX+xiHXuqlEuy0Coi0J2u3USmPmA2W9cOU8/XpJiJk8CS852B
+         ejQEBszFP3wzyp+8Lac5VDTaDfGAB/M4Zb6goMSfStqcOGEDTpf01j+sYhEPjGl/1mXf
+         CTXdW8E+gSiGAe4/HkAr13WDVdah+jTZsJw2drmrwOJQy4C5Ul9NJJMndD3aDclHNkBe
+         Hk3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hOaWLeC8ipHRmcLbRfn6JATZO77iIGtuyhLGc5wCYsg=;
-        b=0pUZQ55hzkDuZUQDSU1Cu85hM34JD8q+yA0PiU5/e11hUApwWxY0543MFG+NFQ2drB
-         9bB3YfeiYdLQ0lk398v9UAU7hvu1yyRRgfv7Cuz8LnFXmyRFBCjZqS5P4kWQq9eEEqFA
-         Tn4pKK9o3I0Y+7sH985vA5KTiHkGNp6MkB7kkIyO35D4CANDMkwVev0AXwDDyoHS37cJ
-         UcmITOcfRseiyweQFAjoIP6Izo2Wies+wRLtwkiSwy6b6IEOIhK+mxzkspnq7yIU6dWf
-         YSV/QVqDN9iLg0WzQJbfYA+W1AneU9LZjAbTZBov0gP9kPDmCw7LQwXJ8N8Wdeqv4xKI
-         BrWA==
-X-Gm-Message-State: AO0yUKUIp7sAZgQaxd1aWMsWCpcsEIHEOqofqDtO98CvlkcbdWT4Pst1
-        eMXiiwMbOv4gCXYMF00QqyROnF/7SgqD7K2wOjE=
-X-Google-Smtp-Source: AK7set+twhKV+Ooh2gn/db6SF56f0jFgx/U8eC4Rup6g9uqGZ3eD9dYBHu34t+9OvtxJPnu0EFSQVSdwEy9TKbvAPXM=
-X-Received: by 2002:a17:906:aec1:b0:889:8f1a:a153 with SMTP id
- me1-20020a170906aec100b008898f1aa153mr660783ejb.15.1675963018825; Thu, 09 Feb
- 2023 09:16:58 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D17ul6Jv4BBsV+2Jo6JXzyrGGRmbOMiujl+Liy7jNKU=;
+        b=M4gCigCgdfh08sxfJD1wkWoIsmSAMJlUNfbNGglWl4NgojqeXiaqqm/8KXvwJwXBHH
+         NWrZqlPR+khsLWnSF69suqFbpWNPgnCXkAqmaPqTIyvWrtqzj5q0a6+WpqNHEWNFq35R
+         Rg/aBYkTh70XJRY9+ZaviVZ9AQmH3zd2WrbRMjOTbGP1TGbT8pwnPWyeae1teq3vfmzd
+         v14fBNGOHdwySnd0ipur2YqJafjPrS8sQc7Gq5IOugf/7wnh+unRP2m1/nruu+2YA4fd
+         DDyjERR7UieZDEWNSkl+GLD1LHcH4fhH10PHN6YVeVdLkh95HE3JUThoZXMUAkVVd4w2
+         TZwA==
+X-Gm-Message-State: AO0yUKWcZmF+WBKicVsaOBkFj0AVAz9NIL9PeKcwG1P6Z5F0p0C3uzbP
+        aefATLJdctN4I6af07FvECAs5jwMc6mHKNFGNHczDQ==
+X-Google-Smtp-Source: AK7set9/asfDGBIlS6FIxPCSSF0J5s4zfbRpUSo/lPaWYG0FFjA+m1JuZQPdJzdk/PLzyIx6cdEIqfKndQA7GHYwaXM=
+X-Received: by 2002:a0c:f302:0:b0:56e:8d82:742d with SMTP id
+ j2-20020a0cf302000000b0056e8d82742dmr49876qvl.34.1675966592638; Thu, 09 Feb
+ 2023 10:16:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20230201135737.800527-1-jolsa@kernel.org> <20230201135737.800527-6-jolsa@kernel.org>
- <CAEf4BzYGQGdydeVbZf5YTnDTvGduA_wbeQ=t5nSc6Wi=S17+=A@mail.gmail.com> <Y+T9XNkDWla1+3NV@krava>
-In-Reply-To: <Y+T9XNkDWla1+3NV@krava>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 9 Feb 2023 09:16:46 -0800
-Message-ID: <CAEf4BzZ0yWJX0iNHEeSmWMmy_SiSCvhPjJdfcaET-3RHeb38Hg@mail.gmail.com>
-Subject: Re: [PATCH RFC 5/5] selftests/bpf: Add iter_task_vma_buildid test
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+References: <20230207035139.272707-1-shiyn.lin@gmail.com>
+In-Reply-To: <20230207035139.272707-1-shiyn.lin@gmail.com>
+From:   Pasha Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 9 Feb 2023 13:15:56 -0500
+Message-ID: <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+To:     Chih-En Lin <shiyn.lin@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, linux-mm@kvack.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Zach O'Keefe" <zokeefe@google.com>,
+        Yun Zhou <yun.zhou@windriver.com>,
+        Hugh Dickins <hughd@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
+        Tong Tiangen <tongtiangen@huawei.com>,
+        Liu Shixin <liushixin2@huawei.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Li kunyu <kunyu@nfschina.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Gautam Menghani <gautammenghani201@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Barret Rhoden <brho@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexey Gladkov <legion@kernel.org>,
         linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Dinglan Peng <peng301@purdue.edu>,
+        Pedro Fonseca <pfonseca@purdue.edu>,
+        Jim Huang <jserv@ccns.ncku.edu.tw>,
+        Huichun Feng <foxhoundsk.tw@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 9, 2023 at 6:04 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Mon, Feb 6, 2023 at 10:52 PM Chih-En Lin <shiyn.lin@gmail.com> wrote:
 >
-> On Wed, Feb 08, 2023 at 04:01:42PM -0800, Andrii Nakryiko wrote:
+> v3 -> v4
+> - Add Kconfig, CONFIG_COW_PTE, since some of the architectures, e.g.,
+>   s390 and powerpc32, don't support the PMD entry and PTE table
+>   operations.
+> - Fix unmatch type of break_cow_pte_range() in
+>   migrate_vma_collect_pmd().
+> - Don=E2=80=99t break COW PTE in folio_referenced_one().
+> - Fix the wrong VMA range checking in break_cow_pte_range().
+> - Only break COW when we modify the soft-dirty bit in
+>   clear_refs_pte_range().
+> - Handle do_swap_page() with COW PTE in mm/memory.c and mm/khugepaged.c.
+> - Change the tlb flush from flush_tlb_mm_range() (x86 specific) to
+>   tlb_flush_pmd_range().
+> - Handle VM_DONTCOPY with COW PTE fork.
+> - Fix the wrong address and invalid vma in recover_pte_range().
+> - Fix the infinite page fault loop in GUP routine.
+>   In mm/gup.c:follow_pfn_pte(), instead of calling the break COW PTE
+>   handler, we return -EMLINK to let the GUP handles the page fault
+>   (call faultin_page() in __get_user_pages()).
+> - return not_found(pvmw) if the break COW PTE failed in
+>   page_vma_mapped_walk().
+> - Since COW PTE has the same result as the normal COW selftest, it
+>   probably passed the COW selftest.
 >
-> SNIP
+>         # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
+>         not ok 33 No leak from parent into child
+>         # [RUN] vmsplice() + unmap in child with mprotect() optimization =
+... with hugetlb (2048 kB)
+>         not ok 44 No leak from parent into child
+>         # [RUN] vmsplice() before fork(), unmap in parent after fork() ..=
+. with hugetlb (2048 kB)
+>         not ok 55 No leak from child into parent
+>         # [RUN] vmsplice() + unmap in parent after fork() ... with hugetl=
+b (2048 kB)
+>         not ok 66 No leak from child into parent
 >
-> > > +static void test_task_vma_buildid(void)
-> > > +{
-> > > +       int err, iter_fd = -1, proc_maps_fd = -1;
-> > > +       struct bpf_iter_task_vma_buildid *skel;
-> > > +       char key[D_PATH_BUF_SIZE], *prev_key;
-> > > +       char bpf_build_id[BUILDID_STR_SIZE];
-> > > +       int len, files_fd, i, cnt = 0;
-> > > +       struct build_id val;
-> > > +       char *build_id;
-> > > +       char c;
-> > > +
-> > > +       skel = bpf_iter_task_vma_buildid__open();
-> > > +       if (!ASSERT_OK_PTR(skel, "bpf_iter_task_vma_buildid__open"))
-> > > +               return;
-> > > +
-> > > +       err = bpf_iter_task_vma_buildid__load(skel);
-> > > +       if (!ASSERT_OK(err, "bpf_iter_task_vma_buildid__load"))
-> > > +               goto out;
-> >
-> > minor: you can do __open_and_load() in one step
+>         Bail out! 4 out of 147 tests failed
+>         # Totals: pass:143 fail:4 xfail:0 xpass:0 skip:0 error:0
+>   See the more information about anon cow hugetlb tests:
+>     https://patchwork.kernel.org/project/linux-mm/patch/20220927110120.10=
+6906-5-david@redhat.com/
 >
-> right, I copied that from another test, but removed all the
-> setup in between, so we can actually call just __open_and_load
 >
-> SNIP
+> v3: https://lore.kernel.org/linux-mm/20221220072743.3039060-1-shiyn.lin@g=
+mail.com/T/
 >
-> > > +               memset(bpf_build_id, 0x0, sizeof(bpf_build_id));
-> > > +               for (i = 0; i < val.sz; i++) {
-> > > +                       sprintf(bpf_build_id + i*2, "%02x",
-> > > +                               (unsigned char) val.data[i]);
-> > > +               }
-> > > +
-> > > +               if (!ASSERT_OK(read_buildid(key, &build_id), "read_buildid"))
-> > > +                       break;
-> > > +
-> > > +               printf("BUILDID %s %s %s\n", bpf_build_id, build_id, key);
-> >
-> > debugging leftover or intentional?
-> >
-> > > +               ASSERT_OK(strncmp(bpf_build_id, build_id, strlen(bpf_build_id)), "buildid_cmp");
-> > > +
-> > > +               free(build_id);
-> > > +               prev_key = key;
-> > > +               cnt++;
-> > > +       }
-> > > +
-> > > +       printf("checked %d files\n", cnt);
-> >
-> > ditto
+> RFC v2 -> v3
+> - Change the sysctl with PID to prctl(PR_SET_COW_PTE).
+> - Account all the COW PTE mapped pages in fork() instead of defer it to
+>   page fault (break COW PTE).
+> - If there is an unshareable mapped page (maybe pinned or private
+>   device), recover all the entries that are already handled by COW PTE
+>   fork, then copy to the new one.
+> - Remove COW_PTE_OWNER_EXCLUSIVE flag and handle the only case of GUP,
+>   follow_pfn_pte().
+> - Remove the PTE ownership since we don't need it.
+> - Use pte lock to protect the break COW PTE and free COW-ed PTE.
+> - Do TLB flushing in break COW PTE handler.
+> - Handle THP, KSM, madvise, mprotect, uffd and migrate device.
+> - Handle the replacement page of uprobe.
+> - Handle the clear_refs_write() of fs/proc.
+> - All of the benchmarks dropped since the accounting and pte lock.
+>   The benchmarks of v3 is worse than RFC v2, most of the cases are
+>   similar to the normal fork, but there still have an use case
+>   (TriforceAFL) is better than the normal fork version.
 >
-> both intentional, first one can go out I guess, but the
-> number of checked files seemed interesting to me ;-)
+> RFC v2: https://lore.kernel.org/linux-mm/20220927162957.270460-1-shiyn.li=
+n@gmail.com/T/
 >
-> SNIP
+> RFC v1 -> RFC v2
+> - Change the clone flag method to sysctl with PID.
+> - Change the MMF_COW_PGTABLE flag to two flags, MMF_COW_PTE and
+>   MMF_COW_PTE_READY, for the sysctl.
+> - Change the owner pointer to use the folio padding.
+> - Handle all the VMAs that cover the PTE table when doing the break COW P=
+TE.
+> - Remove the self-defined refcount to use the _refcount for the page
+>   table page.
+> - Add the exclusive flag to let the page table only own by one task in
+>   some situations.
+> - Invalidate address range MMU notifier and start the write_seqcount
+>   when doing the break COW PTE.
+> - Handle the swap cache and swapoff.
 >
-> > > diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-> > > new file mode 100644
-> > > index 000000000000..25e2179ae5f4
-> > > --- /dev/null
-> > > +++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-> > > @@ -0,0 +1,49 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +
-> > > +#include "bpf_iter.h"
-> > > +#include <bpf/bpf_helpers.h>
-> > > +#include <string.h>
-> > > +
-> > > +char _license[] SEC("license") = "GPL";
-> > > +
-> > > +#define VM_EXEC                0x00000004
-> > > +#define D_PATH_BUF_SIZE        1024
-> > > +
-> > > +struct {
-> > > +       __uint(type, BPF_MAP_TYPE_HASH);
-> > > +       __uint(max_entries, 10000);
-> > > +       __type(key, char[D_PATH_BUF_SIZE]);
-> > > +       __type(value, struct build_id);
-> > > +} files SEC(".maps");
-> > > +
-> > > +static char tmp_key[D_PATH_BUF_SIZE];
-> > > +static struct build_id tmp_data;
-> > > +
-> > > +SEC("iter/task_vma") int proc_maps(struct bpf_iter__task_vma *ctx)
-> >
-> > nit: let's keep SEC() on separate line from function itself
+> RFC v1: https://lore.kernel.org/all/20220519183127.3909598-1-shiyn.lin@gm=
+ail.com/
 >
-> ok
+> ---
 >
-> >
-> > > +{
-> > > +       struct vm_area_struct *vma = ctx->vma;
-> > > +       struct seq_file *seq = ctx->meta->seq;
-> > > +       struct task_struct *task = ctx->task;
-> > > +       unsigned long file_key;
-> > > +       struct file *file;
-> > > +
-> > > +       if (task == (void *)0 || vma == (void *)0)
-> > > +               return 0;
-> > > +
-> > > +       if (!(vma->vm_flags & VM_EXEC))
-> > > +               return 0;
-> > > +
-> > > +       file = vma->vm_file;
-> > > +       if (!file)
-> > > +               return 0;
-> > > +
-> > > +       memset(tmp_key, 0x0, D_PATH_BUF_SIZE);
-> >
-> > __builtin_memset() to not rely on compiler optimization?
-> >
-> > > +       bpf_d_path(&file->f_path, (char *) &tmp_key, D_PATH_BUF_SIZE);
-> > > +
-> > > +       if (bpf_map_lookup_elem(&files, &tmp_key))
-> > > +               return 0;
-> > > +
-> > > +       memcpy(&tmp_data, file->f_bid, sizeof(*file->f_bid));
-> >
-> > same about __builtin_memcpy()
->
-> ah ok, did not know that, will check.. curious what could
-> go wrong by using not '__builtin_...' version?
+> Currently, copy-on-write is only used for the mapped memory; the child
+> process still needs to copy the entire page table from the parent
+> process during forking. The parent process might take a lot of time and
+> memory to copy the page table when the parent has a big page table
+> allocated. For example, the memory usage of a process after forking with
+> 1 GB mapped memory is as follows:
 
-if compiler doesn't optimize it into __builtin_memcpy() (which results
-in just explicit assembly code to copy/set data word-by-word), then
-BPF program will do actual call to memset(), which with C rules would
-be inferred as extern symbol, which would fail BPF object loading with
-error along the lines of "couldn't resolve memset extern".
+For some reason, I was not able to reproduce performance improvements
+with a simple fork() performance measurement program. The results that
+I saw are the following:
 
->
-> thanks,
-> jirka
+Base:
+Fork latency per gigabyte: 0.004416 seconds
+Fork latency per gigabyte: 0.004382 seconds
+Fork latency per gigabyte: 0.004442 seconds
+COW kernel:
+Fork latency per gigabyte: 0.004524 seconds
+Fork latency per gigabyte: 0.004764 seconds
+Fork latency per gigabyte: 0.004547 seconds
+
+AMD EPYC 7B12 64-Core Processor
+Base:
+Fork latency per gigabyte: 0.003923 seconds
+Fork latency per gigabyte: 0.003909 seconds
+Fork latency per gigabyte: 0.003955 seconds
+COW kernel:
+Fork latency per gigabyte: 0.004221 seconds
+Fork latency per gigabyte: 0.003882 seconds
+Fork latency per gigabyte: 0.003854 seconds
+
+Given, that page table for child is not copied, I was expecting the
+performance to be better with COW kernel, and also not to depend on
+the size of the parent.
+
+Test program:
+
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+
+#define USEC    1000000
+#define GIG     (1ul << 30)
+#define NGIG    32
+#define SIZE    (NGIG * GIG)
+#define NPROC   16
+
+void main() {
+        int page_size =3D getpagesize();
+        struct timeval start, end;
+        long duration, i;
+        char *p;
+
+        p =3D mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
+                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if (p =3D=3D MAP_FAILED) {
+                perror("mmap");
+                exit(1);
+        }
+        madvise(p, SIZE, MADV_NOHUGEPAGE);
+
+        /* Touch every page */
+        for (i =3D 0; i < SIZE; i +=3D page_size)
+                p[i] =3D 0;
+
+        gettimeofday(&start, NULL);
+        for (i =3D 0; i < NPROC; i++) {
+                int pid =3D fork();
+
+                if (pid =3D=3D 0) {
+                        sleep(30);
+                        exit(0);
+                }
+        }
+        gettimeofday(&end, NULL);
+        /* Normolize per proc and per gig */
+        duration =3D ((end.tv_sec - start.tv_sec) * USEC
+                + (end.tv_usec - start.tv_usec)) / NPROC / NGIG;
+        printf("Fork latency per gigabyte: %ld.%06ld seconds\n",
+                duration / USEC, duration % USEC);
+}
