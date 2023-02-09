@@ -2,111 +2,194 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEA1C05027
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 00:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F900C6379F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 00:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230304AbjBIAP7 (ORCPT
+        id S230135AbjBIAyT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Feb 2023 19:15:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
+        Wed, 8 Feb 2023 19:54:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbjBIAP6 (ORCPT
+        with ESMTP id S229762AbjBIAyS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Feb 2023 19:15:58 -0500
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5FE206B4;
-        Wed,  8 Feb 2023 16:15:57 -0800 (PST)
-Received: by mail-qt1-x832.google.com with SMTP id w3so289085qts.7;
-        Wed, 08 Feb 2023 16:15:57 -0800 (PST)
+        Wed, 8 Feb 2023 19:54:18 -0500
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B134222DE
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Feb 2023 16:54:16 -0800 (PST)
+Received: by mail-yb1-xb2c.google.com with SMTP id x8so504307ybt.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Feb 2023 16:54:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K2g6mB0/Sbx4Gs5Si9V+xdYfL/m4mgF6UDvbmxWdXlE=;
-        b=l0Y++TGmrtgNClFRLplnapK9EDwNRif6MD/CsaYnGYPcMhfEol/WrTBbcyjlARr23u
-         5wcc81hnLoOcxCCj8oUR0pBo/eoaxVgjt60MvgipZxOsxV7s+7C3Qww5ztM7wYTr4JBW
-         GRKXbrxa2xjCw+zGy3fZRj1EKP2vw5u5cz5AOdEcS3JznmDqlMFe20aTZBMzkBzHJEbs
-         gNEVc2z/wovT4MeLD73AwxfqwejRdr/aBx9s72jQ5h1cY7Vma1XAFDM6vmxqP4xqPNm1
-         Oy0vpsYMsdzQLJdzt0gjqWhRG/HDZXVUmGiy/8cyYkZnvStb2sy4TmLuzKJCu7mFvt0C
-         /Ysg==
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HA3fnt3w/WkldBLqUixquvviOvTsBAQjIdHUUjb56M0=;
+        b=sBenSKQ7FVZf9KJQB47/1z3eFo5uPqCWNUETrOZxLzOJtcLUPNVIZaxX+GVCS8uFqv
+         iwRXjPWW2bB7JalEf8dr+4OdWdJW799KnVv5wR3Re1phRxVIyLFcHw8DCeqrZtz8wpVy
+         XIQufLeg9mKvB3udTuoMH/+0CfFZbJdy/ZyhssQ4fqr17mtOH/3uHYHZZM4TwzEBnk1c
+         ETarg2Djh7AnXFAKIXF7pYXNcN+vvceHsCfOFtij66RhDNrLMs1FODaLt+CFqesZPH49
+         wQnMqvfxtvRKT7lRAJvvjBs1NxndyUcfpXc7Mg5lNSVf9hg2QrUDTpTa+8R2UV3OhcvX
+         IYYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K2g6mB0/Sbx4Gs5Si9V+xdYfL/m4mgF6UDvbmxWdXlE=;
-        b=HroP0OPR6jA3y/Xfa7TJ0g5AdWDSAN9t9Zooysc5rT0566bBvizBKai5r3/WikDdx1
-         lQglN5uFXbYwcmaiMAa8xayBAI56k4Lmc9Si9KmQ1fqLpMcCN6sF2Mqn+8Hd+eCuzSa9
-         KjVLqaLOzNtsaalNi2rQDAzhJBydbGlcOWSlgIet5nNt2BXV/Wa2qvEDOX0jIveceD1m
-         emEKrE/fuAEA5FNgbxZym0LXpe5mDUdHHfNzidLqY/3E/DhqW80bieFpFdf8sscRY/t1
-         ENsFVot9L9SXqtwJ+2WXEN0lc2RbEasTyBlyzrg52m2+L7REoIuWttnae20RgwKGTQS2
-         dhgQ==
-X-Gm-Message-State: AO0yUKX4eCV4GeEIVuRXTF/iouNSCB28Oa2f2LC+hSPX/67r/nBs/r0z
-        uzisFRZuRvpC9GsradpWueE=
-X-Google-Smtp-Source: AK7set+fesB0uqos8P2kUQ4mFFM5Nr5bh777x1pGzlQ0PUr7JyxfE3l0HEJ/8JqI9U4CiTIgm35WrQ==
-X-Received: by 2002:ac8:5f06:0:b0:3b8:6b30:7e30 with SMTP id x6-20020ac85f06000000b003b86b307e30mr12964744qta.54.1675901756717;
-        Wed, 08 Feb 2023 16:15:56 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u9-20020ac87509000000b003b646a99aa6sm167464qtq.77.2023.02.08.16.15.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Feb 2023 16:15:55 -0800 (PST)
-Message-ID: <6abb6cef-a9b3-7542-6e8a-fb463449ddf6@gmail.com>
-Date:   Wed, 8 Feb 2023 16:15:51 -0800
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HA3fnt3w/WkldBLqUixquvviOvTsBAQjIdHUUjb56M0=;
+        b=XR5gbKtLRlPy5AMhUoDkMRNMiPSte/ZBkLTuQHm6ez5gNyy2AJ0X2XZRx/Y50gLi/8
+         yvUby/xm3sSwe2UpsKn1ZbFRbezma7awPceL9t8q8+IC6Pmlkls1T9VZ3n9TgDDxexNJ
+         fx9jq3Xyux7AaYDk2DObzKtm8wb1tYSwNtrFHVLOAygFnUYdGlb0s2ElgEkb8ODFjg9N
+         GHES74iftLtsgJfUNcr+7+96WuvulOEdF2IfC7NzrXRzfoeu2KPjH9+wMLf07SmTIkME
+         RRTzpobBgSENwVZM05NzUCxhPhHkMM+n2wjMc9c6khw+jYopC3qiZDt3eD4dDZwj03+y
+         Lezw==
+X-Gm-Message-State: AO0yUKUic24eC1samUaG9eUQgzYqKwzS3Q5zxDJQ4RMYErlmxqVCaaNk
+        6oZoCg596eKuLWcF+R++RNexHAi9ZOndBcOGAIkO
+X-Google-Smtp-Source: AK7set9ZNH349+n5tqrkBZ3G/4EXSKW8hwOrbG7RXJtrVdxo+rv0LsXkOz6w3KeCd3ROkx+iQMrf5PG0n+BJqgs4m/M=
+X-Received: by 2002:a5b:b87:0:b0:8b6:6ae:3bbe with SMTP id l7-20020a5b0b87000000b008b606ae3bbemr1101327ybq.340.1675904055502;
+ Wed, 08 Feb 2023 16:54:15 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 0/8] perf: arm: Make PMUv3 driver available for aarch32
-Content-Language: en-US
-To:     Marc Zyngier <maz@kernel.org>,
-        Zaid Al-Bassam <zalbassam@google.com>
-Cc:     Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+References: <20211120112738.45980-1-laoar.shao@gmail.com> <20211120112738.45980-8-laoar.shao@gmail.com>
+ <Y+QaZtz55LIirsUO@google.com> <CAADnVQ+nf8MmRWP+naWwZEKBFOYr7QkZugETgAVfjKcEVxmOtg@mail.gmail.com>
+In-Reply-To: <CAADnVQ+nf8MmRWP+naWwZEKBFOYr7QkZugETgAVfjKcEVxmOtg@mail.gmail.com>
+From:   John Stultz <jstultz@google.com>
+Date:   Wed, 8 Feb 2023 16:54:03 -0800
+Message-ID: <CANDhNCo_=Q3pWc7h=ruGyHdRVGpsMKRY=C2AtZgLDwtGzRz8Kw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded 16
+ with TASK_COMM_LEN
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Yafang Shao <laoar.shao@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu
-References: <20230126204444.2204061-1-zalbassam@google.com>
- <86fsbgyutf.wl-maz@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <86fsbgyutf.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Qais Yousef <qyousef@google.com>,
+        Daniele Di Proietto <ddiproietto@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2/8/23 08:40, Marc Zyngier wrote:
-> On Thu, 26 Jan 2023 20:44:36 +0000,
-> Zaid Al-Bassam <zalbassam@google.com> wrote:
->>
->> Currently, PMUv3 driver is only available for ARMv8 aarch64
->> platforms, ARMv8 running in aarch32 mode dont have access to
->> the driver. This is, especially, a problem for ARMv8 platforms
->> that only have aarch32 support, like the Cortex-A32.
-> 
-> FWIW, I've pushed out my own interpretation of this series to [1],
-> including the changes I suggested. The results seems to correctly work
-> in a 32bit guest on a 64bit host, which is what I (used to) care
-> about.
-> 
-> Feel free to pick it up.
+On Wed, Feb 8, 2023 at 4:11 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Feb 8, 2023 at 2:01 PM John Stultz <jstultz@google.com> wrote:
+> >
+> > On Sat, Nov 20, 2021 at 11:27:38AM +0000, Yafang Shao wrote:
+> > > As the sched:sched_switch tracepoint args are derived from the kernel,
+> > > we'd better make it same with the kernel. So the macro TASK_COMM_LEN is
+> > > converted to type enum, then all the BPF programs can get it through BTF.
+> > >
+> > > The BPF program which wants to use TASK_COMM_LEN should include the header
+> > > vmlinux.h. Regarding the test_stacktrace_map and test_tracepoint, as the
+> > > type defined in linux/bpf.h are also defined in vmlinux.h, so we don't
+> > > need to include linux/bpf.h again.
+> > >
+> > > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > > Acked-by: David Hildenbrand <david@redhat.com>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+> > > Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > > Cc: Michal Miroslaw <mirq-linux@rere.qmqm.pl>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > Cc: David Hildenbrand <david@redhat.com>
+> > > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > > Cc: Kees Cook <keescook@chromium.org>
+> > > Cc: Petr Mladek <pmladek@suse.com>
+> > > ---
+> > >  include/linux/sched.h                                   | 9 +++++++--
+> > >  tools/testing/selftests/bpf/progs/test_stacktrace_map.c | 6 +++---
+> > >  tools/testing/selftests/bpf/progs/test_tracepoint.c     | 6 +++---
+> > >  3 files changed, 13 insertions(+), 8 deletions(-)
+> >
+> > Hey all,
+> >   I know this is a little late, but I recently got a report that
+> > this change was causiing older versions of perfetto to stop
+> > working.
+> >
+> > Apparently newer versions of perfetto has worked around this
+> > via the following changes:
+> >   https://android.googlesource.com/platform/external/perfetto/+/c717c93131b1b6e3705a11092a70ac47c78b731d%5E%21/
+> >   https://android.googlesource.com/platform/external/perfetto/+/160a504ad5c91a227e55f84d3e5d3fe22af7c2bb%5E%21/
+> >
+> > But for older versions of perfetto, reverting upstream commit
+> > 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16
+> > with TASK_COMM_LEN") is necessary to get it back to working.
+> >
+> > I haven't dug very far into the details, and obviously this doesn't
+> > break with the updated perfetto, but from a high level this does
+> > seem to be a breaking-userland regression.
+> >
+> > So I wanted to reach out to see if there was more context for this
+> > breakage? I don't want to raise a unnecessary stink if this was
+> > an unfortuante but forced situation.
+>
+> Let me understand what you're saying...
+>
+> The commit 3087c61ed2c4 did
+>
+> -/* Task command name length: */
+> -#define TASK_COMM_LEN                  16
+> +/*
+> + * Define the task command name length as enum, then it can be visible to
+> + * BPF programs.
+> + */
+> +enum {
+> +       TASK_COMM_LEN = 16,
+> +};
+>
+>
+> and that caused:
+>
+> cat /sys/kernel/debug/tracing/events/task/task_newtask/format
+>
+> to print
+> field:char comm[TASK_COMM_LEN];    offset:12;    size:16;    signed:0;
+> instead of
+> field:char comm[16];    offset:12;    size:16;    signed:0;
+>
+> so the ftrace parsing android tracing tool had to do:
+>
+> -  if (Match(type_and_name.c_str(), R"(char [a-zA-Z_]+\[[0-9]+\])")) {
+> +  if (Match(type_and_name.c_str(),
+> +            R"(char [a-zA-Z_][a-zA-Z_0-9]*\[[a-zA-Z_0-9]+\])")) {
+>
+> to workaround this change.
+> Right?
 
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+I believe so.
 
-Thanks!
--- 
-Florian
+> And what are you proposing?
 
+I'm not proposing anything. I was just wanting to understand more
+context around this, as it outwardly appears to be a user-breaking
+change, and that is usually not done, so I figured it was an issue
+worth raising.
+
+If the debug/tracing/*/format output is in the murky not-really-abi
+space, that's fine, but I wanted to know if this was understood as
+something that may require userland updates or if this was a
+unexpected side-effect.
+
+thanks
+-john
