@@ -2,60 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C44C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 13:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E696C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 14:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229881AbjBINTR (ORCPT
+        id S230050AbjBIOET (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Feb 2023 08:19:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49088 "EHLO
+        Thu, 9 Feb 2023 09:04:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjBINTQ (ORCPT
+        with ESMTP id S229752AbjBIOES (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Feb 2023 08:19:16 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6D52D7B;
-        Thu,  9 Feb 2023 05:19:15 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id az4-20020a05600c600400b003dff767a1f1so1506607wmb.2;
-        Thu, 09 Feb 2023 05:19:15 -0800 (PST)
+        Thu, 9 Feb 2023 09:04:18 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB5A47402;
+        Thu,  9 Feb 2023 06:04:17 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id r18so1485462wmq.5;
+        Thu, 09 Feb 2023 06:04:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s4Q71AiGjsfLKoBxQOWiUkZxB1lpoWpjh8S6/VViVGM=;
-        b=VYsTBOFOg7+qEy3LpjhJFQJ5IlOmZRSSFEFfejUhzvUmjmKz42pecTD9YrGtL5QvCy
-         TFPh/kBqfJu5JHN+mpn1FuUxWtQClRcy/fYXNnur8eCOQ040VCMzfy1zOFWfSPtVI63M
-         KAMZnVlmoOVF2aDtSeIb5vODf16+JY/+uA4dRIjRJqq+er5m69Za6ejhENuF0/esIa4P
-         sYv0fMjtpqFcZY54ic+tyXnGV3MXZS0yQ0NCDnJHxbLZWGYyUXd9HL36Wjumo+xZHq/l
-         v/QVmqEn6U36oY2vQt+SRceIa9T82S07raIaEn3k3ytOVpsnDExGC5LrxiHngiR6AOjE
-         pk8g==
+        bh=/PUxryEd4dhrO7bv0OIAXlQqcpfOYRHX35DELWBAPHE=;
+        b=iZJRZxrJefggzAC+FvHDTR5gLHr2uHOtDx8X2MdTdeIgzrzDG6+ByN0Vf4uv9rbdJa
+         0MDoPsaegm6+PTbsCeRrIagMBvqPuzr2uZgBUl5tcxm8ne9n8LsmVBYHokjdCxILpZxg
+         lqpWDghfBS1ywAJqFT7yJs3O/js1VCARGvfb7N76nxzSNSLWejE0lU+9nvtZs9HwdpBO
+         d1lnFgGgMUdH+V+IxsKZnRkgPWhYRON4NyfgJEElTfQP3AOo0Gruo8GPcnQtKou34Kb6
+         cT46EXKlM1V7w/af/QS5WDqFwniA7H85MWFGufBNMoBZzK45yyPtv4FWFgwZQZXUTKK3
+         sRkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s4Q71AiGjsfLKoBxQOWiUkZxB1lpoWpjh8S6/VViVGM=;
-        b=8I6JF4rGDV0KYR5FLWniwueSvvKdykGStzJMCNNPs0vJaE4gif6FxemmvNgkrdeVM8
-         0SlER4dobkr5sQroIf4BEeolmeX/uvDmFgTGlgB4vSZCVEt/q22+QTsUIrBBczua1qKP
-         Gor4D9+NoYwiR4IxLOy6gv2jrJ5wJVXV9NoOsC83pHRLohk5TlFkW7gVz/9o4tIDp1q6
-         sIqbQXYa4zf1asTJDxMLksueeDfBjAVIxPwLPN1DIyy1byt5GcrNUcmw7DRPTArauWjs
-         y5jCnplolIOJ6w9a8rWMkwrq+FTOTPD3BKwiL6bhruGEIenkKln8mJMGGc5cR93dq9Vb
-         zpKw==
-X-Gm-Message-State: AO0yUKWZVg/zRWO1vsymeFsWiJHQFLtNiqQyIjHRFSBT/FKsLN1am+eZ
-        PL12mD3BMzYmn9OE3t7N1oY=
-X-Google-Smtp-Source: AK7set8kUwYAxNHUD6tovIM8ZnOWsU0CeR/O9TTfthpdMDuZQbPWx2cIT0b0QPoUc5OSV30H7ZOElg==
-X-Received: by 2002:a05:600c:990:b0:3dc:5abb:2f50 with SMTP id w16-20020a05600c099000b003dc5abb2f50mr9550565wmp.19.1675948753640;
-        Thu, 09 Feb 2023 05:19:13 -0800 (PST)
+        bh=/PUxryEd4dhrO7bv0OIAXlQqcpfOYRHX35DELWBAPHE=;
+        b=KIOsmbXl+yWcrOYTSYAWC825vtPZM1GWyog64ddDYRmD2s6tVT2j+8oNS8jjdeNNUg
+         6M165mzeYAp4b9/l4rOi45Y4cng5VKsDBxrzs2Oi72oKGCs3kaHG3svUlDtLsS0UZEql
+         c7OUMErIIFGDksnQ8vxA5C1uDNxx0vkFfHCefioYPh8/CjsrcGEMrdK9H5TTmQ4n6T4r
+         EYWabdfbO7toX9CbWA18TkyctderQbgM2GmJeKTYSeke5PdZyRmdy/mcFspre+OzUDWV
+         A93Crylk62R4JSewmTMZIYaSmimILLoH7ZU66VDBwbLi/fyrm7rEP0HxIZBaTRFgnga8
+         KNYg==
+X-Gm-Message-State: AO0yUKULhVaANVjIAQptgGxq5RKCKLTZ+KEk3aozw2hiUO2bbIJBnyKC
+        HMR2SsRPjkWxR3MI1Cz5hSA=
+X-Google-Smtp-Source: AK7set+dQJhhuPXnb9xc8cpZgho9rV47XxrGh3m7mcorhUF5e31qI+vipv6EPg0wYlRKPwf3t1OkIg==
+X-Received: by 2002:a05:600c:3d0e:b0:3df:efdd:9dc7 with SMTP id bh14-20020a05600c3d0e00b003dfefdd9dc7mr6197494wmb.10.1675951455884;
+        Thu, 09 Feb 2023 06:04:15 -0800 (PST)
 Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a28-20020a5d457c000000b002bdda9856b5sm1244007wrc.50.2023.02.09.05.19.12
+        by smtp.gmail.com with ESMTPSA id u6-20020adfed46000000b002bf95500254sm1378133wro.64.2023.02.09.06.04.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 05:19:13 -0800 (PST)
+        Thu, 09 Feb 2023 06:04:15 -0800 (PST)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 9 Feb 2023 14:19:05 +0100
-To:     Hao Luo <haoluo@google.com>
+Date:   Thu, 9 Feb 2023 15:04:12 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -69,60 +70,144 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         KP Singh <kpsingh@chromium.org>,
         Stanislav Fomichev <sdf@google.com>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH RFC 2/5] bpf: Use file object build id in stackmap
-Message-ID: <Y+TyyQ38wYubWZtF@krava>
+Subject: Re: [PATCH RFC 5/5] selftests/bpf: Add iter_task_vma_buildid test
+Message-ID: <Y+T9XNkDWla1+3NV@krava>
 References: <20230201135737.800527-1-jolsa@kernel.org>
- <20230201135737.800527-3-jolsa@kernel.org>
- <CA+khW7iGj=Y3NVxc9Y-MnwmPxCz5jHDmSfW-S6KS9Hko=jgJOg@mail.gmail.com>
+ <20230201135737.800527-6-jolsa@kernel.org>
+ <CAEf4BzYGQGdydeVbZf5YTnDTvGduA_wbeQ=t5nSc6Wi=S17+=A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+khW7iGj=Y3NVxc9Y-MnwmPxCz5jHDmSfW-S6KS9Hko=jgJOg@mail.gmail.com>
+In-Reply-To: <CAEf4BzYGQGdydeVbZf5YTnDTvGduA_wbeQ=t5nSc6Wi=S17+=A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 11:23:13PM -0800, Hao Luo wrote:
-> On Wed, Feb 1, 2023 at 5:58 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Use build id from file object in stackmap if it's available.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> 
-> Can we insert the lookup from vma->vm_file in build_id_parse() rather
-> than its callers?
+On Wed, Feb 08, 2023 at 04:01:42PM -0800, Andrii Nakryiko wrote:
 
-that might simplify also the perf code.. we might need to rename
-it though.. maybe build_id_read(vma,...), I'll check
+SNIP
+
+> > +static void test_task_vma_buildid(void)
+> > +{
+> > +       int err, iter_fd = -1, proc_maps_fd = -1;
+> > +       struct bpf_iter_task_vma_buildid *skel;
+> > +       char key[D_PATH_BUF_SIZE], *prev_key;
+> > +       char bpf_build_id[BUILDID_STR_SIZE];
+> > +       int len, files_fd, i, cnt = 0;
+> > +       struct build_id val;
+> > +       char *build_id;
+> > +       char c;
+> > +
+> > +       skel = bpf_iter_task_vma_buildid__open();
+> > +       if (!ASSERT_OK_PTR(skel, "bpf_iter_task_vma_buildid__open"))
+> > +               return;
+> > +
+> > +       err = bpf_iter_task_vma_buildid__load(skel);
+> > +       if (!ASSERT_OK(err, "bpf_iter_task_vma_buildid__load"))
+> > +               goto out;
+> 
+> minor: you can do __open_and_load() in one step
+
+right, I copied that from another test, but removed all the
+setup in between, so we can actually call just __open_and_load
+
+SNIP
+
+> > +               memset(bpf_build_id, 0x0, sizeof(bpf_build_id));
+> > +               for (i = 0; i < val.sz; i++) {
+> > +                       sprintf(bpf_build_id + i*2, "%02x",
+> > +                               (unsigned char) val.data[i]);
+> > +               }
+> > +
+> > +               if (!ASSERT_OK(read_buildid(key, &build_id), "read_buildid"))
+> > +                       break;
+> > +
+> > +               printf("BUILDID %s %s %s\n", bpf_build_id, build_id, key);
+> 
+> debugging leftover or intentional?
+> 
+> > +               ASSERT_OK(strncmp(bpf_build_id, build_id, strlen(bpf_build_id)), "buildid_cmp");
+> > +
+> > +               free(build_id);
+> > +               prev_key = key;
+> > +               cnt++;
+> > +       }
+> > +
+> > +       printf("checked %d files\n", cnt);
+> 
+> ditto
+
+both intentional, first one can go out I guess, but the
+number of checked files seemed interesting to me ;-)
+
+SNIP
+
+> > diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
+> > new file mode 100644
+> > index 000000000000..25e2179ae5f4
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
+> > @@ -0,0 +1,49 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#include "bpf_iter.h"
+> > +#include <bpf/bpf_helpers.h>
+> > +#include <string.h>
+> > +
+> > +char _license[] SEC("license") = "GPL";
+> > +
+> > +#define VM_EXEC                0x00000004
+> > +#define D_PATH_BUF_SIZE        1024
+> > +
+> > +struct {
+> > +       __uint(type, BPF_MAP_TYPE_HASH);
+> > +       __uint(max_entries, 10000);
+> > +       __type(key, char[D_PATH_BUF_SIZE]);
+> > +       __type(value, struct build_id);
+> > +} files SEC(".maps");
+> > +
+> > +static char tmp_key[D_PATH_BUF_SIZE];
+> > +static struct build_id tmp_data;
+> > +
+> > +SEC("iter/task_vma") int proc_maps(struct bpf_iter__task_vma *ctx)
+> 
+> nit: let's keep SEC() on separate line from function itself
+
+ok
+
+> 
+> > +{
+> > +       struct vm_area_struct *vma = ctx->vma;
+> > +       struct seq_file *seq = ctx->meta->seq;
+> > +       struct task_struct *task = ctx->task;
+> > +       unsigned long file_key;
+> > +       struct file *file;
+> > +
+> > +       if (task == (void *)0 || vma == (void *)0)
+> > +               return 0;
+> > +
+> > +       if (!(vma->vm_flags & VM_EXEC))
+> > +               return 0;
+> > +
+> > +       file = vma->vm_file;
+> > +       if (!file)
+> > +               return 0;
+> > +
+> > +       memset(tmp_key, 0x0, D_PATH_BUF_SIZE);
+> 
+> __builtin_memset() to not rely on compiler optimization?
+> 
+> > +       bpf_d_path(&file->f_path, (char *) &tmp_key, D_PATH_BUF_SIZE);
+> > +
+> > +       if (bpf_map_lookup_elem(&files, &tmp_key))
+> > +               return 0;
+> > +
+> > +       memcpy(&tmp_data, file->f_bid, sizeof(*file->f_bid));
+> 
+> same about __builtin_memcpy()
+
+ah ok, did not know that, will check.. curious what could
+go wrong by using not '__builtin_...' version?
 
 thanks,
 jirka
-
-> 
-> >  kernel/bpf/stackmap.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-> > index aecea7451b61..944cb260a42c 100644
-> > --- a/kernel/bpf/stackmap.c
-> > +++ b/kernel/bpf/stackmap.c
-> > @@ -156,7 +156,15 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
-> >                         goto build_id_valid;
-> >                 }
-> >                 vma = find_vma(current->mm, ips[i]);
-> > +#ifdef CONFIG_FILE_BUILD_ID
-> > +               if (vma && vma->vm_file && vma->vm_file->f_bid) {
-> > +                       memcpy(id_offs[i].build_id,
-> > +                              vma->vm_file->f_bid->data,
-> > +                              vma->vm_file->f_bid->sz);
-> > +               } else {
-> > +#else
-> >                 if (!vma || build_id_parse(vma, id_offs[i].build_id, NULL)) {
-> > +#endif
-> >                         /* per entry fall back to ips */
-> >                         id_offs[i].status = BPF_STACK_BUILD_ID_IP;
-> >                         id_offs[i].ip = ips[i];
-> > --
-> > 2.39.1
-> >
