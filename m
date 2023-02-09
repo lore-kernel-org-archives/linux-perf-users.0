@@ -2,290 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D95BAC6379F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 18:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D129C636D3
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 19:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbjBISQh (ORCPT
+        id S229571AbjBITGq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Feb 2023 13:16:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35654 "EHLO
+        Thu, 9 Feb 2023 14:06:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229865AbjBISQf (ORCPT
+        with ESMTP id S229605AbjBITGp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Feb 2023 13:16:35 -0500
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDAF68AC4
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Feb 2023 10:16:33 -0800 (PST)
-Received: by mail-qv1-xf32.google.com with SMTP id u16so1591352qvp.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Feb 2023 10:16:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D17ul6Jv4BBsV+2Jo6JXzyrGGRmbOMiujl+Liy7jNKU=;
-        b=Ym+CXKOtcv8hciunQy57PF9+Z0g9lkZnEGbxg0LeHnfu/JqGR+eXCyBLaJNHe2a1gB
-         RA77v7i9vAW3zCN/HYYrnibeS1rILcYRPWFAbU/mBmjZZm0l8+f1M417b/mqwPOPVQDY
-         uEBxLZpogxT1gue/5pPtX+xiHXuqlEuy0Coi0J2u3USmPmA2W9cOU8/XpJiJk8CS852B
-         ejQEBszFP3wzyp+8Lac5VDTaDfGAB/M4Zb6goMSfStqcOGEDTpf01j+sYhEPjGl/1mXf
-         CTXdW8E+gSiGAe4/HkAr13WDVdah+jTZsJw2drmrwOJQy4C5Ul9NJJMndD3aDclHNkBe
-         Hk3Q==
+        Thu, 9 Feb 2023 14:06:45 -0500
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AEFC66FAF;
+        Thu,  9 Feb 2023 11:06:34 -0800 (PST)
+Received: by mail-io1-f48.google.com with SMTP id bl9so1057064iob.7;
+        Thu, 09 Feb 2023 11:06:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D17ul6Jv4BBsV+2Jo6JXzyrGGRmbOMiujl+Liy7jNKU=;
-        b=M4gCigCgdfh08sxfJD1wkWoIsmSAMJlUNfbNGglWl4NgojqeXiaqqm/8KXvwJwXBHH
-         NWrZqlPR+khsLWnSF69suqFbpWNPgnCXkAqmaPqTIyvWrtqzj5q0a6+WpqNHEWNFq35R
-         Rg/aBYkTh70XJRY9+ZaviVZ9AQmH3zd2WrbRMjOTbGP1TGbT8pwnPWyeae1teq3vfmzd
-         v14fBNGOHdwySnd0ipur2YqJafjPrS8sQc7Gq5IOugf/7wnh+unRP2m1/nruu+2YA4fd
-         DDyjERR7UieZDEWNSkl+GLD1LHcH4fhH10PHN6YVeVdLkh95HE3JUThoZXMUAkVVd4w2
-         TZwA==
-X-Gm-Message-State: AO0yUKWcZmF+WBKicVsaOBkFj0AVAz9NIL9PeKcwG1P6Z5F0p0C3uzbP
-        aefATLJdctN4I6af07FvECAs5jwMc6mHKNFGNHczDQ==
-X-Google-Smtp-Source: AK7set9/asfDGBIlS6FIxPCSSF0J5s4zfbRpUSo/lPaWYG0FFjA+m1JuZQPdJzdk/PLzyIx6cdEIqfKndQA7GHYwaXM=
-X-Received: by 2002:a0c:f302:0:b0:56e:8d82:742d with SMTP id
- j2-20020a0cf302000000b0056e8d82742dmr49876qvl.34.1675966592638; Thu, 09 Feb
- 2023 10:16:32 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s72xfzKXaAUN+BmCVxfi11/B8MyhXteI6Ce4No4EmDQ=;
+        b=6KV6FWlc3/TcU9j21TRkGZb/uAklzlNEBgMnWVyZPo1FvjK5kuUuc76N5G7oF6Wzef
+         HrizTnzauP0uMinbfq7g6IxWOCQGow195Sft/mAC6CLM+1XTqZqgRdMyjkz4wPxYaUL1
+         Bjwj6O7idS/Fp8LSRUeTgIMfQgxtNuENPOS98f1MavOWSywLnS4g+PcA8uI7ozFtRswR
+         D4XCPAr13G2u+kZUhZ1Kv3LeRnPb5uy1gpH4Cr7VwENgXZX9srlC9AElWQJNmMTEUxRI
+         +NeKjl0NHdJ3Q564L+7AvisSM6rgh4fvh7ZYbePM2BAAOGapmkUtNNU9A7JcU0U2GPu6
+         KX0g==
+X-Gm-Message-State: AO0yUKXqTI56XwwwAsHJ+9f4WyEIKJRWR39GcZo5bH7smgU1Aj9hnSjX
+        DigHBoGn0uktRA8h8CobOymxuIj+CAB1mzE4euE=
+X-Google-Smtp-Source: AK7set+zgXow6B7szYrugwKjpolvD8+2ZXlIs0h3Lja5XOnejqBH1M5oiw6+ey3YztjTcpqXfq7ChgWZG98tq3eTjIg=
+X-Received: by 2002:a05:6638:4b8d:b0:3ab:d885:6e9f with SMTP id
+ dj13-20020a0566384b8d00b003abd8856e9fmr7366615jab.53.1675969593617; Thu, 09
+ Feb 2023 11:06:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20230207035139.272707-1-shiyn.lin@gmail.com>
-In-Reply-To: <20230207035139.272707-1-shiyn.lin@gmail.com>
-From:   Pasha Tatashin <pasha.tatashin@soleen.com>
-Date:   Thu, 9 Feb 2023 13:15:56 -0500
-Message-ID: <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
-To:     Chih-En Lin <shiyn.lin@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20230209064447.83733-1-irogers@google.com>
+In-Reply-To: <20230209064447.83733-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 9 Feb 2023 11:06:22 -0800
+Message-ID: <CAM9d7ciJpB8qAN1OW+xe-ofuzK9tgytNyrV4modEePKJicX-=w@mail.gmail.com>
+Subject: Re: [PATCH v1] perf stat: Avoid merging/aggregating metric counts twice
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Zach O'Keefe" <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>
+        James Clark <james.clark@arm.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 6, 2023 at 10:52 PM Chih-En Lin <shiyn.lin@gmail.com> wrote:
+Hi Ian,
+
+On Wed, Feb 8, 2023 at 10:45 PM Ian Rogers <irogers@google.com> wrote:
 >
-> v3 -> v4
-> - Add Kconfig, CONFIG_COW_PTE, since some of the architectures, e.g.,
->   s390 and powerpc32, don't support the PMD entry and PTE table
->   operations.
-> - Fix unmatch type of break_cow_pte_range() in
->   migrate_vma_collect_pmd().
-> - Don=E2=80=99t break COW PTE in folio_referenced_one().
-> - Fix the wrong VMA range checking in break_cow_pte_range().
-> - Only break COW when we modify the soft-dirty bit in
->   clear_refs_pte_range().
-> - Handle do_swap_page() with COW PTE in mm/memory.c and mm/khugepaged.c.
-> - Change the tlb flush from flush_tlb_mm_range() (x86 specific) to
->   tlb_flush_pmd_range().
-> - Handle VM_DONTCOPY with COW PTE fork.
-> - Fix the wrong address and invalid vma in recover_pte_range().
-> - Fix the infinite page fault loop in GUP routine.
->   In mm/gup.c:follow_pfn_pte(), instead of calling the break COW PTE
->   handler, we return -EMLINK to let the GUP handles the page fault
->   (call faultin_page() in __get_user_pages()).
-> - return not_found(pvmw) if the break COW PTE failed in
->   page_vma_mapped_walk().
-> - Since COW PTE has the same result as the normal COW selftest, it
->   probably passed the COW selftest.
+> The added perf_stat_merge_counters combines uncore counters. When
+> metrics are enabled, the counts are merged into a metric_leader
+> via the stat-shadow saved_value logic. As the leader now is
+> passed an aggregated count, it leads to all counters being added
+> together twice and counts appearing approximately doubled in
+> metrics.
 >
->         # [RUN] vmsplice() + unmap in child ... with hugetlb (2048 kB)
->         not ok 33 No leak from parent into child
->         # [RUN] vmsplice() + unmap in child with mprotect() optimization =
-... with hugetlb (2048 kB)
->         not ok 44 No leak from parent into child
->         # [RUN] vmsplice() before fork(), unmap in parent after fork() ..=
-. with hugetlb (2048 kB)
->         not ok 55 No leak from child into parent
->         # [RUN] vmsplice() + unmap in parent after fork() ... with hugetl=
-b (2048 kB)
->         not ok 66 No leak from child into parent
+> This change disables the saved_value merging of counts for evsels
+> that are merged. It is recommended that later changes remove the
+> saved_value entirely as the two layers of aggregation in the code
+> is confusing.
+
++1
+
 >
->         Bail out! 4 out of 147 tests failed
->         # Totals: pass:143 fail:4 xfail:0 xpass:0 skip:0 error:0
->   See the more information about anon cow hugetlb tests:
->     https://patchwork.kernel.org/project/linux-mm/patch/20220927110120.10=
-6906-5-david@redhat.com/
->
->
-> v3: https://lore.kernel.org/linux-mm/20221220072743.3039060-1-shiyn.lin@g=
-mail.com/T/
->
-> RFC v2 -> v3
-> - Change the sysctl with PID to prctl(PR_SET_COW_PTE).
-> - Account all the COW PTE mapped pages in fork() instead of defer it to
->   page fault (break COW PTE).
-> - If there is an unshareable mapped page (maybe pinned or private
->   device), recover all the entries that are already handled by COW PTE
->   fork, then copy to the new one.
-> - Remove COW_PTE_OWNER_EXCLUSIVE flag and handle the only case of GUP,
->   follow_pfn_pte().
-> - Remove the PTE ownership since we don't need it.
-> - Use pte lock to protect the break COW PTE and free COW-ed PTE.
-> - Do TLB flushing in break COW PTE handler.
-> - Handle THP, KSM, madvise, mprotect, uffd and migrate device.
-> - Handle the replacement page of uprobe.
-> - Handle the clear_refs_write() of fs/proc.
-> - All of the benchmarks dropped since the accounting and pte lock.
->   The benchmarks of v3 is worse than RFC v2, most of the cases are
->   similar to the normal fork, but there still have an use case
->   (TriforceAFL) is better than the normal fork version.
->
-> RFC v2: https://lore.kernel.org/linux-mm/20220927162957.270460-1-shiyn.li=
-n@gmail.com/T/
->
-> RFC v1 -> RFC v2
-> - Change the clone flag method to sysctl with PID.
-> - Change the MMF_COW_PGTABLE flag to two flags, MMF_COW_PTE and
->   MMF_COW_PTE_READY, for the sysctl.
-> - Change the owner pointer to use the folio padding.
-> - Handle all the VMAs that cover the PTE table when doing the break COW P=
-TE.
-> - Remove the self-defined refcount to use the _refcount for the page
->   table page.
-> - Add the exclusive flag to let the page table only own by one task in
->   some situations.
-> - Invalidate address range MMU notifier and start the write_seqcount
->   when doing the break COW PTE.
-> - Handle the swap cache and swapoff.
->
-> RFC v1: https://lore.kernel.org/all/20220519183127.3909598-1-shiyn.lin@gm=
-ail.com/
->
+> Fixes: 942c5593393d ("perf stat: Add perf_stat_merge_counters()")
+> Reported-by: Perry Taylor <perry.taylor@intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+
 > ---
+>  tools/perf/util/stat-shadow.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Currently, copy-on-write is only used for the mapped memory; the child
-> process still needs to copy the entire page table from the parent
-> process during forking. The parent process might take a lot of time and
-> memory to copy the page table when the parent has a big page table
-> allocated. For example, the memory usage of a process after forking with
-> 1 GB mapped memory is as follows:
-
-For some reason, I was not able to reproduce performance improvements
-with a simple fork() performance measurement program. The results that
-I saw are the following:
-
-Base:
-Fork latency per gigabyte: 0.004416 seconds
-Fork latency per gigabyte: 0.004382 seconds
-Fork latency per gigabyte: 0.004442 seconds
-COW kernel:
-Fork latency per gigabyte: 0.004524 seconds
-Fork latency per gigabyte: 0.004764 seconds
-Fork latency per gigabyte: 0.004547 seconds
-
-AMD EPYC 7B12 64-Core Processor
-Base:
-Fork latency per gigabyte: 0.003923 seconds
-Fork latency per gigabyte: 0.003909 seconds
-Fork latency per gigabyte: 0.003955 seconds
-COW kernel:
-Fork latency per gigabyte: 0.004221 seconds
-Fork latency per gigabyte: 0.003882 seconds
-Fork latency per gigabyte: 0.003854 seconds
-
-Given, that page table for child is not copied, I was expecting the
-performance to be better with COW kernel, and also not to depend on
-the size of the parent.
-
-Test program:
-
-#include <time.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-
-#define USEC    1000000
-#define GIG     (1ul << 30)
-#define NGIG    32
-#define SIZE    (NGIG * GIG)
-#define NPROC   16
-
-void main() {
-        int page_size =3D getpagesize();
-        struct timeval start, end;
-        long duration, i;
-        char *p;
-
-        p =3D mmap(NULL, SIZE, PROT_READ | PROT_WRITE,
-                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        if (p =3D=3D MAP_FAILED) {
-                perror("mmap");
-                exit(1);
-        }
-        madvise(p, SIZE, MADV_NOHUGEPAGE);
-
-        /* Touch every page */
-        for (i =3D 0; i < SIZE; i +=3D page_size)
-                p[i] =3D 0;
-
-        gettimeofday(&start, NULL);
-        for (i =3D 0; i < NPROC; i++) {
-                int pid =3D fork();
-
-                if (pid =3D=3D 0) {
-                        sleep(30);
-                        exit(0);
-                }
-        }
-        gettimeofday(&end, NULL);
-        /* Normolize per proc and per gig */
-        duration =3D ((end.tv_sec - start.tv_sec) * USEC
-                + (end.tv_usec - start.tv_usec)) / NPROC / NGIG;
-        printf("Fork latency per gigabyte: %ld.%06ld seconds\n",
-                duration / USEC, duration % USEC);
-}
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index cadb2df23c87..4cd05d9205e3 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -311,7 +311,7 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+>                 update_stats(&v->stats, count);
+>                 if (counter->metric_leader)
+>                         v->metric_total += count;
+> -       } else if (counter->metric_leader) {
+> +       } else if (counter->metric_leader && !counter->merged_stat) {
+>                 v = saved_value_lookup(counter->metric_leader,
+>                                        map_idx, true, STAT_NONE, 0, st, rsd.cgrp);
+>                 v->metric_total += count;
+> --
+> 2.39.1.519.gcb327c4b5f-goog
+>
