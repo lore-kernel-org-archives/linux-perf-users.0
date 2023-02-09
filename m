@@ -2,175 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422CDC636D6
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 19:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C510C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Feb 2023 21:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbjBITi1 (ORCPT
+        id S230296AbjBIV3x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Feb 2023 14:38:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
+        Thu, 9 Feb 2023 16:29:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbjBITi0 (ORCPT
+        with ESMTP id S230040AbjBIV3w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Feb 2023 14:38:26 -0500
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE52F457E6;
-        Thu,  9 Feb 2023 11:38:25 -0800 (PST)
-Received: by mail-io1-xd2b.google.com with SMTP id y2so1102202iot.4;
-        Thu, 09 Feb 2023 11:38:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Jdh4VULJ6F+h4MAiYTsb2LTjagqLadibqRKQMHpvOE=;
-        b=eZBK7bsG54sHx0p7PAQy2iX/zWTjNGA/Qd2/ZdxdVyvp0yXbv8yOGGG3EWPo99DRtz
-         D41JPGxHrKpnMA2ZENevlEV6JriYGPcTumXjSnsCJZwn5IrH5m3MDKobvNnUu2QaxaNv
-         +WiUlme18JXjpbjqrOg7uTaDWpVBzldrKQFEOrgFo/ISWjXyFrg8oofCUNE5uxKa4fQa
-         qqPF0R2NmRh4nBz+9U9FaEP7AHFZCLVSA96LHlfeeqzN265jRXHEQ9O8YMYBZcK9PUrQ
-         esy+bkwI35pyARvJmzRbZzKGOtkGzjGwSFU7dXqiDzoO47SEOS2+of7u8fQwhZszP01/
-         yFIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6Jdh4VULJ6F+h4MAiYTsb2LTjagqLadibqRKQMHpvOE=;
-        b=Svdjr43RbYt5Jx0V4oC/1rRJVds3RQ2vK8eAaClS5JELVPoFPvrODxkEpi34s4Qhua
-         UTAN+Hc3dxki0miSH6a3v0Ys7cp2tbTYAa/AQj50XGwQDqP/Bb+QQOb2wbiqEURbc2aD
-         uHl+5NMRLUWdQIMhn74QIaS2gbX6ZRCaHYNmXoNahRXKogoHlj1XW7zn+/pJH//Pfwm/
-         E6fgKopLJ33x3CroIspNXANkc5elwrhLNcCqs/uYF30C7tLgC5rtwrF03eX1hrOTouEo
-         BGyAqOg3j5ezp3llTE+TY1N4KxfHub2EicRuD1aZDu0/MAiT2ktaCcEB0Bkmw/9kiqyA
-         lGkA==
-X-Gm-Message-State: AO0yUKV6g7DJlh1MVTl2SKW9rO9kbwtGPDzGCwA12GdA3WafOkQbgPZ2
-        Iv3A8xPde789SDpUS8+59DyV/V7K2JCphaKp19E=
-X-Google-Smtp-Source: AK7set/SRwK2j1K6/X1ct4MebC7m2uZKEvZh2iPzd2xeOuLUL++LqTwMGYRVKWqAXTayJdIPTpmag/h5t3V8QGEoDGA=
-X-Received: by 2002:a02:b80a:0:b0:3b0:5216:258a with SMTP id
- o10-20020a02b80a000000b003b05216258amr7282175jam.23.1675971505154; Thu, 09
- Feb 2023 11:38:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20230201135737.800527-1-jolsa@kernel.org> <Y+UAsr8A+xT0bUY/@krava>
-In-Reply-To: <Y+UAsr8A+xT0bUY/@krava>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Thu, 9 Feb 2023 11:38:13 -0800
-Message-ID: <CAM9d7cgrwyzrnDkkU2sAExonKbjSrs=p7Qyr=cww2zg4DTDBFw@mail.gmail.com>
-Subject: Re: [RFC 0/5] mm/bpf/perf: Store build id in file object
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Thu, 9 Feb 2023 16:29:52 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDACA6ADF2;
+        Thu,  9 Feb 2023 13:29:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7072DB82315;
+        Thu,  9 Feb 2023 21:29:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D270EC433D2;
+        Thu,  9 Feb 2023 21:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675978189;
+        bh=bhStTkWBXYavX+5JJIgffrgbDoXU1ftYdER+pfSWJb8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p7rK5sUnLDzz7CD0Cuhc/6Gn1f2z68D+mQfl4R5638pdO6TWzRcluOyxJHvQmwOxB
+         5lRTMDXk5FkBOW99xSLBX3d+qOL9Z8y0qV1wGxdh/usKVoAN2mVzrX42B9bNOJR93s
+         eTF6RA+VHD0Vn7JLRdw5vVvFbWtghq7mwiLZrjzJYqvf7rdizTwkheycfETf1nS/Cq
+         M0zDKCi5jOcZJmpw09VX68DpOf0o43vKWh1yXT9x/30OonLjapm13t9fHdVrcCNVCW
+         aG8KFi7RN2JRGdEUInwQuBh3pIpDblt83i5A9rDMA78ChPAtMfNzbaxwUDXHZEjHMs
+         Or4OjCeDNQM8g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CBD5440444; Thu,  9 Feb 2023 18:29:45 -0300 (-03)
+Date:   Thu, 9 Feb 2023 18:29:45 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        Perry Taylor <perry.taylor@intel.com>
+Subject: Re: [PATCH v1] perf stat: Avoid merging/aggregating metric counts
+ twice
+Message-ID: <Y+VlyR9IF8Ky460u@kernel.org>
+References: <20230209064447.83733-1-irogers@google.com>
+ <CAM9d7ciJpB8qAN1OW+xe-ofuzK9tgytNyrV4modEePKJicX-=w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7ciJpB8qAN1OW+xe-ofuzK9tgytNyrV4modEePKJicX-=w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri,
+Em Thu, Feb 09, 2023 at 11:06:22AM -0800, Namhyung Kim escreveu:
+> On Wed, Feb 8, 2023 at 10:45 PM Ian Rogers <irogers@google.com> wrote:
 
-On Thu, Feb 9, 2023 at 6:25 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Wed, Feb 01, 2023 at 02:57:32PM +0100, Jiri Olsa wrote:
-> > hi,
-> > we have a use cases for bpf programs to use binary file's build id.
+> > The added perf_stat_merge_counters combines uncore counters. When
+> > metrics are enabled, the counts are merged into a metric_leader
+> > via the stat-shadow saved_value logic. As the leader now is
+> > passed an aggregated count, it leads to all counters being added
+> > together twice and counts appearing approximately doubled in
+> > metrics.
+
+> > This change disables the saved_value merging of counts for evsels
+> > that are merged. It is recommended that later changes remove the
+> > saved_value entirely as the two layers of aggregation in the code
+> > is confusing.
+ 
+> +1
+
+'perf stat' code needs help, that I'm sure, its great that you guys are
+looking/working at/on it, please continue.
+ 
 > >
-> > After some attempts to add helpers/kfuncs [1] [2] Andrii had an idea [3]
-> > to store build id directly in the file object. That would solve our use
-> > case and might be beneficial for other profiling/tracing use cases with
-> > bpf programs.
-> >
-> > This RFC patchset adds new config CONFIG_FILE_BUILD_ID option, which adds
-> > build id object pointer to the file object when enabled. The build id is
-> > read/populated when the file is mmap-ed.
-> >
-> > I also added bpf and perf changes that would benefit from this.
+> > Fixes: 942c5593393d ("perf stat: Add perf_stat_merge_counters()")
+> > Reported-by: Perry Taylor <perry.taylor@intel.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Thanks for working on this!
+Thanks, applied.
 
-> >
-> > I'm not sure what's the policy on adding stuff to file object, so apologies
-> > if that's out of line. I'm open to any feedback or suggestions if there's
-> > better place or way to do this.
->
-> hi,
-> Matthew suggested on irc to consider inode for storing build id
-
-Yeah, that's my idea too.
-
->
-> I tried that and it seems to have better stats wrt allocated build
-> id objects, because inode is being shared among file objects
->
-> I took /proc/slabinfo output after running bpf tests
->
-> - build id stored in file:
->
->   # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
->   build_id             668    775    160   25    1 : tunables    0    0    0 : slabdata     31     31      0
->
-> - build id stored in inode:
->
->   # name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab> : tunables <limit> <batchcount> <sharedfactor> : slabdata <active_slabs> <num_slabs> <sharedavail>
->   build_id             222    225    160   25    1 : tunables    0    0    0 : slabdata      9      9      0
-
-Cool!
-
->
->
-> I'm stranger to inode/fs/mm code so I'll spend some time checking on
-> what I possibly broke in there before I send it, but I'd appreciate
-> any early feedback ;-)
->
-> the code is in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   inode_build_id
->
-> I'll send another version with inode if there's no objection
-
-I'll take a look.
-
-Thanks,
-Namhyung
-
-
-> >
-> > [1] https://lore.kernel.org/bpf/20221108222027.3409437-1-jolsa@kernel.org/
-> > [2] https://lore.kernel.org/bpf/20221128132915.141211-1-jolsa@kernel.org/
-> > [3] https://lore.kernel.org/bpf/CAEf4BzaZCUoxN_X2ALXwQeFTCwtL17R4P_B_-hUCcidfyO2xyQ@mail.gmail.com/
-> > ---
-> > Jiri Olsa (5):
-> >       mm: Store build id in file object
-> >       bpf: Use file object build id in stackmap
-> >       perf: Use file object build id in perf_event_mmap_event
-> >       selftests/bpf: Add file_build_id test
-> >       selftests/bpf: Add iter_task_vma_buildid test
-> >
-> >  fs/file_table.c                                               |  3 +++
-> >  include/linux/buildid.h                                       | 17 +++++++++++++++++
-> >  include/linux/fs.h                                            |  3 +++
-> >  kernel/bpf/stackmap.c                                         |  8 ++++++++
-> >  kernel/events/core.c                                          | 43 +++++++++++++++++++++++++++++++++++++++----
-> >  lib/buildid.c                                                 | 44 ++++++++++++++++++++++++++++++++++++++++++++
-> >  mm/Kconfig                                                    |  7 +++++++
-> >  mm/mmap.c                                                     | 15 +++++++++++++++
-> >  tools/testing/selftests/bpf/prog_tests/bpf_iter.c             | 88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tools/testing/selftests/bpf/prog_tests/file_build_id.c        | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tools/testing/selftests/bpf/progs/file_build_id.c             | 34 ++++++++++++++++++++++++++++++++++
-> >  tools/testing/selftests/bpf/trace_helpers.c                   | 35 +++++++++++++++++++++++++++++++++++
-> >  tools/testing/selftests/bpf/trace_helpers.h                   |  1 +
-> >  14 files changed, 413 insertions(+), 4 deletions(-)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/file_build_id.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/file_build_id.c
+- Arnaldo
