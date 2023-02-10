@@ -2,69 +2,61 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98973C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Feb 2023 16:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7809C05027
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Feb 2023 16:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232178AbjBJQV7 (ORCPT
+        id S232890AbjBJQzR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Feb 2023 11:21:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42912 "EHLO
+        Fri, 10 Feb 2023 11:55:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232781AbjBJQV6 (ORCPT
+        with ESMTP id S232303AbjBJQzQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Feb 2023 11:21:58 -0500
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0488113F8
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Feb 2023 08:21:54 -0800 (PST)
-Received: by mail-qt1-x834.google.com with SMTP id g18so6306411qtb.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Feb 2023 08:21:54 -0800 (PST)
+        Fri, 10 Feb 2023 11:55:16 -0500
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3BEF1167C
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Feb 2023 08:55:15 -0800 (PST)
+Received: by mail-pg1-x549.google.com with SMTP id b21-20020a63d815000000b004e22b1adc26so2832457pgh.21
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Feb 2023 08:55:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q3mcvpqnGRzxZSmag23CWJUdjs1NpsRhnyJmXgB+2LI=;
-        b=cDO/ltH9oba2g7m81sHGlz0cBIBBu9U6Y0R4QWT3HoFKc3NTV8+aFwvlkqAIWcOhEr
-         UGt4UCdDpHWAJ0SUEqjNFUp/15BKrduZCAlc4syxNlr+MtSjMrmkOS5daqaAMhvQw5Xg
-         1fw7wdz/uB+dshxZ098absfclhWw7PkpV5uS9ISBzbAk0H1jixdK0jZVLy5/TReJiM0c
-         lj9te1QyiuH+6f+kC1tAPcXXaoKeT2U+BrTBjlUsgwkP7XtCUuPuQ6RXJDFtRiiB/hdQ
-         GpBuxkLYggD8zZXK4vXV5EiegQdXfkUPWRCTp6XMKUHP3AY2GwkERs3JIDZ+fD7akOWP
-         NLZg==
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/T7AMdhFLGitDXHZ5/TfRi2ULQMYcZwnIbHev2XdwW0=;
+        b=W9p/dZOcq6Yrc4yvBEoJQaIdVvvUWQFCmtOwR8Yajzr08GgV7Sj0rLyD/x8KqLBZMr
+         DfL5q09Qgs7SmvILLDxBUmZmVXD4M8nPzD+BwiuyarUPAdmIi93tCwxnjPXLqHPb9UG+
+         HO9E1/VvCqpuwyn0wyC5OZrbDykhAbicVPfxq0EDMpkWSQKA08UULhfQ8kecC1Ay3Jl5
+         rb1z5UZzHJMVoeMg7S6UhPIAZ6ZwJAoXI2LUps9b2YaSakDa+7jRzwL31yRUrL/hY9vC
+         WAyc09K7uHelvmpX6OcLVlAni+u6lRCHwV9pBGss0VRWxNnc/PjV76/MSSX/nMtWwHAu
+         Webg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q3mcvpqnGRzxZSmag23CWJUdjs1NpsRhnyJmXgB+2LI=;
-        b=K+hXYK4SFi1O9V3On4T+EHaqyhBcj2zshZLfZ5aJ7rXoZaq8niLoQTJLSNeXE5xlnN
-         0lMclUL5eqNO+XMxAaP5KgAZ5KUEXz4XBa5vTrnB/sAP8kX7hfzRm5hi1tCBX/4zwhVB
-         XRlHTt9Rk7t6pAi7LZh7dW7H9iMMtPa48FJoBnxo8BoG05YokdpFULoL5p2/EmX9KWfZ
-         KXy5AsRfKDSOwMzNT3T1rH1/bPdjgo8SHNz4YJsP2Ncy0DSJlrYY/GpuW0fdIawQZfg2
-         dUTDcyTMjcXR4LnXrxLYgHz616hHUx8E+FFdkZjuvz0Kmb3/63IKc3xqUoLhCkG4fSXP
-         V2zA==
-X-Gm-Message-State: AO0yUKVxmkKD8tzA7SqjeyAiMJBhXL/ElmQTWuvOR1idf9mV2kEYI3Zp
-        wJfWCPWBe6ljft9mO9coZIOJcNxynMMVpy3ROdbANA==
-X-Google-Smtp-Source: AK7set+L6NzhA8suon4TylHNK1DlDLEyOXcc0AMap3AYzq+uL59ZF8RYF/vEPW58PuLQG6/K4kNdvBPwVDipZHv+bVc=
-X-Received: by 2002:a05:622a:110f:b0:3b8:67d3:343c with SMTP id
- e15-20020a05622a110f00b003b867d3343cmr2507820qty.301.1676046113869; Fri, 10
- Feb 2023 08:21:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20230207035139.272707-1-shiyn.lin@gmail.com> <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
- <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
-In-Reply-To: <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
-From:   Pasha Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 10 Feb 2023 11:21:16 -0500
-Message-ID: <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
-To:     Chih-En Lin <shiyn.lin@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/T7AMdhFLGitDXHZ5/TfRi2ULQMYcZwnIbHev2XdwW0=;
+        b=m37h1zESD4ED+tO1W/dQHq/BKGBnXRjLsznj0oTcJ6mhOtwt/OIUnTNPx3BO2WM9ib
+         MwdZMYVVA/OyITKkstdllBhGXMHWBFa0bpvJsXYJ4xUKGo5JD7/90EkMeeQueKk2XlSI
+         gN5Eu5luIn38o3YDjadxXOWO/QHKKAQTOPWRzwwKDEZqP/BaDduLPQdnG4aHwR46EVhF
+         nSVBcvHXeHWbjgOiKPSHsDeMDRQkLhPaQmpoZwdIGlDfhos+vrFkaY32bOW4n2FJdYuK
+         XSvLIerAqsmcYpEB7gjCSMq9wxkNPN/xzqKcyCeT9iDeRH7oED53ZR5S48dU+somnLGq
+         LmEw==
+X-Gm-Message-State: AO0yUKWJEhG/W29VRzayXp/ePkbRK/+mtcsiCZWRF1SaghHDV7x0Ddae
+        Vad3pn+jP/O1ClV9zaHMfAn+yFvb1gnJij8=
+X-Google-Smtp-Source: AK7set8EEM2vPuWTtNSdApk5kfdc5jxhS8S3smtK3/eWyLn1K5CRolTI3MKSZV4+jhJat0Wcjkt5P+MgOeWbLGU=
+X-Received: from zaidcloud.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5325])
+ (user=zalbassam job=sendgmr) by 2002:a17:90a:280a:b0:231:1912:b40d with SMTP
+ id e10-20020a17090a280a00b002311912b40dmr2050226pjd.116.1676048115339; Fri,
+ 10 Feb 2023 08:55:15 -0800 (PST)
+Date:   Fri, 10 Feb 2023 11:54:52 -0500
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.1.581.gbfd45094c4-goog
+Message-ID: <20230210165500.2292608-1-zalbassam@google.com>
+Subject: [PATCH v2 0/8] perf: arm: Make PMUv3 driver available for aarch32
+From:   Zaid Al-Bassam <zalbassam@google.com>
+To:     Jesus Sanchez-Palencia <jesussanp@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -72,116 +64,79 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Zach O'Keefe" <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu
+Cc:     Zaid Al-Bassam <zalbassam@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> > > Currently, copy-on-write is only used for the mapped memory; the child
-> > > process still needs to copy the entire page table from the parent
-> > > process during forking. The parent process might take a lot of time and
-> > > memory to copy the page table when the parent has a big page table
-> > > allocated. For example, the memory usage of a process after forking with
-> > > 1 GB mapped memory is as follows:
-> >
-> > For some reason, I was not able to reproduce performance improvements
-> > with a simple fork() performance measurement program. The results that
-> > I saw are the following:
-> >
-> > Base:
-> > Fork latency per gigabyte: 0.004416 seconds
-> > Fork latency per gigabyte: 0.004382 seconds
-> > Fork latency per gigabyte: 0.004442 seconds
-> > COW kernel:
-> > Fork latency per gigabyte: 0.004524 seconds
-> > Fork latency per gigabyte: 0.004764 seconds
-> > Fork latency per gigabyte: 0.004547 seconds
-> >
-> > AMD EPYC 7B12 64-Core Processor
-> > Base:
-> > Fork latency per gigabyte: 0.003923 seconds
-> > Fork latency per gigabyte: 0.003909 seconds
-> > Fork latency per gigabyte: 0.003955 seconds
-> > COW kernel:
-> > Fork latency per gigabyte: 0.004221 seconds
-> > Fork latency per gigabyte: 0.003882 seconds
-> > Fork latency per gigabyte: 0.003854 seconds
-> >
-> > Given, that page table for child is not copied, I was expecting the
-> > performance to be better with COW kernel, and also not to depend on
-> > the size of the parent.
->
-> Yes, the child won't duplicate the page table, but fork will still
-> traverse all the page table entries to do the accounting.
-> And, since this patch expends the COW to the PTE table level, it's not
-> the mapped page (page table entry) grained anymore, so we have to
-> guarantee that all the mapped page is available to do COW mapping in
-> the such page table.
-> This kind of checking also costs some time.
-> As a result, since the accounting and the checking, the COW PTE fork
-> still depends on the size of the parent so the improvement might not
-> be significant.
+Currently, PMUv3 driver is only available for ARMv8 aarch64 platforms,
+ARMv8 platorms running in aarch32 mode dont have access to the driver.
+This is, especially, a problem for ARMv8 platforms that only have
+aarch32 support, like the Cortex-A32.
 
-The current version of the series does not provide any performance
-improvements for fork(). I would recommend removing claims from the
-cover letter about better fork() performance, as this may be
-misleading for those looking for a way to speed up forking. In my
-case, I was looking to speed up Redis OSS, which relies on fork() to
-create consistent snapshots for driving replicates/backups. The O(N)
-per-page operation causes fork() to be slow, so I was hoping that this
-series, which does not duplicate the VA during fork(), would make the
-operation much quicker.
+Make the PMUv3 driver available to arm arch (ARMv8 aarch32) by moving
+the PMUv3 driver from arm64 to drivers, that makes the driver common
+to both arm and arm64 architectures, then add PMUv3 arm Support.
 
-> Actually, at the RFC v1 and v2, we proposed the version of skipping
-> those works, and we got a significant improvement. You can see the
-> number from RFC v2 cover letter [1]:
-> "In short, with 512 MB mapped memory, COW PTE decreases latency by 93%
-> for normal fork"
+The main work in this patchset was made a while back by Marc Zyngier
+in [1]. This patchset rebases Marc's patches to the latest kernel
+revision and adds additional patches to accommodate the changes in the
+kernel since Marc wrote the patches.
 
-I suspect the 93% improvement (when the mapcount was not updated) was
-only for VAs with 4K pages. With 2M mappings this series did not
-provide any benefit is this correct?
+This is the v2 of the patch series [v1]. This version of the patchset
+was created by Marc Zyngier and I picked it up from [2].
 
->
-> However, it might break the existing logic of the refcount/mapcount of
-> the page and destabilize the system.
+Changes in v2:
+- Flattened the nested switches in the arm_pmuv3.h for arm.
+- Removed wrappers and added stubs for the PMU KVM functions for arm.
+- Added PMU version abstractions.
 
-This makes sense.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm/pmuv3-32bit
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=arm/pmuv3
 
-> [1] https://lore.kernel.org/linux-mm/20220927162957.270460-1-shiyn.lin@gmail.com/T/#me2340d963c2758a2561c39cb3baf42c478dfe548
-> [2] https://lore.kernel.org/linux-mm/20220927162957.270460-1-shiyn.lin@gmail.com/T/#mbc33221f00c7cf3d71839b45fc23862a5dac3014
+[v1] https://lore.kernel.org/all/20230126204444.2204061-1-zalbassam@google.com/
+
+Thank you,
+Zaid Al-Bassam
+
+Marc Zyngier (5):
+  arm64: perf: Move PMUv3 driver to drivers/perf
+  arm64: perf: Abstract system register accesses away
+  ARM: Make CONFIG_CPU_V7 valid for 32bit ARMv8 implementations
+  ARM: perf: Allow the use of the PMUv3 driver on 32bit ARM
+  ARM: mach-virt: Select PMUv3 driver by default
+
+Zaid Al-Bassam (3):
+  perf: pmuv3: Abstract PMU version checks
+  perf: pmuv3: Move inclusion of kvm_host.h to the arch-specific helper
+  perf: pmuv3: Change GENMASK to GENMASK_ULL
+
+ arch/arm/Kconfig                              |   1 +
+ arch/arm/include/asm/arm_pmuv3.h              | 259 ++++++++++++++
+ arch/arm/mm/Kconfig                           |   2 +-
+ arch/arm64/include/asm/arm_pmuv3.h            | 167 ++++++++++
+ arch/arm64/include/asm/perf_event.h           | 249 --------------
+ arch/arm64/kernel/Makefile                    |   1 -
+ drivers/perf/Kconfig                          |  10 +
+ drivers/perf/Makefile                         |   1 +
+ .../perf_event.c => drivers/perf/arm_pmuv3.c  | 131 ++------
+ include/kvm/arm_pmu.h                         |   2 +-
+ include/linux/perf/arm_pmuv3.h                | 315 ++++++++++++++++++
+ 11 files changed, 787 insertions(+), 351 deletions(-)
+ create mode 100644 arch/arm/include/asm/arm_pmuv3.h
+ create mode 100644 arch/arm64/include/asm/arm_pmuv3.h
+ rename arch/arm64/kernel/perf_event.c => drivers/perf/arm_pmuv3.c (93%)
+ create mode 100644 include/linux/perf/arm_pmuv3.h
+
+-- 
+2.39.1.581.gbfd45094c4-goog
+
