@@ -2,183 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2B4C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Feb 2023 19:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802F3C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Feb 2023 16:51:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233219AbjBJTCj (ORCPT
+        id S229671AbjBKQv2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Feb 2023 14:02:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
+        Sat, 11 Feb 2023 11:51:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233222AbjBJTCi (ORCPT
+        with ESMTP id S229624AbjBKQv2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Feb 2023 14:02:38 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6EA7CCAB;
-        Fri, 10 Feb 2023 11:02:37 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id be8so7442013plb.7;
-        Fri, 10 Feb 2023 11:02:37 -0800 (PST)
+        Sat, 11 Feb 2023 11:51:28 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D9B84EFA
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Feb 2023 08:51:23 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id z13so5940458wmp.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Feb 2023 08:51:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=layalina-io.20210112.gappssmtp.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j1cOhpJR3Kvbh9HZADpLcoUR0+gYgMIFfLat/AASZX0=;
-        b=UQ+9s6t4bnN7xq/qk4qKXpVS0fA5hjb9cQysWiQXGOw9sPbgxVC1j+th2xjSq94/ed
-         eRvdsolTfVMY3PoljYoCbTkdsmOI8pvt+k70XVKF4ZqMRLlu+DodzWwx+vdeWlEa7J81
-         eEszcT7Saa8bO3NougBlhx1qn4jvY2dYx/Wc8Q1OXr8dlpSIxSRjj5bHDYfgPiN8zqnt
-         0wVhAfhnQ73XAbCenDaLigho9YNDBCcGCjjlDcfpa1NWNuSCqNPo/SGwGqIbKQaBJWVS
-         1+0istMIS9kDB6T79b0rBV8Fz1/VvuIFFvUHJ0vpy+QNoR0FI79bMGaKj2PBYpZGl1yg
-         KcKw==
+        bh=V3dLOUyD2qLLZeL+RCBFqBDU+r6K7Onh/Gy2tm5yVZc=;
+        b=ER9ivdRQA46j70AsRtLo3uCWnNMEK1js+A1odjy8Q0Z3FMBTW+wMfXjciKmV+z6gW1
+         k8VkV1E+uBYcsO8SvacDa6fyImvMFIzgtocB2MjOTLT0R0EaDu9jszSbGiTeXetIw81K
+         yHCVKShSA2+RdAwVEqdQLXvrsVSYxRbps4YjQL3gFfW8Q12WxO1WoMpit3RYvCcLYLJw
+         wd1I/Gd+PbRPUMBJ4svv5nAc4RiZRM74ZEd5KQyXsUAnhJ2KD1xN0Ya2j6VrIyGpXSy/
+         9L/oFg6Smvz+NKUvzRDYsgn9WBqBhOUD2cfoTgFSfBopcysBA3dBAWTc77y6jTPjPvy4
+         HueA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j1cOhpJR3Kvbh9HZADpLcoUR0+gYgMIFfLat/AASZX0=;
-        b=bQaDvIfUqoyf2Qeri0O8Rrp7h2Opuyn3BPU86Xt75sYB1rtcGWi6LAqnOAM/LAey7n
-         sbJGg+dO8SbxfJP+mMSZxgf5IF6PahlK+MmRF2Hbr2Qt9qLSLrPFMSuXe/DsZVTw/rxS
-         9b+427DlAjTmtYUWS7xtRqWqo17y7B0oqO4p0UKw59p0RnMnsC6saG1rN/qDBK+zRsw8
-         g58U161GJInNhVDMg+Dw8gpEhkx9sE/d7ZP2zumw+1hI+w9DNjFQlU0sBJ92bUiq8c2T
-         Uc4kANgdijJtri4TaY7d8ABrMQd1Z0gQ0W5gLFBei8igvXV+rttD0SUa+qF6w4FwE3Wb
-         7XiQ==
-X-Gm-Message-State: AO0yUKUnDc5rfWWkTIZHLG1y2+EMtwrH05gWPDeNBbCWM6A6/FYHqRNL
-        fxJLYy8TGaJorFaQPEfRX9U=
-X-Google-Smtp-Source: AK7set/dbUQDWhmep7CTi9/LcTRrHRCnUiwSqFkMOSYdaaHV8nzu9SC6LSieQdGiQ7i/nPcO7dHyMQ==
-X-Received: by 2002:a05:6a20:e488:b0:b5:389e:870e with SMTP id ni8-20020a056a20e48800b000b5389e870emr13945541pzb.4.1676055756388;
-        Fri, 10 Feb 2023 11:02:36 -0800 (PST)
-Received: from zhienlin-MacBook-Pro.local ([123.110.9.95])
-        by smtp.gmail.com with ESMTPSA id i5-20020a63a845000000b00477bfac06b7sm3352172pgp.34.2023.02.10.11.02.23
+        bh=V3dLOUyD2qLLZeL+RCBFqBDU+r6K7Onh/Gy2tm5yVZc=;
+        b=D5OWENp5fNwa83CN/5saKJHDOWi6d0X+bNfENO5fXeKD+XRgzTFSIIEUvyw512GjLr
+         Mfg7Vsro+pP5srswTV3dcnWEcxkFz1pem8vDWcwtZZWlA0ngRa3X2hc11NZagXVoj3Di
+         JwnYPEf4cTL1d48hG9RhlWB5ps9//QEd54fG53zpst/YQdsX+oqUN0QOqTTouBW12itP
+         6kSlWtTDjkO9IBwZEH2L6qGosCz4WuthUGyNeOcjx7028Nw8eMmILimVP58uB5NXpH1i
+         VIdkUg+qYnv3DLBXV1Tsi1NOWLkwl1clgJRGUHm11MTF1OQ/Hvoo1rsw6EguzXgGuJPi
+         2DGA==
+X-Gm-Message-State: AO0yUKWEXSYR1Wdyridvet2Fo3S7h3145bp0ZMEXmx9udQqAvDksWd/L
+        9PxI3ct6+GXGXdD1Al8LtQZ2YA==
+X-Google-Smtp-Source: AK7set/CFEhOT8NQgm8Y1FA7us6RejO5nTqrWa3aLjIDDJhY7POSdEi1Rr+Jp4XzmhMfDx7bAQd+FA==
+X-Received: by 2002:a05:600c:331c:b0:3df:ee43:860b with SMTP id q28-20020a05600c331c00b003dfee43860bmr15481946wmp.23.1676134282119;
+        Sat, 11 Feb 2023 08:51:22 -0800 (PST)
+Received: from airbuntu (host86-163-35-10.range86-163.btcentralplus.com. [86.163.35.10])
+        by smtp.gmail.com with ESMTPSA id r18-20020a05600c459200b003db03725e86sm9729083wmo.8.2023.02.11.08.51.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Feb 2023 11:02:35 -0800 (PST)
-Date:   Sat, 11 Feb 2023 03:02:17 +0800
-From:   Chih-En Lin <shiyn.lin@gmail.com>
-To:     Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Sat, 11 Feb 2023 08:51:21 -0800 (PST)
+Date:   Sat, 11 Feb 2023 16:51:20 +0000
+From:   Qais Yousef <qyousef@layalina.io>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        John Stultz <jstultz@google.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kbuild test robot <lkp@intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
         David Hildenbrand <david@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zach O'Keefe <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
-Message-ID: <Y+aUuVLEXmRhHlC9@zhienlin-MacBook-Pro.local>
-References: <20230207035139.272707-1-shiyn.lin@gmail.com>
- <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
- <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
- <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
- <Y+Z8ymNYc+vJMBx8@strix-laptop>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Qais Yousef <qyousef@google.com>,
+        Daniele Di Proietto <ddiproietto@google.com>
+Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
+ 16 with TASK_COMM_LEN
+Message-ID: <20230211165120.byivmbfhwyegiyae@airbuntu>
+References: <20211120112738.45980-1-laoar.shao@gmail.com>
+ <20211120112738.45980-8-laoar.shao@gmail.com>
+ <Y+QaZtz55LIirsUO@google.com>
+ <CAADnVQ+nf8MmRWP+naWwZEKBFOYr7QkZugETgAVfjKcEVxmOtg@mail.gmail.com>
+ <CANDhNCo_=Q3pWc7h=ruGyHdRVGpsMKRY=C2AtZgLDwtGzRz8Kw@mail.gmail.com>
+ <08e1c9d0-376f-d669-6fe8-559b2fbc2f2b@efficios.com>
+ <CALOAHbBsmajStJ8TrnqEL_pv=UOt-vv0CH30EqThVq=JYXfi8A@mail.gmail.com>
+ <Y+UCxSktKM0CzMlA@e126311.manchester.arm.com>
+ <CALOAHbCdNZ21oBE2ii_XBxecYLSxM7Ws2LRMirdEOpeULiNk4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Y+Z8ymNYc+vJMBx8@strix-laptop>
+In-Reply-To: <CALOAHbCdNZ21oBE2ii_XBxecYLSxM7Ws2LRMirdEOpeULiNk4g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Feb 11, 2023 at 01:20:10AM +0800, Chih-En Lin wrote:
-> On Fri, Feb 10, 2023 at 11:21:16AM -0500, Pasha Tatashin wrote:
-> > > > > Currently, copy-on-write is only used for the mapped memory; the child
-> > > > > process still needs to copy the entire page table from the parent
-> > > > > process during forking. The parent process might take a lot of time and
-> > > > > memory to copy the page table when the parent has a big page table
-> > > > > allocated. For example, the memory usage of a process after forking with
-> > > > > 1 GB mapped memory is as follows:
-> > > >
-> > > > For some reason, I was not able to reproduce performance improvements
-> > > > with a simple fork() performance measurement program. The results that
-> > > > I saw are the following:
-> > > >
-> > > > Base:
-> > > > Fork latency per gigabyte: 0.004416 seconds
-> > > > Fork latency per gigabyte: 0.004382 seconds
-> > > > Fork latency per gigabyte: 0.004442 seconds
-> > > > COW kernel:
-> > > > Fork latency per gigabyte: 0.004524 seconds
-> > > > Fork latency per gigabyte: 0.004764 seconds
-> > > > Fork latency per gigabyte: 0.004547 seconds
-> > > >
-> > > > AMD EPYC 7B12 64-Core Processor
-> > > > Base:
-> > > > Fork latency per gigabyte: 0.003923 seconds
-> > > > Fork latency per gigabyte: 0.003909 seconds
-> > > > Fork latency per gigabyte: 0.003955 seconds
-> > > > COW kernel:
-> > > > Fork latency per gigabyte: 0.004221 seconds
-> > > > Fork latency per gigabyte: 0.003882 seconds
-> > > > Fork latency per gigabyte: 0.003854 seconds
-> > > >
-> > > > Given, that page table for child is not copied, I was expecting the
-> > > > performance to be better with COW kernel, and also not to depend on
-> > > > the size of the parent.
+On 02/09/23 23:37, Yafang Shao wrote:
+> On Thu, Feb 9, 2023 at 10:28 PM Kajetan Puchalski
+> <kajetan.puchalski@arm.com> wrote:
+> >
+> > On Thu, Feb 09, 2023 at 02:20:36PM +0800, Yafang Shao wrote:
+> >
+> > [...]
+> >
+> > Hi Yafang,
+> >
+> > > Many thanks for the detailed analysis. Seems it can work.
 > > >
-> > > Yes, the child won't duplicate the page table, but fork will still
-> > > traverse all the page table entries to do the accounting.
-> > > And, since this patch expends the COW to the PTE table level, it's not
-> > > the mapped page (page table entry) grained anymore, so we have to
-> > > guarantee that all the mapped page is available to do COW mapping in
-> > > the such page table.
-> > > This kind of checking also costs some time.
-> > > As a result, since the accounting and the checking, the COW PTE fork
-> > > still depends on the size of the parent so the improvement might not
-> > > be significant.
-> > 
-> > The current version of the series does not provide any performance
-> > improvements for fork(). I would recommend removing claims from the
-> > cover letter about better fork() performance, as this may be
-> > misleading for those looking for a way to speed up forking. In my
+> > > Hi John,
+> > >
+> > > Could you pls. try the attached fix ? I have verified it in my test env.
+> >
+> > I tested the patch on my environment where I found the issue with newer
+> > kernels + older Perfetto. The patch does improve things so that's nice.
 > 
-> From v3 to v4, I changed the implementation of the COW fork() part to do
+> Thanks for the test. I don't have Perfetto in hand, so I haven't
+> verify Perfetto.
 
-Sorry, it's "RFC v2 to v3".
+FWIW, perfetto is not android specific and can run on normal linux distro setup
+(which I do but haven't noticed this breakage).
 
-> the accounting and checking. At the time, I also removed most of the
-> descriptions about the better fork() performance. Maybe it's not enough
-> and still has some misleading. I will fix this in the next version.
-> Thanks.
+It's easy to download the latest release (including for android though I never
+tried that) from github
 
-Thanks,
-Chih-En Lin
+	https://github.com/google/perfetto/releases
+
+Kajetan might try to see if he can pick the latest version which IIUC contains
+a workaround.
+
+If this simple patch can be tweaked to make it work again against older
+versions that'd be nice though.
+
+HTH.
+
+
+Cheers
+
+--
+Qais Yousef
