@@ -2,89 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8E4C636D4
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Feb 2023 03:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98714C05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Feb 2023 11:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjBLDpF (ORCPT
+        id S229485AbjBLL6m (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Feb 2023 22:45:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51422 "EHLO
+        Sun, 12 Feb 2023 06:58:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjBLDpE (ORCPT
+        with ESMTP id S229484AbjBLL6m (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Feb 2023 22:45:04 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA4B10A85;
-        Sat, 11 Feb 2023 19:45:03 -0800 (PST)
+        Sun, 12 Feb 2023 06:58:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AA611EA9;
+        Sun, 12 Feb 2023 03:58:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 43E0A60B42;
-        Sun, 12 Feb 2023 03:45:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5851C433EF;
-        Sun, 12 Feb 2023 03:44:57 +0000 (UTC)
-Date:   Sat, 11 Feb 2023 22:44:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     John Stultz <jstultz@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FD8260C8A;
+        Sun, 12 Feb 2023 11:58:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541EAC433D2;
+        Sun, 12 Feb 2023 11:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676203119;
+        bh=llt2LXtBDHWGs6tAIpzLRReXdbfmGgNRRE07NC9gqXA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n3a5gGWJi6G/K2nI4VBG91ivR9DBQvxbmws4wuJDtEt43LMTXUAMeHjOuzbm5wfhv
+         2bj5IIqSH/3VsBAc4jMMG5Hx2fY3Da3RPSSu2FA23ykNm51f2q3s/R0JrrIKI5ckpn
+         V4+zj+caHaM7SeThczYY2B1Y8dg34Z0u/82n8TNMNX3munfrgqxuj7qBIYxWGc9cM0
+         R7skLegroNvBI3WXIOnzAVNtuGAB+mljFRAl1bR5/t9Wj65BZXWxGZg9XR7Mg2J38Z
+         r1fTsdULPsgwfGxvKo0fN2T3H4C+Bv++vbT7AwMHEG8Kd6PQCIpvC7qmUAJGn4+xMv
+         9gQiDZafN96QA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pRB08-009ij5-Tv;
+        Sun, 12 Feb 2023 11:58:37 +0000
+Date:   Sun, 12 Feb 2023 11:58:36 +0000
+Message-ID: <865yc7yu1f.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zaid Al-Bassam <zalbassam@google.com>
+Cc:     Jesus Sanchez-Palencia <jesussanp@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kajetan Puchalski <kajetan.puchalski@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Qais Yousef <qyousef@google.com>,
-        Daniele Di Proietto <ddiproietto@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded
- 16 with TASK_COMM_LEN
-Message-ID: <20230211224455.0a4b2914@gandalf.local.home>
-In-Reply-To: <CALOAHbAnFHAiMH4QDgS6xN16B31qfhG8tfQ+iioCr9pw3sP=bw@mail.gmail.com>
-References: <20211120112738.45980-1-laoar.shao@gmail.com>
-        <20211120112738.45980-8-laoar.shao@gmail.com>
-        <Y+QaZtz55LIirsUO@google.com>
-        <CAADnVQ+nf8MmRWP+naWwZEKBFOYr7QkZugETgAVfjKcEVxmOtg@mail.gmail.com>
-        <CANDhNCo_=Q3pWc7h=ruGyHdRVGpsMKRY=C2AtZgLDwtGzRz8Kw@mail.gmail.com>
-        <20230208212858.477cd05e@gandalf.local.home>
-        <20230208213343.40ee15a5@gandalf.local.home>
-        <20230211140011.4f15a633@gandalf.local.home>
-        <CALOAHbAnFHAiMH4QDgS6xN16B31qfhG8tfQ+iioCr9pw3sP=bw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v2 2/8] arm64: perf: Abstract system register accesses away
+In-Reply-To: <20230210165500.2292608-3-zalbassam@google.com>
+References: <20230210165500.2292608-1-zalbassam@google.com>
+        <20230210165500.2292608-3-zalbassam@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: zalbassam@google.com, jesussanp@google.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, marc.zyngier@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, 12 Feb 2023 11:38:52 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
-
-> > Actually, there are cases that this needs to be a number, as b3bc8547d3be6
-> > ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well") made
-> > it update fields as well as the printk fmt.
-> >  
+On Fri, 10 Feb 2023 16:54:54 +0000,
+Zaid Al-Bassam <zalbassam@google.com> wrote:
 > 
-> It seems that TRACE_DEFINE_ENUM(TASK_COMM_LEN) in the trace events
-> header files would be a better fix.
+> From: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> As we want to enable 32bit support, we need to distanciate the
+> PMUv3 driver from the AArch64 system register names.
+> 
+> This patch moves all system register accesses to an architecture
+> specific include file, allowing the 32bit counterpart to be
+> slotted in at a later time.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> Co-developed-by: Zaid Al-Bassam <zalbassam@google.com>
+> Signed-off-by: Zaid Al-Bassam <zalbassam@google.com>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Link: https://lore.kernel.org/r/20230126204444.2204061-3-zalbassam@google.com
 
-NACK! I much prefer the proper fix that adds the length.
+You can drop these links. They were inserted when I picked your series
+from the list, but they don't mean much at this stage.
 
--- Steve
+> ---
+>  arch/arm64/include/asm/arm_pmuv3.h | 149 +++++++++++++++++++++++++++++
+>  drivers/perf/arm_pmuv3.c           | 115 +++++-----------------
+>  include/linux/perf/arm_pmuv3.h     |  45 +++++++++
+>  3 files changed, 217 insertions(+), 92 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/arm_pmuv3.h
+> 
+> diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
+> new file mode 100644
+> index 0000000000000..eb204adb8dee2
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/arm_pmuv3.h
+> @@ -0,0 +1,149 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (C) 2012 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+
+Please drop the license text, as we don't use this boilerplate anymore
+(the SPDX tag is enough). Just keep:
+
+/*
+ * Copyright (C) 2012 ARM Ltd.
+ */
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
