@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DD0C636D4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 08:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8915FC636D4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 08:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbjBMIC6 (ORCPT
+        id S229784AbjBMITG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Feb 2023 03:02:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49472 "EHLO
+        Mon, 13 Feb 2023 03:19:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjBMIC5 (ORCPT
+        with ESMTP id S229871AbjBMITC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Feb 2023 03:02:57 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8249765
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 00:02:56 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id bg2so1839021pjb.4
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 00:02:56 -0800 (PST)
+        Mon, 13 Feb 2023 03:19:02 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7E51126D8
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 00:18:56 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id f16-20020a17090a9b1000b0023058bbd7b2so11428424pjp.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 00:18:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1eCtcZtCR47U1MIhZ6xkb7WXfv9xH7fMalTcERPvTEc=;
-        b=ez4JR4xqehpNflGapljH3KzW4VF5Xp4U0kyztUgaAaPQdul/PNoJXygpS9k07Fso0h
-         SPVDPXoj9Nhs/oT4h1s3lWlur3ESALzQ/3ErCHIlgFhw1ZcA+YhpMSb5FYp1Y3pHDbcD
-         Iw7f7nAW3/IfH9YG5GCZylvibb/joiNYCE7c17J8q+jPxSZRFqvMOQ38dWEDfv2xCAJl
-         PqzR9Wr9ButwzzGWq5oHDqaplFqgVJsv2Y5lnEa5yn8TI5iF/CmICbtJSmwsVqflV3vN
-         FJ6u00/RiAYFQCvRdB5m+9m4J48nfcOtYchJYT2VI5j2mrdePU1/TH24bqefuWLVUxlG
-         +hKA==
+        bh=0F9S1wNTZyJxIrouvIcef18H8doxrRN6lrNngjyJbB4=;
+        b=PUTud1UhAhxH9pliu/gU/vijb4ZPFF6khADtQyuTDBdErHOVDHBJfumeoFfjND0Uq/
+         hdA4cYcEima7/cLeaQuR+FDX+9zwhVfBsBqx0tHBGwYmtCl61Z1dfOR430gt8TFf075E
+         v7rZeBmFs/5XbAoCXInmqzZqVhGyjSXci4m47sWT+2LuGUWdLiGk5J/syANXX08TxjLF
+         KDxMIoHwqNNzAIgNhDipvHS/cQARUQVKYs6MjJuMze8sCdFzjb+pzb6PpyeR09Z2iEU0
+         FILD9XTxG5Ka5C3SRtvC7Amyt3splr1IFe9shhGTHK3dAkG4A50j4nX0wgrbiYx+TKg3
+         Zxpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1eCtcZtCR47U1MIhZ6xkb7WXfv9xH7fMalTcERPvTEc=;
-        b=V4OqQpRUzgBywJ+sMty32NIq2RTePUThG++JovIoV+9NmipyejD6K1ZA4ffT1PZpza
-         SaAjw0EJwLVMnwYIXymaVl2ABcbGJ+S98MWSfSNmmzNwYyAFzBitkekNUk7iwkqJWZBc
-         R/qDrPqjlI2AAUrMRbd3wmjaJK1o/Bgtnaa7czeha6ToMEzk8pFMMgqhRK+2wibsUsuw
-         6jTvQZ+NawU1M9rRNJXL7xjYYmFEKuXY/LhUIZZk1Jiud2X0xPPOvDcOIyC/kQBW6NWG
-         vT4auFD9t6Wg5zqaU81EJJum7dPApyVCmpgJ2qzZOrtysahMxaExHVulLNC/wLRR+7Bz
-         bkJw==
-X-Gm-Message-State: AO0yUKW5qq+ZJNTPVa+L1B6AcE/laaBTAbUJJfytKA3Ug9l+AauQSzXT
-        tND7arZg+FX2QfwMVt8JK6B1cA==
-X-Google-Smtp-Source: AK7set9Co+HQgBjj06+W9UgioXLdyhFieGkYg4dEPCyHrN3c2X42VQ+qghVNMOHy+M9BwVXDnEc9sQ==
-X-Received: by 2002:a17:902:d509:b0:196:22d5:6583 with SMTP id b9-20020a170902d50900b0019622d56583mr23433159plg.32.1676275375693;
-        Mon, 13 Feb 2023 00:02:55 -0800 (PST)
+        bh=0F9S1wNTZyJxIrouvIcef18H8doxrRN6lrNngjyJbB4=;
+        b=nQoYNTVyg2w6PpX7ml5+6pA6BU8EiIuIpO1R1SpNDW4Z++KRIFZaKT9+8XUzNhBiB1
+         5DFi6ZP1AiD+8VDWh6N5ml8xgHkzsvqeFHCbiYA/nddDin7QIEg49GjpdX5labdwBNG4
+         5a5+amMLurB4Fr6T2FOZJHbdI30QNTnuG5CMF00PY/rJg7sn7ds5OiO9BtvF/JXJW1p5
+         zro9lnJYtDuuzpFhCcy3n/72dvLzcPibcYe3nO1FXUonBo8N81VLEK5shxc36a2hz53Y
+         I/fXdqFk8HVViU+zNVro/daGJRc2Q+Y8M3f4abaRx8+RxgMcy0Q4d8/K7/urbwrXYuse
+         +Maw==
+X-Gm-Message-State: AO0yUKUsLY0mc19Ig8wQXrcWqeGkX6NUSXYHsWR1k00HIhrkg16SE17T
+        fcBLVvSdcnrqUPHpzd5ttCe4FQ==
+X-Google-Smtp-Source: AK7set94esnAmiFUzb5PBrIHOwtNtLfJWgckJsxpllK6HZZVN2EOz0ZQFXeQxhLkyaitmLKBJpmSBA==
+X-Received: by 2002:a17:902:f68a:b0:198:f160:59a6 with SMTP id l10-20020a170902f68a00b00198f16059a6mr15486517plg.21.1676276336175;
+        Mon, 13 Feb 2023 00:18:56 -0800 (PST)
 Received: from leoy-yangtze.lan (211-75-219-203.hinet-ip.hinet.net. [211.75.219.203])
-        by smtp.gmail.com with ESMTPSA id d10-20020a170902728a00b001949c680b52sm7537779pll.193.2023.02.13.00.02.51
+        by smtp.gmail.com with ESMTPSA id v22-20020a170902e8d600b001949f21e1d2sm3979480plg.308.2023.02.13.00.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 00:02:55 -0800 (PST)
-Date:   Mon, 13 Feb 2023 16:02:49 +0800
+        Mon, 13 Feb 2023 00:18:55 -0800 (PST)
+Date:   Mon, 13 Feb 2023 16:18:50 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Feng Tang <feng.tang@intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -67,7 +67,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Xing Zhengjun <zhengjun.xing@linux.intel.com>
 Subject: Re: [PATCH] perf c2c: Add report option to show false sharing in
  adjacent cachelines
-Message-ID: <Y+nuqcDBu9sC6F6A@leoy-yangtze.lan>
+Message-ID: <Y+nyakPnVDpVjn24@leoy-yangtze.lan>
 References: <20230213031733.236485-1-feng.tang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -113,8 +113,228 @@ On Mon, Feb 13, 2023 at 11:17:33AM +0800, Feng Tang wrote:
 > 
 > Signed-off-by: Feng Tang <feng.tang@intel.com>
 > Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-c2c.txt |  6 ++++++
+>  tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
+>  tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
+>  tools/perf/util/sort.c                | 13 ++++++++++---
+>  tools/perf/util/sort.h                |  1 +
+>  5 files changed, 50 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+> index 5c5eb2def83e..a8e1e40d270e 100644
+> --- a/tools/perf/Documentation/perf-c2c.txt
+> +++ b/tools/perf/Documentation/perf-c2c.txt
+> @@ -126,6 +126,12 @@ REPORT OPTIONS
+>  	The known limitations include exception handing such as
+>  	setjmp/longjmp will have calls/returns not match.
+>  
+> +-a::
+> +--double-cl::
+> +	Group HITM events in double cacheline granularity. Some architecture
+> +	has Adjacent Cacheline Prefetch feature, which behaves like the
+> +	cachline size is doubled.
 
-LGTM and I verified it on my Arm64 platform with peer flag:
+Sorry I gave my review tags too quick...
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
+Just found several typos, please fix it.
+
+s/Some architecture has/Some architectures have
+
+This is just literal fixing, except x86, I don't know if any other
+architecture has Adjacent Cacheline Prefetch feature :)
+
+s/cachline/cacheline
+
+> +
+>  C2C RECORD
+>  ----------
+>  The perf c2c record command setup options related to HITM cacheline analysis
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 52d94c7dd836..7d495db7e5a2 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	char buf[20];
+>  
+>  	if (he->mem_info)
+> -		addr = cl_address(he->mem_info->daddr.addr);
+> +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+>  }
+> @@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	char buf[20];
+>  
+>  	if (he->mem_info)
+> -		addr = cl_offset(he->mem_info->daddr.al_addr);
+> +		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
+>  
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+>  }
+> @@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  	uint64_t l = 0, r = 0;
+>  
+>  	if (left->mem_info)
+> -		l = cl_offset(left->mem_info->daddr.addr);
+> +		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
+> +
+>  	if (right->mem_info)
+> -		r = cl_offset(right->mem_info->daddr.addr);
+> +		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	return (int64_t)(r - l);
+>  }
+> @@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
+>  	he = cl_browser->he;
+>  
+>  	if (he->mem_info)
+> -		addr = cl_address(he->mem_info->daddr.addr);
+> +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	scnprintf(bf, size, "Cacheline 0x%lx", addr);
+>  	return 0;
+> @@ -2788,15 +2789,16 @@ static int ui_quirks(void)
+>  	if (!c2c.use_stdio) {
+>  		dim_offset.width  = 5;
+>  		dim_offset.header = header_offset_tui;
+> -		nodestr = "CL";
+> +		nodestr = chk_double_cl ? "Double-CL" : "CL";
+>  	}
+>  
+>  	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
+>  
+>  	/* Fix the zero line for dcacheline column. */
+> -	buf = fill_line("Cacheline", dim_dcacheline.width +
+> -				     dim_dcacheline_node.width +
+> -				     dim_dcacheline_count.width + 4);
+> +	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+> +				dim_dcacheline.width +
+> +				dim_dcacheline_node.width +
+> +				dim_dcacheline_count.width + 4);
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+> @@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+>  	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+>  		    "Enable LBR callgraph stitching approach"),
+> +	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
+> +		    "Check adjacent cachline false sharing"),
+
+I personally think the word "Detect" is better than "Check".
+
+s/cachline/cacheline
+
+>  	OPT_PARENT(c2c_options),
+>  	OPT_END()
+>  	};
+> diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
+> index dec8c0fb1f4a..630d16731b4f 100644
+> --- a/tools/perf/util/cacheline.h
+> +++ b/tools/perf/util/cacheline.h
+> @@ -6,16 +6,31 @@
+>  
+>  int __pure cacheline_size(void);
+>  
+> -static inline u64 cl_address(u64 address)
+> +
+> +/*
+> + * Some architecture has 'Adjacent Cacheline Prefetch' feature,
+
+s/Some architecture has/Some architectures have
+
+> + * which performs like the cacheline size being doubled.
+> + */
+> +static inline u64 cl_address(u64 address, bool double_cl)
+>  {
+> +	u64 size = cacheline_size();
+> +
+> +	if (double_cl)
+> +		size *= 2;
+> +
+>  	/* return the cacheline of the address */
+> -	return (address & ~(cacheline_size() - 1));
+> +	return (address & ~(size - 1));
+>  }
+>  
+> -static inline u64 cl_offset(u64 address)
+> +static inline u64 cl_offset(u64 address, bool double_cl)
+>  {
+> -	/* return the cacheline of the address */
+> -	return (address & (cacheline_size() - 1));
+> +	u64 size = cacheline_size();
+> +
+> +	if (double_cl)
+> +		size *= 2;
+> +
+> +	/* return the offset inside cachline */
+
+s/cachline/cacheline
+
+> +	return (address & (size - 1));
+>  }
+>  
+>  #endif // PERF_CACHELINE_H
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index e188f74698dd..148b28f0a7e2 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -52,6 +52,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+>  static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
+>  static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
+>  
+> +/*
+> + * Some architecture has Adjacent Cacheline Prefetch feature, which behaves
+> + * like the cachline size is doubled. Enable this flag to check things in
+
+s/Some architecture has/Some architectures have
+s/cachline/cacheline
+
+With these typo fixes, you could add my reviewed and tested tags.
+
+Thanks,
+Leo
+
+> + * double cacheline granularity.
+> + */
+> +bool chk_double_cl;
+> +
+>  /*
+>   * Replaces all occurrences of a char used with the:
+>   *
+> @@ -1499,8 +1506,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
+>  
+>  addr:
+>  	/* al_addr does all the right addr - start + offset calculations */
+> -	l = cl_address(left->mem_info->daddr.al_addr);
+> -	r = cl_address(right->mem_info->daddr.al_addr);
+> +	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
+> +	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
+>  
+>  	if (l > r) return -1;
+>  	if (l < r) return 1;
+> @@ -1519,7 +1526,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+>  	if (he->mem_info) {
+>  		struct map *map = he->mem_info->daddr.ms.map;
+>  
+> -		addr = cl_address(he->mem_info->daddr.al_addr);
+> +		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
+>  		ms = &he->mem_info->daddr.ms;
+>  
+>  		/* print [s] for shared data mmaps */
+> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+> index 921715e6aec4..04f0a6dc7381 100644
+> --- a/tools/perf/util/sort.h
+> +++ b/tools/perf/util/sort.h
+> @@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
+>  extern struct sort_entry sort_sym_to;
+>  extern struct sort_entry sort_srcline;
+>  extern const char default_mem_sort_order[];
+> +extern bool chk_double_cl;
+>  
+>  struct res_sample {
+>  	u64 time;
+> -- 
+> 2.30.2
+> 
