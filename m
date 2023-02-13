@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C34C636CC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 21:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5335CC64EC7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 21:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbjBMVDq (ORCPT
+        id S229743AbjBMVDq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Mon, 13 Feb 2023 16:03:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230175AbjBMVDm (ORCPT
+        with ESMTP id S230083AbjBMVDo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Feb 2023 16:03:42 -0500
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E181B55E
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 13:03:41 -0800 (PST)
-Received: by mail-pf1-x449.google.com with SMTP id i15-20020aa787cf000000b00593addd14a5so6846954pfo.15
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 13:03:41 -0800 (PST)
+        Mon, 13 Feb 2023 16:03:44 -0500
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D091C5A3
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 13:03:43 -0800 (PST)
+Received: by mail-pg1-x54a.google.com with SMTP id o19-20020a63fb13000000b004fb5e56e652so3562599pgh.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 13:03:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qrN9jlWUGKebcMV0yhiCKjFphcO4anlDt9wV3VUtSLs=;
-        b=jGU4lA8/hoEqIDLvQcR9p4fzHotKwBmrSvnF6Wow0R1HGQvNAaoEO1bMcHJHg/ge/G
-         0Dg6FgengoCE+KVeRUjumTtZBJET+HTRwvM1oe29kGguaC81c9eSVb4eEFZN7bjwEj7W
-         x3BgTlUqJo7pFoUOCvj/uuAZju8B4HaSGiad6kqNvVHMgH/l/BnnLj2zwDGk56mMY7w6
-         +1iitZ1AJ2d+QkUVeqaO1oGEWfiLDMi3KajzG7y44b68gO5UzHzmt/IP2VWuV4JlVy9o
-         FtAmUBaUaKQLJT9i56zUDjV50OWclWQBdZDisY6qkIYmi6bj8YMKtM6AA5UnUNyD2nYm
-         uz8Q==
+        bh=PNlCxue8f7lOs6QuvM7/2EAnGBBamHm0s0gmH31uJ+I=;
+        b=U058KpMINjh/TIWfjHqmqrzoZS+zo6kQ3qBHMGBc/zxuaVSMiK2aoKmOj9MVkOtqiH
+         kQv+V8ppdbQr3FiXtnTo48s1embSUNk9+M2x/tDoErzuwTHbvafGS5z6hPD6+GWuYEPW
+         uZSZ7pD6wZg/ji/Ee08N75aHmpCGZs0oRo1k8TmWL/nbIAzTTqF6j+kzGC0cGpO5sKRZ
+         3Di7zJrx8vMmDb+mBOROXRu4C4pC5sfeowRAAL1tgiNYmWN9CQmKOwhVOOARyOyi/HSp
+         TETl92ToaFLbPJB8RatdASWp5YMsJK9xcUT0MEjgmm8etExgbW3gKRELybDRmrFH7WJD
+         85mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qrN9jlWUGKebcMV0yhiCKjFphcO4anlDt9wV3VUtSLs=;
-        b=XbrLwez+xEVQTm+1T9iW99HfyP640evCyPc5rt5lRxDgyu6yzruEvTSKfL6R9NRBN+
-         GU40hrpBaD047iwbcMREJLh2n+3hsjyxmGNb+SuLbMdVnm2+HEQZVYLV0c9JgMxpN6qk
-         kP7wK2HBNCltCMq61dZBg9qw1SVaGCG/i0c4xKgfRLePOYBGB0Rw+7/zzz7JYjvQZ8ts
-         GApaFXndTu5jdsGeTy/uIGoGUFo14E4JRbnrShCNs284EqN0X09+LVeseZf7muYh+t7N
-         OaUafOifJjJrpSnrosHib6jgyhFOmylcGCtsdpXdcEw927XKDTlUweb7NxQ1tcJ6H7a/
-         /2kQ==
-X-Gm-Message-State: AO0yUKW+ir807np6efzHX91ahLSFWPNNUZ3IR6YGUJp1bMZxLVNRt+mx
-        xbv8L/G3MmHewp8z0TschhKv/UEvSWqZz0E=
-X-Google-Smtp-Source: AK7set+fIZPdMnmqrLDxEeV303sJ8KLR7tYv16tUjdhla8rqMw8CnQM55yRxFm/Zin2t6D5s0G6MgPEgavkoAT8=
+        bh=PNlCxue8f7lOs6QuvM7/2EAnGBBamHm0s0gmH31uJ+I=;
+        b=qvyU3Z6KLPN/+7/RJhNY6BsL3X0V1KP998NJ344RSmXUTBRu6yuJsE1CKhQOSkRfQh
+         2FwyOdyimdsLm8UbwP4jZk40m21Wwa0rqoRNMtmyxbwXwNUgdQ2btmxtCoNnfQSepMyW
+         NHArVpTd8gwTZl+ld7BmPEY9wyz6ikCE9MuEruugGFpZYE3/q+p5II7auN3EF3UwWBha
+         Khq+bsDBwDs0JvA/CYBhRvTbdsAA6Q5aVUpy7RDikhEwi8rpyk6yvvLcqGP9GYwJ6qfy
+         +r/sz/HFp8uTKnccTj7mx3PrZ0Vb9LC5pmdVO9Qoljpk/H6YlIYdkHd0WJKyfqoE2Qet
+         e6Og==
+X-Gm-Message-State: AO0yUKUTIBejXOROl6wzUPe8IM5wY3gc9sejA5VnWN0CO96mqxsLS0ci
+        UAmMZ+vksSfm1EafplInPVQXWshYtM/jFQs=
+X-Google-Smtp-Source: AK7set+80DDsCF1md9COtpoXmv7reEuLQsu7dVpGY6/rfogIf19/pYZcTTCpC8Ysd1iYqvJlAziEz4DFcLpoalI=
 X-Received: from zaidcloud.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5325])
- (user=zalbassam job=sendgmr) by 2002:a17:90b:1483:b0:233:e9c9:67f with SMTP
- id js3-20020a17090b148300b00233e9c9067fmr1318318pjb.9.1676322220898; Mon, 13
- Feb 2023 13:03:40 -0800 (PST)
-Date:   Mon, 13 Feb 2023 16:03:16 -0500
+ (user=zalbassam job=sendgmr) by 2002:a17:902:9682:b0:19a:9980:854 with SMTP
+ id n2-20020a170902968200b0019a99800854mr102676plp.3.1676322222866; Mon, 13
+ Feb 2023 13:03:42 -0800 (PST)
+Date:   Mon, 13 Feb 2023 16:03:17 -0500
 In-Reply-To: <20230213210319.1075872-1-zalbassam@google.com>
 Mime-Version: 1.0
 References: <20230213210319.1075872-1-zalbassam@google.com>
 X-Mailer: git-send-email 2.39.1.581.gbfd45094c4-goog
-Message-ID: <20230213210319.1075872-6-zalbassam@google.com>
-Subject: [PATCH v3 5/8] perf: pmuv3: Change GENMASK to GENMASK_ULL
+Message-ID: <20230213210319.1075872-7-zalbassam@google.com>
+Subject: [PATCH v3 6/8] ARM: Make CONFIG_CPU_V7 valid for 32bit ARMv8 implementations
 From:   Zaid Al-Bassam <zalbassam@google.com>
 To:     Jesus Sanchez-Palencia <jesussanp@google.com>,
         Russell King <linux@armlinux.org.uk>,
@@ -74,47 +74,42 @@ To:     Jesus Sanchez-Palencia <jesussanp@google.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
         kvmarm@lists.cs.columbia.edu
-Cc:     Zaid Al-Bassam <zalbassam@google.com>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>,
+        Zaid Al-Bassam <zalbassam@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-GENMASK macro uses "unsigned long" (32-bit wide on arm and 64-bit
-on arm64), This causes build issues when enabling PMUv3 on arm as
-it tries to access bits > 31. This patch switches the GENMASK to
-GENMASK_ULL, which uses "unsigned long long" (64-bit on both arm
-and arm64).
+From: Marc Zyngier <marc.zyngier@arm.com>
 
+ARMv8 is a superset of ARMv7, and all the ARMv8 features are
+discoverable with a set of ID registers. It means that we can
+use CPU_V7 to guard ARMv8 features at compile time.
+
+This commit simply amends the CPU_V7 configuration symbol comment
+to reflect that CPU_V7 also covers ARMv8.
+
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Zaid Al-Bassam <zalbassam@google.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/perf/arm_pmuv3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index b3683fdf8d0b9..dc8b8c8f1b3ed 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -489,7 +489,7 @@ static bool armv8pmu_event_needs_bias(struct perf_event *event)
- static u64 armv8pmu_bias_long_counter(struct perf_event *event, u64 value)
- {
- 	if (armv8pmu_event_needs_bias(event))
--		value |= GENMASK(63, 32);
-+		value |= GENMASK_ULL(63, 32);
+diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+index e949e84a2decd..b77f4a0d9072e 100644
+--- a/arch/arm/mm/Kconfig
++++ b/arch/arm/mm/Kconfig
+@@ -403,7 +403,7 @@ config CPU_V6K
+ 	select CPU_THUMB_CAPABLE
+ 	select CPU_TLB_V6 if MMU
  
- 	return value;
- }
-@@ -497,7 +497,7 @@ static u64 armv8pmu_bias_long_counter(struct perf_event *event, u64 value)
- static u64 armv8pmu_unbias_long_counter(struct perf_event *event, u64 value)
- {
- 	if (armv8pmu_event_needs_bias(event))
--		value &= ~GENMASK(63, 32);
-+		value &= ~GENMASK_ULL(63, 32);
- 
- 	return value;
- }
+-# ARMv7
++# ARMv7 and ARMv8 architectures
+ config CPU_V7
+ 	bool
+ 	select CPU_32v6K
 -- 
 2.39.1.581.gbfd45094c4-goog
 
