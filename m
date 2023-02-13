@@ -2,132 +2,293 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFDBC05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Feb 2023 11:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E16EC05027
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 03:22:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbjBLL7p (ORCPT
+        id S229557AbjBMDWJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Feb 2023 06:59:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
+        Sun, 12 Feb 2023 22:22:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjBLL7p (ORCPT
+        with ESMTP id S229477AbjBMDWI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Feb 2023 06:59:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 509F311E95;
-        Sun, 12 Feb 2023 03:59:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E84360BA0;
-        Sun, 12 Feb 2023 11:59:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4221C433D2;
-        Sun, 12 Feb 2023 11:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676203182;
-        bh=+RpDH0/cTiKgitsPw9+M0Ym/q48G8wKP3sv+C2fvWEk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Lk2wX2hoC2Np8OnYwCnV/AoRrcqIdj7gNQu92CRvUdUWc80Inu2aFLgjvCPgVZdJS
-         LRONTz/VMHn3wDOxy8EFiGfsxhYX+/CozIg90+6zQqDJUT3JDT1nGUaS1zBhrDvSzc
-         i6jcuXTsyzAiDmbYE2778ipgmsuYxTI6uXNfqVHBlO/TbydqHktE1FQ5++YPsq3QJR
-         sWir/JU/8z71bvmIolWdPJAqFxW8+HEBRiR8kx1L0nUFZrWSjAXgV1b6J1TlWcfzsS
-         rDgUHQdA6uSqRiidwxzb+EL/QFAd9Dqz5J0PCbCZ9RttUV20ojNpOATf4gIM3jeque
-         qVPhEg1k0WGEA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pRB1A-009ikJ-If;
-        Sun, 12 Feb 2023 11:59:40 +0000
-Date:   Sun, 12 Feb 2023 11:59:40 +0000
-Message-ID: <864jrrytzn.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zaid Al-Bassam <zalbassam@google.com>
-Cc:     Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Sun, 12 Feb 2023 22:22:08 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5B51A262;
+        Sun, 12 Feb 2023 19:22:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676258526; x=1707794526;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sbUryGN2GlhD5JhBXbYxOcllmwJOGL46QI8dL79t/vY=;
+  b=iEbA9WF3mcH0LSR7B8Egz5DosTZGK4MpQQhBW7bGV+x3tIyeyGcZZOPp
+   EbV7IrmoMojzPkx7pMXowcNn6PyDiY1gSsfhlqXBuUlSJQSI/Vgfy/HXW
+   MvC9m0QQ2XuQqJCTNMFptCgIEhVex95fw6m4RO1UWqRBx1civ3H5B2gsb
+   WcuodL3cuqlqkUPlo1wSpc9Rf/tXmzoi9el7x4tp8wskLAdymZcQ9nirU
+   tfEVRWcrETW41dJ6Swft855iFMjh5nEfcV6AvfGIpQ8s8xevhmBGTTADm
+   G5vq0we70wLFAowJfVfMmufIzR0OA7fRFA+O6uayjWwl9xrNVwbjRCP+v
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="311158675"
+X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
+   d="scan'208";a="311158675"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2023 19:22:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10619"; a="732336201"
+X-IronPort-AV: E=Sophos;i="5.97,291,1669104000"; 
+   d="scan'208";a="732336201"
+Received: from feng-clx.sh.intel.com ([10.238.200.228])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Feb 2023 19:22:01 -0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 7/8] ARM: perf: Allow the use of the PMUv3 driver on 32bit ARM
-In-Reply-To: <20230210165500.2292608-8-zalbassam@google.com>
-References: <20230210165500.2292608-1-zalbassam@google.com>
-        <20230210165500.2292608-8-zalbassam@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: zalbassam@google.com, jesussanp@google.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, marc.zyngier@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Joe Mario <jmario@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>
+Subject: [PATCH] perf c2c: Add report option to show false sharing in adjacent cachelines
+Date:   Mon, 13 Feb 2023 11:17:33 +0800
+Message-Id: <20230213031733.236485-1-feng.tang@intel.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 10 Feb 2023 16:54:59 +0000,
-Zaid Al-Bassam <zalbassam@google.com> wrote:
-> 
-> From: Marc Zyngier <marc.zyngier@arm.com>
-> 
-> The only thing stopping the PMUv3 driver from compiling on 32bit
-> is the lack of defined system registers names and the handful of
-> required helpers.
-> 
-> This is easily solved by providing the sysreg accessors and updating
-> the Kconfig entry.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> Co-developed-by: Zaid Al-Bassam <zalbassam@google.com>
-> Signed-off-by: Zaid Al-Bassam <zalbassam@google.com>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Link: https://lore.kernel.org/r/20230126204444.2204061-8-zalbassam@google.com
-> ---
->  arch/arm/include/asm/arm_pmuv3.h | 259 +++++++++++++++++++++++++++++++
->  drivers/perf/Kconfig             |   5 +-
->  drivers/perf/arm_pmuv3.c         |   5 +-
->  3 files changed, 265 insertions(+), 4 deletions(-)
->  create mode 100644 arch/arm/include/asm/arm_pmuv3.h
-> 
-> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-> new file mode 100644
-> index 0000000000000..b2d9dc9dedbac
-> --- /dev/null
-> +++ b/arch/arm/include/asm/arm_pmuv3.h
-> @@ -0,0 +1,259 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2012 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
+Many platforms have feature of adjacent cachelines prefetch, when it
+is enabled, for data in RAM of 2 cachelines (2N and 2N+1) granularity,
+if one is fetched to cache, the other one could likely be fetched too,
+which sort of extends the cacheline size to double, thus the false
+sharing could happens in adjacent cachelines.
 
-Same remark here.
+0Day has captured performance changed related with this [1], and some
+commercial software explicitly makes its hot global variables 128 bytes
+aligned (2 cache lines) to avoid this kind of extended false sharing.
 
-	M.
+So add an option "-a" or "--double-cl" for c2c report to show false
+sharing in double cache line granularity, which acts just like the
+cacheline size is doubled. There is no change to c2c record. The
+hardware HITM events are still per cacheline. The option just changes
+the granularity of how events are grouped and displayed.
 
+In the c2c report below (will-it-scale's pagefault2 case on old kernel):
+
+  ----------------------------------------------------------------------
+     26       31        2        0        0        0  0xffff888103ec6000
+  ----------------------------------------------------------------------
+   35.48%   50.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff8133148b      1153        66       971     3748        74  [k] get_mem_cgroup_from_mm
+    6.45%    0.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff813396e4       570         0      1531      879        75  [k] mem_cgroup_charge
+   25.81%   50.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81331472       949        70       593     3359        74  [k] get_mem_cgroup_from_mm
+   19.35%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81339686      1352         0      1073     1022        74  [k] mem_cgroup_charge
+    9.68%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff813396d6      1401         0       863      768        74  [k] mem_cgroup_charge
+    3.23%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81333106       618         0       804       11         9  [k] uncharge_batch
+
+The offset 0x10 and 0x54 used to displayed in 2 groups, and now they
+are listed together to give users a hint.
+
+[1]. https://lore.kernel.org/lkml/20201102091543.GM31092@shao2-debian/
+
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/Documentation/perf-c2c.txt |  6 ++++++
+ tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
+ tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
+ tools/perf/util/sort.c                | 13 ++++++++++---
+ tools/perf/util/sort.h                |  1 +
+ 5 files changed, 50 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+index 5c5eb2def83e..a8e1e40d270e 100644
+--- a/tools/perf/Documentation/perf-c2c.txt
++++ b/tools/perf/Documentation/perf-c2c.txt
+@@ -126,6 +126,12 @@ REPORT OPTIONS
+ 	The known limitations include exception handing such as
+ 	setjmp/longjmp will have calls/returns not match.
+ 
++-a::
++--double-cl::
++	Group HITM events in double cacheline granularity. Some architecture
++	has Adjacent Cacheline Prefetch feature, which behaves like the
++	cachline size is doubled.
++
+ C2C RECORD
+ ----------
+ The perf c2c record command setup options related to HITM cacheline analysis
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 52d94c7dd836..7d495db7e5a2 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = cl_address(he->mem_info->daddr.addr);
++		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = cl_offset(he->mem_info->daddr.al_addr);
++		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = cl_offset(left->mem_info->daddr.addr);
++		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
++
+ 	if (right->mem_info)
+-		r = cl_offset(right->mem_info->daddr.addr);
++		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
+ 	he = cl_browser->he;
+ 
+ 	if (he->mem_info)
+-		addr = cl_address(he->mem_info->daddr.addr);
++		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+ 
+ 	scnprintf(bf, size, "Cacheline 0x%lx", addr);
+ 	return 0;
+@@ -2788,15 +2789,16 @@ static int ui_quirks(void)
+ 	if (!c2c.use_stdio) {
+ 		dim_offset.width  = 5;
+ 		dim_offset.header = header_offset_tui;
+-		nodestr = "CL";
++		nodestr = chk_double_cl ? "Double-CL" : "CL";
+ 	}
+ 
+ 	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
+ 
+ 	/* Fix the zero line for dcacheline column. */
+-	buf = fill_line("Cacheline", dim_dcacheline.width +
+-				     dim_dcacheline_node.width +
+-				     dim_dcacheline_count.width + 4);
++	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
++				dim_dcacheline.width +
++				dim_dcacheline_node.width +
++				dim_dcacheline_count.width + 4);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+ 		    "Enable LBR callgraph stitching approach"),
++	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
++		    "Check adjacent cachline false sharing"),
+ 	OPT_PARENT(c2c_options),
+ 	OPT_END()
+ 	};
+diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
+index dec8c0fb1f4a..630d16731b4f 100644
+--- a/tools/perf/util/cacheline.h
++++ b/tools/perf/util/cacheline.h
+@@ -6,16 +6,31 @@
+ 
+ int __pure cacheline_size(void);
+ 
+-static inline u64 cl_address(u64 address)
++
++/*
++ * Some architecture has 'Adjacent Cacheline Prefetch' feature,
++ * which performs like the cacheline size being doubled.
++ */
++static inline u64 cl_address(u64 address, bool double_cl)
+ {
++	u64 size = cacheline_size();
++
++	if (double_cl)
++		size *= 2;
++
+ 	/* return the cacheline of the address */
+-	return (address & ~(cacheline_size() - 1));
++	return (address & ~(size - 1));
+ }
+ 
+-static inline u64 cl_offset(u64 address)
++static inline u64 cl_offset(u64 address, bool double_cl)
+ {
+-	/* return the cacheline of the address */
+-	return (address & (cacheline_size() - 1));
++	u64 size = cacheline_size();
++
++	if (double_cl)
++		size *= 2;
++
++	/* return the offset inside cachline */
++	return (address & (size - 1));
+ }
+ 
+ #endif // PERF_CACHELINE_H
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index e188f74698dd..148b28f0a7e2 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -52,6 +52,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+ static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
+ static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
+ 
++/*
++ * Some architecture has Adjacent Cacheline Prefetch feature, which behaves
++ * like the cachline size is doubled. Enable this flag to check things in
++ * double cacheline granularity.
++ */
++bool chk_double_cl;
++
+ /*
+  * Replaces all occurrences of a char used with the:
+  *
+@@ -1499,8 +1506,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
+ 
+ addr:
+ 	/* al_addr does all the right addr - start + offset calculations */
+-	l = cl_address(left->mem_info->daddr.al_addr);
+-	r = cl_address(right->mem_info->daddr.al_addr);
++	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
++	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
+ 
+ 	if (l > r) return -1;
+ 	if (l < r) return 1;
+@@ -1519,7 +1526,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+ 	if (he->mem_info) {
+ 		struct map *map = he->mem_info->daddr.ms.map;
+ 
+-		addr = cl_address(he->mem_info->daddr.al_addr);
++		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
+ 		ms = &he->mem_info->daddr.ms;
+ 
+ 		/* print [s] for shared data mmaps */
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 921715e6aec4..04f0a6dc7381 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
+ extern struct sort_entry sort_sym_to;
+ extern struct sort_entry sort_srcline;
+ extern const char default_mem_sort_order[];
++extern bool chk_double_cl;
+ 
+ struct res_sample {
+ 	u64 time;
 -- 
-Without deviation from the norm, progress is not possible.
+2.30.2
+
