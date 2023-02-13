@@ -2,98 +2,333 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF71C636D4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 13:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5931FC636D4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 13:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbjBMNLY (ORCPT
+        id S230324AbjBMNkS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Feb 2023 08:11:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
+        Mon, 13 Feb 2023 08:40:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229976AbjBMNLV (ORCPT
+        with ESMTP id S230199AbjBMNkN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Feb 2023 08:11:21 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32BE1ADF8;
-        Mon, 13 Feb 2023 05:11:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sY0Xw97tkK80XNIR32EODzqw53Y3bbnKuPghntbXvNM=; b=naakW9McTESgZUSXJL5EEszbPv
-        5s89w5K+4FYADoJObYVIcxzM+mVhIROms2qhFrQpm92rlt1ycJUrdtyYh8dHrq8F3kk5J1Mp+SurC
-        iHN4INvuOVfINKgJ/Gv8tCxehyqpZOFvw5TrYBzqYJ45fDI3BHIukQNsND0v3WjOza9kl1jYB3+YM
-        p/4zTdQde4wNyAVDOi1LumVI0uAy/dvMa48pyV/JM2A3iietbnBaYK45o6ArSADz+N21NwlLBWuJF
-        H4xSanFzENWT4SngvrApgnZa0i6CkVs1D0mKVqs3ogdY9qQJrjGBuc4nufQRQ/HsOSQIyJ52RmbYB
-        d/rgW0NA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pRYb0-009J8f-2S;
-        Mon, 13 Feb 2023 13:10:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2306030020C;
-        Mon, 13 Feb 2023 14:10:55 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F0907209F7549; Mon, 13 Feb 2023 14:10:54 +0100 (CET)
-Date:   Mon, 13 Feb 2023 14:10:54 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Manali Shukla <manali.shukla@amd.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, seanjc@google.com,
-        pbonzini@redhat.com, jpoimboe@kernel.org,
-        pawan.kumar.gupta@linux.intel.com, babu.moger@amd.com,
-        sandipan.das@amd.com, jmattson@google.com, thomas.lendacky@amd.com,
-        nikunj@amd.com, ravi.bangoria@amd.com, eranian@google.com,
-        irogers@google.com, kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH kernel 1/2] perf/x86/amd: Add
- amd_prevent_hostibs_window() to set per-cpu ibs_flags
-Message-ID: <Y+o23lcYHbYWua62@hirez.programming.kicks-ass.net>
-References: <20230206060545.628502-1-manali.shukla@amd.com>
- <20230206060545.628502-2-manali.shukla@amd.com>
+        Mon, 13 Feb 2023 08:40:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053D6199CD
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 05:39:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676295559;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=26QBmCO7JapN+9Hm24DRjK9ATcNbpPkqVmUfotAg9yE=;
+        b=JqcBGL8J29ZtuFUAsmhb/Y0V9uWVy0uiz9tYpzmcTP0rvdob9AfIy6UOaoLHHbUXhahLt6
+        71S7r6V1KaOWGZfB1Meq6QtM6atizpQS8FOa9v16txv9pBLp+xLaOwBbyMZiG7+J/Yx4Oz
+        kohSjZyqwDyM/OJJEcYBC/sJZeCuKeg=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-275-Oh54MsC7MW6Wo31MrsrKdQ-1; Mon, 13 Feb 2023 08:39:17 -0500
+X-MC-Unique: Oh54MsC7MW6Wo31MrsrKdQ-1
+Received: by mail-qk1-f197.google.com with SMTP id ay10-20020a05620a178a00b0072db6346c39so7483771qkb.16
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 05:39:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=26QBmCO7JapN+9Hm24DRjK9ATcNbpPkqVmUfotAg9yE=;
+        b=YyGoDyAn1PE6fmR/GqeLyJHwLXTKfu1qxt5SIGvRqxR2Eln3fwNam4ot5X7g2/FrW6
+         w4PBB6aq5TNW8Px1pBJ5daWfoDNcDaOdFo38psYBoQQVQHctBDiM6cQcPoyu1sdkJVDH
+         TrPw6OCpil+sIpKEehoe8Q1ly0UK2XuUoSqpRrRPU92ONY1DofwUpeI9uSva1m6ozv0A
+         MDWfn451H16HRQMkSiSTUijyvhdM+ChTZvZq1dDRDq5H9EGMor+spxF4/3QpIqGUloUt
+         MIFaPa88kZeYXnr3A1lv0G5s3SGaqMtOtmfHiQzPMi4agg9PzIR2JJ1D73iiC86r+i1r
+         uFag==
+X-Gm-Message-State: AO0yUKVkA1DHm0DzvrPjrcwzYzEs995A8VjHg7g6l6GeHmsQzjjpH6uS
+        2obciIDsjHkKjFnCfu/loPueyHEtWCgWDO2TXApaGu3ZhKADWJ8+7uXnt/wQHtwec6Ihn50lZut
+        drGY1fWTJKl8aXFNEL6ckpyO0ESI87NIGpE4=
+X-Received: by 2002:a05:6214:1c0e:b0:56e:ab08:670b with SMTP id u14-20020a0562141c0e00b0056eab08670bmr9083063qvc.34.1676295557283;
+        Mon, 13 Feb 2023 05:39:17 -0800 (PST)
+X-Google-Smtp-Source: AK7set+aYgyPAO6oJPYmirUIUqwbk0ipS9F4i7VAffHt2sNjhvvbFR21wc0SrlU8WjDcc+LWhbBgdg==
+X-Received: by 2002:a05:6214:1c0e:b0:56e:ab08:670b with SMTP id u14-20020a0562141c0e00b0056eab08670bmr9083030qvc.34.1676295556979;
+        Mon, 13 Feb 2023 05:39:16 -0800 (PST)
+Received: from [192.168.1.86] (pool-173-76-169-128.bstnma.fios.verizon.net. [173.76.169.128])
+        by smtp.gmail.com with ESMTPSA id 9-20020a05620a048900b006fec1c0754csm9727357qkr.87.2023.02.13.05.39.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Feb 2023 05:39:16 -0800 (PST)
+Message-ID: <649f813d-2500-3015-57dc-b2e1fe290388@redhat.com>
+Date:   Mon, 13 Feb 2023 08:39:15 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230206060545.628502-2-manali.shukla@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] perf c2c: Add report option to show false sharing in
+ adjacent cachelines
+To:     Feng Tang <feng.tang@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>
+References: <20230213031733.236485-1-feng.tang@intel.com>
+Content-Language: en-US
+From:   Joe Mario <jmario@redhat.com>
+In-Reply-To: <20230213031733.236485-1-feng.tang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 06:05:44AM +0000, Manali Shukla wrote:
-> Add a function to set per-cpu ibs_flags based on an active or inactive
-> PreventHostIBS window.
-> 
-> MSR_AMD64_IBSFETCHCTL[IbsFetchEn] and MSR_AMD64_IBSOPCTL[IbsOpEn] bits
-> need to be cleared for PreventHostIBS feature to be enabled before VMRUN
-> is executed.
-> 
-> ENABLE bit and VALID bit for MSR_AMD64_IBSFETCHCTL are contained in the
-> same MSR and same is the case with MSR_AMD64_IBSOPCTL.
-> 
-> Consider the following scenario:
-> - The IBS MSR which has ENABLE bit set and VALID bit clear is read.
-> - During the process of clearing the ENABLE bit and writing the IBS MSR
->   to disable IBS, an IBS event can occur that sets the VALID bit.
-> - The write operation on IBS MSR can clear the newly set VALID bit.
-> - Since this situation is occurring in the CLGI/STGI window
->   (PreventHostIBS window), the actual NMI is not taken.
-> - Once VMRUN is issued, it will exit with VMEXIT_NMI. As soon as STGI is
->   executed, the pending NMI will trigger.
-> - The IBS NMI handler checks for the VALID bit to determine if the NMI
->   is generated because of IBS.
-> - Since VALID bit is now clear, it doesn't recognize that an IBS event
->   is occurred. Due to this reason, the dazed and confused unknown NMI
->   messages are generated.
-> 
-> amd_prevent_hostibs_window() is added to avoid these messages when
-> PreventHostIBS window is active and PreventHostIBS feature is enabled
-> for the guest.
-> 
-> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
 
-URGH... so am I reading this right that this is a sodding terrible
-software implementation of perf_event_attr::exclude_guest ?
+
+On 2/12/23 10:17 PM, Feng Tang wrote:
+> Many platforms have feature of adjacent cachelines prefetch, when it
+> is enabled, for data in RAM of 2 cachelines (2N and 2N+1) granularity,
+> if one is fetched to cache, the other one could likely be fetched too,
+> which sort of extends the cacheline size to double, thus the false
+> sharing could happens in adjacent cachelines.
+> 
+> 0Day has captured performance changed related with this [1], and some
+> commercial software explicitly makes its hot global variables 128 bytes
+> aligned (2 cache lines) to avoid this kind of extended false sharing.
+> 
+> So add an option "-a" or "--double-cl" for c2c report to show false
+> sharing in double cache line granularity, which acts just like the
+> cacheline size is doubled. There is no change to c2c record. The
+> hardware HITM events are still per cacheline. The option just changes
+> the granularity of how events are grouped and displayed.
+> 
+> In the c2c report below (will-it-scale's pagefault2 case on old kernel):
+> 
+>   ----------------------------------------------------------------------
+>      26       31        2        0        0        0  0xffff888103ec6000
+>   ----------------------------------------------------------------------
+>    35.48%   50.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff8133148b      1153        66       971     3748        74  [k] get_mem_cgroup_from_mm
+>     6.45%    0.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff813396e4       570         0      1531      879        75  [k] mem_cgroup_charge
+>    25.81%   50.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81331472       949        70       593     3359        74  [k] get_mem_cgroup_from_mm
+>    19.35%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81339686      1352         0      1073     1022        74  [k] mem_cgroup_charge
+>     9.68%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff813396d6      1401         0       863      768        74  [k] mem_cgroup_charge
+>     3.23%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81333106       618         0       804       11         9  [k] uncharge_batch
+> 
+> The offset 0x10 and 0x54 used to displayed in 2 groups, and now they
+> are listed together to give users a hint.
+> 
+> [1]. https://lore.kernel.org/lkml/20201102091543.GM31092@shao2-debian/
+> 
+> Signed-off-by: Feng Tang <feng.tang@intel.com>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-c2c.txt |  6 ++++++
+>  tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
+>  tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
+>  tools/perf/util/sort.c                | 13 ++++++++++---
+>  tools/perf/util/sort.h                |  1 +
+>  5 files changed, 50 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+> index 5c5eb2def83e..a8e1e40d270e 100644
+> --- a/tools/perf/Documentation/perf-c2c.txt
+> +++ b/tools/perf/Documentation/perf-c2c.txt
+> @@ -126,6 +126,12 @@ REPORT OPTIONS
+>  	The known limitations include exception handing such as
+>  	setjmp/longjmp will have calls/returns not match.
+>  
+> +-a::
+> +--double-cl::
+> +	Group HITM events in double cacheline granularity. Some architecture
+> +	has Adjacent Cacheline Prefetch feature, which behaves like the
+> +	cachline size is doubled.
+> +
+
+Hi Feng:
+One or two of the recent C2C patches changed the Intel-specifc "HITM" wording to something more generic, mostly because other arches do not have HITM events.
+
+How about changing the above description to something like:
++-a::
++--double-cl::
++       Group the detection of shared cacheline events into double cacheline granularity.
++       Some architectures have an Adjacent Cacheline Prefetch feature, which causes
++       cacheline sharing to behave like the cachline size is doubled.
+
+By the way, this patch is awesome.  
+It's not often that Adjacent Cacheline Prefetching causes performance problems, but when it does, it's a pain to track down.
+This will really help.  Thank you for doing it.
+
+Joe
+
+>  C2C RECORD
+>  ----------
+>  The perf c2c record command setup options related to HITM cacheline analysis
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 52d94c7dd836..7d495db7e5a2 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	char buf[20];
+>  
+>  	if (he->mem_info)
+> -		addr = cl_address(he->mem_info->daddr.addr);
+> +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+>  }
+> @@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	char buf[20];
+>  
+>  	if (he->mem_info)
+> -		addr = cl_offset(he->mem_info->daddr.al_addr);
+> +		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
+>  
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+>  }
+> @@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  	uint64_t l = 0, r = 0;
+>  
+>  	if (left->mem_info)
+> -		l = cl_offset(left->mem_info->daddr.addr);
+> +		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
+> +
+>  	if (right->mem_info)
+> -		r = cl_offset(right->mem_info->daddr.addr);
+> +		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	return (int64_t)(r - l);
+>  }
+> @@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
+>  	he = cl_browser->he;
+>  
+>  	if (he->mem_info)
+> -		addr = cl_address(he->mem_info->daddr.addr);
+> +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	scnprintf(bf, size, "Cacheline 0x%lx", addr);
+>  	return 0;
+> @@ -2788,15 +2789,16 @@ static int ui_quirks(void)
+>  	if (!c2c.use_stdio) {
+>  		dim_offset.width  = 5;
+>  		dim_offset.header = header_offset_tui;
+> -		nodestr = "CL";
+> +		nodestr = chk_double_cl ? "Double-CL" : "CL";
+>  	}
+>  
+>  	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
+>  
+>  	/* Fix the zero line for dcacheline column. */
+> -	buf = fill_line("Cacheline", dim_dcacheline.width +
+> -				     dim_dcacheline_node.width +
+> -				     dim_dcacheline_count.width + 4);
+> +	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+> +				dim_dcacheline.width +
+> +				dim_dcacheline_node.width +
+> +				dim_dcacheline_count.width + 4);
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+> @@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+>  	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+>  		    "Enable LBR callgraph stitching approach"),
+> +	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
+> +		    "Check adjacent cachline false sharing"),
+>  	OPT_PARENT(c2c_options),
+>  	OPT_END()
+>  	};
+> diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
+> index dec8c0fb1f4a..630d16731b4f 100644
+> --- a/tools/perf/util/cacheline.h
+> +++ b/tools/perf/util/cacheline.h
+> @@ -6,16 +6,31 @@
+>  
+>  int __pure cacheline_size(void);
+>  
+> -static inline u64 cl_address(u64 address)
+> +
+> +/*
+> + * Some architecture has 'Adjacent Cacheline Prefetch' feature,
+> + * which performs like the cacheline size being doubled.
+> + */
+> +static inline u64 cl_address(u64 address, bool double_cl)
+>  {
+> +	u64 size = cacheline_size();
+> +
+> +	if (double_cl)
+> +		size *= 2;
+> +
+>  	/* return the cacheline of the address */
+> -	return (address & ~(cacheline_size() - 1));
+> +	return (address & ~(size - 1));
+>  }
+>  
+> -static inline u64 cl_offset(u64 address)
+> +static inline u64 cl_offset(u64 address, bool double_cl)
+>  {
+> -	/* return the cacheline of the address */
+> -	return (address & (cacheline_size() - 1));
+> +	u64 size = cacheline_size();
+> +
+> +	if (double_cl)
+> +		size *= 2;
+> +
+> +	/* return the offset inside cachline */
+> +	return (address & (size - 1));
+>  }
+>  
+>  #endif // PERF_CACHELINE_H
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index e188f74698dd..148b28f0a7e2 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -52,6 +52,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+>  static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
+>  static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
+>  
+> +/*
+> + * Some architecture has Adjacent Cacheline Prefetch feature, which behaves
+> + * like the cachline size is doubled. Enable this flag to check things in
+> + * double cacheline granularity.
+> + */
+> +bool chk_double_cl;
+> +
+>  /*
+>   * Replaces all occurrences of a char used with the:
+>   *
+> @@ -1499,8 +1506,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
+>  
+>  addr:
+>  	/* al_addr does all the right addr - start + offset calculations */
+> -	l = cl_address(left->mem_info->daddr.al_addr);
+> -	r = cl_address(right->mem_info->daddr.al_addr);
+> +	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
+> +	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
+>  
+>  	if (l > r) return -1;
+>  	if (l < r) return 1;
+> @@ -1519,7 +1526,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+>  	if (he->mem_info) {
+>  		struct map *map = he->mem_info->daddr.ms.map;
+>  
+> -		addr = cl_address(he->mem_info->daddr.al_addr);
+> +		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
+>  		ms = &he->mem_info->daddr.ms;
+>  
+>  		/* print [s] for shared data mmaps */
+> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+> index 921715e6aec4..04f0a6dc7381 100644
+> --- a/tools/perf/util/sort.h
+> +++ b/tools/perf/util/sort.h
+> @@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
+>  extern struct sort_entry sort_sym_to;
+>  extern struct sort_entry sort_srcline;
+>  extern const char default_mem_sort_order[];
+> +extern bool chk_double_cl;
+>  
+>  struct res_sample {
+>  	u64 time;
+
