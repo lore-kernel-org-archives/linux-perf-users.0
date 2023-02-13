@@ -2,125 +2,74 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AF9C636D4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 17:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62270C636CC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Feb 2023 18:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbjBMRqM (ORCPT
+        id S229747AbjBMSeh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Feb 2023 12:46:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
+        Mon, 13 Feb 2023 13:34:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjBMRqM (ORCPT
+        with ESMTP id S229556AbjBMSeg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Feb 2023 12:46:12 -0500
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA4A1CF6B;
-        Mon, 13 Feb 2023 09:46:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-        s=smtpout1; t=1676310367;
-        bh=bjIdrq7E7T3M1MvC4x5lbyHOfWJfEa4UUs+f0ZSzvLo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=kVzPuTIfA2sXNFdhJk/1b1s4uKm8ICG0Z1j0EkuKl4Ak+n+7mXGMI0tGuEJpz9ykd
-         m4Yis8VvRX5n3+GHp68aG95M/4efD4oisZWmO5zdDix6w6HfjYkF4Un0Feyh3xUoXQ
-         GLilc1pSgwz1NLkZxrDmTVH6UGcB0xDduN3+j2hpKaBWGRrkjaovRMUaWA8TLqqDvX
-         vUWMFLkqTk/HMmrVArZxP9mMuWp2AZiSVbMGUsvWZ8puZ28ciZOCgpGwAMQeSWCbCK
-         6IcjlC1j9XiM6XrJJpHJqQSEwhThnTbRUr2gV9kFAwfxKTUikdRvhGV1jmSYeBzqVw
-         JHSbLcylDKTSw==
-Received: from [172.16.0.188] (192-222-180-24.qc.cable.ebox.net [192.222.180.24])
-        by smtpout.efficios.com (Postfix) with ESMTPSA id 4PFsFp6TdfzlHF;
-        Mon, 13 Feb 2023 12:46:06 -0500 (EST)
-Message-ID: <52a9f138-45f0-ca05-b67a-d734663984df@efficios.com>
-Date:   Mon, 13 Feb 2023 12:46:06 -0500
+        Mon, 13 Feb 2023 13:34:36 -0500
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E345FFF
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 10:34:34 -0800 (PST)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-15fe106c7c7so16188471fac.8
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Feb 2023 10:34:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SRt21gjhPwtBAHDBr6zXtaiS+CL4W3PobBT4eAbNNt0=;
+        b=noItEXGCXajB+1ZbDSfMWsPWiE5RPQnt2Yc539bihio00GUgOG6h3gJdWs7JxQggDF
+         yp5GLKuC+3bW1O6tndOZssS8HQsOiOaaveCjxAhcJKTAmup1lN8cMVZjZaz49B36HzUW
+         84qjHzHVeQBi/fAXhnmyDrHJYPrJopBQaOa7MbfrAikZtGSN4GSVr1dfelKqNDWGQdAb
+         pARhBo44o+DbuLTcX1U8fRIXim7yFLVxx4seXELUeUfqHa1Pw1Lit3oYKHswRGxMq4CN
+         2NHrMA6iQFvBe2wy6pCMER+gdoqTdWvURuto6Xg28sstC8VVhu7IKVrrHyUEnyMK61HV
+         pKcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SRt21gjhPwtBAHDBr6zXtaiS+CL4W3PobBT4eAbNNt0=;
+        b=cgu/WTaWjH6ZvRTlNDU39Ax/TcUsTwPh96gyWydgCbhgBHNAVlyYQoobRh52fQqNfa
+         OB82oZFcI0TTyMLvjeYdnGoq/yn+aUEzYDV1oqFBfegCfuycv2V+OvjHrHcKOtC7ScoT
+         7R7jAJy7NqLZwkFOzp3aWUtcklIav6ABc9h+CICWu38HDakymPMI46a1y0YTsxs3Z4m1
+         Acc+lryi1jClS/fjBZKayamn+YzD3DK9O8FFINbX5OeM2RBIrdSAl7cGthuukNTb3J56
+         GhJS2Zz6hDX3YCJF24Klc7EQIE9GEWZrcr5MQ76kXNkBBcbmD4bSc/oFShoV3ylfDfTq
+         KNjA==
+X-Gm-Message-State: AO0yUKXt6kb6YZU3k82+v2whTE36o+eh7SCrRWve3TgqkSX4TMQYW8FG
+        flm1VcyV6dwb6/ZzDb0KWWirywlsE6gTFSRymrlkIdhoUEeufQ==
+X-Google-Smtp-Source: AK7set9pE7rHk1/EJXpDlzkCP9TUJhft+cGTJ8mkbmncxAlJuQ6QFaaYQJrL6kf0N6hPgI/4blXSiPKUVzpwIoSvQFk=
+X-Received: by 2002:a05:6870:63ac:b0:16e:18e6:811a with SMTP id
+ t44-20020a05687063ac00b0016e18e6811amr226342oap.175.1676313273710; Mon, 13
+ Feb 2023 10:34:33 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v2 7/7] tools/testing/selftests/bpf: replace open-coded 16
- with TASK_COMM_LEN
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        John Stultz <jstultz@google.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        kbuild test robot <lkp@intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Michal Miroslaw <mirq-linux@rere.qmqm.pl>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kajetan Puchalski <kajetan.puchalski@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Qais Yousef <qyousef@google.com>,
-        Daniele Di Proietto <ddiproietto@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20211120112738.45980-1-laoar.shao@gmail.com>
- <20211120112738.45980-8-laoar.shao@gmail.com> <Y+QaZtz55LIirsUO@google.com>
- <CAADnVQ+nf8MmRWP+naWwZEKBFOYr7QkZugETgAVfjKcEVxmOtg@mail.gmail.com>
- <CANDhNCo_=Q3pWc7h=ruGyHdRVGpsMKRY=C2AtZgLDwtGzRz8Kw@mail.gmail.com>
- <20230208212858.477cd05e@gandalf.local.home>
- <20230208213343.40ee15a5@gandalf.local.home>
- <20230211140011.4f15a633@gandalf.local.home>
- <CALOAHbAnFHAiMH4QDgS6xN16B31qfhG8tfQ+iioCr9pw3sP=bw@mail.gmail.com>
- <20230211224455.0a4b2914@gandalf.local.home>
- <CAM9d7chx+azdxfNVVtaC_8eM2a57aBFa3hjh0TvjFt-6Xc7r7w@mail.gmail.com>
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <CAM9d7chx+azdxfNVVtaC_8eM2a57aBFa3hjh0TvjFt-6Xc7r7w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From:   Iti Shree <itishree1999@gmail.com>
+Date:   Mon, 13 Feb 2023 18:33:58 +0000
+Message-ID: <CAO3P5YQ-BU+fmhQo98SAKdc96qMEsim4nNvMRiBmsW0YSUYjQg@mail.gmail.com>
+Subject: brstack information with perf-intel-pt?
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2023-02-13 12:43, Namhyung Kim wrote:
-> Hi Steve,
-> 
-> On Sat, Feb 11, 2023 at 8:07 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->> On Sun, 12 Feb 2023 11:38:52 +0800
->> Yafang Shao <laoar.shao@gmail.com> wrote:
->>
->>>> Actually, there are cases that this needs to be a number, as b3bc8547d3be6
->>>> ("tracing: Have TRACE_DEFINE_ENUM affect trace event types as well") made
->>>> it update fields as well as the printk fmt.
->>>>
->>>
->>> It seems that TRACE_DEFINE_ENUM(TASK_COMM_LEN) in the trace events
->>> header files would be a better fix.
->>
->> NACK! I much prefer the proper fix that adds the length.
-> 
-> Can we just have both enum and macro at the same time?
-> I guess the enum would fill the BTF and the macro would provide
-> backward compatibility.
+Hello,
+I am trying to get brstack information in perf.data with intel-pt
+flag. I am passing following command for the following: perf record -e
+intel-pt// -m, 32768
 
-This is no need to keep the define. The root cause of the issue is 
-addressed by this fix:
+When I try to check if brstack is present in the gathered data with :
+perf script -F pid, ip, brstack -i pt-perf.data I can only see pid and
+ip information.
 
-https://lore.kernel.org/lkml/20230212154620.4d8fe033@gandalf.local.home/
+I can seem to find branching information with --itrace=b however I was
+wondering if there is any way I can get brstack information decoded
+into perf.data when I use intel-pt flag similar to what I get with
+default perf record?
 
-Thanks,
-
-Mathieu
-
-> 
-> Thanks,
-> Namhyung
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
-
+Best regard,
+Iti
