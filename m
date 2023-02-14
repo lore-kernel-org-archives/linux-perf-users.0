@@ -2,165 +2,319 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6227C6379F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 19:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E56BC05027
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 19:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbjBNTRq (ORCPT
+        id S229793AbjBNTbD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Feb 2023 14:17:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32996 "EHLO
+        Tue, 14 Feb 2023 14:31:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231935AbjBNTRo (ORCPT
+        with ESMTP id S229508AbjBNTbC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Feb 2023 14:17:44 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B53526879;
-        Tue, 14 Feb 2023 11:17:41 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id d8-20020a17090ad98800b002344fa17c8bso469797pjv.5;
-        Tue, 14 Feb 2023 11:17:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G6VI4UtKMXGf1NILxkcNf7EW/7unsO+N5Ql2yHcyswI=;
-        b=RD75b2TbvISNpQa3I0LdGHwJUdi6tx3O6Uqz1DY/dlHboU15NvSDsBv8Lq1f72CV8P
-         F7ApiY7xk9aklr/3IwN3wHEQhzw2Xh0CpapfVgCAsdxo+h1tm2hPwuL6XlR3TH29OcHc
-         AunP9G4sloIKw138O9BYP8/EVaVl5nKcS1wWYJJ9BRt4hcxSrBZ03FLk2yrrCeS78g0e
-         pdPTY5RwZ55QsWpUh03LCfzaFie5td3diC3UQ6NxPJ/eXLDrh7egh3y23ZIfxvk8T2PG
-         Yx8ziVNHlt1m7wSbU/WG2Lc4124UhOS1BjYtxLKL0Tj+qwcevi7ivzeLGFeZWdWUHkUL
-         0LOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G6VI4UtKMXGf1NILxkcNf7EW/7unsO+N5Ql2yHcyswI=;
-        b=XkQG5TuYuu5MRpSxlfF9mWOQlEBXwSwkrHMiu5eZWwAbPu+ceqWq2GVmeR39DJpJOv
-         L7rw6qgRyfTDhb6gzEQtvuO4Nlx1Dr6xHoX8GfLaVdRX3RaDzfA35u1PEEa0hm6dWi+3
-         DUugrAh9+5cX5TdiqAgKWkHEDh8Ks1afujeTwXpSvC52C7kQ8dcq+9g/6YUOYncqbb0Z
-         lp52xSKeQyKUlLBMLMfSj5onDxvZfUVf0zlbIR32lCk2pp3oM/uN627Npk+Joo8Z5oL+
-         D8pObPvOhOLa3ak6wBgV//ppIm/Vsosg+qlotvwSHUUduqSh1PUmwK2DqgbmfzPXueFT
-         pKLg==
-X-Gm-Message-State: AO0yUKXsXoiJQTrJDhGekeiEziI8gftLqfOR9XLqdn3zHz5bXU9q1CFP
-        OAQbEo8zmKL1fDzkLYrgqP0=
-X-Google-Smtp-Source: AK7set+cZzS5QlAok+A3hUaDau+IPIxcFuWKmquBgdY6gCbMbiInMO7ULCrCSY5QJmWyZW0RRRY2IA==
-X-Received: by 2002:a05:6a20:914a:b0:bc:d601:ebfc with SMTP id x10-20020a056a20914a00b000bcd601ebfcmr4361736pzc.54.1676402260776;
-        Tue, 14 Feb 2023 11:17:40 -0800 (PST)
-Received: from strix-laptop (2001-b011-20e0-1465-11be-7287-d61f-f938.dynamic-ip6.hinet.net. [2001:b011:20e0:1465:11be:7287:d61f:f938])
-        by smtp.gmail.com with ESMTPSA id h18-20020a656392000000b004fb4489969bsm9231927pgv.49.2023.02.14.11.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 11:17:40 -0800 (PST)
-Date:   Wed, 15 Feb 2023 03:17:30 +0800
-From:   Chih-En Lin <shiyn.lin@gmail.com>
-To:     Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 14 Feb 2023 14:31:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA142B2B3;
+        Tue, 14 Feb 2023 11:31:01 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E0EB61888;
+        Tue, 14 Feb 2023 19:31:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA602C433D2;
+        Tue, 14 Feb 2023 19:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676403060;
+        bh=OzFdUCCw9Pu2xp+2N+B//goBH7zKxLFMuj6wTNwMO/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LQPe0DwzG3F7uUTtRBr70L7VT4JbYcRm817y6p40EvQ9KQtU6+caK89dpokZ2mylm
+         eJSWN5m6FyVBAHRrGipuOOOj0fj2hvgE+bViq1uM+I3wkSJbZxEMUSya3LGo51+kRZ
+         N0qXdsSQ6V3ouNE1gdkF/d26rlpNKAlEQ/U4YhAPCeZFN2LejQsDSeniCmAjpzExBa
+         jiXzETWOx4ZbK6G24gg9CgJnRbn8W9tROTkajFhRnWymKt4VxcYnQaJ9Qu+a2IOX/S
+         VgAsirXJud7wJN6zAN3eI8lhU4U9KbK+dQe7OYnG1WCrNtyzDPbjh3jUnilfjnG+/Z
+         6Rh56FEWiCoJw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D450740025; Tue, 14 Feb 2023 16:30:56 -0300 (-03)
+Date:   Tue, 14 Feb 2023 16:30:56 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zach O'Keefe <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
-Message-ID: <Y+veStmKQa5o3A6j@strix-laptop>
-References: <20230207035139.272707-1-shiyn.lin@gmail.com>
- <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
- <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
- <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
- <Y+Z8ymNYc+vJMBx8@strix-laptop>
- <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
- <Y+uv3iTajGoOuNMO@strix-laptop>
- <CA+CK2bCKOONeipaYNQJSPTicej1DW0OWvw97r0TbG7oRtxVGnQ@mail.gmail.com>
- <Y+vV9YaiEIUQaW65@strix-laptop>
- <CA+CK2bDYHT4m=we7jbLWxneZTnBt2wJd2Msw67V97c1nNq-KZQ@mail.gmail.com>
+        Joe Mario <jmario@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        tim.c.chen@intel.com
+Subject: Re: [PATCH v2] perf c2c: Add report option to show false sharing in
+ adjacent cachelines
+Message-ID: <Y+vhcAYQrX6Lv7cL@kernel.org>
+References: <20230214075823.246414-1-feng.tang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+CK2bDYHT4m=we7jbLWxneZTnBt2wJd2Msw67V97c1nNq-KZQ@mail.gmail.com>
+In-Reply-To: <20230214075823.246414-1-feng.tang@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 14, 2023 at 01:52:16PM -0500, Pasha Tatashin wrote:
-> On Tue, Feb 14, 2023 at 1:42 PM Chih-En Lin <shiyn.lin@gmail.com> wrote:
-> >
-> > On Tue, Feb 14, 2023 at 11:30:26AM -0500, Pasha Tatashin wrote:
-> > > > > The thing with THP is, that during fork(), we always allocate a backup PTE
-> > > > > table, to be able to PTE-map the THP whenever we have to. Otherwise we'd
-> > > > > have to eventually fail some operations we don't want to fail -- similar to
-> > > > > the case where break_cow_pte() could fail now due to -ENOMEM although we
-> > > > > really don't want to fail (e.g., change_pte_range() ).
-> > > > >
-> > > > > I always considered that wasteful, because in many scenarios, we'll never
-> > > > > ever split a THP and possibly waste memory.
-> > > > >
-> > > > > Optimizing that for THP (e.g., don't always allocate backup THP, have some
-> > > > > global allocation backup pool for splits + refill when close-to-empty) might
-> > > > > provide similar fork() improvements, both in speed and memory consumption
-> > > > > when it comes to anonymous memory.
-> > > >
-> > > > When collapsing huge pages, do/can they reuse those PTEs for backup?
-> > > > So, we don't have to allocate the PTE or maintain the pool.
-> > >
-> > > It might not work for all pages, as collapsing pages might have had
-> > > holes in the user page table, and there were no PTE tables.
-> >
-> > So if there have holes in the user page table, after we doing the
-> > collapsing and then splitting. Do those holes be filled? Assume it is,
-> > then, I think it's the reason why it's not work for all the pages.
-> >
-> > But, after those operations, Will the user get the additional and
-> > unexpected memory (which is from the huge page filling)?
+Em Tue, Feb 14, 2023 at 03:58:23PM +0800, Feng Tang escreveu:
+> Many platforms have feature of adjacent cachelines prefetch, when it
+> is enabled, for data in RAM of 2 cachelines (2N and 2N+1) granularity,
+> if one is fetched to cache, the other one could likely be fetched too,
+> which sort of extends the cacheline size to double, thus the false
+> sharing could happens in adjacent cachelines.
 > 
-> Yes, more memory is going to be allocated for a process in such THP
-> collapse case. This is similar to madvise huge pages, and touching the
-> first byte may allocate 2M.
+> 0Day has captured performance changed related with this [1], and some
+> commercial software explicitly makes its hot global variables 128 bytes
+> aligned (2 cache lines) to avoid this kind of extended false sharing.
+> 
+> So add an option "-a" or "--double-cl" for c2c report to show false
+> sharing in double cache line granularity, which acts just like the
+> cacheline size is doubled. There is no change to c2c record. The
+> hardware events of shared cacheline are still per cacheline, and
+> this option just changes the granularity of how events are grouped
+> and displayed.
+> 
+> In the c2c report below (will-it-scale's 'pagefault2' case on old kernel):
+> 
+>   ----------------------------------------------------------------------
+>      26       31        2        0        0        0  0xffff888103ec6000
+>   ----------------------------------------------------------------------
+>    35.48%   50.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff8133148b      1153        66       971     3748        74  [k] get_mem_cgroup_from_mm
+>     6.45%    0.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff813396e4       570         0      1531      879        75  [k] mem_cgroup_charge
+>    25.81%   50.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81331472       949        70       593     3359        74  [k] get_mem_cgroup_from_mm
+>    19.35%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81339686      1352         0      1073     1022        74  [k] mem_cgroup_charge
+>     9.68%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff813396d6      1401         0       863      768        74  [k] mem_cgroup_charge
+>     3.23%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81333106       618         0       804       11         9  [k] uncharge_batch
+> 
+> The offset 0x10 and 0x54 used to displayed in 2 groups, and now they
+> are listed together to give users a hint of extended false sharing.
+> 
+> [1]. https://lore.kernel.org/lkml/20201102091543.GM31092@shao2-debian/
+> 
+> Signed-off-by: Feng Tang <feng.tang@intel.com>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Tested-by: Leo Yan <leo.yan@linaro.org>
+> ---
+> Changelog:
+> 
+>   v1 -> v2:
+>   * Refine comments and fix typos (Leo Yan)
+>   * Add reviewd-by and tested-by(for Arm64) tag from Leo Yan
+>   * Refine cmd description and commit log to avoid using
+>     architecture specific name (Joe Mario)
+> 
+>  tools/perf/Documentation/perf-c2c.txt |  7 +++++++
+>  tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
+>  tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
+>  tools/perf/util/sort.c                | 13 ++++++++++---
+>  tools/perf/util/sort.h                |  1 +
+>  5 files changed, 51 insertions(+), 17 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+> index 4e8c263e1721..cc18d61ec5d5 100644
+> --- a/tools/perf/Documentation/perf-c2c.txt
+> +++ b/tools/perf/Documentation/perf-c2c.txt
+> @@ -130,6 +130,13 @@ REPORT OPTIONS
+>  	The known limitations include exception handing such as
+>  	setjmp/longjmp will have calls/returns not match.
+>  
+> +-a::
+> +--double-cl::
+> +	Group the detection of shared cacheline events into double cacheline
+> +	granularity. Some architectures have an Adjacent Cacheline Prefetch
+> +	feature, which causes cacheline sharing to behave like the cacheline
+> +	size is doubled.
+> +
 
-Thanks for the explanation.
-Yeah, It seems like the reuse case can't work for all the pages.
+Humm, this is something not that usual, so I think we should have it
+just as --double-cl, ok?
+
+I can do the adjustment here if you agree.
 
 Thanks,
-Chih-En Lin
+
+- Arnaldo
+
+>  C2C RECORD
+>  ----------
+>  The perf c2c record command setup options related to HITM cacheline analysis
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 52d94c7dd836..1a98c6e97a4b 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	char buf[20];
+>  
+>  	if (he->mem_info)
+> -		addr = cl_address(he->mem_info->daddr.addr);
+> +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+>  }
+> @@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	char buf[20];
+>  
+>  	if (he->mem_info)
+> -		addr = cl_offset(he->mem_info->daddr.al_addr);
+> +		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
+>  
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+>  }
+> @@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+>  	uint64_t l = 0, r = 0;
+>  
+>  	if (left->mem_info)
+> -		l = cl_offset(left->mem_info->daddr.addr);
+> +		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
+> +
+>  	if (right->mem_info)
+> -		r = cl_offset(right->mem_info->daddr.addr);
+> +		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	return (int64_t)(r - l);
+>  }
+> @@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
+>  	he = cl_browser->he;
+>  
+>  	if (he->mem_info)
+> -		addr = cl_address(he->mem_info->daddr.addr);
+> +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+>  
+>  	scnprintf(bf, size, "Cacheline 0x%lx", addr);
+>  	return 0;
+> @@ -2788,15 +2789,16 @@ static int ui_quirks(void)
+>  	if (!c2c.use_stdio) {
+>  		dim_offset.width  = 5;
+>  		dim_offset.header = header_offset_tui;
+> -		nodestr = "CL";
+> +		nodestr = chk_double_cl ? "Double-CL" : "CL";
+>  	}
+>  
+>  	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
+>  
+>  	/* Fix the zero line for dcacheline column. */
+> -	buf = fill_line("Cacheline", dim_dcacheline.width +
+> -				     dim_dcacheline_node.width +
+> -				     dim_dcacheline_count.width + 4);
+> +	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+> +				dim_dcacheline.width +
+> +				dim_dcacheline_node.width +
+> +				dim_dcacheline_count.width + 4);
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+> @@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+>  	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+>  		    "Enable LBR callgraph stitching approach"),
+> +	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
+> +		    "Detect adjacent cacheline false sharing"),
+>  	OPT_PARENT(c2c_options),
+>  	OPT_END()
+>  	};
+> diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
+> index dec8c0fb1f4a..fe6d5b60a031 100644
+> --- a/tools/perf/util/cacheline.h
+> +++ b/tools/perf/util/cacheline.h
+> @@ -6,16 +6,31 @@
+>  
+>  int __pure cacheline_size(void);
+>  
+> -static inline u64 cl_address(u64 address)
+> +
+> +/*
+> + * Some architectures have 'Adjacent Cacheline Prefetch' feature,
+> + * which performs like the cacheline size being doubled.
+> + */
+> +static inline u64 cl_address(u64 address, bool double_cl)
+>  {
+> +	u64 size = cacheline_size();
+> +
+> +	if (double_cl)
+> +		size *= 2;
+> +
+>  	/* return the cacheline of the address */
+> -	return (address & ~(cacheline_size() - 1));
+> +	return (address & ~(size - 1));
+>  }
+>  
+> -static inline u64 cl_offset(u64 address)
+> +static inline u64 cl_offset(u64 address, bool double_cl)
+>  {
+> -	/* return the cacheline of the address */
+> -	return (address & (cacheline_size() - 1));
+> +	u64 size = cacheline_size();
+> +
+> +	if (double_cl)
+> +		size *= 2;
+> +
+> +	/* return the offset inside cacheline */
+> +	return (address & (size - 1));
+>  }
+>  
+>  #endif // PERF_CACHELINE_H
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index 4a648231fe72..093a0c8b2e3d 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -53,6 +53,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+>  static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
+>  static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
+>  
+> +/*
+> + * Some architectures have Adjacent Cacheline Prefetch feature, which
+> + * behaves like the cacheline size is doubled. Enable this flag to
+> + * check things in double cacheline granularity.
+> + */
+> +bool chk_double_cl;
+> +
+>  /*
+>   * Replaces all occurrences of a char used with the:
+>   *
+> @@ -1500,8 +1507,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
+>  
+>  addr:
+>  	/* al_addr does all the right addr - start + offset calculations */
+> -	l = cl_address(left->mem_info->daddr.al_addr);
+> -	r = cl_address(right->mem_info->daddr.al_addr);
+> +	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
+> +	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
+>  
+>  	if (l > r) return -1;
+>  	if (l < r) return 1;
+> @@ -1520,7 +1527,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+>  	if (he->mem_info) {
+>  		struct map *map = he->mem_info->daddr.ms.map;
+>  
+> -		addr = cl_address(he->mem_info->daddr.al_addr);
+> +		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
+>  		ms = &he->mem_info->daddr.ms;
+>  
+>  		/* print [s] for shared data mmaps */
+> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+> index 9a91d0df2833..d79a100e5999 100644
+> --- a/tools/perf/util/sort.h
+> +++ b/tools/perf/util/sort.h
+> @@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
+>  extern struct sort_entry sort_sym_to;
+>  extern struct sort_entry sort_srcline;
+>  extern const char default_mem_sort_order[];
+> +extern bool chk_double_cl;
+>  
+>  struct res_sample {
+>  	u64 time;
+> -- 
+> 2.34.1
+> 
+
+-- 
+
+- Arnaldo
