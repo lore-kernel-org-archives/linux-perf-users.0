@@ -2,242 +2,305 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36539C6379F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 05:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C86C677F1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 08:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231286AbjBNFFa (ORCPT
+        id S231655AbjBNIFI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Feb 2023 00:05:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35570 "EHLO
+        Tue, 14 Feb 2023 03:05:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231344AbjBNFFZ (ORCPT
+        with ESMTP id S231501AbjBNIEh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Feb 2023 00:05:25 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FCA199FF;
-        Mon, 13 Feb 2023 21:05:07 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id bg2so4716860pjb.4;
-        Mon, 13 Feb 2023 21:05:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VOPNCVA20E0uVUS+CW/b7qI/sayGHYZXibfTiD56j0M=;
-        b=f5NRaWWERGOECvFzBnZbdLHQ6WIMpG2pTeO4wzJth1Z6GbyDCP6dxNCTciZ+egFMI1
-         sAKTMUbo6q7vaNJqGodDt7wwkeRXkbPptHxqON25oUo+BB6eM2hWMvo1uvAfrl4gndbq
-         s5HVg2/Nj1+ijpF179J9WZQ6LdpWjakk2typsHRghFmKTn2/buBG2n+OifFJnpr9724m
-         Y1M2b5DO3lYm1gq0wiNsILWV0Sy24fbuWzibMx3doc7/5D12XRMt9MTtDhdIWwmyIYBg
-         fKelriVVc3z/0GwxYBwZFWpbTYOSCM+TDfC3aS3WyQ5ue5druCgSbUOTBwf9hsCOXoSs
-         SvDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VOPNCVA20E0uVUS+CW/b7qI/sayGHYZXibfTiD56j0M=;
-        b=dFlXdbxQtus7mIchpSMIx15MLdQMz8+ue15Epv9Ry7JJliDnizCacS1Hx0qVCIobAr
-         rECEKvfuRG04qMBZRRPpCqIMBZyBvxQQV111zuxOx8VdnGrGIs0xNDM7R+ANX2S0jcWc
-         9zvCcK6GyrxmsE6tUGE/ChesRBpl3nQy1iKQAs2P8RrIXCvsW25GYwvDvwPX7Ivcq3CK
-         3y7Afl+BXIYIgeFv5DxCp4JxGY4AOcH/Hj5cnGOk5DJ5lun/UZvYOsAoMjRZXWDrUiFb
-         CS7OLNfT2EZSZxMqk8eXBay8qzqasV1DV83StaIPef0OoI4JVOM1H6JLt823+28dnKbd
-         rqww==
-X-Gm-Message-State: AO0yUKXVmfWBtn6c2LM5HGqtT0Q5WJ3P/8EqTY6OIVXSt19DlintTLZM
-        hFnUNnIFQxHwBglnHbi3IQQ=
-X-Google-Smtp-Source: AK7set+b/WQBdI/xNbpUPfjZ43S1ny0Ui6i+gGAyN51Pf1Poq6VcErFDMvljbuDFACCqKfK7mAHTCQ==
-X-Received: by 2002:a17:902:e851:b0:19a:7758:e5e6 with SMTP id t17-20020a170902e85100b0019a7758e5e6mr1743500plg.48.1676351106335;
-        Mon, 13 Feb 2023 21:05:06 -0800 (PST)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:de3c:c4c2:3f15:764d])
-        by smtp.gmail.com with ESMTPSA id k18-20020a170902761200b001932a9e4f2csm9045593pll.255.2023.02.13.21.05.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 21:05:06 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Tue, 14 Feb 2023 03:04:37 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF5F22DED;
+        Tue, 14 Feb 2023 00:04:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676361866; x=1707897866;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=z4Y+cAss72Dhf62pzjXTLAr4dp36q5M3yX491x6T79Q=;
+  b=V8OMrSomw05wimeA9WGhWe2NyYnBVo0qW1mLE5YsqVb3AxPfZoiJWW7b
+   02KOLxyatgASzlJWwkMvxk5qMgmhJAWrpBaY2dFrCgU2fLmNFOIjYCJnM
+   JsqRayS6wKIC30E4VOp46opvuxEQN9ScgosWIfGbu7xFV+0ErFUrpqI32
+   dfpIido0WIgmLVrnbwabYhzsINVBkrANSOtVnCt+pwRleEQuP4c6u8twz
+   Kl5JYeEcDqjVWViWrcPIv3tCrOYym/udu/yjNHECWTnnNeZToYFrzRjEv
+   CyaNdRejJJJsgAvE/K1lgyg8d+whUBmFg5JJ00c2VDMg7ltm6v9cHA4UY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="328814282"
+X-IronPort-AV: E=Sophos;i="5.97,296,1669104000"; 
+   d="scan'208";a="328814282"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 00:02:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="793033806"
+X-IronPort-AV: E=Sophos;i="5.97,296,1669104000"; 
+   d="scan'208";a="793033806"
+Received: from feng-clx.sh.intel.com ([10.238.200.228])
+  by orsmga004.jf.intel.com with ESMTP; 14 Feb 2023 00:02:50 -0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Joe Mario <jmario@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 7/7] perf bpf filter: Add data_src sample data support
-Date:   Mon, 13 Feb 2023 21:04:52 -0800
-Message-Id: <20230214050452.26390-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.1.581.gbfd45094c4-goog
-In-Reply-To: <20230214050452.26390-1-namhyung@kernel.org>
-References: <20230214050452.26390-1-namhyung@kernel.org>
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        tim.c.chen@intel.com, Feng Tang <feng.tang@intel.com>
+Subject: [PATCH v2] perf c2c: Add report option to show false sharing in adjacent cachelines
+Date:   Tue, 14 Feb 2023 15:58:23 +0800
+Message-Id: <20230214075823.246414-1-feng.tang@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The data_src has many entries to express memory behaviors.  Add each
-term separately so that users can combine them for their purpose.
+Many platforms have feature of adjacent cachelines prefetch, when it
+is enabled, for data in RAM of 2 cachelines (2N and 2N+1) granularity,
+if one is fetched to cache, the other one could likely be fetched too,
+which sort of extends the cacheline size to double, thus the false
+sharing could happens in adjacent cachelines.
 
-I didn't add prefix for the constants for simplicity as they are mostly
-distinguishable but I had to use l1_miss and l2_hit for mem_dtlb since
-mem_lvl has different values for the same names.  Note that I decided
-mem_lvl to be used as an alias of mem_lvlnum as it's deprecated now.
-According to the comment in the UAPI header, users should use the mix
-of mem_lvlnum, mem_remote and mem_snoop.  Also the SNOOPX bits are
-concatenated to mem_snoop for simplicity.
+0Day has captured performance changed related with this [1], and some
+commercial software explicitly makes its hot global variables 128 bytes
+aligned (2 cache lines) to avoid this kind of extended false sharing.
 
-The following terms are used for data_src and the corresponding perf
-sample data fields:
+So add an option "-a" or "--double-cl" for c2c report to show false
+sharing in double cache line granularity, which acts just like the
+cacheline size is doubled. There is no change to c2c record. The
+hardware events of shared cacheline are still per cacheline, and
+this option just changes the granularity of how events are grouped
+and displayed.
 
- * mem_op : { load, store, pfetch, exec }
- * mem_lvl: { l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem }
- * mem_snoop: { none, hit, miss, hitm, fwd, peer }
- * mem_remote: { remote }
- * mem_lock: { locked }
- * mem_dtlb { l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault }
- * mem_blk { by_data, by_addr }
- * mem_hops { hops0, hops1, hops2, hops3 }
+In the c2c report below (will-it-scale's 'pagefault2' case on old kernel):
 
-We can now use a filter expression like below:
+  ----------------------------------------------------------------------
+     26       31        2        0        0        0  0xffff888103ec6000
+  ----------------------------------------------------------------------
+   35.48%   50.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff8133148b      1153        66       971     3748        74  [k] get_mem_cgroup_from_mm
+    6.45%    0.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff813396e4       570         0      1531      879        75  [k] mem_cgroup_charge
+   25.81%   50.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81331472       949        70       593     3359        74  [k] get_mem_cgroup_from_mm
+   19.35%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81339686      1352         0      1073     1022        74  [k] mem_cgroup_charge
+    9.68%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff813396d6      1401         0       863      768        74  [k] mem_cgroup_charge
+    3.23%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81333106       618         0       804       11         9  [k] uncharge_batch
 
-  'bpf: mem_op == load, mem_lvl <= l2, mem_dtlb == l1_hit'
-  'bpf: mem_dtlb == l2_miss, mem_hops > hops1'
-  'bpf: mem_lvl == ram, mem_remote == 1'
+The offset 0x10 and 0x54 used to displayed in 2 groups, and now they
+are listed together to give users a hint of extended false sharing.
 
-Note that 'na' is shared among the terms as it has the same value except
-for mem_lvl.  I don't have a good idea to handle that for now.
+[1]. https://lore.kernel.org/lkml/20201102091543.GM31092@shao2-debian/
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Feng Tang <feng.tang@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/bpf-filter.l                 | 61 ++++++++++++++++++++
- tools/perf/util/bpf_skel/sample_filter.bpf.c | 23 ++++++++
- 2 files changed, 84 insertions(+)
+Changelog:
 
-diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
-index bdc06babb028..3af9331302cf 100644
---- a/tools/perf/util/bpf-filter.l
-+++ b/tools/perf/util/bpf-filter.l
-@@ -41,6 +41,12 @@ static int value(int base)
- 	return BFT_NUM;
+  v1 -> v2:
+  * Refine comments and fix typos (Leo Yan)
+  * Add reviewd-by and tested-by(for Arm64) tag from Leo Yan
+  * Refine cmd description and commit log to avoid using
+    architecture specific name (Joe Mario)
+
+ tools/perf/Documentation/perf-c2c.txt |  7 +++++++
+ tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
+ tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
+ tools/perf/util/sort.c                | 13 ++++++++++---
+ tools/perf/util/sort.h                |  1 +
+ 5 files changed, 51 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+index 4e8c263e1721..cc18d61ec5d5 100644
+--- a/tools/perf/Documentation/perf-c2c.txt
++++ b/tools/perf/Documentation/perf-c2c.txt
+@@ -130,6 +130,13 @@ REPORT OPTIONS
+ 	The known limitations include exception handing such as
+ 	setjmp/longjmp will have calls/returns not match.
+ 
++-a::
++--double-cl::
++	Group the detection of shared cacheline events into double cacheline
++	granularity. Some architectures have an Adjacent Cacheline Prefetch
++	feature, which causes cacheline sharing to behave like the cacheline
++	size is doubled.
++
+ C2C RECORD
+ ----------
+ The perf c2c record command setup options related to HITM cacheline analysis
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 52d94c7dd836..1a98c6e97a4b 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = cl_address(he->mem_info->daddr.addr);
++		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	char buf[20];
+ 
+ 	if (he->mem_info)
+-		addr = cl_offset(he->mem_info->daddr.al_addr);
++		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
+ 
+ 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
+ }
+@@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 	uint64_t l = 0, r = 0;
+ 
+ 	if (left->mem_info)
+-		l = cl_offset(left->mem_info->daddr.addr);
++		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
++
+ 	if (right->mem_info)
+-		r = cl_offset(right->mem_info->daddr.addr);
++		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
+ 
+ 	return (int64_t)(r - l);
+ }
+@@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
+ 	he = cl_browser->he;
+ 
+ 	if (he->mem_info)
+-		addr = cl_address(he->mem_info->daddr.addr);
++		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
+ 
+ 	scnprintf(bf, size, "Cacheline 0x%lx", addr);
+ 	return 0;
+@@ -2788,15 +2789,16 @@ static int ui_quirks(void)
+ 	if (!c2c.use_stdio) {
+ 		dim_offset.width  = 5;
+ 		dim_offset.header = header_offset_tui;
+-		nodestr = "CL";
++		nodestr = chk_double_cl ? "Double-CL" : "CL";
+ 	}
+ 
+ 	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
+ 
+ 	/* Fix the zero line for dcacheline column. */
+-	buf = fill_line("Cacheline", dim_dcacheline.width +
+-				     dim_dcacheline_node.width +
+-				     dim_dcacheline_count.width + 4);
++	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
++				dim_dcacheline.width +
++				dim_dcacheline_node.width +
++				dim_dcacheline_count.width + 4);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+@@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
+ 		    "Enable LBR callgraph stitching approach"),
++	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
++		    "Detect adjacent cacheline false sharing"),
+ 	OPT_PARENT(c2c_options),
+ 	OPT_END()
+ 	};
+diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
+index dec8c0fb1f4a..fe6d5b60a031 100644
+--- a/tools/perf/util/cacheline.h
++++ b/tools/perf/util/cacheline.h
+@@ -6,16 +6,31 @@
+ 
+ int __pure cacheline_size(void);
+ 
+-static inline u64 cl_address(u64 address)
++
++/*
++ * Some architectures have 'Adjacent Cacheline Prefetch' feature,
++ * which performs like the cacheline size being doubled.
++ */
++static inline u64 cl_address(u64 address, bool double_cl)
+ {
++	u64 size = cacheline_size();
++
++	if (double_cl)
++		size *= 2;
++
+ 	/* return the cacheline of the address */
+-	return (address & ~(cacheline_size() - 1));
++	return (address & ~(size - 1));
  }
  
-+static int constant(int val)
-+{
-+	perf_bpf_filter_lval.num = val;
-+	return BFT_NUM;
-+}
+-static inline u64 cl_offset(u64 address)
++static inline u64 cl_offset(u64 address, bool double_cl)
+ {
+-	/* return the cacheline of the address */
+-	return (address & (cacheline_size() - 1));
++	u64 size = cacheline_size();
 +
- %}
++	if (double_cl)
++		size *= 2;
++
++	/* return the offset inside cacheline */
++	return (address & (size - 1));
+ }
  
- num_dec		[0-9]+
-@@ -70,6 +76,15 @@ retire_lat	{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 3); } /* alias for we
- phys_addr	{ return sample(PERF_SAMPLE_PHYS_ADDR); }
- code_pgsz	{ return sample(PERF_SAMPLE_CODE_PAGE_SIZE); }
- data_pgsz	{ return sample(PERF_SAMPLE_DATA_PAGE_SIZE); }
-+mem_op		{ return sample_part(PERF_SAMPLE_DATA_SRC, 1); }
-+mem_lvlnum	{ return sample_part(PERF_SAMPLE_DATA_SRC, 2); }
-+mem_lvl		{ return sample_part(PERF_SAMPLE_DATA_SRC, 2); } /* alias for mem_lvlnum */
-+mem_snoop	{ return sample_part(PERF_SAMPLE_DATA_SRC, 3); } /* include snoopx */
-+mem_remote	{ return sample_part(PERF_SAMPLE_DATA_SRC, 4); }
-+mem_lock	{ return sample_part(PERF_SAMPLE_DATA_SRC, 5); }
-+mem_dtlb	{ return sample_part(PERF_SAMPLE_DATA_SRC, 6); }
-+mem_blk		{ return sample_part(PERF_SAMPLE_DATA_SRC, 7); }
-+mem_hops	{ return sample_part(PERF_SAMPLE_DATA_SRC, 8); }
+ #endif // PERF_CACHELINE_H
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 4a648231fe72..093a0c8b2e3d 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -53,6 +53,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+ static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
+ static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
  
- "=="		{ return operator(PBF_OP_EQ); }
- "!="		{ return operator(PBF_OP_NEQ); }
-@@ -79,6 +94,52 @@ data_pgsz	{ return sample(PERF_SAMPLE_DATA_PAGE_SIZE); }
- "<="		{ return operator(PBF_OP_LE); }
- "&"		{ return operator(PBF_OP_AND); }
++/*
++ * Some architectures have Adjacent Cacheline Prefetch feature, which
++ * behaves like the cacheline size is doubled. Enable this flag to
++ * check things in double cacheline granularity.
++ */
++bool chk_double_cl;
++
+ /*
+  * Replaces all occurrences of a char used with the:
+  *
+@@ -1500,8 +1507,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
  
-+na		{ return constant(PERF_MEM_OP_NA); }
-+load		{ return constant(PERF_MEM_OP_LOAD); }
-+store		{ return constant(PERF_MEM_OP_STORE); }
-+pfetch		{ return constant(PERF_MEM_OP_PFETCH); }
-+exec		{ return constant(PERF_MEM_OP_EXEC); }
-+
-+l1		{ return constant(PERF_MEM_LVLNUM_L1); }
-+l2		{ return constant(PERF_MEM_LVLNUM_L2); }
-+l3		{ return constant(PERF_MEM_LVLNUM_L3); }
-+l4		{ return constant(PERF_MEM_LVLNUM_L4); }
-+cxl		{ return constant(PERF_MEM_LVLNUM_CXL); }
-+io		{ return constant(PERF_MEM_LVLNUM_IO); }
-+any_cache	{ return constant(PERF_MEM_LVLNUM_ANY_CACHE); }
-+lfb		{ return constant(PERF_MEM_LVLNUM_LFB); }
-+ram		{ return constant(PERF_MEM_LVLNUM_RAM); }
-+pmem		{ return constant(PERF_MEM_LVLNUM_PMEM); }
-+
-+none		{ return constant(PERF_MEM_SNOOP_NONE); }
-+hit		{ return constant(PERF_MEM_SNOOP_HIT); }
-+miss		{ return constant(PERF_MEM_SNOOP_MISS); }
-+hitm		{ return constant(PERF_MEM_SNOOP_HITM); }
-+fwd		{ return constant(PERF_MEM_SNOOPX_FWD); }
-+peer		{ return constant(PERF_MEM_SNOOPX_PEER); }
-+
-+remote		{ return constant(PERF_MEM_REMOTE_REMOTE); }
-+
-+locked		{ return constant(PERF_MEM_LOCK_LOCKED); }
-+
-+l1_hit		{ return constant(PERF_MEM_TLB_L1 | PERF_MEM_TLB_HIT); }
-+l1_miss		{ return constant(PERF_MEM_TLB_L1 | PERF_MEM_TLB_MISS); }
-+l2_hit		{ return constant(PERF_MEM_TLB_L2 | PERF_MEM_TLB_HIT); }
-+l2_miss		{ return constant(PERF_MEM_TLB_L2 | PERF_MEM_TLB_MISS); }
-+any_hit		{ return constant(PERF_MEM_TLB_HIT); }
-+any_miss	{ return constant(PERF_MEM_TLB_MISS); }
-+walk		{ return constant(PERF_MEM_TLB_WK); }
-+os		{ return constant(PERF_MEM_TLB_OS); }
-+fault		{ return constant(PERF_MEM_TLB_OS); } /* alias for os */
-+
-+by_data		{ return constant(PERF_MEM_BLK_DATA); }
-+by_addr		{ return constant(PERF_MEM_BLK_ADDR); }
-+
-+hops0		{ return constant(PERF_MEM_HOPS_0); }
-+hops1		{ return constant(PERF_MEM_HOPS_1); }
-+hops2		{ return constant(PERF_MEM_HOPS_2); }
-+hops3		{ return constant(PERF_MEM_HOPS_3); }
-+
- ","		{ return ','; }
- .		{ }
+ addr:
+ 	/* al_addr does all the right addr - start + offset calculations */
+-	l = cl_address(left->mem_info->daddr.al_addr);
+-	r = cl_address(right->mem_info->daddr.al_addr);
++	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
++	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
  
-diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-index 5b239f194fa9..0148b47de7b9 100644
---- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-+++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-@@ -62,6 +62,29 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
- 		return kctx->data->code_page_size;
- 	case PERF_SAMPLE_DATA_PAGE_SIZE:
- 		return kctx->data->data_page_size;
-+	case PERF_SAMPLE_DATA_SRC:
-+		if (entry->part == 1)
-+			return kctx->data->data_src.mem_op;
-+		if (entry->part == 2)
-+			return kctx->data->data_src.mem_lvl_num;
-+		if (entry->part == 3) {
-+			__u32 snoop = kctx->data->data_src.mem_snoop;
-+			__u32 snoopx = kctx->data->data_src.mem_snoopx;
-+
-+			return (snoopx << 5) | snoop;
-+		}
-+		if (entry->part == 4)
-+			return kctx->data->data_src.mem_remote;
-+		if (entry->part == 5)
-+			return kctx->data->data_src.mem_lock;
-+		if (entry->part == 6)
-+			return kctx->data->data_src.mem_dtlb;
-+		if (entry->part == 7)
-+			return kctx->data->data_src.mem_blk;
-+		if (entry->part == 8)
-+			return kctx->data->data_src.mem_hops;
-+		/* return the whole word */
-+		return kctx->data->data_src.val;
- 	default:
- 		break;
- 	}
+ 	if (l > r) return -1;
+ 	if (l < r) return 1;
+@@ -1520,7 +1527,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
+ 	if (he->mem_info) {
+ 		struct map *map = he->mem_info->daddr.ms.map;
+ 
+-		addr = cl_address(he->mem_info->daddr.al_addr);
++		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
+ 		ms = &he->mem_info->daddr.ms;
+ 
+ 		/* print [s] for shared data mmaps */
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 9a91d0df2833..d79a100e5999 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
+ extern struct sort_entry sort_sym_to;
+ extern struct sort_entry sort_srcline;
+ extern const char default_mem_sort_order[];
++extern bool chk_double_cl;
+ 
+ struct res_sample {
+ 	u64 time;
 -- 
-2.39.1.581.gbfd45094c4-goog
+2.34.1
 
