@@ -2,305 +2,272 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C86C677F1
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 08:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE86AC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 10:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231655AbjBNIFI (ORCPT
+        id S232356AbjBNKBR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Feb 2023 03:05:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
+        Tue, 14 Feb 2023 05:01:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231501AbjBNIEh (ORCPT
+        with ESMTP id S231616AbjBNKAQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Feb 2023 03:04:37 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF5F22DED;
-        Tue, 14 Feb 2023 00:04:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676361866; x=1707897866;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=z4Y+cAss72Dhf62pzjXTLAr4dp36q5M3yX491x6T79Q=;
-  b=V8OMrSomw05wimeA9WGhWe2NyYnBVo0qW1mLE5YsqVb3AxPfZoiJWW7b
-   02KOLxyatgASzlJWwkMvxk5qMgmhJAWrpBaY2dFrCgU2fLmNFOIjYCJnM
-   JsqRayS6wKIC30E4VOp46opvuxEQN9ScgosWIfGbu7xFV+0ErFUrpqI32
-   dfpIido0WIgmLVrnbwabYhzsINVBkrANSOtVnCt+pwRleEQuP4c6u8twz
-   Kl5JYeEcDqjVWViWrcPIv3tCrOYym/udu/yjNHECWTnnNeZToYFrzRjEv
-   CyaNdRejJJJsgAvE/K1lgyg8d+whUBmFg5JJ00c2VDMg7ltm6v9cHA4UY
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="328814282"
-X-IronPort-AV: E=Sophos;i="5.97,296,1669104000"; 
-   d="scan'208";a="328814282"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 00:02:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="793033806"
-X-IronPort-AV: E=Sophos;i="5.97,296,1669104000"; 
-   d="scan'208";a="793033806"
-Received: from feng-clx.sh.intel.com ([10.238.200.228])
-  by orsmga004.jf.intel.com with ESMTP; 14 Feb 2023 00:02:50 -0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 14 Feb 2023 05:00:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9B625E14
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Feb 2023 01:58:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676368717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p2satF+hQ5FFdcjtgYoKpvsKHvu1xE8rXyO2IMUMeVs=;
+        b=eTwlP9SA+VA5oNrnu3sv9UtiXrJoBvV+3a7uQghiG5txwUk6/I5J7oxglelCtspjZ8CjYn
+        009YKLjlg38yciHuf7QSGCE/93LOppGIlRv6LiI2jEhOlV+eC0FbooOpXCyHs4DKZVIsXN
+        EhBUSgv1j4/poOooE5RQHJm2GDa1tj8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-613-6KJJwf9dNFK46aCQpvGIXQ-1; Tue, 14 Feb 2023 04:58:34 -0500
+X-MC-Unique: 6KJJwf9dNFK46aCQpvGIXQ-1
+Received: by mail-wr1-f69.google.com with SMTP id v5-20020adf8b45000000b002bde0366b11so2934429wra.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Feb 2023 01:58:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p2satF+hQ5FFdcjtgYoKpvsKHvu1xE8rXyO2IMUMeVs=;
+        b=TKvnI1C02eSXbv+BN/CB8LXQ34E5gd9ZSTA2ODPVMOtmX8f6vPOV8LUTfyYE70BUb7
+         X37w1+Six1y9PYSM72JORFgCMBon//qLkebu0dMaomrxbp4+ICFEWHSH1HHw0j0yRZIG
+         LIk342AHgm+M4Xkla+jhFk4Xej1ubSSzgMNJe6y9HGaehkzJa+6Cm8u797ZIQqKZlT34
+         kxxLWD0QLutEMTXQSJhyuG0w4wjfVq0PT6uqa0MVEOxtw/sQcPNi3Znpi5bWrHfYEpXs
+         ivIdS6ek6rKQ3zwyBsh97MXoHhJPGf5WDWtRn8TUJZx+6XadsAmIMF0lZcTzF5gP3i2N
+         ng3w==
+X-Gm-Message-State: AO0yUKWnnuf897ZrIJjp5oENgNch8HLrg6msgl9ucJzhjqrCWJtW5kGd
+        zVCU9WzcL3H171SZ5m5svOhYYid+lJTvIGglvj8fyNdpUaycfCImeZgLkDY1JgjMkVZjUt6R97E
+        OE+6UqD/Fq8Ey0M7Tf9LUuiB2xIpvwA==
+X-Received: by 2002:adf:f8d1:0:b0:2c5:4c9d:2dab with SMTP id f17-20020adff8d1000000b002c54c9d2dabmr1282100wrq.10.1676368713312;
+        Tue, 14 Feb 2023 01:58:33 -0800 (PST)
+X-Google-Smtp-Source: AK7set+2/NL6NVo4bVpqbzQ5N2dQQ7fBvgOyM9xawBoayfZ5rVsOIRGo9F1XR2LfxDgPz096coFAug==
+X-Received: by 2002:adf:f8d1:0:b0:2c5:4c9d:2dab with SMTP id f17-20020adff8d1000000b002c54c9d2dabmr1282057wrq.10.1676368713026;
+        Tue, 14 Feb 2023 01:58:33 -0800 (PST)
+Received: from ?IPV6:2003:cb:c709:1700:969:8e2b:e8bb:46be? (p200300cbc709170009698e2be8bb46be.dip0.t-ipconnect.de. [2003:cb:c709:1700:969:8e2b:e8bb:46be])
+        by smtp.gmail.com with ESMTPSA id a12-20020a5d508c000000b002c55ec7f661sm3270850wrt.5.2023.02.14.01.58.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Feb 2023 01:58:32 -0800 (PST)
+Message-ID: <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
+Date:   Tue, 14 Feb 2023 10:58:30 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US
+To:     Chih-En Lin <shiyn.lin@gmail.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Joe Mario <jmario@redhat.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        tim.c.chen@intel.com, Feng Tang <feng.tang@intel.com>
-Subject: [PATCH v2] perf c2c: Add report option to show false sharing in adjacent cachelines
-Date:   Tue, 14 Feb 2023 15:58:23 +0800
-Message-Id: <20230214075823.246414-1-feng.tang@intel.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zach O'Keefe <zokeefe@google.com>,
+        Yun Zhou <yun.zhou@windriver.com>,
+        Hugh Dickins <hughd@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
+        Tong Tiangen <tongtiangen@huawei.com>,
+        Liu Shixin <liushixin2@huawei.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Li kunyu <kunyu@nfschina.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Gautam Menghani <gautammenghani201@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Barret Rhoden <brho@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Dinglan Peng <peng301@purdue.edu>,
+        Pedro Fonseca <pfonseca@purdue.edu>,
+        Jim Huang <jserv@ccns.ncku.edu.tw>,
+        Huichun Feng <foxhoundsk.tw@gmail.com>
+References: <20230207035139.272707-1-shiyn.lin@gmail.com>
+ <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
+ <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
+ <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
+ <Y+Z8ymNYc+vJMBx8@strix-laptop>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+In-Reply-To: <Y+Z8ymNYc+vJMBx8@strix-laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Many platforms have feature of adjacent cachelines prefetch, when it
-is enabled, for data in RAM of 2 cachelines (2N and 2N+1) granularity,
-if one is fetched to cache, the other one could likely be fetched too,
-which sort of extends the cacheline size to double, thus the false
-sharing could happens in adjacent cachelines.
+On 10.02.23 18:20, Chih-En Lin wrote:
+> On Fri, Feb 10, 2023 at 11:21:16AM -0500, Pasha Tatashin wrote:
+>>>>> Currently, copy-on-write is only used for the mapped memory; the child
+>>>>> process still needs to copy the entire page table from the parent
+>>>>> process during forking. The parent process might take a lot of time and
+>>>>> memory to copy the page table when the parent has a big page table
+>>>>> allocated. For example, the memory usage of a process after forking with
+>>>>> 1 GB mapped memory is as follows:
+>>>>
+>>>> For some reason, I was not able to reproduce performance improvements
+>>>> with a simple fork() performance measurement program. The results that
+>>>> I saw are the following:
+>>>>
+>>>> Base:
+>>>> Fork latency per gigabyte: 0.004416 seconds
+>>>> Fork latency per gigabyte: 0.004382 seconds
+>>>> Fork latency per gigabyte: 0.004442 seconds
+>>>> COW kernel:
+>>>> Fork latency per gigabyte: 0.004524 seconds
+>>>> Fork latency per gigabyte: 0.004764 seconds
+>>>> Fork latency per gigabyte: 0.004547 seconds
+>>>>
+>>>> AMD EPYC 7B12 64-Core Processor
+>>>> Base:
+>>>> Fork latency per gigabyte: 0.003923 seconds
+>>>> Fork latency per gigabyte: 0.003909 seconds
+>>>> Fork latency per gigabyte: 0.003955 seconds
+>>>> COW kernel:
+>>>> Fork latency per gigabyte: 0.004221 seconds
+>>>> Fork latency per gigabyte: 0.003882 seconds
+>>>> Fork latency per gigabyte: 0.003854 seconds
+>>>>
+>>>> Given, that page table for child is not copied, I was expecting the
+>>>> performance to be better with COW kernel, and also not to depend on
+>>>> the size of the parent.
+>>>
+>>> Yes, the child won't duplicate the page table, but fork will still
+>>> traverse all the page table entries to do the accounting.
+>>> And, since this patch expends the COW to the PTE table level, it's not
+>>> the mapped page (page table entry) grained anymore, so we have to
+>>> guarantee that all the mapped page is available to do COW mapping in
+>>> the such page table.
+>>> This kind of checking also costs some time.
+>>> As a result, since the accounting and the checking, the COW PTE fork
+>>> still depends on the size of the parent so the improvement might not
+>>> be significant.
+>>
+>> The current version of the series does not provide any performance
+>> improvements for fork(). I would recommend removing claims from the
+>> cover letter about better fork() performance, as this may be
+>> misleading for those looking for a way to speed up forking. In my
+> 
+>  From v3 to v4, I changed the implementation of the COW fork() part to do
+> the accounting and checking. At the time, I also removed most of the
+> descriptions about the better fork() performance. Maybe it's not enough
+> and still has some misleading. I will fix this in the next version.
+> Thanks.
+> 
+>> case, I was looking to speed up Redis OSS, which relies on fork() to
+>> create consistent snapshots for driving replicates/backups. The O(N)
+>> per-page operation causes fork() to be slow, so I was hoping that this
+>> series, which does not duplicate the VA during fork(), would make the
+>> operation much quicker.
+> 
+> Indeed, at first, I tried to avoid the O(N) per-page operation by
+> deferring the accounting and the swap stuff to the page fault. But,
+> as I mentioned, it's not suitable for the mainline.
+> 
+> Honestly, for improving the fork(), I have an idea to skip the per-page
+> operation without breaking the logic. However, this will introduce the
+> complicated mechanism and may has the overhead for other features. It
+> might not be worth it. It's hard to strike a balance between the
+> over-complicated mechanism with (probably) better performance and data
+> consistency with the page status. So, I would focus on the safety and
+> stable approach at first.
 
-0Day has captured performance changed related with this [1], and some
-commercial software explicitly makes its hot global variables 128 bytes
-aligned (2 cache lines) to avoid this kind of extended false sharing.
+Yes, it is most probably possible, but complexity, robustness and 
+maintainability have to be considered as well.
 
-So add an option "-a" or "--double-cl" for c2c report to show false
-sharing in double cache line granularity, which acts just like the
-cacheline size is doubled. There is no change to c2c record. The
-hardware events of shared cacheline are still per cacheline, and
-this option just changes the granularity of how events are grouped
-and displayed.
+Thanks for implementing this approach (only deduplication without other 
+optimizations) and evaluating it accordingly. It's certainly "cleaner", 
+such that we only have to mess with unsharing and not with other 
+accounting/pinning/mapcount thingies. But it also highlights how 
+intrusive even this basic deduplication approach already is -- and that 
+most benefits of the original approach requires even more complexity on top.
 
-In the c2c report below (will-it-scale's 'pagefault2' case on old kernel):
+I am not quite sure if the benefit is worth the price (I am not to 
+decide and I would like to hear other options).
 
-  ----------------------------------------------------------------------
-     26       31        2        0        0        0  0xffff888103ec6000
-  ----------------------------------------------------------------------
-   35.48%   50.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff8133148b      1153        66       971     3748        74  [k] get_mem_cgroup_from_mm
-    6.45%    0.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff813396e4       570         0      1531      879        75  [k] mem_cgroup_charge
-   25.81%   50.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81331472       949        70       593     3359        74  [k] get_mem_cgroup_from_mm
-   19.35%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81339686      1352         0      1073     1022        74  [k] mem_cgroup_charge
-    9.68%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff813396d6      1401         0       863      768        74  [k] mem_cgroup_charge
-    3.23%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81333106       618         0       804       11         9  [k] uncharge_batch
+My quick thoughts after skimming over the core parts of this series
 
-The offset 0x10 and 0x54 used to displayed in 2 groups, and now they
-are listed together to give users a hint of extended false sharing.
+(1) forgetting to break COW on a PTE in some pgtable walker feels quite
+     likely (meaning that it might be fairly error-prone) and forgetting
+     to break COW on a PTE table, accidentally modifying the shared
+     table.
+(2) break_cow_pte() can fail, which means that we can fail some
+     operations (possibly silently halfway through) now. For example,
+     looking at your change_pte_range() change, I suspect it's wrong.
+(3) handle_cow_pte_fault() looks quite complicated and needs quite some
+     double-checking: we temporarily clear the PMD, to reset it
+     afterwards. I am not sure if that is correct. For example, what
+     stops another page fault stumbling over that pmd_none() and
+     allocating an empty page table? Maybe there are some locking details
+     missing or they are very subtle such that we better document them. I
+    recall that THP played quite some tricks to make such cases work ...
 
-[1]. https://lore.kernel.org/lkml/20201102091543.GM31092@shao2-debian/
+> 
+>>> Actually, at the RFC v1 and v2, we proposed the version of skipping
+>>> those works, and we got a significant improvement. You can see the
+>>> number from RFC v2 cover letter [1]:
+>>> "In short, with 512 MB mapped memory, COW PTE decreases latency by 93%
+>>> for normal fork"
+>>
+>> I suspect the 93% improvement (when the mapcount was not updated) was
+>> only for VAs with 4K pages. With 2M mappings this series did not
+>> provide any benefit is this correct?
+> 
+> Yes. In this case, the COW PTE performance is similar to the normal
+> fork().
 
-Signed-off-by: Feng Tang <feng.tang@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
----
-Changelog:
 
-  v1 -> v2:
-  * Refine comments and fix typos (Leo Yan)
-  * Add reviewd-by and tested-by(for Arm64) tag from Leo Yan
-  * Refine cmd description and commit log to avoid using
-    architecture specific name (Joe Mario)
+The thing with THP is, that during fork(), we always allocate a backup 
+PTE table, to be able to PTE-map the THP whenever we have to. Otherwise 
+we'd have to eventually fail some operations we don't want to fail -- 
+similar to the case where break_cow_pte() could fail now due to -ENOMEM 
+although we really don't want to fail (e.g., change_pte_range() ).
 
- tools/perf/Documentation/perf-c2c.txt |  7 +++++++
- tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
- tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
- tools/perf/util/sort.c                | 13 ++++++++++---
- tools/perf/util/sort.h                |  1 +
- 5 files changed, 51 insertions(+), 17 deletions(-)
+I always considered that wasteful, because in many scenarios, we'll 
+never ever split a THP and possibly waste memory.
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index 4e8c263e1721..cc18d61ec5d5 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -130,6 +130,13 @@ REPORT OPTIONS
- 	The known limitations include exception handing such as
- 	setjmp/longjmp will have calls/returns not match.
- 
-+-a::
-+--double-cl::
-+	Group the detection of shared cacheline events into double cacheline
-+	granularity. Some architectures have an Adjacent Cacheline Prefetch
-+	feature, which causes cacheline sharing to behave like the cacheline
-+	size is doubled.
-+
- C2C RECORD
- ----------
- The perf c2c record command setup options related to HITM cacheline analysis
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 52d94c7dd836..1a98c6e97a4b 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	char buf[20];
- 
- 	if (he->mem_info)
--		addr = cl_address(he->mem_info->daddr.addr);
-+		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
- 
- 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
- }
-@@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	char buf[20];
- 
- 	if (he->mem_info)
--		addr = cl_offset(he->mem_info->daddr.al_addr);
-+		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
- 
- 	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
- }
-@@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	uint64_t l = 0, r = 0;
- 
- 	if (left->mem_info)
--		l = cl_offset(left->mem_info->daddr.addr);
-+		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
-+
- 	if (right->mem_info)
--		r = cl_offset(right->mem_info->daddr.addr);
-+		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
- 
- 	return (int64_t)(r - l);
- }
-@@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
- 	he = cl_browser->he;
- 
- 	if (he->mem_info)
--		addr = cl_address(he->mem_info->daddr.addr);
-+		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
- 
- 	scnprintf(bf, size, "Cacheline 0x%lx", addr);
- 	return 0;
-@@ -2788,15 +2789,16 @@ static int ui_quirks(void)
- 	if (!c2c.use_stdio) {
- 		dim_offset.width  = 5;
- 		dim_offset.header = header_offset_tui;
--		nodestr = "CL";
-+		nodestr = chk_double_cl ? "Double-CL" : "CL";
- 	}
- 
- 	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
- 
- 	/* Fix the zero line for dcacheline column. */
--	buf = fill_line("Cacheline", dim_dcacheline.width +
--				     dim_dcacheline_node.width +
--				     dim_dcacheline_count.width + 4);
-+	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
-+				dim_dcacheline.width +
-+				dim_dcacheline_node.width +
-+				dim_dcacheline_count.width + 4);
- 	if (!buf)
- 		return -ENOMEM;
- 
-@@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
- 	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
- 		    "Enable LBR callgraph stitching approach"),
-+	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
-+		    "Detect adjacent cacheline false sharing"),
- 	OPT_PARENT(c2c_options),
- 	OPT_END()
- 	};
-diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
-index dec8c0fb1f4a..fe6d5b60a031 100644
---- a/tools/perf/util/cacheline.h
-+++ b/tools/perf/util/cacheline.h
-@@ -6,16 +6,31 @@
- 
- int __pure cacheline_size(void);
- 
--static inline u64 cl_address(u64 address)
-+
-+/*
-+ * Some architectures have 'Adjacent Cacheline Prefetch' feature,
-+ * which performs like the cacheline size being doubled.
-+ */
-+static inline u64 cl_address(u64 address, bool double_cl)
- {
-+	u64 size = cacheline_size();
-+
-+	if (double_cl)
-+		size *= 2;
-+
- 	/* return the cacheline of the address */
--	return (address & ~(cacheline_size() - 1));
-+	return (address & ~(size - 1));
- }
- 
--static inline u64 cl_offset(u64 address)
-+static inline u64 cl_offset(u64 address, bool double_cl)
- {
--	/* return the cacheline of the address */
--	return (address & (cacheline_size() - 1));
-+	u64 size = cacheline_size();
-+
-+	if (double_cl)
-+		size *= 2;
-+
-+	/* return the offset inside cacheline */
-+	return (address & (size - 1));
- }
- 
- #endif // PERF_CACHELINE_H
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 4a648231fe72..093a0c8b2e3d 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -53,6 +53,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
- static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
- static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
- 
-+/*
-+ * Some architectures have Adjacent Cacheline Prefetch feature, which
-+ * behaves like the cacheline size is doubled. Enable this flag to
-+ * check things in double cacheline granularity.
-+ */
-+bool chk_double_cl;
-+
- /*
-  * Replaces all occurrences of a char used with the:
-  *
-@@ -1500,8 +1507,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
- 
- addr:
- 	/* al_addr does all the right addr - start + offset calculations */
--	l = cl_address(left->mem_info->daddr.al_addr);
--	r = cl_address(right->mem_info->daddr.al_addr);
-+	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
-+	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
- 
- 	if (l > r) return -1;
- 	if (l < r) return 1;
-@@ -1520,7 +1527,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
- 	if (he->mem_info) {
- 		struct map *map = he->mem_info->daddr.ms.map;
- 
--		addr = cl_address(he->mem_info->daddr.al_addr);
-+		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
- 		ms = &he->mem_info->daddr.ms;
- 
- 		/* print [s] for shared data mmaps */
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 9a91d0df2833..d79a100e5999 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
- extern struct sort_entry sort_sym_to;
- extern struct sort_entry sort_srcline;
- extern const char default_mem_sort_order[];
-+extern bool chk_double_cl;
- 
- struct res_sample {
- 	u64 time;
+Optimizing that for THP (e.g., don't always allocate backup THP, have 
+some global allocation backup pool for splits + refill when 
+close-to-empty) might provide similar fork() improvements, both in speed 
+and memory consumption when it comes to anonymous memory.
+
 -- 
-2.34.1
+Thanks,
+
+David / dhildenb
 
