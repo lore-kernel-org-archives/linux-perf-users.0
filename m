@@ -2,323 +2,338 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88E9C05027
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 19:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1922C05027
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Feb 2023 22:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232109AbjBNTbr (ORCPT
+        id S232329AbjBNWRA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Feb 2023 14:31:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42796 "EHLO
+        Tue, 14 Feb 2023 17:17:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjBNTbq (ORCPT
+        with ESMTP id S231915AbjBNWRA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Feb 2023 14:31:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3CE1B5;
-        Tue, 14 Feb 2023 11:31:44 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 436FBB81ED8;
-        Tue, 14 Feb 2023 19:31:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A1EC433D2;
-        Tue, 14 Feb 2023 19:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676403102;
-        bh=ibG8Jzdk9lHU2ydDGgy0cRVJY7YtBbk4ruXnjexIcj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bkFdVvEvPZFq6wcOEjer40zaLnftvvlaC6hJNnZdAekgm2AR9m7kwX9ZMZZ2MDvYh
-         Ny76QcOLz3FSOmydBBrNYhFuv99fd2NQLzkHBr2u2oU7urhYpfpuI5rSmBz/NLV76h
-         yvTRcRl9o7VXIemz7dx7r5Yq2FqOMnE2iQ89pputCsJrcKTDbU1DHm23g0Wua/i8Ed
-         rxCvhCE57oJxCqRnSZk551fGCqFN6OtROcXbeNscPZ/nzFcS4mYJzfMs/PeyxvjfcF
-         wIk9+AANdZHTCaQlETR6XDPtutLkRLsKWCWTAsLGMli0pEHpp7fTxXXPFC3plSRcGS
-         xWLTO11DAnH8Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4EDF040025; Tue, 14 Feb 2023 16:31:39 -0300 (-03)
-Date:   Tue, 14 Feb 2023 16:31:39 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Joe Mario <jmario@redhat.com>
-Cc:     Feng Tang <feng.tang@intel.com>,
+        Tue, 14 Feb 2023 17:17:00 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED6C2821B;
+        Tue, 14 Feb 2023 14:16:58 -0800 (PST)
+Received: by mail-vs1-f49.google.com with SMTP id g9so1294894vst.10;
+        Tue, 14 Feb 2023 14:16:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=04jHnhvH+/txwkchWSAMJpUfbKbX/M0Q/tqNfGXy8yI=;
+        b=4p+SnwVC6CP6UNMekqVryJomG23C3P0God7dSkPLbFcv3KWjFELdbdkfmQqRGgn9/q
+         FpEQB95zRPdZ1zjqpsUNw4OvLXSdACMRCcg5B1uiGrdGD8BLrqjKnbiWPFkMCnU9Gid9
+         j2/Ws3+iHvXTDeKUUVz2iSZE36Hy6rTZ/YgM+0l8gudt09X/lMxr9js2KU39p2TwMEJA
+         /5FSA5UelHgw6SsCZzBeloDsqzhQPVwWPtAXq2eD6p74CqmjOJqofiN6Vx+WSBHaW3pC
+         ygqVQ/yRA4WLjxSf9dFmBbJChQVF12FOQmtnnyE4OOPTk2UE2n5ZEnmZhIeKl8lk8XBf
+         OFjQ==
+X-Gm-Message-State: AO0yUKXGIHw5R0b9+CLqwpSqaPOe4sujCUCtYvy+mWsm+JVzaG8wKNN3
+        WLnGIpaBjACz29kn3NqhAB2u7Ec0xSlsEKC9du0=
+X-Google-Smtp-Source: AK7set/GLD9VznI4RvLWRGbDYTchmwGJoLLXeX3Di6BGdKoWdBaGPaM6Pm1nwSsH6aWrw73kvbCa6tE8XO7eNYljXGA=
+X-Received: by 2002:a67:e206:0:b0:412:194f:e67b with SMTP id
+ g6-20020a67e206000000b00412194fe67bmr89272vsa.15.1676413017443; Tue, 14 Feb
+ 2023 14:16:57 -0800 (PST)
+MIME-Version: 1.0
+References: <20230214050452.26390-1-namhyung@kernel.org> <CAP-5=fWG6f_N7PN+A5v61jGsuKobNxCvo4-H0twAZDGQVfa7cQ@mail.gmail.com>
+ <Y+veEFQZQ3xy4d6w@kernel.org>
+In-Reply-To: <Y+veEFQZQ3xy4d6w@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 14 Feb 2023 14:16:46 -0800
+Message-ID: <CAM9d7cj5VgsDEPiyyV82DW5RcR1Q8z73VQgGmHrk+wwXym1O4g@mail.gmail.com>
+Subject: Re: [RFC/PATCHSET 0/7] perf record: Implement BPF sample filter (v1)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>
-Subject: Re: [PATCH] perf c2c: Add report option to show false sharing in
- adjacent cachelines
-Message-ID: <Y+vhmylHaZOvSkQ2@kernel.org>
-References: <20230213031733.236485-1-feng.tang@intel.com>
- <649f813d-2500-3015-57dc-b2e1fe290388@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <649f813d-2500-3015-57dc-b2e1fe290388@redhat.com>
-X-Url:  http://acmel.wordpress.com
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Feb 13, 2023 at 08:39:15AM -0500, Joe Mario escreveu:
-> 
-> 
-> On 2/12/23 10:17 PM, Feng Tang wrote:
-> > Many platforms have feature of adjacent cachelines prefetch, when it
-> > is enabled, for data in RAM of 2 cachelines (2N and 2N+1) granularity,
-> > if one is fetched to cache, the other one could likely be fetched too,
-> > which sort of extends the cacheline size to double, thus the false
-> > sharing could happens in adjacent cachelines.
-> > 
-> > 0Day has captured performance changed related with this [1], and some
-> > commercial software explicitly makes its hot global variables 128 bytes
-> > aligned (2 cache lines) to avoid this kind of extended false sharing.
-> > 
-> > So add an option "-a" or "--double-cl" for c2c report to show false
-> > sharing in double cache line granularity, which acts just like the
-> > cacheline size is doubled. There is no change to c2c record. The
-> > hardware HITM events are still per cacheline. The option just changes
-> > the granularity of how events are grouped and displayed.
-> > 
-> > In the c2c report below (will-it-scale's pagefault2 case on old kernel):
-> > 
-> >   ----------------------------------------------------------------------
-> >      26       31        2        0        0        0  0xffff888103ec6000
-> >   ----------------------------------------------------------------------
-> >    35.48%   50.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff8133148b      1153        66       971     3748        74  [k] get_mem_cgroup_from_mm
-> >     6.45%    0.00%    0.00%    0.00%    0.00%   0x10     0       1  0xffffffff813396e4       570         0      1531      879        75  [k] mem_cgroup_charge
-> >    25.81%   50.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81331472       949        70       593     3359        74  [k] get_mem_cgroup_from_mm
-> >    19.35%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81339686      1352         0      1073     1022        74  [k] mem_cgroup_charge
-> >     9.68%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff813396d6      1401         0       863      768        74  [k] mem_cgroup_charge
-> >     3.23%    0.00%    0.00%    0.00%    0.00%   0x54     0       1  0xffffffff81333106       618         0       804       11         9  [k] uncharge_batch
-> > 
-> > The offset 0x10 and 0x54 used to displayed in 2 groups, and now they
-> > are listed together to give users a hint.
-> > 
-> > [1]. https://lore.kernel.org/lkml/20201102091543.GM31092@shao2-debian/
-> > 
-> > Signed-off-by: Feng Tang <feng.tang@intel.com>
-> > Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> > ---
-> >  tools/perf/Documentation/perf-c2c.txt |  6 ++++++
-> >  tools/perf/builtin-c2c.c              | 22 +++++++++++++---------
-> >  tools/perf/util/cacheline.h           | 25 ++++++++++++++++++++-----
-> >  tools/perf/util/sort.c                | 13 ++++++++++---
-> >  tools/perf/util/sort.h                |  1 +
-> >  5 files changed, 50 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-> > index 5c5eb2def83e..a8e1e40d270e 100644
-> > --- a/tools/perf/Documentation/perf-c2c.txt
-> > +++ b/tools/perf/Documentation/perf-c2c.txt
-> > @@ -126,6 +126,12 @@ REPORT OPTIONS
-> >  	The known limitations include exception handing such as
-> >  	setjmp/longjmp will have calls/returns not match.
-> >  
-> > +-a::
-> > +--double-cl::
-> > +	Group HITM events in double cacheline granularity. Some architecture
-> > +	has Adjacent Cacheline Prefetch feature, which behaves like the
-> > +	cachline size is doubled.
-> > +
-> 
-> Hi Feng:
-> One or two of the recent C2C patches changed the Intel-specifc "HITM" wording to something more generic, mostly because other arches do not have HITM events.
-> 
-> How about changing the above description to something like:
-> +-a::
-> +--double-cl::
-> +       Group the detection of shared cacheline events into double cacheline granularity.
-> +       Some architectures have an Adjacent Cacheline Prefetch feature, which causes
-> +       cacheline sharing to behave like the cachline size is doubled.
-> 
-> By the way, this patch is awesome.  
-> It's not often that Adjacent Cacheline Prefetching causes performance problems, but when it does, it's a pain to track down.
-> This will really help.  Thank you for doing it.
+Hi Arnaldo,
 
-Hi Joe,
+On Tue, Feb 14, 2023 at 11:16 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Tue, Feb 14, 2023 at 08:57:58AM -0800, Ian Rogers escreveu:
+> > On Mon, Feb 13, 2023 at 9:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > There have been requests for more sophisticated perf event sample
+> > > filtering based on the sample data.  Recently the kernel added BPF
+> > > programs can access perf sample data and this is the userspace part
+> > > to enable such a filtering.
+>
+> > > This still has some rough edges and needs more improvements.  But
+> > > I'd like to share the current work and get some feedback for the
+> > > directions and idea for further improvements.
+>
+> > > The kernel changes are in the tip.git tree (perf/core branch) for now.
+> > > perf record has --filter option to set filters on the last specified
+> > > event in the command line.  It worked only for tracepoints and Intel
+> > > PT events so far.  This patchset extends it to have 'bpf:' prefix in
+> > > order to enable the general sample filters using BPF for any events.
+>
+> > > A new filter expression parser was added (using flex/bison) to process
+> > > the filter string.  Right now, it only accepts very simple expressions
+> > > separated by comma.  I'd like to keep the filter expression as simple
+> > > as possible.
+>
+> > > It requires samples satisfy all the filter expressions otherwise it'd
+> > > drop the sample.  IOW filter expressions are connected with logical AND
+> > > operations implicitly.
+>
+> > > Essentially the BPF filter expression is:
+>
+> > >   "bpf:" <term> <operator> <value> ("," <term> <operator> <value>)*
+>
+> bpf is the technology used for that, but this really is about filtering
+> by fields in the sample type, right? So perhaps we could remove that
+> "bpf:" part and simply do:
+>
+>   sudo ./perf record -e cycles --filter 'period > 10000' -- ./perf test -w noploop
+>
+> And notice that this requires this new mechanism and just use it? It
+> gets more compact and should be unambiguous for non-tracepoint events?
+>
+> And for tracepoint events if we can use both mechanisms, then use the
+> tracepoint one since it requires less setup?
 
-	May I add an Acked-by or even Reviewed-by you to the patch?
+Sure, it'd work if we could select the filter mechanism based on the
+event type.  One thing to note is BPF filter requires root permission
+even if the event itself does not.  Users might be surprised if it
+suddenly requires root for their userspace profiling.
 
-Thanks,
+>
+> Perhaps use "sample_type.field" to disambiguate if we would like to get a
+> field from the sample_type and another in the tracepoint if both have
+> the same name?
 
-- Arnaldo
- 
-> Joe
-> 
-> >  C2C RECORD
-> >  ----------
-> >  The perf c2c record command setup options related to HITM cacheline analysis
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index 52d94c7dd836..7d495db7e5a2 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> > @@ -524,7 +524,7 @@ static int dcacheline_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> >  	char buf[20];
-> >  
-> >  	if (he->mem_info)
-> > -		addr = cl_address(he->mem_info->daddr.addr);
-> > +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
-> >  
-> >  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
-> >  }
-> > @@ -562,7 +562,7 @@ static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> >  	char buf[20];
-> >  
-> >  	if (he->mem_info)
-> > -		addr = cl_offset(he->mem_info->daddr.al_addr);
-> > +		addr = cl_offset(he->mem_info->daddr.al_addr, chk_double_cl);
-> >  
-> >  	return scnprintf(hpp->buf, hpp->size, "%*s", width, HEX_STR(buf, addr));
-> >  }
-> > @@ -574,9 +574,10 @@ offset_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> >  	uint64_t l = 0, r = 0;
-> >  
-> >  	if (left->mem_info)
-> > -		l = cl_offset(left->mem_info->daddr.addr);
-> > +		l = cl_offset(left->mem_info->daddr.addr, chk_double_cl);
-> > +
-> >  	if (right->mem_info)
-> > -		r = cl_offset(right->mem_info->daddr.addr);
-> > +		r = cl_offset(right->mem_info->daddr.addr, chk_double_cl);
-> >  
-> >  	return (int64_t)(r - l);
-> >  }
-> > @@ -2590,7 +2591,7 @@ perf_c2c_cacheline_browser__title(struct hist_browser *browser,
-> >  	he = cl_browser->he;
-> >  
-> >  	if (he->mem_info)
-> > -		addr = cl_address(he->mem_info->daddr.addr);
-> > +		addr = cl_address(he->mem_info->daddr.addr, chk_double_cl);
-> >  
-> >  	scnprintf(bf, size, "Cacheline 0x%lx", addr);
-> >  	return 0;
-> > @@ -2788,15 +2789,16 @@ static int ui_quirks(void)
-> >  	if (!c2c.use_stdio) {
-> >  		dim_offset.width  = 5;
-> >  		dim_offset.header = header_offset_tui;
-> > -		nodestr = "CL";
-> > +		nodestr = chk_double_cl ? "Double-CL" : "CL";
-> >  	}
-> >  
-> >  	dim_percent_costly_snoop.header = percent_costly_snoop_header[c2c.display];
-> >  
-> >  	/* Fix the zero line for dcacheline column. */
-> > -	buf = fill_line("Cacheline", dim_dcacheline.width +
-> > -				     dim_dcacheline_node.width +
-> > -				     dim_dcacheline_count.width + 4);
-> > +	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
-> > +				dim_dcacheline.width +
-> > +				dim_dcacheline_node.width +
-> > +				dim_dcacheline_count.width + 4);
-> >  	if (!buf)
-> >  		return -ENOMEM;
-> >  
-> > @@ -3037,6 +3039,8 @@ static int perf_c2c__report(int argc, const char **argv)
-> >  	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
-> >  	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
-> >  		    "Enable LBR callgraph stitching approach"),
-> > +	OPT_BOOLEAN('a', "double-cl", &chk_double_cl,
-> > +		    "Check adjacent cachline false sharing"),
-> >  	OPT_PARENT(c2c_options),
-> >  	OPT_END()
-> >  	};
-> > diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
-> > index dec8c0fb1f4a..630d16731b4f 100644
-> > --- a/tools/perf/util/cacheline.h
-> > +++ b/tools/perf/util/cacheline.h
-> > @@ -6,16 +6,31 @@
-> >  
-> >  int __pure cacheline_size(void);
-> >  
-> > -static inline u64 cl_address(u64 address)
-> > +
-> > +/*
-> > + * Some architecture has 'Adjacent Cacheline Prefetch' feature,
-> > + * which performs like the cacheline size being doubled.
-> > + */
-> > +static inline u64 cl_address(u64 address, bool double_cl)
-> >  {
-> > +	u64 size = cacheline_size();
-> > +
-> > +	if (double_cl)
-> > +		size *= 2;
-> > +
-> >  	/* return the cacheline of the address */
-> > -	return (address & ~(cacheline_size() - 1));
-> > +	return (address & ~(size - 1));
-> >  }
-> >  
-> > -static inline u64 cl_offset(u64 address)
-> > +static inline u64 cl_offset(u64 address, bool double_cl)
-> >  {
-> > -	/* return the cacheline of the address */
-> > -	return (address & (cacheline_size() - 1));
-> > +	u64 size = cacheline_size();
-> > +
-> > +	if (double_cl)
-> > +		size *= 2;
-> > +
-> > +	/* return the offset inside cachline */
-> > +	return (address & (size - 1));
-> >  }
-> >  
-> >  #endif // PERF_CACHELINE_H
-> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> > index e188f74698dd..148b28f0a7e2 100644
-> > --- a/tools/perf/util/sort.c
-> > +++ b/tools/perf/util/sort.c
-> > @@ -52,6 +52,13 @@ enum sort_mode	sort__mode = SORT_MODE__NORMAL;
-> >  static const char *const dynamic_headers[] = {"local_ins_lat", "ins_lat", "local_p_stage_cyc", "p_stage_cyc"};
-> >  static const char *const arch_specific_sort_keys[] = {"local_p_stage_cyc", "p_stage_cyc"};
-> >  
-> > +/*
-> > + * Some architecture has Adjacent Cacheline Prefetch feature, which behaves
-> > + * like the cachline size is doubled. Enable this flag to check things in
-> > + * double cacheline granularity.
-> > + */
-> > +bool chk_double_cl;
-> > +
-> >  /*
-> >   * Replaces all occurrences of a char used with the:
-> >   *
-> > @@ -1499,8 +1506,8 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
-> >  
-> >  addr:
-> >  	/* al_addr does all the right addr - start + offset calculations */
-> > -	l = cl_address(left->mem_info->daddr.al_addr);
-> > -	r = cl_address(right->mem_info->daddr.al_addr);
-> > +	l = cl_address(left->mem_info->daddr.al_addr, chk_double_cl);
-> > +	r = cl_address(right->mem_info->daddr.al_addr, chk_double_cl);
-> >  
-> >  	if (l > r) return -1;
-> >  	if (l < r) return 1;
-> > @@ -1519,7 +1526,7 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
-> >  	if (he->mem_info) {
-> >  		struct map *map = he->mem_info->daddr.ms.map;
-> >  
-> > -		addr = cl_address(he->mem_info->daddr.al_addr);
-> > +		addr = cl_address(he->mem_info->daddr.al_addr, chk_double_cl);
-> >  		ms = &he->mem_info->daddr.ms;
-> >  
-> >  		/* print [s] for shared data mmaps */
-> > diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> > index 921715e6aec4..04f0a6dc7381 100644
-> > --- a/tools/perf/util/sort.h
-> > +++ b/tools/perf/util/sort.h
-> > @@ -35,6 +35,7 @@ extern struct sort_entry sort_sym_from;
-> >  extern struct sort_entry sort_sym_to;
-> >  extern struct sort_entry sort_srcline;
-> >  extern const char default_mem_sort_order[];
-> > +extern bool chk_double_cl;
-> >  
-> >  struct res_sample {
-> >  	u64 time;
-> 
+I think the tracepoint filters are different as they work on the event-
+specific data field.  From the sample data's perspective, it's just
+RAW data and current BPF filters do nothing with it.
 
--- 
+So I'd rather simply delegate it to the tracepoint.
 
-- Arnaldo
+>
+> And how difficult it would be to just accept the same syntax (or a
+> superset) of what is available for tracepoint filters? I.e. allow || as
+> well as &&.
+
+Making the parser accept those syntax would not be that difficult.
+But I'm afraid of the BPF program doing the job and how we can
+build the map to achieve that.
+
+>
+> Great stuff!
+
+Thanks!
+Namhyung
+
+
+>
+> > > The <term> can be one of:
+> > >   ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
+> > >   code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
+> > >   p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
+> > >   mem_dtlb, mem_blk, mem_hops
+> > >
+> > > The <operator> can be one of:
+> > >   ==, !=, >, >=, <, <=, &
+> > >
+> > > The <value> can be one of:
+> > >   <number> (for any term)
+> > >   na, load, store, pfetch, exec (for mem_op)
+> > >   l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+> > >   na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+> > >   remote (for mem_remote)
+> > >   na, locked (for mem_locked)
+> > >   na, l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault (for mem_dtlb)
+> > >   na, by_data, by_addr (for mem_blk)
+> > >   hops0, hops1, hops2, hops3 (for mem_hops)
+> > >
+> > > I plan to improve it with range expressions like for ip or addr and it
+> > > should support symbols like the existing addr-filters.  Also cgroup
+> > > should understand and convert cgroup names to IDs.
+> > >
+> > > Let's take a look at some examples.  The following is to profile a user
+> > > program on the command line.  When the frequency mode is used, it starts
+> > > with a very small period (i.e. 1) and adjust it on every interrupt (NMI)
+> > > to catch up the given frequency.
+> > >
+> > >   $ ./perf record -- ./perf test -w noploop
+> > >   [ perf record: Woken up 1 times to write data ]
+> > >   [ perf record: Captured and wrote 0.263 MB perf.data (4006 samples) ]
+> > >
+> > >   $ ./perf script -F pid,period,event,ip,sym | head
+> > >   36695          1 cycles:  ffffffffbab12ddd perf_event_exec
+> > >   36695          1 cycles:  ffffffffbab12ddd perf_event_exec
+> > >   36695          5 cycles:  ffffffffbab12ddd perf_event_exec
+> > >   36695         46 cycles:  ffffffffbab12de5 perf_event_exec
+> > >   36695       1163 cycles:  ffffffffba80a0eb x86_pmu_disable_all
+> > >   36695       1304 cycles:  ffffffffbaa19507 __hrtimer_get_next_event
+> > >   36695       8143 cycles:  ffffffffbaa186f9 __run_timers
+> > >   36695      69040 cycles:  ffffffffbaa0c393 rcu_segcblist_ready_cbs
+> > >   36695     355117 cycles:            4b0da4 noploop
+> > >   36695     321861 cycles:            4b0da4 noploop
+> > >
+> > > If you want to skip the first few samples that have small periods, you
+> > > can do like this (note it requires root due to BPF).
+> > >
+> > >   $ sudo ./perf record -e cycles --filter 'bpf: period > 10000' -- ./perf test -w noploop
+> > >   [ perf record: Woken up 1 times to write data ]
+> > >   [ perf record: Captured and wrote 0.262 MB perf.data (3990 samples) ]
+> > >
+> > >   $ sudo ./perf script -F pid,period,event,ip,sym | head
+> > >   39524      58253 cycles:  ffffffffba97dac0 update_rq_clock
+> > >   39524     232657 cycles:            4b0da2 noploop
+> > >   39524     210981 cycles:            4b0da2 noploop
+> > >   39524     282882 cycles:            4b0da4 noploop
+> > >   39524     392180 cycles:            4b0da4 noploop
+> > >   39524     456058 cycles:            4b0da4 noploop
+> > >   39524     415196 cycles:            4b0da2 noploop
+> > >   39524     462721 cycles:            4b0da4 noploop
+> > >   39524     526272 cycles:            4b0da2 noploop
+> > >   39524     565569 cycles:            4b0da4 noploop
+> > >
+> > > Maybe more useful example is when it deals with precise memory events.
+> > > On AMD processors with IBS, you can filter only memory load with L1
+> > > dTLB is missed like below.
+> > >
+> > >   $ sudo ./perf record -ad -e ibs_op//p \
+> > >   > --filter 'bpf: mem_op == load, mem_dtlb > l1_hit' sleep 1
+> > >   [ perf record: Woken up 1 times to write data ]
+> > >   [ perf record: Captured and wrote 1.338 MB perf.data (15 samples) ]
+> > >
+> > >   $ sudo ./perf script -F data_src | head
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           49080142 |OP LOAD|LVL L1 hit|SNP N/A|TLB L2 hit|LCK N/A|BLK  N/A
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           51088842 |OP LOAD|LVL L3 or Remote Cache (1 hop) hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >           49080442 |OP LOAD|LVL L2 hit|SNP N/A|TLB L2 hit|LCK N/A|BLK  N/A
+> > >           51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+> > >
+> > > You can also check the number of dropped samples in LOST_SAMPLES events
+> > > using perf report --stat command.
+> > >
+> > >   $ sudo ./perf report --stat
+> > >
+> > >   Aggregated stats:
+> > >              TOTAL events:      16066
+> > >               MMAP events:         22  ( 0.1%)
+> > >               COMM events:       4166  (25.9%)
+> > >               EXIT events:          1  ( 0.0%)
+> > >           THROTTLE events:        816  ( 5.1%)
+> > >         UNTHROTTLE events:        613  ( 3.8%)
+> > >               FORK events:       4165  (25.9%)
+> > >             SAMPLE events:         15  ( 0.1%)
+> > >              MMAP2 events:       6133  (38.2%)
+> > >       LOST_SAMPLES events:          1  ( 0.0%)
+> > >            KSYMBOL events:         69  ( 0.4%)
+> > >          BPF_EVENT events:         57  ( 0.4%)
+> > >     FINISHED_ROUND events:          3  ( 0.0%)
+> > >           ID_INDEX events:          1  ( 0.0%)
+> > >         THREAD_MAP events:          1  ( 0.0%)
+> > >            CPU_MAP events:          1  ( 0.0%)
+> > >          TIME_CONV events:          1  ( 0.0%)
+> > >      FINISHED_INIT events:          1  ( 0.0%)
+> > >   ibs_op//p stats:
+> > >             SAMPLE events:         15
+> > >       LOST_SAMPLES events:       3991
+> > >
+> > > Note that the total aggregated stats show 1 LOST_SAMPLES event but
+> > > per event stats show 3991 events because it's the actual number of
+> > > dropped samples while the aggregated stats has the number of record.
+> > > Maybe we need to change the per-event stats to 'LOST_SAMPLES count'
+> > > to avoid the confusion.
+> > >
+> > > The code is available at 'perf/bpf-filter-v1' branch in my tree.
+> > >
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> > >
+> > > Again, you need tip/perf/core kernel for this to work.
+> > > Any feedback is welcome.
+> >
+> > This is great! I wonder about related clean up:
+> >
+> >  - can we remove BPF events as this is a better feature?
+> >    - I believe BPF events are flaky, seldom used (with the exception
+> > of the augmented syscalls for perf trace, which really should move to
+> > a BPF skeleton as most people don't know how to use it) and they add a
+> > bunch of complexity. A particular complexity I care about is that the
+> > path separator forward slash ('/') is also the modifier separator for
+> > events.
+> >
+> >  - what will happen with multiple events/metrics? Perhaps there should
+> > be a way of listing filters so that each filter applies to the
+> > appropriate event in the event list, like cgroups and -G. For metrics
+> > we shuffle the list of events and so maybe the filters need some way
+> > to specify which event they apply to.
+> >
+> >  - It feels like there should be some BPF way of overcoming the fixed
+> > length number of filters so it is still bounded but not a hardcoded
+> > number.
+> >
+> > Thanks,
+> > Ian
+> >
+> >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > > Namhyung Kim (7):
+> > >   perf bpf filter: Introduce basic BPF filter expression
+> > >   perf bpf filter: Implement event sample filtering
+> > >   perf record: Add BPF event filter support
+> > >   perf record: Record dropped sample count
+> > >   perf bpf filter: Add 'pid' sample data support
+> > >   perf bpf filter: Add more weight sample data support
+> > >   perf bpf filter: Add data_src sample data support
+> > >
+> > >  tools/perf/Documentation/perf-record.txt     |  10 +-
+> > >  tools/perf/Makefile.perf                     |   2 +-
+> > >  tools/perf/builtin-record.c                  |  46 ++++--
+> > >  tools/perf/util/Build                        |  16 ++
+> > >  tools/perf/util/bpf-filter.c                 | 117 ++++++++++++++
+> > >  tools/perf/util/bpf-filter.h                 |  48 ++++++
+> > >  tools/perf/util/bpf-filter.l                 | 146 ++++++++++++++++++
+> > >  tools/perf/util/bpf-filter.y                 |  55 +++++++
+> > >  tools/perf/util/bpf_counter.c                |   3 +-
+> > >  tools/perf/util/bpf_skel/sample-filter.h     |  25 +++
+> > >  tools/perf/util/bpf_skel/sample_filter.bpf.c | 152 +++++++++++++++++++
+> > >  tools/perf/util/evsel.c                      |   2 +
+> > >  tools/perf/util/evsel.h                      |   7 +-
+> > >  tools/perf/util/parse-events.c               |   4 +
+> > >  tools/perf/util/session.c                    |   3 +-
+> > >  15 files changed, 615 insertions(+), 21 deletions(-)
+> > >  create mode 100644 tools/perf/util/bpf-filter.c
+> > >  create mode 100644 tools/perf/util/bpf-filter.h
+> > >  create mode 100644 tools/perf/util/bpf-filter.l
+> > >  create mode 100644 tools/perf/util/bpf-filter.y
+> > >  create mode 100644 tools/perf/util/bpf_skel/sample-filter.h
+> > >  create mode 100644 tools/perf/util/bpf_skel/sample_filter.bpf.c
+> > >
+> > >
+> > > base-commit: 37f322cd58d81a9d46456531281c908de9ef6e42
+> > > --
+> > > 2.39.1.581.gbfd45094c4-goog
+> > >
+>
+> --
+>
+> - Arnaldo
