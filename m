@@ -2,139 +2,71 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638D6C636D4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Feb 2023 13:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF344C636CC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Feb 2023 13:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233460AbjBONWe (ORCPT
+        id S229504AbjBON2F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Feb 2023 08:22:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        Wed, 15 Feb 2023 08:28:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234178AbjBONWd (ORCPT
+        with ESMTP id S229675AbjBON2E (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Feb 2023 08:22:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD32F38B61;
-        Wed, 15 Feb 2023 05:22:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Feb 2023 08:28:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3C2392BB
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Feb 2023 05:27:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676467628;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
+        b=dw7zziPbd2ytNiXprXtLXdniNJyGqQ34RSUEF7DTDlSdZWxD3qrQpi9/uekyTBPmrkGKav
+        EWGaG5USwv83pR0/+ppl71/zWHpsZoQJVwa6ukofTvTakZ5n11zOsCiiR5gjfnc3cHZYrz
+        lRTwfgFsgxqILqjIZmsOH0OlioV2gwY=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-634-bSnxo5JIPNyjZVUu63p6Vg-1; Wed, 15 Feb 2023 08:27:05 -0500
+X-MC-Unique: bSnxo5JIPNyjZVUu63p6Vg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B28761BE3;
-        Wed, 15 Feb 2023 13:22:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E3FC433EF;
-        Wed, 15 Feb 2023 13:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676467350;
-        bh=dumN+7kPt2PnRMxp9OqZvoUwYsetv6dIXzdfMpWd+PU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GAAf0zP8SNuxP+KlmRfetHEjWftsa7C11ZjorYiyM0djZ65jhCRdBbbWtHBBu5rwj
-         t9lxcLrwMtHAO88QnvCrrazKtKnHSThvlYSRurSJR2q7fjqpEM4M/khX28kTQj22Vz
-         74SDrsmV8jmRo+S2JQcBI2GTqEa4xtBLKCVKEh9DPhvKyXJAgz/VVmM9FAwUzmFXVX
-         ia6ijJOe3mqGzj7pNa8iwz/xKmnagcBoLYG4j6hoyK4WsH+VzCyynj0VrMA4zBSgah
-         8qy8kpFdzIIvk311az3wcP7layk0/I8TTBPhx9CEdqKWDGdf2dwAUY7WWrSMn97RQw
-         4uWd8m6UH00ZA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E791740025; Wed, 15 Feb 2023 10:22:27 -0300 (-03)
-Date:   Wed, 15 Feb 2023 10:22:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, jiwei.sun@windriver.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v4] perf record: Fix segfault with --overwrite and
- --max-size
-Message-ID: <Y+zckxuLUEUK0BmI@kernel.org>
-References: <20230215122324.105229-1-yangjihong1@huawei.com>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7F5EC3C0F22E;
+        Wed, 15 Feb 2023 13:27:04 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1914B18EC1;
+        Wed, 15 Feb 2023 13:27:04 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Jianfeng Gao <jianfeng.gao@intel.com>,
+        Andrew Cooper <Andrew.Cooper3@citrix.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v2 0/2] perf/x86: KVM: Disable vPMU on hybrid CPUs
+Date:   Wed, 15 Feb 2023 08:27:02 -0500
+Message-Id: <20230215132702.1339553-1-pbonzini@redhat.com>
+In-Reply-To: <20230208204230.1360502-1-seanjc@google.com>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230215122324.105229-1-yangjihong1@huawei.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 15, 2023 at 12:23:24PM +0000, Yang Jihong escreveu:
-> When --overwrite and --max-size options of perf record are used together,
-> a segmentation fault occurs. The following is an example:
-<SNIP>
-> We add a member variable "thread_bytes_written" in the struct "record"
-> to save the data size written by the threads.
-> 
-> Fixes: 6d57581659f7 ("perf record: Add support for limit perf output file size")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> ---
-> 
-> Changes since v3:
->  - Add Namhyung Kim Acked-by
->    (I don't know whether the problem is caused by my email address, Send again)
+Queued, thanks.
 
-Thanks, applied.
+Paolo
 
-- Arnaldo
 
- 
-> Changes since v2:
->  - Save data size written by threads to calculate the correct total data size.
->  - Update commit message.
-> 
-> Changes since v1:
->  - Add variable check in record__bytes_written for code hardening.
->  - Save bytes_written separately to reduce one calculation.
->  - Remove rec->opts.tail_synthesize check.
-> 
->  tools/perf/builtin-record.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 29dcd454b8e2..8374117e66f6 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -154,6 +154,7 @@ struct record {
->  	struct perf_tool	tool;
->  	struct record_opts	opts;
->  	u64			bytes_written;
-> +	u64			thread_bytes_written;
->  	struct perf_data	data;
->  	struct auxtrace_record	*itr;
->  	struct evlist	*evlist;
-> @@ -226,14 +227,7 @@ static bool switch_output_time(struct record *rec)
->  
->  static u64 record__bytes_written(struct record *rec)
->  {
-> -	int t;
-> -	u64 bytes_written = rec->bytes_written;
-> -	struct record_thread *thread_data = rec->thread_data;
-> -
-> -	for (t = 0; t < rec->nr_threads; t++)
-> -		bytes_written += thread_data[t].bytes_written;
-> -
-> -	return bytes_written;
-> +	return rec->bytes_written + rec->thread_bytes_written;
->  }
->  
->  static bool record__output_max_size_exceeded(struct record *rec)
-> @@ -255,10 +249,12 @@ static int record__write(struct record *rec, struct mmap *map __maybe_unused,
->  		return -1;
->  	}
->  
-> -	if (map && map->file)
-> +	if (map && map->file) {
->  		thread->bytes_written += size;
-> -	else
-> +		rec->thread_bytes_written += size;
-> +	} else {
->  		rec->bytes_written += size;
-> +	}
->  
->  	if (record__output_max_size_exceeded(rec) && !done) {
->  		fprintf(stderr, "[ perf record: perf size limit reached (%" PRIu64 " KB),"
-> -- 
-> 2.30.GIT
-> 
-
--- 
-
-- Arnaldo
