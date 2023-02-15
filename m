@@ -2,158 +2,79 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EF4C636CC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Feb 2023 09:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2838C636CC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Feb 2023 12:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231645AbjBOJjD (ORCPT
+        id S229773AbjBOMJl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Feb 2023 04:39:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45818 "EHLO
+        Wed, 15 Feb 2023 07:09:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230296AbjBOJjC (ORCPT
+        with ESMTP id S229503AbjBOMJk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Feb 2023 04:39:02 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A664241C8
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Feb 2023 01:39:01 -0800 (PST)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31F93MJN035307;
-        Wed, 15 Feb 2023 09:38:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=HaaNFUYd7/y/gH0aZ5dqcVhecNeq1B8ns+OY0zegHJE=;
- b=R16/uOSXeY3xxE+0fWV8qKeCoo8v+flTqteaaou8Kc5cENe+eGw1ABO1V7Vw+CDef91e
- vJ/0WBVGI2gZ8EyCEW1SDalfxrnNaJEiwOa9lPI/kNSppFGqJgvkGSklk2uAsWGDv4En
- HyBMP4T89HVZXc03sc5y8dG+QdRtbhqb+o16PKCkdmut0Q+7tpvFl6UB88hv1iFd8UvM
- bTwJhyvzxUt7qzMcQGAFbe4irbZpxS1cHnCpBCYfMyhb48mPXn3Dkk1Ho5U1GPrFZhdq
- 3XULfRMeRrzQpayz19uL3wITQVv4k0DbtYgEF238T4F+G84Zd4pDr7elopEHCr504Dl2 Kg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nrve4h8wu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Feb 2023 09:38:50 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31F94wSO040934;
-        Wed, 15 Feb 2023 09:38:50 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nrve4h8w5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Feb 2023 09:38:50 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31EIYT1E010698;
-        Wed, 15 Feb 2023 09:38:48 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3np2n6w697-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Feb 2023 09:38:48 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31F9cjl250266396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Feb 2023 09:38:45 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D1D520043;
-        Wed, 15 Feb 2023 09:38:45 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 77E0020040;
-        Wed, 15 Feb 2023 09:38:42 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.com (unknown [9.43.3.48])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Feb 2023 09:38:42 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, rnsastry@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        irogers@google.com
-Subject: [PATCH v2] tools/perf/tests: Change true workload to sleep workload in all metric test for system wide check
-Date:   Wed, 15 Feb 2023 15:08:27 +0530
-Message-Id: <20230215093827.124921-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
+        Wed, 15 Feb 2023 07:09:40 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81AC82387A;
+        Wed, 15 Feb 2023 04:09:39 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PGxdg54JXzRrwZ;
+        Wed, 15 Feb 2023 20:07:03 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Wed, 15 Feb 2023 20:09:36 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH RESEND v2] perf/core: Fix hardlockup failure caused by perf throttle
+Date:   Wed, 15 Feb 2023 20:07:26 +0800
+Message-ID: <20230215120726.239233-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ynkS7O4K1Ei1qXB-iK5cudy8PgYbXvkC
-X-Proofpoint-GUID: ihf7kGT1qK2GVUHfS9ImQoPwZtG42Ci7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-15_05,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 spamscore=0 adultscore=0
- malwarescore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302150087
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Testcase stat_all_metrics.sh fails in powerpc:
+In literal sense of "max_samples_per_tick", if hwc->interrupts ==
+max_samples_per_tick, it should not be throttled, therefore, the judgment
+condition should be changed to "hwc->interrupts > max_samples_per_tick".
 
-98: perf all metrics test : FAILED!
+In fact, this may cause the hardlockup to fail, The minimum value of
+max_samples_per_tick may be 1, in this case, the return value of
+__perf_event_account_interrupt function is 1.
+As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
+architecture as an example, see x86_pmu_handle_irq).
 
-Logs with verbose:
-
-[command]# ./perf test 98 -vv
- 98: perf all metrics test                                           :
- --- start ---
-test child forked, pid 13262
-Testing BRU_STALL_CPI
-Testing COMPLETION_STALL_CPI
- ----
-Testing TOTAL_LOCAL_NODE_PUMPS_P23
-Metric 'TOTAL_LOCAL_NODE_PUMPS_P23' not printed in:
-Error:
-Invalid event (hv_24x7/PM_PB_LNS_PUMP23,chip=3/) in per-thread mode, enable system wide with '-a'.
-Testing TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01
-Metric 'TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01' not printed in:
-Error:
-Invalid event (hv_24x7/PM_PB_RTY_LNS_PUMP01,chip=3/) in per-thread mode, enable system wide with '-a'.
- ----
-
-Based on above logs, we could see some of the hv-24x7 metric events fails,
-and logs suggest to run the metric event with -a option.
-This change happened after the commit a4b8cfcabb1d ("perf stat: Delay metric
-parsing"), which delayed the metric parsing phase and now before metric parsing
-phase perf tool identifies, whether target is system-wide or not. With this
-change, perf_event_open will fails with workload monitoring for uncore events
-as expected.
-
-The perf all metric test case fails as some of the hv-24x7 metric events
-may need bigger workload with system wide monitoring to get the data.
-Fix this issue by changing current system wide check from true workload to
-sleep 0.01 workload.
-
-Result with the patch changes in powerpc:
-
-98: perf all metrics test : Ok
-
-Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Disha Goel <disgoel@linux.ibm.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
-Changelog:
+Changes since v1:
+  - Modify commit title.
 
-v1->v2:
-- Addressed review comments from Ian, by changing true workload
-  to sleep workload in "perf all metric test". Rather then adding
-  new system wide check with perf bench workload.
-- Added Reviewed-by, Tested-by and Suggested-by tags.
-
- tools/perf/tests/shell/stat_all_metrics.sh | 2 +-
+ kernel/events/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index 6e79349e42be..22e9cb294b40 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -11,7 +11,7 @@ for m in $(perf list --raw-dump metrics); do
-     continue
-   fi
-   # Failed so try system wide.
--  result=$(perf stat -M "$m" -a true 2>&1)
-+  result=$(perf stat -M "$m" -a sleep 0.01 2>&1)
-   if [[ "$result" =~ "${m:0:50}" ]]
-   then
-     continue
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index c4be13e50547..c5c3c033ef6b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9409,7 +9409,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+ 	} else {
+ 		hwc->interrupts++;
+ 		if (unlikely(throttle
+-			     && hwc->interrupts >= max_samples_per_tick)) {
++			     && hwc->interrupts > max_samples_per_tick)) {
+ 			__this_cpu_inc(perf_throttled_count);
+ 			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+ 			hwc->interrupts = MAX_INTERRUPTS;
 -- 
-2.39.1
+2.30.GIT
 
