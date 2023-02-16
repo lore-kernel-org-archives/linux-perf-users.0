@@ -2,171 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE15FC636CC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Feb 2023 18:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B6FC636CC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Feb 2023 18:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229450AbjBPSKY (ORCPT
+        id S229482AbjBPSiw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Feb 2023 13:10:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48678 "EHLO
+        Thu, 16 Feb 2023 13:38:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjBPSKY (ORCPT
+        with ESMTP id S229461AbjBPSiv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Feb 2023 13:10:24 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DBF0505F8
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Feb 2023 10:10:19 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id m10so2695906wrn.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Feb 2023 10:10:18 -0800 (PST)
+        Thu, 16 Feb 2023 13:38:51 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABB343930;
+        Thu, 16 Feb 2023 10:38:50 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id 24so1840470pgt.7;
+        Thu, 16 Feb 2023 10:38:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=u8BJ4MZYvude2UfZX0aEIl06W6KmazdVPxZc2eo82sw=;
-        b=Lud5LhA8U1dXNoiIn8jCNMmTT0210E774uSxoedxEsUzgDC7JM+2mtD82zyRHl6IQk
-         2Qw92Uz6TzegRzpxELyal1f179LIc07qWwreJ9vYphJLDdf9wzXbZYw+hvmjlb0tkeJN
-         FhnNYO7MygtP9WAuP5teQNIWit0XHvqHLIHjf3gjHYeAxeWIAipGtb8LmpFOZ29m4Bji
-         plzfiQb7DdtM5x2nhG0eJEOfr8TsaaGPS0RUKI71T/R7y8DsU6EkN2tD8b2iiprghZ+2
-         tdwcRj23Xk/Za0ocnO8pexKw4+qWPY8l6TblXwYRCxzdS6lJkCvQQCiZp18uJoHw58Lf
-         SBdQ==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SuLdwLtfLsyKrMS8dI+1/4NFezsn+c9OtrFVwK/ARsA=;
+        b=g7BW0FLF9CZ568xaYDBEUXjVspPkAaIk1NQp1MjeWnJC6NWS/5EC2HeQaOejVOXAa2
+         rnx2IjNt5yBPwecP9jkrTVCsT35F1fJ5UJbCrQwl9j1nbggCaKyJYZ/jeZlSX79sAss0
+         1DAX2SHHu7UeHAfH+biB99+2FcRoDk0oYmOeWajeIKzF9IRHTgNRYLWMWx1gpaIPFgjC
+         QxNHQgDrT71wwWHGv1row3zXEroWcF9QXR147Gr10WSlN6y2mKMMDppVvLknAjTprcLG
+         LgX8qkuMEUaNIZJXIlnodR+KgZw6KNPJBMNkjZi5R7ybWyoVDTWECotB7l1gxSgshjGV
+         tFaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u8BJ4MZYvude2UfZX0aEIl06W6KmazdVPxZc2eo82sw=;
-        b=UhMq4PVZyFHnvELZD5R0HnrlYfLn93XH1ahwFzUQVlZU7seNNzdQ+0GHVXWIBLyLJt
-         OIO7W1AVhNMUBqk0E1m2hoic10jL2w5XmXSXRqifjZ6ONkXxqEUrd6KetHfRPWLUSESJ
-         PP1IWN9RaqPIRjuGv32CSZSkoPiNg9bBk8al1SpZC6Oh+DpNzfmzUplvDbqWWaTDy7TN
-         8F8/ZAXF6m7QPQElcoBEt2r9I2K8EHhTM04oxbZTcRfO4p9842Fh4nFSCeXaLlEva8hd
-         jin3L7NRiJSzwLp+KoFD2CMQfrNr8XdTWkayHCGHh4OI9D8NCSiZ6z5XW+s27iB90Wuy
-         nFJA==
-X-Gm-Message-State: AO0yUKWQG8qqYGlvFRHcnSaPrdoOnhbedIMKgbU4wbwL5o7QqP1dIU98
-        NIpy4FRPdmfMiTlcpMSxVEBezgNPrUR6O8czhPpUBA==
-X-Google-Smtp-Source: AK7set8PFbTgnLUl+6xDV2jNK1je3uSP5oF36um1IU6MeHsSb+AkUme5G/OUYIQ0ITW0qySBLXOE3eEYR/fCQOy53kc=
-X-Received: by 2002:a5d:6544:0:b0:2c5:4d9c:d206 with SMTP id
- z4-20020a5d6544000000b002c54d9cd206mr152633wrv.733.1676571017231; Thu, 16 Feb
- 2023 10:10:17 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SuLdwLtfLsyKrMS8dI+1/4NFezsn+c9OtrFVwK/ARsA=;
+        b=iet5/37M6/qCC1aFDARVjrVX6VX3GbR5eQa0AhGzzGCWc0evA+kAkVXw+z3KZ57hvO
+         AnWglYJlrk8mc+fLgRWFlZQsPW8lMLidbp1S2ISa8EJP/ayphgnxpGYcpin1cX/58ObA
+         5x1Ve8cPHGMx1Zn2og9ZAv9wpVGZvYCSEdz3iORmd75Q/PXZr9gP75YAzELcaVl8tJ6V
+         Z1PR8NHmK7ojOHKN8pWrZtVKo6nW8ALm/69pbQa7/LmUxc1j/1JeFJONFrMw+8rV7gHO
+         76guClMWXmKUf8iBxpAQiuLLtZxfvXJfGDbI1/4G2OCnZBap6DMTutoX7b+FzHZhyQgQ
+         khUQ==
+X-Gm-Message-State: AO0yUKUa2mf5USs4mX2cbtdHeMkw0+wosfkXA6NqO/Bw1bl5Q+f9Ug7a
+        Tae++KbjM5Hnx/GrrIUmvrAF1P5mCNk=
+X-Google-Smtp-Source: AK7set/aje9IQy6+W9Gi4gllMJPg9aafvoLMyhy5QeuG1pEKiKWelzO3bLxDFZ6vwCo/oMvjCgiNtA==
+X-Received: by 2002:a62:5250:0:b0:596:15de:ea1e with SMTP id g77-20020a625250000000b0059615deea1emr5729416pfb.9.1676572730265;
+        Thu, 16 Feb 2023 10:38:50 -0800 (PST)
+Received: from google.com ([2620:15c:2d4:203:cb24:bfe1:41f4:4b12])
+        by smtp.gmail.com with ESMTPSA id n20-20020aa79054000000b005921c46cbadsm1663672pfo.99.2023.02.16.10.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Feb 2023 10:38:49 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+Date:   Thu, 16 Feb 2023 10:38:46 -0800
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 4/7] perf record: Record dropped sample count
+Message-ID: <Y+54Nla62F+dutdu@google.com>
+References: <20230214050452.26390-1-namhyung@kernel.org>
+ <20230214050452.26390-5-namhyung@kernel.org>
+ <Y+5YaQt7Fme65a78@krava>
+ <Y+5ajnitOAxjdn2C@kernel.org>
+ <Y+5bGS9clWPS+B5J@krava>
 MIME-Version: 1.0
-References: <20230216061240.18067-1-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20230216061240.18067-1-atrajeev@linux.vnet.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 16 Feb 2023 10:10:05 -0800
-Message-ID: <CAP-5=fWBb2=g82uVTkUbENThsnZyhzU+BHWVpuM7iYWDuA_TqA@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/perf: Add json metric events to present CPI stall
- cycles in powerpc
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     mpe@ellerman.id.au, acme@kernel.org, jolsa@kernel.org,
-        ak@linux.intel.com, namhyung@kernel.org, james.clark@arm.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, rnsastry@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Y+5bGS9clWPS+B5J@krava>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 10:12 PM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
-> Power10 Performance Monitoring Unit (PMU) provides events
-> to understand stall cycles of different pipeline stages.
-> These events along with completed instructions provides
-> useful metrics for application tuning.
->
-> Patch implements the json changes to collect counter statistics
-> to present the high level CPI stall breakdown metrics. New metric
-> group is named as "CPI_STALL_RATIO" and this new metric group
-> presents these stall metrics:
-> - DISPATCHED_CPI ( Dispatch stall cycles per insn )
-> - ISSUE_STALL_CPI ( Issue stall cycles per insn )
-> - EXECUTION_STALL_CPI ( Execution stall cycles per insn )
-> - COMPLETION_STALL_CPI ( Completition stall cycles per insn )
->
-> To avoid multipling of events, PM_RUN_INST_CMPL event has been
-> modified to use PMC5(performance monitoring counter5) instead
-> of PMC4. This change is needed, since completion stall event
-> is using PMC4.
->
-> Usage example:
->
->  ./perf stat --metric-no-group -M CPI_STALL_RATIO <workload>
->
->  Performance counter stats for 'workload':
->
->     63,056,817,982      PM_CMPL_STALL                    #     0.28 COMPLETION_STALL_CPI
->  1,743,988,038,896      PM_ISSUE_STALL                   #     7.73 ISSUE_STALL_CPI
->    225,597,495,030      PM_RUN_INST_CMPL                 #     6.18 DISPATCHED_CPI
->                                                   #    37.48 EXECUTION_STALL_CPI
->  1,393,916,546,654      PM_DISP_STALL_CYC
->  8,455,376,836,463      PM_EXEC_STALL
->
-> "--metric-no-group" is used for forcing PM_RUN_INST_CMPL to be scheduled
-> in all group for more accuracy.
->
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Hi Jiri and Arnaldo,
 
-Acked-by: Ian Rogers <irogers@google.com>
+On Thu, Feb 16, 2023 at 05:34:33PM +0100, Jiri Olsa wrote:
+> On Thu, Feb 16, 2023 at 01:32:14PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Feb 16, 2023 at 05:23:05PM +0100, Jiri Olsa escreveu:
+> > > On Mon, Feb 13, 2023 at 09:04:49PM -0800, Namhyung Kim wrote:
+> > > 
+> > > SNIP
+> > > 
+> > > > @@ -1929,12 +1923,27 @@ static void record__read_lost_samples(struct record *rec)
+> > > >  
+> > > >  		for (int x = 0; x < xyarray__max_x(xy); x++) {
+> > > >  			for (int y = 0; y < xyarray__max_y(xy); y++) {
+> > > > -				__record__read_lost_samples(rec, evsel, lost, x, y);
+> > > > +				struct perf_counts_values count;
+> > > > +
+> > > > +				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
+> > > > +					pr_err("read LOST count failed\n");
+> > > > +					goto out;
+> > > > +				}
+> > > > +
+> > > > +				if (count.lost) {
+> > > > +					__record__save_lost_samples(rec, evsel, lost,
+> > > > +								    x, y, count.lost, 0);
+> > > > +				}
+> > > >  			}
+> > > >  		}
+> > > > +
+> > > > +		lost_count = perf_bpf_filter__lost_count(evsel);
+> > > > +		if (lost_count)
+> > > > +			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
+> > > > +						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
+> > > 
+> > > hi,
+> > > I can't see PERF_RECORD_MISC_LOST_SAMPLES_BPF in the tip/perf/core so can't compile,
+> > > what do I miss?
+> > 
+> > Humm, but you shouldn't need kernel headers to build tools/perf/, right?
+> 
+> right, should be also in tools/include headers
+
+Yeah, sorry about that.  I'm not sure how I missed the part.
+
+I put it in tools/lib/perf/include/perf/event.h only as it does nothing
+with kernel.  Will fix in v2.
 
 Thanks,
-Ian
+Namhyung
 
-> ---
->  tools/perf/pmu-events/arch/powerpc/power10/metrics.json | 8 ++++----
->  tools/perf/pmu-events/arch/powerpc/power10/others.json  | 2 +-
->  2 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/metrics.json b/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
-> index b57526fa44f2..6f53583a0c62 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
-> @@ -15,7 +15,7 @@
->      {
->          "BriefDescription": "Average cycles per completed instruction when dispatch was stalled for any reason",
->          "MetricExpr": "PM_DISP_STALL_CYC / PM_RUN_INST_CMPL",
-> -        "MetricGroup": "CPI",
-> +        "MetricGroup": "CPI;CPI_STALL_RATIO",
->          "MetricName": "DISPATCHED_CPI"
->      },
->      {
-> @@ -147,13 +147,13 @@
->      {
->          "BriefDescription": "Average cycles per completed instruction when the NTC instruction has been dispatched but not issued for any reason",
->          "MetricExpr": "PM_ISSUE_STALL / PM_RUN_INST_CMPL",
-> -        "MetricGroup": "CPI",
-> +        "MetricGroup": "CPI;CPI_STALL_RATIO",
->          "MetricName": "ISSUE_STALL_CPI"
->      },
->      {
->          "BriefDescription": "Average cycles per completed instruction when the NTC instruction is waiting to be finished in one of the execution units",
->          "MetricExpr": "PM_EXEC_STALL / PM_RUN_INST_CMPL",
-> -        "MetricGroup": "CPI",
-> +        "MetricGroup": "CPI;CPI_STALL_RATIO",
->          "MetricName": "EXECUTION_STALL_CPI"
->      },
->      {
-> @@ -309,7 +309,7 @@
->      {
->          "BriefDescription": "Average cycles per completed instruction when the NTC instruction cannot complete because the thread was blocked",
->          "MetricExpr": "PM_CMPL_STALL / PM_RUN_INST_CMPL",
-> -        "MetricGroup": "CPI",
-> +        "MetricGroup": "CPI;CPI_STALL_RATIO",
->          "MetricName": "COMPLETION_STALL_CPI"
->      },
->      {
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/others.json b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-> index 7d0de1a2860b..a771e4b6bec5 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/others.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-> @@ -265,7 +265,7 @@
->      "BriefDescription": "Load Missed L1, counted at finish time."
->    },
->    {
-> -    "EventCode": "0x400FA",
-> +    "EventCode": "0x500FA",
->      "EventName": "PM_RUN_INST_CMPL",
->      "BriefDescription": "Completed PowerPC instructions gated by the run latch."
->    }
-> --
-> 2.31.1
->
+---8<---
+
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index ad47d7b31046..51b9338f4c11 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -70,6 +70,8 @@ struct perf_record_lost {
+        __u64                    lost;
+ };
+
++#define PERF_RECORD_MISC_LOST_SAMPLES_BPF (1 << 15)
++
+ struct perf_record_lost_samples {
+        struct perf_event_header header;
+        __u64                    lost;
+
