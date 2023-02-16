@@ -2,181 +2,173 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FC3C636CC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Feb 2023 06:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1287C636D6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Feb 2023 10:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229868AbjBPGNQ (ORCPT
+        id S230185AbjBPKkl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Feb 2023 01:13:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
+        Thu, 16 Feb 2023 05:40:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229877AbjBPGNP (ORCPT
+        with ESMTP id S230214AbjBPKkj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Feb 2023 01:13:15 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B005334022
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Feb 2023 22:13:08 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31G600ts022740;
-        Thu, 16 Feb 2023 06:12:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=JiN/dvf4km/vJNfgTO+6RbKK8MPR21td+sSZc06tm34=;
- b=F7NDhh/ILYwNfkf5COjy1N7nDYxZeE8IQz4aI5tquBg+SeQ3ySm9KS4aFgZDxiPTcgR9
- /oYvDYu4xNANvRUUl0IHZal3dQLJk7Eq3+PcL3v6FLQVyogu5L/XYNPes0zZNLpRGKMP
- QzqACM0KdGe7vdokdEJaZPzQm7JrIoF2cwJflhhaw4pHuwV/xMvHNuXz4wojUMSe8cpb
- BW8j9VDYzp89oIedr5lb7MEjD6WnT8cKwGZK3HybusL3n0n/tjWvU5FiWS0xdt9b8dzZ
- fYDo4q0XQB7fg/iZCU9M51qVgTZxZY0TaeETlGJpMPmB9aweWNhVbStPbNsMl9+2j5/7 Vg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nseu60auq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Feb 2023 06:12:57 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31G60Nge024694;
-        Thu, 16 Feb 2023 06:12:56 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nseu60aty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Feb 2023 06:12:56 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31G62fPA011341;
-        Thu, 16 Feb 2023 06:12:53 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3np2n6x8ed-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Feb 2023 06:12:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31G6CniL47251906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Feb 2023 06:12:49 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 705B720043;
-        Thu, 16 Feb 2023 06:12:49 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79F1820040;
-        Thu, 16 Feb 2023 06:12:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.95.24])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Feb 2023 06:12:43 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     mpe@ellerman.id.au, acme@kernel.org, jolsa@kernel.org
-Cc:     ak@linux.intel.com, namhyung@kernel.org, irogers@google.com,
-        james.clark@arm.com, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
-Subject: [PATCH] powerpc/perf: Add json metric events to present CPI stall cycles in powerpc
-Date:   Thu, 16 Feb 2023 11:42:40 +0530
-Message-Id: <20230216061240.18067-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Thu, 16 Feb 2023 05:40:39 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20606.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eaa::606])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2EA55E4F;
+        Thu, 16 Feb 2023 02:40:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SlZlzhT7CAazYoAuiTqNMnGRCKZo3M6dM0VhZBD9wDtfs8/zr/X2s1gCLLDL6mA4i0pNQ+SbMGH0X7NAd/pQINCXvlh08C5BX1QT8l9GgvmDfBOJh8m5pQ7WhI24XuXSd+72cfsoUfgJ6BAlkcXSZHCLzkkA/qGj/2UMAJi++8Eus25p8WyOyCQlO5NweaZ2315ijFoZ57tSAjxWCAV1pYbKJePusIZfpJJI/6GtlMggeZ/ebb//PJfLiP4ELlD1bRh4O8/6c1kkJesnuj5fRHM+NjhMX8UrqcdpPGHo/bDOvvLWaT1YnjqE7XSIjnbBoXgNXuMG+9BhUvUARUdVbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2b4nB+fZmSHtcbYBDmdR2c4NcJ0tfgB8VizjDY7Jx4k=;
+ b=amIj6NENyaQBovy6Q+KGQhfgxZtuTDp9o1HfTCt/DY47oHnVY94YHkuB4UUUl9sMhW+WtIwYI0u9Q6RmxMJEwfQBSxXRoMIfgLPEmiEaDb76cQERKq6Sp8hoS6klvTfdHabg8VaQNuSPrVnZZ921Sc81VxwvyCHWRdHyFDpOq1O3M0dRiqyUDiQ5bJbIZznbJhM/NfXiIPcHMYhXqr8hfSjjTo6ESXbXkJVNyMeT1qgzUvzSC6oB4c2ANi3VFIu5pLked2BnW/epzCplsGpvWOj7ZjfS5naHR2hFLr8hSjWhufs2A79uL6y8h0nqYM7yU8K0trjSCYVT5Z14LHz6vA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2b4nB+fZmSHtcbYBDmdR2c4NcJ0tfgB8VizjDY7Jx4k=;
+ b=brcQKFLKxO/n3hYeFJWovH9w0AyDW2LFaC6grhJSfCucXFj7zGGEippM2k/M2n6ZZrLjCtShA4bBd6a2MMX6o8w+76dV4ZDy3FyDNJFgcV5Evs193Z1o/xc/2YMgPsjmKeBPS/b+FgyrIDF0l12eL3c8iV+FyYAwHNGC1QjdGtU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com (2603:10b6:8:96::13) by
+ MN0PR12MB6319.namprd12.prod.outlook.com (2603:10b6:208:3c0::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26; Thu, 16 Feb
+ 2023 10:39:48 +0000
+Received: from DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::7000:c45:e56a:9cae]) by DS7PR12MB6214.namprd12.prod.outlook.com
+ ([fe80::7000:c45:e56a:9cae%3]) with mapi id 15.20.6086.026; Thu, 16 Feb 2023
+ 10:39:48 +0000
+Message-ID: <4463b0ae-edcd-eb91-9ef3-a3596a98616f@amd.com>
+Date:   Thu, 16 Feb 2023 16:09:29 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [RFC PATCH kernel 1/2] perf/x86/amd: Add
+ amd_prevent_hostibs_window() to set per-cpu ibs_flags
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, seanjc@google.com,
+        pbonzini@redhat.com, jpoimboe@kernel.org,
+        pawan.kumar.gupta@linux.intel.com, babu.moger@amd.com,
+        sandipan.das@amd.com, jmattson@google.com, thomas.lendacky@amd.com,
+        nikunj@amd.com, ravi.bangoria@amd.com, eranian@google.com,
+        irogers@google.com, kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230206060545.628502-1-manali.shukla@amd.com>
+ <20230206060545.628502-2-manali.shukla@amd.com>
+ <Y+o23lcYHbYWua62@hirez.programming.kicks-ass.net>
+From:   "Shukla, Manali" <mashukla@amd.com>
+In-Reply-To: <Y+o23lcYHbYWua62@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0175.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:de::20) To DS7PR12MB6214.namprd12.prod.outlook.com
+ (2603:10b6:8:96::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dIkqiMJTan-19OIfAm6qDwRkd-Bsg1H2
-X-Proofpoint-GUID: XQyw1ybHMz6jQoTek9aTcYPDi0N9xLEh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-16_04,2023-02-15_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302160050
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6214:EE_|MN0PR12MB6319:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b05ba8f-8091-4389-973f-08db100a1ffd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zrZ8YM0fLSWRBvzLHOWVs5WN1gZipvnOifV294k9hbpbqsDzplVBSj/6gfDIz+NAm5CaF4RzybQ9IQLalESagGE2PW1t/aUKLiDpXw3ThZMt2oAknp6UEypuMhDV25IpH/2NYI/SBqZJCvVkneQ4/tgh7Z/IAQev77MuiLidBC3KTDGmxKGos81n+f33es03fRl38ANCE6Um3fUYRK+7QcWHtOGpLTk+lZ0xZPROzYTnn93bVmmTSliZi7FTAZECcFdz8l+FPkfUBGdI47i8x5VnJ9l6NUGasSlV4cXN8u8KUdLAFeecpwP2+POuIuQ44kcfWPYpFWQP9Irhir20iEgj9ffT0dgj2DoZwFPDmwvBEEFMZH4UckADVyyelKVZZsbduOVw+8MDT+n6zIP3KcJMQfUVJEn3oMlF28u/qDRnL+Dsxu+mAlaJjD27o6E4xGY/f+cMbc3StlcSYvqdFyvaeaiSApVEnIMCW9+QJXzwuWvuznTRbLwYRI/M8ITLRgaQ4JPcFX5FPGxO34SE2hX+9x+EfSdSWnW+LeZJSfjIM7Z38Li7fjBHpaWoGVIO9MJS84z65ydDRUMGzlCvpVwYf9iiDY5qArXMfe2iMv6ShDpcDrEGE1ZhC5B8gXUAAOvwC0SzhO5Tg9qR40eEbpEX3RLb9nDaM6Bk1zjpLFD8HZHhZwPFrSI52A2sdini3gJtgrSFoGaVSnZRwB8oLC8vjPb8lmkAmP78EIbLEjA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6214.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(366004)(376002)(396003)(136003)(39860400002)(451199018)(83380400001)(316002)(5660300002)(2906002)(38100700002)(7416002)(36756003)(31696002)(66946007)(6916009)(8676002)(4326008)(66556008)(66476007)(6666004)(2616005)(478600001)(6512007)(6506007)(6486002)(53546011)(186003)(8936002)(31686004)(41300700001)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TFpmUnZLbm12SGlPSDVLVVhFcnRtSHd2eFhySWZiZnFWTW11Q0RLRTY4ZmNz?=
+ =?utf-8?B?WDZrTGE3RXlTRkhRNFhXMnVMWjBsNk5pVVhxSXI2VGxpWkZ1dnkrbmVGY1c2?=
+ =?utf-8?B?OTJNaDJQVWV1R005Mlhoc0JSdmRVODBZL1h1Q1NVbmx4Q0h0N2VJYzNhcVdh?=
+ =?utf-8?B?ZzJIbzJ4Q0FOSWxkLzhWUjFiMnoydjFHRHNXS1RmZXBDVXByclFvalA2d20z?=
+ =?utf-8?B?bDhjUkNzSHhGQ1Mzd3NXTE5CcUFKWkRVSlhyaGpqT2FxdDdoa1BZci90Q0NL?=
+ =?utf-8?B?dDljaHdhQjVPWG9iaWE0NlF0eUlmVXZLdEtIOHBZeFVKOGlwd2pkQ2VyWmM2?=
+ =?utf-8?B?cUJOWVZlb3pHNzRORHV4SWErbDJTemVVajAzZElBN3ViNWRmNUk5TjM4cmFZ?=
+ =?utf-8?B?YVRPNEZtcEhvWnRibXV0WGJoVWJabzFrZGhLNW1zWitPcitpMk9OaUU3Wlk3?=
+ =?utf-8?B?ajVBc1NJNGRoWHh3N3BWTUZHNTZVNWdRMnVKdTV4TGdBQ0V3TndyVTM3UUsz?=
+ =?utf-8?B?TklHMlFYbGMyYjNvT2s1elVTaXVnRXp3S3BDT1REWFpJREZGaU5xMGR6TVpI?=
+ =?utf-8?B?Y3hWNjBDaFhuNDF6L0NQK1RhRkRHRndhWlVZZkdIMW41dWFqcXRoa1JPejNi?=
+ =?utf-8?B?T1RnS2RCbWRTdFFZbHVpZmIyVGZ2MDNlejZOKzIvMmtvN0t2dXoyQTRFZVU0?=
+ =?utf-8?B?MVA0RHlkNzdsYzZEM0ErTzd6UEhXajNwbVpvem84akc0SUd5b1FLeWxaL1N0?=
+ =?utf-8?B?WENUV1N2dGJuYUNFQVh0SmdseVZaZFlrVEFNUE1NUThOQ0IraGRJNVFLK2pD?=
+ =?utf-8?B?V09VbWowc2ZVUmcyNW4vZEk5RFpoNHB3S0pnRGp4a21sTGVGVGVyVUY5NEpM?=
+ =?utf-8?B?NVd6MERUeWxpNDYxR2dkTzJzcmZCL1dPWXBBVjdCTjlaQXNsR0xobGRsU1Vk?=
+ =?utf-8?B?d3VNSDJOZk9OeURrcVQ4NE01SS9oaTY2NzNCOVhrRzNBM3BHcnBkSEFyaUcx?=
+ =?utf-8?B?dFNrSVdreHV1ZEl6djFMYWV5T3I5WFJWc1pkRy93UDZlM3hVQjRWUnNhMTdZ?=
+ =?utf-8?B?ckxhaFNwYW1kY3lmbE5zTEoxaDJ4dkE0Q3MyWWtEUGU1Y3RCUEZtazNOWGla?=
+ =?utf-8?B?eC9ySFdMM3ZyMlZJeE9QaFR2QjFiVDJBTVczVDNYb2JleWozY3k4VkJRNGxM?=
+ =?utf-8?B?cjBrUVNBZW42ZnpQN2I1TzJwMC8zcWYrTlFEQWNEbDdkK1hYOEZtNHM0cXZ2?=
+ =?utf-8?B?WUlmN0Jid1F0MXJiVGpXUmp1aklaNURFbTVIeDNpemJvZndkOGhNNzZlRXBF?=
+ =?utf-8?B?dXN2d3IxWXFaUmNwUVFWbHpmZlozb1IzM044Z2xlL2RiWHRpZGsyTmdjVFo3?=
+ =?utf-8?B?V0JwN2RFdHJodkU3WEExWFNOZHQ1ZzJjVC9CK2dMVXNsMEladXFpZ2ZLU0My?=
+ =?utf-8?B?YWdqbDdROEJ1WFVFc3A0VFZUeEN2YTBJQ29vWjRnNjR1MURhQXZjZFF1bkhT?=
+ =?utf-8?B?VFFGbEdxZWM3Nys2UnE0STNPVjEzWWxMQmE2U3FNcG91cDA2MlBSWVVWMlUw?=
+ =?utf-8?B?OFNUWkZ3aHpLcG9LYlBkbGo2TCtiM1kxbUFxR2R4VldzbE10NlFLaVdUZkV1?=
+ =?utf-8?B?S1BZbURFTXZXTDhjenRGL1F0Q1d6NlcxWmlUYzdJNzhUOTg1b2RDbGZkTEtv?=
+ =?utf-8?B?YTcvdlp3RHFhcUxkSGZaNjQzb2QxS2FvNFZ5RnBKeWhFaHQyenRYbzF0dThK?=
+ =?utf-8?B?ZGJkemtNbUNNRkNXTzV2MERKY2NEQXlXODJQMWtObUt1QW56ZmdZYkJ4WXhO?=
+ =?utf-8?B?ckxvZkJ3K09iK3ZpclZtbEZiYTNWOEFpQXBXaUIvTU9Ld1ZOT1FGMWFSNm04?=
+ =?utf-8?B?M29Ya0t5VlhHSVVFbXRVMG1yVHZ1blQ4VzFCSFpFL3Z2bUNHREtuQktEcnJ3?=
+ =?utf-8?B?NENPWTRuVkxralZaeVNYcy9mNVBUOXcwbUo1MXVIY09QQjFIaGdPWkMzMWZn?=
+ =?utf-8?B?eGJaOWx5UGRpYU05YWxLU3MvUnZSU3AwckMzeGVmQXpDUUJ1STMvZjVISDY2?=
+ =?utf-8?B?V0xaa21ITVh6aFRKV0VkYmMwVDhwZktubHNJRjZOUkcyeVR3bzdFRTVMM1FO?=
+ =?utf-8?Q?IqYYI5FcMmedj4/o7sLsaC6Nu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b05ba8f-8091-4389-973f-08db100a1ffd
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6214.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2023 10:39:47.9393
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C+4BJE0IYh/TZfy+onopN4BKp2XRdSdmD0uRKtRvZWjNkXJeab6tDIWEiWu3VV0ERgBb/51nfNiwdFhMt6Kl2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6319
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Power10 Performance Monitoring Unit (PMU) provides events
-to understand stall cycles of different pipeline stages.
-These events along with completed instructions provides
-useful metrics for application tuning.
+On 2/13/2023 6:40 PM, Peter Zijlstra wrote:
+> On Mon, Feb 06, 2023 at 06:05:44AM +0000, Manali Shukla wrote:
+>> Add a function to set per-cpu ibs_flags based on an active or inactive
+>> PreventHostIBS window.
+>>
+>> MSR_AMD64_IBSFETCHCTL[IbsFetchEn] and MSR_AMD64_IBSOPCTL[IbsOpEn] bits
+>> need to be cleared for PreventHostIBS feature to be enabled before VMRUN
+>> is executed.
+>>
+>> ENABLE bit and VALID bit for MSR_AMD64_IBSFETCHCTL are contained in the
+>> same MSR and same is the case with MSR_AMD64_IBSOPCTL.
+>>
+>> Consider the following scenario:
+>> - The IBS MSR which has ENABLE bit set and VALID bit clear is read.
+>> - During the process of clearing the ENABLE bit and writing the IBS MSR
+>>   to disable IBS, an IBS event can occur that sets the VALID bit.
+>> - The write operation on IBS MSR can clear the newly set VALID bit.
+>> - Since this situation is occurring in the CLGI/STGI window
+>>   (PreventHostIBS window), the actual NMI is not taken.
+>> - Once VMRUN is issued, it will exit with VMEXIT_NMI. As soon as STGI is
+>>   executed, the pending NMI will trigger.
+>> - The IBS NMI handler checks for the VALID bit to determine if the NMI
+>>   is generated because of IBS.
+>> - Since VALID bit is now clear, it doesn't recognize that an IBS event
+>>   is occurred. Due to this reason, the dazed and confused unknown NMI
+>>   messages are generated.
+>>
+>> amd_prevent_hostibs_window() is added to avoid these messages when
+>> PreventHostIBS window is active and PreventHostIBS feature is enabled
+>> for the guest.
+>>
+>> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+> 
+> URGH... so am I reading this right that this is a sodding terrible
+> software implementation of perf_event_attr::exclude_guest ?
 
-Patch implements the json changes to collect counter statistics
-to present the high level CPI stall breakdown metrics. New metric
-group is named as "CPI_STALL_RATIO" and this new metric group
-presents these stall metrics:
-- DISPATCHED_CPI ( Dispatch stall cycles per insn )
-- ISSUE_STALL_CPI ( Issue stall cycles per insn )
-- EXECUTION_STALL_CPI ( Execution stall cycles per insn )
-- COMPLETION_STALL_CPI ( Completition stall cycles per insn )
+Not exactly. 
+Unlike exclude_guest where profiler decides whether it wants to trace
+guest data or not, PreventHostIBS gives control to the Guest. Secured 
+guests(SEV-ES/SEV-SNP) can disallow the use of IBS by the hypervisor,
+in order to limit the information which can be gathered by host from
+its execution.
 
-To avoid multipling of events, PM_RUN_INST_CMPL event has been
-modified to use PMC5(performance monitoring counter5) instead
-of PMC4. This change is needed, since completion stall event
-is using PMC4.
-
-Usage example:
-
- ./perf stat --metric-no-group -M CPI_STALL_RATIO <workload>
-
- Performance counter stats for 'workload':
-
-    63,056,817,982      PM_CMPL_STALL                    #     0.28 COMPLETION_STALL_CPI
- 1,743,988,038,896      PM_ISSUE_STALL                   #     7.73 ISSUE_STALL_CPI
-   225,597,495,030      PM_RUN_INST_CMPL                 #     6.18 DISPATCHED_CPI
-                                                  #    37.48 EXECUTION_STALL_CPI
- 1,393,916,546,654      PM_DISP_STALL_CYC
- 8,455,376,836,463      PM_EXEC_STALL
-
-"--metric-no-group" is used for forcing PM_RUN_INST_CMPL to be scheduled
-in all group for more accuracy.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/pmu-events/arch/powerpc/power10/metrics.json | 8 ++++----
- tools/perf/pmu-events/arch/powerpc/power10/others.json  | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/metrics.json b/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
-index b57526fa44f2..6f53583a0c62 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/metrics.json
-@@ -15,7 +15,7 @@
-     {
-         "BriefDescription": "Average cycles per completed instruction when dispatch was stalled for any reason",
-         "MetricExpr": "PM_DISP_STALL_CYC / PM_RUN_INST_CMPL",
--        "MetricGroup": "CPI",
-+        "MetricGroup": "CPI;CPI_STALL_RATIO",
-         "MetricName": "DISPATCHED_CPI"
-     },
-     {
-@@ -147,13 +147,13 @@
-     {
-         "BriefDescription": "Average cycles per completed instruction when the NTC instruction has been dispatched but not issued for any reason",
-         "MetricExpr": "PM_ISSUE_STALL / PM_RUN_INST_CMPL",
--        "MetricGroup": "CPI",
-+        "MetricGroup": "CPI;CPI_STALL_RATIO",
-         "MetricName": "ISSUE_STALL_CPI"
-     },
-     {
-         "BriefDescription": "Average cycles per completed instruction when the NTC instruction is waiting to be finished in one of the execution units",
-         "MetricExpr": "PM_EXEC_STALL / PM_RUN_INST_CMPL",
--        "MetricGroup": "CPI",
-+        "MetricGroup": "CPI;CPI_STALL_RATIO",
-         "MetricName": "EXECUTION_STALL_CPI"
-     },
-     {
-@@ -309,7 +309,7 @@
-     {
-         "BriefDescription": "Average cycles per completed instruction when the NTC instruction cannot complete because the thread was blocked",
-         "MetricExpr": "PM_CMPL_STALL / PM_RUN_INST_CMPL",
--        "MetricGroup": "CPI",
-+        "MetricGroup": "CPI;CPI_STALL_RATIO",
-         "MetricName": "COMPLETION_STALL_CPI"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/others.json b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-index 7d0de1a2860b..a771e4b6bec5 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/others.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-@@ -265,7 +265,7 @@
-     "BriefDescription": "Load Missed L1, counted at finish time."
-   },
-   {
--    "EventCode": "0x400FA",
-+    "EventCode": "0x500FA",
-     "EventName": "PM_RUN_INST_CMPL",
-     "BriefDescription": "Completed PowerPC instructions gated by the run latch."
-   }
--- 
-2.31.1
-
+-Manali
