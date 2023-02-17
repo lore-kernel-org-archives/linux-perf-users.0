@@ -2,90 +2,105 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3CBC05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 16:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1328C05027
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 20:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbjBQQnz (ORCPT
+        id S229625AbjBQUTq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Feb 2023 11:43:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57920 "EHLO
+        Fri, 17 Feb 2023 15:19:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjBQQny (ORCPT
+        with ESMTP id S229605AbjBQUTp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Feb 2023 11:43:54 -0500
-Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A832680;
-        Fri, 17 Feb 2023 08:43:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1676652183; bh=8n0Ms1VnNTk56gud+VEJPT9CfkFf8kiqgsa6gw0+rtE=;
-        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:MIME-Version:
-         Content-Type;
-        b=Bkg38ebMftcm82eR9eZeBe6BhxhLijv/1ZIr7t4Pqsoiv8MNV8sodCN0hOVeV2H7J
-         uwGd76HIv49bv5OqeaeaWVxz9TwcPoq1pD1y0pE8HRQcbaE6BgBec7fbBibJhy2mJc
-         onZPbecOW2EmpEyamP6yINnS3LvfT+axKdr8HMuo=
-Received: by b-4.in.mailobj.net [192.168.90.14] with ESMTP
-        via ip-206.mailobj.net [213.182.55.206]
-        Fri, 17 Feb 2023 17:43:03 +0100 (CET)
-X-EA-Auth: ZhcQgAhY3MDn0FswqxGe2X004sgsQugLQCWPlfZj4bf0PNQk7V3TyrkGBQyeqIBHOFoV8JxZOC9Qj49IoQuHdB+af3aU/MUX
-Date:   Fri, 17 Feb 2023 22:12:57 +0530
-From:   Deepak R Varma <drv@mailo.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>,
-        Deepak R Varma <drv@mailo.com>
-Subject: [PATCH] perf/x86/amd/core: Use sysfs_emit() in show() callback
- function
-Message-ID: <Y++ukV1djYTd01vy@ubun2204.myguest.virtualbox.org>
+        Fri, 17 Feb 2023 15:19:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159AD5F812
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Feb 2023 12:19:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9C13BB82D1D
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Feb 2023 20:19:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C517C433D2;
+        Fri, 17 Feb 2023 20:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676665181;
+        bh=dbB6CcifEQa8Ji/ciEHNfB6bXYW8j5MS0/6hgubfde0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZAtVCPSW/8iMRPPOnUI/NurcKSXtzlP/M6HiyWMQ+79cplQq08Rk3gkdl5oLSnIoa
+         x3dLOL/lqqqUl7Au1JEwQqP0lWLcO1L3kpdUmnocg3DJgtlAlwFLfjrvUK2o0RDxrt
+         5UBLpRI1vFpGpvwonMsd4QxzDPqETYhtkqkwjjjhgM7Lmrk8onxOfnIynQGJM+L/8i
+         JD/UY/6O0Oi8IB8k8vRkb6wi4vcnJbY7UdjK3mpjOrQEfPnhV3T47ZKpRAiDG4DQi4
+         qUjFGF/pBj6E9a/geHyXln+OrLaYw4EAUu6tOb+o6uLNFNDZ5ScXFMuNQFyyqFBe6C
+         lR6JvPDrOuznw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9D0A040025; Fri, 17 Feb 2023 17:19:38 -0300 (-03)
+Date:   Fri, 17 Feb 2023 17:19:38 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, mpe@ellerman.id.au,
+        jolsa@kernel.org, ak@linux.intel.com, namhyung@kernel.org,
+        james.clark@arm.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.ibm.com
+Subject: Re: [PATCH] powerpc/perf: Add json metric events to present CPI
+ stall cycles in powerpc
+Message-ID: <Y+/hWuRFPZwjcIxh@kernel.org>
+References: <20230216061240.18067-1-atrajeev@linux.vnet.ibm.com>
+ <CAP-5=fWBb2=g82uVTkUbENThsnZyhzU+BHWVpuM7iYWDuA_TqA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAP-5=fWBb2=g82uVTkUbENThsnZyhzU+BHWVpuM7iYWDuA_TqA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Using sprintf/snprintf functions are error prone and suggested to be
-replaced by scnprintf/vscnrptintf as outlined in this [1] LWN article.
+Em Thu, Feb 16, 2023 at 10:10:05AM -0800, Ian Rogers escreveu:
+> On Wed, Feb 15, 2023 at 10:12 PM Athira Rajeev
+> <atrajeev@linux.vnet.ibm.com> wrote:
+> >
+> > Power10 Performance Monitoring Unit (PMU) provides events
+> > to understand stall cycles of different pipeline stages.
+> > These events along with completed instructions provides
+> > useful metrics for application tuning.
+> >
+> > Patch implements the json changes to collect counter statistics
+> > to present the high level CPI stall breakdown metrics. New metric
+> > group is named as "CPI_STALL_RATIO" and this new metric group
+> > presents these stall metrics:
+> > - DISPATCHED_CPI ( Dispatch stall cycles per insn )
+> > - ISSUE_STALL_CPI ( Issue stall cycles per insn )
+> > - EXECUTION_STALL_CPI ( Execution stall cycles per insn )
+> > - COMPLETION_STALL_CPI ( Completition stall cycles per insn )
+> >
+> > To avoid multipling of events, PM_RUN_INST_CMPL event has been
+> > modified to use PMC5(performance monitoring counter5) instead
+> > of PMC4. This change is needed, since completion stall event
+> > is using PMC4.
+> >
+> > Usage example:
+> >
+> >  ./perf stat --metric-no-group -M CPI_STALL_RATIO <workload>
+> >
+> >  Performance counter stats for 'workload':
+> >
+> >     63,056,817,982      PM_CMPL_STALL                    #     0.28 COMPLETION_STALL_CPI
+> >  1,743,988,038,896      PM_ISSUE_STALL                   #     7.73 ISSUE_STALL_CPI
+> >    225,597,495,030      PM_RUN_INST_CMPL                 #     6.18 DISPATCHED_CPI
+> >                                                   #    37.48 EXECUTION_STALL_CPI
+> >  1,393,916,546,654      PM_DISP_STALL_CYC
+> >  8,455,376,836,463      PM_EXEC_STALL
+> >
+> > "--metric-no-group" is used for forcing PM_RUN_INST_CMPL to be scheduled
+> > in all group for more accuracy.
+> >
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
-A more recent recommendation is to use sysfs_emit() or sysfs_emit_at()
-as per Documentation/filesystems/sysfs.rst in show() callback function
-when formatting values to be returned to user-space. These helper
-functions are PAGE_SIZE aware and wrap a safer call to vscnprintf().
+Thanks, applied.
 
-[1] https://lwn.net/Articles/69419/
-
-Issue identified using the coccinelle device_attr_show.cocci script.
-
-Signed-off-by: Deepak R Varma <drv@mailo.com>
----
- arch/x86/events/amd/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 4386b10682ce..47a3a841332a 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -1272,7 +1272,7 @@ static ssize_t branches_show(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
- }
- 
- static DEVICE_ATTR_RO(branches);
--- 
-2.34.1
-
-
+- Arnaldo
 
