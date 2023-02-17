@@ -2,89 +2,92 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8558C05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 14:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6F3C6379F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 16:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229772AbjBQODy (ORCPT
+        id S229867AbjBQQAB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Feb 2023 09:03:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58920 "EHLO
+        Fri, 17 Feb 2023 11:00:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjBQODx (ORCPT
+        with ESMTP id S229582AbjBQQAA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Feb 2023 09:03:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186DE656B2;
-        Fri, 17 Feb 2023 06:03:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A7F1061BA0;
-        Fri, 17 Feb 2023 14:03:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EF0C433EF;
-        Fri, 17 Feb 2023 14:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676642632;
-        bh=uohuAHrUCjnqA7irnaiWAtD+EmHIGiwseVTupadX5zo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k3x8ARgnp/EUpbuufgbLFiKFaCTeO5ylHTOPnWaNNXvVEQydhvaPGeKMZ7EnuUgEc
-         pfM6+P8rROn+rVQi5HSc3fWZUT3iL6K38EFRg1pkOurXm7Kn7doFpDxnmeNMnJ3Xxu
-         s09dUZyBU5up84KCnkvZcaZIEZtEFUHZEJJ2VMhhhuOeCYBDc4uBdqVSJzsn1EbuE0
-         HSv3AI+F7snKnu7ZGPrg8Q02tuZbcy5qScWnNlHTds8iP9GA2Y81DoIvV/c00daYju
-         woUxAPP5QXJojPmNvkxByqqcM+Ocq6h+UQ1Lkd+IqgFTziNQL28Bq6WXtSEmUaWzfs
-         MhFB+oltjckWg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4B76140025; Fri, 17 Feb 2023 11:03:49 -0300 (-03)
-Date:   Fri, 17 Feb 2023 11:03:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Steinar H. Gunderson" <sesse@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 17 Feb 2023 11:00:00 -0500
+Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8870CC15;
+        Fri, 17 Feb 2023 07:59:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
+        t=1676649552; bh=YsoKXCZB4yem8v+/jW+r+OuwCoAnnlpeCH9iiRWsCrk=;
+        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
+         MIME-Version:Content-Type:In-Reply-To;
+        b=jUmghVuPh9BLCOM7a8uHH977hTqe/EDP1DOykQD75vO5bI/moXXGulslxdMZfyxxU
+         msJ1X2bSza05NaDchlEo9NP5t7Il9M9gcKFr3aMMJe7/MGnxQo0U951IXhmC9EgIiN
+         B5PImmQAE64mqrgGf19+4CgEDj42NfjurAmxqdAw=
+Received: by b-2.in.mailobj.net [192.168.90.12] with ESMTP
+        via ip-206.mailobj.net [213.182.55.206]
+        Fri, 17 Feb 2023 16:59:12 +0100 (CET)
+X-EA-Auth: CbPnAWdQkC53lyFOtoipqkXCf5CkMDnnPU83CE2BgCWjTYLvVlHwaBnCsrI9WOoVp0HjBONIwasmbRx5xO3k10OS3G1xNPK1
+Date:   Fri, 17 Feb 2023 21:29:07 +0530
+From:   Deepak R Varma <drv@mailo.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf intel-pt: Synthesize cycle events
-Message-ID: <Y++JRY4ExBkxeejU@kernel.org>
-References: <20220322082452.1429091-1-sesse@google.com>
- <YjpAYjdgHWwkid5N@kernel.org>
- <YjpFcLiCTjHZWzzA@google.com>
- <52d31321-66e1-f189-2ffc-7c93239eea74@intel.com>
- <Yj49LDY3S/ANeN0V@kernel.org>
- <Y+9evQVBRLrCLQKf@google.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
+        Praveen Kumar <kumarpraveen@linux.microsoft.com>,
+        Deepak R Varma <drv@mailo.com>
+Subject: [PATCH 2/3] perf/x86/intel/pt: Use sysfs_emit() in show() callback
+ function
+Message-ID: <b71f48a837d6de56f15a8e05b7095e062e257eb9.1676649045.git.drv@mailo.com>
+References: <cover.1676649045.git.drv@mailo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y+9evQVBRLrCLQKf@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <cover.1676649045.git.drv@mailo.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Feb 17, 2023 at 12:02:21PM +0100, Steinar H. Gunderson escreveu:
-> On Fri, Mar 25, 2022 at 07:07:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> >>> 
-> >>> There are two issues in play:
-> >>> 
-> >>>  1. PT event synth doesn't support reading inline information from DWARF
-> >>>     yet, and my patch to add it runs into some problems. This is not
-> >>>     relevant for this patch at all.
-> >>>  2. The results from v3 don't quite match the ones from v1, and neither
-> >>>     of us are entirely sure why. My personal feeling is that the one
-> >>>     from v1 are the wrong ones, but it's up to Adrian to say whether we
-> >>>     want to try to investigate deeply here.
-> >> V3 is good.  Please take that.
-> > Thanks, applied.
-> 
-> Hi,
-> 
-> I downloaded linux-6.1.12 now and built perf from that, and this patch
-> isn't included. Did it get somehow lost along the way?
+Using sprintf/snprintf functions are error prone and suggested to be
+replaced by scnprintf/vscnrptintf as outlined in this [1] LWN article.
 
-I must have committed some mistake when doing rebases, I'm sorry.
+A more recent recommendation is to use sysfs_emit() or sysfs_emit_at()
+as per Documentation/filesystems/sysfs.rst in show() callback function
+when formatting values to be returned to user-space. These helper
+functions are PAGE_SIZE aware and wrap a safer call to vscnprintf().
 
-I applied it now and will push it later today, after the usual set of
-tests with it and other patches I apply today.
+[1] https://lwn.net/Articles/69419/
 
-- Arnaldo
+Issue identified using the coccinelle device_attr_show.cocci script.
+
+Signed-off-by: Deepak R Varma <drv@mailo.com>
+---
+ arch/x86/events/intel/pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index 42a55794004a..d9e6d771b458 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -96,7 +96,7 @@ static ssize_t pt_cap_show(struct device *cdev,
+ 		container_of(attr, struct dev_ext_attribute, attr);
+ 	enum pt_capabilities cap = (long)ea->var;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(cap));
++	return sysfs_emit(buf, "%x\n", intel_pt_validate_hw_cap(cap));
+ }
+ 
+ static struct attribute_group pt_cap_group __ro_after_init = {
+-- 
+2.34.1
+
+
+
