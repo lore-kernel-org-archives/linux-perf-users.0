@@ -2,113 +2,105 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E360BC636D6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 20:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF178C636D6
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 22:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbjBQUW7 (ORCPT
+        id S229585AbjBQWcm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Feb 2023 15:22:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
+        Fri, 17 Feb 2023 17:32:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjBQUW6 (ORCPT
+        with ESMTP id S229506AbjBQWcl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Feb 2023 15:22:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491BA12BF5
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Feb 2023 12:22:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A395A61FE7
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Feb 2023 20:22:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D971CC433D2;
-        Fri, 17 Feb 2023 20:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676665376;
-        bh=Xo11NmtvSdfZXdPABXXpW3Tbfo1JIumpBRzv3e++6I0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q8rAzFXJH8MsH5WBh7nNjCYbuacc6d90ansNAbGs7y3oRCNEU+hPWp46w8UF49yfF
-         +5BVaEJNy/zBFsufpdLxt+unvr2IDIkz88JQvmJ3ZYYeySGPlhDkXivKUswuBQEbF4
-         FBfkQQHD8UaHYHcCQvhRxD6Ui47Oz1qDkoVv4QsgkJQwTBoFlJpwQy9wgQu4bzsVz1
-         4/Zq/pvjJ1/Le0JH3wlPnhmU7WpvbOvvvaSxe37Rc//scZ9mubsXLYg/sPz5Ru+bub
-         aP909reAvlV41MWxSgc12y6B99WZbJN3yHSt4TOpENemxzdYM0DDBqh/lLpLaDZ2ou
-         V6DIuNxEPV1Hw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6FA8A40025; Fri, 17 Feb 2023 17:22:53 -0300 (-03)
-Date:   Fri, 17 Feb 2023 17:22:53 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        rnsastry@linux.ibm.com, disgoel@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com
-Subject: Re: [PATCH v2] tools/perf/tests: Change true workload to sleep
- workload in all metric test for system wide check
-Message-ID: <Y+/iHQy9cWOP0ZtN@kernel.org>
-References: <20230215093827.124921-1-kjain@linux.ibm.com>
- <CAP-5=fWZxs432h_Vohe0WXaCATiUrTugpMzbYpKMseJpuj0h-g@mail.gmail.com>
+        Fri, 17 Feb 2023 17:32:41 -0500
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A675FBD5;
+        Fri, 17 Feb 2023 14:32:40 -0800 (PST)
+Received: by mail-ot1-f45.google.com with SMTP id h16-20020a9d6a50000000b00690ed91749aso576602otn.7;
+        Fri, 17 Feb 2023 14:32:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hibrcR3FpohMCi2GhALxLrhNLj3j0HrNrmzVssYuDY0=;
+        b=ZV72aJtOZw0a6eug4Wp6X8rtWj6OnlajTRpUbVvHsxxeK7Mjmyj8P7OHwlc06L2b98
+         27biEt4uEmubqimOMaBWBU1K2sjd+ToVO9iolgwHZRaJU8FiNSev3KiYZlKMG0QHYhlv
+         7ve67XzRxhziSHpHbPhL1y3RSk2tCZi9CPMJUN/U2aOFPeWp2V/nGyiHikO9GTQIo7Qk
+         cW1rRiPPWbn/GZy5b6ulArHM0D2Atn3EX6f8Mhh5eIj4edHf8DvSjuUf1jm15mfqP+uF
+         h/2CW3R26oRMYt+eu49+IDtOBT0+VouI6oIN68noUFGZtSmVAkCqVzMlBjt6xwWtKh5f
+         aRyw==
+X-Gm-Message-State: AO0yUKXRAdMlTCHlcd0YimOHWC+mA4eKS6/83y8UET/lS7BKw6mDr/TA
+        pHfWBCQAKSNmCSr9QzFleQ==
+X-Google-Smtp-Source: AK7set8CQp2VTDIvRs7aGGnR2LQQ0imuAn3sVaPBcsvlLKTg7pxCAc1tzt9MKsFoIvm/+WDFMOlSqw==
+X-Received: by 2002:a05:6830:3148:b0:690:958e:f0e9 with SMTP id c8-20020a056830314800b00690958ef0e9mr591827ots.1.1676673159323;
+        Fri, 17 Feb 2023 14:32:39 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id a13-20020a9d470d000000b00690e42f0da8sm1678619otf.24.2023.02.17.14.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 14:32:39 -0800 (PST)
+Received: (nullmailer pid 1684705 invoked by uid 1000);
+        Fri, 17 Feb 2023 22:32:38 -0000
+From:   Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 0/2] perf tool: 'config3' attribute support
+Date:   Fri, 17 Feb 2023 16:32:09 -0600
+Message-Id: <20220914-arm-perf-tool-spe1-2-v2-v5-0-2cf5210b2f77@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fWZxs432h_Vohe0WXaCATiUrTugpMzbYpKMseJpuj0h-g@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGkA8GMC/43NQQ7CIBAF0KsY1o6hlFZw5T2MC0qnLRGhGSqJa
+ Xp30Z0rXU3+T/6blSUkh4mddisjzC65GEpo9jtmJxNGBNeXzAQXgutKgqE7zEgDLDF6SDNWICA
+ LsKY7Km2bvtGKlXVnEkJHJtip7MPD+1JOLi2Rnp9vuS7n8hvONXBQldKD5bK3tj3fkAL6Q6SRX
+ Qua5Z+QfEO15VphKyqBX9C2bS9VX+CmDQEAAA==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+X-Mailer: b4 0.13-dev
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Feb 15, 2023 at 08:08:20AM -0800, Ian Rogers escreveu:
-> On Wed, Feb 15, 2023 at 1:38 AM Kajol Jain <kjain@linux.ibm.com> wrote:
-> >
-> > Testcase stat_all_metrics.sh fails in powerpc:
-> >
-> > 98: perf all metrics test : FAILED!
-> >
-> > Logs with verbose:
-> >
-> > [command]# ./perf test 98 -vv
-> >  98: perf all metrics test                                           :
-> >  --- start ---
-> > test child forked, pid 13262
-> > Testing BRU_STALL_CPI
-> > Testing COMPLETION_STALL_CPI
-> >  ----
-> > Testing TOTAL_LOCAL_NODE_PUMPS_P23
-> > Metric 'TOTAL_LOCAL_NODE_PUMPS_P23' not printed in:
-> > Error:
-> > Invalid event (hv_24x7/PM_PB_LNS_PUMP23,chip=3/) in per-thread mode, enable system wide with '-a'.
-> > Testing TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01
-> > Metric 'TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01' not printed in:
-> > Error:
-> > Invalid event (hv_24x7/PM_PB_RTY_LNS_PUMP01,chip=3/) in per-thread mode, enable system wide with '-a'.
-> >  ----
-> >
-> > Based on above logs, we could see some of the hv-24x7 metric events fails,
-> > and logs suggest to run the metric event with -a option.
-> > This change happened after the commit a4b8cfcabb1d ("perf stat: Delay metric
-> > parsing"), which delayed the metric parsing phase and now before metric parsing
-> > phase perf tool identifies, whether target is system-wide or not. With this
-> > change, perf_event_open will fails with workload monitoring for uncore events
-> > as expected.
-> >
-> > The perf all metric test case fails as some of the hv-24x7 metric events
-> > may need bigger workload with system wide monitoring to get the data.
-> > Fix this issue by changing current system wide check from true workload to
-> > sleep 0.01 workload.
-> >
-> > Result with the patch changes in powerpc:
-> >
-> > 98: perf all metrics test : Ok
-> >
-> > Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > Tested-by: Disha Goel <disgoel@linux.ibm.com>
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> 
-> Tested-by: Ian Rogers <irogers@google.com>
-> 
-> The mention of a4b8cfcabb1d  can be moved to a Fixes tag so that this
-> is backported.
+This series adds the perf tool support for 'config3' attr. This is 
+the last part to enable Arm SPEv1.2 support. The necessary kernel side 
+changes are pending for v6.3[1].
 
-Done, thanks, applied.
+[1] https://lore.kernel.org/all/20230207124250.GA12385@willie-the-truck/
 
-- Arnaldo
+---
+Changes in v5:
+- Rebase on v6.2-rc1
+- Drop applied config attr fix
+- Link to v4: https://lore.kernel.org/r/20220914-arm-perf-tool-spe1-2-v2-v4-0-83c098e6212e@kernel.org
+
+Changes in v4:
+- Fix event parsing test segfault
+- Add 'config3' in event parsing tests
+- Link to v3: https://lore.kernel.org/r/20220914-arm-perf-tool-spe1-2-v2-v3-0-8189fc04dcc6@kernel.org
+
+---
+Rob Herring (2):
+      perf tools: Sync perf_event_attr::config3 addition
+      perf: Add support for perf_event_attr::config3
+
+ tools/include/uapi/linux/perf_event.h |  3 +++
+ tools/perf/tests/parse-events.c       | 13 ++++++++++++-
+ tools/perf/util/parse-events.c        |  6 ++++++
+ tools/perf/util/parse-events.h        |  1 +
+ tools/perf/util/parse-events.l        |  1 +
+ tools/perf/util/pmu.c                 |  3 +++
+ tools/perf/util/pmu.h                 |  1 +
+ 7 files changed, 27 insertions(+), 1 deletion(-)
+---
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+change-id: 20220914-arm-perf-tool-spe1-2-v2-cab789c5d598
+
+Best regards,
+-- 
+Rob Herring <robh@kernel.org>
+
