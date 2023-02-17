@@ -2,126 +2,89 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E699C05027
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 12:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8558C05027
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 14:03:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbjBQMG4 (ORCPT
+        id S229772AbjBQODy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Feb 2023 07:06:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45352 "EHLO
+        Fri, 17 Feb 2023 09:03:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjBQMGz (ORCPT
+        with ESMTP id S229673AbjBQODx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Feb 2023 07:06:55 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F88644DD;
-        Fri, 17 Feb 2023 04:06:53 -0800 (PST)
-Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PJ9R10kjGzDsWL;
-        Fri, 17 Feb 2023 20:02:05 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by kwepemi500024.china.huawei.com
- (7.221.188.100) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 17 Feb
- 2023 20:06:49 +0800
-From:   Zeng Heng <zengheng4@huawei.com>
-To:     <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
-        <peterz@infradead.org>, <tiwai@suse.de>, <jolsa@kernel.org>,
-        <vbabka@suse.cz>, <keescook@chromium.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <namhyung@kernel.org>, <bp@alien8.de>,
-        <bhe@redhat.com>, <eric.devolder@oracle.com>, <hpa@zytor.com>,
-        <jroedel@suse.de>, <dave.hansen@linux.intel.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liwei391@huawei.com>, <x86@kernel.org>, <xiexiuqi@huawei.com>
-Subject: [RFC PATCH v4] x86/kdump: terminate watchdog NMI interrupt to avoid kdump crashes
-Date:   Fri, 17 Feb 2023 20:06:04 +0800
-Message-ID: <20230217120604.435608-1-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 17 Feb 2023 09:03:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186DE656B2;
+        Fri, 17 Feb 2023 06:03:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A7F1061BA0;
+        Fri, 17 Feb 2023 14:03:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1EF0C433EF;
+        Fri, 17 Feb 2023 14:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676642632;
+        bh=uohuAHrUCjnqA7irnaiWAtD+EmHIGiwseVTupadX5zo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k3x8ARgnp/EUpbuufgbLFiKFaCTeO5ylHTOPnWaNNXvVEQydhvaPGeKMZ7EnuUgEc
+         pfM6+P8rROn+rVQi5HSc3fWZUT3iL6K38EFRg1pkOurXm7Kn7doFpDxnmeNMnJ3Xxu
+         s09dUZyBU5up84KCnkvZcaZIEZtEFUHZEJJ2VMhhhuOeCYBDc4uBdqVSJzsn1EbuE0
+         HSv3AI+F7snKnu7ZGPrg8Q02tuZbcy5qScWnNlHTds8iP9GA2Y81DoIvV/c00daYju
+         woUxAPP5QXJojPmNvkxByqqcM+Ocq6h+UQ1Lkd+IqgFTziNQL28Bq6WXtSEmUaWzfs
+         MhFB+oltjckWg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4B76140025; Fri, 17 Feb 2023 11:03:49 -0300 (-03)
+Date:   Fri, 17 Feb 2023 11:03:49 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Steinar H. Gunderson" <sesse@google.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf intel-pt: Synthesize cycle events
+Message-ID: <Y++JRY4ExBkxeejU@kernel.org>
+References: <20220322082452.1429091-1-sesse@google.com>
+ <YjpAYjdgHWwkid5N@kernel.org>
+ <YjpFcLiCTjHZWzzA@google.com>
+ <52d31321-66e1-f189-2ffc-7c93239eea74@intel.com>
+ <Yj49LDY3S/ANeN0V@kernel.org>
+ <Y+9evQVBRLrCLQKf@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500024.china.huawei.com (7.221.188.100)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y+9evQVBRLrCLQKf@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If the cpu panics within the NMI interrupt context, there could be
-unhandled NMI interrupts in the background which are blocked by processor
-until next IRET instruction executes. Since that, it prevents nested
-NMI handler execution.
+Em Fri, Feb 17, 2023 at 12:02:21PM +0100, Steinar H. Gunderson escreveu:
+> On Fri, Mar 25, 2022 at 07:07:40PM -0300, Arnaldo Carvalho de Melo wrote:
+> >>> 
+> >>> There are two issues in play:
+> >>> 
+> >>>  1. PT event synth doesn't support reading inline information from DWARF
+> >>>     yet, and my patch to add it runs into some problems. This is not
+> >>>     relevant for this patch at all.
+> >>>  2. The results from v3 don't quite match the ones from v1, and neither
+> >>>     of us are entirely sure why. My personal feeling is that the one
+> >>>     from v1 are the wrong ones, but it's up to Adrian to say whether we
+> >>>     want to try to investigate deeply here.
+> >> V3 is good.  Please take that.
+> > Thanks, applied.
+> 
+> Hi,
+> 
+> I downloaded linux-6.1.12 now and built perf from that, and this patch
+> isn't included. Did it get somehow lost along the way?
 
-In case of IRET execution during kdump reboot and no proper NMIs handler
-registered at that point (such as during EFI loader), we need to ensure
-watchdog no work any more, or kdump would crash later. So call
-perf_event_exit_cpu() at the very last moment in the panic shutdown.
+I must have committed some mistake when doing rebases, I'm sorry.
 
-!! Here I know it's not allowed to call perf_event_exit_cpu() within nmi
-context, because of mutex_lock, smp_call_function and so on.
-Is there any experts know about the similar function which allowed to call
-within atomic context (Neither x86_pmu_disable() nor x86_pmu_disable_all()
-do work after my practice)?
+I applied it now and will push it later today, after the usual set of
+tests with it and other patches I apply today.
 
-Thank you in advance.
-
-Here provide one of test case to reproduce the concerned issue:
-  1. # cat uncorrected
-     CPU 1 BANK 4
-     STATUS uncorrected 0xc0
-     MCGSTATUS  EIPV MCIP
-     ADDR 0x1234
-     RIP 0xdeadbabe
-     RAISINGCPU 0
-     MCGCAP SER CMCI TES 0x6
-  2. # modprobe mce_inject
-  3. # mce-inject uncorrected
-
-Mce-inject would trigger kernel panic under NMI interrupt context. In
-addition, we need another NMI interrupt raise (such as from watchdog)
-during panic process. Set proper watchdog threshold value and/or add an
-artificial delay to make sure watchdog interrupt raise during the panic
-procedure and the involved issue would occur.
-
-Fixes: ca0e22d4f011 ("x86/boot/compressed/64: Always switch to own page table")
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
----
-  v1: add dummy NMI interrupt handler in EFI loader
-  v2: tidy up changelog, add comments (by Ingo Molnar)
-  v3: add iret_to_self() to deal with blocked NMIs in advance
-  v4: call perf_event_exit_cpu() to terminate watchdog in panic shutdown
-
- arch/x86/kernel/crash.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 305514431f26..f46df94bbdad 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -25,6 +25,7 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/memblock.h>
-+#include <linux/perf_event.h>
-
- #include <asm/processor.h>
- #include <asm/hardirq.h>
-@@ -170,6 +171,15 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- #ifdef CONFIG_HPET_TIMER
- 	hpet_disable();
- #endif
-+
-+	/*
-+	 * If the cpu panics within the NMI interrupt context,
-+	 * we need to ensure no more NMI interrupts blocked by
-+	 * processor. In case of IRET execution during kdump
-+	 * path and no proper NMIs handler registered at that
-+	 * point, here terminate watchdog in panic shutdown.
-+	 */
-+	perf_event_exit_cpu(smp_processor_id());
- 	crash_save_cpu(regs, safe_smp_processor_id());
- }
-
---
-2.25.1
-
+- Arnaldo
