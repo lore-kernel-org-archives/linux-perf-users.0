@@ -2,150 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B6FC636CC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Feb 2023 18:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EDCC636D4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Feb 2023 11:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbjBPSiw (ORCPT
+        id S229512AbjBQLC5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Feb 2023 13:38:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44254 "EHLO
+        Fri, 17 Feb 2023 06:02:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjBPSiv (ORCPT
+        with ESMTP id S229934AbjBQLCi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Feb 2023 13:38:51 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABB343930;
-        Thu, 16 Feb 2023 10:38:50 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id 24so1840470pgt.7;
-        Thu, 16 Feb 2023 10:38:50 -0800 (PST)
+        Fri, 17 Feb 2023 06:02:38 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 967E664B16
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Feb 2023 03:02:29 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id x4so956749lfq.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Feb 2023 03:02:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SuLdwLtfLsyKrMS8dI+1/4NFezsn+c9OtrFVwK/ARsA=;
-        b=g7BW0FLF9CZ568xaYDBEUXjVspPkAaIk1NQp1MjeWnJC6NWS/5EC2HeQaOejVOXAa2
-         rnx2IjNt5yBPwecP9jkrTVCsT35F1fJ5UJbCrQwl9j1nbggCaKyJYZ/jeZlSX79sAss0
-         1DAX2SHHu7UeHAfH+biB99+2FcRoDk0oYmOeWajeIKzF9IRHTgNRYLWMWx1gpaIPFgjC
-         QxNHQgDrT71wwWHGv1row3zXEroWcF9QXR147Gr10WSlN6y2mKMMDppVvLknAjTprcLG
-         LgX8qkuMEUaNIZJXIlnodR+KgZw6KNPJBMNkjZi5R7ybWyoVDTWECotB7l1gxSgshjGV
-         tFaQ==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/plfQ38dzMrGO1JbheJ9rCmuE1cLMVk9gw7wSXm4Jqc=;
+        b=b1x8b/jwmA9YOIRBgoOQyok9k8pouvrhm1zW5L0FTRJgx+tIK7LO0HIF+s3C/ln4Po
+         VrmFB1cPNkVSAkWm9YVkoV5JvDum7g2l7Lq1tZEMvmXRChfaVOrbnmpg5Q3zwn0jmguJ
+         5TO652PsdgW32LksChbowDOFodL6kp9mixIVoj7WO2ErnuGYAiblfGIRTtg89BpY3VRI
+         rul5RtUiXlQ2JpEGKJ/1mcOvWcrJnkeKixOfEwlqihTR2gfPCAw8hsgOWxoG32Q852fw
+         l01JuY1BE44VUErAENa1J51SGav4GCTVkkEfuOLyPcBkTai7J4r0k9XBoR/2MSEq+9gl
+         Kp/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SuLdwLtfLsyKrMS8dI+1/4NFezsn+c9OtrFVwK/ARsA=;
-        b=iet5/37M6/qCC1aFDARVjrVX6VX3GbR5eQa0AhGzzGCWc0evA+kAkVXw+z3KZ57hvO
-         AnWglYJlrk8mc+fLgRWFlZQsPW8lMLidbp1S2ISa8EJP/ayphgnxpGYcpin1cX/58ObA
-         5x1Ve8cPHGMx1Zn2og9ZAv9wpVGZvYCSEdz3iORmd75Q/PXZr9gP75YAzELcaVl8tJ6V
-         Z1PR8NHmK7ojOHKN8pWrZtVKo6nW8ALm/69pbQa7/LmUxc1j/1JeFJONFrMw+8rV7gHO
-         76guClMWXmKUf8iBxpAQiuLLtZxfvXJfGDbI1/4G2OCnZBap6DMTutoX7b+FzHZhyQgQ
-         khUQ==
-X-Gm-Message-State: AO0yUKUa2mf5USs4mX2cbtdHeMkw0+wosfkXA6NqO/Bw1bl5Q+f9Ug7a
-        Tae++KbjM5Hnx/GrrIUmvrAF1P5mCNk=
-X-Google-Smtp-Source: AK7set/aje9IQy6+W9Gi4gllMJPg9aafvoLMyhy5QeuG1pEKiKWelzO3bLxDFZ6vwCo/oMvjCgiNtA==
-X-Received: by 2002:a62:5250:0:b0:596:15de:ea1e with SMTP id g77-20020a625250000000b0059615deea1emr5729416pfb.9.1676572730265;
-        Thu, 16 Feb 2023 10:38:50 -0800 (PST)
-Received: from google.com ([2620:15c:2d4:203:cb24:bfe1:41f4:4b12])
-        by smtp.gmail.com with ESMTPSA id n20-20020aa79054000000b005921c46cbadsm1663672pfo.99.2023.02.16.10.38.48
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/plfQ38dzMrGO1JbheJ9rCmuE1cLMVk9gw7wSXm4Jqc=;
+        b=w5sOASSpD0Z/tGzouHpKNCa50cXEBXNRzfteuNVcoL2uR0BZEy1fw8L7kZW97GZ9bJ
+         ZIQyk+DEgf0WxIMTafnpcKEvPi3dCCPdw8aim8FV5mYulqSJAJynDA6bu4GH5yz99z4A
+         uqqf50HhuN4e5LEGhnQkRC+hhZlGCHBJGiwIvp6FSsqFx/jjoRtxFe3ujbtp/IhwtGj3
+         k/ZCFK3oHxrfWWb7gmVT9CIEetXbj4aZrDG1jognZNtJiy1VSiW3vsAmc6mLFulhqDs/
+         5t+2x/ZQFtIY6DyqaKuG4Sbz5vS75Igqz0DxwpESa+P8mjTAJdElQhpnuT7iqoM/Ggd6
+         o1uA==
+X-Gm-Message-State: AO0yUKXMulzkMg5Om9RtmB1OjXOv55M5i1e9kj8ezw6KvTYsHhM1d+M+
+        DBVBw4q9LXvKN4xdX50FEnORrw==
+X-Google-Smtp-Source: AK7set/2y7oM6jSdsEB9bbAcsNFt46R4u7C7/sbZGhjSO3xWVD8rkQc6w9MsM4qA6Cl9MgV3Ao8l8g==
+X-Received: by 2002:a19:f611:0:b0:4b6:d28a:2558 with SMTP id x17-20020a19f611000000b004b6d28a2558mr2958542lfe.49.1676631747693;
+        Fri, 17 Feb 2023 03:02:27 -0800 (PST)
+Received: from google.com ([2a00:79e0:18:10:d02c:4bb8:fba9:c9a7])
+        by smtp.gmail.com with ESMTPSA id w6-20020a05651203c600b004cf6c56fdb5sm643926lfp.232.2023.02.17.03.02.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 10:38:49 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-Date:   Thu, 16 Feb 2023 10:38:46 -0800
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Fri, 17 Feb 2023 03:02:26 -0800 (PST)
+Date:   Fri, 17 Feb 2023 12:02:21 +0100
+From:   "Steinar H. Gunderson" <sesse@google.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 4/7] perf record: Record dropped sample count
-Message-ID: <Y+54Nla62F+dutdu@google.com>
-References: <20230214050452.26390-1-namhyung@kernel.org>
- <20230214050452.26390-5-namhyung@kernel.org>
- <Y+5YaQt7Fme65a78@krava>
- <Y+5ajnitOAxjdn2C@kernel.org>
- <Y+5bGS9clWPS+B5J@krava>
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf intel-pt: Synthesize cycle events
+Message-ID: <Y+9evQVBRLrCLQKf@google.com>
+References: <20220322082452.1429091-1-sesse@google.com>
+ <YjpAYjdgHWwkid5N@kernel.org>
+ <YjpFcLiCTjHZWzzA@google.com>
+ <52d31321-66e1-f189-2ffc-7c93239eea74@intel.com>
+ <Yj49LDY3S/ANeN0V@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y+5bGS9clWPS+B5J@krava>
+In-Reply-To: <Yj49LDY3S/ANeN0V@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri and Arnaldo,
+On Fri, Mar 25, 2022 at 07:07:40PM -0300, Arnaldo Carvalho de Melo wrote:
+>>> 
+>>> There are two issues in play:
+>>> 
+>>>  1. PT event synth doesn't support reading inline information from DWARF
+>>>     yet, and my patch to add it runs into some problems. This is not
+>>>     relevant for this patch at all.
+>>>  2. The results from v3 don't quite match the ones from v1, and neither
+>>>     of us are entirely sure why. My personal feeling is that the one
+>>>     from v1 are the wrong ones, but it's up to Adrian to say whether we
+>>>     want to try to investigate deeply here.
+>> V3 is good.  Please take that.
+> Thanks, applied.
 
-On Thu, Feb 16, 2023 at 05:34:33PM +0100, Jiri Olsa wrote:
-> On Thu, Feb 16, 2023 at 01:32:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Feb 16, 2023 at 05:23:05PM +0100, Jiri Olsa escreveu:
-> > > On Mon, Feb 13, 2023 at 09:04:49PM -0800, Namhyung Kim wrote:
-> > > 
-> > > SNIP
-> > > 
-> > > > @@ -1929,12 +1923,27 @@ static void record__read_lost_samples(struct record *rec)
-> > > >  
-> > > >  		for (int x = 0; x < xyarray__max_x(xy); x++) {
-> > > >  			for (int y = 0; y < xyarray__max_y(xy); y++) {
-> > > > -				__record__read_lost_samples(rec, evsel, lost, x, y);
-> > > > +				struct perf_counts_values count;
-> > > > +
-> > > > +				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
-> > > > +					pr_err("read LOST count failed\n");
-> > > > +					goto out;
-> > > > +				}
-> > > > +
-> > > > +				if (count.lost) {
-> > > > +					__record__save_lost_samples(rec, evsel, lost,
-> > > > +								    x, y, count.lost, 0);
-> > > > +				}
-> > > >  			}
-> > > >  		}
-> > > > +
-> > > > +		lost_count = perf_bpf_filter__lost_count(evsel);
-> > > > +		if (lost_count)
-> > > > +			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
-> > > > +						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
-> > > 
-> > > hi,
-> > > I can't see PERF_RECORD_MISC_LOST_SAMPLES_BPF in the tip/perf/core so can't compile,
-> > > what do I miss?
-> > 
-> > Humm, but you shouldn't need kernel headers to build tools/perf/, right?
-> 
-> right, should be also in tools/include headers
+Hi,
 
-Yeah, sorry about that.  I'm not sure how I missed the part.
+I downloaded linux-6.1.12 now and built perf from that, and this patch
+isn't included. Did it get somehow lost along the way?
 
-I put it in tools/lib/perf/include/perf/event.h only as it does nothing
-with kernel.  Will fix in v2.
-
-Thanks,
-Namhyung
-
----8<---
-
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index ad47d7b31046..51b9338f4c11 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -70,6 +70,8 @@ struct perf_record_lost {
-        __u64                    lost;
- };
-
-+#define PERF_RECORD_MISC_LOST_SAMPLES_BPF (1 << 15)
-+
- struct perf_record_lost_samples {
-        struct perf_event_header header;
-        __u64                    lost;
-
+/* Steinar */
