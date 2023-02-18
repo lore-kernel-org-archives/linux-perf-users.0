@@ -2,158 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CC6C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Feb 2023 13:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF80C636CC
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Feb 2023 16:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjBRNWS (ORCPT
+        id S229624AbjBRQ13 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Feb 2023 08:22:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46562 "EHLO
+        Sat, 18 Feb 2023 11:27:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229731AbjBRNWS (ORCPT
+        with ESMTP id S229570AbjBRQ12 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Feb 2023 08:22:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F078D1A649;
-        Sat, 18 Feb 2023 05:21:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A737160B95;
-        Sat, 18 Feb 2023 13:21:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0140C433D2;
-        Sat, 18 Feb 2023 13:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676726512;
-        bh=CeupupIsVHIMUQQJUZ3jIKyLcZQLpPGrGd5qnaaeig4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qBwuHJFxur0MBgyRVuRSB67Ddv77q2jXCiAFQUF0kZZZvqS498U5dzKMonJ38iQn5
-         bOA/1CJLSZrwt2pdVcg568tSsivySdjfiu/8mK0HHXsLWnNFE2WRJK1lLOEt20Xzf/
-         bE7r6K75SCc0WvCGtVI4mYoFSG1eY9E/L+eMDu6rcM4AQXFw5Qg/X7xY/NFFe1Di9L
-         IUsAuB3sBwUGI1WmVwVlEJaHWdL1hq73YvulwcFXaHO3WEh9qLZYywGI9T122izm7l
-         2i9EF9cEpkgZ/hyi9/CmNh96INoJXmkrwJb/919TUKamcgU5HZPgAhcOC99lAwxVwr
-         AKRPbDSSB37Bw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 486B740025; Sat, 18 Feb 2023 10:21:49 -0300 (-03)
-Date:   Sat, 18 Feb 2023 10:21:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] perf tools: Sync perf_event_attr::config3 addition
-Message-ID: <Y/DQ7Y+FD4cMn29J@kernel.org>
-References: <20220914-arm-perf-tool-spe1-2-v2-v5-0-2cf5210b2f77@kernel.org>
- <20220914-arm-perf-tool-spe1-2-v2-v5-1-2cf5210b2f77@kernel.org>
+        Sat, 18 Feb 2023 11:27:28 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359132D78;
+        Sat, 18 Feb 2023 08:27:27 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id qb8-20020a17090b280800b002341a2656e5so933046pjb.1;
+        Sat, 18 Feb 2023 08:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=B37g7B5ar/zjjY7gik7eq16rDy7XTQy/OaSpZGsEq0g=;
+        b=bVa3PxJNt2w4zIlONGnFvuntctpEtTmbqCMOHyzBbJSmggv2XC4grUoeL08I2dfHWf
+         zj2XwOJItqqBF7HHAaMNn/H6sKEB47WBkiCMEkV9NVsc4AKm1lxe9tlT8YZFKqEpI/ln
+         7s2Dpao6mzaF9O2SpB5pEbrhaK7bq9u/EKDn8iJy8K/pkwwZBsnnbKJy40D3UjKZiVql
+         q/M1rT1+ER37U1oPlM74rO01m0iDB76bpG07kbL8h27jNnElyGzG+iHRbivuJST6pn46
+         5yCdqUWvDPixTMA2p2ynPwgU8B//YKPjy50IR757OsO+HxIxbB6OdGxar849PT20Jnor
+         3vEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B37g7B5ar/zjjY7gik7eq16rDy7XTQy/OaSpZGsEq0g=;
+        b=K6puLu2QyruYjaavUzaf2Gs1KuspZNaRoSXgqm/DrdXCYcpgOrbsSkX8tPmAFyZsu5
+         B2m4/frawOkkyEM/3QsIwX5eRFY7S0/40sS7XTpysNMz94vS+cd5whKkRs/jfNbVtpmG
+         wlD7gxHnXLa2/v9Y++T3Lj2bNFjpSq7k4zIGn/jQrxYG2VdPBlhZFNpXn8a9r+92Ttxn
+         lj/cIw5RM+TKlkZufom+ggDiqUqDsqTrdUtGUP2ydwTyLWWuFKCv/TyrrRZMNBBCoYk3
+         yaqx7xdQxAKsjkHtw6V2Ex0iKIMPIBbfpF4cLu6tpZV+Qvx62AbDNSPBrWuUmP6oIfkD
+         /NoA==
+X-Gm-Message-State: AO0yUKXKtL0J2w6lqOmRFr55AR9afIuy9PuF2mfcNg+ZlDIkv8WBi4gd
+        I/ZoXJ53i5b4YbZBGTq6Tn67264RsUo=
+X-Google-Smtp-Source: AK7set/3Jd/okF363wMci6e9ISMyoVSRzAcFrWtOiQAViZjbS8W60DCYnEtOL5+i8MuuxTKZPJIp0A==
+X-Received: by 2002:a05:6a20:4b14:b0:c7:49c4:c28c with SMTP id fp20-20020a056a204b1400b000c749c4c28cmr7574454pzb.20.1676737646459;
+        Sat, 18 Feb 2023 08:27:26 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:ff0:4f8:5d48:b81d:df32])
+        by smtp.gmail.com with ESMTPSA id f4-20020a655504000000b004fb5f4bf585sm2886976pgr.78.2023.02.18.08.27.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Feb 2023 08:27:25 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf test: Fix offcpu test prev_state check
+Date:   Sat, 18 Feb 2023 08:27:24 -0800
+Message-Id: <20230218162724.1292657-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220914-arm-perf-tool-spe1-2-v2-v5-1-2cf5210b2f77@kernel.org>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Feb 17, 2023 at 04:32:10PM -0600, Rob Herring escreveu:
-> Arm SPEv1.2 adds another 64-bits of event filtering control. As the
-> existing perf_event_attr::configN fields are all used up for SPE PMU, an
-> additional field is needed. Add a new 'config3' field.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> This matches commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
-> for the kernel queued in linux-next.
+On Fedora 36, the perf record offcpu profiling tests are failing.
+It was because the BPF checks the prev task's state being S or D
+but actually it has more bits set.  Let's check the LSB 8 bits
+for the purpose of offcpu profiling.
 
-When you mention linux-next where was it that it picked this from?
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/off_cpu.bpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For me to get this merged into the perf tools "next" (perf/core) it must
-already have been merged in the kernel counterpart (tip/perf/core).
+diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+index 38e3b287dbb2..d877a0a9731f 100644
+--- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
++++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+@@ -277,7 +277,7 @@ int on_switch(u64 *ctx)
+ 	else
+ 		prev_state = get_task_state(prev);
+ 
+-	return off_cpu_stat(ctx, prev, next, prev_state);
++	return off_cpu_stat(ctx, prev, next, prev_state & 0xff);
+ }
+ 
+ char LICENSE[] SEC("license") = "Dual BSD/GPL";
+-- 
+2.39.2.637.g21b0678d19-goog
 
-Ok so it is not in tip/perf/core, but got in next yesterday, and PeterZ
-acked it, good, will process it soon.
-
-- Arnaldo
-
-⬢[acme@toolbox perf]$ git show 09519ec3b19e
-commit 09519ec3b19e4144b5f6e269c54fbb9c294a9fcb
-Author: Rob Herring <robh@kernel.org>
-Date:   Mon Jan 9 13:26:23 2023 -0600
-
-    perf: Add perf_event_attr::config3
-
-    Arm SPEv1.2 adds another 64-bits of event filtering control. As the
-    existing perf_event_attr::configN fields are all used up for SPE PMU, an
-    additional field is needed. Add a new 'config3' field.
-
-    Tested-by: James Clark <james.clark@arm.com>
-    Signed-off-by: Rob Herring <robh@kernel.org>
-    Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-    Link: https://lore.kernel.org/r/20220825-arm-spe-v8-7-v4-7-327f860daf28@kernel.org
-    Signed-off-by: Will Deacon <will@kernel.org>
-
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index ccb7f5dad59be96b..37675437b76860ae 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -374,6 +374,7 @@ enum perf_event_read_format {
- #define PERF_ATTR_SIZE_VER5    112     /* add: aux_watermark */
- #define PERF_ATTR_SIZE_VER6    120     /* add: aux_sample_size */
- #define PERF_ATTR_SIZE_VER7    128     /* add: sig_data */
-+#define PERF_ATTR_SIZE_VER8    136     /* add: config3 */
-
- /*
-  * Hardware event_id to monitor via a performance monitoring event:
-@@ -515,6 +516,8 @@ struct perf_event_attr {
-         * truncated accordingly on 32 bit architectures.
-         */
-        __u64   sig_data;
-+
-+       __u64   config3; /* extension of config2 */
- };
-
- /*
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$
-⬢[acme@toolbox perf]$ git tag --contains 09519ec3b19e4144b5f6e269c54fbb9c294a9fcb
-next-20230217
-⬢[acme@toolbox perf]$
-
-
-> ---
->  tools/include/uapi/linux/perf_event.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-> index ea6defacc1a7..a38814ce9485 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -365,6 +365,7 @@ enum perf_event_read_format {
->  #define PERF_ATTR_SIZE_VER5	112	/* add: aux_watermark */
->  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
->  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
-> +#define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
->  
->  /*
->   * Hardware event_id to monitor via a performance monitoring event:
-> @@ -506,6 +507,8 @@ struct perf_event_attr {
->  	 * truncated accordingly on 32 bit architectures.
->  	 */
->  	__u64	sig_data;
-> +
-> +	__u64	config3; /* extension of config2 */
->  };
->  
->  /*
-> 
-> -- 
-> 2.39.1
-> 
