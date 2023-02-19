@@ -2,58 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96522C05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA93AC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230138AbjBSJrV (ORCPT
+        id S230142AbjBSJrY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:47:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
+        Sun, 19 Feb 2023 04:47:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbjBSJrU (ORCPT
+        with ESMTP id S230136AbjBSJrX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:47:20 -0500
-Received: from mail-vk1-xa49.google.com (mail-vk1-xa49.google.com [IPv6:2607:f8b0:4864:20::a49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D63126D2
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:46:48 -0800 (PST)
-Received: by mail-vk1-xa49.google.com with SMTP id x190-20020a1fe0c7000000b004015f66acfdso704388vkg.15
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:46:47 -0800 (PST)
+        Sun, 19 Feb 2023 04:47:23 -0500
+Received: from mail-io1-xd4a.google.com (mail-io1-xd4a.google.com [IPv6:2607:f8b0:4864:20::d4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02A51043B
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:46:51 -0800 (PST)
+Received: by mail-io1-xd4a.google.com with SMTP id y5-20020a6bc405000000b007132e024fb5so16682ioa.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:46:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SBnNbiH+hab12DiOKBd4pcQP1xg7aEKLvUH64+SdruU=;
-        b=lMQXrD7/f5Md4Cv/Wu4Z3DRM30d0/Nfh2T/ynQgxAmUmcGDb50w7szQMN0mpyoaGO2
-         /KdOcvlaYuqHsrNTWXuo8TUwMlOEss4q8f9kTxFsrrK0yzTDOal0zeVsikFKmnYi1xy1
-         ISw/xdS0uAhog4e1fTOEADlDMT1LTOMPedDe904T1ZO1xypLhlaFsSaeUjrSXaUz6fFk
-         msQHGNFimxoQ+TOS/hoLyrv1/fbNc/ptM/wx+RLmFSGLlTDitFY8whrioOlTCio/r8RJ
-         kf7fNFbYz1FDSf1lcNFUE8BVZf9eCYbnaM+F9qAETfZ5JX+dy6Dc7IZB7eKVK/qH0GCF
-         upeA==
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ivvDzCiOjMDLj/gcFt7rd0F2g23q1K7jFLZUP1Bknc=;
+        b=pYOV+yD5JlC63LIjHOEgCbCoVbA5/K+27F7L88dBNxpq0XtFj0mZZlqIwBeS92aa/g
+         4kDUIW6Ukpzk0fFBdMUaZQ9gpbxcONzq+Wex72Os29VOJJeKmMByz2aAyDl1kZOJhSvz
+         gMyXVIcQ66hX6vSSMEXC6o0ZfK1beKFKsed7fXcseehPo4dxwSPM0pj09N90AAhkjkgC
+         RqmIIPmMTskb/OWIeVf6wOoMaMNj2sJEn+pKMsU2ZwLxQqfbvK/cKpI5GR39iETOkuxK
+         apz9HUvn1dPJ6d+YgJ5aG1cft6QskyAlLCTBnyeqR6tQvJk1kYio9jElUCO1VUWcZ9I6
+         YNbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SBnNbiH+hab12DiOKBd4pcQP1xg7aEKLvUH64+SdruU=;
-        b=PEh70pnzRzKMMu7KpwSUD2lAzMNi6XjgSndEmyNqKaCJJYY5K5EQ8dBA3WXnIit4fW
-         pfAF0MT5no6avA0uQ9F0pydu8Lp4+yeld/HtZcIb3KCMoatstwV2gs4fwf+06OaqnWx7
-         Pq/14pesCEeuotxhgHnYchHSfKyxNQaVo3N3dmeyFIE8vwdZZM+fZtPvNsrNdz6nAZtV
-         fEyLpKGFBWU8J7L1375qffbBjssJL+NEhH0bAivlIdYPq1GHmPCle/HSIJxgn5t7NHPb
-         3DZjsvJKG/96GvOFuFr5wutMSd3T+QKwBGZTCdY41r6R6GNh6Td8yL4LeXKAwQP3wUrJ
-         gDvA==
-X-Gm-Message-State: AO0yUKVC2z6mqCuPB+ZOZ2rvJChsgDJFiL07ALoYz+p323iklGzgCJv/
-        w+teO7HmiTtbMsEuyvxHNoYP/C1xSRhg
-X-Google-Smtp-Source: AK7set/W4P4gwQTQ14PucGRNx4H4xnyILVPXxlki8k+imj9Y/kafkRTfhg634nDIsQh4lilI/Yabl8NyXI7+
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4ivvDzCiOjMDLj/gcFt7rd0F2g23q1K7jFLZUP1Bknc=;
+        b=DRCGNZjhD9O2Ec5emgY1aksyPAc0mQxxfeOyxXgwJGipvruW3dJcNhxV6/AiJmLnEI
+         VZTVqRqxQ1GBkZLD+yRa1T8EQPwWndO7xmvOQK3vhObPLw07pgHeMggWH94oNyP58/WE
+         2AOcQpsRCwnkvrJHfzgYNcvYa91dlmwsVQJTsg5kMKJrssdNNDmnEwLJFmwYCbe4g5PC
+         YMVAR44n5dwXmoDUuTnMhHjPDSUIQUsPjP4+9H2WfZjf2XK4hpmv5gOBt4d2tAAJsKLF
+         yvJJ0vHzClSw1uICLtvT2sHVwTOCt9A+XINlh1PPVao7Bu7wkG9+I5QYwbkyZ6kxJjY+
+         Uc4A==
+X-Gm-Message-State: AO0yUKWv6WQfXJRgzWYOujtsEqfAcXCX8W5Y2Ov3aDRaXRnJIDmLGL6k
+        tgff/LykI7tEqGU1TsULrHpkRbcjkATr
+X-Google-Smtp-Source: AK7set8yN+kBbD9ri+YxCMZN5KWjv18FQjaq/9X1tHGt8jIhLEZWXlDKUsXy15DHn+Gq5dx+2iMz3JjgRtb3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a05:6902:10c6:b0:97a:ebd:a594 with SMTP id
- w6-20020a05690210c600b0097a0ebda594mr390732ybu.3.1676799250687; Sun, 19 Feb
- 2023 01:34:10 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:34 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:291:b0:9a0:1d7b:707b with SMTP id
+ v17-20020a056902029100b009a01d7b707bmr49325ybh.4.1676799268239; Sun, 19 Feb
+ 2023 01:34:28 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:36 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-38-irogers@google.com>
+Message-Id: <20230219092848.639226-40-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 37/51] perf expr: More explicit NAN handling
+Subject: [PATCH v1 39/51] perf stat: Add TopdownL1 metric as a default if present
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -88,50 +90,164 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Comparison and logical operations on NAN won't ensure the result is
-NAN. Ensure NANs are propogated so that threshold expressions like
-"tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15" don't yield a
-number when the components are NAN.
+When there are no events and on Intel, the topdown events will be
+added by default if present. To display the metrics associated with
+these request special handling in stat-shadow.c. To more easily update
+these metrics use the json metric version via the TopdownL1
+group. This makes the handling less platform specific.
+
+Modify the metricgroup__has_metric code to also cover metric groups.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/util/evlist.c  |  6 +++---
+ tools/perf/arch/x86/util/topdown.c | 30 ------------------------------
+ tools/perf/arch/x86/util/topdown.h |  1 -
+ tools/perf/builtin-stat.c          | 14 ++++++++++++++
+ tools/perf/util/metricgroup.c      |  6 ++----
+ 5 files changed, 19 insertions(+), 38 deletions(-)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 635e562350c5..250e444bf032 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -127,7 +127,11 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
- 	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
- 		assert(LHS.ids == NULL);				\
- 		assert(RHS.ids == NULL);				\
--		RESULT.val = (long)LHS.val OP (long)RHS.val;		\
-+		if (isnan(LHS.val) || isnan(RHS.val)) {			\
-+			RESULT.val = NAN;				\
-+		} else {						\
-+			RESULT.val = (long)LHS.val OP (long)RHS.val;	\
-+		}							\
- 		RESULT.ids = NULL;					\
- 	} else {							\
- 	        RESULT = union_expr(LHS, RHS);				\
-@@ -137,7 +141,11 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
- 	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
- 		assert(LHS.ids == NULL);				\
- 		assert(RHS.ids == NULL);				\
--		RESULT.val = LHS.val OP RHS.val;			\
-+		if (isnan(LHS.val) || isnan(RHS.val)) {			\
-+			RESULT.val = NAN;				\
-+		} else {						\
-+			RESULT.val = LHS.val OP RHS.val;		\
-+		}							\
- 		RESULT.ids = NULL;					\
- 	} else {							\
- 	        RESULT = union_expr(LHS, RHS);				\
--- 
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/e=
+vlist.c
+index cb59ce9b9638..8a7ae4162563 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -59,10 +59,10 @@ int arch_evlist__add_default_attrs(struct evlist *evlis=
+t,
+ 				   struct perf_event_attr *attrs,
+ 				   size_t nr_attrs)
+ {
+-	if (nr_attrs)
+-		return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
++	if (!nr_attrs)
++		return 0;
+=20
+-	return topdown_parse_events(evlist);
++	return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
+ }
+=20
+ struct evsel *arch_evlist__leader(struct list_head *list)
+diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/=
+topdown.c
+index 54810f9acd6f..eb3a7d9652ab 100644
+--- a/tools/perf/arch/x86/util/topdown.c
++++ b/tools/perf/arch/x86/util/topdown.c
+@@ -9,11 +9,6 @@
+ #include "topdown.h"
+ #include "evsel.h"
+=20
+-#define TOPDOWN_L1_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,=
+topdown-fe-bound,topdown-be-bound}"
+-#define TOPDOWN_L1_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_cor=
+e/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/}"
+-#define TOPDOWN_L2_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,=
+topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,t=
+opdown-fetch-lat,topdown-mem-bound}"
+-#define TOPDOWN_L2_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_cor=
+e/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,c=
+pu_core/topdown-heavy-ops/,cpu_core/topdown-br-mispredict/,cpu_core/topdown=
+-fetch-lat/,cpu_core/topdown-mem-bound/}"
+-
+ /* Check whether there is a PMU which supports the perf metrics. */
+ bool topdown_sys_has_perf_metrics(void)
+ {
+@@ -99,28 +94,3 @@ const char *arch_get_topdown_pmu_name(struct evlist *evl=
+ist, bool warn)
+=20
+ 	return pmu_name;
+ }
+-
+-int topdown_parse_events(struct evlist *evlist)
+-{
+-	const char *topdown_events;
+-	const char *pmu_name;
+-
+-	if (!topdown_sys_has_perf_metrics())
+-		return 0;
+-
+-	pmu_name =3D arch_get_topdown_pmu_name(evlist, false);
+-
+-	if (pmu_have_event(pmu_name, "topdown-heavy-ops")) {
+-		if (!strcmp(pmu_name, "cpu_core"))
+-			topdown_events =3D TOPDOWN_L2_EVENTS_CORE;
+-		else
+-			topdown_events =3D TOPDOWN_L2_EVENTS;
+-	} else {
+-		if (!strcmp(pmu_name, "cpu_core"))
+-			topdown_events =3D TOPDOWN_L1_EVENTS_CORE;
+-		else
+-			topdown_events =3D TOPDOWN_L1_EVENTS;
+-	}
+-
+-	return parse_event(evlist, topdown_events);
+-}
+diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/=
+topdown.h
+index 7eb81f042838..46bf9273e572 100644
+--- a/tools/perf/arch/x86/util/topdown.h
++++ b/tools/perf/arch/x86/util/topdown.h
+@@ -3,6 +3,5 @@
+ #define _TOPDOWN_H 1
+=20
+ bool topdown_sys_has_perf_metrics(void);
+-int topdown_parse_events(struct evlist *evlist);
+=20
+ #endif
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5e13171a7bba..796e98e453f6 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1996,6 +1996,7 @@ static int add_default_attributes(void)
+ 		stat_config.topdown_level =3D TOPDOWN_MAX_LEVEL;
+=20
+ 	if (!evsel_list->core.nr_entries) {
++		/* No events so add defaults. */
+ 		if (target__has_cpu(&target))
+ 			default_attrs0[0].config =3D PERF_COUNT_SW_CPU_CLOCK;
+=20
+@@ -2011,6 +2012,19 @@ static int add_default_attributes(void)
+ 		}
+ 		if (evlist__add_default_attrs(evsel_list, default_attrs1) < 0)
+ 			return -1;
++		/*
++		 * Add TopdownL1 metrics if they exist. To minimize
++		 * multiplexing, don't request threshold computation.
++		 */
++		if (metricgroup__has_metric("TopdownL1") &&
++		    metricgroup__parse_groups(evsel_list, "TopdownL1",
++					    /*metric_no_group=3D*/false,
++					    /*metric_no_merge=3D*/false,
++					    /*metric_no_threshold=3D*/true,
++					    stat_config.user_requested_cpu_list,
++					    stat_config.system_wide,
++					    &stat_config.metric_events) < 0)
++			return -1;
+ 		/* Platform specific attrs */
+ 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+ 			return -1;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index afb6f2fdc24e..64a35f2787dc 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1647,10 +1647,8 @@ static int metricgroup__has_metric_callback(const st=
+ruct pmu_metric *pm,
+ {
+ 	const char *metric =3D vdata;
+=20
+-	if (!pm->metric_expr)
+-		return 0;
+-
+-	if (match_metric(pm->metric_name, metric))
++	if (match_metric(pm->metric_name, metric) ||
++	    match_metric(pm->metric_group, metric))
+ 		return 1;
+=20
+ 	return 0;
+--=20
 2.39.2.637.g21b0678d19-goog
 
