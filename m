@@ -2,58 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE2C636CC
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1707CC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbjBSJej (ORCPT
+        id S229813AbjBSJfN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:34:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56814 "EHLO
+        Sun, 19 Feb 2023 04:35:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbjBSJe3 (ORCPT
+        with ESMTP id S230022AbjBSJe7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:34:29 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE24126DE
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:33:20 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-53686d8ce27so20566157b3.5
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:33:20 -0800 (PST)
+        Sun, 19 Feb 2023 04:34:59 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE69126F0
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:33:46 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-53687f6de13so18436347b3.9
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:33:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IJq6auQeIidM24mfR/8eo3ksFWhAxhvnpDKY7OwBaGQ=;
-        b=I7CnQOuWj57M+eY5KPLUsxlKb0JE3mtO9u5wKbbUpyvJmy+FSZG+GD25OOiBvunIGK
-         Q2dHAsWmeS/qQ2obRvPvqxghBPvmo9xgjx5OjGAKmTc0mkIK9Y/AldxC7enwDlI4MWTt
-         nR/l/y/IJF+yvccRElbcBsPK+/7hGdcJeqKbmIc9JCFFuv9oTrEoI0/ujyZ5AvH92wC/
-         EWoa3QlfPbYhWYZYHRA9iDFVl9xjc2KK7BL4RV4MYYfzreMAZCNLDg6ZS77C3hgZ8snp
-         OZaDgveoVLXlEl2+8JzeckNGBVk4n0JGZzDd/DNEEguY7CzJddiyOUYqxZVM54HziTNG
-         FPVw==
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HHfJUUC7WFoksqzMwO/wB71MjmrmmBDk4U3wZWtbf08=;
+        b=fX59j52xFTzLYLu6bfL/D7xhUQY699O8G2CBhOY2b+WQeh/CNRkmVbk6izOLD09kRS
+         ElhU4Qo79C2zelyYISHlIQ06bx7oywbUO5YVV+td+ogHhr5ySpZA39YLt/jD3Rgl4Hru
+         NSl1oSHcdzoPDzg7iF8Lms4PQ0/pfTnWuTfK8wSI6NYne98qpyTFNmdRCtV6neg55tJh
+         Ro7kutyBaTvkQVQM9r2EZf+9Ichm6O4JTDhrgZK0xRKCqHyknhKGMchi+O2i5EdVLhjY
+         xtmOJEGgVHLUBujQkjjQT/JAK8oWzaiy/iTO9dpZZUZDbqFaUd9bzxnQJrq9uVzKKKb3
+         CXiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IJq6auQeIidM24mfR/8eo3ksFWhAxhvnpDKY7OwBaGQ=;
-        b=WNdItlftmjPxIlfyL+AcXUuq5L96DPnsOp43RCkdp+cKsJ+nj84rxosTi/2DSOhrJH
-         LnyKr3WxmwLenpzdbt0nBRFDwHTfiSCW1tEHyiIDRr9evGzXJHKHWS95eR8AUYyCQG1V
-         cfzckcTycDl7Qt3cDPRa4E3LFCrKYAnjv2zQn3hAa0mqUmIGExyzJPoLsbtqV4w0ndmR
-         8FfJgGcZ/Mr4gLR4D7v57cplc8SK8645FhaRy9g1XAUlrPB0gmghxDqZaDgW8RbGRNKF
-         Dsx6VgXm+cQw1+172ROJMOtZ1DHknLwOUuYKUKrtuAZKb7K3FwEc9iGhSgKWjIrK8i5g
-         XMFw==
-X-Gm-Message-State: AO0yUKVG0eRmd7XKgd7b7UqXx/vdfmbuYRLqa3Epk72+Pu2nlyhMVFI8
-        7iQi8K5iEV8bZHQHCnRY5f+2Q6R2PiCZ
-X-Google-Smtp-Source: AK7set+GnZ9gFfxc43R+jNIxKixL5ZeQEmGo9LILMyNpwr7wkrR1rWIpoCob76eZaJRDrU/m7/FQ6z5YBgsq
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HHfJUUC7WFoksqzMwO/wB71MjmrmmBDk4U3wZWtbf08=;
+        b=0cL/hLFoDXDIfMJt53b4V+5ysQv4jDW0KVKSLqh5K/z+V3PJxYBVw5ckoVe3eAu1oP
+         tQceZfvPgqtY7JfDY3uI9gtzQGj8ofFC7NHElxZlLl/K4aB1CY468xqAPuZbsT6+vzHM
+         ldgkOHDvdSfAtVycWHWZ7NQBu4+LEJtqa9yNiyzlzRRT8CrGtwL0cuMVFpBnYPLm0uTk
+         asZFACiRG8eAhFjauLHqLFe2qK0Kn+PH38Op09bU6iiA8hXLyhMviKUzbZgDtyJ9O3Sy
+         0hlBgfmQ/4nTH9KIFLl25aZTSNz/XLUbF4Ovfugwg9pUhWNeFA8dOBGybcqJcVxpUl6n
+         P4Tw==
+X-Gm-Message-State: AO0yUKXyHi76b4HnaHA6KDFrFon6BvshCh6mAetLtWZ/JauDqrRMznIJ
+        Ci2ta73h8Bbfks9q/hcE+8JEr6hX9OH3
+X-Google-Smtp-Source: AK7set8jEArVFXMo6IHVLJPY3ZmOWPp1glRFXg65Ui1PEiXcYJcQSImzCALuyAA28kKpKUSiX264PfiGtWoA
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a81:af07:0:b0:534:2d49:790a with SMTP id
- n7-20020a81af07000000b005342d49790amr113313ywh.0.1676799199716; Sun, 19 Feb
- 2023 01:33:19 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:28 -0800
+ (user=irogers job=sendgmr) by 2002:a25:8312:0:b0:889:8b19:faec with SMTP id
+ s18-20020a258312000000b008898b19faecmr515910ybk.196.1676799165017; Sun, 19
+ Feb 2023 01:32:45 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:24 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-32-irogers@google.com>
+Message-Id: <20230219092848.639226-28-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 31/51] perf vendor events intel: Refresh westmereep-dp events
+Subject: [PATCH v1 27/51] perf vendor events intel: Refresh silvermont events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -88,61 +90,113 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update the westmereep-dp events from 3 to 4. Generation was done
-using https://github.com/intel/perfmon.
+Update the silvermont events from 14 to 15. Generation was done using
+https://github.com/intel/perfmon.
 
 The most notable change is in corrections to event descriptions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv                      | 2 +-
- tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json         | 2 +-
- .../perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json  | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv              | 2 +-
+ tools/perf/pmu-events/arch/x86/silvermont/frontend.json | 2 +-
+ tools/perf/pmu-events/arch/x86/silvermont/pipeline.json | 2 +-
  3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index bc2c4e756f44..1c6eef118e61 100644
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 1f611a7dbdda..d1d40d0f2b2c 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -28,7 +28,7 @@ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v54,skylake,core
- GenuineIntel-6-55-[01234],v1.29,skylakex,core
+@@ -23,7 +23,7 @@ GenuineIntel-6-1[AEF],v3,nehalemep,core
+ GenuineIntel-6-2E,v3,nehalemex,core
+ GenuineIntel-6-2A,v18,sandybridge,core
+ GenuineIntel-6-(8F|CF),v1.11,sapphirerapids,core
+-GenuineIntel-6-(37|4A|4C|4D|5A),v14,silvermont,core
++GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
+ GenuineIntel-6-55-[01234],v1.28,skylakex,core
  GenuineIntel-6-86,v1.20,snowridgex,core
- GenuineIntel-6-8[CD],v1.10,tigerlake,core
--GenuineIntel-6-2C,v3,westmereep-dp,core
-+GenuineIntel-6-2C,v4,westmereep-dp,core
- GenuineIntel-6-25,v3,westmereep-sp,core
- GenuineIntel-6-2F,v3,westmereex,core
- AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
-index 5c897da3cd6b..4dae735fb636 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
-@@ -182,7 +182,7 @@
-         "UMask": "0x20"
+diff --git a/tools/perf/pmu-events/arch/x86/silvermont/frontend.json b/tool=
+s/perf/pmu-events/arch/x86/silvermont/frontend.json
+index c35da10f7133..cd6ed3f59e26 100644
+--- a/tools/perf/pmu-events/arch/x86/silvermont/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/silvermont/frontend.json
+@@ -11,7 +11,7 @@
+         "BriefDescription": "Counts the number of JCC baclears",
+         "EventCode": "0xE6",
+         "EventName": "BACLEARS.COND",
+-        "PublicDescription": "The BACLEARS event counts the number of time=
+s the front end is resteered, mainly when the Branch Prediction Unit cannot=
+ provide a correct prediction and this is corrected by the Branch Address C=
+alculator at the front end.  The BACLEARS.COND event counts the number of J=
+CC (Jump on Condtional Code) baclears.",
++        "PublicDescription": "The BACLEARS event counts the number of time=
+s the front end is resteered, mainly when the Branch Prediction Unit cannot=
+ provide a correct prediction and this is corrected by the Branch Address C=
+alculator at the front end.  The BACLEARS.COND event counts the number of J=
+CC (Jump on Conditional Code) baclears.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x10"
      },
-     {
--        "BriefDescription": "L2 lines alloacated",
-+        "BriefDescription": "L2 lines allocated",
-         "EventCode": "0xF1",
-         "EventName": "L2_LINES_IN.ANY",
-         "SampleAfterValue": "100000",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
-index ef635bff1522..f75084309041 100644
---- a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
-@@ -56,7 +56,7 @@
-         "UMask": "0x80"
+diff --git a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/silvermont/pipeline.json
+index 59f6116a7eae..2d4214bf9e39 100644
+--- a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
+@@ -228,7 +228,7 @@
+         "BriefDescription": "Counts the number of cycles when no uops are =
+allocated, the IQ is empty, and no other condition is blocking allocation."=
+,
+         "EventCode": "0xCA",
+         "EventName": "NO_ALLOC_CYCLES.NOT_DELIVERED",
+-        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
+sed to measure front-end inefficiencies, i.e. when front-end of the machine=
+ is not delivering micro-ops to the back-end and the back-end is not stalle=
+d. This event can be used to identify if the machine is truly front-end bou=
+nd.  When this event occurs, it is an indication that the front-end of the =
+machine is operating at less than its theoretical peak performance.  Backgr=
+ound: We can think of the processor pipeline as being divided into 2 broade=
+r parts: Front-end and Back-end. Front-end is responsible for fetching the =
+instruction, decoding into micro-ops (uops) in machine understandable forma=
+t and putting them into a micro-op queue to be consumed by back end. The ba=
+ck-end then takes these micro-ops, allocates the required resources.  When =
+all resources are ready, micro-ops are executed. If the back-end is not rea=
+dy to accept micro-ops from the front-end, then we do not want to count the=
+se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
+back-end, we will have allocation unit stalls and eventually forcing the fr=
+ont-end to wait until the back-end is ready to receive more UOPS. This even=
+t counts the cycles only when back-end is requesting more uops and front-en=
+d is not able to provide them. Some examples of conditions that cause front=
+-end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
+ that limit the the front-end bandwidth.",
++        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
+sed to measure front-end inefficiencies, i.e. when front-end of the machine=
+ is not delivering micro-ops to the back-end and the back-end is not stalle=
+d. This event can be used to identify if the machine is truly front-end bou=
+nd.  When this event occurs, it is an indication that the front-end of the =
+machine is operating at less than its theoretical peak performance.  Backgr=
+ound: We can think of the processor pipeline as being divided into 2 broade=
+r parts: Front-end and Back-end. Front-end is responsible for fetching the =
+instruction, decoding into micro-ops (uops) in machine understandable forma=
+t and putting them into a micro-op queue to be consumed by back end. The ba=
+ck-end then takes these micro-ops, allocates the required resources.  When =
+all resources are ready, micro-ops are executed. If the back-end is not rea=
+dy to accept micro-ops from the front-end, then we do not want to count the=
+se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
+back-end, we will have allocation unit stalls and eventually forcing the fr=
+ont-end to wait until the back-end is ready to receive more UOPS. This even=
+t counts the cycles only when back-end is requesting more uops and front-en=
+d is not able to provide them. Some examples of conditions that cause front=
+-end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
+ that limit the front-end bandwidth.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x50"
      },
-     {
--        "BriefDescription": "DTLB misses casued by low part of address",
-+        "BriefDescription": "DTLB misses caused by low part of address",
-         "EventCode": "0x49",
-         "EventName": "DTLB_MISSES.PDE_MISS",
-         "SampleAfterValue": "200000",
--- 
+--=20
 2.39.2.637.g21b0678d19-goog
 
