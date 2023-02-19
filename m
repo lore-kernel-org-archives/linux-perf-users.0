@@ -2,150 +2,440 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2704C636CC
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EBEC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 11:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbjBSJsk (ORCPT
+        id S229911AbjBSLOy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:48:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        Sun, 19 Feb 2023 06:14:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230061AbjBSJsi (ORCPT
+        with ESMTP id S229936AbjBSLOw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:48:38 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7B64EF3
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:47:54 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id m13-20020a25260d000000b0087f69905709so369205ybm.10
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:47:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8oK06fVQN6LXVRqRBpBf6uq7iBLthLemaenQUOot5L0=;
-        b=c/IhxSXdMkvdWRTmNwDGCw1H+VDaY0b3orkL+EP+I6StfnTz8H8pSrT5peoX5iGhyL
-         aZJVTGxQcotqY/9XbrXu5W8a7dwuTOKV2N61EKGNWX+G6n+kxuWgzbZDVX14qVNHNX+s
-         fs5RmxJ4NrWIuhyym0Yg7NUOknjeXIWnd1ZkQeNcEc6sxObdx3t563ad/6YllU0XSRVH
-         fEBlJh6xYkiCZVrIz2FJ28m1/wK+9QXfHWnY7uNt0V/Brg7V6nAD5888J6y3CRDbKjZN
-         b08tJOGA3QuQgVGwsV5oJ+JxevsQJNE5g65XNpdn5E/qZEfMghvi8DBRe4DWYkzPbiRl
-         Q1+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8oK06fVQN6LXVRqRBpBf6uq7iBLthLemaenQUOot5L0=;
-        b=wKYqoPcV85J3DhvEnPj5Sx5J3hwx8oTwsejqL1rJd7WDh/iOAow+b+qDdtBmRxSZIf
-         sPAvJiOG8RbMX7XetNDQ6clkci0reXRsy45+pIIVdHx22KKI6j2ofts+1gQelg7/YYig
-         JcavMxlANWHDacfgKR+HC0XP+hlGnysMLKe//idsvCLQTeI5fszoOdfvND8HxKrkdXDO
-         5hSPnHLGkxZWDlOyJeAkNwXPrgw+LqvpyXgNAeKE/byyk49rtyQw1bTfHs70RwfHdBTn
-         BKBETvh/gM8S+TGOeSDI+T/PtirkPIB1Tw1D17wIVukiIsbHHNNjOGz82XnmbnSyMDWU
-         Z7VA==
-X-Gm-Message-State: AO0yUKUofPU8kqLEPbu68BEIJqqeM8UYy96cdIcCzhjrnE2oiP0ZcPke
-        iYZnRP6gHZxXXfNRm1SU6saoODmlxlKS
-X-Google-Smtp-Source: AK7set+LQd+T0aRT1nOHEm7j8W4E/K6xfWruqyX18mazS98+efqvDllhLIgDjt9Oib0BQaMgkUONzQILaLjH
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a25:9ac4:0:b0:967:e782:c03 with SMTP id
- t4-20020a259ac4000000b00967e7820c03mr884748ybo.430.1676799216733; Sun, 19 Feb
- 2023 01:33:36 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:30 -0800
-In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-34-irogers@google.com>
-Mime-Version: 1.0
-References: <20230219092848.639226-1-irogers@google.com>
-X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 33/51] perf jevent: Parse metric thresholds
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Sun, 19 Feb 2023 06:14:52 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D0EEC6A;
+        Sun, 19 Feb 2023 03:14:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8856660B99;
+        Sun, 19 Feb 2023 11:14:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745ACC433D2;
+        Sun, 19 Feb 2023 11:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676805288;
+        bh=Bc9qQBWEribw6qQPfRmc61f8q7jse/B4ii+KPgZPBeU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AxrU/+Wcjq/75lYRk7MweXd2uq8A8zQa6wvdKdshMNG9FemDDFG+rEEZZv6yzmqX8
+         RVxPFvtO2kEyOZIx4/yi9n1k5gy2pO6Uyb/EyR26hrgFB7/HtydPe24FF5nBQvotzS
+         ta5xuZ0v7vhLr78NXjVR7ud6+4nZzP1AB3sSgkZyRxZXIQpD6cm1qx17Sx1JAcXyQs
+         RVcBeclcyyZfNUr0qjeypP0TC1exeZ3WW6EDb3lh41E5vcPS0pnUqAF0qjCzP4cG22
+         MWNZfGhg44yNZ7Dwers81A7F8H3q7MkIMbJlHrDAIsPIEqLQvgaS1OyZXHKFIN3WCJ
+         ZVfWPfCQ7rTWw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A500C40025; Sun, 19 Feb 2023 08:14:45 -0300 (-03)
+Date:   Sun, 19 Feb 2023 08:14:45 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Florian Fischer <florian.fischer@muhq.space>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/8] perf bpf filter: Implement event sample filtering
+Message-ID: <Y/IEpW77gNpQbpK2@kernel.org>
+References: <20230219061329.1001079-1-namhyung@kernel.org>
+ <20230219061329.1001079-3-namhyung@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230219061329.1001079-3-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Parse the metric threshold and add to the pmu-events.c file. The
-metric isn't parsed as the parser uses python's parser and will break
-the operator precedence.
+Em Sat, Feb 18, 2023 at 10:13:23PM -0800, Namhyung Kim escreveu:
+> The BPF program will be attached to a perf_event and be triggered when
+> it overflows.  It'd iterate the filters map and compare the sample
+> value according to the expression.  If any of them fails, the sample
+> would be dropped.
+> 
+> Also it needs to have the corresponding sample data for the expression
+> so it compares data->sample_flags with the given value.  To access the
+> sample data, it uses the bpf_cast_to_kern_ctx() kfunc which was added
+> in v6.2 kernel.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/jevents.py   | 7 ++++++-
- tools/perf/pmu-events/pmu-events.h | 1 +
- 2 files changed, 7 insertions(+), 1 deletion(-)
+  CLANG   /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o
+util/bpf_skel/sample_filter.bpf.c:26:19: error: no member named 'sample_flags' in 'struct perf_sample_data'
+        if ((kctx->data->sample_flags & entry->flags) == 0)
+             ~~~~~~~~~~  ^
+1 error generated.
+make[2]: *** [Makefile.perf:1078: /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o] Error 1
+make[1]: *** [Makefile.perf:236: sub-make] Error 2
+make: *** [Makefile:113: install-bin] Error 2
+make: Leaving directory '/var/home/acme/git/perf/tools/perf'
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index e82dff3a1228..40b9e626fc15 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -51,7 +51,7 @@ _json_event_attributes = [
+ Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin':
  
- # Attributes that are in pmu_metric rather than pmu_event.
- _json_metric_attributes = [
--    'metric_name', 'metric_group', 'metric_expr', 'desc',
-+    'metric_name', 'metric_group', 'metric_expr', 'metric_threshold', 'desc',
-     'long_desc', 'unit', 'compat', 'aggr_mode', 'event_grouping'
- ]
- # Attributes that are bools or enum int values, encoded as '0', '1',...
-@@ -306,6 +306,9 @@ class JsonEvent:
-     self.metric_expr = None
-     if 'MetricExpr' in jd:
-       self.metric_expr = metric.ParsePerfJson(jd['MetricExpr']).Simplify()
-+    # Note, the metric formula for the threshold isn't parsed as the &
-+    # and > have incorrect precedence.
-+    self.metric_threshold = jd.get('MetricThreshold')
- 
-     arch_std = jd.get('ArchStdEvent')
-     if precise and self.desc and '(Precise Event)' not in self.desc:
-@@ -362,6 +365,8 @@ class JsonEvent:
-         # Convert parsed metric expressions into a string. Slashes
-         # must be doubled in the file.
-         x = x.ToPerfJson().replace('\\', '\\\\')
-+      if metric and x and attr == 'metric_threshold':
-+        x = x.replace('\\', '\\\\')
-       if attr in _json_enum_attributes:
-         s += x if x else '0'
-       else:
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index 57a38e3e5c32..b7dff8f1021f 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -54,6 +54,7 @@ struct pmu_metric {
- 	const char *metric_name;
- 	const char *metric_group;
- 	const char *metric_expr;
-+	const char *metric_threshold;
- 	const char *unit;
- 	const char *compat;
- 	const char *desc;
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Makefile.perf                     |   2 +-
+>  tools/perf/util/bpf-filter.c                 |  71 +++++++++++
+>  tools/perf/util/bpf-filter.h                 |  24 ++--
+>  tools/perf/util/bpf_skel/sample-filter.h     |  24 ++++
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c | 118 +++++++++++++++++++
+>  tools/perf/util/evsel.h                      |   7 +-
+>  6 files changed, 234 insertions(+), 12 deletions(-)
+>  create mode 100644 tools/perf/util/bpf_skel/sample-filter.h
+>  create mode 100644 tools/perf/util/bpf_skel/sample_filter.bpf.c
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index bac9272682b7..474af4adea95 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -1047,7 +1047,7 @@ SKELETONS := $(SKEL_OUT)/bpf_prog_profiler.skel.h
+>  SKELETONS += $(SKEL_OUT)/bperf_leader.skel.h $(SKEL_OUT)/bperf_follower.skel.h
+>  SKELETONS += $(SKEL_OUT)/bperf_cgroup.skel.h $(SKEL_OUT)/func_latency.skel.h
+>  SKELETONS += $(SKEL_OUT)/off_cpu.skel.h $(SKEL_OUT)/lock_contention.skel.h
+> -SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h
+> +SKELETONS += $(SKEL_OUT)/kwork_trace.skel.h $(SKEL_OUT)/sample_filter.skel.h
+>  
+>  $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_OUTPUT) $(LIBSYMBOL_OUTPUT):
+>  	$(Q)$(MKDIR) -p $@
+> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> index 6b1148fcfb0e..f47420cf81c9 100644
+> --- a/tools/perf/util/bpf-filter.c
+> +++ b/tools/perf/util/bpf-filter.c
+> @@ -1,10 +1,81 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <stdlib.h>
+>  
+> +#include <bpf/bpf.h>
+> +#include <linux/err.h>
+> +#include <internal/xyarray.h>
+> +
+> +#include "util/debug.h"
+> +#include "util/evsel.h"
+> +
+>  #include "util/bpf-filter.h"
+>  #include "util/bpf-filter-flex.h"
+>  #include "util/bpf-filter-bison.h"
+>  
+> +#include "bpf_skel/sample-filter.h"
+> +#include "bpf_skel/sample_filter.skel.h"
+> +
+> +#define FD(e, x, y) (*(int *)xyarray__entry(e->core.fd, x, y))
+> +
+> +int perf_bpf_filter__prepare(struct evsel *evsel)
+> +{
+> +	int i, x, y, fd;
+> +	struct sample_filter_bpf *skel;
+> +	struct bpf_program *prog;
+> +	struct bpf_link *link;
+> +	struct perf_bpf_filter_expr *expr;
+> +
+> +	skel = sample_filter_bpf__open();
+> +	if (!skel) {
+> +		pr_err("Failed to open perf sample-filter BPF skeleton\n");
+> +		return -1;
+> +	}
+> +
+> +	bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
+> +
+> +	if (sample_filter_bpf__load(skel) < 0) {
+> +		pr_err("Failed to load perf sample-filter BPF skeleton\n");
+> +		return -1;
+> +	}
+> +
+> +	i = 0;
+> +	fd = bpf_map__fd(skel->maps.filters);
+> +	list_for_each_entry(expr, &evsel->bpf_filters, list) {
+> +		struct perf_bpf_filter_entry entry = {
+> +			.op = expr->op,
+> +			.flags = expr->sample_flags,
+> +			.value = expr->val,
+> +		};
+> +		bpf_map_update_elem(fd, &i, &entry, BPF_ANY);
+> +		i++;
+> +	}
+> +
+> +	prog = skel->progs.perf_sample_filter;
+> +	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
+> +		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
+> +			link = bpf_program__attach_perf_event(prog, FD(evsel, x, y));
+> +			if (IS_ERR(link)) {
+> +				pr_err("Failed to attach perf sample-filter program\n");
+> +				return PTR_ERR(link);
+> +			}
+> +		}
+> +	}
+> +	evsel->bpf_skel = skel;
+> +	return 0;
+> +}
+> +
+> +int perf_bpf_filter__destroy(struct evsel *evsel)
+> +{
+> +	struct perf_bpf_filter_expr *expr, *tmp;
+> +
+> +	list_for_each_entry_safe(expr, tmp, &evsel->bpf_filters, list) {
+> +		list_del(&expr->list);
+> +		free(expr);
+> +	}
+> +	sample_filter_bpf__destroy(evsel->bpf_skel);
+> +	return 0;
+> +}
+> +
+>  struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flags,
+>  						       enum perf_bpf_filter_op op,
+>  						       unsigned long val)
+> diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+> index fd5b1164a322..6077930073f9 100644
+> --- a/tools/perf/util/bpf-filter.h
+> +++ b/tools/perf/util/bpf-filter.h
+> @@ -4,15 +4,7 @@
+>  
+>  #include <linux/list.h>
+>  
+> -enum perf_bpf_filter_op {
+> -	PBF_OP_EQ,
+> -	PBF_OP_NEQ,
+> -	PBF_OP_GT,
+> -	PBF_OP_GE,
+> -	PBF_OP_LT,
+> -	PBF_OP_LE,
+> -	PBF_OP_AND,
+> -};
+> +#include "bpf_skel/sample-filter.h"
+>  
+>  struct perf_bpf_filter_expr {
+>  	struct list_head list;
+> @@ -21,16 +13,30 @@ struct perf_bpf_filter_expr {
+>  	unsigned long val;
+>  };
+>  
+> +struct evsel;
+> +
+>  #ifdef HAVE_BPF_SKEL
+>  struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flags,
+>  						       enum perf_bpf_filter_op op,
+>  						       unsigned long val);
+>  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str);
+> +int perf_bpf_filter__prepare(struct evsel *evsel);
+> +int perf_bpf_filter__destroy(struct evsel *evsel);
+> +
+>  #else /* !HAVE_BPF_SKEL */
+> +
+>  static inline int perf_bpf_filter__parse(struct list_head *expr_head __maybe_unused,
+>  					 const char *str __maybe_unused)
+>  {
+>  	return -ENOSYS;
+>  }
+> +static inline int perf_bpf_filter__prepare(struct evsel *evsel)
+> +{
+> +	return -ENOSYS;
+> +}
+> +static inline int perf_bpf_filter__destroy(struct evsel *evsel)
+> +{
+> +	return -ENOSYS;
+> +}
+>  #endif /* HAVE_BPF_SKEL*/
+>  #endif /* PERF_UTIL_BPF_FILTER_H */
+> \ No newline at end of file
+> diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util/bpf_skel/sample-filter.h
+> new file mode 100644
+> index 000000000000..862060bfda14
+> --- /dev/null
+> +++ b/tools/perf/util/bpf_skel/sample-filter.h
+> @@ -0,0 +1,24 @@
+> +#ifndef PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
+> +#define PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
+> +
+> +#define MAX_FILTERS  32
+> +
+> +/* supported filter operations */
+> +enum perf_bpf_filter_op {
+> +	PBF_OP_EQ,
+> +	PBF_OP_NEQ,
+> +	PBF_OP_GT,
+> +	PBF_OP_GE,
+> +	PBF_OP_LT,
+> +	PBF_OP_LE,
+> +	PBF_OP_AND
+> +};
+> +
+> +/* BPF map entry for filtering */
+> +struct perf_bpf_filter_entry {
+> +	enum perf_bpf_filter_op op;
+> +	__u64 flags;
+> +	__u64 value;
+> +};
+> +
+> +#endif /* PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H */
+> \ No newline at end of file
+> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> new file mode 100644
+> index 000000000000..1aa6a4cacd51
+> --- /dev/null
+> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> @@ -0,0 +1,118 @@
+> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +// Copyright (c) 2023 Google
+> +#include "vmlinux.h"
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include <bpf/bpf_core_read.h>
+> +
+> +#include "sample-filter.h"
+> +
+> +/* BPF map that will be filled by user space */
+> +struct filters {
+> +	__uint(type, BPF_MAP_TYPE_ARRAY);
+> +	__type(key, int);
+> +	__type(value, struct perf_bpf_filter_entry);
+> +	__uint(max_entries, MAX_FILTERS);
+> +} filters SEC(".maps");
+> +
+> +int dropped;
+> +
+> +void *bpf_cast_to_kern_ctx(void *) __ksym;
+> +
+> +/* helper function to return the given perf sample data */
+> +static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
+> +				    struct perf_bpf_filter_entry *entry)
+> +{
+> +	if ((kctx->data->sample_flags & entry->flags) == 0)
+> +		return 0;
+> +
+> +	switch (entry->flags) {
+> +	case PERF_SAMPLE_IP:
+> +		return kctx->data->ip;
+> +	case PERF_SAMPLE_ID:
+> +		return kctx->data->id;
+> +	case PERF_SAMPLE_TID:
+> +		return kctx->data->tid_entry.tid;
+> +	case PERF_SAMPLE_CPU:
+> +		return kctx->data->cpu_entry.cpu;
+> +	case PERF_SAMPLE_TIME:
+> +		return kctx->data->time;
+> +	case PERF_SAMPLE_ADDR:
+> +		return kctx->data->addr;
+> +	case PERF_SAMPLE_PERIOD:
+> +		return kctx->data->period;
+> +	case PERF_SAMPLE_TRANSACTION:
+> +		return kctx->data->txn;
+> +	case PERF_SAMPLE_WEIGHT:
+> +		return kctx->data->weight.full;
+> +	case PERF_SAMPLE_PHYS_ADDR:
+> +		return kctx->data->phys_addr;
+> +	case PERF_SAMPLE_CODE_PAGE_SIZE:
+> +		return kctx->data->code_page_size;
+> +	case PERF_SAMPLE_DATA_PAGE_SIZE:
+> +		return kctx->data->data_page_size;
+> +	default:
+> +		break;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/* BPF program to be called from perf event overflow handler */
+> +SEC("perf_event")
+> +int perf_sample_filter(void *ctx)
+> +{
+> +	struct bpf_perf_event_data_kern *kctx;
+> +	struct perf_bpf_filter_entry *entry;
+> +	__u64 sample_data;
+> +	int i;
+> +
+> +	kctx = bpf_cast_to_kern_ctx(ctx);
+> +
+> +	for (i = 0; i < MAX_FILTERS; i++) {
+> +		int key = i; /* needed for verifier :( */
+> +
+> +		entry = bpf_map_lookup_elem(&filters, &key);
+> +		if (entry == NULL)
+> +			break;
+> +		sample_data = perf_get_sample(kctx, entry);
+> +
+> +		switch (entry->op) {
+> +		case PBF_OP_EQ:
+> +			if (!(sample_data == entry->value))
+> +				goto drop;
+> +			break;
+> +		case PBF_OP_NEQ:
+> +			if (!(sample_data != entry->value))
+> +				goto drop;
+> +			break;
+> +		case PBF_OP_GT:
+> +			if (!(sample_data > entry->value))
+> +				goto drop;
+> +			break;
+> +		case PBF_OP_GE:
+> +			if (!(sample_data >= entry->value))
+> +				goto drop;
+> +			break;
+> +		case PBF_OP_LT:
+> +			if (!(sample_data < entry->value))
+> +				goto drop;
+> +			break;
+> +		case PBF_OP_LE:
+> +			if (!(sample_data <= entry->value))
+> +				goto drop;
+> +			break;
+> +		case PBF_OP_AND:
+> +			if (!(sample_data & entry->value))
+> +				goto drop;
+> +			break;
+> +		}
+> +	}
+> +	/* generate sample data */
+> +	return 1;
+> +
+> +drop:
+> +	__sync_fetch_and_add(&dropped, 1);
+> +	return 0;
+> +}
+> +
+> +char LICENSE[] SEC("license") = "Dual BSD/GPL";
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 24cb807ef6ce..6845642485ec 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -151,8 +151,10 @@ struct evsel {
+>  	 */
+>  	struct bpf_counter_ops	*bpf_counter_ops;
+>  
+> -	/* for perf-stat -b */
+> -	struct list_head	bpf_counter_list;
+> +	union {
+> +		struct list_head	bpf_counter_list; /* for perf-stat -b */
+> +		struct list_head	bpf_filters; /* for perf-record --filter */
+> +	};
+>  
+>  	/* for perf-stat --use-bpf */
+>  	int			bperf_leader_prog_fd;
+> @@ -160,6 +162,7 @@ struct evsel {
+>  	union {
+>  		struct bperf_leader_bpf *leader_skel;
+>  		struct bperf_follower_bpf *follower_skel;
+> +		void *bpf_skel;
+>  	};
+>  	unsigned long		open_flags;
+>  	int			precise_ip_original;
+> -- 
+> 2.39.2.637.g21b0678d19-goog
+> 
+
 -- 
-2.39.2.637.g21b0678d19-goog
 
+- Arnaldo
