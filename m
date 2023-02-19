@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9101AC05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD48BC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbjBSJhG (ORCPT
+        id S229597AbjBSJhh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:37:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59194 "EHLO
+        Sun, 19 Feb 2023 04:37:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjBSJhE (ORCPT
+        with ESMTP id S230045AbjBSJhb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:37:04 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D86412040
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:10 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id e14-20020a25bc8e000000b0091b90b20cd9so1879719ybk.6
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:10 -0800 (PST)
+        Sun, 19 Feb 2023 04:37:31 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F04ACDFB
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:40 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id e14-20020a25bc8e000000b0091b90b20cd9so1880247ybk.6
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBygbP2AnKfDbpz1krdMAZIvQLAdvtaCB6XLYUmfQds=;
-        b=PkbnNXwAZ7dASxCbIk3PSOXIwA56PiTDT2BrHJWvqt8nqcL3bSxaHP0HjREpFP4pBE
-         zmCKIb+9FhlwQ8T9T3hD1DWUTG0iZf0+D8Fg5gEw/6kW81MXr3SCY3kj3ZCNZJM79rEm
-         Z62LtGdZMOWbkEO42PWyNmuN/kx7l7fYGF+pskPCUg8W0RWDaNemZLiFYJpBXAf1moZy
-         UpDKxP3KBGDK6CwystAwBk4I9aM2uCdMXGtMenYofayeUMOzV5RGtLImtFxLETRLxQfL
-         FHBnkZN/j8gx2E/zhsgX1YogOTj0NgsRmfp+VgFEhl3UoSV3sPJ8dji7jQmoLUTBvZKF
-         78sQ==
+        bh=IJ9mpKEII8b9zP7ZWkBkiRr3d/wqZ7eKUUGAHl4KRMM=;
+        b=Wq7kd9AzZfERH/Wm96yVGtChfJIxX+Hq45TeTzrKqX6FBA90UqzrHKNaRhJjgtar5/
+         bhimsNdCsV5BYLK61cgfvHH1vhKfftVlyZ0hn+nA1cQcUXu1UKlJVhj9lMHk5M6FLuvM
+         vNTfKd0izX9zt/h4iW3ALc3gSdLjLzCbUyNUnDg4Z3VCd1vDmdhXFdZgrkePkoQ/dEtS
+         jK+sZatpxHnfOSjYx2XD6a/9cOoznt6WeG8PHDMQk90hC7bbXgYcy0GaACirsuMbCXoi
+         hhOzFVvuyY2zoB6AUilSgOvhEvFH/siKENcL+09Vk0Xo2eRaQSbzj7mKSMywxjG4M9iv
+         d8NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBygbP2AnKfDbpz1krdMAZIvQLAdvtaCB6XLYUmfQds=;
-        b=hH4cfn87R2DVCjWbvhls0MWbFm2chN1nw4ZJZs2n6I2Nz2RnAaP0gT7kVwRb58eWQ+
-         0JInadOgHYnQheO8yYQDk/dHGURhJtiSP5afKrRG4KXqLTcs9XWlzqjuk9Q/4/RwIFfw
-         F2CB0dsV8p27TbgZJJOpGMKmTqudtp77tPcd4Oog4vnQuj2qyzazfniHMm3HxRw5ocNL
-         qVw5Bx5kz00ptI630HjI5JRIcLO9hPbYTxvYOAyRJUkH65zPDhHbAK0Ntal5M/g1HM8I
-         Ppg0nrOM8cHeBMc0V1GDsBHGe6swazMJBb6hKPpWoOdFNLZMIbqSg//du5/refEPsTOj
-         pGbw==
-X-Gm-Message-State: AO0yUKXhgWETt4xEF4WDok++yyJYFpvFr3fe4RzUBq12Z70kAH4qGGFd
-        UfpaRvJM7nE+trjuvQMPSj1TTSin+92Z
-X-Google-Smtp-Source: AK7set+UJL29LpId9cYnoZsgaDIdCVm2Q8RTzyhbCy2UqAjEI7S9r3tmbOx9Jx+VYq9UTHEoDVtaR9fIJ5bP
+        bh=IJ9mpKEII8b9zP7ZWkBkiRr3d/wqZ7eKUUGAHl4KRMM=;
+        b=SP+gugi8esKRfFnDZt7Ukac5+T1K3mP0hvnpUtplaBerX04Eig6uIMLrHMN3cOFk9G
+         Elp6EaZ0hdhxOzhpZ1y6aKDcV1OyhBpp1FIP5Sb3Bg53naV2yX7Sr+EidQMPH32Gbo0u
+         dd3TUDjKscIPU9jn8Our/IbIUaSRPAg7HljY2jlf6ILnig71Jhi+aIi22x6IrW0ppQcT
+         vbcTxdw8fRFj26dNDwq5fDxK94efKtXVZcL8oNBomuMN+AaHD37E7Pm7UKALRxuvyI4g
+         mG9nsmBeXGjJU8Oksuz1UFxmZ7iaQ8NWnpNuagd1tQ6urBAfnySc6LkjlrPQrmv6ppS7
+         JSzw==
+X-Gm-Message-State: AO0yUKUMGnwceSAwRF4A8aOZQDzPPJhuazqqNiKsfT5HrUgJPxonObLe
+        8A9uKwtYPl62Hw+4VKOAZ0eNJLwhaqRF
+X-Google-Smtp-Source: AK7set8Tfv0BGuNfYq9cLusfn9nZpJWmqZP80mZ6E4lzSQLSRdjiaMTyjRCebHBWxidVypB+0faDUTBwUM0L
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a05:6902:11cd:b0:90d:a6c0:6870 with SMTP
- id n13-20020a05690211cd00b0090da6c06870mr391398ybu.2.1676799259452; Sun, 19
- Feb 2023 01:34:19 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:35 -0800
+ (user=irogers job=sendgmr) by 2002:a81:ae0a:0:b0:52e:f66d:b70d with SMTP id
+ m10-20020a81ae0a000000b0052ef66db70dmr22944ywh.0.1676799285601; Sun, 19 Feb
+ 2023 01:34:45 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:38 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-39-irogers@google.com>
+Message-Id: <20230219092848.639226-42-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 38/51] perf metric: Add --metric-no-threshold option
+Subject: [PATCH v1 41/51] perf stat: Remove topdown event special handling
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -92,369 +92,462 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thresholds may need additional events, this can impact things like
-sharing groups of events to avoid multiplexing. Add a flag to make the
-threshold calculations optional. The threshold will still be computed
-if no additional events are necessary.
+Now the events are computed from json metrics, the hard coded logic
+can be removed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c        |  4 +++
- tools/perf/tests/expand-cgroup.c |  3 +-
- tools/perf/tests/parse-metric.c  |  1 -
- tools/perf/tests/pmu-events.c    |  4 +--
- tools/perf/util/metricgroup.c    | 62 ++++++++++++++++++++------------
- tools/perf/util/metricgroup.h    |  3 +-
- tools/perf/util/stat-shadow.c    |  3 +-
- tools/perf/util/stat.h           |  1 +
- 8 files changed, 49 insertions(+), 32 deletions(-)
+ tools/perf/util/stat-shadow.c | 346 ----------------------------------
+ tools/perf/util/stat.c        |  13 --
+ tools/perf/util/stat.h        |  26 ---
+ 3 files changed, 385 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5d18a5a6f662..5e13171a7bba 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1256,6 +1256,8 @@ static struct option stat_options[] = {
- 		       "don't group metric events, impacts multiplexing"),
- 	OPT_BOOLEAN(0, "metric-no-merge", &stat_config.metric_no_merge,
- 		       "don't try to share events between metrics in a group"),
-+	OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_threshold,
-+		       "don't try to share events between metrics in a group  "),
- 	OPT_BOOLEAN(0, "topdown", &topdown_run,
- 			"measure top-down statistics"),
- 	OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
-@@ -1852,6 +1854,7 @@ static int add_default_attributes(void)
- 			return metricgroup__parse_groups(evsel_list, "transaction",
- 							 stat_config.metric_no_group,
- 							 stat_config.metric_no_merge,
-+							 stat_config.metric_no_threshold,
- 							 stat_config.user_requested_cpu_list,
- 							 stat_config.system_wide,
- 							 &stat_config.metric_events);
-@@ -2519,6 +2522,7 @@ int cmd_stat(int argc, const char **argv)
- 		metricgroup__parse_groups(evsel_list, metrics,
- 					stat_config.metric_no_group,
- 					stat_config.metric_no_merge,
-+					stat_config.metric_no_threshold,
- 					stat_config.user_requested_cpu_list,
- 					stat_config.system_wide,
- 					&stat_config.metric_events);
-diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
-index 672a27f37060..ec340880a848 100644
---- a/tools/perf/tests/expand-cgroup.c
-+++ b/tools/perf/tests/expand-cgroup.c
-@@ -187,8 +187,7 @@ static int expand_metric_events(void)
- 
- 	rblist__init(&metric_events);
- 	pme_test = find_core_metrics_table("testarch", "testcpu");
--	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str,
--					     false, false, &metric_events);
-+	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str, &metric_events);
- 	if (ret < 0) {
- 		pr_debug("failed to parse '%s' metric\n", metric_str);
- 		goto out;
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index 9fec6040950c..132c9b945a42 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
-@@ -98,7 +98,6 @@ static int __compute_metric(const char *name, struct value *vals,
- 	/* Parse the metric into metric_events list. */
- 	pme_test = find_core_metrics_table("testarch", "testcpu");
- 	err = metricgroup__parse_groups_test(evlist, pme_test, name,
--					     false, false,
- 					     &metric_events);
- 	if (err)
- 		goto out;
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index db2fed0c6993..50b99a0f8f59 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -846,9 +846,7 @@ static int test__parsing_callback(const struct pmu_metric *pm,
- 	perf_evlist__set_maps(&evlist->core, cpus, NULL);
- 	runtime_stat__init(&st);
- 
--	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name,
--					     false, false,
--					     &metric_events);
-+	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name, &metric_events);
- 	if (err) {
- 		if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
- 		    !strcmp(pm->metric_name, "M3")) {
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index d83885697125..afb6f2fdc24e 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -771,6 +771,7 @@ struct metricgroup_add_iter_data {
- 	int *ret;
- 	bool *has_match;
- 	bool metric_no_group;
-+	bool metric_no_threshold;
- 	const char *user_requested_cpu_list;
- 	bool system_wide;
- 	struct metric *root_metric;
-@@ -786,6 +787,7 @@ static int add_metric(struct list_head *metric_list,
- 		      const struct pmu_metric *pm,
- 		      const char *modifier,
- 		      bool metric_no_group,
-+		      bool metric_no_threshold,
- 		      const char *user_requested_cpu_list,
- 		      bool system_wide,
- 		      struct metric *root_metric,
-@@ -813,6 +815,7 @@ static int add_metric(struct list_head *metric_list,
- static int resolve_metric(struct list_head *metric_list,
- 			  const char *modifier,
- 			  bool metric_no_group,
-+			  bool metric_no_threshold,
- 			  const char *user_requested_cpu_list,
- 			  bool system_wide,
- 			  struct metric *root_metric,
-@@ -861,8 +864,8 @@ static int resolve_metric(struct list_head *metric_list,
- 	 */
- 	for (i = 0; i < pending_cnt; i++) {
- 		ret = add_metric(metric_list, &pending[i].pm, modifier, metric_no_group,
--				 user_requested_cpu_list, system_wide, root_metric, visited,
--				 table);
-+				 metric_no_threshold, user_requested_cpu_list, system_wide,
-+				 root_metric, visited, table);
- 		if (ret)
- 			break;
- 	}
-@@ -879,6 +882,7 @@ static int resolve_metric(struct list_head *metric_list,
-  * @metric_no_group: Should events written to events be grouped "{}" or
-  *                   global. Grouping is the default but due to multiplexing the
-  *                   user may override.
-+ * @metric_no_threshold: Should threshold expressions be ignored?
-  * @runtime: A special argument for the parser only known at runtime.
-  * @user_requested_cpu_list: Command line specified CPUs to record on.
-  * @system_wide: Are events for all processes recorded.
-@@ -894,6 +898,7 @@ static int __add_metric(struct list_head *metric_list,
- 			const struct pmu_metric *pm,
- 			const char *modifier,
- 			bool metric_no_group,
-+			bool metric_no_threshold,
- 			int runtime,
- 			const char *user_requested_cpu_list,
- 			bool system_wide,
-@@ -974,10 +979,12 @@ static int __add_metric(struct list_head *metric_list,
- 		 * Threshold expressions are built off the actual metric. Switch
- 		 * to use that in case of additional necessary events. Change
- 		 * the visited node name to avoid this being flagged as
--		 * recursion.
-+		 * recursion. If the threshold events are disabled, just use the
-+		 * metric's name as a reference. This allows metric threshold
-+		 * computation if there are sufficient events.
- 		 */
- 		assert(strstr(pm->metric_threshold, pm->metric_name));
--		expr = pm->metric_threshold;
-+		expr = metric_no_threshold ? pm->metric_name : pm->metric_threshold;
- 		visited_node.name = "__threshold__";
- 	}
- 	if (expr__find_ids(expr, NULL, root_metric->pctx) < 0) {
-@@ -987,8 +994,8 @@ static int __add_metric(struct list_head *metric_list,
- 	if (!ret) {
- 		/* Resolve referenced metrics. */
- 		ret = resolve_metric(metric_list, modifier, metric_no_group,
--				     user_requested_cpu_list, system_wide,
--				     root_metric, &visited_node, table);
-+				     metric_no_threshold, user_requested_cpu_list,
-+				     system_wide, root_metric, &visited_node, table);
- 	}
- 	if (ret) {
- 		if (is_root)
-@@ -1035,6 +1042,7 @@ static int add_metric(struct list_head *metric_list,
- 		      const struct pmu_metric *pm,
- 		      const char *modifier,
- 		      bool metric_no_group,
-+		      bool metric_no_threshold,
- 		      const char *user_requested_cpu_list,
- 		      bool system_wide,
- 		      struct metric *root_metric,
-@@ -1046,9 +1054,9 @@ static int add_metric(struct list_head *metric_list,
- 	pr_debug("metric expr %s for %s\n", pm->metric_expr, pm->metric_name);
- 
- 	if (!strstr(pm->metric_expr, "?")) {
--		ret = __add_metric(metric_list, pm, modifier, metric_no_group, 0,
--				   user_requested_cpu_list, system_wide, root_metric,
--				   visited, table);
-+		ret = __add_metric(metric_list, pm, modifier, metric_no_group,
-+				   metric_no_threshold, 0, user_requested_cpu_list,
-+				   system_wide, root_metric, visited, table);
- 	} else {
- 		int j, count;
- 
-@@ -1060,9 +1068,9 @@ static int add_metric(struct list_head *metric_list,
- 		 */
- 
- 		for (j = 0; j < count && !ret; j++)
--			ret = __add_metric(metric_list, pm, modifier, metric_no_group, j,
--					   user_requested_cpu_list, system_wide,
--					   root_metric, visited, table);
-+			ret = __add_metric(metric_list, pm, modifier, metric_no_group,
-+					   metric_no_threshold, j, user_requested_cpu_list,
-+					   system_wide, root_metric, visited, table);
- 	}
- 
- 	return ret;
-@@ -1079,8 +1087,8 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
- 		return 0;
- 
- 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
--			 d->user_requested_cpu_list, d->system_wide,
--			 d->root_metric, d->visited, d->table);
-+			 d->metric_no_threshold, d->user_requested_cpu_list,
-+			 d->system_wide, d->root_metric, d->visited, d->table);
- 	if (ret)
- 		goto out;
- 
-@@ -1124,6 +1132,7 @@ struct metricgroup__add_metric_data {
- 	const char *modifier;
- 	const char *user_requested_cpu_list;
- 	bool metric_no_group;
-+	bool metric_no_threshold;
- 	bool system_wide;
- 	bool has_match;
- };
-@@ -1141,8 +1150,9 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
- 
- 		data->has_match = true;
- 		ret = add_metric(data->list, pm, data->modifier, data->metric_no_group,
--				 data->user_requested_cpu_list, data->system_wide,
--				 /*root_metric=*/NULL, /*visited_metrics=*/NULL, table);
-+				 data->metric_no_threshold, data->user_requested_cpu_list,
-+				 data->system_wide, /*root_metric=*/NULL,
-+				 /*visited_metrics=*/NULL, table);
- 	}
- 	return ret;
- }
-@@ -1163,7 +1173,7 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
-  *       architecture perf is running upon.
-  */
- static int metricgroup__add_metric(const char *metric_name, const char *modifier,
--				   bool metric_no_group,
-+				   bool metric_no_group, bool metric_no_threshold,
- 				   const char *user_requested_cpu_list,
- 				   bool system_wide,
- 				   struct list_head *metric_list,
-@@ -1179,6 +1189,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
- 			.metric_name = metric_name,
- 			.modifier = modifier,
- 			.metric_no_group = metric_no_group,
-+			.metric_no_threshold = metric_no_threshold,
- 			.user_requested_cpu_list = user_requested_cpu_list,
- 			.system_wide = system_wide,
- 			.has_match = false,
-@@ -1241,6 +1252,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
-  *       architecture perf is running upon.
-  */
- static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
-+					bool metric_no_threshold,
- 					const char *user_requested_cpu_list,
- 					bool system_wide, struct list_head *metric_list,
- 					const struct pmu_metrics_table *table)
-@@ -1259,7 +1271,8 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
- 			*modifier++ = '\0';
- 
- 		ret = metricgroup__add_metric(metric_name, modifier,
--					      metric_no_group, user_requested_cpu_list,
-+					      metric_no_group, metric_no_threshold,
-+					      user_requested_cpu_list,
- 					      system_wide, metric_list, table);
- 		if (ret == -EINVAL)
- 			pr_err("Cannot find metric or group `%s'\n", metric_name);
-@@ -1449,6 +1462,7 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- static int parse_groups(struct evlist *perf_evlist, const char *str,
- 			bool metric_no_group,
- 			bool metric_no_merge,
-+			bool metric_no_threshold,
- 			const char *user_requested_cpu_list,
- 			bool system_wide,
- 			struct perf_pmu *fake_pmu,
-@@ -1463,7 +1477,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 
- 	if (metric_events_list->nr_entries == 0)
- 		metricgroup__rblist_init(metric_events_list);
--	ret = metricgroup__add_metric_list(str, metric_no_group,
-+	ret = metricgroup__add_metric_list(str, metric_no_group, metric_no_threshold,
- 					   user_requested_cpu_list,
- 					   system_wide, &metric_list, table);
- 	if (ret)
-@@ -1598,6 +1612,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 			      const char *str,
- 			      bool metric_no_group,
- 			      bool metric_no_merge,
-+			      bool metric_no_threshold,
- 			      const char *user_requested_cpu_list,
- 			      bool system_wide,
- 			      struct rblist *metric_events)
-@@ -1608,18 +1623,19 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 		return -EINVAL;
- 
- 	return parse_groups(perf_evlist, str, metric_no_group, metric_no_merge,
--			    user_requested_cpu_list, system_wide,
-+			    metric_no_threshold, user_requested_cpu_list, system_wide,
- 			    /*fake_pmu=*/NULL, metric_events, table);
- }
- 
- int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   const struct pmu_metrics_table *table,
- 				   const char *str,
--				   bool metric_no_group,
--				   bool metric_no_merge,
- 				   struct rblist *metric_events)
- {
--	return parse_groups(evlist, str, metric_no_group, metric_no_merge,
-+	return parse_groups(evlist, str,
-+			    /*metric_no_group=*/false,
-+			    /*metric_no_merge=*/false,
-+			    /*metric_no_threshold=*/false,
- 			    /*user_requested_cpu_list=*/NULL,
- 			    /*system_wide=*/false,
- 			    &perf_pmu__fake, metric_events, table);
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 32eb3a5381fb..8d50052c5b4c 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -70,14 +70,13 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 			      const char *str,
- 			      bool metric_no_group,
- 			      bool metric_no_merge,
-+			      bool metric_no_threshold,
- 			      const char *user_requested_cpu_list,
- 			      bool system_wide,
- 			      struct rblist *metric_events);
- int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   const struct pmu_metrics_table *table,
- 				   const char *str,
--				   bool metric_no_group,
--				   bool metric_no_merge,
- 				   struct rblist *metric_events);
- 
- void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
 diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index a41f186c6ec8..77483eeda0d8 100644
+index 77483eeda0d8..5189756bf16d 100644
 --- a/tools/perf/util/stat-shadow.c
 +++ b/tools/perf/util/stat-shadow.c
-@@ -814,7 +814,8 @@ static void generic_metric(struct perf_stat_config *config,
- 			char metric_bf[64];
+@@ -241,45 +241,6 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+ 		update_runtime_stat(st, STAT_TRANSACTION, map_idx, count, &rsd);
+ 	else if (perf_stat_evsel__is(counter, ELISION_START))
+ 		update_runtime_stat(st, STAT_ELISION, map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_TOTAL_SLOTS))
+-		update_runtime_stat(st, STAT_TOPDOWN_TOTAL_SLOTS,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_SLOTS_ISSUED))
+-		update_runtime_stat(st, STAT_TOPDOWN_SLOTS_ISSUED,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_SLOTS_RETIRED))
+-		update_runtime_stat(st, STAT_TOPDOWN_SLOTS_RETIRED,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_FETCH_BUBBLES))
+-		update_runtime_stat(st, STAT_TOPDOWN_FETCH_BUBBLES,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_RECOVERY_BUBBLES))
+-		update_runtime_stat(st, STAT_TOPDOWN_RECOVERY_BUBBLES,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_RETIRING))
+-		update_runtime_stat(st, STAT_TOPDOWN_RETIRING,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_BAD_SPEC))
+-		update_runtime_stat(st, STAT_TOPDOWN_BAD_SPEC,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_FE_BOUND))
+-		update_runtime_stat(st, STAT_TOPDOWN_FE_BOUND,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_BE_BOUND))
+-		update_runtime_stat(st, STAT_TOPDOWN_BE_BOUND,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_HEAVY_OPS))
+-		update_runtime_stat(st, STAT_TOPDOWN_HEAVY_OPS,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_BR_MISPREDICT))
+-		update_runtime_stat(st, STAT_TOPDOWN_BR_MISPREDICT,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_FETCH_LAT))
+-		update_runtime_stat(st, STAT_TOPDOWN_FETCH_LAT,
+-				    map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TOPDOWN_MEM_BOUND))
+-		update_runtime_stat(st, STAT_TOPDOWN_MEM_BOUND,
+-				    map_idx, count, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
+ 		update_runtime_stat(st, STAT_STALLED_CYCLES_FRONT,
+ 				    map_idx, count, &rsd);
+@@ -524,156 +485,6 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+ 	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache accesses", ratio);
+ }
  
- 			if (metric_threshold &&
--			    expr__parse(&threshold, pctx, metric_threshold) == 0) {
-+			    expr__parse(&threshold, pctx, metric_threshold) == 0 &&
-+			    !isnan(threshold)) {
- 				color = fpclassify(threshold) == FP_ZERO
- 					? PERF_COLOR_GREEN : PERF_COLOR_RED;
- 			}
+-/*
+- * High level "TopDown" CPU core pipe line bottleneck break down.
+- *
+- * Basic concept following
+- * Yasin, A Top Down Method for Performance analysis and Counter architecture
+- * ISPASS14
+- *
+- * The CPU pipeline is divided into 4 areas that can be bottlenecks:
+- *
+- * Frontend -> Backend -> Retiring
+- * BadSpeculation in addition means out of order execution that is thrown away
+- * (for example branch mispredictions)
+- * Frontend is instruction decoding.
+- * Backend is execution, like computation and accessing data in memory
+- * Retiring is good execution that is not directly bottlenecked
+- *
+- * The formulas are computed in slots.
+- * A slot is an entry in the pipeline each for the pipeline width
+- * (for example a 4-wide pipeline has 4 slots for each cycle)
+- *
+- * Formulas:
+- * BadSpeculation = ((SlotsIssued - SlotsRetired) + RecoveryBubbles) /
+- *			TotalSlots
+- * Retiring = SlotsRetired / TotalSlots
+- * FrontendBound = FetchBubbles / TotalSlots
+- * BackendBound = 1.0 - BadSpeculation - Retiring - FrontendBound
+- *
+- * The kernel provides the mapping to the low level CPU events and any scaling
+- * needed for the CPU pipeline width, for example:
+- *
+- * TotalSlots = Cycles * 4
+- *
+- * The scaling factor is communicated in the sysfs unit.
+- *
+- * In some cases the CPU may not be able to measure all the formulas due to
+- * missing events. In this case multiple formulas are combined, as possible.
+- *
+- * Full TopDown supports more levels to sub-divide each area: for example
+- * BackendBound into computing bound and memory bound. For now we only
+- * support Level 1 TopDown.
+- */
+-
+-static double sanitize_val(double x)
+-{
+-	if (x < 0 && x >= -0.02)
+-		return 0.0;
+-	return x;
+-}
+-
+-static double td_total_slots(int map_idx, struct runtime_stat *st,
+-			     struct runtime_stat_data *rsd)
+-{
+-	return runtime_stat_avg(st, STAT_TOPDOWN_TOTAL_SLOTS, map_idx, rsd);
+-}
+-
+-static double td_bad_spec(int map_idx, struct runtime_stat *st,
+-			  struct runtime_stat_data *rsd)
+-{
+-	double bad_spec = 0;
+-	double total_slots;
+-	double total;
+-
+-	total = runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_ISSUED, map_idx, rsd) -
+-		runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_RETIRED, map_idx, rsd) +
+-		runtime_stat_avg(st, STAT_TOPDOWN_RECOVERY_BUBBLES, map_idx, rsd);
+-
+-	total_slots = td_total_slots(map_idx, st, rsd);
+-	if (total_slots)
+-		bad_spec = total / total_slots;
+-	return sanitize_val(bad_spec);
+-}
+-
+-static double td_retiring(int map_idx, struct runtime_stat *st,
+-			  struct runtime_stat_data *rsd)
+-{
+-	double retiring = 0;
+-	double total_slots = td_total_slots(map_idx, st, rsd);
+-	double ret_slots = runtime_stat_avg(st, STAT_TOPDOWN_SLOTS_RETIRED,
+-					    map_idx, rsd);
+-
+-	if (total_slots)
+-		retiring = ret_slots / total_slots;
+-	return retiring;
+-}
+-
+-static double td_fe_bound(int map_idx, struct runtime_stat *st,
+-			  struct runtime_stat_data *rsd)
+-{
+-	double fe_bound = 0;
+-	double total_slots = td_total_slots(map_idx, st, rsd);
+-	double fetch_bub = runtime_stat_avg(st, STAT_TOPDOWN_FETCH_BUBBLES,
+-					    map_idx, rsd);
+-
+-	if (total_slots)
+-		fe_bound = fetch_bub / total_slots;
+-	return fe_bound;
+-}
+-
+-static double td_be_bound(int map_idx, struct runtime_stat *st,
+-			  struct runtime_stat_data *rsd)
+-{
+-	double sum = (td_fe_bound(map_idx, st, rsd) +
+-		      td_bad_spec(map_idx, st, rsd) +
+-		      td_retiring(map_idx, st, rsd));
+-	if (sum == 0)
+-		return 0;
+-	return sanitize_val(1.0 - sum);
+-}
+-
+-/*
+- * Kernel reports metrics multiplied with slots. To get back
+- * the ratios we need to recreate the sum.
+- */
+-
+-static double td_metric_ratio(int map_idx, enum stat_type type,
+-			      struct runtime_stat *stat,
+-			      struct runtime_stat_data *rsd)
+-{
+-	double sum = runtime_stat_avg(stat, STAT_TOPDOWN_RETIRING, map_idx, rsd) +
+-		runtime_stat_avg(stat, STAT_TOPDOWN_FE_BOUND, map_idx, rsd) +
+-		runtime_stat_avg(stat, STAT_TOPDOWN_BE_BOUND, map_idx, rsd) +
+-		runtime_stat_avg(stat, STAT_TOPDOWN_BAD_SPEC, map_idx, rsd);
+-	double d = runtime_stat_avg(stat, type, map_idx, rsd);
+-
+-	if (sum)
+-		return d / sum;
+-	return 0;
+-}
+-
+-/*
+- * ... but only if most of the values are actually available.
+- * We allow two missing.
+- */
+-
+-static bool full_td(int map_idx, struct runtime_stat *stat,
+-		    struct runtime_stat_data *rsd)
+-{
+-	int c = 0;
+-
+-	if (runtime_stat_avg(stat, STAT_TOPDOWN_RETIRING, map_idx, rsd) > 0)
+-		c++;
+-	if (runtime_stat_avg(stat, STAT_TOPDOWN_BE_BOUND, map_idx, rsd) > 0)
+-		c++;
+-	if (runtime_stat_avg(stat, STAT_TOPDOWN_FE_BOUND, map_idx, rsd) > 0)
+-		c++;
+-	if (runtime_stat_avg(stat, STAT_TOPDOWN_BAD_SPEC, map_idx, rsd) > 0)
+-		c++;
+-	return c >= 2;
+-}
+-
+ static void print_smi_cost(struct perf_stat_config *config, int map_idx,
+ 			   struct perf_stat_output_ctx *out,
+ 			   struct runtime_stat *st,
+@@ -885,7 +696,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 	void *ctxp = out->ctx;
+ 	print_metric_t print_metric = out->print_metric;
+ 	double total, ratio = 0.0, total2;
+-	const char *color = NULL;
+ 	struct runtime_stat_data rsd = {
+ 		.ctx = evsel_context(evsel),
+ 		.cgrp = evsel->cgrp,
+@@ -1044,162 +854,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				     avg / (ratio * evsel->scale));
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_BUBBLES)) {
+-		double fe_bound = td_fe_bound(map_idx, st, &rsd);
+-
+-		if (fe_bound > 0.2)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "frontend bound",
+-				fe_bound * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_RETIRED)) {
+-		double retiring = td_retiring(map_idx, st, &rsd);
+-
+-		if (retiring > 0.7)
+-			color = PERF_COLOR_GREEN;
+-		print_metric(config, ctxp, color, "%8.1f%%", "retiring",
+-				retiring * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_RECOVERY_BUBBLES)) {
+-		double bad_spec = td_bad_spec(map_idx, st, &rsd);
+-
+-		if (bad_spec > 0.1)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "bad speculation",
+-				bad_spec * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_SLOTS_ISSUED)) {
+-		double be_bound = td_be_bound(map_idx, st, &rsd);
+-		const char *name = "backend bound";
+-		static int have_recovery_bubbles = -1;
+-
+-		/* In case the CPU does not support topdown-recovery-bubbles */
+-		if (have_recovery_bubbles < 0)
+-			have_recovery_bubbles = pmu_have_event("cpu",
+-					"topdown-recovery-bubbles");
+-		if (!have_recovery_bubbles)
+-			name = "backend bound/bad spec";
+-
+-		if (be_bound > 0.2)
+-			color = PERF_COLOR_RED;
+-		if (td_total_slots(map_idx, st, &rsd) > 0)
+-			print_metric(config, ctxp, color, "%8.1f%%", name,
+-					be_bound * 100.);
+-		else
+-			print_metric(config, ctxp, NULL, NULL, name, 0);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_RETIRING) &&
+-		   full_td(map_idx, st, &rsd)) {
+-		double retiring = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_RETIRING, st,
+-						  &rsd);
+-		if (retiring > 0.7)
+-			color = PERF_COLOR_GREEN;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Retiring",
+-				retiring * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FE_BOUND) &&
+-		   full_td(map_idx, st, &rsd)) {
+-		double fe_bound = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_FE_BOUND, st,
+-						  &rsd);
+-		if (fe_bound > 0.2)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Frontend Bound",
+-				fe_bound * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BE_BOUND) &&
+-		   full_td(map_idx, st, &rsd)) {
+-		double be_bound = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_BE_BOUND, st,
+-						  &rsd);
+-		if (be_bound > 0.2)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Backend Bound",
+-				be_bound * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BAD_SPEC) &&
+-		   full_td(map_idx, st, &rsd)) {
+-		double bad_spec = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_BAD_SPEC, st,
+-						  &rsd);
+-		if (bad_spec > 0.1)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Bad Speculation",
+-				bad_spec * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_HEAVY_OPS) &&
+-			full_td(map_idx, st, &rsd) && (config->topdown_level > 1)) {
+-		double retiring = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_RETIRING, st,
+-						  &rsd);
+-		double heavy_ops = td_metric_ratio(map_idx,
+-						   STAT_TOPDOWN_HEAVY_OPS, st,
+-						   &rsd);
+-		double light_ops = retiring - heavy_ops;
+-
+-		if (retiring > 0.7 && heavy_ops > 0.1)
+-			color = PERF_COLOR_GREEN;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Heavy Operations",
+-				heavy_ops * 100.);
+-		if (retiring > 0.7 && light_ops > 0.6)
+-			color = PERF_COLOR_GREEN;
+-		else
+-			color = NULL;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Light Operations",
+-				light_ops * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_BR_MISPREDICT) &&
+-			full_td(map_idx, st, &rsd) && (config->topdown_level > 1)) {
+-		double bad_spec = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_BAD_SPEC, st,
+-						  &rsd);
+-		double br_mis = td_metric_ratio(map_idx,
+-						STAT_TOPDOWN_BR_MISPREDICT, st,
+-						&rsd);
+-		double m_clears = bad_spec - br_mis;
+-
+-		if (bad_spec > 0.1 && br_mis > 0.05)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Branch Mispredict",
+-				br_mis * 100.);
+-		if (bad_spec > 0.1 && m_clears > 0.05)
+-			color = PERF_COLOR_RED;
+-		else
+-			color = NULL;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Machine Clears",
+-				m_clears * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_FETCH_LAT) &&
+-			full_td(map_idx, st, &rsd) && (config->topdown_level > 1)) {
+-		double fe_bound = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_FE_BOUND, st,
+-						  &rsd);
+-		double fetch_lat = td_metric_ratio(map_idx,
+-						   STAT_TOPDOWN_FETCH_LAT, st,
+-						   &rsd);
+-		double fetch_bw = fe_bound - fetch_lat;
+-
+-		if (fe_bound > 0.2 && fetch_lat > 0.15)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Fetch Latency",
+-				fetch_lat * 100.);
+-		if (fe_bound > 0.2 && fetch_bw > 0.1)
+-			color = PERF_COLOR_RED;
+-		else
+-			color = NULL;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Fetch Bandwidth",
+-				fetch_bw * 100.);
+-	} else if (perf_stat_evsel__is(evsel, TOPDOWN_MEM_BOUND) &&
+-			full_td(map_idx, st, &rsd) && (config->topdown_level > 1)) {
+-		double be_bound = td_metric_ratio(map_idx,
+-						  STAT_TOPDOWN_BE_BOUND, st,
+-						  &rsd);
+-		double mem_bound = td_metric_ratio(map_idx,
+-						   STAT_TOPDOWN_MEM_BOUND, st,
+-						   &rsd);
+-		double core_bound = be_bound - mem_bound;
+-
+-		if (be_bound > 0.2 && mem_bound > 0.2)
+-			color = PERF_COLOR_RED;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Memory Bound",
+-				mem_bound * 100.);
+-		if (be_bound > 0.2 && core_bound > 0.1)
+-			color = PERF_COLOR_RED;
+-		else
+-			color = NULL;
+-		print_metric(config, ctxp, color, "%8.1f%%", "Core Bound",
+-				core_bound * 100.);
+ 	} else if (runtime_stat_n(st, STAT_NSECS, map_idx, &rsd) != 0) {
+ 		char unit = ' ';
+ 		char unit_buf[10] = "/sec";
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 534d36d26fc3..0b8c91ca13cd 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -91,19 +91,6 @@ static const char *id_str[PERF_STAT_EVSEL_ID__MAX] = {
+ 	ID(TRANSACTION_START,	cpu/tx-start/),
+ 	ID(ELISION_START,	cpu/el-start/),
+ 	ID(CYCLES_IN_TX_CP,	cpu/cycles-ct/),
+-	ID(TOPDOWN_TOTAL_SLOTS, topdown-total-slots),
+-	ID(TOPDOWN_SLOTS_ISSUED, topdown-slots-issued),
+-	ID(TOPDOWN_SLOTS_RETIRED, topdown-slots-retired),
+-	ID(TOPDOWN_FETCH_BUBBLES, topdown-fetch-bubbles),
+-	ID(TOPDOWN_RECOVERY_BUBBLES, topdown-recovery-bubbles),
+-	ID(TOPDOWN_RETIRING, topdown-retiring),
+-	ID(TOPDOWN_BAD_SPEC, topdown-bad-spec),
+-	ID(TOPDOWN_FE_BOUND, topdown-fe-bound),
+-	ID(TOPDOWN_BE_BOUND, topdown-be-bound),
+-	ID(TOPDOWN_HEAVY_OPS, topdown-heavy-ops),
+-	ID(TOPDOWN_BR_MISPREDICT, topdown-br-mispredict),
+-	ID(TOPDOWN_FETCH_LAT, topdown-fetch-lat),
+-	ID(TOPDOWN_MEM_BOUND, topdown-mem-bound),
+ 	ID(SMI_NUM, msr/smi/),
+ 	ID(APERF, msr/aperf/),
+ };
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b1c29156c560..cf2d8aa445f3 100644
+index cf2d8aa445f3..42af350a96d9 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -159,6 +159,7 @@ struct perf_stat_config {
- 	bool			 no_csv_summary;
- 	bool			 metric_no_group;
- 	bool			 metric_no_merge;
-+	bool			 metric_no_threshold;
- 	bool			 stop_read_counter;
- 	bool			 iostat_run;
- 	char			 *user_requested_cpu_list;
+@@ -25,19 +25,6 @@ enum perf_stat_evsel_id {
+ 	PERF_STAT_EVSEL_ID__TRANSACTION_START,
+ 	PERF_STAT_EVSEL_ID__ELISION_START,
+ 	PERF_STAT_EVSEL_ID__CYCLES_IN_TX_CP,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_TOTAL_SLOTS,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_SLOTS_ISSUED,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_SLOTS_RETIRED,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_FETCH_BUBBLES,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_RECOVERY_BUBBLES,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_RETIRING,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_BAD_SPEC,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_FE_BOUND,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_BE_BOUND,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_HEAVY_OPS,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_BR_MISPREDICT,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_FETCH_LAT,
+-	PERF_STAT_EVSEL_ID__TOPDOWN_MEM_BOUND,
+ 	PERF_STAT_EVSEL_ID__SMI_NUM,
+ 	PERF_STAT_EVSEL_ID__APERF,
+ 	PERF_STAT_EVSEL_ID__MAX,
+@@ -108,19 +95,6 @@ enum stat_type {
+ 	STAT_CYCLES_IN_TX,
+ 	STAT_TRANSACTION,
+ 	STAT_ELISION,
+-	STAT_TOPDOWN_TOTAL_SLOTS,
+-	STAT_TOPDOWN_SLOTS_ISSUED,
+-	STAT_TOPDOWN_SLOTS_RETIRED,
+-	STAT_TOPDOWN_FETCH_BUBBLES,
+-	STAT_TOPDOWN_RECOVERY_BUBBLES,
+-	STAT_TOPDOWN_RETIRING,
+-	STAT_TOPDOWN_BAD_SPEC,
+-	STAT_TOPDOWN_FE_BOUND,
+-	STAT_TOPDOWN_BE_BOUND,
+-	STAT_TOPDOWN_HEAVY_OPS,
+-	STAT_TOPDOWN_BR_MISPREDICT,
+-	STAT_TOPDOWN_FETCH_LAT,
+-	STAT_TOPDOWN_MEM_BOUND,
+ 	STAT_SMI_NUM,
+ 	STAT_APERF,
+ 	STAT_MAX
 -- 
 2.39.2.637.g21b0678d19-goog
 
