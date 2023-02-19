@@ -2,60 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1707CC05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BD1C6379F
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbjBSJfN (ORCPT
+        id S230024AbjBSJgm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:35:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57452 "EHLO
+        Sun, 19 Feb 2023 04:36:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230022AbjBSJe7 (ORCPT
+        with ESMTP id S230016AbjBSJgk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:34:59 -0500
+        Sun, 19 Feb 2023 04:36:40 -0500
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE69126F0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:33:46 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-53687f6de13so18436347b3.9
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:33:46 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7762D12860
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:35:50 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-53688fe539aso16842837b3.16
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:35:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HHfJUUC7WFoksqzMwO/wB71MjmrmmBDk4U3wZWtbf08=;
-        b=fX59j52xFTzLYLu6bfL/D7xhUQY699O8G2CBhOY2b+WQeh/CNRkmVbk6izOLD09kRS
-         ElhU4Qo79C2zelyYISHlIQ06bx7oywbUO5YVV+td+ogHhr5ySpZA39YLt/jD3Rgl4Hru
-         NSl1oSHcdzoPDzg7iF8Lms4PQ0/pfTnWuTfK8wSI6NYne98qpyTFNmdRCtV6neg55tJh
-         Ro7kutyBaTvkQVQM9r2EZf+9Ichm6O4JTDhrgZK0xRKCqHyknhKGMchi+O2i5EdVLhjY
-         xtmOJEGgVHLUBujQkjjQT/JAK8oWzaiy/iTO9dpZZUZDbqFaUd9bzxnQJrq9uVzKKKb3
-         CXiQ==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1iaZVlYNhiAOA5cs/+UwDX1JeW2DyTfNmupgRycGXY=;
+        b=GXX1CCWTT7DpChHpiAo8vxK/43ddF9gck9mQoSZ2hA08LIJ0U1Cu7/SFYa9EJvJFxe
+         m8KaqG9d0IPv1H+awLg+uCW+JyHffDXi8RxqbbHwMymD1tyKhcsbVu23oOmaI7vI3Ggo
+         A8m02HvwUYluQ/hwtU5heVipo9Wh/I0ByZJ263Ywidlya5sIiWqmTKfXXSjdJB+GukoV
+         TUk+iK3GL6mVBoiR/DsqTD45H27yUEHyxZf4toav9JGdIbqj/1fHLuj6CnEuBf5HvRQU
+         AhDI6PM1KMSvWtTcjBjzp7iRHFEfMo2PY+iby22NhQ0i2XGrdBrVZdFwwu7jGnEkvvA1
+         P5NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HHfJUUC7WFoksqzMwO/wB71MjmrmmBDk4U3wZWtbf08=;
-        b=0cL/hLFoDXDIfMJt53b4V+5ysQv4jDW0KVKSLqh5K/z+V3PJxYBVw5ckoVe3eAu1oP
-         tQceZfvPgqtY7JfDY3uI9gtzQGj8ofFC7NHElxZlLl/K4aB1CY468xqAPuZbsT6+vzHM
-         ldgkOHDvdSfAtVycWHWZ7NQBu4+LEJtqa9yNiyzlzRRT8CrGtwL0cuMVFpBnYPLm0uTk
-         asZFACiRG8eAhFjauLHqLFe2qK0Kn+PH38Op09bU6iiA8hXLyhMviKUzbZgDtyJ9O3Sy
-         0hlBgfmQ/4nTH9KIFLl25aZTSNz/XLUbF4Ovfugwg9pUhWNeFA8dOBGybcqJcVxpUl6n
-         P4Tw==
-X-Gm-Message-State: AO0yUKXyHi76b4HnaHA6KDFrFon6BvshCh6mAetLtWZ/JauDqrRMznIJ
-        Ci2ta73h8Bbfks9q/hcE+8JEr6hX9OH3
-X-Google-Smtp-Source: AK7set8jEArVFXMo6IHVLJPY3ZmOWPp1glRFXg65Ui1PEiXcYJcQSImzCALuyAA28kKpKUSiX264PfiGtWoA
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q1iaZVlYNhiAOA5cs/+UwDX1JeW2DyTfNmupgRycGXY=;
+        b=C0AXH92mpEh/uKVyDukTXNJcAgqlVvs3/jwp9q/W6YFTYKAwc2EhRme35EOqMPC4Q5
+         VIbF8PdTTOmGCjwpXD76evBqqgyd49Yy7i5dYLYMDWsdSoVfcYYryrALur5CVSx8Gseb
+         6BRF7jxuJeJPsv3PW9sCZWngp1R4WBvrGEntTtwy+D6tilA8+4y0QQNdDBzCnrZP5hPC
+         JB83dss64Uqn8rqEs/cF5fXOjLhLmqT0KsMdr5z2wB1jjhLdaaVIrmJYrlLTLCHdiMar
+         vXz+etQokQu6GEWhHSQprzPUIzu+900RsvkwLC9KqgrCGkidSZdMjwI9CKD8+XkpKcqt
+         Acug==
+X-Gm-Message-State: AO0yUKWOCDUsN9u2kRWLUjuluyfF9qFVzSz6oiDKuEbuYXSlFsmm49Ba
+        p2cip4P2YO7PvlrXhPeDouA4jv1sPpt+
+X-Google-Smtp-Source: AK7set+1MTqVPBeVJ1iYyp/8DZ7MkvnpE8pT6AIUM7vIfURx7AFVUwdj5cGYtnDmeFMNAIrj/Jd0CiKRDfkv
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a25:8312:0:b0:889:8b19:faec with SMTP id
- s18-20020a258312000000b008898b19faecmr515910ybk.196.1676799165017; Sun, 19
- Feb 2023 01:32:45 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:24 -0800
+ (user=irogers job=sendgmr) by 2002:a0d:ee44:0:b0:52e:e6ed:30a1 with SMTP id
+ x65-20020a0dee44000000b0052ee6ed30a1mr1338109ywe.545.1676799225232; Sun, 19
+ Feb 2023 01:33:45 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:31 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-28-irogers@google.com>
+Message-Id: <20230219092848.639226-35-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 27/51] perf vendor events intel: Refresh silvermont events
+Subject: [PATCH v1 34/51] perf pmu-events: Test parsing metric thresholds with
+ the fake PMU
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -90,113 +89,57 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update the silvermont events from 14 to 15. Generation was done using
-https://github.com/intel/perfmon.
-
-The most notable change is in corrections to event descriptions.
+Test the correctness of metric thresholds by testing them all with the
+fake PMU logic.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv              | 2 +-
- tools/perf/pmu-events/arch/x86/silvermont/frontend.json | 2 +-
- tools/perf/pmu-events/arch/x86/silvermont/pipeline.json | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/pmu-events.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 1f611a7dbdda..d1d40d0f2b2c 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -23,7 +23,7 @@ GenuineIntel-6-1[AEF],v3,nehalemep,core
- GenuineIntel-6-2E,v3,nehalemex,core
- GenuineIntel-6-2A,v18,sandybridge,core
- GenuineIntel-6-(8F|CF),v1.11,sapphirerapids,core
--GenuineIntel-6-(37|4A|4C|4D|5A),v14,silvermont,core
-+GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v53,skylake,core
- GenuineIntel-6-55-[01234],v1.28,skylakex,core
- GenuineIntel-6-86,v1.20,snowridgex,core
-diff --git a/tools/perf/pmu-events/arch/x86/silvermont/frontend.json b/tool=
-s/perf/pmu-events/arch/x86/silvermont/frontend.json
-index c35da10f7133..cd6ed3f59e26 100644
---- a/tools/perf/pmu-events/arch/x86/silvermont/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/silvermont/frontend.json
-@@ -11,7 +11,7 @@
-         "BriefDescription": "Counts the number of JCC baclears",
-         "EventCode": "0xE6",
-         "EventName": "BACLEARS.COND",
--        "PublicDescription": "The BACLEARS event counts the number of time=
-s the front end is resteered, mainly when the Branch Prediction Unit cannot=
- provide a correct prediction and this is corrected by the Branch Address C=
-alculator at the front end.  The BACLEARS.COND event counts the number of J=
-CC (Jump on Condtional Code) baclears.",
-+        "PublicDescription": "The BACLEARS event counts the number of time=
-s the front end is resteered, mainly when the Branch Prediction Unit cannot=
- provide a correct prediction and this is corrected by the Branch Address C=
-alculator at the front end.  The BACLEARS.COND event counts the number of J=
-CC (Jump on Conditional Code) baclears.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x10"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/silvermont/pipeline.json
-index 59f6116a7eae..2d4214bf9e39 100644
---- a/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/silvermont/pipeline.json
-@@ -228,7 +228,7 @@
-         "BriefDescription": "Counts the number of cycles when no uops are =
-allocated, the IQ is empty, and no other condition is blocking allocation."=
-,
-         "EventCode": "0xCA",
-         "EventName": "NO_ALLOC_CYCLES.NOT_DELIVERED",
--        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
-sed to measure front-end inefficiencies, i.e. when front-end of the machine=
- is not delivering micro-ops to the back-end and the back-end is not stalle=
-d. This event can be used to identify if the machine is truly front-end bou=
-nd.  When this event occurs, it is an indication that the front-end of the =
-machine is operating at less than its theoretical peak performance.  Backgr=
-ound: We can think of the processor pipeline as being divided into 2 broade=
-r parts: Front-end and Back-end. Front-end is responsible for fetching the =
-instruction, decoding into micro-ops (uops) in machine understandable forma=
-t and putting them into a micro-op queue to be consumed by back end. The ba=
-ck-end then takes these micro-ops, allocates the required resources.  When =
-all resources are ready, micro-ops are executed. If the back-end is not rea=
-dy to accept micro-ops from the front-end, then we do not want to count the=
-se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
-back-end, we will have allocation unit stalls and eventually forcing the fr=
-ont-end to wait until the back-end is ready to receive more UOPS. This even=
-t counts the cycles only when back-end is requesting more uops and front-en=
-d is not able to provide them. Some examples of conditions that cause front=
--end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
- that limit the the front-end bandwidth.",
-+        "PublicDescription": "The NO_ALLOC_CYCLES.NOT_DELIVERED event is u=
-sed to measure front-end inefficiencies, i.e. when front-end of the machine=
- is not delivering micro-ops to the back-end and the back-end is not stalle=
-d. This event can be used to identify if the machine is truly front-end bou=
-nd.  When this event occurs, it is an indication that the front-end of the =
-machine is operating at less than its theoretical peak performance.  Backgr=
-ound: We can think of the processor pipeline as being divided into 2 broade=
-r parts: Front-end and Back-end. Front-end is responsible for fetching the =
-instruction, decoding into micro-ops (uops) in machine understandable forma=
-t and putting them into a micro-op queue to be consumed by back end. The ba=
-ck-end then takes these micro-ops, allocates the required resources.  When =
-all resources are ready, micro-ops are executed. If the back-end is not rea=
-dy to accept micro-ops from the front-end, then we do not want to count the=
-se as front-end bottlenecks.  However, whenever we have bottlenecks in the =
-back-end, we will have allocation unit stalls and eventually forcing the fr=
-ont-end to wait until the back-end is ready to receive more UOPS. This even=
-t counts the cycles only when back-end is requesting more uops and front-en=
-d is not able to provide them. Some examples of conditions that cause front=
--end efficiencies are: Icache misses, ITLB misses, and decoder restrictions=
- that limit the front-end bandwidth.",
-         "SampleAfterValue": "200003",
-         "UMask": "0x50"
-     },
---=20
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 521557c396bc..db2fed0c6993 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -1021,12 +1021,34 @@ static int test__parsing_fake(struct test_suite *test __maybe_unused,
+ 	return pmu_for_each_sys_metric(test__parsing_fake_callback, NULL);
+ }
+ 
++static int test__parsing_threshold_callback(const struct pmu_metric *pm,
++					const struct pmu_metrics_table *table __maybe_unused,
++					void *data __maybe_unused)
++{
++	if (!pm->metric_threshold)
++		return 0;
++	return metric_parse_fake(pm->metric_name, pm->metric_threshold);
++}
++
++static int test__parsing_threshold(struct test_suite *test __maybe_unused,
++			      int subtest __maybe_unused)
++{
++	int err = 0;
++
++	err = pmu_for_each_core_metric(test__parsing_threshold_callback, NULL);
++	if (err)
++		return err;
++
++	return pmu_for_each_sys_metric(test__parsing_threshold_callback, NULL);
++}
++
+ static struct test_case pmu_events_tests[] = {
+ 	TEST_CASE("PMU event table sanity", pmu_event_table),
+ 	TEST_CASE("PMU event map aliases", aliases),
+ 	TEST_CASE_REASON("Parsing of PMU event table metrics", parsing,
+ 			 "some metrics failed"),
+ 	TEST_CASE("Parsing of PMU event table metrics with fake PMUs", parsing_fake),
++	TEST_CASE("Parsing of metric thresholds with fake PMUs", parsing_threshold),
+ 	{ .name = NULL, }
+ };
+ 
+-- 
 2.39.2.637.g21b0678d19-goog
 
