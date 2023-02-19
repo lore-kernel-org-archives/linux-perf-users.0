@@ -2,157 +2,328 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD91BC6379F
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 12:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0033DC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 15:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbjBSMCb (ORCPT
+        id S230083AbjBSPni (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 07:02:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36042 "EHLO
+        Sun, 19 Feb 2023 10:43:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjBSMCa (ORCPT
+        with ESMTP id S230063AbjBSPnh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 07:02:30 -0500
-X-Greylist: delayed 581 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 19 Feb 2023 04:02:29 PST
-Received: from vulcan.natalenko.name (vulcan.natalenko.name [IPv6:2001:19f0:6c00:8846:5400:ff:fe0c:dfa0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 728F810A97
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 04:02:29 -0800 (PST)
-Received: from spock.localnet (unknown [83.148.33.151])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by vulcan.natalenko.name (Postfix) with ESMTPSA id 4564A1236E7C;
-        Sun, 19 Feb 2023 12:52:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-        s=dkim-20170712; t=1676807564;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LlM/jmDxuMpikTFQLI7Ipru8I8W1UZUK0W6ugJVYzIg=;
-        b=Du2to3A8IVx/+YQJsJhrR15PFz81aW47bkBKCFbWyZofxmFsMR9m+j6eAkU7XJBv5voM66
-        TP4X/YFbksBWA1fZj0+cngPt3XFXkt1qyFklHFuWip4LKs8hAm/w5gQTXljBE7vPosnW5Y
-        nAfbQKAXm+eatr/48j8GjEruY/DBX9c=
-From:   Oleksandr Natalenko <oleksandr@natalenko.name>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Sun, 19 Feb 2023 10:43:37 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67FBEDBDB
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 07:43:35 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id bg37-20020a05600c3ca500b003e21e018039so45642wmb.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 07:43:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rjOvkhvojmtF53IY21K4y6YcrAFM/XWfZzrTRIwfMes=;
+        b=aGWeNccT/tZp877FsdqXebCR3eniCqghwTsbDGpnfiGBKY22fg+bC+XIdEBtPPf9I/
+         wMBoe3uWIx8W0JyVKCaMl23L7QwKng7No+sCq7h97z7Kj0hPDmMLDqyM2NEz6rj0GyaL
+         05RZLxvaTdDL0ZUGtMC8oJtlxOs9IS1M9K/2XAZBdUJxOusEmpBPV+DL3yDoNis6GRys
+         SfDpltIHDakbh3ALLNgaBCWkHeLvH4k/++zXB0sfW1NVtlZtnJUP8LlvmSpPm6+4jUOZ
+         bgX20hpLwx0FuiR3WmF7FG/LrDsosnfvDRQevBUibIL9vlPKbFw4QGIy4mFpDkAU3cqS
+         lc/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rjOvkhvojmtF53IY21K4y6YcrAFM/XWfZzrTRIwfMes=;
+        b=09pHSEfhCDI7bwKYykXtrCzqdnrVetVRVoaBj9GqFeYRF5Vhe4DKnvTipnF/uKPXI2
+         NVVgL9Q96/q4MnAkevWFiHkUFEdT+Mj9SmMHgrNkRcE79+DLJbBxUJyui2izUm88yfqD
+         sOamBdWUGjVrJEsITsGGZjLDtyOU7AXqVwQ+qFUaLm1huElYhxF4hCF5tXIh4nuveDHT
+         lJFpQrYDTmVaTaZhCNBoJz1k4aqzgRRirIZrb9zlyto6hZCp4aeNx0eUv0PV16bYZR/F
+         VJ0bem+p8YMF1ieoB1UiGxPW2L4Lg8g5+AZLqQhvzpm9i1jTG/ZIzJ/5XEjseiAfamYO
+         Ny+Q==
+X-Gm-Message-State: AO0yUKUWv0+/v8Q4bK1cVdwLjvwUMWAfEidf0nTaADY/8ajlhHX3rD0n
+        fGLd+zWl7tU3Mj6TPtDyuea2QgavJHHNfJqoMwCpaA==
+X-Google-Smtp-Source: AK7set/zyN0OMAIFL6e7QseAoRUqiBhoejUey+m84Zwk96A40DPNbXd961PsFC5rRg67PD90hGmlVcgPE8LdcY1hqIw=
+X-Received: by 2002:a05:600c:1c95:b0:3db:1d5e:699 with SMTP id
+ k21-20020a05600c1c9500b003db1d5e0699mr197150wms.195.1676821413634; Sun, 19
+ Feb 2023 07:43:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20230219092848.639226-1-irogers@google.com> <Y/IFNyI9JcChoR2p@kernel.org>
+In-Reply-To: <Y/IFNyI9JcChoR2p@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Sun, 19 Feb 2023 07:43:20 -0800
+Message-ID: <CAP-5=fWzydsYNKPBv+wCh4M9QaRbk5NiJOUDsjbjPdPjFWQ82g@mail.gmail.com>
+Subject: Re: [PATCH v1 00/51] shadow metric clean up and improvements
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, hpa@zytor.com,
-        Wyes Karny <wyes.karny@amd.com>
-Cc:     x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gautham.shenoy@amd.com,
-        ananth.narayan@amd.com, Wyes Karny <wyes.karny@amd.com>
-Subject: Re: [PATCH] perf/x86/rapl: Enable Core RAPL for AMD
-Date:   Sun, 19 Feb 2023 12:52:42 +0100
-Message-ID: <12153455.O9o76ZdvQC@natalenko.name>
-In-Reply-To: <20230217161354.129442-1-wyes.karny@amd.com>
-References: <20230217161354.129442-1-wyes.karny@amd.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello.
-
-On p=E1tek 17. =FAnora 2023 17:13:54 CET Wyes Karny wrote:
-> AMD processors support per-package and per-core energy monitoring
-> through RAPL counters which can be accessed by users running in
-> supervisor mode.
->=20
-> Core RAPL counters gives power consumption information per core.  For
-> AMD processors the package level RAPL counter are already exposed to
-> perf. Expose the core level RAPL counters also.
->=20
-> sudo perf stat -a --per-core -C 0-127 -e power/energy-cores/
->=20
-> Output:
-> S0-D0-C0           2               8.73 Joules power/energy-cores/
-> S0-D0-C1           2               8.73 Joules power/energy-cores/
-> S0-D0-C2           2               8.73 Joules power/energy-cores/
-> S0-D0-C3           2               8.73 Joules power/energy-cores/
-> S0-D0-C4           2               8.73 Joules power/energy-cores/
->=20
-> Signed-off-by: Wyes Karny <wyes.karny@amd.com>
-> ---
->  arch/x86/events/rapl.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-> index 52e6e7ed4f78..d301bbbc3b93 100644
-> --- a/arch/x86/events/rapl.c
-> +++ b/arch/x86/events/rapl.c
-> @@ -537,7 +537,7 @@ static struct perf_msr intel_rapl_spr_msrs[] =3D {
->   * - want to use same event codes across both architectures
->   */
->  static struct perf_msr amd_rapl_msrs[] =3D {
-> -	[PERF_RAPL_PP0]  =3D { 0, &rapl_events_cores_group, 0, false, 0 },
-> +	[PERF_RAPL_PP0]  =3D { MSR_AMD_CORE_ENERGY_STATUS, &rapl_events_cores_g=
-roup, test_msr, false, RAPL_MSR_MASK },
->  	[PERF_RAPL_PKG]  =3D { MSR_AMD_PKG_ENERGY_STATUS,  &rapl_events_pkg_gro=
-up,   test_msr, false, RAPL_MSR_MASK },
->  	[PERF_RAPL_RAM]  =3D { 0, &rapl_events_ram_group,   0, false, 0 },
->  	[PERF_RAPL_PP1]  =3D { 0, &rapl_events_gpu_group,   0, false, 0 },
-> @@ -764,7 +764,8 @@ static struct rapl_model model_spr =3D {
->  };
-> =20
->  static struct rapl_model model_amd_hygon =3D {
-> -	.events		=3D BIT(PERF_RAPL_PKG),
-> +	.events		=3D BIT(PERF_RAPL_PP0) |
-> +			  BIT(PERF_RAPL_PKG),
->  	.msr_power_unit =3D MSR_AMD_RAPL_POWER_UNIT,
->  	.rapl_msrs      =3D amd_rapl_msrs,
->  };
->=20
-
-With this patch:
-
-```
-$ lscpu | grep 'Model name'
-Model name:                      AMD Ryzen 9 5950X 16-Core Processor
-
-$ sudo perf stat -a --per-core -C 0-15 -e power/energy-cores/ -- dd if=3D/d=
-ev/zero of=3D/dev/null bs=3D1M count=3D100000
-100000+0 records in
-100000+0 records out
-104857600000 bytes (105 GB, 98 GiB) copied, 1,59252 s, 65,8 GB/s
-
-Performance counter stats for 'system wide':
-
-S0-D0-C0           1               1,56 Joules power/energy-cores/
-S0-D0-C1           1               1,56 Joules power/energy-cores/
-S0-D0-C2           1               1,56 Joules power/energy-cores/
-S0-D0-C3           1               1,56 Joules power/energy-cores/
-S0-D0-C4           1               1,56 Joules power/energy-cores/
-S0-D0-C5           1               1,56 Joules power/energy-cores/
-S0-D0-C6           1               1,56 Joules power/energy-cores/
-S0-D0-C7           1               1,56 Joules power/energy-cores/
-S0-D0-C8           1               1,56 Joules power/energy-cores/
-S0-D0-C9           1               1,56 Joules power/energy-cores/
-S0-D0-C10          1               1,56 Joules power/energy-cores/
-S0-D0-C11          1               1,56 Joules power/energy-cores/
-S0-D0-C12          1               1,56 Joules power/energy-cores/
-S0-D0-C13          1               1,56 Joules power/energy-cores/
-S0-D0-C14          1               1,56 Joules power/energy-cores/
-S0-D0-C15          1               1,56 Joules power/energy-cores/
-
-1,593982452 seconds time elapsed
-```
-
-Hence,
-
-Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-
-Thank you.
-
-=2D-=20
-Oleksandr Natalenko (post-factum)
+On Sun, Feb 19, 2023, 3:17 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Sun, Feb 19, 2023 at 01:27:57AM -0800, Ian Rogers escreveu:
+> > Recently the shadow stat metrics broke due to repeated aggregation and
+> > a quick fix was applied:
+> > https://lore.kernel.org/lkml/20230209064447.83733-1-irogers@google.com/
+> > This is the longer fix but one that comes with some extras. To avoid
+> > fixing issues for hard coded metrics, the topdown, SMI cost and
+> > transaction flags are moved into json metrics. A side effect of this
+> > is that TopdownL1 metrics will now be displayed when supported, if no
+> > "perf stat" events are specified.
+> >
+> > Another fix included here is for event grouping as raised in:
+> > https://lore.kernel.org/lkml/CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com/
+> > Metrics are now tagged with NMI and SMT flags, meaning that the events
+> > shouldn't be grouped if the NMI watchdog is enabled or SMT is enabled.
+> >
+> > Given the two issues, the metrics are re-generated and the patches
+> > also include the latest Intel vendor events. The changes to the metric
+> > generation code can be seen in:
+> > https://github.com/intel/perfmon/pull/56
+> >
+> > Hard coded metrics support thresholds, the patches add this ability to
+> > json metrics so that the hard coded metrics can be removed. Migrate
+> > remaining hard coded metrics to looking up counters from the
+> > evlist/aggregation count. Finally, get rid of the saved_value logic
+> > and thereby look to fix the aggregation issues.
+> >
+> > Some related fix ups and code clean ups are included in the changes,
+> > in particular to aid with the code's readability and to keep topdown
+> > documentation in sync.
+>
+> That is great work but won't have a reasonable time sitting on
+> linux-next to make it into 6.3.
+>
+> I have just applied it locally for the usual set of tests, that I'll
+> report back here.
 
 
+Ugh. I'm guessing it won't be useful if I point out more things broken
+with the current workaround, like metrics with --repeat :-/
+
+Thanks,
+Ian
+
+> - Arnaldo
+>
+> > Ian Rogers (51):
+> >   perf tools: Ensure evsel name is initialized
+> >   perf metrics: Improve variable names
+> >   perf pmu-events: Remove aggr_mode from pmu_event
+> >   perf pmu-events: Change aggr_mode to be an enum
+> >   perf pmu-events: Change deprecated to be a bool
+> >   perf pmu-events: Change perpkg to be a bool
+> >   perf expr: Make the online topology accessible globally
+> >   perf pmu-events: Make the metric_constraint an enum
+> >   perf pmu-events: Don't '\0' terminate enum values
+> >   perf vendor events intel: Refresh alderlake events
+> >   perf vendor events intel: Refresh alderlake-n metrics
+> >   perf vendor events intel: Refresh broadwell metrics
+> >   perf vendor events intel: Refresh broadwellde metrics
+> >   perf vendor events intel: Refresh broadwellx metrics
+> >   perf vendor events intel: Refresh cascadelakex events
+> >   perf vendor events intel: Add graniterapids events
+> >   perf vendor events intel: Refresh haswell metrics
+> >   perf vendor events intel: Refresh haswellx metrics
+> >   perf vendor events intel: Refresh icelake events
+> >   perf vendor events intel: Refresh icelakex metrics
+> >   perf vendor events intel: Refresh ivybridge metrics
+> >   perf vendor events intel: Refresh ivytown metrics
+> >   perf vendor events intel: Refresh jaketown events
+> >   perf vendor events intel: Refresh knightslanding events
+> >   perf vendor events intel: Refresh sandybridge events
+> >   perf vendor events intel: Refresh sapphirerapids events
+> >   perf vendor events intel: Refresh silvermont events
+> >   perf vendor events intel: Refresh skylake events
+> >   perf vendor events intel: Refresh skylakex metrics
+> >   perf vendor events intel: Refresh tigerlake events
+> >   perf vendor events intel: Refresh westmereep-dp events
+> >   perf jevents: Add rand support to metrics
+> >   perf jevent: Parse metric thresholds
+> >   perf pmu-events: Test parsing metric thresholds with the fake PMU
+> >   perf list: Support for printing metric thresholds
+> >   perf metric: Compute and print threshold values
+> >   perf expr: More explicit NAN handling
+> >   perf metric: Add --metric-no-threshold option
+> >   perf stat: Add TopdownL1 metric as a default if present
+> >   perf stat: Implement --topdown using json metrics
+> >   perf stat: Remove topdown event special handling
+> >   perf doc: Refresh topdown documentation
+> >   perf stat: Remove hard coded transaction events
+> >   perf stat: Use metrics for --smi-cost
+> >   perf stat: Remove perf_stat_evsel_id
+> >   perf stat: Move enums from header
+> >   perf stat: Hide runtime_stat
+> >   perf stat: Add cpu_aggr_map for loop
+> >   perf metric: Directly use counts rather than saved_value
+> >   perf stat: Use counts rather than saved_value
+> >   perf stat: Remove saved_value/runtime_stat
+> >
+> >  tools/perf/Documentation/perf-stat.txt        |   27 +-
+> >  tools/perf/Documentation/topdown.txt          |   70 +-
+> >  tools/perf/arch/powerpc/util/header.c         |    2 +-
+> >  tools/perf/arch/x86/util/evlist.c             |    6 +-
+> >  tools/perf/arch/x86/util/topdown.c            |   78 +-
+> >  tools/perf/arch/x86/util/topdown.h            |    1 -
+> >  tools/perf/builtin-list.c                     |   13 +-
+> >  tools/perf/builtin-script.c                   |    9 +-
+> >  tools/perf/builtin-stat.c                     |  233 +-
+> >  .../arch/x86/alderlake/adl-metrics.json       | 3190 ++++++++++-------
+> >  .../pmu-events/arch/x86/alderlake/cache.json  |   36 +-
+> >  .../arch/x86/alderlake/floating-point.json    |   27 +
+> >  .../arch/x86/alderlake/frontend.json          |    9 +
+> >  .../pmu-events/arch/x86/alderlake/memory.json |    3 +-
+> >  .../arch/x86/alderlake/pipeline.json          |   14 +-
+> >  .../arch/x86/alderlake/uncore-other.json      |   28 +-
+> >  .../arch/x86/alderlaken/adln-metrics.json     |  811 +++--
+> >  .../arch/x86/broadwell/bdw-metrics.json       | 1439 ++++----
+> >  .../arch/x86/broadwellde/bdwde-metrics.json   | 1405 ++++----
+> >  .../arch/x86/broadwellx/bdx-metrics.json      | 1626 +++++----
+> >  .../arch/x86/broadwellx/uncore-cache.json     |   74 +-
+> >  .../x86/broadwellx/uncore-interconnect.json   |   64 +-
+> >  .../arch/x86/broadwellx/uncore-other.json     |    4 +-
+> >  .../arch/x86/cascadelakex/cache.json          |   24 +-
+> >  .../arch/x86/cascadelakex/clx-metrics.json    | 2198 ++++++------
+> >  .../arch/x86/cascadelakex/frontend.json       |    8 +-
+> >  .../arch/x86/cascadelakex/pipeline.json       |   16 +
+> >  .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
+> >  .../arch/x86/cascadelakex/uncore-other.json   |  120 +-
+> >  .../arch/x86/cascadelakex/uncore-power.json   |    8 +-
+> >  .../arch/x86/graniterapids/cache.json         |   54 +
+> >  .../arch/x86/graniterapids/frontend.json      |   10 +
+> >  .../arch/x86/graniterapids/memory.json        |  174 +
+> >  .../arch/x86/graniterapids/other.json         |   29 +
+> >  .../arch/x86/graniterapids/pipeline.json      |  102 +
+> >  .../x86/graniterapids/virtual-memory.json     |   26 +
+> >  .../arch/x86/haswell/hsw-metrics.json         | 1220 ++++---
+> >  .../arch/x86/haswellx/hsx-metrics.json        | 1397 ++++----
+> >  .../pmu-events/arch/x86/icelake/cache.json    |   16 +
+> >  .../arch/x86/icelake/floating-point.json      |   31 +
+> >  .../arch/x86/icelake/icl-metrics.json         | 1932 +++++-----
+> >  .../pmu-events/arch/x86/icelake/pipeline.json |   23 +-
+> >  .../arch/x86/icelake/uncore-other.json        |   56 +
+> >  .../arch/x86/icelakex/icx-metrics.json        | 2153 +++++------
+> >  .../arch/x86/icelakex/uncore-memory.json      |    2 +-
+> >  .../arch/x86/icelakex/uncore-other.json       |    4 +-
+> >  .../arch/x86/ivybridge/ivb-metrics.json       | 1270 ++++---
+> >  .../arch/x86/ivytown/ivt-metrics.json         | 1311 ++++---
+> >  .../pmu-events/arch/x86/jaketown/cache.json   |    6 +-
+> >  .../arch/x86/jaketown/floating-point.json     |    2 +-
+> >  .../arch/x86/jaketown/frontend.json           |   12 +-
+> >  .../arch/x86/jaketown/jkt-metrics.json        |  602 ++--
+> >  .../arch/x86/jaketown/pipeline.json           |    2 +-
+> >  .../arch/x86/jaketown/uncore-cache.json       |   22 +-
+> >  .../x86/jaketown/uncore-interconnect.json     |   74 +-
+> >  .../arch/x86/jaketown/uncore-memory.json      |    4 +-
+> >  .../arch/x86/jaketown/uncore-other.json       |   22 +-
+> >  .../arch/x86/jaketown/uncore-power.json       |    8 +-
+> >  .../arch/x86/knightslanding/cache.json        |   94 +-
+> >  .../arch/x86/knightslanding/pipeline.json     |    8 +-
+> >  .../arch/x86/knightslanding/uncore-other.json |    8 +-
+> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |   29 +-
+> >  .../arch/x86/sandybridge/cache.json           |    8 +-
+> >  .../arch/x86/sandybridge/floating-point.json  |    2 +-
+> >  .../arch/x86/sandybridge/frontend.json        |   12 +-
+> >  .../arch/x86/sandybridge/pipeline.json        |    2 +-
+> >  .../arch/x86/sandybridge/snb-metrics.json     |  601 ++--
+> >  .../arch/x86/sapphirerapids/cache.json        |   24 +-
+> >  .../x86/sapphirerapids/floating-point.json    |   32 +
+> >  .../arch/x86/sapphirerapids/frontend.json     |    8 +
+> >  .../arch/x86/sapphirerapids/pipeline.json     |   19 +-
+> >  .../arch/x86/sapphirerapids/spr-metrics.json  | 2283 ++++++------
+> >  .../arch/x86/sapphirerapids/uncore-other.json |   60 +
+> >  .../arch/x86/silvermont/frontend.json         |    2 +-
+> >  .../arch/x86/silvermont/pipeline.json         |    2 +-
+> >  .../pmu-events/arch/x86/skylake/cache.json    |   25 +-
+> >  .../pmu-events/arch/x86/skylake/frontend.json |    8 +-
+> >  .../pmu-events/arch/x86/skylake/other.json    |    1 +
+> >  .../pmu-events/arch/x86/skylake/pipeline.json |   16 +
+> >  .../arch/x86/skylake/skl-metrics.json         | 1877 ++++++----
+> >  .../arch/x86/skylake/uncore-other.json        |    1 +
+> >  .../pmu-events/arch/x86/skylakex/cache.json   |    8 +-
+> >  .../arch/x86/skylakex/frontend.json           |    8 +-
+> >  .../arch/x86/skylakex/pipeline.json           |   16 +
+> >  .../arch/x86/skylakex/skx-metrics.json        | 2097 +++++------
+> >  .../arch/x86/skylakex/uncore-memory.json      |    2 +-
+> >  .../arch/x86/skylakex/uncore-other.json       |   96 +-
+> >  .../arch/x86/skylakex/uncore-power.json       |    6 +-
+> >  .../arch/x86/tigerlake/floating-point.json    |   31 +
+> >  .../arch/x86/tigerlake/pipeline.json          |   18 +
+> >  .../arch/x86/tigerlake/tgl-metrics.json       | 1942 +++++-----
+> >  .../arch/x86/tigerlake/uncore-other.json      |   28 +-
+> >  .../arch/x86/westmereep-dp/cache.json         |    2 +-
+> >  .../x86/westmereep-dp/virtual-memory.json     |    2 +-
+> >  tools/perf/pmu-events/jevents.py              |   58 +-
+> >  tools/perf/pmu-events/metric.py               |    8 +-
+> >  tools/perf/pmu-events/pmu-events.h            |   35 +-
+> >  tools/perf/tests/expand-cgroup.c              |    3 +-
+> >  tools/perf/tests/expr.c                       |    7 +-
+> >  tools/perf/tests/parse-metric.c               |   21 +-
+> >  tools/perf/tests/pmu-events.c                 |   49 +-
+> >  tools/perf/util/cpumap.h                      |    3 +
+> >  tools/perf/util/cputopo.c                     |   14 +
+> >  tools/perf/util/cputopo.h                     |    5 +
+> >  tools/perf/util/evsel.h                       |    2 +-
+> >  tools/perf/util/expr.c                        |   16 +-
+> >  tools/perf/util/expr.y                        |   12 +-
+> >  tools/perf/util/metricgroup.c                 |  178 +-
+> >  tools/perf/util/metricgroup.h                 |    5 +-
+> >  tools/perf/util/pmu.c                         |   17 +-
+> >  tools/perf/util/print-events.h                |    1 +
+> >  tools/perf/util/smt.c                         |   11 +-
+> >  tools/perf/util/smt.h                         |   12 +-
+> >  tools/perf/util/stat-display.c                |  117 +-
+> >  tools/perf/util/stat-shadow.c                 | 1287 ++-----
+> >  tools/perf/util/stat.c                        |   74 -
+> >  tools/perf/util/stat.h                        |   96 +-
+> >  tools/perf/util/synthetic-events.c            |    2 +-
+> >  tools/perf/util/topdown.c                     |   68 +-
+> >  tools/perf/util/topdown.h                     |   11 +-
+> >  120 files changed, 18025 insertions(+), 15590 deletions(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/cache.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/frontend.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/memory.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/other.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/pipeline.json
+> >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/virtual-memory.json
+> >
+> > --
+> > 2.39.2.637.g21b0678d19-goog
+> >
+>
+> --
+>
+> - Arnaldo
