@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F37C05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9101AC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230030AbjBSJgy (ORCPT
+        id S230034AbjBSJhG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:36:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59014 "EHLO
+        Sun, 19 Feb 2023 04:37:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbjBSJgx (ORCPT
+        with ESMTP id S229668AbjBSJhE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:36:53 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE6AE12BD2
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:00 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id w3-20020a25ef43000000b008ee1c76c25dso2176275ybm.11
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:00 -0800 (PST)
+        Sun, 19 Feb 2023 04:37:04 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D86412040
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:10 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id e14-20020a25bc8e000000b0091b90b20cd9so1879719ybk.6
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:36:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3kQG0KGeqgW06OPnyih1uXZZsO66wdHBjTbqSiX//SI=;
-        b=gb2QuI/Q7UTLV03j+31SjEjAnQVplGs47YvBd6d72MRsfNX5u2GV1bClVFw/KPr/DJ
-         j9VkCa6qiHYUKeSUlqAMjhUyepIsSaIdmc6/CDEnDH5Bg1MruzsNaUi1GrFe/RCHG4Ou
-         3/q2BxglwECD4NUkzFALnQWIey/UfoJLpkpUM2tCH8Ez4guaASLykOSuwFHIjrha8Gnb
-         tc4FH3ZiS6wOvY2zokF6JUyq2nSs+yVikyByMBdQkxY+ijcxCjlGZ3MBC7jpOELRI0HS
-         mHhwWScV1zH7rzz0rESS6LPTwCbYIbbRMDs+jv17YMGgoYXr5r8mpP8HO3oNUdzQHy/o
-         ZZiw==
+        bh=XBygbP2AnKfDbpz1krdMAZIvQLAdvtaCB6XLYUmfQds=;
+        b=PkbnNXwAZ7dASxCbIk3PSOXIwA56PiTDT2BrHJWvqt8nqcL3bSxaHP0HjREpFP4pBE
+         zmCKIb+9FhlwQ8T9T3hD1DWUTG0iZf0+D8Fg5gEw/6kW81MXr3SCY3kj3ZCNZJM79rEm
+         Z62LtGdZMOWbkEO42PWyNmuN/kx7l7fYGF+pskPCUg8W0RWDaNemZLiFYJpBXAf1moZy
+         UpDKxP3KBGDK6CwystAwBk4I9aM2uCdMXGtMenYofayeUMOzV5RGtLImtFxLETRLxQfL
+         FHBnkZN/j8gx2E/zhsgX1YogOTj0NgsRmfp+VgFEhl3UoSV3sPJ8dji7jQmoLUTBvZKF
+         78sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3kQG0KGeqgW06OPnyih1uXZZsO66wdHBjTbqSiX//SI=;
-        b=x0MllthdU8SDnf1QBwIPB362emvJe1Sgz0/zwblj9+MM1T0LLafo0y7Vezf3oxYo+9
-         J0EhsPcibNiE+IQfmw2ZgBvLRQQVhxbzgmJyzzj5wkAbpJpJUdRZZs36qB2p/DmTVqNz
-         vuS1FIKdi7ZSWVLao0Nh0ciiT3poRpo3TH2fyhz/ty1oY0OmU1aiuo2vejskIESBJ3RG
-         qI3EShzwQEuBUs7xBmMIcddzEr7N+pCduSVz/XpuHBbSY+vFDPYO+JtwG+kJRbgQX9wn
-         8Dain9zeuQuYyMJS1lzSmcJEhZs9igSbn0eJD6bfvCKECxFFwYY5EVSTfHQfvfKYTECz
-         0bpA==
-X-Gm-Message-State: AO0yUKVTtMjKcqoRkWo+p7PPYJI91Rd+JGdgVYY/LRVRjWVH9R6pLWvs
-        ys3f9tZMlYwEh01C5mKgcqcLqi61SO9R
-X-Google-Smtp-Source: AK7set9iZ4GNz6X424ocjjFR9ly/Nzr3yu49B3uQN0Li0fYihqizLYz+cos7UMisC/Dk4m8f82PPVOIM/5Y8
+        bh=XBygbP2AnKfDbpz1krdMAZIvQLAdvtaCB6XLYUmfQds=;
+        b=hH4cfn87R2DVCjWbvhls0MWbFm2chN1nw4ZJZs2n6I2Nz2RnAaP0gT7kVwRb58eWQ+
+         0JInadOgHYnQheO8yYQDk/dHGURhJtiSP5afKrRG4KXqLTcs9XWlzqjuk9Q/4/RwIFfw
+         F2CB0dsV8p27TbgZJJOpGMKmTqudtp77tPcd4Oog4vnQuj2qyzazfniHMm3HxRw5ocNL
+         qVw5Bx5kz00ptI630HjI5JRIcLO9hPbYTxvYOAyRJUkH65zPDhHbAK0Ntal5M/g1HM8I
+         Ppg0nrOM8cHeBMc0V1GDsBHGe6swazMJBb6hKPpWoOdFNLZMIbqSg//du5/refEPsTOj
+         pGbw==
+X-Gm-Message-State: AO0yUKXhgWETt4xEF4WDok++yyJYFpvFr3fe4RzUBq12Z70kAH4qGGFd
+        UfpaRvJM7nE+trjuvQMPSj1TTSin+92Z
+X-Google-Smtp-Source: AK7set+UJL29LpId9cYnoZsgaDIdCVm2Q8RTzyhbCy2UqAjEI7S9r3tmbOx9Jx+VYq9UTHEoDVtaR9fIJ5bP
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a25:6408:0:b0:911:cc15:db74 with SMTP id
- y8-20020a256408000000b00911cc15db74mr28488ybb.13.1676799242175; Sun, 19 Feb
- 2023 01:34:02 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:33 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:11cd:b0:90d:a6c0:6870 with SMTP
+ id n13-20020a05690211cd00b0090da6c06870mr391398ybu.2.1676799259452; Sun, 19
+ Feb 2023 01:34:19 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:35 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-37-irogers@google.com>
+Message-Id: <20230219092848.639226-39-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 36/51] perf metric: Compute and print threshold values
+Subject: [PATCH v1 38/51] perf metric: Add --metric-no-threshold option
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -92,177 +92,369 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Compute the threshold metric and use it to color the metric value as
-red or green. The threshold expression is used to generate the set of
-events as the threshold may require additional events. A later patch
-make this behavior optional with a --metric-no-threshold flag.
+Thresholds may need additional events, this can impact things like
+sharing groups of events to avoid multiplexing. Add a flag to make the
+threshold calculations optional. The threshold will still be computed
+if no additional events are necessary.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 24 +++++++++++++++++++++---
- tools/perf/util/metricgroup.h |  1 +
- tools/perf/util/stat-shadow.c | 24 ++++++++++++++++--------
- 3 files changed, 38 insertions(+), 11 deletions(-)
+ tools/perf/builtin-stat.c        |  4 +++
+ tools/perf/tests/expand-cgroup.c |  3 +-
+ tools/perf/tests/parse-metric.c  |  1 -
+ tools/perf/tests/pmu-events.c    |  4 +--
+ tools/perf/util/metricgroup.c    | 62 ++++++++++++++++++++------------
+ tools/perf/util/metricgroup.h    |  3 +-
+ tools/perf/util/stat-shadow.c    |  3 +-
+ tools/perf/util/stat.h           |  1 +
+ 8 files changed, 49 insertions(+), 32 deletions(-)
 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5d18a5a6f662..5e13171a7bba 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1256,6 +1256,8 @@ static struct option stat_options[] = {
+ 		       "don't group metric events, impacts multiplexing"),
+ 	OPT_BOOLEAN(0, "metric-no-merge", &stat_config.metric_no_merge,
+ 		       "don't try to share events between metrics in a group"),
++	OPT_BOOLEAN(0, "metric-no-threshold", &stat_config.metric_no_threshold,
++		       "don't try to share events between metrics in a group  "),
+ 	OPT_BOOLEAN(0, "topdown", &topdown_run,
+ 			"measure top-down statistics"),
+ 	OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
+@@ -1852,6 +1854,7 @@ static int add_default_attributes(void)
+ 			return metricgroup__parse_groups(evsel_list, "transaction",
+ 							 stat_config.metric_no_group,
+ 							 stat_config.metric_no_merge,
++							 stat_config.metric_no_threshold,
+ 							 stat_config.user_requested_cpu_list,
+ 							 stat_config.system_wide,
+ 							 &stat_config.metric_events);
+@@ -2519,6 +2522,7 @@ int cmd_stat(int argc, const char **argv)
+ 		metricgroup__parse_groups(evsel_list, metrics,
+ 					stat_config.metric_no_group,
+ 					stat_config.metric_no_merge,
++					stat_config.metric_no_threshold,
+ 					stat_config.user_requested_cpu_list,
+ 					stat_config.system_wide,
+ 					&stat_config.metric_events);
+diff --git a/tools/perf/tests/expand-cgroup.c b/tools/perf/tests/expand-cgroup.c
+index 672a27f37060..ec340880a848 100644
+--- a/tools/perf/tests/expand-cgroup.c
++++ b/tools/perf/tests/expand-cgroup.c
+@@ -187,8 +187,7 @@ static int expand_metric_events(void)
+ 
+ 	rblist__init(&metric_events);
+ 	pme_test = find_core_metrics_table("testarch", "testcpu");
+-	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str,
+-					     false, false, &metric_events);
++	ret = metricgroup__parse_groups_test(evlist, pme_test, metric_str, &metric_events);
+ 	if (ret < 0) {
+ 		pr_debug("failed to parse '%s' metric\n", metric_str);
+ 		goto out;
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+index 9fec6040950c..132c9b945a42 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -98,7 +98,6 @@ static int __compute_metric(const char *name, struct value *vals,
+ 	/* Parse the metric into metric_events list. */
+ 	pme_test = find_core_metrics_table("testarch", "testcpu");
+ 	err = metricgroup__parse_groups_test(evlist, pme_test, name,
+-					     false, false,
+ 					     &metric_events);
+ 	if (err)
+ 		goto out;
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index db2fed0c6993..50b99a0f8f59 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -846,9 +846,7 @@ static int test__parsing_callback(const struct pmu_metric *pm,
+ 	perf_evlist__set_maps(&evlist->core, cpus, NULL);
+ 	runtime_stat__init(&st);
+ 
+-	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name,
+-					     false, false,
+-					     &metric_events);
++	err = metricgroup__parse_groups_test(evlist, table, pm->metric_name, &metric_events);
+ 	if (err) {
+ 		if (!strcmp(pm->metric_name, "M1") || !strcmp(pm->metric_name, "M2") ||
+ 		    !strcmp(pm->metric_name, "M3")) {
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index b1d56a73223d..d83885697125 100644
+index d83885697125..afb6f2fdc24e 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -129,6 +129,8 @@ struct metric {
- 	const char *modifier;
- 	/** The expression to parse, for example, "instructions/cycles". */
- 	const char *metric_expr;
-+	/** Optional threshold expression where zero value is green, otherwise red. */
-+	const char *metric_threshold;
- 	/**
- 	 * The "ScaleUnit" that scales and adds a unit to the metric during
- 	 * output.
-@@ -222,6 +224,7 @@ static struct metric *metric__new(const struct pmu_metric *pm,
- 			goto out_err;
- 	}
- 	m->metric_expr = pm->metric_expr;
-+	m->metric_threshold = pm->metric_threshold;
- 	m->metric_unit = pm->unit;
- 	m->pctx->sctx.user_requested_cpu_list = NULL;
- 	if (user_requested_cpu_list) {
-@@ -901,6 +904,7 @@ static int __add_metric(struct list_head *metric_list,
- 	const struct visited_metric *vm;
- 	int ret;
- 	bool is_root = !root_metric;
-+	const char *expr;
- 	struct visited_metric visited_node = {
- 		.name = pm->metric_name,
- 		.parent = visited,
-@@ -963,16 +967,29 @@ static int __add_metric(struct list_head *metric_list,
- 	 * For both the parent and referenced metrics, we parse
- 	 * all the metric's IDs and add it to the root context.
+@@ -771,6 +771,7 @@ struct metricgroup_add_iter_data {
+ 	int *ret;
+ 	bool *has_match;
+ 	bool metric_no_group;
++	bool metric_no_threshold;
+ 	const char *user_requested_cpu_list;
+ 	bool system_wide;
+ 	struct metric *root_metric;
+@@ -786,6 +787,7 @@ static int add_metric(struct list_head *metric_list,
+ 		      const struct pmu_metric *pm,
+ 		      const char *modifier,
+ 		      bool metric_no_group,
++		      bool metric_no_threshold,
+ 		      const char *user_requested_cpu_list,
+ 		      bool system_wide,
+ 		      struct metric *root_metric,
+@@ -813,6 +815,7 @@ static int add_metric(struct list_head *metric_list,
+ static int resolve_metric(struct list_head *metric_list,
+ 			  const char *modifier,
+ 			  bool metric_no_group,
++			  bool metric_no_threshold,
+ 			  const char *user_requested_cpu_list,
+ 			  bool system_wide,
+ 			  struct metric *root_metric,
+@@ -861,8 +864,8 @@ static int resolve_metric(struct list_head *metric_list,
  	 */
--	if (expr__find_ids(pm->metric_expr, NULL, root_metric->pctx) < 0) {
-+	ret = 0;
-+	expr = pm->metric_expr;
-+	if (is_root && pm->metric_threshold) {
-+		/*
-+		 * Threshold expressions are built off the actual metric. Switch
-+		 * to use that in case of additional necessary events. Change
-+		 * the visited node name to avoid this being flagged as
-+		 * recursion.
-+		 */
-+		assert(strstr(pm->metric_threshold, pm->metric_name));
-+		expr = pm->metric_threshold;
-+		visited_node.name = "__threshold__";
-+	}
-+	if (expr__find_ids(expr, NULL, root_metric->pctx) < 0) {
- 		/* Broken metric. */
- 		ret = -EINVAL;
--	} else {
-+	}
-+	if (!ret) {
+ 	for (i = 0; i < pending_cnt; i++) {
+ 		ret = add_metric(metric_list, &pending[i].pm, modifier, metric_no_group,
+-				 user_requested_cpu_list, system_wide, root_metric, visited,
+-				 table);
++				 metric_no_threshold, user_requested_cpu_list, system_wide,
++				 root_metric, visited, table);
+ 		if (ret)
+ 			break;
+ 	}
+@@ -879,6 +882,7 @@ static int resolve_metric(struct list_head *metric_list,
+  * @metric_no_group: Should events written to events be grouped "{}" or
+  *                   global. Grouping is the default but due to multiplexing the
+  *                   user may override.
++ * @metric_no_threshold: Should threshold expressions be ignored?
+  * @runtime: A special argument for the parser only known at runtime.
+  * @user_requested_cpu_list: Command line specified CPUs to record on.
+  * @system_wide: Are events for all processes recorded.
+@@ -894,6 +898,7 @@ static int __add_metric(struct list_head *metric_list,
+ 			const struct pmu_metric *pm,
+ 			const char *modifier,
+ 			bool metric_no_group,
++			bool metric_no_threshold,
+ 			int runtime,
+ 			const char *user_requested_cpu_list,
+ 			bool system_wide,
+@@ -974,10 +979,12 @@ static int __add_metric(struct list_head *metric_list,
+ 		 * Threshold expressions are built off the actual metric. Switch
+ 		 * to use that in case of additional necessary events. Change
+ 		 * the visited node name to avoid this being flagged as
+-		 * recursion.
++		 * recursion. If the threshold events are disabled, just use the
++		 * metric's name as a reference. This allows metric threshold
++		 * computation if there are sufficient events.
+ 		 */
+ 		assert(strstr(pm->metric_threshold, pm->metric_name));
+-		expr = pm->metric_threshold;
++		expr = metric_no_threshold ? pm->metric_name : pm->metric_threshold;
+ 		visited_node.name = "__threshold__";
+ 	}
+ 	if (expr__find_ids(expr, NULL, root_metric->pctx) < 0) {
+@@ -987,8 +994,8 @@ static int __add_metric(struct list_head *metric_list,
+ 	if (!ret) {
  		/* Resolve referenced metrics. */
  		ret = resolve_metric(metric_list, modifier, metric_no_group,
- 				     user_requested_cpu_list, system_wide,
- 				     root_metric, &visited_node, table);
+-				     user_requested_cpu_list, system_wide,
+-				     root_metric, &visited_node, table);
++				     metric_no_threshold, user_requested_cpu_list,
++				     system_wide, root_metric, &visited_node, table);
  	}
--
  	if (ret) {
  		if (is_root)
- 			metric__free(root_metric);
-@@ -1554,6 +1571,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 			free(metric_events);
- 			goto out;
- 		}
-+		expr->metric_threshold = m->metric_threshold;
- 		expr->metric_unit = m->metric_unit;
- 		expr->metric_events = metric_events;
- 		expr->runtime = m->pctx->sctx.runtime;
+@@ -1035,6 +1042,7 @@ static int add_metric(struct list_head *metric_list,
+ 		      const struct pmu_metric *pm,
+ 		      const char *modifier,
+ 		      bool metric_no_group,
++		      bool metric_no_threshold,
+ 		      const char *user_requested_cpu_list,
+ 		      bool system_wide,
+ 		      struct metric *root_metric,
+@@ -1046,9 +1054,9 @@ static int add_metric(struct list_head *metric_list,
+ 	pr_debug("metric expr %s for %s\n", pm->metric_expr, pm->metric_name);
+ 
+ 	if (!strstr(pm->metric_expr, "?")) {
+-		ret = __add_metric(metric_list, pm, modifier, metric_no_group, 0,
+-				   user_requested_cpu_list, system_wide, root_metric,
+-				   visited, table);
++		ret = __add_metric(metric_list, pm, modifier, metric_no_group,
++				   metric_no_threshold, 0, user_requested_cpu_list,
++				   system_wide, root_metric, visited, table);
+ 	} else {
+ 		int j, count;
+ 
+@@ -1060,9 +1068,9 @@ static int add_metric(struct list_head *metric_list,
+ 		 */
+ 
+ 		for (j = 0; j < count && !ret; j++)
+-			ret = __add_metric(metric_list, pm, modifier, metric_no_group, j,
+-					   user_requested_cpu_list, system_wide,
+-					   root_metric, visited, table);
++			ret = __add_metric(metric_list, pm, modifier, metric_no_group,
++					   metric_no_threshold, j, user_requested_cpu_list,
++					   system_wide, root_metric, visited, table);
+ 	}
+ 
+ 	return ret;
+@@ -1079,8 +1087,8 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
+ 		return 0;
+ 
+ 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
+-			 d->user_requested_cpu_list, d->system_wide,
+-			 d->root_metric, d->visited, d->table);
++			 d->metric_no_threshold, d->user_requested_cpu_list,
++			 d->system_wide, d->root_metric, d->visited, d->table);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1124,6 +1132,7 @@ struct metricgroup__add_metric_data {
+ 	const char *modifier;
+ 	const char *user_requested_cpu_list;
+ 	bool metric_no_group;
++	bool metric_no_threshold;
+ 	bool system_wide;
+ 	bool has_match;
+ };
+@@ -1141,8 +1150,9 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
+ 
+ 		data->has_match = true;
+ 		ret = add_metric(data->list, pm, data->modifier, data->metric_no_group,
+-				 data->user_requested_cpu_list, data->system_wide,
+-				 /*root_metric=*/NULL, /*visited_metrics=*/NULL, table);
++				 data->metric_no_threshold, data->user_requested_cpu_list,
++				 data->system_wide, /*root_metric=*/NULL,
++				 /*visited_metrics=*/NULL, table);
+ 	}
+ 	return ret;
+ }
+@@ -1163,7 +1173,7 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
+  *       architecture perf is running upon.
+  */
+ static int metricgroup__add_metric(const char *metric_name, const char *modifier,
+-				   bool metric_no_group,
++				   bool metric_no_group, bool metric_no_threshold,
+ 				   const char *user_requested_cpu_list,
+ 				   bool system_wide,
+ 				   struct list_head *metric_list,
+@@ -1179,6 +1189,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
+ 			.metric_name = metric_name,
+ 			.modifier = modifier,
+ 			.metric_no_group = metric_no_group,
++			.metric_no_threshold = metric_no_threshold,
+ 			.user_requested_cpu_list = user_requested_cpu_list,
+ 			.system_wide = system_wide,
+ 			.has_match = false,
+@@ -1241,6 +1252,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
+  *       architecture perf is running upon.
+  */
+ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
++					bool metric_no_threshold,
+ 					const char *user_requested_cpu_list,
+ 					bool system_wide, struct list_head *metric_list,
+ 					const struct pmu_metrics_table *table)
+@@ -1259,7 +1271,8 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+ 			*modifier++ = '\0';
+ 
+ 		ret = metricgroup__add_metric(metric_name, modifier,
+-					      metric_no_group, user_requested_cpu_list,
++					      metric_no_group, metric_no_threshold,
++					      user_requested_cpu_list,
+ 					      system_wide, metric_list, table);
+ 		if (ret == -EINVAL)
+ 			pr_err("Cannot find metric or group `%s'\n", metric_name);
+@@ -1449,6 +1462,7 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
+ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 			bool metric_no_group,
+ 			bool metric_no_merge,
++			bool metric_no_threshold,
+ 			const char *user_requested_cpu_list,
+ 			bool system_wide,
+ 			struct perf_pmu *fake_pmu,
+@@ -1463,7 +1477,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
+ 
+ 	if (metric_events_list->nr_entries == 0)
+ 		metricgroup__rblist_init(metric_events_list);
+-	ret = metricgroup__add_metric_list(str, metric_no_group,
++	ret = metricgroup__add_metric_list(str, metric_no_group, metric_no_threshold,
+ 					   user_requested_cpu_list,
+ 					   system_wide, &metric_list, table);
+ 	if (ret)
+@@ -1598,6 +1612,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      const char *str,
+ 			      bool metric_no_group,
+ 			      bool metric_no_merge,
++			      bool metric_no_threshold,
+ 			      const char *user_requested_cpu_list,
+ 			      bool system_wide,
+ 			      struct rblist *metric_events)
+@@ -1608,18 +1623,19 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 		return -EINVAL;
+ 
+ 	return parse_groups(perf_evlist, str, metric_no_group, metric_no_merge,
+-			    user_requested_cpu_list, system_wide,
++			    metric_no_threshold, user_requested_cpu_list, system_wide,
+ 			    /*fake_pmu=*/NULL, metric_events, table);
+ }
+ 
+ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 				   const struct pmu_metrics_table *table,
+ 				   const char *str,
+-				   bool metric_no_group,
+-				   bool metric_no_merge,
+ 				   struct rblist *metric_events)
+ {
+-	return parse_groups(evlist, str, metric_no_group, metric_no_merge,
++	return parse_groups(evlist, str,
++			    /*metric_no_group=*/false,
++			    /*metric_no_merge=*/false,
++			    /*metric_no_threshold=*/false,
+ 			    /*user_requested_cpu_list=*/NULL,
+ 			    /*system_wide=*/false,
+ 			    &perf_pmu__fake, metric_events, table);
 diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 84030321a057..32eb3a5381fb 100644
+index 32eb3a5381fb..8d50052c5b4c 100644
 --- a/tools/perf/util/metricgroup.h
 +++ b/tools/perf/util/metricgroup.h
-@@ -47,6 +47,7 @@ struct metric_expr {
- 	const char *metric_expr;
- 	/** The name of the meric such as "IPC". */
- 	const char *metric_name;
-+	const char *metric_threshold;
- 	/**
- 	 * The "ScaleUnit" that scales and adds a unit to the metric during
- 	 * output. For example, "6.4e-05MiB" means to scale the resulting metric
+@@ -70,14 +70,13 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 			      const char *str,
+ 			      bool metric_no_group,
+ 			      bool metric_no_merge,
++			      bool metric_no_threshold,
+ 			      const char *user_requested_cpu_list,
+ 			      bool system_wide,
+ 			      struct rblist *metric_events);
+ int metricgroup__parse_groups_test(struct evlist *evlist,
+ 				   const struct pmu_metrics_table *table,
+ 				   const char *str,
+-				   bool metric_no_group,
+-				   bool metric_no_merge,
+ 				   struct rblist *metric_events);
+ 
+ void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
 diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 806b32156459..a41f186c6ec8 100644
+index a41f186c6ec8..77483eeda0d8 100644
 --- a/tools/perf/util/stat-shadow.c
 +++ b/tools/perf/util/stat-shadow.c
-@@ -777,6 +777,7 @@ static int prepare_metric(struct evsel **metric_events,
- 
- static void generic_metric(struct perf_stat_config *config,
- 			   const char *metric_expr,
-+			   const char *metric_threshold,
- 			   struct evsel **metric_events,
- 			   struct metric_ref *metric_refs,
- 			   char *name,
-@@ -789,9 +790,10 @@ static void generic_metric(struct perf_stat_config *config,
- {
- 	print_metric_t print_metric = out->print_metric;
- 	struct expr_parse_ctx *pctx;
--	double ratio, scale;
-+	double ratio, scale, threshold;
- 	int i;
- 	void *ctxp = out->ctx;
-+	const char *color = NULL;
- 
- 	pctx = expr__ctx_new();
- 	if (!pctx)
-@@ -811,6 +813,12 @@ static void generic_metric(struct perf_stat_config *config,
- 			char *unit;
+@@ -814,7 +814,8 @@ static void generic_metric(struct perf_stat_config *config,
  			char metric_bf[64];
  
-+			if (metric_threshold &&
-+			    expr__parse(&threshold, pctx, metric_threshold) == 0) {
-+				color = fpclassify(threshold) == FP_ZERO
-+					? PERF_COLOR_GREEN : PERF_COLOR_RED;
-+			}
-+
- 			if (metric_unit && metric_name) {
- 				if (perf_pmu__convert_scale(metric_unit,
- 					&unit, &scale) >= 0) {
-@@ -823,22 +831,22 @@ static void generic_metric(struct perf_stat_config *config,
- 					scnprintf(metric_bf, sizeof(metric_bf),
- 					  "%s  %s", unit, metric_name);
- 
--				print_metric(config, ctxp, NULL, "%8.1f",
-+				print_metric(config, ctxp, color, "%8.1f",
- 					     metric_bf, ratio);
- 			} else {
--				print_metric(config, ctxp, NULL, "%8.2f",
-+				print_metric(config, ctxp, color, "%8.2f",
- 					metric_name ?
- 					metric_name :
- 					out->force_header ?  name : "",
- 					ratio);
+ 			if (metric_threshold &&
+-			    expr__parse(&threshold, pctx, metric_threshold) == 0) {
++			    expr__parse(&threshold, pctx, metric_threshold) == 0 &&
++			    !isnan(threshold)) {
+ 				color = fpclassify(threshold) == FP_ZERO
+ 					? PERF_COLOR_GREEN : PERF_COLOR_RED;
  			}
- 		} else {
--			print_metric(config, ctxp, NULL, NULL,
-+			print_metric(config, ctxp, color, /*unit=*/NULL,
- 				     out->force_header ?
- 				     (metric_name ? metric_name : name) : "", 0);
- 		}
- 	} else {
--		print_metric(config, ctxp, NULL, NULL,
-+		print_metric(config, ctxp, color, /*unit=*/NULL,
- 			     out->force_header ?
- 			     (metric_name ? metric_name : name) : "", 0);
- 	}
-@@ -1214,9 +1222,9 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		list_for_each_entry (mexp, &me->head, nd) {
- 			if (num++ > 0)
- 				out->new_line(config, ctxp);
--			generic_metric(config, mexp->metric_expr, mexp->metric_events,
--				       mexp->metric_refs, evsel->name, mexp->metric_name,
--				       mexp->metric_unit, mexp->runtime,
-+			generic_metric(config, mexp->metric_expr, mexp->metric_threshold,
-+				       mexp->metric_events, mexp->metric_refs, evsel->name,
-+				       mexp->metric_name, mexp->metric_unit, mexp->runtime,
- 				       map_idx, out, st);
- 		}
- 	}
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index b1c29156c560..cf2d8aa445f3 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -159,6 +159,7 @@ struct perf_stat_config {
+ 	bool			 no_csv_summary;
+ 	bool			 metric_no_group;
+ 	bool			 metric_no_merge;
++	bool			 metric_no_threshold;
+ 	bool			 stop_read_counter;
+ 	bool			 iostat_run;
+ 	char			 *user_requested_cpu_list;
 -- 
 2.39.2.637.g21b0678d19-goog
 
