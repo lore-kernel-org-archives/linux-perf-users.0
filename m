@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5665CC636CC
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502A1C636CC
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbjBSJin (ORCPT
+        id S230072AbjBSJjC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:38:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
+        Sun, 19 Feb 2023 04:39:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230063AbjBSJil (ORCPT
+        with ESMTP id S230056AbjBSJjB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:38:41 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649FA125B7
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:37:42 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-53687f81167so18785597b3.18
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:37:42 -0800 (PST)
+        Sun, 19 Feb 2023 04:39:01 -0500
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF9AC653
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:38:10 -0800 (PST)
+Received: by mail-yb1-f201.google.com with SMTP id k18-20020a25b292000000b0091231592671so22362ybj.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:38:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KWbhNdODInNmkKhRE1J16fJdDjqDUBwLENwO3W9vuiU=;
-        b=Pm859wysWzwzMi1q3PqzD+ne5cXUtXcBdKyZ0RS1dnxvqc3OaHp8DhL81ofEGYOgyI
-         L5IQIUgDp0VOypIYOXzLORvQ8rsun/udjxKhuATtxbN3onPcIRK5hjIiBs6kOb6UyhPu
-         jQuiF01vyuV9aBbDnpjIIgSILCRwX6F5MWuKOHlsyDoDqHN0LdEVSQrp9hBJ/m6KYVni
-         iYurqb7fJVAn6qXnKcJb2No+8gTYalxOJk4e0xCvES+dUhxkkykpJpF8WSCYQnmmkKcF
-         2YZi+Kuqk7+q7PLIuUiD4DtSXzRupWNlCokHZfTMqJ88/DyhTR0Lsu0EZMX1oRjJSn2P
-         lzPg==
+        bh=83ufvBpHVtY5n0dRrsyH94JHmCN6bDj+Te8NRRpOnv0=;
+        b=lxWRJOz1YmAnLVIpr+fpP4VDEQycUyWETLBz0W+CvZOIA6Kr/CoxJ2NsHEn41bEINl
+         xdOo4dSeb6JldrmmHx8t98bCU9i7l7fSaOmRZyGpziCtv6bpIJCU9iN0JcYU+NjDa2O+
+         9XTFi0YHaXrGx64qq4FOlIRjg9uoMS8Ya2jorXHuAwkk2xbnSK++ZlozuUPqdODuJFKs
+         6tKq8t5/yfeYhmVTyuQilkmzIWpSy5DP2e7xVmQeMyMJXwX8z5cUkxyl2CUbyclghtcG
+         xaFP4bc1MAn1II2okkTepHrecIc0FvHgfZ29b/HmYpMob81nIptOTI3KNc6OhwmW2xc0
+         LwxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KWbhNdODInNmkKhRE1J16fJdDjqDUBwLENwO3W9vuiU=;
-        b=iPnurgfDM6iHVgmCoItOGFeZkhEi4Tlrk6r0gKDknLlHyNy4ofNnMAWCnL5tFX8nSW
-         y3khivoPXm7/DWScL6otd0S36II8bswXoZ+CoAWSQ9VMKnE/xkcObAMwEpWP2AGvTkFE
-         Rv5M0l83jzTNLE6AMPLdKqG33QiTtNNk2nhlmNV+TjihpbgUp4esmWjrtTq8KgorgLhB
-         jc4GmP14Rqy7Z+wbK3MD4ceCeRONbGNREkKor5nlOmM1rfmkIr/7HhFAzQ79CBbFS/Xu
-         4zhOsnH3D9yWn4oeXCDSN6hCX7EJJR05mcynGBURQRkwAvxswglvpNiAtQF5G7YLqkeO
-         Z+Sw==
-X-Gm-Message-State: AO0yUKWX5CFnH//bw58kqE69vzNzxHIB8MwKDVxqw1Q6PvcbynBNAdl5
-        NJ/S+sMwteYZA+6J8aEA6zkatRBBw+eG
-X-Google-Smtp-Source: AK7set8YqgO/ol8bai9joW9tiv/vzRHWjDm3VMhOIPq5xrBsNspbbJh5PV/rW1OqBHmfh9XKebzqmWulRZtt
+        bh=83ufvBpHVtY5n0dRrsyH94JHmCN6bDj+Te8NRRpOnv0=;
+        b=tzCfeiZLARh2fhtu9FnV3hYY77PBb4yIVLjXqfyNntCxw38TialLiOz9hA2hjOMYGj
+         9pjFCAK27XQCU5GSLkYcqdJNw4JLqgN4X5ZgJ58hgx5x1ts6Jqd0iBTSVC46uv9bWXlp
+         FAiYD5/v0HdRvYDi843RT9LJAgVLB6Xw0ZGappuDaYNuSRbnWUXYDI4LKMHOK2+EeYZe
+         qucLMYw31ndZGF/K+EqVyTBvPYS67eBizeHS/5RHxGCcJokkVXtlCXUKdZejI4Ck3olL
+         YxOK2K2sMS40hIjm9PTwfs1ruxggsaausEPfKSXf8QYuprb6Hsw8KIRAMFWs5QBbuNP+
+         93AA==
+X-Gm-Message-State: AO0yUKW/tZlOc6qHs75fjHjaX4pSt0HxiK0gYQzG/0HK10Tt7XiYtiLa
+        WFgka4NV4B7oHqg36ZCYIaIoJ04bd87r
+X-Google-Smtp-Source: AK7set8t3rcgc5hL8cNAhis/P84/LQFLK5QsqBjIvZYGgI+BUkbIeJCgbTvi2p9zIdmfba0Vf3xefkV5CXYn
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a05:6902:12c5:b0:8d9:7d26:d690 with SMTP
- id j5-20020a05690212c500b008d97d26d690mr156747ybu.1.1676799370473; Sun, 19
- Feb 2023 01:36:10 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:48 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:10c6:b0:855:fdcb:4467 with SMTP
+ id w6-20020a05690210c600b00855fdcb4467mr151684ybu.0.1676799302521; Sun, 19
+ Feb 2023 01:35:02 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:40 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-52-irogers@google.com>
+Message-Id: <20230219092848.639226-44-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 51/51] perf stat: Remove saved_value/runtime_stat
+Subject: [PATCH v1 43/51] perf stat: Remove hard coded transaction events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -92,402 +92,214 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As saved_value/runtime_stat are only written to and not read, remove
-the associated logic and writes.
+The metric group "transaction" is now present for Intel architectures
+so the legacy hard coded approach won't be used. Remove the associated
+logic.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c     |   5 -
- tools/perf/builtin-stat.c       |   6 -
- tools/perf/tests/parse-metric.c |   1 -
- tools/perf/tests/pmu-events.c   |   1 -
- tools/perf/util/stat-shadow.c   | 198 --------------------------------
- tools/perf/util/stat.c          |  24 ----
- tools/perf/util/stat.h          |   4 -
- 7 files changed, 239 deletions(-)
+ tools/perf/builtin-stat.c     | 59 ++++++-----------------------------
+ tools/perf/util/stat-shadow.c | 48 +---------------------------
+ tools/perf/util/stat.c        |  4 ---
+ tools/perf/util/stat.h        |  7 -----
+ 4 files changed, 11 insertions(+), 107 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index e9b5387161df..522226114263 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2072,9 +2072,6 @@ static void perf_sample__fprint_metric(struct perf_script *script,
- 	if (evsel_script(leader)->gnum++ == 0)
- 		perf_stat__reset_shadow_stats();
- 	val = sample->period * evsel->scale;
--	perf_stat__update_shadow_stats(evsel,
--				       val,
--				       sample->cpu);
- 	evsel_script(evsel)->val = val;
- 	if (evsel_script(leader)->gnum == leader->core.nr_members) {
- 		for_each_group_member (ev2, leader) {
-@@ -2792,8 +2789,6 @@ static int __cmd_script(struct perf_script *script)
- 
- 	signal(SIGINT, sig_handler);
- 
--	perf_stat__init_shadow_stats();
--
- 	/* override event processing functions */
- 	if (script->show_task_events) {
- 		script->tool.comm = process_comm_event;
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 619387459914..d70b1ec88594 100644
+index bdb1ef4fc6ad..e6b60b058257 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -424,7 +424,6 @@ static void process_counters(void)
+@@ -100,30 +100,6 @@
  
- 	perf_stat_merge_counters(&stat_config, evsel_list);
- 	perf_stat_process_percore(&stat_config, evsel_list);
--	perf_stat_process_shadow_stats(&stat_config, evsel_list);
- }
+ static void print_counters(struct timespec *ts, int argc, const char **argv);
  
- static void process_interval(void)
-@@ -434,7 +433,6 @@ static void process_interval(void)
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
- 
--	perf_stat__reset_shadow_per_stat();
- 	evlist__reset_aggr_stats(evsel_list);
- 
- 	if (read_counters(&rs) == 0)
-@@ -910,7 +908,6 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		evlist__copy_prev_raw_counts(evsel_list);
- 		evlist__reset_prev_raw_counts(evsel_list);
- 		evlist__reset_aggr_stats(evsel_list);
--		perf_stat__reset_shadow_per_stat();
- 	} else {
- 		update_stats(&walltime_nsecs_stats, t1 - t0);
- 		update_rusage_stats(&ru_stats, &stat_config.ru_data);
-@@ -2132,8 +2129,6 @@ static int __cmd_report(int argc, const char **argv)
- 			input_name = "perf.data";
- 	}
- 
--	perf_stat__init_shadow_stats();
+-/* Default events used for perf stat -T */
+-static const char *transaction_attrs = {
+-	"task-clock,"
+-	"{"
+-	"instructions,"
+-	"cycles,"
+-	"cpu/cycles-t/,"
+-	"cpu/tx-start/,"
+-	"cpu/el-start/,"
+-	"cpu/cycles-ct/"
+-	"}"
+-};
 -
- 	perf_stat.data.path = input_name;
- 	perf_stat.data.mode = PERF_DATA_MODE_READ;
+-/* More limited version when the CPU does not have all events. */
+-static const char * transaction_limited_attrs = {
+-	"task-clock,"
+-	"{"
+-	"instructions,"
+-	"cycles,"
+-	"cpu/cycles-t/,"
+-	"cpu/tx-start/"
+-	"}"
+-};
+-
+ static const char *smi_cost_attrs = {
+ 	"{"
+ 	"msr/aperf/,"
+@@ -1811,37 +1787,22 @@ static int add_default_attributes(void)
+ 		return 0;
  
-@@ -2413,7 +2408,6 @@ int cmd_stat(int argc, const char **argv)
- 					&stat_config.metric_events);
- 		zfree(&metrics);
+ 	if (transaction_run) {
+-		struct parse_events_error errinfo;
+ 		/* Handle -T as -M transaction. Once platform specific metrics
+ 		 * support has been added to the json files, all architectures
+ 		 * will use this approach. To determine transaction support
+ 		 * on an architecture test for such a metric name.
+ 		 */
+-		if (metricgroup__has_metric("transaction")) {
+-			return metricgroup__parse_groups(evsel_list, "transaction",
+-							 stat_config.metric_no_group,
+-							 stat_config.metric_no_merge,
+-							 stat_config.metric_no_threshold,
+-							 stat_config.user_requested_cpu_list,
+-							 stat_config.system_wide,
+-							 &stat_config.metric_events);
+-		}
+-
+-		parse_events_error__init(&errinfo);
+-		if (pmu_have_event("cpu", "cycles-ct") &&
+-		    pmu_have_event("cpu", "el-start"))
+-			err = parse_events(evsel_list, transaction_attrs,
+-					   &errinfo);
+-		else
+-			err = parse_events(evsel_list,
+-					   transaction_limited_attrs,
+-					   &errinfo);
+-		if (err) {
+-			fprintf(stderr, "Cannot set up transaction events\n");
+-			parse_events_error__print(&errinfo, transaction_attrs);
++		if (!metricgroup__has_metric("transaction")) {
++			pr_err("Missing transaction metrics");
++			return -1;
+ 		}
+-		parse_events_error__exit(&errinfo);
+-		return err ? -1 : 0;
++		return metricgroup__parse_groups(evsel_list, "transaction",
++						stat_config.metric_no_group,
++						stat_config.metric_no_merge,
++						stat_config.metric_no_threshold,
++						stat_config.user_requested_cpu_list,
++						stat_config.system_wide,
++						&stat_config.metric_events);
  	}
--	perf_stat__init_shadow_stats();
  
- 	if (add_default_attributes())
- 		goto out;
-diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-index b9b8a48289c4..c43b056f9fa3 100644
---- a/tools/perf/tests/parse-metric.c
-+++ b/tools/perf/tests/parse-metric.c
-@@ -296,7 +296,6 @@ static int test_metric_group(void)
- 
- static int test__parse_metric(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	perf_stat__init_shadow_stats();
- 	TEST_ASSERT_VAL("IPC failed", test_ipc() == 0);
- 	TEST_ASSERT_VAL("frontend failed", test_frontend() == 0);
- 	TEST_ASSERT_VAL("DCache_L2 failed", test_dcache_l2() == 0);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 4ec2a4ca1a82..6ccd413b5983 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -905,7 +905,6 @@ static int test__parsing(struct test_suite *test __maybe_unused,
- {
- 	int failures = 0;
- 
--	perf_stat__init_shadow_stats();
- 	pmu_for_each_core_metric(test__parsing_callback, &failures);
- 	pmu_for_each_sys_metric(test__parsing_callback, &failures);
- 
+ 	if (smi_cost) {
 diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 9d22cde09dc9..ef85f1ae1ab2 100644
+index 5189756bf16d..3cfe4b4eb3de 100644
 --- a/tools/perf/util/stat-shadow.c
 +++ b/tools/perf/util/stat-shadow.c
-@@ -16,22 +16,9 @@
- #include "iostat.h"
- #include "util/hashmap.h"
- 
--/*
-- * AGGR_GLOBAL: Use CPU 0
-- * AGGR_SOCKET: Use first CPU of socket
-- * AGGR_DIE: Use first CPU of die
-- * AGGR_CORE: Use first CPU of core
-- * AGGR_NONE: Use matching CPU
-- * AGGR_THREAD: Not supported?
-- */
--
- struct stats walltime_nsecs_stats;
- struct rusage_stats ru_stats;
- 
--static struct runtime_stat {
--	struct rblist value_list;
--} rt_stat;
--
- enum {
- 	CTX_BIT_USER	= 1 << 0,
- 	CTX_BIT_KERNEL	= 1 << 1,
-@@ -65,117 +52,6 @@ enum stat_type {
- 	STAT_MAX
- };
- 
--struct saved_value {
--	struct rb_node rb_node;
--	struct evsel *evsel;
--	enum stat_type type;
--	int ctx;
--	int map_idx;  /* cpu or thread map index */
--	struct cgroup *cgrp;
--	struct stats stats;
--	u64 metric_total;
--	int metric_other;
--};
--
--static int saved_value_cmp(struct rb_node *rb_node, const void *entry)
--{
--	struct saved_value *a = container_of(rb_node,
--					     struct saved_value,
--					     rb_node);
--	const struct saved_value *b = entry;
--
--	if (a->map_idx != b->map_idx)
--		return a->map_idx - b->map_idx;
--
--	/*
--	 * Previously the rbtree was used to link generic metrics.
--	 * The keys were evsel/cpu. Now the rbtree is extended to support
--	 * per-thread shadow stats. For shadow stats case, the keys
--	 * are cpu/type/ctx/stat (evsel is NULL). For generic metrics
--	 * case, the keys are still evsel/cpu (type/ctx/stat are 0 or NULL).
--	 */
--	if (a->type != b->type)
--		return a->type - b->type;
--
--	if (a->ctx != b->ctx)
--		return a->ctx - b->ctx;
--
--	if (a->cgrp != b->cgrp)
--		return (char *)a->cgrp < (char *)b->cgrp ? -1 : +1;
--
--	if (a->evsel == b->evsel)
--		return 0;
--	if ((char *)a->evsel < (char *)b->evsel)
--		return -1;
--	return +1;
--}
--
--static struct rb_node *saved_value_new(struct rblist *rblist __maybe_unused,
--				     const void *entry)
--{
--	struct saved_value *nd = malloc(sizeof(struct saved_value));
--
--	if (!nd)
--		return NULL;
--	memcpy(nd, entry, sizeof(struct saved_value));
--	return &nd->rb_node;
--}
--
--static void saved_value_delete(struct rblist *rblist __maybe_unused,
--			       struct rb_node *rb_node)
--{
--	struct saved_value *v;
--
--	BUG_ON(!rb_node);
--	v = container_of(rb_node, struct saved_value, rb_node);
--	free(v);
--}
--
--static struct saved_value *saved_value_lookup(struct evsel *evsel,
--					      int map_idx,
--					      bool create,
--					      enum stat_type type,
--					      int ctx,
--					      struct cgroup *cgrp)
--{
--	struct rblist *rblist;
--	struct rb_node *nd;
--	struct saved_value dm = {
--		.map_idx = map_idx,
--		.evsel = evsel,
--		.type = type,
--		.ctx = ctx,
--		.cgrp = cgrp,
--	};
--
--	rblist = &rt_stat.value_list;
--
--	/* don't use context info for clock events */
--	if (type == STAT_NSECS)
--		dm.ctx = 0;
--
--	nd = rblist__find(rblist, &dm);
--	if (nd)
--		return container_of(nd, struct saved_value, rb_node);
--	if (create) {
--		rblist__add_node(rblist, &dm);
--		nd = rblist__find(rblist, &dm);
--		if (nd)
--			return container_of(nd, struct saved_value, rb_node);
--	}
--	return NULL;
--}
--
--void perf_stat__init_shadow_stats(void)
--{
--	struct rblist *rblist = &rt_stat.value_list;
--
--	rblist__init(rblist);
--	rblist->node_cmp = saved_value_cmp;
--	rblist->node_new = saved_value_new;
--	rblist->node_delete = saved_value_delete;
--}
--
- static int evsel_context(const struct evsel *evsel)
+@@ -235,12 +235,6 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+ 		update_runtime_stat(st, STAT_NSECS, map_idx, count_ns, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
+ 		update_runtime_stat(st, STAT_CYCLES, map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, CYCLES_IN_TX))
+-		update_runtime_stat(st, STAT_CYCLES_IN_TX, map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, TRANSACTION_START))
+-		update_runtime_stat(st, STAT_TRANSACTION, map_idx, count, &rsd);
+-	else if (perf_stat_evsel__is(counter, ELISION_START))
+-		update_runtime_stat(st, STAT_ELISION, map_idx, count, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
+ 		update_runtime_stat(st, STAT_STALLED_CYCLES_FRONT,
+ 				    map_idx, count, &rsd);
+@@ -695,7 +689,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
  {
- 	int ctx = 0;
-@@ -194,86 +70,12 @@ static int evsel_context(const struct evsel *evsel)
- 	return ctx;
- }
- 
--void perf_stat__reset_shadow_per_stat(void)
--{
--	struct rblist *rblist;
--	struct rb_node *pos, *next;
+ 	void *ctxp = out->ctx;
+ 	print_metric_t print_metric = out->print_metric;
+-	double total, ratio = 0.0, total2;
++	double total, ratio = 0.0;
+ 	struct runtime_stat_data rsd = {
+ 		.ctx = evsel_context(evsel),
+ 		.cgrp = evsel->cgrp,
+@@ -808,46 +802,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		} else {
+ 			print_metric(config, ctxp, NULL, NULL, "Ghz", 0);
+ 		}
+-	} else if (perf_stat_evsel__is(evsel, CYCLES_IN_TX)) {
+-		total = runtime_stat_avg(st, STAT_CYCLES, map_idx, &rsd);
 -
--	rblist = &rt_stat.value_list;
--	next = rb_first_cached(&rblist->entries);
--	while (next) {
--		pos = next;
--		next = rb_next(pos);
--		memset(&container_of(pos, struct saved_value, rb_node)->stats,
--		       0,
--		       sizeof(struct stats));
--	}
--}
+-		if (total)
+-			print_metric(config, ctxp, NULL,
+-					"%7.2f%%", "transactional cycles",
+-					100.0 * (avg / total));
+-		else
+-			print_metric(config, ctxp, NULL, NULL, "transactional cycles",
+-				     0);
+-	} else if (perf_stat_evsel__is(evsel, CYCLES_IN_TX_CP)) {
+-		total = runtime_stat_avg(st, STAT_CYCLES, map_idx, &rsd);
+-		total2 = runtime_stat_avg(st, STAT_CYCLES_IN_TX, map_idx, &rsd);
 -
- void perf_stat__reset_shadow_stats(void)
- {
--	perf_stat__reset_shadow_per_stat();
- 	memset(&walltime_nsecs_stats, 0, sizeof(walltime_nsecs_stats));
- 	memset(&ru_stats, 0, sizeof(ru_stats));
- }
- 
--struct runtime_stat_data {
--	int ctx;
--	struct cgroup *cgrp;
--};
+-		if (total2 < avg)
+-			total2 = avg;
+-		if (total)
+-			print_metric(config, ctxp, NULL, "%7.2f%%", "aborted cycles",
+-				100.0 * ((total2-avg) / total));
+-		else
+-			print_metric(config, ctxp, NULL, NULL, "aborted cycles", 0);
+-	} else if (perf_stat_evsel__is(evsel, TRANSACTION_START)) {
+-		total = runtime_stat_avg(st, STAT_CYCLES_IN_TX, map_idx, &rsd);
 -
--static void update_runtime_stat(enum stat_type type,
--				int map_idx, u64 count,
--				struct runtime_stat_data *rsd)
--{
--	struct saved_value *v = saved_value_lookup(NULL, map_idx, true, type,
--						   rsd->ctx, rsd->cgrp);
+-		if (avg)
+-			ratio = total / avg;
 -
--	if (v)
--		update_stats(&v->stats, count);
--}
+-		if (runtime_stat_n(st, STAT_CYCLES_IN_TX, map_idx, &rsd) != 0)
+-			print_metric(config, ctxp, NULL, "%8.0f",
+-				     "cycles / transaction", ratio);
+-		else
+-			print_metric(config, ctxp, NULL, NULL, "cycles / transaction",
+-				      0);
+-	} else if (perf_stat_evsel__is(evsel, ELISION_START)) {
+-		total = runtime_stat_avg(st, STAT_CYCLES_IN_TX, map_idx, &rsd);
 -
--/*
-- * Update various tracking values we maintain to print
-- * more semantic information such as miss/hit ratios,
-- * instruction rates, etc:
-- */
--void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
--				    int aggr_idx)
--{
--	u64 count_ns = count;
--	struct runtime_stat_data rsd = {
--		.ctx = evsel_context(counter),
--		.cgrp = counter->cgrp,
--	};
--	count *= counter->scale;
+-		if (avg)
+-			ratio = total / avg;
 -
--	if (evsel__is_clock(counter))
--		update_runtime_stat(STAT_NSECS, aggr_idx, count_ns, &rsd);
--	else if (evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
--		update_runtime_stat(STAT_CYCLES, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
--		update_runtime_stat(STAT_STALLED_CYCLES_FRONT,
--				    aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_BACKEND))
--		update_runtime_stat(STAT_STALLED_CYCLES_BACK,
--				    aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HARDWARE, HW_BRANCH_INSTRUCTIONS))
--		update_runtime_stat(STAT_BRANCHES, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HARDWARE, HW_CACHE_REFERENCES))
--		update_runtime_stat(STAT_CACHE_REFS, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HW_CACHE, HW_CACHE_L1D))
--		update_runtime_stat(STAT_L1_DCACHE, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HW_CACHE, HW_CACHE_L1I))
--		update_runtime_stat(STAT_L1_ICACHE, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HW_CACHE, HW_CACHE_LL))
--		update_runtime_stat(STAT_LL_CACHE, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HW_CACHE, HW_CACHE_DTLB))
--		update_runtime_stat(STAT_DTLB_CACHE, aggr_idx, count, &rsd);
--	else if (evsel__match(counter, HW_CACHE, HW_CACHE_ITLB))
--		update_runtime_stat(STAT_ITLB_CACHE, aggr_idx, count, &rsd);
--}
--
- static enum stat_type evsel__stat_type(const struct evsel *evsel)
- {
- 	/* Fake perf_hw_cache_op_id values for use with evsel__match. */
+-		print_metric(config, ctxp, NULL, "%8.0f", "cycles / elision", ratio);
+ 	} else if (evsel__is_clock(evsel)) {
+ 		if ((ratio = avg_stats(&walltime_nsecs_stats)) != 0)
+ 			print_metric(config, ctxp, NULL, "%8.3f", "CPUs utilized",
 diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 83dc4c1f4b12..4abfd87c5352 100644
+index 0b8c91ca13cd..b5b18d457254 100644
 --- a/tools/perf/util/stat.c
 +++ b/tools/perf/util/stat.c
-@@ -648,30 +648,6 @@ void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *e
- 		evsel__process_percore(evsel);
- }
- 
--static void evsel__update_shadow_stats(struct evsel *evsel)
--{
--	struct perf_stat_evsel *ps = evsel->stats;
--	int aggr_idx;
--
--	if (ps->aggr == NULL)
--		return;
--
--	for (aggr_idx = 0; aggr_idx < ps->nr_aggr; aggr_idx++) {
--		struct perf_counts_values *aggr_counts = &ps->aggr[aggr_idx].counts;
--
--		perf_stat__update_shadow_stats(evsel, aggr_counts->val, aggr_idx);
--	}
--}
--
--void perf_stat_process_shadow_stats(struct perf_stat_config *config __maybe_unused,
--				    struct evlist *evlist)
--{
--	struct evsel *evsel;
--
--	evlist__for_each_entry(evlist, evsel)
--		evsel__update_shadow_stats(evsel);
--}
--
- int perf_event__process_stat_event(struct perf_session *session,
- 				   union perf_event *event)
- {
+@@ -87,10 +87,6 @@ bool __perf_stat_evsel__is(struct evsel *evsel, enum perf_stat_evsel_id id)
+ #define ID(id, name) [PERF_STAT_EVSEL_ID__##id] = #name
+ static const char *id_str[PERF_STAT_EVSEL_ID__MAX] = {
+ 	ID(NONE,		x),
+-	ID(CYCLES_IN_TX,	cpu/cycles-t/),
+-	ID(TRANSACTION_START,	cpu/tx-start/),
+-	ID(ELISION_START,	cpu/el-start/),
+-	ID(CYCLES_IN_TX_CP,	cpu/cycles-ct/),
+ 	ID(SMI_NUM, msr/smi/),
+ 	ID(APERF, msr/aperf/),
+ };
 diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b01c828c3799..41204547b76b 100644
+index 42af350a96d9..c5fe847dd344 100644
 --- a/tools/perf/util/stat.h
 +++ b/tools/perf/util/stat.h
-@@ -157,10 +157,7 @@ typedef void (*print_metric_t)(struct perf_stat_config *config,
- 			       const char *fmt, double val);
- typedef void (*new_line_t)(struct perf_stat_config *config, void *ctx);
+@@ -21,10 +21,6 @@ struct stats {
  
--void perf_stat__init_shadow_stats(void);
- void perf_stat__reset_shadow_stats(void);
--void perf_stat__reset_shadow_per_stat(void);
--void perf_stat__update_shadow_stats(struct evsel *counter, u64 count, int aggr_idx);
- struct perf_stat_output_ctx {
- 	void *ctx;
- 	print_metric_t print_metric;
-@@ -189,7 +186,6 @@ int perf_stat_process_counter(struct perf_stat_config *config,
- 			      struct evsel *counter);
- void perf_stat_merge_counters(struct perf_stat_config *config, struct evlist *evlist);
- void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *evlist);
--void perf_stat_process_shadow_stats(struct perf_stat_config *config, struct evlist *evlist);
- 
- struct perf_tool;
- union perf_event;
+ enum perf_stat_evsel_id {
+ 	PERF_STAT_EVSEL_ID__NONE = 0,
+-	PERF_STAT_EVSEL_ID__CYCLES_IN_TX,
+-	PERF_STAT_EVSEL_ID__TRANSACTION_START,
+-	PERF_STAT_EVSEL_ID__ELISION_START,
+-	PERF_STAT_EVSEL_ID__CYCLES_IN_TX_CP,
+ 	PERF_STAT_EVSEL_ID__SMI_NUM,
+ 	PERF_STAT_EVSEL_ID__APERF,
+ 	PERF_STAT_EVSEL_ID__MAX,
+@@ -92,9 +88,6 @@ enum stat_type {
+ 	STAT_LL_CACHE,
+ 	STAT_ITLB_CACHE,
+ 	STAT_DTLB_CACHE,
+-	STAT_CYCLES_IN_TX,
+-	STAT_TRANSACTION,
+-	STAT_ELISION,
+ 	STAT_SMI_NUM,
+ 	STAT_APERF,
+ 	STAT_MAX
 -- 
 2.39.2.637.g21b0678d19-goog
 
