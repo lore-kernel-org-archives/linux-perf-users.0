@@ -2,330 +2,304 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB17C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 06:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B8DC636CC
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjBSGOK (ORCPT
+        id S229506AbjBSJ3D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 01:14:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45574 "EHLO
+        Sun, 19 Feb 2023 04:29:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjBSGOG (ORCPT
+        with ESMTP id S229459AbjBSJ3D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 01:14:06 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050C013D57;
-        Sat, 18 Feb 2023 22:13:47 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id f8-20020a17090ac28800b00233d7314c1cso103797pjt.5;
-        Sat, 18 Feb 2023 22:13:47 -0800 (PST)
+        Sun, 19 Feb 2023 04:29:03 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64AF9CDEF
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:29:01 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5368723920fso20244827b3.21
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:29:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5gN8E44qYK1VjzQVWIb3XOtq2U8NR24vawLMGmfvkdw=;
-        b=peHhq0bBQU6unbUIMfKArDPXNRFcTtvWLekxgi+j8mPTvRJ/oy9iEF4JWteo1c4rPZ
-         3Kd7jTFFYtqNL1e52uLjjiUjtSUzil4lzmR0xCJIKweY/8WkbQODKBFYTOY9dcTgjsfb
-         zlLC36MglbzkIvJyu3gVpxuNN1OQEGtD2veyg6XUOpToymvcF2BBpdt3WY/rVJqVESOH
-         ohQFD819cHPDEluOUIkqxxiCF8HT+l3fV/+fbwCUSBw5fkIvz648DwaN+z6N/fJd1MVG
-         S40NPZut0891qlG94ZUqEKyhqkM0k2cYzjd0Tz8kszgEYcQRVW1Ceh4XyZKN1aQnun8D
-         BGTQ==
+        d=google.com; s=20210112;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iJosK1Ihgd/nMhOJiBYuM5V7zKTvkUsZMn0PA7vQppI=;
+        b=X9BTsrJiAv2Xuc4Pm8jHky/B1hvPug1xr7CTwpFcweElCQU+4RmslgtHwW3xQCaexW
+         f6gkG3Ho1IPBZHXrGXxzsl/Fjor3mw3mRX22Pwz/m7FXCn6Jfb+jTRPM3PsvasEu7nPc
+         /hqDywG2QCxZDVcIc1+kG4pesk2oZfgvJ749ZnwUGWoPH+fhksTskEHOtmXLmhRkiy5Q
+         RwBKp8FesmuDNni/enk5W4Avkcbb5PM0++23trOZhJ8R6IKsiGz5JVdqC/FBGOp9A/7p
+         7uyDdcxejazKW3ZXIP1Wo9iCqsKQi0T+1S3tAqt+jV2jX6e6pVWC1BcxMxk3gR7xEdl4
+         Q5lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5gN8E44qYK1VjzQVWIb3XOtq2U8NR24vawLMGmfvkdw=;
-        b=PtwAWqzAiNfK6zOAKisMAFqpIfpvoFEEainEvCUaEb1ToNhQECm+/OAWRgXIoRvEKk
-         WyCJJfMy/n/v2Kem8HeHoB4iXo38tuX6V8OsKSPoRTTC0v0TdTMHiGYyAYSB2fjMt4yA
-         T5qGVjEKtjno91w+5pBwPBCCeo2p1+be3EZBL6gL17cu8L+igtfX4eAiBkpg0xVjXx/M
-         Zt6UxDLmLiela4xHcWJJ6Fo7dcP92/jLMfxz308wrbH3h0eK+tncdbGLQThAq2Z3vtWH
-         syZp0Sq8BWmt9YZQcfxeyHz30df9EiRepDigtmN4Iljk+bsVPe8v/rlouwFGYRnbWibP
-         sdwA==
-X-Gm-Message-State: AO0yUKW1CdBII8mmF5sEdL10NWUEfhXFoGui2rrzrXP6EWK5kHNGP7uf
-        Fi9UIA60FAluoR6jdeuDw5E=
-X-Google-Smtp-Source: AK7set8nrZEmfhRfOGcDXg3CfnLVJmhbff8KTZFyP0etwiBZ9WnuunKZCCuwdvlKYN14OrrcxieRzQ==
-X-Received: by 2002:a17:903:228a:b0:19b:33c0:4092 with SMTP id b10-20020a170903228a00b0019b33c04092mr631255plh.24.1676787226966;
-        Sat, 18 Feb 2023 22:13:46 -0800 (PST)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:70ac:ab5:11d3:d785])
-        by smtp.gmail.com with ESMTPSA id q16-20020a170902dad000b00189ac5a2340sm1182140plx.124.2023.02.18.22.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Feb 2023 22:13:46 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 8/8] perf bpf filter: Add logical OR operator
-Date:   Sat, 18 Feb 2023 22:13:29 -0800
-Message-Id: <20230219061329.1001079-9-namhyung@kernel.org>
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iJosK1Ihgd/nMhOJiBYuM5V7zKTvkUsZMn0PA7vQppI=;
+        b=VZTqHABGFgykA0WbmHFLPvlBiEhXokukcBCzOjcua6sEQJzoaWN9/FIT0wQyUiEl0K
+         PeTKV2Gv43igS6lpgYIIvB6H67PoqB/ki2V1x3y/lUYvlMf6ve3X588jIqs1t6/aJHX8
+         CYfP9rlvpSuyspEKpH0hR6IP5vK3W58PciItVWx4CfmRgaZgj+ugFtMmpdw1cpE9lfFg
+         yijN1MjMuuJWRLtCaLE9hMI+f2XYfXM3+z+95L5Q2OGwZXHzv4iz2Z9qf96+LptW44lQ
+         u7ZqB0NHVlWihKk3zugva+1joGRojqDz9F4JlWOEJyWUDK1RO6VG0Z+jxm8+xGlcbVgY
+         jEJw==
+X-Gm-Message-State: AO0yUKUTLoV2ZDPmWdSPOhonjzpH9e5faI/xjYHqZ10MqmF0aFb5xblR
+        kYtTxAAlciQrEl+fhF6+VSh8zSI54T+E
+X-Google-Smtp-Source: AK7set8RgxXY5cGl22dEsu5jGhgaZL213HmhFauX+emJRn+yOqOKULpgl3Gsl/81EaYHzQUShH+XesYVHN+s
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
+ (user=irogers job=sendgmr) by 2002:a25:9c86:0:b0:995:ccb:1a9b with SMTP id
+ y6-20020a259c86000000b009950ccb1a9bmr95443ybo.0.1676798940623; Sun, 19 Feb
+ 2023 01:29:00 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:27:57 -0800
+Message-Id: <20230219092848.639226-1-irogers@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-In-Reply-To: <20230219061329.1001079-1-namhyung@kernel.org>
-References: <20230219061329.1001079-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v1 00/51] shadow metric clean up and improvements
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It supports two or more expressions connected as a group and the group
-result is considered true when one of them returns true.  The new group
-operators (GROUP_BEGIN and GROUP_END) are added to setup and check the
-condition.  As it doesn't allow nested groups, the condition is saved
-in local variables.
+Recently the shadow stat metrics broke due to repeated aggregation and
+a quick fix was applied:
+https://lore.kernel.org/lkml/20230209064447.83733-1-irogers@google.com/
+This is the longer fix but one that comes with some extras. To avoid
+fixing issues for hard coded metrics, the topdown, SMI cost and
+transaction flags are moved into json metrics. A side effect of this
+is that TopdownL1 metrics will now be displayed when supported, if no
+"perf stat" events are specified.
 
-For example, the following is to get samples only if the data source
-memory level is L2 cache or the weight value is greater than 30.
+Another fix included here is for event grouping as raised in:
+https://lore.kernel.org/lkml/CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com/
+Metrics are now tagged with NMI and SMT flags, meaning that the events
+shouldn't be grouped if the NMI watchdog is enabled or SMT is enabled.
 
-  $ sudo ./perf record -adW -e cpu/mem-loads/pp \
-  > --filter 'mem_lvl == l2 || weight > 30' -- sleep 1
+Given the two issues, the metrics are re-generated and the patches
+also include the latest Intel vendor events. The changes to the metric
+generation code can be seen in:
+https://github.com/intel/perfmon/pull/56
 
-  $ sudo ./perf script -F data_src,weight
-     10668100842 |OP LOAD|LVL L3 or L3 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A		    47
-     11868100242 |OP LOAD|LVL LFB/MAB or LFB/MAB hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A      57
-     10668100842 |OP LOAD|LVL L3 or L3 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                56
-     10650100842 |OP LOAD|LVL L3 or L3 hit|SNP None|TLB L2 miss|LCK No|BLK  N/A                    144
-     10468100442 |OP LOAD|LVL L2 or L2 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                16
-     10468100442 |OP LOAD|LVL L2 or L2 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                20
-     11868100242 |OP LOAD|LVL LFB/MAB or LFB/MAB hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A     189
-     1026a100142 |OP LOAD|LVL L1 or L1 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A              193
-     10468100442 |OP LOAD|LVL L2 or L2 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                18
-     ...
+Hard coded metrics support thresholds, the patches add this ability to
+json metrics so that the hard coded metrics can be removed. Migrate
+remaining hard coded metrics to looking up counters from the
+evlist/aggregation count. Finally, get rid of the saved_value logic
+and thereby look to fix the aggregation issues.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf-filter.c                 | 25 +++++++++++++
- tools/perf/util/bpf-filter.h                 |  1 +
- tools/perf/util/bpf-filter.l                 |  1 +
- tools/perf/util/bpf-filter.y                 | 25 +++++++++++--
- tools/perf/util/bpf_skel/sample-filter.h     |  6 ++--
- tools/perf/util/bpf_skel/sample_filter.bpf.c | 38 +++++++++++++-------
- 6 files changed, 79 insertions(+), 17 deletions(-)
+Some related fix ups and code clean ups are included in the changes,
+in particular to aid with the code's readability and to keep topdown
+documentation in sync.
 
-diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index 2e02dc965dd9..79d79992e608 100644
---- a/tools/perf/util/bpf-filter.c
-+++ b/tools/perf/util/bpf-filter.c
-@@ -49,8 +49,32 @@ int perf_bpf_filter__prepare(struct evsel *evsel)
- 		};
- 		bpf_map_update_elem(fd, &i, &entry, BPF_ANY);
- 		i++;
-+
-+		if (expr->op == PBF_OP_GROUP_BEGIN) {
-+			struct perf_bpf_filter_expr *group;
-+
-+			list_for_each_entry(group, &expr->groups, list) {
-+				struct perf_bpf_filter_entry group_entry = {
-+					.op = group->op,
-+					.part = group->part,
-+					.flags = group->sample_flags,
-+					.value = group->val,
-+				};
-+				bpf_map_update_elem(fd, &i, &group_entry, BPF_ANY);
-+				i++;
-+			}
-+
-+			memset(&entry, 0, sizeof(entry));
-+			entry.op = PBF_OP_GROUP_END;
-+			bpf_map_update_elem(fd, &i, &entry, BPF_ANY);
-+			i++;
-+		}
- 	}
- 
-+	if (i > MAX_FILTERS) {
-+		pr_err("Too many filters: %d (max = %d)\n", i, MAX_FILTERS);
-+		return -1;
-+	}
- 	prog = skel->progs.perf_sample_filter;
- 	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
- 		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
-@@ -96,6 +120,7 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flag
- 		expr->part = part;
- 		expr->op = op;
- 		expr->val = val;
-+		INIT_LIST_HEAD(&expr->groups);
- 	}
- 	return expr;
- }
-diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
-index 4fb33d296d9c..cf2b605e9121 100644
---- a/tools/perf/util/bpf-filter.h
-+++ b/tools/perf/util/bpf-filter.h
-@@ -8,6 +8,7 @@
- 
- struct perf_bpf_filter_expr {
- 	struct list_head list;
-+	struct list_head groups;
- 	enum perf_bpf_filter_op op;
- 	int part;
- 	unsigned long sample_flags;
-diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
-index 3af9331302cf..817531428530 100644
---- a/tools/perf/util/bpf-filter.l
-+++ b/tools/perf/util/bpf-filter.l
-@@ -141,6 +141,7 @@ hops2		{ return constant(PERF_MEM_HOPS_2); }
- hops3		{ return constant(PERF_MEM_HOPS_3); }
- 
- ","		{ return ','; }
-+"||"		{ return BFT_LOGICAL_OR; }
- .		{ }
- 
- %%
-diff --git a/tools/perf/util/bpf-filter.y b/tools/perf/util/bpf-filter.y
-index 0c6035937a6e..19de79131ad3 100644
---- a/tools/perf/util/bpf-filter.y
-+++ b/tools/perf/util/bpf-filter.y
-@@ -27,8 +27,8 @@ static void perf_bpf_filter_error(struct list_head *expr __maybe_unused,
- 	struct perf_bpf_filter_expr *expr;
- }
- 
--%token BFT_SAMPLE BFT_OP BFT_ERROR BFT_NUM
--%type <expr> filter_term
-+%token BFT_SAMPLE BFT_OP BFT_ERROR BFT_NUM BFT_LOGICAL_OR
-+%type <expr> filter_term filter_expr
- %destructor { free ($$); } <expr>
- %type <sample> BFT_SAMPLE
- %type <op> BFT_OP
-@@ -48,6 +48,27 @@ filter_term
- }
- 
- filter_term:
-+filter_term BFT_LOGICAL_OR filter_expr
-+{
-+	struct perf_bpf_filter_expr *expr;
-+
-+	if ($1->op == PBF_OP_GROUP_BEGIN) {
-+		expr = $1;
-+	} else {
-+		expr = perf_bpf_filter_expr__new(0, 0, PBF_OP_GROUP_BEGIN, 1);
-+		list_add_tail(&$1->list, &expr->groups);
-+	}
-+	expr->val++;
-+	list_add_tail(&$3->list, &expr->groups);
-+	$$ = expr;
-+}
-+|
-+filter_expr
-+{
-+	$$ = $1;
-+}
-+
-+filter_expr:
- BFT_SAMPLE BFT_OP BFT_NUM
- {
- 	$$ = perf_bpf_filter_expr__new($1.type, $1.part, $2, $3);
-diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util/bpf_skel/sample-filter.h
-index 6b9fd554ad7b..2e96e1ab084a 100644
---- a/tools/perf/util/bpf_skel/sample-filter.h
-+++ b/tools/perf/util/bpf_skel/sample-filter.h
-@@ -1,7 +1,7 @@
- #ifndef PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
- #define PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
- 
--#define MAX_FILTERS  32
-+#define MAX_FILTERS  64
- 
- /* supported filter operations */
- enum perf_bpf_filter_op {
-@@ -11,7 +11,9 @@ enum perf_bpf_filter_op {
- 	PBF_OP_GE,
- 	PBF_OP_LT,
- 	PBF_OP_LE,
--	PBF_OP_AND
-+	PBF_OP_AND,
-+	PBF_OP_GROUP_BEGIN,
-+	PBF_OP_GROUP_END,
- };
- 
- /* BPF map entry for filtering */
-diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-index 0148b47de7b9..4b4269054ed8 100644
---- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-+++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-@@ -91,6 +91,14 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
- 	return 0;
- }
- 
-+#define CHECK_RESULT(data, op, val)			\
-+	if (!(data op val)) {				\
-+		if (!in_group)				\
-+			goto drop;			\
-+	} else if (in_group) {				\
-+		group_result = 1;			\
-+	}
-+
- /* BPF program to be called from perf event overflow handler */
- SEC("perf_event")
- int perf_sample_filter(void *ctx)
-@@ -98,6 +106,8 @@ int perf_sample_filter(void *ctx)
- 	struct bpf_perf_event_data_kern *kctx;
- 	struct perf_bpf_filter_entry *entry;
- 	__u64 sample_data;
-+	int in_group = 0;
-+	int group_result = 0;
- 	int i;
- 
- 	kctx = bpf_cast_to_kern_ctx(ctx);
-@@ -112,32 +122,34 @@ int perf_sample_filter(void *ctx)
- 
- 		switch (entry->op) {
- 		case PBF_OP_EQ:
--			if (!(sample_data == entry->value))
--				goto drop;
-+			CHECK_RESULT(sample_data, ==, entry->value)
- 			break;
- 		case PBF_OP_NEQ:
--			if (!(sample_data != entry->value))
--				goto drop;
-+			CHECK_RESULT(sample_data, !=, entry->value)
- 			break;
- 		case PBF_OP_GT:
--			if (!(sample_data > entry->value))
--				goto drop;
-+			CHECK_RESULT(sample_data, >, entry->value)
- 			break;
- 		case PBF_OP_GE:
--			if (!(sample_data >= entry->value))
--				goto drop;
-+			CHECK_RESULT(sample_data, >=, entry->value)
- 			break;
- 		case PBF_OP_LT:
--			if (!(sample_data < entry->value))
--				goto drop;
-+			CHECK_RESULT(sample_data, <, entry->value)
- 			break;
- 		case PBF_OP_LE:
--			if (!(sample_data <= entry->value))
--				goto drop;
-+			CHECK_RESULT(sample_data, <=, entry->value)
- 			break;
- 		case PBF_OP_AND:
--			if (!(sample_data & entry->value))
-+			CHECK_RESULT(sample_data, &, entry->value)
-+			break;
-+		case PBF_OP_GROUP_BEGIN:
-+			in_group = 1;
-+			group_result = 0;
-+			break;
-+		case PBF_OP_GROUP_END:
-+			if (group_result == 0)
- 				goto drop;
-+			in_group = 0;
- 			break;
- 		}
- 	}
+Ian Rogers (51):
+  perf tools: Ensure evsel name is initialized
+  perf metrics: Improve variable names
+  perf pmu-events: Remove aggr_mode from pmu_event
+  perf pmu-events: Change aggr_mode to be an enum
+  perf pmu-events: Change deprecated to be a bool
+  perf pmu-events: Change perpkg to be a bool
+  perf expr: Make the online topology accessible globally
+  perf pmu-events: Make the metric_constraint an enum
+  perf pmu-events: Don't '\0' terminate enum values
+  perf vendor events intel: Refresh alderlake events
+  perf vendor events intel: Refresh alderlake-n metrics
+  perf vendor events intel: Refresh broadwell metrics
+  perf vendor events intel: Refresh broadwellde metrics
+  perf vendor events intel: Refresh broadwellx metrics
+  perf vendor events intel: Refresh cascadelakex events
+  perf vendor events intel: Add graniterapids events
+  perf vendor events intel: Refresh haswell metrics
+  perf vendor events intel: Refresh haswellx metrics
+  perf vendor events intel: Refresh icelake events
+  perf vendor events intel: Refresh icelakex metrics
+  perf vendor events intel: Refresh ivybridge metrics
+  perf vendor events intel: Refresh ivytown metrics
+  perf vendor events intel: Refresh jaketown events
+  perf vendor events intel: Refresh knightslanding events
+  perf vendor events intel: Refresh sandybridge events
+  perf vendor events intel: Refresh sapphirerapids events
+  perf vendor events intel: Refresh silvermont events
+  perf vendor events intel: Refresh skylake events
+  perf vendor events intel: Refresh skylakex metrics
+  perf vendor events intel: Refresh tigerlake events
+  perf vendor events intel: Refresh westmereep-dp events
+  perf jevents: Add rand support to metrics
+  perf jevent: Parse metric thresholds
+  perf pmu-events: Test parsing metric thresholds with the fake PMU
+  perf list: Support for printing metric thresholds
+  perf metric: Compute and print threshold values
+  perf expr: More explicit NAN handling
+  perf metric: Add --metric-no-threshold option
+  perf stat: Add TopdownL1 metric as a default if present
+  perf stat: Implement --topdown using json metrics
+  perf stat: Remove topdown event special handling
+  perf doc: Refresh topdown documentation
+  perf stat: Remove hard coded transaction events
+  perf stat: Use metrics for --smi-cost
+  perf stat: Remove perf_stat_evsel_id
+  perf stat: Move enums from header
+  perf stat: Hide runtime_stat
+  perf stat: Add cpu_aggr_map for loop
+  perf metric: Directly use counts rather than saved_value
+  perf stat: Use counts rather than saved_value
+  perf stat: Remove saved_value/runtime_stat
+
+ tools/perf/Documentation/perf-stat.txt        |   27 +-
+ tools/perf/Documentation/topdown.txt          |   70 +-
+ tools/perf/arch/powerpc/util/header.c         |    2 +-
+ tools/perf/arch/x86/util/evlist.c             |    6 +-
+ tools/perf/arch/x86/util/topdown.c            |   78 +-
+ tools/perf/arch/x86/util/topdown.h            |    1 -
+ tools/perf/builtin-list.c                     |   13 +-
+ tools/perf/builtin-script.c                   |    9 +-
+ tools/perf/builtin-stat.c                     |  233 +-
+ .../arch/x86/alderlake/adl-metrics.json       | 3190 ++++++++++-------
+ .../pmu-events/arch/x86/alderlake/cache.json  |   36 +-
+ .../arch/x86/alderlake/floating-point.json    |   27 +
+ .../arch/x86/alderlake/frontend.json          |    9 +
+ .../pmu-events/arch/x86/alderlake/memory.json |    3 +-
+ .../arch/x86/alderlake/pipeline.json          |   14 +-
+ .../arch/x86/alderlake/uncore-other.json      |   28 +-
+ .../arch/x86/alderlaken/adln-metrics.json     |  811 +++--
+ .../arch/x86/broadwell/bdw-metrics.json       | 1439 ++++----
+ .../arch/x86/broadwellde/bdwde-metrics.json   | 1405 ++++----
+ .../arch/x86/broadwellx/bdx-metrics.json      | 1626 +++++----
+ .../arch/x86/broadwellx/uncore-cache.json     |   74 +-
+ .../x86/broadwellx/uncore-interconnect.json   |   64 +-
+ .../arch/x86/broadwellx/uncore-other.json     |    4 +-
+ .../arch/x86/cascadelakex/cache.json          |   24 +-
+ .../arch/x86/cascadelakex/clx-metrics.json    | 2198 ++++++------
+ .../arch/x86/cascadelakex/frontend.json       |    8 +-
+ .../arch/x86/cascadelakex/pipeline.json       |   16 +
+ .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
+ .../arch/x86/cascadelakex/uncore-other.json   |  120 +-
+ .../arch/x86/cascadelakex/uncore-power.json   |    8 +-
+ .../arch/x86/graniterapids/cache.json         |   54 +
+ .../arch/x86/graniterapids/frontend.json      |   10 +
+ .../arch/x86/graniterapids/memory.json        |  174 +
+ .../arch/x86/graniterapids/other.json         |   29 +
+ .../arch/x86/graniterapids/pipeline.json      |  102 +
+ .../x86/graniterapids/virtual-memory.json     |   26 +
+ .../arch/x86/haswell/hsw-metrics.json         | 1220 ++++---
+ .../arch/x86/haswellx/hsx-metrics.json        | 1397 ++++----
+ .../pmu-events/arch/x86/icelake/cache.json    |   16 +
+ .../arch/x86/icelake/floating-point.json      |   31 +
+ .../arch/x86/icelake/icl-metrics.json         | 1932 +++++-----
+ .../pmu-events/arch/x86/icelake/pipeline.json |   23 +-
+ .../arch/x86/icelake/uncore-other.json        |   56 +
+ .../arch/x86/icelakex/icx-metrics.json        | 2153 +++++------
+ .../arch/x86/icelakex/uncore-memory.json      |    2 +-
+ .../arch/x86/icelakex/uncore-other.json       |    4 +-
+ .../arch/x86/ivybridge/ivb-metrics.json       | 1270 ++++---
+ .../arch/x86/ivytown/ivt-metrics.json         | 1311 ++++---
+ .../pmu-events/arch/x86/jaketown/cache.json   |    6 +-
+ .../arch/x86/jaketown/floating-point.json     |    2 +-
+ .../arch/x86/jaketown/frontend.json           |   12 +-
+ .../arch/x86/jaketown/jkt-metrics.json        |  602 ++--
+ .../arch/x86/jaketown/pipeline.json           |    2 +-
+ .../arch/x86/jaketown/uncore-cache.json       |   22 +-
+ .../x86/jaketown/uncore-interconnect.json     |   74 +-
+ .../arch/x86/jaketown/uncore-memory.json      |    4 +-
+ .../arch/x86/jaketown/uncore-other.json       |   22 +-
+ .../arch/x86/jaketown/uncore-power.json       |    8 +-
+ .../arch/x86/knightslanding/cache.json        |   94 +-
+ .../arch/x86/knightslanding/pipeline.json     |    8 +-
+ .../arch/x86/knightslanding/uncore-other.json |    8 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   29 +-
+ .../arch/x86/sandybridge/cache.json           |    8 +-
+ .../arch/x86/sandybridge/floating-point.json  |    2 +-
+ .../arch/x86/sandybridge/frontend.json        |   12 +-
+ .../arch/x86/sandybridge/pipeline.json        |    2 +-
+ .../arch/x86/sandybridge/snb-metrics.json     |  601 ++--
+ .../arch/x86/sapphirerapids/cache.json        |   24 +-
+ .../x86/sapphirerapids/floating-point.json    |   32 +
+ .../arch/x86/sapphirerapids/frontend.json     |    8 +
+ .../arch/x86/sapphirerapids/pipeline.json     |   19 +-
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 2283 ++++++------
+ .../arch/x86/sapphirerapids/uncore-other.json |   60 +
+ .../arch/x86/silvermont/frontend.json         |    2 +-
+ .../arch/x86/silvermont/pipeline.json         |    2 +-
+ .../pmu-events/arch/x86/skylake/cache.json    |   25 +-
+ .../pmu-events/arch/x86/skylake/frontend.json |    8 +-
+ .../pmu-events/arch/x86/skylake/other.json    |    1 +
+ .../pmu-events/arch/x86/skylake/pipeline.json |   16 +
+ .../arch/x86/skylake/skl-metrics.json         | 1877 ++++++----
+ .../arch/x86/skylake/uncore-other.json        |    1 +
+ .../pmu-events/arch/x86/skylakex/cache.json   |    8 +-
+ .../arch/x86/skylakex/frontend.json           |    8 +-
+ .../arch/x86/skylakex/pipeline.json           |   16 +
+ .../arch/x86/skylakex/skx-metrics.json        | 2097 +++++------
+ .../arch/x86/skylakex/uncore-memory.json      |    2 +-
+ .../arch/x86/skylakex/uncore-other.json       |   96 +-
+ .../arch/x86/skylakex/uncore-power.json       |    6 +-
+ .../arch/x86/tigerlake/floating-point.json    |   31 +
+ .../arch/x86/tigerlake/pipeline.json          |   18 +
+ .../arch/x86/tigerlake/tgl-metrics.json       | 1942 +++++-----
+ .../arch/x86/tigerlake/uncore-other.json      |   28 +-
+ .../arch/x86/westmereep-dp/cache.json         |    2 +-
+ .../x86/westmereep-dp/virtual-memory.json     |    2 +-
+ tools/perf/pmu-events/jevents.py              |   58 +-
+ tools/perf/pmu-events/metric.py               |    8 +-
+ tools/perf/pmu-events/pmu-events.h            |   35 +-
+ tools/perf/tests/expand-cgroup.c              |    3 +-
+ tools/perf/tests/expr.c                       |    7 +-
+ tools/perf/tests/parse-metric.c               |   21 +-
+ tools/perf/tests/pmu-events.c                 |   49 +-
+ tools/perf/util/cpumap.h                      |    3 +
+ tools/perf/util/cputopo.c                     |   14 +
+ tools/perf/util/cputopo.h                     |    5 +
+ tools/perf/util/evsel.h                       |    2 +-
+ tools/perf/util/expr.c                        |   16 +-
+ tools/perf/util/expr.y                        |   12 +-
+ tools/perf/util/metricgroup.c                 |  178 +-
+ tools/perf/util/metricgroup.h                 |    5 +-
+ tools/perf/util/pmu.c                         |   17 +-
+ tools/perf/util/print-events.h                |    1 +
+ tools/perf/util/smt.c                         |   11 +-
+ tools/perf/util/smt.h                         |   12 +-
+ tools/perf/util/stat-display.c                |  117 +-
+ tools/perf/util/stat-shadow.c                 | 1287 ++-----
+ tools/perf/util/stat.c                        |   74 -
+ tools/perf/util/stat.h                        |   96 +-
+ tools/perf/util/synthetic-events.c            |    2 +-
+ tools/perf/util/topdown.c                     |   68 +-
+ tools/perf/util/topdown.h                     |   11 +-
+ 120 files changed, 18025 insertions(+), 15590 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/virtual-memory.json
+
 -- 
 2.39.2.637.g21b0678d19-goog
 
