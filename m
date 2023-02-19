@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83A4C05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D1DC05027
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbjBSJcR (ORCPT
+        id S229976AbjBSJeK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:32:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
+        Sun, 19 Feb 2023 04:34:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbjBSJbz (ORCPT
+        with ESMTP id S229971AbjBSJeH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:31:55 -0500
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A861CDFB
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:31:18 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 5-20020a250105000000b009802c10698cso865066ybb.22
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:31:18 -0800 (PST)
+        Sun, 19 Feb 2023 04:34:07 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2CE10C7
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:32:53 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5369e5f7913so1100087b3.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:32:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AiAycDrybveoMuJFEB+r5dLTNOyKRMMZ7bT1bkVL/x4=;
-        b=mAGNMChIxmCLNL67y+hstMcY9oXuPTwb2KsmXQc1lkpPbxb+zHBfH+Visl9kjNSuSh
-         wX1Z7ZX062igns/0RVUrhLbGGAog8e6kKBKbUTxV/xW3AfTK0T93XWMO/RfNP6DqI2oe
-         vyrPpPeGUg5U3OkeT/X5v4XKwr08PlzWm6SUW/2xKwkgFutbxQ/hpiKmh5PUfMniw6yC
-         L2pItgOROrWWhX3BVpGABcNH6gBD6qpnu19VQGXlhj4V1/O6TFK5/bco3NXfaIAO87q2
-         V7LOi/WUATuoO9aAwd0Q0QdbEpOmnQYO9Vt31PcprgN2Z2X5Spx9WVMCgXzZ3O+dZpYO
-         BSug==
+        bh=RhC8RlQQDEUumThBVP3BFgOcI9ow4i6TnnBtpNZj6g8=;
+        b=NLiqNqqN2UXiBVa/kIcJY7ovAkmY5RZlMuWs3LqQooTQ7jmKpeovntgrAcJjCTFJQF
+         8ZxOPeAEWluzKYrDb8Lmmn1QQQFGp4RYZibqZ+XdgcNY0Gulj9egKCnUDB+FDBCU+/wz
+         IfFux3pX1h7GnQDz0Fo2rtQF2oZZZP8uHh5lBaCMiDjZC6mNUHh65NbvekbRAUq0cqfY
+         qcEN8ZtWjf03eBBDuJ+kAv/mw1xZ3+ayXqspuvzFRRTGhyDeiQl2vPediInZj2DuK6qc
+         P0O7xGQZjAtedCZCSp7qfhJmF0TwRjs/EkdhrrQbDwOekwD/j8XAOujIiT4dybqYIaFX
+         GuUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=AiAycDrybveoMuJFEB+r5dLTNOyKRMMZ7bT1bkVL/x4=;
-        b=q+ENTaccmoS9kdNbug4OyJQuqXtV/ZCEJJy/bIb/V7WNXuTHzZ83j6PRfn6U6ldzjs
-         OvlAfCxaTnV2Lou4HEUTGwUDfPgF5fXZvPmrldX/CAMvhT6DlD146HRtvgU4RnDmptx3
-         9eA3YsVMe3qURXaIDdbsa0RbkmuRV0rk1NsWmO4bScsBLlHSp9iu+L3HhuoKMLLKKsdo
-         +PUSuixxjl7kAc6tyGMJM1HhePrlIzAvzS2iSsfvra8VdyUSCd7gsM9jmWUeYht0IWpP
-         XZvxWsCXhcl1MrxGegOmSLaJtSQc1lSAdT1CWZGnrkMQkrmDXBuNyl91dQnr/nMD/Zuj
-         b+SQ==
-X-Gm-Message-State: AO0yUKVoqA8SVNWnZV3/OFeXu3E+4+M4RQTLY2X4P/EflPLCACqxGkWh
-        xpyIdzxC+IEM6D26EFx33U/gNHrjlYN8
-X-Google-Smtp-Source: AK7set9IgB0DC1xtM8FHHexh2+omWFeYd4xPfiQJDL4uQcLTHNS60bCNetPqI8ejH4DScPcC9wHXMLC4bqUk
+        bh=RhC8RlQQDEUumThBVP3BFgOcI9ow4i6TnnBtpNZj6g8=;
+        b=a93sswN1cPWflZ0zTeJ4xeocqEyuqUji2M2y9/OHiIYZcIuHR56Vwd6RL2y+VTm1i4
+         aESe3sv/0nSxYik3YyNeXmZ+by2ppCf1qXyzRmSbHWzrNKU5n3SgfGE66KyZ2JbUl0fn
+         P1FSpVNw4w2AcsMr7rh4KDVTU1lVbVi3VcY+uS6zqkOmWYLbO5m7HeMNuXf580sN8hm9
+         zLOLnn9arisdlBhm7VIFtgBwaYNR3SN1xJ6lKm7/i31f2UuzIF9hJYJfYGNA/DKkMe6o
+         l82A8L9DZlvjqXpmQUt3HW/1fhSyCCYIcsj/igx7yaO+KxeBQA6oWE5OaqrlDkM4iEqW
+         FEYA==
+X-Gm-Message-State: AO0yUKWKFZgKwOcr9lJ7qU2I1AtpkfPkRsnlB2K2YyOQhHSQ27Kdx/QU
+        dxUuZqcun2qunA2HI08tUHMNJiojhMZQ
+X-Google-Smtp-Source: AK7set+wG2j6JROLi4IipOflMnlcql2zJZMYYJJ6qZ1zTfA+xN3lYElfRlCZYSX3KiyaCchExfXBiFDcIifu
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a05:6902:351:b0:8ac:72e3:c743 with SMTP id
- e17-20020a056902035100b008ac72e3c743mr14973ybs.9.1676799074539; Sun, 19 Feb
- 2023 01:31:14 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:13 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:291:b0:9a0:1d7b:707b with SMTP id
+ v17-20020a056902029100b009a01d7b707bmr49063ybh.4.1676799137260; Sun, 19 Feb
+ 2023 01:32:17 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:21 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-17-irogers@google.com>
+Message-Id: <20230219092848.639226-25-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 16/51] perf vendor events intel: Add graniterapids events
+Subject: [PATCH v1 24/51] perf vendor events intel: Refresh knightslanding events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,670 +95,808 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add version 1.00 of the graniterapids events from
-https://github.com/intel/perfmon.
+Update the knightslanding events from 9 to 10. Generation was done
+using https://github.com/intel/perfmon.
+
+The most notable change is in corrections to event descriptions.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/graniterapids/cache.json         |  54 ++++++
- .../arch/x86/graniterapids/frontend.json      |  10 +
- .../arch/x86/graniterapids/memory.json        | 174 ++++++++++++++++++
- .../arch/x86/graniterapids/other.json         |  29 +++
- .../arch/x86/graniterapids/pipeline.json      | 102 ++++++++++
- .../x86/graniterapids/virtual-memory.json     |  26 +++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
- 7 files changed, 396 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/frontend.j=
-son
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/memory.jso=
-n
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/pipeline.j=
-son
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/virtual-me=
-mory.json
+ .../arch/x86/knightslanding/cache.json        | 94 +++++++++----------
+ .../arch/x86/knightslanding/pipeline.json     |  8 +-
+ .../arch/x86/knightslanding/uncore-other.json |  8 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ 4 files changed, 56 insertions(+), 56 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/cache.json b/tool=
-s/perf/pmu-events/arch/x86/graniterapids/cache.json
-new file mode 100644
-index 000000000000..56212827870c
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/cache.json
-@@ -0,0 +1,54 @@
-+[
-+    {
-+        "BriefDescription": "L2 code requests",
-+        "EventCode": "0x24",
-+        "EventName": "L2_RQSTS.ALL_CODE_RD",
-+        "PublicDescription": "Counts the total number of L2 code requests.=
+diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/cache.json b/too=
+ls/perf/pmu-events/arch/x86/knightslanding/cache.json
+index 01aea3d2832e..d9876cb06b08 100644
+--- a/tools/perf/pmu-events/arch/x86/knightslanding/cache.json
++++ b/tools/perf/pmu-events/arch/x86/knightslanding/cache.json
+@@ -6,7 +6,7 @@
+         "SampleAfterValue": "200003"
+     },
+     {
+-        "BriefDescription": "Counts the number of core cycles the fetch st=
+alls because of an icache miss. This is a cummulative count of core cycles =
+the fetch stalled for all icache misses.",
++        "BriefDescription": "Counts the number of core cycles the fetch st=
+alls because of an icache miss. This is a cumulative count of core cycles t=
+he fetch stalled for all icache misses.",
+         "EventCode": "0x86",
+         "EventName": "FETCH_STALL.ICACHE_FILL_PENDING_CYCLES",
+         "PublicDescription": "This event counts the number of core cycles =
+the fetch stalls because of an icache miss. This is a cumulative count of c=
+ycles the NIP stalled for all icache misses.",
+@@ -28,7 +28,7 @@
+         "UMask": "0x4f"
+     },
+     {
+-        "BriefDescription": "Counts the number of MEC requests from the L2=
+Q that reference a cache line (cacheable requests) exlcuding SW prefetches =
+filling only to L2 cache and L1 evictions (automatically exlcudes L2HWP, UC=
+, WC) that were rejected - Multiple repeated rejects should be counted mult=
+iple times",
++        "BriefDescription": "Counts the number of MEC requests from the L2=
+Q that reference a cache line (cacheable requests) excluding SW prefetches =
+filling only to L2 cache and L1 evictions (automatically exlcudes L2HWP, UC=
+, WC) that were rejected - Multiple repeated rejects should be counted mult=
+iple times",
+         "EventCode": "0x30",
+         "EventName": "L2_REQUESTS_REJECT.ALL",
+         "SampleAfterValue": "200003"
+@@ -108,7 +108,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand code reads and prefetch code re=
+ad requests  that accounts for reponses from snoop request hit with data fo=
+rwarded from it Far(not in the same quadrant as the request)-other tile L2 =
+in E/F/M state. Valid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Demand code reads and prefetch code re=
+ad requests  that accounts for responses from snoop request hit with data f=
+orwarded from it Far(not in the same quadrant as the request)-other tile L2=
+ in E/F/M state. Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_CODE_RD.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -135,7 +135,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand code reads and prefetch code re=
+ad requests  that accounts for reponses from snoop request hit with data fo=
+rwarded from its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts Demand code reads and prefetch code re=
+ad requests  that accounts for responses from snoop request hit with data f=
+orwarded from its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_CODE_RD.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -198,7 +198,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand code reads and prefetch code re=
+ad requests  that are outstanding, per weighted cycle, from the time of the=
+ request to when any response is received. The oustanding response should b=
+e programmed only on PMC0.",
++        "BriefDescription": "Counts Demand code reads and prefetch code re=
+ad requests  that are outstanding, per weighted cycle, from the time of the=
+ request to when any response is received. The outstanding response should =
+be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_CODE_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -216,7 +216,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data and L1 prefetch =
+data read requests  that accounts for reponses from snoop request hit with =
+data forwarded from it Far(not in the same quadrant as the request)-other t=
+ile L2 in E/F/M state. Valid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Demand cacheable data and L1 prefetch =
+data read requests  that accounts for responses from snoop request hit with=
+ data forwarded from it Far(not in the same quadrant as the request)-other =
+tile L2 in E/F/M state. Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -243,7 +243,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data and L1 prefetch =
+data read requests  that accounts for reponses from snoop request hit with =
+data forwarded from its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts Demand cacheable data and L1 prefetch =
+data read requests  that accounts for responses from snoop request hit with=
+ data forwarded from its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -306,7 +306,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data and L1 prefetch =
+data read requests  that are outstanding, per weighted cycle, from the time=
+ of the request to when any response is received. The oustanding response s=
+hould be programmed only on PMC0.",
++        "BriefDescription": "Counts Demand cacheable data and L1 prefetch =
+data read requests  that are outstanding, per weighted cycle, from the time=
+ of the request to when any response is received. The outstanding response =
+should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_DATA_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -324,7 +324,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any Prefetch requests that accounts fo=
+r reponses from snoop request hit with data forwarded from it Far(not in th=
+e same quadrant as the request)-other tile L2 in E/F/M state. Valid only in=
+ SNC4 Cluster mode.",
++        "BriefDescription": "Counts any Prefetch requests that accounts fo=
+r responses from snoop request hit with data forwarded from it Far(not in t=
+he same quadrant as the request)-other tile L2 in E/F/M state. Valid only i=
+n SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_PF_L2.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -351,7 +351,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any Prefetch requests that accounts fo=
+r reponses from snoop request hit with data forwarded from its Near-other t=
+ile L2 in E/F/M state",
++        "BriefDescription": "Counts any Prefetch requests that accounts fo=
+r responses from snoop request hit with data forwarded from its Near-other =
+tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_PF_L2.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -405,7 +405,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any Prefetch requests that are outstan=
+ding, per weighted cycle, from the time of the request to when any response=
+ is received. The oustanding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts any Prefetch requests that are outstan=
+ding, per weighted cycle, from the time of the request to when any response=
+ is received. The outstanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_PF_L2.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -423,7 +423,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any Read request  that accounts for re=
+ponses from snoop request hit with data forwarded from it Far(not in the sa=
+me quadrant as the request)-other tile L2 in E/F/M state. Valid only in SNC=
+4 Cluster mode.",
++        "BriefDescription": "Counts any Read request  that accounts for re=
+sponses from snoop request hit with data forwarded from it Far(not in the s=
+ame quadrant as the request)-other tile L2 in E/F/M state. Valid only in SN=
+C4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -450,7 +450,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any Read request  that accounts for re=
+ponses from snoop request hit with data forwarded from its Near-other tile =
+L2 in E/F/M state",
++        "BriefDescription": "Counts any Read request  that accounts for re=
+sponses from snoop request hit with data forwarded from its Near-other tile=
+ L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_READ.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -513,7 +513,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any Read request  that are outstanding=
+, per weighted cycle, from the time of the request to when any response is =
+received. The oustanding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts any Read request  that are outstanding=
+, per weighted cycle, from the time of the request to when any response is =
+received. The outstanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_READ.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -531,7 +531,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any request that accounts for reponses=
+ from snoop request hit with data forwarded from it Far(not in the same qua=
+drant as the request)-other tile L2 in E/F/M state. Valid only in SNC4 Clus=
+ter mode.",
++        "BriefDescription": "Counts any request that accounts for response=
+s from snoop request hit with data forwarded from it Far(not in the same qu=
+adrant as the request)-other tile L2 in E/F/M state. Valid only in SNC4 Clu=
+ster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -558,7 +558,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any request that accounts for reponses=
+ from snoop request hit with data forwarded from its Near-other tile L2 in =
+E/F/M state",
++        "BriefDescription": "Counts any request that accounts for response=
+s from snoop request hit with data forwarded from its Near-other tile L2 in=
+ E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -621,7 +621,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts any request that are outstanding, per =
+weighted cycle, from the time of the request to when any response is receiv=
+ed. The oustanding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts any request that are outstanding, per =
+weighted cycle, from the time of the request to when any response is receiv=
+ed. The outstanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -639,7 +639,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data write requests  =
+that accounts for reponses from snoop request hit with data forwarded from =
+it Far(not in the same quadrant as the request)-other tile L2 in E/F/M stat=
+e. Valid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Demand cacheable data write requests  =
+that accounts for responses from snoop request hit with data forwarded from=
+ it Far(not in the same quadrant as the request)-other tile L2 in E/F/M sta=
+te. Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -666,7 +666,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data write requests  =
+that accounts for reponses from snoop request hit with data forwarded from =
+its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts Demand cacheable data write requests  =
+that accounts for responses from snoop request hit with data forwarded from=
+ its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_RFO.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -729,7 +729,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data write requests  =
+that are outstanding, per weighted cycle, from the time of the request to w=
+hen any response is received. The oustanding response should be programmed =
+only on PMC0.",
++        "BriefDescription": "Counts Demand cacheable data write requests  =
+that are outstanding, per weighted cycle, from the time of the request to w=
+hen any response is received. The outstanding response should be programmed=
+ only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.ANY_RFO.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -747,7 +747,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Bus locks and split lock requests that=
+ accounts for reponses from snoop request hit with data forwarded from it F=
+ar(not in the same quadrant as the request)-other tile L2 in E/F/M state. V=
+alid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Bus locks and split lock requests that=
+ accounts for responses from snoop request hit with data forwarded from it =
+Far(not in the same quadrant as the request)-other tile L2 in E/F/M state. =
+Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -774,7 +774,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Bus locks and split lock requests that=
+ accounts for reponses from snoop request hit with data forwarded from its =
+Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts Bus locks and split lock requests that=
+ accounts for responses from snoop request hit with data forwarded from its=
+ Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -837,7 +837,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Bus locks and split lock requests that=
+ are outstanding, per weighted cycle, from the time of the request to when =
+any response is received. The oustanding response should be programmed only=
+ on PMC0.",
++        "BriefDescription": "Counts Bus locks and split lock requests that=
+ are outstanding, per weighted cycle, from the time of the request to when =
+any response is received. The outstanding response should be programmed onl=
+y on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.BUS_LOCKS.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -855,7 +855,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts demand code reads and prefetch code re=
+ads that accounts for reponses from snoop request hit with data forwarded f=
+rom it Far(not in the same quadrant as the request)-other tile L2 in E/F/M =
+state. Valid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts demand code reads and prefetch code re=
+ads that accounts for responses from snoop request hit with data forwarded =
+from it Far(not in the same quadrant as the request)-other tile L2 in E/F/M=
+ state. Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -882,7 +882,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts demand code reads and prefetch code re=
+ads that accounts for reponses from snoop request hit with data forwarded f=
+rom its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts demand code reads and prefetch code re=
+ads that accounts for responses from snoop request hit with data forwarded =
+from its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -945,7 +945,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts demand code reads and prefetch code re=
+ads that are outstanding, per weighted cycle, from the time of the request =
+to when any response is received. The oustanding response should be program=
+med only on PMC0.",
++        "BriefDescription": "Counts demand code reads and prefetch code re=
+ads that are outstanding, per weighted cycle, from the time of the request =
+to when any response is received. The outstanding response should be progra=
+mmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1035,7 +1035,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts demand cacheable data and L1 prefetch =
+data reads that are outstanding, per weighted cycle, from the time of the r=
+equest to when any response is received. The oustanding response should be =
+programmed only on PMC0.",
++        "BriefDescription": "Counts demand cacheable data and L1 prefetch =
+data reads that are outstanding, per weighted cycle, from the time of the r=
+equest to when any response is received. The outstanding response should be=
+ programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1053,7 +1053,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data writes that acco=
+unts for reponses from snoop request hit with data forwarded from it Far(no=
+t in the same quadrant as the request)-other tile L2 in E/F/M state. Valid =
+only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Demand cacheable data writes that acco=
+unts for responses from snoop request hit with data forwarded from it Far(n=
+ot in the same quadrant as the request)-other tile L2 in E/F/M state. Valid=
+ only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1080,7 +1080,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data writes that acco=
+unts for reponses from snoop request hit with data forwarded from its Near-=
+other tile L2 in E/F/M state",
++        "BriefDescription": "Counts Demand cacheable data writes that acco=
+unts for responses from snoop request hit with data forwarded from its Near=
+-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1143,7 +1143,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Demand cacheable data writes that are =
+outstanding, per weighted cycle, from the time of the request to when any r=
+esponse is received. The oustanding response should be programmed only on P=
+MC0.",
++        "BriefDescription": "Counts Demand cacheable data writes that are =
+outstanding, per weighted cycle, from the time of the request to when any r=
+esponse is received. The outstanding response should be programmed only on =
+PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1170,7 +1170,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Partial reads (UC or WC and is valid o=
+nly for Outstanding response type).  that accounts for reponses from snoop =
+request hit with data forwarded from it Far(not in the same quadrant as the=
+ request)-other tile L2 in E/F/M state. Valid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Partial reads (UC or WC and is valid o=
+nly for Outstanding response type).  that accounts for responses from snoop=
+ request hit with data forwarded from it Far(not in the same quadrant as th=
+e request)-other tile L2 in E/F/M state. Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1197,7 +1197,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Partial reads (UC or WC and is valid o=
+nly for Outstanding response type).  that accounts for reponses from snoop =
+request hit with data forwarded from its Near-other tile L2 in E/F/M state"=
+,
++        "BriefDescription": "Counts Partial reads (UC or WC and is valid o=
+nly for Outstanding response type).  that accounts for responses from snoop=
+ request hit with data forwarded from its Near-other tile L2 in E/F/M state=
 ",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0xe4"
-+    },
-+    {
-+        "BriefDescription": "Demand Data Read access L2 cache",
-+        "EventCode": "0x24",
-+        "EventName": "L2_RQSTS.ALL_DEMAND_DATA_RD",
-+        "PublicDescription": "Counts Demand Data Read requests accessing t=
-he L2 cache. These requests may hit or miss L2 cache. True-miss exclude mis=
-ses that were merged with ongoing L2 misses. An access is counted once.",
-+        "SampleAfterValue": "200003",
-+        "UMask": "0xe1"
-+    },
-+    {
-+        "BriefDescription": "Core-originated cacheable requests that misse=
-d L3  (Except hardware prefetches to the L3)",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.MISS",
-+        "PublicDescription": "Counts core-originated cacheable requests th=
-at miss the L3 cache (Longest Latency cache). Requests include data and cod=
-e reads, Reads-for-Ownership (RFOs), speculative accesses and hardware pref=
-etches to the L1 and L2.  It does not include hardware prefetches to the L3=
-, and may not count other types of requests to the L3.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x41"
-+    },
-+    {
-+        "BriefDescription": "Core-originated cacheable requests that refer=
- to L3 (Except hardware prefetches to the L3)",
-+        "EventCode": "0x2e",
-+        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
-+        "PublicDescription": "Counts core-originated cacheable requests to=
- the L3 cache (Longest Latency cache). Requests include data and code reads=
-, Reads-for-Ownership (RFOs), speculative accesses and hardware prefetches =
-to the L1 and L2.  It does not include hardware prefetches to the L3, and m=
-ay not count other types of requests to the L3.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x4f"
-+    },
-+    {
-+        "BriefDescription": "Retired load instructions.",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_INST_RETIRED.ALL_LOADS",
-+        "PEBS": "1",
-+        "PublicDescription": "Counts all retired load instructions. This e=
-vent accounts for SW prefetch instructions of PREFETCHNTA or PREFETCHT0/1/2=
- or PREFETCHW.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x81"
-+    },
-+    {
-+        "BriefDescription": "Retired store instructions.",
-+        "Data_LA": "1",
-+        "EventCode": "0xd0",
-+        "EventName": "MEM_INST_RETIRED.ALL_STORES",
-+        "PEBS": "1",
-+        "PublicDescription": "Counts all retired store instructions.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x82"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/frontend.json b/t=
-ools/perf/pmu-events/arch/x86/graniterapids/frontend.json
-new file mode 100644
-index 000000000000..dfd9c5ea1584
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/frontend.json
-@@ -0,0 +1,10 @@
-+[
-+    {
-+        "BriefDescription": "This event counts a subset of the Topdown Slo=
-ts event that were no operation was delivered to the back-end pipeline due =
-to instruction fetch limitations when the back-end could have accepted more=
- operations. Common examples include instruction cache misses or x86 instru=
-ction decode limitations.",
-+        "EventCode": "0x9c",
-+        "EventName": "IDQ_BUBBLES.CORE",
-+        "PublicDescription": "This event counts a subset of the Topdown Sl=
-ots event that were no operation was delivered to the back-end pipeline due=
- to instruction fetch limitations when the back-end could have accepted mor=
-e operations. Common examples include instruction cache misses or x86 instr=
-uction decode limitations.\nThe count may be distributed among unhalted log=
-ical processors (hyper-threads) who share the same physical core, in proces=
-sors that support Intel Hyper-Threading Technology. Software can use this e=
-vent as the nominator for the Frontend Bound metric (or top-level category)=
- of the Top-down Microarchitecture Analysis method.",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x1"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/memory.json b/too=
-ls/perf/pmu-events/arch/x86/graniterapids/memory.json
-new file mode 100644
-index 000000000000..1c0e0e86e58e
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/memory.json
-@@ -0,0 +1,174 @@
-+[
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 128 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x80",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 128 cycles.  Reported=
- latency may be longer than just the memory latency.",
-+        "SampleAfterValue": "1009",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 16 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x10",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 16 cycles.  Reported =
-latency may be longer than just the memory latency.",
-+        "SampleAfterValue": "20011",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 256 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x100",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 256 cycles.  Reported=
- latency may be longer than just the memory latency.",
-+        "SampleAfterValue": "503",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 32 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x20",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 32 cycles.  Reported =
-latency may be longer than just the memory latency.",
-+        "SampleAfterValue": "100007",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 4 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x4",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 4 cycles.  Reported l=
-atency may be longer than just the memory latency.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 512 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x200",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 512 cycles.  Reported=
- latency may be longer than just the memory latency.",
-+        "SampleAfterValue": "101",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 64 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x40",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 64 cycles.  Reported =
-latency may be longer than just the memory latency.",
-+        "SampleAfterValue": "2003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts randomly selected loads when the laten=
-cy from first dispatch to completion is greater than 8 cycles.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
-+        "MSRIndex": "0x3F6",
-+        "MSRValue": "0x8",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts randomly selected loads when the late=
-ncy from first dispatch to completion is greater than 8 cycles.  Reported l=
-atency may be longer than just the memory latency.",
-+        "SampleAfterValue": "50021",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Retired memory store access operations. A PDi=
-st event for PEBS Store Latency Facility.",
-+        "Data_LA": "1",
-+        "EventCode": "0xcd",
-+        "EventName": "MEM_TRANS_RETIRED.STORE_SAMPLE",
-+        "PEBS": "2",
-+        "PublicDescription": "Counts Retired memory accesses with at least=
- 1 store operation. This PEBS event is the precisely-distributed (PDist) tr=
-igger covering all stores uops for sampling by the PEBS Store Latency Facil=
-ity. The facility is described in Intel SDM Volume 3 section 19.9.8",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were not suppli=
-ed by the local socket's L1, L2, or L3 caches.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3FBFC00001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that were n=
-ot supplied by the local socket's L1, L2, or L3 caches.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_RFO.L3_MISS",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F3FC00002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Number of times an RTM execution aborted.",
-+        "EventCode": "0xc9",
-+        "EventName": "RTM_RETIRED.ABORTED",
-+        "PublicDescription": "Counts the number of times RTM abort was tri=
-ggered.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "Number of times an RTM execution successfully=
- committed",
-+        "EventCode": "0xc9",
-+        "EventName": "RTM_RETIRED.COMMIT",
-+        "PublicDescription": "Counts the number of times RTM commit succee=
-ded.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Number of times an RTM execution started.",
-+        "EventCode": "0xc9",
-+        "EventName": "RTM_RETIRED.START",
-+        "PublicDescription": "Counts the number of times we entered an RTM=
- region. Does not count nested transactions.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Speculatively counts the number of TSX aborts=
- due to a data capacity limitation for transactional reads",
-+        "EventCode": "0x54",
-+        "EventName": "TX_MEM.ABORT_CAPACITY_READ",
-+        "PublicDescription": "Speculatively counts the number of Transacti=
-onal Synchronization Extensions (TSX) aborts due to a data capacity limitat=
-ion for transactional reads",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x80"
-+    },
-+    {
-+        "BriefDescription": "Speculatively counts the number of TSX aborts=
- due to a data capacity limitation for transactional writes.",
-+        "EventCode": "0x54",
-+        "EventName": "TX_MEM.ABORT_CAPACITY_WRITE",
-+        "PublicDescription": "Speculatively counts the number of Transacti=
-onal Synchronization Extensions (TSX) aborts due to a data capacity limitat=
-ion for transactional writes.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Number of times a transactional abort was sig=
-naled due to a data conflict on a transactionally accessed address",
-+        "EventCode": "0x54",
-+        "EventName": "TX_MEM.ABORT_CONFLICT",
-+        "PublicDescription": "Counts the number of times a TSX line had a =
-cache conflict.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/other.json b/tool=
-s/perf/pmu-events/arch/x86/graniterapids/other.json
-new file mode 100644
-index 000000000000..5e799bae03ea
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/other.json
-@@ -0,0 +1,29 @@
-+[
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM attached to this socket, unless in Sub NUMA Cluster(SNC) Mode.  In S=
-NC Mode counts only those DRAM accesses that are controlled by the close SN=
-C Cluster.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x104000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
-ny type of response.",
-+        "EventCode": "0x2A,0x2B",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x3F3FFC0002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/pipeline.json b/t=
-ools/perf/pmu-events/arch/x86/graniterapids/pipeline.json
-new file mode 100644
-index 000000000000..d6aafb258708
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/pipeline.json
-@@ -0,0 +1,102 @@
-+[
-+    {
-+        "BriefDescription": "All branch instructions retired.",
-+        "EventCode": "0xc4",
-+        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-+        "PEBS": "1",
-+        "PublicDescription": "Counts all branch instructions retired.",
-+        "SampleAfterValue": "400009"
-+    },
-+    {
-+        "BriefDescription": "All mispredicted branch instructions retired.=
-",
-+        "EventCode": "0xc5",
-+        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
-+        "PEBS": "1",
-+        "PublicDescription": "Counts all the retired branch instructions t=
-hat were mispredicted by the processor. A branch misprediction occurs when =
-the processor incorrectly predicts the destination of the branch.  When the=
- misprediction is discovered at execution, all the instructions executed in=
- the wrong (speculative) path must be discarded, and the processor must sta=
-rt fetching from the correct path.",
-+        "SampleAfterValue": "400009"
-+    },
-+    {
-+        "BriefDescription": "Reference cycles when the core is not in halt=
- state.",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-+        "PublicDescription": "Counts the number of reference cycles when t=
-he core is not in a halt state. The core enters the halt state when it is r=
-unning the HLT instruction or the MWAIT instruction. This event is not affe=
-cted by core frequency changes (for example, P states, TM2 transitions) but=
- has the same incrementing frequency as the time stamp counter. This event =
-can approximate elapsed time while the core was not in a halt state. It is =
-counted on a dedicated fixed counter, leaving the eight programmable counte=
-rs available for other events. Note: On all current platforms this event st=
-ops counting during 'throttling (TM)' states duty off periods the processor=
- is 'halted'.  The counter update is done at a lower clock rate then the co=
-re clock the overflow status bit for this counter may appear 'sticky'.  Aft=
-er the counter has overflowed and software clears the overflow status bit a=
-nd resets the counter to less than MAX. The reset value to the counter is n=
-ot clocked immediately so the overflow status bit will flip 'high (1)' and =
-generate another PMI (if enabled) after which the reset value gets clocked =
-into the counter. Therefore, software will get the interrupt, read the over=
-flow status bit '1 for bit 34 while the counter value is less than MAX. Sof=
-tware should ignore this case.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x3"
-+    },
-+    {
-+        "BriefDescription": "Reference cycles when the core is not in halt=
- state.",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
-+        "PublicDescription": "Counts the number of reference cycles when t=
-he core is not in a halt state. The core enters the halt state when it is r=
-unning the HLT instruction or the MWAIT instruction. This event is not affe=
-cted by core frequency changes (for example, P states, TM2 transitions) but=
- has the same incrementing frequency as the time stamp counter. This event =
-can approximate elapsed time while the core was not in a halt state. It is =
-counted on a dedicated fixed counter, leaving the four (eight when Hyperthr=
-eading is disabled) programmable counters available for other events. Note:=
- On all current platforms this event stops counting during 'throttling (TM)=
-' states duty off periods the processor is 'halted'.  The counter update is=
- done at a lower clock rate then the core clock the overflow status bit for=
- this counter may appear 'sticky'.  After the counter has overflowed and so=
-ftware clears the overflow status bit and resets the counter to less than M=
-AX. The reset value to the counter is not clocked immediately so the overfl=
-ow status bit will flip 'high (1)' and generate another PMI (if enabled) af=
-ter which the reset value gets clocked into the counter. Therefore, softwar=
-e will get the interrupt, read the overflow status bit '1 for bit 34 while =
-the counter value is less than MAX. Software should ignore this case.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Core cycles when the thread is not in halt st=
-ate",
-+        "EventName": "CPU_CLK_UNHALTED.THREAD",
-+        "PublicDescription": "Counts the number of core cycles while the t=
-hread is not in a halt state. The thread enters the halt state when it is r=
-unning the HLT instruction. This event is a component in many key event rat=
-ios. The core frequency may change from time to time due to transitions ass=
-ociated with Enhanced Intel SpeedStep Technology or TM2. For this reason th=
-is event may have a changing ratio with regards to time. When the core freq=
-uency is constant, this event can approximate elapsed time while the core w=
-as not in the halt state. It is counted on a dedicated fixed counter, leavi=
-ng the eight programmable counters available for other events.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "Thread cycles when thread is not in halt stat=
-e",
-+        "EventCode": "0x3c",
-+        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
-+        "PublicDescription": "This is an architectural event that counts t=
-he number of thread cycles while the thread is not in a halt state. The thr=
-ead enters the halt state when it is running the HLT instruction. The core =
-frequency may change from time to time due to power or thermal throttling. =
-For this reason, this event may have a changing ratio with regards to wall =
-clock time.",
-+        "SampleAfterValue": "2000003"
-+    },
-+    {
-+        "BriefDescription": "Number of instructions retired. Fixed Counter=
- - architectural event",
-+        "EventName": "INST_RETIRED.ANY",
-+        "PEBS": "1",
-+        "PublicDescription": "Counts the number of X86 instructions retire=
-d - an Architectural PerfMon event. Counting continues during hardware inte=
-rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
-unted by a designated fixed counter freeing up programmable counters to cou=
-nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Number of instructions retired. General Count=
-er - architectural event",
-+        "EventCode": "0xc0",
-+        "EventName": "INST_RETIRED.ANY_P",
-+        "PEBS": "1",
-+        "PublicDescription": "Counts the number of X86 instructions retire=
-d - an Architectural PerfMon event. Counting continues during hardware inte=
-rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
-unted by a designated fixed counter freeing up programmable counters to cou=
-nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
-+        "SampleAfterValue": "2000003"
-+    },
-+    {
-+        "BriefDescription": "Loads blocked due to overlapping with a prece=
-ding store that cannot be forwarded.",
-+        "EventCode": "0x03",
-+        "EventName": "LD_BLOCKS.STORE_FORWARD",
-+        "PublicDescription": "Counts the number of times where store forwa=
-rding was prevented for a load operation. The most common case is a load bl=
-ocked due to the address of memory access (partially) overlapping with a pr=
-eceding uncompleted store. Note: See the table of not supported store forwa=
-rds in the Optimization Guide.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x82"
-+    },
-+    {
-+        "BriefDescription": "This event counts a subset of the Topdown Slo=
-ts event that were not consumed by the back-end pipeline due to lack of bac=
-k-end resources, as a result of memory subsystem delays, execution units li=
-mitations, or other conditions.",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.BACKEND_BOUND_SLOTS",
-+        "PublicDescription": "This event counts a subset of the Topdown Sl=
-ots event that were not consumed by the back-end pipeline due to lack of ba=
-ck-end resources, as a result of memory subsystem delays, execution units l=
-imitations, or other conditions.\nThe count is distributed among unhalted l=
-ogical processors (hyper-threads) who share the same physical core, in proc=
-essors that support Intel Hyper-Threading Technology. Software can use this=
- event as the nominator for the Backend Bound metric (or top-level category=
-) of the Top-down Microarchitecture Analysis method.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x2"
-+    },
-+    {
-+        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. Fixed counter - architectural event",
-+        "EventName": "TOPDOWN.SLOTS",
-+        "PublicDescription": "Number of available slots for an unhalted lo=
-gical processor. The event increments by machine-width of the narrowest pip=
-eline as employed by the Top-down Microarchitecture Analysis method (TMA). =
-The count is distributed among unhalted logical processors (hyper-threads) =
-who share the same physical core. Software can use this event as the denomi=
-nator for the top-level metrics of the TMA method. This architectural event=
- is counted on a designated fixed counter (Fixed Counter 3).",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x4"
-+    },
-+    {
-+        "BriefDescription": "TMA slots available for an unhalted logical p=
-rocessor. General counter - architectural event",
-+        "EventCode": "0xa4",
-+        "EventName": "TOPDOWN.SLOTS_P",
-+        "PublicDescription": "Counts the number of available slots for an =
-unhalted logical processor. The event increments by machine-width of the na=
-rrowest pipeline as employed by the Top-down Microarchitecture Analysis met=
-hod. The count is distributed among unhalted logical processors (hyper-thre=
-ads) who share the same physical core.",
-+        "SampleAfterValue": "10000003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "This event counts a subset of the Topdown Slo=
-ts event that are utilized by operations that eventually get retired (commi=
-tted) by the processor pipeline. Usually, this event positively correlates =
-with higher performance  for example, as measured by the instructions-per-c=
-ycle metric.",
-+        "EventCode": "0xc2",
-+        "EventName": "UOPS_RETIRED.SLOTS",
-+        "PublicDescription": "This event counts a subset of the Topdown Sl=
-ots event that are utilized by operations that eventually get retired (comm=
-itted) by the processor pipeline. Usually, this event positively correlates=
- with higher performance  for example, as measured by the instructions-per-=
-cycle metric.\nSoftware can use this event as the nominator for the Retirin=
-g metric (or top-level category) of the Top-down Microarchitecture Analysis=
- method.",
-+        "SampleAfterValue": "2000003",
-+        "UMask": "0x2"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/graniterapids/virtual-memory.js=
-on b/tools/perf/pmu-events/arch/x86/graniterapids/virtual-memory.json
-new file mode 100644
-index 000000000000..8784c97b7534
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/graniterapids/virtual-memory.json
-@@ -0,0 +1,26 @@
-+[
-+    {
-+        "BriefDescription": "Load miss in all TLB levels causes a page wal=
-k that completes. (All page sizes)",
-+        "EventCode": "0x12",
-+        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts completed page walks  (all page sizes=
-) caused by demand data loads. This implies it missed in the DTLB and furth=
-er levels of TLB. The page walk can end with or without a fault.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0xe"
-+    },
-+    {
-+        "BriefDescription": "Store misses in all TLB levels causes a page =
-walk that completes. (All page sizes)",
-+        "EventCode": "0x13",
-+        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts completed page walks  (all page sizes=
-) caused by demand data stores. This implies it missed in the DTLB and furt=
-her levels of TLB. The page walk can end with or without a fault.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0xe"
-+    },
-+    {
-+        "BriefDescription": "Code miss in all TLB levels causes a page wal=
-k that completes. (All page sizes)",
-+        "EventCode": "0x11",
-+        "EventName": "ITLB_MISSES.WALK_COMPLETED",
-+        "PublicDescription": "Counts completed page walks (all page sizes)=
- caused by a code fetch. This implies it missed in the ITLB (Instruction TL=
-B) and further levels of TLB. The page walk can end with or without a fault=
-.",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0xe"
-+    }
-+]
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1260,7 +1260,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Partial reads (UC or WC and is valid o=
+nly for Outstanding response type).  that are outstanding, per weighted cyc=
+le, from the time of the request to when any response is received. The oust=
+anding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts Partial reads (UC or WC and is valid o=
+nly for Outstanding response type).  that are outstanding, per weighted cyc=
+le, from the time of the request to when any response is received. The outs=
+tanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PARTIAL_READS.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1287,7 +1287,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Partial writes (UC or WT or WP and sho=
+uld be programmed on PMC1) that accounts for reponses from snoop request hi=
+t with data forwarded from it Far(not in the same quadrant as the request)-=
+other tile L2 in E/F/M state. Valid only in SNC4 Cluster mode.",
++        "BriefDescription": "Counts Partial writes (UC or WT or WP and sho=
+uld be programmed on PMC1) that accounts for responses from snoop request h=
+it with data forwarded from it Far(not in the same quadrant as the request)=
+-other tile L2 in E/F/M state. Valid only in SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a7",
+@@ -1314,7 +1314,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Partial writes (UC or WT or WP and sho=
+uld be programmed on PMC1) that accounts for reponses from snoop request hi=
+t with data forwarded from its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts Partial writes (UC or WT or WP and sho=
+uld be programmed on PMC1) that accounts for responses from snoop request h=
+it with data forwarded from its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PARTIAL_WRITES.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a7",
+@@ -1386,7 +1386,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L1 data HW prefetches that accounts fo=
+r reponses from snoop request hit with data forwarded from it Far(not in th=
+e same quadrant as the request)-other tile L2 in E/F/M state. Valid only in=
+ SNC4 Cluster mode.",
++        "BriefDescription": "Counts L1 data HW prefetches that accounts fo=
+r responses from snoop request hit with data forwarded from it Far(not in t=
+he same quadrant as the request)-other tile L2 in E/F/M state. Valid only i=
+n SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1413,7 +1413,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L1 data HW prefetches that accounts fo=
+r reponses from snoop request hit with data forwarded from its Near-other t=
+ile L2 in E/F/M state",
++        "BriefDescription": "Counts L1 data HW prefetches that accounts fo=
+r responses from snoop request hit with data forwarded from its Near-other =
+tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1476,7 +1476,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L1 data HW prefetches that are outstan=
+ding, per weighted cycle, from the time of the request to when any response=
+ is received. The oustanding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts L1 data HW prefetches that are outstan=
+ding, per weighted cycle, from the time of the request to when any response=
+ is received. The outstanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L1_DATA_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1494,7 +1494,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L2 code HW prefetches that accounts fo=
+r reponses from snoop request hit with data forwarded from it Far(not in th=
+e same quadrant as the request)-other tile L2 in E/F/M state. Valid only in=
+ SNC4 Cluster mode.",
++        "BriefDescription": "Counts L2 code HW prefetches that accounts fo=
+r responses from snoop request hit with data forwarded from it Far(not in t=
+he same quadrant as the request)-other tile L2 in E/F/M state. Valid only i=
+n SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1521,7 +1521,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L2 code HW prefetches that accounts fo=
+r reponses from snoop request hit with data forwarded from its Near-other t=
+ile L2 in E/F/M state",
++        "BriefDescription": "Counts L2 code HW prefetches that accounts fo=
+r responses from snoop request hit with data forwarded from its Near-other =
+tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1566,7 +1566,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L2 code HW prefetches that are outstan=
+ding, per weighted cycle, from the time of the request to when any response=
+ is received. The oustanding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts L2 code HW prefetches that are outstan=
+ding, per weighted cycle, from the time of the request to when any response=
+ is received. The outstanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1602,7 +1602,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts L2 data RFO prefetches (includes PREFE=
+TCHW instruction) that accounts for reponses from snoop request hit with da=
+ta forwarded from its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts L2 data RFO prefetches (includes PREFE=
+TCHW instruction) that accounts for responses from snoop request hit with d=
+ata forwarded from its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1683,7 +1683,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Software Prefetches that accounts for =
+reponses from snoop request hit with data forwarded from it Far(not in the =
+same quadrant as the request)-other tile L2 in E/F/M state. Valid only in S=
+NC4 Cluster mode.",
++        "BriefDescription": "Counts Software Prefetches that accounts for =
+responses from snoop request hit with data forwarded from it Far(not in the=
+ same quadrant as the request)-other tile L2 in E/F/M state. Valid only in =
+SNC4 Cluster mode.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_SOFTWARE.L2_HIT_FAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1710,7 +1710,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Software Prefetches that accounts for =
+reponses from snoop request hit with data forwarded from its Near-other til=
+e L2 in E/F/M state",
++        "BriefDescription": "Counts Software Prefetches that accounts for =
+responses from snoop request hit with data forwarded from its Near-other ti=
+le L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_SOFTWARE.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1773,7 +1773,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts Software Prefetches that are outstandi=
+ng, per weighted cycle, from the time of the request to when any response i=
+s received. The oustanding response should be programmed only on PMC0.",
++        "BriefDescription": "Counts Software Prefetches that are outstandi=
+ng, per weighted cycle, from the time of the request to when any response i=
+s received. The outstanding response should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.PF_SOFTWARE.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+@@ -1818,7 +1818,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts UC code reads (valid only for Outstand=
+ing response type)  that accounts for reponses from snoop request hit with =
+data forwarded from its Near-other tile L2 in E/F/M state",
++        "BriefDescription": "Counts UC code reads (valid only for Outstand=
+ing response type)  that accounts for responses from snoop request hit with=
+ data forwarded from its Near-other tile L2 in E/F/M state",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.UC_CODE_READS.L2_HIT_NEAR_TILE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1881,7 +1881,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts UC code reads (valid only for Outstand=
+ing response type)  that are outstanding, per weighted cycle, from the time=
+ of the request to when any response is received. The oustanding response s=
+hould be programmed only on PMC0.",
++        "BriefDescription": "Counts UC code reads (valid only for Outstand=
+ing response type)  that are outstanding, per weighted cycle, from the time=
+ of the request to when any response is received. The outstanding response =
+should be programmed only on PMC0.",
+         "EventCode": "0xB7",
+         "EventName": "OFFCORE_RESPONSE.UC_CODE_READS.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json b/=
+tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
+index 1b803fa38641..3dc532107ead 100644
+--- a/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/knightslanding/pipeline.json
+@@ -254,14 +254,14 @@
+         "UMask": "0x80"
+     },
+     {
+-        "BriefDescription": "Counts the number of occurences a retired loa=
+d gets blocked because its address overlaps with a store whose data is not =
+ready",
++        "BriefDescription": "Counts the number of occurrences a retired lo=
+ad gets blocked because its address overlaps with a store whose data is not=
+ ready",
+         "EventCode": "0x03",
+         "EventName": "RECYCLEQ.LD_BLOCK_STD_NOTREADY",
+         "SampleAfterValue": "200003",
+         "UMask": "0x2"
+     },
+     {
+-        "BriefDescription": "Counts the number of occurences a retired loa=
+d gets blocked because its address partially overlaps with a store",
++        "BriefDescription": "Counts the number of occurrences a retired lo=
+ad gets blocked because its address partially overlaps with a store",
+         "Data_LA": "1",
+         "EventCode": "0x03",
+         "EventName": "RECYCLEQ.LD_BLOCK_ST_FORWARD",
+@@ -270,7 +270,7 @@
+         "UMask": "0x1"
+     },
+     {
+-        "BriefDescription": "Counts the number of occurences a retired loa=
+d that is a cache line split. Each split should be counted only once.",
++        "BriefDescription": "Counts the number of occurrences a retired lo=
+ad that is a cache line split. Each split should be counted only once.",
+         "Data_LA": "1",
+         "EventCode": "0x03",
+         "EventName": "RECYCLEQ.LD_SPLITS",
+@@ -293,7 +293,7 @@
+         "UMask": "0x20"
+     },
+     {
+-        "BriefDescription": "Counts the number of occurences a retired sto=
+re that is a cache line split. Each split should be counted only once.",
++        "BriefDescription": "Counts the number of occurrences a retired st=
+ore that is a cache line split. Each split should be counted only once.",
+         "EventCode": "0x03",
+         "EventName": "RECYCLEQ.ST_SPLITS",
+         "PublicDescription": "This event counts the number of retired stor=
+e that experienced a cache line boundary split(Precise Event). Note that ea=
+ch spilt should be counted only once.",
+diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.jso=
+n b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.json
+index 3abd9c3fdc48..491cb37ddab0 100644
+--- a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.json
+@@ -1084,7 +1084,7 @@
+         "Unit": "CHA"
+     },
+     {
+-        "BriefDescription": "Cache Lookups. Counts the number of times the=
+ LLC was accessed. Writeback transactions from L2 to the LLC  This includes=
+ all write transactions -- both Cachable and UC.",
++        "BriefDescription": "Cache Lookups. Counts the number of times the=
+ LLC was accessed. Writeback transactions from L2 to the LLC  This includes=
+ all write transactions -- both Cacheable and UC.",
+         "EventCode": "0x37",
+         "EventName": "UNC_H_CACHE_LINES_VICTIMIZED.E_STATE",
+         "PerPkg": "1",
+@@ -1843,7 +1843,7 @@
+         "Unit": "CHA"
+     },
+     {
+-        "BriefDescription": "Counts cycles source throttling is adderted -=
+ horizontal",
++        "BriefDescription": "Counts cycles source throttling is asserted -=
+ horizontal",
+         "EventCode": "0xA5",
+         "EventName": "UNC_H_FAST_ASSERTED.HORZ",
+         "PerPkg": "1",
+@@ -1851,7 +1851,7 @@
+         "Unit": "CHA"
+     },
+     {
+-        "BriefDescription": "Counts cycles source throttling is adderted -=
+ vertical",
++        "BriefDescription": "Counts cycles source throttling is asserted -=
+ vertical",
+         "EventCode": "0xA5",
+         "EventName": "UNC_H_FAST_ASSERTED.VERT",
+         "PerPkg": "1",
+@@ -2929,7 +2929,7 @@
+         "Unit": "CHA"
+     },
+     {
+-        "BriefDescription": "Cache Lookups. Counts the number of times the=
+ LLC was accessed. Writeback transactions from L2 to the LLC  This includes=
+ all write transactions -- both Cachable and UC.",
++        "BriefDescription": "Cache Lookups. Counts the number of times the=
+ LLC was accessed. Writeback transactions from L2 to the LLC  This includes=
+ all write transactions -- both Cacheable and UC.",
+         "EventCode": "0x34",
+         "EventName": "UNC_H_SF_LOOKUP.WRITE",
+         "PerPkg": "1",
 diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
 ents/arch/x86/mapfile.csv
-index 793076e00188..1677ec22e2e3 100644
+index afe811f154d7..41bd13baa265 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -9,6 +9,7 @@ GenuineIntel-6-55-[56789ABCDEF],v1.17,cascadelakex,core
- GenuineIntel-6-9[6C],v1.03,elkhartlake,core
- GenuineIntel-6-5[CF],v13,goldmont,core
- GenuineIntel-6-7A,v1.01,goldmontplus,core
-+GenuineIntel-6-A[DE],v1.00,graniterapids,core
- GenuineIntel-6-(3C|45|46),v32,haswell,core
- GenuineIntel-6-3F,v26,haswellx,core
- GenuineIntel-6-(7D|7E|A7),v1.15,icelake,core
+@@ -17,7 +17,7 @@ GenuineIntel-6-6[AC],v1.18,icelakex,core
+ GenuineIntel-6-3A,v23,ivybridge,core
+ GenuineIntel-6-3E,v22,ivytown,core
+ GenuineIntel-6-2D,v22,jaketown,core
+-GenuineIntel-6-(57|85),v9,knightslanding,core
++GenuineIntel-6-(57|85),v10,knightslanding,core
+ GenuineIntel-6-A[AC],v1.00,meteorlake,core
+ GenuineIntel-6-1[AEF],v3,nehalemep,core
+ GenuineIntel-6-2E,v3,nehalemex,core
 --=20
 2.39.2.637.g21b0678d19-goog
 
