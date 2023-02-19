@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C54CC05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC491C636CC
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjBSJjk (ORCPT
+        id S230099AbjBSJkE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:39:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34576 "EHLO
+        Sun, 19 Feb 2023 04:40:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbjBSJjh (ORCPT
+        with ESMTP id S230201AbjBSJj7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:39:37 -0500
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21A512043
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:38:33 -0800 (PST)
-Received: by mail-yb1-f201.google.com with SMTP id f33-20020a25b0a1000000b009433a21be0dso2111534ybj.19
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:38:33 -0800 (PST)
+        Sun, 19 Feb 2023 04:39:59 -0500
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED36112595
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:38:53 -0800 (PST)
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-53687b09838so19217377b3.6
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:38:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GaAtWKR9dpkXeAR2EgXOT4Jdr/WSY94NBCFSvIpDY1I=;
-        b=VylUNAn6gHel5Js0dIwjbwarkGvBURpX13yLOd3CW4OTRSkRMUf8XHI2zSpfzbjBTl
-         SB510gQdp40gx0uSZZLIgNNz4Kd88eaHe+lh/k2K9tn4l3KLtbeqrchgwWNAhiazTwQd
-         Br7tiZX8fDhfDJ0Iq88Ivllx+3qI5YH0zvu/svcdpjZ+dbPcW5Wtvl4LbHk7hp38hz9C
-         M0sCu7FAudJGP8OO1fJYzQVounuONNh5bliMIXH5XMWyetj1YHZsu5e4XHxoyfX1tq//
-         75Z0Ygyq+8zK+P+XGK8lDR+F98LErBncmwBRFxwIQT5kmERsmDNZl+uUm2HDhfD5Bwu/
-         7Mhg==
+        bh=/y7SWHTUkfrtXB6+Nyg9zBpnl23ivOFDADIaKoe8cgw=;
+        b=iH7Yk8ZgXy+D6RWwLGF5Fea/CxfUBXBWWaJTGGLOaD3q0mPtVxy87WyEw1kDXvTs8N
+         lVs/8gn3d9xyHWfONVRA4PnFDLyL+j2HaxjoWqsZ4cVF51kSMNi0W/SKen7hmzU52zwp
+         VVn0eX2Kh1EQUjLisJYaA7huB27zZN6I2vuBrfTyBAd22Wuz4jYjc53371S41SDo6ZIz
+         q4HjKc4jHYhXbS47kZnTyg8rlJoqgQ8U4oHn34uWMwSwSK/SvJO7P3UiqNvSmwtKs8xZ
+         NWdNCLIAYUg4Hb1Gpe59FDXDn6ABHPblT6huaDvP2xhkKsnOFy7QJeRV0n6+AixmvJEP
+         PqDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GaAtWKR9dpkXeAR2EgXOT4Jdr/WSY94NBCFSvIpDY1I=;
-        b=wSeoF6L7nIX8RHYB/yNO4orknYyjZDXkLGXGbtw7tUSWdQY+WcPk28MO0TPn8m155k
-         cXb+dDZ8JiVbEGtwFTPKspIWqfW9oI+36SPWQZD+z/MW2+IEsGlwz4WCml9kynwI2xeR
-         mylli7J47kE/TPa7MT7MzHd26sGnQ/X4YrMInDA2wKxPSQWSGGiw1yVda/YTi7YgaNwm
-         gCxWehec0H6/c9muPFjphU8yuyCkFERLidSlIm8KYhGePq0nFJBTR/kDIiXlzZU2DKDW
-         xM15csjzPUTroOtrAA1/OyzH4O1xAlm7yq6pgzjf2O4lwuhAI/QnumituXKqPnWMKAJ6
-         TLLQ==
-X-Gm-Message-State: AO0yUKWZg/c8kTvtyn0LX/RIsmnFU81tVyKsurQaeDH+6zYjSxWCWbJl
-        M2Kdlm5g8lQDh3EoQ8AQr3yLwSbz5mil
-X-Google-Smtp-Source: AK7set8kPIXJz7JjvYoQFNFQqaZ1LyPc80VR3m+dsyBFK1HRmpLa0UEcK2ME+rxn30fnLOQdRJdH4tRDGizS
+        bh=/y7SWHTUkfrtXB6+Nyg9zBpnl23ivOFDADIaKoe8cgw=;
+        b=2XemyYgCOcFITY3juj/m14i3Fz2P/bVK9htVZm2+0EytJS0ns9vE8DnoGLNKLExA3W
+         Zx7SzPiqxzVLtv0DhMs9RZak26nhcCp/Ct19w4vJKvAFS7OC7duoW6nrETo01keX06sE
+         ytGDE45GAWzbjCDLIlyF+dihkHR4YI/ojILnlgZuIOmwt3c+BgPh0Gie2+upnNC8qocq
+         wkmK5jS8/qHDKm73y2w6MLhsZeQobCRXs7LGFKb3oVFbkZ3Ra4i3SL/RNb5ZSuotUn8k
+         Fq4Lfd/mxAZ9aff0lBQ3kqQKInwyI4oRKvUtO+LYfPjTHAJY1iToyauyMRlFGJFFCJeb
+         XVBA==
+X-Gm-Message-State: AO0yUKU9KdnrhJqrOA+V8vsg7kDQ6jWz8MpxSmH4Ipo2+/mWkoVGQP2Z
+        Qpn4r78vm2Fhp9iU+z2VJH1eAHpNivT5
+X-Google-Smtp-Source: AK7set+SDwSFsi7O/fo64NsxVt/D+12xPBeJw6GMKN+lVo6XjuPcDJt1aO99H9SPG2oJ8vHQrF/a450gGlng
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a05:6902:11cd:b0:90d:a6c0:6870 with SMTP
- id n13-20020a05690211cd00b0090da6c06870mr391638ybu.2.1676799362330; Sun, 19
- Feb 2023 01:36:02 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:47 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:cc7:0:b0:7d1:87e:1713 with SMTP id
+ e7-20020a5b0cc7000000b007d1087e1713mr1553569ybr.102.1676799345329; Sun, 19
+ Feb 2023 01:35:45 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:45 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-51-irogers@google.com>
+Message-Id: <20230219092848.639226-49-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 50/51] perf stat: Use counts rather than saved_value
+Subject: [PATCH v1 48/51] perf stat: Add cpu_aggr_map for loop
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -92,683 +92,874 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Switch the hard coded metrics to use the aggregate value rather than
-from saved_value. When computing a metric like IPC the aggregate count
-comes from instructions then cycles is looked up and if present IPC
-computed. Rather than lookup from the saved_value rbtree, search the
-counter's evlist for the desired counter.
-
-A new helper evsel__stat_type is used to both quickly find a metric
-function and to identify when a counter is the one being sought. So
-that both total and miss counts can be sought, the stat_type enum is
-expanded. The ratio functions are rewritten to share a common helper
-with the ratios being directly passed rather than computed from an
-enum value.
+Rename variables, add a comment and add a cpu_aggr_map__for_each_idx
+to aid the readability of the stat-display code. In particular, try to
+make sure aggr_idx is used consistently to differentiate from other
+kinds of index.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.h       |   2 +-
- tools/perf/util/stat-shadow.c | 534 +++++++++++++++++-----------------
- 2 files changed, 270 insertions(+), 266 deletions(-)
+ tools/perf/util/cpumap.h       |   3 +
+ tools/perf/util/stat-display.c | 112 +++++++++++++++--------------
+ tools/perf/util/stat-shadow.c  | 128 ++++++++++++++++-----------------
+ tools/perf/util/stat.c         |   8 +--
+ tools/perf/util/stat.h         |   6 +-
+ 5 files changed, 132 insertions(+), 125 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 24cb807ef6ce..814a49ebb7e3 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -436,7 +436,7 @@ static inline bool evsel__is_bpf_output(struct evsel *evsel)
- 	return evsel__match(evsel, SOFTWARE, SW_BPF_OUTPUT);
- }
- 
--static inline bool evsel__is_clock(struct evsel *evsel)
-+static inline bool evsel__is_clock(const struct evsel *evsel)
- {
- 	return evsel__match(evsel, SOFTWARE, SW_CPU_CLOCK) ||
- 	       evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK);
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index eba98520cea2..9d22cde09dc9 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -45,15 +45,23 @@ enum stat_type {
- 	STAT_NONE = 0,
- 	STAT_NSECS,
- 	STAT_CYCLES,
-+	STAT_INSTRUCTIONS,
- 	STAT_STALLED_CYCLES_FRONT,
- 	STAT_STALLED_CYCLES_BACK,
- 	STAT_BRANCHES,
--	STAT_CACHEREFS,
-+	STAT_BRANCH_MISS,
-+	STAT_CACHE_REFS,
-+	STAT_CACHE_MISSES,
- 	STAT_L1_DCACHE,
- 	STAT_L1_ICACHE,
- 	STAT_LL_CACHE,
- 	STAT_ITLB_CACHE,
- 	STAT_DTLB_CACHE,
-+	STAT_L1D_MISS,
-+	STAT_L1I_MISS,
-+	STAT_LL_MISS,
-+	STAT_DTLB_MISS,
-+	STAT_ITLB_MISS,
- 	STAT_MAX
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index c2f5824a3a22..e3426541e0aa 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -35,6 +35,9 @@ struct cpu_aggr_map {
+ 	struct aggr_cpu_id map[];
  };
  
-@@ -168,7 +176,7 @@ void perf_stat__init_shadow_stats(void)
- 	rblist->node_delete = saved_value_delete;
- }
- 
--static int evsel_context(struct evsel *evsel)
-+static int evsel_context(const struct evsel *evsel)
- {
- 	int ctx = 0;
- 
-@@ -253,7 +261,7 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
- 	else if (evsel__match(counter, HARDWARE, HW_BRANCH_INSTRUCTIONS))
- 		update_runtime_stat(STAT_BRANCHES, aggr_idx, count, &rsd);
- 	else if (evsel__match(counter, HARDWARE, HW_CACHE_REFERENCES))
--		update_runtime_stat(STAT_CACHEREFS, aggr_idx, count, &rsd);
-+		update_runtime_stat(STAT_CACHE_REFS, aggr_idx, count, &rsd);
- 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_L1D))
- 		update_runtime_stat(STAT_L1_DCACHE, aggr_idx, count, &rsd);
- 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_L1I))
-@@ -266,199 +274,283 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
- 		update_runtime_stat(STAT_ITLB_CACHE, aggr_idx, count, &rsd);
- }
- 
--/* used for get_ratio_color() */
--enum grc_type {
--	GRC_STALLED_CYCLES_FE,
--	GRC_STALLED_CYCLES_BE,
--	GRC_CACHE_MISSES,
--	GRC_MAX_NR
--};
-+static enum stat_type evsel__stat_type(const struct evsel *evsel)
-+{
-+	/* Fake perf_hw_cache_op_id values for use with evsel__match. */
-+	u64 PERF_COUNT_hw_cache_l1d_miss = PERF_COUNT_HW_CACHE_L1D |
-+		((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
-+		((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16);
-+	u64 PERF_COUNT_hw_cache_l1i_miss = PERF_COUNT_HW_CACHE_L1I |
-+		((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
-+		((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16);
-+	u64 PERF_COUNT_hw_cache_ll_miss = PERF_COUNT_HW_CACHE_LL |
-+		((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
-+		((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16);
-+	u64 PERF_COUNT_hw_cache_dtlb_miss = PERF_COUNT_HW_CACHE_DTLB |
-+		((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
-+		((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16);
-+	u64 PERF_COUNT_hw_cache_itlb_miss = PERF_COUNT_HW_CACHE_ITLB |
-+		((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
-+		((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16);
++#define cpu_aggr_map__for_each_idx(idx, aggr_map)				\
++	for ((idx) = 0; (idx) < aggr_map->nr; (idx)++)
 +
-+	if (evsel__is_clock(evsel))
-+		return STAT_NSECS;
-+	else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES))
-+		return STAT_CYCLES;
-+	else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS))
-+		return STAT_INSTRUCTIONS;
-+	else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
-+		return STAT_STALLED_CYCLES_FRONT;
-+	else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_BACKEND))
-+		return STAT_STALLED_CYCLES_BACK;
-+	else if (evsel__match(evsel, HARDWARE, HW_BRANCH_INSTRUCTIONS))
-+		return STAT_BRANCHES;
-+	else if (evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES))
-+		return STAT_BRANCH_MISS;
-+	else if (evsel__match(evsel, HARDWARE, HW_CACHE_REFERENCES))
-+		return STAT_CACHE_REFS;
-+	else if (evsel__match(evsel, HARDWARE, HW_CACHE_MISSES))
-+		return STAT_CACHE_MISSES;
-+	else if (evsel__match(evsel, HW_CACHE, HW_CACHE_L1D))
-+		return STAT_L1_DCACHE;
-+	else if (evsel__match(evsel, HW_CACHE, HW_CACHE_L1I))
-+		return STAT_L1_ICACHE;
-+	else if (evsel__match(evsel, HW_CACHE, HW_CACHE_LL))
-+		return STAT_LL_CACHE;
-+	else if (evsel__match(evsel, HW_CACHE, HW_CACHE_DTLB))
-+		return STAT_DTLB_CACHE;
-+	else if (evsel__match(evsel, HW_CACHE, HW_CACHE_ITLB))
-+		return STAT_ITLB_CACHE;
-+	else if (evsel__match(evsel, HW_CACHE, hw_cache_l1d_miss))
-+		return STAT_L1D_MISS;
-+	else if (evsel__match(evsel, HW_CACHE, hw_cache_l1i_miss))
-+		return STAT_L1I_MISS;
-+	else if (evsel__match(evsel, HW_CACHE, hw_cache_ll_miss))
-+		return STAT_LL_MISS;
-+	else if (evsel__match(evsel, HW_CACHE, hw_cache_dtlb_miss))
-+		return STAT_DTLB_MISS;
-+	else if (evsel__match(evsel, HW_CACHE, hw_cache_itlb_miss))
-+		return STAT_ITLB_MISS;
-+	return STAT_NONE;
-+}
+ struct perf_record_cpu_map_data;
  
--static const char *get_ratio_color(enum grc_type type, double ratio)
-+static const char *get_ratio_color(const double ratios[3], double val)
+ bool perf_record_cpu_map_data__test_bit(int i, const struct perf_record_cpu_map_data *data);
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 6c065d0624c3..e6035ecbeee8 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -183,7 +183,7 @@ static void print_cgroup(struct perf_stat_config *config, struct cgroup *cgrp)
+ }
+ 
+ static void print_aggr_id_std(struct perf_stat_config *config,
+-			      struct evsel *evsel, struct aggr_cpu_id id, int nr)
++			      struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
  {
--	static const double grc_table[GRC_MAX_NR][3] = {
--		[GRC_STALLED_CYCLES_FE] = { 50.0, 30.0, 10.0 },
--		[GRC_STALLED_CYCLES_BE] = { 75.0, 50.0, 20.0 },
--		[GRC_CACHE_MISSES] 	= { 20.0, 10.0, 5.0 },
--	};
- 	const char *color = PERF_COLOR_NORMAL;
+ 	FILE *output = config->output;
+ 	int idx = config->aggr_mode;
+@@ -225,11 +225,11 @@ static void print_aggr_id_std(struct perf_stat_config *config,
+ 		return;
+ 	}
  
--	if (ratio > grc_table[type][0])
-+	if (val > ratios[0])
- 		color = PERF_COLOR_RED;
--	else if (ratio > grc_table[type][1])
-+	else if (val > ratios[1])
- 		color = PERF_COLOR_MAGENTA;
--	else if (ratio > grc_table[type][2])
-+	else if (val > ratios[2])
- 		color = PERF_COLOR_YELLOW;
+-	fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, 4, nr);
++	fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, 4, aggr_nr);
+ }
  
+ static void print_aggr_id_csv(struct perf_stat_config *config,
+-			      struct evsel *evsel, struct aggr_cpu_id id, int nr)
++			      struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
+ {
+ 	FILE *output = config->output;
+ 	const char *sep = config->csv_sep;
+@@ -237,19 +237,19 @@ static void print_aggr_id_csv(struct perf_stat_config *config,
+ 	switch (config->aggr_mode) {
+ 	case AGGR_CORE:
+ 		fprintf(output, "S%d-D%d-C%d%s%d%s",
+-			id.socket, id.die, id.core, sep, nr, sep);
++			id.socket, id.die, id.core, sep, aggr_nr, sep);
+ 		break;
+ 	case AGGR_DIE:
+ 		fprintf(output, "S%d-D%d%s%d%s",
+-			id.socket, id.die, sep, nr, sep);
++			id.socket, id.die, sep, aggr_nr, sep);
+ 		break;
+ 	case AGGR_SOCKET:
+ 		fprintf(output, "S%d%s%d%s",
+-			id.socket, sep, nr, sep);
++			id.socket, sep, aggr_nr, sep);
+ 		break;
+ 	case AGGR_NODE:
+ 		fprintf(output, "N%d%s%d%s",
+-			id.node, sep, nr, sep);
++			id.node, sep, aggr_nr, sep);
+ 		break;
+ 	case AGGR_NONE:
+ 		if (evsel->percore && !config->percore_show_thread) {
+@@ -275,26 +275,26 @@ static void print_aggr_id_csv(struct perf_stat_config *config,
+ }
+ 
+ static void print_aggr_id_json(struct perf_stat_config *config,
+-			       struct evsel *evsel, struct aggr_cpu_id id, int nr)
++			       struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
+ {
+ 	FILE *output = config->output;
+ 
+ 	switch (config->aggr_mode) {
+ 	case AGGR_CORE:
+ 		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
+-			id.socket, id.die, id.core, nr);
++			id.socket, id.die, id.core, aggr_nr);
+ 		break;
+ 	case AGGR_DIE:
+ 		fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
+-			id.socket, id.die, nr);
++			id.socket, id.die, aggr_nr);
+ 		break;
+ 	case AGGR_SOCKET:
+ 		fprintf(output, "\"socket\" : \"S%d\", \"aggregate-number\" : %d, ",
+-			id.socket, nr);
++			id.socket, aggr_nr);
+ 		break;
+ 	case AGGR_NODE:
+ 		fprintf(output, "\"node\" : \"N%d\", \"aggregate-number\" : %d, ",
+-			id.node, nr);
++			id.node, aggr_nr);
+ 		break;
+ 	case AGGR_NONE:
+ 		if (evsel->percore && !config->percore_show_thread) {
+@@ -319,14 +319,14 @@ static void print_aggr_id_json(struct perf_stat_config *config,
+ }
+ 
+ static void aggr_printout(struct perf_stat_config *config,
+-			  struct evsel *evsel, struct aggr_cpu_id id, int nr)
++			  struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
+ {
+ 	if (config->json_output)
+-		print_aggr_id_json(config, evsel, id, nr);
++		print_aggr_id_json(config, evsel, id, aggr_nr);
+ 	else if (config->csv_output)
+-		print_aggr_id_csv(config, evsel, id, nr);
++		print_aggr_id_csv(config, evsel, id, aggr_nr);
+ 	else
+-		print_aggr_id_std(config, evsel, id, nr);
++		print_aggr_id_std(config, evsel, id, aggr_nr);
+ }
+ 
+ struct outstate {
+@@ -335,7 +335,7 @@ struct outstate {
+ 	bool first;
+ 	const char *prefix;
+ 	int  nfields;
+-	int  nr;
++	int  aggr_nr;
+ 	struct aggr_cpu_id id;
+ 	struct evsel *evsel;
+ 	struct cgroup *cgrp;
+@@ -355,7 +355,7 @@ static void do_new_line_std(struct perf_stat_config *config,
+ 	fputc('\n', os->fh);
+ 	if (os->prefix)
+ 		fputs(os->prefix, os->fh);
+-	aggr_printout(config, os->evsel, os->id, os->nr);
++	aggr_printout(config, os->evsel, os->id, os->aggr_nr);
+ 	if (config->aggr_mode == AGGR_NONE)
+ 		fprintf(os->fh, "        ");
+ 	fprintf(os->fh, "                                                 ");
+@@ -396,7 +396,7 @@ static void new_line_csv(struct perf_stat_config *config, void *ctx)
+ 	fputc('\n', os->fh);
+ 	if (os->prefix)
+ 		fprintf(os->fh, "%s", os->prefix);
+-	aggr_printout(config, os->evsel, os->id, os->nr);
++	aggr_printout(config, os->evsel, os->id, os->aggr_nr);
+ 	for (i = 0; i < os->nfields; i++)
+ 		fputs(config->csv_sep, os->fh);
+ }
+@@ -444,7 +444,7 @@ static void new_line_json(struct perf_stat_config *config, void *ctx)
+ 	fputs("\n{", os->fh);
+ 	if (os->prefix)
+ 		fprintf(os->fh, "%s", os->prefix);
+-	aggr_printout(config, os->evsel, os->id, os->nr);
++	aggr_printout(config, os->evsel, os->id, os->aggr_nr);
+ }
+ 
+ /* Filter out some columns that don't work well in metrics only mode */
+@@ -645,10 +645,10 @@ static void print_counter_value(struct perf_stat_config *config,
+ }
+ 
+ static void abs_printout(struct perf_stat_config *config,
+-			 struct aggr_cpu_id id, int nr,
++			 struct aggr_cpu_id id, int aggr_nr,
+ 			 struct evsel *evsel, double avg, bool ok)
+ {
+-	aggr_printout(config, evsel, id, nr);
++	aggr_printout(config, evsel, id, aggr_nr);
+ 	print_counter_value(config, evsel, avg, ok);
+ 	print_cgroup(config, evsel->cgrp);
+ }
+@@ -678,7 +678,7 @@ static bool is_mixed_hw_group(struct evsel *counter)
+ }
+ 
+ static void printout(struct perf_stat_config *config, struct outstate *os,
+-		     double uval, u64 run, u64 ena, double noise, int map_idx)
++		     double uval, u64 run, u64 ena, double noise, int aggr_idx)
+ {
+ 	struct perf_stat_output_ctx out;
+ 	print_metric_t pm;
+@@ -721,14 +721,14 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 	out.force_header = false;
+ 
+ 	if (!config->metric_only) {
+-		abs_printout(config, os->id, os->nr, counter, uval, ok);
++		abs_printout(config, os->id, os->aggr_nr, counter, uval, ok);
+ 
+ 		print_noise(config, counter, noise, /*before_metric=*/true);
+ 		print_running(config, run, ena, /*before_metric=*/true);
+ 	}
+ 
+ 	if (ok) {
+-		perf_stat__print_shadow_stats(config, counter, uval, map_idx,
++		perf_stat__print_shadow_stats(config, counter, uval, aggr_idx,
+ 					      &out, &config->metric_events);
+ 	} else {
+ 		pm(config, os, /*color=*/NULL, /*format=*/NULL, /*unit=*/"", /*val=*/0);
+@@ -833,20 +833,20 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ }
+ 
+ static void print_counter_aggrdata(struct perf_stat_config *config,
+-				   struct evsel *counter, int s,
++				   struct evsel *counter, int aggr_idx,
+ 				   struct outstate *os)
+ {
+ 	FILE *output = config->output;
+ 	u64 ena, run, val;
+ 	double uval;
+ 	struct perf_stat_evsel *ps = counter->stats;
+-	struct perf_stat_aggr *aggr = &ps->aggr[s];
+-	struct aggr_cpu_id id = config->aggr_map->map[s];
++	struct perf_stat_aggr *aggr = &ps->aggr[aggr_idx];
++	struct aggr_cpu_id id = config->aggr_map->map[aggr_idx];
+ 	double avg = aggr->counts.val;
+ 	bool metric_only = config->metric_only;
+ 
+ 	os->id = id;
+-	os->nr = aggr->nr;
++	os->aggr_nr = aggr->nr;
+ 	os->evsel = counter;
+ 
+ 	/* Skip already merged uncore/hybrid events */
+@@ -874,7 +874,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 
+ 	uval = val * counter->scale;
+ 
+-	printout(config, os, uval, run, ena, avg, s);
++	printout(config, os, uval, run, ena, avg, aggr_idx);
+ 
+ 	if (!metric_only)
+ 		fputc('\n', output);
+@@ -925,7 +925,7 @@ static void print_aggr(struct perf_stat_config *config,
+ 		       struct outstate *os)
+ {
+ 	struct evsel *counter;
+-	int s;
++	int aggr_idx;
+ 
+ 	if (!config->aggr_map || !config->aggr_get_id)
+ 		return;
+@@ -934,11 +934,11 @@ static void print_aggr(struct perf_stat_config *config,
+ 	 * With metric_only everything is on a single line.
+ 	 * Without each counter has its own line.
+ 	 */
+-	for (s = 0; s < config->aggr_map->nr; s++) {
+-		print_metric_begin(config, evlist, os, s);
++	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
++		print_metric_begin(config, evlist, os, aggr_idx);
+ 
+ 		evlist__for_each_entry(evlist, counter) {
+-			print_counter_aggrdata(config, counter, s, os);
++			print_counter_aggrdata(config, counter, aggr_idx, os);
+ 		}
+ 		print_metric_end(config, os);
+ 	}
+@@ -949,7 +949,7 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ 			      struct outstate *os)
+ {
+ 	struct evsel *counter, *evsel;
+-	int s;
++	int aggr_idx;
+ 
+ 	if (!config->aggr_map || !config->aggr_get_id)
+ 		return;
+@@ -960,14 +960,14 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ 
+ 		os->cgrp = evsel->cgrp;
+ 
+-		for (s = 0; s < config->aggr_map->nr; s++) {
+-			print_metric_begin(config, evlist, os, s);
++		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
++			print_metric_begin(config, evlist, os, aggr_idx);
+ 
+ 			evlist__for_each_entry(evlist, counter) {
+ 				if (counter->cgrp != os->cgrp)
+ 					continue;
+ 
+-				print_counter_aggrdata(config, counter, s, os);
++				print_counter_aggrdata(config, counter, aggr_idx, os);
+ 			}
+ 			print_metric_end(config, os);
+ 		}
+@@ -977,14 +977,14 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ static void print_counter(struct perf_stat_config *config,
+ 			  struct evsel *counter, struct outstate *os)
+ {
+-	int s;
++	int aggr_idx;
+ 
+ 	/* AGGR_THREAD doesn't have config->aggr_get_id */
+ 	if (!config->aggr_map)
+ 		return;
+ 
+-	for (s = 0; s < config->aggr_map->nr; s++) {
+-		print_counter_aggrdata(config, counter, s, os);
++	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
++		print_counter_aggrdata(config, counter, aggr_idx, os);
+ 	}
+ }
+ 
+@@ -1003,23 +1003,23 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 			u64 ena, run, val;
+ 			double uval;
+ 			struct perf_stat_evsel *ps = counter->stats;
+-			int counter_idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
++			int aggr_idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
+ 
+-			if (counter_idx < 0)
++			if (aggr_idx < 0)
+ 				continue;
+ 
+ 			os->evsel = counter;
+ 			os->id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+ 			if (first) {
+-				print_metric_begin(config, evlist, os, counter_idx);
++				print_metric_begin(config, evlist, os, aggr_idx);
+ 				first = false;
+ 			}
+-			val = ps->aggr[counter_idx].counts.val;
+-			ena = ps->aggr[counter_idx].counts.ena;
+-			run = ps->aggr[counter_idx].counts.run;
++			val = ps->aggr[aggr_idx].counts.val;
++			ena = ps->aggr[aggr_idx].counts.ena;
++			run = ps->aggr[aggr_idx].counts.run;
+ 
+ 			uval = val * counter->scale;
+-			printout(config, os, uval, run, ena, 1.0, counter_idx);
++			printout(config, os, uval, run, ena, 1.0, aggr_idx);
+ 		}
+ 		if (!first)
+ 			print_metric_end(config, os);
+@@ -1338,7 +1338,7 @@ static void print_percore(struct perf_stat_config *config,
+ 	bool metric_only = config->metric_only;
+ 	FILE *output = config->output;
+ 	struct cpu_aggr_map *core_map;
+-	int s, c, i;
++	int aggr_idx, core_map_len = 0;
+ 
+ 	if (!config->aggr_map || !config->aggr_get_id)
+ 		return;
+@@ -1346,18 +1346,22 @@ static void print_percore(struct perf_stat_config *config,
+ 	if (config->percore_show_thread)
+ 		return print_counter(config, counter, os);
+ 
++	/*
++	 * core_map will hold the aggr_cpu_id for the cores that have been
++	 * printed so that each core is printed just once.
++	 */
+ 	core_map = cpu_aggr_map__empty_new(config->aggr_map->nr);
+ 	if (core_map == NULL) {
+ 		fprintf(output, "Cannot allocate per-core aggr map for display\n");
+ 		return;
+ 	}
+ 
+-	for (s = 0, c = 0; s < config->aggr_map->nr; s++) {
+-		struct perf_cpu curr_cpu = config->aggr_map->map[s].cpu;
++	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
++		struct perf_cpu curr_cpu = config->aggr_map->map[aggr_idx].cpu;
+ 		struct aggr_cpu_id core_id = aggr_cpu_id__core(curr_cpu, NULL);
+ 		bool found = false;
+ 
+-		for (i = 0; i < c; i++) {
++		for (int i = 0; i < core_map_len; i++) {
+ 			if (aggr_cpu_id__equal(&core_map->map[i], &core_id)) {
+ 				found = true;
+ 				break;
+@@ -1366,9 +1370,9 @@ static void print_percore(struct perf_stat_config *config,
+ 		if (found)
+ 			continue;
+ 
+-		print_counter_aggrdata(config, counter, s, os);
++		print_counter_aggrdata(config, counter, aggr_idx, os);
+ 
+-		core_map->map[c++] = core_id;
++		core_map->map[core_map_len++] = core_id;
+ 	}
+ 	free(core_map);
+ 
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index f80be6abac90..7b48e2bd3ba1 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -231,7 +231,7 @@ static void update_runtime_stat(enum stat_type type,
+  * instruction rates, etc:
+  */
+ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+-				    int map_idx)
++				    int aggr_idx)
+ {
+ 	u64 count_ns = count;
+ 	struct saved_value *v;
+@@ -242,39 +242,39 @@ void perf_stat__update_shadow_stats(struct evsel *counter, u64 count,
+ 	count *= counter->scale;
+ 
+ 	if (evsel__is_clock(counter))
+-		update_runtime_stat(STAT_NSECS, map_idx, count_ns, &rsd);
++		update_runtime_stat(STAT_NSECS, aggr_idx, count_ns, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
+-		update_runtime_stat(STAT_CYCLES, map_idx, count, &rsd);
++		update_runtime_stat(STAT_CYCLES, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
+ 		update_runtime_stat(STAT_STALLED_CYCLES_FRONT,
+-				    map_idx, count, &rsd);
++				    aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_STALLED_CYCLES_BACKEND))
+ 		update_runtime_stat(STAT_STALLED_CYCLES_BACK,
+-				    map_idx, count, &rsd);
++				    aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_BRANCH_INSTRUCTIONS))
+-		update_runtime_stat(STAT_BRANCHES, map_idx, count, &rsd);
++		update_runtime_stat(STAT_BRANCHES, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HARDWARE, HW_CACHE_REFERENCES))
+-		update_runtime_stat(STAT_CACHEREFS, map_idx, count, &rsd);
++		update_runtime_stat(STAT_CACHEREFS, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_L1D))
+-		update_runtime_stat(STAT_L1_DCACHE, map_idx, count, &rsd);
++		update_runtime_stat(STAT_L1_DCACHE, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_L1I))
+-		update_runtime_stat(STAT_L1_ICACHE, map_idx, count, &rsd);
++		update_runtime_stat(STAT_L1_ICACHE, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_LL))
+-		update_runtime_stat(STAT_LL_CACHE, map_idx, count, &rsd);
++		update_runtime_stat(STAT_LL_CACHE, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_DTLB))
+-		update_runtime_stat(STAT_DTLB_CACHE, map_idx, count, &rsd);
++		update_runtime_stat(STAT_DTLB_CACHE, aggr_idx, count, &rsd);
+ 	else if (evsel__match(counter, HW_CACHE, HW_CACHE_ITLB))
+-		update_runtime_stat(STAT_ITLB_CACHE, map_idx, count, &rsd);
++		update_runtime_stat(STAT_ITLB_CACHE, aggr_idx, count, &rsd);
+ 
+ 	if (counter->collect_stat) {
+-		v = saved_value_lookup(counter, map_idx, true, STAT_NONE, 0,
++		v = saved_value_lookup(counter, aggr_idx, true, STAT_NONE, 0,
+ 				       rsd.cgrp);
+ 		update_stats(&v->stats, count);
+ 		if (counter->metric_leader)
+ 			v->metric_total += count;
+ 	} else if (counter->metric_leader && !counter->merged_stat) {
+ 		v = saved_value_lookup(counter->metric_leader,
+-				       map_idx, true, STAT_NONE, 0, rsd.cgrp);
++				       aggr_idx, true, STAT_NONE, 0, rsd.cgrp);
+ 		v->metric_total += count;
+ 		v->metric_other++;
+ 	}
+@@ -307,24 +307,24 @@ static const char *get_ratio_color(enum grc_type type, double ratio)
  	return color;
  }
  
--static double runtime_stat_avg(enum stat_type type, int aggr_idx,
--			       struct runtime_stat_data *rsd)
-+static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type type)
+-static double runtime_stat_avg(enum stat_type type, int map_idx,
++static double runtime_stat_avg(enum stat_type type, int aggr_idx,
+ 			       struct runtime_stat_data *rsd)
  {
--	struct saved_value *v;
--
--	v = saved_value_lookup(NULL, aggr_idx, false, type, rsd->ctx, rsd->cgrp);
--	if (!v)
--		return 0.0;
--
--	return avg_stats(&v->stats);
-+	const struct evsel *cur;
-+	int evsel_ctx = evsel_context(evsel);
-+
-+	evlist__for_each_entry(evsel->evlist, cur) {
-+		struct perf_stat_aggr *aggr;
-+
-+		/* Ignore the evsel that is being searched from. */
-+		if (evsel == cur)
-+			continue;
-+
-+		/* Ignore evsels that are part of different groups. */
-+		if (evsel->core.leader->nr_members &&
-+		    evsel->core.leader != cur->core.leader)
-+			continue;
-+		/* Ignore evsels with mismatched modifiers. */
-+		if (evsel_ctx != evsel_context(cur))
-+			continue;
-+		/* Ignore if not the cgroup we're looking for. */
-+		if (evsel->cgrp != cur->cgrp)
-+			continue;
-+		/* Ignore if not the stat we're looking for. */
-+		if (type != evsel__stat_type(cur))
-+			continue;
-+
-+		aggr = &cur->stats->aggr[aggr_idx];
-+		if (type == STAT_NSECS)
-+			return aggr->counts.val;
-+		return aggr->counts.val * cur->scale;
-+	}
-+	return 0.0;
+ 	struct saved_value *v;
+ 
+-	v = saved_value_lookup(NULL, map_idx, false, type, rsd->ctx, rsd->cgrp);
++	v = saved_value_lookup(NULL, aggr_idx, false, type, rsd->ctx, rsd->cgrp);
+ 	if (!v)
+ 		return 0.0;
+ 
+ 	return avg_stats(&v->stats);
  }
  
--static double runtime_stat_n(enum stat_type type, int aggr_idx,
--			     struct runtime_stat_data *rsd)
-+static void print_ratio(struct perf_stat_config *config,
-+			const struct evsel *evsel, int aggr_idx,
-+			double numerator, struct perf_stat_output_ctx *out,
-+			enum stat_type denominator_type,
-+			const double color_ratios[3], const char *unit)
+-static double runtime_stat_n(enum stat_type type, int map_idx,
++static double runtime_stat_n(enum stat_type type, int aggr_idx,
+ 			     struct runtime_stat_data *rsd)
  {
--	struct saved_value *v;
-+	double denominator = find_stat(evsel, aggr_idx, denominator_type);
+ 	struct saved_value *v;
  
--	v = saved_value_lookup(NULL, aggr_idx, false, type, rsd->ctx, rsd->cgrp);
--	if (!v)
--		return 0.0;
-+	if (numerator && denominator) {
-+		double ratio = numerator / denominator * 100.0;
-+		const char *color = get_ratio_color(color_ratios, ratio);
+-	v = saved_value_lookup(NULL, map_idx, false, type, rsd->ctx, rsd->cgrp);
++	v = saved_value_lookup(NULL, aggr_idx, false, type, rsd->ctx, rsd->cgrp);
+ 	if (!v)
+ 		return 0.0;
  
--	return v->stats.n;
-+		out->print_metric(config, out->ctx, color, "%7.2f%%", unit, ratio);
-+	} else
-+		out->print_metric(config, out->ctx, NULL, NULL, unit, 0);
+@@ -332,14 +332,14 @@ static double runtime_stat_n(enum stat_type type, int map_idx,
  }
  
--static void print_stalled_cycles_frontend(struct perf_stat_config *config,
--					  int aggr_idx, double avg,
--					  struct perf_stat_output_ctx *out,
--					  struct runtime_stat_data *rsd)
-+static void print_stalled_cycles_front(struct perf_stat_config *config,
-+				const struct evsel *evsel,
-+				int aggr_idx, double stalled,
-+				struct perf_stat_output_ctx *out)
+ static void print_stalled_cycles_frontend(struct perf_stat_config *config,
+-					  int map_idx, double avg,
++					  int aggr_idx, double avg,
+ 					  struct perf_stat_output_ctx *out,
+ 					  struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
--
--	total = runtime_stat_avg(STAT_CYCLES, aggr_idx, rsd);
--
--	if (total)
--		ratio = avg / total * 100.0;
-+	static const double color_ratios[3] = {50.0, 30.0, 10.0};
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	color = get_ratio_color(GRC_STALLED_CYCLES_FE, ratio);
--
--	if (ratio)
--		out->print_metric(config, out->ctx, color, "%7.2f%%", "frontend cycles idle",
--				  ratio);
--	else
--		out->print_metric(config, out->ctx, NULL, NULL, "frontend cycles idle", 0);
-+	print_ratio(config, evsel, aggr_idx, stalled, out, STAT_CYCLES, color_ratios,
-+		    "frontend cycles idle");
+-	total = runtime_stat_avg(STAT_CYCLES, map_idx, rsd);
++	total = runtime_stat_avg(STAT_CYCLES, aggr_idx, rsd);
+ 
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -354,14 +354,14 @@ static void print_stalled_cycles_frontend(struct perf_stat_config *config,
  }
  
--static void print_stalled_cycles_backend(struct perf_stat_config *config,
--					 int aggr_idx, double avg,
--					 struct perf_stat_output_ctx *out,
--					 struct runtime_stat_data *rsd)
-+static void print_stalled_cycles_back(struct perf_stat_config *config,
-+				const struct evsel *evsel,
-+				int aggr_idx, double stalled,
-+				struct perf_stat_output_ctx *out)
+ static void print_stalled_cycles_backend(struct perf_stat_config *config,
+-					 int map_idx, double avg,
++					 int aggr_idx, double avg,
+ 					 struct perf_stat_output_ctx *out,
+ 					 struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
--
--	total = runtime_stat_avg(STAT_CYCLES, aggr_idx, rsd);
--
--	if (total)
--		ratio = avg / total * 100.0;
-+	static const double color_ratios[3] = {75.0, 50.0, 20.0};
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	color = get_ratio_color(GRC_STALLED_CYCLES_BE, ratio);
--
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "backend cycles idle", ratio);
-+	print_ratio(config, evsel, aggr_idx, stalled, out, STAT_CYCLES, color_ratios,
-+		    "backend cycles idle");
+-	total = runtime_stat_avg(STAT_CYCLES, map_idx, rsd);
++	total = runtime_stat_avg(STAT_CYCLES, aggr_idx, rsd);
+ 
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -372,14 +372,14 @@ static void print_stalled_cycles_backend(struct perf_stat_config *config,
  }
  
--static void print_branch_misses(struct perf_stat_config *config,
--				int aggr_idx, double avg,
--				struct perf_stat_output_ctx *out,
--				struct runtime_stat_data *rsd)
-+static void print_branch_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
+ static void print_branch_misses(struct perf_stat_config *config,
+-				int map_idx, double avg,
++				int aggr_idx, double avg,
+ 				struct perf_stat_output_ctx *out,
+ 				struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
--
--	total = runtime_stat_avg(STAT_BRANCHES, aggr_idx, rsd);
--
--	if (total)
--		ratio = avg / total * 100.0;
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all branches", ratio);
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_BRANCHES, color_ratios,
-+		    "of all branches");
+-	total = runtime_stat_avg(STAT_BRANCHES, map_idx, rsd);
++	total = runtime_stat_avg(STAT_BRANCHES, aggr_idx, rsd);
+ 
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -390,14 +390,14 @@ static void print_branch_misses(struct perf_stat_config *config,
  }
  
--static void print_l1_dcache_misses(struct perf_stat_config *config,
--				   int aggr_idx, double avg,
--				   struct perf_stat_output_ctx *out,
--				   struct runtime_stat_data *rsd)
-+static void print_l1d_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
+ static void print_l1_dcache_misses(struct perf_stat_config *config,
+-				   int map_idx, double avg,
++				   int aggr_idx, double avg,
+ 				   struct perf_stat_output_ctx *out,
+ 				   struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
--
--	total = runtime_stat_avg(STAT_L1_DCACHE, aggr_idx, rsd);
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	if (total)
--		ratio = avg / total * 100.0;
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_L1_DCACHE, color_ratios,
-+		    "of all L1-dcache accesses");
-+}
+-	total = runtime_stat_avg(STAT_L1_DCACHE, map_idx, rsd);
++	total = runtime_stat_avg(STAT_L1_DCACHE, aggr_idx, rsd);
  
--	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
-+static void print_l1i_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
-+{
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
- 
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_L1_ICACHE, color_ratios,
-+		    "of all L1-icache accesses");
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -408,14 +408,14 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
  }
  
--static void print_l1_icache_misses(struct perf_stat_config *config,
--				   int aggr_idx, double avg,
--				   struct perf_stat_output_ctx *out,
--				   struct runtime_stat_data *rsd)
-+static void print_ll_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
+ static void print_l1_icache_misses(struct perf_stat_config *config,
+-				   int map_idx, double avg,
++				   int aggr_idx, double avg,
+ 				   struct perf_stat_output_ctx *out,
+ 				   struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	total = runtime_stat_avg(STAT_L1_ICACHE, aggr_idx, rsd);
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_LL_CACHE, color_ratios,
-+		    "of all L1-icache accesses");
-+}
+-	total = runtime_stat_avg(STAT_L1_ICACHE, map_idx, rsd);
++	total = runtime_stat_avg(STAT_L1_ICACHE, aggr_idx, rsd);
  
--	if (total)
--		ratio = avg / total * 100.0;
-+static void print_dtlb_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
-+{
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
- 
--	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache accesses", ratio);
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_DTLB_CACHE, color_ratios,
-+		    "of all dTLB cache accesses");
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -425,14 +425,14 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
  }
  
--static void print_dtlb_cache_misses(struct perf_stat_config *config,
--				    int aggr_idx, double avg,
--				    struct perf_stat_output_ctx *out,
--				    struct runtime_stat_data *rsd)
-+static void print_itlb_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
+ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+-				    int map_idx, double avg,
++				    int aggr_idx, double avg,
+ 				    struct perf_stat_output_ctx *out,
+ 				    struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	total = runtime_stat_avg(STAT_DTLB_CACHE, aggr_idx, rsd);
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_ITLB_CACHE, color_ratios,
-+		    "of all iTLB cache accesses");
-+}
+-	total = runtime_stat_avg(STAT_DTLB_CACHE, map_idx, rsd);
++	total = runtime_stat_avg(STAT_DTLB_CACHE, aggr_idx, rsd);
  
--	if (total)
--		ratio = avg / total * 100.0;
-+static void print_cache_miss(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double misses,
-+			struct perf_stat_output_ctx *out)
-+{
-+	static const double color_ratios[3] = {20.0, 10.0, 5.0};
- 
--	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache accesses", ratio);
-+	print_ratio(config, evsel, aggr_idx, misses, out, STAT_CACHE_REFS, color_ratios,
-+		    "of all cache refs");
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -442,14 +442,14 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
  }
  
--static void print_itlb_cache_misses(struct perf_stat_config *config,
--				    int aggr_idx, double avg,
--				    struct perf_stat_output_ctx *out,
--				    struct runtime_stat_data *rsd)
-+static void print_instructions(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double instructions,
-+			struct perf_stat_output_ctx *out)
+ static void print_itlb_cache_misses(struct perf_stat_config *config,
+-				    int map_idx, double avg,
++				    int aggr_idx, double avg,
+ 				    struct perf_stat_output_ctx *out,
+ 				    struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
-+	print_metric_t print_metric = out->print_metric;
-+	void *ctxp = out->ctx;
-+	double cycles = find_stat(evsel, aggr_idx, STAT_CYCLES);
-+	double max_stalled = max(find_stat(evsel, aggr_idx, STAT_STALLED_CYCLES_FRONT),
-+				find_stat(evsel, aggr_idx, STAT_STALLED_CYCLES_BACK));
-+
-+	if (cycles) {
-+		print_metric(config, ctxp, NULL, "%7.2f ", "insn per cycle",
-+			instructions / cycles);
-+	} else
-+		print_metric(config, ctxp, NULL, NULL, "insn per cycle", 0);
-+
-+	if (max_stalled && instructions) {
-+		out->new_line(config, ctxp);
-+		print_metric(config, ctxp, NULL, "%7.2f ", "stalled cycles per insn",
-+			max_stalled / instructions);
-+	}
-+}
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	total = runtime_stat_avg(STAT_ITLB_CACHE, aggr_idx, rsd);
-+static void print_cycles(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx, double cycles,
-+			struct perf_stat_output_ctx *out)
-+{
-+	double nsecs = find_stat(evsel, aggr_idx, STAT_NSECS);
+-	total = runtime_stat_avg(STAT_ITLB_CACHE, map_idx, rsd);
++	total = runtime_stat_avg(STAT_ITLB_CACHE, aggr_idx, rsd);
  
--	if (total)
--		ratio = avg / total * 100.0;
-+	if (cycles && nsecs) {
-+		double ratio = cycles / nsecs;
- 
--	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache accesses", ratio);
-+		out->print_metric(config, out->ctx, NULL, "%8.3f", "GHz", ratio);
-+	} else
-+		out->print_metric(config, out->ctx, NULL, NULL, "GHz", 0);
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -459,14 +459,14 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
  }
  
--static void print_ll_cache_misses(struct perf_stat_config *config,
--				  int aggr_idx, double avg,
--				  struct perf_stat_output_ctx *out,
--				  struct runtime_stat_data *rsd)
-+static void print_nsecs(struct perf_stat_config *config,
-+			const struct evsel *evsel,
-+			int aggr_idx __maybe_unused, double nsecs,
-+			struct perf_stat_output_ctx *out)
+ static void print_ll_cache_misses(struct perf_stat_config *config,
+-				  int map_idx, double avg,
++				  int aggr_idx, double avg,
+ 				  struct perf_stat_output_ctx *out,
+ 				  struct runtime_stat_data *rsd)
  {
--	double total, ratio = 0.0;
--	const char *color;
--
--	total = runtime_stat_avg(STAT_LL_CACHE, aggr_idx, rsd);
--
--	if (total)
--		ratio = avg / total * 100.0;
-+	print_metric_t print_metric = out->print_metric;
-+	void *ctxp = out->ctx;
-+	double wall_time = avg_stats(&walltime_nsecs_stats);
+ 	double total, ratio = 0.0;
+ 	const char *color;
  
--	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache accesses", ratio);
-+	if (wall_time) {
-+		print_metric(config, ctxp, NULL, "%8.3f", "CPUs utilized",
-+			nsecs / (wall_time * evsel->scale));
-+	} else
-+		print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
- }
+-	total = runtime_stat_avg(STAT_LL_CACHE, map_idx, rsd);
++	total = runtime_stat_avg(STAT_LL_CACHE, aggr_idx, rsd);
  
+ 	if (total)
+ 		ratio = avg / total * 100.0;
+@@ -478,7 +478,7 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
  static int prepare_metric(struct evsel **metric_events,
-@@ -638,139 +730,51 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 			  struct metric_ref *metric_refs,
+ 			  struct expr_parse_ctx *pctx,
+-			  int map_idx)
++			  int aggr_idx)
+ {
+ 	double scale;
+ 	char *n;
+@@ -516,7 +516,7 @@ static int prepare_metric(struct evsel **metric_events,
+ 				abort();
+ 			}
+ 		} else {
+-			v = saved_value_lookup(metric_events[i], map_idx, false,
++			v = saved_value_lookup(metric_events[i], aggr_idx, false,
+ 					       STAT_NONE, 0,
+ 					       metric_events[i]->cgrp);
+ 			if (!v)
+@@ -560,7 +560,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 			   const char *metric_name,
+ 			   const char *metric_unit,
+ 			   int runtime,
+-			   int map_idx,
++			   int aggr_idx,
+ 			   struct perf_stat_output_ctx *out)
+ {
+ 	print_metric_t print_metric = out->print_metric;
+@@ -578,7 +578,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 		pctx->sctx.user_requested_cpu_list = strdup(config->user_requested_cpu_list);
+ 	pctx->sctx.runtime = runtime;
+ 	pctx->sctx.system_wide = config->system_wide;
+-	i = prepare_metric(metric_events, metric_refs, pctx, map_idx);
++	i = prepare_metric(metric_events, metric_refs, pctx, aggr_idx);
+ 	if (i < 0) {
+ 		expr__ctx_free(pctx);
+ 		return;
+@@ -630,7 +630,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 	expr__ctx_free(pctx);
+ }
+ 
+-double test_generic_metric(struct metric_expr *mexp, int map_idx)
++double test_generic_metric(struct metric_expr *mexp, int aggr_idx)
+ {
+ 	struct expr_parse_ctx *pctx;
+ 	double ratio = 0.0;
+@@ -639,7 +639,7 @@ double test_generic_metric(struct metric_expr *mexp, int map_idx)
+ 	if (!pctx)
+ 		return NAN;
+ 
+-	if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx, map_idx) < 0)
++	if (prepare_metric(mexp->metric_events, mexp->metric_refs, pctx, aggr_idx) < 0)
+ 		goto out;
+ 
+ 	if (expr__parse(&ratio, pctx, mexp->metric_expr))
+@@ -652,7 +652,7 @@ double test_generic_metric(struct metric_expr *mexp, int map_idx)
+ 
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct evsel *evsel,
+-				   double avg, int map_idx,
++				   double avg, int aggr_idx,
  				   struct perf_stat_output_ctx *out,
  				   struct rblist *metric_events)
  {
--	void *ctxp = out->ctx;
--	print_metric_t print_metric = out->print_metric;
--	double total, ratio = 0.0;
--	struct runtime_stat_data rsd = {
--		.ctx = evsel_context(evsel),
--		.cgrp = evsel->cgrp,
-+	typedef void (*stat_print_function_t)(struct perf_stat_config *config,
-+					const struct evsel *evsel,
-+					int aggr_idx, double misses,
-+					struct perf_stat_output_ctx *out);
-+	static const stat_print_function_t stat_print_function[STAT_MAX] = {
-+		[STAT_INSTRUCTIONS] = print_instructions,
-+		[STAT_BRANCH_MISS] = print_branch_miss,
-+		[STAT_L1D_MISS] = print_l1d_miss,
-+		[STAT_L1I_MISS] = print_l1i_miss,
-+		[STAT_DTLB_MISS] = print_dtlb_miss,
-+		[STAT_ITLB_MISS] = print_itlb_miss,
-+		[STAT_LL_MISS] = print_ll_miss,
-+		[STAT_CACHE_MISSES] = print_cache_miss,
-+		[STAT_STALLED_CYCLES_FRONT] = print_stalled_cycles_front,
-+		[STAT_STALLED_CYCLES_BACK] = print_stalled_cycles_back,
-+		[STAT_CYCLES] = print_cycles,
-+		[STAT_NSECS] = print_nsecs,
- 	};
-+	print_metric_t print_metric = out->print_metric;
-+	void *ctxp = out->ctx;
- 	struct metric_event *me;
- 	int num = 1;
- 
+@@ -669,7 +669,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
  	if (config->iostat_run) {
  		iostat_print_metric(config, evsel, out);
--	} else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS)) {
--		total = runtime_stat_avg(STAT_CYCLES, aggr_idx, &rsd);
--
--		if (total) {
--			ratio = avg / total;
--			print_metric(config, ctxp, NULL, "%7.2f ",
--					"insn per cycle", ratio);
--		} else {
--			print_metric(config, ctxp, NULL, NULL, "insn per cycle", 0);
--		}
--
--		total = runtime_stat_avg(STAT_STALLED_CYCLES_FRONT, aggr_idx, &rsd);
--
--		total = max(total, runtime_stat_avg(STAT_STALLED_CYCLES_BACK,
--						    aggr_idx, &rsd));
--
--		if (total && avg) {
--			out->new_line(config, ctxp);
--			ratio = total / avg;
--			print_metric(config, ctxp, NULL, "%7.2f ",
--					"stalled cycles per insn",
--					ratio);
--		}
--	} else if (evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
--		if (runtime_stat_n(STAT_BRANCHES, aggr_idx, &rsd) != 0)
--			print_branch_misses(config, aggr_idx, avg, out, &rsd);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all branches", 0);
--	} else if (
--		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
--		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1D |
--					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
--					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
--
--		if (runtime_stat_n(STAT_L1_DCACHE, aggr_idx, &rsd) != 0)
--			print_l1_dcache_misses(config, aggr_idx, avg, out, &rsd);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache accesses", 0);
--	} else if (
--		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
--		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
--					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
--					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
--
--		if (runtime_stat_n(STAT_L1_ICACHE, aggr_idx, &rsd) != 0)
--			print_l1_icache_misses(config, aggr_idx, avg, out, &rsd);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all L1-icache accesses", 0);
--	} else if (
--		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
--		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
--					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
--					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
--
--		if (runtime_stat_n(STAT_DTLB_CACHE, aggr_idx, &rsd) != 0)
--			print_dtlb_cache_misses(config, aggr_idx, avg, out, &rsd);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache accesses", 0);
--	} else if (
--		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
--		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
--					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
--					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
--
--		if (runtime_stat_n(STAT_ITLB_CACHE, aggr_idx, &rsd) != 0)
--			print_itlb_cache_misses(config, aggr_idx, avg, out, &rsd);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache accesses", 0);
--	} else if (
--		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
--		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
--					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
--					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
--
--		if (runtime_stat_n(STAT_LL_CACHE, aggr_idx, &rsd) != 0)
--			print_ll_cache_misses(config, aggr_idx, avg, out, &rsd);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all LL-cache accesses", 0);
--	} else if (evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
--		total = runtime_stat_avg(STAT_CACHEREFS, aggr_idx, &rsd);
--
--		if (total)
--			ratio = avg * 100 / total;
--
--		if (runtime_stat_n(STAT_CACHEREFS, aggr_idx, &rsd) != 0)
--			print_metric(config, ctxp, NULL, "%8.3f %%",
--				     "of all cache refs", ratio);
--		else
--			print_metric(config, ctxp, NULL, NULL, "of all cache refs", 0);
--	} else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND)) {
--		print_stalled_cycles_frontend(config, aggr_idx, avg, out, &rsd);
--	} else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_BACKEND)) {
--		print_stalled_cycles_backend(config, aggr_idx, avg, out, &rsd);
--	} else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES)) {
--		total = runtime_stat_avg(STAT_NSECS, aggr_idx, &rsd);
--
--		if (total) {
--			ratio = avg / total;
--			print_metric(config, ctxp, NULL, "%8.3f", "GHz", ratio);
--		} else {
--			print_metric(config, ctxp, NULL, NULL, "Ghz", 0);
--		}
--	} else if (evsel__is_clock(evsel)) {
--		if ((ratio = avg_stats(&walltime_nsecs_stats)) != 0)
--			print_metric(config, ctxp, NULL, "%8.3f", "CPUs utilized",
--				     avg / (ratio * evsel->scale));
--		else
--			print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
--	} else if (runtime_stat_n(STAT_NSECS, aggr_idx, &rsd) != 0) {
--		char unit = ' ';
--		char unit_buf[10] = "/sec";
--
--		total = runtime_stat_avg(STAT_NSECS, aggr_idx, &rsd);
--		if (total)
--			ratio = convert_unit_double(1000000000.0 * avg / total, &unit);
--
--		if (unit != ' ')
--			snprintf(unit_buf, sizeof(unit_buf), "%c/sec", unit);
--		print_metric(config, ctxp, NULL, "%8.3f", unit_buf, ratio);
- 	} else {
--		num = 0;
-+		stat_print_function_t fn = stat_print_function[evsel__stat_type(evsel)];
-+
-+		if (fn)
-+			fn(config, evsel, aggr_idx, avg, out);
-+		else {
-+			double nsecs =	find_stat(evsel, aggr_idx, STAT_NSECS);
-+
-+			if (nsecs) {
-+				char unit = ' ';
-+				char unit_buf[10] = "/sec";
-+				double ratio = convert_unit_double(1000000000.0 * avg / nsecs,
-+								   &unit);
-+
-+				if (unit != ' ')
-+					snprintf(unit_buf, sizeof(unit_buf), "%c/sec", unit);
-+				print_metric(config, ctxp, NULL, "%8.3f", unit_buf, ratio);
-+			} else
-+				num = 0;
-+		}
- 	}
+ 	} else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS)) {
+-		total = runtime_stat_avg(STAT_CYCLES, map_idx, &rsd);
++		total = runtime_stat_avg(STAT_CYCLES, aggr_idx, &rsd);
  
- 	if ((me = metricgroup__lookup(metric_events, evsel, false)) != NULL) {
+ 		if (total) {
+ 			ratio = avg / total;
+@@ -679,10 +679,10 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 			print_metric(config, ctxp, NULL, NULL, "insn per cycle", 0);
+ 		}
+ 
+-		total = runtime_stat_avg(STAT_STALLED_CYCLES_FRONT, map_idx, &rsd);
++		total = runtime_stat_avg(STAT_STALLED_CYCLES_FRONT, aggr_idx, &rsd);
+ 
+ 		total = max(total, runtime_stat_avg(STAT_STALLED_CYCLES_BACK,
+-						    map_idx, &rsd));
++						    aggr_idx, &rsd));
+ 
+ 		if (total && avg) {
+ 			out->new_line(config, ctxp);
+@@ -692,8 +692,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					ratio);
+ 		}
+ 	} else if (evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
+-		if (runtime_stat_n(STAT_BRANCHES, map_idx, &rsd) != 0)
+-			print_branch_misses(config, map_idx, avg, out, &rsd);
++		if (runtime_stat_n(STAT_BRANCHES, aggr_idx, &rsd) != 0)
++			print_branch_misses(config, aggr_idx, avg, out, &rsd);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all branches", 0);
+ 	} else if (
+@@ -702,8 +702,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
+ 					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
+ 
+-		if (runtime_stat_n(STAT_L1_DCACHE, map_idx, &rsd) != 0)
+-			print_l1_dcache_misses(config, map_idx, avg, out, &rsd);
++		if (runtime_stat_n(STAT_L1_DCACHE, aggr_idx, &rsd) != 0)
++			print_l1_dcache_misses(config, aggr_idx, avg, out, &rsd);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache accesses", 0);
+ 	} else if (
+@@ -712,8 +712,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
+ 					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
+ 
+-		if (runtime_stat_n(STAT_L1_ICACHE, map_idx, &rsd) != 0)
+-			print_l1_icache_misses(config, map_idx, avg, out, &rsd);
++		if (runtime_stat_n(STAT_L1_ICACHE, aggr_idx, &rsd) != 0)
++			print_l1_icache_misses(config, aggr_idx, avg, out, &rsd);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all L1-icache accesses", 0);
+ 	} else if (
+@@ -722,8 +722,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
+ 					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
+ 
+-		if (runtime_stat_n(STAT_DTLB_CACHE, map_idx, &rsd) != 0)
+-			print_dtlb_cache_misses(config, map_idx, avg, out, &rsd);
++		if (runtime_stat_n(STAT_DTLB_CACHE, aggr_idx, &rsd) != 0)
++			print_dtlb_cache_misses(config, aggr_idx, avg, out, &rsd);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache accesses", 0);
+ 	} else if (
+@@ -732,8 +732,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
+ 					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
+ 
+-		if (runtime_stat_n(STAT_ITLB_CACHE, map_idx, &rsd) != 0)
+-			print_itlb_cache_misses(config, map_idx, avg, out, &rsd);
++		if (runtime_stat_n(STAT_ITLB_CACHE, aggr_idx, &rsd) != 0)
++			print_itlb_cache_misses(config, aggr_idx, avg, out, &rsd);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache accesses", 0);
+ 	} else if (
+@@ -742,27 +742,27 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
+ 					 ((PERF_COUNT_HW_CACHE_RESULT_MISS) << 16))) {
+ 
+-		if (runtime_stat_n(STAT_LL_CACHE, map_idx, &rsd) != 0)
+-			print_ll_cache_misses(config, map_idx, avg, out, &rsd);
++		if (runtime_stat_n(STAT_LL_CACHE, aggr_idx, &rsd) != 0)
++			print_ll_cache_misses(config, aggr_idx, avg, out, &rsd);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all LL-cache accesses", 0);
+ 	} else if (evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
+-		total = runtime_stat_avg(STAT_CACHEREFS, map_idx, &rsd);
++		total = runtime_stat_avg(STAT_CACHEREFS, aggr_idx, &rsd);
+ 
+ 		if (total)
+ 			ratio = avg * 100 / total;
+ 
+-		if (runtime_stat_n(STAT_CACHEREFS, map_idx, &rsd) != 0)
++		if (runtime_stat_n(STAT_CACHEREFS, aggr_idx, &rsd) != 0)
+ 			print_metric(config, ctxp, NULL, "%8.3f %%",
+ 				     "of all cache refs", ratio);
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "of all cache refs", 0);
+ 	} else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND)) {
+-		print_stalled_cycles_frontend(config, map_idx, avg, out, &rsd);
++		print_stalled_cycles_frontend(config, aggr_idx, avg, out, &rsd);
+ 	} else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_BACKEND)) {
+-		print_stalled_cycles_backend(config, map_idx, avg, out, &rsd);
++		print_stalled_cycles_backend(config, aggr_idx, avg, out, &rsd);
+ 	} else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES)) {
+-		total = runtime_stat_avg(STAT_NSECS, map_idx, &rsd);
++		total = runtime_stat_avg(STAT_NSECS, aggr_idx, &rsd);
+ 
+ 		if (total) {
+ 			ratio = avg / total;
+@@ -776,11 +776,11 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				     avg / (ratio * evsel->scale));
+ 		else
+ 			print_metric(config, ctxp, NULL, NULL, "CPUs utilized", 0);
+-	} else if (runtime_stat_n(STAT_NSECS, map_idx, &rsd) != 0) {
++	} else if (runtime_stat_n(STAT_NSECS, aggr_idx, &rsd) != 0) {
+ 		char unit = ' ';
+ 		char unit_buf[10] = "/sec";
+ 
+-		total = runtime_stat_avg(STAT_NSECS, map_idx, &rsd);
++		total = runtime_stat_avg(STAT_NSECS, aggr_idx, &rsd);
+ 		if (total)
+ 			ratio = convert_unit_double(1000000000.0 * avg / total, &unit);
+ 
+@@ -800,7 +800,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 			generic_metric(config, mexp->metric_expr, mexp->metric_threshold,
+ 				       mexp->metric_events, mexp->metric_refs, evsel->name,
+ 				       mexp->metric_name, mexp->metric_unit, mexp->runtime,
+-				       map_idx, out);
++				       aggr_idx, out);
+ 		}
+ 	}
+ 	if (num == 0)
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 0d7538670d67..83dc4c1f4b12 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -651,15 +651,15 @@ void perf_stat_process_percore(struct perf_stat_config *config, struct evlist *e
+ static void evsel__update_shadow_stats(struct evsel *evsel)
+ {
+ 	struct perf_stat_evsel *ps = evsel->stats;
+-	int i;
++	int aggr_idx;
+ 
+ 	if (ps->aggr == NULL)
+ 		return;
+ 
+-	for (i = 0; i < ps->nr_aggr; i++) {
+-		struct perf_counts_values *aggr_counts = &ps->aggr[i].counts;
++	for (aggr_idx = 0; aggr_idx < ps->nr_aggr; aggr_idx++) {
++		struct perf_counts_values *aggr_counts = &ps->aggr[aggr_idx].counts;
+ 
+-		perf_stat__update_shadow_stats(evsel, aggr_counts->val, i);
++		perf_stat__update_shadow_stats(evsel, aggr_counts->val, aggr_idx);
+ 	}
+ }
+ 
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index 09975e098bd0..b01c828c3799 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -160,7 +160,7 @@ typedef void (*new_line_t)(struct perf_stat_config *config, void *ctx);
+ void perf_stat__init_shadow_stats(void);
+ void perf_stat__reset_shadow_stats(void);
+ void perf_stat__reset_shadow_per_stat(void);
+-void perf_stat__update_shadow_stats(struct evsel *counter, u64 count, int map_idx);
++void perf_stat__update_shadow_stats(struct evsel *counter, u64 count, int aggr_idx);
+ struct perf_stat_output_ctx {
+ 	void *ctx;
+ 	print_metric_t print_metric;
+@@ -170,7 +170,7 @@ struct perf_stat_output_ctx {
+ 
+ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 				   struct evsel *evsel,
+-				   double avg, int map_idx,
++				   double avg, int aggr_idx,
+ 				   struct perf_stat_output_ctx *out,
+ 				   struct rblist *metric_events);
+ 
+@@ -211,5 +211,5 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 			    struct target *_target, struct timespec *ts, int argc, const char **argv);
+ 
+ struct metric_expr;
+-double test_generic_metric(struct metric_expr *mexp, int map_idx);
++double test_generic_metric(struct metric_expr *mexp, int aggr_idx);
+ #endif
 -- 
 2.39.2.637.g21b0678d19-goog
 
