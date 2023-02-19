@@ -2,60 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA93AC05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2704C636CC
+	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 09:48:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbjBSJrY (ORCPT
+        id S230186AbjBSJsk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:47:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
+        Sun, 19 Feb 2023 04:48:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230136AbjBSJrX (ORCPT
+        with ESMTP id S230061AbjBSJsi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:47:23 -0500
-Received: from mail-io1-xd4a.google.com (mail-io1-xd4a.google.com [IPv6:2607:f8b0:4864:20::d4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02A51043B
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:46:51 -0800 (PST)
-Received: by mail-io1-xd4a.google.com with SMTP id y5-20020a6bc405000000b007132e024fb5so16682ioa.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:46:51 -0800 (PST)
+        Sun, 19 Feb 2023 04:48:38 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7B64EF3
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:47:54 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id m13-20020a25260d000000b0087f69905709so369205ybm.10
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Feb 2023 01:47:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4ivvDzCiOjMDLj/gcFt7rd0F2g23q1K7jFLZUP1Bknc=;
-        b=pYOV+yD5JlC63LIjHOEgCbCoVbA5/K+27F7L88dBNxpq0XtFj0mZZlqIwBeS92aa/g
-         4kDUIW6Ukpzk0fFBdMUaZQ9gpbxcONzq+Wex72Os29VOJJeKmMByz2aAyDl1kZOJhSvz
-         gMyXVIcQ66hX6vSSMEXC6o0ZfK1beKFKsed7fXcseehPo4dxwSPM0pj09N90AAhkjkgC
-         RqmIIPmMTskb/OWIeVf6wOoMaMNj2sJEn+pKMsU2ZwLxQqfbvK/cKpI5GR39iETOkuxK
-         apz9HUvn1dPJ6d+YgJ5aG1cft6QskyAlLCTBnyeqR6tQvJk1kYio9jElUCO1VUWcZ9I6
-         YNbQ==
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8oK06fVQN6LXVRqRBpBf6uq7iBLthLemaenQUOot5L0=;
+        b=c/IhxSXdMkvdWRTmNwDGCw1H+VDaY0b3orkL+EP+I6StfnTz8H8pSrT5peoX5iGhyL
+         aZJVTGxQcotqY/9XbrXu5W8a7dwuTOKV2N61EKGNWX+G6n+kxuWgzbZDVX14qVNHNX+s
+         fs5RmxJ4NrWIuhyym0Yg7NUOknjeXIWnd1ZkQeNcEc6sxObdx3t563ad/6YllU0XSRVH
+         fEBlJh6xYkiCZVrIz2FJ28m1/wK+9QXfHWnY7uNt0V/Brg7V6nAD5888J6y3CRDbKjZN
+         b08tJOGA3QuQgVGwsV5oJ+JxevsQJNE5g65XNpdn5E/qZEfMghvi8DBRe4DWYkzPbiRl
+         Q1+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4ivvDzCiOjMDLj/gcFt7rd0F2g23q1K7jFLZUP1Bknc=;
-        b=DRCGNZjhD9O2Ec5emgY1aksyPAc0mQxxfeOyxXgwJGipvruW3dJcNhxV6/AiJmLnEI
-         VZTVqRqxQ1GBkZLD+yRa1T8EQPwWndO7xmvOQK3vhObPLw07pgHeMggWH94oNyP58/WE
-         2AOcQpsRCwnkvrJHfzgYNcvYa91dlmwsVQJTsg5kMKJrssdNNDmnEwLJFmwYCbe4g5PC
-         YMVAR44n5dwXmoDUuTnMhHjPDSUIQUsPjP4+9H2WfZjf2XK4hpmv5gOBt4d2tAAJsKLF
-         yvJJ0vHzClSw1uICLtvT2sHVwTOCt9A+XINlh1PPVao7Bu7wkG9+I5QYwbkyZ6kxJjY+
-         Uc4A==
-X-Gm-Message-State: AO0yUKWv6WQfXJRgzWYOujtsEqfAcXCX8W5Y2Ov3aDRaXRnJIDmLGL6k
-        tgff/LykI7tEqGU1TsULrHpkRbcjkATr
-X-Google-Smtp-Source: AK7set8yN+kBbD9ri+YxCMZN5KWjv18FQjaq/9X1tHGt8jIhLEZWXlDKUsXy15DHn+Gq5dx+2iMz3JjgRtb3
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8oK06fVQN6LXVRqRBpBf6uq7iBLthLemaenQUOot5L0=;
+        b=wKYqoPcV85J3DhvEnPj5Sx5J3hwx8oTwsejqL1rJd7WDh/iOAow+b+qDdtBmRxSZIf
+         sPAvJiOG8RbMX7XetNDQ6clkci0reXRsy45+pIIVdHx22KKI6j2ofts+1gQelg7/YYig
+         JcavMxlANWHDacfgKR+HC0XP+hlGnysMLKe//idsvCLQTeI5fszoOdfvND8HxKrkdXDO
+         5hSPnHLGkxZWDlOyJeAkNwXPrgw+LqvpyXgNAeKE/byyk49rtyQw1bTfHs70RwfHdBTn
+         BKBETvh/gM8S+TGOeSDI+T/PtirkPIB1Tw1D17wIVukiIsbHHNNjOGz82XnmbnSyMDWU
+         Z7VA==
+X-Gm-Message-State: AO0yUKUofPU8kqLEPbu68BEIJqqeM8UYy96cdIcCzhjrnE2oiP0ZcPke
+        iYZnRP6gHZxXXfNRm1SU6saoODmlxlKS
+X-Google-Smtp-Source: AK7set+LQd+T0aRT1nOHEm7j8W4E/K6xfWruqyX18mazS98+efqvDllhLIgDjt9Oib0BQaMgkUONzQILaLjH
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:cde9:3fbc:e1f1:6e3b])
- (user=irogers job=sendgmr) by 2002:a05:6902:291:b0:9a0:1d7b:707b with SMTP id
- v17-20020a056902029100b009a01d7b707bmr49325ybh.4.1676799268239; Sun, 19 Feb
- 2023 01:34:28 -0800 (PST)
-Date:   Sun, 19 Feb 2023 01:28:36 -0800
+ (user=irogers job=sendgmr) by 2002:a25:9ac4:0:b0:967:e782:c03 with SMTP id
+ t4-20020a259ac4000000b00967e7820c03mr884748ybo.430.1676799216733; Sun, 19 Feb
+ 2023 01:33:36 -0800 (PST)
+Date:   Sun, 19 Feb 2023 01:28:30 -0800
 In-Reply-To: <20230219092848.639226-1-irogers@google.com>
-Message-Id: <20230219092848.639226-40-irogers@google.com>
+Message-Id: <20230219092848.639226-34-irogers@google.com>
 Mime-Version: 1.0
 References: <20230219092848.639226-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 39/51] perf stat: Add TopdownL1 metric as a default if present
+Subject: [PATCH v1 33/51] perf jevent: Parse metric thresholds
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -90,164 +88,64 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When there are no events and on Intel, the topdown events will be
-added by default if present. To display the metrics associated with
-these request special handling in stat-shadow.c. To more easily update
-these metrics use the json metric version via the TopdownL1
-group. This makes the handling less platform specific.
-
-Modify the metricgroup__has_metric code to also cover metric groups.
+Parse the metric threshold and add to the pmu-events.c file. The
+metric isn't parsed as the parser uses python's parser and will break
+the operator precedence.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/evlist.c  |  6 +++---
- tools/perf/arch/x86/util/topdown.c | 30 ------------------------------
- tools/perf/arch/x86/util/topdown.h |  1 -
- tools/perf/builtin-stat.c          | 14 ++++++++++++++
- tools/perf/util/metricgroup.c      |  6 ++----
- 5 files changed, 19 insertions(+), 38 deletions(-)
+ tools/perf/pmu-events/jevents.py   | 7 ++++++-
+ tools/perf/pmu-events/pmu-events.h | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/e=
-vlist.c
-index cb59ce9b9638..8a7ae4162563 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -59,10 +59,10 @@ int arch_evlist__add_default_attrs(struct evlist *evlis=
-t,
- 				   struct perf_event_attr *attrs,
- 				   size_t nr_attrs)
- {
--	if (nr_attrs)
--		return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
-+	if (!nr_attrs)
-+		return 0;
-=20
--	return topdown_parse_events(evlist);
-+	return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
- }
-=20
- struct evsel *arch_evlist__leader(struct list_head *list)
-diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/=
-topdown.c
-index 54810f9acd6f..eb3a7d9652ab 100644
---- a/tools/perf/arch/x86/util/topdown.c
-+++ b/tools/perf/arch/x86/util/topdown.c
-@@ -9,11 +9,6 @@
- #include "topdown.h"
- #include "evsel.h"
-=20
--#define TOPDOWN_L1_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,=
-topdown-fe-bound,topdown-be-bound}"
--#define TOPDOWN_L1_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_cor=
-e/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/}"
--#define TOPDOWN_L2_EVENTS       "{slots,topdown-retiring,topdown-bad-spec,=
-topdown-fe-bound,topdown-be-bound,topdown-heavy-ops,topdown-br-mispredict,t=
-opdown-fetch-lat,topdown-mem-bound}"
--#define TOPDOWN_L2_EVENTS_CORE  "{slots,cpu_core/topdown-retiring/,cpu_cor=
-e/topdown-bad-spec/,cpu_core/topdown-fe-bound/,cpu_core/topdown-be-bound/,c=
-pu_core/topdown-heavy-ops/,cpu_core/topdown-br-mispredict/,cpu_core/topdown=
--fetch-lat/,cpu_core/topdown-mem-bound/}"
--
- /* Check whether there is a PMU which supports the perf metrics. */
- bool topdown_sys_has_perf_metrics(void)
- {
-@@ -99,28 +94,3 @@ const char *arch_get_topdown_pmu_name(struct evlist *evl=
-ist, bool warn)
-=20
- 	return pmu_name;
- }
--
--int topdown_parse_events(struct evlist *evlist)
--{
--	const char *topdown_events;
--	const char *pmu_name;
--
--	if (!topdown_sys_has_perf_metrics())
--		return 0;
--
--	pmu_name =3D arch_get_topdown_pmu_name(evlist, false);
--
--	if (pmu_have_event(pmu_name, "topdown-heavy-ops")) {
--		if (!strcmp(pmu_name, "cpu_core"))
--			topdown_events =3D TOPDOWN_L2_EVENTS_CORE;
--		else
--			topdown_events =3D TOPDOWN_L2_EVENTS;
--	} else {
--		if (!strcmp(pmu_name, "cpu_core"))
--			topdown_events =3D TOPDOWN_L1_EVENTS_CORE;
--		else
--			topdown_events =3D TOPDOWN_L1_EVENTS;
--	}
--
--	return parse_event(evlist, topdown_events);
--}
-diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/=
-topdown.h
-index 7eb81f042838..46bf9273e572 100644
---- a/tools/perf/arch/x86/util/topdown.h
-+++ b/tools/perf/arch/x86/util/topdown.h
-@@ -3,6 +3,5 @@
- #define _TOPDOWN_H 1
-=20
- bool topdown_sys_has_perf_metrics(void);
--int topdown_parse_events(struct evlist *evlist);
-=20
- #endif
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5e13171a7bba..796e98e453f6 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1996,6 +1996,7 @@ static int add_default_attributes(void)
- 		stat_config.topdown_level =3D TOPDOWN_MAX_LEVEL;
-=20
- 	if (!evsel_list->core.nr_entries) {
-+		/* No events so add defaults. */
- 		if (target__has_cpu(&target))
- 			default_attrs0[0].config =3D PERF_COUNT_SW_CPU_CLOCK;
-=20
-@@ -2011,6 +2012,19 @@ static int add_default_attributes(void)
- 		}
- 		if (evlist__add_default_attrs(evsel_list, default_attrs1) < 0)
- 			return -1;
-+		/*
-+		 * Add TopdownL1 metrics if they exist. To minimize
-+		 * multiplexing, don't request threshold computation.
-+		 */
-+		if (metricgroup__has_metric("TopdownL1") &&
-+		    metricgroup__parse_groups(evsel_list, "TopdownL1",
-+					    /*metric_no_group=3D*/false,
-+					    /*metric_no_merge=3D*/false,
-+					    /*metric_no_threshold=3D*/true,
-+					    stat_config.user_requested_cpu_list,
-+					    stat_config.system_wide,
-+					    &stat_config.metric_events) < 0)
-+			return -1;
- 		/* Platform specific attrs */
- 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
- 			return -1;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index afb6f2fdc24e..64a35f2787dc 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1647,10 +1647,8 @@ static int metricgroup__has_metric_callback(const st=
-ruct pmu_metric *pm,
- {
- 	const char *metric =3D vdata;
-=20
--	if (!pm->metric_expr)
--		return 0;
--
--	if (match_metric(pm->metric_name, metric))
-+	if (match_metric(pm->metric_name, metric) ||
-+	    match_metric(pm->metric_group, metric))
- 		return 1;
-=20
- 	return 0;
---=20
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index e82dff3a1228..40b9e626fc15 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -51,7 +51,7 @@ _json_event_attributes = [
+ 
+ # Attributes that are in pmu_metric rather than pmu_event.
+ _json_metric_attributes = [
+-    'metric_name', 'metric_group', 'metric_expr', 'desc',
++    'metric_name', 'metric_group', 'metric_expr', 'metric_threshold', 'desc',
+     'long_desc', 'unit', 'compat', 'aggr_mode', 'event_grouping'
+ ]
+ # Attributes that are bools or enum int values, encoded as '0', '1',...
+@@ -306,6 +306,9 @@ class JsonEvent:
+     self.metric_expr = None
+     if 'MetricExpr' in jd:
+       self.metric_expr = metric.ParsePerfJson(jd['MetricExpr']).Simplify()
++    # Note, the metric formula for the threshold isn't parsed as the &
++    # and > have incorrect precedence.
++    self.metric_threshold = jd.get('MetricThreshold')
+ 
+     arch_std = jd.get('ArchStdEvent')
+     if precise and self.desc and '(Precise Event)' not in self.desc:
+@@ -362,6 +365,8 @@ class JsonEvent:
+         # Convert parsed metric expressions into a string. Slashes
+         # must be doubled in the file.
+         x = x.ToPerfJson().replace('\\', '\\\\')
++      if metric and x and attr == 'metric_threshold':
++        x = x.replace('\\', '\\\\')
+       if attr in _json_enum_attributes:
+         s += x if x else '0'
+       else:
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 57a38e3e5c32..b7dff8f1021f 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -54,6 +54,7 @@ struct pmu_metric {
+ 	const char *metric_name;
+ 	const char *metric_group;
+ 	const char *metric_expr;
++	const char *metric_threshold;
+ 	const char *unit;
+ 	const char *compat;
+ 	const char *desc;
+-- 
 2.39.2.637.g21b0678d19-goog
 
