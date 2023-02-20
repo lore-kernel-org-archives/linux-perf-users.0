@@ -2,158 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E60C05027
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Feb 2023 16:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C86C636CC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Feb 2023 17:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbjBTQYs (ORCPT
+        id S232346AbjBTRQS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Feb 2023 11:24:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38688 "EHLO
+        Mon, 20 Feb 2023 12:16:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232216AbjBTQYq (ORCPT
+        with ESMTP id S232383AbjBTRQR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Feb 2023 11:24:46 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D260D1F4B0;
-        Mon, 20 Feb 2023 08:24:42 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36E75FEC;
-        Mon, 20 Feb 2023 08:25:25 -0800 (PST)
-Received: from [10.57.90.234] (unknown [10.57.90.234])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D8933F703;
-        Mon, 20 Feb 2023 08:24:40 -0800 (PST)
-Message-ID: <e3df35fe-a00d-69ec-32ee-53c949909cab@arm.com>
-Date:   Mon, 20 Feb 2023 16:24:39 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.7.2
-Subject: v4: Re: [PATCH v7 00/15] coresight: Add new API to allocate trace
- source ID values
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+        Mon, 20 Feb 2023 12:16:17 -0500
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B012055F
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Feb 2023 09:16:14 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id E6B5A921976
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Feb 2023 17:16:13 +0000 (UTC)
+Received: from pdx1-sub0-mail-a306.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id 75C9992186D
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Feb 2023 17:16:13 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1676913373; a=rsa-sha256;
+        cv=none;
+        b=l8y73v1kQHKYz1V6IIrqO17lu3AcuglL9JGyHW/eIeEmHAO8IhsV8Id8fEDLDzELN2o11D
+        cW0tAAl/m1rHTE3n0QIwM/bbXBQ6EdQB3HxirvmZryNh4bJ8f28faHXbr8P+z4LnNhMcF8
+        AO1IGEiYEJ3GKXthZkIqh2nqlWtbq8JRpVMIE4/LE/jLswzENFwnf/1PE/0za5ovEzQGsB
+        yB/zYAHsKf3c2zSupQonnzmfUxc+NHUsQHizcro0AzNRCV+5KVlBatKCgS/7ek8u2YimhE
+        N0mMs2q91ooneKXI5pGPyaEKPjMw1XlYy5/A1WyeRfQvOwwr6mMqQR6M+pgxJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1676913373;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=whX2ZzDG1ObOudLbNNnBksBTqM5gR0iYyizYBnUIlGo=;
+        b=aewUVKddZBMj0ilHT5hkdvrfMdL5IXRWgaruZJ3T+h6pvFK3uJ5Ctu9aAy+CdApSFOIrSu
+        1h/9v9G92JKFBFVPYNpuJshaKV/DaFcLkfqw1INWQKEUQaTMe6LlFSNH/uY6NjsWAJWxKA
+        jKnuNth7plrkW23cSFeTKXXcYeix8eljsqr5YClzsQHahhkbDVk9A4HzIG6XwIQTCl21CQ
+        s3Vd4db8S8yZg5UypE9n0nukSB7SmhLgmP1edkIrZscxjgz6AeBLOhKruEenMvr1cJjEym
+        ugkzt06AkT9zIEFgYkP3dgMU1yrciUNiliLKsfuZj9HIirMpK9NhWzm3srjrMA==
+ARC-Authentication-Results: i=1;
+        rspamd-9788b98bc-ngd69;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Cure-Lettuce: 5816cbe755eec86f_1676913373706_1687721613
+X-MC-Loop-Signature: 1676913373706:1121159221
+X-MC-Ingress-Time: 1676913373706
+Received: from pdx1-sub0-mail-a306.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.123.200.110 (trex/6.7.1);
+        Mon, 20 Feb 2023 17:16:13 +0000
+Received: from kmjvbox (c-76-102-200-71.hsd1.ca.comcast.net [76.102.200.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kjlx@templeofstupid.com)
+        by pdx1-sub0-mail-a306.dreamhost.com (Postfix) with ESMTPSA id 4PL8G36wW6z14t
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Feb 2023 09:16:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+        s=dreamhost; t=1676913372;
+        bh=whX2ZzDG1ObOudLbNNnBksBTqM5gR0iYyizYBnUIlGo=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=E5RyGqxK4GSP2iCeUVhwcQCq55mWBmxqxX1OBVPzBhJa+YfWXXtIPNVIg/LB9+Jkf
+         LURa74yeVqek7y3qm34Xx8iZzawf2Drdni0+KKFovZgbiikPzq6/jA2TlyGcoGpK4j
+         jU3P7snzWhNxhPRX4DiLS6NJpbhg71k92zhr8qNo=
+Received: from johansen (uid 1000)
+        (envelope-from kjlx@templeofstupid.com)
+        id e0067
+        by kmjvbox (DragonFly Mail Agent v0.12);
+        Mon, 20 Feb 2023 09:16:08 -0800
+Date:   Mon, 20 Feb 2023 09:16:08 -0800
+From:   Krister Johansen <kjlx@templeofstupid.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
-        quic_jinlmao@quicinc.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
-        James Clark <james.clark@arm.com>
-References: <20230116124928.5440-1-mike.leach@linaro.org>
- <546f218f-3ac9-8fc2-c843-2f2f16882f31@arm.com>
- <5b7df6df-0c2d-6953-0f50-e85745cb1f4b@arm.com>
- <2864f28e-dd2f-5a9c-922f-5c044a864beb@arm.com>
-In-Reply-To: <2864f28e-dd2f-5a9c-922f-5c044a864beb@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Krister Johansen <kjlx@templeofstupid.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        David Reaver <me@davidreaver.com>
+Subject: Re: [PATCH v2] perf/util: Symbol lookup with kcore can fail if
+ multiple segments match stext
+Message-ID: <20230220171608.GA1993@templeofstupid.com>
+References: <20230124223531.GB1962@templeofstupid.com>
+ <20230125183418.GD1963@templeofstupid.com>
+ <7b5f872a-f52e-7129-e956-90e97ec7d911@intel.com>
+ <Y9sLQ1Iy5LJAaJ8L@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9sLQ1Iy5LJAaJ8L@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arnaldo
-
-Gentle ping
-
-
-On 31/01/2023 11:49, Suzuki K Poulose wrote:
-> Hi Arnaldo
+On Wed, Feb 01, 2023 at 10:00:51PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jan 30, 2023 at 03:29:54PM +0200, Adrian Hunter escreveu:
+> > On 25/01/23 20:34, Krister Johansen wrote:
+> > > This problem was encountered on an arm64 system with a lot of memory.
+> > > Without kernel debug symbols installed, and with both kcore and kallsyms
+> > > available, perf managed to get confused and returned "unknown" for all
+> > > of the kernel symbols that it tried to look up.
+> > > 
+> > > On this system, stext fell within the vmalloc segment.  The kcore symbol
+> > > matching code tries to find the first segment that contains stext and
+> > > uses that to replace the segment generated from just the kallsyms
+> > > information.  In this case, however, there were two: a very large
+> > > vmalloc segment, and the text segment.  This caused perf to get confused
+> > > because multiple overlapping segments were inserted into the RB tree
+> > > that holds the discovered segments.  However, that alone wasn't
+> > > sufficient to cause the problem. Even when we could find the segment,
+> > > the offsets were adjusted in such a way that the newly generated symbols
+> > > didn't line up with the instruction addresses in the trace.  The most
+> > > obvious solution would be to consult which segment type is text from
+> > > kcore, but this information is not exposed to users.
+> > > 
+> > > Instead, select the smallest matching segment that contains stext
+> > > instead of the first matching segment.  This allows us to match the text
+> > > segment instead of vmalloc, if one is contained within the other.
+> > > 
+> > > Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+> > 
+> > Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
-> On 24/01/2023 11:36, Suzuki K Poulose wrote:
->> Hi Arnaldo
->>
->> Gentle ping.
->>
->> On 19/01/2023 12:00, Suzuki K Poulose wrote:
->>> Hi Arnaldo,
->>>
->>> On 16/01/2023 12:49, Mike Leach wrote:
->>>> The current method for allocating trace source ID values to sources is
->>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
->>>> The STM is allocated ID 0x1.
->>>>
->>>> This fixed algorithm is used in both the CoreSight driver code, and by
->>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
->>>>
->>>> The method needs replacing as currently:-
->>>> 1. It is inefficient in using available IDs.
->>>> 2. Does not scale to larger systems with many cores and the algorithm
->>>> has no limits so will generate invalid trace IDs for cpu number > 44.
->>>>
->>>> Additionally requirements to allocate additional system IDs on some
->>>> systems have been seen.
->>>>
->>>> This patch set  introduces an API that allows the allocation of 
->>>> trace IDs
->>>> in a dynamic manner.
->>>>
->>>> Architecturally reserved IDs are never allocated, and the system is
->>>> limited to allocating only valid IDs.
->>>>
->>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated 
->>>> to use
->>>> the new API.
->>>>
->>>> For the ETMx.x devices IDs are allocated on certain events
->>>> a) When using sysfs, an ID will be allocated on hardware enable, or 
->>>> a read of
->>>> sysfs TRCTRACEID register and freed when the sysfs reset is written.
->>>>
->>>> b) When using perf, ID is allocated on during setup AUX event, and 
->>>> freed on
->>>> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
->>>> The ID allocator is notified when perf sessions start and stop
->>>> so CPU based IDs are kept constant throughout any perf session.
->>>>
->>>>
->>>> Note: This patchset breaks some backward compatibility for perf 
->>>> record and
->>>> perf report.
->>>>
->>>> The version of the AUXTRACE_INFO has been updated to reflect the 
->>>> fact that
->>>> the trace source IDs are generated differently. This will
->>>> mean older versions of perf report cannot decode the newer file.
->>>>
->>>> Appies to coresight/next
->>>>
->>
->> ...
->>
->>>> Mike Leach (15):
->>>>    coresight: trace-id: Add API to dynamically assign Trace ID values
->>>>    coresight: Remove obsolete Trace ID unniqueness checks
->>>>    coresight: perf: traceid: Add perf ID allocation and notifiers
->>>>    coresight: stm: Update STM driver to use Trace ID API
->>>>    coresight: etm4x: Update ETM4 driver to use Trace ID API
->>>>    coresight: etm3x: Update ETM3 driver to use Trace ID API
->>>>    coresight: etmX.X: stm: Remove trace_id() callback
->>>>    coresight: trace id: Remove legacy get trace ID function.
->>>>    perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->>>>    perf: cs-etm: Update record event to use new Trace ID protocol
->>>>    kernel: events: Export perf_report_aux_output_id()
->>>>    perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
->>>>    coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
->>>>    coresight: trace-id: Add debug & test macros to Trace ID allocation
->>>>    coresight: etm3x: docs: Alter sysfs documentation for trace id 
->>>> updates
->>>
->>> I have pushed the kernel patches on this series to coresight tree 
->>> next[0].
->>>
->>> I will be sending them out to Greg for v6.3. Please could you queue the
->>> perf tool changes in the series ? i.e., Patches 9,10 and 12.
->>>
->>>
->>> [0] 
->>> https://git.kernel.org/pub/scm/linux/kernel/git/coresight/linux.git/log/?h=next
->>>
->>
->> Please could you pick up the perf tool changes above ?
-> 
-> Please could you confirm if you are able to queue the perf tool changes 
-> ? Or would you like me route it via coresight tree ?
-> 
-> Kind regards
-> Suzuki
-> 
+> Thanks, applied.
 
+Thanks, Arnaldo.  If it's not too late, would you be willing to tag this
+one as:
 
-Suzuki
+Fixes: 5654997838c2 ("perf tools: Use the "_stest" symbol to identify the kernel map when loading kcore")
+Cc: <stable@vger.kernel.org>
 
+So that it makes it to the right stable branches?  I meant to do this
+prior to sending it along.
+
+-K
