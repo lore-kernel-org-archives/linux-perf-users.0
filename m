@@ -2,96 +2,86 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9160FC05027
-	for <linux-perf-users@archiver.kernel.org>; Sun, 19 Feb 2023 16:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27F9C05027
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Feb 2023 11:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbjBSQtC (ORCPT
+        id S230333AbjBTLhh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Feb 2023 11:49:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
+        Mon, 20 Feb 2023 06:37:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230329AbjBSQs7 (ORCPT
+        with ESMTP id S231522AbjBTLhh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Feb 2023 11:48:59 -0500
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CCF212844;
-        Sun, 19 Feb 2023 08:48:55 -0800 (PST)
-Received: by mail-wm1-f45.google.com with SMTP id l5-20020a05600c4f0500b003dc4050c94aso692741wmq.4;
-        Sun, 19 Feb 2023 08:48:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QsCVWrbLL/D50N7P27MmqiJUQZU2UivM1r339HWQD0k=;
-        b=a9/KqAy9P3QlpR4XtTZ82sxORtD9vVXj93bL3ixlwZgpThd49/zVjm9lCSg3zbn/ZV
-         gJ88DkidKN0KHmj/qy9Onxys31GZvh6hki5s3/bZh1d+/Ws7ForSG8ws7KvqQnhufY1U
-         WfA/LhUdgtIahn3gISzv2LKnnSdV3Lnlmbn4aPfhPLRYX2pL5xuy+oSK0d6Cg0AtfBw6
-         Pwj+CC5RYy9vwoTPigzY1Z8G2GuI0SqpmIPHVdyrfG2AV41JyEKSlPbo65AIV8f3GLGY
-         lJPnnRpi1xtKl+DCyHOu8GmN9anZo6GaLIY45QH9DiJuTJX5fNSd5ZUM/9z5TDisOhFg
-         K3XQ==
-X-Gm-Message-State: AO0yUKX6Q0WBSPW6UK6RBjoQfSS4WrCpXFqdN+JFOHPELDAAcDmbso/z
-        RdV8/RMfPFwo3eMchf6InbANUYRexJSMZ+HQz5Y=
-X-Google-Smtp-Source: AK7set+mVKstVfwjdkCojHGxAPiVA/T14JygnjkP5djwbBkCfMgP5aqesm1O+I/2G9xrS4PTHhLqrltcYVTXd60HSOw=
-X-Received: by 2002:a05:600c:384a:b0:3d1:cb12:1013 with SMTP id
- s10-20020a05600c384a00b003d1cb121013mr778196wmr.165.1676825333622; Sun, 19
- Feb 2023 08:48:53 -0800 (PST)
+        Mon, 20 Feb 2023 06:37:37 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCAD1BF8;
+        Mon, 20 Feb 2023 03:37:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3IfNPTAaPPBd75bAfyJDqCNuYWHBYxJ5ORy+gQ+26fY=; b=CW7ZdEbA+tIwqcxY/TQR5O6sig
+        rjpaOoOEusUGWglCaLQzvzcZbw+vKe89jAwSB6MzYRcA+4hTwAByTSS6CPC8iGVTrY8AU4hdtK+bR
+        5w2ioUDXinY3NStDBYTj1k9VZeJpblFV3ktovjby+P3F+XXauPYxAdPUjHUG+2oxpsTkQ139Wak2S
+        sgmEc7of2YT9KGIBAaaCaMkd2ZmM0vBU5c02BbB/KR/E1dPchfv0zEqd4BMhTY+MQi9UU3Ob/pCRt
+        wRI2ADxVrFYhXsawmN36WPFDgjsW79iNNjR6jmmguCS6nKN1gTExkUIP4QNbQ2RwL3zwSRy3qxqO8
+        6hmuiBsw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pU4Tr-00Bgbk-Jf; Mon, 20 Feb 2023 11:37:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F37A63002BF;
+        Mon, 20 Feb 2023 12:37:13 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D68362135FABD; Mon, 20 Feb 2023 12:37:13 +0100 (CET)
+Date:   Mon, 20 Feb 2023 12:37:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Deepak R Varma <drv@mailo.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        Praveen Kumar <kumarpraveen@linux.microsoft.com>
+Subject: Re: [PATCH] perf/x86/amd/core: Use sysfs_emit() in show() callback
+ function
+Message-ID: <Y/NbadiYAF5exJN0@hirez.programming.kicks-ass.net>
+References: <Y++ukV1djYTd01vy@ubun2204.myguest.virtualbox.org>
 MIME-Version: 1.0
-References: <20230219061329.1001079-1-namhyung@kernel.org> <20230219061329.1001079-3-namhyung@kernel.org>
- <Y/IEpW77gNpQbpK2@kernel.org>
-In-Reply-To: <Y/IEpW77gNpQbpK2@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Sun, 19 Feb 2023 08:48:42 -0800
-Message-ID: <CAM9d7chrbQ+79HRJF=e3DLA7rDL-LdNw2fVW3enjJjY+E-ESsQ@mail.gmail.com>
-Subject: Re: [PATCH 2/8] perf bpf filter: Implement event sample filtering
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y++ukV1djYTd01vy@ubun2204.myguest.virtualbox.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Feb 19, 2023 at 3:14 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Sat, Feb 18, 2023 at 10:13:23PM -0800, Namhyung Kim escreveu:
-> > The BPF program will be attached to a perf_event and be triggered when
-> > it overflows.  It'd iterate the filters map and compare the sample
-> > value according to the expression.  If any of them fails, the sample
-> > would be dropped.
-> >
-> > Also it needs to have the corresponding sample data for the expression
-> > so it compares data->sample_flags with the given value.  To access the
-> > sample data, it uses the bpf_cast_to_kern_ctx() kfunc which was added
-> > in v6.2 kernel.
->
->   CLANG   /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o
-> util/bpf_skel/sample_filter.bpf.c:26:19: error: no member named 'sample_flags' in 'struct perf_sample_data'
->         if ((kctx->data->sample_flags & entry->flags) == 0)
->              ~~~~~~~~~~  ^
-> 1 error generated.
-> make[2]: *** [Makefile.perf:1078: /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o] Error 1
-> make[1]: *** [Makefile.perf:236: sub-make] Error 2
-> make: *** [Makefile:113: install-bin] Error 2
-> make: Leaving directory '/var/home/acme/git/perf/tools/perf'
->
->  Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin':
+On Fri, Feb 17, 2023 at 10:12:57PM +0530, Deepak R Varma wrote:
+> Using sprintf/snprintf functions are error prone and suggested to be
+> replaced by scnprintf/vscnrptintf as outlined in this [1] LWN article.
+> 
+> A more recent recommendation is to use sysfs_emit() or sysfs_emit_at()
+> as per Documentation/filesystems/sysfs.rst in show() callback function
+> when formatting values to be returned to user-space. These helper
+> functions are PAGE_SIZE aware and wrap a safer call to vscnprintf().
+> 
+> [1] https://lwn.net/Articles/69419/
+> 
+> Issue identified using the coccinelle device_attr_show.cocci script.
 
-Hmm.. strange.  In the include/linux/perf_event.h, the
-perf_sample_data has sample_flags, but vmlinux.h doesn't.
+This Changelog fails to inform me of what the actual problem is and why
+the proposed solution is better.
 
-Thanks,
-Namhyung
+As such I cannot form an opinion on the patch and must decline.
+
+(Also, I'm not going to chase down random links on the interweb,
+Changelogs should be self contained)
