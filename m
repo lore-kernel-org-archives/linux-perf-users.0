@@ -2,44 +2,46 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27F9C05027
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Feb 2023 11:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D25EC636CC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Feb 2023 11:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230333AbjBTLhh (ORCPT
+        id S230258AbjBTLpn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Feb 2023 06:37:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59536 "EHLO
+        Mon, 20 Feb 2023 06:45:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231522AbjBTLhh (ORCPT
+        with ESMTP id S229666AbjBTLpm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Feb 2023 06:37:37 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BCAD1BF8;
-        Mon, 20 Feb 2023 03:37:35 -0800 (PST)
+        Mon, 20 Feb 2023 06:45:42 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930A4EC53;
+        Mon, 20 Feb 2023 03:45:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3IfNPTAaPPBd75bAfyJDqCNuYWHBYxJ5ORy+gQ+26fY=; b=CW7ZdEbA+tIwqcxY/TQR5O6sig
-        rjpaOoOEusUGWglCaLQzvzcZbw+vKe89jAwSB6MzYRcA+4hTwAByTSS6CPC8iGVTrY8AU4hdtK+bR
-        5w2ioUDXinY3NStDBYTj1k9VZeJpblFV3ktovjby+P3F+XXauPYxAdPUjHUG+2oxpsTkQ139Wak2S
-        sgmEc7of2YT9KGIBAaaCaMkd2ZmM0vBU5c02BbB/KR/E1dPchfv0zEqd4BMhTY+MQi9UU3Ob/pCRt
-        wRI2ADxVrFYhXsawmN36WPFDgjsW79iNNjR6jmmguCS6nKN1gTExkUIP4QNbQ2RwL3zwSRy3qxqO8
-        6hmuiBsw==;
+        bh=X8k7KlQ4uXMCXN8bSMF5Q1MWz8YaNsyZxevsKw/7eD0=; b=mv4Gf92/oWST8m1vQtLsjSNMKd
+        p9mcm9oBmqXaW+70mPiWbaA73iD10I3guNk+kxNDeJaRS9XMLoRP0p01lbv19U+ImiB4robUUX0nv
+        s0oEu2hgCbreGySB4AeIEAN9sH5I1oGGOW2XlofHJpPGJyIiuIxpPC68AoJwKm4g2nZc2i24OB/x4
+        JCq31xaPjwsHY/xpdo1PYHaitI89SaYtWYmT4u71k+R/Z4AL9Kv6GAJY2WwBgJ3N17rV/QYcSIU00
+        s4iEUzhVBkH7PWZTGq7LkypivcHev1O3MoxN0l0aMH0T357Fhq06lhOWkZeT7tq6UQqfV7En74mk7
+        Sy20WBOg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pU4Tr-00Bgbk-Jf; Mon, 20 Feb 2023 11:37:16 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pU4bj-00BnUt-1l;
+        Mon, 20 Feb 2023 11:45:27 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F37A63002BF;
-        Mon, 20 Feb 2023 12:37:13 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C3C530036B;
+        Mon, 20 Feb 2023 12:45:22 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D68362135FABD; Mon, 20 Feb 2023 12:37:13 +0100 (CET)
-Date:   Mon, 20 Feb 2023 12:37:13 +0100
+        id 3B4C32135FAC6; Mon, 20 Feb 2023 12:45:22 +0100 (CET)
+Date:   Mon, 20 Feb 2023 12:45:22 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Deepak R Varma <drv@mailo.com>
+To:     Wyes Karny <wyes.karny@amd.com>,
+        Stephane Eranian <eranian@google.com>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,40 +50,70 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Subject: Re: [PATCH] perf/x86/amd/core: Use sysfs_emit() in show() callback
- function
-Message-ID: <Y/NbadiYAF5exJN0@hirez.programming.kicks-ass.net>
-References: <Y++ukV1djYTd01vy@ubun2204.myguest.virtualbox.org>
+        Dave Hansen <dave.hansen@linux.intel.com>, hpa@zytor.com,
+        x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gautham.shenoy@amd.com,
+        ananth.narayan@amd.com
+Subject: Re: [PATCH] perf/x86/rapl: Enable Core RAPL for AMD
+Message-ID: <Y/NdUjLiQu+D0q7b@hirez.programming.kicks-ass.net>
+References: <20230217161354.129442-1-wyes.karny@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y++ukV1djYTd01vy@ubun2204.myguest.virtualbox.org>
+In-Reply-To: <20230217161354.129442-1-wyes.karny@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 17, 2023 at 10:12:57PM +0530, Deepak R Varma wrote:
-> Using sprintf/snprintf functions are error prone and suggested to be
-> replaced by scnprintf/vscnrptintf as outlined in this [1] LWN article.
+On Fri, Feb 17, 2023 at 04:13:54PM +0000, Wyes Karny wrote:
+> AMD processors support per-package and per-core energy monitoring
+> through RAPL counters which can be accessed by users running in
+> supervisor mode.
 > 
-> A more recent recommendation is to use sysfs_emit() or sysfs_emit_at()
-> as per Documentation/filesystems/sysfs.rst in show() callback function
-> when formatting values to be returned to user-space. These helper
-> functions are PAGE_SIZE aware and wrap a safer call to vscnprintf().
+> Core RAPL counters gives power consumption information per core.  For
+> AMD processors the package level RAPL counter are already exposed to
+> perf. Expose the core level RAPL counters also.
 > 
-> [1] https://lwn.net/Articles/69419/
+> sudo perf stat -a --per-core -C 0-127 -e power/energy-cores/
 > 
-> Issue identified using the coccinelle device_attr_show.cocci script.
+> Output:
+> S0-D0-C0           2               8.73 Joules power/energy-cores/
+> S0-D0-C1           2               8.73 Joules power/energy-cores/
+> S0-D0-C2           2               8.73 Joules power/energy-cores/
+> S0-D0-C3           2               8.73 Joules power/energy-cores/
+> S0-D0-C4           2               8.73 Joules power/energy-cores/
+> 
+> Signed-off-by: Wyes Karny <wyes.karny@amd.com>
+> ---
+>  arch/x86/events/rapl.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index 52e6e7ed4f78..d301bbbc3b93 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -537,7 +537,7 @@ static struct perf_msr intel_rapl_spr_msrs[] = {
+>   * - want to use same event codes across both architectures
+>   */
+>  static struct perf_msr amd_rapl_msrs[] = {
+> -	[PERF_RAPL_PP0]  = { 0, &rapl_events_cores_group, 0, false, 0 },
+> +	[PERF_RAPL_PP0]  = { MSR_AMD_CORE_ENERGY_STATUS, &rapl_events_cores_group, test_msr, false, RAPL_MSR_MASK },
 
-This Changelog fails to inform me of what the actual problem is and why
-the proposed solution is better.
+Stephane, this was an oversight?
 
-As such I cannot form an opinion on the patch and must decline.
-
-(Also, I'm not going to chase down random links on the interweb,
-Changelogs should be self contained)
+>  	[PERF_RAPL_PKG]  = { MSR_AMD_PKG_ENERGY_STATUS,  &rapl_events_pkg_group,   test_msr, false, RAPL_MSR_MASK },
+>  	[PERF_RAPL_RAM]  = { 0, &rapl_events_ram_group,   0, false, 0 },
+>  	[PERF_RAPL_PP1]  = { 0, &rapl_events_gpu_group,   0, false, 0 },
+> @@ -764,7 +764,8 @@ static struct rapl_model model_spr = {
+>  };
+>  
+>  static struct rapl_model model_amd_hygon = {
+> -	.events		= BIT(PERF_RAPL_PKG),
+> +	.events		= BIT(PERF_RAPL_PP0) |
+> +			  BIT(PERF_RAPL_PKG),
+>  	.msr_power_unit = MSR_AMD_RAPL_POWER_UNIT,
+>  	.rapl_msrs      = amd_rapl_msrs,
+>  };
+> -- 
+> 2.34.1
+> 
