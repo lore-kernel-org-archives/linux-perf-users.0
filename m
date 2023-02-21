@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CB0C61DA3
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Feb 2023 14:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DA7C61DA3
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Feb 2023 14:08:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232986AbjBUOIJ (ORCPT
+        id S232246AbjBUOIW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Feb 2023 09:08:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
+        Tue, 21 Feb 2023 09:08:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233656AbjBUOII (ORCPT
+        with ESMTP id S234307AbjBUOIU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Feb 2023 09:08:08 -0500
-Received: from msg-4.mailo.com (msg-4.mailo.com [213.182.54.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94CC82A99A;
-        Tue, 21 Feb 2023 06:07:42 -0800 (PST)
+        Tue, 21 Feb 2023 09:08:20 -0500
+Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF72DBF0;
+        Tue, 21 Feb 2023 06:08:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1676988418; bh=oLZwRpXxfR8jKepCYgBAd0gcxoO2D6bBAKStsCYFVz8=;
+        t=1676988458; bh=Rbss0jxu2oGKjdOiKMyt4uKTBzrOuv6xJ/DDTtxIAQM=;
         h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
          MIME-Version:Content-Type:In-Reply-To;
-        b=ct/HGOoSPl2yfAJdpTmfbCK4kQ8qIvxaKs0L4O54Kib0xMGCCh0W34MpMfkFTJl8j
-         VOcr/oyOReG12/EEQ5gUPB3DGFW3K01KcX6ECXSJqTVFA0yZHWook5MYdkKBMhrspq
-         rPqb2ddx9urUVC9k78cNNCT253DHeqi8pEPTluaQ=
-Received: by b-3.in.mailobj.net [192.168.90.13] with ESMTP
+        b=jJMAjZ+wRXfZFrYdt+Xcn/ezo/9xrp/LwdbJoKl+AwbZm80cZgUsaDEbAWPJRxOBU
+         HIM6ejsCz0X04GFUTgdxcvWy6IG+M2/nxMprwhgGlNT/3F8TJ3VgNxQBi54VdouWI9
+         6sBCN1q9IMevCHLOoKiHI+3JiSMc2d3w3VrlkmXc=
+Received: by b-4.in.mailobj.net [192.168.90.14] with ESMTP
         via ip-206.mailobj.net [213.182.55.206]
-        Tue, 21 Feb 2023 15:06:58 +0100 (CET)
-X-EA-Auth: at9OF3ziCtOVa+pv6TzsuxHGTTSacIrTPKQNDcL9n3nWoXnaOhWUsf84g1TEAEzf2IJx/eMLezJ3x9Jg2DvqQbGUPd6TRiTO
-Date:   Tue, 21 Feb 2023 19:36:52 +0530
+        Tue, 21 Feb 2023 15:07:38 +0100 (CET)
+X-EA-Auth: vqvzvLOiwMJVZ0nf4zmrjP3ujrlYSnChDzDG2lu6ZTVMp0oV+9+mMIgP7QH2LsPs0i4s9VN9g+YYQSaiMUmcCpK/f2s81Znu
+Date:   Tue, 21 Feb 2023 19:37:33 +0530
 From:   Deepak R Varma <drv@mailo.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -44,9 +44,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
         Praveen Kumar <kumarpraveen@linux.microsoft.com>,
         Deepak R Varma <drv@mailo.com>
-Subject: [PATCH v2 2/3] perf/x86/intel/pt: Use sysfs_emit() in show()
- callback function
-Message-ID: <54c16281234d057ebed1ef05bde20d2d57d70669.1676987821.git.drv@mailo.com>
+Subject: [PATCH v2 3/3] perf/x86/intel: Use sysfs_emit() in show() callback
+ function
+Message-ID: <a1a2565f668b3516c19086c4b9a590eb5de6cdd1.1676987821.git.drv@mailo.com>
 References: <cover.1676987821.git.drv@mailo.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -79,22 +79,40 @@ Changes in v2:
      Feedback provided by Peter Zijlstra <peterz@infradead.org>
 
 
- arch/x86/events/intel/pt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 42a55794004a..d9e6d771b458 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -96,7 +96,7 @@ static ssize_t pt_cap_show(struct device *cdev,
- 		container_of(attr, struct dev_ext_attribute, attr);
- 	enum pt_capabilities cap = (long)ea->var;
- 
--	return snprintf(buf, PAGE_SIZE, "%x\n", intel_pt_validate_hw_cap(cap));
-+	return sysfs_emit(buf, "%x\n", intel_pt_validate_hw_cap(cap));
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index bafdc2be479a..8fb1225123ef 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5273,7 +5273,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
+ 			      struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
++	return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
  }
  
- static struct attribute_group pt_cap_group __ro_after_init = {
+ static ssize_t set_sysctl_tfa(struct device *cdev,
+@@ -5307,7 +5307,7 @@ static ssize_t branches_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
++	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+ }
+ 
+ static DEVICE_ATTR_RO(branches);
+@@ -5323,7 +5323,7 @@ static ssize_t pmu_name_show(struct device *cdev,
+ 			     struct device_attribute *attr,
+ 			     char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
++	return sysfs_emit(buf, "%s\n", pmu_name_str);
+ }
+ 
+ static DEVICE_ATTR_RO(pmu_name);
 -- 
 2.34.1
 
