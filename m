@@ -2,32 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87DA7C61DA3
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Feb 2023 14:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B7CC636D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Feb 2023 14:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232246AbjBUOIW (ORCPT
+        id S232793AbjBUONK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Feb 2023 09:08:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
+        Tue, 21 Feb 2023 09:13:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234307AbjBUOIU (ORCPT
+        with ESMTP id S229945AbjBUONJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Feb 2023 09:08:20 -0500
-Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF72DBF0;
-        Tue, 21 Feb 2023 06:08:06 -0800 (PST)
+        Tue, 21 Feb 2023 09:13:09 -0500
+Received: from msg-1.mailo.com (msg-1.mailo.com [213.182.54.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C11011644;
+        Tue, 21 Feb 2023 06:12:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1676988458; bh=Rbss0jxu2oGKjdOiKMyt4uKTBzrOuv6xJ/DDTtxIAQM=;
-        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
-         MIME-Version:Content-Type:In-Reply-To;
-        b=jJMAjZ+wRXfZFrYdt+Xcn/ezo/9xrp/LwdbJoKl+AwbZm80cZgUsaDEbAWPJRxOBU
-         HIM6ejsCz0X04GFUTgdxcvWy6IG+M2/nxMprwhgGlNT/3F8TJ3VgNxQBi54VdouWI9
-         6sBCN1q9IMevCHLOoKiHI+3JiSMc2d3w3VrlkmXc=
+        t=1676988740; bh=Y+XUERfWbYvdyrJk7Q/GnRbFZoY0tQf2LzvIHzC3ksw=;
+        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:MIME-Version:
+         Content-Type;
+        b=bbv/URB4n568NFzb4GZ1LRt2TvS2hSVe+Qhu06enXxysj+JIFaSaane4lnUHgz4Bn
+         S/oG9/hrY5dvLyjfiyql2LZw5YtSNTFAo+RhhuuBk9u3MnNomtcK56cL0+cy5AzX/u
+         JLIUfeGHDxv4p2cjnSmZ8nTraRhxwlgxRivuh5qY=
 Received: by b-4.in.mailobj.net [192.168.90.14] with ESMTP
         via ip-206.mailobj.net [213.182.55.206]
-        Tue, 21 Feb 2023 15:07:38 +0100 (CET)
-X-EA-Auth: vqvzvLOiwMJVZ0nf4zmrjP3ujrlYSnChDzDG2lu6ZTVMp0oV+9+mMIgP7QH2LsPs0i4s9VN9g+YYQSaiMUmcCpK/f2s81Znu
-Date:   Tue, 21 Feb 2023 19:37:33 +0530
+        Tue, 21 Feb 2023 15:12:20 +0100 (CET)
+X-EA-Auth: /mGkXO4TmPlY0gMC/hZgUu73fMaPxcvWM61GG+jGP9YYZyawHPuUKmU9xmg7oVb1hSv4F/r0UFq77Y+IhowKxCkKroXFiG6M
+Date:   Tue, 21 Feb 2023 19:42:15 +0530
 From:   Deepak R Varma <drv@mailo.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -44,14 +44,12 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
         Praveen Kumar <kumarpraveen@linux.microsoft.com>,
         Deepak R Varma <drv@mailo.com>
-Subject: [PATCH v2 3/3] perf/x86/intel: Use sysfs_emit() in show() callback
+Subject: [PATCH v2] perf/x86/core: Use sysfs_emit() in show() callback
  function
-Message-ID: <a1a2565f668b3516c19086c4b9a590eb5de6cdd1.1676987821.git.drv@mailo.com>
-References: <cover.1676987821.git.drv@mailo.com>
+Message-ID: <Y/TRP1hrstvUFd6n@ubun2204.myguest.virtualbox.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1676987821.git.drv@mailo.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -78,41 +76,42 @@ Changes in v2:
      current implementation and how the proposal is a better solution.
      Feedback provided by Peter Zijlstra <peterz@infradead.org>
 
+ arch/x86/events/core.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
- arch/x86/events/intel/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bafdc2be479a..8fb1225123ef 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5273,7 +5273,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 85a63a41c471..27c03e6dcb5d 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1896,9 +1896,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
+ 		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
+ 			next_str = strchr(str, ';');
+ 			if (next_str)
+-				return snprintf(page, next_str - str + 1, "%s", str);
+-			else
+-				return sprintf(page, "%s", str);
++				return sysfs_emit(page, "%s", str);
+ 		}
+ 		str = strchr(str, ';');
+ 		str++;
+@@ -2544,7 +2542,7 @@ static ssize_t get_attr_rdpmc(struct device *cdev,
  			      struct device_attribute *attr,
  			      char *buf)
  {
--	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
-+	return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
+-	return snprintf(buf, 40, "%d\n", x86_pmu.attr_rdpmc);
++	return sysfs_emit(buf, "%d\n", x86_pmu.attr_rdpmc);
  }
  
- static ssize_t set_sysctl_tfa(struct device *cdev,
-@@ -5307,7 +5307,7 @@ static ssize_t branches_show(struct device *cdev,
- 			     struct device_attribute *attr,
- 			     char *buf)
+ static ssize_t set_attr_rdpmc(struct device *cdev,
+@@ -2602,7 +2600,7 @@ static ssize_t max_precise_show(struct device *cdev,
+ 				  struct device_attribute *attr,
+ 				  char *buf)
  {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
+-	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu_max_precise());
++	return sysfs_emit(buf, "%d\n", x86_pmu_max_precise());
  }
  
- static DEVICE_ATTR_RO(branches);
-@@ -5323,7 +5323,7 @@ static ssize_t pmu_name_show(struct device *cdev,
- 			     struct device_attribute *attr,
- 			     char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
-+	return sysfs_emit(buf, "%s\n", pmu_name_str);
- }
- 
- static DEVICE_ATTR_RO(pmu_name);
+ static DEVICE_ATTR_RO(max_precise);
 -- 
 2.34.1
 
