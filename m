@@ -2,53 +2,53 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DE3C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 19:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94694C636D6
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 19:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbjBVTnO (ORCPT
+        id S232449AbjBVTs5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 14:43:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
+        Wed, 22 Feb 2023 14:48:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232382AbjBVTnM (ORCPT
+        with ESMTP id S231897AbjBVTs4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 14:43:12 -0500
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC3432CDF;
-        Wed, 22 Feb 2023 11:43:10 -0800 (PST)
-Received: by mail-vs1-f47.google.com with SMTP id d7so5302363vsj.2;
-        Wed, 22 Feb 2023 11:43:10 -0800 (PST)
+        Wed, 22 Feb 2023 14:48:56 -0500
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2AB27D7F;
+        Wed, 22 Feb 2023 11:48:55 -0800 (PST)
+Received: by mail-vs1-f52.google.com with SMTP id v3so10764566vse.0;
+        Wed, 22 Feb 2023 11:48:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677094989;
+        d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=G16wx/2YBGseQ9h6Vt/v5mRzhL85ElXwuJBuYIENYiQ=;
-        b=MpyLejdxaLY4GQEc8MPntu/EOVdVao4xNX+pYiLBov0QwwDDpz1TSvcv5zthmvV47T
-         W0AN95lawsO4nqDPJjQNCZS7Nr0wEtfhd6zLQYrHghfp0kr4dR8kPEf3vq3sbH3k6qhC
-         85TTYkRwk8c6/qQ5c8P9ZsRr5TNd8OqjOG4xitFg0j4yGAa8cgXPKqfTuEnJR01AaLXF
-         uI5VA5GqnWs+TjtcH6XgbLCUkvSeLTFOO8e8ENp2h81jJozu7vFybNEwKUuzTb5Y5pTO
-         g9Oy1GL7AkpZfMkmKwqTB0C06GYdWVk0fxq6zjN7aCVSovZLEx8WHgrsd4B30SZdTnsw
-         qPEg==
-X-Gm-Message-State: AO0yUKVc0spa/vfNTItLp4a4RU5SzTJE6+C41n6iZVOPSSqyPHWC+giR
-        Rs0MZ46OY3ZkO4C3+TkDc99aa+c5pVv4RH9xW8bCCpky
-X-Google-Smtp-Source: AK7set/vWLR2A53VCLEjo9d4OAYvMfdnKXRp9zaCYqEkEI7JjwqPdgG5GHVirIrw5JSj9ex3PRr6+DRLC5TY/ZeVMAQ=
-X-Received: by 2002:a05:6122:84a:b0:411:b190:fe5b with SMTP id
- 10-20020a056122084a00b00411b190fe5bmr196366vkk.39.1677094988963; Wed, 22 Feb
- 2023 11:43:08 -0800 (PST)
+        bh=XM/lQi5N/iiNMtRIy5H0b7ls2dpYLYTqiw3Gl5EGGP8=;
+        b=3DLr0kLc5pVMx2L5ETn0W75sSNp5V8ejVqbJb1VTNUNbMyu7ohRz8fk2g1lOGVjmyO
+         SQrJ2Ni6W0sNcBdofx1hW4APGtVeBoICQVm2Nc+9IW5AGPXpthQ3up+DKia9GU4cav6c
+         FcqvgpC2tsD9HIMB3w7OV5OLVgm/5OtHqREVZq6oHDxSzBk20MSCC1fgsoTht2fSC+NK
+         Ex7eT9pVXZ26+WFNL9geVozn26yDnkjvzscLZvDK3uvS5YziSv+4KpcVYE7XqEP0wjpt
+         Uxj22+ox3sbigPJb/2HwS/DtTx6vvRI1UjWgCS0gd7COvzN60ojjyHEK6VfVngwTzeuR
+         4C1g==
+X-Gm-Message-State: AO0yUKUr/PbRGV2SA8BOPMlt6yGU1kzvCVsqKYouWxWGlLrx1BAgQY4d
+        QcCum6sorjLauFmgR+2iHo3yGLCY5XxsJgfjm64=
+X-Google-Smtp-Source: AK7set/JOuNdH1Xqx90bNX1Aqnfcv1+F2m1Exkm49i1plXuAeh7llPRwlEUfRRIxFP8Elkp8A+malkHf1PZvkQv5kB0=
+X-Received: by 2002:ab0:54da:0:b0:687:afc8:ffb9 with SMTP id
+ q26-20020ab054da000000b00687afc8ffb9mr1587192uaa.2.1677095334627; Wed, 22 Feb
+ 2023 11:48:54 -0800 (PST)
 MIME-Version: 1.0
-References: <20230214050452.26390-1-namhyung@kernel.org> <CAP-5=fWG6f_N7PN+A5v61jGsuKobNxCvo4-H0twAZDGQVfa7cQ@mail.gmail.com>
- <CAM9d7ci8YxEAvzU0+7Q8q9wn+q4eBa=nwcWboh9GWH6PSyQdcg@mail.gmail.com> <Y/Sw4uo7Ma0Ohh9f@krava>
-In-Reply-To: <Y/Sw4uo7Ma0Ohh9f@krava>
+References: <20230219061329.1001079-1-namhyung@kernel.org> <20230219061329.1001079-3-namhyung@kernel.org>
+ <Y/IEpW77gNpQbpK2@kernel.org> <CAM9d7chrbQ+79HRJF=e3DLA7rDL-LdNw2fVW3enjJjY+E-ESsQ@mail.gmail.com>
+In-Reply-To: <CAM9d7chrbQ+79HRJF=e3DLA7rDL-LdNw2fVW3enjJjY+E-ESsQ@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 22 Feb 2023 11:42:57 -0800
-Message-ID: <CAM9d7cjkUJ0wKi30winkDz=MKGB0Fhpp6Qnp2kSxC1eL+ZWNwA@mail.gmail.com>
-Subject: Re: [RFC/PATCHSET 0/7] perf record: Implement BPF sample filter (v1)
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Date:   Wed, 22 Feb 2023 11:48:43 -0800
+Message-ID: <CAM9d7cg_bnLuYN+SnS_m6gV2qto8hVGF1oYE7gSko=TuY-dpOQ@mail.gmail.com>
+Subject: Re: [PATCH 2/8] perf bpf filter: Implement event sample filtering
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -64,91 +64,40 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri,
-
-On Tue, Feb 21, 2023 at 3:54 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+On Sun, Feb 19, 2023 at 8:48 AM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Tue, Feb 14, 2023 at 10:01:41AM -0800, Namhyung Kim wrote:
-> > Hi Ian,
+> On Sun, Feb 19, 2023 at 3:14 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > On Tue, Feb 14, 2023 at 8:58 AM Ian Rogers <irogers@google.com> wrote:
+> > Em Sat, Feb 18, 2023 at 10:13:23PM -0800, Namhyung Kim escreveu:
+> > > The BPF program will be attached to a perf_event and be triggered when
+> > > it overflows.  It'd iterate the filters map and compare the sample
+> > > value according to the expression.  If any of them fails, the sample
+> > > would be dropped.
 > > >
-> > > On Mon, Feb 13, 2023 at 9:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > There have been requests for more sophisticated perf event sample
-> > > > filtering based on the sample data.  Recently the kernel added BPF
-> > > > programs can access perf sample data and this is the userspace part
-> > > > to enable such a filtering.
-> > > >
-> > > > This still has some rough edges and needs more improvements.  But
-> > > > I'd like to share the current work and get some feedback for the
-> > > > directions and idea for further improvements.
-> > > >
-> > > > The kernel changes are in the tip.git tree (perf/core branch) for now.
-> > > > perf record has --filter option to set filters on the last specified
-> > > > event in the command line.  It worked only for tracepoints and Intel
-> > > > PT events so far.  This patchset extends it to have 'bpf:' prefix in
-> > > > order to enable the general sample filters using BPF for any events.
-> > > >
-> > > > A new filter expression parser was added (using flex/bison) to process
-> > > > the filter string.  Right now, it only accepts very simple expressions
-> > > > separated by comma.  I'd like to keep the filter expression as simple
-> > > > as possible.
-> > > >
-> > > > It requires samples satisfy all the filter expressions otherwise it'd
-> > > > drop the sample.  IOW filter expressions are connected with logical AND
-> > > > operations implicitly.
-> > > >
-> > > > Essentially the BPF filter expression is:
-> > > >
-> > > >   "bpf:" <term> <operator> <value> ("," <term> <operator> <value>)*
-> > > >
-> > > > The <term> can be one of:
-> > > >   ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
-> > > >   code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
-> > > >   p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
-> > > >   mem_dtlb, mem_blk, mem_hops
-> > > >
-> > > > The <operator> can be one of:
-> > > >   ==, !=, >, >=, <, <=, &
-> > > >
-> > > > The <value> can be one of:
-> > > >   <number> (for any term)
-> > > >   na, load, store, pfetch, exec (for mem_op)
-> > > >   l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
-> > > >   na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
-> > > >   remote (for mem_remote)
-> > > >   na, locked (for mem_locked)
-> > > >   na, l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault (for mem_dtlb)
-> > > >   na, by_data, by_addr (for mem_blk)
-> > > >   hops0, hops1, hops2, hops3 (for mem_hops)
-> > > >
-> > > > I plan to improve it with range expressions like for ip or addr and it
-> > > > should support symbols like the existing addr-filters.  Also cgroup
-> > > > should understand and convert cgroup names to IDs.
+> > > Also it needs to have the corresponding sample data for the expression
+> > > so it compares data->sample_flags with the given value.  To access the
+> > > sample data, it uses the bpf_cast_to_kern_ctx() kfunc which was added
+> > > in v6.2 kernel.
+> >
+> >   CLANG   /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o
+> > util/bpf_skel/sample_filter.bpf.c:26:19: error: no member named 'sample_flags' in 'struct perf_sample_data'
+> >         if ((kctx->data->sample_flags & entry->flags) == 0)
+> >              ~~~~~~~~~~  ^
+> > 1 error generated.
+> > make[2]: *** [Makefile.perf:1078: /tmp/build/perf/util/bpf_skel/.tmp/sample_filter.bpf.o] Error 1
+> > make[1]: *** [Makefile.perf:236: sub-make] Error 2
+> > make: *** [Makefile:113: install-bin] Error 2
+> > make: Leaving directory '/var/home/acme/git/perf/tools/perf'
+> >
+> >  Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf -C tools/perf install-bin':
 >
-> this seems similar to what ftrace is doing in filter_match_preds,
-> I checked the code briefly and I wonder if we shoud be able to write
-> that function logic in bpf, assuming that the filter is prepared in
-> user space
->
-> it might solve the 'part' data problem in generic way.. but I might be
-> missing some blocker of course.. just an idea ;-)
->
-> could replace the tracepoint filters.. if we actually care
+> Hmm.. strange.  In the include/linux/perf_event.h, the
+> perf_sample_data has sample_flags, but vmlinux.h doesn't.
 
-I'm not sure about replacing tracepoint filters.  IIRC BPF is optional,
-then tracepoints should work without it.  From the BPF's perspective,
-it has its own way of handling tracepoints so no need to deal with
-perf or event tracing (ftrace) for that.
-
-From the perf's perspective, I think it can use either the existing ftrace
-filters or build a new BPF filter for each event.  But it cannot use BTF
-for perf tracepoint events at least for now.  Certainly it can use RAW
-sample data and parse the event format to access the fields but I'm
-not sure it's worth doing that. :)
+It looks like the vmlinux.h came from the old kernel image (before v6.1).
+Please try again after building the kernel.  I'll add a check to prevent
+such a build error in v3.
 
 Thanks,
 Namhyung
