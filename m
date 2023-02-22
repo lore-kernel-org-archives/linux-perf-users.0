@@ -2,373 +2,541 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FF6C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 13:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84809C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 15:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231415AbjBVNrY (ORCPT
+        id S232480AbjBVPh0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 08:47:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35734 "EHLO
+        Wed, 22 Feb 2023 10:37:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbjBVNrX (ORCPT
+        with ESMTP id S231260AbjBVPhZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 08:47:23 -0500
+        Wed, 22 Feb 2023 10:37:25 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF41125;
-        Wed, 22 Feb 2023 05:47:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FFE38B6A;
+        Wed, 22 Feb 2023 07:36:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5C73FB8123A;
-        Wed, 22 Feb 2023 13:47:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1526C433D2;
-        Wed, 22 Feb 2023 13:47:17 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 64E1AB815E0;
+        Wed, 22 Feb 2023 15:36:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D75C433D2;
+        Wed, 22 Feb 2023 15:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677073638;
-        bh=zCC0XkWQD3wf20Y5Q/XG/X/FXj9lNvFwMc9Tyj9Zc6o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eP3AiwSxl6GHQk7WxIqOtOxCM2oNEqzdAwLg1/NAm0y/wADWAZX//T9jq6k5KNlm5
-         NdD8f76LghjjI02nFBQGS7TWxGGsEfSZkMKy2Mz1Azza4kfQx/hulFflpMTDKPMxLj
-         MNAgUG73r/PEwlo4ZRryoVnMOIpHIaX76FP4GgkPfGQEdFQ2WxefoYPgZhaeZaHRoi
-         /vmFr/xfYIE2LoGCDYrkqqEQUjK0MN72huEcbe9ctmQgwY6+Ws2Ab0YjcCuvDT2zgm
-         nGiS9qLL2nMx6kzPOnE5yiId+y+LNrV1SVdW1jbnEQtEJEBadGCiL6PqlppICyMWTK
-         pkomLlIegm7Bg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C7C524049F; Wed, 22 Feb 2023 10:47:14 -0300 (-03)
-Date:   Wed, 22 Feb 2023 10:47:14 -0300
+        s=k20201202; t=1677080193;
+        bh=KPyBluyD8RxSLlOM6S1dr9Xo4GNKEgseQCfSsuhya2Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OJEHyizOzUIJ28lUtLpSwe/i0QofgqrvZaEx6Pcu17WR0wE4hq+V5P+w9A5dTQKmE
+         PKZIX05dJBmRZPprjPPe/2J6ZOeXTr6n6xdYooEISyomKu5cPOv9+9KwcXCncYA8mD
+         gvMXaCNDHS9m4Jh3yY99aUR2rOMwI1DCs+TR4e1+bkycBPf1B6iRstwLBk3Dzbe1jP
+         fp/rSQNN8XrxzwPkSJK5G3fGMtJ2Z9rED6physWzgzMmsd+45ZN9ovHJDpcyXn0I7c
+         v+Unn5nVNRGk/paex+MGxHXjTcKeNSWVv1n+dAZbzWKlRHWSna/Xp5Ug4+L65jO8ek
+         tNKd73Dk/pgLw==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        James Clark <james.clark@arm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Sean Christopherson <seanjc@google.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [PATCH v1 00/51] shadow metric clean up and improvements
-Message-ID: <Y/Yc4m6ozl9B0w4l@kernel.org>
-References: <20230219092848.639226-1-irogers@google.com>
- <Y/IFNyI9JcChoR2p@kernel.org>
- <CAP-5=fWzydsYNKPBv+wCh4M9QaRbk5NiJOUDsjbjPdPjFWQ82g@mail.gmail.com>
- <CAP-5=fWmFtktttCmXBmF1W-V5yU47UFod=MxOX3re5pG_ScETQ@mail.gmail.com>
+        Diederik de Haas <didi.debian@cknow.org>,
+        Disha Goel <disgoel@linux.ibm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Krister Johansen <kjlx@templeofstupid.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        qinyu <qinyu32@huawei.com>, Rob Herring <robh@kernel.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Tanmay Jagdale <tanmay@marvell.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools changes for v6.3
+Date:   Wed, 22 Feb 2023 12:36:15 -0300
+Message-Id: <20230222153615.210643-1-acme@kernel.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWmFtktttCmXBmF1W-V5yU47UFod=MxOX3re5pG_ScETQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Feb 21, 2023 at 09:44:36AM -0800, Ian Rogers escreveu:
-> On Sun, Feb 19, 2023 at 7:43 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Sun, Feb 19, 2023, 3:17 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > >
-> > > Em Sun, Feb 19, 2023 at 01:27:57AM -0800, Ian Rogers escreveu:
-> > > > Recently the shadow stat metrics broke due to repeated aggregation and
-> > > > a quick fix was applied:
-> > > > https://lore.kernel.org/lkml/20230209064447.83733-1-irogers@google.com/
-> > > > This is the longer fix but one that comes with some extras. To avoid
-> > > > fixing issues for hard coded metrics, the topdown, SMI cost and
-> > > > transaction flags are moved into json metrics. A side effect of this
-> > > > is that TopdownL1 metrics will now be displayed when supported, if no
-> > > > "perf stat" events are specified.
-> > > >
-> > > > Another fix included here is for event grouping as raised in:
-> > > > https://lore.kernel.org/lkml/CA+icZUU_ew7pzWJJZLbj1xsU6MQTPrj8tkFfDhNdTDRQfGUBMQ@mail.gmail.com/
-> > > > Metrics are now tagged with NMI and SMT flags, meaning that the events
-> > > > shouldn't be grouped if the NMI watchdog is enabled or SMT is enabled.
-> > > >
-> > > > Given the two issues, the metrics are re-generated and the patches
-> > > > also include the latest Intel vendor events. The changes to the metric
-> > > > generation code can be seen in:
-> > > > https://github.com/intel/perfmon/pull/56
-> > > >
-> > > > Hard coded metrics support thresholds, the patches add this ability to
-> > > > json metrics so that the hard coded metrics can be removed. Migrate
-> > > > remaining hard coded metrics to looking up counters from the
-> > > > evlist/aggregation count. Finally, get rid of the saved_value logic
-> > > > and thereby look to fix the aggregation issues.
-> > > >
-> > > > Some related fix ups and code clean ups are included in the changes,
-> > > > in particular to aid with the code's readability and to keep topdown
-> > > > documentation in sync.
-> > >
-> > > That is great work but won't have a reasonable time sitting on
-> > > linux-next to make it into 6.3.
-> > >
-> > > I have just applied it locally for the usual set of tests, that I'll
-> > > report back here.
-> >
-> >
-> > Ugh. I'm guessing it won't be useful if I point out more things broken
-> > with the current workaround, like metrics with --repeat :-/
-> >
-> > Thanks,
-> > Ian
-> 
-> So currently the flow of patches is:
-> 
-> 1) initially testing - acme tmp.perf/core
-> 2) things staged for next release - acme perf/core (perhaps this
-> should be called perf-next)
+Hi Linus,
 
-Yeah, perf-tools-next probably.
+	Please consider pulling,
 
-> 3) linux wide next release testing - linux-next
-> 4) release - linus/master
-> 
-> I wonder if there should be a perf-next-next branch to work around the
-> "sitting time" problem. Otherwise anybody who touches code in these 51
-> patches will create a merge conflict. Given the aggregation issues
-> we're likely to see changes in this code and so conflicts are likely
-> to happen.
-> 
-> The patch flow with perf-next-next would be:
-> 
-> 1) initial testing - tmp.perf-next-next
-> 2) things acquiring sitting time and where developers work - perf-next-next
-> 3) things staged for the next release - perf-next
-> 4) as 3 above
-> 5) as 4 above
-> 
-> With linux-next picking up acme perf/core (aka perf-next) daily it
-> isn't clear whether we should work off of perf-core or linux-next as
-> they are so in sync. This process means we've lost a sitting place for
-> developer patches and we're going to feel the pain in terms of merge
-> conflicts on the list, difficulty building off of the latest work
-> without cherry-picking from the list, etc.
-
-I'll send perf/core to Linus today and then your 51 patches will appear
-on perf-tools-next, where we'll do what was done before in perf/core
-(remained like that for historical reasons).
-
-I'll make perf/urgent become 'perf-tools', and when the merge window
-closes, we turn 'perf-tools-next' into 'perf-tools',
+Best regards,
 
 - Arnaldo
- 
-> Thanks,
-> Ian
-> 
-> > > - Arnaldo
-> > >
-> > > > Ian Rogers (51):
-> > > >   perf tools: Ensure evsel name is initialized
-> > > >   perf metrics: Improve variable names
-> > > >   perf pmu-events: Remove aggr_mode from pmu_event
-> > > >   perf pmu-events: Change aggr_mode to be an enum
-> > > >   perf pmu-events: Change deprecated to be a bool
-> > > >   perf pmu-events: Change perpkg to be a bool
-> > > >   perf expr: Make the online topology accessible globally
-> > > >   perf pmu-events: Make the metric_constraint an enum
-> > > >   perf pmu-events: Don't '\0' terminate enum values
-> > > >   perf vendor events intel: Refresh alderlake events
-> > > >   perf vendor events intel: Refresh alderlake-n metrics
-> > > >   perf vendor events intel: Refresh broadwell metrics
-> > > >   perf vendor events intel: Refresh broadwellde metrics
-> > > >   perf vendor events intel: Refresh broadwellx metrics
-> > > >   perf vendor events intel: Refresh cascadelakex events
-> > > >   perf vendor events intel: Add graniterapids events
-> > > >   perf vendor events intel: Refresh haswell metrics
-> > > >   perf vendor events intel: Refresh haswellx metrics
-> > > >   perf vendor events intel: Refresh icelake events
-> > > >   perf vendor events intel: Refresh icelakex metrics
-> > > >   perf vendor events intel: Refresh ivybridge metrics
-> > > >   perf vendor events intel: Refresh ivytown metrics
-> > > >   perf vendor events intel: Refresh jaketown events
-> > > >   perf vendor events intel: Refresh knightslanding events
-> > > >   perf vendor events intel: Refresh sandybridge events
-> > > >   perf vendor events intel: Refresh sapphirerapids events
-> > > >   perf vendor events intel: Refresh silvermont events
-> > > >   perf vendor events intel: Refresh skylake events
-> > > >   perf vendor events intel: Refresh skylakex metrics
-> > > >   perf vendor events intel: Refresh tigerlake events
-> > > >   perf vendor events intel: Refresh westmereep-dp events
-> > > >   perf jevents: Add rand support to metrics
-> > > >   perf jevent: Parse metric thresholds
-> > > >   perf pmu-events: Test parsing metric thresholds with the fake PMU
-> > > >   perf list: Support for printing metric thresholds
-> > > >   perf metric: Compute and print threshold values
-> > > >   perf expr: More explicit NAN handling
-> > > >   perf metric: Add --metric-no-threshold option
-> > > >   perf stat: Add TopdownL1 metric as a default if present
-> > > >   perf stat: Implement --topdown using json metrics
-> > > >   perf stat: Remove topdown event special handling
-> > > >   perf doc: Refresh topdown documentation
-> > > >   perf stat: Remove hard coded transaction events
-> > > >   perf stat: Use metrics for --smi-cost
-> > > >   perf stat: Remove perf_stat_evsel_id
-> > > >   perf stat: Move enums from header
-> > > >   perf stat: Hide runtime_stat
-> > > >   perf stat: Add cpu_aggr_map for loop
-> > > >   perf metric: Directly use counts rather than saved_value
-> > > >   perf stat: Use counts rather than saved_value
-> > > >   perf stat: Remove saved_value/runtime_stat
-> > > >
-> > > >  tools/perf/Documentation/perf-stat.txt        |   27 +-
-> > > >  tools/perf/Documentation/topdown.txt          |   70 +-
-> > > >  tools/perf/arch/powerpc/util/header.c         |    2 +-
-> > > >  tools/perf/arch/x86/util/evlist.c             |    6 +-
-> > > >  tools/perf/arch/x86/util/topdown.c            |   78 +-
-> > > >  tools/perf/arch/x86/util/topdown.h            |    1 -
-> > > >  tools/perf/builtin-list.c                     |   13 +-
-> > > >  tools/perf/builtin-script.c                   |    9 +-
-> > > >  tools/perf/builtin-stat.c                     |  233 +-
-> > > >  .../arch/x86/alderlake/adl-metrics.json       | 3190 ++++++++++-------
-> > > >  .../pmu-events/arch/x86/alderlake/cache.json  |   36 +-
-> > > >  .../arch/x86/alderlake/floating-point.json    |   27 +
-> > > >  .../arch/x86/alderlake/frontend.json          |    9 +
-> > > >  .../pmu-events/arch/x86/alderlake/memory.json |    3 +-
-> > > >  .../arch/x86/alderlake/pipeline.json          |   14 +-
-> > > >  .../arch/x86/alderlake/uncore-other.json      |   28 +-
-> > > >  .../arch/x86/alderlaken/adln-metrics.json     |  811 +++--
-> > > >  .../arch/x86/broadwell/bdw-metrics.json       | 1439 ++++----
-> > > >  .../arch/x86/broadwellde/bdwde-metrics.json   | 1405 ++++----
-> > > >  .../arch/x86/broadwellx/bdx-metrics.json      | 1626 +++++----
-> > > >  .../arch/x86/broadwellx/uncore-cache.json     |   74 +-
-> > > >  .../x86/broadwellx/uncore-interconnect.json   |   64 +-
-> > > >  .../arch/x86/broadwellx/uncore-other.json     |    4 +-
-> > > >  .../arch/x86/cascadelakex/cache.json          |   24 +-
-> > > >  .../arch/x86/cascadelakex/clx-metrics.json    | 2198 ++++++------
-> > > >  .../arch/x86/cascadelakex/frontend.json       |    8 +-
-> > > >  .../arch/x86/cascadelakex/pipeline.json       |   16 +
-> > > >  .../arch/x86/cascadelakex/uncore-memory.json  |   18 +-
-> > > >  .../arch/x86/cascadelakex/uncore-other.json   |  120 +-
-> > > >  .../arch/x86/cascadelakex/uncore-power.json   |    8 +-
-> > > >  .../arch/x86/graniterapids/cache.json         |   54 +
-> > > >  .../arch/x86/graniterapids/frontend.json      |   10 +
-> > > >  .../arch/x86/graniterapids/memory.json        |  174 +
-> > > >  .../arch/x86/graniterapids/other.json         |   29 +
-> > > >  .../arch/x86/graniterapids/pipeline.json      |  102 +
-> > > >  .../x86/graniterapids/virtual-memory.json     |   26 +
-> > > >  .../arch/x86/haswell/hsw-metrics.json         | 1220 ++++---
-> > > >  .../arch/x86/haswellx/hsx-metrics.json        | 1397 ++++----
-> > > >  .../pmu-events/arch/x86/icelake/cache.json    |   16 +
-> > > >  .../arch/x86/icelake/floating-point.json      |   31 +
-> > > >  .../arch/x86/icelake/icl-metrics.json         | 1932 +++++-----
-> > > >  .../pmu-events/arch/x86/icelake/pipeline.json |   23 +-
-> > > >  .../arch/x86/icelake/uncore-other.json        |   56 +
-> > > >  .../arch/x86/icelakex/icx-metrics.json        | 2153 +++++------
-> > > >  .../arch/x86/icelakex/uncore-memory.json      |    2 +-
-> > > >  .../arch/x86/icelakex/uncore-other.json       |    4 +-
-> > > >  .../arch/x86/ivybridge/ivb-metrics.json       | 1270 ++++---
-> > > >  .../arch/x86/ivytown/ivt-metrics.json         | 1311 ++++---
-> > > >  .../pmu-events/arch/x86/jaketown/cache.json   |    6 +-
-> > > >  .../arch/x86/jaketown/floating-point.json     |    2 +-
-> > > >  .../arch/x86/jaketown/frontend.json           |   12 +-
-> > > >  .../arch/x86/jaketown/jkt-metrics.json        |  602 ++--
-> > > >  .../arch/x86/jaketown/pipeline.json           |    2 +-
-> > > >  .../arch/x86/jaketown/uncore-cache.json       |   22 +-
-> > > >  .../x86/jaketown/uncore-interconnect.json     |   74 +-
-> > > >  .../arch/x86/jaketown/uncore-memory.json      |    4 +-
-> > > >  .../arch/x86/jaketown/uncore-other.json       |   22 +-
-> > > >  .../arch/x86/jaketown/uncore-power.json       |    8 +-
-> > > >  .../arch/x86/knightslanding/cache.json        |   94 +-
-> > > >  .../arch/x86/knightslanding/pipeline.json     |    8 +-
-> > > >  .../arch/x86/knightslanding/uncore-other.json |    8 +-
-> > > >  tools/perf/pmu-events/arch/x86/mapfile.csv    |   29 +-
-> > > >  .../arch/x86/sandybridge/cache.json           |    8 +-
-> > > >  .../arch/x86/sandybridge/floating-point.json  |    2 +-
-> > > >  .../arch/x86/sandybridge/frontend.json        |   12 +-
-> > > >  .../arch/x86/sandybridge/pipeline.json        |    2 +-
-> > > >  .../arch/x86/sandybridge/snb-metrics.json     |  601 ++--
-> > > >  .../arch/x86/sapphirerapids/cache.json        |   24 +-
-> > > >  .../x86/sapphirerapids/floating-point.json    |   32 +
-> > > >  .../arch/x86/sapphirerapids/frontend.json     |    8 +
-> > > >  .../arch/x86/sapphirerapids/pipeline.json     |   19 +-
-> > > >  .../arch/x86/sapphirerapids/spr-metrics.json  | 2283 ++++++------
-> > > >  .../arch/x86/sapphirerapids/uncore-other.json |   60 +
-> > > >  .../arch/x86/silvermont/frontend.json         |    2 +-
-> > > >  .../arch/x86/silvermont/pipeline.json         |    2 +-
-> > > >  .../pmu-events/arch/x86/skylake/cache.json    |   25 +-
-> > > >  .../pmu-events/arch/x86/skylake/frontend.json |    8 +-
-> > > >  .../pmu-events/arch/x86/skylake/other.json    |    1 +
-> > > >  .../pmu-events/arch/x86/skylake/pipeline.json |   16 +
-> > > >  .../arch/x86/skylake/skl-metrics.json         | 1877 ++++++----
-> > > >  .../arch/x86/skylake/uncore-other.json        |    1 +
-> > > >  .../pmu-events/arch/x86/skylakex/cache.json   |    8 +-
-> > > >  .../arch/x86/skylakex/frontend.json           |    8 +-
-> > > >  .../arch/x86/skylakex/pipeline.json           |   16 +
-> > > >  .../arch/x86/skylakex/skx-metrics.json        | 2097 +++++------
-> > > >  .../arch/x86/skylakex/uncore-memory.json      |    2 +-
-> > > >  .../arch/x86/skylakex/uncore-other.json       |   96 +-
-> > > >  .../arch/x86/skylakex/uncore-power.json       |    6 +-
-> > > >  .../arch/x86/tigerlake/floating-point.json    |   31 +
-> > > >  .../arch/x86/tigerlake/pipeline.json          |   18 +
-> > > >  .../arch/x86/tigerlake/tgl-metrics.json       | 1942 +++++-----
-> > > >  .../arch/x86/tigerlake/uncore-other.json      |   28 +-
-> > > >  .../arch/x86/westmereep-dp/cache.json         |    2 +-
-> > > >  .../x86/westmereep-dp/virtual-memory.json     |    2 +-
-> > > >  tools/perf/pmu-events/jevents.py              |   58 +-
-> > > >  tools/perf/pmu-events/metric.py               |    8 +-
-> > > >  tools/perf/pmu-events/pmu-events.h            |   35 +-
-> > > >  tools/perf/tests/expand-cgroup.c              |    3 +-
-> > > >  tools/perf/tests/expr.c                       |    7 +-
-> > > >  tools/perf/tests/parse-metric.c               |   21 +-
-> > > >  tools/perf/tests/pmu-events.c                 |   49 +-
-> > > >  tools/perf/util/cpumap.h                      |    3 +
-> > > >  tools/perf/util/cputopo.c                     |   14 +
-> > > >  tools/perf/util/cputopo.h                     |    5 +
-> > > >  tools/perf/util/evsel.h                       |    2 +-
-> > > >  tools/perf/util/expr.c                        |   16 +-
-> > > >  tools/perf/util/expr.y                        |   12 +-
-> > > >  tools/perf/util/metricgroup.c                 |  178 +-
-> > > >  tools/perf/util/metricgroup.h                 |    5 +-
-> > > >  tools/perf/util/pmu.c                         |   17 +-
-> > > >  tools/perf/util/print-events.h                |    1 +
-> > > >  tools/perf/util/smt.c                         |   11 +-
-> > > >  tools/perf/util/smt.h                         |   12 +-
-> > > >  tools/perf/util/stat-display.c                |  117 +-
-> > > >  tools/perf/util/stat-shadow.c                 | 1287 ++-----
-> > > >  tools/perf/util/stat.c                        |   74 -
-> > > >  tools/perf/util/stat.h                        |   96 +-
-> > > >  tools/perf/util/synthetic-events.c            |    2 +-
-> > > >  tools/perf/util/topdown.c                     |   68 +-
-> > > >  tools/perf/util/topdown.h                     |   11 +-
-> > > >  120 files changed, 18025 insertions(+), 15590 deletions(-)
-> > > >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/cache.json
-> > > >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/frontend.json
-> > > >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/memory.json
-> > > >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/other.json
-> > > >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/pipeline.json
-> > > >  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/virtual-memory.json
-> > > >
-> > > > --
-> > > > 2.39.2.637.g21b0678d19-goog
-> > > >
-> > >
-> > > --
-> > >
-> > > - Arnaldo
 
--- 
 
-- Arnaldo
+The following changes since commit d2d11f342b179f1894a901f143ec7c008caba43e:
+
+  Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2023-02-05 17:17:10 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.3-1-2023-02-22
+
+for you to fetch changes up to f9fa0778ee7349a9aa3d2ea10e9f2ab843a0b44e:
+
+  perf tests stat_all_metrics: Change true workload to sleep workload for system wide check (2023-02-17 17:22:56 -0300)
+
+----------------------------------------------------------------
+perf tools changes for v6.3:
+
+- 'perf lock contention' improvements:
+
+  - Add -o/--lock-owner option:
+
+  $ sudo ./perf lock contention -abo -- ./perf bench sched pipe
+  # Running 'sched/pipe' benchmark:
+  # Executed 1000000 pipe operations between two processes
+
+       Total time: 4.766 [sec]
+
+         4.766540 usecs/op
+           209795 ops/sec
+   contended   total wait     max wait     avg wait          pid   owner
+
+         403    565.32 us     26.81 us      1.40 us           -1   Unknown
+           4     27.99 us      8.57 us      7.00 us      1583145   sched-pipe
+           1      8.25 us      8.25 us      8.25 us      1583144   sched-pipe
+           1      2.03 us      2.03 us      2.03 us         5068   chrome
+
+   The owner is unknown in most cases.  Filtering only for the mutex locks, it
+   will more likely get the owners.
+
+  - -S/--callstack-filter is to limit display entries having the given
+   string in the callstack
+
+  $ sudo ./perf lock contention -abv -S net sleep 1
+  ...
+   contended   total wait     max wait     avg wait         type   caller
+
+           5     70.20 us     16.13 us     14.04 us     spinlock   __dev_queue_xmit+0xb6d
+                          0xffffffffa5dd1c60  _raw_spin_lock+0x30
+                          0xffffffffa5b8f6ed  __dev_queue_xmit+0xb6d
+                          0xffffffffa5cd8267  ip6_finish_output2+0x2c7
+                          0xffffffffa5cdac14  ip6_finish_output+0x1d4
+                          0xffffffffa5cdb477  ip6_xmit+0x457
+                          0xffffffffa5d1fd17  inet6_csk_xmit+0xd7
+                          0xffffffffa5c5f4aa  __tcp_transmit_skb+0x54a
+                          0xffffffffa5c6467d  tcp_keepalive_timer+0x2fd
+
+  Please note that to have the -b option (BPF) working above one has to build
+  with BUILD_BPF_SKEL=1.
+
+  - Add more 'perf test' entries to test these new features.
+
+- Add Ian Rogers to MAINTAINERS as a perf tools reviewer.
+
+- Add support for retire latency feature (pipeline stall of a instruction
+  compared to the previous one, in cycles) present on some Intel processors.
+
+- Add 'perf c2c' report option to show false sharing with adjacent cachelines, to
+  be used in machines with cacheline prefetching, where accesses to a cacheline
+  brings the next one too.
+
+- Skip 'perf test bpf' when the required kernel-debuginfo package isn't installed.
+
+perf script:
+
+- Add 'cgroup' field for 'perf script' output:
+
+  $ perf record --all-cgroups -- true
+  $ perf script -F comm,pid,cgroup
+            true 337112  /user.slice/user-657345.slice/user@657345.service/...
+            true 337112  /user.slice/user-657345.slice/user@657345.service/...
+            true 337112  /user.slice/user-657345.slice/user@657345.service/...
+            true 337112  /user.slice/user-657345.slice/user@657345.service/...
+
+- Add support for showing branch speculation information in 'perf
+  script' and in the 'perf report' raw dump (-D).
+
+perf record:
+
+- Fix 'perf record' segfault with --overwrite and --max-size.
+
+Intel PT:
+
+- Add support for synthesizing "cycle" events from Intel PT traces as we
+  support "instruction" events when Intel PT CYC packets are available. This
+  enables much more accurate profiles than when using the regular 'perf record -e
+  cycles' (the default) when the workload lasts for very short periods (<10ms).
+
+- .plt symbol handling improvements, better handling IBT (in the past
+  MPX) done in the context of decoding Intel PT processor traces, IFUNC
+  symbols on x86_64, static executables, understanding .plt.got symbols on
+  x86_64.
+
+- Add a 'perf test' to test symbol resolution, part of the .plt
+  improvements series, this tests things like symbol size in contexts
+  where only the symbol start is available (kallsyms), etc.
+
+- Better handle auxtrace/Intel PT data when using pipe mode (perf record sleep 1|perf report).
+
+- Fix symbol lookup with kcore with multiple segments match stext,
+  getting the symbol resolution to just show DSOs as unknown.
+
+ARM:
+
+- Timestamp improvements for ARM64 systems with ETMv4 (Embedded Trace
+  Macrocell v4).
+
+- Ensure ARM64 CoreSight timestamps don't go backwards.
+
+- Document that ARM64 SPE (Statistical Profiling Extension) is used with 'perf c2c/mem'.
+
+- Add raw decoding for ARM64 SPEv1.2 previous branch address.
+
+- Update neoverse-n2-v2 ARM vendor events (JSON tables): topdown L1, TLB,
+  cache, branch, PE utilization and instruction mix metrics.
+
+- Update decoder code for OpenCSD version 1.4, on ARM64 systems.
+
+- Fix command line auto-complete of CPU events on aarch64.
+
+perf test/bench:
+
+- Switch basic BPF filtering test to use syscall tracepoint to avoid the
+  variable number of probes inserted when using the previous probe point
+  (do_epoll_wait) that happens on different CPU architectures.
+
+- Fix DWARF unwind test by adding non-inline to expected function in a
+  backtrace.
+
+- Use 'grep -c' where the longer form 'grep | wc -l' was being used.
+
+- Add getpid and execve benchmarks to 'perf bench syscall'.
+
+Miscellaneous:
+
+- Avoid d3-flame-graph package dependency in 'perf script flamegraph',
+  making this feature more generally available.
+
+- Add JSON metric events to present CPI stall cycles in Power10.
+
+- Assorted improvements/refactorings on the JSON metrics parsing code.
+
+Build:
+
+- Fix 'perf probe' and 'perf test' when libtraceevent isn't linked, as
+  several tests use tracepoints, those should be skipped.
+
+- More fallout fixes for the removal of tools/lib/traceevent/.
+
+- Fix build error when linking with libpfm.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Adrian Hunter (19):
+      perf test: Add Symbols test
+      perf symbols: Factor out get_plt_sizes()
+      perf symbols: Check plt_entry_size is not zero
+      perf symbols: Add dso__find_symbol_nocache()
+      perf symbols: Slightly simplify 'err' usage in dso__synthesize_plt_symbols()
+      perf symbols: Do not check ss->dynsym twice
+      perf symbols: Add symbol for .plt header
+      perf symbols: Allow for .plt entries with no symbol
+      perf symbols: Combine handling for SHT_RELA and SHT_REL
+      perf symbols: Check SHT_RELA and SHT_REL type earlier
+      perf symbols: Correct plt entry sizes for x86
+      perf symbols: Add support for x86 .plt.sec
+      perf symbols: Sort plt relocations for x86
+      perf symbols: Record whether a symbol is an alias for an IFUNC symbol
+      perf symbols: Add support for IFUNC symbols for x86_64
+      perf symbols: Allow for .plt without header
+      perf symbols: Allow for static executables with .plt
+      perf symbols: Start adding support for .plt.got for x86
+      perf symbols: Get symbols for .plt.got for x86-64
+
+Arnaldo Carvalho de Melo (3):
+      Merge remote-tracking branch 'torvalds/master' into perf/core
+      perf tools: Add Ian Rogers to MAINTAINERS as a reviewer
+      Merge remote-tracking branch 'torvalds/master' into perf/core
+
+Athira Rajeev (8):
+      perf test buildid: Fix shell string substitutions
+      perf tests shell: Add check for perf data file in record+probe_libc_inet_pton test
+      perf tests shell: Fix check for libtracevent support
+      perf probe: Fix usage when libtraceevent is missing
+      perf test bpf: Check for libtraceevent support
+      perf probe: Update the exit error codes in function try_to_find_probe_trace_event
+      perf test bpf: Skip test if kernel-debuginfo is not present
+      perf vendor events power10: Add JSON metric events to present CPI stall cycles in powerpc
+
+Diederik de Haas (3):
+      perf: Various spelling fixes
+      perf test: Replace 'grep | wc -l' with 'grep -c'
+      perf test: Replace legacy `...` with $(...)
+
+Feng Tang (1):
+      perf c2c: Add report option to show false sharing in adjacent cachelines
+
+German Gomez (4):
+      perf pmu: Add function to check if a pmu file exists
+      perf cs_etm: Keep separate symbols for ETMv4 and ETE parameters
+      perf cs_etm: Record ts_source in AUXTRACE_INFO for ETMv4 and ETE
+      perf cs_etm: Set the time field in the synthetic samples
+
+Ian Rogers (24):
+      perf script flamegraph: Avoid d3-flame-graph package dependency
+      perf llvm: Fix inadvertent file creation
+      perf tools: Remove HAVE_LIBTRACEEVENT_TEP_FIELD_IS_RELATIVE
+      perf trace: Reduce #ifdefs for TEP_FIELD_IS_RELATIVE
+      perf debug: Increase libtraceevent logging when verbose
+      perf test workload thloop: Make count increments atomic
+      perf tools: Fix foolproof typo
+      perf buildid: Avoid copy of uninitialized memory
+      perf jevents metric: Correct Function equality
+      perf jevents metric: Add ability to rewrite metrics in terms of others
+      perf jevents: Rewrite metrics in the same file with each other
+      perf pmu-events: Add separate metric from pmu_event
+      perf pmu-events: Separate the metrics from events for no jevents
+      perf pmu-events: Remove now unused event and metric variables
+      perf stat: Remove evsel metric_name/expr
+      perf jevents: Combine table prefix and suffix writing
+      perf pmu-events: Introduce pmu_metrics_table
+      perf jevents: Generate metrics and events as separate tables
+      perf jevents: Add model list option
+      perf pmu-events: Fix testing with JEVENTS_ARCH=all
+      perf jevents: Correct bad character encoding
+      tools build: Add test echo-cmd
+      perf jevents: Run metric_test.py at compile-time
+      perf stat: Avoid merging/aggregating metric counts twice
+
+James Clark (6):
+      perf pmu: Remove duplication around EVENT_SOURCE_DEVICE_PATH
+      perf pmu: Use perf_pmu__open_file() and perf_pmu__scan_file()
+      perf pmu: Remove remaining duplication of bus/event_source/devices/...
+      perf cs-etm: Ensure that Coresight timestamps don't go backwards
+      perf cs-etm: Improve missing sink warning message
+      perf mem/c2c: Document that SPE is used for mem and c2c on ARM
+
+Jing Zhang (9):
+      perf pmu: Add #slots literal support for arm64
+      perf jevent: Add general metrics support
+      perf vendor events arm64: Add common topdown L1 metrics
+      perf vendor events arm64: Add topdown L1 metrics for neoverse-n2-v2
+      perf vendor events arm64: Add TLB metrics for neoverse-n2-v2
+      perf vendor events arm64: Add cache metrics for neoverse-n2-v2
+      perf vendor events arm64: Add branch metrics for neoverse-n2-v2
+      perf vendor events arm64: Add PE utilization metrics for neoverse-n2-v2
+      perf vendor events arm64: Add instruction mix metrics for neoverse-n2-v2
+
+Kajol Jain (1):
+      perf tests stat_all_metrics: Change true workload to sleep workload for system wide check
+
+Kan Liang (6):
+      perf vendor events intel: Add Emerald Rapids
+      perf report: Support Retire Latency
+      perf script: Support Retire Latency
+      perf test x86: Support the retire_lat (Retire Latency) sample_type check
+      perf event x86: Add retire_lat when synthesizing PERF_SAMPLE_WEIGHT_STRUCT
+      perf script: Fix missing Retire Latency fields option documentation
+
+Krister Johansen (1):
+      perf symbols: Symbol lookup with kcore can fail if multiple segments match stext
+
+Mike Leach (1):
+      perf cs-etm: Update decoder code for OpenCSD version 1.4
+
+Namhyung Kim (14):
+      perf inject: Use perf_data__read() for auxtrace
+      perf intel-pt: Do not try to queue auxtrace data on pipe
+      perf session: Avoid calling lseek(2) for pipe
+      perf test: Add pipe mode test to the Intel PT test suite
+      perf script: Add 'cgroup' field for output
+      perf lock contention: Add -S/--callstack-filter option
+      perf stat: Hide invalid uncore event output for aggr mode
+      perf test: Add more test cases for perf lock contention
+      perf lock contention: Factor out lock_contention_get_name()
+      perf lock contention: Use lock_stat_find{,new}
+      perf lock contention: Support filters for different aggregation
+      perf lock contention: Fix to save callstack for the default modified
+      perf lock contention: Add -o/--lock-owner option
+      perf lock contention: Support old rw_semaphore type
+
+Naveen N. Rao (2):
+      perf test: Switch basic bpf filtering test to use syscall tracepoint
+      perf test: Fix DWARF unwind test by adding non-inline to expected function in a backtrace
+
+Rob Herring (2):
+      perf arm-spe: Only warn once for each unsupported address packet
+      perf arm-spe: Add raw decoding for SPEv1.2 previous branch address
+
+Ross Zwisler (1):
+      perf tools docs: Use canonical ftrace path
+
+Sandipan Das (2):
+      perf script: Show branch speculation info
+      perf session: Show branch speculation info in raw dump
+
+Steinar H. Gunderson (1):
+      perf intel-pt: Synthesize cycle events
+
+Thomas Richter (1):
+      perf tools: Fix perf tool build error in util/pfm.c
+
+Tiezhu Yang (4):
+      tools x86: Keep list sorted by number in unistd_{32,64}.h
+      perf bench syscall: Introduce bench_syscall_common()
+      perf bench syscall: Add getpgid syscall benchmark
+      perf bench syscall: Add execve syscall benchmark
+
+Yang Jihong (1):
+      perf record: Fix segfault with --overwrite and --max-size
+
+Yicong Yang (1):
+      perf tools: Fix auto-complete on aarch64
+
+qinyu (1):
+      perf docs: Fix a typo in 'perf probe' man page: l20th -> 120th
+
+ MAINTAINERS                                        |   1 +
+ tools/arch/x86/include/uapi/asm/unistd_32.h        |  23 +-
+ tools/arch/x86/include/uapi/asm/unistd_64.h        |  23 +-
+ tools/build/Makefile.build                         |   1 +
+ tools/perf/.gitignore                              |   1 +
+ tools/perf/Documentation/itrace.txt                |   3 +-
+ tools/perf/Documentation/perf-bench.txt            |   2 +-
+ tools/perf/Documentation/perf-c2c.txt              |  16 +-
+ tools/perf/Documentation/perf-intel-pt.txt         |  66 ++-
+ tools/perf/Documentation/perf-list.txt             |   2 +-
+ tools/perf/Documentation/perf-lock.txt             |  11 +
+ tools/perf/Documentation/perf-mem.txt              |   7 +-
+ tools/perf/Documentation/perf-probe.txt            |   2 +-
+ tools/perf/Documentation/perf-report.txt           |   4 +-
+ tools/perf/Documentation/perf-script-perl.txt      |   2 +-
+ tools/perf/Documentation/perf-script-python.txt    |   4 +-
+ tools/perf/Documentation/perf-script.txt           |   7 +-
+ tools/perf/Documentation/perf-test.txt             |   3 +
+ tools/perf/Documentation/perf-top.txt              |   2 +-
+ tools/perf/Makefile.config                         |   4 -
+ tools/perf/Makefile.perf                           |   1 +
+ tools/perf/arch/arm/util/auxtrace.c                |   5 +-
+ tools/perf/arch/arm/util/cs-etm.c                  | 103 +++-
+ tools/perf/arch/arm64/util/pmu.c                   |  44 +-
+ tools/perf/arch/powerpc/util/header.c              |   4 +-
+ tools/perf/arch/x86/tests/sample-parsing.c         |   5 +-
+ tools/perf/arch/x86/util/event.c                   |  21 +
+ tools/perf/arch/x86/util/pmu.c                     |  12 +-
+ tools/perf/bench/bench.h                           |   2 +
+ tools/perf/bench/syscall.c                         |  76 ++-
+ tools/perf/builtin-bench.c                         |   4 +-
+ tools/perf/builtin-c2c.c                           |  21 +-
+ tools/perf/builtin-inject.c                        |   6 +-
+ tools/perf/builtin-list.c                          |  20 +-
+ tools/perf/builtin-lock.c                          | 147 +++++-
+ tools/perf/builtin-probe.c                         |   9 +
+ tools/perf/builtin-record.c                        |  16 +-
+ tools/perf/builtin-script.c                        |  40 +-
+ tools/perf/builtin-stat.c                          |   1 -
+ tools/perf/builtin-trace.c                         |   4 +-
+ tools/perf/perf-completion.sh                      |  11 +-
+ tools/perf/pmu-events/Build                        |  16 +-
+ .../arch/arm64/arm/neoverse-n2-v2/metrics.json     | 273 +++++++++++
+ tools/perf/pmu-events/arch/arm64/sbsa.json         |  30 ++
+ .../pmu-events/arch/powerpc/power10/metrics.json   |   8 +-
+ .../pmu-events/arch/powerpc/power10/others.json    |   2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv         |   2 +-
+ tools/perf/pmu-events/empty-pmu-events.c           | 108 ++++-
+ tools/perf/pmu-events/jevents.py                   | 359 +++++++++++---
+ tools/perf/pmu-events/metric.py                    |  79 ++-
+ tools/perf/pmu-events/metric_test.py               |  15 +-
+ tools/perf/pmu-events/pmu-events.h                 |  26 +-
+ tools/perf/scripts/python/flamegraph.py            | 107 ++++-
+ tools/perf/tests/Build                             |   1 +
+ tools/perf/tests/bpf-script-example.c              |   2 +-
+ tools/perf/tests/bpf.c                             |  28 +-
+ tools/perf/tests/builtin-test.c                    |   3 +
+ tools/perf/tests/dwarf-unwind.c                    |   5 +-
+ tools/perf/tests/expand-cgroup.c                   |   4 +-
+ tools/perf/tests/parse-metric.c                    |   4 +-
+ tools/perf/tests/pmu-events.c                      |  69 +--
+ tools/perf/tests/sample-parsing.c                  |   2 +-
+ tools/perf/tests/shell/buildid.sh                  |  18 +-
+ tools/perf/tests/shell/lib/coresight.sh            |  18 +-
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh    |   8 +
+ tools/perf/tests/shell/lock_contention.sh          |  66 ++-
+ .../tests/shell/record+probe_libc_inet_pton.sh     |  11 +
+ .../tests/shell/record+script_probe_vfs_getname.sh |   3 +
+ tools/perf/tests/shell/stat_all_metrics.sh         |   2 +-
+ tools/perf/tests/shell/test_brstack.sh             |  18 +-
+ tools/perf/tests/shell/test_intel_pt.sh            |  17 +
+ tools/perf/tests/symbols.c                         | 150 ++++++
+ tools/perf/tests/tests.h                           |   3 +
+ tools/perf/tests/workloads/thloop.c                |   2 +-
+ tools/perf/util/Build                              |   5 +-
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  |   6 +-
+ .../util/arm-spe-decoder/arm-spe-pkt-decoder.c     |   4 +-
+ .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |   1 +
+ tools/perf/util/auxtrace.c                         |  12 +-
+ tools/perf/util/auxtrace.h                         |   7 +-
+ tools/perf/util/bpf_lock_contention.c              | 183 ++++---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c     | 104 +++-
+ tools/perf/util/bpf_skel/lock_data.h               |   4 +-
+ tools/perf/util/branch.c                           |  15 +
+ tools/perf/util/branch.h                           |   2 +
+ tools/perf/util/cacheline.h                        |  25 +-
+ tools/perf/util/cgroup.c                           |   1 -
+ tools/perf/util/cputopo.c                          |   9 +-
+ tools/perf/util/cs-etm-base.c                      |  34 +-
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  71 ++-
+ tools/perf/util/cs-etm.c                           |  95 +++-
+ tools/perf/util/cs-etm.h                           |  16 +-
+ tools/perf/util/data-convert-bt.c                  |   4 +-
+ tools/perf/util/debug.c                            |  15 +
+ tools/perf/util/evsel.c                            |  21 +-
+ tools/perf/util/evsel.h                            |   2 -
+ tools/perf/util/evswitch.h                         |   4 +-
+ tools/perf/util/expr.c                             |   5 +
+ tools/perf/util/expr.h                             |   1 +
+ tools/perf/util/expr.l                             |   8 +-
+ tools/perf/util/intel-pt.c                         |  73 ++-
+ tools/perf/util/llvm-utils.c                       |  25 +-
+ tools/perf/util/lock-contention.h                  |   7 +
+ tools/perf/util/metricgroup.c                      | 207 ++++----
+ tools/perf/util/metricgroup.h                      |   4 +-
+ tools/perf/util/parse-events.c                     |   2 -
+ tools/perf/util/pfm.c                              |   6 +-
+ tools/perf/util/pmu-hybrid.c                       |  27 +-
+ tools/perf/util/pmu.c                              | 227 ++++-----
+ tools/perf/util/pmu.h                              |  21 +-
+ tools/perf/util/print-events.c                     |  32 +-
+ tools/perf/util/print-events.h                     |   3 +-
+ tools/perf/util/probe-event.c                      |   4 +-
+ tools/perf/util/python.c                           |  19 +-
+ tools/perf/util/sample.h                           |   5 +-
+ .../perf/util/scripting-engines/trace-event-perl.c |   4 +-
+ .../util/scripting-engines/trace-event-python.c    |   4 +-
+ tools/perf/util/session.c                          |  14 +-
+ tools/perf/util/sort.c                             |  20 +-
+ tools/perf/util/sort.h                             |   3 +
+ tools/perf/util/stat-display.c                     |  51 +-
+ tools/perf/util/stat-shadow.c                      | 114 +----
+ tools/perf/util/stat.h                             |   1 -
+ tools/perf/util/symbol-elf.c                       | 527 +++++++++++++++++----
+ tools/perf/util/symbol.c                           |  26 +-
+ tools/perf/util/symbol.h                           |   3 +
+ tools/perf/util/symsrc.h                           |   1 +
+ tools/perf/util/synthetic-events.c                 |   4 +-
+ tools/perf/util/trace-event.h                      |  19 +
+ 129 files changed, 3210 insertions(+), 1092 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/neoverse-n2-v2/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/sbsa.json
+ mode change 100644 => 100755 tools/perf/pmu-events/metric_test.py
+ create mode 100644 tools/perf/tests/symbols.c
