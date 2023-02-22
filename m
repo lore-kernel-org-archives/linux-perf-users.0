@@ -2,102 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A7DC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 19:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D29C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 20:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232562AbjBVTvF (ORCPT
+        id S232139AbjBVUgU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 14:51:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55448 "EHLO
+        Wed, 22 Feb 2023 15:36:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232770AbjBVTvA (ORCPT
+        with ESMTP id S229603AbjBVUgU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 14:51:00 -0500
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38AD943440;
-        Wed, 22 Feb 2023 11:50:57 -0800 (PST)
-Received: by mail-vs1-f46.google.com with SMTP id x14so11041560vso.9;
-        Wed, 22 Feb 2023 11:50:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677095456;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=REE+ef0e7B87qEFp3QV5xjO+8g40xyGabze32yJEghU=;
-        b=cGlttOgOaJOT9DsDX0wjk/KNEgI+9AYjMTL8pNWhtDpuoWvDbB073ASuUSkzpjNLLh
-         3tESOytjJsfP4l3iWx1LGx+IM5BsuLS0M7uQsInotri53PIdTGQLbcU5OtmMIuNDO/XK
-         5WG+GJRl/orBE4ce/TKMYJGP3dkVQDKvyHwYgMh16gTvHTQq6ZOY+fThN1uOLMJZEvx9
-         lVyGsEUG4KpgEvrqlzjv3v2lIbGVWuwQvrXahM+AHUZh0m4szMEwGafdr/1GpiLFZBGY
-         e5drSghIgTuR6hO/fwG+XQA7jYFyaH5hVDqi9dXWUJiPpk49V+/roSw/reKUj9KKGbz/
-         bG8A==
-X-Gm-Message-State: AO0yUKV2oDyp2h5KHz/Wj6v5cne1B5QYS2IxhlKTYTfK/nUpK02SSTEG
-        K+SPW/51WL45y4io5/pfEZNj5ZaIkU/FmKOHcwxhy2rw
-X-Google-Smtp-Source: AK7set+ix5t9sPDbnKvhcT2dxs2wUW9xzkkKlAcueIrwb0TvkJS3OtsqfCQHHKGtOkpm7l0dXW+zjcXkKgApy6ni9Ac=
-X-Received: by 2002:a05:6122:84a:b0:411:b190:fe5b with SMTP id
- 10-20020a056122084a00b00411b190fe5bmr205060vkk.39.1677095456147; Wed, 22 Feb
- 2023 11:50:56 -0800 (PST)
+        Wed, 22 Feb 2023 15:36:20 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114F338B47;
+        Wed, 22 Feb 2023 12:36:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BEN4TQVxNPWEx7hwJvP/GS/RJsdusdDphuNNuthrAYU=; b=fdRbnWiea2gIQFySo8fX/v0ENQ
+        V2LYJNL0Jn9pYU50c16nDn7SLpCNtGp2PTS3hVm+4mDVNigekAt8z1QFwcFR5bpWBLpBG2ihM/Mjg
+        o49aW6qR7laIfhIOzJdw69ki4jJ6YPpqQVtujwmpHEcrIKRtWq036H8O4HYFArEP4pfYc68AJh6LI
+        2w424XyBCkhvpDZL/CXRy3xT4niZuD1MWEsch9zN67Ez9lO63iysFblTgPTghLc+SK3s27e42ad58
+        KMPyeAwjn2tLL+BxSC5pa+pNZ7mGJyVgOS0mTHtwmSaN5jMi37DtdovbWHgAuNepuYWzmPrjpl6EK
+        NhDKHTrw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pUvqE-00Dky7-LY; Wed, 22 Feb 2023 20:35:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42FF0300193;
+        Wed, 22 Feb 2023 21:35:53 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 257E220D8CD8C; Wed, 22 Feb 2023 21:35:53 +0100 (CET)
+Date:   Wed, 22 Feb 2023 21:35:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Deepak R Varma <drv@mailo.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        Praveen Kumar <kumarpraveen@linux.microsoft.com>
+Subject: Re: [PATCH v2 1/3] perf/x86/core: Use sysfs_emit() in show()
+ callback function
+Message-ID: <Y/Z8qUYDXPFlzdsY@hirez.programming.kicks-ass.net>
+References: <cover.1676987821.git.drv@mailo.com>
+ <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
 MIME-Version: 1.0
-References: <20230219061329.1001079-1-namhyung@kernel.org> <20230219061329.1001079-4-namhyung@kernel.org>
- <Y/Sw9Cd5nvf/YKjA@krava>
-In-Reply-To: <Y/Sw9Cd5nvf/YKjA@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 22 Feb 2023 11:50:45 -0800
-Message-ID: <CAM9d7cj_gm7m344Q4GS2v4cBzJWqL=s0POON-9e9DE4p8ohX-Q@mail.gmail.com>
-Subject: Re: [PATCH 3/8] perf record: Add BPF event filter support
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 3:54 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Sat, Feb 18, 2023 at 10:13:24PM -0800, Namhyung Kim wrote:
->
-> SNIP
->
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 8374117e66f6..6429915d376d 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -52,6 +52,7 @@
-> >  #include "util/pmu-hybrid.h"
-> >  #include "util/evlist-hybrid.h"
-> >  #include "util/off_cpu.h"
-> > +#include "util/bpf-filter.h"
-> >  #include "asm/bug.h"
-> >  #include "perf.h"
-> >  #include "cputopo.h"
-> > @@ -1364,6 +1365,14 @@ static int record__open(struct record *rec)
-> >
-> >       session->evlist = evlist;
-> >       perf_session__set_id_hdr_size(session);
-> > +
-> > +     evlist__for_each_entry(evlist, pos) {
-> > +             if (list_empty(&pos->bpf_filters))
-> > +                     continue;
-> > +             rc = perf_bpf_filter__prepare(pos);
-> > +             if (rc)
-> > +                     break;
-> > +     }
->
-> might fit better under evlist__apply_filters ?
+On Tue, Feb 21, 2023 at 07:36:12PM +0530, Deepak R Varma wrote:
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 85a63a41c471..27c03e6dcb5d 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1896,9 +1896,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
+>  		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
+>  			next_str = strchr(str, ';');
+>  			if (next_str)
+> -				return snprintf(page, next_str - str + 1, "%s", str);
+> -			else
+> -				return sprintf(page, "%s", str);
+> +				return sysfs_emit(page, "%s", str);
+>  		}
+>  		str = strchr(str, ';');
+>  		str++;
 
-Right, it'd be better.  Will move.
-
-Thanks,
-Namhyung
+How is this correct ?!?
