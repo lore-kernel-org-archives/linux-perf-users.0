@@ -2,85 +2,289 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D29C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 20:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3492AC6379F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 23:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232139AbjBVUgU (ORCPT
+        id S233082AbjBVXBs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 15:36:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        Wed, 22 Feb 2023 18:01:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbjBVUgU (ORCPT
+        with ESMTP id S231844AbjBVXBr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 15:36:20 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114F338B47;
-        Wed, 22 Feb 2023 12:36:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=BEN4TQVxNPWEx7hwJvP/GS/RJsdusdDphuNNuthrAYU=; b=fdRbnWiea2gIQFySo8fX/v0ENQ
-        V2LYJNL0Jn9pYU50c16nDn7SLpCNtGp2PTS3hVm+4mDVNigekAt8z1QFwcFR5bpWBLpBG2ihM/Mjg
-        o49aW6qR7laIfhIOzJdw69ki4jJ6YPpqQVtujwmpHEcrIKRtWq036H8O4HYFArEP4pfYc68AJh6LI
-        2w424XyBCkhvpDZL/CXRy3xT4niZuD1MWEsch9zN67Ez9lO63iysFblTgPTghLc+SK3s27e42ad58
-        KMPyeAwjn2tLL+BxSC5pa+pNZ7mGJyVgOS0mTHtwmSaN5jMi37DtdovbWHgAuNepuYWzmPrjpl6EK
-        NhDKHTrw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pUvqE-00Dky7-LY; Wed, 22 Feb 2023 20:35:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42FF0300193;
-        Wed, 22 Feb 2023 21:35:53 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 257E220D8CD8C; Wed, 22 Feb 2023 21:35:53 +0100 (CET)
-Date:   Wed, 22 Feb 2023 21:35:53 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Deepak R Varma <drv@mailo.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Subject: Re: [PATCH v2 1/3] perf/x86/core: Use sysfs_emit() in show()
- callback function
-Message-ID: <Y/Z8qUYDXPFlzdsY@hirez.programming.kicks-ass.net>
-References: <cover.1676987821.git.drv@mailo.com>
- <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
+        Wed, 22 Feb 2023 18:01:47 -0500
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADE4410AE;
+        Wed, 22 Feb 2023 15:01:45 -0800 (PST)
+Received: by mail-pg1-x530.google.com with SMTP id z10so4975754pgr.8;
+        Wed, 22 Feb 2023 15:01:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=UINcpy434SfhopxdYyHr2G9QMCc2YVPa4kQ0VAtxtDE=;
+        b=JPCEuOTAnInQd+Bhfd+BxAc8MI1m9hn+jQD7fQkEpJNaZo4yiAspAYYSAY0A4rU20d
+         7PAv4mO4QMWTB5+HQap0F/NaAytB3aDAwfI/D99hPE/VXOkpHc1cxft8cNqrX9/lP3cZ
+         BQjVCuL+mP9mu1lEUkW07xOcU8AiIxDHEN7ZxIKu9CgXPnY8fLcAK/gqznJmGTmepHKv
+         GliqaQ7FjIjOryPQZygqWzhhMNdIjV3OY4lhGJDWC9uuUp8Bm0GejkzTpVmeKrFe/4uU
+         hs7wYoS1eEuWkA7d9vW1xJFvmwrMb+jQJy3HQ8YUlvES3aisLGv3f1dhou7wM2mGpuNr
+         WP7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UINcpy434SfhopxdYyHr2G9QMCc2YVPa4kQ0VAtxtDE=;
+        b=YxhhUbIqcOnoGaWyoKhFtWXhzQbDH3GHmC2dElF+zMYtrnD5ixhjUtApwGYykz1cHz
+         eC/pShv81dVZScXaOXvRz2pGXmrSsz/gUcJlS0dqr0sXoOSkrrbsHs4hYyvX5dSzqtc6
+         Zj3ja5Wz8RAAWpPevXHWrgbj3lx8J9kQ1nP7RslXajNLcEsKVNYRV1QZ7bRWBNpbCxf1
+         17LpbqpnVFLV9fy6BZ7eY9is1N3SgRBdSq05yT2PAalectNhQqIJY0w+noXhHTzTz5tR
+         RUzIoqNJT1cZAQeYcRDWt2aNBQEckpWPLKz5yJhXViRFx2PiGujTwKXnBJ8MYHGx+xMb
+         2lnw==
+X-Gm-Message-State: AO0yUKUk1u2mGzaoBFJnQro5sXM66YUVTs8N7JM2++ng3jUc01yGIOx9
+        TXLv1zwCcHMVh7UcaBn3YRo=
+X-Google-Smtp-Source: AK7set94wsCqhcUOg601Zmcr0TbdbA01IviNTaS7o0wvyVvMhpYSZswHaeagU+HlWV3JTIHI9nz+Lw==
+X-Received: by 2002:aa7:96c9:0:b0:5a9:c682:831d with SMTP id h9-20020aa796c9000000b005a9c682831dmr9003149pfq.13.1677106904735;
+        Wed, 22 Feb 2023 15:01:44 -0800 (PST)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:8f76:587d:f250:fecf])
+        by smtp.gmail.com with ESMTPSA id s1-20020aa78281000000b005ccbe5346ebsm3895127pfm.163.2023.02.22.15.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Feb 2023 15:01:44 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: [RFC/PATCHSET 0/8] perf record: Implement BPF sample filter (v3)
+Date:   Wed, 22 Feb 2023 15:01:33 -0800
+Message-Id: <20230222230141.1729048-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 07:36:12PM +0530, Deepak R Varma wrote:
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 85a63a41c471..27c03e6dcb5d 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1896,9 +1896,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
->  		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
->  			next_str = strchr(str, ';');
->  			if (next_str)
-> -				return snprintf(page, next_str - str + 1, "%s", str);
-> -			else
-> -				return sprintf(page, "%s", str);
-> +				return sysfs_emit(page, "%s", str);
->  		}
->  		str = strchr(str, ';');
->  		str++;
+Hello,
 
-How is this correct ?!?
+There have been requests for more sophisticated perf event sample
+filtering based on the sample data.  Recently the kernel added BPF
+programs can access perf sample data and this is the userspace part
+to enable such a filtering.
+
+This still has some rough edges and needs more improvements.  But
+I'd like to share the current work and get some feedback for the
+directions and idea for further improvements.
+
+v3 changes)
+ * fix build error on old kernels/vmlinux  (Arnaldo)
+ * move the logic to evlist__apply_filters  (Jiri)
+ * improve error message for bad input
+
+v2 changes)
+ * fix build error with the misc field  (Jiri)
+ * add a destructor for filter expr  (Ian)
+ * remove 'bpf:' prefix  (Arnaldo)
+ * add '||' operator
+
+The required kernel changes are now in the mainline tree (for v6.3).
+perf record has --filter option to set filters on the last specified
+event in the command line.  It worked only for tracepoints and Intel
+PT events so far.  This patchset extends it to use BPF in order to
+enable the general sample filters for any events.
+
+A new filter expression parser was added (using flex/bison) to process
+the filter string.  Right now, it only accepts very simple expressions
+separated by comma.  I'd like to keep the filter expression as simple
+as possible.
+
+It requires samples satisfy all the filter expressions otherwise it'd
+drop the sample.  IOW filter expressions are connected with logical AND
+operations unless they used "||" explicitly.  So if user has something
+like 'A, B || C, D', then BOTH A and D should be true AND either B or C
+also needs to be true.
+
+Essentially the BPF filter expression is:
+
+  <term> <operator> <value> (("," | "||") <term> <operator> <value>)*
+
+The <term> can be one of:
+  ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
+  code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
+  p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
+  mem_dtlb, mem_blk, mem_hops
+
+The <operator> can be one of:
+  ==, !=, >, >=, <, <=, &
+
+The <value> can be one of:
+  <number> (for any term)
+  na, load, store, pfetch, exec (for mem_op)
+  l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+  na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+  remote (for mem_remote)
+  na, locked (for mem_locked)
+  na, l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault (for mem_dtlb)
+  na, by_data, by_addr (for mem_blk)
+  hops0, hops1, hops2, hops3 (for mem_hops)
+
+I plan to improve it with range expressions like for ip or addr and it
+should support symbols like the existing addr-filters.  Also cgroup
+should understand and convert cgroup names to IDs.
+
+Let's take a look at some examples.  The following is to profile a user
+program on the command line.  When the frequency mode is used, it starts
+with a very small period (i.e. 1) and adjust it on every interrupt (NMI)
+to catch up the given frequency.
+
+  $ ./perf record -- ./perf test -w noploop
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.263 MB perf.data (4006 samples) ]
+
+  $ ./perf script -F pid,period,event,ip,sym | head
+  36695          1 cycles:  ffffffffbab12ddd perf_event_exec
+  36695          1 cycles:  ffffffffbab12ddd perf_event_exec
+  36695          5 cycles:  ffffffffbab12ddd perf_event_exec
+  36695         46 cycles:  ffffffffbab12de5 perf_event_exec
+  36695       1163 cycles:  ffffffffba80a0eb x86_pmu_disable_all
+  36695       1304 cycles:  ffffffffbaa19507 __hrtimer_get_next_event
+  36695       8143 cycles:  ffffffffbaa186f9 __run_timers
+  36695      69040 cycles:  ffffffffbaa0c393 rcu_segcblist_ready_cbs
+  36695     355117 cycles:            4b0da4 noploop
+  36695     321861 cycles:            4b0da4 noploop
+
+If you want to skip the first few samples that have small periods, you
+can do like this (note it requires root due to BPF).
+
+  $ sudo ./perf record -e cycles --filter 'period > 10000' -- ./perf test -w noploop
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.262 MB perf.data (3990 samples) ]
+
+  $ sudo ./perf script -F pid,period,event,ip,sym | head
+  39524      58253 cycles:  ffffffffba97dac0 update_rq_clock
+  39524     232657 cycles:            4b0da2 noploop
+  39524     210981 cycles:            4b0da2 noploop
+  39524     282882 cycles:            4b0da4 noploop
+  39524     392180 cycles:            4b0da4 noploop
+  39524     456058 cycles:            4b0da4 noploop
+  39524     415196 cycles:            4b0da2 noploop
+  39524     462721 cycles:            4b0da4 noploop
+  39524     526272 cycles:            4b0da2 noploop
+  39524     565569 cycles:            4b0da4 noploop
+
+Maybe more useful example is when it deals with precise memory events.
+On AMD processors with IBS, you can filter only memory load with L1
+dTLB is missed like below.
+
+  $ sudo ./perf record -ad -e ibs_op//p \
+  > --filter 'mem_op == load, mem_dtlb > l1_hit' sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 1.338 MB perf.data (15 samples) ]
+
+  $ sudo ./perf script -F data_src | head
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          49080142 |OP LOAD|LVL L1 hit|SNP N/A|TLB L2 hit|LCK N/A|BLK  N/A
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          51088842 |OP LOAD|LVL L3 or Remote Cache (1 hop) hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+          49080442 |OP LOAD|LVL L2 hit|SNP N/A|TLB L2 hit|LCK N/A|BLK  N/A
+          51080242 |OP LOAD|LVL LFB/MAB hit|SNP N/A|TLB L2 miss|LCK N/A|BLK  N/A
+
+You can also check the number of dropped samples in LOST_SAMPLES events
+using perf report --stat command.
+
+  $ sudo ./perf report --stat
+
+  Aggregated stats:
+             TOTAL events:      16066
+              MMAP events:         22  ( 0.1%)
+              COMM events:       4166  (25.9%)
+              EXIT events:          1  ( 0.0%)
+          THROTTLE events:        816  ( 5.1%)
+        UNTHROTTLE events:        613  ( 3.8%)
+              FORK events:       4165  (25.9%)
+            SAMPLE events:         15  ( 0.1%)
+             MMAP2 events:       6133  (38.2%)
+      LOST_SAMPLES events:          1  ( 0.0%)
+           KSYMBOL events:         69  ( 0.4%)
+         BPF_EVENT events:         57  ( 0.4%)
+    FINISHED_ROUND events:          3  ( 0.0%)
+          ID_INDEX events:          1  ( 0.0%)
+        THREAD_MAP events:          1  ( 0.0%)
+           CPU_MAP events:          1  ( 0.0%)
+         TIME_CONV events:          1  ( 0.0%)
+     FINISHED_INIT events:          1  ( 0.0%)
+  ibs_op//p stats:
+            SAMPLE events:         15
+      LOST_SAMPLES events:       3991
+
+Note that the total aggregated stats show 1 LOST_SAMPLES event but
+per event stats show 3991 events because it's the actual number of
+dropped samples while the aggregated stats has the number of record.
+Maybe we need to change the per-event stats to 'LOST_SAMPLES count'
+to avoid the confusion.
+
+The code is available at 'perf/bpf-filter-v3' branch in my tree.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Any feedback is welcome.
+
+Thanks,
+Namhyung
+
+Namhyung Kim (8):
+  perf bpf filter: Introduce basic BPF filter expression
+  perf bpf filter: Implement event sample filtering
+  perf record: Add BPF event filter support
+  perf record: Record dropped sample count
+  perf bpf filter: Add 'pid' sample data support
+  perf bpf filter: Add more weight sample data support
+  perf bpf filter: Add data_src sample data support
+  perf bpf filter: Add logical OR operator
+
+ tools/lib/perf/include/perf/event.h          |   2 +
+ tools/perf/Documentation/perf-record.txt     |  15 +-
+ tools/perf/Makefile.perf                     |   2 +-
+ tools/perf/builtin-record.c                  |  38 ++--
+ tools/perf/util/Build                        |  16 ++
+ tools/perf/util/bpf-filter.c                 | 135 +++++++++++++++
+ tools/perf/util/bpf-filter.h                 |  49 ++++++
+ tools/perf/util/bpf-filter.l                 | 159 +++++++++++++++++
+ tools/perf/util/bpf-filter.y                 |  78 +++++++++
+ tools/perf/util/bpf_counter.c                |   3 +-
+ tools/perf/util/bpf_skel/sample-filter.h     |  27 +++
+ tools/perf/util/bpf_skel/sample_filter.bpf.c | 172 +++++++++++++++++++
+ tools/perf/util/evlist.c                     |  25 ++-
+ tools/perf/util/evsel.c                      |   2 +
+ tools/perf/util/evsel.h                      |   7 +-
+ tools/perf/util/parse-events.c               |   8 +-
+ tools/perf/util/session.c                    |   3 +-
+ 17 files changed, 706 insertions(+), 35 deletions(-)
+ create mode 100644 tools/perf/util/bpf-filter.c
+ create mode 100644 tools/perf/util/bpf-filter.h
+ create mode 100644 tools/perf/util/bpf-filter.l
+ create mode 100644 tools/perf/util/bpf-filter.y
+ create mode 100644 tools/perf/util/bpf_skel/sample-filter.h
+ create mode 100644 tools/perf/util/bpf_skel/sample_filter.bpf.c
+
+
+base-commit: f9fa0778ee7349a9aa3d2ea10e9f2ab843a0b44e
+-- 
+2.39.2.637.g21b0678d19-goog
+
