@@ -2,88 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64E4C636D7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 04:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE6BC636D7
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 05:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232889AbjBWE4q (ORCPT
+        id S233248AbjBWFx1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 23:56:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57978 "EHLO
+        Thu, 23 Feb 2023 00:53:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232305AbjBWE4p (ORCPT
+        with ESMTP id S233240AbjBWFx0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 23:56:45 -0500
-Received: from msg-1.mailo.com (msg-1.mailo.com [213.182.54.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A31D31E3F;
-        Wed, 22 Feb 2023 20:56:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1677128150; bh=mvZGstpEL9ZF5XhvQ8Sk4puue/WRYuf6cEKinTtT/nw=;
-        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
-         MIME-Version:Content-Type:In-Reply-To;
-        b=QU9Kis/rEzizbq+lzNCdr8jN2+g4D+sXrcdrvBAWw0DOq/gGoBYUB8eUcj9I1B97+
-         Kc4kkwBVJ/BW8xWmMpBgFodi63UiGDSJlhHiekOvGEZ5BnjoI6ZdzyEPRroYSCYMhR
-         gff54v0s9Itetb+MsVWZAVyHscJVjpTONNy7gMk4=
-Received: by b-6.in.mailobj.net [192.168.90.16] with ESMTP
-        via ip-206.mailobj.net [213.182.55.206]
-        Thu, 23 Feb 2023 05:55:50 +0100 (CET)
-X-EA-Auth: w1tJG6aBq96uRusMGtbYZezFwDdxEqXWpbeiOtNbPKP845V9IQXv3WuIxjC78dy6CdXHxxaS2DDH5bqHd+l1Zw==
-Date:   Thu, 23 Feb 2023 10:25:45 +0530
-From:   Deepak R Varma <drv@mailo.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Thu, 23 Feb 2023 00:53:26 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673A936FC1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 21:53:25 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536bfec4a66so106517287b3.5
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 21:53:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DDgXS1ftumo1r65N+SbOeCecYRv//vJu/P3chpFR5JQ=;
+        b=nm+fgnXRAHDlICA2dS9MgRkbQs2nSJVBBOYglg3/KRf4PfqmJIHgcrQMjNcz9Imaye
+         3XuYy/14YPK1YzI98f3OtdXzP+LyJywgOkBk7gjTk3Lg0WkzEGFjbSGpHQOBMOBY13o5
+         GvW0Iku8BKE9SFt7eW9e3BOTuaCs685odbhFnO/6TdUKtAyk9qKZXplCsm/3S6+PmCwO
+         XX13ETDSg5gEUyBVnFGjBmB6KLBP1gCFpnpBTr+GxC5ACwJdH+N/hl2Ak3tvry1+zALV
+         DBWZ3fXGZbPzZnekrzozq9Zc2vGygAMxvhQUj/Ve9RgEBEi/kvOp2xU4EvY1gIuWjJkt
+         caIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DDgXS1ftumo1r65N+SbOeCecYRv//vJu/P3chpFR5JQ=;
+        b=uk0PYG2XCLhyy2hs/LuYDDPVaGgoeT4GacfutJUL9xnSx8pSZiVPfkOwtF+gkPuCYO
+         80uYtzVuGOhxKd3mzUysfM7CY3TGm4QGNo4CH5A1AUlo38V6Kuhoy4mfZsBbaksjwD8e
+         db+YtArX6VL/1jH4FCvao6DHguabJP8VeWTXI8xo+pJ5HRoY2TxrP3Fll4X/RVoJ3QMW
+         TFp5qAf8KUvsYRJbukFpig0cgbu1ZubF7PcCxxkj8aZGzcXmjnUJReoZbvRHEt3r/1jT
+         D+CjiSes40b2u4ZniifXAccN3mu5Lcmok3GjG66KB3TrhglZh/3pVegaUn4uHrKGRFYv
+         wrbw==
+X-Gm-Message-State: AO0yUKXinoMpYA4Bre4kzP6Kj37QnPeksHDil2JSXchK1MEYq5iCcks+
+        fFbQIFZ+1/q8JCEgYpdcyNLT/wVEBjxj
+X-Google-Smtp-Source: AK7set+p2Eid2y8XQfngFt7UiVeZneEnwLO+j03PtLgelli3+OybfcZRHUyv64woWmRAA9xg93yark0S4EKT
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9002:67cd:9e6b:7083])
+ (user=irogers job=sendgmr) by 2002:a05:6902:138d:b0:a09:314f:9f09 with SMTP
+ id x13-20020a056902138d00b00a09314f9f09mr1623114ybu.6.1677131604657; Wed, 22
+ Feb 2023 21:53:24 -0800 (PST)
+Date:   Wed, 22 Feb 2023 21:53:03 -0800
+Message-Id: <20230223055306.296179-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
+Subject: [PATCH v1 0/3] Update Alderlake and IcelakeX events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>,
-        Deepak R Varma <drv@mailo.com>
-Subject: Re: [PATCH v2 1/3] perf/x86/core: Use sysfs_emit() in show()
- callback function
-Message-ID: <Y/bx0Q6XRv0mNdAT@ubun2204.myguest.virtualbox.org>
-References: <cover.1676987821.git.drv@mailo.com>
- <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
- <Y/Z8qUYDXPFlzdsY@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/Z8qUYDXPFlzdsY@hirez.programming.kicks-ass.net>
+        Ian Rogers <irogers@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 22, 2023 at 09:35:53PM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 21, 2023 at 07:36:12PM +0530, Deepak R Varma wrote:
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 85a63a41c471..27c03e6dcb5d 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -1896,9 +1896,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
-> >  		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
-> >  			next_str = strchr(str, ';');
-> >  			if (next_str)
-> > -				return snprintf(page, next_str - str + 1, "%s", str);
-> > -			else
-> > -				return sprintf(page, "%s", str);
-> > +				return sysfs_emit(page, "%s", str);
-> >  		}
-> >  		str = strchr(str, ';');
-> >  		str++;
-> 
-> How is this correct ?!?
+Update Alderlake and IcelakeX events to v1.19.
 
-oops.. that is bad on my part. My apologies for the wrong code.
-I will correct it and send in v3.
+Developed on the perf-tools-next branch of:
+git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
 
-Thank you Peter.
+Ian Rogers (3):
+  perf vendor events intel: Update alderlake to v1.19
+  perf vendor events intel: Update alderlaken to v1.19
+  perf vendor events intel: Update icelakex to v1.19
 
-Regards,
-./drv
+ .../pmu-events/arch/x86/alderlake/memory.json |  8 +++++
+ .../arch/x86/alderlake/pipeline.json          | 10 ++++++
+ .../arch/x86/alderlaken/memory.json           |  7 +++++
+ .../pmu-events/arch/x86/icelakex/cache.json   |  8 +++++
+ .../arch/x86/icelakex/floating-point.json     | 31 +++++++++++++++++++
+ .../arch/x86/icelakex/pipeline.json           | 10 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  6 ++--
+ 7 files changed, 77 insertions(+), 3 deletions(-)
 
+-- 
+2.39.2.637.g21b0678d19-goog
 
