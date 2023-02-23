@@ -2,131 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEBAC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Feb 2023 23:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE8C636D6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 00:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232774AbjBVXCc (ORCPT
+        id S232880AbjBWA2v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 18:02:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
+        Wed, 22 Feb 2023 19:28:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233117AbjBVXBz (ORCPT
+        with ESMTP id S232865AbjBWA2v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 18:01:55 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3DB474F1;
-        Wed, 22 Feb 2023 15:01:54 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id p5so5015400pgh.11;
-        Wed, 22 Feb 2023 15:01:54 -0800 (PST)
+        Wed, 22 Feb 2023 19:28:51 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B8817171
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 16:28:49 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id ko13so11570336plb.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 16:28:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7w5v6HDDIJM40WcjLFww/rgpyST+M1urWgPilPWBon8=;
-        b=YQ5wHmi8qisFfdU/P7pajLC17qKNsBusu4tx8BKHw1MgBV8pqOWkvPqhfO9Elwof30
-         G0wAxMBquNFoXLr0ZLCDpyDZxAzdhk6yhj+t/7r5AK78AEQwN5e5wNZc6Mh5l0q3lu1x
-         e5jmksxSksTDOAgw8U4YZmoZ8/5oX9HwMn/C7N0gNd1lJtcaXraM9Es9UkvX5Mo0zqq2
-         YMLBU0ULesrvTHvBqig9YC8WJRgvoQJ+fHYIS61t8V4GYr/9CsS4YfFhvy8Vz2vFlwCQ
-         cYIIzFIeeNwTOzFAIZPhADQcJis3sbLgG74+lpdOxkEkq9I6LVgFEeFCOuY/wYy7rUyi
-         HQJw==
+        d=atishpatra.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WO6JN/lm3lqcQUnXcLoikkeEf2tkfRdlWGJSxQRLbXY=;
+        b=F82qGBR6+LJm7hgQrtY1K9rv0f84ccQwl2P9aVuk3adqaJXZb4qRmdhXYeXAuWZcQw
+         9eIsELi6Zifxx/0gWK4pSECx6ypFlVV0pIDbrFGxgXwxU8N2XYR3VqYDRTcvef+jjprR
+         z6sH3x1QwlrRaeO/9R5wENE/GLujCk8qs3UTI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7w5v6HDDIJM40WcjLFww/rgpyST+M1urWgPilPWBon8=;
-        b=e5NeTBPWtIwt1ZO8+zkyLD/gRP5Qaas5DgTA10559/AFSGeIEjzA6n1D+FkX0FCC9S
-         HIugSTJ1eNSbnRIdp7zRjJzyEahHs9PRkiOst5LLfjbQW8qLzsYijlwGS4PDVoSTBNOW
-         EpBGThp2+Bf0R4jN9F0I3Ke2u2BwEsPOtasq6PFewCmWBu/HG9TblbqWGDy2sh6CMd8Z
-         foXVQkxBJJ1aYgxRaxnqJiyLtXvD8knsRsltuG7ZUZmKz18ez06X5OG9PIn+N7ea3in5
-         4FkiFWAjdzfAo9R7Bo32Dwc7LoP7n+zmY4kxluenOrB73ukfj7a0nCWUm+XNz0bcLrKt
-         dVRQ==
-X-Gm-Message-State: AO0yUKXkptEKVfGWyF207uHTG41DX2ndr5NmYE1JbH2JJbWVICzIu/CI
-        tnwYtXVE0ZsvNgfI7rcwqtE=
-X-Google-Smtp-Source: AK7set+2ns9vUVl6u4tJC3dwYZ0/+HuMiYjCeBZp5p9NTYLMcRVLcZRieOOZtjPcXGJOHIzNdWbVlQ==
-X-Received: by 2002:aa7:9e4b:0:b0:5d6:138f:5596 with SMTP id z11-20020aa79e4b000000b005d6138f5596mr2824208pfq.14.1677106913583;
-        Wed, 22 Feb 2023 15:01:53 -0800 (PST)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:8f76:587d:f250:fecf])
-        by smtp.gmail.com with ESMTPSA id s1-20020aa78281000000b005ccbe5346ebsm3895127pfm.163.2023.02.22.15.01.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Feb 2023 15:01:53 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 6/8] perf bpf filter: Add more weight sample data support
-Date:   Wed, 22 Feb 2023 15:01:39 -0800
-Message-Id: <20230222230141.1729048-7-namhyung@kernel.org>
-X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-In-Reply-To: <20230222230141.1729048-1-namhyung@kernel.org>
-References: <20230222230141.1729048-1-namhyung@kernel.org>
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WO6JN/lm3lqcQUnXcLoikkeEf2tkfRdlWGJSxQRLbXY=;
+        b=M6fingjC9YDS91ABFFiEBl1DLSfMkRMhnlJOary9G8fGw7F6Vl9G55tINNTPTbhOFw
+         T27/B/qqk2c+rLic2X+qyndWiS0IK1to5bisfw89wgoCC4C9qrVF+ZdRxDsMoFq0GZr+
+         xKEe9cLiNXAd6nMsw3X2wfSVBt+ERlXLoNYdH5btb+PvmPGKhKLrg9CYFMa0R8KcwBHU
+         pf2z8Oo96EfArSsH8c5YBILUABSnr5wllliBKaThpGmk052GfJHS/flQhnYqoAqxWPn6
+         9vXHpx6qWgbcCuTnfCiKcN5R5/LboOTMOr8TN2JXWLeBXbSqfO66SKNAYAm7lIq2lLfw
+         ctdg==
+X-Gm-Message-State: AO0yUKU6OmvQL9rEEVLEUC57EB6LntVlOW0Fyn4puFZW6BpBOP7kdEZS
+        4n8RfMMWNfIgkBXtG3WEueiZMjlW2yf468ZKw6XJySCtX2veaEM=
+X-Google-Smtp-Source: AK7set/XC3/Aa7hXy/PABBf/Y0Z6F8a+4tSvCIQ4QT2fhxgwWrwkyx6sCvKWNMWyowSnBYt4xOIDVtO9q0vznwbApGU=
+X-Received: by 2002:a17:90b:3e8a:b0:233:c312:47a1 with SMTP id
+ rj10-20020a17090b3e8a00b00233c31247a1mr2193217pjb.81.1677112127857; Wed, 22
+ Feb 2023 16:28:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Wed, 22 Feb 2023 16:28:36 -0800
+Message-ID: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
+Subject: Perf event to counter mapping question
+To:     linux-perf-users@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Anup Patel <apatel@ventanamicro.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The weight data consists of a couple of fields with the
-PERF_SAMPE_WEIGHT_STRUCT.  Add weight{1,2,3} term to select them
-separately.  Also add their aliases like 'ins_lat', 'p_stage_cyc'
-and 'retire_lat'.
+Hi All,
+We are trying to figure out what is the best approach to define the
+perf event to programmable counter mappings in RISC-V.
+Until recently, all the programmable counter/event selector registers
+were writable in M-mode (highest privilege mode) only. The firmware
+residing in M-mode
+would discover the mapping from device tree[1] and the perf driver
+relies on SBI PMU[2] interface to discover the mapping between event &
+counters.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf-filter.l                 | 6 ++++++
- tools/perf/util/bpf_skel/sample_filter.bpf.c | 8 ++++++++
- 2 files changed, 14 insertions(+)
+There are new ISA extensions being proposed to make counters /event
+selector register in supervisor mode as well. Thus, a pmu driver
+can directly program the event selectors without relying on firmware.
+However, the kernel needs to be aware of counter mapping to do that.
 
-diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
-index ec12fc4d2ab8..419f923b35c0 100644
---- a/tools/perf/util/bpf-filter.l
-+++ b/tools/perf/util/bpf-filter.l
-@@ -71,6 +71,12 @@ addr		{ return sample(PERF_SAMPLE_ADDR); }
- period		{ return sample(PERF_SAMPLE_PERIOD); }
- txn		{ return sample(PERF_SAMPLE_TRANSACTION); }
- weight		{ return sample(PERF_SAMPLE_WEIGHT); }
-+weight1		{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 1); }
-+weight2		{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 2); }
-+weight3		{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 3); }
-+ins_lat		{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 2); } /* alias for weight2 */
-+p_stage_cyc	{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 3); } /* alias for weight3 */
-+retire_lat	{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 3); } /* alias for weight3 */
- phys_addr	{ return sample(PERF_SAMPLE_PHYS_ADDR); }
- code_pgsz	{ return sample(PERF_SAMPLE_CODE_PAGE_SIZE); }
- data_pgsz	{ return sample(PERF_SAMPLE_DATA_PAGE_SIZE); }
-diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-index dddf38c27bb7..d930401c5bfc 100644
---- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-+++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-@@ -54,6 +54,14 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
- 		return kctx->data->period;
- 	case PERF_SAMPLE_TRANSACTION:
- 		return kctx->data->txn;
-+	case PERF_SAMPLE_WEIGHT_STRUCT:
-+		if (entry->part == 1)
-+			return kctx->data->weight.var1_dw;
-+		if (entry->part == 2)
-+			return kctx->data->weight.var2_w;
-+		if (entry->part == 3)
-+			return kctx->data->weight.var3_w;
-+		/* fall through */
- 	case PERF_SAMPLE_WEIGHT:
- 		return kctx->data->weight.full;
- 	case PERF_SAMPLE_PHYS_ADDR:
+AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
+much easier. It just needs to pick the next available counter.
+On the other hand, x86 allows selective counter mapping which is
+discovered from the json file and maintained in per event
+constraints[4].
+There may be some legacy reasons why it was done in x86 this way[5].
+Please correct me if I am wrong in my understanding/assumption.
+
+Here are a few approaches that can be used to solve it in RISC-V.
+
+1. Continue to use device tree bindings
+Cons: We have to define similar entries for ACPI. It makes
+virtualization difficult as the VMM has to discover and update the
+device tree/ACPI as well.
+
+2. Mandate all-to-all mapping similar to ARM64.
+Note: This is only for programmable counters. If the platform supports
+any fixed counters (i.e. can monitor
+only a specific event), that needs to be provisioned via some other
+method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
+AMU not PMU.
+
+3. All platforms need to define which subset of events can be
+monitored using a subset of counters. The platform specific perf json
+file can specify that.
+This approach provides more flexibility but makes the code path a bit
+more complex as the counter mask constraint needs to be maintained per
+event basis.
+
+4. Any other approach ?
+
+Any thoughts on what would be the best approach for RISC-V. It would
+be great to repeat any past mistakes in RISC-V by learning from
+experience from the community.
+
+[1] https://lore.kernel.org/lkml/Y6tS959TaY2EBAdn@spud/T/
+[2] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc#function-find-and-configure-a-matching-counter-fid-2
+[3] https://elixir.bootlin.com/linux/v6.2/source/arch/arm64/kernel/perf_event.c#L899
+[4] https://elixir.bootlin.com/linux/latest/source/arch/x86/events/core.c#L876
+[5] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1978937.html
 -- 
-2.39.2.637.g21b0678d19-goog
-
+Regards,
+Atish
