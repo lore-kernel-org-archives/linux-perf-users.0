@@ -2,99 +2,105 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31E5C636D7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 08:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D3BC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 10:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233405AbjBWI1R (ORCPT
+        id S232110AbjBWKGj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 03:27:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
+        Thu, 23 Feb 2023 05:06:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232802AbjBWI1Q (ORCPT
+        with ESMTP id S233601AbjBWKGg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 03:27:16 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71584AFD5;
-        Thu, 23 Feb 2023 00:27:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=R1GIMlyP5PmQ6SSQoioYTffHvrdpX2DoA1X1TWCwifQ=; b=jS9dsEsb5Fd/0eEkO0zUtow29J
-        o5wgECtpniTBjdA+Vb0yrmQPVKc2v8KOZHZTyVVbtgyaibYrMJU9ZBpGg+TMVh/IkLkWabfplx+Br
-        tmO+FrxbsBNroteuBOZUTbZjhfgxSlWczot+KzJ8kZnWY43ZtNv0Ky68OTsKb2/X19u8lNwemqdeF
-        Qi/AsX8fwFYr1FQOZCQgKZb6AE2hl1rNf86uTdhXvbKb4/OVH47bpyQQYIgZoiQj1H7vm/tTzl+tb
-        mU0rS+kkPKl6pIQBaFJHMsj2q3uf2YsceGb70dXOQw62BFBSp+goy/3u4Go25kRBviu5U49H+kC1o
-        2X2QkhFA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pV6wW-00ECNn-Jw; Thu, 23 Feb 2023 08:27:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 942BF30013F;
-        Thu, 23 Feb 2023 09:27:07 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3025620831B67; Thu, 23 Feb 2023 09:27:07 +0100 (CET)
-Date:   Thu, 23 Feb 2023 09:27:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Beeman Strong <beeman@rivosinc.com>,
-        Anup Patel <apatel@ventanamicro.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Subject: Re: Perf event to counter mapping question
-Message-ID: <Y/cjW8qVhRTPiz0t@hirez.programming.kicks-ass.net>
-References: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
+        Thu, 23 Feb 2023 05:06:36 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E92F39CF1;
+        Thu, 23 Feb 2023 02:06:29 -0800 (PST)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PMpWd5ZDszRs8M;
+        Thu, 23 Feb 2023 18:03:41 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Thu, 23 Feb 2023 18:05:21 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH] perf: fix counting when initial delay configured
+Date:   Thu, 23 Feb 2023 15:58:00 +0800
+Message-ID: <20230223075800.1795777-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 22, 2023 at 04:28:36PM -0800, Atish Patra wrote:
+When creating counters with initial delay configured, the enable_on_exec
+field is not set. So we need to enable the counters later. The problem
+is, when a workload is specified the target__none() is still true. So
+we also need to check stat_config.initial_delay.
 
-> AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
-> much easier. It just needs to pick the next available counter.
-> On the other hand, x86 allows selective counter mapping which is
-> discovered from the json file and maintained in per event
-> constraints[4].
+Before this fix the event is not counted:
+$ ./perf stat -e instructions -D 100 sleep 2
+Events disabled
+Events enabled
 
-All the contraint management is done in kernel, and yes, it's a giant
-pain in the rear side.
+ Performance counter stats for 'sleep 2':
 
-From what I understand the reason for these contraints is complexity of
-implementation, less constraints is more 'wires' in the hardware.
+     <not counted>      instructions
 
-With PMU use being ever more popular, we're seeing the x86 PMU move
-towards less constraints -- although I don't think we'll ever get rid of
-them :/
+       1.901661124 seconds time elapsed
 
-> 2. Mandate all-to-all mapping similar to ARM64.
+       0.001602000 seconds user
+       0.000000000 seconds sys
 
-If at all possible, I would strongly recommend taking this route. Yes,
-the hardware people will complain, but newer x86 hardware having less,
-or simpler, constraints might be sufficient to convince them.
+After fix it works:
+$ ./perf stat -e instructions -D 100 sleep 2
+Events disabled
+Events enabled
 
-(and if you do have to do contraints, please take a lesson from x86 and
- *never* allow overlapping contraints as AMD had, solving those
- constraints is not fun)
+ Performance counter stats for 'sleep 2':
 
-As you note, this is *much* simpler to program and virtualize.
+           404,214      instructions
 
-> Note: This is only for programmable counters. If the platform supports
-> any fixed counters (i.e. can monitor
-> only a specific event), that needs to be provisioned via some other
-> method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
-> AMU not PMU.
+       1.901743475 seconds time elapsed
 
-So free running counters are ideal and fairly simple to multiplex/use.
+       0.001617000 seconds user
+       0.000000000 seconds sys
 
-The moment you start adding overflow interrupts / filters and any other
-complexities to fixed function counters it becomes a mess (look at the
-x86 PMU again).
+Fixes: c587e77e100f ("perf stat: Do not delay the workload with --delay")
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/builtin-stat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 9f3e4b257516..c71d85577de6 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -544,7 +544,7 @@ static int enable_counters(void)
+ 	 * - we don't have tracee (attaching to task or cpu)
+ 	 * - we have initial delay configured
+ 	 */
+-	if (!target__none(&target)) {
++	if (!target__none(&target) || stat_config.initial_delay) {
+ 		if (!all_counters_use_bpf)
+ 			evlist__enable(evsel_list);
+ 	}
+-- 
+2.25.1
+
