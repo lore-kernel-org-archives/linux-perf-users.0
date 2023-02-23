@@ -2,116 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D52CC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 18:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B15C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 21:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232503AbjBWSrX (ORCPT
+        id S229538AbjBWVuE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 13:47:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58826 "EHLO
+        Thu, 23 Feb 2023 16:50:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231811AbjBWSrP (ORCPT
+        with ESMTP id S229479AbjBWVuD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 13:47:15 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB8915892
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 10:46:59 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id g17so2216701lfv.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 10:46:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=d84WjkOkqupHcw+FU5vzhrvdpAfWUWehoXECwf0pUzI=;
-        b=qhm3hPm+oSJ4s1ShP0lapEUYR5IkwmhP+F+TJeQKrxZd+TPQYlMiwjnu0Bj10ztB0Y
-         YVurYzUsyGsKrzwbqRkGwEmL9maWHZaHGOOA65qnrC6JLnKcGptkWpvgQMgseJZlUAH2
-         iYEoFhf2x9kip/2gCIgUrrWz9EeWQvDPbx5zbpqbicLx2RZgcVWR5xKL1BQro2kthufd
-         kXPaewWe4ha8b3ROmFmaN0PuS2+nM4kSds4IAapt12zwv+KDBqlfRMQJj64QvmhtF2nf
-         c+ZepL+WBfUJtsnpJmB//rjxP68pXKk+MNswp83Ty3nkVa+jVVkAAnxXoFpnZycxev4B
-         pYmQ==
+        Thu, 23 Feb 2023 16:50:03 -0500
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB1DF77B;
+        Thu, 23 Feb 2023 13:50:02 -0800 (PST)
+Received: by mail-vs1-f51.google.com with SMTP id f13so13962855vsg.6;
+        Thu, 23 Feb 2023 13:50:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d84WjkOkqupHcw+FU5vzhrvdpAfWUWehoXECwf0pUzI=;
-        b=6uUnr2pZtfK18DfVcshGO8J3t1xyhV8Mw73FwZ4G8cWo24kKLJmspORyoOOuSu/+87
-         TSo6NWIoLiQ4mwHNF+T3h7O7sIksZopXabtVwFTxLyHReoOtk87Th70GoJfrEQXs9IB1
-         g8VsnOwRn3n63Ly2iOiG29XG7GDI8nH74B789i76KH0HGodyBpNrGexd3zAjM41cH8Wp
-         aYFdHnxT3kgxvFEIaIcFb/VhSw5DAP0ZYn+CvFB4oJEWO2K6eQqdFvFR4gC16931Y922
-         3X958vAMSJhUFMqTtwkAyB70hpqdWo+oE9iNPrjIt3VZIS5jdjaR0TP9QshFu01Z3DzV
-         TiSg==
-X-Gm-Message-State: AO0yUKVn877Tic7G0L0JFb2Z8iiYwWoGTk0Jk9s7WsE9snAuSybCVAVr
-        WjlW+BRA7KvaPn6KLEncKyILuagGlUmARXWLWL7i4Q==
-X-Google-Smtp-Source: AK7set9GVMhv/MFxdE4YCHJ+J6E6QpFq7wGeHK54sZrlaJUASkgEtczMsrA24TNPaRXTbFQJxd/Sez72HlZanbuvKhg=
-X-Received: by 2002:ac2:5689:0:b0:4d5:ca42:aeed with SMTP id
- 9-20020ac25689000000b004d5ca42aeedmr4072955lfr.13.1677178017989; Thu, 23 Feb
- 2023 10:46:57 -0800 (PST)
+        bh=r7xjpQc7ELJpfmCL2VOzLnnU8rHD9JJ2+wguahKqJjI=;
+        b=JDR+mjehDw9066HjWSUhKCfovzP1o/0XRCMGH4RZ8MCkJ0Z1KECZquWufO47srnuq6
+         jVXa9OHBkdymMyzj96esMyrjZbuiK74RXNcTKKT7gtNll7BYULqyepQ9ufJGL0CrCCHT
+         jUA+/H6ImJtRl6MtQow8uKUsuJoiPkSt4hiJO6/nq5AoXZaQ6689iTWww/oTqFMpFSfU
+         o0AAyjglT74kwELY7/FO8qrTZ+ljO7HbmBmBkrz1hpXeiJ/ahhDDt1KJ0kjlNTuncTgw
+         mrUJ7OVsKwsyggnonkfrhgtEG+BKP2afi7SYLxKGSwSengksy3/pF6ODi1WCmJuZV0pG
+         d0xg==
+X-Gm-Message-State: AO0yUKWiOXCjkQJCU58eswMKs3+gP7LF67BXxdytxV49swHJJocIuyNj
+        uQsIbn9Vn+/od7Gh5HXWI394M/sVhlwuXittEvw=
+X-Google-Smtp-Source: AK7set8NGh1mxIbFg7MzYyrjxYgDjfkKuIVijdNNHXQP92atWvUPPv0g5fcRYVQYo4ZpUOitB2uTTRfh81jftsFWfes=
+X-Received: by 2002:a67:e182:0:b0:411:fd99:bc47 with SMTP id
+ e2-20020a67e182000000b00411fd99bc47mr921766vsl.2.1677189001891; Thu, 23 Feb
+ 2023 13:50:01 -0800 (PST)
 MIME-Version: 1.0
-References: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
- <Y/cjW8qVhRTPiz0t@hirez.programming.kicks-ass.net>
-In-Reply-To: <Y/cjW8qVhRTPiz0t@hirez.programming.kicks-ass.net>
-From:   Beeman Strong <beeman@rivosinc.com>
-Date:   Thu, 23 Feb 2023 10:46:46 -0800
-Message-ID: <CAP55G9CmOai+L_5yhqAQT586sas5+zSc=NgeJZVa6U8WzQYf+Q@mail.gmail.com>
-Subject: Re: Perf event to counter mapping question
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Atish Patra <atishp@atishpatra.org>,
-        linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Anup Patel <apatel@ventanamicro.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+References: <20230219061329.1001079-1-namhyung@kernel.org> <Y/d8juzJIRHdtKlQ@kernel.org>
+In-Reply-To: <Y/d8juzJIRHdtKlQ@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 23 Feb 2023 13:49:49 -0800
+Message-ID: <CAM9d7cgxJEMioUAqVN7g+GVfmEYtJ3S1tGyNhdQH_qv7wYJAFg@mail.gmail.com>
+Subject: Re: [RFC/PATCHSET 0/8] perf record: Implement BPF sample filter (v2)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Trying again:
-Hi Peter, thanks for the feedback.  Can you say more about AMD's
-overlapping constraints?
+On Thu, Feb 23, 2023 at 6:47 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Sat, Feb 18, 2023 at 10:13:21PM -0800, Namhyung Kim escreveu:
+> > Hello,
+> >
+> > There have been requests for more sophisticated perf event sample
+> > filtering based on the sample data.  Recently the kernel added BPF
+> > programs can access perf sample data and this is the userspace part
+> > to enable such a filtering.
+> >
+> > This still has some rough edges and needs more improvements.  But
+> > I'd like to share the current work and get some feedback for the
+> > directions and idea for further improvements.
+> >
+> > v2 changes)
+> >  * fix build error with the misc field  (Jiri)
+> >  * add a destructor for filter expr  (Ian)
+> >  * remove 'bpf:' prefix  (Arnaldo)
+> >  * add '||' operator
+> >
+> > The kernel changes are in the tip.git tree (perf/core branch) for now.
+> > perf record has --filter option to set filters on the last specified
+> > event in the command line.  It worked only for tracepoints and Intel
+> > PT events so far.  This patchset extends it to have 'bpf:' prefix in
+> > order to enable the general sample filters using BPF for any events.
+> >
+> > A new filter expression parser was added (using flex/bison) to process
+> > the filter string.  Right now, it only accepts very simple expressions
+> > separated by comma.  I'd like to keep the filter expression as simple
+> > as possible.
+> >
+> > It requires samples satisfy all the filter expressions otherwise it'd
+> > drop the sample.  IOW filter expressions are connected with logical AND
+> > operations implicitly.
+> >
+> > Essentially the BPF filter expression is:
+> >
+> >   <term> <operator> <value> (("," | "||") <term> <operator> <value>)*
+>
+> So "," means "&&" ?
 
+Right. :)
 
-On Thu, Feb 23, 2023 at 12:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> On Wed, Feb 22, 2023 at 04:28:36PM -0800, Atish Patra wrote:
->
-> > AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
-> > much easier. It just needs to pick the next available counter.
-> > On the other hand, x86 allows selective counter mapping which is
-> > discovered from the json file and maintained in per event
-> > constraints[4].
->
-> All the contraint management is done in kernel, and yes, it's a giant
-> pain in the rear side.
->
-> From what I understand the reason for these contraints is complexity of
-> implementation, less constraints is more 'wires' in the hardware.
->
-> With PMU use being ever more popular, we're seeing the x86 PMU move
-> towards less constraints -- although I don't think we'll ever get rid of
-> them :/
->
-> > 2. Mandate all-to-all mapping similar to ARM64.
->
-> If at all possible, I would strongly recommend taking this route. Yes,
-> the hardware people will complain, but newer x86 hardware having less,
-> or simpler, constraints might be sufficient to convince them.
->
-> (and if you do have to do contraints, please take a lesson from x86 and
->  *never* allow overlapping contraints as AMD had, solving those
->  constraints is not fun)
->
-> As you note, this is *much* simpler to program and virtualize.
->
-> > Note: This is only for programmable counters. If the platform supports
-> > any fixed counters (i.e. can monitor
-> > only a specific event), that needs to be provisioned via some other
-> > method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
-> > AMU not PMU.
->
-> So free running counters are ideal and fairly simple to multiplex/use.
->
-> The moment you start adding overflow interrupts / filters and any other
-> complexities to fixed function counters it becomes a mess (look at the
-> x86 PMU again).
+> I understand that its less characters, but can't we use the well
+> established '&&' instead? :-)
+
+It's doable but I was a bit afraid of the complexity or confusion
+it might bring up.  It should handle expressions like 'A && B || C'
+then we need to be clear on the precedence of them.  Currently
+it would behave like 'A && (B || C)' but users might expect
+'(A && B) || C'.
+
+Then we might want to add the parentheses explicitly to adjust
+the operator priority.  That could result in complex expressions
+possibly with nested parentheses.  I'm not sure if we really want
+this.  Considering the restrictions in BPF, I think we should keep
+the expressions as simple as possible.
+
+Thanks,
+Namhyung
