@@ -2,119 +2,80 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3515CC636D6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 03:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C96C636D7
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 03:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232913AbjBWDOO (ORCPT
+        id S232910AbjBWD6W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 22:14:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58056 "EHLO
+        Wed, 22 Feb 2023 22:58:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231726AbjBWDON (ORCPT
+        with ESMTP id S231214AbjBWD6V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 22:14:13 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1F5212AA;
-        Wed, 22 Feb 2023 19:14:12 -0800 (PST)
-Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PMdKM68dZzKmMq;
-        Thu, 23 Feb 2023 11:09:11 +0800 (CST)
-Received: from [10.174.179.163] (10.174.179.163) by
- kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Thu, 23 Feb 2023 11:14:01 +0800
-Message-ID: <0e26e06a-37af-8905-5b87-d1f96a74ab67@huawei.com>
-Date:   Thu, 23 Feb 2023 11:14:00 +0800
+        Wed, 22 Feb 2023 22:58:21 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C4610253
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 19:58:20 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id iv11-20020a05600c548b00b003dc52fed235so6952612wmb.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 19:58:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IxsGBXV15vlKxvjhvdM60Z0zaiMtg1YCb2+rbW/W2ro=;
+        b=f62pn7qnbDZPQPC27XciIzjpEUO9N1R8bF4LgHcNulv5+2GQNhIhYRglneCR0HRN+D
+         UyWBjuyBG66Y3NmxrSrAgpKVv6WL+hzFIo5B9COZ5TIQPVhATe8RaTz7kNZVJUDFNwPY
+         bGM/X0mRtNdfRRTF+xI5/dkRUuqIMLlwXO5wWgZTPQUkTkuUgpMkkmulBxIFNT3VoRx6
+         e3tSdmTDUg7WhUcEnAt+F1yHhDjJz7V96LkfkOjbmxgZL4HdlSHhGfaYzIHhJtNHGJq3
+         4zQ3zVUHqLJkR9TY1F3wewEOcbZTgn9W7e75rb+YhFP/ZEch5Od8yGskheTAw/m37okN
+         nWvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IxsGBXV15vlKxvjhvdM60Z0zaiMtg1YCb2+rbW/W2ro=;
+        b=GTNlKnBvND5wxaItzb/Ib2wi+rs9h+Ed5CZAgccMG/V2lst9ceu6Vakz3eRyftHb/w
+         1K99mKNMqTtYlkjGilYThp4PPSJjR5Y2doJRQMO5IA1ug0kwoMPnOS2rJSjDWx6c2Mlf
+         wy4rDPkMM+7qmHVVOBJHjX8etAhjRwz1VuPuZf25kdJZTHqvU9LGiAr5WZFpCFT0BbrW
+         wQ3dlzPJ2JfZPQHXN/cdAILnONhbDjPcpGU2J92qBY4YrxFsAIOJFddb2q+pP9Yfi6rw
+         9eTl+97ZCgcb18VLVjWJz/3HGUXB9abV4rCHgHD35ZNuTfiaDxj9qKeRm7zGYxvwk9Q5
+         qBPw==
+X-Gm-Message-State: AO0yUKVA9YnTHld7/rgJryB1eK+Tur0fsOxnJWVqIaXcapfcVfou04Os
+        1Na1443bIjvYy4DdYGHOB5jguyR0vLu5/HPgM9WK5g==
+X-Google-Smtp-Source: AK7set81Io+7cYMCH8vgLkj3wEespo3eo98ecXfzfsqmr2KHVd8D8Oi4GQsLqaZX1HE9YoYR0AXH41YD+LNq4uhCDz0=
+X-Received: by 2002:a05:600c:1c95:b0:3db:1d5e:699 with SMTP id
+ k21-20020a05600c1c9500b003db1d5e0699mr1152414wms.195.1677124698785; Wed, 22
+ Feb 2023 19:58:18 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [RFC PATCH v4] x86/kdump: terminate watchdog NMI interrupt to
- avoid kdump crashes
-Content-Language: en-US
-From:   Zeng Heng <zengheng4@huawei.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
-        <tiwai@suse.de>, <jolsa@kernel.org>, <vbabka@suse.cz>,
-        <keescook@chromium.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <namhyung@kernel.org>, <bp@alien8.de>, <bhe@redhat.com>,
-        <eric.devolder@oracle.com>, <hpa@zytor.com>, <jroedel@suse.de>,
-        <dave.hansen@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <liwei391@huawei.com>,
-        <x86@kernel.org>, <xiexiuqi@huawei.com>, <liaochang1@huawei.com>
-References: <20230217120604.435608-1-zengheng4@huawei.com>
- <Y/ZMEesgPnRR3LsG@hirez.programming.kicks-ass.net>
- <87r0uh5yud.fsf@email.froward.int.ebiederm.org>
- <81f5d521-bc8a-4d1a-fe7e-55487f3d25b3@huawei.com>
-In-Reply-To: <81f5d521-bc8a-4d1a-fe7e-55487f3d25b3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.163]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500024.china.huawei.com (7.221.188.100)
-X-CFilter-Loop: Reflected
+References: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
+ <Y7w2qshoCEjKKVlz@kernel.org> <CAP-5=fUeC2nhUhFN69+sL687csSsoi5=ZEkRH70vUy+kTiF52g@mail.gmail.com>
+In-Reply-To: <CAP-5=fUeC2nhUhFN69+sL687csSsoi5=ZEkRH70vUy+kTiF52g@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 22 Feb 2023 19:58:06 -0800
+Message-ID: <CAP-5=fVaH0p4NkKiQSxaxZnT5zR=hbwSArO2n0L7tCNZwBumKQ@mail.gmail.com>
+Subject: Re: Google Summer-of-Code 2023
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The Linux Foundation was selected as a GSoC organization for 2023!
+https://summerofcode.withgoogle.com/programs/2023/organizations/the-linux-foundation
 
-在 2023/2/23 10:29, Zeng Heng 写道:
->
-> 在 2023/2/23 2:39, Eric W. Biederman 写道:
->> Peter Zijlstra <peterz@infradead.org> writes:
->>
->>> On Fri, Feb 17, 2023 at 08:06:04PM +0800, Zeng Heng wrote:
->>>> If the cpu panics within the NMI interrupt context, there could be
->>>> unhandled NMI interrupts in the background which are blocked by 
->>>> processor
->>>> until next IRET instruction executes. Since that, it prevents nested
->>>> NMI handler execution.
->>>>
->>>> In case of IRET execution during kdump reboot and no proper NMIs 
->>>> handler
->>>> registered at that point (such as during EFI loader)
->> EFI loader?  kexec on panic is supposed to be kernel to kernel.
->> If someone is getting EFI involved that is a bug.
->
-> In kdump path, kexec would start purgatory to verify the secondary 
-> kernel by
->
-> sha256. If verify passed, it would turn the control to EFI loader, and 
-> call the second
->
-> kernel to capture the environment as vmcore file.
->
-> As the mail said, if panic appears within NMI context, we never exit 
-> from that until
->
-> EFI loader handles page fault exception and executes IRET instruction 
-> when exit
->
-> from PF. At this moment, processor would allow the blocked NMI 
-> interrupt raise.
->
->
->>> This kills all of perf, including but not limited to the hardware
->>> watchdog. However, it does nothing to external NMI sources like the NMI
->>> button found on some HP machines.
->>>
->>> Still I suppose it is sufficient for the normal case.
->> I can't think of one why we don't just leave
->> NMIs deliberately disabled
->
-Inative_machine_crash_shutdown() has called lapic_shutdown() to disable 
-any kind of
+This means we're looking for contributors until March 19th:
+https://developers.google.com/open-source/gsoc/timeline
 
-irq, but EFI loader assumes there is no any residual NMIs in the background.
+Some project ideas are listed here:
+https://wiki.linuxfoundation.org/gsoc/2023-gsoc-perf
 
+Please help to share!
 
-Here is the first version for this issue:
+Thanks,
+Ian
 
-https://lore.kernel.org/all/20230110102745.2514694-1-zengheng4@huawei.com/
-
-Zeng Heng
-
->
->> until the crash recover kernel figured out how to enable them safely.
->>
->
+(Resend in plain text because of LKML's HTML filters)
