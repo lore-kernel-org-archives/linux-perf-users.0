@@ -2,121 +2,194 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9D7C636D7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 07:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD8FC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 07:18:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233303AbjBWHCb (ORCPT
+        id S231312AbjBWHSi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 02:02:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48506 "EHLO
+        Thu, 23 Feb 2023 02:18:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233493AbjBWHC2 (ORCPT
+        with ESMTP id S229531AbjBWHSh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 02:02:28 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397244AFE2;
-        Wed, 22 Feb 2023 23:02:02 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id e9so6677917plh.2;
-        Wed, 22 Feb 2023 23:02:02 -0800 (PST)
+        Thu, 23 Feb 2023 02:18:37 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE011F5F7
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 23:18:32 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-53700262a47so69891587b3.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 23:18:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=mdqKjDpknoldjbXgVeqUHUTykf5w/8lk9H2d441sxtg=;
-        b=FJ/Zl852LRpZfzweW3XjqZItvLfXb8d10BfQXkfC2dq/ORvjq0DRh2POWz/HnulYAQ
-         4s1nItn+GP1RK5xIn6OcxS4NyMvRYRUjEtDNnG8+a9du+Cyn5edhETRqk6OB+CHljcTt
-         hcwkzFIqZxJvusfp6Fm1QCXB8SYNY4PaFl3vYzapey6bNc0mnE+WedBtkBQiX3EwXLCZ
-         uKGY7+RpaIRB8n3J6XOFVkcBhu1YQnZID2osD6tTQX02JqCSxv912Bjnj7tMrIdxeQV1
-         q1DK/B2dPv6TAIKF1zhNDvELiyLz1uvW3X7KwDcnuf1pvlHKtsYejVasiHjmqvRXZ+u8
-         YJFA==
+        d=google.com; s=20210112;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iXAeDlZXVCzOH1LqKDfRFH+Nnlw0nQyHAuUwu11nvRY=;
+        b=gme+dLCjCjeQrS7dw8VS93maFpyrhu5Zmp25GduivSACrzqAvIAAq6r72zo6X3cbTH
+         1SpV6w4bVEz+pKjwSz/1FHSFMvQUU/q8XDkvCk8R1r3iyMzs3FvmyA2pQtamrBcOi3HW
+         UDx2iYfwq6sImcWTSGhYkFdceh1kVm2MuxgnEx9dbNmSP7+yeWuj3HbiL94DxnX5IleC
+         6LgsVa6GxavccDMnVFb4WCs/hTml6Z1PeFyqNH3/C366KTqF3/+op7S+7AUyyB9nrmJU
+         U6ZVH9dl05NJ5HhMBvEV7pwphPtakpca6vS8aF1iFlgwMZ5JSigJqSg0LO49MZ44DVhb
+         Tt+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mdqKjDpknoldjbXgVeqUHUTykf5w/8lk9H2d441sxtg=;
-        b=VkoHq/C/7ISfvqTBNNrh7upVm7ed5/xuz8QlWk33HYKeeAPTxoFyosNLU5+8/i+St2
-         8LcP+H06bxdL00Bip2HA4D9Inr2hZPF0OZgVg0xTxpfRSqaUBU55VdKUhQRrELhrxLk/
-         TolJssWcq7aMnkAyG30g7v8sxAsiYh+cBP2+PD1Q80z1vlpqzPa0GW+lHhnnEBdhg5eU
-         Fx+JC48AVa0cY7kZmTCrV8KWDS6I5L7TehrxxsuGdYWDj8+rihUWrAAGz0XrHztxFzTS
-         JyRYmohDQ22Biw5eFRxH6OiCLX67kpPWAV+Vy2CENZTFK0q3kUkOs/HAskD5E73/dmH9
-         aeoA==
-X-Gm-Message-State: AO0yUKU3+tdqb1aLtn2pL3ssG4UOSr0uwofjHGPIiqC5KW9SKMGsi/nY
-        faBxhFJbpkrPmeLo+vCXPRQ=
-X-Google-Smtp-Source: AK7set82OYyCXPIb5mj39rMPSTyj4k8FAK3ZXtDeewEo0KuLS+Wd5dbFCKODHxACj0b43P/ArJPTlw==
-X-Received: by 2002:a17:903:41cd:b0:19a:a6cd:35a8 with SMTP id u13-20020a17090341cd00b0019aa6cd35a8mr12692150ple.25.1677135718170;
-        Wed, 22 Feb 2023 23:01:58 -0800 (PST)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:44b0:ad80:6c0b:4a23:5c4f])
-        by smtp.gmail.com with ESMTPSA id gj5-20020a17090b108500b00231227781d5sm4570725pjb.2.2023.02.22.23.01.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Feb 2023 23:01:57 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] perf inject: Fix --buildid-all not to eat up MMAP2
-Date:   Wed, 22 Feb 2023 23:01:55 -0800
-Message-Id: <20230223070155.54251-1-namhyung@kernel.org>
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iXAeDlZXVCzOH1LqKDfRFH+Nnlw0nQyHAuUwu11nvRY=;
+        b=XL7bbwtBFqivtlePuAyOzDr9APUT5PVVRLgWXNQfFGwPj8+28HTlhoZitCxkmNks91
+         uV6iG4bZYyCCNvWzKAbIjJMzEA7dducvw2Ntqmq7byZDbtnukhy5VCDbYa2sLQbrrXWn
+         hGllYHPZzxRLBOMdEghYC6KLG2ZRmXvouJ6fqtKnYTn9Mkawu0bf7CAdF7yu9brneIuP
+         4I5HNIBg0DTHzibWDI+pOA7UZRUqlXmhgl41TrbvsjcNdtAX2yXZYkunJt4iL9qhBDkj
+         wYudkbog+De0aqO7TPJuecEEmlT3PSUoJ6LbEJ9leqEp2m0QKMdoQyzodlEm1KbLIiPw
+         3GNg==
+X-Gm-Message-State: AO0yUKWHUOTMRmNrrXy7EgyN+Y6o+kzlDqRY5edJbT35EpMZvqZ+Fzd6
+        hGU7eCe3Szq5uvtYON6gZbAvwB6/dtXG
+X-Google-Smtp-Source: AK7set/Wkw8fj89oBF//D3/fhbjw6lAN4fu5/NHTRzd5x1LMXBtFZ22kkHGRjzYle+Rqh3E7YUEzYF4jcKj0
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9002:67cd:9e6b:7083])
+ (user=irogers job=sendgmr) by 2002:a81:4320:0:b0:52e:c77d:3739 with SMTP id
+ q32-20020a814320000000b0052ec77d3739mr1651534ywa.9.1677136711579; Wed, 22 Feb
+ 2023 23:18:31 -0800 (PST)
+Date:   Wed, 22 Feb 2023 23:18:17 -0800
+Message-Id: <20230223071818.329671-1-irogers@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v1 1/2] perf tests stat+csv_output: Switch CSV separator to @
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Claire Jensen <cjense@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When MMAP2 has PERF_RECORD_MISC_MMAP_BUILD_ID flag, it means the record
-already has the build-id info.  So it marks the DSO as hit, to skip if
-the same DSO is not processed if it happens to miss the build-id later.
+Commas may appear in events like:
+cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/
+which causes the commachecker to see more fields than expected. Use @
+as the CSV separator to avoid this.
 
-But it missed to copy the MMAP2 record itself so it'd fail to symbolize
-samples for those regions.
-
-For example, the following generates 249 MMAP2 events.
-
-  $ perf record --buildid-mmap -o- true | perf report --stat -i- | grep MMAP2
-           MMAP2 events:        249  (86.8%)
-
-Adding perf inject should not change the number of events like this
-
-  $ perf record --buildid-mmap -o- true | perf inject -b | \
-  > perf report --stat -i- | grep MMAP2
-           MMAP2 events:        249  (86.5%)
-
-But when --buildid-all is used, it eats most of the MMAP2 events.
-
-  $ perf record --buildid-mmap -o- true | perf inject -b --buildid-all | \
-  > perf report --stat -i- | grep MMAP2
-           MMAP2 events:          1  ( 2.5%)
-
-With this patch, it shows the original number now.
-
-  $ perf record --buildid-mmap -o- true | perf inject -b --buildid-all | \
-  > perf report --stat -i- | grep MMAP2
-           MMAP2 events:        249  (86.5%)
-
-Cc: stable@vger.kernel.org
-Fixes: f7fc0d1c915a ("perf inject: Do not inject BUILD_ID record if MMAP2 has it")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/shell/stat+csv_output.sh | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index f8182417b734..10bb1d494258 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -538,6 +538,7 @@ static int perf_event__repipe_buildid_mmap2(struct perf_tool *tool,
- 			dso->hit = 1;
- 		}
- 		dso__put(dso);
-+		perf_event__repipe(tool, event, sample, machine);
- 		return 0;
- 	}
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index b7f050aa6210..324fc9e6edd7 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -7,6 +7,7 @@
+ set -e
+ 
+ skip_test=0
++csv_sep=@
+ 
+ function commachecker()
+ {
+@@ -34,7 +35,7 @@ function commachecker()
+ 		[ "$x" = "Failed" ] && continue
+ 
+ 		# Count the number of commas
+-		x=$(echo $line | tr -d -c ',')
++		x=$(echo $line | tr -d -c $csv_sep)
+ 		cnt="${#x}"
+ 		# echo $line $cnt
+ 		[[ ! "$cnt" =~ $exp ]] && {
+@@ -54,7 +55,7 @@ function ParanoidAndNotRoot()
+ check_no_args()
+ {
+ 	echo -n "Checking CSV output: no args "
+-	perf stat -x, true 2>&1 | commachecker --no-args
++	perf stat -x$csv_sep true 2>&1 | commachecker --no-args
+ 	echo "[Success]"
+ }
+ 
+@@ -66,7 +67,7 @@ check_system_wide()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x, -a true 2>&1 | commachecker --system-wide
++	perf stat -x$csv_sep -a true 2>&1 | commachecker --system-wide
+ 	echo "[Success]"
+ }
+ 
+@@ -79,14 +80,14 @@ check_system_wide_no_aggr()
+ 		return
+ 	fi
+ 	echo -n "Checking CSV output: system wide no aggregation "
+-	perf stat -x, -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
++	perf stat -x$csv_sep -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
+ 	echo "[Success]"
+ }
+ 
+ check_interval()
+ {
+ 	echo -n "Checking CSV output: interval "
+-	perf stat -x, -I 1000 true 2>&1 | commachecker --interval
++	perf stat -x$csv_sep -I 1000 true 2>&1 | commachecker --interval
+ 	echo "[Success]"
+ }
+ 
+@@ -94,7 +95,7 @@ check_interval()
+ check_event()
+ {
+ 	echo -n "Checking CSV output: event "
+-	perf stat -x, -e cpu-clock true 2>&1 | commachecker --event
++	perf stat -x$csv_sep -e cpu-clock true 2>&1 | commachecker --event
+ 	echo "[Success]"
+ }
+ 
+@@ -106,7 +107,7 @@ check_per_core()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x, --per-core -a true 2>&1 | commachecker --per-core
++	perf stat -x$csv_sep --per-core -a true 2>&1 | commachecker --per-core
+ 	echo "[Success]"
+ }
+ 
+@@ -118,7 +119,7 @@ check_per_thread()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x, --per-thread -a true 2>&1 | commachecker --per-thread
++	perf stat -x$csv_sep --per-thread -a true 2>&1 | commachecker --per-thread
+ 	echo "[Success]"
+ }
+ 
+@@ -130,7 +131,7 @@ check_per_die()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x, --per-die -a true 2>&1 | commachecker --per-die
++	perf stat -x$csv_sep --per-die -a true 2>&1 | commachecker --per-die
+ 	echo "[Success]"
+ }
+ 
+@@ -142,7 +143,7 @@ check_per_node()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x, --per-node -a true 2>&1 | commachecker --per-node
++	perf stat -x$csv_sep --per-node -a true 2>&1 | commachecker --per-node
+ 	echo "[Success]"
+ }
+ 
+@@ -154,7 +155,7 @@ check_per_socket()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x, --per-socket -a true 2>&1 | commachecker --per-socket
++	perf stat -x$csv_sep --per-socket -a true 2>&1 | commachecker --per-socket
+ 	echo "[Success]"
+ }
  
 -- 
 2.39.2.637.g21b0678d19-goog
