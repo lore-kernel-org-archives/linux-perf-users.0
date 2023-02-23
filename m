@@ -2,103 +2,138 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F777C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 02:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874E7C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 02:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232415AbjBWC3m (ORCPT
+        id S233539AbjBWCzq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Feb 2023 21:29:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
+        Wed, 22 Feb 2023 21:55:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231214AbjBWC3l (ORCPT
+        with ESMTP id S233541AbjBWCzp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Feb 2023 21:29:41 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D511258B;
-        Wed, 22 Feb 2023 18:29:39 -0800 (PST)
-Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PMcL423BJzKmMd;
-        Thu, 23 Feb 2023 10:24:44 +0800 (CST)
-Received: from [10.174.179.163] (10.174.179.163) by
- kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Thu, 23 Feb 2023 10:29:34 +0800
-Message-ID: <81f5d521-bc8a-4d1a-fe7e-55487f3d25b3@huawei.com>
-Date:   Thu, 23 Feb 2023 10:29:33 +0800
+        Wed, 22 Feb 2023 21:55:45 -0500
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8FE37B4F
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 18:55:43 -0800 (PST)
+Received: by mail-vs1-xe2e.google.com with SMTP id f13so8727174vsg.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 18:55:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1677120942;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AZET/dAHnThSMI4ijShZNNiovoZM2A1RWGGjD4Jr3zI=;
+        b=cQA7kltWBFhKaJFUORao4wek6jqjyO5D4kYl2n7nRPq3J23ED5n+McNlruyi43uuZl
+         07VJ9zt4Nm++tPV3fZ0GPkp+rOqEcek1ldgMMLzR4f36/FF8Wx5t3CKAazBh3Z13hddI
+         B6W1eOUUTqWrpMBR7j9rrOPL8xVjOZ680Q5kmvqASZuxgvTrFGqiAJ142h0x2kc0WyH5
+         2yZF2L3He+AN7F3B9MVgRoQ6mGhm6rZ//a0QfDtrX3ML2Jo0k74YIAXyAXFaqd+V5q1j
+         xruLkqG7LM1OPIR415ZcAjCnV4/6IEcL4uqzIcrQ9dhQgQhHI8v+wa3uUdGhv0LCzUEf
+         gGwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677120942;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AZET/dAHnThSMI4ijShZNNiovoZM2A1RWGGjD4Jr3zI=;
+        b=eRPMLtlsvUjUrgGWjAMP+H+kamn8PJBYV14NLFCabQRjboVsKsH9Yr8ANzr/mefm7H
+         5+dIveFC2cod0HDlbxVCPEGyeZSyn7+Q24rNNQ5MiTQjWpDhp8s9tQo7N21p0SswNL6o
+         hFrl/UlsDu9eumfu15VnRfQfIocTxPMxLfyrE6kXQj+Q5XqzGGC0bYQAkSyLucI7uVmd
+         OWZcDSc+1mm1nmetBSlwSL5z9iBw/6B+jWVwGuF4mgGDhGkXFguWdkiUnAnji5+9R73Z
+         +RLjW/knUFW+2AyzmAMmQ8kGjzJs20432JTwF067SUX9PxGIKgnm2i4OUFQZAzGJ3E9g
+         mzjw==
+X-Gm-Message-State: AO0yUKU1cV9zxJ57kuapFSHzomzdisl9nE4+lPnroVOxmIWXbZ4lGWTB
+        LqoMCmDQBdQ4B03sRexPEQjYYWmR7oryt257tpgKV01CXRjlsA==
+X-Google-Smtp-Source: AK7set+xIQn5l60WL9i2IviMkablDKXnJOMl8YCsfmyE5doLc73GdhGypaDze9dw46Wo8k5gVoLEbV4HXYtU7CRLrck=
+X-Received: by 2002:a1f:7ccf:0:b0:406:1e33:3ddb with SMTP id
+ x198-20020a1f7ccf000000b004061e333ddbmr1856299vkc.1.1677120942440; Wed, 22
+ Feb 2023 18:55:42 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [RFC PATCH v4] x86/kdump: terminate watchdog NMI interrupt to
- avoid kdump crashes
-Content-Language: en-US
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     <alexander.shishkin@linux.intel.com>, <tglx@linutronix.de>,
-        <tiwai@suse.de>, <jolsa@kernel.org>, <vbabka@suse.cz>,
-        <keescook@chromium.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <namhyung@kernel.org>, <bp@alien8.de>, <bhe@redhat.com>,
-        <eric.devolder@oracle.com>, <hpa@zytor.com>, <jroedel@suse.de>,
-        <dave.hansen@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <liwei391@huawei.com>,
-        <x86@kernel.org>, <xiexiuqi@huawei.com>, <liaochang1@huawei.com>
-References: <20230217120604.435608-1-zengheng4@huawei.com>
- <Y/ZMEesgPnRR3LsG@hirez.programming.kicks-ass.net>
- <87r0uh5yud.fsf@email.froward.int.ebiederm.org>
-From:   Zeng Heng <zengheng4@huawei.com>
-In-Reply-To: <87r0uh5yud.fsf@email.froward.int.ebiederm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.163]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500024.china.huawei.com (7.221.188.100)
-X-CFilter-Loop: Reflected
+References: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
+In-Reply-To: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
+From:   Anup Patel <apatel@ventanamicro.com>
+Date:   Thu, 23 Feb 2023 08:25:31 +0530
+Message-ID: <CAK9=C2Uy_0B6D2TGq35sfrGkp9s1Td=cEsidzDPTDhG7Nq5EWw@mail.gmail.com>
+Subject: Re: Perf event to counter mapping question
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Beeman Strong <beeman@rivosinc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-在 2023/2/23 2:39, Eric W. Biederman 写道:
-> Peter Zijlstra <peterz@infradead.org> writes:
+On Thu, Feb 23, 2023 at 5:58 AM Atish Patra <atishp@atishpatra.org> wrote:
 >
->> On Fri, Feb 17, 2023 at 08:06:04PM +0800, Zeng Heng wrote:
->>> If the cpu panics within the NMI interrupt context, there could be
->>> unhandled NMI interrupts in the background which are blocked by processor
->>> until next IRET instruction executes. Since that, it prevents nested
->>> NMI handler execution.
->>>
->>> In case of IRET execution during kdump reboot and no proper NMIs handler
->>> registered at that point (such as during EFI loader)
-> EFI loader?  kexec on panic is supposed to be kernel to kernel.
-> If someone is getting EFI involved that is a bug.
-
-In kdump path, kexec would start purgatory to verify the secondary kernel by
-
-sha256. If verify passed, it would turn the control to EFI loader, and 
-call the second
-
-kernel to capture the environment as vmcore file.
-
-As the mail said, if panic appears within NMI context, we never exit 
-from that until
-
-EFI loader handles page fault exception and executes IRET instruction 
-when exit
-
-from PF. At this moment, processor would allow the blocked NMI interrupt 
-raise.
-
-
->> This kills all of perf, including but not limited to the hardware
->> watchdog. However, it does nothing to external NMI sources like the NMI
->> button found on some HP machines.
->>
->> Still I suppose it is sufficient for the normal case.
-> I can't think of one why we don't just leave
-> NMIs deliberately disabled
-
-How to just leave NMIs disabled, could you explain it with more details ?
-
-Zeng Heng
-
-> until the crash recover kernel figured out how to enable them safely.
+> Hi All,
+> We are trying to figure out what is the best approach to define the
+> perf event to programmable counter mappings in RISC-V.
+> Until recently, all the programmable counter/event selector registers
+> were writable in M-mode (highest privilege mode) only. The firmware
+> residing in M-mode
+> would discover the mapping from device tree[1] and the perf driver
+> relies on SBI PMU[2] interface to discover the mapping between event &
+> counters.
 >
+> There are new ISA extensions being proposed to make counters /event
+> selector register in supervisor mode as well. Thus, a pmu driver
+> can directly program the event selectors without relying on firmware.
+> However, the kernel needs to be aware of counter mapping to do that.
+>
+> AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
+> much easier. It just needs to pick the next available counter.
+> On the other hand, x86 allows selective counter mapping which is
+> discovered from the json file and maintained in per event
+> constraints[4].
+> There may be some legacy reasons why it was done in x86 this way[5].
+> Please correct me if I am wrong in my understanding/assumption.
+>
+> Here are a few approaches that can be used to solve it in RISC-V.
+>
+> 1. Continue to use device tree bindings
+> Cons: We have to define similar entries for ACPI. It makes
+> virtualization difficult as the VMM has to discover and update the
+> device tree/ACPI as well.
+>
+> 2. Mandate all-to-all mapping similar to ARM64.
+> Note: This is only for programmable counters. If the platform supports
+> any fixed counters (i.e. can monitor
+> only a specific event), that needs to be provisioned via some other
+> method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
+> AMU not PMU.
+>
+> 3. All platforms need to define which subset of events can be
+> monitored using a subset of counters. The platform specific perf json
+> file can specify that.
+> This approach provides more flexibility but makes the code path a bit
+> more complex as the counter mask constraint needs to be maintained per
+> event basis.
+>
+> 4. Any other approach ?
+
+I suggest a 4th approach where by default the kernel assumes all-to-all
+mappings and optionally perf json file can be used to override mappings
+for certain counters. This approach is more like a hybrid approach between
+approach #2 and #3. It work fine with KVM RISC-V as well because Guest/VM
+will assume all-to-all mapping for logical HW counters whereas Host can have
+specific counter mappings.
+
+>
+> Any thoughts on what would be the best approach for RISC-V. It would
+> be great to repeat any past mistakes in RISC-V by learning from
+> experience from the community.
+>
+> [1] https://lore.kernel.org/lkml/Y6tS959TaY2EBAdn@spud/T/
+> [2] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc#function-find-and-configure-a-matching-counter-fid-2
+> [3] https://elixir.bootlin.com/linux/v6.2/source/arch/arm64/kernel/perf_event.c#L899
+> [4] https://elixir.bootlin.com/linux/latest/source/arch/x86/events/core.c#L876
+> [5] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1978937.html
+> --
+> Regards,
+> Atish
+
+Regards,
+Anup
