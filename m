@@ -2,181 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B49C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 13:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E96C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 14:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234274AbjBWNqn (ORCPT
+        id S233787AbjBWOYU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 08:46:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48614 "EHLO
+        Thu, 23 Feb 2023 09:24:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234409AbjBWNqc (ORCPT
+        with ESMTP id S233421AbjBWOYT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 08:46:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B4C584BD;
-        Thu, 23 Feb 2023 05:46:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 469916170C;
-        Thu, 23 Feb 2023 13:45:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F5AC433D2;
-        Thu, 23 Feb 2023 13:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677159915;
-        bh=2pri+T/s3WCeS8rc0Z1BvEcngNYcJQ1Atpo18KxCzEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rl7xb/+rSv7I+dvIXh90eCDQkh1VnIAC5dOu+0gUuKGlIuNMURPtlxq9LZWmOyFUa
-         sD2ihI+ZlnCj4Kji00LahaWxVNtnyEf3+MioiYaENBUC+hvfNMH+pfskrEyq7B0VEi
-         Zysq2gqfcczMuUTCGIOiCzmLC+Eov9hX/BOiD++RcK3bMhZgIrIjG73tvc0A3DMZku
-         UtcMoL9eJpJIDpn6qHT8nIXEB0uqrbng3+UuW5F/ERwPsK5J8dUTjM+XgT4SJQAKmA
-         TNSGcFXaDQHHK4D33jwnHMnVNmJms9cgVD4/b/g/QBSz5MeT52CySdyvy6Op9e1dwd
-         hL5ZPuUzg4SYg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1B8714049F; Thu, 23 Feb 2023 10:45:13 -0300 (-03)
-Date:   Thu, 23 Feb 2023 10:45:13 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Changbin Du <changbin.du@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hui Wang <hw.huiwang@huawei.com>
-Subject: Re: [PATCH] perf: fix counting when initial delay configured
-Message-ID: <Y/dt6QpsCj5AAUE/@kernel.org>
-References: <20230223075800.1795777-1-changbin.du@huawei.com>
+        Thu, 23 Feb 2023 09:24:19 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDFA46B0;
+        Thu, 23 Feb 2023 06:24:18 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31NE5sKV030311;
+        Thu, 23 Feb 2023 14:24:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=QhBLqNAAAUfBo8zrGeabF9XkrAAVmtIUEckwOA5id0g=;
+ b=BrRVoYPFolQtM2DClHYfvsFgzwqMMWpMPJ5Qmah3Cy1zwHb3w4PMfzJ2yEfAnEqLFG9t
+ c9H/Eu3P2qFk465v/MNYsCTvrdQycm6YkKw1q4hZphAFThbeyr9w41HPRBFSgtaNy+2h
+ z1wx5Q2QijJw47C7kUle8N69RJFqUYh8YPinq5yJx3YxUJP+yOC2CztQ7+5e0d0upcgI
+ XVDbY0zUmNHl+nriVsPW+UcawTqflKghqdxe/MMU9W3xivhVYtuMsM1Fo/0/GhKsUY0+
+ 3+WGtx7aN0tfkKJwdoEMOGJhbJtO9X0631z3ahzMlp+PJf8VnClfogoF3aqjwLs3xXj/ bQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nx7k9m3u2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Feb 2023 14:24:04 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31NDqbAV025703;
+        Thu, 23 Feb 2023 14:24:03 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nx7k9m3su-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Feb 2023 14:24:03 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31N7VYn8007325;
+        Thu, 23 Feb 2023 14:24:01 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3ntpa6eryb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Feb 2023 14:24:01 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31NENx6K29294872
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Feb 2023 14:23:59 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B08120040;
+        Thu, 23 Feb 2023 14:23:59 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4665C20043;
+        Thu, 23 Feb 2023 14:23:56 +0000 (GMT)
+Received: from [9.43.40.228] (unknown [9.43.40.228])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Feb 2023 14:23:56 +0000 (GMT)
+Message-ID: <086e2f43-00d2-0738-7d1b-697971161a32@linux.ibm.com>
+Date:   Thu, 23 Feb 2023 19:53:55 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230223075800.1795777-1-changbin.du@huawei.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v5 1/2] perf tools: Sync perf_event_attr::config3 addition
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20220914-arm-perf-tool-spe1-2-v2-v5-0-2cf5210b2f77@kernel.org>
+ <20220914-arm-perf-tool-spe1-2-v2-v5-1-2cf5210b2f77@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <20220914-arm-perf-tool-spe1-2-v2-v5-1-2cf5210b2f77@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: zXUEIAOrF-d-snL_s7cQUj80Mp3Yi4qM
+X-Proofpoint-GUID: 139F4cq_Vr95yZpB0Yc4aDxtUfxlG5-O
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-23_08,2023-02-23_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302230115
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Feb 23, 2023 at 03:58:00PM +0800, Changbin Du escreveu:
-> When creating counters with initial delay configured, the enable_on_exec
-> field is not set. So we need to enable the counters later. The problem
-> is, when a workload is specified the target__none() is still true. So
-> we also need to check stat_config.initial_delay.
+
+
+On 2/18/23 04:02, Rob Herring wrote:
+> Arm SPEv1.2 adds another 64-bits of event filtering control. As the
+> existing perf_event_attr::configN fields are all used up for SPE PMU, an
+> additional field is needed. Add a new 'config3' field.
 > 
-> Before this fix the event is not counted:
-> $ ./perf stat -e instructions -D 100 sleep 2
-> Events disabled
-> Events enabled
-> 
->  Performance counter stats for 'sleep 2':
-> 
->      <not counted>      instructions
-> 
->        1.901661124 seconds time elapsed
-> 
->        0.001602000 seconds user
->        0.000000000 seconds sys
-> 
-> After fix it works:
-> $ ./perf stat -e instructions -D 100 sleep 2
-> Events disabled
-> Events enabled
-> 
->  Performance counter stats for 'sleep 2':
-> 
->            404,214      instructions
-> 
->        1.901743475 seconds time elapsed
-> 
->        0.001617000 seconds user
->        0.000000000 seconds sys
-> 
-> Fixes: c587e77e100f ("perf stat: Do not delay the workload with --delay")
-
-Yeap, even the comment states that we need to enable when initial_delay
-is set :-)
-
-I added the additional test output below.
-
-Namhyung, can you please ack it?
-
-- Arnaldo
-
-Committer testing:
-
-Before:
-
-Lets use stress-ng so that we have lots of samples using a CPU stressor
-and also intermingle the workload output with the messages about when
-the events get enabled (i.e. later on in the workload):
-
-  $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
-  Events disabled
-  stress-ng: info:  [38361] setting to a 1 second run per stressor
-  stress-ng: info:  [38361] dispatching hogs: 32 cpu
-  Events enabled
-  stress-ng: info:  [38361] successful run completed in 1.01s
-
-   Performance counter stats for 'stress-ng -c 32 -t 1':
-
-       <not counted>      instructions:u
-
-         0.916479141 seconds time elapsed
-
-        30.868003000 seconds user
-         0.049851000 seconds sys
-
-
-  Some events weren't counted. Try disabling the NMI watchdog:
-        echo 0 > /proc/sys/kernel/nmi_watchdog
-        perf stat ...
-        echo 1 > /proc/sys/kernel/nmi_watchdog
-  $
-
-After the fix:
-
-  $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
-  Events disabled
-  stress-ng: info:  [40429] setting to a 1 second run per stressor
-  stress-ng: info:  [40429] dispatching hogs: 32 cpu
-  Events enabled
-  stress-ng: info:  [40429] successful run completed in 1.01s
-
-   Performance counter stats for 'stress-ng -c 32 -t 1':
-
-        154117865145      instructions:u
-
-         0.920827644 seconds time elapsed
-
-        30.864753000 seconds user
-         0.073862000 seconds sys
-
-
-  $
-
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  tools/perf/builtin-stat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This matches commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
+> for the kernel queued in linux-next.
+> ---
+>  tools/include/uapi/linux/perf_event.h | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 9f3e4b257516..c71d85577de6 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -544,7 +544,7 @@ static int enable_counters(void)
->  	 * - we don't have tracee (attaching to task or cpu)
->  	 * - we have initial delay configured
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index ea6defacc1a7..a38814ce9485 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -365,6 +365,7 @@ enum perf_event_read_format {
+>  #define PERF_ATTR_SIZE_VER5	112	/* add: aux_watermark */
+>  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+>  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+> +#define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+>  
+>  /*
+>   * Hardware event_id to monitor via a performance monitoring event:
+> @@ -506,6 +507,8 @@ struct perf_event_attr {
+>  	 * truncated accordingly on 32 bit architectures.
 >  	 */
-> -	if (!target__none(&target)) {
-> +	if (!target__none(&target) || stat_config.initial_delay) {
->  		if (!all_counters_use_bpf)
->  			evlist__enable(evsel_list);
->  	}
-> -- 
-> 2.25.1
+>  	__u64	sig_data;
+> +
+> +	__u64	config3; /* extension of config2 */
+
+Patch looks fine to me.
+
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+>  };
+>  
+>  /*
 > 
-
--- 
-
-- Arnaldo
