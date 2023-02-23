@@ -2,120 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106FFC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 08:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31E5C636D7
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 08:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233350AbjBWIC3 (ORCPT
+        id S233405AbjBWI1R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 03:02:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57238 "EHLO
+        Thu, 23 Feb 2023 03:27:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233369AbjBWICZ (ORCPT
+        with ESMTP id S232802AbjBWI1Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 03:02:25 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA5F4C6F7
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 00:02:23 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id d1-20020a17090a3b0100b00229ca6a4636so11989488pjc.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 00:02:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oCCHulnPjeXfVxB2hc2FnPODrNWqu5nDv28ixYfrxMM=;
-        b=jD+TbkRKtV9BQXTQHgW6EMy89Wv6sq4xhRDSgXlUtbyGezotuogOjMpX1gS+AS9vgs
-         rbLwrQaWNYcF9egRPxc/BKIU/nfaxagr/FraNQPR7PHSAoWVMjduYbUEOpHt/WlfbgSp
-         RuN04HbAEg8kCH2Yi9uOBAsytqdkJ2M9CX3rnuHBb6ogtgx0tPrG0KbPNpQy/oLo0u/+
-         3AIbaOz4ygcsudW1hATYkd2yflFkWcxoxQpBIk7zFHm22oYo7X7eCAt1x8smc7y+DPI2
-         54Lm/fqM4lZOiemaO445cMMHnfzyyw95+0e3QWxKRfgsFqQz+M1MfXErWveKSwaSYcYj
-         RBDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oCCHulnPjeXfVxB2hc2FnPODrNWqu5nDv28ixYfrxMM=;
-        b=5cboQhGrbAmydUWTnT3dXCNHUmgAkMqHYKh8ZcBPODiFfyjr+YNJpCQMbSA3WSJAMs
-         em++cI0+3F2H5AdxMyjk/qnsYuih4zWuB8GqLiMvk0AnncItednl5RBBKHq5tR7UUqRL
-         qffB0R1mKX+WJYq0Cd+17i+V96Rgo9hDvGgu3Ui6NrocpBVEtv2MsCpasfKhioNSIajc
-         Dz+fhImQRLmiaU4jYwkSaOl+ZClt2bfDy043xSA/duufrcYqWmktegvQHjSVHzmmoqSZ
-         vfQABU8OIYYLjfdYBm0dP7BzutfJQUr+vVvO1W5KG81GRSW916Ib3U8WSzIEErezVySH
-         5fyQ==
-X-Gm-Message-State: AO0yUKWclVcejNsSDSGlK09gMfyN8Pp/lY+1VIOct0w6rnasxrdqdBGU
-        4omdpA9IhWeN4VzDAzbLri4xlbsmH5LIccmRuAYgMFMDGkg=
-X-Google-Smtp-Source: AK7set/Z56Ijpbz4lc+SqXvPct9PPLxoQnz2+Qk9UZb0t3HqxthYWZQZG1DAlr9SynoKkTPwC5jTlwI4B9NWYB9dzYs=
-X-Received: by 2002:a17:90a:ca88:b0:237:2516:f76a with SMTP id
- y8-20020a17090aca8800b002372516f76amr293257pjt.2.1677139342599; Thu, 23 Feb
- 2023 00:02:22 -0800 (PST)
+        Thu, 23 Feb 2023 03:27:16 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71584AFD5;
+        Thu, 23 Feb 2023 00:27:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=R1GIMlyP5PmQ6SSQoioYTffHvrdpX2DoA1X1TWCwifQ=; b=jS9dsEsb5Fd/0eEkO0zUtow29J
+        o5wgECtpniTBjdA+Vb0yrmQPVKc2v8KOZHZTyVVbtgyaibYrMJU9ZBpGg+TMVh/IkLkWabfplx+Br
+        tmO+FrxbsBNroteuBOZUTbZjhfgxSlWczot+KzJ8kZnWY43ZtNv0Ky68OTsKb2/X19u8lNwemqdeF
+        Qi/AsX8fwFYr1FQOZCQgKZb6AE2hl1rNf86uTdhXvbKb4/OVH47bpyQQYIgZoiQj1H7vm/tTzl+tb
+        mU0rS+kkPKl6pIQBaFJHMsj2q3uf2YsceGb70dXOQw62BFBSp+goy/3u4Go25kRBviu5U49H+kC1o
+        2X2QkhFA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pV6wW-00ECNn-Jw; Thu, 23 Feb 2023 08:27:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 942BF30013F;
+        Thu, 23 Feb 2023 09:27:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3025620831B67; Thu, 23 Feb 2023 09:27:07 +0100 (CET)
+Date:   Thu, 23 Feb 2023 09:27:07 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Anup Patel <apatel@ventanamicro.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Subject: Re: Perf event to counter mapping question
+Message-ID: <Y/cjW8qVhRTPiz0t@hirez.programming.kicks-ass.net>
+References: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
 MIME-Version: 1.0
-From:   RAJESH DASARI <raajeshdasari@gmail.com>
-Date:   Thu, 23 Feb 2023 10:02:11 +0200
-Message-ID: <CAPXMrf9hCmTKjUJJ_cymxqw696FdDvgV0xuDjwGeQTkoDpi=KQ@mail.gmail.com>
-Subject: perf record is crashing on system with bpf progs are running
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi ,
+On Wed, Feb 22, 2023 at 04:28:36PM -0800, Atish Patra wrote:
 
-perf record is crashing on systems with bpf programs are running.
+> AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
+> much easier. It just needs to pick the next available counter.
+> On the other hand, x86 allows selective counter mapping which is
+> discovered from the json file and maintained in per event
+> constraints[4].
 
-We are running on the 4.18 host kernel and we launch a container ,
-inside the container we run perf record command, (bpf program is
-running). Perf is built on top of the 5.4.228 kernel.
+All the contraint management is done in kernel, and yes, it's a giant
+pain in the rear side.
 
-(gdb) bt
-#0  0x000000000055becf in perf_event__synthesize_one_bpf_prog
-(opts=0x94def8 <record+280>, event=0xabd910, fd=132, machine=0xaf6208,
-process=0x421260 <process_synthesized_event>,
-    session=0xaf6090) at util/bpf-event.c:242
-#1  perf_event__synthesize_bpf_events (session=session@entry=0xaf6090,
-process=process@entry=0x421260 <process_synthesized_event>,
-machine=machine@entry=0xaf6208,
-    opts=opts@entry=0x94def8 <record+280>) at util/bpf-event.c:333
-#2  0x000000000041ff5c in record__synthesize (tail=tail@entry=false,
-rec=0x94dde0 <record>) at builtin-record.c:1323
-#3  0x0000000000422bc4 in __cmd_record (rec=0x94dde0 <record>,
-argv=<optimized out>, argc=<optimized out>) at builtin-record.c:1465
-#4  cmd_record (argc=<optimized out>, argv=<optimized out>) at
-builtin-record.c:2474
-#5  0x0000000000490769 in run_builtin (p=p@entry=0x9574b8
-<commands+216>, argc=argc@entry=1, argv=argv@entry=0x7fffffffc120) at
-perf.c:312
-#6  0x000000000040c05a in handle_internal_command
-(argv=0x7fffffffc120, argc=1) at perf.c:364
-#7  run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at perf.c:408
-#8  main (argc=1, argv=0x7fffffffc120) at perf.c:538
+From what I understand the reason for these contraints is complexity of
+implementation, less constraints is more 'wires' in the hardware.
 
-We tried running perf record --no-bpf-event but crash is still seen so
-we added the below patch to skip processing bpf events when
-no-bpf-event options is provided , but not sure if this is the actual
-solution, please provide your inputs.
+With PMU use being ever more popular, we're seeing the x86 PMU move
+towards less constraints -- although I don't think we'll ever get rid of
+them :/
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 454e275..78e96ad 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1320,11 +1320,12 @@ static int record__synthesize(struct record
-*rec, bool tail)
-                return err;
-        }
+> 2. Mandate all-to-all mapping similar to ARM64.
 
--       err = perf_event__synthesize_bpf_events(session,
-process_synthesized_event,
--                                               machine, opts);
--       if (err < 0)
--               pr_warning("Couldn't synthesize bpf events.\n");
--
-+        if (!opts->no_bpf_event) {
-+                err = perf_event__synthesize_bpf_events(session,
-process_synthesized_event,
-+                                                       machine, opts);
-+               if (err < 0)
-+                       pr_warning("Couldn't synthesize bpf events.\n");
-+        }
+If at all possible, I would strongly recommend taking this route. Yes,
+the hardware people will complain, but newer x86 hardware having less,
+or simpler, constraints might be sufficient to convince them.
 
+(and if you do have to do contraints, please take a lesson from x86 and
+ *never* allow overlapping contraints as AMD had, solving those
+ constraints is not fun)
 
-Thanks,
-Rajesh Dasari.
+As you note, this is *much* simpler to program and virtualize.
+
+> Note: This is only for programmable counters. If the platform supports
+> any fixed counters (i.e. can monitor
+> only a specific event), that needs to be provisioned via some other
+> method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
+> AMU not PMU.
+
+So free running counters are ideal and fairly simple to multiplex/use.
+
+The moment you start adding overflow interrupts / filters and any other
+complexities to fixed function counters it becomes a mess (look at the
+x86 PMU again).
