@@ -2,58 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C28C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 05:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A538C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 05:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233235AbjBWFx4 (ORCPT
+        id S233287AbjBWFyM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 00:53:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36078 "EHLO
+        Thu, 23 Feb 2023 00:54:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233308AbjBWFxv (ORCPT
+        with ESMTP id S233296AbjBWFyL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 00:53:51 -0500
+        Thu, 23 Feb 2023 00:54:11 -0500
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EAC4AFDA
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 21:53:40 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-536c525d470so103723427b3.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 21:53:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6662D4A1F8
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 21:53:49 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-536cb268ab8so98845437b3.17
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Feb 2023 21:53:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tqdZ+G+VG1pXrXKKnIZ+HhiVU4LU/SJNnBh8ENQqCxc=;
-        b=FkVPW5Pne6GEsLhxFV5uq6tgPY0W90Ql62F75cJ/6JEft9Qs3BuMx8IqpH6whEnFhB
-         jBiAIFrhRK39OrfdF0OclJnRf4uWrUOV7XgsGUIoh3jK0wMk5lbuHNg4FpCEp5WYbnYM
-         8y/Ra9oMvTXwm28RkGL+UeON25KoAMcQ+Hds4G45H1byarL2ptd2I999jYaTTQtgeLGN
-         /vxACwmkg5Q8sHitLhu5DdSiN8qG61Zw76Rv0WCSMZdWMznKkMdrVzu0odE+EEFpsLIu
-         4WFIRZ6HQpvxdCiypiTYi33v+i1op3Ftff7PxLA6HQwLY6GSCI41CrxO5t1RHFXfK9PF
-         Q0Ng==
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LQIONRKAoheHJe5HMGw7YhPGfU99bOk8dma1cNwtyOc=;
+        b=pmkF/y0qsYwGbP0Pzl/MYgIlPjP5/MovcXS/v61rtUEbx0zAH4h3hpa3ADpuSkQ89H
+         +nJgu+6DJaO+KvWjmS+fXmaabmRFxkfuaML5g7LivAvyUfdbdEsTP7oKdXLx7Qn/ATBC
+         Qv5XoIQgQwRuBxkVgfMXjAtw76YwL4iH7l7Q9fvR5LKDszVrNZMpVrq6Nen5tHmIuTDw
+         ie8m2zfKIA/lVgb4ButKwNi90u3Z0be3xgN81mV/KUodB4trTZTe6PqKdsazxjk9aoBQ
+         mvQQs2yH5oIfq94Nwb2mA+qEU/ww98/RFwzkydkKxB333iWJjXFDdllG+nl7k00eTGl9
+         vpfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tqdZ+G+VG1pXrXKKnIZ+HhiVU4LU/SJNnBh8ENQqCxc=;
-        b=UXEMeeTQ311dylsfc9f32onQguCwfNtobWrTASDgezcNvGhsO9Wuz6NGcdNshScfw6
-         /ckjucLxxFoDd8z1nyymVgUAd76LWMSzEXAWH1VWJaBVMA70x/adMTfQhvGNbbFgVhZO
-         GST6WM9H5dxgVkpzhQPH5vLexiJP6kH3br9bpyfAIZ3iMeTW6E4hnOZUR49PLV+x/HrS
-         mFM9PqExXkMN9M/WurFUkjmGuTKNkgyjVHx+Mt8PnlqYY9371cgZHR7mJ9uiEui3O1Xy
-         MHH9KhjIfubRiTYKa8MK+Qttx5iFdFJHd0JTVOqqGgJtbWyA92bQieXQMztarmKgc9qE
-         X/Xg==
-X-Gm-Message-State: AO0yUKU7Uq0yOJz5y9Vj2DGaekMejRE0q5roM43aEXLZ1Fqu5jw0I4Yt
-        Sf2+RswdXjDiffRWwmQULzZm3luIqmWc
-X-Google-Smtp-Source: AK7set+dgqX2j8MuW+xdhwgM+ldNVX/T9gkhXNcSHS8RuMbBK8laFiP6db7m4u8zEoccn+w38ASYt8b6K28j
+        h=content-transfer-encoding:to:from:subject:references:mime-version
+         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LQIONRKAoheHJe5HMGw7YhPGfU99bOk8dma1cNwtyOc=;
+        b=q3gNr7ac5zJ78CZYCgTispRTeaMd8yEA7CrOOP6xWfVmoZzVCDZJP0uO6vdimiOMkq
+         XOK95hOmBn6t2AyzSsNHNqs7nNPb0b/TcJGfVRD974ePRCbC4h/1eyKXcmgOA09lN95l
+         2nL1LbPHjTmnUork6Wi1ymjow88EXruhpaVyAxaR+O+sV01xNPyzFpe6xSjYGupjvSF4
+         kqlcQh7KAbDD5mFvt879tAEPbRusNLQA9TKbC/fhWrwWO2nqiaUszdZduB0O5dgOtt/f
+         DWEa7yEm+N7/IYmRVdmsW0LtTDQeuOGy3pX6i4i+jH5oqb1IDXIu6QZQGIBBcBthxq6A
+         GF8A==
+X-Gm-Message-State: AO0yUKVOGUHjRuJD2pbzZmnoQqpAOt3LmKAjwJ6E8e3e/Fag/W7n8xyK
+        qkc4M0dsj4x5MeRLraP+8I/7tMbs8/RG
+X-Google-Smtp-Source: AK7set+3eWFTF8ea13q/dbG0iPvwcQteOJVYMZ0EZlF/zVuCq5xXSYyKx0qlpaS5BbKrzgW95PxZTg1q2L36
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9002:67cd:9e6b:7083])
- (user=irogers job=sendgmr) by 2002:a05:6902:154b:b0:9f5:af6b:6f69 with SMTP
- id r11-20020a056902154b00b009f5af6b6f69mr1961555ybu.5.1677131619856; Wed, 22
- Feb 2023 21:53:39 -0800 (PST)
-Date:   Wed, 22 Feb 2023 21:53:05 -0800
+ (user=irogers job=sendgmr) by 2002:a25:9003:0:b0:900:c3fd:a080 with SMTP id
+ s3-20020a259003000000b00900c3fda080mr3124424ybl.665.1677131628411; Wed, 22
+ Feb 2023 21:53:48 -0800 (PST)
+Date:   Wed, 22 Feb 2023 21:53:06 -0800
 In-Reply-To: <20230223055306.296179-1-irogers@google.com>
-Message-Id: <20230223055306.296179-3-irogers@google.com>
+Message-Id: <20230223055306.296179-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230223055306.296179-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Subject: [PATCH v1 2/3] perf vendor events intel: Update alderlaken to v1.19
+Subject: [PATCH v1 3/3] perf vendor events intel: Update icelakex to v1.19
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -68,11 +70,12 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Edward Baker <edward.baker@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update alderlaken perf json from v1.18 to v1.19.
+Update icelakex perf json from v1.18 to v1.19.
 
 Based on:
 https://github.com/intel/perfmon/pull/58
@@ -81,40 +84,193 @@ https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/alderlaken/memory.json | 7 +++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv            | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ .../pmu-events/arch/x86/icelakex/cache.json   |  8 +++++
+ .../arch/x86/icelakex/floating-point.json     | 31 +++++++++++++++++++
+ .../arch/x86/icelakex/pipeline.json           | 10 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
+ 4 files changed, 50 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-index f84bf8c43495..37259d38a222 100644
---- a/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/alderlaken/memory.json
-@@ -13,6 +13,13 @@
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/cache.json b/tools/per=
+f/pmu-events/arch/x86/icelakex/cache.json
+index d6463c8d9462..3bdc56a75097 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/cache.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/cache.json
+@@ -825,6 +825,14 @@
          "SampleAfterValue": "1000003",
-         "UMask": "0xf4"
+         "UMask": "0x1"
      },
 +    {
-+        "BriefDescription": "Counts the number of cycles that the head (oldest load) of the load buffer and retirement are both stalled due to a DL1 miss.",
-+        "EventCode": "0x05",
-+        "EventName": "LD_HEAD.L1_MISS_AT_RET",
-+        "SampleAfterValue": "1000003",
-+        "UMask": "0x81"
++        "BriefDescription": "Counts bus locks, accounts for cache line spl=
+it locks and UC locks.",
++        "EventCode": "0xF4",
++        "EventName": "SQ_MISC.BUS_LOCK",
++        "PublicDescription": "Counts the more expensive bus lock needed to=
+ enforce cache coherency for certain memory accesses that need to be done a=
+tomically.  Can be created by issuing an atomic instruction (via the LOCK p=
+refix) which causes a cache line split or accesses uncacheable memory.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x10"
 +    },
      {
-         "BriefDescription": "Counts the number of cycles that the head (oldest load) of the load buffer and retirement are both stalled due to other block cases.",
-         "EventCode": "0x05",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index e69b29123327..1c5776e37120 100644
+         "BriefDescription": "Cycles the queue waiting for offcore response=
+s is full.",
+         "EventCode": "0xf4",
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/floating-point.json b/=
+tools/perf/pmu-events/arch/x86/icelakex/floating-point.json
+index 655342dadac6..85c26c889088 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/floating-point.json
+@@ -39,6 +39,14 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x20"
+     },
++    {
++        "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
+d single and 256-bit packed double precision FP instructions retired; some =
+instructions will count twice as noted below.  Each count represents 2 or/a=
+nd 4 computation operations, 1 for each element.  Applies to SSE* and AVX* =
+packed single precision and packed double precision FP instructions: ADD SU=
+B HADD HSUB SUBADD MUL DIV MIN MAX RCP14 RSQRT14 SQRT DPP FM(N)ADD/SUB.  DP=
+P and FM(N)ADD/SUB count twice as they perform 2 calculations per element."=
+,
++        "EventCode": "0xc7",
++        "EventName": "FP_ARITH_INST_RETIRED.4_FLOPS",
++        "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
+ed single precision and 256-bit packed double precision  floating-point ins=
+tructions retired; some instructions will count twice as noted below.  Each=
+ count represents 2 or/and 4 computation operations, one for each element. =
+ Applies to SSE* and AVX* packed single precision floating-point and packed=
+ double precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL=
+ DIV MIN MAX RCP14 RSQRT14 SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB ins=
+tructions count twice as they perform 2 calculations per element. The DAZ a=
+nd FTZ flags in the MXCSR register need to be set when using these events."=
+,
++        "SampleAfterValue": "100003",
++        "UMask": "0x18"
++    },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational 512-bi=
+t packed double precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 8 computation=
+ operations, one for each element.  Applies to SSE* and AVX* packed double =
+precision floating-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT14=
+ RCP14 FM(N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform =
+2 calculations per element.",
+         "EventCode": "0xc7",
+@@ -55,6 +63,22 @@
+         "SampleAfterValue": "100003",
+         "UMask": "0x80"
+     },
++    {
++        "BriefDescription": "Number of SSE/AVX computational 256-bit packe=
+d single precision and 512-bit packed double precision  FP instructions ret=
+ired; some instructions will count twice as noted below.  Each count repres=
+ents 8 computation operations, 1 for each element.  Applies to SSE* and AVX=
+* packed single precision and double precision FP instructions: ADD SUB HAD=
+D HSUB SUBADD MUL DIV MIN MAX SQRT RSQRT RSQRT14 RCP RCP14 DPP FM(N)ADD/SUB=
+.  DPP and FM(N)ADD/SUB count twice as they perform 2 calculations per elem=
+ent.",
++        "EventCode": "0xc7",
++        "EventName": "FP_ARITH_INST_RETIRED.8_FLOPS",
++        "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
+ed single precision and 512-bit packed double precision  floating-point ins=
+tructions retired; some instructions will count twice as noted below.  Each=
+ count represents 8 computation operations, one for each element.  Applies =
+to SSE* and AVX* packed single precision and double precision floating-poin=
+t instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT RSQRT RSQRT14=
+ RCP RCP14 DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice=
+ as they perform 2 calculations per element. The DAZ and FTZ flags in the M=
+XCSR register need to be set when using these events.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x60"
++    },
++    {
++        "BriefDescription": "Number of SSE/AVX computational scalar floati=
+ng-point instructions retired; some instructions will count twice as noted =
+below.  Applies to SSE* and AVX* scalar, double and single precision floati=
+ng-point: ADD SUB MUL DIV MIN MAX RCP14 RSQRT14 SQRT DPP FM(N)ADD/SUB.  DPP=
+ and FM(N)ADD/SUB instructions count twice as they perform multiple calcula=
+tions per element.",
++        "EventCode": "0xc7",
++        "EventName": "FP_ARITH_INST_RETIRED.SCALAR",
++        "PublicDescription": "Number of SSE/AVX computational scalar singl=
+e precision and double precision floating-point instructions retired; some =
+instructions will count twice as noted below.  Each count represents 1 comp=
+utational operation. Applies to SSE* and AVX* scalar single precision float=
+ing-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB=
+.  FM(N)ADD/SUB instructions count twice as they perform 2 calculations per=
+ element. The DAZ and FTZ flags in the MXCSR register need to be set when u=
+sing these events.",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x3"
++    },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational scalar=
+ double precision floating-point instructions retired; some instructions wi=
+ll count twice as noted below.  Each count represents 1 computational opera=
+tion. Applies to SSE* and AVX* scalar double precision floating-point instr=
+uctions: ADD SUB MUL DIV MIN MAX SQRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructi=
+ons count twice as they perform 2 calculations per element.",
+         "EventCode": "0xc7",
+@@ -70,5 +94,12 @@
+         "PublicDescription": "Number of SSE/AVX computational scalar singl=
+e precision floating-point instructions retired; some instructions will cou=
+nt twice as noted below.  Each count represents 1 computational operation. =
+Applies to SSE* and AVX* scalar single precision floating-point instruction=
+s: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB.  FM(N)ADD/SUB instr=
+uctions count twice as they perform 2 calculations per element. The DAZ and=
+ FTZ flags in the MXCSR register need to be set when using these events.",
+         "SampleAfterValue": "100003",
+         "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Number of any Vector retired FP arithmetic in=
+structions",
++        "EventCode": "0xc7",
++        "EventName": "FP_ARITH_INST_RETIRED.VECTOR",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xfc"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json b/tools/=
+perf/pmu-events/arch/x86/icelakex/pipeline.json
+index 4cf16a1fcad4..442a4c7539dd 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/pipeline.json
+@@ -374,6 +374,16 @@
+         "SampleAfterValue": "2000003",
+         "UMask": "0x3"
+     },
++    {
++        "BriefDescription": "Clears speculative count",
++        "CounterMask": "1",
++        "EdgeDetect": "1",
++        "EventCode": "0x0D",
++        "EventName": "INT_MISC.CLEARS_COUNT",
++        "PublicDescription": "Counts the number of speculative clears due =
+to any type of branch misprediction or machine clears",
++        "SampleAfterValue": "500009",
++        "UMask": "0x1"
++    },
+     {
+         "BriefDescription": "Counts cycles after recovery from a branch mi=
+sprediction or machine clear till the first uop is issued from the resteere=
+d path.",
+         "EventCode": "0x0d",
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 1c5776e37120..bb4e545fa100 100644
 --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,6 +1,6 @@
- Family-model,Version,Filename,EventType
- GenuineIntel-6-(97|9A|B7|BA|BF),v1.19,alderlake,core
--GenuineIntel-6-BE,v1.18,alderlaken,core
-+GenuineIntel-6-BE,v1.19,alderlaken,core
- GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
- GenuineIntel-6-(3D|47),v26,broadwell,core
- GenuineIntel-6-56,v7,broadwellde,core
--- 
+@@ -13,7 +13,7 @@ GenuineIntel-6-A[DE],v1.00,graniterapids,core
+ GenuineIntel-6-(3C|45|46),v32,haswell,core
+ GenuineIntel-6-3F,v26,haswellx,core
+ GenuineIntel-6-(7D|7E|A7),v1.17,icelake,core
+-GenuineIntel-6-6[AC],v1.18,icelakex,core
++GenuineIntel-6-6[AC],v1.19,icelakex,core
+ GenuineIntel-6-3A,v23,ivybridge,core
+ GenuineIntel-6-3E,v22,ivytown,core
+ GenuineIntel-6-2D,v22,jaketown,core
+--=20
 2.39.2.637.g21b0678d19-goog
 
