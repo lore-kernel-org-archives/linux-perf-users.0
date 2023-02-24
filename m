@@ -2,197 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38ECC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Feb 2023 22:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9296C64ED6
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 02:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbjBWWsm (ORCPT
+        id S229784AbjBXCdI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 17:48:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47762 "EHLO
+        Thu, 23 Feb 2023 21:33:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjBWWsl (ORCPT
+        with ESMTP id S229769AbjBXCdD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 17:48:41 -0500
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D9D58B70;
-        Thu, 23 Feb 2023 14:48:38 -0800 (PST)
-Received: by mail-vs1-f46.google.com with SMTP id f31so18288607vsv.1;
-        Thu, 23 Feb 2023 14:48:38 -0800 (PST)
+        Thu, 23 Feb 2023 21:33:03 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C05F196BB
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 18:33:02 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id h31so6809517pgl.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 18:33:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=v7D5+/tTKW4hdCKLoGhGLZFN3+ohidFIvVz7P7koHlk=;
+        b=TqIRXVfgz6LBupiY2MkRcBseRiyJ7neFuVaTF3fYvmFFGl9TsT/USgKJ8ewASzxh3o
+         /HRAPsYVkwaMImGHtKYQbogH+nOgDY/U1PMJmKMXeOxWpDU9FLMzJV0YXBA4JTaeGzN1
+         YsTkOZ7aoJ6IkvizZRl3Axbg55L7Osd8eVdt0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oHMjpTxClSIg+L1M1jMF9kWQNxpNp0ehcRQMMzgVYio=;
-        b=UxBiUguVba98KFpa9SFh6TO4Ev9mlp1PaI+DreA6P2eYUdnUS7H1Whyyvc2d9+II9q
-         Cp5WSPmhE6yDjRFxKvzywGmSjo5DwGt5a03g3/XHYwT59/Kk1kBZC8eqEtIsfFTb8hzO
-         PuWUXg4rmxjpsGlR8E+RBZntEIsa59cAuXHEF2DuUJ4pZfQiU3EGzzWFZIx2BJVEP0j7
-         ZV1wqoKm12hVfaUq90ZIOFpvynScq2D7DVHvhXvrq4OgR1rCxHNz6mmcbpmyH8uKTPri
-         2OfEZe0M1v2Yu2xAoHZni4BrBmGT2hUs/3PMotDlpPTLrz+F9sd849tVV4Wmj6Oh0lBi
-         JjHQ==
-X-Gm-Message-State: AO0yUKUGRjn7vzK1qBqtXmYR5UfTy0g18XQV6XJ88DcQgJpVUhiqIGSK
-        ign1jGJpcMh5AsqCwHjRgTffLDWsq8kSB3O/u0o=
-X-Google-Smtp-Source: AK7set9/9BwQxNLEoH7DgSRqN5o2EtQHS3IVRtIrSNXf5PLIBKinCKxvtc58mzbP/ZuHVKYfOaKW2vXR3FLxsP8n+Ew=
-X-Received: by 2002:a67:d893:0:b0:40d:68b8:6577 with SMTP id
- f19-20020a67d893000000b0040d68b86577mr1003403vsj.2.1677192517738; Thu, 23 Feb
- 2023 14:48:37 -0800 (PST)
+        bh=v7D5+/tTKW4hdCKLoGhGLZFN3+ohidFIvVz7P7koHlk=;
+        b=kfIxKykW2k3ENYxoWIHN+50OOitvZsGe0OMSAXVavUo06yTUvzDltKgGStS+uk5Nw0
+         div7j6w3PkkC6bRELa7dty7dDjlMN1hACnnOXabfqhE24ZCR38VLO+z28Pg9XkRPU3JC
+         SyrDeJYIvRDM2G/PpVu6gh3A38SRkIA2En3BBMoFWXwkmp6I/uWf0KRZGS0450X3Uy7C
+         /37HGd1IloY3EJ8Pe3Cs3sTDX1o3jJQw+0U3EYeAly7NXdZ1Lhmt1ELi18dcuMPEmJ+u
+         3sduTcJguolPjbGqbCRWVHoNmEws3J4jgovaWtr/nOygJRkPjr50CAIFADKwkLJcA+23
+         sEZA==
+X-Gm-Message-State: AO0yUKUWfESpJxf+h60gY+qQ/GM8+gmTTJvs2sBN2kRpqnvlbRr2+WB8
+        EHEW3/UblNknuN/BIZaG1MVrJRdH5j/2kZ5bBdBoE/CsFBFCaxc=
+X-Google-Smtp-Source: AK7set++kyCManleDnDskA+/fx2yOFWwby3yiI0iFzoAl+ek8Jbav3knAnBru2MFKPfxE5NSNvbWGImJgNblJx3qzTs=
+X-Received: by 2002:a05:6a02:110:b0:502:e3fb:bdac with SMTP id
+ bg16-20020a056a02011000b00502e3fbbdacmr1435529pgb.1.1677205981535; Thu, 23
+ Feb 2023 18:33:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20230223075800.1795777-1-changbin.du@huawei.com> <Y/dt6QpsCj5AAUE/@kernel.org>
-In-Reply-To: <Y/dt6QpsCj5AAUE/@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 23 Feb 2023 14:48:26 -0800
-Message-ID: <CAM9d7cgwP1ra44oJeWO3y+XviXJyZmR4wrgdizK1UhYEw9w6jg@mail.gmail.com>
-Subject: Re: [PATCH] perf: fix counting when initial delay configured
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Changbin Du <changbin.du@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hui Wang <hw.huiwang@huawei.com>
+References: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
+ <Y/cjW8qVhRTPiz0t@hirez.programming.kicks-ass.net>
+In-Reply-To: <Y/cjW8qVhRTPiz0t@hirez.programming.kicks-ass.net>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Thu, 23 Feb 2023 18:32:50 -0800
+Message-ID: <CAOnJCUJQVQQUn_brgKCMFduo_RUYndFDuV-m0e2g3AQo6CV==g@mail.gmail.com>
+Subject: Re: Perf event to counter mapping question
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Beeman Strong <beeman@rivosinc.com>,
+        Anup Patel <apatel@ventanamicro.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Thu, Feb 23, 2023 at 12:27 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Feb 22, 2023 at 04:28:36PM -0800, Atish Patra wrote:
+>
+> > AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
+> > much easier. It just needs to pick the next available counter.
+> > On the other hand, x86 allows selective counter mapping which is
+> > discovered from the json file and maintained in per event
+> > constraints[4].
+>
+> All the contraint management is done in kernel, and yes, it's a giant
+> pain in the rear side.
+>
+> From what I understand the reason for these contraints is complexity of
+> implementation, less constraints is more 'wires' in the hardware.
+>
+> With PMU use being ever more popular, we're seeing the x86 PMU move
+> towards less constraints -- although I don't think we'll ever get rid of
+> them :/
+>
+> > 2. Mandate all-to-all mapping similar to ARM64.
+>
+> If at all possible, I would strongly recommend taking this route. Yes,
+> the hardware people will complain, but newer x86 hardware having less,
+> or simpler, constraints might be sufficient to convince them.
+>
 
-On Thu, Feb 23, 2023 at 5:45 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+Yeah. That's where folks want to go in order to provide flexibility
+for future platform vendors by
+allowing constraints.
+
+Can you provide some examples or some pointers that describe these
+simpler constraints ?
+
+Finding a middle path would certainly keep everyone happy :). Thanks a
+lot for your input.
+
+> (and if you do have to do contraints, please take a lesson from x86 and
+>  *never* allow overlapping contraints as AMD had, solving those
+>  constraints is not fun)
 >
-> Em Thu, Feb 23, 2023 at 03:58:00PM +0800, Changbin Du escreveu:
-> > When creating counters with initial delay configured, the enable_on_exec
-> > field is not set. So we need to enable the counters later. The problem
-> > is, when a workload is specified the target__none() is still true. So
-> > we also need to check stat_config.initial_delay.
-> >
-> > Before this fix the event is not counted:
-> > $ ./perf stat -e instructions -D 100 sleep 2
-> > Events disabled
-> > Events enabled
-> >
-> >  Performance counter stats for 'sleep 2':
-> >
-> >      <not counted>      instructions
-> >
-> >        1.901661124 seconds time elapsed
-> >
-> >        0.001602000 seconds user
-> >        0.000000000 seconds sys
-> >
-> > After fix it works:
-> > $ ./perf stat -e instructions -D 100 sleep 2
-> > Events disabled
-> > Events enabled
-> >
-> >  Performance counter stats for 'sleep 2':
-> >
-> >            404,214      instructions
-> >
-> >        1.901743475 seconds time elapsed
-> >
-> >        0.001617000 seconds user
-> >        0.000000000 seconds sys
-> >
-> > Fixes: c587e77e100f ("perf stat: Do not delay the workload with --delay")
+> As you note, this is *much* simpler to program and virtualize.
 >
-> Yeap, even the comment states that we need to enable when initial_delay
-> is set :-)
-
-Right, but the logic that checks the initial_delay is placed
-out of the function.  Just checking the initial_delay value
-can be confusing as it can have a negative value.
-
-Maybe we can add an argument (bool force?) to the
-enable_counters() function.
-
-Thanks,
-Namhyung
+> > Note: This is only for programmable counters. If the platform supports
+> > any fixed counters (i.e. can monitor
+> > only a specific event), that needs to be provisioned via some other
+> > method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
+> > AMU not PMU.
+>
+> So free running counters are ideal and fairly simple to multiplex/use.
+>
+> The moment you start adding overflow interrupts / filters and any other
+> complexities to fixed function counters it becomes a mess (look at the
+> x86 PMU again).
 
 
->
-> I added the additional test output below.
->
-> Namhyung, can you please ack it?
->
-> - Arnaldo
->
-> Committer testing:
->
-> Before:
->
-> Lets use stress-ng so that we have lots of samples using a CPU stressor
-> and also intermingle the workload output with the messages about when
-> the events get enabled (i.e. later on in the workload):
->
->   $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
->   Events disabled
->   stress-ng: info:  [38361] setting to a 1 second run per stressor
->   stress-ng: info:  [38361] dispatching hogs: 32 cpu
->   Events enabled
->   stress-ng: info:  [38361] successful run completed in 1.01s
->
->    Performance counter stats for 'stress-ng -c 32 -t 1':
->
->        <not counted>      instructions:u
->
->          0.916479141 seconds time elapsed
->
->         30.868003000 seconds user
->          0.049851000 seconds sys
->
->
->   Some events weren't counted. Try disabling the NMI watchdog:
->         echo 0 > /proc/sys/kernel/nmi_watchdog
->         perf stat ...
->         echo 1 > /proc/sys/kernel/nmi_watchdog
->   $
->
-> After the fix:
->
->   $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
->   Events disabled
->   stress-ng: info:  [40429] setting to a 1 second run per stressor
->   stress-ng: info:  [40429] dispatching hogs: 32 cpu
->   Events enabled
->   stress-ng: info:  [40429] successful run completed in 1.01s
->
->    Performance counter stats for 'stress-ng -c 32 -t 1':
->
->         154117865145      instructions:u
->
->          0.920827644 seconds time elapsed
->
->         30.864753000 seconds user
->          0.073862000 seconds sys
->
->
->   $
->
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > ---
-> >  tools/perf/builtin-stat.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index 9f3e4b257516..c71d85577de6 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -544,7 +544,7 @@ static int enable_counters(void)
-> >        * - we don't have tracee (attaching to task or cpu)
-> >        * - we have initial delay configured
-> >        */
-> > -     if (!target__none(&target)) {
-> > +     if (!target__none(&target) || stat_config.initial_delay) {
-> >               if (!all_counters_use_bpf)
-> >                       evlist__enable(evsel_list);
-> >       }
-> > --
-> > 2.25.1
-> >
->
-> --
->
-> - Arnaldo
+
+--
+Regards,
+Atish
