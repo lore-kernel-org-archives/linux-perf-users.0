@@ -2,153 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B223EC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 02:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01BEC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 03:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbjBXCih (ORCPT
+        id S229609AbjBXDp4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 21:38:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53564 "EHLO
+        Thu, 23 Feb 2023 22:45:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbjBXCig (ORCPT
+        with ESMTP id S229506AbjBXDpz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 21:38:36 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B2530E89
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 18:38:33 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id u20so4297992pfm.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 18:38:33 -0800 (PST)
+        Thu, 23 Feb 2023 22:45:55 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B1DE131
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 19:45:54 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id p8so12743025wrt.12
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 19:45:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JRecAKZcY6IbQwyurCrABIbVaiA2PzBDQV3Z+P3MRuI=;
-        b=CNs/JVqajIYC7MgPC9Va/OivfBI1AxWe1NN6i0WgWVrP3aM2ojjh1GNTlvPQaE4sUC
-         rbFzdkj1hFdKLdtFkngfOFnh22XWCC6dPlb3l7/bVYcnWsoPsAYHR367jep2wHUi5Q0m
-         FXzYJTsE1HdASYCoYJEr398Ubr9lnkPyAEpjs=
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=33nRVcEx51wK1syFEsZ5/2j4bLwy5lT6Y+g6+3Ht0fw=;
+        b=b/5IGEPSM+YeIYNI+lfqEA27fjSYmJp+Q4NVnM3uPFUAONFhkq9s2BxFPe7LVG5hRo
+         ni/Ppeb0E5i3Mt5BFtSSxiMVcJ9GVbE8Z53ckPA7QlFn2CwUCw0ZNd1F6qLRRjK4JVOb
+         qrdkm8LGC8RmFezW3sQAfGlO3LOpLLYY9p/7Qm3VFfwGMYsM9Nw4AGphyAEe5AhJPkC3
+         4PCu/4mXl67LKD5KoiYzOuWdgoIRBl7+5ZWyspcs/KFfs2TkkLVTZTCn4LbSN484NXfb
+         nZcwCZWFg40iKzG0tEYbqgyPBiKBhxGeryPo77S1vHKHwZi7nLo4ktLHfE23vwSZa+2X
+         yWYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JRecAKZcY6IbQwyurCrABIbVaiA2PzBDQV3Z+P3MRuI=;
-        b=ohs44YASmZAPsg4psDALQz44M94RxC5R13lV7RVi8ozhnrBSrHd8dd1kqYVxAcF2Sd
-         tsf85kduK+JaEYTkQS2wugC/7R5quJ4rjs6LXId8pqnCQzgy20aUmlFxRoVRXGYQ/zSC
-         gv4zNeY2P5NFwyL1xEvoqYoWM/VcbucQBTLs/hg+7ZnU5/8ljHqTCw5Y1PYLjMvINoDL
-         zYI3Lrjm+B3OUjnVef0CVWsZUXtyP/J50tyXUwbEF2TjQF6CizS/lAtfQnJvZ4HTRhfK
-         1ANDwujqKMawdrvp6O7xoFzTqjtXhWWtT8wj+N2iEsyDpgT/LGaViVlTZeeOQcoD5yju
-         FkaQ==
-X-Gm-Message-State: AO0yUKXT1vuoFwt7rhRmOJRLTG27HjVp6yhy+mrXYYG4twXm4pA9yZMA
-        esb+Tk0fiVBZJ77QOIMoXIoB+NKE8rcTJT65IW8t
-X-Google-Smtp-Source: AK7set/Pl4bgDi8YBHtTidAXSP+H3vDftz5DSWh0Vofi7bk5M4UMW7IhUght0gW5AAjqkid9OtVoW7Q3yNNWVKSGijI=
-X-Received: by 2002:a62:8704:0:b0:5a8:9872:2b9b with SMTP id
- i4-20020a628704000000b005a898722b9bmr2481602pfe.1.1677206312565; Thu, 23 Feb
- 2023 18:38:32 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=33nRVcEx51wK1syFEsZ5/2j4bLwy5lT6Y+g6+3Ht0fw=;
+        b=qifI+RcDqS1inAPWSFV6uy1Q3JiBgahPSJEENMtJb3RHxx/TFY9vkoq8BQ8oRdwrq8
+         2KGUgk0eScecZ+RNpGX2K1FDhoUVCXS+zuh8vBe++O/2N2WLuG4X66COV0Y6xjCfYmtJ
+         5YS9loJd0pTf+y52wHt58FNuLaR42Zjn4HbSN8hFTaXwGXbeghVjEVXWssj+IPDLAaeu
+         mMmyy37LlQIlL3skLagCljWLbv0znk/JEWaNjideIFCROHKWJ9MFGO3iaQ3mLYzKF19P
+         70Q6s7FKqOjAqEfE7GXYh2+vo0eJiVlWg4y57WNLS72WcsmXdNl1HVUm1kf4Ruk3+mS8
+         QWKA==
+X-Gm-Message-State: AO0yUKUNcPTV7gQ0xh9+y9IsXLDVUW7VbpLua01flRp89Vt5VivzOcJd
+        eQpC9FCnn96QTqDuhs++qu0rWnIWy0InTdwURjnNf5bW0kiVHokU
+X-Google-Smtp-Source: AK7set9Jt2AbBb2iYiGwcv8kMMBiAWSeL4Q/pq3PMf2uj7eHRELjQt4QBUXrBqaiOXtWLtJfcPnNRiKa4/ESMlqoDE0=
+X-Received: by 2002:a5d:5041:0:b0:2c5:881a:eaab with SMTP id
+ h1-20020a5d5041000000b002c5881aeaabmr921413wrt.4.1677210352475; Thu, 23 Feb
+ 2023 19:45:52 -0800 (PST)
 MIME-Version: 1.0
-References: <CAOnJCUKHq_8msJtU-H1JvWJ8nY94J0tcarQMBsPNpBZO8sP6HQ@mail.gmail.com>
- <CAK9=C2Uy_0B6D2TGq35sfrGkp9s1Td=cEsidzDPTDhG7Nq5EWw@mail.gmail.com>
-In-Reply-To: <CAK9=C2Uy_0B6D2TGq35sfrGkp9s1Td=cEsidzDPTDhG7Nq5EWw@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Thu, 23 Feb 2023 18:38:21 -0800
-Message-ID: <CAOnJCU+EdF3sCpcNoOiPOCNwwX7bguJghqZccY=cUmku+Ak0=A@mail.gmail.com>
-Subject: Re: Perf event to counter mapping question
-To:     Anup Patel <apatel@ventanamicro.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Beeman Strong <beeman@rivosinc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
+References: <CAPXMrf9hCmTKjUJJ_cymxqw696FdDvgV0xuDjwGeQTkoDpi=KQ@mail.gmail.com>
+In-Reply-To: <CAPXMrf9hCmTKjUJJ_cymxqw696FdDvgV0xuDjwGeQTkoDpi=KQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 23 Feb 2023 19:45:40 -0800
+Message-ID: <CAP-5=fWzTyz5hZqPSrtMyxZ3biu+ywtzMJk-A2jituE20EGGNA@mail.gmail.com>
+Subject: Re: perf record is crashing on system with bpf progs are running
+To:     RAJESH DASARI <raajeshdasari@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Feb 22, 2023 at 6:55 PM Anup Patel <apatel@ventanamicro.com> wrote:
+On Thu, Feb 23, 2023 at 12:02=E2=80=AFAM RAJESH DASARI <raajeshdasari@gmail=
+.com> wrote:
 >
-> On Thu, Feb 23, 2023 at 5:58 AM Atish Patra <atishp@atishpatra.org> wrote:
-> >
-> > Hi All,
-> > We are trying to figure out what is the best approach to define the
-> > perf event to programmable counter mappings in RISC-V.
-> > Until recently, all the programmable counter/event selector registers
-> > were writable in M-mode (highest privilege mode) only. The firmware
-> > residing in M-mode
-> > would discover the mapping from device tree[1] and the perf driver
-> > relies on SBI PMU[2] interface to discover the mapping between event &
-> > counters.
-> >
-> > There are new ISA extensions being proposed to make counters /event
-> > selector register in supervisor mode as well. Thus, a pmu driver
-> > can directly program the event selectors without relying on firmware.
-> > However, the kernel needs to be aware of counter mapping to do that.
-> >
-> > AFAIK, ARM64 allows all-to-all mapping in pmuv3[1]. That makes life
-> > much easier. It just needs to pick the next available counter.
-> > On the other hand, x86 allows selective counter mapping which is
-> > discovered from the json file and maintained in per event
-> > constraints[4].
-> > There may be some legacy reasons why it was done in x86 this way[5].
-> > Please correct me if I am wrong in my understanding/assumption.
-> >
-> > Here are a few approaches that can be used to solve it in RISC-V.
-> >
-> > 1. Continue to use device tree bindings
-> > Cons: We have to define similar entries for ACPI. It makes
-> > virtualization difficult as the VMM has to discover and update the
-> > device tree/ACPI as well.
-> >
-> > 2. Mandate all-to-all mapping similar to ARM64.
-> > Note: This is only for programmable counters. If the platform supports
-> > any fixed counters (i.e. can monitor
-> > only a specific event), that needs to be provisioned via some other
-> > method. IIRC the fixed counters(apart from cycle) in ARM64 are part of
-> > AMU not PMU.
-> >
-> > 3. All platforms need to define which subset of events can be
-> > monitored using a subset of counters. The platform specific perf json
-> > file can specify that.
-> > This approach provides more flexibility but makes the code path a bit
-> > more complex as the counter mask constraint needs to be maintained per
-> > event basis.
-> >
-> > 4. Any other approach ?
+> Hi ,
 >
-> I suggest a 4th approach where by default the kernel assumes all-to-all
-> mappings and optionally perf json file can be used to override mappings
-> for certain counters. This approach is more like a hybrid approach between
-
-Do you mean override counter mapping for certain events ? I don't
-think we should split counter space as platforms may want
-to choose random encounters between hpmcounter3-hpmcounte31.
-
-We can always do this. If the counter mask is not set in the event
-attributes, assume that the event
-can be monitored by all the counters. x86 does something similar as well.
-
-> approach #2 and #3. It work fine with KVM RISC-V as well because Guest/VM
-> will assume all-to-all mapping for logical HW counters whereas Host can have
-> specific counter mappings.
+> perf record is crashing on systems with bpf programs are running.
 >
-> >
-> > Any thoughts on what would be the best approach for RISC-V. It would
-> > be great to repeat any past mistakes in RISC-V by learning from
-> > experience from the community.
-> >
-> > [1] https://lore.kernel.org/lkml/Y6tS959TaY2EBAdn@spud/T/
-> > [2] https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc#function-find-and-configure-a-matching-counter-fid-2
-> > [3] https://elixir.bootlin.com/linux/v6.2/source/arch/arm64/kernel/perf_event.c#L899
-> > [4] https://elixir.bootlin.com/linux/latest/source/arch/x86/events/core.c#L876
-> > [5] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1978937.html
-> > --
-> > Regards,
-> > Atish
+> We are running on the 4.18 host kernel and we launch a container ,
+> inside the container we run perf record command, (bpf program is
+> running). Perf is built on top of the 5.4.228 kernel.
+
+You mean you are running perf built from Linux 5.4? Could you try
+something more recent like Linux 6.2?
+
+Thanks,
+Ian
+
+> (gdb) bt
+> #0  0x000000000055becf in perf_event__synthesize_one_bpf_prog
+> (opts=3D0x94def8 <record+280>, event=3D0xabd910, fd=3D132, machine=3D0xaf=
+6208,
+> process=3D0x421260 <process_synthesized_event>,
+>     session=3D0xaf6090) at util/bpf-event.c:242
+> #1  perf_event__synthesize_bpf_events (session=3Dsession@entry=3D0xaf6090=
+,
+> process=3Dprocess@entry=3D0x421260 <process_synthesized_event>,
+> machine=3Dmachine@entry=3D0xaf6208,
+>     opts=3Dopts@entry=3D0x94def8 <record+280>) at util/bpf-event.c:333
+> #2  0x000000000041ff5c in record__synthesize (tail=3Dtail@entry=3Dfalse,
+> rec=3D0x94dde0 <record>) at builtin-record.c:1323
+> #3  0x0000000000422bc4 in __cmd_record (rec=3D0x94dde0 <record>,
+> argv=3D<optimized out>, argc=3D<optimized out>) at builtin-record.c:1465
+> #4  cmd_record (argc=3D<optimized out>, argv=3D<optimized out>) at
+> builtin-record.c:2474
+> #5  0x0000000000490769 in run_builtin (p=3Dp@entry=3D0x9574b8
+> <commands+216>, argc=3Dargc@entry=3D1, argv=3Dargv@entry=3D0x7fffffffc120=
+) at
+> perf.c:312
+> #6  0x000000000040c05a in handle_internal_command
+> (argv=3D0x7fffffffc120, argc=3D1) at perf.c:364
+> #7  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointer>) at=
+ perf.c:408
+> #8  main (argc=3D1, argv=3D0x7fffffffc120) at perf.c:538
 >
-> Regards,
-> Anup
-
-
-
--- 
-Regards,
-Atish
+> We tried running perf record --no-bpf-event but crash is still seen so
+> we added the below patch to skip processing bpf events when
+> no-bpf-event options is provided , but not sure if this is the actual
+> solution, please provide your inputs.
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 454e275..78e96ad 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1320,11 +1320,12 @@ static int record__synthesize(struct record
+> *rec, bool tail)
+>                 return err;
+>         }
+>
+> -       err =3D perf_event__synthesize_bpf_events(session,
+> process_synthesized_event,
+> -                                               machine, opts);
+> -       if (err < 0)
+> -               pr_warning("Couldn't synthesize bpf events.\n");
+> -
+> +        if (!opts->no_bpf_event) {
+> +                err =3D perf_event__synthesize_bpf_events(session,
+> process_synthesized_event,
+> +                                                       machine, opts);
+> +               if (err < 0)
+> +                       pr_warning("Couldn't synthesize bpf events.\n");
+> +        }
+>
+>
+> Thanks,
+> Rajesh Dasari.
