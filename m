@@ -2,139 +2,263 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01BEC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 03:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F94CC64ED8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 07:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbjBXDp4 (ORCPT
+        id S229487AbjBXHZm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Feb 2023 22:45:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48380 "EHLO
+        Fri, 24 Feb 2023 02:25:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjBXDpz (ORCPT
+        with ESMTP id S229476AbjBXHZl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Feb 2023 22:45:55 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B1DE131
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 19:45:54 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id p8so12743025wrt.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Feb 2023 19:45:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=33nRVcEx51wK1syFEsZ5/2j4bLwy5lT6Y+g6+3Ht0fw=;
-        b=b/5IGEPSM+YeIYNI+lfqEA27fjSYmJp+Q4NVnM3uPFUAONFhkq9s2BxFPe7LVG5hRo
-         ni/Ppeb0E5i3Mt5BFtSSxiMVcJ9GVbE8Z53ckPA7QlFn2CwUCw0ZNd1F6qLRRjK4JVOb
-         qrdkm8LGC8RmFezW3sQAfGlO3LOpLLYY9p/7Qm3VFfwGMYsM9Nw4AGphyAEe5AhJPkC3
-         4PCu/4mXl67LKD5KoiYzOuWdgoIRBl7+5ZWyspcs/KFfs2TkkLVTZTCn4LbSN484NXfb
-         nZcwCZWFg40iKzG0tEYbqgyPBiKBhxGeryPo77S1vHKHwZi7nLo4ktLHfE23vwSZa+2X
-         yWYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=33nRVcEx51wK1syFEsZ5/2j4bLwy5lT6Y+g6+3Ht0fw=;
-        b=qifI+RcDqS1inAPWSFV6uy1Q3JiBgahPSJEENMtJb3RHxx/TFY9vkoq8BQ8oRdwrq8
-         2KGUgk0eScecZ+RNpGX2K1FDhoUVCXS+zuh8vBe++O/2N2WLuG4X66COV0Y6xjCfYmtJ
-         5YS9loJd0pTf+y52wHt58FNuLaR42Zjn4HbSN8hFTaXwGXbeghVjEVXWssj+IPDLAaeu
-         mMmyy37LlQIlL3skLagCljWLbv0znk/JEWaNjideIFCROHKWJ9MFGO3iaQ3mLYzKF19P
-         70Q6s7FKqOjAqEfE7GXYh2+vo0eJiVlWg4y57WNLS72WcsmXdNl1HVUm1kf4Ruk3+mS8
-         QWKA==
-X-Gm-Message-State: AO0yUKUNcPTV7gQ0xh9+y9IsXLDVUW7VbpLua01flRp89Vt5VivzOcJd
-        eQpC9FCnn96QTqDuhs++qu0rWnIWy0InTdwURjnNf5bW0kiVHokU
-X-Google-Smtp-Source: AK7set9Jt2AbBb2iYiGwcv8kMMBiAWSeL4Q/pq3PMf2uj7eHRELjQt4QBUXrBqaiOXtWLtJfcPnNRiKa4/ESMlqoDE0=
-X-Received: by 2002:a5d:5041:0:b0:2c5:881a:eaab with SMTP id
- h1-20020a5d5041000000b002c5881aeaabmr921413wrt.4.1677210352475; Thu, 23 Feb
- 2023 19:45:52 -0800 (PST)
+        Fri, 24 Feb 2023 02:25:41 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE3E1EBDF;
+        Thu, 23 Feb 2023 23:25:39 -0800 (PST)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PNLvr5jszznWTZ;
+        Fri, 24 Feb 2023 15:23:04 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 24 Feb
+ 2023 15:25:34 +0800
+Date:   Fri, 24 Feb 2023 15:25:01 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Changbin Du <changbin.du@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>
+Subject: Re: [PATCH] perf: fix counting when initial delay configured
+Message-ID: <20230224072501.r6khif73pg27xe5l@M910t>
+References: <20230223075800.1795777-1-changbin.du@huawei.com>
+ <Y/dt6QpsCj5AAUE/@kernel.org>
+ <CAM9d7cgwP1ra44oJeWO3y+XviXJyZmR4wrgdizK1UhYEw9w6jg@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAPXMrf9hCmTKjUJJ_cymxqw696FdDvgV0xuDjwGeQTkoDpi=KQ@mail.gmail.com>
-In-Reply-To: <CAPXMrf9hCmTKjUJJ_cymxqw696FdDvgV0xuDjwGeQTkoDpi=KQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 23 Feb 2023 19:45:40 -0800
-Message-ID: <CAP-5=fWzTyz5hZqPSrtMyxZ3biu+ywtzMJk-A2jituE20EGGNA@mail.gmail.com>
-Subject: Re: perf record is crashing on system with bpf progs are running
-To:     RAJESH DASARI <raajeshdasari@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cgwP1ra44oJeWO3y+XviXJyZmR4wrgdizK1UhYEw9w6jg@mail.gmail.com>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 23, 2023 at 12:02=E2=80=AFAM RAJESH DASARI <raajeshdasari@gmail=
-.com> wrote:
+On Thu, Feb 23, 2023 at 02:48:26PM -0800, Namhyung Kim wrote:
+> Hello,
+> 
+> On Thu, Feb 23, 2023 at 5:45 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Thu, Feb 23, 2023 at 03:58:00PM +0800, Changbin Du escreveu:
+> > > When creating counters with initial delay configured, the enable_on_exec
+> > > field is not set. So we need to enable the counters later. The problem
+> > > is, when a workload is specified the target__none() is still true. So
+> > > we also need to check stat_config.initial_delay.
+> > >
+> > > Before this fix the event is not counted:
+> > > $ ./perf stat -e instructions -D 100 sleep 2
+> > > Events disabled
+> > > Events enabled
+> > >
+> > >  Performance counter stats for 'sleep 2':
+> > >
+> > >      <not counted>      instructions
+> > >
+> > >        1.901661124 seconds time elapsed
+> > >
+> > >        0.001602000 seconds user
+> > >        0.000000000 seconds sys
+> > >
+> > > After fix it works:
+> > > $ ./perf stat -e instructions -D 100 sleep 2
+> > > Events disabled
+> > > Events enabled
+> > >
+> > >  Performance counter stats for 'sleep 2':
+> > >
+> > >            404,214      instructions
+> > >
+> > >        1.901743475 seconds time elapsed
+> > >
+> > >        0.001617000 seconds user
+> > >        0.000000000 seconds sys
+> > >
+> > > Fixes: c587e77e100f ("perf stat: Do not delay the workload with --delay")
+> >
+> > Yeap, even the comment states that we need to enable when initial_delay
+> > is set :-)
+> 
+> Right, but the logic that checks the initial_delay is placed
+> out of the function.  Just checking the initial_delay value
+> can be confusing as it can have a negative value.
+> 
+> Maybe we can add an argument (bool force?) to the
+> enable_counters() function.
 >
-> Hi ,
->
-> perf record is crashing on systems with bpf programs are running.
->
-> We are running on the 4.18 host kernel and we launch a container ,
-> inside the container we run perf record command, (bpf program is
-> running). Perf is built on top of the 5.4.228 kernel.
+Yes, it could be done.
 
-You mean you are running perf built from Linux 5.4? Could you try
-something more recent like Linux 6.2?
+Maybe we can fold the 'initial_delay' into 'struct target', and provide
+consistent behaviour for all subcommands. Here I add a
+target__enable_counter_on_exec() to determine whether enable_on_exec should
+set for all counters.
 
-Thanks,
-Ian
+$ git diff -U1
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index c71d85577de6..e807be2214c7 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -541,8 +541,3 @@ static int enable_counters(void)
 
-> (gdb) bt
-> #0  0x000000000055becf in perf_event__synthesize_one_bpf_prog
-> (opts=3D0x94def8 <record+280>, event=3D0xabd910, fd=3D132, machine=3D0xaf=
-6208,
-> process=3D0x421260 <process_synthesized_event>,
->     session=3D0xaf6090) at util/bpf-event.c:242
-> #1  perf_event__synthesize_bpf_events (session=3Dsession@entry=3D0xaf6090=
-,
-> process=3Dprocess@entry=3D0x421260 <process_synthesized_event>,
-> machine=3Dmachine@entry=3D0xaf6208,
->     opts=3Dopts@entry=3D0x94def8 <record+280>) at util/bpf-event.c:333
-> #2  0x000000000041ff5c in record__synthesize (tail=3Dtail@entry=3Dfalse,
-> rec=3D0x94dde0 <record>) at builtin-record.c:1323
-> #3  0x0000000000422bc4 in __cmd_record (rec=3D0x94dde0 <record>,
-> argv=3D<optimized out>, argc=3D<optimized out>) at builtin-record.c:1465
-> #4  cmd_record (argc=3D<optimized out>, argv=3D<optimized out>) at
-> builtin-record.c:2474
-> #5  0x0000000000490769 in run_builtin (p=3Dp@entry=3D0x9574b8
-> <commands+216>, argc=3Dargc@entry=3D1, argv=3Dargv@entry=3D0x7fffffffc120=
-) at
-> perf.c:312
-> #6  0x000000000040c05a in handle_internal_command
-> (argv=3D0x7fffffffc120, argc=3D1) at perf.c:364
-> #7  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointer>) at=
- perf.c:408
-> #8  main (argc=3D1, argv=3D0x7fffffffc120) at perf.c:538
->
-> We tried running perf record --no-bpf-event but crash is still seen so
-> we added the below patch to skip processing bpf events when
-> no-bpf-event options is provided , but not sure if this is the actual
-> solution, please provide your inputs.
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 454e275..78e96ad 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1320,11 +1320,12 @@ static int record__synthesize(struct record
-> *rec, bool tail)
->                 return err;
->         }
->
-> -       err =3D perf_event__synthesize_bpf_events(session,
-> process_synthesized_event,
-> -                                               machine, opts);
-> -       if (err < 0)
-> -               pr_warning("Couldn't synthesize bpf events.\n");
-> -
-> +        if (!opts->no_bpf_event) {
-> +                err =3D perf_event__synthesize_bpf_events(session,
-> process_synthesized_event,
-> +                                                       machine, opts);
-> +               if (err < 0)
-> +                       pr_warning("Couldn't synthesize bpf events.\n");
-> +        }
->
->
+-       /*
+-        * We need to enable counters only if:
+-        * - we don't have tracee (attaching to task or cpu)
+-        * - we have initial delay configured
+-        */
+-       if (!target__none(&target) || stat_config.initial_delay) {
++       if (!target__enable_counter_on_exec(&target)) {
+                if (!all_counters_use_bpf)
+@@ -916,3 +911,3 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+
+-       if (stat_config.initial_delay) {
++       if (target.initial_delay) {
+                pr_info(EVLIST_DISABLED_MSG);
+@@ -928,4 +923,4 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+
+-       if (stat_config.initial_delay > 0) {
+-               usleep(stat_config.initial_delay * USEC_PER_MSEC);
++       if (target.initial_delay > 0) {
++               usleep(target.initial_delay * USEC_PER_MSEC);
+                err = enable_counters();
+@@ -1250,3 +1245,3 @@ static struct option stat_options[] = {
+                     "aggregate counts per numa node", AGGR_NODE),
+-       OPT_INTEGER('D', "delay", &stat_config.initial_delay,
++       OPT_INTEGER('D', "delay", &target.initial_delay,
+                    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 534d36d26fc3..40984d124db1 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -848,3 +848,3 @@ int create_perf_stat_counter(struct evsel *evsel,
+                 */
+-               if (target__none(target) && !config->initial_delay)
++               if (target__enable_counter_on_exec(target))
+                        attr->enable_on_exec = 1;
+diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
+index daec6cba500d..a6721b644bfb 100644
+--- a/tools/perf/util/target.h
++++ b/tools/perf/util/target.h
+@@ -20,2 +20,3 @@ struct target {
+        bool         hybrid;
++       int          initial_delay;
+        const char   *attr_map;
+@@ -74,2 +75,7 @@ static inline bool target__none(struct target *target)
+
++static inline bool target__enable_counter_on_exec(struct target *target)
++{
++       return target__none(target) && !target->initial_delay;
++}
++
+
 > Thanks,
-> Rajesh Dasari.
+> Namhyung
+> 
+> 
+> >
+> > I added the additional test output below.
+> >
+> > Namhyung, can you please ack it?
+> >
+> > - Arnaldo
+> >
+> > Committer testing:
+> >
+> > Before:
+> >
+> > Lets use stress-ng so that we have lots of samples using a CPU stressor
+> > and also intermingle the workload output with the messages about when
+> > the events get enabled (i.e. later on in the workload):
+> >
+> >   $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
+> >   Events disabled
+> >   stress-ng: info:  [38361] setting to a 1 second run per stressor
+> >   stress-ng: info:  [38361] dispatching hogs: 32 cpu
+> >   Events enabled
+> >   stress-ng: info:  [38361] successful run completed in 1.01s
+> >
+> >    Performance counter stats for 'stress-ng -c 32 -t 1':
+> >
+> >        <not counted>      instructions:u
+> >
+> >          0.916479141 seconds time elapsed
+> >
+> >         30.868003000 seconds user
+> >          0.049851000 seconds sys
+> >
+> >
+> >   Some events weren't counted. Try disabling the NMI watchdog:
+> >         echo 0 > /proc/sys/kernel/nmi_watchdog
+> >         perf stat ...
+> >         echo 1 > /proc/sys/kernel/nmi_watchdog
+> >   $
+> >
+> > After the fix:
+> >
+> >   $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
+> >   Events disabled
+> >   stress-ng: info:  [40429] setting to a 1 second run per stressor
+> >   stress-ng: info:  [40429] dispatching hogs: 32 cpu
+> >   Events enabled
+> >   stress-ng: info:  [40429] successful run completed in 1.01s
+> >
+> >    Performance counter stats for 'stress-ng -c 32 -t 1':
+> >
+> >         154117865145      instructions:u
+> >
+> >          0.920827644 seconds time elapsed
+> >
+> >         30.864753000 seconds user
+> >          0.073862000 seconds sys
+> >
+> >
+> >   $
+> >
+> > > Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> > > ---
+> > >  tools/perf/builtin-stat.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > > index 9f3e4b257516..c71d85577de6 100644
+> > > --- a/tools/perf/builtin-stat.c
+> > > +++ b/tools/perf/builtin-stat.c
+> > > @@ -544,7 +544,7 @@ static int enable_counters(void)
+> > >        * - we don't have tracee (attaching to task or cpu)
+> > >        * - we have initial delay configured
+> > >        */
+> > > -     if (!target__none(&target)) {
+> > > +     if (!target__none(&target) || stat_config.initial_delay) {
+> > >               if (!all_counters_use_bpf)
+> > >                       evlist__enable(evsel_list);
+> > >       }
+> > > --
+> > > 2.25.1
+> > >
+> >
+> > --
+> >
+> > - Arnaldo
+> 
+
+-- 
+Cheers,
+Changbin Du
