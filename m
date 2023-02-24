@@ -2,263 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F94CC64ED8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 07:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC65C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Feb 2023 22:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjBXHZm (ORCPT
+        id S229613AbjBXWsP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Feb 2023 02:25:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37036 "EHLO
+        Fri, 24 Feb 2023 17:48:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjBXHZl (ORCPT
+        with ESMTP id S229379AbjBXWsO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Feb 2023 02:25:41 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE3E1EBDF;
-        Thu, 23 Feb 2023 23:25:39 -0800 (PST)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PNLvr5jszznWTZ;
-        Fri, 24 Feb 2023 15:23:04 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
- (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 24 Feb
- 2023 15:25:34 +0800
-Date:   Fri, 24 Feb 2023 15:25:01 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Changbin Du <changbin.du@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 24 Feb 2023 17:48:14 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D083A298D9;
+        Fri, 24 Feb 2023 14:48:13 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id h14so989119plf.10;
+        Fri, 24 Feb 2023 14:48:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qeATGpMAUhlPhNlH9gLwCd/TfxdFp8lFPK3Fc+jb8A4=;
+        b=Es3b3ycUyHUUzwLVFclE4aaFgl10/UTcec+goyMlkH/IUCyzlYs1lYdHiL7UhEwt3U
+         TY692Ar4ptj+Or+3WFK5qEAhRXwp1uih2X/G+j7UiM+q0JiNAZru/VlDZA+KanFvhjJd
+         Wn/pdc4L9yW3JWEDn/IZtvFmFxVeeSTQ6pNEunlboQf4p7lMtuSeFAdOLOxeabQwk4oY
+         qw8njtIEm4wE5j7GkZYa1hc7099iTIRWn+J6KIQthbu/sS2MQ3R+A8vvpXUoKK4OI3rS
+         hzr8O0m5LocQZF0GCwIObsnc9yEsBy6VunYD7vrNOwCe6DAa7qVYGzbfM6fnbmqRvJWE
+         AIHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qeATGpMAUhlPhNlH9gLwCd/TfxdFp8lFPK3Fc+jb8A4=;
+        b=3eA4GOL/e5lZtCOxCqUSxAjUk8WWvENBnNKdVOMBReKnPF3crO5GiZyc8pxdtnchLN
+         KI6Bgg/tOgGrOWj/KsWFvX8qzqSZ7gdemnnxg4pG0fBEYjOs3GDMZ0tXRy7TL9plZJga
+         8/h7lkXNPq+2gq+5oijUCZGUEouQwfd5uULOZO1T9sctscl+Vle+WG/iQV4u2ER7IzFk
+         UQ9HydBQGGhICLCqWb6iCSH54QVRMTavGPhfiFiftpc9XoDNQ3YhqylAu0Ahhehyehb7
+         P2JPK0muVECga7Z2pI2T/XCe58bK81f9Abx4Yuygth51fzYSJ2IOzPxMipxkeHsfQ9Ug
+         PyGA==
+X-Gm-Message-State: AO0yUKWU/zdtIWqKVov4Ru8IvYdCydxgP4EUmy8uK6SJ07DV9Yf5jl5s
+        xsXJtXcZ9938Bk9xRZnkolU=
+X-Google-Smtp-Source: AK7set+PhjoHKaKfk5icN0Rs8rA4nm5038euOGQAbYkKXG/+4fURV/b5B0PelIz1YulzEAHf6TFvvg==
+X-Received: by 2002:a17:902:6b06:b0:19c:d5d4:843c with SMTP id o6-20020a1709026b0600b0019cd5d4843cmr2723168plk.20.1677278893220;
+        Fri, 24 Feb 2023 14:48:13 -0800 (PST)
+Received: from google.com ([2601:647:6780:44b0:776c:a206:d0db:818b])
+        by smtp.gmail.com with ESMTPSA id m12-20020a170902bb8c00b00194a297cb8esm13674pls.191.2023.02.24.14.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Feb 2023 14:48:12 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
+Date:   Fri, 24 Feb 2023 14:48:07 -0800
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ian Rogers <irogers@google.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>
-Subject: Re: [PATCH] perf: fix counting when initial delay configured
-Message-ID: <20230224072501.r6khif73pg27xe5l@M910t>
-References: <20230223075800.1795777-1-changbin.du@huawei.com>
- <Y/dt6QpsCj5AAUE/@kernel.org>
- <CAM9d7cgwP1ra44oJeWO3y+XviXJyZmR4wrgdizK1UhYEw9w6jg@mail.gmail.com>
+        Jiri Olsa <jolsa@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        James Clark <james.clark@arm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 50/51] perf stat: Use counts rather than saved_value
+Message-ID: <Y/k+p8IPY/ftl3KQ@google.com>
+References: <20230219092848.639226-1-irogers@google.com>
+ <20230219092848.639226-51-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cgwP1ra44oJeWO3y+XviXJyZmR4wrgdizK1UhYEw9w6jg@mail.gmail.com>
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20230219092848.639226-51-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 23, 2023 at 02:48:26PM -0800, Namhyung Kim wrote:
-> Hello,
+On Sun, Feb 19, 2023 at 01:28:47AM -0800, Ian Rogers wrote:
+> Switch the hard coded metrics to use the aggregate value rather than
+> from saved_value. When computing a metric like IPC the aggregate count
+> comes from instructions then cycles is looked up and if present IPC
+> computed. Rather than lookup from the saved_value rbtree, search the
+> counter's evlist for the desired counter.
 > 
-> On Thu, Feb 23, 2023 at 5:45 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Thu, Feb 23, 2023 at 03:58:00PM +0800, Changbin Du escreveu:
-> > > When creating counters with initial delay configured, the enable_on_exec
-> > > field is not set. So we need to enable the counters later. The problem
-> > > is, when a workload is specified the target__none() is still true. So
-> > > we also need to check stat_config.initial_delay.
-> > >
-> > > Before this fix the event is not counted:
-> > > $ ./perf stat -e instructions -D 100 sleep 2
-> > > Events disabled
-> > > Events enabled
-> > >
-> > >  Performance counter stats for 'sleep 2':
-> > >
-> > >      <not counted>      instructions
-> > >
-> > >        1.901661124 seconds time elapsed
-> > >
-> > >        0.001602000 seconds user
-> > >        0.000000000 seconds sys
-> > >
-> > > After fix it works:
-> > > $ ./perf stat -e instructions -D 100 sleep 2
-> > > Events disabled
-> > > Events enabled
-> > >
-> > >  Performance counter stats for 'sleep 2':
-> > >
-> > >            404,214      instructions
-> > >
-> > >        1.901743475 seconds time elapsed
-> > >
-> > >        0.001617000 seconds user
-> > >        0.000000000 seconds sys
-> > >
-> > > Fixes: c587e77e100f ("perf stat: Do not delay the workload with --delay")
-> >
-> > Yeap, even the comment states that we need to enable when initial_delay
-> > is set :-)
+> A new helper evsel__stat_type is used to both quickly find a metric
+> function and to identify when a counter is the one being sought. So
+> that both total and miss counts can be sought, the stat_type enum is
+> expanded. The ratio functions are rewritten to share a common helper
+> with the ratios being directly passed rather than computed from an
+> enum value.
 > 
-> Right, but the logic that checks the initial_delay is placed
-> out of the function.  Just checking the initial_delay value
-> can be confusing as it can have a negative value.
-> 
-> Maybe we can add an argument (bool force?) to the
-> enable_counters() function.
->
-Yes, it could be done.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+[SNIP]
+> -static double runtime_stat_avg(enum stat_type type, int aggr_idx,
+> -			       struct runtime_stat_data *rsd)
+> +static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type type)
+>  {
+> -	struct saved_value *v;
+> -
+> -	v = saved_value_lookup(NULL, aggr_idx, false, type, rsd->ctx, rsd->cgrp);
+> -	if (!v)
+> -		return 0.0;
+> -
+> -	return avg_stats(&v->stats);
+> +	const struct evsel *cur;
+> +	int evsel_ctx = evsel_context(evsel);
+> +
+> +	evlist__for_each_entry(evsel->evlist, cur) {
+> +		struct perf_stat_aggr *aggr;
+> +
+> +		/* Ignore the evsel that is being searched from. */
+> +		if (evsel == cur)
+> +			continue;
+> +
+> +		/* Ignore evsels that are part of different groups. */
+> +		if (evsel->core.leader->nr_members &&
+> +		    evsel->core.leader != cur->core.leader)
 
-Maybe we can fold the 'initial_delay' into 'struct target', and provide
-consistent behaviour for all subcommands. Here I add a
-target__enable_counter_on_exec() to determine whether enable_on_exec should
-set for all counters.
+The evsel->nr_members is somewhat confusing in that it counts itself
+as a member.  I'm not sure it resets the nr_members to 0 for standalone
+events.  You'd better checking nr_members greater than 1 for group
+events.
 
-$ git diff -U1
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index c71d85577de6..e807be2214c7 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -541,8 +541,3 @@ static int enable_counters(void)
+Thanks,
+Namhyung
 
--       /*
--        * We need to enable counters only if:
--        * - we don't have tracee (attaching to task or cpu)
--        * - we have initial delay configured
--        */
--       if (!target__none(&target) || stat_config.initial_delay) {
-+       if (!target__enable_counter_on_exec(&target)) {
-                if (!all_counters_use_bpf)
-@@ -916,3 +911,3 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
 
--       if (stat_config.initial_delay) {
-+       if (target.initial_delay) {
-                pr_info(EVLIST_DISABLED_MSG);
-@@ -928,4 +923,4 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
-
--       if (stat_config.initial_delay > 0) {
--               usleep(stat_config.initial_delay * USEC_PER_MSEC);
-+       if (target.initial_delay > 0) {
-+               usleep(target.initial_delay * USEC_PER_MSEC);
-                err = enable_counters();
-@@ -1250,3 +1245,3 @@ static struct option stat_options[] = {
-                     "aggregate counts per numa node", AGGR_NODE),
--       OPT_INTEGER('D', "delay", &stat_config.initial_delay,
-+       OPT_INTEGER('D', "delay", &target.initial_delay,
-                    "ms to wait before starting measurement after program start (-1: start with events disabled)"),
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 534d36d26fc3..40984d124db1 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -848,3 +848,3 @@ int create_perf_stat_counter(struct evsel *evsel,
-                 */
--               if (target__none(target) && !config->initial_delay)
-+               if (target__enable_counter_on_exec(target))
-                        attr->enable_on_exec = 1;
-diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
-index daec6cba500d..a6721b644bfb 100644
---- a/tools/perf/util/target.h
-+++ b/tools/perf/util/target.h
-@@ -20,2 +20,3 @@ struct target {
-        bool         hybrid;
-+       int          initial_delay;
-        const char   *attr_map;
-@@ -74,2 +75,7 @@ static inline bool target__none(struct target *target)
-
-+static inline bool target__enable_counter_on_exec(struct target *target)
-+{
-+       return target__none(target) && !target->initial_delay;
-+}
-+
-
-> Thanks,
-> Namhyung
-> 
-> 
-> >
-> > I added the additional test output below.
-> >
-> > Namhyung, can you please ack it?
-> >
-> > - Arnaldo
-> >
-> > Committer testing:
-> >
-> > Before:
-> >
-> > Lets use stress-ng so that we have lots of samples using a CPU stressor
-> > and also intermingle the workload output with the messages about when
-> > the events get enabled (i.e. later on in the workload):
-> >
-> >   $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
-> >   Events disabled
-> >   stress-ng: info:  [38361] setting to a 1 second run per stressor
-> >   stress-ng: info:  [38361] dispatching hogs: 32 cpu
-> >   Events enabled
-> >   stress-ng: info:  [38361] successful run completed in 1.01s
-> >
-> >    Performance counter stats for 'stress-ng -c 32 -t 1':
-> >
-> >        <not counted>      instructions:u
-> >
-> >          0.916479141 seconds time elapsed
-> >
-> >         30.868003000 seconds user
-> >          0.049851000 seconds sys
-> >
-> >
-> >   Some events weren't counted. Try disabling the NMI watchdog:
-> >         echo 0 > /proc/sys/kernel/nmi_watchdog
-> >         perf stat ...
-> >         echo 1 > /proc/sys/kernel/nmi_watchdog
-> >   $
-> >
-> > After the fix:
-> >
-> >   $ perf stat -e instructions -D 100 stress-ng -c 32 -t 1
-> >   Events disabled
-> >   stress-ng: info:  [40429] setting to a 1 second run per stressor
-> >   stress-ng: info:  [40429] dispatching hogs: 32 cpu
-> >   Events enabled
-> >   stress-ng: info:  [40429] successful run completed in 1.01s
-> >
-> >    Performance counter stats for 'stress-ng -c 32 -t 1':
-> >
-> >         154117865145      instructions:u
-> >
-> >          0.920827644 seconds time elapsed
-> >
-> >         30.864753000 seconds user
-> >          0.073862000 seconds sys
-> >
-> >
-> >   $
-> >
-> > > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > > ---
-> > >  tools/perf/builtin-stat.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > > index 9f3e4b257516..c71d85577de6 100644
-> > > --- a/tools/perf/builtin-stat.c
-> > > +++ b/tools/perf/builtin-stat.c
-> > > @@ -544,7 +544,7 @@ static int enable_counters(void)
-> > >        * - we don't have tracee (attaching to task or cpu)
-> > >        * - we have initial delay configured
-> > >        */
-> > > -     if (!target__none(&target)) {
-> > > +     if (!target__none(&target) || stat_config.initial_delay) {
-> > >               if (!all_counters_use_bpf)
-> > >                       evlist__enable(evsel_list);
-> > >       }
-> > > --
-> > > 2.25.1
-> > >
-> >
-> > --
-> >
-> > - Arnaldo
-> 
-
--- 
-Cheers,
-Changbin Du
+> +			continue;
+> +		/* Ignore evsels with mismatched modifiers. */
+> +		if (evsel_ctx != evsel_context(cur))
+> +			continue;
+> +		/* Ignore if not the cgroup we're looking for. */
+> +		if (evsel->cgrp != cur->cgrp)
+> +			continue;
+> +		/* Ignore if not the stat we're looking for. */
+> +		if (type != evsel__stat_type(cur))
+> +			continue;
+> +
+> +		aggr = &cur->stats->aggr[aggr_idx];
+> +		if (type == STAT_NSECS)
+> +			return aggr->counts.val;
+> +		return aggr->counts.val * cur->scale;
+> +	}
+> +	return 0.0;
+>  }
