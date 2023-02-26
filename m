@@ -2,35 +2,35 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5BAC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 17:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D2AC64ED6
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 17:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229489AbjBZRcP (ORCPT
+        id S229838AbjBZRhZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 26 Feb 2023 12:32:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58000 "EHLO
+        Sun, 26 Feb 2023 12:37:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229790AbjBZRcO (ORCPT
+        with ESMTP id S229840AbjBZRhY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 26 Feb 2023 12:32:14 -0500
-Received: from msg-1.mailo.com (msg-1.mailo.com [213.182.54.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B9613DC1;
-        Sun, 26 Feb 2023 09:32:12 -0800 (PST)
+        Sun, 26 Feb 2023 12:37:24 -0500
+Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063821A650;
+        Sun, 26 Feb 2023 09:37:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1677432705; bh=G3YJe+kKHyMy1tZ4zRvdixDsMk9Nsq26rrWMIw2P9PI=;
+        t=1677433010; bh=z+D+egR+IKnMs7kjuMNQ9QKI6HtiUZ3Hosht4R19zPw=;
         h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
          MIME-Version:Content-Type:In-Reply-To;
-        b=WWmwd75Wg7zo53mZy7rXFj9vSaArWZ5y7XT49N3fcen580mffuBOYc5ni7X5XCP5x
-         8p/Jy/cUbIqKH+zgxX7de8COpLf+lTNbRI2XiCWLAp4tbI/K8US2qZSZZvR5G3yu15
-         +VyuLLK+JicyVq5YZyyBT99uaGGD0iRodSdGDwSU=
-Received: by b-3.in.mailobj.net [192.168.90.13] with ESMTP
+        b=EEQO9cSVjeoATtyOmloe/fMJcCplhKOYas0s3copL2zAdh13bmNDODhD1ghRgXzN+
+         VhnPtG0zcL+bcUF6OPj1mRNPRJADSYj8MBQ3KFoIAjOyORxeVP1VFqotvUJB/xgqMt
+         OR4jEC/awV4xKVIi6WBZJ2yh7lUW/uWyPpkR7zek=
+Received: by b-4.in.mailobj.net [192.168.90.14] with ESMTP
         via ip-206.mailobj.net [213.182.55.206]
-        Sun, 26 Feb 2023 18:31:45 +0100 (CET)
-X-EA-Auth: pRYlgKORJEAre/qpX2WFvfeHJfJwl+ydoWZtKitRbEvAfMuTYx5eU4HewOUNtO0sQwssNeMGNKTBHEGOccQrbsaQXUWczipn
-Date:   Sun, 26 Feb 2023 23:01:39 +0530
+        Sun, 26 Feb 2023 18:36:50 +0100 (CET)
+X-EA-Auth: qamVEZnHJQXIEp9zxWVTYlqDSqL2sF3iYAhmrtrd2KZnayt/BOycf2pya47q0KpqLmWIBlKgn9iAfxETKxqSNw==
+Date:   Sun, 26 Feb 2023 23:06:45 +0530
 From:   Deepak R Varma <drv@mailo.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -40,83 +40,64 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
+        linux-kernel@vger.kernel.org,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
         Praveen Kumar <kumarpraveen@linux.microsoft.com>,
         Deepak R Varma <drv@mailo.com>
-Subject: [PATCH v3 3/3] perf/x86/intel: Use sysfs_emit() in show() callback
- function
-Message-ID: <e88697a9e217961ffcbf5843588a78e8b0b19854.1677431992.git.drv@mailo.com>
-References: <cover.1677431992.git.drv@mailo.com>
+Subject: Re: [PATCH v2 1/3] perf/x86/core: Use sysfs_emit() in show()
+ callback function
+Message-ID: <Y/uYrf1M0R4lZZb1@ubun2204.myguest.virtualbox.org>
+References: <cover.1676987821.git.drv@mailo.com>
+ <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
+ <Y/Z8qUYDXPFlzdsY@hirez.programming.kicks-ass.net>
+ <Y/bx0Q6XRv0mNdAT@ubun2204.myguest.virtualbox.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1677431992.git.drv@mailo.com>
+In-Reply-To: <Y/bx0Q6XRv0mNdAT@ubun2204.myguest.virtualbox.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As per C99 standard, snprintf() returns the number of bytes that would
-be encoded in the destination buffer when it is sufficiently large. This
-return value may be different from what the caller is expecting and hence
-may lead to potential errors in the program.
-Kernel release 2.6.2 introduced scnprintf() & vscnprintf() which precisely
-return the actual bytes encoded into the destination buffer.
+On Thu, Feb 23, 2023 at 10:25:45AM +0530, Deepak R Varma wrote:
+> On Wed, Feb 22, 2023 at 09:35:53PM +0100, Peter Zijlstra wrote:
+> > On Tue, Feb 21, 2023 at 07:36:12PM +0530, Deepak R Varma wrote:
+> > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > > index 85a63a41c471..27c03e6dcb5d 100644
+> > > --- a/arch/x86/events/core.c
+> > > +++ b/arch/x86/events/core.c
+> > > @@ -1896,9 +1896,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
+> > >  		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
+> > >  			next_str = strchr(str, ';');
+> > >  			if (next_str)
+> > > -				return snprintf(page, next_str - str + 1, "%s", str);
+> > > -			else
+> > > -				return sprintf(page, "%s", str);
+> > > +				return sysfs_emit(page, "%s", str);
+> > >  		}
+> > >  		str = strchr(str, ';');
+> > >  		str++;
+> > 
+> > How is this correct ?!?
+> 
+> oops.. that is bad on my part. My apologies for the wrong code.
+> I will correct it and send in v3.
 
-For the sysfs attribute show() callback functions, which returns the number
-of bytes to the user space, a more recent recommendation is to use
-sysfs_emit() or sysfs_emit_at() instead of sprintf() family of functions.
-This is recorded in the Documentation/filesystems/sysfs.rst Kernel
-documentation file.
+Hello Peter,
+I reviewed the code more closely and concluded that the current implementation
+is better as is. I sent in a v3 with necessary correction for your review.
 
-Issue identified using the coccinelle device_attr_show.cocci script.
+I do have another observation from this area that I will send in as a separate
+patch soon.
 
-Signed-off-by: Deepak R Varma <drv@mailo.com>
----
-Changes in v3:
-   - None.
+Thank you again.
+./drv
 
-Changes in v2:
-   - Revise patch log message to include details on the potential issues with
-     current implementation and how the proposal is a better solution.
-     Feedback provided by Peter Zijlstra <peterz@infradead.org>
 
- arch/x86/events/intel/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 9fce2d1247a7..75ab89ff3a0f 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5387,7 +5387,7 @@ static ssize_t show_sysctl_tfa(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
-+	return sysfs_emit(buf, "%d\n", allow_tsx_force_abort);
- }
- 
- static ssize_t set_sysctl_tfa(struct device *cdev,
-@@ -5421,7 +5421,7 @@ static ssize_t branches_show(struct device *cdev,
- 			     struct device_attribute *attr,
- 			     char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
- }
- 
- static DEVICE_ATTR_RO(branches);
-@@ -5437,7 +5437,7 @@ static ssize_t pmu_name_show(struct device *cdev,
- 			     struct device_attribute *attr,
- 			     char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%s\n", pmu_name_str);
-+	return sysfs_emit(buf, "%s\n", pmu_name_str);
- }
- 
- static DEVICE_ATTR_RO(pmu_name);
--- 
-2.34.1
-
+> 
+> Thank you Peter.
+> 
+> Regards,
+> ./drv
 
 
