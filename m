@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2855FC7EE2D
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 03:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5704FC6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 03:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjBZDog (ORCPT
+        id S229958AbjBZDpf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 25 Feb 2023 22:44:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55418 "EHLO
+        Sat, 25 Feb 2023 22:45:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229919AbjBZDoK (ORCPT
+        with ESMTP id S229954AbjBZDo6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Feb 2023 22:44:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8011116889;
-        Sat, 25 Feb 2023 19:43:47 -0800 (PST)
+        Sat, 25 Feb 2023 22:44:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1605314E8F;
+        Sat, 25 Feb 2023 19:44:26 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CE2FDB80B7F;
-        Sun, 26 Feb 2023 03:42:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5525BC4339C;
-        Sun, 26 Feb 2023 03:42:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 11B3E60B75;
+        Sun, 26 Feb 2023 03:43:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364F2C433D2;
+        Sun, 26 Feb 2023 03:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677382975;
-        bh=rJPBEV0FPwZmSAFS/n5ny5h+aeR6TT0xUdbUjMQKMyA=;
+        s=k20201202; t=1677383038;
+        bh=lYtVxYstbIKppmUFhlg/c2HpxN2I0Aw6trIOgY1wuDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyJEqcwd/pd+jp0uSJrbts/EyrHDMkKNRR/9XZxUFC99e6ItgDm6dXRIicGTV2QVG
-         wKBZZKjLVs0sO4M+4rrQh6+xdvcLYvHVbdDXRAMt9HjFNQKbLY4Qh7aZGtZv1++/ex
-         xuZGh2jwlpTNePkx9MC9VGp3qAFbTPkpW5KqnD86Wm4+fJM8h0UCJG2D42UnhwI8q2
-         UwFG9cRWVJ0BzkBqvSkXnHiSnQo6UeSJkcKjciS9zK23FjSBshhPb8D1d3qCC6r79G
-         z2fXo/5YUmZEepOgDBVKn71KfLQ0QV3ga/scJLWz/TQdbySWQsR1eIuVItJMjwUQ65
-         YVuSpGDCtTHCw==
+        b=jAnUhRYuRVamqpGZ5U62odTwac/9thRthHxsPZLs0yXZkLGAS6hCH58UOwlUdiTVX
+         1tD7vHCQilOy7dMB3vgmBuPBCPfkcSKVGFKj7SBSozoUoO1Zv2bXw4pQfxmIAIyq1/
+         EJSfRnJqDiSg2R64bGdAo0fnj0goGSUfU0N53uf9ozhs4lbPoxTp7KSRY+E5hjMCge
+         7ZA0PP30/0X2MrG3YwzYu3A9nlbya77YZtl6w/CAXCHwYtoqkZbnuuT/HN4qen824t
+         g/e3LgH+sFnomlosOexKXUUhFWpl5kgEwGhFkHi5C5ls/3CxTFNOhaFzzx5rToLfbo
+         A0K2jSmd1YmzA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
@@ -41,12 +41,12 @@ Cc:     Kan Liang <kan.liang@linux.intel.com>,
         mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
         bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 21/21] perf/x86/intel/uncore: Add Meteor Lake support
-Date:   Sat, 25 Feb 2023 22:41:50 -0500
-Message-Id: <20230226034150.771411-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 21/21] perf/x86/intel/uncore: Add Meteor Lake support
+Date:   Sat, 25 Feb 2023 22:42:56 -0500
+Message-Id: <20230226034256.771769-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226034150.771411-1-sashal@kernel.org>
-References: <20230226034150.771411-1-sashal@kernel.org>
+In-Reply-To: <20230226034256.771769-1-sashal@kernel.org>
+References: <20230226034256.771769-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -106,10 +106,10 @@ index 459b1aafd4d4a..27b34f5b87600 100644
  	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&spr_uncore_init),
  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&snr_uncore_init),
 diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index e278e2e7c051a..305a54d88beee 100644
+index b363fddc2a89e..b74e352910f45 100644
 --- a/arch/x86/events/intel/uncore.h
 +++ b/arch/x86/events/intel/uncore.h
-@@ -602,6 +602,7 @@ void skl_uncore_cpu_init(void);
+@@ -587,6 +587,7 @@ void skl_uncore_cpu_init(void);
  void icl_uncore_cpu_init(void);
  void tgl_uncore_cpu_init(void);
  void adl_uncore_cpu_init(void);
