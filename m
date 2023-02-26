@@ -2,314 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5704FC6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 03:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BE4C64ED6
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 04:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbjBZDpf (ORCPT
+        id S229524AbjBZEVJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 25 Feb 2023 22:45:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
+        Sat, 25 Feb 2023 23:21:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbjBZDo6 (ORCPT
+        with ESMTP id S229482AbjBZEVI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Feb 2023 22:44:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1605314E8F;
-        Sat, 25 Feb 2023 19:44:26 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 11B3E60B75;
-        Sun, 26 Feb 2023 03:43:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364F2C433D2;
-        Sun, 26 Feb 2023 03:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677383038;
-        bh=lYtVxYstbIKppmUFhlg/c2HpxN2I0Aw6trIOgY1wuDs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAnUhRYuRVamqpGZ5U62odTwac/9thRthHxsPZLs0yXZkLGAS6hCH58UOwlUdiTVX
-         1tD7vHCQilOy7dMB3vgmBuPBCPfkcSKVGFKj7SBSozoUoO1Zv2bXw4pQfxmIAIyq1/
-         EJSfRnJqDiSg2R64bGdAo0fnj0goGSUfU0N53uf9ozhs4lbPoxTp7KSRY+E5hjMCge
-         7ZA0PP30/0X2MrG3YwzYu3A9nlbya77YZtl6w/CAXCHwYtoqkZbnuuT/HN4qen824t
-         g/e3LgH+sFnomlosOexKXUUhFWpl5kgEwGhFkHi5C5ls/3CxTFNOhaFzzx5rToLfbo
-         A0K2jSmd1YmzA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 21/21] perf/x86/intel/uncore: Add Meteor Lake support
-Date:   Sat, 25 Feb 2023 22:42:56 -0500
-Message-Id: <20230226034256.771769-21-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226034256.771769-1-sashal@kernel.org>
-References: <20230226034256.771769-1-sashal@kernel.org>
+        Sat, 25 Feb 2023 23:21:08 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD1CBDE5
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Feb 2023 20:21:06 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id bh1so3505482plb.11
+        for <linux-perf-users@vger.kernel.org>; Sat, 25 Feb 2023 20:21:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UtCAs/YFFr86XIDfqRqy7kxe4a72YAo+hwolG1inDOM=;
+        b=sBZUrPHnNpZZctNY8LhbDZY7ekb7jqxIeaCi0kseTB/qguUAUe1bYA7THrmxBmfJuy
+         7IuUKcthk066PTSg8U9Jf2w5BOvgV12Y7hCh2cFmswKORn0yBQDucjp8Z5VaFEQMn/Tu
+         jP2yfSrZQIxQrjWqpOGmgosAEN6BxS6Z9FvNtGyYZsoZOmgL6sTi2FGilQbAyp+6ypGI
+         63PeAJo+BV27mWvO0iHfhTkjJBY83kuXWUmhhhXG3ecQ/D4MNQodI6Rh7Yl12j0VgZHW
+         S/q3lOgZMT4GMglpxPWJSe4Z0ZKXHe8Tms4WChxbSQPVVoAgqDeeQB/g3NcMIsUXzHV/
+         7Qzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UtCAs/YFFr86XIDfqRqy7kxe4a72YAo+hwolG1inDOM=;
+        b=Gms5ajiMZpTMY+G5X51IVPCwkr2bEOffUKuX820cMxsKROP4cVZuafOU/b3/K/dnED
+         Nuzf+l2AHaj5Qu549smGQKXWfTLYVDgWzr3QxbzFdnvdDVZ/leuFJB1KfIqbUY8Rk3NF
+         AAOXLfQfaUcOcgw8Yt6SKvq20981ZcWEn1Kuujkk5h3J3xd6tSth7V4WDZ2MpMZqGo9X
+         ygDklGmIuIgxyJIxIeBUaeij5scgS1CWm+sbBT9ZaHlRN/I7tAIZVIFhrdFk0xGsXZB5
+         Zb8ZCWGH8Yv2VByzaVVoAkJ/mnZeIxo9j7qwr4gEIrTem5yI9so01ZiFkPjcYKuKKAkF
+         QKBA==
+X-Gm-Message-State: AO0yUKVhkpqpZC/yxEspSrGeB8Hhy0gUAbsrp61L03UXD4twa60IZCuO
+        F2JB0qZ3BJ1fAXJpg/nrrBKjYcV7LU3XIA6QDmafyg==
+X-Google-Smtp-Source: AK7set9E52xh+xIv1mHte+MfOeP0FWxj3c4Lz+XbS6Ebpe4T0QSt9hx0z+d6uxQIoU3qZyj8qdcE3g==
+X-Received: by 2002:a17:902:ec86:b0:196:11b1:101d with SMTP id x6-20020a170902ec8600b0019611b1101dmr24412942plg.28.1677385266205;
+        Sat, 25 Feb 2023 20:21:06 -0800 (PST)
+Received: from leoy-huanghe.lan (n058152048225.netvigator.com. [58.152.48.225])
+        by smtp.gmail.com with ESMTPSA id jj2-20020a170903048200b0019aaab3f9d7sm1976036plb.113.2023.02.25.20.21.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Feb 2023 20:21:05 -0800 (PST)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 00/14] perf kvm: Support histograms and TUI mode
+Date:   Sun, 26 Feb 2023 12:20:39 +0800
+Message-Id: <20230226042053.1492409-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+This patch set is to enable histograms and (partially) TUI mode in perf
+kvm tool.
 
-[ Upstream commit c828441f21ddc819a28b5723a72e3c840e9de1c6 ]
+Current tool uses its own RB tree to maintain KVM events, it's not easy
+to extend to support more metrics and have no chance to support TUI
+mode.  For this reason, we need firstly to refactor the code by using
+histograms and its associated RB tree; based on histograms we can add
+dimensions for KVM event statistics.  Finally, we need to enable TUI
+mode in the tool.  This is the methodology applied in this series.
 
-The uncore subsystem for Meteor Lake is similar to the previous Alder
-Lake. The main difference is that MTL provides PMU support for different
-tiles, while ADL only provides PMU support for the whole package. On
-ADL, there are CBOX, ARB, and clockbox uncore PMON units. On MTL, they
-are split into CBOX/HAC_CBOX, ARB/HAC_ARB, and cncu/sncu which provides
-a fixed counter for clockticks. Also, new MSR addresses are introduced
-on MTL.
+This series enables TUI mode for 'perf kvm stat report', but it doesn't
+support TUI mode for 'perf kvm stat live'; this is because live mode is
+different from report for TUI mode, which will be implemented in later
+(TBH, I need to look into more details in histograms for this part).
 
-The IMC uncore PMON is the same as Alder Lake. Add new PCIIDs of IMC for
-Meteor Lake.
+Patches 01 ~ 04 are minor refactoring and they are preparation for later
+enabling histograms and dimensions.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20230210190238.1726237-1-kan.liang@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/events/intel/uncore.c     |   7 ++
- arch/x86/events/intel/uncore.h     |   1 +
- arch/x86/events/intel/uncore_snb.c | 161 +++++++++++++++++++++++++++++
- 3 files changed, 169 insertions(+)
+Patches 05 ~ 10 are for enabling histograms and dimensions; with these
+changes the cached list is replaced by histograms list, and we extend to
+support more sorting keys (max time, min time, mean time).
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 459b1aafd4d4a..27b34f5b87600 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1765,6 +1765,11 @@ static const struct intel_uncore_init_fun adl_uncore_init __initconst = {
- 	.mmio_init = adl_uncore_mmio_init,
- };
- 
-+static const struct intel_uncore_init_fun mtl_uncore_init __initconst = {
-+	.cpu_init = mtl_uncore_cpu_init,
-+	.mmio_init = adl_uncore_mmio_init,
-+};
-+
- static const struct intel_uncore_init_fun icx_uncore_init __initconst = {
- 	.cpu_init = icx_uncore_cpu_init,
- 	.pci_init = icx_uncore_pci_init,
-@@ -1832,6 +1837,8 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&adl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&adl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&adl_uncore_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&mtl_uncore_init),
-+	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&mtl_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&spr_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&spr_uncore_init),
- 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&snr_uncore_init),
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index b363fddc2a89e..b74e352910f45 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -587,6 +587,7 @@ void skl_uncore_cpu_init(void);
- void icl_uncore_cpu_init(void);
- void tgl_uncore_cpu_init(void);
- void adl_uncore_cpu_init(void);
-+void mtl_uncore_cpu_init(void);
- void tgl_uncore_mmio_init(void);
- void tgl_l_uncore_mmio_init(void);
- void adl_uncore_mmio_init(void);
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 1f4869227efb9..7fd4334e12a17 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -109,6 +109,19 @@
- #define PCI_DEVICE_ID_INTEL_RPL_23_IMC		0xA728
- #define PCI_DEVICE_ID_INTEL_RPL_24_IMC		0xA729
- #define PCI_DEVICE_ID_INTEL_RPL_25_IMC		0xA72A
-+#define PCI_DEVICE_ID_INTEL_MTL_1_IMC		0x7d00
-+#define PCI_DEVICE_ID_INTEL_MTL_2_IMC		0x7d01
-+#define PCI_DEVICE_ID_INTEL_MTL_3_IMC		0x7d02
-+#define PCI_DEVICE_ID_INTEL_MTL_4_IMC		0x7d05
-+#define PCI_DEVICE_ID_INTEL_MTL_5_IMC		0x7d10
-+#define PCI_DEVICE_ID_INTEL_MTL_6_IMC		0x7d14
-+#define PCI_DEVICE_ID_INTEL_MTL_7_IMC		0x7d15
-+#define PCI_DEVICE_ID_INTEL_MTL_8_IMC		0x7d16
-+#define PCI_DEVICE_ID_INTEL_MTL_9_IMC		0x7d21
-+#define PCI_DEVICE_ID_INTEL_MTL_10_IMC		0x7d22
-+#define PCI_DEVICE_ID_INTEL_MTL_11_IMC		0x7d23
-+#define PCI_DEVICE_ID_INTEL_MTL_12_IMC		0x7d24
-+#define PCI_DEVICE_ID_INTEL_MTL_13_IMC		0x7d28
- 
- 
- #define IMC_UNCORE_DEV(a)						\
-@@ -205,6 +218,32 @@
- #define ADL_UNC_ARB_PERFEVTSEL0			0x2FD0
- #define ADL_UNC_ARB_MSR_OFFSET			0x8
- 
-+/* MTL Cbo register */
-+#define MTL_UNC_CBO_0_PER_CTR0			0x2448
-+#define MTL_UNC_CBO_0_PERFEVTSEL0		0x2442
-+
-+/* MTL HAC_ARB register */
-+#define MTL_UNC_HAC_ARB_CTR			0x2018
-+#define MTL_UNC_HAC_ARB_CTRL			0x2012
-+
-+/* MTL ARB register */
-+#define MTL_UNC_ARB_CTR				0x2418
-+#define MTL_UNC_ARB_CTRL			0x2412
-+
-+/* MTL cNCU register */
-+#define MTL_UNC_CNCU_FIXED_CTR			0x2408
-+#define MTL_UNC_CNCU_FIXED_CTRL			0x2402
-+#define MTL_UNC_CNCU_BOX_CTL			0x240e
-+
-+/* MTL sNCU register */
-+#define MTL_UNC_SNCU_FIXED_CTR			0x2008
-+#define MTL_UNC_SNCU_FIXED_CTRL			0x2002
-+#define MTL_UNC_SNCU_BOX_CTL			0x200e
-+
-+/* MTL HAC_CBO register */
-+#define MTL_UNC_HBO_CTR				0x2048
-+#define MTL_UNC_HBO_CTRL			0x2042
-+
- DEFINE_UNCORE_FORMAT_ATTR(event, event, "config:0-7");
- DEFINE_UNCORE_FORMAT_ATTR(umask, umask, "config:8-15");
- DEFINE_UNCORE_FORMAT_ATTR(chmask, chmask, "config:8-11");
-@@ -598,6 +637,115 @@ void adl_uncore_cpu_init(void)
- 	uncore_msr_uncores = adl_msr_uncores;
- }
- 
-+static struct intel_uncore_type mtl_uncore_cbox = {
-+	.name		= "cbox",
-+	.num_counters   = 2,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= MTL_UNC_CBO_0_PER_CTR0,
-+	.event_ctl	= MTL_UNC_CBO_0_PERFEVTSEL0,
-+	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
-+	.msr_offset	= SNB_UNC_CBO_MSR_OFFSET,
-+	.ops		= &icl_uncore_msr_ops,
-+	.format_group	= &adl_uncore_format_group,
-+};
-+
-+static struct intel_uncore_type mtl_uncore_hac_arb = {
-+	.name		= "hac_arb",
-+	.num_counters   = 2,
-+	.num_boxes	= 2,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= MTL_UNC_HAC_ARB_CTR,
-+	.event_ctl	= MTL_UNC_HAC_ARB_CTRL,
-+	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
-+	.msr_offset	= SNB_UNC_CBO_MSR_OFFSET,
-+	.ops		= &icl_uncore_msr_ops,
-+	.format_group	= &adl_uncore_format_group,
-+};
-+
-+static struct intel_uncore_type mtl_uncore_arb = {
-+	.name		= "arb",
-+	.num_counters   = 2,
-+	.num_boxes	= 2,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= MTL_UNC_ARB_CTR,
-+	.event_ctl	= MTL_UNC_ARB_CTRL,
-+	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
-+	.msr_offset	= SNB_UNC_CBO_MSR_OFFSET,
-+	.ops		= &icl_uncore_msr_ops,
-+	.format_group	= &adl_uncore_format_group,
-+};
-+
-+static struct intel_uncore_type mtl_uncore_hac_cbox = {
-+	.name		= "hac_cbox",
-+	.num_counters   = 2,
-+	.num_boxes	= 2,
-+	.perf_ctr_bits	= 48,
-+	.perf_ctr	= MTL_UNC_HBO_CTR,
-+	.event_ctl	= MTL_UNC_HBO_CTRL,
-+	.event_mask	= ADL_UNC_RAW_EVENT_MASK,
-+	.msr_offset	= SNB_UNC_CBO_MSR_OFFSET,
-+	.ops		= &icl_uncore_msr_ops,
-+	.format_group	= &adl_uncore_format_group,
-+};
-+
-+static void mtl_uncore_msr_init_box(struct intel_uncore_box *box)
-+{
-+	wrmsrl(uncore_msr_box_ctl(box), SNB_UNC_GLOBAL_CTL_EN);
-+}
-+
-+static struct intel_uncore_ops mtl_uncore_msr_ops = {
-+	.init_box	= mtl_uncore_msr_init_box,
-+	.disable_event	= snb_uncore_msr_disable_event,
-+	.enable_event	= snb_uncore_msr_enable_event,
-+	.read_counter	= uncore_msr_read_counter,
-+};
-+
-+static struct intel_uncore_type mtl_uncore_cncu = {
-+	.name		= "cncu",
-+	.num_counters   = 1,
-+	.num_boxes	= 1,
-+	.box_ctl	= MTL_UNC_CNCU_BOX_CTL,
-+	.fixed_ctr_bits = 48,
-+	.fixed_ctr	= MTL_UNC_CNCU_FIXED_CTR,
-+	.fixed_ctl	= MTL_UNC_CNCU_FIXED_CTRL,
-+	.single_fixed	= 1,
-+	.event_mask	= SNB_UNC_CTL_EV_SEL_MASK,
-+	.format_group	= &icl_uncore_clock_format_group,
-+	.ops		= &mtl_uncore_msr_ops,
-+	.event_descs	= icl_uncore_events,
-+};
-+
-+static struct intel_uncore_type mtl_uncore_sncu = {
-+	.name		= "sncu",
-+	.num_counters   = 1,
-+	.num_boxes	= 1,
-+	.box_ctl	= MTL_UNC_SNCU_BOX_CTL,
-+	.fixed_ctr_bits	= 48,
-+	.fixed_ctr	= MTL_UNC_SNCU_FIXED_CTR,
-+	.fixed_ctl	= MTL_UNC_SNCU_FIXED_CTRL,
-+	.single_fixed	= 1,
-+	.event_mask	= SNB_UNC_CTL_EV_SEL_MASK,
-+	.format_group	= &icl_uncore_clock_format_group,
-+	.ops		= &mtl_uncore_msr_ops,
-+	.event_descs	= icl_uncore_events,
-+};
-+
-+static struct intel_uncore_type *mtl_msr_uncores[] = {
-+	&mtl_uncore_cbox,
-+	&mtl_uncore_hac_arb,
-+	&mtl_uncore_arb,
-+	&mtl_uncore_hac_cbox,
-+	&mtl_uncore_cncu,
-+	&mtl_uncore_sncu,
-+	NULL
-+};
-+
-+void mtl_uncore_cpu_init(void)
-+{
-+	mtl_uncore_cbox.num_boxes = icl_get_cbox_num();
-+	uncore_msr_uncores = mtl_msr_uncores;
-+}
-+
- enum {
- 	SNB_PCI_UNCORE_IMC,
- };
-@@ -1264,6 +1412,19 @@ static const struct pci_device_id tgl_uncore_pci_ids[] = {
- 	IMC_UNCORE_DEV(RPL_23),
- 	IMC_UNCORE_DEV(RPL_24),
- 	IMC_UNCORE_DEV(RPL_25),
-+	IMC_UNCORE_DEV(MTL_1),
-+	IMC_UNCORE_DEV(MTL_2),
-+	IMC_UNCORE_DEV(MTL_3),
-+	IMC_UNCORE_DEV(MTL_4),
-+	IMC_UNCORE_DEV(MTL_5),
-+	IMC_UNCORE_DEV(MTL_6),
-+	IMC_UNCORE_DEV(MTL_7),
-+	IMC_UNCORE_DEV(MTL_8),
-+	IMC_UNCORE_DEV(MTL_9),
-+	IMC_UNCORE_DEV(MTL_10),
-+	IMC_UNCORE_DEV(MTL_11),
-+	IMC_UNCORE_DEV(MTL_12),
-+	IMC_UNCORE_DEV(MTL_13),
- 	{ /* end: all zeroes */ }
- };
- 
+Patches 11 ~ 13 are to enable TUI mode in stat report, after this patch
+TUI mode will be default mode, and user needs to input option '--stdio'
+for stdio mode rather than TUI mode.
+
+Patch 14 updates documentation for new sorting and 'stdio' mode.
+
+After changes:
+
+Please see the screenshot for the TUI with 'perf kvm stat report':
+https://people.linaro.org/~leo.yan/debug/perf/perf_kvm_stat_report_tui.png
+
+And I verified the '--stdio' mode and confirmed it has the same result
+with before applying this series.
+
+  # perf kvm stat report --stdio
+
+
+  Analyze events for all VMs, all VCPUs:
+
+               VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time 
+
+             MSR_WRITE        520    60.05%     0.07%      0.74us     16.92us      2.62us ( +-   2.66% )
+                   HLT        179    20.67%    99.82%     64.53us  17159.69us  10123.40us ( +-   4.68% )
+    EXTERNAL_INTERRUPT         71     8.20%     0.07%      1.16us     79.63us     17.56us ( +-  10.92% )
+         EPT_MISCONFIG         68     7.85%     0.03%      5.53us     64.64us      8.09us ( +-  12.50% )
+      PREEMPTION_TIMER         18     2.08%     0.01%      1.91us     12.06us      5.53us ( +-  10.25% )
+      INTERRUPT_WINDOW          7     0.81%     0.00%      0.91us      1.66us      1.30us ( +-   9.09% )
+              MSR_READ          3     0.35%     0.00%      4.06us      4.84us      4.42us ( +-   5.11% )
+
+  Total Samples:866, Total events handled time:1815367.45us.
+
+  # perf kvm stat live
+  12:10:10.786799
+
+  Analyze events for all VMs, all VCPUs:
+
+               VM-EXIT    Samples  Samples%     Time%    Min Time    Max Time         Avg time 
+
+             MSR_WRITE        121    66.85%    12.90%      0.67us  62918.87us    667.19us ( +-  80.72% )
+                   HLT         34    18.78%    76.61%   2069.99us  52171.44us  14103.37us ( +-  14.25% )
+    EXTERNAL_INTERRUPT         20    11.05%    10.49%      1.61us  47469.17us   3282.16us ( +-  75.75% )
+      PREEMPTION_TIMER          5     2.76%     0.00%      3.98us      7.39us      5.84us ( +-  10.51% )
+      INTERRUPT_WINDOW          1     0.55%     0.00%      2.01us      2.01us      2.01us ( +-   0.00% )
+
+  Total Samples:181, Total events handled time:625919.05us.
+
+
+Leo Yan (14):
+  perf kvm: Refactor overall statistics
+  perf kvm: Add pointer to 'perf_kvm_stat' in kvm event
+  perf kvm: Move up metrics helpers
+  perf kvm: Use subtraction for comparison metrics
+  perf kvm: Introduce histograms data structures
+  perf kvm: Pass argument 'sample' to kvm_alloc_init_event()
+  perf kvm: Parse address location for samples
+  perf kvm: Add dimensions for KVM event statistics
+  perf kvm: Use histograms list to replace cached list
+  perf kvm: Polish sorting key
+  perf kvm: Support printing attributions for dimensions
+  perf kvm: Add dimensions for percentages
+  perf kvm: Add TUI mode for stat report
+  perf kvm: Update documentation to reflect new changes
+
+ tools/perf/Documentation/perf-kvm.txt |   9 +-
+ tools/perf/builtin-kvm.c              | 847 +++++++++++++++++++++-----
+ tools/perf/util/kvm-stat.h            |  26 +-
+ 3 files changed, 707 insertions(+), 175 deletions(-)
+
 -- 
-2.39.0
+2.34.1
 
