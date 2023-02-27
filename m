@@ -2,89 +2,191 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9043C64ED6
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Feb 2023 12:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAF6C7EE30
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Feb 2023 12:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjB0M2R (ORCPT
+        id S229809AbjB0Moz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Feb 2023 07:28:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46528 "EHLO
+        Mon, 27 Feb 2023 07:44:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjB0M2Q (ORCPT
+        with ESMTP id S229806AbjB0Moy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Feb 2023 07:28:16 -0500
-Received: from msg-4.mailo.com (msg-4.mailo.com [213.182.54.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D25D32A;
-        Mon, 27 Feb 2023 04:28:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1677500859; bh=45r2F7pMo5/b+WnaKlZH9rDvVipqqe8nois6iv1W+fY=;
-        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
-         MIME-Version:Content-Type:In-Reply-To;
-        b=dl1Uqlci+twDXbHxg6doTDmOYrTHQsiQfEvrULQfC24DRExMRzpb0pvtZvVsS3PuO
-         cYU++1yAE2+oJ60hQ0dM+fc156xnCa8fdKBD/V3TaHm+sOGzptUeiyvCojqLsbMS2Q
-         vbagiXchq2C1sTkpxVfxyEf/M96gC7f95zqogQac=
-Received: by b-5.in.mailobj.net [192.168.90.15] with ESMTP
-        via ip-206.mailobj.net [213.182.55.206]
-        Mon, 27 Feb 2023 13:27:39 +0100 (CET)
-X-EA-Auth: PvGfg/P+ZTbdFxj/dOecIx/mwxuxCL4nBxuwsxCjBGrSjZ9jsyKv52sRJcwNd/8aNyYiUvPFZBk3l54x1wU5ykSTWR86r8OT
-Date:   Mon, 27 Feb 2023 17:57:30 +0530
-From:   Deepak R Varma <drv@mailo.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 27 Feb 2023 07:44:54 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953F21E5EE;
+        Mon, 27 Feb 2023 04:44:49 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31RAnXSL001330;
+        Mon, 27 Feb 2023 12:44:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=aJggnU0u6cZtd/CnG0YMaA2+lOlrvzt7JaSzs3cV4As=;
+ b=fBCzjLtdq4zGpJMmyj0OId0gxeqTDTOszo1wCOwPUGQMhvY3IUXW2sNKPip9loNeMTFr
+ H4diGRkAiJ+9qiON3YSURU7bQqLJbv2xvq9rm7KBpZMstMjDmowRlNF5LDERzsfqGKNd
+ FjcmiyZVrfR6roSGRz+dhxVuEvFug7zjfFdzwiOkZvmRTmC4oTar9dNT6pRdaAg4/SJE
+ roTHd6AIqCFVMeHk+uTey5dRYxVkcmw5dZDqPAl4RayH+zEmg3p7oINDN49yCm0TWorF
+ zGb7+fgvKAIg+BnlJRUX+UI2gQr+J9rtSrxTIujsJwqSDwuhFPZ5EcRCYMtwTZ5+Nx0P 2Q== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p0u3tg7y4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Feb 2023 12:44:14 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31RCiDA5027379
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Feb 2023 12:44:13 GMT
+Received: from [10.50.13.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 27 Feb
+ 2023 04:44:02 -0800
+Message-ID: <4e8effc6-396a-84af-856f-c820f62d8b16@quicinc.com>
+Date:   Mon, 27 Feb 2023 18:13:43 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [GIT PULL] Qualcomm driver updates for v6.3
+To:     Leo Yan <leo.yan@linaro.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Bjorn Andersson <andersson@kernel.org>, arm <arm@kernel.org>,
+        <soc@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        "Olof Johansson" <olof@lixom.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Bagas Sanjaya" <bagasdotme@gmail.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Guru Das Srinagesh <quic_gurus@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dawei Li <set_pte_at@outlook.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Naman Jain <quic_namajain@quicinc.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        "Yang Li" <yang.lee@linux.alibaba.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        <coresight@lists.linaro.org>,
+        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>
-Subject: Re: [PATCH] perf/x86/core: Remove repeating test expression
-Message-ID: <Y/yhsmvkeJ0h7tFI@ubun2204.myguest.virtualbox.org>
-References: <Y/yYTY7c7L0+d+Gb@ubun2204.myguest.virtualbox.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/yYTY7c7L0+d+Gb@ubun2204.myguest.virtualbox.org>
+        <linux-perf-users@vger.kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>
+References: <20230126163008.3676950-1-andersson@kernel.org>
+ <cdcff86c-77fe-4c5d-b8e8-58b815b9e969@app.fastmail.com>
+ <20230130222412.t2tkkhqfep2orxf2@builder.lan>
+ <9b680581-0956-4188-9af9-af06b625c001@app.fastmail.com>
+ <Y/VzRJzxkPm3l0Km@leoy-yangtze.lan>
+ <4704856d-eac6-9088-4523-3739e04d3fcd@quicinc.com>
+ <Y/YHByya0NvoU+If@leoy-yangtze.lan>
+Content-Language: en-US
+From:   Souradeep Chowdhury <quic_schowdhu@quicinc.com>
+In-Reply-To: <Y/YHByya0NvoU+If@leoy-yangtze.lan>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: dErdltN2yB0QQRePR-PdMnE_suiYPJtp
+X-Proofpoint-ORIG-GUID: dErdltN2yB0QQRePR-PdMnE_suiYPJtp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-27_10,2023-02-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 adultscore=0 clxscore=1015 phishscore=0
+ bulkscore=0 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302270098
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 05:17:25PM +0530, Deepak R Varma wrote:
-> Current implementation already checks validity of the cpu_type for the
-> hybrid pmu two lines above. Hence there is no need to again include
-> it in the immediate if test evaluation.
+
+
+On 2/22/2023 5:43 PM, Leo Yan wrote:
+> Hi Souradeep,
 > 
-> Signed-off-by: Deepak R Varma <drv@mailo.com>
-> ---
-
-Please disregard. I misread the bitwise operation as logical evaluation. Sorry
-for any inconvenience.
-
-Deepak.
-
->  arch/x86/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Wed, Feb 22, 2023 at 04:46:07PM +0530, Souradeep Chowdhury wrote:
+>> On 2/22/2023 7:13 AM, Leo Yan wrote:
+>>> On Wed, Feb 15, 2023 at 04:05:36PM +0100, Arnd Bergmann wrote:
 > 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 87a7f0cd77fd..89db2352deb9 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1893,7 +1893,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
->  	for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
->  		if (!(x86_pmu.hybrid_pmu[i].cpu_type & pmu_attr->pmu_type))
->  			continue;
-> -		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
-> +		if (pmu->cpu_type) {
->  			next_str = strchr(str, ';');
->  			if (next_str)
->  				return snprintf(page, next_str - str + 1, "%s", str);
-> -- 
-> 2.34.1
+> [...]
 > 
+>>>> If the possible use is purely for saving some state across
+>>>> a reboot, as opposed to other events, I wonder if there is
+>>>> a good way to integrate it into the fs/pstore/ code, which
+>>>> already has a way to multiplex various kinds of input (log
+>>>> buffer, ftrace call chain, userspace strings, ...) into
+>>>> various kinds of persistent buffers (sram, blockdev, mtd,
+>>>> efivars, ...) with the purpose of helping analyze the
+>>>> state after a reboot.
+>>>
+>>> Good point!
+>>>
+>>> I understand pstore/ramoops is somehow like a sink which routes the
+>>> tracing data (software tracing data but not hadware tracing data) to
+>>> persistent memory.  This is why we also can route these software
+>>> tracing data to STM (hardware sink!).
+>>>
+>>> Seems to me, Arnd suggests to connect two sinks between DCC and
+>>> pstore (to persistent memory).  But I cannot give an example code in
+>>> kernel for doing this way, sorry if I miss something.
+>>>
+>>> Essentially, a good user case is to keep a persistent memory for the
+>>> tracing data, then after rebooting cycle we can retrieve the tracing
+>>> data via user space interface (like sysfs node).
+>>
+>> Hi Leo/Arnd,
+>>
+>> Just wanted to let you know that the justification of not using PStore was
+>> already given in the version 1 of this patch series as below
+>>
+>> https://lore.kernel.org/linux-arm-msm/ab30490c016f906fd9bc5d789198530b@codeaurora.org/#r
+>>
+>> PStore/Ramoops only persists across warm-reboots which is present for chrome
+>> devices but not for android ones.
+> 
+> Thanks for the info.  Just remind a subtle difference of reboots.
+> 
+> Besides warm reboot, kernel can reboot system after panic (see kernel
+> command line option `panic`) and watchdog can reboot the system as well.
+> 
+> Even though Android doesn't support warm reboot, system still can reboot
+> on panic or by watchdog (in particular after bus lockup), pstore/ramoops
+> also can support these cases.
 
 
+So for the SoCs that doesn't support warm reboots, the DDR memory is non
+persistent across panics or watchdog bites in which case the 
+PStore/Ramoops cannot be of use.
+
+
+> 
+>> Also the dcc_sram contents can
+>> also be collected by going for a software trigger after loading the kernel
+>> and the dcc_sram is parsed to get the register values with the
+>> opensource parser as below
+>>
+>> https://source.codeaurora.org/quic/la/platform/vendor/qcom-opensource/tools/tree/dcc_parser
+> 
+> To be clear, current driver is fine for me (TBH, I didn't spend much
+> time to read it but it's very neat after quickly went through it), I
+> just share some info in case it's helpful for the discussion.
+> 
+> Thanks,
+> Leo
