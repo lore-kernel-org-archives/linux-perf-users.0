@@ -2,136 +2,174 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF3CC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Feb 2023 09:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9716DC64ED6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Feb 2023 10:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229742AbjB0JA4 (ORCPT
+        id S229679AbjB0K0o (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Feb 2023 04:00:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53774 "EHLO
+        Mon, 27 Feb 2023 05:26:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbjB0JAW (ORCPT
+        with ESMTP id S229566AbjB0K0n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Feb 2023 04:00:22 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C023AD22;
-        Mon, 27 Feb 2023 00:50:54 -0800 (PST)
-Received: from dggpeml500019.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PQDdT5C6QznWWq;
-        Mon, 27 Feb 2023 16:47:09 +0800 (CST)
-Received: from [10.67.101.98] (10.67.101.98) by dggpeml500019.china.huawei.com
- (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 27 Feb
- 2023 16:49:46 +0800
-Message-ID: <75a1b477-5325-bec9-5750-b09bf0e5dfb0@hisilicon.com>
-Date:   Mon, 27 Feb 2023 16:49:46 +0800
+        Mon, 27 Feb 2023 05:26:43 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BFA652055C;
+        Mon, 27 Feb 2023 02:26:40 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4868EC14;
+        Mon, 27 Feb 2023 02:27:23 -0800 (PST)
+Received: from [10.57.91.127] (unknown [10.57.91.127])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BBCB3F881;
+        Mon, 27 Feb 2023 02:26:38 -0800 (PST)
+Message-ID: <6a71acac-c478-6e5d-3165-4ba9526614db@arm.com>
+Date:   Mon, 27 Feb 2023 10:26:28 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [RFC PATCH v1 0/4] HiSilicon Performance Monitor Control Unit
-To:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <corbet@lwn.net>, <jonathan.cameron@huawei.com>
-CC:     <zhangshaokun@hisilicon.com>, <shenyang39@huawei.com>,
-        <hejunhao3@huawei.com>, <yangyicong@hisilicon.com>,
-        <prime.zeng@huawei.com>, <suntao25@huawei.com>,
-        <jiazhao4@hisilicon.com>, <linuxarm@huawei.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
-From:   Jie Zhan <zhanjie9@hisilicon.com>
-In-Reply-To: <20230206065146.645505-1-zhanjie9@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.98]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500019.china.huawei.com (7.185.36.137)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.7.2
+Subject: Re: v4: Re: [PATCH v7 00/15] coresight: Add new API to allocate trace
+ source ID values
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        linux-perf-users@vger.kernel.org, leo.yan@linaro.org,
+        quic_jinlmao@quicinc.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+        James Clark <james.clark@arm.com>
+References: <20230116124928.5440-1-mike.leach@linaro.org>
+ <546f218f-3ac9-8fc2-c843-2f2f16882f31@arm.com>
+ <5b7df6df-0c2d-6953-0f50-e85745cb1f4b@arm.com>
+ <2864f28e-dd2f-5a9c-922f-5c044a864beb@arm.com>
+ <e3df35fe-a00d-69ec-32ee-53c949909cab@arm.com>
+In-Reply-To: <e3df35fe-a00d-69ec-32ee-53c949909cab@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Please can anyone have a look at this PMCU patchset and provide some 
-comments?
+Mike,
 
-It is much related to the ARM PMU.
+Please could you send all the perf tool related patches as a seperate
+series, with all the tags to Arnaldo directly at -rc1.
 
-We are looking forward to the feedback.
+Please add a cover letter explaining that the kernel changes are
+available upstream.
 
-Any relevant comments/questions, with respect to software or hardware 
-design, use cases, coding, are welcome.
+Kind regards
+Suzuki
 
-Kind regards,
+On 20/02/2023 16:24, Suzuki K Poulose wrote:
+> Arnaldo
+> 
+> Gentle ping
+> 
+> 
+> On 31/01/2023 11:49, Suzuki K Poulose wrote:
+>> Hi Arnaldo
+>>
+>> On 24/01/2023 11:36, Suzuki K Poulose wrote:
+>>> Hi Arnaldo
+>>>
+>>> Gentle ping.
+>>>
+>>> On 19/01/2023 12:00, Suzuki K Poulose wrote:
+>>>> Hi Arnaldo,
+>>>>
+>>>> On 16/01/2023 12:49, Mike Leach wrote:
+>>>>> The current method for allocating trace source ID values to sources is
+>>>>> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 
+>>>>> 0x10).
+>>>>> The STM is allocated ID 0x1.
+>>>>>
+>>>>> This fixed algorithm is used in both the CoreSight driver code, and by
+>>>>> perf when writing the trace metadata in the AUXTRACE_INFO record.
+>>>>>
+>>>>> The method needs replacing as currently:-
+>>>>> 1. It is inefficient in using available IDs.
+>>>>> 2. Does not scale to larger systems with many cores and the algorithm
+>>>>> has no limits so will generate invalid trace IDs for cpu number > 44.
+>>>>>
+>>>>> Additionally requirements to allocate additional system IDs on some
+>>>>> systems have been seen.
+>>>>>
+>>>>> This patch set  introduces an API that allows the allocation of 
+>>>>> trace IDs
+>>>>> in a dynamic manner.
+>>>>>
+>>>>> Architecturally reserved IDs are never allocated, and the system is
+>>>>> limited to allocating only valid IDs.
+>>>>>
+>>>>> Each of the current trace sources ETM3.x, ETM4.x and STM is updated 
+>>>>> to use
+>>>>> the new API.
+>>>>>
+>>>>> For the ETMx.x devices IDs are allocated on certain events
+>>>>> a) When using sysfs, an ID will be allocated on hardware enable, or 
+>>>>> a read of
+>>>>> sysfs TRCTRACEID register and freed when the sysfs reset is written.
+>>>>>
+>>>>> b) When using perf, ID is allocated on during setup AUX event, and 
+>>>>> freed on
+>>>>> event free. IDs are communicated using the AUX_OUTPUT_HW_ID packet.
+>>>>> The ID allocator is notified when perf sessions start and stop
+>>>>> so CPU based IDs are kept constant throughout any perf session.
+>>>>>
+>>>>>
+>>>>> Note: This patchset breaks some backward compatibility for perf 
+>>>>> record and
+>>>>> perf report.
+>>>>>
+>>>>> The version of the AUXTRACE_INFO has been updated to reflect the 
+>>>>> fact that
+>>>>> the trace source IDs are generated differently. This will
+>>>>> mean older versions of perf report cannot decode the newer file.
+>>>>>
+>>>>> Appies to coresight/next
+>>>>>
+>>>
+>>> ...
+>>>
+>>>>> Mike Leach (15):
+>>>>>    coresight: trace-id: Add API to dynamically assign Trace ID values
+>>>>>    coresight: Remove obsolete Trace ID unniqueness checks
+>>>>>    coresight: perf: traceid: Add perf ID allocation and notifiers
+>>>>>    coresight: stm: Update STM driver to use Trace ID API
+>>>>>    coresight: etm4x: Update ETM4 driver to use Trace ID API
+>>>>>    coresight: etm3x: Update ETM3 driver to use Trace ID API
+>>>>>    coresight: etmX.X: stm: Remove trace_id() callback
+>>>>>    coresight: trace id: Remove legacy get trace ID function.
+>>>>>    perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+>>>>>    perf: cs-etm: Update record event to use new Trace ID protocol
+>>>>>    kernel: events: Export perf_report_aux_output_id()
+>>>>>    perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+>>>>>    coresight: events: PERF_RECORD_AUX_OUTPUT_HW_ID used for Trace ID
+>>>>>    coresight: trace-id: Add debug & test macros to Trace ID allocation
+>>>>>    coresight: etm3x: docs: Alter sysfs documentation for trace id 
+>>>>> updates
+>>>>
+>>>> I have pushed the kernel patches on this series to coresight tree 
+>>>> next[0].
+>>>>
+>>>> I will be sending them out to Greg for v6.3. Please could you queue the
+>>>> perf tool changes in the series ? i.e., Patches 9,10 and 12.
+>>>>
+>>>>
+>>>> [0] 
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/coresight/linux.git/log/?h=next
+>>>>
+>>>
+>>> Please could you pick up the perf tool changes above ?
+>>
+>> Please could you confirm if you are able to queue the perf tool 
+>> changes ? Or would you like me route it via coresight tree ?
+>>
+>> Kind regards
+>> Suzuki
+>>
+> 
+> 
+> Suzuki
+> 
 
-Jie
-
-
-On 06/02/2023 14:51, Jie Zhan wrote:
-> HiSilicon Performance Monitor Control Unit (PMCU) is a device that offloads
-> PMU accesses from CPUs, handling the configuration, event switching, and
-> counter reading of core PMUs on Kunpeng SoC. It facilitates fine-grained
-> and multi-PMU-event CPU profiling, in which scenario the current 'perf'
-> scheme may lose events or drop sampling frequency. With PMCU, users can
-> reliably obtain the data of up to 240 PMU events with the sample interval
-> of events down to 1ms, while the software overhead of accessing PMUs, as
-> well as its impact on target workloads, is reduced.
->
-> This patchset contains the documentation, driver, and user perf tool
-> support to enable using PMCU with the 'perf_event' framework.
->
-> Here are two key questions requested for comments:
->
-> - How do we make it compatible with arm_pmu drivers?
->
->    Hardware-wise, PMCU uses the existing core PMUs, so PMUs can be accessed
->    from CPU and PMCU simultaneously. The current hardware can't guarantee
->    mutual exclusive accesses. Hence, scheduling arm_pmu and PMCU events at
->    the same time may mess up the operation of PMUs, delivering incorrect
->    data for both events, e.g. unexpected events or sample periods.
->    Software-wise, we probably need to prevent the two types of events from
->    running at the same time, but currently there isn't a clear solution.
->
-> - Currently we reply on a sysfs file for users to input event numbers. Is
->    there a better way to pass many events?
->
->    The perf framework only allows three 64-bit config fields for custom PMU
->    configs. Obviously, this can't satisfy our need for passing many events
->    at a time. As an event number is 16-bit wide, the config fields can only
->    take up to 12 events at a time, or up to 192 events even if we do a
->    bitmap of events (and there are more than 192 available event numbers).
->    Hence, the current design takes an array of event numbers from a sysfs
->    file before starting profiling. However, this may go against the common
->    way to schedule perf events through perf commands.
->
-> Jie Zhan (4):
->    docs: perf: Add documentation for HiSilicon PMCU
->    drivers/perf: hisi: Add driver support for HiSilicon PMCU
->    perf tool: Add HiSilicon PMCU data recording support
->    perf tool: Add HiSilicon PMCU data decoding support
->
->   Documentation/admin-guide/perf/hisi-pmcu.rst |  183 +++
->   Documentation/admin-guide/perf/index.rst     |    1 +
->   drivers/perf/hisilicon/Kconfig               |   15 +
->   drivers/perf/hisilicon/Makefile              |    1 +
->   drivers/perf/hisilicon/hisi_pmcu.c           | 1096 ++++++++++++++++++
->   tools/perf/arch/arm/util/auxtrace.c          |   61 +
->   tools/perf/arch/arm64/util/Build             |    2 +-
->   tools/perf/arch/arm64/util/hisi-pmcu.c       |  145 +++
->   tools/perf/util/Build                        |    1 +
->   tools/perf/util/auxtrace.c                   |    4 +
->   tools/perf/util/auxtrace.h                   |    1 +
->   tools/perf/util/hisi-pmcu.c                  |  305 +++++
->   tools/perf/util/hisi-pmcu.h                  |   19 +
->   13 files changed, 1833 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/admin-guide/perf/hisi-pmcu.rst
->   create mode 100644 drivers/perf/hisilicon/hisi_pmcu.c
->   create mode 100644 tools/perf/arch/arm64/util/hisi-pmcu.c
->   create mode 100644 tools/perf/util/hisi-pmcu.c
->   create mode 100644 tools/perf/util/hisi-pmcu.h
->
->
-> base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
