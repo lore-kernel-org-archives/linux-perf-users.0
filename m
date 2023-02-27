@@ -2,102 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D2AC64ED6
-	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Feb 2023 17:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDE8C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Feb 2023 02:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbjBZRhZ (ORCPT
+        id S229733AbjB0Ciy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 26 Feb 2023 12:37:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33654 "EHLO
+        Sun, 26 Feb 2023 21:38:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbjBZRhY (ORCPT
+        with ESMTP id S231689AbjB0Cil (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 26 Feb 2023 12:37:24 -0500
-Received: from msg-2.mailo.com (msg-2.mailo.com [213.182.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063821A650;
-        Sun, 26 Feb 2023 09:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailo.com; s=mailo;
-        t=1677433010; bh=z+D+egR+IKnMs7kjuMNQ9QKI6HtiUZ3Hosht4R19zPw=;
-        h=X-EA-Auth:Date:From:To:Cc:Subject:Message-ID:References:
-         MIME-Version:Content-Type:In-Reply-To;
-        b=EEQO9cSVjeoATtyOmloe/fMJcCplhKOYas0s3copL2zAdh13bmNDODhD1ghRgXzN+
-         VhnPtG0zcL+bcUF6OPj1mRNPRJADSYj8MBQ3KFoIAjOyORxeVP1VFqotvUJB/xgqMt
-         OR4jEC/awV4xKVIi6WBZJ2yh7lUW/uWyPpkR7zek=
-Received: by b-4.in.mailobj.net [192.168.90.14] with ESMTP
-        via ip-206.mailobj.net [213.182.55.206]
-        Sun, 26 Feb 2023 18:36:50 +0100 (CET)
-X-EA-Auth: qamVEZnHJQXIEp9zxWVTYlqDSqL2sF3iYAhmrtrd2KZnayt/BOycf2pya47q0KpqLmWIBlKgn9iAfxETKxqSNw==
-Date:   Sun, 26 Feb 2023 23:06:45 +0530
-From:   Deepak R Varma <drv@mailo.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Saurabh Singh Sengar <ssengar@microsoft.com>,
-        Praveen Kumar <kumarpraveen@linux.microsoft.com>,
-        Deepak R Varma <drv@mailo.com>
-Subject: Re: [PATCH v2 1/3] perf/x86/core: Use sysfs_emit() in show()
- callback function
-Message-ID: <Y/uYrf1M0R4lZZb1@ubun2204.myguest.virtualbox.org>
-References: <cover.1676987821.git.drv@mailo.com>
- <719558b8a435a6f942b2cc3f5c0431212be76bc6.1676987821.git.drv@mailo.com>
- <Y/Z8qUYDXPFlzdsY@hirez.programming.kicks-ass.net>
- <Y/bx0Q6XRv0mNdAT@ubun2204.myguest.virtualbox.org>
+        Sun, 26 Feb 2023 21:38:41 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1393C0C;
+        Sun, 26 Feb 2023 18:38:09 -0800 (PST)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PQ4NK73DVzKq8Z;
+        Mon, 27 Feb 2023 10:35:13 +0800 (CST)
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Feb 2023 10:37:10 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <eranian@google.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by perf throttle
+Date:   Mon, 27 Feb 2023 10:35:08 +0800
+Message-ID: <20230227023508.102230-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/bx0Q6XRv0mNdAT@ubun2204.myguest.virtualbox.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Feb 23, 2023 at 10:25:45AM +0530, Deepak R Varma wrote:
-> On Wed, Feb 22, 2023 at 09:35:53PM +0100, Peter Zijlstra wrote:
-> > On Tue, Feb 21, 2023 at 07:36:12PM +0530, Deepak R Varma wrote:
-> > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > > index 85a63a41c471..27c03e6dcb5d 100644
-> > > --- a/arch/x86/events/core.c
-> > > +++ b/arch/x86/events/core.c
-> > > @@ -1896,9 +1896,7 @@ ssize_t events_hybrid_sysfs_show(struct device *dev,
-> > >  		if (x86_pmu.hybrid_pmu[i].cpu_type & pmu->cpu_type) {
-> > >  			next_str = strchr(str, ';');
-> > >  			if (next_str)
-> > > -				return snprintf(page, next_str - str + 1, "%s", str);
-> > > -			else
-> > > -				return sprintf(page, "%s", str);
-> > > +				return sysfs_emit(page, "%s", str);
-> > >  		}
-> > >  		str = strchr(str, ';');
-> > >  		str++;
-> > 
-> > How is this correct ?!?
-> 
-> oops.. that is bad on my part. My apologies for the wrong code.
-> I will correct it and send in v3.
+commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
+introduces a change in throttling threshold judgment. Before this,
+compare hwc->interrupts and max_samples_per_tick, then increase
+hwc->interrupts by 1, but this commit reverses order of these two
+behaviors, causing the semantics of max_samples_per_tick to change.
+In literal sense of "max_samples_per_tick", if hwc->interrupts ==
+max_samples_per_tick, it should not be throttled, therefore, the judgment
+condition should be changed to "hwc->interrupts > max_samples_per_tick".
 
-Hello Peter,
-I reviewed the code more closely and concluded that the current implementation
-is better as is. I sent in a v3 with necessary correction for your review.
+In fact, this may cause the hardlockup to fail, The minimum value of
+max_samples_per_tick may be 1, in this case, the return value of
+__perf_event_account_interrupt function is 1.
+As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
+architecture as an example, see x86_pmu_handle_irq).
 
-I do have another observation from this area that I will send in as a separate
-patch soon.
+Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
 
-Thank you again.
-./drv
+Changes since v2:
+  - Add fixed commit.
 
+Changes since v1:
+  - Modify commit title.
 
-> 
-> Thank you Peter.
-> 
-> Regards,
-> ./drv
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f79fd8b87f75..0540a8653906 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+ 	} else {
+ 		hwc->interrupts++;
+ 		if (unlikely(throttle
+-			     && hwc->interrupts >= max_samples_per_tick)) {
++			     && hwc->interrupts > max_samples_per_tick)) {
+ 			__this_cpu_inc(perf_throttled_count);
+ 			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+ 			hwc->interrupts = MAX_INTERRUPTS;
+-- 
+2.30.GIT
 
