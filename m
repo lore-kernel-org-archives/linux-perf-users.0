@@ -2,124 +2,273 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4545CC7EE30
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 22:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAC5C64EC4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 23:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbjB1WHW (ORCPT
+        id S229883AbjB1Xem (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Feb 2023 17:07:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57474 "EHLO
+        Tue, 28 Feb 2023 18:34:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbjB1WHV (ORCPT
+        with ESMTP id S229630AbjB1Xem (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Feb 2023 17:07:21 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BCE30292
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 14:07:19 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id q31-20020a17090a17a200b0023750b69614so10993342pja.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 14:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRCOA+ylhY8BYizlMsPJIRnUep7ueVrntpLfbub6Ho8=;
-        b=mEiI40fNyimk2yi3utKlVT4Y6/XfiZzMjf8IL7rx8OZsMKma/44lGsAnfhQMTGCIOg
-         XwvFvk+ZnJmZe9+sdLNWPkH1TdM+I4pNgrG1evG8lyp0RSNhFvrtiSo6iMPFR5Acpwfy
-         Gq9DjLyDHgC0vFM4FAJfYVG+okzSshZtjiOJSUFJJZMUJbnLm8ZnikUj0L5RaPwWgSMG
-         uvZmyfdN0NiOFEtzPa+f8Wx053NjMRjhE1YFf8eOyqQTPSMHobAOoSptMdDuJvuJm2Ek
-         fCsUiKusB2DxBsB5dssZ2d7zDkIjFa6Epeo3CDsDMsfBdVQ2wwKx4rzUqmq5HEg//qc5
-         wJRw==
+        Tue, 28 Feb 2023 18:34:42 -0500
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD1322DE2;
+        Tue, 28 Feb 2023 15:34:40 -0800 (PST)
+Received: by mail-io1-f50.google.com with SMTP id bf15so4715917iob.7;
+        Tue, 28 Feb 2023 15:34:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YRCOA+ylhY8BYizlMsPJIRnUep7ueVrntpLfbub6Ho8=;
-        b=3h12sKm76K96hjX9628JBKrmue9zdY2RMCtJTaz5CSbFGTyY4xaYG4c+Yyw6z8PHcR
-         7qBlfyJX5jJTOQuPpJXsUmVf9YljycKruh41jNqQzqyI5paRjXJjF1GR+7ji2Nh5J02b
-         8fKbuq2mEVU1iv5bCB6xu2eUcrjk8/hxl41Y87ES8OoYu4gqdWEPT2mlpN4s+aoyZT81
-         j9HCmNOm1dJwxp4rgsZC2MBAADk/guoB8vCEdzNKt2lL8CgvvPcaJVJ7x56sqZ4oIjnA
-         M+dGHJcErT2vWOC1O2O0G7QBsNGQulAq041dgfWVg6rAsO1+5zwox5xJJzhPD2Uyv9tD
-         v6SA==
-X-Gm-Message-State: AO0yUKXhp8yjm10FWNEnB11aSWGWfODKFxvDOmeedZIgYTTMNYfwfCCc
-        SECsJ0njm2v5XAqBn/wqxxBh1w==
-X-Google-Smtp-Source: AK7set/jYgli/Hpbv8aT03CHshIOUH7bFyfP1JcTprKwyvrob0wmRB9dc55aO9ppjsNzZUynNOiyPQ==
-X-Received: by 2002:a17:903:1ce:b0:19d:1f42:b018 with SMTP id e14-20020a17090301ce00b0019d1f42b018mr8426976plh.27.1677622038760;
-        Tue, 28 Feb 2023 14:07:18 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-4-237.pa.vic.optusnet.com.au. [49.186.4.237])
-        by smtp.gmail.com with ESMTPSA id bc7-20020a170902930700b0019aaccb665bsm6957404plb.245.2023.02.28.14.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 14:07:18 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1pX87u-003HvY-Hh; Wed, 01 Mar 2023 09:07:14 +1100
-Date:   Wed, 1 Mar 2023 09:07:14 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        d=1e100.net; s=20210112; t=1677627280;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FeueFgms68iXpT/krDtL0yaSU3HkmD5uN8iaU1zZO2k=;
+        b=dxC1QWxYFDvVrSJTyrYO2BE5hUSIU5oaAh0ip44UqxgL/YrGp8nsVxoYYxvtbb9Vw9
+         v7IRIbTfVcwlDp0YzV0kztDNO6BM0gWiF0EB0lBqtkEBFlzokxynWflrUuchVqFy45TK
+         CnETiz4elIcSstWjasjwUxIkt07TRziWLKKRa4ybRZquSj0goBXUId6XN48JmT4bxQ1T
+         fVPw0AEr0xMbN8FTYY6KQ9m9NUhUGJ/pr6MufWAJ7lm1mpbghoET79GTpmjXY3/OUT73
+         R9WXSIYAuxkZa5OOVbxyMb/cJ/uRIlZpNjSHJOaa7RD3zydpAbvc/Bp331s4jFlW8+zt
+         vhLw==
+X-Gm-Message-State: AO0yUKXaWpcJNt2ZC7ye+DdSp2Tvns7SG3zB8f2KvtZeqlL5V68EKpug
+        6qUZHZLCK5jqwe9FqesgR9CJyKKPYJfnpAdxgHE=
+X-Google-Smtp-Source: AK7set/EkmZ5lfHMe26IBDK9XcJOKP0KCYSlYbcf3h5369Pdb9l4dIKRs+nTuOGR+uosRTCsiVE8AUYOFmT30UTpYa8=
+X-Received: by 2002:a6b:ee19:0:b0:745:405d:b703 with SMTP id
+ i25-20020a6bee19000000b00745405db703mr2088843ioh.3.1677627279880; Tue, 28 Feb
+ 2023 15:34:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20230228115125.144172-1-leo.yan@linaro.org> <20230228115125.144172-9-leo.yan@linaro.org>
+In-Reply-To: <20230228115125.144172-9-leo.yan@linaro.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 28 Feb 2023 15:34:28 -0800
+Message-ID: <CAM9d7cgEZ4ugAfef8hDKOr11xF7QP1w7-Ax3mnDr4XXmYr0DoQ@mail.gmail.com>
+Subject: Re: [PATCH v3 08/14] perf kvm: Add dimensions for KVM event statistics
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>
-Subject: Re: [RFC v2 bpf-next 0/9] mm/bpf/perf: Store build id in inode object
-Message-ID: <20230228220714.GJ2825702@dread.disaster.area>
-References: <20230228093206.821563-1-jolsa@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230228093206.821563-1-jolsa@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Feb 28, 2023 at 10:31:57AM +0100, Jiri Olsa wrote:
-> hi,
-> this is RFC patchset for adding build id under inode's object.
-> 
-> The main change to previous post [1] is to use inode object instead of file
-> object for build id data.
+Hi Leo,
 
-Please explain what a "build id" is, the use case for it, why we
-need to store it in VFS objects, what threat model it is protecting
-the system against, etc.
+On Tue, Feb 28, 2023 at 3:53 AM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> To support KVM event statistics, this patch firstly registers histograms
+> columns and sorting fields; every column or field has its own format
+> structure, the format structure is dereferenced to access the dimension,
+> finally the dimension provides the comparison callback for sorting
+> result.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/builtin-kvm.c   | 239 +++++++++++++++++++++++++++++++++++--
+>  tools/perf/util/kvm-stat.h |   2 +
+>  2 files changed, 234 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index a9f467926bdd..da84f5063d4d 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -70,9 +70,9 @@ static int cmp_event_ ## func(struct kvm_event *one,                  \
+>                get_event_ ##func(two, vcpu);                            \
+>  }
+>
+> -GET_EVENT_KEY(time, time);
+> -GET_EVENT_KEY(max, stats.max);
+> -GET_EVENT_KEY(min, stats.min);
+> +COMPARE_EVENT_KEY(time, time);
+> +COMPARE_EVENT_KEY(max, stats.max);
+> +COMPARE_EVENT_KEY(min, stats.min);
+>  COMPARE_EVENT_KEY(count, stats.n);
+>  COMPARE_EVENT_KEY(mean, stats.mean);
+>
+> @@ -90,13 +90,238 @@ struct kvm_hists {
+>         struct perf_hpp_list    list;
+>  };
+>
+> +struct kvm_dimension {
+> +       const char *name;
+> +       int64_t (*cmp)(struct perf_hpp_fmt *fmt, struct hist_entry *left,
+> +                      struct hist_entry *right);
+> +};
+> +
+> +struct kvm_fmt {
+> +       struct perf_hpp_fmt     fmt;
+> +       struct kvm_dimension    *dim;
+> +};
+> +
+>  static struct kvm_hists kvm_hists;
+>
+> -static int kvm_hists__init(void)
+> +static int64_t
+> +empty_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+> +         struct hist_entry *left __maybe_unused,
+> +         struct hist_entry *right __maybe_unused)
+> +{
+> +       return 0;
+> +}
+> +
+> +static struct kvm_dimension dim_event = {
+> +       .name           = "name",
+> +       .cmp            = empty_cmp,
+> +};
 
-> 
-> However.. ;-) while using inode as build id storage place saves some memory
-> by keeping just one copy of the build id for all file instances, there seems
-> to be another problem.
+I guess you can name it as 'dim_name' to reduce the confusion.
+Also it can compare event names using strcmp() in case users
+want to see event names in alphabetical order.
 
-Yes, the problem being that we can cache hundreds of millions of
-inodes in memory, and only a very small subset of them are going to
-have open files associated with them. And an even smaller subset are
-going to be mmapped.
+[SNIP]
+> +
+> +static int kvm_hists__init_output(struct perf_hpp_list *hpp_list, char *name)
+> +{
+> +       struct kvm_fmt *kvm_fmt = get_format(name);
+> +
+> +       if (!kvm_fmt) {
+> +               reset_dimensions();
+> +               return output_field_add(hpp_list, name);
 
-So, in reality, this proposal won't save any memory at all - it
-costs memory for every inode that is not currently being used as
-a mmapped elf executable, right?
+Hmm.. do you plan to support these generic output fields too?
+I'm not sure you need reset_dimensions() here.
 
-> The problem is that we read the build id when the file is mmap-ed.
+> +       }
+> +
+> +       perf_hpp_list__column_register(hpp_list, &kvm_fmt->fmt);
+> +       return 0;
+> +}
+> +
+> +static int kvm_hists__init_sort(struct perf_hpp_list *hpp_list, char *name)
+> +{
+> +       struct kvm_fmt *kvm_fmt = get_format(name);
+> +
+> +       if (!kvm_fmt) {
+> +               reset_dimensions();
+> +               return sort_dimension__add(hpp_list, name, NULL, 0);
 
-Why? I'm completely clueless as to what this thing does or how it's
-used....
+Ditto.
 
-> Which is fine for our use case,
+> +       }
+> +
+> +       perf_hpp_list__register_sort_field(hpp_list, &kvm_fmt->fmt);
+> +       return 0;
+> +}
+> +
+> +static int kvm_hpp_list__init(char *list,
+> +                             struct perf_hpp_list *hpp_list,
+> +                             int (*fn)(struct perf_hpp_list *hpp_list,
+> +                                       char *name))
+> +{
+> +       char *tmp, *tok;
+> +       int ret;
+> +
+> +       if (!list || !fn)
+> +               return 0;
+> +
+> +       for (tok = strtok_r(list, ", ", &tmp); tok;
+> +            tok = strtok_r(NULL, ", ", &tmp)) {
+> +               ret = fn(hpp_list, tok);
+> +               if (!ret)
+> +                       continue;
+> +
+> +               /* Handle errors */
+> +               if (ret == -EINVAL)
+> +                       pr_err("Invalid field key: '%s'", tok);
+> +               else if (ret == -ESRCH)
+> +                       pr_err("Unknown field key: '%s'", tok);
+> +               else
+> +                       pr_err("Fail to initialize for field key: '%s'", tok);
+> +
+> +               break;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static int kvm_hpp_list__parse(struct perf_hpp_list *hpp_list,
+> +                              const char *output_, const char *sort_)
+> +{
+> +       char *output = output_ ? strdup(output_) : NULL;
+> +       char *sort = sort_ ? strdup(sort_) : NULL;
+> +       int ret;
+> +
+> +       ret = kvm_hpp_list__init(output, hpp_list, kvm_hists__init_output);
+> +       if (ret)
+> +               goto out;
+> +
+> +       ret = kvm_hpp_list__init(sort, hpp_list, kvm_hists__init_sort);
+> +       if (ret)
+> +               goto out;
+> +
+> +       /* Copy sort keys to output fields */
+> +       perf_hpp__setup_output_field(hpp_list);
 
-Which is?
+I think you also need perf_hpp__append_sort_keys() as in
+setup_sorting() to have secondary sort keys in case the
+given sort key cannot determine the ordering.
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+Namhyung
+
+
+> +
+> +out:
+> +       free(output);
+> +       free(sort);
+> +       return ret;
+> +}
+> +
+> +static int kvm_hists__init(struct perf_kvm_stat *kvm)
+> +{
+> +       const char *output_columns = "name,sample,time,max_t,min_t,mean_t";
+> +
+>         __hists__init(&kvm_hists.hists, &kvm_hists.list);
+>         perf_hpp_list__init(&kvm_hists.list);
+> -       return 0;
+> +       return kvm_hpp_list__parse(&kvm_hists.list, output_columns,
+> +                                  kvm->sort_key);
+>  }
+>
+>  static const char *get_filename_for_perf_kvm(void)
+> @@ -979,7 +1204,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
+>         set_term_quiet_input(&save);
+>         init_kvm_event_record(kvm);
+>
+> -       kvm_hists__init();
+> +       kvm_hists__init(kvm);
+>
+>         signal(SIGINT, sig_handler);
+>         signal(SIGTERM, sig_handler);
+> @@ -1176,7 +1401,7 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
+>         init_kvm_event_record(kvm);
+>         setup_pager();
+>
+> -       kvm_hists__init();
+> +       kvm_hists__init(kvm);
+>
+>         ret = read_events(kvm);
+>         if (ret)
+> diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
+> index 80d5c5a9ae31..ca5796959f66 100644
+> --- a/tools/perf/util/kvm-stat.h
+> +++ b/tools/perf/util/kvm-stat.h
+> @@ -40,6 +40,8 @@ struct kvm_event {
+>         #define DEFAULT_VCPU_NUM 8
+>         int max_vcpu;
+>         struct kvm_event_stats *vcpu;
+> +
+> +       struct hist_entry he;
+>  };
+>
+>  typedef int (*key_cmp_fun)(struct kvm_event*, struct kvm_event*, int);
+> --
+> 2.34.1
+>
