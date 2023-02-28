@@ -2,36 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCBFC64EC7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 11:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E14C64ED6
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 11:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjB1LMX (ORCPT
+        id S231237AbjB1LgN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Feb 2023 06:12:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
+        Tue, 28 Feb 2023 06:36:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjB1LMW (ORCPT
+        with ESMTP id S231382AbjB1LgF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Feb 2023 06:12:22 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2A332BEDF;
-        Tue, 28 Feb 2023 03:12:21 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5011C14;
-        Tue, 28 Feb 2023 03:13:04 -0800 (PST)
-Received: from [10.57.51.147] (unknown [10.57.51.147])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F86B3F881;
-        Tue, 28 Feb 2023 03:12:18 -0800 (PST)
-Message-ID: <678c5939-f512-d4f8-e290-9c0f2bf05023@arm.com>
-Date:   Tue, 28 Feb 2023 11:12:17 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 13/14] perf kvm: Add TUI mode for stat report
-To:     Leo Yan <leo.yan@linaro.org>
-References: <20230228084147.106167-1-leo.yan@linaro.org>
- <20230228084147.106167-14-leo.yan@linaro.org>
-Content-Language: en-US
+        Tue, 28 Feb 2023 06:36:05 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05FA31258C
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 03:36:04 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id n6so8681243plf.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 03:36:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=o//K/tErGPaPJ52r46l6Rxq+plE4dBlL3n3ahROgLsA=;
+        b=D6k8bxREcPgb0FmW6ZpVz/wG9B5iQfpxlbGjk+Hi12FAw/wxJlITtDRe/EGC9pzTjA
+         moa0q6yPJxYUmyEWj492+kaFVyYvdKMyniovt1TUgduSOk6tnxx6/rA8iJFsaCsu/K2Z
+         PoSFMaWSHBXBtRNIs56fiJ62jIYeuDh3z+NkAjmB2Wg3uo6jON0rRjS08tBLfGR9bFmo
+         jK1+rWeOkk0m2B/G9z64/cTj9agn4Eyu7nxYfO4TPSW/pt5bC1HAl5D6rZehsLMYQBDy
+         VTIuzykyGeMRvJHtyUsIM9bzWdN+fi/SZLCSNUpiap6cBdHm4KYcukofgrk77pSWmzHW
+         4OHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o//K/tErGPaPJ52r46l6Rxq+plE4dBlL3n3ahROgLsA=;
+        b=nHWu+pLcxnBFzArTvrLw27aioMd88qHPVHrkgRX7AD+liRANFjlyTWoJENYeBHFyKV
+         AlKNe5ozxL4bS+DyeQVkSSwIRKauPdQfN6+LbuVnQ5GnsjQi1BqGJ0KmwhpHUD7eaheI
+         Yojq1PjdvN2ha+M9f+KGDIVZqcZlzl5z2fpoXDy/r7ZDiKduelM3DWx2Yyl17plmbS6p
+         IZnpqQcPy6vGFQtk02w2D9XUgkvT80atNy21DPdosbWl0sB2G/av8EI3eQ5G59hi31ko
+         J6MzFSrc4Faw/pP+YkD1NOa06EEIcQNAXpvnFeibE+J0h4BiwAPd40o9IzLJjZDAAtMf
+         UdFw==
+X-Gm-Message-State: AO0yUKV545W2/89NTJDk+C7ifMupZkBgi4Q3S4TSXQ0JtRtLVk6vvQXm
+        lAx56drwS0hOj2m7gsFEmD2WrQ==
+X-Google-Smtp-Source: AK7set9d8OSjLjeV3pqXHAmC+UhG8CPdsw8c53sE0CrU+XDHEF6X+GrnWDDTo0c2Cwo30jzN3xNOzA==
+X-Received: by 2002:a17:90b:4acd:b0:233:f354:e7df with SMTP id mh13-20020a17090b4acd00b00233f354e7dfmr2988992pjb.18.1677584163380;
+        Tue, 28 Feb 2023 03:36:03 -0800 (PST)
+Received: from leoy-yangtze.lan (n058152048225.netvigator.com. [58.152.48.225])
+        by smtp.gmail.com with ESMTPSA id p2-20020a17090a348200b00233567a978csm7784204pjb.42.2023.02.28.03.35.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Feb 2023 03:36:02 -0800 (PST)
+Date:   Tue, 28 Feb 2023 19:35:57 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -42,83 +64,56 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230228084147.106167-14-leo.yan@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 13/14] perf kvm: Add TUI mode for stat report
+Message-ID: <Y/3nHZdMQEoadoLG@leoy-yangtze.lan>
+References: <20230228084147.106167-1-leo.yan@linaro.org>
+ <20230228084147.106167-14-leo.yan@linaro.org>
+ <678c5939-f512-d4f8-e290-9c0f2bf05023@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <678c5939-f512-d4f8-e290-9c0f2bf05023@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James,
 
+On Tue, Feb 28, 2023 at 11:12:17AM +0000, James Clark wrote:
 
-On 28/02/2023 08:41, Leo Yan wrote:
-> Since we have supported histograms list and prepared the dimensions in
-> the tool, this patch adds TUI mode for stat report.  It also adds UI
-> progress for sorting for better user experience.
+[...]
+
+> > +static void print_result(struct perf_kvm_stat *kvm);
+> > +
+> > +#ifdef HAVE_SLANG_SUPPORT
 > 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/builtin-kvm.c   | 110 ++++++++++++++++++++++++++++++++++++-
->  tools/perf/util/kvm-stat.h |   1 +
->  2 files changed, 109 insertions(+), 2 deletions(-)
+> Hi Leo,
 > 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 5b1b2042dfed..b0be59577779 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -23,6 +23,8 @@
->  #include "util/data.h"
->  #include "util/ordered-events.h"
->  #include "util/kvm-stat.h"
-> +#include "ui/browsers/hists.h"
-> +#include "ui/progress.h"
->  #include "ui/ui.h"
->  #include "util/string2.h"
->  
-> @@ -506,10 +508,98 @@ static int kvm_hists__init(struct perf_kvm_stat *kvm)
->  
->  	__hists__init(&kvm_hists.hists, &kvm_hists.list);
->  	perf_hpp_list__init(&kvm_hists.list);
-> +	kvm_hists.list.nr_header_lines = 1;
->  	return kvm_hpp_list__parse(&kvm_hists.list, output_columns,
->  				   kvm->sort_key);
->  }
->  
-> +static int kvm_browser__title(struct hist_browser *browser,
-> +			      char *buf, size_t size)
-> +{
-> +	scnprintf(buf, size, "KVM event statistics (%lu entries)",
-> +		  browser->nr_non_filtered_entries);
-> +	return 0;
-> +}
-> +
-> +static struct hist_browser*
-> +perf_kvm_browser__new(struct hists *hists)
-> +{
-> +	struct hist_browser *browser = hist_browser__new(hists);
-> +
-> +	if (browser)
-> +		browser->title = kvm_browser__title;
-> +
-> +	return browser;
-> +}
-> +
-> +static void print_result(struct perf_kvm_stat *kvm);
-> +
-> +#ifdef HAVE_SLANG_SUPPORT
+> I get an error because of this addition when building on x86. I think
+> it's because I don't have HAVE_SLANG_SUPPORT. It might be the same error
+> that you mentioned on v1?
+> 
+>    builtin-kvm.c:535:13: error: ‘print_result’ used but never defined
+> [-Werror]
+>    535 | static void print_result(struct perf_kvm_stat *kvm);
 
-Hi Leo,
+It's a bit weird for reporting this issue, since you could see I have
+moved the function definition for print_result() ahead the macro
+condition '#ifdef HAVE_SLANG_SUPPORT'.
 
-I get an error because of this addition when building on x86. I think
-it's because I don't have HAVE_SLANG_SUPPORT. It might be the same error
-that you mentioned on v1?
+But I found building failure with below command:
 
-   builtin-kvm.c:535:13: error: ‘print_result’ used but never defined
-[-Werror]
-   535 | static void print_result(struct perf_kvm_stat *kvm);
+  $ make VF=1 DEBUG=1 NO_SLANG=1
 
-Other than that, for the whole set:
+Let me repin this patch for the building failures; sorry I have been
+negligent.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+> Other than that, for the whole set:
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
 
+Thanks a lot for reviewing!  I will apply your tag in next spin
+except patch 13.
+
+Leo
