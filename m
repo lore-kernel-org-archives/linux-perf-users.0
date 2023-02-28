@@ -2,248 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06926C64EC7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 09:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCBFC64EC7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 11:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231407AbjB1Jee (ORCPT
+        id S230117AbjB1LMX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Feb 2023 04:34:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51640 "EHLO
+        Tue, 28 Feb 2023 06:12:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231415AbjB1JeY (ORCPT
+        with ESMTP id S230047AbjB1LMW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Feb 2023 04:34:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1561CF52;
-        Tue, 28 Feb 2023 01:34:10 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F0F0C61027;
-        Tue, 28 Feb 2023 09:34:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 555D7C433EF;
-        Tue, 28 Feb 2023 09:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677576849;
-        bh=GuLnU0d3k2V6ZdWnoPW82USn52Mxiiw398+O8RnbxjY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kUEbZG/k7LV/1mLXHeWWy8ByEFwfH8vr4ZFgj6lyjUX85YnoF9O+2SNLVfQ+BFZCK
-         /C8zbSyBs0+Fgcg9S3mJ2CLktdsdjmUgSUhzqdyNcv7ycvIZ0OCbJwonyDI4shyNV5
-         ftTQF6r5HRAVPTY6qSwaMbTC+jiQDAFlvQxjT/tlM2rrxAwhsV4dC4XBD980wAL+mb
-         tJpPPKnthTlBdWX5SGZewGddSsBTsAMcdvfZrdMbLb3WEcdYd1omjU9JoHFl2ZgqeI
-         OJuG5BHYKrQ+D9+Yy/tYafMvA1FOw/NB91C6UneYdz+M7WN7WxroH3DaZIK9AeKVf7
-         ICF2YvbB5G38w==
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tue, 28 Feb 2023 06:12:22 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B2A332BEDF;
+        Tue, 28 Feb 2023 03:12:21 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5011C14;
+        Tue, 28 Feb 2023 03:13:04 -0800 (PST)
+Received: from [10.57.51.147] (unknown [10.57.51.147])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F86B3F881;
+        Tue, 28 Feb 2023 03:12:18 -0800 (PST)
+Message-ID: <678c5939-f512-d4f8-e290-9c0f2bf05023@arm.com>
+Date:   Tue, 28 Feb 2023 11:12:17 +0000
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2 13/14] perf kvm: Add TUI mode for stat report
+To:     Leo Yan <leo.yan@linaro.org>
+References: <20230228084147.106167-1-leo.yan@linaro.org>
+ <20230228084147.106167-14-leo.yan@linaro.org>
+Content-Language: en-US
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>
-Subject: [PATCH RFC v2 bpf-next 9/9] selftests/bpf: Add iter_task_vma_buildid test
-Date:   Tue, 28 Feb 2023 10:32:06 +0100
-Message-Id: <20230228093206.821563-10-jolsa@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230228093206.821563-1-jolsa@kernel.org>
-References: <20230228093206.821563-1-jolsa@kernel.org>
-MIME-Version: 1.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230228084147.106167-14-leo.yan@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Testing iterator access to build id in vma->vm_file->f_inode
-object by storing each binary with buildid into map and checking
-it against buildid retrieved in user space.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/bpf_iter.c       | 78 +++++++++++++++++++
- .../bpf/progs/bpf_iter_task_vma_buildid.c     | 60 ++++++++++++++
- 2 files changed, 138 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-index 1f02168103dd..c7dd89e7cad0 100644
---- a/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-+++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter.c
-@@ -33,6 +33,7 @@
- #include "bpf_iter_bpf_link.skel.h"
- #include "bpf_iter_ksym.skel.h"
- #include "bpf_iter_sockmap.skel.h"
-+#include "bpf_iter_task_vma_buildid.skel.h"
- 
- static int duration;
- 
-@@ -1536,6 +1537,81 @@ static void test_task_vma_dead_task(void)
- 	bpf_iter_task_vma__destroy(skel);
- }
- 
-+#define D_PATH_BUF_SIZE	1024
-+
-+struct build_id {
-+	u32 sz;
-+	char data[BPF_BUILD_ID_SIZE];
-+};
-+
-+static void test_task_vma_buildid(void)
-+{
-+	int err, iter_fd = -1, proc_maps_fd = -1, sz;
-+	struct bpf_iter_task_vma_buildid *skel;
-+	char key[D_PATH_BUF_SIZE], *prev_key;
-+	char build_id[BPF_BUILD_ID_SIZE];
-+	int len, files_fd, cnt = 0;
-+	struct build_id val;
-+	char c;
-+
-+	skel = bpf_iter_task_vma_buildid__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "bpf_iter_task_vma_buildid__open_and_load"))
-+		return;
-+
-+	skel->links.proc_maps = bpf_program__attach_iter(
-+		skel->progs.proc_maps, NULL);
-+
-+	if (!ASSERT_OK_PTR(skel->links.proc_maps, "bpf_program__attach_iter")) {
-+		skel->links.proc_maps = NULL;
-+		goto out;
-+	}
-+
-+	iter_fd = bpf_iter_create(bpf_link__fd(skel->links.proc_maps));
-+	if (!ASSERT_GE(iter_fd, 0, "create_iter"))
-+		goto out;
-+
-+	/* trigger the iterator, there's no output, just map */
-+	len = read(iter_fd, &c, 1);
-+	ASSERT_EQ(len, 0, "len_check");
-+
-+	files_fd = bpf_map__fd(skel->maps.files);
-+
-+	prev_key = NULL;
-+
-+	while (true) {
-+		err = bpf_map_get_next_key(files_fd, prev_key, &key);
-+		if (err) {
-+			if (errno == ENOENT)
-+				err = 0;
-+			break;
-+		}
-+		if (bpf_map_lookup_elem(files_fd, key, &val))
-+			break;
-+		if (!ASSERT_LE(val.sz, BPF_BUILD_ID_SIZE, "buildid_size"))
-+			break;
-+
-+		sz = read_build_id(key, build_id);
-+		/* If there's an error, the build id is not present or malformed, kernel
-+		 * should see the same result and bpf program pushed zero build id.
-+		 */
-+		if (sz < 0) {
-+			memset(build_id, 0x0, BPF_BUILD_ID_SIZE);
-+			sz = BPF_BUILD_ID_SIZE;
-+		}
-+		ASSERT_EQ(val.sz, sz, "build_id_size");
-+		ASSERT_MEMEQ(val.data, build_id, sz, "build_id_data");
-+
-+		prev_key = key;
-+		cnt++;
-+	}
-+
-+	printf("checked %d files\n", cnt);
-+out:
-+	close(proc_maps_fd);
-+	close(iter_fd);
-+	bpf_iter_task_vma_buildid__destroy(skel);
-+}
-+
- void test_bpf_sockmap_map_iter_fd(void)
- {
- 	struct bpf_iter_sockmap *skel;
-@@ -1659,6 +1735,8 @@ void test_bpf_iter(void)
- 		test_task_vma();
- 	if (test__start_subtest("task_vma_dead_task"))
- 		test_task_vma_dead_task();
-+	if (test__start_subtest("task_vma_buildid"))
-+		test_task_vma_buildid();
- 	if (test__start_subtest("task_btf"))
- 		test_task_btf();
- 	if (test__start_subtest("tcp4"))
-diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-new file mode 100644
-index 000000000000..dc528a4783ec
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include "bpf_iter.h"
-+#include "err.h"
-+#include <bpf/bpf_helpers.h>
-+#include <string.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+#define VM_EXEC		0x00000004
-+#define D_PATH_BUF_SIZE	1024
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__uint(max_entries, 10000);
-+	__type(key, char[D_PATH_BUF_SIZE]);
-+	__type(value, struct build_id);
-+} files SEC(".maps");
-+
-+static char path[D_PATH_BUF_SIZE];
-+static struct build_id build_id;
-+
-+SEC("iter/task_vma")
-+int proc_maps(struct bpf_iter__task_vma *ctx)
-+{
-+	struct vm_area_struct *vma = ctx->vma;
-+	struct seq_file *seq = ctx->meta->seq;
-+	struct task_struct *task = ctx->task;
-+	unsigned long file_key;
-+	struct inode *inode;
-+	struct file *file;
-+
-+	if (task == (void *)0 || vma == (void *)0)
-+		return 0;
-+
-+	if (!(vma->vm_flags & VM_EXEC))
-+		return 0;
-+
-+	file = vma->vm_file;
-+	if (!file)
-+		return 0;
-+
-+	__builtin_memset(path, 0x0, D_PATH_BUF_SIZE);
-+	bpf_d_path(&file->f_path, (char *) &path, D_PATH_BUF_SIZE);
-+
-+	if (bpf_map_lookup_elem(&files, &path))
-+		return 0;
-+
-+	inode = file->f_inode;
-+	if (IS_ERR_OR_NULL(inode->i_build_id)) {
-+		/* On error return empty build id. */
-+		__builtin_memset(&build_id.data, 0x0, sizeof(build_id.data));
-+		build_id.sz = 20;
-+	} else {
-+		__builtin_memcpy(&build_id, inode->i_build_id, sizeof(*inode->i_build_id));
-+	}
-+
-+	bpf_map_update_elem(&files, &path, &build_id, 0);
-+	return 0;
-+}
--- 
-2.39.2
+On 28/02/2023 08:41, Leo Yan wrote:
+> Since we have supported histograms list and prepared the dimensions in
+> the tool, this patch adds TUI mode for stat report.  It also adds UI
+> progress for sorting for better user experience.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/builtin-kvm.c   | 110 ++++++++++++++++++++++++++++++++++++-
+>  tools/perf/util/kvm-stat.h |   1 +
+>  2 files changed, 109 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index 5b1b2042dfed..b0be59577779 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -23,6 +23,8 @@
+>  #include "util/data.h"
+>  #include "util/ordered-events.h"
+>  #include "util/kvm-stat.h"
+> +#include "ui/browsers/hists.h"
+> +#include "ui/progress.h"
+>  #include "ui/ui.h"
+>  #include "util/string2.h"
+>  
+> @@ -506,10 +508,98 @@ static int kvm_hists__init(struct perf_kvm_stat *kvm)
+>  
+>  	__hists__init(&kvm_hists.hists, &kvm_hists.list);
+>  	perf_hpp_list__init(&kvm_hists.list);
+> +	kvm_hists.list.nr_header_lines = 1;
+>  	return kvm_hpp_list__parse(&kvm_hists.list, output_columns,
+>  				   kvm->sort_key);
+>  }
+>  
+> +static int kvm_browser__title(struct hist_browser *browser,
+> +			      char *buf, size_t size)
+> +{
+> +	scnprintf(buf, size, "KVM event statistics (%lu entries)",
+> +		  browser->nr_non_filtered_entries);
+> +	return 0;
+> +}
+> +
+> +static struct hist_browser*
+> +perf_kvm_browser__new(struct hists *hists)
+> +{
+> +	struct hist_browser *browser = hist_browser__new(hists);
+> +
+> +	if (browser)
+> +		browser->title = kvm_browser__title;
+> +
+> +	return browser;
+> +}
+> +
+> +static void print_result(struct perf_kvm_stat *kvm);
+> +
+> +#ifdef HAVE_SLANG_SUPPORT
+
+Hi Leo,
+
+I get an error because of this addition when building on x86. I think
+it's because I don't have HAVE_SLANG_SUPPORT. It might be the same error
+that you mentioned on v1?
+
+   builtin-kvm.c:535:13: error: ‘print_result’ used but never defined
+[-Werror]
+   535 | static void print_result(struct perf_kvm_stat *kvm);
+
+Other than that, for the whole set:
+
+Reviewed-by: James Clark <james.clark@arm.com>
 
