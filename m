@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F0DC64EC7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 11:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1D4C64ED6
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 11:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbjB1Lyb (ORCPT
+        id S231418AbjB1Lyb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 28 Feb 2023 06:54:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50152 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231653AbjB1LyQ (ORCPT
+        with ESMTP id S231528AbjB1LyV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Feb 2023 06:54:16 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AF6621296
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 03:53:49 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id y15-20020a17090aa40f00b00237ad8ee3a0so9326514pjp.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 03:53:49 -0800 (PST)
+        Tue, 28 Feb 2023 06:54:21 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86463113C7
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 03:53:53 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id i3so10114173plg.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Feb 2023 03:53:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IVA/SliggfFjyn1LtlyRDRM3jLle/ZCLsZr9XDCOvr4=;
-        b=cwaSdMK2MosBJmFPQ/Yz+X8w6vJQFeqlpKXTuMEkpAbwdsXVZsA7aI9Bhr6MdaA7ik
-         hHlobYafFhEA+RyhWqM+V4zoFeZKGAT2UcQ09SiYl/FlQSx6mKbybsaZdSig9uwdcJpM
-         7MPEggnnLXmeXb0lcSRAIOgGmlfHkhHadZPHKyUn+oYbvGWQ3eY4nfAcX476IOkhZRbY
-         ofIKbDfUSF5Cf0j8RvOWoqwVVr0d49FzCSl2X8AEfhXlyxy5rGI5SqdR1/iTpPJUkNB6
-         ogH+kBsvzFOTzngsOyan8MTDivDFF12j/5HSIIzLGpBqT+tk68Ibg/ZzZ+58gujFILMR
-         lBoQ==
+        bh=l9iPZ6kED2sgejRw3aZIhHru7u/PrSSNmL2hmgbo2xU=;
+        b=yUDll5J7GnGcIkqj+lEUDzHzv7O+vN8nlDbM8MjOlM/hfuXTefjK6nhrzsPfuA8/oo
+         MvE/RHMgcpiXTBNBx9zskzB73Q0vMeoAgYlq8MGR43HX4FShbmbAw/+X4ESDdvC6HboR
+         8AJw+jQb8gc1Nk8d2obBd10Cn037XWKUt5kaJZDgjVgcRQR80H5h3W58ZmDuWniGSriG
+         j2kn1F2XgImdIuQTGCx19zNRoGxBPTo7GG6Fhy9/1MierflfeHbJvotFCN1jZ48LUk+H
+         HmB7XffVKPIMBOeYy+XgVs2+Ulsxc46DsJGyQTlKnj7XGA5pA93QIjwBTpz8NQQP+RS/
+         dCeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IVA/SliggfFjyn1LtlyRDRM3jLle/ZCLsZr9XDCOvr4=;
-        b=Rj+r6EQtaQOa9bUYtTgAARJdIQQHF/MwvYNc5wHVbJUHuhqnIjbPHuM7PRABT2FpSr
-         zDgWHLefckODJhpNSztWb0JbJh44vb4GrqSFu2B4MIi2u1kJ9AXQHOxFN88JG878Z51I
-         YSp8qLVutkKHaWoTIWbk/iIShTIxaBbtkwdC6Z1maSt7oNh8bPACj8CsM2KHcOgNLYnR
-         oLQdhmvfu/dJisiGgCY02qJ5VKAVS1121ZU7gC635iz2vsP8aCCyby9Yaa5g24nHboJX
-         xoU4PaQ537N5KFtViBJl8R+Qy3Bf9PwvP11okuDPZGdOPcKoeKhiK4L3O03pHYStUYd2
-         7VxA==
-X-Gm-Message-State: AO0yUKV6quqiKOivgrc5kzyJGm1CY30hx+QdOJmUitFHI8JNqzkL2Q8k
-        k/azcUWbVfAk9+8feQJVajMHdg==
-X-Google-Smtp-Source: AK7set8h4tOy6A4rKkBURR6cbLmv7aSoNCG38/0VHxDX58D/uxKiVvPifngHERVeFiT0t8a3gvMnBA==
-X-Received: by 2002:a17:90a:345:b0:236:75d3:fedc with SMTP id 5-20020a17090a034500b0023675d3fedcmr3063340pjf.8.1677585223568;
-        Tue, 28 Feb 2023 03:53:43 -0800 (PST)
+        bh=l9iPZ6kED2sgejRw3aZIhHru7u/PrSSNmL2hmgbo2xU=;
+        b=ePvKRkbERYGbeueqE5MW2W367LMwdUTzkxNp5xbzYwoErLwLgpWuhyZWUYdwVQepMy
+         rPiX/UKx8Hrm2zi4bhuQegWU1stgxtRSwtD7yFwlBZXO4jeyrXqXcI3oyPhaCrX6luCc
+         GI1RM/3rSuNJ7rIZo72PuU6UHEPD0aq71d5qYD4ryxcYIFkq4a3h9W3Gtv/QdXybLbDR
+         F3yjvayr6ZWF82PWPjMhp1o0v1Re0Vrsrp6SvxhoVRdXYs12vYgVnlp97oEq3eipeBf8
+         A30YCreuXK8ZlwyE7dikyZ+oO2YV1x2G+1GYwKQ6RVdhJQWXnSH0VMhXQ7CuO8cdr6dx
+         5+cw==
+X-Gm-Message-State: AO0yUKU9KyhkQpVwg1tr8F6OwiMYqO+q9oEMrfFf1tY1+3lefaKUhKcn
+        Y50Sf50oJwjgYV5AUcy9pY5NWQ==
+X-Google-Smtp-Source: AK7set+Pv0C8P12Xd85/1MPiNULsnUZK5TQAgCpz5ZENyf617uBKO/UEeuVN2jBWAVgvJDmSEwxadg==
+X-Received: by 2002:a17:90a:1959:b0:237:659a:a44d with SMTP id 25-20020a17090a195900b00237659aa44dmr3103998pjh.9.1677585228471;
+        Tue, 28 Feb 2023 03:53:48 -0800 (PST)
 Received: from leoy-huanghe.lan (n058152048225.netvigator.com. [58.152.48.225])
-        by smtp.gmail.com with ESMTPSA id gk8-20020a17090b118800b002339491ead6sm7922317pjb.5.2023.02.28.03.53.39
+        by smtp.gmail.com with ESMTPSA id gk8-20020a17090b118800b002339491ead6sm7922317pjb.5.2023.02.28.03.53.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 03:53:43 -0800 (PST)
+        Tue, 28 Feb 2023 03:53:48 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -64,9 +64,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 10/14] perf kvm: Polish sorting key
-Date:   Tue, 28 Feb 2023 19:51:21 +0800
-Message-Id: <20230228115125.144172-11-leo.yan@linaro.org>
+Subject: [PATCH v3 11/14] perf kvm: Support printing attributions for dimensions
+Date:   Tue, 28 Feb 2023 19:51:22 +0800
+Message-Id: <20230228115125.144172-12-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230228115125.144172-1-leo.yan@linaro.org>
 References: <20230228115125.144172-1-leo.yan@linaro.org>
@@ -76,111 +76,187 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since histograms supports sorting, the tool doesn't need to maintain the
-mapping between the sorting keys and the corresponding comparison
-callbacks, therefore, this patch removes structure kvm_event_key.
-
-But we still need to validate the sorting key, this patch uses an array
-for sorting keys and renames function select_key() to is_valid_key()
-to validate the sorting key passed by user.
+This patch adds header, entry callback and width for every dimension,
+thus in TUI mode the tool can print items with the defined attributions.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/builtin-kvm.c   | 27 +++++++++------------------
- tools/perf/util/kvm-stat.h |  8 --------
- 2 files changed, 9 insertions(+), 26 deletions(-)
+ tools/perf/builtin-kvm.c | 105 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 102 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 32dc697ff707..741ba65bf092 100644
+index 741ba65bf092..a56d0983c585 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -76,15 +76,6 @@ COMPARE_EVENT_KEY(min, stats.min);
- COMPARE_EVENT_KEY(count, stats.n);
- COMPARE_EVENT_KEY(mean, stats.mean);
+@@ -83,8 +83,12 @@ struct kvm_hists {
  
--#define DEF_SORT_NAME_KEY(name, compare_key)				\
--	{ #name, cmp_event_ ## compare_key }
--
--static struct kvm_event_key keys[] = {
--	DEF_SORT_NAME_KEY(sample, count),
--	DEF_SORT_NAME_KEY(time, mean),
--	{ NULL, NULL }
--};
--
- struct kvm_hists {
- 	struct hists		hists;
- 	struct perf_hpp_list	list;
-@@ -766,18 +757,18 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
- 	return true;
- }
- 
--static bool select_key(struct perf_kvm_stat *kvm)
-+static bool is_valid_key(struct perf_kvm_stat *kvm)
- {
-+	const char *key_array[] = {
-+		"sample", "time", "max_t", "min_t", "mean_t",
-+	};
- 	int i;
- 
--	for (i = 0; keys[i].name; i++) {
--		if (!strcmp(keys[i].name, kvm->sort_key)) {
--			kvm->compare = keys[i].key;
-+	for (i = 0; ARRAY_SIZE(key_array); i++)
-+		if (!strcmp(key_array[i], kvm->sort_key))
- 			return true;
--		}
--	}
- 
--	pr_err("Unknown compare key:%s\n", kvm->sort_key);
-+	pr_err("Unsupported key: %s\n", kvm->sort_key);
- 	return false;
- }
- 
-@@ -1201,7 +1192,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
- 		return ret;
- 
- 	if (!verify_vcpu(kvm->trace_vcpu) ||
--	    !select_key(kvm) ||
-+	    !is_valid_key(kvm) ||
- 	    !register_kvm_events_ops(kvm)) {
- 		goto out;
- 	}
-@@ -1395,7 +1386,7 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
- 	if (!verify_vcpu(vcpu))
- 		goto exit;
- 
--	if (!select_key(kvm))
-+	if (!is_valid_key(kvm))
- 		goto exit;
- 
- 	if (!register_kvm_events_ops(kvm))
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index c38d320c7cbe..a8e919ca59f4 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -43,13 +43,6 @@ struct kvm_event {
- 	struct hist_entry he;
+ struct kvm_dimension {
+ 	const char *name;
++	const char *header;
++	int width;
+ 	int64_t (*cmp)(struct perf_hpp_fmt *fmt, struct hist_entry *left,
+ 		       struct hist_entry *right);
++	int (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		     struct hist_entry *he);
  };
  
--typedef int (*key_cmp_fun)(struct kvm_event*, struct kvm_event*, int);
--
--struct kvm_event_key {
--	const char *name;
--	key_cmp_fun key;
--};
--
- struct child_event_ops {
- 	void (*get_key)(struct evsel *evsel,
- 			struct perf_sample *sample,
-@@ -92,7 +85,6 @@ struct perf_kvm_stat {
- 	const char *exit_reasons_isa;
+ struct kvm_fmt {
+@@ -102,9 +106,32 @@ empty_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 	return 0;
+ }
  
- 	struct kvm_events_ops *events_ops;
--	key_cmp_fun compare;
++static int fmt_width(struct perf_hpp_fmt *fmt,
++		     struct perf_hpp *hpp __maybe_unused,
++		     struct hists *hists __maybe_unused);
++
++static int ev_name_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++			 struct hist_entry *he)
++{
++	struct kvm_event *event;
++	int width = fmt_width(fmt, hpp, he->hists);
++	char decode[decode_str_len];
++	struct perf_kvm_stat *perf_kvm;
++
++	event = container_of(he, struct kvm_event, he);
++
++	perf_kvm = event->perf_kvm;
++	perf_kvm->events_ops->decode_key(perf_kvm, &event->key, decode);
++
++	return scnprintf(hpp->buf, hpp->size, "%*s", width, decode);
++}
++
+ static struct kvm_dimension dim_event = {
++	.header		= "Event name",
+ 	.name		= "name",
+ 	.cmp		= empty_cmp,
++	.entry		= ev_name_entry,
++	.width		= 40,
+ };
  
- 	u64 total_time;
- 	u64 total_count;
+ #define EV_METRIC_CMP(metric)						\
+@@ -130,29 +157,77 @@ EV_METRIC_CMP(max)
+ EV_METRIC_CMP(min)
+ EV_METRIC_CMP(mean)
+ 
++#define EV_METRIC_ENTRY(metric)						\
++static int ev_entry_##metric(struct perf_hpp_fmt *fmt,			\
++			     struct perf_hpp *hpp,			\
++			     struct hist_entry *he)			\
++{									\
++	struct kvm_event *event;					\
++	int width = fmt_width(fmt, hpp, he->hists);			\
++	struct perf_kvm_stat *perf_kvm;					\
++									\
++	event = container_of(he, struct kvm_event, he);			\
++	perf_kvm = event->perf_kvm;					\
++	return scnprintf(hpp->buf, hpp->size, "%*lu", width,		\
++		get_event_##metric(event, perf_kvm->trace_vcpu));	\
++}
++
++EV_METRIC_ENTRY(time)
++EV_METRIC_ENTRY(count)
++EV_METRIC_ENTRY(max)
++EV_METRIC_ENTRY(min)
++
+ static struct kvm_dimension dim_time = {
++	.header		= "Time (ns)",
+ 	.name		= "time",
+ 	.cmp		= ev_cmp_time,
++	.entry		= ev_entry_time,
++	.width		= 12,
+ };
+ 
+ static struct kvm_dimension dim_count = {
++	.header		= "Samples",
+ 	.name		= "sample",
+ 	.cmp		= ev_cmp_count,
++	.entry		= ev_entry_count,
++	.width		= 12,
+ };
+ 
+ static struct kvm_dimension dim_max_time = {
++	.header		= "Max Time (ns)",
+ 	.name		= "max_t",
+ 	.cmp		= ev_cmp_max,
++	.entry		= ev_entry_max,
++	.width		= 14,
+ };
+ 
+ static struct kvm_dimension dim_min_time = {
++	.header		= "Min Time (ns)",
+ 	.name		= "min_t",
+ 	.cmp		= ev_cmp_min,
++	.entry		= ev_entry_min,
++	.width		= 14,
+ };
+ 
++static int ev_entry_mean(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++			 struct hist_entry *he)
++{
++	struct kvm_event *event;
++	int width = fmt_width(fmt, hpp, he->hists);
++	struct perf_kvm_stat *perf_kvm;
++
++	event = container_of(he, struct kvm_event, he);
++	perf_kvm = event->perf_kvm;
++	return scnprintf(hpp->buf, hpp->size, "%*lu", width,
++			 get_event_mean(event, perf_kvm->trace_vcpu));
++}
++
+ static struct kvm_dimension dim_mean_time = {
++	.header		= "Mean Time (ns)",
+ 	.name		= "mean_t",
+ 	.cmp		= ev_cmp_mean,
++	.entry		= ev_entry_mean,
++	.width		= 14,
+ };
+ 
+ static struct kvm_dimension *dimensions[] = {
+@@ -165,6 +240,30 @@ static struct kvm_dimension *dimensions[] = {
+ 	NULL,
+ };
+ 
++static int fmt_width(struct perf_hpp_fmt *fmt,
++		     struct perf_hpp *hpp __maybe_unused,
++		     struct hists *hists __maybe_unused)
++{
++	struct kvm_fmt *kvm_fmt;
++
++	kvm_fmt = container_of(fmt, struct kvm_fmt, fmt);
++	return kvm_fmt->dim->width;
++}
++
++static int fmt_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
++		      struct hists *hists, int line __maybe_unused,
++		      int *span __maybe_unused)
++{
++	struct kvm_fmt *kvm_fmt;
++	struct kvm_dimension *dim;
++	int width = fmt_width(fmt, hpp, hists);
++
++	kvm_fmt = container_of(fmt, struct kvm_fmt, fmt);
++	dim = kvm_fmt->dim;
++
++	return scnprintf(hpp->buf, hpp->size, "%*s", width, dim->header);
++}
++
+ static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
+ {
+ 	struct kvm_fmt *kvm_fmt_a = container_of(a, struct kvm_fmt, fmt);
+@@ -214,9 +313,9 @@ static struct kvm_fmt *get_format(const char *name)
+ 	fmt->cmp	= dim->cmp;
+ 	fmt->sort	= dim->cmp;
+ 	fmt->color	= NULL;
+-	fmt->entry	= NULL;
+-	fmt->header	= NULL;
+-	fmt->width	= NULL;
++	fmt->entry	= dim->entry;
++	fmt->header	= fmt_header;
++	fmt->width	= fmt_width;
+ 	fmt->collapse	= dim->cmp;
+ 	fmt->equal	= fmt_equal;
+ 	fmt->free	= fmt_free;
 -- 
 2.34.1
 
