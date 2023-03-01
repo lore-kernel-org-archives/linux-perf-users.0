@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAC5C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Feb 2023 23:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20564C64EC4
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Mar 2023 00:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbjB1Xem (ORCPT
+        id S229805AbjCAADo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Feb 2023 18:34:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51462 "EHLO
+        Tue, 28 Feb 2023 19:03:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjB1Xem (ORCPT
+        with ESMTP id S229822AbjCAADl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Feb 2023 18:34:42 -0500
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD1322DE2;
-        Tue, 28 Feb 2023 15:34:40 -0800 (PST)
-Received: by mail-io1-f50.google.com with SMTP id bf15so4715917iob.7;
-        Tue, 28 Feb 2023 15:34:40 -0800 (PST)
+        Tue, 28 Feb 2023 19:03:41 -0500
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6653F302B7;
+        Tue, 28 Feb 2023 16:03:40 -0800 (PST)
+Received: by mail-il1-f171.google.com with SMTP id i4so7423424ils.1;
+        Tue, 28 Feb 2023 16:03:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677627280;
+        d=1e100.net; s=20210112; t=1677629019;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FeueFgms68iXpT/krDtL0yaSU3HkmD5uN8iaU1zZO2k=;
-        b=dxC1QWxYFDvVrSJTyrYO2BE5hUSIU5oaAh0ip44UqxgL/YrGp8nsVxoYYxvtbb9Vw9
-         v7IRIbTfVcwlDp0YzV0kztDNO6BM0gWiF0EB0lBqtkEBFlzokxynWflrUuchVqFy45TK
-         CnETiz4elIcSstWjasjwUxIkt07TRziWLKKRa4ybRZquSj0goBXUId6XN48JmT4bxQ1T
-         fVPw0AEr0xMbN8FTYY6KQ9m9NUhUGJ/pr6MufWAJ7lm1mpbghoET79GTpmjXY3/OUT73
-         R9WXSIYAuxkZa5OOVbxyMb/cJ/uRIlZpNjSHJOaa7RD3zydpAbvc/Bp331s4jFlW8+zt
-         vhLw==
-X-Gm-Message-State: AO0yUKXaWpcJNt2ZC7ye+DdSp2Tvns7SG3zB8f2KvtZeqlL5V68EKpug
-        6qUZHZLCK5jqwe9FqesgR9CJyKKPYJfnpAdxgHE=
-X-Google-Smtp-Source: AK7set/EkmZ5lfHMe26IBDK9XcJOKP0KCYSlYbcf3h5369Pdb9l4dIKRs+nTuOGR+uosRTCsiVE8AUYOFmT30UTpYa8=
-X-Received: by 2002:a6b:ee19:0:b0:745:405d:b703 with SMTP id
- i25-20020a6bee19000000b00745405db703mr2088843ioh.3.1677627279880; Tue, 28 Feb
- 2023 15:34:39 -0800 (PST)
+        bh=wqlh8BQKuxQaHWLyKXNgCkeWAA6Guq7VsUwjTAIoHs0=;
+        b=S6TTJVN4fOpTd9WQylK1e1I/+nUjvsTfwffHYj8ecdaRv5k9Z+bK2kfMCU/Lyak2Cx
+         uwxrC3miRMSs0BHfKksqg1m21IKdE+QZW115OEAsOi0EjQIo97/8q4T3KCcnFiVJ71i7
+         ovNkkzKBROxin5u2gPpgdCIBaO2mY35S72aHPT17zy6TCqmdPjWiE6yERPzVYYZvTKuf
+         wnTK0luuR/uZm+dAqnEpWq+5rJE+qGJnaN/L/uoP0uVsmw/GQc/KPJlLid+KYzXf3ExS
+         I8Fn+qora0r3espilXlHwUkPdjktQTTjeH6FPmHqBIAB7D1iHsF9BE0f5+uy8KOgw9Fs
+         w0Ow==
+X-Gm-Message-State: AO0yUKW3lJWzC4bH/dMikkOIebjI8398VNSRTkNqQ49DmwWseSM2az9N
+        idWuhBnfT6YP1slE/H0UUTJqbgo1oAnxF5cJMf8=
+X-Google-Smtp-Source: AK7set+GUKbLh5qalgpqMBZZB4Q0jnLgBVp/H8mRmWkJnfYp00sV4gjO/A/J+pu7vUTbX7hx9LX+bsCTsq75sIopSYo=
+X-Received: by 2002:a05:6e02:66b:b0:314:8c8:de65 with SMTP id
+ l11-20020a056e02066b00b0031408c8de65mr2199182ilt.3.1677629019509; Tue, 28 Feb
+ 2023 16:03:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20230228115125.144172-1-leo.yan@linaro.org> <20230228115125.144172-9-leo.yan@linaro.org>
-In-Reply-To: <20230228115125.144172-9-leo.yan@linaro.org>
+References: <20230228115125.144172-1-leo.yan@linaro.org> <20230228115125.144172-10-leo.yan@linaro.org>
+In-Reply-To: <20230228115125.144172-10-leo.yan@linaro.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 28 Feb 2023 15:34:28 -0800
-Message-ID: <CAM9d7cgEZ4ugAfef8hDKOr11xF7QP1w7-Ax3mnDr4XXmYr0DoQ@mail.gmail.com>
-Subject: Re: [PATCH v3 08/14] perf kvm: Add dimensions for KVM event statistics
+Date:   Tue, 28 Feb 2023 16:03:27 -0800
+Message-ID: <CAM9d7cgXkPw_op7tj7eZE4xP68reO8cDmwpHOa+13C1CSeOOjg@mail.gmail.com>
+Subject: Re: [PATCH v3 09/14] perf kvm: Use histograms list to replace cached list
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -58,217 +58,200 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
-
 On Tue, Feb 28, 2023 at 3:53 AM Leo Yan <leo.yan@linaro.org> wrote:
 >
-> To support KVM event statistics, this patch firstly registers histograms
-> columns and sorting fields; every column or field has its own format
-> structure, the format structure is dereferenced to access the dimension,
-> finally the dimension provides the comparison callback for sorting
-> result.
+> perf kvm tool defines its own cached list which is managed with RB tree,
+> histograms also provide RB tree to manage data entries.  Since now we
+> have introduced histograms in the tool, it's not necessary to use the
+> self defined list and we can directly use histograms list to manage
+> KVM events.
+>
+> This patch changes to use histograms list to track KVM events, and it
+> invokes the common function hists__output_resort_cb() to sort result,
+> this also give us flexibility to extend more sorting key words easily.
+>
+> After histograms list supported, the cached list is redundant so remove
+> the relevant code for it.
 >
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > Reviewed-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/builtin-kvm.c   | 239 +++++++++++++++++++++++++++++++++++--
->  tools/perf/util/kvm-stat.h |   2 +
->  2 files changed, 234 insertions(+), 7 deletions(-)
+>  tools/perf/builtin-kvm.c   | 186 +++++++++++++++++++------------------
+>  tools/perf/util/kvm-stat.h |   7 --
+>  2 files changed, 94 insertions(+), 99 deletions(-)
 >
 > diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index a9f467926bdd..da84f5063d4d 100644
+> index da84f5063d4d..32dc697ff707 100644
 > --- a/tools/perf/builtin-kvm.c
 > +++ b/tools/perf/builtin-kvm.c
-> @@ -70,9 +70,9 @@ static int cmp_event_ ## func(struct kvm_event *one,                  \
->                get_event_ ##func(two, vcpu);                            \
->  }
->
-> -GET_EVENT_KEY(time, time);
-> -GET_EVENT_KEY(max, stats.max);
-> -GET_EVENT_KEY(min, stats.min);
-> +COMPARE_EVENT_KEY(time, time);
-> +COMPARE_EVENT_KEY(max, stats.max);
-> +COMPARE_EVENT_KEY(min, stats.min);
->  COMPARE_EVENT_KEY(count, stats.n);
->  COMPARE_EVENT_KEY(mean, stats.mean);
->
-> @@ -90,13 +90,238 @@ struct kvm_hists {
->         struct perf_hpp_list    list;
+> @@ -421,44 +421,37 @@ struct vcpu_event_record {
+>         struct kvm_event *last_event;
 >  };
 >
-> +struct kvm_dimension {
-> +       const char *name;
-> +       int64_t (*cmp)(struct perf_hpp_fmt *fmt, struct hist_entry *left,
-> +                      struct hist_entry *right);
-> +};
+> -
+> -static void init_kvm_event_record(struct perf_kvm_stat *kvm)
+> -{
+> -       unsigned int i;
+> -
+> -       for (i = 0; i < EVENTS_CACHE_SIZE; i++)
+> -               INIT_LIST_HEAD(&kvm->kvm_events_cache[i]);
+> -}
+> -
+>  #ifdef HAVE_TIMERFD_SUPPORT
+> -static void clear_events_cache_stats(struct list_head *kvm_events_cache)
+> +static void clear_events_cache_stats(void)
+>  {
+> -       struct list_head *head;
+> +       struct rb_root_cached *root;
+> +       struct rb_node *nd;
+>         struct kvm_event *event;
+> -       unsigned int i;
+> -       int j;
+> -
+> -       for (i = 0; i < EVENTS_CACHE_SIZE; i++) {
+> -               head = &kvm_events_cache[i];
+> -               list_for_each_entry(event, head, hash_entry) {
+> -                       /* reset stats for event */
+> -                       event->total.time = 0;
+> -                       init_stats(&event->total.stats);
+> -
+> -                       for (j = 0; j < event->max_vcpu; ++j) {
+> -                               event->vcpu[j].time = 0;
+> -                               init_stats(&event->vcpu[j].stats);
+> -                       }
+> +       int i;
 > +
-> +struct kvm_fmt {
-> +       struct perf_hpp_fmt     fmt;
-> +       struct kvm_dimension    *dim;
-> +};
+> +       if (hists__has(&kvm_hists.hists, need_collapse))
+> +               root = &kvm_hists.hists.entries_collapsed;
+> +       else
+> +               root = kvm_hists.hists.entries_in;
 > +
->  static struct kvm_hists kvm_hists;
+> +       for (nd = rb_first_cached(root); nd; nd = rb_next(nd)) {
+> +               struct hist_entry *he;
+> +
+> +               he = rb_entry(nd, struct hist_entry, rb_node_in);
+> +               event = container_of(he, struct kvm_event, he);
+> +
+> +               /* reset stats for event */
+> +               event->total.time = 0;
+> +               init_stats(&event->total.stats);
+> +
+> +               for (i = 0; i < event->max_vcpu; ++i) {
+> +                       event->vcpu[i].time = 0;
+> +                       init_stats(&event->vcpu[i].stats);
+>                 }
+>         }
+>  }
+>  #endif
 >
-> -static int kvm_hists__init(void)
-> +static int64_t
-> +empty_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> +         struct hist_entry *left __maybe_unused,
-> +         struct hist_entry *right __maybe_unused)
+> -static int kvm_events_hash_fn(u64 key)
+> -{
+> -       return key & (EVENTS_CACHE_SIZE - 1);
+> -}
+> -
+>  static bool kvm_event_expand(struct kvm_event *event, int vcpu_id)
+>  {
+>         int old_max_vcpu = event->max_vcpu;
+> @@ -484,21 +477,51 @@ static bool kvm_event_expand(struct kvm_event *event, int vcpu_id)
+>         return true;
+>  }
+>
+> +static void *kvm_he_zalloc(size_t size)
 > +{
-> +       return 0;
+> +       struct kvm_event *kvm_ev;
+> +
+> +       kvm_ev = zalloc(size + sizeof(*kvm_ev));
+> +       if (!kvm_ev)
+> +               return NULL;
+> +
+> +       return &kvm_ev->he;
 > +}
 > +
-> +static struct kvm_dimension dim_event = {
-> +       .name           = "name",
-> +       .cmp            = empty_cmp,
+> +static void kvm_he_free(void *he)
+> +{
+> +       struct kvm_event *kvm_ev;
+> +
+> +       kvm_ev = container_of(he, struct kvm_event, he);
+> +       free(kvm_ev);
+> +}
+> +
+> +static struct hist_entry_ops kvm_ev_entry_ops = {
+> +       .new    = kvm_he_zalloc,
+> +       .free   = kvm_he_free,
 > +};
+> +
+>  static struct kvm_event *kvm_alloc_init_event(struct perf_kvm_stat *kvm,
+>                                               struct event_key *key,
+> -                                             struct perf_sample *sample __maybe_unused)
+> +                                             struct perf_sample *sample)
+>  {
+>         struct kvm_event *event;
+> +       struct hist_entry *he;
+>
+> -       event = zalloc(sizeof(*event));
+> -       if (!event) {
+> -               pr_err("Not enough memory\n");
+> +       he = hists__add_entry_ops(&kvm_hists.hists, &kvm_ev_entry_ops,
+> +                                 &kvm->al, NULL, NULL, NULL, sample, true);
+> +       if (he == NULL) {
+> +               pr_err("Failed to allocate hist entry\n");
+>                 return NULL;
+>         }
+>
+> +       hists__inc_nr_samples(&kvm_hists.hists, 0);
+> +
+> +       event = container_of(he, struct kvm_event, he);
+>         event->perf_kvm = kvm;
+>         event->key = *key;
+>         init_stats(&event->total.stats);
+> +
+>         return event;
+>  }
+>
+> @@ -507,22 +530,26 @@ static struct kvm_event *find_create_kvm_event(struct perf_kvm_stat *kvm,
+>                                                struct perf_sample *sample)
+>  {
+>         struct kvm_event *event;
+> -       struct list_head *head;
+> +       struct rb_root_cached *root;
+> +       struct rb_node *nd;
+>
+>         BUG_ON(key->key == INVALID_KEY);
+>
+> -       head = &kvm->kvm_events_cache[kvm_events_hash_fn(key->key)];
+> -       list_for_each_entry(event, head, hash_entry) {
+> +       if (hists__has(&kvm_hists.hists, need_collapse))
+> +               root = &kvm_hists.hists.entries_collapsed;
+> +       else
+> +               root = kvm_hists.hists.entries_in;
+> +
+> +       for (nd = rb_first_cached(root); nd; nd = rb_next(nd)) {
+> +               struct hist_entry *he = rb_entry(nd, struct hist_entry,
+> +                                                rb_node_in);
+> +
+> +               event = container_of(he, struct kvm_event, he);
+>                 if (event->key.key == key->key && event->key.info == key->info)
+>                         return event;
 
-I guess you can name it as 'dim_name' to reduce the confusion.
-Also it can compare event names using strcmp() in case users
-want to see event names in alphabetical order.
+This seems inefficient and even unnecessary.  You should find
+the event based on the return value of hist_entry__cmp() from
+the root and go down.
 
-[SNIP]
-> +
-> +static int kvm_hists__init_output(struct perf_hpp_list *hpp_list, char *name)
-> +{
-> +       struct kvm_fmt *kvm_fmt = get_format(name);
-> +
-> +       if (!kvm_fmt) {
-> +               reset_dimensions();
-> +               return output_field_add(hpp_list, name);
-
-Hmm.. do you plan to support these generic output fields too?
-I'm not sure you need reset_dimensions() here.
-
-> +       }
-> +
-> +       perf_hpp_list__column_register(hpp_list, &kvm_fmt->fmt);
-> +       return 0;
-> +}
-> +
-> +static int kvm_hists__init_sort(struct perf_hpp_list *hpp_list, char *name)
-> +{
-> +       struct kvm_fmt *kvm_fmt = get_format(name);
-> +
-> +       if (!kvm_fmt) {
-> +               reset_dimensions();
-> +               return sort_dimension__add(hpp_list, name, NULL, 0);
-
-Ditto.
-
-> +       }
-> +
-> +       perf_hpp_list__register_sort_field(hpp_list, &kvm_fmt->fmt);
-> +       return 0;
-> +}
-> +
-> +static int kvm_hpp_list__init(char *list,
-> +                             struct perf_hpp_list *hpp_list,
-> +                             int (*fn)(struct perf_hpp_list *hpp_list,
-> +                                       char *name))
-> +{
-> +       char *tmp, *tok;
-> +       int ret;
-> +
-> +       if (!list || !fn)
-> +               return 0;
-> +
-> +       for (tok = strtok_r(list, ", ", &tmp); tok;
-> +            tok = strtok_r(NULL, ", ", &tmp)) {
-> +               ret = fn(hpp_list, tok);
-> +               if (!ret)
-> +                       continue;
-> +
-> +               /* Handle errors */
-> +               if (ret == -EINVAL)
-> +                       pr_err("Invalid field key: '%s'", tok);
-> +               else if (ret == -ESRCH)
-> +                       pr_err("Unknown field key: '%s'", tok);
-> +               else
-> +                       pr_err("Fail to initialize for field key: '%s'", tok);
-> +
-> +               break;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static int kvm_hpp_list__parse(struct perf_hpp_list *hpp_list,
-> +                              const char *output_, const char *sort_)
-> +{
-> +       char *output = output_ ? strdup(output_) : NULL;
-> +       char *sort = sort_ ? strdup(sort_) : NULL;
-> +       int ret;
-> +
-> +       ret = kvm_hpp_list__init(output, hpp_list, kvm_hists__init_output);
-> +       if (ret)
-> +               goto out;
-> +
-> +       ret = kvm_hpp_list__init(sort, hpp_list, kvm_hists__init_sort);
-> +       if (ret)
-> +               goto out;
-> +
-> +       /* Copy sort keys to output fields */
-> +       perf_hpp__setup_output_field(hpp_list);
-
-I think you also need perf_hpp__append_sort_keys() as in
-setup_sorting() to have secondary sort keys in case the
-given sort key cannot determine the ordering.
+But I think that's what hists__add_entry_ops() does.  Maybe
+you may need to move the init logic (like init_stats) to the
+kvm_he_zalloc().
 
 Thanks,
 Namhyung
 
 
-> +
-> +out:
-> +       free(output);
-> +       free(sort);
-> +       return ret;
-> +}
-> +
-> +static int kvm_hists__init(struct perf_kvm_stat *kvm)
-> +{
-> +       const char *output_columns = "name,sample,time,max_t,min_t,mean_t";
-> +
->         __hists__init(&kvm_hists.hists, &kvm_hists.list);
->         perf_hpp_list__init(&kvm_hists.list);
-> -       return 0;
-> +       return kvm_hpp_list__parse(&kvm_hists.list, output_columns,
-> +                                  kvm->sort_key);
+>         }
+>
+> -       event = kvm_alloc_init_event(kvm, key, sample);
+> -       if (!event)
+> -               return NULL;
+> -
+> -       list_add(&event->hash_entry, head);
+> -       return event;
+> +       return kvm_alloc_init_event(kvm, key, sample);
 >  }
->
->  static const char *get_filename_for_perf_kvm(void)
-> @@ -979,7 +1204,7 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
->         set_term_quiet_input(&save);
->         init_kvm_event_record(kvm);
->
-> -       kvm_hists__init();
-> +       kvm_hists__init(kvm);
->
->         signal(SIGINT, sig_handler);
->         signal(SIGTERM, sig_handler);
-> @@ -1176,7 +1401,7 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
->         init_kvm_event_record(kvm);
->         setup_pager();
->
-> -       kvm_hists__init();
-> +       kvm_hists__init(kvm);
->
->         ret = read_events(kvm);
->         if (ret)
-> diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-> index 80d5c5a9ae31..ca5796959f66 100644
-> --- a/tools/perf/util/kvm-stat.h
-> +++ b/tools/perf/util/kvm-stat.h
-> @@ -40,6 +40,8 @@ struct kvm_event {
->         #define DEFAULT_VCPU_NUM 8
->         int max_vcpu;
->         struct kvm_event_stats *vcpu;
-> +
-> +       struct hist_entry he;
->  };
->
->  typedef int (*key_cmp_fun)(struct kvm_event*, struct kvm_event*, int);
-> --
-> 2.34.1
->
