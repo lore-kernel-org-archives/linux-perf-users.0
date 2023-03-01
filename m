@@ -2,100 +2,128 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D6C6FA9D
-	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Mar 2023 15:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D1C6FA9D
+	for <linux-perf-users@archiver.kernel.org>; Wed,  1 Mar 2023 15:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjCAPEa (ORCPT
+        id S229806AbjCAPl2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Mar 2023 10:04:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56988 "EHLO
+        Wed, 1 Mar 2023 10:41:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbjCAPE3 (ORCPT
+        with ESMTP id S229527AbjCAPl1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Mar 2023 10:04:29 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708BB303E5;
-        Wed,  1 Mar 2023 07:04:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677683068; x=1709219068;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JnmA5Zi17bd6jWDVLbg86M4rw6XNBDHfhFxQM53Fmpw=;
-  b=d/GJP07JcrCBqhy1GEhLfDLF26a1oJugufVquKVfyn3bZsu3bE67iYYv
-   IqEJr0WBhbnkRI4HQw2u4U/68XJ+ONUMxhsGbgdYMOBwGOtNmAlWxQHSF
-   ijzTiMTkhH8akGwJTi5noLajv59yJBjBoh8oX8TyPWLEnxrn4El6oTnDi
-   Sz8MzqWDnlDlmSkwxVkgWO3oz8NjOoLjGqrY0ZI0GEX8yyFmdvMIQaK0f
-   PoUzdkWNyJW4FAi79/A3VYOxP/xZ/LTm2TiFlcgO1u8U3yJA8i+tOurPM
-   sz7CZ2dFh4irK59Bym9GPy3QfUTakq0vrjhZYN2g+cjlgdl8QNdk5SiD/
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="331908111"
-X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="331908111"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2023 07:04:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10636"; a="920273548"
-X-IronPort-AV: E=Sophos;i="5.98,225,1673942400"; 
-   d="scan'208";a="920273548"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Mar 2023 07:04:26 -0800
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        namhyung@kernel.org
-Cc:     jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf record: Fix "read LOST count failed" msg with sample read
-Date:   Wed,  1 Mar 2023 07:04:13 -0800
-Message-Id: <20230301150413.27011-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        Wed, 1 Mar 2023 10:41:27 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1E8410AB;
+        Wed,  1 Mar 2023 07:41:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 212BF6137B;
+        Wed,  1 Mar 2023 15:41:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43BC4C433EF;
+        Wed,  1 Mar 2023 15:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677685284;
+        bh=+qv6It5dGq3Z5N42zbPSFy3HhrWC6PisO2WM+ec3U58=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WP5sZE1YDwJteuvwIPzuCpoH8l4GQ3vJF3Z7Ew12qTs0sbiTAQoUAm1H0GN3neq0g
+         kp546ONmr7KhXv/OQUUR8Q4v9HGkXwxIkySx2osYW0AECu/h+LiCSlJYGrORbKmaO4
+         g4uq3yVfsDmsO3UgjEtMI3vZbLHI1G/1eW9MSUs9j0ASnxnxkn+q8ygx2oaGcvrg0A
+         Q/i341yhJtzkSLYJaV+MfWAud9gG08qCfdCloNRQrNSpIBiVsvNHpv1gjpIzbO72iC
+         rvMoh/37GKzizCK7Frcw3ReUx01IyAYKX8YsZSlI3EI3xgodOG7Alct6KUWKTHNaeR
+         JERnhAKzpSPIA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7A4534049F; Wed,  1 Mar 2023 12:41:20 -0300 (-03)
+Date:   Wed, 1 Mar 2023 12:41:20 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>
+Subject: Re: [RFC v2 bpf-next 0/9] mm/bpf/perf: Store build id in inode object
+Message-ID: <Y/9yIJ9kOHcZqIzo@kernel.org>
+References: <20230228093206.821563-1-jolsa@kernel.org>
+ <20230228220714.GJ2825702@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230228220714.GJ2825702@dread.disaster.area>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Em Wed, Mar 01, 2023 at 09:07:14AM +1100, Dave Chinner escreveu:
+> On Tue, Feb 28, 2023 at 10:31:57AM +0100, Jiri Olsa wrote:
+> > this is RFC patchset for adding build id under inode's object.
 
-Hundreds of "read LOST count failed" error messages may be displayed,
-when the below command is launched.
+> > The main change to previous post [1] is to use inode object instead of file
+> > object for build id data.
+> 
+> Please explain what a "build id" is, the use case for it, why we
+> need to store it in VFS objects, what threat model it is protecting
+> the system against, etc.
 
-perf record -e '{cpu/mem-loads-aux/,cpu/event=0xcd,umask=0x1/}:S' -a
+[root@quaco ~]# file /bin/bash
+/bin/bash: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=160df51238a38ca27d03290f3ad5f7df75560ae0, for GNU/Linux 3.2.0, stripped
+[root@quaco ~]# file /lib64/libc.so.6
+/lib64/libc.so.6: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8257ee907646e9b057197533d1e4ac8ede7a9c5c, for GNU/Linux 3.2.0, not stripped
+[root@quaco ~]#
 
-According to the commit 89e3106fa25f ("libperf: Handle read format in
-perf_evsel__read()"), the PERF_FORMAT_GROUP is only available for the
-leader. However, the record__read_lost_samples() goes through every
-entry of an evlist, which includes both leader and member. The member
-event errors out and triggers the error message. Since there may be
-hundreds of CPUs on a server, the message will be printed hundreds of
-times, which is very annoying.
+Those BuildID[sha1]= bits, that is present in all binaries I think in
+all distros for quite a while.
 
-The message itself is correct, but the pr_err is a overkill. Other error
-messages in the record__read_lost_samples() are all pr_debug. To make
-the output format consistent, change the pr_err("read LOST count
-failed\n"); to pr_debug("read LOST count failed\n");.
-User can still get the message via -v option.
+This page, from when this was initially designed, has a discussion about
+it, why it is needed, etc:
 
-Fixes: e3a23261ad06 ("perf record: Read and inject LOST_SAMPLES events")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/builtin-record.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  https://fedoraproject.org/wiki/RolandMcGrath/BuildID
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8374117e66f6..be7c0c29d15b 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1866,7 +1866,7 @@ static void __record__read_lost_samples(struct record *rec, struct evsel *evsel,
- 	int id_hdr_size;
+'perf record' will receive MMAP records, initially without build-ids,
+now we have one that has, but collecting it when the mmap is executed
+(and thus a PERF_RECORD_MMAP* record is emitted) may not work, thus this
+work from Jiri.
+
+- Arnaldo
  
- 	if (perf_evsel__read(&evsel->core, cpu_idx, thread_idx, &count) < 0) {
--		pr_err("read LOST count failed\n");
-+		pr_debug("read LOST count failed\n");
- 		return;
- 	}
+> > 
+> > However.. ;-) while using inode as build id storage place saves some memory
+> > by keeping just one copy of the build id for all file instances, there seems
+> > to be another problem.
  
--- 
-2.35.1
-
+> Yes, the problem being that we can cache hundreds of millions of
+> inodes in memory, and only a very small subset of them are going to
+> have open files associated with them. And an even smaller subset are
+> going to be mmapped.
+ 
+> So, in reality, this proposal won't save any memory at all - it
+> costs memory for every inode that is not currently being used as
+> a mmapped elf executable, right?
+> 
+> > The problem is that we read the build id when the file is mmap-ed.
+> 
+> Why? I'm completely clueless as to what this thing does or how it's
+> used....
+> 
+> > Which is fine for our use case,
+> 
+> Which is?
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
