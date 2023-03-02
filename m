@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B915C678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 14:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB294C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 14:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjCBOcy (ORCPT
+        id S229506AbjCBOdP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:32:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
+        Thu, 2 Mar 2023 09:33:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjCBOcy (ORCPT
+        with ESMTP id S229888AbjCBOdO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:32:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A76F3A88;
-        Thu,  2 Mar 2023 06:32:52 -0800 (PST)
+        Thu, 2 Mar 2023 09:33:14 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA343E614;
+        Thu,  2 Mar 2023 06:33:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 99AD7615D4;
-        Thu,  2 Mar 2023 14:32:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98650C433EF;
-        Thu,  2 Mar 2023 14:32:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 029A4B80F52;
+        Thu,  2 Mar 2023 14:33:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDE3C433EF;
+        Thu,  2 Mar 2023 14:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677767570;
-        bh=4kWn2IUOqTgbuPNR7J4g0aISgONkKWz1waYvnH8empk=;
+        s=k20201202; t=1677767584;
+        bh=1R2gSt+nHJNxrAQ3PyOhlKch6GMiz2DfejtQUqixaPU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dkkIEyq0IRXUm4Vrc0c7Kh9DKTxUvUemhN6YlRmM6E4OclRg3z3vuklxMRcZ3jxg2
-         AThhMXlTnOohw04BC+gKnTf92taSteFgy5JdPF+U0j/KBiWgXShmPjekpVz70JG4/N
-         pssmglc7IBnJ5tQ/ot+Vv7WrxRA8VPSaKkQihEZb6cIj/YvTgbFswNQQI3xxzA/H0x
-         AhnGmab+mpSxX7AfllzWg8bnvU9agleWXloyGxI78EQ8pJS7bB/i6wRmBpBDSEfdfW
-         No0unzTjL54P8HtijPCNyJThUCekfVZdBEeTf65vhXzNKBaKnfDmo/kqDfI0pLjyZ9
-         4nSf16QZWDMVQ==
+        b=ASCdwM4PuschUkqdvQ0it4PpES09CnGya4rFsgoTJNaTEIWBxux68EQiTuE6TKokW
+         czmxYks/qO6ITI2STNsm0aYJT1w86IttIZrCYcAT/NbxuSSb5JDls/DYHsH7XuyDwn
+         hd41IqRr/5Hnv1dAqOB4ntkIJgIxvfoZ09K8NOD3zFp/6wyADpiNO08hxmWkX/J3bC
+         Lb6DbLOhmI39wF6I4LoKmB+UcwoHAtil6FbsBP62ja1xbMNSgmTojsp9IFpYxQPcgW
+         UWIWODgrLgQvGUSVW4gwitxJ1pF5dXlgv7EG6QiOitWuVUm4hG0y/XM+VRFItSGcTz
+         /8Z7YlMAl/KjA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2E7E54049F; Thu,  2 Mar 2023 11:32:48 -0300 (-03)
-Date:   Thu, 2 Mar 2023 11:32:48 -0300
+        id 3E06F4049F; Thu,  2 Mar 2023 11:33:02 -0300 (-03)
+Date:   Thu, 2 Mar 2023 11:33:02 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -60,114 +60,57 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 03/10] perf record: Early auxtrace initialization
- before event parsing
-Message-ID: <ZACzkOmDFuRQ5MiR@kernel.org>
+Subject: Re: [PATCH v1 01/10] libperf evlist: Avoid a use of evsel idx
+Message-ID: <ZACznqmwP2ySKwn9@kernel.org>
 References: <20230302041211.852330-1-irogers@google.com>
- <20230302041211.852330-4-irogers@google.com>
+ <20230302041211.852330-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230302041211.852330-4-irogers@google.com>
+In-Reply-To: <20230302041211.852330-2-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 01, 2023 at 08:12:04PM -0800, Ian Rogers escreveu:
-> This allows event parsing to use the evsel__is_aux_event function,
-> which is important when determining event grouping.
-> 
+Em Wed, Mar 01, 2023 at 08:12:02PM -0800, Ian Rogers escreveu:
+> Setting the leader iterates the list, so rather than use idx (which
+> may be changed through list reordering) just count the elements and
+> set afterwards.
+
+Looks ok
+ 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/arch/x86/util/auxtrace.c | 17 +++++++++++++----
->  tools/perf/builtin-record.c         |  6 ++++++
->  tools/perf/util/auxtrace.h          |  2 ++
->  3 files changed, 21 insertions(+), 4 deletions(-)
+>  tools/lib/perf/evlist.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
 > 
-> diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
-> index 3da506e13f49..de1e4842ea2e 100644
-> --- a/tools/perf/arch/x86/util/auxtrace.c
-> +++ b/tools/perf/arch/x86/util/auxtrace.c
-> @@ -15,6 +15,19 @@
->  #include "../../../util/intel-bts.h"
->  #include "../../../util/evlist.h"
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index 61b637f29b82..2d6121e89ccb 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -687,15 +687,14 @@ perf_evlist__next_mmap(struct perf_evlist *evlist, struct perf_mmap *map,
 >  
-> +void auxtrace__early_init(void)
-> +{
-> +	struct perf_pmu *intel_pt_pmu;
-> +	struct perf_pmu *intel_bts_pmu;
-> +
-> +	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-> +	if (intel_pt_pmu)
-> +		intel_pt_pmu->auxtrace = true;
-> +	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-> +	if (intel_bts_pmu)
-> +		intel_bts_pmu->auxtrace = true;
-> +}
-> +
->  static
->  struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
->  						    int *err)
-> @@ -26,11 +39,7 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
->  	bool found_bts = false;
+>  void __perf_evlist__set_leader(struct list_head *list, struct perf_evsel *leader)
+>  {
+> -	struct perf_evsel *first, *last, *evsel;
+> -
+> -	first = list_first_entry(list, struct perf_evsel, node);
+> -	last = list_last_entry(list, struct perf_evsel, node);
+> -
+> -	leader->nr_members = last->idx - first->idx + 1;
+> +	struct perf_evsel *evsel;
+> +	int n = 0;
 >  
->  	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-> -	if (intel_pt_pmu)
-> -		intel_pt_pmu->auxtrace = true;
-
-In this case, can't we do it as:
-
-	if (intel_pt_pmu == NULL && intel_bts_pmu == NULL)
-		auxtrace__early_init();
-
-To avoid possibly doing the finds again?
-
-- Arnaldo
-
->  	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-> -	if (intel_bts_pmu)
-> -		intel_bts_pmu->auxtrace = true;
->  
->  	evlist__for_each_entry(evlist, evsel) {
->  		if (intel_pt_pmu && evsel->core.attr.type == intel_pt_pmu->type)
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 8374117e66f6..a0870c076dc0 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -3940,6 +3940,10 @@ static int record__init_thread_masks(struct record *rec)
->  	return ret;
+> -	__perf_evlist__for_each_entry(list, evsel)
+> +	__perf_evlist__for_each_entry(list, evsel) {
+>  		evsel->leader = leader;
+> +		n++;
+> +	}
+> +	leader->nr_members = n;
 >  }
 >  
-> +__weak void auxtrace__early_init(void)
-> +{
-> +}
-> +
->  int cmd_record(int argc, const char **argv)
->  {
->  	int err;
-> @@ -3985,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
->  	if (err)
->  		return err;
->  
-> +	auxtrace__early_init();
-> +
->  	argc = parse_options(argc, argv, record_options, record_usage,
->  			    PARSE_OPT_STOP_AT_NON_OPTION);
->  	if (quiet)
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index 29eb82dff574..49a86aa6ac94 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -457,6 +457,8 @@ struct addr_filters {
->  
->  struct auxtrace_cache;
->  
-> +void auxtrace__early_init(void);
-> +
->  #ifdef HAVE_AUXTRACE_SUPPORT
->  
->  u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
+>  void perf_evlist__set_leader(struct perf_evlist *evlist)
 > -- 
 > 2.39.2.722.g9855ee24e9-goog
 > 
