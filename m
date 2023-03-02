@@ -2,46 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EF0C678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 14:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D498C678D4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 14:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229888AbjCBOeC (ORCPT
+        id S229771AbjCBOfA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:34:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53804 "EHLO
+        Thu, 2 Mar 2023 09:35:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbjCBOeB (ORCPT
+        with ESMTP id S229916AbjCBOe7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:34:01 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB26672BD;
-        Thu,  2 Mar 2023 06:33:48 -0800 (PST)
+        Thu, 2 Mar 2023 09:34:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837DD1284B;
+        Thu,  2 Mar 2023 06:34:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 67B68B80F52;
-        Thu,  2 Mar 2023 14:33:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA2FC433D2;
-        Thu,  2 Mar 2023 14:33:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E7D5615D2;
+        Thu,  2 Mar 2023 14:34:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445C1C433EF;
+        Thu,  2 Mar 2023 14:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677767626;
-        bh=BhRkTFCSc2JckHWTMswJuCDs/Jls19/WFRnTcugVLRQ=;
+        s=k20201202; t=1677767677;
+        bh=am2Pms4fC7Mb/X3wlNdEKvPjV1B08gkpE6ryQz2S3CI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hKUlDY4hZDspqJ4F1+TvxQjEtZ0Ozl5npVO5rMYTTcDeiZ4CzZMWkFpVyn2VI/Ga5
-         2H3UATtWHui9mWepS6QCdh2B0KyxLZ9Vz4SXR8uexMgiTHhOq08zw8HChCtsnZ4BFd
-         qNDlCJY3rDRyBJUjn/O8vglhOf6Uo1H/AFLfHaYY4fhkArr6BeBjsOVOmxzNarxt3Z
-         DwA6LYJScVa83fKmGRIFrhjiJClrJgN7u9h8Y592JqfegnOH0+zTiJF3KJpyc9TcFQ
-         i8HI5BPrC6E2cTE79W07vwySesOQtCrwN4acjszu5s+M1AD+FHzpxwxqFnN9T3qLuy
-         psi7qAjOSV66Q==
+        b=HQUUGL8ZdCd64toSBpMY2gXtz8rhPG6UFK7zTU8cYXcH9s9YF+v4BXfjWioHvIX1E
+         uOm+1ZHKl86gMFbEWwIB7ACztp+OTESh4ehQQVJG9RcJr65CTfd1ABjn/Klj6w9caa
+         8b8KNS+NR/tGSqOLFz4cSZCLB7x1JIq/TFei3K/fG1hTR9zqKgUmUOh3Xqy5WN/Vrs
+         WMW9KESdw1YHg4yAED+v9myP13HpO5kMW71zHMwCW7Hhu2qDodrMREWiXKivR1YnIg
+         uwdY4n8xVNNQHmeALGTBPBdgjtnQQQq4KYCRbXF7MkukijPVdfB+j+BRb9HkdN5/Gj
+         irAaQ8DOAEB2A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B4A454049F; Thu,  2 Mar 2023 11:33:43 -0300 (-03)
-Date:   Thu, 2 Mar 2023 11:33:43 -0300
+        id 5111E4049F; Thu,  2 Mar 2023 11:34:35 -0300 (-03)
+Date:   Thu, 2 Mar 2023 11:34:35 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Zhengjun Xing <zhengjun.xing@linux.intel.com>,
@@ -59,100 +60,49 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 02/10] perf stat: Don't remove all grouped events when
- CPU maps disagree
-Message-ID: <ZACzx4FrBa0xz5L8@kernel.org>
+Subject: Re: [PATCH v1 04/10] perf stat: Modify the group test
+Message-ID: <ZACz+ypWOFxtsu92@kernel.org>
 References: <20230302041211.852330-1-irogers@google.com>
- <20230302041211.852330-3-irogers@google.com>
+ <20230302041211.852330-5-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230302041211.852330-3-irogers@google.com>
+In-Reply-To: <20230302041211.852330-5-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 01, 2023 at 08:12:03PM -0800, Ian Rogers escreveu:
-> If the events in an evlist's CPU map differ then the entire group is
-> removed. For example:
-> 
-> ```
-> $ perf stat -e '{imc_free_running/data_read/,imc_free_running/data_write/,cs}' -a sleep 1
-> WARNING: grouped events cpus do not match, disabling group:
->   anon group { imc_free_running/data_read/, imc_free_running/data_write/, cs }
-> ```
-> 
-> Change the behavior so that just the events not matching the leader
-> are removed. So in the example above, just 'cs' will be removed.
+Em Wed, Mar 01, 2023 at 08:12:05PM -0800, Ian Rogers escreveu:
+> Previously nr_members would be 0 for an event with no group. The
+> previous change made that count 1, the event is its own leader without
+> a group. Make the find_stat logic consistent with this, an improvement
+> suggested by Namhyung Kim.
 
-Its a change in behaviour but a good one, I think, Jiri?
+Is this the only place where this change in behaviour needs to be taken
+into account?
 
 - Arnaldo
  
-> Modify the warning so that it is produced once for each group, rather
-> than once for the entire evlist. Shrink the scope and size of the
-> warning text buffer.
-> 
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-stat.c | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
+>  tools/perf/util/stat-shadow.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index d70b1ec88594..5c12ae5efce5 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -181,14 +181,13 @@ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
->  
->  static void evlist__check_cpu_maps(struct evlist *evlist)
->  {
-> -	struct evsel *evsel, *pos, *leader;
-> -	char buf[1024];
-> +	struct evsel *evsel, *warned_leader = NULL;
->  
->  	if (evlist__has_hybrid(evlist))
->  		evlist__warn_hybrid_group(evlist);
->  
->  	evlist__for_each_entry(evlist, evsel) {
-> -		leader = evsel__leader(evsel);
-> +		struct evsel *leader = evsel__leader(evsel);
->  
->  		/* Check that leader matches cpus with each member. */
->  		if (leader == evsel)
-> @@ -197,19 +196,26 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index ef85f1ae1ab2..eeccab6751d7 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -163,7 +163,7 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
 >  			continue;
 >  
->  		/* If there's mismatch disable the group and warn user. */
-> -		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
-> -		evsel__group_desc(leader, buf, sizeof(buf));
-> -		pr_warning("  %s\n", buf);
-> -
-> +		if (warned_leader != leader) {
-> +			char buf[200];
-> +
-> +			pr_warning("WARNING: grouped events cpus do not match.\n"
-> +				"Events with CPUs not matching the leader will "
-> +				"be removed from the group.\n");
-> +			evsel__group_desc(leader, buf, sizeof(buf));
-> +			pr_warning("  %s\n", buf);
-> +			warned_leader = leader;
-> +		}
->  		if (verbose > 0) {
-> +			char buf[200];
-> +
->  			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
->  			pr_warning("     %s: %s\n", leader->name, buf);
->  			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
->  			pr_warning("     %s: %s\n", evsel->name, buf);
->  		}
->  
-> -		for_each_group_evsel(pos, leader)
-> -			evsel__remove_from_group(pos, leader);
-> +		evsel__remove_from_group(evsel, leader);
->  	}
->  }
->  
+>  		/* Ignore evsels that are part of different groups. */
+> -		if (evsel->core.leader->nr_members &&
+> +		if (evsel->core.leader->nr_members > 1 &&
+>  		    evsel->core.leader != cur->core.leader)
+>  			continue;
+>  		/* Ignore evsels with mismatched modifiers. */
 > -- 
 > 2.39.2.722.g9855ee24e9-goog
 > 
