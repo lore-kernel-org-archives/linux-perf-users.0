@@ -2,247 +2,161 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E76BC678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 04:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D667C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 06:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjCBEPW (ORCPT
+        id S229652AbjCBGWa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Mar 2023 23:15:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
+        Thu, 2 Mar 2023 01:22:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229947AbjCBEOl (ORCPT
+        with ESMTP id S229953AbjCBGWa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Mar 2023 23:14:41 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA744FA98
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Mar 2023 20:14:05 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id e195-20020a25e7cc000000b00a1e59ba7ed9so2767579ybh.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Mar 2023 20:14:05 -0800 (PST)
+        Thu, 2 Mar 2023 01:22:30 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771672686B
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Mar 2023 22:22:01 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id z2so16482595plf.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Mar 2023 22:22:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677730442;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=edRZozQBIL0WlfafeNLLWxRrsV4anV+EoxBdmB1IrUI=;
-        b=Zgfun8QgnPZ+Nr/wCJafylCn0XSjYqgFUdlDHJO5cnTR1+b1ZCQZiYGq9UW8k9FyKS
-         tHG8x2ePXnPC9SgiV4oCVFSB3tf1IcZkl0V6w2y9YNvCzNT/oDDTrh05HwJ5yqenfyS2
-         D+Ej5lO+Je/Clb4lSWjSPfFhYLb/5/YcAX2xUt0pKvbw3Bsy2PKgzfkVq9agFvrhMjQ4
-         HLk6X0knBvDkY+Vve+qw4XtKybCGqxpMnEg4/Sp74fd2N0I6ocEs7J0nbhrvVfDzsBm4
-         qQZ9rWmjhw6JggL/4gIWcTu+Nx3tCkwloMbV1StkBOlhfyllHLDKIbpOGI1IdTuEuzUI
-         Q/uQ==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PA16CYwgLHtTJC6J+i3zkra58SYe5m6n4UeJlr0V+ck=;
+        b=rHf5mvQjSbynBAHM66iSN5narRVS9ZYjGCYMNG4Prgrei9ItH8wA7/ajmoAID23LEc
+         X+fnp5nFIWfqGVdxoKYvsMK/S7LbwmALDMUmjKazyPmexnW/+pr4oBgQB3IimfPChXJw
+         wzg8RdKpX13YEs4xx0ghxbSH/5KZ8/wPDrOGiMqkrFfnBHh57HZGUNr2nxntV17z+THH
+         lormf0i/tjI0xzlMQNuo8O6QZVeClGv06SlXC9N80PizZjTVOVBwOnHw4npI2PdWWRK1
+         DHzQ55DAgfJM0j4Ppr1ZOUEYvjXTjg7zwHibT0/42Vbw1tvYbLMswOlak1s8m03wU56E
+         I97w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677730442;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=edRZozQBIL0WlfafeNLLWxRrsV4anV+EoxBdmB1IrUI=;
-        b=Bt1R+Tmf/quIKvqxp6XsKYBjwNpEcpe5cvWYcU1USBZziSIN58QOEuoPb1UffvI4SY
-         6H9F2eziiuXaUnnepN6xblYVOgBLg1BOW2N2MkFbJc+KbEWS4GeyXSSMHOreioVwuSYx
-         l20uybwGtSbB3fuDUh3lxl+PId9IGOtBzVp8afoZYCEi3Y5XRZ71OOl0SUhdIk/TzSqd
-         uTLnKBFJBtibel4iiQPwSELRYTd8v12RllVKd/63NuuKeS9EBA9IiTY+Dk/zr+JH9NLb
-         ZKYwODqDgU4cwssZiIA8xQqbPwrqiZx0CkKgh5rfGoc3WK13uTRphrphHp1IzYoFkjfu
-         5dZg==
-X-Gm-Message-State: AO0yUKUsU/jZBtAxjfJUWtuk535K8KgSY8TCO8BFNK84N3cjUh078FM5
-        wgHKCRH7Y+nXUXmXqA9HMFTUmUOhgNio
-X-Google-Smtp-Source: AK7set8DhJwkzTqFj0DOHspQzxw83fzJ+xaJxRLmIms2ft3h9ZyiSzUWS+YDsk9Q8cBzNsg4wWls8cgC7kaF
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bdf9:f5cb:d05:c4d5])
- (user=irogers job=sendgmr) by 2002:a5b:744:0:b0:914:fc5e:bbec with SMTP id
- s4-20020a5b0744000000b00914fc5ebbecmr3944683ybq.13.1677730442368; Wed, 01 Mar
- 2023 20:14:02 -0800 (PST)
-Date:   Wed,  1 Mar 2023 20:12:11 -0800
-In-Reply-To: <20230302041211.852330-1-irogers@google.com>
-Message-Id: <20230302041211.852330-11-irogers@google.com>
-Mime-Version: 1.0
-References: <20230302041211.852330-1-irogers@google.com>
-X-Mailer: git-send-email 2.39.2.722.g9855ee24e9-goog
-Subject: [PATCH v1 10/10] perf evsel: Remove use_uncore_alias
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PA16CYwgLHtTJC6J+i3zkra58SYe5m6n4UeJlr0V+ck=;
+        b=IO/C/GkW9yokLczlZ8G2Y/4vjlZY7DdP7wxsaXN+g3ZKEG/KjyjozkVLr8bBNzv568
+         Aon8E+zGnt1nhU3JOktOIpi+sUm+Z8RsYTrndyunNi3ibg3Xi0gewdNIsQ3Klhqm4F1R
+         PyRAjbQYCabbZkY5QIH5lpEAhdc9Lmpx1htnS5J5X3LlzUrn7vLfo3Ppnr+nRIOdzrIC
+         t0mNPYw5dE9bph2rRveNserulWrvlPqbm28Hfj6PEqY+Z2zoKFBXD+cwJU/4ofjFgwor
+         ATaDA6Q55SpBSMViH4aW2HuzaTaZsXienguAKJfbc8ST4AGqLtFHK3XQkCsvEet9QuKV
+         bcNA==
+X-Gm-Message-State: AO0yUKVYFXTk7wVU/5LFrbeTMZHUgt6sRIDdwYoVNS/uD3ni1Jt/q4Bc
+        +eNf/KlYxa/a9sqOP2hHQuFi9A==
+X-Google-Smtp-Source: AK7set8JpOlRSw10uf53oa6shjrsMJafm929r7BWJOvH3HbE7aetRWx1gSeCjYurz/YVbMoeceHIcg==
+X-Received: by 2002:a17:902:ecd2:b0:19c:d7a9:8be1 with SMTP id a18-20020a170902ecd200b0019cd7a98be1mr10865377plh.61.1677738120663;
+        Wed, 01 Mar 2023 22:22:00 -0800 (PST)
+Received: from leoy-huanghe ([156.146.45.203])
+        by smtp.gmail.com with ESMTPSA id u9-20020a17090282c900b0019cb6222698sm9437169plz.266.2023.03.01.22.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Mar 2023 22:22:00 -0800 (PST)
+Date:   Thu, 2 Mar 2023 14:21:53 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
         James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 08/14] perf kvm: Add dimensions for KVM event
+ statistics
+Message-ID: <ZABAgcaBHhD22uHw@leoy-huanghe>
+References: <20230228115125.144172-1-leo.yan@linaro.org>
+ <20230228115125.144172-9-leo.yan@linaro.org>
+ <CAM9d7cgEZ4ugAfef8hDKOr11xF7QP1w7-Ax3mnDr4XXmYr0DoQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cgEZ4ugAfef8hDKOr11xF7QP1w7-Ax3mnDr4XXmYr0DoQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This flag used to be used when regrouping uncore events in particular
-due to wildcard matches. This is now handled by sorting evlist and so
-the flag is redundant.
+Hi Namhyung,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.c        |  1 -
- tools/perf/util/evsel.h        |  1 -
- tools/perf/util/parse-events.c | 12 +++---------
- tools/perf/util/parse-events.h |  3 +--
- tools/perf/util/parse-events.y | 11 +++++++----
- 5 files changed, 11 insertions(+), 17 deletions(-)
+On Tue, Feb 28, 2023 at 03:34:28PM -0800, Namhyung Kim wrote:
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9c6b486f8bd4..5446128be03b 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -458,7 +458,6 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	evsel->per_pkg = orig->per_pkg;
- 	evsel->percore = orig->percore;
- 	evsel->precise_max = orig->precise_max;
--	evsel->use_uncore_alias = orig->use_uncore_alias;
- 	evsel->is_libpfm_event = orig->is_libpfm_event;
- 
- 	evsel->exclude_GH = orig->exclude_GH;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 72121194d3b1..9a8d08fcad1c 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -89,7 +89,6 @@ struct evsel {
- 		bool			per_pkg;
- 		bool			percore;
- 		bool			precise_max;
--		bool			use_uncore_alias;
- 		bool			is_libpfm_event;
- 		bool			auto_merge_stats;
- 		bool			collect_stat;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d6eb0a54dd2d..ac7709c1c5b7 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1445,15 +1445,13 @@ static int parse_events__inside_hybrid_pmu(struct parse_events_state *parse_stat
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
--			 bool auto_merge_stats,
--			 bool use_alias)
-+			 bool auto_merge_stats)
- {
- 	struct perf_event_attr attr;
- 	struct perf_pmu_info info;
- 	struct perf_pmu *pmu;
- 	struct evsel *evsel;
- 	struct parse_events_error *err = parse_state->error;
--	bool use_uncore_alias;
- 	LIST_HEAD(config_terms);
- 
- 	pmu = parse_state->fake_pmu ?: perf_pmu__find(name);
-@@ -1488,8 +1486,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		memset(&attr, 0, sizeof(attr));
- 	}
- 
--	use_uncore_alias = (pmu->is_uncore && use_alias);
--
- 	if (!head_config) {
- 		attr.type = pmu->type;
- 		evsel = __add_event(list, &parse_state->idx, &attr,
-@@ -1499,7 +1495,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 				    /*cpu_list=*/NULL);
- 		if (evsel) {
- 			evsel->pmu_name = name ? strdup(name) : NULL;
--			evsel->use_uncore_alias = use_uncore_alias;
- 			return 0;
- 		} else {
- 			return -ENOMEM;
-@@ -1560,7 +1555,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		evsel->use_config_name = true;
- 
- 	evsel->pmu_name = name ? strdup(name) : NULL;
--	evsel->use_uncore_alias = use_uncore_alias;
- 	evsel->percore = config_term_percore(&evsel->config_terms);
- 
- 	if (parse_state->fake_pmu)
-@@ -1622,7 +1616,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 				parse_events_copy_term_list(head, &orig_head);
- 				if (!parse_events_add_pmu(parse_state, list,
- 							  pmu->name, orig_head,
--							  true, true)) {
-+							  /*auto_merge_stats=*/true)) {
- 					pr_debug("%s -> %s/%s/\n", str,
- 						 pmu->name, alias->str);
- 					ok++;
-@@ -1634,7 +1628,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, list, str, head,
--					  true, true)) {
-+					  /*auto_merge_stats=*/true)) {
- 			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
- 			ok++;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 22fc11b0bd59..fdac44dc696b 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -183,8 +183,7 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
--			 bool auto_merge_stats,
--			 bool use_alias);
-+			 bool auto_merge_stats);
- 
- struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
- 				      const char *name, const char *metric_id,
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 90d12f2bc8be..f1b153c72d67 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -313,7 +313,7 @@ event_pmu_name opt_pmu_config
- 	list = alloc_list();
- 	if (!list)
- 		CLEANUP_YYABORT;
--	if (parse_events_add_pmu(_parse_state, list, $1, $2, false, false)) {
-+	if (parse_events_add_pmu(_parse_state, list, $1, $2, /*auto_merge_stats=*/false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
- 
-@@ -330,8 +330,10 @@ event_pmu_name opt_pmu_config
- 			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
- 				if (parse_events_copy_term_list(orig_terms, &terms))
- 					CLEANUP_YYABORT;
--				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
-+				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms,
-+							  /*auto_merge_stats=*/true)) {
- 					ok++;
-+				}
- 				parse_events_terms__delete(terms);
- 			}
- 		}
-@@ -407,7 +409,8 @@ PE_PMU_EVENT_FAKE sep_dc
- 	if (!list)
- 		YYABORT;
- 
--	err = parse_events_add_pmu(_parse_state, list, $1, NULL, false, false);
-+	err = parse_events_add_pmu(_parse_state, list, $1, /*head_config=*/NULL,
-+				   /*auto_merge_stats=*/false);
- 	free($1);
- 	if (err < 0) {
- 		free(list);
-@@ -425,7 +428,7 @@ PE_PMU_EVENT_FAKE opt_pmu_config
- 	if (!list)
- 		YYABORT;
- 
--	err = parse_events_add_pmu(_parse_state, list, $1, $2, false, false);
-+	err = parse_events_add_pmu(_parse_state, list, $1, $2, /*auto_merge_stats=*/false);
- 	free($1);
- 	parse_events_terms__delete($2);
- 	if (err < 0) {
--- 
-2.39.2.722.g9855ee24e9-goog
+[...]
 
+> > +static struct kvm_dimension dim_event = {
+> > +       .name           = "name",
+> > +       .cmp            = empty_cmp,
+> > +};
+> 
+> I guess you can name it as 'dim_name' to reduce the confusion.
+> Also it can compare event names using strcmp() in case users
+> want to see event names in alphabetical order.
+
+I will rename as 'ev_name' or 'event_name'; and it's good point to
+compare the name with string order.  Will do it.
+
+[...]
+
+> [SNIP]
+> > +
+> > +static int kvm_hists__init_output(struct perf_hpp_list *hpp_list, char *name)
+> > +{
+> > +       struct kvm_fmt *kvm_fmt = get_format(name);
+> > +
+> > +       if (!kvm_fmt) {
+> > +               reset_dimensions();
+> > +               return output_field_add(hpp_list, name);
+> 
+> Hmm.. do you plan to support these generic output fields too?
+> I'm not sure you need reset_dimensions() here.
+
+So far, we don't need to add any generic output field, I will remove
+reset_dimensions() / output_field_add(), alternatively, in next spin I
+will simply print an error info and return -EINVAL.
+
+> > +       }
+> > +
+> > +       perf_hpp_list__column_register(hpp_list, &kvm_fmt->fmt);
+> > +       return 0;
+> > +}
+> > +
+> > +static int kvm_hists__init_sort(struct perf_hpp_list *hpp_list, char *name)
+> > +{
+> > +       struct kvm_fmt *kvm_fmt = get_format(name);
+> > +
+> > +       if (!kvm_fmt) {
+> > +               reset_dimensions();
+> > +               return sort_dimension__add(hpp_list, name, NULL, 0);
+> 
+> Ditto.
+
+Will do the same change with the above statement.
+
+[...]
+
+> > +static int kvm_hpp_list__parse(struct perf_hpp_list *hpp_list,
+> > +                              const char *output_, const char *sort_)
+> > +{
+> > +       char *output = output_ ? strdup(output_) : NULL;
+> > +       char *sort = sort_ ? strdup(sort_) : NULL;
+> > +       int ret;
+> > +
+> > +       ret = kvm_hpp_list__init(output, hpp_list, kvm_hists__init_output);
+> > +       if (ret)
+> > +               goto out;
+> > +
+> > +       ret = kvm_hpp_list__init(sort, hpp_list, kvm_hists__init_sort);
+> > +       if (ret)
+> > +               goto out;
+> > +
+> > +       /* Copy sort keys to output fields */
+> > +       perf_hpp__setup_output_field(hpp_list);
+> 
+> I think you also need perf_hpp__append_sort_keys() as in
+> setup_sorting() to have secondary sort keys in case the
+> given sort key cannot determine the ordering.
+
+Will do.
+
+Thanks a lot for reviewing!
+
+Leo
