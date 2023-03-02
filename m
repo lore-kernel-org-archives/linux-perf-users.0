@@ -2,112 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EED1C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 03:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA61BC678D4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 04:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229876AbjCBDMa (ORCPT
+        id S229668AbjCBEMj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Mar 2023 22:12:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56722 "EHLO
+        Wed, 1 Mar 2023 23:12:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229778AbjCBDM1 (ORCPT
+        with ESMTP id S229470AbjCBEMi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Mar 2023 22:12:27 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FF6532BD;
-        Wed,  1 Mar 2023 19:12:25 -0800 (PST)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PRx335ky4zrS3t;
-        Thu,  2 Mar 2023 11:11:43 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 2 Mar 2023 11:12:22 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        Wed, 1 Mar 2023 23:12:38 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0F83B3F2
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Mar 2023 20:12:37 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536a545bfbaso305159797b3.20
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Mar 2023 20:12:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1677730356;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9LAF/AgK1HRYrzi87aj0ZroDBvPnZklwy00LEUIfbuo=;
+        b=CPfp8goIzicDcS9LgF3shufrgSj4gAVtdqdQCkjveYkYtd+xXUW+MJN1gUC6qCnokc
+         dP2+dLPHZzpcAhqmyCXrs+xxDsCscpum0pL8YvQPgdmHg39/KqCrdL+ioIV2nfASnBom
+         xFPsZxfRSH5T2O4DJXDWqANz7sD2FvuWUZRmb/EBXTwIWIflLLJCu0Zuz29s6qRGmHeT
+         aMVVtMkuxHYaXQR0GXY7bKELBtXj/GSGddlEn9Ci60/AAsZ9N0hyIDlQap3yMp2tgDWF
+         2FAT03oYpxxWd1cU1lrNJFotT/4srvQkpLyyZ5gdruq9Uu6ulMtFB4ltT5zPBe6y9JMk
+         LpWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677730356;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9LAF/AgK1HRYrzi87aj0ZroDBvPnZklwy00LEUIfbuo=;
+        b=ppnUeC/xPU5tDjn3Jh42isd8tPAW5G9G9xig4aZcx4Nsz+LF00hvegIRBWtEv4K5eF
+         9V/8tYhqSDON2adD2Oe1CpJxbWZlrdyjN0KvXZvOZLh/psCP3zfBazD6aRpxPWMcWhBk
+         DErFeLgdR3Rlx84MyyWXy3VtmHXsxDu+Y4/psEzZDULMF/x9FIac/ErGB/4Ee2hD4z0h
+         45lG3E5KtJBTCFssVacOW/BupVmIPR5vgKCOpHPEvzLH/v+JmUVNPkggBZksMW3bdVND
+         T8lPjHk/zDp9+F1ullpGJAu5LzwzwXCJxBI3R7SvPkErUH0T5oHZv+KiRX0lgGq82uRi
+         m/Yw==
+X-Gm-Message-State: AO0yUKWG4CEq/NPhjEuTWlbC42uPlc1joWo3XSJ/pG0hdi1TjtXb28Bv
+        7QRjYnViQUMZKWGS9ReZ15fUyeeENmhg
+X-Google-Smtp-Source: AK7set9B05gBEoUSyInp6RerniFlMwoQQi++2P7JiMO6aVzPT3ulpltquldvz486F4UNhwF4d4jx94UQet5C
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bdf9:f5cb:d05:c4d5])
+ (user=irogers job=sendgmr) by 2002:a81:ac61:0:b0:53c:7047:14c4 with SMTP id
+ z33-20020a81ac61000000b0053c704714c4mr2497162ywj.8.1677730356300; Wed, 01 Mar
+ 2023 20:12:36 -0800 (PST)
+Date:   Wed,  1 Mar 2023 20:12:01 -0800
+Message-Id: <20230302041211.852330-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.39.2.722.g9855ee24e9-goog
+Subject: [PATCH v1 00/10] Better fixes for  grouping of events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v2 3/3] perf: ftrace: reuse target::initial_delay
-Date:   Thu, 2 Mar 2023 11:11:46 +0800
-Message-ID: <20230302031146.2801588-4-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230302031146.2801588-1-changbin.du@huawei.com>
-References: <20230302031146.2801588-1-changbin.du@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Qi Liu <liuqi115@huawei.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Replace perf_ftrace::initial_delay with target::initial_delay. Specifying
-a negative initial_delay is meaningless for ftrace in practice but allowed
-here.
+The rules for grouping events has grown more complex. Topdown events
+must be grouped, but flags like --metric-no-group and flags on metrics
+don't respect this. Uncore events may be expanded using wild cards for
+PMU names, but then the events need reordering so the group members
+are adjacent. Rather than fixing metrics, this change fixes the main
+event parsing code to first sort and then regroup evsels.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/builtin-ftrace.c | 10 +++++-----
- tools/perf/util/ftrace.h    |  1 -
- 2 files changed, 5 insertions(+), 6 deletions(-)
+As this is shared functionality changes to it should cause
+concern. The change is done with the intent of simplifying and making
+more robust the grouping logic, examples are given. If additional
+changes are necessary, they are most likely necessary to the
+evsel__pmu_name logic as the code avoids breaking groups that are on
+the same PMU. The pmu_name is tweaked in the case of software and aux
+events, that use groups in a slightly different manner to conventional
+events.
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index d7fe00f66b83..73d51ce84c3a 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -623,7 +623,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
- 	/* display column headers */
- 	read_tracing_file_to_stdout("trace");
- 
--	if (!ftrace->initial_delay) {
-+	if (!ftrace->target.initial_delay) {
- 		if (write_tracing_file("tracing_on", "1") < 0) {
- 			pr_err("can't enable tracing\n");
- 			goto out_close_fd;
-@@ -632,8 +632,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
- 
- 	evlist__start_workload(ftrace->evlist);
- 
--	if (ftrace->initial_delay) {
--		usleep(ftrace->initial_delay * 1000);
-+	if (ftrace->target.initial_delay > 0) {
-+		usleep(ftrace->target.initial_delay * 1000);
- 		if (write_tracing_file("tracing_on", "1") < 0) {
- 			pr_err("can't enable tracing\n");
- 			goto out_close_fd;
-@@ -1164,8 +1164,8 @@ int cmd_ftrace(int argc, const char **argv)
- 		     "Size of per cpu buffer, needs to use a B, K, M or G suffix.", parse_buffer_size),
- 	OPT_BOOLEAN(0, "inherit", &ftrace.inherit,
- 		    "Trace children processes"),
--	OPT_UINTEGER('D', "delay", &ftrace.initial_delay,
--		     "Number of milliseconds to wait before starting tracing after program start"),
-+	OPT_INTEGER('D', "delay", &ftrace.target.initial_delay,
-+		    "Number of milliseconds to wait before starting tracing after program start"),
- 	OPT_PARENT(common_options),
- 	};
- 	const struct option latency_options[] = {
-diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
-index a34cd15733b8..558efcb98d25 100644
---- a/tools/perf/util/ftrace.h
-+++ b/tools/perf/util/ftrace.h
-@@ -25,7 +25,6 @@ struct perf_ftrace {
- 	int			graph_noirqs;
- 	int			graph_verbose;
- 	int			graph_thresh;
--	unsigned int		initial_delay;
- };
- 
- struct filter_entry {
+The code was manually tested as well as passing perf test on a Intel
+tigerlake CPU with intel-pt.
+
+Ian Rogers (10):
+  libperf evlist: Avoid a use of evsel idx
+  perf stat: Don't remove all grouped events when CPU maps disagree
+  perf record: Early auxtrace initialization before event parsing
+  perf stat: Modify the group test
+  perf evsel: Limit in group test to CPUs
+  perf evsel: Allow const evsel for certain accesses
+  perf evsel: Add function to compute pmu_name
+  perf parse-events: Pass ownership of the group name
+  perf parse-events: Sort and group parsed events
+  perf evsel: Remove use_uncore_alias
+
+ tools/lib/perf/evlist.c             |  13 +-
+ tools/perf/arch/x86/util/auxtrace.c |  17 +-
+ tools/perf/arch/x86/util/evlist.c   |  39 ++---
+ tools/perf/arch/x86/util/evsel.c    |   3 +
+ tools/perf/builtin-record.c         |   6 +
+ tools/perf/builtin-stat.c           |  24 ++-
+ tools/perf/util/auxtrace.h          |   2 +
+ tools/perf/util/evlist.h            |   2 +-
+ tools/perf/util/evsel.c             |  27 ++-
+ tools/perf/util/evsel.h             |   8 +-
+ tools/perf/util/parse-events.c      | 253 +++++++++++++---------------
+ tools/perf/util/parse-events.h      |   6 +-
+ tools/perf/util/parse-events.y      |  17 +-
+ tools/perf/util/pmu.c               |   6 +-
+ tools/perf/util/python.c            |   2 +-
+ tools/perf/util/stat-shadow.c       |   2 +-
+ 16 files changed, 228 insertions(+), 199 deletions(-)
+
 -- 
-2.25.1
+2.39.2.722.g9855ee24e9-goog
 
