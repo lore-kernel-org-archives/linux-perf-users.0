@@ -2,222 +2,163 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42F4C6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 22:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD70C678D4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 22:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjCBWMw (ORCPT
+        id S229790AbjCBWXl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 17:12:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56188 "EHLO
+        Thu, 2 Mar 2023 17:23:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbjCBWMu (ORCPT
+        with ESMTP id S229966AbjCBWXk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 17:12:50 -0500
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4028E17CFC;
-        Thu,  2 Mar 2023 14:12:41 -0800 (PST)
-Received: by mail-yb1-f169.google.com with SMTP id n18so334851ybm.10;
-        Thu, 02 Mar 2023 14:12:41 -0800 (PST)
+        Thu, 2 Mar 2023 17:23:40 -0500
+Received: from mail-ot1-x34a.google.com (mail-ot1-x34a.google.com [IPv6:2607:f8b0:4864:20::34a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C06C11EBE
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 14:23:34 -0800 (PST)
+Received: by mail-ot1-x34a.google.com with SMTP id l10-20020a056830334a00b00694420738edso333565ott.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 14:23:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1677795813;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dvqLbFbIa5Th4hLVJzIhGZ3VgrtC26zZgF3M8vwaoio=;
+        b=jRla/kUviyKfiXQESPwuR7jJ/pVzh3GeUc8PlfDJKrMAP3x2k5jHzpQH60NB+K5Bf0
+         tLGmuRZMeiwjrzO+D00XKe6A2WJilAhald2UD7jhZSwGzRfNrtC79hySa+//SG3fzklh
+         5p1XW5LKEHqqwazlpqooVohVzWKGw+U5YUA/LkyUA/9mO2j6eymZ5eN+fCapcCcQnD5v
+         dqYzAVT4uT5gLhowaj0lqWUuuthcIY6l35EThTg+lD6Y4R2KL9gweXlKwdF8D/o03g5S
+         kbpT2g+RvXy+L0BwhSEckQ4dCkm9yy17YGIYV016qMjmkVR5EY/Ijc4JLuC0yGAUhkek
+         y0cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677795160;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6saCZ3E79yVnYszzUQo6SvNydCkpTtwym9Ni4bS0DrU=;
-        b=zPSxTLO9lJzfC7IvUxY1Lg3QpE1gX0EZ35GE1oPm/1w5Gz90f1pUARaW/5ZoXTEYT0
-         HOy0OwamIk5gE+5xTyF0+Dbj0/0MPcdNXmNcLMeSveNdpStBTsViywAjmGib5fOT1jb5
-         T9o5eI8HeRVeXoOMoLhfM4u/QTrg8wHJgT3i3MjUUF+khhlabpDcYBwo2aEvaTVjFS1X
-         yAyV7FBQsGe22huJalN5o5irjcDRrIO13XD/xy/NHClRc1oYwf+RQR9Kq/zKzqhFLpyK
-         Ygeq84J2JGEOSnIbu7WjlzAP65NYtKFpie/ErpJ4iYkZ+m5CLlvJF9ZKIh0mYS+lyxd1
-         IS+g==
-X-Gm-Message-State: AO0yUKUNCjGAVYKKpkefScur9Bx5ug1/TBzUFGstgUwphcm8Gc+RHT6b
-        uW4Q6wHFBpcpRfH6LJpqLOdbtlFRvqhKO5P3sx87wn00
-X-Google-Smtp-Source: AK7set+fy6p2dKVVJB3IiTU3fB42sqBJ+/a+xqn0gvOcAV9xu2BE3AViUN0Kwud/ov2Fy9iVx6LeWD7SRyexs4ou/KA=
-X-Received: by 2002:a05:6902:4d1:b0:ab8:1ed9:cfd2 with SMTP id
- v17-20020a05690204d100b00ab81ed9cfd2mr5554203ybs.5.1677795160369; Thu, 02 Mar
- 2023 14:12:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20230302092109.367-1-ravi.bangoria@amd.com> <20230302092109.367-3-ravi.bangoria@amd.com>
-In-Reply-To: <20230302092109.367-3-ravi.bangoria@amd.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 2 Mar 2023 14:12:29 -0800
-Message-ID: <CAM9d7chQA27aD_mPe=3-9jZLWP_a64ztihuK=upgNL++kMFSNw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Add selftest to test IBS invocation via
- core pmu events
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     peterz@infradead.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
+        d=1e100.net; s=20210112; t=1677795813;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dvqLbFbIa5Th4hLVJzIhGZ3VgrtC26zZgF3M8vwaoio=;
+        b=7IYOBVdGzmBr25+G4OGB1cEmNxOLhueWhW1uaQYVlzRmPv0JXhUKToNtm9FYw/eRmR
+         TEQgtpB84ksWjQ1BjfTgj0vPThV5MD7+5z6rFQIVf6x9KcPDK5ZzhWIRyM+qCfs5L/Uv
+         ptB3lzg5tv/z91BWvtC7Xx0GcUbQipJBCZOItVqq+kxZ/v+HjfVqajUCCbU1jeEhHb6J
+         CgvPCNSt4VaOde4FCF57p2wUab8nCUIaLu/BpwyVSlSNbChL7Za5EJteijck3vk9J2/3
+         0C08oGWQfNe2CU41OUZ1fhkfCXxKWQ9oa3zfZcmERLXYjoOsdRGzK9qK1loNwWKOJxgM
+         65NA==
+X-Gm-Message-State: AO0yUKXy3QXjw6/zNWVzYNJ6FTeMI0a+a3NhUpOL2xRWsvKzZl7LSYhf
+        YsNDpJ7k4kOFmTW4OdxluAW/ORQkPBsO
+X-Google-Smtp-Source: AK7set/77hq2nbjz3JZillK85E2ztOk6/zaHwTy51JirFxWAWfnzXGB75tCD+P3ovof7qkUcsCy8lqK3pepL
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:5f50:6ef4:b4d0:568e])
+ (user=irogers job=sendgmr) by 2002:a05:6902:101:b0:a4e:4575:f3ec with SMTP id
+ o1-20020a056902010100b00a4e4575f3ecmr5273607ybh.0.1677792363948; Thu, 02 Mar
+ 2023 13:26:03 -0800 (PST)
+Date:   Thu,  2 Mar 2023 13:25:23 -0800
+In-Reply-To: <20230302212531.1043318-1-irogers@google.com>
+Message-Id: <20230302212531.1043318-3-irogers@google.com>
+Mime-Version: 1.0
+References: <20230302212531.1043318-1-irogers@google.com>
+X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
+Subject: [PATCH v2 02/10] perf stat: Don't remove all grouped events when CPU
+ maps disagree
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 1:22 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> IBS pmu can be invoked via fixed set of core pmu events. Add simple
-> event open test for all these events.
->
-> Without kernel fix:
->   $ sudo ./perf test -vv 76
->    76: IBS via core pmu                                                :
->   --- start ---
->   test child forked, pid 6553
->   Using CPUID AuthenticAMD-25-1-1
->   type: 0x0, config: 0x0, fd: 3  -  Pass
->   type: 0x0, config: 0x1, fd: -1  -  Pass
->   type: 0x4, config: 0x76, fd: -1  -  Fail
->   type: 0x4, config: 0xc1, fd: -1  -  Fail
->   type: 0x4, config: 0x12, fd: -1  -  Pass
->   test child finished with -1
->   ---- end ----
->   IBS via core pmu: FAILED!
->
-> With kernel fix:
->   $ sudo ./perf test -vv 76
->    76: IBS via core pmu                                                :
->   --- start ---
->   test child forked, pid 7526
->   Using CPUID AuthenticAMD-25-1-1
->   type: 0x0, config: 0x0, fd: 3  -  Pass
->   type: 0x0, config: 0x1, fd: -1  -  Pass
->   type: 0x4, config: 0x76, fd: 3  -  Pass
->   type: 0x4, config: 0xc1, fd: 3  -  Pass
->   type: 0x4, config: 0x12, fd: -1  -  Pass
->   test child finished with 0
->   ---- end ----
->   IBS via core pmu: Ok
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  tools/perf/tests/Build              |  1 +
->  tools/perf/tests/builtin-test.c     |  1 +
->  tools/perf/tests/ibs-via-core-pmu.c | 70 +++++++++++++++++++++++++++++
->  tools/perf/tests/tests.h            |  1 +
->  4 files changed, 73 insertions(+)
->  create mode 100644 tools/perf/tests/ibs-via-core-pmu.c
->
-> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-> index fb9ac5dc4079..1a232cf13c33 100644
-> --- a/tools/perf/tests/Build
-> +++ b/tools/perf/tests/Build
-> @@ -69,6 +69,7 @@ perf-y += dlfilter-test.o
->  perf-y += sigtrap.o
->  perf-y += event_groups.o
->  perf-y += symbols.o
-> +perf-y += ibs-via-core-pmu.o
->
->  $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
->         $(call rule_mkdir)
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 35cc3807cc9e..aed887234500 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -119,6 +119,7 @@ static struct test_suite *generic_tests[] = {
->         &suite__sigtrap,
->         &suite__event_groups,
->         &suite__symbols,
-> +       &suite__ibs_via_core_pmu,
->         NULL,
->  };
->
-> diff --git a/tools/perf/tests/ibs-via-core-pmu.c b/tools/perf/tests/ibs-via-core-pmu.c
-> new file mode 100644
-> index 000000000000..6ac539509791
-> --- /dev/null
-> +++ b/tools/perf/tests/ibs-via-core-pmu.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "linux/perf_event.h"
-> +#include "tests.h"
-> +#include "pmu.h"
-> +#include "pmus.h"
-> +#include "../perf-sys.h"
-> +#include "debug.h"
-> +
-> +#define NR_SUB_TESTS 5
-> +
-> +static struct sub_tests {
-> +       int type;
-> +       unsigned long config;
-> +       bool valid;
-> +} sub_tests[NR_SUB_TESTS] = {
-> +       { PERF_TYPE_HARDWARE, PERF_COUNT_HW_CPU_CYCLES, true },
-> +       { PERF_TYPE_HARDWARE, PERF_COUNT_HW_INSTRUCTIONS, false },
-> +       { PERF_TYPE_RAW, 0x076, true },
-> +       { PERF_TYPE_RAW, 0x0C1, true },
-> +       { PERF_TYPE_RAW, 0x012, false },
-> +};
-> +
-> +static int event_open(int type, unsigned long config)
-> +{
-> +       struct perf_event_attr attr;
-> +
-> +       memset(&attr, 0, sizeof(struct perf_event_attr));
-> +       attr.type = type;
-> +       attr.size = sizeof(struct perf_event_attr);
-> +       attr.config = config;
-> +       attr.disabled = 1;
-> +       attr.precise_ip = 1;
-> +       attr.sample_type = PERF_SAMPLE_IP | PERF_SAMPLE_TID;
-> +       attr.sample_period = 100000;
-> +
-> +       return sys_perf_event_open(&attr, -1, 0, -1, 0);
-> +}
-> +
-> +static int test__ibs_via_core_pmu(struct test_suite *text __maybe_unused,
-> +                                 int subtest __maybe_unused)
-> +{
-> +       struct perf_pmu *ibs_pmu;
-> +       int ret = TEST_OK;
-> +       int fd, i;
-> +
-> +       if (list_empty(&pmus))
-> +               perf_pmu__scan(NULL);
-> +
-> +       ibs_pmu = perf_pmu__find("ibs_op");
-> +       if (!ibs_pmu)
-> +               return TEST_SKIP;
-> +
-> +       for (i = 0; i < NR_SUB_TESTS; i++) {
-> +               fd = event_open(sub_tests[i].type, sub_tests[i].config);
-> +               pr_debug("type: 0x%x, config: 0x%lx, fd: %d  -  ", sub_tests[i].type,
-> +                        sub_tests[i].config, fd);
-> +               if ((sub_tests[i].valid && fd == -1) ||
-> +                   (!sub_tests[i].valid && fd > 0)) {
-> +                       pr_debug("Fail\n");
-> +                       ret = TEST_FAIL;
+If the events in an evlist's CPU map differ then the entire group is
+removed. For example:
 
-You need to close(fd) when it's succeeded for invalid one.
+```
+$ perf stat -e '{imc_free_running/data_read/,imc_free_running/data_write/,cs}' -a sleep 1
+WARNING: grouped events cpus do not match, disabling group:
+  anon group { imc_free_running/data_read/, imc_free_running/data_write/, cs }
+```
 
-Thanks,
-Namhyung
+Change the behavior so that just the events not matching the leader
+are removed. So in the example above, just 'cs' will be removed.
 
+Modify the warning so that it is produced once for each group, rather
+than once for the entire evlist. Shrink the scope and size of the
+warning text buffer.
 
-> +               } else {
-> +                       pr_debug("Pass\n");
-> +                       close(fd);
-> +               }
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +DEFINE_SUITE("IBS via core pmu", ibs_via_core_pmu);
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index 9a0f3904e53d..36339fdf9c36 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -149,6 +149,7 @@ DECLARE_SUITE(dlfilter);
->  DECLARE_SUITE(sigtrap);
->  DECLARE_SUITE(event_groups);
->  DECLARE_SUITE(symbols);
-> +DECLARE_SUITE(ibs_via_core_pmu);
->
->  /*
->   * PowerPC and S390 do not support creation of instruction breakpoints using the
-> --
-> 2.39.2
->
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-stat.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index d70b1ec88594..5c12ae5efce5 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -181,14 +181,13 @@ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+ 
+ static void evlist__check_cpu_maps(struct evlist *evlist)
+ {
+-	struct evsel *evsel, *pos, *leader;
+-	char buf[1024];
++	struct evsel *evsel, *warned_leader = NULL;
+ 
+ 	if (evlist__has_hybrid(evlist))
+ 		evlist__warn_hybrid_group(evlist);
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		leader = evsel__leader(evsel);
++		struct evsel *leader = evsel__leader(evsel);
+ 
+ 		/* Check that leader matches cpus with each member. */
+ 		if (leader == evsel)
+@@ -197,19 +196,26 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
+ 			continue;
+ 
+ 		/* If there's mismatch disable the group and warn user. */
+-		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
+-		evsel__group_desc(leader, buf, sizeof(buf));
+-		pr_warning("  %s\n", buf);
+-
++		if (warned_leader != leader) {
++			char buf[200];
++
++			pr_warning("WARNING: grouped events cpus do not match.\n"
++				"Events with CPUs not matching the leader will "
++				"be removed from the group.\n");
++			evsel__group_desc(leader, buf, sizeof(buf));
++			pr_warning("  %s\n", buf);
++			warned_leader = leader;
++		}
+ 		if (verbose > 0) {
++			char buf[200];
++
+ 			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
+ 			pr_warning("     %s: %s\n", leader->name, buf);
+ 			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
+ 			pr_warning("     %s: %s\n", evsel->name, buf);
+ 		}
+ 
+-		for_each_group_evsel(pos, leader)
+-			evsel__remove_from_group(pos, leader);
++		evsel__remove_from_group(evsel, leader);
+ 	}
+ }
+ 
+-- 
+2.40.0.rc0.216.gc4246ad0f0-goog
+
