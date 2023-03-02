@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BF7C7EE3A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F63DC7EE36
 	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 22:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbjCBWAX (ORCPT
+        id S229745AbjCBWAS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 17:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43552 "EHLO
+        Thu, 2 Mar 2023 17:00:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjCBWAW (ORCPT
+        with ESMTP id S229787AbjCBWAN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 17:00:22 -0500
-Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CC85553D
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 14:00:18 -0800 (PST)
-Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-172c939204aso457432fac.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 14:00:18 -0800 (PST)
+        Thu, 2 Mar 2023 17:00:13 -0500
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E195A6C5
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 14:00:09 -0800 (PST)
+Received: by mail-qt1-x849.google.com with SMTP id g20-20020ac870d4000000b003b9c1013018so389934qtp.18
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 14:00:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677794358;
+        d=google.com; s=20210112; t=1677794408;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mSc6zWu+gp18coqfyQ+Fs9l1x/Sawfb5L2ZQMm92/Ks=;
-        b=U3Sroh9FwOcuAW7rrXxMmWRRMfDfXVADV4ZfeMsztbr+4tvm4UFXAcU8ozpdhq5qoD
-         RVTzkH8XxGpuZNe7+wotYHleIJwiG9JXNscSKpr6/dZAa8xUP4FUOs46abgyC2QF2IEj
-         ghxmetCs/cMBQQHAEqHLYweF8ckJFDUh9ZO9UXhsfRKnjiXPvAlnqmGuDFNDNKKuOdRq
-         idMU/jyX1hp/FbLWPp89xi2+LzhRcsmSaH5brIopqAhwORBrY/bAXG8Su2bMP7AzcKfV
-         FRJSTtgTWnDaO7N8JfHowYUkoNHozHtugcBjIReUZTl5NMsqhn4iS46o81M0mLmr3pIa
-         W5OQ==
+        bh=g0jlEMBakJd81khWC3QW7IrApk6xNYL1VTloNWEkJVI=;
+        b=oso2SaaFeUKp4cEJwFrgvQ6VUMvgSbD+skNOj+VyuuzDIdt8a/V0ax2NYtGwhUyac+
+         yZ0FheElJtKKox0heses3pN7AYppdM5KBmmVT/cSWU2L279BGFY61MWmbFgSIcfTyY3t
+         bg45gPloBNn5FKi5BQimeo4oZIZUzCBkwxhnJ4lIwLZ1Tvu9SqDzn6CwJuTHEdnycF+s
+         04ez6IhH0yyCLUnMtJnIXxWP4wPoDsenI3Jv/A47nebS18HcijelWF3NITjRz50wZFR5
+         8I9aTXXaHJK+iFq3xzRn7vb+OBYmx+qzt8XV5NhIZkRhCIH9DVVhwVw8V+GqOVgcOf0l
+         kPKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677794358;
+        d=1e100.net; s=20210112; t=1677794408;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mSc6zWu+gp18coqfyQ+Fs9l1x/Sawfb5L2ZQMm92/Ks=;
-        b=2iPjenHXRLP5lfWpG5ngB3jOfxALwCzquuUep05v3BsVN8mH1uwE2Vdz4XEI4bmIPk
-         9myonSjv/7Re2upXbPtvuxhaZ0FOUs9AkUCuXdChwoFc2cO+qg4pX8wOJtavSqZ5Q0Fw
-         DVCYfFxsppjfxa+wgu6+a8MF2wVn5u9y7VqdoQQk1AsA0tXQ4lXjW9OASayVGzNRYlYM
-         S4HW292aducyzuz6CTGI/ejy3Y438mCG2ehsnd67gx0cLjaAZI0inJLVtZJNeYD1xQoC
-         A5kE3VV5vS1sMfjGf9hR9MhOgN3yAYvkiHq1LwFThlhy9lx+6IeJDhWU3zqjQf50iPQS
-         Vt6Q==
-X-Gm-Message-State: AO0yUKXhEmViBBbs4Y9tDDZb8Vcr4HQV8pCmm+a9E+fxYEcyiaNxLl7b
-        vZD3XuNI3L4Jw1A4y+mFWA8yVyr42dsg
-X-Google-Smtp-Source: AK7set8EG+2QHSnGl+SsrkplMEsrRkrZK6RrmEtHNWM0JmQIeq0WDAJIcmhe259f39B7PGTkhwzUnyILVerf
+        bh=g0jlEMBakJd81khWC3QW7IrApk6xNYL1VTloNWEkJVI=;
+        b=pLn99hfCL2guPeaixDdDmma03GSVWbQLR1KWUgqRt+Idc7Ih+s21uWp0ejNzBhyP4O
+         yKYQ/1rG5tEvXGE1jJ8cHgYswDyP+vCGa2c2IaUpwD4r2mh6K+bgSoTCBhjQ/u/hxpjq
+         T/tK6ikCT/REYefntEERDVb0Y8158h6kNaKyj1aHf80WI86dfJz6qxaVwGVkZ4zvvZpg
+         KWjnWE6L6Mx+wqSOgIdi2Ks+IcTIKP5xNg9muuNX7dcSnpNZtKn73TCm1q6DXZZU4AcN
+         guXaGmFut/Pm+grp1MbEBoH2hn/gCEiRQP045IuYpripXT4XwncxU5dFZYSH4l1lyiRA
+         WhkQ==
+X-Gm-Message-State: AO0yUKWf66GxdT0wGQSWvUJL5u8fvU9JOp+fzGh8h+3JLCSkB/CPxXGv
+        XN3CfB9fR9sPOwUl+Vl6AVkDd9rpkXBA
+X-Google-Smtp-Source: AK7set/SqQ08lU+52ZjXhfuDGzA0eY94bDLs6OOwSv2m5Qv+bcRAT36ykFY05Uh+hyChaWXjxycybDuacudI
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:5f50:6ef4:b4d0:568e])
- (user=irogers job=sendgmr) by 2002:a05:6902:343:b0:aa9:bd2e:3744 with SMTP id
- e3-20020a056902034300b00aa9bd2e3744mr5222936ybs.9.1677792387767; Thu, 02 Mar
- 2023 13:26:27 -0800 (PST)
-Date:   Thu,  2 Mar 2023 13:25:26 -0800
+ (user=irogers job=sendgmr) by 2002:a05:6902:4f0:b0:a9d:be6e:3340 with SMTP id
+ w16-20020a05690204f000b00a9dbe6e3340mr6135290ybs.1.1677792410039; Thu, 02 Mar
+ 2023 13:26:50 -0800 (PST)
+Date:   Thu,  2 Mar 2023 13:25:29 -0800
 In-Reply-To: <20230302212531.1043318-1-irogers@google.com>
-Message-Id: <20230302212531.1043318-6-irogers@google.com>
+Message-Id: <20230302212531.1043318-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20230302212531.1043318-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v2 05/10] perf evsel: Allow const evsel for certain accesses
+Subject: [PATCH v2 08/10] perf parse-events: Sort and group parsed events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,95 +83,462 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-List sorting, added later to evlist, passes const elements requiring
-helper functions to also be const. Make the argument to
-evsel__find_pmu, evsel__is_aux_event and evsel__leader const.
+This change is intended to be a no-op for most current cases, the
+default sort order is the order the events were parsed. Where it
+varies is in how groups are handled. Previously an uncore and core
+event that are grouped would most often cause the group to be removed:
+
+```
+$ perf stat -e '{instructions,uncore_imc_free_running_0/data_total/}' -a sleep 1
+WARNING: grouped events cpus do not match, disabling group:
+  anon group { instructions, uncore_imc_free_running_0/data_total/ }
+...
+```
+
+However, when wildcards are used the events should be re-sorted and
+re-grouped in parse_events__set_leader, but this currently fails for
+simple examples:
+
+```
+$ perf stat -e '{uncore_imc_free_running/data_read/,uncore_imc_free_running/data_write/}' -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+     <not counted> MiB  uncore_imc_free_running/data_read/
+     <not counted> MiB  uncore_imc_free_running/data_write/
+
+       1.000996992 seconds time elapsed
+```
+
+A futher failure mode, fixed in this patch, is to force topdown events
+into a group.
+
+This change moves sorting the evsels in the evlist after parsing. It
+requires parsing to set up groups. First the evsels are sorted
+respecting the existing groupings and parse order, but also reordering
+to ensure evsels of the same PMU and group appear together. So that
+software and aux events respect groups, their pmu_name is taken from
+the group leader. The sorting is done with list_sort removing a memory
+allocation.
+
+After sorting a pass is done to correct the group leaders and for
+topdown events ensuring they have a group leader.
+
+This fixes the problems seen before:
+
+```
+$ perf stat -e '{uncore_imc_free_running/data_read/,uncore_imc_free_running/data_write/}' -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+            727.42 MiB  uncore_imc_free_running/data_read/
+             81.84 MiB  uncore_imc_free_running/data_write/
+
+       1.000948615 seconds time elapsed
+```
+
+As well as making groups not fail for cases like:
+
+```
+$ perf stat -e '{imc_free_running_0/data_total/,imc_free_running_1/data_total/}' -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+            256.47 MiB  imc_free_running_0/data_total/
+            256.48 MiB  imc_free_running_1/data_total/
+
+       1.001165442 seconds time elapsed
+```
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c  | 2 +-
- tools/perf/util/evsel.h  | 6 +++---
- tools/perf/util/pmu.c    | 6 +++---
- tools/perf/util/python.c | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ tools/perf/arch/x86/util/evlist.c |  39 ++---
+ tools/perf/util/evlist.h          |   2 +-
+ tools/perf/util/parse-events.c    | 240 +++++++++++++++---------------
+ tools/perf/util/parse-events.h    |   3 +-
+ tools/perf/util/parse-events.y    |   4 +-
+ 5 files changed, 136 insertions(+), 152 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 51e8ce6edddc..2dc2c24252bb 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3139,7 +3139,7 @@ bool evsel__is_hybrid(const struct evsel *evsel)
- 	return evsel->pmu_name && perf_pmu__is_hybrid(evsel->pmu_name);
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+index 8a7ae4162563..d4193479a364 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -65,29 +65,22 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+ 	return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
  }
  
--struct evsel *evsel__leader(struct evsel *evsel)
-+struct evsel *evsel__leader(const struct evsel *evsel)
+-struct evsel *arch_evlist__leader(struct list_head *list)
++int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
  {
- 	return container_of(evsel->core.leader, struct evsel, core);
+-	struct evsel *evsel, *first, *slots = NULL;
+-	bool has_topdown = false;
+-
+-	first = list_first_entry(list, struct evsel, core.node);
+-
+-	if (!topdown_sys_has_perf_metrics())
+-		return first;
+-
+-	/* If there is a slots event and a topdown event then the slots event comes first. */
+-	__evlist__for_each_entry(list, evsel) {
+-		if (evsel->pmu_name && !strncmp(evsel->pmu_name, "cpu", 3) && evsel->name) {
+-			if (strcasestr(evsel->name, "slots")) {
+-				slots = evsel;
+-				if (slots == first)
+-					return first;
+-			}
+-			if (strcasestr(evsel->name, "topdown"))
+-				has_topdown = true;
+-			if (slots && has_topdown)
+-				return slots;
+-		}
++	if (topdown_sys_has_perf_metrics() &&
++	    (!lhs->pmu_name || !strncmp(lhs->pmu_name, "cpu", 3))) {
++		/* Ensure the topdown slots comes first. */
++		if (strcasestr(lhs->name, "slots"))
++			return -1;
++		if (strcasestr(rhs->name, "slots"))
++			return 1;
++		/* Followed by topdown events. */
++		if (strcasestr(lhs->name, "topdown") && !strcasestr(rhs->name, "topdown"))
++			return -1;
++		if (!strcasestr(lhs->name, "topdown") && strcasestr(rhs->name, "topdown"))
++			return 1;
+ 	}
+-	return first;
++
++	/* Default ordering by insertion index. */
++	return lhs->core.idx - rhs->core.idx;
  }
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 814a49ebb7e3..676c499323e9 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -212,8 +212,8 @@ int evsel__object_config(size_t object_size,
- 			 int (*init)(struct evsel *evsel),
- 			 void (*fini)(struct evsel *evsel));
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 01fa9d592c5a..d89d8f92802b 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -119,7 +119,7 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+ #define evlist__add_default_attrs(evlist, array) \
+ 	arch_evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
  
--struct perf_pmu *evsel__find_pmu(struct evsel *evsel);
--bool evsel__is_aux_event(struct evsel *evsel);
-+struct perf_pmu *evsel__find_pmu(const struct evsel *evsel);
-+bool evsel__is_aux_event(const struct evsel *evsel);
+-struct evsel *arch_evlist__leader(struct list_head *list);
++int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs);
  
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx);
- 
-@@ -505,7 +505,7 @@ int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
- 
- void evsel__zero_per_pkg(struct evsel *evsel);
- bool evsel__is_hybrid(const struct evsel *evsel);
--struct evsel *evsel__leader(struct evsel *evsel);
-+struct evsel *evsel__leader(const struct evsel *evsel);
- bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
- bool evsel__is_leader(struct evsel *evsel);
- void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 43b6182d96b7..45d9b8e28e16 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -988,7 +988,7 @@ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
- 	return NULL;
+ int evlist__add_dummy(struct evlist *evlist);
+ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 1be454697d57..d6eb0a54dd2d 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/hw_breakpoint.h>
+ #include <linux/err.h>
++#include <linux/list_sort.h>
+ #include <linux/zalloc.h>
+ #include <dirent.h>
+ #include <errno.h>
+@@ -1655,125 +1656,7 @@ int parse_events__modifier_group(struct list_head *list,
+ 	return parse_events__modifier_event(list, event_mod, true);
  }
  
--struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
-+struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+-/*
+- * Check if the two uncore PMUs are from the same uncore block
+- * The format of the uncore PMU name is uncore_#blockname_#pmuidx
+- */
+-static bool is_same_uncore_block(const char *pmu_name_a, const char *pmu_name_b)
+-{
+-	char *end_a, *end_b;
+-
+-	end_a = strrchr(pmu_name_a, '_');
+-	end_b = strrchr(pmu_name_b, '_');
+-
+-	if (!end_a || !end_b)
+-		return false;
+-
+-	if ((end_a - pmu_name_a) != (end_b - pmu_name_b))
+-		return false;
+-
+-	return (strncmp(pmu_name_a, pmu_name_b, end_a - pmu_name_a) == 0);
+-}
+-
+-static int
+-parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+-					   struct parse_events_state *parse_state)
+-{
+-	struct evsel *evsel, *leader;
+-	uintptr_t *leaders;
+-	bool is_leader = true;
+-	int i, nr_pmu = 0, total_members, ret = 0;
+-
+-	leader = list_first_entry(list, struct evsel, core.node);
+-	evsel = list_last_entry(list, struct evsel, core.node);
+-	total_members = evsel->core.idx - leader->core.idx + 1;
+-
+-	leaders = calloc(total_members, sizeof(uintptr_t));
+-	if (WARN_ON(!leaders))
+-		return 0;
+-
+-	/*
+-	 * Going through the whole group and doing sanity check.
+-	 * All members must use alias, and be from the same uncore block.
+-	 * Also, storing the leader events in an array.
+-	 */
+-	__evlist__for_each_entry(list, evsel) {
+-
+-		/* Only split the uncore group which members use alias */
+-		if (!evsel->use_uncore_alias)
+-			goto out;
+-
+-		/* The events must be from the same uncore block */
+-		if (!is_same_uncore_block(leader->pmu_name, evsel->pmu_name))
+-			goto out;
+-
+-		if (!is_leader)
+-			continue;
+-		/*
+-		 * If the event's PMU name starts to repeat, it must be a new
+-		 * event. That can be used to distinguish the leader from
+-		 * other members, even they have the same event name.
+-		 */
+-		if ((leader != evsel) &&
+-		    !strcmp(leader->pmu_name, evsel->pmu_name)) {
+-			is_leader = false;
+-			continue;
+-		}
+-
+-		/* Store the leader event for each PMU */
+-		leaders[nr_pmu++] = (uintptr_t) evsel;
+-	}
+-
+-	/* only one event alias */
+-	if (nr_pmu == total_members) {
+-		parse_state->nr_groups--;
+-		goto handled;
+-	}
+-
+-	/*
+-	 * An uncore event alias is a joint name which means the same event
+-	 * runs on all PMUs of a block.
+-	 * Perf doesn't support mixed events from different PMUs in the same
+-	 * group. The big group has to be split into multiple small groups
+-	 * which only include the events from the same PMU.
+-	 *
+-	 * Here the uncore event aliases must be from the same uncore block.
+-	 * The number of PMUs must be same for each alias. The number of new
+-	 * small groups equals to the number of PMUs.
+-	 * Setting the leader event for corresponding members in each group.
+-	 */
+-	i = 0;
+-	__evlist__for_each_entry(list, evsel) {
+-		if (i >= nr_pmu)
+-			i = 0;
+-		evsel__set_leader(evsel, (struct evsel *) leaders[i++]);
+-	}
+-
+-	/* The number of members and group name are same for each group */
+-	for (i = 0; i < nr_pmu; i++) {
+-		evsel = (struct evsel *) leaders[i];
+-		evsel->core.nr_members = total_members / nr_pmu;
+-		evsel->group_name = name ? strdup(name) : NULL;
+-	}
+-
+-	/* Take the new small groups into account */
+-	parse_state->nr_groups += nr_pmu - 1;
+-
+-handled:
+-	ret = 1;
+-	free(name);
+-out:
+-	free(leaders);
+-	return ret;
+-}
+-
+-__weak struct evsel *arch_evlist__leader(struct list_head *list)
+-{
+-	return list_first_entry(list, struct evsel, core.node);
+-}
+-
+-void parse_events__set_leader(char *name, struct list_head *list,
+-			      struct parse_events_state *parse_state)
++void parse_events__set_leader(char *name, struct list_head *list)
  {
- 	struct perf_pmu *pmu = NULL;
+ 	struct evsel *leader;
  
-@@ -1000,11 +1000,11 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
- 			break;
+@@ -1782,13 +1665,9 @@ void parse_events__set_leader(char *name, struct list_head *list,
+ 		return;
  	}
  
--	evsel->pmu = pmu;
-+	((struct evsel *)evsel)->pmu = pmu;
- 	return pmu;
+-	if (parse_events__set_leader_for_uncore_aliase(name, list, parse_state))
+-		return;
+-
+-	leader = arch_evlist__leader(list);
++	leader = list_first_entry(list, struct evsel, core.node);
+ 	__perf_evlist__set_leader(list, &leader->core);
+ 	leader->group_name = name;
+-	list_move(&leader->core.node, list);
  }
  
--bool evsel__is_aux_event(struct evsel *evsel)
-+bool evsel__is_aux_event(const struct evsel *evsel)
- {
- 	struct perf_pmu *pmu = evsel__find_pmu(evsel);
- 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 42e8b813d010..ab48ffbb6448 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -83,7 +83,7 @@ const char *perf_env__arch(struct perf_env *env __maybe_unused)
-  * far, for the perf python binding known usecases, revisit if this become
-  * necessary.
-  */
--struct perf_pmu *evsel__find_pmu(struct evsel *evsel __maybe_unused)
-+struct perf_pmu *evsel__find_pmu(const struct evsel *evsel __maybe_unused)
- {
- 	return NULL;
+ /* list_event is assumed to point to malloc'ed memory */
+@@ -2245,6 +2124,117 @@ static int parse_events__with_hybrid_pmu(struct parse_events_state *parse_state,
+ 	return ret;
  }
+ 
++__weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
++{
++	/* Order by insertion index. */
++	return lhs->core.idx - rhs->core.idx;
++}
++
++static int evlist__cmp(void *state, const struct list_head *l, const struct list_head *r)
++{
++	const struct perf_evsel *lhs_core = container_of(l, struct perf_evsel, node);
++	const struct evsel *lhs = container_of(lhs_core, struct evsel, core);
++	const struct perf_evsel *rhs_core = container_of(r, struct perf_evsel, node);
++	const struct evsel *rhs = container_of(rhs_core, struct evsel, core);
++	int *leader_idx = state;
++	int lhs_leader_idx = *leader_idx, rhs_leader_idx = *leader_idx, ret;
++	const char *lhs_pmu_name, *rhs_pmu_name;
++
++	/*
++	 * First sort by grouping/leader. Read the leader idx only if the evsel
++	 * is part of a group, as -1 indicates no group.
++	 */
++	if (lhs_core->leader != lhs_core || lhs_core->nr_members > 1)
++		lhs_leader_idx = lhs_core->leader->idx;
++	if (rhs_core->leader != rhs_core || rhs_core->nr_members > 1)
++		rhs_leader_idx = rhs_core->leader->idx;
++
++	if (lhs_leader_idx != rhs_leader_idx)
++		return lhs_leader_idx - rhs_leader_idx;
++
++	/* Group by PMU. Groups can't span PMUs. */
++	lhs_pmu_name = evsel__pmu_name(lhs);
++	rhs_pmu_name = evsel__pmu_name(rhs);
++	ret = strcmp(lhs_pmu_name, rhs_pmu_name);
++	if (ret)
++		return ret;
++
++	/* Architecture specific sorting. */
++	return arch_evlist__cmp(lhs, rhs);
++}
++
++static void parse_events__sort_events_and_fix_groups(struct list_head *list)
++{
++	int idx = -1;
++	struct evsel *pos, *cur_leader = NULL;
++	struct perf_evsel *cur_leaders_grp = NULL;
++
++	/*
++	 * Compute index to insert ungrouped events at. Place them where the
++	 * first ungrouped event appears.
++	 */
++	list_for_each_entry(pos, list, core.node) {
++		const struct evsel *pos_leader = evsel__leader(pos);
++
++		if (pos != pos_leader || pos->core.nr_members > 1)
++			continue;
++
++		idx = pos->core.idx;
++		break;
++	}
++
++	/* Sort events. */
++	list_sort(&idx, list, evlist__cmp);
++
++	/*
++	 * Recompute groups, splitting for PMUs and adding groups for events
++	 * that require them.
++	 */
++	idx = 0;
++	list_for_each_entry(pos, list, core.node) {
++		const struct evsel *pos_leader = evsel__leader(pos);
++		const char *pos_pmu_name = evsel__pmu_name(pos);
++		const char *cur_leader_pmu_name, *pos_leader_pmu_name;
++		bool force_grouped = arch_evsel__must_be_in_group(pos);
++
++		/* Reset index and nr_members. */
++		pos->core.idx = idx++;
++		pos->core.nr_members = 0;
++
++		/*
++		 * Set the group leader respecting the given groupings and that
++		 * groups can't span PMUs.
++		 */
++		if (!cur_leader)
++			cur_leader = pos;
++
++		cur_leader_pmu_name = evsel__pmu_name(cur_leader);
++		if ((cur_leaders_grp != pos->core.leader && !force_grouped) ||
++		    strcmp(cur_leader_pmu_name, pos_pmu_name)) {
++			/* Event is for a different group/PMU than last. */
++			cur_leader = pos;
++			/*
++			 * Remember the leader's group before it is overwritten,
++			 * so that later events match as being in the same
++			 * group.
++			 */
++			cur_leaders_grp = pos->core.leader;
++		}
++		pos_leader_pmu_name = evsel__pmu_name(pos_leader);
++		if (strcmp(pos_leader_pmu_name, pos_pmu_name) || force_grouped) {
++			/*
++			 * Event's PMU differs from its leader's. Groups can't
++			 * span PMUs, so update leader from the group/PMU
++			 * tracker.
++			 */
++			evsel__set_leader(pos, cur_leader);
++		}
++	}
++	list_for_each_entry(pos, list, core.node) {
++		pos->core.leader->nr_members++;
++	}
++}
++
+ int __parse_events(struct evlist *evlist, const char *str,
+ 		   struct parse_events_error *err, struct perf_pmu *fake_pmu)
+ {
+@@ -2266,6 +2256,8 @@ int __parse_events(struct evlist *evlist, const char *str,
+ 		return -1;
+ 	}
+ 
++	parse_events__sort_events_and_fix_groups(&parse_state.list);
++
+ 	/*
+ 	 * Add list to the evlist even with errors to allow callers to clean up.
+ 	 */
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 428e72eaafcc..22fc11b0bd59 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -200,8 +200,7 @@ int parse_events_copy_term_list(struct list_head *old,
+ 
+ enum perf_pmu_event_symbol_type
+ perf_pmu__parse_check(const char *name);
+-void parse_events__set_leader(char *name, struct list_head *list,
+-			      struct parse_events_state *parse_state);
++void parse_events__set_leader(char *name, struct list_head *list);
+ void parse_events_update_lists(struct list_head *list_event,
+ 			       struct list_head *list_all);
+ void parse_events_evlist_error(struct parse_events_state *parse_state,
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 541b8dde2063..90d12f2bc8be 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -203,7 +203,7 @@ PE_NAME '{' events '}'
+ 
+ 	inc_group_count(list, _parse_state);
+ 	/* Takes ownership of $1. */
+-	parse_events__set_leader($1, list, _parse_state);
++	parse_events__set_leader($1, list);
+ 	$$ = list;
+ }
+ |
+@@ -212,7 +212,7 @@ PE_NAME '{' events '}'
+ 	struct list_head *list = $2;
+ 
+ 	inc_group_count(list, _parse_state);
+-	parse_events__set_leader(NULL, list, _parse_state);
++	parse_events__set_leader(NULL, list);
+ 	$$ = list;
+ }
+ 
 -- 
 2.40.0.rc0.216.gc4246ad0f0-goog
 
