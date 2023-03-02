@@ -2,43 +2,42 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDEDC678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 14:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B857C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 14:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjCBOjW (ORCPT
+        id S229722AbjCBOpr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:39:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59098 "EHLO
+        Thu, 2 Mar 2023 09:45:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjCBOjV (ORCPT
+        with ESMTP id S229608AbjCBOpr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:39:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B320B2A6FC;
-        Thu,  2 Mar 2023 06:39:20 -0800 (PST)
+        Thu, 2 Mar 2023 09:45:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F5C3E626;
+        Thu,  2 Mar 2023 06:45:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4655E615D2;
-        Thu,  2 Mar 2023 14:39:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE8DC433D2;
-        Thu,  2 Mar 2023 14:39:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6B8CAB8122A;
+        Thu,  2 Mar 2023 14:45:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF57C433D2;
+        Thu,  2 Mar 2023 14:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677767959;
-        bh=+6aE/Q/gEbdk0VnH+27QNOv9p1fOfMaR+j7PKnHb2Ao=;
+        s=k20201202; t=1677768342;
+        bh=Cdp+fzAk3TXRE5mc3Ioe3GgwQcA8HQfOrkZ9V3g4Kpw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hP0Yc6MqGVGWZnrbC7ATGwlQXJ44QSEOk4XDYBAxaB6CuKfjhWy41MEGRFzXbtvXQ
-         GbRSvIhL8x8ctWOTKSTC8FqfdFrD1hjmmPZfbOLjoG66qC8L2ta3H+x/Bqn7iV97yM
-         S5QRScb8IpWUa/8tXNqQovOEk9zm2uPp3Y1J+zJrmR51WGFk/yUbWqeRtXDVSkF7SZ
-         7u8SkTJOyksWFg+UNvvYC/1EbwT5x/JAX3EoDVSQ+GspYGM0ZG9+XR/YmjrbFYvDq4
-         80s3ZsA7xFquhw1ImLwH4zHb9ZQ2oARKCTCiqlIHSDTUMQ89uHH8O3H/3Y2boJS7E8
-         H4wE+uRGrXZtA==
+        b=Mk80df8L8TkuG0GIllo9Olh/po96Ww5tPU5YvaD4EMB1os67PKP6XgAZOpIdUKhAC
+         q6Zf1iQr34m1lyVM2LJWoRYtibPKfOsrCt9JbalEksPsggYPB6Cqr7XZZVoHzjbdAt
+         5OeW2XjGR6N45ufHWEr6asv3+Z15ceJkMfQzlmIM6qGvBu9REHb8e4AKm1bd+7NcbV
+         3nfbDTbeeC9AhSU7yWTAK03CBg9OE/EnWjSDG3SOyjSSxV+zBSElZ1rrTbOE4cNlY5
+         wX/csEkDusJ/JyOhbw9tb9DrhLP5xePAcqEjvPzI1f2SFnP4F8Ji9TkrrJI68wexJ1
+         vegt4KvdAAcTg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DD6844049F; Thu,  2 Mar 2023 11:39:16 -0300 (-03)
-Date:   Thu, 2 Mar 2023 11:39:16 -0300
+        id D429A4049F; Thu,  2 Mar 2023 11:45:39 -0300 (-03)
+Date:   Thu, 2 Mar 2023 11:45:39 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -61,82 +60,69 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kajol Jain <kjain@linux.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 07/10] perf evsel: Add function to compute pmu_name
-Message-ID: <ZAC1FK0EHA4reQid@kernel.org>
+Subject: Re: [PATCH v1 08/10] perf parse-events: Pass ownership of the group
+ name
+Message-ID: <ZAC2k4I8rEPQWL/o@kernel.org>
 References: <20230302041211.852330-1-irogers@google.com>
- <20230302041211.852330-8-irogers@google.com>
+ <20230302041211.852330-9-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230302041211.852330-8-irogers@google.com>
+In-Reply-To: <20230302041211.852330-9-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 01, 2023 at 08:12:08PM -0800, Ian Rogers escreveu:
-> The computed pmu_name respects software events and aux event groups,
-> such that the pmu_name is changed to be that of the aux event leader
-> or group leader for software events. This is done as a later change
-> will split events that are in different PMUs into different groups.
+Em Wed, Mar 01, 2023 at 08:12:09PM -0800, Ian Rogers escreveu:
+> Pass ownership of the group name rather than copying and freeing the
+> original. This saves a memory allocation and copy.
 
-Adrian, can you please take a look and provide an Ack or Reviewed-by?
+Looks ok.
 
 - Arnaldo
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
->  tools/perf/util/evsel.h |  1 +
->  2 files changed, 25 insertions(+)
+>  tools/perf/util/parse-events.c | 3 ++-
+>  tools/perf/util/parse-events.y | 2 +-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 2dc2c24252bb..9c6b486f8bd4 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -821,6 +821,30 @@ const char *evsel__name(struct evsel *evsel)
->  	return "unknown";
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 0336ff27c15f..1be454697d57 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1761,6 +1761,7 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+>  
+>  handled:
+>  	ret = 1;
+> +	free(name);
+>  out:
+>  	free(leaders);
+>  	return ret;
+> @@ -1786,7 +1787,7 @@ void parse_events__set_leader(char *name, struct list_head *list,
+>  
+>  	leader = arch_evlist__leader(list);
+>  	__perf_evlist__set_leader(list, &leader->core);
+> -	leader->group_name = name ? strdup(name) : NULL;
+> +	leader->group_name = name;
+>  	list_move(&leader->core.node, list);
 >  }
 >  
-> +const char *evsel__pmu_name(const struct evsel *evsel)
-> +{
-> +	const struct evsel *leader;
-> +
-> +	/* If the pmu_name is set use it. pmu_name isn't set for CPU and software events. */
-> +	if (evsel->pmu_name)
-> +		return evsel->pmu_name;
-> +	/*
-> +	 * Software events may be in a group with other uncore PMU events. Use
-> +	 * the pmu_name of the group leader to avoid breaking the software event
-> +	 * out of the group.
-> +	 *
-> +	 * Aux event leaders, like intel_pt, expect a group with events from
-> +	 * other PMUs, so substitute the AUX event's PMU in this case.
-> +	 */
-> +	leader  = evsel__leader(evsel);
-> +	if ((evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) &&
-> +	    leader->pmu_name) {
-> +		return leader->pmu_name;
-> +	}
-> +
-> +	return "cpu";
-> +}
-> +
->  const char *evsel__metric_id(const struct evsel *evsel)
->  {
->  	if (evsel->metric_id)
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 676c499323e9..72121194d3b1 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -280,6 +280,7 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size);
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index be8c51770051..541b8dde2063 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -202,8 +202,8 @@ PE_NAME '{' events '}'
+>  	struct list_head *list = $3;
 >  
->  int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char *bf, size_t size);
->  const char *evsel__name(struct evsel *evsel);
-> +const char *evsel__pmu_name(const struct evsel *evsel);
->  const char *evsel__metric_id(const struct evsel *evsel);
->  
->  static inline bool evsel__is_tool(const struct evsel *evsel)
+>  	inc_group_count(list, _parse_state);
+> +	/* Takes ownership of $1. */
+>  	parse_events__set_leader($1, list, _parse_state);
+> -	free($1);
+>  	$$ = list;
+>  }
+>  |
 > -- 
 > 2.39.2.722.g9855ee24e9-goog
 > 
