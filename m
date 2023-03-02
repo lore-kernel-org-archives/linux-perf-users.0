@@ -2,61 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56661C678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 16:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC72C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 16:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbjCBQGL (ORCPT
+        id S229769AbjCBQK0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 11:06:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36310 "EHLO
+        Thu, 2 Mar 2023 11:10:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjCBQGK (ORCPT
+        with ESMTP id S229760AbjCBQKZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 11:06:10 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55370515EE
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 08:06:09 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id d41-20020a05600c4c2900b003e9e066550fso1799670wmp.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 08:06:09 -0800 (PST)
+        Thu, 2 Mar 2023 11:10:25 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0BE1C324
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 08:10:24 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id h11so5311938wrm.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 08:10:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677773168;
+        d=google.com; s=20210112; t=1677773422;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=45um0PPdrlY43VdRNnyAzfel5NrZe30rf+cZnQhohI0=;
-        b=XU4UgxFTlcPnuoa4qsyIziynGo54xUe6JLltmdIdh7WfyCnEnFjXQ5Y2zTgTLQfSOK
-         4QtHXKclzgFSiQ6VQd7RhOpb5GmaRx3ajv+jsTlR9bq/OthC3VkFFE8NpKUyB6qoTn/r
-         dvLiPdIctMf7h8iR8J0+bhKlP0qPoHo71Wvy64TFwuNR95J8mYtCcLy+nVlRx+Kxg4IY
-         cBc0wIJu9gbtP8AvNi2FjtnlftYuw5JzUzEVDuwhPSjzrLJMES1Zt2GE2RYonylvm8iR
-         X2UDcQ23ZOns1iFK5dot00/neagEFWcGA7lA9fyKkdWLzF1G2+zXLJszCyYoIWtSLMRH
-         hgiw==
+        bh=oW2Fv/dLrDNZnUSVAjrQLRhdPmysQ5son7O3258Q2aY=;
+        b=rastKU+uQCQA+5HnKRmbJF7aq90705G+ZLNOmygZSeCv1y19ToAuYXL4Qnb+nWZFRq
+         ICgaNnyc60TyRo1dXxVVyQA7k4KvgadLdv1FNqevIpZ3yNTgA9LNveC6UU0DC8Kvty2k
+         vDlla5D18NSFRVrq8cIoddhTT4u9FhJ9Eb1lqBSwcf2dIaQEQvgEyIJQSbrDS99qpb1e
+         /jhBdzDF30xZGs4RHYCZRc6ja7M1ve63t/GMHOT9LX06j3Tc8IxbIZJE/J+yBVnyRKAy
+         W7bC7x7suQ4XPic0flKj03eZ3lrjJtDHnPgPTsns8KSDmIRrrL55QPRvXk4XFDWnr4Nx
+         GZVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677773168;
+        d=1e100.net; s=20210112; t=1677773422;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=45um0PPdrlY43VdRNnyAzfel5NrZe30rf+cZnQhohI0=;
-        b=FoFTgg/0YDhFTE01/mW4aFrdAHMusZ+7i6QwESiWi4q2sX44NAmxuebryYTimVEQQJ
-         cC8oqB9iBNQfft3eWxI+/giNflUr7UFlEzDNnZHl2Zf4qH52536at2YjdH+zgv5cMI6p
-         TcWnJJuNuqW1QX6PRkN3ACY0GpYBQi14+pL8Nf2eTloQbiA3rMV9t7ZZrYsMT8AqnTl+
-         ANxV/h4SYJf8/nv2nfwYn+voCnqyVXER85nhPIJrF8JAWQjzTZhSnktrONxFusitNzYH
-         M7/mya0fwzLPPMwjho2ovPSPcgS9OERssSt/2rzr9PzbLmUXp+uPsFvYLREtFsIMDsek
-         0T4g==
-X-Gm-Message-State: AO0yUKWvysis2iZwCE6PzIUKGkp3vhCvwDJYpfssatSUOgjFNm3fTS6v
-        kf7bXdikk73M2RL9NO4ihf/VmV6UfUSz5+45S/xuBQ==
-X-Google-Smtp-Source: AK7set+PtyNU/IlP+xgwkG23mEgycytRqwSDF0d4R084E5ctDT1y318peW4VQq4ZGRPap3XwE6xGXyir+Z3PYmu8TAA=
-X-Received: by 2002:a05:600c:3c81:b0:3df:97fd:2222 with SMTP id
- bg1-20020a05600c3c8100b003df97fd2222mr3102833wmb.8.1677773167447; Thu, 02 Mar
- 2023 08:06:07 -0800 (PST)
+        bh=oW2Fv/dLrDNZnUSVAjrQLRhdPmysQ5son7O3258Q2aY=;
+        b=mpiMsteLjzfP77OhtetZw/ppGj8yTx4esOmY5BovoihsiqKCgVCpIFnvhw+XOTH8Gc
+         aRHXKIsiaz/p1r9AURyG/8XCERPcWBNUB829196JHKi8j/ZaFvvidIArUQMNeyTMtQbA
+         Ot41OuE9/TfWot3e8U+zxHWTH3eBcF3NNE6vs+FfnRAlVA0UaaFZDK0sKpcS0+oiWKNI
+         7A4LZls8QGr1vyZJ5SUkCf6Mzu98jo2iFxGyWdy/j11KPDCLltOEvgAPWU6bDVC/thPy
+         acY5T4g4fFa25ITdeZWHF3Bumhu6lZAWvQ87mO/9+2wD+jEJpt9MtNZkgTdUBiJ03+a7
+         iCHQ==
+X-Gm-Message-State: AO0yUKWUy0yY5fY3kPpbTaLZeoDpZW7fJHjNFiy5kIjjKztcrorRkgbz
+        vLYnOs52MXSEsRJrH1jtZzBGMHcuqPPsJEf5xwSrIw==
+X-Google-Smtp-Source: AK7set/ipYXKag1e9vnesLZbvbHv7qmSFavWidoOGmvDdrjVDkTB6kLe5bP5bKHXJd0SP8ZTEx5JhtC57CKh/zOumKs=
+X-Received: by 2002:a5d:6485:0:b0:2c5:4adc:6e52 with SMTP id
+ o5-20020a5d6485000000b002c54adc6e52mr597945wri.3.1677773422436; Thu, 02 Mar
+ 2023 08:10:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20230302041211.852330-1-irogers@google.com> <20230302041211.852330-4-irogers@google.com>
- <ZACzkOmDFuRQ5MiR@kernel.org>
-In-Reply-To: <ZACzkOmDFuRQ5MiR@kernel.org>
+References: <20230302041211.852330-1-irogers@google.com> <20230302041211.852330-5-irogers@google.com>
+ <ZACz+ypWOFxtsu92@kernel.org>
+In-Reply-To: <ZACz+ypWOFxtsu92@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 2 Mar 2023 08:05:53 -0800
-Message-ID: <CAP-5=fX-F9UChi-sRcPTnRLYdU8n3B1jtk1QWEfKPdYYZDPP1A@mail.gmail.com>
-Subject: Re: [PATCH v1 03/10] perf record: Early auxtrace initialization
- before event parsing
+Date:   Thu, 2 Mar 2023 08:10:08 -0800
+Message-ID: <CAP-5=fVTviA3y0rLWUOs=WkB5B1Fw_dd9PMZXBhLN38c5F_u3Q@mail.gmail.com>
+Subject: Re: [PATCH v1 04/10] perf stat: Modify the group test
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -86,119 +85,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 6:32=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+On Thu, Mar 2, 2023 at 6:34=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
 l.org> wrote:
 >
-> Em Wed, Mar 01, 2023 at 08:12:04PM -0800, Ian Rogers escreveu:
-> > This allows event parsing to use the evsel__is_aux_event function,
-> > which is important when determining event grouping.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/arch/x86/util/auxtrace.c | 17 +++++++++++++----
-> >  tools/perf/builtin-record.c         |  6 ++++++
-> >  tools/perf/util/auxtrace.h          |  2 ++
-> >  3 files changed, 21 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/=
-util/auxtrace.c
-> > index 3da506e13f49..de1e4842ea2e 100644
-> > --- a/tools/perf/arch/x86/util/auxtrace.c
-> > +++ b/tools/perf/arch/x86/util/auxtrace.c
-> > @@ -15,6 +15,19 @@
-> >  #include "../../../util/intel-bts.h"
-> >  #include "../../../util/evlist.h"
-> >
-> > +void auxtrace__early_init(void)
-> > +{
-> > +     struct perf_pmu *intel_pt_pmu;
-> > +     struct perf_pmu *intel_bts_pmu;
-> > +
-> > +     intel_pt_pmu =3D perf_pmu__find(INTEL_PT_PMU_NAME);
-> > +     if (intel_pt_pmu)
-> > +             intel_pt_pmu->auxtrace =3D true;
-> > +     intel_bts_pmu =3D perf_pmu__find(INTEL_BTS_PMU_NAME);
-> > +     if (intel_bts_pmu)
-> > +             intel_bts_pmu->auxtrace =3D true;
-> > +}
-> > +
-> >  static
-> >  struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evl=
-ist,
-> >                                                   int *err)
-> > @@ -26,11 +39,7 @@ struct auxtrace_record *auxtrace_record__init_intel(=
-struct evlist *evlist,
-> >       bool found_bts =3D false;
-> >
-> >       intel_pt_pmu =3D perf_pmu__find(INTEL_PT_PMU_NAME);
-> > -     if (intel_pt_pmu)
-> > -             intel_pt_pmu->auxtrace =3D true;
+> Em Wed, Mar 01, 2023 at 08:12:05PM -0800, Ian Rogers escreveu:
+> > Previously nr_members would be 0 for an event with no group. The
+> > previous change made that count 1, the event is its own leader without
+> > a group. Make the find_stat logic consistent with this, an improvement
+> > suggested by Namhyung Kim.
 >
-> In this case, can't we do it as:
->
->         if (intel_pt_pmu =3D=3D NULL && intel_bts_pmu =3D=3D NULL)
->                 auxtrace__early_init();
->
-> To avoid possibly doing the finds again?
+> Is this the only place where this change in behaviour needs to be taken
+> into account?
 >
 > - Arnaldo
 
-So this code is called after parse events and has the evlist. The
-early init code is called before parse events so that the aux trace
-PMUs are flagged for the sake of the is_aux call in evsel__pmu_name,
-as aux events must be grouped with their different PMU type leader. It
-won't be possible to combine the calls but I plan to look at
-restructuring how PMUs are accessed so that searches are less
-necessary.
+Actually, I reordered the patches and so the review comment is off.
+The nr_members change is in the sorting patch 9. I'll fix up the
+comment. I did look for other uses and didn't spot any. I also think
+we can add some kind of helper. The current evsel__is_leader functions
+are weird. When thinking about the helper I couldn't think of a good
+name as I want groups greater than size 1. I'll tweak this.
 
 Thanks,
 Ian
 
-> >       intel_bts_pmu =3D perf_pmu__find(INTEL_BTS_PMU_NAME);
-> > -     if (intel_bts_pmu)
-> > -             intel_bts_pmu->auxtrace =3D true;
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/stat-shadow.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> >       evlist__for_each_entry(evlist, evsel) {
-> >               if (intel_pt_pmu && evsel->core.attr.type =3D=3D intel_pt=
-_pmu->type)
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 8374117e66f6..a0870c076dc0 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -3940,6 +3940,10 @@ static int record__init_thread_masks(struct reco=
-rd *rec)
-> >       return ret;
-> >  }
+> > diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shado=
+w.c
+> > index ef85f1ae1ab2..eeccab6751d7 100644
+> > --- a/tools/perf/util/stat-shadow.c
+> > +++ b/tools/perf/util/stat-shadow.c
+> > @@ -163,7 +163,7 @@ static double find_stat(const struct evsel *evsel, =
+int aggr_idx, enum stat_type
+> >                       continue;
 > >
-> > +__weak void auxtrace__early_init(void)
-> > +{
-> > +}
-> > +
-> >  int cmd_record(int argc, const char **argv)
-> >  {
-> >       int err;
-> > @@ -3985,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
-> >       if (err)
-> >               return err;
-> >
-> > +     auxtrace__early_init();
-> > +
-> >       argc =3D parse_options(argc, argv, record_options, record_usage,
-> >                           PARSE_OPT_STOP_AT_NON_OPTION);
-> >       if (quiet)
-> > diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> > index 29eb82dff574..49a86aa6ac94 100644
-> > --- a/tools/perf/util/auxtrace.h
-> > +++ b/tools/perf/util/auxtrace.h
-> > @@ -457,6 +457,8 @@ struct addr_filters {
-> >
-> >  struct auxtrace_cache;
-> >
-> > +void auxtrace__early_init(void);
-> > +
-> >  #ifdef HAVE_AUXTRACE_SUPPORT
-> >
-> >  u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
+> >               /* Ignore evsels that are part of different groups. */
+> > -             if (evsel->core.leader->nr_members &&
+> > +             if (evsel->core.leader->nr_members > 1 &&
+> >                   evsel->core.leader !=3D cur->core.leader)
+> >                       continue;
+> >               /* Ignore evsels with mismatched modifiers. */
 > > --
 > > 2.39.2.722.g9855ee24e9-goog
 > >
