@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9561C678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 04:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FC4C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 04:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbjCBEN3 (ORCPT
+        id S229761AbjCBENs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 1 Mar 2023 23:13:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
+        Wed, 1 Mar 2023 23:13:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbjCBENO (ORCPT
+        with ESMTP id S229892AbjCBENZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 1 Mar 2023 23:13:14 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7763D907
-        for <linux-perf-users@vger.kernel.org>; Wed,  1 Mar 2023 20:13:09 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5395c8fc4a1so256352897b3.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 01 Mar 2023 20:13:09 -0800 (PST)
+        Wed, 1 Mar 2023 23:13:25 -0500
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD053E624
+        for <linux-perf-users@vger.kernel.org>; Wed,  1 Mar 2023 20:13:16 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id 66-20020a250245000000b00a53c1100d72so2755780ybc.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 01 Mar 2023 20:13:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677730387;
+        d=google.com; s=20210112; t=1677730395;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bygd021PGnvtCwZIuzbnz2JBaDd2eMkon8HHUjvbNBU=;
-        b=jwsnSTAptQEZ+jP/eZLmspl0xIsJe4Ftvxsrx2655NshVyHk0nvMJKzqMAO8uwAaMZ
-         YzXH5j+Ry0qbX5IAelfZwag959M0gTt5sGJD5Aj5jrgw37YgWNbr7caJTaBDd7eqV9F2
-         y0BsqnWBqjdsG4+BCUxegbg4m973P4Y6F0qKWSi7DHy8+MuYeySbMMDiTRU4XMgvHRnR
-         eShvW3gMcn8ngmfCIU2lNn2KKlFboCHFpEIkaC/W7E82xpYRNvsUTxunVgypc/EsWL7K
-         jNgXtro+oTpJ7KFtu0/EBQ8/bT7bLQBfvDOsq/lQbKeAitZgMbHNqKYFQp5Jgl2sDosN
-         inMw==
+        bh=jg6IMjGjrVTTIu+EnMv4tDRbAkAbegs9QpsJAAuMpXw=;
+        b=QdXTTG18tvoaUzogomQ8IIMRWYDh50wm0SYSRSBjt8mOk3Mpeny67Ubc1ihJTdykF8
+         DtsvcjA0gRqZZnG16lTL7kpIw2xBrixZQg237a4JC+rVUDSl1eclwqN7PIGj5SZ8aukh
+         t7JcobuwABd+/XgGeYwksYa6zcuizId/cCnYnNQPmHVfoTwZ0VKPTvotFmiSTvPAEuGP
+         8n8okejR1xp5fh4wrNO4fO//Y/xur6xE4Fdpnt9WuAfgs6/qI449eCWr6bYjdizl0xfb
+         d3bfq4fZCS5zkNYCp5TtB/sk+gJ2z5KLFtvcpqkZ87TerCmAdJFwyBedv1rl/BvC73ck
+         NwoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677730387;
+        d=1e100.net; s=20210112; t=1677730395;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bygd021PGnvtCwZIuzbnz2JBaDd2eMkon8HHUjvbNBU=;
-        b=gtp0ZJNm8/TqexjznRPEJszVtZs6lI7BIDCWzHxxVnvdpF33K3+7ZkmrQYw+rhCw8p
-         d16pzR6AxHtn+qAbkN80uY1U0JlQbpgoEC8sxWRWJer5SciDNhmm34+j4M/wFRoIc3OA
-         v7XCVAexbXCliLZCTJwe9DvotrYaWj9eZOzNcQ0iSfRzzibrfXF2e2pTG+RB0eJWRVrQ
-         4ClitImdPmB8LGbpvnvDKLRs/AZoFH3tMxRMiJZRkKBXXmwiJ9AVYQCKVQ4EyTPLxxKV
-         PYyQKcffN+2zVYN55Pi21eu+0BOaPzogYK51HcR0BY7Po4ig7Wd3FLF26LVW0CCUR5JK
-         M1Rw==
-X-Gm-Message-State: AO0yUKXp0v6ZW8x4qQ/0Zs/3eI22v+QVc4PksPK8A/g6Y51V7v08BfM9
-        6sbzUNtENW+uPwdepBXCO6sJl1YyzF2t
-X-Google-Smtp-Source: AK7set8ZRO97weMI9CFo55ZrmML4Et9B8NSn12aowt3uVaG5LbWQaCuScUZqbYkLJuNweLexj7al8jzVkKYw
+        bh=jg6IMjGjrVTTIu+EnMv4tDRbAkAbegs9QpsJAAuMpXw=;
+        b=wEl38Z/mYqpS4KbA20fhkSTEZwIBmBWKHd+Rpcmd5xGAe7/5mYgQVu9jfcdw0KvQ9N
+         RsnLOlThn0Cx7EO6T5dAPQ1jrSKDvBC9kvEWueiSa/RN5Y3zd43Zfj+bCu5dNmhYMasW
+         kYOQuttS1pSHdJIU9bcl4noiVNoRNZ+yC0dalzUwNoaPgthI7ueJz+SsxQk1rzFV8FnD
+         UxM/wUXPZjoIj+azGd16Hqersfds/azMo6eoe5Ov3rWIyaOPBL0NZMy84tfcmMlB5zEb
+         54SswPiG+UU/tkHbkaCLIKdKpKvE5Q7/Q0q0wDqdCooY83gpJscW4SGkWw7AjfZkwDNT
+         1Y0A==
+X-Gm-Message-State: AO0yUKWsqj+Hsh9iZjSjK5AvPZeD2HFEGrQ3dbH7g5xgQZY/BBX8b8OR
+        PxWxA7WygLzu+H7ecGWp3GOlSEiFB7cA
+X-Google-Smtp-Source: AK7set9P5DIrE8EDR9jHyHpnOnI0Wv+Z6sn3ZEJdpyDXMfyvZtibiEi/ZiqElPkqWnMdN5n+DzbaLShxV84k
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bdf9:f5cb:d05:c4d5])
- (user=irogers job=sendgmr) by 2002:a05:6902:4d1:b0:ab8:1ed9:cfd2 with SMTP id
- v17-20020a05690204d100b00ab81ed9cfd2mr3932135ybs.5.1677730387009; Wed, 01 Mar
- 2023 20:13:07 -0800 (PST)
-Date:   Wed,  1 Mar 2023 20:12:05 -0800
+ (user=irogers job=sendgmr) by 2002:a25:fb0e:0:b0:ad0:a82:7ef2 with SMTP id
+ j14-20020a25fb0e000000b00ad00a827ef2mr900496ybe.8.1677730394822; Wed, 01 Mar
+ 2023 20:13:14 -0800 (PST)
+Date:   Wed,  1 Mar 2023 20:12:06 -0800
 In-Reply-To: <20230302041211.852330-1-irogers@google.com>
-Message-Id: <20230302041211.852330-5-irogers@google.com>
+Message-Id: <20230302041211.852330-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20230302041211.852330-1-irogers@google.com>
 X-Mailer: git-send-email 2.39.2.722.g9855ee24e9-goog
-Subject: [PATCH v1 04/10] perf stat: Modify the group test
+Subject: [PATCH v1 05/10] perf evsel: Limit in group test to CPUs
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -84,30 +84,27 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Previously nr_members would be 0 for an event with no group. The
-previous change made that count 1, the event is its own leader without
-a group. Make the find_stat logic consistent with this, an improvement
-suggested by Namhyung Kim.
+Don't just match on the event name, restict based on the PMU too.
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-shadow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/arch/x86/util/evsel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index ef85f1ae1ab2..eeccab6751d7 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -163,7 +163,7 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
- 			continue;
+diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+index ea3972d785d1..580b0a172136 100644
+--- a/tools/perf/arch/x86/util/evsel.c
++++ b/tools/perf/arch/x86/util/evsel.c
+@@ -61,6 +61,9 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+ 	if (!evsel__sys_has_perf_metrics(evsel))
+ 		return false;
  
- 		/* Ignore evsels that are part of different groups. */
--		if (evsel->core.leader->nr_members &&
-+		if (evsel->core.leader->nr_members > 1 &&
- 		    evsel->core.leader != cur->core.leader)
- 			continue;
- 		/* Ignore evsels with mismatched modifiers. */
++	if (evsel->pmu_name && strncmp(evsel->pmu_name, "cpu", 3))
++		return false;
++
+ 	return evsel->name &&
+ 		(strcasestr(evsel->name, "slots") ||
+ 		 strcasestr(evsel->name, "topdown"));
 -- 
 2.39.2.722.g9855ee24e9-goog
 
