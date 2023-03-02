@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88277C678D4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 22:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E42FC6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 22:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbjCBWY4 (ORCPT
+        id S230071AbjCBW3E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 17:24:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
+        Thu, 2 Mar 2023 17:29:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCBWYv (ORCPT
+        with ESMTP id S230063AbjCBW3D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 17:24:51 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01929EB53
-        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 14:24:49 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536c6ce8d74so4746437b3.9
-        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 14:24:49 -0800 (PST)
+        Thu, 2 Mar 2023 17:29:03 -0500
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6EF17CD6
+        for <linux-perf-users@vger.kernel.org>; Thu,  2 Mar 2023 14:29:02 -0800 (PST)
+Received: by mail-pl1-x649.google.com with SMTP id k17-20020a170902d59100b0019abcf45d75so347744plh.8
+        for <linux-perf-users@vger.kernel.org>; Thu, 02 Mar 2023 14:29:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677795889;
+        d=google.com; s=20210112; t=1677796142;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ad9Nr5+r5OwXptIHZFIm1qSb+Ko8YJARAL8GzdEg8mM=;
-        b=TEczbSe75EZpE8ckL6g/w3+Ly3pZhYLzFPW3Q40ODo6Dcf9K3jIWwYf0/1n4Sy0V+u
-         SfVnrEMWYcD4uukojzQfzmLDSoPOqs8dlj1siQkFzPjw55OgsOVjGB3XT6WtGjB2Tgev
-         Ut6vg1IB7DdXVS0Cd9jvplCIFpUD9GQtGdQj9H3zFMtYrFm7W1b2J0bPoWVtcAvkKucw
-         V0nxtLtpRFh2WioVwcbs4WjhrgADeQXi1QPOMIQuMRSNIb2jeqCQz/viU5PuBVazeb9X
-         BAKhdrWAEz6/rEypd77nvc6GGc+6PwYxPKDLPsBUowcEHfWNicMu63AgbE8nt3MjLRZ7
-         Izbg==
+        bh=sLp16thdoL8gYxkkfhRZgItEDw/VHlYRuSQJ2A/KjWw=;
+        b=i8Og79catj1OlIBUEL9S1MIBSf1IAd1tzHRKwUw7koailbxBx3f8qmxAEqiijFPvYL
+         eRT84euiOjnGZfUOnyWKNpvM0/6KF6IK/+ofEohgIOrD9G0iJ6KWjJbpHsiFr78SQ6pw
+         M9qo/xTEU0ps5/qu3WmmOxMky/Vkt/u/kHlwZrICNKW0Gu1N/SsPP99zsxNn5DDgOG3L
+         YjTPbT4LWUgi4EMPNb5bRYX5Oxg6YAfbU3xR+gehL7J8FCe3Kfq4D6clFJ44gz3fogbn
+         QK4UUHKeaRziqz8bEglUEUrJoOP2Ws7YtfyQonWSDVHhmhWkKJ6EOZ8PgQd3JWPMT+xT
+         ipMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677795889;
+        d=1e100.net; s=20210112; t=1677796142;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ad9Nr5+r5OwXptIHZFIm1qSb+Ko8YJARAL8GzdEg8mM=;
-        b=sqg+1M3QXdGDP2HaxyPHZCrQq7W5scEyqcCvD7Y0eIsyDkrH8NH2BFDWW2HZAmdKJI
-         eAkZmdtBtSuOrE3oLg4tXbaQuthkxI51mzl6M2Uc+m+TGpmDyTihlbU4y+JHYjx/S1lQ
-         P/Qxb/AOUrL9LCcaPlwF/HTvQUpUiusbpsDy/SPj5lP2Fqk85OBOd3nX0SMKLIlNx+HK
-         yr51iXGI+E6XJj5p4o0dddb8f/ARynAbh0idOAMxCS4przXJ6ZrsxtwtqUfUkTSUpE3T
-         WiHlc+6X2mXJnbFpVjXq6bd+nPve3+3+NkzM06BXkuZzp0SsfnARnx18wkcjkq/Jcfs3
-         S0Ng==
-X-Gm-Message-State: AO0yUKUvY7dNMDDxZi0r15GOCfdl1cIKf3aKdIRH/l0P4LFaSiHSYH4+
-        wlFCH5RdUtVwSmrpYl1ikUCd3xsnEWxB
-X-Google-Smtp-Source: AK7set/uMoZ6jPJ0j66IhDj9ZIVg60IlLUjFoyrs2T71SZiv9SWR1oEFupyX4cKf1xzSNGXR82f11ynIKe3c
+        bh=sLp16thdoL8gYxkkfhRZgItEDw/VHlYRuSQJ2A/KjWw=;
+        b=e8pYuAcLHfyWuKljRYXPsnr2YdHMp+JpQ3zPrhnhkZjWr4tueH3ybRUI+rVS1TeKz+
+         aVSvfDp5T/8J8J6GaBSSnycI/Jnm8MzixJwGw62gUULc9esuvI1CE2gVaHS2YP1/0WwX
+         RwCv0lS66Nzqh8lDJT3elJ3dsCIyExUjUe4rJ4R9jhH6SIY7b8N6dmBX8TiM1sGnhDdm
+         el2GjjKuDDBDhxEubi7z90oypduMQESKnoJC7rfjWWizd67ZbIDrzv7AFCKWIUldxiqQ
+         /RoXJlqollQiOOTGfPLQaxvYLMIp0YdRGNYMs4ZvYVs3scZd/cOtsgfyIM3mdbzfT+Wv
+         0G2Q==
+X-Gm-Message-State: AO0yUKXIY29lcYmdw0a6s1UcnMZs3AiinelA0z7EzLJ8XIT+Kw5j6fww
+        +c+mlrjBVfJHbN0fv37T4G+APpPnPQtu
+X-Google-Smtp-Source: AK7set8IDse27H7uhs55+lpktQZD5WFfNUIFhEks3/sxyTroAWqTYmsTORr1cgwGdzOx42qWESc0pbtFHcKQ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:5f50:6ef4:b4d0:568e])
- (user=irogers job=sendgmr) by 2002:a05:6902:28d:b0:ac6:9d3d:c2c5 with SMTP id
- v13-20020a056902028d00b00ac69d3dc2c5mr4ybh.633.1677792416877; Thu, 02 Mar
- 2023 13:26:56 -0800 (PST)
-Date:   Thu,  2 Mar 2023 13:25:30 -0800
+ (user=irogers job=sendgmr) by 2002:a25:9112:0:b0:9fe:1493:8bb with SMTP id
+ v18-20020a259112000000b009fe149308bbmr4926485ybl.13.1677792371865; Thu, 02
+ Mar 2023 13:26:11 -0800 (PST)
+Date:   Thu,  2 Mar 2023 13:25:24 -0800
 In-Reply-To: <20230302212531.1043318-1-irogers@google.com>
-Message-Id: <20230302212531.1043318-10-irogers@google.com>
+Message-Id: <20230302212531.1043318-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230302212531.1043318-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v2 09/10] perf evsel: Remove use_uncore_alias
+Subject: [PATCH v2 03/10] perf record: Early auxtrace initialization before
+ event parsing
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,165 +84,89 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This flag used to be used when regrouping uncore events in particular
-due to wildcard matches. This is now handled by sorting evlist and so
-the flag is redundant.
+This allows event parsing to use the evsel__is_aux_event function,
+which is important when determining event grouping.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c        |  1 -
- tools/perf/util/evsel.h        |  1 -
- tools/perf/util/parse-events.c | 12 +++---------
- tools/perf/util/parse-events.h |  3 +--
- tools/perf/util/parse-events.y | 11 +++++++----
- 5 files changed, 11 insertions(+), 17 deletions(-)
+ tools/perf/arch/x86/util/auxtrace.c | 17 +++++++++++++----
+ tools/perf/builtin-record.c         |  6 ++++++
+ tools/perf/util/auxtrace.h          |  2 ++
+ 3 files changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9c6b486f8bd4..5446128be03b 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -458,7 +458,6 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	evsel->per_pkg = orig->per_pkg;
- 	evsel->percore = orig->percore;
- 	evsel->precise_max = orig->precise_max;
--	evsel->use_uncore_alias = orig->use_uncore_alias;
- 	evsel->is_libpfm_event = orig->is_libpfm_event;
+diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+index 3da506e13f49..de1e4842ea2e 100644
+--- a/tools/perf/arch/x86/util/auxtrace.c
++++ b/tools/perf/arch/x86/util/auxtrace.c
+@@ -15,6 +15,19 @@
+ #include "../../../util/intel-bts.h"
+ #include "../../../util/evlist.h"
  
- 	evsel->exclude_GH = orig->exclude_GH;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 72121194d3b1..9a8d08fcad1c 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -89,7 +89,6 @@ struct evsel {
- 		bool			per_pkg;
- 		bool			percore;
- 		bool			precise_max;
--		bool			use_uncore_alias;
- 		bool			is_libpfm_event;
- 		bool			auto_merge_stats;
- 		bool			collect_stat;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d6eb0a54dd2d..ac7709c1c5b7 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1445,15 +1445,13 @@ static int parse_events__inside_hybrid_pmu(struct parse_events_state *parse_stat
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
--			 bool auto_merge_stats,
--			 bool use_alias)
-+			 bool auto_merge_stats)
++void auxtrace__early_init(void)
++{
++	struct perf_pmu *intel_pt_pmu;
++	struct perf_pmu *intel_bts_pmu;
++
++	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
++	if (intel_pt_pmu)
++		intel_pt_pmu->auxtrace = true;
++	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
++	if (intel_bts_pmu)
++		intel_bts_pmu->auxtrace = true;
++}
++
+ static
+ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+ 						    int *err)
+@@ -26,11 +39,7 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+ 	bool found_bts = false;
+ 
+ 	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
+-	if (intel_pt_pmu)
+-		intel_pt_pmu->auxtrace = true;
+ 	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
+-	if (intel_bts_pmu)
+-		intel_bts_pmu->auxtrace = true;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (intel_pt_pmu && evsel->core.attr.type == intel_pt_pmu->type)
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 8374117e66f6..a0870c076dc0 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3940,6 +3940,10 @@ static int record__init_thread_masks(struct record *rec)
+ 	return ret;
+ }
+ 
++__weak void auxtrace__early_init(void)
++{
++}
++
+ int cmd_record(int argc, const char **argv)
  {
- 	struct perf_event_attr attr;
- 	struct perf_pmu_info info;
- 	struct perf_pmu *pmu;
- 	struct evsel *evsel;
- 	struct parse_events_error *err = parse_state->error;
--	bool use_uncore_alias;
- 	LIST_HEAD(config_terms);
+ 	int err;
+@@ -3985,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
+ 	if (err)
+ 		return err;
  
- 	pmu = parse_state->fake_pmu ?: perf_pmu__find(name);
-@@ -1488,8 +1486,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		memset(&attr, 0, sizeof(attr));
- 	}
++	auxtrace__early_init();
++
+ 	argc = parse_options(argc, argv, record_options, record_usage,
+ 			    PARSE_OPT_STOP_AT_NON_OPTION);
+ 	if (quiet)
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 29eb82dff574..49a86aa6ac94 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -457,6 +457,8 @@ struct addr_filters {
  
--	use_uncore_alias = (pmu->is_uncore && use_alias);
--
- 	if (!head_config) {
- 		attr.type = pmu->type;
- 		evsel = __add_event(list, &parse_state->idx, &attr,
-@@ -1499,7 +1495,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 				    /*cpu_list=*/NULL);
- 		if (evsel) {
- 			evsel->pmu_name = name ? strdup(name) : NULL;
--			evsel->use_uncore_alias = use_uncore_alias;
- 			return 0;
- 		} else {
- 			return -ENOMEM;
-@@ -1560,7 +1555,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		evsel->use_config_name = true;
+ struct auxtrace_cache;
  
- 	evsel->pmu_name = name ? strdup(name) : NULL;
--	evsel->use_uncore_alias = use_uncore_alias;
- 	evsel->percore = config_term_percore(&evsel->config_terms);
++void auxtrace__early_init(void);
++
+ #ifdef HAVE_AUXTRACE_SUPPORT
  
- 	if (parse_state->fake_pmu)
-@@ -1622,7 +1616,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 				parse_events_copy_term_list(head, &orig_head);
- 				if (!parse_events_add_pmu(parse_state, list,
- 							  pmu->name, orig_head,
--							  true, true)) {
-+							  /*auto_merge_stats=*/true)) {
- 					pr_debug("%s -> %s/%s/\n", str,
- 						 pmu->name, alias->str);
- 					ok++;
-@@ -1634,7 +1628,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
- 
- 	if (parse_state->fake_pmu) {
- 		if (!parse_events_add_pmu(parse_state, list, str, head,
--					  true, true)) {
-+					  /*auto_merge_stats=*/true)) {
- 			pr_debug("%s -> %s/%s/\n", str, "fake_pmu", str);
- 			ok++;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 22fc11b0bd59..fdac44dc696b 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -183,8 +183,7 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
--			 bool auto_merge_stats,
--			 bool use_alias);
-+			 bool auto_merge_stats);
- 
- struct evsel *parse_events__add_event(int idx, struct perf_event_attr *attr,
- 				      const char *name, const char *metric_id,
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 90d12f2bc8be..f1b153c72d67 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -313,7 +313,7 @@ event_pmu_name opt_pmu_config
- 	list = alloc_list();
- 	if (!list)
- 		CLEANUP_YYABORT;
--	if (parse_events_add_pmu(_parse_state, list, $1, $2, false, false)) {
-+	if (parse_events_add_pmu(_parse_state, list, $1, $2, /*auto_merge_stats=*/false)) {
- 		struct perf_pmu *pmu = NULL;
- 		int ok = 0;
- 
-@@ -330,8 +330,10 @@ event_pmu_name opt_pmu_config
- 			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
- 				if (parse_events_copy_term_list(orig_terms, &terms))
- 					CLEANUP_YYABORT;
--				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
-+				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms,
-+							  /*auto_merge_stats=*/true)) {
- 					ok++;
-+				}
- 				parse_events_terms__delete(terms);
- 			}
- 		}
-@@ -407,7 +409,8 @@ PE_PMU_EVENT_FAKE sep_dc
- 	if (!list)
- 		YYABORT;
- 
--	err = parse_events_add_pmu(_parse_state, list, $1, NULL, false, false);
-+	err = parse_events_add_pmu(_parse_state, list, $1, /*head_config=*/NULL,
-+				   /*auto_merge_stats=*/false);
- 	free($1);
- 	if (err < 0) {
- 		free(list);
-@@ -425,7 +428,7 @@ PE_PMU_EVENT_FAKE opt_pmu_config
- 	if (!list)
- 		YYABORT;
- 
--	err = parse_events_add_pmu(_parse_state, list, $1, $2, false, false);
-+	err = parse_events_add_pmu(_parse_state, list, $1, $2, /*auto_merge_stats=*/false);
- 	free($1);
- 	parse_events_terms__delete($2);
- 	if (err < 0) {
+ u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
 -- 
 2.40.0.rc0.216.gc4246ad0f0-goog
 
