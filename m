@@ -2,155 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20648C6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 08:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7000C678D4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  2 Mar 2023 09:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbjCBIla (ORCPT
+        id S229974AbjCBJXH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 2 Mar 2023 03:41:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50668 "EHLO
+        Thu, 2 Mar 2023 04:23:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjCBIl3 (ORCPT
+        with ESMTP id S229972AbjCBJWf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 2 Mar 2023 03:41:29 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB5924CAD;
-        Thu,  2 Mar 2023 00:41:28 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id eg37so64354569edb.12;
-        Thu, 02 Mar 2023 00:41:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=K1YXVoCyOwxQNnderTrmDeMC40tQAhZcHa0ukb6R9Ws=;
-        b=Rszkk4uwKQuXpOD256yevOsKDiLr4NPBQeo7kAGO8nrR5c7v+uWhDLhg1c7DXe9CCg
-         6sFJnQQ4ys8Xt1HBqHwDBQrCCPYrMZ6BlscFKL4kizHDhu5qs0Eh1RxAjc23brCl9Qui
-         hLLRgbOMAGA591ODRdSldDjRHtZ2mZSN8n5Vl9ar1h5eHetOevpSNJNTs26ycj6OaG0L
-         4L1Pd9hLwD1fUZaSEIK2u125UT6now9zJlMBhpMWKs1c/5nVFU6lq/vXdOsheBdpLFsr
-         B8E2UMZSfprRlDOChYnYKKNzt5pl2CyVD9OZJZjYlsvamVh3NNY2DITQQ/F7gUn2Qwtb
-         +sFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K1YXVoCyOwxQNnderTrmDeMC40tQAhZcHa0ukb6R9Ws=;
-        b=XDITuMq8D89kWJpMsNCIgRa1eWq9V+RBSRJc85TH9jh6vSuKTr9gJhKJ8CC6DSOkqF
-         aYcXbZ58sM1QNzAcVLV6tWbJp+t9gxUEKEWAeMawDjr7jjEuCnW/sSfKVbzsKGQUZW5o
-         fMIgMWsJYWeKg+8grFoJyaebDsIccJxwDx93p+OQFp0/d0tvjg2HkSfCRjWKdRjKH1m7
-         Dqcmt/cD+NMC9iYuaB2ucDZHwCaeq1RmuNwz4bPgPE7fGtjv8inHAHlZMwKeMgONWxI+
-         mSc5tcoJhxhpDtigScMWxqR4pggoQcDJhKJpa0gW/qdB+Fz00rWi/l5PZO9s6aifxH0r
-         WP9w==
-X-Gm-Message-State: AO0yUKU4PsNvrcoLsbsfhdDat01zJFhtEtHMkmLfpD/Ie6uiYuGsXYTr
-        rH3hO85snQwZz1dCw5RKpDUNE99iVFOgQg==
-X-Google-Smtp-Source: AK7set+Wnc63PgyHHQ3ShMaX4eflGRmShodrFGCyynYYDAJoy+XWo1MzU/OGJ7YL2Ydiea70Fhp+9w==
-X-Received: by 2002:a05:6402:1250:b0:4bb:f229:9431 with SMTP id l16-20020a056402125000b004bbf2299431mr1280219edw.19.1677746486483;
-        Thu, 02 Mar 2023 00:41:26 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id a98-20020a509eeb000000b004ad601533a3sm6665583edf.55.2023.03.02.00.41.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Mar 2023 00:41:26 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 2 Mar 2023 09:41:23 +0100
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>
-Subject: Re: [RFC v2 bpf-next 0/9] mm/bpf/perf: Store build id in inode object
-Message-ID: <ZABhM913DI+DYSjL@krava>
-References: <20230228093206.821563-1-jolsa@kernel.org>
- <20230228220714.GJ2825702@dread.disaster.area>
- <Y/9yIJ9kOHcZqIzo@kernel.org>
+        Thu, 2 Mar 2023 04:22:35 -0500
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2054.outbound.protection.outlook.com [40.107.102.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AC0410B7;
+        Thu,  2 Mar 2023 01:22:12 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d4JQAW9bwKeeNYpEn73xtfJkCzeWWg4r/FYPgKn0nenF9smoWpJDvmprGezdllufJGiejeg9rII6b2JrIJq4g6PZmnRgAM+v9vIU/WUIlW/TAlt/4bRQvyDnQuaMP+e7tjyzhnqdXuDwtrCLwDSYF87ulAaEPBAfSxAeFx6ORGFRjG/tQe2Tiai7V3lvNRlhAMQ1OnS8kmmCqrPFV470l2weDAb4QNE3O+zUhXnu9dXsVLvKrQXvOEM6aNeJ6WtiraMj93K+3f8vRoFd+27n3YLJOwkOwxu+WuZqlLz5/4MtBBEqKHaG7Y87RXFRLNFPlyqpro24r+QjExbA5gCbIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n5GwyyEz0CxOu4K+uVKqVsG3raMsVp4JNKQIZqu4fYY=;
+ b=TGbEhnHB6C1J17CcbBMEtPKs94Fr8iJS/gyLYo6uCMejN3+l5slOLN9P22fSldpsHDaFo0AxovY1jTBO0GYgju7wn2JbZHqe81c/bvJ7KFTiQEVARyxSkG+fs2Y6KKyam8Z/Jb5J427VnoeeYmdykhOGVZBf4PaGYNGJbtOynZJEFDHiFbil2A+jEKW8/xeLTDUGukKrWmIPaDSA7e3z+6MaXNjrTFkUZUBoj/b++MKRNx3/S6WvG461MfU9i1Q4OItD4r6epUEYt/O92k0TqohohVt3Mw23fNlOUtU3gTFABxEQAHHGAvTUhWfIgss0WP0Wx1oJRhFw9LrYi56Uag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n5GwyyEz0CxOu4K+uVKqVsG3raMsVp4JNKQIZqu4fYY=;
+ b=o3i9Y3i1HfQd6hNp4xaKomSs9IDiQc4NulQ3UnDmSkKeeC5rVfyjxU6z1yE+zqrR87hoao37OyjOkb1Vz43IQ40dPPOUDKlQYGwJHlLIQ95xuUoWyWXhXmOMF84VTMr1pRgS4HXgXJSo9aAJoboShYZlQ0XeTN8C1ajKmNlGbL8=
+Received: from BN0PR04CA0021.namprd04.prod.outlook.com (2603:10b6:408:ee::26)
+ by PH8PR12MB6986.namprd12.prod.outlook.com (2603:10b6:510:1bd::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.30; Thu, 2 Mar
+ 2023 09:22:09 +0000
+Received: from BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:ee:cafe::19) by BN0PR04CA0021.outlook.office365.com
+ (2603:10b6:408:ee::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.19 via Frontend
+ Transport; Thu, 2 Mar 2023 09:22:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT006.mail.protection.outlook.com (10.13.177.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6156.19 via Frontend Transport; Thu, 2 Mar 2023 09:22:08 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 2 Mar
+ 2023 03:21:55 -0600
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <peterz@infradead.org>
+CC:     <ravi.bangoria@amd.com>, <eranian@google.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <irogers@google.com>, <bp@alien8.de>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH 0/2] perf/ibs: Fix interface via core pmu events
+Date:   Thu, 2 Mar 2023 14:51:07 +0530
+Message-ID: <20230302092109.367-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/9yIJ9kOHcZqIzo@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT006:EE_|PH8PR12MB6986:EE_
+X-MS-Office365-Filtering-Correlation-Id: e58c8566-c36d-4768-388f-08db1aff990e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OB/9uszZNiKY2hpntT4d8U5GPP+ibUKGKvIjguh5Ksl/v0gNDnY4GYhCWrJt/iI09YnIxHkyceUDr2/1Z9Z+S6UjZl+olyFGI71PagjRiYHYGh8EICNvqSBvRSnVl5fMY12pfHbnu4ocMtQNajnJG1AmS5j9ChhkoC3xKSx8hI52a/030+FgTRfYzUGqZTeRJlk7EkVVUzOncRuRctRpaoFJgL5DhSdOwyV/Q0wM0zp7LCtsxsfROSdr8Vqp6hIYeiYnKIWtTOcCO2oSosjzM9luDl0/o5zLb9sb8UBzI4ToNGi22k2EaMVFB8GOyBvqNaDl3rq2zFDLX7DmzdL6H/apr8wytY+3HB8UjtpnUxWe9oksioxgAcy6sknYzBD02R9i1NzuIy01JWRBXHu3Wdagxn4qnRwGLS9ERpJBqetq8WSZS7qIN72CLoyn8NNm8zlAGWSBKHdMdKJBqndQZFKB3ZhgkoL3YJdSmOswugvNDqRG77OFLt/F347iukjJUf7+vCOxy2TC/2qt3dxELFq4qpaiG2/uula4lMUVWsi61WudKZd0W6LftVQThdJIIhAjqPP8Bbwjv/HaZ0WYzhji78RJ0h9mJ1XP5Sl1IalQR9cIW0t8/uwQVc3da1J4FglkCLxZWqAc58owe/z0N6TdadV+ijptLl4yhzWCOMwLNM3+RjD+s8b0RNlm81k01RjFWZF6BPYfHafQHrAjQTX/dCR7lKp7CtOXC25VQlk=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(396003)(346002)(136003)(376002)(451199018)(40470700004)(46966006)(36840700001)(86362001)(36860700001)(81166007)(356005)(82740400003)(36756003)(2906002)(44832011)(7416002)(70206006)(5660300002)(8936002)(6916009)(41300700001)(4326008)(8676002)(70586007)(4744005)(40460700003)(82310400005)(336012)(40480700001)(26005)(1076003)(2616005)(186003)(16526019)(83380400001)(47076005)(54906003)(426003)(6666004)(316002)(478600001)(7696005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2023 09:22:08.9573
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e58c8566-c36d-4768-388f-08db1aff990e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT006.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6986
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 01, 2023 at 12:41:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Mar 01, 2023 at 09:07:14AM +1100, Dave Chinner escreveu:
-> > On Tue, Feb 28, 2023 at 10:31:57AM +0100, Jiri Olsa wrote:
-> > > this is RFC patchset for adding build id under inode's object.
-> 
-> > > The main change to previous post [1] is to use inode object instead of file
-> > > object for build id data.
-> > 
-> > Please explain what a "build id" is, the use case for it, why we
-> > need to store it in VFS objects, what threat model it is protecting
-> > the system against, etc.
-> 
-> [root@quaco ~]# file /bin/bash
-> /bin/bash: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=160df51238a38ca27d03290f3ad5f7df75560ae0, for GNU/Linux 3.2.0, stripped
-> [root@quaco ~]# file /lib64/libc.so.6
-> /lib64/libc.so.6: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=8257ee907646e9b057197533d1e4ac8ede7a9c5c, for GNU/Linux 3.2.0, not stripped
-> [root@quaco ~]#
-> 
-> Those BuildID[sha1]= bits, that is present in all binaries I think in
-> all distros for quite a while.
-> 
-> This page, from when this was initially designed, has a discussion about
-> it, why it is needed, etc:
-> 
->   https://fedoraproject.org/wiki/RolandMcGrath/BuildID
-> 
-> 'perf record' will receive MMAP records, initially without build-ids,
-> now we have one that has, but collecting it when the mmap is executed
-> (and thus a PERF_RECORD_MMAP* record is emitted) may not work, thus this
-> work from Jiri.
+IBS used to allow event creation via core pmu events with precise_ip
+attribute set, but it's broken since late 2019. 1st patch fixes the
+issue and 2nd patch adds simple perf test for the same.
 
-thanks for the pointers
+Ravi Bangoria (2):
+  perf/ibs: Fix interface via core pmu events
+  perf test: Add selftest to test IBS invocation via core pmu events
 
-build id is unique id for binary that's been used to identify
-correct binary version for related stuff.. like binary's debuginfo
-in perf or match binary with stack trace entries in bpf stackmap
+ arch/x86/events/amd/core.c          |  5 +++
+ arch/x86/events/core.c              |  2 +
+ arch/x86/events/perf_event.h        |  3 ++
+ include/linux/perf_event.h          |  1 +
+ kernel/events/core.c                | 11 +++--
+ tools/perf/tests/Build              |  1 +
+ tools/perf/tests/builtin-test.c     |  1 +
+ tools/perf/tests/ibs-via-core-pmu.c | 70 +++++++++++++++++++++++++++++
+ tools/perf/tests/tests.h            |  1 +
+ 9 files changed, 92 insertions(+), 3 deletions(-)
+ create mode 100644 tools/perf/tests/ibs-via-core-pmu.c
 
-jirka
+-- 
+2.39.2
 
-> 
-> - Arnaldo
->  
-> > > 
-> > > However.. ;-) while using inode as build id storage place saves some memory
-> > > by keeping just one copy of the build id for all file instances, there seems
-> > > to be another problem.
->  
-> > Yes, the problem being that we can cache hundreds of millions of
-> > inodes in memory, and only a very small subset of them are going to
-> > have open files associated with them. And an even smaller subset are
-> > going to be mmapped.
->  
-> > So, in reality, this proposal won't save any memory at all - it
-> > costs memory for every inode that is not currently being used as
-> > a mmapped elf executable, right?
-> > 
-> > > The problem is that we read the build id when the file is mmap-ed.
-> > 
-> > Why? I'm completely clueless as to what this thing does or how it's
-> > used....
-> > 
-> > > Which is fine for our use case,
-> > 
-> > Which is?
-> > 
-> > -Dave.
-> > -- 
-> > Dave Chinner
-> > david@fromorbit.com
