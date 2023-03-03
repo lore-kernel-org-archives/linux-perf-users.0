@@ -2,158 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA9C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 05:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321A4C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 10:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbjCCF4N (ORCPT
+        id S230223AbjCCKC2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 00:56:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42738 "EHLO
+        Fri, 3 Mar 2023 05:02:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjCCFzt (ORCPT
+        with ESMTP id S230216AbjCCKC0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 00:55:49 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2088.outbound.protection.outlook.com [40.107.92.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E61C27983;
-        Thu,  2 Mar 2023 21:55:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ffcGP5PeINcJuBJxG46Hn5ZwXnZ3TFLJuNCWSHhQN/f7Vdt/TesAS6rnU9h0vxX58JdCjmBWAhAerrXj3b73olEEqOi9wM9itRBZTKYaC6THi6/mQpGyWWR2/fL/GIPn2A0J3RvoBbk/46x779WPrsYOmIDt5NaNhLFf9kRjL4FGU/jFpyJXO+GFuScLAAQo4/aE1UzpfQpZMikykZAk7ScCuysHUfr7kXfh57WUqFfxd5xWA8BZ4NlH7BIvFVI0Cmd4BuzxpKy3ETLGj9mh16MSDe+p095yiIF7irUX+VPkcMLKgnKET+zJAvLmNIy5oKx2raDtQBuuTSG0odgitg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dKt/ExPhVdLKYayMxMTMzK+y/ULdyl++afPRZe6MXS0=;
- b=BfsWYLnl/LBWOL1mWAKesQFTq+g4faPfU5E441PZH3Yjc12x86X2AL/ObJo6apXklOACg+EDTIXMweId+BBkwxwncYqGAa7bu6k6nG/OGUj7Rwbz7PJCOFOwUmL3WlI476owQ6970tcxTqsQOku1++GPTwe/YHz9kmsADcRX52z9BhPk/eUQEvcIJnc7KItSfvbeqCFX1+t7d+KzkfK+ZB8ODr7fW09V4iX5/NmdElYT/4xaHbCgr0O+WllCYgt2d/SOSc01nwaFBLRbBXLzRHTrWXh22NpjbXlm3OhmAo/RK6TvQnREvH8wZCSpCgJe8zOzqgsEjWCnG2GPoRSZeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dKt/ExPhVdLKYayMxMTMzK+y/ULdyl++afPRZe6MXS0=;
- b=rxQFgOK1PAX+/AGVUO+AR3FCJM759hcmlyVYpSc2EKlYwT70dR0b5wIXUAHCcHz0YaoutfhuuIW9Sf6n7hyjDN4Sw5ewjfsD91W7cLGXAToYSSvR++INp8Uk5LDdv8zaTQRVHkSAYacytE7AepOP7N7G3gQUVwPC8YdBBf2Ot/w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SN7PR12MB6932.namprd12.prod.outlook.com (2603:10b6:806:260::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.18; Fri, 3 Mar
- 2023 05:55:27 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d8e6:76b5:2c23:1247]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d8e6:76b5:2c23:1247%8]) with mapi id 15.20.6156.018; Fri, 3 Mar 2023
- 05:55:27 +0000
-Message-ID: <2075986d-2344-80ff-d494-8bdc97b627d5@amd.com>
-Date:   Fri, 3 Mar 2023 11:25:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 2/2] perf test: Add selftest to test IBS invocation via
- core pmu events
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     peterz@infradead.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230302092109.367-1-ravi.bangoria@amd.com>
- <20230302092109.367-3-ravi.bangoria@amd.com>
- <CAM9d7chQA27aD_mPe=3-9jZLWP_a64ztihuK=upgNL++kMFSNw@mail.gmail.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CAM9d7chQA27aD_mPe=3-9jZLWP_a64ztihuK=upgNL++kMFSNw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0186.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::7) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Fri, 3 Mar 2023 05:02:26 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0185CC32;
+        Fri,  3 Mar 2023 02:02:22 -0800 (PST)
+Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PSk3F6YXhz16PB4;
+        Fri,  3 Mar 2023 17:59:37 +0800 (CST)
+Received: from [10.174.177.30] (10.174.177.30) by
+ kwepemm600006.china.huawei.com (7.193.23.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 3 Mar 2023 18:02:18 +0800
+Message-ID: <a60e9257-0874-223c-0cd8-7ab284cd0a1f@huawei.com>
+Date:   Fri, 3 Mar 2023 18:02:17 +0800
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SN7PR12MB6932:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d3f6850-d39e-415a-0d33-08db1babe328
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AwRW8jxjEdakZhvMWJmzfTN2W/T5B6bycqVL70AiwoWo3rc9c+hokHu2VmC1MITgG8A3R7wf/hkvpGuebu1uVv+xbWCZTEYiBjNuX46o29YWcPhKOepF0bi/y4DNBEQ1ILadmyXOoHhlIPZfYelrGS9g/ud6RuUWTVpTDs9wQ+PiNwb57Y0bisK6imCBrHNzKouHhIVZLAfjl/b6yb2dW8/K4y1SPpUfNoasfRhQzxUDD/T+pfq1RrQI6/aXZH69ZiyY/U9Ivn/QrTgE8bmq1hrVywqGKl4iliXkFNVpVA9FpO8auhVWQg7XGYP9hfU7fIZxc14R7PrZZ1pcd3qhGOGJ/oh9ZHWGeTNsyiN26qRcaUXAIaaH2l/VlpnwJ13Y9vdryZDljY0LExzK75pC0kqmQSL8Gxfdsy6fIVCbaXBfCs5iYzgDVXuTIVrln2jYOX/RSnM19/IrLcSdK6td37MH54qSLaZcnDqsmgkbMVwdcs9lUd88rQpE88i/1Nz8GtoxgIiayby0vf6Hm/ECBuSsTHZL6WB0chl9rUSUIACFpEa3v6AD+nCmFUljlL08Ohy+X4nRBYIqM4QP51hUmGj1dhyAzplil17fs1pxLT3S/o4/WimwxRIBAn1ZWzAktFHUR+9xOAQJT8OglTx95zT5gcA43UHFybEztjEn0DiIgLS4Zs2P847f8/zjuXw6E8nTwUErq75g86h3jaXFREhtq9ZPy96xBHWsxP2XFro=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(396003)(376002)(346002)(136003)(39860400002)(451199018)(7416002)(5660300002)(4744005)(8936002)(36756003)(44832011)(86362001)(31696002)(6666004)(83380400001)(6486002)(2616005)(478600001)(6512007)(6506007)(6916009)(8676002)(66476007)(4326008)(38100700002)(41300700001)(316002)(66946007)(186003)(66556008)(26005)(2906002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MWZCS1JnNDdFcWFnbk0xTTk4dnRlNjVuWnBsa0pWNXNTTU9lR2FUajlDdE1Z?=
- =?utf-8?B?bUpoclNTenJDcERySlVSS3VaOGgzVUVCZ3N3TzFPbkZsYUhuVzhVVktzb0Iz?=
- =?utf-8?B?eHBSK0JmNURCSkVxcWc2T21RV1gzZWhOaDBna2VGVU1JdVJtOWl5dmYxRUlX?=
- =?utf-8?B?dG1hL0wvb3BvVDFqS0J4MkQrYUQvYWNrNEdtWjdpdUpzRUVvRThzVTJOVWYw?=
- =?utf-8?B?UWQweHd5Y1ZMQmpIazdhcmhEbE1KcTN5YUM4bnlFYXAzQWZIdTBmNmQ2ZE4z?=
- =?utf-8?B?U1dEUDBjNi9LdW9mbXJyL0cyVGVyZ1EvaUNwNVM5d0xDSldnWElPam1MNjEw?=
- =?utf-8?B?d28zKzI2Ty9wTGNicW5NR1NMOU9wSVU1V0FOODFPLzZjdC94Wk1Zd2JhVkVs?=
- =?utf-8?B?aGVaNUZEM2dLRU1CR3l0MmE1b3BhaFZLVkZJWjUrZldSNS85V3lFVGJ3Z3R6?=
- =?utf-8?B?MTRJT2dFK3crT2crQWYxd1dWUnIwdXdaOHNOSUFBaUNVRzE0YTJ1MlFDQS92?=
- =?utf-8?B?ajZMdnFHUGFveWFCZFpKc3piQkhna0w1clZra0FZRWk1UXY0YnM1TTJSclJ2?=
- =?utf-8?B?ckl1ZmI0MWlaSGFsNFdFd09YeVM4YUJYYXFmTGJhUUVPbHNKaGhzYzlHVzZq?=
- =?utf-8?B?eW1LbHo4bGY5VUxWckludFloZDh0cDVVNUt2RGhEaHM0RjZ1SVFQdEtMdmRr?=
- =?utf-8?B?VHk5eDdrS1BTSjE1cEZHOEx2VjhJL2VqWk85MGlzWXNyeGVrU1IxR3RWdXND?=
- =?utf-8?B?bDJpSnhCUFBIVFJaMDdwZU9mZTdHVDh4QktESXY2Qk5wcWplMVAvWmwrZElL?=
- =?utf-8?B?YXV4Tmhjd2U2MWpFbXczM2gyeDlHUXdRU2pBYnFvcStmTDh5YnNmYmRwT1c4?=
- =?utf-8?B?SUhGbk5ZYjhMeVowRHRGZHgwYlNydVQwdWF5VmJpZU9vQ1pmSDVKa3lWTjMy?=
- =?utf-8?B?UmREQ3NGU2kvM2l1TEZ2Q3QrREwrYVh1NzNpenJKQWlXbFNOOGdoTXZ1YjFy?=
- =?utf-8?B?UnJKKzRqRG0zdkY1NE96b2NXMjU3N2I3QTVQa3lPb3ZnTjZxNTlaN2ZxT0Qx?=
- =?utf-8?B?ZkxmaCtnUldhMFpibEh4d3c1RDdGa1phbVhSWHFzMHFhdm9BT2tQZzAxVW5o?=
- =?utf-8?B?bnd3TWpoaWhLbWpDSDV5aDNBdHFSZk1JV0xRQ0lWRlJkQ0h6eXVadkROTmtY?=
- =?utf-8?B?djdhZjErc3JibndzdEU3V0ZhdU1XR2FIem9XRnpIYllZRVpNc0lPeTdGdkRW?=
- =?utf-8?B?cTVrT3E1SjJGamdFSHJ1R0M2bHlCd2hjVXl0WG9UOERBYXBlaEhkWSs2eDV5?=
- =?utf-8?B?K0l0N0p4ditDY0xOZ1dpekN6R2FpSjkxWFU0TkM1S2tvVVZjUzUyY0pENGlw?=
- =?utf-8?B?WkduYi9XSW82TVgzWGdsaGlsZkVZVUZ2NHlVa09iTHdmeEorRGtRRk9mcnpS?=
- =?utf-8?B?L252Nm5FWUJ2K1FZOFZkQmJTR0hKYUZDQzYzR2VvaVBKdXVucG1oRDdNOWtV?=
- =?utf-8?B?ZXVnZUZnektOdDlyZU9TUWQ4eUI3NWE3N3NOQTJDQUsvRGNZdFg2b2p1VjhE?=
- =?utf-8?B?MnRqQnE2QXQ1cEc1Q28vRWhlSVR4UnhOdm9MNks1RTZDU0ZYK2hua0t3TFoz?=
- =?utf-8?B?dFluUW9LTzZoc2tXT2ZFSVdVaEZWMk1ON0JwQzJ4TS9jYm9wQWVob2ZndVIr?=
- =?utf-8?B?WHZSRzh6Y0NPVG1XSVZGRW5seHBTVVNNOTVRTUY2M1ZlbHZrOHpDVXZxNStP?=
- =?utf-8?B?Zit5U1FCR25URHc3ZXhxSEp4Y0xtajc2QmhVRGM2OFc4ZHRTbWdIdGp0dXNq?=
- =?utf-8?B?Y0ZlemNEeldMc0MxTitDSFgzM3BpMUFaMmZMdCtkMUsybkoxZXkvVmNMb2lQ?=
- =?utf-8?B?OEx6Mzk0ZHpDN2RrSnpKS09DK1lwVnFWQzFmZ2tnV0pYU1NGTFFOSktvSWZH?=
- =?utf-8?B?NzQwUFFxbTZESWJOSzZQYnJ6OElCeGtSV3UzOEp6MW54TzFXblBrcHBVTSt5?=
- =?utf-8?B?SWlteHVLUmtQMWpxY0xoQ2dZZGpTMmdTaElESjVWTkdwVFJYOUtDYmQxYzFL?=
- =?utf-8?B?NVNFWnd2dElMV296c2FIaDNHcHRBb21wVXZWM0c4OGlyYkRNalhwY25FRGo3?=
- =?utf-8?Q?JHjJSk0gAnt+oVugbrc2KkGpX?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d3f6850-d39e-415a-0d33-08db1babe328
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2023 05:55:27.1061
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4JE+mz3SXaNGE+quFi6FoVpxrKzSNagsYKFMGzE74HG1hXg/Ian5oNYN/lnqm3GVa5KHINrzYvGcZHokWZVnIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6932
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+CC:     <linfeilong@huawei.com>, "hewenliang (C)" <hewenliang4@huawei.com>,
+        <yeyunfeng@huawei.com>, Wenyu Liu <liuwenyu7@huawei.com>
+From:   "liuwenyu (D)" <liuwenyu7@huawei.com>
+Subject: [PATCH] perf top: Fix rare segfault in thread__comm_len()
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <brauner@kernel.org>, <adrian.hunter@intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.30]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600006.china.huawei.com (7.193.23.105)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Namhyung,
+In thread__comm_len(),strlen() is called outside of the
+thread->comm_lock critical section,which may cause a UAF
+problems if comm__free() is called by the process_thread
+concurrently.
 
->> +static int test__ibs_via_core_pmu(struct test_suite *text __maybe_unused,
->> +                                 int subtest __maybe_unused)
->> +{
->> +       struct perf_pmu *ibs_pmu;
->> +       int ret = TEST_OK;
->> +       int fd, i;
->> +
->> +       if (list_empty(&pmus))
->> +               perf_pmu__scan(NULL);
->> +
->> +       ibs_pmu = perf_pmu__find("ibs_op");
->> +       if (!ibs_pmu)
->> +               return TEST_SKIP;
->> +
->> +       for (i = 0; i < NR_SUB_TESTS; i++) {
->> +               fd = event_open(sub_tests[i].type, sub_tests[i].config);
->> +               pr_debug("type: 0x%x, config: 0x%lx, fd: %d  -  ", sub_tests[i].type,
->> +                        sub_tests[i].config, fd);
->> +               if ((sub_tests[i].valid && fd == -1) ||
->> +                   (!sub_tests[i].valid && fd > 0)) {
->> +                       pr_debug("Fail\n");
->> +                       ret = TEST_FAIL;
-> 
-> You need to close(fd) when it's succeeded for invalid one.
+backtrace of the core file is as follows:
 
-Yup. Will fix it.
+     (gdb) bt
+     #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+     #1  0x000055ad15d31de5 in thread__comm_len (thread=0x7f627d20e300) 
+at util/thread.c:320
+     #2  0x000055ad15d4fade in hists__calc_col_len (h=0x7f627d295940, 
+hists=0x55ad1772bfe0)
+         at util/hist.c:103
+     #3  hists__calc_col_len (hists=0x55ad1772bfe0, h=0x7f627d295940) at 
+util/hist.c:79
+     #4  0x000055ad15d52c8c in output_resort 
+(hists=hists@entry=0x55ad1772bfe0, prog=0x0,
+         use_callchain=false, cb=cb@entry=0x0, cb_arg=0x0) at 
+util/hist.c:1926
+     #5  0x000055ad15d530a4 in evsel__output_resort_cb 
+(evsel=evsel@entry=0x55ad1772bde0,
+         prog=prog@entry=0x0, cb=cb@entry=0x0, cb_arg=cb_arg@entry=0x0) 
+at util/hist.c:1945
+     #6  0x000055ad15d53110 in evsel__output_resort 
+(evsel=evsel@entry=0x55ad1772bde0,
+         prog=prog@entry=0x0) at util/hist.c:1950
+     #7  0x000055ad15c6ae9a in perf_top__resort_hists 
+(t=t@entry=0x7ffcd9cbf4f0) at builtin-top.c:311
+     #8  0x000055ad15c6cc6d in perf_top__print_sym_table 
+(top=0x7ffcd9cbf4f0) at builtin-top.c:346
+     #9  display_thread (arg=0x7ffcd9cbf4f0) at builtin-top.c:700
+     #10 0x00007f6282fab4fa in start_thread (arg=<optimized out>) at 
+pthread_create.c:443
+     #11 0x00007f628302e200 in clone3 () at 
+../sysdeps/unix/sysv/linux/x86_64/clone3.S:81
 
-Thanks,
-Ravi
+The reason is that strlen() get a pointer to a memory that has been freed.
+
+The string pointer is stored in the structure comm_str, which corresponds
+to a rb_tree node,when the node is erased, the memory of the string is 
+also freed.
+
+In thread__comm_len(),it gets the pointer within the thread->comm_lock 
+critical section,
+but passed to strlen() outside of the thread->comm_lock critical 
+section, and the perf
+process_thread may called comm__free() concurrently, cause this segfault 
+problem.
+
+The process is as follows:
+
+display_thread                                  process_thread
+--------------                                  --------------
+
+thread__comm_len
+   -> thread__comm_str
+        # held the comm read lock
+     -> __thread__comm_str(thread)
+        # release the comm read lock
+                                                 thread__delete
+                                                      # held the comm 
+write lock
+                                                   -> comm__free
+                                                     -> 
+comm_str__put(comm->comm_str)
+                                                       -> zfree(&cs->str)
+                                                      # release the comm 
+write lock
+       # The memory of the string pointed
+         to by comm has been free.
+     -> thread->comm_len = strlen(comm);
+
+This patch expand the critical section range of thread->comm_lock in 
+thread__comm_len(),
+to make strlen() called safe.
+
+Signed-off-by: Wenyu Liu  <liuwenyu7@huawei.com>
+---
+  tools/perf/util/thread.c | 25 +++++++++++++++++++------
+  1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index e3e5427e1c3c..a2490a20eb56 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -311,17 +311,30 @@ const char *thread__comm_str(struct thread *thread)
+      return str;
+  }
+
++static int __thread__comm_len(struct thread *thread, const char *comm)
++{
++    if (!comm)
++        return 0;
++    thread->comm_len = strlen(comm);
++
++    return thread->comm_len;
++}
++
+  /* CHECKME: it should probably better return the max comm len from its 
+comm list */
+  int thread__comm_len(struct thread *thread)
+  {
+-    if (!thread->comm_len) {
+-        const char *comm = thread__comm_str(thread);
+-        if (!comm)
+-            return 0;
+-        thread->comm_len = strlen(comm);
++    int comm_len = thread->comm_len;
++
++    if (!comm_len) {
++        const char *comm;
++
++        down_read(&thread->comm_lock);
++        comm = __thread__comm_str(thread);
++        comm_len = __thread__comm_len(thread, comm);
++        up_read(&thread->comm_lock);
+      }
+
+-    return thread->comm_len;
++    return comm_len;
+  }
+
+  size_t thread__fprintf(struct thread *thread, FILE *fp)
+-- 
+2.36.1
+
