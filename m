@@ -2,56 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9BBC7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 15:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C6DC7EE2D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 16:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231377AbjCCPu1 (ORCPT
+        id S230521AbjCCQkQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 10:50:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
+        Fri, 3 Mar 2023 11:40:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjCCPu0 (ORCPT
+        with ESMTP id S230386AbjCCQkP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 10:50:26 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7611C31F;
-        Fri,  3 Mar 2023 07:50:25 -0800 (PST)
+        Fri, 3 Mar 2023 11:40:15 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF45628206;
+        Fri,  3 Mar 2023 08:40:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677858625; x=1709394625;
+  t=1677861614; x=1709397614;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=zgJrm/0CHMzsxm8TFxdkZyaRoDiAB6z4BjVyd2CwAg0=;
-  b=Fv3IZj7rIwbH+eTBultqLb0k8E/0CL/xd6EnsOtt01swhhBC9gKpYXJ6
-   h+hhgPuDaOezrEJ8ef2yTftRzDk8Up5KrnbM1A9RR03f+cOpG+a75mSH5
-   PIJjExwRJQKQ9ml8D1kfSu15n3rQIzjaV581LMOFvg7WNnR+anfAcr8ef
-   l+wwbJfRRCAoVyXPIcvSQo0eW0fjdu8n0y/hTaZtC7ZoXRc6mS+5VPpyA
-   FbMWfeNPaNs0cBokPj7iRr9tlRG2RVXZGWYLan1xEhj8dp/gjvbZ9BfbO
-   rQc5hGwfV3s3h3FbTLJ2W6j6td2KZ89vzahENuryxxsF4SPEqoDN3D+Hl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="333794818"
+  bh=qFuP52u/hk29+iJGCaH/iY8OktY9rmftf25HJ4x/aDs=;
+  b=P7voRbGjTApfBgjtNlBlcXjbDYOkUuWlIcDWa2r5+xNpK9MN9Qf10jR2
+   RmHqXPoKkdTvLv4VCICmTHK9rbC9z2nEDGg1lKNUwyhaiyEanXkWig+MP
+   sPVh3MwiY7km675Qou8tZUd/IlLRXHG7aQZ4OcDeRpsuzqsg9SsSCz8Ep
+   XktbUuiX8Axhxc1ZLa668jrWct+69Utm+hZ2/sfD8eqhfl9YlMQrrNFUk
+   N7RHBzdRO2BAGoJIXs14N944skIBLQ377upNnTl6nCdIMR4vBq+8kfATi
+   wL9a9kgWNzWnyagu9CfYu+qOdoHyPn1OLp1P59TBR1C7T2+1S1BM/H/z9
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="318911453"
 X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="333794818"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 07:50:25 -0800
+   d="scan'208";a="318911453"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 08:40:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="921159289"
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="818531170"
 X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="921159289"
+   d="scan'208";a="818531170"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Mar 2023 07:50:24 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 03 Mar 2023 08:40:12 -0800
 Received: from [10.212.168.11] (kliang2-mobl1.ccr.corp.intel.com [10.212.168.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A38F1580689;
-        Fri,  3 Mar 2023 07:50:18 -0800 (PST)
-Message-ID: <962de75d-8e27-9b47-662e-e324b3ba5812@linux.intel.com>
-Date:   Fri, 3 Mar 2023 10:50:12 -0500
+        by linux.intel.com (Postfix) with ESMTPS id B3325580689;
+        Fri,  3 Mar 2023 08:40:09 -0800 (PST)
+Message-ID: <2aed81ff-2d28-3af5-0657-16ee69705c03@linux.intel.com>
+Date:   Fri, 3 Mar 2023 11:40:08 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v2 02/10] perf stat: Don't remove all grouped events when
- CPU maps disagree
+Subject: Re: [PATCH v2 03/10] perf record: Early auxtrace initialization
+ before event parsing
+Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,10 +76,9 @@ To:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Stephane Eranian <eranian@google.com>
 References: <20230302212531.1043318-1-irogers@google.com>
- <20230302212531.1043318-3-irogers@google.com>
-Content-Language: en-US
+ <20230302212531.1043318-4-irogers@google.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230302212531.1043318-3-irogers@google.com>
+In-Reply-To: <20230302212531.1043318-4-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -88,91 +88,123 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 2023-03-02 4:25 p.m., Ian Rogers wrote:
-> If the events in an evlist's CPU map differ then the entire group is
-> removed. For example:
-> 
-> ```
-> $ perf stat -e '{imc_free_running/data_read/,imc_free_running/data_write/,cs}' -a sleep 1
-> WARNING: grouped events cpus do not match, disabling group:
->   anon group { imc_free_running/data_read/, imc_free_running/data_write/, cs }
-> ```
-> 
-> Change the behavior so that just the events not matching the leader
-> are removed. So in the example above, just 'cs' will be removed.
-> 
-> Modify the warning so that it is produced once for each group, rather
-> than once for the entire evlist. Shrink the scope and size of the
-> warning text buffer.
-
-For the uncore, we usually have to create a group for each uncore PMU.
-The number of groups may be big. For example, on ICX, we have 40 CHA
-PMUs. For SPR, there should be more CHAs. If we have something like
-{cycles,uncore_cha/event=0x1/}, is the warning shown 40 times on ICX?
-If so, it should be very annoying.
-
-Maybe it's better to keep the current behavior which only print a
-warning once and notify the users that perf will re-group the events.
-For the details, they can get it from the -v option.
-
-Thanks,
-Kan
+> This allows event parsing to use the evsel__is_aux_event function,
+> which is important when determining event grouping.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-stat.c | 24 +++++++++++++++---------
->  1 file changed, 15 insertions(+), 9 deletions(-)
+>  tools/perf/arch/x86/util/auxtrace.c | 17 +++++++++++++----
+>  tools/perf/builtin-record.c         |  6 ++++++
+>  tools/perf/util/auxtrace.h          |  2 ++
+>  3 files changed, 21 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index d70b1ec88594..5c12ae5efce5 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -181,14 +181,13 @@ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+> diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+> index 3da506e13f49..de1e4842ea2e 100644
+> --- a/tools/perf/arch/x86/util/auxtrace.c
+> +++ b/tools/perf/arch/x86/util/auxtrace.c
+> @@ -15,6 +15,19 @@
+>  #include "../../../util/intel-bts.h"
+>  #include "../../../util/evlist.h"
 >  
->  static void evlist__check_cpu_maps(struct evlist *evlist)
->  {
-> -	struct evsel *evsel, *pos, *leader;
-> -	char buf[1024];
-> +	struct evsel *evsel, *warned_leader = NULL;
+> +void auxtrace__early_init(void)
+> +{
+> +	struct perf_pmu *intel_pt_pmu;
+> +	struct perf_pmu *intel_bts_pmu;
+> +
+> +	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
+> +	if (intel_pt_pmu)
+> +		intel_pt_pmu->auxtrace = true;
+> +	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
+> +	if (intel_bts_pmu)
+> +		intel_bts_pmu->auxtrace = true;
+> +}
+> +
+>  static
+>  struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+>  						    int *err)
+> @@ -26,11 +39,7 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+>  	bool found_bts = false;
 >  
->  	if (evlist__has_hybrid(evlist))
->  		evlist__warn_hybrid_group(evlist);
+>  	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
+> -	if (intel_pt_pmu)
+> -		intel_pt_pmu->auxtrace = true;
+>  	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
+> -	if (intel_bts_pmu)
+> -		intel_bts_pmu->auxtrace = true;
 >  
 >  	evlist__for_each_entry(evlist, evsel) {
-> -		leader = evsel__leader(evsel);
-> +		struct evsel *leader = evsel__leader(evsel);
->  
->  		/* Check that leader matches cpus with each member. */
->  		if (leader == evsel)
-> @@ -197,19 +196,26 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
->  			continue;
->  
->  		/* If there's mismatch disable the group and warn user. */
-> -		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
-> -		evsel__group_desc(leader, buf, sizeof(buf));
-> -		pr_warning("  %s\n", buf);
-> -
-> +		if (warned_leader != leader) {
-> +			char buf[200];
-> +
-> +			pr_warning("WARNING: grouped events cpus do not match.\n"
-> +				"Events with CPUs not matching the leader will "
-> +				"be removed from the group.\n");
-> +			evsel__group_desc(leader, buf, sizeof(buf));
-> +			pr_warning("  %s\n", buf);
-> +			warned_leader = leader;
-> +		}
->  		if (verbose > 0) {
-> +			char buf[200];
-> +
->  			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
->  			pr_warning("     %s: %s\n", leader->name, buf);
->  			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
->  			pr_warning("     %s: %s\n", evsel->name, buf);
->  		}
->  
-> -		for_each_group_evsel(pos, leader)
-> -			evsel__remove_from_group(pos, leader);
-> +		evsel__remove_from_group(evsel, leader);
->  	}
+>  		if (intel_pt_pmu && evsel->core.attr.type == intel_pt_pmu->type)
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 8374117e66f6..a0870c076dc0 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -3940,6 +3940,10 @@ static int record__init_thread_masks(struct record *rec)
+>  	return ret;
 >  }
 >  
+> +__weak void auxtrace__early_init(void)
+> +{
+> +}
+> +
+>  int cmd_record(int argc, const char **argv)
+>  {
+>  	int err;
+> @@ -3985,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
+>  	if (err)
+>  		return err;
+>  
+> +	auxtrace__early_init();
+
+So the auxtrace__early_init() will be unconditionally invoked even there
+is no PT or BTS events, right?
+
+Maybe we should move the auxtrace__early_init() to evsel__is_aux_event()
+and cache the value. The initialization will only be invoked when it's
+required.
+Something as below (not tested.)
+
++void auxtrace__init(void)
++{
++	struct perf_pmu *intel_pt_pmu;
++	struct perf_pmu *intel_bts_pmu;
++	static bool cached;
++
++	if (cached)
++		return;
++	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
++	if (intel_pt_pmu)
++		intel_pt_pmu->auxtrace = true;
++	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
++	if (intel_bts_pmu)
++		intel_bts_pmu->auxtrace = true;
++}
+
+bool evsel__is_aux_event(struct evsel *evsel)
+{
+	struct perf_pmu *pmu = evsel__find_pmu(evsel);
++	auxtrace__init();
+	return pmu && pmu->auxtrace;
+}
+
+
+
+Thanks,
+Kan
+
+> +
+>  	argc = parse_options(argc, argv, record_options, record_usage,
+>  			    PARSE_OPT_STOP_AT_NON_OPTION);
+>  	if (quiet)
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 29eb82dff574..49a86aa6ac94 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -457,6 +457,8 @@ struct addr_filters {
+>  
+>  struct auxtrace_cache;
+>  
+> +void auxtrace__early_init(void);
+> +
+>  #ifdef HAVE_AUXTRACE_SUPPORT
+>  
+>  u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
