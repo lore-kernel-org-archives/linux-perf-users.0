@@ -2,174 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80CAC64EC4
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 18:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4B8C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 19:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231808AbjCCSfI (ORCPT
+        id S231287AbjCCTbF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 13:35:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
+        Fri, 3 Mar 2023 14:31:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231696AbjCCSfE (ORCPT
+        with ESMTP id S230244AbjCCTbE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 13:35:04 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFA1C14E;
-        Fri,  3 Mar 2023 10:34:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677868498; x=1709404498;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YavG9SzN7R2V9f06OiIdyohGAgtDlBxsdq17qor+UyE=;
-  b=joVYnowMZa4NdX4IUnLgCqm77L1bPaNazN4DZw2Q9UkbFS2M3XuZoyBX
-   q9Gv66HA/9d3kY/EgH0XZpEGjlx4lsRYigZNNUFEQkyIWU1JZHK7dyNs9
-   Bm1MI/Q0t17dDmxwoGZahFonoI7O02BAnsmGlR+qx43OViITauVSeudFQ
-   5cuoGOsHXGkBii5RRewA9jCzqWERezNNEIseBk1HZmh6Dwi1lzFaiDUot
-   pizgmdXm+PvRVKYuOwOa8eLTrio5HDedmM/T+mNfGGyqiXDZ2Ji89onzW
-   lYKnuifsPXuwL5NCF0KSlUWpYf9piEqAuHnGtcSorE+rf3zHDhNi+NlTV
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="399931576"
-X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="399931576"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 10:34:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="675456279"
-X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="675456279"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.209.141.249]) ([10.209.141.249])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 10:34:41 -0800
-Message-ID: <4dabd301-32d7-968e-e048-8135b072a7b5@intel.com>
-Date:   Fri, 3 Mar 2023 11:34:37 -0700
+        Fri, 3 Mar 2023 14:31:04 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DA21554C
+        for <linux-perf-users@vger.kernel.org>; Fri,  3 Mar 2023 11:31:03 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id j2so3303040wrh.9
+        for <linux-perf-users@vger.kernel.org>; Fri, 03 Mar 2023 11:31:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677871862;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DY/RsrwQtoulloPUsXVpIgU+LbyVaN6H5jV3mQtvsxs=;
+        b=O7K+l0NPhigKpNBRroeZ4ddEnMwKC3oCJI6bfdvWLo3jZZ3lsGJe7Jdaa06Njc+std
+         nscBPiPb/2Hp14LYlO6dAUufhA9/mNRfmymSZEbpZl/gPej0f4J20likSfuRHb5Mx/qr
+         U/+IXQnM9YcR6Z5eTF1XpntyGQOxOJFngLaIeoUbqCsmNKAVdohnVJwsaKUHPo5tjBbh
+         SLuvTEq7eb/9fVPQZkmlkptRAX1nlU0JFPneCRsjNKK9BoANnKv6W+mf9oA8dkAw6Be7
+         blogmgO3qWVWpcCw3mBtWok+0N86TdbwgfKFBDT6dn2HZNG04qWMSSXBUS9ycp2vpgjL
+         7JIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677871862;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DY/RsrwQtoulloPUsXVpIgU+LbyVaN6H5jV3mQtvsxs=;
+        b=CB5f2TZmlxMBtNRsaVSzdt+/t8gPDBfr1mUIsrruf2gwdtgQCfHNKY54J2LbN+/OE8
+         IKaUfonXrOy3uLU0yPGN33ippWSnRZsXiDotI2igHBYf1A4M2Sdgo2zha+P11lC6pVqq
+         7ncW4LCpAdp6vRq2/TKYsahdT4J69YXhhBvn+BvDICP+dRfG9GMvegZ/biN0+Qc6lEIW
+         r+MdEgVfq6jq6rMiRzD67ulfWiv3/WZXNrov2AQChPhvvuheLHmximlInen+BHTj76EX
+         guyTxgqXy4PXYOJf6REueXrLs/GBf7AY8W+u1KYin/HjDBf1V5NzJPTCI5Ej+6mDGSDK
+         2v9g==
+X-Gm-Message-State: AO0yUKXfO83FfbfyWkA855Vbn507NKn9GC7pvacs+LHZJirrQ6RnFGNl
+        UncD0e+QlrN6TLtJygHwwCbqBimM26M=
+X-Google-Smtp-Source: AK7set8JGYhXxg8u9NNzE8az9iug0DxsY7ikPcdrHkkSI4aedFwfbGKco2YtERn5DM7vATgP/umEWw==
+X-Received: by 2002:adf:f092:0:b0:2c7:83b:9d20 with SMTP id n18-20020adff092000000b002c7083b9d20mr2090184wro.34.1677871862096;
+        Fri, 03 Mar 2023 11:31:02 -0800 (PST)
+Received: from kos-moceratops.home ([2a01:cb1d:8ddc:f000:36ae:1bf1:281b:95d9])
+        by smtp.gmail.com with ESMTPSA id b16-20020a5d4d90000000b002c70851bfcasm2983341wru.28.2023.03.03.11.31.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Mar 2023 11:31:01 -0800 (PST)
+From:   Patrice Duroux <patrice.duroux@gmail.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Patrice Duroux <patrice.duroux@gmail.com>
+Subject: [PATCH 1/2] replace 2&>1 by 2>&1
+Date:   Fri,  3 Mar 2023 20:30:58 +0100
+Message-Id: <20230303193058.21274-1-patrice.duroux@gmail.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <CAGKjw9KHDnVgRz5bstJYkq4t0-bT5fvkuQZbEB48d-8jo4Q00g@mail.gmail.com>
+References: <CAGKjw9KHDnVgRz5bstJYkq4t0-bT5fvkuQZbEB48d-8jo4Q00g@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 4/4] docs: perf: Minimal introduction the the CXL PMU
- device and driver.
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, will@kernel.org, dan.j.williams@intel.com,
-        bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, linuxarm@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
- <20230303175022.10806-5-Jonathan.Cameron@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230303175022.10806-5-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Signed-off-by: Patrice Duroux <patrice.duroux@gmail.com>
+---
+ tools/perf/tests/shell/record_offcpu.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
+index e01973d4e0fb..f062ae9a95e1 100755
+--- a/tools/perf/tests/shell/record_offcpu.sh
++++ b/tools/perf/tests/shell/record_offcpu.sh
+@@ -65,7 +65,7 @@ test_offcpu_child() {
+ 
+   # perf bench sched messaging creates 400 processes
+   if ! perf record --off-cpu -e dummy -o ${perfdata} -- \
+-    perf bench sched messaging -g 10 > /dev/null 2&>1
++    perf bench sched messaging -g 10 > /dev/null 2>&1
+   then
+     echo "Child task off-cpu test [Failed record]"
+     err=1
+-- 
+2.39.2
 
-On 3/3/23 10:50 AM, Jonathan Cameron wrote:
-> Very basic introduction to the device and the current driver support
-> provided. I expect to expand on this in future versions of this patch
-> set.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> 
-> --
-> v1:
-> - Add docs for how to use a Vendor Defined Counter.
-> RFC:
-> - I'll post separately about this shortly, but it seems very odd
->    to me that there is no way to assign a parent to an event_sources
->    device.  As a result we get the messy approach of playing match
->    the name to figure out what the CPMU instance is connected to.
-
-Would it be too awkward to encode the parent name into the cpmu name?
-
-> ---
->   Documentation/admin-guide/perf/cxl.rst   | 65 ++++++++++++++++++++++++
->   Documentation/admin-guide/perf/index.rst |  1 +
->   2 files changed, 66 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-> new file mode 100644
-> index 000000000000..46235dff4b21
-> --- /dev/null
-> +++ b/Documentation/admin-guide/perf/cxl.rst
-> @@ -0,0 +1,65 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================================
-> +CXL Performance Monitoring Unit (CPMU)
-> +======================================
-> +
-> +The CXL rev 3.0 specification provides a definition of CXL Performance
-> +Monitoring Unit in section 13.2: Performance Monitoring.
-> +
-> +CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-> +any number of CPMU instances. CPMU capabilities are fully discoverable from
-> +the devices. The specification provides event definitions for all CXL protocol
-> +message types and a set of additional events for things commonly counted on
-> +CXL devices (e.g. DRAM events).
-> +
-> +CPMU driver
-> +===========
-> +
-> +The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-> +
-> +    /sys/bus/cxl/device/cpmu<id>
-> +
-> +The associated PMU is registered as
-> +
-> +   /sys/bus/event_sources/devices/cpmu<id>
-> +
-> +In common with other CXL bus devices, the id has no specific meaning and the
-> +relationship to specific CXL device should be established via the device parent
-> +of the device on the CXL bus.
-> +
-> +PMU driver provides description of available events and filter options in sysfs.
-> +
-> +The "format" directory describes all formats of the config (event vendor id,
-> +group id and mask) config1 (threshold, filter enables) and config2 (filter
-> +parameters) fields of the perf_event_attr structure.  The "events" directory
-> +describes all documented events show in perf list.
-> +
-> +The events shown in perf list are the most fine grained events with a single
-> +bit of the event mask set. More general events may be enable by setting
-> +multiple mask bits in config. For example, all Device to Host Read Requests
-> +may be captured on a single counter by setting the bits for all of
-> +
-> +* d2h_req_rdcurr
-> +* d2h_req_rdown
-> +* d2h_req_rdshared
-> +* d2h_req_rdany
-> +* d2h_req_rdownnodata
-> +
-> +Example of usage::
-> +
-> +  $#perf list
-> +  cpmu0/clock_ticks/                                 [Kernel PMU event]
-> +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-> +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-> +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-> +  -----------------------------------------------------------
-> +
-> +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-> +
-> +Vendor specific events may also be available and if so can be used via
-> +
-> +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
-> +
-> +The driver does not support sampling. So "perf record" and attaching to
-> +a task are unsupported.
-> diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-> index 9de64a40adab..f60be04e4e33 100644
-> --- a/Documentation/admin-guide/perf/index.rst
-> +++ b/Documentation/admin-guide/perf/index.rst
-> @@ -21,3 +21,4 @@ Performance monitor support
->      alibaba_pmu
->      nvidia-pmu
->      meson-ddr-pmu
-> +   cxl
