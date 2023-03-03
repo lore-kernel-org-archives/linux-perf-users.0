@@ -2,175 +2,177 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321A4C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 10:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9BBC7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 15:50:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230223AbjCCKC2 (ORCPT
+        id S231377AbjCCPu1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 05:02:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46266 "EHLO
+        Fri, 3 Mar 2023 10:50:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbjCCKC0 (ORCPT
+        with ESMTP id S229737AbjCCPu0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 05:02:26 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0185CC32;
-        Fri,  3 Mar 2023 02:02:22 -0800 (PST)
-Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PSk3F6YXhz16PB4;
-        Fri,  3 Mar 2023 17:59:37 +0800 (CST)
-Received: from [10.174.177.30] (10.174.177.30) by
- kwepemm600006.china.huawei.com (7.193.23.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 3 Mar 2023 18:02:18 +0800
-Message-ID: <a60e9257-0874-223c-0cd8-7ab284cd0a1f@huawei.com>
-Date:   Fri, 3 Mar 2023 18:02:17 +0800
+        Fri, 3 Mar 2023 10:50:26 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7611C31F;
+        Fri,  3 Mar 2023 07:50:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677858625; x=1709394625;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zgJrm/0CHMzsxm8TFxdkZyaRoDiAB6z4BjVyd2CwAg0=;
+  b=Fv3IZj7rIwbH+eTBultqLb0k8E/0CL/xd6EnsOtt01swhhBC9gKpYXJ6
+   h+hhgPuDaOezrEJ8ef2yTftRzDk8Up5KrnbM1A9RR03f+cOpG+a75mSH5
+   PIJjExwRJQKQ9ml8D1kfSu15n3rQIzjaV581LMOFvg7WNnR+anfAcr8ef
+   l+wwbJfRRCAoVyXPIcvSQo0eW0fjdu8n0y/hTaZtC7ZoXRc6mS+5VPpyA
+   FbMWfeNPaNs0cBokPj7iRr9tlRG2RVXZGWYLan1xEhj8dp/gjvbZ9BfbO
+   rQc5hGwfV3s3h3FbTLJ2W6j6td2KZ89vzahENuryxxsF4SPEqoDN3D+Hl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="333794818"
+X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
+   d="scan'208";a="333794818"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 07:50:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="921159289"
+X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
+   d="scan'208";a="921159289"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Mar 2023 07:50:24 -0800
+Received: from [10.212.168.11] (kliang2-mobl1.ccr.corp.intel.com [10.212.168.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id A38F1580689;
+        Fri,  3 Mar 2023 07:50:18 -0800 (PST)
+Message-ID: <962de75d-8e27-9b47-662e-e324b3ba5812@linux.intel.com>
+Date:   Fri, 3 Mar 2023 10:50:12 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-CC:     <linfeilong@huawei.com>, "hewenliang (C)" <hewenliang4@huawei.com>,
-        <yeyunfeng@huawei.com>, Wenyu Liu <liuwenyu7@huawei.com>
-From:   "liuwenyu (D)" <liuwenyu7@huawei.com>
-Subject: [PATCH] perf top: Fix rare segfault in thread__comm_len()
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <brauner@kernel.org>, <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.30]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600006.china.huawei.com (7.193.23.105)
-X-CFilter-Loop: Reflected
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 02/10] perf stat: Don't remove all grouped events when
+ CPU maps disagree
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20230302212531.1043318-1-irogers@google.com>
+ <20230302212531.1043318-3-irogers@google.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230302212531.1043318-3-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In thread__comm_len(),strlen() is called outside of the
-thread->comm_lock critical section,which may cause a UAF
-problems if comm__free() is called by the process_thread
-concurrently.
 
-backtrace of the core file is as follows:
 
-     (gdb) bt
-     #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-     #1  0x000055ad15d31de5 in thread__comm_len (thread=0x7f627d20e300) 
-at util/thread.c:320
-     #2  0x000055ad15d4fade in hists__calc_col_len (h=0x7f627d295940, 
-hists=0x55ad1772bfe0)
-         at util/hist.c:103
-     #3  hists__calc_col_len (hists=0x55ad1772bfe0, h=0x7f627d295940) at 
-util/hist.c:79
-     #4  0x000055ad15d52c8c in output_resort 
-(hists=hists@entry=0x55ad1772bfe0, prog=0x0,
-         use_callchain=false, cb=cb@entry=0x0, cb_arg=0x0) at 
-util/hist.c:1926
-     #5  0x000055ad15d530a4 in evsel__output_resort_cb 
-(evsel=evsel@entry=0x55ad1772bde0,
-         prog=prog@entry=0x0, cb=cb@entry=0x0, cb_arg=cb_arg@entry=0x0) 
-at util/hist.c:1945
-     #6  0x000055ad15d53110 in evsel__output_resort 
-(evsel=evsel@entry=0x55ad1772bde0,
-         prog=prog@entry=0x0) at util/hist.c:1950
-     #7  0x000055ad15c6ae9a in perf_top__resort_hists 
-(t=t@entry=0x7ffcd9cbf4f0) at builtin-top.c:311
-     #8  0x000055ad15c6cc6d in perf_top__print_sym_table 
-(top=0x7ffcd9cbf4f0) at builtin-top.c:346
-     #9  display_thread (arg=0x7ffcd9cbf4f0) at builtin-top.c:700
-     #10 0x00007f6282fab4fa in start_thread (arg=<optimized out>) at 
-pthread_create.c:443
-     #11 0x00007f628302e200 in clone3 () at 
-../sysdeps/unix/sysv/linux/x86_64/clone3.S:81
+On 2023-03-02 4:25 p.m., Ian Rogers wrote:
+> If the events in an evlist's CPU map differ then the entire group is
+> removed. For example:
+> 
+> ```
+> $ perf stat -e '{imc_free_running/data_read/,imc_free_running/data_write/,cs}' -a sleep 1
+> WARNING: grouped events cpus do not match, disabling group:
+>   anon group { imc_free_running/data_read/, imc_free_running/data_write/, cs }
+> ```
+> 
+> Change the behavior so that just the events not matching the leader
+> are removed. So in the example above, just 'cs' will be removed.
+> 
+> Modify the warning so that it is produced once for each group, rather
+> than once for the entire evlist. Shrink the scope and size of the
+> warning text buffer.
 
-The reason is that strlen() get a pointer to a memory that has been freed.
+For the uncore, we usually have to create a group for each uncore PMU.
+The number of groups may be big. For example, on ICX, we have 40 CHA
+PMUs. For SPR, there should be more CHAs. If we have something like
+{cycles,uncore_cha/event=0x1/}, is the warning shown 40 times on ICX?
+If so, it should be very annoying.
 
-The string pointer is stored in the structure comm_str, which corresponds
-to a rb_tree node,when the node is erased, the memory of the string is 
-also freed.
+Maybe it's better to keep the current behavior which only print a
+warning once and notify the users that perf will re-group the events.
+For the details, they can get it from the -v option.
 
-In thread__comm_len(),it gets the pointer within the thread->comm_lock 
-critical section,
-but passed to strlen() outside of the thread->comm_lock critical 
-section, and the perf
-process_thread may called comm__free() concurrently, cause this segfault 
-problem.
-
-The process is as follows:
-
-display_thread                                  process_thread
---------------                                  --------------
-
-thread__comm_len
-   -> thread__comm_str
-        # held the comm read lock
-     -> __thread__comm_str(thread)
-        # release the comm read lock
-                                                 thread__delete
-                                                      # held the comm 
-write lock
-                                                   -> comm__free
-                                                     -> 
-comm_str__put(comm->comm_str)
-                                                       -> zfree(&cs->str)
-                                                      # release the comm 
-write lock
-       # The memory of the string pointed
-         to by comm has been free.
-     -> thread->comm_len = strlen(comm);
-
-This patch expand the critical section range of thread->comm_lock in 
-thread__comm_len(),
-to make strlen() called safe.
-
-Signed-off-by: Wenyu Liu  <liuwenyu7@huawei.com>
----
-  tools/perf/util/thread.c | 25 +++++++++++++++++++------
-  1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index e3e5427e1c3c..a2490a20eb56 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -311,17 +311,30 @@ const char *thread__comm_str(struct thread *thread)
-      return str;
-  }
-
-+static int __thread__comm_len(struct thread *thread, const char *comm)
-+{
-+    if (!comm)
-+        return 0;
-+    thread->comm_len = strlen(comm);
-+
-+    return thread->comm_len;
-+}
-+
-  /* CHECKME: it should probably better return the max comm len from its 
-comm list */
-  int thread__comm_len(struct thread *thread)
-  {
--    if (!thread->comm_len) {
--        const char *comm = thread__comm_str(thread);
--        if (!comm)
--            return 0;
--        thread->comm_len = strlen(comm);
-+    int comm_len = thread->comm_len;
-+
-+    if (!comm_len) {
-+        const char *comm;
-+
-+        down_read(&thread->comm_lock);
-+        comm = __thread__comm_str(thread);
-+        comm_len = __thread__comm_len(thread, comm);
-+        up_read(&thread->comm_lock);
-      }
-
--    return thread->comm_len;
-+    return comm_len;
-  }
-
-  size_t thread__fprintf(struct thread *thread, FILE *fp)
--- 
-2.36.1
-
+Thanks,
+Kan
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-stat.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index d70b1ec88594..5c12ae5efce5 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -181,14 +181,13 @@ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
+>  
+>  static void evlist__check_cpu_maps(struct evlist *evlist)
+>  {
+> -	struct evsel *evsel, *pos, *leader;
+> -	char buf[1024];
+> +	struct evsel *evsel, *warned_leader = NULL;
+>  
+>  	if (evlist__has_hybrid(evlist))
+>  		evlist__warn_hybrid_group(evlist);
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+> -		leader = evsel__leader(evsel);
+> +		struct evsel *leader = evsel__leader(evsel);
+>  
+>  		/* Check that leader matches cpus with each member. */
+>  		if (leader == evsel)
+> @@ -197,19 +196,26 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
+>  			continue;
+>  
+>  		/* If there's mismatch disable the group and warn user. */
+> -		WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
+> -		evsel__group_desc(leader, buf, sizeof(buf));
+> -		pr_warning("  %s\n", buf);
+> -
+> +		if (warned_leader != leader) {
+> +			char buf[200];
+> +
+> +			pr_warning("WARNING: grouped events cpus do not match.\n"
+> +				"Events with CPUs not matching the leader will "
+> +				"be removed from the group.\n");
+> +			evsel__group_desc(leader, buf, sizeof(buf));
+> +			pr_warning("  %s\n", buf);
+> +			warned_leader = leader;
+> +		}
+>  		if (verbose > 0) {
+> +			char buf[200];
+> +
+>  			cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
+>  			pr_warning("     %s: %s\n", leader->name, buf);
+>  			cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
+>  			pr_warning("     %s: %s\n", evsel->name, buf);
+>  		}
+>  
+> -		for_each_group_evsel(pos, leader)
+> -			evsel__remove_from_group(pos, leader);
+> +		evsel__remove_from_group(evsel, leader);
+>  	}
+>  }
+>  
