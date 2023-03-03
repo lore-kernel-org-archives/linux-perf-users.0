@@ -2,244 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B69EC64EC4
-	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 17:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4650C7EE2D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  3 Mar 2023 17:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230420AbjCCRg4 (ORCPT
+        id S231377AbjCCRu2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 12:36:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
+        Fri, 3 Mar 2023 12:50:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbjCCRgz (ORCPT
+        with ESMTP id S231150AbjCCRu2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 12:36:55 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CE7B44E;
-        Fri,  3 Mar 2023 09:36:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677865014; x=1709401014;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=53YO1WGPLlrAsnqfxbpbcOnEwzAeo87kJqM4uTjUf4I=;
-  b=da9jO8Na9B+se/hVMROVZOQxeb2QABxdOZDR9b2xbyfVEMm7/tIrvsTo
-   AuJidCIJ4wFFfRZdUx7q39Im21Uyw3YHT0hvS8wuWqWodgkt2mPpujDVy
-   JC2uytZ3UkRl8ilJE4SCIP6JVzsAazKQna22ijuHQEYDgvXQk22P8g76/
-   sv3CuFnAsSVAEVQ95uDvbLtPJxkcbM/wTvJ5HZhCIXwE2lLltYbe/NQrP
-   3RBhm9ZOAIqzgX38+/aV7z36yqHt8JRKKxTZ09HsaWO3h9aGO7I9joYHy
-   JFiPMD307Ww/MlrppohoQadLZaHmDCpPlrpP82Pn+HUzJKX3WEdwiDrK1
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="399914315"
-X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="399914315"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 09:36:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="739576152"
-X-IronPort-AV: E=Sophos;i="5.98,231,1673942400"; 
-   d="scan'208";a="739576152"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Mar 2023 09:36:52 -0800
-Received: from [10.212.168.11] (kliang2-mobl1.ccr.corp.intel.com [10.212.168.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id E13A3580689;
-        Fri,  3 Mar 2023 09:36:49 -0800 (PST)
-Message-ID: <08b6d2c9-b6f9-fdbd-e871-b81437cca218@linux.intel.com>
-Date:   Fri, 3 Mar 2023 12:36:48 -0500
+        Fri, 3 Mar 2023 12:50:28 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54EC028206;
+        Fri,  3 Mar 2023 09:50:25 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PSwRZ3R0Fz6J9fR;
+        Sat,  4 Mar 2023 01:47:54 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 3 Mar 2023 17:50:23 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-cxl@vger.kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>,
+        <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <linuxarm@huawei.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/4] CXL 3.0 Performance Monitoring Unit support
+Date:   Fri, 3 Mar 2023 17:50:18 +0000
+Message-ID: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 02/10] perf stat: Don't remove all grouped events when
- CPU maps disagree
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-References: <20230302212531.1043318-1-irogers@google.com>
- <20230302212531.1043318-3-irogers@google.com>
- <962de75d-8e27-9b47-662e-e324b3ba5812@linux.intel.com>
- <CAP-5=fXiRtKF661e=-4dX30ooV7uKQbidjaaDhjckVRdjw7CzA@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fXiRtKF661e=-4dX30ooV7uKQbidjaaDhjckVRdjw7CzA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+There was some interest in CPMU support on the monthly sync call, so
+time to revisit this. The general CXL driver interrupt handling question
+has now been resolved, so this is pretty separable from everything else
+going on in CXL land.
 
+Since RFC v3: 
+ - Simplified registration as no longer need the dynamic interrupt
+   discovery dance as upstream driver is just enabling lots of interrupts :)
+ - Various minor things (I forgot to take note).
 
-On 2023-03-03 11:44 a.m., Ian Rogers wrote:
-> On Fri, Mar 3, 2023 at 7:50 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2023-03-02 4:25 p.m., Ian Rogers wrote:
->>> If the events in an evlist's CPU map differ then the entire group is
->>> removed. For example:
->>>
->>> ```
->>> $ perf stat -e '{imc_free_running/data_read/,imc_free_running/data_write/,cs}' -a sleep 1
->>> WARNING: grouped events cpus do not match, disabling group:
->>>   anon group { imc_free_running/data_read/, imc_free_running/data_write/, cs }
->>> ```
->>>
->>> Change the behavior so that just the events not matching the leader
->>> are removed. So in the example above, just 'cs' will be removed.
->>>
->>> Modify the warning so that it is produced once for each group, rather
->>> than once for the entire evlist. Shrink the scope and size of the
->>> warning text buffer.
->>
->> For the uncore, we usually have to create a group for each uncore PMU.
->> The number of groups may be big. For example, on ICX, we have 40 CHA
->> PMUs. For SPR, there should be more CHAs. If we have something like
->> {cycles,uncore_cha/event=0x1/}, is the warning shown 40 times on ICX?
->> If so, it should be very annoying.
->>
->> Maybe it's better to keep the current behavior which only print a
->> warning once and notify the users that perf will re-group the events.
->> For the details, they can get it from the -v option.
-> 
-> Thanks Kan, I could imagine that but I was also worried about cases
-> where there are multiple groups like:
-> 
-> ```
-> $ perf stat -e '{imc_free_running/data_read/,cs},{uncore_clock/clockticks/,cs}'
-> -a sleep 1
-> WARNING: grouped events cpus do not match.
-> Events with CPUs not matching the leader will be removed from the group.
->  anon group { imc_free_running/data_read/, cs }
-> WARNING: grouped events cpus do not match.
-> Events with CPUs not matching the leader will be removed from the group.
->  anon group { uncore_clock/clockticks/, cs }
-> 
-> Performance counter stats for 'system wide':
-> 
->          1,255.75 MiB  imc_free_running/data_read/
->             7,571      cs
->     1,327,285,527      uncore_clock/clockticks/
->             7,571      cs
-> 
->       1.002772882 seconds time elapsed
-> ```
-> 
-> Knowing that both groups were broken there feels like a value add.
-> Given that this is a warning, and it can be fixed by moving the event
-> out of the group or forcing the CPUs, I lean toward being
-> informative/spammy as the spam is somewhat straightforwardly fixed on
-> the command line.
+Updated cover letter:
 
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
 
-I did some tests with the patch. The issue I was worried about didn't
-occur. The change looks good to me.
+One big question - how do we expose discoverable counters when we don't know
+what they are? (just VID, Group ID and Mask)
 
-But I found another issue. If I specify a CPU set, the group removal
-fails. It's not an issue of this patch. It looks like the current perf
-compares the user defined CPU set, rather than the PMU's cpumask.
+A few things to note.
 
-./perf stat -e '{cycles,uncore_cha/event=0x1/}' -C0 sleep 1
+1) The QEMU model against which this was developed needs tidying up and
+   review for correctness. Latest tree at
+   https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go.  So whilst I 'think'
+   the driver should be fine for what it supports, I may have missed
+   something.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) I'm not sure how to expose to user space the sets of events that may
+   be summed (given by a mask in the Counter Event Capabilities registers).
+   For now the driver advertises the individual events. Each individual
+   event may form part of multiple overlapping groups for example.
+   It may be a case of these allowed combinations only being discoverable
+   by requesting a combination and checking for errors on start.
+5) Related to that, how do we deal with the discoverable nature of vendor
+   defined events?  The CPMU is fully discoverable down to a VID / Group ID
+   and mask that sets which group elements can be used. I can't find any
+   similar drivers.
+6) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+7) Documentation needs improving, but I didn't want to spend too much
+   time on that whilst we have so many open questions.  I'll separately
+   raise the question about pmu->dev parenting which is mentioned in the
+   Docs patch introduction. (oops - haven't done that yet)
 
- Performance counter stats for 'CPU(s) 0':
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
 
-     <not counted>      cycles
-   <not supported>      uncore_cha/event=0x1/
+Based on mainline as of earlier today.
 
-       1.001783936 seconds time elapsed
+Jonathan Cameron (4):
+  cxl: Add function to count regblocks of a given type.
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver.
 
-Some events weren't counted. Try disabling the NMI watchdog:
-        echo 0 > /proc/sys/kernel/nmi_watchdog
-        perf stat ...
-        echo 1 > /proc/sys/kernel/nmi_watchdog
-The events in group usually have to be from the same PMU. Try
-reorganizing the group.
+ Documentation/admin-guide/perf/cxl.rst   |  65 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  12 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   3 +
+ drivers/cxl/core/cpmu.c                  |  69 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  50 +-
+ drivers/cxl/cpmu.c                       | 943 +++++++++++++++++++++++
+ drivers/cxl/cxl.h                        |  17 +-
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  27 +-
+ 14 files changed, 1188 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
 
-Thanks,
-Kan
+-- 
+2.37.2
 
-> 
-> Thanks,
-> Ian
-> 
->> Thanks,
->> Kan
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/builtin-stat.c | 24 +++++++++++++++---------
->>>  1 file changed, 15 insertions(+), 9 deletions(-)
->>>
->>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->>> index d70b1ec88594..5c12ae5efce5 100644
->>> --- a/tools/perf/builtin-stat.c
->>> +++ b/tools/perf/builtin-stat.c
->>> @@ -181,14 +181,13 @@ static bool cpus_map_matched(struct evsel *a, struct evsel *b)
->>>
->>>  static void evlist__check_cpu_maps(struct evlist *evlist)
->>>  {
->>> -     struct evsel *evsel, *pos, *leader;
->>> -     char buf[1024];
->>> +     struct evsel *evsel, *warned_leader = NULL;
->>>
->>>       if (evlist__has_hybrid(evlist))
->>>               evlist__warn_hybrid_group(evlist);
->>>
->>>       evlist__for_each_entry(evlist, evsel) {
->>> -             leader = evsel__leader(evsel);
->>> +             struct evsel *leader = evsel__leader(evsel);
->>>
->>>               /* Check that leader matches cpus with each member. */
->>>               if (leader == evsel)
->>> @@ -197,19 +196,26 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
->>>                       continue;
->>>
->>>               /* If there's mismatch disable the group and warn user. */
->>> -             WARN_ONCE(1, "WARNING: grouped events cpus do not match, disabling group:\n");
->>> -             evsel__group_desc(leader, buf, sizeof(buf));
->>> -             pr_warning("  %s\n", buf);
->>> -
->>> +             if (warned_leader != leader) {
->>> +                     char buf[200];
->>> +
->>> +                     pr_warning("WARNING: grouped events cpus do not match.\n"
->>> +                             "Events with CPUs not matching the leader will "
->>> +                             "be removed from the group.\n");
->>> +                     evsel__group_desc(leader, buf, sizeof(buf));
->>> +                     pr_warning("  %s\n", buf);
->>> +                     warned_leader = leader;
->>> +             }
->>>               if (verbose > 0) {
->>> +                     char buf[200];
->>> +
->>>                       cpu_map__snprint(leader->core.cpus, buf, sizeof(buf));
->>>                       pr_warning("     %s: %s\n", leader->name, buf);
->>>                       cpu_map__snprint(evsel->core.cpus, buf, sizeof(buf));
->>>                       pr_warning("     %s: %s\n", evsel->name, buf);
->>>               }
->>>
->>> -             for_each_group_evsel(pos, leader)
->>> -                     evsel__remove_from_group(pos, leader);
->>> +             evsel__remove_from_group(evsel, leader);
->>>       }
->>>  }
->>>
