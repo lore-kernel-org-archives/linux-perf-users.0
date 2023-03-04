@@ -2,160 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE00C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Mar 2023 02:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD21C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Mar 2023 02:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjCDCWb convert rfc822-to-8bit (ORCPT
+        id S229552AbjCDCqi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 21:22:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38514 "EHLO
+        Fri, 3 Mar 2023 21:46:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjCDCWa (ORCPT
+        with ESMTP id S229500AbjCDCqh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 21:22:30 -0500
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F8C1B31E;
-        Fri,  3 Mar 2023 18:22:29 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5384ff97993so76499817b3.2;
-        Fri, 03 Mar 2023 18:22:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677896548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qPHnjCLdtmXvj3xOnAC54fhyuMMx2Sn9DQO+LKzZiBw=;
-        b=1vf0uADeLP2cy9IvxWAxXFCQdTYs1FA0pdQeHs+R8tfJPX56QcTiJg/l8xbXHgmUGT
-         tOSl9m6CIXkjSMB4beE8bq4Z/LTTeZRvvo8AlCP0UC7/OxtxuA7GNX27MqE4t0IRCyWh
-         gVHcRD7Dk57uXWLIN+twg6IqZsqHnG87C3qCpWC35CzdAjQjKm2ikBt0nG0nSY/Whlt/
-         AhxLRBH7/kTjFX2W87WY2HOJ5pEbi683b9h7EhCA538VZfAKdDlzD3+Mxj4x2+EPj3zn
-         xdPBJgc9hO8D8DshUfk/93PVKwxUivVRg4zJJnZmaMvW+gPvm6+chlIoDc1nKS4HAn64
-         4/iQ==
-X-Gm-Message-State: AO0yUKVbehjhp3cR9wwrB8A4gmEVlPwYyckMumjBCdhsBbqxzi8DUiVY
-        Cl3H+9+0V5PPMJg3Z2I38UNTimYpLv08/BnRiu4=
-X-Google-Smtp-Source: AK7set+O/rTHZZcjaoCcS0aYmy1w63tC1g9blFpNriZI/g8cwa2hY+STgZcWGaA0fbYhA9F5VWmiYLpbnE1d7OdciBg=
-X-Received: by 2002:a81:ae47:0:b0:533:9ffb:cb13 with SMTP id
- g7-20020a81ae47000000b005339ffbcb13mr2185799ywk.3.1677896548461; Fri, 03 Mar
- 2023 18:22:28 -0800 (PST)
+        Fri, 3 Mar 2023 21:46:37 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6F827AAC;
+        Fri,  3 Mar 2023 18:46:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677897996; x=1709433996;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l/A99rMM5WHL0wv+tSavfNrlLcDVEGZfVCVXimd15eM=;
+  b=ed4MVFEkgrEAxdj3JoMr7zQE5ERYuaOFOhWvQc5kKnCb8pg3ElGZH6s9
+   6uOWzhghyGytH3bgnThsU4OUArgeAfuuuQo9OeBo285spMdID7Ozz4hQb
+   DgzhTxCoj6UmmNuYALILFw1gv4N3pSHDX1zHNzNq4cD3LPeZs065q4f2C
+   aTW4Gy1w0c/GjZO5ley6nbpi6w3Bd/qOilj9JSIxQhNRk6wvGhLyMWCE+
+   ajWLLfvs3ABzF3GZPp9xhiI0suQMP+MIN909OpFxV4WPhqKScXPcKpRnl
+   BTm36NtOKLjUPoO35Et2aMSP/TPXU7Fo6yysSdqcOUW8YBbJFAyGjvla4
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="421484483"
+X-IronPort-AV: E=Sophos;i="5.98,232,1673942400"; 
+   d="scan'208";a="421484483"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 18:46:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="705850369"
+X-IronPort-AV: E=Sophos;i="5.98,232,1673942400"; 
+   d="scan'208";a="705850369"
+Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 03 Mar 2023 18:46:32 -0800
+Received: from kbuild by 776573491cc5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pYHup-0001oS-2O;
+        Sat, 04 Mar 2023 02:46:31 +0000
+Date:   Sat, 4 Mar 2023 10:46:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-cxl@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        will@kernel.org, dan.j.williams@intel.com, bwidawsk@kernel.org,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, linuxarm@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
+Message-ID: <202303041001.G9OUGQ6l-lkp@intel.com>
+References: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-References: <20230302212531.1043318-1-irogers@google.com> <20230302212531.1043318-9-irogers@google.com>
- <CAM9d7ciBSB33HDD0-vcHHsco9k=H6qZkiCH8po=adt8-jv0ayg@mail.gmail.com> <CAP-5=fWTqSuec8P-Ccztz=HiBHFLYmk7Nq1Z1eYzmi6WOuB=YA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWTqSuec8P-Ccztz=HiBHFLYmk7Nq1Z1eYzmi6WOuB=YA@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 3 Mar 2023 18:22:16 -0800
-Message-ID: <CAM9d7chCEBvOtAQbozodjEnxqdObZXvoRcsTo8ERyn97PqPtPg@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] perf parse-events: Sort and group parsed events
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 5:39 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Thu, Mar 2, 2023 at 4:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Thu, Mar 2, 2023 at 1:26 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > This change is intended to be a no-op for most current cases, the
-> > > default sort order is the order the events were parsed. Where it
-> > > varies is in how groups are handled. Previously an uncore and core
-> > > event that are grouped would most often cause the group to be removed:
-> > >
-> > > ```
-> > > $ perf stat -e '{instructions,uncore_imc_free_running_0/data_total/}' -a sleep 1
-> > > WARNING: grouped events cpus do not match, disabling group:
-> > >   anon group { instructions, uncore_imc_free_running_0/data_total/ }
-> > > ...
-> > > ```
-> > >
-> > > However, when wildcards are used the events should be re-sorted and
-> > > re-grouped in parse_events__set_leader, but this currently fails for
-> > > simple examples:
-> > >
-> > > ```
-> > > $ perf stat -e '{uncore_imc_free_running/data_read/,uncore_imc_free_running/data_write/}' -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >      <not counted> MiB  uncore_imc_free_running/data_read/
-> > >      <not counted> MiB  uncore_imc_free_running/data_write/
-> > >
-> > >        1.000996992 seconds time elapsed
-> > > ```
-> > >
-> > > A futher failure mode, fixed in this patch, is to force topdown events
-> > > into a group.
-> > >
-> > > This change moves sorting the evsels in the evlist after parsing. It
-> > > requires parsing to set up groups. First the evsels are sorted
-> > > respecting the existing groupings and parse order, but also reordering
-> > > to ensure evsels of the same PMU and group appear together. So that
-> > > software and aux events respect groups, their pmu_name is taken from
-> > > the group leader. The sorting is done with list_sort removing a memory
-> > > allocation.
-> > >
-> > > After sorting a pass is done to correct the group leaders and for
-> > > topdown events ensuring they have a group leader.
-> > >
-> > > This fixes the problems seen before:
-> > >
-> > > ```
-> > > $ perf stat -e '{uncore_imc_free_running/data_read/,uncore_imc_free_running/data_write/}' -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >             727.42 MiB  uncore_imc_free_running/data_read/
-> > >              81.84 MiB  uncore_imc_free_running/data_write/
-> > >
-> > >        1.000948615 seconds time elapsed
-> > > ```
-> > >
-> > > As well as making groups not fail for cases like:
-> > >
-> > > ```
-> > > $ perf stat -e '{imc_free_running_0/data_total/,imc_free_running_1/data_total/}' -a sleep 1
-> > >
-> > >  Performance counter stats for 'system wide':
-> > >
-> > >             256.47 MiB  imc_free_running_0/data_total/
-> > >             256.48 MiB  imc_free_running_1/data_total/
-> >
-> > I didn't expect we can group events from different PMUs.
-> > Not sure if it can handle multiplexing properly..
->
-> You are right, this example is now working as the sorting and
-> regrouping breaks the events into two groups. The rules around
-> grouping are complex and Arnaldo mentioned that maybe cases like this
-> should be warned about. The problem then is that wildcard and metric
-> expansion may naturally produce these cases and we don't want the
-> warning. It is something of a shame that the grouping information in
-> the perf stat output isn't clearer.
+Hi Jonathan,
 
-Oh, that means the events are not in a group in this case.
-Yeah.. it can be somewhat confusing.  It seems the wildcard
-is a kind of exception.  Then we can warn if there's no wildcard?
+I love your patch! Yet something to improve:
 
-Thanks,
-Namhyung
+[auto build test ERROR on cxl/next]
+[also build test ERROR on cxl/pending linus/master next-20230303]
+[cannot apply to v6.2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20230303175022.10806-3-Jonathan.Cameron%40huawei.com
+patch subject: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
+config: alpha-randconfig-r003-20230302 (https://download.01.org/0day-ci/archive/20230304/202303041001.G9OUGQ6l-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/0790ed82bb7adf04c834e8c03008b92c1b23945e
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
+        git checkout 0790ed82bb7adf04c834e8c03008b92c1b23945e
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha SHELL=/bin/bash drivers/cxl/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303041001.G9OUGQ6l-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/cxl/core/regs.c:9:10: fatal error: cpmu.h: No such file or directory
+       9 | #include <cpmu.h>
+         |          ^~~~~~~~
+   compilation terminated.
+--
+>> drivers/cxl/core/cpmu.c:8:10: fatal error: cpmu.h: No such file or directory
+       8 | #include <cpmu.h>
+         |          ^~~~~~~~
+   compilation terminated.
+
+
+vim +9 drivers/cxl/core/regs.c
+
+   > 9	#include <cpmu.h>
+    10	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
