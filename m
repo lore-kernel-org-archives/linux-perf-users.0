@@ -2,252 +2,194 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F824C61DA3
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Mar 2023 00:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F4C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Mar 2023 02:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjCDAPb (ORCPT
+        id S229643AbjCDCAp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 3 Mar 2023 19:15:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49186 "EHLO
+        Fri, 3 Mar 2023 21:00:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbjCDAPb (ORCPT
+        with ESMTP id S229511AbjCDCAp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 3 Mar 2023 19:15:31 -0500
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5B7A2BF14
-        for <linux-perf-users@vger.kernel.org>; Fri,  3 Mar 2023 16:15:29 -0800 (PST)
-Received: by mail-io1-xd2d.google.com with SMTP id m22so1700232ioy.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 03 Mar 2023 16:15:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677888929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DH/huBKc05VkKi0Pa9Nd68GqeoHNsDb+c2sFg42hjVU=;
-        b=tB9adW87yWkt3ipX0jZr1TZjqf3gaoWVCa+mUGjPziGhkp2HMOPi5zz3qEsyyBQYJx
-         kF77+Nd7Hx9JYdF6k//pzzfcFBQVfAwUMmWQPyVTL2aIoIEfNLCg2V+g1hJ6E605YqxJ
-         I5fziSLG+p+vLRu475n9rrhliCN0GFu3JEi+qMcouLX8R8m2hdThnh/wi3JpNHMrGGUe
-         OwsWIShTWdyutCpTZOgPO0j65eVtZaD/YgFbwAaUC3JtSn19zDCLofnBA06eEql1VpXG
-         qWJ7Pa9xkredIVxiJqvyTAHkPnXGXa1jSFgUNUbljEoc95P1UU1Er1GRB7grpMa52EtN
-         m+mg==
+        Fri, 3 Mar 2023 21:00:45 -0500
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A451717CDF;
+        Fri,  3 Mar 2023 18:00:43 -0800 (PST)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-536bbe5f888so75227877b3.8;
+        Fri, 03 Mar 2023 18:00:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677888929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DH/huBKc05VkKi0Pa9Nd68GqeoHNsDb+c2sFg42hjVU=;
-        b=HSqthpKeRaeysx7rB5rmcuRK8bJk1qRhVkK1t3i4ji3p+LVxERVKDZsF7rxyCKzTbu
-         uRNLQ7CR91xRiRaRxJ2iTsx0+lQmTMbncuIrWMr+6YLQP7eOyzCLRvzMLlFUstDikr6u
-         BHPq6VJVfJhP5eyb9OJMV3OwueoLEJGbh7BQxBT4osxj5aP9dPR+bbEI5bCdOXTgjChw
-         78OSlrR34jzo0GdVqL7ciujwCwxtf/sqOT90ZmBIEbqaPCqTCHDqe2Fz9xJwAHXJY77A
-         iunR61cfIK8Q4EboQ3Vdcj94bNB+mG7BDsL7VDLbUChH8m3b+beGUCVFIjpADno6WhPD
-         y+jQ==
-X-Gm-Message-State: AO0yUKX3CvIsWtiFobN0PPRZy/GNJskiANR3WuuDnjlKF9KK2NkqDsDH
-        RadNhOPq/asZQdzJbgQX6USa4QIyeMAW4aLfeVd73w==
-X-Google-Smtp-Source: AK7set9uWODy1xGUkdXMgLnbJ4ULDScYxo3ilV9y0EjHQL/d09kg2Yld1urfbk6D7hr4nVs8UQb0goA7WjMH3pg+eUA=
-X-Received: by 2002:a5e:c002:0:b0:74a:f35:ca88 with SMTP id
- u2-20020a5ec002000000b0074a0f35ca88mr1501692iol.2.1677888928991; Fri, 03 Mar
- 2023 16:15:28 -0800 (PST)
+        d=1e100.net; s=20210112; t=1677895243;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5mPNNhACcaePShslSruZSyQWxcL1c2PuVcOte264Rko=;
+        b=fmpv4tjo0383vu7NbicTh/2vr7GfQNC/IFt3HcCFl2jSPL4/0kHWyquAWcMhEG5RY5
+         PBJkvM57JlRB24CDwqpKm+v/bxz9nWybReSniJgd0oYAD5aFyUV9CSosG6pXHEzkHu04
+         be6OM8ScWdn//RyLta0DYAmr4YHXB/Wyl8IddqbmZ07C3FEPdYFBMMGYaVZlkMRB+2Ts
+         TsB/f5wjN83K4dzSfthf/cCEXdPr0tEYwHXDHTm66MlmIFKGU/0i1Z5Q3/6sWhffC1RD
+         XtJabpMjJpCBV9lUIxcqQUOihes8BLcrAusElls/VVwxvbl+z3eKImeCF2kSaQyRVfqB
+         S08Q==
+X-Gm-Message-State: AO0yUKUsDdxUaMhfmukCSANXzLEkgum3EZDgmGVgmZaqdjfciOjIXljy
+        L5pTmgueFwDxwCWuLWs8Nc8NIYApcBlsWgBR2Yo=
+X-Google-Smtp-Source: AK7set8TKS2zI0waWBj2l+bnzBQVl0I9oGTUaJhcIMdYpAt27V3gshPDO43VSH8Ley//23BfVFr6Ig0S6766v1+C6xM=
+X-Received: by 2002:a81:ae47:0:b0:533:9ffb:cb13 with SMTP id
+ g7-20020a81ae47000000b005339ffbcb13mr2153446ywk.3.1677895242776; Fri, 03 Mar
+ 2023 18:00:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20230223071818.329671-1-irogers@google.com> <Y/dq4yO+zXYLCQ8d@kernel.org>
- <CAP-5=fXuZ=sWJcKFUSPVSpjmHFHzSWQEMfoisvjqzJz2dDOXWQ@mail.gmail.com> <ZAEJy6RXAGjd7Erb@kernel.org>
-In-Reply-To: <ZAEJy6RXAGjd7Erb@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 3 Mar 2023 16:15:17 -0800
-Message-ID: <CAP-5=fXS0pUsYXDrvwMgGJnYV=+1-PO+nE+b0FHR5YbNZzYSQg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf tests stat+csv_output: Switch CSV separator
- to @
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Claire Jensen <cjense@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <a60e9257-0874-223c-0cd8-7ab284cd0a1f@huawei.com>
+In-Reply-To: <a60e9257-0874-223c-0cd8-7ab284cd0a1f@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 3 Mar 2023 18:00:30 -0800
+Message-ID: <CAM9d7chC4dkKXCK=sg-C8JB-ouqfHmWJqaQMfiP-4Uuk7iDjvA@mail.gmail.com>
+Subject: Re: [PATCH] perf top: Fix rare segfault in thread__comm_len()
+To:     "liuwenyu (D)" <liuwenyu7@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, brauner@kernel.org,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linfeilong@huawei.com,
+        "hewenliang (C)" <hewenliang4@huawei.com>, yeyunfeng@huawei.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 12:40=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Thu, Mar 02, 2023 at 11:30:36AM -0800, Ian Rogers escreveu:
-> > On Thu, Feb 23, 2023 at 5:32=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Wed, Feb 22, 2023 at 11:18:17PM -0800, Ian Rogers escreveu:
-> > > > Commas may appear in events like:
-> > > > cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/
-> > > > which causes the commachecker to see more fields than expected. Use=
- @
-> > > > as the CSV separator to avoid this.
-> > >
-> > > Thanks, applied both patches.
-> >
-> > Thanks Arnaldo, I don't see the patches in the git branches so perhaps
-> > something went wrong?
->
-> Its in my local branch, I'll push it.
+Hello,
 
-Thanks Arnaldo! I see the change in perf-tools and perf/urgent which
-means they should appear in Linux 6.3. How do these things get merged
-into perf-tools-next? I'm building upon them for changes targeting
-Linux 6.4.
+On Fri, Mar 3, 2023 at 2:02 AM liuwenyu (D) <liuwenyu7@huawei.com> wrote:
+>
+> In thread__comm_len(),strlen() is called outside of the
+> thread->comm_lock critical section,which may cause a UAF
+> problems if comm__free() is called by the process_thread
+> concurrently.
+>
+> backtrace of the core file is as follows:
+>
+>      (gdb) bt
+>      #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+>      #1  0x000055ad15d31de5 in thread__comm_len (thread=0x7f627d20e300)
+> at util/thread.c:320
+>      #2  0x000055ad15d4fade in hists__calc_col_len (h=0x7f627d295940,
+> hists=0x55ad1772bfe0)
+>          at util/hist.c:103
+>      #3  hists__calc_col_len (hists=0x55ad1772bfe0, h=0x7f627d295940) at
+> util/hist.c:79
+>      #4  0x000055ad15d52c8c in output_resort
+> (hists=hists@entry=0x55ad1772bfe0, prog=0x0,
+>          use_callchain=false, cb=cb@entry=0x0, cb_arg=0x0) at
+> util/hist.c:1926
+>      #5  0x000055ad15d530a4 in evsel__output_resort_cb
+> (evsel=evsel@entry=0x55ad1772bde0,
+>          prog=prog@entry=0x0, cb=cb@entry=0x0, cb_arg=cb_arg@entry=0x0)
+> at util/hist.c:1945
+>      #6  0x000055ad15d53110 in evsel__output_resort
+> (evsel=evsel@entry=0x55ad1772bde0,
+>          prog=prog@entry=0x0) at util/hist.c:1950
+>      #7  0x000055ad15c6ae9a in perf_top__resort_hists
+> (t=t@entry=0x7ffcd9cbf4f0) at builtin-top.c:311
+>      #8  0x000055ad15c6cc6d in perf_top__print_sym_table
+> (top=0x7ffcd9cbf4f0) at builtin-top.c:346
+>      #9  display_thread (arg=0x7ffcd9cbf4f0) at builtin-top.c:700
+>      #10 0x00007f6282fab4fa in start_thread (arg=<optimized out>) at
+> pthread_create.c:443
+>      #11 0x00007f628302e200 in clone3 () at
+> ../sysdeps/unix/sysv/linux/x86_64/clone3.S:81
+>
+> The reason is that strlen() get a pointer to a memory that has been freed.
+>
+> The string pointer is stored in the structure comm_str, which corresponds
+> to a rb_tree node,when the node is erased, the memory of the string is
+> also freed.
+>
+> In thread__comm_len(),it gets the pointer within the thread->comm_lock
+> critical section,
+> but passed to strlen() outside of the thread->comm_lock critical
+> section, and the perf
+> process_thread may called comm__free() concurrently, cause this segfault
+> problem.
+>
+> The process is as follows:
+>
+> display_thread                                  process_thread
+> --------------                                  --------------
+>
+> thread__comm_len
+>    -> thread__comm_str
+>         # held the comm read lock
+>      -> __thread__comm_str(thread)
+>         # release the comm read lock
+>                                                  thread__delete
+>                                                       # held the comm
+> write lock
+>                                                    -> comm__free
+>                                                      ->
+> comm_str__put(comm->comm_str)
+>                                                        -> zfree(&cs->str)
+>                                                       # release the comm
+> write lock
+>        # The memory of the string pointed
+>          to by comm has been free.
+>      -> thread->comm_len = strlen(comm);
+>
+> This patch expand the critical section range of thread->comm_lock in
+> thread__comm_len(),
+> to make strlen() called safe.
+>
+> Signed-off-by: Wenyu Liu  <liuwenyu7@huawei.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
-Ian
+Namhyung
 
-> > Ian
-> >
-> > > - Arnaldo
-> > >
-> > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/tests/shell/stat+csv_output.sh | 23 ++++++++++++-------=
-----
-> > > >  1 file changed, 12 insertions(+), 11 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf=
-/tests/shell/stat+csv_output.sh
-> > > > index b7f050aa6210..324fc9e6edd7 100755
-> > > > --- a/tools/perf/tests/shell/stat+csv_output.sh
-> > > > +++ b/tools/perf/tests/shell/stat+csv_output.sh
-> > > > @@ -7,6 +7,7 @@
-> > > >  set -e
-> > > >
-> > > >  skip_test=3D0
-> > > > +csv_sep=3D@
-> > > >
-> > > >  function commachecker()
-> > > >  {
-> > > > @@ -34,7 +35,7 @@ function commachecker()
-> > > >               [ "$x" =3D "Failed" ] && continue
-> > > >
-> > > >               # Count the number of commas
-> > > > -             x=3D$(echo $line | tr -d -c ',')
-> > > > +             x=3D$(echo $line | tr -d -c $csv_sep)
-> > > >               cnt=3D"${#x}"
-> > > >               # echo $line $cnt
-> > > >               [[ ! "$cnt" =3D~ $exp ]] && {
-> > > > @@ -54,7 +55,7 @@ function ParanoidAndNotRoot()
-> > > >  check_no_args()
-> > > >  {
-> > > >       echo -n "Checking CSV output: no args "
-> > > > -     perf stat -x, true 2>&1 | commachecker --no-args
-> > > > +     perf stat -x$csv_sep true 2>&1 | commachecker --no-args
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -66,7 +67,7 @@ check_system_wide()
-> > > >               echo "[Skip] paranoid and not root"
-> > > >               return
-> > > >       fi
-> > > > -     perf stat -x, -a true 2>&1 | commachecker --system-wide
-> > > > +     perf stat -x$csv_sep -a true 2>&1 | commachecker --system-wid=
-e
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -79,14 +80,14 @@ check_system_wide_no_aggr()
-> > > >               return
-> > > >       fi
-> > > >       echo -n "Checking CSV output: system wide no aggregation "
-> > > > -     perf stat -x, -A -a --no-merge true 2>&1 | commachecker --sys=
-tem-wide-no-aggr
-> > > > +     perf stat -x$csv_sep -A -a --no-merge true 2>&1 | commachecke=
-r --system-wide-no-aggr
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > >  check_interval()
-> > > >  {
-> > > >       echo -n "Checking CSV output: interval "
-> > > > -     perf stat -x, -I 1000 true 2>&1 | commachecker --interval
-> > > > +     perf stat -x$csv_sep -I 1000 true 2>&1 | commachecker --inter=
-val
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -94,7 +95,7 @@ check_interval()
-> > > >  check_event()
-> > > >  {
-> > > >       echo -n "Checking CSV output: event "
-> > > > -     perf stat -x, -e cpu-clock true 2>&1 | commachecker --event
-> > > > +     perf stat -x$csv_sep -e cpu-clock true 2>&1 | commachecker --=
-event
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -106,7 +107,7 @@ check_per_core()
-> > > >               echo "[Skip] paranoid and not root"
-> > > >               return
-> > > >       fi
-> > > > -     perf stat -x, --per-core -a true 2>&1 | commachecker --per-co=
-re
-> > > > +     perf stat -x$csv_sep --per-core -a true 2>&1 | commachecker -=
--per-core
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -118,7 +119,7 @@ check_per_thread()
-> > > >               echo "[Skip] paranoid and not root"
-> > > >               return
-> > > >       fi
-> > > > -     perf stat -x, --per-thread -a true 2>&1 | commachecker --per-=
-thread
-> > > > +     perf stat -x$csv_sep --per-thread -a true 2>&1 | commachecker=
- --per-thread
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -130,7 +131,7 @@ check_per_die()
-> > > >               echo "[Skip] paranoid and not root"
-> > > >               return
-> > > >       fi
-> > > > -     perf stat -x, --per-die -a true 2>&1 | commachecker --per-die
-> > > > +     perf stat -x$csv_sep --per-die -a true 2>&1 | commachecker --=
-per-die
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -142,7 +143,7 @@ check_per_node()
-> > > >               echo "[Skip] paranoid and not root"
-> > > >               return
-> > > >       fi
-> > > > -     perf stat -x, --per-node -a true 2>&1 | commachecker --per-no=
-de
-> > > > +     perf stat -x$csv_sep --per-node -a true 2>&1 | commachecker -=
--per-node
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > @@ -154,7 +155,7 @@ check_per_socket()
-> > > >               echo "[Skip] paranoid and not root"
-> > > >               return
-> > > >       fi
-> > > > -     perf stat -x, --per-socket -a true 2>&1 | commachecker --per-=
-socket
-> > > > +     perf stat -x$csv_sep --per-socket -a true 2>&1 | commachecker=
- --per-socket
-> > > >       echo "[Success]"
-> > > >  }
-> > > >
-> > > > --
-> > > > 2.39.2.637.g21b0678d19-goog
-> > > >
-> > >
-> > > --
-> > >
-> > > - Arnaldo
+
+> ---
+>   tools/perf/util/thread.c | 25 +++++++++++++++++++------
+>   1 file changed, 19 insertions(+), 6 deletions(-)
 >
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index e3e5427e1c3c..a2490a20eb56 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -311,17 +311,30 @@ const char *thread__comm_str(struct thread *thread)
+>       return str;
+>   }
+>
+> +static int __thread__comm_len(struct thread *thread, const char *comm)
+> +{
+> +    if (!comm)
+> +        return 0;
+> +    thread->comm_len = strlen(comm);
+> +
+> +    return thread->comm_len;
+> +}
+> +
+>   /* CHECKME: it should probably better return the max comm len from its
+> comm list */
+>   int thread__comm_len(struct thread *thread)
+>   {
+> -    if (!thread->comm_len) {
+> -        const char *comm = thread__comm_str(thread);
+> -        if (!comm)
+> -            return 0;
+> -        thread->comm_len = strlen(comm);
+> +    int comm_len = thread->comm_len;
+> +
+> +    if (!comm_len) {
+> +        const char *comm;
+> +
+> +        down_read(&thread->comm_lock);
+> +        comm = __thread__comm_str(thread);
+> +        comm_len = __thread__comm_len(thread, comm);
+> +        up_read(&thread->comm_lock);
+>       }
+>
+> -    return thread->comm_len;
+> +    return comm_len;
+>   }
+>
+>   size_t thread__fprintf(struct thread *thread, FILE *fp)
 > --
+> 2.36.1
 >
-> - Arnaldo
