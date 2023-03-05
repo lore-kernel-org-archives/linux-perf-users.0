@@ -2,213 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3D9C6FA8E
-	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Mar 2023 08:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E60C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Mar 2023 09:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbjCEIcv (ORCPT
+        id S229570AbjCEJ2V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Mar 2023 03:32:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35058 "EHLO
+        Sun, 5 Mar 2023 04:28:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjCEIcv (ORCPT
+        with ESMTP id S229561AbjCEJ2U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Mar 2023 03:32:51 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6B4144B4;
-        Sun,  5 Mar 2023 00:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678005170; x=1709541170;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tbIHEzVDd1WuDL63qoVgpFnJqE453iOUu81RrWrZ/Pg=;
-  b=hSLPKZ/SgqEiys4/F0tPUl/dFH8r1f5EzNJPBs+bSSlumHFDpHqM0Kis
-   1foYBrdFHQL44NWbtLAK/BA0ThIyYra0mv1xV27RMOR1thNOKH7CRbHEz
-   /vzalCIdu2nNrmMOyjxVDu0OM1VaHnF/dzcl1ZZsEC3bMyyT/dYb4gTIJ
-   TVzPtv0mv8GTA2UsN7HoM9fThbgpXdY2SG16OvMlyq1Ajz6H/n+jfj4hA
-   6IrYw+nsqZpH21Wm9vYV4vCWNXhsaa61f4rsCfp+6qjoC17xUG4jyEWD8
-   F5URSQyFO5oQPA9SfZag1Y97zgSgWMC+sLCt504Ezz8tqF8BtkMF1Zm3D
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10639"; a="332835491"
-X-IronPort-AV: E=Sophos;i="5.98,235,1673942400"; 
-   d="scan'208";a="332835491"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2023 00:32:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10639"; a="653252875"
-X-IronPort-AV: E=Sophos;i="5.98,235,1673942400"; 
-   d="scan'208";a="653252875"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.75])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2023 00:32:43 -0800
-Message-ID: <4473367b-38e1-7c15-3937-a077d68410b7@intel.com>
-Date:   Sun, 5 Mar 2023 10:32:39 +0200
+        Sun, 5 Mar 2023 04:28:20 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323B67A8E;
+        Sun,  5 Mar 2023 01:28:19 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id kb15so6921833pjb.1;
+        Sun, 05 Mar 2023 01:28:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678008498;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DjyKHW/kawAuwuQfrAWVGuzBmTM7GYJlp82gYhymMcs=;
+        b=jABWayejwtGhcItoAt3G7bLw466a5H5PPhNAyj/17NYmQeniElDScMW8f1oclGzhpq
+         3Hzgt26m3KUuGZWox+tg6RcyyCaPKyacXGxZf8NgsxnUzuZu/X3NNEV3JM37QDoPwLHu
+         Ryx0zCRZAcKCxUk3HP6/9wHIqV4ykjyQtanrdEEagsY6O9KKyxCrCVcuuymCgqWGdA34
+         lAqApg1ezaVz27wA0yLKRAn6uRWYaObKPKe7f7h3c9Im7CTisAAUvpPPdfG5xCVvIEEx
+         7xnInnHAXuiI+XX1RS3x2X9f8qYTij/IsZ+4TqTWBjtzO98OexFsQ0fCtrYaTqPLGdTh
+         P0zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678008498;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DjyKHW/kawAuwuQfrAWVGuzBmTM7GYJlp82gYhymMcs=;
+        b=V4yAbiI5KXXMgIBfnOraFWFJOqsVan7FK49peXfYU2UPYZckX6s2Xgo6ZHigExSqaN
+         z1KDR6+gysr1vGxvoCE0dWNc8FQ/+WZ3xFxUes4fam6smoDDrR1V74dsHNJ82J3tWzDd
+         B7AGy+OJC4O83+D6aJ0Cf++cRW+Wd7RuUNlMY7edAuga/UO+mZ/jEoE+DTeIRVhZOT2d
+         CWn9lbExPiJ75rAlFirm20mNGPVajTP7cLGzTORGtch4jc0pCElG5/+Iqq838zTV4OM/
+         909kt3GVry9PUrg1iTM81dOy5t174dK3pObiQJQn2bYC4YW4iXPjXMHD9gr4+t2j5Ypw
+         M6Uw==
+X-Gm-Message-State: AO0yUKVd+fFVMlMBxqrp7tyeYBkvyrItJ2LDxMX5DG6lqZDEzJz8ZWfa
+        5r9vc0dr23kxRHGNlKQFVanbWqDgx9HYSQ==
+X-Google-Smtp-Source: AK7set++UyKWGrsZ10B0LNEUIUmCxHzBKAElgojOCieONFfl9ObfJihWWVgmFzngmwJQU1V35v7Yeg==
+X-Received: by 2002:a17:902:f693:b0:19d:e11:32de with SMTP id l19-20020a170902f69300b0019d0e1132demr9442026plg.34.1678008498536;
+        Sun, 05 Mar 2023 01:28:18 -0800 (PST)
+Received: from mbhardwaj.nvidia.com ([203.200.25.7])
+        by smtp.googlemail.com with ESMTPSA id w22-20020a1709029a9600b001991f3d85acsm4418019plp.299.2023.03.05.01.28.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Mar 2023 01:28:18 -0800 (PST)
+From:   Manish Bhardwaj <bhardwajmanish18@gmail.com>
+To:     bhardwajmanish18@gmail.com
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        irogers@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
+Subject: [PATCH] perf/core: introduced stub APIs for exported APIs
+Date:   Sun,  5 Mar 2023 14:57:59 +0530
+Message-Id: <20230305092759.10754-1-bhardwajmanish18@gmail.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230305053934.9948-1-bhardwajmanish18@gmail.com>
+References: <20230305053934.9948-1-bhardwajmanish18@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.8.0
-Subject: Re: [PATCH v2 03/10] perf record: Early auxtrace initialization
- before event parsing
-Content-Language: en-US
-To:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20230302212531.1043318-1-irogers@google.com>
- <20230302212531.1043318-4-irogers@google.com>
- <2aed81ff-2d28-3af5-0657-16ee69705c03@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <2aed81ff-2d28-3af5-0657-16ee69705c03@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/03/23 18:40, Liang, Kan wrote:
-> 
-> 
-> On 2023-03-02 4:25 p.m., Ian Rogers wrote:
->> This allows event parsing to use the evsel__is_aux_event function,
->> which is important when determining event grouping.
->>
->> Signed-off-by: Ian Rogers <irogers@google.com>
->> ---
->>  tools/perf/arch/x86/util/auxtrace.c | 17 +++++++++++++----
->>  tools/perf/builtin-record.c         |  6 ++++++
->>  tools/perf/util/auxtrace.h          |  2 ++
->>  3 files changed, 21 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
->> index 3da506e13f49..de1e4842ea2e 100644
->> --- a/tools/perf/arch/x86/util/auxtrace.c
->> +++ b/tools/perf/arch/x86/util/auxtrace.c
->> @@ -15,6 +15,19 @@
->>  #include "../../../util/intel-bts.h"
->>  #include "../../../util/evlist.h"
->>  
->> +void auxtrace__early_init(void)
->> +{
->> +	struct perf_pmu *intel_pt_pmu;
->> +	struct perf_pmu *intel_bts_pmu;
->> +
->> +	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
->> +	if (intel_pt_pmu)
->> +		intel_pt_pmu->auxtrace = true;
->> +	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
->> +	if (intel_bts_pmu)
->> +		intel_bts_pmu->auxtrace = true;
->> +}
->> +
->>  static
->>  struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
->>  						    int *err)
->> @@ -26,11 +39,7 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
->>  	bool found_bts = false;
->>  
->>  	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
->> -	if (intel_pt_pmu)
->> -		intel_pt_pmu->auxtrace = true;
->>  	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
->> -	if (intel_bts_pmu)
->> -		intel_bts_pmu->auxtrace = true;
->>  
->>  	evlist__for_each_entry(evlist, evsel) {
->>  		if (intel_pt_pmu && evsel->core.attr.type == intel_pt_pmu->type)
->> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->> index 8374117e66f6..a0870c076dc0 100644
->> --- a/tools/perf/builtin-record.c
->> +++ b/tools/perf/builtin-record.c
->> @@ -3940,6 +3940,10 @@ static int record__init_thread_masks(struct record *rec)
->>  	return ret;
->>  }
->>  
->> +__weak void auxtrace__early_init(void)
->> +{
->> +}
->> +
->>  int cmd_record(int argc, const char **argv)
->>  {
->>  	int err;
->> @@ -3985,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
->>  	if (err)
->>  		return err;
->>  
->> +	auxtrace__early_init();
-> 
-> So the auxtrace__early_init() will be unconditionally invoked even there
-> is no PT or BTS events, right?
-> 
-> Maybe we should move the auxtrace__early_init() to evsel__is_aux_event()
-> and cache the value. The initialization will only be invoked when it's
-> required.
+Introduced stub APIs for exported APIs so that we can build
+independent module without any error if CONFIG_PERF_EVENT
+feature is disabled in kernel.
 
-Although perf_pmu__find() will be called unconditionally via
-record__auxtrace_init() anyway.
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c:
+In function _scf_pmu_device_probe_:
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c:596:    8:
+error: implicit declaration of function _perf_pmu_register_
+[-Werror=implicit-function-declaration]
+  err = perf_pmu_register(&uncore_pmu->pmu, uncore_pmu->pmu.name,
+531       |        ^~~~~~~~~~~~~~~~~
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c: In
+function _scf_pmu_device_remove_:
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c:611:    2:
+error: implicit declaration of function _perf_pmu_unregister_; did you
+mean _device_unregister_? [-Werror=implicit-function-declaration]
+  611 |  perf_pmu_unregister(&uncore_pmu->pmu);
+      |  ^~~~~~~~~~~~~~~~~~~
+      |  device_unregister
+cc1: some warnings being treated as errors
+scripts/Makefile.build:297: recipe for target
+'drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.o' failed
+make[7]: *** [drivers/platform/tegra/
+uncore_pmu/tegra23x_perf_uncore.o] Error 1
 
-> Something as below (not tested.)
-> 
-> +void auxtrace__init(void)
-> +{
-> +	struct perf_pmu *intel_pt_pmu;
-> +	struct perf_pmu *intel_bts_pmu;
-> +	static bool cached;
-> +
-> +	if (cached)
-> +		return;
-> +	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-> +	if (intel_pt_pmu)
-> +		intel_pt_pmu->auxtrace = true;
-> +	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-> +	if (intel_bts_pmu)
-> +		intel_bts_pmu->auxtrace = true;
-> +}
-> 
-> bool evsel__is_aux_event(struct evsel *evsel)
-> {
-> 	struct perf_pmu *pmu = evsel__find_pmu(evsel);
-> +	auxtrace__init();
-> 	return pmu && pmu->auxtrace;
-> }
-> 
-> 
-> 
-> Thanks,
-> Kan
-> 
->> +
->>  	argc = parse_options(argc, argv, record_options, record_usage,
->>  			    PARSE_OPT_STOP_AT_NON_OPTION);
->>  	if (quiet)
->> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
->> index 29eb82dff574..49a86aa6ac94 100644
->> --- a/tools/perf/util/auxtrace.h
->> +++ b/tools/perf/util/auxtrace.h
->> @@ -457,6 +457,8 @@ struct addr_filters {
->>  
->>  struct auxtrace_cache;
->>  
->> +void auxtrace__early_init(void);
->> +
->>  #ifdef HAVE_AUXTRACE_SUPPORT
->>  
->>  u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
+Signed-off-by: Manish Bhardwaj <bhardwajmanish18@gmail.com>
+---
+ include/linux/perf_event.h | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d5628a7b5eaa..96259320aff1 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1679,6 +1679,42 @@ extern int perf_event_account_interrupt(struct perf_event *event);
+ extern int perf_event_period(struct perf_event *event, u64 value);
+ extern u64 perf_event_pause(struct perf_event *event, bool reset);
+ #else /* !CONFIG_PERF_EVENTS: */
++static void perf_event_addr_filters_sync(struct perf_event *event)		{ }
++static u64 perf_event_read_value(struct perf_event *event,
++				 u64 *enabled, u64 *running)
++{
++	return 0;
++}
++static void perf_event_update_userpage(struct perf_event *event)			{ }
++static void perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)	{ }
++static void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)	{ }
++static void perf_report_aux_output_id(struct perf_event *event, u64 hw_id)		{ }
++static void perf_tp_event(u16 event_type, u64 count, void *record,
++			  int entry_size, struct pt_regs *regs,
++			  struct hlist_head *head, int rctx,
++			  struct task_struct *task)
++{
++}
++static int perf_pmu_register(struct pmu *pmu, const char *name, int type)
++{
++	return -1;
++}
++static void perf_pmu_unregister(struct pmu *pmu)					{ }
++static struct perf_event *
++perf_event_create_kernel_counter(struct perf_event_attr *attr,
++				int cpu,
++				struct task_struct *task,
++				perf_overflow_handler_t callback,
++				void *context)
++{
++	return NULL;
++}
++static void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)		{ }
++static ssize_t perf_event_sysfs_show(struct device *dev, struct device_attribute *attr,
++			      char *page)
++{
++	return -1;
++}
+ static inline void *
+ perf_aux_output_begin(struct perf_output_handle *handle,
+ 		      struct perf_event *event)				{ return NULL; }
+
+base-commit: b01fe98d34f3bed944a93bd8119fed80c856fad8
+-- 
+2.39.2
 
