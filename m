@@ -2,120 +2,153 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312D7C6FA99
-	for <linux-perf-users@archiver.kernel.org>; Sat,  4 Mar 2023 08:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4C6C6FA8E
+	for <linux-perf-users@archiver.kernel.org>; Sun,  5 Mar 2023 05:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbjCDIXy (ORCPT
+        id S229598AbjCEFju (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 4 Mar 2023 03:23:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
+        Sun, 5 Mar 2023 00:39:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjCDIXw (ORCPT
+        with ESMTP id S229489AbjCEFjt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 4 Mar 2023 03:23:52 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B2011EBE;
-        Sat,  4 Mar 2023 00:23:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677918231; x=1709454231;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=be1rXqOTaA9TmHSy7Fu3SagO+W1K5eB5Fn1fhibjMYE=;
-  b=ibmWX0F0/7f6DOIOHaDnOF7eAVfxCvsYOayREiEWCVOkVjLZCAvNCX0o
-   ZuYxddqrZrwrpXPLxaQCq+kGe6npfe5S/RSd4rqLvZY5PkgCRHaM/k7Kq
-   gss8ojqHYuwkYaRFdde3D88LY1ROSWeEpY8KSSKs9IJbQiP4L+GssjHCP
-   LkXSdtHolwcL7tDPadJlXOh2x8erqhhww6C2XIB9FN4dXhBoo+XT+f6Mq
-   t/y7ahmkldV9d9jj6WvpreG5fyHhsbqtNwOZvK6ABgu440EARu7dnFhS8
-   dzAV74H+jEHGEJF5iak0dISc3RRzJ3j3s+gPIri9kvB6wNfgN6NhW987O
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="336758159"
-X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
-   d="scan'208";a="336758159"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2023 00:23:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="705896951"
-X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
-   d="scan'208";a="705896951"
-Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 04 Mar 2023 00:23:46 -0800
-Received: from kbuild by 776573491cc5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pYNBB-00020e-0n;
-        Sat, 04 Mar 2023 08:23:45 +0000
-Date:   Sat, 4 Mar 2023 16:22:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, will@kernel.org, dan.j.williams@intel.com,
-        bwidawsk@kernel.org, ira.weiny@intel.com, vishal.l.verma@intel.com,
-        alison.schofield@intel.com, linuxarm@huawei.com,
+        Sun, 5 Mar 2023 00:39:49 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C074CDF3;
+        Sat,  4 Mar 2023 21:39:48 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id q189so3689177pga.9;
+        Sat, 04 Mar 2023 21:39:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677994788;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aF4awQjRw6Sz8u+8//U9ovq/pyiLmh3hGvC3x/vOYJQ=;
+        b=gyU4DPmORyLU6mT6oqiFWLuzdbnUKXyiijoxiDJQBshJZS0yHu+mLpMxRjr1JvIXr2
+         pGZbZb+m+jIUUCvDC4Sy3jEtc0FYm/of5k/sBay45UotVhvDe3fDm8gKMEKlzHm5PP10
+         1JJ5Vl/6DjZt7vusbIG4DCUhQpX0AU93YJGcPfKRnEC8Ef3TU2tCJc9nhsNO9d41bFlG
+         /xKin2e75LglhwwZxdq6BusHz5FgofkaEWKqklQAjBfW12DqE7JnvFj1skGOjzq0Ea2S
+         2P6yzymlJAgcAMTCAm8N2vTVhixxrE8JncmNDpWt43PyA2w7QyCPxNQ7izEkakIhVk5B
+         GrZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677994788;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aF4awQjRw6Sz8u+8//U9ovq/pyiLmh3hGvC3x/vOYJQ=;
+        b=gd1kKCfeEYd/OV7thXm7YA2+8lqsXsolN2+7gpk1lXnibryVZ7YS3S+hfDc18zSqU4
+         Qu0CLxFam6hAVHm1V8Lqs2hzhJJF54255TjNz9+7oWFufNAa7S/jCC/Cmc6r0BD2VLxD
+         6rrwMIO4/KPKYQxA61U8m2/FLxARazyDBw01Na8VxZwBW5R6D/7U2Qd4jSbL6xALP7f4
+         eHXWFSsqKiflgYJtZd2tTAHXTIycblcz31dLpdmyzCq/kmapCZmpSNXTD44Z8e+gTevc
+         38o9/PciCLSwS2GbdKUgTOfRRhNYK2ui0TKGp+AqWKtc0Nt4qBSwFXkd+4p4gNNAHv9Q
+         StPg==
+X-Gm-Message-State: AO0yUKXmCBdWUFJ9vKpzAu6rzfMbGyuwJqepKbH1RgcxZhiS4fOhekip
+        flTv7AzZTTByazTt5LUgO8w=
+X-Google-Smtp-Source: AK7set+jKTqo3dkOqSmOvreWP2ak+GnwM1RU4t38QsU2omuNiYiQda3bLr3FX4LLB4z+SWAgjUHmsQ==
+X-Received: by 2002:a62:1dd4:0:b0:5d6:138f:5596 with SMTP id d203-20020a621dd4000000b005d6138f5596mr7369497pfd.14.1677994787926;
+        Sat, 04 Mar 2023 21:39:47 -0800 (PST)
+Received: from mbhardwaj.nvidia.com ([203.200.25.7])
+        by smtp.googlemail.com with ESMTPSA id u4-20020aa78484000000b00575d1ba0ecfsm3994983pfn.133.2023.03.04.21.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Mar 2023 21:39:47 -0800 (PST)
+From:   Manish Bhardwaj <bhardwajmanish18@gmail.com>
+Cc:     Manish Bhardwaj <bhardwajmanish18@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
-Message-ID: <202303041641.maw8XfoZ-lkp@intel.com>
-References: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
+Subject: [PATCH] perf/core: introduced stub APIs for exported APIs
+Date:   Sun,  5 Mar 2023 11:09:34 +0530
+Message-Id: <20230305053934.9948-1-bhardwajmanish18@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jonathan,
+Introduced stub APIs for exported APIs so that we can build
+independent module without any error if CONFIG_PERF_EVENT
+feature is disabled in kernel.
 
-I love your patch! Yet something to improve:
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c:
+In function _scf_pmu_device_probe_:
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c:596:    8:
+error: implicit declaration of function _perf_pmu_register_
+[-Werror=implicit-function-declaration]
+  err = perf_pmu_register(&uncore_pmu->pmu, uncore_pmu->pmu.name,
+531       |        ^~~~~~~~~~~~~~~~~
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c: In
+function _scf_pmu_device_remove_:
+drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.c:611:    2:
+error: implicit declaration of function _perf_pmu_unregister_; did you
+mean _device_unregister_? [-Werror=implicit-function-declaration]
+  611 |  perf_pmu_unregister(&uncore_pmu->pmu);
+      |  ^~~~~~~~~~~~~~~~~~~
+      |  device_unregister
+cc1: some warnings being treated as errors
+scripts/Makefile.build:297: recipe for target
+'drivers/platform/tegra/uncore_pmu/tegra23x_perf_uncore.o' failed
+make[7]: *** [drivers/platform/tegra/
+uncore_pmu/tegra23x_perf_uncore.o] Error 1
 
-[auto build test ERROR on cxl/next]
-[also build test ERROR on cxl/pending linus/master next-20230303]
-[cannot apply to v6.2]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Manish Bhardwaj <bhardwajmanish18@gmail.com>
+---
+ include/linux/perf_event.h | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-patch link:    https://lore.kernel.org/r/20230303175022.10806-3-Jonathan.Cameron%40huawei.com
-patch subject: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
-config: x86_64-randconfig-a012 (https://download.01.org/0day-ci/archive/20230304/202303041641.maw8XfoZ-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/0790ed82bb7adf04c834e8c03008b92c1b23945e
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
-        git checkout 0790ed82bb7adf04c834e8c03008b92c1b23945e
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/cxl/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303041641.maw8XfoZ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/cxl/core/regs.c:9:10: fatal error: 'cpmu.h' file not found
-   #include <cpmu.h>
-            ^~~~~~~~
-   1 error generated.
---
->> drivers/cxl/core/cpmu.c:8:10: fatal error: 'cpmu.h' file not found
-   #include <cpmu.h>
-            ^~~~~~~~
-   1 error generated.
-
-
-vim +9 drivers/cxl/core/regs.c
-
-   > 9	#include <cpmu.h>
-    10	
-
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index d5628a7b5eaa..f3361f6f348e 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1679,6 +1679,42 @@ extern int perf_event_account_interrupt(struct perf_event *event);
+ extern int perf_event_period(struct perf_event *event, u64 value);
+ extern u64 perf_event_pause(struct perf_event *event, bool reset);
+ #else /* !CONFIG_PERF_EVENTS: */
++static void perf_event_addr_filters_sync(struct perf_event *event)		{ }
++static u64 perf_event_read_value(struct perf_event *event,
++				 u64 *enabled, u64 *running)
++{
++	return 0;
++}
++static void perf_event_update_userpage(struct perf_event *event)			{ }
++static void perf_register_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)	{ }
++static void perf_unregister_guest_info_callbacks(struct perf_guest_info_callbacks *cbs)	{ }
++static void perf_report_aux_output_id(struct perf_event *event, u64 hw_id)		{ }
++static void perf_tp_event(u16 event_type, u64 count, void *record,
++			  int entry_size, struct pt_regs *regs,
++			  struct hlist_head *head, int rctx,
++			  struct task_struct *task)
++{
++}
++static int perf_pmu_register(struct pmu *pmu, const char *name, int type)
++{
++	return -1;
++}
++extern void perf_pmu_unregister(struct pmu *pmu)					{ }
++static struct perf_event *
++perf_event_create_kernel_counter(struct perf_event_attr *attr,
++				int cpu,
++				struct task_struct *task,
++				perf_overflow_handler_t callback,
++				void *context)
++{
++	return NULL;
++}
++static void perf_pmu_migrate_context(struct pmu *pmu, int src_cpu, int dst_cpu)		{ }
++static ssize_t perf_event_sysfs_show(struct device *dev, struct device_attribute *attr,
++			      char *page)
++{
++	return -1;
++}
+ static inline void *
+ perf_aux_output_begin(struct perf_output_handle *handle,
+ 		      struct perf_event *event)				{ return NULL; }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.2
+
