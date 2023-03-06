@@ -2,97 +2,397 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6559FC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 21:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FCBC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 22:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjCFVqU (ORCPT
+        id S229806AbjCFWK3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 16:46:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
+        Mon, 6 Mar 2023 17:10:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbjCFVqU (ORCPT
+        with ESMTP id S229651AbjCFWK2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 16:46:20 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52327532B9
-        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 13:46:19 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id 76so4620347iou.9
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Mar 2023 13:46:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678139178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0be8Fuk83PUDgGdvru7aKlbepqqNL6DJVgCmbNx06ek=;
-        b=NussaeJr1ZURMudzZH5Mbi0lfWMbHfYKjS+es87wSq6ARBboWjMkatuMD3W7YOPaLc
-         v7sCF2jZT5zs/OLCxoHV2cbP0+Im8Nfn1e7bKwW1u3sCOOOxGT9D/v4ZD1Ir3igM7DG2
-         kGT2ZlUsqkVwDfGTFLQ/8g0Zt8vYRjuog9po1NtPWRGJGJEQqPnN3B9aMdL0owfsq3e2
-         UEKXie4om7S4FfLHhncwkxCIrW1K8xmqU9gpsoGn0ik6rhW1bppTjWNpNPPEvKI9Q53B
-         v/z6nr221lLE42r/qqrtrw5XzAKdznW2wBgKOooUZwoJEGv5k8+kAXDYMkVwm6qvMLVG
-         2fzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678139178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0be8Fuk83PUDgGdvru7aKlbepqqNL6DJVgCmbNx06ek=;
-        b=JiWg7Wtpaa4XAW8NNGbf1TJ1wmEweL7HisDThvD649zLMGCjwGA7eqbNRw1BovkRIy
-         2Bv3EyDdzaBEdsVxerQsG7G8L6MxGBAePthbb6BM256CE0hFrZXi0EfdE+1fWzFu9qbF
-         LZClh35WI+69xwM0i7zv4H7uUh3/V77f/FPGOM/VQcA7YnmfRYRme7Tioe2t/Sd9hcrL
-         KOksAk/tEh17RSR+z9+vwigbkLV165VYpyIfH9McsLGzwLW0NOeD2fK+uN1rGHJHKX0t
-         3NDzJT0rM/PQDZP9kw0zgEhZAaYO4/BpWBLON5KLImboh2MZBma0wu54AsxRa/nkd9dv
-         ZIkg==
-X-Gm-Message-State: AO0yUKVFuxxrRsuMnxfbuRjWRLFWnlM4CDCEaRNXxAK8H+qFfGZK9kgU
-        +xQrkMISQLNZ1sI6lT31TpwQFk3rUa3+Ewmf8MlGJQ==
-X-Google-Smtp-Source: AK7set81xTHXxgxn+7pCS9xs2h0YSAn5FF+ggGpxzIwLmVvOAUeYfc1xekrqoskI97yyEpKGM6sa/Rfc3YVFbsnKni0=
-X-Received: by 2002:a02:2ac1:0:b0:3eb:3166:9da4 with SMTP id
- w184-20020a022ac1000000b003eb31669da4mr6324985jaw.2.1678139178477; Mon, 06
- Mar 2023 13:46:18 -0800 (PST)
+        Mon, 6 Mar 2023 17:10:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05D13C7A2
+        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 14:10:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D55060F57
+        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 22:10:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59005C4339B;
+        Mon,  6 Mar 2023 22:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678140608;
+        bh=yEHsQvHa5a0N0rqX/UFTrEuioAY2wCaa/RDmbb4TKsk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WRzBE/I1CdQk47UzSu2f6SnpX12KosGgOS2U+2bLw4xp6oSo2cG1Q9UKsi8W0qGiJ
+         Aof/vMNK2Pq9CCYBrVueS58wqaUzbQZhnqw2W3X77THveRxrW5fo6uDgulmtY/uzoq
+         qN8C9qYIsFMIlLroWMTbZBD4a804updGmqMdWk3390MZ13LFR+5zBTXB2jEG7cGmar
+         5VdQjIKcLEf5cjuhV2uh3Xt1qw6izcAAZUsp8qSmY+WB0Ls3zeXuamDhwHj6UXnJFV
+         JHdyoHA8kFCvOD+cv2ct9CAoxPzlzCLYSVRXl+S9HR15gLnE8K9cgAN+p0cm5ilnoK
+         8ny9LzH4G6Qeg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id ADC4A4049F; Mon,  6 Mar 2023 19:10:05 -0300 (-03)
+Date:   Mon, 6 Mar 2023 19:10:05 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Lukas Molleman <lukas.molleman@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
+        rickyman7@gmail.com
+Subject: perf test results on ARM64. was Re: GSoC: perf Linux Profiling
+ Scalability and speed
+Message-ID: <ZAZkvaVBcyM1I4ar@kernel.org>
+References: <CANRdyn9kXT623Pbu9hc+c4YrDu_h06a2Ch9fJpt=O0S7yKXDEg@mail.gmail.com>
+ <CAP-5=fU30f1j5o7c05ohaygpgV4=Hx7yS7f8i3vZ1j1Gk=HgcA@mail.gmail.com>
+ <CANRdyn9H7kzBXUxpvTJ_93G5Tc=51vCRs9ucHbSyVRO_rQf5vA@mail.gmail.com>
+ <CAP-5=fUr18kZVDDymDB6kJWa7Ptf9XkDMKxorZx2O2UjPusn1w@mail.gmail.com>
+ <CANRdyn9MU1N5xH8MfMbpmxPhRTCqi9J_NWsVOPKXodE97H97rQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAGKjw9KHDnVgRz5bstJYkq4t0-bT5fvkuQZbEB48d-8jo4Q00g@mail.gmail.com>
- <20230303193058.21274-1-patrice.duroux@gmail.com>
-In-Reply-To: <20230303193058.21274-1-patrice.duroux@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 6 Mar 2023 13:46:07 -0800
-Message-ID: <CAP-5=fV5h9AEf3V1taXA++frs=AAPeuPbd=Hb0koVjKfGpQNsw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] replace 2&>1 by 2>&1
-To:     Patrice Duroux <patrice.duroux@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANRdyn9MU1N5xH8MfMbpmxPhRTCqi9J_NWsVOPKXodE97H97rQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 3, 2023 at 11:31=E2=80=AFAM Patrice Duroux <patrice.duroux@gmai=
-l.com> wrote:
->
-> Signed-off-by: Patrice Duroux <patrice.duroux@gmail.com>
+Em Mon, Mar 06, 2023 at 12:18:30PM +0100, Lukas Molleman escreveu:
+> > Perhaps if you share what the errors are then we can talk about how to
+> > fix them. There are also tests that currently say skip but don't give
+> > a reason, it'd be nice to improve this.
+ 
+>  1: vmlinux symtab matches kallsyms            : FAILED!
+>  2: Detect openat syscall event                : FAILED!
+>  3: Detect openat syscall event on all cpus    : FAILED!
+>  4: Read samples using the mmap interface      : FAILED!
+>  5: Test data source output                    : Ok
+>  6: Parse event definition strings             : FAILED!
+>  7: Simple expression parser                   : Ok
+>  8: PERF_RECORD_* events & perf_sample fields  : FAILED!
+>  9: Parse perf pmu format                      : Ok
+> 10: PMU events                                 :
+> 10.1: PMU event table sanity                           : Ok
+> 10.2: PMU event map aliases                            : Ok
+> 10.3: Parsing of PMU event table metrics               : Ok
+> 10.4: Parsing of PMU event table metrics with fake PMUs: Ok
+> 11: DSO data read                              : Ok
+> 12: DSO data cache                             : Ok
+> 13: DSO data reopen                            : Ok
+> 14: Roundtrip evsel->name                      : Ok
+> 15: Parse sched tracepoints fields             : FAILED!
+> 16: syscalls:sys_enter_openat event fields     : FAILED!
+> 17: Setup struct perf_event_attr               : Skip
+> 18: Match and link multiple hists              : Ok
+> 19: 'import perf' in python                    : Ok
+> 22: Breakpoint accounting                      : Skip
+> 23: Watchpoint                                 :
+> 23.1: Read Only Watchpoint                     : FAILED!
+> 23.2: Write Only Watchpoint                    : FAILED!
+> 23.3: Read / Write Watchpoint                  : FAILED!
+> 23.4: Modify Watchpoint                        : FAILED!
+> 24: Number of exit events of a simple workload : FAILED!
+> 25: Software clock events period values        : FAILED!
+> 26: Object code reading                        : FAILED!
+> 27: Sample parsing                             : Ok
+> 28: Use a dummy software event to keep tracking: Skip
+> 29: Parse with no sample_id_all bit set        : Ok
+> 30: Filter hist entries                        : Ok
+> 31: Lookup mmap thread                         : Ok
+> 32: Share thread maps                          : Ok
+> 33: Sort output of hist entries                : Ok
+> 34: Cumulate child hist entries                : Ok
+> 35: Track with sched_switch                    : Ok
+> 36: Filter fds with revents mask in a fdarray  : Ok
+> 37: Add fd to a fdarray, making it autogrow    : Ok
+> 38: kmod_path__parse                           : Ok
+> 39: Thread map                                 : Ok
+> 40: LLVM search and compile                    :
+> 40.1: Basic BPF llvm compile                    : Skip
+> 40.2: kbuild searching                          : Skip
+> 40.3: Compile source for BPF prologue generation: Skip
+> 40.4: Compile source for BPF relocation         : Skip
+> 41: Session topology                           : Ok
+> 42: BPF filter                                 :
+> 42.1: Basic BPF filtering                      : Skip
+> 42.2: BPF pinning                              : Skip
+> 42.3: BPF prologue generation                  : Skip
+> 43: Synthesize thread map                      : Ok
+> 44: Remove thread map                          : Ok
+> 45: Synthesize cpu map                         : Ok
+> 46: Synthesize stat config                     : Ok
+> 47: Synthesize stat                            : Ok
+> 48: Synthesize stat round                      : Ok
+> 49: Synthesize attr update                     : Ok
+> 50: Event times                                : FAILED!
+> 51: Read backward ring buffer                  : Skip
+> 52: Print cpu map                              : Ok
+> 53: Merge cpu map                              : Ok
+> 54: Probe SDT events                           : Skip
+> 55: is_printable_array                         : Ok
+> 56: Print bitmap                               : Ok
+> 57: perf hooks                                 : Ok
+> 58: builtin clang support                      : Skip (not compiled in)
+> 59: unit_number__scnprintf                     : Ok
+> 60: mem2node                                   : Ok
+> 61: time utils                                 : Ok
+> 62: Test jit_write_elf                         : Ok
+> 63: Test libpfm4 support                       : Skip (not compiled in)
+> 64: Test api io                                : Ok
+> 65: maps__merge_in                             : Ok
+> 66: Demangle Java                              : Ok
+> 67: Demangle OCaml                             : Ok
+> 68: Parse and process metrics                  : Ok
+> 69: PE file support                            : Skip
+> 70: Event expansion for cgroups                : Ok
+> 71: Convert perf time to TSC                   : FAILED!
+> 72: dlfilter C API                             : Skip
+> 73: DWARF unwind                               : Ok
+> failed to open shell test directory: /usr/libexec/perf-core/tests/shell
+> 
+> I'm using Ubuntu 22.04 kernel 5.15.0-60-generic ARM64.
+> perf version 5.15.78
 
-Fixes: ade1d0307b2f ("perf offcpu: Update offcpu test for child process")
-Acked-by: Ian Rogers <irogers@google.com>
+So, here, on a Libre Computer Firefly RK3399PC board and using what will
+soon be on the perf-tools branch to go to Linus:
 
-Thanks,
-Ian
+root@roc-rk3399-pc:~# cat /etc/os-release
+PRETTY_NAME="Ubuntu 22.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.1 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+root@roc-rk3399-pc:~# perf -v
+perf version 6.2.rc7.g5b201a82cd9d
+root@roc-rk3399-pc:~# perf -vv
+perf version 6.2.rc7.g5b201a82cd9d
+                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+            debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+               libpfm4: [ OFF ]  # HAVE_LIBPFM
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+root@roc-rk3399-pc:~#
 
-> ---
->  tools/perf/tests/shell/record_offcpu.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/s=
-hell/record_offcpu.sh
-> index e01973d4e0fb..f062ae9a95e1 100755
-> --- a/tools/perf/tests/shell/record_offcpu.sh
-> +++ b/tools/perf/tests/shell/record_offcpu.sh
-> @@ -65,7 +65,7 @@ test_offcpu_child() {
->
->    # perf bench sched messaging creates 400 processes
->    if ! perf record --off-cpu -e dummy -o ${perfdata} -- \
-> -    perf bench sched messaging -g 10 > /dev/null 2&>1
-> +    perf bench sched messaging -g 10 > /dev/null 2>&1
->    then
->      echo "Child task off-cpu test [Failed record]"
->      err=3D1
-> --
-> 2.39.2
->
+acme@roc-rk3399-pc:~/git/perf-tools$ sudo su -
+[sudo] password for acme: 
+root@roc-rk3399-pc:~# set -o vi
+root@roc-rk3399-pc:~# export PATH=$PATH:~/bin
+root@roc-rk3399-pc:~# perf test
+  1: vmlinux symtab matches kallsyms                                 : Ok
+  2: Detect openat syscall event                                     : Ok
+  3: Detect openat syscall event on all cpus                         : Ok
+  4: mmap interface tests                                            :
+  4.1: Read samples using the mmap interface                         : Ok
+  4.2: User space counter reading of instructions                    : Skip (permissions)
+  4.3: User space counter reading of cycles                          : Skip (permissions)
+  5: Test data source output                                         : Ok
+  6: Parse event definition strings                                  :
+  6.1: Test event parsing                                            : Ok
+  6.2: Test parsing of "hybrid" CPU events                           : Skip (not hybrid)
+  6.3: Parsing of all PMU events from sysfs                          : Skip (permissions)
+  6.4: Parsing of given PMU events from sysfs                        : Skip (permissions)
+  6.5: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
+  6.6: Parsing of aliased events                                     : Ok
+  6.7: Parsing of terms (event modifiers)                            : Ok
+  7: Simple expression parser                                        : Ok
+  8: PERF_RECORD_* events & perf_sample fields                       : Ok
+  9: Parse perf pmu format                                           : Ok
+ 10: PMU events                                                      :
+ 10.1: PMU event table sanity                                        : Ok
+ 10.2: PMU event map aliases                                         : Ok
+ 10.3: Parsing of PMU event table metrics                            : Ok
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
+ 11: DSO data read                                                   : Ok
+ 12: DSO data cache                                                  : Ok
+ 13: DSO data reopen                                                 : Ok
+ 14: Roundtrip evsel->name                                           : Ok
+ 15: Parse sched tracepoints fields                                  : Ok
+ 16: syscalls:sys_enter_openat event fields                          : Ok
+ 17: Setup struct perf_event_attr                                    : FAILED!
+ 18: Match and link multiple hists                                   : Ok
+ 19: 'import perf' in python                                         : Ok
+ 20: Breakpoint overflow signal handler                              : Skip
+ 21: Breakpoint overflow sampling                                    : Skip
+ 22: Breakpoint accounting                                           : Ok
+ 23: Watchpoint                                                      :
+ 23.1: Read Only Watchpoint                                          : Ok
+ 23.2: Write Only Watchpoint                                         : Ok
+ 23.3: Read / Write Watchpoint                                       : Ok
+ 23.4: Modify Watchpoint                                             : Ok
+ 24: Number of exit events of a simple workload                      : FAILED!
+ 25: Software clock events period values                             : Ok
+ 26: Object code reading                                             : Ok
+ 27: Sample parsing                                                  : Ok
+ 28: Use a dummy software event to keep tracking                     : Ok
+ 29: Parse with no sample_id_all bit set                             : Ok
+ 30: Filter hist entries                                             : Ok
+ 31: Lookup mmap thread                                              : Ok
+ 32: Share thread maps                                               : Ok
+ 33: Sort output of hist entries                                     : Ok
+ 34: Cumulate child hist entries                                     : Ok
+ 35: Track with sched_switch                                         : Ok
+ 36: Filter fds with revents mask in a fdarray                       : Ok
+ 37: Add fd to a fdarray, making it autogrow                         : Ok
+ 38: kmod_path__parse                                                : Ok
+ 39: Thread map                                                      : Ok
+ 40: LLVM search and compile                                         :
+ 40.1: Basic BPF llvm compile                                        : Ok
+ 40.2: kbuild searching                                              : FAILED!
+ 40.3: Compile source for BPF prologue generation                    : FAILED!
+ 40.4: Compile source for BPF relocation                             : Ok
+ 41: Session topology                                                : Ok
+ 42: BPF filter                                                      :
+ 42.1: Basic BPF filtering                                           : Ok
+ 42.2: BPF pinning                                                   : Ok
+ 42.3: BPF prologue generation                                       : FAILED!
+ 43: Synthesize thread map                                           : Ok
+ 44: Remove thread map                                               : Ok
+ 45: Synthesize cpu map                                              : Ok
+ 46: Synthesize stat config                                          : Ok
+ 47: Synthesize stat                                                 : Ok
+ 48: Synthesize stat round                                           : Ok
+ 49: Synthesize attr update                                          : Ok
+ 50: Event times                                                     : Ok
+ 51: Read backward ring buffer                                       : Ok
+ 52: Print cpu map                                                   : Ok
+ 53: Merge cpu map                                                   : Ok
+ 54: Probe SDT events                                                : Ok
+ 55: is_printable_array                                              : Ok
+ 56: Print bitmap                                                    : Ok
+ 57: perf hooks                                                      : Ok
+ 58: builtin clang support                                           :
+ 58.1: builtin clang compile C source to IR                          : Skip (not compiled in)
+ 58.2: builtin clang compile C source to ELF object                  : Skip (not compiled in)
+ 59: unit_number__scnprintf                                          : Ok
+ 60: mem2node                                                        : Ok
+ 61: time utils                                                      : Ok
+ 62: Test jit_write_elf                                              : Ok
+ 63: Test libpfm4 support                                            :
+ 63.1: test of individual --pfm-events                               : Skip (not compiled in)
+ 63.2: test groups of --pfm-events                                   : Skip (not compiled in)
+ 64: Test api io                                                     : Ok
+ 65: maps__merge_in                                                  : Ok
+ 66: Demangle Java                                                   : Ok
+ 67: Demangle OCaml                                                  : Ok
+ 68: Parse and process metrics                                       : Ok
+ 69: PE file support                                                 : FAILED!
+ 70: Event expansion for cgroups                                     : Ok
+ 71: Convert perf time to TSC                                        :
+ 71.1: TSC support                                                   : Ok
+ 71.2: Perf time to TSC                                              : Ok
+ 72: dlfilter C API                                                  : Ok
+ 73: Sigtrap                                                         : Skip
+ 74: Event groups                                                    : Skip
+ 75: Symbols                                                         : Ok
+ 76: Test dwarf unwind                                               : Ok
+ 77: build id cache operations                                       : FAILED!
+ 78: CoreSight / ASM Pure Loop                                       : FAILED!
+ 79: CoreSight / Memcpy 16k 10 Threads                               : FAILED!
+ 80: CoreSight / Thread Loop 10 Threads - Check TID                  : FAILED!
+ 81: CoreSight / Thread Loop 2 Threads - Check TID                   : FAILED!
+ 82: CoreSight / Unroll Loop Thread 10                               : FAILED!
+ 83: daemon operations                                               : Ok
+ 84: kernel lock contention analysis test                            : Ok
+ 85: perf pipe recording and injection test                          : Ok
+ 86: Add vfs_getname probe to get syscall args filenames             : FAILED!
+ 87: probe libc's inet_pton & backtrace it with ping                 : Ok
+ 88: Use vfs_getname probe to get syscall args filenames             : FAILED!
+ 89: Zstd perf.data compression/decompression                        : Ok
+ 90: perf record tests                                               : FAILED!
+ 91: perf record offcpu profiling tests                              : FAILED!
+ 92: perf stat CSV output linter                                     : Ok
+ 93: perf stat csv summary test                                      : Ok
+ 94: perf stat JSON output linter                                    : FAILED!
+ 95: perf stat metrics (shadow stat) test                            : Ok
+ 96: perf stat tests                                                 : Ok
+ 97: perf all metricgroups test                                      : Ok
+ 98: perf all metrics test                                           : Ok
+ 99: perf all PMU test                                               : Ok
+100: perf stat --bpf-counters test                                   : FAILED!
+101: perf stat --bpf-counters --for-each-cgroup test                 : FAILED!
+102: Check Arm64 callgraphs are complete in fp mode                  : Ok
+103: Check Arm CoreSight trace data recording and synthesized samples: FAILED!
+104: Check Arm SPE trace data recording and synthesized samples      : Skip
+105: Check Arm SPE doesn't hang when there are forks                 : Skip
+106: Check branch stack sampling                                     : Skip
+107: Test data symbol                                                : Skip
+108: Miscellaneous Intel PT testing                                  : Skip
+109: Test java symbol                                                : Ok
+110: perf script task-analyzer tests                                 : Ok
+111: Check open filename arg using perf trace + vfs_getname          : FAILED!
+root@roc-rk3399-pc:~# 
+
+
+
+ 
+> > So the perf tool is written in somewhat low-level C code, in fact we
+> > try to adopt the Linux kernel's conventions so that code between the
+> > tool and the kernel can easily be shared. Frameworks for different
+> > kinds of parallelism would need to be added. In the past Riccardo
+> > Mancini looked at adding workqueues;
+> >
+> https://lore.kernel.org/lkml/3c4f8dd64d07373d876990ceb16e469b4029363f.camel@gmail.com/
+> > We'd like to merge this work but it needs rebasing on to the current
+> > perf development tree. One problem encountered by Riccardo was issues
+> > with reference counts. To this end I wrote a reference count checker:
+> > https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.com/
+> > Which has a number of fixes now merged into the tree but not the
+> > actual checking framework itself. A first task may be to work on the
+> > reference count checker and then to bring in Riccardo's work. I
+> > started a rebase on the checker and I should work to send it out again
+> > soon.
+> 
+> Interesting. I edited my planning to this:
+> 
+> Now - start date: Research
+> 
+>    - Get a deeper understanding of workqueue by reading the books "Linux
+>    kernel development: chapter 6" and "Linux device drivers" chapter 7.
+>    - Understand necessary modules, libraries and tools.
+>    - Understand the code that I need to know to succeed.
+>    - Work on fixing the issues with reference counts and rebase workqueues
+>    patch. This task can be worked on between 3 April and 16 April.
+> 
+> Week 2 - 3: Code
+> 
+> 
+>    - Implement workqueue for processing smaller/easier data structures.
+>    Working further on previous contributions.
+> 
+> week 4: Evaluating
+> 
+>    - Evaluate the effectiveness of the working queues on a smaller scale
+>    and devise strategies to implement this on a bigger scale.
+> 
+> Week 5 - 6: Code
+> 
+>    - Implement workqueue for processing bigger/more complex data structures.
+
+-- 
+
+- Arnaldo
