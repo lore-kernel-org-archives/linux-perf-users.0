@@ -2,78 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95B6C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 21:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6559FC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 21:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjCFVF1 (ORCPT
+        id S229865AbjCFVqU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 16:05:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55028 "EHLO
+        Mon, 6 Mar 2023 16:46:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229582AbjCFVF0 (ORCPT
+        with ESMTP id S229729AbjCFVqU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 16:05:26 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CD87431F
-        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 13:04:55 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id ky4so11935803plb.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Mar 2023 13:04:55 -0800 (PST)
+        Mon, 6 Mar 2023 16:46:20 -0500
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52327532B9
+        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 13:46:19 -0800 (PST)
+Received: by mail-io1-xd33.google.com with SMTP id 76so4620347iou.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Mar 2023 13:46:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678136689;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1W0t2QxwC6JI1D5afE14BJw1zu1iLu1dtXyhWC7lh9Q=;
-        b=PqKVnLuVnB9K4DozqcT01qX1GWE6y8H+2Tn4foeZymgpxbcVEGeHoAB4D0uwPas5OZ
-         hSPrwLT2SrSqlKC3oG51Nvk62oPoDYiSm2ia//RlJbKC/A3p74DyOPIYx/X/WxMaO91K
-         3x5yq/ytjAeG7nTZ23rLwoSJ+k8f+kbrjhcVeoS5uUcALEK5fCu8xY/5cIOLfa6MEm8w
-         6GiPGz4afEMUBSMWRO/BuKONYpZgqh+TCtgZhGtwx+eY+TECuagsyPb+8jNY+cY3BKkn
-         +KS3Bh+BBtQ5W7+NVvBkBS2abmOLM6pZxgQcnly6sSRxDt/1LoyBc033FxItFxkj+s9x
-         hllQ==
+        d=google.com; s=20210112; t=1678139178;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0be8Fuk83PUDgGdvru7aKlbepqqNL6DJVgCmbNx06ek=;
+        b=NussaeJr1ZURMudzZH5Mbi0lfWMbHfYKjS+es87wSq6ARBboWjMkatuMD3W7YOPaLc
+         v7sCF2jZT5zs/OLCxoHV2cbP0+Im8Nfn1e7bKwW1u3sCOOOxGT9D/v4ZD1Ir3igM7DG2
+         kGT2ZlUsqkVwDfGTFLQ/8g0Zt8vYRjuog9po1NtPWRGJGJEQqPnN3B9aMdL0owfsq3e2
+         UEKXie4om7S4FfLHhncwkxCIrW1K8xmqU9gpsoGn0ik6rhW1bppTjWNpNPPEvKI9Q53B
+         v/z6nr221lLE42r/qqrtrw5XzAKdznW2wBgKOooUZwoJEGv5k8+kAXDYMkVwm6qvMLVG
+         2fzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678136689;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1W0t2QxwC6JI1D5afE14BJw1zu1iLu1dtXyhWC7lh9Q=;
-        b=ntUBLFeXE+FxLdwGY+K7SCSpvGJST5mzQETebxb8qJ6uacDUaJwrLYnx3g2ScnrqBF
-         ADpL6zfd/bkxVEelkoYsC0431ZHe229WtuGEJBctsN1f8dUNCBSHoaS3IVSez223H0QK
-         qJlKojDTFI+EAV3pHFFmWR5EXtguSRcU69ow6UuUqt0ItYA8E107NZu1Eg6uS91Ya7gL
-         WnYFckDFZkWkYqW6WlcYVsrTJn1cBJuYYrhY0wrCpKRYC1KsBHrbe3avbYUaTy0dhpSE
-         qiH6KjH1kRSyQ+bX/+dIIb8btB7ayGATXOiiNFXsKKtGRYxBxw2lC0j+OzI29Uydn7GB
-         TzGA==
-X-Gm-Message-State: AO0yUKWZdygNvRyA5S4xLb49zYye7LHawRd9g2jdCYm3rfkUf3aDEkf5
-        zdHBcLUZN9riGPYEme9S9eG3YMEAHGPMqwXp
-X-Google-Smtp-Source: AK7set+WBjI71bw8VoLrTvjw5vqUBm9OATtHWpKkbzfUFz56EPvyd4k48eQN6+SUq7UMu9AI1/UDcg==
-X-Received: by 2002:a05:6a21:6da5:b0:bc:bf86:660 with SMTP id wl37-20020a056a216da500b000bcbf860660mr13023058pzb.45.1678136689331;
-        Mon, 06 Mar 2023 13:04:49 -0800 (PST)
-Received: from yoga ([2400:1f00:13:15ae:65e0:9312:d450:136a])
-        by smtp.gmail.com with ESMTPSA id 8-20020aa79208000000b005ccbe5346ebsm6675068pfo.163.2023.03.06.13.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 13:04:49 -0800 (PST)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Tue, 7 Mar 2023 02:34:43 +0530
-To:     linux-perf-users@vger.kernel.org
-Cc:     irogers@google.com, acme@kernel.org, namhyung@kernel.org,
-        irogers+gsoc22@google.com, anupnewsmail@gmail.com
-Subject: [RFC] Open Source Contribution | GSoC Perf
-Message-ID: <ZAZVazubl60xYaO8@yoga>
+        d=1e100.net; s=20210112; t=1678139178;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0be8Fuk83PUDgGdvru7aKlbepqqNL6DJVgCmbNx06ek=;
+        b=JiWg7Wtpaa4XAW8NNGbf1TJ1wmEweL7HisDThvD649zLMGCjwGA7eqbNRw1BovkRIy
+         2Bv3EyDdzaBEdsVxerQsG7G8L6MxGBAePthbb6BM256CE0hFrZXi0EfdE+1fWzFu9qbF
+         LZClh35WI+69xwM0i7zv4H7uUh3/V77f/FPGOM/VQcA7YnmfRYRme7Tioe2t/Sd9hcrL
+         KOksAk/tEh17RSR+z9+vwigbkLV165VYpyIfH9McsLGzwLW0NOeD2fK+uN1rGHJHKX0t
+         3NDzJT0rM/PQDZP9kw0zgEhZAaYO4/BpWBLON5KLImboh2MZBma0wu54AsxRa/nkd9dv
+         ZIkg==
+X-Gm-Message-State: AO0yUKVFuxxrRsuMnxfbuRjWRLFWnlM4CDCEaRNXxAK8H+qFfGZK9kgU
+        +xQrkMISQLNZ1sI6lT31TpwQFk3rUa3+Ewmf8MlGJQ==
+X-Google-Smtp-Source: AK7set81xTHXxgxn+7pCS9xs2h0YSAn5FF+ggGpxzIwLmVvOAUeYfc1xekrqoskI97yyEpKGM6sa/Rfc3YVFbsnKni0=
+X-Received: by 2002:a02:2ac1:0:b0:3eb:3166:9da4 with SMTP id
+ w184-20020a022ac1000000b003eb31669da4mr6324985jaw.2.1678139178477; Mon, 06
+ Mar 2023 13:46:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAGKjw9KHDnVgRz5bstJYkq4t0-bT5fvkuQZbEB48d-8jo4Q00g@mail.gmail.com>
+ <20230303193058.21274-1-patrice.duroux@gmail.com>
+In-Reply-To: <20230303193058.21274-1-patrice.duroux@gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 6 Mar 2023 13:46:07 -0800
+Message-ID: <CAP-5=fV5h9AEf3V1taXA++frs=AAPeuPbd=Hb0koVjKfGpQNsw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] replace 2&>1 by 2>&1
+To:     Patrice Duroux <patrice.duroux@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello, Perf!
-I'm interested in joining the perf community and learning more about how to start contributing because of my desire to learn more about the Linux kernel and performance.
-I've only recently started using Perf Tool, but I'm really enjoying seeing the metrics and outcomes. I want to resolve a few inconsistencies I found on a wiki page while learning, so if you have any suggestions, please let me know.
-1. LINK BROKEN under Tutorial-> Linux Sourcecode: /tools/perf (hyperlink: ) correct (
-2. LINK BROKEN under Hardware Reference -> Performance Counters for Linux: hyperlink for PCL core kernel data structures, PCL core kernel internals, perf tool internals are not available. Can anyone help me to know why this contents are not available on wiki?
-3. ALLIGNMENT : Under Glossary -> BPF counter, Off-CPU, Multiplexing is not alliged properly.
-4. INFO MISSING: Under Glossary -> offcore is TODO.
+On Fri, Mar 3, 2023 at 11:31=E2=80=AFAM Patrice Duroux <patrice.duroux@gmai=
+l.com> wrote:
+>
+> Signed-off-by: Patrice Duroux <patrice.duroux@gmail.com>
 
-I've also invested some time going though Brendan Gregg conference talk and wiki page,  I'd be delighted to contribute to any of the open tasks!
-Thank you all for your time.
+Fixes: ade1d0307b2f ("perf offcpu: Update offcpu test for child process")
+Acked-by: Ian Rogers <irogers@google.com>
 
-With regards,
-Anup Sharma
+Thanks,
+Ian
+
+> ---
+>  tools/perf/tests/shell/record_offcpu.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/s=
+hell/record_offcpu.sh
+> index e01973d4e0fb..f062ae9a95e1 100755
+> --- a/tools/perf/tests/shell/record_offcpu.sh
+> +++ b/tools/perf/tests/shell/record_offcpu.sh
+> @@ -65,7 +65,7 @@ test_offcpu_child() {
+>
+>    # perf bench sched messaging creates 400 processes
+>    if ! perf record --off-cpu -e dummy -o ${perfdata} -- \
+> -    perf bench sched messaging -g 10 > /dev/null 2&>1
+> +    perf bench sched messaging -g 10 > /dev/null 2>&1
+>    then
+>      echo "Child task off-cpu test [Failed record]"
+>      err=3D1
+> --
+> 2.39.2
+>
