@@ -2,92 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5401C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 22:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6E6C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 22:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229726AbjCFW3X (ORCPT
+        id S229841AbjCFWbd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 17:29:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56768 "EHLO
+        Mon, 6 Mar 2023 17:31:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCFW3X (ORCPT
+        with ESMTP id S229815AbjCFWbc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 17:29:23 -0500
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A2C38004;
-        Mon,  6 Mar 2023 14:29:22 -0800 (PST)
-Received: by mail-yb1-f174.google.com with SMTP id k23so9742871ybk.13;
-        Mon, 06 Mar 2023 14:29:22 -0800 (PST)
+        Mon, 6 Mar 2023 17:31:32 -0500
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5434531E17;
+        Mon,  6 Mar 2023 14:31:31 -0800 (PST)
+Received: by mail-yb1-f177.google.com with SMTP id c80so2805444ybf.5;
+        Mon, 06 Mar 2023 14:31:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678141761;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j6f12142LyUCXv1wqTPt0K0jlFaLpVhCgvJtjTz/YcU=;
-        b=FfNTDfUX3CBYUOV8HvY7XXLbJ2YFAGR1ccW9M2jx+/E6lMKSWe91IaCJBUq1O1fBfn
-         HajwIKMrPsONsezDckGguMmiP5+ge4Qv/J8UbMPSy51wP2zVRjlddncLVx89MITus0BS
-         NoIa0lB1pd8NJR9Pyc9I4VFz6tv8eGOGCTsI76cg2txiOYkAoTOPxcgMgy0G5q3ZbbI/
-         Q4iFb0L7ZToU5VRgvcz92RG7mQmEZxBMaOqLMoEk88PVc4682HqKlkEwgSkj9EwGaU1i
-         RxiOfrc6UJe6SDU2XbQyXnhGi1yxEwZ0gVed7FSFq6xu8GvowAZJEymWtcockN2cbLwi
-         KDeg==
-X-Gm-Message-State: AO0yUKWpzNpjBvI1kgBGT94vDM3psYjUoEypII0PrMw7Z1fesiGelXUN
-        T9rM10oEcmZZpkMnf3eo3yFJgvWcVTMzsw6lBIA=
-X-Google-Smtp-Source: AK7set88+PSiio1FR30WjpA0FzgWVtcBYUiBeYMk+qIe2UpKOodB7VmxKHlJgejXUbTRigoHd4hCL7LcyOK8DKkYluw=
-X-Received: by 2002:a25:b206:0:b0:8bd:4ab5:18f4 with SMTP id
- i6-20020a25b206000000b008bd4ab518f4mr10239475ybj.6.1678141761302; Mon, 06 Mar
- 2023 14:29:21 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678141890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=L3EpSG/yIupfU+bIz0Ha+9Xy1hc/gD4iPgGZEOuU6zE=;
+        b=FZSZ1rl/UBfax5nv8PsAx+pEwgoNKEbvtLcmaNNLwjrqD2GpFJxrxJax8U1ykrMTy8
+         FPeRoDeBUdl04GR5CDV93L6XwmlrirtYb5edS+dATCxm0nlJOjDo+j/yvoAJhYNZkfuQ
+         /7sngycLpqURGwTO8rSAtJPnU2kSmTcpKGFjOtZH7cCkq4ifFiw06yuDWBw/zJDDlWmy
+         qPREJuZD/12bG5xluLo6nPERIEQPFUL5lJF8s4rCZ9v6jO8PEUVbty95O1/N4pLdEJ7M
+         SfZeywTdQHytWzoARnJevDJ+nCG7Xo+fxxgpykYI03b4SdusXj3UpqA6VLFA63fMZMlx
+         P2JA==
+X-Gm-Message-State: AO0yUKVMWnFRhBh9t6z33HuRTFWvtvJJVF694bQk07H56RqBiSlT/k5X
+        ZhNv6WVZ6oWZztwRQ4km/9NNurLT0Xrj6v1Ex4o=
+X-Google-Smtp-Source: AK7set8ikc1Xk+h35xt+HqOt8Fnfy0/s4ec8KIh3m31A7iSfo11irY5v6IMUJPoVBTZ9jpaXCFK7kAFtH5XHB+r6FvE=
+X-Received: by 2002:a25:8609:0:b0:a09:314f:9f09 with SMTP id
+ y9-20020a258609000000b00a09314f9f09mr7626245ybk.6.1678141890435; Mon, 06 Mar
+ 2023 14:31:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20230302092109.367-1-ravi.bangoria@amd.com> <20230302092109.367-2-ravi.bangoria@amd.com>
- <CAM9d7cjEvjcYwjA+HfsDHKDX8FGZCECTZ8vDMPHBUSqfQSCOfA@mail.gmail.com> <c5f1c3c2-6de3-a40d-9cf0-c1c7638acfc3@amd.com>
-In-Reply-To: <c5f1c3c2-6de3-a40d-9cf0-c1c7638acfc3@amd.com>
+References: <20230303114637.4015916-1-zangchunxin@lixiang.com>
+ <CAM9d7cjnkPduqCLTow1m6U2C7dVM5tsu5k42heh8G568-8Jd8Q@mail.gmail.com> <A6AF90E2-7EA6-4BFC-9749-382F46559DD4@lixiang.com>
+In-Reply-To: <A6AF90E2-7EA6-4BFC-9749-382F46559DD4@lixiang.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 6 Mar 2023 14:29:10 -0800
-Message-ID: <CAM9d7ch9OsFz9N71QG5DOyygctK+bVAFGQByUGAvy=d29rzWZg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf/ibs: Fix interface via core pmu events
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     peterz@infradead.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
+Date:   Mon, 6 Mar 2023 14:31:19 -0800
+Message-ID: <CAM9d7cipx=ATF7HgpUiOOdLZrq79eX3Eg=7pb-ZytyP=CJWh3w@mail.gmail.com>
+Subject: Re: [PATCH] perf sched: Fix sched latency analysis incorrect
+To:     Chunxin Zang <zangchunxin@lixiang.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jerry Zhou <zhouchunhua@lixiang.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 9:54 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+On Mon, Mar 6, 2023 at 2:05 AM Chunxin Zang <zangchunxin@lixiang.com> wrote:
 >
-> Hi Namhyung,
->
-> >> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> >> index a5a51dfdd622..c3f59d937280 100644
-> >> --- a/kernel/events/core.c
-> >> +++ b/kernel/events/core.c
-> >> @@ -11633,9 +11633,13 @@ static struct pmu *perf_init_event(struct perf_event *event)
-> >>                         goto fail;
-> >>
-> >>                 ret = perf_try_init_event(pmu, event);
-> >> -               if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> >> -                       type = event->attr.type;
-> >> -                       goto again;
-> >> +               if (ret == -ENOENT) {
-> >> +                       if (event->attr.type != type && !extended_type) {
-> >> +                               type = event->attr.type;
-> >> +                               goto again;
-> >> +                       }
-> >> +                       if (pmu->capabilities & PERF_PMU_CAP_FORWARD_EVENT)
-> >> +                               goto try_all;
+> > On Mar 4, 2023, at 10:14, Namhyung Kim wrote:
 > >
-> > Wouldn't it be better to use a different error code to indicate
-> > it's about precise_ip (or forwarding in general)?  Otherwise
-> > other invalid config might cause the forwarding unnecessarily..
+> > Hello,
+> >
+> > On Fri, Mar 3, 2023 at 3:53 AM Chunxin Zang wrote:
+> >>
+> >> 'perf sched latency' is incorrect to get process schedule latency
+> >> when it used 'sched:sched_wakeup' to analysis perf.data.
+> >>
+> >> Because 'perf record' prefer use 'sched:sched_waking' to
+> >> 'sched:sched_wakeup' since commit d566a9c2d482 ("perf sched: Prefer
+> >> sched_waking event when it exists"). It's very reasonable to
+> >> evaluate process schedule latency.
+> >>
+> >> Similarly, update sched latency/map/replay to use sched_waking events.
+> >
+> > Have you checked if it works ok when data has both wakeup and
+> > waking events?
 >
-> That would make things easier and we might not need this new capability.
-> Most appropriate error codes seems ENOENT, EOPNOTSUPP and EINVAL but all
-> are already used for other purposes. Any other suggestions?
+>
+> Yes, I used 'perf record -e “sched:* "' to record both wakeup and waking events,
+> and use fixed perf version to analysis them, the result is correct.
+> Because the function "latency_wakeup_event” will change atom->state to THREAD_WAIT_CPU
+> at waking event, and judge the 'atom->state != THREAD_SLEEPING’ is false then returned at wakeup event.
 
-Maybe we can have more liberty for the error code since
-it's not returned to the user.  How about ESRCH, EIO or ENXIO?
+Ok, good.
+
+>
+> >
+> >>
+> >> Signed-off-by: Chunxin Zang
+> >> Signed-off-by: Jerry Zhou
+> >
+> > Missing email addresses.
+> >
+> > Otherwise looks good.
+> >
+> > Thanks,
+> > Namhyung
+>
+> Maybe the company smtp email server reason, the email address is erased.
+> Shall I send v2 patch version to fix it?
+
+Yeah, that'd be nice.
 
 Thanks,
 Namhyung
