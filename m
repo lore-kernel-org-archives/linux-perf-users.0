@@ -2,182 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CF9C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 10:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A475C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 11:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbjCFK2s (ORCPT
+        id S229752AbjCFLNE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 05:28:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58670 "EHLO
+        Mon, 6 Mar 2023 06:13:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbjCFK2U (ORCPT
+        with ESMTP id S229816AbjCFLND (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 05:28:20 -0500
+        Mon, 6 Mar 2023 06:13:03 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C510027992;
-        Mon,  6 Mar 2023 02:27:31 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 812AD27D7D;
+        Mon,  6 Mar 2023 03:12:36 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PVZSv395tz6J9jy;
-        Mon,  6 Mar 2023 18:24:47 +0800 (CST)
-Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PVbSq5cFkz6J9kD;
+        Mon,  6 Mar 2023 19:09:47 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 6 Mar
- 2023 10:27:23 +0000
-Date:   Mon, 6 Mar 2023 10:27:22 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] docs: perf: Minimal introduction the the CXL PMU
- device and driver.
-Message-ID: <20230306102722.00005ead@huawei.com>
-In-Reply-To: <4dabd301-32d7-968e-e048-8135b072a7b5@intel.com>
-References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
-        <20230303175022.10806-5-Jonathan.Cameron@huawei.com>
-        <4dabd301-32d7-968e-e048-8135b072a7b5@intel.com>
-Organization: Huawei Technologies R&D (UK) Ltd.
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
+ 2023 11:12:23 +0000
+Date:   Mon, 6 Mar 2023 11:12:23 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     kernel test robot <lkp@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <oe-kbuild-all@lists.linux.dev>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>,
+        <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <linuxarm@huawei.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
+Message-ID: <20230306111223.00005f9b@Huawei.com>
+In-Reply-To: <202303041001.G9OUGQ6l-lkp@intel.com>
+References: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
+        <202303041001.G9OUGQ6l-lkp@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 3 Mar 2023 11:34:37 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Sat, 4 Mar 2023 10:46:28 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-> On 3/3/23 10:50 AM, Jonathan Cameron wrote:
-> > Very basic introduction to the device and the current driver support
-> > provided. I expect to expand on this in future versions of this patch
-> > set.
-> > 
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> Hi Jonathan,
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> I love your patch! Yet something to improve:
 > 
-> > 
-> > --
-> > v1:
-> > - Add docs for how to use a Vendor Defined Counter.
-> > RFC:
-> > - I'll post separately about this shortly, but it seems very odd
-> >    to me that there is no way to assign a parent to an event_sources
-> >    device.  As a result we get the messy approach of playing match
-> >    the name to figure out what the CPMU instance is connected to.  
-> 
-> Would it be too awkward to encode the parent name into the cpmu name?
 
-We could, though it gets messy fast as we have multiple instances per
-CXL component - right now I'm only registering them for the PCI EPs but
-we also need to deal with all the other places they could be.
-We can also expose extra information via additional attributes, but where
-I've seen that done in the past it's a topology description (i.e. socket X,
-die Y) and our topology isn't stable.
+Last minute rebase mess up.  Will fix for v2.
 
-Even if we do I'd like to fix the issue with parents for event_sources
-and once that's done I'm not sure we need to worry so much about how
-to do the reverse lookup.
-
-Input from perf / event_sources folk on how they would like to do
-the association needed!
+One day I'll remember to run a sanity check build on a clean tree.
 
 Jonathan
 
-
+> [auto build test ERROR on cxl/next]
+> [also build test ERROR on cxl/pending linus/master next-20230303]
+> [cannot apply to v6.2]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 > 
-> > ---
-> >   Documentation/admin-guide/perf/cxl.rst   | 65 ++++++++++++++++++++++++
-> >   Documentation/admin-guide/perf/index.rst |  1 +
-> >   2 files changed, 66 insertions(+)
-> > 
-> > diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-> > new file mode 100644
-> > index 000000000000..46235dff4b21
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/perf/cxl.rst
-> > @@ -0,0 +1,65 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +======================================
-> > +CXL Performance Monitoring Unit (CPMU)
-> > +======================================
-> > +
-> > +The CXL rev 3.0 specification provides a definition of CXL Performance
-> > +Monitoring Unit in section 13.2: Performance Monitoring.
-> > +
-> > +CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-> > +any number of CPMU instances. CPMU capabilities are fully discoverable from
-> > +the devices. The specification provides event definitions for all CXL protocol
-> > +message types and a set of additional events for things commonly counted on
-> > +CXL devices (e.g. DRAM events).
-> > +
-> > +CPMU driver
-> > +===========
-> > +
-> > +The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-> > +
-> > +    /sys/bus/cxl/device/cpmu<id>
-> > +
-> > +The associated PMU is registered as
-> > +
-> > +   /sys/bus/event_sources/devices/cpmu<id>
-> > +
-> > +In common with other CXL bus devices, the id has no specific meaning and the
-> > +relationship to specific CXL device should be established via the device parent
-> > +of the device on the CXL bus.
-> > +
-> > +PMU driver provides description of available events and filter options in sysfs.
-> > +
-> > +The "format" directory describes all formats of the config (event vendor id,
-> > +group id and mask) config1 (threshold, filter enables) and config2 (filter
-> > +parameters) fields of the perf_event_attr structure.  The "events" directory
-> > +describes all documented events show in perf list.
-> > +
-> > +The events shown in perf list are the most fine grained events with a single
-> > +bit of the event mask set. More general events may be enable by setting
-> > +multiple mask bits in config. For example, all Device to Host Read Requests
-> > +may be captured on a single counter by setting the bits for all of
-> > +
-> > +* d2h_req_rdcurr
-> > +* d2h_req_rdown
-> > +* d2h_req_rdshared
-> > +* d2h_req_rdany
-> > +* d2h_req_rdownnodata
-> > +
-> > +Example of usage::
-> > +
-> > +  $#perf list
-> > +  cpmu0/clock_ticks/                                 [Kernel PMU event]
-> > +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-> > +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-> > +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-> > +  -----------------------------------------------------------
-> > +
-> > +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-> > +
-> > +Vendor specific events may also be available and if so can be used via
-> > +
-> > +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
-> > +
-> > +The driver does not support sampling. So "perf record" and attaching to
-> > +a task are unsupported.
-> > diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-> > index 9de64a40adab..f60be04e4e33 100644
-> > --- a/Documentation/admin-guide/perf/index.rst
-> > +++ b/Documentation/admin-guide/perf/index.rst
-> > @@ -21,3 +21,4 @@ Performance monitor support
-> >      alibaba_pmu
-> >      nvidia-pmu
-> >      meson-ddr-pmu
-> > +   cxl  
+> url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+> patch link:    https://lore.kernel.org/r/20230303175022.10806-3-Jonathan.Cameron%40huawei.com
+> patch subject: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
+> config: alpha-randconfig-r003-20230302 (https://download.01.org/0day-ci/archive/20230304/202303041001.G9OUGQ6l-lkp@intel.com/config)
+> compiler: alpha-linux-gcc (GCC) 12.1.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://github.com/intel-lab-lkp/linux/commit/0790ed82bb7adf04c834e8c03008b92c1b23945e
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
+>         git checkout 0790ed82bb7adf04c834e8c03008b92c1b23945e
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha olddefconfig
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha SHELL=/bin/bash drivers/cxl/
+> 
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Link: https://lore.kernel.org/oe-kbuild-all/202303041001.G9OUGQ6l-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/cxl/core/regs.c:9:10: fatal error: cpmu.h: No such file or directory  
+>        9 | #include <cpmu.h>
+>          |          ^~~~~~~~
+>    compilation terminated.
+> --
+> >> drivers/cxl/core/cpmu.c:8:10: fatal error: cpmu.h: No such file or directory  
+>        8 | #include <cpmu.h>
+>          |          ^~~~~~~~
+>    compilation terminated.
+> 
+> 
+> vim +9 drivers/cxl/core/regs.c
+> 
+>    > 9	#include <cpmu.h>  
+>     10	
+> 
 
