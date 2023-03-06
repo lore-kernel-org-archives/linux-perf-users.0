@@ -2,114 +2,64 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A475C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 11:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B345FC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 11:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbjCFLNE (ORCPT
+        id S229695AbjCFLpw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 06:13:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57362 "EHLO
+        Mon, 6 Mar 2023 06:45:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjCFLND (ORCPT
+        with ESMTP id S229685AbjCFLpw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 06:13:03 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 812AD27D7D;
-        Mon,  6 Mar 2023 03:12:36 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PVbSq5cFkz6J9kD;
-        Mon,  6 Mar 2023 19:09:47 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 6 Mar
- 2023 11:12:23 +0000
-Date:   Mon, 6 Mar 2023 11:12:23 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     kernel test robot <lkp@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <oe-kbuild-all@lists.linux.dev>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>,
-        <dan.j.williams@intel.com>, <bwidawsk@kernel.org>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <linuxarm@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
-Message-ID: <20230306111223.00005f9b@Huawei.com>
-In-Reply-To: <202303041001.G9OUGQ6l-lkp@intel.com>
-References: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
-        <202303041001.G9OUGQ6l-lkp@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Mon, 6 Mar 2023 06:45:52 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BFF26CCB;
+        Mon,  6 Mar 2023 03:45:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yS+ytLqY5Kuqs1S5nQfCnTNPD061txIdGUAFz6FPQ5s=; b=iQSWKyYHZGeLDqMfVDY/AWWc6N
+        xaupPbdfKgOCK5PFXkRVuVJGCJDHrY9kCxpVGtV7D+o/Gn2Mz7j9gR0f4ZTKbbxZR4Wk6bTJRS4M5
+        +GK0QM/tFt17gDA9PiA2XEs3hB0ywUcy7Iw/UBD3ObX5HsAX4p2rz2UWSCmoLkPQt79VTOZeJWJim
+        ImunN4OJdQWaNSYvRmf7apCiBFB8Ax3AM1NL8C9sr4l0PTEbv2vWDgyxSZIs/pxrp9XYwTjKimlgV
+        p5pOzqIM2LEIr7uexDEYVS5JA9P3Pz6Aq23Hn1mYl58fWIbCgc1H2GCrNaGwFd98z2yXIgympMUmi
+        1vL+wr7g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pZ9Hd-00Gekm-0G;
+        Mon, 06 Mar 2023 11:45:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9C866300328;
+        Mon,  6 Mar 2023 12:45:35 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7EDCB23B586C3; Mon,  6 Mar 2023 12:45:35 +0100 (CET)
+Date:   Mon, 6 Mar 2023 12:45:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Manish Bhardwaj <bhardwajmanish18@gmail.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        irogers@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org
+Subject: Re: [PATCH] perf/core: introduced stub APIs for exported APIs
+Message-ID: <20230306114535.GC1267364@hirez.programming.kicks-ass.net>
+References: <20230305053934.9948-1-bhardwajmanish18@gmail.com>
+ <20230305092759.10754-1-bhardwajmanish18@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230305092759.10754-1-bhardwajmanish18@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, 4 Mar 2023 10:46:28 +0800
-kernel test robot <lkp@intel.com> wrote:
+On Sun, Mar 05, 2023 at 02:57:59PM +0530, Manish Bhardwaj wrote:
+> Introduced stub APIs for exported APIs so that we can build
+> independent module without any error if CONFIG_PERF_EVENT
+> feature is disabled in kernel.
 
-> Hi Jonathan,
-> 
-> I love your patch! Yet something to improve:
-> 
-
-Last minute rebase mess up.  Will fix for v2.
-
-One day I'll remember to run a sanity check build on a clean tree.
-
-Jonathan
-
-> [auto build test ERROR on cxl/next]
-> [also build test ERROR on cxl/pending linus/master next-20230303]
-> [cannot apply to v6.2]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-> patch link:    https://lore.kernel.org/r/20230303175022.10806-3-Jonathan.Cameron%40huawei.com
-> patch subject: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
-> config: alpha-randconfig-r003-20230302 (https://download.01.org/0day-ci/archive/20230304/202303041001.G9OUGQ6l-lkp@intel.com/config)
-> compiler: alpha-linux-gcc (GCC) 12.1.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/0790ed82bb7adf04c834e8c03008b92c1b23945e
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230304-015342
->         git checkout 0790ed82bb7adf04c834e8c03008b92c1b23945e
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha olddefconfig
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha SHELL=/bin/bash drivers/cxl/
-> 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: https://lore.kernel.org/oe-kbuild-all/202303041001.G9OUGQ6l-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> drivers/cxl/core/regs.c:9:10: fatal error: cpmu.h: No such file or directory  
->        9 | #include <cpmu.h>
->          |          ^~~~~~~~
->    compilation terminated.
-> --
-> >> drivers/cxl/core/cpmu.c:8:10: fatal error: cpmu.h: No such file or directory  
->        8 | #include <cpmu.h>
->          |          ^~~~~~~~
->    compilation terminated.
-> 
-> 
-> vim +9 drivers/cxl/core/regs.c
-> 
->    > 9	#include <cpmu.h>  
->     10	
-> 
-
+WTH would you build these drivers when PERF_EVENT=n ?!?
