@@ -2,100 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A06C678DB
-	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 01:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBFDC678D4
+	for <linux-perf-users@archiver.kernel.org>; Mon,  6 Mar 2023 06:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjCFBOV (ORCPT
+        id S229549AbjCFGyn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 5 Mar 2023 20:14:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
+        Mon, 6 Mar 2023 01:54:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjCFBOU (ORCPT
+        with ESMTP id S229483AbjCFGym (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 5 Mar 2023 20:14:20 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C71B86BE;
-        Sun,  5 Mar 2023 17:14:19 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PVLDs1NylzrSQ3;
-        Mon,  6 Mar 2023 09:13:33 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 6 Mar 2023 09:14:16 +0800
-Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
- perf throttle
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <eranian@google.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230227023508.102230-1-yangjihong1@huawei.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
-Date:   Mon, 6 Mar 2023 09:14:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Mon, 6 Mar 2023 01:54:42 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD3093C9
+        for <linux-perf-users@vger.kernel.org>; Sun,  5 Mar 2023 22:54:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678085680; x=1709621680;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=mJJya7SIAzAlCuAvpaKizpxbQ+o+i8w0w7p4mZVk4wE=;
+  b=YLQeVGDEKTBbKp7ZhPYEfMfRqvMU3XUJd9flpjaXaH2+7hY3polUFme4
+   p8PG6J7Ff3VBapJl2Gwq6kG0YcWd0zJadFc9C8mWRaJhy6aA6N85aEj6N
+   mX+zTJAq20GN4BKM89TmvojOryLhxp1IgxuHTuEVUR94pUOu6HWnKID2R
+   sPkXzt47FV6KyqmTSioznz0gkwPCyx0jxDSuTS5LpYxmMTEc40uDwLbp9
+   xb8M42GMjv5Icp7YDgXNVh2MJha7zVHYlc1j9zhbUGkgU/s5f6EcfN0WR
+   aBC7vOcvPDPDSbQxQsVyMLsINh+wBMPULglAL+AnIxm1cEh6ea83TOeqU
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10640"; a="421760758"
+X-IronPort-AV: E=Sophos;i="5.98,236,1673942400"; 
+   d="scan'208";a="421760758"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2023 22:54:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10640"; a="626059260"
+X-IronPort-AV: E=Sophos;i="5.98,236,1673942400"; 
+   d="scan'208";a="626059260"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.82])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2023 22:54:38 -0800
+Message-ID: <a1b7c912-1554-a623-6799-32dbd0ead4de@intel.com>
+Date:   Mon, 6 Mar 2023 08:54:34 +0200
 MIME-Version: 1.0
-In-Reply-To: <20230227023508.102230-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.8.0
+Subject: Re: brstack information with perf-intel-pt?
+To:     Iti Shree <itishree1999@gmail.com>,
+        linux-perf-users@vger.kernel.org
+References: <CAO3P5YQ-BU+fmhQo98SAKdc96qMEsim4nNvMRiBmsW0YSUYjQg@mail.gmail.com>
 Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAO3P5YQ-BU+fmhQo98SAKdc96qMEsim4nNvMRiBmsW0YSUYjQg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On 13/02/23 20:33, Iti Shree wrote:
+> Hello,
+> I am trying to get brstack information in perf.data with intel-pt
+> flag. I am passing following command for the following: perf record -e
+> intel-pt// -m, 32768
+> 
+> When I try to check if brstack is present in the gathered data with :
+> perf script -F pid, ip, brstack -i pt-perf.data I can only see pid and
+> ip information.
+> 
+> I can seem to find branching information with --itrace=b however I was
+> wondering if there is any way I can get brstack information decoded
+> into perf.data when I use intel-pt flag similar to what I get with
+> default perf record?
 
-PING.
+You need to use --itrace=li which will synthesize "instructions" events
+and add a branch stack.  Note that the period of the instructions events
+can be defined e.g. --itrace=li10us for 10 microseconds.  And also the
+max size of the branch stack e.g. --itrace=l10i for 10 branches.
 
-Thanks,
-Yang.
+Typically you need to be aware of decoding errors also, so also add
+the 'e' option i.e. --itrace=el10i10us.  There is also 'L' which adds
+the branch stack to non-synthesized events (that you may have added
+with the -e option).
 
-On 2023/2/27 10:35, Yang Jihong wrote:
-> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
-> introduces a change in throttling threshold judgment. Before this,
-> compare hwc->interrupts and max_samples_per_tick, then increase
-> hwc->interrupts by 1, but this commit reverses order of these two
-> behaviors, causing the semantics of max_samples_per_tick to change.
-> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
-> max_samples_per_tick, it should not be throttled, therefore, the judgment
-> condition should be changed to "hwc->interrupts > max_samples_per_tick".
-> 
-> In fact, this may cause the hardlockup to fail, The minimum value of
-> max_samples_per_tick may be 1, in this case, the return value of
-> __perf_event_account_interrupt function is 1.
-> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
-> architecture as an example, see x86_pmu_handle_irq).
-> 
-> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
-> 
-> Changes since v2:
->    - Add fixed commit.
-> 
-> Changes since v1:
->    - Modify commit title.
-> 
->   kernel/events/core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f79fd8b87f75..0540a8653906 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->   	} else {
->   		hwc->interrupts++;
->   		if (unlikely(throttle
-> -			     && hwc->interrupts >= max_samples_per_tick)) {
-> +			     && hwc->interrupts > max_samples_per_tick)) {
->   			__this_cpu_inc(perf_throttled_count);
->   			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->   			hwc->interrupts = MAX_INTERRUPTS;
-> 
+Some more information about --itrace for Intel PT is here:
+
+https://perf.wiki.kernel.org/index.php/Latest_Manual_Page_of_perf-intel-pt.1#New_--itrace_option
+
+General information and examples for about Intel PT can be found here:
+
+https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
+
+
