@@ -2,158 +2,218 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56FC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 16:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1712DC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 16:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230463AbjCGQXr (ORCPT
+        id S230262AbjCGQnb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 11:23:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49968 "EHLO
+        Tue, 7 Mar 2023 11:43:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjCGQXO (ORCPT
+        with ESMTP id S229750AbjCGQnA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 11:23:14 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C33A9AA01;
-        Tue,  7 Mar 2023 08:22:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678206131; x=1709742131;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qEjxqCSJ8PPyCUX8TqtU7LzyV+Hxlz+cYXbal7Q9vmk=;
-  b=cI1iGs5U6/xiNhFs7iW8IPyw0K17pO/kL4sMevx1PyMjGSOGggn3KCn3
-   Jx+FffrAflrc9NRqHPAiUYRVBIJY2gtMQV3xcdFk26qikEeKjrWYrqhyy
-   PhyIQYSI9bRTbrDUsz3Xkw43ueamTquo7fy3PwhzI5DhYkd/DoUqBQcDC
-   brrypRAEorW8ssr4gi9fTjhegwRxHQxYHUYUkwrScDvHGxsT9b1wH3H4/
-   e3i0sXVgA2X81+A+ju8DlaX5KYVMg0SXIlBy1DnQPfIHZkFOMFheoEqWP
-   nBuy3/CBNaJrZpZTxPxxg/Z8X1EZHUGidd3c6DC+zFnwUsfLE/x/MX6UY
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="400717428"
-X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="400717428"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 08:22:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="626593990"
-X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
-   d="scan'208";a="626593990"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 07 Mar 2023 08:22:06 -0800
-Received: from [10.209.30.169] (kliang2-mobl1.ccr.corp.intel.com [10.209.30.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8D416580377;
-        Tue,  7 Mar 2023 08:21:58 -0800 (PST)
-Message-ID: <70691ba4-f2ea-3d82-6c15-2f8e01151b90@linux.intel.com>
-Date:   Tue, 7 Mar 2023 11:21:52 -0500
+        Tue, 7 Mar 2023 11:43:00 -0500
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9272A3A8E
+        for <linux-perf-users@vger.kernel.org>; Tue,  7 Mar 2023 08:40:38 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed50:614d:21b0:703:d0f9])
+        by albert.telenet-ops.be with bizsmtp
+        id VUg82900A3mNwr406Ug80J; Tue, 07 Mar 2023 17:40:24 +0100
+Received: from geert (helo=localhost)
+        by ramsan.of.borg with local-esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pZaMC-00BCRZ-9r;
+        Tue, 07 Mar 2023 17:40:08 +0100
+Date:   Tue, 7 Mar 2023 17:40:08 +0100 (CET)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Frederic Weisbecker <frederic@kernel.org>,
+        Guo Ren <guoren@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, linux@armlinux.org.uk,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v3 07/51] cpuidle,psci: Push RCU-idle into driver
+In-Reply-To: <20230112195539.760296658@infradead.org>
+Message-ID: <ff338b9f-4ab0-741b-26ea-7b7351da156@linux-m68k.org>
+References: <20230112194314.845371875@infradead.org> <20230112195539.760296658@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 3/4] cxl: CXL Performance Monitoring Unit driver
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-cxl@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
- <20230303175022.10806-4-Jonathan.Cameron@huawei.com>
- <b766b4ca-1255-3b33-864c-0e7f9ab00e15@linux.intel.com>
- <20230306144124.00006b94@Huawei.com>
- <52abbd9a-3a63-3dde-c20f-99787225200e@linux.intel.com>
- <20230307091936.000055be@Huawei.com>
-Content-Language: en-US
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230307091936.000055be@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+ 	Hoi Peter,
 
+(reduced the insane CC list)
 
-On 2023-03-07 4:19 a.m., Jonathan Cameron wrote:
->>> A hybrid approach of exposing the VID / GID / Mask sets to userspace that
->>> then deals with pretty naming etc would work though.
->>>
->>> For summed events we also don't have enough information without similar
->>> exports of VID / GID / Mask.
->>>
->>> We can't use the fact that events are exposed which 'might' be summable in
->>> hardware because we may have only subsets supported by the hardware.
->>>
->>> E.g.
->>>
->>> VID / GID / Mask
->>>
->>> 19e5 / 1 / 0x1
->>> 19e5 / 1 / 0xe
->>>
->>> etc 
->>>
->>> There are going to be a lot of CXL device implementations so I think we need
->>> to find a sensible interface to pass this information to perf tool.
->>>
->>> Currently I'm thinking a new sysfs ABI that has
->>>
->>> event_groupX_vid, event_groupX_gid, event_groupX_msk, event_groupX_fixed 
->>> with one set of entries for every event group.
->>>
->>> Using that, perf tool can apply various rules to figure out sensible subsets
->>> to advertise.
->>>  
->> Usually, we only hardcode the generic/architectural or some widely used
->> events in the kernel. The perf tool should be the place for the vender
->> specific/device specific events.
->>
->> We may not want to expose the counter constraints information to the
->> user space. It's better to keep the information in the kernel. We can
->> use it to check whether the user input is valid in the event_init.
->>
->> For a specific device, the constraint information should be fixed. We
->> may create a dedicate event list file in perf tool for each device.
->>
->> For example, with your example, you can define the below events in the
->> event list file. (just demonstrate the idea. It should be in JSON format
->> in the file.)
->> Event Name / VID / GID / Mask
->> A          / 19e5 / 1 / 0x1
->> B          / 19e5 / 1 / 0x2
->> C          / 19e5 / 1 / 0x4
->> D          / 19e5 / 1 / 0x8
->> BC         / 19e5 / 1 / 0x6
->> BD         / 19e5 / 1 / 0xa
->> CD         / 19e5 / 1 / 0xc
->> BCD        / 19e5 / 1 / 0xe
->>
->> perf stat -e BD will give you the summed event B + D.
-> To me, that seems to be a non starter.  We will have 100s to 1000s of
-> device variants, each of which may have several instances of CPMU with
-> different events. The available events on some devices will be
-> firmware version dependent.
-> 
-> The explosion in json files will rapidly become unmanageable.
+On Thu, 12 Jan 2023, Peter Zijlstra wrote:
+> Doing RCU-idle outside the driver, only to then temporarily enable it
+> again, at least twice, before going idle is daft.
+>
+> Notably once implicitly through the cpu_pm_*() calls and once
+> explicitly doing ct_irq_*_irqon().
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+> Reviewed-by: Guo Ren <guoren@kernel.org>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Tested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
+> Tested-by: Tony Lindgren <tony@atomide.com>
+> Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-OK. I agree.
+Thanks for your patch, which is now commit e038f7b8028a1d1b ("cpuidle,
+psci: Push RCU-idle into driver") in v6.3-rc1.
 
-> Given PMU capabilities are fully discoverable we should use that.
-> 
-> We'd then need json to describe what groups make sense, but not which
-> ones the particular hardware supports.  Thus we'd need one set of
-> data for a particular VID/GID pair, instead of one for every device
-> with it's own mix of multiple masks for each VID/GID pair.
-> 
-> In a similar fashion to metrics, not all combinations are likely to be
-> useful things to measure so we can describe just the ones that seem
-> reasonable.
-> 
+I have bisected a PSCI checker regression on Renesas R-Car Gen3/4 SoCs
+to commit a01353cf1896ea5b ("cpuidle: Fix ct_idle_*() usage") (the 7
+commits before that do not compile):
 
-It sounds reasonable. There will be a JSON file which includes all the
-reasonable combinations of VID/GID/mask. We can decide the available one
-at runtime, e.g., perf list will only list the available events/metrics.
+psci_checker: PSCI checker started using 2 CPUs
+psci_checker: Starting hotplug tests
+psci_checker: Trying to turn off and on again all CPUs
+psci: CPU0 killed (polled 0 ms)
+Detected PIPT I-cache on CPU0
+CPU0: Booted secondary processor 0x0000000000 [0x411fd073]
+psci_checker: Trying to turn off and on again group 0 (CPUs 0-1)
+psci: CPU0 killed (polled 0 ms)
+Detected PIPT I-cache on CPU0
+CPU0: Booted secondary processor 0x0000000000 [0x411fd073]
+psci_checker: Hotplug tests passed OK
+psci_checker: Starting suspend tests (10 cycles per state)
+psci_checker: CPU 0 entering suspend cycles, states 1 through 1
+psci_checker: CPU 1 entering suspend cycles, states 1 through 1
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 177 at kernel/context_tracking.c:141 ct_kernel_exit.constprop.0+0xd8/0xf4
+Modules linked in:
+CPU: 1 PID: 177 Comm: psci_suspend_te Not tainted 6.2.0-rc1-salvator-x-00052-ga01353cf1896 #1415
+Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
+pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : ct_kernel_exit.constprop.0+0xd8/0xf4
+lr : ct_kernel_exit.constprop.0+0xc8/0xf4
+sp : ffffffc00b73bd30
+x29: ffffffc00b73bd30 x28: ffffff807fbadc90 x27: 0000000000000000
+x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+x23: ffffff800981e140 x22: 0000000000000001 x21: 0000000000010000
+x20: ffffffc0086be1d8 x19: ffffff807fbac070 x18: 0000000000000000
+x17: ffffff80083d1000 x16: ffffffc00841fff8 x15: ffffffc00b73b990
+x14: ffffffc00895be78 x13: 0000000000000001 x12: 0000000000000000
+x11: 00000000000001aa x10: 00000000ffffffea x9 : 000000000000000f
+x8 : ffffffc00b73bb68 x7 : ffffffc00b73be18 x6 : ffffffc00815ff34
+x5 : ffffffc00a6a0c30 x4 : ffffffc00801ce00 x3 : 0000000000000000
+x2 : ffffffc008dc3070 x1 : ffffffc008dc3078 x0 : 0000000004208040
+Call trace:
+  ct_kernel_exit.constprop.0+0xd8/0xf4
+  ct_idle_enter+0x18/0x20
+  psci_enter_idle_state+0xa4/0xfc
+  suspend_test_thread+0x238/0x2f0
+  kthread+0xd8/0xe8
+  ret_from_fork+0x10/0x20
+irq event stamp: 0
+hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+hardirqs last disabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
+softirqs last  enabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
+softirqs last disabled at (0): [<0000000000000000>] 0x0
+---[ end trace 0000000000000000 ]---
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 177 at kernel/context_tracking.c:186 ct_kernel_enter.constprop.0+0x78/0xa4
+Modules linked in:
+CPU: 1 PID: 177 Comm: psci_suspend_te Tainted: G        W          6.2.0-rc1-salvator-x-00052-ga01353cf1896 #1415
+Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
+pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : ct_kernel_enter.constprop.0+0x78/0xa4
+lr : ct_kernel_enter.constprop.0+0x68/0xa4
+sp : ffffffc00b73bd30
+x29: ffffffc00b73bd30 x28: ffffff807fbadc90 x27: 0000000000000000
+x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+x23: ffffff800981e140 x22: 0000000000000001 x21: 00000000ffffffa1
+x20: ffffffc0086be1d8 x19: 00000000000000c0 x18: 0000000000000000
+x17: ffffff80083d1000 x16: ffffffc00841fff8 x15: ffffffc00b73b990
+x14: ffffffc00895be78 x13: ffffff800e325180 x12: ffffffc076de9000
+x11: 0000000034d4d91d x10: 0000000000000008 x9 : 0000000000001000
+x8 : ffffffc008012800 x7 : 0000000000000000 x6 : ffffff807fbac070
+x5 : ffffffc008dc3070 x4 : 0000000000000000 x3 : 000000000001a9fc
+x2 : 0000000000000003 x1 : ffffffc008dc3070 x0 : 0000000004208040
+Call trace:
+  ct_kernel_enter.constprop.0+0x78/0xa4
+  ct_idle_exit+0x18/0x38
+  psci_enter_idle_state+0xdc/0xfc
+  suspend_test_thread+0x238/0x2f0
+  kthread+0xd8/0xe8
+  ret_from_fork+0x10/0x20
+irq event stamp: 0
+hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+hardirqs last disabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
+softirqs last  enabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
+softirqs last disabled at (0): [<0000000000000000>] 0x0
+---[ end trace 0000000000000000 ]---
+psci_checker: Failed to suspend CPU 1: error -1 (requested state 1, cycle 0)
+psci_checker: CPU 0 suspend test results: success 0, shallow states 10, errors 0
+mmcblk0rpmb: mmc0:0001 BGSD3R 4.00 MiB, chardev (243:0)
+psci_checker: CPU 1 suspend test results: success 0, shallow states 9, errors 1
+psci_checker: 1 error(s) encountered in suspend tests
+psci_checker: PSCI checker completed
 
-Thanks,
-Kan
+> ---
+> drivers/cpuidle/cpuidle-psci.c |    9 +++++----
+> 1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -69,12 +69,12 @@ static int __psci_enter_domain_idle_stat
+> 		return -1;
+>
+> 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
+> -	ct_irq_enter_irqson();
+> 	if (s2idle)
+> 		dev_pm_genpd_suspend(pd_dev);
+> 	else
+> 		pm_runtime_put_sync_suspend(pd_dev);
+> -	ct_irq_exit_irqson();
+> +
+> +	ct_idle_enter();
+>
+> 	state = psci_get_domain_state();
+> 	if (!state)
+> @@ -82,12 +82,12 @@ static int __psci_enter_domain_idle_stat
+>
+> 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+>
+> -	ct_irq_enter_irqson();
+> +	ct_idle_exit();
+> +
+> 	if (s2idle)
+> 		dev_pm_genpd_resume(pd_dev);
+> 	else
+> 		pm_runtime_get_sync(pd_dev);
+> -	ct_irq_exit_irqson();
+>
+> 	cpu_pm_exit();
+>
+> @@ -240,6 +240,7 @@ static int psci_dt_cpu_init_topology(str
+> 	 * of a shared state for the domain, assumes the domain states are all
+> 	 * deeper states.
+> 	 */
+> +	drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
+> 	drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
+> 	drv->states[state_count - 1].enter_s2idle = psci_enter_s2idle_domain_idle_state;
+> 	psci_cpuidle_use_cpuhp = true;
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
