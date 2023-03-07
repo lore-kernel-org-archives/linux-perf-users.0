@@ -2,100 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BA8C678D5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 16:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA0AC6FD1A
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 18:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbjCGQ5M convert rfc822-to-8bit (ORCPT
+        id S231263AbjCGSpK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 11:57:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49536 "EHLO
+        Tue, 7 Mar 2023 13:45:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbjCGQ45 (ORCPT
+        with ESMTP id S233116AbjCGSoi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 11:56:57 -0500
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F795615B;
-        Tue,  7 Mar 2023 08:53:09 -0800 (PST)
-Received: by mail-yb1-f169.google.com with SMTP id v101so12069489ybi.2;
-        Tue, 07 Mar 2023 08:53:09 -0800 (PST)
+        Tue, 7 Mar 2023 13:44:38 -0500
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C2AA9DCB
+        for <linux-perf-users@vger.kernel.org>; Tue,  7 Mar 2023 10:34:35 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id 4so8932577ilz.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Mar 2023 10:34:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678214006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P5IKF/wsNpch5kvYfjJD05zz11I2xpXAsWHYDo9mWyw=;
+        b=tNpMm35+X6ecwkKkevjGBZwu1cYO/BLh11Zq9okE/3D3TpHD9Kk9/JbT4qSphJ0x4j
+         +W2kYujXN9kAPGd9XWCFCrO7BX7msrEiMs5vdqdhTYiN9sJDNXCZRbdNbEzHe5ap4Q9m
+         +HidVxBV9x1lsYRjgHhSWcYleJfOqhEAG0y+Jejo+GnH+8FLpswMTTE5u8DgvSEDqEeB
+         80FmZ4WAGRdSPEY3NKXuVDc/GmLk9jndfSDLPaxeHBr8j76NSA1rI7LUDcjNBrFihiry
+         vITQgdSlSVw7Asa3dgwdXHjHaVD4ZCsY6g18Iv//DxwoBHrb0RdmbXfPUYP0O8SykxwJ
+         Eh1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678207988;
+        d=1e100.net; s=20210112; t=1678214006;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7/gBRXb85me+1FkZga1hHDiW80ClQBScKHoPc4rOx7U=;
-        b=QFW4hRUoZL8060muDNaB9ki4SvmVpZe77FKBLsjxJp2lZJVko8Y6pQu2h91eRPaQJg
-         kbjOaomx15eHuYpghlokmPbrhaONQvbjvjuHIA8AYoUJOt1oQ5XC67qb8KLCu/7kHGuV
-         D2S/a4ECdOhzwPkllKvNfVojozs982xNKFi1X6RlsSSlt6nHmo6M+BA9vsAWaa/yaUcC
-         tcVP/tMAM59X9zRMu43b2/FRmt/AIqajiH1UdP9VyKX+9b3CxKeJ9KQWlZA5RUR4cyjz
-         fcNiWxodUNHXF6iCmQYrEC+FoGMHVbA3oP+YDLu8zSQ4UAo4QuOffQdpmVCymrB+SNRF
-         cJ0g==
-X-Gm-Message-State: AO0yUKVuBaZ5gVxykzg7zAhKAIkNgMgNO5JtX/kM9qdMl1mlOmM4B9/2
-        cV4wfJeVTld2lDiNfzREPf6b/cfgBfx4teeSOQM=
-X-Google-Smtp-Source: AK7set8tfjwpzQZQScNYBcN4iSNxac+Y9AyRsU8j+6uBk2WxKvaFCooRfM+pMbzRDq0D2AUizmGWvySr43aDph3iyXM=
-X-Received: by 2002:a5b:384:0:b0:a65:8cd3:fc4 with SMTP id k4-20020a5b0384000000b00a658cd30fc4mr8914549ybp.5.1678207988110;
- Tue, 07 Mar 2023 08:53:08 -0800 (PST)
+        bh=P5IKF/wsNpch5kvYfjJD05zz11I2xpXAsWHYDo9mWyw=;
+        b=RYOR1WYPytA2AvjUsMD78aXhthgTUHwO0rMJyYiXkLmLWmKfCOU5TutYM2WRBo1NrG
+         hqDkKbB0IQmlY8M7AWvGCGjsitsjPDT6ncKwcNdbY/GJasWMLnXC+aqQ1oShmx64FDqA
+         VBpXcvmx3Zy8+nzUrwy2cE0HRQma9gP/IlMuif2aZUl0qHRvfLq+mtAcEG0ezAU8E1aJ
+         M0nLCVSGrj+c9mWDO6lHzp5hLX3uhaDAicMly5Kws/gRRl1hbFZyf7rc3y8wzD2hDEYD
+         kmmEu5LHtPvEMTTBQBPvnC9U5+kpnxW7XlopN7Pa8enXiLvJFYWIuaTcw8fQlGZ/m51/
+         eBrA==
+X-Gm-Message-State: AO0yUKWkc5DhaHXaX1DK/dzuXGUXqDHwEK6hNgt3zH0DBKn3PWHbyqdd
+        p58qxaQJuO74jwkOW7hOviVeBvwTGzYDB2KJp6UVvw==
+X-Google-Smtp-Source: AK7set/BQKxv7tdZI9XQIsj/G34VZUzE4hpqgDN5Gf0wSMpQ+phfmCxU5ogoMAurXeZ2rlA/0THSa/4Uhsky+GD3aCc=
+X-Received: by 2002:a05:6e02:118b:b0:315:459e:177d with SMTP id
+ y11-20020a056e02118b00b00315459e177dmr7122231ili.2.1678214006007; Tue, 07 Mar
+ 2023 10:33:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20230307032117.3461008-1-irogers@google.com> <CAM9d7ci6FWx2oYAbqhVW2-tjB4p8ji3w87n-ndwxidMov+kVZw@mail.gmail.com>
- <CAP-5=fUQNimNSKjwZaCASyikjXJXBZdw7Z=APYEB4RyX-dXMfQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fUQNimNSKjwZaCASyikjXJXBZdw7Z=APYEB4RyX-dXMfQ@mail.gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 7 Mar 2023 08:52:57 -0800
-Message-ID: <CAM9d7ciO8EYQ_5GoNzRiR=-HWK6K0ihceL+pA4En1N0bhL3TVA@mail.gmail.com>
-Subject: Re: [PATCH] perf lock contention: Fix builtin detection
-To:     Ian Rogers <irogers@google.com>
-Cc:     bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Martin KaFai Lau <martin.lau@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CABDzTvaZMCoSah-XNnvnewMUkTp_skOSy3Nbhvex-D_=szpJkg@mail.gmail.com>
+In-Reply-To: <CABDzTvaZMCoSah-XNnvnewMUkTp_skOSy3Nbhvex-D_=szpJkg@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 7 Mar 2023 10:33:14 -0800
+Message-ID: <CAP-5=fXZtcs5QGD014MXwXr2871T0Ymabca9RkncU0mO7BXRpA@mail.gmail.com>
+Subject: Re: GSoC'2023: Perf: The Linux-Foundation
+To:     Madhu patel <patelmadhu06@gmail.com>
+Cc:     irogers+gsoc22@google.com, namhyung@kernel.org, acme@kernel.org,
+        linux-perf-users@vger.kernel.org,
+        "mingo@redhat.com" <mingo@redhat.com>, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 6, 2023 at 9:56 PM Ian Rogers <irogers@google.com> wrote:
+On Tue, Mar 7, 2023 at 8:33=E2=80=AFAM Madhu patel <patelmadhu06@gmail.com>=
+ wrote:
 >
-> On Mon, Mar 6, 2023 at 8:43 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Mon, Mar 6, 2023 at 7:21 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > __has_builtin was passed the macro rather than the actual builtin
-> > > feature.
-> >
-> > Oh, I missed it's a macro define in tools/lib/bpf/bpf_core_read.h file.
-> >
-> > Looking at some BPF test codes, it seems you also need to check the
-> > clang compiler version.  Please take a look at the file below:
-> >
-> >   tools/testing/selftests/bpf/progs/test_core_reloc_type_base.c
-> >
-> > Thanks,
-> > Namhyung
+> Hi Ian Rogers, Namhyung Kim
 >
-> Hmm..
+> I'm very interested in working on the project perf in Linux-Foundation or=
+ganization through GSoC'2023.
 >
-> tools/testing/selftests/bpf/progs/test_core_reloc_kernel.c:
-> ...
->        /* Support for the BPF_TYPE_MATCHES argument to the
->         * __builtin_preserve_type_info builtin was added at some point during
->         * development of clang 15 and it's what we require for this test.
->         */
-> #if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >= 15
-> ...
+> I am Madhu Patel, a fourth-year B.Tech. student in Computer Science at IG=
+DTUW, with a current CGPA of 8.7/10. I have previously interned at Adobe In=
+dia, Rabvik Innovations, and FM solutions, and I am currently a research in=
+tern at IIT Roorkee. I am also working on a research paper on Linux Kernel =
+Evolution for the USENIX publication. Moreover, my research paper on Stock =
+Price Prediction was recently accepted at the IEEE Conference. You can find=
+ more information about my work on my LinkedIn and GitHub profiles.
 >
-> I'm not sure we need to worry about development clang builds and just
-> the __has_builtin is cleaner. Perhaps the BPF folks can chime in.
+> Can you please suggest a few initial tasks I can work on during the appli=
+cation period and attach them to my application? I have already prepared a =
+timeline/planner, great if you could have a look at it and suggest any enha=
+ncements. Additionally, I have signed in to the mailing lists, and IRCs and=
+ explored them as described on the project page [1].
 
-My understanding is that __builtin_preserve_type_info is supported
-before.  But clang 15 added BPF_TYPE_MATCHES which is used for
-bpf_core_type_matches().  So just checking the builtin would not work.
+
+Hi Madhu,
+
+Thank you for your interest in contributing to Linux perf! One area
+we're trying to improve is the Linux perf wiki:
+http://perf.wiki.kernel.org/ You can register for an account and help
+to fill out topics, provide tutorials, etc.
+
+Another idea is if you run the `perf test` command, especially for the
+current developer tree [1] branch perf-tools (targeting Linux 6.3) or
+perf-tools-next (targeting Linux 6.4) then you will see tests passing,
+skipping or failing. An improvement would be to add detail to the skip
+messages so that users know why a test skipped. Of course you'll need
+to build the perf command to see this.
+
+These tasks are both ongoing, so there's no expectation to fix
+everything. For GSoC we'd just appreciate seeing that you're engaged
+with the linux-perf-users community and able to make contributions.
 
 Thanks,
-Namhyung
+Ian
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/
+
+>
+> Thanks,
+> Madhu Patel
+> LinkedIn | Github
+>
+>
+>
