@@ -2,287 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED31FC6FD1E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 19:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB33FC6FA99
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 20:57:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbjCGTyH (ORCPT
+        id S229994AbjCGU5l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 14:54:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
+        Tue, 7 Mar 2023 15:57:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231260AbjCGTxq (ORCPT
+        with ESMTP id S229963AbjCGU5k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 14:53:46 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92BE2A17CD;
-        Tue,  7 Mar 2023 11:45:28 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id h31so8285437pgl.6;
-        Tue, 07 Mar 2023 11:45:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678218327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P8WHAoxDTRRK4jgSNRWSO106FAPif1ofRn3Id2SdfTg=;
-        b=Df7Py+r+m8TXzKdv94IMkfGQikmUBvIMX0mpKskcpWVQxBtnSYifG65S7ptSkgy4hD
-         dyJBe3RRVpaDLcMe2/WgMbLwgSvkfcFJ15689YjlPWO6VxQFsPWh6c7CCanjgOlTKRVO
-         ksWtvFsuzT4zUxfnzRJiIh4MLVxwo/isqPSgVBt9h8iZR53N2tvKT4bw3sDEFJ0wcKhQ
-         LRgsGCPWQl6g8mQFruudwy+LexsvlrdKtRjto7Zde28tzAybL5vqzoMy10Stp7TGnUUj
-         WC7QMlv2QAVsGQeiLv++s+uzRNxGeFDjyr6m9xA1j/pdVsMSIsXHPFmXmA18VpXFZQNu
-         ZYUg==
+        Tue, 7 Mar 2023 15:57:40 -0500
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63D4ABB12;
+        Tue,  7 Mar 2023 12:57:38 -0800 (PST)
+Received: by mail-yb1-f175.google.com with SMTP id e82so12735055ybh.9;
+        Tue, 07 Mar 2023 12:57:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678218327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P8WHAoxDTRRK4jgSNRWSO106FAPif1ofRn3Id2SdfTg=;
-        b=bjNQcaQWxf/vTkr29KgQZmc9kLYSjnRG31FUd5H8+HuYZUtq+N8NNcuS21evheqBbS
-         ov5s2PMSNUqOLxv8ZjZ6Bn4plMEMz0cAczcWquorTuQ++d3vOuNYedXN/0BUcdnNC1yn
-         i12A6dahL7c9Ua63CJyVMk+BG1znLzp6CZHPQxAQv6NIzomb+P+FU+KIxxK/vK35KF7f
-         al1A8CLz1WYCV+A4zLGQtyWGLYwle3uULkCtRcgXQ9tgoFJE/I/W3eaR6F+tZHPuEkkb
-         79zY/YWUb3P2xijQ25/XVHfSCK8GihEg8wNwrt+SxvForW8OsRqjKETq/EGzTgC5wkYs
-         uPMQ==
-X-Gm-Message-State: AO0yUKXDP9SWPv3L89a5dsjjyg8hj6f5ehO/86NQwJ4n8/IJ8pMDad8I
-        SBKpwA1b3DXHNBxDbvdn3HaU4S4rka2eR4sBspY=
-X-Google-Smtp-Source: AK7set8dNzbBQE8T8gnrJ4/QKDyk+bntEZEGiPqi70liTAPp0sYr6bg4WsKA8nle1I/wlCQ54LthkY82dhH9SuSP1vQ=
-X-Received: by 2002:a63:931e:0:b0:503:2561:6fed with SMTP id
- b30-20020a63931e000000b0050325616fedmr5561743pge.1.1678218327480; Tue, 07 Mar
- 2023 11:45:27 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678222658;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6MYcGa0FDnlV4+RzWjtLODWC2bUWFcR+22ILhsmpYos=;
+        b=fLOaBg6I4gENBB6PkFZRhIY76i55U8VCubkWkUPqs3HN9cY6fnf6BBvCDJK0c6d6BU
+         WH2Gy/lOjTOQJvDRFxmfbWwopcWep2/ouwoEYATuH/scAsqPmTtWrwOOidAE86PMztru
+         UQhaN2jSk3yeITd6iQqLe9VoGE4XK7xtN++RbiZ80ev0cAZ09c0bLkWK5DWvHTDgjoc1
+         eJdfnr7l7Q7ppLiV5lwHTo7PLqT238/5E9JYjNIGaK/qu1E44p7+OLWvOqOm09tR9CrE
+         Q5WQPF3Vc4SUGPA2B69+A431wBeC/pobq2hWb/SYMW2iddYwoL+/KIR1mgm++jbsdQMw
+         Gomg==
+X-Gm-Message-State: AO0yUKUdvSf763CyHlxM7T+AcaNZCwjiSM5OHLjb443L9FdntSbTRmT7
+        9YSRCquVDTL6MOsR2nHpWYGpatgA1nE0AmNI+cY=
+X-Google-Smtp-Source: AK7set/NoV8+bRWpR4hZCAOIMHd3+do8A/zUKt46TPa8iqSccqhy9UJIMdg50xkil+9ptQtV6bzaoKq91dllqtIWoMA=
+X-Received: by 2002:a5b:38a:0:b0:ac9:cb97:bd0e with SMTP id
+ k10-20020a5b038a000000b00ac9cb97bd0emr7471455ybp.5.1678222657924; Tue, 07 Mar
+ 2023 12:57:37 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
-In-Reply-To: <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Tue, 7 Mar 2023 11:45:16 -0800
-Message-ID: <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        leo.yan@linaro.org, mathieu.poirier@linaro.org,
-        adrian.hunter@intel.com, Jiri Olsa <jolsa@kernel.org>,
-        acme@redhat.com, mike.leach@linaro.org,
-        Will Deacon <will@kernel.org>, suzuki.poulose@arm.com
+References: <20230222230141.1729048-1-namhyung@kernel.org> <20230222230141.1729048-3-namhyung@kernel.org>
+ <0c4afcfb-fe9a-89ac-16aa-57ce0d2a70bc@intel.com>
+In-Reply-To: <0c4afcfb-fe9a-89ac-16aa-57ce0d2a70bc@intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 7 Mar 2023 12:57:26 -0800
+Message-ID: <CAM9d7chU4pPVTT1rFvr4zP27c5DOVuX6MJi6qBw9SgN1B-Ezww@mail.gmail.com>
+Subject: Re: [PATCH 2/8] perf bpf filter: Implement event sample filtering
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+Hi Adrian,
 
-Thanks for the prompt response. Please see the inline replies.
+Thanks for your feedback!
 
-On Tue, Mar 7, 2023 at 2:32=E2=80=AFAM James Clark <james.clark@arm.com> wr=
-ote:
+On Tue, Mar 7, 2023 at 5:04 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
->
->
-> On 06/03/2023 21:13, Yang Shi wrote:
-> > Hi,
+> On 23/02/23 01:01, Namhyung Kim wrote:
+> > The BPF program will be attached to a perf_event and be triggered when
+> > it overflows.  It'd iterate the filters map and compare the sample
+> > value according to the expression.  If any of them fails, the sample
+> > would be dropped.
 > >
-> > I'm seeking some help regarding perf record --kcore + coresight. When
-> > I tracing with perf record --kcore -e cs_etm ... , perf report shows
-> > "The perf.data/data data has no samples!".
+> > Also it needs to have the corresponding sample data for the expression
+> > so it compares data->sample_flags with the given value.  To access the
+> > sample data, it uses the bpf_cast_to_kern_ctx() kfunc which was added
+> > in v6.2 kernel.
 > >
-> > I tried other combinations:
-> > 1. perf record --kcore (w/o using coresight): works
-> > 2. perf record -e cs_etm ... : works
-> > 3. Manually copy kcore with perf buildid-cache, then run perf record
-> > -e cs_etm... : works
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+[SNIP]
+> > diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+> > index fd5b1164a322..6077930073f9 100644
+> > --- a/tools/perf/util/bpf-filter.h
+> > +++ b/tools/perf/util/bpf-filter.h
+> > @@ -4,15 +4,7 @@
 > >
-> > So just "perf record --kcore -e cs_etm ..." doesn't work.
+> >  #include <linux/list.h>
 > >
-> > I'm using v6.2 kernel and the perf is built from the same kernel
-> > source with OpenCSD 1.4. Also attached the sample file generated by
-> > perf.
+> > -enum perf_bpf_filter_op {
+> > -     PBF_OP_EQ,
+> > -     PBF_OP_NEQ,
+> > -     PBF_OP_GT,
+> > -     PBF_OP_GE,
+> > -     PBF_OP_LT,
+> > -     PBF_OP_LE,
+> > -     PBF_OP_AND,
+> > -};
+> > +#include "bpf_skel/sample-filter.h"
 > >
-> > Any suggestion is appreciated.
+> >  struct perf_bpf_filter_expr {
+> >       struct list_head list;
+> > @@ -21,16 +13,30 @@ struct perf_bpf_filter_expr {
+> >       unsigned long val;
+> >  };
 > >
-> > Thanks,
-> > Yang
+> > +struct evsel;
+> > +
+> >  #ifdef HAVE_BPF_SKEL
+> >  struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flags,
+> >                                                      enum perf_bpf_filter_op op,
+> >                                                      unsigned long val);
+> >  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str);
+> > +int perf_bpf_filter__prepare(struct evsel *evsel);
+> > +int perf_bpf_filter__destroy(struct evsel *evsel);
+> > +
+> >  #else /* !HAVE_BPF_SKEL */
+> > +
+> >  static inline int perf_bpf_filter__parse(struct list_head *expr_head __maybe_unused,
+> >                                        const char *str __maybe_unused)
+> >  {
+> >       return -ENOSYS;
 >
-> Hi Yang,
->
-> I don't see any issue with this command and I still get samples:
->
->   perf record -e cs_etm// --kcore -- true
+> Any reason for ENOSYS instead of say EOPNOTSUPP?
 
-This command works for me. But the below command doesn't work:
-
-perf record --kcore -e cs_etm/@tmc_etf63/k --per-thread -- taskset
---cpu-list 1 uname
-
->
-> You might want to try running both record and report in verbose and
-> stdio mode (-vvv --stdio) to see if you see any warnings.
->
-> I can't think of any way --kcore would cause an issue because all it
-> does is save kcore into the .debug cache rather than affecting the
-> actual perf.data file.
-
-Yes, this is what I thought. But digging into the code seems it may
-add a new dummy event. Please see the below data header dump.
+No specific reason.  I can change it to EOPNOTSUPP.
 
 >
-> Are you running perf report in the same place the recording was made? Or
-> on another system?
+> >  }
+> > +static inline int perf_bpf_filter__prepare(struct evsel *evsel)
+>
+> Needs  __maybe_unused on the parameters
 
-Yes.
-
-I did some further investigation. The below is the dump for both good
-and bad data files.
-
-Good (copy kcore manually):
-# captured on    : Tue Mar  7 11:19:14 2023
-# header version : 1
-# data offset    : 1576
-# data size      : 26736
-# feat offset    : 28312
-# hostname : fedora
-# os release : 6.2.0-coresight+
-# perf version : 6.2.g3424af22c4fc
-# arch : aarch64
-# nrcpus online : 128
-# nrcpus avail : 128
-# cpuid : 0x00000000c00fac30
-# total memory : 2108862504 kB
-# cmdline : /root/bin/perf record -e cs_etm/@tmc_etf63/k --kcore
---per-thread -- taskset --cpu-list 1 true
-# event : name =3D cs_etm/@tmc_etf63/k, , id =3D { 2248 }, type =3D 9, size
-=3D 128, { sample_period, sample_freq } =3D 1, sample_type =3D
-IP|TID|IDENTIFIER, read_format =3D ID|LO
-ST, disabled =3D 1, exclude_user =3D 1, exclude_hv =3D 1, enable_on_exec =
-=3D
-1, sample_id_all =3D 1, { bp_len, config2 } =3D 0x12792918
-# event : name =3D dummy:u, , id =3D { 2249 }, type =3D 1, size =3D 128,
-config =3D 0x9, { sample_period, sample_freq } =3D 1, sample_type =3D
-IP|TID|IDENTIFIER, read_format =3D ID|
-LOST, disabled =3D 1, exclude_kernel =3D 1, exclude_hv =3D 1, mmap =3D 1, c=
-omm
-=3D 1, enable_on_exec =3D 1, task =3D 1, sample_id_all =3D 1, exclude_guest=
- =3D
-1, mmap2 =3D 1, comm_exec
-=3D 1, context_switch =3D 1, bpf_event =3D 1
-# event : name =3D dummy:u, , id =3D { 2250, 2251, 2252, 2253, 2254, 2255,
-2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263, 2264, 2265, 2266,
-2267, 2268, 2269, 2270, 2271
-, 2272, 2273, 2274, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282,
-2283, 2284, 2285, 2286, 2287, 2288, 2289, 2290, 2291, 2292, 2293,
-2294, 2295, 2296, 2297, 2298, 2
-299, 2300, 2301, 2302, 2303, 2304, 2305, 2306, 2307, 2308, 2309, 2310,
-2311, 2312, 2313, 2314, 2315, 2316, 2317, 2318, 2319, 2320, 2321,
-2322, 2323, 2324, 2325, 2326
-, 2327, 2328, 2329, 2330, 2331, 2332, 2333, 2334, 2335, 2336, 2337,
-2338, 2339, 2340, 2341, 2342, 2343, 2344, 2345, 2346, 2347, 2348,
-2349, 2350, 2351, 2352, 2353, 2
-354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365,
-2366, 2367, 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377
-}, type =3D 1, size =3D 128
-, config =3D 0x9, { sample_period, sample_freq } =3D 1, sample_type =3D
-IP|TID|TIME|IDENTIFIER, read_format =3D ID|LOST, exclude_kernel =3D 1,
-exclude_hv =3D 1, sample_id_all =3D
-1, exclude_guest =3D 1, ksymbol =3D 1, text_poke =3D 1
-# CPU_TOPOLOGY info available, use -I to display
-# NUMA_TOPOLOGY info available, use -I to display
-# pmu mappings: armv8_pmuv3_0 =3D 8, software =3D 1, arm_cmn_0 =3D 10,
-uprobe =3D 7, cs_etm =3D 9, breakpoint =3D 5, tracepoint =3D 2, arm_cmn_1 =
-=3D
-11, kprobe =3D 6
-# contains AUX area data (e.g. instruction trace)
-# CACHE info available, use -I to display
-# time of first sample : 18446744073.709551
-# time of last sample : 18446744073.709551
-# sample duration :      0.000 ms
-# MEM_TOPOLOGY info available, use -I to display
-# armv8_pmuv3_0 pmu capabilities: slots=3D0x00000004,
-bus_slots=3D0x00000000, bus_width=3D0x00000000
-# missing features: (null) CPUDESC BRANCH_STACK GROUP_DESC STAT
-CLOCKID DIR_FORMAT COMPRESSED CPU_PMU_CAPS CLOCK_DATA HYBRID_TOPOLOGY
-
-Bad:
-# captured on    : Tue Mar  7 11:19:14 2023
-# header version : 1
-# data offset    : 1576
-# data size      : 26736
-# feat offset    : 28312
-# hostname : fedora
-# os release : 6.2.0-coresight+
-# perf version : 6.2.g3424af22c4fc
-# arch : aarch64
-# nrcpus online : 128
-# nrcpus avail : 128
-# cpuid : 0x00000000c00fac30
-# total memory : 2108862504 kB
-# cmdline : /root/bin/perf record -e cs_etm/@tmc_etf63/k --kcore
---per-thread -- taskset --cpu-list 1 true
-# event : name =3D cs_etm/@tmc_etf63/k, , id =3D { 2248 }, type =3D 9, size
-=3D 128, { sample_period, sample_freq } =3D 1, sample_type =3D
-IP|TID|IDENTIFIER, read_format =3D ID|LO
-ST, disabled =3D 1, exclude_user =3D 1, exclude_hv =3D 1, enable_on_exec =
-=3D
-1, sample_id_all =3D 1, { bp_len, config2 } =3D 0x12792918
-# event : name =3D dummy:u, , id =3D { 2249 }, type =3D 1, size =3D 128,
-config =3D 0x9, { sample_period, sample_freq } =3D 1, sample_type =3D
-IP|TID|IDENTIFIER, read_format =3D ID|
-LOST, disabled =3D 1, exclude_kernel =3D 1, exclude_hv =3D 1, mmap =3D 1, c=
-omm
-=3D 1, enable_on_exec =3D 1, task =3D 1, sample_id_all =3D 1, exclude_guest=
- =3D
-1, mmap2 =3D 1, comm_exec
-=3D 1, context_switch =3D 1, bpf_event =3D 1
-# event : name =3D dummy:u, , id =3D { 2250, 2251, 2252, 2253, 2254, 2255,
-2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263, 2264, 2265, 2266,
-2267, 2268, 2269, 2270, 2271
-, 2272, 2273, 2274, 2275, 2276, 2277, 2278, 2279, 2280, 2281, 2282,
-2283, 2284, 2285, 2286, 2287, 2288, 2289, 2290, 2291, 2292, 2293,
-2294, 2295, 2296, 2297, 2298, 2
-299, 2300, 2301, 2302, 2303, 2304, 2305, 2306, 2307, 2308, 2309, 2310,
-2311, 2312, 2313, 2314, 2315, 2316, 2317, 2318, 2319, 2320, 2321,
-2322, 2323, 2324, 2325, 2326
-, 2327, 2328, 2329, 2330, 2331, 2332, 2333, 2334, 2335, 2336, 2337,
-2338, 2339, 2340, 2341, 2342, 2343, 2344, 2345, 2346, 2347, 2348,
-2349, 2350, 2351, 2352, 2353, 2
-354, 2355, 2356, 2357, 2358, 2359, 2360, 2361, 2362, 2363, 2364, 2365,
-2366, 2367, 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377
-}, type =3D 1, size =3D 128
-, config =3D 0x9, { sample_period, sample_freq } =3D 1, sample_type =3D
-IP|TID|TIME|IDENTIFIER, read_format =3D ID|LOST, exclude_kernel =3D 1,
-exclude_hv =3D 1, sample_id_all =3D
-1, exclude_guest =3D 1, ksymbol =3D 1, text_poke =3D 1
-# CPU_TOPOLOGY info available, use -I to display
-# NUMA_TOPOLOGY info available, use -I to display
-# pmu mappings: armv8_pmuv3_0 =3D 8, software =3D 1, arm_cmn_0 =3D 10,
-uprobe =3D 7, cs_etm =3D 9, breakpoint =3D 5, tracepoint =3D 2, arm_cmn_1 =
-=3D
-11, kprobe =3D 6
-# contains AUX area data (e.g. instruction trace)
-# CACHE info available, use -I to display
-# time of first sample : 18446744073.709551
-# time of last sample : 18446744073.709551
-# sample duration :      0.000 ms
-# MEM_TOPOLOGY info available, use -I to display
-# armv8_pmuv3_0 pmu capabilities: slots=3D0x00000004,
-bus_slots=3D0x00000000, bus_width=3D0x00000000
-# missing features: (null) CPUDESC BRANCH_STACK GROUP_DESC STAT
-CLOCKID DIR_FORMAT COMPRESSED CPU_PMU_CAPS CLOCK_DATA HYBRID_TOPOLOGY
-
-
-Dumping raw events could show the events from the bad data file. But
-it has zero samples after event collapse.
-
-The only difference is --kcore inserted a new text_poke dummy event.
-It seems coresight also inserted a dummy event with my command but
-your command didn't. So it seems like the two dummy events confused
-event collapse.
-
-The text_poke dummy event is added by commit
-f42c0ce573df79d1b8bd169008c994dcdd43585a ("perf record: Always get
-text_poke events with --kcore option"). If I reverted this commit,
-then it works. But I'm not sure whether this is the right fix or real
-root cause or not. Or coresight shouldn't insert its own dummy event?
+Sure.
 
 >
-> James
+> > +{
+> > +     return -ENOSYS;
+> > +}
+> > +static inline int perf_bpf_filter__destroy(struct evsel *evsel)
+>
+> Needs  __maybe_unused on the parameters
+
+Will do.
+
+Thanks,
+Namhyung
