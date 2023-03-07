@@ -2,123 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF59C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 03:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9106C64EC4
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 03:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229849AbjCGDRS (ORCPT
+        id S229667AbjCGDVb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 22:17:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34832 "EHLO
+        Mon, 6 Mar 2023 22:21:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230414AbjCGDRE (ORCPT
+        with ESMTP id S229659AbjCGDVa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 22:17:04 -0500
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 306567EEF;
-        Mon,  6 Mar 2023 19:16:27 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id BC4A85C0A4E;
-        Tue,  7 Mar 2023 03:06:00 +0000 (UTC)
-Received: from pdx1-sub0-mail-a206.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 236AE5C1317;
-        Tue,  7 Mar 2023 03:06:00 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1678158360; a=rsa-sha256;
-        cv=none;
-        b=cHtdUigyZivh467zszhrhBVCutRs6EHRiOLzX1t0wtfG7Q43y6VGpD9571wR1lNwwr/ilT
-        aNKjhINpN/fZJ6PpueVmZVvb7QAXkSqjuoGJMKnqedk2cJturCVEGmp4cFfiTP6pgarAAk
-        6+Wg40dEFNAucsB0epz/NZR3b+m0yHykr+q1soqmemi2xNhgLGyO9IL5I4yhDP72kFtBwK
-        e+b12hrA9/7ROKJOhwqAytbidDEQCV/F+xaNt3yXfakO+6cgnMc6jJBgsmycUxt01UC3RD
-        Sv+tnC15dViRwhlgZy6v78dK/S3MzK4StWi32NwVzsDGKf9aSoHajSCzx6p3KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1678158360;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=cS8qyos2zZngD0Sbb383Sp/fAKIfbdQf6NRl8D5NnPQ=;
-        b=udZI3bFOlRXLTw7wJTNjsIVFznWSgU7j7LE2BaAv/4KtrtUnEJLdk3qfljdplacn/braaS
-        pB17B9r8GnZvuEpzmz/ZkYZ9e93FjrdWDKcu6ecvX2gj7OqS6tWO2Vxs+LWDyij9DaeFar
-        o/Kn4eFCzf6ongESFzVLrBPFqnqALaNHOwlNsFCCUP9w2eZV/gQx5iO3rzXqy7QqsYLg6U
-        T3dFJl+MgWb+XGMwbX7NzcXnkxOXM8C81ycQhoHJrvxxAJP1bAjnABSZNFJ49GUONAw8sP
-        IY3oJyswXLznUI7BBNOipA7dEfbzKnvALBc3OyN6hj/ppnRjeObZtOpTEj92Fg==
-ARC-Authentication-Results: i=1;
-        rspamd-69778c65cd-ktdqp;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Callous-Whispering: 6e365262054f08b4_1678158360567_4098767612
-X-MC-Loop-Signature: 1678158360567:3780146233
-X-MC-Ingress-Time: 1678158360567
-Received: from pdx1-sub0-mail-a206.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.109.196.245 (trex/6.7.2);
-        Tue, 07 Mar 2023 03:06:00 +0000
-Received: from offworld (unknown [104.36.30.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a206.dreamhost.com (Postfix) with ESMTPSA id 4PW0h66Jncz94;
-        Mon,  6 Mar 2023 19:05:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1678158359;
-        bh=cS8qyos2zZngD0Sbb383Sp/fAKIfbdQf6NRl8D5NnPQ=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=Xq2gvgRSt/ZzYQ9Hfc2Kzd8Ji5mvy9tuMPDu+544w67QAsy49TqXCCxKTitj1QhU6
-         zRDa9NEP9sUEHyLgNMoVctElEabkN+wzP52d5AunJKnFIeH0bT1Z7VMl2l6lFI9afS
-         rJT/BpMEXnUv0hhsJgkImzvGzyihR7hMFw9m+d+60NB+yUSWIh6qYE3dYp9xoArTA9
-         FXjho9quBYutWFtS0jIC/ZMmq3uqKY6Zml0XmBmRNDAd8fn64TUnwQDWuUWSFSaqTG
-         zXHJxppO89wfu040fvT37vuyFq8VJkQt6AsYaGHoNAHK/jZn9ES8Ze3Q9Iee/Di05k
-         jkoQB2pke4gxQ==
-Date:   Mon, 6 Mar 2023 18:36:56 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-cxl@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
-Message-ID: <20230307023656.cyntxctzqgpam5u3@offworld>
-References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
- <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
-User-Agent: NeoMutt/20220429
+        Mon, 6 Mar 2023 22:21:30 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D9C25283
+        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 19:21:29 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536c02ed619so122829777b3.8
+        for <linux-perf-users@vger.kernel.org>; Mon, 06 Mar 2023 19:21:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678159289;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4V7qYWhF33WfuebsbvBQGuVFdWrj0NpdHzfUvHWbnC8=;
+        b=T6aJICY3NlE5u1vNf9OmUu/eQQfbV1GOJRNrimXa/y/VrCdgNdOV7kGTIj3rJyf4wa
+         aqwHTM01jEscUPE0aEfwaQeY7t7uOeWnYctZUoykgy3b/+ezfZnYP/dibefqCpC8upTn
+         ojKMH5WPYxFHPy+ps/fY/KIMAmJueL/XJO2AVHpeeRyo+9BLATfCDjkoxAhaH38hFolS
+         KB15K1yev8xl8ggZq9RJzJp7l431FszYjyPjR4iCTFLUWp06RhKgWW2QF6ViLTB6UYti
+         25dfkSOrJjRW17VdryAboCaHdNloYycIqLVfz7XIBhCBHvHHroIen3Y0R0JTpZwvBdJG
+         1b4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678159289;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4V7qYWhF33WfuebsbvBQGuVFdWrj0NpdHzfUvHWbnC8=;
+        b=0Qe3vu2slthOIb5ycRvGB/43GQ21fI6wimRWIR6yoaQ1UH6ufdu12YBkhoQW+49nZg
+         SRrB8CYhYKmixDkH3vnqpAoX2m5kG2dCNO6UFXRjCq2iQPXjnxm5tKZsZ+QPQCTP8Ev+
+         JGQMJtReW09isUQoHaYc9TEsnPNw/OTvIamk0kK2VrcBDTHTxzCe9X9CRD5Y/OWlIgXQ
+         Lw1ISyi5OzEY51q5Qhg3HOYp90rKXcsy7J+AW2iTIQCg73h+Gh1bNLxf2cjSru9W0i3f
+         uxs2z3npLOL1os7ETAyxoIa+4I+Lf2sOqFI/hCD8VSnM1IYuyD5NHU+CoieQMIHuu/5H
+         JVDQ==
+X-Gm-Message-State: AO0yUKVJodHEXRhaK08iGOo6AivlbE9PMYZ24Rl7imWYCzeO2g5Qz0cm
+        iwbQatOGZtZVwQqCFqzgrybg18VVUJii
+X-Google-Smtp-Source: AK7set/GvSG52lshrWljOTP0+TlFYk0pdSie2CoXb1dha9MKGJX2b0KrwFUW5yKqo7j0oALBm3rVqp9b7WJc
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:1c60:6b8e:dccc:a3b1])
+ (user=irogers job=sendgmr) by 2002:a81:4005:0:b0:532:e887:2c23 with SMTP id
+ l5-20020a814005000000b00532e8872c23mr8552310ywn.9.1678159288922; Mon, 06 Mar
+ 2023 19:21:28 -0800 (PST)
+Date:   Mon,  6 Mar 2023 19:21:17 -0800
+Message-Id: <20230307032117.3461008-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
+Subject: [PATCH] perf lock contention: Fix builtin detection
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Martin KaFai Lau <martin.lau@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 03 Mar 2023, Jonathan Cameron wrote:
+__has_builtin was passed the macro rather than the actual builtin
+feature.
 
->+int devm_cxl_cpmu_add(struct device *parent, struct cxl_cpmu_regs *regs, int index)
->+{
->+	struct cxl_cpmu *cpmu;
->+	struct device *dev;
->+	int rc;
->+
->+	cpmu = kzalloc(sizeof(*cpmu), GFP_KERNEL);
->+	if (!cpmu)
->+		return -ENOMEM;
->+
->+	cpmu->base = regs->cpmu;
->+	dev = &cpmu->dev;
->+	device_initialize(dev);
->+	device_set_pm_not_required(dev);
->+	dev->parent = parent;
->+	dev->bus = &cxl_bus_type;
->+	dev->type = &cxl_cpmu_type;
->+	rc = ida_alloc(&cpmu_ida, GFP_KERNEL);
->+	if (rc < 0)
->+		goto err;
+Fixes: 1bece1351c65 ("perf lock contention: Support old rw_semaphore type")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Probably better to do the ida_alloc after the cpmu allocation above, before
-arming the dev.
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index e6007eaeda1a..e422eee0f942 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -182,7 +182,7 @@ static inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
+ 		struct mutex *mutex = (void *)lock;
+ 		owner = BPF_CORE_READ(mutex, owner.counter);
+ 	} else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
+-#if __has_builtin(bpf_core_type_matches)
++#if __has_builtin(__builtin_preserve_type_info)
+ 		if (bpf_core_type_matches(struct rw_semaphore___old)) {
+ 			struct rw_semaphore___old *rwsem = (void *)lock;
+ 			owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
+-- 
+2.40.0.rc0.216.gc4246ad0f0-goog
+
