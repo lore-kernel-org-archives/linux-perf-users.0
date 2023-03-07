@@ -2,251 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53998C678D5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 13:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B56FC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 16:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbjCGNHY (ORCPT
+        id S230463AbjCGQXr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 08:07:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40416 "EHLO
+        Tue, 7 Mar 2023 11:23:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230310AbjCGNG5 (ORCPT
+        with ESMTP id S230062AbjCGQXO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 08:06:57 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186D37FD56;
-        Tue,  7 Mar 2023 05:05:33 -0800 (PST)
+        Tue, 7 Mar 2023 11:23:14 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C33A9AA01;
+        Tue,  7 Mar 2023 08:22:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678194335; x=1709730335;
-  h=message-id:date:mime-version:from:subject:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=KFg4L7M6IRI6fgqdYWT7p8LpuP1HblpAzdXOjwSB7b0=;
-  b=AlEUqBj3FNX4CpOIV6jn4MBmYj1qrqtRFhPoYDPjvYSJaV0GipAOLy8o
-   O+uUI0vRNus3GKHf2f5MRXKwGC1H9vBcKS4apKK+FKBY3f0NZ0oJevzp0
-   47rRqGpTBfj/62b3n2+ft9dmLxd2X0V+9nPbb409fAKnWSEXyMLBwL4oj
-   9fjXfnUnIJUU1yJJBPI21P68NJa6xHnwgshb5jYgu4Fb4busrIeG9R9gR
-   iRqDkaU68g9//0xxnv0WbXW0mMqLJb61P7Ak2pe+Z5yEN2CQ0aD3zzbCi
-   1dmt6NARJZXcYbbCUcnW3W1PKWShkfceVg54opVMcMO5C8wIAlQ3zC8t2
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="324149157"
-X-IronPort-AV: E=Sophos;i="5.98,240,1673942400"; 
-   d="scan'208";a="324149157"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 05:04:56 -0800
+  t=1678206131; x=1709742131;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qEjxqCSJ8PPyCUX8TqtU7LzyV+Hxlz+cYXbal7Q9vmk=;
+  b=cI1iGs5U6/xiNhFs7iW8IPyw0K17pO/kL4sMevx1PyMjGSOGggn3KCn3
+   Jx+FffrAflrc9NRqHPAiUYRVBIJY2gtMQV3xcdFk26qikEeKjrWYrqhyy
+   PhyIQYSI9bRTbrDUsz3Xkw43ueamTquo7fy3PwhzI5DhYkd/DoUqBQcDC
+   brrypRAEorW8ssr4gi9fTjhegwRxHQxYHUYUkwrScDvHGxsT9b1wH3H4/
+   e3i0sXVgA2X81+A+ju8DlaX5KYVMg0SXIlBy1DnQPfIHZkFOMFheoEqWP
+   nBuy3/CBNaJrZpZTxPxxg/Z8X1EZHUGidd3c6DC+zFnwUsfLE/x/MX6UY
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="400717428"
+X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
+   d="scan'208";a="400717428"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 08:22:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10641"; a="765636950"
-X-IronPort-AV: E=Sophos;i="5.98,240,1673942400"; 
-   d="scan'208";a="765636950"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.218.236])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2023 05:04:51 -0800
-Message-ID: <6a99683d-c9fc-8ff7-5a95-8b835a6df6f5@intel.com>
-Date:   Tue, 7 Mar 2023 15:04:46 +0200
+X-IronPort-AV: E=McAfee;i="6500,9779,10642"; a="626593990"
+X-IronPort-AV: E=Sophos;i="5.98,241,1673942400"; 
+   d="scan'208";a="626593990"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 07 Mar 2023 08:22:06 -0800
+Received: from [10.209.30.169] (kliang2-mobl1.ccr.corp.intel.com [10.209.30.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 8D416580377;
+        Tue,  7 Mar 2023 08:21:58 -0800 (PST)
+Message-ID: <70691ba4-f2ea-3d82-6c15-2f8e01151b90@linux.intel.com>
+Date:   Tue, 7 Mar 2023 11:21:52 -0500
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.8.0
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 4/8] perf record: Record dropped sample count
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-References: <20230222230141.1729048-1-namhyung@kernel.org>
- <20230222230141.1729048-5-namhyung@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 3/4] cxl: CXL Performance Monitoring Unit driver
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        dan.j.williams@intel.com, bwidawsk@kernel.org, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
+ <20230303175022.10806-4-Jonathan.Cameron@huawei.com>
+ <b766b4ca-1255-3b33-864c-0e7f9ab00e15@linux.intel.com>
+ <20230306144124.00006b94@Huawei.com>
+ <52abbd9a-3a63-3dde-c20f-99787225200e@linux.intel.com>
+ <20230307091936.000055be@Huawei.com>
 Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230222230141.1729048-5-namhyung@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230307091936.000055be@Huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 23/02/23 01:01, Namhyung Kim wrote:
-> When it uses bpf filters, event might drop some samples.  It'd be nice
-> if it can report how many samples it lost.  As LOST_SAMPLES event can
-> carry the similar information, let's use it for bpf filters.
-> 
-> To indicate it's from BPF filters, add a new misc flag for that and
-> do not display cpu load warnings.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/lib/perf/include/perf/event.h |  2 ++
->  tools/perf/builtin-record.c         | 38 ++++++++++++++++++-----------
->  tools/perf/util/bpf-filter.c        |  7 ++++++
->  tools/perf/util/bpf-filter.h        |  5 ++++
->  tools/perf/util/session.c           |  3 ++-
->  5 files changed, 40 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-> index ad47d7b31046..51b9338f4c11 100644
-> --- a/tools/lib/perf/include/perf/event.h
-> +++ b/tools/lib/perf/include/perf/event.h
-> @@ -70,6 +70,8 @@ struct perf_record_lost {
->  	__u64			 lost;
->  };
->  
-> +#define PERF_RECORD_MISC_LOST_SAMPLES_BPF (1 << 15)
-> +
->  struct perf_record_lost_samples {
->  	struct perf_event_header header;
->  	__u64			 lost;
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 8374117e66f6..197e802a150b 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -52,6 +52,7 @@
->  #include "util/pmu-hybrid.h"
->  #include "util/evlist-hybrid.h"
->  #include "util/off_cpu.h"
-> +#include "util/bpf-filter.h"
->  #include "asm/bug.h"
->  #include "perf.h"
->  #include "cputopo.h"
-> @@ -1856,24 +1857,16 @@ record__switch_output(struct record *rec, bool at_exit)
->  	return fd;
->  }
->  
-> -static void __record__read_lost_samples(struct record *rec, struct evsel *evsel,
-> +static void __record__save_lost_samples(struct record *rec, struct evsel *evsel,
->  					struct perf_record_lost_samples *lost,
-> -					int cpu_idx, int thread_idx)
-> +					int cpu_idx, int thread_idx, u64 lost_count,
-> +					u16 misc_flag)
->  {
-> -	struct perf_counts_values count;
->  	struct perf_sample_id *sid;
->  	struct perf_sample sample = {};
->  	int id_hdr_size;
->  
-> -	if (perf_evsel__read(&evsel->core, cpu_idx, thread_idx, &count) < 0) {
-> -		pr_err("read LOST count failed\n");
-> -		return;
-> -	}
-> -
-> -	if (count.lost == 0)
-> -		return;
-> -
-> -	lost->lost = count.lost;
-> +	lost->lost = lost_count;
->  	if (evsel->core.ids) {
->  		sid = xyarray__entry(evsel->core.sample_id, cpu_idx, thread_idx);
->  		sample.id = sid->id;
-> @@ -1882,6 +1875,7 @@ static void __record__read_lost_samples(struct record *rec, struct evsel *evsel,
->  	id_hdr_size = perf_event__synthesize_id_sample((void *)(lost + 1),
->  						       evsel->core.attr.sample_type, &sample);
->  	lost->header.size = sizeof(*lost) + id_hdr_size;
-> +	lost->header.misc = misc_flag;
->  	record__write(rec, NULL, lost, lost->header.size);
->  }
->  
-> @@ -1905,6 +1899,7 @@ static void record__read_lost_samples(struct record *rec)
->  
->  	evlist__for_each_entry(session->evlist, evsel) {
->  		struct xyarray *xy = evsel->core.sample_id;
-> +		u64 lost_count;
->  
->  		if (xy == NULL || evsel->core.fd == NULL)
->  			continue;
-> @@ -1916,12 +1911,27 @@ static void record__read_lost_samples(struct record *rec)
->  
->  		for (int x = 0; x < xyarray__max_x(xy); x++) {
->  			for (int y = 0; y < xyarray__max_y(xy); y++) {
-> -				__record__read_lost_samples(rec, evsel, lost, x, y);
-> +				struct perf_counts_values count;
-> +
-> +				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
-> +					pr_err("read LOST count failed\n");
-> +					goto out;
-> +				}
-> +
-> +				if (count.lost) {
-> +					__record__save_lost_samples(rec, evsel, lost,
-> +								    x, y, count.lost, 0);
-> +				}
->  			}
->  		}
-> +
-> +		lost_count = perf_bpf_filter__lost_count(evsel);
-> +		if (lost_count)
-> +			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
-> +						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
->  	}
-> +out:
->  	free(lost);
-> -
->  }
->  
->  static volatile sig_atomic_t workload_exec_errno;
-> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> index e1b1a5343bad..660db5ccd3da 100644
-> --- a/tools/perf/util/bpf-filter.c
-> +++ b/tools/perf/util/bpf-filter.c
-> @@ -69,6 +69,13 @@ int perf_bpf_filter__destroy(struct evsel *evsel)
->  	return 0;
->  }
->  
-> +u64 perf_bpf_filter__lost_count(struct evsel *evsel)
-> +{
-> +	struct sample_filter_bpf *skel = evsel->bpf_skel;
-> +
-> +	return skel ? skel->bss->dropped : 0;
-> +}
-> +
->  struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flags,
->  						       enum perf_bpf_filter_op op,
->  						       unsigned long val)
-> diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
-> index 6077930073f9..36b44c8188ab 100644
-> --- a/tools/perf/util/bpf-filter.h
-> +++ b/tools/perf/util/bpf-filter.h
-> @@ -22,6 +22,7 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flag
->  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str);
->  int perf_bpf_filter__prepare(struct evsel *evsel);
->  int perf_bpf_filter__destroy(struct evsel *evsel);
-> +u64 perf_bpf_filter__lost_count(struct evsel *evsel);
->  
->  #else /* !HAVE_BPF_SKEL */
->  
-> @@ -38,5 +39,9 @@ static inline int perf_bpf_filter__destroy(struct evsel *evsel)
->  {
->  	return -ENOSYS;
->  }
-> +static inline u64 perf_bpf_filter__lost_count(struct evsel *evsel)
 
-Needs  __maybe_unused on the parameters
 
-> +{
-> +	return 0;
-> +}
->  #endif /* HAVE_BPF_SKEL*/
->  #endif /* PERF_UTIL_BPF_FILTER_H */
-> \ No newline at end of file
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 749d5b5c135b..7d8d057d1772 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1582,7 +1582,8 @@ static int machines__deliver_event(struct machines *machines,
->  			evlist->stats.total_lost += event->lost.lost;
->  		return tool->lost(tool, event, sample, machine);
->  	case PERF_RECORD_LOST_SAMPLES:
-> -		if (tool->lost_samples == perf_event__process_lost_samples)
-> +		if (tool->lost_samples == perf_event__process_lost_samples &&
-> +		    !(event->header.misc & PERF_RECORD_MISC_LOST_SAMPLES_BPF))
->  			evlist->stats.total_lost_samples += event->lost_samples.lost;
->  		return tool->lost_samples(tool, event, sample, machine);
->  	case PERF_RECORD_READ:
+On 2023-03-07 4:19 a.m., Jonathan Cameron wrote:
+>>> A hybrid approach of exposing the VID / GID / Mask sets to userspace that
+>>> then deals with pretty naming etc would work though.
+>>>
+>>> For summed events we also don't have enough information without similar
+>>> exports of VID / GID / Mask.
+>>>
+>>> We can't use the fact that events are exposed which 'might' be summable in
+>>> hardware because we may have only subsets supported by the hardware.
+>>>
+>>> E.g.
+>>>
+>>> VID / GID / Mask
+>>>
+>>> 19e5 / 1 / 0x1
+>>> 19e5 / 1 / 0xe
+>>>
+>>> etc 
+>>>
+>>> There are going to be a lot of CXL device implementations so I think we need
+>>> to find a sensible interface to pass this information to perf tool.
+>>>
+>>> Currently I'm thinking a new sysfs ABI that has
+>>>
+>>> event_groupX_vid, event_groupX_gid, event_groupX_msk, event_groupX_fixed 
+>>> with one set of entries for every event group.
+>>>
+>>> Using that, perf tool can apply various rules to figure out sensible subsets
+>>> to advertise.
+>>>  
+>> Usually, we only hardcode the generic/architectural or some widely used
+>> events in the kernel. The perf tool should be the place for the vender
+>> specific/device specific events.
+>>
+>> We may not want to expose the counter constraints information to the
+>> user space. It's better to keep the information in the kernel. We can
+>> use it to check whether the user input is valid in the event_init.
+>>
+>> For a specific device, the constraint information should be fixed. We
+>> may create a dedicate event list file in perf tool for each device.
+>>
+>> For example, with your example, you can define the below events in the
+>> event list file. (just demonstrate the idea. It should be in JSON format
+>> in the file.)
+>> Event Name / VID / GID / Mask
+>> A          / 19e5 / 1 / 0x1
+>> B          / 19e5 / 1 / 0x2
+>> C          / 19e5 / 1 / 0x4
+>> D          / 19e5 / 1 / 0x8
+>> BC         / 19e5 / 1 / 0x6
+>> BD         / 19e5 / 1 / 0xa
+>> CD         / 19e5 / 1 / 0xc
+>> BCD        / 19e5 / 1 / 0xe
+>>
+>> perf stat -e BD will give you the summed event B + D.
+> To me, that seems to be a non starter.  We will have 100s to 1000s of
+> device variants, each of which may have several instances of CPMU with
+> different events. The available events on some devices will be
+> firmware version dependent.
+> 
+> The explosion in json files will rapidly become unmanageable.
 
+OK. I agree.
+
+> Given PMU capabilities are fully discoverable we should use that.
+> 
+> We'd then need json to describe what groups make sense, but not which
+> ones the particular hardware supports.  Thus we'd need one set of
+> data for a particular VID/GID pair, instead of one for every device
+> with it's own mix of multiple masks for each VID/GID pair.
+> 
+> In a similar fashion to metrics, not all combinations are likely to be
+> useful things to measure so we can describe just the ones that seem
+> reasonable.
+> 
+
+It sounds reasonable. There will be a JSON file which includes all the
+reasonable combinations of VID/GID/mask. We can decide the available one
+at runtime, e.g., perf list will only list the available events/metrics.
+
+Thanks,
+Kan
