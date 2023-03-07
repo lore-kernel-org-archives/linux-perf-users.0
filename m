@@ -2,345 +2,685 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10AEC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 01:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A208C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 02:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjCGB2S (ORCPT
+        id S229744AbjCGCT2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 20:28:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
+        Mon, 6 Mar 2023 21:19:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbjCGB2R (ORCPT
+        with ESMTP id S229993AbjCGCTX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 20:28:17 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A412ED6F
-        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 17:28:15 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id oj5so11711067pjb.5
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Mar 2023 17:28:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678152495;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7jFqUMIK4Bo9oSKOWLvUk2wpmnRkhFYIHTJi/l89QE=;
-        b=obtVRZTJS9Ljj73OstScusHnJxVdxuiNuQV4TQnO4eSp5uFZtlOTFOtKGbnTsUx88M
-         bBg6FP6Q0w3ToiKnt15e3b0HhhJBBwo1MAcoXOier75qRh6WtjXXqSfDTyGIg9kOLrO9
-         13jCVBy5SGAb2rFrOEAL7EX4F5vC1iuKkGLNxXwRx5DUfM8no+ZWqE5LGSN01gqTF8vm
-         9KRvK5wDBF93d/dq04Y4SZaFzKUxttXz2oYOCox+P88gCDwqSUFRt/RMJNYwghelGuXy
-         i2BXp7gQmZKRzqSQPT1P8bIelcjD3rnLXCbCWk6K8a3/bBDqqx4UaduOJuqRZrGbUAnI
-         s2rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678152495;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r7jFqUMIK4Bo9oSKOWLvUk2wpmnRkhFYIHTJi/l89QE=;
-        b=qVR/ZWCtU6tJCx4gf0LSARtZGR/xxE9gNhQpJ6hLurfUyKumymetXnIN8kI467fRW6
-         atlH2Qhw0MOgrqg9ER0u3Muk4LpFxc2MPqjB/WtCs2BtXOtHRH379EG1bAl92aO5WSB2
-         1g5xuy7JccvAtUrNcwDe/nUwyDsMfGYi7JLTOkWa2d/YmVnB+CIrBdE9IcuyAD9N+/b2
-         ODwnh+cJYDXxkMlSfCU/2tgeQS38zk4ZP5EGXiSF0Sn1qJTHsnKvxg3kuzm4yGw+Mku/
-         +CS5eSJyXLJYPSx6QPR7Uvyu6B8Lr+t6qqqL/+j9aBLn4wJ7ogXpCSl4LetlqirlVId7
-         cyCA==
-X-Gm-Message-State: AO0yUKVOEOWFeEuCrjSxZHYAy95bsIVB1U7z2eHKGXGJRI5PTml0JU3O
-        DkiJlSanBItllxTtEf1UQ5lNuQ==
-X-Google-Smtp-Source: AK7set8C4BssYYFqZRD65/9a+Ep17z+23HD9bYswcUdfP51iLk5NA/1RmmV0VeEGjeWYVyOwdHc6YQ==
-X-Received: by 2002:a17:902:db01:b0:19b:c37:25e7 with SMTP id m1-20020a170902db0100b0019b0c3725e7mr16608294plx.66.1678152494576;
-        Mon, 06 Mar 2023 17:28:14 -0800 (PST)
-Received: from leoy-yangtze.lan (211-75-219-203.hinet-ip.hinet.net. [211.75.219.203])
-        by smtp.gmail.com with ESMTPSA id u3-20020a170902e80300b0019a6e8ceb49sm7294366plg.259.2023.03.06.17.28.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 17:28:14 -0800 (PST)
-Date:   Tue, 7 Mar 2023 09:28:08 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <James.Clark@arm.com>
-Cc:     Lukas Molleman <lukas.molleman@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, rickyman7@gmail.com
-Subject: Re: perf test results on ARM64. was Re: GSoC: perf Linux Profiling
- Scalability and speed
-Message-ID: <20230307012808.GA2332936@leoy-yangtze.lan>
-References: <CANRdyn9kXT623Pbu9hc+c4YrDu_h06a2Ch9fJpt=O0S7yKXDEg@mail.gmail.com>
- <CAP-5=fU30f1j5o7c05ohaygpgV4=Hx7yS7f8i3vZ1j1Gk=HgcA@mail.gmail.com>
- <CANRdyn9H7kzBXUxpvTJ_93G5Tc=51vCRs9ucHbSyVRO_rQf5vA@mail.gmail.com>
- <CAP-5=fUr18kZVDDymDB6kJWa7Ptf9XkDMKxorZx2O2UjPusn1w@mail.gmail.com>
- <CANRdyn9MU1N5xH8MfMbpmxPhRTCqi9J_NWsVOPKXodE97H97rQ@mail.gmail.com>
- <ZAZkvaVBcyM1I4ar@kernel.org>
+        Mon, 6 Mar 2023 21:19:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736C369CEA;
+        Mon,  6 Mar 2023 18:19:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E08EB611C6;
+        Tue,  7 Mar 2023 02:19:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0AD6C433EF;
+        Tue,  7 Mar 2023 02:19:06 +0000 (UTC)
+From:   Huacai Chen <chenhuacai@loongson.cn>
+To:     Huacai Chen <chenhuacai@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Ming Wang <wangming01@loongson.cn>
+Subject: [PATCH] tools/perf: Add basic support for LoongArch
+Date:   Tue,  7 Mar 2023 10:18:57 +0800
+Message-Id: <20230307021857.1217951-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZAZkvaVBcyM1I4ar@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Lukas,
+Add basic support for LoongArch, which is very similar to the MIPS
+version.
 
-[ +James ]
+Signed-off-by: Ming Wang <wangming01@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ .../loongarch/include/uapi/asm/perf_regs.h    | 40 +++++++++
+ .../arch/loongarch/include/uapi/asm/unistd.h  |  9 ++
+ tools/perf/Makefile.config                    |  7 ++
+ tools/perf/arch/loongarch/Build               |  1 +
+ tools/perf/arch/loongarch/Makefile            | 27 ++++++
+ .../arch/loongarch/annotate/instructions.c    | 45 ++++++++++
+ .../loongarch/entry/syscalls/mksyscalltbl     | 61 +++++++++++++
+ .../arch/loongarch/include/dwarf-regs-table.h | 16 ++++
+ tools/perf/arch/loongarch/include/perf_regs.h | 88 +++++++++++++++++++
+ tools/perf/arch/loongarch/util/Build          |  4 +
+ tools/perf/arch/loongarch/util/dwarf-regs.c   | 25 ++++++
+ tools/perf/arch/loongarch/util/perf_regs.c    |  6 ++
+ .../arch/loongarch/util/unwind-libunwind.c    | 82 +++++++++++++++++
+ tools/perf/util/annotate.c                    |  8 ++
+ tools/perf/util/dwarf-regs.c                  |  7 ++
+ tools/perf/util/env.c                         |  2 +
+ tools/perf/util/genelf.h                      |  3 +
+ tools/perf/util/syscalltbl.c                  |  4 +
+ 18 files changed, 435 insertions(+)
+ create mode 100644 tools/arch/loongarch/include/uapi/asm/perf_regs.h
+ create mode 100644 tools/arch/loongarch/include/uapi/asm/unistd.h
+ create mode 100644 tools/perf/arch/loongarch/Build
+ create mode 100644 tools/perf/arch/loongarch/Makefile
+ create mode 100644 tools/perf/arch/loongarch/annotate/instructions.c
+ create mode 100755 tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
+ create mode 100644 tools/perf/arch/loongarch/include/dwarf-regs-table.h
+ create mode 100644 tools/perf/arch/loongarch/include/perf_regs.h
+ create mode 100644 tools/perf/arch/loongarch/util/Build
+ create mode 100644 tools/perf/arch/loongarch/util/dwarf-regs.c
+ create mode 100644 tools/perf/arch/loongarch/util/perf_regs.c
+ create mode 100644 tools/perf/arch/loongarch/util/unwind-libunwind.c
 
-On Mon, Mar 06, 2023 at 07:10:05PM -0300, Arnaldo Carvalho de Melo wrote:
+diff --git a/tools/arch/loongarch/include/uapi/asm/perf_regs.h b/tools/arch/loongarch/include/uapi/asm/perf_regs.h
+new file mode 100644
+index 000000000000..9943d418e01d
+--- /dev/null
++++ b/tools/arch/loongarch/include/uapi/asm/perf_regs.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _ASM_LOONGARCH_PERF_REGS_H
++#define _ASM_LOONGARCH_PERF_REGS_H
++
++enum perf_event_loongarch_regs {
++	PERF_REG_LOONGARCH_PC,
++	PERF_REG_LOONGARCH_R1,
++	PERF_REG_LOONGARCH_R2,
++	PERF_REG_LOONGARCH_R3,
++	PERF_REG_LOONGARCH_R4,
++	PERF_REG_LOONGARCH_R5,
++	PERF_REG_LOONGARCH_R6,
++	PERF_REG_LOONGARCH_R7,
++	PERF_REG_LOONGARCH_R8,
++	PERF_REG_LOONGARCH_R9,
++	PERF_REG_LOONGARCH_R10,
++	PERF_REG_LOONGARCH_R11,
++	PERF_REG_LOONGARCH_R12,
++	PERF_REG_LOONGARCH_R13,
++	PERF_REG_LOONGARCH_R14,
++	PERF_REG_LOONGARCH_R15,
++	PERF_REG_LOONGARCH_R16,
++	PERF_REG_LOONGARCH_R17,
++	PERF_REG_LOONGARCH_R18,
++	PERF_REG_LOONGARCH_R19,
++	PERF_REG_LOONGARCH_R20,
++	PERF_REG_LOONGARCH_R21,
++	PERF_REG_LOONGARCH_R22,
++	PERF_REG_LOONGARCH_R23,
++	PERF_REG_LOONGARCH_R24,
++	PERF_REG_LOONGARCH_R25,
++	PERF_REG_LOONGARCH_R26,
++	PERF_REG_LOONGARCH_R27,
++	PERF_REG_LOONGARCH_R28,
++	PERF_REG_LOONGARCH_R29,
++	PERF_REG_LOONGARCH_R30,
++	PERF_REG_LOONGARCH_R31,
++	PERF_REG_LOONGARCH_MAX = PERF_REG_LOONGARCH_R31 + 1,
++};
++#endif /* _ASM_LOONGARCH_PERF_REGS_H */
+diff --git a/tools/arch/loongarch/include/uapi/asm/unistd.h b/tools/arch/loongarch/include/uapi/asm/unistd.h
+new file mode 100644
+index 000000000000..0c743344e92d
+--- /dev/null
++++ b/tools/arch/loongarch/include/uapi/asm/unistd.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
++
++#include <asm-generic/unistd.h>
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 3519a0139026..89230ae68721 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -80,6 +80,13 @@ ifeq ($(SRCARCH),arm64)
+   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+ endif
+ 
++ifeq ($(SRCARCH),loongarch)
++  NO_PERF_REGS := 0
++  CFLAGS += -I$(OUTPUT)arch/loongarch/include/generated
++  CFLAGS += -I$(OUTPUT)../arch/loongarch/include/uapi
++  LIBUNWIND_LIBS = -lunwind -lunwind-loongarch
++endif
++
+ ifeq ($(SRCARCH),riscv)
+   NO_PERF_REGS := 0
+ endif
+diff --git a/tools/perf/arch/loongarch/Build b/tools/perf/arch/loongarch/Build
+new file mode 100644
+index 000000000000..e4e5f33c84d8
+--- /dev/null
++++ b/tools/perf/arch/loongarch/Build
+@@ -0,0 +1 @@
++perf-y += util/
+diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loongarch/Makefile
+new file mode 100644
+index 000000000000..1229157b09e1
+--- /dev/null
++++ b/tools/perf/arch/loongarch/Makefile
+@@ -0,0 +1,27 @@
++# SPDX-License-Identifier: GPL-2.0
++ifndef NO_DWARF
++PERF_HAVE_DWARF_REGS := 1
++endif
++PERF_HAVE_JITDUMP := 1
++
++#
++# Syscall table generation for perf
++#
++
++out    := $(OUTPUT)arch/loongarch/include/generated/asm
++header := $(out)/syscalls_64.c
++incpath := $(srctree)/tools
++sysdef := $(srctree)/tools/arch/loongarch/include/uapi/asm/unistd.h
++sysprf := $(srctree)/tools/perf/arch/loongarch/entry/syscalls/
++systbl := $(sysprf)/mksyscalltbl
++
++# Create output directory if not already present
++_dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
++
++$(header): $(sysdef) $(systbl)
++	$(Q)$(SHELL) '$(systbl)' '$(CC)' '$(HOSTCC)' $(incpath) $(sysdef) > $@
++
++clean::
++	$(call QUIET_CLEAN, loongarch) $(RM) $(header)
++
++archheaders: $(header)
+diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+new file mode 100644
+index 000000000000..ab21bf122135
+--- /dev/null
++++ b/tools/perf/arch/loongarch/annotate/instructions.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Perf annotate functions.
++ *
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++static
++struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
++{
++	struct ins_ops *ops = NULL;
++
++	if (!strncmp(name, "beqz", 4) ||
++	    !strncmp(name, "bnez", 4) ||
++	    !strncmp(name, "beq", 3) ||
++	    !strncmp(name, "bne", 3) ||
++	    !strncmp(name, "blt", 3) ||
++	    !strncmp(name, "bge", 3) ||
++	    !strncmp(name, "bltu", 4) ||
++	    !strncmp(name, "bgeu", 4) ||
++	    !strncmp(name, "bl", 2))
++		ops = &call_ops;
++	else if (!strncmp(name, "jirl", 4))
++		ops = &ret_ops;
++	else if (name[0] == 'b')
++		ops = &jump_ops;
++	else
++		return NULL;
++
++	arch__associate_ins_ops(arch, name, ops);
++
++	return ops;
++}
++
++static
++int loongarch__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
++{
++	if (!arch->initialized) {
++		arch->associate_instruction_ops = loongarch__associate_ins_ops;
++		arch->initialized = true;
++		arch->objdump.comment_char = '#';
++	}
++
++	return 0;
++}
+diff --git a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
+new file mode 100755
+index 000000000000..c52156f7204d
+--- /dev/null
++++ b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
+@@ -0,0 +1,61 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++#
++# Generate system call table for perf. Derived from
++# powerpc script.
++#
++# Author(s):  Ming Wang <wangming01@loongson.cn>
++# Author(s):  Huacai Chen <chenhuacai@loongson.cn>
++# Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++
++gcc=$1
++hostcc=$2
++incpath=$3
++input=$4
++
++if ! test -r $input; then
++	echo "Could not read input file" >&2
++	exit 1
++fi
++
++create_table_from_c()
++{
++	local sc nr last_sc
++
++	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
++
++	{
++
++	cat <<-_EoHEADER
++		#include <stdio.h>
++		#include "$input"
++		int main(int argc, char *argv[])
++		{
++	_EoHEADER
++
++	while read sc nr; do
++		printf "%s\n" "	printf(\"\\t[%d] = \\\"$sc\\\",\\n\", $nr);"
++		last_sc=$nr
++	done
++
++	printf "%s\n" "	printf(\"#define SYSCALLTBL_LOONGARCH_MAX_ID %d\\n\", $last_sc);"
++	printf "}\n"
++
++	} | $hostcc -I $incpath/include/uapi -o $create_table_exe -x c -
++
++	$create_table_exe
++
++	rm -f $create_table_exe
++}
++
++create_table()
++{
++	echo "static const char *syscalltbl_loongarch[] = {"
++	create_table_from_c
++	echo "};"
++}
++
++$gcc -E -dM -x c  -I $incpath/include/uapi $input	       \
++	|sed -ne 's/^#define __NR_//p' \
++	|sort -t' ' -k2 -n \
++	|create_table
+diff --git a/tools/perf/arch/loongarch/include/dwarf-regs-table.h b/tools/perf/arch/loongarch/include/dwarf-regs-table.h
+new file mode 100644
+index 000000000000..4b2291034668
+--- /dev/null
++++ b/tools/perf/arch/loongarch/include/dwarf-regs-table.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * dwarf-regs-table.h : Mapping of DWARF debug register numbers into
++ * register names.
++ *
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ */
++
++#ifdef DEFINE_DWARF_REGSTR_TABLE
++static const char * const loongarch_regstr_tbl[] = {
++	"$0", "$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9",
++	"$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18", "$19",
++	"$20", "$21", "$22", "$23", "$24", "$25", "$26", "$27", "$28", "%29",
++	"$30", "$31",
++};
++#endif
+diff --git a/tools/perf/arch/loongarch/include/perf_regs.h b/tools/perf/arch/loongarch/include/perf_regs.h
+new file mode 100644
+index 000000000000..82d531dcd90f
+--- /dev/null
++++ b/tools/perf/arch/loongarch/include/perf_regs.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ARCH_PERF_REGS_H
++#define ARCH_PERF_REGS_H
++
++#include <stdlib.h>
++#include <linux/types.h>
++#include <asm/perf_regs.h>
++
++#define PERF_REGS_MAX PERF_REG_LOONGARCH_MAX
++#define PERF_REG_IP PERF_REG_LOONGARCH_PC
++#define PERF_REG_SP PERF_REG_LOONGARCH_R3
++
++#define PERF_REGS_MASK ((1ULL << PERF_REG_LOONGARCH_MAX) - 1)
++
++static inline const char *__perf_reg_name(int id)
++{
++	switch (id) {
++	case PERF_REG_LOONGARCH_PC:
++		return "PC";
++	case PERF_REG_LOONGARCH_R1:
++		return "$1";
++	case PERF_REG_LOONGARCH_R2:
++		return "$2";
++	case PERF_REG_LOONGARCH_R3:
++		return "$3";
++	case PERF_REG_LOONGARCH_R4:
++		return "$4";
++	case PERF_REG_LOONGARCH_R5:
++		return "$5";
++	case PERF_REG_LOONGARCH_R6:
++		return "$6";
++	case PERF_REG_LOONGARCH_R7:
++		return "$7";
++	case PERF_REG_LOONGARCH_R8:
++		return "$8";
++	case PERF_REG_LOONGARCH_R9:
++		return "$9";
++	case PERF_REG_LOONGARCH_R10:
++		return "$10";
++	case PERF_REG_LOONGARCH_R11:
++		return "$11";
++	case PERF_REG_LOONGARCH_R12:
++		return "$12";
++	case PERF_REG_LOONGARCH_R13:
++		return "$13";
++	case PERF_REG_LOONGARCH_R14:
++		return "$14";
++	case PERF_REG_LOONGARCH_R15:
++		return "$15";
++	case PERF_REG_LOONGARCH_R16:
++		return "$16";
++	case PERF_REG_LOONGARCH_R17:
++		return "$17";
++	case PERF_REG_LOONGARCH_R18:
++		return "$18";
++	case PERF_REG_LOONGARCH_R19:
++		return "$19";
++	case PERF_REG_LOONGARCH_R20:
++		return "$20";
++	case PERF_REG_LOONGARCH_R21:
++		return "$21";
++	case PERF_REG_LOONGARCH_R22:
++		return "$22";
++	case PERF_REG_LOONGARCH_R23:
++		return "$23";
++	case PERF_REG_LOONGARCH_R24:
++		return "$24";
++	case PERF_REG_LOONGARCH_R25:
++		return "$25";
++	case PERF_REG_LOONGARCH_R26:
++		return "$26";
++	case PERF_REG_LOONGARCH_R27:
++		return "$27";
++	case PERF_REG_LOONGARCH_R28:
++		return "$28";
++	case PERF_REG_LOONGARCH_R29:
++		return "$29";
++	case PERF_REG_LOONGARCH_R30:
++		return "$30";
++	case PERF_REG_LOONGARCH_R31:
++		return "$31";
++	default:
++		break;
++	}
++	return NULL;
++}
++
++#endif /* ARCH_PERF_REGS_H */
+diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/loongarch/util/Build
+new file mode 100644
+index 000000000000..fab48acf21c5
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/Build
+@@ -0,0 +1,4 @@
++perf-y += perf_regs.o
++
++perf-$(CONFIG_DWARF)     += dwarf-regs.o
++perf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
+diff --git a/tools/perf/arch/loongarch/util/dwarf-regs.c b/tools/perf/arch/loongarch/util/dwarf-regs.c
+new file mode 100644
+index 000000000000..7db14897a384
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/dwarf-regs.c
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * dwarf-regs.c : Mapping of DWARF debug register numbers into register names.
++ *
++ * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
++ *
++ * Derived from MIPS:
++ * Copyright (C) 2013 Cavium, Inc.
++ */
++
++#include <stdio.h>
++#include <dwarf-regs.h>
++
++static const char *loongarch_gpr_names[32] = {
++	"$0", "$1", "$2", "$3", "$4", "$5", "$6", "$7", "$8", "$9",
++	"$10", "$11", "$12", "$13", "$14", "$15", "$16", "$17", "$18", "$19",
++	"$20", "$21", "$22", "$23", "$24", "$25", "$26", "$27", "$28", "$29",
++	"$30", "$31"
++};
++
++const char *get_arch_regstr(unsigned int n)
++{
++	n %= 32;
++	return loongarch_gpr_names[n];
++}
+diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
+new file mode 100644
+index 000000000000..2833e101a7c6
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/perf_regs.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../../util/perf_regs.h"
++
++const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG_END
++};
+diff --git a/tools/perf/arch/loongarch/util/unwind-libunwind.c b/tools/perf/arch/loongarch/util/unwind-libunwind.c
+new file mode 100644
+index 000000000000..f693167b86ef
+--- /dev/null
++++ b/tools/perf/arch/loongarch/util/unwind-libunwind.c
+@@ -0,0 +1,82 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <errno.h>
++#include <libunwind.h>
++#include "perf_regs.h"
++#include "../../util/unwind.h"
++#include "util/debug.h"
++
++int libunwind__arch_reg_id(int regnum)
++{
++	switch (regnum) {
++	case UNW_LOONGARCH64_R1:
++		return PERF_REG_LOONGARCH_R1;
++	case UNW_LOONGARCH64_R2:
++		return PERF_REG_LOONGARCH_R2;
++	case UNW_LOONGARCH64_R3:
++		return PERF_REG_LOONGARCH_R3;
++	case UNW_LOONGARCH64_R4:
++		return PERF_REG_LOONGARCH_R4;
++	case UNW_LOONGARCH64_R5:
++		return PERF_REG_LOONGARCH_R5;
++	case UNW_LOONGARCH64_R6:
++		return PERF_REG_LOONGARCH_R6;
++	case UNW_LOONGARCH64_R7:
++		return PERF_REG_LOONGARCH_R7;
++	case UNW_LOONGARCH64_R8:
++		return PERF_REG_LOONGARCH_R8;
++	case UNW_LOONGARCH64_R9:
++		return PERF_REG_LOONGARCH_R9;
++	case UNW_LOONGARCH64_R10:
++		return PERF_REG_LOONGARCH_R10;
++	case UNW_LOONGARCH64_R11:
++		return PERF_REG_LOONGARCH_R11;
++	case UNW_LOONGARCH64_R12:
++		return PERF_REG_LOONGARCH_R12;
++	case UNW_LOONGARCH64_R13:
++		return PERF_REG_LOONGARCH_R13;
++	case UNW_LOONGARCH64_R14:
++		return PERF_REG_LOONGARCH_R14;
++	case UNW_LOONGARCH64_R15:
++		return PERF_REG_LOONGARCH_R15;
++	case UNW_LOONGARCH64_R16:
++		return PERF_REG_LOONGARCH_R16;
++	case UNW_LOONGARCH64_R17:
++		return PERF_REG_LOONGARCH_R17;
++	case UNW_LOONGARCH64_R18:
++		return PERF_REG_LOONGARCH_R18;
++	case UNW_LOONGARCH64_R19:
++		return PERF_REG_LOONGARCH_R19;
++	case UNW_LOONGARCH64_R20:
++		return PERF_REG_LOONGARCH_R20;
++	case UNW_LOONGARCH64_R21:
++		return PERF_REG_LOONGARCH_R21;
++	case UNW_LOONGARCH64_R22:
++		return PERF_REG_LOONGARCH_R22;
++	case UNW_LOONGARCH64_R23:
++		return PERF_REG_LOONGARCH_R23;
++	case UNW_LOONGARCH64_R24:
++		return PERF_REG_LOONGARCH_R24;
++	case UNW_LOONGARCH64_R25:
++		return PERF_REG_LOONGARCH_R25;
++	case UNW_LOONGARCH64_R26:
++		return PERF_REG_LOONGARCH_R26;
++	case UNW_LOONGARCH64_R27:
++		return PERF_REG_LOONGARCH_R27;
++	case UNW_LOONGARCH64_R28:
++		return PERF_REG_LOONGARCH_R28;
++	case UNW_LOONGARCH64_R29:
++		return PERF_REG_LOONGARCH_R29;
++	case UNW_LOONGARCH64_R30:
++		return PERF_REG_LOONGARCH_R30;
++	case UNW_LOONGARCH64_R31:
++		return PERF_REG_LOONGARCH_R31;
++	case UNW_LOONGARCH64_PC:
++		return PERF_REG_LOONGARCH_PC;
++	default:
++		pr_err("unwind: invalid reg id %d\n", regnum);
++		return -EINVAL;
++	}
++
++	return -EINVAL;
++}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index db475e44f42f..0cc7710f32da 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -149,6 +149,7 @@ static int arch__associate_ins_ops(struct arch* arch, const char *name, struct i
+ #include "arch/arm/annotate/instructions.c"
+ #include "arch/arm64/annotate/instructions.c"
+ #include "arch/csky/annotate/instructions.c"
++#include "arch/loongarch/annotate/instructions.c"
+ #include "arch/mips/annotate/instructions.c"
+ #include "arch/x86/annotate/instructions.c"
+ #include "arch/powerpc/annotate/instructions.c"
+@@ -211,6 +212,13 @@ static struct arch architectures[] = {
+ 			.comment_char = '#',
+ 		},
+ 	},
++	{
++		.name = "loongarch",
++		.init = loongarch__annotate_init,
++		.objdump = {
++			.comment_char = '#',
++		},
++	},
+ };
+ 
+ static void ins__delete(struct ins_operands *ops)
+diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
+index 3fa4486742cd..69cfaa5953bf 100644
+--- a/tools/perf/util/dwarf-regs.c
++++ b/tools/perf/util/dwarf-regs.c
+@@ -14,6 +14,10 @@
+ #define EM_AARCH64	183  /* ARM 64 bit */
+ #endif
+ 
++#ifndef EM_LOONGARCH
++#define EM_LOONGARCH	258 /* LoongArch */
++#endif
++
+ /* Define const char * {arch}_register_tbl[] */
+ #define DEFINE_DWARF_REGSTR_TABLE
+ #include "../arch/x86/include/dwarf-regs-table.h"
+@@ -25,6 +29,7 @@
+ #include "../arch/sparc/include/dwarf-regs-table.h"
+ #include "../arch/xtensa/include/dwarf-regs-table.h"
+ #include "../arch/mips/include/dwarf-regs-table.h"
++#include "../arch/loongarch/include/dwarf-regs-table.h"
+ 
+ #define __get_dwarf_regstr(tbl, n) (((n) < ARRAY_SIZE(tbl)) ? (tbl)[(n)] : NULL)
+ 
+@@ -56,6 +61,8 @@ const char *get_dwarf_regstr(unsigned int n, unsigned int machine)
+ 		return __get_dwarf_regstr(xtensa_regstr_tbl, n);
+ 	case EM_MIPS:
+ 		return __get_dwarf_regstr(mips_regstr_tbl, n);
++	case EM_LOONGARCH:
++		return __get_dwarf_regstr(loongarch_regstr_tbl, n);
+ 	default:
+ 		pr_err("ELF MACHINE %x is not supported.\n", machine);
+ 	}
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 5b8cf6a421a4..0d5d40cb997b 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -435,6 +435,8 @@ static const char *normalize_arch(char *arch)
+ 		return "mips";
+ 	if (!strncmp(arch, "sh", 2) && isdigit(arch[2]))
+ 		return "sh";
++	if (!strncmp(arch, "loongarch", 9))
++		return "loongarch";
+ 
+ 	return arch;
+ }
+diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+index 6af062d1c452..5f18d20ea903 100644
+--- a/tools/perf/util/genelf.h
++++ b/tools/perf/util/genelf.h
+@@ -43,6 +43,9 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+ #elif defined(__riscv) && __riscv_xlen == 64
+ #define GEN_ELF_ARCH	EM_RISCV
+ #define GEN_ELF_CLASS	ELFCLASS64
++#elif defined(__loongarch__)
++#define GEN_ELF_ARCH	EM_LOONGARCH
++#define GEN_ELF_CLASS	ELFCLASS64
+ #else
+ #error "unsupported architecture"
+ #endif
+diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
+index a2e906858891..313eccef6cb4 100644
+--- a/tools/perf/util/syscalltbl.c
++++ b/tools/perf/util/syscalltbl.c
+@@ -38,6 +38,10 @@ static const char **syscalltbl_native = syscalltbl_arm64;
+ #include <asm/syscalls_n64.c>
+ const int syscalltbl_native_max_id = SYSCALLTBL_MIPS_N64_MAX_ID;
+ static const char **syscalltbl_native = syscalltbl_mips_n64;
++#elif defined(__loongarch__)
++#include <asm/syscalls.c>
++const int syscalltbl_native_max_id = SYSCALLTBL_LOONGARCH_MAX_ID;
++static const char **syscalltbl_native = syscalltbl_loongarch;
+ #endif
+ 
+ struct syscall {
+-- 
+2.39.1
 
-[...]
-
-> > I'm using Ubuntu 22.04 kernel 5.15.0-60-generic ARM64.
-> > perf version 5.15.78
-
-Just remind, if you test perf on Arm64 platforms, you could refer to the
-page [1], section "LKFT Integration with Perf testing on Arm64".  Please
-confirm if kernel configurations (e.g. eBPF, Ftrace, etc) have been
-enabled and make sure the setting up environment for eBPF & python,
-especially if you are using self-built kernel image.
-
-I have not checked the perf test for a long while, so I don't want to
-mislead you that I have confirmed the cases can pass on Arm64 platforms.
-In below Arnaldo's testing result, there still have some unexpected
-failures, we need to look into it in details.
-
-Thanks,
-Leo
-
-[1] https://lkft.linaro.org/tests/
-
-> So, here, on a Libre Computer Firefly RK3399PC board and using what will
-> soon be on the perf-tools branch to go to Linus:
-> 
-> root@roc-rk3399-pc:~# cat /etc/os-release
-> PRETTY_NAME="Ubuntu 22.04.1 LTS"
-> NAME="Ubuntu"
-> VERSION_ID="22.04"
-> VERSION="22.04.1 LTS (Jammy Jellyfish)"
-> VERSION_CODENAME=jammy
-> ID=ubuntu
-> ID_LIKE=debian
-> HOME_URL="https://www.ubuntu.com/"
-> SUPPORT_URL="https://help.ubuntu.com/"
-> BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
-> PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
-> UBUNTU_CODENAME=jammy
-> root@roc-rk3399-pc:~# perf -v
-> perf version 6.2.rc7.g5b201a82cd9d
-> root@roc-rk3399-pc:~# perf -vv
-> perf version 6.2.rc7.g5b201a82cd9d
->                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
->     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
->                  glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
->          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
->                 libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
->             debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
->                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
->                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
->                libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
->              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
->              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
->              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
->     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
->                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
->                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
->              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
->                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
->                    aio: [ on  ]  # HAVE_AIO_SUPPORT
->                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
->                libpfm4: [ OFF ]  # HAVE_LIBPFM
->          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-> root@roc-rk3399-pc:~#
-> 
-> acme@roc-rk3399-pc:~/git/perf-tools$ sudo su -
-> [sudo] password for acme: 
-> root@roc-rk3399-pc:~# set -o vi
-> root@roc-rk3399-pc:~# export PATH=$PATH:~/bin
-> root@roc-rk3399-pc:~# perf test
->   1: vmlinux symtab matches kallsyms                                 : Ok
->   2: Detect openat syscall event                                     : Ok
->   3: Detect openat syscall event on all cpus                         : Ok
->   4: mmap interface tests                                            :
->   4.1: Read samples using the mmap interface                         : Ok
->   4.2: User space counter reading of instructions                    : Skip (permissions)
->   4.3: User space counter reading of cycles                          : Skip (permissions)
->   5: Test data source output                                         : Ok
->   6: Parse event definition strings                                  :
->   6.1: Test event parsing                                            : Ok
->   6.2: Test parsing of "hybrid" CPU events                           : Skip (not hybrid)
->   6.3: Parsing of all PMU events from sysfs                          : Skip (permissions)
->   6.4: Parsing of given PMU events from sysfs                        : Skip (permissions)
->   6.5: Parsing of aliased events from sysfs                          : Skip (no aliases in sysfs)
->   6.6: Parsing of aliased events                                     : Ok
->   6.7: Parsing of terms (event modifiers)                            : Ok
->   7: Simple expression parser                                        : Ok
->   8: PERF_RECORD_* events & perf_sample fields                       : Ok
->   9: Parse perf pmu format                                           : Ok
->  10: PMU events                                                      :
->  10.1: PMU event table sanity                                        : Ok
->  10.2: PMU event map aliases                                         : Ok
->  10.3: Parsing of PMU event table metrics                            : Ok
->  10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
->  11: DSO data read                                                   : Ok
->  12: DSO data cache                                                  : Ok
->  13: DSO data reopen                                                 : Ok
->  14: Roundtrip evsel->name                                           : Ok
->  15: Parse sched tracepoints fields                                  : Ok
->  16: syscalls:sys_enter_openat event fields                          : Ok
->  17: Setup struct perf_event_attr                                    : FAILED!
->  18: Match and link multiple hists                                   : Ok
->  19: 'import perf' in python                                         : Ok
->  20: Breakpoint overflow signal handler                              : Skip
->  21: Breakpoint overflow sampling                                    : Skip
->  22: Breakpoint accounting                                           : Ok
->  23: Watchpoint                                                      :
->  23.1: Read Only Watchpoint                                          : Ok
->  23.2: Write Only Watchpoint                                         : Ok
->  23.3: Read / Write Watchpoint                                       : Ok
->  23.4: Modify Watchpoint                                             : Ok
->  24: Number of exit events of a simple workload                      : FAILED!
->  25: Software clock events period values                             : Ok
->  26: Object code reading                                             : Ok
->  27: Sample parsing                                                  : Ok
->  28: Use a dummy software event to keep tracking                     : Ok
->  29: Parse with no sample_id_all bit set                             : Ok
->  30: Filter hist entries                                             : Ok
->  31: Lookup mmap thread                                              : Ok
->  32: Share thread maps                                               : Ok
->  33: Sort output of hist entries                                     : Ok
->  34: Cumulate child hist entries                                     : Ok
->  35: Track with sched_switch                                         : Ok
->  36: Filter fds with revents mask in a fdarray                       : Ok
->  37: Add fd to a fdarray, making it autogrow                         : Ok
->  38: kmod_path__parse                                                : Ok
->  39: Thread map                                                      : Ok
->  40: LLVM search and compile                                         :
->  40.1: Basic BPF llvm compile                                        : Ok
->  40.2: kbuild searching                                              : FAILED!
->  40.3: Compile source for BPF prologue generation                    : FAILED!
->  40.4: Compile source for BPF relocation                             : Ok
->  41: Session topology                                                : Ok
->  42: BPF filter                                                      :
->  42.1: Basic BPF filtering                                           : Ok
->  42.2: BPF pinning                                                   : Ok
->  42.3: BPF prologue generation                                       : FAILED!
->  43: Synthesize thread map                                           : Ok
->  44: Remove thread map                                               : Ok
->  45: Synthesize cpu map                                              : Ok
->  46: Synthesize stat config                                          : Ok
->  47: Synthesize stat                                                 : Ok
->  48: Synthesize stat round                                           : Ok
->  49: Synthesize attr update                                          : Ok
->  50: Event times                                                     : Ok
->  51: Read backward ring buffer                                       : Ok
->  52: Print cpu map                                                   : Ok
->  53: Merge cpu map                                                   : Ok
->  54: Probe SDT events                                                : Ok
->  55: is_printable_array                                              : Ok
->  56: Print bitmap                                                    : Ok
->  57: perf hooks                                                      : Ok
->  58: builtin clang support                                           :
->  58.1: builtin clang compile C source to IR                          : Skip (not compiled in)
->  58.2: builtin clang compile C source to ELF object                  : Skip (not compiled in)
->  59: unit_number__scnprintf                                          : Ok
->  60: mem2node                                                        : Ok
->  61: time utils                                                      : Ok
->  62: Test jit_write_elf                                              : Ok
->  63: Test libpfm4 support                                            :
->  63.1: test of individual --pfm-events                               : Skip (not compiled in)
->  63.2: test groups of --pfm-events                                   : Skip (not compiled in)
->  64: Test api io                                                     : Ok
->  65: maps__merge_in                                                  : Ok
->  66: Demangle Java                                                   : Ok
->  67: Demangle OCaml                                                  : Ok
->  68: Parse and process metrics                                       : Ok
->  69: PE file support                                                 : FAILED!
->  70: Event expansion for cgroups                                     : Ok
->  71: Convert perf time to TSC                                        :
->  71.1: TSC support                                                   : Ok
->  71.2: Perf time to TSC                                              : Ok
->  72: dlfilter C API                                                  : Ok
->  73: Sigtrap                                                         : Skip
->  74: Event groups                                                    : Skip
->  75: Symbols                                                         : Ok
->  76: Test dwarf unwind                                               : Ok
->  77: build id cache operations                                       : FAILED!
->  78: CoreSight / ASM Pure Loop                                       : FAILED!
->  79: CoreSight / Memcpy 16k 10 Threads                               : FAILED!
->  80: CoreSight / Thread Loop 10 Threads - Check TID                  : FAILED!
->  81: CoreSight / Thread Loop 2 Threads - Check TID                   : FAILED!
->  82: CoreSight / Unroll Loop Thread 10                               : FAILED!
->  83: daemon operations                                               : Ok
->  84: kernel lock contention analysis test                            : Ok
->  85: perf pipe recording and injection test                          : Ok
->  86: Add vfs_getname probe to get syscall args filenames             : FAILED!
->  87: probe libc's inet_pton & backtrace it with ping                 : Ok
->  88: Use vfs_getname probe to get syscall args filenames             : FAILED!
->  89: Zstd perf.data compression/decompression                        : Ok
->  90: perf record tests                                               : FAILED!
->  91: perf record offcpu profiling tests                              : FAILED!
->  92: perf stat CSV output linter                                     : Ok
->  93: perf stat csv summary test                                      : Ok
->  94: perf stat JSON output linter                                    : FAILED!
->  95: perf stat metrics (shadow stat) test                            : Ok
->  96: perf stat tests                                                 : Ok
->  97: perf all metricgroups test                                      : Ok
->  98: perf all metrics test                                           : Ok
->  99: perf all PMU test                                               : Ok
-> 100: perf stat --bpf-counters test                                   : FAILED!
-> 101: perf stat --bpf-counters --for-each-cgroup test                 : FAILED!
-> 102: Check Arm64 callgraphs are complete in fp mode                  : Ok
-> 103: Check Arm CoreSight trace data recording and synthesized samples: FAILED!
-> 104: Check Arm SPE trace data recording and synthesized samples      : Skip
-> 105: Check Arm SPE doesn't hang when there are forks                 : Skip
-> 106: Check branch stack sampling                                     : Skip
-> 107: Test data symbol                                                : Skip
-> 108: Miscellaneous Intel PT testing                                  : Skip
-> 109: Test java symbol                                                : Ok
-> 110: perf script task-analyzer tests                                 : Ok
-> 111: Check open filename arg using perf trace + vfs_getname          : FAILED!
-> root@roc-rk3399-pc:~# 
-> 
-> 
-> 
->  
-> > > So the perf tool is written in somewhat low-level C code, in fact we
-> > > try to adopt the Linux kernel's conventions so that code between the
-> > > tool and the kernel can easily be shared. Frameworks for different
-> > > kinds of parallelism would need to be added. In the past Riccardo
-> > > Mancini looked at adding workqueues;
-> > >
-> > https://lore.kernel.org/lkml/3c4f8dd64d07373d876990ceb16e469b4029363f.camel@gmail.com/
-> > > We'd like to merge this work but it needs rebasing on to the current
-> > > perf development tree. One problem encountered by Riccardo was issues
-> > > with reference counts. To this end I wrote a reference count checker:
-> > > https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.com/
-> > > Which has a number of fixes now merged into the tree but not the
-> > > actual checking framework itself. A first task may be to work on the
-> > > reference count checker and then to bring in Riccardo's work. I
-> > > started a rebase on the checker and I should work to send it out again
-> > > soon.
-> > 
-> > Interesting. I edited my planning to this:
-> > 
-> > Now - start date: Research
-> > 
-> >    - Get a deeper understanding of workqueue by reading the books "Linux
-> >    kernel development: chapter 6" and "Linux device drivers" chapter 7.
-> >    - Understand necessary modules, libraries and tools.
-> >    - Understand the code that I need to know to succeed.
-> >    - Work on fixing the issues with reference counts and rebase workqueues
-> >    patch. This task can be worked on between 3 April and 16 April.
-> > 
-> > Week 2 - 3: Code
-> > 
-> > 
-> >    - Implement workqueue for processing smaller/easier data structures.
-> >    Working further on previous contributions.
-> > 
-> > week 4: Evaluating
-> > 
-> >    - Evaluate the effectiveness of the working queues on a smaller scale
-> >    and devise strategies to implement this on a bigger scale.
-> > 
-> > Week 5 - 6: Code
-> > 
-> >    - Implement workqueue for processing bigger/more complex data structures.
-> 
-> -- 
-> 
-> - Arnaldo
