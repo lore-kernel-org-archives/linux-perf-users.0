@@ -2,95 +2,171 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9106C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 03:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C5BC64EC4
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 03:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjCGDVb (ORCPT
+        id S229767AbjCGDWu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 22:21:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
+        Mon, 6 Mar 2023 22:22:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbjCGDVa (ORCPT
+        with ESMTP id S229718AbjCGDWt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 22:21:30 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D9C25283
-        for <linux-perf-users@vger.kernel.org>; Mon,  6 Mar 2023 19:21:29 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536c02ed619so122829777b3.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 06 Mar 2023 19:21:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678159289;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4V7qYWhF33WfuebsbvBQGuVFdWrj0NpdHzfUvHWbnC8=;
-        b=T6aJICY3NlE5u1vNf9OmUu/eQQfbV1GOJRNrimXa/y/VrCdgNdOV7kGTIj3rJyf4wa
-         aqwHTM01jEscUPE0aEfwaQeY7t7uOeWnYctZUoykgy3b/+ezfZnYP/dibefqCpC8upTn
-         ojKMH5WPYxFHPy+ps/fY/KIMAmJueL/XJO2AVHpeeRyo+9BLATfCDjkoxAhaH38hFolS
-         KB15K1yev8xl8ggZq9RJzJp7l431FszYjyPjR4iCTFLUWp06RhKgWW2QF6ViLTB6UYti
-         25dfkSOrJjRW17VdryAboCaHdNloYycIqLVfz7XIBhCBHvHHroIen3Y0R0JTpZwvBdJG
-         1b4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678159289;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4V7qYWhF33WfuebsbvBQGuVFdWrj0NpdHzfUvHWbnC8=;
-        b=0Qe3vu2slthOIb5ycRvGB/43GQ21fI6wimRWIR6yoaQ1UH6ufdu12YBkhoQW+49nZg
-         SRrB8CYhYKmixDkH3vnqpAoX2m5kG2dCNO6UFXRjCq2iQPXjnxm5tKZsZ+QPQCTP8Ev+
-         JGQMJtReW09isUQoHaYc9TEsnPNw/OTvIamk0kK2VrcBDTHTxzCe9X9CRD5Y/OWlIgXQ
-         Lw1ISyi5OzEY51q5Qhg3HOYp90rKXcsy7J+AW2iTIQCg73h+Gh1bNLxf2cjSru9W0i3f
-         uxs2z3npLOL1os7ETAyxoIa+4I+Lf2sOqFI/hCD8VSnM1IYuyD5NHU+CoieQMIHuu/5H
-         JVDQ==
-X-Gm-Message-State: AO0yUKVJodHEXRhaK08iGOo6AivlbE9PMYZ24Rl7imWYCzeO2g5Qz0cm
-        iwbQatOGZtZVwQqCFqzgrybg18VVUJii
-X-Google-Smtp-Source: AK7set/GvSG52lshrWljOTP0+TlFYk0pdSie2CoXb1dha9MKGJX2b0KrwFUW5yKqo7j0oALBm3rVqp9b7WJc
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:1c60:6b8e:dccc:a3b1])
- (user=irogers job=sendgmr) by 2002:a81:4005:0:b0:532:e887:2c23 with SMTP id
- l5-20020a814005000000b00532e8872c23mr8552310ywn.9.1678159288922; Mon, 06 Mar
- 2023 19:21:28 -0800 (PST)
-Date:   Mon,  6 Mar 2023 19:21:17 -0800
-Message-Id: <20230307032117.3461008-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH] perf lock contention: Fix builtin detection
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Martin KaFai Lau <martin.lau@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Mar 2023 22:22:49 -0500
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2061.outbound.protection.outlook.com [40.107.212.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E661129;
+        Mon,  6 Mar 2023 19:22:48 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c325duPiHY3ESuTqkhZKIrOHzTJpsU1omvaGQpE94tLysiZcfM2M21pIJGvUpjNvIXTs6x6GYYdcIH0RgShNBPNqS1AVjUtuHGjTgYNxNy/F57DLRwjip721kf2eZ1ZTrjwGzjsjurOs5NtqxlDG9f2x+XTWAA0eLCej6hISzWyjHGxw9x88cmJT4kVA+uK5IfBjR0voLvI0NQ9W1y0bmdb2cpfhEhQ9USre3Xy4dKRXehrQnNFNpyt+qEYGTgw1XShaFVdWHenF0ihI9iM9U7ey6/kMxv8s2FJD/C80wzvCb0F83tWrOPItJccdt9NjRYldRw9OS8n3F0LxqjaDrA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=c8N929KV6x3v2FB4rD8h8Z0vIoZdMSMGQTln+hHtZk0=;
+ b=PH7W5QFMBMwlB2liy2FB5ohOFtjRKIUQJt6W3XKdi1A6t/9QrQZ4Q2RZY9tRkqQflXlAXV9OySo6e2fQvBhUAwtd1kVlBvSILFUdV+iGOyg3IMgatsR0ituKHsP6iAHFTEaHOD4ApHv0OUx3aQMaDCjTj1sWd5TKGuin8FzxdhYKhH2ZdcQy8Ncc+/aogzYFmHOQ5Tqu230SZjgZVED+gjlySCslRgXbwy3RQOIPzWYAnHjFgV3A7ogoQuJavslLBzjpzmIwqEct0VTAnI0mtCMWjRVhzT5rPwBP/grPK/h/15J4AK1b+6nK0C6uR1x/jAZ9uc4gwhL/pbiBgUECEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c8N929KV6x3v2FB4rD8h8Z0vIoZdMSMGQTln+hHtZk0=;
+ b=21OFHxoFButds6fd70ZnC8ZzLd255Dm76wOwSP00Rz1yBZ+kOEE13+8mX4cxu0jHJHYfvnOFj6OzdBSX4KxfI3LeOcVJc1sw1NJSkp4z6E+tfhUOm9UznR587/t/VIqOrAEzatPwCAT0Zq/DFQH2tDO0M9WrOrv7yJGAEH/rG18=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by MW6PR12MB8915.namprd12.prod.outlook.com (2603:10b6:303:23e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
+ 2023 03:20:12 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d8e6:76b5:2c23:1247]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d8e6:76b5:2c23:1247%9]) with mapi id 15.20.6156.027; Tue, 7 Mar 2023
+ 03:20:12 +0000
+Message-ID: <7c721c17-1d72-5fbc-4d69-d8d6bc12b404@amd.com>
+Date:   Tue, 7 Mar 2023 08:49:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 1/2] perf/ibs: Fix interface via core pmu events
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     peterz@infradead.org, eranian@google.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230302092109.367-1-ravi.bangoria@amd.com>
+ <20230302092109.367-2-ravi.bangoria@amd.com>
+ <CAM9d7cjEvjcYwjA+HfsDHKDX8FGZCECTZ8vDMPHBUSqfQSCOfA@mail.gmail.com>
+ <c5f1c3c2-6de3-a40d-9cf0-c1c7638acfc3@amd.com>
+ <CAM9d7ch9OsFz9N71QG5DOyygctK+bVAFGQByUGAvy=d29rzWZg@mail.gmail.com>
+Content-Language: en-US
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <CAM9d7ch9OsFz9N71QG5DOyygctK+bVAFGQByUGAvy=d29rzWZg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0167.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:de::11) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MW6PR12MB8915:EE_
+X-MS-Office365-Filtering-Correlation-Id: 518a546b-75bc-47b6-46ae-08db1ebadcd9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GxQr4Rs8eHDadJHT/bI1JU7DTS7nawSLEAIevZ0hMh+0lBaiIi+YeTzP4H0hPPCWXj1olFt5vPkoMZuUza7IOdiIm8jbSyFRmJUFTHuHIo6i9zVi+24t3Iz8KheyRYoy8xLsbCpiWyDeJoehGbkk2vf+9OTCQjdjQcqOwYO81anvpYfeMVdAmBaO4jOv8NyZDbp5ZcJDEX0o6c+sSt7oWvetczCfQ3u5p/OQnwAXWlQ4DN5YTeCibd8Q+sFb2clUDPAPqFSJ7JtPkERDLilebB+f5ylyT8IDrwyuueElFTbSuvnO2fmpInBlN0lt5DPssWyKyYELanCzHqThdlgsFUvJ+RhSc0of8cmCGVqI+lxmGADjdRTZey6Du/nT6SSMvhYK/k8rWn09nO6FGK3YzDIhVgGie4NA7YGbc0/7cl3dcLuSDbMQrkO6Zz8SqOBP4o8wfj4qPGGSgFtJfuIGJiOrYpVHaVeqN+HDvm2LKn2cyVz2sAWEMnqkj2lwBr+RtrCFHyrAwd+skoHEYBv0ORHGamByvMhMtLmKnjnzHkkcw12HOortLFiqAhAKIs5XFlD+7OsFbIBGRMnlZ8lqwWKJlAh/IFh8m/bO48fy6+EQttwQUS2s3ZMHwwdL1cj1qQLkBvyz9lj34oRp085xzcQS+pQJJV4Ew+hHn6JSrDQgqk6B1dVObhNrVW3uuAm12Y2k0E8UloqNV8dj0D9WJQ7fISwlJFDDYQV5pqADT5k=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(39860400002)(396003)(376002)(346002)(136003)(451199018)(41300700001)(186003)(6506007)(6512007)(53546011)(2616005)(38100700002)(478600001)(6916009)(8676002)(66476007)(66556008)(66946007)(4326008)(316002)(36756003)(6486002)(6666004)(86362001)(31696002)(44832011)(2906002)(31686004)(8936002)(7416002)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OXRQeHIrSzJyNDJLcG5FbDF5eU43RWUzWXlRaFNEWi9POXFxMTZXWlMxUll2?=
+ =?utf-8?B?Q2tlZnhxNkJUNzFKYXZVMDRxMmQ4S3pHZlFVeGVzVy9NU1hyTEpyM3BtWEJ2?=
+ =?utf-8?B?TFNLN2xSSXYxa0hiYTZpSXRuM3p0NVhubzZnN0xVM3FPUHJLUEpna1VHZWFB?=
+ =?utf-8?B?NjdMOUc1ZGhXUkQ5ZDdQN3NtMWpxcko4SkhrWUV1MzdCNVF6bW5RdVhQbzVW?=
+ =?utf-8?B?NXJZRHhVU2k2ZXNUQ29ET2hqeVhWUXpMWDBRZ1VKaktIbWwxcE9ia2NjdC9u?=
+ =?utf-8?B?ZGljTzFHMkwxK3RYVG9mZHZpdGVjbEhWSEFmUU5Sc3U0SFVESWhmZ0E4dUdq?=
+ =?utf-8?B?UWdBWHlwUzgzY00vL28vUFBqclRHeGgyWThUUllxNEhXZnlCcmdVTVoxdWZ2?=
+ =?utf-8?B?eC9oMFNTY2RoVjFXb1pUR2xDb1RoblpOQnduV0htbWNxVjdFRkFDNlkwYVNK?=
+ =?utf-8?B?QnEyaGluTUNvT0NoV1lvVVpDYjdkVGlPMSsvcC9HRnpYT0p3aUtteWZ2ZnJJ?=
+ =?utf-8?B?Mmo2aEgvWTRtSzVkSjA5NDhySEhaL2tVMWxyYTdyRUVxWkoxd3BGZlJiRjd2?=
+ =?utf-8?B?TlRWSXFGMVA0YzQwKzhQc1VMaUVwZUNQM3NmemZBYTR1alYvdXBmNlliTUVs?=
+ =?utf-8?B?Q25wNEVKWFhUMUg4UnN1OStCU3JHSEdHcERjR3dFcTM0YkpESFVrVUNrQmxz?=
+ =?utf-8?B?TTNaRVVrMHFkRVI1cjQ5V3FKQnlLeUgyS0l1WkJ3c09hS3ZtMjE4V2lkWk5I?=
+ =?utf-8?B?S3VGMU9OYWRwZndZU1IvUEFLb2pwYmpJRWtJMnc3VmxWNS8vSDRQbW1ld21q?=
+ =?utf-8?B?WXpFaFBDakhwdWtURUtrdGZqdUlNTkh5TnNtcWdoUEFOM1h1UDN1eUxvdFEw?=
+ =?utf-8?B?NGxMVGJoRjlZKy9icWZER09CQmhJR0trdklKaDVoWDZMQnhiYXQ2TUp2WFRa?=
+ =?utf-8?B?cmUvb3prQlRiYTdWR0JsN0dSbDhHQThpM3paVDVnZmhFQlJRK3ZLUE9ucDM5?=
+ =?utf-8?B?WkVMTG1GUDhqWDB3RFBjMnJicGhpWG4xa0UvbitkMGxucERaYlJuTXVnd0tZ?=
+ =?utf-8?B?cDE2SzBBWUJubnpWUWF3NHlKOXlWc29YRWdpOGEzWjQrTEJsTW1oYjFqWmdJ?=
+ =?utf-8?B?NjlpR0wwbkYraVNtVUF0eXloK2lpdU5mZEpaTFVhZGRORVN1L01IclkyWHNs?=
+ =?utf-8?B?OHIzdUpBK3ZidUhJQjNSS3Jpc2VacVcyZXlrZnRKdjI3cWV6djVZdHI1V3pL?=
+ =?utf-8?B?WFZVUTVvS1RhTTAvRkdlR1JJR2U4SXVFaC93SlVhaVIvUzlNeHpBdFFocHlw?=
+ =?utf-8?B?dXc1dkplQlNiY2svUHVJemNjVWphSVZ3MXpHWGJCaE16NG5KcWNPU0xHMWtZ?=
+ =?utf-8?B?NHJOUnFDUWRpS2FGNVcvek81UUZvTW4zcGV4VWlmcmFhVzJFRzVMWVR5cDRo?=
+ =?utf-8?B?dWQwOGlnM3YxMHBkRkl4bUI5ZVk1WDcrbU5wRGgyeHgrcXJueCtYa29yQXBT?=
+ =?utf-8?B?VTdyY2VvUVRhNWRDb05YQjArNTM1dzVDUVNZZVFMYkQ4NXh6ZmtYM2d5WGhr?=
+ =?utf-8?B?cmVkN3F5UFJlbnJldmJDZnFacUJ2NTFXUHMrZE4ybHd5MmZkRk1mWkdablFY?=
+ =?utf-8?B?enNOZnFFOGgvRWxNOVFlZDhlb25HdERIdk5QeFJ6SzhYeFRKTWozRTBUZ1Z2?=
+ =?utf-8?B?V25rZU5aZU8zQlg2cExzSFRxcEdKdE5jd2hHdDk4aC9SQk5QS0lCdEVRQlpW?=
+ =?utf-8?B?L1pmRkJvdnppK2VWTEdLalJadjdJUTY4cWIrSWVtNWhUbitWbEZEVzh0OFU0?=
+ =?utf-8?B?dEM5MVBSOTZjY1JNQVk5UElSaXpkNWFrV2x2ci9KajVZd0x6Y1cwbWxTb0xp?=
+ =?utf-8?B?UWJxRHE2VEl0SVY3UzBmWWdNQjJYS1VvZVN3bXA4RGVkOS8zYXZHcmc1b2c5?=
+ =?utf-8?B?ZXhHcS9JMVRORXFYTUkrNHlNZFBLZ1ZlUE83cmlLMGpOdXNOVzQ3SWFWVldX?=
+ =?utf-8?B?ZGNCMWhzVGpVY0JuTUk3WDh4Mmg5Z2llUCtDOS9XYWtuTW5ZYXZkVWVKeXFy?=
+ =?utf-8?B?clNpR3grSDRDOE9tS3NsWVhFVW05QzVldzZ2a3U3QUJhQTJmN2kyZkp0YnRV?=
+ =?utf-8?B?UzNQRjdJWjFhVkQwRk9OWTQrSVdXRTh3Q0hibEpKcUFRalFnOHN2MktuaEw0?=
+ =?utf-8?Q?309o1kVbOajESnlZr62mZ0wKX8gUP/nd2YMfQMDVwFt0?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 518a546b-75bc-47b6-46ae-08db1ebadcd9
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2023 03:20:12.6669
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FBRwtzX2RSBOMCBdhmfTXadnElbb5/SYC/q7XlcFmieFuhhzkXX05pcGMpQKP+ASS68tZ5ZW+nLoX4YS/cAMZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8915
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-__has_builtin was passed the macro rather than the actual builtin
-feature.
+On 07-Mar-23 3:59 AM, Namhyung Kim wrote:
+> On Thu, Mar 2, 2023 at 9:54 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>>
+>> Hi Namhyung,
+>>
+>>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>>> index a5a51dfdd622..c3f59d937280 100644
+>>>> --- a/kernel/events/core.c
+>>>> +++ b/kernel/events/core.c
+>>>> @@ -11633,9 +11633,13 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>>>>                         goto fail;
+>>>>
+>>>>                 ret = perf_try_init_event(pmu, event);
+>>>> -               if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+>>>> -                       type = event->attr.type;
+>>>> -                       goto again;
+>>>> +               if (ret == -ENOENT) {
+>>>> +                       if (event->attr.type != type && !extended_type) {
+>>>> +                               type = event->attr.type;
+>>>> +                               goto again;
+>>>> +                       }
+>>>> +                       if (pmu->capabilities & PERF_PMU_CAP_FORWARD_EVENT)
+>>>> +                               goto try_all;
+>>>
+>>> Wouldn't it be better to use a different error code to indicate
+>>> it's about precise_ip (or forwarding in general)?  Otherwise
+>>> other invalid config might cause the forwarding unnecessarily..
+>>
+>> That would make things easier and we might not need this new capability.
+>> Most appropriate error codes seems ENOENT, EOPNOTSUPP and EINVAL but all
+>> are already used for other purposes. Any other suggestions?
+> 
+> Maybe we can have more liberty for the error code since
+> it's not returned to the user.  How about ESRCH, EIO or ENXIO?
 
-Fixes: 1bece1351c65 ("perf lock contention: Support old rw_semaphore type")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok. We can probably use ESRCH, although it's meaning is little different:
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index e6007eaeda1a..e422eee0f942 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -182,7 +182,7 @@ static inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
- 		struct mutex *mutex = (void *)lock;
- 		owner = BPF_CORE_READ(mutex, owner.counter);
- 	} else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
--#if __has_builtin(bpf_core_type_matches)
-+#if __has_builtin(__builtin_preserve_type_info)
- 		if (bpf_core_type_matches(struct rw_semaphore___old)) {
- 			struct rw_semaphore___old *rwsem = (void *)lock;
- 			owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
--- 
-2.40.0.rc0.216.gc4246ad0f0-goog
+  $ errno -l | grep ESRCH
+  ESRCH 3 No such process
 
+Thanks,
+Ravi
