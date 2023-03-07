@@ -2,155 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9A3C678D5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 03:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5BBC678D5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 04:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbjCGD4v (ORCPT
+        id S230287AbjCGEoo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 6 Mar 2023 22:56:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
+        Mon, 6 Mar 2023 23:44:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbjCGD4u (ORCPT
+        with ESMTP id S230329AbjCGEof (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 6 Mar 2023 22:56:50 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B0C56519;
-        Mon,  6 Mar 2023 19:56:49 -0800 (PST)
-Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.56])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PW1lW46QcznWfG;
-        Tue,  7 Mar 2023 11:53:59 +0800 (CST)
-Received: from [10.174.177.30] (10.174.177.30) by
- kwepemm600006.china.huawei.com (7.193.23.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 7 Mar 2023 11:56:14 +0800
-Message-ID: <bebc6247-84bf-a4c1-13ec-742aa24f12b4@huawei.com>
-Date:   Tue, 7 Mar 2023 11:56:13 +0800
+        Mon, 6 Mar 2023 23:44:35 -0500
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5372FCF8;
+        Mon,  6 Mar 2023 20:44:07 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5384ff97993so225053077b3.2;
+        Mon, 06 Mar 2023 20:44:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678164222;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K3AJYKJmsuBeQzEHwMVXmiapyZ13/OI8jrm9b5FPop4=;
+        b=eDiBUhWOx1y0oASVjUXAi/BJPjfJckPjiza+oPz61GHn9hAW/otBoYAiOGASOZvd6r
+         eObxv4eS3ocSf+k0SgGdIfRqZDYLb8KBQNx9V2tpGgi3IW5Z0IXoLNFCRFOJ7x8eGnvT
+         JxJrlutMdNBWLNngfdtvsWVc2nrNpivzfQYZQOxqqVKlSIGmkVX+79HsrJoaPRLwc/Yj
+         n0/uFcdKAqMd7GAOlnplIBeThQZegXT24GnuySV+szYCBPQW7riwodQ4RF1i7P9M/tgD
+         3vuZDT+TgB64lsuu407brCbY8SmABK9B3RQ4tNlQql1VL7oB9VhDD5vyxwvGozjqWbZh
+         nqbg==
+X-Gm-Message-State: AO0yUKUBYcfvDmf/2KkijeslPI52f9tzF056Iq1uqa2Lz9XcMwRTZbDr
+        27P+meZABriyiIDgaU1QZhas7SZBTJXmE0T4IWhJxOYqfVI=
+X-Google-Smtp-Source: AK7set/UB9njf4BtCwbMNKJGKl7au48PIvWnWyweDDrTje3FyPZKq/vzFM5IbBHcoDOEBwZVB1Im3Gm2vVNShHq1G9Y=
+X-Received: by 2002:a81:b71c:0:b0:536:7529:55b4 with SMTP id
+ v28-20020a81b71c000000b00536752955b4mr8352513ywh.3.1678164222242; Mon, 06 Mar
+ 2023 20:43:42 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>, <brauner@kernel.org>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From:   "liuwenyu (D)" <liuwenyu7@huawei.com>
-Subject: [PATCH v2] perf top: Fix rare segfault in thread__comm_len()
+References: <20230307032117.3461008-1-irogers@google.com>
+In-Reply-To: <20230307032117.3461008-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 6 Mar 2023 20:43:30 -0800
+Message-ID: <CAM9d7ci6FWx2oYAbqhVW2-tjB4p8ji3w87n-ndwxidMov+kVZw@mail.gmail.com>
+Subject: Re: [PATCH] perf lock contention: Fix builtin detection
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Martin KaFai Lau <martin.lau@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.30]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600006.china.huawei.com (7.193.23.105)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In thread__comm_len(),strlen() is called outside of the
-thread->comm_lock critical section,which may cause a UAF
-problems if comm__free() is called by the process_thread
-concurrently.
+Hi Ian,
 
-backtrace of the core file is as follows:
+On Mon, Mar 6, 2023 at 7:21 PM Ian Rogers <irogers@google.com> wrote:
+>
+> __has_builtin was passed the macro rather than the actual builtin
+> feature.
 
-    (gdb) bt
-    #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
-    #1  0x000055ad15d31de5 in thread__comm_len (thread=0x7f627d20e300) at util/thread.c:320
-    #2  0x000055ad15d4fade in hists__calc_col_len (h=0x7f627d295940, hists=0x55ad1772bfe0)
-        at util/hist.c:103
-    #3  hists__calc_col_len (hists=0x55ad1772bfe0, h=0x7f627d295940) at util/hist.c:79
-    #4  0x000055ad15d52c8c in output_resort (hists=hists@entry=0x55ad1772bfe0, prog=0x0,
-        use_callchain=false, cb=cb@entry=0x0, cb_arg=0x0) at util/hist.c:1926
-    #5  0x000055ad15d530a4 in evsel__output_resort_cb (evsel=evsel@entry=0x55ad1772bde0,
-        prog=prog@entry=0x0, cb=cb@entry=0x0, cb_arg=cb_arg@entry=0x0) at util/hist.c:1945
-    #6  0x000055ad15d53110 in evsel__output_resort (evsel=evsel@entry=0x55ad1772bde0,
-        prog=prog@entry=0x0) at util/hist.c:1950
-    #7  0x000055ad15c6ae9a in perf_top__resort_hists (t=t@entry=0x7ffcd9cbf4f0) at builtin-top.c:311
-    #8  0x000055ad15c6cc6d in perf_top__print_sym_table (top=0x7ffcd9cbf4f0) at builtin-top.c:346
-    #9  display_thread (arg=0x7ffcd9cbf4f0) at builtin-top.c:700
-    #10 0x00007f6282fab4fa in start_thread (arg=<optimized out>) at pthread_create.c:443
-    #11 0x00007f628302e200 in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:81
+Oh, I missed it's a macro define in tools/lib/bpf/bpf_core_read.h file.
 
-The reason is that strlen() get a pointer to a memory that has been freed.
+Looking at some BPF test codes, it seems you also need to check the
+clang compiler version.  Please take a look at the file below:
 
-The string pointer is stored in the structure comm_str, which corresponds
-to a rb_tree node,when the node is erased, the memory of the string is also freed.
+  tools/testing/selftests/bpf/progs/test_core_reloc_type_base.c
 
-In thread__comm_len(),it gets the pointer within the thread->comm_lock critical section,
-but passed to strlen() outside of the thread->comm_lock critical section, and the perf
-process_thread may called comm__free() concurrently, cause this segfault problem.
+Thanks,
+Namhyung
 
-The process is as follows:
-
-display_thread                                  process_thread
---------------                                  --------------
-
-thread__comm_len
-  -> thread__comm_str
-       # held the comm read lock
-    -> __thread__comm_str(thread)
-       # release the comm read lock
-                                                thread__delete
-                                                     # held the comm write lock
-                                                  -> comm__free
-                                                    -> comm_str__put(comm->comm_str)
-                                                      -> zfree(&cs->str)
-                                                     # release the comm write lock
-      # The memory of the string pointed
-        to by comm has been free.
-    -> thread->comm_len = strlen(comm);
-
-This patch expand the critical section range of thread->comm_lock in thread__comm_len(),
-to make strlen() called safe.
-
-Signed-off-by: Wenyu Liu  <liuwenyu7@huawei.com>
----
-v1 -> v2
- - format the patch file correctly
-
- tools/perf/util/thread.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index e3e5427e1c3c..a2490a20eb56 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -311,17 +311,30 @@ const char *thread__comm_str(struct thread *thread)
- 	return str;
- }
- 
-+static int __thread__comm_len(struct thread *thread, const char *comm)
-+{
-+	if (!comm)
-+		return 0;
-+	thread->comm_len = strlen(comm);
-+
-+	return thread->comm_len;
-+}
-+
- /* CHECKME: it should probably better return the max comm len from its comm list */
- int thread__comm_len(struct thread *thread)
- {
--	if (!thread->comm_len) {
--		const char *comm = thread__comm_str(thread);
--		if (!comm)
--			return 0;
--		thread->comm_len = strlen(comm);
-+	int comm_len = thread->comm_len;
-+
-+	if (!comm_len) {
-+		const char *comm;
-+
-+		down_read(&thread->comm_lock);
-+		comm = __thread__comm_str(thread);
-+		comm_len = __thread__comm_len(thread, comm);
-+		up_read(&thread->comm_lock);
- 	}
- 
--	return thread->comm_len;
-+	return comm_len;
- }
- 
- size_t thread__fprintf(struct thread *thread, FILE *fp)
--- 
-2.36.1
+>
+> Fixes: 1bece1351c65 ("perf lock contention: Support old rw_semaphore type")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index e6007eaeda1a..e422eee0f942 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -182,7 +182,7 @@ static inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
+>                 struct mutex *mutex = (void *)lock;
+>                 owner = BPF_CORE_READ(mutex, owner.counter);
+>         } else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
+> -#if __has_builtin(bpf_core_type_matches)
+> +#if __has_builtin(__builtin_preserve_type_info)
+>                 if (bpf_core_type_matches(struct rw_semaphore___old)) {
+>                         struct rw_semaphore___old *rwsem = (void *)lock;
+>                         owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
+> --
+> 2.40.0.rc0.216.gc4246ad0f0-goog
+>
