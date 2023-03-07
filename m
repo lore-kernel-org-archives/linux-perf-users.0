@@ -2,282 +2,221 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE6CC678D5
-	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10191C678D5
+	for <linux-perf-users@archiver.kernel.org>; Tue,  7 Mar 2023 21:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjCGVGK (ORCPT
+        id S229795AbjCGV4i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 16:06:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
+        Tue, 7 Mar 2023 16:56:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbjCGVGJ (ORCPT
+        with ESMTP id S229716AbjCGV4i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 16:06:09 -0500
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B2AC9E65C;
-        Tue,  7 Mar 2023 13:06:08 -0800 (PST)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-536cb25982eso267878577b3.13;
-        Tue, 07 Mar 2023 13:06:08 -0800 (PST)
+        Tue, 7 Mar 2023 16:56:38 -0500
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA13DAD02F
+        for <linux-perf-users@vger.kernel.org>; Tue,  7 Mar 2023 13:56:36 -0800 (PST)
+Received: by mail-il1-x136.google.com with SMTP id k9so8876628ilu.13
+        for <linux-perf-users@vger.kernel.org>; Tue, 07 Mar 2023 13:56:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678226196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+rveWX4XJg/Qkkxcd1WRDIn4qMcZV5+mal9JHsCcmPA=;
+        b=Ycpi8aInEeo+ROGI7MjpD9OtCtnGtlPbndL3ZgmKs0c1oc2CLdSp26mSoxg+LxO4nm
+         XMlHl+t2dPgYq3toxoO5KLHK6lE4u36r3Cf0SxkSUtJmGKTQO12v5t8oa3G91thPgfQH
+         Cx2ROVOnQn13ahFpIdgG1XpdQSyBQ4TQjRu9KotCg1N1EbJkfLv2dk8IN5zcqW+5AOQJ
+         KE9oZQGuPtcMgEoruZ84GO0O441+l3b3ImvIR2Zu1yqJO2PdSRYQ5Zz5P6kYVBP/9iil
+         K/loiZ+llFSj4A2P2Y7yPyOUe/6MrT84pfEMPYlrv1q/bnCbjcTWDWQ2sq49lpjb/neN
+         4U4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678223167;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QYEKiuL+XZif3mNNO70+2wqcpywL1vqIp76X1v4C78k=;
-        b=mvwij5RWjGSMI9irDJeMlExufT23OkK47yBSbN1yFp6hVLLgUpQJ2RUBzwz7k9s6n1
-         8VJqKqbQ+ZgwMrsfaA+WmyDmOVAvy4QT8k8fAuG7wCp1dmR1yq5fwzrzH61qbQgoy66A
-         mneGTu9qIWZRK2jmo/7mUmJBw3iQw07YV86i5jok8/Tv7qJYaXS1+iZf4npMG5FKNbaf
-         Q1x5HjrwlDc1kN+FXgiZ4dFqc52mrhEWb6PegziDM0SFusMeadtzMdOqUQ3bsvNexiDj
-         QDlWqRwidzBLj8PlLu5vIqNEt/UeGzYqo84V1EMDMXnNtBrlzkksVLMJH8oux8JFoUzV
-         yoeg==
-X-Gm-Message-State: AO0yUKXEEp2F5hK5AoMGyQ6A8MOH9Dewog5gXRisphFTBwFpUj+7oJbK
-        gYwg4AMl6IuKxsd1A3fhghh5nPIiRGHorA9b0sXjAFq17eQ=
-X-Google-Smtp-Source: AK7set9bS3QS0nq9+I95KvD5zh73Fr2BW+LPDcurBp/vfuK6lpHdrdKhwW0JIbFJqfKtWIh99KkEyXDj5cKaK8h9OlM=
-X-Received: by 2002:a81:b71c:0:b0:536:7529:55b4 with SMTP id
- v28-20020a81b71c000000b00536752955b4mr10151649ywh.3.1678223167164; Tue, 07
- Mar 2023 13:06:07 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678226196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+rveWX4XJg/Qkkxcd1WRDIn4qMcZV5+mal9JHsCcmPA=;
+        b=Z1c6ydC0Ns/EIsCPcMBGPFIVXrOfAcU1MRqcgRyEJL25j5m9uG/jw0hKsWngy7wDcC
+         pRLUhTz8TdpeqDmutoz40Y75ljLG0A0jqSQ497HNZ6+gsfOoJ5VDBe0ntWtvDR2s+zyB
+         itQ38fyivghStWzrkqtQ4l+emzB8LNvSUNDUVQyNWfs83ELQiToouCAlNZR+TBZc49m3
+         w17sIZANn05EW9XF+X0PAItKFTs30VG7MX6Kimw3tZMbEUW9uwpnFxid1c6gJrZLjcpN
+         EpA2RLHxYxhZ4+daaJ9Lkm85e4RJNyji+vSdPjfsIyL3upaDIm7Z7XBTVk1qFU0gX7dh
+         eRdw==
+X-Gm-Message-State: AO0yUKXTuR85l8iuU9fn/DibviGOPeUExfrePIio9cuWSHl7iaSHblF8
+        xLNvuncBJAqyXfQbC16AqlYonJ+pz0/y7UaTAup9vA==
+X-Google-Smtp-Source: AK7set+O5UV0TH3KmBsgerMuRszBBa2nk9DVamEE4clRFiRb7I0l8i3kNoI2TdobI63w/fcPONGWetgE0jOwwyDx4lo=
+X-Received: by 2002:a05:6e02:13f4:b0:310:9fc1:a92b with SMTP id
+ w20-20020a056e0213f400b003109fc1a92bmr8161924ilj.0.1678226195774; Tue, 07 Mar
+ 2023 13:56:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20230222230141.1729048-1-namhyung@kernel.org> <20230222230141.1729048-4-namhyung@kernel.org>
- <4d6f69ce-e765-13f6-ae30-8ec63eaf4c34@intel.com>
-In-Reply-To: <4d6f69ce-e765-13f6-ae30-8ec63eaf4c34@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 7 Mar 2023 13:05:56 -0800
-Message-ID: <CAM9d7ch9QAoernuHFY3pC0zr+ROHS_m1WquNUrcC7E15otBDnw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] perf record: Add BPF event filter support
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+References: <CANRdyn9kXT623Pbu9hc+c4YrDu_h06a2Ch9fJpt=O0S7yKXDEg@mail.gmail.com>
+ <CAP-5=fU30f1j5o7c05ohaygpgV4=Hx7yS7f8i3vZ1j1Gk=HgcA@mail.gmail.com>
+ <CANRdyn9H7kzBXUxpvTJ_93G5Tc=51vCRs9ucHbSyVRO_rQf5vA@mail.gmail.com>
+ <CAP-5=fUr18kZVDDymDB6kJWa7Ptf9XkDMKxorZx2O2UjPusn1w@mail.gmail.com> <CANRdyn9MU1N5xH8MfMbpmxPhRTCqi9J_NWsVOPKXodE97H97rQ@mail.gmail.com>
+In-Reply-To: <CANRdyn9MU1N5xH8MfMbpmxPhRTCqi9J_NWsVOPKXodE97H97rQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 7 Mar 2023 13:56:24 -0800
+Message-ID: <CAP-5=fX5nUbhrWENd3=ZcEXPdpFk_3yGo2wWtpwoy8nqvqPgog@mail.gmail.com>
+Subject: Re: GSoC: perf Linux Profiling Scalability and speed
+To:     Lukas Molleman <lukas.molleman@gmail.com>
+Cc:     acme@kernel.org, linux-perf-users@vger.kernel.org,
+        rickyman7@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 5:04 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Mon, Mar 6, 2023 at 3:18=E2=80=AFAM Lukas Molleman <lukas.molleman@gmail=
+.com> wrote:
 >
-> On 23/02/23 01:01, Namhyung Kim wrote:
-> > Use --filter option to set BPF filter for generic events other than the
-> > tracepoints or Intel PT.  The BPF program will check the sample data and
-> > filter according to the expression.
-> >
-> > For example, the below is the typical perf record for frequency mode.
-> > The sample period started from 1 and increased gradually.
-> >
-> > $ sudo ./perf record -e cycles true
-> > $ sudo ./perf script
-> >        perf-exec 2272336 546683.916875:          1 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916892:          1 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916899:          3 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916905:         17 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916911:        100 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916917:        589 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916924:       3470 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >        perf-exec 2272336 546683.916930:      20465 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
-> >             true 2272336 546683.916940:     119873 cycles:  ffffffff8283afdd perf_iterate_ctx+0x2d ([kernel.kallsyms])
-> >             true 2272336 546683.917003:     461349 cycles:  ffffffff82892517 vma_interval_tree_insert+0x37 ([kernel.kallsyms])
-> >             true 2272336 546683.917237:     635778 cycles:  ffffffff82a11400 security_mmap_file+0x20 ([kernel.kallsyms])
-> >
-> > When you add a BPF filter to get samples having periods greater than 1000,
-> > the output would look like below:
-> >
-> > $ sudo ./perf record -e cycles --filter 'period > 1000' true
-> > $ sudo ./perf script
-> >        perf-exec 2273949 546850.708501:       5029 cycles:  ffffffff826f9e25 finish_wait+0x5 ([kernel.kallsyms])
-> >        perf-exec 2273949 546850.708508:      32409 cycles:  ffffffff826f9e25 finish_wait+0x5 ([kernel.kallsyms])
-> >        perf-exec 2273949 546850.708526:     143369 cycles:  ffffffff82b4cdbf xas_start+0x5f ([kernel.kallsyms])
-> >        perf-exec 2273949 546850.708600:     372650 cycles:  ffffffff8286b8f7 __pagevec_lru_add+0x117 ([kernel.kallsyms])
-> >        perf-exec 2273949 546850.708791:     482953 cycles:  ffffffff829190de __mod_memcg_lruvec_state+0x4e ([kernel.kallsyms])
-> >             true 2273949 546850.709036:     501985 cycles:  ffffffff828add7c tlb_gather_mmu+0x4c ([kernel.kallsyms])
-> >             true 2273949 546850.709292:     503065 cycles:      7f2446d97c03 _dl_map_object_deps+0x973 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/Documentation/perf-record.txt | 15 +++++++++++---
-> >  tools/perf/util/bpf_counter.c            |  3 +--
-> >  tools/perf/util/evlist.c                 | 25 +++++++++++++++++-------
-> >  tools/perf/util/evsel.c                  |  2 ++
-> >  tools/perf/util/parse-events.c           |  8 +++-----
-> >  5 files changed, 36 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > index ff815c2f67e8..9f4e1337e6dc 100644
-> > --- a/tools/perf/Documentation/perf-record.txt
-> > +++ b/tools/perf/Documentation/perf-record.txt
-> > @@ -119,9 +119,12 @@ OPTIONS
-> >         "perf report" to view group events together.
-> >
-> >  --filter=<filter>::
-> > -        Event filter. This option should follow an event selector (-e) which
-> > -     selects either tracepoint event(s) or a hardware trace PMU
-> > -     (e.g. Intel PT or CoreSight).
-> > +     Event filter.  This option should follow an event selector (-e).
-> > +     If the event is a tracepoint, the filter string will be parsed by
-> > +     the kernel.  If the event is a hardware trace PMU (e.g. Intel PT
-> > +     or CoreSight), it'll be processed as an address filter.  Otherwise
-> > +     it means a general filter using BPF which can be applied for any
-> > +     kind of events.
+> > Perhaps if you share what the errors are then we can talk about how to
+> > fix them. There are also tests that currently say skip but don't give
+> > a reason, it'd be nice to improve this.
 >
-> events -> event
+>  1: vmlinux symtab matches kallsyms            : FAILED!
+>  2: Detect openat syscall event                : FAILED!
+>  3: Detect openat syscall event on all cpus    : FAILED!
+>  4: Read samples using the mmap interface      : FAILED!
+>  5: Test data source output                    : Ok
+>  6: Parse event definition strings             : FAILED!
+>  7: Simple expression parser                   : Ok
+>  8: PERF_RECORD_* events & perf_sample fields  : FAILED!
+>  9: Parse perf pmu format                      : Ok
+> 10: PMU events                                 :
+> 10.1: PMU event table sanity                           : Ok
+> 10.2: PMU event map aliases                            : Ok
+> 10.3: Parsing of PMU event table metrics               : Ok
+> 10.4: Parsing of PMU event table metrics with fake PMUs: Ok
+> 11: DSO data read                              : Ok
+> 12: DSO data cache                             : Ok
+> 13: DSO data reopen                            : Ok
+> 14: Roundtrip evsel->name                      : Ok
+> 15: Parse sched tracepoints fields             : FAILED!
+> 16: syscalls:sys_enter_openat event fields     : FAILED!
+> 17: Setup struct perf_event_attr               : Skip
+> 18: Match and link multiple hists              : Ok
+> 19: 'import perf' in python                    : Ok
+> 22: Breakpoint accounting                      : Skip
+> 23: Watchpoint                                 :
+> 23.1: Read Only Watchpoint                     : FAILED!
+> 23.2: Write Only Watchpoint                    : FAILED!
+> 23.3: Read / Write Watchpoint                  : FAILED!
+> 23.4: Modify Watchpoint                        : FAILED!
+> 24: Number of exit events of a simple workload : FAILED!
+> 25: Software clock events period values        : FAILED!
+> 26: Object code reading                        : FAILED!
+> 27: Sample parsing                             : Ok
+> 28: Use a dummy software event to keep tracking: Skip
+> 29: Parse with no sample_id_all bit set        : Ok
+> 30: Filter hist entries                        : Ok
+> 31: Lookup mmap thread                         : Ok
+> 32: Share thread maps                          : Ok
+> 33: Sort output of hist entries                : Ok
+> 34: Cumulate child hist entries                : Ok
+> 35: Track with sched_switch                    : Ok
+> 36: Filter fds with revents mask in a fdarray  : Ok
+> 37: Add fd to a fdarray, making it autogrow    : Ok
+> 38: kmod_path__parse                           : Ok
+> 39: Thread map                                 : Ok
+> 40: LLVM search and compile                    :
+> 40.1: Basic BPF llvm compile                    : Skip
+> 40.2: kbuild searching                          : Skip
+> 40.3: Compile source for BPF prologue generation: Skip
+> 40.4: Compile source for BPF relocation         : Skip
+> 41: Session topology                           : Ok
+> 42: BPF filter                                 :
+> 42.1: Basic BPF filtering                      : Skip
+> 42.2: BPF pinning                              : Skip
+> 42.3: BPF prologue generation                  : Skip
+> 43: Synthesize thread map                      : Ok
+> 44: Remove thread map                          : Ok
+> 45: Synthesize cpu map                         : Ok
+> 46: Synthesize stat config                     : Ok
+> 47: Synthesize stat                            : Ok
+> 48: Synthesize stat round                      : Ok
+> 49: Synthesize attr update                     : Ok
+> 50: Event times                                : FAILED!
+> 51: Read backward ring buffer                  : Skip
+> 52: Print cpu map                              : Ok
+> 53: Merge cpu map                              : Ok
+> 54: Probe SDT events                           : Skip
+> 55: is_printable_array                         : Ok
+> 56: Print bitmap                               : Ok
+> 57: perf hooks                                 : Ok
+> 58: builtin clang support                      : Skip (not compiled in)
+> 59: unit_number__scnprintf                     : Ok
+> 60: mem2node                                   : Ok
+> 61: time utils                                 : Ok
+> 62: Test jit_write_elf                         : Ok
+> 63: Test libpfm4 support                       : Skip (not compiled in)
+> 64: Test api io                                : Ok
+> 65: maps__merge_in                             : Ok
+> 66: Demangle Java                              : Ok
+> 67: Demangle OCaml                             : Ok
+> 68: Parse and process metrics                  : Ok
+> 69: PE file support                            : Skip
+> 70: Event expansion for cgroups                : Ok
+> 71: Convert perf time to TSC                   : FAILED!
+> 72: dlfilter C API                             : Skip
+> 73: DWARF unwind                               : Ok
+> failed to open shell test directory: /usr/libexec/perf-core/tests/shell
 >
-> >
-> >       - tracepoint filters
-> >
-> > @@ -174,6 +177,12 @@ OPTIONS
-> >       within a single mapping.  MMAP events (or /proc/<pid>/maps) can be
-> >       examined to determine if that is a possibility.
-> >
-> > +     - bpf filters
-> > +
-> > +     BPF filter can access the sample data and make a decision based on the
->
-> 'BPF filter' -> 'A BPF filter'
->
-> > +     data.  Users need to set the appropriate sample type to use the BPF
->
-> 'the appropriate' -> 'an appropriate'
->
-> Perhaps could expand on what "appropriate sample type" means here,
-> also, since the user does not actually specify sample_type directly.
->
-> What happens if the sample_type is not appropriate?
+> I'm using Ubuntu 22.04 kernel 5.15.0-60-generic ARM64.
+> perf version 5.15.78
 
-Good point.  If it doesn't have an appropriate sample type, value 0
-will be used and I expect it makes the filter fail.  But we should not
-rely on such a behavior and request user to provide the sample type.
-I think perf tool should show a warning to tell the missing options.
-
->
-> > +     filter.
-> > +
-> >       Multiple filters can be separated with space or comma.
-> >
-> >  --exclude-perf::
-> > diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-> > index eeee899fcf34..0414385794ee 100644
-> > --- a/tools/perf/util/bpf_counter.c
-> > +++ b/tools/perf/util/bpf_counter.c
-> > @@ -781,8 +781,7 @@ extern struct bpf_counter_ops bperf_cgrp_ops;
-> >
-> >  static inline bool bpf_counter_skip(struct evsel *evsel)
-> >  {
-> > -     return list_empty(&evsel->bpf_counter_list) &&
-> > -             evsel->follower_skel == NULL;
-> > +     return evsel->bpf_counter_ops == NULL;
-> >  }
-> >
-> >  int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd)
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index 817df2504a1e..1ae047b24c89 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -31,6 +31,7 @@
-> >  #include "util/evlist-hybrid.h"
-> >  #include "util/pmu.h"
-> >  #include "util/sample.h"
-> > +#include "util/bpf-filter.h"
-> >  #include <signal.h>
-> >  #include <unistd.h>
-> >  #include <sched.h>
-> > @@ -1086,17 +1087,27 @@ int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
-> >       int err = 0;
-> >
-> >       evlist__for_each_entry(evlist, evsel) {
-> > -             if (evsel->filter == NULL)
-> > -                     continue;
-> > -
-> >               /*
-> >                * filters only work for tracepoint event, which doesn't have cpu limit.
-> >                * So evlist and evsel should always be same.
-> >                */
-> > -             err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
-> > -             if (err) {
-> > -                     *err_evsel = evsel;
-> > -                     break;
-> > +              if (evsel->filter) {
->
-> Extra space before 'if'
-
-Oops, will fix.
+Thanks for checking this Lukas. With `perf test` you can run
+individual tests by putting the test number after `perf test`, you can
+add the verbose flags (-v, -vv, -vvv) to see what the issue is. The -F
+flag will let you run the test without forking, which simplifies
+debugging with say gdb. I would also suggest using the latest version
+of the perf tool from the maintainer's tree:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+as you may be seeing issues that are already fixed.
 
 Thanks,
-Namhyung
+Ian
 
 
+> > So the perf tool is written in somewhat low-level C code, in fact we
+> > try to adopt the Linux kernel's conventions so that code between the
+> > tool and the kernel can easily be shared. Frameworks for different
+> > kinds of parallelism would need to be added. In the past Riccardo
+> > Mancini looked at adding workqueues;
+> > https://lore.kernel.org/lkml/3c4f8dd64d07373d876990ceb16e469b4029363f.c=
+amel@gmail.com/
+> > We'd like to merge this work but it needs rebasing on to the current
+> > perf development tree. One problem encountered by Riccardo was issues
+> > with reference counts. To this end I wrote a reference count checker:
+> > https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.co=
+m/
+> > Which has a number of fixes now merged into the tree but not the
+> > actual checking framework itself. A first task may be to work on the
+> > reference count checker and then to bring in Riccardo's work. I
+> > started a rebase on the checker and I should work to send it out again
+> > soon.
 >
-> > +                     err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
-> > +                     if (err) {
-> > +                             *err_evsel = evsel;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +
-> > +             /*
-> > +              * non-tracepoint events can have BPF filters.
-> > +              */
-> > +             if (!list_empty(&evsel->bpf_filters)) {
-> > +                     err = perf_bpf_filter__prepare(evsel);
-> > +                     if (err) {
-> > +                             *err_evsel = evsel;
-> > +                             break;
-> > +                     }
-> >               }
-> >       }
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 51e8ce6edddc..cae624fde026 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -50,6 +50,7 @@
-> >  #include "off_cpu.h"
-> >  #include "../perf-sys.h"
-> >  #include "util/parse-branch-options.h"
-> > +#include "util/bpf-filter.h"
-> >  #include <internal/xyarray.h>
-> >  #include <internal/lib.h>
-> >  #include <internal/threadmap.h>
-> > @@ -1494,6 +1495,7 @@ void evsel__exit(struct evsel *evsel)
-> >       assert(list_empty(&evsel->core.node));
-> >       assert(evsel->evlist == NULL);
-> >       bpf_counter__destroy(evsel);
-> > +     perf_bpf_filter__destroy(evsel);
-> >       evsel__free_counts(evsel);
-> >       perf_evsel__free_fd(&evsel->core);
-> >       perf_evsel__free_id(&evsel->core);
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index 0336ff27c15f..4371a2bb2564 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -27,6 +27,7 @@
-> >  #include "perf.h"
-> >  #include "util/parse-events-hybrid.h"
-> >  #include "util/pmu-hybrid.h"
-> > +#include "util/bpf-filter.h"
-> >  #include "tracepoint.h"
-> >  #include "thread_map.h"
-> >
-> > @@ -2537,11 +2538,8 @@ static int set_filter(struct evsel *evsel, const void *arg)
-> >               perf_pmu__scan_file(pmu, "nr_addr_filters",
-> >                                   "%d", &nr_addr_filters);
-> >
-> > -     if (!nr_addr_filters) {
-> > -             fprintf(stderr,
-> > -                     "This CPU does not support address filtering\n");
-> > -             return -1;
-> > -     }
-> > +     if (!nr_addr_filters)
-> > +             return perf_bpf_filter__parse(&evsel->bpf_filters, str);
-> >
-> >       if (evsel__append_addr_filter(evsel, str) < 0) {
-> >               fprintf(stderr,
+> Interesting. I edited my planning to this:
 >
+> Now - start date: Research
+>
+> Get a deeper understanding of workqueue by reading the books "Linux kerne=
+l development: chapter 6" and "Linux device drivers" chapter 7.
+> Understand necessary modules, libraries and tools.
+> Understand the code that I need to know to succeed.
+> Work on fixing the issues with reference counts and rebase workqueues pat=
+ch. This task can be worked on between 3 April and 16 April.
+>
+> Week 2 - 3: Code
+>
+> Implement workqueue for processing smaller/easier data structures. Workin=
+g further on previous contributions.
+>
+> week 4: Evaluating
+>
+> Evaluate the effectiveness of the working queues on a smaller scale and d=
+evise strategies to implement this on a bigger scale.
+>
+> Week 5 - 6: Code
+>
+> Implement workqueue for processing bigger/more complex data structures.
