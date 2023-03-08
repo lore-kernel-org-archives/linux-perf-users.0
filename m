@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DB8C678D5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 08:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7CBC64EC4
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 08:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbjCHISn (ORCPT
+        id S230150AbjCHITC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 03:18:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
+        Wed, 8 Mar 2023 03:19:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbjCHISf (ORCPT
+        with ESMTP id S229610AbjCHISl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 03:18:35 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99D9168A2
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 00:18:19 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536e8d6d9ceso163177267b3.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 00:18:19 -0800 (PST)
+        Wed, 8 Mar 2023 03:18:41 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29A05BC96
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 00:18:26 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-53700262a47so159960107b3.4
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 00:18:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678263498;
+        d=google.com; s=20210112; t=1678263506;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pBjmM/9ZxcY4QPw1OT563S/xkYBM1O7yZVKEKyXWS5g=;
-        b=pxEIKL3PPwlLN25TpuV0eautgYwV0o0aW2grlqQeTcfwjmIZQil6pJYUPMEAxU4Srb
-         7+OwVGY8HDpmBsBFFS+oKiq/0OnJFSw3yr+fvEmx9wepn6Q1dHpQdhJpbeK8gd9PVEHK
-         4FBPWrwDUUadtk0Gdf3tDQ5Ed66djl1JBTDVZxfvgA4m504KL7o9Ra8UxQIuntd+6DlH
-         n5XFdEsf43PQ7RZhOnb6wys4naGaG31RZel3b39NTMP6PcWfVhy7V7ay9lC06kgXCsPt
-         pgrINEKblHASyMrd53gusCR6hN9faCsRSq43QRhNT9OJKncHrUeoxMP+H1ZNWZhsUpSK
-         6ndg==
+        bh=mSc6zWu+gp18coqfyQ+Fs9l1x/Sawfb5L2ZQMm92/Ks=;
+        b=gLWDALHSInxky1q6KNIpnowuYEoAGOGZqYbXoY4UG9TnPphzEsx1yixDt3YiKOyxy1
+         XEKNGbnfoszZmuZYOOn1uPUN942/LROjz6KlDdi+FPTEjr/1QP440MweC2zp02lgEOmC
+         E+S14VlZ8ME5YG8xPOkBs3cPdBsjbW+OEvwKzM8F2J7nGW9pCZwCgUedh8OT31ehxrcM
+         7xAtmVbyAGN6ehrI35e+jjqnzVdIMOjJxe96QrrvDDwF9P2CZffeldPb6ktuDsSAVC63
+         mGgZVK0PXgMVjtv+89zCZeeBEbXau66K9sL9q9vm8KxfN2xQ1SlPCmC/MYAUyQFCay4I
+         m0IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678263498;
+        d=1e100.net; s=20210112; t=1678263506;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pBjmM/9ZxcY4QPw1OT563S/xkYBM1O7yZVKEKyXWS5g=;
-        b=S3crBs8RQQPPpjo4RE7K1z8asaLoe8d0Iff7ZDsHFir0KpDUQ9demQtxZB6MJH0Jhg
-         bgF3wT6ODM+Zb8h8XP6jJSYtgbkMeHk7/lHuS9aPYql8F78S91POFKg8qPVn8vT7A3DT
-         6mD3/jcrOgtNN4CRxW4mPfcWHdDrnOPctAZ3sRWHCqs9hdknBuUVJueTrINEZUyBTPkx
-         Pgi7vkY4pqOHUkHKH1W9CtHWeZSpYBXYs7pJf8ttr2CjDa8OOkGLiSJPaOxMEf90sr/x
-         p0/uGv1/q9Zk190+YyxCtr9MuHQGwML7dWxYGDLwp/YcuIf+e5LCkCcQBiHkdwaLQbbn
-         iq9Q==
-X-Gm-Message-State: AO0yUKWEUKriy0PQok/9hBvNSL7gLekxMT7dN9Y/05jfp7bFU4KKQ53D
-        SfojoxKXnaezZt1V2mQqjQeSMzlCNetW
-X-Google-Smtp-Source: AK7set+9O9Wk5BTCkRajxDbon6ycn1pAYNIVG/NGlctTUcdXrjn2qjwP6WpHtNlyYFMb9Y/pOgb8vp5bjVOq
+        bh=mSc6zWu+gp18coqfyQ+Fs9l1x/Sawfb5L2ZQMm92/Ks=;
+        b=bmauwG6ilhbKlKkYG4y6qE8He8LMLWr8jar18U4Cq4ZbSKnoWZ2HOdC0N5rSqtDEZE
+         bmN5RH+UiyYsWYuA9mEn0vQH5+QmMzQStnBsWWBh9KoP171ofHrw118VPdbXqDS3jt3H
+         NUpWKFcbxvECn4uVuQdETSoTyhMwp7g735+jPvITvrXiZEn0gZdaJazExT3cG/ec7+Pf
+         +oPYToyOcsNF6Q7YcfFKqsEl4FFp+E6ghW6/WXxxOiz/FJ9xlNz6Oq0htsgsz7ac6bLu
+         dNsVS26rA8O4YvY9zx3m9WEHWkFgpAJe1jC4CmQf0OG7TP9acGybh69cz7a8uE0hDQ9a
+         XS5w==
+X-Gm-Message-State: AO0yUKVJU/qwmJ9gDYXh9YZvc6zEDdHs4+qvtIF1M8CZGhY51zx/EWJO
+        /rsIYlaBHiRiMuZF9bdk3Bozua46rC51
+X-Google-Smtp-Source: AK7set/23H5ZOdtcYZfBRDyjidz9RK2zlWG161Fx6tujXY+ah9CAk/M7KPO62g4Wp4xGn09+d51ommDZZNtV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9a99:fbc4:7488:8b5f])
- (user=irogers job=sendgmr) by 2002:a5b:c0b:0:b0:80b:4f92:1623 with SMTP id
- f11-20020a5b0c0b000000b0080b4f921623mr6ybq.370.1678263498380; Wed, 08 Mar
- 2023 00:18:18 -0800 (PST)
-Date:   Wed,  8 Mar 2023 00:17:24 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:e92:0:b0:ab8:1ed9:cfc9 with SMTP id
+ z18-20020a5b0e92000000b00ab81ed9cfc9mr10409623ybr.6.1678263506184; Wed, 08
+ Mar 2023 00:18:26 -0800 (PST)
+Date:   Wed,  8 Mar 2023 00:17:25 -0800
 In-Reply-To: <20230308081731.1887278-1-irogers@google.com>
-Message-Id: <20230308081731.1887278-5-irogers@google.com>
+Message-Id: <20230308081731.1887278-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20230308081731.1887278-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v3 04/11] perf stat: Modify the group test
+Subject: [PATCH v3 05/11] perf evsel: Allow const evsel for certain accesses
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,30 +83,95 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently nr_members is 0 for an event with no group, however, they
-are always a leader of their own group. A later change will make that
-count 1 because the event is its own leader. Make the find_stat logic
-consistent with this, an improvement suggested by Namhyung Kim.
+List sorting, added later to evlist, passes const elements requiring
+helper functions to also be const. Make the argument to
+evsel__find_pmu, evsel__is_aux_event and evsel__leader const.
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-shadow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c  | 2 +-
+ tools/perf/util/evsel.h  | 6 +++---
+ tools/perf/util/pmu.c    | 6 +++---
+ tools/perf/util/python.c | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index ef85f1ae1ab2..eeccab6751d7 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -163,7 +163,7 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
- 			continue;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 51e8ce6edddc..2dc2c24252bb 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3139,7 +3139,7 @@ bool evsel__is_hybrid(const struct evsel *evsel)
+ 	return evsel->pmu_name && perf_pmu__is_hybrid(evsel->pmu_name);
+ }
  
- 		/* Ignore evsels that are part of different groups. */
--		if (evsel->core.leader->nr_members &&
-+		if (evsel->core.leader->nr_members > 1 &&
- 		    evsel->core.leader != cur->core.leader)
- 			continue;
- 		/* Ignore evsels with mismatched modifiers. */
+-struct evsel *evsel__leader(struct evsel *evsel)
++struct evsel *evsel__leader(const struct evsel *evsel)
+ {
+ 	return container_of(evsel->core.leader, struct evsel, core);
+ }
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 814a49ebb7e3..676c499323e9 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -212,8 +212,8 @@ int evsel__object_config(size_t object_size,
+ 			 int (*init)(struct evsel *evsel),
+ 			 void (*fini)(struct evsel *evsel));
+ 
+-struct perf_pmu *evsel__find_pmu(struct evsel *evsel);
+-bool evsel__is_aux_event(struct evsel *evsel);
++struct perf_pmu *evsel__find_pmu(const struct evsel *evsel);
++bool evsel__is_aux_event(const struct evsel *evsel);
+ 
+ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx);
+ 
+@@ -505,7 +505,7 @@ int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
+ 
+ void evsel__zero_per_pkg(struct evsel *evsel);
+ bool evsel__is_hybrid(const struct evsel *evsel);
+-struct evsel *evsel__leader(struct evsel *evsel);
++struct evsel *evsel__leader(const struct evsel *evsel);
+ bool evsel__has_leader(struct evsel *evsel, struct evsel *leader);
+ bool evsel__is_leader(struct evsel *evsel);
+ void evsel__set_leader(struct evsel *evsel, struct evsel *leader);
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 43b6182d96b7..45d9b8e28e16 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -988,7 +988,7 @@ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
+ 	return NULL;
+ }
+ 
+-struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
++struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+ {
+ 	struct perf_pmu *pmu = NULL;
+ 
+@@ -1000,11 +1000,11 @@ struct perf_pmu *evsel__find_pmu(struct evsel *evsel)
+ 			break;
+ 	}
+ 
+-	evsel->pmu = pmu;
++	((struct evsel *)evsel)->pmu = pmu;
+ 	return pmu;
+ }
+ 
+-bool evsel__is_aux_event(struct evsel *evsel)
++bool evsel__is_aux_event(const struct evsel *evsel)
+ {
+ 	struct perf_pmu *pmu = evsel__find_pmu(evsel);
+ 
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 42e8b813d010..ab48ffbb6448 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -83,7 +83,7 @@ const char *perf_env__arch(struct perf_env *env __maybe_unused)
+  * far, for the perf python binding known usecases, revisit if this become
+  * necessary.
+  */
+-struct perf_pmu *evsel__find_pmu(struct evsel *evsel __maybe_unused)
++struct perf_pmu *evsel__find_pmu(const struct evsel *evsel __maybe_unused)
+ {
+ 	return NULL;
+ }
 -- 
 2.40.0.rc0.216.gc4246ad0f0-goog
 
