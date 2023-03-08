@@ -2,161 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEAFC76186
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 14:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B239C678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 18:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbjCHOBh (ORCPT
+        id S229610AbjCHS57 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 09:01:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37714 "EHLO
+        Wed, 8 Mar 2023 13:57:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231887AbjCHOBN (ORCPT
+        with ESMTP id S229718AbjCHS56 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 09:01:13 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB34F31E0A;
-        Wed,  8 Mar 2023 06:00:06 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id az36so9878584wmb.1;
-        Wed, 08 Mar 2023 06:00:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678284005;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ijCIwYAPHXH0JJ+XDQYDNj+O+tMouNaBIO9o2nVcDs8=;
-        b=THbWYOEzoZY1Wq+Hj1c1Z23EGHOERcBr1xS1UYnd58sZJTcj65wRsmdBIpATJ5ZEvi
-         2UAVbYzzXm/CbuXOWd3xUzPdspNUTbXiSmWUcIwdZf2tJHwERpph/iO374/hLyv3thOL
-         SvK0uufuL6YupsR1/whQEb7+NQ4S1vJHyWn8V2qwBJ20rF0EKy9Y95Grl+3dP2JnFPaW
-         7T1p14NXqyYLqGuXhvElEuCQL3j5gA9Lj0e29CuyX1XJSUA634hNOPRicebRONgNJPKX
-         XyBpPzpprlp6ybWCSiTz/Mvf2CyQwxL4FwnnBzp/yTsbvD5CHU4WFnECZPlcfwOfiowB
-         hJYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678284005;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ijCIwYAPHXH0JJ+XDQYDNj+O+tMouNaBIO9o2nVcDs8=;
-        b=4gfywHiKLs4eJcfVm5amaWwkuFfNhbUeVgNz5drpHUhlGOMU5oJ1ZyVNha2v8iJIe/
-         QWMnX0wwWlpH/3Z+mg+bkau75+drtdlvooL0nSr9vHik9hxiHl09ugYTuyrNUfp2p2O1
-         MdGmakCAUcn9RtVg70YoY33YwL7Ztq6rOJS/J9YaxApHG9swchicY2MJmSWczGp0349q
-         /XuzrVlwGVuswkL7kIxcdXQYIWNjRrrrR+S2EwPe276cXvdqr8Wk9ToXVwqkiKvdumM/
-         yZQ+iW5awRfQQ+2ro4dWxPC01rn8Dp3vpQ43U9uKNmHTs/2Cd5kVm0uKA8NZDlzM+dB+
-         jS4g==
-X-Gm-Message-State: AO0yUKUEOi34wugND4buA09P0kga8b/R1JWTsQJn6iMf59hr2WqDJVRL
-        xdaFV4WAjf7iqotp8swSyv4=
-X-Google-Smtp-Source: AK7set/vn8OmbYpYQOF2rZW6B03lZoH7qD0Ni12/ue2KmXWMbAqnSzbBF1zwnu0kRzByWKofxqOH9A==
-X-Received: by 2002:a05:600c:4fc5:b0:3e2:1f63:4beb with SMTP id o5-20020a05600c4fc500b003e21f634bebmr16964014wmq.19.1678284005129;
-        Wed, 08 Mar 2023 06:00:05 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id q8-20020a05600c46c800b003e7f1086660sm21557344wmo.15.2023.03.08.06.00.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 06:00:04 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 8 Mar 2023 15:00:02 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>
-Subject: Re: [PATCH RFC v2 bpf-next 9/9] selftests/bpf: Add
- iter_task_vma_buildid test
-Message-ID: <ZAiU4nk5zKey4p5O@krava>
-References: <20230228093206.821563-1-jolsa@kernel.org>
- <20230228093206.821563-10-jolsa@kernel.org>
- <CAEf4BzbLz5q8NgREMEiOPumSBEhKMh0rDC=1ii8Muvm4Whg59w@mail.gmail.com>
+        Wed, 8 Mar 2023 13:57:58 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9321B4EF8
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 10:57:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678301875; x=1709837875;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=snWVTulzMCdK3OPFce899Z1b3WS4JTgMp6IitGULnYU=;
+  b=KzRjNLP2uHgw0s0ks3cMuwGctXdVqO7UXqRTqZJcGQvanPF0+ybWDepD
+   7DlwE0GJuE6Oupwv19XnvZotiVUWSd/DCdFq38bXT0nQhvazmx7nT/yCo
+   mR5Q3qwXCihsYaPF15KuZ+6Y+kY6kBDggsT82GheadrWz6UZ6kLgyBaSA
+   q+Twd50SouE0tFN1tSud032wpfw6l4VBvy+Arkdi9Ek7LPmKqsPCe5lzd
+   XQNqoPiOq8E40nGeXIGGzTnZMSyM800HQIvGSJzMo3yr/jrGPtiIB5fwu
+   7f+TdKBroafe6lisGAk7wmF0kPYsQpaOX2SDbbTl2AJF17lHa5nw596Ld
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="324564112"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="324564112"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 10:57:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="654457252"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="654457252"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.228])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 10:57:53 -0800
+Message-ID: <921ab358-691d-26b6-a8f2-1f34239b571a@intel.com>
+Date:   Wed, 8 Mar 2023 20:57:49 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbLz5q8NgREMEiOPumSBEhKMh0rDC=1ii8Muvm4Whg59w@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.8.0
+Subject: Re: brstack information with perf-intel-pt?
+Content-Language: en-US
+To:     Iti Shree <itishree1999@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <CAO3P5YQ-BU+fmhQo98SAKdc96qMEsim4nNvMRiBmsW0YSUYjQg@mail.gmail.com>
+ <a1b7c912-1554-a623-6799-32dbd0ead4de@intel.com>
+ <CAO3P5YTf+by5ppR2K44Bw+1h0B2JAZH__oJThS6hepAe5v6LMg@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAO3P5YTf+by5ppR2K44Bw+1h0B2JAZH__oJThS6hepAe5v6LMg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 07, 2023 at 05:32:17PM -0800, Andrii Nakryiko wrote:
-
-SNIP
-
-> > diff --git a/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-> > new file mode 100644
-> > index 000000000000..dc528a4783ec
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
-> > @@ -0,0 +1,60 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include "bpf_iter.h"
-> > +#include "err.h"
-> > +#include <bpf/bpf_helpers.h>
-> > +#include <string.h>
-> > +
-> > +char _license[] SEC("license") = "GPL";
-> > +
-> > +#define VM_EXEC                0x00000004
-> > +#define D_PATH_BUF_SIZE        1024
-> > +
-> > +struct {
-> > +       __uint(type, BPF_MAP_TYPE_HASH);
-> > +       __uint(max_entries, 10000);
-> > +       __type(key, char[D_PATH_BUF_SIZE]);
-> > +       __type(value, struct build_id);
-> > +} files SEC(".maps");
-> > +
-> > +static char path[D_PATH_BUF_SIZE];
-> > +static struct build_id build_id;
-> > +
-> > +SEC("iter/task_vma")
-> > +int proc_maps(struct bpf_iter__task_vma *ctx)
-> > +{
-> > +       struct vm_area_struct *vma = ctx->vma;
-> > +       struct seq_file *seq = ctx->meta->seq;
-> > +       struct task_struct *task = ctx->task;
-> > +       unsigned long file_key;
-> > +       struct inode *inode;
-> > +       struct file *file;
-> > +
-> > +       if (task == (void *)0 || vma == (void *)0)
-> > +               return 0;
-> > +
-> > +       if (!(vma->vm_flags & VM_EXEC))
-> > +               return 0;
-> > +
-> > +       file = vma->vm_file;
-> > +       if (!file)
-> > +               return 0;
-> > +
-> > +       __builtin_memset(path, 0x0, D_PATH_BUF_SIZE);
-> > +       bpf_d_path(&file->f_path, (char *) &path, D_PATH_BUF_SIZE);
-> > +
-> > +       if (bpf_map_lookup_elem(&files, &path))
-> > +               return 0;
-> > +
-> > +       inode = file->f_inode;
-> > +       if (IS_ERR_OR_NULL(inode->i_build_id)) {
-> > +               /* On error return empty build id. */
-> > +               __builtin_memset(&build_id.data, 0x0, sizeof(build_id.data));
-> > +               build_id.sz = 20;
+On 8/03/23 10:49, Iti Shree wrote:
+> Hello Adrian,
 > 
-> let's replace `#define BUILD_ID_SIZE_MAX 20` in
-> include/linux/buildid.h with `enum { BUILD_ID_SIZE_MAX = 20 };`. This
-> will "expose" this constant into BTF and thus vmlinux.h, so we won't
-> have to hard-code anything. BPF users would be grateful as well.
+> Thank you for the reply and the link to itrace page.
 > 
-> No downsides of doing this.
+> On Mon, Mar 6, 2023 at 6:54 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 13/02/23 20:33, Iti Shree wrote:
+>>> Hello,
+>>> I am trying to get brstack information in perf.data with intel-pt
+>>> flag. I am passing following command for the following: perf record -e
+>>> intel-pt// -m, 32768
+>>>
+>>> When I try to check if brstack is present in the gathered data with :
+>>> perf script -F pid, ip, brstack -i pt-perf.data I can only see pid and
+>>> ip information.
+>>>
+>>> I can seem to find branching information with --itrace=b however I was
+>>> wondering if there is any way I can get brstack information decoded
+>>> into perf.data when I use intel-pt flag similar to what I get with
+>>> default perf record?
+>>
+>> You need to use --itrace=li which will synthesize "instructions" events
+>> and add a branch stack.  Note that the period of the instructions events
+>> can be defined e.g. --itrace=li10us for 10 microseconds.  And also the
+>> max size of the branch stack e.g. --itrace=l10i for 10 branches.
+>>
+> 
+> I am wondering if I can get a branch stack on "branches" events Either
+> by some --itrace options (I tried --itrace=Lcr/lcr) or by modifying
+> perf's codebase a bit?
 
-ok works nicely.. thanks
+At the moment the code will not synthesize a branch stack for a
+synthesized branch event. "L" is for synthesizing a branch stack
+for real events (e.g. -e branch-misses) where as "l" synthesizes
+branch stacks only for synthesized instructions, cycles or
+transactions events.
 
-jirka
+So the code would have to be modified.
+
+But how are you consuming the data?  "perf report"?
+
+> 
+>> Typically you need to be aware of decoding errors also, so also add
+>> the 'e' option i.e. --itrace=el10i10us.  There is also 'L' which adds
+>> the branch stack to non-synthesized events (that you may have added
+>> with the -e option).
+> 
+>> Some more information about --itrace for Intel PT is here:
+>>
+>> https://perf.wiki.kernel.org/index.php/Latest_Manual_Page_of_perf-intel-pt.1#New_--itrace_option
+>>
+>> General information and examples for about Intel PT can be found here:
+>>
+>> https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace
+>>
+>>
+> 
+> Another question, not related. I am working quite a bit with perf and
+> Intel PT right now, is there any sort of active IRC channel/slack or
+> discord for more interactive discussions? If not, would it be okay to
+> cc you (or where can I find the right people to reach out?).
+
+It is just fine to email me and cc linux-perf-users@vger.kernel.org
+
+> 
+> Thank you again. Good day!
+> 
+> Iti
+
