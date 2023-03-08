@@ -2,207 +2,293 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95AFC64EC4
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 12:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F1DC678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 12:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231386AbjCHMZi (ORCPT
+        id S231193AbjCHMxz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 07:25:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47638 "EHLO
+        Wed, 8 Mar 2023 07:53:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231442AbjCHMZ2 (ORCPT
+        with ESMTP id S230343AbjCHMxm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 07:25:28 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A242499653;
-        Wed,  8 Mar 2023 04:25:07 -0800 (PST)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3288E7uk012972;
-        Wed, 8 Mar 2023 12:24:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=JA8S8vpEPGSeNKb7VxNYhC1zM0dlGJlC5uhovnQqhKg=;
- b=C3TO0+MAEyvqHFRfY6s755pZ1T6gpo9hGYdf9va3p4K1Ff6azqhCW9a3LtvWJLtKTiAs
- rSdSz4xDFf+C1hFim6iFt88yC7ZZn8+Z+lJreADMN80Mxvv5UxXhKT+82mPKKnnQnYFh
- al8GLYb6eGAVJuNAlehKaxe8oXzjH87HKHmyVoWO48SXM0iaaXrM/GNMZE6lLgkz+7W7
- 1dWWVI6xUkFJlWw9Rmt0KK6MEg1inUYCspaRvjNeZsBxz8R9YfnRvFKlqlC2ucLQeecT
- yFwmN7FZMTznQl8Za5NLg2H7vHpYOSpRIKwtZG9NhXc0/pRL8UBRZ/VWUUrQWPwIKwQS Ug== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p5nn949d3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Mar 2023 12:24:11 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 328BDiV1036526;
-        Wed, 8 Mar 2023 12:24:10 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2047.outbound.protection.outlook.com [104.47.73.47])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p6g45cx35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Mar 2023 12:24:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XQZ3L1DgK7HelbBnsacfl2xGzLxm42SWURpWrEZpuyNukpXmzddqmYYa9Gy8vjfeswYN4swnaQRHusW1bKAAXFG+iClg/9PQvkFFQ4p8kmi9GSJXi58HHS4MiXFONSap48r8ZlJpS9/34sRZO8dN8S1TDHqrK/WUhLGV2wlBr8pfGY6+sHsUT7o1u9n11e24dgPUbOWRr2dTXASeR6jrd+Jd94K3WP4pB/MALDVRwqqq3YoCPhdOZUylMUqKe4nEjgtA78L2JwhnA5m/KigrR+7kINHFcGLmOAxEEytUs+npXk9qC3InOJKlU+KfcgEb8VKOLKjOBVCoTVYUuBkTug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JA8S8vpEPGSeNKb7VxNYhC1zM0dlGJlC5uhovnQqhKg=;
- b=Imav6R4ij6e0CTdPqJ+WPDf7AvF/oytzzrDAjyho0XGy5lGKxrjgklLDP7iRaOdZ1NDW4z9qaCf3XZRRrMOoDZxsJiZTBxNdysSXDxSqfiOiPr1uNTuCcQn4F1i21ZFlFZpW0GdWc1jrPsIYvbctFW3jemZE0KTiuJnlr7Jycz/sFgr2RFZqGqrIIeZm6c1XfGF02EQWF1jVW/gpVy8FQY6XLMekQN3hbXmISWZnoR8NwCdtjHgfCdu6iEN7h5jIQkTIf+ZshqtcBhiG84VFQl+Q7056ZWM7rId5eVjFyzUyMXqsWCemGfnP20CfrTX56XyuIN5nt2CnfRJHGrq9mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JA8S8vpEPGSeNKb7VxNYhC1zM0dlGJlC5uhovnQqhKg=;
- b=siThQWx29ez5oGN6kGMEdHhpXtMTunyc3bsDKpuTFywOrOR3mQOeo/IYUrBV/QHEUnaPKzB3o3SEJXwVjDgTSPb7hasI+HRh79hiGk3Wj8zviv7KU91DMxXH/sBCzUxhbVj7sRnp5e0kPOBT8ORKfpB6pX0StZWKB8OwjcNDN4Y=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by BLAPR10MB5172.namprd10.prod.outlook.com (2603:10b6:208:30f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.18; Wed, 8 Mar
- 2023 12:24:07 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::7276:bc4c:17a0:7267]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::7276:bc4c:17a0:7267%4]) with mapi id 15.20.6178.017; Wed, 8 Mar 2023
- 12:24:07 +0000
-Message-ID: <2e284b0a-1ccb-dcaa-91bf-56dd9428ead8@oracle.com>
-Date:   Wed, 8 Mar 2023 12:24:01 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v3 01/11] libperf evlist: Avoid a use of evsel idx
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>, Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20230308081731.1887278-1-irogers@google.com>
- <20230308081731.1887278-2-irogers@google.com>
-Content-Language: en-US
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20230308081731.1887278-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0238.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:350::11) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        Wed, 8 Mar 2023 07:53:42 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F7FB4820;
+        Wed,  8 Mar 2023 04:53:40 -0800 (PST)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 328BCH2J017371;
+        Wed, 8 Mar 2023 12:53:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=BaOHCIvZggeecOWNBSlSSkIxgYUdRP4iC0BWfBmoQF0=;
+ b=rTXwCOdguD3cwN7uQGHGMSKS+U0t3RDUzlfRCj2QtDTqM7EQEV+2q91+eLi6xr+JQnaw
+ yby7qU8UxRfDkBAX1lrFA+bwPQHrwh4/OZJPA2ZjgFe9ig2emzfja2Y30kTK0fdh/6A3
+ eru6DOY4ZEzlOwKka1spEqKTlTRJQC5Nk1WSVlPiAn5DgchZYuyQG6Kuwr6RZvMdmGt5
+ +9gf7HDmRfUzrls+x2wAWItaz+nZupRuCCVzTblLWcz0VOsMT6TOlP8p/zAWxwSDMdGZ
+ k98cD85812GGFXxhp87L7wnfEvi3AlyE32VQiJB/FZIwyZYfioc8cobIwxp3/B2ZWSz6 8A== 
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6s9a26d8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Mar 2023 12:53:37 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3280dl7e003274;
+        Wed, 8 Mar 2023 12:53:35 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3p6g0pgk2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Mar 2023 12:53:35 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 328CrVcf35717584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Mar 2023 12:53:31 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8C4220043;
+        Wed,  8 Mar 2023 12:53:31 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6DF4620040;
+        Wed,  8 Mar 2023 12:53:31 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Mar 2023 12:53:31 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf list: Add PMU pai_ext event description for IBM z16
+Date:   Wed,  8 Mar 2023 13:53:26 +0100
+Message-Id: <20230308125326.2195613-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|BLAPR10MB5172:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c9da876-7202-4aa5-411c-08db1fd00390
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: l0ge75sZ9DHTp8JmRttUiwn3vHzS/pN57b8Su2sBlLTRF9fjtodp3tIgRsxqc/BEJj8XiMuulS2aQUieyeBUh1cJYrEIrYi+6YHauyLXeUJlJ07IWSfPVPSkt3bFPQaQgtElxh674InmSQnGf0hz3uTwMq+08NWQcpO1KbVNjXVzQrOFc4z+le+S+/kzfzxJFG+IRLGDF8GNLAVjKV+Ax6ipfOYRfgC32DhDtcUtHqMJqKtUizixQqxZDBeVp6SkgnL+OZ5O0PdhWJjtkUFm1IILzuJmxuTCbTVkeuc5zxY4C5BfY2S7Cwr7JhwmIYcwVbXrqIhBadBvIJoJiLmtv3AYuP+qINurHxMrP00h89sp3z2OenFBOxn8VYr/VfWm0ettdk5sOYaXZGDhvVIRapwnmIZvBoGJtJL00OKAqa0zlF1bd9CWvgxHP9FvxkVHp0Y27W8zWid/T3ZOApcPl6PzXnenNzpSIFB7/38qQG/gqnFeZVYoT/Tjls7oyFQMkto2FBkLbY7MfjIiChEC5wEGPfsLNVnzslTZwww9RPwjLFbb3eX8Xh6zdpXLTvNgTgP2cUFYoT+oq337teN7HwryxUMJDqPhJxIPcrfNEdYj11IxON1x1YG9WO3sAIb9X3WRr8zXlXeGtpPKmxXsoknd8Qkuto+yN+q0WlSg1uQXBRFBrzJADruoJNsIeAXxhyq5Mm4DXKcwOpjw+Z7K6AFUmz5aHRtYET/tF8v4Ut3mq18QpXqitfj4YXr0X+TH
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(366004)(346002)(396003)(376002)(39860400002)(451199018)(31686004)(31696002)(110136005)(316002)(558084003)(36756003)(921005)(38100700002)(86362001)(6512007)(6506007)(53546011)(83380400001)(2616005)(26005)(6666004)(186003)(6486002)(36916002)(5660300002)(478600001)(7416002)(41300700001)(8936002)(4326008)(66946007)(2906002)(8676002)(66556008)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QW9DaGtuZ3FjcFpGOXNQZHlsbytOSHpscjVVRmpmaVMxenJTVUJQaVViaExQ?=
- =?utf-8?B?VnFUdWpveXh3TFpVRUFmbGtzN0NJWjZpdjhMdVRvN2gxdlpneWN5a1dQMTJh?=
- =?utf-8?B?NjBQR2RKNnp5cGE4K1dtQmJnc1VleDFTRTRZbzZLNUpzU2pvS3Y4UGRHbC9t?=
- =?utf-8?B?YStRR2tRV0tVM2lMZ2NSdmk0aUVGNC9iOXhnS3YzSFozaDJvUnlKNzN4dFUx?=
- =?utf-8?B?UFRvVG11Tyt2NnA1YmVyWlNheHBSSGFPb1F1T3BOVG5pVklqblY2MDVUdTVs?=
- =?utf-8?B?bmIzU0U3NDBkQkI2OUFuNjlMb2s3ZS9tcWI1eHpFSkpzZFFPOEh3TjcreEw4?=
- =?utf-8?B?UGdna1hZeUJFWmVzei9DVnpRTS9XeTN2d0xOSGYvdU05UTNWYytBelpyRVhM?=
- =?utf-8?B?bmJsbGdpbjZBSU8vZ2l4U25kNmY0a09wdC9xVlJPYkcva2tISEdxdUZ2NTF1?=
- =?utf-8?B?ZVNwVVFBTVB4L3hDM1ZUOWFPNGZ5UGw0UnhCVmFPRUhPVUNWZ3VFMUZFdW1H?=
- =?utf-8?B?VEhoYklpTFNma3I2ZTVjT0xqbkt0ZE9pZ3RZbldZSXFocGduZjJvRm1hRjlD?=
- =?utf-8?B?R2FGaWF6Uld3bVhtSEZEalJoZXlJVVFyWGdKTDhGUmZZM3ZlYkw4a1NsRFlS?=
- =?utf-8?B?ajdvS2VkeVAxSFJhV25ydzVqT2tEMjRPWUJDMlUxQVNlRWpLanY3czUwMk9P?=
- =?utf-8?B?WlhOUDg2UE5DaUtaaUJYdTEzTVdGbDFKdzVtNk9YM0VTUVdTVTVYRVU3TnJN?=
- =?utf-8?B?UTZJVjZ4TFEzOVZlSGxUNGdEMEZvcW9ld1g2ZFRoWmdVdUYycHplQWJheDV0?=
- =?utf-8?B?SDVWSUlVQnFOMk5QSTZJeVRKOHNoaEpYcGo4RWdNcVh3bVowRWJ1UVYzenhX?=
- =?utf-8?B?TmZ3N1pNUjV2U3NWcnNTMk9IY2F6WnZYcXR3TU85R3k4Z1dRZzRVK3JJb1JI?=
- =?utf-8?B?T3VVSHNQUFBNWVU3MTF3bFowOGxSdG56SHV3dEJmT2hUaThOLzNHVm4vYTdL?=
- =?utf-8?B?OW5XVmJ3QW9RMU1QSDFrZkUzSTgzNVMyUDU0RFpxV1JFQS9pU2F6a3RiMGNy?=
- =?utf-8?B?VG4rOFl0dVJOV2Z4U01MdFlKVUlNbXNYQ2dCWnFuYzdLdGRoWDhIWmRHL25l?=
- =?utf-8?B?dFhEdnJyemJrT1JVZk1xOVgyc2cyZVRQRC9LT3V0UHFPYkN5em1tZjk0QW9F?=
- =?utf-8?B?eHdXVTl1NFpENWt3NkRMd1NORUNTRVNUQ0cxTmQyZXFCVmE2MnpaajlQTk5i?=
- =?utf-8?B?OHMxS0dQVlZDTUpyNEJ1Zkx6cTBBck9aenhmVjNtalhTSC9rMVZJMTdrMzl0?=
- =?utf-8?B?UTZrUktWblNMam1hQVh0bHhqeUpyOFBSSVFTc09iNXR4dEprZFpUNCtnV1F5?=
- =?utf-8?B?a1VGWGxQb05sVWlLMUJyTkYyYnBQT0cra2xENVpkNDBySFh4K0RITkY2RFdG?=
- =?utf-8?B?eVVOSzBIODFLcjMrQ2tSRXMyNkt0VWlXNkRzWklvOC94aDk1UGZ0ay9IL0tm?=
- =?utf-8?B?WUR3enREakYwZ2pTWWs0WitRcEZwaGttSmdmY0dwcUtFYWdwazM1UlVHM2t0?=
- =?utf-8?B?WEs5blVsSmxKSk1kY2xuYnRIUWhKRjJESVRzS0RmbG01dFRuLzJVUTdvd3dC?=
- =?utf-8?B?Tmw5RmJRdTV6ajN5S1FjN01WU0lZVnpyUG14VDNzMHpMMDdvbWtMdmNER3FP?=
- =?utf-8?B?bjNZZnQxYU5xMkpJVWtGU2RacUFoSmRVVnhna2tnUno3czAvS0ZXSkt3b3dx?=
- =?utf-8?B?UGx1OHpRUzg2VEhRS2QrenZhekhBRVFkeWM0U0dmZjJ2K2ZEbFFtdldnT1Ev?=
- =?utf-8?B?YStvc1pwRTBOT0YxeEF5ajBiTUV1eG9oVVU0bGtGc05lY1NOekdiSlZabXVw?=
- =?utf-8?B?SFZHVTZXck9IOURLTUtMd2ZYd3VpTjBuN2I1dnVDYXVzUUcwSXVvL1g0YWo2?=
- =?utf-8?B?b2dxNEh1b2N1dnhScjNIcEpBMHpwYi9tb29MR2hGd2hPK2V1SlpsbFNWNFhT?=
- =?utf-8?B?YXQ2NUs1STdoU2JERFQ4bkIveFV1WWNDbFJMK3V3ZVZzQVJPVmoxWjA4WHRS?=
- =?utf-8?B?MEFKQnFDV0hvaU43NDhJQ3dRbEVvL1VoTW5nUXlNMmw5UXRjcWI5a2tOekEv?=
- =?utf-8?B?Mi9keXRoNzVDRGphR2NnNjF0M3JFTmg3WFg1TEo1QkJLVnB3eERBUUVDTWhm?=
- =?utf-8?B?dkE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?SVRUMVBRL3huYjNoZ0RxNEZ0aTlKUHd2NE5DQ1FsTzl0OUZQTklTSFdtY1du?=
- =?utf-8?B?OFpQeVNkQjV5eWNlT0xyN2w1TG5lb3pTN2ExRU1Iemt4bksxSWE1MmtWYkUw?=
- =?utf-8?B?UXFuSW1mZ1k3TThiWmpjdXRhUlRwYTZrYno3QlBQd3B2OWI2SVJmdGtqUTJG?=
- =?utf-8?B?VDFveVVOYVRUby9XR0Y0YXZLQ1dPU0dMZVE4M3QrSnR4ekYybXBLVDV3eVYr?=
- =?utf-8?B?K0h5L1hKeGJIQ0NhcEhFS1VZbjZVYzlYOGc5d2dQdW1XbitobFg1Nm9qclMw?=
- =?utf-8?B?ZmUrRlNKREZiZmljcnVCSGordnNXcE5kV242N2tsM1ZRUFNDam5sL2o0VHRn?=
- =?utf-8?B?QTFNMGlkUUlZQVQ0OS9DRWNHcUR2QnhSdXBCSCtNbUFBNFgvQVg2VVpWUWJ5?=
- =?utf-8?B?Wmw5OXp2Qk5KSzZ1cXl5clFyT0Z6U3ZOdU9tYVd3OHJzRVFsMkJQMlJhYk5m?=
- =?utf-8?B?RmRHM05GMExOZU5jdUwvdllNZnJsamV1MndQMHZhOUJpQmJKbFJPNkg1dlFt?=
- =?utf-8?B?OFJQWm5hcVRxWmNobUV2ZzdTTUJZU3ZEMURmL0lDVDE0d3MxYjBmUUdsQXVj?=
- =?utf-8?B?eGNGS3BsWWJxN0FzL3pKSlBUQkJOaWtXMk9uZlo2NkF2Rk91VHRrUHMxWU1J?=
- =?utf-8?B?STV3Myt5OGVKclRVL25oUEtsaUZNdlVIZFBXZUxPVUpZKzRrc2ZSdjJpcEtE?=
- =?utf-8?B?Wm9ZYkZLd2tGYjlqRTloSzY4NFJPdjJFdmdMOGlXeE9DYXVOMnJRUDVxTnlH?=
- =?utf-8?B?QmRZWDJ6KzZPU2JqMzUxajEvSHVnY1ZUOFFFaHhlZzlZQTE5Q3U3bmNrL1po?=
- =?utf-8?B?aklDOVdoQjVFcHFiVENUK0RtK0tlNmx1bktSaTVEWmJZNjVGK1NpRS9kTm44?=
- =?utf-8?B?d0psVmxDZGRuT1RiTWtZc3NsQk52Nzk0bHlIQW44bXdKcnZzOXE4RGE0V25G?=
- =?utf-8?B?MFN1OENGWklsV2ZvTXU1eWxBRXZxZFF1L29pUGxxb0VmODUwMWsvN09TU1pX?=
- =?utf-8?B?S2xIeHBWMW9xOGNFZU83SkZUY0RCa2NnMkJQK284eHVjV3ZiWnJFdkJFaUZk?=
- =?utf-8?B?b3IvYnhvbjYyNWtGelllRXhjOFJ6aTZaQTJ2RVB5Z0RzejJJekRrQUltOW1O?=
- =?utf-8?B?UXlIMlZDbmY3RHFNYmtyWE5UT1Q0QUpvOHZXdHhKK290U3lWT3JEY3BPQkRF?=
- =?utf-8?B?RHpUUitDNHRmZURBdTRqa3JsdzlScEprb1o5U1RCSngydFhrN0MzNXpubHFN?=
- =?utf-8?B?NEJURDN4a1o2YmUyL0JpTTRxYVkxUTRHRnhVMDBJam9NQUdENzNYVEY2Wml1?=
- =?utf-8?B?SmJ1M1VNaXlKUXlqTUV6RTZCZDI3Nis3bWVXMGtmVmQ3M2taek40MjhJMitN?=
- =?utf-8?B?NTZiWXJPR2VSQWVCQTR1VThzRXlaK200WDFUY3pzM1RmTFdNSStSdWtvQU5w?=
- =?utf-8?B?N0FEd21ZRlV2NlIxL1NxTTRJMnJreW1Qdy84TXkzYlJTNnQ4M0RxNmQ1SWhi?=
- =?utf-8?Q?kdHI1wfIh9JssDB4lBBJ7rz5ZCM?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c9da876-7202-4aa5-411c-08db1fd00390
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2023 12:24:07.8375
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ST03xyvO3vCul/6HihZQ6VG/FMMkbalsl2SO5oPYlijlqj/Oh1OmozOZ7+R65dcMexLGbSjrrdoDnupD58Z/sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5172
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: RpeAmozW15tdJB27fTMt0yE2cwFs2tVB
+X-Proofpoint-GUID: RpeAmozW15tdJB27fTMt0yE2cwFs2tVB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-08_07,2023-03-08_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303080106
-X-Proofpoint-GUID: z37wzl_9Ms5bC3UgI3ICsnD01UsKo5Gv
-X-Proofpoint-ORIG-GUID: z37wzl_9Ms5bC3UgI3ICsnD01UsKo5Gv
+ definitions=2023-03-08_08,2023-03-08_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 clxscore=1011 impostorscore=0 mlxlogscore=853
+ priorityscore=1501 suspectscore=0 mlxscore=0 spamscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303080108
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 08/03/2023 08:17, Ian Rogers wrote:
-> Setting the leader iterates the list, so rather than use idx (which
-> may be changed through list reordering) just count the elements and
-> set afterwards.
-> 
-> Signed-off-by: Ian Rogers<irogers@google.com>
+Add the event description for the IBM z16 pai_ext PMU released with
+commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
 
-Reviewed-by: John Garry <john.g.garry@oracle.com>
+The document SA22-7832-13 "z/Architecture Principles of Operation",
+published May, 2022, contains the description of the
+Processor Activity Instrumentation Facility and the NNPA counter
+set., See Pages 5-113 to 5-116 and chapter 26 for details.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 178 ++++++++++++++++++
+ tools/perf/pmu-events/jevents.py              |   1 +
+ 2 files changed, 179 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+new file mode 100644
+index 000000000000..7ccbded95dc9
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+@@ -0,0 +1,178 @@
++[
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6144",
++		"EventName": "NNPA_ALL",
++		"BriefDescription": "NNPA ALL Sum of all non zero counters",
++		"PublicDescription": "Sum of all non zero NNPA (Neural Networks Processing Assist) counters"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6145",
++		"EventName": "NNPA_ADD",
++		"BriefDescription": "NNPA ADD function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6146",
++		"EventName": "NNPA_SUB",
++		"BriefDescription": "NNPA SUB function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6147",
++		"EventName": "NNPA_MUL",
++		"BriefDescription": "NNPA MUL function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6148",
++		"EventName": "NNPA_DIV",
++		"BriefDescription": "NNPA DIV function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6149",
++		"EventName": "NNPA_MIN",
++		"BriefDescription": "NNPA MIN function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6150",
++		"EventName": "NNPA_MAX",
++		"BriefDescription": "NNPA MAX function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6151",
++		"EventName": "NNPA_LOG",
++		"BriefDescription": "NNPA LOG function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6152",
++		"EventName": "NNPA_EXP",
++		"BriefDescription": "NNPA EXP function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6153",
++		"EventName": "NNPA_IBM_RESERVED_9",
++		"BriefDescription": "Reserved for IBM use",
++		"PublicDescription": "Reserved for IBM use"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6154",
++		"EventName": "NNPA_RELU",
++		"BriefDescription": "NNPA RELU function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6155",
++		"EventName": "NNPA_TANH",
++		"BriefDescription": "NNPA TANH function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6156",
++		"EventName": "NNPA_SIGMOID",
++		"BriefDescription": "NNPA SIGMOID function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6157",
++		"EventName": "NNPA_SOFTMAX",
++		"BriefDescription": "NNPA SOFTMAX function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6158",
++		"EventName": "NNPA_BATCHNORM",
++		"BriefDescription": "NNPA BATCHNORM function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6159",
++		"EventName": "NNPA_MAXPOOL2D",
++		"BriefDescription": "NNPA MAXPOOL2D function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6160",
++		"EventName": "NNPA_AVGPOOL2D",
++		"BriefDescription": "NNPA AVGPOOL2D function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6161",
++		"EventName": "NNPA_LSTMACT",
++		"BriefDescription": "NNPA LSTMACT function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6162",
++		"EventName": "NNPA_GRUACT",
++		"BriefDescription": "NNPA GRUACT function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6163",
++		"EventName": "NNPA_CONVOLUTION",
++		"BriefDescription": "NNPA CONVOLUTION function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6164",
++		"EventName": "NNPA_MATMUL_OP",
++		"BriefDescription": "NNPA MATMUL OP function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6165",
++		"EventName": "NNPA_MATMUL_OP_BCAST23",
++		"BriefDescription": "NNPA NNPA MATMUL OP BCAST23 function ending with CC=0"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6166",
++		"EventName": "NNPA_SMALLBATCH",
++		"BriefDescription": "NNPA SMALLBATCH OP function ending with CC=0",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6167",
++		"EventName": "NNPA_LARGEDIM",
++		"BriefDescription": "NNPA LARGEDIM OP function ending with CC=0",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6168",
++		"EventName": "NNPA_SMALLTENSOR",
++		"BriefDescription": "NNPA SMALLTENSOR OP function ending with CC=0",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6169",
++		"EventName": "NNPA_1MFRAME",
++		"BriefDescription": "NNPA 1MFRAME OP function ending with CC=0",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6170",
++		"EventName": "NNPA_2GFRAME",
++		"BriefDescription": "NNPA 2GFRAME OP function ending with CC=0",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	},
++	{
++		"Unit": "PAI-EXT",
++		"EventCode": "6171",
++		"EventName": "NNPA_ACCESSEXCEPT",
++		"BriefDescription": "NNPA ACCESSEXCEPT OP function ending with CC=0",
++		"PublicDescription": "NNPA function with conditions as described in Common Operation"
++	}
++]
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 2bcd07ce609f..b20d06fcc358 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -246,6 +246,7 @@ class JsonEvent:
+           'CPU-M-CF': 'cpum_cf',
+           'CPU-M-SF': 'cpum_sf',
+           'PAI-CRYPTO' : 'pai_crypto',
++          'PAI-EXT' : 'pai_ext',
+           'UPI LL': 'uncore_upi',
+           'hisi_sicl,cpa': 'hisi_sicl,cpa',
+           'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
+-- 
+2.39.1
+
