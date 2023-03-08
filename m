@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37C2C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 08:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DB8C678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 08:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbjCHIS0 (ORCPT
+        id S230107AbjCHISn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 03:18:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34180 "EHLO
+        Wed, 8 Mar 2023 03:18:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230095AbjCHIST (ORCPT
+        with ESMTP id S230119AbjCHISf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 03:18:19 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9546E80921
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 00:18:11 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id m202-20020a2526d3000000b00ae90d688ab4so16844283ybm.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 00:18:11 -0800 (PST)
+        Wed, 8 Mar 2023 03:18:35 -0500
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99D9168A2
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 00:18:19 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536e8d6d9ceso163177267b3.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 00:18:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678263490;
+        d=google.com; s=20210112; t=1678263498;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sLp16thdoL8gYxkkfhRZgItEDw/VHlYRuSQJ2A/KjWw=;
-        b=EfW+9a47KBIdziTM7x7a2ANP1WlRWe9rDGoGTPnoi9oLeCZbdrYqEUBp/iMW01A+HW
-         O6ai2+XCJRNw/O1LxcmNlCxYhzfwqZM8q7gVlkWJYtboZ3LosTlkrP3/3/RutYVouUHG
-         IT5nKQq6fKEZXQBj3nBbFiJTmYv64TUl6SeNfOrqrMzj6QVE8c9AK5gPOH+MV2bHeFJe
-         kWrTlcYhqi7GPk2+ExxcE26UsPYaaSBeo5SYQm3eHV9cB3R1dTON3A6BwHQMWbHfyQyd
-         uoiqH8jEKGJCwdAbTz81jSEfW9eb5PszlU0MMLkKFXZAPg1eJvWeRoVbShcJftGbyBOQ
-         fe1Q==
+        bh=pBjmM/9ZxcY4QPw1OT563S/xkYBM1O7yZVKEKyXWS5g=;
+        b=pxEIKL3PPwlLN25TpuV0eautgYwV0o0aW2grlqQeTcfwjmIZQil6pJYUPMEAxU4Srb
+         7+OwVGY8HDpmBsBFFS+oKiq/0OnJFSw3yr+fvEmx9wepn6Q1dHpQdhJpbeK8gd9PVEHK
+         4FBPWrwDUUadtk0Gdf3tDQ5Ed66djl1JBTDVZxfvgA4m504KL7o9Ra8UxQIuntd+6DlH
+         n5XFdEsf43PQ7RZhOnb6wys4naGaG31RZel3b39NTMP6PcWfVhy7V7ay9lC06kgXCsPt
+         pgrINEKblHASyMrd53gusCR6hN9faCsRSq43QRhNT9OJKncHrUeoxMP+H1ZNWZhsUpSK
+         6ndg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678263490;
+        d=1e100.net; s=20210112; t=1678263498;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sLp16thdoL8gYxkkfhRZgItEDw/VHlYRuSQJ2A/KjWw=;
-        b=bflrrH8uNwCflKuLs+5gR5yiSLclPRi0frCXwgnUeFMIX1AZvIUDdBujpp11d6C/Rt
-         B2xfGhNd5t+Ulvl2R8YCXWNCinrNr2QZwCpN4ZSmLJyG6vvu4ievhg38dmAcpqsLrF1u
-         PVlDWL0C4wac+//1jhYJ1wMrFKS2XIdsKQJEUJno3Xkwc+hN+StvLMWK/DiH3C9dtaay
-         jyQPnvPa55Q5oO+wO4bCjYzgfdsptMQnDfcjCvPjocwI4nRY9N9LJkHa8x4s66OdUOEN
-         UN+3hxPQkbDz2VUcflbnBAh/zWQV/wTWNBHIN6egfLqxq2ZD8T69jVGO21/pO0+KW2W8
-         ImOQ==
-X-Gm-Message-State: AO0yUKWgyW1jKC4fuRUWAWMUKPnUDs0lbgxrF3EkEVCTapgi6zo5SsDj
-        QN0Fwt/nSG2OH1jcVnCcJjS1qw9HDnbd
-X-Google-Smtp-Source: AK7set/r6knPTbdZZ65XOastihxReoqy7J+DgQeV11VF8N93mA6AZ2m+HNStQQOI5vnPLMDQCu62VB0J1Apk
+        bh=pBjmM/9ZxcY4QPw1OT563S/xkYBM1O7yZVKEKyXWS5g=;
+        b=S3crBs8RQQPPpjo4RE7K1z8asaLoe8d0Iff7ZDsHFir0KpDUQ9demQtxZB6MJH0Jhg
+         bgF3wT6ODM+Zb8h8XP6jJSYtgbkMeHk7/lHuS9aPYql8F78S91POFKg8qPVn8vT7A3DT
+         6mD3/jcrOgtNN4CRxW4mPfcWHdDrnOPctAZ3sRWHCqs9hdknBuUVJueTrINEZUyBTPkx
+         Pgi7vkY4pqOHUkHKH1W9CtHWeZSpYBXYs7pJf8ttr2CjDa8OOkGLiSJPaOxMEf90sr/x
+         p0/uGv1/q9Zk190+YyxCtr9MuHQGwML7dWxYGDLwp/YcuIf+e5LCkCcQBiHkdwaLQbbn
+         iq9Q==
+X-Gm-Message-State: AO0yUKWEUKriy0PQok/9hBvNSL7gLekxMT7dN9Y/05jfp7bFU4KKQ53D
+        SfojoxKXnaezZt1V2mQqjQeSMzlCNetW
+X-Google-Smtp-Source: AK7set+9O9Wk5BTCkRajxDbon6ycn1pAYNIVG/NGlctTUcdXrjn2qjwP6WpHtNlyYFMb9Y/pOgb8vp5bjVOq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9a99:fbc4:7488:8b5f])
- (user=irogers job=sendgmr) by 2002:a25:e90b:0:b0:9fc:e3d7:d60f with SMTP id
- n11-20020a25e90b000000b009fce3d7d60fmr7943980ybd.5.1678263490719; Wed, 08 Mar
- 2023 00:18:10 -0800 (PST)
-Date:   Wed,  8 Mar 2023 00:17:23 -0800
+ (user=irogers job=sendgmr) by 2002:a5b:c0b:0:b0:80b:4f92:1623 with SMTP id
+ f11-20020a5b0c0b000000b0080b4f921623mr6ybq.370.1678263498380; Wed, 08 Mar
+ 2023 00:18:18 -0800 (PST)
+Date:   Wed,  8 Mar 2023 00:17:24 -0800
 In-Reply-To: <20230308081731.1887278-1-irogers@google.com>
-Message-Id: <20230308081731.1887278-4-irogers@google.com>
+Message-Id: <20230308081731.1887278-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230308081731.1887278-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v3 03/11] perf record: Early auxtrace initialization before
- event parsing
+Subject: [PATCH v3 04/11] perf stat: Modify the group test
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -84,89 +83,30 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This allows event parsing to use the evsel__is_aux_event function,
-which is important when determining event grouping.
+Currently nr_members is 0 for an event with no group, however, they
+are always a leader of their own group. A later change will make that
+count 1 because the event is its own leader. Make the find_stat logic
+consistent with this, an improvement suggested by Namhyung Kim.
 
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/auxtrace.c | 17 +++++++++++++----
- tools/perf/builtin-record.c         |  6 ++++++
- tools/perf/util/auxtrace.h          |  2 ++
- 3 files changed, 21 insertions(+), 4 deletions(-)
+ tools/perf/util/stat-shadow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
-index 3da506e13f49..de1e4842ea2e 100644
---- a/tools/perf/arch/x86/util/auxtrace.c
-+++ b/tools/perf/arch/x86/util/auxtrace.c
-@@ -15,6 +15,19 @@
- #include "../../../util/intel-bts.h"
- #include "../../../util/evlist.h"
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index ef85f1ae1ab2..eeccab6751d7 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -163,7 +163,7 @@ static double find_stat(const struct evsel *evsel, int aggr_idx, enum stat_type
+ 			continue;
  
-+void auxtrace__early_init(void)
-+{
-+	struct perf_pmu *intel_pt_pmu;
-+	struct perf_pmu *intel_bts_pmu;
-+
-+	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-+	if (intel_pt_pmu)
-+		intel_pt_pmu->auxtrace = true;
-+	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-+	if (intel_bts_pmu)
-+		intel_bts_pmu->auxtrace = true;
-+}
-+
- static
- struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
- 						    int *err)
-@@ -26,11 +39,7 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
- 	bool found_bts = false;
- 
- 	intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
--	if (intel_pt_pmu)
--		intel_pt_pmu->auxtrace = true;
- 	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
--	if (intel_bts_pmu)
--		intel_bts_pmu->auxtrace = true;
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (intel_pt_pmu && evsel->core.attr.type == intel_pt_pmu->type)
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 8374117e66f6..a0870c076dc0 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -3940,6 +3940,10 @@ static int record__init_thread_masks(struct record *rec)
- 	return ret;
- }
- 
-+__weak void auxtrace__early_init(void)
-+{
-+}
-+
- int cmd_record(int argc, const char **argv)
- {
- 	int err;
-@@ -3985,6 +3989,8 @@ int cmd_record(int argc, const char **argv)
- 	if (err)
- 		return err;
- 
-+	auxtrace__early_init();
-+
- 	argc = parse_options(argc, argv, record_options, record_usage,
- 			    PARSE_OPT_STOP_AT_NON_OPTION);
- 	if (quiet)
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 29eb82dff574..49a86aa6ac94 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -457,6 +457,8 @@ struct addr_filters {
- 
- struct auxtrace_cache;
- 
-+void auxtrace__early_init(void);
-+
- #ifdef HAVE_AUXTRACE_SUPPORT
- 
- u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
+ 		/* Ignore evsels that are part of different groups. */
+-		if (evsel->core.leader->nr_members &&
++		if (evsel->core.leader->nr_members > 1 &&
+ 		    evsel->core.leader != cur->core.leader)
+ 			continue;
+ 		/* Ignore evsels with mismatched modifiers. */
 -- 
 2.40.0.rc0.216.gc4246ad0f0-goog
 
