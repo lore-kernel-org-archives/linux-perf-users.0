@@ -2,258 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B465AC6FD1E
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 08:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F79AC678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 08:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbjCHIUS (ORCPT
+        id S230052AbjCHIuR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 03:20:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        Wed, 8 Mar 2023 03:50:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbjCHIT0 (ORCPT
+        with ESMTP id S230370AbjCHIuC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 03:19:26 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72261AFB92
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 00:19:11 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536b7eb9117so163299587b3.14
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 00:19:11 -0800 (PST)
+        Wed, 8 Mar 2023 03:50:02 -0500
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8079CFF8
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 00:50:01 -0800 (PST)
+Received: by mail-ot1-x32b.google.com with SMTP id 32-20020a9d0323000000b0069426a71d79so8581956otv.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 00:50:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678263550;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x5MPo35xGT8I5no97e54JFoAV8IlgxfgBAbMEiQkE8U=;
-        b=e4ESgZ8ToAIyqrq8dv/6NSbnKuVRTmohRuk7EygZNRLdy/dMiSTxYdYKvas6dsWze6
-         VHQFO/oAV/sZUgNJ5NatjUIu83tNhajiPfaMjzY5PIhlw5Xiggq3Q3EQ66K1A2OhNbw5
-         8ABZpeAslQ4uHqXddYwS4vN7+wuw0b+/z1CcZPIUMxTEdtBsnm3jePax3mkUtUkAZOu3
-         wd3p4dq70Nj/oCZ5hKY1OdBRb2SbtFjwwDpLq6WSfTrs5qWr7u8OJ9zmgY+hi56E+Lvy
-         FQ7lj0RT0C10phT40hj3IrHy4vfRqK6ArEgQVEUXjPhGra33pfdasIoaYRfseS5roSzp
-         5P4g==
+        d=gmail.com; s=20210112; t=1678265401;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lXXn/9+lWwIo7i5vPpgF03z6CM+OJXb8oIZ08kR1L6o=;
+        b=i1X0Fqktymbb6cej3g+/U1NtepQNoDbdsiB+VlIrVvaJZNrm8iIanOCVMYYAWHQkWi
+         pNuVIRMB6bfTzHIJh8DfvExmzhAlbGk0X1ZcXiYMLZUFCS7Ty9y335HySX1sy5rCT7BW
+         LnfUZ5TAqoK4pciV/iHa4MJeMzwzQ+LBJcmAs5xTghR44h/ojtR1OR0QOpQ0Lo6lxc27
+         0IsqupGNpqfzc315rZv33gm7WhidVT9jJH5yS6EoAmXWOKc4YCm1vLLJYe9COOJE2AyO
+         WDE4Pn8/lim78Jck1+77K6izCOqoXUF/2SIAygYpgesiazrm7J0VzI5R2CgeQgdYE1vv
+         hpzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678263550;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x5MPo35xGT8I5no97e54JFoAV8IlgxfgBAbMEiQkE8U=;
-        b=IshRuU+0mQWmFMwtG78M4w8kIjJ/zUFoH/F0oDRIVgK8Whq+9xouMSenbOR+X9Q4NS
-         kVwIxxrUU5cgEXbF8Rg0RvP1sRsQaieVfF5GX8RG9ZDWnv8q5iDBKsq+9UuYkg8U767O
-         HytGBYGE+1WxKrb75bDzx0bo3xtP7WKggwXMjhxJYHSyIq1c1OojHZjsp2yMvznc3qzB
-         fIY4hNSADgBqMirSTp5e7YiEFmdxLIO673TAGyYEdWrolu+rVUwnKIMY13NWHnuUZ/2y
-         dI+9x9wmsTOHv3TWsfZH3Vz2ncfKO0a4O/PqA31ZDe9iFoJnWqJ5mDa8wy3EcJyRbApZ
-         cClg==
-X-Gm-Message-State: AO0yUKWIKU+ab1Q1DFuITI3/7DfDNMf3lLi5LW1qenhY8hvB6pUs+6Vo
-        mFfXD5D+OuTnSM737qgMiD1z7awgcRGp
-X-Google-Smtp-Source: AK7set8wR0JRCbOxXeyoYk1i7vpLK4VrAcyGzkcxx5TBYPyVU6eUjGqAbiFS0FlYYP2ABj6uyumbw0Ed0HOH
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9a99:fbc4:7488:8b5f])
- (user=irogers job=sendgmr) by 2002:a5b:c4e:0:b0:9f2:a1ba:6908 with SMTP id
- d14-20020a5b0c4e000000b009f2a1ba6908mr8377911ybr.12.1678263550648; Wed, 08
- Mar 2023 00:19:10 -0800 (PST)
-Date:   Wed,  8 Mar 2023 00:17:31 -0800
-In-Reply-To: <20230308081731.1887278-1-irogers@google.com>
-Message-Id: <20230308081731.1887278-12-irogers@google.com>
-Mime-Version: 1.0
-References: <20230308081731.1887278-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v3 11/11] perf parse-events: Warn when events are regrouped
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        d=1e100.net; s=20210112; t=1678265401;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lXXn/9+lWwIo7i5vPpgF03z6CM+OJXb8oIZ08kR1L6o=;
+        b=RJpS/l7vMYdMPkr54PQaJAljOUW1eGzrZuwwvOAyqMluLRAEEaDtEsJiRWRJozzBft
+         cyrecHDg8WS2X3hSmc9a+ElfYhMJvIl44CZaGbKS1g8LZc65QbnD7PbxTx2eFJ9J5zZ8
+         fN366Jcwb4MQ8PgArJx0Icl5Z3KvdjuVNX0N0BMGM4Yh6TlWTxMFWphdqkFAVL1Y2ggG
+         7dd4dXcwK6oQOuHvUXE0UjhsCOJS2b1EuYrT0FjVSIg8isIzSZtyLEtFSDiFEC8BVMY2
+         FB5OVoYTsM3A9RnVSRIbcKHUJbGncIzDvgIwW/9IIJv54pzx3yKkybEivvdOljtIHGi7
+         aKxA==
+X-Gm-Message-State: AO0yUKWfh94k4iWjX39+8iUFWRu6TkAv86xNloPnOQyD/yUTeqfFY3UU
+        GTGdEvJ/dv73APZmCRAmhmGgPB7FKcFTf3WQaUDtvocJ
+X-Google-Smtp-Source: AK7set+tV4tTfW8xrnaRIDXeUfCEnDxoAj+P/yej/Ib3M8Le+z3mV71X51WdcxLyPUq2bUKeykXRFKZi2MrogZ56Swk=
+X-Received: by 2002:a05:6830:3378:b0:68d:48f0:9bad with SMTP id
+ l56-20020a056830337800b0068d48f09badmr5754262ott.7.1678265401003; Wed, 08 Mar
+ 2023 00:50:01 -0800 (PST)
+MIME-Version: 1.0
+References: <CAO3P5YQ-BU+fmhQo98SAKdc96qMEsim4nNvMRiBmsW0YSUYjQg@mail.gmail.com>
+ <a1b7c912-1554-a623-6799-32dbd0ead4de@intel.com>
+In-Reply-To: <a1b7c912-1554-a623-6799-32dbd0ead4de@intel.com>
+From:   Iti Shree <itishree1999@gmail.com>
+Date:   Wed, 8 Mar 2023 08:49:24 +0000
+Message-ID: <CAO3P5YTf+by5ppR2K44Bw+1h0B2JAZH__oJThS6hepAe5v6LMg@mail.gmail.com>
+Subject: Re: brstack information with perf-intel-pt?
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use if an event is reordered or the number of groups increases to
-signal that regrouping has happened and warn about it. Disable the
-warning in the case wild card PMU names are used and for metrics.
+Hello Adrian,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/parse-events.c |  2 +-
- tools/perf/tests/pmu-events.c   |  2 +-
- tools/perf/util/metricgroup.c   |  3 ++-
- tools/perf/util/parse-events.c  | 28 ++++++++++++++++++++--------
- tools/perf/util/parse-events.h  |  7 ++++---
- tools/perf/util/parse-events.y  |  1 +
- 6 files changed, 29 insertions(+), 14 deletions(-)
+Thank you for the reply and the link to itrace page.
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index ffa6f0a90741..b1c2f0a20306 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2103,7 +2103,7 @@ static int test_event_fake_pmu(const char *str)
- 
- 	parse_events_error__init(&err);
- 	perf_pmu__test_parse_init();
--	ret = __parse_events(evlist, str, &err, &perf_pmu__fake);
-+	ret = __parse_events(evlist, str, &err, &perf_pmu__fake, /*warn_if_reordered=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
- 			 str, ret, err.str);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 6ccd413b5983..7f8e86452527 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -785,7 +785,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 		 */
- 		perf_pmu__test_parse_init();
- 	}
--	ret = __parse_events(evlist, dup, error, fake_pmu);
-+	ret = __parse_events(evlist, dup, error, fake_pmu, /*warn_if_reordered=*/true);
- 	free(dup);
- 
- 	evlist__delete(evlist);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index de6dd527a2ba..5783f4c2d1ef 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1441,7 +1441,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	}
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
--	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
-+	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu,
-+			     /*warn_if_reordered=*/false);
- 	if (ret) {
- 		parse_events_error__print(&parse_error, events.buf);
- 		goto err_out;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 9ec3c1dc81e0..4bb28c32b511 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2157,11 +2157,13 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
- 	return arch_evlist__cmp(lhs, rhs);
- }
- 
--static void parse_events__sort_events_and_fix_groups(struct list_head *list)
-+static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- {
- 	int idx = -1;
- 	struct evsel *pos, *cur_leader = NULL;
- 	struct perf_evsel *cur_leaders_grp = NULL;
-+	bool idx_changed = false;
-+	int orig_num_leaders = 0, num_leaders = 0;
- 
- 	/*
- 	 * Compute index to insert ungrouped events at. Place them where the
-@@ -2170,11 +2172,11 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	list_for_each_entry(pos, list, core.node) {
- 		const struct evsel *pos_leader = evsel__leader(pos);
- 
--		if (pos != pos_leader || pos->core.nr_members > 1)
--			continue;
-+		if (pos == pos_leader)
-+			orig_num_leaders++;
- 
--		idx = pos->core.idx;
--		break;
-+		if (idx == -1 && pos == pos_leader && pos->core.nr_members < 2)
-+			idx = pos->core.idx;
- 	}
- 
- 	/* Sort events. */
-@@ -2192,6 +2194,8 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		bool force_grouped = arch_evsel__must_be_in_group(pos);
- 
- 		/* Reset index and nr_members. */
-+		if (pos->core.idx != idx)
-+			idx_changed = true;
- 		pos->core.idx = idx++;
- 		pos->core.nr_members = 0;
- 
-@@ -2225,12 +2229,18 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		}
- 	}
- 	list_for_each_entry(pos, list, core.node) {
--		pos->core.leader->nr_members++;
-+		struct evsel *pos_leader = evsel__leader(pos);
-+
-+		if (pos == pos_leader)
-+			num_leaders++;
-+		pos_leader->core.nr_members++;
- 	}
-+	return idx_changed || num_leaders != orig_num_leaders;
- }
- 
- int __parse_events(struct evlist *evlist, const char *str,
--		   struct parse_events_error *err, struct perf_pmu *fake_pmu)
-+		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
-+		   bool warn_if_reordered)
- {
- 	struct parse_events_state parse_state = {
- 		.list	  = LIST_HEAD_INIT(parse_state.list),
-@@ -2250,7 +2260,9 @@ int __parse_events(struct evlist *evlist, const char *str,
- 		return -1;
- 	}
- 
--	parse_events__sort_events_and_fix_groups(&parse_state.list);
-+	if (parse_events__sort_events_and_fix_groups(&parse_state.list) &&
-+	    warn_if_reordered && !parse_state.wild_card_pmus)
-+		pr_warning("WARNING: events were regrouped to match PMUs\n");
- 
- 	/*
- 	 * Add list to the evlist even with errors to allow callers to clean up.
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 767ad1729228..46204c1a7916 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -26,13 +26,13 @@ int parse_events_option(const struct option *opt, const char *str, int unset);
- int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
- __attribute__((nonnull(1, 2, 3)))
- int __parse_events(struct evlist *evlist, const char *str, struct parse_events_error *error,
--		   struct perf_pmu *fake_pmu);
-+		   struct perf_pmu *fake_pmu, bool warn_if_reordered);
- 
--__attribute__((nonnull))
-+__attribute__((nonnull(1, 2, 3)))
- static inline int parse_events(struct evlist *evlist, const char *str,
- 			       struct parse_events_error *err)
- {
--	return __parse_events(evlist, str, err, NULL);
-+	return __parse_events(evlist, str, err, /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
- }
- 
- int parse_event(struct evlist *evlist, const char *str);
-@@ -128,6 +128,7 @@ struct parse_events_state {
- 	int			   stoken;
- 	struct perf_pmu		  *fake_pmu;
- 	char			  *hybrid_pmu_name;
-+	bool			   wild_card_pmus;
- };
- 
- void parse_events__shrink_config_terms(void);
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 3a04602d2982..4488443e506e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -323,6 +323,7 @@ event_pmu_name opt_pmu_config
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms,
- 							  /*auto_merge_stats=*/true)) {
- 					ok++;
-+					parse_state->wild_card_pmus = true;
- 				}
- 				parse_events_terms__delete(terms);
- 			}
--- 
-2.40.0.rc0.216.gc4246ad0f0-goog
+On Mon, Mar 6, 2023 at 6:54=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
+om> wrote:
+>
+> On 13/02/23 20:33, Iti Shree wrote:
+> > Hello,
+> > I am trying to get brstack information in perf.data with intel-pt
+> > flag. I am passing following command for the following: perf record -e
+> > intel-pt// -m, 32768
+> >
+> > When I try to check if brstack is present in the gathered data with :
+> > perf script -F pid, ip, brstack -i pt-perf.data I can only see pid and
+> > ip information.
+> >
+> > I can seem to find branching information with --itrace=3Db however I wa=
+s
+> > wondering if there is any way I can get brstack information decoded
+> > into perf.data when I use intel-pt flag similar to what I get with
+> > default perf record?
+>
+> You need to use --itrace=3Dli which will synthesize "instructions" events
+> and add a branch stack.  Note that the period of the instructions events
+> can be defined e.g. --itrace=3Dli10us for 10 microseconds.  And also the
+> max size of the branch stack e.g. --itrace=3Dl10i for 10 branches.
+>
 
+I am wondering if I can get a branch stack on "branches" events Either
+by some --itrace options (I tried --itrace=3DLcr/lcr) or by modifying
+perf's codebase a bit?
+
+> Typically you need to be aware of decoding errors also, so also add
+> the 'e' option i.e. --itrace=3Del10i10us.  There is also 'L' which adds
+> the branch stack to non-synthesized events (that you may have added
+> with the -e option).
+
+> Some more information about --itrace for Intel PT is here:
+>
+> https://perf.wiki.kernel.org/index.php/Latest_Manual_Page_of_perf-intel-p=
+t.1#New_--itrace_option
+>
+> General information and examples for about Intel PT can be found here:
+>
+> https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE=
+_Processor_Trace
+>
+>
+
+Another question, not related. I am working quite a bit with perf and
+Intel PT right now, is there any sort of active IRC channel/slack or
+discord for more interactive discussions? If not, would it be okay to
+cc you (or where can I find the right people to reach out?).
+
+Thank you again. Good day!
+
+Iti
