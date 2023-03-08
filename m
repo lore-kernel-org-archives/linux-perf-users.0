@@ -2,102 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4E6C678D5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 00:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75742C6FA99
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 01:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbjCHAa3 (ORCPT
+        id S230026AbjCHBTW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 19:30:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52800 "EHLO
+        Tue, 7 Mar 2023 20:19:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjCHAa1 (ORCPT
+        with ESMTP id S229879AbjCHBTU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 19:30:27 -0500
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA05DA42C7
-        for <linux-perf-users@vger.kernel.org>; Tue,  7 Mar 2023 16:30:26 -0800 (PST)
-Received: by mail-pf1-x449.google.com with SMTP id t12-20020aa7938c000000b005ac41980708so7946527pfe.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 07 Mar 2023 16:30:26 -0800 (PST)
+        Tue, 7 Mar 2023 20:19:20 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5046A6758;
+        Tue,  7 Mar 2023 17:19:13 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id g3so59894094eda.1;
+        Tue, 07 Mar 2023 17:19:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678235426;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=SWmklWyVCwxXFF6wO6v9mDT+U/6Przz0XnTBbNzMl+M=;
-        b=nEPr6VECvGe6NhTwzmP8wSYxHm/jEvwAdt6Nf1V10+vi5IktT6GFHvL8rBdGLMnVtH
-         9lA2h/IYUoP3jBX6WWElTHI28Ll7lRZpsuo/iN+946s3pGgW8IH5X0WzAmyLsaeYeFjD
-         JCMpdubtNGDzR7yfOd+tLfjak8QNM3m1nluDeA/Brik+UdUV9BeeuGYos6isWHWX8I87
-         GpRsHlkDi92tuWY/LiBIZpdf4kHZqGw34elLw5/0XQ0iLfRINdoTLZ8HM/gsQsvh0mYA
-         eNiKnTlXCP+v2Vt5cYtPZgdfKABpjBrhH0f8n/Spi/spBYNhIGzyFRwfDz2CMqEC9vh6
-         4wAg==
+        d=gmail.com; s=20210112; t=1678238352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tLH4A9cIITiWgvTROt/796Hn74B0vtkSJjpGSyylmcs=;
+        b=CH4tLeaHYarBvXDOPbS6HHToCNDS2n9U2X1f5Sa9il8btMfRfIIm4s5yckdyl3bjR8
+         e3aTlEasvW4CQyhpLvjJ2hENvdKKgfYsF2fwK6Y8MCFFmE1p/ulnzwEzYq8JSy+djDcx
+         gGOZC72PsiEEosBCnxNYwBBmjmFFdixtjxBVNYKx9wiyFNcDqb79YGRM6Qn/iiAPAZLy
+         bEpFY1Hl6vKFokdOmrgfxuEm9U565KA+IgMpc4fcA5g0gqY8HjZP8Lq44mGWssVyAuYh
+         o4Br5oES0/YawB0aREI8VlnW8vvX8xHvwPr21y9s8gdhKhgX4g8WOPszlhmbr7mPkyIO
+         YGCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678235426;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SWmklWyVCwxXFF6wO6v9mDT+U/6Przz0XnTBbNzMl+M=;
-        b=uJwEuVpHaCn7OahCmnTCU015JXDsOSL7j5fDR300ZXobtvlbtlwdEgq1zPguhU8vP0
-         cBNBnk9jZ+GqO1XAVxbZCg4AoyJ4ME6kADYo3DOGY5qENbOGPbr7wSkZSmK6jvxRlCUl
-         PozXMOVHn7rsWZCkSa7N60CjTNTOl+yZuwK8hQqU3hiGHnj1H9Ok5SckjTvajvQABneb
-         SqdZ/v83xba1309ggN8xxTKwYHHsBmWYilkULQOYJ7vdocqI8wwSLNBI17FGcDnSv7om
-         ZRlsxfohHf91+nyH1wqgb+MYQ3CD/GPe09R1YN+Uxw61u0jEtrM6vriEp0Y+IkGWliXq
-         aByQ==
-X-Gm-Message-State: AO0yUKVaR7R4BGhs0TzgDGL5V11at4rDR9CWKsYhljOq+yBwawjn/ytp
-        wuP5a+EikYfN+X36omGqa385QmC0tXUc
-X-Google-Smtp-Source: AK7set/1oCu95AivzYKa9M4rxRkuUVpCxglBFgFEVUNGKBoNg8a61V4ubQnwxHaL2KN3ig51ffUXkYCuLGTn
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9a99:fbc4:7488:8b5f])
- (user=irogers job=sendgmr) by 2002:a17:90b:3594:b0:234:bcb5:2a5f with SMTP id
- mm20-20020a17090b359400b00234bcb52a5fmr6097010pjb.5.1678235426354; Tue, 07
- Mar 2023 16:30:26 -0800 (PST)
-Date:   Tue,  7 Mar 2023 16:30:20 -0800
-Message-Id: <20230308003020.3653271-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v2] perf lock contention: Fix builtin detection
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20210112; t=1678238352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tLH4A9cIITiWgvTROt/796Hn74B0vtkSJjpGSyylmcs=;
+        b=Lo/A3G0pi/f5TwDmx1L/kfzl4/Q3GyhhBXBsbMxTkHPjQ7T4JQwRt40PKyjoiTUDZF
+         MT3NvXWvqpNAvcEAjtrnT+lG89yLxqnmzAd2KN1u8hCR12YTydCHNVoSCTEncyDS+LZK
+         HqcrBkxYiicHtG226bJyDcQaurBu9CGI3AWh2JcT4esKJEcCZLHdn8T93sZMbH72lwy6
+         YvQhtKXJ/0xMxDWea2xj6awevYMFHpL+zedEznzySzkT6XoadatRWZtL716J2WmpmH45
+         OFfOApWj0FvDPZH7YCq05JqhlEyjJg7HM6o+DaI7ST7E5i/ce2nZYSwPLCtvUQZ0z7Tt
+         frtg==
+X-Gm-Message-State: AO0yUKWKbF0A95/seM448nvMzxPI+V0ixWWphCABLtMuJifu4neBusVQ
+        F2QUY6Pp4f9Y9JylLbrB3zx8LGYSOgndDNpRyIw=
+X-Google-Smtp-Source: AK7set8Qd4OHKSzPmiTWMliy10a/G8dDy8JOTmOGGJCFt+t8GRv8SHa9aGKKXq1WB+UO6VNza4fdEfQXn7owmJDnpb8=
+X-Received: by 2002:a17:906:4bcb:b0:8b1:28f6:8ab3 with SMTP id
+ x11-20020a1709064bcb00b008b128f68ab3mr8269471ejv.15.1678238352239; Tue, 07
+ Mar 2023 17:19:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20230228093206.821563-1-jolsa@kernel.org> <20230228093206.821563-5-jolsa@kernel.org>
+In-Reply-To: <20230228093206.821563-5-jolsa@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 7 Mar 2023 17:19:00 -0800
+Message-ID: <CAEf4Bzar7H1OsjgqJ8H6R-f3DZPhhR0+KOamyt0MDNboept--A@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 bpf-next 4/9] libbpf: Allow to resolve binary path
+ in current directory
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Martin KaFai Lau <martin.lau@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
+        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-__has_builtin was passed the macro rather than the actual builtin
-feature. The builtin test isn't sufficient and a clang version test
-also needs to be performed.
+On Tue, Feb 28, 2023 at 1:33=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Try to resolve uprobe/usdt binary path also in current directory,
+> it's used in the test code in following changes.
 
-Fixes: 1bece1351c65 ("perf lock contention: Support old rw_semaphore type")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+nope, that's not what shell is doing, so let's not invent new rules
+here. If some tests need something like that, utilize LD_LIBRARY_PATH
+or even better just specify './library.so'
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index e6007eaeda1a..141b36d13b19 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -182,7 +182,13 @@ static inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
- 		struct mutex *mutex = (void *)lock;
- 		owner = BPF_CORE_READ(mutex, owner.counter);
- 	} else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
--#if __has_builtin(bpf_core_type_matches)
-+	/*
-+	 * Support for the BPF_TYPE_MATCHES argument to the
-+	 * __builtin_preserve_type_info builtin was added at some point during
-+	 * development of clang 15 and it's what is needed for
-+	 * bpf_core_type_matches.
-+	 */
-+#if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >= 15
- 		if (bpf_core_type_matches(struct rw_semaphore___old)) {
- 			struct rw_semaphore___old *rwsem = (void *)lock;
- 			owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
--- 
-2.40.0.rc0.216.gc4246ad0f0-goog
-
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/lib/bpf/libbpf.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 05c4db355f28..f72115e8b7f9 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -10727,17 +10727,19 @@ static const char *arch_specific_lib_paths(void=
+)
+>  /* Get full path to program/shared library. */
+>  static int resolve_full_path(const char *file, char *result, size_t resu=
+lt_sz)
+>  {
+> -       const char *search_paths[3] =3D {};
+> +       const char *search_paths[4] =3D {};
+>         int i, perm;
+>
+>         if (str_has_sfx(file, ".so") || strstr(file, ".so.")) {
+>                 search_paths[0] =3D getenv("LD_LIBRARY_PATH");
+>                 search_paths[1] =3D "/usr/lib64:/usr/lib";
+>                 search_paths[2] =3D arch_specific_lib_paths();
+> +               search_paths[3] =3D ".";
+>                 perm =3D R_OK;
+>         } else {
+>                 search_paths[0] =3D getenv("PATH");
+>                 search_paths[1] =3D "/usr/bin:/usr/sbin";
+> +               search_paths[2] =3D ".";
+>                 perm =3D R_OK | X_OK;
+>         }
+>
+> --
+> 2.39.2
+>
