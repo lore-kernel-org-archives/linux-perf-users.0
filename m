@@ -2,101 +2,91 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6287AC6FA99
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 01:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF98C678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 06:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229570AbjCHBld convert rfc822-to-8bit (ORCPT
+        id S229486AbjCHG7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 7 Mar 2023 20:41:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59618 "EHLO
+        Wed, 8 Mar 2023 01:59:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjCHBlc (ORCPT
+        with ESMTP id S229483AbjCHG7O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 7 Mar 2023 20:41:32 -0500
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F328CA17EE;
-        Tue,  7 Mar 2023 17:41:31 -0800 (PST)
-Received: by mail-yb1-f177.google.com with SMTP id v13so13348344ybu.0;
-        Tue, 07 Mar 2023 17:41:31 -0800 (PST)
+        Wed, 8 Mar 2023 01:59:14 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C307DA0F29;
+        Tue,  7 Mar 2023 22:59:13 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id v11so16785583plz.8;
+        Tue, 07 Mar 2023 22:59:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678258753;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=hIkmwT/HZfPdKI7XyMs9iCXmGKHTJCfQa15FJksHUag=;
+        b=oyfGVI75sqU6FBVb43RtFbhFg9F03goImGxnOf2UrScVsVNaffit6jFuWZs5JYEf5/
+         Wmr2Pq9YdCC13iQL2AkMsLtWLacPAt6rmA31mkNLBpB3emrzzrObMQIJ2rdkzPVYGCw6
+         K7f9OebTm2RA1klvlZu/lE/g1auniPVGGCEIWiqWTfgoW2sFwlrEm0YRWjJ64hPgrWUt
+         vcrg7qgBdNWY74txDlcfaYLn6mWi3WmrIv1Vd1RidOJof0yUcRdyvJeDckSCecOgYI+N
+         eEFtZb8jZobadbLXuUUIfblYz4wXRhUNS+46XKYL6+dODJSWPPspfZlGwM1/bC4GGKbn
+         tKwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678239691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TppUL57H0OWtGYAgk5sVPvgNVPqvGJNjviqBBu28EEw=;
-        b=FwkqQX6z1NI+yr5R+LWFynwuoCR4oMoelP1FnLy+1gYyczHIgwpiNUi3jI/g/5ny4b
-         68flz9YAY55vb8cA3jBjbfLcp0VxVxLDxM4rR3qpbjl46xnRo6Llu5L3M4/PdrgS/rV8
-         GVABnNYMorKoQy4gj7WsKgMMdFFzQ4lNjXS5XS6ndVEVfgq1UJoNd8tq+nAiSv34Bav6
-         DsV/jbVMxY7GfPanmGOMUQpAew8V22AL8JMP9iE79/IWqiRJyHmRivHOLlPeP57VfUBd
-         FHx7YaHU2GUTqWZo/aSDe90WNlgpAvdiWZwzjVKarRLZTNnPOUFaHNhuAeifDmbrjJqM
-         2uXA==
-X-Gm-Message-State: AO0yUKVHdvB4vOfshUoaJ1AndT61MFilC4RRirpRKSymCVyZIxneW88k
-        jfyJc1H9T7eMXlOAnrqXojjX1B26+uVQ/ppFyFM=
-X-Google-Smtp-Source: AK7set+Q6VggA+AbQUocaBGV7QKqq/nDBfJowhUBW2747W0DPy1t9DC7OJ0knURikkdpl5fNwDsi32GXFz0gJWqaCiI=
-X-Received: by 2002:a25:8b8f:0:b0:906:307b:1449 with SMTP id
- j15-20020a258b8f000000b00906307b1449mr9919126ybl.5.1678239690961; Tue, 07 Mar
- 2023 17:41:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20230308003020.3653271-1-irogers@google.com>
-In-Reply-To: <20230308003020.3653271-1-irogers@google.com>
+        d=1e100.net; s=20210112; t=1678258753;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hIkmwT/HZfPdKI7XyMs9iCXmGKHTJCfQa15FJksHUag=;
+        b=hHXcb7OOUMHi8kD60Ti1G1XfovzcfGkQqRh+4BUhFBTZec/jiPf8FC7zodH6dt0wXq
+         1phjyrForOWqpwl7vEMdb/e8qeaaE1bgaLhR6zifiwIPq+8o0fggC+K7N1KyvCV1EiEb
+         q6t2o2fbDSyF12I7d7hho+XeTHBk727kYNPG6tajX/iIekolsMMqaSXfQ4aqXaPBKzzw
+         J80XBfoHWLZJuNTK8VMvzNspsTmqg1UP4YG1vvsOT4Gn6ulkEIViAoCbRBpwgIGGThfi
+         lCdLMtiPCCybiFibogf8vWtDVMOPhz5IiNFGtnb1Jph3vl0pk/PypejRJNPX6hRMpdt5
+         PFmQ==
+X-Gm-Message-State: AO0yUKXtazSBt0Gzna9agOIq64G0d/dQjHCRn3IIMDPJg2SzYzEVxozA
+        t6XbVUH4Y4sBP9e0UQxYp/I=
+X-Google-Smtp-Source: AK7set8zu6AK4NHwvciMC1jk3hw45M/7yB1LnA6To89LcogEfv/AeR8PdS29+jK1aSDR/FOvtVpRfg==
+X-Received: by 2002:a17:90b:1804:b0:233:af77:c075 with SMTP id lw4-20020a17090b180400b00233af77c075mr17871939pjb.36.1678258753094;
+        Tue, 07 Mar 2023 22:59:13 -0800 (PST)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:44b0:80c8:4a92:e7f2:ff68])
+        by smtp.gmail.com with ESMTPSA id gz7-20020a17090b0ec700b002349608e80csm8365410pjb.47.2023.03.07.22.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 22:59:12 -0800 (PST)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 7 Mar 2023 17:41:19 -0800
-Message-ID: <CAM9d7ciyGagEiM6zSVjh9VpsiShLeRBUFjfGGLrzoqTD+hT9KA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf lock contention: Fix builtin detection
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Martin KaFai Lau <martin.lau@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf tools: Ignore vmlinux.h
+Date:   Tue,  7 Mar 2023 22:59:11 -0800
+Message-Id: <20230308065911.1127255-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 7, 2023 at 4:30 PM Ian Rogers <irogers@google.com> wrote:
->
-> __has_builtin was passed the macro rather than the actual builtin
-> feature. The builtin test isn't sufficient and a clang version test
-> also needs to be performed.
->
-> Fixes: 1bece1351c65 ("perf lock contention: Support old rw_semaphore type")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+The vmlinux.h file is generated during the build.
 
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/.gitignore | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/util/bpf_skel/.gitignore b/tools/perf/util/bpf_skel/.gitignore
+index 5263e9e6c5d8..cd01455e1b53 100644
+--- a/tools/perf/util/bpf_skel/.gitignore
++++ b/tools/perf/util/bpf_skel/.gitignore
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ .tmp
+-*.skel.h
+\ No newline at end of file
++*.skel.h
++vmlinux.h
+-- 
+2.40.0.rc0.216.gc4246ad0f0-goog
 
-
-> ---
->  tools/perf/util/bpf_skel/lock_contention.bpf.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index e6007eaeda1a..141b36d13b19 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -182,7 +182,13 @@ static inline struct task_struct *get_lock_owner(__u64 lock, __u32 flags)
->                 struct mutex *mutex = (void *)lock;
->                 owner = BPF_CORE_READ(mutex, owner.counter);
->         } else if (flags == LCB_F_READ || flags == LCB_F_WRITE) {
-> -#if __has_builtin(bpf_core_type_matches)
-> +       /*
-> +        * Support for the BPF_TYPE_MATCHES argument to the
-> +        * __builtin_preserve_type_info builtin was added at some point during
-> +        * development of clang 15 and it's what is needed for
-> +        * bpf_core_type_matches.
-> +        */
-> +#if __has_builtin(__builtin_preserve_type_info) && __clang_major__ >= 15
->                 if (bpf_core_type_matches(struct rw_semaphore___old)) {
->                         struct rw_semaphore___old *rwsem = (void *)lock;
->                         owner = (unsigned long)BPF_CORE_READ(rwsem, owner);
-> --
-> 2.40.0.rc0.216.gc4246ad0f0-goog
->
