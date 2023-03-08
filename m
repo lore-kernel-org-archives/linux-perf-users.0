@@ -2,179 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38FFC678D5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 07:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F811C678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 07:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjCHHA5 (ORCPT
+        id S229939AbjCHH53 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 02:00:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48256 "EHLO
+        Wed, 8 Mar 2023 02:57:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229905AbjCHHAt (ORCPT
+        with ESMTP id S229927AbjCHH51 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 02:00:49 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DF0A1FF8;
-        Tue,  7 Mar 2023 23:00:47 -0800 (PST)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3283Pm9B004259;
-        Wed, 8 Mar 2023 07:00:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=yo0swHo5+4sRaFUSjMiXCjNEn1jfJ3ZW8sRs62LZQdc=;
- b=cxN+Xo7cG3ukG6Q4CVNdGkq909wB1Jl+O/VzJuFWG2Aj44myzmgAJDY1G9eYhLPKca+c
- /BVFF7UsOtLxT/P+wMaSEkJE8mf9zniRtjumvkVhXMv0tjLKKUbAh86B3/f9vVsafEhD
- dL0+6IojGtUW37z9r/HlufIuEpM8IKudaFki7xlG2PMgcx/hirab5Tt5yv5aocELcpNR
- 6Wi9n8r1sRIoXPyWZ/Lmj1ttjNS3eXd/43rR8t8oClSFZqLFb7/5i3VasyxX9ny8rFGl
- n8eIB3frz2QNitWhiCOoP3jb0X6URDy8g1T/eqvfZoNgJr3/Qxann/6Ubt68li3HAt7W fA== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p6fej0ssk-1
+        Wed, 8 Mar 2023 02:57:27 -0500
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78299BA69;
+        Tue,  7 Mar 2023 23:57:25 -0800 (PST)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+        by mx0a-0064b401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32870bOR000488;
+        Tue, 7 Mar 2023 23:56:56 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com; h=to : cc : from :
+ subject : message-id : date : content-type : content-transfer-encoding :
+ mime-version; s=PPS06212021;
+ bh=2C7rLQGIKMxRpxTgBcz+nIxW2bd2ZyzFgcwNo4O78Ug=;
+ b=PNnC6RMGxY2qKtv4C6Vwh9s1+tF7AGMTyWlhoErslFYJ0gO7s5WIj+j7w+wM6Fjqgqou
+ /SygniAXF29y0lC8nyS3UfLslDo5n3qwhtAktjudaK9Is36qbfD+4iCsY5bv6ehMYntB
+ quTujB8R827l9EhfGKwoC8croVIIIco9O2Hs0KX/C1QP7I3NdGAfgT3jWJ0W+ghKa/Sf
+ uKzY90IrXd3g8ALjr18yc/io+KfqMraeZhyaBe6uNfgrvYQzenwoc88m+0Bv/B1exhbs
+ 7Dt82FYc+XFNk29wT6yh0Ba2ybzZ8nn4I3QB/SBoFOWYAuPeBFWzc6XQZrVAObXUjjnJ wg== 
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
+        by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3p6ffd09c2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Mar 2023 07:00:05 +0000
-Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 328704IB017604
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 8 Mar 2023 07:00:04 GMT
-Received: from [10.213.73.166] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 7 Mar 2023
- 23:00:01 -0800
-Message-ID: <9477d392-aedd-3187-762d-8e19fdc41c29@quicinc.com>
-Date:   Wed, 8 Mar 2023 12:29:57 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH V6] arm64: perf: Make exporting of pmu events configurable
-Content-Language: en-US
-From:   Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
-To:     Will Deacon <will@kernel.org>
-CC:     <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1654779589-19937-1-git-send-email-quic_c_spathi@quicinc.com>
- <20220624121825.GB18561@willie-the-truck>
- <ac0ef25b-b9a9-b4d5-381c-4e970a258cc9@quicinc.com>
-In-Reply-To: <ac0ef25b-b9a9-b4d5-381c-4e970a258cc9@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+        Tue, 07 Mar 2023 23:56:56 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PzR5J3UNAIMTJcSSSTgN/nO62sxvOAYSSIq+mo1sMz/J9p++h4CdPPn0ti1wqM5proxlnzrXOteOiVzrO7e9h06UA2n212azNYgNyeEiLVh6WD2frlu55qgyeIgt1B6C4c97cxd51wk3IA2OOBovcMsZZeBQ8nioUvPuZ0KSKoomTbqy/WvsOUKbqZVTvNHfpocGhCu1ZClDnc+rh2wgxu9mk9v/+dlwALGq78fPF24ZzaEKAJA6QoEq7KBxCEwY6zKqvrMIxxkUKKvp4Nth6LPsW7u5NaBSZ7q8t9n9s/dbpv0k1hLxxf7Kax79t7fFMZfrFfst+lL1rVvjZHANww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2C7rLQGIKMxRpxTgBcz+nIxW2bd2ZyzFgcwNo4O78Ug=;
+ b=bGEQBGUwz2A+D5kPK7tr15QSBsyMzM985lg1eeBAsl2yU7TgBMtJi1nyLTaztAJfNvlE/axJaWUVCQ+AdXvbwQxqkYR/PdSZ2CC1YvNydSwackmycjf8o13xS7BbKzHcmB1Q25u78x8KVVnhCj72AClhOF3l7k9xiSmurSsSgvxLYapUFyjHtAGZMnAZ/D54syX+ywpI0xFpaxsMY/OP+Vpt5dAELF3PB8K+l6RkrI9O8fuXq03Sxl1Huk4tDLXcM9ixlf8eoQAZS7UiO4VZpZ6mXS2QZglwYRSa8ObeHS6IGp7dXLBEPUs/jawL0itWkDLqXBnRWT1vBxdyfQV37A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from MW5PR11MB5764.namprd11.prod.outlook.com (2603:10b6:303:197::8)
+ by MW4PR11MB6984.namprd11.prod.outlook.com (2603:10b6:303:22e::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.28; Wed, 8 Mar
+ 2023 07:56:51 +0000
+Received: from MW5PR11MB5764.namprd11.prod.outlook.com
+ ([fe80::7709:2bed:5653:b4d1]) by MW5PR11MB5764.namprd11.prod.outlook.com
+ ([fe80::7709:2bed:5653:b4d1%4]) with mapi id 15.20.6156.028; Wed, 8 Mar 2023
+ 07:56:51 +0000
+To:     will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   wangxiaolei <xiaolei.wang@windriver.com>
+Subject: perf record -e branch-misses ls > /dev/null
+Message-ID: <08994540-d132-6e49-f6a0-82d8dfd1f3f0@windriver.com>
+Date:   Wed, 8 Mar 2023 15:56:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ykY-PixxMzbm3OpccFuJ0u0TtWJjnYvQ
-X-Proofpoint-ORIG-GUID: ykY-PixxMzbm3OpccFuJ0u0TtWJjnYvQ
+Content-Language: en-US
+X-ClientProxiedBy: SI2PR04CA0006.apcprd04.prod.outlook.com
+ (2603:1096:4:197::13) To MW5PR11MB5764.namprd11.prod.outlook.com
+ (2603:10b6:303:197::8)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW5PR11MB5764:EE_|MW4PR11MB6984:EE_
+X-MS-Office365-Filtering-Correlation-Id: b042ed92-91fa-4613-1c8e-08db1faaad42
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pO57rFPQmrL96kJiI7H+GgSb2cjHet+5Nyhzhn19mdv+knaTzzwc/tqipwnoDvFKMztrshhjAE3cuHUcu5VaOtspyaae+tyisQ3Z/JeiSnNxzVX7NXCHJQUep8RNvIpojJp2IytYQiabAv7Li90bSYexRV92iiHs4UIlXL9TTzT/u7+kWnfNMWwfmXngLIaT/VNyc0qHPUqnPtYwYVxOx34KuvzgE0RhW9Ax5XdVkAFMe+24Tta+qPvYhphxm0nOFGlEgrnEoBYt0gYLDpOUBLgeIDhTaxSwlVZGhH1UVsp6QZGdKbAOOy1+VY8K07/1ADgftqKcZeZ+rvQIOPQ6iMYQkGkhM6TeCtiwvYnJtTG8gVzY/Ai/kbu9iAx3+X+OedXxPHiNSVBQhhjA01I6atO6TUhwz/0hJADFaI7/ijsCM/Me2TzJgGqW1tW/Ec/Tyc5CyLTz+9uuOMY2ddZhmv1QBNk8LAJVvBFDmHT764f7CdLMA98izNLiUaOyMEJ3xaa3z+5H6dkifKmLPz8ntYGqyW+q3zkGjfP0vLlElJo0KcEJbfexO+QX4reeEl9OADJjvObBaLMfE6PdqeYb7FJzqwCiVX7fBzoVPyS8WphHPzOZPrBVauIB4CXnkaA6HywNO3PMzdcWtkidARJoxXFfhwgc3EVZqxbHMLNehMk6wA8vwkK124PgFR/ZVLK2kMi6+rTpxtLmA5nSU/0ow0twlQTKnqUcbvgxFIpz/BDcyOBs7synL58G/XHY1iYild9YDgN+ZK3mavhJ9CP5fyonnLEclJdHkcakwbUSYghU8xGFnONwDHE3umunDBmi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5764.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(346002)(376002)(396003)(366004)(39850400004)(451199018)(36756003)(316002)(31696002)(86362001)(31686004)(2906002)(6486002)(186003)(41300700001)(26005)(5660300002)(66556008)(8676002)(66946007)(66476007)(4326008)(478600001)(6666004)(6506007)(2616005)(7416002)(6512007)(8936002)(921005)(38100700002)(43062005)(43740500002)(45980500001)(159843002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?THg1UjdIL2lZelJBUXcvcjdWNkdVVHN6Qk1lcWx5UmNzOEp0WjBUVC9jYWhG?=
+ =?utf-8?B?bjFaU2RGUjl4dXB6N2lNSVVvVEFQUEp3dzc1K3ZNcnVIYWdVSHhjQ0l2WSt4?=
+ =?utf-8?B?Ymw4S0JnSkJSeEVTZlRrejNxVHVIQW1lRmY3Z0VkNlhXUFJDVTJQNzQ0ZkFX?=
+ =?utf-8?B?NzhLajd0MXREU1dCWDZIRWloV0lMS1FOYXlPbWN6b2grNWRjRmFzNk52dkow?=
+ =?utf-8?B?ajZpbFcxZmtsU25oTWI2Um9UQkZWL3EwM2pYaW9KanFUUEl5OE9HbEJDdnQv?=
+ =?utf-8?B?T1F1U2Y2OGh0b1BENjE3KzltRFI2RkxYb0ZTR0N2cnZIQ2lKUnp1VnpFYzBw?=
+ =?utf-8?B?eXAzc05uUDV4cENuQUxPeUVITEhnVUx2UXpYV3ZXek1UWmd4eFcvTWFVTk9K?=
+ =?utf-8?B?LzFUMHFXbmtPWGtTU0JVYXBxQm1QczVzQ05pTFFSMzVSWDVIS2VJZDNueFhY?=
+ =?utf-8?B?K1BCMGR4eWFOYnNyZWtxRFVCN2p2dk1XTVd2aG15ZEs2V1ZZYzVpcVVwS0JX?=
+ =?utf-8?B?V3Y4QWxmZUVkbHZVampsbVA3R1ZiUStIalBHNzh1MzUveVh6NjQzYmhPVWZN?=
+ =?utf-8?B?T3AyRnF2MmF6VU5UQWlGbjVpbGp4YmZDNXRkajVkei9FY1Y3cnE1UEtsM2xN?=
+ =?utf-8?B?Q2lXQkNZMlorZGU5WGNwNllyT2VOeGlZT3pyWDFlK3RwdnZRN1hNUzJmcVJZ?=
+ =?utf-8?B?MUMvODhiZTFxcXUyZHVRSE95eWp4NGJ6Vmo5b2RrejB5WUdQN3FUbzI1MW9O?=
+ =?utf-8?B?Q05wdGZzUlluUkZwV2xzM0prc0hLeWxTTVZqUENUVWx0TnNXeFI1UnhwWS9m?=
+ =?utf-8?B?TnpwS1QzRVdodmI1UFJJWHBzVjhNbmZ2WHE4cVJPZ2VzOFBLdnB0UzJxSkNa?=
+ =?utf-8?B?OXk4QmNHdCtiK1JpSTVhck1DLzFyOW02OWdIN00yYjh3WG5wazlXWXpaWFFp?=
+ =?utf-8?B?ZktEVy8ydmVtVE83WGV5SVhxcVlJVmN5bEdVME9BQ040UVVuQ0RrTU5VdE80?=
+ =?utf-8?B?anQ3b1p5OGg1Q0lnN0NIZmdGVldkNmVVWFZMemdzRWduZlgvbCtaSEdwZ043?=
+ =?utf-8?B?WnU1cnR2ZFFyOEs1czNDT0FDNUNqUFhyV3g1SDlmb1NiNDNlY2VZejRKbURQ?=
+ =?utf-8?B?QVhqTWphQ092VUZyQWNIQ0lTMjZUQjJxY0xwNW0vYTJ1aDlnWGtYU2Z1M0x5?=
+ =?utf-8?B?V2V5K1JpUmk4alhZTFhjbDFQZERZbVhtaENnM3dpUm9Pb0tWNkMrMGdjb3hR?=
+ =?utf-8?B?aklFMDFlUlZGMHIzNHNkZnhiZnJva0pIQUg3eTBPVjZUME8wTnJWTUhDSFZD?=
+ =?utf-8?B?b0c4M2J3UE5DWTBTNFp4M3FDWE1tbDY3UFlyY1ROQWRBbnUvbGVXc29JcDNC?=
+ =?utf-8?B?UWFPMzQ5VXF4YU8xL0ZKQUoyM1dmR0JpSFFLelA4dy9aaSt2ODZwSXl6Vy93?=
+ =?utf-8?B?c09aUGJmRjYvekRheDN2VVAvU2x0WUdvY2t1c29nZXBWdmt0WmRyRnpNZDZp?=
+ =?utf-8?B?TjYxQ21LaWsyQVcwNFNTdnNDOWQxTFdoUWZNeHcrdDEvZXArL1NsbGJJZjVX?=
+ =?utf-8?B?WTJlNWdMMStmQmhVWFQybTRmMnJjcURUUHBXbHFMd1N5VFYvcUZvNjE3aS9z?=
+ =?utf-8?B?Y3BaVW9NWmJtbGhWMmhLUW5IbVVuL3JjRTF3MUJLOFlNY0tNYmxKSjRYSHJh?=
+ =?utf-8?B?ZWZzeTBmejFJamdySXQ3QjlDcmNIZTBDU0JYQmh5bUpmeEtXd1V1NU1hVGRS?=
+ =?utf-8?B?RXB2NkJjZE5qVDFsamJqU1BYRElERGovTVFaR0daaFBENVhxWm8wSld3Rktv?=
+ =?utf-8?B?WTZhRlhaaEExejVKYTFVUGlsc2FUVW1NOXZMSDhOUWpzSWxDZWgvMEFteW9Y?=
+ =?utf-8?B?VFgxeWtTOGdNT2o4d0haSllSSmw5MHArcWdJRzdybm5aNXpreGJOSHhIeFdX?=
+ =?utf-8?B?ZzN1ZXppcGVXamQ5Z3NZajhRZnBQVHJOcys3MzVkV3R0bk9ob3hscVFGaFZm?=
+ =?utf-8?B?TnlPdmtrY3Y1VllOQk54enlaY0YzZTZ6Y09mcnNPcE5qN0ZIc1R0alhQOUtk?=
+ =?utf-8?B?ZTdYTkZYNmlsWmFWOFl4ZGdLY08yOHBEUDdDZmU4bWhEamVqWWdrdUxEcmN2?=
+ =?utf-8?B?bTdUalNrYUYvaDk4b0VoRlc5NkRQWFowUlZRME9vUU1LNFZTMGpjQ1FOMWh4?=
+ =?utf-8?B?Qmc9PQ==?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b042ed92-91fa-4613-1c8e-08db1faaad42
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5764.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2023 07:56:51.5530
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zywcSBVaQ/o0tQxUbuxv2kW+JG9Vx6yRWZlw5MVPPVZQ53gSD8LOy6oayMd2aV0DzQhkVqQBtApW0/eleeGN1YMPkmdHP6VL2APg4j1mPDM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6984
+X-Proofpoint-GUID: SFZLtreg4Au7eSki4rHLEFZYxwvHgGJn
+X-Proofpoint-ORIG-GUID: SFZLtreg4Au7eSki4rHLEFZYxwvHgGJn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-08_02,2023-03-07_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
- mlxlogscore=999 impostorscore=0 clxscore=1011 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303080059
+ definitions=2023-03-08_03,2023-03-07_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ clxscore=1011 phishscore=0 priorityscore=1501 spamscore=0 mlxlogscore=643
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303080068
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+hi
 
-On 7/13/2022 9:35 AM, Srinivasarao Pathipati wrote:
->
-> On 6/24/2022 5:48 PM, Will Deacon wrote:
->> On Thu, Jun 09, 2022 at 06:29:49PM +0530, Srinivasarao Pathipati wrote:
->>> The PMU export bit (PMCR_EL0.X) is getting reset during pmu reset,
->>> Make it configurable using sysctls to enable/disable at runtime.
->>>
->>> Signed-off-by: Srinivasarao Pathipati <quic_c_spathi@quicinc.com>
->>> ---
->>> Changes since V5:
->>>     - removed configuring with kernel parameters.
->>> Changes since V4:
->>>     - Registering sysctls dynamically for only arm64 as suggested by 
->>> Will
->>>     - Not removed the code to configure with kernel parameters
->>>       as the sysctl's kernel parameter(sysctl.kernel.export_pmu_events)
->>>       is not working at early bootup. pmu_reset() getting called before
->>>       sysctl's kernel parameter is set.
->>> Changes since V3:
->>>     - export bit is now configurable with sysctl
->>>     - enabling export bit on reset instead of retaining
->>>
->>> Changes since V2:
->>>     Done below changes as per Will's comments
->>>     - enabling pmcr_x now configurable with kernel parameters and
->>>       by default it is disabled.
->>>
->>> Changes since V1:
->>>     - Preserving only PMCR_X bit as per Robin Murphy's comment.
->>>
->>> ---
->>>   Documentation/admin-guide/sysctl/kernel.rst | 11 +++++++++++
->>>   arch/arm64/kernel/perf_event.c              | 13 +++++++++++++
->>>   2 files changed, 24 insertions(+)
->>>
->>> diff --git a/Documentation/admin-guide/sysctl/kernel.rst 
->>> b/Documentation/admin-guide/sysctl/kernel.rst
->>> index ddccd10..c2ecd84 100644
->>> --- a/Documentation/admin-guide/sysctl/kernel.rst
->>> +++ b/Documentation/admin-guide/sysctl/kernel.rst
->>> @@ -267,6 +267,17 @@ domain names are in general different. For a 
->>> detailed discussion
->>>   see the ``hostname(1)`` man page.
->>>     +export_pmu_events (arm64 only)
->>> +==============================
->>> +
->>> +Controls the PMU export bit (PMCR_EL0.X), which enables the 
->>> exporting of
->>> +events over an IMPLEMENTATION DEFINED PMU event export bus to 
->>> another device.
->>> +
->>> +0: disables exporting of events (default).
->>> +
->>> +1: enables exporting of events.
->>> +
->>> +
->>>   firmware_config
->>>   ===============
->>>   diff --git a/arch/arm64/kernel/perf_event.c 
->>> b/arch/arm64/kernel/perf_event.c
->>> index cb69ff1..a8c32a0 100644
->>> --- a/arch/arm64/kernel/perf_event.c
->>> +++ b/arch/arm64/kernel/perf_event.c
->>> @@ -298,6 +298,7 @@ PMU_FORMAT_ATTR(long, "config1:0");
->>>   PMU_FORMAT_ATTR(rdpmc, "config1:1");
->>>     static int sysctl_perf_user_access __read_mostly;
->>> +static int sysctl_export_pmu_events __read_mostly;
->>>     static inline bool armv8pmu_event_is_64bit(struct perf_event 
->>> *event)
->>>   {
->>> @@ -1047,6 +1048,9 @@ static void armv8pmu_reset(void *info)
->>>       if (armv8pmu_has_long_event(cpu_pmu))
->>>           pmcr |= ARMV8_PMU_PMCR_LP;
->>>   +    if (sysctl_export_pmu_events)
->>> +        pmcr |= ARMV8_PMU_PMCR_X;
->> I think we need to do this in armv8pmu_start() rather than 
->> armv8pmu_reset(),
->> otherwise any changes to the sysctl at runtime won't take effect 
->> unless you
->> do something like re-online the CPU.
->>
->> Will
->
-> Hi Will ,
->
-> We think it may not work.   Say for example pmu->reset is called which 
-> disables the exporting of events,
-> and pmu->start not called. This would lead to missing of events.
->
-> How about enabling it in both reset and start functions? do you see 
-> any issue?
->
-> --Srinivas
+When I use the perf tool on nxp-imx6sx, the CPU is armv7 cortex-A9 to 
+test, I execute the perf record -e branch-misses ls > /dev/null command, 
+but the perf report result is indeed:
+perf report
+Error:
+The perf.data data has no samples!
+# To display the perf.data header info, please use 
+--header/--header-only options.
 
-Hi Will ,
+root@nxp-imx6:~# perf list hardware
 
-Could you please suggest ,better way to fix this.
+List of pre-defined events (to be used in -e):
+
+    branch-instructions OR branches [Hardware event]
+    branch-misses [Hardware event]
+    bus-cycles [Hardware event]
+    cache-misses [Hardware event]
+    cache-references [Hardware event]
+    cpu-cycles OR cycles [Hardware event]
+    instructions [Hardware event]
+
+And not only this one hardware event, only cycles are working normally 
+in the following supported hardware time, other hardware events are not 
+interrupted and reported, and the value in the read PMXEVCNTR register 
+is always -1, and the PMCR register E, bit[0 ] it will be written to 0 
+before reading the PMXEVCNTR register. I don’t know if the value in the 
+PMXEVCNTR register is always -1 for this reason. Does anyone have any 
+good suggestions for debugging this problem?
+
+
+thanks
+
+xiaolei
 
