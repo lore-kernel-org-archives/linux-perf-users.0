@@ -2,293 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F1DC678D5
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 12:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC76C678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 13:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231193AbjCHMxz (ORCPT
+        id S230171AbjCHNsn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 07:53:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57712 "EHLO
+        Wed, 8 Mar 2023 08:48:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbjCHMxm (ORCPT
+        with ESMTP id S230044AbjCHNsk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 07:53:42 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F7FB4820;
-        Wed,  8 Mar 2023 04:53:40 -0800 (PST)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 328BCH2J017371;
-        Wed, 8 Mar 2023 12:53:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=BaOHCIvZggeecOWNBSlSSkIxgYUdRP4iC0BWfBmoQF0=;
- b=rTXwCOdguD3cwN7uQGHGMSKS+U0t3RDUzlfRCj2QtDTqM7EQEV+2q91+eLi6xr+JQnaw
- yby7qU8UxRfDkBAX1lrFA+bwPQHrwh4/OZJPA2ZjgFe9ig2emzfja2Y30kTK0fdh/6A3
- eru6DOY4ZEzlOwKka1spEqKTlTRJQC5Nk1WSVlPiAn5DgchZYuyQG6Kuwr6RZvMdmGt5
- +9gf7HDmRfUzrls+x2wAWItaz+nZupRuCCVzTblLWcz0VOsMT6TOlP8p/zAWxwSDMdGZ
- k98cD85812GGFXxhp87L7wnfEvi3AlyE32VQiJB/FZIwyZYfioc8cobIwxp3/B2ZWSz6 8A== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6s9a26d8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Mar 2023 12:53:37 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3280dl7e003274;
-        Wed, 8 Mar 2023 12:53:35 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3p6g0pgk2b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Mar 2023 12:53:35 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 328CrVcf35717584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Mar 2023 12:53:31 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8C4220043;
-        Wed,  8 Mar 2023 12:53:31 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DF4620040;
-        Wed,  8 Mar 2023 12:53:31 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Mar 2023 12:53:31 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf list: Add PMU pai_ext event description for IBM z16
-Date:   Wed,  8 Mar 2023 13:53:26 +0100
-Message-Id: <20230308125326.2195613-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.37.2
+        Wed, 8 Mar 2023 08:48:40 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6042F233D2;
+        Wed,  8 Mar 2023 05:48:19 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id d41-20020a05600c4c2900b003e9e066550fso1183582wmp.4;
+        Wed, 08 Mar 2023 05:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678283298;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Eeukihki09mFh5Tgwwz3g9D7DAvSgW843JlsCSZBqvk=;
+        b=N6PvQAEn37lp58tqEPw/ABQMH1wD1koV7wrbUPpnxRk+Sw04kEs6b9mcewq487BZvS
+         PPaEBWGf1G5xLhSxWV4/X7+HtFJcv13hPo/rYRpCjziAPtmnE3GZmFT8/xVmenaiK5mW
+         21ZxVtBXxlUENvU6CpfiuF7Hsp7mRtAlOLobIk5HQd0m+SC6ixIlYOLs7qMBR3cJccvd
+         AGyKhw3sRypwGqwqnUWHWa0ZOOeG5S/1dctzOpxoPqECmisHQq8Aj0Ro5WFmQZSC27iV
+         Rqxd0E7GQYwcanuyp3aHwk8SMieQT+rp3DFfcAIMebesejcH4X07a05WQLUX0rfTPzMk
+         nhHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678283298;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eeukihki09mFh5Tgwwz3g9D7DAvSgW843JlsCSZBqvk=;
+        b=pLGlg9xxOQiCckTPYkMqpFiafl9UpJQlRX6TSiwwOf2GfNaAxu4UPnU5vo0fGy41JA
+         uXnKcbm3OUNDYapjpL+eix4Al3IEZ/WcZORcOI+Xe//Y9/6o57Tr8rrKq/ZJjQUFL3Lu
+         8NsHIBcqcR59ncl7R6debGA7L9MO1oiFR3+goLc5L7yyD5zbwMBkKFEmfj8LwYNmkDCc
+         PxLD8Z3X6w2F/WHnnqTGmERWkQBBsYmtDR+EjNcQX+yKNrUhNZCMt2Ib6R8hLWyqa/HO
+         jCVE2cAM3gEj52+tDE78jd9KpcFXshzIqRAdsDdCujMdgIMLrGx9+QEiUwn+ayw8Awjz
+         LoJQ==
+X-Gm-Message-State: AO0yUKUoMPGW0TPCOwaTRyQd1tfgqNAKfHa5j5XVUTCWTJsnoUrT48vX
+        Nfdt5++hgIpiMXxtB6KqjqQ=
+X-Google-Smtp-Source: AK7set/We+21S7n72POqTKt6ngyQSPmSgUn7r5KwmhLXABqmHks8nzQ0ne3JyfD77aWaHXBj99vHNA==
+X-Received: by 2002:a05:600c:1c96:b0:3ea:f6c4:5f3d with SMTP id k22-20020a05600c1c9600b003eaf6c45f3dmr15837479wms.2.1678283297706;
+        Wed, 08 Mar 2023 05:48:17 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 16-20020a05600c229000b003eb2e33f327sm2220186wmf.2.2023.03.08.05.48.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Mar 2023 05:48:17 -0800 (PST)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 8 Mar 2023 14:48:14 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, bpf@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>
+Subject: Re: [PATCH RFC v2 bpf-next 4/9] libbpf: Allow to resolve binary path
+ in current directory
+Message-ID: <ZAiSHjVjdS76kSVN@krava>
+References: <20230228093206.821563-1-jolsa@kernel.org>
+ <20230228093206.821563-5-jolsa@kernel.org>
+ <CAEf4Bzar7H1OsjgqJ8H6R-f3DZPhhR0+KOamyt0MDNboept--A@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RpeAmozW15tdJB27fTMt0yE2cwFs2tVB
-X-Proofpoint-GUID: RpeAmozW15tdJB27fTMt0yE2cwFs2tVB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-08_08,2023-03-08_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 phishscore=0 clxscore=1011 impostorscore=0 mlxlogscore=853
- priorityscore=1501 suspectscore=0 mlxscore=0 spamscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303080108
+In-Reply-To: <CAEf4Bzar7H1OsjgqJ8H6R-f3DZPhhR0+KOamyt0MDNboept--A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add the event description for the IBM z16 pai_ext PMU released with
-commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA counters")
+On Tue, Mar 07, 2023 at 05:19:00PM -0800, Andrii Nakryiko wrote:
+> On Tue, Feb 28, 2023 at 1:33 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Try to resolve uprobe/usdt binary path also in current directory,
+> > it's used in the test code in following changes.
+> 
+> nope, that's not what shell is doing, so let's not invent new rules
+> here. If some tests need something like that, utilize LD_LIBRARY_PATH
+> or even better just specify './library.so'
 
-The document SA22-7832-13 "z/Architecture Principles of Operation",
-published May, 2022, contains the description of the
-Processor Activity Instrumentation Facility and the NNPA counter
-set., See Pages 5-113 to 5-116 and chapter 26 for details.
+ok, that fixed that:
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 178 ++++++++++++++++++
- tools/perf/pmu-events/jevents.py              |   1 +
- 2 files changed, 179 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+SEC("uprobe/./liburandom_read.so:urandlib_read_without_sema")
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
-new file mode 100644
-index 000000000000..7ccbded95dc9
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
-@@ -0,0 +1,178 @@
-+[
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6144",
-+		"EventName": "NNPA_ALL",
-+		"BriefDescription": "NNPA ALL Sum of all non zero counters",
-+		"PublicDescription": "Sum of all non zero NNPA (Neural Networks Processing Assist) counters"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6145",
-+		"EventName": "NNPA_ADD",
-+		"BriefDescription": "NNPA ADD function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6146",
-+		"EventName": "NNPA_SUB",
-+		"BriefDescription": "NNPA SUB function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6147",
-+		"EventName": "NNPA_MUL",
-+		"BriefDescription": "NNPA MUL function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6148",
-+		"EventName": "NNPA_DIV",
-+		"BriefDescription": "NNPA DIV function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6149",
-+		"EventName": "NNPA_MIN",
-+		"BriefDescription": "NNPA MIN function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6150",
-+		"EventName": "NNPA_MAX",
-+		"BriefDescription": "NNPA MAX function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6151",
-+		"EventName": "NNPA_LOG",
-+		"BriefDescription": "NNPA LOG function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6152",
-+		"EventName": "NNPA_EXP",
-+		"BriefDescription": "NNPA EXP function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6153",
-+		"EventName": "NNPA_IBM_RESERVED_9",
-+		"BriefDescription": "Reserved for IBM use",
-+		"PublicDescription": "Reserved for IBM use"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6154",
-+		"EventName": "NNPA_RELU",
-+		"BriefDescription": "NNPA RELU function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6155",
-+		"EventName": "NNPA_TANH",
-+		"BriefDescription": "NNPA TANH function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6156",
-+		"EventName": "NNPA_SIGMOID",
-+		"BriefDescription": "NNPA SIGMOID function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6157",
-+		"EventName": "NNPA_SOFTMAX",
-+		"BriefDescription": "NNPA SOFTMAX function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6158",
-+		"EventName": "NNPA_BATCHNORM",
-+		"BriefDescription": "NNPA BATCHNORM function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6159",
-+		"EventName": "NNPA_MAXPOOL2D",
-+		"BriefDescription": "NNPA MAXPOOL2D function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6160",
-+		"EventName": "NNPA_AVGPOOL2D",
-+		"BriefDescription": "NNPA AVGPOOL2D function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6161",
-+		"EventName": "NNPA_LSTMACT",
-+		"BriefDescription": "NNPA LSTMACT function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6162",
-+		"EventName": "NNPA_GRUACT",
-+		"BriefDescription": "NNPA GRUACT function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6163",
-+		"EventName": "NNPA_CONVOLUTION",
-+		"BriefDescription": "NNPA CONVOLUTION function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6164",
-+		"EventName": "NNPA_MATMUL_OP",
-+		"BriefDescription": "NNPA MATMUL OP function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6165",
-+		"EventName": "NNPA_MATMUL_OP_BCAST23",
-+		"BriefDescription": "NNPA NNPA MATMUL OP BCAST23 function ending with CC=0"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6166",
-+		"EventName": "NNPA_SMALLBATCH",
-+		"BriefDescription": "NNPA SMALLBATCH OP function ending with CC=0",
-+		"PublicDescription": "NNPA function with conditions as described in Common Operation"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6167",
-+		"EventName": "NNPA_LARGEDIM",
-+		"BriefDescription": "NNPA LARGEDIM OP function ending with CC=0",
-+		"PublicDescription": "NNPA function with conditions as described in Common Operation"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6168",
-+		"EventName": "NNPA_SMALLTENSOR",
-+		"BriefDescription": "NNPA SMALLTENSOR OP function ending with CC=0",
-+		"PublicDescription": "NNPA function with conditions as described in Common Operation"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6169",
-+		"EventName": "NNPA_1MFRAME",
-+		"BriefDescription": "NNPA 1MFRAME OP function ending with CC=0",
-+		"PublicDescription": "NNPA function with conditions as described in Common Operation"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6170",
-+		"EventName": "NNPA_2GFRAME",
-+		"BriefDescription": "NNPA 2GFRAME OP function ending with CC=0",
-+		"PublicDescription": "NNPA function with conditions as described in Common Operation"
-+	},
-+	{
-+		"Unit": "PAI-EXT",
-+		"EventCode": "6171",
-+		"EventName": "NNPA_ACCESSEXCEPT",
-+		"BriefDescription": "NNPA ACCESSEXCEPT OP function ending with CC=0",
-+		"PublicDescription": "NNPA function with conditions as described in Common Operation"
-+	}
-+]
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 2bcd07ce609f..b20d06fcc358 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -246,6 +246,7 @@ class JsonEvent:
-           'CPU-M-CF': 'cpum_cf',
-           'CPU-M-SF': 'cpum_sf',
-           'PAI-CRYPTO' : 'pai_crypto',
-+          'PAI-EXT' : 'pai_ext',
-           'UPI LL': 'uncore_upi',
-           'hisi_sicl,cpa': 'hisi_sicl,cpa',
-           'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
--- 
-2.39.1
+thanks,
+jirka
 
+> 
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/lib/bpf/libbpf.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > index 05c4db355f28..f72115e8b7f9 100644
+> > --- a/tools/lib/bpf/libbpf.c
+> > +++ b/tools/lib/bpf/libbpf.c
+> > @@ -10727,17 +10727,19 @@ static const char *arch_specific_lib_paths(void)
+> >  /* Get full path to program/shared library. */
+> >  static int resolve_full_path(const char *file, char *result, size_t result_sz)
+> >  {
+> > -       const char *search_paths[3] = {};
+> > +       const char *search_paths[4] = {};
+> >         int i, perm;
+> >
+> >         if (str_has_sfx(file, ".so") || strstr(file, ".so.")) {
+> >                 search_paths[0] = getenv("LD_LIBRARY_PATH");
+> >                 search_paths[1] = "/usr/lib64:/usr/lib";
+> >                 search_paths[2] = arch_specific_lib_paths();
+> > +               search_paths[3] = ".";
+> >                 perm = R_OK;
+> >         } else {
+> >                 search_paths[0] = getenv("PATH");
+> >                 search_paths[1] = "/usr/bin:/usr/sbin";
+> > +               search_paths[2] = ".";
+> >                 perm = R_OK | X_OK;
+> >         }
+> >
+> > --
+> > 2.39.2
+> >
