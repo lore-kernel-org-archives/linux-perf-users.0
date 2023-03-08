@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73D7C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 09:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC139C678D5
+	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 09:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjCHJuO (ORCPT
+        id S229780AbjCHJuP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 04:50:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38708 "EHLO
+        Wed, 8 Mar 2023 04:50:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjCHJuG (ORCPT
+        with ESMTP id S230109AbjCHJuC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 04:50:06 -0500
+        Wed, 8 Mar 2023 04:50:02 -0500
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2CBA61B2F0;
-        Wed,  8 Mar 2023 01:50:05 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AF8E11FB;
-        Wed,  8 Mar 2023 01:50:48 -0800 (PST)
-Received: from e127643.broadband (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7604E3F71A;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7DB031B2F0;
         Wed,  8 Mar 2023 01:50:01 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67508113E;
+        Wed,  8 Mar 2023 01:50:44 -0800 (PST)
+Received: from e127643.broadband (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 839853F71A;
+        Wed,  8 Mar 2023 01:49:57 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc:     linux-kernel@vger.kernel.org, al.grant@arm.com,
@@ -40,46 +40,51 @@ Cc:     linux-kernel@vger.kernel.org, al.grant@arm.com,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/2] perf cs-etm: Avoid printing warning in cs_etm_is_ete() check
-Date:   Wed,  8 Mar 2023 09:48:43 +0000
-Message-Id: <20230308094843.287093-2-james.clark@arm.com>
+Subject: [PATCH 1/2] perf cs-etm: Reduce verbosity of ts_source warning
+Date:   Wed,  8 Mar 2023 09:48:42 +0000
+Message-Id: <20230308094843.287093-1-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230308094843.287093-1-james.clark@arm.com>
-References: <20230308094843.287093-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When checking for the presence of ETE, a register is read that may not
-be present on older kernels or if ETE isn't available. cs_etm_get_ro()
-will print a warning if it doesn't exist, so check for the existence
-first before accessing it.
+This is printed as a warning but it is normal behavior that users
+shouldn't be expected to do anything about. Reduce the warning level to
+debug3 so it's only seen in verbose mode to avoid confusion.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/arch/arm/util/cs-etm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 59b50dd70330..86b61ad74f90 100644
+index 7f71c8a237ff..59b50dd70330 100644
 --- a/tools/perf/arch/arm/util/cs-etm.c
 +++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -659,8 +659,12 @@ static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu)
- {
- 	struct cs_etm_recording *ptr = container_of(itr, struct cs_etm_recording, itr);
- 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
--	int trcdevarch = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TRCDEVARCH]);
-+	int trcdevarch;
- 
-+	if (!cs_etm_pmu_path_exists(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TRCDEVARCH]))
-+		return false;
-+
-+	trcdevarch = cs_etm_get_ro(cs_etm_pmu, cpu, metadata_ete_ro[CS_ETE_TRCDEVARCH]);
- 	/*
- 	 * ETE if ARCHVER is 5 (ARCHVER is 4 for ETM) and ARCHPART is 0xA13.
- 	 * See ETM_DEVARCH_ETE_ARCH in coresight-etm4x.h
+@@ -694,8 +694,8 @@ static void cs_etm_save_etmv4_header(__u64 data[], struct auxtrace_record *itr,
+ 		data[CS_ETMV4_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
+ 				metadata_etmv4_ro[CS_ETMV4_TS_SOURCE]);
+ 	else {
+-		pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
+-			   cpu);
++		pr_debug3("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
++			  cpu);
+ 		data[CS_ETMV4_TS_SOURCE] = (__u64) -1;
+ 	}
+ }
+@@ -729,8 +729,8 @@ static void cs_etm_save_ete_header(__u64 data[], struct auxtrace_record *itr, in
+ 		data[CS_ETE_TS_SOURCE] = (__u64) cs_etm_get_ro_signed(cs_etm_pmu, cpu,
+ 				metadata_ete_ro[CS_ETE_TS_SOURCE]);
+ 	else {
+-		pr_warning("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
+-			   cpu);
++		pr_debug3("[%03d] pmu file 'ts_source' not found. Fallback to safe value (-1)\n",
++			  cpu);
+ 		data[CS_ETE_TS_SOURCE] = (__u64) -1;
+ 	}
+ }
 -- 
 2.34.1
 
