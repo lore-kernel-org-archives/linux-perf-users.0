@@ -2,257 +2,289 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D0AC64EC4
-	for <linux-perf-users@archiver.kernel.org>; Wed,  8 Mar 2023 23:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF7CC678D5
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 02:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbjCHXBx (ORCPT
+        id S229977AbjCICN5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 8 Mar 2023 18:01:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39586 "EHLO
+        Wed, 8 Mar 2023 21:13:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbjCHXBM (ORCPT
+        with ESMTP id S229983AbjCICNz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 8 Mar 2023 18:01:12 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1679DB854D
-        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 15:00:45 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id l24-20020a25b318000000b007eba3f8e3baso260541ybj.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 15:00:45 -0800 (PST)
+        Wed, 8 Mar 2023 21:13:55 -0500
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA62D618B8
+        for <linux-perf-users@vger.kernel.org>; Wed,  8 Mar 2023 18:13:48 -0800 (PST)
+Received: by mail-io1-xd2b.google.com with SMTP id e11so154441ioe.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 08 Mar 2023 18:13:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678316443;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=x5MPo35xGT8I5no97e54JFoAV8IlgxfgBAbMEiQkE8U=;
-        b=tGLBbmk6mEkyaPVhJkZRCYWA6iEy5ckHJhLPb7F8UqErknxUOA5qOz8VB2+BvRY4bN
-         LDlVBlhI3wLjbVj3S+97kTVLarHFG7Lrd22PX3efIySxkJhUBeTHuy8uevzWBho3PT0g
-         eGNFgG1G6cmd1vYXW2/tD2t/sXAnNbDrkNLVJtt2uCBDB9OnrkEiPxvGq3Hb/QRaIa6Q
-         K9KToen8jFhaLhboI8Xddizefkh6aAtWbiw2O2763qDEgl95SYASXcSYvZqEfQNkDTbq
-         ZwhhKNaoxsVZFPjJBaBUuCvBWdkt3EV5KLrFrfpOyhojPs9DO3VIJbqp5OSiObZ375yN
-         bFbA==
+        d=google.com; s=20210112; t=1678328028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDCu+k9I5uU9ZeyTijagvPSWTHvVWfU/xHE3X1obRdA=;
+        b=dipSQP9U03tyGH9iIucLnZ+CHfS8mkxPYC/AtXJfO832TcuO3QoByvI+6Uci295s7p
+         fA2hqBRkCc8bB0ZMgkrGFTYy5k5GBsaopWvkUGyIdT86m6qAPoh5sQ0peVqyaac+44bx
+         U8FF94CJ+IDhardjXsj3ub8vOIaAt2oJRTIl5dCD7Lms6O2I51mhkET8WnxJrhLDwl2l
+         m82MqiqWrvYwmnP/dd4F0bjz1jby+M/KxfnX0czHLuII+GwHnHDsFwydgj0EaU7Fzg2c
+         hlODJfjtSs+xPsbYqL7kTPxOFFOccA7cNgraGGKw0RQFuiEAUe7pgqxJW0LrMahKUuEH
+         CKHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678316443;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x5MPo35xGT8I5no97e54JFoAV8IlgxfgBAbMEiQkE8U=;
-        b=36b3TfCTzxcHNzE4U+egTNUZDtCgwfB6C4Ds/76W+HKB7aWLUhglNE+Hs+EGwzI1f4
-         wqpir9K3iLjBX+IrBBkGF5GQfchIKmucTVPoTihOmTIfk0zNID1pMbT+C2RWCxnfvPa8
-         z8yGj+3vNFv2+Pt7teUDXvMJIGRqf+lFqQwTycMVZt7aHtoNqJe7bxtjfHg+Nl9n8udf
-         UNx+UZoc242NZziLtcy/FnV1pnEYPVVqg/DDXH0ylMG8eyntIlRVBLOWBT6AYfWSY4Sc
-         IHJV1GBbmvwz4SNp+//bHR9uFtCtKhnRjpar2mVWnBl2C8b4uxXconDyVZSgDwKnu/zW
-         4qmQ==
-X-Gm-Message-State: AO0yUKVwBIlnCHFTYYFd69+mxk3KoJgPwCE11Fkh9tP/taKRJVXXSpWy
-        mqODYfOHDgIT9xcpRGqRxTODhYuaima2
-X-Google-Smtp-Source: AK7set8cHVeu2tes5PIhkpiZB9G05ecICAh5BhC4MNN5AarP7q9+ndGq4yJkt8Mpa6MaAqQxOO4a2GMkfC2g
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:5292:ba14:c261:246a])
- (user=irogers job=sendgmr) by 2002:a5b:e92:0:b0:ab8:1ed9:cfc9 with SMTP id
- z18-20020a5b0e92000000b00ab81ed9cfc9mr11861623ybr.6.1678316443692; Wed, 08
- Mar 2023 15:00:43 -0800 (PST)
-Date:   Wed,  8 Mar 2023 14:59:12 -0800
-In-Reply-To: <20230308225912.1960990-1-irogers@google.com>
-Message-Id: <20230308225912.1960990-12-irogers@google.com>
-Mime-Version: 1.0
-References: <20230308225912.1960990-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.rc0.216.gc4246ad0f0-goog
-Subject: [PATCH v4 11/11] perf parse-events: Warn when events are regrouped
+        d=1e100.net; s=20210112; t=1678328028;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xDCu+k9I5uU9ZeyTijagvPSWTHvVWfU/xHE3X1obRdA=;
+        b=VJAMjxfwHqm0Hoyhq/53xriZxq3Gqx42PqCDeXASrEQvKyW+mZBtRccFnakAOntyif
+         CdrcIbs6epc5brPLyuN1kploJZc0KIbfUXHlEJ3SImUqiD7tMgx6FJyDhPnSU6oXembL
+         7q/YPdJjg/gF18jv1CFSusQEcBNSELd9upRNturSM2NRTG9OteqPnBzKbohj2sXzkYOJ
+         9YO8GCNnlYpu2rd9wS12rIblBsLIvUXCrlt1ZVSYoBL7mlVeqrDOtShiytAbyDNP5tx7
+         TQM9rQqmn1FQaaV6RGMT8vcPJ0BuQpFMq6jF3tsADGBNjjsQMZQc/+MuppAcM/Y/dbBG
+         DdJQ==
+X-Gm-Message-State: AO0yUKVXKDESX+QGH3/OoW5Otcv+RNcjMyYrEq8/JvTLuo1mfLiPerQj
+        r+j+yYCKu4l+xxTxRoMVrTC8AJFtxhFgKDVpyiZjsA==
+X-Google-Smtp-Source: AK7set+mWq6zJzHt94/3BeSde/daBudUBmiy0DGPNw2z7zo1D94NCuIcD0UN8oAwSxIzMMRpLPMDFnzDPe9ry/6ETaA=
+X-Received: by 2002:a6b:dc03:0:b0:74c:7eac:a064 with SMTP id
+ s3-20020a6bdc03000000b0074c7eaca064mr9571737ioc.2.1678328027763; Wed, 08 Mar
+ 2023 18:13:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20230116010115.490713-1-irogers@google.com> <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
+ <Y8mAuDvs566zwG67@kernel.org> <Y8myfqy5EMit3Kr/@krava>
+In-Reply-To: <Y8myfqy5EMit3Kr/@krava>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Wed, 8 Mar 2023 18:13:34 -0800
+Message-ID: <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Andres Freund <andres@anarazel.de>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Guilherme Amadio <amadio@gentoo.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use if an event is reordered or the number of groups increases to
-signal that regrouping has happened and warn about it. Disable the
-warning in the case wild card PMU names are used and for metrics.
+On Thu, Jan 19, 2023 at 1:13=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu:
+> > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.com> wrote=
+:
+> > > > libbpf 1.0 was a major change in API. Perf has partially supported
+> > > > older libbpf's but an implementation may be:
+> > > > ..
+> > > >        pr_err("%s: not support, update libbpf\n", __func__);
+> > > >        return -ENOTSUP;
+> > > > ..
+> > > >
+> > > > Rather than build a binary that would fail at runtime it is
+> > > > preferrential just to build libbpf statically and link against
+> > > > that. The static version is in the kernel tools tree and newer than
+> > > > 1.0.
+> > > >
+> > > > These patches change the libbpf test to only pass when at least
+> > > > version 1.0 is installed, then remove the conditional build and
+> > > > feature logic.
+> > > >
+> > > > The issue is discussed here:
+> > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@google=
+.com/
+> > > > perf bpf:
+> > > >
+> > > > A variant of this fix was added to Linux 6.2 in:
+> > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_DYNAMI=
+C=3D1"
+> > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
+> > > > This change goes further in removing logic that is now no longer
+> > > > necessary.
+> > > >
+> > > > v2. Rebase now that breakage fix patch is in linus/master.
+> > >
+> > > I missed the:
+> > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
+> > > I believe we are waiting for package maintainer input.
+> >
+> > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
+>
+> rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd be to move
+> f37 to 1.x, but I had to do bulk update of like 10 other dependent packag=
+es
+> for f38, so not sure how bad it'd be for f37
+>
+> jirka
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/parse-events.c |  2 +-
- tools/perf/tests/pmu-events.c   |  2 +-
- tools/perf/util/metricgroup.c   |  3 ++-
- tools/perf/util/parse-events.c  | 28 ++++++++++++++++++++--------
- tools/perf/util/parse-events.h  |  7 ++++---
- tools/perf/util/parse-events.y  |  1 +
- 6 files changed, 29 insertions(+), 14 deletions(-)
++Guilherme
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index ffa6f0a90741..b1c2f0a20306 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2103,7 +2103,7 @@ static int test_event_fake_pmu(const char *str)
- 
- 	parse_events_error__init(&err);
- 	perf_pmu__test_parse_init();
--	ret = __parse_events(evlist, str, &err, &perf_pmu__fake);
-+	ret = __parse_events(evlist, str, &err, &perf_pmu__fake, /*warn_if_reordered=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
- 			 str, ret, err.str);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 6ccd413b5983..7f8e86452527 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -785,7 +785,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 		 */
- 		perf_pmu__test_parse_init();
- 	}
--	ret = __parse_events(evlist, dup, error, fake_pmu);
-+	ret = __parse_events(evlist, dup, error, fake_pmu, /*warn_if_reordered=*/true);
- 	free(dup);
- 
- 	evlist__delete(evlist);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index de6dd527a2ba..5783f4c2d1ef 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1441,7 +1441,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	}
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
--	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
-+	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu,
-+			     /*warn_if_reordered=*/false);
- 	if (ret) {
- 		parse_events_error__print(&parse_error, events.buf);
- 		goto err_out;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 9ec3c1dc81e0..4bb28c32b511 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2157,11 +2157,13 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
- 	return arch_evlist__cmp(lhs, rhs);
- }
- 
--static void parse_events__sort_events_and_fix_groups(struct list_head *list)
-+static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- {
- 	int idx = -1;
- 	struct evsel *pos, *cur_leader = NULL;
- 	struct perf_evsel *cur_leaders_grp = NULL;
-+	bool idx_changed = false;
-+	int orig_num_leaders = 0, num_leaders = 0;
- 
- 	/*
- 	 * Compute index to insert ungrouped events at. Place them where the
-@@ -2170,11 +2172,11 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	list_for_each_entry(pos, list, core.node) {
- 		const struct evsel *pos_leader = evsel__leader(pos);
- 
--		if (pos != pos_leader || pos->core.nr_members > 1)
--			continue;
-+		if (pos == pos_leader)
-+			orig_num_leaders++;
- 
--		idx = pos->core.idx;
--		break;
-+		if (idx == -1 && pos == pos_leader && pos->core.nr_members < 2)
-+			idx = pos->core.idx;
- 	}
- 
- 	/* Sort events. */
-@@ -2192,6 +2194,8 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		bool force_grouped = arch_evsel__must_be_in_group(pos);
- 
- 		/* Reset index and nr_members. */
-+		if (pos->core.idx != idx)
-+			idx_changed = true;
- 		pos->core.idx = idx++;
- 		pos->core.nr_members = 0;
- 
-@@ -2225,12 +2229,18 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		}
- 	}
- 	list_for_each_entry(pos, list, core.node) {
--		pos->core.leader->nr_members++;
-+		struct evsel *pos_leader = evsel__leader(pos);
-+
-+		if (pos == pos_leader)
-+			num_leaders++;
-+		pos_leader->core.nr_members++;
- 	}
-+	return idx_changed || num_leaders != orig_num_leaders;
- }
- 
- int __parse_events(struct evlist *evlist, const char *str,
--		   struct parse_events_error *err, struct perf_pmu *fake_pmu)
-+		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
-+		   bool warn_if_reordered)
- {
- 	struct parse_events_state parse_state = {
- 		.list	  = LIST_HEAD_INIT(parse_state.list),
-@@ -2250,7 +2260,9 @@ int __parse_events(struct evlist *evlist, const char *str,
- 		return -1;
- 	}
- 
--	parse_events__sort_events_and_fix_groups(&parse_state.list);
-+	if (parse_events__sort_events_and_fix_groups(&parse_state.list) &&
-+	    warn_if_reordered && !parse_state.wild_card_pmus)
-+		pr_warning("WARNING: events were regrouped to match PMUs\n");
- 
- 	/*
- 	 * Add list to the evlist even with errors to allow callers to clean up.
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 767ad1729228..46204c1a7916 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -26,13 +26,13 @@ int parse_events_option(const struct option *opt, const char *str, int unset);
- int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
- __attribute__((nonnull(1, 2, 3)))
- int __parse_events(struct evlist *evlist, const char *str, struct parse_events_error *error,
--		   struct perf_pmu *fake_pmu);
-+		   struct perf_pmu *fake_pmu, bool warn_if_reordered);
- 
--__attribute__((nonnull))
-+__attribute__((nonnull(1, 2, 3)))
- static inline int parse_events(struct evlist *evlist, const char *str,
- 			       struct parse_events_error *err)
- {
--	return __parse_events(evlist, str, err, NULL);
-+	return __parse_events(evlist, str, err, /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
- }
- 
- int parse_event(struct evlist *evlist, const char *str);
-@@ -128,6 +128,7 @@ struct parse_events_state {
- 	int			   stoken;
- 	struct perf_pmu		  *fake_pmu;
- 	char			  *hybrid_pmu_name;
-+	bool			   wild_card_pmus;
- };
- 
- void parse_events__shrink_config_terms(void);
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 3a04602d2982..4488443e506e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -323,6 +323,7 @@ event_pmu_name opt_pmu_config
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms,
- 							  /*auto_merge_stats=*/true)) {
- 					ok++;
-+					parse_state->wild_card_pmus = true;
- 				}
- 				parse_events_terms__delete(terms);
- 			}
--- 
-2.40.0.rc0.216.gc4246ad0f0-goog
+We were looking for maintainer input on these changes, but there is no
+update in over a month. Here is the original lore link:
+https://lore.kernel.org/lkml/CAP-5=3DfVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaL=
+xrO4Hpg@mail.gmail.com/
+Should these changes land in perf-tools-next targeting Linux 6.4?
 
+Thanks,
+Ian
+
+> >
+> > This is what I have in the containers I test, sure, the older ones
+> > already have NO_LIBBPF=3D1 and some will get this added, and some I sti=
+ll
+> > need to ask for libbpf-devel (or the distro specific name, like
+> > libbpf-dev):
+> >
+> > [perfbuilder@five ~]$ podman images --format "{{.Repository}}:{{.Tag}}"=
+ | grep /acmel/ | grep -v '<none>' | sort -t: -Vk1,2 | grep -v -- -x- | whi=
+le read image ; do echo -n $image: ; libbpf=3D$(podman run --rm -t --entryp=
+oint=3Dls $image -la /usr/lib64/libbpf.so.1) ; echo $libbpf ; done
+> > localhost/acmel/linux-perf-tools-build-almalinux:8:ls: cannot access '/=
+usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-almalinux:9:ls: cannot access '/=
+usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:3.12:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:3.13:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:3.14:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:3.15:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:3.16:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:3.17:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alpine:edge:ls: /usr/lib64/libbp=
+f.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alt:p9:ls: cannot access '/usr/l=
+ib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alt:p10:ls: cannot access '/usr/=
+lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-alt:sisyphus:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-amazonlinux:2:ls: cannot access =
+/usr/lib64/libbpf.so.1: No such file or directory
+> > localhost/acmel/linux-perf-tools-build-amazonlinux:devel:ls: cannot acc=
+ess '/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-archlinux:base:lrwxrwxrwx 1 root=
+ root 15 Oct 1 12:32 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.1
+> > localhost/acmel/linux-perf-tools-build-centos:8:ls: cannot access '/usr=
+/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-centos:stream:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-clearlinux:latest:lrwxrwxrwx 1 r=
+oot root 15 Sep 30 16:01 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.1
+> > localhost/acmel/linux-perf-tools-build-debian:10:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-debian:11:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-debian:experimental:ls: cannot a=
+ccess '/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:26:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:27:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:28:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:29:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:30:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:31:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:32:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:33:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:34:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:35:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:36:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:37:ls: cannot access '/us=
+r/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-fedora:38:lrwxrwxrwx. 1 root roo=
+t 15 Dec 20 14:39 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.0
+> > localhost/acmel/linux-perf-tools-build-fedora:rawhide:lrwxrwxrwx. 1 roo=
+t root 15 Dec 20 14:39 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.0
+> > localhost/acmel/linux-perf-tools-build-gentoo-stage3:latest:ls: cannot =
+access '/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-manjaro:base:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:15.0:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:15.1:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:15.2:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:15.3:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:15.4:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:15.5:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-opensuse:tumbleweed:lrwxrwxrwx. =
+1 root root 15 Nov 9 12:08 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.1
+> > localhost/acmel/linux-perf-tools-build-oraclelinux:8:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-oraclelinux:9:ls: cannot access =
+'/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-rockylinux:8:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-rockylinux:9:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:18.04:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:20.04:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:21.04:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:21.10:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:22.04:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:22.10:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > localhost/acmel/linux-perf-tools-build-ubuntu:23.04:ls: cannot access '=
+/usr/lib64/libbpf.so.1': No such file or directory
+> > [perfbuilder@five ~]$
+> >
+> > [perfbuilder@five linux-perf-tools-build]$ grep libbpf-dev */*/Dockerfi=
+le
+> > debian/experimental/Dockerfile:       libbpf-dev \
+> > fedora/35/Dockerfile:            libtraceevent-devel libbpf-devel \
+> > fedora/36/Dockerfile:            libtraceevent-devel libbpf-devel \
+> > fedora/37/Dockerfile:            libtraceevent-devel libbpf-devel \
+> > fedora/38/Dockerfile:            libtraceevent-devel libbpf-devel \
+> > fedora/rawhide/Dockerfile:    libtraceevent-devel libbpf-devel \
+> > opensuse/tumbleweed/Dockerfile:       libbpf-devel libtraceevent-devel =
+\
+> > ubuntu/22.04/Dockerfile:      libelf-dev libiberty-dev libdw-dev libaud=
+it-dev libtraceevent-dev libbpf-dev \
+> > ubuntu/22.10/Dockerfile:      libelf-dev libiberty-dev libdw-dev libaud=
+it-dev libtraceevent-dev libbpf-dev \
+> > ubuntu/23.04/Dockerfile:      libelf-dev libiberty-dev libdw-dev libaud=
+it-dev libtraceevent-dev libbpf-dev \
+> > [perfbuilder@five linux-perf-tools-build]$
+> >
+> > In some cases it gets dragged on differently, like with clearlinux,
+> > gentoo, archlinux, etc.
+> >
+> > Anyway, just a data point, I'll check if I'm missing installing it
+> > somewhere.
+> >
+> > - Arnaldo
