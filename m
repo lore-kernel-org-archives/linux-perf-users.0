@@ -2,167 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67484C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 17:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F01C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 21:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbjCIRZL (ORCPT
+        id S231165AbjCIVN7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Mar 2023 12:25:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46276 "EHLO
+        Thu, 9 Mar 2023 16:13:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjCIRZF (ORCPT
+        with ESMTP id S231129AbjCIVN6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Mar 2023 12:25:05 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B21D2F4014;
-        Thu,  9 Mar 2023 09:25:03 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id da10so10050050edb.3;
-        Thu, 09 Mar 2023 09:25:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678382702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HrmnCwuqDBkKBTp5toyLRDgxwMb1mUSNwOKGOvXrNk8=;
-        b=YbMFQAN2CFlTRt/shmKFWoDHH43IVpYQv0SdPfm1P0UfpM2c2rY0m3J7N4tG0Q/3UO
-         niA4MqgL3o1TfWqbVSuZw0qSG5yX9f+bmGbnMokP/7KExMkIA98ymyTOQ/TIvY7X6rdK
-         F8j6/zYdxi8fVdjAkOL/jFjnbZWAOC2JsHX8CcLoMBshIkRXczOq/4+yIr/zybGd9bqF
-         +TRHSx1dsz7z/cG8zSds+BYnz5wMl7LfB5NnbZuUDz/n49I8gPt+FqiApPYgOqmjCENu
-         HGblFwoYSg0zMZGTRJRn+SMCYkpkd6fTebC4OoFtA6+EWvzczM8WI3Sib8AGBHg8zXSb
-         BgWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678382702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HrmnCwuqDBkKBTp5toyLRDgxwMb1mUSNwOKGOvXrNk8=;
-        b=UjkLqanfSQcAzP56BTY0AU93/1AQgH3OmsGHm7NIWBVZx/fV4aYqCMCFbQmgFVL5HF
-         52+SnRS01lp8C/4mpjOY5yI76gDhBjUMmx3lPqG6xzi4+8d+TtKWqGO2AYrZcrwQt3hK
-         gETmFU0UIXpBQDGymY89w5tktInt1WWJfzwOzNscblxQCXQ6M8uWduERCaTgjj5Ehe7J
-         75PEbKiNdJK547fuB7KL/2pCQQpurkuo7W4bwW5r42SJ6omis2OQBMx7sKrD0fzxG8pN
-         hMTWObwik2vzrTk9tFXNhvVMY1QGnI8e/TNyaSe82aa/nN4t1V+qdInE+Ze2/wG4YmdS
-         Xn0A==
-X-Gm-Message-State: AO0yUKWsHaEWHtokfzVlvFcHa6G5Nmbhk67SGSw9LwXU/QjdTifKLdgj
-        y9YkS4l1a/AR1sYascnJtv1XW3avzzrPZbEq3/c=
-X-Google-Smtp-Source: AK7set9+WAM2tkUR3P8z1o6OwFcOvtGcpMNZO6wiOAEM0Wf7cKJqwCUv8lccj1cA/eicaCLfU57xRkIAGSrSIMk1IdM=
-X-Received: by 2002:a17:906:6dc1:b0:8b1:76b8:9834 with SMTP id
- j1-20020a1709066dc100b008b176b89834mr11537033ejt.5.1678382702071; Thu, 09 Mar
- 2023 09:25:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20230116010115.490713-1-irogers@google.com> <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
- <Y8mAuDvs566zwG67@kernel.org> <Y8myfqy5EMit3Kr/@krava> <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
- <ZAmRjk1x4p4TrFb0@gentoo.org>
-In-Reply-To: <ZAmRjk1x4p4TrFb0@gentoo.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 9 Mar 2023 09:24:50 -0800
-Message-ID: <CAEf4BzZJvEnWdTKVSgdBDr_KEgkW5HLHc7N-HRkmb-drCbg2uw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
-To:     Guilherme Amadio <amadio@gentoo.org>
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thu, 9 Mar 2023 16:13:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B42B7E9CCB;
+        Thu,  9 Mar 2023 13:13:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2A9BAB820C8;
+        Thu,  9 Mar 2023 21:13:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA451C433EF;
+        Thu,  9 Mar 2023 21:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678396433;
+        bh=BeV26pTW4A5lvPDrYbQpGFlfWF2dzD/VF0QL/uwIDgw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oW+gyq4GejWp1tCcd/bDmwPlmhQqO+xlLbPJvdgwU6OtHkSsRTJRt3bNFWFCsy8mv
+         69FeyKeDo3+o3OMJWdV96x9tRbuoDYtjWs9sq9LpIEfm/23rNUFa8nzWbfjwNCm2+i
+         39WKAmYcwrpXyJQ4g7obpCGRM1idCXSTQjtUHUSTRCctVtaik/rvBWouS6u1coltzr
+         P5uyzj0KxQiIaF5f0VFd1+F4im+HwSxeO3ENH0rXiBtc8BKjikWs+Bc+TXfEvizToc
+         IBpHCmdAY3sMrWQiqf/4EFsfZbfYU88CWP2v0c3NsK3yKeg+DAsqM7LUkY0UBm19AU
+         NyAUgZIsNnCRQ==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Changbin Du <changbin.du@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.3
+Date:   Thu,  9 Mar 2023 18:13:46 -0300
+Message-Id: <20230309211346.904516-1-acme@kernel.org>
+X-Mailer: git-send-email 2.39.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 8, 2023 at 11:58=E2=80=AFPM Guilherme Amadio <amadio@gentoo.org=
-> wrote:
->
-> On Wed, Mar 08, 2023 at 06:13:34PM -0800, Ian Rogers wrote:
-> > On Thu, Jan 19, 2023 at 1:13=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> =
-wrote:
-> > >
-> > > On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu:
-> > > > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.com> w=
-rote:
-> > > > > > libbpf 1.0 was a major change in API. Perf has partially suppor=
-ted
-> > > > > > older libbpf's but an implementation may be:
-> > > > > > ..
-> > > > > >        pr_err("%s: not support, update libbpf\n", __func__);
-> > > > > >        return -ENOTSUP;
-> > > > > > ..
-> > > > > >
-> > > > > > Rather than build a binary that would fail at runtime it is
-> > > > > > preferrential just to build libbpf statically and link against
-> > > > > > that. The static version is in the kernel tools tree and newer =
-than
-> > > > > > 1.0.
-> > > > > >
-> > > > > > These patches change the libbpf test to only pass when at least
-> > > > > > version 1.0 is installed, then remove the conditional build and
-> > > > > > feature logic.
-> > > > > >
-> > > > > > The issue is discussed here:
-> > > > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@go=
-ogle.com/
-> > > > > > perf bpf:
-> > > > > >
-> > > > > > A variant of this fix was added to Linux 6.2 in:
-> > > > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_DY=
-NAMIC=3D1"
-> > > > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
-> > > > > > This change goes further in removing logic that is now no longe=
-r
-> > > > > > necessary.
-> > > > > >
-> > > > > > v2. Rebase now that breakage fix patch is in linus/master.
-> > > > >
-> > > > > I missed the:
-> > > > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > I believe we are waiting for package maintainer input.
-> > > >
-> > > > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
-> > >
-> > > rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd be to m=
-ove
-> > > f37 to 1.x, but I had to do bulk update of like 10 other dependent pa=
-ckages
-> > > for f38, so not sure how bad it'd be for f37
-> > >
-> > > jirka
-> >
-> > +Guilherme
-> >
-> > We were looking for maintainer input on these changes, but there is no
-> > update in over a month. Here is the original lore link:
-> > https://lore.kernel.org/lkml/CAP-5=3DfVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39d=
-ywaLxrO4Hpg@mail.gmail.com/
-> > Should these changes land in perf-tools-next targeting Linux 6.4?
->
-> Gentoo has libbpf-1.1 already available, so requiring >libbpf-1.0 is not
-> a problem. We (Gentoo) just need to make sure to stabilize libbpf-1.x bef=
-ore
-> stabilizing newer versions of perf, as the stable libbpf is 0.8.1 at the =
-moment.
->
+Hi Linus,
 
-libbpf v0.8 is basically all the 1.0 APIs, except by default 1.0
-semantics is not enforced, unless libbpf_set_strict_mode() is enabled.
+	Please consider pulling,
 
-So, if 0.8 is a restriction, perf can stay on 0.8, use all the same
-APIs that are in 1.0 (except newer one added later, but I'm not sure
-perf needs any of the newer additions), and just stick to setting
-libbpf_set_strict_mode() unconditionally.
+Best regards,
+
+- Arnaldo
 
 
-> Best regards,
-> -Guilherme
->
+The following changes since commit f9fa0778ee7349a9aa3d2ea10e9f2ab843a0b44e:
+
+  perf tests stat_all_metrics: Change true workload to sleep workload for system wide check (2023-02-17 17:22:56 -0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.3-1-2023-03-09
+
+for you to fetch changes up to 5b201a82cd9d0945d70562974ea6ad8e3b1861b5:
+
+  perf tools: Add Adrian Hunter to MAINTAINERS as a reviewer (2023-03-06 17:23:18 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.3:
+
+- Add Adrian Hunter to MAINTAINERS as a perf tools reviewer.
+
+- Sync various tools/ copies of kernel headers with the kernel sources, this
+  time trying to avoid first merging with upstream to then update but instead
+  copy from upstream so that a merge is avoided and the end result after merging
+  this pull request is the one expected, tools/perf/check-headers.sh (mostly)
+  happy, less warnings while building tools/perf/.
+
+- Fix counting when initial delay configured by setting
+  perf_attr.enable_on_exec when starting workloads from the perf command line.
+
+- Don't avoid emitting a PERF_RECORD_MMAP2 in 'perf inject --buildid-all' when
+  that record comes with a build-id, otherwise we end up not being able to
+  resolve symbols.
+
+- Don't use comma as the CSV output separator the "stat+csv_output" test, as
+  comma can appear on some tests as a modifier for an event, use @ instead,
+  ditto for the JSON linter test.
+
+- The offcpu test was looking for some bits being set on
+  task_struct->prev_state without masking other bits not important for this
+  specific 'perf test', fix it.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (12):
+      tools arch x86: Sync the msr-index.h copy with the kernel sources
+      tools headers svm: Sync svm headers with the kernel sources
+      tools headers: Update the copy of x86's mem{cpy,set}_64.S used in 'perf bench'
+      tools headers UAPI: Sync linux/prctl.h with the kernel sources
+      tools headers: Synchronize {linux,vdso}/bits.h with the kernel sources
+      tools include UAPI: Synchronize linux/fcntl.h with the kernel sources
+      tools headers kvm: Sync uapi/{asm/linux} kvm.h headers with the kernel sources
+      tools arch x86: Sync the msr-index.h copy with the kernel sources
+      tools include UAPI: Sync linux/vhost.h with the kernel sources
+      tools headers x86 cpufeatures: Sync with the kernel sources
+      tools headers UAPI: Sync linux/perf_event.h with the kernel sources
+      perf tools: Add Adrian Hunter to MAINTAINERS as a reviewer
+
+Changbin Du (1):
+      perf stat: Fix counting when initial delay configured
+
+Ian Rogers (2):
+      perf tests stat+csv_output: Switch CSV separator to @
+      perf test: Avoid counting commas in json linter
+
+Namhyung Kim (2):
+      perf test: Fix offcpu test prev_state check
+      perf inject: Fix --buildid-all not to eat up MMAP2
+
+ MAINTAINERS                                        |  1 +
+ tools/arch/arm64/include/uapi/asm/kvm.h            |  1 +
+ tools/arch/x86/include/asm/cpufeatures.h           |  2 +-
+ tools/arch/x86/include/asm/disabled-features.h     |  3 +-
+ tools/arch/x86/include/asm/msr-index.h             | 31 ++++++++++++++++++++
+ tools/arch/x86/include/asm/required-features.h     |  3 +-
+ tools/arch/x86/include/uapi/asm/kvm.h              | 34 ++++++++++++++++++++--
+ tools/arch/x86/include/uapi/asm/svm.h              |  6 ++++
+ tools/arch/x86/lib/memcpy_64.S                     |  5 ++--
+ tools/arch/x86/lib/memset_64.S                     |  4 ++-
+ tools/include/linux/bits.h                         |  1 -
+ tools/include/uapi/linux/fcntl.h                   |  1 +
+ tools/include/uapi/linux/kvm.h                     |  9 ++++++
+ tools/include/uapi/linux/perf_event.h              |  3 ++
+ tools/include/uapi/linux/prctl.h                   |  6 ++++
+ tools/include/uapi/linux/vhost.h                   |  8 +++++
+ tools/include/vdso/bits.h                          |  1 +
+ tools/perf/builtin-inject.c                        |  1 +
+ tools/perf/builtin-stat.c                          | 15 ++++------
+ .../perf/tests/shell/lib/perf_json_output_lint.py  | 29 +++++++++---------
+ tools/perf/tests/shell/stat+csv_output.sh          | 23 ++++++++-------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c             |  2 +-
+ tools/perf/util/stat.c                             |  6 +---
+ tools/perf/util/stat.h                             |  1 -
+ tools/perf/util/target.h                           | 12 ++++++++
+ 25 files changed, 154 insertions(+), 54 deletions(-)
