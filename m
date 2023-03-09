@@ -2,112 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4415BC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 08:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B0EC64EC4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 09:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229890AbjCIIAP (ORCPT
+        id S230427AbjCIJ41 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Mar 2023 03:00:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35614 "EHLO
+        Thu, 9 Mar 2023 04:56:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbjCIH7u (ORCPT
+        with ESMTP id S230362AbjCIJ4Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Mar 2023 02:59:50 -0500
-Received: from smtp.gentoo.org (smtp.gentoo.org [IPv6:2001:470:ea4a:1:5054:ff:fec7:86e4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E571A57D0C;
-        Wed,  8 Mar 2023 23:58:15 -0800 (PST)
-Date:   Thu, 9 Mar 2023 08:58:06 +0100
-From:   Guilherme Amadio <amadio@gentoo.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Thu, 9 Mar 2023 04:56:24 -0500
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93861A54F5
+        for <linux-perf-users@vger.kernel.org>; Thu,  9 Mar 2023 01:56:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=pjMNkt2tZMtyk4s9pJ2sylWEzRTvvbuAIVPJQDAbMEM=; b=nPiHhphuiF2wbmGdjKDC5Da28k
+        UNB23XX4SINhB1bzPfm+/taZezY94q+NAvoKl5EZjOWG/sy6qYfoboe0OYkV0AqYXj505csipN/Kl
+        kKRhcM/qbHhDXGyBYlvoEjSm5wecX/sHEknFcLx6NHQPI0HrXW8KLrGQyReLGpBqyhlrY1D1mCCrI
+        aWdE/zzBxwJ5P2VrOLlcBc3y1kpjN3VyKMCXLW65rS9tMTHphZBFUr+sa1oSn0Unw8HxyjFExJ+2a
+        JyHCPR0cLoFjnTTQP0t5Nr71N0K4hC3S/H5gAl/z4Yofm4ewzGCO6CO6fBB/sZn1mfnwc/800/g3G
+        EvaR6aXA==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1paD0P-0007YW-Ab; Thu, 09 Mar 2023 10:56:13 +0100
+Received: from [81.6.34.132] (helo=localhost.localdomain)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1paD0P-000WVR-38; Thu, 09 Mar 2023 10:56:13 +0100
+Subject: Re: Broken build on 6.3-rc1 with uClibc-ng based toolchains due to
+ poisoned strlcpy
+To:     Jesus Sanchez-Palencia <jesussanp@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
-Message-ID: <ZAmRjk1x4p4TrFb0@gentoo.org>
-References: <20230116010115.490713-1-irogers@google.com>
- <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
- <Y8mAuDvs566zwG67@kernel.org>
- <Y8myfqy5EMit3Kr/@krava>
- <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
+        rongtao@cestc.cn, Stanislav Fomichev <sdf@google.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <CAK4Nh0igK=-wapie340gnoo4xazC8GP7EG7wjy1EEJokCLQanA@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <533547a7-a9c0-2e6f-7817-43502f3679ba@iogearbox.net>
+Date:   Thu, 9 Mar 2023 10:56:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
+In-Reply-To: <CAK4Nh0igK=-wapie340gnoo4xazC8GP7EG7wjy1EEJokCLQanA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26836/Thu Mar  9 09:23:04 2023)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 06:13:34PM -0800, Ian Rogers wrote:
-> On Thu, Jan 19, 2023 at 1:13 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu:
-> > > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > libbpf 1.0 was a major change in API. Perf has partially supported
-> > > > > older libbpf's but an implementation may be:
-> > > > > ..
-> > > > >        pr_err("%s: not support, update libbpf\n", __func__);
-> > > > >        return -ENOTSUP;
-> > > > > ..
-> > > > >
-> > > > > Rather than build a binary that would fail at runtime it is
-> > > > > preferrential just to build libbpf statically and link against
-> > > > > that. The static version is in the kernel tools tree and newer than
-> > > > > 1.0.
-> > > > >
-> > > > > These patches change the libbpf test to only pass when at least
-> > > > > version 1.0 is installed, then remove the conditional build and
-> > > > > feature logic.
-> > > > >
-> > > > > The issue is discussed here:
-> > > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@google.com/
-> > > > > perf bpf:
-> > > > >
-> > > > > A variant of this fix was added to Linux 6.2 in:
-> > > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_DYNAMIC=1"
-> > > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
-> > > > > This change goes further in removing logic that is now no longer
-> > > > > necessary.
-> > > > >
-> > > > > v2. Rebase now that breakage fix patch is in linus/master.
-> > > >
-> > > > I missed the:
-> > > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
-> > > > I believe we are waiting for package maintainer input.
-> > >
-> > > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
-> >
-> > rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd be to move
-> > f37 to 1.x, but I had to do bulk update of like 10 other dependent packages
-> > for f38, so not sure how bad it'd be for f37
-> >
-> > jirka
+On 3/8/23 8:28 PM, Jesus Sanchez-Palencia wrote:
+> Hi there,
 > 
-> +Guilherme
+> So commit 6d0c4b11e743("libbpf: Poison strlcpy()") added the pragma
+> poison directive to libbpf_internal.h to protect against accidental
+> usage of strlcpy. This has broken the build for some toolchains and
+> the problem is that some libcs  (e.g. uClibc-ng) provide the strlcpy()
+> declaration from string.h, which leads to a problem with the following
+> include order:
 > 
-> We were looking for maintainer input on these changes, but there is no
-> update in over a month. Here is the original lore link:
-> https://lore.kernel.org/lkml/CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com/
-> Should these changes land in perf-tools-next targeting Linux 6.4?
+>                   string.h,
+>                   from Iibbpf_common.h:12,
+>                   from libbpf.h:20,
+>                   from libbpf_internal.h:26,
+>                   from strset.c:9:
+> 
+> If we patch libbpf_internal.h and move the #pragma GCC poison
+> directive to after the include list, we fix the problem but at the
+> expense of leaving libbpf.h unprotected (and libbpf_common.h as well,
+> of course). We could duplicate the directive on all these other libbpf
+> headers after the include list, but that's code duplication so I
+> wanted to bring this up here before I send out a patch.
+> 
+> Let me know what you think or if you have any other suggestions, please.
 
-Gentoo has libbpf-1.1 already available, so requiring >libbpf-1.0 is not
-a problem. We (Gentoo) just need to make sure to stabilize libbpf-1.x before
-stabilizing newer versions of perf, as the stable libbpf is 0.8.1 at the moment.
+Looks like you already sent a revert. Imo, that's probably the most pragmatic
+way forward, so no objections from my side.
 
-Best regards,
--Guilherme
+https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/commit/?id=3b83591e32dd
 
+Thanks for looking into this,
+Daniel
