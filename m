@@ -2,123 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6201AC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 11:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7394DC6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  9 Mar 2023 15:29:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231560AbjCILjC (ORCPT
+        id S229845AbjCIP3V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Mar 2023 06:39:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60808 "EHLO
+        Thu, 9 Mar 2023 10:29:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231452AbjCILjB (ORCPT
+        with ESMTP id S229737AbjCIP3V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Mar 2023 06:39:01 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877906A9F1
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Mar 2023 03:39:00 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id n6so1649245plf.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Mar 2023 03:39:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678361940;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kYsJiKyy+lTF4z1H2mSxKLr6ADWPzBDDBXemJTJ36Ks=;
-        b=qrYsSdWwsRhgnb8uDOtCBtoRToUCHBFxclejPIK5uKZNh5GhkUHLsx+shQWLFKnQRb
-         lxqZQ7iqj1Rp1ij8OB5I0DCtrrEKznEBMWwEe6u77MBH82sEen6sPY+AK54YhhVv6Zov
-         vVErC58toiN46BPkGNds4B1oKmfDQo1P/GuPXKmcewJs6zIMxMm2vzB9g83cmrN9i5As
-         3jOPPHhtpAPnN92dBR7TQxAt+FDacKrAzodTNH8J3HQmZbftdnunON5V2OXxGUfugwm2
-         fiLZlmKMfYQPp/+CjWQfWUNFi6694qDSqu+QN+UfHSYk0Ofg9B5XTmduB99kk4/x/5ov
-         zsgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678361940;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kYsJiKyy+lTF4z1H2mSxKLr6ADWPzBDDBXemJTJ36Ks=;
-        b=Q8CZUqVo8FcvmlldsJy/ksh10ncitKut7awuNZlqPxhg9tmwwbnPu7lfa+hAPZrmW4
-         S2sjbe1Ng6+tnio/z3TlBwjXptxtK8cJp9dRVRbYzyEez3ptfndtLU+Xm+ItCY8lrr4M
-         xR1RuLyuNexAvPINp+DNoz9QlZsahTpbmwYMDywFLVW02J16bRsYvGh56VMoCbVbqCQN
-         +tRX1sgT/0MDgcKRSh9XrEWSZZkLo0/TqxNR6lyzXpk0vGGZh3cGYmS4AKY3d9H/AbJQ
-         I5h34uUcKa75H345+j/LwZBzY7QcT814cbqZTG5wKuJeDaYFYOHTJPW8GxWxLJ86hBuq
-         akVw==
-X-Gm-Message-State: AO0yUKU/Zmz/TPdYS/GtMHYEi0f4UAGn4ghYhzaNikBzzyK/JSfn1K9S
-        WX6nCWjTC43zYxNgDK4MONwyNw==
-X-Google-Smtp-Source: AK7set9BcKzdqEvVwBm1rR1GGtYhrdXP+ByCdfjj8e7gOOwRGmWRyMbWRum5esDB5AWQTC0hTpRL3g==
-X-Received: by 2002:a17:90b:4a4c:b0:237:9cc7:28a4 with SMTP id lb12-20020a17090b4a4c00b002379cc728a4mr22842172pjb.14.1678361939798;
-        Thu, 09 Mar 2023 03:38:59 -0800 (PST)
-Received: from leoy-yangtze.lan ([107.151.177.133])
-        by smtp.gmail.com with ESMTPSA id mm14-20020a17090b358e00b0023493354f37sm1427084pjb.26.2023.03.09.03.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 03:38:59 -0800 (PST)
-Date:   Thu, 9 Mar 2023 19:38:51 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-Message-ID: <20230309113851.GF19253@leoy-yangtze.lan>
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
- <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
+        Thu, 9 Mar 2023 10:29:21 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A1B8B330;
+        Thu,  9 Mar 2023 07:29:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678375758; x=1709911758;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UwZg0IQKRPgjN7Aw0YALaFZ5q4J2jP64sVuOU2UZIVg=;
+  b=Z24lQG+kHkiB0q7OV7hNjq4Y2ZjMOnp62UX+RoDwjnw6JvQ60+n3riHi
+   qlykCSiLj7nMDIhDeiI4Nk8D5fqwCwvJ2vWSwLvDJTMz1FB9XnREfhL84
+   XGqMZQ+uwqfBZWhRCfzBVesKmaFr1Fa67agnCnORI3ndVD4JKDL16H2hU
+   oy0j5aASsataaaohczjDkKW7RAoUWdrkJbCFJFWhoayvdxvZ63rf0Fjzz
+   DKHWtNP9rwkqHGgA0SAZxWn0FOzauzzX9By6y7qhKCSjFJ4aKfS4ebYb3
+   dAQdwXG8X5Mua4wnMaCshD3azr8xkcbhCo4Nw5kYnORO3TZqgMDvKQdss
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="333942929"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="333942929"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 07:29:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="851545489"
+X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
+   d="scan'208";a="851545489"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 09 Mar 2023 07:29:16 -0800
+Received: from [10.209.59.135] (kliang2-mobl1.ccr.corp.intel.com [10.209.59.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 49206580BBE;
+        Thu,  9 Mar 2023 07:29:14 -0800 (PST)
+Message-ID: <306106d7-b411-eece-aa32-45683a69a289@linux.intel.com>
+Date:   Thu, 9 Mar 2023 10:29:12 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v4 00/11] Better fixes for grouping of events
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20230308225912.1960990-1-irogers@google.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230308225912.1960990-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Yang,
 
-On Wed, Mar 08, 2023 at 11:56:38AM -0800, Yang Shi wrote:
 
-[...]
-
-> > Dumping raw events could show the events from the bad data file. But
-> > it has zero samples after event collapse.
-> >
-> > The only difference is --kcore inserted a new text_poke dummy event.
-> > It seems coresight also inserted a dummy event with my command but
-> > your command didn't. So it seems like the two dummy events confused
-> > event collapse.
-> >
-> > The text_poke dummy event is added by commit
-> > f42c0ce573df79d1b8bd169008c994dcdd43585a ("perf record: Always get
-> > text_poke events with --kcore option"). If I reverted this commit,
-> > then it works. But I'm not sure whether this is the right fix or real
-> > root cause or not. Or coresight shouldn't insert its own dummy event?
+On 2023-03-08 5:59 p.m., Ian Rogers wrote:
+> The rules for grouping events have grown more complex. Topdown events
+> must be grouped, but flags like --metric-no-group and flags on metrics
+> don't respect this. Uncore events may be expanded using wild cards for
+> PMU names, but then the events need reordering so the group members
+> are adjacent. Rather than fixing metrics, this change fixes the main
+> event parsing code to first sort and then regroup evsels.
 > 
-> It seems like coresight needs to insert the dummy event if
-> full_auxtrace is on IIUC. So it sounds like event collapse can't
-> handle such a case?
+> As this is shared functionality changes to it should cause
+> concern. The change is done with the intent of simplifying and making
+> more robust the grouping logic, examples are given. If additional
+> changes are necessary, they are most likely necessary to the
+> evsel__group_pmu_name logic as the code avoids breaking groups that
+> are on the same "group" PMU. The group_pmu_name is a variant of the
+> pmu_name tweaked in the case of software and aux events, that use
+> groups in a slightly different manner to conventional events.
+> 
+> The code was manually tested as well as passing perf test on a Intel
+> tigerlake CPU with intel-pt.
+> 
+> v4. Move the Intel pmu->auxtrace initialization to the existing
+>     perf_pmu__get_default_config as suggested by Adrian Hunter.
+> v3. Rename pmu_name to group_pmu_name and add patch to warn when
+>     events are regrouped as requested by Namhyung.
+> v2. Fix up the commit message on 4/10 (thanks Arnaldo). Drop
+>     unnecessary v1 5/10 (thanks Kan). evlist->core.nr_groups wasn't
+>     being correctly maintained after the sort/regrouping and so the
+>     new patch 10/10 removes that variable and computes it from the
+>     evlist when necessary, generally just tests.
+> 
+> Ian Rogers (11):
+>   libperf evlist: Avoid a use of evsel idx
+>   perf stat: Don't remove all grouped events when CPU maps disagree
+>   perf pmu: Earlier PMU auxtrace initialization
+>   perf stat: Modify the group test
+>   perf evsel: Allow const evsel for certain accesses
+>   perf evsel: Add function to compute group PMU name
+>   perf parse-events: Pass ownership of the group name
+>   perf parse-events: Sort and group parsed events
+>   perf evsel: Remove use_uncore_alias
+>   perf evlist: Remove nr_groups
+>   perf parse-events: Warn when events are regrouped
+> 
 
-I am struggling to understand the meaning "event collapse" :)
+Thanks Ian. The patch series looks good to me.
 
-I reviewed your shared dump, the bad and good perf data both contain the
-dummy event with 'text_poke = 1'.  Could you confirm the shared dump in
-your previous email is correct or not?
-
-> I also tried v5.19 (before "perf record: Always
-> get text_poke events with --kcore option", which was merged in v6.0),
-> it works. So it seems like a regression.
-
-Yeah, we need to fix it.  I am not sure the Linux kernel for Arm64
-supports text poke or not (kernel needs some specific handling when
-alter instructions), the kernel change is the prerequisites.
-
-On the other hand, in the current code cs-etm misses to handle the
-event PERF_RECORD_TEXT_POKE in the function cs_etm__process_event().
-This might be the cause for the failure.
-
-Do you mind to share the bad perf.data file with James and me?
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
-Leo
+Kan
+
+>  tools/lib/perf/evlist.c                  |  31 ++-
+>  tools/lib/perf/include/internal/evlist.h |   1 -
+>  tools/lib/perf/include/perf/evlist.h     |   1 +
+>  tools/perf/arch/x86/util/auxtrace.c      |   4 -
+>  tools/perf/arch/x86/util/evlist.c        |  39 ++--
+>  tools/perf/arch/x86/util/pmu.c           |   8 +-
+>  tools/perf/builtin-record.c              |   2 +-
+>  tools/perf/builtin-report.c              |   2 +-
+>  tools/perf/builtin-stat.c                |  24 +-
+>  tools/perf/tests/bpf.c                   |   1 -
+>  tools/perf/tests/parse-events.c          |  24 +-
+>  tools/perf/tests/pfm.c                   |  12 +-
+>  tools/perf/tests/pmu-events.c            |   2 +-
+>  tools/perf/util/evlist.c                 |   2 +-
+>  tools/perf/util/evlist.h                 |   8 +-
+>  tools/perf/util/evsel.c                  |  27 ++-
+>  tools/perf/util/evsel.h                  |   8 +-
+>  tools/perf/util/header.c                 |   3 +-
+>  tools/perf/util/metricgroup.c            |   3 +-
+>  tools/perf/util/parse-events.c           | 268 +++++++++++------------
+>  tools/perf/util/parse-events.h           |  14 +-
+>  tools/perf/util/parse-events.y           |  28 +--
+>  tools/perf/util/pfm.c                    |   1 -
+>  tools/perf/util/pmu.c                    |   6 +-
+>  tools/perf/util/python.c                 |   2 +-
+>  tools/perf/util/stat-shadow.c            |   2 +-
+>  26 files changed, 277 insertions(+), 246 deletions(-)
+> 
