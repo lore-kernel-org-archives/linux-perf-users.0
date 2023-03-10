@@ -2,231 +2,189 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E053C6FA99
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 03:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D53C6FA99
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 06:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbjCJD0y (ORCPT
+        id S229768AbjCJGlv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 9 Mar 2023 22:26:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        Fri, 10 Mar 2023 01:41:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbjCJD0w (ORCPT
+        with ESMTP id S229546AbjCJGlu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 9 Mar 2023 22:26:52 -0500
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8FED6B331
-        for <linux-perf-users@vger.kernel.org>; Thu,  9 Mar 2023 19:26:49 -0800 (PST)
-Received: by mail-io1-xd33.google.com with SMTP id e11so1553664ioe.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 09 Mar 2023 19:26:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678418809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oXceP9AsMjvivVzcPWyt1cCB9rlFzG2cR5zq3gKp8kg=;
-        b=QbqXgGD2gYCpt+l8sIVRhRlvqBcrj5iQuWzhZGHSgoxO+OlxFB+iSj3SmvEtVfUI7K
-         hWHOOhMQ/cZTrZD17imIDty7WniaxSDwCYKg0dAWDP629YBh1aefNAjRNcWHqPA8JXL8
-         B9c1H3APzBtCnVwNxKJNBeBYRgEWjgIfaDPBBNNNgwtLIDz6bIUAXgMy/ifBMEhFDBSo
-         6a0P+8SAHqLjJy6yxGIrFvhiD+qoq4WzpLZEdwGwrnyMmnhMN9I6YZAbOKY8vE2p9cDR
-         /wnPtgi3w1Vsq5NUaRclRtn8SZWv+TZAw+k0TaFzLuJnM412bFpIGng+ODZRq6OOLK5/
-         GQMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678418809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oXceP9AsMjvivVzcPWyt1cCB9rlFzG2cR5zq3gKp8kg=;
-        b=bUOiwrD3zD2TUckakTIxAxsUvfHERT7qbnTIfw+yyM8SVUS3BSLmLUV9sG5WAHsWJn
-         j+Nb9oIiJ879ns5hsK5f0nqFiV0OW8wfXgyGYHbKrBigHwSVtJ3c/qNdhqZhmnk4Y2Bw
-         SIc7PAz5Jgp3rT7q7koSEzdkGme8nI5U6l5j+uILxqkT9F1UujdPh5y+NNy/2p6JXngB
-         5kuboNxI0Ge/5AEVIX7SlZEtRDqREcn4qrfnnuifSmzTgvchsJuRFDaijUfK+ylEdTq2
-         7zURw0IRZg5NxY0+2p1hFSasMizByB2MTVGVYBa5ixCFpHOD5fMhLoHZ3BXfyEpv6/RG
-         cO8Q==
-X-Gm-Message-State: AO0yUKXNCOmz7c2l8Trb2FOQFVjceyRx6DRaS6t2uay5PRtJwHlHaXCY
-        LX9iE7Vvo3EyLYcEF+sC3W5InJCCWedmX6+XjcB1lQ==
-X-Google-Smtp-Source: AK7set9LTtI/PpGuBD2uqj0AoseCwQoLA/055RWxCBWhT1XMwNyc5d9vjAfhpp7M3ioVa9HBEC0v2CDu1a8mQOPw2y4=
-X-Received: by 2002:a5e:9413:0:b0:745:a722:4a15 with SMTP id
- q19-20020a5e9413000000b00745a7224a15mr11061449ioj.2.1678418808743; Thu, 09
- Mar 2023 19:26:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20230116010115.490713-1-irogers@google.com> <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
- <Y8mAuDvs566zwG67@kernel.org> <Y8myfqy5EMit3Kr/@krava> <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
- <ZAmRjk1x4p4TrFb0@gentoo.org> <CAEf4BzZJvEnWdTKVSgdBDr_KEgkW5HLHc7N-HRkmb-drCbg2uw@mail.gmail.com>
-In-Reply-To: <CAEf4BzZJvEnWdTKVSgdBDr_KEgkW5HLHc7N-HRkmb-drCbg2uw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 9 Mar 2023 19:26:35 -0800
-Message-ID: <CAP-5=fWvMFXOaKA0bKaKdzYjqOxTCXGapJy-4x34hJyZxqD-Dw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Guilherme Amadio <amadio@gentoo.org>,
-        Jiri Olsa <olsajiri@gmail.com>,
+        Fri, 10 Mar 2023 01:41:50 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2055.outbound.protection.outlook.com [40.107.93.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4020BD462D;
+        Thu,  9 Mar 2023 22:41:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S59FXM1unp5D5E6rIvDwz/QIZnY2b6nQZW1fi6KRUmbDjnamIF1fOpXYCveADe0ttVLdgVr2Tt+xKesAWWpdm/HhUZ5L9qJw8/wwOS8NaU7EqA+O31cOmme1+RmAy6KtdNDwR9Vu4oq6Fss6omyw8aySL9M86x02KRlf92t9WBNuoEOFdGSKP2Vme5Wo49GgHQwzb2UJM5veRY1NPiOZDZ5E5qpoy0gfXbPR9DjD2pED64mtDPpbhl4/vG6bA2MPH6QJeII3gKI5FJqWtywd+G/hz/wHIDJPLRKDzsEHRRtjfpSYGSvFPn4CK2+LTjXKxwbCxEJFp+DVVQXTRvgLbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W0O6d0NWz4oBUf5gbHOa6yEW5cT7LmuQdwQyuzis4iQ=;
+ b=jLrR34rUzx/BN012y/sH0s9G/c9k0LG1tfwBGJZaZg427ufgwpzphX0hHr4PlkWqRxsPX29AGsvh+3pEo2/BuQ+YjC9iYXZRYMc+D8yo2IkRvlSKz3f3kbJcCwRm/C2TixOrBzp4rRMJb/8uOEA8aniCyy3xKA4x3n8KlWb/sYUa5nTSSEduxM0AuLlzy7T+sMhxzQsuO7agCsCMnkZo9Vlr4+/XB235xNMiiSOOFYP0kXkGKshD0IRX5u7rlW9xE9IvqFuawk1Yk0Y2DgJtDqxSVv7ICOJBXUdGnIfXF/aSVG63NKutatagR27JRcjok3adx3gfeUCAVq/hmZH/7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W0O6d0NWz4oBUf5gbHOa6yEW5cT7LmuQdwQyuzis4iQ=;
+ b=Rnm+1se+hIkIGnx75gIYK9kH2z23qcDKG8Qm7MnlrGOD/xnaXcUxUJd5ICuVlW3abzW8QE7ZdzbrrP9ge74L1aW8pK8q35rzPHBgwFjjXm+sRD+Jk/64sOq6IEpLWRGIDcZ/+7NbnHZINLyJDLMd0QVg1TuqOXScE7bOtWZ+n1Q=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.17; Fri, 10 Mar
+ 2023 06:40:43 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d8e6:76b5:2c23:1247]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d8e6:76b5:2c23:1247%9]) with mapi id 15.20.6178.019; Fri, 10 Mar 2023
+ 06:40:43 +0000
+Message-ID: <9f692bd9-94e4-ee60-2174-561685b9b39a@amd.com>
+Date:   Fri, 10 Mar 2023 12:10:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [RFC/PATCHSET 0/9] perf record: Implement BPF sample filter (v4)
+To:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230307233309.3546160-1-namhyung@kernel.org>
+Content-Language: en-US
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20230307233309.3546160-1-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0193.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e8::16) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CH3PR12MB8659:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e3bc9eb-2307-4778-da4b-08db21325ed8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: t+nqJJiSw7ITp93Vb0Z80wUkGt5viiTTIWxe83xponw3qB74L0Wveh1934dJzqZI/SYmnc6N38X2/CM1iRprtewwa3oY3WzCK5As5yYfy4H81AFExo6fdSvsJy5C3XPJHLvo8GVZVgF+DOD+829Qz6G+Eqz5O3g1oM6aoB+yPByNFZ5ZV8JoCewdq4NuDKL3fU/ja+Yh6pFi3v/wkEfMX3+RmafzRjtuvkiAgNR3iaLzBo3iPePjmEnjZFkroY5X66tABkUqw/RWsuPx2H/ftUqKwrHhuY3UHFpb3SXTIuC5mueSZCapV+foGIVLx8Nu03jlPjlQ8G12jvaYCb5CvS2K+xMzcYupXZlwZ5azOYwG8vU2Qsfx+jejL6YqzAa2Ll1XuAUa3DIFqMBW/AQL0WFxgymMj5g4iRTABm4dM61q/frdwVoTQstR7mwuftABsufipgR62Ozidl8VMQMllYvB+AmQgYTobQN4KB85JaT1HekbRMHCIt2hefYz7QatppDTPU7qayio1W8xBph6HFzWQo1q0LdWtLpjfEYc+ej6nqbht22Fx40vSn1/W4k+R/OqJEuAq5NOfab5gyJFF6A4DBPDCGtzKtP6UCEx9EZuZXJvJwCwNfip9/qTKJ5jo3MnuIuZPQP0d+8c9T8HT1Sy9XU5mV6MEdcMHkv120aJbGPjoN0i+XXclwrGuGBBrlNgjrUo8a90WfF37Mbf8PvxtWcdDFL26X6bw6ecb50=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(39860400002)(376002)(366004)(136003)(451199018)(31696002)(36756003)(54906003)(26005)(110136005)(316002)(8936002)(5660300002)(6486002)(478600001)(7416002)(8676002)(66476007)(2906002)(66556008)(4326008)(66946007)(44832011)(41300700001)(6666004)(38100700002)(86362001)(6512007)(186003)(2616005)(6506007)(83380400001)(66899018)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cW1kblhWNkdCOGxhVDVZVXlvaHluVVlUczc1bTJmL2p3amgxUE9mN05Xbi9F?=
+ =?utf-8?B?VkxDcUJ1V2lQMktLd2puaFlwQ0ZMdnFYcjhKTkNqMjhPUVNQS1V6UzJFQ0N2?=
+ =?utf-8?B?NTlLOFpXZ0Z3WlF3Q2tvYWprVnhHeWV5UXcvYlB1WTdBVjg0SmhaM0R1TkVt?=
+ =?utf-8?B?cldsSWZlOUtEUHBDRmd3eUppRmpYc2ppbnE0VklNRUwvdFJMcHFsL2lDWjBQ?=
+ =?utf-8?B?QmpTbHlCdlBIdE9hTTd2d1JoMlZ5amozOHdHNDR3eXZMcjAwQVNjYS9KUS80?=
+ =?utf-8?B?TmEwbzluSUdJbUx5V0lWTjFITmFPZEU4bnNMYVkxVC9XR3BJdGZTUlB4blFY?=
+ =?utf-8?B?b0pVQ0hKbFk0R2U0cVJhMVVTYzRrT0JtbkxhZ1lVT0x6T2xtaW9QOFRtRmFY?=
+ =?utf-8?B?T1gxek9BTVA3cG1BY3NtQS9BTnFuZE1CUzJKL042N1NlNFNwemJ1YnZ4c0s4?=
+ =?utf-8?B?Q01mN0Q4bk9vWHNIbU5MZTNTT0pXNlJ0NkVvV2xDZHd6UUNja0x5TElmdG1N?=
+ =?utf-8?B?RHJJRFg2aFV3cTNhSnltamxVRWx0bXZGSlZocGh1S05iZlpxUXNsckhqZEYw?=
+ =?utf-8?B?Q0l3eVBRNDBLVnVnWU5GZkZTUmVuQjlKaVZIL0cwOHJDOXpmT2t5eWZMYWp3?=
+ =?utf-8?B?T0I3azc1VkdNcjkyZGNvM1IvenZHdE5pTDIxZ085bzB1ZURaNUxScndkMVYr?=
+ =?utf-8?B?ZUgvRC9GWDZIUWV4VUtHd3l2aTY0S1ZNYlNpbEYxdnVhMGdSRXQxbUJnRVlh?=
+ =?utf-8?B?clYyRm9xR1ZHM0NMUnNYMnV1N3dxU05CYlN4V3BxUlIwQWc0WWZrN1FYL1A3?=
+ =?utf-8?B?a3R4SmhzdklRN2FFTG02N3Bpa0VFcU5IbW5HZTl2ZVRrY0FLR0k2UjhkcFNW?=
+ =?utf-8?B?RzRLa3doaHBJRnJVZHhMWjV4SzVPQkR4VDhRWjVjRGZnWkxESDlqUkJpcUFQ?=
+ =?utf-8?B?UnVQRVd6aE5nNm9saUcwTFdJQ1VUeGltdUF4V2E5aU10Y0VaYnIwZkJtZUJB?=
+ =?utf-8?B?Ty9BYjRFN1pxRU16UVpUMzBCekJXUHU3bFRxMWhYcm1Qa2xNeHo3dWpHQm1K?=
+ =?utf-8?B?MWRmSnNRVWIwZktyb1hwOTc0eC9LMDE3TEZUN2t0UkRqcWxRdVlKMnFyQUhm?=
+ =?utf-8?B?Y2FBZWNZSUNva3JjUlZXZkRsM0tNYm4zU280YXRsNkdWMTJvRXBpWHlLbzM2?=
+ =?utf-8?B?aW9yS1V2OHRZWEpGSVQwVVJHWEhzc2VOdS8rT1c2ckVzTlZTejFXL3ZyMEs0?=
+ =?utf-8?B?Nm9odFRaN0s3Q0ZNa0plWGpGdlM0SWhNb3ZnMnY1SUtPcTRha1c0dGZoY2Vo?=
+ =?utf-8?B?SEtYaWZKdXh6WjRubm1MLy9MU0thc1VnYTUrdTFETVFiOHdRN0dvd0tmTnpK?=
+ =?utf-8?B?cCtZNUNMOXRodld6QmF5V0QySmhKMVhrOHBUNk5DZjNaSVRMdnNVOHU1NHRp?=
+ =?utf-8?B?aXU5bkhnejZtMzlpdFFHT3RmSzI3aEc2ZnF0L3BQQUlTOU5wU05mNldBU3hU?=
+ =?utf-8?B?dTlQNGVmUXUxRS8zVVNFODdQU2U3RjRZWktZaFpKVTRSdjhtQ1ZVc1pid0Ey?=
+ =?utf-8?B?azByV084TXFKRFNHdldJai9Xc3JxcVZmZzVSNEVoTUdJa3I1SU9ZRFNyVVFv?=
+ =?utf-8?B?YkRlTGlBdTBhaFR0UnVncXMxcm5MbXpLU1IwQTdHKzlrUjVRRjhUQS93VkNY?=
+ =?utf-8?B?SkthcTNRemdYb0VMSStuZGJQendMSjY4N1BDc0k3VzNaZlZTaEdLcndPREFG?=
+ =?utf-8?B?NUxzWXhuMUhGOFNPalQ1QTBJS3BBTjVLdE0yaHdQZGRHeHI3RFJQNWJYcnYz?=
+ =?utf-8?B?VUdCaGF6ME01aXAyVUw4TlFsNWpaTmVRaWhlaWZvallXQi83QTluQVJDTE9z?=
+ =?utf-8?B?ZzRZQThwSFdrY2FWbTlySktlN25xTVR2bFJHYjVSSWhlci9RWFp2YVRkYmxR?=
+ =?utf-8?B?cFJWelptU0ZSSEROSXdmQjlvUGwvQ2UxbkpPU1JNci9xcjlGcmxucklGTDFP?=
+ =?utf-8?B?b1dUZjVQT2VKQU00Q1kyUDBHeXEwNlVURFVWcFBjUTBnWVRqRmFzYkFDZlk3?=
+ =?utf-8?B?V2psdzEwbzhSbWkwWkhLUkM2QWhmeFFvVS96Q3BYQUNobFFaakNMeDc2VDVa?=
+ =?utf-8?Q?yxNERrIL+dPL5PgsLA644jmuW?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e3bc9eb-2307-4778-da4b-08db21325ed8
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2023 06:40:43.0782
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eQA6LivAtNmMw844aPUv+84WQVUM3hBleJipt8NrhPiNbiaMNkcphaOHjWugL/2tl/GO6WUflhGm5+1KmqoGzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8659
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 9, 2023 at 9:25=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Mar 8, 2023 at 11:58=E2=80=AFPM Guilherme Amadio <amadio@gentoo.o=
-rg> wrote:
-> >
-> > On Wed, Mar 08, 2023 at 06:13:34PM -0800, Ian Rogers wrote:
-> > > On Thu, Jan 19, 2023 at 1:13=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com=
-> wrote:
-> > > >
-> > > > On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de Melo =
-wrote:
-> > > > > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu:
-> > > > > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.com>=
- wrote:
-> > > > > > > libbpf 1.0 was a major change in API. Perf has partially supp=
-orted
-> > > > > > > older libbpf's but an implementation may be:
-> > > > > > > ..
-> > > > > > >        pr_err("%s: not support, update libbpf\n", __func__);
-> > > > > > >        return -ENOTSUP;
-> > > > > > > ..
-> > > > > > >
-> > > > > > > Rather than build a binary that would fail at runtime it is
-> > > > > > > preferrential just to build libbpf statically and link agains=
-t
-> > > > > > > that. The static version is in the kernel tools tree and newe=
-r than
-> > > > > > > 1.0.
-> > > > > > >
-> > > > > > > These patches change the libbpf test to only pass when at lea=
-st
-> > > > > > > version 1.0 is installed, then remove the conditional build a=
-nd
-> > > > > > > feature logic.
-> > > > > > >
-> > > > > > > The issue is discussed here:
-> > > > > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@=
-google.com/
-> > > > > > > perf bpf:
-> > > > > > >
-> > > > > > > A variant of this fix was added to Linux 6.2 in:
-> > > > > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_=
-DYNAMIC=3D1"
-> > > > > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
-> > > > > > > This change goes further in removing logic that is now no lon=
-ger
-> > > > > > > necessary.
-> > > > > > >
-> > > > > > > v2. Rebase now that breakage fix patch is in linus/master.
-> > > > > >
-> > > > > > I missed the:
-> > > > > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > > I believe we are waiting for package maintainer input.
-> > > > >
-> > > > > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
-> > > >
-> > > > rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd be to=
- move
-> > > > f37 to 1.x, but I had to do bulk update of like 10 other dependent =
-packages
-> > > > for f38, so not sure how bad it'd be for f37
-> > > >
-> > > > jirka
-> > >
-> > > +Guilherme
-> > >
-> > > We were looking for maintainer input on these changes, but there is n=
-o
-> > > update in over a month. Here is the original lore link:
-> > > https://lore.kernel.org/lkml/CAP-5=3DfVUgc8xtBzGi66YRUxZHyXvW2kiMjGz3=
-9dywaLxrO4Hpg@mail.gmail.com/
-> > > Should these changes land in perf-tools-next targeting Linux 6.4?
-> >
-> > Gentoo has libbpf-1.1 already available, so requiring >libbpf-1.0 is no=
-t
-> > a problem. We (Gentoo) just need to make sure to stabilize libbpf-1.x b=
-efore
-> > stabilizing newer versions of perf, as the stable libbpf is 0.8.1 at th=
-e moment.
-> >
->
-> libbpf v0.8 is basically all the 1.0 APIs, except by default 1.0
-> semantics is not enforced, unless libbpf_set_strict_mode() is enabled.
->
-> So, if 0.8 is a restriction, perf can stay on 0.8, use all the same
-> APIs that are in 1.0 (except newer one added later, but I'm not sure
-> perf needs any of the newer additions), and just stick to setting
-> libbpf_set_strict_mode() unconditionally.
+Hi Namhyung,
 
-Thanks Andrii,
+Sorry, I should have tried earlier prototypes but missed it.
 
-The default perf build is to build against tools/lib/bpf and
-statically link libbpf in. This means by default we have the latest
-libbpf 1.2. If any perf code has a dependency on 0.8 (we don't support
-earlier) we need to #ifdef for it. Currently we have 7 feature tests
-for libbpf, but perhaps there is some cruft that's carried forward.
-The features are:
- - btf__load_from_kernel_by_id
- - bpf_prog_load
- - bpf_object__next_program
- - bpf_object__next_map
- - bpf_program__set_insns
- - btf__raw_data
- - bpf_map_create
+> Maybe more useful example is when it deals with precise memory events.
+> On AMD processors with IBS, you can filter only memory load with L1
+> dTLB is missed like below.
+> 
+>   $ sudo ./perf record -ad -e ibs_op//p \
+>   > --filter 'mem_op == load, mem_dtlb > l1_hit' sleep 1
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 1.338 MB perf.data (15 samples) ]
 
-The not present implementations look like:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/util/bpf-loader.c?h=3Dperf-tools#n36
-```
-int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
-  struct bpf_insn *new_insns __maybe_unused, size_t new_insn_cnt __maybe_un=
-used)
-{
-pr_err("%s: not support, update libbpf\n", __func__);
-return -ENOTSUP;
-}
+On my zen4 machine:
 
-int libbpf_register_prog_handler(const char *sec __maybe_unused,
-                                 enum bpf_prog_type prog_type __maybe_unuse=
-d,
-                                 enum bpf_attach_type exp_attach_type
-__maybe_unused,
-                                 const struct libbpf_prog_handler_opts
-*opts __maybe_unused)
-{
-pr_err("%s: not support, update libbpf\n", __func__);
-return -ENOTSUP;
-}
-```
-This will basically mean that while you dynamically linked with libbpf
-0.8 you are in all likelihood not going to get proper BPF support.
-These changes up the version requirement to 1.0 and get rid entirely
-of the feature tests - so no runtime failing implementations. If the
-build determines at build time libbpf 1.0+ isn't present then it still
-executes, switching from dynamic libbpf to the default static libbpf
-that is at 1.2. As mentioned in this thread, distributions like Debian
-use the default static linking of libbpf.
+  $ sudo ./perf record -d -e ibs_op//p --filter 'mem_op == load' -c 100000 ~/test
+  [ perf record: Woken up 6 times to write data ]
+  [ perf record: Captured and wrote 1.436 MB perf.data (30966 samples) ]
 
-I'm not keen to hold on to the feature tests for the complexity that
-they hold and their needlessly (as you can always statically link)
-broken at runtime behavior. We could but my opinion is, let's not :-)
+  $ sudo ./perf mem report -F sample,mem --stdio
+  #      Samples  Memory access
+  # ............  ........................
+           30325  L1 hit
+             477  Local RAM hit
+              89  L2 hit
+              75  L3 hit
+
+This looks good because IBS hw can't filter specific type of instruction
+and thus unfiltered data will contain "NA" types of memory accesses, which
+is absent here. So mem_op == load filter seems to be working.
+
+However, if I add "mem_lvl == l1" (or l2 / ram) in the filter, I see mostly
+all samples are getting lost:
+
+  $ sudo ./perf record -d -e ibs_op//p --filter 'mem_op == load, mem_lvl == l1' -c 100000 ~/test
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.019 MB perf.data ]
+
+  $ sudo ./perf report --stat | grep SAMPLE
+    LOST_SAMPLES events:          1  ( 0.8%)
+    LOST_SAMPLES events:     136332
+
+What am I missing?
+
+2nd observation, invalid expressions like 'mem_op == load, mem_dtlb == l1'
+are not failing, instead recording misleading data:
+
+  $ sudo ./perf record -d -e ibs_op//p --filter 'mem_op == load, mem_dtlb == l1' -c 100000 ~/test
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.047 MB perf.data (614 samples) ]
+
+  $ sudo ./perf script -F data_src | grep "TLB N/A" | wc -l
+  614
 
 Thanks,
-Ian
-
-> > Best regards,
-> > -Guilherme
-> >
+Ravi
