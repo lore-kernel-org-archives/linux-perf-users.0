@@ -2,331 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C518C74A44
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 14:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E0C64EC4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 14:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231808AbjCJOJq (ORCPT
+        id S232226AbjCJOV0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Mar 2023 09:09:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33674 "EHLO
+        Fri, 10 Mar 2023 09:21:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231713AbjCJOJ0 (ORCPT
+        with ESMTP id S232142AbjCJOU4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Mar 2023 09:09:26 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EF3512F32
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 06:08:48 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id f18so6773444lfa.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 06:08:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1678457325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IeEXk67wIJ913Y7z/KttI6cUkRX+27x8mHj5WiM1k8k=;
-        b=ROnut0mKL3kWff2v2cdQiEIdeHLJhXRjDMwrmQxP4z1+hGJH2xF8MWAz87QbXHszRC
-         dAipsLC3zGnZlUL79Xi5sH9DNACGOnOh9zxxX9fSreg9HlAM6uR+2MIiPfOIjnZsFrEr
-         FWBI3hAuSXuGGOuqgizL72kD4aezIlFiD1GyA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678457325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IeEXk67wIJ913Y7z/KttI6cUkRX+27x8mHj5WiM1k8k=;
-        b=awINUgwSOEZ1MnXecjeZwPU13yWjNhm2DtGDbSvIB3cw/z16C92W/L1YCD5mubSizw
-         qBl5J2lNCam2hdZXa7NE5O/l/Tw+kND31EZ7Vwtb8WSL1T3CuKZn0KtGlI0oKNM3ZvrF
-         6KzTmFn/2cVBuD2q4MwzOGRqdLbQi8U+8PQoXCIU8LBZnhOkWRM8SoR+j/P9bVT/rtQq
-         7eztj06h5hA+oTskZJnPjK2qWYfs5qh8TLd99XbpIuuItafjdD5gcm6XWDrMIlaY+Buk
-         oF8x7VGH3c9dl6GOHYeiqgI6p6qPjA583KW2b19V0ePdhzN6UESZEoeKOf/eEB6PgSOj
-         NT/A==
-X-Gm-Message-State: AO0yUKVDrwsZkLzXonH+HQQ6fRijkfeJ3hz9KZjUyQD0lf5i9BdFo8C2
-        5RHGagiCjfhKhIwyzOL0sXy5LrfrEnHoiqTu2DUs5g==
-X-Google-Smtp-Source: AK7set+U9kAmFT9jt70sXYXxiUuQXxRJHeFpdmHxIOtpl/J9zB/aONJv2E9Jm5JpBIO/edF7zWnJxg==
-X-Received: by 2002:ac2:559a:0:b0:4dc:8129:2700 with SMTP id v26-20020ac2559a000000b004dc81292700mr6908214lfg.54.1678457325574;
-        Fri, 10 Mar 2023 06:08:45 -0800 (PST)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id u28-20020ac2519c000000b004b5979f9ba8sm2238lfi.210.2023.03.10.06.08.44
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Mar 2023 06:08:44 -0800 (PST)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Received: by mail-lf1-f44.google.com with SMTP id s22so6734579lfi.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 06:08:44 -0800 (PST)
-X-Received: by 2002:ac2:5934:0:b0:4db:3873:fac1 with SMTP id
- v20-20020ac25934000000b004db3873fac1mr8069058lfi.9.1678457324089; Fri, 10 Mar
- 2023 06:08:44 -0800 (PST)
+        Fri, 10 Mar 2023 09:20:56 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745AB11BB2A
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 06:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678457981; x=1709993981;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dslIk3BBHKwsSybg8vbqYVfdRVYr+82nX52/098xeZo=;
+  b=mxsbZRO68gbZG5fTBF3Jzt4r3bH27Y5v/tOTtCYFqgkzHtkKdbRzQLO8
+   fkC/TIgZ04aGAk8Pekc5Ss3+cSMWDGJaxfWEqpLsCjjiTfCMd038bimyA
+   7IqfSDp/FGDBLOZRezLBdJYYWBfrtQ4SLzaI6+WNNw5lzcq/P6BuIq+y0
+   /oQ00uvAAr0KIZHdqgOo2v79K7HdSWyocmH9B/YhabLUtY653c/QkTH8g
+   U3jMVhCdbCV/VihGh+Zso5E+n3XcmyjLcxuVLbIyxggu1WjFcAllU0lRs
+   cX1trFa1HjUNpx1+sEF1yixSA7A6QeLl9SKgCJsqjkF1JdcvGWqlxaDjC
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="401595040"
+X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
+   d="scan'208";a="401595040"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 06:19:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="821061820"
+X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
+   d="scan'208";a="821061820"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.222])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 06:19:19 -0800
+Message-ID: <db6b4693-3f71-00aa-4dd7-00700fc50668@intel.com>
+Date:   Fri, 10 Mar 2023 16:19:14 +0200
 MIME-Version: 1.0
-References: <20230116010115.490713-1-irogers@google.com> <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
- <Y8mAuDvs566zwG67@kernel.org> <Y8myfqy5EMit3Kr/@krava> <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
- <ZArzvpnRyJatVSHR@krava>
-In-Reply-To: <ZArzvpnRyJatVSHR@krava>
-From:   Justin Forbes <jforbes@fedoraproject.org>
-Date:   Fri, 10 Mar 2023 08:08:31 -0600
-X-Gmail-Original-Message-ID: <CAFbkSA03OoqWbh5v8FLyHBHOhgOTJQL2CPurcGOHpeXgDBbyiw@mail.gmail.com>
-Message-ID: <CAFbkSA03OoqWbh5v8FLyHBHOhgOTJQL2CPurcGOHpeXgDBbyiw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Guilherme Amadio <amadio@gentoo.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.8.0
+Subject: Re: [PATCH] fix IPC output in perf intel-pt-events script
+Content-Language: en-US
+To:     Roman Lozko <lozko.roma@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <20230310111001.2836295-1-lozko.roma@gmail.com>
+ <01f16399-f600-2b45-766f-0b5e5f868345@intel.com>
+ <CAEhC_B=hB+bmozvxk-5sGDfw3mJ5Xt6hd0bUm-L1Dt373Z3Uow@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAEhC_B=hB+bmozvxk-5sGDfw3mJ5Xt6hd0bUm-L1Dt373Z3Uow@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 3:09=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Wed, Mar 08, 2023 at 06:13:34PM -0800, Ian Rogers wrote:
-> > On Thu, Jan 19, 2023 at 1:13=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> =
-wrote:
-> > >
-> > > On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu:
-> > > > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.com> w=
-rote:
-> > > > > > libbpf 1.0 was a major change in API. Perf has partially suppor=
-ted
-> > > > > > older libbpf's but an implementation may be:
-> > > > > > ..
-> > > > > >        pr_err("%s: not support, update libbpf\n", __func__);
-> > > > > >        return -ENOTSUP;
-> > > > > > ..
-> > > > > >
-> > > > > > Rather than build a binary that would fail at runtime it is
-> > > > > > preferrential just to build libbpf statically and link against
-> > > > > > that. The static version is in the kernel tools tree and newer =
-than
-> > > > > > 1.0.
-> > > > > >
-> > > > > > These patches change the libbpf test to only pass when at least
-> > > > > > version 1.0 is installed, then remove the conditional build and
-> > > > > > feature logic.
-> > > > > >
-> > > > > > The issue is discussed here:
-> > > > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@go=
-ogle.com/
-> > > > > > perf bpf:
-> > > > > >
-> > > > > > A variant of this fix was added to Linux 6.2 in:
-> > > > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_DY=
-NAMIC=3D1"
-> > > > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
-> > > > > > This change goes further in removing logic that is now no longe=
-r
-> > > > > > necessary.
-> > > > > >
-> > > > > > v2. Rebase now that breakage fix patch is in linus/master.
-> > > > >
-> > > > > I missed the:
-> > > > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > I believe we are waiting for package maintainer input.
-> > > >
-> > > > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
-> > >
-> > > rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd be to m=
-ove
-> > > f37 to 1.x, but I had to do bulk update of like 10 other dependent pa=
-ckages
-> > > for f38, so not sure how bad it'd be for f37
-> > >
-> > > jirka
-> >
-> > +Guilherme
-> >
-> > We were looking for maintainer input on these changes, but there is no
-> > update in over a month. Here is the original lore link:
-> > https://lore.kernel.org/lkml/CAP-5=3DfVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39d=
-ywaLxrO4Hpg@mail.gmail.com/
-> > Should these changes land in perf-tools-next targeting Linux 6.4?
->
-> ugh, I did not include Justin :-\ sry
->
-> Justin,
-> we are trying to move perf to use libbpf 1.0 only, which is fine for fedo=
-ra 38,
-> but fedora 37 is still on libbpf 0.8 (and it's not easy to do the bulk up=
-date)
->
-> would fedora 37 even get to sync 6.4 kernel/kernel-tools?
+On 10/03/23 16:02, Roman Lozko wrote:
+> On Fri, Mar 10, 2023 at 3:32 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> Thanks for finding this.  Obviously Python 3 is preferred nowadays
+>> but Python 2 seems to be still a thing.
+>>
+>> AFAICT, it would be better to fix this by adding:
+>>
+>> from __future__ import division
+>>
+>> at the top of the script, next to from __future__ import print_function
+> 
+> Is it possible to build perf with python3? May it be better to stop
+> supporting Python 2?
 
-Yes, Fedora 37 will not EOL until November when F39 has been out for
-30 days. It will certainly get 6.4, which should come out this summer.
-We could probably do some hackish static link situation for Fedora 37
-if necessary though.  It isn't idea, but we know it is short lived, so
-I would be okay with making that work.
+PYTHON=python3 make -C tools/perf install
 
-Justin
+For more information refer:
 
-> thanks,
-> jirka
->
-> >
-> > Thanks,
-> > Ian
-> >
-> > > >
-> > > > This is what I have in the containers I test, sure, the older ones
-> > > > already have NO_LIBBPF=3D1 and some will get this added, and some I=
- still
-> > > > need to ask for libbpf-devel (or the distro specific name, like
-> > > > libbpf-dev):
-> > > >
-> > > > [perfbuilder@five ~]$ podman images --format "{{.Repository}}:{{.Ta=
-g}}" | grep /acmel/ | grep -v '<none>' | sort -t: -Vk1,2 | grep -v -- -x- |=
- while read image ; do echo -n $image: ; libbpf=3D$(podman run --rm -t --en=
-trypoint=3Dls $image -la /usr/lib64/libbpf.so.1) ; echo $libbpf ; done
-> > > > localhost/acmel/linux-perf-tools-build-almalinux:8:ls: cannot acces=
-s '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-almalinux:9:ls: cannot acces=
-s '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:3.12:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:3.13:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:3.14:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:3.15:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:3.16:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:3.17:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alpine:edge:ls: /usr/lib64/l=
-ibbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alt:p9:ls: cannot access '/u=
-sr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alt:p10:ls: cannot access '/=
-usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-alt:sisyphus:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-amazonlinux:2:ls: cannot acc=
-ess /usr/lib64/libbpf.so.1: No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-amazonlinux:devel:ls: cannot=
- access '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-archlinux:base:lrwxrwxrwx 1 =
-root root 15 Oct 1 12:32 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.1
-> > > > localhost/acmel/linux-perf-tools-build-centos:8:ls: cannot access '=
-/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-centos:stream:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-clearlinux:latest:lrwxrwxrwx=
- 1 root root 15 Sep 30 16:01 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.1
-> > > > localhost/acmel/linux-perf-tools-build-debian:10:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-debian:11:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-debian:experimental:ls: cann=
-ot access '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:26:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:27:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:28:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:29:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:30:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:31:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:32:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:33:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:34:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:35:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:36:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:37:ls: cannot access =
-'/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-fedora:38:lrwxrwxrwx. 1 root=
- root 15 Dec 20 14:39 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.0
-> > > > localhost/acmel/linux-perf-tools-build-fedora:rawhide:lrwxrwxrwx. 1=
- root root 15 Dec 20 14:39 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.0
-> > > > localhost/acmel/linux-perf-tools-build-gentoo-stage3:latest:ls: can=
-not access '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-manjaro:base:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:15.0:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:15.1:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:15.2:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:15.3:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:15.4:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:15.5:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-opensuse:tumbleweed:lrwxrwxr=
-wx. 1 root root 15 Nov 9 12:08 /usr/lib64/libbpf.so.1 -> libbpf.so.1.0.1
-> > > > localhost/acmel/linux-perf-tools-build-oraclelinux:8:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-oraclelinux:9:ls: cannot acc=
-ess '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-rockylinux:8:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-rockylinux:9:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:18.04:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:20.04:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:21.04:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:21.10:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:22.04:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:22.10:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > localhost/acmel/linux-perf-tools-build-ubuntu:23.04:ls: cannot acce=
-ss '/usr/lib64/libbpf.so.1': No such file or directory
-> > > > [perfbuilder@five ~]$
-> > > >
-> > > > [perfbuilder@five linux-perf-tools-build]$ grep libbpf-dev */*/Dock=
-erfile
-> > > > debian/experimental/Dockerfile:       libbpf-dev \
-> > > > fedora/35/Dockerfile:            libtraceevent-devel libbpf-devel \
-> > > > fedora/36/Dockerfile:            libtraceevent-devel libbpf-devel \
-> > > > fedora/37/Dockerfile:            libtraceevent-devel libbpf-devel \
-> > > > fedora/38/Dockerfile:            libtraceevent-devel libbpf-devel \
-> > > > fedora/rawhide/Dockerfile:    libtraceevent-devel libbpf-devel \
-> > > > opensuse/tumbleweed/Dockerfile:       libbpf-devel libtraceevent-de=
-vel \
-> > > > ubuntu/22.04/Dockerfile:      libelf-dev libiberty-dev libdw-dev li=
-baudit-dev libtraceevent-dev libbpf-dev \
-> > > > ubuntu/22.10/Dockerfile:      libelf-dev libiberty-dev libdw-dev li=
-baudit-dev libtraceevent-dev libbpf-dev \
-> > > > ubuntu/23.04/Dockerfile:      libelf-dev libiberty-dev libdw-dev li=
-baudit-dev libtraceevent-dev libbpf-dev \
-> > > > [perfbuilder@five linux-perf-tools-build]$
-> > > >
-> > > > In some cases it gets dragged on differently, like with clearlinux,
-> > > > gentoo, archlinux, etc.
-> > > >
-> > > > Anyway, just a data point, I'll check if I'm missing installing it
-> > > > somewhere.
-> > > >
-> > > > - Arnaldo
->
+https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace#Downloading_and_building_the_latest_perf_tools
+
+> 
+>> Also the patch subject should be:
+>>
+>> perf scripts: intel-pt-events.py: Fix IPC output for Python 2
+>>
+>> Also a Fixes tag could be added i.e.
+>>
+>> Fixes: a483e64c0b62 ("perf scripting python: intel-pt-events.py: Add --insn-trace and --src-trace")
+> 
+> Thanks for details, this is my first patch, I knew I would miss something :)
+
