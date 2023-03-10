@@ -2,95 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E0C64EC4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 14:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8396DC64EC4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 15:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232226AbjCJOV0 (ORCPT
+        id S234059AbjCJPMw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Mar 2023 09:21:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58594 "EHLO
+        Fri, 10 Mar 2023 10:12:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232142AbjCJOU4 (ORCPT
+        with ESMTP id S232006AbjCJPMf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Mar 2023 09:20:56 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745AB11BB2A
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 06:19:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678457981; x=1709993981;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dslIk3BBHKwsSybg8vbqYVfdRVYr+82nX52/098xeZo=;
-  b=mxsbZRO68gbZG5fTBF3Jzt4r3bH27Y5v/tOTtCYFqgkzHtkKdbRzQLO8
-   fkC/TIgZ04aGAk8Pekc5Ss3+cSMWDGJaxfWEqpLsCjjiTfCMd038bimyA
-   7IqfSDp/FGDBLOZRezLBdJYYWBfrtQ4SLzaI6+WNNw5lzcq/P6BuIq+y0
-   /oQ00uvAAr0KIZHdqgOo2v79K7HdSWyocmH9B/YhabLUtY653c/QkTH8g
-   U3jMVhCdbCV/VihGh+Zso5E+n3XcmyjLcxuVLbIyxggu1WjFcAllU0lRs
-   cX1trFa1HjUNpx1+sEF1yixSA7A6QeLl9SKgCJsqjkF1JdcvGWqlxaDjC
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="401595040"
-X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="401595040"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 06:19:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="821061820"
-X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="821061820"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.60.222])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 06:19:19 -0800
-Message-ID: <db6b4693-3f71-00aa-4dd7-00700fc50668@intel.com>
-Date:   Fri, 10 Mar 2023 16:19:14 +0200
+        Fri, 10 Mar 2023 10:12:35 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C4AD123DCC;
+        Fri, 10 Mar 2023 07:04:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57D3061A4E;
+        Fri, 10 Mar 2023 15:04:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D66EC4339E;
+        Fri, 10 Mar 2023 15:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678460645;
+        bh=mqk0HwoIiz3oQZAzA3nO4eAGQCmcs8r7gMDQJtl6vC8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A1grifkb0unP7UXl7M6IKeC1E+2Lf/xVmtTNrgSaYdOEphZMzj5RgyCPm2lXEiglt
+         cZmgyPLrd4yEN2jb6MkbVeGg1n+iRsx5FYN6WR2IJIcYDpbh1Yvy63nJ36A3YtDwOZ
+         XzEJJ8lEIGDZxX66/mSI0cst4mAdkxLMyo8cRNPHbyo1CxK7hWJL4KUMchIJtCv6jC
+         avIGlHd/mWNDP76esfh2ec5UX7h9gSyhRvgAT3x1JdClX7RO9i/CkFnb718l7SS0Gl
+         pSDdXGmXC5jltVjj/p8OKC+dCQKns1dk8byzIaSut4SHzqeA6IRy7BTH3alYOd0D1t
+         T5orV4yzAzf8A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6750E4049F; Fri, 10 Mar 2023 12:04:03 -0300 (-03)
+Date:   Fri, 10 Mar 2023 12:04:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC/PATCHSET 0/9] perf record: Implement BPF sample filter (v4)
+Message-ID: <ZAtG43JZkUoO9XkF@kernel.org>
+References: <20230307233309.3546160-1-namhyung@kernel.org>
+ <f5b3de20-797c-4ff6-a85b-06c85b4eaa1b@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.8.0
-Subject: Re: [PATCH] fix IPC output in perf intel-pt-events script
-Content-Language: en-US
-To:     Roman Lozko <lozko.roma@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
-References: <20230310111001.2836295-1-lozko.roma@gmail.com>
- <01f16399-f600-2b45-766f-0b5e5f868345@intel.com>
- <CAEhC_B=hB+bmozvxk-5sGDfw3mJ5Xt6hd0bUm-L1Dt373Z3Uow@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAEhC_B=hB+bmozvxk-5sGDfw3mJ5Xt6hd0bUm-L1Dt373Z3Uow@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5b3de20-797c-4ff6-a85b-06c85b4eaa1b@amd.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/03/23 16:02, Roman Lozko wrote:
-> On Fri, Mar 10, 2023 at 3:32 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> Thanks for finding this.  Obviously Python 3 is preferred nowadays
->> but Python 2 seems to be still a thing.
->>
->> AFAICT, it would be better to fix this by adding:
->>
->> from __future__ import division
->>
->> at the top of the script, next to from __future__ import print_function
+Em Fri, Mar 10, 2023 at 03:28:03PM +0530, Ravi Bangoria escreveu:
+> > It requires samples satisfy all the filter expressions otherwise it'd
+> > drop the sample.  IOW filter expressions are connected with logical AND
+> > operations unless they used "||" explicitly.  So if user has something
+> > like 'A, B || C, D', then BOTH A and D should be true AND either B or C
+> > also needs to be true.
+> > 
+> > Essentially the BPF filter expression is:
+> > 
+> >   <term> <operator> <value> (("," | "||") <term> <operator> <value>)*
+> > 
+> > The <term> can be one of:
+> >   ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
+> >   code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
+> >   p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
+> >   mem_dtlb, mem_blk, mem_hops
+> > 
+> > The <operator> can be one of:
+> >   ==, !=, >, >=, <, <=, &
+> > 
+> > The <value> can be one of:
+> >   <number> (for any term)
+> >   na, load, store, pfetch, exec (for mem_op)
+> >   l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+> >   na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+> >   remote (for mem_remote)
+> >   na, locked (for mem_locked)
+> >   na, l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault (for mem_dtlb)
+> >   na, by_data, by_addr (for mem_blk)
+> >   hops0, hops1, hops2, hops3 (for mem_hops)
 > 
-> Is it possible to build perf with python3? May it be better to stop
-> supporting Python 2?
+> I think this and few examples should be added in perf-record man page.
 
-PYTHON=python3 make -C tools/perf install
+Agreed, and even mentioning cases where it overcome problems like the
+filtering you mentioned for AMD systems.
 
-For more information refer:
-
-https://perf.wiki.kernel.org/index.php/Perf_tools_support_for_Intel%C2%AE_Processor_Trace#Downloading_and_building_the_latest_perf_tools
-
-> 
->> Also the patch subject should be:
->>
->> perf scripts: intel-pt-events.py: Fix IPC output for Python 2
->>
->> Also a Fixes tag could be added i.e.
->>
->> Fixes: a483e64c0b62 ("perf scripting python: intel-pt-events.py: Add --insn-trace and --src-trace")
-> 
-> Thanks for details, this is my first patch, I knew I would miss something :)
-
+- Arnaldo
