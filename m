@@ -2,158 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0461FC678D5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 07:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5E9C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 11:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbjCKHA5 (ORCPT
+        id S231147AbjCKL1P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 02:00:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48686 "EHLO
+        Sat, 11 Mar 2023 06:27:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbjCKHA0 (ORCPT
+        with ESMTP id S230250AbjCKL0w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 02:00:26 -0500
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A597DBB7C
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:57 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-53700262a47so76022717b3.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:57 -0800 (PST)
+        Sat, 11 Mar 2023 06:26:52 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D33912CCB;
+        Sat, 11 Mar 2023 03:22:59 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id nn12so7672225pjb.5;
+        Sat, 11 Mar 2023 03:22:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678517995;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=suA+bwgJNWM1ViYRwliFKAa9dMDLpk9Qwp1WJkMdxcc=;
-        b=CQZt3tWjAs16t6INtGV8MfbsFPXnxShEd3XQr0Eg2M1Lq8aK2hi5j69UBZR4nZvzQk
-         s70YdoH35sqKBKPjWDpSYMFsqUFh0N/2F4nVGpQMSCBVJcFiDIavD87dGD04hX8KnzQO
-         872HqHIhAoE6Y39RvB4exu295r38ilJ6XdN22SVd+X4CzDldEZzpLwiDUDuJgFIXo2JB
-         DQ0r3g7RnmpHwriEWOT1iX4UDptqU27wyA0chat1UyI4L+vzaMegrBm+fA9mCexnzQb/
-         ProMYdMUTJIItTVUbMrA9mEo6o7msjnB11hVk/pqvLYWAGyciPvgRwd37MCBKBNz7Hbl
-         l1Pw==
+        d=gmail.com; s=20210112; t=1678533737;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fQ3pWdzvgyzFWwehYnV2owVmjn0zg/w4S967lskCtEY=;
+        b=o9by0IefuLncZNR0lGzGGkYmV3tCLpct/VIqyysUdtMMmijUXRXVvYczYF19jx4w/9
+         3P6Wph9/uqDRVkssg8IcDPd0N1cNPDcjXEdXGSMl62MwpYHv5MnmyQdaxrI8G244b8G9
+         mIL82j60RuLTahi1ij14+rGMY02lmqKmUx/2FGa5at0nQjiL1b/oUqtsvgVkpYvyZfzU
+         lUTJUpaW0OyZQvg3OkSIPqpshIzG+8OL2wcZaKE2R8/gpC+bbnUj7jNBfKrePZSJsswO
+         8BPGWMynCzdEmSqGxS4gbYJJcbQmU6XO1TYIUsoghWSJkre2IZIvDaX9DAbifYkeW5IA
+         CWeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678517995;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=suA+bwgJNWM1ViYRwliFKAa9dMDLpk9Qwp1WJkMdxcc=;
-        b=GNB3UygoIBI41Qtm1mV/O/EXT+im2A4DrUvsURpgY7w0thxaLmcyQA459HPCniUk7+
-         ZBDVuUmf21o9ja2HlGyIuu39kQb4+HtVXYxsgxOdcBJsbK6z+MZZPuVufYvyonn4zSs1
-         IlZ9t9XJJhe/IR7BKLzCS+8AP2Sbrc3vbuxFj9wlli7z9lpftWTz+j7wwb5ZKhxzDB/t
-         VLXwO9HQNlq50wHjZJ59aDdS4AiAyugYBFsnbr+MOiXEjkttDaN7uivhR32VHSbNg4O9
-         hsyOtn75TFx7077G6F+K+QXeZGA0ZCfop+3TZK2fEq9QxUhfLIeV9s2NNQPyLV1jEX9a
-         pyyA==
-X-Gm-Message-State: AO0yUKU1RVBIKfOKEk3H2dZvijcvQSOAqT6pH75oEUE6mOW4B4zg1qpa
-        nXSjL6bpe/BcpL37Z9H/NUtDwJ7KqEDx
-X-Google-Smtp-Source: AK7set9XTSaarIquORnK+0yBheQDbBcFerJD4i+/DeqYN6jDbj3frYgSC1/aA5aOMWmcLWCqwpOpNALBFmcU
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a11d:a763:a328:f2d6])
- (user=irogers job=sendgmr) by 2002:a81:a983:0:b0:52e:e095:d840 with SMTP id
- g125-20020a81a983000000b0052ee095d840mr18667452ywh.0.1678517995660; Fri, 10
- Mar 2023 22:59:55 -0800 (PST)
-Date:   Fri, 10 Mar 2023 22:57:53 -0800
-In-Reply-To: <20230311065753.3012826-1-irogers@google.com>
-Message-Id: <20230311065753.3012826-14-irogers@google.com>
-Mime-Version: 1.0
-References: <20230311065753.3012826-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v1 13/13] perf build: Remove redundant NO_NEWT build option
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        d=1e100.net; s=20210112; t=1678533737;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fQ3pWdzvgyzFWwehYnV2owVmjn0zg/w4S967lskCtEY=;
+        b=bVEYXMBr1Uj/geDWdRoOzJQaHzixFAqDCJPDQRaJbdlhDp7iQnPn32U2WMUweF3Yrf
+         GqfvMozhnhrHltHKTRYHzrzURLF/EH87ClbBC1jgWROl+w9OTOhL/uAyDTOXpFIJzaja
+         y9DDUvoX4F3vTkrp2wcdR4VA7qtBpg1pmNBxbAf5e2MlXb2rLjUxmcK6BM97DBAUrGuJ
+         Sor7gUnsBO6fETmDO4+x7t+PJm0b5oEn49LMoUAVjvSdV5MEqtdyURC61t+Dq/d3PPG6
+         V7WN8VO4jRXayrQXamR3iB5X8g7sH9jX9jdZhBlOIRuRqE3sSc0qhORfwNmD/r9qflDs
+         JUUg==
+X-Gm-Message-State: AO0yUKUH2l5ArJr1C5ZP1s3VmjX3NIN1mKHVDb7KVwgtLVqQRyAdxsmK
+        Nftgyd3c+LChk/Pjy9RM7nReKIn9ul7aO3G4
+X-Google-Smtp-Source: AK7set+2yemjXIhufbiQIUZV+/nrTJ6zdAlrOSUpszmESQ+sgDlwA8YkmZRJZG9bi+ACHzp79Mr3Mw==
+X-Received: by 2002:a17:903:230e:b0:19c:b4e3:c660 with SMTP id d14-20020a170903230e00b0019cb4e3c660mr32223340plh.47.1678533736916;
+        Sat, 11 Mar 2023 03:22:16 -0800 (PST)
+Received: from kim-GL702ZC.. ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id ls8-20020a17090b350800b002367325203fsm1326941pjb.50.2023.03.11.03.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Mar 2023 03:22:16 -0800 (PST)
+From:   paranlee <p4ranlee@gmail.com>
+To:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Andres Freund <andres@anarazel.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, paranlee <p4ranlee@gmail.com>
+Subject: [PATCH] perf tools riscv: Add support for riscv lookup_binutils_path
+Date:   Sat, 11 Mar 2023 20:21:22 +0900
+Message-Id: <20230311112122.28894-1-p4ranlee@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The option controlled nothing and no code depends, conditional or
-otherwise, on libnewt.
+Add to know RISC-V binutils path.
+Secondarily, edit the code block with alphabetical order.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Paran Lee <p4ranlee@gmail.com>
 ---
- tools/perf/Makefile.config | 4 ----
- tools/perf/Makefile.perf   | 2 --
- tools/perf/tests/make      | 6 ++----
- 3 files changed, 2 insertions(+), 10 deletions(-)
+ tools/perf/arch/common.c | 51 +++++++++++++++++++++++++++-------------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 1b598c5e68eb..b7a9cb4a3526 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -752,10 +752,6 @@ ifndef NO_LIBCRYPTO
-   endif
- endif
+diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+index 59dd875fd5e4..058527ededdd 100644
+--- a/tools/perf/arch/common.c
++++ b/tools/perf/arch/common.c
+@@ -29,11 +29,23 @@ const char *const arm_triplets[] = {
+ };
  
--ifdef NO_NEWT
--  NO_SLANG=1
--endif
+ const char *const arm64_triplets[] = {
++	"aarch64-unknown-linux-",
+ 	"aarch64-linux-android-",
+ 	"aarch64-linux-gnu-",
+ 	NULL
+ };
+ 
++const char *const mips_triplets[] = {
++	"mips-unknown-linux-gnu-",
++	"mipsel-linux-android-",
++	"mips-linux-gnu-",
++	"mips64-linux-gnu-",
++	"mips64el-linux-gnuabi64-",
++	"mips64-linux-gnuabi64-",
++	"mipsel-linux-gnu-",
++	NULL
++};
++
+ const char *const powerpc_triplets[] = {
+ 	"powerpc-unknown-linux-gnu-",
+ 	"powerpc-linux-gnu-",
+@@ -43,6 +55,20 @@ const char *const powerpc_triplets[] = {
+ 	NULL
+ };
+ 
++const char *const riscv32_triplets[] = {
++	"riscv32-unknown-linux-gnu-",
++	"riscv32-linux-android-",
++	"riscv32-linux-gnu-",
++	NULL
++};
++
++const char *const riscv64_triplets[] = {
++	"riscv64-unknown-linux-gnu-",
++	"riscv64-linux-android-",
++	"riscv64-linux-gnu-",
++	NULL
++};
++
+ const char *const s390_triplets[] = {
+ 	"s390-ibm-linux-",
+ 	"s390x-linux-gnu-",
+@@ -78,17 +104,6 @@ const char *const x86_triplets[] = {
+ 	NULL
+ };
+ 
+-const char *const mips_triplets[] = {
+-	"mips-unknown-linux-gnu-",
+-	"mipsel-linux-android-",
+-	"mips-linux-gnu-",
+-	"mips64-linux-gnu-",
+-	"mips64el-linux-gnuabi64-",
+-	"mips64-linux-gnuabi64-",
+-	"mipsel-linux-gnu-",
+-	NULL
+-};
 -
- ifndef NO_SLANG
-   ifneq ($(feature-libslang), 1)
-     ifneq ($(feature-libslang-include-subdir), 1)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 3e06915f6bd0..dc9dda09b076 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -44,8 +44,6 @@ include ../scripts/utilities.mak
- #
- # Define WERROR=0 to disable treating any warnings as errors.
- #
--# Define NO_NEWT if you do not want TUI support. (deprecated)
--#
- # Define NO_SLANG if you do not want TUI support.
- #
- # Define GTK2 if you want GTK+ GUI support.
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 47c665659022..a74b4be446c6 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -72,10 +72,9 @@ make_nondistro      := BUILD_NONDISTRO=1
- make_no_libperl     := NO_LIBPERL=1
- make_no_libpython   := NO_LIBPYTHON=1
- make_no_scripts     := NO_LIBPYTHON=1 NO_LIBPERL=1
--make_no_newt        := NO_NEWT=1
- make_no_slang       := NO_SLANG=1
- make_no_gtk2        := NO_GTK2=1
--make_no_ui          := NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
-+make_no_ui          := NO_SLANG=1 NO_GTK2=1
- make_no_demangle    := NO_DEMANGLE=1
- make_no_libelf      := NO_LIBELF=1
- make_no_libunwind   := NO_LIBUNWIND=1
-@@ -115,7 +114,7 @@ make_install_prefix_slash := install prefix=/tmp/krava/
- make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1
- 
- # all the NO_* variable combined
--make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1
-+make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
- make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1
- make_minimal        += NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1
- make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
-@@ -139,7 +138,6 @@ run += make_nondistro
- run += make_no_libperl
- run += make_no_libpython
- run += make_no_scripts
--run += make_no_newt
- run += make_no_slang
- run += make_no_gtk2
- run += make_no_ui
+ static bool lookup_path(char *name)
+ {
+ 	bool found = false;
+@@ -164,18 +179,22 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
+ 		path_list = arm_triplets;
+ 	else if (!strcmp(arch, "arm64"))
+ 		path_list = arm64_triplets;
++	else if (!strcmp(arch, "mips"))
++		path_list = mips_triplets;
+ 	else if (!strcmp(arch, "powerpc"))
+ 		path_list = powerpc_triplets;
+-	else if (!strcmp(arch, "sh"))
+-		path_list = sh_triplets;
++	else if (!strcmp(arch, "riscv32"))
++		path_list = riscv32_triplets;
++	else if (!strcmp(arch, "riscv64"))
++		path_list = riscv64_triplets;
+ 	else if (!strcmp(arch, "s390"))
+-		path_list = s390_triplets;
++		path_list = s390_triplets;		
++	else if (!strcmp(arch, "sh"))
++		path_list = sh_triplets;		
+ 	else if (!strcmp(arch, "sparc"))
+ 		path_list = sparc_triplets;
+ 	else if (!strcmp(arch, "x86"))
+ 		path_list = x86_triplets;
+-	else if (!strcmp(arch, "mips"))
+-		path_list = mips_triplets;
+ 	else {
+ 		ui__error("binutils for %s not supported.\n", arch);
+ 		goto out_error;
 -- 
-2.40.0.rc1.284.g88254d51c5-goog
+2.34.1
 
