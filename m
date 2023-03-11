@@ -2,124 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C772C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Fri, 10 Mar 2023 21:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4472EC6FD19
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 00:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbjCJV5q (ORCPT
+        id S229550AbjCKAfF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 10 Mar 2023 16:57:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56218 "EHLO
+        Fri, 10 Mar 2023 19:35:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231996AbjCJV5X (ORCPT
+        with ESMTP id S229541AbjCKAeb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 10 Mar 2023 16:57:23 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6ACB134ACE;
-        Fri, 10 Mar 2023 13:54:10 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id v11so7053607plz.8;
-        Fri, 10 Mar 2023 13:54:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678485204;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q5Orq6OUo/pN9+uOJs2jd/JlG/R3HWqXG9hbMYSUELE=;
-        b=OdOUYQg8vBDloWdBEQa/m7LLPmkva3gwZ5Rtxf+t+92qz9ykvr0rv1uF09z4qEElG6
-         K6XlbZX7G5N5/C/gObBFthqXf2iQ1T0aCufWBK3uXNmX5k3snV2XRsD6uImH/R7a6w/9
-         pY2Yz5f+w1ON7ZYLC8u2UsefYbBIIs8S+HZvkHaA+9136uvmULJCWvCmjMcUJ3f952I2
-         1tCXKZSnH27RXUvvYyIByjxLNBc1zIXJGEKkN1tgyrS/GxQ1zYtTvhJ26Vs3BeBUHhIn
-         6y65/ZuUk36xid7J6OjX8O/DdOOTBjy4Gqy/HfJCek36wKj4YvgG+RaGTFuY5YlkGn7M
-         4C5w==
+        Fri, 10 Mar 2023 19:34:31 -0500
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA70E3AB;
+        Fri, 10 Mar 2023 16:33:47 -0800 (PST)
+Received: by mail-io1-f41.google.com with SMTP id v10so2729660iox.8;
+        Fri, 10 Mar 2023 16:33:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678485204;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1678494758;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Q5Orq6OUo/pN9+uOJs2jd/JlG/R3HWqXG9hbMYSUELE=;
-        b=Cr0fRtNs2DWsMhuUSCCy2Fnm4GdG2UMHyrokYo+RuZ0tW/MuRI4P9BRhLXWNYk3Zhv
-         L34udUl0aiwGxCJswZbcadOIEzwZgd4ble3VDmp3SpWlaGsH5k/iVBuJJQgZKj6XmiX7
-         jJsKKXJEpVtQJ7ht9CJ79aky15g24hAwyzRO9+W7JftLCcNtmb0BzNNT0Hs+EfOzhMNH
-         uWU0frqopPCmIHH7xRg1AJ2511wbkxipm+hsKHcEDinzXJib7SzQYEopFUKRe+0ln0Yd
-         ByNcSQZi55zi9AawQhxf2zgkm2kvYwiydPreSUcFJEhsiBISZ3lIGyJ8Kd8J9Gc/0Lzu
-         u6PA==
-X-Gm-Message-State: AO0yUKV26Yc4FlcslZhMgqFglKIH4mG2d3rGbX3CoMDf/fuyuqAAVP0g
-        M1JajaadqdqR2X5ECxeSSWk=
-X-Google-Smtp-Source: AK7set8xo1mmbiK6cPqAoEvmR80uh4F+/9s9AuHEj1y23Y8JhipidTbK3rOp41I3C2fY8kjTw0mrxg==
-X-Received: by 2002:a17:90a:1a49:b0:234:b964:570d with SMTP id 9-20020a17090a1a4900b00234b964570dmr27514917pjl.13.1678485204044;
-        Fri, 10 Mar 2023 13:53:24 -0800 (PST)
-Received: from google.com ([2601:647:6780:44b0:e32f:ca65:5413:8ef7])
-        by smtp.gmail.com with ESMTPSA id o13-20020a17090ad24d00b002343e59709asm359880pjw.46.2023.03.10.13.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 13:53:23 -0800 (PST)
-Sender: Namhyung Kim <namhyung@gmail.com>
-Date:   Fri, 10 Mar 2023 13:53:20 -0800
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [RFC/PATCHSET 0/9] perf record: Implement BPF sample filter (v4)
-Message-ID: <ZAum0AFE27UMjfpG@google.com>
-References: <20230307233309.3546160-1-namhyung@kernel.org>
- <f5b3de20-797c-4ff6-a85b-06c85b4eaa1b@amd.com>
- <ZAtG43JZkUoO9XkF@kernel.org>
+        bh=ws2skJ37FCki1KwSUpSOEyJRCk/XSPHYtSy0yF1HNaA=;
+        b=T7Ug0VJbZIi0AcpOLt3tuKGjvVyZnoRLOcWxhy1jb2jqCjogHFcKihEILx3xeMTvB7
+         YQK8Bp6frNKQQskuajAU7W/QOC/AD3QVSEddYXw18xAx4warUPjVJp+9G3DyldMAg9ue
+         3FdCrIN5aLQers7moFg1pyIsz7QiCpnwdzZWqVN2kdIKPdULNPhHZ9oSSfqayVlkIuA8
+         rx8sak7L0DjTeichJTPuc8uaNKdGK/yZMmFxIfYAmMzGOimEWNVRwpD6Y8htkV0lPiXC
+         wtxzmuy6hVKT6wn3/6bUF+YC9C6nyxSzlGCPG28eBrIGoKHroBRjQlNicHBMQKlQDodB
+         nI+A==
+X-Gm-Message-State: AO0yUKXu8yPlTQV9s8HgwJhFeugdsyo14izY5uSutp7NrGv0kipz9Tfv
+        S3MWdlsOVMjxzQztaPmavQK2AwK6ZwDgYWJ/L6MaoPdi
+X-Google-Smtp-Source: AK7set/MbE+gdgzBDZPbePFWGMKNZxKoSHr4lcZB10652VHo3Ochc9bFkvSUardatgF5SdUflxsE2WKmpSLSGjzma1Y=
+X-Received: by 2002:a02:94cd:0:b0:3e1:fb3d:4dce with SMTP id
+ x71-20020a0294cd000000b003e1fb3d4dcemr13747156jah.0.1678494757979; Fri, 10
+ Mar 2023 16:32:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZAtG43JZkUoO9XkF@kernel.org>
+References: <20230309101111.444-1-ravi.bangoria@amd.com> <20230309101111.444-3-ravi.bangoria@amd.com>
+In-Reply-To: <20230309101111.444-3-ravi.bangoria@amd.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 10 Mar 2023 16:32:26 -0800
+Message-ID: <CAM9d7ci_dRrjq==hu5O0wD2kdN5tSJRNFf2ZtDsQ_X6UXZM3CA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] perf/ibs: Fix interface via core pmu events
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     peterz@infradead.org, eranian@google.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 12:04:03PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Mar 10, 2023 at 03:28:03PM +0530, Ravi Bangoria escreveu:
-> > > It requires samples satisfy all the filter expressions otherwise it'd
-> > > drop the sample.  IOW filter expressions are connected with logical AND
-> > > operations unless they used "||" explicitly.  So if user has something
-> > > like 'A, B || C, D', then BOTH A and D should be true AND either B or C
-> > > also needs to be true.
-> > > 
-> > > Essentially the BPF filter expression is:
-> > > 
-> > >   <term> <operator> <value> (("," | "||") <term> <operator> <value>)*
-> > > 
-> > > The <term> can be one of:
-> > >   ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
-> > >   code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
-> > >   p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
-> > >   mem_dtlb, mem_blk, mem_hops
-> > > 
-> > > The <operator> can be one of:
-> > >   ==, !=, >, >=, <, <=, &
-> > > 
-> > > The <value> can be one of:
-> > >   <number> (for any term)
-> > >   na, load, store, pfetch, exec (for mem_op)
-> > >   l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
-> > >   na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
-> > >   remote (for mem_remote)
-> > >   na, locked (for mem_locked)
-> > >   na, l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault (for mem_dtlb)
-> > >   na, by_data, by_addr (for mem_blk)
-> > >   hops0, hops1, hops2, hops3 (for mem_hops)
-> > 
-> > I think this and few examples should be added in perf-record man page.
-> 
-> Agreed, and even mentioning cases where it overcome problems like the
-> filtering you mentioned for AMD systems.
+On Thu, Mar 9, 2023 at 2:12 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> Although, IBS pmu can be invoked via it's own interface, indirect
+> IBS invocation via core pmu event is also supported with fixed set
+> of events: cpu-cycles:p, r076:p (same as cpu-cycles:p) and r0C1:p
+> (micro-ops) for user convenience.
+>
+> This indirect IBS invocation is broken since commit 66d258c5b048
+> ("perf/core: Optimize perf_init_event()"), which added RAW pmu
+> under pmu_idr list and thus if event_init() fails with RAW pmu,
+> it started returning error instead of trying other pmus.
+>
+> Fix it by trying to open event on all pmus if event_init() on user
+> requested pmu returns -ESRCH.
+>
+> Without patch:
+>   $ sudo ./perf record -C 0 -e r076:p -- sleep 1
+>   Error:
+>   The r076:p event is not supported.
+>
+> With patch:
+>   $ sudo ./perf record -C 0 -e r076:p -- sleep 1
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.341 MB perf.data (37 samples) ]
+>
+> Note that there is no notion of forward pmu mapping. i.e. kernel doesn't
+> know which specific pmu(or a set of pmus) the event should be forwarded
+> to. As of now, only AMD core pmu forwards a set of events to IBS pmu
+> when precise_ip attribute is set and thus trying with all pmus works.
+> But if more pmus starts returning -ESRCH, some sort of forward pmu
+> mapping needs to be introduced through which the event can directly
+> get forwarded to only mapped pmus. Otherwise, trying all pmus can
+> inadvertently open event on wrong pmu.
+>
+> Fixes: 66d258c5b048 ("perf/core: Optimize perf_init_event()")
+> Reported-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  arch/x86/events/amd/core.c | 11 ++++++++---
+>  kernel/events/core.c       | 10 +++++++++-
+>  2 files changed, 17 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 8c45b198b62f..81d67b899371 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -371,10 +371,15 @@ static inline int amd_has_nb(struct cpu_hw_events *cpuc)
+>  static int amd_pmu_hw_config(struct perf_event *event)
+>  {
+>         int ret;
+> +       u64 dummy;
+>
+> -       /* pass precise event sampling to ibs: */
+> -       if (event->attr.precise_ip && get_ibs_caps())
+> -               return -ENOENT;
+> +       if (event->attr.precise_ip) {
+> +               /* pass precise event sampling to ibs by returning -ESRCH */
+> +               if (get_ibs_caps() && !ibs_core_pmu_event(event, &dummy))
+> +                       return -ESRCH;
+> +               else
+> +                       return -ENOENT;
+> +       }
+>
+>         if (has_branch_stack(event) && !x86_pmu.lbr_nr)
+>                 return -EOPNOTSUPP;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f79fd8b87f75..e990c71ba34a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11639,18 +11639,26 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>                         goto again;
+>                 }
+>
+> +               /*
+> +                * pmu->event_init() should return -ESRCH only when it
+> +                * wants to forward the event to other pmu.
+> +                */
 
-Sure, will add them.
+Can we add this to the comment in the struct pmu?  There is a
+description already for other error codes.
+
+Otherwise looks good.
 
 Thanks,
 Namhyung
+
+
+> +               if (ret == -ESRCH)
+> +                       goto try_all;
+> +
+>                 if (ret)
+>                         pmu = ERR_PTR(ret);
+>
+>                 goto unlock;
+>         }
+>
+> +try_all:
+>         list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+>                 ret = perf_try_init_event(pmu, event);
+>                 if (!ret)
+>                         goto unlock;
+>
+> -               if (ret != -ENOENT) {
+> +               if (ret != -ENOENT && ret != -ESRCH) {
+>                         pmu = ERR_PTR(ret);
+>                         goto unlock;
+>                 }
+> --
+> 2.39.2
+>
