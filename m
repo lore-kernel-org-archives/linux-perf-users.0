@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B92C678D5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEBBC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 07:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230103AbjCKG7x (ORCPT
+        id S230207AbjCKHAJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 01:59:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48830 "EHLO
+        Sat, 11 Mar 2023 02:00:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbjCKG7q (ORCPT
+        with ESMTP id S230146AbjCKG7u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 01:59:46 -0500
+        Sat, 11 Mar 2023 01:59:50 -0500
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AFD144847
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:14 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-53700262a47so76012367b3.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:14 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6CAE20DA
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:25 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536a545bfbaso77700067b3.20
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678517952;
+        d=google.com; s=20210112; t=1678517959;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TM6MVHcCvuJekzTOoSVMhLDs6+EBUa5GfqRq4fZc+Ec=;
-        b=HdhM8KBj3naBHJmHM7igItQ5pBTYYwK7qACdj0h9KiPaEWKZLsUQBg7f1POy+kvwR0
-         XAIB8LuFlxWvu5TJMnOKluFvecDnp4+Xw8uQugf394yiK26eDGIZZqr7zTQUjPBdFLul
-         1ff2oQ0gCAQDA25UdC3vYZNsEI3KK1fWX0PwAZRays8oDpkiKTfFz5wYtByAr9wryMG4
-         a9W8QMUejxImdACl7uh8gRxo2ihfKbxsJysnghExmev5iG4I7yWGlAqOThA+lLRGYcvb
-         tceKy1NLHq1aJo1vvHH9YBqDy9NL/LVKMRu4baJXtD8QlnkxKOs5DQDOn5p5mPfW2kc4
-         wNvg==
+        bh=UaJIIcBEzyZNOhgIC/lIx2fcWxamKUkNGMgdjyQDc5Y=;
+        b=JbwMyb82arUwYsbpp+2CR3MOHnK4Bsgb7d87J6uyhp979D8l8HMxntJlXJ4Ze9lD8o
+         iFmBbKwqDAo3XhKpHsyaZSNeXtsidCNlvJm0M4gN9mCD3eta1g0KxeorDAWq9p68P34H
+         xeb/mr6jj4e0OdWAZrQOZphdhr2VY3Mdtb3Rj6aM9M/JVn0koMGGTASHDtYSHDlzwTUY
+         3IyCYa58D7A0JflpKOIKrnlZTrtELd+rFMGtv4aiKRORbakk4zVXOML7dZQAJ7k3X2Hz
+         VdhFBzRYTBm18iPXmY4AhKQIpdedyNTxP6bKwMYmVRtPEFAvg7WLEC32TfF36clrZ4+Z
+         U3Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678517952;
+        d=1e100.net; s=20210112; t=1678517959;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TM6MVHcCvuJekzTOoSVMhLDs6+EBUa5GfqRq4fZc+Ec=;
-        b=O03UhnjIee1Ee33QAl0Mj4GX2h4Dlt3/o0SVeWwYbLDhpQP7DPcTGm8F7mLMi5iKW+
-         V3fQl6qbVUO2EXAEgwd4oqPjf+jZjxWYHkXvFZynegEs3msH0jHyzIxeNt2S8oBKBUIi
-         FEjOCzFlQeLIsDETrOM2lhA71jLuOlIiPpHCTydVar+aYCD7nBqNQKQn0V2KaQ277mDH
-         /Ukbj2J6mvzNO7/aRHdMTLE4kmfTqu25cdRHfrClQ3UtKmV7dQWoj1XA2q+TUi/XfoHT
-         LrsYDI5fCQ5WecZpP8I/+9fhhMEg9BotmRzC2hdZTNKygauCG0wDNgMwqhzimECCPpvU
-         dY5g==
-X-Gm-Message-State: AO0yUKWkUCfblMgyqGLxRMn2isQJb+bEc6MJW/WRZakAEYYSgF5SX+Js
-        J9P8I7rDW5iQFmavA6vaoe/x1QHi4Ouf
-X-Google-Smtp-Source: AK7set+xqAyh5y8tXjMnLJd5UbnjPtT6qg4NLqQvGdWP2Kx9rtxLaD23Nwdq9QQHOj7sVLVD/G9RUtoTx0mU
+        bh=UaJIIcBEzyZNOhgIC/lIx2fcWxamKUkNGMgdjyQDc5Y=;
+        b=wGzZHhNZ4jGFbOVCsEqctQuj7LG5NTjDVzrvfYNeDW9FAruqB11QNsEtPad1F3cbhG
+         j9sZrxNSZJR8inIkjoQwT0dDUWfnmChRFritsXiPVvKgEOWUp5PgNrv/Bt0fObHOsBWq
+         u1n4MBmEnJ8jwrUpQ8cFVAaWxBIODXPw3UGpo3Iz4CisQRNW+ZFA9G4PVCQx58uyKfbx
+         /CBrCpxGiWytAIJW53i4q0LK/q8riETD04KQEm/XpkSwr3GyBGzT2eTgCzErCCyR+2qE
+         lEchWdkYqg4NiCOtWxrJukbFeYPA0LE6MaxzYCWleIHA94pxMPMIFRxZgZExcklenIGe
+         TtRA==
+X-Gm-Message-State: AO0yUKVryXwAnZGdqmn4wTf5if0DN8x/wXic3+2R57JUklA5qYQYrC9G
+        una+qFml+34OZ2qVWzVfBXAB0TD+mwra
+X-Google-Smtp-Source: AK7set8r7y5C4YRsyVKjA7xb6uMrDtNqf2buJwznbMCVbDT8O9J9H12jt+MiPLw/Ik+0AdXWYz2LqVnm5lPL
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a11d:a763:a328:f2d6])
- (user=irogers job=sendgmr) by 2002:a5b:83:0:b0:a17:c04e:bf7c with SMTP id
- b3-20020a5b0083000000b00a17c04ebf7cmr17133991ybp.11.1678517952523; Fri, 10
- Mar 2023 22:59:12 -0800 (PST)
-Date:   Fri, 10 Mar 2023 22:57:49 -0800
+ (user=irogers job=sendgmr) by 2002:a81:ac28:0:b0:536:55e5:2eaa with SMTP id
+ k40-20020a81ac28000000b0053655e52eaamr18111377ywh.3.1678517959721; Fri, 10
+ Mar 2023 22:59:19 -0800 (PST)
+Date:   Fri, 10 Mar 2023 22:57:50 -0800
 In-Reply-To: <20230311065753.3012826-1-irogers@google.com>
-Message-Id: <20230311065753.3012826-10-irogers@google.com>
+Message-Id: <20230311065753.3012826-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20230311065753.3012826-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v1 09/13] perf symbol: Add abi::__cxa_demangle C++ demangling support
+Subject: [PATCH v1 10/13] perf build: Switch libpfm4 to opt-out rather than opt-in
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,241 +83,72 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Refactor C++ demangling out of symbol-elf into its own files similar
-to other languages. Add abi::__cxa_demangle support. As the other
-demanglers are not shippable with distributions, this brings back C++
-demangling in a common case. It isn't perfect as the support for
-optionally demangling arguments and modifiers isn't present.
+If libpfm4 passes the feature test, it would be nice to have it
+enabled rather than also requiring the LIBPFM4=1 build flag.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config       | 29 +++++++++---------
- tools/perf/util/Build            |  1 +
- tools/perf/util/demangle-cxx.cpp | 50 ++++++++++++++++++++++++++++++++
- tools/perf/util/demangle-cxx.h   | 16 ++++++++++
- tools/perf/util/symbol-elf.c     | 37 +++++------------------
- 5 files changed, 88 insertions(+), 45 deletions(-)
- create mode 100644 tools/perf/util/demangle-cxx.cpp
- create mode 100644 tools/perf/util/demangle-cxx.h
+ tools/perf/Makefile.config | 3 +--
+ tools/perf/Makefile.perf   | 2 +-
+ tools/perf/tests/make      | 4 ++--
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 5756498248e0..fdeca45cf15f 100644
+index fdeca45cf15f..9754218bd418 100644
 --- a/tools/perf/Makefile.config
 +++ b/tools/perf/Makefile.config
-@@ -906,6 +906,7 @@ ifdef BUILD_NONDISTRO
+@@ -1130,7 +1130,7 @@ ifdef LIBCLANGLLVM
    endif
+ endif
  
-   CFLAGS += -DHAVE_LIBBFD_SUPPORT
-+  CXXFLAGS += -DHAVE_LIBBFD_SUPPORT
-   ifeq ($(feature-libbfd-buildid), 1)
-     CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
+-ifdef LIBPFM4
++ifndef NO_LIBPFM4
+   $(call feature_check,libpfm4)
+   ifeq ($(feature-libpfm4), 1)
+     CFLAGS += -DHAVE_LIBPFM
+@@ -1139,7 +1139,6 @@ ifdef LIBPFM4
+     $(call detected,CONFIG_LIBPFM4)
    else
-@@ -913,26 +914,24 @@ ifdef BUILD_NONDISTRO
+     msg := $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev);
+-    NO_LIBPFM4 := 1
    endif
  endif
  
--ifdef NO_DEMANGLE
--  CFLAGS += -DNO_DEMANGLE
--else
-+ifndef NO_DEMANGLE
-+  $(call feature_check,cxa-demangle)
-+  ifeq ($(feature-cxa-demangle), 1)
-+    EXTLIBS += -lstdc++
-+    CFLAGS += -DHAVE_CXA_DEMANGLE_SUPPORT
-+    CXXFLAGS += -DHAVE_CXA_DEMANGLE_SUPPORT
-+  endif
-   ifdef BUILD_NONDISTRO
-     ifeq ($(filter -liberty,$(EXTLIBS)),)
--      ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
-+      $(call feature_check,cplus-demangle)
-+      ifeq ($(feature-cplus-demangle), 1)
-         EXTLIBS += -liberty
--      else
--        $(call feature_check,cplus-demangle)
--        ifeq ($(feature-cplus-demangle), 1)
--          EXTLIBS += -liberty
--        endif
-       endif
-     endif
--  endif
--
--  ifneq ($(filter -liberty,$(EXTLIBS)),)
--    CFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
--  else
--    CFLAGS += -DNO_DEMANGLE
-+    ifneq ($(filter -liberty,$(EXTLIBS)),)
-+      CFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
-+      CXXFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
-+    endif
-   endif
- endif
- 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 918b501f9bd8..8607575183a9 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -211,6 +211,7 @@ perf-$(CONFIG_ZSTD) += zstd.o
- 
- perf-$(CONFIG_LIBCAP) += cap.o
- 
-+perf-y += demangle-cxx.o
- perf-y += demangle-ocaml.o
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
-diff --git a/tools/perf/util/demangle-cxx.cpp b/tools/perf/util/demangle-cxx.cpp
-new file mode 100644
-index 000000000000..8708bcafd370
---- /dev/null
-+++ b/tools/perf/util/demangle-cxx.cpp
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "demangle-cxx.h"
-+#include <stdlib.h>
-+#include <string.h>
-+#include <linux/compiler.h>
-+
-+#ifdef HAVE_LIBBFD_SUPPORT
-+#define PACKAGE 'perf'
-+#include <bfd.h>
-+#endif
-+
-+#ifdef HAVE_CXA_DEMANGLE_SUPPORT
-+#include <cxxabi.h>
-+#endif
-+
-+#if defined(HAVE_LIBBFD_SUPPORT) || defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
-+#ifndef DMGL_PARAMS
-+#define DMGL_PARAMS     (1 << 0)  /* Include function args */
-+#define DMGL_ANSI       (1 << 1)  /* Include const, volatile, etc */
-+#endif
-+#endif
-+
-+/*
-+ * Demangle C++ function signature
-+ *
-+ * Note: caller is responsible for freeing demangled string
-+ */
-+extern "C"
-+char *cxx_demangle_sym(const char *str, bool params __maybe_unused,
-+                       bool modifiers __maybe_unused)
-+{
-+#ifdef HAVE_LIBBFD_SUPPORT
-+        int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
-+
-+        return bfd_demangle(NULL, str, flags);
-+#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
-+        int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
-+
-+        return cplus_demangle(str, flags);
-+#elif defined(HAVE_CXA_DEMANGLE_SUPPORT)
-+        size_t len = strlen(str);
-+        char *output = (char*)malloc(len);
-+        int status;
-+
-+        output = abi::__cxa_demangle(str, output, &len, &status);
-+        return output;
-+#else
-+        return NULL;
-+#endif
-+}
-diff --git a/tools/perf/util/demangle-cxx.h b/tools/perf/util/demangle-cxx.h
-new file mode 100644
-index 000000000000..26b5b66c0b4e
---- /dev/null
-+++ b/tools/perf/util/demangle-cxx.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_DEMANGLE_CXX
-+#define __PERF_DEMANGLE_CXX 1
-+
-+#ifdef __cplusplus
-+extern "C" {
-+#endif
-+
-+char *cxx_demangle_sym(const char *str, bool params, bool modifiers);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+
-+#endif /* __PERF_DEMANGLE_CXX */
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 41882ae8452e..c0a2de42c51b 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -12,6 +12,7 @@
- #include "maps.h"
- #include "symbol.h"
- #include "symsrc.h"
-+#include "demangle-cxx.h"
- #include "demangle-ocaml.h"
- #include "demangle-java.h"
- #include "demangle-rust.h"
-@@ -25,6 +26,11 @@
- #include <symbol/kallsyms.h>
- #include <internal/lib.h>
- 
-+#ifdef HAVE_LIBBFD_SUPPORT
-+#define PACKAGE 'perf'
-+#include <bfd.h>
-+#endif
-+
- #ifndef EM_AARCH64
- #define EM_AARCH64	183  /* ARM 64 bit */
- #endif
-@@ -45,34 +51,6 @@
- 
- typedef Elf64_Nhdr GElf_Nhdr;
- 
--#ifndef DMGL_PARAMS
--#define DMGL_NO_OPTS     0              /* For readability... */
--#define DMGL_PARAMS      (1 << 0)       /* Include function args */
--#define DMGL_ANSI        (1 << 1)       /* Include const, volatile, etc */
--#endif
--
--#ifdef HAVE_LIBBFD_SUPPORT
--#define PACKAGE 'perf'
--#include <bfd.h>
--#else
--#ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
--extern char *cplus_demangle(const char *, int);
--
--static inline char *bfd_demangle(void __maybe_unused *v, const char *c, int i)
--{
--	return cplus_demangle(c, i);
--}
--#else
--#ifdef NO_DEMANGLE
--static inline char *bfd_demangle(void __maybe_unused *v,
--				 const char __maybe_unused *c,
--				 int __maybe_unused i)
--{
--	return NULL;
--}
--#endif
--#endif
--#endif
- 
- #ifndef HAVE_ELF_GETPHDRNUM_SUPPORT
- static int elf_getphdrnum(Elf *elf, size_t *dst)
-@@ -295,7 +273,6 @@ static bool want_demangle(bool is_kernel_sym)
- 
- static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
- {
--	int demangle_flags = verbose > 0 ? (DMGL_PARAMS | DMGL_ANSI) : DMGL_NO_OPTS;
- 	char *demangled = NULL;
- 
- 	/*
-@@ -306,7 +283,7 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
- 	if (!want_demangle(dso->kernel || kmodule))
- 	    return demangled;
- 
--	demangled = bfd_demangle(NULL, elf_name, demangle_flags);
-+	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
- 	if (demangled == NULL) {
- 		demangled = ocaml_demangle_sym(elf_name);
- 		if (demangled == NULL) {
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index a35bc995d5d8..3e06915f6bd0 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -122,7 +122,7 @@ include ../scripts/utilities.mak
+ # generated from the kernel .tbl or unistd.h files and use, if available, libaudit
+ # for doing the conversions to/from strings/id.
+ #
+-# Define LIBPFM4 to enable libpfm4 events extension.
++# Define NO_LIBPFM4 to disable libpfm4 events extension.
+ #
+ # Define NO_LIBDEBUGINFOD if you do not want support debuginfod
+ #
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index c2f74ed43418..47c665659022 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -94,7 +94,7 @@ make_with_coresight := CORESIGHT=1
+ make_no_sdt	    := NO_SDT=1
+ make_no_syscall_tbl := NO_SYSCALL_TABLE=1
+ make_with_clangllvm := LIBCLANGLLVM=1
+-make_with_libpfm4   := LIBPFM4=1
++make_no_libpfm4     := NO_LIBPFM4=1
+ make_with_gtk2      := GTK2=1
+ make_tags           := tags
+ make_cscope         := cscope
+@@ -161,7 +161,7 @@ run += make_no_syscall_tbl
+ run += make_with_babeltrace
+ run += make_with_coresight
+ run += make_with_clangllvm
+-run += make_with_libpfm4
++run += make_no_libpfm4
+ run += make_help
+ run += make_doc
+ run += make_perf_o
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
