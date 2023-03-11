@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E97BC678D5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557A9C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjCKG6M (ORCPT
+        id S230021AbjCKG6X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 01:58:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
+        Sat, 11 Mar 2023 01:58:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjCKG6L (ORCPT
+        with ESMTP id S229981AbjCKG6Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 01:58:11 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F19B4193E8
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:08 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id x64-20020a25ce43000000b00ae6d5855d78so8157154ybe.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:08 -0800 (PST)
+        Sat, 11 Mar 2023 01:58:16 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B521E5D9
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:15 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-536be78056eso76645757b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678517888;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pD8c7jNdpj5ptTgq1gX/x9ALXUHbsLatMpWGDnoqbzQ=;
-        b=kWuFyS4fBm4SiaMrQwcGUG+RzZteQEFtk8mf3AG6uyRzq7T3wLQb7jOQsVkQZ+tBYY
-         fuzH0baQNT7imkIuqlEF/oDU2tHjCViefrXQc7Rcd2ksllCsadqMo0KHCKAWjP40UACN
-         flARb8jvg5Zb6RM4FFO6mD6DyH7Td9s+CzE2KZfYlXajgIBgcHKNxaqeRmDUGegjnsmG
-         xIKNKhSzxK5D3/LXWkTMaa6I1kA16k5xaE1l0mchax554KT+c4i10VdgEYxzp1yIG13a
-         UGgIetYbLlqqIPWOJAy7rO7OrdcWLo69ihSzaIg5wopzlPqqlCZRft6Oe9YWJDyJ35DG
-         s7IQ==
+        d=google.com; s=20210112; t=1678517894;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hwwywuV0dZU1czvMnaqVuf21dNJ0Sgzpp/JikcaGwIM=;
+        b=iyrOLKNXgp5pumM5DPnUpRoFROT7RshhOsI0yeo95KWRoGMdlcNQFCDjSYJF/fd4gd
+         7hu12qdHoHdYgm5zqyEXci3bfX0dydaKiArEDp0hM+neBf5ZBCosEv8IMARvBPjkqvmb
+         yyD03otq1Y3WrtRW1ipFvMJEFdzz4bTnUoWXEjLsUOaY2TTFbdm4WovCLsZ2ZMDxdDWx
+         ahYVziJPegDQKv0SeE+vgbJ/BrG1XcS0IJjpZIdltdzjzWegZRCUU4PBAwH//URFsDzl
+         qYjgfQT96MzCh+0XPNa8h0mKffrqvjZKoqCnZjWCb3uAKrC7+1bdEynScYjzx9wmJgNd
+         WA5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678517888;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pD8c7jNdpj5ptTgq1gX/x9ALXUHbsLatMpWGDnoqbzQ=;
-        b=R3n2VEijdmfW+1hZ2jqBkgfyvgZSdvxsVMqFZGhD7ohzJ1Ud7jzllfBQhlmsyuljyQ
-         vrqZ6egMCdaYaMskzTJI4tOHMSoQ+6NlsQ75DQBcGEIgfzNw2QsaxyCEKsRZekt/rqr/
-         HoZFXlVmYy0DX1H/or//rdnsMyc+dBjoBX5hZqDAWpzInrhQqCoX+IBPsmguFB9hCG1y
-         bCrndcdbVHmYq3XcdaVi1yEBUa9fTzrh30RtcIkzA0JRTo0gFE0HbzA/3KnEiMTNEqt4
-         e89i1ZWeBQUw+9LLgYZS6/3NoEVEml6EayGw1Kj2p9dp3Sh5xm/Mge5eczbRexAFM668
-         GvSg==
-X-Gm-Message-State: AO0yUKUd7v8/oo+oISbx16Lo//ojjwN9csWRS20D5Ip7RtPDBzKNC8UM
-        /7j8ilRSD+12Gz6zz8BXgSVU0USa6KEI
-X-Google-Smtp-Source: AK7set8ozQE07aJyWsS9+H7+0a3rX8LyO18V2wF+euw7j31c9xAaAA7NMVClhPZfql3wEq3+LUy8xhszx5Jv
+        d=1e100.net; s=20210112; t=1678517894;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hwwywuV0dZU1czvMnaqVuf21dNJ0Sgzpp/JikcaGwIM=;
+        b=L1Gt8PMe+jzbpVjIM4Rt5oFWIhV1088j9TATkjG1sLjyK06Ueg1D4Nzc2TCkdHcQQY
+         PIHp2gdrOyp7Gh4WtvoEpbAy6kfHgNUQ42ipbzO/1oLEXdoYluCpiCoB6rPOu6/bW1ne
+         xgn10EPVCp8jL9dd5reOAjJ1uI7d4ATd6rOUKtMPE2wU6Yiz/GpFK1hVRbZumwEcNflu
+         bKE6v3CfrjZPTfgoy5A1GWK3xDWYMemW//w8ACx+2gTsDJbAWh5jODqvEJ+r2cFjzx2R
+         7U4PtfSl43TlIAkMNCKuKUgMKUxKvJy7oHe4YW8iahXJtc5LqAi3wazLeEchW9XUgEiE
+         sgUA==
+X-Gm-Message-State: AO0yUKVR09o9Whf69Nq51ULFHBYGSJy411UjECSFpZd8v6JsL6uOSDj/
+        nN7LHwqL34q3HjnHr5/Cl7E6gv0JNP05
+X-Google-Smtp-Source: AK7set/zGiooCzj2OYBw/Kwkd+hENEaJ42PWysldu6pOmjd3+QpAqaf5IiY56xK1QlQisJb8LjrjQIF7eeVF
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a11d:a763:a328:f2d6])
- (user=irogers job=sendgmr) by 2002:a81:ae1d:0:b0:52f:23f5:4079 with SMTP id
- m29-20020a81ae1d000000b0052f23f54079mr18340384ywh.4.1678517888215; Fri, 10
- Mar 2023 22:58:08 -0800 (PST)
-Date:   Fri, 10 Mar 2023 22:57:40 -0800
-Message-Id: <20230311065753.3012826-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:251:b0:9f1:6c48:f95f with SMTP id
+ k17-20020a056902025100b009f16c48f95fmr6264375ybs.5.1678517894743; Fri, 10 Mar
+ 2023 22:58:14 -0800 (PST)
+Date:   Fri, 10 Mar 2023 22:57:41 -0800
+In-Reply-To: <20230311065753.3012826-1-irogers@google.com>
+Message-Id: <20230311065753.3012826-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230311065753.3012826-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v1 00/13] Perf tool build improvements
+Subject: [PATCH v1 01/13] perf build: Support python/perf.so testing
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -81,51 +83,74 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Make the default build options a more preferred set, such as making
-BPF skeletons default and failing the build if jevents or libtracevent
-dependencies fail. The binutil dependencies are opt-in given license
-restrictions. abi::__cxa_demangle demangling support is added so that
-libiberty, from binutils, isn't necessary for C++ demangling.
+Add a build target to echo the python/perf.so's name from
+Makefile.perf. Use it in tests/make so the correct target is built and
+tested for.
 
-Some build/test dependencies are fixed and the code cleaned up.
+Fixes: caec54705adb ("perf build: Fix python/perf.so library's name")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.perf | 7 +++++--
+ tools/perf/tests/make    | 5 +++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-Ian Rogers (13):
-  perf build: Support python/perf.so testing
-  perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
-  perf build: Remove unused HAVE_GLIBC_SUPPORT
-  perf build: Error if no libelf and NO_LIBELF isn't set
-  perf util: Remove weak sched_getcpu
-  perf build: Error if jevents won't work and NO_JEVENTS=1 isn't set
-  perf build: Make binutil libraries opt in
-  tools build: Add feature test for abi::__cxa_demangle
-  perf symbol: Add abi::__cxa_demangle C++ demangling support
-  perf build: Switch libpfm4 to opt-out rather than opt-in
-  perf build: If libtraceevent isn't present error the build
-  tools headers: Make the difference output easier to read
-  perf build: Remove redundant NO_NEWT build option
-
- tools/build/Makefile.feature              |   1 +
- tools/build/feature/Makefile              |   4 +
- tools/build/feature/test-cxa-demangle.cpp |  17 ++
- tools/perf/Makefile.config                |  84 +++-----
- tools/perf/Makefile.perf                  |  21 +-
- tools/perf/builtin-lock.c                 |   2 +-
- tools/perf/builtin-record.c               |   2 +-
- tools/perf/builtin-version.c              |   2 +-
- tools/perf/check-headers.sh               | 229 ++++++++++++----------
- tools/perf/tests/make                     |  17 +-
- tools/perf/tests/shell/record_offcpu.sh   |   2 +-
- tools/perf/util/Build                     |   1 +
- tools/perf/util/cloexec.c                 |  13 --
- tools/perf/util/demangle-cxx.cpp          |  50 +++++
- tools/perf/util/demangle-cxx.h            |  16 ++
- tools/perf/util/symbol-elf.c              |  37 +---
- tools/perf/util/util.c                    |  16 ++
- 17 files changed, 294 insertions(+), 220 deletions(-)
- create mode 100644 tools/build/feature/test-cxa-demangle.cpp
- create mode 100644 tools/perf/util/demangle-cxx.cpp
- create mode 100644 tools/perf/util/demangle-cxx.h
-
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index bac9272682b7..2fcee585b225 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -647,13 +647,16 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
+ # Create python binding output directory if not already present
+ _dummy := $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
+ 
+-$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF)
++$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF) $(LIBSUBCMD)
+ 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
+         CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' \
+ 	  $(PYTHON_WORD) util/setup.py \
+ 	  --quiet build_ext; \
+ 	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
+ 
++python_perf_target:
++	@echo "Target is: $(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX)"
++
+ please_set_SHELL_PATH_to_a_more_modern_shell:
+ 	$(Q)$$(:)
+ 
+@@ -1152,7 +1155,7 @@ FORCE:
+ .PHONY: all install clean config-clean strip install-gtk
+ .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
+ .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare
+-.PHONY: archheaders
++.PHONY: archheaders python_perf_target
+ 
+ endif # force_fixdep
+ 
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 009d6efb673c..deb37fb982e9 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -62,10 +62,11 @@ lib = lib
+ endif
+ 
+ has = $(shell which $1 2>/dev/null)
++python_perf_so := $(shell $(MAKE) python_perf_target|grep "Target is:"|awk '{print $$3}')
+ 
+ # standard single make variable specified
+ make_clean_all      := clean all
+-make_python_perf_so := python/perf.so
++make_python_perf_so := $(python_perf_so)
+ make_debug          := DEBUG=1
+ make_no_libperl     := NO_LIBPERL=1
+ make_no_libpython   := NO_LIBPYTHON=1
+@@ -204,7 +205,7 @@ test_make_doc    := $(test_ok)
+ test_make_help_O := $(test_ok)
+ test_make_doc_O  := $(test_ok)
+ 
+-test_make_python_perf_so := test -f $(PERF_O)/python/perf.so
++test_make_python_perf_so := test -f $(PERF_O)/$(python_perf_so)
+ 
+ test_make_perf_o           := test -f $(PERF_O)/perf.o
+ test_make_util_map_o       := test -f $(PERF_O)/util/map.o
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
