@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873AFC678D5
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA2C678D5
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230050AbjCKG7N (ORCPT
+        id S229589AbjCKG70 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 01:59:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45426 "EHLO
+        Sat, 11 Mar 2023 01:59:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjCKG7E (ORCPT
+        with ESMTP id S230052AbjCKG7T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 01:59:04 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B59968E0
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:42 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-540e3b152a3so19191717b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:42 -0800 (PST)
+        Sat, 11 Mar 2023 01:59:19 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C957C9F8
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:50 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id w14-20020a25ac0e000000b00b369c36c165so847159ybi.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678517922;
+        d=google.com; s=20210112; t=1678517929;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5GcUUcZRN+AEu9vpTIS9W0tRqRRERda5Pu2Ht/K9Pk=;
-        b=pR13zWUd1h9CUw/T2GV0Cj+B8jhP5cn1b0sfJynxS58CMKOE3JqEuutXfxMi4Wioti
-         EFbn2mdwNoHJ/wARCIZO56BUhwpqgFZ4Bn5sPoYHugdpGrzTJmayahuR+TNP5iqQgy/x
-         CqWQeouCG3GnHU6qgt4kdZpK5XM+ljNUv0Jsdzr7g/tl9L65XCuwCndRocKy+po/BQzU
-         ruGs389OD5dZUXcUWJjPGX566lwUNDY7Xc+oEkZSRYH+PVXpT8RFXWNcEPR71t4g47Sx
-         sLTI3WeR7S1OZCkHPeDiOq26WyWmPGQPgAJqIzyXSYb0CMy3RBdWVwkUSQGv+qwnbW9q
-         VBeQ==
+        bh=F+R3xPbwPywZgeJnsjmP8WPRT4KEekM8oOe2/6TEvNc=;
+        b=GbtM2Vfzd2uFvQ6E35ynK8F12Mz9p4h3fX4fxIWbDeMGmaSb8govTXiIR7bx13KqIZ
+         t0bsGbbpwQjP8kz815Hlg7oCFGUF8NTM+Nb1AJ8tMOyo/KVrOmJVHJnHFU3qWelr3BPi
+         D6Nbhdqr5/xBXvBJ0IcI3dD64GMuAz4RS0EnursVquuv9NOMpAOw1fpcijqesKM0rZd9
+         2HRm6ltAulua1/24fpO526B5Lw2TgG02TTd9WVKnwanBl9Pc0XDL1HXOMukDmzNXP9DQ
+         shVkfNRnPhhdrmaGUuHNwUTpZSYdMRGDGH0/qLU7MeJ6vxdOmLVCC8jyclr4MHbtoEHs
+         qaeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678517922;
+        d=1e100.net; s=20210112; t=1678517929;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5GcUUcZRN+AEu9vpTIS9W0tRqRRERda5Pu2Ht/K9Pk=;
-        b=XctffcRZfHS+J/rNe3sWQpH6iMaToHmEN6QT97dTkN6C3RJsoLGXs0cvwF/MJ+syI9
-         1xObuCOyGI58WrRQRDfVRAhwH9y6LRvjGyZT/qYUkcPrtGRIyhO/DLfSRJXyooSEfjFn
-         05RVIG7YQtV6Z34eC6oPzKYPr4UJzQrDlx61lMrOCiVMKBNrU99VXhLF7CQtF4jJfStf
-         0DLBZCpUv57Xo4mZjXPUhpnbbDj7+rpRrlma9mlJ1ryVCAsQNCyXKHOI5gawawnDhAxb
-         Y9ejCULMOeP1gw/AgP1iWfHWscqhC00QI4Fgdj6tWdcddDFRrz5MqmfVhjYiYsjgT+O+
-         qsDQ==
-X-Gm-Message-State: AO0yUKXmH9xhnkkC6B5FYENEJwTksg/9q7AL5pVfinyRnmbUGBAkF6F6
-        NCGBHajRuqyabQU1h7VoCIWLkQuYqqGn
-X-Google-Smtp-Source: AK7set+6srXuJ0wtMRw7PpcSCeXW+oUgIuzrriuNVGeyYG1RPaHgSLMosGnTbUK0w+ieDCHiEIQd12hje2ew
+        bh=F+R3xPbwPywZgeJnsjmP8WPRT4KEekM8oOe2/6TEvNc=;
+        b=QJhSc4XIADwx0XsoITufqNjdt20N5du6zCIv1i2F5US0Fz9xymtLs7ojnhuigfKTM9
+         LwXxtK5dXTYjnwfv2GDaJiWykvI5XhkUGak5xm29LqnPoAY8YxbGqv0VPWtsGJtmOGNn
+         9KQj+q81w746FsjMEJC8UKJu9T/sOXGbRbMWs8iVXaqTlQk/fT8fAIuZV7lYYDmdjZxZ
+         JcI4PHjejCsJaf/h1UCSwKdxTZdsnvraEzkGplxfqq4MilDPHFXT9lkGDPhc9aKyISX7
+         UKUBmVlMW96klUBP5mn+oEKiFdFKhrCS3TBMpR9PWjXEjfJIj1ZGoS44Wr1KdDMY/xZ/
+         YtNg==
+X-Gm-Message-State: AO0yUKUw6kg+BLREa3fTM5vyljZxOe+HMQoFu06yCM3pUfDuZV1dj4MN
+        ajqgsgBMq2B6gNlmUqzCHixzWuUN2a1M
+X-Google-Smtp-Source: AK7set+YGmGHUS1yB1fxA8fPS4XfwBlDXecnkj+KmRN23aQEoGof3q6DV9UBVKyc6t+I+wVdms/fMYZMYvOW
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a11d:a763:a328:f2d6])
- (user=irogers job=sendgmr) by 2002:a05:6902:208:b0:ace:1ae4:9dd2 with SMTP id
- j8-20020a056902020800b00ace1ae49dd2mr17170987ybs.8.1678517921899; Fri, 10 Mar
- 2023 22:58:41 -0800 (PST)
-Date:   Fri, 10 Mar 2023 22:57:45 -0800
+ (user=irogers job=sendgmr) by 2002:a81:ac4d:0:b0:541:6961:8457 with SMTP id
+ z13-20020a81ac4d000000b0054169618457mr685807ywj.2.1678517929704; Fri, 10 Mar
+ 2023 22:58:49 -0800 (PST)
+Date:   Fri, 10 Mar 2023 22:57:46 -0800
 In-Reply-To: <20230311065753.3012826-1-irogers@google.com>
-Message-Id: <20230311065753.3012826-6-irogers@google.com>
+Message-Id: <20230311065753.3012826-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20230311065753.3012826-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v1 05/13] perf util: Remove weak sched_getcpu
+Subject: [PATCH v1 06/13] perf build: Error if jevents won't work and
+ NO_JEVENTS=1 isn't set
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,66 +84,37 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-sched_getcpu may not be present and so a feature test and definition
-exist to workaround this in the build. The feature test is used to
-define HAVE_SCHED_GETCPU_SUPPORT and so this is sufficient to know
-whether the local sched_getcpu is needed and a weak symbol can be
-avoided.
+Rather than disabling jevents if a sufficient python isn't present
+error in the build. This avoids the build progressing but the binary
+being degraded. The build can still succeed by specifying NO_JEVENTS=1
+to the build and this is conveyed in the error message.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/cloexec.c | 13 -------------
- tools/perf/util/util.c    | 16 ++++++++++++++++
- 2 files changed, 16 insertions(+), 13 deletions(-)
+ tools/perf/Makefile.config | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-index fa8248aadb59..8830604c3a8d 100644
---- a/tools/perf/util/cloexec.c
-+++ b/tools/perf/util/cloexec.c
-@@ -13,19 +13,6 @@
- 
- static unsigned long flag = PERF_FLAG_FD_CLOEXEC;
- 
--int __weak sched_getcpu(void)
--{
--#ifdef __NR_getcpu
--	unsigned cpu;
--	int err = syscall(__NR_getcpu, &cpu, NULL, NULL);
--	if (!err)
--		return cpu;
--#else
--	errno = ENOSYS;
--#endif
--	return -1;
--}
--
- static int perf_flag_probe(void)
- {
- 	/* use 'safest' configuration as used in evsel__fallback() */
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 391c1e928bd7..b356c9f7f0c3 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -533,3 +533,19 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x, size_t msz,
- 	*arr_sz = new_sz;
- 	return 0;
- }
-+
-+#ifndef HAVE_SCHED_GETCPU_SUPPORT
-+int sched_getcpu(void)
-+{
-+#ifdef __NR_getcpu
-+	unsigned int cpu;
-+	int err = syscall(__NR_getcpu, &cpu, NULL, NULL);
-+
-+	if (!err)
-+		return cpu;
-+#else
-+	errno = ENOSYS;
-+#endif
-+	return -1;
-+}
-+#endif
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 5691e2ffb1b9..2557654d8e29 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -872,14 +872,12 @@ endif
+ ifneq ($(NO_JEVENTS),1)
+   NO_JEVENTS := 0
+   ifndef PYTHON
+-    $(warning No python interpreter disabling jevent generation)
+-    NO_JEVENTS := 1
++    $(error ERROR: No python interpreter needed for jevents generation. Install python or build with NO_JEVENTS=1.)
+   else
+     # jevents.py uses f-strings present in Python 3.6 released in Dec. 2016.
+     JEVENTS_PYTHON_GOOD := $(shell $(PYTHON) -c 'import sys;print("1" if(sys.version_info.major >= 3 and sys.version_info.minor >= 6) else "0")' 2> /dev/null)
+     ifneq ($(JEVENTS_PYTHON_GOOD), 1)
+-      $(warning Python interpreter too old (older than 3.6) disabling jevent generation)
+-      NO_JEVENTS := 1
++      $(error ERROR: Python interpreter needed for jevents generation too old (older than 3.6). Install a newer python or build with NO_JEVENTS=1.)
+     endif
+   endif
+ endif
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
