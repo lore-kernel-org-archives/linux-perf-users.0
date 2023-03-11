@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B1C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A61C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 11 Mar 2023 06:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjCKG7h (ORCPT
+        id S230098AbjCKG7v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 01:59:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        Sat, 11 Mar 2023 01:59:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjCKG7a (ORCPT
+        with ESMTP id S230101AbjCKG7n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 01:59:30 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC8A7D557
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:57 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id w200-20020a25c7d1000000b00b3215dc7b87so3127530ybe.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:58:57 -0800 (PST)
+        Sat, 11 Mar 2023 01:59:43 -0500
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F8E6FFE2
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:07 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-53700262a47so76010397b3.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 10 Mar 2023 22:59:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678517937;
+        d=google.com; s=20210112; t=1678517945;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1pq+mKZowelrihgZxRhsuEZHUM4AjdLByKfzOTWop3w=;
-        b=WCpB1voDzndaohurNNZYQGv0vrqsEJxdv42rkVIZwjJfH7whmhOKEBaX1/oAFnc74Z
-         zcO5YSNux0MCfvJfD8ZHjPWUeYjHzNGqUczp4XQaT16TZ+PIRtBs6x7K4zv7OVhY0xSk
-         5gH5mQiBKsjvMd82GAPqiULNfojeP7aVd6i/lK1KQSJERsjQe78tBuapzfeUT6vp+gNH
-         LfBvxdKgQwhCP8xtS2L9sxnh0OvBnSTj9RYS2SQFuWrl7V10lsdoizZdl4+nilttIthq
-         rq+yeLwFjlivAk+KJslhScF8GXvNDH+922JgCOkqH9J0oxNVqjZWOWe61IwvvU7dd6gJ
-         lXkA==
+        bh=TeLjpZEBElZPq770pHQ3cqTtDu48PrMd6iajkLxZXoU=;
+        b=Ua++G/pPd+SVDJwvl19ZJsDG1Or/TZ/BFSKNdrAmYWdlWCZ/iFomFaBUwI0T5lTgOm
+         xWfKU5/Bwli59xtjTjo+LvLnIbOmWR8cgnp7hb1NjIlSzo+khMAZRqdJ7g6wNgAZ//6K
+         oZdtIP7+Kdy3nvqTB6B04pijjfOeie0Hf1QccsJhVwceP78G/J1wbT+FQNpjgHIfl+OH
+         FWBtsQo9zfspq9m+CreQOdsqyBGbr0Q2nNsJRtvkSqrHutbXWoGADqwcJbESnMQDEnv1
+         oiiRTPBevzcT/2RXis5IoSDZyeRElEE8Uf3/yhtx94aYTkUDApVo7blkQ5nkkY/NTzAm
+         cpBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678517937;
+        d=1e100.net; s=20210112; t=1678517945;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1pq+mKZowelrihgZxRhsuEZHUM4AjdLByKfzOTWop3w=;
-        b=CYotLTuKKg786Z6DFoQwA8MD3s/92n/MIXYH24HJ38d8HTtavuxswRGbQwKhEFVzGd
-         eiEx4RGDYmXLRs8+1RQafyNf6VBK6yySaN92c2m6ZPUOXkkka5Vnf2uW7UZML8pDG2K1
-         WmKtSMFQaHDVRt1s0FhfIBVbWbYUkbkhpUd2vAMJtfoA7gWaM++Vmn/N/F5/8/W+qSTS
-         WbDtYrqx19zrTHWEhh6hhvyhrxz+MX9KK+k5OCh21PNqHdYSGRT2Nvpb7+T1Hrz3mCoW
-         EcJ42C7etf2uPWxV2YaHno/1Rn8xOg4SufYkL5c0RmRon0Jmnvq+zJ/HPyhF0VOYvH+s
-         rq2g==
-X-Gm-Message-State: AO0yUKVPSFvwFjs1Zq7TfXC6SWYSxCki8pqdX/Cncn2MiL30rTZa0ylk
-        MPH1uB2ZZUGG36BawT011YOFjzn/qYrr
-X-Google-Smtp-Source: AK7set8aUqc8K5cZUVUsFpXNndv1liCiw25sradrgvIfHuLhCd2KbosYVbgxeqUpBlh9ZgLyL4l4p2TpvgWe
+        bh=TeLjpZEBElZPq770pHQ3cqTtDu48PrMd6iajkLxZXoU=;
+        b=M41eb1tHuRuldOMAeJzlJ2BnysCfP7i5M3Onina3rAwZrg1EqxpJkZK/9ImZz1+e5r
+         faJMUd6cHt7oqS7P3q7hST62qfjl6HHwWFoLstbnOhA+bSBdB+uBQTwCujCtWWHWlZIg
+         I337pIeMrj+af+sgrZpW0fm4ToG/ft4mB8ulKaN4dPFqcz3N+ACcV2fOBLeqapt1PG10
+         gwKin7WICeQgDmThXo/jxgL/FZpmFi/b84BzmwJs7St3Om4lV2zuutp+j2hM4uw3H1oK
+         rRptmNJ/iBujxaWl6fsjqgLtlWFjJiUK4mxUc0LtdkQmr6EMBFttWzy/c2znOlixVooT
+         4n7A==
+X-Gm-Message-State: AO0yUKXranaJMkNN/ylWMS/rUbQFdTEzR/z4vRwG8VoYizvzgZQQ3D4x
+        DMptg7s+uDlFUUGZfG1r42vUP5i/peth
+X-Google-Smtp-Source: AK7set/6+p+yFgDiDQyRYorbvgodf9XCwu4OA2mDN8JFQ4h3Y3vVuSxNelxVt3B5EzESzr56CUvMk0R6m5mw
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a11d:a763:a328:f2d6])
- (user=irogers job=sendgmr) by 2002:a05:6902:185:b0:acd:7374:f15b with SMTP id
- t5-20020a056902018500b00acd7374f15bmr17294166ybh.13.1678517937040; Fri, 10
- Mar 2023 22:58:57 -0800 (PST)
-Date:   Fri, 10 Mar 2023 22:57:47 -0800
+ (user=irogers job=sendgmr) by 2002:a81:4328:0:b0:541:642f:709c with SMTP id
+ q40-20020a814328000000b00541642f709cmr2ywa.388.1678517944974; Fri, 10 Mar
+ 2023 22:59:04 -0800 (PST)
+Date:   Fri, 10 Mar 2023 22:57:48 -0800
 In-Reply-To: <20230311065753.3012826-1-irogers@google.com>
-Message-Id: <20230311065753.3012826-8-irogers@google.com>
+Message-Id: <20230311065753.3012826-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20230311065753.3012826-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v1 07/13] perf build: Make binutil libraries opt in
+Subject: [PATCH v1 08/13] tools build: Add feature test for abi::__cxa_demangle
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -83,114 +83,75 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-binutils is GPLv3 so distributions cannot ship perf linked against
-libbfd and libiberty as the licenses are incompatible. Rather than
-defaulting the build to opting in to libbfd and libiberty support and
-opting out via NO_LIBBFD=1 and NO_DEMANGLE=1, make building against
-the libraries optional and enabled with BUILD_NONDISTRO=1.
+cxxabi.h is part of libsdtc++ and LLVM's libcxx, providing
+abi::__cxa_demangle a portable C++ demangler. Add a feature test to
+detect that the function is available.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Makefile.config | 25 ++++++++++---------------
- tools/perf/Makefile.perf   |  2 ++
- tools/perf/tests/make      |  2 ++
- 3 files changed, 14 insertions(+), 15 deletions(-)
+ tools/build/Makefile.feature              |  1 +
+ tools/build/feature/Makefile              |  4 ++++
+ tools/build/feature/test-cxa-demangle.cpp | 17 +++++++++++++++++
+ 3 files changed, 22 insertions(+)
+ create mode 100644 tools/build/feature/test-cxa-demangle.cpp
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 2557654d8e29..5756498248e0 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -882,7 +882,7 @@ ifneq ($(NO_JEVENTS),1)
-   endif
- endif
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 38f8851bd7cb..214622d7537c 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -80,6 +80,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          compile-32                     \
+          compile-x32                    \
+          cplus-demangle                 \
++         cxa-demangle                   \
+          gtk2                           \
+          gtk2-infobar                   \
+          hello                          \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index dc9323e01e42..0a3b9281f8b0 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -23,6 +23,7 @@ FILES=                                          \
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
+          test-cplus-demangle.bin                \
++         test-cxa-demangle.bin                  \
+          test-libcap.bin			\
+          test-libelf.bin                        \
+          test-libelf-getphdrnum.bin             \
+@@ -262,6 +263,9 @@ $(OUTPUT)test-libbfd-liberty-z.bin:
+ $(OUTPUT)test-cplus-demangle.bin:
+ 	$(BUILD) -liberty
  
--ifndef NO_LIBBFD
-+ifdef BUILD_NONDISTRO
-   ifeq ($(feature-libbfd), 1)
-     EXTLIBS += -lbfd -lopcodes
-   else
-@@ -905,6 +905,7 @@ ifndef NO_LIBBFD
-     $(call feature_check,disassembler-init-styled)
-   endif
++$(OUTPUT)test-cxa-demangle.bin:
++	$(BUILDXX)
++
+ $(OUTPUT)test-backtrace.bin:
+ 	$(BUILD)
  
-+  CFLAGS += -DHAVE_LIBBFD_SUPPORT
-   ifeq ($(feature-libbfd-buildid), 1)
-     CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
-   else
-@@ -915,32 +916,26 @@ endif
- ifdef NO_DEMANGLE
-   CFLAGS += -DNO_DEMANGLE
- else
--  ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
--    EXTLIBS += -liberty
--  else
-+  ifdef BUILD_NONDISTRO
-     ifeq ($(filter -liberty,$(EXTLIBS)),)
--      $(call feature_check,cplus-demangle)
--
--      # we dont have neither HAVE_CPLUS_DEMANGLE_SUPPORT
--      # or any of 'bfd iberty z' trinity
--      ifeq ($(feature-cplus-demangle), 1)
-+      ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
-         EXTLIBS += -liberty
-       else
--        msg := $(warning No bfd.h/libbfd found, please install binutils-dev[el]/zlib-static/libiberty-dev to gain symbol demangling)
--        CFLAGS += -DNO_DEMANGLE
-+        $(call feature_check,cplus-demangle)
-+        ifeq ($(feature-cplus-demangle), 1)
-+          EXTLIBS += -liberty
-+        endif
-       endif
-     endif
-   endif
- 
-   ifneq ($(filter -liberty,$(EXTLIBS)),)
-     CFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
-+  else
-+    CFLAGS += -DNO_DEMANGLE
-   endif
- endif
- 
--ifneq ($(filter -lbfd,$(EXTLIBS)),)
--  CFLAGS += -DHAVE_LIBBFD_SUPPORT
--endif
--
- ifndef NO_ZLIB
-   ifeq ($(feature-zlib), 1)
-     CFLAGS += -DHAVE_ZLIB_SUPPORT
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 283ee4f56234..a35bc995d5d8 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -128,6 +128,8 @@ include ../scripts/utilities.mak
- #
- # Define NO_BPF_SKEL to disable BPF skeletons
- #
-+# Define BUILD_NONDISTRO to enable building an linking against libbfd and
-+# libiberty distribution license incompatible libraries.
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index deb37fb982e9..c2f74ed43418 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -68,6 +68,7 @@ python_perf_so := $(shell $(MAKE) python_perf_target|grep "Target is:"|awk '{pri
- make_clean_all      := clean all
- make_python_perf_so := $(python_perf_so)
- make_debug          := DEBUG=1
-+make_nondistro      := BUILD_NONDISTRO=1
- make_no_libperl     := NO_LIBPERL=1
- make_no_libpython   := NO_LIBPYTHON=1
- make_no_scripts     := NO_LIBPYTHON=1 NO_LIBPERL=1
-@@ -134,6 +135,7 @@ MAKE_F := $(MAKE) -f $(MK)
- endif
- run += make_python_perf_so
- run += make_debug
-+run += make_nondistro
- run += make_no_libperl
- run += make_no_libpython
- run += make_no_scripts
+diff --git a/tools/build/feature/test-cxa-demangle.cpp b/tools/build/feature/test-cxa-demangle.cpp
+new file mode 100644
+index 000000000000..a3e712f65c37
+--- /dev/null
++++ b/tools/build/feature/test-cxa-demangle.cpp
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdlib.h>
++#include <cxxabi.h>
++
++int main(void)
++{
++  size_t len = 256;
++  char *output = (char*)malloc(len);
++        int status;
++
++        output = abi::__cxa_demangle("FieldName__9ClassNameFd", output, &len, &status);
++
++        printf("demangled symbol: {%s}\n", output);
++
++        return 0;
++}
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
