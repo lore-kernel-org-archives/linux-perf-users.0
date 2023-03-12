@@ -2,206 +2,280 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C53FC6FA99
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 06:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ABFC6FA99
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 09:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbjCLG17 (ORCPT
+        id S229614AbjCLJvz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Mar 2023 01:27:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        Sun, 12 Mar 2023 05:51:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjCLG16 (ORCPT
+        with ESMTP id S229749AbjCLJvy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Mar 2023 01:27:58 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F092697
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 22:27:54 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id t15so8560216wrz.7
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 22:27:54 -0800 (PST)
+        Sun, 12 Mar 2023 05:51:54 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78C735276;
+        Sun, 12 Mar 2023 01:51:50 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id da10so37592239edb.3;
+        Sun, 12 Mar 2023 01:51:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678602473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wtv29KZX+XREe9cWzAMxT6V39t/L1NQeIC8ivHVuqS4=;
-        b=o0/NYospeBO1+8cuP+NfwBHbLPcnYfw49cgYl3XTC5Ix9P6eV9x6V1BRXB92AePhzQ
-         Xda0Eq54Oegsxn//6fhRY9YjbX9yCJ7g6vef56+Zl7ua5XAV+e3b/aWVTtgZZik5bBEc
-         MXON0IdN9LwL9sevao0AitDnR2cTNtRkdOqYwR42RhK1GZiqOF4ZqSL01Mv42QaWl0P0
-         1ypy2zSoVNkALt0IXZOgIVRVklSOQxbgNlaVpqIypfh9HkMv2mz8gxas5DaNrXMPgmnR
-         QpeCZRPN9apuoktC8SI4zqi4UO15X+smd7H9PBd23iPa9w4keLmPvSImc9cB4t5DJDVs
-         UU/g==
+        d=gmail.com; s=20210112; t=1678614709;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YQkKzx/kuL9LZC9IFcIW6aPhkuKQVK/swufodiKorEE=;
+        b=p9i87XK+5ihyI+SOQ5TawmLD1XGE41DRjRPvqNbKDUs1SDu89ORGc2TUwmlTGbhLj0
+         Z3EtFdI0yzZB9GPTgrSk8g6C11RgSylN7H1OQnBSC9gsXvfAukSbr2pQ/TRrl9gzWJXX
+         cF3V6JbK+eJQdLbMB61w/LEq17P73r3lZbkxXNgdwr6pYLizFoxPHth5XfTmkZzdF+Q+
+         1s//CXA3hePi73U6a1oCUZL+2QvnVo39jT/CMBZBHFXjbFmExeQsGNhPSCUbdXhpSGqj
+         zBBFaBIgjBaxHSywzPtFBqpDeZBhF9ct4lhrfKfNTRIpnZgh575xUwyjhMajlVHlxWNl
+         nESg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678602473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wtv29KZX+XREe9cWzAMxT6V39t/L1NQeIC8ivHVuqS4=;
-        b=S0DQMDrCy4WE7qUH/9aPxqllOFdoFd2KLOdby609znoWqqN/+h5vxuohbb/Qkna2NN
-         EWvy3O3SiuB2pB9oNAARGacUKoDSjtiA8FREB3P0+1Pmvew4FQvJ5sN2ItOTHvgZEi2m
-         wCyhN050DvZCul0LJpVR2MRqwFFJsfRpV5fPUZv7Dw4sYTwmDnjLrEj2LbrmwZt7G3Du
-         cjqs4xibRnHsgruBceExnhvY5SRYhlCWwX1+LbLbUoteVL0Ix98VeykchNukKnHzICdX
-         UWjAy3qhWv5csDCnFELkcQ9dKEhX4hCpffUGR5uurCVW87qvCB0V0eERLVnZFSXlYCck
-         Fy0w==
-X-Gm-Message-State: AO0yUKXU0EhI47WiG1p1Q2gBceIRU+0E2D3649ZI3M5UzWfQf9zP+G9z
-        A/i1bDox1Nnv8S+tJphByXvQ7zECyaqwMK4wHfgWuA==
-X-Google-Smtp-Source: AK7set/W089nZRtqvQkaqo5MGXF43OWcIyaszLy3QrT1jn4BQxabvW3adNuV27z4WnO5yFKbt6/MdgsapvUuEkuPeEM=
-X-Received: by 2002:adf:f189:0:b0:2ce:aaff:2a8c with SMTP id
- h9-20020adff189000000b002ceaaff2a8cmr151156wro.14.1678602473299; Sat, 11 Mar
- 2023 22:27:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20230311112122.28894-1-p4ranlee@gmail.com>
-In-Reply-To: <20230311112122.28894-1-p4ranlee@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 11 Mar 2023 22:27:41 -0800
-Message-ID: <CAP-5=fWkAqX+Uy_XhXHjEx6sj-wpOJ+WQf=vMtRzRBS-0Kj32Q@mail.gmail.com>
-Subject: Re: [PATCH] perf tools riscv: Add support for riscv lookup_binutils_path
-To:     paranlee <p4ranlee@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
+        d=1e100.net; s=20210112; t=1678614709;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YQkKzx/kuL9LZC9IFcIW6aPhkuKQVK/swufodiKorEE=;
+        b=0momoc3QlgUKNtUq1oPZan2abUk6HMg+49thxw80/Q57VKSSvasnY+CvuLLhqso/uI
+         LL4RqE8VEP4eldklb5EF03zWDIiSTj0bo9D2PBFIvJiSEEXXq1znBW/9OpgvD5S0Nxdz
+         Rbk4GgGXubfoiWPNuGp0mg7Ol+q0SJlMRnZvdhvYR3HL1JV4lf9pDBa6237WLzfXL6n7
+         AWEgZY+xClw5g0RcaWdFwL+xjQBXbA9W3n35hVPAniyRHvUFf45+in2E8lDZ4Wo6E8SU
+         xayL3OVj+MSHcZ3LOr5Mgwh6N8y0DKMggwSa8+2ZljvDI/Vtpx/143ebHxShp1itNOjr
+         zR7g==
+X-Gm-Message-State: AO0yUKXleW2MO+6Ll8k9An5BkuSMQ6arWuFlwfUeIL0G3JDODirAxxS4
+        g2JGUtqUcZQlO+fo9zl6jqM=
+X-Google-Smtp-Source: AK7set9BSyBXetZuX5WfkVc3KxfotNGe+/apFydowA4AbgXfDrB3HSg6LmiokyfU+dVJX8M+BOC9ZA==
+X-Received: by 2002:a17:906:70d:b0:923:6ffa:cf05 with SMTP id y13-20020a170906070d00b009236ffacf05mr2828950ejb.50.1678614709105;
+        Sun, 12 Mar 2023 01:51:49 -0800 (PST)
+Received: from krava (ip-94-113-247-30.net.vodafone.cz. [94.113.247.30])
+        by smtp.gmail.com with ESMTPSA id b21-20020a17090630d500b008cafeec917dsm2052954ejb.101.2023.03.12.01.51.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Mar 2023 01:51:48 -0800 (PST)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sun, 12 Mar 2023 10:51:46 +0100
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Guilherme Amadio <amadio@gentoo.org>,
+        Jiri Olsa <olsajiri@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andres Freund <andres@anarazel.de>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
+Message-ID: <ZA2gsjqAK9465kiV@krava>
+References: <20230116010115.490713-1-irogers@google.com>
+ <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
+ <Y8mAuDvs566zwG67@kernel.org>
+ <Y8myfqy5EMit3Kr/@krava>
+ <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
+ <ZAmRjk1x4p4TrFb0@gentoo.org>
+ <CAEf4BzZJvEnWdTKVSgdBDr_KEgkW5HLHc7N-HRkmb-drCbg2uw@mail.gmail.com>
+ <CAP-5=fWvMFXOaKA0bKaKdzYjqOxTCXGapJy-4x34hJyZxqD-Dw@mail.gmail.com>
+ <CAEf4BzZyxyqC1KB3zou46ckf3UvDY9PwgrKdofnPfbhXrN3=XQ@mail.gmail.com>
+ <CAP-5=fWRxM3pVy6YH=gAnyMXgPBx5eShcJMBiGggCdJj23tUtg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWRxM3pVy6YH=gAnyMXgPBx5eShcJMBiGggCdJj23tUtg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Mar 11, 2023 at 3:22=E2=80=AFAM paranlee <p4ranlee@gmail.com> wrote=
-:
->
-> Add to know RISC-V binutils path.
-> Secondarily, edit the code block with alphabetical order.
->
-> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
-> ---
->  tools/perf/arch/common.c | 51 +++++++++++++++++++++++++++-------------
->  1 file changed, 35 insertions(+), 16 deletions(-)
->
-> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-> index 59dd875fd5e4..058527ededdd 100644
-> --- a/tools/perf/arch/common.c
-> +++ b/tools/perf/arch/common.c
-> @@ -29,11 +29,23 @@ const char *const arm_triplets[] =3D {
->  };
->
->  const char *const arm64_triplets[] =3D {
-> +       "aarch64-unknown-linux-",
+On Sat, Mar 11, 2023 at 05:00:01PM -0800, Ian Rogers wrote:
+> On Fri, Mar 10, 2023 at 12:22 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Thu, Mar 9, 2023 at 7:26 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Thu, Mar 9, 2023 at 9:25 AM Andrii Nakryiko
+> > > <andrii.nakryiko@gmail.com> wrote:
+> > > >
+> > > > On Wed, Mar 8, 2023 at 11:58 PM Guilherme Amadio <amadio@gentoo.org> wrote:
+> > > > >
+> > > > > On Wed, Mar 08, 2023 at 06:13:34PM -0800, Ian Rogers wrote:
+> > > > > > On Thu, Jan 19, 2023 at 1:13 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > > > > > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu:
+> > > > > > > > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > > > > > > libbpf 1.0 was a major change in API. Perf has partially supported
+> > > > > > > > > > older libbpf's but an implementation may be:
+> > > > > > > > > > ..
+> > > > > > > > > >        pr_err("%s: not support, update libbpf\n", __func__);
+> > > > > > > > > >        return -ENOTSUP;
+> > > > > > > > > > ..
+> > > > > > > > > >
+> > > > > > > > > > Rather than build a binary that would fail at runtime it is
+> > > > > > > > > > preferrential just to build libbpf statically and link against
+> > > > > > > > > > that. The static version is in the kernel tools tree and newer than
+> > > > > > > > > > 1.0.
+> > > > > > > > > >
+> > > > > > > > > > These patches change the libbpf test to only pass when at least
+> > > > > > > > > > version 1.0 is installed, then remove the conditional build and
+> > > > > > > > > > feature logic.
+> > > > > > > > > >
+> > > > > > > > > > The issue is discussed here:
+> > > > > > > > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irogers@google.com/
+> > > > > > > > > > perf bpf:
+> > > > > > > > > >
+> > > > > > > > > > A variant of this fix was added to Linux 6.2 in:
+> > > > > > > > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIBBPF_DYNAMIC=1"
+> > > > > > > > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
+> > > > > > > > > > This change goes further in removing logic that is now no longer
+> > > > > > > > > > necessary.
+> > > > > > > > > >
+> > > > > > > > > > v2. Rebase now that breakage fix patch is in linus/master.
+> > > > > > > > >
+> > > > > > > > > I missed the:
+> > > > > > > > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > > > > > I believe we are waiting for package maintainer input.
+> > > > > > > >
+> > > > > > > > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
+> > > > > > >
+> > > > > > > rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd be to move
+> > > > > > > f37 to 1.x, but I had to do bulk update of like 10 other dependent packages
+> > > > > > > for f38, so not sure how bad it'd be for f37
+> > > > > > >
+> > > > > > > jirka
+> > > > > >
+> > > > > > +Guilherme
+> > > > > >
+> > > > > > We were looking for maintainer input on these changes, but there is no
+> > > > > > update in over a month. Here is the original lore link:
+> > > > > > https://lore.kernel.org/lkml/CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com/
+> > > > > > Should these changes land in perf-tools-next targeting Linux 6.4?
+> > > > >
+> > > > > Gentoo has libbpf-1.1 already available, so requiring >libbpf-1.0 is not
+> > > > > a problem. We (Gentoo) just need to make sure to stabilize libbpf-1.x before
+> > > > > stabilizing newer versions of perf, as the stable libbpf is 0.8.1 at the moment.
+> > > > >
+> > > >
+> > > > libbpf v0.8 is basically all the 1.0 APIs, except by default 1.0
+> > > > semantics is not enforced, unless libbpf_set_strict_mode() is enabled.
+> > > >
+> > > > So, if 0.8 is a restriction, perf can stay on 0.8, use all the same
+> > > > APIs that are in 1.0 (except newer one added later, but I'm not sure
+> > > > perf needs any of the newer additions), and just stick to setting
+> > > > libbpf_set_strict_mode() unconditionally.
+> > >
+> > > Thanks Andrii,
+> > >
+> >
+> > Full disclosure, I'm totally supporting the switch to v1.0+, just
+> > trying to be helpful here from the standpoint of 0.x vs 1.x libbpf
+> > transition. See below. I believe you can keep 0.8+ dependency and drop
+> > all the legacy code completely.
+> >
+> > But just take it as an information, and feel free to do whatever you
+> > think is best with it.
+> >
+> > > The default perf build is to build against tools/lib/bpf and
+> > > statically link libbpf in. This means by default we have the latest
+> > > libbpf 1.2. If any perf code has a dependency on 0.8 (we don't support
+> > > earlier) we need to #ifdef for it. Currently we have 7 feature tests
+> > > for libbpf, but perhaps there is some cruft that's carried forward.
+> > > The features are:
+> > >  - btf__load_from_kernel_by_id
+> >
+> > v0.5 API
+> >
+> > >  - bpf_prog_load
+> > >  - bpf_object__next_program
+> > >  - bpf_object__next_map
+> >
+> > all three are v0.6 APIs
+> >
+> > >  - bpf_program__set_insns
+> >
+> > v0.8 API
+> >
+> > >  - btf__raw_data
+> > >  - bpf_map_create
+> >
+> > both v0.6 API
+> >
+> > >
+> > > The not present implementations look like:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/bpf-loader.c?h=perf-tools#n36
+> > > ```
+> > > int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
+> > >   struct bpf_insn *new_insns __maybe_unused, size_t new_insn_cnt __maybe_unused)
+> > > {
+> > > pr_err("%s: not support, update libbpf\n", __func__);
+> > > return -ENOTSUP;
+> > > }
+> > >
+> > > int libbpf_register_prog_handler(const char *sec __maybe_unused,
+> > >                                  enum bpf_prog_type prog_type __maybe_unused,
+> > >                                  enum bpf_attach_type exp_attach_type
+> > > __maybe_unused,
+> > >                                  const struct libbpf_prog_handler_opts
+> > > *opts __maybe_unused)
+> > > {
+> > > pr_err("%s: not support, update libbpf\n", __func__);
+> > > return -ENOTSUP;
+> > > }
+> > > ```
+> >
+> > both are v0.8 APIs
+> >
+> > > This will basically mean that while you dynamically linked with libbpf
+> > > 0.8 you are in all likelihood not going to get proper BPF support.
+> > > These changes up the version requirement to 1.0 and get rid entirely
+> > > of the feature tests - so no runtime failing implementations. If the
+> >
+> > 100% supportive on upgrade and dropping feature checks. My point is
+> > that you don't need those feature checks with v0.8+ requirement.
+> >
+> > The only difference between staying on v0.8+ vs going all the way to
+> > v1.0+ would be that you have to keep libbpf_set_strict() call. In
+> > v1.0+ it's a noop, so could be dropped.
+> >
+> > > build determines at build time libbpf 1.0+ isn't present then it still
+> > > executes, switching from dynamic libbpf to the default static libbpf
+> > > that is at 1.2. As mentioned in this thread, distributions like Debian
+> > > use the default static linking of libbpf.
+> > >
+> >
+> > oh, that's nice, good to know
+> >
+> > > I'm not keen to hold on to the feature tests for the complexity that
+> > > they hold and their needlessly (as you can always statically link)
+> > > broken at runtime behavior. We could but my opinion is, let's not :-)
+> >
+> > I've been consistently advocating for static linking with libbpf, so
+> > 100% support this.
+> 
+> Right, so I think we should move forward with these patches. We also
 
-Modifying ARM64 behavior should be a separate change.
++1
 
->         "aarch64-linux-android-",
->         "aarch64-linux-gnu-",
->         NULL
->  };
->
-> +const char *const mips_triplets[] =3D {
-> +       "mips-unknown-linux-gnu-",
-> +       "mipsel-linux-android-",
-> +       "mips-linux-gnu-",
-> +       "mips64-linux-gnu-",
-> +       "mips64el-linux-gnuabi64-",
-> +       "mips64-linux-gnuabi64-",
-> +       "mipsel-linux-gnu-",
-> +       NULL
-> +};
-> +
+jirka
 
-This will affect the blame history. It should probably be its own change to=
-o.
-
->  const char *const powerpc_triplets[] =3D {
->         "powerpc-unknown-linux-gnu-",
->         "powerpc-linux-gnu-",
-> @@ -43,6 +55,20 @@ const char *const powerpc_triplets[] =3D {
->         NULL
->  };
->
-> +const char *const riscv32_triplets[] =3D {
-> +       "riscv32-unknown-linux-gnu-",
-> +       "riscv32-linux-android-",
-> +       "riscv32-linux-gnu-",
-> +       NULL
-> +};
-> +
-> +const char *const riscv64_triplets[] =3D {
-> +       "riscv64-unknown-linux-gnu-",
-> +       "riscv64-linux-android-",
-> +       "riscv64-linux-gnu-",
-> +       NULL
-> +};
-> +
->  const char *const s390_triplets[] =3D {
->         "s390-ibm-linux-",
->         "s390x-linux-gnu-",
-> @@ -78,17 +104,6 @@ const char *const x86_triplets[] =3D {
->         NULL
->  };
->
-> -const char *const mips_triplets[] =3D {
-> -       "mips-unknown-linux-gnu-",
-> -       "mipsel-linux-android-",
-> -       "mips-linux-gnu-",
-> -       "mips64-linux-gnu-",
-> -       "mips64el-linux-gnuabi64-",
-> -       "mips64-linux-gnuabi64-",
-> -       "mipsel-linux-gnu-",
-> -       NULL
-> -};
-> -
->  static bool lookup_path(char *name)
->  {
->         bool found =3D false;
-> @@ -164,18 +179,22 @@ static int perf_env__lookup_binutils_path(struct pe=
-rf_env *env,
->                 path_list =3D arm_triplets;
->         else if (!strcmp(arch, "arm64"))
->                 path_list =3D arm64_triplets;
-> +       else if (!strcmp(arch, "mips"))
-> +               path_list =3D mips_triplets;
->         else if (!strcmp(arch, "powerpc"))
->                 path_list =3D powerpc_triplets;
-> -       else if (!strcmp(arch, "sh"))
-> -               path_list =3D sh_triplets;
-> +       else if (!strcmp(arch, "riscv32"))
-> +               path_list =3D riscv32_triplets;
-> +       else if (!strcmp(arch, "riscv64"))
-> +               path_list =3D riscv64_triplets;
->         else if (!strcmp(arch, "s390"))
-> -               path_list =3D s390_triplets;
-> +               path_list =3D s390_triplets;
-
-whitespace issue?
-
-> +       else if (!strcmp(arch, "sh"))
-> +               path_list =3D sh_triplets;
->         else if (!strcmp(arch, "sparc"))
->                 path_list =3D sparc_triplets;
->         else if (!strcmp(arch, "x86"))
->                 path_list =3D x86_triplets;
-> -       else if (!strcmp(arch, "mips"))
-> -               path_list =3D mips_triplets;
->         else {
->                 ui__error("binutils for %s not supported.\n", arch);
->                 goto out_error;
-
-I think in general we need to revamp this code. Two things that I see
-that are missing are (1) support for perf config and (2) addr2line
-should be configurable, you may want llvm-addr2line. Adding RISC-V is
-of course important too :-)
-
-Thanks,
-Ian
-
-> --
-> 2.34.1
->
+> have had non-API changes to support libbpf 1.0+ like:
+> https://lore.kernel.org/lkml/20221103045437.163510-4-irogers@google.com/
+> and I'm worried about the state of these with libbpf 0.8.
+> 
+> Thanks,
+> Ian
+> 
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > > > > Best regards,
+> > > > > -Guilherme
+> > > > >
