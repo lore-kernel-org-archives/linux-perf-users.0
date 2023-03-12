@@ -2,140 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDC3C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 13:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E0CC6FD19
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 14:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbjCLNk3 (ORCPT
+        id S229677AbjCLOyk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Mar 2023 09:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
+        Sun, 12 Mar 2023 10:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230452AbjCLNk1 (ORCPT
+        with ESMTP id S229711AbjCLOyj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Mar 2023 09:40:27 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF971FF1;
-        Sun, 12 Mar 2023 06:40:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0B115B80B50;
-        Sun, 12 Mar 2023 13:40:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F08ABC433EF;
-        Sun, 12 Mar 2023 13:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678628423;
-        bh=Cc5SkNpX+fJG4RhyUV9lX1ru3SeON0+cWxM07x3k8gc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hCXCY3gQlYG4wYh02Oq5jSSRHPDnRfzATTKm9owjSaO0LGOkx3wHIw17a0xH5za97
-         koz4zAADjjftqSv+BJbQstR4dibA7NjaNqffj/WaIeTIT6Y3Ra39bwCrgoaFzjYY1v
-         lkdv43Z+yG8e0lfh75uL8UeW0WFnYAr8QB7YlUNBvcne76sIFJn9d6D+kdOg9qo5yQ
-         oFu2thUebbZd1r9wfWPR/3ClEuzm8W8PnslQTLC8LrAdY8va5At52SYNnxvU3xIup9
-         /erOa+vf8y1VGQ3Kk0ZvJrMhc7UcKA6VjruSM3r2FA4Yzw/MFY6s8unDNAHjK4LgJZ
-         y8mXWG3kSUP+g==
-Date:   Sun, 12 Mar 2023 13:40:18 +0000
-From:   Conor Dooley <conor@kernel.org>
-To:     Paran Lee <p4ranlee@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [RESEND PATCH] perf tools riscv: Add support for riscv
- lookup_binutils_path
-Message-ID: <972fcc78-517b-40fa-b46a-ce5dd6f8e980@spud>
-References: <20230312130303.87954-1-p4ranlee@gmail.com>
+        Sun, 12 Mar 2023 10:54:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A587D1ADFD;
+        Sun, 12 Mar 2023 07:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KH8tQFD6+tSiQOT1PfAjpOv+D/Fe0N+sgUQBc9cq624=; b=Co5lzFiJvwM5i18Hf55xUJOJph
+        fBo561VYQN40SnrTJ3KRBJ/PqK4eBf8dm119k0Me17OhdmmWRBYDy/Irgn7ow1bSDhr63ywCmukN2
+        eVr9VUAT/xCnljLv+EDJeoo8uxJCt/3I0tguH082ZjjfDeVEChImzd6iK1qUVHgWPsxprBnuGlbhc
+        sGVSZpHU2IL5jKkogMIATBwrS0EL94M/4PC8fo41Fog9juREVrbEUfcE3zKwttc+ZL0n7ZpdqEO6s
+        GZ4/ZKP3pDqMOmHPbbeor6zSmHP6pZr0PGBYXsv6wc2lwFYdThfCstDHZLHdrJb5E4B+o3N6kfd6/
+        A3KHym4w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pbN5f-00B73x-Pr; Sun, 12 Mar 2023 14:54:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A7773001E5;
+        Sun, 12 Mar 2023 15:54:26 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 448DD20831B69; Sun, 12 Mar 2023 15:54:26 +0100 (CET)
+Date:   Sun, 12 Mar 2023 15:54:26 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     namhyung@kernel.org, eranian@google.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+Subject: Re: [PATCH v2 2/3] perf/ibs: Fix interface via core pmu events
+Message-ID: <20230312145426.GA1757905@hirez.programming.kicks-ass.net>
+References: <20230309101111.444-1-ravi.bangoria@amd.com>
+ <20230309101111.444-3-ravi.bangoria@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5/FZjlJfVq2Ptchx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230312130303.87954-1-p4ranlee@gmail.com>
+In-Reply-To: <20230309101111.444-3-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
---5/FZjlJfVq2Ptchx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Mar 12, 2023 at 10:03:05PM +0900, Paran Lee wrote:
-> Add to know RISC-V binutils path.
->=20
-> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
-> ---
->  tools/perf/arch/common.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-> index 59dd875fd5e4..6ac7a22244c0 100644
-> --- a/tools/perf/arch/common.c
-> +++ b/tools/perf/arch/common.c
-> @@ -43,6 +43,20 @@ const char *const powerpc_triplets[] =3D {
->  	NULL
->  };
-> =20
-> +const char *const riscv32_triplets[] =3D {
-> +	"riscv32-unknown-linux-gnu-",
-> +	"riscv32-linux-android-",
-> +	"riscv32-linux-gnu-",
-> +	NULL
-> +};
+On Thu, Mar 09, 2023 at 03:41:10PM +0530, Ravi Bangoria wrote:
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 8c45b198b62f..81d67b899371 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -371,10 +371,15 @@ static inline int amd_has_nb(struct cpu_hw_events *cpuc)
+>  static int amd_pmu_hw_config(struct perf_event *event)
+>  {
+>  	int ret;
+> +	u64 dummy;
+>  
+> -	/* pass precise event sampling to ibs: */
+> -	if (event->attr.precise_ip && get_ibs_caps())
+> -		return -ENOENT;
+> +	if (event->attr.precise_ip) {
+> +		/* pass precise event sampling to ibs by returning -ESRCH */
+> +		if (get_ibs_caps() && !ibs_core_pmu_event(event, &dummy))
+> +			return -ESRCH;
+> +		else
+> +			return -ENOENT;
+> +	}
+>  
+>  	if (has_branch_stack(event) && !x86_pmu.lbr_nr)
+>  		return -EOPNOTSUPP;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f79fd8b87f75..e990c71ba34a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11639,18 +11639,26 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>  			goto again;
+>  		}
+>  
+> +		/*
+> +		 * pmu->event_init() should return -ESRCH only when it
+> +		 * wants to forward the event to other pmu.
+> +		 */
+> +		if (ret == -ESRCH)
+> +			goto try_all;
 > +
-> +const char *const riscv64_triplets[] =3D {
-> +	"riscv64-unknown-linux-gnu-",
-> +	"riscv64-linux-android-",
-> +	"riscv64-linux-gnu-",
+>  		if (ret)
+>  			pmu = ERR_PTR(ret);
+>  
+>  		goto unlock;
+>  	}
+>  
+> +try_all:
+>  	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+>  		ret = perf_try_init_event(pmu, event);
+>  		if (!ret)
+>  			goto unlock;
+>  
+> -		if (ret != -ENOENT) {
+> +		if (ret != -ENOENT && ret != -ESRCH) {
+>  			pmu = ERR_PTR(ret);
+>  			goto unlock;
+>  		}
 
-I don't know anything about perf, so I could be asking a really silly
-question here, but how come riscvN-linux- has been omitted here?
-The kernel.org toolchains [1] are prefixed that way, although I noticed
-in your v1 that you'd seemingly duplicated the arm64 patterns, so I am
-curious as to whether the omission is intentional.
+Urgh.. So amd_pmu_hw_config() knows what PMU it should be but has no
+real way to communicate this, so you make it try all of them again.
 
-Cheers,
-Conor.
+Now, we already have a gruesome hack in there, and I'm thikning you
+should use that instead of adding yet another one. Note:
 
-[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/
+		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+			type = event->attr.type;
+			goto again;
 
-> +	NULL
-> +};
-> +
->  const char *const s390_triplets[] =3D {
->  	"s390-ibm-linux-",
->  	"s390x-linux-gnu-",
-> @@ -168,6 +182,10 @@ static int perf_env__lookup_binutils_path(struct per=
-f_env *env,
->  		path_list =3D powerpc_triplets;
->  	else if (!strcmp(arch, "sh"))
->  		path_list =3D sh_triplets;
-> +	else if (!strcmp(arch, "riscv32"))
-> +		path_list =3D riscv32_triplets;
-> +	else if (!strcmp(arch, "riscv64"))
-> +		path_list =3D riscv64_triplets;
->  	else if (!strcmp(arch, "s390"))
->  		path_list =3D s390_triplets;
->  	else if (!strcmp(arch, "sparc"))
-> --=20
-> 2.34.1
->=20
+So if you have amd_pmu_hw_config() do:
 
---5/FZjlJfVq2Ptchx
-Content-Type: application/pgp-signature; name="signature.asc"
+	event->attr.type = ibs_pmu.type;
+	return -ENOENT;
 
------BEGIN PGP SIGNATURE-----
+it should all just work no?
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZA3WPwAKCRB4tDGHoIJi
-0sdJAQCoa+n+1sORACKtBGf6R1h/ZsaFTKclg0mcHVus8Gc65AEA9FeWMCtsjgc+
-UDqGOtpYMTAQ6x/ALdE8HA8PFZ1T1Q8=
-=Lmym
------END PGP SIGNATURE-----
+And now thinking about this, I'm thinking we can clean up the whole
+swevent mess too, a little something like the below perhaps... Then it
+might just be possible to remove that list_for_each_entry_rcu()
+entirely.
 
---5/FZjlJfVq2Ptchx--
+Hmm?
+
+
+---
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f79fd8b87f75..26130d1ca40b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9951,6 +9951,9 @@ static void sw_perf_event_destroy(struct perf_event *event)
+ 	swevent_hlist_put();
+ }
+ 
++static struct pmu perf_cpu_clock; /* fwd declaration */
++static struct pmu perf_task_clock;
++
+ static int perf_swevent_init(struct perf_event *event)
+ {
+ 	u64 event_id = event->attr.config;
+@@ -9966,7 +9969,11 @@ static int perf_swevent_init(struct perf_event *event)
+ 
+ 	switch (event_id) {
+ 	case PERF_COUNT_SW_CPU_CLOCK:
++		event->attr.type = perf_cpu_clock.type;
++		return -ENOENT;
++
+ 	case PERF_COUNT_SW_TASK_CLOCK:
++		event->attr.type = perf_task_clock.type;
+ 		return -ENOENT;
+ 
+ 	default:
