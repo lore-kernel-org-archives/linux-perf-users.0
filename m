@@ -2,290 +2,318 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC917C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 01:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E07C74A44
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 02:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbjCLBAT (ORCPT
+        id S229672AbjCLCEf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 20:00:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
+        Sat, 11 Mar 2023 21:04:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjCLBAT (ORCPT
+        with ESMTP id S229473AbjCLCEe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 20:00:19 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBBA6285A
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 17:00:17 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id g3so8299087wri.6
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 17:00:17 -0800 (PST)
+        Sat, 11 Mar 2023 21:04:34 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41E0642BDA
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 18:04:32 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id l1so8331304wry.12
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 18:04:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678582816;
+        d=google.com; s=20210112; t=1678586670;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DVqViHKN5Yirjh+bmhLj58d+3uxBU5OraeGY1CTO3p0=;
-        b=YXV7T+jrhb/oIiO+r59EKktvaQZO116g6QgA/YTIS1RwBA9Ng3/qRalnt1KzZyWwHg
-         GltOPQDsulhChZSx8XE9pZfpvmjTx0htL98h+KTh1UiJOdcO0LD0Lzdx1qrSVYC5AHBb
-         +RQg9CVa8Ls/92haVTTZtY76yyJv+DrtC/sXhB86Ir3oc9Kf2Hu0ZZYf+LSSCVKQvDra
-         Ex5PBhy/Gdak5+UoOvVH8dXaeQEUIRgZ+kDWWbFJhzg4XbyAqR9M75ZmmBkQdZNfpb14
-         5+aVaC2ZhEon5BYTJAubMjAGMptIhw3scDnYE5tv56WylYHtK+G8pIjYiUe+vMJXB016
-         ugdw==
+        bh=a/CejgmZHTsVZv9QvT0Arr0+JFH+g4A1lKD4Au9URvY=;
+        b=aDyPNuDSQ2zCNEYOn8/D/oRw/6lADae/Bv3I3K5vp2Rp9qqZ2A80ei1YHKxat19lVj
+         rotbWOjURq7Nd3G6ApcSAiXfRoEJJBy7caEYKnu/w1fm0YQBlbUSxRecfx0E5Zdtp1HV
+         0/QNXlU6E8OR4EvOaYfAWuxKI87wmRRB8FyGfFwahFglgTLuFj5T7y/+Zk/ekC/gAXsp
+         C1rtv1m5KS8Z+OEmRcpWOx+HXz2yI/6OYvLvCL+vJthyckB8P4y3rai+VtfHNi/pCsgE
+         U/UjWbLGDJE6Wsi2BPA8N4UQRNuONpnlK0lMsx6xp0Qng7tQrc2SLbilsgMHpZsZX/79
+         GjJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678582816;
+        d=1e100.net; s=20210112; t=1678586670;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DVqViHKN5Yirjh+bmhLj58d+3uxBU5OraeGY1CTO3p0=;
-        b=nhwZcVkwUZDs+T2CttrZ3UtwHW36H0Ax5yAWa1qnEoFbML5NzHk64oqBAVB4BmMFnN
-         gCbJujU7WdwRpC6dMQ0wAp6AkJU+y3jcPWo0+fIQyBfThR9hfFlVa41CQXIRx54PoNbi
-         +wcCfAUcsp2bLVG0PU+VTR0bR9ieoyYjGEG9haZiXRenJfIuydbryc13cg1yiDqaCUVE
-         /qiZMkkS+FJHBaDnU+nLQImqVe5zVYBma+EVKyJmzL8Swdf02GEHmuPGuNfRVrz8v7v3
-         IPdkXsQkC6GYxnbEm4qX+w6dcWFa8vMH4+9nji/CC5lC00+F8tWcd4vvYAoB03OpRz1r
-         my7w==
-X-Gm-Message-State: AO0yUKXp0lf2eqDNUo/Wdf0J6uYFxp/dYvaM5Ve5UvPb2ehxyGsy0SS7
-        RChIKOwrm9szoK28pstUNupH1AJxCzUEbZn5dfU5OA==
-X-Google-Smtp-Source: AK7set9bmHDuF9mllRRV379UiGJDViyqO9cr5DQfcZYcJ4Q1rrezSOAo940mr19FkRZTedMUoNWupL7ppjMO7tjDHuo=
-X-Received: by 2002:a5d:46ca:0:b0:2c7:c483:9faa with SMTP id
- g10-20020a5d46ca000000b002c7c4839faamr6639805wrs.14.1678582815821; Sat, 11
- Mar 2023 17:00:15 -0800 (PST)
+        bh=a/CejgmZHTsVZv9QvT0Arr0+JFH+g4A1lKD4Au9URvY=;
+        b=u1APVjjTfeogPBCPdWLRTHRwBFUbAV/GWxDu7zmc4tTdEOuWgXbG+cDGimmj0VHcSm
+         5J4dweOipYgo12fLMNPWq2Jlp5dR7TYlJLTbQ3uPq3ce0NUIt383Zj5yC0JC3p2iiDbC
+         2OR64y0bYpKMTi/g8aMLhwNAFSiPO424EKLKK+cuZLnlRJ6G9CVbZYWCiT+23y+LvBTv
+         /SUE2klpmBia7qxx7F7DR1O3MpAln0CYroSuDagfjC+G8w81LIMP2rK/0DqYycD9yqQI
+         c6xuF6DsuJ5TT1uGMhfrGkgI14Ou1iP7JYOQMPjmb03451z6elCJvgZ53Tc1ne/FVpnZ
+         3MZw==
+X-Gm-Message-State: AO0yUKXMsjCqiFFtXyeJKapOwqTfHY4yxuqJX8/93MYwmk/o+BtI1f6B
+        1AQn4GiVx0BfmdE7XeQ8VPZ8mIA0WzoxPiZSSA3Pag==
+X-Google-Smtp-Source: AK7set8yEPEvhHpqQNUlqbtvXbO6+2yL4bPJmFRek0zg0q5EQyJ1kPDvOV+38aS+nnk4gT7nmZgrFMa50JfItyK+4QY=
+X-Received: by 2002:adf:dd4f:0:b0:2c5:5297:1f9a with SMTP id
+ u15-20020adfdd4f000000b002c552971f9amr6486702wrm.14.1678586670302; Sat, 11
+ Mar 2023 18:04:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20230116010115.490713-1-irogers@google.com> <CAP-5=fVUgc8xtBzGi66YRUxZHyXvW2kiMjGz39dywaLxrO4Hpg@mail.gmail.com>
- <Y8mAuDvs566zwG67@kernel.org> <Y8myfqy5EMit3Kr/@krava> <CAP-5=fUugnKd=pGpZve7tKThhM5b0AqGMnuiELF+fZQw-xJz9w@mail.gmail.com>
- <ZAmRjk1x4p4TrFb0@gentoo.org> <CAEf4BzZJvEnWdTKVSgdBDr_KEgkW5HLHc7N-HRkmb-drCbg2uw@mail.gmail.com>
- <CAP-5=fWvMFXOaKA0bKaKdzYjqOxTCXGapJy-4x34hJyZxqD-Dw@mail.gmail.com> <CAEf4BzZyxyqC1KB3zou46ckf3UvDY9PwgrKdofnPfbhXrN3=XQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzZyxyqC1KB3zou46ckf3UvDY9PwgrKdofnPfbhXrN3=XQ@mail.gmail.com>
+References: <20230308225912.1960990-1-irogers@google.com> <20230308225912.1960990-12-irogers@google.com>
+ <fd1f74e0-718c-5745-c224-5f4cee2ac2b2@intel.com>
+In-Reply-To: <fd1f74e0-718c-5745-c224-5f4cee2ac2b2@intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 11 Mar 2023 17:00:01 -0800
-Message-ID: <CAP-5=fWRxM3pVy6YH=gAnyMXgPBx5eShcJMBiGggCdJj23tUtg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Assume libbpf 1.0+
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Guilherme Amadio <amadio@gentoo.org>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Date:   Sat, 11 Mar 2023 18:04:18 -0800
+Message-ID: <CAP-5=fU-EO+wPeVZT2V29-fB79OUVyazzaK_Cqa_piXe3QB+Qg@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] perf parse-events: Warn when events are regrouped
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 12:22=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, Mar 9, 2023 at 7:26=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > On Thu, Mar 9, 2023 at 9:25=E2=80=AFAM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Wed, Mar 8, 2023 at 11:58=E2=80=AFPM Guilherme Amadio <amadio@gent=
-oo.org> wrote:
-> > > >
-> > > > On Wed, Mar 08, 2023 at 06:13:34PM -0800, Ian Rogers wrote:
-> > > > > On Thu, Jan 19, 2023 at 1:13=E2=80=AFPM Jiri Olsa <olsajiri@gmail=
-.com> wrote:
-> > > > > >
-> > > > > > On Thu, Jan 19, 2023 at 02:41:12PM -0300, Arnaldo Carvalho de M=
-elo wrote:
-> > > > > > > Em Thu, Jan 19, 2023 at 09:11:03AM -0800, Ian Rogers escreveu=
-:
-> > > > > > > > On Sun, Jan 15, 2023 at 5:01 PM Ian Rogers <irogers@google.=
+On Thu, Mar 9, 2023 at 11:29=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
 com> wrote:
-> > > > > > > > > libbpf 1.0 was a major change in API. Perf has partially =
-supported
-> > > > > > > > > older libbpf's but an implementation may be:
-> > > > > > > > > ..
-> > > > > > > > >        pr_err("%s: not support, update libbpf\n", __func_=
-_);
-> > > > > > > > >        return -ENOTSUP;
-> > > > > > > > > ..
-> > > > > > > > >
-> > > > > > > > > Rather than build a binary that would fail at runtime it =
-is
-> > > > > > > > > preferrential just to build libbpf statically and link ag=
-ainst
-> > > > > > > > > that. The static version is in the kernel tools tree and =
-newer than
-> > > > > > > > > 1.0.
-> > > > > > > > >
-> > > > > > > > > These patches change the libbpf test to only pass when at=
- least
-> > > > > > > > > version 1.0 is installed, then remove the conditional bui=
-ld and
-> > > > > > > > > feature logic.
-> > > > > > > > >
-> > > > > > > > > The issue is discussed here:
-> > > > > > > > > https://lore.kernel.org/lkml/20230106151320.619514-1-irog=
-ers@google.com/
-> > > > > > > > > perf bpf:
-> > > > > > > > >
-> > > > > > > > > A variant of this fix was added to Linux 6.2 in:
-> > > > > > > > > "perf bpf: Avoid build breakage with libbpf < 0.8.0 + LIB=
-BPF_DYNAMIC=3D1"
-> > > > > > > > > https://lore.kernel.org/lkml/Y71+eh00Ju7WeEFX@kernel.org/
-> > > > > > > > > This change goes further in removing logic that is now no=
- longer
-> > > > > > > > > necessary.
-> > > > > > > > >
-> > > > > > > > > v2. Rebase now that breakage fix patch is in linus/master=
-.
-> > > > > > > >
-> > > > > > > > I missed the:
-> > > > > > > > Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
-> > > > > > > > I believe we are waiting for package maintainer input.
-> > > > > > >
-> > > > > > > Yes, as fedora:37 still is at libbpf 0.8.0 :-\
-> > > > > >
-> > > > > > rawhide (f38) is already on 1.1.0 ... I'll check how bad it'd b=
-e to move
-> > > > > > f37 to 1.x, but I had to do bulk update of like 10 other depend=
-ent packages
-> > > > > > for f38, so not sure how bad it'd be for f37
-> > > > > >
-> > > > > > jirka
-> > > > >
-> > > > > +Guilherme
-> > > > >
-> > > > > We were looking for maintainer input on these changes, but there =
-is no
-> > > > > update in over a month. Here is the original lore link:
-> > > > > https://lore.kernel.org/lkml/CAP-5=3DfVUgc8xtBzGi66YRUxZHyXvW2kiM=
-jGz39dywaLxrO4Hpg@mail.gmail.com/
-> > > > > Should these changes land in perf-tools-next targeting Linux 6.4?
-> > > >
-> > > > Gentoo has libbpf-1.1 already available, so requiring >libbpf-1.0 i=
-s not
-> > > > a problem. We (Gentoo) just need to make sure to stabilize libbpf-1=
-.x before
-> > > > stabilizing newer versions of perf, as the stable libbpf is 0.8.1 a=
-t the moment.
-> > > >
-> > >
-> > > libbpf v0.8 is basically all the 1.0 APIs, except by default 1.0
-> > > semantics is not enforced, unless libbpf_set_strict_mode() is enabled=
-.
-> > >
-> > > So, if 0.8 is a restriction, perf can stay on 0.8, use all the same
-> > > APIs that are in 1.0 (except newer one added later, but I'm not sure
-> > > perf needs any of the newer additions), and just stick to setting
-> > > libbpf_set_strict_mode() unconditionally.
-> >
-> > Thanks Andrii,
-> >
 >
-> Full disclosure, I'm totally supporting the switch to v1.0+, just
-> trying to be helpful here from the standpoint of 0.x vs 1.x libbpf
-> transition. See below. I believe you can keep 0.8+ dependency and drop
-> all the legacy code completely.
+> On 9/03/23 00:59, Ian Rogers wrote:
+> > Use if an event is reordered or the number of groups increases to
+> > signal that regrouping has happened and warn about it. Disable the
+> > warning in the case wild card PMU names are used and for metrics.
 >
-> But just take it as an information, and feel free to do whatever you
-> think is best with it.
+> The new warning seems to happen no matter what the order
+> in some cases e.g.
 >
-> > The default perf build is to build against tools/lib/bpf and
-> > statically link libbpf in. This means by default we have the latest
-> > libbpf 1.2. If any perf code has a dependency on 0.8 (we don't support
-> > earlier) we need to #ifdef for it. Currently we have 7 feature tests
-> > for libbpf, but perhaps there is some cruft that's carried forward.
-> > The features are:
-> >  - btf__load_from_kernel_by_id
+> $ perf record -e branch-misses//u -e cycles:u  -- uname
+> WARNING: events were regrouped to match PMUs
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.004 MB perf.data (11 samples) ]
 >
-> v0.5 API
->
-> >  - bpf_prog_load
-> >  - bpf_object__next_program
-> >  - bpf_object__next_map
->
-> all three are v0.6 APIs
->
-> >  - bpf_program__set_insns
->
-> v0.8 API
->
-> >  - btf__raw_data
-> >  - bpf_map_create
->
-> both v0.6 API
->
-> >
-> > The not present implementations look like:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/too=
-ls/perf/util/bpf-loader.c?h=3Dperf-tools#n36
-> > ```
-> > int bpf_program__set_insns(struct bpf_program *prog __maybe_unused,
-> >   struct bpf_insn *new_insns __maybe_unused, size_t new_insn_cnt __mayb=
-e_unused)
-> > {
-> > pr_err("%s: not support, update libbpf\n", __func__);
-> > return -ENOTSUP;
-> > }
-> >
-> > int libbpf_register_prog_handler(const char *sec __maybe_unused,
-> >                                  enum bpf_prog_type prog_type __maybe_u=
-nused,
-> >                                  enum bpf_attach_type exp_attach_type
-> > __maybe_unused,
-> >                                  const struct libbpf_prog_handler_opts
-> > *opts __maybe_unused)
-> > {
-> > pr_err("%s: not support, update libbpf\n", __func__);
-> > return -ENOTSUP;
-> > }
-> > ```
->
-> both are v0.8 APIs
->
-> > This will basically mean that while you dynamically linked with libbpf
-> > 0.8 you are in all likelihood not going to get proper BPF support.
-> > These changes up the version requirement to 1.0 and get rid entirely
-> > of the feature tests - so no runtime failing implementations. If the
->
-> 100% supportive on upgrade and dropping feature checks. My point is
-> that you don't need those feature checks with v0.8+ requirement.
->
-> The only difference between staying on v0.8+ vs going all the way to
-> v1.0+ would be that you have to keep libbpf_set_strict() call. In
-> v1.0+ it's a noop, so could be dropped.
->
-> > build determines at build time libbpf 1.0+ isn't present then it still
-> > executes, switching from dynamic libbpf to the default static libbpf
-> > that is at 1.2. As mentioned in this thread, distributions like Debian
-> > use the default static linking of libbpf.
-> >
->
-> oh, that's nice, good to know
->
-> > I'm not keen to hold on to the feature tests for the complexity that
-> > they hold and their needlessly (as you can always statically link)
-> > broken at runtime behavior. We could but my opinion is, let's not :-)
->
-> I've been consistently advocating for static linking with libbpf, so
-> 100% support this.
+> $ perf record -e cycles:u -e branch-misses//u -- uname
+> WARNING: events were regrouped to match PMUs
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.005 MB perf.data (16 samples) ]
 
-Right, so I think we should move forward with these patches. We also
-have had non-API changes to support libbpf 1.0+ like:
-https://lore.kernel.org/lkml/20221103045437.163510-4-irogers@google.com/
-and I'm worried about the state of these with libbpf 0.8.
+Thanks Adrian! It is caused by lists of evsels being merged because of
+the multiple -e options. There was an assumption idx values would be
+sequential and when we merge them this is no longer the case. I added
+a fix for v5.
 
 Thanks,
 Ian
 
 > >
-> > Thanks,
-> > Ian
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/tests/parse-events.c |  2 +-
+> >  tools/perf/tests/pmu-events.c   |  2 +-
+> >  tools/perf/util/metricgroup.c   |  3 ++-
+> >  tools/perf/util/parse-events.c  | 28 ++++++++++++++++++++--------
+> >  tools/perf/util/parse-events.h  |  7 ++++---
+> >  tools/perf/util/parse-events.y  |  1 +
+> >  6 files changed, 29 insertions(+), 14 deletions(-)
 > >
-> > > > Best regards,
-> > > > -Guilherme
-> > > >
+> > diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-e=
+vents.c
+> > index ffa6f0a90741..b1c2f0a20306 100644
+> > --- a/tools/perf/tests/parse-events.c
+> > +++ b/tools/perf/tests/parse-events.c
+> > @@ -2103,7 +2103,7 @@ static int test_event_fake_pmu(const char *str)
+> >
+> >       parse_events_error__init(&err);
+> >       perf_pmu__test_parse_init();
+> > -     ret =3D __parse_events(evlist, str, &err, &perf_pmu__fake);
+> > +     ret =3D __parse_events(evlist, str, &err, &perf_pmu__fake, /*warn=
+_if_reordered=3D*/true);
+> >       if (ret) {
+> >               pr_debug("failed to parse event '%s', err %d, str '%s'\n"=
+,
+> >                        str, ret, err.str);
+> > diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-event=
+s.c
+> > index 6ccd413b5983..7f8e86452527 100644
+> > --- a/tools/perf/tests/pmu-events.c
+> > +++ b/tools/perf/tests/pmu-events.c
+> > @@ -785,7 +785,7 @@ static int check_parse_id(const char *id, struct pa=
+rse_events_error *error,
+> >                */
+> >               perf_pmu__test_parse_init();
+> >       }
+> > -     ret =3D __parse_events(evlist, dup, error, fake_pmu);
+> > +     ret =3D __parse_events(evlist, dup, error, fake_pmu, /*warn_if_re=
+ordered=3D*/true);
+> >       free(dup);
+> >
+> >       evlist__delete(evlist);
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgrou=
+p.c
+> > index de6dd527a2ba..5783f4c2d1ef 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -1441,7 +1441,8 @@ static int parse_ids(bool metric_no_merge, struct=
+ perf_pmu *fake_pmu,
+> >       }
+> >       pr_debug("Parsing metric events '%s'\n", events.buf);
+> >       parse_events_error__init(&parse_error);
+> > -     ret =3D __parse_events(parsed_evlist, events.buf, &parse_error, f=
+ake_pmu);
+> > +     ret =3D __parse_events(parsed_evlist, events.buf, &parse_error, f=
+ake_pmu,
+> > +                          /*warn_if_reordered=3D*/false);
+> >       if (ret) {
+> >               parse_events_error__print(&parse_error, events.buf);
+> >               goto err_out;
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 9ec3c1dc81e0..4bb28c32b511 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -2157,11 +2157,13 @@ static int evlist__cmp(void *state, const struc=
+t list_head *l, const struct list
+> >       return arch_evlist__cmp(lhs, rhs);
+> >  }
+> >
+> > -static void parse_events__sort_events_and_fix_groups(struct list_head =
+*list)
+> > +static bool parse_events__sort_events_and_fix_groups(struct list_head =
+*list)
+> >  {
+> >       int idx =3D -1;
+> >       struct evsel *pos, *cur_leader =3D NULL;
+> >       struct perf_evsel *cur_leaders_grp =3D NULL;
+> > +     bool idx_changed =3D false;
+> > +     int orig_num_leaders =3D 0, num_leaders =3D 0;
+> >
+> >       /*
+> >        * Compute index to insert ungrouped events at. Place them where =
+the
+> > @@ -2170,11 +2172,11 @@ static void parse_events__sort_events_and_fix_g=
+roups(struct list_head *list)
+> >       list_for_each_entry(pos, list, core.node) {
+> >               const struct evsel *pos_leader =3D evsel__leader(pos);
+> >
+> > -             if (pos !=3D pos_leader || pos->core.nr_members > 1)
+> > -                     continue;
+> > +             if (pos =3D=3D pos_leader)
+> > +                     orig_num_leaders++;
+> >
+> > -             idx =3D pos->core.idx;
+> > -             break;
+> > +             if (idx =3D=3D -1 && pos =3D=3D pos_leader && pos->core.n=
+r_members < 2)
+> > +                     idx =3D pos->core.idx;
+> >       }
+> >
+> >       /* Sort events. */
+> > @@ -2192,6 +2194,8 @@ static void parse_events__sort_events_and_fix_gro=
+ups(struct list_head *list)
+> >               bool force_grouped =3D arch_evsel__must_be_in_group(pos);
+> >
+> >               /* Reset index and nr_members. */
+> > +             if (pos->core.idx !=3D idx)
+> > +                     idx_changed =3D true;
+> >               pos->core.idx =3D idx++;
+> >               pos->core.nr_members =3D 0;
+> >
+> > @@ -2225,12 +2229,18 @@ static void parse_events__sort_events_and_fix_g=
+roups(struct list_head *list)
+> >               }
+> >       }
+> >       list_for_each_entry(pos, list, core.node) {
+> > -             pos->core.leader->nr_members++;
+> > +             struct evsel *pos_leader =3D evsel__leader(pos);
+> > +
+> > +             if (pos =3D=3D pos_leader)
+> > +                     num_leaders++;
+> > +             pos_leader->core.nr_members++;
+> >       }
+> > +     return idx_changed || num_leaders !=3D orig_num_leaders;
+> >  }
+> >
+> >  int __parse_events(struct evlist *evlist, const char *str,
+> > -                struct parse_events_error *err, struct perf_pmu *fake_=
+pmu)
+> > +                struct parse_events_error *err, struct perf_pmu *fake_=
+pmu,
+> > +                bool warn_if_reordered)
+> >  {
+> >       struct parse_events_state parse_state =3D {
+> >               .list     =3D LIST_HEAD_INIT(parse_state.list),
+> > @@ -2250,7 +2260,9 @@ int __parse_events(struct evlist *evlist, const c=
+har *str,
+> >               return -1;
+> >       }
+> >
+> > -     parse_events__sort_events_and_fix_groups(&parse_state.list);
+> > +     if (parse_events__sort_events_and_fix_groups(&parse_state.list) &=
+&
+> > +         warn_if_reordered && !parse_state.wild_card_pmus)
+> > +             pr_warning("WARNING: events were regrouped to match PMUs\=
+n");
+> >
+> >       /*
+> >        * Add list to the evlist even with errors to allow callers to cl=
+ean up.
+> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-eve=
+nts.h
+> > index 767ad1729228..46204c1a7916 100644
+> > --- a/tools/perf/util/parse-events.h
+> > +++ b/tools/perf/util/parse-events.h
+> > @@ -26,13 +26,13 @@ int parse_events_option(const struct option *opt, c=
+onst char *str, int unset);
+> >  int parse_events_option_new_evlist(const struct option *opt, const cha=
+r *str, int unset);
+> >  __attribute__((nonnull(1, 2, 3)))
+> >  int __parse_events(struct evlist *evlist, const char *str, struct pars=
+e_events_error *error,
+> > -                struct perf_pmu *fake_pmu);
+> > +                struct perf_pmu *fake_pmu, bool warn_if_reordered);
+> >
+> > -__attribute__((nonnull))
+> > +__attribute__((nonnull(1, 2, 3)))
+> >  static inline int parse_events(struct evlist *evlist, const char *str,
+> >                              struct parse_events_error *err)
+> >  {
+> > -     return __parse_events(evlist, str, err, NULL);
+> > +     return __parse_events(evlist, str, err, /*fake_pmu=3D*/NULL, /*wa=
+rn_if_reordered=3D*/true);
+> >  }
+> >
+> >  int parse_event(struct evlist *evlist, const char *str);
+> > @@ -128,6 +128,7 @@ struct parse_events_state {
+> >       int                        stoken;
+> >       struct perf_pmu           *fake_pmu;
+> >       char                      *hybrid_pmu_name;
+> > +     bool                       wild_card_pmus;
+> >  };
+> >
+> >  void parse_events__shrink_config_terms(void);
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
+nts.y
+> > index 3a04602d2982..4488443e506e 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -323,6 +323,7 @@ event_pmu_name opt_pmu_config
+> >                               if (!parse_events_add_pmu(_parse_state, l=
+ist, pmu->name, terms,
+> >                                                         /*auto_merge_st=
+ats=3D*/true)) {
+> >                                       ok++;
+> > +                                     parse_state->wild_card_pmus =3D t=
+rue;
+> >                               }
+> >                               parse_events_terms__delete(terms);
+> >                       }
+>
