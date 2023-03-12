@@ -2,270 +2,206 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68ED6C74A44
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 02:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C53FC6FA99
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 06:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbjCLCR7 (ORCPT
+        id S229493AbjCLG17 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 11 Mar 2023 21:17:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
+        Sun, 12 Mar 2023 01:27:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjCLCRr (ORCPT
+        with ESMTP id S229473AbjCLG16 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 11 Mar 2023 21:17:47 -0500
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E34B567A2
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 18:17:21 -0800 (PST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536a5a0b6e3so97724817b3.10
-        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 18:17:21 -0800 (PST)
+        Sun, 12 Mar 2023 01:27:58 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F092697
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 22:27:54 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id t15so8560216wrz.7
+        for <linux-perf-users@vger.kernel.org>; Sat, 11 Mar 2023 22:27:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678587440;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XftaVtT6DBaR6TmU1BfUjZFS2j5Dv53zloyEU1YN4Tc=;
-        b=EBIRD4BvBs5N1uLmenNLq6Q0KHywSkUXNiV9JBr63KlvUkcScAgxamWWEGYgAqoQX8
-         btnNSUTDtI5NTTsA6iuLtocZEOduFAA3ruNB1i5rHpdgYgz5FHADZx0r3qzCPciO9R1x
-         YJGYVNIgh5VF/CnlfHmpxRweCFdfZwRudW5TUAcxFgi2tq0W6OVONJBiwP39ga3Pt3Qo
-         HYB+p+B00hHpG2OF65oRzgnqeflOeLhCY9/KLKkwoVtnXKqaEFl5jxtL0mlvO5Ozr14I
-         BXNSMFUiszBDbYbZtm06mweCd+UkxkM9rVQYprDrdx9CqvR5suuisKwR+wNrs2DCxsDb
-         NXtQ==
+        d=google.com; s=20210112; t=1678602473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wtv29KZX+XREe9cWzAMxT6V39t/L1NQeIC8ivHVuqS4=;
+        b=o0/NYospeBO1+8cuP+NfwBHbLPcnYfw49cgYl3XTC5Ix9P6eV9x6V1BRXB92AePhzQ
+         Xda0Eq54Oegsxn//6fhRY9YjbX9yCJ7g6vef56+Zl7ua5XAV+e3b/aWVTtgZZik5bBEc
+         MXON0IdN9LwL9sevao0AitDnR2cTNtRkdOqYwR42RhK1GZiqOF4ZqSL01Mv42QaWl0P0
+         1ypy2zSoVNkALt0IXZOgIVRVklSOQxbgNlaVpqIypfh9HkMv2mz8gxas5DaNrXMPgmnR
+         QpeCZRPN9apuoktC8SI4zqi4UO15X+smd7H9PBd23iPa9w4keLmPvSImc9cB4t5DJDVs
+         UU/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678587440;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XftaVtT6DBaR6TmU1BfUjZFS2j5Dv53zloyEU1YN4Tc=;
-        b=6tLaY7YpWDIfTRrUB+QJmVeT6C+OOONhrApWS1dhj+xEZ5IeipIcmN+gLzzzCeNJI+
-         L21sBzAnSRKgTVR0pasaSNpCbmCyyWjlXTnPzl2fW1fph3+Hy9XB37Y0reMHqRbxZJGK
-         t6YgkR82cgmpLSPsIPeElInhkCR8JuDQAx3Te+kGr/roxmNomg8E+pBs+ss+iFfpKxH8
-         vQ1avHnFNHwdBKSNjuazcAqNMhHWUPDMKCNHB6erVaOBKUavxxdikXyUKpn5d9IN8XD2
-         eK3hc/JIh9XQUNNpbHzniIvZxNTho+vndkqvtCVFLQn1o64uHkoD58fly5dp+b6or7hM
-         6PNA==
-X-Gm-Message-State: AO0yUKUVIA4WtYQsHE3t9qNMcHbXRDq+IOB8uHA01Zy27tI22VWS5Oyk
-        p76KdSMhE6MMy1XpQclSSqlvZ1mfJNHp
-X-Google-Smtp-Source: AK7set8mDjxcyITu3npZkWCgchptcXmCcdHmOK3V6cpZLYMuIA1g+7UeIT8WVkaT9+MW0Q1jvz2rE0VAZIjn
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b42b:2e07:afb:877e])
- (user=irogers job=sendgmr) by 2002:a81:ac67:0:b0:541:753d:32f9 with SMTP id
- z39-20020a81ac67000000b00541753d32f9mr1633136ywj.9.1678587440627; Sat, 11 Mar
- 2023 18:17:20 -0800 (PST)
-Date:   Sat, 11 Mar 2023 18:15:43 -0800
-In-Reply-To: <20230312021543.3060328-1-irogers@google.com>
-Message-Id: <20230312021543.3060328-12-irogers@google.com>
-Mime-Version: 1.0
-References: <20230312021543.3060328-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v5 11/11] perf parse-events: Warn when events are regrouped
+        d=1e100.net; s=20210112; t=1678602473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wtv29KZX+XREe9cWzAMxT6V39t/L1NQeIC8ivHVuqS4=;
+        b=S0DQMDrCy4WE7qUH/9aPxqllOFdoFd2KLOdby609znoWqqN/+h5vxuohbb/Qkna2NN
+         EWvy3O3SiuB2pB9oNAARGacUKoDSjtiA8FREB3P0+1Pmvew4FQvJ5sN2ItOTHvgZEi2m
+         wCyhN050DvZCul0LJpVR2MRqwFFJsfRpV5fPUZv7Dw4sYTwmDnjLrEj2LbrmwZt7G3Du
+         cjqs4xibRnHsgruBceExnhvY5SRYhlCWwX1+LbLbUoteVL0Ix98VeykchNukKnHzICdX
+         UWjAy3qhWv5csDCnFELkcQ9dKEhX4hCpffUGR5uurCVW87qvCB0V0eERLVnZFSXlYCck
+         Fy0w==
+X-Gm-Message-State: AO0yUKXU0EhI47WiG1p1Q2gBceIRU+0E2D3649ZI3M5UzWfQf9zP+G9z
+        A/i1bDox1Nnv8S+tJphByXvQ7zECyaqwMK4wHfgWuA==
+X-Google-Smtp-Source: AK7set/W089nZRtqvQkaqo5MGXF43OWcIyaszLy3QrT1jn4BQxabvW3adNuV27z4WnO5yFKbt6/MdgsapvUuEkuPeEM=
+X-Received: by 2002:adf:f189:0:b0:2ce:aaff:2a8c with SMTP id
+ h9-20020adff189000000b002ceaaff2a8cmr151156wro.14.1678602473299; Sat, 11 Mar
+ 2023 22:27:53 -0800 (PST)
+MIME-Version: 1.0
+References: <20230311112122.28894-1-p4ranlee@gmail.com>
+In-Reply-To: <20230311112122.28894-1-p4ranlee@gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Sat, 11 Mar 2023 22:27:41 -0800
+Message-ID: <CAP-5=fWkAqX+Uy_XhXHjEx6sj-wpOJ+WQf=vMtRzRBS-0Kj32Q@mail.gmail.com>
+Subject: Re: [PATCH] perf tools riscv: Add support for riscv lookup_binutils_path
+To:     paranlee <p4ranlee@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ananth N Mavinakayanahalli <ananth@in.ibm.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use if an event is reordered or the number of groups increases to
-signal that regrouping has happened and warn about it. Disable the
-warning in the case wild card PMU names are used and for metrics.
+On Sat, Mar 11, 2023 at 3:22=E2=80=AFAM paranlee <p4ranlee@gmail.com> wrote=
+:
+>
+> Add to know RISC-V binutils path.
+> Secondarily, edit the code block with alphabetical order.
+>
+> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+> ---
+>  tools/perf/arch/common.c | 51 +++++++++++++++++++++++++++-------------
+>  1 file changed, 35 insertions(+), 16 deletions(-)
+>
+> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+> index 59dd875fd5e4..058527ededdd 100644
+> --- a/tools/perf/arch/common.c
+> +++ b/tools/perf/arch/common.c
+> @@ -29,11 +29,23 @@ const char *const arm_triplets[] =3D {
+>  };
+>
+>  const char *const arm64_triplets[] =3D {
+> +       "aarch64-unknown-linux-",
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/parse-events.c |  2 +-
- tools/perf/tests/pmu-events.c   |  2 +-
- tools/perf/util/metricgroup.c   |  3 ++-
- tools/perf/util/parse-events.c  | 39 ++++++++++++++++++++++++---------
- tools/perf/util/parse-events.h  |  7 +++---
- tools/perf/util/parse-events.y  |  1 +
- 6 files changed, 38 insertions(+), 16 deletions(-)
+Modifying ARM64 behavior should be a separate change.
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index ffa6f0a90741..b1c2f0a20306 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2103,7 +2103,7 @@ static int test_event_fake_pmu(const char *str)
- 
- 	parse_events_error__init(&err);
- 	perf_pmu__test_parse_init();
--	ret = __parse_events(evlist, str, &err, &perf_pmu__fake);
-+	ret = __parse_events(evlist, str, &err, &perf_pmu__fake, /*warn_if_reordered=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d, str '%s'\n",
- 			 str, ret, err.str);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 6ccd413b5983..7f8e86452527 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -785,7 +785,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 		 */
- 		perf_pmu__test_parse_init();
- 	}
--	ret = __parse_events(evlist, dup, error, fake_pmu);
-+	ret = __parse_events(evlist, dup, error, fake_pmu, /*warn_if_reordered=*/true);
- 	free(dup);
- 
- 	evlist__delete(evlist);
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index de6dd527a2ba..5783f4c2d1ef 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1441,7 +1441,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	}
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
--	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu);
-+	ret = __parse_events(parsed_evlist, events.buf, &parse_error, fake_pmu,
-+			     /*warn_if_reordered=*/false);
- 	if (ret) {
- 		parse_events_error__print(&parse_error, events.buf);
- 		goto err_out;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 9ec3c1dc81e0..3b2e5bb3e852 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2157,11 +2157,13 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
- 	return arch_evlist__cmp(lhs, rhs);
- }
- 
--static void parse_events__sort_events_and_fix_groups(struct list_head *list)
-+static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- {
--	int idx = -1;
-+	int idx = 0, unsorted_idx = -1;
- 	struct evsel *pos, *cur_leader = NULL;
- 	struct perf_evsel *cur_leaders_grp = NULL;
-+	bool idx_changed = false;
-+	int orig_num_leaders = 0, num_leaders = 0;
- 
- 	/*
- 	 * Compute index to insert ungrouped events at. Place them where the
-@@ -2170,15 +2172,22 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	list_for_each_entry(pos, list, core.node) {
- 		const struct evsel *pos_leader = evsel__leader(pos);
- 
--		if (pos != pos_leader || pos->core.nr_members > 1)
--			continue;
-+		if (pos == pos_leader)
-+			orig_num_leaders++;
- 
--		idx = pos->core.idx;
--		break;
-+		/*
-+		 * Ensure indexes are sequential, in particular for multiple
-+		 * event lists being merged. The indexes are used to detect when
-+		 * the user order is modified.
-+		 */
-+		pos->core.idx = idx++;
-+
-+		if (unsorted_idx == -1 && pos == pos_leader && pos->core.nr_members < 2)
-+			unsorted_idx = pos->core.idx;
- 	}
- 
- 	/* Sort events. */
--	list_sort(&idx, list, evlist__cmp);
-+	list_sort(&unsorted_idx, list, evlist__cmp);
- 
- 	/*
- 	 * Recompute groups, splitting for PMUs and adding groups for events
-@@ -2192,6 +2201,8 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		bool force_grouped = arch_evsel__must_be_in_group(pos);
- 
- 		/* Reset index and nr_members. */
-+		if (pos->core.idx != idx)
-+			idx_changed = true;
- 		pos->core.idx = idx++;
- 		pos->core.nr_members = 0;
- 
-@@ -2225,12 +2236,18 @@ static void parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		}
- 	}
- 	list_for_each_entry(pos, list, core.node) {
--		pos->core.leader->nr_members++;
-+		struct evsel *pos_leader = evsel__leader(pos);
-+
-+		if (pos == pos_leader)
-+			num_leaders++;
-+		pos_leader->core.nr_members++;
- 	}
-+	return idx_changed || num_leaders != orig_num_leaders;
- }
- 
- int __parse_events(struct evlist *evlist, const char *str,
--		   struct parse_events_error *err, struct perf_pmu *fake_pmu)
-+		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
-+		   bool warn_if_reordered)
- {
- 	struct parse_events_state parse_state = {
- 		.list	  = LIST_HEAD_INIT(parse_state.list),
-@@ -2250,7 +2267,9 @@ int __parse_events(struct evlist *evlist, const char *str,
- 		return -1;
- 	}
- 
--	parse_events__sort_events_and_fix_groups(&parse_state.list);
-+	if (parse_events__sort_events_and_fix_groups(&parse_state.list) &&
-+	    warn_if_reordered && !parse_state.wild_card_pmus)
-+		pr_warning("WARNING: events were regrouped to match PMUs\n");
- 
- 	/*
- 	 * Add list to the evlist even with errors to allow callers to clean up.
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 767ad1729228..46204c1a7916 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -26,13 +26,13 @@ int parse_events_option(const struct option *opt, const char *str, int unset);
- int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
- __attribute__((nonnull(1, 2, 3)))
- int __parse_events(struct evlist *evlist, const char *str, struct parse_events_error *error,
--		   struct perf_pmu *fake_pmu);
-+		   struct perf_pmu *fake_pmu, bool warn_if_reordered);
- 
--__attribute__((nonnull))
-+__attribute__((nonnull(1, 2, 3)))
- static inline int parse_events(struct evlist *evlist, const char *str,
- 			       struct parse_events_error *err)
- {
--	return __parse_events(evlist, str, err, NULL);
-+	return __parse_events(evlist, str, err, /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
- }
- 
- int parse_event(struct evlist *evlist, const char *str);
-@@ -128,6 +128,7 @@ struct parse_events_state {
- 	int			   stoken;
- 	struct perf_pmu		  *fake_pmu;
- 	char			  *hybrid_pmu_name;
-+	bool			   wild_card_pmus;
- };
- 
- void parse_events__shrink_config_terms(void);
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 3a04602d2982..4488443e506e 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -323,6 +323,7 @@ event_pmu_name opt_pmu_config
- 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms,
- 							  /*auto_merge_stats=*/true)) {
- 					ok++;
-+					parse_state->wild_card_pmus = true;
- 				}
- 				parse_events_terms__delete(terms);
- 			}
--- 
-2.40.0.rc1.284.g88254d51c5-goog
+>         "aarch64-linux-android-",
+>         "aarch64-linux-gnu-",
+>         NULL
+>  };
+>
+> +const char *const mips_triplets[] =3D {
+> +       "mips-unknown-linux-gnu-",
+> +       "mipsel-linux-android-",
+> +       "mips-linux-gnu-",
+> +       "mips64-linux-gnu-",
+> +       "mips64el-linux-gnuabi64-",
+> +       "mips64-linux-gnuabi64-",
+> +       "mipsel-linux-gnu-",
+> +       NULL
+> +};
+> +
 
+This will affect the blame history. It should probably be its own change to=
+o.
+
+>  const char *const powerpc_triplets[] =3D {
+>         "powerpc-unknown-linux-gnu-",
+>         "powerpc-linux-gnu-",
+> @@ -43,6 +55,20 @@ const char *const powerpc_triplets[] =3D {
+>         NULL
+>  };
+>
+> +const char *const riscv32_triplets[] =3D {
+> +       "riscv32-unknown-linux-gnu-",
+> +       "riscv32-linux-android-",
+> +       "riscv32-linux-gnu-",
+> +       NULL
+> +};
+> +
+> +const char *const riscv64_triplets[] =3D {
+> +       "riscv64-unknown-linux-gnu-",
+> +       "riscv64-linux-android-",
+> +       "riscv64-linux-gnu-",
+> +       NULL
+> +};
+> +
+>  const char *const s390_triplets[] =3D {
+>         "s390-ibm-linux-",
+>         "s390x-linux-gnu-",
+> @@ -78,17 +104,6 @@ const char *const x86_triplets[] =3D {
+>         NULL
+>  };
+>
+> -const char *const mips_triplets[] =3D {
+> -       "mips-unknown-linux-gnu-",
+> -       "mipsel-linux-android-",
+> -       "mips-linux-gnu-",
+> -       "mips64-linux-gnu-",
+> -       "mips64el-linux-gnuabi64-",
+> -       "mips64-linux-gnuabi64-",
+> -       "mipsel-linux-gnu-",
+> -       NULL
+> -};
+> -
+>  static bool lookup_path(char *name)
+>  {
+>         bool found =3D false;
+> @@ -164,18 +179,22 @@ static int perf_env__lookup_binutils_path(struct pe=
+rf_env *env,
+>                 path_list =3D arm_triplets;
+>         else if (!strcmp(arch, "arm64"))
+>                 path_list =3D arm64_triplets;
+> +       else if (!strcmp(arch, "mips"))
+> +               path_list =3D mips_triplets;
+>         else if (!strcmp(arch, "powerpc"))
+>                 path_list =3D powerpc_triplets;
+> -       else if (!strcmp(arch, "sh"))
+> -               path_list =3D sh_triplets;
+> +       else if (!strcmp(arch, "riscv32"))
+> +               path_list =3D riscv32_triplets;
+> +       else if (!strcmp(arch, "riscv64"))
+> +               path_list =3D riscv64_triplets;
+>         else if (!strcmp(arch, "s390"))
+> -               path_list =3D s390_triplets;
+> +               path_list =3D s390_triplets;
+
+whitespace issue?
+
+> +       else if (!strcmp(arch, "sh"))
+> +               path_list =3D sh_triplets;
+>         else if (!strcmp(arch, "sparc"))
+>                 path_list =3D sparc_triplets;
+>         else if (!strcmp(arch, "x86"))
+>                 path_list =3D x86_triplets;
+> -       else if (!strcmp(arch, "mips"))
+> -               path_list =3D mips_triplets;
+>         else {
+>                 ui__error("binutils for %s not supported.\n", arch);
+>                 goto out_error;
+
+I think in general we need to revamp this code. Two things that I see
+that are missing are (1) support for perf config and (2) addr2line
+should be configurable, you may want llvm-addr2line. Adding RISC-V is
+of course important too :-)
+
+Thanks,
+Ian
+
+> --
+> 2.34.1
+>
