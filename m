@@ -2,118 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C8AC6FA99
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 13:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDC3C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 13:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbjCLNE2 (ORCPT
+        id S230440AbjCLNk3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Mar 2023 09:04:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57974 "EHLO
+        Sun, 12 Mar 2023 09:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229713AbjCLNE1 (ORCPT
+        with ESMTP id S230452AbjCLNk1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Mar 2023 09:04:27 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE7E3D911;
-        Sun, 12 Mar 2023 06:04:26 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id v21so53534ple.9;
-        Sun, 12 Mar 2023 06:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678626266;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C88fNbpNNCW2fZzaHvdAaN4smyngfaWHvN+4TC6Vu/U=;
-        b=kFCMPQc2sYve/lVbIe5ls9dYN2LyCmd5x8+hMcazTbYR9xurnuNhzQ2Y0slbv7wd5L
-         6EJ35TorXe63WI+WssUbGxjKRnBrkU6QRY3UBAj5J1lIiBi/tRoukyeoCwPWfn1FcSvj
-         7jvxgwdBXFP9aK2Us1XOkOrchnH9yg3XQPcs0jb79r7z/CEAu5/ArcttodT4NZJWXYtT
-         iuaR+o8uWnaKHWr2IgkrHLNHzzJk+yL4wPBd0xRsRM9kQnuEe+DzsiYsnGs6ArTW3PhK
-         +DK04Jia/RfxHevH3+rAut53e67/N0RfN8QIgoamVaODHsYHaa7m7dVqnAed1JiMSAUl
-         8WHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678626266;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C88fNbpNNCW2fZzaHvdAaN4smyngfaWHvN+4TC6Vu/U=;
-        b=ltars5YyvvPbFLaqfjtwQ/Kq/5xADuysAr+n9tSxR56kvV9gPFbS+W5aSnHJuKH+L0
-         OjEk6oB6/JXqGucTsI1ZeZecO0Rx71518G85TJ2vWYGM2h7HDG4cqUJgHVNJf8UwBxDt
-         rsEKPjD3/6ifB9zPC9EXb7kjmPvfH/OP5wE0PwpCAPGp85bR7SYy+UmuvOYJKqBT1Am+
-         lDbjMFtxe0jPd6zmXi3ZJwAsm1WbHhrq2lQMjIOo4/Bigz6adP48wy13RdaX1C+Ptuuv
-         RDSqJJ8S+x6w8SKL0rNDDSFH76Oq9gDKgWDqOqhN5Fy66lf7mwXzurFQ4j28grvsEXc6
-         8vHQ==
-X-Gm-Message-State: AO0yUKWHB2Lip4oEIFQ/FNXPpU/XTedwR07epJx2vaoBLiuBzIFdlzdE
-        4SGusTBwhpN1ySOHbHQ7EsqclwFuH6JHWL8j
-X-Google-Smtp-Source: AK7set99HL/INURs2FdURDjFPoChaZAtIVfwXX188EPMfu1XBIsb0kvse3VwuBAqN+9DXJPqMewUBw==
-X-Received: by 2002:a17:902:c404:b0:19f:e9e7:4cb with SMTP id k4-20020a170902c40400b0019fe9e704cbmr1677531plk.45.1678626266013;
-        Sun, 12 Mar 2023 06:04:26 -0700 (PDT)
-Received: from kim-GL702ZC.. ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id kp15-20020a170903280f00b0019926c77577sm2858624plb.90.2023.03.12.06.04.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Mar 2023 06:04:25 -0700 (PDT)
-From:   Paran Lee <p4ranlee@gmail.com>
-To:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Sun, 12 Mar 2023 09:40:27 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF971FF1;
+        Sun, 12 Mar 2023 06:40:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0B115B80B50;
+        Sun, 12 Mar 2023 13:40:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F08ABC433EF;
+        Sun, 12 Mar 2023 13:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678628423;
+        bh=Cc5SkNpX+fJG4RhyUV9lX1ru3SeON0+cWxM07x3k8gc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hCXCY3gQlYG4wYh02Oq5jSSRHPDnRfzATTKm9owjSaO0LGOkx3wHIw17a0xH5za97
+         koz4zAADjjftqSv+BJbQstR4dibA7NjaNqffj/WaIeTIT6Y3Ra39bwCrgoaFzjYY1v
+         lkdv43Z+yG8e0lfh75uL8UeW0WFnYAr8QB7YlUNBvcne76sIFJn9d6D+kdOg9qo5yQ
+         oFu2thUebbZd1r9wfWPR/3ClEuzm8W8PnslQTLC8LrAdY8va5At52SYNnxvU3xIup9
+         /erOa+vf8y1VGQ3Kk0ZvJrMhc7UcKA6VjruSM3r2FA4Yzw/MFY6s8unDNAHjK4LgJZ
+         y8mXWG3kSUP+g==
+Date:   Sun, 12 Mar 2023 13:40:18 +0000
+From:   Conor Dooley <conor@kernel.org>
+To:     Paran Lee <p4ranlee@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Anton Blanchard <anton@ozlabs.org>, Daniel Axtens <dja@axtens.net>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Daniel Axtens <dja@axtens.net>,
         Michael Ellerman <mpe@ellerman.id.au>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Paran Lee <p4ranlee@gmail.com>
-Subject: [RESEND PATCH] perf tools riscv: Add support for riscv lookup_binutils_path
-Date:   Sun, 12 Mar 2023 22:03:05 +0900
-Message-Id: <20230312130303.87954-1-p4ranlee@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        linux-riscv@lists.infradead.org
+Subject: Re: [RESEND PATCH] perf tools riscv: Add support for riscv
+ lookup_binutils_path
+Message-ID: <972fcc78-517b-40fa-b46a-ce5dd6f8e980@spud>
+References: <20230312130303.87954-1-p4ranlee@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5/FZjlJfVq2Ptchx"
+Content-Disposition: inline
+In-Reply-To: <20230312130303.87954-1-p4ranlee@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add to know RISC-V binutils path.
 
-Signed-off-by: Paran Lee <p4ranlee@gmail.com>
----
- tools/perf/arch/common.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+--5/FZjlJfVq2Ptchx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
-index 59dd875fd5e4..6ac7a22244c0 100644
---- a/tools/perf/arch/common.c
-+++ b/tools/perf/arch/common.c
-@@ -43,6 +43,20 @@ const char *const powerpc_triplets[] = {
- 	NULL
- };
- 
-+const char *const riscv32_triplets[] = {
-+	"riscv32-unknown-linux-gnu-",
-+	"riscv32-linux-android-",
-+	"riscv32-linux-gnu-",
-+	NULL
-+};
-+
-+const char *const riscv64_triplets[] = {
-+	"riscv64-unknown-linux-gnu-",
-+	"riscv64-linux-android-",
-+	"riscv64-linux-gnu-",
-+	NULL
-+};
-+
- const char *const s390_triplets[] = {
- 	"s390-ibm-linux-",
- 	"s390x-linux-gnu-",
-@@ -168,6 +182,10 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
- 		path_list = powerpc_triplets;
- 	else if (!strcmp(arch, "sh"))
- 		path_list = sh_triplets;
-+	else if (!strcmp(arch, "riscv32"))
-+		path_list = riscv32_triplets;
-+	else if (!strcmp(arch, "riscv64"))
-+		path_list = riscv64_triplets;
- 	else if (!strcmp(arch, "s390"))
- 		path_list = s390_triplets;
- 	else if (!strcmp(arch, "sparc"))
--- 
-2.34.1
+On Sun, Mar 12, 2023 at 10:03:05PM +0900, Paran Lee wrote:
+> Add to know RISC-V binutils path.
+>=20
+> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+> ---
+>  tools/perf/arch/common.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+> index 59dd875fd5e4..6ac7a22244c0 100644
+> --- a/tools/perf/arch/common.c
+> +++ b/tools/perf/arch/common.c
+> @@ -43,6 +43,20 @@ const char *const powerpc_triplets[] =3D {
+>  	NULL
+>  };
+> =20
+> +const char *const riscv32_triplets[] =3D {
+> +	"riscv32-unknown-linux-gnu-",
+> +	"riscv32-linux-android-",
+> +	"riscv32-linux-gnu-",
+> +	NULL
+> +};
+> +
+> +const char *const riscv64_triplets[] =3D {
+> +	"riscv64-unknown-linux-gnu-",
+> +	"riscv64-linux-android-",
+> +	"riscv64-linux-gnu-",
 
+I don't know anything about perf, so I could be asking a really silly
+question here, but how come riscvN-linux- has been omitted here?
+The kernel.org toolchains [1] are prefixed that way, although I noticed
+in your v1 that you'd seemingly duplicated the arm64 patterns, so I am
+curious as to whether the omission is intentional.
+
+Cheers,
+Conor.
+
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/
+
+> +	NULL
+> +};
+> +
+>  const char *const s390_triplets[] =3D {
+>  	"s390-ibm-linux-",
+>  	"s390x-linux-gnu-",
+> @@ -168,6 +182,10 @@ static int perf_env__lookup_binutils_path(struct per=
+f_env *env,
+>  		path_list =3D powerpc_triplets;
+>  	else if (!strcmp(arch, "sh"))
+>  		path_list =3D sh_triplets;
+> +	else if (!strcmp(arch, "riscv32"))
+> +		path_list =3D riscv32_triplets;
+> +	else if (!strcmp(arch, "riscv64"))
+> +		path_list =3D riscv64_triplets;
+>  	else if (!strcmp(arch, "s390"))
+>  		path_list =3D s390_triplets;
+>  	else if (!strcmp(arch, "sparc"))
+> --=20
+> 2.34.1
+>=20
+
+--5/FZjlJfVq2Ptchx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZA3WPwAKCRB4tDGHoIJi
+0sdJAQCoa+n+1sORACKtBGf6R1h/ZsaFTKclg0mcHVus8Gc65AEA9FeWMCtsjgc+
+UDqGOtpYMTAQ6x/ALdE8HA8PFZ1T1Q8=
+=Lmym
+-----END PGP SIGNATURE-----
+
+--5/FZjlJfVq2Ptchx--
