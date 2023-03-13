@@ -2,89 +2,326 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7C1C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 14:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D8C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 15:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231204AbjCMOWN (ORCPT
+        id S229836AbjCMPUk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 10:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57336 "EHLO
+        Mon, 13 Mar 2023 11:20:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230184AbjCMOWM (ORCPT
+        with ESMTP id S229571AbjCMPUj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 10:22:12 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC1C1AD;
-        Mon, 13 Mar 2023 07:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IS55g0S66y8y4INdsvsEQ01kM13lZ7aZPntjdQt/z6k=; b=fIXGJPJMOmi+ej6WgGuCSOwHh6
-        09hVUbs9A1swzOHw+opRoouJYbgJ7xt70ELTzNyCRXCiZs86qbcpoA2MKK1UM+chZHRJkvUQQj/iX
-        BeRySBsPrD5H0J/xBmZtTUh5owQDcKOOhVa9/s1e48XAMPta4+VyU3Xo9yFms/qnKJy6MEiPRJcWR
-        6VRSUpK3L3/LKrN90z/qCevzrq8dcy9msG85rIzh+RiAz3F9QGUA6aPHQVJdcZtbAcxpDN15hk4ke
-        thX/6SccEJiT6PQUJQ+yRrJxlC0WetqOuGCMxEAgKRNfY485NLQoXFpB+1vcecwqbHCaQT+Z7dfb1
-        4yuaE9cw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pbj3m-001OOw-16;
-        Mon, 13 Mar 2023 14:21:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 19D9B30030F;
-        Mon, 13 Mar 2023 15:21:57 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 00847200C9CB3; Mon, 13 Mar 2023 15:21:56 +0100 (CET)
-Date:   Mon, 13 Mar 2023 15:21:56 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     namhyung@kernel.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
-Subject: Re: [PATCH v2 2/3] perf/ibs: Fix interface via core pmu events
-Message-ID: <20230313142156.GL2017917@hirez.programming.kicks-ass.net>
-References: <20230309101111.444-1-ravi.bangoria@amd.com>
- <20230309101111.444-3-ravi.bangoria@amd.com>
- <20230312145426.GA1757905@hirez.programming.kicks-ass.net>
- <45de7e62-d951-1019-990e-6df285a64cf6@amd.com>
+        Mon, 13 Mar 2023 11:20:39 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760F9664F2
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:20:38 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id e194so12247957ybf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678720837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hg/mpqiGdKgql/ouc23r5Z8gp8NHynkHtJy9u7d3hI8=;
+        b=ZgclPJKxiIMOfozzAfXPChLBUKjaLXpRpRsHMb4Lw/5D+AYyjqHwp8G9n2kKb9opyX
+         C3uBw1HRvyxzQ50Ndeppk/VPnIJvH1spRF3QA9Y2KOxSd80DsHUvLUADTmjxvkoIYIfM
+         2UgrAOrm+le8yiF3xUvh6ppnj9Lqhx88GbBaxEAyfXkbfbdVQ3pc5JpFeVXUwY6qPGSV
+         aACsv6K9Vms2pRx64xOzjjnp0NtJ8GCORb29kIAoyV0Xiuf65ezessK2F/yx7N7+O6EP
+         2SOxnCwC2JufkOKFfLjsUAieeLGW0zJYQJ/0t8SOzx1h1BWWWvojgkO+tzRNga2a78/Z
+         b/Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678720837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hg/mpqiGdKgql/ouc23r5Z8gp8NHynkHtJy9u7d3hI8=;
+        b=apH2HrosSv8FKQQfPJcKFpgNtmv9UKH06SpVak6FzNvnfiY3h3t7qCgeAuHEnX+jgZ
+         VDswh99z3r/0CstDY+JGrxM8liAtqscL1uIy07NVRmSe5R3GWNZdwYMa0DHe3D+k/Z5d
+         unv1w5lfK9gsftZg2JLVcOsveUhJHlme+iktLJMWeEi1GJcHVUcpK1h2GvXSkMCs9liC
+         Wwzap9SQ3TzYPujuIELK0S9KjPII9oJzll8C+G6RA3beAdhTeNHFlH4M1nGOsFSUtxGt
+         d79PnAaxbqe4UE1suOG4O5V/p9JsXgw75xGU//qdMiyDiWYE9nVAN7HRDJx4etg9f+SZ
+         qjXA==
+X-Gm-Message-State: AO0yUKXKkY+H6CEsnDHov36ZIciwRdVBIQWJZfP0FJYtf/46eYvg6hbi
+        eX7HMNbT239mJF/IgCa+msaQs0X2TUhhat3lTIwoPg==
+X-Google-Smtp-Source: AK7set9rwKnvGypNlqyjM9tokE1R7KsL7qPKchoDxgZaXyFBQSnUCbyj7hbrrAWEy5KQd/ac/AgTe+W5E9gm/fSgATo=
+X-Received: by 2002:a5b:7:0:b0:a06:55b5:3cdf with SMTP id a7-20020a5b0007000000b00a0655b53cdfmr17165325ybp.3.1678720837421;
+ Mon, 13 Mar 2023 08:20:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45de7e62-d951-1019-990e-6df285a64cf6@amd.com>
+References: <20230308125326.2195613-1-tmricht@linux.ibm.com>
+In-Reply-To: <20230308125326.2195613-1-tmricht@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Mar 2023 08:20:25 -0700
+Message-ID: <CAP-5=fXzeAJqRjtEqsWS26K-+qh3gsDJ+nKOEY7riqedTb-WQQ@mail.gmail.com>
+Subject: Re: [PATCH] perf list: Add PMU pai_ext event description for IBM z16
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 13, 2023 at 05:59:46PM +0530, Ravi Bangoria wrote:
+On Wed, Mar 8, 2023 at 4:54=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
+m> wrote:
+>
+> Add the event description for the IBM z16 pai_ext PMU released with
+> commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA coun=
+ters")
+>
+> The document SA22-7832-13 "z/Architecture Principles of Operation",
+> published May, 2022, contains the description of the
+> Processor Activity Instrumentation Facility and the NNPA counter
+> set., See Pages 5-113 to 5-116 and chapter 26 for details.
+>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 
-> > Now, we already have a gruesome hack in there, and I'm thikning you
-> > should use that instead of adding yet another one. Note:
-> > 
-> > 		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> > 			type = event->attr.type;
-> > 			goto again;
-> > 
-> > So if you have amd_pmu_hw_config() do:
-> > 
-> > 	event->attr.type = ibs_pmu.type;
-> > 	return -ENOENT;
-> > 
-> > it should all just work no?
-> 
-> IBS driver needs to convert RAW pmu config to IBS config, which it does
-> based on original event->attr.type. See perf_ibs_precise_event(). This
-> logic will fail with event->attr.type overwrite.
+Acked-by: Ian Rogers <irogers@google.com>
 
-amd_pmu_hw_config() could also rewrite event->attr.config I suppose.
+Thanks,
+Ian
 
-I don't think we actually use/expose these event->attr fields again
-after all this, do wel?
-
-The closest to that is perf_event_modify_attr(), but that is limited to
-TYPE_BREAKPOINT for the time being (also, could this be used to cure
-your in-kernel IBS usage woes?).
+> ---
+>  .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 178 ++++++++++++++++++
+>  tools/perf/pmu-events/jevents.py              |   1 +
+>  2 files changed, 179 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+>
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/=
+perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+> new file mode 100644
+> index 000000000000..7ccbded95dc9
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+> @@ -0,0 +1,178 @@
+> +[
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6144",
+> +               "EventName": "NNPA_ALL",
+> +               "BriefDescription": "NNPA ALL Sum of all non zero counter=
+s",
+> +               "PublicDescription": "Sum of all non zero NNPA (Neural Ne=
+tworks Processing Assist) counters"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6145",
+> +               "EventName": "NNPA_ADD",
+> +               "BriefDescription": "NNPA ADD function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6146",
+> +               "EventName": "NNPA_SUB",
+> +               "BriefDescription": "NNPA SUB function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6147",
+> +               "EventName": "NNPA_MUL",
+> +               "BriefDescription": "NNPA MUL function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6148",
+> +               "EventName": "NNPA_DIV",
+> +               "BriefDescription": "NNPA DIV function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6149",
+> +               "EventName": "NNPA_MIN",
+> +               "BriefDescription": "NNPA MIN function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6150",
+> +               "EventName": "NNPA_MAX",
+> +               "BriefDescription": "NNPA MAX function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6151",
+> +               "EventName": "NNPA_LOG",
+> +               "BriefDescription": "NNPA LOG function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6152",
+> +               "EventName": "NNPA_EXP",
+> +               "BriefDescription": "NNPA EXP function ending with CC=3D0=
+"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6153",
+> +               "EventName": "NNPA_IBM_RESERVED_9",
+> +               "BriefDescription": "Reserved for IBM use",
+> +               "PublicDescription": "Reserved for IBM use"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6154",
+> +               "EventName": "NNPA_RELU",
+> +               "BriefDescription": "NNPA RELU function ending with CC=3D=
+0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6155",
+> +               "EventName": "NNPA_TANH",
+> +               "BriefDescription": "NNPA TANH function ending with CC=3D=
+0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6156",
+> +               "EventName": "NNPA_SIGMOID",
+> +               "BriefDescription": "NNPA SIGMOID function ending with CC=
+=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6157",
+> +               "EventName": "NNPA_SOFTMAX",
+> +               "BriefDescription": "NNPA SOFTMAX function ending with CC=
+=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6158",
+> +               "EventName": "NNPA_BATCHNORM",
+> +               "BriefDescription": "NNPA BATCHNORM function ending with =
+CC=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6159",
+> +               "EventName": "NNPA_MAXPOOL2D",
+> +               "BriefDescription": "NNPA MAXPOOL2D function ending with =
+CC=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6160",
+> +               "EventName": "NNPA_AVGPOOL2D",
+> +               "BriefDescription": "NNPA AVGPOOL2D function ending with =
+CC=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6161",
+> +               "EventName": "NNPA_LSTMACT",
+> +               "BriefDescription": "NNPA LSTMACT function ending with CC=
+=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6162",
+> +               "EventName": "NNPA_GRUACT",
+> +               "BriefDescription": "NNPA GRUACT function ending with CC=
+=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6163",
+> +               "EventName": "NNPA_CONVOLUTION",
+> +               "BriefDescription": "NNPA CONVOLUTION function ending wit=
+h CC=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6164",
+> +               "EventName": "NNPA_MATMUL_OP",
+> +               "BriefDescription": "NNPA MATMUL OP function ending with =
+CC=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6165",
+> +               "EventName": "NNPA_MATMUL_OP_BCAST23",
+> +               "BriefDescription": "NNPA NNPA MATMUL OP BCAST23 function=
+ ending with CC=3D0"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6166",
+> +               "EventName": "NNPA_SMALLBATCH",
+> +               "BriefDescription": "NNPA SMALLBATCH OP function ending w=
+ith CC=3D0",
+> +               "PublicDescription": "NNPA function with conditions as de=
+scribed in Common Operation"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6167",
+> +               "EventName": "NNPA_LARGEDIM",
+> +               "BriefDescription": "NNPA LARGEDIM OP function ending wit=
+h CC=3D0",
+> +               "PublicDescription": "NNPA function with conditions as de=
+scribed in Common Operation"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6168",
+> +               "EventName": "NNPA_SMALLTENSOR",
+> +               "BriefDescription": "NNPA SMALLTENSOR OP function ending =
+with CC=3D0",
+> +               "PublicDescription": "NNPA function with conditions as de=
+scribed in Common Operation"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6169",
+> +               "EventName": "NNPA_1MFRAME",
+> +               "BriefDescription": "NNPA 1MFRAME OP function ending with=
+ CC=3D0",
+> +               "PublicDescription": "NNPA function with conditions as de=
+scribed in Common Operation"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6170",
+> +               "EventName": "NNPA_2GFRAME",
+> +               "BriefDescription": "NNPA 2GFRAME OP function ending with=
+ CC=3D0",
+> +               "PublicDescription": "NNPA function with conditions as de=
+scribed in Common Operation"
+> +       },
+> +       {
+> +               "Unit": "PAI-EXT",
+> +               "EventCode": "6171",
+> +               "EventName": "NNPA_ACCESSEXCEPT",
+> +               "BriefDescription": "NNPA ACCESSEXCEPT OP function ending=
+ with CC=3D0",
+> +               "PublicDescription": "NNPA function with conditions as de=
+scribed in Common Operation"
+> +       }
+> +]
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 2bcd07ce609f..b20d06fcc358 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -246,6 +246,7 @@ class JsonEvent:
+>            'CPU-M-CF': 'cpum_cf',
+>            'CPU-M-SF': 'cpum_sf',
+>            'PAI-CRYPTO' : 'pai_crypto',
+> +          'PAI-EXT' : 'pai_ext',
+>            'UPI LL': 'uncore_upi',
+>            'hisi_sicl,cpa': 'hisi_sicl,cpa',
+>            'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
+> --
+> 2.39.1
+>
