@@ -2,160 +2,249 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43F0C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 12:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFD3C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 12:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjCMMO2 (ORCPT
+        id S229535AbjCMMaM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 08:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58518 "EHLO
+        Mon, 13 Mar 2023 08:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjCMMO1 (ORCPT
+        with ESMTP id S229531AbjCMMaL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 08:14:27 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F040629164
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 05:14:26 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id s17so6756875pgv.4
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 05:14:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678709666;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NEQoyNriMJeJ4EU4gkSZqe8loY1NyZvw+jZ3N5Z4ois=;
-        b=aO/CuDa1fBgcy2czOWarVp5KtBVJq/f/rsOQZy36Wyc4SxvXh6rOiTn7Nlwb2sfshn
-         9zyvPQfMY6VcUIlFML/YIqLdEs6J+TB+5lgKWOn7csBxGl76t+l5QbgOFhEvjKU0b3b8
-         nqVaTFMFeHEsBJkm0FFLk2qts3erFUzfPs4zQrR61wzbEubtymhrVhomn0eHbfVDqSiO
-         qnTN0gdDU0RMjhwUabaYAR0CDMh2aYGu1KBSHG/MHetybJHZQW2tJHdZKuh6QW6dbLHf
-         D9xeymY6ZlGbGHtRuyUeMkY42rT24QED5KxfhqkJghuexa2oeali14/bM4XwmaTtb5J2
-         xSBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678709666;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NEQoyNriMJeJ4EU4gkSZqe8loY1NyZvw+jZ3N5Z4ois=;
-        b=NUgIcjlhKQG38nbwitLELpUkQQzRPsyBuPctWP+z08FNbMtVsYb7DyeF7GuQS4ktHN
-         ZYxnssLnaZ30xhFhbJwYEGY+Gc9yChH3EbwVp2wehZ6gHzn+/WVmDUXkn/QaHtNVI7jc
-         8Za4Ok9jVdBaM0ZmFw6FcrXKlBLYWRYhjYph04obqIJmxYW2kSjQdR85enYre+X+X7uK
-         0bAWr5bKSpd0+OA3HyOse/lUH6Hk8tW3dLPpNvwtuVOZFSvT951aqehNjBJ3RlQBrTm9
-         FdrSYki7wfSyNg3B8G0tYnOna5zphUWfZBXEKn1t8PnIssDTb8R1YtNuHk5KAcO2Xuke
-         YEtw==
-X-Gm-Message-State: AO0yUKVLGNc7R00SlxfCKg3BTq1uBXEoX+WojSWFKeY4ubYArGL3g2Dq
-        t5XftgS6qRhqj1rxmRlKuXLhjg==
-X-Google-Smtp-Source: AK7set8ukf6Y64neOmLwbgEC/yWtUHBdc4ykr/rEJ4KBI22fzl5FtG0Zpq+5XqwHlnoEaLKpn3L2+Q==
-X-Received: by 2002:a62:1b13:0:b0:622:944f:ccb0 with SMTP id b19-20020a621b13000000b00622944fccb0mr5242013pfb.34.1678709666359;
-        Mon, 13 Mar 2023 05:14:26 -0700 (PDT)
-Received: from leoy-yangtze.lan ([156.59.236.112])
-        by smtp.gmail.com with ESMTPSA id b14-20020aa7870e000000b005a8f1187112sm2544738pfo.58.2023.03.13.05.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 05:14:25 -0700 (PDT)
-Date:   Mon, 13 Mar 2023 20:14:20 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-Message-ID: <20230313121420.GB2426758@leoy-yangtze.lan>
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
- <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan>
- <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
+        Mon, 13 Mar 2023 08:30:11 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F184FA8D;
+        Mon, 13 Mar 2023 05:30:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yk4jjtMLc6jGNxtgz2zyAOGYZzTMt7WsBLCHy4Hd7TSBntq58UyaEX/P1PPT+uuEghv8TJWVdfvSyRtKdc9nPBcZJIm2MiRhAjBoQFZGJZHC6OIyX3ro41likvTufBL8Tiwn2SXNtCUnvAJ7PxhjaPmPAto22gxiXL82k6eO1+Rgnx69ZnEzkix5dx9g2EqPewTo00tU2d5Of2Dn0lunRsaicaZDCrGZjIcwrkXTUNfL6sV3dl1iuCaoAp1v+iqU2diEkvMq/bPAW6ijh73q2qzUbllK+2kUgkJpl6jpd55CDcl27AyfzapiaAPPTYi/Py+7DR7lNYnNyp0grb2CRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WTuiSvLXqVSbLTZe+Gso1U1+5OJ/uwtvulOX+7PHhj8=;
+ b=Gdt6sxS1yteRZwiJ/2CwmGRv+oMD+hD7AjlVZxP4YSEAbVYDWwHUCjq0m54fmJDNZRR94iUqovGUT1o+6CgaXhHAx2Kz/csMd9dxDCufI0IxrU878P3Wi/UmpiI9gS3g8rkxgBCfItgNl6wPK1J9WZdMIYfkpBAoyP+HuLG84dpc8K89JtNBNytZmrXXceRYty1MC0im8K4iGn6HNz94kFHiy9q0kRZHhM3W4qeqIz5XonAbg+FNvrQ/mkbQAeyxY5o5ZXTIi2RlUu4PQYOd39TzPDvczji5rEPCRGE0NKmF8dysNWkU2kvP2wSOL9/2I/lUUAUC+dIPxeDWTghs2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WTuiSvLXqVSbLTZe+Gso1U1+5OJ/uwtvulOX+7PHhj8=;
+ b=dWkQDzoN7QvxC26/Fhp8bhYTys+TPDwSfq3kRVbMeNKQ2HvW0qr+LKI5tNrBZH+wgm86OZxDWm58O6znA5ZCvbYzMyGAaT7WRL6rneBgmCCDoLKCrUbyNZMD4UdICpi7KX0W6/Aiq6UKPBqSjHO+MqSgbb99KieQo8gkVQGnSps=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DM6PR12MB4091.namprd12.prod.outlook.com (2603:10b6:5:222::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Mon, 13 Mar
+ 2023 12:30:00 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d8e6:76b5:2c23:1247]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::d8e6:76b5:2c23:1247%4]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
+ 12:30:00 +0000
+Message-ID: <45de7e62-d951-1019-990e-6df285a64cf6@amd.com>
+Date:   Mon, 13 Mar 2023 17:59:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2 2/3] perf/ibs: Fix interface via core pmu events
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     namhyung@kernel.org, eranian@google.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230309101111.444-1-ravi.bangoria@amd.com>
+ <20230309101111.444-3-ravi.bangoria@amd.com>
+ <20230312145426.GA1757905@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20230312145426.GA1757905@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0036.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::15) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM6PR12MB4091:EE_
+X-MS-Office365-Filtering-Correlation-Id: 685eadf2-0c7d-4744-c206-08db23bea986
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: wFG85peWGYdWPp1cg2YI9xSfsTpkIpXtXows5eYclcaRl4f2cBc4S8xh89i8kaP6DGIeOPprqMS4/opIFlv+CKwl1+Q5TNsuuBn5OqQuHTdogF0+A64z1rQgqhbCfyyoT5Lxb6IxKwQ+1aXNgEYww5vbWOHYdXEhK/KLGIu3uk51TYhL3rRyMv3dyBfgTj07HxVG4So6J4o27YBKoCEAtdifYghXcqpyIJahuWvxrgSf87WleEk/4xVAz50BloLy2U7a9HWSpdICXaCn6VdXmBXHnkqKdzAF5z+cRSP9shQlikBNFCSgUUT/M+CDlVq6rTpACO9d7WL9tUXlDdRLpNt1xS0pYOhorf9J+CmWuknagaQ89OMQj5nJWYk9riO0uIcca1SBl5KpiSEVz/QQmPteF5dVI0GiNdbWSL8llSKbZNAn4xgci8csA+2XpUranKdRPocltI1EdvnAxAC0zm8D/s047y5CXQHFwNcPGIT4Wf4B/ZRdqtnFEV4ehRMPhnOZeEcUV28YdrklrjpT1ZxqUoRt0G8mUO7l83eyxC5oweSnRs5Yc2YKLJY7iB/vzv2wjeIaFePyo8v4bx+E7qimV4x0lFhlNRtcCB8r8WtNvUCQRB1oDFZMGCxArSJ0ibRuHm0/UslbwXBPPIB7pmUP4rIHupqc64aD3wKBieO4o0HqW0Nt/GADqQi6bth/HOsxv3DiWL10U5WEY+GEH/2mS7oMrVOHYm7sB+tEJDY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(451199018)(6666004)(83380400001)(316002)(38100700002)(478600001)(6512007)(8936002)(186003)(8676002)(6506007)(36756003)(26005)(5660300002)(53546011)(6916009)(4326008)(7416002)(66556008)(66476007)(66946007)(41300700001)(31696002)(86362001)(44832011)(2616005)(6486002)(2906002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZzJ2Uy9kdGVPSTBvYUN5d0Y0UjYxVUVCeFpUSVlsZHVqNmZZeVBlOHNVWjNK?=
+ =?utf-8?B?dVBDYVovODFJdGVwQlpVYkx0Zmk1bjJCaUFYVGNuWTVJZHdJdDVVa29BbVp0?=
+ =?utf-8?B?UkYwTUg4NDA2MVBCS0Z5WXAySFVSdUphaXJJTENtZ1VLQng5STYwdWVPZDM0?=
+ =?utf-8?B?NjFJVE5RK1hDbVpmQ1hKSjZZRkp4NTlRRnpkRnhOeDRBR0E0bVFDVHFWUHFN?=
+ =?utf-8?B?QkpnVFQxUDAvTmJsalZDVmhMRkJsUWU0SW9pdWxxUnJHeWp2VVd4QW95eVhO?=
+ =?utf-8?B?RDhUQzVsNC9ONWRaNmxVb3R2cUJEc05VMjdKRUZVUHJIQlJMdk1yMUVVZGFw?=
+ =?utf-8?B?QnVGNE04d2JIWTZBRGFNcFNYNE1LR0ZRZUkwZ2RtaHA4cjFYdlhTT1FMQ1Aw?=
+ =?utf-8?B?Y1k2amJiRnB1azRNQnNpbXVWaFA2QU5mQjVLWjArMk51bFROei9XUjdPWUNv?=
+ =?utf-8?B?QVduSW90bHJqYmpDeHBvZE5SdnNaVGlDUkRaTlRMT1YxbUc3NUZvVDR0cUpq?=
+ =?utf-8?B?dUFBNDJhdWp5OEo3eDNPMUdmTHdxTlFtMUxFOWl1UUN6dXdabC9zMzVKemVx?=
+ =?utf-8?B?U1h0WWdmckd6LzBSMXpURVpYRnh3RTBScWpMWmJra2ZNSm04dVV2WFpYV0tD?=
+ =?utf-8?B?eGp3OEtBTU9yR3RYRC9kRUR4SUU4Tys4dEYzV1lzNlJrM0kzN2RlbXUzV1Zm?=
+ =?utf-8?B?aDFKWmJsb00rcDRRV1JFdjh4QjE1ZUd2bnFLM1oxTFh6M2JKVlJCdlJHM2Z0?=
+ =?utf-8?B?dHpNMnZxaVVtWTZxdlRVUHAyQ29XMWh4TStySWZ4a2hCbGllR0h3SWNQczNp?=
+ =?utf-8?B?Vnk2Znk4OHhmb3RxVWpyV3F2Sm5nSnRLUUdzQzd0ZGtieCtkTnRsUVBwREhJ?=
+ =?utf-8?B?UG9yUkZzejZRY3AvV3BReWFkWW9BRVcxZWVMRmdMMURJcTRjN1dnRXl6a0VZ?=
+ =?utf-8?B?dGZMMGVXbkRBWlZ4MkpCeXd4OHd1TzcrenNlVEVoQTVzQmx4SUdxV1RqVXBk?=
+ =?utf-8?B?SzRTdTBpWVpQRXdGeUp1UTNiVzh4QWIvUnFRZmE1WUNaRkRXNThMTjZpd2c4?=
+ =?utf-8?B?aGwvMUxPVEtlTXJSSDJ0QWc1czdtQlpKUFNKR2luN1FlNHhSWDZzeEFaN3No?=
+ =?utf-8?B?dmZKdG1sMFBBYXg5TlFBalFkRExScVJMdlNSbEpvMGFkU01aTnNtYmlvcGk5?=
+ =?utf-8?B?Vk1WRkdFV0FHaEE1cSt5dXAvSTRtdGVaQVNWSTFJYmE5VGVTRzkzRVd0aVdS?=
+ =?utf-8?B?WUpXUHU4ZlZLWTQzaWQzQkRTT1Ric0cxdWpLd2RaVk1kSXJ1M3FocmVDOUh0?=
+ =?utf-8?B?MnBZc0FqZGpxc3dKdFRldjBZYnJsYWxLYXp3Ry9UUGFvcXNtMWUxTEcweFdH?=
+ =?utf-8?B?bWdjcUZjTXZ1Snp5MTFOUFdvaVNucmZZWmJaSHd5b3NxUldMY29tVjIxV3BO?=
+ =?utf-8?B?R3dqbW5lMDk0M3c0TGZEU0d4TkdES2RPMk9MckZ0SnJ1bzhPaXhQaUl3RUdx?=
+ =?utf-8?B?aGVaWjRTYlFwL0xLZEh4cmsrSTU4TlNGbVQwOHFueFdvRU9Bc0tOd2JRTFVx?=
+ =?utf-8?B?VDR1WXhiS1JlYmgwSjQ0TEFXcHR6LzFLdVNCZDdrMjVlbElvT2dWZ3hOSFVZ?=
+ =?utf-8?B?ZHJoOHlxeUxMSytxRmlMMVpyL292azhlQ21ROVhxcytUaDZFOWZKdDY1T05D?=
+ =?utf-8?B?L0Fhd1VSMVNxYU1GQUk5MFlFc1BzbllFUlBBekZiWFZMd1MwNzVnM2RCeTU2?=
+ =?utf-8?B?eGJ6ZzEvS3JVQ0t2UXZmVXE2eFNoOEZDMEhSYzQySFZaMWRTdi9mRzJBdDVs?=
+ =?utf-8?B?S25YVmx4OGdLWHN2SG9mZVhYdFd3Tm1RSWZXNzlKSGxUL3Q4M2hlWjM5WFoy?=
+ =?utf-8?B?dW5kaWVOTThRd1V0dVFjVitvSG9IaGs0MmZpS2VXa2JIbWJuMkc3Q2FmRjc5?=
+ =?utf-8?B?Qm56eHlnL3Q2UmpyaStCZGlvelZmQmFEZTdYdXVsT1h3VVVtcnJpejJSSnZZ?=
+ =?utf-8?B?UCtPNlZzblJCKzV6Tm9vR0VLRkRkMEJzT0lBMUFQd0ZTck8zZXA0MG12bTBp?=
+ =?utf-8?B?S0Y5dDc0SDh4NlBDdXByMVdlb0JJN1FFOVY1Tk9pZS9vc3M1MjlldUxhd09G?=
+ =?utf-8?Q?AokQK3JnxNyKiSYTcyVMpzQJS?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 685eadf2-0c7d-4744-c206-08db23bea986
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2023 12:30:00.2072
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V9C9UIo2mjugIfl1biaB1Q8kjQ0fcgpDt1ZoaW2jVQ7lTGxRnc/jwbUyCLLw38s+xN2/k81f0MKVRTjzWN9h3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4091
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 10:06:41AM -0800, Yang Shi wrote:
+Hi Peter,
 
-[...]
-
-> > I reviewed your shared dump, the bad and good perf data both contain the
-> > dummy event with 'text_poke = 1'.  Could you confirm the shared dump in
-> > your previous email is correct or not?
+On 12-Mar-23 8:24 PM, Peter Zijlstra wrote:
+> On Thu, Mar 09, 2023 at 03:41:10PM +0530, Ravi Bangoria wrote:
+>> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+>> index 8c45b198b62f..81d67b899371 100644
+>> --- a/arch/x86/events/amd/core.c
+>> +++ b/arch/x86/events/amd/core.c
+>> @@ -371,10 +371,15 @@ static inline int amd_has_nb(struct cpu_hw_events *cpuc)
+>>  static int amd_pmu_hw_config(struct perf_event *event)
+>>  {
+>>  	int ret;
+>> +	u64 dummy;
+>>  
+>> -	/* pass precise event sampling to ibs: */
+>> -	if (event->attr.precise_ip && get_ibs_caps())
+>> -		return -ENOENT;
+>> +	if (event->attr.precise_ip) {
+>> +		/* pass precise event sampling to ibs by returning -ESRCH */
+>> +		if (get_ibs_caps() && !ibs_core_pmu_event(event, &dummy))
+>> +			return -ESRCH;
+>> +		else
+>> +			return -ENOENT;
+>> +	}
+>>  
+>>  	if (has_branch_stack(event) && !x86_pmu.lbr_nr)
+>>  		return -EOPNOTSUPP;
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index f79fd8b87f75..e990c71ba34a 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -11639,18 +11639,26 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>>  			goto again;
+>>  		}
+>>  
+>> +		/*
+>> +		 * pmu->event_init() should return -ESRCH only when it
+>> +		 * wants to forward the event to other pmu.
+>> +		 */
+>> +		if (ret == -ESRCH)
+>> +			goto try_all;
+>> +
+>>  		if (ret)
+>>  			pmu = ERR_PTR(ret);
+>>  
+>>  		goto unlock;
+>>  	}
+>>  
+>> +try_all:
+>>  	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+>>  		ret = perf_try_init_event(pmu, event);
+>>  		if (!ret)
+>>  			goto unlock;
+>>  
+>> -		if (ret != -ENOENT) {
+>> +		if (ret != -ENOENT && ret != -ESRCH) {
+>>  			pmu = ERR_PTR(ret);
+>>  			goto unlock;
+>>  		}
 > 
-> Oops, sorry. I pasted the wrong log. The good one looks like
-> (generated by v5.19):
+> Urgh.. So amd_pmu_hw_config() knows what PMU it should be but has no
+> real way to communicate this, so you make it try all of them again.
 > 
-> # captured on    : Wed Mar  8 18:02:58 2023
-> # header version : 1
-> # data offset    : 408
-> # data size      : 22640
-> # feat offset    : 23048
-> # hostname : fedora
-> # os release : 6.2.0-coresight+
-> # perf version : 5.19.g3d7cb6b04c3f
-> # arch : aarch64
-> # nrcpus online : 128
-> # nrcpus avail : 128
-> # cpuid : 0x00000000c00fac30
-> # total memory : 2108862504 kB
-> # cmdline : /home/yshi/linux/tools/perf/perf record -e
-> cs_etm/@tmc_etf63/k --kcore --per-thread -- taskset --cpu-list 1 uname
-> # event : name = cs_etm/@tmc_etf63/k, , id = { 3832 }, type = 9, size
-> = 128, { sample_period, sample_freq } = 1, sample_type =
-> IP|TID|IDENTIFIER, read_format = ID, d
-> isabled = 1, exclude_user = 1, exclude_hv = 1, enable_on_exec = 1,
-> sample_id_all = 1, { bp_len, config2 } = 0x12792918
-> # event : name = dummy:u, , id = { 3833 }, type = 1, size = 128,
-> config = 0x9, { sample_period, sample_freq } = 1, sample_type =
-> IP|TID|IDENTIFIER, read_format = ID,
->  disabled = 1, exclude_kernel = 1, exclude_hv = 1, mmap = 1, comm = 1,
-> enable_on_exec = 1, task = 1, sample_id_all = 1, exclude_guest = 1,
-> mmap2 = 1, comm_exec = 1,
-> context_switch = 1, ksymbol = 1, bpf_event = 1
-> # CPU_TOPOLOGY info available, use -I to display
-> # NUMA_TOPOLOGY info available, use -I to display
-> # pmu mappings: armv8_pmuv3_0 = 8, software = 1, arm_cmn_0 = 10,
-> uprobe = 7, cs_etm = 9, breakpoint = 5, tracepoint = 2, arm_cmn_1 =
-> 11, kprobe = 6
-> # contains AUX area data (e.g. instruction trace)
-> # CACHE info available, use -I to display
-> # time of first sample : 18446744073.709551
-> # time of last sample : 18446744073.709551
-> # sample duration :      0.000 ms
-> # MEM_TOPOLOGY info available, use -I to display
-> # missing features: TRACING_DATA CPUDESC BRANCH_STACK GROUP_DESC STAT
-> CLOCKID DIR_FORMAT COMPRESSED CPU_PMU_CAPS CLOCK_DATA HYBRID_TOPOLOGY
-> HYBRID_CPU_PMU_CAPS
-
-Thanks for confirmation.
-
-Just a quick summary, here we have two issues:
-
-- With command:
-  perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
-  -- taskset --cpu-list 1 uname",
-
-  perf doesn't enable "text poke" attribution.
-
-- With command:
-  perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
-  -- taskset --cpu-list 1 true (in your previous email), or ...
-  perf record --kcore -e cs_etm/@tmc_etf63/k --per-thread \
-  -- taskset --cpu-list 1 uname (in your shared perf data file),
-
-  perf enables "text poke" attribution, in this case, perf fails to decode
-  Arm CoreSight trace data.
-
-[...]
-
-> > Do you mind to share the bad perf.data file with James and me?
+> Now, we already have a gruesome hack in there, and I'm thikning you
+> should use that instead of adding yet another one. Note:
 > 
-> Please check the attachment out. Thanks for looking into this problem.
+> 		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+> 			type = event->attr.type;
+> 			goto again;
+> 
+> So if you have amd_pmu_hw_config() do:
+> 
+> 	event->attr.type = ibs_pmu.type;
+> 	return -ENOENT;
+> 
+> it should all just work no?
 
-Thank you for sharing the data.  We will look into it.
+IBS driver needs to convert RAW pmu config to IBS config, which it does
+based on original event->attr.type. See perf_ibs_precise_event(). This
+logic will fail with event->attr.type overwrite.
 
-Leo
+> 
+> And now thinking about this, I'm thinking we can clean up the whole
+> swevent mess too, a little something like the below perhaps... Then it
+> might just be possible to remove that list_for_each_entry_rcu()
+> entirely.
+> 
+> Hmm?
+
+I'll check this and revert back.
+
+> 
+> 
+> ---
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f79fd8b87f75..26130d1ca40b 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9951,6 +9951,9 @@ static void sw_perf_event_destroy(struct perf_event *event)
+>  	swevent_hlist_put();
+>  }
+>  
+> +static struct pmu perf_cpu_clock; /* fwd declaration */
+> +static struct pmu perf_task_clock;
+> +
+>  static int perf_swevent_init(struct perf_event *event)
+>  {
+>  	u64 event_id = event->attr.config;
+> @@ -9966,7 +9969,11 @@ static int perf_swevent_init(struct perf_event *event)
+>  
+>  	switch (event_id) {
+>  	case PERF_COUNT_SW_CPU_CLOCK:
+> +		event->attr.type = perf_cpu_clock.type;
+> +		return -ENOENT;
+> +
+>  	case PERF_COUNT_SW_TASK_CLOCK:
+> +		event->attr.type = perf_task_clock.type;
+>  		return -ENOENT;
+>  
+>  	default:
+
+Thanks,
+Ravi
