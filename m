@@ -2,229 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D41EC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 20:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6F6C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 21:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbjCMU7P (ORCPT
+        id S229673AbjCMVAR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 16:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
+        Mon, 13 Mar 2023 17:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjCMU7O (ORCPT
+        with ESMTP id S229551AbjCMVAQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 16:59:14 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DC4126E5
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 13:58:28 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id j6so3144278ilr.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 13:58:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678741107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cz/F3ZMv7JJTYZGTybhdPyEf/RGnba1yVdkcAMI5UGs=;
-        b=CX5N+6G4k61+cs5paeZTKqx3CgY3MqW1PGC3VLqiHAc3Lrd0ET11IpVzV0YbGQuAhT
-         kN9pVSXmJaO4L+GH2fNmFZqiJe+kAanFT20RUughuKx+ZeCRJO2bsqE4d+iD9C6ICjY0
-         39bzUoWEwWWcxvXCPs2v6my2T9ZGYzCX5248ogRVXVwe/VNO+xxfdIGbJNmcY0yeA4Je
-         qmBMm9/otFx29sNbuFFVlWPreJqSlI4uyPY7XYirwAkxvWcN2yNJcMw0xGgVJ5ovTdOW
-         lUbtm9J2jP+rUsEsx1DVMhtWTKuv9vIcaVjGuEklJPnYUArGp8ho3d3FX45CjsuAXyA0
-         tj9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678741107;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cz/F3ZMv7JJTYZGTybhdPyEf/RGnba1yVdkcAMI5UGs=;
-        b=RUdRDEw9NYKK4DqMT1r4yrcq9d/Lqqu/umM7g80XWYFWY7RNUSW9ngoORQCHgwnAiD
-         PIv+NEhd2ZHRUygHcsCvzzrIsod/c7GWFS6ZgP8nxV4P6veclNjhr742wIUx1qbYu8AG
-         NVX+LrqS4ooRZMgNpmqC5Ei1f1yV7eLtnGUVeutpO2DlZ5URzIEtT4d+w59xqohFQbWk
-         nEFJPWUVcvfGzJp5ALOfwwgJic7+bngrYiCIaJJfSjgCMMopOLzNgQZ0I4fAhHBItvy7
-         gp9WDFQCA2FaXXtYJppFmgL5+yH3PdHTbeMqa/R7Og9OH/rzfh+qXJDCeJHn1AyB4xlT
-         HTlg==
-X-Gm-Message-State: AO0yUKUO0CGCZaxaoVxZfYkKfOR4hHntcaI7eJTLhVCes2Jyv9qUW0yD
-        Ab/JDAdZpSJCzlny5n5RZYuJKcgDeb2gctG6hXLkLg==
-X-Google-Smtp-Source: AK7set+Xi9ueG8OhlwmwlrRpeY2SXs9S254LzUANmFveR3Bx9FO9NaM1s5wYgid/T+MUYELve8vax69y6fNNKiJvEQ8=
-X-Received: by 2002:a05:6e02:12a8:b0:323:17f1:e752 with SMTP id
- f8-20020a056e0212a800b0032317f1e752mr532220ilr.0.1678741107477; Mon, 13 Mar
- 2023 13:58:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230308225912.1960990-1-irogers@google.com> <20230308225912.1960990-7-irogers@google.com>
- <ZA+KjvtPyDDb0Xb5@kernel.org>
-In-Reply-To: <ZA+KjvtPyDDb0Xb5@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 13 Mar 2023 13:58:16 -0700
-Message-ID: <CAP-5=fXdJ3UQMF47BVt4-mPdVnAyzPpFnWWCdh74WL89=+3VDQ@mail.gmail.com>
-Subject: Re: [PATCH v4 06/11] perf evsel: Add function to compute group PMU name
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        Mon, 13 Mar 2023 17:00:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70272716;
+        Mon, 13 Mar 2023 13:59:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6F297B815BD;
+        Mon, 13 Mar 2023 20:59:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF1E9C433D2;
+        Mon, 13 Mar 2023 20:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678741178;
+        bh=X59VM+mVnGs6nAi19xoVBZJyc3qLMsw52qxHRGax6HE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GKmvjqPabBQiL6LDwcUdN5JPGmUglT3G7lE8LVQwCppdXOGT2yLqPMLoTMuUO6Cpa
+         Z8fXyS00DxZFsq44lUDRKm05BDccjfp2ztyS9KoEKLyQ/eUdW9nB1SwOawiXJ4Bs+y
+         rvxU+7OgR4G29fLH2kZdAA/b4lmFIpz+OcNPvVZ/3C/zhWLJZAIYQkXKY4dMjrE8x2
+         k/f6vnBOLfFbFX9CdKN3MZa65yEXJz75KFzreuNqdiDNTOYiK0NYRa0DYULd7AvM5f
+         w/dclrBPnf6CqT+JrSmzRlqpfSaR2BBQZubBPNSwFESti2GC1wdTH+eT84r0nTqa+U
+         6Iz7RvNIDEoZQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 73B4F4049F; Mon, 13 Mar 2023 17:59:35 -0300 (-03)
+Date:   Mon, 13 Mar 2023 17:59:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Andres Freund <andres@anarazel.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        llvm@lists.linux.dev, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 02/13] perf build: Make BUILD_BPF_SKEL default, rename
+ to NO_BPF_SKEL
+Message-ID: <ZA+Ot0dnX0MNZKmn@kernel.org>
+References: <20230311065753.3012826-1-irogers@google.com>
+ <20230311065753.3012826-3-irogers@google.com>
+ <ZA+FOpzJswZx8os+@kernel.org>
+ <CAP-5=fUG1CbzevoS=+Jj_pBO4umNj6ekaMeEuSHGC4kAZgVJJg@mail.gmail.com>
+ <ZA+IvqVb6Gos+NOe@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZA+IvqVb6Gos+NOe@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 13, 2023 at 1:41=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Mar 08, 2023 at 02:59:07PM -0800, Ian Rogers escreveu:
-> > The computed name respects software events and aux event groups, such
-> > that the pmu_name is changed to be that of the aux event leader or
-> > group leader for software events. This is done as a later change will
-> > split events that are in different PMUs into different groups.
->
-> This makes 'perf test python' to fail:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ perf test -v python
-> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF =
-maps, etc
->  19: 'import perf' in python                                         :
-> --- start ---
-> test child forked, pid 720242
-> python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf-t=
-ools-next/python'); import perf" | '/usr/bin/python3' "
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
-> ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-li=
-nux-gnu.so: undefined symbol: evsel__is_aux_event
-> test child finished with -1
-> ---- end ----
-> 'import perf' in python: FAILED!
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> So I added the following patch, please run 'perf test' and 'make -C
-> tools/perf build-test' before submitting patch series.
->
-> - Arnaldo
+Em Mon, Mar 13, 2023 at 05:34:06PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, Mar 13, 2023 at 01:27:21PM -0700, Ian Rogers escreveu:
+> > On Mon, Mar 13, 2023 at 1:19 PM Arnaldo Carvalho de Melo
+> > > (.text+0x1b): undefined reference to `main'
+> > > /usr/bin/ld: final link failed: file in wrong format
+> > > collect2: error: ld returned 1 exit status
+> > > clang-15: error: linker (via gcc) command failed with exit code 1 (use -v to see invocation)
+> > > make[4]: *** [Makefile.perf:1081: /tmp/tmp.Rr5xDuXo13/util/bpf_skel/.tmp/bperf_cgroup.bpf.o] Error 1
+> > > make[3]: *** [Makefile.perf:236: sub-make] Error 2
+> > > make[2]: *** [Makefile:70: all] Error 2
+> > > make[1]: *** [tests/make:326: make_libbpf_dynamic_O] Error 1
+> > > make: *** [Makefile:103: build-test] Error 2
+> > > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+> > >
+> > > real    5m55.192s
+> > > user    62m31.596s
+> > > sys     14m30.828s
+> > > ⬢[acme@toolbox perf-tools-next]$
+> > 
+> > Sorry, I was testing this on top of:
+> > https://lore.kernel.org/lkml/20230116010115.490713-1-irogers@google.com/
+> > The issue being that we're trying to use an old libbpf that the has
+> > meant disabling things but:
+> >   NO_BPF_SKEL := 1
+> > hadn't been set as part of this. I can address in v2, but with the
+> > "assume libbpf 1.0+" patch I hadn't been worrying about this as we'd
+> > error out for this case  - rather than build error. The erroring out
+> > can be worked around by just not having libbpf be dynamic (ie static
+> > or not at all by adding NO_LIBBPF=1).
+> 
+> I'll try adding that 3-patch series before this one.
 
-Hmm.. was passing for me:
+⬢[acme@toolbox perf-tools-next]$ git log --oneline -16
+76c8a07f51703787 (HEAD -> perf-tools-next) perf build: Error if no libelf and NO_LIBELF isn't set
+030a6c72b38e334d perf build: Remove redundant NO_NEWT build option
+5d1360fc84cd2e3b perf build: If libtraceevent isn't present error the build
+e25e0db4700aa39a perf build: Switch libpfm4 to opt-out rather than opt-in
+39f53202a8961d3d perf symbol: Add abi::__cxa_demangle C++ demangling support
+d857f258f3d1214a tools build: Add feature test for abi::__cxa_demangle
+7aae0d8341c9c373 perf build: Make binutil libraries opt in
+dc4890e772aba1e9 perf build: Error if jevents won't work and NO_JEVENTS=1 isn't set
+334e64172816623d perf util: Remove weak sched_getcpu
+e44d7e7c60fc4ded perf build: Remove unused HAVE_GLIBC_SUPPORT
+14ea53be45758450 perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
+eb03903c5c119254 perf build: Support python/perf.so testing
+f8b579c1996ba4a9 perf bpf: Remove pre libbpf 1.0 conditional logic
+2cce43c63d4d0abc perf build: Remove libbpf pre-1.0 feature tests
+a24ebff6cce14a34 tools build: Pass libbpf feature only if libbpf 1.0+
+17535a33a9c1e4fb perf lock contention: Fix compiler builtin detection
+⬢[acme@toolbox perf-tools-next]$
 
-```
- 19: 'import perf' in python                                         :
---- start ---
-test child forked, pid 3161744
-python usage test: "echo "import sys ;
-sys.path.append('/tmp/perf/python'); import perf" | '/usr/bin/python3'
-"
-test child finished with 0
----- end ----
-'import perf' in python: Ok
-```
+       make_libbpf_dynamic_O: cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.cO9WpgtAvo DESTDIR=/tmp/tmp.jjguTPlLWt
+ldd: /tmp/tmp.cO9WpgtAvo/perf: No such file or directory
+cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.cO9WpgtAvo DESTDIR=/tmp/tmp.jjguTPlLWt
+  BUILD:   Doing 'make -j32' parallel build
+  HOSTCC  /tmp/tmp.cO9WpgtAvo/fixdep.o
+  HOSTLD  /tmp/tmp.cO9WpgtAvo/fixdep-in.o
+  LINK    /tmp/tmp.cO9WpgtAvo/fixdep
+Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs from latest version at 'include/uapi/linux/in.h'
+diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
+Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
+diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h' differs from latest version at 'include/linux/coresight-pmu.h'
+diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
+Makefile.config:563: *** Error: No libbpf devel library found, please install libbpf-devel.  Stop.
+make[3]: *** [Makefile.perf:236: sub-make] Error 2
+make[2]: *** [Makefile:70: all] Error 2
+make[1]: *** [tests/make:326: make_libbpf_dynamic_O] Error 1
 
-albeit:
-```
-$ nm /tmp/perf/python/perf.cpython-310-x86_64-linux-gnu.so |grep is_aux_eve=
-nt
-                U evsel__is_aux_event
-```
 
-Perhaps there's some more aggressive linking flag I need to enable.
+But:
 
-Thanks,
-Ian
+⬢[acme@toolbox perf-tools-next]$ rpm -qa | grep libbpf
+libbpf-0.8.0-2.fc37.x86_64
+libbpf-devel-0.8.0-2.fc37.x86_64
+⬢[acme@toolbox perf-tools-next]$
 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index ab48ffbb644805df..be336f1b2b689602 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -93,6 +93,11 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const ch=
-ar *name, const char *fmt,
->         return EOF;
->  }
->
-> +bool evsel__is_aux_event(const struct evsel *evsel __maybe_unused)
-> +{
-> +       return false;
-> +}
-> +
->  /*
->   * Add this one here not to drag util/metricgroup.c
->   */
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
-> >  tools/perf/util/evsel.h |  1 +
-> >  2 files changed, 25 insertions(+)
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 2dc2c24252bb..51d9650267d0 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -821,6 +821,30 @@ const char *evsel__name(struct evsel *evsel)
-> >       return "unknown";
-> >  }
-> >
-> > +const char *evsel__group_pmu_name(const struct evsel *evsel)
-> > +{
-> > +     const struct evsel *leader;
-> > +
-> > +     /* If the pmu_name is set use it. pmu_name isn't set for CPU and =
-software events. */
-> > +     if (evsel->pmu_name)
-> > +             return evsel->pmu_name;
-> > +     /*
-> > +      * Software events may be in a group with other uncore PMU events=
-. Use
-> > +      * the pmu_name of the group leader to avoid breaking the softwar=
-e event
-> > +      * out of the group.
-> > +      *
-> > +      * Aux event leaders, like intel_pt, expect a group with events f=
-rom
-> > +      * other PMUs, so substitute the AUX event's PMU in this case.
-> > +      */
-> > +     leader  =3D evsel__leader(evsel);
-> > +     if ((evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is=
-_aux_event(leader)) &&
-> > +         leader->pmu_name) {
-> > +             return leader->pmu_name;
-> > +     }
-> > +
-> > +     return "cpu";
-> > +}
-> > +
-> >  const char *evsel__metric_id(const struct evsel *evsel)
-> >  {
-> >       if (evsel->metric_id)
-> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > index 676c499323e9..d26745ca6147 100644
-> > --- a/tools/perf/util/evsel.h
-> > +++ b/tools/perf/util/evsel.h
-> > @@ -280,6 +280,7 @@ int arch_evsel__hw_name(struct evsel *evsel, char *=
-bf, size_t size);
-> >
-> >  int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char=
- *bf, size_t size);
-> >  const char *evsel__name(struct evsel *evsel);
-> > +const char *evsel__group_pmu_name(const struct evsel *evsel);
-> >  const char *evsel__metric_id(const struct evsel *evsel);
-> >
-> >  static inline bool evsel__is_tool(const struct evsel *evsel)
-> > --
-> > 2.40.0.rc0.216.gc4246ad0f0-goog
-> >
->
-> --
->
-> - Arnaldo
+⬢[acme@toolbox perf-tools-next]$ cat /etc/os-release
+NAME="Fedora Linux"
+VERSION="37 (Container Image)"
+
+
+I'll see if this is just a matter of tweaking the error message to
+something like "libbpf-devel not found or older than 1.0.0, please install/update"
+
+- Arnaldo
