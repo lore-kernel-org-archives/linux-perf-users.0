@@ -2,165 +2,219 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69390C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 03:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C142FC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 08:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbjCMDaV (ORCPT
+        id S229783AbjCMIGS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Mar 2023 23:30:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43154 "EHLO
+        Mon, 13 Mar 2023 04:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229838AbjCMDaR (ORCPT
+        with ESMTP id S229784AbjCMIFq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Mar 2023 23:30:17 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2063.outbound.protection.outlook.com [40.107.100.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48289311FD;
-        Sun, 12 Mar 2023 20:30:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aHjnl9VvQjYAqxlF83MdgWowMN7atFB8G0NXe7pYQUXwSePZgSVcOw213vOB3dCvOWtb1mAeFIuhwNuOjG2nMKY+gShex60MGfQ0NOCVKFuK7oJdK2uyPdp9768cvkPyBSJb3ted9qmLYpkW0OqUf7VyfrM2zgcUuVCfBkPi+dHAa+f2aSFZAS6GNHSS6fnO8+kzIVooaFotACuFTycse48hIbl/RlQIgx1V+V6b+e9V7ie8i82kJTxDnROSkN+u4yETAEwm44oFP2k7wcQmJwjJ2AH2UV5stemxfgp8yECetzIW8S/mlihL/h3JbQMund9UAKr0agbgphPvDmjhXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZQg3mXx0K0elpgjyZjok2suoMatqS61fv619rNMzg9M=;
- b=cAuSM9AdIdMyh62CJ8LZLlDd/o6JoIMhVyzNGCZDFv35QsEMuNbxL0L6sZK18od+oAkkrSw/V9V1XMgMUEFbH5XH392pjQ08Rlq+BU3Fx6qualymXczscPe6DAq7V39PhYmp1e+o3O3+tECMcAR92db5epcouWxSZefMNGAJskPcR8MDqv8m1iEws1pYHUnuDvubiwGtGTULD9dEljIKLMrMYnjvZkB9mnAxca8exNjPU7Fp3n151g820wa+xDBk1twl7VQTNEZiBDqKVoRlAX9hC4JOP8CVdznSSX8wX9M8Z0mUS0s4+aLkY0tehatE6bgYzoypyHUSZvQCY8Yn3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZQg3mXx0K0elpgjyZjok2suoMatqS61fv619rNMzg9M=;
- b=CWR0jG2FF6a1XMWznVZi7BlbZd9gHIqI+JhVARSr9jGse53CBNu2NiO+md/iGB50/lWio/86E9AFfoU2x+el4jAfirADpfD8I4jcuKsAFW4+GKDK/+Ke7JJQVQYp/hE5RfsGjwEBoU7Abz9/gJDyy1rWvJqV4Rlcecqd73H2I2I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by DM4PR12MB5391.namprd12.prod.outlook.com (2603:10b6:5:39a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Mon, 13 Mar
- 2023 03:30:06 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d8e6:76b5:2c23:1247]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d8e6:76b5:2c23:1247%4]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
- 03:30:06 +0000
-Message-ID: <e3f3864c-a6d6-6d6e-31d1-d3dff4a1beca@amd.com>
-Date:   Mon, 13 Mar 2023 08:59:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RFC PATCH kernel 1/2] perf/x86/amd: Add
- amd_prevent_hostibs_window() to set per-cpu ibs_flags
-To:     Manali Shukla <manali.shukla@amd.com>, peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, seanjc@google.com,
-        pbonzini@redhat.com, jpoimboe@kernel.org,
-        pawan.kumar.gupta@linux.intel.com, babu.moger@amd.com,
-        sandipan.das@amd.com, jmattson@google.com, thomas.lendacky@amd.com,
-        nikunj@amd.com, eranian@google.com, irogers@google.com,
-        kvm@vger.kernel.org, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230206060545.628502-1-manali.shukla@amd.com>
- <20230206060545.628502-2-manali.shukla@amd.com>
-Content-Language: en-US
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20230206060545.628502-2-manali.shukla@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::11) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Mon, 13 Mar 2023 04:05:46 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FFC59410;
+        Mon, 13 Mar 2023 01:02:49 -0700 (PDT)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32D7pWne007420;
+        Mon, 13 Mar 2023 08:02:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=W3sSDkvUeJHf9tD3g5PeDz9HU2CPI9L7sOUY3ZAn8SQ=;
+ b=hK75zh4A9hr7U0DSLZS/uzhVk4U1Gipa7TO3KwbMpDUJl4tlOt2wLrZ3/Lx7mOMtwH4T
+ 5HfFf8O//h1cmvQ5BB92bw72E78xeeM50DxrzN+16x7VRjjV7s4jxgLdLoEvo9GKLOUf
+ rUoLpJGCoNfVm7a+gC78v8Gxhl0qgLAsh23AB0+q6u2wLU0wEgX7E0J0yIRtfm8FozNx
+ 3uBj5CIf51GjB1Bh2NO4Cu5pASGCEG+sSI5smWGouNwzL+AwBir4c0TOLBFeY44bMnhF
+ pBngnjhUXPd5VEQRJEMnwboVo/hJLx0wiZt3D9z+TiLomwAzC/uSUYo5ayjrjAI3VB6H DA== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p93fs65c0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Mar 2023 08:02:13 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32D2kieq028609;
+        Mon, 13 Mar 2023 08:02:10 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3p8h96k058-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Mar 2023 08:02:10 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32D827d956361380
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Mar 2023 08:02:07 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 329DD204B4;
+        Mon, 13 Mar 2023 08:02:07 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7D5520536;
+        Mon, 13 Mar 2023 08:02:06 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Mar 2023 08:02:06 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, sumanthk@linux.ibm.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/6] tools/perf/json: Add common metrics for s390
+Date:   Mon, 13 Mar 2023 09:01:56 +0100
+Message-Id: <20230313080201.2440201-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: l3efZP7XxXzcOHKReJtlnggfpeZEis1L
+X-Proofpoint-ORIG-GUID: l3efZP7XxXzcOHKReJtlnggfpeZEis1L
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM4PR12MB5391:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5459b16e-fa5a-43b7-c354-08db23733d52
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: g9GpQunLP0XM2I8MzcCiWK6bZaXReSXNnGZXGyiljbT0quAm22MDf9/r+DeCkVqHlAT1Ck7JCClODp2/XlaZiaKTBPndN6YTn48wWWALYlHCR7eyqgldqyAXwrJML61Td89uYR0DNJLNsxtKGAZxU2Zd9hP2KgHwUDd6tyPi2cZLbK4sVVQUA9M3BEenJbw5hsvt+xae63Hla+QPGGDm9oPrPxtkRVOSt1w+VIfaZUgIDCOsUGj0hYoMA5uEDdS8FQjh2VWlzbRtWdH03cQvN4kEXSe9hHSDRowlDYqHdfx5jHwXSGHxvljYYfFJgq6nJnaG12udId68fTVYAbudvLbrAeE4cirt810AgOmzKgZCfXcXtBSVTvfUDkJLo+v1AxRhR6YPyjqLQA2cwa+ndxt3P6lypO5t2ErJRpuTdM35KmadOoo1kpoi4lI42dK07cFeksp6TvFapqvBuqv1Wu2V1leyb/wn77bV99tFxxprfnooIHHDHdxImdkB+c5tdaWtqu5YWac7SPGnuOuMbcKuJbxJgZCYz2T1PUvlJ+OhesynE1dIn9PiDkqK58hBALFDTeVCy8H1Si6uM5WEt+96zTu/pdHBNKpu4KlZUwxka1ikLxe5mT6qIUNsg9cZSV8f1T6SvRbGjEnt+H14OTSU1zKRuW2iQNGnutJZ+fT4m1w7H/0LSRi4pDa7Gi2iaMjdiw+dlXQ2x++7vss83QKiCDpvqP28+0LQZNhMlWI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(376002)(136003)(39860400002)(396003)(346002)(451199018)(38100700002)(2906002)(31686004)(2616005)(478600001)(316002)(6506007)(6666004)(6512007)(86362001)(31696002)(36756003)(41300700001)(66556008)(66946007)(4326008)(66476007)(8676002)(8936002)(186003)(26005)(53546011)(6486002)(7416002)(5660300002)(83380400001)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dTd3aG83YTlFWVpDZDdnUm5tOFhhOVNzY0w4eDVvZXVoVTVscC9NSjJNR1Uz?=
- =?utf-8?B?VXJNdG9ZS0Y4U0JjV3NrSlplT3dNRitmV0xGcUU1YitnbGNXTkVQOVB6ZWdu?=
- =?utf-8?B?QVhRb2Jmd1AzVjdTYXlCY0FlK1g2TXJhTEFCVkNXaTJWVU96Y3BlWUlsVkli?=
- =?utf-8?B?UjJ6UnB4MVlKeTYrYlNhOThTSG5vU2hHcnRIRld6OFJzSENaR1hoMGZyVXor?=
- =?utf-8?B?NE5keWpqT2VCR0VDQlVmcmNVTjVLdTh3RHg1ZXFucHlCM3U4RkRQQlg2cVQ0?=
- =?utf-8?B?WHg3ZVBwV0VFTGFmbWU2OXdzbmF6NzJxTldRSnJQUzQ2V1VpUm9zSW53eWMz?=
- =?utf-8?B?aWUyd0d5ekR3Nk92ZXVJM1k2MW1FUGw1M20xU3ptMFpHV0FraVNORE5jNGlQ?=
- =?utf-8?B?R1VNbmlOSmp4elJFaTJDS2tQTFFhaHNKMDNGNU1tTDczUE9XM0wxQzRXeUwz?=
- =?utf-8?B?MWQweFM4QlljbFZXRHQxVW9QelNhUUwrcXI5NFVpbWVhbDNUSlZlTXNVd0Mr?=
- =?utf-8?B?emVneGttcDFEOWYwOG1OVXA1RTNXRWtHajhhNFlSbmpaZU1ZWDlHRkU4Zzkr?=
- =?utf-8?B?b3YwbXQ2c0tIN1N6N3g4YzJOajNZVFlrV3MyTyt6L3EzY3NZbXJqWVF5TVNs?=
- =?utf-8?B?blNwYWVZcndndW1yWjJZWW1BWE1sekkvUmF0NXdKb2lBeHhLNFFDLzF3ZXpY?=
- =?utf-8?B?NENyWWlQNEk0OXdoWndYeEpJWUZiby9McG5md1l0L2xBVitpeHFmQ043YkYv?=
- =?utf-8?B?ckpaQ051WlF1akdTV09JUWIzVG95U2pNWDFSVGl6VDludWtiU1RjUlQxQ2pU?=
- =?utf-8?B?M1hFSlJwWGpWejdBUmh0N0l2NWFvUklDQmE1WWhMQlZiNDdJT2l6MDQ2Y3g1?=
- =?utf-8?B?RVpnSXN1TmhFWlJxQlVXOVR5SlV4VDhnUmkwN0xpeFJEbFJ1a0RhbEM0aFdm?=
- =?utf-8?B?Vi9CTlJMQVRsaE4vYnd6SWliTUtwbjZnTHZDdUs5Tm96d2pjWW5xKys5eGZZ?=
- =?utf-8?B?bmVHbXVFZEw2bGxsV2JibkpoZFNiNC9KUUgyRXJrbitmQ2lCRE5LT0M4ZEN0?=
- =?utf-8?B?NG4wWlVQeWNLNDBQOUZSZGpyOUlhQnlKenJuSGh3MFRmT0w1YlhIWHJFbTF4?=
- =?utf-8?B?VWRmSGVFdUNxNk80YU5ZSDhGWE5TZFB5UkV4U0Jjd05EQ3ZEN2FyeFhqeHhm?=
- =?utf-8?B?TlloQXdMYmE2TGRNaWhQbFFyNEYxNE53cDYvcjNCdkFzQUdIM3d0OUJKbjB5?=
- =?utf-8?B?V3pqUUtRd0JQV3VBVHRWSDdrYmVjeEFPeTRDM1ZUZktaYmcxYnpuNmQzR205?=
- =?utf-8?B?T1M1U2pqaU5BRGU4SGQreGM2NS9uUHZtSXB4ZnUvNkpudmYrekM0QStSRmRr?=
- =?utf-8?B?UzVBOHRuTHpZNSs1ZGEvYkZnSk44NEpXRFcwSHQvL1JMNUNDRU56RGtsVy9j?=
- =?utf-8?B?dmVYdmFzcXpjOUpqOW9MRm8zUmpEbitiLzI2VWJQd2FiRVJBYkN6ZlM0L0Jj?=
- =?utf-8?B?OS9wQWFBSjcvLzd6a2RsTHVnMWdkWWQ5VnlkNzIyS2pnd1AvSXVxcnBvVXU0?=
- =?utf-8?B?WE5tWElXVHhpcE9EV2xWTUJMajloWjhJbTVHSEFpbzYxNkJ5c05tQW9ISHJi?=
- =?utf-8?B?MjZRbDRRRGc0azM5VXQyVnQ1MGRvd2pRQ1NnQVZienNKMjA3ZFFIZi9CV3NN?=
- =?utf-8?B?NTNJZzNlejBoYmZmTTNjSU41VnRycW1HT0hvWlBGVyswNDNGSW9UbmhtN1lt?=
- =?utf-8?B?RGhJbEwvQmF0U0F5eitJcFh0ZWdkTlY3ejEyWmM1cGtpUE9TVXBpeXJJcHRj?=
- =?utf-8?B?RzgyMGIvK09Kamo3dytCOVdlaldxeklyVk9lVGhyTi9nbjkzZWlKTENIV3NZ?=
- =?utf-8?B?dmpMSjNmbTdmOEhUTmtMdGNpVjg5alBsOGFqLzZ6MkR6VUtlaHVjeFRadTh5?=
- =?utf-8?B?RUtBNGpTQmprSjFnTnFKaW0rWnpRVjdkSWdONFFDU0U0VFdSQTNDVUY0bWE5?=
- =?utf-8?B?TGR3eGdOQ3RHUnJJWVZBRWVXT1F6bUs3REwrY2p3ZmxBTzN2enRNSDlVTmhr?=
- =?utf-8?B?c0p4RjczSU9IbUxGQUU4VW5YSlhRamlrSzRlcFFkTjBlT25uaVVmaGlQditZ?=
- =?utf-8?Q?ahodjiO5eJ56NLk3UzSrtQrLU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5459b16e-fa5a-43b7-c354-08db23733d52
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2023 03:30:06.4788
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TQKI087qFPriCHE1t7iEp0yMZnfIiP7njm2qJt/uoQfJbnADOl7nffkm/x2SL92sog/KZGSxEpZfREVaIDG6SQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5391
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-12_10,2023-03-10_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 mlxscore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303130065
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06-Feb-23 11:35 AM, Manali Shukla wrote:
-> Add a function to set per-cpu ibs_flags based on an active or inactive
-> PreventHostIBS window.
-> 
-> MSR_AMD64_IBSFETCHCTL[IbsFetchEn] and MSR_AMD64_IBSOPCTL[IbsOpEn] bits
-> need to be cleared for PreventHostIBS feature to be enabled before VMRUN
-> is executed.
-> 
-> ENABLE bit and VALID bit for MSR_AMD64_IBSFETCHCTL are contained in the
-> same MSR and same is the case with MSR_AMD64_IBSOPCTL.
-> 
-> Consider the following scenario:
-> - The IBS MSR which has ENABLE bit set and VALID bit clear is read.
-> - During the process of clearing the ENABLE bit and writing the IBS MSR
->   to disable IBS, an IBS event can occur that sets the VALID bit.
-> - The write operation on IBS MSR can clear the newly set VALID bit.
-> - Since this situation is occurring in the CLGI/STGI window
->   (PreventHostIBS window), the actual NMI is not taken.
-> - Once VMRUN is issued, it will exit with VMEXIT_NMI. As soon as STGI is
->   executed, the pending NMI will trigger.
-> - The IBS NMI handler checks for the VALID bit to determine if the NMI
->   is generated because of IBS.
-> - Since VALID bit is now clear, it doesn't recognize that an IBS event
->   is occurred. Due to this reason, the dazed and confused unknown NMI
->   messages are generated.
-> 
-> amd_prevent_hostibs_window() is added to avoid these messages when
-> PreventHostIBS window is active and PreventHostIBS feature is enabled
-> for the guest.
-> 
-> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
+Add 3 metrics for s390 machines:
+- Cycles per instruction: Amount of CPU cycles used per instructions,
+  named cpi.
+- Problem state ratio: Ratio of instructions executed in problem state
+  compared to total number of instructions, named prbstate.
+- Level one instruction and data cache misses per 100 instructions,
+  named l1mp.
 
-LGTM.
+For details about the formulas see this documentation:
+https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
 
-Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Outpuf after:
+ # ./perf stat -M cpi -- dd if=/dev/zero of=/dev/null bs=1M count=10K
+ 10240+0 records in
+ 10240+0 records out
+ 10737418240 bytes (11 GB, 10 GiB) copied, 1.30151 s, 8.2 GB/s
+
+Performance counter stats for 'dd if=/dev/zero of=/dev/null .....':
+
+  6,779,778,802      CPU_CYCLES              #     1.96 cpi
+  3,461,975,090      INSTRUCTIONS
+
+  1.306873021 seconds time elapsed
+
+  0.001034000 seconds user
+  1.305677000 seconds sys
+ #
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ .../pmu-events/arch/s390/cf_z13/transaction.json  | 15 +++++++++++++++
+ .../pmu-events/arch/s390/cf_z14/transaction.json  | 15 +++++++++++++++
+ .../pmu-events/arch/s390/cf_z15/transaction.json  | 15 +++++++++++++++
+ .../pmu-events/arch/s390/cf_z16/transaction.json  | 15 +++++++++++++++
+ 4 files changed, 60 insertions(+)
+
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
+index 1a0034f79f73..86bf83b4504e 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
+@@ -3,5 +3,20 @@
+     "BriefDescription": "Transaction count",
+     "MetricName": "transaction",
+     "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  },
++  {
++    "BriefDescription": "Cycles per Instruction",
++    "MetricName": "cpi",
++    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
++  },
++  {
++    "BriefDescription": "Problem State Instruction Ratio",
++    "MetricName": "prbstate",
++    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
++  },
++  {
++    "BriefDescription": "Level One Miss per 100 Instructions",
++    "MetricName": "l1mp",
++    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
+index 1a0034f79f73..86bf83b4504e 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
+@@ -3,5 +3,20 @@
+     "BriefDescription": "Transaction count",
+     "MetricName": "transaction",
+     "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  },
++  {
++    "BriefDescription": "Cycles per Instruction",
++    "MetricName": "cpi",
++    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
++  },
++  {
++    "BriefDescription": "Problem State Instruction Ratio",
++    "MetricName": "prbstate",
++    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
++  },
++  {
++    "BriefDescription": "Level One Miss per 100 Instructions",
++    "MetricName": "l1mp",
++    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
+index 1a0034f79f73..86bf83b4504e 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
+@@ -3,5 +3,20 @@
+     "BriefDescription": "Transaction count",
+     "MetricName": "transaction",
+     "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  },
++  {
++    "BriefDescription": "Cycles per Instruction",
++    "MetricName": "cpi",
++    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
++  },
++  {
++    "BriefDescription": "Problem State Instruction Ratio",
++    "MetricName": "prbstate",
++    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
++  },
++  {
++    "BriefDescription": "Level One Miss per 100 Instructions",
++    "MetricName": "l1mp",
++    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100"
+   }
+ ]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+index 1a0034f79f73..86bf83b4504e 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+@@ -3,5 +3,20 @@
+     "BriefDescription": "Transaction count",
+     "MetricName": "transaction",
+     "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  },
++  {
++    "BriefDescription": "Cycles per Instruction",
++    "MetricName": "cpi",
++    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
++  },
++  {
++    "BriefDescription": "Problem State Instruction Ratio",
++    "MetricName": "prbstate",
++    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
++  },
++  {
++    "BriefDescription": "Level One Miss per 100 Instructions",
++    "MetricName": "l1mp",
++    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100"
+   }
+ ]
+-- 
+2.39.1
+
