@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A7FC6FD19
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 15:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27180C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 15:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbjCMPXD (ORCPT
+        id S230259AbjCMPYW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 11:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56416 "EHLO
+        Mon, 13 Mar 2023 11:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230221AbjCMPXB (ORCPT
+        with ESMTP id S230454AbjCMPYV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 11:23:01 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05144EC2
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:22:56 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-53916ab0c6bso248509887b3.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:22:56 -0700 (PDT)
+        Mon, 13 Mar 2023 11:24:21 -0400
+Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22976BC07
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:24:18 -0700 (PDT)
+Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-5416949b35aso122672337b3.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:24:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678720976;
+        d=google.com; s=20210112; t=1678721058;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9j2QtS0izWtlGzja2plumnFtdWtXW9QpAWI+2e46E1w=;
-        b=Ppq3CJmGuTh9roU+hKK7uMdfAhMLQkc+A8dUwlD238z9zAcDijvrtKMBs/L6fHolOV
-         UBIJbEfQFph5WndN/eBKarOyIPLQOB9RkTQ8o7vUjkPi5zJo37PosGoF7IEZdeKEcvAP
-         YYDSEnMN8TPAdFO/2Ky/Me4KuYEzkPVaADQ/LIzZpnhw9yotevGJxydFRAMUwXh+oz24
-         DQnuYM/ZmaDuxESKPEsnjmA7zn1xQ14euy88wGUiwYv69Q4PTJ4um7RKGd5w0BX7VBKk
-         ARKzVzbEtLccrLfhozlmKMca9l2B51aVYGqPPnOSGbrxmy5TiT+48+B+6QFt1JPfTvx7
-         hiXg==
+        bh=miD1UL5SmaXU4angX1YOOgTXJKTsZ0bIXYcLaAcdSBs=;
+        b=sBBL2nrrHl8OUQTwNxo1hL50DYzng/MctVbkj/JgtWNDA/2ehB4a/4Laz6BGRWq7hI
+         ot0b2cO9LzgvRThnNmF5DwKvea1/gdKxXMjwQB0OejwBKxjnSbqOUXaYmoNOM3DZ+JE8
+         3SsQWGK54GouUPA3IRoCcoWiBKCVwgkNiTo18/9FTsMgN6guMqR6bAeF3sneCx6axYBr
+         L7vS7fC8/1QIRvLjCcgrOU9Gl6Wfls40Kdr2rJYPk92IdN9bE1JB62DKG7XfQC6O4Vw+
+         hO/H9LW1WBhMVzo3QvxeeqsPPegyBeBuZZK7C6Z4WwfCd0EdQjGU/fw5O62LqHg26+j9
+         fONQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678720976;
+        d=1e100.net; s=20210112; t=1678721058;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9j2QtS0izWtlGzja2plumnFtdWtXW9QpAWI+2e46E1w=;
-        b=DlzCvHM7Y6lQvADr7fnDY8eI2br74jrY5n4JTsSNIzYSUClc9lyn95wPOEx294DZt3
-         f33QkM9BffKvtCwj46Vy0we3PvTIgYqs8woY04xKMZoEkWFsf97GkSktr42qa6y44606
-         bUWzEWgqdPMDMKT56yuNH7UigsnNsDjEymi3TKFMBa94XFGHHsQyVIvv3SHtdbcEDGaO
-         yUSirPtY/uADPAJ19MDW4AKXJ1ys1d8RW6htmujBwZroY+LyvrxHkErYK7xOjGZsM4av
-         h5AlOZyBYKvy5Y/BKEEBzpwSvsIYceUsGFSJbkjFq8TXhkmZNyPP94jhX8nTC31X4kBU
-         5rWA==
-X-Gm-Message-State: AO0yUKWBDdfq5MtyAz8fyW10CXdZwJWCldfq8Hy8DygztuZVf+zYxFwA
-        MIxG4ryR59Smd9ZjU6YZpomdc7hFI9UXjBLUKAQD8Q==
-X-Google-Smtp-Source: AK7set8gePuMGWiDrsPV9lJEidAEgaaYfnXDj6nGhpPG9bKQlQblHGaGIsm9Wv3vk9NSgM9ruJYYzNFKKqY5VtUQB5M=
-X-Received: by 2002:a81:ae22:0:b0:541:6fb9:c9c2 with SMTP id
- m34-20020a81ae22000000b005416fb9c9c2mr4757137ywh.2.1678720975603; Mon, 13 Mar
- 2023 08:22:55 -0700 (PDT)
+        bh=miD1UL5SmaXU4angX1YOOgTXJKTsZ0bIXYcLaAcdSBs=;
+        b=xltH95NiMZpPlXAOsJCs+R1seU/zgFaV6/1EhdkB9jXYdKkngk8jLS1XnWqrnJzneX
+         kOyiPckSS7hTfYOKajiRkpH1C98KUWf5IWmCjQA1hFuhwvJ79Xk1W2W6bUEzJy1if9ji
+         upO4CUeEZ898q456a0kZmNZx2PVg0LOg2C8+Hr9IoCoPVKNMtf4XNsmdtPREs9to1lvl
+         KorniQ9x+vGZ5IfFRjNWBGz/ZusMSvsis3AbL1wlfuBPAmAccxRW3pzcBAYKErabdNOT
+         Tj1t9UBgKb4MTISvkW7wzOy+rkx6i8Yct1Sdbiw6BagH0R3xzgxZ8r0dQR6p93GWej1M
+         CUEw==
+X-Gm-Message-State: AO0yUKX1aCgdw8gt414YEvRGuvbs9xt1BJOoGfJzaIKE0Jn82YpbseXv
+        CN/cxvhw9IBJIPol8gQ7koko1R0xOOOFqM8ItbUGZw==
+X-Google-Smtp-Source: AK7set9rOIwWUcKus6/AOVo/cWIf+3wr/bs1l75PKL7IV1SvIuGBUgFixB+MaM+Xt3efTaF+E8qXMRI+OtH3pPVeROM=
+X-Received: by 2002:a81:af5c:0:b0:540:e6c6:31e7 with SMTP id
+ x28-20020a81af5c000000b00540e6c631e7mr5878250ywj.2.1678721057682; Mon, 13 Mar
+ 2023 08:24:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230313080201.2440201-1-tmricht@linux.ibm.com> <20230313080201.2440201-2-tmricht@linux.ibm.com>
-In-Reply-To: <20230313080201.2440201-2-tmricht@linux.ibm.com>
+References: <20230313080201.2440201-1-tmricht@linux.ibm.com> <20230313080201.2440201-3-tmricht@linux.ibm.com>
+In-Reply-To: <20230313080201.2440201-3-tmricht@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 13 Mar 2023 08:22:44 -0700
-Message-ID: <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
+Date:   Mon, 13 Mar 2023 08:24:06 -0700
+Message-ID: <CAP-5=fW6HjLubp381QuAw-Q8N7-D6StTP5maqksRGWvwwv9UgQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] tools/perf/json: Add cache metrics for s390 z15
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org, sumanthk@linux.ibm.com, svens@linux.ibm.com,
@@ -65,10 +65,10 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 13, 2023 at 1:30=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+On Mon, Mar 13, 2023 at 1:31=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
 om> wrote:
 >
-> Add metrics for s390 z16
+> Add metrics for s390 z15
 > - Percentage sourced from Level 2 cache
 > - Percentage sourced from Level 3 on same chip cache
 > - Percentage sourced from Level 4 Local cache on same book
@@ -80,45 +80,37 @@ om> wrote:
 rmulas%20including%20z16%20-%20May%202022_1.pdf
 >
 > Outpuf after:
->  # ./perf stat -M l4rp -- dd if=3D/dev/zero of=3D/dev/null bs=3D10M count=
-=3D10K
->  .... dd output deleted
+>  # ./perf stat -M l4rp -- find /
+>  .... find output deleted
 >
->  Performance counter stats for 'dd if=3D/dev/zero of=3D/dev/null bs=3D10M=
- count=3D10K':
+>  Performance counter stats for 'find /':
 >
->                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
->            431,866      L1I_DIR_WRITES
->              2,395      IDCW_OFF_DRAWER_IV
->                  0      ICW_OFF_DRAWER
->                  0      IDCW_OFF_DRAWER_DRAWER_HIT
->              1,437      DCW_OFF_DRAWER
->        425,960,793      L1D_DIR_WRITES
+>               5      L1I_OFFDRAWER_L4_SOURCED_WRITES  #     0.01 l4rp
+>             187      L1D_OFFDRAWER_L4_SOURCED_WRITES
+>               0      L1I_OFFDRAWER_L3_SOURCED_WRITES
+>     231,333,165      L1I_DIR_WRITES
+>           3,303      L1D_OFFDRAWER_L3_SOURCED_WRITES
+>          47,461      L1D_OFFDRAWER_L3_SOURCED_WRITES_IV
+>               0      L1I_OFFDRAWER_L3_SOURCED_WRITES_IV
+>     126,706,244      L1D_DIR_WRITES
 >
->       12.165030699 seconds time elapsed
+>    27.870355461 seconds time elapsed
 >
->        0.001037000 seconds user
->       12.162140000 seconds sys
->
+>     0.521562000 seconds user
+>    12.494503000 seconds sys
 >  #
 >
 > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 > Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
 > ---
->  .../arch/s390/cf_z16/transaction.json         | 25 +++++++++++++++++++
+>  .../arch/s390/cf_z15/transaction.json         | 25 +++++++++++++++++++
 >  1 file changed, 25 insertions(+)
 >
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/to=
-ols/perf/pmu-events/arch/s390/cf_z16/transaction.json
-> index 86bf83b4504e..dde0735a7d22 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z15/transaction.json
+> index 86bf83b4504e..cca237bdb7ba 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
 > @@ -18,5 +18,30 @@
 >      "BriefDescription": "Level One Miss per 100 Instructions",
 >      "MetricName": "l1mp",
@@ -128,42 +120,53 @@ ols/perf/pmu-events/arch/s390/cf_z16/transaction.json
 > +  {
 > +    "BriefDescription": "Percentage sourced from Level 2 cache",
 > +    "MetricName": "l2p",
-> +    "MetricExpr": "((DCW_REQ + DCW_REQ_IV + ICW_REQ + ICW_REQ_IV) / (L1I=
-_DIR_WRITES + L1D_DIR_WRITES)) * 100"
+> +    "MetricExpr": "((L1D_L2D_SOURCED_WRITES + L1I_L2I_SOURCED_WRITES) / =
+(L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 > +  },
 > +  {
 > +    "BriefDescription": "Percentage sourced from Level 3 on same chip ca=
 che",
 > +    "MetricName": "l3p",
-> +    "MetricExpr": "((DCW_REQ_CHIP_HIT + DCW_ON_CHIP + DCW_ON_CHIP_IV + D=
-CW_ON_CHIP_CHIP_HIT + ICW_REQ_CHIP_HIT + ICW_ON_CHIP + ICW_ON_CHIP_IV + ICW=
-_ON_CHIP_CHIP_HIT) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
+> +    "MetricExpr": "((L1D_ONCHIP_L3_SOURCED_WRITES + L1D_ONCHIP_L3_SOURCE=
+D_WRITES_IV + L1I_ONCHIP_L3_SOURCED_WRITES + L1I_ONCHIP_L3_SOURCED_WRITES_I=
+V) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 > +  },
 > +  {
 > +    "BriefDescription": "Percentage sourced from Level 4 Local cache on =
 same book",
 > +    "MetricName": "l4lp",
-> +    "MetricExpr": "((DCW_REQ_DRAWER_HIT + DCW_ON_CHIP_DRAWER_HIT + DCW_O=
-N_MODULE + DCW_ON_DRAWER + IDCW_ON_MODULE_IV + IDCW_ON_MODULE_CHIP_HIT + ID=
-CW_ON_MODULE_DRAWER_HIT + IDCW_ON_DRAWER_IV + IDCW_ON_DRAWER_CHIP_HIT + IDC=
-W_ON_DRAWER_DRAWER_HIT + ICW_REQ_DRAWER_HIT + ICW_ON_CHIP_DRAWER_HIT + ICW_=
-ON_MODULE + ICW_ON_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
+> +    "MetricExpr": "((L1D_ONCLUSTER_L3_SOURCED_WRITES + L1D_ONCLUSTER_L3_=
+SOURCED_WRITES_IV + L1D_ONDRAWER_L4_SOURCED_WRITES + L1I_ONCLUSTER_L3_SOURC=
+ED_WRITES + L1I_ONCLUSTER_L3_SOURCED_WRITES_IV + L1I_ONDRAWER_L4_SOURCED_WR=
+ITES + L1D_OFFCLUSTER_L3_SOURCED_WRITES + L1D_OFFCLUSTER_L3_SOURCED_WRITES_=
+IV + L1D_ONCHIP_L3_SOURCED_WRITES_RO + L1I_OFFCLUSTER_L3_SOURCED_WRITES + L=
+1I_OFFCLUSTER_L3_SOURCED_WRITES_IV) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * =
+100"
+
+It is more typical for percentages to change the ScaleUnit to "100%"
+and not to do the "* 100". Otherwise these look good.
+
+Thanks,
+Ian
+
 > +  },
 > +  {
 > +    "BriefDescription": "Percentage sourced from Level 4 Remote cache on=
  different book",
 > +    "MetricName": "l4rp",
-> +    "MetricExpr": "((DCW_OFF_DRAWER + IDCW_OFF_DRAWER_IV + IDCW_OFF_DRAW=
-ER_CHIP_HIT + IDCW_OFF_DRAWER_DRAWER_HIT + ICW_OFF_DRAWER) / (L1I_DIR_WRITE=
-S + L1D_DIR_WRITES)) * 100"
+> +    "MetricExpr": "((L1D_OFFDRAWER_L3_SOURCED_WRITES + L1D_OFFDRAWER_L3_=
+SOURCED_WRITES_IV + L1D_OFFDRAWER_L4_SOURCED_WRITES + L1I_OFFDRAWER_L3_SOUR=
+CED_WRITES + L1I_OFFDRAWER_L3_SOURCED_WRITES_IV + L1I_OFFDRAWER_L4_SOURCED_=
+WRITES) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 > +  },
 > +  {
 > +    "BriefDescription": "Percentage sourced from memory",
 > +    "MetricName": "memp",
-> +    "MetricExpr": "((DCW_ON_CHIP_MEMORY + DCW_ON_MODULE_MEMORY + DCW_ON_=
-DRAWER_MEMORY + DCW_OFF_DRAWER_MEMORY + ICW_ON_CHIP_MEMORY + ICW_ON_MODULE_=
-MEMORY + ICW_ON_DRAWER_MEMORY + ICW_OFF_DRAWER_MEMORY) / (L1I_DIR_WRITES + =
-L1D_DIR_WRITES)) * 100"
+> +    "MetricExpr": "((L1D_ONCHIP_MEMORY_SOURCED_WRITES + L1D_ONCLUSTER_ME=
+MORY_SOURCED_WRITES + L1D_OFFCLUSTER_MEMORY_SOURCED_WRITES + L1D_OFFDRAWER_=
+MEMORY_SOURCED_WRITES + L1I_ONCHIP_MEMORY_SOURCED_WRITES + L1I_ONCLUSTER_ME=
+MORY_SOURCED_WRITES + L1I_OFFCLUSTER_MEMORY_SOURCED_WRITES + L1I_OFFDRAWER_=
+MEMORY_SOURCED_WRITES) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 >    }
 >  ]
 > --
