@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E19CC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 21:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED046C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 21:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjCMVHZ (ORCPT
+        id S230038AbjCMVLX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 17:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33576 "EHLO
+        Mon, 13 Mar 2023 17:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjCMVHY (ORCPT
+        with ESMTP id S229707AbjCMVLU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 17:07:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4364824487;
-        Mon, 13 Mar 2023 14:06:31 -0700 (PDT)
+        Mon, 13 Mar 2023 17:11:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC4985B21;
+        Mon, 13 Mar 2023 14:10:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 229F2614F1;
-        Mon, 13 Mar 2023 21:05:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288F8C4339B;
-        Mon, 13 Mar 2023 21:05:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C81E461509;
+        Mon, 13 Mar 2023 21:10:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CDFC433EF;
+        Mon, 13 Mar 2023 21:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678741509;
-        bh=jVEbYSaDY85e2O7DDoCo5LPr2RoisuVHRdSf0mtTx7o=;
+        s=k20201202; t=1678741843;
+        bh=dxuRLSd8h1FoIH/fxYjwVcYLJFWUAKEsGBCisIu7SeE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FR5omo3r03m3+pCEBeKe0CYyYZsQgbvbB0IwrRjgmS92QjiiS4/54ZCeXH9wzjhaM
-         oHxcG55KSIuS/HYs1iwNrpAyDYWwsIXYwyIkqrzbaTwZTqgs2uF9f8pl61WAtDeKdr
-         qt4W4o0ZMszOEFLPJuapNscclHTDYcVg6bXsIj8hhE2w8eu+U9a51Iqlqtw6EzkPcZ
-         +ViV4uftN2byR54H7tJUofWEwUUUTkeJImPmG1WMpBY2MFqNafJTQOd3lACffRRt3o
-         0c6DjqsaSrPrMp4REu/Xr7CR1mEV3ndhDC7Luiryqh+bH46RRz7/HadB4/0i2zU5JR
-         fZy574U8wH8bg==
+        b=lB6IeSxnwVjumJTqMUq7yl8tTb66bzrRCuN4mKS9q+u6xdSxxrVeBkpGpV+vIgyT5
+         42F5WKSsBeAfZzPdtTP+0s5YodNWn6fCD9sQx5EW6xfxq+WTsP7qi5khbjy2okB3v7
+         NImg475O2ZJmUhxxe8pz26DcQzz+4nAyYX6L5JWKrL6NKVr3/n/2IT6L9Z+uiqDssY
+         ngi2nxqEvH/+fJs82LH/gsfWxnTP3zOx1PfM5/7+oMkGPLjSKYcRLerWLB2NcYJ6Sy
+         4nEJC1SforaVqvrfHPkptJeeH8ea8A3bbGnq20RiL9ItY5/y4xXelb4TvEtkAzue57
+         kkCs30vgOYkmA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 792E24049F; Mon, 13 Mar 2023 18:05:06 -0300 (-03)
-Date:   Mon, 13 Mar 2023 18:05:06 -0300
+        id A10F74049F; Mon, 13 Mar 2023 18:10:40 -0300 (-03)
+Date:   Mon, 13 Mar 2023 18:10:40 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -44,133 +44,271 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Quentin Monnet <quentin@isovalent.com>,
         Andres Freund <andres@anarazel.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 02/13] perf build: Make BUILD_BPF_SKEL default, rename
- to NO_BPF_SKEL
-Message-ID: <ZA+QAvj0DIpxTGSS@kernel.org>
-References: <20230311065753.3012826-1-irogers@google.com>
- <20230311065753.3012826-3-irogers@google.com>
- <ZA+FOpzJswZx8os+@kernel.org>
- <CAP-5=fUG1CbzevoS=+Jj_pBO4umNj6ekaMeEuSHGC4kAZgVJJg@mail.gmail.com>
- <ZA+IvqVb6Gos+NOe@kernel.org>
- <ZA+Ot0dnX0MNZKmn@kernel.org>
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] perf build: Remove libbpf pre-1.0 feature tests
+Message-ID: <ZA+RUCE4vAgBlQRh@kernel.org>
+References: <20230116010115.490713-1-irogers@google.com>
+ <20230116010115.490713-3-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZA+Ot0dnX0MNZKmn@kernel.org>
+In-Reply-To: <20230116010115.490713-3-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 13, 2023 at 05:59:35PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Mar 13, 2023 at 05:34:06PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Mon, Mar 13, 2023 at 01:27:21PM -0700, Ian Rogers escreveu:
-> > > On Mon, Mar 13, 2023 at 1:19 PM Arnaldo Carvalho de Melo
-> > > > (.text+0x1b): undefined reference to `main'
-> > > > /usr/bin/ld: final link failed: file in wrong format
-> > > > collect2: error: ld returned 1 exit status
-> > > > clang-15: error: linker (via gcc) command failed with exit code 1 (use -v to see invocation)
-> > > > make[4]: *** [Makefile.perf:1081: /tmp/tmp.Rr5xDuXo13/util/bpf_skel/.tmp/bperf_cgroup.bpf.o] Error 1
-> > > > make[3]: *** [Makefile.perf:236: sub-make] Error 2
-> > > > make[2]: *** [Makefile:70: all] Error 2
-> > > > make[1]: *** [tests/make:326: make_libbpf_dynamic_O] Error 1
-> > > > make: *** [Makefile:103: build-test] Error 2
-> > > > make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-> > > >
-> > > > real    5m55.192s
-> > > > user    62m31.596s
-> > > > sys     14m30.828s
-> > > > ⬢[acme@toolbox perf-tools-next]$
-> > > 
-> > > Sorry, I was testing this on top of:
-> > > https://lore.kernel.org/lkml/20230116010115.490713-1-irogers@google.com/
-> > > The issue being that we're trying to use an old libbpf that the has
-> > > meant disabling things but:
-> > >   NO_BPF_SKEL := 1
-> > > hadn't been set as part of this. I can address in v2, but with the
-> > > "assume libbpf 1.0+" patch I hadn't been worrying about this as we'd
-> > > error out for this case  - rather than build error. The erroring out
-> > > can be worked around by just not having libbpf be dynamic (ie static
-> > > or not at all by adding NO_LIBBPF=1).
-> > 
-> > I'll try adding that 3-patch series before this one.
-> 
-> ⬢[acme@toolbox perf-tools-next]$ git log --oneline -16
-> 76c8a07f51703787 (HEAD -> perf-tools-next) perf build: Error if no libelf and NO_LIBELF isn't set
-> 030a6c72b38e334d perf build: Remove redundant NO_NEWT build option
-> 5d1360fc84cd2e3b perf build: If libtraceevent isn't present error the build
-> e25e0db4700aa39a perf build: Switch libpfm4 to opt-out rather than opt-in
-> 39f53202a8961d3d perf symbol: Add abi::__cxa_demangle C++ demangling support
-> d857f258f3d1214a tools build: Add feature test for abi::__cxa_demangle
-> 7aae0d8341c9c373 perf build: Make binutil libraries opt in
-> dc4890e772aba1e9 perf build: Error if jevents won't work and NO_JEVENTS=1 isn't set
-> 334e64172816623d perf util: Remove weak sched_getcpu
-> e44d7e7c60fc4ded perf build: Remove unused HAVE_GLIBC_SUPPORT
-> 14ea53be45758450 perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL
-> eb03903c5c119254 perf build: Support python/perf.so testing
-> f8b579c1996ba4a9 perf bpf: Remove pre libbpf 1.0 conditional logic
-> 2cce43c63d4d0abc perf build: Remove libbpf pre-1.0 feature tests
-> a24ebff6cce14a34 tools build: Pass libbpf feature only if libbpf 1.0+
-> 17535a33a9c1e4fb perf lock contention: Fix compiler builtin detection
-> ⬢[acme@toolbox perf-tools-next]$
-> 
->        make_libbpf_dynamic_O: cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.cO9WpgtAvo DESTDIR=/tmp/tmp.jjguTPlLWt
-> ldd: /tmp/tmp.cO9WpgtAvo/perf: No such file or directory
-> cd . && make LIBBPF_DYNAMIC=1 FEATURES_DUMP=/var/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=/tmp/tmp.cO9WpgtAvo DESTDIR=/tmp/tmp.jjguTPlLWt
->   BUILD:   Doing 'make -j32' parallel build
->   HOSTCC  /tmp/tmp.cO9WpgtAvo/fixdep.o
->   HOSTLD  /tmp/tmp.cO9WpgtAvo/fixdep-in.o
->   LINK    /tmp/tmp.cO9WpgtAvo/fixdep
-> Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs from latest version at 'include/uapi/linux/in.h'
-> diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
-> Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-> diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
-> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
-> diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
-> Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h' differs from latest version at 'include/linux/coresight-pmu.h'
-> diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
-> Makefile.config:563: *** Error: No libbpf devel library found, please install libbpf-devel.  Stop.
-> make[3]: *** [Makefile.perf:236: sub-make] Error 2
-> make[2]: *** [Makefile:70: all] Error 2
-> make[1]: *** [tests/make:326: make_libbpf_dynamic_O] Error 1
-> 
-> 
-> But:
-> 
-> ⬢[acme@toolbox perf-tools-next]$ rpm -qa | grep libbpf
-> libbpf-0.8.0-2.fc37.x86_64
-> libbpf-devel-0.8.0-2.fc37.x86_64
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> ⬢[acme@toolbox perf-tools-next]$ cat /etc/os-release
-> NAME="Fedora Linux"
-> VERSION="37 (Container Image)"
-> 
-> 
-> I'll see if this is just a matter of tweaking the error message to
-> something like "libbpf-devel not found or older than 1.0.0, please install/update"
+Em Sun, Jan 15, 2023 at 05:01:14PM -0800, Ian Rogers escreveu:
+> The feature tests were necessary for libbpf pre-1.0, but as the libbpf
+> implies at least 1.0 we can remove these now.
 
-Yeah, I'll tweak the warning:
+So I added this:
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 8b0bd3aa018ef166..b715cd4f43f4a014 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -580,7 +580,7 @@ ifndef NO_LIBELF
+           EXTLIBS += -lbpf
+           $(call detected,CONFIG_LIBBPF_DYNAMIC)
+         else
+-          dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
++          dummy := $(error Error: No libbpf devel library found or older than v1.0, please install/update libbpf-devel);
+         endif
+       else
+         # Libbpf will be built as a static library from tools/lib/bpf.
+
+To better reflect the failure reason:
 
 ⬢[acme@toolbox perf-tools-next]$ cat /tmp/build/perf-tools-next/feature/test-libbpf.make.output
 test-libbpf.c:5:2: error: #error At least libbpf 1.0 is required for Linux tools.
     5 | #error At least libbpf 1.0 is required for Linux tools.
       |  ^~~~~
+⬢[acme@toolbox perf-tools-next]$ rpm -q libbpf-devel
+libbpf-devel-0.8.0-2.fc37.x86_64
 ⬢[acme@toolbox perf-tools-next]$
+
+I'll see if I can make the build test conditional on libbpf being >= 1.0
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/build/feature/Makefile                  |  7 ---
+>  .../feature/test-libbpf-bpf_map_create.c      |  8 ----
+>  .../test-libbpf-bpf_object__next_map.c        |  8 ----
+>  .../test-libbpf-bpf_object__next_program.c    |  8 ----
+>  .../build/feature/test-libbpf-bpf_prog_load.c |  9 ----
+>  .../test-libbpf-bpf_program__set_insns.c      |  8 ----
+>  .../test-libbpf-btf__load_from_kernel_by_id.c |  8 ----
+>  .../build/feature/test-libbpf-btf__raw_data.c |  8 ----
+>  tools/perf/Makefile.config                    | 48 ++++---------------
+>  9 files changed, 10 insertions(+), 102 deletions(-)
+>  delete mode 100644 tools/build/feature/test-libbpf-bpf_map_create.c
+>  delete mode 100644 tools/build/feature/test-libbpf-bpf_object__next_map.c
+>  delete mode 100644 tools/build/feature/test-libbpf-bpf_object__next_program.c
+>  delete mode 100644 tools/build/feature/test-libbpf-bpf_prog_load.c
+>  delete mode 100644 tools/build/feature/test-libbpf-bpf_program__set_insns.c
+>  delete mode 100644 tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+>  delete mode 100644 tools/build/feature/test-libbpf-btf__raw_data.c
+> 
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 690fe97be190..dc9323e01e42 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -58,13 +58,6 @@ FILES=                                          \
+>           test-lzma.bin                          \
+>           test-bpf.bin                           \
+>           test-libbpf.bin                        \
+> -         test-libbpf-btf__load_from_kernel_by_id.bin	\
+> -         test-libbpf-bpf_prog_load.bin          \
+> -         test-libbpf-bpf_map_create.bin		\
+> -         test-libbpf-bpf_object__next_program.bin \
+> -         test-libbpf-bpf_object__next_map.bin   \
+> -         test-libbpf-bpf_program__set_insns.bin	\
+> -         test-libbpf-btf__raw_data.bin          \
+>           test-get_cpuid.bin                     \
+>           test-sdt.bin                           \
+>           test-cxx.bin                           \
+> diff --git a/tools/build/feature/test-libbpf-bpf_map_create.c b/tools/build/feature/test-libbpf-bpf_map_create.c
+> deleted file mode 100644
+> index b9f550e332c8..000000000000
+> --- a/tools/build/feature/test-libbpf-bpf_map_create.c
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/bpf.h>
+> -
+> -int main(void)
+> -{
+> -	return bpf_map_create(0 /* map_type */, NULL /* map_name */, 0, /* key_size */,
+> -			      0 /* value_size */, 0 /* max_entries */, NULL /* opts */);
+> -}
+> diff --git a/tools/build/feature/test-libbpf-bpf_object__next_map.c b/tools/build/feature/test-libbpf-bpf_object__next_map.c
+> deleted file mode 100644
+> index 64adb519e97e..000000000000
+> --- a/tools/build/feature/test-libbpf-bpf_object__next_map.c
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/libbpf.h>
+> -
+> -int main(void)
+> -{
+> -	bpf_object__next_map(NULL /* obj */, NULL /* prev */);
+> -	return 0;
+> -}
+> diff --git a/tools/build/feature/test-libbpf-bpf_object__next_program.c b/tools/build/feature/test-libbpf-bpf_object__next_program.c
+> deleted file mode 100644
+> index 8bf4fd26b545..000000000000
+> --- a/tools/build/feature/test-libbpf-bpf_object__next_program.c
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/libbpf.h>
+> -
+> -int main(void)
+> -{
+> -	bpf_object__next_program(NULL /* obj */, NULL /* prev */);
+> -	return 0;
+> -}
+> diff --git a/tools/build/feature/test-libbpf-bpf_prog_load.c b/tools/build/feature/test-libbpf-bpf_prog_load.c
+> deleted file mode 100644
+> index 47f516d63ebc..000000000000
+> --- a/tools/build/feature/test-libbpf-bpf_prog_load.c
+> +++ /dev/null
+> @@ -1,9 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/bpf.h>
+> -
+> -int main(void)
+> -{
+> -	return bpf_prog_load(0 /* prog_type */, NULL /* prog_name */,
+> -			     NULL /* license */, NULL /* insns */,
+> -			     0 /* insn_cnt */, NULL /* opts */);
+> -}
+> diff --git a/tools/build/feature/test-libbpf-bpf_program__set_insns.c b/tools/build/feature/test-libbpf-bpf_program__set_insns.c
+> deleted file mode 100644
+> index f3b7f18c8f49..000000000000
+> --- a/tools/build/feature/test-libbpf-bpf_program__set_insns.c
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/libbpf.h>
+> -
+> -int main(void)
+> -{
+> -	bpf_program__set_insns(NULL /* prog */, NULL /* new_insns */, 0 /* new_insn_cnt */);
+> -	return 0;
+> -}
+> diff --git a/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c b/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+> deleted file mode 100644
+> index a17647f7d5a4..000000000000
+> --- a/tools/build/feature/test-libbpf-btf__load_from_kernel_by_id.c
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/btf.h>
+> -
+> -int main(void)
+> -{
+> -	btf__load_from_kernel_by_id(20151128);
+> -	return 0;
+> -}
+> diff --git a/tools/build/feature/test-libbpf-btf__raw_data.c b/tools/build/feature/test-libbpf-btf__raw_data.c
+> deleted file mode 100644
+> index 57da31dd7581..000000000000
+> --- a/tools/build/feature/test-libbpf-btf__raw_data.c
+> +++ /dev/null
+> @@ -1,8 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <bpf/btf.h>
+> -
+> -int main(void)
+> -{
+> -	btf__raw_data(NULL /* btf_ro */, NULL /* size */);
+> -	return 0;
+> -}
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 5b8784675903..5ab7cac48c4a 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -565,54 +565,26 @@ ifndef NO_LIBELF
+>  
+>        # detecting libbpf without LIBBPF_DYNAMIC, so make VF=1 shows libbpf detection status
+>        $(call feature_check,libbpf)
+> +
+> +      # Feature test requires libbpf 1.0 so we can assume the following:
+> +      CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
+> +      CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
+> +      CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
+> +      CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_MAP
+> +      CFLAGS += -DHAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
+> +      CFLAGS += -DHAVE_LIBBPF_BTF__RAW_DATA
+> +      CFLAGS += -DHAVE_LIBBPF_BPF_MAP_CREATE
+> +
+>        ifdef LIBBPF_DYNAMIC
+>          ifeq ($(feature-libbpf), 1)
+>            EXTLIBS += -lbpf
+>            $(call detected,CONFIG_LIBBPF_DYNAMIC)
+> -
+> -          $(call feature_check,libbpf-btf__load_from_kernel_by_id)
+> -          ifeq ($(feature-libbpf-btf__load_from_kernel_by_id), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
+> -          endif
+> -          $(call feature_check,libbpf-bpf_prog_load)
+> -          ifeq ($(feature-libbpf-bpf_prog_load), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
+> -          endif
+> -          $(call feature_check,libbpf-bpf_object__next_program)
+> -          ifeq ($(feature-libbpf-bpf_object__next_program), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
+> -          endif
+> -          $(call feature_check,libbpf-bpf_object__next_map)
+> -          ifeq ($(feature-libbpf-bpf_object__next_map), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_MAP
+> -          endif
+> -          $(call feature_check,libbpf-bpf_program__set_insns)
+> -          ifeq ($(feature-libbpf-bpf_program__set_insns), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
+> -          else
+> -            dummy := $(error Error: libbpf devel library needs to be >= 0.8.0 to build with LIBBPF_DYNAMIC, update or build statically with the version that comes with the kernel sources);
+> -          endif
+> -          $(call feature_check,libbpf-btf__raw_data)
+> -          ifeq ($(feature-libbpf-btf__raw_data), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BTF__RAW_DATA
+> -          endif
+> -          $(call feature_check,libbpf-bpf_map_create)
+> -          ifeq ($(feature-libbpf-bpf_map_create), 1)
+> -            CFLAGS += -DHAVE_LIBBPF_BPF_MAP_CREATE
+> -          endif
+>          else
+>            dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
+>          endif
+>        else
+>          # Libbpf will be built as a static library from tools/lib/bpf.
+>  	LIBBPF_STATIC := 1
+> -	CFLAGS += -DHAVE_LIBBPF_BTF__LOAD_FROM_KERNEL_BY_ID
+> -        CFLAGS += -DHAVE_LIBBPF_BPF_PROG_LOAD
+> -        CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_PROGRAM
+> -        CFLAGS += -DHAVE_LIBBPF_BPF_OBJECT__NEXT_MAP
+> -        CFLAGS += -DHAVE_LIBBPF_BPF_PROGRAM__SET_INSNS
+> -        CFLAGS += -DHAVE_LIBBPF_BTF__RAW_DATA
+> -        CFLAGS += -DHAVE_LIBBPF_BPF_MAP_CREATE
+>        endif
+>      endif
+>  
+> -- 
+> 2.39.0.314.g84b9a713c41-goog
+
+-- 
 
 - Arnaldo
