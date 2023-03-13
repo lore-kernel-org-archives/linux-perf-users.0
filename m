@@ -2,179 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1ECC6FD19
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 18:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D14C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 18:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbjCMSP6 (ORCPT
+        id S230456AbjCMS1S (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 14:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
+        Mon, 13 Mar 2023 14:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbjCMSP6 (ORCPT
+        with ESMTP id S231192AbjCMS1C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 14:15:58 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F1377CB8;
-        Mon, 13 Mar 2023 11:15:56 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id y10so8190308pfi.8;
-        Mon, 13 Mar 2023 11:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678731356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IlFPtKHfCjZ7hFcG725CdyIieAxGOw83mG6tgIjYd0I=;
-        b=I5EJVvuG8+H5r4JISqONKqo52EimvwOiUXI2hBsF+6DblFw6jPteCln6Es3CuT1LLA
-         5Gsk0b7F/6XCIoWAAeETEo5TndayeT9W8xUpmzx1mO9N8u1Ii8xyxeFGPebQk9cgyB4v
-         pVelDhQnuPiW6Qc326FDyGOXFYjeZPvDCtvQMDoVsg34w0Wlz47vA+XcVgCcJgpMSIMD
-         9OhHneoEbqrct9CrvKYZwWhxU5b374BGItQoEoDijLiZ6o+UwhJNch2OKE1MfqNCzMxF
-         3/kWVDW6dvpOzvacitmLH2JRHsgpkGunVArMvLSPt7DZ4BczlMHpwoead++SrEq/9kIK
-         0cIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678731356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IlFPtKHfCjZ7hFcG725CdyIieAxGOw83mG6tgIjYd0I=;
-        b=0Fk0912Ew+iaMG/7scCIOmcrlviPaXJ/xhaCwy13PgSZ1ci32KVZw9ON9UjW1JdnnI
-         VFZQ0zdEp/2l7SZ4stngFjvDdwKaNO8vt8QZVlF3Vwbl7ZwI3BV4XMetbqLLm8FjRtah
-         5oUyje4HedSdZNKO7eqz0O7HgGxPQppswW6KCebXqKiYP3CFJIW60lh0vZyJMMXgOVrY
-         GaMfcvUZTswSK+b1H7GFotzM2vhnVHQOLlFSuvf1wnCfLKNInvccJgeAzkRPQAfvCOOK
-         dti1C82OT1vl1zRgdlJoLu5Tb2QRuRBN1c2dBUNE9A5cS23qwqRAaUqjdxjyRv2T76p8
-         fjtQ==
-X-Gm-Message-State: AO0yUKUwawN7mEwDFG50CxXAvJvVJOLyBoT5CmpsUscxy/k6V9j2lNwf
-        mVKcdoJhNPU7DHSe5CVP+Rb3mN9LFb31GMMIiUk=
-X-Google-Smtp-Source: AK7set+VmSBXdhB+Z6f8/4GulZiGPhX9WCQo45A0GE+qnhRK/dtu/Tpv2vLYuscXgOxNXf0473KLta7QhVvQLfeQqa4=
-X-Received: by 2002:a62:1acb:0:b0:622:bfcd:149 with SMTP id
- a194-20020a621acb000000b00622bfcd0149mr2529789pfa.0.1678731356374; Mon, 13
- Mar 2023 11:15:56 -0700 (PDT)
+        Mon, 13 Mar 2023 14:27:02 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B1017CD2;
+        Mon, 13 Mar 2023 11:25:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 599C6B811D9;
+        Mon, 13 Mar 2023 18:25:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00C0C433D2;
+        Mon, 13 Mar 2023 18:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678731943;
+        bh=qyGf7+ezeWajxKxCIptIxhJuwG8WYUdjZZdsJ3FxiQ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DIfXpgHR1dPoDS180z3kzOfqife7YqQdEPNKb0jLOt5mjzTECkg48jmMvhMlIK4Fy
+         8NCESgAk2sZzHCPtAuLb2bt1sDB85hD8gkxKVMebPKMFxWOUSEPAmkv7oYIUCyv01E
+         8KUCabveyg/gqCtlZSiSJnRIFQqH+y446uo2fPeuR3M9QIDU+BcV6K8Q24s8RXL5p0
+         rTupcAqsLxFr9YBfBpAiKBH37cxd6YwaysbWWjFhTw0OF4akaVuBdqD7OHR/e68i6K
+         bOw6Fz9JVa+s1ZoUeEBWben0T51+LVFVPDsgvHewuVj5Z69K9CFTRyIsH5wsl0540B
+         nwfr5mnVDoipA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4E5FD4049F; Mon, 13 Mar 2023 15:25:40 -0300 (-03)
+Date:   Mon, 13 Mar 2023 15:25:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5 00/11] Better fixes for  grouping of events
+Message-ID: <ZA9qpIuUPecYPiFk@kernel.org>
+References: <20230312021543.3060328-1-irogers@google.com>
 MIME-Version: 1.0
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com> <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan> <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
- <20230313121420.GB2426758@leoy-yangtze.lan>
-In-Reply-To: <20230313121420.GB2426758@leoy-yangtze.lan>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 13 Mar 2023 11:15:44 -0700
-Message-ID: <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230312021543.3060328-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 13, 2023 at 5:14=E2=80=AFAM Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Thu, Mar 09, 2023 at 10:06:41AM -0800, Yang Shi wrote:
->
-> [...]
->
-> > > I reviewed your shared dump, the bad and good perf data both contain =
-the
-> > > dummy event with 'text_poke =3D 1'.  Could you confirm the shared dum=
-p in
-> > > your previous email is correct or not?
-> >
-> > Oops, sorry. I pasted the wrong log. The good one looks like
-> > (generated by v5.19):
-> >
-> > # captured on    : Wed Mar  8 18:02:58 2023
-> > # header version : 1
-> > # data offset    : 408
-> > # data size      : 22640
-> > # feat offset    : 23048
-> > # hostname : fedora
-> > # os release : 6.2.0-coresight+
-> > # perf version : 5.19.g3d7cb6b04c3f
-> > # arch : aarch64
-> > # nrcpus online : 128
-> > # nrcpus avail : 128
-> > # cpuid : 0x00000000c00fac30
-> > # total memory : 2108862504 kB
-> > # cmdline : /home/yshi/linux/tools/perf/perf record -e
-> > cs_etm/@tmc_etf63/k --kcore --per-thread -- taskset --cpu-list 1 uname
-> > # event : name =3D cs_etm/@tmc_etf63/k, , id =3D { 3832 }, type =3D 9, =
-size
-> > =3D 128, { sample_period, sample_freq } =3D 1, sample_type =3D
-> > IP|TID|IDENTIFIER, read_format =3D ID, d
-> > isabled =3D 1, exclude_user =3D 1, exclude_hv =3D 1, enable_on_exec =3D=
- 1,
-> > sample_id_all =3D 1, { bp_len, config2 } =3D 0x12792918
-> > # event : name =3D dummy:u, , id =3D { 3833 }, type =3D 1, size =3D 128=
-,
-> > config =3D 0x9, { sample_period, sample_freq } =3D 1, sample_type =3D
-> > IP|TID|IDENTIFIER, read_format =3D ID,
-> >  disabled =3D 1, exclude_kernel =3D 1, exclude_hv =3D 1, mmap =3D 1, co=
-mm =3D 1,
-> > enable_on_exec =3D 1, task =3D 1, sample_id_all =3D 1, exclude_guest =
-=3D 1,
-> > mmap2 =3D 1, comm_exec =3D 1,
-> > context_switch =3D 1, ksymbol =3D 1, bpf_event =3D 1
-> > # CPU_TOPOLOGY info available, use -I to display
-> > # NUMA_TOPOLOGY info available, use -I to display
-> > # pmu mappings: armv8_pmuv3_0 =3D 8, software =3D 1, arm_cmn_0 =3D 10,
-> > uprobe =3D 7, cs_etm =3D 9, breakpoint =3D 5, tracepoint =3D 2, arm_cmn=
-_1 =3D
-> > 11, kprobe =3D 6
-> > # contains AUX area data (e.g. instruction trace)
-> > # CACHE info available, use -I to display
-> > # time of first sample : 18446744073.709551
-> > # time of last sample : 18446744073.709551
-> > # sample duration :      0.000 ms
-> > # MEM_TOPOLOGY info available, use -I to display
-> > # missing features: TRACING_DATA CPUDESC BRANCH_STACK GROUP_DESC STAT
-> > CLOCKID DIR_FORMAT COMPRESSED CPU_PMU_CAPS CLOCK_DATA HYBRID_TOPOLOGY
-> > HYBRID_CPU_PMU_CAPS
->
-> Thanks for confirmation.
->
-> Just a quick summary, here we have two issues:
->
-> - With command:
->   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
->   -- taskset --cpu-list 1 uname",
->
->   perf doesn't enable "text poke" attribution.
+Em Sat, Mar 11, 2023 at 06:15:32PM -0800, Ian Rogers escreveu:
+> The rules for grouping events have grown more complex. Topdown events
+> must be grouped, but flags like --metric-no-group and flags on metrics
+> don't respect this. Uncore events may be expanded using wild cards for
+> PMU names, but then the events need reordering so the group members
+> are adjacent. Rather than fixing metrics, this change fixes the main
+> event parsing code to first sort and then regroup evsels.
+> 
+> As this is shared functionality changes to it should cause
+> concern. The change is done with the intent of simplifying and making
+> more robust the grouping logic, examples are given. If additional
+> changes are necessary, they are most likely necessary to the
+> evsel__group_pmu_name logic as the code avoids breaking groups that
+> are on the same "group" PMU. The group_pmu_name is a variant of the
+> pmu_name tweaked in the case of software and aux events, that use
+> groups in a slightly different manner to conventional events.
+> 
+> The code was manually tested as well as passing perf test on a Intel
+> tigerlake CPU with intel-pt.
+> 
+> v5. Add Adrian's Acked-by on patch 3, add a fix to the warning logic
+>     for multiple event groups as reported by Adrian.
 
-No, it enables "text poke" and perf fails to decode coresight trace
-data too. It doesn't matter whether "--kcore" is after or before "-e
-cs/etm/@tmc_etf63/k".
 
->
-> - With command:
->   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
->   -- taskset --cpu-list 1 true (in your previous email), or ...
->   perf record --kcore -e cs_etm/@tmc_etf63/k --per-thread \
->   -- taskset --cpu-list 1 uname (in your shared perf data file),
->
->   perf enables "text poke" attribution, in this case, perf fails to decod=
-e
->   Arm CoreSight trace data.
+Appled locally, testing.
 
-Yes.
+- Arnaldo
 
->
-> [...]
->
-> > > Do you mind to share the bad perf.data file with James and me?
-> >
-> > Please check the attachment out. Thanks for looking into this problem.
->
-> Thank you for sharing the data.  We will look into it.
+> v4. Move the Intel pmu->auxtrace initialization to the existing
+>     perf_pmu__get_default_config as suggested by Adrian Hunter.
+> v3. Rename pmu_name to group_pmu_name and add patch to warn when
+>     events are regrouped as requested by Namhyung.
+> v2. Fix up the commit message on 4/10 (thanks Arnaldo). Drop
+>     unnecessary v1 5/10 (thanks Kan). evlist->core.nr_groups wasn't
+>     being correctly maintained after the sort/regrouping and so the
+>     new patch 10/10 removes that variable and computes it from the
+>     evlist when necessary, generally just tests.
+> 
+> Ian Rogers (11):
+>   libperf evlist: Avoid a use of evsel idx
+>   perf stat: Don't remove all grouped events when CPU maps disagree
+>   perf pmu: Earlier PMU auxtrace initialization
+>   perf stat: Modify the group test
+>   perf evsel: Allow const evsel for certain accesses
+>   perf evsel: Add function to compute group PMU name
+>   perf parse-events: Pass ownership of the group name
+>   perf parse-events: Sort and group parsed events
+>   perf evsel: Remove use_uncore_alias
+>   perf evlist: Remove nr_groups
+>   perf parse-events: Warn when events are regrouped
+> 
+>  tools/lib/perf/evlist.c                  |  31 ++-
+>  tools/lib/perf/include/internal/evlist.h |   1 -
+>  tools/lib/perf/include/perf/evlist.h     |   1 +
+>  tools/perf/arch/x86/util/auxtrace.c      |   4 -
+>  tools/perf/arch/x86/util/evlist.c        |  39 ++--
+>  tools/perf/arch/x86/util/pmu.c           |   8 +-
+>  tools/perf/builtin-record.c              |   2 +-
+>  tools/perf/builtin-report.c              |   2 +-
+>  tools/perf/builtin-stat.c                |  24 +-
+>  tools/perf/tests/bpf.c                   |   1 -
+>  tools/perf/tests/parse-events.c          |  24 +-
+>  tools/perf/tests/pfm.c                   |  12 +-
+>  tools/perf/tests/pmu-events.c            |   2 +-
+>  tools/perf/util/evlist.c                 |   2 +-
+>  tools/perf/util/evlist.h                 |   8 +-
+>  tools/perf/util/evsel.c                  |  27 ++-
+>  tools/perf/util/evsel.h                  |   8 +-
+>  tools/perf/util/header.c                 |   3 +-
+>  tools/perf/util/metricgroup.c            |   3 +-
+>  tools/perf/util/parse-events.c           | 275 ++++++++++++-----------
+>  tools/perf/util/parse-events.h           |  14 +-
+>  tools/perf/util/parse-events.y           |  28 +--
+>  tools/perf/util/pfm.c                    |   1 -
+>  tools/perf/util/pmu.c                    |   6 +-
+>  tools/perf/util/python.c                 |   2 +-
+>  tools/perf/util/stat-shadow.c            |   2 +-
+>  26 files changed, 284 insertions(+), 246 deletions(-)
+> 
+> -- 
+> 2.40.0.rc1.284.g88254d51c5-goog
+> 
 
-Thank you.
+-- 
 
->
-> Leo
+- Arnaldo
