@@ -2,166 +2,201 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98801C74A4B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 15:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8195C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 16:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230326AbjCMPxB (ORCPT
+        id S231268AbjCMQ2V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 11:53:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
+        Mon, 13 Mar 2023 12:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230229AbjCMPw7 (ORCPT
+        with ESMTP id S230370AbjCMQ2S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 11:52:59 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2060.outbound.protection.outlook.com [40.107.220.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA55577C8E;
-        Mon, 13 Mar 2023 08:52:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J4H0yxs3nrBNtKP0YcGudzXA+lGlXDODRqJDtm/o8yfScP8/+BtEN1IlaEkpm2jd21KqsYA1alquEKmUM2saol9quK4mJ6UV3sBp/O6LUQ2chrftZb2z1s//GNkzl5Sqzi6w7swxTHGb/zqSyYq7OuGqZPEGeLGPxYxfAwIThjhkxowG9VZrwWB/7XaHzvbLn/frBP4+FzvcgGYCvIUr2506M8VeaQ1fhc0et7XCGa8JiWQCUXNWpS+ROGXNiQxYZ7zEUINWhXymxjVDq9726PPnIW9BIbfM802MyiWbQjTxQfec72E9k3bA8xeoyaH8mjBL7eVW4rbYEhtW7jEBuA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=adlrGznXuZpeHcklbVG4UdNDuImzefKq+HtruUCKIPM=;
- b=DRWtxVsSamIiNHC/47kghO/pnA7qA5EMyjq8jePiYETdqwedEcYVmI1RCREjN8SwTslNdn4NwSoCSeJ5BVyK3+zENnH6XbpkyCpfV1Y2oCB+1y/HV4K+iXnJHzMicXwvvQzoxeXaCk003+psblZTvq/XURZgeJI3+vO5QFGfcSRXH3bh9/EMcKQbx6rmVIr25NOxB81gLFxSsBXpFivxG6MQfxL4BM71htSkuCHXRiPhLlvD+tWEdwMKx7vkasjxfjYCeS4xAfZ6fFs23lgpT0lLyUsL4mvrsqrNIBvGZUwoY1pxu9WjManagr499zNoiixzGxSp6qQYwZ9UyjzHZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=adlrGznXuZpeHcklbVG4UdNDuImzefKq+HtruUCKIPM=;
- b=GNqYPP8nIQvSLYJow62166XaL2wo9CN9FK2T3pT2hPM1in4g1X4jDjsa1F1OUb1RC0oIvaP4qn6Xcojd+oWE/ws3/I/axO3GK32v4LhGvlGiyg/8LFex4FtVUdTiTBIMkn1ObGyetJLsfHDBgUoRfuZiINmADbZoHrxATBQpBUA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by CYYPR12MB8990.namprd12.prod.outlook.com (2603:10b6:930:ba::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Mon, 13 Mar
- 2023 15:51:46 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d8e6:76b5:2c23:1247]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::d8e6:76b5:2c23:1247%4]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
- 15:51:46 +0000
-Message-ID: <479da7ad-66ba-870e-a2ac-c1378e2f452b@amd.com>
-Date:   Mon, 13 Mar 2023 21:21:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RFC/PATCHSET 0/9] perf record: Implement BPF sample filter (v4)
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230307233309.3546160-1-namhyung@kernel.org>
- <9f692bd9-94e4-ee60-2174-561685b9b39a@amd.com> <ZAumkq2L2bo8wDCk@google.com>
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <ZAumkq2L2bo8wDCk@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0183.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::8) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Mon, 13 Mar 2023 12:28:18 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A8379B19
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 09:27:49 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id b5so5253767iow.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 09:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678724869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uThRQ+LYc3DxfsAWXC/vPY+ugCmlfaobHQqFrI5rVyg=;
+        b=NFGoQpB+8ib1in+s3af9+VB5yHzj2lDnrovQryBfGVP20pUWWtnKKxx44SWm1H9AKa
+         fEDpW3umOBDmokjGyYFPMY5BCFp92bfWs9M5XPbAkjg3dQMYeebXkgWZ4YZOwzZU34Uq
+         ok+LIfx2YxHbOVRr4Lg5ISUDFzCc58eW8u4G7UuO5J6aNofv8fx1XC+J51YUq1TbQIvX
+         E1mhWadnuPOyqhspB8PwpTnW8oqazvPkAH8Mx59d17OBalBwPA9slh5bIKSSLe6IsrwJ
+         +d80Q1hJFaYV6W4g97QxWuUh/86LlP+XbWsBmme0M3UXaMvB3abypA4/PHpV6eShNfV6
+         aCvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678724869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uThRQ+LYc3DxfsAWXC/vPY+ugCmlfaobHQqFrI5rVyg=;
+        b=nOt0NwjBU21ivdLNdhINMY3ue+8hs+VHBfpWWO/i++XJv8GF9TpEnL7NStQJumrzl0
+         XpK6qtjZY+QT7PlIKISW6685tPe2JmFncUEc4CrRIZJloFbyATDKHcujqWQjMpp/PoOp
+         Mi9U1C5sNgnVAvOJho4MRXI+5I24/jBtlgABUKQPgEKkWIA5JvxkfLCo/8hhM+8+vs7U
+         Ry+iqExJMcmsObhTcWJXuDMj5JUfgp7k+o2xoaC9i/w14gM33PoqO937G458roZgVgMc
+         bd/LfHfURQr4N6vj3KQ1TSm43z8DeWJ0+mMtvPhEQwQLijGJZg65eU23UJRJNWKmZvY2
+         aevg==
+X-Gm-Message-State: AO0yUKVs3bS3o7AcXIc+zEHqJaoM1tHkoxUoZftIKbfnDNyEveeZipKG
+        Ja0jk+L8eRJGXo44zOD2S6UjuiIS9ELngeWvb/p8cw7C2GDn7aKCzsUXOg==
+X-Google-Smtp-Source: AK7set+7EtFwe6HXEKJ1Gf+hvJUXct2FYTqYMvd+TWTbl75XQSf6BtdH8inJGp4bsSLQOwWWrvIZaQr2rvAzxm9CdDw=
+X-Received: by 2002:a5d:8b47:0:b0:745:c41a:8f0f with SMTP id
+ c7-20020a5d8b47000000b00745c41a8f0fmr16695129iot.2.1678724867424; Mon, 13 Mar
+ 2023 09:27:47 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CYYPR12MB8990:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29d6ae51-7fd2-4ce2-207d-08db23dad92e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZLdl5Y821loT9sJVXe6ePad+sSTc9JudWa++OnAEMgs6jwiX15liujqxQyn/EwZJ2u4Vg9GpW8jh3/oVLuOBtLFfcCxex8bRH765RbxqHEQXlLEdYkhkfpy9SexKG2rYMWguWJP3Z0EVGrVyc6PJ1ABZ2y0TZ/4teRxMlBJgtM2aim/+zdD56uB1iiZupdn7HLau45xPuiK1PtrvqExKxvTEHxMj7rJSscJlRYItwQt1mLtwGxDVLfbpIRnNP+eQtfnFNdQZFlUuUk1734i3syyoMANHqDau0my/FNYnRM1GLf2kN0BS23Z9ppCuoh8m17QSeYeWuUtFSELka+1aZdvBhcg/OiktyA8+UVXjwa6hInlycyzyCDDlSZavTngEf4TyNZhs1UrqPOMKdP74HBbD4pgYbds4PIMJevMTB24GU5ZUnGKu6ZPEh5v/Gjw/ulXrSznsltcNM+MFKBo77iFE4C1iatY4YMz/d7AwTEmD0ISgsdSfj289/ziSEGt1S1/6KmscyOe7Tlpn9va3H4TpyqdOI//iGSmxiIgxAZo1azRcNGa7kRNLBX8noLC8WQFVuRnUweDAtG4NYHVNOU3NLqRf4/UaGFKimIlXjkHTsf4vKQ+DzaeypNk1Ue8t2LR9zQx1CHb7jCHl/mLKISNVh9p2piJQFHF9rYAiVFfi/enWeRSmJaNC8EW9kv6eo7wZnBdD4J9ug0D8v+RWQrrW4iFcte5+1p1eOmojXbE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(451199018)(478600001)(83380400001)(2906002)(38100700002)(86362001)(8936002)(7416002)(5660300002)(44832011)(31696002)(36756003)(8676002)(6916009)(66556008)(66476007)(66946007)(4326008)(54906003)(41300700001)(316002)(26005)(6666004)(186003)(2616005)(6512007)(6506007)(31686004)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OWI4NFNmdDJRTDUvVmZQUGRkajhQMFRGYW9JUXY1c1pJTHBZSk9uanhQdXV0?=
- =?utf-8?B?NE1GNGRBM2wyZlAyaVZuSUtqcFdZWlNnZDlqamZlYWFOSi9UUkNlUkIvK3VW?=
- =?utf-8?B?TS9Hc2F4N1J5ZkQ2ZlBRbXAzYjlqNllUdmVSQ0Rac0kzVGtKN25wblQ3WU5M?=
- =?utf-8?B?aEt1R05xem12eGhlS0lScWpBdmFLaThEelJqam5TSTJJbXh3MStFSVI3UlZV?=
- =?utf-8?B?V1NPU0hHbkdCYWp1TmEvZTVNSzFjNXBpTUZOWlFTM3VZdTRLTGtNdEgvQVdn?=
- =?utf-8?B?Z0RsRVpPQk9iTkRxc0N5UGNYaHBFdHdCVnBDZjJmVjl6OFpoNHZHVWRnMW9O?=
- =?utf-8?B?OHlIUDR2UUV3K0NMdUpEdlB4cVVTVFk1WFpKSmFaMnFuTkRtZmNCQVM0OFJp?=
- =?utf-8?B?Wnp1MTllVklHVTZIQ2lXcGM0NjErT1UvUnVsTVBHNzBUSmFIYUE5ZHI0aTlo?=
- =?utf-8?B?SGlCYXBMblUyUm91c3EwaW43eC9PVVR2dTQ1ZkZsR2QxT2xRZVVzT2dETU9G?=
- =?utf-8?B?V1lRdVhiZ2w4eklyV0FKamJmbk8zdENhMGZTYW1tRDd2SjVlUmFuZ1F2VGZs?=
- =?utf-8?B?V0NhMzJWQmNjdGZ4dXZCSWRCd2dHaWtiNy92QVNBVGRta2JZZ1BJMFZOUW5H?=
- =?utf-8?B?VU5RZVFDN2g4WWM2K1VzTFlmaEpaMUMwMllKb1lJV3A5RjJhb1hBcno1bW83?=
- =?utf-8?B?S0ZmYjFDY290NzVvemZxM1BOMEVFSCtuZnNuVVV1a3VrZXhoZGxSRGd2ZG50?=
- =?utf-8?B?cVlJNldtemlBK3N6d0p3bDVrQWJtbHF5WitDbmczZzVMNjBCTGY4QUgxekdB?=
- =?utf-8?B?cmR2YUd3VXhUZzhoSVVNNHduQ010eTFxRGNVWE5STENRbUVpRDh0QXVrODND?=
- =?utf-8?B?TjZNZis0d2pYbXhJVGtwZFpzb3YrcllIb21KSzJSNjNiY0g4ektPcTVDamVq?=
- =?utf-8?B?eWdrcXJjNmJoTWpMZXgrK2wycTFFY05oQ1dUNWdHTlZuUlR0eFp0OEVQSVRD?=
- =?utf-8?B?NXorR3VnRjA4MmNFU0JNSG9sNVNDOUhkNWJTQU5CbGVGZ2tvRjZ4RHc5YUdH?=
- =?utf-8?B?Z3o3RTlRQXJpNkNJK0x5QWY1NDJPa1RFblVjUTFxME9IMkZYb2I1SkVJUGRx?=
- =?utf-8?B?cEJ1YXBKZG5uQU9ISE1UdXB6RFZnRzhTeUsrb0NaMTRIbHFQcnFBemFDb3Iy?=
- =?utf-8?B?eXlhdkVrb0xuMENIdWN5ZE8xOFNuajducXlMeXd0WHFKNmRsNnUwTThjVWRm?=
- =?utf-8?B?VzVpcEw4eTFNQmR2N3Z1V2Y0YVdEaXh3ZC8vekwvY2FSSFBZWi9BMFd0VnRC?=
- =?utf-8?B?bDFNUnViSTE0NWJYYVhWZldDUVZaOFRlVWdGdkcrSkxkakMrajNKK095OXRo?=
- =?utf-8?B?VU52c1ZXNjFGdEtEd3VLdUJmbThCUHZIVzVzaHptL0RvTFg3a2d3MUk1R0NC?=
- =?utf-8?B?MEIrd0VadmJIbEx6WjhLZkNiTU8ydFgrTmw4bW96aTZSSWFwZzY5RVlHV1JF?=
- =?utf-8?B?MVRMNzVHWVZxK09FaVNWNVdpTXkxMk1nL3d0WlJOeG5rTFVpMWtvVW1DRVVW?=
- =?utf-8?B?SXh3UGtPcmlxYlk4YWxyU0J2N0Q4KzFVcGNOais5dWZ3Sk5UOVlnWWEvQXVm?=
- =?utf-8?B?VXJBaElrOVZiVmZUVDNOWlVHZ2ovVnB3Qm5RV0tVQnFWRGNxRHJsVnE1dFhI?=
- =?utf-8?B?WUtPc3lEQ20rY2k1SUtKUkdVYmVXeVFvdWlTOTZQYkZLMmEzVFAvRERlOUlQ?=
- =?utf-8?B?V1ZaVmtHc2JCTjNiTG1UUjJua0RVMStLblIrTzZjSnBrdkR1cEpuSU9nRW52?=
- =?utf-8?B?OUY2Uk9ZU1NYc0QveXNaWHFKT2FaWUE1bHk2a3N5cUpITTl5UHJsWFpRMloy?=
- =?utf-8?B?T3lTTkQ5S2FEakZVcm9sMkl0blBOaVRhdklUOVNUZDZRQ3N5TjdWM2hneng3?=
- =?utf-8?B?SzBkYjN3Q003N1ZIK1NicHFXRjN1Rmg4eVFibnMyVEtzL01Ec2VqbjY1c0Jk?=
- =?utf-8?B?ZXdlVFBreUZ3WGpnNFB0ZmpyOTJGaVBCT05sY2hPSEpMMzErRzc1Q091MElm?=
- =?utf-8?B?VGVGYVJYK0p0VXVjemRJN2sxS0ZqakZJdFlKOWwwc01JSWdzL1d3dEpyNUln?=
- =?utf-8?Q?mtuxh5jglUcv5os4uaRN2XQM7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29d6ae51-7fd2-4ce2-207d-08db23dad92e
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2023 15:51:46.0547
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aiIWf9xQj0vcaJYanjBk7m0UaE4PBm0e4m4hxaP4opkHWvXtJIxA8yCGPEO7+hh/XJ3t8JBcPKqgacILUYC4qQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8990
+References: <20230311112122.28894-1-p4ranlee@gmail.com> <CAP-5=fWkAqX+Uy_XhXHjEx6sj-wpOJ+WQf=vMtRzRBS-0Kj32Q@mail.gmail.com>
+ <09d44d74-f3c9-cf99-8d14-74499485e956@gmail.com>
+In-Reply-To: <09d44d74-f3c9-cf99-8d14-74499485e956@gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Mar 2023 09:27:35 -0700
+Message-ID: <CAP-5=fUqLdCD_Ks2WQxjyRoNO53PxzDv_P7GJuY320+gKF=vEw@mail.gmail.com>
+Subject: Re: [PATCH] perf tools riscv: Add support for riscv lookup_binutils_path
+To:     Paran Lee <p4ranlee@gmail.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
->> However, if I add "mem_lvl == l1" (or l2 / ram) in the filter, I see mostly
->> all samples are getting lost:
->>
->>   $ sudo ./perf record -d -e ibs_op//p --filter 'mem_op == load, mem_lvl == l1' -c 100000 ~/test
->>   [ perf record: Woken up 1 times to write data ]
->>   [ perf record: Captured and wrote 0.019 MB perf.data ]
->>
->>   $ sudo ./perf report --stat | grep SAMPLE
->>     LOST_SAMPLES events:          1  ( 0.8%)
->>     LOST_SAMPLES events:     136332
->>
->> What am I missing?
-> 
-> It seems IBS PMU doesn't set the mem_lvlnum field in the data source.
-> As I said in the patch 7, 'mem_lvl' actually uses mem_lvlnum fields
-> instead of mem_lvl because it's preferred according to the comment in
-> the UAPI header.
-> 
-> /*
->  * PERF_MEM_LVL_* namespace being depricated to some extent in the
->  * favour of newer composite PERF_MEM_{LVLNUM_,REMOTE_,SNOOPX_} fields.
->  * Supporting this namespace inorder to not break defined ABIs.
->  *
->  * memory hierarchy (memory level, hit or miss)
->  */
-> 
-> I'll post a patch to set it separately.
+On Sun, Mar 12, 2023 at 5:53=E2=80=AFAM Paran Lee <p4ranlee@gmail.com> wrot=
+e:
+>
+>
+>
+> 23. 3. 12. 15:27=EC=97=90 Ian Rogers =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=
+=B8=80:
+> > On Sat, Mar 11, 2023 at 3:22=E2=80=AFAM paranlee <p4ranlee@gmail.com> w=
+rote:
+> >>
+> >> Add to know RISC-V binutils path.
+> >> Secondarily, edit the code block with alphabetical order.
+> >>
+> >> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+> >> ---
+> >>  tools/perf/arch/common.c | 51 +++++++++++++++++++++++++++------------=
+-
+> >>  1 file changed, 35 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+> >> index 59dd875fd5e4..058527ededdd 100644
+> >> --- a/tools/perf/arch/common.c
+> >> +++ b/tools/perf/arch/common.c
+> >> @@ -29,11 +29,23 @@ const char *const arm_triplets[] =3D {
+> >>  };
+> >>
+> >>  const char *const arm64_triplets[] =3D {
+> >> +       "aarch64-unknown-linux-",
+> >
+> > Modifying ARM64 behavior should be a separate change.
+> >
+> >>         "aarch64-linux-android-",
+> >>         "aarch64-linux-gnu-",
+> >>         NULL
+> >>  };
+> >>
+> >> +const char *const mips_triplets[] =3D {
+> >> +       "mips-unknown-linux-gnu-",
+> >> +       "mipsel-linux-android-",
+> >> +       "mips-linux-gnu-",
+> >> +       "mips64-linux-gnu-",
+> >> +       "mips64el-linux-gnuabi64-",
+> >> +       "mips64-linux-gnuabi64-",
+> >> +       "mipsel-linux-gnu-",
+> >> +       NULL
+> >> +};
+> >> +
+> >
+> > This will affect the blame history. It should probably be its own chang=
+e too.
+>
+> Thank you for review! I agree. So I would split the patch.
+>
+> >> -
+> >>  static bool lookup_path(char *name)
+> >>  {
+> >>         bool found =3D false;
+> >> @@ -164,18 +179,22 @@ static int perf_env__lookup_binutils_path(struct=
+ perf_env *env,
+> >>                 path_list =3D arm_triplets;
+> >>         else if (!strcmp(arch, "arm64"))
+> >>                 path_list =3D arm64_triplets;
+> >> +       else if (!strcmp(arch, "mips"))
+> >> +               path_list =3D mips_triplets;
+> >>         else if (!strcmp(arch, "powerpc"))
+> >>                 path_list =3D powerpc_triplets;
+> >> -       else if (!strcmp(arch, "sh"))
+> >> -               path_list =3D sh_triplets;
+> >> +       else if (!strcmp(arch, "riscv32"))
+> >> +               path_list =3D riscv32_triplets;
+> >> +       else if (!strcmp(arch, "riscv64"))
+> >> +               path_list =3D riscv64_triplets;
+> >>         else if (!strcmp(arch, "s390"))
+> >> -               path_list =3D s390_triplets;
+> >> +               path_list =3D s390_triplets;
+> >
+> > whitespace issue?
+>
+> I tried to correct the alphabetical order because it was vaguely sorted.
+> And I'll try to work on blame history on each arch code block as well.
+>
+> >> +       else if (!strcmp(arch, "sh"))
+> >> +               path_list =3D sh_triplets;
+> >>         else if (!strcmp(arch, "sparc"))
+> >>                 path_list =3D sparc_triplets;
+> >>         else if (!strcmp(arch, "x86"))
+> >>                 path_list =3D x86_triplets;
+> >> -       else if (!strcmp(arch, "mips"))
+> >> -               path_list =3D mips_triplets;
+> >>         else {
+> >>                 ui__error("binutils for %s not supported.\n", arch);
+> >>                 goto out_error;
+> >
+> > I think in general we need to revamp this code. Two things that I see
+> > that are missing are (1) support for perf config and (2) addr2line
+> > should be configurable, you may want llvm-addr2line. Adding RISC-V is
+> > of course important too :-)
+> >
+> > Thanks,
+> > Ian
+>
+> May I ask documentation or hint that I can help work with?
+>
+> P.S.
+>
+> I'm interested in the Google Summer Of code perf category this year,
+> especially the part about risc-v architecture, I recently purchased a
+> development board and would like to be able to test perf on a Sifive U74
+> CPU based environment.
+> But I've only used perf with command tool and don't know much about the
+> internals, so if there is a roadmap for perf development or
+> contribution, I have interest in perf internals both kernel and user side=
+.
+> May I ask information to apply?
+> I am developing Linux Security Driver drivers for a security company.
+>
+> BR
+> Paran Lee
 
-Got it. I saw your patch, will review it.
+Hi Paran,
+
+Thanks for being interested in GSoC with Linux perf. Here is what I
+posted on the mailing list:
+https://lore.kernel.org/linux-perf-users/CAP-5=3DfWxF6in4vQyGuh=3D0kpAYEXAY=
+ZN_KobXCY=3DTX2oxssZ+HQ@mail.gmail.com/
+Applications are ultimately sent to:
+https://summerofcode.withgoogle.com/
+and the entry requirements are there. I believe they are less strict
+than previously.
+
+Wrt the patch, could you reply to Conor's response.
 
 Thanks,
-Ravi
+Ian
