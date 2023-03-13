@@ -2,82 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D8C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 15:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0134C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 15:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbjCMPUk (ORCPT
+        id S230450AbjCMPWP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 11:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52256 "EHLO
+        Mon, 13 Mar 2023 11:22:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjCMPUj (ORCPT
+        with ESMTP id S229768AbjCMPWK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 11:20:39 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760F9664F2
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:20:38 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id e194so12247957ybf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:20:38 -0700 (PDT)
+        Mon, 13 Mar 2023 11:22:10 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773A16F49C
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:22:09 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-53916ab0c6bso248467277b3.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 08:22:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678720837;
+        d=google.com; s=20210112; t=1678720928;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hg/mpqiGdKgql/ouc23r5Z8gp8NHynkHtJy9u7d3hI8=;
-        b=ZgclPJKxiIMOfozzAfXPChLBUKjaLXpRpRsHMb4Lw/5D+AYyjqHwp8G9n2kKb9opyX
-         C3uBw1HRvyxzQ50Ndeppk/VPnIJvH1spRF3QA9Y2KOxSd80DsHUvLUADTmjxvkoIYIfM
-         2UgrAOrm+le8yiF3xUvh6ppnj9Lqhx88GbBaxEAyfXkbfbdVQ3pc5JpFeVXUwY6qPGSV
-         aACsv6K9Vms2pRx64xOzjjnp0NtJ8GCORb29kIAoyV0Xiuf65ezessK2F/yx7N7+O6EP
-         2SOxnCwC2JufkOKFfLjsUAieeLGW0zJYQJ/0t8SOzx1h1BWWWvojgkO+tzRNga2a78/Z
-         b/Rg==
+        bh=KIirSw/hZG6Knd8g/0d8FTYdGwbw04UvbKt8SdtEMds=;
+        b=pUqoI8n2FFvSJ75U0mQW3hso4d0ccj6gO7Nm+PMEbXV7srmwpvUx/Z8mmcal49/bqu
+         76xTnZFme9MJqpvgT/DJFGm945aZMkDR9h3uepcRVjC5scANlW61V3Y1oP4wJAmQ+E77
+         S65SrsisT1gXNbHL/pGqAzIbmpEVykrXVvh4LxJuSdJCEGNlxisfABLzvYD6NDV/p2bN
+         c95i/WTYhgNwGHBLVjXPdjuugIkVlc8uhAMQOKGaJ7XNYDxJo4PCq3C9KJdGtW11jsdS
+         GIYJQegJaJ+T0pBk9F5WbD6UDQEidMVjyuP+x6Wwo48HT04J8wPFGBFG+IzBSdw6XgZo
+         XUPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678720837;
+        d=1e100.net; s=20210112; t=1678720928;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hg/mpqiGdKgql/ouc23r5Z8gp8NHynkHtJy9u7d3hI8=;
-        b=apH2HrosSv8FKQQfPJcKFpgNtmv9UKH06SpVak6FzNvnfiY3h3t7qCgeAuHEnX+jgZ
-         VDswh99z3r/0CstDY+JGrxM8liAtqscL1uIy07NVRmSe5R3GWNZdwYMa0DHe3D+k/Z5d
-         unv1w5lfK9gsftZg2JLVcOsveUhJHlme+iktLJMWeEi1GJcHVUcpK1h2GvXSkMCs9liC
-         Wwzap9SQ3TzYPujuIELK0S9KjPII9oJzll8C+G6RA3beAdhTeNHFlH4M1nGOsFSUtxGt
-         d79PnAaxbqe4UE1suOG4O5V/p9JsXgw75xGU//qdMiyDiWYE9nVAN7HRDJx4etg9f+SZ
-         qjXA==
-X-Gm-Message-State: AO0yUKXKkY+H6CEsnDHov36ZIciwRdVBIQWJZfP0FJYtf/46eYvg6hbi
-        eX7HMNbT239mJF/IgCa+msaQs0X2TUhhat3lTIwoPg==
-X-Google-Smtp-Source: AK7set9rwKnvGypNlqyjM9tokE1R7KsL7qPKchoDxgZaXyFBQSnUCbyj7hbrrAWEy5KQd/ac/AgTe+W5E9gm/fSgATo=
-X-Received: by 2002:a5b:7:0:b0:a06:55b5:3cdf with SMTP id a7-20020a5b0007000000b00a0655b53cdfmr17165325ybp.3.1678720837421;
- Mon, 13 Mar 2023 08:20:37 -0700 (PDT)
+        bh=KIirSw/hZG6Knd8g/0d8FTYdGwbw04UvbKt8SdtEMds=;
+        b=sW9DGbqScDgShoAATdMWS0/nl44AmWoTMPDoHu79BHPF7ihiPOOntbmq/4i4gwnpgs
+         WT1P1bytzTci2C8qPyDp39IuJbtD/CSyqdEBW5b52P7gPHkUEOeRXS5zcYAomhGWf7Zt
+         2zc5KP96khsQdnvFwBZ9Sq07Cel0reboxa0In1660P2jAYAxoALjeZY0uTOTHDtSvKwF
+         i+NmIt29Bj2kShElCd6O4TYmCMgyw+CM9gIZd4A3c1J6XnPJTzbiuIspvl67ZILHDgGw
+         Ld2p1ArY0D4DhhV/KoaoGBJQN95usHVcCjUGWCl/qzmxMHM7iZLhSKBuTtwU6FjKkSO6
+         u+qw==
+X-Gm-Message-State: AO0yUKVoA5zrM44RLWKNX0ska3fDBwxR8zpS29TyQz7LCLCxD5h2i6+p
+        Fv1ttmeOocAu+w4JS261gLekSbN6cfc+IaXkMb+xMA==
+X-Google-Smtp-Source: AK7set88EOorTCYe0sYEPjHrkUPLEBaOHMfN+ZIo+EM4OklcrE+1pw9HL4mP61K3jpnERWaDwA9ZtIhdL9jUpT2DXME=
+X-Received: by 2002:a81:af5c:0:b0:540:e6c6:31e7 with SMTP id
+ x28-20020a81af5c000000b00540e6c631e7mr5873887ywj.2.1678720928477; Mon, 13 Mar
+ 2023 08:22:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230308125326.2195613-1-tmricht@linux.ibm.com>
-In-Reply-To: <20230308125326.2195613-1-tmricht@linux.ibm.com>
+References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
+In-Reply-To: <20230313080201.2440201-1-tmricht@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 13 Mar 2023 08:20:25 -0700
-Message-ID: <CAP-5=fXzeAJqRjtEqsWS26K-+qh3gsDJ+nKOEY7riqedTb-WQQ@mail.gmail.com>
-Subject: Re: [PATCH] perf list: Add PMU pai_ext event description for IBM z16
+Date:   Mon, 13 Mar 2023 08:21:56 -0700
+Message-ID: <CAP-5=fUN=ZVmG6Ryv3QUxcxBfUOw4HURtfcTsi+X9c73QWJPnw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] tools/perf/json: Add common metrics for s390
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
+        acme@kernel.org, sumanthk@linux.ibm.com, svens@linux.ibm.com,
+        gor@linux.ibm.com, hca@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 8, 2023 at 4:54=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.co=
-m> wrote:
+On Mon, Mar 13, 2023 at 1:06=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
 >
-> Add the event description for the IBM z16 pai_ext PMU released with
-> commit c432fefe8e62 ("s390/pai: Add support for PAI Extension 1 NNPA coun=
-ters")
+> Add 3 metrics for s390 machines:
+> - Cycles per instruction: Amount of CPU cycles used per instructions,
+>   named cpi.
+> - Problem state ratio: Ratio of instructions executed in problem state
+>   compared to total number of instructions, named prbstate.
+> - Level one instruction and data cache misses per 100 instructions,
+>   named l1mp.
 >
-> The document SA22-7832-13 "z/Architecture Principles of Operation",
-> published May, 2022, contains the description of the
-> Processor Activity Instrumentation Facility and the NNPA counter
-> set., See Pages 5-113 to 5-116 and chapter 26 for details.
+> For details about the formulas see this documentation:
+> https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Fo=
+rmulas%20including%20z16%20-%20May%202022_1.pdf
+>
+> Outpuf after:
+>  # ./perf stat -M cpi -- dd if=3D/dev/zero of=3D/dev/null bs=3D1M count=
+=3D10K
+>  10240+0 records in
+>  10240+0 records out
+>  10737418240 bytes (11 GB, 10 GiB) copied, 1.30151 s, 8.2 GB/s
+>
+> Performance counter stats for 'dd if=3D/dev/zero of=3D/dev/null .....':
+>
+>   6,779,778,802      CPU_CYCLES              #     1.96 cpi
+>   3,461,975,090      INSTRUCTIONS
+>
+>   1.306873021 seconds time elapsed
+>
+>   0.001034000 seconds user
+>   1.305677000 seconds sys
+>  #
 >
 > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
 
 Acked-by: Ian Rogers <irogers@google.com>
 
@@ -85,243 +107,124 @@ Thanks,
 Ian
 
 > ---
->  .../pmu-events/arch/s390/cf_z16/pai_ext.json  | 178 ++++++++++++++++++
->  tools/perf/pmu-events/jevents.py              |   1 +
->  2 files changed, 179 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
+>  .../pmu-events/arch/s390/cf_z13/transaction.json  | 15 +++++++++++++++
+>  .../pmu-events/arch/s390/cf_z14/transaction.json  | 15 +++++++++++++++
+>  .../pmu-events/arch/s390/cf_z15/transaction.json  | 15 +++++++++++++++
+>  .../pmu-events/arch/s390/cf_z16/transaction.json  | 15 +++++++++++++++
+>  4 files changed, 60 insertions(+)
 >
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json b/tools/=
-perf/pmu-events/arch/s390/cf_z16/pai_ext.json
-> new file mode 100644
-> index 000000000000..7ccbded95dc9
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/pai_ext.json
-> @@ -0,0 +1,178 @@
-> +[
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6144",
-> +               "EventName": "NNPA_ALL",
-> +               "BriefDescription": "NNPA ALL Sum of all non zero counter=
-s",
-> +               "PublicDescription": "Sum of all non zero NNPA (Neural Ne=
-tworks Processing Assist) counters"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6145",
-> +               "EventName": "NNPA_ADD",
-> +               "BriefDescription": "NNPA ADD function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6146",
-> +               "EventName": "NNPA_SUB",
-> +               "BriefDescription": "NNPA SUB function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6147",
-> +               "EventName": "NNPA_MUL",
-> +               "BriefDescription": "NNPA MUL function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6148",
-> +               "EventName": "NNPA_DIV",
-> +               "BriefDescription": "NNPA DIV function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6149",
-> +               "EventName": "NNPA_MIN",
-> +               "BriefDescription": "NNPA MIN function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6150",
-> +               "EventName": "NNPA_MAX",
-> +               "BriefDescription": "NNPA MAX function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6151",
-> +               "EventName": "NNPA_LOG",
-> +               "BriefDescription": "NNPA LOG function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6152",
-> +               "EventName": "NNPA_EXP",
-> +               "BriefDescription": "NNPA EXP function ending with CC=3D0=
-"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6153",
-> +               "EventName": "NNPA_IBM_RESERVED_9",
-> +               "BriefDescription": "Reserved for IBM use",
-> +               "PublicDescription": "Reserved for IBM use"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6154",
-> +               "EventName": "NNPA_RELU",
-> +               "BriefDescription": "NNPA RELU function ending with CC=3D=
-0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6155",
-> +               "EventName": "NNPA_TANH",
-> +               "BriefDescription": "NNPA TANH function ending with CC=3D=
-0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6156",
-> +               "EventName": "NNPA_SIGMOID",
-> +               "BriefDescription": "NNPA SIGMOID function ending with CC=
-=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6157",
-> +               "EventName": "NNPA_SOFTMAX",
-> +               "BriefDescription": "NNPA SOFTMAX function ending with CC=
-=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6158",
-> +               "EventName": "NNPA_BATCHNORM",
-> +               "BriefDescription": "NNPA BATCHNORM function ending with =
-CC=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6159",
-> +               "EventName": "NNPA_MAXPOOL2D",
-> +               "BriefDescription": "NNPA MAXPOOL2D function ending with =
-CC=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6160",
-> +               "EventName": "NNPA_AVGPOOL2D",
-> +               "BriefDescription": "NNPA AVGPOOL2D function ending with =
-CC=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6161",
-> +               "EventName": "NNPA_LSTMACT",
-> +               "BriefDescription": "NNPA LSTMACT function ending with CC=
-=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6162",
-> +               "EventName": "NNPA_GRUACT",
-> +               "BriefDescription": "NNPA GRUACT function ending with CC=
-=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6163",
-> +               "EventName": "NNPA_CONVOLUTION",
-> +               "BriefDescription": "NNPA CONVOLUTION function ending wit=
-h CC=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6164",
-> +               "EventName": "NNPA_MATMUL_OP",
-> +               "BriefDescription": "NNPA MATMUL OP function ending with =
-CC=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6165",
-> +               "EventName": "NNPA_MATMUL_OP_BCAST23",
-> +               "BriefDescription": "NNPA NNPA MATMUL OP BCAST23 function=
- ending with CC=3D0"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6166",
-> +               "EventName": "NNPA_SMALLBATCH",
-> +               "BriefDescription": "NNPA SMALLBATCH OP function ending w=
-ith CC=3D0",
-> +               "PublicDescription": "NNPA function with conditions as de=
-scribed in Common Operation"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6167",
-> +               "EventName": "NNPA_LARGEDIM",
-> +               "BriefDescription": "NNPA LARGEDIM OP function ending wit=
-h CC=3D0",
-> +               "PublicDescription": "NNPA function with conditions as de=
-scribed in Common Operation"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6168",
-> +               "EventName": "NNPA_SMALLTENSOR",
-> +               "BriefDescription": "NNPA SMALLTENSOR OP function ending =
-with CC=3D0",
-> +               "PublicDescription": "NNPA function with conditions as de=
-scribed in Common Operation"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6169",
-> +               "EventName": "NNPA_1MFRAME",
-> +               "BriefDescription": "NNPA 1MFRAME OP function ending with=
- CC=3D0",
-> +               "PublicDescription": "NNPA function with conditions as de=
-scribed in Common Operation"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6170",
-> +               "EventName": "NNPA_2GFRAME",
-> +               "BriefDescription": "NNPA 2GFRAME OP function ending with=
- CC=3D0",
-> +               "PublicDescription": "NNPA function with conditions as de=
-scribed in Common Operation"
-> +       },
-> +       {
-> +               "Unit": "PAI-EXT",
-> +               "EventCode": "6171",
-> +               "EventName": "NNPA_ACCESSEXCEPT",
-> +               "BriefDescription": "NNPA ACCESSEXCEPT OP function ending=
- with CC=3D0",
-> +               "PublicDescription": "NNPA function with conditions as de=
-scribed in Common Operation"
-> +       }
-> +]
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 2bcd07ce609f..b20d06fcc358 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -246,6 +246,7 @@ class JsonEvent:
->            'CPU-M-CF': 'cpum_cf',
->            'CPU-M-SF': 'cpum_sf',
->            'PAI-CRYPTO' : 'pai_crypto',
-> +          'PAI-EXT' : 'pai_ext',
->            'UPI LL': 'uncore_upi',
->            'hisi_sicl,cpa': 'hisi_sicl,cpa',
->            'hisi_sccl,ddrc': 'hisi_sccl,ddrc',
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z13/transaction.json
+> index 1a0034f79f73..86bf83b4504e 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
+> @@ -3,5 +3,20 @@
+>      "BriefDescription": "Transaction count",
+>      "MetricName": "transaction",
+>      "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_S=
+PECIAL + TX_C_TABORT_NO_SPECIAL"
+> +  },
+> +  {
+> +    "BriefDescription": "Cycles per Instruction",
+> +    "MetricName": "cpi",
+> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
+> +  },
+> +  {
+> +    "BriefDescription": "Problem State Instruction Ratio",
+> +    "MetricName": "prbstate",
+> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
+> +  },
+> +  {
+> +    "BriefDescription": "Level One Miss per 100 Instructions",
+> +    "MetricName": "l1mp",
+> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100"
+>    }
+>  ]
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z14/transaction.json
+> index 1a0034f79f73..86bf83b4504e 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
+> @@ -3,5 +3,20 @@
+>      "BriefDescription": "Transaction count",
+>      "MetricName": "transaction",
+>      "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_S=
+PECIAL + TX_C_TABORT_NO_SPECIAL"
+> +  },
+> +  {
+> +    "BriefDescription": "Cycles per Instruction",
+> +    "MetricName": "cpi",
+> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
+> +  },
+> +  {
+> +    "BriefDescription": "Problem State Instruction Ratio",
+> +    "MetricName": "prbstate",
+> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
+> +  },
+> +  {
+> +    "BriefDescription": "Level One Miss per 100 Instructions",
+> +    "MetricName": "l1mp",
+> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100"
+>    }
+>  ]
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z15/transaction.json
+> index 1a0034f79f73..86bf83b4504e 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
+> @@ -3,5 +3,20 @@
+>      "BriefDescription": "Transaction count",
+>      "MetricName": "transaction",
+>      "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_S=
+PECIAL + TX_C_TABORT_NO_SPECIAL"
+> +  },
+> +  {
+> +    "BriefDescription": "Cycles per Instruction",
+> +    "MetricName": "cpi",
+> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
+> +  },
+> +  {
+> +    "BriefDescription": "Problem State Instruction Ratio",
+> +    "MetricName": "prbstate",
+> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
+> +  },
+> +  {
+> +    "BriefDescription": "Level One Miss per 100 Instructions",
+> +    "MetricName": "l1mp",
+> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100"
+>    }
+>  ]
+> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/to=
+ols/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> index 1a0034f79f73..86bf83b4504e 100644
+> --- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
+> @@ -3,5 +3,20 @@
+>      "BriefDescription": "Transaction count",
+>      "MetricName": "transaction",
+>      "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_S=
+PECIAL + TX_C_TABORT_NO_SPECIAL"
+> +  },
+> +  {
+> +    "BriefDescription": "Cycles per Instruction",
+> +    "MetricName": "cpi",
+> +    "MetricExpr": "CPU_CYCLES / INSTRUCTIONS"
+> +  },
+> +  {
+> +    "BriefDescription": "Problem State Instruction Ratio",
+> +    "MetricName": "prbstate",
+> +    "MetricExpr": "(PROBLEM_STATE_INSTRUCTIONS / INSTRUCTIONS) * 100"
+> +  },
+> +  {
+> +    "BriefDescription": "Level One Miss per 100 Instructions",
+> +    "MetricName": "l1mp",
+> +    "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * =
+100"
+>    }
+>  ]
 > --
 > 2.39.1
 >
