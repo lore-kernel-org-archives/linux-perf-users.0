@@ -2,179 +2,229 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8828C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 20:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D41EC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 20:59:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbjCMUsq (ORCPT
+        id S229836AbjCMU7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 16:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
+        Mon, 13 Mar 2023 16:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229992AbjCMUsf (ORCPT
+        with ESMTP id S229493AbjCMU7O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 16:48:35 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7965B6187;
-        Mon, 13 Mar 2023 13:48:31 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id y2so13279204pjg.3;
-        Mon, 13 Mar 2023 13:48:31 -0700 (PDT)
+        Mon, 13 Mar 2023 16:59:14 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DC4126E5
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 13:58:28 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id j6so3144278ilr.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 13:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678740511;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20210112; t=1678741107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JMkL+RuV2gz/hzkO+iEW9HUlD0V+BM8BplklCfPzrkE=;
-        b=TrDJUwoqnKQ/G6hrEF9tBK6uK6Tt8itetLQoIX1DE61g0mlVnfnAfJv/wzZ3vVxClO
-         u4Y/mYRnrYHipfL5j3C4tCWfMwR5slRbu0Cu5Mzl4uMbRICLMSho1vor6UQeXVo4RgEM
-         7GTkSFyG0FHYaZ7kO4zzBDROeJwi1g2+bt4/Yx8/xG4kCZbUxeG/t2MaZMuyCeyREnoW
-         m8VFroBuCZVS3HYr/2HxBd5qka5SZnxcpyeMEs3Ee5JAweEb7oW1wbCi4OSb07sXrX+U
-         qz3tJQYV91qFkOZIV81kHgNuAP0F1XcggZcDk8PsfBK3LmFTtjaYwaVpsVYL2RqXqcnq
-         zL1Q==
+        bh=cz/F3ZMv7JJTYZGTybhdPyEf/RGnba1yVdkcAMI5UGs=;
+        b=CX5N+6G4k61+cs5paeZTKqx3CgY3MqW1PGC3VLqiHAc3Lrd0ET11IpVzV0YbGQuAhT
+         kN9pVSXmJaO4L+GH2fNmFZqiJe+kAanFT20RUughuKx+ZeCRJO2bsqE4d+iD9C6ICjY0
+         39bzUoWEwWWcxvXCPs2v6my2T9ZGYzCX5248ogRVXVwe/VNO+xxfdIGbJNmcY0yeA4Je
+         qmBMm9/otFx29sNbuFFVlWPreJqSlI4uyPY7XYirwAkxvWcN2yNJcMw0xGgVJ5ovTdOW
+         lUbtm9J2jP+rUsEsx1DVMhtWTKuv9vIcaVjGuEklJPnYUArGp8ho3d3FX45CjsuAXyA0
+         tj9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678740511;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=JMkL+RuV2gz/hzkO+iEW9HUlD0V+BM8BplklCfPzrkE=;
-        b=bXr6GXM22MdomqzTuvVdpMY3weDG8xvXrAVEFqPmeZ/DoyWnCLb89/gzhfF3DHEyQ/
-         ABVGTFRDFNgLS2A4z1tsXdJjMY0Cu/uP0GH6EHSwZEGtdEdYl3oy/wBPRhtTKX/Tsqt3
-         Qo2W2d3mB/+e8f9VXcH1r8UYqXKThubxogOfudPPFlxZFoXmIQ1+SuT6qpJoSty/LIDC
-         Hl4Jx1zw1lVxZv4aaGwWLotjVxVh5OEkR5/INHyhKXTAOgE9sHGzsJ1zGuFl7p1FelBv
-         mftdGE7QBmhBOpCxp+2eqOeIEYWsuCiE+5QZOEHyTpj6rAZA/4EdNHrctQeDbGW6f9kd
-         q85w==
-X-Gm-Message-State: AO0yUKVWdpVL5Qf8WT1a1J9JTj2tDPhowx4kgP4AI9nrg0qD4guxYkoX
-        LRULImRrbgtokG4EFbx+3Ps=
-X-Google-Smtp-Source: AK7set/ksRuDZOws2N7QlY5ec1AmU0FdbxEc5J5WSEFPJ+yfMpOuGnjCn8xJG9MnXMNhCSB2lB1nPA==
-X-Received: by 2002:a17:90b:1b08:b0:23b:308e:b0ab with SMTP id nu8-20020a17090b1b0800b0023b308eb0abmr9028191pjb.34.1678740510896;
-        Mon, 13 Mar 2023 13:48:30 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:26de:6cd7:2c4f:96d5])
-        by smtp.gmail.com with ESMTPSA id s12-20020a17090aba0c00b0023af8a3cf6esm265026pjr.48.2023.03.13.13.48.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 13:48:30 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 2/4] perf lock contention: Track and show siglock with address
-Date:   Mon, 13 Mar 2023 13:48:23 -0700
-Message-Id: <20230313204825.2665483-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-In-Reply-To: <20230313204825.2665483-1-namhyung@kernel.org>
-References: <20230313204825.2665483-1-namhyung@kernel.org>
+        d=1e100.net; s=20210112; t=1678741107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cz/F3ZMv7JJTYZGTybhdPyEf/RGnba1yVdkcAMI5UGs=;
+        b=RUdRDEw9NYKK4DqMT1r4yrcq9d/Lqqu/umM7g80XWYFWY7RNUSW9ngoORQCHgwnAiD
+         PIv+NEhd2ZHRUygHcsCvzzrIsod/c7GWFS6ZgP8nxV4P6veclNjhr742wIUx1qbYu8AG
+         NVX+LrqS4ooRZMgNpmqC5Ei1f1yV7eLtnGUVeutpO2DlZ5URzIEtT4d+w59xqohFQbWk
+         nEFJPWUVcvfGzJp5ALOfwwgJic7+bngrYiCIaJJfSjgCMMopOLzNgQZ0I4fAhHBItvy7
+         gp9WDFQCA2FaXXtYJppFmgL5+yH3PdHTbeMqa/R7Og9OH/rzfh+qXJDCeJHn1AyB4xlT
+         HTlg==
+X-Gm-Message-State: AO0yUKUO0CGCZaxaoVxZfYkKfOR4hHntcaI7eJTLhVCes2Jyv9qUW0yD
+        Ab/JDAdZpSJCzlny5n5RZYuJKcgDeb2gctG6hXLkLg==
+X-Google-Smtp-Source: AK7set+Xi9ueG8OhlwmwlrRpeY2SXs9S254LzUANmFveR3Bx9FO9NaM1s5wYgid/T+MUYELve8vax69y6fNNKiJvEQ8=
+X-Received: by 2002:a05:6e02:12a8:b0:323:17f1:e752 with SMTP id
+ f8-20020a056e0212a800b0032317f1e752mr532220ilr.0.1678741107477; Mon, 13 Mar
+ 2023 13:58:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230308225912.1960990-1-irogers@google.com> <20230308225912.1960990-7-irogers@google.com>
+ <ZA+KjvtPyDDb0Xb5@kernel.org>
+In-Reply-To: <ZA+KjvtPyDDb0Xb5@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Mar 2023 13:58:16 -0700
+Message-ID: <CAP-5=fXdJ3UQMF47BVt4-mPdVnAyzPpFnWWCdh74WL89=+3VDQ@mail.gmail.com>
+Subject: Re: [PATCH v4 06/11] perf evsel: Add function to compute group PMU name
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Likewise, we can display siglock by following the pointer like
-current->sighand->siglock.
+On Mon, Mar 13, 2023 at 1:41=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Wed, Mar 08, 2023 at 02:59:07PM -0800, Ian Rogers escreveu:
+> > The computed name respects software events and aux event groups, such
+> > that the pmu_name is changed to be that of the aux event leader or
+> > group leader for software events. This is done as a later change will
+> > split events that are in different PMUs into different groups.
+>
+> This makes 'perf test python' to fail:
+>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ perf test -v python
+> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF =
+maps, etc
+>  19: 'import perf' in python                                         :
+> --- start ---
+> test child forked, pid 720242
+> python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf-t=
+ools-next/python'); import perf" | '/usr/bin/python3' "
+> Traceback (most recent call last):
+>   File "<stdin>", line 1, in <module>
+> ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-li=
+nux-gnu.so: undefined symbol: evsel__is_aux_event
+> test child finished with -1
+> ---- end ----
+> 'import perf' in python: FAILED!
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> So I added the following patch, please run 'perf test' and 'make -C
+> tools/perf build-test' before submitting patch series.
+>
+> - Arnaldo
 
-  $ sudo ./perf lock con -abl -- sleep 1
-   contended   total wait     max wait     avg wait            address   symbol
+Hmm.. was passing for me:
 
-          16      2.18 ms    305.35 us    136.34 us   ffffffff92e06080   tasklist_lock
-          28    521.78 us     31.16 us     18.63 us   ffff8cc703783ec4
-           7    119.03 us     23.55 us     17.00 us   ffff8ccb92479440
-          15     88.29 us     10.06 us      5.89 us   ffff8cd560b5f380   siglock
-           7     37.67 us      9.16 us      5.38 us   ffff8d053daf0c80
-           5      8.81 us      4.92 us      1.76 us   ffff8d053d6b0c80
+```
+ 19: 'import perf' in python                                         :
+--- start ---
+test child forked, pid 3161744
+python usage test: "echo "import sys ;
+sys.path.append('/tmp/perf/python'); import perf" | '/usr/bin/python3'
+"
+test child finished with 0
+---- end ----
+'import perf' in python: Ok
+```
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-lock.c                      | 3 +--
- tools/perf/util/bpf_lock_contention.c          | 8 ++++++--
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 5 +++++
- tools/perf/util/bpf_skel/lock_data.h           | 3 ++-
- 4 files changed, 14 insertions(+), 5 deletions(-)
+albeit:
+```
+$ nm /tmp/perf/python/perf.cpython-310-x86_64-linux-gnu.so |grep is_aux_eve=
+nt
+                U evsel__is_aux_event
+```
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index c62f4d9363a6..c710a5d46638 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1662,8 +1662,7 @@ static void print_contention_result(struct lock_contention *con)
- 				pid, pid == -1 ? "Unknown" : thread__comm_str(t));
- 			break;
- 		case LOCK_AGGR_ADDR:
--			pr_info("  %016llx   %s\n", (unsigned long long)st->addr,
--				(st->flags & LCD_F_MMAP_LOCK) ? "mmap_lock" : st->name);
-+			pr_info("  %016llx   %s\n", (unsigned long long)st->addr, st->name);
- 			break;
- 		default:
- 			break;
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index fadcacb9d501..51631af3b4d6 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -169,7 +169,7 @@ int lock_contention_stop(void)
- 
- static const char *lock_contention_get_name(struct lock_contention *con,
- 					    struct contention_key *key,
--					    u64 *stack_trace)
-+					    u64 *stack_trace, u32 flags)
- {
- 	int idx = 0;
- 	u64 addr;
-@@ -198,6 +198,10 @@ static const char *lock_contention_get_name(struct lock_contention *con,
- 	}
- 
- 	if (con->aggr_mode == LOCK_AGGR_ADDR) {
-+		if (flags & LCD_F_MMAP_LOCK)
-+			return "mmap_lock";
-+		if (flags & LCD_F_SIGHAND_LOCK)
-+			return "siglock";
- 		sym = machine__find_kernel_symbol(machine, key->lock_addr, &kmap);
- 		if (sym)
- 			name = sym->name;
-@@ -301,7 +305,7 @@ int lock_contention_read(struct lock_contention *con)
- 			goto next;
- 		}
- 
--		name = lock_contention_get_name(con, &key, stack_trace);
-+		name = lock_contention_get_name(con, &key, stack_trace, data.flags);
- 		st = lock_stat_findnew(ls_key, name, data.flags);
- 		if (st == NULL)
- 			break;
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index f092a78ae2b5..4ba34caf84eb 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -236,6 +236,11 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
- 				return LCD_F_MMAP_LOCK;
- 		}
- 		break;
-+	case LCB_F_SPIN:  /* spinlock */
-+		curr = bpf_get_current_task_btf();
-+		if (&curr->sighand->siglock == (void *)lock)
-+			return LCD_F_SIGHAND_LOCK;
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-index 789f20833798..5ed1a0955015 100644
---- a/tools/perf/util/bpf_skel/lock_data.h
-+++ b/tools/perf/util/bpf_skel/lock_data.h
-@@ -19,7 +19,8 @@ struct contention_task_data {
-  * Upper bits of the flags in the contention_data are used to identify
-  * some well-known locks which do not have symbols (non-global locks).
-  */
--#define LCD_F_MMAP_LOCK  (1U << 31)
-+#define LCD_F_MMAP_LOCK		(1U << 31)
-+#define LCD_F_SIGHAND_LOCK	(1U << 30)
- 
- struct contention_data {
- 	u64 total_time;
--- 
-2.40.0.rc1.284.g88254d51c5-goog
+Perhaps there's some more aggressive linking flag I need to enable.
 
+Thanks,
+Ian
+
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index ab48ffbb644805df..be336f1b2b689602 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -93,6 +93,11 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const ch=
+ar *name, const char *fmt,
+>         return EOF;
+>  }
+>
+> +bool evsel__is_aux_event(const struct evsel *evsel __maybe_unused)
+> +{
+> +       return false;
+> +}
+> +
+>  /*
+>   * Add this one here not to drag util/metricgroup.c
+>   */
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
+> >  tools/perf/util/evsel.h |  1 +
+> >  2 files changed, 25 insertions(+)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 2dc2c24252bb..51d9650267d0 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -821,6 +821,30 @@ const char *evsel__name(struct evsel *evsel)
+> >       return "unknown";
+> >  }
+> >
+> > +const char *evsel__group_pmu_name(const struct evsel *evsel)
+> > +{
+> > +     const struct evsel *leader;
+> > +
+> > +     /* If the pmu_name is set use it. pmu_name isn't set for CPU and =
+software events. */
+> > +     if (evsel->pmu_name)
+> > +             return evsel->pmu_name;
+> > +     /*
+> > +      * Software events may be in a group with other uncore PMU events=
+. Use
+> > +      * the pmu_name of the group leader to avoid breaking the softwar=
+e event
+> > +      * out of the group.
+> > +      *
+> > +      * Aux event leaders, like intel_pt, expect a group with events f=
+rom
+> > +      * other PMUs, so substitute the AUX event's PMU in this case.
+> > +      */
+> > +     leader  =3D evsel__leader(evsel);
+> > +     if ((evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is=
+_aux_event(leader)) &&
+> > +         leader->pmu_name) {
+> > +             return leader->pmu_name;
+> > +     }
+> > +
+> > +     return "cpu";
+> > +}
+> > +
+> >  const char *evsel__metric_id(const struct evsel *evsel)
+> >  {
+> >       if (evsel->metric_id)
+> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> > index 676c499323e9..d26745ca6147 100644
+> > --- a/tools/perf/util/evsel.h
+> > +++ b/tools/perf/util/evsel.h
+> > @@ -280,6 +280,7 @@ int arch_evsel__hw_name(struct evsel *evsel, char *=
+bf, size_t size);
+> >
+> >  int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char=
+ *bf, size_t size);
+> >  const char *evsel__name(struct evsel *evsel);
+> > +const char *evsel__group_pmu_name(const struct evsel *evsel);
+> >  const char *evsel__metric_id(const struct evsel *evsel);
+> >
+> >  static inline bool evsel__is_tool(const struct evsel *evsel)
+> > --
+> > 2.40.0.rc0.216.gc4246ad0f0-goog
+> >
+>
+> --
+>
+> - Arnaldo
