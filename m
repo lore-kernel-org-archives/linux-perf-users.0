@@ -2,167 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E0CC6FD19
-	for <linux-perf-users@archiver.kernel.org>; Sun, 12 Mar 2023 14:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC66C6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 01:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbjCLOyk (ORCPT
+        id S229561AbjCMB7C (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 12 Mar 2023 10:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
+        Sun, 12 Mar 2023 21:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbjCLOyj (ORCPT
+        with ESMTP id S229437AbjCMB7B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 12 Mar 2023 10:54:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A587D1ADFD;
-        Sun, 12 Mar 2023 07:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KH8tQFD6+tSiQOT1PfAjpOv+D/Fe0N+sgUQBc9cq624=; b=Co5lzFiJvwM5i18Hf55xUJOJph
-        fBo561VYQN40SnrTJ3KRBJ/PqK4eBf8dm119k0Me17OhdmmWRBYDy/Irgn7ow1bSDhr63ywCmukN2
-        eVr9VUAT/xCnljLv+EDJeoo8uxJCt/3I0tguH082ZjjfDeVEChImzd6iK1qUVHgWPsxprBnuGlbhc
-        sGVSZpHU2IL5jKkogMIATBwrS0EL94M/4PC8fo41Fog9juREVrbEUfcE3zKwttc+ZL0n7ZpdqEO6s
-        GZ4/ZKP3pDqMOmHPbbeor6zSmHP6pZr0PGBYXsv6wc2lwFYdThfCstDHZLHdrJb5E4B+o3N6kfd6/
-        A3KHym4w==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pbN5f-00B73x-Pr; Sun, 12 Mar 2023 14:54:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A7773001E5;
-        Sun, 12 Mar 2023 15:54:26 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 448DD20831B69; Sun, 12 Mar 2023 15:54:26 +0100 (CET)
-Date:   Sun, 12 Mar 2023 15:54:26 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     namhyung@kernel.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, x86@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
-Subject: Re: [PATCH v2 2/3] perf/ibs: Fix interface via core pmu events
-Message-ID: <20230312145426.GA1757905@hirez.programming.kicks-ass.net>
-References: <20230309101111.444-1-ravi.bangoria@amd.com>
- <20230309101111.444-3-ravi.bangoria@amd.com>
+        Sun, 12 Mar 2023 21:59:01 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5945D234D3;
+        Sun, 12 Mar 2023 18:59:00 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PZfrh1gk4z17KS6;
+        Mon, 13 Mar 2023 09:56:04 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 13 Mar
+ 2023 09:58:28 +0800
+Date:   Mon, 13 Mar 2023 09:58:11 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Changbin Du <changbin.du@huawei.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>
+Subject: Re: [PATCH v2 0/3] perf : fix counting when initial delay configured
+Message-ID: <20230313015811.2nivivoiyh674lzj@M910t>
+References: <20230302031146.2801588-1-changbin.du@huawei.com>
+ <CAM9d7cigZ=TRoH8-MNbovUETzsjf+OuX7ykXA9rSyhsOY48dRg@mail.gmail.com>
+ <ZAEJsMYGo1HC5CRk@kernel.org>
+ <20230310023714.gqmenjlunlcm3bju@M910t>
+ <ZAtHQuhWz+q//pE2@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230309101111.444-3-ravi.bangoria@amd.com>
+In-Reply-To: <ZAtHQuhWz+q//pE2@kernel.org>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 09, 2023 at 03:41:10PM +0530, Ravi Bangoria wrote:
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index 8c45b198b62f..81d67b899371 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -371,10 +371,15 @@ static inline int amd_has_nb(struct cpu_hw_events *cpuc)
->  static int amd_pmu_hw_config(struct perf_event *event)
->  {
->  	int ret;
-> +	u64 dummy;
->  
-> -	/* pass precise event sampling to ibs: */
-> -	if (event->attr.precise_ip && get_ibs_caps())
-> -		return -ENOENT;
-> +	if (event->attr.precise_ip) {
-> +		/* pass precise event sampling to ibs by returning -ESRCH */
-> +		if (get_ibs_caps() && !ibs_core_pmu_event(event, &dummy))
-> +			return -ESRCH;
-> +		else
-> +			return -ENOENT;
-> +	}
->  
->  	if (has_branch_stack(event) && !x86_pmu.lbr_nr)
->  		return -EOPNOTSUPP;
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f79fd8b87f75..e990c71ba34a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11639,18 +11639,26 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  			goto again;
->  		}
->  
-> +		/*
-> +		 * pmu->event_init() should return -ESRCH only when it
-> +		 * wants to forward the event to other pmu.
-> +		 */
-> +		if (ret == -ESRCH)
-> +			goto try_all;
-> +
->  		if (ret)
->  			pmu = ERR_PTR(ret);
->  
->  		goto unlock;
->  	}
->  
-> +try_all:
->  	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
->  		ret = perf_try_init_event(pmu, event);
->  		if (!ret)
->  			goto unlock;
->  
-> -		if (ret != -ENOENT) {
-> +		if (ret != -ENOENT && ret != -ESRCH) {
->  			pmu = ERR_PTR(ret);
->  			goto unlock;
->  		}
+On Fri, Mar 10, 2023 at 12:05:38PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Mar 10, 2023 at 10:37:14AM +0800, Changbin Du escreveu:
+> > On Thu, Mar 02, 2023 at 05:40:16PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Em Thu, Mar 02, 2023 at 11:22:37AM -0800, Namhyung Kim escreveu:
+> > > > Hello,
+> > > > 
+> > > > On Wed, Mar 1, 2023 at 7:12 PM Changbin Du <changbin.du@huawei.com> wrote:
+> > > > >
+> > > > > The first one fixes the problem that counters are never enabled  when initial
+> > > > > delay configured.
+> > > > > The remaining two reuse the common field target::initial_delay for
+> > > > > record/ftrace/trace subcommands.
+> > > > >
+> > > > > v2:
+> > > > >  - introduce common filed target::initial_delay
+> > > > >
+> > > > > Changbin Du (3):
+> > > > >   perf stat: fix counting when initial delay configured
+> > > > >   perf record: reuse target::initial_delay
+> > > > >   perf: ftrace: reuse target::initial_delay
+> > > > 
+> > > > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > 
+> > > Thanks, applying the first to perf-tools (old perf/urgent) and the rest
+> > > to perf-tools-next (old perf/core).
+> > > 
+> > > - Arnaldo
+> > > 
+> > Hi Arnaldo, it seems only the first one is applied. The remaining two patches
+> > are missed in your tree.
+> >  - perf record: reuse target::initial_delay
+> >  - perf: ftrace: reuse target::initial_delay
+> 
+> Those are not fixes, right? I mentioned that I would apply it after the
+> first is merged.
+>
+Sorry, I misunderstood your previous reply :)
 
-Urgh.. So amd_pmu_hw_config() knows what PMU it should be but has no
-real way to communicate this, so you make it try all of them again.
+> - Arnaldo
 
-Now, we already have a gruesome hack in there, and I'm thikning you
-should use that instead of adding yet another one. Note:
-
-		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-			type = event->attr.type;
-			goto again;
-
-So if you have amd_pmu_hw_config() do:
-
-	event->attr.type = ibs_pmu.type;
-	return -ENOENT;
-
-it should all just work no?
-
-And now thinking about this, I'm thinking we can clean up the whole
-swevent mess too, a little something like the below perhaps... Then it
-might just be possible to remove that list_for_each_entry_rcu()
-entirely.
-
-Hmm?
-
-
----
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f79fd8b87f75..26130d1ca40b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9951,6 +9951,9 @@ static void sw_perf_event_destroy(struct perf_event *event)
- 	swevent_hlist_put();
- }
- 
-+static struct pmu perf_cpu_clock; /* fwd declaration */
-+static struct pmu perf_task_clock;
-+
- static int perf_swevent_init(struct perf_event *event)
- {
- 	u64 event_id = event->attr.config;
-@@ -9966,7 +9969,11 @@ static int perf_swevent_init(struct perf_event *event)
- 
- 	switch (event_id) {
- 	case PERF_COUNT_SW_CPU_CLOCK:
-+		event->attr.type = perf_cpu_clock.type;
-+		return -ENOENT;
-+
- 	case PERF_COUNT_SW_TASK_CLOCK:
-+		event->attr.type = perf_task_clock.type;
- 		return -ENOENT;
- 
- 	default:
+-- 
+Cheers,
+Changbin Du
