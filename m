@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AA2C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 20:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8828C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 20:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjCMUsm (ORCPT
+        id S229755AbjCMUsq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 16:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53416 "EHLO
+        Mon, 13 Mar 2023 16:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229814AbjCMUsf (ORCPT
+        with ESMTP id S229992AbjCMUsf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 13 Mar 2023 16:48:35 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 070B216AC6;
-        Mon, 13 Mar 2023 13:48:34 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id i5so14389698pla.2;
-        Mon, 13 Mar 2023 13:48:34 -0700 (PDT)
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7965B6187;
+        Mon, 13 Mar 2023 13:48:31 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id y2so13279204pjg.3;
+        Mon, 13 Mar 2023 13:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678740513;
+        d=gmail.com; s=20210112; t=1678740511;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RciDXnCG/KtX4Q4XcZ5CVs3Bi1XerIjeyGzrjFnWXYw=;
-        b=Jvb5hDuwEF3uh8FaYe3r6f5k6p3w1TgfnX8JQkY1WSKdGPWVX1x258Y7IxdX/tPnVJ
-         ej/XpP52Ra9JpL3PF2IlBQFexFLavSvD3Q7LBvmk9Mlr13uS6hZzvuXqXBbAR8MRZZ45
-         BSlt6+Ph4p76rSxn3PzeKbzy7YZZ8VlKvq4omqujzgOGTZ1r8D8uMMPfm8/iaGlJdjr6
-         pKIR/UcOLTi9+Z2HyZLHqDYLSaKoADacAhD4yyWcysd4O0IIIkNvCi6SHPFTVk1ejpNL
-         kfU3JibXU58r5JkSD3CoQp5TGV+hKai7TdEDQBUiQ2C3yDTSfifUXz5MYisYYdNBGYNA
-         L5jw==
+        bh=JMkL+RuV2gz/hzkO+iEW9HUlD0V+BM8BplklCfPzrkE=;
+        b=TrDJUwoqnKQ/G6hrEF9tBK6uK6Tt8itetLQoIX1DE61g0mlVnfnAfJv/wzZ3vVxClO
+         u4Y/mYRnrYHipfL5j3C4tCWfMwR5slRbu0Cu5Mzl4uMbRICLMSho1vor6UQeXVo4RgEM
+         7GTkSFyG0FHYaZ7kO4zzBDROeJwi1g2+bt4/Yx8/xG4kCZbUxeG/t2MaZMuyCeyREnoW
+         m8VFroBuCZVS3HYr/2HxBd5qka5SZnxcpyeMEs3Ee5JAweEb7oW1wbCi4OSb07sXrX+U
+         qz3tJQYV91qFkOZIV81kHgNuAP0F1XcggZcDk8PsfBK3LmFTtjaYwaVpsVYL2RqXqcnq
+         zL1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678740513;
+        d=1e100.net; s=20210112; t=1678740511;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=RciDXnCG/KtX4Q4XcZ5CVs3Bi1XerIjeyGzrjFnWXYw=;
-        b=MCVIVLL/2ruv2mwdE+LB5BVamV0bSp9+4zl6GMVgp3enBkxlFPaV6mQT6yXShvhfyu
-         +KBB+cOj5yLz2+fyx34f7UZGcV/ntT56nZ5CnjjjrtxfPvbuRJ1ZDJvACjm9gsNg3jte
-         qAzRBA+2p1DrkLEczi17Ibo+j8dumg3dHccXSbUO9e4naPAk3hgrPOhmiiKF8fdz/nPF
-         SJvcpQubdrRp7SfTe+I/tHIX+Bik+451jXO7CznSFkhgNMg6Q4hgMwzitq5iE8kHLZiG
-         rRf3lVkNhJXSqlLw+0K6Sx7Azis0fkbZiert6FWnzbkNzFEClWuFx8hWRFRATBBFbvRi
-         xHug==
-X-Gm-Message-State: AO0yUKWu/BCy4InfXbglGiamMkb2inuQtLp5/FSW7xbjOEI7vD1pg3SA
-        tSlQNn0uSG64EiU4VFvBtE25CGgOEJk=
-X-Google-Smtp-Source: AK7set/IfmOLXf/3U5fu+rEDzar/pRMlA/1BLru0aWlZ07K66QKIFddPFsDRbgbAznYNaadOmdxVXQ==
-X-Received: by 2002:a17:90b:3810:b0:237:62f7:3106 with SMTP id mq16-20020a17090b381000b0023762f73106mr37551968pjb.17.1678740513428;
-        Mon, 13 Mar 2023 13:48:33 -0700 (PDT)
+        bh=JMkL+RuV2gz/hzkO+iEW9HUlD0V+BM8BplklCfPzrkE=;
+        b=bXr6GXM22MdomqzTuvVdpMY3weDG8xvXrAVEFqPmeZ/DoyWnCLb89/gzhfF3DHEyQ/
+         ABVGTFRDFNgLS2A4z1tsXdJjMY0Cu/uP0GH6EHSwZEGtdEdYl3oy/wBPRhtTKX/Tsqt3
+         Qo2W2d3mB/+e8f9VXcH1r8UYqXKThubxogOfudPPFlxZFoXmIQ1+SuT6qpJoSty/LIDC
+         Hl4Jx1zw1lVxZv4aaGwWLotjVxVh5OEkR5/INHyhKXTAOgE9sHGzsJ1zGuFl7p1FelBv
+         mftdGE7QBmhBOpCxp+2eqOeIEYWsuCiE+5QZOEHyTpj6rAZA/4EdNHrctQeDbGW6f9kd
+         q85w==
+X-Gm-Message-State: AO0yUKVWdpVL5Qf8WT1a1J9JTj2tDPhowx4kgP4AI9nrg0qD4guxYkoX
+        LRULImRrbgtokG4EFbx+3Ps=
+X-Google-Smtp-Source: AK7set/ksRuDZOws2N7QlY5ec1AmU0FdbxEc5J5WSEFPJ+yfMpOuGnjCn8xJG9MnXMNhCSB2lB1nPA==
+X-Received: by 2002:a17:90b:1b08:b0:23b:308e:b0ab with SMTP id nu8-20020a17090b1b0800b0023b308eb0abmr9028191pjb.34.1678740510896;
+        Mon, 13 Mar 2023 13:48:30 -0700 (PDT)
 Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:26de:6cd7:2c4f:96d5])
-        by smtp.gmail.com with ESMTPSA id s12-20020a17090aba0c00b0023af8a3cf6esm265026pjr.48.2023.03.13.13.48.32
+        by smtp.gmail.com with ESMTPSA id s12-20020a17090aba0c00b0023af8a3cf6esm265026pjr.48.2023.03.13.13.48.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 13:48:33 -0700 (PDT)
+        Mon, 13 Mar 2023 13:48:30 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,9 +65,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 4/4] perf lock contention: Show lock type with address
-Date:   Mon, 13 Mar 2023 13:48:25 -0700
-Message-Id: <20230313204825.2665483-5-namhyung@kernel.org>
+Subject: [PATCH 2/4] perf lock contention: Track and show siglock with address
+Date:   Mon, 13 Mar 2023 13:48:23 -0700
+Message-Id: <20230313204825.2665483-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
 In-Reply-To: <20230313204825.2665483-1-namhyung@kernel.org>
 References: <20230313204825.2665483-1-namhyung@kernel.org>
@@ -77,117 +77,104 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Show lock type names after the symbol of locks if any.  This can be
-useful especially when it doesn't show the lock symbols.
-
-The indentation before the lock type parenthesis is to recognize lock
-symbols more easily.
+Likewise, we can display siglock by following the pointer like
+current->sighand->siglock.
 
   $ sudo ./perf lock con -abl -- sleep 1
    contended   total wait     max wait     avg wait            address   symbol
 
-          44      6.13 ms    284.49 us    139.28 us   ffffffff92e06080   tasklist_lock (rwlock)
-         159    983.38 us     12.38 us      6.18 us   ffff8cc717c90000   siglock (spinlock)
-          10    679.90 us    153.35 us     67.99 us   ffff8cdc2872aaf8   mmap_lock (rwsem)
-           9    558.11 us    180.67 us     62.01 us   ffff8cd647914038   mmap_lock (rwsem)
-          78    228.56 us      7.82 us      2.93 us   ffff8cc700061c00    (spinlock)
-           5     41.60 us     16.93 us      8.32 us   ffffd853acb41468    (spinlock)
-          10     37.24 us      5.87 us      3.72 us   ffff8cd560b5c200   siglock (spinlock)
-           4     11.17 us      3.97 us      2.79 us   ffff8d053ddf0c80   rq_lock (spinlock)
-           1      7.86 us      7.86 us      7.86 us   ffff8cd64791404c    (spinlock)
-           1      4.13 us      4.13 us      4.13 us   ffff8d053d930c80   rq_lock (spinlock)
-           7      3.98 us      1.67 us       568 ns   ffff8ccb92479440    (mutex)
-           2      2.62 us      2.33 us      1.31 us   ffff8cc702e6ede0    (rwlock)
+          16      2.18 ms    305.35 us    136.34 us   ffffffff92e06080   tasklist_lock
+          28    521.78 us     31.16 us     18.63 us   ffff8cc703783ec4
+           7    119.03 us     23.55 us     17.00 us   ffff8ccb92479440
+          15     88.29 us     10.06 us      5.89 us   ffff8cd560b5f380   siglock
+           7     37.67 us      9.16 us      5.38 us   ffff8d053daf0c80
+           5      8.81 us      4.92 us      1.76 us   ffff8d053d6b0c80
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-lock.c            | 45 ++++++++++++++++++----------
- tools/perf/util/bpf_skel/lock_data.h |  2 ++
- 2 files changed, 32 insertions(+), 15 deletions(-)
+ tools/perf/builtin-lock.c                      | 3 +--
+ tools/perf/util/bpf_lock_contention.c          | 8 ++++++--
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 5 +++++
+ tools/perf/util/bpf_skel/lock_data.h           | 3 ++-
+ 4 files changed, 14 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index c710a5d46638..a845c0ce5dc8 100644
+index c62f4d9363a6..c710a5d46638 100644
 --- a/tools/perf/builtin-lock.c
 +++ b/tools/perf/builtin-lock.c
-@@ -1548,27 +1548,41 @@ static void sort_result(void)
- 
- static const struct {
- 	unsigned int flags;
-+	const char *str;
- 	const char *name;
- } lock_type_table[] = {
--	{ 0,				"semaphore" },
--	{ LCB_F_SPIN,			"spinlock" },
--	{ LCB_F_SPIN | LCB_F_READ,	"rwlock:R" },
--	{ LCB_F_SPIN | LCB_F_WRITE,	"rwlock:W"},
--	{ LCB_F_READ,			"rwsem:R" },
--	{ LCB_F_WRITE,			"rwsem:W" },
--	{ LCB_F_RT,			"rtmutex" },
--	{ LCB_F_RT | LCB_F_READ,	"rwlock-rt:R" },
--	{ LCB_F_RT | LCB_F_WRITE,	"rwlock-rt:W"},
--	{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R" },
--	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W" },
--	{ LCB_F_MUTEX,			"mutex" },
--	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex" },
-+	{ 0,				"semaphore",	"semaphore" },
-+	{ LCB_F_SPIN,			"spinlock",	"spinlock" },
-+	{ LCB_F_SPIN | LCB_F_READ,	"rwlock:R",	"rwlock" },
-+	{ LCB_F_SPIN | LCB_F_WRITE,	"rwlock:W",	"rwlock" },
-+	{ LCB_F_READ,			"rwsem:R",	"rwsem" },
-+	{ LCB_F_WRITE,			"rwsem:W",	"rwsem" },
-+	{ LCB_F_RT,			"rt=mutex",	"rt-mutex" },
-+	{ LCB_F_RT | LCB_F_READ,	"rwlock-rt:R",	"rwlock-rt" },
-+	{ LCB_F_RT | LCB_F_WRITE,	"rwlock-rt:W",	"rwlock-rt" },
-+	{ LCB_F_PERCPU | LCB_F_READ,	"pcpu-sem:R",	"percpu-rwsem" },
-+	{ LCB_F_PERCPU | LCB_F_WRITE,	"pcpu-sem:W",	"percpu-rwsem" },
-+	{ LCB_F_MUTEX,			"mutex",	"mutex" },
-+	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex",	"mutex" },
- 	/* alias for get_type_flag() */
--	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex-spin" },
-+	{ LCB_F_MUTEX | LCB_F_SPIN,	"mutex-spin",	"mutex" },
- };
- 
- static const char *get_type_str(unsigned int flags)
- {
-+	flags &= LCB_F_MAX_FLAGS - 1;
-+
-+	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
-+		if (lock_type_table[i].flags == flags)
-+			return lock_type_table[i].str;
-+	}
-+	return "unknown";
-+}
-+
-+static const char *get_type_name(unsigned int flags)
-+{
-+	flags &= LCB_F_MAX_FLAGS - 1;
-+
- 	for (unsigned int i = 0; i < ARRAY_SIZE(lock_type_table); i++) {
- 		if (lock_type_table[i].flags == flags)
- 			return lock_type_table[i].name;
-@@ -1662,7 +1676,8 @@ static void print_contention_result(struct lock_contention *con)
+@@ -1662,8 +1662,7 @@ static void print_contention_result(struct lock_contention *con)
  				pid, pid == -1 ? "Unknown" : thread__comm_str(t));
  			break;
  		case LOCK_AGGR_ADDR:
--			pr_info("  %016llx   %s\n", (unsigned long long)st->addr, st->name);
-+			pr_info("  %016llx   %s (%s)\n", (unsigned long long)st->addr,
-+				st->name, get_type_name(st->flags));
+-			pr_info("  %016llx   %s\n", (unsigned long long)st->addr,
+-				(st->flags & LCD_F_MMAP_LOCK) ? "mmap_lock" : st->name);
++			pr_info("  %016llx   %s\n", (unsigned long long)st->addr, st->name);
  			break;
  		default:
  			break;
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index fadcacb9d501..51631af3b4d6 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -169,7 +169,7 @@ int lock_contention_stop(void)
+ 
+ static const char *lock_contention_get_name(struct lock_contention *con,
+ 					    struct contention_key *key,
+-					    u64 *stack_trace)
++					    u64 *stack_trace, u32 flags)
+ {
+ 	int idx = 0;
+ 	u64 addr;
+@@ -198,6 +198,10 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+ 	}
+ 
+ 	if (con->aggr_mode == LOCK_AGGR_ADDR) {
++		if (flags & LCD_F_MMAP_LOCK)
++			return "mmap_lock";
++		if (flags & LCD_F_SIGHAND_LOCK)
++			return "siglock";
+ 		sym = machine__find_kernel_symbol(machine, key->lock_addr, &kmap);
+ 		if (sym)
+ 			name = sym->name;
+@@ -301,7 +305,7 @@ int lock_contention_read(struct lock_contention *con)
+ 			goto next;
+ 		}
+ 
+-		name = lock_contention_get_name(con, &key, stack_trace);
++		name = lock_contention_get_name(con, &key, stack_trace, data.flags);
+ 		st = lock_stat_findnew(ls_key, name, data.flags);
+ 		if (st == NULL)
+ 			break;
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index f092a78ae2b5..4ba34caf84eb 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -236,6 +236,11 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
+ 				return LCD_F_MMAP_LOCK;
+ 		}
+ 		break;
++	case LCB_F_SPIN:  /* spinlock */
++		curr = bpf_get_current_task_btf();
++		if (&curr->sighand->siglock == (void *)lock)
++			return LCD_F_SIGHAND_LOCK;
++		break;
+ 	default:
+ 		break;
+ 	}
 diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
-index e59366f2dba3..1ba61cb4d480 100644
+index 789f20833798..5ed1a0955015 100644
 --- a/tools/perf/util/bpf_skel/lock_data.h
 +++ b/tools/perf/util/bpf_skel/lock_data.h
-@@ -22,6 +22,8 @@ struct contention_task_data {
- #define LCD_F_MMAP_LOCK		(1U << 31)
- #define LCD_F_SIGHAND_LOCK	(1U << 30)
+@@ -19,7 +19,8 @@ struct contention_task_data {
+  * Upper bits of the flags in the contention_data are used to identify
+  * some well-known locks which do not have symbols (non-global locks).
+  */
+-#define LCD_F_MMAP_LOCK  (1U << 31)
++#define LCD_F_MMAP_LOCK		(1U << 31)
++#define LCD_F_SIGHAND_LOCK	(1U << 30)
  
-+#define LCB_F_MAX_FLAGS		(1U << 7)
-+
  struct contention_data {
  	u64 total_time;
- 	u64 min_time;
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
