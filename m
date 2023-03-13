@@ -2,170 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E28C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 17:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1ECC6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 18:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjCMR6a (ORCPT
+        id S229608AbjCMSP6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 13:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58792 "EHLO
+        Mon, 13 Mar 2023 14:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCMR63 (ORCPT
+        with ESMTP id S229688AbjCMSP6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 13:58:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D1F1CF45;
-        Mon, 13 Mar 2023 10:58:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C0752611DA;
-        Mon, 13 Mar 2023 17:58:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF52C433D2;
-        Mon, 13 Mar 2023 17:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678730305;
-        bh=R/CebLcuOYIfi6x1vLEG3j/yHBC7GgWxI/SYarquQus=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LH3JvtinkJ1j4GUObgdL7Upg9la09ptXBp3ufoB6TvF4MtA8uc8T/r/9d8kyc1mFL
-         1z1Vm8lD0lh+jIajBWC0NYvJj97QqHTagnC5X3QGVALu5n9TqBQbjZGmuM7g+KBVhf
-         8E9iqFGrfN+FTvqzIAz9GoWTn4KWVdpv9K6jY0FzXVMj0bvlN25rDGlMftEBqny3ar
-         0OpyZfn19uogCz0ijMZBAVkJCKKDf2bss8h7IAdE6+RyzyYCX/nr8e1GWyezBchUDO
-         VnyxX8MwWtKizX4/GKOYdOU6QUc3v8MJAh7QztxOeY2GhJ90xeZVR9e5iF11FOINIO
-         p4P52qnPDCpFw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2C6974049F; Mon, 13 Mar 2023 14:58:22 -0300 (-03)
-Date:   Mon, 13 Mar 2023 14:58:22 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        James Clark <james.clark@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 04/16] perf kvm: Use subtraction for comparison metrics
-Message-ID: <ZA9kPg7JDzkxAStz@kernel.org>
-References: <20230313114018.543254-1-leo.yan@linaro.org>
- <20230313114018.543254-5-leo.yan@linaro.org>
+        Mon, 13 Mar 2023 14:15:58 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1F1377CB8;
+        Mon, 13 Mar 2023 11:15:56 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id y10so8190308pfi.8;
+        Mon, 13 Mar 2023 11:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678731356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IlFPtKHfCjZ7hFcG725CdyIieAxGOw83mG6tgIjYd0I=;
+        b=I5EJVvuG8+H5r4JISqONKqo52EimvwOiUXI2hBsF+6DblFw6jPteCln6Es3CuT1LLA
+         5Gsk0b7F/6XCIoWAAeETEo5TndayeT9W8xUpmzx1mO9N8u1Ii8xyxeFGPebQk9cgyB4v
+         pVelDhQnuPiW6Qc326FDyGOXFYjeZPvDCtvQMDoVsg34w0Wlz47vA+XcVgCcJgpMSIMD
+         9OhHneoEbqrct9CrvKYZwWhxU5b374BGItQoEoDijLiZ6o+UwhJNch2OKE1MfqNCzMxF
+         3/kWVDW6dvpOzvacitmLH2JRHsgpkGunVArMvLSPt7DZ4BczlMHpwoead++SrEq/9kIK
+         0cIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678731356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IlFPtKHfCjZ7hFcG725CdyIieAxGOw83mG6tgIjYd0I=;
+        b=0Fk0912Ew+iaMG/7scCIOmcrlviPaXJ/xhaCwy13PgSZ1ci32KVZw9ON9UjW1JdnnI
+         VFZQ0zdEp/2l7SZ4stngFjvDdwKaNO8vt8QZVlF3Vwbl7ZwI3BV4XMetbqLLm8FjRtah
+         5oUyje4HedSdZNKO7eqz0O7HgGxPQppswW6KCebXqKiYP3CFJIW60lh0vZyJMMXgOVrY
+         GaMfcvUZTswSK+b1H7GFotzM2vhnVHQOLlFSuvf1wnCfLKNInvccJgeAzkRPQAfvCOOK
+         dti1C82OT1vl1zRgdlJoLu5Tb2QRuRBN1c2dBUNE9A5cS23qwqRAaUqjdxjyRv2T76p8
+         fjtQ==
+X-Gm-Message-State: AO0yUKUwawN7mEwDFG50CxXAvJvVJOLyBoT5CmpsUscxy/k6V9j2lNwf
+        mVKcdoJhNPU7DHSe5CVP+Rb3mN9LFb31GMMIiUk=
+X-Google-Smtp-Source: AK7set+VmSBXdhB+Z6f8/4GulZiGPhX9WCQo45A0GE+qnhRK/dtu/Tpv2vLYuscXgOxNXf0473KLta7QhVvQLfeQqa4=
+X-Received: by 2002:a62:1acb:0:b0:622:bfcd:149 with SMTP id
+ a194-20020a621acb000000b00622bfcd0149mr2529789pfa.0.1678731356374; Mon, 13
+ Mar 2023 11:15:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230313114018.543254-5-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
+References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
+ <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com> <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
+ <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
+ <20230309113851.GF19253@leoy-yangtze.lan> <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
+ <20230313121420.GB2426758@leoy-yangtze.lan>
+In-Reply-To: <20230313121420.GB2426758@leoy-yangtze.lan>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 13 Mar 2023 11:15:44 -0700
+Message-ID: <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
+Subject: Re: [BUG] perf: No samples found when using kcore + coresight
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        coresight@lists.linaro.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
+        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
+        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
+        suzuki.poulose@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 13, 2023 at 07:40:06PM +0800, Leo Yan escreveu:
-> Currently the metrics comparison uses greater operator (>), it returns
-> the boolean value (0 or 1).
-> 
-> This patch changes to use subtraction as comparison result, which can
-> be used by histograms sorting.  Since the subtraction result is u64
-> type, we change the function return type from int to int64_t to avoid
-> overflow.
+On Mon, Mar 13, 2023 at 5:14=E2=80=AFAM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Thu, Mar 09, 2023 at 10:06:41AM -0800, Yang Shi wrote:
+>
+> [...]
+>
+> > > I reviewed your shared dump, the bad and good perf data both contain =
+the
+> > > dummy event with 'text_poke =3D 1'.  Could you confirm the shared dum=
+p in
+> > > your previous email is correct or not?
+> >
+> > Oops, sorry. I pasted the wrong log. The good one looks like
+> > (generated by v5.19):
+> >
+> > # captured on    : Wed Mar  8 18:02:58 2023
+> > # header version : 1
+> > # data offset    : 408
+> > # data size      : 22640
+> > # feat offset    : 23048
+> > # hostname : fedora
+> > # os release : 6.2.0-coresight+
+> > # perf version : 5.19.g3d7cb6b04c3f
+> > # arch : aarch64
+> > # nrcpus online : 128
+> > # nrcpus avail : 128
+> > # cpuid : 0x00000000c00fac30
+> > # total memory : 2108862504 kB
+> > # cmdline : /home/yshi/linux/tools/perf/perf record -e
+> > cs_etm/@tmc_etf63/k --kcore --per-thread -- taskset --cpu-list 1 uname
+> > # event : name =3D cs_etm/@tmc_etf63/k, , id =3D { 3832 }, type =3D 9, =
+size
+> > =3D 128, { sample_period, sample_freq } =3D 1, sample_type =3D
+> > IP|TID|IDENTIFIER, read_format =3D ID, d
+> > isabled =3D 1, exclude_user =3D 1, exclude_hv =3D 1, enable_on_exec =3D=
+ 1,
+> > sample_id_all =3D 1, { bp_len, config2 } =3D 0x12792918
+> > # event : name =3D dummy:u, , id =3D { 3833 }, type =3D 1, size =3D 128=
+,
+> > config =3D 0x9, { sample_period, sample_freq } =3D 1, sample_type =3D
+> > IP|TID|IDENTIFIER, read_format =3D ID,
+> >  disabled =3D 1, exclude_kernel =3D 1, exclude_hv =3D 1, mmap =3D 1, co=
+mm =3D 1,
+> > enable_on_exec =3D 1, task =3D 1, sample_id_all =3D 1, exclude_guest =
+=3D 1,
+> > mmap2 =3D 1, comm_exec =3D 1,
+> > context_switch =3D 1, ksymbol =3D 1, bpf_event =3D 1
+> > # CPU_TOPOLOGY info available, use -I to display
+> > # NUMA_TOPOLOGY info available, use -I to display
+> > # pmu mappings: armv8_pmuv3_0 =3D 8, software =3D 1, arm_cmn_0 =3D 10,
+> > uprobe =3D 7, cs_etm =3D 9, breakpoint =3D 5, tracepoint =3D 2, arm_cmn=
+_1 =3D
+> > 11, kprobe =3D 6
+> > # contains AUX area data (e.g. instruction trace)
+> > # CACHE info available, use -I to display
+> > # time of first sample : 18446744073.709551
+> > # time of last sample : 18446744073.709551
+> > # sample duration :      0.000 ms
+> > # MEM_TOPOLOGY info available, use -I to display
+> > # missing features: TRACING_DATA CPUDESC BRANCH_STACK GROUP_DESC STAT
+> > CLOCKID DIR_FORMAT COMPRESSED CPU_PMU_CAPS CLOCK_DATA HYBRID_TOPOLOGY
+> > HYBRID_CPU_PMU_CAPS
+>
+> Thanks for confirmation.
+>
+> Just a quick summary, here we have two issues:
+>
+> - With command:
+>   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
+>   -- taskset --cpu-list 1 uname",
+>
+>   perf doesn't enable "text poke" attribution.
 
-Not building at his point in the series:
+No, it enables "text poke" and perf fails to decode coresight trace
+data too. It doesn't matter whether "--kcore" is after or before "-e
+cs/etm/@tmc_etf63/k".
 
-  LD      /tmp/build/perf-tools-next/util/perf-in.o
-builtin-kvm.c:80:18: error: initialization of ‘int (*)(struct kvm_event *, struct kvm_event *, int)’ from incompatible pointer type ‘int64_t (*)(struct kvm_event *, struct kvm_event *, int)’ {aka ‘long int (*)(struct kvm_event *, struct kvm_event *, int)’} [-Werror=incompatible-pointer-types]
-   80 |         { #name, cmp_event_ ## compare_key }
-      |                  ^~~~~~~~~~
-builtin-kvm.c:83:9: note: in expansion of macro ‘DEF_SORT_NAME_KEY’
-   83 |         DEF_SORT_NAME_KEY(sample, count),
-      |         ^~~~~~~~~~~~~~~~~
-builtin-kvm.c:80:18: note: (near initialization for ‘keys[0].key’)
-   80 |         { #name, cmp_event_ ## compare_key }
-      |                  ^~~~~~~~~~
-builtin-kvm.c:83:9: note: in expansion of macro ‘DEF_SORT_NAME_KEY’
-   83 |         DEF_SORT_NAME_KEY(sample, count),
-      |         ^~~~~~~~~~~~~~~~~
-builtin-kvm.c:80:18: error: initialization of ‘int (*)(struct kvm_event *, struct kvm_event *, int)’ from incompatible pointer type ‘int64_t (*)(struct kvm_event *, struct kvm_event *, int)’ {aka ‘long int (*)(struct kvm_event *, struct kvm_event *, int)’} [-Werror=incompatible-pointer-types]
-   80 |         { #name, cmp_event_ ## compare_key }
-      |                  ^~~~~~~~~~
-builtin-kvm.c:84:9: note: in expansion of macro ‘DEF_SORT_NAME_KEY’
-   84 |         DEF_SORT_NAME_KEY(time, mean),
-      |         ^~~~~~~~~~~~~~~~~
-builtin-kvm.c:80:18: note: (near initialization for ‘keys[1].key’)
-   80 |         { #name, cmp_event_ ## compare_key }
-      |                  ^~~~~~~~~~
-builtin-kvm.c:84:9: note: in expansion of macro ‘DEF_SORT_NAME_KEY’
-   84 |         DEF_SORT_NAME_KEY(time, mean),
-      |         ^~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/builtin-kvm.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-make[2]: *** [Makefile.perf:673: /tmp/build/perf-tools-next/perf-in.o] Error 2
-make[2]: *** Waiting for unfinished jobs....
-  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
-  LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
-make[1]: *** [Makefile.perf:236: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+>
+> - With command:
+>   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
+>   -- taskset --cpu-list 1 true (in your previous email), or ...
+>   perf record --kcore -e cs_etm/@tmc_etf63/k --per-thread \
+>   -- taskset --cpu-list 1 uname (in your shared perf data file),
+>
+>   perf enables "text poke" attribution, in this case, perf fails to decod=
+e
+>   Arm CoreSight trace data.
 
- Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin':
+Yes.
 
-       46519453561      cycles:u
-       73484239007      instructions:u                   #    1.58  insn per cycle
+>
+> [...]
+>
+> > > Do you mind to share the bad perf.data file with James and me?
+> >
+> > Please check the attachment out. Thanks for looking into this problem.
+>
+> Thank you for sharing the data.  We will look into it.
 
-      10.053592077 seconds time elapsed
+Thank you.
 
-      10.925077000 seconds user
-       8.045887000 seconds sys
-
-
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -4
-40843f667620dcf3 (HEAD) perf kvm: Use subtraction for comparison metrics
-c6a5a089864171f2 perf kvm: Move up metrics helpers
-1d75bc17ffc933aa perf kvm: Add pointer to 'perf_kvm_stat' in kvm event
-4568393639938020 perf kvm: Refactor overall statistics
-⬢[acme@toolbox perf-tools-next]$
-
-⬢[acme@toolbox perf-tools-next]$ gcc --version
-gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4)
- 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/builtin-kvm.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 62c097a37da9..4e9519390da6 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -63,10 +63,10 @@ static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
->  
->  #define COMPARE_EVENT_KEY(func, field)					\
->  GET_EVENT_KEY(func, field)						\
-> -static int cmp_event_ ## func(struct kvm_event *one,			\
-> +static int64_t cmp_event_ ## func(struct kvm_event *one,		\
->  			      struct kvm_event *two, int vcpu)		\
->  {									\
-> -	return get_event_ ##func(one, vcpu) >				\
-> +	return get_event_ ##func(one, vcpu) -				\
->  	       get_event_ ##func(two, vcpu);				\
->  }
->  
-> @@ -523,7 +523,7 @@ static void insert_to_result(struct rb_root *result, struct kvm_event *event,
->  		p = container_of(*rb, struct kvm_event, rb);
->  		parent = *rb;
->  
-> -		if (bigger(event, p, vcpu))
-> +		if (bigger(event, p, vcpu) > 0)
->  			rb = &(*rb)->rb_left;
->  		else
->  			rb = &(*rb)->rb_right;
-> -- 
-> 2.34.1
-> 
-
--- 
-
-- Arnaldo
+>
+> Leo
