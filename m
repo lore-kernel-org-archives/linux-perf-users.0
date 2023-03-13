@@ -2,158 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D14C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 18:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F571C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 18:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbjCMS1S (ORCPT
+        id S231426AbjCMSfv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 14:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50568 "EHLO
+        Mon, 13 Mar 2023 14:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231192AbjCMS1C (ORCPT
+        with ESMTP id S231454AbjCMSfb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 14:27:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B1017CD2;
-        Mon, 13 Mar 2023 11:25:58 -0700 (PDT)
+        Mon, 13 Mar 2023 14:35:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 411F686151;
+        Mon, 13 Mar 2023 11:34:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 599C6B811D9;
-        Mon, 13 Mar 2023 18:25:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00C0C433D2;
-        Mon, 13 Mar 2023 18:25:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 52838612FE;
+        Mon, 13 Mar 2023 18:33:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEB4C4339B;
+        Mon, 13 Mar 2023 18:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678731943;
-        bh=qyGf7+ezeWajxKxCIptIxhJuwG8WYUdjZZdsJ3FxiQ0=;
+        s=k20201202; t=1678732387;
+        bh=Qvjiry3j6mDR6Vh8s4c81dINZYpikTiYdWJ60bOpkcM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DIfXpgHR1dPoDS180z3kzOfqife7YqQdEPNKb0jLOt5mjzTECkg48jmMvhMlIK4Fy
-         8NCESgAk2sZzHCPtAuLb2bt1sDB85hD8gkxKVMebPKMFxWOUSEPAmkv7oYIUCyv01E
-         8KUCabveyg/gqCtlZSiSJnRIFQqH+y446uo2fPeuR3M9QIDU+BcV6K8Q24s8RXL5p0
-         rTupcAqsLxFr9YBfBpAiKBH37cxd6YwaysbWWjFhTw0OF4akaVuBdqD7OHR/e68i6K
-         bOw6Fz9JVa+s1ZoUeEBWben0T51+LVFVPDsgvHewuVj5Z69K9CFTRyIsH5wsl0540B
-         nwfr5mnVDoipA==
+        b=XhHmCRiCZOyGKXJUg3UdOju2bmn60DCmAGvqNrBINb0H9m2RMvBtahzg8qzzpsSWM
+         CHW7dxX/6JE9FNOvrDSmKwAmlNxzpyan2WvmCM9YriWNJYu12FzI0QeNDtpM68SkvJ
+         8GDbpUdCDjJr5/f4WORw+3ExzndSMyfA90Tw+L57t7FdB8LqqnrfraqlUyED2YpLRu
+         Y23n/j56lNxyAigSAQ4fYJhO5+QNRQFdU5T6n+ryNx+j9hbAW6DV28zB1Zh87ti4aH
+         j6eYNMGrht2JR4n96OvvWW+pMBNavOMJcPxj3SDMEOuJlsITD31Bu+bQfyBK634IWY
+         HXAlQlQjmi0Jg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4E5FD4049F; Mon, 13 Mar 2023 15:25:40 -0300 (-03)
-Date:   Mon, 13 Mar 2023 15:25:40 -0300
+        id E2EA74049F; Mon, 13 Mar 2023 15:33:04 -0300 (-03)
+Date:   Mon, 13 Mar 2023 15:33:04 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v5 00/11] Better fixes for  grouping of events
-Message-ID: <ZA9qpIuUPecYPiFk@kernel.org>
-References: <20230312021543.3060328-1-irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
+Message-ID: <ZA9sYL/re/aNVpo+@kernel.org>
+References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
+ <20230313080201.2440201-2-tmricht@linux.ibm.com>
+ <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230312021543.3060328-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sat, Mar 11, 2023 at 06:15:32PM -0800, Ian Rogers escreveu:
-> The rules for grouping events have grown more complex. Topdown events
-> must be grouped, but flags like --metric-no-group and flags on metrics
-> don't respect this. Uncore events may be expanded using wild cards for
-> PMU names, but then the events need reordering so the group members
-> are adjacent. Rather than fixing metrics, this change fixes the main
-> event parsing code to first sort and then regroup evsels.
+Em Mon, Mar 13, 2023 at 08:22:44AM -0700, Ian Rogers escreveu:
+> On Mon, Mar 13, 2023 at 1:30 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >
+> > Add metrics for s390 z16
+> > - Percentage sourced from Level 2 cache
+> > - Percentage sourced from Level 3 on same chip cache
+> > - Percentage sourced from Level 4 Local cache on same book
+> > - Percentage sourced from Level 4 Remote cache on different book
+> > - Percentage sourced from memory
+> >
+> > For details about the formulas see this documentation:
+> > https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
+> >
+> > Outpuf after:
+> >  # ./perf stat -M l4rp -- dd if=/dev/zero of=/dev/null bs=10M count=10K
+> >  .... dd output deleted
+> >
+> >  Performance counter stats for 'dd if=/dev/zero of=/dev/null bs=10M count=10K':
+> >
+> >                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
+> >            431,866      L1I_DIR_WRITES
+> >              2,395      IDCW_OFF_DRAWER_IV
+> >                  0      ICW_OFF_DRAWER
+> >                  0      IDCW_OFF_DRAWER_DRAWER_HIT
+> >              1,437      DCW_OFF_DRAWER
+> >        425,960,793      L1D_DIR_WRITES
+> >
+> >       12.165030699 seconds time elapsed
+> >
+> >        0.001037000 seconds user
+> >       12.162140000 seconds sys
+> >
+> >  #
+> >
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
 > 
-> As this is shared functionality changes to it should cause
-> concern. The change is done with the intent of simplifying and making
-> more robust the grouping logic, examples are given. If additional
-> changes are necessary, they are most likely necessary to the
-> evsel__group_pmu_name logic as the code avoids breaking groups that
-> are on the same "group" PMU. The group_pmu_name is a variant of the
-> pmu_name tweaked in the case of software and aux events, that use
-> groups in a slightly different manner to conventional events.
-> 
-> The code was manually tested as well as passing perf test on a Intel
-> tigerlake CPU with intel-pt.
-> 
-> v5. Add Adrian's Acked-by on patch 3, add a fix to the warning logic
->     for multiple event groups as reported by Adrian.
+> Acked-by: Ian Rogers <irogers@google.com>
 
+Thanks, applied the first two patches, please address the review
+suggestions for patches 3-6 and resubmit only those.
 
-Appled locally, testing.
-
-- Arnaldo
-
-> v4. Move the Intel pmu->auxtrace initialization to the existing
->     perf_pmu__get_default_config as suggested by Adrian Hunter.
-> v3. Rename pmu_name to group_pmu_name and add patch to warn when
->     events are regrouped as requested by Namhyung.
-> v2. Fix up the commit message on 4/10 (thanks Arnaldo). Drop
->     unnecessary v1 5/10 (thanks Kan). evlist->core.nr_groups wasn't
->     being correctly maintained after the sort/regrouping and so the
->     new patch 10/10 removes that variable and computes it from the
->     evlist when necessary, generally just tests.
-> 
-> Ian Rogers (11):
->   libperf evlist: Avoid a use of evsel idx
->   perf stat: Don't remove all grouped events when CPU maps disagree
->   perf pmu: Earlier PMU auxtrace initialization
->   perf stat: Modify the group test
->   perf evsel: Allow const evsel for certain accesses
->   perf evsel: Add function to compute group PMU name
->   perf parse-events: Pass ownership of the group name
->   perf parse-events: Sort and group parsed events
->   perf evsel: Remove use_uncore_alias
->   perf evlist: Remove nr_groups
->   perf parse-events: Warn when events are regrouped
-> 
->  tools/lib/perf/evlist.c                  |  31 ++-
->  tools/lib/perf/include/internal/evlist.h |   1 -
->  tools/lib/perf/include/perf/evlist.h     |   1 +
->  tools/perf/arch/x86/util/auxtrace.c      |   4 -
->  tools/perf/arch/x86/util/evlist.c        |  39 ++--
->  tools/perf/arch/x86/util/pmu.c           |   8 +-
->  tools/perf/builtin-record.c              |   2 +-
->  tools/perf/builtin-report.c              |   2 +-
->  tools/perf/builtin-stat.c                |  24 +-
->  tools/perf/tests/bpf.c                   |   1 -
->  tools/perf/tests/parse-events.c          |  24 +-
->  tools/perf/tests/pfm.c                   |  12 +-
->  tools/perf/tests/pmu-events.c            |   2 +-
->  tools/perf/util/evlist.c                 |   2 +-
->  tools/perf/util/evlist.h                 |   8 +-
->  tools/perf/util/evsel.c                  |  27 ++-
->  tools/perf/util/evsel.h                  |   8 +-
->  tools/perf/util/header.c                 |   3 +-
->  tools/perf/util/metricgroup.c            |   3 +-
->  tools/perf/util/parse-events.c           | 275 ++++++++++++-----------
->  tools/perf/util/parse-events.h           |  14 +-
->  tools/perf/util/parse-events.y           |  28 +--
->  tools/perf/util/pfm.c                    |   1 -
->  tools/perf/util/pmu.c                    |   6 +-
->  tools/perf/util/python.c                 |   2 +-
->  tools/perf/util/stat-shadow.c            |   2 +-
->  26 files changed, 284 insertions(+), 246 deletions(-)
-> 
-> -- 
-> 2.40.0.rc1.284.g88254d51c5-goog
-> 
-
--- 
+The patches will be in the public perf-tools-next branch later today.
 
 - Arnaldo
+
