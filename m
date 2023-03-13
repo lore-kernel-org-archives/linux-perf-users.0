@@ -2,559 +2,161 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA94DC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 09:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BEAC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 11:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbjCMJEW (ORCPT
+        id S230291AbjCMLkj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 05:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55680 "EHLO
+        Mon, 13 Mar 2023 07:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230463AbjCMJDu (ORCPT
+        with ESMTP id S229813AbjCMLki (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 05:03:50 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6454761532;
-        Mon, 13 Mar 2023 01:59:40 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PZrDR2rG6zrSdT;
-        Mon, 13 Mar 2023 16:58:47 +0800 (CST)
-Received: from localhost.localdomain (10.50.163.32) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 13 Mar 2023 16:59:38 +0800
-From:   Yicong Yang <yangyicong@huawei.com>
-To:     <acme@kernel.org>, <mark.rutland@arm.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <james.clark@arm.com>,
-        <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <Jonathan.Cameron@huawei.com>, <21cnbao@gmail.com>,
-        <tim.c.chen@intel.com>, <prime.zeng@hisilicon.com>,
-        <shenyang39@huawei.com>, <linuxarm@huawei.com>,
-        <yangyicong@hisilicon.com>
-Subject: [PATCH] perf stat: Support per-cluster aggregation
-Date:   Mon, 13 Mar 2023 16:59:11 +0800
-Message-ID: <20230313085911.61359-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+        Mon, 13 Mar 2023 07:40:38 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B64F5D892
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 04:40:37 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id i3so12590582plg.6
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 04:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678707637;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0EAtvo1So/zPFTCpyYhVNyCZVLKaC2sgLkHS7h4c9HI=;
+        b=X1KDjnPYBYAadbBiCgglFFKeQZxJ/PEdNiBAUYNkojjh67qEA65iUTnBjaB2AvaE+l
+         fy2jSsu8P5/IBXSYWxxFDFfRgSmgwP0kq43Wyh3I4nCyf1l7WtkKT74/DvQMM9qQ17j+
+         ccUC1l3yk5usFBDWHYBB2Yo/DfliCEaec4XA3ECBOqJoRZRlILI+X0LAHcUfnfEQ+pE1
+         P3Ef718VCS/mRIadlud9RVl6nO+OuRjfQ7DFfCXPg0cSge5Rtj7RfKZuO8qdHlOAFlFp
+         6P2ERambOtJhrCBAKhC0XXE/XPL5ypnCiIh2bbhXwq1hLh5d+0bRrAci+UDeD7q7oYDw
+         DLhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678707637;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0EAtvo1So/zPFTCpyYhVNyCZVLKaC2sgLkHS7h4c9HI=;
+        b=DA9sl8XNna0XgCub5azMOfZzbfTp7BQnsN66CdmPuqV9PwdFlIPzqyNgJOAnfuEpA6
+         JF3Fk2rf99XakdtKiYz9TEWByIqHD51tuh++QzZJaOu4HeVn54YSsTWs0NGnhsSmu0xG
+         TYFHcX6GkfB0Zn9tB7lCAXjaI/zbqn8FdlgqA3lmSYLPkqkaLS56KyX/k2LryDC2hdrW
+         Z+MwxZpEwzPbkj4BaxswiE9fDo1YmZrTUXBiTbdtHLJtLD9fFJeIildNT9lcV5O6r2eo
+         7qrKb8H6Cn5ibCPknI8OA7dsOx2Xn9zirlyRkp1qe6BMEZYyL112lP//BRNZ4DvG/ZHo
+         NKAg==
+X-Gm-Message-State: AO0yUKWPupGrJZPI4zVlvBfu2Y6BJzVJ2JsSvtfPa2E8OMudghot7IGY
+        rZDRAPhT80nF/ocTdOh/DciGRg==
+X-Google-Smtp-Source: AK7set9socWh1UG+jyBtropg1WjPePnuqA3jmkI1RbgqzI8RMELBbwR9dWUiGkRWFsQfGBlVQ4/tLw==
+X-Received: by 2002:a17:90a:b89:b0:23b:5537:8c99 with SMTP id 9-20020a17090a0b8900b0023b55378c99mr4477602pjr.45.1678707636603;
+        Mon, 13 Mar 2023 04:40:36 -0700 (PDT)
+Received: from leoy-huanghe.lan ([156.59.236.112])
+        by smtp.gmail.com with ESMTPSA id q21-20020a17090a2e1500b0022335f1dae2sm4281625pjd.22.2023.03.13.04.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Mar 2023 04:40:36 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v4 00/16] perf kvm: Support histograms and TUI mode
+Date:   Mon, 13 Mar 2023 19:40:02 +0800
+Message-Id: <20230313114018.543254-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.50.163.32]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+This patch set is to enable histograms and (partially) TUI mode in perf
+kvm tool.
 
-Some platforms have 'cluster' topology and CPUs in the cluster will
-share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
-cache (for Intel Jacobsville). Currently parsing and building cluster
-topology have been supported since [1].
+Patch set v1 [1] gives brief introduction for the change and this series
+has a minor update for the patch 13 'perf kvm: Add TUI mode for stat
+report' to avoid building failure when the system doesn't support
+HAVE_SLANG_SUPPORT.
 
-perf stat has already supported aggregation for other topologies like
-die or socket, etc. It'll be useful to aggregate per-cluster to find
-problems like L3T bandwidth contention or imbalance.
+We can use below commands for testing this series:
 
-This patch adds support for "--per-cluster" option for per-cluster
-aggregation. Also update the docs and related test. The output will
-be like:
+In a terminal, you could launch a virtual machine with qemu command; in
+below case, I downloaded a Ubuntu (or Debian) iso file and used it as
+the file system image:
 
-[root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
+  $ qemu-system-x86_64 -M pc -enable-kvm -cpu host -m 4096 -hda ubuntu-22.04-desktop-amd64.iso
 
- Performance counter stats for 'system wide':
+Then in another terminal, I can use below command to capture KVM trace
+data and report the result:
 
-S56-D0-CLS158    4      1,321,521,570      LLC-load
-S56-D0-CLS594    4        794,211,453      LLC-load
-S56-D0-CLS1030    4             41,623      LLC-load
-S56-D0-CLS1466    4             41,646      LLC-load
-S56-D0-CLS1902    4             16,863      LLC-load
-S56-D0-CLS2338    4             15,721      LLC-load
-S56-D0-CLS2774    4             22,671      LLC-load
-[...]
+  # cd linux/tools/perf
+  # ./perf kvm stat record
+  # ./perf kvm stat report          => Output in TUI mode
+  # ./perf kvm stat report --stdio  => Output in stdio mode
 
-[1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
+Changes from v3:
+* Updated patch 04 to change comparison function return type from int to
+  int64_t to avoid overflow;
+* Added a refactoring patch 05 "perf kvm: Use macro to replace variable
+  'decode_str_len'";
+* Refined to use hists__add_entry_ops() and hist_entry__cmp() to compare
+  hist entry and add new entries, to support comparison between hist
+  entry, added a new patch 09; (Namhyung Kim)
+* Updated patch 10 for comparison event name; (Namhyung Kim)
+* Refined patch 11 to move init_stats() and hists__inc_nr_samples()
+  into kvm_he_zalloc(); (Namhyung Kim)
+* Minor refactoring for sort_result() and kvm_hists__init() in patch 15.
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- tools/perf/Documentation/perf-stat.txt        | 10 ++++
- tools/perf/builtin-stat.c                     | 52 +++++++++++++++++--
- .../tests/shell/lib/perf_json_output_lint.py  |  4 +-
- tools/perf/tests/shell/stat+csv_output.sh     | 14 +++++
- tools/perf/tests/shell/stat+json_output.sh    | 13 +++++
- tools/perf/util/cpumap.c                      | 28 +++++++++-
- tools/perf/util/cpumap.h                      | 19 +++++--
- tools/perf/util/env.h                         |  1 +
- tools/perf/util/stat-display.c                | 13 +++++
- tools/perf/util/stat.h                        |  1 +
- 10 files changed, 146 insertions(+), 9 deletions(-)
+Changes from v2:
+* Found building failure with command 'make VF=1 DEBUG=1 NO_SLANG=1',
+  fixed it in the patch 13. (James Clark)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 18abdc1dce05..688433c3756c 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -308,6 +308,13 @@ use --per-die in addition to -a. (system-wide).  The output includes the
- die number and the number of online processors on that die. This is
- useful to gauge the amount of aggregation.
- 
-+--per-cluster::
-+Aggregate counts per processor cluster for system-wide mode measurement.  This
-+is a useful mode to detect imbalance between clusters.  To enable this mode,
-+use --per-cluster in addition to -a. (system-wide).  The output includes the
-+cluster number and the number of online processors on that cluster. This is
-+useful to gauge the amount of aggregation.
-+
- --per-core::
- Aggregate counts per physical processor for system-wide mode measurements.  This
- is a useful mode to detect imbalance between physical cores.  To enable this mode,
-@@ -379,6 +386,9 @@ Aggregate counts per processor socket for system-wide mode measurements.
- --per-die::
- Aggregate counts per processor die for system-wide mode measurements.
- 
-+--per-cluster::
-+Aggregate counts perf processor cluster for system-wide mode measurements.
-+
- --per-core::
- Aggregate counts per physical processor for system-wide mode measurements.
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index fa7c40956d0f..e5630cb28985 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1237,6 +1237,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
- 	OPT_SET_UINT(0, "per-die", &stat_config.aggr_mode,
- 		     "aggregate counts per processor die", AGGR_DIE),
-+	OPT_SET_UINT(0, "per-cluster", &stat_config.aggr_mode,
-+		     "aggregate counts per processor cluster", AGGR_CLUSTER),
- 	OPT_SET_UINT(0, "per-core", &stat_config.aggr_mode,
- 		     "aggregate counts per physical processor core", AGGR_CORE),
- 	OPT_SET_UINT(0, "per-thread", &stat_config.aggr_mode,
-@@ -1298,6 +1300,7 @@ static struct option stat_options[] = {
- 
- static const char *const aggr_mode__string[] = {
- 	[AGGR_CORE] = "core",
-+	[AGGR_CLUSTER] = "cluster",
- 	[AGGR_DIE] = "die",
- 	[AGGR_GLOBAL] = "global",
- 	[AGGR_NODE] = "node",
-@@ -1319,6 +1322,12 @@ static struct aggr_cpu_id perf_stat__get_die(struct perf_stat_config *config __m
- 	return aggr_cpu_id__die(cpu, /*data=*/NULL);
- }
- 
-+static struct aggr_cpu_id perf_stat__get_cluster(struct perf_stat_config *config __maybe_unused,
-+						 struct perf_cpu cpu)
-+{
-+	return aggr_cpu_id__cluster(cpu, /*data=*/NULL);
-+}
-+
- static struct aggr_cpu_id perf_stat__get_core(struct perf_stat_config *config __maybe_unused,
- 					      struct perf_cpu cpu)
- {
-@@ -1371,6 +1380,12 @@ static struct aggr_cpu_id perf_stat__get_die_cached(struct perf_stat_config *con
- 	return perf_stat__get_aggr(config, perf_stat__get_die, cpu);
- }
- 
-+static struct aggr_cpu_id perf_stat__get_cluster_cached(struct perf_stat_config *config,
-+							struct perf_cpu cpu)
-+{
-+	return perf_stat__get_aggr(config, perf_stat__get_cluster, cpu);
-+}
-+
- static struct aggr_cpu_id perf_stat__get_core_cached(struct perf_stat_config *config,
- 						     struct perf_cpu cpu)
- {
-@@ -1402,6 +1417,8 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr(enum aggr_mode aggr_mode)
- 		return aggr_cpu_id__socket;
- 	case AGGR_DIE:
- 		return aggr_cpu_id__die;
-+	case AGGR_CLUSTER:
-+		return aggr_cpu_id__cluster;
- 	case AGGR_CORE:
- 		return aggr_cpu_id__core;
- 	case AGGR_NODE:
-@@ -1425,6 +1442,8 @@ static aggr_get_id_t aggr_mode__get_id(enum aggr_mode aggr_mode)
- 		return perf_stat__get_socket_cached;
- 	case AGGR_DIE:
- 		return perf_stat__get_die_cached;
-+	case AGGR_CLUSTER:
-+		return perf_stat__get_cluster_cached;
- 	case AGGR_CORE:
- 		return perf_stat__get_core_cached;
- 	case AGGR_NODE:
-@@ -1537,6 +1556,21 @@ static struct aggr_cpu_id perf_env__get_die_aggr_by_cpu(struct perf_cpu cpu, voi
- 	return id;
- }
- 
-+static struct aggr_cpu_id perf_env__get_cluster_aggr_by_cpu(struct perf_cpu cpu,
-+							    void *data)
-+{
-+	struct perf_env *env = data;
-+	struct aggr_cpu_id id = aggr_cpu_id__empty();
-+
-+	if (cpu.cpu != -1) {
-+		id.socket = env->cpu[cpu.cpu].socket_id;
-+		id.die = env->cpu[cpu.cpu].die_id;
-+		id.cluster = env->cpu[cpu.cpu].cluster_id;
-+	}
-+
-+	return id;
-+}
-+
- static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, void *data)
- {
- 	struct perf_env *env = data;
-@@ -1544,12 +1578,12 @@ static struct aggr_cpu_id perf_env__get_core_aggr_by_cpu(struct perf_cpu cpu, vo
- 
- 	if (cpu.cpu != -1) {
- 		/*
--		 * core_id is relative to socket and die,
--		 * we need a global id. So we set
--		 * socket, die id and core id
-+		 * core_id is relative to socket, die and cluster, we need a
-+		 * global id. So we set socket, die id, cluster id and core id.
- 		 */
- 		id.socket = env->cpu[cpu.cpu].socket_id;
- 		id.die = env->cpu[cpu.cpu].die_id;
-+		id.cluster = env->cpu[cpu.cpu].cluster_id;
- 		id.core = env->cpu[cpu.cpu].core_id;
- 	}
- 
-@@ -1605,6 +1639,12 @@ static struct aggr_cpu_id perf_stat__get_die_file(struct perf_stat_config *confi
- 	return perf_env__get_die_aggr_by_cpu(cpu, &perf_stat.session->header.env);
- }
- 
-+static struct aggr_cpu_id perf_stat__get_cluster_file(struct perf_stat_config *config __maybe_unused,
-+						      struct perf_cpu cpu)
-+{
-+	return perf_env__get_cluster_aggr_by_cpu(cpu, &perf_stat.session->header.env);
-+}
-+
- static struct aggr_cpu_id perf_stat__get_core_file(struct perf_stat_config *config __maybe_unused,
- 						   struct perf_cpu cpu)
- {
-@@ -1636,6 +1676,8 @@ static aggr_cpu_id_get_t aggr_mode__get_aggr_file(enum aggr_mode aggr_mode)
- 		return perf_env__get_socket_aggr_by_cpu;
- 	case AGGR_DIE:
- 		return perf_env__get_die_aggr_by_cpu;
-+	case AGGR_CLUSTER:
-+		return perf_env__get_cluster_aggr_by_cpu;
- 	case AGGR_CORE:
- 		return perf_env__get_core_aggr_by_cpu;
- 	case AGGR_NODE:
-@@ -1659,6 +1701,8 @@ static aggr_get_id_t aggr_mode__get_id_file(enum aggr_mode aggr_mode)
- 		return perf_stat__get_socket_file;
- 	case AGGR_DIE:
- 		return perf_stat__get_die_file;
-+	case AGGR_CLUSTER:
-+		return perf_stat__get_cluster_file;
- 	case AGGR_CORE:
- 		return perf_stat__get_core_file;
- 	case AGGR_NODE:
-@@ -2219,6 +2263,8 @@ static int __cmd_report(int argc, const char **argv)
- 		     "aggregate counts per processor socket", AGGR_SOCKET),
- 	OPT_SET_UINT(0, "per-die", &perf_stat.aggr_mode,
- 		     "aggregate counts per processor die", AGGR_DIE),
-+	OPT_SET_UINT(0, "per-cluster", &perf_stat.aggr_mode,
-+		     "aggregate counts perf processor cluster", AGGR_CLUSTER),
- 	OPT_SET_UINT(0, "per-core", &perf_stat.aggr_mode,
- 		     "aggregate counts per physical processor core", AGGR_CORE),
- 	OPT_SET_UINT(0, "per-node", &perf_stat.aggr_mode,
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index 97598d14e532..1869ff9b92c1 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -14,6 +14,7 @@ ap.add_argument('--system-wide', action='store_true')
- ap.add_argument('--event', action='store_true')
- ap.add_argument('--per-core', action='store_true')
- ap.add_argument('--per-thread', action='store_true')
-+ap.add_argument('--per-cluster', action='store_true')
- ap.add_argument('--per-die', action='store_true')
- ap.add_argument('--per-node', action='store_true')
- ap.add_argument('--per-socket', action='store_true')
-@@ -46,6 +47,7 @@ def check_json_output(expected_items):
-       'counter-value': lambda x: is_counter_value(x),
-       'cgroup': lambda x: True,
-       'cpu': lambda x: isint(x),
-+      'cluster': lambda x: True,
-       'die': lambda x: True,
-       'event': lambda x: True,
-       'event-runtime': lambda x: isfloat(x),
-@@ -82,7 +84,7 @@ try:
-     expected_items = 7
-   elif args.interval or args.per_thread or args.system_wide_no_aggr:
-     expected_items = 8
--  elif args.per_core or args.per_socket or args.per_node or args.per_die:
-+  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cluster:
-     expected_items = 9
-   else:
-     # If no option is specified, don't check the number of items.
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index 324fc9e6edd7..7311bc835280 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -26,6 +26,7 @@ function commachecker()
- 	;; "--per-socket")	exp=8
- 	;; "--per-node")	exp=8
- 	;; "--per-die")		exp=8
-+	;; "--per-cluster")	exp=8
- 	esac
- 
- 	while read line
-@@ -123,6 +124,18 @@ check_per_thread()
- 	echo "[Success]"
- }
- 
-+check_per_cluster()
-+{
-+	echo -n "Checking CSV output: per cluster "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat -x$csv_sep --per-cluster -a true 2>&1 | commachecker --per-cluster
-+	echo "[Success]"
-+}
-+
- check_per_die()
- {
- 	echo -n "Checking CSV output: per die "
-@@ -197,6 +210,7 @@ if [ $skip_test -ne 1 ]
- then
- 	check_system_wide_no_aggr
- 	check_per_core
-+	check_per_cluster
- 	check_per_die
- 	check_per_socket
- else
-diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-index 2c4212c641ed..c74bfd32abcb 100755
---- a/tools/perf/tests/shell/stat+json_output.sh
-+++ b/tools/perf/tests/shell/stat+json_output.sh
-@@ -100,6 +100,18 @@ check_per_thread()
- 	echo "[Success]"
- }
- 
-+check_per_cluster()
-+{
-+	echo -n "Checking json output: per cluster "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoia and not root"
-+		return
-+	fi
-+	perf stat -j --per-cluster -a true 2>&1 | $PYTHON $pythonchecker --per-cluster
-+	echo "[Success]"
-+}
-+
- check_per_die()
- {
- 	echo -n "Checking json output: per die "
-@@ -174,6 +186,7 @@ if [ $skip_test -ne 1 ]
- then
- 	check_system_wide_no_aggr
- 	check_per_core
-+	check_per_cluster
- 	check_per_die
- 	check_per_socket
- else
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 5e564974fba4..636b3bc0cc04 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -227,6 +227,8 @@ static int aggr_cpu_id__cmp(const void *a_pointer, const void *b_pointer)
- 		return a->socket - b->socket;
- 	else if (a->die != b->die)
- 		return a->die - b->die;
-+	else if (a->cluster != b->cluster)
-+		return a->cluster - b->cluster;
- 	else if (a->core != b->core)
- 		return a->core - b->core;
- 	else
-@@ -310,6 +312,25 @@ struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
- 	return id;
- }
- 
-+int cpu__get_cluster_id(struct perf_cpu cpu)
-+{
-+	int value, ret = cpu__get_topology_int(cpu.cpu, "cluster_id", &value);
-+	return ret ?: value;
-+}
-+
-+struct aggr_cpu_id aggr_cpu_id__cluster(struct perf_cpu cpu, void *data)
-+{
-+	int cluster = cpu__get_cluster_id(cpu);
-+	struct aggr_cpu_id id;
-+
-+	id = aggr_cpu_id__die(cpu, data);
-+	if (aggr_cpu_id__is_empty(&id))
-+		return id;
-+
-+	id.cluster = cluster;
-+	return id;
-+}
-+
- int cpu__get_core_id(struct perf_cpu cpu)
- {
- 	int value, ret = cpu__get_topology_int(cpu.cpu, "core_id", &value);
-@@ -321,8 +342,8 @@ struct aggr_cpu_id aggr_cpu_id__core(struct perf_cpu cpu, void *data)
- 	struct aggr_cpu_id id;
- 	int core = cpu__get_core_id(cpu);
- 
--	/* aggr_cpu_id__die returns a struct with socket and die set. */
--	id = aggr_cpu_id__die(cpu, data);
-+	/* aggr_cpu_id__die returns a struct with socket die, and cluster set. */
-+	id = aggr_cpu_id__cluster(cpu, data);
- 	if (aggr_cpu_id__is_empty(&id))
- 		return id;
- 
-@@ -684,6 +705,7 @@ bool aggr_cpu_id__equal(const struct aggr_cpu_id *a, const struct aggr_cpu_id *b
- 		a->node == b->node &&
- 		a->socket == b->socket &&
- 		a->die == b->die &&
-+		a->cluster == b->cluster &&
- 		a->core == b->core &&
- 		a->cpu.cpu == b->cpu.cpu;
- }
-@@ -694,6 +716,7 @@ bool aggr_cpu_id__is_empty(const struct aggr_cpu_id *a)
- 		a->node == -1 &&
- 		a->socket == -1 &&
- 		a->die == -1 &&
-+		a->cluster == -1 &&
- 		a->core == -1 &&
- 		a->cpu.cpu == -1;
- }
-@@ -705,6 +728,7 @@ struct aggr_cpu_id aggr_cpu_id__empty(void)
- 		.node = -1,
- 		.socket = -1,
- 		.die = -1,
-+		.cluster = -1,
- 		.core = -1,
- 		.cpu = (struct perf_cpu){ .cpu = -1 },
- 	};
-diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index c2f5824a3a22..e3b6b8c1b0b4 100644
---- a/tools/perf/util/cpumap.h
-+++ b/tools/perf/util/cpumap.h
-@@ -20,6 +20,8 @@ struct aggr_cpu_id {
- 	int socket;
- 	/** The die id as read from /sys/devices/system/cpu/cpuX/topology/die_id. */
- 	int die;
-+	/** The cluster id as read from /sys/devices/system/cpu/cpuX/topology/cluster_id */
-+	int cluster;
- 	/** The core id as read from /sys/devices/system/cpu/cpuX/topology/core_id. */
- 	int core;
- 	/** CPU aggregation, note there is one CPU for each SMT thread. */
-@@ -76,6 +78,11 @@ int cpu__get_socket_id(struct perf_cpu cpu);
-  * /sys/devices/system/cpu/cpuX/topology/die_id for the given CPU.
-  */
- int cpu__get_die_id(struct perf_cpu cpu);
-+/**
-+ * cpu__get_cluster_id - Returns the cluster id as read from
-+ * /sys/devices/system/cpu/cpuX/topology/cluster_id for the given CPU
-+ */
-+int cpu__get_cluster_id(struct perf_cpu cpu);
- /**
-  * cpu__get_core_id - Returns the core id as read from
-  * /sys/devices/system/cpu/cpuX/topology/core_id for the given CPU.
-@@ -117,9 +124,15 @@ struct aggr_cpu_id aggr_cpu_id__socket(struct perf_cpu cpu, void *data);
-  */
- struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data);
- /**
-- * aggr_cpu_id__core - Create an aggr_cpu_id with the core, die and socket
-- * populated with the core, die and socket for cpu. The function signature is
-- * compatible with aggr_cpu_id_get_t.
-+ * aggr_cpu_id__cluster - Create an aggr_cpu_id with cluster, die and socket
-+ * populated with the cluster, die and socket for cpu. The function signature
-+ * is compatible with aggr_cpu_id_get_t.
-+ */
-+struct aggr_cpu_id aggr_cpu_id__cluster(struct perf_cpu cpu, void *data);
-+/**
-+ * aggr_cpu_id__core - Create an aggr_cpu_id with the core, cluster, die and
-+ * socket populated with the core, die and socket for cpu. The function
-+ * signature is compatible with aggr_cpu_id_get_t.
-  */
- struct aggr_cpu_id aggr_cpu_id__core(struct perf_cpu cpu, void *data);
- /**
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 4566c51f2fd9..e288649627d5 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -12,6 +12,7 @@ struct perf_cpu_map;
- struct cpu_topology_map {
- 	int	socket_id;
- 	int	die_id;
-+	int	cluster_id;
- 	int	core_id;
- };
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 1b5cb20efd23..a6aca21ab040 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -193,6 +193,9 @@ static void print_aggr_id_std(struct perf_stat_config *config,
- 	case AGGR_CORE:
- 		snprintf(buf, sizeof(buf), "S%d-D%d-C%d", id.socket, id.die, id.core);
- 		break;
-+	case AGGR_CLUSTER:
-+		snprintf(buf, sizeof(buf), "S%d-D%d-CLS%d", id.socket, id.die, id.cluster);
-+		break;
- 	case AGGR_DIE:
- 		snprintf(buf, sizeof(buf), "S%d-D%d", id.socket, id.die);
- 		break;
-@@ -239,6 +242,10 @@ static void print_aggr_id_csv(struct perf_stat_config *config,
- 		fprintf(output, "S%d-D%d-C%d%s%d%s",
- 			id.socket, id.die, id.core, sep, nr, sep);
- 		break;
-+	case AGGR_CLUSTER:
-+		fprintf(config->output, "S%d-D%d-CLS%d%s%d%s",
-+			id.socket, id.die, id.cluster, sep, nr, sep);
-+		break;
- 	case AGGR_DIE:
- 		fprintf(output, "S%d-D%d%s%d%s",
- 			id.socket, id.die, sep, nr, sep);
-@@ -284,6 +291,10 @@ static void print_aggr_id_json(struct perf_stat_config *config,
- 		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d, ",
- 			id.socket, id.die, id.core, nr);
- 		break;
-+	case AGGR_CLUSTER:
-+		fprintf(output, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregate-number\" : %d, ",
-+			id.socket, id.die, id.cluster, nr);
-+		break;
- 	case AGGR_DIE:
- 		fprintf(output, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d, ",
- 			id.socket, id.die, nr);
-@@ -1126,6 +1137,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
- 	case AGGR_NODE:
- 	case AGGR_SOCKET:
- 	case AGGR_DIE:
-+	case AGGR_CLUSTER:
- 	case AGGR_CORE:
- 		fprintf(output, "#%*s %-*s cpus",
- 			INTERVAL_LEN - 1, "time",
-@@ -1422,6 +1434,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
- 
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
-+	case AGGR_CLUSTER:
- 	case AGGR_DIE:
- 	case AGGR_SOCKET:
- 	case AGGR_NODE:
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index bf1794ebc916..9efbfbc25bc7 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -74,6 +74,7 @@ enum aggr_mode {
- 	AGGR_GLOBAL,
- 	AGGR_SOCKET,
- 	AGGR_DIE,
-+	AGGR_CLUSTER,
- 	AGGR_CORE,
- 	AGGR_THREAD,
- 	AGGR_UNSET,
+Changes from v1:
+* Updated the patch 13 'perf kvm: Add TUI mode for stat report' to avoid
+  building failure if no support HAVE_SLANG_SUPPORT.
+
+[1] https://lore.kernel.org/lkml/20230226042053.1492409-1-leo.yan@linaro.org/
+
+
+Leo Yan (16):
+  perf kvm: Refactor overall statistics
+  perf kvm: Add pointer to 'perf_kvm_stat' in kvm event
+  perf kvm: Move up metrics helpers
+  perf kvm: Use subtraction for comparison metrics
+  perf kvm: Use macro to replace variable 'decode_str_len'
+  perf kvm: Introduce histograms data structures
+  perf kvm: Pass argument 'sample' to kvm_alloc_init_event()
+  perf kvm: Parse address location for samples
+  perf hist: Add 'kvm_info' field in histograms entry
+  perf kvm: Add dimensions for KVM event statistics
+  perf kvm: Use histograms list to replace cached list
+  perf kvm: Polish sorting key
+  perf kvm: Support printing attributions for dimensions
+  perf kvm: Add dimensions for percentages
+  perf kvm: Add TUI mode for stat report
+  perf kvm: Update documentation to reflect new changes
+
+ tools/perf/Documentation/perf-kvm.txt   |   9 +-
+ tools/perf/arch/arm64/util/kvm-stat.c   |   1 -
+ tools/perf/arch/powerpc/util/kvm-stat.c |   3 +-
+ tools/perf/arch/s390/util/kvm-stat.c    |   1 -
+ tools/perf/arch/x86/util/kvm-stat.c     |   7 +-
+ tools/perf/builtin-annotate.c           |   2 +-
+ tools/perf/builtin-c2c.c                |   4 +-
+ tools/perf/builtin-diff.c               |   4 +-
+ tools/perf/builtin-kvm.c                | 859 +++++++++++++++++++-----
+ tools/perf/tests/hists_link.c           |   4 +-
+ tools/perf/util/hist.c                  |  19 +-
+ tools/perf/util/hist.h                  |   3 +
+ tools/perf/util/kvm-stat.h              |  33 +-
+ tools/perf/util/sort.h                  |   1 +
+ 14 files changed, 745 insertions(+), 205 deletions(-)
+
 -- 
-2.24.0
+2.34.1
 
