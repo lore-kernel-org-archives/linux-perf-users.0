@@ -2,69 +2,69 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B0AC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 08:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A16C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 08:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbjCMIaB (ORCPT
+        id S229987AbjCMIat (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 04:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56256 "EHLO
+        Mon, 13 Mar 2023 04:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjCMI35 (ORCPT
+        with ESMTP id S230081AbjCMIaq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 04:29:57 -0400
+        Mon, 13 Mar 2023 04:30:46 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748013646C;
-        Mon, 13 Mar 2023 01:29:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2531366A2;
+        Mon, 13 Mar 2023 01:30:40 -0700 (PDT)
 Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32D82RE4007039;
-        Mon, 13 Mar 2023 08:29:53 GMT
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32D8OMc6006944;
+        Mon, 13 Mar 2023 08:30:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=+RbjSmD6FJZnhR3wntxnHXaRrbaADvVd/IxWP8Tt+HE=;
- b=sgZP3HrS9tYKYPi0Joa41GhFEVXahPgUzlGksIgf4KqjAC6r3b5e199xGEj52lMYA1pR
- mnOFz1Cb4Ly/0B1WiaZ+yrtDPCe2YOHkR8TF6ZED+r+t16rxo8SRMI+VmCcamMpZFsQS
- mHEj7jzpNlfcSGRyzdCqcqr4Yvo0YiYEfFmBi37bHKTCoVO7p6Qzrf86LWlF9s5D6AZN
- siHPJfTc4sNfVvOpWPLr9kn0eHeruGwMJOwuixvIKE1JB0JgA1gkyu+YqM2DU66X8xVg
- Fy5DOz4zxfwqawLY8cZ6tbIAv9sPmbhA1MAN4wiILKuKtRLtEbI/UsSiD6p5Kg5cfm0O DQ== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p93fs6set-1
+ : mime-version; s=pp1; bh=XefQJx/nB6d8qQAZLRs/7LrvMTHdfc1jGzHHDnw/ZKM=;
+ b=XnnXlTQNToG/uBkXo8Z4Ujxxygv0N6e2W8fsAsJl6VfgXXG7wgsKsIIbyVq75ItnfwsT
+ jZglnyP4dbraGe//dGK1lpuiYqTltfdXwumTTrkuf8h7oOB+7E6jKNyLCTWGblaW0kMS
+ NTjWnLAuUOlhlgy7eDJYsWW7Rv6/+JA+crHpe4cFADR1Uyhhreaokn7uAk7nuDZc/ePF
+ eXzqK+g7hzcpDASWKueqz8Q4oQXw2zAKMqDT2bjBqdGXW6VU+SKG5duTYd+HJtCa6uly
+ QIrDsECLobIEqI1GWBUkqGq7IBebnKZCXfBMWvMzTYgJoRaVLI/ClnlQ3jtoeD/ayzjY cw== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p93fs6t4v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Mar 2023 08:29:52 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32D2Q4Zb029926;
-        Mon, 13 Mar 2023 08:29:50 GMT
+        Mon, 13 Mar 2023 08:30:38 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32CJoSEr019195;
+        Mon, 13 Mar 2023 08:30:35 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3p8gwfb25d-1
+        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3p8h96jbx9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Mar 2023 08:29:50 +0000
+        Mon, 13 Mar 2023 08:30:35 +0000
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32D8ThJ344958056
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32D8UVbO4260412
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Mar 2023 08:29:43 GMT
+        Mon, 13 Mar 2023 08:30:31 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63D842054F;
-        Mon, 13 Mar 2023 08:02:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D27D82052D;
+        Mon, 13 Mar 2023 08:02:08 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20D1620547;
-        Mon, 13 Mar 2023 08:02:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 94BF72052A;
+        Mon, 13 Mar 2023 08:02:08 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Mar 2023 08:02:15 +0000 (GMT)
+        Mon, 13 Mar 2023 08:02:08 +0000 (GMT)
 From:   Thomas Richter <tmricht@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org, sumanthk@linux.ibm.com
 Cc:     svens@linux.ibm.com, gor@linux.ibm.com, hca@linux.ibm.com,
         Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 6/6] tools/perf/json: Add metric for tlb and cache s390
-Date:   Mon, 13 Mar 2023 09:02:01 +0100
-Message-Id: <20230313080201.2440201-6-tmricht@linux.ibm.com>
+Subject: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
+Date:   Mon, 13 Mar 2023 09:01:57 +0100
+Message-Id: <20230313080201.2440201-2-tmricht@linux.ibm.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230313080201.2440201-1-tmricht@linux.ibm.com>
 References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Lt20Sa2K532UG0M9Ww18QPcqVUsOnQo_
-X-Proofpoint-ORIG-GUID: Lt20Sa2K532UG0M9Ww18QPcqVUsOnQo_
+X-Proofpoint-GUID: li-TVPCnnInWhQ01U3kFCCV1xStTjp0a
+X-Proofpoint-ORIG-GUID: li-TVPCnnInWhQ01U3kFCCV1xStTjp0a
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
@@ -80,190 +80,76 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add metrics for tlb and cache statistics:
-- finite_cpi: Cycles per Instructions from Finite cache/memory
-- est_cpi: Estimated Instruction Complexity CPI infinite Level 1
-- scpl1m: Estimated Sourcing Cycles per Level 1 Miss
-- tlb_percent: Estimated TLB CPU percentage of Total CPU
-- tlb_miss: Estimated Cycles per TLB Miss
+Add metrics for s390 z16
+- Percentage sourced from Level 2 cache
+- Percentage sourced from Level 3 on same chip cache
+- Percentage sourced from Level 4 Local cache on same book
+- Percentage sourced from Level 4 Remote cache on different book
+- Percentage sourced from memory
 
 For details about the formulas see this documentation:
 https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
 
-Output after:
- # ./perf stat -M tlb_miss -- dd if=/dev/zero of=/dev/null bs=1M count=10K
- ... dd output removed
+Outpuf after:
+ # ./perf stat -M l4rp -- dd if=/dev/zero of=/dev/null bs=10M count=10K
+ .... dd output deleted
 
- Performance counter stats for
- 			'dd if=/dev/zero of=/dev/null bs=1M count=10K':
+ Performance counter stats for 'dd if=/dev/zero of=/dev/null bs=10M count=10K':
 
-           667,726      DTLB2_MISSES             #   440.96 tlb_miss
-               198      ITLB2_WRITES
-       795,170,260      L1C_TLB2_MISSES
-             9,478      ITLB2_MISSES
-               820      DTLB2_WRITES
-     1,197,126,869      L1D_PENALTY_CYCLES
-         2,457,447      L1I_PENALTY_CYCLES
+                 0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
+           431,866      L1I_DIR_WRITES
+             2,395      IDCW_OFF_DRAWER_IV
+                 0      ICW_OFF_DRAWER
+                 0      IDCW_OFF_DRAWER_DRAWER_HIT
+             1,437      DCW_OFF_DRAWER
+       425,960,793      L1D_DIR_WRITES
 
-       1.249342187 seconds time elapsed
+      12.165030699 seconds time elapsed
 
-       0.001030000 seconds user
-       1.248105000 seconds sys
+       0.001037000 seconds user
+      12.162140000 seconds sys
 
  #
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
 ---
- .../arch/s390/cf_z13/transaction.json         | 30 +++++++++++++++++++
- .../arch/s390/cf_z14/transaction.json         | 25 ++++++++++++++++
- .../arch/s390/cf_z15/transaction.json         | 25 ++++++++++++++++
- .../arch/s390/cf_z16/transaction.json         | 25 ++++++++++++++++
- 4 files changed, 105 insertions(+)
+ .../arch/s390/cf_z16/transaction.json         | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
-index 71e2c7fa734c..b941a7212a4d 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z13/transaction.json
-@@ -43,5 +43,35 @@
-     "BriefDescription": "Percentage sourced from memory",
-     "MetricName": "memp",
-     "MetricExpr": "((L1D_ONNODE_MEM_SOURCED_WRITES + L1D_ONDRAWER_MEM_SOURCED_WRITES + L1D_OFFDRAWER_MEM_SOURCED_WRITES + L1D_ONCHIP_MEM_SOURCED_WRITES + L1I_ONNODE_MEM_SOURCED_WRITES + L1I_ONDRAWER_MEM_SOURCED_WRITES + L1I_OFFDRAWER_MEM_SOURCED_WRITES + L1I_ONCHIP_MEM_SOURCED_WRITES) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+  },
-+  {
-+    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
-+    "MetricName": "finite_cpi",
-+    "MetricExpr": "L1C_TLB1_MISSES / INSTRUCTIONS"
-+  },
-+  {
-+    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
-+    "MetricName": "est_cpi",
-+    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB1_MISSES / INSTRUCTIONS)"
-+  },
-+  {
-+    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-+    "MetricName": "scpl1m",
-+    "MetricExpr": "L1C_TLB1_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES)"
-+  },
-+  {
-+    "BriefDescription": "Estimated TLB CPU percentage of Total CPU",
-+    "MetricName": "tlb_percent",
-+    "MetricExpr": "((DTLB1_MISSES + ITLB1_MISSES) / CPU_CYCLES) * (L1C_TLB1_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100"
-+  },
-+  {
-+    "BriefDescription": "Estimated Cycles per TLB Miss",
-+    "MetricName": "tlb_miss",
-+    "MetricExpr": "((DTLB1_MISSES + ITLB1_MISSES) / (DTLB1_WRITES + ITLB1_WRITES)) * (L1C_TLB1_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES))"
-+  },
-+  {
-+    "BriefDescription": "Page Table Entry misses",
-+    "MetricName": "pte_miss",
-+    "MetricExpr": "(TLB2_PTE_WRITES / (DTLB1_WRITES + ITLB1_WRITES)) * 100"
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
-index cca237bdb7ba..ce814ea93396 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z14/transaction.json
-@@ -43,5 +43,30 @@
-     "BriefDescription": "Percentage sourced from memory",
-     "MetricName": "memp",
-     "MetricExpr": "((L1D_ONCHIP_MEMORY_SOURCED_WRITES + L1D_ONCLUSTER_MEMORY_SOURCED_WRITES + L1D_OFFCLUSTER_MEMORY_SOURCED_WRITES + L1D_OFFDRAWER_MEMORY_SOURCED_WRITES + L1I_ONCHIP_MEMORY_SOURCED_WRITES + L1I_ONCLUSTER_MEMORY_SOURCED_WRITES + L1I_OFFCLUSTER_MEMORY_SOURCED_WRITES + L1I_OFFDRAWER_MEMORY_SOURCED_WRITES) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+  },
-+  {
-+    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
-+    "MetricName": "finite_cpi",
-+    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS"
-+  },
-+  {
-+    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
-+    "MetricName": "est_cpi",
-+    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS)"
-+  },
-+  {
-+    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-+    "MetricName": "scpl1m",
-+    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES)"
-+  },
-+  {
-+    "BriefDescription": "Estimated TLB CPU percentage of Total CPU",
-+    "MetricName": "tlb_percent",
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / CPU_CYCLES) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100"
-+  },
-+  {
-+    "BriefDescription": "Estimated Cycles per TLB Miss",
-+    "MetricName": "tlb_miss",
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES))"
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
-index cca237bdb7ba..ce814ea93396 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
-@@ -43,5 +43,30 @@
-     "BriefDescription": "Percentage sourced from memory",
-     "MetricName": "memp",
-     "MetricExpr": "((L1D_ONCHIP_MEMORY_SOURCED_WRITES + L1D_ONCLUSTER_MEMORY_SOURCED_WRITES + L1D_OFFCLUSTER_MEMORY_SOURCED_WRITES + L1D_OFFDRAWER_MEMORY_SOURCED_WRITES + L1I_ONCHIP_MEMORY_SOURCED_WRITES + L1I_ONCLUSTER_MEMORY_SOURCED_WRITES + L1I_OFFCLUSTER_MEMORY_SOURCED_WRITES + L1I_OFFDRAWER_MEMORY_SOURCED_WRITES) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
-+  },
-+  {
-+    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
-+    "MetricName": "finite_cpi",
-+    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS"
-+  },
-+  {
-+    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
-+    "MetricName": "est_cpi",
-+    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS)"
-+  },
-+  {
-+    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-+    "MetricName": "scpl1m",
-+    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES)"
-+  },
-+  {
-+    "BriefDescription": "Estimated TLB CPU percentage of Total CPU",
-+    "MetricName": "tlb_percent",
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / CPU_CYCLES) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100"
-+  },
-+  {
-+    "BriefDescription": "Estimated Cycles per TLB Miss",
-+    "MetricName": "tlb_miss",
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES))"
-   }
- ]
 diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-index dde0735a7d22..ec2ff78e2b5f 100644
+index 86bf83b4504e..dde0735a7d22 100644
 --- a/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
 +++ b/tools/perf/pmu-events/arch/s390/cf_z16/transaction.json
-@@ -43,5 +43,30 @@
-     "BriefDescription": "Percentage sourced from memory",
-     "MetricName": "memp",
-     "MetricExpr": "((DCW_ON_CHIP_MEMORY + DCW_ON_MODULE_MEMORY + DCW_ON_DRAWER_MEMORY + DCW_OFF_DRAWER_MEMORY + ICW_ON_CHIP_MEMORY + ICW_ON_MODULE_MEMORY + ICW_ON_DRAWER_MEMORY + ICW_OFF_DRAWER_MEMORY) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
+@@ -18,5 +18,30 @@
+     "BriefDescription": "Level One Miss per 100 Instructions",
+     "MetricName": "l1mp",
+     "MetricExpr": "((L1I_DIR_WRITES + L1D_DIR_WRITES) / INSTRUCTIONS) * 100"
 +  },
 +  {
-+    "BriefDescription": "Cycles per Instructions from Finite cache/memory",
-+    "MetricName": "finite_cpi",
-+    "MetricExpr": "L1C_TLB2_MISSES / INSTRUCTIONS"
++    "BriefDescription": "Percentage sourced from Level 2 cache",
++    "MetricName": "l2p",
++    "MetricExpr": "((DCW_REQ + DCW_REQ_IV + ICW_REQ + ICW_REQ_IV) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 +  },
 +  {
-+    "BriefDescription": "Estimated Instruction Complexity CPI infinite Level 1",
-+    "MetricName": "est_cpi",
-+    "MetricExpr": "(CPU_CYCLES / INSTRUCTIONS) - (L1C_TLB2_MISSES / INSTRUCTIONS)"
++    "BriefDescription": "Percentage sourced from Level 3 on same chip cache",
++    "MetricName": "l3p",
++    "MetricExpr": "((DCW_REQ_CHIP_HIT + DCW_ON_CHIP + DCW_ON_CHIP_IV + DCW_ON_CHIP_CHIP_HIT + ICW_REQ_CHIP_HIT + ICW_ON_CHIP + ICW_ON_CHIP_IV + ICW_ON_CHIP_CHIP_HIT) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 +  },
 +  {
-+    "BriefDescription": "Estimated Sourcing Cycles per Level 1 Miss",
-+    "MetricName": "scpl1m",
-+    "MetricExpr": "L1C_TLB2_MISSES / (L1I_DIR_WRITES + L1D_DIR_WRITES)"
++    "BriefDescription": "Percentage sourced from Level 4 Local cache on same book",
++    "MetricName": "l4lp",
++    "MetricExpr": "((DCW_REQ_DRAWER_HIT + DCW_ON_CHIP_DRAWER_HIT + DCW_ON_MODULE + DCW_ON_DRAWER + IDCW_ON_MODULE_IV + IDCW_ON_MODULE_CHIP_HIT + IDCW_ON_MODULE_DRAWER_HIT + IDCW_ON_DRAWER_IV + IDCW_ON_DRAWER_CHIP_HIT + IDCW_ON_DRAWER_DRAWER_HIT + ICW_REQ_DRAWER_HIT + ICW_ON_CHIP_DRAWER_HIT + ICW_ON_MODULE + ICW_ON_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 +  },
 +  {
-+    "BriefDescription": "Estimated TLB CPU percentage of Total CPU",
-+    "MetricName": "tlb_percent",
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / CPU_CYCLES) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES)) * 100"
++    "BriefDescription": "Percentage sourced from Level 4 Remote cache on different book",
++    "MetricName": "l4rp",
++    "MetricExpr": "((DCW_OFF_DRAWER + IDCW_OFF_DRAWER_IV + IDCW_OFF_DRAWER_CHIP_HIT + IDCW_OFF_DRAWER_DRAWER_HIT + ICW_OFF_DRAWER) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
 +  },
 +  {
-+    "BriefDescription": "Estimated Cycles per TLB Miss",
-+    "MetricName": "tlb_miss",
-+    "MetricExpr": "((DTLB2_MISSES + ITLB2_MISSES) / (DTLB2_WRITES + ITLB2_WRITES)) * (L1C_TLB2_MISSES / (L1I_PENALTY_CYCLES + L1D_PENALTY_CYCLES))"
++    "BriefDescription": "Percentage sourced from memory",
++    "MetricName": "memp",
++    "MetricExpr": "((DCW_ON_CHIP_MEMORY + DCW_ON_MODULE_MEMORY + DCW_ON_DRAWER_MEMORY + DCW_OFF_DRAWER_MEMORY + ICW_ON_CHIP_MEMORY + ICW_ON_MODULE_MEMORY + ICW_ON_DRAWER_MEMORY + ICW_OFF_DRAWER_MEMORY) / (L1I_DIR_WRITES + L1D_DIR_WRITES)) * 100"
    }
  ]
 -- 
