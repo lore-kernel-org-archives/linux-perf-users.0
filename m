@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0714FC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 19:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C397FC6FD19
+	for <linux-perf-users@archiver.kernel.org>; Mon, 13 Mar 2023 19:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjCMTiD (ORCPT
+        id S229548AbjCMTpS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 15:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        Mon, 13 Mar 2023 15:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjCMTiC (ORCPT
+        with ESMTP id S229493AbjCMTpR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 15:38:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CA2EFAD;
-        Mon, 13 Mar 2023 12:38:01 -0700 (PDT)
+        Mon, 13 Mar 2023 15:45:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57674838AC;
+        Mon, 13 Mar 2023 12:45:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AB201B811E1;
-        Mon, 13 Mar 2023 19:37:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D36C433EF;
-        Mon, 13 Mar 2023 19:37:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F03AB614A7;
+        Mon, 13 Mar 2023 19:45:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32D62C433D2;
+        Mon, 13 Mar 2023 19:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678736278;
-        bh=jQi+PcG9SAfmGUTaLTv603Vpq8uAn+L4RzhgHyvuiig=;
+        s=k20201202; t=1678736715;
+        bh=AvlUso4KYkp1l30VXRmyTuU2ziwo0V1J35ALSrtrQvA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d2SFcGprrSjv0cTpRZfKeQdx7abce/yNw5R+ZVX+rWeuJ8cXml22yTmTdYTt/f98d
-         uPu6Gz6PTVoqEC3ODp3SPKsebrenq2+tTNQ70T7u93my7rltHaKhEYv7koQYPQnyhK
-         jT5N4Vy8GA5plz95q9lOI6VtAus6U0cCRHLtx4o4TAtzMRYwYpSBbM8T3qUYKdpawm
-         3ERoghniuFKnwI4HZHbHJGBfs+/sfXhlhjsJYJ9Q9l23DGH489UG7kmilJ/ZTMLbEW
-         lVqa5aR2Kmky7rJbUVdTDVracaKWPVhs+vaC4IkYDbPNZ0VWF/jtfZv2sqFUZhCAoO
-         k4XBI0gYA2lSw==
+        b=swtloOobGFfgTpVWibyC1HAPg+JDVxsi0U3xo1EzWswVs/CvqHHS5g/rtIcz/s9YS
+         OoC0IKeNs8J2Q/jiNd2SY1WaFPfEHBwD63IXiRnfbzjOCsgQTZn8p7jwku7lQ1b1+t
+         /e8plgzC6c4bqfpUXetsXvAtu9k1D9+P2doUNevE4XMYybJKmF4erRKZwBc14MTkiv
+         dlH93ublpPmIk0OPjRn5rIzDphFy4LNmNKoq2cnHmoyhi1qAWva5cjAJ+asbbvUGdw
+         /5rjo0Ve4vR4sdVGokZiB4txnC0/7fx/UZc5kPP/UvD/KPMbARLADhtGEdi6ScxXZ+
+         cMWkf7U32G6dQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EA6BE4049F; Mon, 13 Mar 2023 16:37:55 -0300 (-03)
-Date:   Mon, 13 Mar 2023 16:37:55 -0300
+        id AC0994049F; Mon, 13 Mar 2023 16:45:12 -0300 (-03)
+Date:   Mon, 13 Mar 2023 16:45:12 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -58,166 +58,56 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         llvm@lists.linux.dev, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v1 07/13] perf build: Make binutil libraries opt in
-Message-ID: <ZA97k8ZP4lAC0tia@kernel.org>
+Subject: Re: [PATCH v1 04/13] perf build: Error if no libelf and NO_LIBELF
+ isn't set
+Message-ID: <ZA99SPGAlLUIjQoj@kernel.org>
 References: <20230311065753.3012826-1-irogers@google.com>
- <20230311065753.3012826-8-irogers@google.com>
+ <20230311065753.3012826-5-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230311065753.3012826-8-irogers@google.com>
+In-Reply-To: <20230311065753.3012826-5-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Mar 10, 2023 at 10:57:47PM -0800, Ian Rogers escreveu:
-> binutils is GPLv3 so distributions cannot ship perf linked against
-> libbfd and libiberty as the licenses are incompatible. Rather than
-> defaulting the build to opting in to libbfd and libiberty support and
-> opting out via NO_LIBBFD=1 and NO_DEMANGLE=1, make building against
-> the libraries optional and enabled with BUILD_NONDISTRO=1.
+Em Fri, Mar 10, 2023 at 10:57:44PM -0800, Ian Rogers escreveu:
+> Building without libelf support is going disable a lot of
+> functionality. Require that the NO_LIBELF=1 build option is passed if
+> this is intentional.
 
-So now I get this:
 
-⬢[acme@toolbox perf-tools-next]$ perf -vv
-perf version 6.3.rc1.gace4d44d094c
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-         BPF skeletons: [ on  ]  # HAVE_BPF_SKEL
-⬢[acme@toolbox perf-tools-next]$
+'make -C tools/perf build-test' is failing:
 
-Shouldn't we have, right next to libbpf that libstdc++ feature status?
+⬢[acme@toolbox perf-tools-next]$ git log --oneline -1 ; time make -C tools/perf build-test
+ace4d44d094ce850 (HEAD -> perf-tools-next) perf build: Remove redundant NO_NEWT build option
+make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
+Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs from latest version at 'include/uapi/linux/in.h'
+Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
+Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h' differs from latest version at 'include/linux/coresight-pmu.h'
+- tarpkg: ./tests/perf-targz-src-pkg .
+                 make_static: cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j32  DESTDIR=/tmp/tmp.jqGYXdF9cQ
+cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 -j32 DESTDIR=/tmp/tmp.jqGYXdF9cQ
+  BUILD:   Doing 'make -j32' parallel build
+  HOSTCC  fixdep.o
+  HOSTLD  fixdep-in.o
+  LINK    fixdep
+Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs from latest version at 'include/uapi/linux/in.h'
+diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
+Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
+diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h' differs from latest version at 'include/linux/coresight-pmu.h'
+diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
+Makefile.config:429: *** ERROR: No libelf found. Disables 'probe' tool, jvmti and BPF support. Please install libelf-dev, libelf-devel, elfutils-libelf-devel or build with NO_LIBELF=1..  Stop.
+make[3]: *** [Makefile.perf:236: sub-make] Error 2
+make[2]: *** [Makefile:70: all] Error 2
+  test: test -x ./perf
+make[1]: *** [tests/make:316: make_static] Error 1
+make: *** [Makefile:103: build-test] Error 2
 
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.config | 25 ++++++++++---------------
->  tools/perf/Makefile.perf   |  2 ++
->  tools/perf/tests/make      |  2 ++
->  3 files changed, 14 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 2557654d8e29..5756498248e0 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -882,7 +882,7 @@ ifneq ($(NO_JEVENTS),1)
->    endif
->  endif
->  
-> -ifndef NO_LIBBFD
-> +ifdef BUILD_NONDISTRO
->    ifeq ($(feature-libbfd), 1)
->      EXTLIBS += -lbfd -lopcodes
->    else
-> @@ -905,6 +905,7 @@ ifndef NO_LIBBFD
->      $(call feature_check,disassembler-init-styled)
->    endif
->  
-> +  CFLAGS += -DHAVE_LIBBFD_SUPPORT
->    ifeq ($(feature-libbfd-buildid), 1)
->      CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
->    else
-> @@ -915,32 +916,26 @@ endif
->  ifdef NO_DEMANGLE
->    CFLAGS += -DNO_DEMANGLE
->  else
-> -  ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
-> -    EXTLIBS += -liberty
-> -  else
-> +  ifdef BUILD_NONDISTRO
->      ifeq ($(filter -liberty,$(EXTLIBS)),)
-> -      $(call feature_check,cplus-demangle)
-> -
-> -      # we dont have neither HAVE_CPLUS_DEMANGLE_SUPPORT
-> -      # or any of 'bfd iberty z' trinity
-> -      ifeq ($(feature-cplus-demangle), 1)
-> +      ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
->          EXTLIBS += -liberty
->        else
-> -        msg := $(warning No bfd.h/libbfd found, please install binutils-dev[el]/zlib-static/libiberty-dev to gain symbol demangling)
-> -        CFLAGS += -DNO_DEMANGLE
-> +        $(call feature_check,cplus-demangle)
-> +        ifeq ($(feature-cplus-demangle), 1)
-> +          EXTLIBS += -liberty
-> +        endif
->        endif
->      endif
->    endif
->  
->    ifneq ($(filter -liberty,$(EXTLIBS)),)
->      CFLAGS += -DHAVE_CPLUS_DEMANGLE_SUPPORT
-> +  else
-> +    CFLAGS += -DNO_DEMANGLE
->    endif
->  endif
->  
-> -ifneq ($(filter -lbfd,$(EXTLIBS)),)
-> -  CFLAGS += -DHAVE_LIBBFD_SUPPORT
-> -endif
-> -
->  ifndef NO_ZLIB
->    ifeq ($(feature-zlib), 1)
->      CFLAGS += -DHAVE_ZLIB_SUPPORT
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 283ee4f56234..a35bc995d5d8 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -128,6 +128,8 @@ include ../scripts/utilities.mak
->  #
->  # Define NO_BPF_SKEL to disable BPF skeletons
->  #
-> +# Define BUILD_NONDISTRO to enable building an linking against libbfd and
-> +# libiberty distribution license incompatible libraries.
->  
->  # As per kernel Makefile, avoid funny character set dependencies
->  unexport LC_ALL
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index deb37fb982e9..c2f74ed43418 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-> @@ -68,6 +68,7 @@ python_perf_so := $(shell $(MAKE) python_perf_target|grep "Target is:"|awk '{pri
->  make_clean_all      := clean all
->  make_python_perf_so := $(python_perf_so)
->  make_debug          := DEBUG=1
-> +make_nondistro      := BUILD_NONDISTRO=1
->  make_no_libperl     := NO_LIBPERL=1
->  make_no_libpython   := NO_LIBPYTHON=1
->  make_no_scripts     := NO_LIBPYTHON=1 NO_LIBPERL=1
-> @@ -134,6 +135,7 @@ MAKE_F := $(MAKE) -f $(MK)
->  endif
->  run += make_python_perf_so
->  run += make_debug
-> +run += make_nondistro
->  run += make_no_libperl
->  run += make_no_libpython
->  run += make_no_scripts
-> -- 
-> 2.40.0.rc1.284.g88254d51c5-goog
-> 
-
--- 
-
-- Arnaldo
+Same thing for the libtraceevent, I'll add NO_LIBTRACEEVENT=1 and NO_LIBELF=1 to the static build test in tools/perf/tests/make
