@@ -2,100 +2,176 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B33C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 00:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4854DC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 01:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbjCNAge (ORCPT
+        id S230402AbjCNBvR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 13 Mar 2023 20:36:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53632 "EHLO
+        Mon, 13 Mar 2023 21:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230326AbjCNAg1 (ORCPT
+        with ESMTP id S230393AbjCNBvQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 13 Mar 2023 20:36:27 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C7682A97
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 17:36:16 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id q14so2791970pfu.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 17:36:16 -0700 (PDT)
+        Mon, 13 Mar 2023 21:51:16 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3ED7432E
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 18:51:13 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id bp11so2519610ilb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 18:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678754176;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vlH32Emuag8G8y9Ul5mcocRDTiGSeipNTGU5xstePhI=;
-        b=LC9WAk/kiCsVP8DZ63qBj9WES4RNUeUZHz0x915YlHbjaPh1l3J5fJy0NT+ObTGJ08
-         sPWmP+WS+kbCjhi1JhXNgK/wc/KZPWlI8vzMvW6uH/HNrHWddbpdOnG/SYvbdAUA0QoC
-         EIXxfZpCRb47Gr2HzktVuZIxIh+TNzB3UjGpMVy+N0dnFtRGcXGG7Hgoxp3jVeqECN4Q
-         TaorKyjxRuAM8gsKUtzC+GLqU8UXvNLbUGwyi4p1G/SDr/Ay2Ylot98x5f+kclK5y7e8
-         2PqekyLXOp6JRzqiMkYMYka9PZJzEN5ibhbksk7TJcb1VQ4L9w9hi6UsdTUlczTwMtAj
-         rGgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678754176;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20210112; t=1678758673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vlH32Emuag8G8y9Ul5mcocRDTiGSeipNTGU5xstePhI=;
-        b=0uawoGc+FMCq4vcFd+OIwGTOJHXf38aG+h0NMnQ+dUhV4xrtOfHgWgRnO5bkF6Mfpv
-         CTx5/kYHz1Scia47u8M3k6QK6HytMHABT8cXGtA9bcqQ/6FGdOUOUmJC/QKBp5iw9AkX
-         WrO8rqgyi/LLYJOkQfbTJeyGGdB4j5jLer69sme3vPczgRMiSRxBrQZc8FKtG9aBzQYh
-         6nIGqOYY7vQPH95KaLYyv5CZodAH4uF8WLudW0IV2G5IBFYGk2XLsIJImu96fqQetg8k
-         rj3v6QbJOXHASAiBOg/S987755Uzda8wuQC6YqpMxqV2kMEjqSI/2P4Y15XFdi8FZeX+
-         nCyw==
-X-Gm-Message-State: AO0yUKUbIV3jU8P+bmtLbZwmZssx0yhSyyBivYoutobe4FWfNOMSquDA
-        U3HN0ResLwdVdhBsnSbBDU2vMQ==
-X-Google-Smtp-Source: AK7set+Oh5cn1IYOWU6yauoYsJOvLntjuV2ZQ7CGBQKzeIOFxWwEiay+rHs7xVVYnsJGnaGv7uURFQ==
-X-Received: by 2002:a62:8489:0:b0:5a9:bf42:fcc5 with SMTP id k131-20020a628489000000b005a9bf42fcc5mr40513981pfd.0.1678754175989;
-        Mon, 13 Mar 2023 17:36:15 -0700 (PDT)
-Received: from leoy-yangtze.lan ([156.59.236.112])
-        by smtp.gmail.com with ESMTPSA id s11-20020aa7828b000000b005ded5d2d571sm271368pfm.185.2023.03.13.17.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 17:36:15 -0700 (PDT)
-Date:   Tue, 14 Mar 2023 08:36:10 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-Message-ID: <20230314003610.GD2426758@leoy-yangtze.lan>
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
- <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan>
- <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
- <20230313121420.GB2426758@leoy-yangtze.lan>
- <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
+        bh=589d5gGFeTRFSWyqkY4bWEOUvz8ytn+1q0THemjgTjo=;
+        b=sCoaYS53kX1FbnPJO069z9fN0xiunJwETCfuUF0U+/1RY4OSf2gZybXW3iq2NvZtxL
+         N3xD1WDLzMneibZj8Q3LKDEfJFudxp9oIpmwf5eOXWyWx+wW0FJtOX7nLfzWWpK2+z94
+         aJ5Xanx5/iUJnv4jg7mSaFCnACgXLQRGVkZAU0jGHhQpgDgZxawwuUPuUJRUCOccQwxu
+         oOiq+OeNrEHYo37W1HQdW/+izUkV1CJSVNCCDgjq7JSkccc0HO7BvdXU+s2bsT8CUhMT
+         elDT2/kflN9YtGfavs/UkIQ5Uo6goP5LKIO8AWva4YDcH2BjhLC0X0G8VMGzLVnfZfEF
+         q91A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678758673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=589d5gGFeTRFSWyqkY4bWEOUvz8ytn+1q0THemjgTjo=;
+        b=tm+eEjH7kqrYuC9ykyYrareDD7YBC7QnX0B/oEUezYoE8V6bb7FlutVLwxXHIIZAHp
+         ZlFnSYslxPJDSRYrvZ1N7Qm3uj9rpHUOjAYQ1ZOaYxjycE7EKEcEncXO7xk+vAZwM99l
+         YcETCdGHRVfhSCt41qsAzKAh3m7foQ3Q4FCofQpZSnofechj+F2GCEXXPTxw53MiFraH
+         cTWUg/V2zQbjnKNTdqyTgahg/NUEYRSyLBn+s+kKTKmPdVbo8gksELjNCnhox/Xw6NNk
+         h+lSHVhZ2tYYyxxXHayAR53K2tDcvX2JTaoMWRGQ7jEeDQmR+A7wcDExykBE5NHeb6oD
+         UENA==
+X-Gm-Message-State: AO0yUKVc0+p8QZeTZPE6KXMP6vX4r7WlIEZSut/ohoFrs82RjEDk6cAO
+        x2Q1JV6NCLt4ALnPUFMbq3MSJ2wAs8IQ/cbDFXPDFg==
+X-Google-Smtp-Source: AK7set8+Dh8f7H+Wetyv5sOVdRcPFSdXasKPH4Ttdqkf4wP3Sdu73sgx2P46Ghc94F6DQroovlvQv8Ld0rvKqSoUjYc=
+X-Received: by 2002:a05:6e02:601:b0:311:1424:47f1 with SMTP id
+ t1-20020a056e02060100b00311142447f1mr54396ils.0.1678758672482; Mon, 13 Mar
+ 2023 18:51:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
+References: <20230116010115.490713-1-irogers@google.com> <20230116010115.490713-3-irogers@google.com>
+ <ZA+RUCE4vAgBlQRh@kernel.org> <ZA+X14KllWXrlr7C@kernel.org> <CAP-5=fWFYVyCCH19XrFSk0hwPoxGkWKJ=vyjrWNroFWzBZ-S2A@mail.gmail.com>
+In-Reply-To: <CAP-5=fWFYVyCCH19XrFSk0hwPoxGkWKJ=vyjrWNroFWzBZ-S2A@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 13 Mar 2023 18:51:01 -0700
+Message-ID: <CAP-5=fVAhoqE6E87FRnwHr6Em2eX9Rq++6HmHMcFqVjFGCitmA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] perf build: Remove libbpf pre-1.0 feature tests
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andres Freund <andres@anarazel.de>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Christy Lee <christylee@fb.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 13, 2023 at 11:15:44AM -0700, Yang Shi wrote:
-
-[...]
-
-> > Just a quick summary, here we have two issues:
+On Mon, Mar 13, 2023 at 5:19=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Mon, Mar 13, 2023 at 2:38=E2=80=AFPM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > - With command:
-> >   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
-> >   -- taskset --cpu-list 1 uname",
+> > Em Mon, Mar 13, 2023 at 06:10:40PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:
+> > > Em Sun, Jan 15, 2023 at 05:01:14PM -0800, Ian Rogers escreveu:
+> > > > The feature tests were necessary for libbpf pre-1.0, but as the lib=
+bpf
+> > > > implies at least 1.0 we can remove these now.
+> > >
+> > > So I added this:
+> > >
+> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > > index 8b0bd3aa018ef166..b715cd4f43f4a014 100644
+> > > --- a/tools/perf/Makefile.config
+> > > +++ b/tools/perf/Makefile.config
+> > > @@ -580,7 +580,7 @@ ifndef NO_LIBELF
+> > >            EXTLIBS +=3D -lbpf
+> > >            $(call detected,CONFIG_LIBBPF_DYNAMIC)
+> > >          else
+> > > -          dummy :=3D $(error Error: No libbpf devel library found, p=
+lease install libbpf-devel);
+> > > +          dummy :=3D $(error Error: No libbpf devel library found or=
+ older than v1.0, please install/update libbpf-devel);
+> > >          endif
+> > >        else
+> > >          # Libbpf will be built as a static library from tools/lib/bp=
+f.
+> > >
+> > > To better reflect the failure reason:
+> > >
+> > > =E2=AC=A2[acme@toolbox perf-tools-next]$ cat /tmp/build/perf-tools-ne=
+xt/feature/test-libbpf.make.output
+> > > test-libbpf.c:5:2: error: #error At least libbpf 1.0 is required for =
+Linux tools.
+> > >     5 | #error At least libbpf 1.0 is required for Linux tools.
+> > >       |  ^~~~~
+> > > =E2=AC=A2[acme@toolbox perf-tools-next]$ rpm -q libbpf-devel
+> > > libbpf-devel-0.8.0-2.fc37.x86_64
+> > > =E2=AC=A2[acme@toolbox perf-tools-next]$
+> > >
+> > > I'll see if I can make the build test conditional on libbpf being >=
+=3D 1.0
 > >
-> >   perf doesn't enable "text poke" attribution.
-> 
-> No, it enables "text poke" and perf fails to decode coresight trace
-> data too. It doesn't matter whether "--kcore" is after or before "-e
-> cs/etm/@tmc_etf63/k".
+> > I'm trying with this:
+> >
+> > =E2=AC=A2[acme@toolbox libbpf]$ git log --oneline -1 9476dce6fe905a6bf1=
+d4c483f7b2b8575c4ffb2d
+> > 9476dce6fe905a6b libbpf: remove deprecated low-level APIs
+> > =E2=AC=A2[acme@toolbox libbpf]$ git tag --contains 9476dce6fe905a6bf1d4=
+c483f7b2b8575c4ffb2d
+> > v1.0.0
+> > v1.0.1
+> > v1.1.0
+> > =E2=AC=A2[acme@toolbox libbpf]$
+> >
+> > diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+> > index 531324c3dab594e1..f866c58b916f4d7a 100644
+> > --- a/tools/perf/tests/make
+> > +++ b/tools/perf/tests/make
+> > @@ -63,6 +63,7 @@ endif
+> >
+> >  has =3D $(shell which $1 2>/dev/null)
+> >  python_perf_so :=3D $(shell $(MAKE) python_perf_target|grep "Target is=
+:"|awk '{print $$3}')
+> > +old_libbpf :=3D $(shell grep -q LIBBPF_DEPRECATED /usr/include/bpf/bpf=
+.h)
+>
+> I think this could also be:
+> old_libbpf :=3D $(shell grep MAJOR /usr/include/bpf/libbpf_version.h
+> 2>&1 |grep -q  0)
+> Which may be a bit more intention revealing and future proof.
+>
+> Thanks,
+> Ian
 
-Understand now.  Thanks for correction, if so we can ignore this one.
+To avoid /usr/include assumptions, there's also:
+old_libbpf :=3D $(shell echo "#include <bpf/libbpf.h>" | $(CC) -E -dM -x
+c -|grep "define LIBBPF_MAJOR_VERSION"|grep -q 0)
+:-)
 
-Leo
+Ian
+
+> >  # standard single make variable specified
+> >  make_clean_all      :=3D clean all
+> > @@ -151,7 +152,9 @@ run +=3D make_no_libaudit
+> >  run +=3D make_no_libbionic
+> >  run +=3D make_no_auxtrace
+> >  run +=3D make_no_libbpf
+> > +ifneq ($(old_libbpf),)
+> >  run +=3D make_libbpf_dynamic
+> > +endif
+> >  run +=3D make_no_libbpf_DEBUG
+> >  run +=3D make_no_libcrypto
+> >  run +=3D make_no_sdt
