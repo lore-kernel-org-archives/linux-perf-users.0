@@ -2,147 +2,249 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16D5C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 21:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EA9C7618B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 21:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbjCNVgb (ORCPT
+        id S230372AbjCNVmo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Mar 2023 17:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
+        Tue, 14 Mar 2023 17:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjCNVgb (ORCPT
+        with ESMTP id S230122AbjCNVmn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Mar 2023 17:36:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB1051C86;
-        Tue, 14 Mar 2023 14:36:29 -0700 (PDT)
+        Tue, 14 Mar 2023 17:42:43 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2A24617B;
+        Tue, 14 Mar 2023 14:42:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E18B061999;
-        Tue, 14 Mar 2023 21:36:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23BFAC433D2;
-        Tue, 14 Mar 2023 21:36:28 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 67E6CCE1777;
+        Tue, 14 Mar 2023 21:42:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A74C433D2;
+        Tue, 14 Mar 2023 21:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678829788;
-        bh=N/TveHPIq2WE+Bc7VWWnzUTgWumhBYG3YPoOYW04ilE=;
+        s=k20201202; t=1678830138;
+        bh=O2/V8An4y4HPQZQMLd2yHYKygWqd9I/oQmCKa9k5eG8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fPh2D+aExS+mJSqhVN/fZZq0gILyw4ZF/s4QvwhvLiJSBXrjF6hqlw6ZlC4ZrOTds
-         DocqXNji5GDVUVXboZLBjUw8Dv5/xgy/tfTfNe1X9ULVoLfnHKjCEp+gGH9jas+8c9
-         6Jjm4NbwRoSxyU1XCpu4EkkHNbJZp/AJEP+zyQi3l18DrUC39hqoD0+clA1iUUQX6e
-         RNMs7zm71rqokkEPF6b85Lk9LitMMfWciStrSEORgfAejDVM+bN2VsyUc3TDG5G8Pq
-         Oio8YFUkf2L5lrAd1VXVgpmAtgtaoSH7IVwUEISB5TqdNeSGA3ZfJ/5a5i64kkREdP
-         0h6oIyjHfWSjw==
+        b=DE8qK1Uk9MtI3yLlK5w4Htj2dluL101agFfvNwjS8Ik+k0NnE5GUNe3BVbdewNcAV
+         uwI8tAdAz9BghNUSLIoVYDGaSJ4a+WwqZAVkHJe/3HHZbj9bSbwHPLK+zIHEDbDMtG
+         6JGhAHr3ps8ABWDRrexxDr7ZtNXYw046cKUHsPf54ALYKkN4eTk5g+n9iVkl5nUXUI
+         F1okuaV80ZmEzb6SbQaIgF88AJVEaP1S8Ypc/ZeiXryvl5rM6ZVY/oQbWAPr/16q00
+         POvpZ8888MPkEk2w71iDxikxyvAMEysF1tK3YCNZG4v3sUvmWlethzZ1D+jrefkxHz
+         R1LA0skJ5szpw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B87E24049F; Tue, 14 Mar 2023 18:36:24 -0300 (-03)
-Date:   Tue, 14 Mar 2023 18:36:24 -0300
+        id 1827B4049F; Tue, 14 Mar 2023 18:42:16 -0300 (-03)
+Date:   Tue, 14 Mar 2023 18:42:16 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
-Message-ID: <ZBDo2GiuUTrHhd2L@kernel.org>
-References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
- <20230313080201.2440201-2-tmricht@linux.ibm.com>
- <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
- <ZA9sYL/re/aNVpo+@kernel.org>
- <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
- <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 4/9] perf record: Record dropped sample count
+Message-ID: <ZBDqOMJexe7Cq3eM@kernel.org>
+References: <20230307233309.3546160-1-namhyung@kernel.org>
+ <20230307233309.3546160-5-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
+In-Reply-To: <20230307233309.3546160-5-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 14, 2023 at 09:34:46AM -0700, Ian Rogers escreveu:
-> On Tue, Mar 14, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> >
-> > On 3/13/23 19:33, Arnaldo Carvalho de Melo wrote:
-> > > Em Mon, Mar 13, 2023 at 08:22:44AM -0700, Ian Rogers escreveu:
-> > >> On Mon, Mar 13, 2023 at 1:30 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > >>>
-> > >>> Add metrics for s390 z16
-> > >>> - Percentage sourced from Level 2 cache
-> > >>> - Percentage sourced from Level 3 on same chip cache
-> > >>> - Percentage sourced from Level 4 Local cache on same book
-> > >>> - Percentage sourced from Level 4 Remote cache on different book
-> > >>> - Percentage sourced from memory
-> > >>>
-> > >>> For details about the formulas see this documentation:
-> > >>> https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
-> > >>>
-> > >>> Outpuf after:
-> > >>>  # ./perf stat -M l4rp -- dd if=/dev/zero of=/dev/null bs=10M count=10K
-> > >>>  .... dd output deleted
-> > >>>
-> > >>>  Performance counter stats for 'dd if=/dev/zero of=/dev/null bs=10M count=10K':
-> > >>>
-> > >>>                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
-> > >>>            431,866      L1I_DIR_WRITES
-> > >>>              2,395      IDCW_OFF_DRAWER_IV
-> > >>>                  0      ICW_OFF_DRAWER
-> > >>>                  0      IDCW_OFF_DRAWER_DRAWER_HIT
-> > >>>              1,437      DCW_OFF_DRAWER
-> > >>>        425,960,793      L1D_DIR_WRITES
-> > >>>
-> > >>>       12.165030699 seconds time elapsed
-> > >>>
-> > >>>        0.001037000 seconds user
-> > >>>       12.162140000 seconds sys
-> > >>>
-> > >>>  #
-> > >>>
-> > >>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > >>> Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > >>
-> > >> Acked-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks, applied the first two patches, please address the review
-> > > suggestions for patches 3-6 and resubmit only those.
-> > >
-> > > The patches will be in the public perf-tools-next branch later today.
-> > >
-> > > - Arnaldo
-> > >
-> >
-> > I would really prefer the current implementation without using "ScaleUnit": "100%"
-> > The reason is that these formulars are given to me from the s390 Performance team.
-> > They want to use the exact same formulars on all platforms running on s390
-> > which includes z/OS and z/VM. This way they are sure to get the same numbers.
-> >
-> > Hope this background info helps.
+Em Tue, Mar 07, 2023 at 03:33:04PM -0800, Namhyung Kim escreveu:
+> When it uses bpf filters, event might drop some samples.  It'd be nice
+> if it can report how many samples it lost.  As LOST_SAMPLES event can
+> carry the similar information, let's use it for bpf filters.
 > 
-> For the series:
-> Acked-by: Ian Rogers <irogers@google.com>
+> To indicate it's from BPF filters, add a new misc flag for that and
+> do not display cpu load warnings.
 
-Thanks, applied.
+This one isn't applying, can you please refresh on top of
+acme/tmp.perf-tools-next ?
 
 - Arnaldo
-
  
-> Using ScaleUnit won't change the result. A ScaleUnit of "100%" means
-> scale the result up by multiplying by 100 and then apply the % after
-> the value. Another nit is having metrics that place their units in the
-> name, like _percent, is usually a sign the name can be better. Perhaps
-> we can follow up with some clean up.
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/lib/perf/include/perf/event.h |  2 ++
+>  tools/perf/builtin-record.c         | 38 ++++++++++++++++++-----------
+>  tools/perf/util/bpf-filter.c        |  7 ++++++
+>  tools/perf/util/bpf-filter.h        |  5 ++++
+>  tools/perf/util/session.c           |  3 ++-
+>  5 files changed, 40 insertions(+), 15 deletions(-)
 > 
-> Thanks,
-> Ian
+> diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+> index ad47d7b31046..51b9338f4c11 100644
+> --- a/tools/lib/perf/include/perf/event.h
+> +++ b/tools/lib/perf/include/perf/event.h
+> @@ -70,6 +70,8 @@ struct perf_record_lost {
+>  	__u64			 lost;
+>  };
+>  
+> +#define PERF_RECORD_MISC_LOST_SAMPLES_BPF (1 << 15)
+> +
+>  struct perf_record_lost_samples {
+>  	struct perf_event_header header;
+>  	__u64			 lost;
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 8374117e66f6..197e802a150b 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -52,6 +52,7 @@
+>  #include "util/pmu-hybrid.h"
+>  #include "util/evlist-hybrid.h"
+>  #include "util/off_cpu.h"
+> +#include "util/bpf-filter.h"
+>  #include "asm/bug.h"
+>  #include "perf.h"
+>  #include "cputopo.h"
+> @@ -1856,24 +1857,16 @@ record__switch_output(struct record *rec, bool at_exit)
+>  	return fd;
+>  }
+>  
+> -static void __record__read_lost_samples(struct record *rec, struct evsel *evsel,
+> +static void __record__save_lost_samples(struct record *rec, struct evsel *evsel,
+>  					struct perf_record_lost_samples *lost,
+> -					int cpu_idx, int thread_idx)
+> +					int cpu_idx, int thread_idx, u64 lost_count,
+> +					u16 misc_flag)
+>  {
+> -	struct perf_counts_values count;
+>  	struct perf_sample_id *sid;
+>  	struct perf_sample sample = {};
+>  	int id_hdr_size;
+>  
+> -	if (perf_evsel__read(&evsel->core, cpu_idx, thread_idx, &count) < 0) {
+> -		pr_err("read LOST count failed\n");
+> -		return;
+> -	}
+> -
+> -	if (count.lost == 0)
+> -		return;
+> -
+> -	lost->lost = count.lost;
+> +	lost->lost = lost_count;
+>  	if (evsel->core.ids) {
+>  		sid = xyarray__entry(evsel->core.sample_id, cpu_idx, thread_idx);
+>  		sample.id = sid->id;
+> @@ -1882,6 +1875,7 @@ static void __record__read_lost_samples(struct record *rec, struct evsel *evsel,
+>  	id_hdr_size = perf_event__synthesize_id_sample((void *)(lost + 1),
+>  						       evsel->core.attr.sample_type, &sample);
+>  	lost->header.size = sizeof(*lost) + id_hdr_size;
+> +	lost->header.misc = misc_flag;
+>  	record__write(rec, NULL, lost, lost->header.size);
+>  }
+>  
+> @@ -1905,6 +1899,7 @@ static void record__read_lost_samples(struct record *rec)
+>  
+>  	evlist__for_each_entry(session->evlist, evsel) {
+>  		struct xyarray *xy = evsel->core.sample_id;
+> +		u64 lost_count;
+>  
+>  		if (xy == NULL || evsel->core.fd == NULL)
+>  			continue;
+> @@ -1916,12 +1911,27 @@ static void record__read_lost_samples(struct record *rec)
+>  
+>  		for (int x = 0; x < xyarray__max_x(xy); x++) {
+>  			for (int y = 0; y < xyarray__max_y(xy); y++) {
+> -				__record__read_lost_samples(rec, evsel, lost, x, y);
+> +				struct perf_counts_values count;
+> +
+> +				if (perf_evsel__read(&evsel->core, x, y, &count) < 0) {
+> +					pr_err("read LOST count failed\n");
+> +					goto out;
+> +				}
+> +
+> +				if (count.lost) {
+> +					__record__save_lost_samples(rec, evsel, lost,
+> +								    x, y, count.lost, 0);
+> +				}
+>  			}
+>  		}
+> +
+> +		lost_count = perf_bpf_filter__lost_count(evsel);
+> +		if (lost_count)
+> +			__record__save_lost_samples(rec, evsel, lost, 0, 0, lost_count,
+> +						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
+>  	}
+> +out:
+>  	free(lost);
+> -
+>  }
+>  
+>  static volatile sig_atomic_t workload_exec_errno;
+> diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+> index f20e1bc03778..7bd6f2e41513 100644
+> --- a/tools/perf/util/bpf-filter.c
+> +++ b/tools/perf/util/bpf-filter.c
+> @@ -69,6 +69,13 @@ int perf_bpf_filter__destroy(struct evsel *evsel)
+>  	return 0;
+>  }
+>  
+> +u64 perf_bpf_filter__lost_count(struct evsel *evsel)
+> +{
+> +	struct sample_filter_bpf *skel = evsel->bpf_skel;
+> +
+> +	return skel ? skel->bss->dropped : 0;
+> +}
+> +
+>  struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flags,
+>  						       enum perf_bpf_filter_op op,
+>  						       unsigned long val)
+> diff --git a/tools/perf/util/bpf-filter.h b/tools/perf/util/bpf-filter.h
+> index eb8e1ac43cdf..f0c66764c6d0 100644
+> --- a/tools/perf/util/bpf-filter.h
+> +++ b/tools/perf/util/bpf-filter.h
+> @@ -22,6 +22,7 @@ struct perf_bpf_filter_expr *perf_bpf_filter_expr__new(unsigned long sample_flag
+>  int perf_bpf_filter__parse(struct list_head *expr_head, const char *str);
+>  int perf_bpf_filter__prepare(struct evsel *evsel);
+>  int perf_bpf_filter__destroy(struct evsel *evsel);
+> +u64 perf_bpf_filter__lost_count(struct evsel *evsel);
+>  
+>  #else /* !HAVE_BPF_SKEL */
+>  
+> @@ -38,5 +39,9 @@ static inline int perf_bpf_filter__destroy(struct evsel *evsel __maybe_unused)
+>  {
+>  	return -EOPNOTSUPP;
+>  }
+> +static inline u64 perf_bpf_filter__lost_count(struct evsel *evsel __maybe_unused)
+> +{
+> +	return 0;
+> +}
+>  #endif /* HAVE_BPF_SKEL*/
+>  #endif /* PERF_UTIL_BPF_FILTER_H */
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 749d5b5c135b..7d8d057d1772 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1582,7 +1582,8 @@ static int machines__deliver_event(struct machines *machines,
+>  			evlist->stats.total_lost += event->lost.lost;
+>  		return tool->lost(tool, event, sample, machine);
+>  	case PERF_RECORD_LOST_SAMPLES:
+> -		if (tool->lost_samples == perf_event__process_lost_samples)
+> +		if (tool->lost_samples == perf_event__process_lost_samples &&
+> +		    !(event->header.misc & PERF_RECORD_MISC_LOST_SAMPLES_BPF))
+>  			evlist->stats.total_lost_samples += event->lost_samples.lost;
+>  		return tool->lost_samples(tool, event, sample, machine);
+>  	case PERF_RECORD_READ:
+> -- 
+> 2.40.0.rc1.284.g88254d51c5-goog
 > 
-> > Thanks a lot.
-> > --
-> > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> > --
-> > Vorsitzender des Aufsichtsrats: Gregor Pillen
-> > Geschäftsführung: David Faller
-> > Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> >
 
 -- 
 
