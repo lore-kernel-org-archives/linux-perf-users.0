@@ -2,137 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F36C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 11:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609F6C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 11:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231366AbjCNLgx (ORCPT
+        id S231446AbjCNLjg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Mar 2023 07:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35996 "EHLO
+        Tue, 14 Mar 2023 07:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbjCNLgw (ORCPT
+        with ESMTP id S231395AbjCNLjb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Mar 2023 07:36:52 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F9E6C190;
-        Tue, 14 Mar 2023 04:36:49 -0700 (PDT)
+        Tue, 14 Mar 2023 07:39:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758E781CEF;
+        Tue, 14 Mar 2023 04:39:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 58814CE1255;
-        Tue, 14 Mar 2023 11:36:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B2DC433D2;
-        Tue, 14 Mar 2023 11:36:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2196EB818EC;
+        Tue, 14 Mar 2023 11:39:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80644C433D2;
+        Tue, 14 Mar 2023 11:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678793805;
-        bh=M2mHWXPIMyf36MInMAIEfhAMF3K+r+4D7kKbwFHmcO8=;
+        s=k20201202; t=1678793960;
+        bh=luG+2uJ/rehWgapl11w1aqOj1LPV0nhCPrhmlVJlaqE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pP5u788v3vDSAO/CLRqHe+jfwegEH9r6eNPHqQueUe+BdRnXqOX5zo1Zu/N446DrJ
-         7b63WXBd9gjM7UTexiTtPtMSraI6e+q7h5u2kNTz3XyGs4XGrGGwKfJqd7JCY6c0bQ
-         0FHuWnFwxT456dDk5HddqBPqD5btMNl45QLdjLW4fSnk5c/K7x4QYSFRNlpETlCiMO
-         37XdvNQ+MLxPLNzX3vG26Z69FLfTN3Y72+kpnW/w3MvWVsV0XYhm9BCMReaCl6kje9
-         oDV26J1AZzpL53+Ku2cTzSgWYNaWP0XOY3XCThgnmu5TT3UOV3RKMuDW2sDp2YhkfI
-         /cQCAnEWiMkOw==
+        b=RXkhavefrxy8Kkr7ZC+k6gzAHH84WV/h2I+deeprYe0k16vqGvv5xft4yt7rNJJdl
+         0U9VbhTajNezp9sFOLexQKEMNHBNeCYysIfTMbnp8r88BIML6u+qtzieRi0nGielAo
+         2uPJzTAYkDKJ5CkEvSkfPJ1sstgzvX321RYmUInPRLuVd7cTsTFv+FVD/HMul8d1nw
+         VcEn99+E/0RoS2NcFmwQZSQ7stFP8e24az9aTWJxzJF3rZfQJFGbSbCNuIKE92XqvO
+         0grc5gQss0yQGXLlWUE+vkJmGHQ730meiWW3ESX1Uz4wx9XWK3vMgmsL1iyx/nSEt+
+         RIjdrYaP8Lc9w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 486144049F; Tue, 14 Mar 2023 08:36:42 -0300 (-03)
-Date:   Tue, 14 Mar 2023 08:36:42 -0300
+        id DAE774049F; Tue, 14 Mar 2023 08:39:17 -0300 (-03)
+Date:   Tue, 14 Mar 2023 08:39:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Christy Lee <christylee@fb.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] perf build: Remove libbpf pre-1.0 feature tests
-Message-ID: <ZBBcSiggg0RgM0HB@kernel.org>
-References: <20230116010115.490713-1-irogers@google.com>
- <20230116010115.490713-3-irogers@google.com>
- <ZA+RUCE4vAgBlQRh@kernel.org>
- <ZA+X14KllWXrlr7C@kernel.org>
- <CAP-5=fWFYVyCCH19XrFSk0hwPoxGkWKJ=vyjrWNroFWzBZ-S2A@mail.gmail.com>
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Song Liu <song@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC/PATCHSET 0/9] perf record: Implement BPF sample filter (v4)
+Message-ID: <ZBBc5SQK2OhIGtGy@kernel.org>
+References: <20230307233309.3546160-1-namhyung@kernel.org>
+ <f5b3de20-797c-4ff6-a85b-06c85b4eaa1b@amd.com>
+ <ZAtG43JZkUoO9XkF@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWFYVyCCH19XrFSk0hwPoxGkWKJ=vyjrWNroFWzBZ-S2A@mail.gmail.com>
+In-Reply-To: <ZAtG43JZkUoO9XkF@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 13, 2023 at 05:19:45PM -0700, Ian Rogers escreveu:
-> On Mon, Mar 13, 2023 at 2:38 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Mon, Mar 13, 2023 at 06:10:40PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Sun, Jan 15, 2023 at 05:01:14PM -0800, Ian Rogers escreveu:
-> > > > The feature tests were necessary for libbpf pre-1.0, but as the libbpf
-> > > > implies at least 1.0 we can remove these now.
-> > >
-> > > So I added this:
-> > >
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index 8b0bd3aa018ef166..b715cd4f43f4a014 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -580,7 +580,7 @@ ifndef NO_LIBELF
-> > >            EXTLIBS += -lbpf
-> > >            $(call detected,CONFIG_LIBBPF_DYNAMIC)
-> > >          else
-> > > -          dummy := $(error Error: No libbpf devel library found, please install libbpf-devel);
-> > > +          dummy := $(error Error: No libbpf devel library found or older than v1.0, please install/update libbpf-devel);
-> > >          endif
-> > >        else
-> > >          # Libbpf will be built as a static library from tools/lib/bpf.
-> > >
-> > > To better reflect the failure reason:
-> > >
-> > > ⬢[acme@toolbox perf-tools-next]$ cat /tmp/build/perf-tools-next/feature/test-libbpf.make.output
-> > > test-libbpf.c:5:2: error: #error At least libbpf 1.0 is required for Linux tools.
-> > >     5 | #error At least libbpf 1.0 is required for Linux tools.
-> > >       |  ^~~~~
-> > > ⬢[acme@toolbox perf-tools-next]$ rpm -q libbpf-devel
-> > > libbpf-devel-0.8.0-2.fc37.x86_64
-> > > ⬢[acme@toolbox perf-tools-next]$
-> > >
-> > > I'll see if I can make the build test conditional on libbpf being >= 1.0
-> >
-> > I'm trying with this:
-> >
-> > ⬢[acme@toolbox libbpf]$ git log --oneline -1 9476dce6fe905a6bf1d4c483f7b2b8575c4ffb2d
-> > 9476dce6fe905a6b libbpf: remove deprecated low-level APIs
-> > ⬢[acme@toolbox libbpf]$ git tag --contains 9476dce6fe905a6bf1d4c483f7b2b8575c4ffb2d
-> > v1.0.0
-> > v1.0.1
-> > v1.1.0
-> > ⬢[acme@toolbox libbpf]$
-> >
-> > diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> > index 531324c3dab594e1..f866c58b916f4d7a 100644
-> > --- a/tools/perf/tests/make
-> > +++ b/tools/perf/tests/make
-> > @@ -63,6 +63,7 @@ endif
-> >
-> >  has = $(shell which $1 2>/dev/null)
-> >  python_perf_so := $(shell $(MAKE) python_perf_target|grep "Target is:"|awk '{print $$3}')
-> > +old_libbpf := $(shell grep -q LIBBPF_DEPRECATED /usr/include/bpf/bpf.h)
+Em Fri, Mar 10, 2023 at 12:04:03PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Mar 10, 2023 at 03:28:03PM +0530, Ravi Bangoria escreveu:
+> > > It requires samples satisfy all the filter expressions otherwise it'd
+> > > drop the sample.  IOW filter expressions are connected with logical AND
+> > > operations unless they used "||" explicitly.  So if user has something
+> > > like 'A, B || C, D', then BOTH A and D should be true AND either B or C
+> > > also needs to be true.
+> > > 
+> > > Essentially the BPF filter expression is:
+> > > 
+> > >   <term> <operator> <value> (("," | "||") <term> <operator> <value>)*
+> > > 
+> > > The <term> can be one of:
+> > >   ip, id, tid, pid, cpu, time, addr, period, txn, weight, phys_addr,
+> > >   code_pgsz, data_pgsz, weight1, weight2, weight3, ins_lat, retire_lat,
+> > >   p_stage_cyc, mem_op, mem_lvl, mem_snoop, mem_remote, mem_lock,
+> > >   mem_dtlb, mem_blk, mem_hops
+> > > 
+> > > The <operator> can be one of:
+> > >   ==, !=, >, >=, <, <=, &
+> > > 
+> > > The <value> can be one of:
+> > >   <number> (for any term)
+> > >   na, load, store, pfetch, exec (for mem_op)
+> > >   l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+> > >   na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+> > >   remote (for mem_remote)
+> > >   na, locked (for mem_locked)
+> > >   na, l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault (for mem_dtlb)
+> > >   na, by_data, by_addr (for mem_blk)
+> > >   hops0, hops1, hops2, hops3 (for mem_hops)
+> > 
+> > I think this and few examples should be added in perf-record man page.
 > 
-> I think this could also be:
-> old_libbpf := $(shell grep MAJOR /usr/include/bpf/libbpf_version.h
-> 2>&1 |grep -q  0)
-> Which may be a bit more intention revealing and future proof.
+> Agreed, and even mentioning cases where it overcome problems like the
+> filtering you mentioned for AMD systems.
 
-Thanks, I used:
-
-old_libbpf := $(shell echo "#include <bpf/libbpf.h>" | $(CC) -E -dM -x c -| egrep -q "define[[:space:]]+LIBBPF_MAJOR_VERSION[[:space:]]+0{1}")
+So, what do you think is best? Wait for v5 or apply v4 and then add
+documentation and other touches as followup patches?
 
 - Arnaldo
