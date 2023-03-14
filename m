@@ -2,96 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC28AC6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 04:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F6DC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 05:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjCNEug (ORCPT
+        id S229545AbjCNFdv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Mar 2023 00:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
+        Tue, 14 Mar 2023 01:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbjCNEuc (ORCPT
+        with ESMTP id S229736AbjCNFdu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Mar 2023 00:50:32 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE39523DAB;
-        Mon, 13 Mar 2023 21:50:29 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PbLgB13VbzKmyT;
-        Tue, 14 Mar 2023 12:50:14 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 14 Mar 2023 12:50:26 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] perf/core: Fix perf_output_begin parameter is incorrectly invoked in perf_event_bpf_output
-Date:   Tue, 14 Mar 2023 04:47:35 +0000
-Message-ID: <20230314044735.56551-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Tue, 14 Mar 2023 01:33:50 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC1B7D091
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 22:33:23 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id m6-20020a056902118600b00aeb1e3dbd1bso15692561ybu.9
+        for <linux-perf-users@vger.kernel.org>; Mon, 13 Mar 2023 22:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678772003;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MwzV/vcYr5Zry5C9s84roUhY+PWVjIVRmjU3ee9SQpE=;
+        b=HDIj3nfkgsOUYQZ5qw8ur+gCJGp/io4tqQ6Q4ow58uYXi9Il6j9+XoKvtLBUBz7x41
+         /xmyqdDfPxnRy27tmMapbClnCpZ941zD8zzoITxKTVOWJw8vGolSiiZnwl37GInl37PT
+         TJxLJee9FdEj2d3feSGSYxP1ZaxG7umrkXU1/3rv0Afmnp/ss1vxjXZ+ekwbCGgBlz9w
+         4okVWdKplWCllBtcVpbNQbwCfUA/RMqU1QgVXmibbGIp9esEIEXIUthPRi4/bznT91Uc
+         NruYASFLIO+OvRzDKeBMO/O7PLlVdnvYJiAt06GD8+WIRswLUwWwJHKCwpCk5R4Mrvdv
+         GkDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678772003;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MwzV/vcYr5Zry5C9s84roUhY+PWVjIVRmjU3ee9SQpE=;
+        b=QHUTY2d5m1bH0tELGLU0ugQx3BwSATiJFm7SyF8JpY+gHaWH3vhpvxdnSDyV2uMFyw
+         pKEGcDAkh0ka3vowxNN2PCsgBAPuCLlAL0iF/Wm8lGFB3gcoozc4YUrtiVJmgAiilVo8
+         o/fTaX9nrYhMfBoWFPSWJvGCnA/rQmtrPR2JU1TUrB0NJxK4D4aFyUnL7o/3HMrdoo74
+         SJBrbRNqk2lw0MBQyjILMrBC9GdzANKub0jNjwazuxBQ3jXE9N8vQHTqX77fI6iDb8Jj
+         LPuVfTlLiIA3l99tOzq5oahwQD6v5hA4hXk16eoNif+Vehx3zjyiW3GOFXCTtTQzO6I5
+         pO6g==
+X-Gm-Message-State: AO0yUKXPHHNtxMUfM3gmO04MGxURaOz0NkEL67cSWt7KfKBlVN6/cxcE
+        GdRXCBBmhxdUIKFu6qU8CO4PFk1lEu2x
+X-Google-Smtp-Source: AK7set+2hAm+eZDUuLi0segr54jwahN7es2PMtB0X7hrmupVnXjBwjMOqvqSP7MOkOY2cm+giM20Z7pBNRif
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:adc3:d11e:dcd7:fd4e])
+ (user=irogers job=sendgmr) by 2002:a05:690c:798:b0:533:a15a:d33e with SMTP id
+ bw24-20020a05690c079800b00533a15ad33emr10114724ywb.5.1678772003054; Mon, 13
+ Mar 2023 22:33:23 -0700 (PDT)
+Date:   Mon, 13 Mar 2023 22:33:09 -0700
+Message-Id: <20230314053312.3237390-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+Subject: [PATCH v1 0/3] Event updates for GNR, MTL and SKL
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-syzkaller reportes a KASAN issue with stack-out-of-bounds.
-The call trace is as follows:
-  dump_stack+0x9c/0xd3
-  print_address_description.constprop.0+0x19/0x170
-  __kasan_report.cold+0x6c/0x84
-  kasan_report+0x3a/0x50
-  __perf_event_header__init_id+0x34/0x290
-  perf_event_header__init_id+0x48/0x60
-  perf_output_begin+0x4a4/0x560
-  perf_event_bpf_output+0x161/0x1e0
-  perf_iterate_sb_cpu+0x29e/0x340
-  perf_iterate_sb+0x4c/0xc0
-  perf_event_bpf_event+0x194/0x2c0
-  __bpf_prog_put.constprop.0+0x55/0xf0
-  __cls_bpf_delete_prog+0xea/0x120 [cls_bpf]
-  cls_bpf_delete_prog_work+0x1c/0x30 [cls_bpf]
-  process_one_work+0x3c2/0x730
-  worker_thread+0x93/0x650
-  kthread+0x1b8/0x210
-  ret_from_fork+0x1f/0x30
+Update events for graniterapids and meteorlake, v1.00 to v1.01, as
+well as skylake v54 to v55. All patches generated from:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-commit 267fb27352b6 ("perf: Reduce stack usage of perf_output_begin()")
-use on-stack struct perf_sample_data of the caller function.
+Ian Rogers (3):
+  perf vendor events intel: Update graniterapids events
+  perf vendor events intel: Update meteorlake events
+  perf vendor events intel: Update skylake events
 
-However, perf_event_bpf_output uses incorrect parameter to convert
-small-sized data (struct perf_bpf_event) into large-sized data
-(struct perf_sample_data), which causes memory overwriting occurs in
-__perf_event_header__init_id.
+ .../arch/x86/graniterapids/frontend.json      |  2 +-
+ .../arch/x86/graniterapids/pipeline.json      |  4 +--
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |  6 ++--
+ .../pmu-events/arch/x86/meteorlake/cache.json |  8 +++++
+ .../arch/x86/meteorlake/frontend.json         |  9 +++++
+ .../arch/x86/meteorlake/memory.json           | 13 +++++--
+ .../pmu-events/arch/x86/meteorlake/other.json |  4 +--
+ .../arch/x86/meteorlake/pipeline.json         | 36 +++++++++++++++++--
+ .../arch/x86/meteorlake/virtual-memory.json   |  4 +++
+ .../pmu-events/arch/x86/skylake/cache.json    |  8 +++++
+ .../arch/x86/skylake/floating-point.json      | 15 ++++++++
+ .../pmu-events/arch/x86/skylake/pipeline.json | 10 ++++++
+ 12 files changed, 107 insertions(+), 12 deletions(-)
 
-Fixes: 267fb27352b6 ("perf: Reduce stack usage of perf_output_begin()")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f79fd8b87f75..296617edbda1 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9187,7 +9187,7 @@ static void perf_event_bpf_output(struct perf_event *event, void *data)
- 
- 	perf_event_header__init_id(&bpf_event->event_id.header,
- 				   &sample, event);
--	ret = perf_output_begin(&handle, data, event,
-+	ret = perf_output_begin(&handle, &sample, event,
- 				bpf_event->event_id.header.size);
- 	if (ret)
- 		return;
 -- 
-2.30.GIT
+2.40.0.rc1.284.g88254d51c5-goog
 
