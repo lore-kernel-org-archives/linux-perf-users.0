@@ -2,158 +2,208 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 501D7C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 16:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006A2C05027
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 17:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230491AbjCNQfm (ORCPT
+        id S230129AbjCNRz1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Mar 2023 12:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58810 "EHLO
+        Tue, 14 Mar 2023 13:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbjCNQfi (ORCPT
+        with ESMTP id S229692AbjCNRz0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Mar 2023 12:35:38 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B105A6BFF
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Mar 2023 09:34:58 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id l9so5824111iln.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Mar 2023 09:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678811698;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dTUo1zy3Yf2SEGOt4NXzm+Sz0YHam92eDgEkCkzygro=;
-        b=OfUkXIjGb3mHVPvW05uFb4MDikddcsTmIhLvBVJQ10F4JDtyO1kFQ4BprDnhVbTOPQ
-         ktxNlHpWKlUzhRtiQ/9EtIp4in1y1GlwIM6lV8A6Ux92FYY72VMlglersjb6yNY8E/hn
-         4Tz2KUb0HzZPLAvyfG9oKwlmfnCCbQKaiuC7wd2jIyDGE//gwi8PIDCgORuFBwUwixyl
-         TkZZH5xCo51aE7hV4UXkzaR/JstS/1JY8kCyweA3DXii6+vfRNN7TD6UuLEiYBxIwyyv
-         u3q6D8umveLOrlarc1Fliz2LmohBvqikPhoN4lVbj+Cxr39w76TVQXnjF+71bTASv2lb
-         LrXQ==
+        Tue, 14 Mar 2023 13:55:26 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637DC6A7E;
+        Tue, 14 Mar 2023 10:55:25 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id bf15so6753309iob.7;
+        Tue, 14 Mar 2023 10:55:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678811698;
+        d=1e100.net; s=20210112; t=1678816524;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dTUo1zy3Yf2SEGOt4NXzm+Sz0YHam92eDgEkCkzygro=;
-        b=Eks7Pk+LIwssevCDtd6vEOQcgJQKcPCL6itpVhE69EA4m8d9dy6wcPaR3VhCuYpQ3A
-         styiZlAglo2h1xiiFoBI+SNdw/DHpF69hm4z9XkocRCl37C0/oOrxxo8dv2vGiak4o0v
-         pUkMiqZUQtdEnN29fDxNjeDQKnzmsYUYO9pQoxPCGPZfElHgdaCooAXuS1eVWd9ZnftR
-         NWUHLlvCLWIkJnmQQ24xgdMna5H71AoJHM4R18dNtruqy9O7XJ1LeBdJ7BJmMQsC/9B9
-         aUvFYVVXDNeOk9h8kheaXov+4ySHa240eYnOo1x/IPg3pPfFn8snMOVV9c2FYuX4QioM
-         OT8A==
-X-Gm-Message-State: AO0yUKVziwow28ve7cMD+hdYuwUiIH8WgrQzAkEuNMrT1PGyPw1T5xvG
-        vqHf6/JFgJff3ywwqPHDfN42d7VtfjAZPBLGF8CW6hVm7/S8eTacTMw7PQ==
-X-Google-Smtp-Source: AK7set+dUs802nOfxxhPX49VrJJOwVZL6sjEfLYK9Ao4UZxrZGa7dW02ez/BpntdYOan9jZ5k1Q9y3bZr2KT8yhkSRQ=
-X-Received: by 2002:a05:6e02:889:b0:322:ecc3:e5c3 with SMTP id
- z9-20020a056e02088900b00322ecc3e5c3mr168967ils.13.1678811697674; Tue, 14 Mar
- 2023 09:34:57 -0700 (PDT)
+        bh=UC6SiqJv6vv+aMWv+c2O7wVq//MMLZA07pBFsShSM5s=;
+        b=xb5s8xNCTDias2b+Q7cG7pk6KBOnvuk4OCopA+Y8iJ/Yl8csITY2ezxktYI/J8ptaO
+         xrNck4Bqx1f9zomV8RLB2n0j+CB/KmNtuQI7UCsuCyRhm/A0daAlOwr+ShhrxkyrXgxd
+         eO3j9FlRI+p5oyanhWxS/wVJfsfc6vBoWmzYtbx9D50n6JYyNTqQPNxaPgA8LX6M8e86
+         U0B9h+po3s4yTHgXwzcH0xrvQ8yQXQqEzJH0dMCvw16D/CO86a0q3OsVujutqaUSpmFU
+         ZeToG9PhmAsU9b8aeeHMm5HeXGkefNJeS6bhvNBqjWOJEs6HYBxabX6Tiz++Nv1JGylT
+         1/Ow==
+X-Gm-Message-State: AO0yUKW3F215cH+2ph/J2bKiVWrOIXuIAX88Wa/TzzIa3u4GTF+goQQ+
+        bmqUZ8xWW37aV5RVVHKnmrGVxxRnIXSDYKIkVvk=
+X-Google-Smtp-Source: AK7set/mFHxf4wxT++oOO9bnKbj6PFDPNuBQQ/UlvR2FPcsP+Upe3oFecm93vcNbSOLqo2tzP0Dlcsh1GXTHObmwoQI=
+X-Received: by 2002:a5d:8d87:0:b0:744:f5bb:6e60 with SMTP id
+ b7-20020a5d8d87000000b00744f5bb6e60mr18465052ioj.1.1678816524533; Tue, 14 Mar
+ 2023 10:55:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
- <20230313080201.2440201-2-tmricht@linux.ibm.com> <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
- <ZA9sYL/re/aNVpo+@kernel.org> <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
-In-Reply-To: <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 14 Mar 2023 09:34:46 -0700
-Message-ID: <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com
+References: <20230313204825.2665483-1-namhyung@kernel.org> <ZA+ZkRYADwtFEsPt@kernel.org>
+ <ZBBnUlIQ5gLhoScx@kernel.org>
+In-Reply-To: <ZBBnUlIQ5gLhoScx@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 14 Mar 2023 10:55:13 -0700
+Message-ID: <CAM9d7cj7CSToKq7FKqYKCzpWddTfBW0GZH9ydGM2ZMdwNDGm2g@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf lock contention: Improve lock symbol display (v1)
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 1:20=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> On 3/13/23 19:33, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Mar 13, 2023 at 08:22:44AM -0700, Ian Rogers escreveu:
-> >> On Mon, Mar 13, 2023 at 1:30=E2=80=AFAM Thomas Richter <tmricht@linux.=
-ibm.com> wrote:
-> >>>
-> >>> Add metrics for s390 z16
-> >>> - Percentage sourced from Level 2 cache
-> >>> - Percentage sourced from Level 3 on same chip cache
-> >>> - Percentage sourced from Level 4 Local cache on same book
-> >>> - Percentage sourced from Level 4 Remote cache on different book
-> >>> - Percentage sourced from memory
-> >>>
-> >>> For details about the formulas see this documentation:
-> >>> https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%=
-20Formulas%20including%20z16%20-%20May%202022_1.pdf
-> >>>
-> >>> Outpuf after:
-> >>>  # ./perf stat -M l4rp -- dd if=3D/dev/zero of=3D/dev/null bs=3D10M c=
-ount=3D10K
-> >>>  .... dd output deleted
-> >>>
-> >>>  Performance counter stats for 'dd if=3D/dev/zero of=3D/dev/null bs=
-=3D10M count=3D10K':
-> >>>
-> >>>                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l=
-4rp
-> >>>            431,866      L1I_DIR_WRITES
-> >>>              2,395      IDCW_OFF_DRAWER_IV
-> >>>                  0      ICW_OFF_DRAWER
-> >>>                  0      IDCW_OFF_DRAWER_DRAWER_HIT
-> >>>              1,437      DCW_OFF_DRAWER
-> >>>        425,960,793      L1D_DIR_WRITES
-> >>>
-> >>>       12.165030699 seconds time elapsed
-> >>>
-> >>>        0.001037000 seconds user
-> >>>       12.162140000 seconds sys
-> >>>
-> >>>  #
-> >>>
-> >>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> >>> Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> >>
-> >> Acked-by: Ian Rogers <irogers@google.com>
-> >
-> > Thanks, applied the first two patches, please address the review
-> > suggestions for patches 3-6 and resubmit only those.
-> >
-> > The patches will be in the public perf-tools-next branch later today.
-> >
-> > - Arnaldo
-> >
->
-> I would really prefer the current implementation without using "ScaleUnit=
-": "100%"
-> The reason is that these formulars are given to me from the s390 Performa=
-nce team.
-> They want to use the exact same formulars on all platforms running on s39=
-0
-> which includes z/OS and z/VM. This way they are sure to get the same numb=
-ers.
->
-> Hope this background info helps.
+Hi Arnaldo,
 
-For the series:
-Acked-by: Ian Rogers <irogers@google.com>
+On Tue, Mar 14, 2023 at 5:23 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Mar 13, 2023 at 06:45:53PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Mon, Mar 13, 2023 at 01:48:21PM -0700, Namhyung Kim escreveu:
+> > > Hello,
+> > >
+> > > This patchset improves the symbolization of locks for -l/--lock-addr mode.
+> > > As of now it only shows global lock symbols present in the kallsyms.  But
+> > > we can add some more lock symbols by traversing pointers in the BPF program.
+> > >
+> > > For example, mmap_lock can be reached from the mm_struct of the current task
+> > > (task_struct->mm->mmap_lock) and we can compare the address of the give lock
+> > > with it.  Similarly I've added 'siglock' for current->sighand->siglock.
+>
+> Hey, we can go a bit further by using something like pahole's
+> --expand_types and --expand_pointers and play iterating a type members
+> and looking for locks, like:
+>
+> ⬢[acme@toolbox pahole]$ pahole task_struct | grep spinlock_t
+>         spinlock_t                 alloc_lock;           /*  3280     4 */
+>         raw_spinlock_t             pi_lock;              /*  3284     4 */
+>         seqcount_spinlock_t        mems_allowed_seq;     /*  3616     4 */
+> ⬢[acme@toolbox pahole]$
+>
+> Expand points will find mmap_lock:
+>
+> ⬢[acme@toolbox pahole]$ pahole --expand_pointers -C task_struct | grep -B10 mmap_lock
+>                                                                 } *pgd;
+>                                                                 atomic_t                       membarrier_state;
+>                                                                 atomic_t                       mm_users;
+>                                                                 atomic_t                       mm_count;
+>
+>                                                                 /* XXX 4 bytes hole, try to pack */
+>
+>                                                                 atomic_long_t                  pgtables_bytes;
+>                                                                 int                            map_count;
+>                                                                 spinlock_t                     page_table_lock;
+>                                                                 struct rw_semaphore                          mmap_lock;
+> ^C
+> ⬢[acme@toolbox pahole]$
+>
+>
+> ITs just too much expansion to see task_struct->mm, but it is there, of
+> course:
+>
+> ⬢[acme@toolbox pahole]$ pahole mm_struct | grep mmap_lock
+>                 struct rw_semaphore mmap_lock;           /*   120    40 */
+> ⬢[acme@toolbox pahole]$
+>
+> Also:
+>
+> ⬢[acme@toolbox pahole]$ pahole --contains rw_semaphore
+> address_space
+> signal_struct
+> key
+> inode
+> super_block
+> quota_info
+> user_namespace
+> blocking_notifier_head
+> backing_dev_info
+> anon_vma
+> tty_struct
+> cpufreq_policy
+> tcf_block
+> ipc_ids
+> autogroup
+> kvm_arch
+> posix_clock
+> listener_list
+> uprobe
+> kernfs_root
+> configfs_fragment
+> ext4_inode_info
+> ext4_group_info
+> btrfs_fs_info
+> extent_buffer
+> btrfs_dev_replace
+> btrfs_space_info
+> btrfs_inode
+> btrfs_block_group
+> tpm_chip
+> ib_device
+> ib_xrcd
+> blk_crypto_profile
+> controller
+> led_classdev
+> cppc_pcc_data
+> dm_snapshot
+> ⬢[acme@toolbox pahole]$
+>
+> And:
+>
+> ⬢[acme@toolbox pahole]$ pahole --find_pointers_to mm_struct
+> task_struct: mm
+> task_struct: active_mm
+> vm_area_struct: vm_mm
+> flush_tlb_info: mm
+> signal_struct: oom_mm
+> tlb_state: loaded_mm
+> linux_binprm: mm
+> mmu_gather: mm
+> trace_event_raw_xen_mmu_ptep_modify_prot: mm
+> trace_event_raw_xen_mmu_alloc_ptpage: mm
+> trace_event_raw_xen_mmu_pgd: mm
+> trace_event_raw_xen_mmu_flush_tlb_multi: mm
+> trace_event_raw_hyperv_mmu_flush_tlb_multi: mm
+> mmu_notifier: mm
+> mmu_notifier_range: mm
+> sgx_encl_mm: mm
+> rq: prev_mm
+> kvm: mm
+> cpuset_migrate_mm_work: mm
+> mmap_unlock_irq_work: mm
+> delayed_uprobe: mm
+> map_info: mm
+> trace_event_raw_mmap_lock: mm
+> trace_event_raw_mmap_lock_acquire_returned: mm
+> mm_walk: mm
+> make_exclusive_args: mm
+> mmu_interval_notifier: mm
+> mm_slot: mm
+> rmap_item: mm
+> trace_event_raw_mm_khugepaged_scan_pmd: mm
+> trace_event_raw_mm_collapse_huge_page: mm
+> trace_event_raw_mm_collapse_huge_page_swapin: mm
+> mm_slot: mm
+> move_charge_struct: mm
+> userfaultfd_ctx: mm
+> proc_maps_private: mm
+> remap_pfn: mm
+> intel_svm: mm
+> binder_alloc: vma_vm_mm
+> ⬢[acme@toolbox pahole]$
 
-Using ScaleUnit won't change the result. A ScaleUnit of "100%" means
-scale the result up by multiplying by 100 and then apply the % after
-the value. Another nit is having metrics that place their units in the
-name, like _percent, is usually a sign the name can be better. Perhaps
-we can follow up with some clean up.
+This looks really cool! especially.
+
+I'm especially interested in adding super_block and kernfs_root.
+Let me see how I can add them.
 
 Thanks,
-Ian
-
-> Thanks a lot.
-> --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
->
+Namhyung
