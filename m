@@ -2,278 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B5BC6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 12:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCD9C7618A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 12:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231745AbjCNMbV (ORCPT
+        id S230133AbjCNMkQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Mar 2023 08:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33964 "EHLO
+        Tue, 14 Mar 2023 08:40:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbjCNMbC (ORCPT
+        with ESMTP id S231779AbjCNMkG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Mar 2023 08:31:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFC97DA1;
-        Tue, 14 Mar 2023 05:30:07 -0700 (PDT)
+        Tue, 14 Mar 2023 08:40:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68A29663F;
+        Tue, 14 Mar 2023 05:39:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0246DB81905;
-        Tue, 14 Mar 2023 12:23:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41046C433EF;
-        Tue, 14 Mar 2023 12:23:49 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E248EB818E2;
+        Tue, 14 Mar 2023 12:29:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BFC4C433D2;
+        Tue, 14 Mar 2023 12:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678796629;
-        bh=bHVG6dSQimW/cFHcRzTGys9iwkQ1d8n2ulEi+M5nzlI=;
+        s=k20201202; t=1678796973;
+        bh=SsbRst9oxFmMKQIdzsFuNY1AB7aYjq84Cm828fhrEBE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AdF7YGKaXC36EjMn9dm3L8/jG9yINq2r7GVsB8N0q2+P2axrC8HURqhe9V1+n5v0a
-         dWxbWBNTOx46+825dyQN3FWk6Q04F8LwS165QGfJFb6xxzAsfEbb99Wj8SQMr3bmDd
-         bGQtAI4TvcNcHAmrSFIa6d8YJK8jXNJ7GOItanp6ig46SwT20JbPJYlHwDiM8VBgDe
-         9Nrvk8mwMbxdoQ6uuph6+QZQVxDADXSPSsJ3du8LWmjE88ybFaTO6WZiz0fh+dxPUl
-         in+8R1liTevsB57e69InZ5ihE4DJ273JLd98UhBiB9pCATvZz25UMt1hDgYXOmBi+5
-         VV8sFZQKxyW7g==
+        b=If6OgWeds5zIaEkgw4wbKWVhSxGhKPKTo0DD2PCEL337Mb3+ali2hJI7WZ0xLsjZc
+         UQaLE5mTgoUZK4CaZ9xTY0rppc7A6unCm5NePjueDHTOzFQvhIdj6M4q5Ee6Ah7FoQ
+         UC/zLkcetZqH2/NXZIaAA/QgA9BxVRBCNyFuRBdegQCo0e8F/3d0RNDzbKVnGKvVsL
+         cluzN5NGGC2Q3fpl1VHvS0Hg5F+iU4Ic6EFoBVgfoVAWccTgNBmmRvJ7euhNpi32CR
+         MccFwnxh9Goqffm1OHwjFdUu8zxq5c9YSoqVG0nW2G6eGMhFOLsjCG5KGwJ0XDNwu5
+         vP4Zjx+8ZbC1w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B2FA74049F; Tue, 14 Mar 2023 09:23:46 -0300 (-03)
-Date:   Tue, 14 Mar 2023 09:23:46 -0300
+        id 35EDD4049F; Tue, 14 Mar 2023 09:29:31 -0300 (-03)
+Date:   Tue, 14 Mar 2023 09:29:31 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf lock contention: Improve lock symbol display
- (v1)
-Message-ID: <ZBBnUlIQ5gLhoScx@kernel.org>
-References: <20230313204825.2665483-1-namhyung@kernel.org>
- <ZA+ZkRYADwtFEsPt@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Andres Freund <andres@anarazel.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        llvm@lists.linux.dev, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v1 00/13] Perf tool build improvements
+Message-ID: <ZBBoq1WRXJ0vcLn1@kernel.org>
+References: <20230311065753.3012826-1-irogers@google.com>
+ <ZBBkWDFdBDC9Spt9@kernel.org>
+ <ZBBkkye0TGP9EVYl@kernel.org>
+ <ZBBoQggQI8Vcy7QL@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZA+ZkRYADwtFEsPt@kernel.org>
+In-Reply-To: <ZBBoQggQI8Vcy7QL@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 13, 2023 at 06:45:53PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Mar 13, 2023 at 01:48:21PM -0700, Namhyung Kim escreveu:
-> > Hello,
+Em Tue, Mar 14, 2023 at 09:27:46AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > >    3     4.57 alpine:3.15                   : FAIL gcc version 10.3.1 20211027 (Alpine 10.3.1_git20211027)
+> > >    4     4.27 alpine:3.16                   : FAIL gcc version 11.2.1 20220219 (Alpine 11.2.1_git20220219)
+> > >    5     4.27 alpine:3.17                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r4)
+> > >    6     4.67 alpine:edge                   : FAIL gcc version 12.2.1 20220924 (Alpine 12.2.1_git20220924-r9)
+> > >    7     4.47 alt:p9                        : FAIL gcc version 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) (GCC)
+> > >    8     4.58 alt:p10                       : FAIL gcc version 10.3.1 20210703 (ALT Sisyphus 10.3.1-alt2) (GCC)
+> > >    9     4.57 alt:sisyphus                  : FAIL gcc version 12.1.1 20220518 (ALT Sisyphus 12.1.1-alt2) (GCC)
+> > >   10     3.97 amazonlinux:2                 : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-15) (GCC)
+> > >   11     5.77 amazonlinux:devel             : FAIL gcc version 11.3.1 20220421 (Red Hat 11.3.1-2) (GCC)
+> > >   12   160.30 archlinux:base                : Ok   gcc (GCC) 12.2.0 , clang version 14.0.6
+> > >   13     4.68 centos:8                      : FAIL gcc version 8.4.1 20200928 (Red Hat 8.4.1-1) (GCC)
+> > >   14     5.07 centos:stream                 : FAIL gcc version 8.5.0 20210514 (Red Hat 8.5.0-18) (GCC)
+> > >   15     5.27 clearlinux:latest             : FAIL gcc version 12.2.1 20230202 releases/gcc-12.2.0-400-gd31bd71386 (Clear Linux OS for Intel Architecture)
+> > >   16     3.37 debian:10                     : FAIL gcc version 8.3.0 (Debian 8.3.0-6)
+> > >   17     3.57 debian:11                     : FAIL gcc version 10.2.1 20210110 (Debian 10.2.1-6)
+> > >   18     4.08 debian:experimental           : FAIL gcc version 12.2.0 (Debian 12.2.0-10)
+> > >   19     3.78 debian:experimental-x-arm64   : FAIL gcc version 12.2.0 (Debian 12.2.0-14)
+> > >   20     2.77 debian:experimental-x-mips    : FAIL gcc version 12.2.0 (Debian 12.2.0-14)
+> > >   21     3.47 debian:experimental-x-mips64  : FAIL gcc version 10.2.1 20210110 (Debian 10.2.1-6)
+> > >   22     3.47 debian:experimental-x-mipsel  : FAIL gcc version 12.2.0 (Debian 12.2.0-14)
+> > >   23     4.37 fedora:26                     : FAIL gcc version 7.3.1 20180130 (Red Hat 7.3.1-2) (GCC)
+> > >   24     4.27 fedora:27                     : FAIL gcc version 7.3.1 20180712 (Red Hat 7.3.1-6) (GCC)
+> > >   25     4.27 fedora:28                     : FAIL gcc version 8.3.1 20190223 (Red Hat 8.3.1-2) (GCC)
+> > >   26     4.87 fedora:29                     : FAIL gcc version 8.3.1 20190223 (Red Hat 8.3.1-2) (GCC)
+> > >   27     4.97 fedora:30                     : FAIL gcc version 9.3.1 20200408 (Red Hat 9.3.1-2) (GCC)
+> > >   28     5.38 fedora:31                     : FAIL gcc version 9.3.1 20200408 (Red Hat 9.3.1-2) (GCC)
+> > >   29     5.48 fedora:32                     : FAIL gcc version 10.3.1 20210422 (Red Hat 10.3.1-1) (GCC)
+> > > 
+> > > 
+> > > Yeah, I'll take the opportunity and prune the older ones.
 > > 
-> > This patchset improves the symbolization of locks for -l/--lock-addr mode.
-> > As of now it only shows global lock symbols present in the kallsyms.  But
-> > we can add some more lock symbols by traversing pointers in the BPF program.
+> > One more!
 > > 
-> > For example, mmap_lock can be reached from the mm_struct of the current task
-> > (task_struct->mm->mmap_lock) and we can compare the address of the give lock
-> > with it.  Similarly I've added 'siglock' for current->sighand->siglock.
+> >   30   181.19 fedora:33                     : Ok   gcc (GCC) 10.3.1 20210422 (Red Hat 10.3.1-1) , clang version 11.0.0 (Fedora 11.0.0-3.fc33)
 
-Hey, we can go a bit further by using something like pahole's
---expand_types and --expand_pointers and play iterating a type members
-and looking for locks, like:
+ 31   222.81 fedora:34                     : Ok   gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-2) , clang version 12.0.1 (Fedora 12.0.1-1.fc34)
+  32     3.07 fedora:34-x-ARC-glibc         : FAIL gcc version 8.3.1 20190225 (ARC HS GNU/Linux glibc toolchain 2019.03-rc1)
+  33     2.67 fedora:34-x-ARC-uClibc        : FAIL gcc version 8.3.1 20190225 (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1)
+  34   182.17 fedora:35                     : Ok   gcc (GCC) 11.3.1 20220421 (Red Hat 11.3.1-3) , clang version 13.0.1 (Fedora 13.0.1-1.fc35)
+  35   180.73 fedora:36                     : Ok   gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4) , clang version 14.0.5 (Fedora 14.0.5-2.fc36)
+  36   179.27 fedora:37                     : Ok   gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4) , clang version 15.0.7 (Fedora 15.0.7-1.fc37)
+  37   169.45 fedora:38                     : Ok   gcc (GCC) 13.0.1 20230208 (Red Hat 13.0.1-0) , clang version 15.0.7 (Fedora 15.0.7-2.fc38)
 
-⬢[acme@toolbox pahole]$ pahole task_struct | grep spinlock_t
-	spinlock_t                 alloc_lock;           /*  3280     4 */
-	raw_spinlock_t             pi_lock;              /*  3284     4 */
-	seqcount_spinlock_t        mems_allowed_seq;     /*  3616     4 */
-⬢[acme@toolbox pahole]$
-
-Expand points will find mmap_lock:
-
-⬢[acme@toolbox pahole]$ pahole --expand_pointers -C task_struct | grep -B10 mmap_lock
-								} *pgd;
-								atomic_t                       membarrier_state;
-								atomic_t                       mm_users;
-								atomic_t                       mm_count;
-
-								/* XXX 4 bytes hole, try to pack */
-
-								atomic_long_t                  pgtables_bytes;
-								int                            map_count;
-								spinlock_t                     page_table_lock;
-								struct rw_semaphore                          mmap_lock;
-^C
-⬢[acme@toolbox pahole]$
-
-
-ITs just too much expansion to see task_struct->mm, but it is there, of
-course:
-
-⬢[acme@toolbox pahole]$ pahole mm_struct | grep mmap_lock
-		struct rw_semaphore mmap_lock;           /*   120    40 */
-⬢[acme@toolbox pahole]$
-
-Also:
-
-⬢[acme@toolbox pahole]$ pahole --contains rw_semaphore
-address_space
-signal_struct
-key
-inode
-super_block
-quota_info
-user_namespace
-blocking_notifier_head
-backing_dev_info
-anon_vma
-tty_struct
-cpufreq_policy
-tcf_block
-ipc_ids
-autogroup
-kvm_arch
-posix_clock
-listener_list
-uprobe
-kernfs_root
-configfs_fragment
-ext4_inode_info
-ext4_group_info
-btrfs_fs_info
-extent_buffer
-btrfs_dev_replace
-btrfs_space_info
-btrfs_inode
-btrfs_block_group
-tpm_chip
-ib_device
-ib_xrcd
-blk_crypto_profile
-controller
-led_classdev
-cppc_pcc_data
-dm_snapshot
-⬢[acme@toolbox pahole]$
-
-And:
-
-⬢[acme@toolbox pahole]$ pahole --find_pointers_to mm_struct
-task_struct: mm
-task_struct: active_mm
-vm_area_struct: vm_mm
-flush_tlb_info: mm
-signal_struct: oom_mm
-tlb_state: loaded_mm
-linux_binprm: mm
-mmu_gather: mm
-trace_event_raw_xen_mmu_ptep_modify_prot: mm
-trace_event_raw_xen_mmu_alloc_ptpage: mm
-trace_event_raw_xen_mmu_pgd: mm
-trace_event_raw_xen_mmu_flush_tlb_multi: mm
-trace_event_raw_hyperv_mmu_flush_tlb_multi: mm
-mmu_notifier: mm
-mmu_notifier_range: mm
-sgx_encl_mm: mm
-rq: prev_mm
-kvm: mm
-cpuset_migrate_mm_work: mm
-mmap_unlock_irq_work: mm
-delayed_uprobe: mm
-map_info: mm
-trace_event_raw_mmap_lock: mm
-trace_event_raw_mmap_lock_acquire_returned: mm
-mm_walk: mm
-make_exclusive_args: mm
-mmu_interval_notifier: mm
-mm_slot: mm
-rmap_item: mm
-trace_event_raw_mm_khugepaged_scan_pmd: mm
-trace_event_raw_mm_collapse_huge_page: mm
-trace_event_raw_mm_collapse_huge_page_swapin: mm
-mm_slot: mm
-move_charge_struct: mm
-userfaultfd_ctx: mm
-proc_maps_private: mm
-remap_pfn: mm
-intel_svm: mm
-binder_alloc: vma_vm_mm
-⬢[acme@toolbox pahole]$
-
-- Arnaldo
-
-
-> > On the other hand, we can traverse some of semi-global locks like per-cpu,
-> > per-device, per-filesystem and so on.  I've added 'rqlock' for each cpu's
-> > runqueue lock.
-> > 
-> > It cannot cover all types of locks in the system but it'd be fairly usefule
-> > if we can add many of often contended locks.  I tried to add futex locks
-> > but it failed to find the __futex_data symbol from BTF.  I'm not sure why but
-> > I guess it's because the struct doesn't have a tag name.
-> > 
-> > Those locks are added just because they got caught during my test.
-> > It'd be nice if you suggest which locks to add and how to do that. :)
-> > I'm thinking if there's a way to track file-based locks (like epoll, etc).
-> > 
-> > Finally I also added a lock type name after the symbols (if any) so that we
-> > can get some idea even though it has no symbol.  The example output looks
-> > like below:
-> > 
-> >   $ sudo ./perf lock con -abl -- sleep 1
-> >    contended   total wait     max wait     avg wait            address   symbol
-> > 
-> >           44      6.13 ms    284.49 us    139.28 us   ffffffff92e06080   tasklist_lock (rwlock)
-> >          159    983.38 us     12.38 us      6.18 us   ffff8cc717c90000   siglock (spinlock)
-> >           10    679.90 us    153.35 us     67.99 us   ffff8cdc2872aaf8   mmap_lock (rwsem)
-> >            9    558.11 us    180.67 us     62.01 us   ffff8cd647914038   mmap_lock (rwsem)
-> >           78    228.56 us      7.82 us      2.93 us   ffff8cc700061c00    (spinlock)
-> >            5     41.60 us     16.93 us      8.32 us   ffffd853acb41468    (spinlock)
-> >           10     37.24 us      5.87 us      3.72 us   ffff8cd560b5c200   siglock (spinlock)
-> >            4     11.17 us      3.97 us      2.79 us   ffff8d053ddf0c80   rq_lock (spinlock)
-> >            1      7.86 us      7.86 us      7.86 us   ffff8cd64791404c    (spinlock)
-> >            1      4.13 us      4.13 us      4.13 us   ffff8d053d930c80   rq_lock (spinlock)
-> >            7      3.98 us      1.67 us       568 ns   ffff8ccb92479440    (mutex)
-> >            2      2.62 us      2.33 us      1.31 us   ffff8cc702e6ede0    (rwlock)
-> > 
-> > The tasklist_lock is global so it's from the kallsyms.  But others like
-> > siglock, mmap_lock and rq_lock are from the BPF.
-> 
-> Beautiful :-)
-> 
-> And the csets are _so_ small and demonstrate techniques that should be
-> used in more and more tools.
-> 
-> Applied, testing.
-> 
-> - Arnaldo
->  
-> > You get get the code at 'perf/lock-symbol-v1' branch in
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> > Namhyung Kim (4):
-> >   perf lock contention: Track and show mmap_lock with address
-> >   perf lock contention: Track and show siglock with address
-> >   perf lock contention: Show per-cpu rq_lock with address
-> >   perf lock contention: Show lock type with address
-> > 
-> >  tools/perf/builtin-lock.c                     | 46 +++++++----
-> >  tools/perf/util/bpf_lock_contention.c         | 35 ++++++++-
-> >  .../perf/util/bpf_skel/lock_contention.bpf.c  | 77 +++++++++++++++++++
-> >  tools/perf/util/bpf_skel/lock_data.h          | 14 ++++
-> >  4 files changed, 152 insertions(+), 20 deletions(-)
-> > 
-> > 
-> > base-commit: b8fa3e3833c14151a47ebebbc5427dcfe94bb407
-> > -- 
-> > 2.40.0.rc1.284.g88254d51c5-goog
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-
--- 
-
-- Arnaldo
