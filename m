@@ -2,297 +2,160 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA4BC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 13:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB362C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 14:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjCONs2 (ORCPT
+        id S232623AbjCOOve (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 09:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40436 "EHLO
+        Wed, 15 Mar 2023 10:51:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231921AbjCONs1 (ORCPT
+        with ESMTP id S232276AbjCOOvc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 09:48:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8A68C805;
-        Wed, 15 Mar 2023 06:47:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8AED661DA5;
-        Wed, 15 Mar 2023 13:47:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A72C433EF;
-        Wed, 15 Mar 2023 13:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678888052;
-        bh=pLTTdcysDE6MuWCJgZEr33nFmAHkj+/laic2uRWrGpM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B4U2NIwt7leQZluMD/1StUmSwXjtb7crTNxEWND78mybiE/jkjbRmPVRWBqiV/0hr
-         pvd/GlHX0B7o5RYG3q75x9TSm0qmsdnbFlP21RfX2TiECpaT59PSYSpDxiSCI4GTK3
-         GW7ZGf3L76aO5Jb+eBHFaheNocqhj5BxNENo26FssKz+W7dPowaKZEFyXDtVB68p0t
-         7YDiZv97KrC7cGRK4kq3BbS7D153xybPbAYrzozMNMsBzzX7eYIh56YD2KrBHS74qd
-         1oebLvwTncCKM6chZcsYTy7vWbi9Z3jjUKLT2YZK6e6RnEkg2vMOCgx7psu3tpi4aw
-         lCREf0Tz9FgQw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 76FFD4049F; Wed, 15 Mar 2023 10:47:29 -0300 (-03)
-Date:   Wed, 15 Mar 2023 10:47:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
+        Wed, 15 Mar 2023 10:51:32 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C53560ABB
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 07:51:31 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so2279623pjz.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 07:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678891890;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bu4kxPfj7aIJx2I6pw2/A71GwgwBL/cX002kwanRK0c=;
+        b=tyNRqzSJPRKtY5LNcM6dZEmVfMM65dt3L9q2kkBYCu7OE8sI6uVYE1LAfnbA/pAM/Q
+         wja1CAysLDHEslicv7D4P4qE5dMF3tg0nh7hmkw+/9Itks2fAIIJr6a9WyoPt/JM9fMB
+         bV8J34pNnVfaRD3Y/DB9MhjvH84gvyahf/bCsNB1D35JyuGi0m5vrcM6bru5YBJimRaO
+         48JoZeFei6FBrcZ4W8muU8JbV0SaDaOBYlDJpf5YSBWlpdV6TXgvZNeu0OmoLMdUYoXM
+         pcBpFvDM5MPdWndxuiELOpw7KqN3F4o78pbG9yCNTEHiL2spXBVipkI1BXfizjAMaq+R
+         mX4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678891890;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Bu4kxPfj7aIJx2I6pw2/A71GwgwBL/cX002kwanRK0c=;
+        b=DDJPGU+sx2NKelW/BlQXCrMuS0fOz0XVR4SJyAN8AtjNBagI+ORfZ893aH0nRtelPh
+         LGyz4f+EiBkZDoqpGe9t88otmMk85D7W0uXa9wYEhdOJYOKEBmq5ZfzxXfsBh1ruuegF
+         eonQlNV0jJey3oyrjhIcUNAu6mVD0lyEDYaExKgDX1PbS0P65gwoRKdYXrbXS+vRleET
+         qQfLGqazo6nehrL39JvO3bUXl3zRpNFmc2xDRJrlT+9W5pRF+PVbXWaTq7kWiOdVm3xG
+         smbCIDjgYolv8XT66De69gv4s4H4tnKgH9fsYezduZPUlSamt3M7VbE3E3vEFm7tC1N6
+         ZNaQ==
+X-Gm-Message-State: AO0yUKVwJ3zafddxv1G8lWKkn0sIibONOHQ4B+P+T/f7f/WNoSy2N9Dl
+        PNsNBn4foCbpwJo2ahOXkvJpuQ==
+X-Google-Smtp-Source: AK7set8J8AEmLGC58l903GZXDnUrjgGzARKnedfsmeb3OmriJj+UQPTB0Yb6xgtAngvU93KxxBaJEA==
+X-Received: by 2002:a17:903:228d:b0:19a:9686:ea85 with SMTP id b13-20020a170903228d00b0019a9686ea85mr3543724plh.17.1678891890198;
+        Wed, 15 Mar 2023 07:51:30 -0700 (PDT)
+Received: from leoy-huanghe.lan ([107.151.177.133])
+        by smtp.gmail.com with ESMTPSA id kh3-20020a170903064300b0019926c77577sm3781587plb.90.2023.03.15.07.51.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Mar 2023 07:51:29 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
+        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 03/10] perf record: Add BPF event filter support
-Message-ID: <ZBHMcfCr+GeQJ9Sz@kernel.org>
-References: <20230314234237.3008956-1-namhyung@kernel.org>
- <20230314234237.3008956-4-namhyung@kernel.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v5 00/16] perf kvm: Support histograms and TUI mode
+Date:   Wed, 15 Mar 2023 22:50:56 +0800
+Message-Id: <20230315145112.186603-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230314234237.3008956-4-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 14, 2023 at 04:42:30PM -0700, Namhyung Kim escreveu:
-> Use --filter option to set BPF filter for generic events other than the
-> tracepoints or Intel PT.  The BPF program will check the sample data and
-> filter according to the expression.
-> 
-> For example, the below is the typical perf record for frequency mode.
-> The sample period started from 1 and increased gradually.
-> 
-> $ sudo ./perf record -e cycles true
-> $ sudo ./perf script
->        perf-exec 2272336 546683.916875:          1 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916892:          1 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916899:          3 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916905:         17 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916911:        100 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916917:        589 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916924:       3470 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->        perf-exec 2272336 546683.916930:      20465 cycles:  ffffffff828499b8 perf_event_exec+0x298 ([kernel.kallsyms])
->             true 2272336 546683.916940:     119873 cycles:  ffffffff8283afdd perf_iterate_ctx+0x2d ([kernel.kallsyms])
->             true 2272336 546683.917003:     461349 cycles:  ffffffff82892517 vma_interval_tree_insert+0x37 ([kernel.kallsyms])
->             true 2272336 546683.917237:     635778 cycles:  ffffffff82a11400 security_mmap_file+0x20 ([kernel.kallsyms])
-> 
-> When you add a BPF filter to get samples having periods greater than 1000,
-> the output would look like below:
+This patch set is to enable histograms and (partially) TUI mode in perf
+kvm tool; patch set v1 [1] gives brief introduction for the change.
 
-Had to add:
+We can use below commands for testing this series:
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index be336f1b2b689602..153a13cdca9df1ea 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -19,6 +19,7 @@
- #include "mmap.h"
- #include "stat.h"
- #include "metricgroup.h"
-+#include "util/bpf-filter.h"
- #include "util/env.h"
- #include "util/pmu.h"
- #include <internal/lib.h>
-@@ -135,6 +136,18 @@ int bpf_counter__disable(struct evsel *evsel __maybe_unused)
- 	return 0;
- }
- 
-+// not to drag util/bpf-filter.c
-+
-+int perf_bpf_filter__prepare(struct evsel *evsel __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+int perf_bpf_filter__destroy(struct evsel *evsel __maybe_unused)
-+{
-+	return 0;
-+}
-+
- /*
-  * Support debug printing even though util/debug.c is not linked.  That means
-  * implementing 'verbose' and 'eprintf'.
+In a terminal, you could launch a virtual machine with qemu command; in
+below case, I downloaded a Ubuntu (or Debian) iso file and used it as
+the file system image:
+
+  $ qemu-system-x86_64 -M pc -enable-kvm -cpu host -m 4096 -hda ubuntu-22.04-desktop-amd64.iso
+
+Then in another terminal, I can use below command to capture KVM trace
+data and report the result:
+
+  # cd linux/tools/perf
+  # ./perf kvm stat record
+  # ./perf kvm stat report          => Output in TUI mode
+  # ./perf kvm stat report --stdio  => Output in stdio mode
+
+Changes from v4:
+* Fixed building failure in patch 04; compiled successfully for every
+  patch to ensure bisection.
+
+Changes from v3:
+* Updated patch 04 to change comparison function return type from int to
+  int64_t to avoid overflow;
+* Added a refactoring patch 05 "perf kvm: Use macro to replace variable
+  'decode_str_len'";
+* Refined to use hists__add_entry_ops() and hist_entry__cmp() to compare
+  hist entry and add new entries, to support comparison between hist
+  entry, added a new patch 09; (Namhyung Kim)
+* Updated patch 10 for comparison event name; (Namhyung Kim)
+* Refined patch 11 to move init_stats() and hists__inc_nr_samples()
+  into kvm_he_zalloc(); (Namhyung Kim)
+* Minor refactoring for sort_result() and kvm_hists__init() in patch 15.
+
+Changes from v2:
+* Found building failure with command 'make VF=1 DEBUG=1 NO_SLANG=1',
+  fixed it in the patch 13. (James Clark)
+
+Changes from v1:
+* Updated the patch 13 'perf kvm: Add TUI mode for stat report' to avoid
+  building failure if no support HAVE_SLANG_SUPPORT.
+
+[1] https://lore.kernel.org/lkml/20230226042053.1492409-1-leo.yan@linaro.org/
 
 
-Please run 'perf test' before submitting patches,
+Leo Yan (16):
+  perf kvm: Refactor overall statistics
+  perf kvm: Add pointer to 'perf_kvm_stat' in kvm event
+  perf kvm: Move up metrics helpers
+  perf kvm: Use subtraction for comparison metrics
+  perf kvm: Use macro to replace variable 'decode_str_len'
+  perf kvm: Introduce histograms data structures
+  perf kvm: Pass argument 'sample' to kvm_alloc_init_event()
+  perf kvm: Parse address location for samples
+  perf hist: Add 'kvm_info' field in histograms entry
+  perf kvm: Add dimensions for KVM event statistics
+  perf kvm: Use histograms list to replace cached list
+  perf kvm: Polish sorting key
+  perf kvm: Support printing attributions for dimensions
+  perf kvm: Add dimensions for percentages
+  perf kvm: Add TUI mode for stat report
+  perf kvm: Update documentation to reflect new changes
 
-- Arnaldo
- 
-> $ sudo ./perf record -e cycles --filter 'period > 1000' true
-> $ sudo ./perf script
->        perf-exec 2273949 546850.708501:       5029 cycles:  ffffffff826f9e25 finish_wait+0x5 ([kernel.kallsyms])
->        perf-exec 2273949 546850.708508:      32409 cycles:  ffffffff826f9e25 finish_wait+0x5 ([kernel.kallsyms])
->        perf-exec 2273949 546850.708526:     143369 cycles:  ffffffff82b4cdbf xas_start+0x5f ([kernel.kallsyms])
->        perf-exec 2273949 546850.708600:     372650 cycles:  ffffffff8286b8f7 __pagevec_lru_add+0x117 ([kernel.kallsyms])
->        perf-exec 2273949 546850.708791:     482953 cycles:  ffffffff829190de __mod_memcg_lruvec_state+0x4e ([kernel.kallsyms])
->             true 2273949 546850.709036:     501985 cycles:  ffffffff828add7c tlb_gather_mmu+0x4c ([kernel.kallsyms])
->             true 2273949 546850.709292:     503065 cycles:      7f2446d97c03 _dl_map_object_deps+0x973 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/Documentation/perf-record.txt | 15 +++++++++++---
->  tools/perf/util/bpf_counter.c            |  3 +--
->  tools/perf/util/evlist.c                 | 25 +++++++++++++++++-------
->  tools/perf/util/evsel.c                  |  2 ++
->  tools/perf/util/parse-events.c           |  8 +++-----
->  5 files changed, 36 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index ff815c2f67e8..122f71726eaa 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -119,9 +119,12 @@ OPTIONS
->  	  "perf report" to view group events together.
->  
->  --filter=<filter>::
-> -        Event filter. This option should follow an event selector (-e) which
-> -	selects either tracepoint event(s) or a hardware trace PMU
-> -	(e.g. Intel PT or CoreSight).
-> +	Event filter.  This option should follow an event selector (-e).
-> +	If the event is a tracepoint, the filter string will be parsed by
-> +	the kernel.  If the event is a hardware trace PMU (e.g. Intel PT
-> +	or CoreSight), it'll be processed as an address filter.  Otherwise
-> +	it means a general filter using BPF which can be applied for any
-> +	kind of event.
->  
->  	- tracepoint filters
->  
-> @@ -176,6 +179,12 @@ OPTIONS
->  
->  	Multiple filters can be separated with space or comma.
->  
-> +	- bpf filters
-> +
-> +	A BPF filter can access the sample data and make a decision based on the
-> +	data.  Users need to set an appropriate sample type to use the BPF
-> +	filter.
-> +
->  --exclude-perf::
->  	Don't record events issued by perf itself. This option should follow
->  	an event selector (-e) which selects tracepoint event(s). It adds a
-> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-> index aa78a15a6f0a..1b77436e067e 100644
-> --- a/tools/perf/util/bpf_counter.c
-> +++ b/tools/perf/util/bpf_counter.c
-> @@ -763,8 +763,7 @@ extern struct bpf_counter_ops bperf_cgrp_ops;
->  
->  static inline bool bpf_counter_skip(struct evsel *evsel)
->  {
-> -	return list_empty(&evsel->bpf_counter_list) &&
-> -		evsel->follower_skel == NULL;
-> +	return evsel->bpf_counter_ops == NULL;
->  }
->  
->  int bpf_counter__install_pe(struct evsel *evsel, int cpu_map_idx, int fd)
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index b74e12239aec..cc491a037836 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -31,6 +31,7 @@
->  #include "util/evlist-hybrid.h"
->  #include "util/pmu.h"
->  #include "util/sample.h"
-> +#include "util/bpf-filter.h"
->  #include <signal.h>
->  #include <unistd.h>
->  #include <sched.h>
-> @@ -1086,17 +1087,27 @@ int evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
->  	int err = 0;
->  
->  	evlist__for_each_entry(evlist, evsel) {
-> -		if (evsel->filter == NULL)
-> -			continue;
-> -
->  		/*
->  		 * filters only work for tracepoint event, which doesn't have cpu limit.
->  		 * So evlist and evsel should always be same.
->  		 */
-> -		err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
-> -		if (err) {
-> -			*err_evsel = evsel;
-> -			break;
-> +		if (evsel->filter) {
-> +			err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
-> +			if (err) {
-> +				*err_evsel = evsel;
-> +				break;
-> +			}
-> +		}
-> +
-> +		/*
-> +		 * non-tracepoint events can have BPF filters.
-> +		 */
-> +		if (!list_empty(&evsel->bpf_filters)) {
-> +			err = perf_bpf_filter__prepare(evsel);
-> +			if (err) {
-> +				*err_evsel = evsel;
-> +				break;
-> +			}
->  		}
->  	}
->  
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index a83d8cd5eb51..dc3faf005c3b 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -50,6 +50,7 @@
->  #include "off_cpu.h"
->  #include "../perf-sys.h"
->  #include "util/parse-branch-options.h"
-> +#include "util/bpf-filter.h"
->  #include <internal/xyarray.h>
->  #include <internal/lib.h>
->  #include <internal/threadmap.h>
-> @@ -1517,6 +1518,7 @@ void evsel__exit(struct evsel *evsel)
->  	assert(list_empty(&evsel->core.node));
->  	assert(evsel->evlist == NULL);
->  	bpf_counter__destroy(evsel);
-> +	perf_bpf_filter__destroy(evsel);
->  	evsel__free_counts(evsel);
->  	perf_evsel__free_fd(&evsel->core);
->  	perf_evsel__free_id(&evsel->core);
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> index 3b2e5bb3e852..6c5cf5244486 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -28,6 +28,7 @@
->  #include "perf.h"
->  #include "util/parse-events-hybrid.h"
->  #include "util/pmu-hybrid.h"
-> +#include "util/bpf-filter.h"
->  #include "tracepoint.h"
->  #include "thread_map.h"
->  
-> @@ -2542,11 +2543,8 @@ static int set_filter(struct evsel *evsel, const void *arg)
->  		perf_pmu__scan_file(pmu, "nr_addr_filters",
->  				    "%d", &nr_addr_filters);
->  
-> -	if (!nr_addr_filters) {
-> -		fprintf(stderr,
-> -			"This CPU does not support address filtering\n");
-> -		return -1;
-> -	}
-> +	if (!nr_addr_filters)
-> +		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
->  
->  	if (evsel__append_addr_filter(evsel, str) < 0) {
->  		fprintf(stderr,
-> -- 
-> 2.40.0.rc1.284.g88254d51c5-goog
-> 
+ tools/perf/Documentation/perf-kvm.txt   |   9 +-
+ tools/perf/arch/arm64/util/kvm-stat.c   |   1 -
+ tools/perf/arch/powerpc/util/kvm-stat.c |   3 +-
+ tools/perf/arch/s390/util/kvm-stat.c    |   1 -
+ tools/perf/arch/x86/util/kvm-stat.c     |   7 +-
+ tools/perf/builtin-annotate.c           |   2 +-
+ tools/perf/builtin-c2c.c                |   4 +-
+ tools/perf/builtin-diff.c               |   4 +-
+ tools/perf/builtin-kvm.c                | 859 +++++++++++++++++++-----
+ tools/perf/tests/hists_link.c           |   4 +-
+ tools/perf/util/hist.c                  |  19 +-
+ tools/perf/util/hist.h                  |   3 +
+ tools/perf/util/kvm-stat.h              |  33 +-
+ tools/perf/util/sort.h                  |   1 +
+ 14 files changed, 745 insertions(+), 205 deletions(-)
 
 -- 
+2.34.1
 
-- Arnaldo
