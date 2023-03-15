@@ -2,176 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6B8C7618D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 05:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147C9C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 06:01:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231547AbjCOFlq (ORCPT
+        id S229494AbjCOGB6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 01:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36710 "EHLO
+        Wed, 15 Mar 2023 02:01:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231550AbjCOFll (ORCPT
+        with ESMTP id S229629AbjCOGB5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 01:41:41 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C65424FA9B;
-        Tue, 14 Mar 2023 22:41:29 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B68A116F3;
-        Tue, 14 Mar 2023 22:16:31 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.41.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9545E3F67D;
-        Tue, 14 Mar 2023 22:15:43 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 15 Mar 2023 02:01:57 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99911B2FD;
+        Tue, 14 Mar 2023 23:01:55 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id y19so10172746pgk.5;
+        Tue, 14 Mar 2023 23:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678860115;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9ph4mEsJfMGt8x6D4O/q6Z6jc9EvXuEN8fjxp1ja/3Y=;
+        b=p7tvfCMc7cgnlwBeJkbUGcf+q54nucaVu1UeJgUjkCPpb/cOsPmDgMzLzX5dbBW+RM
+         5/4YiG1GMlv0GFAnRpfP58XQBOegUWXNPOIp38jrMOvWE9SxGvyqxzZ2IXg1NtlY3NEP
+         6eVEuKtJmQCDyZekGb01ANO92z+rgMxHleD2aQxMlCYRA2enP//23yWvI/2CJAcfRvuD
+         5UGT1CUvo+Vj7Q7NpKtqECVSldqTkVBM9Tf0nwcLWUv+rhIuNFe9kS76xNBt2rot62yz
+         4XppaBBYP9712eXN8G0r5SHFaijDrYf8OQyQw3ODqY8IQqYWPqT7CEcZptA1I9sf775J
+         HFqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678860115;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9ph4mEsJfMGt8x6D4O/q6Z6jc9EvXuEN8fjxp1ja/3Y=;
+        b=AW8RugZIXHbXAjd7DhPRK4EGInF/NES5T1tf51EUzJlTL3ZZ9cAunwzGoP6XmbyRN/
+         KfUZ9Gk6xbMTiXF4+7npTLE0yoC6lf58WEJ8ROcUY9DVfFd+qTBXDYWtnqu/TMok8U2E
+         rA7dvG+NAmPxsLBGgWTGs+TfqjLvAA2S+D5OjX96dRnCWToIfTBdmECceOl67INhmfGM
+         V+jibnTQsva+l7WTgO9BLNsv6WvukwY9wAvoLGa2kTPgQ9SWltEDHKklkdvnFK23mbAh
+         cU26gM/VtfykWKnOqTxHoBpjC6OxtXof6Nja5nryvX4LjKpu9WC6kye4p115wnng5Maj
+         RoBw==
+X-Gm-Message-State: AO0yUKVwygRpJLUIaU78305UnyIAIC2NawbItykukdv8RG3J77DVRvdB
+        upPndTL7Krocwa+zABnU6zhWjKeFY1MYXjXH
+X-Google-Smtp-Source: AK7set9xAV/grl8gRzV8cOUkens4vcIqbtsttQsAh3A2Ht0R7RVwbr9fD7Y5eWezkV7K2JnNB82+WQ==
+X-Received: by 2002:aa7:9602:0:b0:624:2e60:f21e with SMTP id q2-20020aa79602000000b006242e60f21emr7694296pfg.29.1678860115030;
+        Tue, 14 Mar 2023 23:01:55 -0700 (PDT)
+Received: from kim-GL702ZC.. ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id x28-20020aa793bc000000b00593baab06dcsm2585648pff.198.2023.03.14.23.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Mar 2023 23:01:54 -0700 (PDT)
+From:   Paran Lee <p4ranlee@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH V9 10/10] arm64/perf: Implement branch records save on PMU IRQ
-Date:   Wed, 15 Mar 2023 10:44:44 +0530
-Message-Id: <20230315051444.1683170-11-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230315051444.1683170-1-anshuman.khandual@arm.com>
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paran Lee <p4ranlee@gmail.com>
+Subject: [PATCH] perf tools: Add levenshtein ENOMEM check
+Date:   Wed, 15 Mar 2023 14:59:38 +0900
+Message-Id: <20230315055937.22769-1-p4ranlee@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This modifies armv8pmu_branch_read() to concatenate live entries along with
-task context stored entries and then process the resultant buffer to create
-perf branch entry array for perf_sample_data. It follows the same principle
-like task sched out.
+The levenshtein algorithm requires exception handling
+when making dynamic allocations strings.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Paran Lee <p4ranlee@gmail.com>
 ---
- arch/arm64/kernel/brbe.c | 75 +++++++++++++++-------------------------
- 1 file changed, 28 insertions(+), 47 deletions(-)
+ tools/perf/util/help-unknown-cmd.c |  6 +++++-
+ tools/perf/util/levenshtein.c      | 16 ++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kernel/brbe.c b/arch/arm64/kernel/brbe.c
-index 3dcb4407b92a..652af6668d37 100644
---- a/arch/arm64/kernel/brbe.c
-+++ b/arch/arm64/kernel/brbe.c
-@@ -693,41 +693,45 @@ void armv8pmu_branch_reset(void)
- 	isb();
- }
+diff --git a/tools/perf/util/help-unknown-cmd.c b/tools/perf/util/help-unknown-cmd.c
+index ab9e16123626..a70ef339b8af 100644
+--- a/tools/perf/util/help-unknown-cmd.c
++++ b/tools/perf/util/help-unknown-cmd.c
+@@ -74,10 +74,14 @@ const char *help_unknown_cmd(const char *cmd)
  
--static bool capture_branch_entry(struct pmu_hw_events *cpuc,
--				 struct perf_event *event, int idx)
-+static void brbe_regset_branch_entries(struct pmu_hw_events *cpuc, struct perf_event *event,
-+				       struct brbe_regset *regset, int idx)
+ 	if (main_cmds.cnt) {
+ 		/* This reuses cmdname->len for similarity index */
+-		for (i = 0; i < main_cmds.cnt; ++i)
++		for (i = 0; i < main_cmds.cnt; ++i) {
+ 			main_cmds.names[i]->len =
+ 				levenshtein(cmd, main_cmds.names[i]->name, 0, 2, 1, 4);
+ 
++			if(main_cmds.names[i]->len == -ENOMEM)
++				goto end;
++		}
++
+ 		qsort(main_cmds.names, main_cmds.cnt,
+ 		      sizeof(*main_cmds.names), levenshtein_compare);
+ 
+diff --git a/tools/perf/util/levenshtein.c b/tools/perf/util/levenshtein.c
+index 6a6712635aa4..ce273d34af5f 100644
+--- a/tools/perf/util/levenshtein.c
++++ b/tools/perf/util/levenshtein.c
+@@ -45,11 +45,17 @@ int levenshtein(const char *string1, const char *string2,
+ 		int w, int s, int a, int d)
  {
- 	struct perf_branch_entry *entry = &cpuc->branches->branch_entries[idx];
--	u64 brbinf = get_brbinf_reg(idx);
--
--	/*
--	 * There are no valid entries anymore on the buffer.
--	 * Abort the branch record processing to save some
--	 * cycles and also reduce the capture/process load
--	 * for the user space as well.
--	 */
--	if (brbe_invalid(brbinf))
--		return false;
-+	u64 brbinf = regset[idx].brbinf;
+ 	int len1 = strlen(string1), len2 = strlen(string2);
+-	int *row0 = malloc(sizeof(int) * (len2 + 1));
+-	int *row1 = malloc(sizeof(int) * (len2 + 1));
+-	int *row2 = malloc(sizeof(int) * (len2 + 1));
++	int *rows, *row0, *row1, *row2;
+ 	int i, j;
  
- 	perf_clear_branch_entry_bitfields(entry);
- 	if (brbe_record_is_complete(brbinf)) {
--		entry->from = get_brbsrc_reg(idx);
--		entry->to = get_brbtgt_reg(idx);
-+		entry->from = regset[idx].brbsrc;
-+		entry->to = regset[idx].brbtgt;
- 	} else if (brbe_record_is_source_only(brbinf)) {
--		entry->from = get_brbsrc_reg(idx);
-+		entry->from = regset[idx].brbsrc;
- 		entry->to = 0;
- 	} else if (brbe_record_is_target_only(brbinf)) {
- 		entry->from = 0;
--		entry->to = get_brbtgt_reg(idx);
-+		entry->to = regset[idx].brbtgt;
++	rows = malloc(3 * sizeof(int) * (len2 + 1));
++	if(!rows)
++		return -ENOMEM;
++
++	row0 = rows[0];
++	row1 = rows[1];
++	row2 = rows[2];
++
+ 	for (j = 0; j <= len2; j++)
+ 		row1[j] = j * a;
+ 	for (i = 0; i < len1; i++) {
+@@ -79,9 +85,7 @@ int levenshtein(const char *string1, const char *string2,
  	}
- 	capture_brbe_flags(entry, event, brbinf);
--	return true;
-+}
-+
-+static void process_branch_entries(struct pmu_hw_events *cpuc, struct perf_event *event,
-+				   struct brbe_regset *regset, int nr_regset)
-+{
-+	int idx;
-+
-+	for (idx = 0; idx < nr_regset; idx++)
-+		brbe_regset_branch_entries(cpuc, event, regset, idx);
-+
-+	cpuc->branches->branch_stack.nr = nr_regset;
-+	cpuc->branches->branch_stack.hw_idx = -1ULL;
+ 
+ 	i = row1[len2];
+-	free(row0);
+-	free(row1);
+-	free(row2);
++	free(rows);
+ 
+ 	return i;
  }
- 
- void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
- {
- 	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
-+	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
-+	struct brbe_regset live[BRBE_MAX_ENTRIES];
-+	int nr_live, nr_store;
- 	u64 brbfcr, brbcr;
--	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
- 
- 	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
- 	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-@@ -739,36 +743,13 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
- 	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
- 	isb();
- 
--	/* Determine the indices for each loop */
--	loop1_idx1 = BRBE_BANK0_IDX_MIN;
--	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
--		loop1_idx2 = brbe_attr->brbe_nr - 1;
--		loop2_idx1 = BRBE_BANK1_IDX_MIN;
--		loop2_idx2 = BRBE_BANK0_IDX_MAX;
--	} else {
--		loop1_idx2 = BRBE_BANK0_IDX_MAX;
--		loop2_idx1 = BRBE_BANK1_IDX_MIN;
--		loop2_idx2 = brbe_attr->brbe_nr - 1;
--	}
--
--	/* Loop through bank 0 */
--	select_brbe_bank(BRBE_BANK_IDX_0);
--	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
--		if (!capture_branch_entry(cpuc, event, idx))
--			goto skip_bank_1;
--	}
--
--	/* Loop through bank 1 */
--	select_brbe_bank(BRBE_BANK_IDX_1);
--	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
--		if (!capture_branch_entry(cpuc, event, idx))
--			break;
--	}
--
--skip_bank_1:
--	cpuc->branches->branch_stack.nr = idx;
--	cpuc->branches->branch_stack.hw_idx = -1ULL;
-+	nr_live = capture_brbe_regset(brbe_attr, live);
-+	nr_store = task_ctx->nr_brbe_records;
-+	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
-+					      nr_live, brbe_attr->brbe_nr);
-+	process_branch_entries(cpuc, event, task_ctx->store, nr_store);
- 	process_branch_aborts(cpuc);
-+	task_ctx->nr_brbe_records = 0;
- 
- 	/* Unpause the buffer */
- 	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
 -- 
-2.25.1
+2.34.1
 
