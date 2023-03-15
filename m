@@ -2,100 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4165C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 07:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD92C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 07:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231473AbjCOHFQ (ORCPT
+        id S231504AbjCOHVm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 03:05:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35136 "EHLO
+        Wed, 15 Mar 2023 03:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231623AbjCOHE6 (ORCPT
+        with ESMTP id S231530AbjCOHV3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 03:04:58 -0400
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2B427D79;
-        Wed, 15 Mar 2023 00:04:54 -0700 (PDT)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4Pc1c45ym3z8RV7R;
-        Wed, 15 Mar 2023 15:04:52 +0800 (CST)
-Received: from szxlzmapp05.zte.com.cn ([10.5.230.85])
-        by mse-fl2.zte.com.cn with SMTP id 32F74e3W080872;
-        Wed, 15 Mar 2023 15:04:40 +0800 (+08)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-cloudhost8.zte.com.cn (unknown [10.234.72.110])
-        by smtp (Zmail) with SMTP;
-        Wed, 15 Mar 2023 15:04:42 +0800
-X-Zmail-TransId: 3e8164116e08000-ffc3a
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        wang.liang82@zte.com.cn, "Liu.Xiaoyang" <liu.xiaoyang@zte.com.cn>
-Subject: [PATCH] perf: fix segmentation fault in perf_event__synthesize_one_bpf_prog
-Date:   Wed, 15 Mar 2023 14:58:18 +0800
-Message-Id: <20230315065818.31156-1-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 2.33.0.rc0.dirty
-MIME-Version: 1.0
+        Wed, 15 Mar 2023 03:21:29 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF4A6923A;
+        Wed, 15 Mar 2023 00:21:13 -0700 (PDT)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32F634iW013971;
+        Wed, 15 Mar 2023 07:21:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=fCdCFK+wRShOfc45RRYz+BzRBwmmZNXzRilOrAjpY3A=;
+ b=NmquYZSFToMHM758eKR1u37yBVQrq+T79yJ2i+UGazt+MypZB/yx1929Czj3wAD6zY5Y
+ zZ85OIAMHo9DiGeh76Pa/Gl9WzCtS7mLEZSmcj1L3mNLEzxryWFjgGSHBVHo9EwpGXIH
+ oVuvduZVEvTe0ids1Vji5jjleJaRxKXYa0jR9aq6cQrA0iZmnauV5YHoCQKvFpEmxlAN
+ 91QgeJzbpx7lacCDBlzcnIOON6A90aFq0EV52j/iKODiG1IyTUpJr9lmvoNcD4RLy1b6
+ ihBDTbfZtYJYh4oitK6lNIPBQXkYzfryrTfElT2R7wUhebbiNKQRJ6zOdOq+JR2OZghJ ZA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pb6wmuk3y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 07:21:10 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32F7B9GN018688;
+        Wed, 15 Mar 2023 07:21:10 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pb6wmuk2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 07:21:10 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32EN62eg008691;
+        Wed, 15 Mar 2023 07:21:08 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pb29sgefk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 07:21:07 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32F7L4jV56361458
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Mar 2023 07:21:04 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51FC12004D;
+        Wed, 15 Mar 2023 07:21:04 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E19B020043;
+        Wed, 15 Mar 2023 07:21:03 +0000 (GMT)
+Received: from [9.171.86.252] (unknown [9.171.86.252])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Mar 2023 07:21:03 +0000 (GMT)
+Message-ID: <432b0083-3e22-adf8-2699-903c71e7dd57@linux.ibm.com>
+Date:   Wed, 15 Mar 2023 08:21:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
+        hca@linux.ibm.com
+References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
+ <20230313080201.2440201-2-tmricht@linux.ibm.com>
+ <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
+ <ZA9sYL/re/aNVpo+@kernel.org>
+ <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
+ <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
+Content-Language: en-US
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: HkMobC8TzWcneDtdiyklhr0TU82J5QMr
+X-Proofpoint-GUID: yO9Vxiv1qwFZQ7W3ufo85IIrnaDFedKB
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 32F74e3W080872
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.137.novalocal with ID 64116E14.002 by FangMail milter!
-X-FangMail-Envelope: 1678863892/4Pc1c45ym3z8RV7R/64116E14.002/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<wang.yi59@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 64116E14.002/4Pc1c45ym3z8RV7R
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-15_02,2023-03-14_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 mlxscore=0 bulkscore=0 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2302240000 definitions=main-2303150061
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: "Liu.Xiaoyang" <liu.xiaoyang@zte.com.cn>
+On 3/14/23 17:34, Ian Rogers wrote:
+> On Tue, Mar 14, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> On 3/13/23 19:33, Arnaldo Carvalho de Melo wrote:
+>>> Em Mon, Mar 13, 2023 at 08:22:44AM -0700, Ian Rogers escreveu:
+>>>> On Mon, Mar 13, 2023 at 1:30 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>>>>
+>>>>> Add metrics for s390 z16
+>>>>> - Percentage sourced from Level 2 cache
+>>>>> - Percentage sourced from Level 3 on same chip cache
+>>>>> - Percentage sourced from Level 4 Local cache on same book
+>>>>> - Percentage sourced from Level 4 Remote cache on different book
+>>>>> - Percentage sourced from memory
+>>>>>
+>>>>> For details about the formulas see this documentation:
+>>>>> https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
+>>>>>
+>>>>> Outpuf after:
+>>>>>  # ./perf stat -M l4rp -- dd if=/dev/zero of=/dev/null bs=10M count=10K
+>>>>>  .... dd output deleted
+>>>>>
+>>>>>  Performance counter stats for 'dd if=/dev/zero of=/dev/null bs=10M count=10K':
+>>>>>
+>>>>>                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
+>>>>>            431,866      L1I_DIR_WRITES
+>>>>>              2,395      IDCW_OFF_DRAWER_IV
+>>>>>                  0      ICW_OFF_DRAWER
+>>>>>                  0      IDCW_OFF_DRAWER_DRAWER_HIT
+>>>>>              1,437      DCW_OFF_DRAWER
+>>>>>        425,960,793      L1D_DIR_WRITES
+>>>>>
+>>>>>       12.165030699 seconds time elapsed
+>>>>>
+>>>>>        0.001037000 seconds user
+>>>>>       12.162140000 seconds sys
+>>>>>
+>>>>>  #
+>>>>>
+>>>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>>>> Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
+>>>>
+>>>> Acked-by: Ian Rogers <irogers@google.com>
+>>>
+>>> Thanks, applied the first two patches, please address the review
+>>> suggestions for patches 3-6 and resubmit only those.
+>>>
+>>> The patches will be in the public perf-tools-next branch later today.
+>>>
+>>> - Arnaldo
+>>>
+>>
+>> I would really prefer the current implementation without using "ScaleUnit": "100%"
+>> The reason is that these formulars are given to me from the s390 Performance team.
+>> They want to use the exact same formulars on all platforms running on s390
+>> which includes z/OS and z/VM. This way they are sure to get the same numbers.
+>>
+>> Hope this background info helps.
+> 
+> For the series:
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> Using ScaleUnit won't change the result. A ScaleUnit of "100%" means
+> scale the result up by multiplying by 100 and then apply the % after
+> the value. Another nit is having metrics that place their units in the
+> name, like _percent, is usually a sign the name can be better. Perhaps
+> we can follow up with some clean up.
+> 
+> Thanks,
+> Ian
 
-Description of problem:
-when /proc/sys/kernel/kptr_restrict set to 2 and there are bpf progs
-loaded on system, ptr prog_lens and prog_addrs maybe Null.
-then prog_addrs[i] and prog_lens[i] will case segmentation fault.
+Thanks Ian,
+I put the ScaleUnit thing on my todo list and will provide a clean up...
 
-call trace：
-perf: Segmentation fault
-perf(sighandler_dump_stack+0x48)
-/lib64/libc.so.6(+0x37400)
-perf(perf_event__synthesize_bpf_events+0x23a)
-perf(+0x235b73)
-perf(cmd_record+0xc0d)
-perf(+0x2a8c5d)
-perf(main+0x69a)
-
-Signed-off-by: Liu.Xiaoyang <liu.xiaoyang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- tools/perf/util/bpf-event.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index cc7c1f9..7a6ea6d 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -307,6 +307,11 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 		__u64 *prog_addrs = (__u64 *)(uintptr_t)(info->jited_ksyms);
- 		int name_len;
- 
-+		if (!prog_lens || !prog_addrs) {
-+			err = -1;
-+			goto out;
-+		}
-+
- 		*ksymbol_event = (struct perf_record_ksymbol) {
- 			.header = {
- 				.type = PERF_RECORD_KSYMBOL,
 -- 
-1.8.3.1
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
