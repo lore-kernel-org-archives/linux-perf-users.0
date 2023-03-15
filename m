@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E98EC76196
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 19:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA8DC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 19:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230283AbjCOTpK (ORCPT
+        id S229459AbjCOTrC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 15:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        Wed, 15 Mar 2023 15:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232777AbjCOTos (ORCPT
+        with ESMTP id S231636AbjCOTrA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 15:44:48 -0400
+        Wed, 15 Mar 2023 15:47:00 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1742B7C965;
-        Wed, 15 Mar 2023 12:44:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0030E94775;
+        Wed, 15 Mar 2023 12:46:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EDEB61E58;
-        Wed, 15 Mar 2023 19:44:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D89C433EF;
-        Wed, 15 Mar 2023 19:44:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A9BA061E4A;
+        Wed, 15 Mar 2023 19:45:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3920C433D2;
+        Wed, 15 Mar 2023 19:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678909478;
-        bh=ObcCFqCfiMrpq2QWm65GyyVNOjbLViYdoZZDXlKz4Lc=;
+        s=k20201202; t=1678909556;
+        bh=LSJOMlcnJ19oNf9iRYay/FZoaeNsalq4lnfuSfcm2LA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SfAyqiOY64jz84a/DcLzXtVJhAkjBLGIZVk6CM3oWF1D2ti839YWH8MgjJswWvFL4
-         Ziy2q4R8q/oDCWbnlePr1mrUGIzAiPlzicByCQUYISXdxOhKgJnb/f6Lg7VN3rlsoi
-         jrNxp0T7DcdTYsh4Yq7uM6UaGFkEH/+5jPqRKtBqWFAhbrpmCZdf9QlVuRBWQHrXiR
-         uQRPcyPMop7GQotmZJih26RZL1grpQi80SSYa33Yir9KBvZnOhvXVPHYfOtBpmd9Z4
-         k14E0txwlflAHpYTT1zIHt9SbbJTFR5493Kd0nALv+YsqusWQ52F5Ohf3zEn640qTb
-         fzFdk/cLEVg7A==
+        b=asVGCKb4y+4LZhwBNHWB4tgXjlSbFC93WfXlPgefWO35EWMOyIlwymM12RucAVWMe
+         l97lKH2CQv26f2uOkDIfHJaZUZNzOBJnQLoN85npw7UJPumqKEG4WqxB4q4jGq/u0A
+         E2GyoyYYbstgupYGVH63dgf4LRtsiExe4NvvIT5MhFW9tbjVgMYWGpvT5QQNopYvSO
+         iZxIQ2JKk1QWUPx6yzX8lKxbPCTfg+OmfrsiCG6oAbeOsA7VmIQKbi0mI4F2/uNbNo
+         mhV2YiaBuNw/FuqvBnn2W260IE0IWLvrRtAlWtiHhs0naMbeqluBHfbBxoV6vetpXP
+         wQAFTZjLo9dNw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 24DA14049F; Wed, 15 Mar 2023 16:44:35 -0300 (-03)
-Date:   Wed, 15 Mar 2023 16:44:35 -0300
+        id 9E23E4049F; Wed, 15 Mar 2023 16:45:53 -0300 (-03)
+Date:   Wed, 15 Mar 2023 16:45:53 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -49,152 +49,110 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 03/16] perf kvm: Move up metrics helpers
-Message-ID: <ZBIgI1+s6Zf4Va+i@kernel.org>
+Subject: Re: [PATCH v5 06/16] perf kvm: Introduce histograms data structures
+Message-ID: <ZBIgcX0TmC0tyFR0@kernel.org>
 References: <20230315145112.186603-1-leo.yan@linaro.org>
- <20230315145112.186603-4-leo.yan@linaro.org>
+ <20230315145112.186603-7-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230315145112.186603-4-leo.yan@linaro.org>
+In-Reply-To: <20230315145112.186603-7-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 15, 2023 at 10:50:59PM +0800, Leo Yan escreveu:
-> This patch moves up the helper functions of event's metrics for later
-> adding code to call them.
+Em Wed, Mar 15, 2023 at 10:51:02PM +0800, Leo Yan escreveu:
+> This is a preparation to support histograms in perf kvm tool.  As first
+> step, this patch defines histograms data structures and initialize them.
 > 
-> No any functionality changes, but has a function renaming from
-> compare_kvm_event_{metric}() to cmp_event_{metric}().
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/builtin-kvm.c   | 18 ++++++++++++++++++
+>  tools/perf/util/kvm-stat.h |  1 +
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index d400434aa137..384992c8a01a 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -85,6 +85,20 @@ static struct kvm_event_key keys[] = {
+>  	{ NULL, NULL }
+>  };
+>  
+> +struct kvm_hists {
+> +	struct hists		hists;
+> +	struct perf_hpp_list	list;
+> +};
+> +
+> +static struct kvm_hists kvm_hists;
+> +
+> +static int kvm_hists__init(void)
+> +{
+> +	__hists__init(&kvm_hists.hists, &kvm_hists.list);
+> +	perf_hpp_list__init(&kvm_hists.list);
+> +	return 0;
+> +}
+> +
 
-    Those helper functions are only used if this is true:
-    
-      if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
-    
-    So keep them enclosed with that.
-
-Did it here
+Had to add:
 
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 62c097a37da9b9fe..c11f5454f35c544a 100644
+index c4cb34df155fec67..b06c11d306a11cab 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -49,6 +49,7 @@
- #include <math.h>
- #include <perf/mmap.h>
- 
-+#if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
- #define GET_EVENT_KEY(func, field)					\
- static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
- {									\
-@@ -84,6 +85,7 @@ static struct kvm_event_key keys[] = {
+@@ -85,7 +85,6 @@ static struct kvm_event_key keys[] = {
  	DEF_SORT_NAME_KEY(time, mean),
  	{ NULL, NULL }
  };
+-#endif // defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+ 
+ struct kvm_hists {
+ 	struct hists		hists;
+@@ -100,6 +99,7 @@ static int kvm_hists__init(void)
+ 	perf_hpp_list__init(&kvm_hists.list);
+ 	return 0;
+ }
 +#endif // defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
  
  static const char *get_filename_for_perf_kvm(void)
  {
- 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Reviewed-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/builtin-kvm.c | 72 ++++++++++++++++++++--------------------
->  1 file changed, 36 insertions(+), 36 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 3d2560ec6b37..62c097a37da9 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -49,6 +49,42 @@
->  #include <math.h>
->  #include <perf/mmap.h>
->  
-> +#define GET_EVENT_KEY(func, field)					\
-> +static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
-> +{									\
-> +	if (vcpu == -1)							\
-> +		return event->total.field;				\
-> +									\
-> +	if (vcpu >= event->max_vcpu)					\
-> +		return 0;						\
-> +									\
-> +	return event->vcpu[vcpu].field;					\
-> +}
-> +
-> +#define COMPARE_EVENT_KEY(func, field)					\
-> +GET_EVENT_KEY(func, field)						\
-> +static int cmp_event_ ## func(struct kvm_event *one,			\
-> +			      struct kvm_event *two, int vcpu)		\
-> +{									\
-> +	return get_event_ ##func(one, vcpu) >				\
-> +	       get_event_ ##func(two, vcpu);				\
-> +}
-> +
-> +GET_EVENT_KEY(time, time);
-> +GET_EVENT_KEY(max, stats.max);
-> +GET_EVENT_KEY(min, stats.min);
-> +COMPARE_EVENT_KEY(count, stats.n);
-> +COMPARE_EVENT_KEY(mean, stats.mean);
-> +
-> +#define DEF_SORT_NAME_KEY(name, compare_key)				\
-> +	{ #name, cmp_event_ ## compare_key }
-> +
-> +static struct kvm_event_key keys[] = {
-> +	DEF_SORT_NAME_KEY(sample, count),
-> +	DEF_SORT_NAME_KEY(time, mean),
-> +	{ NULL, NULL }
-> +};
-> +
+
 >  static const char *get_filename_for_perf_kvm(void)
 >  {
 >  	const char *filename;
-> @@ -461,42 +497,6 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
->  	return true;
->  }
+> @@ -957,6 +971,8 @@ static int kvm_events_live_report(struct perf_kvm_stat *kvm)
+>  	set_term_quiet_input(&save);
+>  	init_kvm_event_record(kvm);
 >  
-> -#define GET_EVENT_KEY(func, field)					\
-> -static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
-> -{									\
-> -	if (vcpu == -1)							\
-> -		return event->total.field;				\
-> -									\
-> -	if (vcpu >= event->max_vcpu)					\
-> -		return 0;						\
-> -									\
-> -	return event->vcpu[vcpu].field;					\
-> -}
-> -
-> -#define COMPARE_EVENT_KEY(func, field)					\
-> -GET_EVENT_KEY(func, field)						\
-> -static int compare_kvm_event_ ## func(struct kvm_event *one,		\
-> -					struct kvm_event *two, int vcpu)\
-> -{									\
-> -	return get_event_ ##func(one, vcpu) >				\
-> -				get_event_ ##func(two, vcpu);		\
-> -}
-> -
-> -GET_EVENT_KEY(time, time);
-> -COMPARE_EVENT_KEY(count, stats.n);
-> -COMPARE_EVENT_KEY(mean, stats.mean);
-> -GET_EVENT_KEY(max, stats.max);
-> -GET_EVENT_KEY(min, stats.min);
-> -
-> -#define DEF_SORT_NAME_KEY(name, compare_key)				\
-> -	{ #name, compare_kvm_event_ ## compare_key }
-> -
-> -static struct kvm_event_key keys[] = {
-> -	DEF_SORT_NAME_KEY(sample, count),
-> -	DEF_SORT_NAME_KEY(time, mean),
-> -	{ NULL, NULL }
-> -};
-> -
->  static bool select_key(struct perf_kvm_stat *kvm)
->  {
->  	int i;
+> +	kvm_hists__init();
+> +
+>  	signal(SIGINT, sig_handler);
+>  	signal(SIGTERM, sig_handler);
+>  
+> @@ -1152,6 +1168,8 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
+>  	init_kvm_event_record(kvm);
+>  	setup_pager();
+>  
+> +	kvm_hists__init();
+> +
+>  	ret = read_events(kvm);
+>  	if (ret)
+>  		goto exit;
+> diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
+> index 841b3174c211..e2c17662bac7 100644
+> --- a/tools/perf/util/kvm-stat.h
+> +++ b/tools/perf/util/kvm-stat.h
+> @@ -5,6 +5,7 @@
+>  #ifdef HAVE_KVM_STAT_SUPPORT
+>  
+>  #include "tool.h"
+> +#include "sort.h"
+>  #include "stat.h"
+>  #include "record.h"
+>  
 > -- 
 > 2.34.1
 > 
