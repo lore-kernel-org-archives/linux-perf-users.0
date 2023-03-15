@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147C9C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 06:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B794DC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 06:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjCOGB6 (ORCPT
+        id S230280AbjCOGMK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 02:01:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
+        Wed, 15 Mar 2023 02:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjCOGB5 (ORCPT
+        with ESMTP id S229666AbjCOGMJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 02:01:57 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99911B2FD;
-        Tue, 14 Mar 2023 23:01:55 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id y19so10172746pgk.5;
-        Tue, 14 Mar 2023 23:01:55 -0700 (PDT)
+        Wed, 15 Mar 2023 02:12:09 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235795B437;
+        Tue, 14 Mar 2023 23:12:08 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id h8so18939242plf.10;
+        Tue, 14 Mar 2023 23:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678860115;
+        d=gmail.com; s=20210112; t=1678860727;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ph4mEsJfMGt8x6D4O/q6Z6jc9EvXuEN8fjxp1ja/3Y=;
-        b=p7tvfCMc7cgnlwBeJkbUGcf+q54nucaVu1UeJgUjkCPpb/cOsPmDgMzLzX5dbBW+RM
-         5/4YiG1GMlv0GFAnRpfP58XQBOegUWXNPOIp38jrMOvWE9SxGvyqxzZ2IXg1NtlY3NEP
-         6eVEuKtJmQCDyZekGb01ANO92z+rgMxHleD2aQxMlCYRA2enP//23yWvI/2CJAcfRvuD
-         5UGT1CUvo+Vj7Q7NpKtqECVSldqTkVBM9Tf0nwcLWUv+rhIuNFe9kS76xNBt2rot62yz
-         4XppaBBYP9712eXN8G0r5SHFaijDrYf8OQyQw3ODqY8IQqYWPqT7CEcZptA1I9sf775J
-         HFqw==
+        bh=2mVdgwgT2qkvzpfasDSj7seSqlj6lgppVtKp0BZbtf0=;
+        b=lYl0CLiE4QFY1LHjzOTsvsZ9ivFXWrocZmWnVGAWdmA3fV4ppYmG6/Mky0qQBAjEMv
+         gP+i3uspGIfUeD9/qcYlGACf8RFacyO4rnKfNT9/zPFsIbpGFq6EonbzNc1n/dCePcjC
+         tOaN2pcxX+7HAef+H7//wblL5HZ1aU3dMxEMRJwsnIRDWAejvwyMImqOqHpWmr9VWU0y
+         ppuSDzU1BdKnnDKSaA2avR/SV8NOZj1lGZYKlMKT/H45jDdWThB4U1g3coFKD4icaTpm
+         WiVqgKbfRbE+/roeexnwZkRY9aDpFYgoF7/ZTruvd3f90LxosReqO786rTQdymtZmbAe
+         ASYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678860115;
+        d=1e100.net; s=20210112; t=1678860727;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9ph4mEsJfMGt8x6D4O/q6Z6jc9EvXuEN8fjxp1ja/3Y=;
-        b=AW8RugZIXHbXAjd7DhPRK4EGInF/NES5T1tf51EUzJlTL3ZZ9cAunwzGoP6XmbyRN/
-         KfUZ9Gk6xbMTiXF4+7npTLE0yoC6lf58WEJ8ROcUY9DVfFd+qTBXDYWtnqu/TMok8U2E
-         rA7dvG+NAmPxsLBGgWTGs+TfqjLvAA2S+D5OjX96dRnCWToIfTBdmECceOl67INhmfGM
-         V+jibnTQsva+l7WTgO9BLNsv6WvukwY9wAvoLGa2kTPgQ9SWltEDHKklkdvnFK23mbAh
-         cU26gM/VtfykWKnOqTxHoBpjC6OxtXof6Nja5nryvX4LjKpu9WC6kye4p115wnng5Maj
-         RoBw==
-X-Gm-Message-State: AO0yUKVwygRpJLUIaU78305UnyIAIC2NawbItykukdv8RG3J77DVRvdB
-        upPndTL7Krocwa+zABnU6zhWjKeFY1MYXjXH
-X-Google-Smtp-Source: AK7set9xAV/grl8gRzV8cOUkens4vcIqbtsttQsAh3A2Ht0R7RVwbr9fD7Y5eWezkV7K2JnNB82+WQ==
-X-Received: by 2002:aa7:9602:0:b0:624:2e60:f21e with SMTP id q2-20020aa79602000000b006242e60f21emr7694296pfg.29.1678860115030;
-        Tue, 14 Mar 2023 23:01:55 -0700 (PDT)
+        bh=2mVdgwgT2qkvzpfasDSj7seSqlj6lgppVtKp0BZbtf0=;
+        b=Xuo8GgkPUKEdICIXckEX6VEZOnL8hnyiTQIzTeWpNAoDOQ87eQmy+enjE8q9VvDdsr
+         tFmSa0byfIuqqBANbTkNPh3M4xjakRI4L1ocaO27HMzYz3w8YmX7sa20a/eUDKSAbRuC
+         VXgiSD/w4n8acxW/V3ffq4ctYj0PK5sX3oSJoTk8vSpAq5BLQZMV9GYICvg+jy1Keog+
+         JE35KmRxZefkddVALp4dhKodSvNu1/x+vauCYVhDRlLpOaNBRPgNnj66OG1hq15nxTB3
+         mMNhJD7Y1vvi3hWDNGIkAdgO/xstd2v19+QAIT4oksGlsnRSe3ED72uT6k+pKl0fPbAM
+         FhoA==
+X-Gm-Message-State: AO0yUKUBHOobkHd8/8nY0YjWfWlEN/JagA7LwThIehskYcAw1QSSZoe2
+        bbmlgyvg07bruoffkAXLjFk=
+X-Google-Smtp-Source: AK7set/vfxBgnmopzVSGEh2xGbcrBcc/Ijhd+G4JyJ+osaoyEaOHC9c7kHUE3Jfqbsvnf6MJ5eE0jA==
+X-Received: by 2002:a05:6a20:8f04:b0:cc:8107:7474 with SMTP id b4-20020a056a208f0400b000cc81077474mr46397683pzk.9.1678860727493;
+        Tue, 14 Mar 2023 23:12:07 -0700 (PDT)
 Received: from kim-GL702ZC.. ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id x28-20020aa793bc000000b00593baab06dcsm2585648pff.198.2023.03.14.23.01.51
+        by smtp.gmail.com with ESMTPSA id i31-20020a63131f000000b00502ecc282e2sm2554323pgl.5.2023.03.14.23.12.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 23:01:54 -0700 (PDT)
+        Tue, 14 Mar 2023 23:12:07 -0700 (PDT)
 From:   Paran Lee <p4ranlee@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paran Lee <p4ranlee@gmail.com>
-Subject: [PATCH] perf tools: Add levenshtein ENOMEM check
-Date:   Wed, 15 Mar 2023 14:59:38 +0900
-Message-Id: <20230315055937.22769-1-p4ranlee@gmail.com>
+Subject: [RESEND PATCH] perf tools: Add levenshtein ENOMEM check
+Date:   Wed, 15 Mar 2023 15:11:33 +0900
+Message-Id: <20230315061132.25165-1-p4ranlee@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -103,7 +103,7 @@ index ab9e16123626..a70ef339b8af 100644
  		      sizeof(*main_cmds.names), levenshtein_compare);
  
 diff --git a/tools/perf/util/levenshtein.c b/tools/perf/util/levenshtein.c
-index 6a6712635aa4..ce273d34af5f 100644
+index 6a6712635aa4..0f0f244f142b 100644
 --- a/tools/perf/util/levenshtein.c
 +++ b/tools/perf/util/levenshtein.c
 @@ -45,11 +45,17 @@ int levenshtein(const char *string1, const char *string2,
@@ -120,9 +120,9 @@ index 6a6712635aa4..ce273d34af5f 100644
 +	if(!rows)
 +		return -ENOMEM;
 +
-+	row0 = rows[0];
-+	row1 = rows[1];
-+	row2 = rows[2];
++	row0 = &rows[0];
++	row1 = &rows[1];
++	row2 = &rows[2];
 +
  	for (j = 0; j <= len2; j++)
  		row1[j] = j * a;
