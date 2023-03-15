@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916D4C7618B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 14:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD8EC7618B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 14:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233251AbjCOOx4 (ORCPT
+        id S233310AbjCOOyS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 10:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35958 "EHLO
+        Wed, 15 Mar 2023 10:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233260AbjCOOxZ (ORCPT
+        with ESMTP id S233234AbjCOOxm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 10:53:25 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31C796C21
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 07:52:52 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id j3-20020a17090adc8300b0023d09aea4a6so2072461pjv.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 07:52:52 -0700 (PDT)
+        Wed, 15 Mar 2023 10:53:42 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931368FBF9
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 07:52:58 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id u5so20289295plq.7
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 07:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678891970;
+        d=linaro.org; s=google; t=1678891975;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lmJnfY2lbCc2C3dy6sxzWUeYnl8mSWLRJqM4XO3hbV8=;
-        b=KypbBeFiiw071Rag2kqAVfUN+QVZTcqiKgxUGUU95LCFu9MmUtsYI+52dxV0Gv89Vy
-         pvCdUgfGXRI6tPoC+r7RLW1BiF/XK9AmJdznQYzoS/HYtLWDcmCSSeflr+kVEeKLe4At
-         SWjpbBLrLMBEltp6BVgmrJMqMhOjBu4+KbFYaw4+W+kuEtJe9qqUWwufhhMUJjwKMkXW
-         UBSeVJ2/7gqCKip0CHurXPOnl1XVpTx+LrtS6vTTZQPVq77Pla+qZWnZATzQj7nDNFwc
-         Jv1vNx+VfVH0Yahp0jDLw3tKhw+sbCtt5eRr+u60J23SyyNF0e5sas97TCOCDhbpSsfW
-         KqCg==
+        bh=4fUVJ64SEnuw/uEL+nd4TijpPo7wgQdrNlutXsuxFPw=;
+        b=x9vKO8zrluYXjIO9bjuhov9DZqAYa+F8jPYdBlS5kHR0dQKGSslQ3g1RIFT/DY3dOi
+         VVw7kKtu24W/1xfax5GHrCuIF38Xnp01YXTRGWvIJsSs4CS6X1z6szgrhaZNh8Py3f8n
+         AGYREmFwR+i8ztqj+WLQj8ejBEfCI13ArCEUGW5dDcx4hi/nuHtan9lOjsnVHFf3qk/M
+         ELsF+6QNzSAgNYgtQWu41OUMvJh1xo62qR5QUAvQ5/dF8MvHfNslaEzh6me8hCAHAWr4
+         6XWNYL5m4aGKIGg5APbsyJN58aq4yEHfL1cIqB2JEgmf0Zw2yF7ajrpoC6X5DKrlKAXE
+         zTSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678891970;
+        d=1e100.net; s=20210112; t=1678891975;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lmJnfY2lbCc2C3dy6sxzWUeYnl8mSWLRJqM4XO3hbV8=;
-        b=SnCdmNXNY7mEB8Kyq5jp1we0v+fYYFEXeVIM38ZuPlXOuFbign1aX1uqsmAxC2oHsE
-         FOrAIoraGD+LiSbA6vNCCH1NryRTl1X6zn/kQOzu420rQ5SUNR70ToZPYoeQgG/Bm2+J
-         uihqHgce5ySJEMWTReYlnCglLZ+CKQMO10QFphsxGZxJwwqThTNgov9SqcFIrGt//48w
-         sNM4MtnDrpp2cNmiDV/M9LKAyE2V7hWg2uLA1BGBjd6Ln73TkuNycLKrHbUU1UyzZGI6
-         1AednCjNU83NvjDGb0eTj9rasprrnEm7AeNa5cYnJo0oNwm618tzYmITtbSp9r8VYVI7
-         fm/g==
-X-Gm-Message-State: AO0yUKVIEhHvrmI/epTyCwfwI6+A72TcLRa8vznyp+x5b8tc2Ik4h0R3
-        Hanny9Zr7gWZwxUsGTNdDizUFw==
-X-Google-Smtp-Source: AK7set8CJNZe2JhTNOxg0QgEtz1dzP7EuN9M3xiZmEechhTZHY0AG3PLkB8JSV85l+21tYStSl89xg==
-X-Received: by 2002:a17:902:e886:b0:19a:7f4b:3ef6 with SMTP id w6-20020a170902e88600b0019a7f4b3ef6mr3551199plg.3.1678891969844;
-        Wed, 15 Mar 2023 07:52:49 -0700 (PDT)
+        bh=4fUVJ64SEnuw/uEL+nd4TijpPo7wgQdrNlutXsuxFPw=;
+        b=A8PkqLvmNKaOrYQMZa1+RdiainAzx3fTOQkI3/OaEwRGBEoh8w7uuwaZmrS1PbtMhu
+         lGszVvFiE+8AQWJPtH0gK+cyxENGd6H7VevQ1lhiu7VX3Gh/3KElhXjumw9UzeAMAO4i
+         MY56iUA2AXi0lHCr5I0rZKMFlJ7aE8ufVCKoI+zdlullpj3vL8q0l150QB6XunxCVj/N
+         S8cPRw5RDJKAxxysJEuJmzO0IsH6HenAY8CIWOKftdVGoWnquPD9stQACkcBrdJ3z+vY
+         4Hj608/g72EgM/E8D74B642cO+XZzhWf0TdeAcRHHwlS+XYknsgNnT+MM+y3Ku+umTfx
+         ZLog==
+X-Gm-Message-State: AO0yUKWSp1EC272eJP/6HBIbWja1iGnq7V9erZ8a7gLRB+jqfa/KDMlj
+        ZK6z/+P5oclaNDp8G2htSGZ/zg==
+X-Google-Smtp-Source: AK7set9B+UVpE782e+TBDyWEej89u0xSElFONYLClqrCI95oD1FjuDxJopuGRtjHwWabgeFPczT3Ow==
+X-Received: by 2002:a17:902:e2ca:b0:19a:f9b5:2f2f with SMTP id l10-20020a170902e2ca00b0019af9b52f2fmr2311988plc.55.1678891975618;
+        Wed, 15 Mar 2023 07:52:55 -0700 (PDT)
 Received: from leoy-huanghe.lan ([107.151.177.133])
-        by smtp.gmail.com with ESMTPSA id kh3-20020a170903064300b0019926c77577sm3781587plb.90.2023.03.15.07.52.44
+        by smtp.gmail.com with ESMTPSA id kh3-20020a170903064300b0019926c77577sm3781587plb.90.2023.03.15.07.52.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 07:52:49 -0700 (PDT)
+        Wed, 15 Mar 2023 07:52:55 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -66,9 +66,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 14/16] perf kvm: Add dimensions for percentages
-Date:   Wed, 15 Mar 2023 22:51:10 +0800
-Message-Id: <20230315145112.186603-15-leo.yan@linaro.org>
+Subject: [PATCH v5 15/16] perf kvm: Add TUI mode for stat report
+Date:   Wed, 15 Mar 2023 22:51:11 +0800
+Message-Id: <20230315145112.186603-16-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230315145112.186603-1-leo.yan@linaro.org>
 References: <20230315145112.186603-1-leo.yan@linaro.org>
@@ -78,135 +78,203 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add dimensions for count and time percentages, it would be useful for
-user to review percentage statistics.
+Since we have supported histograms list and prepared the dimensions in
+the tool, this patch adds TUI mode for stat report.  It also adds UI
+progress for sorting for better user experience.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/builtin-kvm.c | 98 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 97 insertions(+), 1 deletion(-)
+ tools/perf/builtin-kvm.c   | 109 ++++++++++++++++++++++++++++++++++++-
+ tools/perf/util/kvm-stat.h |   1 +
+ 2 files changed, 108 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 0d857df826cf..ab1cd6b5e528 100644
+index ab1cd6b5e528..3dd44763d1fc 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -222,10 +222,105 @@ static struct kvm_dimension dim_mean_time = {
- 	.width		= 14,
- };
+@@ -23,6 +23,8 @@
+ #include "util/data.h"
+ #include "util/ordered-events.h"
+ #include "util/kvm-stat.h"
++#include "ui/browsers/hists.h"
++#include "ui/progress.h"
+ #include "ui/ui.h"
+ #include "util/string2.h"
  
-+#define PERC_STR(__s, __v)				\
-+({							\
-+	scnprintf(__s, sizeof(__s), "%.2F%%", __v);	\
-+	__s;						\
-+})
+@@ -495,6 +497,7 @@ static int kvm_hpp_list__parse(struct perf_hpp_list *hpp_list,
+ 
+ static int kvm_hists__init(void)
+ {
++	kvm_hists.list.nr_header_lines = 1;
+ 	__hists__init(&kvm_hists.hists, &kvm_hists.list);
+ 	perf_hpp_list__init(&kvm_hists.list);
+ 	return kvm_hpp_list__parse(&kvm_hists.list, NULL, "ev_name");
+@@ -506,6 +509,93 @@ static int kvm_hists__reinit(const char *output, const char *sort)
+ 	return kvm_hpp_list__parse(&kvm_hists.list, output, sort);
+ }
+ 
++static void print_result(struct perf_kvm_stat *kvm);
 +
-+static double percent(u64 st, u64 tot)
++#ifdef HAVE_SLANG_SUPPORT
++static void kvm_browser__update_nr_entries(struct hist_browser *hb)
 +{
-+	return tot ? 100. * (double) st / (double) tot : 0;
++	struct rb_node *nd = rb_first_cached(&hb->hists->entries);
++	u64 nr_entries = 0;
++
++	for (; nd; nd = rb_next(nd)) {
++		struct hist_entry *he = rb_entry(nd, struct hist_entry,
++						 rb_node);
++
++		if (!he->filtered)
++			nr_entries++;
++	}
++
++	hb->nr_non_filtered_entries = nr_entries;
 +}
 +
-+#define EV_METRIC_PERCENT(metric)					\
-+static int ev_percent_##metric(struct hist_entry *he)			\
-+{									\
-+	struct kvm_event *event;					\
-+	struct perf_kvm_stat *perf_kvm;					\
-+									\
-+	event = container_of(he, struct kvm_event, he);			\
-+	perf_kvm = event->perf_kvm;					\
-+									\
-+	return percent(get_event_##metric(event, perf_kvm->trace_vcpu),	\
-+		       perf_kvm->total_##metric);			\
-+}
-+
-+EV_METRIC_PERCENT(time)
-+EV_METRIC_PERCENT(count)
-+
-+static int ev_entry_time_precent(struct perf_hpp_fmt *fmt,
-+				 struct perf_hpp *hpp,
-+				 struct hist_entry *he)
++static int kvm_browser__title(struct hist_browser *browser,
++			      char *buf, size_t size)
 +{
-+	int width = fmt_width(fmt, hpp, he->hists);
-+	double per;
-+	char buf[10];
-+
-+	per = ev_percent_time(he);
-+	return scnprintf(hpp->buf, hpp->size, "%*s", width, PERC_STR(buf, per));
++	scnprintf(buf, size, "KVM event statistics (%lu entries)",
++		  browser->nr_non_filtered_entries);
++	return 0;
 +}
 +
-+static int64_t
-+ev_cmp_time_precent(struct perf_hpp_fmt *fmt __maybe_unused,
-+		    struct hist_entry *left, struct hist_entry *right)
++static struct hist_browser*
++perf_kvm_browser__new(struct hists *hists)
 +{
-+	double per_left;
-+	double per_right;
++	struct hist_browser *browser = hist_browser__new(hists);
 +
-+	per_left  = ev_percent_time(left);
-+	per_right = ev_percent_time(right);
++	if (browser)
++		browser->title = kvm_browser__title;
 +
-+	return per_left - per_right;
++	return browser;
 +}
 +
-+static struct kvm_dimension dim_time_percent = {
-+	.header		= "Time%",
-+	.name		= "percent_time",
-+	.cmp		= ev_cmp_time_precent,
-+	.entry		= ev_entry_time_precent,
-+	.width		= 12,
-+};
-+
-+static int ev_entry_count_precent(struct perf_hpp_fmt *fmt,
-+				  struct perf_hpp *hpp,
-+				  struct hist_entry *he)
++static int kvm__hists_browse(struct hists *hists)
 +{
-+	int width = fmt_width(fmt, hpp, he->hists);
-+	double per;
-+	char buf[10];
++	struct hist_browser *browser;
++	int key = -1;
 +
-+	per = ev_percent_count(he);
-+	return scnprintf(hpp->buf, hpp->size, "%*s", width, PERC_STR(buf, per));
++	browser = perf_kvm_browser__new(hists);
++	if (browser == NULL)
++		return -1;
++
++	/* reset abort key so that it can get Ctrl-C as a key */
++	SLang_reset_tty();
++	SLang_init_tty(0, 0, 0);
++
++	kvm_browser__update_nr_entries(browser);
++
++	while (1) {
++		key = hist_browser__run(browser, "? - help", true, 0);
++
++		switch (key) {
++		case 'q':
++			goto out;
++		default:
++			break;
++		}
++	}
++
++out:
++	hist_browser__delete(browser);
++	return 0;
 +}
 +
-+static int64_t
-+ev_cmp_count_precent(struct perf_hpp_fmt *fmt __maybe_unused,
-+		     struct hist_entry *left, struct hist_entry *right)
++static void kvm_display(struct perf_kvm_stat *kvm)
 +{
-+	double per_left;
-+	double per_right;
-+
-+	per_left  = ev_percent_count(left);
-+	per_right = ev_percent_count(right);
-+
-+	return per_left - per_right;
++	if (!use_browser)
++		print_result(kvm);
++	else
++		kvm__hists_browse(&kvm_hists.hists);
 +}
 +
-+static struct kvm_dimension dim_count_percent = {
-+	.header		= "Sample%",
-+	.name		= "percent_sample",
-+	.cmp		= ev_cmp_count_precent,
-+	.entry		= ev_entry_count_precent,
-+	.width		= 12,
-+};
++#else
 +
- static struct kvm_dimension *dimensions[] = {
- 	&dim_event,
- 	&dim_time,
-+	&dim_time_percent,
- 	&dim_count,
-+	&dim_count_percent,
- 	&dim_max_time,
- 	&dim_min_time,
- 	&dim_mean_time,
-@@ -875,7 +970,8 @@ static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
++static void kvm_display(struct perf_kvm_stat *kvm)
++{
++	use_browser = 0;
++	print_result(kvm);
++}
++
++#endif /* HAVE_SLANG_SUPPORT */
++
+ static const char *get_filename_for_perf_kvm(void)
+ {
+ 	const char *filename;
+@@ -970,12 +1060,15 @@ static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
  
  static void sort_result(struct perf_kvm_stat *kvm)
  {
--	const char *output_columns = "ev_name,sample,time,max_t,min_t,mean_t";
-+	const char *output_columns = "ev_name,sample,percent_sample,"
-+				     "time,percent_time,max_t,min_t,mean_t";
++	struct ui_progress prog;
+ 	const char *output_columns = "ev_name,sample,percent_sample,"
+ 				     "time,percent_time,max_t,min_t,mean_t";
  
  	kvm_hists__reinit(output_columns, kvm->sort_key);
++	ui_progress__init(&prog, kvm_hists.hists.nr_entries, "Sorting...");
  	hists__collapse_resort(&kvm_hists.hists, NULL);
+ 	hists__output_resort_cb(&kvm_hists.hists, NULL, filter_cb);
++	ui_progress__finish();
+ }
+ 
+ static void print_vcpu_info(struct perf_kvm_stat *kvm)
+@@ -1577,7 +1670,14 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
+ 	if (!register_kvm_events_ops(kvm))
+ 		goto exit;
+ 
+-	setup_pager();
++	if (kvm->use_stdio) {
++		use_browser = 0;
++		setup_pager();
++	} else {
++		use_browser = 1;
++	}
++
++	setup_browser(false);
+ 
+ 	kvm_hists__init();
+ 
+@@ -1586,7 +1686,7 @@ static int kvm_events_report_vcpu(struct perf_kvm_stat *kvm)
+ 		goto exit;
+ 
+ 	sort_result(kvm);
+-	print_result(kvm);
++	kvm_display(kvm);
+ 
+ exit:
+ 	return ret;
+@@ -1693,6 +1793,7 @@ kvm_events_report(struct perf_kvm_stat *kvm, int argc, const char **argv)
+ 		OPT_STRING('p', "pid", &kvm->opts.target.pid, "pid",
+ 			   "analyze events only for given process id(s)"),
+ 		OPT_BOOLEAN('f', "force", &kvm->force, "don't complain, do it"),
++		OPT_BOOLEAN(0, "stdio", &kvm->use_stdio, "use the stdio interface"),
+ 		OPT_END()
+ 	};
+ 
+@@ -1710,6 +1811,10 @@ kvm_events_report(struct perf_kvm_stat *kvm, int argc, const char **argv)
+ 					   kvm_events_report_options);
+ 	}
+ 
++#ifndef HAVE_SLANG_SUPPORT
++	kvm->use_stdio = true;
++#endif
++
+ 	if (!kvm->opts.target.pid)
+ 		kvm->opts.target.system_wide = true;
+ 
+diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
+index 35d03894fac3..bc6c8e38ef50 100644
+--- a/tools/perf/util/kvm-stat.h
++++ b/tools/perf/util/kvm-stat.h
+@@ -103,6 +103,7 @@ struct perf_kvm_stat {
+ 	unsigned int display_time;
+ 	bool live;
+ 	bool force;
++	bool use_stdio;
+ };
+ 
+ struct kvm_reg_events_ops {
 -- 
 2.34.1
 
