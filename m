@@ -2,418 +2,182 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31389C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 13:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5FFC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 13:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbjCON1i (ORCPT
+        id S232096AbjCONbj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 09:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
+        Wed, 15 Mar 2023 09:31:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231401AbjCON1h (ORCPT
+        with ESMTP id S232242AbjCONbT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 09:27:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4337DFF24;
-        Wed, 15 Mar 2023 06:27:34 -0700 (PDT)
+        Wed, 15 Mar 2023 09:31:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5F7974BF;
+        Wed, 15 Mar 2023 06:30:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C0A261D8E;
-        Wed, 15 Mar 2023 13:27:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71D08C433EF;
-        Wed, 15 Mar 2023 13:27:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B596661D97;
+        Wed, 15 Mar 2023 13:30:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99D0C433EF;
+        Wed, 15 Mar 2023 13:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678886852;
-        bh=5e7jV98iMpsWDXI3RR0Ay60Q2zEjHsmzina9SQVuoRU=;
+        s=k20201202; t=1678887053;
+        bh=++bKB4oS9vZ1gn+XGEOhRptCdRrXqRvQkYHWuuXpgjA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kctpftor/evQerfdmOhvf36cVbbTqIqmDidA8WK9eHGGaEZSew+ninvkHql/14Imu
-         jjjdUDR0w5k2v9PFT1rYhYbtvMZ2gq9ELXNLo47s217ngiht4sQ6i38DCkdHKurD5V
-         hVAvkt9WkqDNTt35lV0dTGhxX6S8miAgCZBNk1zy1ChyQgyOgVwprofY0d6Fyx7Gqa
-         8Rh2lCBX5FmPokRQazO9M/oo5Irm0+AgIn/JGedWhgMY2peCa4d467Vz7uVdaoRfIy
-         +kj90WwbM6Yij64w8IZ4wdasMuJzH9/VqFoSc2G5wpClUrZPi1HezVk2KzM6D333rX
-         KViC40iU36Rkg==
+        b=dlrSML9XqaN+5WDrn+B0QRgEEGtAML66JWraXTuS9cy2pgzhjqw5VaYfeE7w/phI+
+         pBGK0NpRlAZWSBEhoNVJRMZyg5ypmpDWGMgY4cFM8NnkjE1N/JDLD5NbX6f/22GCrt
+         LOWSGXycbGnXl1JJiCJhkkmPY6Fts4khvI3sCrCrJcutxDIrkMob67k5e+ObpbW99J
+         BBcmnv3JLAMqfNgpEsfToL8q32Fje8YF/zDCvVQA6pism14zDtY5qVwEJXieq2Hm8Z
+         vwwyatdfC0BpX0ZRoa2/p3E66HY2UZ8RsFmFCcpGSsHvlCdlnpEv22f639xlBrFAJS
+         5d8nrbqeGby9Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CE43A4049F; Wed, 15 Mar 2023 10:27:29 -0300 (-03)
-Date:   Wed, 15 Mar 2023 10:27:29 -0300
+        id AF12D4049F; Wed, 15 Mar 2023 10:30:49 -0300 (-03)
+Date:   Wed, 15 Mar 2023 10:30:49 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf script: Fix Python support when no libtraceevent
-Message-ID: <ZBHHwaAtfdftRCyj@kernel.org>
-References: <20230315084321.14563-1-adrian.hunter@intel.com>
+To:     "liuwenyu (D)" <liuwenyu7@huawei.com>
+Cc:     mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, brauner@kernel.org,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linfeilong@huawei.com,
+        "hewenliang (C)" <hewenliang4@huawei.com>, yeyunfeng@huawei.com
+Subject: Re: [PATCH v2 RESEND] perf top: Fix rare segfault in
+ thread__comm_len()
+Message-ID: <ZBHIifoDwAMwz/Qv@kernel.org>
+References: <322bfb49-840b-f3b6-9ef1-f9ec3435b07e@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230315084321.14563-1-adrian.hunter@intel.com>
+In-Reply-To: <322bfb49-840b-f3b6-9ef1-f9ec3435b07e@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 15, 2023 at 10:43:21AM +0200, Adrian Hunter escreveu:
-> Python scripting can be used without libtraceevent. In particular,
-> scripting for Intel PT does not use tracepoints, and so does not need
-> libtraceevent support.
-> 
-> Alter the build and employ conditional compilation to allow Python
-> scripting without libtraceevent.
-> 
-> Example:
+Em Wed, Mar 15, 2023 at 02:42:17PM +0800, liuwenyu (D) escreveu:
+> In thread__comm_len(),strlen() is called outside of the
+> thread->comm_lock critical section,which may cause a UAF
+> problems if comm__free() is called by the process_thread
+> concurrently.
 
-Thanks, applied.
+Applied, next time you resend a patch just to fix formatting, without
+changing what the patch does, please collect tags provided for the
+previous version, like the one from Namhyung:
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+I did it because I saw it for v1, so added now.
+
+Thanks,
 
 - Arnaldo
-
  
->  Before:
+> backtrace of the core file is as follows:
 > 
->     $ ldd `which perf` | grep -i python
->     $ ldd `which perf` | grep -i libtraceevent
->     $ perf record -e intel_pt//u uname
->     Linux
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.031 MB perf.data ]
->     $ perf script intel-pt-events.py |& head -3
->       Error: Couldn't find script `intel-pt-events.py'
+>     (gdb) bt
+>     #0  __strlen_evex () at ../sysdeps/x86_64/multiarch/strlen-evex.S:77
+>     #1  0x000055ad15d31de5 in thread__comm_len (thread=0x7f627d20e300) at util/thread.c:320
+>     #2  0x000055ad15d4fade in hists__calc_col_len (h=0x7f627d295940, hists=0x55ad1772bfe0)
+>         at util/hist.c:103
+>     #3  hists__calc_col_len (hists=0x55ad1772bfe0, h=0x7f627d295940) at util/hist.c:79
+>     #4  0x000055ad15d52c8c in output_resort (hists=hists@entry=0x55ad1772bfe0, prog=0x0,
+>         use_callchain=false, cb=cb@entry=0x0, cb_arg=0x0) at util/hist.c:1926
+>     #5  0x000055ad15d530a4 in evsel__output_resort_cb (evsel=evsel@entry=0x55ad1772bde0,
+>         prog=prog@entry=0x0, cb=cb@entry=0x0, cb_arg=cb_arg@entry=0x0) at util/hist.c:1945
+>     #6  0x000055ad15d53110 in evsel__output_resort (evsel=evsel@entry=0x55ad1772bde0,
+>         prog=prog@entry=0x0) at util/hist.c:1950
+>     #7  0x000055ad15c6ae9a in perf_top__resort_hists (t=t@entry=0x7ffcd9cbf4f0) at builtin-top.c:311
+>     #8  0x000055ad15c6cc6d in perf_top__print_sym_table (top=0x7ffcd9cbf4f0) at builtin-top.c:346
+>     #9  display_thread (arg=0x7ffcd9cbf4f0) at builtin-top.c:700
+>     #10 0x00007f6282fab4fa in start_thread (arg=<optimized out>) at pthread_create.c:443
+>     #11 0x00007f628302e200 in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:81
 > 
->      See perf script -l for available scripts.
+> The reason is that strlen() get a pointer to a memory that has been freed.
 > 
->  After:
+> The string pointer is stored in the structure comm_str, which corresponds
+> to a rb_tree node,when the node is erased, the memory of the string is also freed.
 > 
->     $ ldd `which perf` | grep -i python
->             libpython3.10.so.1.0 => /lib/x86_64-linux-gnu/libpython3.10.so.1.0 (0x00007f4bac400000)
->     $ ldd `which perf` | grep -i libtraceevent
->     $ perf script intel-pt-events.py | head
->     Intel PT Branch Trace, Power Events, Event Trace and PTWRITE
->          Switch In    8021/8021  [000]     11234.097713404     0/0
->            perf-exec  8021/8021  [000]     11234.098041726       psb                        offset: 0x0                0 [unknown] ([unknown])
->            perf-exec  8021/8021  [000]     11234.098041726       cbr                         45  freq: 4505 MHz  (161%)                0 [unknown] ([unknown])
->                uname  8021/8021  [000]     11234.098082170  branches:uH  tr strt                              0 [unknown] ([unknown]) => 7f3a8b9422b0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->                uname  8021/8021  [000]     11234.098082379  branches:uH  tr end                    7f3a8b9422b0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2) => 0 [unknown] ([unknown])
->                uname  8021/8021  [000]     11234.098083629  branches:uH  tr strt                              0 [unknown] ([unknown]) => 7f3a8b9422b0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->                uname  8021/8021  [000]     11234.098083629  branches:uH  call                      7f3a8b9422b3 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2) => 7f3a8b943050 _dl_start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
->                uname  8021/8021  [000]     11234.098083837  branches:uH  tr end                    7f3a8b943060 _dl_start+0x10 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2) => 0 [unknown] ([unknown])  IPC: 0.01 (9/938)
->                uname  8021/8021  [000]     11234.098084670  branches:uH  tr strt                              0 [unknown] ([unknown]) => 7f3a8b943060 _dl_start+0x10 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+> In thread__comm_len(),it gets the pointer within the thread->comm_lock critical section,
+> but passed to strlen() outside of the thread->comm_lock critical section, and the perf
+> process_thread may called comm__free() concurrently, cause this segfault problem.
 > 
-> Fixes: 378ef0f5d9d7 ("perf build: Use libtraceevent from the system")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> The process is as follows:
+> 
+> display_thread                                  process_thread
+> --------------                                  --------------
+> 
+> thread__comm_len
+>   -> thread__comm_str
+>        # held the comm read lock
+>     -> __thread__comm_str(thread)
+>        # release the comm read lock
+>                                                 thread__delete
+>                                                      # held the comm write lock
+>                                                   -> comm__free
+>                                                     -> comm_str__put(comm->comm_str)
+>                                                       -> zfree(&cs->str)
+>                                                      # release the comm write lock
+>       # The memory of the string pointed
+>         to by comm has been free.
+>     -> thread->comm_len = strlen(comm);
+> 
+> This patch expand the critical section range of thread->comm_lock in thread__comm_len(),
+> to make strlen() called safe.
+> 
+> Signed-off-by: Wenyu Liu  <liuwenyu7@huawei.com>
 > ---
->  tools/perf/Build                              |  2 +-
->  tools/perf/builtin-script.c                   |  2 +-
->  tools/perf/scripts/Build                      |  4 +-
->  .../perf/scripts/python/Perf-Trace-Util/Build |  2 +-
->  .../scripts/python/Perf-Trace-Util/Context.c  |  4 +
->  tools/perf/util/Build                         |  2 +-
->  tools/perf/util/scripting-engines/Build       |  2 +-
->  .../scripting-engines/trace-event-python.c    | 75 +++++++++++++------
->  tools/perf/util/trace-event-scripting.c       |  9 ++-
->  9 files changed, 72 insertions(+), 30 deletions(-)
+> v1 -> v2
+>  - format the patch to be applied
 > 
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index 6dd67e502295..aa7623622834 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -56,6 +56,6 @@ CFLAGS_builtin-report.o	   += -DDOCDIR="BUILD_STR($(srcdir_SQ)/Documentation)"
->  perf-y += util/
->  perf-y += arch/
->  perf-y += ui/
-> -perf-$(CONFIG_LIBTRACEEVENT) += scripts/
-> +perf-y += scripts/
->  
->  gtk-y += ui/gtk/
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 522226114263..976f8bfe099c 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2313,8 +2313,8 @@ static void setup_scripting(void)
->  {
->  #ifdef HAVE_LIBTRACEEVENT
->  	setup_perl_scripting();
-> -	setup_python_scripting();
->  #endif
-> +	setup_python_scripting();
+>  tools/perf/util/thread.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+> index e3e5427e1c3c..a2490a20eb56 100644
+> --- a/tools/perf/util/thread.c
+> +++ b/tools/perf/util/thread.c
+> @@ -311,17 +311,30 @@ const char *thread__comm_str(struct thread *thread)
+>  	return str;
 >  }
 >  
->  static int flush_scripting(void)
-> diff --git a/tools/perf/scripts/Build b/tools/perf/scripts/Build
-> index 68d4b54574ad..7d8e2e57faac 100644
-> --- a/tools/perf/scripts/Build
-> +++ b/tools/perf/scripts/Build
-> @@ -1,2 +1,4 @@
-> -perf-$(CONFIG_LIBPERL)   += perl/Perf-Trace-Util/
-> +ifeq ($(CONFIG_LIBTRACEEVENT),y)
-> +  perf-$(CONFIG_LIBPERL)   += perl/Perf-Trace-Util/
-> +endif
->  perf-$(CONFIG_LIBPYTHON) += python/Perf-Trace-Util/
-> diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Build b/tools/perf/scripts/python/Perf-Trace-Util/Build
-> index d5fed4e42617..7d0e33ce6aba 100644
-> --- a/tools/perf/scripts/python/Perf-Trace-Util/Build
-> +++ b/tools/perf/scripts/python/Perf-Trace-Util/Build
-> @@ -1,3 +1,3 @@
-> -perf-$(CONFIG_LIBTRACEEVENT) += Context.o
-> +perf-y += Context.o
->  
->  CFLAGS_Context.o += $(PYTHON_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-nested-externs
-> diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-> index 895f5fc23965..b0d449f41650 100644
-> --- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-> +++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-> @@ -59,6 +59,7 @@ static struct scripting_context *get_scripting_context(PyObject *args)
->  	return get_args(args, "context", NULL);
->  }
->  
-> +#ifdef HAVE_LIBTRACEEVENT
->  static PyObject *perf_trace_context_common_pc(PyObject *obj, PyObject *args)
->  {
->  	struct scripting_context *c = get_scripting_context(args);
-> @@ -90,6 +91,7 @@ static PyObject *perf_trace_context_common_lock_depth(PyObject *obj,
->  
->  	return Py_BuildValue("i", common_lock_depth(c));
->  }
-> +#endif
->  
->  static PyObject *perf_sample_insn(PyObject *obj, PyObject *args)
->  {
-> @@ -178,12 +180,14 @@ static PyObject *perf_sample_srccode(PyObject *obj, PyObject *args)
->  }
->  
->  static PyMethodDef ContextMethods[] = {
-> +#ifdef HAVE_LIBTRACEEVENT
->  	{ "common_pc", perf_trace_context_common_pc, METH_VARARGS,
->  	  "Get the common preempt count event field value."},
->  	{ "common_flags", perf_trace_context_common_flags, METH_VARARGS,
->  	  "Get the common flags event field value."},
->  	{ "common_lock_depth", perf_trace_context_common_lock_depth,
->  	  METH_VARARGS,	"Get the common lock depth event field value."},
-> +#endif
->  	{ "perf_sample_insn", perf_sample_insn,
->  	  METH_VARARGS,	"Get the machine code instruction."},
->  	{ "perf_set_itrace_options", perf_set_itrace_options,
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 918b501f9bd8..4868e3bf7df9 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -78,7 +78,7 @@ perf-y += pmu-bison.o
->  perf-y += pmu-hybrid.o
->  perf-y += svghelper.o
->  perf-$(CONFIG_LIBTRACEEVENT) += trace-event-info.o
-> -perf-$(CONFIG_LIBTRACEEVENT) += trace-event-scripting.o
-> +perf-y += trace-event-scripting.o
->  perf-$(CONFIG_LIBTRACEEVENT) += trace-event.o
->  perf-$(CONFIG_LIBTRACEEVENT) += trace-event-parse.o
->  perf-$(CONFIG_LIBTRACEEVENT) += trace-event-read.o
-> diff --git a/tools/perf/util/scripting-engines/Build b/tools/perf/util/scripting-engines/Build
-> index 2c96aa3cc1ec..c220fec97032 100644
-> --- a/tools/perf/util/scripting-engines/Build
-> +++ b/tools/perf/util/scripting-engines/Build
-> @@ -1,7 +1,7 @@
->  ifeq ($(CONFIG_LIBTRACEEVENT),y)
->    perf-$(CONFIG_LIBPERL)   += trace-event-perl.o
-> -  perf-$(CONFIG_LIBPYTHON) += trace-event-python.o
->  endif
-> +perf-$(CONFIG_LIBPYTHON) += trace-event-python.o
->  
->  CFLAGS_trace-event-perl.o += $(PERL_EMBED_CCOPTS) -Wno-redundant-decls -Wno-strict-prototypes -Wno-unused-parameter -Wno-shadow -Wno-nested-externs -Wno-undef -Wno-switch-default -Wno-bad-function-cast -Wno-declaration-after-statement -Wno-switch-enum
->  
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 2c2697c5d025..0f4ef61f2ffa 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -30,7 +30,9 @@
->  #include <linux/bitmap.h>
->  #include <linux/compiler.h>
->  #include <linux/time64.h>
-> +#ifdef HAVE_LIBTRACEEVENT
->  #include <traceevent/event-parse.h>
-> +#endif
->  
->  #include "../build-id.h"
->  #include "../counts.h"
-> @@ -87,18 +89,21 @@ PyMODINIT_FUNC initperf_trace_context(void);
->  PyMODINIT_FUNC PyInit_perf_trace_context(void);
->  #endif
->  
-> +#ifdef HAVE_LIBTRACEEVENT
->  #define TRACE_EVENT_TYPE_MAX				\
->  	((1 << (sizeof(unsigned short) * 8)) - 1)
->  
->  static DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
->  
-> -#define MAX_FIELDS	64
->  #define N_COMMON_FIELDS	7
->  
-> -extern struct scripting_context *scripting_context;
-> -
->  static char *cur_field_name;
->  static int zero_flag_atom;
-> +#endif
-> +
-> +#define MAX_FIELDS	64
-> +
-> +extern struct scripting_context *scripting_context;
->  
->  static PyObject *main_module, *main_dict;
->  
-> @@ -153,6 +158,26 @@ static PyObject *get_handler(const char *handler_name)
->  	return handler;
->  }
->  
-> +static void call_object(PyObject *handler, PyObject *args, const char *die_msg)
+> +static int __thread__comm_len(struct thread *thread, const char *comm)
 > +{
-> +	PyObject *retval;
+> +	if (!comm)
+> +		return 0;
+> +	thread->comm_len = strlen(comm);
 > +
-> +	retval = PyObject_CallObject(handler, args);
-> +	if (retval == NULL)
-> +		handler_call_die(die_msg);
-> +	Py_DECREF(retval);
+> +	return thread->comm_len;
 > +}
 > +
-> +static void try_call_object(const char *handler_name, PyObject *args)
-> +{
-> +	PyObject *handler;
+>  /* CHECKME: it should probably better return the max comm len from its comm list */
+>  int thread__comm_len(struct thread *thread)
+>  {
+> -	if (!thread->comm_len) {
+> -		const char *comm = thread__comm_str(thread);
+> -		if (!comm)
+> -			return 0;
+> -		thread->comm_len = strlen(comm);
+> +	int comm_len = thread->comm_len;
 > +
-> +	handler = get_handler(handler_name);
-> +	if (handler)
-> +		call_object(handler, args, handler_name);
-> +}
+> +	if (!comm_len) {
+> +		const char *comm;
 > +
-> +#ifdef HAVE_LIBTRACEEVENT
->  static int get_argument_count(PyObject *handler)
->  {
->  	int arg_count = 0;
-> @@ -181,25 +206,6 @@ static int get_argument_count(PyObject *handler)
->  	return arg_count;
+> +		down_read(&thread->comm_lock);
+> +		comm = __thread__comm_str(thread);
+> +		comm_len = __thread__comm_len(thread, comm);
+> +		up_read(&thread->comm_lock);
+>  	}
+>  
+> -	return thread->comm_len;
+> +	return comm_len;
 >  }
 >  
-> -static void call_object(PyObject *handler, PyObject *args, const char *die_msg)
-> -{
-> -	PyObject *retval;
-> -
-> -	retval = PyObject_CallObject(handler, args);
-> -	if (retval == NULL)
-> -		handler_call_die(die_msg);
-> -	Py_DECREF(retval);
-> -}
-> -
-> -static void try_call_object(const char *handler_name, PyObject *args)
-> -{
-> -	PyObject *handler;
-> -
-> -	handler = get_handler(handler_name);
-> -	if (handler)
-> -		call_object(handler, args, handler_name);
-> -}
-> -
->  static void define_value(enum tep_print_arg_type field_type,
->  			 const char *ev_name,
->  			 const char *field_name,
-> @@ -379,6 +385,7 @@ static PyObject *get_field_numeric_entry(struct tep_event *event,
->  		obj = list;
->  	return obj;
->  }
-> +#endif
->  
->  static const char *get_dsoname(struct map *map)
->  {
-> @@ -906,6 +913,7 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  	return dict;
->  }
->  
-> +#ifdef HAVE_LIBTRACEEVENT
->  static void python_process_tracepoint(struct perf_sample *sample,
->  				      struct evsel *evsel,
->  				      struct addr_location *al,
-> @@ -1035,6 +1043,16 @@ static void python_process_tracepoint(struct perf_sample *sample,
->  
->  	Py_DECREF(t);
->  }
-> +#else
-> +static void python_process_tracepoint(struct perf_sample *sample __maybe_unused,
-> +				      struct evsel *evsel __maybe_unused,
-> +				      struct addr_location *al __maybe_unused,
-> +				      struct addr_location *addr_al __maybe_unused)
-> +{
-> +	fprintf(stderr, "Tracepoint events are not supported because "
-> +			"perf is not linked with libtraceevent.\n");
-> +}
-> +#endif
->  
->  static PyObject *tuple_new(unsigned int sz)
->  {
-> @@ -1965,6 +1983,7 @@ static int python_stop_script(void)
->  	return 0;
->  }
->  
-> +#ifdef HAVE_LIBTRACEEVENT
->  static int python_generate_script(struct tep_handle *pevent, const char *outfile)
->  {
->  	int i, not_first, count, nr_events;
-> @@ -2155,6 +2174,18 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
->  
->  	return 0;
->  }
-> +#else
-> +static int python_generate_script(struct tep_handle *pevent __maybe_unused,
-> +				  const char *outfile __maybe_unused)
-> +{
-> +	fprintf(stderr, "Generating Python perf-script is not supported."
-> +		"  Install libtraceevent and rebuild perf to enable it.\n"
-> +		"For example:\n  # apt install libtraceevent-dev (ubuntu)"
-> +		"\n  # yum install libtraceevent-devel (Fedora)"
-> +		"\n  etc.\n");
-> +	return -1;
-> +}
-> +#endif
->  
->  struct scripting_ops python_scripting_ops = {
->  	.name			= "Python",
-> diff --git a/tools/perf/util/trace-event-scripting.c b/tools/perf/util/trace-event-scripting.c
-> index 56175c53f9af..bd0000300c77 100644
-> --- a/tools/perf/util/trace-event-scripting.c
-> +++ b/tools/perf/util/trace-event-scripting.c
-> @@ -9,7 +9,9 @@
->  #include <stdlib.h>
->  #include <string.h>
->  #include <errno.h>
-> +#ifdef HAVE_LIBTRACEEVENT
->  #include <traceevent/event-parse.h>
-> +#endif
->  
->  #include "debug.h"
->  #include "trace-event.h"
-> @@ -27,10 +29,11 @@ void scripting_context__update(struct scripting_context *c,
->  			       struct addr_location *addr_al)
->  {
->  	c->event_data = sample->raw_data;
-> +	c->pevent = NULL;
-> +#ifdef HAVE_LIBTRACEEVENT
->  	if (evsel->tp_format)
->  		c->pevent = evsel->tp_format->tep;
-> -	else
-> -		c->pevent = NULL;
-> +#endif
->  	c->event = event;
->  	c->sample = sample;
->  	c->evsel = evsel;
-> @@ -122,6 +125,7 @@ void setup_python_scripting(void)
->  }
->  #endif
->  
-> +#ifdef HAVE_LIBTRACEEVENT
->  static void print_perl_unsupported_msg(void)
->  {
->  	fprintf(stderr, "Perl scripting not supported."
-> @@ -186,3 +190,4 @@ void setup_perl_scripting(void)
->  	register_perl_scripting(&perl_scripting_ops);
->  }
->  #endif
-> +#endif
+>  size_t thread__fprintf(struct thread *thread, FILE *fp)
 > -- 
-> 2.34.1
-> 
+> 2.36.1
 
 -- 
 
