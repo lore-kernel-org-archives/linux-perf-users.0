@@ -2,179 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD92C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 07:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD82C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 08:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231504AbjCOHVm (ORCPT
+        id S231451AbjCOIdy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 03:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
+        Wed, 15 Mar 2023 04:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231530AbjCOHV3 (ORCPT
+        with ESMTP id S229878AbjCOIdx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 03:21:29 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF4A6923A;
-        Wed, 15 Mar 2023 00:21:13 -0700 (PDT)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32F634iW013971;
-        Wed, 15 Mar 2023 07:21:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=fCdCFK+wRShOfc45RRYz+BzRBwmmZNXzRilOrAjpY3A=;
- b=NmquYZSFToMHM758eKR1u37yBVQrq+T79yJ2i+UGazt+MypZB/yx1929Czj3wAD6zY5Y
- zZ85OIAMHo9DiGeh76Pa/Gl9WzCtS7mLEZSmcj1L3mNLEzxryWFjgGSHBVHo9EwpGXIH
- oVuvduZVEvTe0ids1Vji5jjleJaRxKXYa0jR9aq6cQrA0iZmnauV5YHoCQKvFpEmxlAN
- 91QgeJzbpx7lacCDBlzcnIOON6A90aFq0EV52j/iKODiG1IyTUpJr9lmvoNcD4RLy1b6
- ihBDTbfZtYJYh4oitK6lNIPBQXkYzfryrTfElT2R7wUhebbiNKQRJ6zOdOq+JR2OZghJ ZA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pb6wmuk3y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Mar 2023 07:21:10 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32F7B9GN018688;
-        Wed, 15 Mar 2023 07:21:10 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pb6wmuk2s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Mar 2023 07:21:10 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32EN62eg008691;
-        Wed, 15 Mar 2023 07:21:08 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pb29sgefk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Mar 2023 07:21:07 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32F7L4jV56361458
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Mar 2023 07:21:04 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51FC12004D;
-        Wed, 15 Mar 2023 07:21:04 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E19B020043;
-        Wed, 15 Mar 2023 07:21:03 +0000 (GMT)
-Received: from [9.171.86.252] (unknown [9.171.86.252])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Mar 2023 07:21:03 +0000 (GMT)
-Message-ID: <432b0083-3e22-adf8-2699-903c71e7dd57@linux.ibm.com>
-Date:   Wed, 15 Mar 2023 08:21:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com
-References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
- <20230313080201.2440201-2-tmricht@linux.ibm.com>
- <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
- <ZA9sYL/re/aNVpo+@kernel.org>
- <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
- <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
-Content-Language: en-US
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: HkMobC8TzWcneDtdiyklhr0TU82J5QMr
-X-Proofpoint-GUID: yO9Vxiv1qwFZQ7W3ufo85IIrnaDFedKB
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Wed, 15 Mar 2023 04:33:53 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2C047437;
+        Wed, 15 Mar 2023 01:33:46 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id rj10so7435403pjb.4;
+        Wed, 15 Mar 2023 01:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678869226;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l+Hh4NEFdu23NPkrKY/S6kujZJVpr7cH2s1IcB94ZS8=;
+        b=DFJfdO3xq/W/yhPfb2XHJPh5VTmDSx3Wp2/N/1oGzZbkyZESpMb4x4mISadDh9qgYC
+         pLs6QDSRoJrQf2LJzVLda7ARDZKqQD/sn3iP9IucvWpUD+15vPJ1tOLBxQlA1fcUmTD/
+         Oy5OlP1WAS74Mopi2HB78Oh05Mz/+2D7YIEsQqp+ZofN83afLT7empxbHKHstl5PRL/0
+         iYxkRSsURsZRQBefpCG2tFXwV0bUDTDgsVnyk2hCnwfpAxsREH5mFXbbM3siAYwZJh2s
+         BgiZiJ7XN7p/ZXHtwXgfDfBG3eLFKrsxceq/kZS5dmaSX8NMldS6QCH+RANLPhI8FWFv
+         WpYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678869226;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l+Hh4NEFdu23NPkrKY/S6kujZJVpr7cH2s1IcB94ZS8=;
+        b=s0jTyH/BzbQ5lrk9kYtxowKDWc77Lg+kfWtSqm/oITw/AXS5DuD4CGq+yGdZn7554Z
+         vbFqlIyOsPz5yojMEXujPqvFsHpgCq/SvfBxaahukTW5VhyVQ06kbRstRvHuWpTc5IDC
+         Da7Tt8Xn3umnad3BO8Iu8LdORYzaJeqS0pN+VtJvxNiObRC+qwUv2ro48Svf5Dys6hiZ
+         lxUmC6vphWG10T8vDWs4Q+QSbU0CMtIbgaJGwGS2gPqocTHhla29u1/1PtiNFlhqQoU3
+         c8SbDxxnsZGbDQiuum5zlmmEjm+Dd7zC+D9xuRwbQwJaFG8j+w+fjEwEakSpzF1GU9uy
+         6cRg==
+X-Gm-Message-State: AO0yUKVcyS71wakckLfsTDuxe37Dx/caKSVV58jco6ttXa06XSUV+y8A
+        yi+9DP8cEzltqjSesvYUhf8=
+X-Google-Smtp-Source: AK7set/wEiuyevyaiw6M5NAEko33WKy2otbz/it60gU93sXh4o7D/snZwnz9Lw3Rgy6sxGqUcDRXNQ==
+X-Received: by 2002:a05:6a20:431a:b0:cb:aacb:312c with SMTP id h26-20020a056a20431a00b000cbaacb312cmr45612179pzk.27.1678869226123;
+        Wed, 15 Mar 2023 01:33:46 -0700 (PDT)
+Received: from [192.168.50.71] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id r3-20020a654983000000b004f27761a9e7sm2795426pgs.12.2023.03.15.01.33.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Mar 2023 01:33:45 -0700 (PDT)
+Message-ID: <4f536461-ee2c-73a0-9d28-668a99f8a027@gmail.com>
+Date:   Wed, 15 Mar 2023 17:33:40 +0900
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-15_02,2023-03-14_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 mlxscore=0 bulkscore=0 clxscore=1015 adultscore=0
- impostorscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2302240000 definitions=main-2303150061
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [RESEND PATCH] perf tools: Add levenshtein ENOMEM check
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230315061132.25165-1-p4ranlee@gmail.com>
+From:   Paran Lee <p4ranlee@gmail.com>
+In-Reply-To: <20230315061132.25165-1-p4ranlee@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/14/23 17:34, Ian Rogers wrote:
-> On Tue, Mar 14, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>
->> On 3/13/23 19:33, Arnaldo Carvalho de Melo wrote:
->>> Em Mon, Mar 13, 2023 at 08:22:44AM -0700, Ian Rogers escreveu:
->>>> On Mon, Mar 13, 2023 at 1:30 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>>>>
->>>>> Add metrics for s390 z16
->>>>> - Percentage sourced from Level 2 cache
->>>>> - Percentage sourced from Level 3 on same chip cache
->>>>> - Percentage sourced from Level 4 Local cache on same book
->>>>> - Percentage sourced from Level 4 Remote cache on different book
->>>>> - Percentage sourced from memory
->>>>>
->>>>> For details about the formulas see this documentation:
->>>>> https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
->>>>>
->>>>> Outpuf after:
->>>>>  # ./perf stat -M l4rp -- dd if=/dev/zero of=/dev/null bs=10M count=10K
->>>>>  .... dd output deleted
->>>>>
->>>>>  Performance counter stats for 'dd if=/dev/zero of=/dev/null bs=10M count=10K':
->>>>>
->>>>>                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
->>>>>            431,866      L1I_DIR_WRITES
->>>>>              2,395      IDCW_OFF_DRAWER_IV
->>>>>                  0      ICW_OFF_DRAWER
->>>>>                  0      IDCW_OFF_DRAWER_DRAWER_HIT
->>>>>              1,437      DCW_OFF_DRAWER
->>>>>        425,960,793      L1D_DIR_WRITES
->>>>>
->>>>>       12.165030699 seconds time elapsed
->>>>>
->>>>>        0.001037000 seconds user
->>>>>       12.162140000 seconds sys
->>>>>
->>>>>  #
->>>>>
->>>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->>>>> Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
->>>>
->>>> Acked-by: Ian Rogers <irogers@google.com>
->>>
->>> Thanks, applied the first two patches, please address the review
->>> suggestions for patches 3-6 and resubmit only those.
->>>
->>> The patches will be in the public perf-tools-next branch later today.
->>>
->>> - Arnaldo
->>>
->>
->> I would really prefer the current implementation without using "ScaleUnit": "100%"
->> The reason is that these formulars are given to me from the s390 Performance team.
->> They want to use the exact same formulars on all platforms running on s390
->> which includes z/OS and z/VM. This way they are sure to get the same numbers.
->>
->> Hope this background info helps.
-> 
-> For the series:
-> Acked-by: Ian Rogers <irogers@google.com>
-> 
-> Using ScaleUnit won't change the result. A ScaleUnit of "100%" means
-> scale the result up by multiplying by 100 and then apply the % after
-> the value. Another nit is having metrics that place their units in the
-> name, like _percent, is usually a sign the name can be better. Perhaps
-> we can follow up with some clean up.
-> 
-> Thanks,
-> Ian
 
-Thanks Ian,
-I put the ScaleUnit thing on my todo list and will provide a clean up...
 
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+23. 3. 15. 15:11에 Paran Lee 이(가) 쓴 글:
+> The levenshtein algorithm requires exception handling
+> when making dynamic allocations strings.
 
+Sorry about that. I modified the code to make it behave incorrectly.
+
+>  	int len1 = strlen(string1), len2 = strlen(string2);
+> -	int *row0 = malloc(sizeof(int) * (len2 + 1));
+> -	int *row1 = malloc(sizeof(int) * (len2 + 1));
+> -	int *row2 = malloc(sizeof(int) * (len2 + 1));
+> +	int *rows, *row0, *row1, *row2;
+>  	int i, j;
+>  
+> +	rows = malloc(3 * sizeof(int) * (len2 + 1));
+> +	if(!rows)
+> +		return -ENOMEM;
+> +
+> +	row0 = &rows[0];
+> +	row1 = &rows[1];
+> +	row2 = &rows[2];
+> +
+>  	for (j = 0; j <= len2; j++)
+>  		row1[j] = j * a;
+>  	for (i = 0; i < len1; i++) {
+> @@ -79,9 +85,7 @@ int levenshtein(const char *string1, const char *string2,
+>  	}
+>  
+>  	i = row1[len2];
+> -	free(row0);
+> -	free(row1);
+> -	free(row2);
+> +	free(rows);
+>  
+>  	return i;
+>  }
+
+I'll think about it a bit more and figure out how to patch it up to make
+it look better.
+
+BR
+Paran Lee
