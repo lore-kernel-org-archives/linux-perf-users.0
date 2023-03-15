@@ -2,243 +2,198 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BDC761AF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 14 Mar 2023 23:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79817C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 05:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229850AbjCNXoi (ORCPT
+        id S229648AbjCOFDu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 14 Mar 2023 19:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57144 "EHLO
+        Wed, 15 Mar 2023 01:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230111AbjCNXnM (ORCPT
+        with ESMTP id S229487AbjCOFDt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 14 Mar 2023 19:43:12 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12823D902;
-        Tue, 14 Mar 2023 16:42:49 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id v21so8160794ple.9;
-        Tue, 14 Mar 2023 16:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678837369;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AUz9t3miV/6g18NoyX2KHMC0EiLYl+hvlFPuzWmCtsU=;
-        b=XomfK7jyB3k61EfY5qAfnfRDEZ3ZWHdtMyzPh8jWVWzBgiVOnXqrV6fHKfDymD9WyU
-         K4raOz7T4Frod+/HmNne94Kl42KqEQER5atLtKI7m+uIdVs6+skh2mioVGUhQtkgM4gN
-         mUm/flgUHzBUNTQC6+mAgPfwVnVGI4re2n420OAylxucfbvWonrQheMYb6L3FCEYddov
-         nqYUhc/ZraL6nw9+wqaJzqhwTAZIH9ATmgcHxVpri+HhhsKVlJUVP6v7fzuHAjU7d9V4
-         I8+dJwwJ/yxP2QB77leav+cqL37eFVXdv0eJjk5CaSBMdInPmrmgimRbcTCvoQ1YXRuY
-         BuwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678837369;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=AUz9t3miV/6g18NoyX2KHMC0EiLYl+hvlFPuzWmCtsU=;
-        b=v/3RoHVnhJ6fI/WXB8fuXE3pSJ/xEe+jd4xD3xJ4epq6w1t7jZ3P+sBnN17apVonBx
-         Tc61su07zPsB6bStjqQqSq/d4PMw+iasvXEsCPgRm/QWD+Q0I+xj74+qbZmpzOJMrg33
-         oK71anQyMzBUEbMxYa4xH1NEbTQ5hlm2OTXuwil9ktGdozWpumNuAuZ+DJFpVSnN8iZO
-         dYaSKk6h3Onio8MhzDfsSIbZtbBTRVAywWmoJQPZNaRh7HeR+PnexJaKWrgCpfwpsSoA
-         fFSmOODiZOWkwII3bT16sKXoK7weE4Pr3LSz1fsHtks25ekxzfWvx3OkUdz0KRIIv5Iy
-         EitQ==
-X-Gm-Message-State: AO0yUKVaqscWIc/VEFEMXZu6+RoJZdFiJ1FQQqBuTxugq6ZKwztEWO+E
-        joHGfNgRoqLyfTc3HiA9lyk=
-X-Google-Smtp-Source: AK7set/lPJTrFbOOgl/ZD7hgiVjyoz/bxi1eJbzxhfRSZnVtMnMxLmIKpYVxzOJgRaTqqxjTxKEsLA==
-X-Received: by 2002:a17:903:234a:b0:19f:3797:d8de with SMTP id c10-20020a170903234a00b0019f3797d8demr879742plh.9.1678837369104;
-        Tue, 14 Mar 2023 16:42:49 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:3826:a5cd:1f1d:6c85])
-        by smtp.gmail.com with ESMTPSA id ik13-20020a170902ab0d00b0019f39e4f120sm2280806plb.18.2023.03.14.16.42.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 16:42:48 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>, Hao Luo <haoluo@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH 07/10] perf bpf filter: Add data_src sample data support
-Date:   Tue, 14 Mar 2023 16:42:34 -0700
-Message-Id: <20230314234237.3008956-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-In-Reply-To: <20230314234237.3008956-1-namhyung@kernel.org>
-References: <20230314234237.3008956-1-namhyung@kernel.org>
+        Wed, 15 Mar 2023 01:03:49 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2047.outbound.protection.outlook.com [40.107.243.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6FA12075;
+        Tue, 14 Mar 2023 22:03:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NrYsiRy9Tzv4P/ZtNWDQcUn3tqfRf/7B8DFmONsTmVd3SoZ/rmpf/QPLIpwL29/GotI8HALI+FJF74TfIfWiKOXKX5WDvyzx8Q4PpkZwdv4gOZVyWvhRziNPGmJrJsqz8NwhSSWxHowmX/4yAeUIpNpHkyaAiLfnhhSOsC5sfp2a+knqeqaoS2DosFzog0qL2/EXd7PyctpJfIYWRWERlhOCY/GEEESUeWKz3k40CeQ78/P+ApVLb14oZ4WGjl4Gc6O/wc7Z9+FIyampHTYW1e6Dbl0SMgcyGCsO/PyUguUZLV6WAMHeqDx7E5oplVAlSUteLADMf0hXAqWFcILVZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FT8EAvph0Et8GBpDF9s13Nldm29VIwrmHW7c6COPDKw=;
+ b=l8GrJBY/Y1Q61zFTPTjgObKi/3o4qdUcL7UcEAsZDIkalMCwNkMPKNi5kbzgxh+m9MTQ5rYUT1UBLX+zrEVljwT/MlwypqWOwckXC4175DN5dgPOHFFR4DAldwVmwhvuuZ0O2h80DLib4lVFUPnOVswzRvBmPTAo7or52pVoDCnyEgWiPF27LZ/TOx7GlXCigKbYeT2ID9ejezCp90GjTu/25jUjdAJ14malS1RlfD0EkEWVXgwAyNu5tVHILIelDtzxf0pHaqmFcK72JM4GuX/JqZ2Pz2fIB3z1bNnYxZNaPlTCePIuZtmvJ7VcPu6dxsEydlFaExc264JpD3R4sA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FT8EAvph0Et8GBpDF9s13Nldm29VIwrmHW7c6COPDKw=;
+ b=dUBmoPKxu+oNDNFc9sOrWYdH3DGL8GmyfbUQSDZrBA+DtbaNkM2a/1pkiqsVR2aswjc3X5mTnjKzupu0lrN9q6TWLMCKe//IqC1H4Pr4GKyUCb15lJKPI7q7Gsivh+w6zNXz+KQta+DBPFDO1HnYHHvPlRzHnpsGJEUGvic7HBU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SJ1PR12MB6218.namprd12.prod.outlook.com (2603:10b6:a03:457::17)
+ by SJ0PR12MB5612.namprd12.prod.outlook.com (2603:10b6:a03:427::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Wed, 15 Mar
+ 2023 05:03:43 +0000
+Received: from SJ1PR12MB6218.namprd12.prod.outlook.com
+ ([fe80::1554:c96b:6ce2:adc6]) by SJ1PR12MB6218.namprd12.prod.outlook.com
+ ([fe80::1554:c96b:6ce2:adc6%3]) with mapi id 15.20.6178.026; Wed, 15 Mar 2023
+ 05:03:43 +0000
+Message-ID: <786f4d69-85c6-a581-1187-2fe8a49cf7e6@amd.com>
+Date:   Wed, 15 Mar 2023 10:33:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [RFC PATCH kernel 0/2] PreventHostIBS feature for SEV-ES and SNP
+ guests
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, dave.hansen@linux.intel.com, seanjc@google.com,
+        pbonzini@redhat.com, jpoimboe@kernel.org,
+        pawan.kumar.gupta@linux.intel.com, babu.moger@amd.com,
+        sandipan.das@amd.com, jmattson@google.com, thomas.lendacky@amd.com,
+        nikunj@amd.com, ravi.bangoria@amd.com, eranian@google.com,
+        irogers@google.com, kvm@vger.kernel.org, x86@kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230206060545.628502-1-manali.shukla@amd.com>
+From:   Manali Shukla <manali.shukla@amd.com>
+In-Reply-To: <20230206060545.628502-1-manali.shukla@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0020.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:97::16) To SJ1PR12MB6218.namprd12.prod.outlook.com
+ (2603:10b6:a03:457::17)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PR12MB6218:EE_|SJ0PR12MB5612:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22ee3af3-eeab-4094-b0c8-08db2512a5c3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: D1TsTKZxTKj8GKfercH2LV28f+bYNdlyTB26ClaJIWw7ml/D3f9wa3iuU/0RyLDJ1iSEJVBYQADtGItVT583CFFFO4mwBWRpjuj5kMBDvG0hCzbaYT8eVgLtV35ajWGLqL1RCK0w2hjFYuo9MLWLCcH4hEZNuPQY2sNrF70krDf3DJsjEhjQS2I3XCOKUuVFU0r4EfTUXd+x1cZiyKRYQXJbJVdTvNpFJMfySY4z6EYDyMY2Tygs5yCO0iL3YZgEY6rJUSOXWkZQlGnAb9B0NJ4A7WBjutIyJehFtNdi4G2L3sJZvR6/6H1KyojSMyNMuTqCZQNBAWrvmSULOst+ghvLCZV6+m9jaghPFVUFY19E4B9sddKgkGg+TpcqwMl1Lo4Q16aYfXcod69JvWNAuvMSk2qHAVpzW9uv4Zjg+gHzZQAidP1VODjKYqhf5dX0jpHHgfbCo4olEpnvFjBpD87XO8IuYtKmovsw8lrQMGhU9zWFy6Wl6YfIxpEZ/AFVmTBmL/8oha40FExqxCTRBVzW5f/nh4m+B6+oFmSRfk2Y0oSOmtogGU4PC4ewBslmBDO5aM+E3ElqrXSYhFyplcYNtLctMjPAAzI2HtxJfTXxH6PDz6/QlGmGwF+mbMQ0mO4xGquZVpwgEmxFApNfjbTqB2LpzooDPNWh4LF1G3WG4oDiVYAqRqGfQdH2iZqukwMJAzebO9sGEOmaylclRhxSQzYfklVzcoRDtJZdA/U=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR12MB6218.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(376002)(39860400002)(396003)(366004)(346002)(451199018)(2906002)(31686004)(41300700001)(83380400001)(36756003)(5660300002)(7416002)(44832011)(66946007)(66556008)(86362001)(31696002)(66476007)(38100700002)(8676002)(4326008)(6916009)(8936002)(316002)(186003)(478600001)(6506007)(26005)(53546011)(6512007)(2616005)(6486002)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?anRRWCt1bjVpVllPOWtvME1aaUo3ZFBySXhKMnZuRHA2UVQ2SklHSnMvMzdS?=
+ =?utf-8?B?RGFZSUg4NGVySnkyMnUxT3ZyZHRlQTFudm1TcU5IRmx5VlJxcVRPMlc0bWtV?=
+ =?utf-8?B?Y1JRNVhMQUNlaWxlVGRHc0g2R2ZnMHVXNUVyckh1Sk9TYTNzclo1cE1Fd2kw?=
+ =?utf-8?B?OTh3SDFWbzlaQ1RRZnNDNnRiSzhob05oMjBxeHhNWi9VaWI0NWkrMnpDcTNP?=
+ =?utf-8?B?Zk8zWkJtUTFjanZxSVgvb3BhMFB4dWMvNkxRMHlXbHJUTUk0ZjZsRTh4MEND?=
+ =?utf-8?B?U3dRU2taMzFHek9jS1pzbStwTkpWdTZWVUZoTkh1YmtNUWJtcithRjZxRk4y?=
+ =?utf-8?B?Ykk2WFFvSlNZQ29NU2tjMU1PQVVlTFpPNGl4RUlEZTBrcmhHRXhZL2YwVUJ0?=
+ =?utf-8?B?a3dlRW5NNmFuQXBUUGN5SmRSb0IvdzVGZXFPY1RlbHZEcUw0OTBjUWJDclVG?=
+ =?utf-8?B?b0pOOGIvRGpjS2dxNEllWURIdDFPSHRsTktVZWp1YzRmdUN1YkxKTUtCSHRt?=
+ =?utf-8?B?UmJ2cHJuZU4rY2M2eEtQQlZSU0tUdG11RVRxWjlDc2M3SUlKRmtsOW1zOXAw?=
+ =?utf-8?B?QkdSTjRNNDhISjhrZWJFUGVyVU5CM3g0Nk5OUDZ0dDFpZ2tiUUtTUlR1dE04?=
+ =?utf-8?B?dG9BZEdGVXdVNncveFR6clpPNVJINTFGYXk0OWtFUUxUM1pNU1JIb2tRZHh3?=
+ =?utf-8?B?bUMyVlRQeC9FYm5abmlLYlVwSHZyY3ZQYjBjMU9NbVVRR2FaVk9iSHg1dDM4?=
+ =?utf-8?B?V3Z5U0NHSWRCMnhaWGdtYUxGS2VvR21Pb1MzdkMrRDVHKzJmQTkrVHBDeVFG?=
+ =?utf-8?B?MVU0Z3h2NGZHNllTNGwwNjl3bFJwbzZTRGFQSGwwQWdzQUIwV1FpWFFqSi9Q?=
+ =?utf-8?B?SGdMd1ZSbTF5Nm1MWWFwUVh6QjBjK3VScmpWSk9uQkp3cFBpQXBjeThIOE1X?=
+ =?utf-8?B?Tldud1dZM0htRUo0eUxVQVlHV0htV29TLzVqdm1mZERhVGQ2NTZPWlRGbFgv?=
+ =?utf-8?B?RCtTV1YvZkp4LzlrcUh5cVJpMi92Q3pFdFhjUHkwSERGZm1EcTVPNlNrZnVU?=
+ =?utf-8?B?Y3BONmRxSzV4aUplU3BDWk5OZCs2Z1V6Vk1LeHo2QWZQQUduaEd6UFVlZW9X?=
+ =?utf-8?B?Q2VVZVJrYTVrZlJBQUlydEhEWGN5aFFpS2o3ZlZMVjBEdDNaSDB3elh3WDk1?=
+ =?utf-8?B?SjlHWnMwb2kya3BJOVpFWWdmOWtOa3d0NXhZejJnT2w4SUhDdU5vdXhwOUor?=
+ =?utf-8?B?RzRieGpReHZWOGFuZisyTlN5UlZYbExYT2xJSTZwZitzMzNXcE5XcHphc3Jh?=
+ =?utf-8?B?WTgyaGhGZHd5bGs4UVo2Z3VQM2ZOMDZyOGJIUG96MGE1NHpFOTAraFE0aCtL?=
+ =?utf-8?B?WHMxc01KNzBtcnNZQVY1c2k5WUlJajZQMWxkYnI2cEozYW9GVVpzQStVWC9N?=
+ =?utf-8?B?ZCtIVGZWaTc0R2RmUEdPb29EbzA3ZnY4YVl3bExURHVQbzk3c3UxeGNuMHFq?=
+ =?utf-8?B?VlY1cVdHejBMblZwbkVmRDR6UjBLSlo0VWxhejY3Zk5tdzVSVERkUmZ4TURM?=
+ =?utf-8?B?WlgyWTh0YVRKRCtnNkRFaW1FSkFTekpDaE1ObmZMMTdUSGJ6OGRLSEhHVjhD?=
+ =?utf-8?B?REQ5a3hZM3JLQm8yZjZkR0EzM0RIU21PZ2FWMWdUdEkxUktUZVlYdW5VWEhW?=
+ =?utf-8?B?c0JBa3ZXVUNZdENST2xVRU5GUkkzNSt6Rmk3aHRsS1FMWTJIeW1BZzFNSjl5?=
+ =?utf-8?B?Rks0a0Zld1VsK1c4em9BTlUzUlA4MkRVaXgrQkMxUXZvMDI0TjRYUGJUdHNW?=
+ =?utf-8?B?TWtrN2NiYXRDU3NoMUdjMktEWnNuQmNENkNBeFZ4MW83TzBDSWF5TVVYeFBh?=
+ =?utf-8?B?Y1RNOGZXcnNaYlpCMGVBMEUvMXBuWUJvWkZ0dy9heE4vQ3RLOXlUejNCZm9V?=
+ =?utf-8?B?SkwvTGJQM1RDYUpCMHF6NmR6NDVZejluOEl5cXFqZCsreGZqbGwxSldDVkNJ?=
+ =?utf-8?B?dk96OWpGM2FnTkIvcUVLajcvSlJXME1MbUJxdkdUMzJiMXhibE9YV3FnRXRn?=
+ =?utf-8?B?eVNWcEc2SW5zOVZnZUNZMFlJM255UTJ5YjhOQlIvNjR1WEtsMGNhdDN4TkZU?=
+ =?utf-8?Q?Iv7XWz5ocAuiu2dyIKeP0u8gH?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22ee3af3-eeab-4094-b0c8-08db2512a5c3
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR12MB6218.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2023 05:03:43.0145
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CFOxNaxzD4MmIvRS41XERXfWRK/SQxKk8IXge5OwW2dGHr6O6DcDpn7OINjf/rzYF1PbRDRlUIXhSB47UhpByQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5612
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The data_src has many entries to express memory behaviors.  Add each
-term separately so that users can combine them for their purpose.
+On 2/6/2023 11:35 AM, Manali Shukla wrote:
+> Adds support for PreventHostIBS feature for SEV-ES and SNP guests.
+> Currently, the hypervisor is able to inspect instruction based samples
+> from the guest and gather execution information.  With enablement of
+> PreventHostIBS feature, SEV-ES and SNP guests may choose to disallow
+> use of instruction based sampling by the hypervisor in order to limit
+> the information gathered about their execution.  (More information in
+> Section 15.36.17 APM Volume 2)
+> 
+> While implementing this feature, unknown NMIs were being seen. On
+> further investigation, a race was found effecting the IBS FETCH/OP
+> MSR.
+> 
+> ENABLE bit and VALID bit for IBS_FETCH_CTL are contained in the same
+> MSR and same is the case with IBS_OP_CTL.
+> 
+> Consider the following scenario:
+> - The IBS MSR which has ENABLE bit set and VALID bit clear is read.
+> - During the process of clearing the ENABLE bit and writing the IBS
+>   MSR to disable IBS, an IBS event can occur that sets the VALID bit.
+> - The write operation on IBS MSR can clear the newly set VALID bit.
+> - Since this situation is occurring in the CLGI/STGI window
+>   (PreventHostIBS window), the actual NMI is not taken.
+> - Once VMRUN is issued, it will exit with VMEXIT_NMI and as soon as
+>   STGI is executed, the pending NMI will trigger.
+> - The IBS NMI handler checks for the VALID bit to determine if the NMI
+>   is generated because of IBS.
+> - Since VALID bit is now clear, it doesn't recognize that an IBS event
+>   is occurred which in turn generates the dazed and confused unknown
+>   NMI messages.
+> 
+> Per-cpu ibs_flags which indicates whether PreventHostIBS window is
+> active/inactive are added to avoid the above mentioned race.
+> 
+> An active PreventHostIBS window is set before calling VMRUN and
+> cleared after STGI. PreventHostIBS window check is added to
+> perf_ibs_handle_irq(), to avoid unknown NMIs and treat them as handled
+> when window is active.
+> 
+> There are 2 patches in this series.
+> 1) Add amd_prevent_hostibs_window() function to set per-cpu ibs_flags
+> based on an active/inactive PreventHostIBS window.
+> 2) Enable PreventHostIBS for SEV-ES and SNP guests.
+> 
+> Testing done:
+> - Executed program symbols in guest are not captured in host when
+>   PreventHostIBS feature is enabled.
+> - Generated 1000+ NMIs using cpuid command, no unknown NMIs are seen
+>   after enablement of PreventHostIBS feature.
+> 
+> Qemu commandline to enable PreventHostIBS on guest.
+> 
+> qemu-system-x86_64 -enable-kvm -cpu EPYC-v4,+nohostibs \ ..
+> 
+> Manali Shukla (2):
+>   perf/x86/amd: Add amd_prevent_hostibs_window() to set per-cpu
+>     ibs_flags
+>   KVM: SEV: PreventHostIBS enablement for SEV-ES and SNP guest
+> 
+>  arch/x86/events/amd/ibs.c          | 64 ++++++++++++++++++++++++++++++
+>  arch/x86/include/asm/cpufeatures.h |  1 +
+>  arch/x86/include/asm/perf_event.h  | 20 ++++++++++
+>  arch/x86/kvm/svm/sev.c             | 10 +++++
+>  arch/x86/kvm/svm/svm.c             | 39 +++++++++++++++++-
+>  arch/x86/kvm/svm/svm.h             |  1 +
+>  6 files changed, 133 insertions(+), 2 deletions(-)
+> 
 
-I didn't add prefix for the constants for simplicity as they are mostly
-distinguishable but I had to use l1_miss and l2_hit for mem_dtlb since
-mem_lvl has different values for the same names.  Note that I decided
-mem_lvl to be used as an alias of mem_lvlnum as it's deprecated now.
-According to the comment in the UAPI header, users should use the mix
-of mem_lvlnum, mem_remote and mem_snoop.  Also the SNOOPX bits are
-concatenated to mem_snoop for simplicity.
+A gentle reminder for the review.
 
-The following terms are used for data_src and the corresponding perf
-sample data fields:
-
- * mem_op : { load, store, pfetch, exec }
- * mem_lvl: { l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem }
- * mem_snoop: { none, hit, miss, hitm, fwd, peer }
- * mem_remote: { remote }
- * mem_lock: { locked }
- * mem_dtlb { l1_hit, l1_miss, l2_hit, l2_miss, any_hit, any_miss, walk, fault }
- * mem_blk { by_data, by_addr }
- * mem_hops { hops0, hops1, hops2, hops3 }
-
-We can now use a filter expression like below:
-
-  'mem_op == load, mem_lvl <= l2, mem_dtlb == l1_hit'
-  'mem_dtlb == l2_miss, mem_hops > hops1'
-  'mem_lvl == ram, mem_remote == 1'
-
-Note that 'na' is shared among the terms as it has the same value except
-for mem_lvl.  I don't have a good idea to handle that for now.
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf-filter.l                 | 61 ++++++++++++++++++++
- tools/perf/util/bpf_skel/sample_filter.bpf.c | 23 ++++++++
- 2 files changed, 84 insertions(+)
-
-diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
-index 419f923b35c0..3e66b7a0215e 100644
---- a/tools/perf/util/bpf-filter.l
-+++ b/tools/perf/util/bpf-filter.l
-@@ -42,6 +42,12 @@ static int value(int base)
- 	return BFT_NUM;
- }
- 
-+static int constant(int val)
-+{
-+	perf_bpf_filter_lval.num = val;
-+	return BFT_NUM;
-+}
-+
- static int error(const char *str)
- {
- 	printf("perf_bpf_filter: Unexpected filter %s: %s\n", str, perf_bpf_filter_text);
-@@ -80,6 +86,15 @@ retire_lat	{ return sample_part(PERF_SAMPLE_WEIGHT_STRUCT, 3); } /* alias for we
- phys_addr	{ return sample(PERF_SAMPLE_PHYS_ADDR); }
- code_pgsz	{ return sample(PERF_SAMPLE_CODE_PAGE_SIZE); }
- data_pgsz	{ return sample(PERF_SAMPLE_DATA_PAGE_SIZE); }
-+mem_op		{ return sample_part(PERF_SAMPLE_DATA_SRC, 1); }
-+mem_lvlnum	{ return sample_part(PERF_SAMPLE_DATA_SRC, 2); }
-+mem_lvl		{ return sample_part(PERF_SAMPLE_DATA_SRC, 2); } /* alias for mem_lvlnum */
-+mem_snoop	{ return sample_part(PERF_SAMPLE_DATA_SRC, 3); } /* include snoopx */
-+mem_remote	{ return sample_part(PERF_SAMPLE_DATA_SRC, 4); }
-+mem_lock	{ return sample_part(PERF_SAMPLE_DATA_SRC, 5); }
-+mem_dtlb	{ return sample_part(PERF_SAMPLE_DATA_SRC, 6); }
-+mem_blk		{ return sample_part(PERF_SAMPLE_DATA_SRC, 7); }
-+mem_hops	{ return sample_part(PERF_SAMPLE_DATA_SRC, 8); }
- 
- "=="		{ return operator(PBF_OP_EQ); }
- "!="		{ return operator(PBF_OP_NEQ); }
-@@ -89,6 +104,52 @@ data_pgsz	{ return sample(PERF_SAMPLE_DATA_PAGE_SIZE); }
- "<="		{ return operator(PBF_OP_LE); }
- "&"		{ return operator(PBF_OP_AND); }
- 
-+na		{ return constant(PERF_MEM_OP_NA); }
-+load		{ return constant(PERF_MEM_OP_LOAD); }
-+store		{ return constant(PERF_MEM_OP_STORE); }
-+pfetch		{ return constant(PERF_MEM_OP_PFETCH); }
-+exec		{ return constant(PERF_MEM_OP_EXEC); }
-+
-+l1		{ return constant(PERF_MEM_LVLNUM_L1); }
-+l2		{ return constant(PERF_MEM_LVLNUM_L2); }
-+l3		{ return constant(PERF_MEM_LVLNUM_L3); }
-+l4		{ return constant(PERF_MEM_LVLNUM_L4); }
-+cxl		{ return constant(PERF_MEM_LVLNUM_CXL); }
-+io		{ return constant(PERF_MEM_LVLNUM_IO); }
-+any_cache	{ return constant(PERF_MEM_LVLNUM_ANY_CACHE); }
-+lfb		{ return constant(PERF_MEM_LVLNUM_LFB); }
-+ram		{ return constant(PERF_MEM_LVLNUM_RAM); }
-+pmem		{ return constant(PERF_MEM_LVLNUM_PMEM); }
-+
-+none		{ return constant(PERF_MEM_SNOOP_NONE); }
-+hit		{ return constant(PERF_MEM_SNOOP_HIT); }
-+miss		{ return constant(PERF_MEM_SNOOP_MISS); }
-+hitm		{ return constant(PERF_MEM_SNOOP_HITM); }
-+fwd		{ return constant(PERF_MEM_SNOOPX_FWD); }
-+peer		{ return constant(PERF_MEM_SNOOPX_PEER); }
-+
-+remote		{ return constant(PERF_MEM_REMOTE_REMOTE); }
-+
-+locked		{ return constant(PERF_MEM_LOCK_LOCKED); }
-+
-+l1_hit		{ return constant(PERF_MEM_TLB_L1 | PERF_MEM_TLB_HIT); }
-+l1_miss		{ return constant(PERF_MEM_TLB_L1 | PERF_MEM_TLB_MISS); }
-+l2_hit		{ return constant(PERF_MEM_TLB_L2 | PERF_MEM_TLB_HIT); }
-+l2_miss		{ return constant(PERF_MEM_TLB_L2 | PERF_MEM_TLB_MISS); }
-+any_hit		{ return constant(PERF_MEM_TLB_HIT); }
-+any_miss	{ return constant(PERF_MEM_TLB_MISS); }
-+walk		{ return constant(PERF_MEM_TLB_WK); }
-+os		{ return constant(PERF_MEM_TLB_OS); }
-+fault		{ return constant(PERF_MEM_TLB_OS); } /* alias for os */
-+
-+by_data		{ return constant(PERF_MEM_BLK_DATA); }
-+by_addr		{ return constant(PERF_MEM_BLK_ADDR); }
-+
-+hops0		{ return constant(PERF_MEM_HOPS_0); }
-+hops1		{ return constant(PERF_MEM_HOPS_1); }
-+hops2		{ return constant(PERF_MEM_HOPS_2); }
-+hops3		{ return constant(PERF_MEM_HOPS_3); }
-+
- ","		{ return ','; }
- 
- {ident}		{ return error("ident"); }
-diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-index d930401c5bfc..88dbc788d257 100644
---- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-+++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-@@ -70,6 +70,29 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
- 		return kctx->data->code_page_size;
- 	case PERF_SAMPLE_DATA_PAGE_SIZE:
- 		return kctx->data->data_page_size;
-+	case PERF_SAMPLE_DATA_SRC:
-+		if (entry->part == 1)
-+			return kctx->data->data_src.mem_op;
-+		if (entry->part == 2)
-+			return kctx->data->data_src.mem_lvl_num;
-+		if (entry->part == 3) {
-+			__u32 snoop = kctx->data->data_src.mem_snoop;
-+			__u32 snoopx = kctx->data->data_src.mem_snoopx;
-+
-+			return (snoopx << 5) | snoop;
-+		}
-+		if (entry->part == 4)
-+			return kctx->data->data_src.mem_remote;
-+		if (entry->part == 5)
-+			return kctx->data->data_src.mem_lock;
-+		if (entry->part == 6)
-+			return kctx->data->data_src.mem_dtlb;
-+		if (entry->part == 7)
-+			return kctx->data->data_src.mem_blk;
-+		if (entry->part == 8)
-+			return kctx->data->data_src.mem_hops;
-+		/* return the whole word */
-+		return kctx->data->data_src.val;
- 	default:
- 		break;
- 	}
--- 
-2.40.0.rc1.284.g88254d51c5-goog
-
+-Manali
