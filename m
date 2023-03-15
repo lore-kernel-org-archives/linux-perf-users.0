@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CABC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 19:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E98EC76196
+	for <linux-perf-users@archiver.kernel.org>; Wed, 15 Mar 2023 19:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232684AbjCOTfR (ORCPT
+        id S230283AbjCOTpK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 15:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58726 "EHLO
+        Wed, 15 Mar 2023 15:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbjCOTfP (ORCPT
+        with ESMTP id S232777AbjCOTos (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 15:35:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B48898E4;
-        Wed, 15 Mar 2023 12:35:10 -0700 (PDT)
+        Wed, 15 Mar 2023 15:44:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1742B7C965;
+        Wed, 15 Mar 2023 12:44:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0B5CBB81E9C;
-        Wed, 15 Mar 2023 19:35:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661B0C433D2;
-        Wed, 15 Mar 2023 19:35:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EDEB61E58;
+        Wed, 15 Mar 2023 19:44:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D89C433EF;
+        Wed, 15 Mar 2023 19:44:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678908907;
-        bh=lhJAoCq8jM1UuVXoin0jp+FnkJ36n7D08vcuCtEr10Q=;
+        s=k20201202; t=1678909478;
+        bh=ObcCFqCfiMrpq2QWm65GyyVNOjbLViYdoZZDXlKz4Lc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c3NRqR2aslcc1pCFI8LXpd7ECMfasVodc3p2fjUEssoXSpFdoMLqYMcYEnByLdULZ
-         EfQOeIUQG8t4B3roXAWunlYgD2tC61LxjvCiIfj/GBwUkfKqZ7184WdOlAe2WXJxZp
-         IzW11Sr2cMceeDf0/0zPdy+KLeBR4GEL57lBG327xzR67wEzx9SvcfQ8ueGIivdbmA
-         3SJrBDJGY/ykxk5vrdybHYSu+2A4C8hrLGrEalslm1INfOr3XNARvmjd8JvBJO13VJ
-         TimPcleA+9QSlgeIQ8qHcuk2Dl/4u3PAMtdG+3+2Ssfa4vH+vvGJa6BEnxvN8Ogdz7
-         ziyhOKlwKSkbA==
+        b=SfAyqiOY64jz84a/DcLzXtVJhAkjBLGIZVk6CM3oWF1D2ti839YWH8MgjJswWvFL4
+         Ziy2q4R8q/oDCWbnlePr1mrUGIzAiPlzicByCQUYISXdxOhKgJnb/f6Lg7VN3rlsoi
+         jrNxp0T7DcdTYsh4Yq7uM6UaGFkEH/+5jPqRKtBqWFAhbrpmCZdf9QlVuRBWQHrXiR
+         uQRPcyPMop7GQotmZJih26RZL1grpQi80SSYa33Yir9KBvZnOhvXVPHYfOtBpmd9Z4
+         k14E0txwlflAHpYTT1zIHt9SbbJTFR5493Kd0nALv+YsqusWQ52F5Ohf3zEn640qTb
+         fzFdk/cLEVg7A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ED8F64049F; Wed, 15 Mar 2023 16:35:04 -0300 (-03)
-Date:   Wed, 15 Mar 2023 16:35:04 -0300
+        id 24DA14049F; Wed, 15 Mar 2023 16:44:35 -0300 (-03)
+Date:   Wed, 15 Mar 2023 16:44:35 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -49,124 +49,156 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 00/16] perf kvm: Support histograms and TUI mode
-Message-ID: <ZBId6CEVp4mTiFhq@kernel.org>
+Subject: Re: [PATCH v5 03/16] perf kvm: Move up metrics helpers
+Message-ID: <ZBIgI1+s6Zf4Va+i@kernel.org>
 References: <20230315145112.186603-1-leo.yan@linaro.org>
+ <20230315145112.186603-4-leo.yan@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230315145112.186603-1-leo.yan@linaro.org>
+In-Reply-To: <20230315145112.186603-4-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 15, 2023 at 10:50:56PM +0800, Leo Yan escreveu:
-> This patch set is to enable histograms and (partially) TUI mode in perf
-> kvm tool; patch set v1 [1] gives brief introduction for the change.
+Em Wed, Mar 15, 2023 at 10:50:59PM +0800, Leo Yan escreveu:
+> This patch moves up the helper functions of event's metrics for later
+> adding code to call them.
 > 
-> We can use below commands for testing this series:
-> 
-> In a terminal, you could launch a virtual machine with qemu command; in
-> below case, I downloaded a Ubuntu (or Debian) iso file and used it as
-> the file system image:
-> 
->   $ qemu-system-x86_64 -M pc -enable-kvm -cpu host -m 4096 -hda ubuntu-22.04-desktop-amd64.iso
-> 
-> Then in another terminal, I can use below command to capture KVM trace
-> data and report the result:
-> 
->   # cd linux/tools/perf
->   # ./perf kvm stat record
->   # ./perf kvm stat report          => Output in TUI mode
->   # ./perf kvm stat report --stdio  => Output in stdio mode
-> 
-> Changes from v4:
-> * Fixed building failure in patch 04; compiled successfully for every
->   patch to ensure bisection.
+> No any functionality changes, but has a function renaming from
+> compare_kvm_event_{metric}() to cmp_event_{metric}().
 
-Trying to fix this:
+    Those helper functions are only used if this is true:
+    
+      if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+    
+    So keep them enclosed with that.
 
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -1 ; time make -C tools/perf build-test
-cbd137d776f05b70 (HEAD -> perf-tools-next) perf kvm: Update documentation to reflect new changes
-make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
-- tarpkg: ./tests/perf-targz-src-pkg .
-                 make_static: cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 NO_LIBTRACEEVENT=1 NO_LIBELF=1 -j32  DESTDIR=/tmp/tmp.AJidGMSQnF
-cd . && make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1 NO_LIBTRACEEVENT=1 NO_LIBELF=1 -j32 DESTDIR=/tmp/tmp.AJidGMSQnF
-  BUILD:   Doing 'make -j32' parallel build
-  HOSTCC  fixdep.o
-  HOSTLD  fixdep-in.o
-  LINK    fixdep
-Makefile.config:678: Disabling post unwind, no support found.
-Makefile.config:746: No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev
-Makefile.config:758: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
-Makefile.config:805: Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev
-Makefile.config:845: No 'Python.h' was found: disables Python support - please install python-devel/python-dev
-Makefile.config:950: No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev
-Makefile.config:963: No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR
-Makefile.config:974: No libcap found, disables capability support, please install libcap-devel/libcap-dev
-Makefile.config:987: No numa.h found, disables 'perf bench numa mem' benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
-Makefile.config:1046: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-Makefile.config:1137: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+Did it here
 
-Auto-detecting system features:
-...                                   dwarf: [ OFF ]
-...                      dwarf_getlocations: [ OFF ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ OFF ]
-...                          libbfd-buildid: [ OFF ]
-...                                  libcap: [ OFF ]
-...                                  libelf: [ OFF ]
-...                                 libnuma: [ OFF ]
-...                  numa_num_possible_cpus: [ OFF ]
-...                                 libperl: [ OFF ]
-...                               libpython: [ OFF ]
-...                               libcrypto: [ OFF ]
-...                               libunwind: [ OFF ]
-...                      libdw-dwarf-unwind: [ OFF ]
-...                                    zlib: [ OFF ]
-...                                    lzma: [ OFF ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ OFF ]
 
-  GEN     common-cmds.h
-  CC      dlfilters/dlfilter-test-api-v0.o
-  CC      dlfilters/dlfilter-show-cycles.o
-  LINK    dlfilters/dlfilter-show-cycles.so
-  LINK    dlfilters/dlfilter-test-api-v0.so
-  INSTALL /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/include/subcmd/exec-cmd.h
-  INSTALL /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/include/subcmd/help.h
-  INSTALL /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/include/subcmd/pager.h
-  INSTALL /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/include/subcmd/parse-options.h
-  INSTALL /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/include/subcmd/run-command.h
-  CC      /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/exec-cmd.o
-  CC      /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/help.o
-  CC      /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/pager.o
-  <SNIP>
-  CC      /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/parse-options.o
-  CC      /var/home/acme/git/perf-tools-next/tools/perf/libsubcmd/run-command.o
-  CC      util/sample-raw.o
-  CC      util/s390-sample-raw.o
-  CC      util/amd-sample-raw.o
-  CC      util/ordered-events.o
-builtin-kvm.c:512:13: error: ‘print_result’ used but never defined [-Werror]
-  512 | static void print_result(struct perf_kvm_stat *kvm);
-      |             ^~~~~~~~~~~~
-builtin-kvm.c:591:13: error: ‘kvm_display’ defined but not used [-Werror=unused-function]
-  591 | static void kvm_display(struct perf_kvm_stat *kvm)
-      |             ^~~~~~~~~~~
-builtin-kvm.c:506:12: error: ‘kvm_hists__reinit’ defined but not used [-Werror=unused-function]
-  506 | static int kvm_hists__reinit(const char *output, const char *sort)
-      |            ^~~~~~~~~~~~~~~~~
-builtin-kvm.c:498:12: error: ‘kvm_hists__init’ defined but not used [-Werror=unused-function]
-  498 | static int kvm_hists__init(void)
-      |            ^~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: builtin-kvm.o] Error 1
-make[5]: *** Waiting for unfinished jobs....
-  CC      tests/perf-time-to-tsc.o
-  CC      util/namespaces.o
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 62c097a37da9b9fe..c11f5454f35c544a 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -49,6 +49,7 @@
+ #include <math.h>
+ #include <perf/mmap.h>
+ 
++#if defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+ #define GET_EVENT_KEY(func, field)					\
+ static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
+ {									\
+@@ -84,6 +85,7 @@ static struct kvm_event_key keys[] = {
+ 	DEF_SORT_NAME_KEY(time, mean),
+ 	{ NULL, NULL }
+ };
++#endif // defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+ 
+ static const char *get_filename_for_perf_kvm(void)
+ {
+ 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/builtin-kvm.c | 72 ++++++++++++++++++++--------------------
+>  1 file changed, 36 insertions(+), 36 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index 3d2560ec6b37..62c097a37da9 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -49,6 +49,42 @@
+>  #include <math.h>
+>  #include <perf/mmap.h>
+>  
+> +#define GET_EVENT_KEY(func, field)					\
+> +static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
+> +{									\
+> +	if (vcpu == -1)							\
+> +		return event->total.field;				\
+> +									\
+> +	if (vcpu >= event->max_vcpu)					\
+> +		return 0;						\
+> +									\
+> +	return event->vcpu[vcpu].field;					\
+> +}
+> +
+> +#define COMPARE_EVENT_KEY(func, field)					\
+> +GET_EVENT_KEY(func, field)						\
+> +static int cmp_event_ ## func(struct kvm_event *one,			\
+> +			      struct kvm_event *two, int vcpu)		\
+> +{									\
+> +	return get_event_ ##func(one, vcpu) >				\
+> +	       get_event_ ##func(two, vcpu);				\
+> +}
+> +
+> +GET_EVENT_KEY(time, time);
+> +GET_EVENT_KEY(max, stats.max);
+> +GET_EVENT_KEY(min, stats.min);
+> +COMPARE_EVENT_KEY(count, stats.n);
+> +COMPARE_EVENT_KEY(mean, stats.mean);
+> +
+> +#define DEF_SORT_NAME_KEY(name, compare_key)				\
+> +	{ #name, cmp_event_ ## compare_key }
+> +
+> +static struct kvm_event_key keys[] = {
+> +	DEF_SORT_NAME_KEY(sample, count),
+> +	DEF_SORT_NAME_KEY(time, mean),
+> +	{ NULL, NULL }
+> +};
+> +
+>  static const char *get_filename_for_perf_kvm(void)
+>  {
+>  	const char *filename;
+> @@ -461,42 +497,6 @@ static bool handle_kvm_event(struct perf_kvm_stat *kvm,
+>  	return true;
+>  }
+>  
+> -#define GET_EVENT_KEY(func, field)					\
+> -static u64 get_event_ ##func(struct kvm_event *event, int vcpu)		\
+> -{									\
+> -	if (vcpu == -1)							\
+> -		return event->total.field;				\
+> -									\
+> -	if (vcpu >= event->max_vcpu)					\
+> -		return 0;						\
+> -									\
+> -	return event->vcpu[vcpu].field;					\
+> -}
+> -
+> -#define COMPARE_EVENT_KEY(func, field)					\
+> -GET_EVENT_KEY(func, field)						\
+> -static int compare_kvm_event_ ## func(struct kvm_event *one,		\
+> -					struct kvm_event *two, int vcpu)\
+> -{									\
+> -	return get_event_ ##func(one, vcpu) >				\
+> -				get_event_ ##func(two, vcpu);		\
+> -}
+> -
+> -GET_EVENT_KEY(time, time);
+> -COMPARE_EVENT_KEY(count, stats.n);
+> -COMPARE_EVENT_KEY(mean, stats.mean);
+> -GET_EVENT_KEY(max, stats.max);
+> -GET_EVENT_KEY(min, stats.min);
+> -
+> -#define DEF_SORT_NAME_KEY(name, compare_key)				\
+> -	{ #name, compare_kvm_event_ ## compare_key }
+> -
+> -static struct kvm_event_key keys[] = {
+> -	DEF_SORT_NAME_KEY(sample, count),
+> -	DEF_SORT_NAME_KEY(time, mean),
+> -	{ NULL, NULL }
+> -};
+> -
+>  static bool select_key(struct perf_kvm_stat *kvm)
+>  {
+>  	int i;
+> -- 
+> 2.34.1
+> 
 
+-- 
+
+- Arnaldo
