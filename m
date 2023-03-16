@@ -2,125 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3A2C6FD19
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 10:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF31FC6FD19
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 10:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbjCPKOA (ORCPT
+        id S229532AbjCPKP3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Mar 2023 06:14:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33496 "EHLO
+        Thu, 16 Mar 2023 06:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230321AbjCPKNf (ORCPT
+        with ESMTP id S229617AbjCPKPI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Mar 2023 06:13:35 -0400
+        Thu, 16 Mar 2023 06:15:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62EB9BBB0D;
-        Thu, 16 Mar 2023 03:13:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1781E41B41;
+        Thu, 16 Mar 2023 03:15:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A27561EFB;
-        Thu, 16 Mar 2023 10:13:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C39F2C433D2;
-        Thu, 16 Mar 2023 10:13:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 92B2561FAC;
+        Thu, 16 Mar 2023 10:15:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C718FC433D2;
+        Thu, 16 Mar 2023 10:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678961585;
-        bh=4hBFXp7kq5jpTGTR3V2fVBamGY+6l1AyRs1M+Mn24L8=;
+        s=k20201202; t=1678961706;
+        bh=u6SbNFyGK6DhDprwxEpLwft4QJBSY9ZwoqO/Bt9FTx0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k7poubKxLaDvDEpQTohrR5kCeYHrEk8MrplJL43zaqPKRg+mAKueLfLvSpfxXGKD7
-         CpMtf6rSK1nOTmL4DXxh3P8lOBbCAM0HrGCetye4OhA+VIfSj8BHXpDTc236h24Eg8
-         NzNgMa8E3goacCWVdPfyxIRsbHiwWwKaD3te4kAyzowQf7/6+tH70YB5tjafpdK6HE
-         vf+7EF+wWCrvDtZAmpc58IY7xjYXn7G+K+fPUu67nOvkDRpfYp/YpVhmcPau8n71xl
-         K/Wm5KcJTHWsbYa5NAgSkA78eV+8Tuamt2Aw+NlqfvP5sG7hmuAu/mNN1IcK7B21Js
-         LFb/lAaSfp6Fw==
+        b=olYXZdoylPgLMeNBvutIs3OL0QlxPkK3ARUtrT9sWY7RRQMrOrU7NXafZa6SuWGyb
+         aRKeEshKf09U/bsdrlqEgb4q848QvzESN+qBEh++nW7q9C+tZ8lL3XhBChkOVz/j5d
+         UYbjyXI5Sftx/Lza8suH/l51tUTK/uhKPF7UkNGQyyu9+S/UK0vD3swPVE6UcYLB3p
+         t81jp/nHT27RNqppjt6C4mGi5T0KmKXEE6UVX/3PII5RJ0WIRIWRAbR8722d1xOi+v
+         4zEI0pdZ4rq7se5k++lmiFp+bnwOXrrwCLKrLB5bJl5jcdX/DGSu1TQ5XYea7uRpg7
+         CxxN+OnjLwz9A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3CDB34049F; Thu, 16 Mar 2023 07:13:02 -0300 (-03)
-Date:   Thu, 16 Mar 2023 07:13:02 -0300
+        id 96C5E4049F; Thu, 16 Mar 2023 07:15:03 -0300 (-03)
+Date:   Thu, 16 Mar 2023 07:15:03 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        James Clark <james.clark@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 11/16] perf kvm: Use histograms list to replace cached
- list
-Message-ID: <ZBLrruagawAbxqoz@kernel.org>
-References: <20230315145112.186603-1-leo.yan@linaro.org>
- <20230315145112.186603-12-leo.yan@linaro.org>
- <CAM9d7chSKPxMHzpKZ92xGZ+XmLpd2q2EJwMuszosXu_FO4_dgA@mail.gmail.com>
- <20230316090418.GA2665235@leoy-yangtze.lan>
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 02/10] perf bpf filter: Implement event sample filtering
+Message-ID: <ZBLsJ+tt/hjIBQ6v@kernel.org>
+References: <20230314234237.3008956-1-namhyung@kernel.org>
+ <20230314234237.3008956-3-namhyung@kernel.org>
+ <ZBHxRaP7BC+qDzJ/@kernel.org>
+ <ZBH0s5P2KV5bJR3h@kernel.org>
+ <CAM9d7cjrFT=c-Obw8TsVk3ntGtUEUoGzco8mUssiSPvuZN-iKw@mail.gmail.com>
+ <ZBImvCSuWFUgjgQj@kernel.org>
+ <ZBKmoeGAmlhv+yvc@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230316090418.GA2665235@leoy-yangtze.lan>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZBKmoeGAmlhv+yvc@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 16, 2023 at 05:04:18PM +0800, Leo Yan escreveu:
-> On Thu, Mar 16, 2023 at 12:42:53AM -0700, Namhyung Kim wrote:
-> 
-> [...]
-> 
-> > >  static struct kvm_event *find_create_kvm_event(struct perf_kvm_stat *kvm,
-> > >                                                struct event_key *key,
-> > >                                                struct perf_sample *sample)
-> > >  {
-> > >         struct kvm_event *event;
-> > > -       struct list_head *head;
-> > > +       struct hist_entry *he;
-> > > +       struct kvm_info *ki;
-> > >
-> > >         BUG_ON(key->key == INVALID_KEY);
-> > >
-> > > -       head = &kvm->kvm_events_cache[kvm_events_hash_fn(key->key)];
-> > > -       list_for_each_entry(event, head, hash_entry) {
-> > > -               if (event->key.key == key->key && event->key.info == key->info)
-> > > -                       return event;
-> > > +       ki = zalloc(sizeof(*ki));
-> > > +       if (!ki) {
-> > > +               pr_err("Failed to allocate kvm info\n");
-> > > +               return NULL;
-> > >         }
-> > >
-> > > -       event = kvm_alloc_init_event(kvm, key, sample);
-> > > -       if (!event)
-> > > +       kvm->events_ops->decode_key(kvm, key, ki->name);
-> > > +       he = hists__add_entry_ops(&kvm_hists.hists, &kvm_ev_entry_ops,
-> > > +                                 &kvm->al, NULL, NULL, NULL, ki, sample, true);
+Em Wed, Mar 15, 2023 at 10:18:25PM -0700, Namhyung Kim escreveu:
+> On Wed, Mar 15, 2023 at 05:12:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Mar 15, 2023 at 09:51:03AM -0700, Namhyung Kim escreveu:
+> > > On Wed, Mar 15, 2023 at 9:39 AM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > Em Wed, Mar 15, 2023 at 01:24:37PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > > Em Tue, Mar 14, 2023 at 04:42:29PM -0700, Namhyung Kim escreveu:
+> > > > > > The BPF program will be attached to a perf_event and be triggered when
+> > > > > > it overflows.  It'd iterate the filters map and compare the sample
+> > > > > > value according to the expression.  If any of them fails, the sample
+> > > > > > would be dropped.
+> > > > > >
+> > > > > > Also it needs to have the corresponding sample data for the expression
+> > > > > > so it compares data->sample_flags with the given value.  To access the
+> > > > > > sample data, it uses the bpf_cast_to_kern_ctx() kfunc which was added
+> > > > > > in v6.2 kernel.
+> > > > > >
+> > > > > > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > > >
+> > > > >
+> > > > > I'm noticing this while building on a debian:11 container:
+> > > > >
+> > > > >   GENSKEL /tmp/build/perf/util/bpf_skel/bperf_leader.skel.h
+> > > > >   GENSKEL /tmp/build/perf/util/bpf_skel/bperf_follower.skel.h
+> > > > >   GENSKEL /tmp/build/perf/util/bpf_skel/func_latency.skel.h
+> > > > >   GENSKEL /tmp/build/perf/util/bpf_skel/bpf_prog_profiler.skel.h
+> > > > >   GENSKEL /tmp/build/perf/util/bpf_skel/kwork_trace.skel.h
+> > > > >   GENSKEL /tmp/build/perf/util/bpf_skel/sample_filter.skel.h
+> > > > > libbpf: failed to find BTF for extern 'bpf_cast_to_kern_ctx' [21] section: -2
+> > > > > Error: failed to open BPF object file: No such file or directory
+> > > > > make[2]: *** [Makefile.perf:1085: /tmp/build/perf/util/bpf_skel/sample_filter.skel.h] Error 254
+> > > > > make[2]: *** Deleting file '/tmp/build/perf/util/bpf_skel/sample_filter.skel.h'
+> > > > > make[2]: *** Waiting for unfinished jobs....
+> > > > > make[1]: *** [Makefile.perf:236: sub-make] Error 2
+> > > > > make: *** [Makefile:70: all] Error 2
+> > > > > make: Leaving directory '/git/perf-6.3.0-rc1/tools/perf'
+> > > > > + exit 1
+> > > > > [perfbuilder@five 11]$
+> > > >
+> > > > Same thing on debian:10
+> > > 
+> > > Hmm.. I thought extern symbols with__ksym are runtime
+> > > dependencies and it should build on old kernels too.
+> > > 
+> > > BPF folks, any suggestions?
 > > 
-> > The hists__add_entry{,_ops} can return either a new entry
-> > or an existing one.  I think it'd leak the 'ki' when it returns
-> > the existing one.  You may deep-copy it in hist_entry__init()
-> > and always free the 'ki' here.
+> > Fedora 33 also fails, see below, but these work:
 > 
-> Thanks for pointing out this, Namhyung.  I will fix it.
-> 
-> @Arnaldo, do you want me to send an appending patch, or will you drop
-> this patch series from your branch so I send a new patch set?
-> 
-> > Another thought on this.  Lots of fields in the hist_entry are
-> > not used for kvm.  We might split the hist_entry somehow
-> > so that we can use unnecessary parts only.  But that could
-> > be a future project. :)
-> 
-> Yeah, I found now hist_entry contains many fields
-> (branch_info/mem_info/kvm_info/block_info); we can consider to
-> refactor the struct hist_entry to use an abstract pointer to refer
-> tool's specific data, this could be easily extend hist_entry to
-> support more tools.
+> Maybe I can declare it as a weak symbol.  How about this?
 
-Since I build tested this already and had the other fixes, I'm pushing
-this out to perf-tools-next (and perf/core for a while, for people not
-knowing about the new nbranch names) and you can continue from there,
-ok?
+Unsure this is the right fix, for now I'm using NO_BPF_SKEL=1 in those
+older distros, will check again early next week when I'm back from a
+short trip.
+
+- Arnaldo
+ 
+> Thanks,
+> Namhyung
+> 
+> ---8<---
+> 
+> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> index 57e3c67d6d37..52cbdd1765cd 100644
+> --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> @@ -17,7 +17,7 @@ struct filters {
+> 
+>  int dropped;
+> 
+> -void *bpf_cast_to_kern_ctx(void *) __ksym;
+> +void *bpf_cast_to_kern_ctx(void *) __ksym __weak;
+> 
+>  /* new kernel perf_sample_data definition */
+>  struct perf_sample_data___new {
+> @@ -118,6 +118,10 @@ int perf_sample_filter(void *ctx)
+>  	int group_result = 0;
+>  	int i;
+> 
+> +	/* no kernel context support, no filtering */
+> +	if (!bpf_cast_to_kern_ctx)
+> +		return 1;
+> +
+>  	kctx = bpf_cast_to_kern_ctx(ctx);
+> 
+>  	for (i = 0; i < MAX_FILTERS; i++) {
+> 
+
+-- 
 
 - Arnaldo
