@@ -2,273 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8EDC6FD19
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 16:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B06C7618E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 17:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbjCPQGX (ORCPT
+        id S229813AbjCPRCH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Mar 2023 12:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
+        Thu, 16 Mar 2023 13:02:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbjCPQGW (ORCPT
+        with ESMTP id S229631AbjCPRCF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Mar 2023 12:06:22 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE8AA1FCE;
-        Thu, 16 Mar 2023 09:06:21 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id rj10so2099992pjb.4;
-        Thu, 16 Mar 2023 09:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678982780;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3/BYlKm1OOM4FM5sq6VFyTDVBzXDbNiTrGJipf7AXzE=;
-        b=f6oxs7KmI/7sb2F8Xyg3kgHogHr4EptnikWdMBHTlx0O/in6zdYazoC2LkxFYkmfwH
-         XugMLUknQ2t3vIKmYW8q/wcddsk48GwmpxKtVpC5BFJ/vDRo7pj/cSG0M0qDl6DlpBhm
-         J3tKHvMQOp0CZwVh7nXEVf96Gt9CqwsChV/9APLzqXnsBe3saQkGC9FewYrhQV4LqV7I
-         g/je/vMYNcgpHyiQtllpXkzwYuq3OWdqi9T9+CypIUI8B6bYRvuM/RM2/QvZe2pbVFU+
-         SkZkb9Qy2FCZB4WAxw21673ktAbQfBDeLABUC0u20v3c4epA2uHbUD0g3ChuzCd/iVAd
-         rFkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678982780;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3/BYlKm1OOM4FM5sq6VFyTDVBzXDbNiTrGJipf7AXzE=;
-        b=V7nAbl79j3tFpX16OEeIyn6ASs5g7uvb6rzb0MiyUVg3s/L6J8ih0elv950SZbwM1C
-         xTjHbqt7Oz3ULJ7WkpRXLeIVpVrd2SAOiFNSXG/gfJMDxgYOU2neHUNAd/yCqR293hGG
-         pBxtJgNjcJ/+GsRzY0IQ6I2SeyW2TloFOYLHOga5XpmQZTpGg87NvdWSsuduNa9us5cH
-         0PMcso+ffrvVIsnjbCOr5ljTeVTFGJ5QxxWYHcpQIgOzwa2KabjWFU0FPgn6zUMesHzg
-         2TBzUSP1HavSepTjL07uIiQK/PnzILTkUuu+Q3k++d0YxKc1HL3bMVLbvDfsN+qNOBCh
-         H6Fw==
-X-Gm-Message-State: AO0yUKXTOpSlnIlkD/SVPS3GoxvTbLZfiXaqSBPQ3snKOjI14PN+3DgS
-        q3pz0tQGAPdSfQZ2sYCo+LY=
-X-Google-Smtp-Source: AK7set+EVRaLdrl+7diz4Rb6s51DKRy/egjlu6T3PVdwO8CC06bzNfn0dbDqxQYDu5aGT5LB46no+Q==
-X-Received: by 2002:a05:6a20:734e:b0:cd:a334:a531 with SMTP id v14-20020a056a20734e00b000cda334a531mr5249262pzc.62.1678982780028;
-        Thu, 16 Mar 2023 09:06:20 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:9b18:1f77:4356:f626:b1b])
-        by smtp.gmail.com with ESMTPSA id x5-20020a62fb05000000b006242f4a8945sm5598681pfm.182.2023.03.16.09.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 09:06:19 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Thu, 16 Mar 2023 21:36:12 +0530
-To:     Ian Rogers <irogers@google.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-        leo.yan@linaro.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anupnewsmail@gmail.com
-Subject: Re: [PATCH] perf: Fix indentation errors by removing extra spaces
-Message-ID: <ZBM+dBK27EtCH78k@yoga>
-References: <ZBIro7uDO/Mii3xF@yoga>
- <CAP-5=fX8xyd4qby2w15s+fEC4EeZt=2J2C6gz-stgtKTk2tkuA@mail.gmail.com>
+        Thu, 16 Mar 2023 13:02:05 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D43A79B2F7;
+        Thu, 16 Mar 2023 10:01:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 746D3B8228C;
+        Thu, 16 Mar 2023 17:01:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABF6C4339B;
+        Thu, 16 Mar 2023 17:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678986117;
+        bh=iAe83v06CelvQ5x9yL4BVebJHJ8BOoQ+WiuxJO46PLc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UrAFSXvLQU2L+HELh4Ww55FjwUFPh88C4WrAY8SuExteQeDon/zQi9uIlnQ0FeLUN
+         IloCjLYHlbUgUQ9Q9TsI1exG7B+AjPZNwB2NWj39PMHS3epq0d2Mth7nidheT4cxW4
+         6qSEwwCxL3uVBH8whbcX+/nskeSD772HAApttUAqVdHZy8vIyYxWVVxNA5XPFAi4m7
+         zQjb2XvY9Mw+JrwQftcZWPS7Jfx/qmNqGiaWa0KcCqz2SuzuIhhWdOqR32100jjvvw
+         f3raN7WrqQRL9KfyDpOifwgo1nJj0rDvM57S64hE+TJjTBKfS/cDZ7fCeanU41XyGw
+         z6eEp+AwgZg0w==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+Date:   Thu, 16 Mar 2023 18:01:40 +0100
+Message-Id: <20230316170149.4106586-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX8xyd4qby2w15s+fEC4EeZt=2J2C6gz-stgtKTk2tkuA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 05:10:52PM -0700, Ian Rogers wrote:
-> On Wed, Mar 15, 2023 at 1:33 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > Cleaning up tabstop related warning reported by checkpatch.pl script
-> >
-> > WARNING: Statements should start on a tabstop
-> >
-> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
-> 
-> Thanks Anup,
-> 
-> Arnaldo, what's the policy on whitespace cleanup? Obviously new
-> patches should try to avoid it, but patches like this are sometimes
-> frowned upon due to losing blame history.>
+hi,
+this patchset adds build id object pointer to struct file object.
 
-Thank you Ian for informing, Just to get kickstarted I sent this patch. 
-Will keep in mind from next time.
+We have several use cases for build id to be used in BPF programs
+[2][3].
 
-> Anup, when I run checkpatch.pl on this I see other warnings in the same code:
+Having build id pointer stored directly in file object allows to get
+build id reliably regardless of the execution context as described
+in [3].
 
-Correct, there are few other warning also, however I tried cleaning tabstop related
-warning first, then thought of going to the next. 
+Previous iteration [1] stored build id pointer into inode, but it
+became clear that struct file object is better place, because we read 
+the build id when the file is mmap-ed and as Dave Chinner said [4]:
 
-> ```
-> $ b4 am ZBIro7uDO/Mii3xF@yoga
-> Grabbing thread from lore.kernel.org/all/ZBIro7uDO%2FMii3xF%40yoga/t.mbox.gz
-> Analyzing 1 messages in the thread
-> Checking attestation on all messages, may take a moment...
-> ---
->  ✓ [PATCH] perf: Fix indentation errors by removing extra spaces
->  ---
->  ✓ Signed: DKIM/gmail.com
-> ---
-> Total patches: 1
-> ---
-> Link: https://lore.kernel.org/r/ZBIro7uDO/Mii3xF@yoga
-> Base: not specified
->       git am ./20230316_anupnewsmail_perf_fix_indentation_errors_by_removing_extra_spaces.mbx
-> $ scripts/checkpatch.pl
-> ./20230316_anupnewsmail_perf_fix_indentation_errors_by_removing_extra_spaces.mbx
-> WARNING: braces {} are not necessary for single statement blocks
-> #78: FILE: tools/perf/jvmti/libjvmti.c:315:
-> +               if (line_file_names[nr_lines - 1]) {
-> +                       free(line_file_names[nr_lines - 1]);
-> +               }
-> 
-> WARNING: Missing a blank line after declarations
-> #96: FILE: tools/perf/ui/browser.c:44:
-> +       int color = ui_browser__percent_color(browser, percent, current);
-> +       ui_browser__set_color(browser, color);
-> ```
-> 
-> These should probably be fixed at the same time.
+> Yes, the problem being that we can cache hundreds of millions of
+> inodes in memory, and only a very small subset of them are going to
+> have open files associated with them. And an even smaller subset are
+> going to be mmapped.
 
-I'd want to fix those as well, if you can guide me on the correct proceduce. 
+thanks,
+jirka
 
-> Thanks,
-> Ian
-> 
-> > ---
-> >  tools/perf/builtin-lock.c      |  2 +-
-> >  tools/perf/builtin-trace.c     |  6 +++---
-> >  tools/perf/jvmti/libjvmti.c    |  8 ++++----
-> >  tools/perf/ui/browser.c        |  4 ++--
-> >  tools/perf/ui/browsers/hists.c | 10 +++++-----
-> >  tools/perf/util/symbol-elf.c   |  2 +-
-> >  6 files changed, 16 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> > index 054997edd98b..4a1d5a08c8d6 100644
-> > --- a/tools/perf/builtin-lock.c
-> > +++ b/tools/perf/builtin-lock.c
-> > @@ -2094,7 +2094,7 @@ static int parse_lock_type(const struct option *opt __maybe_unused, const char *
-> >                         char buf[32];
-> >
-> >                         if (strchr(tok, ':'))
-> > -                           continue;
-> > +                               continue;
-> >
-> >                         /* try :R and :W suffixes for rwlock, rwsem, ... */
-> >                         scnprintf(buf, sizeof(buf), "%s:R", tok);
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index 610fb60b1c0d..155abfd07286 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> > @@ -1942,7 +1942,7 @@ static __maybe_unused bool trace__syscall_enabled(struct trace *trace, int id)
-> >                                   trace->ev_qualifier_ids.nr, sizeof(int), intcmp) != NULL;
-> >
-> >         if (in_ev_qualifier)
-> > -              return !trace->not_ev_qualifier;
-> > +               return !trace->not_ev_qualifier;
-> >
-> >         return trace->not_ev_qualifier;
-> >  }
-> > @@ -3363,10 +3363,10 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
-> >                              candidate_is_pointer = candidate_field->flags & TEP_FIELD_IS_POINTER;
-> >
-> >                         if (is_pointer) {
-> > -                              if (!candidate_is_pointer) {
-> > +                               if (!candidate_is_pointer) {
-> >                                         // The candidate just doesn't copies our pointer arg, might copy other pointers we want.
-> >                                         continue;
-> > -                              }
-> > +                               }
-> >                         } else {
-> >                                 if (candidate_is_pointer) {
-> >                                         // The candidate might copy a pointer we don't have, skip it.
-> > diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-> > index fcca275e5bf9..faf5925f7433 100644
-> > --- a/tools/perf/jvmti/libjvmti.c
-> > +++ b/tools/perf/jvmti/libjvmti.c
-> > @@ -312,10 +312,10 @@ compiled_method_load_cb(jvmtiEnv *jvmti,
-> >         (*jvmti)->Deallocate(jvmti, (unsigned char *)class_sign);
-> >         free(line_tab);
-> >         while (line_file_names && (nr_lines > 0)) {
-> > -           if (line_file_names[nr_lines - 1]) {
-> > -               free(line_file_names[nr_lines - 1]);
-> > -           }
-> > -           nr_lines -= 1;
-> > +               if (line_file_names[nr_lines - 1]) {
-> > +                       free(line_file_names[nr_lines - 1]);
-> > +               }
-> > +               nr_lines -= 1;
-> >         }
-> >         free(line_file_names);
-> >  }
-> > diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-> > index 78fb01d6ad63..ba725ed5c86d 100644
-> > --- a/tools/perf/ui/browser.c
-> > +++ b/tools/perf/ui/browser.c
-> > @@ -40,8 +40,8 @@ int ui_browser__set_color(struct ui_browser *browser, int color)
-> >  void ui_browser__set_percent_color(struct ui_browser *browser,
-> >                                    double percent, bool current)
-> >  {
-> > -        int color = ui_browser__percent_color(browser, percent, current);
-> > -        ui_browser__set_color(browser, color);
-> > +       int color = ui_browser__percent_color(browser, percent, current);
-> > +       ui_browser__set_color(browser, color);
-> >  }
-> >
-> >  void ui_browser__gotorc_title(struct ui_browser *browser, int y, int x)
-> > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > index b72ee6822222..947f8023a140 100644
-> > --- a/tools/perf/ui/browsers/hists.c
-> > +++ b/tools/perf/ui/browsers/hists.c
-> > @@ -402,7 +402,7 @@ static bool hist_browser__selection_has_children(struct hist_browser *browser)
-> >                 return false;
-> >
-> >         if (ms == &he->ms)
-> > -              return he->has_children;
-> > +               return he->has_children;
-> >
-> >         return container_of(ms, struct callchain_list, ms)->has_children;
-> >  }
-> > @@ -421,7 +421,7 @@ static bool hist_browser__selection_unfolded(struct hist_browser *browser)
-> >                 return false;
-> >
-> >         if (ms == &he->ms)
-> > -              return he->unfolded;
-> > +               return he->unfolded;
-> >
-> >         return container_of(ms, struct callchain_list, ms)->unfolded;
-> >  }
-> > @@ -436,8 +436,8 @@ static char *hist_browser__selection_sym_name(struct hist_browser *browser, char
-> >                 return NULL;
-> >
-> >         if (ms == &he->ms) {
-> > -              hist_entry__sym_snprintf(he, bf, size, 0);
-> > -              return bf + 4; // skip the level, e.g. '[k] '
-> > +               hist_entry__sym_snprintf(he, bf, size, 0);
-> > +               return bf + 4; // skip the level, e.g. '[k] '
-> >         }
-> >
-> >         callchain_entry = container_of(ms, struct callchain_list, ms);
-> > @@ -3599,7 +3599,7 @@ static bool evlist__single_entry(struct evlist *evlist)
-> >         int nr_entries = evlist->core.nr_entries;
-> >
-> >         if (nr_entries == 1)
-> > -              return true;
-> > +               return true;
-> >
-> >         if (nr_entries == 2) {
-> >                 struct evsel *last = evlist__last(evlist);
-> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> > index 41882ae8452e..32bd70d7b712 100644
-> > --- a/tools/perf/util/symbol-elf.c
-> > +++ b/tools/perf/util/symbol-elf.c
-> > @@ -304,7 +304,7 @@ static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
-> >          * to it...
-> >          */
-> >         if (!want_demangle(dso->kernel || kmodule))
-> > -           return demangled;
-> > +               return demangled;
-> >
-> >         demangled = bfd_demangle(NULL, elf_name, demangle_flags);
-> >         if (demangled == NULL) {
-> > --
-> > 2.34.1
-> >
+
+v3 changes:
+  - moved build id back to file object (discussed in [4])
+  - drop patch 4, it's not needed [Andrii]
+  - added ack to patch 7 [Andrii]
+  - replaced BUILD_ID_SIZE_MAX macro with enum [Andrii]
+  - few re-formatting fixes [Andrii]
+
+v2 changes:
+  - store build id under inode [Matthew Wilcox]
+  - use urandom_read and liburandom_read.so for test [Andrii]
+  - add libelf-based helper to fetch build ID from elf [Andrii]
+  - store build id or error we got when reading it [Andrii]
+  - use full name i_build_id [Andrii]
+  - several tests fixes [Andrii]
+
+
+[1] https://lore.kernel.org/bpf/20230228093206.821563-1-jolsa@kernel.org/
+[2] https://lore.kernel.org/bpf/CA+khW7juLEcrTOd7iKG3C_WY8L265XKNo0iLzV1fE=o-cyeHcQ@mail.gmail.com/
+[3] https://lore.kernel.org/bpf/ZABf26mV0D0LS7r%2F@krava/
+[4] https://lore.kernel.org/bpf/20230228220714.GJ2825702@dread.disaster.area/
+---
+Jiri Olsa (9):
+      mm: Store build id in file object
+      perf: Use file object build id in perf_event_mmap_event
+      bpf: Use file object build id in stackmap
+      bpf: Switch BUILD_ID_SIZE_MAX to enum
+      selftests/bpf: Add read_buildid function
+      selftests/bpf: Add err.h header
+      selftests/bpf: Replace extract_build_id with read_build_id
+      selftests/bpf: Add iter_task_vma_buildid test
+      selftests/bpf: Add file_build_id test
+
+ fs/file_table.c                                                  |  3 +++
+ include/linux/buildid.h                                          | 21 ++++++++++++++++++-
+ include/linux/fs.h                                               |  7 +++++++
+ kernel/bpf/stackmap.c                                            | 24 +++++++++++++++++++++-
+ kernel/events/core.c                                             | 43 ++++++++++++++++++++++++++++++++++----
+ lib/buildid.c                                                    | 42 +++++++++++++++++++++++++++++++++++++
+ mm/Kconfig                                                       |  9 ++++++++
+ mm/mmap.c                                                        | 18 ++++++++++++++++
+ tools/testing/selftests/bpf/Makefile                             |  7 ++++++-
+ tools/testing/selftests/bpf/no_build_id.c                        |  6 ++++++
+ tools/testing/selftests/bpf/prog_tests/bpf_iter.c                | 78 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/prog_tests/file_build_id.c           | 98 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/prog_tests/stacktrace_build_id.c     | 19 +++++++----------
+ tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c | 17 ++++++---------
+ tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c    | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/err.h                          | 18 ++++++++++++++++
+ tools/testing/selftests/bpf/progs/file_build_id.c                | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/progs/profiler.inc.h                 |  3 +--
+ tools/testing/selftests/bpf/test_progs.c                         | 25 ----------------------
+ tools/testing/selftests/bpf/test_progs.h                         | 11 +++++++++-
+ tools/testing/selftests/bpf/trace_helpers.c                      | 86 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/bpf/trace_helpers.h                      |  5 +++++
+ 22 files changed, 608 insertions(+), 58 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/no_build_id.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/file_build_id.c
+ create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_vma_buildid.c
+ create mode 100644 tools/testing/selftests/bpf/progs/err.h
+ create mode 100644 tools/testing/selftests/bpf/progs/file_build_id.c
