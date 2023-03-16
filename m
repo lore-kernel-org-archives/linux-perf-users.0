@@ -2,145 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F281CC76196
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 20:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303CEC6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 21:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbjCPUAs (ORCPT
+        id S229560AbjCPVV3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Mar 2023 16:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48138 "EHLO
+        Thu, 16 Mar 2023 17:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjCPUAe (ORCPT
+        with ESMTP id S229489AbjCPVV2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Mar 2023 16:00:34 -0400
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BA5CC309;
-        Thu, 16 Mar 2023 13:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=1+em3CxVhuR3t6hBfQ8ylZ5mFdk8mfxa3UhWs5bbebE=; b=jnfTLbEYvHHYc0U0zB3DuCNep9
-        VQUjClUzHpq6rCcIiW8MhZBjnyv1nSpWEGrOzwVtrLyDwxtMWEqU/2rj48STQjv+k14/9EaXBcmgi
-        sV61H+eMBJHKSn4mo5GbdWuV5UlK/ozBf/KO/CKgeEKGEzM8CCMuOiwOJMI6ObdjTTB3JsCMYkHgi
-        yZ1rIrtCpgy2ZEABBuS7URmVOsapvfSIYwhczA2gEESMwKyd9tggTRZHlDpFjEgf/NRXVax5yz8Z5
-        y5TWju9TY+Qj5SHP9hADSMEIyNjWprGlOKKfMMzptm+Bd5vjbM/vWKz5sqTKQ4j4GDPNUfl/oxobQ
-        jYRmVdFw==;
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1pctkx-000GR8-FZ; Thu, 16 Mar 2023 20:59:23 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1pctkw-0003g0-Nf; Thu, 16 Mar 2023 20:59:22 +0100
-Subject: Re: [PATCHv3 bpf-next 9/9] selftests/bpf: Add file_build_id test
-To:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Namhyung Kim <namhyung@gmail.com>,
-        Dave Chinner <david@fromorbit.com>
-References: <20230316170149.4106586-1-jolsa@kernel.org>
- <20230316170149.4106586-10-jolsa@kernel.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <478a8e03-dea3-ebca-8376-6b7e3b616b5e@iogearbox.net>
-Date:   Thu, 16 Mar 2023 20:59:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 16 Mar 2023 17:21:28 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B8A8C48B1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Mar 2023 14:21:27 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-3184514d31eso13195ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Mar 2023 14:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679001687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sed8mBQa+lDJxDv12thn4n6WdTH+ovGBkrm+trscL6A=;
+        b=HTnshhdiEiXyeKl4aXg09OlYc6L0l5aXKBxe+SSC8s1UqdOiifd5GvbIZKnKLvIpgA
+         hmv7dcTXYgl1H4YfNtUB/hCKvG0Gk30ZPmFbvTnOHpDj/rNAwbSYgmpb27mFIlItu8gR
+         Q67ZxNxJsXc1x64otXi64FYctPeHvD9uVdlOwF4QSc4xQUYxAatEhAKJbxFKsf2YzalK
+         xlroQyV/d4OgufRs+/hfTzoy9gWEKHt7e0UMYMfIJDeVwX6qxIDozSSORu+6XoPsqG8S
+         UI58g7w7eOSfEoC3NZz/XiW75sujncvLf402RgG8b+TbJ2xJwEy33cNyYH1RErdF5f0F
+         cIyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679001687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sed8mBQa+lDJxDv12thn4n6WdTH+ovGBkrm+trscL6A=;
+        b=iD58hNfBxVwrteKuEthjLrC9uut2p2PtWPYmxbo3cQOARkC34qykYpKyEVCbctp5Az
+         CPD7VBaKEcMhKbzqftWPL5IY6fBskTtAPIM3LXQs9kPey0ogQ+7LYYb1heQN3RpZOMtH
+         VEZRs3yDx1JCnjNqCzB8G7InGlAHrjQYdfzt1j50I6vJhoLrQ8y7ZneRltFGWxM7eCyV
+         MfCwg1ZK1XA7uO2kMbxxt8U3nNEt3NU5ZufxM0aYV1/CmsyFqO6/TDQThJMphiZm+29i
+         vnd0oszgEDlJGKQ72qhnPljB5/U9GRNKWDn9jxt/ry+82qqzD5cxIxu/nw2ETnabP3M1
+         cfnA==
+X-Gm-Message-State: AO0yUKVDDEaaos2nt2d6AOOh/LUyObPwJ3o96kqKw3+X4RjPfjIKHht5
+        7fI9EmSbkbbn/gHmJh/28g1OUCI2wZlm4yk5RRuPkQ==
+X-Google-Smtp-Source: AK7set98LyaF+G5c4cnoCd0UiaU3BqlTvVBEFgHA8CSTx/7bwOpAfyueD2HfNo/QxkqsC9+iUNNK8oXMFvgA+KpjHA0=
+X-Received: by 2002:a05:6e02:1c8f:b0:322:c06b:50c0 with SMTP id
+ w15-20020a056e021c8f00b00322c06b50c0mr33534ill.11.1679001686705; Thu, 16 Mar
+ 2023 14:21:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20230316170149.4106586-10-jolsa@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26845/Thu Mar 16 19:16:15 2023)
+References: <20230316194156.8320-1-adrian.hunter@intel.com>
+In-Reply-To: <20230316194156.8320-1-adrian.hunter@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 16 Mar 2023 14:21:12 -0700
+Message-ID: <CAP-5=fV8HsLWzXSV-mov+s1doKNFvAPqpep9dhnoAbS3bdir5A@mail.gmail.com>
+Subject: Re: [PATCH 0/3] perf tools: Address fixes
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/16/23 6:01 PM, Jiri Olsa wrote:
-> The test attaches bpf program to sched_process_exec tracepoint
-> and gets build of executed file from bprm->file object.
-> 
-> We use urandom_read as the test program and in addition we also
-> attach uprobe to liburandom_read.so:urandlib_read_without_sema
-> and retrieve and check build id of that shared library.
-> 
-> Also executing the no_build_id binary to verify the bpf program
-> gets the error properly.
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-[...]
-> diff --git a/tools/testing/selftests/bpf/progs/file_build_id.c b/tools/testing/selftests/bpf/progs/file_build_id.c
-> new file mode 100644
-> index 000000000000..6dc10c8e17ac
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/file_build_id.c
-> @@ -0,0 +1,70 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include "vmlinux.h"
-> +#include "err.h"
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +#include <linux/string.h>
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +int pid;
-> +
-> +u32 build_id_bin_size;
-> +u32 build_id_lib_size;
-> +
-> +char build_id_bin[BUILD_ID_SIZE_MAX];
-> +char build_id_lib[BUILD_ID_SIZE_MAX];
-> +
-> +long build_id_bin_err;
-> +long build_id_lib_err;
-> +
-> +static int store_build_id(struct file *file, char *build_id, u32 *sz, long *err)
-> +{
-> +	struct build_id *bid;
-> +
-> +	bid = file->f_build_id;
-> +	if (IS_ERR_OR_NULL(bid)) {
+On Thu, Mar 16, 2023 at 12:42=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
+.com> wrote:
+>
+> Hi
+>
+> Here are 3 small fixes resulting from a report from a
+> kernel test robot:
+>
+> https://lore.kernel.org/oe-lkp/202303061424.6ad43294-yujie.liu@intel.com
+>
+> Issues were revealed due to the use of build
+> option:
+>
+>         EXTRA_CFLAGS=3D"-fsanitize=3Dundefined -fsanitize=3Daddress"
+>
+>
+> Adrian Hunter (3):
+>       perf symbols: Fix use-after-free in get_plt_got_name()
+>       perf symbols: Fix unaligned access in get_x86_64_plt_disp()
+>       perf tools: Avoid warning in do_realloc_array_as_needed()
 
-I think you might need to enable this also in the CI config:
-
-   [...]
-     CLNG-BPF [test_maps] btf_dump_test_case_multidim.bpf.o
-     CLNG-BPF [test_maps] ima.bpf.o
-     CLNG-BPF [test_maps] bpf_cubic.bpf.o
-   progs/bpf_iter_task_vma_buildid.c:46:27: error: no member named 'f_build_id' in 'struct file'
-           if (IS_ERR_OR_NULL(file->f_build_id)) {
-                              ~~~~  ^
-   progs/bpf_iter_task_vma_buildid.c:51:37: error: no member named 'f_build_id' in 'struct file'
-                   __builtin_memcpy(&build_id, file->f_build_id, sizeof(*file->f_build_id));
-                                               ~~~~  ^
-   progs/bpf_iter_task_vma_buildid.c:51:63: error: no member named 'f_build_id' in 'struct file'
-                   __builtin_memcpy(&build_id, file->f_build_id, sizeof(*file->f_build_id));
-                                                                         ~~~~  ^
-   3 errors generated.
-   make: *** [Makefile:578: /tmp/work/bpf/bpf/tools/testing/selftests/bpf/bpf_iter_task_vma_buildid.bpf.o] Error 1
-   make: *** Waiting for unfinished jobs....
-   make: Leaving directory '/tmp/work/bpf/bpf/tools/testing/selftests/bpf'
-   Error: Process completed with exit code 2.
+All 3:
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Daniel
+Ian
+
+>  tools/perf/util/symbol-elf.c | 10 ++++++++--
+>  tools/perf/util/util.c       |  3 ++-
+>  2 files changed, 10 insertions(+), 3 deletions(-)
+>
+>
+> Regards
+> Adrian
