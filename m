@@ -2,82 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57022C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 14:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B77C6FD19
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 15:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230106AbjCPO76 (ORCPT
+        id S230470AbjCPPOX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Mar 2023 10:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47166 "EHLO
+        Thu, 16 Mar 2023 11:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229887AbjCPO75 (ORCPT
+        with ESMTP id S230041AbjCPPOW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Mar 2023 10:59:57 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C59846AA;
-        Thu, 16 Mar 2023 07:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678978797; x=1710514797;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gSkBRZP1Batv+iNg2i5f9JFlf1xzYofdNM0e35H6EGQ=;
-  b=g4u4SQr1BPv38rykHtFFqrKT6K5PyWoIXgi4IRD4/UBEmYeF0l07GMjo
-   W9uRHMQY5cMJDZ0iF8bHzjf2bQoxb5SLDUO7jT2hJS4dI34S7KHyxTAuw
-   TRMpXlBroeWdlPNMv5mbezrY8BOVGqv/RfDmznW4n8jG29VYXUj93NHvM
-   FIqSPrChAZJVRr7YNbwDFqurZzD4icgbmG21/quu/XWwJxPGnE52MS4sl
-   VgiU569d7ur35ft+H7L7zN81sBKyVlgjzOycxqTuHmr1eJRbauCSBu26B
-   F0FUtxPpItCXaxrY1eiF0SyzmwbPVQOBTGm2CyM5NikdbMGGJaRIa/EzX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="424283965"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="424283965"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 07:59:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="790338783"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="790338783"
-Received: from mvalent1-mobl2.amr.corp.intel.com (HELO [10.252.142.240]) ([10.252.142.240])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 07:59:55 -0700
-Message-ID: <6f78ecfb-99c8-eee3-cad0-69bbd88a107c@intel.com>
-Date:   Thu, 16 Mar 2023 07:59:56 -0700
+        Thu, 16 Mar 2023 11:14:22 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F57B53EA
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Mar 2023 08:14:21 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id f6-20020a17090ac28600b0023b9bf9eb63so1889602pjt.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Mar 2023 08:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678979661;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hipF8kv9btc+ofi69HcRjl9Ik6Nhwu9Uss+16//MXqk=;
+        b=oYzM8mfqsog+QJRhec+BKT1ae38JEQWTABfr0aunbSbufycQbpAX77GixAo4mlG02a
+         45Ax2iXM4BaAg0AxTbfA3lomJ+GKpTMAUWOKMhUJOcAcMZSovddcC0WcACaWrpBBhAz5
+         47LkJ5DHckti+l5/4pFSBII35EmBlKHH3ak7prX1NUY/7oNkwwKbTB9xVkupcRNY+KId
+         exvmcUc9nBg0rFZAJQ1HcgDp/BRZpfb80e/mh1lcpEF+N3Q6tU1omjJXdSX0PuyyQO4H
+         qQCjcTC7Fc9WIqSUc5vvYgV2wyrocKvq6P7FP8PATz2pV4NlSpgBdCSRr66TE+UxjI/T
+         dUnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678979661;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hipF8kv9btc+ofi69HcRjl9Ik6Nhwu9Uss+16//MXqk=;
+        b=jJq6hUS1iSvjK4mgcFBU3xRZSFVpiO3WGlThj/74rnClpTY4Nm3ZuUC68GKdzBVzqI
+         5j14I8BuSChyZ/6odBVY6efa/bijm6hYhJ8EBJyMBdRTpze6vgBb8ukVlTQVnq3f+DRn
+         DdNWcVXrSzLa1O/LxmWV2Uy9EGQBZMZbC5Cww0j8IeWfASTTZVcHlacGRZY9B1FDdejt
+         5epHghH7c9H5zRdScCClFZPPOs+becghZW28mWcmlmk3PXAE60cfHMlEQQ2p9D7V2RlL
+         32A+Lr5X8wumBbWdpf1IssWqqk7iXRWZtF4aRHLTd6UeAieXvEMDPSYLCyE69PD9DjjU
+         ErHQ==
+X-Gm-Message-State: AO0yUKV2cGWjauRcyxhdL3++Cp7+wq/wi6jAAqnYX+90mZ0h3m+q+Lli
+        ICDFGuOA3ckC+8zwNRQODzEb0ZC402gsCT3gjbsdXH8g
+X-Google-Smtp-Source: AK7set+MWdri4mh3ohhBtzGkKy25cPA3xa0qhOawUt9CdCmWX/BF9DdxvoyfpfkQOUt1OsWmJAibtQ==
+X-Received: by 2002:a17:902:e546:b0:1a0:6bd4:ea9a with SMTP id n6-20020a170902e54600b001a06bd4ea9amr4556577plf.16.1678979661080;
+        Thu, 16 Mar 2023 08:14:21 -0700 (PDT)
+Received: from leoy-yangtze.lan ([156.59.236.112])
+        by smtp.gmail.com with ESMTPSA id s15-20020a170902ea0f00b0019602274208sm5687274plg.186.2023.03.16.08.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Mar 2023 08:14:20 -0700 (PDT)
+Date:   Thu, 16 Mar 2023 23:14:15 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.g.garry@oracle.com>,
+        James Clark <james.clark@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 11/16] perf kvm: Use histograms list to replace cached
+ list
+Message-ID: <20230316151316.GA2813925@leoy-yangtze.lan>
+References: <20230315145112.186603-1-leo.yan@linaro.org>
+ <20230315145112.186603-12-leo.yan@linaro.org>
+ <CAM9d7chSKPxMHzpKZ92xGZ+XmLpd2q2EJwMuszosXu_FO4_dgA@mail.gmail.com>
+ <20230316090418.GA2665235@leoy-yangtze.lan>
+ <ZBLrruagawAbxqoz@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] perf/x86/zhaoxin: Add Yongfeng support
-Content-Language: en-US
-To:     silviazhao <silviazhao-oc@zhaoxin.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     cobechen@zhaoxin.com, louisqi@zhaoxin.com, silviazhao@zhaoxin.com,
-        cooperyan@zhaoxin.com
-References: <20230316021647.771-1-silviazhao-oc@zhaoxin.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230316021647.771-1-silviazhao-oc@zhaoxin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZBLrruagawAbxqoz@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/15/23 19:16, silviazhao wrote:
-> +		case 0x5b:
-> +			zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
-> +				X86_CONFIG(.event = 0x02, .umask = 0x01, .inv = 0x01,
-> +						.cmask = 0x01);
+On Thu, Mar 16, 2023 at 07:13:02AM -0300, Arnaldo Carvalho de Melo wrote:
 
-On the Intel side of x86/ land, we used to have these open-coded
-model/family numbers scattered about.  But, a few years ago, we started
-populating arch/x86/include/asm/intel-family.h and using those instead.
-I think it's been pretty successful.  It's a lot easier to grep for
-INTEL_FAM6_NEHALEM_EX than for 0x2E.
+[...]
 
-Is there a chance we could start doing the same for other CPU vendors?
-Perhaps start with:
+> Since I build tested this already and had the other fixes, I'm pushing
+> this out to perf-tools-next (and perf/core for a while, for people not
+> knowing about the new nbranch names) and you can continue from there,
+> ok?
 
-#define ZHAOXIN_FAMILY_YONGFENG 0x5B
+Sure, I will send a fixing patch.
+
+Thanks,
+Leo
