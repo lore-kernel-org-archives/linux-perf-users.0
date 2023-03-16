@@ -2,55 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE1FC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 03:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A243BC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 03:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbjCPDCS (ORCPT
+        id S229471AbjCPDKT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 23:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60908 "EHLO
+        Wed, 15 Mar 2023 23:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjCPDCR (ORCPT
+        with ESMTP id S229489AbjCPDKR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 23:02:17 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052D6BBB23
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 20:02:16 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id u3-20020a17090a450300b00239db6d7d47so212326pjg.4
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 20:02:16 -0700 (PDT)
+        Wed, 15 Mar 2023 23:10:17 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444412056B
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 20:10:16 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id y2so350020pjg.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 20:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678935735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7EWiKEbOPUDyB/zyzM3aKt/kTkta+HN39sJbR4GK64=;
-        b=zda6cwqWDW/ZoGfEs0UKEVqsEmth82V2Op4mAzethVMRg93zU57nyUl68JRhzcpOQv
-         YN+splHI4ZJWsS/7IuLDd6eQ6IhqAmExpcMDGFcJH74LsNLvy7nFyJgX8l5XKJPzU29y
-         etx3nvUnF9kQc3+2d644rev8b8j42vSrpcNryJtfor1+0OHitsM1CFkBqQUtMOQTjUMW
-         Ci73rGO108SF3gs5JFXg0tOcVZDwiwQgpLwLDtZ8TkNv8TjbSiyJbfxg7QmfYjCWfzdl
-         xVk2AWAn4INbBEb0vx1Tc4vcGVxouJHGcexIDc6fd6n25NJ45gABMovrDxFO2Pt4S3Oc
-         0JNQ==
+        d=linaro.org; s=google; t=1678936216;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qdTpg3Vl/G//xMzeyCbPzh8UIOf3V5q7hPMjnAsDuG4=;
+        b=O005cU5dJsRih8ktI4SN6TV2OUApRrnoRcaWVToeUttS/lrimEXxRnrLoJyU3ZmEV0
+         ArbV8lY4vZn3rBZCMSd4aTGZqfKCvcU+14V/mY12/2PRrGS+1Qj9wwRG2PO9yII+P/r5
+         b8HvQFWG+xgFO5xbsRfAHBxpXXbgYusE1zQk+NDtjrQNsGMfbhNS89u7LzVwVtzT9odP
+         WB+nCdU4HnCdVmfcG5BPi4yQHuCZl3JJEcCnUnSR+YcSSaBn8lWbO6T2TknbC5d4o84b
+         JifdmI0mp4YTWtiIFMefKlJcI4E3KAWPT2o+DKL4y0xnJZvOZrR7VYWrs7nUIA/iTyI8
+         VnOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678935735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a7EWiKEbOPUDyB/zyzM3aKt/kTkta+HN39sJbR4GK64=;
-        b=FhuTHyHHWF3usevAqdmcfb/SHXxdtpUnR2G2cuBpEaoCUhtCNRbJPPNIG7x/klN8/5
-         rN372nHM7jMCzVE+AbqNUiGWV0uGnTi6t2x8Mw5DAS+pHCfHpP0SDgaILmkw/snNWC5I
-         bAMj1/QGuVQ5IONqvCN/gB1weMMoxKg8ikxYgeqmBUWC4LWUMKaZdGF2XbvQwRz+erSY
-         OEa7iUNaoOE0xc5416X/uMn7OM3Rmvzp5pCdvviSovgiOMjV7ZSfcAqFsxDN51v6ojry
-         TPQ0DLHOz+uTuNzvRPYVtS374b3DEMwyuFtibA/hENxLwG6/iZCQzsryMbk9oA70arl6
-         bM9w==
-X-Gm-Message-State: AO0yUKUGOW+qbe04I8LqyJmqcnr+j4hifypsBBCpyd8HY0f6TNYbF5rN
-        96rtYoZ+v1Lkyw63cikB01jWD8H9yepzURwxqqTM0ICh
-X-Google-Smtp-Source: AK7set8c5ZrGL+nvSbQvYycqwXtRzHVmOwi5GpQiW2J6MANXBQteRhZRjSlj0F7wF52H79vCfsNpFQ==
-X-Received: by 2002:a05:6a20:729c:b0:cc:eb3b:56e9 with SMTP id o28-20020a056a20729c00b000cceb3b56e9mr2856563pzk.1.1678935735350;
-        Wed, 15 Mar 2023 20:02:15 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678936216;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdTpg3Vl/G//xMzeyCbPzh8UIOf3V5q7hPMjnAsDuG4=;
+        b=JrTPuhtvT7MXa+2S9o3R8EuGyN9lv3qypVs06iT5TcK1/nAY/vYzD9Vm03fLr8ypCW
+         RXAqy2L4LWVVSIOOCps7URdODv2GHuxESaJDjx1S/8XiyoY4Z+Q+G3EDYPWi2tOUl2hU
+         QbBQeQ5IvTB/zfrKx3BCl4a7oBKi9mOlCRwYpXxUkKkXpA2KFQOkjoX/W9B9i4n+tZPS
+         eCVO8itpB1kyNUCpuwVDwcuqThFd7OzbeqgLgZaZ1f0GnRbnI0vii2UFuvKYDLrlvWws
+         Ms5mQYkfMr3W69v/d7aAeeoq6zqRBjU7s+7d9XkYohGG9QgbfNLogHpglOj9jFXPcfeK
+         1C/w==
+X-Gm-Message-State: AO0yUKUm+eA97q+qOZYa4d/Z33Hu/o516CaB63Lq9yX9F1FHmT7sUrBD
+        OKlcmNnoeGKv/uKAFrCD2GmS5Q==
+X-Google-Smtp-Source: AK7set//ovEB2NXtKp5RwZmadOOvHLadL6LO61G9fAXmSu+4SfMssw+lhhSHsOpjIR6kKqqWG/v7wQ==
+X-Received: by 2002:a17:90b:3902:b0:234:a88e:d67e with SMTP id ob2-20020a17090b390200b00234a88ed67emr1977794pjb.34.1678936215450;
+        Wed, 15 Mar 2023 20:10:15 -0700 (PDT)
 Received: from leoy-yangtze.lan ([107.151.177.133])
-        by smtp.gmail.com with ESMTPSA id c20-20020aa78814000000b005907716bf8bsm1729115pfo.60.2023.03.15.20.02.10
+        by smtp.gmail.com with ESMTPSA id b3-20020a170902bd4300b0019682e27995sm4310109plx.223.2023.03.15.20.10.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 20:02:14 -0700 (PDT)
-Date:   Thu, 16 Mar 2023 11:02:06 +0800
+        Wed, 15 Mar 2023 20:10:14 -0700 (PDT)
+Date:   Thu, 16 Mar 2023 11:10:06 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -64,54 +65,45 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 06/16] perf kvm: Introduce histograms data structures
-Message-ID: <20230316030206.GB2267252@leoy-yangtze.lan>
+Subject: Re: [PATCH v5 00/16] perf kvm: Support histograms and TUI mode
+Message-ID: <20230316031006.GC2267252@leoy-yangtze.lan>
 References: <20230315145112.186603-1-leo.yan@linaro.org>
- <20230315145112.186603-7-leo.yan@linaro.org>
- <ZBIgcX0TmC0tyFR0@kernel.org>
+ <ZBId6CEVp4mTiFhq@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZBIgcX0TmC0tyFR0@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZBId6CEVp4mTiFhq@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
-
-On Wed, Mar 15, 2023 at 04:45:53PM -0300, Arnaldo Carvalho de Melo wrote:
+On Wed, Mar 15, 2023 at 04:35:04PM -0300, Arnaldo Carvalho de Melo wrote:
 
 [...]
 
-> Had to add:
+> Trying to fix this:
 > 
-> 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index c4cb34df155fec67..b06c11d306a11cab 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -85,7 +85,6 @@ static struct kvm_event_key keys[] = {
->  	DEF_SORT_NAME_KEY(time, mean),
->  	{ NULL, NULL }
->  };
-> -#endif // defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
->  
->  struct kvm_hists {
->  	struct hists		hists;
-> @@ -100,6 +99,7 @@ static int kvm_hists__init(void)
->  	perf_hpp_list__init(&kvm_hists.list);
->  	return 0;
->  }
-> +#endif // defined(HAVE_KVM_STAT_SUPPORT) && defined(HAVE_LIBTRACEEVENT)
+> ⬢[acme@toolbox perf-tools-next]$ git log --oneline -1 ; time make -C tools/perf build-test
 
-Thanks for fixing up, this is fine for me.
+I tried to run the build-test after I fetched the branch
+acme/tmp.perf-tools-next and found errors; seems the errors are not
+related with perf kvm but it's good to check a bit.
 
-Seems to me it is not a good practice to use macros (and nested macros) to
-mute or unmute big chunk code.  I will try to refine the building
-builtin-kvm.c and prepare patches based on current code base.
+/usr/bin/ld: /usr/lib/llvm-15/lib/libclangSema.a(SemaRISCVVectorLookup.cpp.o): in function `clang::CreateRISCVIntrinsicManager(clang::Sema&)':
+(.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x1b8): undefined reference to `clang::RISCV::RVVIntrinsic::computeBuiltinTypes(llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>, bool, bool, bool, unsigned int)'
+/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x1f9): undefined reference to `clang::RISCV::RVVIntrinsic::computeBuiltinTypes(llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>, bool, bool, bool, unsigned int)'
+/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x2cc): undefined reference to `clang::RISCV::RVVType::computeTypes(clang::RISCV::BasicType, int, unsigned int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
+/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x2ec): undefined reference to `clang::RISCV::RVVIntrinsic::getSuffixStr[abi:cxx11](clang::RISCV::BasicType, int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
+/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x307): undefined reference to `clang::RISCV::RVVIntrinsic::getSuffixStr[abi:cxx11](clang::RISCV::BasicType, int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
+/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x36c): undefined reference to `clang::RISCV::RVVType::computeTypes(clang::RISCV::BasicType, int, unsigned int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
+collect2: error: ld returned 1 exit status
 
-P.s. I saw this series has been picked up into your branch
-acme/tmp.perf-tools-next, if you want me to follow up anything, please
-let me know.  Thank you!
+The complete building log is in the link:
+https://termbin.com/jujt.
 
+Later I think it would be a good habit to run build-test on my
+patches locally :)
+
+Thanks,
 Leo
