@@ -2,88 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C583C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 19:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F281CC76196
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 20:00:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230255AbjCPTmY (ORCPT
+        id S230234AbjCPUAs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 16 Mar 2023 15:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47820 "EHLO
+        Thu, 16 Mar 2023 16:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbjCPTmX (ORCPT
+        with ESMTP id S229534AbjCPUAe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 16 Mar 2023 15:42:23 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD2CE5008;
-        Thu, 16 Mar 2023 12:42:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678995739; x=1710531739;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Uj6dg8HajoHWiLlcjfZ1cC5m+o7lfOdaDPvUfS+JTUc=;
-  b=V0az4KmSNpQhRsXgK7F4AjZ1dyvrBdTMCIsXSUnFhoxpvn1w6T4RjfcO
-   piGmFQ1WfDFSJiMFjyvg+GwFAi2sIhh37IgZVoBluYEpfy5SO/O8DRFdc
-   s14Vaa+y062VyBLZJTz+M2u8r+AyzEaiUMHVXeUwF37OyHrlqEXn5JLBK
-   1pK/K+gpojAtjtr8ywu3K3+9X7xY5+4SfWs/tmUhJgIpTpoLBBCT/se4P
-   ZhTk1MuJ/XuaeMShPIuAHRYaGa/23ubdmOz03PkPvCEazMdTlu3C0JDl0
-   TOYoexKdJNmg9Jy0We2Sjy6cRQw5+TLU8Oo1WGpmB3o8EHcKy/IjBW+Rx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="326465427"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="326465427"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 12:42:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="823392406"
-X-IronPort-AV: E=Sophos;i="5.98,265,1673942400"; 
-   d="scan'208";a="823392406"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.221.172])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 12:42:16 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf tools: Avoid warning in do_realloc_array_as_needed()
-Date:   Thu, 16 Mar 2023 21:41:56 +0200
-Message-Id: <20230316194156.8320-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230316194156.8320-1-adrian.hunter@intel.com>
-References: <20230316194156.8320-1-adrian.hunter@intel.com>
+        Thu, 16 Mar 2023 16:00:34 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BA5CC309;
+        Thu, 16 Mar 2023 13:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=1+em3CxVhuR3t6hBfQ8ylZ5mFdk8mfxa3UhWs5bbebE=; b=jnfTLbEYvHHYc0U0zB3DuCNep9
+        VQUjClUzHpq6rCcIiW8MhZBjnyv1nSpWEGrOzwVtrLyDwxtMWEqU/2rj48STQjv+k14/9EaXBcmgi
+        sV61H+eMBJHKSn4mo5GbdWuV5UlK/ozBf/KO/CKgeEKGEzM8CCMuOiwOJMI6ObdjTTB3JsCMYkHgi
+        yZ1rIrtCpgy2ZEABBuS7URmVOsapvfSIYwhczA2gEESMwKyd9tggTRZHlDpFjEgf/NRXVax5yz8Z5
+        y5TWju9TY+Qj5SHP9hADSMEIyNjWprGlOKKfMMzptm+Bd5vjbM/vWKz5sqTKQ4j4GDPNUfl/oxobQ
+        jYRmVdFw==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1pctkx-000GR8-FZ; Thu, 16 Mar 2023 20:59:23 +0100
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1pctkw-0003g0-Nf; Thu, 16 Mar 2023 20:59:22 +0100
+Subject: Re: [PATCHv3 bpf-next 9/9] selftests/bpf: Add file_build_id test
+To:     Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+References: <20230316170149.4106586-1-jolsa@kernel.org>
+ <20230316170149.4106586-10-jolsa@kernel.org>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <478a8e03-dea3-ebca-8376-6b7e3b616b5e@iogearbox.net>
+Date:   Thu, 16 Mar 2023 20:59:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230316170149.4106586-10-jolsa@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26845/Thu Mar 16 19:16:15 2023)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-do_realloc_array_as_needed() used memcpy() of zero size with a NULL
-pointer. Check the size first to avoid sanitize warning.
+On 3/16/23 6:01 PM, Jiri Olsa wrote:
+> The test attaches bpf program to sched_process_exec tracepoint
+> and gets build of executed file from bprm->file object.
+> 
+> We use urandom_read as the test program and in addition we also
+> attach uprobe to liburandom_read.so:urandlib_read_without_sema
+> and retrieve and check build id of that shared library.
+> 
+> Also executing the no_build_id binary to verify the bpf program
+> gets the error properly.
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+[...]
+> diff --git a/tools/testing/selftests/bpf/progs/file_build_id.c b/tools/testing/selftests/bpf/progs/file_build_id.c
+> new file mode 100644
+> index 000000000000..6dc10c8e17ac
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/file_build_id.c
+> @@ -0,0 +1,70 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include "vmlinux.h"
+> +#include "err.h"
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include <linux/string.h>
+> +
+> +char _license[] SEC("license") = "GPL";
+> +
+> +int pid;
+> +
+> +u32 build_id_bin_size;
+> +u32 build_id_lib_size;
+> +
+> +char build_id_bin[BUILD_ID_SIZE_MAX];
+> +char build_id_lib[BUILD_ID_SIZE_MAX];
+> +
+> +long build_id_bin_err;
+> +long build_id_lib_err;
+> +
+> +static int store_build_id(struct file *file, char *build_id, u32 *sz, long *err)
+> +{
+> +	struct build_id *bid;
+> +
+> +	bid = file->f_build_id;
+> +	if (IS_ERR_OR_NULL(bid)) {
 
-Discovered using EXTRA_CFLAGS="-fsanitize=undefined -fsanitize=address".
+I think you might need to enable this also in the CI config:
 
-Reported-by: kernel test robot <yujie.liu@intel.com>
-Link: https://lore.kernel.org/oe-lkp/202303061424.6ad43294-yujie.liu@intel.com
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/util.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+   [...]
+     CLNG-BPF [test_maps] btf_dump_test_case_multidim.bpf.o
+     CLNG-BPF [test_maps] ima.bpf.o
+     CLNG-BPF [test_maps] bpf_cubic.bpf.o
+   progs/bpf_iter_task_vma_buildid.c:46:27: error: no member named 'f_build_id' in 'struct file'
+           if (IS_ERR_OR_NULL(file->f_build_id)) {
+                              ~~~~  ^
+   progs/bpf_iter_task_vma_buildid.c:51:37: error: no member named 'f_build_id' in 'struct file'
+                   __builtin_memcpy(&build_id, file->f_build_id, sizeof(*file->f_build_id));
+                                               ~~~~  ^
+   progs/bpf_iter_task_vma_buildid.c:51:63: error: no member named 'f_build_id' in 'struct file'
+                   __builtin_memcpy(&build_id, file->f_build_id, sizeof(*file->f_build_id));
+                                                                         ~~~~  ^
+   3 errors generated.
+   make: *** [Makefile:578: /tmp/work/bpf/bpf/tools/testing/selftests/bpf/bpf_iter_task_vma_buildid.bpf.o] Error 1
+   make: *** Waiting for unfinished jobs....
+   make: Leaving directory '/tmp/work/bpf/bpf/tools/testing/selftests/bpf'
+   Error: Process completed with exit code 2.
 
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index b356c9f7f0c3..089208b51e68 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -524,7 +524,8 @@ int do_realloc_array_as_needed(void **arr, size_t *arr_sz, size_t x, size_t msz,
- 	new_arr = calloc(new_sz, msz);
- 	if (!new_arr)
- 		return -ENOMEM;
--	memcpy(new_arr, *arr, *arr_sz * msz);
-+	if (*arr_sz)
-+		memcpy(new_arr, *arr, *arr_sz * msz);
- 	if (init_val) {
- 		for (i = *arr_sz; i < new_sz; i++)
- 			memcpy(new_arr + (i * msz), init_val, msz);
--- 
-2.34.1
-
+Thanks,
+Daniel
