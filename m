@@ -2,108 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A243BC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 03:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3ADC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 16 Mar 2023 05:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbjCPDKT (ORCPT
+        id S229690AbjCPFSc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 15 Mar 2023 23:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49840 "EHLO
+        Thu, 16 Mar 2023 01:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbjCPDKR (ORCPT
+        with ESMTP id S229494AbjCPFSb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 15 Mar 2023 23:10:17 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444412056B
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 20:10:16 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id y2so350020pjg.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Mar 2023 20:10:16 -0700 (PDT)
+        Thu, 16 Mar 2023 01:18:31 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8734FA4B01;
+        Wed, 15 Mar 2023 22:18:29 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id l9-20020a17090a3f0900b0023d32684e7fso4945548pjc.1;
+        Wed, 15 Mar 2023 22:18:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678936216;
+        d=gmail.com; s=20210112; t=1678943909;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qdTpg3Vl/G//xMzeyCbPzh8UIOf3V5q7hPMjnAsDuG4=;
-        b=O005cU5dJsRih8ktI4SN6TV2OUApRrnoRcaWVToeUttS/lrimEXxRnrLoJyU3ZmEV0
-         ArbV8lY4vZn3rBZCMSd4aTGZqfKCvcU+14V/mY12/2PRrGS+1Qj9wwRG2PO9yII+P/r5
-         b8HvQFWG+xgFO5xbsRfAHBxpXXbgYusE1zQk+NDtjrQNsGMfbhNS89u7LzVwVtzT9odP
-         WB+nCdU4HnCdVmfcG5BPi4yQHuCZl3JJEcCnUnSR+YcSSaBn8lWbO6T2TknbC5d4o84b
-         JifdmI0mp4YTWtiIFMefKlJcI4E3KAWPT2o+DKL4y0xnJZvOZrR7VYWrs7nUIA/iTyI8
-         VnOg==
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lQkThabclSFSrHGkVJhUFLMeitSegsGICR7uAMH5ljA=;
+        b=BE+qN+1QWaTed4BsGauV2Ri3pefR5tuFT20PGI/ArdoWosFZS14/w9Uh5sKPvXaEEv
+         Wb4+bydqPAPvhv8BuhK/auhUBSE5rLdFqqUmy6b9z6UQBgmG1Xk9Tyf+RQ9XjqtZTPA+
+         KLy6B5OMwWdda25FZDZrlpXy4iOi9Z3a1MquILGzZ6D3wTL7Yjv3S7h6Of6vLTS0e0I4
+         qf/UfF5Wooz1tn0H+8nw6HteIAMij5GCAXrqHJzVhFcOta4eSkj5QKmmKl3EI90f9LEB
+         3rZAeYmALxCNzZg2aOyKoglwPtHaDYhsXN0NE5EwFleeZfEqNe1jD+w2XmCBmKgYgmpx
+         0kSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678936216;
+        d=1e100.net; s=20210112; t=1678943909;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qdTpg3Vl/G//xMzeyCbPzh8UIOf3V5q7hPMjnAsDuG4=;
-        b=JrTPuhtvT7MXa+2S9o3R8EuGyN9lv3qypVs06iT5TcK1/nAY/vYzD9Vm03fLr8ypCW
-         RXAqy2L4LWVVSIOOCps7URdODv2GHuxESaJDjx1S/8XiyoY4Z+Q+G3EDYPWi2tOUl2hU
-         QbBQeQ5IvTB/zfrKx3BCl4a7oBKi9mOlCRwYpXxUkKkXpA2KFQOkjoX/W9B9i4n+tZPS
-         eCVO8itpB1kyNUCpuwVDwcuqThFd7OzbeqgLgZaZ1f0GnRbnI0vii2UFuvKYDLrlvWws
-         Ms5mQYkfMr3W69v/d7aAeeoq6zqRBjU7s+7d9XkYohGG9QgbfNLogHpglOj9jFXPcfeK
-         1C/w==
-X-Gm-Message-State: AO0yUKUm+eA97q+qOZYa4d/Z33Hu/o516CaB63Lq9yX9F1FHmT7sUrBD
-        OKlcmNnoeGKv/uKAFrCD2GmS5Q==
-X-Google-Smtp-Source: AK7set//ovEB2NXtKp5RwZmadOOvHLadL6LO61G9fAXmSu+4SfMssw+lhhSHsOpjIR6kKqqWG/v7wQ==
-X-Received: by 2002:a17:90b:3902:b0:234:a88e:d67e with SMTP id ob2-20020a17090b390200b00234a88ed67emr1977794pjb.34.1678936215450;
-        Wed, 15 Mar 2023 20:10:15 -0700 (PDT)
-Received: from leoy-yangtze.lan ([107.151.177.133])
-        by smtp.gmail.com with ESMTPSA id b3-20020a170902bd4300b0019682e27995sm4310109plx.223.2023.03.15.20.10.10
+        bh=lQkThabclSFSrHGkVJhUFLMeitSegsGICR7uAMH5ljA=;
+        b=8M1hps6kLP5qgkvytg8Gt7T1bx+HuNXcb8bmy5MFf4vfAs84d1JvjaxvtzmPlNfN38
+         lSRZ3pvulPcr8+8r7Rz0wZYQG4umjYxIqdkcE6sWeo8ZLFyuOjYl4eIxnuwszFtl+FYN
+         6Bu66VsdzJyBe8dZtYM+FZBUPpdBJFPhRKTaKFlEe7GRHt027jpyaVWF/TFlMiB2XlZ5
+         PMkn0Ul8yCHypUTW5mVKNovu9PWej4cIDJbQ1Z9Eky5LTj1t9m6UprUUiz2H2eS3SGND
+         PuPz43BL1z5d38dMPzux1BR8JaSOWuROT/ZXUIHbJUfF0YasGeO5R+MC7/dqFNhNwRJ8
+         smhw==
+X-Gm-Message-State: AO0yUKWFYZXgtV7zcrFhFBwmezePZv/U6jeE2rth8yveXyoUjEm/Udyc
+        fbxqBxMWKkNYl2vR0SK5bBE=
+X-Google-Smtp-Source: AK7set9pwYn/0Xs8MzesfRiBTkcJdFM+9hnGUi2AiBSNyCiGA4Ur8oy3VTgaMyMJh2hzKoGUBW5DzA==
+X-Received: by 2002:a17:902:db07:b0:19c:be57:9c82 with SMTP id m7-20020a170902db0700b0019cbe579c82mr2186934plx.65.1678943908829;
+        Wed, 15 Mar 2023 22:18:28 -0700 (PDT)
+Received: from google.com ([2620:15c:2d4:203:894e:b93:8c44:3d78])
+        by smtp.gmail.com with ESMTPSA id q11-20020a170902f78b00b0019ee0ad15b4sm4477573pln.191.2023.03.15.22.18.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 20:10:14 -0700 (PDT)
-Date:   Thu, 16 Mar 2023 11:10:06 +0800
-From:   Leo Yan <leo.yan@linaro.org>
+        Wed, 15 Mar 2023 22:18:28 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+Date:   Wed, 15 Mar 2023 22:18:25 -0700
+From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        James Clark <james.clark@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Cc:     Jiri Olsa <jolsa@kernel.org>, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 00/16] perf kvm: Support histograms and TUI mode
-Message-ID: <20230316031006.GC2267252@leoy-yangtze.lan>
-References: <20230315145112.186603-1-leo.yan@linaro.org>
- <ZBId6CEVp4mTiFhq@kernel.org>
+        Ingo Molnar <mingo@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 02/10] perf bpf filter: Implement event sample filtering
+Message-ID: <ZBKmoeGAmlhv+yvc@google.com>
+References: <20230314234237.3008956-1-namhyung@kernel.org>
+ <20230314234237.3008956-3-namhyung@kernel.org>
+ <ZBHxRaP7BC+qDzJ/@kernel.org>
+ <ZBH0s5P2KV5bJR3h@kernel.org>
+ <CAM9d7cjrFT=c-Obw8TsVk3ntGtUEUoGzco8mUssiSPvuZN-iKw@mail.gmail.com>
+ <ZBImvCSuWFUgjgQj@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZBId6CEVp4mTiFhq@kernel.org>
+In-Reply-To: <ZBImvCSuWFUgjgQj@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 04:35:04PM -0300, Arnaldo Carvalho de Melo wrote:
-
-[...]
-
-> Trying to fix this:
+On Wed, Mar 15, 2023 at 05:12:44PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Mar 15, 2023 at 09:51:03AM -0700, Namhyung Kim escreveu:
+> > On Wed, Mar 15, 2023 at 9:39 AM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > Em Wed, Mar 15, 2023 at 01:24:37PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > Em Tue, Mar 14, 2023 at 04:42:29PM -0700, Namhyung Kim escreveu:
+> > > > > The BPF program will be attached to a perf_event and be triggered when
+> > > > > it overflows.  It'd iterate the filters map and compare the sample
+> > > > > value according to the expression.  If any of them fails, the sample
+> > > > > would be dropped.
+> > > > >
+> > > > > Also it needs to have the corresponding sample data for the expression
+> > > > > so it compares data->sample_flags with the given value.  To access the
+> > > > > sample data, it uses the bpf_cast_to_kern_ctx() kfunc which was added
+> > > > > in v6.2 kernel.
+> > > > >
+> > > > > Acked-by: Jiri Olsa <jolsa@kernel.org>
+> > > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > >
+> > > >
+> > > > I'm noticing this while building on a debian:11 container:
+> > > >
+> > > >   GENSKEL /tmp/build/perf/util/bpf_skel/bperf_leader.skel.h
+> > > >   GENSKEL /tmp/build/perf/util/bpf_skel/bperf_follower.skel.h
+> > > >   GENSKEL /tmp/build/perf/util/bpf_skel/func_latency.skel.h
+> > > >   GENSKEL /tmp/build/perf/util/bpf_skel/bpf_prog_profiler.skel.h
+> > > >   GENSKEL /tmp/build/perf/util/bpf_skel/kwork_trace.skel.h
+> > > >   GENSKEL /tmp/build/perf/util/bpf_skel/sample_filter.skel.h
+> > > > libbpf: failed to find BTF for extern 'bpf_cast_to_kern_ctx' [21] section: -2
+> > > > Error: failed to open BPF object file: No such file or directory
+> > > > make[2]: *** [Makefile.perf:1085: /tmp/build/perf/util/bpf_skel/sample_filter.skel.h] Error 254
+> > > > make[2]: *** Deleting file '/tmp/build/perf/util/bpf_skel/sample_filter.skel.h'
+> > > > make[2]: *** Waiting for unfinished jobs....
+> > > > make[1]: *** [Makefile.perf:236: sub-make] Error 2
+> > > > make: *** [Makefile:70: all] Error 2
+> > > > make: Leaving directory '/git/perf-6.3.0-rc1/tools/perf'
+> > > > + exit 1
+> > > > [perfbuilder@five 11]$
+> > >
+> > > Same thing on debian:10
+> > 
+> > Hmm.. I thought extern symbols with__ksym are runtime
+> > dependencies and it should build on old kernels too.
+> > 
+> > BPF folks, any suggestions?
 > 
-> ⬢[acme@toolbox perf-tools-next]$ git log --oneline -1 ; time make -C tools/perf build-test
+> Fedora 33 also fails, see below, but these work:
 
-I tried to run the build-test after I fetched the branch
-acme/tmp.perf-tools-next and found errors; seems the errors are not
-related with perf kvm but it's good to check a bit.
-
-/usr/bin/ld: /usr/lib/llvm-15/lib/libclangSema.a(SemaRISCVVectorLookup.cpp.o): in function `clang::CreateRISCVIntrinsicManager(clang::Sema&)':
-(.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x1b8): undefined reference to `clang::RISCV::RVVIntrinsic::computeBuiltinTypes(llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>, bool, bool, bool, unsigned int)'
-/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x1f9): undefined reference to `clang::RISCV::RVVIntrinsic::computeBuiltinTypes(llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>, bool, bool, bool, unsigned int)'
-/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x2cc): undefined reference to `clang::RISCV::RVVType::computeTypes(clang::RISCV::BasicType, int, unsigned int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
-/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x2ec): undefined reference to `clang::RISCV::RVVIntrinsic::getSuffixStr[abi:cxx11](clang::RISCV::BasicType, int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
-/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x307): undefined reference to `clang::RISCV::RVVIntrinsic::getSuffixStr[abi:cxx11](clang::RISCV::BasicType, int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
-/usr/bin/ld: (.text._ZN5clang27CreateRISCVIntrinsicManagerERNS_4SemaE+0x36c): undefined reference to `clang::RISCV::RVVType::computeTypes(clang::RISCV::BasicType, int, unsigned int, llvm::ArrayRef<clang::RISCV::PrototypeDescriptor>)'
-collect2: error: ld returned 1 exit status
-
-The complete building log is in the link:
-https://termbin.com/jujt.
-
-Later I think it would be a good habit to run build-test on my
-patches locally :)
+Maybe I can declare it as a weak symbol.  How about this?
 
 Thanks,
-Leo
+Namhyung
+
+---8<---
+
+diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+index 57e3c67d6d37..52cbdd1765cd 100644
+--- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
++++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+@@ -17,7 +17,7 @@ struct filters {
+
+ int dropped;
+
+-void *bpf_cast_to_kern_ctx(void *) __ksym;
++void *bpf_cast_to_kern_ctx(void *) __ksym __weak;
+
+ /* new kernel perf_sample_data definition */
+ struct perf_sample_data___new {
+@@ -118,6 +118,10 @@ int perf_sample_filter(void *ctx)
+ 	int group_result = 0;
+ 	int i;
+
++	/* no kernel context support, no filtering */
++	if (!bpf_cast_to_kern_ctx)
++		return 1;
++
+ 	kctx = bpf_cast_to_kern_ctx(ctx);
+
+ 	for (i = 0; i < MAX_FILTERS; i++) {
+
