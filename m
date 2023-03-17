@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FB2C76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 19:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DE5C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 19:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229787AbjCQTuv (ORCPT
+        id S230137AbjCQTvI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 15:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37026 "EHLO
+        Fri, 17 Mar 2023 15:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229887AbjCQTuq (ORCPT
+        with ESMTP id S229911AbjCQTuv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 15:50:46 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5254AFC4
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 12:50:41 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id n33-20020a17090a5aa400b0023b4f444476so2702873pji.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 12:50:41 -0700 (PDT)
+        Fri, 17 Mar 2023 15:50:51 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41EF4FABC
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 12:50:43 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id ch1-20020a0569020b0100b00b3cc5b4fa9dso6244361ybb.12
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 12:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679082641;
+        d=google.com; s=20210112; t=1679082643;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z72R+3odzfiNkyX6SGGSqUQNHo1bmT9+pfk1eNIvl7o=;
-        b=GN2SLPKRMda0UocyaeMMDhoPnXjXS6wzxhV4spf1woRM0Pd7GRpnUmjWIZ5Icnq+sx
-         lJWebUhxwCIQO9Pj3ZFOzqj6/fC+ZaEsju01x2S/bzLIm8pltxc2Sat+2cjblcbdKu8H
-         4gqXVEEOdeZtJztVvnN/WU9G3dTzct/mX6/U749LYRTMRF/qWmvtKnRvOS6LKccJ3Q7D
-         JJ+VvjKzYOi03Vctd2SMh6/HirKWPMFwHkNx2fUoHTJYv3HgLnom8eFlUyI3VdRyebiJ
-         w9LBNCrjsmcL8mVGuzWUdWPCEiuFSlqpWYtnKFHKGzSuCfGQHYJnBKRyxRU9QNf40l77
-         SQww==
+        bh=bzLjpALMNgZO7D58TEpXLTW3ZAq+0ArtuotO+lK7MeI=;
+        b=rfDE15TqBibmTXBcKQLshSEj4c6MwqUGxMquOL0OuWRBYtGNLzBp8EE5cIbjyXxbRX
+         ukRcpP1Wfdp7D7qmGxMa7oLQdH34lzLP9g6O1OToXRqSwo0uaVAIL91sp7hL/FyOL+IR
+         EYeYOPg16SxhFexw2qhP1MszVnslWyhD7gvV4faQmDYs/G2EkHE5uUEEwYgK+6KCsn36
+         8Z5QorSBDI9KtAxdoIaVBFKPz5RRO+mCmbmdX67tnvlYglVv+lu+suEwbHDH4pPoXlKa
+         aMj1juzDu3StwVf4JmKr4iYJBtjmhmL6DKEhwTylpdahoarWAzq+aVp9YqviLI9YapPb
+         ctxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679082641;
+        d=1e100.net; s=20210112; t=1679082643;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z72R+3odzfiNkyX6SGGSqUQNHo1bmT9+pfk1eNIvl7o=;
-        b=UA7tVEsj7u+BKJzM+SMRJvmVCkihBpoNiP8xhLFuwOqffdLkJV61QMaRyLsYuUwbv6
-         SHjXVvRJ6YNotoSZF+KWprikICI9xNud9V23q5iP6Zl6LDBl3uQwAlo3RSsKMhIgRCRl
-         36wBpaOHf8Q5TCbENTPPaIXkkSGHk87se+xo7AkedDHvELEot2nbwnSy8gcV8C6yiknc
-         r8fcFO3hr0CBOVEt/B9do98R0U8SFqCPz2yJs8tXq9ZPBviP3xTFjZL/C8FY1qC3scLr
-         qcw+ZYQY+svovFjhr3EDUVV9zdsCYerzUmD6e9x2wNFHQqbD3ZlU4i+42rrN06ZOnLPS
-         GQRw==
-X-Gm-Message-State: AO0yUKXMDLawzwGOfQKMZMRfVbDwym/KfxDCl3n54Oiwqzl2SvlCprMs
-        xotOoWiJ3RtX742u2p4Wcqa0NeD5c9aSXNM=
-X-Google-Smtp-Source: AK7set8bLjWRAqpMz9hYfPmb4+QfmXU1/pHVOHvQ8yGi0o0OYjh6bRGR/OHWF5WezN91QfrFA6teCY/w+iDwzqk=
+        bh=bzLjpALMNgZO7D58TEpXLTW3ZAq+0ArtuotO+lK7MeI=;
+        b=FZs4Gk4Q7K+6Gx7cFPhN702wn6wyrdlPnUBrLzxuSpztHJ/iqqtKR77t6WpOP5fOzY
+         25uD+QMbNPwSoVeHvSVygLc9NxinVLc3V7mMGCHI0lX3MyFUb+parnfbp+zUUQGLZTUk
+         8HEBZGbkGSb1VcmepAhOjg2FjaO2wtGPThkMDGU00FGvPhFupm/dEO31wq2sIIx1PPg1
+         aFKJr/kbsBUpS4RlHVcbRqxTGnX5CrSTLoMhM6XcYH2T9eh9jyTQNCtEz3uqBASVgkkC
+         n5NG6qwIAWFKX1LmTs1o786vZcbUN0Q/ygkbp7rqYCivngI2tEkaDiVPeIU4SbFHr2Nq
+         +Hkw==
+X-Gm-Message-State: AO0yUKU4AQT2XDxbK4yaXt196K2Tgjz6fXN3VPPlsmitGQOmrZBWSSBn
+        oS51VRZKx3QhsM9wFLP/iv88CLmav1E2BoI=
+X-Google-Smtp-Source: AK7set+m7P9XPq+3Ux7nA0IYcb2cZgCLFWfZ4IOd9qnHlpeaYU67uI0KBzpA9cBUep4TzOcEY2DLbdhoLgSHnk0=
 X-Received: from zaidcloud.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5325])
- (user=zalbassam job=sendgmr) by 2002:a17:903:3295:b0:19f:30be:e9f6 with SMTP
- id jh21-20020a170903329500b0019f30bee9f6mr3465284plb.6.1679082641228; Fri, 17
- Mar 2023 12:50:41 -0700 (PDT)
-Date:   Fri, 17 Mar 2023 15:50:23 -0400
+ (user=zalbassam job=sendgmr) by 2002:a05:6902:100d:b0:b51:9eff:ea80 with SMTP
+ id w13-20020a056902100d00b00b519effea80mr473731ybt.6.1679082643007; Fri, 17
+ Mar 2023 12:50:43 -0700 (PDT)
+Date:   Fri, 17 Mar 2023 15:50:24 -0400
 In-Reply-To: <20230317195027.3746949-1-zalbassam@google.com>
 Mime-Version: 1.0
 References: <20230317195027.3746949-1-zalbassam@google.com>
 X-Mailer: git-send-email 2.40.0.rc2.332.ga46443480c-goog
-Message-ID: <20230317195027.3746949-5-zalbassam@google.com>
-Subject: [PATCH v4 4/8] perf: pmuv3: Move inclusion of kvm_host.h to the
- arch-specific helper
+Message-ID: <20230317195027.3746949-6-zalbassam@google.com>
+Subject: [PATCH v4 5/8] perf: pmuv3: Change GENMASK to GENMASK_ULL
 From:   Zaid Al-Bassam <zalbassam@google.com>
 To:     Jesus Sanchez-Palencia <jesussanp@google.com>,
         Russell King <linux@armlinux.org.uk>,
@@ -81,43 +80,41 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-KVM host support is available only on arm64.
-
-By moving the inclusion of kvm_host.h to an arm64-specific file,
-the 32bit architecture will be able to implement dummy helpers.
+GENMASK macro uses "unsigned long" (32-bit wide on arm and 64-bit
+on arm64), This causes build issues when enabling PMUv3 on arm as
+it tries to access bits > 31. This patch switches the GENMASK to
+GENMASK_ULL, which uses "unsigned long long" (64-bit on both arm
+and arm64).
 
 Signed-off-by: Zaid Al-Bassam <zalbassam@google.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/include/asm/arm_pmuv3.h | 2 ++
- drivers/perf/arm_pmuv3.c           | 1 -
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/perf/arm_pmuv3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
-index 80cdfa4c3e88..d6b51deb7bf0 100644
---- a/arch/arm64/include/asm/arm_pmuv3.h
-+++ b/arch/arm64/include/asm/arm_pmuv3.h
-@@ -6,6 +6,8 @@
- #ifndef __ASM_PMUV3_H
- #define __ASM_PMUV3_H
- 
-+#include <linux/kvm_host.h>
-+
- #include <asm/cpufeature.h>
- #include <asm/sysreg.h>
- 
 diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index f7d890af8cc1..2cab600af4fd 100644
+index 2cab600af4fd..fc8ed3cd0330 100644
 --- a/drivers/perf/arm_pmuv3.c
 +++ b/drivers/perf/arm_pmuv3.c
-@@ -16,7 +16,6 @@
+@@ -489,7 +489,7 @@ static bool armv8pmu_event_needs_bias(struct perf_event *event)
+ static u64 armv8pmu_bias_long_counter(struct perf_event *event, u64 value)
+ {
+ 	if (armv8pmu_event_needs_bias(event))
+-		value |= GENMASK(63, 32);
++		value |= GENMASK_ULL(63, 32);
  
- #include <linux/acpi.h>
- #include <linux/clocksource.h>
--#include <linux/kvm_host.h>
- #include <linux/of.h>
- #include <linux/perf/arm_pmu.h>
- #include <linux/perf/arm_pmuv3.h>
+ 	return value;
+ }
+@@ -497,7 +497,7 @@ static u64 armv8pmu_bias_long_counter(struct perf_event *event, u64 value)
+ static u64 armv8pmu_unbias_long_counter(struct perf_event *event, u64 value)
+ {
+ 	if (armv8pmu_event_needs_bias(event))
+-		value &= ~GENMASK(63, 32);
++		value &= ~GENMASK_ULL(63, 32);
+ 
+ 	return value;
+ }
 -- 
 2.40.0.rc2.332.ga46443480c-goog
 
