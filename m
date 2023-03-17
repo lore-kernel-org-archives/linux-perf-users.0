@@ -2,109 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D16BC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 10:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E817C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 10:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230180AbjCQKFw (ORCPT
+        id S229878AbjCQK5y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 06:05:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38058 "EHLO
+        Fri, 17 Mar 2023 06:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjCQKFv (ORCPT
+        with ESMTP id S229838AbjCQK5t (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 06:05:51 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8373962FFB;
-        Fri, 17 Mar 2023 03:05:49 -0700 (PDT)
-Received: from kwepemi500007.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PdKW15tLFzKnWN;
-        Fri, 17 Mar 2023 18:05:01 +0800 (CST)
-Received: from huawei.com (10.174.179.93) by kwepemi500007.china.huawei.com
- (7.221.188.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 17 Mar
- 2023 18:05:17 +0800
-From:   Hangliang Lai <laihangliang1@huawei.com>
-To:     <liuwenyu7@huawei.com>, <acme@kernel.org>,
-        <adrian.hunter@intel.com>, <alexander.shishkin@linux.intel.com>,
-        <brauner@kernel.org>, <hewenliang4@huawei.com>,
-        <irogers@google.com>, <jolsa@kernel.org>, <linfeilong@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <mark.rutland@arm.com>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <yeyunfeng@huawei.com>
-Subject: [PATCH] perf top: expand the range of multithreaded phase
-Date:   Fri, 17 Mar 2023 18:05:14 +0800
-Message-ID: <20230317100514.1373-1-laihangliang1@huawei.com>
-X-Mailer: git-send-email 2.37.3.windows.1
+        Fri, 17 Mar 2023 06:57:49 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA6AE91AE
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 03:57:43 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id iw3so4895001plb.6
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 03:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679050662;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6rFPd3VuqvE+nV0qASh7ejPCqIICCfENYOm20TTJbVg=;
+        b=ecaLmzBaDA9Ic3qvSF+8dzA73mQcRPO25KEey0qlXzC/l5d6Yq5G8UXdRncHxFLm9Y
+         Ezc3C07QvIGQ0eoIO1C5m0EMwXOGrbno927Q1P/itIr0OsZXtB0DmbP1gce3aexzADjS
+         LELTF8X540luGaMa1cYI+epJGB/2SuYp21caqCVD2Sid0PxXeAMmXA93fbCQ5lixTRXj
+         lQs3YeSi4I/gO8J1SI8bYSxP0DVdNV+yge/vNa/PbTV5GKNPvQ79Wup4bRuxNR9a17yI
+         eiHINfhIEB9gLaCq/auqFoQE9LrdKKXW3PTfUU58m2HR5jgMfRHulNLpRj25+i5A4P1u
+         EvXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679050662;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6rFPd3VuqvE+nV0qASh7ejPCqIICCfENYOm20TTJbVg=;
+        b=AjdIbNMFGSkp2e6G8X3+IdPanmHX8JTfA3tgvvYj0uuen1ZG4+a5qoQ+Ax4e3xpnwB
+         FqlS70bs8qiZ/7irjOmgwCM+A8LO+IK2kPDHDb2W3Gv+XfRa9OAK4zQV5gI6QxmCRhD+
+         Uj4j3tzIjfYlQo66NGcYHjSrBUYHirN6QStME1MUasAxi4g45GYjKfmjNDTlF/2EQuWR
+         H6mvkAssXnRGe7FkR9m1LX/kQ16Ynu0b7Cq3yBoqkRpOwEY6SOzQHb5Dbjla2oNqNWA+
+         SgVi9W/A+hE+6bEPcyLakbyHH2nejyUMW3JHl+PwgIsP7VqLV01LdVfUB9QITX9zQo3H
+         5wkQ==
+X-Gm-Message-State: AO0yUKWcHDPlqA8JnQRdlgqhnPQbXcrIU1/fdyiMd45ckQ1Xtl5pxjja
+        NO8q0LJEGD/SZdBsLyebLZ0=
+X-Google-Smtp-Source: AK7set+KglzLGhbiUFdbU/13wmWLFaKLGbXxLd3VxtoQIKmp8vapVVhR8yePFnUtk4XVr2PxexlyjA==
+X-Received: by 2002:a17:90b:1808:b0:23e:2b3c:d4a7 with SMTP id lw8-20020a17090b180800b0023e2b3cd4a7mr7671233pjb.35.1679050662401;
+        Fri, 17 Mar 2023 03:57:42 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:9b5e:6556:7e3f:618e:d8d8])
+        by smtp.gmail.com with ESMTPSA id u21-20020a17090ae01500b0023f3fc5d162sm1958834pjy.25.2023.03.17.03.57.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Mar 2023 03:57:42 -0700 (PDT)
+From:   Anup Sharma <anupnewsmail@gmail.com>
+X-Google-Original-From: Anup Sharma <AnupSharma>
+Date:   Fri, 17 Mar 2023 16:27:36 +0530
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org,
+        namhyung@kernel.org, irogers+gsoc22@google.com,
+        anupnewsmail@gmail.com
+Subject: Re: [RFC] Open Source Contribution | GSoC Perf
+Message-ID: <ZBRHoIuv2g6RTdAx@yoga>
+References: <ZAZVazubl60xYaO8@yoga>
+ <CAP-5=fVT3vh8j8FVAdr2Zp2bTpCxdLGW4Gkndb6-mmNdRcW7ug@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.179.93]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500007.china.huawei.com (7.221.188.207)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVT3vh8j8FVAdr2Zp2bTpCxdLGW4Gkndb6-mmNdRcW7ug@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In __cmd_top, perf_set_multithreaded is used to enable pthread_rwlock, thus
-donw_read and down_write can work to handle concurrency problems. Then top 
-use perf_set_singlethreaded and switch to single threaded phase, assuming 
-that no thread concurrency will happen later. 
-
-However, a UAF problem could occur in perf top in single threaded phase, 
-The concurrent procedure is like this:
-
-display_thread                              process_thread
---------------                              --------------
-
-thread__comm_len
-  -> thread__comm_str
-    -> __thread__comm_str(thread)
-                                            thread__delete
-                                             -> comm__free
-                                              -> comm_str__put
-                                               -> zfree(&cs->str)
-    -> thread->comm_len = strlen(comm);
-
-Since in single thread phase, perf_singlethreaded is true, down_read and 
-down_write can not work to avoid concurrency problems.
-
-This patch put perf_set_singlethreaded to the function tail to expand the 
-multithreaded phase range, make display_thread and process_thread run
-safe. 
-
-Signed-off-by: Hangliang Lai  <laihangliang1@huawei.com>
-Reported-by: Wenyu Liu <liuwenyu7@huawei.com>
-Reviewed-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- tools/perf/builtin-top.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 7c6413447..74239940b 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1280,9 +1280,6 @@ static int __cmd_top(struct perf_top *top)
- 				    top->evlist->core.threads, false,
- 				    top->nr_threads_synthesize);
- 
--	if (top->nr_threads_synthesize > 1)
--		perf_set_singlethreaded();
--
- 	if (perf_hpp_list.socket) {
- 		ret = perf_env__read_cpu_topology_map(&perf_env);
- 		if (ret < 0) {
-@@ -1359,6 +1356,10 @@ out_join:
- out_join_thread:
- 	pthread_cond_signal(&top->qe.cond);
- 	pthread_join(thread_process, NULL);
-+
-+	if (top->nr_threads_synthesize > 1)
-+		perf_set_singlethreaded();
-+
- 	return ret;
- }
- 
--- 
-2.33.0
-
+On Tue, Mar 07, 2023 at 10:57:23AM -0800, Ian Rogers wrote:
+> On Mon, Mar 6, 2023 at 1:04 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> >
+> > Hello, Perf!
+> > I'm interested in joining the perf community and learning more about how to start contributing because of my desire to learn more about the Linux kernel and performance.
+> > I've only recently started using Perf Tool, but I'm really enjoying seeing the metrics and outcomes. I want to resolve a few inconsistencies I found on a wiki page while learning, so if you have any suggestions, please let me know.
+> > 1. LINK BROKEN under Tutorial-> Linux Sourcecode: /tools/perf (hyperlink: ) correct (
+> > 2. LINK BROKEN under Hardware Reference -> Performance Counters for Linux: hyperlink for PCL core kernel data structures, PCL core kernel internals, perf tool internals are not available. Can anyone help me to know why this contents are not available on wiki?
+> > 3. ALLIGNMENT : Under Glossary -> BPF counter, Off-CPU, Multiplexing is not alliged properly.
+> > 4. INFO MISSING: Under Glossary -> offcore is TODO.
+> >
+> > I've also invested some time going though Brendan Gregg conference talk and wiki page,  I'd be delighted to contribute to any of the open tasks!
+> > Thank you all for your time.
+> 
+> Thanks Anup!
+> 
+> Updating the wiki is great! I was looking at your changes, I'd
+> encourage linux-perf-users to checkout updates at:
+> https://perf.wiki.kernel.org/index.php/Special:RecentChanges
+> 
+> I wanted to give some feedback on just one of the changes:
+> https://perf.wiki.kernel.org/index.php?title=Tutorial&curid=22&diff=3921&oldid=3520
+> The maintainer's source tree is at:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/
+> which gets integrated into the main Linus tree at:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/
+> I think it would be better to use these rather than which given the
+> version number in the URL looks quite out-of-date compared to Linux
+> 6.2:
+> http://lxr.linux.no/linux+v2.6.39/tools/perf/
+>
+Done. 
+> Thanks,
+> Ian
+> 
+> > With regards,
+> > Anup Sharma
