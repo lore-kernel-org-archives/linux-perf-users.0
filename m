@@ -2,399 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9385C7618B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 19:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8951C7618B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 21:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbjCQTvN (ORCPT
+        id S229885AbjCQVO2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 15:51:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37040 "EHLO
+        Fri, 17 Mar 2023 17:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbjCQTvB (ORCPT
+        with ESMTP id S229868AbjCQVO1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 15:51:01 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38D4460B7
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 12:50:47 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id l84-20020a252557000000b00b61b96282a4so4294498ybl.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 12:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679082646;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsHIhTjG1TgxkAKk4QKS7wpdAjljWDCWo7xglNbEXhM=;
-        b=LcFFZwItiiLsdG2t2h3U0h68WAaRV582YutG8/qcggo0hfNhhSHU8Q4BMd/Esr7a7i
-         wVGgaLXpjbdzo32oHiPbYgZvSn5/VziJgQ1ARIRBvbOmGGAzRqJ4nOHJzj5IB5IZovVF
-         M0ezSG7qdkSM1Jx3BNDkh8X1PBBNRW95fb35ro/Ubm709ukx4WDz41xG5khGhm1WRrta
-         PX4IVSl5XVn4IM8tihVvcGV44NodIBVYvQnD81sJbqgt/JRiXDyxZRtrfcJ3eWL1OFOV
-         Q54usD3V4CHs5/9Dz7WoLroM9AhjTBMSBHJgBgwFaeWXLl4q9E8yI5dSO7NXlTaduVL0
-         uS2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679082646;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsHIhTjG1TgxkAKk4QKS7wpdAjljWDCWo7xglNbEXhM=;
-        b=qplyF6tkIUh7LsN2jPpu0XkhOURplmmdFTeUBdz5Q+RI+/7NkzsZa3LLS7udQl+U5V
-         769dqygxlVJb7jA2bYxN2vEtMs2gPq1+KgF0n+Oe8d8MjbxRGs0OVgMjB5U2oUqGNgMT
-         uL60BBGlk+/KYF+RhSDN2H/zc5LuwaIXhY3mOZJx2B9MPLCNcKPUl/3gURtzI/T0OLqg
-         pUCSVml2NQW6NxsgH1bP/A2+F3Yxu0Noiz0ANqoZpl3MNpfvett+J+zDhuXwT24XTd0q
-         Ozjyo9v9/Rd4hjwUe7tfbmRJvRDQ6UWwvDGupKYaUKd2HQ8whti6+yNp5UAPDxhopLoG
-         I/5Q==
-X-Gm-Message-State: AO0yUKXA4k4xWCj8u1eg9yBbwcDbrDd5kjuOZxfTEej7yhT1zcLfSVtJ
-        +Lfe7vp1PB7fPSTY5qRPeT6ozSAgNFkBZVM=
-X-Google-Smtp-Source: AK7set+0JFGEAofJw1Qxi5UNXe2u8Rwj1vDs0LU+u17GURMUimp/vYqbUGbONSLVchokfDAXirbr3+rtTWV7UnI=
-X-Received: from zaidcloud.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5325])
- (user=zalbassam job=sendgmr) by 2002:a81:d84d:0:b0:543:9065:b225 with SMTP id
- n13-20020a81d84d000000b005439065b225mr5514547ywl.5.1679082646430; Fri, 17 Mar
- 2023 12:50:46 -0700 (PDT)
-Date:   Fri, 17 Mar 2023 15:50:26 -0400
-In-Reply-To: <20230317195027.3746949-1-zalbassam@google.com>
-Mime-Version: 1.0
-References: <20230317195027.3746949-1-zalbassam@google.com>
-X-Mailer: git-send-email 2.40.0.rc2.332.ga46443480c-goog
-Message-ID: <20230317195027.3746949-8-zalbassam@google.com>
-Subject: [PATCH v4 7/8] ARM: perf: Allow the use of the PMUv3 driver on 32bit ARM
-From:   Zaid Al-Bassam <zalbassam@google.com>
-To:     Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Fri, 17 Mar 2023 17:14:27 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1512884B;
+        Fri, 17 Mar 2023 14:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cHqfWu/5jLA19Bc4SPAq+8G3pCotHNCQZAShat/fUf4=; b=ThJc2vpScZAiBQxgjZDotCj6p9
+        DTMXzCRy/yOVCF1einZD1BU3rJhnQlNH/lx0rME2jZK8WR2dHAQCIrEvB7h+6AuCu2BbZMhLp0Q00
+        nTH6K91KnBffoDwCNL9mWkxkDt119Qqu2/YNsFWqzbKjFjUHE0YRZOL0HNo27frzNWUMmSiPS/RrA
+        vaJ19v53ST1t6XJKO8KVCuiX7sa9MO4YtCw2PcXkZt7xKzB3MGXTHTztFzp0+U4jZWfUduusForhh
+        XiwJ6m3g2kURSNAnW4uDwXALalBS5zSd/NEhT8m1wOrCLKqKICf2NMWUdxUCp9JkxOHQg9ozJu8u/
+        ZOqYY8aw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1pdHOl-00HSsX-0w;
+        Fri, 17 Mar 2023 21:14:03 +0000
+Date:   Fri, 17 Mar 2023 21:14:03 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, f.fainelli@gmail.com
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Zaid Al-Bassam <zalbassam@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+Message-ID: <20230317211403.GZ3390869@ZenIV>
+References: <20230316170149.4106586-1-jolsa@kernel.org>
+ <ZBNTMZjEoETU9d8N@casper.infradead.org>
+ <CAP-5=fVYriALLwF2FU1ZUtLuHndnvPw=3SctVqY6Uwex8JfscA@mail.gmail.com>
+ <CAEf4BzYgyGTVv=cDwaW+DBke1uk_aLCg3CB_9W6+9tkS8Nyn_Q@mail.gmail.com>
+ <ZBPjs1b8crUv4ur6@casper.infradead.org>
+ <CAEf4BzbPa-5b9uU0+GN=iaMGc6otje3iNQd+MOg_byTSYU8fEQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzbPa-5b9uU0+GN=iaMGc6otje3iNQd+MOg_byTSYU8fEQ@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+On Fri, Mar 17, 2023 at 09:33:17AM -0700, Andrii Nakryiko wrote:
 
-The only thing stopping the PMUv3 driver from compiling on 32bit
-is the lack of defined system registers names and the handful of
-required helpers.
+> > But build IDs are _generally_ available.  The only problem (AIUI)
+> > is when you're trying to examine the contents of one container from
+> > another container.  And to solve that problem, you're imposing a cost
+> > on everybody else with (so far) pretty vague justifications.  I really
+> > don't like to see you growing struct file for this (nor struct inode,
+> > nor struct vm_area_struct).  It's all quite unsatisfactory and I don't
+> > have a good suggestion.
+> 
+> There is a lot of profiling, observability and debugging tooling built
+> using BPF. And when capturing stack traces from BPF programs, if the
+> build ID note is not physically present in memory, fetching it from
+> the BPF program might fail in NMI (and other non-faultable contexts).
+> This patch set is about making sure we always can fetch build ID, even
+> from most restrictive environments. It's guarded by Kconfig to avoid
+> adding 8 bytes of overhead to struct file for environment where this
+> might be unacceptable, giving users and distros a choice.
 
-This is easily solved by providing the sysreg accessors and updating
-the Kconfig entry.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Co-developed-by: Zaid Al-Bassam <zalbassam@google.com>
-Signed-off-by: Zaid Al-Bassam <zalbassam@google.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- arch/arm/include/asm/arm_pmuv3.h | 247 +++++++++++++++++++++++++++++++
- drivers/perf/Kconfig             |   5 +-
- drivers/perf/arm_pmuv3.c         |   5 +-
- 3 files changed, 253 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/include/asm/arm_pmuv3.h
-
-diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-new file mode 100644
-index 000000000000..78d3d4b82c6c
---- /dev/null
-+++ b/arch/arm/include/asm/arm_pmuv3.h
-@@ -0,0 +1,247 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2012 ARM Ltd.
-+ */
-+
-+#ifndef __ASM_PMUV3_H
-+#define __ASM_PMUV3_H
-+
-+#include <asm/cp15.h>
-+#include <asm/cputype.h>
-+
-+#define PMCCNTR			__ACCESS_CP15_64(0, c9)
-+
-+#define PMCR			__ACCESS_CP15(c9,  0, c12, 0)
-+#define PMCNTENSET		__ACCESS_CP15(c9,  0, c12, 1)
-+#define PMCNTENCLR		__ACCESS_CP15(c9,  0, c12, 2)
-+#define PMOVSR			__ACCESS_CP15(c9,  0, c12, 3)
-+#define PMSELR			__ACCESS_CP15(c9,  0, c12, 5)
-+#define PMCEID0			__ACCESS_CP15(c9,  0, c12, 6)
-+#define PMCEID1			__ACCESS_CP15(c9,  0, c12, 7)
-+#define PMXEVTYPER		__ACCESS_CP15(c9,  0, c13, 1)
-+#define PMXEVCNTR		__ACCESS_CP15(c9,  0, c13, 2)
-+#define PMUSERENR		__ACCESS_CP15(c9,  0, c14, 0)
-+#define PMINTENSET		__ACCESS_CP15(c9,  0, c14, 1)
-+#define PMINTENCLR		__ACCESS_CP15(c9,  0, c14, 2)
-+#define PMMIR			__ACCESS_CP15(c9,  0, c14, 6)
-+#define PMCCFILTR		__ACCESS_CP15(c14, 0, c15, 7)
-+
-+#define PMEVCNTR0		__ACCESS_CP15(c14, 0, c8, 0)
-+#define PMEVCNTR1		__ACCESS_CP15(c14, 0, c8, 1)
-+#define PMEVCNTR2		__ACCESS_CP15(c14, 0, c8, 2)
-+#define PMEVCNTR3		__ACCESS_CP15(c14, 0, c8, 3)
-+#define PMEVCNTR4		__ACCESS_CP15(c14, 0, c8, 4)
-+#define PMEVCNTR5		__ACCESS_CP15(c14, 0, c8, 5)
-+#define PMEVCNTR6		__ACCESS_CP15(c14, 0, c8, 6)
-+#define PMEVCNTR7		__ACCESS_CP15(c14, 0, c8, 7)
-+#define PMEVCNTR8		__ACCESS_CP15(c14, 0, c9, 0)
-+#define PMEVCNTR9		__ACCESS_CP15(c14, 0, c9, 1)
-+#define PMEVCNTR10		__ACCESS_CP15(c14, 0, c9, 2)
-+#define PMEVCNTR11		__ACCESS_CP15(c14, 0, c9, 3)
-+#define PMEVCNTR12		__ACCESS_CP15(c14, 0, c9, 4)
-+#define PMEVCNTR13		__ACCESS_CP15(c14, 0, c9, 5)
-+#define PMEVCNTR14		__ACCESS_CP15(c14, 0, c9, 6)
-+#define PMEVCNTR15		__ACCESS_CP15(c14, 0, c9, 7)
-+#define PMEVCNTR16		__ACCESS_CP15(c14, 0, c10, 0)
-+#define PMEVCNTR17		__ACCESS_CP15(c14, 0, c10, 1)
-+#define PMEVCNTR18		__ACCESS_CP15(c14, 0, c10, 2)
-+#define PMEVCNTR19		__ACCESS_CP15(c14, 0, c10, 3)
-+#define PMEVCNTR20		__ACCESS_CP15(c14, 0, c10, 4)
-+#define PMEVCNTR21		__ACCESS_CP15(c14, 0, c10, 5)
-+#define PMEVCNTR22		__ACCESS_CP15(c14, 0, c10, 6)
-+#define PMEVCNTR23		__ACCESS_CP15(c14, 0, c10, 7)
-+#define PMEVCNTR24		__ACCESS_CP15(c14, 0, c11, 0)
-+#define PMEVCNTR25		__ACCESS_CP15(c14, 0, c11, 1)
-+#define PMEVCNTR26		__ACCESS_CP15(c14, 0, c11, 2)
-+#define PMEVCNTR27		__ACCESS_CP15(c14, 0, c11, 3)
-+#define PMEVCNTR28		__ACCESS_CP15(c14, 0, c11, 4)
-+#define PMEVCNTR29		__ACCESS_CP15(c14, 0, c11, 5)
-+#define PMEVCNTR30		__ACCESS_CP15(c14, 0, c11, 6)
-+
-+#define PMEVTYPER0		__ACCESS_CP15(c14, 0, c12, 0)
-+#define PMEVTYPER1		__ACCESS_CP15(c14, 0, c12, 1)
-+#define PMEVTYPER2		__ACCESS_CP15(c14, 0, c12, 2)
-+#define PMEVTYPER3		__ACCESS_CP15(c14, 0, c12, 3)
-+#define PMEVTYPER4		__ACCESS_CP15(c14, 0, c12, 4)
-+#define PMEVTYPER5		__ACCESS_CP15(c14, 0, c12, 5)
-+#define PMEVTYPER6		__ACCESS_CP15(c14, 0, c12, 6)
-+#define PMEVTYPER7		__ACCESS_CP15(c14, 0, c12, 7)
-+#define PMEVTYPER8		__ACCESS_CP15(c14, 0, c13, 0)
-+#define PMEVTYPER9		__ACCESS_CP15(c14, 0, c13, 1)
-+#define PMEVTYPER10		__ACCESS_CP15(c14, 0, c13, 2)
-+#define PMEVTYPER11		__ACCESS_CP15(c14, 0, c13, 3)
-+#define PMEVTYPER12		__ACCESS_CP15(c14, 0, c13, 4)
-+#define PMEVTYPER13		__ACCESS_CP15(c14, 0, c13, 5)
-+#define PMEVTYPER14		__ACCESS_CP15(c14, 0, c13, 6)
-+#define PMEVTYPER15		__ACCESS_CP15(c14, 0, c13, 7)
-+#define PMEVTYPER16		__ACCESS_CP15(c14, 0, c14, 0)
-+#define PMEVTYPER17		__ACCESS_CP15(c14, 0, c14, 1)
-+#define PMEVTYPER18		__ACCESS_CP15(c14, 0, c14, 2)
-+#define PMEVTYPER19		__ACCESS_CP15(c14, 0, c14, 3)
-+#define PMEVTYPER20		__ACCESS_CP15(c14, 0, c14, 4)
-+#define PMEVTYPER21		__ACCESS_CP15(c14, 0, c14, 5)
-+#define PMEVTYPER22		__ACCESS_CP15(c14, 0, c14, 6)
-+#define PMEVTYPER23		__ACCESS_CP15(c14, 0, c14, 7)
-+#define PMEVTYPER24		__ACCESS_CP15(c14, 0, c15, 0)
-+#define PMEVTYPER25		__ACCESS_CP15(c14, 0, c15, 1)
-+#define PMEVTYPER26		__ACCESS_CP15(c14, 0, c15, 2)
-+#define PMEVTYPER27		__ACCESS_CP15(c14, 0, c15, 3)
-+#define PMEVTYPER28		__ACCESS_CP15(c14, 0, c15, 4)
-+#define PMEVTYPER29		__ACCESS_CP15(c14, 0, c15, 5)
-+#define PMEVTYPER30		__ACCESS_CP15(c14, 0, c15, 6)
-+
-+#define RETURN_READ_PMEVCNTRN(n) \
-+	return read_sysreg(PMEVCNTR##n)
-+static unsigned long read_pmevcntrn(int n)
-+{
-+	PMEVN_SWITCH(n, RETURN_READ_PMEVCNTRN);
-+	return 0;
-+}
-+
-+#define WRITE_PMEVCNTRN(n) \
-+	write_sysreg(val, PMEVCNTR##n)
-+static void write_pmevcntrn(int n, unsigned long val)
-+{
-+	PMEVN_SWITCH(n, WRITE_PMEVCNTRN);
-+}
-+
-+#define WRITE_PMEVTYPERN(n) \
-+	write_sysreg(val, PMEVTYPER##n)
-+static void write_pmevtypern(int n, unsigned long val)
-+{
-+	PMEVN_SWITCH(n, WRITE_PMEVTYPERN);
-+}
-+
-+static inline unsigned long read_pmmir(void)
-+{
-+	return read_sysreg(PMMIR);
-+}
-+
-+static inline u32 read_pmuver(void)
-+{
-+	/* PMUVers is not a signed field */
-+	u32 dfr0 = read_cpuid_ext(CPUID_EXT_DFR0);
-+
-+	return (dfr0 >> 24) & 0xf;
-+}
-+
-+static inline void write_pmcr(u32 val)
-+{
-+	write_sysreg(val, PMCR);
-+}
-+
-+static inline u32 read_pmcr(void)
-+{
-+	return read_sysreg(PMCR);
-+}
-+
-+static inline void write_pmselr(u32 val)
-+{
-+	write_sysreg(val, PMSELR);
-+}
-+
-+static inline void write_pmccntr(u64 val)
-+{
-+	write_sysreg(val, PMCCNTR);
-+}
-+
-+static inline u64 read_pmccntr(void)
-+{
-+	return read_sysreg(PMCCNTR);
-+}
-+
-+static inline void write_pmxevcntr(u32 val)
-+{
-+	write_sysreg(val, PMXEVCNTR);
-+}
-+
-+static inline u32 read_pmxevcntr(void)
-+{
-+	return read_sysreg(PMXEVCNTR);
-+}
-+
-+static inline void write_pmxevtyper(u32 val)
-+{
-+	write_sysreg(val, PMXEVTYPER);
-+}
-+
-+static inline void write_pmcntenset(u32 val)
-+{
-+	write_sysreg(val, PMCNTENSET);
-+}
-+
-+static inline void write_pmcntenclr(u32 val)
-+{
-+	write_sysreg(val, PMCNTENCLR);
-+}
-+
-+static inline void write_pmintenset(u32 val)
-+{
-+	write_sysreg(val, PMINTENSET);
-+}
-+
-+static inline void write_pmintenclr(u32 val)
-+{
-+	write_sysreg(val, PMINTENCLR);
-+}
-+
-+static inline void write_pmccfiltr(u32 val)
-+{
-+	write_sysreg(val, PMCCFILTR);
-+}
-+
-+static inline void write_pmovsclr(u32 val)
-+{
-+	write_sysreg(val, PMOVSR);
-+}
-+
-+static inline u32 read_pmovsclr(void)
-+{
-+	return read_sysreg(PMOVSR);
-+}
-+
-+static inline void write_pmuserenr(u32 val)
-+{
-+	write_sysreg(val, PMUSERENR);
-+}
-+
-+static inline u32 read_pmceid0(void)
-+{
-+	return read_sysreg(PMCEID0);
-+}
-+
-+static inline u32 read_pmceid1(void)
-+{
-+	return read_sysreg(PMCEID1);
-+}
-+
-+static inline void kvm_set_pmu_events(u32 set, struct perf_event_attr *attr) {}
-+static inline void kvm_clr_pmu_events(u32 clr) {}
-+static inline bool kvm_pmu_counter_deferred(struct perf_event_attr *attr)
-+{
-+	return false;
-+}
-+
-+/* PMU Version in DFR Register */
-+#define ARMV8_PMU_DFR_VER_NI        0
-+#define ARMV8_PMU_DFR_VER_V3P4      0x5
-+#define ARMV8_PMU_DFR_VER_V3P5      0x6
-+#define ARMV8_PMU_DFR_VER_IMP_DEF   0xF
-+
-+static inline bool pmuv3_implemented(int pmuver)
-+{
-+	return !(pmuver == ARMV8_PMU_DFR_VER_IMP_DEF ||
-+		 pmuver == ARMV8_PMU_DFR_VER_NI);
-+}
-+
-+static inline bool is_pmuv3p4(int pmuver)
-+{
-+	return pmuver >= ARMV8_PMU_DFR_VER_V3P4;
-+}
-+
-+static inline bool is_pmuv3p5(int pmuver)
-+{
-+	return pmuver >= ARMV8_PMU_DFR_VER_V3P5;
-+}
-+
-+#endif
-diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
-index defe6b47854b..711f82400086 100644
---- a/drivers/perf/Kconfig
-+++ b/drivers/perf/Kconfig
-@@ -101,15 +101,14 @@ config ARM_SMMU_V3_PMU
- 	   based on the Stream ID of the corresponding master.
- 
- config ARM_PMUV3
--	depends on HW_PERF_EVENTS && ARM64
-+	depends on HW_PERF_EVENTS && ((ARM && CPU_V7) || ARM64)
- 	bool "ARM PMUv3 support" if !ARM64
--	default y
-+	default ARM64
- 	  help
- 	  Say y if you want to use the ARM performance monitor unit (PMU)
- 	  version 3. The PMUv3 is the CPU performance monitors on ARMv8
- 	  (aarch32 and aarch64) systems that implement the PMUv3
- 	  architecture.
--	  Currently, PMUv3 is only supported on aarch64 (arm64)
- 
- config ARM_DSU_PMU
- 	tristate "ARM DynamIQ Shared Unit (DSU) PMU"
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index fc8ed3cd0330..34ed0d5d7898 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -388,10 +388,13 @@ static const struct attribute_group armv8_pmuv3_caps_attr_group = {
-  * We unconditionally enable ARMv8.5-PMU long event counter support
-  * (64-bit events) where supported. Indicate if this arm_pmu has long
-  * event counter support.
-+ *
-+ * On AArch32, long counters make no sense (you can't access the top
-+ * bits), so we only enable this on AArch64.
-  */
- static bool armv8pmu_has_long_event(struct arm_pmu *cpu_pmu)
- {
--	return (is_pmuv3p5(cpu_pmu->pmuver));
-+	return (IS_ENABLED(CONFIG_ARM64) && is_pmuv3p5(cpu_pmu->pmuver));
- }
- 
- static inline bool armv8pmu_event_has_user_read(struct perf_event *event)
--- 
-2.40.0.rc2.332.ga46443480c-goog
-
+Lovely.  As an exercise you might want to collect the stats on the
+number of struct file instances on the system vs. the number of files
+that happen to be ELF objects and are currently mmapped anywhere.
+That does depend upon the load, obviously, but it's not hard to collect -
+you already have more than enough hooks inserted in the relevant places.
+That might give a better appreciation of the reactions...
