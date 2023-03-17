@@ -2,162 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4442C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 06:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4C5C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 06:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjCQG0w (ORCPT
+        id S229602AbjCQGdP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 02:26:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
+        Fri, 17 Mar 2023 02:33:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjCQG0w (ORCPT
+        with ESMTP id S229938AbjCQGdP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 02:26:52 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE1C65475;
-        Thu, 16 Mar 2023 23:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679034406; x=1710570406;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bL/PYAQu02/a6klSErCbC2EVB0viYzOA5B2PQDBINuM=;
-  b=ndLJM+yCK4/McL0xVQwz4mMWqWwtYccHOwa4Az0NlEkEzdh7aatta5sJ
-   itOaN3d7KjJPryxIl9IuLMr83gV452jlNODnx6XOn9LvkqUHOz925PA25
-   wB5sNPbF5tMpYnehRBFHwoIZq06aRIqGUg64s14R0RPxAYXWWeBHDeMZF
-   uqpfDPYGLnwhnrvVGVym6m49z86ZOz1u27HpSUuOMlcuOZH6l3g1kLF6F
-   KgrFFEjBDDPZyYZu4MItwCryA3HpUP4t8UCdRY3PcF+4q0FtsgQ4YQVWg
-   tk3JmzMUv3PxR0QOKqKFWR4xn4j2ULFSxwW9sA3fT2h3fy1n1/PSiKm2l
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="339732990"
-X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
-   d="scan'208";a="339732990"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 23:26:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10651"; a="710399574"
-X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
-   d="scan'208";a="710399574"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.44.29])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2023 23:26:42 -0700
-Message-ID: <e7105cdd-3bc0-d4a8-52c3-36d95fcf3ad2@intel.com>
-Date:   Fri, 17 Mar 2023 08:26:38 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [linus:master] [perf symbols] ce4c8e7966:
- perf-sanity-tests.Test_data_symbol.fail
-Content-Language: en-US
-To:     Yujie Liu <yujie.liu@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <202303061424.6ad43294-yujie.liu@intel.com>
- <d62c6cc7-9f43-2c23-d9e2-1ddbd0f5234c@intel.com>
- <ZBK00bqcyl2lnG8W@yujie-X299>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZBK00bqcyl2lnG8W@yujie-X299>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Fri, 17 Mar 2023 02:33:15 -0400
+Received: from s01.bc.larksuite.com (s01.bc.larksuite.com [209.127.230.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D58D73383
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Mar 2023 23:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lixiang-com.20200927.dkim.feishu.cn; t=1679034782;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=2ln52H+evtC829KMeIqIAAU69hFDzh9bXD3tmz+5gkU=;
+ b=d4lHzBrC6zQdtPgwlTBzCS444Ih52TjKrAxthQ2Mmrm9MZ3rOCtOS12ClZvsTmkIuxtN7U
+ X6vsnR4CdPJPB6QDP7OIHs37FWwVMsQ/2s+jBWCphmNCgdVdgGBmsXobv3KyEcDgb+4Flq
+ 24i/pKD2ObLdVk6Z3EpbSMqaB0RDcjt8pHbYlBAP2RoU4xLIp+EzSQ6tiS78VFx5rKiFgC
+ 3VT1StTmLSndjt0nG1cOp2AgM94BgsoMXfquaCyo3nKCSfIHxTie9wC5ERosP6oAz4s7n6
+ i62TqoJTvinP39pVZtvqPqYmxRlC8apC6lGCgoGTF2qLjPNLbr4QdbODjO3xEw==
+To:     <namhyung@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>
+Cc:     <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <irogers@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Chunxin Zang" <zangchunxin@lixiang.com>,
+        "Jerry Zhou" <zhouchunhua@lixiang.com>
+From:   "Chunxin Zang" <zangchunxin@lixiang.com>
+Date:   Fri, 17 Mar 2023 14:32:50 +0800
+Mime-Version: 1.0
+Message-Id: <20230317063246.1128219-1-zangchunxin@lixiang.com>
+X-Lms-Return-Path: <lba+264140992+184bc7+vger.kernel.org+zangchunxin@lixiang.com>
+Subject: [PATCH v3] perf sched: Fix sched latency analysis incorrect
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: multipart/alternative;
+ boundary=53820eba028c09539e2fb24b274fd97a8f7c75059bd59e40fa0efef5cf55
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/03/23 08:18, Yujie Liu wrote:
-> On Mon, Mar 06, 2023 at 03:20:09PM +0200, Adrian Hunter wrote:
->> On 6/03/23 08:30, kernel test robot wrote:
->>> Greeting,
->>>
->>> FYI, we sent a report when this commit was in linux-next/master:
->>>
->>> https://lore.kernel.org/all/202302092156.c0b14693-oliver.sang@intel.com/
->>>
->>> This commit has been merged to mainline and we still observe similar
->>> failures, so we report again FYI.
->>>
->>> We noticed perf-sanity-tests.Test_data_symbol.fail due to commit (built with gcc-11):
->>>
->>> commit: ce4c8e7966f317ef2af896778b5fa9105a5cd351 ("perf symbols: Get symbols for .plt.got for x86-64")
->>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>>
->>> [test failed on linux-next/master 1acf39ef8f1425cd105f630dc2c7c1d8fff27ed1]
->>>
->>> in testcase: perf-sanity-tests
->>> version: 
->>> with following parameters:
->>>
->>> 	perf_compiler: clang
->>>
->>> on test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz (Kaby Lake) with 32G memory
->>>
->>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->>>
->>>
->>> 2023-02-08 19:29:00 sudo /usr/src/perf_selftests-x86_64-rhel-8.3-func-ce4c8e7966f317ef2af896778b5fa91
->>> 05a5cd351/tools/perf/perf test 105
->>> 105: Test data symbol                                                : FAILED!
->>>
->>>
->>> =========================================================================================
->>> tbox_group/testcase/rootfs/kconfig/compiler/perf_compiler:
->>>   lkp-kbl-d01/perf-sanity-tests/debian-11.1-x86_64-20220510.cgz/x86_64-rhel-8.3-func/gcc-11/clang
->>>
->>> commit: 
->>>   51a188ad8c2d8 ("perf symbols: Start adding support for .plt.got for x86")
->>>   ce4c8e7966f31 ("perf symbols: Get symbols for .plt.got for x86-64")
->>>
->>> 51a188ad8c2d89c5 ce4c8e7966f317ef2af896778b5 
->>> ---------------- --------------------------- 
->>>        fail:runs  %reproduction    fail:runs
->>>            |             |             |    
->>>            :6           50%           3:6     perf-sanity-tests.Check_branch_stack_sampling.fail
->>>            :6          100%           6:6     perf-sanity-tests.Test_data_symbol.fail
->>>            :6           33%           2:6     perf-sanity-tests.perf_record_tests.fail
->>>
->>>
->>> If you fix the issue, kindly add following tag
->>> | Reported-by: kernel test robot <yujie.liu@intel.com>
->>> | Link: https://lore.kernel.org/oe-lkp/202303061424.6ad43294-yujie.liu@intel.com
->>>
->>>
->>> To reproduce:
->>>
->>>         git clone https://github.com/intel/lkp-tests.git
->>>         cd lkp-tests
->>>         sudo bin/lkp install job.yaml           # job file is attached in this email
->>>         bin/lkp split-job --compatible job.yaml # generate the yaml file for lkp run
->>>         sudo bin/lkp run generated-yaml-file
->>>
->>>         # if come across any failure that blocks the test,
->>>         # please remove ~/.lkp and /lkp dir to run from a clean state.
->>
->> Works fine for me.  See below.
->>
->> You will have to debug your environment:
->> Add option -v to perf test (e.g. perf test -c "data symbol") and
->> add 'set -x' to tools/perf/tests/shell/test_data_symbol.sh
-> 
-> Thanks for the suggestion on debugging our environment.
-> 
-> We found that we were asked by developers to run perf test with
-> sanitizer on, so we build perf with some additional flags like
-> `make EXTRA_CFLAGS="-fsanitize=undefined -fsanitize=address"`, and the
-> test_data_symbol failure only happens when these flags are set, but
-> won't happen if do a make without those flags.
-> 
-> Could you please help check if above flags could impact the behavior of
-> perf test? Thanks.
-> 
+--53820eba028c09539e2fb24b274fd97a8f7c75059bd59e40fa0efef5cf55
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Thanks for the information.
+'perf sched latency' is incorrect to get process schedule latency
+when it used 'sched:sched_wakeup' to analysis perf.data.
 
-I sent 3 patches which should fix the test case:
+Because 'perf record' prefer use 'sched:sched_waking' to
+'sched:sched_wakeup' since commit d566a9c2d482 ("perf sched: Prefer
+sched_waking event when it exists"). It's very reasonable to
+evaluate process schedule latency.
 
-https://lore.kernel.org/lkml/?q=%3C20230316194156.8320-1-adrian.hunter%40intel.com%3E
+Similarly, update sched latency/map/replay to use sched_waking events.
 
+I used 'perf record -e "sched:* "' to record both wakeup and waking events,
+and use fixed perf version to analysis them, the result is correct.
+Because the function "latency_wakeup_event" will change atom->state to
+THREAD_WAIT_CPU at waking event, and judge the 'atom->state !=3D
+THREAD_SLEEPING' is false then returned at wakeup event.
 
+Signed-off-by: Chunxin Zang <zangchunxin@lixiang.com>
+Signed-off-by: Jerry Zhou <zhouchunhua@lixiang.com>
+---
+
+	changelogs in v3:
+	1) fix non-ASCII characters in commit log.
+
+	changelogs in v2:
+	1) fix email address disappearing in 'signed off by'
+
+ tools/perf/builtin-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 86e18575c9be..1af4ec1ac824 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1819,6 +1819,7 @@ static int perf_sched__read_events(struct perf_sched =
+*sched)
+ 	const struct evsel_str_handler handlers[] =3D {
+ 		{ "sched:sched_switch",	      process_sched_switch_event, },
+ 		{ "sched:sched_stat_runtime", process_sched_runtime_event, },
++		{ "sched:sched_waking",	      process_sched_wakeup_event, },
+ 		{ "sched:sched_wakeup",	      process_sched_wakeup_event, },
+ 		{ "sched:sched_wakeup_new",   process_sched_wakeup_event, },
+ 		{ "sched:sched_migrate_task", process_sched_migrate_task_event, },
+--=20
+2.25.1
+
+=E5=A3=B0=E6=98=8E=EF=BC=9A=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E5=8F=AA=E5=
+=85=81=E8=AE=B8=E6=96=87=E4=BB=B6=E6=8E=A5=E6=94=B6=E8=80=85=E9=98=85=E8=AF=
+=BB=EF=BC=8C=E6=9C=89=E5=BE=88=E9=AB=98=E7=9A=84=E6=9C=BA=E5=AF=86=E6=80=A7=
+=E8=A6=81=E6=B1=82=E3=80=82=E7=A6=81=E6=AD=A2=E5=85=B6=E4=BB=96=E4=BA=BA=E4=
+=BD=BF=E7=94=A8=E3=80=81=E6=89=93=E5=BC=80=E3=80=81=E5=A4=8D=E5=88=B6=E6=88=
+=96=E8=BD=AC=E5=8F=91=E9=87=8C=E9=9D=A2=E7=9A=84=E4=BB=BB=E4=BD=95=E5=86=85=
+=E5=AE=B9=E3=80=82=E5=A6=82=E6=9E=9C=E6=9C=AC=E9=82=AE=E4=BB=B6=E9=94=99=E8=
+=AF=AF=E5=9C=B0=E5=8F=91=E7=BB=99=E4=BA=86=E4=BD=A0=EF=BC=8C=E8=AF=B7=E8=81=
+=94=E7=B3=BB=E9=82=AE=E4=BB=B6=E5=8F=91=E5=87=BA=E8=80=85=E5=B9=B6=E5=88=A0=
+=E9=99=A4=E8=BF=99=E4=B8=AA=E6=96=87=E4=BB=B6=E3=80=82=E6=9C=BA=E5=AF=86=E5=
+=8F=8A=E6=B3=95=E5=BE=8B=E7=9A=84=E7=89=B9=E6=9D=83=E5=B9=B6=E4=B8=8D=E5=9B=
+=A0=E4=B8=BA=E8=AF=AF=E5=8F=91=E9=82=AE=E4=BB=B6=E8=80=8C=E6=94=BE=E5=BC=83=
+=E6=88=96=E4=B8=A7=E5=A4=B1=E3=80=82=E4=BB=BB=E4=BD=95=E6=8F=90=E5=87=BA=E7=
+=9A=84=E8=A7=82=E7=82=B9=E6=88=96=E6=84=8F=E8=A7=81=E5=8F=AA=E5=B1=9E=E4=BA=
+=8E=E4=BD=9C=E8=80=85=E7=9A=84=E4=B8=AA=E4=BA=BA=E8=A7=81=E8=A7=A3=EF=BC=8C=
+=E5=B9=B6=E4=B8=8D=E4=B8=80=E5=AE=9A=E4=BB=A3=E8=A1=A8=E6=9C=AC=E5=85=AC=E5=
+=8F=B8=E3=80=82
+--53820eba028c09539e2fb24b274fd97a8f7c75059bd59e40fa0efef5cf55--
