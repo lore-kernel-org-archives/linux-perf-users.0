@@ -2,172 +2,81 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB93BC7618B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A27BC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 13:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbjCQNLl (ORCPT
+        id S229888AbjCQN3O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 09:11:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55784 "EHLO
+        Fri, 17 Mar 2023 09:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbjCQNLl (ORCPT
+        with ESMTP id S229517AbjCQN2m (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 09:11:41 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577CEE4DAF;
-        Fri, 17 Mar 2023 06:11:36 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PdPds124yz6J7tB;
-        Fri, 17 Mar 2023 21:11:13 +0800 (CST)
-Received: from localhost (10.48.148.142) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 17 Mar
- 2023 13:11:32 +0000
-Date:   Fri, 17 Mar 2023 13:11:31 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jie Zhan <zhanjie9@hisilicon.com>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <corbet@lwn.net>, <zhangshaokun@hisilicon.com>,
-        <shenyang39@huawei.com>, <hejunhao3@huawei.com>,
-        <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <suntao25@huawei.com>, <jiazhao4@hisilicon.com>,
-        <linuxarm@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v1 0/4] HiSilicon Performance Monitor Control Unit
-Message-ID: <20230317131131.00005817@Huawei.com>
-In-Reply-To: <75a1b477-5325-bec9-5750-b09bf0e5dfb0@hisilicon.com>
-References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
-        <75a1b477-5325-bec9-5750-b09bf0e5dfb0@hisilicon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Fri, 17 Mar 2023 09:28:42 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 810E1A256
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 06:28:41 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id q11-20020a056830440b00b00693c1a62101so2858909otv.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 17 Mar 2023 06:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679059720;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mgpMLag8MHdKV6jstxIR1+/70o9FTC1Xzx45b2XLchM=;
+        b=Pf4EaycmZKpnK25FxhH5DneLFjGLVvka2+XQcyJfuZAEsV2rvhe3C6Q6IkrPVm21vU
+         CN8dM8Fc2MiZHC5ag1uqDXDZ3+B+JYxUeucv6omjRUKQa0YHqRWQMYS0DSr+iiBHyrzd
+         yGZ0+NjIP8xHWr1C3eHSu3VzxNELKZ6VeSpogO58ifAxlkKeH8t67jPOmL+vzgWxLwqm
+         OZ9a7x9lP5+7GjF0Apon9D8zRBHLACVhlPjcXUhj+Izrf0VCnp3BEDzyrxjSroDVHlt9
+         HpwfvXVe3pjr/47NnH9yVVHXaq2szmCveH8WmBJzZ3wLNhLCiVsahNSJlw/5TNksSnvK
+         DAtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679059720;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mgpMLag8MHdKV6jstxIR1+/70o9FTC1Xzx45b2XLchM=;
+        b=pyOAYxiwoqSxTglb/HoCJPYMbzLP7iOY2FMGo/6cjOuMX9k7/QGr/B0uYdvtG1lS2c
+         YFynoU00GSMxY98Q+68NBPpdL8R3n3o1zhFIXucLUujmtdxGHCiza473HVTPA1Xfl2k5
+         66CZ55AiMJ9hJWjxRJJIduY8wJZIvkdzsr2Yhdz9QWIvwrsoHXL7BxeLlngbC2rlJbwe
+         Q+IhHxX+wgV5rRlrPJvsQf/DRG+ZadNeaBmqm2Sz49hfWFy/sSkzt8ADLxlwXjz5o1lC
+         DIYYFBjZlNEsViv8EpLTJh4H30UgSekITpUYiQl9nPArPtBRGp+GSZnxtcCc67iyDT/T
+         RLZQ==
+X-Gm-Message-State: AO0yUKXI2Sl36il4EIuI0Odoi7V3IxwcM2S4qV8rRPAekcX/kNNur0zj
+        BRSB+BDMXXClQUCGukmBc9DzIx3D1oM=
+X-Google-Smtp-Source: AK7set/7iv9A5CgzY+Y/aKBlorM3kesitpNV08Pi9+UTbB2ZPGOUmi2kFANEiY5HCjSzPGL0T0vdnQ==
+X-Received: by 2002:a05:6830:3498:b0:69d:2629:fe5d with SMTP id c24-20020a056830349800b0069d2629fe5dmr3770792otu.37.1679059720581;
+        Fri, 17 Mar 2023 06:28:40 -0700 (PDT)
+Received: from ?IPv6:::1? ([2804:431:cff4:5c11:95f2:3305:cfcc:450b])
+        by smtp.gmail.com with ESMTPSA id d6-20020a056830004600b0069451a9274bsm958648otp.28.2023.03.17.06.28.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Mar 2023 06:28:40 -0700 (PDT)
+Date:   Fri, 17 Mar 2023 10:28:36 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Travis Downs <travis.downs@gmail.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: Cross-arch analysis
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAOBGo4z=LObbQ-KRRuH__pFsC=1r1jQ2r0e3TbCTeweA9YsDxA@mail.gmail.com>
+References: <CAOBGo4z=LObbQ-KRRuH__pFsC=1r1jQ2r0e3TbCTeweA9YsDxA@mail.gmail.com>
+Message-ID: <01A1CCF5-C9C0-484B-A1B7-08514CE5453F@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.148.142]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 27 Feb 2023 16:49:46 +0800
-Jie Zhan <zhanjie9@hisilicon.com> wrote:
 
-> Please can anyone have a look at this PMCU patchset and provide some 
-> comments?
-> 
-> It is much related to the ARM PMU.
-> 
-> We are looking forward to the feedback.
-> 
-> Any relevant comments/questions, with respect to software or hardware 
-> design, use cases, coding, are welcome.
-> 
-> Kind regards,
-> 
-> Jie
-> 
-> 
-> On 06/02/2023 14:51, Jie Zhan wrote:
-> > HiSilicon Performance Monitor Control Unit (PMCU) is a device that offloads
-> > PMU accesses from CPUs, handling the configuration, event switching, and
-> > counter reading of core PMUs on Kunpeng SoC. It facilitates fine-grained
-> > and multi-PMU-event CPU profiling, in which scenario the current 'perf'
-> > scheme may lose events or drop sampling frequency. With PMCU, users can
-> > reliably obtain the data of up to 240 PMU events with the sample interval
-> > of events down to 1ms, while the software overhead of accessing PMUs, as
-> > well as its impact on target workloads, is reduced.
-> >
-> > This patchset contains the documentation, driver, and user perf tool
-> > support to enable using PMCU with the 'perf_event' framework.
-> >
-> > Here are two key questions requested for comments:
-> >
-> > - How do we make it compatible with arm_pmu drivers?
-> >
-> >    Hardware-wise, PMCU uses the existing core PMUs, so PMUs can be accessed
-> >    from CPU and PMCU simultaneously. The current hardware can't guarantee
-> >    mutual exclusive accesses. Hence, scheduling arm_pmu and PMCU events at
-> >    the same time may mess up the operation of PMUs, delivering incorrect
-> >    data for both events, e.g. unexpected events or sample periods.
-> >    Software-wise, we probably need to prevent the two types of events from
-> >    running at the same time, but currently there isn't a clear solution.
 
-I've been thinking about this a bit and don't have a good answer yet.
+On March 17, 2023 10:02:37 AM GMT-03:00, Travis Downs <travis=2Edowns@gmai=
+l=2Ecom> wrote:
+>Can I run perf record against a binary running on say Arm64, then pull
+>back the perf=2Edata file
+>to an x86 machine and run perf report there?
 
-So some thoughts that might get some discussion going (some are here
-mostly to be shot down ;)
+Yes, and to gather DSOs with samples, use 'perf archive' or point 'perf re=
+port' to a directory with the arm64 OS image using --symfs=2E
 
-1. I suspect adding a hook into the specific pmu driver to reserve a counter is going
-   to be controversial for this usecase.  But maybe there is a more generic
-   way...  There are lock up detectors that use PMU counters and ensure the counters
-   aren't also used for other purposes and that leads me to wonder if you can use
-https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L12700
-perf_event_create_kernel_counter()
-to do the same as opening a counter from userspace but then not use it.
-I have no idea if this will work though or if enabling the event would be necessary
-to prevent it being used elsewhere.
-
-2. It might be possible to reuse any of the infrastructure that exists
-   for userspace PMU counter access or maybe Rob Herring (+CC) has a suggestion based on
-   his work on that feature.
-
-3. It's not nice, but maybe could enforce this constraint just in userspace?
-   We'd have to make sure that both drivers didn't do anything beyond not working
-   correctly if the other driver is messing with the hardware.
-
-4. We can't do the nasty trick of providing a second driver that binds to the
-   PMU hardware to prevent it being used because I think the main arm PMU
-   driver has suppress_bind_attrs = true.  Maybe we can make remove work?
-   (original patch for this in 2018 added that line because of a crash on remove
-    - not sure anyone looked at fixing the crash).
-
-> >
-> > - Currently we reply on a sysfs file for users to input event numbers. Is
-> >    there a better way to pass many events?
-> >
-> >    The perf framework only allows three 64-bit config fields for custom PMU
-> >    configs. Obviously, this can't satisfy our need for passing many events
-> >    at a time. As an event number is 16-bit wide, the config fields can only
-> >    take up to 12 events at a time, or up to 192 events even if we do a
-> >    bitmap of events (and there are more than 192 available event numbers).
-> >    Hence, the current design takes an array of event numbers from a sysfs
-> >    file before starting profiling. However, this may go against the common
-> >    way to schedule perf events through perf commands.
-> >
-> > Jie Zhan (4):
-> >    docs: perf: Add documentation for HiSilicon PMCU
-> >    drivers/perf: hisi: Add driver support for HiSilicon PMCU
-> >    perf tool: Add HiSilicon PMCU data recording support
-> >    perf tool: Add HiSilicon PMCU data decoding support
-> >
-> >   Documentation/admin-guide/perf/hisi-pmcu.rst |  183 +++
-> >   Documentation/admin-guide/perf/index.rst     |    1 +
-> >   drivers/perf/hisilicon/Kconfig               |   15 +
-> >   drivers/perf/hisilicon/Makefile              |    1 +
-> >   drivers/perf/hisilicon/hisi_pmcu.c           | 1096 ++++++++++++++++++
-> >   tools/perf/arch/arm/util/auxtrace.c          |   61 +
-> >   tools/perf/arch/arm64/util/Build             |    2 +-
-> >   tools/perf/arch/arm64/util/hisi-pmcu.c       |  145 +++
-> >   tools/perf/util/Build                        |    1 +
-> >   tools/perf/util/auxtrace.c                   |    4 +
-> >   tools/perf/util/auxtrace.h                   |    1 +
-> >   tools/perf/util/hisi-pmcu.c                  |  305 +++++
-> >   tools/perf/util/hisi-pmcu.h                  |   19 +
-> >   13 files changed, 1833 insertions(+), 1 deletion(-)
-> >   create mode 100644 Documentation/admin-guide/perf/hisi-pmcu.rst
-> >   create mode 100644 drivers/perf/hisilicon/hisi_pmcu.c
-> >   create mode 100644 tools/perf/arch/arm64/util/hisi-pmcu.c
-> >   create mode 100644 tools/perf/util/hisi-pmcu.c
-> >   create mode 100644 tools/perf/util/hisi-pmcu.h
-> >
-> >
-> > base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476  
-
+- Arnaldo=20
