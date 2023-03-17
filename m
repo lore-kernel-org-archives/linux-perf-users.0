@@ -2,150 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95424C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 15:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289ACC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 16:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230325AbjCQPN4 (ORCPT
+        id S230036AbjCQQdd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 11:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
+        Fri, 17 Mar 2023 12:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231150AbjCQPNu (ORCPT
+        with ESMTP id S229703AbjCQQdd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 11:13:50 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09BFAC3CDC;
-        Fri, 17 Mar 2023 08:13:26 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PdSKh1zSkz6J6pL;
-        Fri, 17 Mar 2023 23:12:24 +0800 (CST)
-Received: from localhost (10.48.148.142) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 17 Mar
- 2023 15:13:23 +0000
-Date:   Fri, 17 Mar 2023 15:13:22 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jie Zhan <zhanjie9@hisilicon.com>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <corbet@lwn.net>, <zhangshaokun@hisilicon.com>,
-        <shenyang39@huawei.com>, <hejunhao3@huawei.com>,
-        <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <suntao25@huawei.com>, <jiazhao4@hisilicon.com>,
-        <linuxarm@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-Subject: Re: [RFC PATCH v1 3/4] perf tool: Add HiSilicon PMCU data recording
- support
-Message-ID: <20230317151322.000034eb@Huawei.com>
-In-Reply-To: <20230206065146.645505-4-zhanjie9@hisilicon.com>
-References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
-        <20230206065146.645505-4-zhanjie9@hisilicon.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Fri, 17 Mar 2023 12:33:33 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46EB733CE9;
+        Fri, 17 Mar 2023 09:33:31 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id z21so22702718edb.4;
+        Fri, 17 Mar 2023 09:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679070810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sOc1064wJwVxntbc0Hg4Pm5Z8bh8eNRp/vDpjqeTV8A=;
+        b=npLaYxhqDOo4k6OjTdGIDQG0WQfkgtv9fM6BdKrkgn40eFBPLGXHs3yWzljccmyqFp
+         9ZPFV+7u4iptswc+firC3lJ9YhcygL+/3eHPtfo5wxoGAuB4gYp2xWIsUES5cUTFkq++
+         xz8PToZXfHlOeG7TmrhhOx53Nog+9wC2ylbmAmjZmwpEN170qmKZukfxhjUX8GuEyda9
+         nJ8Vns+osPqA4HvBdp+PUjkFpCKf/cu1P/jPkbynrcOTe2VmLIAaObRntsQY90dkhDaY
+         cqg/85OMC1OnxVBzE8PYrjQwnyNgcTf7/05NJ9SZNG0+tn97Fo0kTnS/LwY63/7nMi5p
+         3P0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679070810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sOc1064wJwVxntbc0Hg4Pm5Z8bh8eNRp/vDpjqeTV8A=;
+        b=hnjnVungEnlFTLIz1SaL0yAbsiOe4s7SehpwgjIObnvWCX9F1Dpf4u1PcJ50cOW4yK
+         obhi3yRoJVQ/eG9BcdvrowI0yAHzMv68QZWiSqnrtGO8YXnIOsu07g6TQpvCGPqzMfIT
+         YYp2CKN3h3HY55CNw7pGKS9Gy8b4EMHBUsZMrO6Epw7x7Zv9jXHj6iNwjGlBuLPAJAQe
+         XDNmZAfpF5NuugBlpT2r6hRCdW2mY7SfH9JrPy6NxRyiGNCW1nS2c55MVnWTtRjqZgW8
+         9cOom/3BIB8HJ8UftedSqS31AE44WA2TelYduKoi0HPOCFiynXNJCX/p4Zfg3roMpy6u
+         UcIg==
+X-Gm-Message-State: AO0yUKXBX2gl9X+5eB/2KawHOAMQLxkzFtY79gUFnT52ExWlqtvY0m0q
+        5H2yFp9Gk238N/9Rg8XjPfsuyROOOzQnRxpJtjY=
+X-Google-Smtp-Source: AK7set+0ohyPqN6E5Ro9SkqCqggHHZv4+NXE5j4GuR8AQ+M1h80H52LGa3htbnGp0mJWOjTgUhvmwUwf1sMfqR3ewCU=
+X-Received: by 2002:a17:906:8552:b0:8ab:b606:9728 with SMTP id
+ h18-20020a170906855200b008abb6069728mr7694310ejy.5.1679070809653; Fri, 17 Mar
+ 2023 09:33:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.48.148.142]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+References: <20230316170149.4106586-1-jolsa@kernel.org> <ZBNTMZjEoETU9d8N@casper.infradead.org>
+ <CAP-5=fVYriALLwF2FU1ZUtLuHndnvPw=3SctVqY6Uwex8JfscA@mail.gmail.com>
+ <CAEf4BzYgyGTVv=cDwaW+DBke1uk_aLCg3CB_9W6+9tkS8Nyn_Q@mail.gmail.com> <ZBPjs1b8crUv4ur6@casper.infradead.org>
+In-Reply-To: <ZBPjs1b8crUv4ur6@casper.infradead.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 17 Mar 2023 09:33:17 -0700
+Message-ID: <CAEf4BzbPa-5b9uU0+GN=iaMGc6otje3iNQd+MOg_byTSYU8fEQ@mail.gmail.com>
+Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 6 Feb 2023 14:51:45 +0800
-Jie Zhan <zhanjie9@hisilicon.com> wrote:
+On Thu, Mar 16, 2023 at 8:51=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Thu, Mar 16, 2023 at 02:51:52PM -0700, Andrii Nakryiko wrote:
+> > Yep, Meta is also capturing stack traces with build ID as well, if
+> > possible. Build IDs help with profiling short-lived processes which
+> > exit before the profiling session is done and user-space tooling is
+> > able to collect /proc/<pid>/maps contents (which is what Ian is
+> > referring to here). But also build ID allows to offload more of the
+> > expensive stack symbolization process (converting raw memory addresses
+> > into human readable function+offset+file path+line numbers
+> > information) to dedicated remote servers, by allowing to cache and
+> > reuse preprocessed DWARF/ELF information based on build ID.
+> >
+> > I believe perf tool is also using build ID, so any tool relying on
+> > perf capturing full and complete profiling data for system-wide
+> > performance analysis would benefit as well.
+> >
+> > Generally speaking, there is a whole ecosystem built on top of
+> > assumption that binaries have build ID and profiling tooling is able
+> > to provide more value if those build IDs are more reliably collected.
+> > Which ultimately benefits the entire open-source ecosystem by allowing
+> > people to spot issues (not necessarily just performance, it could be
+> > correctness issues as well) more reliably, fix them, and benefit every
+> > user.
+>
+> But build IDs are _generally_ available.  The only problem (AIUI)
+> is when you're trying to examine the contents of one container from
+> another container.  And to solve that problem, you're imposing a cost
+> on everybody else with (so far) pretty vague justifications.  I really
+> don't like to see you growing struct file for this (nor struct inode,
+> nor struct vm_area_struct).  It's all quite unsatisfactory and I don't
+> have a good suggestion.
 
-> Support for HiSilicon PMCU data recording using 'perf-record'.
-> 
-> Users can start PMCU profiling through 'perf-record'. Event numbers are
-> passed by a sysfs interface. The following optional parameters can be
-> passed through 'perf-record':
-> - nr_sample: number of samples to take
-> - sample_period_ms: time in ms for PMU counters to stay on for an event
-> - pmccfiltr: bits[31-24] of system register PMCCFILTR_EL0
-> 
-> Example usage:
-> 
-> 1. Enter event numbers in the 'user_events' file:
-> 
-> 	echo "0x10 0x11" > /sys/devices/hisi_pmcu_sccl3/user_events
-> 
-> 2. Start the sampling with 'perf-record':
-> 
-> 	perf record -e hisi_pmcu_sccl3/nr_sample=1000,sample_period_ms=1/
-> 
-> In this example, the PMCU takes 1000 samples of event 0x0010 and 0x0011
-> with a sampling period of 1ms. Data will be written to a 'perf.data' file.
-> 
-> Co-developed-by: Yang Shen <shenyang39@huawei.com>
-> Signed-off-by: Yang Shen <shenyang39@huawei.com>
-> Signed-off-by: Jie Zhan <zhanjie9@hisilicon.com>
-
-I'm not particularly knowledgeable about perf tool so just some superficial comments
-from me.
-
-> ---
-
-> diff --git a/tools/perf/arch/arm64/util/hisi-pmcu.c b/tools/perf/arch/arm64/util/hisi-pmcu.c
-> new file mode 100644
-> index 000000000000..7c33abf1182d
-> --- /dev/null
-> +++ b/tools/perf/arch/arm64/util/hisi-pmcu.c
-
-> +struct hisi_pmcu_record {
-> +	struct auxtrace_record itr;
-> +	struct perf_pmu *hisi_pmcu_pmu;
-> +	struct evlist *evlist;
-> +};
-
-...
-
-> +struct auxtrace_record *hisi_pmcu_recording_init(int *err,
-> +						 struct perf_pmu *hisi_pmcu_pmu)
-> +{
-
-...
-
-> +	pmcu_record->hisi_pmcu_pmu = hisi_pmcu_pmu;
-> +	pmcu_record->itr.recording_options = hisi_pmcu_recording_options;
-> +	pmcu_record->itr.info_priv_size = hisi_pmcu_info_priv_size;
-> +	pmcu_record->itr.info_fill = hisi_pmcu_info_fill;
-> +	pmcu_record->itr.free = hisi_pmcu_record_free;
-> +	pmcu_record->itr.reference = hisi_pmcu_reference;
-> +	pmcu_record->itr.read_finish = auxtrace_record__read_finish;
-> +	pmcu_record->itr.alignment = HISI_PMCU_DATA_ALIGNMENT;
-> +	pmcu_record->itr.pmu = hisi_pmcu_pmu;
-
-Maybe a local variable for itr - or if you can rely on c99 in perf tool
-a compound literal to use structure field names etc.
-
-	pmcu_record->itr = (struct xxx){
-		.recording_options = ,
-etc
-
-
-> +
-> +	*err = 0;
-> +	return &pmcu_record->itr;
-> +}
-
-> diff --git a/tools/perf/util/hisi-pmcu.h b/tools/perf/util/hisi-pmcu.h
-> new file mode 100644
-> index 000000000000..d46d523a3aee
-> --- /dev/null
-> +++ b/tools/perf/util/hisi-pmcu.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * HiSilicon Performance Monitor Control Unit (PMCU) support
-> + *
-> + * Copyright (C) 2022 HiSilicon Limited
-
-Probably want to update the dates if any substantial changes for v2.
-
+There is a lot of profiling, observability and debugging tooling built
+using BPF. And when capturing stack traces from BPF programs, if the
+build ID note is not physically present in memory, fetching it from
+the BPF program might fail in NMI (and other non-faultable contexts).
+This patch set is about making sure we always can fetch build ID, even
+from most restrictive environments. It's guarded by Kconfig to avoid
+adding 8 bytes of overhead to struct file for environment where this
+might be unacceptable, giving users and distros a choice.
