@@ -2,103 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA7C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Fri, 17 Mar 2023 21:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D3C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 00:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjCQVVg (ORCPT
+        id S229716AbjCRAWY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 17:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54464 "EHLO
+        Fri, 17 Mar 2023 20:22:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjCQVVf (ORCPT
+        with ESMTP id S229488AbjCRAWW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 17:21:35 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FDCC6DB4;
-        Fri, 17 Mar 2023 14:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=duOFugondzlaZ1LXs5SvSoE1GdiyBhAvkTn/kwjW458=; b=wnouQv66go+XZKFt6FiBvqDO04
-        LVtyKHJ2HgYBufa0+kc6sTVmgZMMjxCD8ZsrZjgRaglj+sT5Xz/61hyAwEwgyGmLuey30ZVtGx0m6
-        PsSrBbxJEWXjTM6eNrpy0CADjWlTKs6+9GfcbHCD8zQua7AdutO3t2a85JXqhE0j+cwzAOzWKIlVg
-        0Nw6Xcg9afMr9857QMdq4UGdwUavgBU9Gi+pdbvC7lCOI50gkE1Tj4efa24j2Lyi6ztzuDcbTL16r
-        hCO9B213xgf9DM3cjfkAagTUX76GmtKR249ZvCLURhfYGI1VBCK8m2NCGVE7pAsIDA+sKutey8v2u
-        h5/trWwg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pdHVt-00HSwS-0B;
-        Fri, 17 Mar 2023 21:21:25 +0000
-Date:   Fri, 17 Mar 2023 21:21:25 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Fri, 17 Mar 2023 20:22:22 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FF4D5882;
+        Fri, 17 Mar 2023 17:22:21 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id d13so7056382pjh.0;
+        Fri, 17 Mar 2023 17:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679098941;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=4yU+Z21I1n6ZTEcdAUJLZP5nCp1KnymrYky69QflvpE=;
+        b=UoRNMmWc3dTcvEUmRLVoYCCnpI7jyl3RWmla3Sm8tZ0TgYtW6yjUf6XFv6EE3uM6Ix
+         6GmdcplsrfFRcjx6VmEXx2OMZWi4FkOnP7SYijKtD6lfjlzTkjrAGE12jNdP0z7cSVJi
+         o07GNTSotKd4CUC5GDRK8Ct2JIsOyOHMV4oLhyvdhv9+tOwI6kvULU015Ga/6qSkgijG
+         qwk1e5rDwr4FAWzFg/bVtNNtvpsKwwVLUqJBTijbV5uKA0Ub5M1/60xnyoSi+zJCGLH0
+         1SQVjQnpAk+QuiSqv66jQQTQm3FpWGylgMGwQW00nDo42zPLxJdppXENPXnVa4Kzb1f8
+         pI5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679098941;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4yU+Z21I1n6ZTEcdAUJLZP5nCp1KnymrYky69QflvpE=;
+        b=WOAVhYSFbaT6UT+coyTGcFmXpOe54T9hFP/8QZa1Eaa2zTd5kgBJhdcs6Q0vk2ShJe
+         6LHx2QbmC8hR6zZMrpUhec+eLSdzwsWiQbIZlCakpfMsHk8h51lQBtGBiNl5ReN9nzDF
+         FnTwKn8SYxBRDZZMnVQkvJwA6AmiauU3L/4AOvMuKG/gjTrS/bFKAPojPs3KbLg+nCzu
+         56Uw4G6ecAmxyLaDAZeLFkjr0v6Gdtu4cQBBmtwup9Ud/VCBKSbIIcysME6XoV6NsFZz
+         HniXz8Z8RqYFv74dD3eSpzjw7rvxBP3HKUC3GDu9s2InToxYj9tcNHSSzdeiDLUT4Mba
+         VIyg==
+X-Gm-Message-State: AO0yUKWJ0+c+X3f1AUkfP1bXGezngzWKGqVZasQgFUbgbmmCB6pIp3Xp
+        cKIQzSXwezRwrPummk9akbw=
+X-Google-Smtp-Source: AK7set+KZPeJd6aNgYNo+BP1h4HTqppNCdeOA7X1jHxCgQChP0A5/yxBObMoVhZBji9oLqrScAkL3A==
+X-Received: by 2002:a05:6a20:4c1f:b0:d4:e6f:1ee2 with SMTP id fm31-20020a056a204c1f00b000d40e6f1ee2mr8084470pzb.56.1679098940561;
+        Fri, 17 Mar 2023 17:22:20 -0700 (PDT)
+Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:44b0:d54a:f8f3:872:5c2e])
+        by smtp.gmail.com with ESMTPSA id d10-20020a634f0a000000b0050f56964426sm137975pgb.54.2023.03.17.17.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Mar 2023 17:22:20 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
-Message-ID: <20230317212125.GA3390869@ZenIV>
-References: <20230316170149.4106586-1-jolsa@kernel.org>
- <ZBNTMZjEoETU9d8N@casper.infradead.org>
- <CAP-5=fVYriALLwF2FU1ZUtLuHndnvPw=3SctVqY6Uwex8JfscA@mail.gmail.com>
- <CAEf4BzYgyGTVv=cDwaW+DBke1uk_aLCg3CB_9W6+9tkS8Nyn_Q@mail.gmail.com>
- <ZBPjs1b8crUv4ur6@casper.infradead.org>
- <CAEf4BzbPa-5b9uU0+GN=iaMGc6otje3iNQd+MOg_byTSYU8fEQ@mail.gmail.com>
- <20230317211403.GZ3390869@ZenIV>
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf bpf filter: Add an error message for BPF filter
+Date:   Fri, 17 Mar 2023 17:22:18 -0700
+Message-Id: <20230318002218.2035109-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230317211403.GZ3390869@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 09:14:03PM +0000, Al Viro wrote:
-> On Fri, Mar 17, 2023 at 09:33:17AM -0700, Andrii Nakryiko wrote:
-> 
-> > > But build IDs are _generally_ available.  The only problem (AIUI)
-> > > is when you're trying to examine the contents of one container from
-> > > another container.  And to solve that problem, you're imposing a cost
-> > > on everybody else with (so far) pretty vague justifications.  I really
-> > > don't like to see you growing struct file for this (nor struct inode,
-> > > nor struct vm_area_struct).  It's all quite unsatisfactory and I don't
-> > > have a good suggestion.
-> > 
-> > There is a lot of profiling, observability and debugging tooling built
-> > using BPF. And when capturing stack traces from BPF programs, if the
-> > build ID note is not physically present in memory, fetching it from
-> > the BPF program might fail in NMI (and other non-faultable contexts).
-> > This patch set is about making sure we always can fetch build ID, even
-> > from most restrictive environments. It's guarded by Kconfig to avoid
-> > adding 8 bytes of overhead to struct file for environment where this
-> > might be unacceptable, giving users and distros a choice.
-> 
-> Lovely.  As an exercise you might want to collect the stats on the
-> number of struct file instances on the system vs. the number of files
-> that happen to be ELF objects and are currently mmapped anywhere.
-> That does depend upon the load, obviously, but it's not hard to collect -
-> you already have more than enough hooks inserted in the relevant places.
-> That might give a better appreciation of the reactions...
+Currently there's no error message for filter (other than the help for
+the option) when it's built with NO_BPF_SKEL=1.  It should show the
+BPF filter is not supported like below:
 
-One possibility would be a bit stolen from inode flags + hash keyed by
-struct inode address (middle bits make for a decent hash function);
-inode eviction would check that bit and kick the corresponding thing
-from hash if the bit is set.
+  $ sudo ./perf record -e cycles --filter ip==1 true
+  BPF filter is not supported        <------------------- added
 
-Associating that thing with inode => hash lookup/insert + set the bit.
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+          --filter <filter>
+                            event filter
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/parse-events.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6c5cf5244486..f1fa469712c4 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2543,8 +2543,16 @@ static int set_filter(struct evsel *evsel, const void *arg)
+ 		perf_pmu__scan_file(pmu, "nr_addr_filters",
+ 				    "%d", &nr_addr_filters);
+ 
+-	if (!nr_addr_filters)
+-		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
++	if (!nr_addr_filters) {
++		int ret = perf_bpf_filter__parse(&evsel->bpf_filters, str);
++
++		if (ret == -EOPNOTSUPP)
++			fprintf(stderr, "BPF filter is not supported\n");
++		else if (ret)
++			fprintf(stderr, "failed to set the BPF filter\n");
++
++		return ret;
++	}
+ 
+ 	if (evsel__append_addr_filter(evsel, str) < 0) {
+ 		fprintf(stderr,
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
+
