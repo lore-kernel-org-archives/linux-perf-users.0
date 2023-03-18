@@ -2,114 +2,203 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3D3C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 00:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09138C761AF
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 06:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjCRAWY (ORCPT
+        id S230093AbjCRGJE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 17 Mar 2023 20:22:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
+        Sat, 18 Mar 2023 02:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjCRAWW (ORCPT
+        with ESMTP id S229590AbjCRGJD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 17 Mar 2023 20:22:22 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46FF4D5882;
-        Fri, 17 Mar 2023 17:22:21 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id d13so7056382pjh.0;
-        Fri, 17 Mar 2023 17:22:21 -0700 (PDT)
+        Sat, 18 Mar 2023 02:09:03 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D489F3B664;
+        Fri, 17 Mar 2023 23:08:59 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id y4so28161216edo.2;
+        Fri, 17 Mar 2023 23:08:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679098941;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=4yU+Z21I1n6ZTEcdAUJLZP5nCp1KnymrYky69QflvpE=;
-        b=UoRNMmWc3dTcvEUmRLVoYCCnpI7jyl3RWmla3Sm8tZ0TgYtW6yjUf6XFv6EE3uM6Ix
-         6GmdcplsrfFRcjx6VmEXx2OMZWi4FkOnP7SYijKtD6lfjlzTkjrAGE12jNdP0z7cSVJi
-         o07GNTSotKd4CUC5GDRK8Ct2JIsOyOHMV4oLhyvdhv9+tOwI6kvULU015Ga/6qSkgijG
-         qwk1e5rDwr4FAWzFg/bVtNNtvpsKwwVLUqJBTijbV5uKA0Ub5M1/60xnyoSi+zJCGLH0
-         1SQVjQnpAk+QuiSqv66jQQTQm3FpWGylgMGwQW00nDo42zPLxJdppXENPXnVa4Kzb1f8
-         pI5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679098941;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1679119738;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4yU+Z21I1n6ZTEcdAUJLZP5nCp1KnymrYky69QflvpE=;
-        b=WOAVhYSFbaT6UT+coyTGcFmXpOe54T9hFP/8QZa1Eaa2zTd5kgBJhdcs6Q0vk2ShJe
-         6LHx2QbmC8hR6zZMrpUhec+eLSdzwsWiQbIZlCakpfMsHk8h51lQBtGBiNl5ReN9nzDF
-         FnTwKn8SYxBRDZZMnVQkvJwA6AmiauU3L/4AOvMuKG/gjTrS/bFKAPojPs3KbLg+nCzu
-         56Uw4G6ecAmxyLaDAZeLFkjr0v6Gdtu4cQBBmtwup9Ud/VCBKSbIIcysME6XoV6NsFZz
-         HniXz8Z8RqYFv74dD3eSpzjw7rvxBP3HKUC3GDu9s2InToxYj9tcNHSSzdeiDLUT4Mba
-         VIyg==
-X-Gm-Message-State: AO0yUKWJ0+c+X3f1AUkfP1bXGezngzWKGqVZasQgFUbgbmmCB6pIp3Xp
-        cKIQzSXwezRwrPummk9akbw=
-X-Google-Smtp-Source: AK7set+KZPeJd6aNgYNo+BP1h4HTqppNCdeOA7X1jHxCgQChP0A5/yxBObMoVhZBji9oLqrScAkL3A==
-X-Received: by 2002:a05:6a20:4c1f:b0:d4:e6f:1ee2 with SMTP id fm31-20020a056a204c1f00b000d40e6f1ee2mr8084470pzb.56.1679098940561;
-        Fri, 17 Mar 2023 17:22:20 -0700 (PDT)
-Received: from balhae.hsd1.ca.comcast.net ([2601:647:6780:44b0:d54a:f8f3:872:5c2e])
-        by smtp.gmail.com with ESMTPSA id d10-20020a634f0a000000b0050f56964426sm137975pgb.54.2023.03.17.17.22.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Mar 2023 17:22:20 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf bpf filter: Add an error message for BPF filter
-Date:   Fri, 17 Mar 2023 17:22:18 -0700
-Message-Id: <20230318002218.2035109-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+        bh=kV6D6PWuyY+pzJCeIR0JhzUrH+GgDghjB9uU7AntUqA=;
+        b=ohCbefDAyCpU7VGBYqZpzJHtlEkbOY7Acj9MBcGEFIKZQ02InFEathyokeRbr/+LRi
+         5OaU4RFGmzKS4u7JBelbcT1IDEaXUuEjStkFDpvE45mo2RD1IUSwzC974CU2MgIGXnkI
+         g643/nyEUBUMu0xbJDTEJAUR9Syt+GIoMIYgaWga7pFQzMb4AALVIKcH1d+GVExOoZI5
+         /jdWvi8OKRx5/UJNVM8SBBJLg2oqE5HHWAS70YjOskmsToTtt2yzbeG7Djhfjm7XlIyk
+         qABY68h9/bSktn/pRHowHwANI2c2+bSCdHgZMJa/jupIa6QCDgMnP2IndATSAsbk3CN9
+         3Hzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679119738;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kV6D6PWuyY+pzJCeIR0JhzUrH+GgDghjB9uU7AntUqA=;
+        b=YRMX72YZBCOo+q0UY+4owasXSqitlBxmAKMIljc6TkJOHX+Eu/8hFcIt2/jkVLoPg2
+         WMeFNLwrVUfWCK5N0ORSWlhwNkY2jTKhzxt9O8iGnOOEaA4HQ4/7q5i/gc38iB5LdYfP
+         otSrwGL+aCwwa9E3SJer7S70jUhPOVvu1lBBt9XNOG7yXLDHeDBhfYTReOW3drE1dTja
+         BXnhgfih+7eBE0ZK1AdYjDdtbn87oD4ona3xJfZPYGmt++ila7ol/ZIxMabv6AradPta
+         3i9ArrT5OotD7AbWJFbYT0tYpbFD3AVTzV450KzsqUX/BhqCLGPWt45TN5JqiNsXlaFR
+         68hA==
+X-Gm-Message-State: AO0yUKXgASohUg1A8Tz7HoNJ/BXkasfXOvxzt51q88pOTii5EZhzwn0Q
+        SeUeb/i6yI+cKbHafiqml+KCUCVh9SdAKUwbB0E=
+X-Google-Smtp-Source: AK7set9vNfDYTp13qC3VLlkv2NKrpoWodSQ81WtPPKmcZNYmxSE0tQmMZA6FKAfCBAih1aFLohvSXIcdvr4MosOWD90=
+X-Received: by 2002:a17:906:b4b:b0:931:c1a:b526 with SMTP id
+ v11-20020a1709060b4b00b009310c1ab526mr814048ejg.5.1679119738091; Fri, 17 Mar
+ 2023 23:08:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230316170149.4106586-1-jolsa@kernel.org> <ZBNTMZjEoETU9d8N@casper.infradead.org>
+ <CAP-5=fVYriALLwF2FU1ZUtLuHndnvPw=3SctVqY6Uwex8JfscA@mail.gmail.com>
+ <CAEf4BzYgyGTVv=cDwaW+DBke1uk_aLCg3CB_9W6+9tkS8Nyn_Q@mail.gmail.com>
+ <ZBPjs1b8crUv4ur6@casper.infradead.org> <CAEf4BzbPa-5b9uU0+GN=iaMGc6otje3iNQd+MOg_byTSYU8fEQ@mail.gmail.com>
+ <20230317211403.GZ3390869@ZenIV> <20230317212125.GA3390869@ZenIV>
+In-Reply-To: <20230317212125.GA3390869@ZenIV>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 17 Mar 2023 23:08:44 -0700
+Message-ID: <CAEf4BzYQ-bktO9s8yhBk7xUoz=2NFrgdGviWsN2=HWPBaGv6hA@mail.gmail.com>
+Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently there's no error message for filter (other than the help for
-the option) when it's built with NO_BPF_SKEL=1.  It should show the
-BPF filter is not supported like below:
+On Fri, Mar 17, 2023 at 2:21=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
+>
+> On Fri, Mar 17, 2023 at 09:14:03PM +0000, Al Viro wrote:
+> > On Fri, Mar 17, 2023 at 09:33:17AM -0700, Andrii Nakryiko wrote:
+> >
+> > > > But build IDs are _generally_ available.  The only problem (AIUI)
+> > > > is when you're trying to examine the contents of one container from
+> > > > another container.  And to solve that problem, you're imposing a co=
+st
+> > > > on everybody else with (so far) pretty vague justifications.  I rea=
+lly
+> > > > don't like to see you growing struct file for this (nor struct inod=
+e,
+> > > > nor struct vm_area_struct).  It's all quite unsatisfactory and I do=
+n't
+> > > > have a good suggestion.
+> > >
+> > > There is a lot of profiling, observability and debugging tooling buil=
+t
+> > > using BPF. And when capturing stack traces from BPF programs, if the
+> > > build ID note is not physically present in memory, fetching it from
+> > > the BPF program might fail in NMI (and other non-faultable contexts).
+> > > This patch set is about making sure we always can fetch build ID, eve=
+n
+> > > from most restrictive environments. It's guarded by Kconfig to avoid
+> > > adding 8 bytes of overhead to struct file for environment where this
+> > > might be unacceptable, giving users and distros a choice.
+> >
+> > Lovely.  As an exercise you might want to collect the stats on the
+> > number of struct file instances on the system vs. the number of files
+> > that happen to be ELF objects and are currently mmapped anywhere.
 
-  $ sudo ./perf record -e cycles --filter ip==1 true
-  BPF filter is not supported        <------------------- added
+That's a good suggestion. I wrote a simple script that uses the drgn
+tool ([0]), it enables nice introspection of the state of the kernel
+memory for the running kernel. The script is at the bottom ([1]) for
+anyone to sanity check. I didn't try to figure out which file is
+mmaped as executable and which didn't, so let's do worst case and
+assume that none of the file is executable, and thus that 8 byte
+pointer is a waste for all of them.
 
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
+On my devserver I got:
 
-          --filter <filter>
-                            event filter
+task_cnt=3D15984 uniq_file_cnt=3D56780
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/parse-events.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+On randomly chosen production host I got:
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6c5cf5244486..f1fa469712c4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2543,8 +2543,16 @@ static int set_filter(struct evsel *evsel, const void *arg)
- 		perf_pmu__scan_file(pmu, "nr_addr_filters",
- 				    "%d", &nr_addr_filters);
- 
--	if (!nr_addr_filters)
--		return perf_bpf_filter__parse(&evsel->bpf_filters, str);
-+	if (!nr_addr_filters) {
-+		int ret = perf_bpf_filter__parse(&evsel->bpf_filters, str);
-+
-+		if (ret == -EOPNOTSUPP)
-+			fprintf(stderr, "BPF filter is not supported\n");
-+		else if (ret)
-+			fprintf(stderr, "failed to set the BPF filter\n");
-+
-+		return ret;
-+	}
- 
- 	if (evsel__append_addr_filter(evsel, str) < 0) {
- 		fprintf(stderr,
--- 
-2.40.0.rc1.284.g88254d51c5-goog
+task_cnt=3D6387 uniq_file_cnt=3D22514
 
+So it seems like my devserver is "busier" than the production host. :)
+
+Above numbers suggest that my devserver's kernel has about 57000
+*unique* `struct file *` instances. That's 450KB of overhead. That's
+not much by any modern standard.
+
+But let's say I'm way off, and we have 1 million struct files. That's
+8MB overhead. I'd argue that those 8MB is not a big deal even on a
+normal laptop, even less so on production servers. Especially if you
+have 1 million active struct file instances created in the system, as
+way more will be used for application-specific needs.
+
+
+> > That does depend upon the load, obviously, but it's not hard to collect=
+ -
+> > you already have more than enough hooks inserted in the relevant places=
+.
+> > That might give a better appreciation of the reactions...
+>
+> One possibility would be a bit stolen from inode flags + hash keyed by
+> struct inode address (middle bits make for a decent hash function);
+> inode eviction would check that bit and kick the corresponding thing
+> from hash if the bit is set.
+>
+> Associating that thing with inode =3D> hash lookup/insert + set the bit.
+
+This is an interesting idea, but now we are running into a few
+unnecessary problems. We need to have a global dynamically sized hash
+map in the system. If we fix the number of buckets, we risk either
+wasting memory on an underutilized system (if we oversize), or
+performance problems due to collisions (if we undersize) if we have a
+busy system with lots of executables mapped in memory. If we don't
+pre-size, then we are talking about reallocations, rehashing, and
+doing that under global lock or something like that. Further, we'd
+have to take locks on buckets, which causes further problems for
+looking up build ID from this hashmap in NMI context for perf events
+and BPF programs, as locks can't be safely taken under those
+conditions, and thus fetching build ID would still be unreliable
+(though less so than it is today, of course).
+
+All of this is solvable to some degree (but not perfectly and not with
+simple and elegant approaches), but seems like an unnecessarily
+overcomplication compared to the amount of memory that we hope to
+save. It still feels like a Kconfig-guarded 8 byte field per struct
+file is a reasonable price for gaining reliable build ID information
+for profiling/tracing tools.
+
+
+  [0] https://drgn.readthedocs.io/en/latest/index.html
+
+  [1] Script I used:
+
+from drgn.helpers.linux.pid import for_each_task
+from drgn.helpers.linux.fs import for_each_file
+
+task_cnt =3D 0
+file_set =3D set()
+
+for task in for_each_task(prog):
+    task_cnt +=3D 1
+    try:
+        for (fd, file) in for_each_file(task):
+            file_set.add(file.value_())
+    except:
+        pass
+
+uniq_file_cnt =3D len(file_set)
+print(f"task_cnt=3D{task_cnt} uniq_file_cnt=3D{uniq_file_cnt}")
