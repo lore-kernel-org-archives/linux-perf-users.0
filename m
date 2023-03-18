@@ -2,98 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D41C61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 15:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3450DC61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 17:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229575AbjCRP27 (ORCPT
+        id S229999AbjCRRk7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Mar 2023 11:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48812 "EHLO
+        Sat, 18 Mar 2023 13:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjCRP27 (ORCPT
+        with ESMTP id S229886AbjCRRkv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Mar 2023 11:28:59 -0400
-X-Greylist: delayed 2662 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 18 Mar 2023 08:28:57 PDT
-Received: from mx.treblig.org (unknown [IPv6:2a00:1098:5b::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A84751A4AB
-        for <linux-perf-users@vger.kernel.org>; Sat, 18 Mar 2023 08:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-        ; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
-        :Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=UoJYitD5hhTMteTIVterFTcXdepPYFO2InWaB6RVd9w=; b=IXs/168u3/Tn+WHV2QDrFH9ZDx
-        VlWgq4vV4n2aID9LE30PCUwKIhhe9FIZL2r1lnSGiN6HE/gd25hB2LmeBvYyKGhdjimxDLmlYoRkE
-        3riBQWyvAfXQsMe3HJWGk4xfXVBympFip4Ce9t5nAnsBRMsLeA5q1hiD7kIakNr9TXOsTbNbU8z/s
-        aXjVAJNgcC9HwSQkW0MgZ1htJT6UC63/UEwdy4V4ligIcyeGE8KMh0WZKUQkWsndnvBnsY/pvSwnM
-        OlI317BXP7u2u7ADAqkI1ljLLkthgdxsb0I/5zaePzVWvSItEZdlmRZrcpB+Ak2xMeJmZZ/5QtIzD
-        SXTfhCKA==;
-Received: from dg by mx.treblig.org with local (Exim 4.94.2)
-        (envelope-from <dg@treblig.org>)
-        id 1pdXn4-000647-Om; Sat, 18 Mar 2023 14:44:14 +0000
-Date:   Sat, 18 Mar 2023 14:44:14 +0000
-From:   "Dr. David Alan Gilbert" <linux@treblig.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, acme@kernel.org,
-        linux-perf-users@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: NMI reason 2d when running perf
-Message-ID: <ZBXOPvIqybwtihJY@gallifrey>
-References: <25fccb43-8338-a690-0009-384dc0640169@kernel.dk>
+        Sat, 18 Mar 2023 13:40:51 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4314F2213F;
+        Sat, 18 Mar 2023 10:40:50 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id p34so41759wms.3;
+        Sat, 18 Mar 2023 10:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679161249;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ev2W7AwgvE+3tr7BAXXjW37/uLiVAl5wqa5Vqup/X18=;
+        b=Yl7l77+G+vWuZBrzmXQxIW4PhdcbuiWftbjibBta14w9f+IW+cP4rAqaUOEf54VsBP
+         XXcfsI0nfYwJA26CqS7T9F2Or0MsGLRdgDyme5Bhatkxfkcj3tht1cJWu9TO+QDzTDNj
+         /+QwOVyIXX+kAOQ60wi/wjA2WoOlZiSPw/7SrmfgWl4W1SF52ThmMuN26J9efm9dsWZT
+         wsgOC23KF0f0mJ0gi83B9lDDLlXm8j+xgWzfOmoVixSjCIi/R2VS0ynCo0MaWodEYm7Y
+         HFFiy/qM9A7HDTs3Iizi2lRpDpkyc5F5Qu0y6qpkXshh+P2hNhr3cHN9B8b7g4ihnEOF
+         8tew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679161249;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ev2W7AwgvE+3tr7BAXXjW37/uLiVAl5wqa5Vqup/X18=;
+        b=3LUngfb4BiFGfMgzvRGhmvVuBDqiroFnNS7Aom49uUkt3qR4x1QhoJCTZnbE5YwIda
+         Dh03Ar/PI3CrXIelvgTx+fL0yYdCUlxeByWrlrpzi/C2tGosU+VgeQ/b2WTi2JrCAVZW
+         jK4RKV2vNSJCawy88owdQ0/eTOLcTpwQzyLBKEFIFsaFDYsfZ3lab46HpyzkcEB/aQt8
+         BQ/oVPJh4DEc8gyJHM/F8U7fk0Ztq+9bhzuPNkZQcNrnkNibarVlQbUd5ljJcHC2gjG6
+         jLkdA73q6pWf0fG92Yo8LgLMfmXaVfu1BZY24v+8KGcE2gK3MVBGl2z81vCN22dDdfdU
+         BI/w==
+X-Gm-Message-State: AO0yUKXitvYhzq6k1ewfdbahaGHRwtkyLHr0ZwNajaXpRDLTuD+QiiiF
+        HMVmjyRmM31UcIX4jFXZ7/s=
+X-Google-Smtp-Source: AK7set9zXPa/ih+Bbwm7sQZOKAnG69++6aoehqPt/kHsTPtM2UGAPjvGCSsnG1ECr9Gokzh9oSseng==
+X-Received: by 2002:a05:600c:358e:b0:3ed:2a41:8525 with SMTP id p14-20020a05600c358e00b003ed2a418525mr17932303wmq.22.1679161249516;
+        Sat, 18 Mar 2023 10:40:49 -0700 (PDT)
+Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
+        by smtp.gmail.com with ESMTPSA id b15-20020adfe30f000000b002c706c754fesm4797373wrj.32.2023.03.18.10.40.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Mar 2023 10:40:49 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sat, 18 Mar 2023 18:40:45 +0100
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+Message-ID: <ZBX3nRWtc6+EI13W@krava>
+References: <20230316170149.4106586-1-jolsa@kernel.org>
+ <ZBNTMZjEoETU9d8N@casper.infradead.org>
+ <ZBV3beyxYhKv/kMp@krava>
+ <ZBXV3crf/wX5D9lo@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <25fccb43-8338-a690-0009-384dc0640169@kernel.dk>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/5.10.0-21-amd64 (x86_64)
-X-Uptime: 14:42:53 up 5 days, 23:05,  1 user,  load average: 0.02, 0.04, 0.01
-User-Agent: Mutt/2.0.5 (2021-01-21)
+In-Reply-To: <ZBXV3crf/wX5D9lo@casper.infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-* Jens Axboe (axboe@kernel.dk) wrote:
-> Hi,
+On Sat, Mar 18, 2023 at 03:16:45PM +0000, Matthew Wilcox wrote:
+> On Sat, Mar 18, 2023 at 09:33:49AM +0100, Jiri Olsa wrote:
+> > On Thu, Mar 16, 2023 at 05:34:41PM +0000, Matthew Wilcox wrote:
+> > > On Thu, Mar 16, 2023 at 06:01:40PM +0100, Jiri Olsa wrote:
+> > > > hi,
+> > > > this patchset adds build id object pointer to struct file object.
+> > > > 
+> > > > We have several use cases for build id to be used in BPF programs
+> > > > [2][3].
+> > > 
+> > > Yes, you have use cases, but you never answered the question I asked:
+> > > 
+> > > Is this going to be enabled by every distro kernel, or is it for special
+> > > use-cases where only people doing a very specialised thing who are
+> > > willing to build their own kernels will use it?
+> > 
+> > I hope so, but I guess only time tell.. given the response by Ian and Andrii
+> > there are 3 big users already
 > 
-> When running perf on my Dell R7525 on a running process, I get a ton of:
+> So the whole "There's a config option to turn it off" shtick is just a
+> fig-leaf.  I won't ever see it turned off.  You're imposing the cost of
+> this on EVERYONE who runs a distro kernel.  And almost nobody will see
+> any benefits from it.  Thanks for admitting that.
 > 
-> [  504.234782] Dazed and confused, but trying to continue
-> [  504.267843] Uhhuh. NMI received for unknown reason 2d on CPU 48.
-> [  504.267846] Dazed and confused, but trying to continue
-> [  504.335975] Uhhuh. NMI received for unknown reason 2d on CPU 48.
-> [  504.335977] Dazed and confused, but trying to continue
-> [  504.368031] Uhhuh. NMI received for unknown reason 2d on CPU 48.
-> [  504.368033] Dazed and confused, but trying to continue
-> [  504.371037] Uhhuh. NMI received for unknown reason 2d on CPU 48.
-> [  504.371038] Dazed and confused, but trying to continue
-> [  504.439165] Uhhuh. NMI received for unknown reason 2d on CPU 48.
-> [  504.439167] Dazed and confused, but trying to continue
-> 
-> spew in dmesg. The box has 2x7763 CPUS. This seems to be a recent
-> regression, been using this box for a while and haven't seen this
-> before. The test being traced is pinned to CPU 48. The box is currently
-> running:
 
-I'm not sure this is new; I've seen this intermittently on AMD boxes
-for a few years. Always when running perf or related tools.
+sure, I understand that's legit way of looking at this
 
-Dave
+I can imagine distros would have that enabled for debugging version of
+the kernel (like in fedora), and if that proves to be useful the standard
+kernel might take it, but yes, there's price (for discussion as pointed
+by Andrii) and it'd be for the distro maintainers to decide
 
-> commit 6015b1aca1a233379625385feb01dd014aca60b5 (origin/master, origin/HEAD)
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Tue Mar 14 19:32:38 2023 -0700
-> 
->     sched_getaffinity: don't assume 'cpumask_size()' is fully initialized
-> 
-> with the pending block/io_uring branches merged in for testing.
-> 
-> -- 
-> Jens Axboe
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+jirka
