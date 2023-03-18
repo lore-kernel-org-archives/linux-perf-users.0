@@ -2,114 +2,86 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4012EC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 10:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE5C61DA4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 15:17:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229681AbjCRKCl (ORCPT
+        id S229734AbjCRPRE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Mar 2023 06:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
+        Sat, 18 Mar 2023 11:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjCRKCk (ORCPT
+        with ESMTP id S229553AbjCRPRD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Mar 2023 06:02:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9A11165C;
-        Sat, 18 Mar 2023 03:02:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F335B60B4C;
-        Sat, 18 Mar 2023 10:02:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5181EC433EF;
-        Sat, 18 Mar 2023 10:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679133757;
-        bh=SdAwA+yHmCjXzJB/aenMpFVAdyQsRtXN1tQ01msm5Cs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RqY6KopL7ppyQlvW6i3ZwxS+hbTy+fvymdMHSNtaF+v3LemFtoyinunkzxynSnDVR
-         tBjblgW/mYpTyycNu0X36cBD7+EUgc2fisTzcDj8wXIi4mOOipZIjIGphqHoxKiZGZ
-         ABI80Aeg0LzIYPPM+3WrUAxi2RlNpn6kuht5rcIfMCnUTJGWZ16vFesqiGGI2aqqlO
-         K9LbFETxjc9LHXK93QRT7k/liOfpqJNdMu4NVkRR6TuU3Hj8Pcpnz/lVG0EbN/tDOw
-         YZTEm1OuKFyDmu1nt/Zdwyi4fugx0fKBph9xJdCP/MtJp2SxPxrNzksgcNOxfH5hGy
-         WR2tNkEkWMHdQ==
-Received: from [89.213.33.168] (helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pdTOU-001Anm-NT;
-        Sat, 18 Mar 2023 10:02:34 +0000
-Date:   Sat, 18 Mar 2023 10:02:33 +0000
-Message-ID: <87v8iygyx2.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zaid Al-Bassam <zalbassam@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        Sat, 18 Mar 2023 11:17:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23A7D303E9;
+        Sat, 18 Mar 2023 08:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RQqhoBxESfjz0MrhZuxEnWRoFia7U0MNzcHrY8Fhlv0=; b=d6ccJIc0boouKz1RgK4pvpGHi8
+        4ZkGSh7ToGcaKfREyF2r2iGLEPicussMx8K0l2Li2ra249nXJO7hUZf38itouaruulqS1aOFTKTqN
+        jJMx2gb8RC+xEru4EMEUbXlbziGm+fW8Fml8xSUcNodEmfqS15SK8uCirMJIR9JVRKxZaBwPAD74R
+        K9n/THstFMW9NglqvNtSQmYgeP646r9HesxPdRri63hl3iM8CtBAdvbnwf953h05nlX4Ap9z9DTvP
+        3+UTf5Zp5V2ZQKQBjwv/jwj26batJCHJXAy8GoUDqoSLOsLOteidAWyQR8ImH4PUgpewvrOdjbLIg
+        85rR280A==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pdYIX-00Gudm-D6; Sat, 18 Mar 2023 15:16:45 +0000
+Date:   Sat, 18 Mar 2023 15:16:45 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Hao Luo <haoluo@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, f.fainelli@gmail.com
-Subject: Re: [PATCH v4 0/8] perf: arm: Make PMUv3 driver available for aarch32
-In-Reply-To: <20230317195027.3746949-1-zalbassam@google.com>
-References: <20230317195027.3746949-1-zalbassam@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 89.213.33.168
-X-SA-Exim-Rcpt-To: zalbassam@google.com, mark.rutland@arm.com, will@kernel.org, jesussanp@google.com, linux@armlinux.org.uk, catalin.marinas@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org, james.morse@arm.com, suzuki.poulose@arm.com, oliver.upton@linux.dev, yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev, kvmarm@lists.cs.columbia.edu, f.fainelli@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Namhyung Kim <namhyung@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+Message-ID: <ZBXV3crf/wX5D9lo@casper.infradead.org>
+References: <20230316170149.4106586-1-jolsa@kernel.org>
+ <ZBNTMZjEoETU9d8N@casper.infradead.org>
+ <ZBV3beyxYhKv/kMp@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZBV3beyxYhKv/kMp@krava>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 17 Mar 2023 19:50:19 +0000,
-Zaid Al-Bassam <zalbassam@google.com> wrote:
+On Sat, Mar 18, 2023 at 09:33:49AM +0100, Jiri Olsa wrote:
+> On Thu, Mar 16, 2023 at 05:34:41PM +0000, Matthew Wilcox wrote:
+> > On Thu, Mar 16, 2023 at 06:01:40PM +0100, Jiri Olsa wrote:
+> > > hi,
+> > > this patchset adds build id object pointer to struct file object.
+> > > 
+> > > We have several use cases for build id to be used in BPF programs
+> > > [2][3].
+> > 
+> > Yes, you have use cases, but you never answered the question I asked:
+> > 
+> > Is this going to be enabled by every distro kernel, or is it for special
+> > use-cases where only people doing a very specialised thing who are
+> > willing to build their own kernels will use it?
 > 
-> Currently, PMUv3 driver is only available for ARMv8 aarch64 platforms,
-> ARMv8 platorms running in aarch32 mode dont have access to the driver.
-> This is, especially, a problem for ARMv8 platforms that only have
-> aarch32 support, like the Cortex-A32.
-> 
-> Make the PMUv3 driver available to arm arch (ARMv8 aarch32) by moving
-> the PMUv3 driver from arm64 to drivers, that makes the driver common
-> to both arm and arm64 architectures, then add PMUv3 arm Support.
-> 
-> The main work in this patchset was made a while back by Marc Zyngier
-> in [1]. Patchset version 1 [v1] rebases Marc's patches to the latest
-> kernel revision and adds additional patches to accommodate the changes
-> in the kernel since Marc wrote the patches.
-> 
-> version 2 [v2] of the patchset was created by Marc Zyngier and I
-> picked it up from [2].
+> I hope so, but I guess only time tell.. given the response by Ian and Andrii
+> there are 3 big users already
 
-The SoB chain is now a bit off as you picked it from my tree. Nothing
-that we can't fix, but please be careful in the future. You also
-failed to pick Florian's Tested-by: tags, which is worse. Please make
-sure to pick these things as people reply to your series.
+So the whole "There's a config option to turn it off" shtick is just a
+fig-leaf.  I won't ever see it turned off.  You're imposing the cost of
+this on EVERYONE who runs a distro kernel.  And almost nobody will see
+any benefits from it.  Thanks for admitting that.
 
-Will, Mark: any objection to the general shape of this series? I've
-been using it again to test the 32bit PMU support in KVM, and would
-rather see something merged while the architecture still has some
-relevance.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
