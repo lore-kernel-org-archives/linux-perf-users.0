@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB66C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5BEC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbjCTVZi (ORCPT
+        id S230462AbjCTV0O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 17:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
+        Mon, 20 Mar 2023 17:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230346AbjCTVZM (ORCPT
+        with ESMTP id S230361AbjCTVZs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 17:25:12 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BAA73A4E1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:24:34 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54161af1984so133642877b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:24:34 -0700 (PDT)
+        Mon, 20 Mar 2023 17:25:48 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4827B3A849
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:13 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id n203-20020a25dad4000000b0091231592671so14125777ybf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679347471;
+        d=google.com; s=20210112; t=1679347495;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+KtCffkRlKUj/6PyHm4epmu0CxW4XJhmveznufYgwCI=;
-        b=DZ6GWIVkzebRGgOcdqI2wT53YMfUXpZvpqNCqj3ZyeEG46nJFsL242v1WGyc/1QeN1
-         9Luv9MZJ+3BY8ycXooZuF3LB0GzZ26c8elBRxcRSnKNCByaglj/O8+Vlv5JjVQS2/kw1
-         XXFBAlzUASkELTnWk8kgWYHyPvjNTxPUigkFsk+b/4B3j67kChCIQxlR3YhBS2fu55Xr
-         jrBqy8UTJKyfoT41Dik94b/4g2qxMj9b2ZrM7UTswDxRGP23kygXCqCi1QX+Pfs25twq
-         eLgxKAsaq7bckbllav68NqK19awd9KQz1iB9tmBPCJ/y8leDDFcXE7IxPxhQwHIZQVdP
-         a0bA==
+        bh=9d5VHIsvA9UZ1+YJTtLO7nde7SlLSiM5pVs449RNH/o=;
+        b=qhKpTVNKCQn/LR/gWNt+OKGxc0LvmSnpiQpEi7vCLbImDciq8XF7geg8WGZHp13RNg
+         EmrxNqKPqOCiT6u6klxAvjAAwJZcDHkT1oEo1cw20gzuzfMpTxRN3byjbHtu4Ddlxldm
+         xvXoSTNHs/5uhaOtw2zTEDO5yWeo1t3tlgV7S7/8OwCqEtoCv8yeq40J80nqGSmNdLyb
+         /g4iPz2+3rOI5d9NiDgerwp92LTUOQMaGT9PTiXAeSBEB16u/J/ZAs09qARBZ8mtVtOM
+         h4w1F8+YGrzk/QeOZ8bSiCMtIv9tIPCP0F9Ztxcz8hzXFyQX6OL5VwMjmSf8NAbnNFX1
+         X21g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679347471;
+        d=1e100.net; s=20210112; t=1679347495;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+KtCffkRlKUj/6PyHm4epmu0CxW4XJhmveznufYgwCI=;
-        b=H4aISczoVNWqnZoifJhfkZKMvEn2DxyvsmkKi11V2K6UirZJ+QiVyAOdexIoL8IKDx
-         Ro9KD9NYEz8CJAMga2rAIpb/zjzSuUD3ofTcXPdUwv4PFEt0esx3wQzhqbksjsT2R0f8
-         h/tR5zyYyzoY3nLaoYpncwJrESg1acxP1GIjqkxbjhvnDnexJULBpw+Exk3EidiS5ABf
-         BIL7a14jxKzsxzfwOk1ur/1xcTFVEsJtKkqvd9oumZlOHn1RhdKQbnOZcTKV5Qqjn+CU
-         hoWDcGDCcznMJQkTc9AdJB+txzCiLFw3PXwr8U00GNZhXr+ZccHHvwpJpLudslYNSxJe
-         XCNQ==
-X-Gm-Message-State: AAQBX9ePOVVwmlGWDn9S5BuZKecT9VMN3mqLV3i/PzHWQUr4g34YRt3J
-        e0tt01JNk+uLmZSdGKquof9Jtg2euIVf
-X-Google-Smtp-Source: AKy350bg/gnqoyrIPdmKvwRKbfS2NvDfJWDP4vPPvtcDhgJXXwUVvM09zXz69maYgMB8VKKF3s7FJFk53wtF
+        bh=9d5VHIsvA9UZ1+YJTtLO7nde7SlLSiM5pVs449RNH/o=;
+        b=RyJyccoiDBPx7jKRQbzD7+NdyqKVVbvb1tyh2ZDbJjCczNhYkubEZzrAEzsK2eddUf
+         1l/ZIMswl4CqTt9n3/1ht08pMcJkbmgVgGjD5g/luwpVtqb8H4a1cgRX6NDZA66RACT3
+         L0QOfvjpuGwx3rmugwWtexWmvhw87iG/tIffCu21I4iI3rt2EGWnRgotBi/tFO26W/B7
+         U+ko9uoUAX+yPnhtgT1wJMSysGbiY4dnVlzvhPA42yBwHCxOIJdG/UlyC+iajx9ipTFs
+         WEU2fq75ySU45FR6+Uvgsx2tErww+Je3vwMmXizO8BX5/gsYaLuk1HxTczyP0mYRrdYb
+         EkUw==
+X-Gm-Message-State: AAQBX9c7eGc1DXkX/wDCeiHffP7Y05nq6qXlySPMH8OsSzTEtgBN1K63
+        RiCuDK9P3r/SKbj3WS8smsBDfG9RP/H5
+X-Google-Smtp-Source: AKy350YJK+zkOXjidRVH66SLC6+qrdiYoHsyTZtR/D5fS2wVNDxKYUYAda4YhIA/5vMiNqNykryKMRyBWlLD
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a30f:d1e2:fcd8:aa4d])
- (user=irogers job=sendgmr) by 2002:a25:9289:0:b0:a5f:0:bf12 with SMTP id
- y9-20020a259289000000b00a5f0000bf12mr391189ybl.13.1679347470925; Mon, 20 Mar
- 2023 14:24:30 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 14:22:43 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:3ce:b0:b61:14c8:90fd with SMTP id
+ g14-20020a05690203ce00b00b6114c890fdmr9978ybs.4.1679347495011; Mon, 20 Mar
+ 2023 14:24:55 -0700 (PDT)
+Date:   Mon, 20 Mar 2023 14:22:46 -0700
 In-Reply-To: <20230320212248.1175731-1-irogers@google.com>
-Message-Id: <20230320212248.1175731-13-irogers@google.com>
+Message-Id: <20230320212248.1175731-16-irogers@google.com>
 Mime-Version: 1.0
 References: <20230320212248.1175731-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v5 12/17] perf map: Changes to reference counting
+Subject: [PATCH v5 15/17] perf namespaces: Add reference count checking
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,492 +95,366 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When a pointer to a map exists do a get, when that pointer is
-overwritten or freed, put the map. This avoids issues with gets and
-puts being inconsistently used causing, use after puts, etc. For
-example, the map in struct addr_location is changed to hold a
-reference count. Reference count checking and address sanitizer were
-used to identify issues.
+Add reference count checking controlled by REFCNT_CHECKING ifdef. The
+reference count checking interposes an allocated pointer between the
+reference counted struct on a get and frees the pointer on a put.
+Accesses after a put cause faults and use after free, missed puts are
+caughts as leaks and double puts are double frees.
+
+This checking helped resolve a memory leak and use after free:
+https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/code-reading.c       |  1 +
- tools/perf/tests/hists_cumulate.c     | 10 ++++
- tools/perf/tests/hists_filter.c       | 10 ++++
- tools/perf/tests/hists_link.c         | 18 +++++-
- tools/perf/tests/hists_output.c       | 10 ++++
- tools/perf/tests/mmap-thread-lookup.c |  1 +
- tools/perf/util/callchain.c           |  9 +--
- tools/perf/util/event.c               |  6 +-
- tools/perf/util/hist.c                | 10 ++--
- tools/perf/util/machine.c             | 79 ++++++++++++++++-----------
- tools/perf/util/map.c                 |  2 +-
- 11 files changed, 112 insertions(+), 44 deletions(-)
+ tools/perf/builtin-inject.c  |   2 +-
+ tools/perf/util/annotate.c   |   2 +-
+ tools/perf/util/dso.c        |   2 +-
+ tools/perf/util/dsos.c       |   2 +-
+ tools/perf/util/namespaces.c | 132 ++++++++++++++++++++---------------
+ tools/perf/util/namespaces.h |   3 +-
+ tools/perf/util/symbol.c     |   2 +-
+ 7 files changed, 83 insertions(+), 62 deletions(-)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 1545fcaa95c6..efe026a35010 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -366,6 +366,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 	}
- 	pr_debug("Bytes read match those read by objdump\n");
- out:
-+	map__put(al.map);
- 	return err;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index fd2b38458a5d..fe6ddcf7fb1e 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -632,7 +632,7 @@ static int dso__read_build_id(struct dso *dso)
+ 	else if (dso->nsinfo) {
+ 		char *new_name;
+ 
+-		new_name = filename_with_chroot(dso->nsinfo->pid,
++		new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid,
+ 						dso->long_name);
+ 		if (new_name && filename__read_build_id(new_name, &dso->bid) > 0)
+ 			dso->has_build_id = true;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index e8570b7cc36f..199f6cd5ad1e 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1701,7 +1701,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 
+ 		mutex_lock(&dso->lock);
+ 		if (access(filename, R_OK) && errno == ENOENT && dso->nsinfo) {
+-			char *new_name = filename_with_chroot(dso->nsinfo->pid,
++			char *new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid,
+ 							      filename);
+ 			if (new_name) {
+ 				strlcpy(filename, new_name, filename_size);
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index e36b418df2c6..6c4129598f5d 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -515,7 +515,7 @@ static int __open_dso(struct dso *dso, struct machine *machine)
+ 		if (errno != ENOENT || dso->nsinfo == NULL)
+ 			goto out;
+ 
+-		new_name = filename_with_chroot(dso->nsinfo->pid, name);
++		new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid, name);
+ 		if (!new_name)
+ 			goto out;
+ 
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index 2bd23e4cf19e..53b989072ec5 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -91,7 +91,7 @@ bool __dsos__read_build_ids(struct list_head *head, bool with_hits)
+ 			have_build_id	  = true;
+ 			pos->has_build_id = true;
+ 		} else if (errno == ENOENT && pos->nsinfo) {
+-			char *new_name = filename_with_chroot(pos->nsinfo->pid,
++			char *new_name = filename_with_chroot(RC_CHK_ACCESS(pos->nsinfo)->pid,
+ 							      pos->long_name);
+ 
+ 			if (new_name && filename__read_build_id(new_name,
+diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
+index dd536220cdb9..8a3b7bd27b19 100644
+--- a/tools/perf/util/namespaces.c
++++ b/tools/perf/util/namespaces.c
+@@ -60,7 +60,7 @@ void namespaces__free(struct namespaces *namespaces)
+ 	free(namespaces);
  }
  
-diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
-index f00ec9abdbcd..8c0e3f334747 100644
---- a/tools/perf/tests/hists_cumulate.c
-+++ b/tools/perf/tests/hists_cumulate.c
-@@ -112,6 +112,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
- 		}
- 
- 		fake_samples[i].thread = al.thread;
-+		map__put(fake_samples[i].map);
- 		fake_samples[i].map = al.map;
- 		fake_samples[i].sym = al.sym;
- 	}
-@@ -147,6 +148,14 @@ static void del_hist_entries(struct hists *hists)
- 	}
- }
- 
-+static void put_fake_samples(void)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fake_samples); i++)
-+		map__put(fake_samples[i].map);
-+}
-+
- typedef int (*test_fn_t)(struct evsel *, struct machine *);
- 
- #define COMM(he)  (thread__comm_str(he->thread))
-@@ -733,6 +742,7 @@ static int test__hists_cumulate(struct test_suite *test __maybe_unused, int subt
- 	/* tear down everything */
- 	evlist__delete(evlist);
- 	machines__exit(&machines);
-+	put_fake_samples();
- 
- 	return err;
- }
-diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
-index 7c552549f4a4..98eff5935a1c 100644
---- a/tools/perf/tests/hists_filter.c
-+++ b/tools/perf/tests/hists_filter.c
-@@ -89,6 +89,7 @@ static int add_hist_entries(struct evlist *evlist,
- 			}
- 
- 			fake_samples[i].thread = al.thread;
-+			map__put(fake_samples[i].map);
- 			fake_samples[i].map = al.map;
- 			fake_samples[i].sym = al.sym;
- 		}
-@@ -101,6 +102,14 @@ static int add_hist_entries(struct evlist *evlist,
- 	return TEST_FAIL;
- }
- 
-+static void put_fake_samples(void)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fake_samples); i++)
-+		map__put(fake_samples[i].map);
-+}
-+
- static int test__hists_filter(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+-static int nsinfo__get_nspid(struct nsinfo *nsi, const char *path)
++static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const char *path)
  {
- 	int err = TEST_FAIL;
-@@ -322,6 +331,7 @@ static int test__hists_filter(struct test_suite *test __maybe_unused, int subtes
- 	evlist__delete(evlist);
- 	reset_output_field();
- 	machines__exit(&machines);
-+	put_fake_samples();
- 
- 	return err;
- }
-diff --git a/tools/perf/tests/hists_link.c b/tools/perf/tests/hists_link.c
-index e7e4ee57ce04..64ce8097889c 100644
---- a/tools/perf/tests/hists_link.c
-+++ b/tools/perf/tests/hists_link.c
-@@ -6,6 +6,7 @@
- #include "evsel.h"
- #include "evlist.h"
- #include "machine.h"
-+#include "map.h"
- #include "parse-events.h"
- #include "hists_common.h"
- #include "util/mmap.h"
-@@ -94,6 +95,7 @@ static int add_hist_entries(struct evlist *evlist, struct machine *machine)
- 			}
- 
- 			fake_common_samples[k].thread = al.thread;
-+			map__put(fake_common_samples[k].map);
- 			fake_common_samples[k].map = al.map;
- 			fake_common_samples[k].sym = al.sym;
- 		}
-@@ -126,11 +128,24 @@ static int add_hist_entries(struct evlist *evlist, struct machine *machine)
- 	return -1;
- }
- 
-+static void put_fake_samples(void)
-+{
-+	size_t i, j;
-+
-+	for (i = 0; i < ARRAY_SIZE(fake_common_samples); i++)
-+		map__put(fake_common_samples[i].map);
-+	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
-+		for (j = 0; j < ARRAY_SIZE(fake_samples[0]); j++)
-+			map__put(fake_samples[i][j].map);
-+	}
-+}
-+
- static int find_sample(struct sample *samples, size_t nr_samples,
- 		       struct thread *t, struct map *m, struct symbol *s)
- {
- 	while (nr_samples--) {
--		if (samples->thread == t && samples->map == m &&
-+		if (samples->thread == t &&
-+		    samples->map == m &&
- 		    samples->sym == s)
- 			return 1;
- 		samples++;
-@@ -336,6 +351,7 @@ static int test__hists_link(struct test_suite *test __maybe_unused, int subtest
- 	evlist__delete(evlist);
- 	reset_output_field();
- 	machines__exit(&machines);
-+	put_fake_samples();
- 
- 	return err;
- }
-diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
-index 428d11a938f2..cebd5226bb12 100644
---- a/tools/perf/tests/hists_output.c
-+++ b/tools/perf/tests/hists_output.c
-@@ -78,6 +78,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 	FILE *f = NULL;
+ 	char *statln = NULL;
+@@ -74,19 +74,18 @@ static int nsinfo__get_nspid(struct nsinfo *nsi, const char *path)
+ 	while (getline(&statln, &linesz, f) != -1) {
+ 		/* Use tgid if CONFIG_PID_NS is not defined. */
+ 		if (strstr(statln, "Tgid:") != NULL) {
+-			nsi->tgid = (pid_t)strtol(strrchr(statln, '\t'),
+-						     NULL, 10);
+-			nsi->nstgid = nsinfo__tgid(nsi);
++			*tgid = (pid_t)strtol(strrchr(statln, '\t'), NULL, 10);
++			*nstgid = *tgid;
  		}
  
- 		fake_samples[i].thread = al.thread;
-+		map__put(fake_samples[i].map);
- 		fake_samples[i].map = al.map;
- 		fake_samples[i].sym = al.sym;
- 	}
-@@ -113,6 +114,14 @@ static void del_hist_entries(struct hists *hists)
- 	}
- }
- 
-+static void put_fake_samples(void)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fake_samples); i++)
-+		map__put(fake_samples[i].map);
-+}
-+
- typedef int (*test_fn_t)(struct evsel *, struct machine *);
- 
- #define COMM(he)  (thread__comm_str(he->thread))
-@@ -620,6 +629,7 @@ static int test__hists_output(struct test_suite *test __maybe_unused, int subtes
- 	/* tear down everything */
- 	evlist__delete(evlist);
- 	machines__exit(&machines);
-+	put_fake_samples();
- 
- 	return err;
- }
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index 5cc4644e353d..898eda55b7a8 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -203,6 +203,7 @@ static int mmap_events(synth_cb synth)
+ 		if (strstr(statln, "NStgid:") != NULL) {
+ 			nspid = strrchr(statln, '\t');
+-			nsi->nstgid = (pid_t)strtol(nspid, NULL, 10);
++			*nstgid = (pid_t)strtol(nspid, NULL, 10);
+ 			/*
+ 			 * If innermost tgid is not the first, process is in a different
+ 			 * PID namespace.
+ 			 */
+-			nsi->in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
++			*in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
+ 			break;
  		}
- 
- 		pr_debug("map %p, addr %" PRIx64 "\n", al.map, map__start(al.map));
-+		map__put(al.map);
+ 	}
+@@ -121,8 +120,8 @@ int nsinfo__init(struct nsinfo *nsi)
+ 	 * want to switch as part of looking up dso/map data.
+ 	 */
+ 	if (old_stat.st_ino != new_stat.st_ino) {
+-		nsi->need_setns = true;
+-		nsi->mntns_path = newns;
++		RC_CHK_ACCESS(nsi)->need_setns = true;
++		RC_CHK_ACCESS(nsi)->mntns_path = newns;
+ 		newns = NULL;
  	}
  
- 	machine__delete_threads(machine);
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 9e9c39dd9d2b..78dc7b6f7ff7 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -589,7 +589,7 @@ fill_node(struct callchain_node *node, struct callchain_cursor *cursor)
- 		}
- 		call->ip = cursor_node->ip;
- 		call->ms = cursor_node->ms;
--		map__get(call->ms.map);
-+		call->ms.map = map__get(call->ms.map);
- 		call->srcline = cursor_node->srcline;
- 
- 		if (cursor_node->branch) {
-@@ -1067,7 +1067,7 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
- 	node->ip = ip;
- 	map__zput(node->ms.map);
- 	node->ms = *ms;
--	map__get(node->ms.map);
-+	node->ms.map = map__get(node->ms.map);
- 	node->branch = branch;
- 	node->nr_loop_iter = nr_loop_iter;
- 	node->iter_cycles = iter_cycles;
-@@ -1115,7 +1115,8 @@ int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *
- 	struct machine *machine = maps__machine(node->ms.maps);
- 
- 	al->maps = node->ms.maps;
--	al->map = node->ms.map;
-+	map__put(al->map);
-+	al->map = map__get(node->ms.map);
- 	al->sym = node->ms.sym;
- 	al->srcline = node->srcline;
- 	al->addr = node->ip;
-@@ -1528,7 +1529,7 @@ int callchain_node__make_parent_list(struct callchain_node *node)
- 				goto out;
- 			*new = *chain;
- 			new->has_children = false;
--			map__get(new->ms.map);
-+			new->ms.map = map__get(new->ms.map);
- 			list_add_tail(&new->list, &head);
- 		}
- 		parent = parent->parent;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index 2712d1a8264e..13f7f85e92e1 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -485,13 +485,14 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *ma
- 	if (machine) {
- 		struct addr_location al;
- 
--		al.map = maps__find(machine__kernel_maps(machine), tp->addr);
-+		al.map = map__get(maps__find(machine__kernel_maps(machine), tp->addr));
- 		if (al.map && map__load(al.map) >= 0) {
- 			al.addr = map__map_ip(al.map, tp->addr);
- 			al.sym = map__find_symbol(al.map, al.addr);
- 			if (al.sym)
- 				ret += symbol__fprintf_symname_offs(al.sym, &al, fp);
- 		}
-+		map__put(al.map);
- 	}
- 	ret += fprintf(fp, " old len %u new len %u\n", tp->old_len, tp->new_len);
- 	old = true;
-@@ -614,7 +615,7 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 		return NULL;
- 	}
- 
--	al->map = maps__find(maps, al->addr);
-+	al->map = map__get(maps__find(maps, al->addr));
- 	if (al->map != NULL) {
- 		/*
- 		 * Kernel maps might be changed when loading symbols so loading
-@@ -773,6 +774,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
-  */
- void addr_location__put(struct addr_location *al)
- {
-+	map__zput(al->map);
- 	thread__zput(al->thread);
- }
- 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index fdf0562d2fd3..02b4bf31b1a7 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -450,7 +450,7 @@ static int hist_entry__init(struct hist_entry *he,
- 			memset(&he->stat, 0, sizeof(he->stat));
- 	}
- 
--	map__get(he->ms.map);
-+	he->ms.map = map__get(he->ms.map);
- 
- 	if (he->branch_info) {
- 		/*
-@@ -465,13 +465,13 @@ static int hist_entry__init(struct hist_entry *he,
- 		memcpy(he->branch_info, template->branch_info,
- 		       sizeof(*he->branch_info));
- 
--		map__get(he->branch_info->from.ms.map);
--		map__get(he->branch_info->to.ms.map);
-+		he->branch_info->from.ms.map = map__get(he->branch_info->from.ms.map);
-+		he->branch_info->to.ms.map = map__get(he->branch_info->to.ms.map);
- 	}
- 
- 	if (he->mem_info) {
--		map__get(he->mem_info->iaddr.ms.map);
--		map__get(he->mem_info->daddr.ms.map);
-+		he->mem_info->iaddr.ms.map = map__get(he->mem_info->iaddr.ms.map);
-+		he->mem_info->daddr.ms.map = map__get(he->mem_info->daddr.ms.map);
- 	}
- 
- 	if (hist_entry__has_callchains(he) && symbol_conf.use_callchain)
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 916d98885128..502e97010a3c 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -880,21 +880,29 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 	struct symbol *sym;
- 	struct dso *dso;
- 	struct map *map = maps__find(machine__kernel_maps(machine), event->ksymbol.addr);
-+	bool put_map = false;
-+	int err = 0;
- 
- 	if (!map) {
--		int err;
--
- 		dso = dso__new(event->ksymbol.name);
--		if (dso) {
--			dso->kernel = DSO_SPACE__KERNEL;
--			map = map__new2(0, dso);
--			dso__put(dso);
--		}
- 
--		if (!dso || !map) {
--			return -ENOMEM;
-+		if (!dso) {
-+			err = -ENOMEM;
-+			goto out;
- 		}
--
-+		dso->kernel = DSO_SPACE__KERNEL;
-+		map = map__new2(0, dso);
-+		dso__put(dso);
-+		if (!map) {
-+			err = -ENOMEM;
-+			goto out;
-+		}
-+		/*
-+		 * The inserted map has a get on it, we need to put to release
-+		 * the reference count here, but do it after all accesses are
-+		 * done.
-+		 */
-+		put_map = true;
- 		if (event->ksymbol.ksym_type == PERF_RECORD_KSYMBOL_TYPE_OOL) {
- 			dso->binary_type = DSO_BINARY_TYPE__OOL;
- 			dso->data.file_size = event->ksymbol.len;
-@@ -904,9 +912,10 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 		map->start = event->ksymbol.addr;
- 		map->end = map__start(map) + event->ksymbol.len;
- 		err = maps__insert(machine__kernel_maps(machine), map);
--		map__put(map);
--		if (err)
--			return err;
-+		if (err) {
-+			err = -ENOMEM;
-+			goto out;
-+		}
- 
- 		dso__set_loaded(dso);
- 
-@@ -921,10 +930,15 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 	sym = symbol__new(map__map_ip(map, map__start(map)),
- 			  event->ksymbol.len,
- 			  0, 0, event->ksymbol.name);
--	if (!sym)
--		return -ENOMEM;
-+	if (!sym) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
- 	dso__insert_symbol(dso, sym);
--	return 0;
-+out:
-+	if (put_map)
-+		map__put(map);
-+	return err;
- }
- 
- static int machine__process_ksymbol_unregister(struct machine *machine,
-@@ -1026,13 +1040,11 @@ static struct map *machine__addnew_module_map(struct machine *machine, u64 start
+@@ -132,13 +131,26 @@ int nsinfo__init(struct nsinfo *nsi)
+ 	if (snprintf(spath, PATH_MAX, "/proc/%d/status", nsinfo__pid(nsi)) >= PATH_MAX)
  		goto out;
  
- 	err = maps__insert(machine__kernel_maps(machine), map);
--
--	/* Put the map here because maps__insert already got it */
--	map__put(map);
--
- 	/* If maps__insert failed, return NULL. */
--	if (err)
-+	if (err) {
-+		map__put(map);
- 		map = NULL;
-+	}
+-	rv = nsinfo__get_nspid(nsi, spath);
++	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
++			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
+ 
  out:
- 	/* put the dso here, corresponding to  machine__findnew_module_dso */
- 	dso__put(dso);
-@@ -1324,6 +1336,7 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
- 	/* In case of renewal the kernel map, destroy previous one */
- 	machine__destroy_kernel_maps(machine);
- 
-+	map__put(machine->vmlinux_map);
- 	machine->vmlinux_map = map__new2(0, kernel);
- 	if (machine->vmlinux_map == NULL)
- 		return -ENOMEM;
-@@ -1612,7 +1625,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
- 	map->end = start + size;
- 
- 	dso__kernel_module_get_build_id(map__dso(map), machine->root_dir);
--
-+	map__put(map);
- 	return 0;
+ 	free(newns);
+ 	return rv;
  }
  
-@@ -1658,16 +1671,18 @@ static void machine__set_kernel_mmap(struct machine *machine,
- static int machine__update_kernel_mmap(struct machine *machine,
- 				     u64 start, u64 end)
++static struct nsinfo *nsinfo__alloc(void)
++{
++	struct nsinfo *res;
++	RC_STRUCT(nsinfo) *nsi;
++
++	nsi = calloc(1, sizeof(*nsi));
++	if (ADD_RC_CHK(res, nsi))
++		refcount_set(&nsi->refcnt, 1);
++
++	return res;
++}
++
+ struct nsinfo *nsinfo__new(pid_t pid)
  {
--	struct map *map = machine__kernel_map(machine);
-+	struct map *orig, *updated;
- 	int err;
+ 	struct nsinfo *nsi;
+@@ -146,22 +158,21 @@ struct nsinfo *nsinfo__new(pid_t pid)
+ 	if (pid == 0)
+ 		return NULL;
  
--	map__get(map);
--	maps__remove(machine__kernel_maps(machine), map);
-+	orig = machine->vmlinux_map;
-+	updated = map__get(orig);
+-	nsi = calloc(1, sizeof(*nsi));
+-	if (nsi != NULL) {
+-		nsi->pid = pid;
+-		nsi->tgid = pid;
+-		nsi->nstgid = pid;
+-		nsi->need_setns = false;
+-		nsi->in_pidns = false;
+-		/* Init may fail if the process exits while we're trying to look
+-		 * at its proc information.  In that case, save the pid but
+-		 * don't try to enter the namespace.
+-		 */
+-		if (nsinfo__init(nsi) == -1)
+-			nsi->need_setns = false;
++	nsi = nsinfo__alloc();
++	if (!nsi)
++		return NULL;
  
-+	machine->vmlinux_map = updated;
- 	machine__set_kernel_mmap(machine, start, end);
-+	maps__remove(machine__kernel_maps(machine), orig);
-+	err = maps__insert(machine__kernel_maps(machine), updated);
-+	map__put(orig);
+-		refcount_set(&nsi->refcnt, 1);
+-	}
++	RC_CHK_ACCESS(nsi)->pid = pid;
++	RC_CHK_ACCESS(nsi)->tgid = pid;
++	RC_CHK_ACCESS(nsi)->nstgid = pid;
++	RC_CHK_ACCESS(nsi)->need_setns = false;
++	RC_CHK_ACCESS(nsi)->in_pidns = false;
++	/* Init may fail if the process exits while we're trying to look at its
++	 * proc information. In that case, save the pid but don't try to enter
++	 * the namespace.
++	 */
++	if (nsinfo__init(nsi) == -1)
++		RC_CHK_ACCESS(nsi)->need_setns = false;
  
--	err = maps__insert(machine__kernel_maps(machine), map);
--	map__put(map);
- 	return err;
+ 	return nsi;
  }
+@@ -173,21 +184,21 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+ 	if (nsi == NULL)
+ 		return NULL;
  
-@@ -2294,7 +2309,7 @@ static int add_callchain_ip(struct thread *thread,
- {
- 	struct map_symbol ms;
- 	struct addr_location al;
--	int nr_loop_iter = 0;
-+	int nr_loop_iter = 0, err;
- 	u64 iter_cycles = 0;
- 	const char *srcline = NULL;
- 
-@@ -2355,9 +2370,11 @@ static int add_callchain_ip(struct thread *thread,
- 	ms.map = al.map;
- 	ms.sym = al.sym;
- 	srcline = callchain_srcline(&ms, al.addr);
--	return callchain_cursor_append(cursor, ip, &ms,
--				       branch, flags, nr_loop_iter,
--				       iter_cycles, branch_from, srcline);
-+	err = callchain_cursor_append(cursor, ip, &ms,
-+				      branch, flags, nr_loop_iter,
-+				      iter_cycles, branch_from, srcline);
-+	map__put(al.map);
-+	return err;
- }
- 
- struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 1fe367e2cf19..acbc37359e06 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -410,7 +410,7 @@ struct map *map__clone(struct map *from)
- 	map = memdup(from, size);
- 	if (map != NULL) {
- 		refcount_set(&map->refcnt, 1);
--		dso__get(dso);
-+		map->dso = dso__get(dso);
+-	nnsi = calloc(1, sizeof(*nnsi));
+-	if (nnsi != NULL) {
+-		nnsi->pid = nsinfo__pid(nsi);
+-		nnsi->tgid = nsinfo__tgid(nsi);
+-		nnsi->nstgid = nsinfo__nstgid(nsi);
+-		nnsi->need_setns = nsinfo__need_setns(nsi);
+-		nnsi->in_pidns = nsinfo__in_pidns(nsi);
+-		if (nsi->mntns_path) {
+-			nnsi->mntns_path = strdup(nsi->mntns_path);
+-			if (!nnsi->mntns_path) {
+-				free(nnsi);
+-				return NULL;
+-			}
++	nnsi = nsinfo__alloc();
++	if (!nnsi)
++		return NULL;
++
++	RC_CHK_ACCESS(nnsi)->pid = nsinfo__pid(nsi);
++	RC_CHK_ACCESS(nnsi)->tgid = nsinfo__tgid(nsi);
++	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
++	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
++	RC_CHK_ACCESS(nnsi)->in_pidns = nsinfo__in_pidns(nsi);
++	if (RC_CHK_ACCESS(nsi)->mntns_path) {
++		RC_CHK_ACCESS(nnsi)->mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
++		if (!RC_CHK_ACCESS(nnsi)->mntns_path) {
++			nsinfo__put(nnsi);
++			return NULL;
+ 		}
+-		refcount_set(&nnsi->refcnt, 1);
  	}
  
- 	return map;
+ 	return nnsi;
+@@ -195,51 +206,60 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
+ 
+ static void nsinfo__delete(struct nsinfo *nsi)
+ {
+-	zfree(&nsi->mntns_path);
+-	free(nsi);
++	if (nsi) {
++		WARN_ONCE(refcount_read(&RC_CHK_ACCESS(nsi)->refcnt) != 0,
++			"nsinfo refcnt unbalanced\n");
++		zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
++		RC_CHK_FREE(nsi);
++	}
+ }
+ 
+ struct nsinfo *nsinfo__get(struct nsinfo *nsi)
+ {
+-	if (nsi)
+-		refcount_inc(&nsi->refcnt);
+-	return nsi;
++	struct nsinfo *result;
++
++	if (RC_CHK_GET(result, nsi))
++		refcount_inc(&RC_CHK_ACCESS(nsi)->refcnt);
++
++	return result;
+ }
+ 
+ void nsinfo__put(struct nsinfo *nsi)
+ {
+-	if (nsi && refcount_dec_and_test(&nsi->refcnt))
++	if (nsi && refcount_dec_and_test(&RC_CHK_ACCESS(nsi)->refcnt))
+ 		nsinfo__delete(nsi);
++	else
++		RC_CHK_PUT(nsi);
+ }
+ 
+ bool nsinfo__need_setns(const struct nsinfo *nsi)
+ {
+-        return nsi->need_setns;
++	return RC_CHK_ACCESS(nsi)->need_setns;
+ }
+ 
+ void nsinfo__clear_need_setns(struct nsinfo *nsi)
+ {
+-        nsi->need_setns = false;
++	RC_CHK_ACCESS(nsi)->need_setns = false;
+ }
+ 
+ pid_t nsinfo__tgid(const struct nsinfo  *nsi)
+ {
+-        return nsi->tgid;
++	return RC_CHK_ACCESS(nsi)->tgid;
+ }
+ 
+ pid_t nsinfo__nstgid(const struct nsinfo  *nsi)
+ {
+-        return nsi->nstgid;
++	return RC_CHK_ACCESS(nsi)->nstgid;
+ }
+ 
+ pid_t nsinfo__pid(const struct nsinfo  *nsi)
+ {
+-        return nsi->pid;
++	return RC_CHK_ACCESS(nsi)->pid;
+ }
+ 
+ pid_t nsinfo__in_pidns(const struct nsinfo  *nsi)
+ {
+-        return nsi->in_pidns;
++	return RC_CHK_ACCESS(nsi)->in_pidns;
+ }
+ 
+ void nsinfo__mountns_enter(struct nsinfo *nsi,
+@@ -256,7 +276,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 	nc->oldns = -1;
+ 	nc->newns = -1;
+ 
+-	if (!nsi || !nsi->need_setns)
++	if (!nsi || !RC_CHK_ACCESS(nsi)->need_setns)
+ 		return;
+ 
+ 	if (snprintf(curpath, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
+@@ -270,7 +290,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
+ 	if (oldns < 0)
+ 		goto errout;
+ 
+-	newns = open(nsi->mntns_path, O_RDONLY);
++	newns = open(RC_CHK_ACCESS(nsi)->mntns_path, O_RDONLY);
+ 	if (newns < 0)
+ 		goto errout;
+ 
+@@ -339,9 +359,9 @@ int nsinfo__stat(const char *filename, struct stat *st, struct nsinfo *nsi)
+ 
+ bool nsinfo__is_in_root_namespace(void)
+ {
+-	struct nsinfo nsi;
++	pid_t tgid = 0, nstgid = 0;
++	bool in_pidns = false;
+ 
+-	memset(&nsi, 0x0, sizeof(nsi));
+-	nsinfo__get_nspid(&nsi, "/proc/self/status");
+-	return !nsi.in_pidns;
++	nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, "/proc/self/status");
++	return !in_pidns;
+ }
+diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
+index 567829262c42..8c0731c6cbb7 100644
+--- a/tools/perf/util/namespaces.h
++++ b/tools/perf/util/namespaces.h
+@@ -13,6 +13,7 @@
+ #include <linux/perf_event.h>
+ #include <linux/refcount.h>
+ #include <linux/types.h>
++#include <internal/rc_check.h>
+ 
+ #ifndef HAVE_SETNS_SUPPORT
+ int setns(int fd, int nstype);
+@@ -29,7 +30,7 @@ struct namespaces {
+ struct namespaces *namespaces__new(struct perf_record_namespaces *event);
+ void namespaces__free(struct namespaces *namespaces);
+ 
+-struct nsinfo {
++DECLARE_RC_STRUCT(nsinfo) {
+ 	pid_t			pid;
+ 	pid_t			tgid;
+ 	pid_t			nstgid;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 7904bfff7d0e..f5432c7add09 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1962,7 +1962,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 
+ 		is_reg = is_regular_file(name);
+ 		if (!is_reg && errno == ENOENT && dso->nsinfo) {
+-			char *new_name = filename_with_chroot(dso->nsinfo->pid,
++			char *new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid,
+ 							      name);
+ 			if (new_name) {
+ 				is_reg = is_regular_file(new_name);
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
