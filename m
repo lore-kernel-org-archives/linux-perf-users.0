@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8C4C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 03:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F8DC7618A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 03:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbjCTDnC (ORCPT
+        id S230013AbjCTDnF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Mar 2023 23:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38216 "EHLO
+        Sun, 19 Mar 2023 23:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229778AbjCTDmD (ORCPT
+        with ESMTP id S230052AbjCTDmT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Mar 2023 23:42:03 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B66231D0
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:40:43 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 204-20020a250fd5000000b00b6d6655dc35so441526ybp.6
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:40:43 -0700 (PDT)
+        Sun, 19 Mar 2023 23:42:19 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060C49038
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:40:59 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5417f156cb9so110037917b3.8
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:40:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679283643;
+        d=google.com; s=20210112; t=1679283656;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sc0UoT/sOrVoOx3FR0aFOvpKiVJitcdLEI81kwZKe/g=;
-        b=UmEP33hr/jPyu0yNNb2qGf4hbSQTq8fi6dIbd1w65AkitadLNWgAFBRVIskw3bUef5
-         tFNkH4yIg0GKr/pw4/15xpiZJQRWK5WcFRNxnsPD6wAnYlqn3OVLLeCoruhZK5BI7PpI
-         CAgb8lADRB3PIShqAqa7B79AAM9QNvkuQ1Tz32gZo6EWNKQnRiusj/RVG42LM17H64bU
-         0Z39e1rhWe3JlBYvgJZl40GeBH4Z820ZTt7XS3nMiuL27ybtNFUGzkPDujBIfssPEKb9
-         6fZPy9qmNeQHPylel43XezvOWOAjy6iGTKTLLxaM+9VcQ21jjJ5bi11fBnOmxPWN+HZ4
-         v4og==
+        bh=Dx+Czfooqx4+y3PtKz3VngTOr7flvK3/ZnOwhjyajRw=;
+        b=MnCFeZ3XYBxTeakZd+zOXa4Ab3HZffcdRzC8KKmGbbG9Fn9k1DFYzjlrNzkXYGXnxd
+         923XA9T3DkAR0cJ6qMDKJ9rhD3B6K8UXQ7POn0CCRqQcNXXrQxg5X0BE0b1a18KdG70D
+         ul5rcjH1TSDixbX/5aMLw+P/mJ2v2v6aS45fo+mDzXKNT1tqCuO1ISTU5MXWf6YAVpTO
+         3nCtelHziS8hnvRvMZXud4/jWzVF9s8FLsd96uVwPGuS6/rBup1H+o/TDMxalS7iDz0Y
+         SAUjZQ9vSBzD6XhPKS4ZAWFEt4Dxe2TohNmrm2CaXeTkKRG2T+JO6e8WEntCXe14Ejyh
+         X20Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679283643;
+        d=1e100.net; s=20210112; t=1679283656;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sc0UoT/sOrVoOx3FR0aFOvpKiVJitcdLEI81kwZKe/g=;
-        b=RcpjPCgwdhtxrapcsok1MtYhyXMvD48KulrvVFLlwbYqRthI9MS5lyptgmnUBdTDmp
-         nXPjnmlydeMKboQSTuP82KVnCxd4cY5oysznm2yCaje3gWls8tdznU9yhWTzzTDwnWoa
-         fuPVupQ5Q5nqQvXRDJwUpA4wkM3jgE4Rwh81PzAvHHkBdIicWiMAVMLqAFpYRGVQCGmB
-         c9vg7muEA6AFv1k0bL9RodttA3UzlS63yJgIgt2GakX7HC/CfDP5dg773GZBrBjNC1+X
-         LCL33A7R+QDPNd3dXXSbLssMLdhutzAv52XuhLeFfWP/wFrA+kMiaLAMNo/6RFDUyuyi
-         9f4A==
-X-Gm-Message-State: AO0yUKWhPRL4EIuCYh3V04Q7LvHWLklYK7za7Kub5WfW3iIUyg4sH/HS
-        NYn3wPuaOkOgUELqFWeN6B1f3Hegrxx6
-X-Google-Smtp-Source: AK7set8rIGJCJcTTopzK8gDqrWUi43rxBiQxYsPlBLHZMzFHhN/bfigSuXEcRY8MK2r/URicHWHJMXIbvOtn
+        bh=Dx+Czfooqx4+y3PtKz3VngTOr7flvK3/ZnOwhjyajRw=;
+        b=LPHXUDnS4uBnjt8pIwkjYxN1JZBg67RghK1DHF0I8I1f/mpEvweyX0wuZoj8hJMGTI
+         cZ2lwpcn2n+CvqX6AfIb6hyUT7bVkLXSehmSTBJ1EdbBM6XKHTRxRiK5TMc9e12Deh1d
+         kSlIcFsl0zdWqP1M5L9/D3NVGFS2UorFSmworJ6l5xoYCBUN7282JPSrU/ZKOGmNvrVK
+         eRFIR1kU6LNnEUuC0RBsIjy01Vq+5Halspn3n8+XPnDDY+7Y2cB+Pqme5KVcEAtWO6Uy
+         eozhJeWWKNYiT/ZIQR0lS4SgedE43yOwvo2vqBx725c1trWzuR+BhCNj2fJSJCTH4FKH
+         LN4Q==
+X-Gm-Message-State: AO0yUKWyefSq5PNAI2tLgIvqU5D72+HmP/gYogWm8pqB2vTgAC4quhna
+        UXeErYBKmcqbxd5qAuJX8dI+74XNvNoK
+X-Google-Smtp-Source: AK7set8Tdbub04SSF+TbbYlkVgHxpVLE5t37DZ88uqqR1sEcI7ns7735e5AVy4IaYP0kJ8d3N8QRGJexgh2j
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:1895:9fa0:27f5:cb71])
- (user=irogers job=sendgmr) by 2002:a5b:711:0:b0:a42:1dd7:6fc7 with SMTP id
- g17-20020a5b0711000000b00a421dd76fc7mr4398820ybq.11.1679283642774; Sun, 19
- Mar 2023 20:40:42 -0700 (PDT)
-Date:   Sun, 19 Mar 2023 20:38:04 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:72b:b0:b6b:e967:920d with SMTP id
+ l11-20020a056902072b00b00b6be967920dmr1240639ybt.13.1679283656703; Sun, 19
+ Mar 2023 20:40:56 -0700 (PDT)
+Date:   Sun, 19 Mar 2023 20:38:06 -0700
 In-Reply-To: <20230320033810.980165-1-irogers@google.com>
-Message-Id: <20230320033810.980165-17-irogers@google.com>
+Message-Id: <20230320033810.980165-19-irogers@google.com>
 Mime-Version: 1.0
 References: <20230320033810.980165-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v4 16/22] perf maps: Modify maps_by_name to hold a reference
- to a map
+Subject: [PATCH v4 18/22] libperf: Add reference count checking macros.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -97,166 +96,118 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To make it clearer about the ownership of a reference count split the
-by-name case from the regular start-address sorted tree. Put the
-reference count when maps_by_name is freed, which requires moving a
-decrement to nr_maps in maps__remove. Add two missing map puts in
-maps__fixup_overlappings in the event maps__insert fails.
+The macros serve as a way to debug use of a reference counted struct.
+The macros add a memory allocated pointer that is interposed between
+the reference counted original struct at a get and freed by a put.
+The pointer replaces the original struct, so use of the struct name
+via APIs remains unchanged.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/maps.c   | 30 ++++++++++++++++--------------
- tools/perf/util/symbol.c | 21 +++++++++++++++++----
- 2 files changed, 33 insertions(+), 18 deletions(-)
+ tools/lib/perf/include/internal/rc_check.h | 94 ++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 tools/lib/perf/include/internal/rc_check.h
 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index ffd4a4a64026..74e3133f5007 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -26,6 +26,9 @@ static void __maps__free_maps_by_name(struct maps *maps)
- 	/*
- 	 * Free everything to try to do it from the rbtree in the next search
- 	 */
-+	for (unsigned int i = 0; i < maps__nr_maps(maps); i++)
-+		map__put(maps__maps_by_name(maps)[i]);
+diff --git a/tools/lib/perf/include/internal/rc_check.h b/tools/lib/perf/include/internal/rc_check.h
+new file mode 100644
+index 000000000000..c0626d8beb59
+--- /dev/null
++++ b/tools/lib/perf/include/internal/rc_check.h
+@@ -0,0 +1,94 @@
++/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
++#ifndef __LIBPERF_INTERNAL_RC_CHECK_H
++#define __LIBPERF_INTERNAL_RC_CHECK_H
 +
- 	zfree(&maps->maps_by_name);
- 	maps->nr_maps_allocated = 0;
- }
-@@ -42,7 +45,7 @@ static int __maps__insert(struct maps *maps, struct map *map)
- 		return -ENOMEM;
- 
- 	RB_CLEAR_NODE(&new_rb_node->rb_node);
--	new_rb_node->map = map;
-+	new_rb_node->map = map__get(map);
- 
- 	while (*p != NULL) {
- 		parent = *p;
-@@ -55,7 +58,6 @@ static int __maps__insert(struct maps *maps, struct map *map)
- 
- 	rb_link_node(&new_rb_node->rb_node, parent, p);
- 	rb_insert_color(&new_rb_node->rb_node, maps__entries(maps));
--	map__get(map);
- 	return 0;
- }
- 
-@@ -100,7 +102,7 @@ int maps__insert(struct maps *maps, struct map *map)
- 			maps->maps_by_name = maps_by_name;
- 			maps->nr_maps_allocated = nr_allocate;
- 		}
--		maps__maps_by_name(maps)[maps__nr_maps(maps) - 1] = map;
-+		maps__maps_by_name(maps)[maps__nr_maps(maps) - 1] = map__get(map);
- 		__maps__sort_by_name(maps);
- 	}
-  out:
-@@ -126,9 +128,9 @@ void maps__remove(struct maps *maps, struct map *map)
- 	rb_node = maps__find_node(maps, map);
- 	assert(rb_node->map == map);
- 	__maps__remove(maps, rb_node);
--	--maps->nr_maps;
- 	if (maps__maps_by_name(maps))
- 		__maps__free_maps_by_name(maps);
-+	--maps->nr_maps;
- 	up_write(maps__lock(maps));
- }
- 
-@@ -136,6 +138,9 @@ static void __maps__purge(struct maps *maps)
- {
- 	struct map_rb_node *pos, *next;
- 
-+	if (maps__maps_by_name(maps))
-+		__maps__free_maps_by_name(maps);
++#include <stdlib.h>
++#include <linux/zalloc.h>
 +
- 	maps__for_each_entry_safe(maps, pos, next) {
- 		rb_erase_init(&pos->rb_node,  maps__entries(maps));
- 		map__put(pos->map);
-@@ -293,7 +298,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 	}
- 
- 	next = first;
--	while (next) {
-+	while (next && !err) {
- 		struct map_rb_node *pos = rb_entry(next, struct map_rb_node, rb_node);
- 		next = rb_next(&pos->rb_node);
- 
-@@ -331,8 +336,10 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 
- 			before->end = map__start(map);
- 			err = __maps__insert(maps, before);
--			if (err)
-+			if (err) {
-+				map__put(before);
- 				goto put_map;
-+			}
- 
- 			if (verbose >= 2 && !use_browser)
- 				map__fprintf(before, fp);
-@@ -352,22 +359,17 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 			assert(map__map_ip(pos->map, map__end(map)) ==
- 				map__map_ip(after, map__end(map)));
- 			err = __maps__insert(maps, after);
--			if (err)
-+			if (err) {
-+				map__put(after);
- 				goto put_map;
--
-+			}
- 			if (verbose >= 2 && !use_browser)
- 				map__fprintf(after, fp);
- 			map__put(after);
- 		}
- put_map:
- 		map__put(pos->map);
--
--		if (err)
--			goto out;
- 	}
--
--	err = 0;
--out:
- 	up_write(maps__lock(maps));
- 	return err;
- }
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 0431c328f4d6..1f4c23052a54 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2049,10 +2049,23 @@ int dso__load(struct dso *dso, struct map *map)
- 
- static int map__strcmp(const void *a, const void *b)
- {
--	const struct dso *dso_a = map__dso(*(const struct map **)a);
--	const struct dso *dso_b = map__dso(*(const struct map **)b);
-+	const struct map *map_a = *(const struct map **)a;
-+	const struct map *map_b = *(const struct map **)b;
-+	const struct dso *dso_a = map__dso(map_a);
-+	const struct dso *dso_b = map__dso(map_b);
-+	int ret = strcmp(dso_a->short_name, dso_b->short_name);
- 
--	return strcmp(dso_a->short_name, dso_b->short_name);
-+	if (ret == 0 && map_a != map_b) {
-+		/*
-+		 * Ensure distinct but name equal maps have an order in part to
-+		 * aid reference counting.
-+		 */
-+		ret = (int)map__start(map_a) - (int)map__start(map_b);
-+		if (ret == 0)
-+			ret = (int)((intptr_t)map_a - (intptr_t)map_b);
-+	}
++/*
++ * Shared reference count checking macros.
++ *
++ * Reference count checking is an approach to sanitizing the use of reference
++ * counted structs. It leverages address and leak sanitizers to make sure gets
++ * are paired with a put. Reference count checking adds a malloc-ed layer of
++ * indirection on a get, and frees it on a put. A missed put will be reported as
++ * a memory leak. A double put will be reported as a double free. Accessing
++ * after a put will cause a use-after-free and/or a segfault.
++ */
 +
-+	return ret;
- }
- 
- static int map__strcmp_name(const void *name, const void *b)
-@@ -2084,7 +2097,7 @@ static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
- 	maps->nr_maps_allocated = maps__nr_maps(maps);
- 
- 	maps__for_each_entry(maps, rb_node)
--		maps_by_name[i++] = rb_node->map;
-+		maps_by_name[i++] = map__get(rb_node->map);
- 
- 	__maps__sort_by_name(maps);
- 
++#ifndef REFCNT_CHECKING
++/* Replaces "struct foo" so that the pointer may be interposed. */
++#define DECLARE_RC_STRUCT(struct_name)		\
++	struct struct_name
++
++/* Declare a reference counted struct variable. */
++#define RC_STRUCT(struct_name) struct struct_name
++
++/*
++ * Interpose the indirection. Result will hold the indirection and object is the
++ * reference counted struct.
++ */
++#define ADD_RC_CHK(result, object) (result = object, object)
++
++/* Strip the indirection layer. */
++#define RC_CHK_ACCESS(object) object
++
++/* Frees the object and the indirection layer. */
++#define RC_CHK_FREE(object) free(object)
++
++/* A get operation adding the indirection layer. */
++#define RC_CHK_GET(result, object) ADD_RC_CHK(result, object)
++
++/* A put operation removing the indirection layer. */
++#define RC_CHK_PUT(object) {}
++
++#else
++
++/* Replaces "struct foo" so that the pointer may be interposed. */
++#define DECLARE_RC_STRUCT(struct_name)			\
++	struct original_##struct_name;			\
++	struct struct_name {				\
++		struct original_##struct_name *orig;	\
++	};						\
++	struct original_##struct_name
++
++/* Declare a reference counted struct variable. */
++#define RC_STRUCT(struct_name) struct original_##struct_name
++
++/*
++ * Interpose the indirection. Result will hold the indirection and object is the
++ * reference counted struct.
++ */
++#define ADD_RC_CHK(result, object)					\
++	(								\
++		object ? (result = malloc(sizeof(*result)),		\
++			result ? (result->orig = object, result)	\
++			: (result = NULL, NULL))			\
++		: (result = NULL, NULL)					\
++		)
++
++/* Strip the indirection layer. */
++#define RC_CHK_ACCESS(object) object->orig
++
++/* Frees the object and the indirection layer. */
++#define RC_CHK_FREE(object)			\
++	do {					\
++		zfree(&object->orig);		\
++		free(object);			\
++	} while(0)
++
++/* A get operation adding the indirection layer. */
++#define RC_CHK_GET(result, object) ADD_RC_CHK(result, (object ? object->orig : NULL))
++
++/* A put operation removing the indirection layer. */
++#define RC_CHK_PUT(object)			\
++	do {					\
++		if (object) {			\
++			object->orig = NULL;	\
++			free(object);		\
++		}				\
++	} while(0)
++
++#endif
++
++#endif /* __LIBPERF_INTERNAL_RC_CHECK_H */
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
