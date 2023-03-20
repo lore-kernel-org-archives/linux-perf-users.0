@@ -2,245 +2,233 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93D1C77B6E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B53C7618A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 15:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232126AbjCTO6v (ORCPT
+        id S232659AbjCTPW7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 10:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41880 "EHLO
+        Mon, 20 Mar 2023 11:22:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231893AbjCTO6K (ORCPT
+        with ESMTP id S232726AbjCTPWi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 10:58:10 -0400
+        Mon, 20 Mar 2023 11:22:38 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3561125A7;
-        Mon, 20 Mar 2023 07:56:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 47F0A32E7E;
+        Mon, 20 Mar 2023 08:16:10 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FD62AD7;
-        Mon, 20 Mar 2023 07:57:13 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAA413F71E;
-        Mon, 20 Mar 2023 07:56:26 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 14:56:20 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Kajetan Puchalski <kajetan.puchalski@arm.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, linux@armlinux.org.uk,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 07/51] cpuidle,psci: Push RCU-idle into driver
-Message-ID: <ZBh0FPlF1oeqHftc@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230112194314.845371875@infradead.org>
- <20230112195539.760296658@infradead.org>
- <ff338b9f-4ab0-741b-26ea-7b7351da156@linux-m68k.org>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CDC3106F;
+        Mon, 20 Mar 2023 08:16:15 -0700 (PDT)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 31DCC3F71E;
+        Mon, 20 Mar 2023 08:15:29 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, Anshuman.Khandual@arm.com
+Cc:     German Gomez <german.gomez@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 4/4] perf report: Add 'simd' sort field
+Date:   Mon, 20 Mar 2023 15:15:08 +0000
+Message-Id: <20230320151509.1137462-5-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230320151509.1137462-1-james.clark@arm.com>
+References: <20230320151509.1137462-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff338b9f-4ab0-741b-26ea-7b7351da156@linux-m68k.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Geert,
+From: German Gomez <german.gomez@arm.com>
 
-On Tue, Mar 07, 2023 at 05:40:08PM +0100, Geert Uytterhoeven wrote:
-> 	Hoi Peter,
-> 
-> (reduced the insane CC list)
+Add 'simd' sort field to visualize SIMD ops in perf-report.
 
-Helpfully you dropped me from Cc, so I missed this until just now...
+Rows are labeled with the SIMD isa, and the type of predicate (if any):
 
-> On Thu, 12 Jan 2023, Peter Zijlstra wrote:
-> > Doing RCU-idle outside the driver, only to then temporarily enable it
-> > again, at least twice, before going idle is daft.
-> > 
-> > Notably once implicitly through the cpu_pm_*() calls and once
-> > explicitly doing ct_irq_*_irqon().
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-> > Reviewed-by: Guo Ren <guoren@kernel.org>
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > Tested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
-> > Tested-by: Tony Lindgren <tony@atomide.com>
-> > Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
-> 
-> Thanks for your patch, which is now commit e038f7b8028a1d1b ("cpuidle,
-> psci: Push RCU-idle into driver") in v6.3-rc1.
-> 
-> I have bisected a PSCI checker regression on Renesas R-Car Gen3/4 SoCs
-> to commit a01353cf1896ea5b ("cpuidle: Fix ct_idle_*() usage") (the 7
-> commits before that do not compile):
->
-> psci_checker: PSCI checker started using 2 CPUs
-> psci_checker: Starting hotplug tests
-> psci_checker: Trying to turn off and on again all CPUs
-> psci: CPU0 killed (polled 0 ms)
-> Detected PIPT I-cache on CPU0
-> CPU0: Booted secondary processor 0x0000000000 [0x411fd073]
-> psci_checker: Trying to turn off and on again group 0 (CPUs 0-1)
-> psci: CPU0 killed (polled 0 ms)
-> Detected PIPT I-cache on CPU0
-> CPU0: Booted secondary processor 0x0000000000 [0x411fd073]
-> psci_checker: Hotplug tests passed OK
-> psci_checker: Starting suspend tests (10 cycles per state)
-> psci_checker: CPU 0 entering suspend cycles, states 1 through 1
-> psci_checker: CPU 1 entering suspend cycles, states 1 through 1
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 177 at kernel/context_tracking.c:141 ct_kernel_exit.constprop.0+0xd8/0xf4
+  - [p] partial predicate
+  - [e] empty predicate (no elements in the vector being used)
 
-So that's:
+Example with Arm SPE and SVE (Scalable Vector Extension):
 
-  WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
+  #include <arm_sve.h>
 
-... and the PSCI checker doens't run in the context of the idle thread, so the
-warning is correct, and we're violating the expectation of the context tracking
-code.
+  double src[1025], dst[1025];
 
-The PSCI checker is very much a special case, and I'm not sure how we can fix
-this without removing the warning in the cases we want it. It'd be nicer if we
-could "queue" the idle into the relevant idle thread. :/
+  int main(void) {
+    svfloat64_t vc = svdup_f64(1);
+    for(;;)
+      for(int i = 0; i < 1025; i += svcntd())
+      {
+        svbool_t pg = svwhilelt_b64(i, 1025);
+        svfloat64_t vsrc = svld1(pg, &src[i]);
+        svfloat64_t vdst = svadd_x(pg, vsrc, vc);
+        svst1(pg, &dst[i], vdst);
+      }
+    return 0;
+  }
 
-I'm very tempted to say we should just rip the checker code out, rather than
-contorting the rest of the code to make that work.
+  ... compiled using "gcc-11 -march=armv8-a+sve -O3"
 
-Thanks,
-Mark.
+Profiling on a platform that implements FEAT_SVE and FEAT_SPEv1p1:
 
-> Modules linked in:
-> CPU: 1 PID: 177 Comm: psci_suspend_te Not tainted 6.2.0-rc1-salvator-x-00052-ga01353cf1896 #1415
-> Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
-> pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : ct_kernel_exit.constprop.0+0xd8/0xf4
-> lr : ct_kernel_exit.constprop.0+0xc8/0xf4
-> sp : ffffffc00b73bd30
-> x29: ffffffc00b73bd30 x28: ffffff807fbadc90 x27: 0000000000000000
-> x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
-> x23: ffffff800981e140 x22: 0000000000000001 x21: 0000000000010000
-> x20: ffffffc0086be1d8 x19: ffffff807fbac070 x18: 0000000000000000
-> x17: ffffff80083d1000 x16: ffffffc00841fff8 x15: ffffffc00b73b990
-> x14: ffffffc00895be78 x13: 0000000000000001 x12: 0000000000000000
-> x11: 00000000000001aa x10: 00000000ffffffea x9 : 000000000000000f
-> x8 : ffffffc00b73bb68 x7 : ffffffc00b73be18 x6 : ffffffc00815ff34
-> x5 : ffffffc00a6a0c30 x4 : ffffffc00801ce00 x3 : 0000000000000000
-> x2 : ffffffc008dc3070 x1 : ffffffc008dc3078 x0 : 0000000004208040
-> Call trace:
->  ct_kernel_exit.constprop.0+0xd8/0xf4
->  ct_idle_enter+0x18/0x20
->  psci_enter_idle_state+0xa4/0xfc
->  suspend_test_thread+0x238/0x2f0
->  kthread+0xd8/0xe8
->  ret_from_fork+0x10/0x20
-> irq event stamp: 0
-> hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-> hardirqs last disabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
-> softirqs last  enabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
-> softirqs last disabled at (0): [<0000000000000000>] 0x0
-> ---[ end trace 0000000000000000 ]---
-> ------------[ cut here ]------------
-> WARNING: CPU: 1 PID: 177 at kernel/context_tracking.c:186 ct_kernel_enter.constprop.0+0x78/0xa4
-> Modules linked in:
-> CPU: 1 PID: 177 Comm: psci_suspend_te Tainted: G        W          6.2.0-rc1-salvator-x-00052-ga01353cf1896 #1415
-> Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
-> pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : ct_kernel_enter.constprop.0+0x78/0xa4
-> lr : ct_kernel_enter.constprop.0+0x68/0xa4
-> sp : ffffffc00b73bd30
-> x29: ffffffc00b73bd30 x28: ffffff807fbadc90 x27: 0000000000000000
-> x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
-> x23: ffffff800981e140 x22: 0000000000000001 x21: 00000000ffffffa1
-> x20: ffffffc0086be1d8 x19: 00000000000000c0 x18: 0000000000000000
-> x17: ffffff80083d1000 x16: ffffffc00841fff8 x15: ffffffc00b73b990
-> x14: ffffffc00895be78 x13: ffffff800e325180 x12: ffffffc076de9000
-> x11: 0000000034d4d91d x10: 0000000000000008 x9 : 0000000000001000
-> x8 : ffffffc008012800 x7 : 0000000000000000 x6 : ffffff807fbac070
-> x5 : ffffffc008dc3070 x4 : 0000000000000000 x3 : 000000000001a9fc
-> x2 : 0000000000000003 x1 : ffffffc008dc3070 x0 : 0000000004208040
-> Call trace:
->  ct_kernel_enter.constprop.0+0x78/0xa4
->  ct_idle_exit+0x18/0x38
->  psci_enter_idle_state+0xdc/0xfc
->  suspend_test_thread+0x238/0x2f0
->  kthread+0xd8/0xe8
->  ret_from_fork+0x10/0x20
-> irq event stamp: 0
-> hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-> hardirqs last disabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
-> softirqs last  enabled at (0): [<ffffffc0080798b0>] copy_process+0x608/0x13dc
-> softirqs last disabled at (0): [<0000000000000000>] 0x0
-> ---[ end trace 0000000000000000 ]---
-> psci_checker: Failed to suspend CPU 1: error -1 (requested state 1, cycle 0)
-> psci_checker: CPU 0 suspend test results: success 0, shallow states 10, errors 0
-> mmcblk0rpmb: mmc0:0001 BGSD3R 4.00 MiB, chardev (243:0)
-> psci_checker: CPU 1 suspend test results: success 0, shallow states 9, errors 1
-> psci_checker: 1 error(s) encountered in suspend tests
-> psci_checker: PSCI checker completed
-> 
-> > ---
-> > drivers/cpuidle/cpuidle-psci.c |    9 +++++----
-> > 1 file changed, 5 insertions(+), 4 deletions(-)
-> > 
-> > --- a/drivers/cpuidle/cpuidle-psci.c
-> > +++ b/drivers/cpuidle/cpuidle-psci.c
-> > @@ -69,12 +69,12 @@ static int __psci_enter_domain_idle_stat
-> > 		return -1;
-> > 
-> > 	/* Do runtime PM to manage a hierarchical CPU toplogy. */
-> > -	ct_irq_enter_irqson();
-> > 	if (s2idle)
-> > 		dev_pm_genpd_suspend(pd_dev);
-> > 	else
-> > 		pm_runtime_put_sync_suspend(pd_dev);
-> > -	ct_irq_exit_irqson();
-> > +
-> > +	ct_idle_enter();
-> > 
-> > 	state = psci_get_domain_state();
-> > 	if (!state)
-> > @@ -82,12 +82,12 @@ static int __psci_enter_domain_idle_stat
-> > 
-> > 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-> > 
-> > -	ct_irq_enter_irqson();
-> > +	ct_idle_exit();
-> > +
-> > 	if (s2idle)
-> > 		dev_pm_genpd_resume(pd_dev);
-> > 	else
-> > 		pm_runtime_get_sync(pd_dev);
-> > -	ct_irq_exit_irqson();
-> > 
-> > 	cpu_pm_exit();
-> > 
-> > @@ -240,6 +240,7 @@ static int psci_dt_cpu_init_topology(str
-> > 	 * of a shared state for the domain, assumes the domain states are all
-> > 	 * deeper states.
-> > 	 */
-> > +	drv->states[state_count - 1].flags |= CPUIDLE_FLAG_RCU_IDLE;
-> > 	drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
-> > 	drv->states[state_count - 1].enter_s2idle = psci_enter_s2idle_domain_idle_state;
-> > 	psci_cpuidle_use_cpuhp = true;
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> 
+  $ perf record -e arm_spe_0// -- ./a.out
+  $ perf report --itrace=i1i -s overhead,pid,simd,sym
+
+  Overhead      Pid:Command   Simd     Symbol
+  ........  ................  .......  ......................
+
+    53.76%    10758:program            [.] main
+    46.14%    10758:program   [.] SVE  [.] main
+     0.09%    10758:program   [p] SVE  [.] main
+
+The report shows 0.09% of the sampled SVE operations use partial
+predicates due to src and dst arrays not being multiples of the vector
+register lengths.
+
+Signed-off-by: German Gomez <german.gomez@arm.com>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/util/hist.c                   |  1 +
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 47 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  2 +
+ 5 files changed, 52 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index c242e8da6b1a..cfd502f7e6da 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -117,6 +117,7 @@ OPTIONS
+ 	- addr: (Full) virtual address of the sampled instruction
+ 	- retire_lat: On X86, this reports pipeline stall of this instruction compared
+ 	  to the previous instruction in cycles. And currently supported only on X86
++	- simd: Flags describing a SIMD operation. "e" for empty Arm SVE predicate. "p" for partial Arm SVE predicate
+ 
+ 	By default, comm, dso and symbol keys are used.
+ 	(i.e. --sort comm,dso,symbol)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 3670136a0074..0c11f50abfec 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -745,6 +745,7 @@ __hists__add_entry(struct hists *hists,
+ 		.weight = sample->weight,
+ 		.ins_lat = sample->ins_lat,
+ 		.p_stage_cyc = sample->p_stage_cyc,
++		.simd_flags = sample->simd_flags,
+ 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+ 
+ 	if (!hists->has_callchains && he && he->callchain_size != 0)
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 86a677954279..afc9f1c7f4dc 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -81,6 +81,7 @@ enum hist_column {
+ 	HISTC_ADDR_FROM,
+ 	HISTC_ADDR_TO,
+ 	HISTC_ADDR,
++	HISTC_SIMD,
+ 	HISTC_NR_COLS, /* Last entry */
+ };
+ 
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 093a0c8b2e3d..e11e68ecf0a2 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -139,6 +139,52 @@ struct sort_entry sort_thread = {
+ 	.se_width_idx	= HISTC_THREAD,
+ };
+ 
++/* --sort simd */
++
++static int64_t
++sort__simd_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	if (left->simd_flags.arch != right->simd_flags.arch)
++		return (int64_t) left->simd_flags.arch - right->simd_flags.arch;
++
++	return (int64_t) left->simd_flags.pred - right->simd_flags.pred;
++}
++
++static const char *hist_entry__get_simd_name(struct simd_flags *simd_flags)
++{
++	u64 arch = simd_flags->arch;
++
++	if (arch & SIMD_OP_FLAGS_ARCH_SVE)
++		return "SVE";
++	else
++		return "n/a";
++}
++
++static int hist_entry__simd_snprintf(struct hist_entry *he, char *bf,
++				     size_t size, unsigned int width __maybe_unused)
++{
++	const char *name;
++
++	if (!he->simd_flags.arch)
++		return repsep_snprintf(bf, size, "");
++
++	name = hist_entry__get_simd_name(&he->simd_flags);
++
++	if (he->simd_flags.pred & SIMD_OP_FLAGS_PRED_EMPTY)
++		return repsep_snprintf(bf, size, "[e] %s", name);
++	else if (he->simd_flags.pred & SIMD_OP_FLAGS_PRED_PARTIAL)
++		return repsep_snprintf(bf, size, "[p] %s", name);
++
++	return repsep_snprintf(bf, size, "[.] %s", name);
++}
++
++struct sort_entry sort_simd = {
++	.se_header	= "Simd   ",
++	.se_cmp		= sort__simd_cmp,
++	.se_snprintf	= hist_entry__simd_snprintf,
++	.se_width_idx	= HISTC_SIMD,
++};
++
+ /* --sort comm */
+ 
+ /*
+@@ -2142,6 +2188,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_ADDR, "addr", sort_addr),
+ 	DIM(SORT_LOCAL_RETIRE_LAT, "local_retire_lat", sort_local_p_stage_cyc),
+ 	DIM(SORT_GLOBAL_RETIRE_LAT, "retire_lat", sort_global_p_stage_cyc),
++	DIM(SORT_SIMD, "simd", sort_simd)
+ };
+ 
+ #undef DIM
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 22f437c3476f..ecfb7f1359d5 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -111,6 +111,7 @@ struct hist_entry {
+ 	u64			p_stage_cyc;
+ 	u8			cpumode;
+ 	u8			depth;
++	struct simd_flags	simd_flags;
+ 
+ 	/* We are added by hists__add_dummy_entry. */
+ 	bool			dummy;
+@@ -241,6 +242,7 @@ enum sort_type {
+ 	SORT_ADDR,
+ 	SORT_LOCAL_RETIRE_LAT,
+ 	SORT_GLOBAL_RETIRE_LAT,
++	SORT_SIMD,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
+-- 
+2.34.1
+
