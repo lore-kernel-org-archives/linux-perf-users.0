@@ -2,44 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5774C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 22:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AF5C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 22:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbjCTW3T (ORCPT
+        id S229764AbjCTWhV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 18:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33692 "EHLO
+        Mon, 20 Mar 2023 18:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjCTW3S (ORCPT
+        with ESMTP id S229561AbjCTWhU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 18:29:18 -0400
+        Mon, 20 Mar 2023 18:37:20 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D2DC619C;
-        Mon, 20 Mar 2023 15:29:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B2FB26A9;
+        Mon, 20 Mar 2023 15:37:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 753BEB810F6;
-        Mon, 20 Mar 2023 22:29:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04FCDC433EF;
-        Mon, 20 Mar 2023 22:29:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 39F6AB810FA;
+        Mon, 20 Mar 2023 22:37:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC185C433D2;
+        Mon, 20 Mar 2023 22:37:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679351352;
-        bh=scf65u0jBdg4sE2X6WhlnAwDa/Qn0mokAtjRKzVKTBk=;
+        s=k20201202; t=1679351837;
+        bh=IBBEyGAISWsgD1ZP/NwygwfuZMDNyGdcymw3q6BDNug=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aZUC//1LZhzPYZGH5UOU4TgPC/YD48hCJ+XuVz6zUEw2Ap+w59sv+K+pRiSKuK7qH
-         b1QX3JSgetAwDNbXlXreAosBbAs7Qlc3nmxNOkgfoawYYn+oNbGTXZpTxaemcM0b0L
-         oxDL5zO2I40RkzwuIEMYIWcAkCHrwrdFPZt5+1RlrXW5mQ81rVIdlkT6so0ihzQM05
-         BPkZ/mhJqNy7jaXB/T5AKeRFAroBlQxWi87V/sk4wONAh4uv/PE+kkM21ujCSZvErg
-         CcELv5sT+SLNdzgVeA6GTdsTTDebiCyohXOXmunqoi+YC8dD5ZbgZ75o5V4WbTXabR
-         xp+D1oMZIkppw==
+        b=AQFeSa+BaBuKwg+y09/XwdbpPHxQB8QvAnpuHxVhsb5RTnyBbCSeYFUvFhhs3sLpH
+         YFp059df0J3zM6gwIW9gQ+MnAgXhBAEuLJDm386ZmXj/v+nckV1fz0BwXK1oBz83Jn
+         i8RoBl/B/eLcQpzGRBsk4jaWerMdG+JwxNhZ08wFCHyKYi4h7GRGTNp4eRn039yQ6H
+         eaKejj6Wz7xpYfjoqOQXRiaXgTwAxV5BRJrbcGIK4nAD7TUU9kE3dEcv25pQuOV0Cy
+         GmbY3VOZhUA8cDvblqeIG5QJukSekY89ypmAWVdUawr/t5TSxkixZCAnx/JfayV6Hl
+         aQJDhbwVZA41w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EC8E04052D; Mon, 20 Mar 2023 19:29:09 -0300 (-03)
-Date:   Mon, 20 Mar 2023 19:29:09 -0300
+        id 6E6254052D; Mon, 20 Mar 2023 19:37:14 -0300 (-03)
+Date:   Mon, 20 Mar 2023 19:37:14 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, Anshuman.Khandual@arm.com,
+Cc:     Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -47,89 +46,64 @@ Cc:     James Clark <james.clark@arm.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/4] Enable display of partial and empty SVE
- predicates from Arm SPE data
-Message-ID: <ZBjeNW9wg4fQcLCU@kernel.org>
-References: <20230320151509.1137462-1-james.clark@arm.com>
- <CAP-5=fUz_u8BODDn3OK5hh9xSbXbMZU0fiCJUdpoS3AFQGQ9GA@mail.gmail.com>
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] perf kvm: Fix memory leak
+Message-ID: <ZBjgGg3XumiJB/YG@kernel.org>
+References: <20230320061619.29520-1-leo.yan@linaro.org>
+ <CAP-5=fVBZfTrtp6OUzop3HxL-Aw80FDC+7MPS6UEwDhhfkgk_Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUz_u8BODDn3OK5hh9xSbXbMZU0fiCJUdpoS3AFQGQ9GA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVBZfTrtp6OUzop3HxL-Aw80FDC+7MPS6UEwDhhfkgk_Q@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 20, 2023 at 10:50:59AM -0700, Ian Rogers escreveu:
-> On Mon, Mar 20, 2023 at 8:15 AM James Clark <james.clark@arm.com> wrote:
+Em Mon, Mar 20, 2023 at 10:43:11AM -0700, Ian Rogers escreveu:
+> On Sun, Mar 19, 2023 at 11:16 PM Leo Yan <leo.yan@linaro.org> wrote:
 > >
-> > Changes since v1:
-> >  * Rebase onto perf/core because it no longer applied cleanly
+> > This patch seris is to address memory leak issues in perf kvm.
 > >
-> > ------------
+> > The first patch introduces refcnt in structure kvm_info, so we can avoid
+> > memory leak for it.
 > >
-> > Hi,
+> > The second patch explicitly delete histograms entries before program
+> > exiting rather than relying on kernel releasing memory space.
 > >
-> > I'm submitting this on behalf of German who moved on to work on other
-> > things in Arm before he could finish it off.
-> >
-> > The predicate information is available on SPE samples from
-> > Armv8.3 (FEAT_SPEv1p1), this could be useful info for profiling SVE
-> > code as partial and empty predicates indicate that the full vector
-> > width isn't being used. There is a good example in the last commit
-> > message.
-> >
-> > Though currently, there isn't a suitable field to store the info
-> > on Perf samples, so this change also adds a new SIMD field.
-> > This field could be used by other architectures, but currently there
-> > is only one bit reserved to identify SVE. It's only added to
-> > struct perf_sample on the userspace side, and isn't part of the kernel
-> > ABI, so it doesn't survive a perf inject. Although this is the
-> > same behavior for some other fields like branch flags, so I don't
-> > think it should be an issue to do something similar here. Perhaps in
-> > the future we could make sure everything that is synthesised from
-> > auxtrace data also makes it back into the new Perf inject file without
-> > being lost.
 > 
 > Series:
 > Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks, applied.
+I applied this, but the second patch may end up delaying tool exit by
+traversing data structures holding lots of objects to needless free
+them.
+
+There are places in perf where we do it conditionally for that reason.
+
+At some point I want to try signalling we're exiting using some global
+variable and then making all memory free operations become nops.
 
 - Arnaldo
+
 
  
 > Thanks,
 > Ian
 > 
-> > German Gomez (4):
-> >   perf event: Add simd_flags field to perf_sample
-> >   perf arm-spe: Refactor arm-spe to support operation packet type
-> >   perf arm-spe: Add SVE flags to the SPE samples
-> >   perf report: Add 'simd' sort field
+> > Leo Yan (2):
+> >   perf kvm: Support refcnt in structure kvm_info
+> >   perf kvm: Delete histograms entries before exiting
 > >
-> >  tools/perf/Documentation/perf-report.txt      |  1 +
-> >  .../util/arm-spe-decoder/arm-spe-decoder.c    | 30 ++++++++++--
-> >  .../util/arm-spe-decoder/arm-spe-decoder.h    | 47 +++++++++++++++----
-> >  tools/perf/util/arm-spe.c                     | 28 +++++++++--
-> >  tools/perf/util/hist.c                        |  1 +
-> >  tools/perf/util/hist.h                        |  1 +
-> >  tools/perf/util/sample.h                      | 13 +++++
-> >  tools/perf/util/sort.c                        | 47 +++++++++++++++++++
-> >  tools/perf/util/sort.h                        |  2 +
-> >  9 files changed, 152 insertions(+), 18 deletions(-)
+> >  tools/perf/builtin-kvm.c   |  6 ++++--
+> >  tools/perf/util/hist.c     |  5 +++++
+> >  tools/perf/util/kvm-stat.h | 37 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 46 insertions(+), 2 deletions(-)
 > >
-> >
-> > base-commit: 96d541699e5c50b1bc2d50c83cd7145994d5f071
 > > --
-> > 2.34.1
+> > 2.39.2
 > >
 
 -- 
