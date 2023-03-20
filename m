@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5BEC6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FAFC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230462AbjCTV0O (ORCPT
+        id S230240AbjCTV0Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 17:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48718 "EHLO
+        Mon, 20 Mar 2023 17:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230361AbjCTVZs (ORCPT
+        with ESMTP id S230281AbjCTVZ5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 17:25:48 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4827B3A849
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:13 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id n203-20020a25dad4000000b0091231592671so14125777ybf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:13 -0700 (PDT)
+        Mon, 20 Mar 2023 17:25:57 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6959975A
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:24:48 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5425c04765dso133922637b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:24:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679347495;
+        d=google.com; s=20210112; t=1679347480;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9d5VHIsvA9UZ1+YJTtLO7nde7SlLSiM5pVs449RNH/o=;
-        b=qhKpTVNKCQn/LR/gWNt+OKGxc0LvmSnpiQpEi7vCLbImDciq8XF7geg8WGZHp13RNg
-         EmrxNqKPqOCiT6u6klxAvjAAwJZcDHkT1oEo1cw20gzuzfMpTxRN3byjbHtu4Ddlxldm
-         xvXoSTNHs/5uhaOtw2zTEDO5yWeo1t3tlgV7S7/8OwCqEtoCv8yeq40J80nqGSmNdLyb
-         /g4iPz2+3rOI5d9NiDgerwp92LTUOQMaGT9PTiXAeSBEB16u/J/ZAs09qARBZ8mtVtOM
-         h4w1F8+YGrzk/QeOZ8bSiCMtIv9tIPCP0F9Ztxcz8hzXFyQX6OL5VwMjmSf8NAbnNFX1
-         X21g==
+        bh=Dx+Czfooqx4+y3PtKz3VngTOr7flvK3/ZnOwhjyajRw=;
+        b=Q+n6EUqhYj+IdoEFDVvk6ANpjHNNdXvaBW3gCdTMQk9mwjnqHSMUCPhxWeIfxMAHrI
+         NVfKSReNTU7Gbn7DBB6hBcinYmRvdy7cdvjILkdjHstnuBAr2fiTwItkAHZZVcwtRT/f
+         wtniKmWKLCmnaJZBne28dG+uWL2aO9QUhggoSfnUyz1dOfIAIXC52kYAgX5mX0H2gWv+
+         xI99cVholotXfrgkFhuxjtrv/O1jfHaGRPpakU4KTGVQPYjihtLkoObTJMRuWRE+ClM8
+         W0enLg1WWfYqJ5JFzq8jH1SK39d2Id+IqBkK9p/FHSmIndqDl9D4P+mS8ADJMBlnCh8Z
+         1L+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679347495;
+        d=1e100.net; s=20210112; t=1679347480;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9d5VHIsvA9UZ1+YJTtLO7nde7SlLSiM5pVs449RNH/o=;
-        b=RyJyccoiDBPx7jKRQbzD7+NdyqKVVbvb1tyh2ZDbJjCczNhYkubEZzrAEzsK2eddUf
-         1l/ZIMswl4CqTt9n3/1ht08pMcJkbmgVgGjD5g/luwpVtqb8H4a1cgRX6NDZA66RACT3
-         L0QOfvjpuGwx3rmugwWtexWmvhw87iG/tIffCu21I4iI3rt2EGWnRgotBi/tFO26W/B7
-         U+ko9uoUAX+yPnhtgT1wJMSysGbiY4dnVlzvhPA42yBwHCxOIJdG/UlyC+iajx9ipTFs
-         WEU2fq75ySU45FR6+Uvgsx2tErww+Je3vwMmXizO8BX5/gsYaLuk1HxTczyP0mYRrdYb
-         EkUw==
-X-Gm-Message-State: AAQBX9c7eGc1DXkX/wDCeiHffP7Y05nq6qXlySPMH8OsSzTEtgBN1K63
-        RiCuDK9P3r/SKbj3WS8smsBDfG9RP/H5
-X-Google-Smtp-Source: AKy350YJK+zkOXjidRVH66SLC6+qrdiYoHsyTZtR/D5fS2wVNDxKYUYAda4YhIA/5vMiNqNykryKMRyBWlLD
+        bh=Dx+Czfooqx4+y3PtKz3VngTOr7flvK3/ZnOwhjyajRw=;
+        b=6byeF5W55K41LIqFZKRdDQd1VKfKYZ9UeQuRNeOBXKfg0HP4tx19m0q+kNfM5zEtBp
+         umNC+g7avIGkINgoAzuOV0X5h21Hj2N0nPppOPtRRdL6F9giQjXBx/Ey5V+GScLq9iW5
+         6OOkQqBh5AadNElR/uTc2FItyZ3wv+OALcUychM6LDOuquwV9uSQURmxIChengqTiKjO
+         MgHJX5+sve/eCM9vesfaWt7/8fxePFUTof4NQQeH/40nqCdLku1P9Rxf8EqZgcFZcjI9
+         YNp3AACWVcs1ijwvmgKOiWqr7/aRhe/vkrhZdhDSp+xlgK4z0G+V/DwB5uBHNOMCSbSs
+         TALA==
+X-Gm-Message-State: AAQBX9fPYWDNbeHPcgrQMgio4t22sPMMskdg7BBYhi1RUS0XztduEvSB
+        bH4NeWhany5Dng7vyHH8SxH4vuP/kWkm
+X-Google-Smtp-Source: AKy350ZbdKh1NwspQyhPDDoyG/uJa2t17sY3CpDG/BXxxDQyfVAf2+UE9i8v/XL82NqaZ+NvaLUu30w+NNg7
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a30f:d1e2:fcd8:aa4d])
- (user=irogers job=sendgmr) by 2002:a05:6902:3ce:b0:b61:14c8:90fd with SMTP id
- g14-20020a05690203ce00b00b6114c890fdmr9978ybs.4.1679347495011; Mon, 20 Mar
- 2023 14:24:55 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 14:22:46 -0700
+ (user=irogers job=sendgmr) by 2002:a25:5b84:0:b0:b67:d295:d614 with SMTP id
+ p126-20020a255b84000000b00b67d295d614mr403541ybb.12.1679347479801; Mon, 20
+ Mar 2023 14:24:39 -0700 (PDT)
+Date:   Mon, 20 Mar 2023 14:22:44 -0700
 In-Reply-To: <20230320212248.1175731-1-irogers@google.com>
-Message-Id: <20230320212248.1175731-16-irogers@google.com>
+Message-Id: <20230320212248.1175731-14-irogers@google.com>
 Mime-Version: 1.0
 References: <20230320212248.1175731-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v5 15/17] perf namespaces: Add reference count checking
+Subject: [PATCH v5 13/17] libperf: Add reference count checking macros.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,366 +95,118 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add reference count checking controlled by REFCNT_CHECKING ifdef. The
-reference count checking interposes an allocated pointer between the
-reference counted struct on a get and frees the pointer on a put.
-Accesses after a put cause faults and use after free, missed puts are
-caughts as leaks and double puts are double frees.
-
-This checking helped resolve a memory leak and use after free:
-https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
+The macros serve as a way to debug use of a reference counted struct.
+The macros add a memory allocated pointer that is interposed between
+the reference counted original struct at a get and freed by a put.
+The pointer replaces the original struct, so use of the struct name
+via APIs remains unchanged.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c  |   2 +-
- tools/perf/util/annotate.c   |   2 +-
- tools/perf/util/dso.c        |   2 +-
- tools/perf/util/dsos.c       |   2 +-
- tools/perf/util/namespaces.c | 132 ++++++++++++++++++++---------------
- tools/perf/util/namespaces.h |   3 +-
- tools/perf/util/symbol.c     |   2 +-
- 7 files changed, 83 insertions(+), 62 deletions(-)
+ tools/lib/perf/include/internal/rc_check.h | 94 ++++++++++++++++++++++
+ 1 file changed, 94 insertions(+)
+ create mode 100644 tools/lib/perf/include/internal/rc_check.h
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index fd2b38458a5d..fe6ddcf7fb1e 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -632,7 +632,7 @@ static int dso__read_build_id(struct dso *dso)
- 	else if (dso->nsinfo) {
- 		char *new_name;
- 
--		new_name = filename_with_chroot(dso->nsinfo->pid,
-+		new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid,
- 						dso->long_name);
- 		if (new_name && filename__read_build_id(new_name, &dso->bid) > 0)
- 			dso->has_build_id = true;
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e8570b7cc36f..199f6cd5ad1e 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1701,7 +1701,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 
- 		mutex_lock(&dso->lock);
- 		if (access(filename, R_OK) && errno == ENOENT && dso->nsinfo) {
--			char *new_name = filename_with_chroot(dso->nsinfo->pid,
-+			char *new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid,
- 							      filename);
- 			if (new_name) {
- 				strlcpy(filename, new_name, filename_size);
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index e36b418df2c6..6c4129598f5d 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -515,7 +515,7 @@ static int __open_dso(struct dso *dso, struct machine *machine)
- 		if (errno != ENOENT || dso->nsinfo == NULL)
- 			goto out;
- 
--		new_name = filename_with_chroot(dso->nsinfo->pid, name);
-+		new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid, name);
- 		if (!new_name)
- 			goto out;
- 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 2bd23e4cf19e..53b989072ec5 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -91,7 +91,7 @@ bool __dsos__read_build_ids(struct list_head *head, bool with_hits)
- 			have_build_id	  = true;
- 			pos->has_build_id = true;
- 		} else if (errno == ENOENT && pos->nsinfo) {
--			char *new_name = filename_with_chroot(pos->nsinfo->pid,
-+			char *new_name = filename_with_chroot(RC_CHK_ACCESS(pos->nsinfo)->pid,
- 							      pos->long_name);
- 
- 			if (new_name && filename__read_build_id(new_name,
-diff --git a/tools/perf/util/namespaces.c b/tools/perf/util/namespaces.c
-index dd536220cdb9..8a3b7bd27b19 100644
---- a/tools/perf/util/namespaces.c
-+++ b/tools/perf/util/namespaces.c
-@@ -60,7 +60,7 @@ void namespaces__free(struct namespaces *namespaces)
- 	free(namespaces);
- }
- 
--static int nsinfo__get_nspid(struct nsinfo *nsi, const char *path)
-+static int nsinfo__get_nspid(pid_t *tgid, pid_t *nstgid, bool *in_pidns, const char *path)
- {
- 	FILE *f = NULL;
- 	char *statln = NULL;
-@@ -74,19 +74,18 @@ static int nsinfo__get_nspid(struct nsinfo *nsi, const char *path)
- 	while (getline(&statln, &linesz, f) != -1) {
- 		/* Use tgid if CONFIG_PID_NS is not defined. */
- 		if (strstr(statln, "Tgid:") != NULL) {
--			nsi->tgid = (pid_t)strtol(strrchr(statln, '\t'),
--						     NULL, 10);
--			nsi->nstgid = nsinfo__tgid(nsi);
-+			*tgid = (pid_t)strtol(strrchr(statln, '\t'), NULL, 10);
-+			*nstgid = *tgid;
- 		}
- 
- 		if (strstr(statln, "NStgid:") != NULL) {
- 			nspid = strrchr(statln, '\t');
--			nsi->nstgid = (pid_t)strtol(nspid, NULL, 10);
-+			*nstgid = (pid_t)strtol(nspid, NULL, 10);
- 			/*
- 			 * If innermost tgid is not the first, process is in a different
- 			 * PID namespace.
- 			 */
--			nsi->in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
-+			*in_pidns = (statln + sizeof("NStgid:") - 1) != nspid;
- 			break;
- 		}
- 	}
-@@ -121,8 +120,8 @@ int nsinfo__init(struct nsinfo *nsi)
- 	 * want to switch as part of looking up dso/map data.
- 	 */
- 	if (old_stat.st_ino != new_stat.st_ino) {
--		nsi->need_setns = true;
--		nsi->mntns_path = newns;
-+		RC_CHK_ACCESS(nsi)->need_setns = true;
-+		RC_CHK_ACCESS(nsi)->mntns_path = newns;
- 		newns = NULL;
- 	}
- 
-@@ -132,13 +131,26 @@ int nsinfo__init(struct nsinfo *nsi)
- 	if (snprintf(spath, PATH_MAX, "/proc/%d/status", nsinfo__pid(nsi)) >= PATH_MAX)
- 		goto out;
- 
--	rv = nsinfo__get_nspid(nsi, spath);
-+	rv = nsinfo__get_nspid(&RC_CHK_ACCESS(nsi)->tgid, &RC_CHK_ACCESS(nsi)->nstgid,
-+			       &RC_CHK_ACCESS(nsi)->in_pidns, spath);
- 
- out:
- 	free(newns);
- 	return rv;
- }
- 
-+static struct nsinfo *nsinfo__alloc(void)
-+{
-+	struct nsinfo *res;
-+	RC_STRUCT(nsinfo) *nsi;
+diff --git a/tools/lib/perf/include/internal/rc_check.h b/tools/lib/perf/include/internal/rc_check.h
+new file mode 100644
+index 000000000000..c0626d8beb59
+--- /dev/null
++++ b/tools/lib/perf/include/internal/rc_check.h
+@@ -0,0 +1,94 @@
++/* SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause) */
++#ifndef __LIBPERF_INTERNAL_RC_CHECK_H
++#define __LIBPERF_INTERNAL_RC_CHECK_H
 +
-+	nsi = calloc(1, sizeof(*nsi));
-+	if (ADD_RC_CHK(res, nsi))
-+		refcount_set(&nsi->refcnt, 1);
++#include <stdlib.h>
++#include <linux/zalloc.h>
 +
-+	return res;
-+}
++/*
++ * Shared reference count checking macros.
++ *
++ * Reference count checking is an approach to sanitizing the use of reference
++ * counted structs. It leverages address and leak sanitizers to make sure gets
++ * are paired with a put. Reference count checking adds a malloc-ed layer of
++ * indirection on a get, and frees it on a put. A missed put will be reported as
++ * a memory leak. A double put will be reported as a double free. Accessing
++ * after a put will cause a use-after-free and/or a segfault.
++ */
 +
- struct nsinfo *nsinfo__new(pid_t pid)
- {
- 	struct nsinfo *nsi;
-@@ -146,22 +158,21 @@ struct nsinfo *nsinfo__new(pid_t pid)
- 	if (pid == 0)
- 		return NULL;
- 
--	nsi = calloc(1, sizeof(*nsi));
--	if (nsi != NULL) {
--		nsi->pid = pid;
--		nsi->tgid = pid;
--		nsi->nstgid = pid;
--		nsi->need_setns = false;
--		nsi->in_pidns = false;
--		/* Init may fail if the process exits while we're trying to look
--		 * at its proc information.  In that case, save the pid but
--		 * don't try to enter the namespace.
--		 */
--		if (nsinfo__init(nsi) == -1)
--			nsi->need_setns = false;
-+	nsi = nsinfo__alloc();
-+	if (!nsi)
-+		return NULL;
- 
--		refcount_set(&nsi->refcnt, 1);
--	}
-+	RC_CHK_ACCESS(nsi)->pid = pid;
-+	RC_CHK_ACCESS(nsi)->tgid = pid;
-+	RC_CHK_ACCESS(nsi)->nstgid = pid;
-+	RC_CHK_ACCESS(nsi)->need_setns = false;
-+	RC_CHK_ACCESS(nsi)->in_pidns = false;
-+	/* Init may fail if the process exits while we're trying to look at its
-+	 * proc information. In that case, save the pid but don't try to enter
-+	 * the namespace.
-+	 */
-+	if (nsinfo__init(nsi) == -1)
-+		RC_CHK_ACCESS(nsi)->need_setns = false;
- 
- 	return nsi;
- }
-@@ -173,21 +184,21 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 	if (nsi == NULL)
- 		return NULL;
- 
--	nnsi = calloc(1, sizeof(*nnsi));
--	if (nnsi != NULL) {
--		nnsi->pid = nsinfo__pid(nsi);
--		nnsi->tgid = nsinfo__tgid(nsi);
--		nnsi->nstgid = nsinfo__nstgid(nsi);
--		nnsi->need_setns = nsinfo__need_setns(nsi);
--		nnsi->in_pidns = nsinfo__in_pidns(nsi);
--		if (nsi->mntns_path) {
--			nnsi->mntns_path = strdup(nsi->mntns_path);
--			if (!nnsi->mntns_path) {
--				free(nnsi);
--				return NULL;
--			}
-+	nnsi = nsinfo__alloc();
-+	if (!nnsi)
-+		return NULL;
++#ifndef REFCNT_CHECKING
++/* Replaces "struct foo" so that the pointer may be interposed. */
++#define DECLARE_RC_STRUCT(struct_name)		\
++	struct struct_name
 +
-+	RC_CHK_ACCESS(nnsi)->pid = nsinfo__pid(nsi);
-+	RC_CHK_ACCESS(nnsi)->tgid = nsinfo__tgid(nsi);
-+	RC_CHK_ACCESS(nnsi)->nstgid = nsinfo__nstgid(nsi);
-+	RC_CHK_ACCESS(nnsi)->need_setns = nsinfo__need_setns(nsi);
-+	RC_CHK_ACCESS(nnsi)->in_pidns = nsinfo__in_pidns(nsi);
-+	if (RC_CHK_ACCESS(nsi)->mntns_path) {
-+		RC_CHK_ACCESS(nnsi)->mntns_path = strdup(RC_CHK_ACCESS(nsi)->mntns_path);
-+		if (!RC_CHK_ACCESS(nnsi)->mntns_path) {
-+			nsinfo__put(nnsi);
-+			return NULL;
- 		}
--		refcount_set(&nnsi->refcnt, 1);
- 	}
- 
- 	return nnsi;
-@@ -195,51 +206,60 @@ struct nsinfo *nsinfo__copy(const struct nsinfo *nsi)
- 
- static void nsinfo__delete(struct nsinfo *nsi)
- {
--	zfree(&nsi->mntns_path);
--	free(nsi);
-+	if (nsi) {
-+		WARN_ONCE(refcount_read(&RC_CHK_ACCESS(nsi)->refcnt) != 0,
-+			"nsinfo refcnt unbalanced\n");
-+		zfree(&RC_CHK_ACCESS(nsi)->mntns_path);
-+		RC_CHK_FREE(nsi);
-+	}
- }
- 
- struct nsinfo *nsinfo__get(struct nsinfo *nsi)
- {
--	if (nsi)
--		refcount_inc(&nsi->refcnt);
--	return nsi;
-+	struct nsinfo *result;
++/* Declare a reference counted struct variable. */
++#define RC_STRUCT(struct_name) struct struct_name
 +
-+	if (RC_CHK_GET(result, nsi))
-+		refcount_inc(&RC_CHK_ACCESS(nsi)->refcnt);
++/*
++ * Interpose the indirection. Result will hold the indirection and object is the
++ * reference counted struct.
++ */
++#define ADD_RC_CHK(result, object) (result = object, object)
 +
-+	return result;
- }
- 
- void nsinfo__put(struct nsinfo *nsi)
- {
--	if (nsi && refcount_dec_and_test(&nsi->refcnt))
-+	if (nsi && refcount_dec_and_test(&RC_CHK_ACCESS(nsi)->refcnt))
- 		nsinfo__delete(nsi);
-+	else
-+		RC_CHK_PUT(nsi);
- }
- 
- bool nsinfo__need_setns(const struct nsinfo *nsi)
- {
--        return nsi->need_setns;
-+	return RC_CHK_ACCESS(nsi)->need_setns;
- }
- 
- void nsinfo__clear_need_setns(struct nsinfo *nsi)
- {
--        nsi->need_setns = false;
-+	RC_CHK_ACCESS(nsi)->need_setns = false;
- }
- 
- pid_t nsinfo__tgid(const struct nsinfo  *nsi)
- {
--        return nsi->tgid;
-+	return RC_CHK_ACCESS(nsi)->tgid;
- }
- 
- pid_t nsinfo__nstgid(const struct nsinfo  *nsi)
- {
--        return nsi->nstgid;
-+	return RC_CHK_ACCESS(nsi)->nstgid;
- }
- 
- pid_t nsinfo__pid(const struct nsinfo  *nsi)
- {
--        return nsi->pid;
-+	return RC_CHK_ACCESS(nsi)->pid;
- }
- 
- pid_t nsinfo__in_pidns(const struct nsinfo  *nsi)
- {
--        return nsi->in_pidns;
-+	return RC_CHK_ACCESS(nsi)->in_pidns;
- }
- 
- void nsinfo__mountns_enter(struct nsinfo *nsi,
-@@ -256,7 +276,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	nc->oldns = -1;
- 	nc->newns = -1;
- 
--	if (!nsi || !nsi->need_setns)
-+	if (!nsi || !RC_CHK_ACCESS(nsi)->need_setns)
- 		return;
- 
- 	if (snprintf(curpath, PATH_MAX, "/proc/self/ns/mnt") >= PATH_MAX)
-@@ -270,7 +290,7 @@ void nsinfo__mountns_enter(struct nsinfo *nsi,
- 	if (oldns < 0)
- 		goto errout;
- 
--	newns = open(nsi->mntns_path, O_RDONLY);
-+	newns = open(RC_CHK_ACCESS(nsi)->mntns_path, O_RDONLY);
- 	if (newns < 0)
- 		goto errout;
- 
-@@ -339,9 +359,9 @@ int nsinfo__stat(const char *filename, struct stat *st, struct nsinfo *nsi)
- 
- bool nsinfo__is_in_root_namespace(void)
- {
--	struct nsinfo nsi;
-+	pid_t tgid = 0, nstgid = 0;
-+	bool in_pidns = false;
- 
--	memset(&nsi, 0x0, sizeof(nsi));
--	nsinfo__get_nspid(&nsi, "/proc/self/status");
--	return !nsi.in_pidns;
-+	nsinfo__get_nspid(&tgid, &nstgid, &in_pidns, "/proc/self/status");
-+	return !in_pidns;
- }
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index 567829262c42..8c0731c6cbb7 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -13,6 +13,7 @@
- #include <linux/perf_event.h>
- #include <linux/refcount.h>
- #include <linux/types.h>
-+#include <internal/rc_check.h>
- 
- #ifndef HAVE_SETNS_SUPPORT
- int setns(int fd, int nstype);
-@@ -29,7 +30,7 @@ struct namespaces {
- struct namespaces *namespaces__new(struct perf_record_namespaces *event);
- void namespaces__free(struct namespaces *namespaces);
- 
--struct nsinfo {
-+DECLARE_RC_STRUCT(nsinfo) {
- 	pid_t			pid;
- 	pid_t			tgid;
- 	pid_t			nstgid;
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 7904bfff7d0e..f5432c7add09 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1962,7 +1962,7 @@ int dso__load(struct dso *dso, struct map *map)
- 
- 		is_reg = is_regular_file(name);
- 		if (!is_reg && errno == ENOENT && dso->nsinfo) {
--			char *new_name = filename_with_chroot(dso->nsinfo->pid,
-+			char *new_name = filename_with_chroot(RC_CHK_ACCESS(dso->nsinfo)->pid,
- 							      name);
- 			if (new_name) {
- 				is_reg = is_regular_file(new_name);
++/* Strip the indirection layer. */
++#define RC_CHK_ACCESS(object) object
++
++/* Frees the object and the indirection layer. */
++#define RC_CHK_FREE(object) free(object)
++
++/* A get operation adding the indirection layer. */
++#define RC_CHK_GET(result, object) ADD_RC_CHK(result, object)
++
++/* A put operation removing the indirection layer. */
++#define RC_CHK_PUT(object) {}
++
++#else
++
++/* Replaces "struct foo" so that the pointer may be interposed. */
++#define DECLARE_RC_STRUCT(struct_name)			\
++	struct original_##struct_name;			\
++	struct struct_name {				\
++		struct original_##struct_name *orig;	\
++	};						\
++	struct original_##struct_name
++
++/* Declare a reference counted struct variable. */
++#define RC_STRUCT(struct_name) struct original_##struct_name
++
++/*
++ * Interpose the indirection. Result will hold the indirection and object is the
++ * reference counted struct.
++ */
++#define ADD_RC_CHK(result, object)					\
++	(								\
++		object ? (result = malloc(sizeof(*result)),		\
++			result ? (result->orig = object, result)	\
++			: (result = NULL, NULL))			\
++		: (result = NULL, NULL)					\
++		)
++
++/* Strip the indirection layer. */
++#define RC_CHK_ACCESS(object) object->orig
++
++/* Frees the object and the indirection layer. */
++#define RC_CHK_FREE(object)			\
++	do {					\
++		zfree(&object->orig);		\
++		free(object);			\
++	} while(0)
++
++/* A get operation adding the indirection layer. */
++#define RC_CHK_GET(result, object) ADD_RC_CHK(result, (object ? object->orig : NULL))
++
++/* A put operation removing the indirection layer. */
++#define RC_CHK_PUT(object)			\
++	do {					\
++		if (object) {			\
++			object->orig = NULL;	\
++			free(object);		\
++		}				\
++	} while(0)
++
++#endif
++
++#endif /* __LIBPERF_INTERNAL_RC_CHECK_H */
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
