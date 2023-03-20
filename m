@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2E9C77B76
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 03:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CAEC7618A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 03:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbjCTDjk (ORCPT
+        id S229925AbjCTDkG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Mar 2023 23:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36392 "EHLO
+        Sun, 19 Mar 2023 23:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbjCTDjZ (ORCPT
+        with ESMTP id S229861AbjCTDjk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Mar 2023 23:39:25 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629B42210D
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:39:09 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id y144-20020a253296000000b00b69ce0e6f2dso3480794yby.18
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:39:09 -0700 (PDT)
+        Sun, 19 Mar 2023 23:39:40 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4309621A3B
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:39:18 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id i11-20020a256d0b000000b0086349255277so11807287ybc.8
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:39:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679283548;
+        d=google.com; s=20210112; t=1679283555;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWDjPPDoVS0JDf2qDq/S5D6izq+O5FLiZzLIDYhTDcw=;
-        b=nLz4ieuq6UQ5762iyzEeXxWSNK23K6yAuzQg63tWTPUIEyVjby55CsOVPeUtvgl1yI
-         HcneNx08ADteLp+/O4bi+8YI0ur6CZ7cZBuHbFdrn/k2l5ddq7nfLQILexB0idnupNXt
-         w//iLOiyCoxAN57trk5THriviyko0qKJ5C0TCMc24ZSufaekqPSTiY2CwqtDNhcW91BN
-         07P8aJ15SRl2/dwVRVr0S6lrQYbmxbFi/IwX/Ecr9HTBRoRLBSVu7S4R3Dm6qFRT66IW
-         +ums7G4p3gNHeT9ZvVnnPnnTzYl3upmQoDXnwHM6tvEhQjSqj9mSuYE4OFEdrsf+z/+E
-         djGg==
+        bh=Dp06SaO3sEqKpsudj2OEFM6hmtCSHDlmEVrT0Oyh9g0=;
+        b=oVlLy7C6zk07uvV078+G3tAiOSzYAnnphvIKsGkr7X87lY7rdXejY5aqdAZhnZqurU
+         NLmHm30WqEW3T4Ohz83AZNdwIWA6BqcBR51g66JhSdnUB7xRaQw7PU2zYgMibh7YrqIq
+         9ZpEBh7W7VfsRswyeQNnDf7VnFEPy0zWYb+cMafP1CKpk/2l3eQRqA1CnuX1SzUIaMWr
+         r63nsFVxf5KF2TKfTYcpNWMAD4DyXgcYuzFT/9jJUuHF6VK6HrQ07RrMtoOuAL/ZjWKt
+         zoWMGS/5DkjqASK2ZdZrIcQmSSRA/BLLQIk4M7DZAHsdX88Ep1WdRiCCP8rADhVeSBRx
+         70KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679283548;
+        d=1e100.net; s=20210112; t=1679283555;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jWDjPPDoVS0JDf2qDq/S5D6izq+O5FLiZzLIDYhTDcw=;
-        b=57qbMvUSTHBUrORuZrPK8p2V5H40xu4DroTMNDQ8oi5KiiCSUkRDwHrygyWO1/D+CH
-         ZNHYLNyJ2VGcdfRsh2e0NtwLIp3W+AqF8dqZn9mrLGIFqEMQ6b4MoJG0R6vtqeC6JHUi
-         1lEQ1pq5S+LYsac6EsFjgh/SXjslkA2orSwNn7Gnr5RPDSlxTU5U56wqRkHrcir+AWG4
-         VIPoS6/HU0zrOBseeK/PuCRWkXraFeT8CGeK5o9WAY8Xje5Asv4fqGWV9R6CkzcYUSyi
-         hIzyQ7oe40LZwZ3XBsIKwDZRk62COtvdtop27IvljFv3Pm0VCDq4ElWJVFQWfjiN4lva
-         yilA==
-X-Gm-Message-State: AO0yUKUAnXf2UXpL8XeIYuuoKjz5nbf3zt44Bveps3XokRgX5Jvt+4Sb
-        euJUmF8JcbvioxLGlR+zu92W1Kt/+jOT
-X-Google-Smtp-Source: AK7set+e/p/tdOZmnVTvRXJkVG1NofWhKYs0Acw/s+ryqCYiUJ57g7N82BnK7fiHBi5vw8sOBCGCb/J/FUzC
+        bh=Dp06SaO3sEqKpsudj2OEFM6hmtCSHDlmEVrT0Oyh9g0=;
+        b=tu5F88eEeG1fKIPIvqL7nDnqFv/RyUlQMVvNhmG5U+vVmwPz2WM98r/v0GyXFGbhV9
+         8Gw4bGGaCsgfXxdlWnPpIsbxc8INZT2/E4OjZbO+cPL/kQJlWnOuNrtvDyLLOe9hOyjx
+         bfO85VNah45HzI6apgwvo3BYqutqdvnWjkgk3FiPrguG8ajRhwML0nvpSeTCWazyvDr/
+         l8ZG87aLA6UIketKEX629UA8HjUUc4dbumzrW+P7dfDf6El6TxNRlQAYMO87gFsBTLqQ
+         m/nC5YgC+HejotMMR1lbGUBIHCpFafUQ3E+X+nv2W2eNb/zYF2aQTPbeugTY+8FUinNI
+         Iomw==
+X-Gm-Message-State: AO0yUKUJxky2RaVSpdyt0oSMA9Z9UUL/CyUm6aJm3HQGiO1buegFQq76
+        PQdHMU0z4COAUqEKFkzu9JXnzeiiYMIa
+X-Google-Smtp-Source: AK7set8DXFIYSHJXW7PIqklNOFVLXkRtk81Ryce9utE5CyGINekjemf91kZj1GKnU0xUvk3YNr67AY0kdQGO
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:1895:9fa0:27f5:cb71])
- (user=irogers job=sendgmr) by 2002:a81:af02:0:b0:541:822f:af40 with SMTP id
- n2-20020a81af02000000b00541822faf40mr9649912ywh.10.1679283548003; Sun, 19 Mar
- 2023 20:39:08 -0700 (PDT)
-Date:   Sun, 19 Mar 2023 20:37:52 -0700
+ (user=irogers job=sendgmr) by 2002:a81:b649:0:b0:541:8995:5334 with SMTP id
+ h9-20020a81b649000000b0054189955334mr9279059ywk.3.1679283555031; Sun, 19 Mar
+ 2023 20:39:15 -0700 (PDT)
+Date:   Sun, 19 Mar 2023 20:37:53 -0700
 In-Reply-To: <20230320033810.980165-1-irogers@google.com>
-Message-Id: <20230320033810.980165-5-irogers@google.com>
+Message-Id: <20230320033810.980165-6-irogers@google.com>
 Mime-Version: 1.0
 References: <20230320033810.980165-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v4 04/22] perf test: Fix memory leak in symbols
+Subject: [PATCH v4 05/22] perf symbol: Sort names under write lock
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -96,24 +96,39 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-machine__delete doesn't delete threads. Add call to delete threads
-ahead of deleting the machine.
+If finding a name doesn't find the sorted names then they are
+allocated and sorted. This shouldn't be done under a read lock as
+another reader may access it. Release the read lock and acquire the
+write lock, then release the write lock and reacquire the read lock.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/symbols.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/symbol.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-index 057b16df6416..0793f8f419e2 100644
---- a/tools/perf/tests/symbols.c
-+++ b/tools/perf/tests/symbols.c
-@@ -38,6 +38,7 @@ static int init_test_info(struct test_info *ti)
- static void exit_test_info(struct test_info *ti)
- {
- 	thread__put(ti->thread);
-+	machine__delete_threads(ti->machine);
- 	machine__delete(ti->machine);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 317c0706852f..a458aa8b87bb 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2018,6 +2018,9 @@ static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
+ 	if (maps_by_name == NULL)
+ 		return -1;
+ 
++	up_read(&maps->lock);
++	down_write(&maps->lock);
++
+ 	maps->maps_by_name = maps_by_name;
+ 	maps->nr_maps_allocated = maps->nr_maps;
+ 
+@@ -2025,6 +2028,10 @@ static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
+ 		maps_by_name[i++] = map;
+ 
+ 	__maps__sort_by_name(maps);
++
++	up_write(&maps->lock);
++	down_read(&maps->lock);
++
+ 	return 0;
  }
  
 -- 
