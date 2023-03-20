@@ -2,53 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BA6C7618E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D175DC7618A
 	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 18:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbjCTSqL (ORCPT
+        id S231278AbjCTSqM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 14:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48514 "EHLO
+        Mon, 20 Mar 2023 14:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbjCTSpr (ORCPT
+        with ESMTP id S229961AbjCTSpw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 14:45:47 -0400
+        Mon, 20 Mar 2023 14:45:52 -0400
 Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC90325E3C;
-        Mon, 20 Mar 2023 11:38:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F01CF59F0;
+        Mon, 20 Mar 2023 11:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679337536; x=1710873536;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xBVA+rxKOlHABSAbfGyz1olD1VAK66fbUS7prRd9Bz0=;
-  b=SF0wHTuz2JA0/4CI2snHXmJ4cMSu8VVAuGC7CimOeCMeC9eqsKKzeYaK
-   UtsEPmnS9/n8kgxiJNAhbnqgvETjr6MwN1UpdmVgpHsNmKCt2FOplitJR
-   5cj69YVGt5/sMjZIx3wndYkE2jOjb7vBjHEyPBmfYB6MKFzyWUkb7Yrng
-   n02tb4U6RUf23IS1f4snefO/5VcZsIL7SMyw7Q8dSC4+5LNM+mzsooylu
-   mwenh1X600bWFrNb0SkKTEsphM2LS+FtqMJWwLAGmpWl4IxVjMDtN9hh7
-   Xfq13XugJQ/X8+PtDwvh5he4oQygRG39ygr6igrn9aIfZ98okgF+Rv6mr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="322588293"
+  t=1679337537; x=1710873537;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=EsUqD7zHZfhJc1niZQc3vdHLYkAA8CFNFuJTGMjtmwY=;
+  b=NqPGIddujiNHtlhtLwX7Yq6+Km4lXL4tcDUNAqY9NHNmnJFvFY0rHr7q
+   T03hQTls7dVXpwNWAt6OU/E9R9YzyOGs+SBjlkxIZaKD8Z9rKLDb20HAm
+   VS1fmpAvBTct1xt4KKb4M0kr3KSeOn2pfzfpv8jF71lT8DDalMAt42hca
+   Yzv7U5T0GPabq08DfPDrwxvBAvUibF5gXUaTYBnZ97/nCuxELTKWRyaZQ
+   pJYD5x4bZGjPhBtk590QRho8q+AxSiu4GVhp9nqlZQ5868ziLZnBtRAFv
+   SvYVRkELHx0Q3250KtsQJTTHqVisYbbxPLIf5TGUPKSNylstD4Fu9YW/t
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="322588321"
 X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="322588293"
+   d="scan'208";a="322588321"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:35:38 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:35:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="791730815"
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="791730823"
 X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
-   d="scan'208";a="791730815"
+   d="scan'208";a="791730823"
 Received: from spalihov-mobl2.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.34.182])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:35:35 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:35:40 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 0/2] perf intel-pt: Small updates
-Date:   Mon, 20 Mar 2023 20:35:15 +0200
-Message-Id: <20230320183517.15099-1-adrian.hunter@intel.com>
+Subject: [PATCH 2/2] perf intel-pt: Add support for new branch instructions ERETS and ERETU
+Date:   Mon, 20 Mar 2023 20:35:17 +0200
+Message-Id: <20230320183517.15099-3-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230320183517.15099-1-adrian.hunter@intel.com>
+References: <20230320183517.15099-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
@@ -56,28 +58,105 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi
+Intel Flexible Return and Event Delivery (FRED) adds instructions ERETS
+(return to supervisor) and ERETU (return to user). Intel PT instruction
+decoder needs to know about these instructions because they are
+branch instructions. Similar to IRET instructions, when the decoder
+encounters one of these instructions it will match it to a TIP (target
+instruction pointer) packet that informs what the branch destination is.
 
-Here are 2 small updates for Intel PT.
+The existing "x86 instruction decoder - new instructions" test can be
+used to test the result e.g.
 
-The first is just a couple of new event type names.
+  $ perf test -v ins |& grep eret
+  Decoded ok: f2 0f 01 ca         erets
+  Decoded ok: f3 0f 01 ca         eretu
 
-The second is a small change to Intel PT as it relates to
-Intel FRED.  The patch is standalone but, for anyone
-interested, you can search LKML for FRED to find out more
-about Intel FRED implementation.
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/arch/x86/tests/insn-x86.c           |  4 ++++
+ .../intel-pt-decoder/intel-pt-insn-decoder.c   | 18 ++++++++++++++++++
+ .../intel-pt-decoder/intel-pt-insn-decoder.h   |  2 ++
+ 3 files changed, 24 insertions(+)
 
+diff --git a/tools/perf/arch/x86/tests/insn-x86.c b/tools/perf/arch/x86/tests/insn-x86.c
+index 94b490c434d0..735257d205b5 100644
+--- a/tools/perf/arch/x86/tests/insn-x86.c
++++ b/tools/perf/arch/x86/tests/insn-x86.c
+@@ -29,6 +29,8 @@ struct test_data test_data_64[] = {
+ #include "insn-x86-dat-64.c"
+ 	{{0x0f, 0x01, 0xee}, 3, 0, NULL, NULL, "0f 01 ee             \trdpkru"},
+ 	{{0x0f, 0x01, 0xef}, 3, 0, NULL, NULL, "0f 01 ef             \twrpkru"},
++	{{0xf2, 0x0f, 0x01, 0xca}, 4, 0, "erets", "indirect", "f2 0f 01 ca  \terets"},
++	{{0xf3, 0x0f, 0x01, 0xca}, 4, 0, "eretu", "indirect", "f3 0f 01 ca  \teretu"},
+ 	{{0}, 0, 0, NULL, NULL, NULL},
+ };
+ 
+@@ -49,6 +51,8 @@ static int get_op(const char *op_str)
+ 		{"syscall", INTEL_PT_OP_SYSCALL},
+ 		{"sysret",  INTEL_PT_OP_SYSRET},
+ 		{"vmentry",  INTEL_PT_OP_VMENTRY},
++		{"erets",   INTEL_PT_OP_ERETS},
++		{"eretu",   INTEL_PT_OP_ERETU},
+ 		{NULL, 0},
+ 	};
+ 	struct val_data *val;
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+index 22308dd93010..c5d57027ec23 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.c
+@@ -52,6 +52,20 @@ static void intel_pt_insn_decoder(struct insn *insn,
+ 				op = INTEL_PT_OP_VMENTRY;
+ 				branch = INTEL_PT_BR_INDIRECT;
+ 				break;
++			case 0xca:
++				switch (insn->prefixes.bytes[3]) {
++				case 0xf2: /* erets */
++					op = INTEL_PT_OP_ERETS;
++					branch = INTEL_PT_BR_INDIRECT;
++					break;
++				case 0xf3: /* eretu */
++					op = INTEL_PT_OP_ERETU;
++					branch = INTEL_PT_BR_INDIRECT;
++					break;
++				default:
++					break;
++				}
++				break;
+ 			default:
+ 				break;
+ 			}
+@@ -230,6 +244,8 @@ const char *branch_name[] = {
+ 	[INTEL_PT_OP_SYSCALL]	= "Syscall",
+ 	[INTEL_PT_OP_SYSRET]	= "Sysret",
+ 	[INTEL_PT_OP_VMENTRY]	= "VMentry",
++	[INTEL_PT_OP_ERETS]	= "Erets",
++	[INTEL_PT_OP_ERETU]	= "Eretu",
+ };
+ 
+ const char *intel_pt_insn_name(enum intel_pt_insn_op op)
+@@ -273,6 +289,8 @@ int intel_pt_insn_type(enum intel_pt_insn_op op)
+ 	case INTEL_PT_OP_LOOP:
+ 		return PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_CONDITIONAL;
+ 	case INTEL_PT_OP_IRET:
++	case INTEL_PT_OP_ERETS:
++	case INTEL_PT_OP_ERETU:
+ 		return PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN |
+ 		       PERF_IP_FLAG_INTERRUPT;
+ 	case INTEL_PT_OP_INT:
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.h
+index e3338b56a75f..7fb7fe3a1566 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.h
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-insn-decoder.h
+@@ -25,6 +25,8 @@ enum intel_pt_insn_op {
+ 	INTEL_PT_OP_SYSCALL,
+ 	INTEL_PT_OP_SYSRET,
+ 	INTEL_PT_OP_VMENTRY,
++	INTEL_PT_OP_ERETS,
++	INTEL_PT_OP_ERETU,
+ };
+ 
+ enum intel_pt_insn_branch {
+-- 
+2.34.1
 
-Adrian Hunter (2):
-      perf intel-pt: Add event type names UINTR and UIRET
-      perf intel-pt: Add support for new branch instructions ERETS and ERETU
-
- tools/perf/arch/x86/tests/insn-x86.c                   |  4 ++++
- tools/perf/builtin-script.c                            |  2 +-
- .../perf/util/intel-pt-decoder/intel-pt-insn-decoder.c | 18 ++++++++++++++++++
- .../perf/util/intel-pt-decoder/intel-pt-insn-decoder.h |  2 ++
- 4 files changed, 25 insertions(+), 1 deletion(-)
-
-
-Regards
-Adrian
