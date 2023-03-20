@@ -2,121 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3450DC61DA4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 18 Mar 2023 17:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9338FC6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 01:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbjCRRk7 (ORCPT
+        id S229548AbjCTBqW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 18 Mar 2023 13:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        Sun, 19 Mar 2023 21:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbjCRRkv (ORCPT
+        with ESMTP id S229527AbjCTBqW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 18 Mar 2023 13:40:51 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4314F2213F;
-        Sat, 18 Mar 2023 10:40:50 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id p34so41759wms.3;
-        Sat, 18 Mar 2023 10:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679161249;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ev2W7AwgvE+3tr7BAXXjW37/uLiVAl5wqa5Vqup/X18=;
-        b=Yl7l77+G+vWuZBrzmXQxIW4PhdcbuiWftbjibBta14w9f+IW+cP4rAqaUOEf54VsBP
-         XXcfsI0nfYwJA26CqS7T9F2Or0MsGLRdgDyme5Bhatkxfkcj3tht1cJWu9TO+QDzTDNj
-         /+QwOVyIXX+kAOQ60wi/wjA2WoOlZiSPw/7SrmfgWl4W1SF52ThmMuN26J9efm9dsWZT
-         wsgOC23KF0f0mJ0gi83B9lDDLlXm8j+xgWzfOmoVixSjCIi/R2VS0ynCo0MaWodEYm7Y
-         HFFiy/qM9A7HDTs3Iizi2lRpDpkyc5F5Qu0y6qpkXshh+P2hNhr3cHN9B8b7g4ihnEOF
-         8tew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679161249;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ev2W7AwgvE+3tr7BAXXjW37/uLiVAl5wqa5Vqup/X18=;
-        b=3LUngfb4BiFGfMgzvRGhmvVuBDqiroFnNS7Aom49uUkt3qR4x1QhoJCTZnbE5YwIda
-         Dh03Ar/PI3CrXIelvgTx+fL0yYdCUlxeByWrlrpzi/C2tGosU+VgeQ/b2WTi2JrCAVZW
-         jK4RKV2vNSJCawy88owdQ0/eTOLcTpwQzyLBKEFIFsaFDYsfZ3lab46HpyzkcEB/aQt8
-         BQ/oVPJh4DEc8gyJHM/F8U7fk0Ztq+9bhzuPNkZQcNrnkNibarVlQbUd5ljJcHC2gjG6
-         jLkdA73q6pWf0fG92Yo8LgLMfmXaVfu1BZY24v+8KGcE2gK3MVBGl2z81vCN22dDdfdU
-         BI/w==
-X-Gm-Message-State: AO0yUKXitvYhzq6k1ewfdbahaGHRwtkyLHr0ZwNajaXpRDLTuD+QiiiF
-        HMVmjyRmM31UcIX4jFXZ7/s=
-X-Google-Smtp-Source: AK7set9zXPa/ih+Bbwm7sQZOKAnG69++6aoehqPt/kHsTPtM2UGAPjvGCSsnG1ECr9Gokzh9oSseng==
-X-Received: by 2002:a05:600c:358e:b0:3ed:2a41:8525 with SMTP id p14-20020a05600c358e00b003ed2a418525mr17932303wmq.22.1679161249516;
-        Sat, 18 Mar 2023 10:40:49 -0700 (PDT)
-Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
-        by smtp.gmail.com with ESMTPSA id b15-20020adfe30f000000b002c706c754fesm4797373wrj.32.2023.03.18.10.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Mar 2023 10:40:49 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sat, 18 Mar 2023 18:40:45 +0100
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
-Message-ID: <ZBX3nRWtc6+EI13W@krava>
-References: <20230316170149.4106586-1-jolsa@kernel.org>
- <ZBNTMZjEoETU9d8N@casper.infradead.org>
- <ZBV3beyxYhKv/kMp@krava>
- <ZBXV3crf/wX5D9lo@casper.infradead.org>
+        Sun, 19 Mar 2023 21:46:22 -0400
+X-Greylist: delayed 616 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 19 Mar 2023 18:46:20 PDT
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38FD3C169
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 18:46:20 -0700 (PDT)
+X-ASG-Debug-ID: 1679276160-1eb14e6d7b1e670001-i5rUwQ
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id czeTCPi4m3nL3oj8 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Mon, 20 Mar 2023 09:36:00 +0800 (CST)
+X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Mon, 20 Mar
+ 2023 09:35:59 +0800
+Received: from [10.29.8.47] (10.29.8.47) by ZXBJMBX02.zhaoxin.com
+ (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Mon, 20 Mar
+ 2023 09:35:57 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Message-ID: <81897a7c-2dab-f854-ff09-e50d8b875f02@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.47
+Date:   Mon, 20 Mar 2023 09:35:56 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZBXV3crf/wX5D9lo@casper.infradead.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] perf/x86/zhaoxin: Add Yongfeng support
+Content-Language: en-US
+X-ASG-Orig-Subj: Re: [PATCH] perf/x86/zhaoxin: Add Yongfeng support
+To:     Dave Hansen <dave.hansen@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
+        <silviazhao@zhaoxin.com>, <cooperyan@zhaoxin.com>
+References: <20230316021647.771-1-silviazhao-oc@zhaoxin.com>
+ <6f78ecfb-99c8-eee3-cad0-69bbd88a107c@intel.com>
+From:   silviazhaooc <silviazhao-oc@zhaoxin.com>
+In-Reply-To: <6f78ecfb-99c8-eee3-cad0-69bbd88a107c@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.29.8.47]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1679276160
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 926
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.106283
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Mar 18, 2023 at 03:16:45PM +0000, Matthew Wilcox wrote:
-> On Sat, Mar 18, 2023 at 09:33:49AM +0100, Jiri Olsa wrote:
-> > On Thu, Mar 16, 2023 at 05:34:41PM +0000, Matthew Wilcox wrote:
-> > > On Thu, Mar 16, 2023 at 06:01:40PM +0100, Jiri Olsa wrote:
-> > > > hi,
-> > > > this patchset adds build id object pointer to struct file object.
-> > > > 
-> > > > We have several use cases for build id to be used in BPF programs
-> > > > [2][3].
-> > > 
-> > > Yes, you have use cases, but you never answered the question I asked:
-> > > 
-> > > Is this going to be enabled by every distro kernel, or is it for special
-> > > use-cases where only people doing a very specialised thing who are
-> > > willing to build their own kernels will use it?
-> > 
-> > I hope so, but I guess only time tell.. given the response by Ian and Andrii
-> > there are 3 big users already
+On 2023/3/16 22:59, Dave Hansen wrote:
+> On 3/15/23 19:16, silviazhao wrote:
+>> +		case 0x5b:
+>> +			zx_pmon_event_map[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND] =
+>> +				X86_CONFIG(.event = 0x02, .umask = 0x01, .inv = 0x01,
+>> +						.cmask = 0x01);
 > 
-> So the whole "There's a config option to turn it off" shtick is just a
-> fig-leaf.  I won't ever see it turned off.  You're imposing the cost of
-> this on EVERYONE who runs a distro kernel.  And almost nobody will see
-> any benefits from it.  Thanks for admitting that.
+> On the Intel side of x86/ land, we used to have these open-coded
+> model/family numbers scattered about.  But, a few years ago, we started
+> populating arch/x86/include/asm/intel-family.h and using those instead.
+> I think it's been pretty successful.  It's a lot easier to grep for
+> INTEL_FAM6_NEHALEM_EX than for 0x2E.
 > 
+> Is there a chance we could start doing the same for other CPU vendors?
+> Perhaps start with:
+> 
+> #define ZHAOXIN_FAMILY_YONGFENG 0x5B
 
-sure, I understand that's legit way of looking at this
-
-I can imagine distros would have that enabled for debugging version of
-the kernel (like in fedora), and if that proves to be useful the standard
-kernel might take it, but yes, there's price (for discussion as pointed
-by Andrii) and it'd be for the distro maintainers to decide
-
-jirka
+Great suggestion. After discussing with my colleagues, we decide to add 
+these open-coded model/family numbers into a new file like 
+zhaoxin-family.h, create a new patch set and re-commit.
