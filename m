@@ -2,93 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A9AC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 18:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB9AC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 18:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231136AbjCTS3T (ORCPT
+        id S231206AbjCTSqJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 14:29:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48024 "EHLO
+        Mon, 20 Mar 2023 14:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230506AbjCTS3A (ORCPT
+        with ESMTP id S229675AbjCTSpm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 14:29:00 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99389AD25;
-        Mon, 20 Mar 2023 11:21:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 43B38B80E6B;
-        Mon, 20 Mar 2023 18:21:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07ACDC4339C;
-        Mon, 20 Mar 2023 18:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679336483;
-        bh=90Js5AXKAuYFcX6gyojlhCPyfPNMYTsfiXawUSspkjQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nFB6ZtkrHJ98/KzRB+ukoV03uculXitgCJB5bL1y2j5b2PXCRVU8czdtKvQeQ9WFW
-         EmfdiXHNRIcKQdBx8Zxce/xHPlJThb1sh3vxhVdxeSZ04AD/R9IDUAB7HPoMwZDn/p
-         mLdBgznbugfq8pqdIVq7LgRwD3oz9ynpd+SHi/Sz1rYhkK+8qfrzDS+5WwBHnZGE11
-         r9RqAkCtNF2vfrDiIfjirYhi0xe8c3uXW6HkqXxMH1P3U3Q4sYoreWBWvO/yXyv02I
-         1KlkDdenat45WWzcult4Q463clJ4KJGlqykH1KhNoeKCE0x0MnT+b/diLdTEM4xstG
-         HXWMjz5NRo/5w==
-Received: by mail-ua1-f42.google.com with SMTP id g9so4071756uam.9;
-        Mon, 20 Mar 2023 11:21:22 -0700 (PDT)
-X-Gm-Message-State: AO0yUKVeV2yoIdPg1ld6eA+PJ8JhleJBjFXWh5otIJDVh+HZ9jYs0erG
-        8G0yP/nsG1u0D+Ch32ai2rAFnrbBzYuiqA5Tbg==
-X-Google-Smtp-Source: AK7set/OvN8aYUC9NkIqrZpBU3dUWhruxYt0hxPWmbNFknRenQlNBhAulaCUdwLMAukgz53ZrJzUKQftgDPBPI5Ok4E=
-X-Received: by 2002:a1f:2982:0:b0:401:8898:ea44 with SMTP id
- p124-20020a1f2982000000b004018898ea44mr149758vkp.3.1679336481957; Mon, 20 Mar
- 2023 11:21:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220914-arm-perf-tool-spe1-2-v2-v5-0-2cf5210b2f77@kernel.org>
- <20220914-arm-perf-tool-spe1-2-v2-v5-1-2cf5210b2f77@kernel.org> <Y/DQ7Y+FD4cMn29J@kernel.org>
-In-Reply-To: <Y/DQ7Y+FD4cMn29J@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 20 Mar 2023 13:21:10 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLD_P1X1+vKODgZP1vaie2+c__X_HM8kWWzSb7PxZqZew@mail.gmail.com>
-Message-ID: <CAL_JsqLD_P1X1+vKODgZP1vaie2+c__X_HM8kWWzSb7PxZqZew@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] perf tools: Sync perf_event_attr::config3 addition
+        Mon, 20 Mar 2023 14:45:42 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC59159FC;
+        Mon, 20 Mar 2023 11:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679337536; x=1710873536;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UvYJIwBTHdBBZXZqPdQKayC0/G29FFNNPv4XihGRHPw=;
+  b=bX34Pd3gWFh48zNcT2KCJOw4VbCJcw/d2jCbO0euWLMLF8X8QtiA58wj
+   /aMhMpLNmacLQE63OxLAui6nUaXiliTHQ6XMAHTkA3rSg2q4X5dMUoPwC
+   JVqeXXr+zDhiJOSMTIeCxg+HDzXKH+ty3ywR60A0a6OREeEQ5X2uaRJfT
+   63RRIHWfmAu9btiLTpFsS3fXa0Me4XdQ33mG6VW7m2TviI2ePd7Lui369
+   G3gvqBCCPYqmbtFNMeAvGV/5bEnFjcM0EJrLbwhnglLZps3Y2/6MxUqGb
+   5DPBvWKpGVItq2X6VC2Rb/wzt6ix1M11TBowm1CL3MlWGFgwpyDLRXupk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="322588307"
+X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
+   d="scan'208";a="322588307"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:35:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="791730818"
+X-IronPort-AV: E=Sophos;i="5.98,276,1673942400"; 
+   d="scan'208";a="791730818"
+Received: from spalihov-mobl2.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.34.182])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 11:35:38 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/2] perf intel-pt: Add event type names UINTR and UIRET
+Date:   Mon, 20 Mar 2023 20:35:16 +0200
+Message-Id: <20230320183517.15099-2-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230320183517.15099-1-adrian.hunter@intel.com>
+References: <20230320183517.15099-1-adrian.hunter@intel.com>
+MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Feb 18, 2023 at 7:21=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Feb 17, 2023 at 04:32:10PM -0600, Rob Herring escreveu:
-> > Arm SPEv1.2 adds another 64-bits of event filtering control. As the
-> > existing perf_event_attr::configN fields are all used up for SPE PMU, a=
-n
-> > additional field is needed. Add a new 'config3' field.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > This matches commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
-> > for the kernel queued in linux-next.
->
-> When you mention linux-next where was it that it picked this from?
->
-> For me to get this merged into the perf tools "next" (perf/core) it must
-> already have been merged in the kernel counterpart (tip/perf/core).
->
-> Ok so it is not in tip/perf/core, but got in next yesterday, and PeterZ
-> acked it, good, will process it soon.
+UINTR and UIRET are listed in table 32-50 "CFE Packet Type and Vector
+Fields Details" in the Intel Processor Trace chapter of The Intel SDM
+Volume 3 version 078.
 
-Hi Arnaldo, Are you going to apply this or are you expecting something from=
- me?
+The codes are for "User interrupt delivered" and "Exiting from user
+interrupt routine" respectively.
 
-Rob
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 976f8bfe099c..c9296d8b33c0 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1906,7 +1906,7 @@ static int perf_sample__fprintf_synth_evt(struct perf_sample *sample, FILE *fp)
+ 	struct perf_synth_intel_evt *data = perf_sample__synth_ptr(sample);
+ 	const char *cfe[32] = {NULL, "INTR", "IRET", "SMI", "RSM", "SIPI",
+ 			       "INIT", "VMENTRY", "VMEXIT", "VMEXIT_INTR",
+-			       "SHUTDOWN"};
++			       "SHUTDOWN", NULL, "UINTR", "UIRET"};
+ 	const char *evd[64] = {"PFA", "VMXQ", "VMXR"};
+ 	const char *s;
+ 	int len, i;
+-- 
+2.34.1
+
