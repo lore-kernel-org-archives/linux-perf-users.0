@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7E6C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CEEC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbjCTV0Z (ORCPT
+        id S230358AbjCTV0g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 17:26:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
+        Mon, 20 Mar 2023 17:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230429AbjCTV0F (ORCPT
+        with ESMTP id S230272AbjCTV0P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 17:26:05 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5733757C
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:03 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3-20020a250b03000000b00b5f1fab9897so13479408ybl.19
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:03 -0700 (PDT)
+        Mon, 20 Mar 2023 17:26:15 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FC02E82D
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:37 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54196bfcd5fso132501687b3.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679347486;
+        d=google.com; s=20210112; t=1679347503;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kb4pdWYoXXxgxH3CLp93b6VqLVR3bmV9cj+P/uj/TFI=;
-        b=FEcmSAQ94asx3Ftg3A85HzsnyhqdayOhNlrYQvrHIMje30mr3f0CfX89iTbmoT4ce6
-         dGFxf9lPrVeSybuzCD3vQ1V7UjNj7ZSwMh/efM5wdA/2Nhrz4nFEcY6xPUNutkMdzKyH
-         QF1h5NmtHDrJ9cFHdjFH1mriKjO5F5fT6rexm6T1KPDS7XCBAOmdR6ZGJ6BykXpL9Y88
-         BGjeiiOKrJ04hy34USnwxMhaZqLuO90XiVe449mbULxEtkJuOBnPIQZfw/ImJQjw4/FR
-         jBvoTbxRRLRI5JAIK2MQdJwLE8pR0sVknqQdQycEu2g7b/MkM9E43qmYUxltUFN37+ZT
-         6jHw==
+        bh=icBYGhACTLENBFtI0uAK9GZilU3MMSebJp6keqt4NA0=;
+        b=jGcUqcPVGFax6oc/S4S8LcGtg6Tuujx2Q1ikG5/H9j7LhIDe2QDAzhq+AQ2UiZ1d4y
+         J1GE4K5sr+PAP9ce+SERYJybvNb6dqpZJnmcnqf7yWrPTRAtJT9oXYhJ4/9jCaWGYeYc
+         yO5PXUkWWXpEb6bIXELq0y+rU6tSveJTFMPq4wSMXIbBC7kvE6wVxri6KJGEYRNP+fyB
+         Wj/Bq2bizYry8N1XCT62ajE/PconuhS87rCa8jyBaDnA+I3ZVygtsni9gb7q/w2VJXsj
+         ud+UAncmjX0IWrhwTrznacTDg1xeWIJnv7rDoxKD+kd/OrkWRLdpRxknE4xsXo8ZjB+N
+         swpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679347486;
+        d=1e100.net; s=20210112; t=1679347503;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kb4pdWYoXXxgxH3CLp93b6VqLVR3bmV9cj+P/uj/TFI=;
-        b=3wqwb1jcVofMHfDW5259dDyeLpJQ0DQOQQSbEjBAmRSu2HZD4PdB3glJN/doBYez8i
-         bcXIit7mBJg+7NR176HLG7JvNcLuUpKM4LsYu/dvXUFLRa8XTFvgVZ24UbEp+uT1HATH
-         A/yBFwDirzZNfyV5HHbO5thw9jxNquzNUSDEWolFPWCVPr9YWW5kCLv3hLUldlvpGlju
-         6DI4QWcnNrx1hb7F8KkjbB4mOw/gLW392oNbOhOCav/Xzgg5thGGIzc9W1dpJyxEgyL8
-         cww/HhJAbrGL4pqxrQEi46MRPUr/7Dkqt/l6eXdlVggN8AsltWMoSAV42gPIrxZ37ia4
-         05zw==
-X-Gm-Message-State: AAQBX9d6F55GFTiQsJLZtgRdm95wdUHI7GFpaTX2VVS3qor/CErKB0sH
-        CEONMs+FDsx1hF2T2L5Ye6iFKVNwPmGK
-X-Google-Smtp-Source: AKy350YYHiATAsiBofs1Ea4bNUxbO8KFX+Hh+6yG94Cm64fP9uXj/o2tVL129TtxO4xY/pLAWXeSCDcZllY1
+        bh=icBYGhACTLENBFtI0uAK9GZilU3MMSebJp6keqt4NA0=;
+        b=j0cI5Dt9lUpA7NgbzlaW8ko4eabM4e5ImWqtd+eyhEl9crujzD5MtnvK9NO/f1zFzV
+         39/Lar6qTyq5Jeh2GP3bz3Fo6R42G/jscb2CduJziRG5TtxRoe72PVRvAXy2+sqTHtjd
+         0xkuKBGyLhZZnlbT0YSQmzLqO22Ib1zi30jv8KssWa5xakztRSYRMyZfoN8sqfv6iwTn
+         ecYjm8vcZxDA05pe3/mEWZJXPiITvmXZmvnpKZnu609cDIr7TaFP+Kt1Mu+ddUmdCKxK
+         meFFkqw4lCLSyGJF+PrTAZvpnW8ecSpyo0ME3GAQ9Pa2FmCeRSsxiTdRKEFZguefAPrM
+         hcZw==
+X-Gm-Message-State: AAQBX9cRJnShicvPAN0cXIFhZ5KwDNGJMkmgSmxmmgmPzO2sxxSsx5D6
+        BTzceB6rqav0ILeVsByS+TLVwrUC2Ohv
+X-Google-Smtp-Source: AKy350b5F+c1tKe8LfIVMxkrYq9LHCF/Q5UHRj7P1d6wO56g1unbT07IC+jOP6I9+EYXfCIe/AsZk446Gy0U
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a30f:d1e2:fcd8:aa4d])
- (user=irogers job=sendgmr) by 2002:a25:b10f:0:b0:b21:5fb4:c6e6 with SMTP id
- g15-20020a25b10f000000b00b215fb4c6e6mr370481ybj.11.1679347486132; Mon, 20 Mar
- 2023 14:24:46 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 14:22:45 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d512:0:b0:b45:5cbe:48b3 with SMTP id
+ r18-20020a25d512000000b00b455cbe48b3mr55577ybe.0.1679347503736; Mon, 20 Mar
+ 2023 14:25:03 -0700 (PDT)
+Date:   Mon, 20 Mar 2023 14:22:47 -0700
 In-Reply-To: <20230320212248.1175731-1-irogers@google.com>
-Message-Id: <20230320212248.1175731-15-irogers@google.com>
+Message-Id: <20230320212248.1175731-17-irogers@google.com>
 Mime-Version: 1.0
 References: <20230320212248.1175731-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v5 14/17] perf cpumap: Add reference count checking
+Subject: [PATCH v5 16/17] perf maps: Add reference count checking.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,466 +95,373 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Enabled when REFCNT_CHECKING is defined. The change adds a memory
-allocated pointer that is interposed between the reference counted
-cpu map at a get and freed by a put. The pointer replaces the original
-perf_cpu_map struct, so use of the perf_cpu_map via APIs remains
-unchanged. Any use of the cpu map without the API requires two versions,
-handled via the RC_CHK_ACCESS macro.
+Add reference count checking to make sure of good use of get and put.
+Add and use accessors to reduce RC_CHK clutter.
 
-This change is intended to catch:
- - use after put: using a cpumap after you have put it will cause a
-   segv.
- - unbalanced puts: two puts for a get will result in a double free
-   that can be captured and reported by tools like address sanitizer,
-   including with the associated stack traces of allocation and frees.
- - missing puts: if a put is missing then the get turns into a memory
-   leak that can be reported by leak sanitizer, including the stack
-   trace at the point the get occurs.
+The only significant issue was in tests/thread-maps-share.c where
+reference counts were released in the reverse order to acquisition,
+leading to a use after put. This was fixed by reversing the put order.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/Makefile                  |  2 +-
- tools/lib/perf/cpumap.c                  | 94 +++++++++++++-----------
- tools/lib/perf/include/internal/cpumap.h |  4 +-
- tools/perf/tests/cpumap.c                |  4 +-
- tools/perf/util/cpumap.c                 | 40 +++++-----
- tools/perf/util/pmu.c                    |  8 +-
- 6 files changed, 81 insertions(+), 71 deletions(-)
+ tools/perf/tests/thread-maps-share.c     | 29 ++++++-------
+ tools/perf/util/machine.c                |  2 +-
+ tools/perf/util/maps.c                   | 53 +++++++++++++-----------
+ tools/perf/util/maps.h                   | 17 ++++----
+ tools/perf/util/symbol.c                 | 13 +++---
+ tools/perf/util/unwind-libdw.c           |  2 +-
+ tools/perf/util/unwind-libunwind-local.c |  2 +-
+ tools/perf/util/unwind-libunwind.c       |  2 +-
+ 8 files changed, 64 insertions(+), 56 deletions(-)
 
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index d8cad124e4c5..3a9b2140aa04 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -188,7 +188,7 @@ install_lib: libs
- 		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
+diff --git a/tools/perf/tests/thread-maps-share.c b/tools/perf/tests/thread-maps-share.c
+index 84edd82c519e..dfe51b21bd7d 100644
+--- a/tools/perf/tests/thread-maps-share.c
++++ b/tools/perf/tests/thread-maps-share.c
+@@ -43,12 +43,12 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
+ 			leader && t1 && t2 && t3 && other);
  
- HDRS := bpf_perf.h core.h cpumap.h threadmap.h evlist.h evsel.h event.h mmap.h
--INTERNAL_HDRS := cpumap.h evlist.h evsel.h lib.h mmap.h threadmap.h xyarray.h
-+INTERNAL_HDRS := cpumap.h evlist.h evsel.h lib.h mmap.h rc_check.h threadmap.h xyarray.h
+ 	maps = leader->maps;
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 4);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(maps)->refcnt), 4);
  
- INSTALL_HDRS_PFX := $(DESTDIR)$(prefix)/include/perf
- INSTALL_HDRS := $(addprefix $(INSTALL_HDRS_PFX)/, $(HDRS))
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index 6cd0be7c1bb4..56eed1ac80d9 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -10,16 +10,16 @@
- #include <ctype.h>
- #include <limits.h>
+ 	/* test the maps pointer is shared */
+-	TEST_ASSERT_VAL("maps don't match", maps == t1->maps);
+-	TEST_ASSERT_VAL("maps don't match", maps == t2->maps);
+-	TEST_ASSERT_VAL("maps don't match", maps == t3->maps);
++	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(t1->maps));
++	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(t2->maps));
++	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(t3->maps));
  
--static struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-+struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
- {
--	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
+ 	/*
+ 	 * Verify the other leader was created by previous call.
+@@ -71,25 +71,26 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
+ 	machine__remove_thread(machine, other_leader);
+ 
+ 	other_maps = other->maps;
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_maps->refcnt), 2);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(other_maps)->refcnt), 2);
+ 
+-	TEST_ASSERT_VAL("maps don't match", other_maps == other_leader->maps);
++	TEST_ASSERT_VAL("maps don't match",
++			RC_CHK_ACCESS(other_maps) == RC_CHK_ACCESS(other_leader->maps));
+ 
+ 	/* release thread group */
+-	thread__put(leader);
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 3);
 -
--	if (cpus != NULL) {
-+	struct perf_cpu_map *result;
-+	RC_STRUCT(perf_cpu_map) *cpus =
-+		malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
-+	if (ADD_RC_CHK(result, cpus)) {
- 		cpus->nr = nr_cpus;
- 		refcount_set(&cpus->refcnt, 1);
--
- 	}
--	return cpus;
-+	return result;
- }
+-	thread__put(t1);
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 2);
++	thread__put(t3);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(maps)->refcnt), 3);
  
- struct perf_cpu_map *perf_cpu_map__dummy_new(void)
-@@ -27,7 +27,7 @@ struct perf_cpu_map *perf_cpu_map__dummy_new(void)
- 	struct perf_cpu_map *cpus = perf_cpu_map__alloc(1);
+ 	thread__put(t2);
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 1);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(maps)->refcnt), 2);
  
- 	if (cpus)
--		cpus->map[0].cpu = -1;
-+		RC_CHK_ACCESS(cpus)->map[0].cpu = -1;
- 
- 	return cpus;
- }
-@@ -35,23 +35,30 @@ struct perf_cpu_map *perf_cpu_map__dummy_new(void)
- static void cpu_map__delete(struct perf_cpu_map *map)
- {
- 	if (map) {
--		WARN_ONCE(refcount_read(&map->refcnt) != 0,
-+		WARN_ONCE(refcount_read(&RC_CHK_ACCESS(map)->refcnt) != 0,
- 			  "cpu_map refcnt unbalanced\n");
--		free(map);
-+		RC_CHK_FREE(map);
- 	}
- }
- 
- struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map)
- {
--	if (map)
--		refcount_inc(&map->refcnt);
--	return map;
-+	struct perf_cpu_map *result;
+-	thread__put(t3);
++	thread__put(t1);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(maps)->refcnt), 1);
 +
-+	if (RC_CHK_GET(result, map))
-+		refcount_inc(&RC_CHK_ACCESS(map)->refcnt);
-+
-+	return result;
- }
++	thread__put(leader);
  
- void perf_cpu_map__put(struct perf_cpu_map *map)
- {
--	if (map && refcount_dec_and_test(&map->refcnt))
--		cpu_map__delete(map);
-+	if (map) {
-+		if (refcount_dec_and_test(&RC_CHK_ACCESS(map)->refcnt))
-+			cpu_map__delete(map);
-+		else
-+			RC_CHK_PUT(map);
-+	}
- }
+ 	/* release other group  */
+ 	thread__put(other_leader);
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_maps->refcnt), 1);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(other_maps)->refcnt), 1);
  
- static struct perf_cpu_map *cpu_map__default_new(void)
-@@ -68,7 +75,7 @@ static struct perf_cpu_map *cpu_map__default_new(void)
- 		int i;
+ 	thread__put(other);
  
- 		for (i = 0; i < nr_cpus; ++i)
--			cpus->map[i].cpu = i;
-+			RC_CHK_ACCESS(cpus)->map[i].cpu = i;
- 	}
- 
- 	return cpus;
-@@ -94,15 +101,16 @@ static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, const struct perf_cpu
- 	int i, j;
- 
- 	if (cpus != NULL) {
--		memcpy(cpus->map, tmp_cpus, payload_size);
--		qsort(cpus->map, nr_cpus, sizeof(struct perf_cpu), cmp_cpu);
-+		memcpy(RC_CHK_ACCESS(cpus)->map, tmp_cpus, payload_size);
-+		qsort(RC_CHK_ACCESS(cpus)->map, nr_cpus, sizeof(struct perf_cpu), cmp_cpu);
- 		/* Remove dups */
- 		j = 0;
- 		for (i = 0; i < nr_cpus; i++) {
--			if (i == 0 || cpus->map[i].cpu != cpus->map[i - 1].cpu)
--				cpus->map[j++].cpu = cpus->map[i].cpu;
-+			if (i == 0 ||
-+			    RC_CHK_ACCESS(cpus)->map[i].cpu != RC_CHK_ACCESS(cpus)->map[i - 1].cpu)
-+				RC_CHK_ACCESS(cpus)->map[j++].cpu = RC_CHK_ACCESS(cpus)->map[i].cpu;
- 		}
--		cpus->nr = j;
-+		RC_CHK_ACCESS(cpus)->nr = j;
- 		assert(j <= nr_cpus);
- 	}
- 	return cpus;
-@@ -263,20 +271,20 @@ struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
- 		.cpu = -1
- 	};
- 
--	if (cpus && idx < cpus->nr)
--		return cpus->map[idx];
-+	if (cpus && idx < RC_CHK_ACCESS(cpus)->nr)
-+		return RC_CHK_ACCESS(cpus)->map[idx];
- 
- 	return result;
- }
- 
- int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- {
--	return cpus ? cpus->nr : 1;
-+	return cpus ? RC_CHK_ACCESS(cpus)->nr : 1;
- }
- 
- bool perf_cpu_map__empty(const struct perf_cpu_map *map)
- {
--	return map ? map->map[0].cpu == -1 : true;
-+	return map ? RC_CHK_ACCESS(map)->map[0].cpu == -1 : true;
- }
- 
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
-@@ -287,10 +295,10 @@ int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
- 		return -1;
- 
- 	low = 0;
--	high = cpus->nr;
-+	high = RC_CHK_ACCESS(cpus)->nr;
- 	while (low < high) {
- 		int idx = (low + high) / 2;
--		struct perf_cpu cpu_at_idx = cpus->map[idx];
-+		struct perf_cpu cpu_at_idx = RC_CHK_ACCESS(cpus)->map[idx];
- 
- 		if (cpu_at_idx.cpu == cpu.cpu)
- 			return idx;
-@@ -316,7 +324,9 @@ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
- 	};
- 
- 	// cpu_map__trim_new() qsort()s it, cpu_map__default_new() sorts it as well.
--	return map->nr > 0 ? map->map[map->nr - 1] : result;
-+	return RC_CHK_ACCESS(map)->nr > 0
-+		? RC_CHK_ACCESS(map)->map[RC_CHK_ACCESS(map)->nr - 1]
-+		: result;
- }
- 
- /** Is 'b' a subset of 'a'. */
-@@ -324,15 +334,15 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
- {
- 	if (a == b || !b)
- 		return true;
--	if (!a || b->nr > a->nr)
-+	if (!a || RC_CHK_ACCESS(b)->nr > RC_CHK_ACCESS(a)->nr)
- 		return false;
- 
--	for (int i = 0, j = 0; i < a->nr; i++) {
--		if (a->map[i].cpu > b->map[j].cpu)
-+	for (int i = 0, j = 0; i < RC_CHK_ACCESS(a)->nr; i++) {
-+		if (RC_CHK_ACCESS(a)->map[i].cpu > RC_CHK_ACCESS(b)->map[j].cpu)
- 			return false;
--		if (a->map[i].cpu == b->map[j].cpu) {
-+		if (RC_CHK_ACCESS(a)->map[i].cpu == RC_CHK_ACCESS(b)->map[j].cpu) {
- 			j++;
--			if (j == b->nr)
-+			if (j == RC_CHK_ACCESS(b)->nr)
- 				return true;
- 		}
- 	}
-@@ -362,27 +372,27 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
- 		return perf_cpu_map__get(other);
- 	}
- 
--	tmp_len = orig->nr + other->nr;
-+	tmp_len = RC_CHK_ACCESS(orig)->nr + RC_CHK_ACCESS(other)->nr;
- 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
- 	if (!tmp_cpus)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 502e97010a3c..cfbced348335 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -434,7 +434,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
  		return NULL;
  
- 	/* Standard merge algorithm from wikipedia */
- 	i = j = k = 0;
--	while (i < orig->nr && j < other->nr) {
--		if (orig->map[i].cpu <= other->map[j].cpu) {
--			if (orig->map[i].cpu == other->map[j].cpu)
-+	while (i < RC_CHK_ACCESS(orig)->nr && j < RC_CHK_ACCESS(other)->nr) {
-+		if (RC_CHK_ACCESS(orig)->map[i].cpu <= RC_CHK_ACCESS(other)->map[j].cpu) {
-+			if (RC_CHK_ACCESS(orig)->map[i].cpu == RC_CHK_ACCESS(other)->map[j].cpu)
- 				j++;
--			tmp_cpus[k++] = orig->map[i++];
-+			tmp_cpus[k++] = RC_CHK_ACCESS(orig)->map[i++];
- 		} else
--			tmp_cpus[k++] = other->map[j++];
-+			tmp_cpus[k++] = RC_CHK_ACCESS(other)->map[j++];
- 	}
+ 	/* Assume maps are set up if there are any */
+-	if (thread->maps->nr_maps)
++	if (RC_CHK_ACCESS(thread->maps)->nr_maps)
+ 		return thread;
  
--	while (i < orig->nr)
--		tmp_cpus[k++] = orig->map[i++];
-+	while (i < RC_CHK_ACCESS(orig)->nr)
-+		tmp_cpus[k++] = RC_CHK_ACCESS(orig)->map[i++];
+ 	host_thread = machine__find_thread(host_machine, -1, pid);
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 74e3133f5007..3c8bbcb2c204 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -12,13 +12,13 @@
  
--	while (j < other->nr)
--		tmp_cpus[k++] = other->map[j++];
-+	while (j < RC_CHK_ACCESS(other)->nr)
-+		tmp_cpus[k++] = RC_CHK_ACCESS(other)->map[j++];
- 	assert(k <= tmp_len);
+ static void maps__init(struct maps *maps, struct machine *machine)
+ {
+-	maps->entries = RB_ROOT;
++	RC_CHK_ACCESS(maps)->entries = RB_ROOT;
+ 	init_rwsem(maps__lock(maps));
+-	maps->machine = machine;
+-	maps->last_search_by_name = NULL;
+-	maps->nr_maps = 0;
+-	maps->maps_by_name = NULL;
+-	refcount_set(&maps->refcnt, 1);
++	RC_CHK_ACCESS(maps)->machine = machine;
++	RC_CHK_ACCESS(maps)->last_search_by_name = NULL;
++	RC_CHK_ACCESS(maps)->nr_maps = 0;
++	RC_CHK_ACCESS(maps)->maps_by_name = NULL;
++	refcount_set(&RC_CHK_ACCESS(maps)->refcnt, 1);
+ }
  
- 	merged = cpu_map__trim_new(k, tmp_cpus);
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index 35dd29642296..6c01bee4d048 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -4,6 +4,7 @@
+ static void __maps__free_maps_by_name(struct maps *maps)
+@@ -29,8 +29,8 @@ static void __maps__free_maps_by_name(struct maps *maps)
+ 	for (unsigned int i = 0; i < maps__nr_maps(maps); i++)
+ 		map__put(maps__maps_by_name(maps)[i]);
  
- #include <linux/refcount.h>
- #include <perf/cpumap.h>
+-	zfree(&maps->maps_by_name);
+-	maps->nr_maps_allocated = 0;
++	zfree(&RC_CHK_ACCESS(maps)->maps_by_name);
++	RC_CHK_ACCESS(maps)->nr_maps_allocated = 0;
+ }
+ 
+ static int __maps__insert(struct maps *maps, struct map *map)
+@@ -71,7 +71,7 @@ int maps__insert(struct maps *maps, struct map *map)
+ 	if (err)
+ 		goto out;
+ 
+-	++maps->nr_maps;
++	++RC_CHK_ACCESS(maps)->nr_maps;
+ 
+ 	if (dso && dso->kernel) {
+ 		struct kmap *kmap = map__kmap(map);
+@@ -88,7 +88,7 @@ int maps__insert(struct maps *maps, struct map *map)
+ 	 * inserted map and resort.
+ 	 */
+ 	if (maps__maps_by_name(maps)) {
+-		if (maps__nr_maps(maps) > maps->nr_maps_allocated) {
++		if (maps__nr_maps(maps) > RC_CHK_ACCESS(maps)->nr_maps_allocated) {
+ 			int nr_allocate = maps__nr_maps(maps) * 2;
+ 			struct map **maps_by_name = realloc(maps__maps_by_name(maps),
+ 							    nr_allocate * sizeof(map));
+@@ -99,8 +99,8 @@ int maps__insert(struct maps *maps, struct map *map)
+ 				goto out;
+ 			}
+ 
+-			maps->maps_by_name = maps_by_name;
+-			maps->nr_maps_allocated = nr_allocate;
++			RC_CHK_ACCESS(maps)->maps_by_name = maps_by_name;
++			RC_CHK_ACCESS(maps)->nr_maps_allocated = nr_allocate;
+ 		}
+ 		maps__maps_by_name(maps)[maps__nr_maps(maps) - 1] = map__get(map);
+ 		__maps__sort_by_name(maps);
+@@ -122,15 +122,15 @@ void maps__remove(struct maps *maps, struct map *map)
+ 	struct map_rb_node *rb_node;
+ 
+ 	down_write(maps__lock(maps));
+-	if (maps->last_search_by_name == map)
+-		maps->last_search_by_name = NULL;
++	if (RC_CHK_ACCESS(maps)->last_search_by_name == map)
++		RC_CHK_ACCESS(maps)->last_search_by_name = NULL;
+ 
+ 	rb_node = maps__find_node(maps, map);
+ 	assert(rb_node->map == map);
+ 	__maps__remove(maps, rb_node);
+ 	if (maps__maps_by_name(maps))
+ 		__maps__free_maps_by_name(maps);
+-	--maps->nr_maps;
++	--RC_CHK_ACCESS(maps)->nr_maps;
+ 	up_write(maps__lock(maps));
+ }
+ 
+@@ -162,33 +162,38 @@ bool maps__empty(struct maps *maps)
+ 
+ struct maps *maps__new(struct machine *machine)
+ {
+-	struct maps *maps = zalloc(sizeof(*maps));
++	struct maps *res;
++	RC_STRUCT(maps) *maps = zalloc(sizeof(*maps));
+ 
+-	if (maps != NULL)
+-		maps__init(maps, machine);
++	if (ADD_RC_CHK(res, maps))
++		maps__init(res, machine);
+ 
+-	return maps;
++	return res;
+ }
+ 
+ void maps__delete(struct maps *maps)
+ {
+ 	maps__exit(maps);
+ 	unwind__finish_access(maps);
+-	free(maps);
++	RC_CHK_FREE(maps);
+ }
+ 
+ struct maps *maps__get(struct maps *maps)
+ {
+-	if (maps)
+-		refcount_inc(&maps->refcnt);
++	struct maps *result;
+ 
+-	return maps;
++	if (RC_CHK_GET(result, maps))
++		refcount_inc(&RC_CHK_ACCESS(maps)->refcnt);
++
++	return result;
+ }
+ 
+ void maps__put(struct maps *maps)
+ {
+-	if (maps && refcount_dec_and_test(&maps->refcnt))
++	if (maps && refcount_dec_and_test(&RC_CHK_ACCESS(maps)->refcnt))
+ 		maps__delete(maps);
++	else
++		RC_CHK_PUT(maps);
+ }
+ 
+ struct symbol *maps__find_symbol(struct maps *maps, u64 addr, struct map **mapp)
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index bde3390c7096..0af4b7e42fca 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -8,6 +8,7 @@
+ #include <stdbool.h>
+ #include <linux/types.h>
+ #include "rwsem.h"
 +#include <internal/rc_check.h>
  
- /**
-  * A sized, reference counted, sorted array of integers representing CPU
-@@ -12,7 +13,7 @@
-  * gaps if CPU numbers were used. For events associated with a pid, rather than
-  * a CPU, a single dummy map with an entry of -1 is used.
-  */
--struct perf_cpu_map {
-+DECLARE_RC_STRUCT(perf_cpu_map) {
- 	refcount_t	refcnt;
- 	/** Length of the map array. */
- 	int		nr;
-@@ -24,6 +25,7 @@ struct perf_cpu_map {
- #define MAX_NR_CPUS	2048
+ struct ref_reloc_sym;
+ struct machine;
+@@ -32,7 +33,7 @@ struct map *maps__find(struct maps *maps, u64 addr);
+ 	for (map = maps__first(maps), next = map_rb_node__next(map); map; \
+ 	     map = next, next = map_rb_node__next(map))
+ 
+-struct maps {
++DECLARE_RC_STRUCT(maps) {
+ 	struct rb_root      entries;
+ 	struct rw_semaphore lock;
+ 	struct machine	 *machine;
+@@ -65,38 +66,38 @@ void maps__put(struct maps *maps);
+ 
+ static inline struct rb_root *maps__entries(struct maps *maps)
+ {
+-	return &maps->entries;
++	return &RC_CHK_ACCESS(maps)->entries;
+ }
+ 
+ static inline struct machine *maps__machine(struct maps *maps)
+ {
+-	return maps->machine;
++	return RC_CHK_ACCESS(maps)->machine;
+ }
+ 
+ static inline struct rw_semaphore *maps__lock(struct maps *maps)
+ {
+-	return &maps->lock;
++	return &RC_CHK_ACCESS(maps)->lock;
+ }
+ 
+ static inline struct map **maps__maps_by_name(struct maps *maps)
+ {
+-	return maps->maps_by_name;
++	return RC_CHK_ACCESS(maps)->maps_by_name;
+ }
+ 
+ static inline unsigned int maps__nr_maps(const struct maps *maps)
+ {
+-	return maps->nr_maps;
++	return RC_CHK_ACCESS(maps)->nr_maps;
+ }
+ 
+ #ifdef HAVE_LIBUNWIND_SUPPORT
+ static inline void *maps__addr_space(struct maps *maps)
+ {
+-	return maps->addr_space;
++	return RC_CHK_ACCESS(maps)->addr_space;
+ }
+ 
+ static inline const struct unwind_libunwind_ops *maps__unwind_libunwind_ops(const struct maps *maps)
+ {
+-	return maps->unwind_libunwind_ops;
++	return RC_CHK_ACCESS(maps)->unwind_libunwind_ops;
+ }
  #endif
  
-+struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu);
- bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index f5432c7add09..d99c8e1bb4bf 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -2096,8 +2096,8 @@ static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
+ 	up_read(maps__lock(maps));
+ 	down_write(maps__lock(maps));
  
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 3150fc1fed6f..d6f77b676d11 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -68,7 +68,7 @@ static int process_event_cpus(struct perf_tool *tool __maybe_unused,
- 	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 2);
- 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 1);
- 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 1).cpu == 256);
--	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
-+	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(map)->refcnt) == 1);
- 	perf_cpu_map__put(map);
- 	return 0;
- }
-@@ -94,7 +94,7 @@ static int process_event_range_cpus(struct perf_tool *tool __maybe_unused,
- 	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 256);
- 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 1);
- 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__max(map).cpu == 256);
--	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
-+	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&RC_CHK_ACCESS(map)->refcnt) == 1);
- 	perf_cpu_map__put(map);
- 	return 0;
- }
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 5e564974fba4..22453893105f 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -77,9 +77,9 @@ static struct perf_cpu_map *cpu_map__from_entries(const struct perf_record_cpu_m
- 			 * otherwise it would become 65535.
- 			 */
- 			if (data->cpus_data.cpu[i] == (u16) -1)
--				map->map[i].cpu = -1;
-+				RC_CHK_ACCESS(map)->map[i].cpu = -1;
- 			else
--				map->map[i].cpu = (int) data->cpus_data.cpu[i];
-+				RC_CHK_ACCESS(map)->map[i].cpu = (int) data->cpus_data.cpu[i];
+-	maps->maps_by_name = maps_by_name;
+-	maps->nr_maps_allocated = maps__nr_maps(maps);
++	RC_CHK_ACCESS(maps)->maps_by_name = maps_by_name;
++	RC_CHK_ACCESS(maps)->nr_maps_allocated = maps__nr_maps(maps);
+ 
+ 	maps__for_each_entry(maps, rb_node)
+ 		maps_by_name[i++] = map__get(rb_node->map);
+@@ -2132,11 +2132,12 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 
+ 	down_read(maps__lock(maps));
+ 
+-	if (maps->last_search_by_name) {
+-		const struct dso *dso = map__dso(maps->last_search_by_name);
++
++	if (RC_CHK_ACCESS(maps)->last_search_by_name) {
++		const struct dso *dso = map__dso(RC_CHK_ACCESS(maps)->last_search_by_name);
+ 
+ 		if (strcmp(dso->short_name, name) == 0) {
+-			map = maps->last_search_by_name;
++			map = RC_CHK_ACCESS(maps)->last_search_by_name;
+ 			goto out_unlock;
  		}
  	}
- 
-@@ -107,7 +107,7 @@ static struct perf_cpu_map *cpu_map__from_mask(const struct perf_record_cpu_map_
- 
- 		perf_record_cpu_map_data__read_one_mask(data, i, local_copy);
- 		for_each_set_bit(cpu, local_copy, 64)
--			map->map[j++].cpu = cpu + cpus_per_i;
-+		        RC_CHK_ACCESS(map)->map[j++].cpu = cpu + cpus_per_i;
- 	}
- 	return map;
- 
-@@ -124,11 +124,11 @@ static struct perf_cpu_map *cpu_map__from_range(const struct perf_record_cpu_map
- 		return NULL;
- 
- 	if (data->range_cpu_data.any_cpu)
--		map->map[i++].cpu = -1;
-+		RC_CHK_ACCESS(map)->map[i++].cpu = -1;
- 
- 	for (int cpu = data->range_cpu_data.start_cpu; cpu <= data->range_cpu_data.end_cpu;
- 	     i++, cpu++)
--		map->map[i].cpu = cpu;
-+		RC_CHK_ACCESS(map)->map[i].cpu = cpu;
- 
- 	return map;
- }
-@@ -160,16 +160,13 @@ size_t cpu_map__fprintf(struct perf_cpu_map *map, FILE *fp)
- 
- struct perf_cpu_map *perf_cpu_map__empty_new(int nr)
- {
--	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + sizeof(int) * nr);
-+	struct perf_cpu_map *cpus = perf_cpu_map__alloc(nr);
- 
- 	if (cpus != NULL) {
- 		int i;
- 
--		cpus->nr = nr;
- 		for (i = 0; i < nr; i++)
--			cpus->map[i].cpu = -1;
--
--		refcount_set(&cpus->refcnt, 1);
-+			RC_CHK_ACCESS(cpus)->map[i].cpu = -1;
- 	}
- 
- 	return cpus;
-@@ -239,7 +236,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
- {
- 	int idx;
- 	struct perf_cpu cpu;
--	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(cpus->nr);
-+	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(perf_cpu_map__nr(cpus));
- 
- 	if (!c)
- 		return NULL;
-@@ -263,7 +260,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
+@@ -2156,7 +2157,7 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+ 		map = rb_node->map;
+ 		dso = map__dso(map);
+ 		if (strcmp(dso->short_name, name) == 0) {
+-			maps->last_search_by_name = map;
++			RC_CHK_ACCESS(maps)->last_search_by_name = map;
+ 			goto out_unlock;
  		}
  	}
- 	/* Trim. */
--	if (c->nr != cpus->nr) {
-+	if (c->nr != perf_cpu_map__nr(cpus)) {
- 		struct cpu_aggr_map *trimmed_c =
- 			realloc(c,
- 				sizeof(struct cpu_aggr_map) + sizeof(struct aggr_cpu_id) * c->nr);
-@@ -582,31 +579,32 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 9565f9906e5d..bdccfc511b7e 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -230,7 +230,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
+ 	struct unwind_info *ui, ui_buf = {
+ 		.sample		= data,
+ 		.thread		= thread,
+-		.machine	= thread->maps->machine,
++		.machine	= RC_CHK_ACCESS(thread->maps)->machine,
+ 		.cb		= cb,
+ 		.arg		= arg,
+ 		.max_stack	= max_stack,
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index 952c5ee66fe7..2947c210576e 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -667,7 +667,7 @@ static int _unwind__prepare_access(struct maps *maps)
+ {
+ 	void *addr_space = unw_create_addr_space(&accessors, 0);
  
- #define COMMA first ? "" : ","
+-	maps->addr_space = addr_space;
++	RC_CHK_ACCESS(maps)->addr_space = addr_space;
+ 	if (!addr_space) {
+ 		pr_err("unwind: Can't create unwind address space.\n");
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index c14f04082377..48a7aeb3f9ec 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -14,7 +14,7 @@ struct unwind_libunwind_ops __weak *arm64_unwind_libunwind_ops;
  
--	for (i = 0; i < map->nr + 1; i++) {
-+	for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
- 		struct perf_cpu cpu = { .cpu = INT_MAX };
--		bool last = i == map->nr;
-+		bool last = i == perf_cpu_map__nr(map);
+ static void unwind__register_ops(struct maps *maps, struct unwind_libunwind_ops *ops)
+ {
+-	maps->unwind_libunwind_ops = ops;
++	RC_CHK_ACCESS(maps)->unwind_libunwind_ops = ops;
+ }
  
- 		if (!last)
--			cpu = map->map[i];
-+			cpu = perf_cpu_map__cpu(map, i);
- 
- 		if (start == -1) {
- 			start = i;
- 			if (last) {
- 				ret += snprintf(buf + ret, size - ret,
- 						"%s%d", COMMA,
--						map->map[i].cpu);
-+						perf_cpu_map__cpu(map, i).cpu);
- 			}
--		} else if (((i - start) != (cpu.cpu - map->map[start].cpu)) || last) {
-+		} else if (((i - start) != (cpu.cpu - perf_cpu_map__cpu(map, start).cpu)) || last) {
- 			int end = i - 1;
- 
- 			if (start == end) {
- 				ret += snprintf(buf + ret, size - ret,
- 						"%s%d", COMMA,
--						map->map[start].cpu);
-+						perf_cpu_map__cpu(map, start).cpu);
- 			} else {
- 				ret += snprintf(buf + ret, size - ret,
- 						"%s%d-%d", COMMA,
--						map->map[start].cpu, map->map[end].cpu);
-+						perf_cpu_map__cpu(map, start).cpu,
-+						perf_cpu_map__cpu(map, end).cpu);
- 			}
- 			first = false;
- 			start = i;
-@@ -633,7 +631,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- 	int i, cpu;
- 	char *ptr = buf;
- 	unsigned char *bitmap;
--	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, map->nr - 1);
-+	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, perf_cpu_map__nr(map) - 1);
- 
- 	if (buf == NULL)
- 		return 0;
-@@ -644,7 +642,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
- 		return 0;
- 	}
- 
--	for (i = 0; i < map->nr; i++) {
-+	for (i = 0; i < perf_cpu_map__nr(map); i++) {
- 		cpu = perf_cpu_map__cpu(map, i).cpu;
- 		bitmap[cpu / 8] |= 1 << (cpu % 8);
- 	}
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 45d9b8e28e16..25bb52e8c147 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1885,13 +1885,13 @@ int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
- 
- 	perf_cpu_map__for_each_cpu(cpu, i, cpus) {
- 		if (!perf_cpu_map__has(pmu_cpus, cpu))
--			unmatched_cpus->map[unmatched_nr++] = cpu;
-+			RC_CHK_ACCESS(unmatched_cpus)->map[unmatched_nr++] = cpu;
- 		else
--			matched_cpus->map[matched_nr++] = cpu;
-+			RC_CHK_ACCESS(matched_cpus)->map[matched_nr++] = cpu;
- 	}
- 
--	unmatched_cpus->nr = unmatched_nr;
--	matched_cpus->nr = matched_nr;
-+	RC_CHK_ACCESS(unmatched_cpus)->nr = unmatched_nr;
-+	RC_CHK_ACCESS(matched_cpus)->nr = matched_nr;
- 	*mcpus_ptr = matched_cpus;
- 	*ucpus_ptr = unmatched_cpus;
- 	return 0;
+ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized)
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
