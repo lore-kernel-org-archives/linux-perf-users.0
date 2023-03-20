@@ -2,152 +2,293 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F85AC6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 20:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF22AC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 21:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229772AbjCTUsy (ORCPT
+        id S230012AbjCTVXO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 16:48:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        Mon, 20 Mar 2023 17:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjCTUsx (ORCPT
+        with ESMTP id S229833AbjCTVXI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 16:48:53 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6693AF0F
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 13:48:50 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3ddbf70d790so327611cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 13:48:50 -0700 (PDT)
+        Mon, 20 Mar 2023 17:23:08 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908542B289
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:23:03 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id y144-20020a253296000000b00b69ce0e6f2dso6027633yby.18
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 14:23:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679345330;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0iGj9gwcm4e4ac0NCSGO8171w0NDeoSnjyBfeexxjTo=;
-        b=GomZIKXsD6iYzuOydfHF7Vmd+/a2V5ldYR8Nc+H906JlSAkGrNW/aCrrn+jWPH74l4
-         le8ZJDTPI7d/OrLg4BFEvdt0iaTeKN6e/CNnty2h8rW7sDWYKk5GmN8DoP7epXQZjKGd
-         zBDqInSq3D5KL/4+eAMvClcwKo3onL3m9rUG1sIjrlPgiK107rc4QOInKrcqsP0+K2Sm
-         Iwgvo3iKQcW9TxKp/QFo39S9YtxuWk8YWLjkzBXOTTu+A9tC4Gk21hzAYyF8Taqv63EP
-         Nu5+dt9F1klOu6rBl+WSli0l8vnlqABd5wePDZ2s5jmer9uD9f462wVG/hOsBzXuAzGu
-         FU2A==
+        d=google.com; s=20210112; t=1679347383;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JoxCGzwoNxMNf6h7IxJDrhVxKGanKm4jEu+1jKn9MQ8=;
+        b=CC74bgqB7hmvyDaaA6d+wflRfoeN2vNIDQQcz3fxofwo98uyRZAz6t5P1wf7YO+ypZ
+         jK4KrXHXuSoMtGm9LhmNRevTl+Mc/u+dCvmozVhhsd8ZMID1Dn6JQjzYgAAyOdOtDpum
+         3N345h8cplcZeve6VBYbUfiyM7JQLeBt7rP8u/oMul1HScf21yiBGgcJiSIOki00OoM+
+         vIS4IWrVLSzhfzsmS5gmyWVJDe1t1Nt5kSoStPesNrT1et3vnmROQPnZO7RTWcdXVIpe
+         Zsja+k1+wqlfgxCOwClHEyyyJaVq1Lp2+d6nlu/8uIbg+N84X4I2mWYODimeDF7ywvlq
+         fhTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679345330;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0iGj9gwcm4e4ac0NCSGO8171w0NDeoSnjyBfeexxjTo=;
-        b=IcK/j339z0NtydznjlpT+/KeIcNrnxq1P7ZqcsHAwNJ/hm0KcPRpWwHD+lXHMdHaS8
-         rOuzm5fBFi6SCqALmkZ5dsIM9bWRp51qD9cr3aMxXJcNzffW4DXcSyVbkyozI7EXVl9G
-         vut50P2b5DVIomwlmAYz8Zsd22+yIOY5wZ2x/W7zUyBXuQBcdRaeuBaldZzh0DWDAYEl
-         b4nkfTVxf3NnNQ9pq+Qr+q/nHRSFPeqXp2SPg0pnTwg9mhtvt6/M9zdRnMKuhQhezyCU
-         NRyBhLnzBA/N2Y/8dXI6iqz/zGF4SrV/QbW47xtNXUDoY/S0SoGilyU/EgZP2Sriq2qF
-         6CYQ==
-X-Gm-Message-State: AO0yUKX69dXOh/smAUDCkoO/bk50k0rB8x7mz+/RjeahDeK2+NTfz1lD
-        mcf9Us21ihzPmFMsHx7hmp5pbYv0463Cs5RwAxHQBNxaPcPDvsYy/qjN7w==
-X-Google-Smtp-Source: AK7set/G9GbTxjCo4Pwsbe2Elo0X85937zZME0lUs/FSvigtRHGSnx6jYbVWcur4ZREWNa4Zz4O32o9PXllUVNM0u0o=
-X-Received: by 2002:a05:622a:170f:b0:3b9:f696:c759 with SMTP id
- h15-20020a05622a170f00b003b9f696c759mr132455qtk.10.1679345329601; Mon, 20 Mar
- 2023 13:48:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230320201841.1133-1-bwiedemann@suse.de>
-In-Reply-To: <20230320201841.1133-1-bwiedemann@suse.de>
+        d=1e100.net; s=20210112; t=1679347383;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JoxCGzwoNxMNf6h7IxJDrhVxKGanKm4jEu+1jKn9MQ8=;
+        b=KLjlg6aQGteOphFl/jWpfQfVINlsoLKBjLP1mDEkI/b0zGIkc2XsTwMsX/5zI4Smzq
+         vN0BcCCLk/rAfoM2E1+UJL+XOG4mthwx/OiZuRMAZoLh2HN2Ixgay+kazTaTaZDPmfhu
+         TWDetUcxOsC2FvmZUk8YO1pIsfch3gR/bkesebqu3hKI3xqWZUIrvW/miQJfGm5lAgGr
+         aGlpI9rBM77QSVZvTKjbumci274ndNKu3r1t+SuoPZLY0/VOJClcbr2CqzuJkGHJEeGd
+         qfjkKNUj5WGy2hRf0Y93/XMN1P8IViFGI4ctRCbvUfWV9RAopgnH35HJ2knCynKY2uc9
+         gA7w==
+X-Gm-Message-State: AO0yUKVJMAhpZo8vEzpv9vq15Khi+/zRS7ddkeGBzMsrqJNDWrK3Uzgx
+        IbOjpz/cr2geIv6l5LhJohftWeGtKSyv
+X-Google-Smtp-Source: AK7set/TFRMgMsJrgMOU62LHw53sX046VvQ/XtYiYHjkklzkotQh3bP9yhFAoBKoubK1Ei21d3RNjXU+M5XO
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a30f:d1e2:fcd8:aa4d])
+ (user=irogers job=sendgmr) by 2002:a81:a783:0:b0:545:1d7f:ac7a with SMTP id
+ e125-20020a81a783000000b005451d7fac7amr2489989ywh.7.1679347382744; Mon, 20
+ Mar 2023 14:23:02 -0700 (PDT)
+Date:   Mon, 20 Mar 2023 14:22:31 -0700
+Message-Id: <20230320212248.1175731-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+Subject: [PATCH v5 00/17] Reference count checker and related fixes
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 20 Mar 2023 13:48:38 -0700
-Message-ID: <CAP-5=fUGbT8=spY=e6NPJvf_+Ct6VksFzWM6Eybf=gst_J=Xmw@mail.gmail.com>
-Subject: Re: [PATCH] perf jevents: Sort list of input files
-To:     "Bernhard M. Wiedemann" <bwiedemann@suse.de>,
-        Ben Hutchings <benh@debian.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Hao Luo <haoluo@google.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 1:19=E2=80=AFPM Bernhard M. Wiedemann
-<bwiedemann@suse.de> wrote:
->
-> Without this, pmu-events.c would be generated with variations in ordering
-> depending on non-deterministic filesystem readdir order.
->
-> I tested that pmu-events.c still has the same number of lines
-> and that perf list output works.
->
-> This patch was done while working on reproducible builds for openSUSE,
-> but also solves issues in Debian [1] and other distributions.
->
-> [1] https://tests.reproducible-builds.org/debian/rb-pkg/unstable/i386/lin=
-ux.html
->
-> Signed-off-by: Bernhard M. Wiedemann <bwiedemann@suse.de>
-> CC: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/pmu-events/jevents.py | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
+The perf tool has a class of memory problems where reference counts
+are used incorrectly. Memory/address sanitizers and valgrind don't
+provide useful ways to debug these problems, you see a memory leak
+where the only pertinent information is the original allocation
+site. What would be more useful is knowing where a get fails to have a
+corresponding put, where there are double puts, etc.
 
-Thanks Bernhard,
+This work was motivated by the roll-back of:
+https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
+where fixing a missed put resulted in a use-after-free in a different
+context. There was a sense in fixing the issue that a game of
+wac-a-mole had been embarked upon in adding missed gets and puts.
 
-I think this may already be addressed by sorting prior to output:
-https://lore.kernel.org/r/20220812230949.683239-5-irogers@google.com
+The basic approach of the change is to add a level of indirection at
+the get and put calls. Get allocates a level of indirection that, if
+no corresponding put is called, becomes a memory leak (and associated
+stack trace) that leak sanitizer can report. Similarly if two puts are
+called for the same get, then a double free can be detected by address
+sanitizer. This can also detect the use after put, which should also
+yield a segv without a sanitizer.
 
-Could you confirm?
+Adding reference count checking to cpu map was done as a proof of
+concept, it yielded little other than a location where the use of get
+could be cleaner by using its result. Reference count checking on
+nsinfo identified a double free of the indirection layer and the
+related threads, thereby identifying a data race as discussed here:
+ https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
+Accordingly the dso->lock was extended and use to cover the race.
 
-Thanks,
-Ian
+The v3 version addresses problems in v2, in particular using macros to
+avoid #ifdefs. The v3 version applies the reference count checking
+approach to two more data structures, maps and map. While maps was
+straightforward, struct map showed a problem where reference counted
+thing can be on lists and rb-trees that are oblivious to the
+reference count. To sanitize this, struct map is changed so that it is
+referenced by either a list or rb-tree node and not part of it. This
+simplifies the reference count and the patches have caught and fixed a
+number of missed or mismatched reference counts relating to struct
+map.
 
->
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 2bcd07ce609f..f06e1abac7c7 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -381,10 +381,13 @@ def read_json_events(path: str, topic: str) -> Sequ=
-ence[JsonEvent]:
->
->    return events
->
-> +def sorted_scandir(path: str) -> list[os.DirEntry]:
-> +  return sorted(os.scandir(path), key=3Dlambda e: e.name)
-> +
->  def preprocess_arch_std_files(archpath: str) -> None:
->    """Read in all architecture standard events."""
->    global _arch_std_events
-> -  for item in os.scandir(archpath):
-> +  for item in sorted_scandir(archpath):
->      if item.is_file() and item.name.endswith('.json'):
->        for event in read_json_events(item.path, topic=3D''):
->          if event.name:
-> @@ -497,7 +500,7 @@ def preprocess_one_file(parents: Sequence[str], item:=
- os.DirEntry) -> None:
->  def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
->    """Process a JSON file during the main walk."""
->    def is_leaf_dir(path: str) -> bool:
-> -    for item in os.scandir(path):
-> +    for item in sorted_scandir(path):
->        if item.is_dir():
->          return False
->      return True
-> @@ -889,7 +892,7 @@ def main() -> None:
->    def ftw(path: str, parents: Sequence[str],
->            action: Callable[[Sequence[str], os.DirEntry], None]) -> None:
->      """Replicate the directory/file walking behavior of C's file tree wa=
-lk."""
-> -    for item in os.scandir(path):
-> +    for item in sorted_scandir(path):
->        if _args.model !=3D 'all' and item.is_dir():
->          # Check if the model matches one in _args.model.
->          if len(parents) =3D=3D _args.model.split(',')[0].count('/'):
-> @@ -930,7 +933,7 @@ struct compact_pmu_event {
->
->  """)
->    archs =3D []
-> -  for item in os.scandir(_args.starting_dir):
-> +  for item in sorted_scandir(_args.starting_dir):
->      if not item.is_dir():
->        continue
->      if item.name =3D=3D _args.arch or _args.arch =3D=3D 'all' or item.na=
-me =3D=3D 'test':
-> --
-> 2.35.3
->
+The patches are arranged so that API refactors and bug fixes appear
+first, then the reference count checker itself appears. This allows
+for the refactor and fixes to be applied upstream first, as has
+already happened with cpumap.
+
+A wider discussion of the approach is on the mailing list:
+ https://lore.kernel.org/linux-perf-users/YffqnynWcc5oFkI5@kernel.org/T/#mf25ccd7a2e03de92cec29d36e2999a8ab5ec7f88
+Comparing it to a past approach:
+ https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.localdomain/
+and to ref_tracker:
+ https://lwn.net/Articles/877603/
+
+v5. rebase removing 5 merged changes. Add map_list_node__new to the
+    1st patch (perf map: Move map list node into symbol) as suggested
+    by Arnaldo. Remove unnecessary map__puts from patch 12 (perf map:
+    Changes to reference counting) as suggested by Adrian. A summary
+    of the sizes of the remaining patches is:
+74fd7ffafdd0 perf map: Add reference count checking
+ 12 files changed, 136 insertions(+), 114 deletions(-)
+4719196db8d3 perf maps: Add reference count checking.
+ 8 files changed, 64 insertions(+), 56 deletions(-)
+03943e7594cf perf namespaces: Add reference count checking
+ 7 files changed, 83 insertions(+), 62 deletions(-)
+0bb382cc52d7 perf cpumap: Add reference count checking
+ 6 files changed, 81 insertions(+), 71 deletions(-)
+ef39f550c40d libperf: Add reference count checking macros.
+ 1 file changed, 94 insertions(+)
+d9ac37c750e0 perf map: Changes to reference counting
+ 11 files changed, 112 insertions(+), 44 deletions(-)
+476014bc9b55 perf maps: Modify maps_by_name to hold a reference to a map
+ 2 files changed, 33 insertions(+), 18 deletions(-)
+91384676fddd perf test: Add extra diagnostics to maps test
+ 1 file changed, 36 insertions(+), 15 deletions(-)
+fdc30434f826 perf map: Add accessors for pgoff and reloc
+ 9 files changed, 33 insertions(+), 23 deletions(-)
+368fe015adb2 perf map: Add accessors for prot, priv and flags
+ 6 files changed, 28 insertions(+), 12 deletions(-)
+2c6a8169826a perf map: Add helper for map_ip and unmap_ip
+ 23 files changed, 80 insertions(+), 65 deletions(-)
+929e59d49f4b perf map: Rename map_ip and unmap_ip
+ 6 files changed, 13 insertions(+), 13 deletions(-)
+4a38194aaaf5 perf map: Add accessor for start and end
+ 24 files changed, 114 insertions(+), 103 deletions(-)
+02b63e5c415e perf map: Add accessor for dso
+ 48 files changed, 404 insertions(+), 293 deletions(-)
+9324af6ccf42 perf maps: Add functions to access maps
+ 20 files changed, 175 insertions(+), 111 deletions(-)
+5c590d36a308 perf maps: Remove rb_node from struct map
+ 16 files changed, 291 insertions(+), 184 deletions(-)
+af1d142eb777 perf map: Move map list node into symbol
+ 2 files changed, 63 insertions(+), 35 deletions(-)
+ 
+v4. rebases on to acme's perf-tools-next, fixes more issues with
+    map/maps and breaks apart the accessor functions to reduce
+    individual patch sizes. The accessor functions are mechanical
+    changes where the single biggest one is refactoring use of
+    map->dso to be map__dso(map).
+
+The v3 change is available here:
+https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.com/
+
+Ian Rogers (17):
+  perf map: Move map list node into symbol
+  perf maps: Remove rb_node from struct map
+  perf maps: Add functions to access maps
+  perf map: Add accessor for dso
+  perf map: Add accessor for start and end
+  perf map: Rename map_ip and unmap_ip
+  perf map: Add helper for map_ip and unmap_ip
+  perf map: Add accessors for prot, priv and flags
+  perf map: Add accessors for pgoff and reloc
+  perf test: Add extra diagnostics to maps test
+  perf maps: Modify maps_by_name to hold a reference to a map
+  perf map: Changes to reference counting
+  libperf: Add reference count checking macros.
+  perf cpumap: Add reference count checking
+  perf namespaces: Add reference count checking
+  perf maps: Add reference count checking.
+  perf map: Add reference count checking
+
+ tools/lib/perf/Makefile                       |   2 +-
+ tools/lib/perf/cpumap.c                       |  94 ++---
+ tools/lib/perf/include/internal/cpumap.h      |   4 +-
+ tools/lib/perf/include/internal/rc_check.h    |  94 +++++
+ tools/perf/arch/s390/annotate/instructions.c  |   4 +-
+ tools/perf/arch/x86/tests/dwarf-unwind.c      |   2 +-
+ tools/perf/arch/x86/util/event.c              |  13 +-
+ tools/perf/builtin-annotate.c                 |  11 +-
+ tools/perf/builtin-buildid-list.c             |   4 +-
+ tools/perf/builtin-inject.c                   |  12 +-
+ tools/perf/builtin-kallsyms.c                 |   6 +-
+ tools/perf/builtin-kmem.c                     |   4 +-
+ tools/perf/builtin-lock.c                     |   4 +-
+ tools/perf/builtin-mem.c                      |  10 +-
+ tools/perf/builtin-report.c                   |  26 +-
+ tools/perf/builtin-script.c                   |  27 +-
+ tools/perf/builtin-top.c                      |  17 +-
+ tools/perf/builtin-trace.c                    |   2 +-
+ .../scripts/python/Perf-Trace-Util/Context.c  |  13 +-
+ tools/perf/tests/code-reading.c               |  37 +-
+ tools/perf/tests/cpumap.c                     |   4 +-
+ tools/perf/tests/hists_common.c               |   8 +-
+ tools/perf/tests/hists_cumulate.c             |  14 +-
+ tools/perf/tests/hists_filter.c               |  14 +-
+ tools/perf/tests/hists_link.c                 |  18 +-
+ tools/perf/tests/hists_output.c               |  12 +-
+ tools/perf/tests/maps.c                       |  69 ++--
+ tools/perf/tests/mmap-thread-lookup.c         |   3 +-
+ tools/perf/tests/symbols.c                    |   6 +-
+ tools/perf/tests/thread-maps-share.c          |  29 +-
+ tools/perf/tests/vmlinux-kallsyms.c           |  54 +--
+ tools/perf/ui/browsers/annotate.c             |   9 +-
+ tools/perf/ui/browsers/hists.c                |  19 +-
+ tools/perf/ui/browsers/map.c                  |   4 +-
+ tools/perf/util/annotate.c                    |  40 ++-
+ tools/perf/util/auxtrace.c                    |   2 +-
+ tools/perf/util/block-info.c                  |   4 +-
+ tools/perf/util/bpf-event.c                   |  10 +-
+ tools/perf/util/bpf_lock_contention.c         |   6 +-
+ tools/perf/util/build-id.c                    |   2 +-
+ tools/perf/util/callchain.c                   |  24 +-
+ tools/perf/util/cpumap.c                      |  40 ++-
+ tools/perf/util/data-convert-json.c           |  10 +-
+ tools/perf/util/db-export.c                   |  16 +-
+ tools/perf/util/dlfilter.c                    |  28 +-
+ tools/perf/util/dso.c                         |   8 +-
+ tools/perf/util/dsos.c                        |   2 +-
+ tools/perf/util/event.c                       |  27 +-
+ tools/perf/util/evsel_fprintf.c               |   4 +-
+ tools/perf/util/hist.c                        |  22 +-
+ tools/perf/util/intel-pt.c                    |  63 ++--
+ tools/perf/util/machine.c                     | 252 ++++++++------
+ tools/perf/util/map.c                         | 217 ++++++------
+ tools/perf/util/map.h                         |  74 +++-
+ tools/perf/util/maps.c                        | 318 ++++++++++-------
+ tools/perf/util/maps.h                        |  67 +++-
+ tools/perf/util/namespaces.c                  | 132 +++++---
+ tools/perf/util/namespaces.h                  |   3 +-
+ tools/perf/util/pmu.c                         |   8 +-
+ tools/perf/util/probe-event.c                 |  62 ++--
+ .../util/scripting-engines/trace-event-perl.c |  10 +-
+ .../scripting-engines/trace-event-python.c    |  26 +-
+ tools/perf/util/sort.c                        |  67 ++--
+ tools/perf/util/symbol-elf.c                  |  41 ++-
+ tools/perf/util/symbol.c                      | 320 +++++++++++-------
+ tools/perf/util/symbol_fprintf.c              |   2 +-
+ tools/perf/util/synthetic-events.c            |  34 +-
+ tools/perf/util/thread-stack.c                |   4 +-
+ tools/perf/util/thread.c                      |  39 +--
+ tools/perf/util/unwind-libdw.c                |  20 +-
+ tools/perf/util/unwind-libunwind-local.c      |  16 +-
+ tools/perf/util/unwind-libunwind.c            |  33 +-
+ tools/perf/util/vdso.c                        |   7 +-
+ 73 files changed, 1665 insertions(+), 1044 deletions(-)
+ create mode 100644 tools/lib/perf/include/internal/rc_check.h
+
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
+
