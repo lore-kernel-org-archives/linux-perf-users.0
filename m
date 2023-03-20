@@ -2,137 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7759AC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 17:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A9AC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 18:29:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230222AbjCTR6M (ORCPT
+        id S231136AbjCTS3T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 13:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
+        Mon, 20 Mar 2023 14:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjCTR5p (ORCPT
+        with ESMTP id S230506AbjCTS3A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 13:57:45 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D94C3524D
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 10:52:38 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3e0965f70ecso201571cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 10:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679334671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N73sqeWtcmiMT11zk6Xguucktfja74ge8kCnKLo8Z3g=;
-        b=JoAClhnDEoJsOhMwe4R3A3SZCW9sDQ5iYxrpSGAHufIciA1FL1Fu8v4ZR0dItI3jqp
-         QO5eDZTh/yObIEY016SdvROxbKuPQyQsAHb5vVJmGRplmy1xQgVPD0UZGsu7H+/ZhEkk
-         ikytFEf9CmEHx2Kx++cL3z0HL07mH8uvUgtscoGH7kanoIxEU1VWWDJpRS2D7X2QnR8d
-         LcV6E9C0knWaKIVUrFNY/n0q13oEknUePQzGSq5crtVhtAhL2u5NlR83nfu+DMVnUeNk
-         cQbcEpnDACeiYR0nJCsuw1BQnY9mx/yZJmHsAdDJIEV8XeAgPYlDV8dQnP9K2SxH4ml8
-         7r3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679334671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N73sqeWtcmiMT11zk6Xguucktfja74ge8kCnKLo8Z3g=;
-        b=6j1BfNFG2v0BuJ+0HYXqKcr2Q1t8l0/M8mERy2DXEJOnjYA30fvpxLWwnWkTi120Pj
-         DXh7JG2IedJaIVFvbf7yGeT7CCDqkwjYO24Sg3hmzhUuBZBuAl3mxKsMrD8EkUAwLFSr
-         dZLxcmJvKNRdlUcKoAT/A9iAfS6OXdHH/3BAgx+SYNoqdxrUWAaWxkSOy3Or28LUvgGw
-         yvQuFRI+3ti104lMF13SOMo+bWv+jVQD3HIMqh3ixit3eT8gc9vYrs8uNtf9P9B/Otuq
-         qCkkTQ+D+y7113svKGPBDCSghU+kZ+o0SwxfOJH2kMAIYyP4nYMf+haZor9CxE8wZx9q
-         FekQ==
-X-Gm-Message-State: AO0yUKUIn5RWRcwsxfAjZ3MHYiNdCYhkrk1oh9CU5T7dUtlJ3mbs8xZv
-        wGHAJnkroTKtK5RZooUmrV9zAtnTlv/5Q8g3z/JGZZNNeQqRfqiw2U4etA==
-X-Google-Smtp-Source: AK7set8xoH+ERmG9f0Rp3Mohcu4SaYNCUDnLF6OBvXBKzCJI6SY5u8RMK6lG77DVgaf4qy+IOQp7a6aRVcLjtVZZcLM=
-X-Received: by 2002:a05:622a:8:b0:3d4:1f4a:3b52 with SMTP id
- x8-20020a05622a000800b003d41f4a3b52mr12922qtw.6.1679334670611; Mon, 20 Mar
- 2023 10:51:10 -0700 (PDT)
+        Mon, 20 Mar 2023 14:29:00 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99389AD25;
+        Mon, 20 Mar 2023 11:21:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 43B38B80E6B;
+        Mon, 20 Mar 2023 18:21:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07ACDC4339C;
+        Mon, 20 Mar 2023 18:21:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679336483;
+        bh=90Js5AXKAuYFcX6gyojlhCPyfPNMYTsfiXawUSspkjQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nFB6ZtkrHJ98/KzRB+ukoV03uculXitgCJB5bL1y2j5b2PXCRVU8czdtKvQeQ9WFW
+         EmfdiXHNRIcKQdBx8Zxce/xHPlJThb1sh3vxhVdxeSZ04AD/R9IDUAB7HPoMwZDn/p
+         mLdBgznbugfq8pqdIVq7LgRwD3oz9ynpd+SHi/Sz1rYhkK+8qfrzDS+5WwBHnZGE11
+         r9RqAkCtNF2vfrDiIfjirYhi0xe8c3uXW6HkqXxMH1P3U3Q4sYoreWBWvO/yXyv02I
+         1KlkDdenat45WWzcult4Q463clJ4KJGlqykH1KhNoeKCE0x0MnT+b/diLdTEM4xstG
+         HXWMjz5NRo/5w==
+Received: by mail-ua1-f42.google.com with SMTP id g9so4071756uam.9;
+        Mon, 20 Mar 2023 11:21:22 -0700 (PDT)
+X-Gm-Message-State: AO0yUKVeV2yoIdPg1ld6eA+PJ8JhleJBjFXWh5otIJDVh+HZ9jYs0erG
+        8G0yP/nsG1u0D+Ch32ai2rAFnrbBzYuiqA5Tbg==
+X-Google-Smtp-Source: AK7set/OvN8aYUC9NkIqrZpBU3dUWhruxYt0hxPWmbNFknRenQlNBhAulaCUdwLMAukgz53ZrJzUKQftgDPBPI5Ok4E=
+X-Received: by 2002:a1f:2982:0:b0:401:8898:ea44 with SMTP id
+ p124-20020a1f2982000000b004018898ea44mr149758vkp.3.1679336481957; Mon, 20 Mar
+ 2023 11:21:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230320151509.1137462-1-james.clark@arm.com>
-In-Reply-To: <20230320151509.1137462-1-james.clark@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 20 Mar 2023 10:50:59 -0700
-Message-ID: <CAP-5=fUz_u8BODDn3OK5hh9xSbXbMZU0fiCJUdpoS3AFQGQ9GA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Enable display of partial and empty SVE predicates
- from Arm SPE data
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, Anshuman.Khandual@arm.com,
-        Peter Zijlstra <peterz@infradead.org>,
+References: <20220914-arm-perf-tool-spe1-2-v2-v5-0-2cf5210b2f77@kernel.org>
+ <20220914-arm-perf-tool-spe1-2-v2-v5-1-2cf5210b2f77@kernel.org> <Y/DQ7Y+FD4cMn29J@kernel.org>
+In-Reply-To: <Y/DQ7Y+FD4cMn29J@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 20 Mar 2023 13:21:10 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLD_P1X1+vKODgZP1vaie2+c__X_HM8kWWzSb7PxZqZew@mail.gmail.com>
+Message-ID: <CAL_JsqLD_P1X1+vKODgZP1vaie2+c__X_HM8kWWzSb7PxZqZew@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] perf tools: Sync perf_event_attr::config3 addition
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 8:15=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On Sat, Feb 18, 2023 at 7:21=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Changes since v1:
->  * Rebase onto perf/core because it no longer applied cleanly
+> Em Fri, Feb 17, 2023 at 04:32:10PM -0600, Rob Herring escreveu:
+> > Arm SPEv1.2 adds another 64-bits of event filtering control. As the
+> > existing perf_event_attr::configN fields are all used up for SPE PMU, a=
+n
+> > additional field is needed. Add a new 'config3' field.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > This matches commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
+> > for the kernel queued in linux-next.
 >
-> ------------
+> When you mention linux-next where was it that it picked this from?
 >
-> Hi,
+> For me to get this merged into the perf tools "next" (perf/core) it must
+> already have been merged in the kernel counterpart (tip/perf/core).
 >
-> I'm submitting this on behalf of German who moved on to work on other
-> things in Arm before he could finish it off.
->
-> The predicate information is available on SPE samples from
-> Armv8.3 (FEAT_SPEv1p1), this could be useful info for profiling SVE
-> code as partial and empty predicates indicate that the full vector
-> width isn't being used. There is a good example in the last commit
-> message.
->
-> Though currently, there isn't a suitable field to store the info
-> on Perf samples, so this change also adds a new SIMD field.
-> This field could be used by other architectures, but currently there
-> is only one bit reserved to identify SVE. It's only added to
-> struct perf_sample on the userspace side, and isn't part of the kernel
-> ABI, so it doesn't survive a perf inject. Although this is the
-> same behavior for some other fields like branch flags, so I don't
-> think it should be an issue to do something similar here. Perhaps in
-> the future we could make sure everything that is synthesised from
-> auxtrace data also makes it back into the new Perf inject file without
-> being lost.
+> Ok so it is not in tip/perf/core, but got in next yesterday, and PeterZ
+> acked it, good, will process it soon.
 
-Series:
-Acked-by: Ian Rogers <irogers@google.com>
+Hi Arnaldo, Are you going to apply this or are you expecting something from=
+ me?
 
-Thanks,
-Ian
-
-> German Gomez (4):
->   perf event: Add simd_flags field to perf_sample
->   perf arm-spe: Refactor arm-spe to support operation packet type
->   perf arm-spe: Add SVE flags to the SPE samples
->   perf report: Add 'simd' sort field
->
->  tools/perf/Documentation/perf-report.txt      |  1 +
->  .../util/arm-spe-decoder/arm-spe-decoder.c    | 30 ++++++++++--
->  .../util/arm-spe-decoder/arm-spe-decoder.h    | 47 +++++++++++++++----
->  tools/perf/util/arm-spe.c                     | 28 +++++++++--
->  tools/perf/util/hist.c                        |  1 +
->  tools/perf/util/hist.h                        |  1 +
->  tools/perf/util/sample.h                      | 13 +++++
->  tools/perf/util/sort.c                        | 47 +++++++++++++++++++
->  tools/perf/util/sort.h                        |  2 +
->  9 files changed, 152 insertions(+), 18 deletions(-)
->
->
-> base-commit: 96d541699e5c50b1bc2d50c83cd7145994d5f071
-> --
-> 2.34.1
->
+Rob
