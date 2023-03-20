@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907B0C7618A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 03:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B9CC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 03:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbjCTDij (ORCPT
+        id S229757AbjCTDiy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 19 Mar 2023 23:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35004 "EHLO
+        Sun, 19 Mar 2023 23:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbjCTDih (ORCPT
+        with ESMTP id S229733AbjCTDiv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 19 Mar 2023 23:38:37 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23669113D4
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:38:35 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 204-20020a2514d5000000b00a3637aea9e1so11872279ybu.17
-        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:38:35 -0700 (PDT)
+        Sun, 19 Mar 2023 23:38:51 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0FB2203E
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:38:46 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-536cb268ab8so110664127b3.17
+        for <linux-perf-users@vger.kernel.org>; Sun, 19 Mar 2023 20:38:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679283514;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lEZYqTvAXtJtxMDl8FDOj3xVdVn2rBr2WTRC9CD3FD4=;
-        b=KFItMDuePrfwDcnb1SmdlpjX8taeFZPACRXcf15WX7MqLcnAJlyKa9KmGXj1Yzgmtk
-         eqWVLKwVu9twVUm1fNYgZ8Ekl7xFzAysVN7/VvufpyL+WorUE15pPj00TCmZx8NEUsWv
-         E+oiV+2W/Wa4UAHxlnsYcMol+hWAVT8cazSWCH4xjhSyf4bQFcuWLNIjLXgGDGzri2dO
-         PHo+RGR3s8+jUsI307wlqZJNu/S+xEY95joHun7MWI7ab0p1NUShBIIbHmn89rBUVNpl
-         QcRVvKiDDMUoP2tUHFWmMeUTJiqlRI1hO3TLjRxxy7FhjO3MjTk6VnYifSm0qBBHsrBo
-         sIFQ==
+        d=google.com; s=20210112; t=1679283525;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=viZfwPvf0caSxtFGqLDwlsYO52BarmzoWX8M5eoZoBk=;
+        b=OrtovnaInILlCIRf6L7NJjDGfa5k9Acce0mhfYh+s2Wus1VqddW29oleoAHbBhIYMW
+         CLvXLUKZdLagltpnwPsXblMivLI1AhDXqhqEcM2yE+7p7ApY/HG4ppObxPG8d3YwOiv8
+         dflRvDhpHRs4mqPmCyGWkPo4ZkqxvbKa1DJk6JP2BdaS5UUsqWwJPNWzHj5HDtWlvRe8
+         xeBVg7JpyIWD9gZA+mLvpjfG2mbGsaCsa/Dw+5Xj2zgu5SidlZpOPFoXoVplKR0O+i8L
+         XwkrQFXf2VtuRN9zTLijz4IxotpxF1jgCM7/+p1HQW4tD/vzxBewwT1c4opH5TBvo3Hv
+         DdxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679283514;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lEZYqTvAXtJtxMDl8FDOj3xVdVn2rBr2WTRC9CD3FD4=;
-        b=anwn0Mo7ArXY4mQYl4Q/3RRaHagpjW19uxbTVzTj1mPzCK6vFq0Mh7Xils7Z0PndEO
-         6buTwtS6ZWjULYxfdnvbz/wywnle7Q0ADfZMs+nxIpBpVCcg2xEp3iSFNGw0zhMZAf6+
-         JclVXBmzS2I7e7TDw9GZU1lWXhv/PU1nNScqyiw86qwb3vPyHPucCdl14wrAc1vxw2gK
-         QLfJ4mCWMj/nKgFZvDNAopIBsw8jIZbqh3tgazB+W3HnAD8tQ2mYVYyzBoK1JBJmMXKP
-         /3n8btd/AkLIRWPyIbDPZITLuzaFMkBFtj9Kk00Jyc7SOnBcsogh2MNewKRWqm1Waj3A
-         ndVA==
-X-Gm-Message-State: AO0yUKU9UO8v2DDtkkdlIBvT3HEhOFlIdhO0RcmNlQKfymt8iISQGsHr
-        eOGaaEpVvTQjR/JobeeXzX+OeYSQVKQ2
-X-Google-Smtp-Source: AK7set9GQPL6P42ccI2PNSi17+UzRDe7MRmYUnCtluB0ZBEOKulpbRg3LrtW/zlgiUMlOipWp+RB2uzm8GM2
+        d=1e100.net; s=20210112; t=1679283525;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=viZfwPvf0caSxtFGqLDwlsYO52BarmzoWX8M5eoZoBk=;
+        b=Ru91UthZwQNzlyKX/51q0h20MzsvNZXOpycSq8Bns/nYYh80+vvhuORw9DCpX/trbn
+         uNz0Y4mFZqHF22UuS5na2X3zcTPT6fR7LkNjKTnWdVazJxbadpNrTPxRmAyT5XuaoWBa
+         iED+C+UIHdfMhLSQDA7YThmXtPL9wH3RaXwc9ErSWmxrzkymH33MUvDuBmJnHK9ggFH1
+         EUtLFnMnVE63EdlAe9kqV5bO8y5tkOZVEUNKMCuTvN/GklHHwSlV60SAuh4e64VNmAf5
+         E8HvIQPfcK/vRVGnSuS2tw7Njahz3Q9oL8Pt7BZRLqQDG8JdcS94V7ozifN8VtNuEfHo
+         cJwA==
+X-Gm-Message-State: AO0yUKVkdhQlLwytvpoC8xktlkoVBWuqjpd8oLacoVVvKqMG8S3ibYMr
+        zlpfrz8paw2/P21oElRg+a6zv4+C3zd7
+X-Google-Smtp-Source: AK7set9HA6GCjS7rQXIB5sBheW9QzDYpHx1Wud7NltgUnVFzU4bZ2gsYo7N/ovZdaIdTTmaYEv6lK0iOD5xj
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:1895:9fa0:27f5:cb71])
- (user=irogers job=sendgmr) by 2002:a05:6902:114b:b0:b09:6f3d:ea1f with SMTP
- id p11-20020a056902114b00b00b096f3dea1fmr4617820ybu.4.1679283514323; Sun, 19
- Mar 2023 20:38:34 -0700 (PDT)
-Date:   Sun, 19 Mar 2023 20:37:48 -0700
-Message-Id: <20230320033810.980165-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:1002:b0:a27:3ecc:ffe7 with SMTP
+ id w2-20020a056902100200b00a273eccffe7mr4343205ybt.3.1679283525119; Sun, 19
+ Mar 2023 20:38:45 -0700 (PDT)
+Date:   Sun, 19 Mar 2023 20:37:49 -0700
+In-Reply-To: <20230320033810.980165-1-irogers@google.com>
+Message-Id: <20230320033810.980165-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230320033810.980165-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Subject: [PATCH v4 00/22] Reference count checker and related fixes
+Subject: [PATCH v4 01/22] perf symbol: Avoid memory leak from abi::__cxa_demangle
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -94,215 +96,34 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The perf tool has a class of memory problems where reference counts
-are used incorrectly. Memory/address sanitizers and valgrind don't
-provide useful ways to debug these problems, you see a memory leak
-where the only pertinent information is the original allocation
-site. What would be more useful is knowing where a get fails to have a
-corresponding put, where there are double puts, etc.
+Rather than allocate memory, allow abi::__cxa_demangle to do
+that. This avoids a problem where on error NULL was returned
+triggering a memory leak.
 
-This work was motivated by the roll-back of:
-https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers@google.com/
-where fixing a missed put resulted in a use-after-free in a different
-context. There was a sense in fixing the issue that a game of
-wac-a-mole had been embarked upon in adding missed gets and puts.
-
-The basic approach of the change is to add a level of indirection at
-the get and put calls. Get allocates a level of indirection that, if
-no corresponding put is called, becomes a memory leak (and associated
-stack trace) that leak sanitizer can report. Similarly if two puts are
-called for the same get, then a double free can be detected by address
-sanitizer. This can also detect the use after put, which should also
-yield a segv without a sanitizer.
-
-Adding reference count checking to cpu map was done as a proof of
-concept, it yielded little other than a location where the use of get
-could be cleaner by using its result. Reference count checking on
-nsinfo identified a double free of the indirection layer and the
-related threads, thereby identifying a data race as discussed here:
- https://lore.kernel.org/linux-perf-users/CAP-5=fWZH20L4kv-BwVtGLwR=Em3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
-Accordingly the dso->lock was extended and use to cover the race.
-
-The v3 version addresses problems in v2, in particular using macros to
-avoid #ifdefs. The v3 version applies the reference count checking
-approach to two more data structures, maps and map. While maps was
-straightforward, struct map showed a problem where reference counted
-thing can be on lists and rb-trees that are oblivious to the
-reference count. To sanitize this, struct map is changed so that it is
-referenced by either a list or rb-tree node and not part of it. This
-simplifies the reference count and the patches have caught and fixed a
-number of missed or mismatched reference counts relating to struct
-map.
-
-The patches are arranged so that API refactors and bug fixes appear
-first, then the reference count checker itself appears. This allows
-for the refactor and fixes to be applied upstream first, as has
-already happened with cpumap.
-
-A wider discussion of the approach is on the mailing list:
- https://lore.kernel.org/linux-perf-users/YffqnynWcc5oFkI5@kernel.org/T/#mf25ccd7a2e03de92cec29d36e2999a8ab5ec7f88
-Comparing it to a past approach:
- https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.localdomain/
-and to ref_tracker:
- https://lwn.net/Articles/877603/
-
-v4. rebases on to acme's perf-tools-next, fixes more issues with
-    map/maps and breaks apart the accessor functions to reduce
-    individual patch sizes. The accessor functions are mechanical
-    changes where the single biggest one is refactoring use of
-    map->dso to be map__dso(map). A summary of the sizes of each patch
-    is:
-
-92e1b65b136b perf map: Add reference count checking
- 12 files changed, 136 insertions(+), 114 deletions(-)
-7fef12ca75a1 perf maps: Add reference count checking.
- 8 files changed, 64 insertions(+), 56 deletions(-)
-1a57842b86fd perf namespaces: Add reference count checking
- 7 files changed, 83 insertions(+), 62 deletions(-)
-6e50b206b364 perf cpumap: Add reference count checking
- 6 files changed, 81 insertions(+), 71 deletions(-)
-d64ebe641edd libperf: Add reference count checking macros.
- 1 file changed, 94 insertions(+)
-e0c3f6d95483 perf map: Changes to reference counting
- 11 files changed, 114 insertions(+), 44 deletions(-)
-d34755aef532 perf maps: Modify maps_by_name to hold a reference to a map
- 2 files changed, 33 insertions(+), 18 deletions(-)
-24c5eb40b0b4 perf test: Add extra diagnostics to maps test
- 1 file changed, 36 insertions(+), 15 deletions(-)
-1f1540178acf perf map: Add accessors for pgoff and reloc
- 9 files changed, 33 insertions(+), 23 deletions(-)
-a9f0c85f6269 perf map: Add accessors for prot, priv and flags
- 6 files changed, 28 insertions(+), 12 deletions(-)
-ee07e4fbbf8f perf map: Add helper for map_ip and unmap_ip
- 23 files changed, 80 insertions(+), 65 deletions(-)
-a2ff37e2d9c1 perf map: Rename map_ip and unmap_ip
- 6 files changed, 13 insertions(+), 13 deletions(-)
-285214010556 perf map: Add accessor for start and end
- 24 files changed, 114 insertions(+), 103 deletions(-)
-bcd608c93c81 perf map: Add accessor for dso
- 48 files changed, 404 insertions(+), 293 deletions(-)
-d921b7cb8254 perf maps: Add functions to access maps
- 20 files changed, 175 insertions(+), 111 deletions(-)
-3909794aab1c perf maps: Remove rb_node from struct map
- 16 files changed, 291 insertions(+), 184 deletions(-)
-c202320ec659 perf map: Move map list node into symbol
- 2 files changed, 60 insertions(+), 35 deletions(-)
-5f0c2abb3f6b perf symbol: Sort names under write lock
- 1 file changed, 7 insertions(+)
-38c930af7ecb perf test: Fix memory leak in symbols
- 1 file changed, 1 insertion(+)
-144f31b33eff perf tests: Add common error route for code-reading
- 1 file changed, 23 insertions(+), 16 deletions(-)
-d043380916fb perf bpf_counter: Use public cpumap accessors
- 1 file changed, 3 insertions(+), 3 deletions(-)
-08d8e5dd2277 perf symbol: Avoid memory leak from abi::__cxa_demangle
+Fixes: 3b4e4efe88f6 ("perf symbol: Add abi::__cxa_demangle C++ demangling support")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/demangle-cxx.cpp | 5 ++---
  1 file changed, 2 insertions(+), 3 deletions(-)
 
-The v3 change is available here:
-https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.com/
-
-Ian Rogers (22):
-  perf symbol: Avoid memory leak from abi::__cxa_demangle
-  perf bpf_counter: Use public cpumap accessors
-  perf tests: Add common error route for code-reading
-  perf test: Fix memory leak in symbols
-  perf symbol: Sort names under write lock
-  perf map: Move map list node into symbol
-  perf maps: Remove rb_node from struct map
-  perf maps: Add functions to access maps
-  perf map: Add accessor for dso
-  perf map: Add accessor for start and end
-  perf map: Rename map_ip and unmap_ip
-  perf map: Add helper for map_ip and unmap_ip
-  perf map: Add accessors for prot, priv and flags
-  perf map: Add accessors for pgoff and reloc
-  perf test: Add extra diagnostics to maps test
-  perf maps: Modify maps_by_name to hold a reference to a map
-  perf map: Changes to reference counting
-  libperf: Add reference count checking macros.
-  perf cpumap: Add reference count checking
-  perf namespaces: Add reference count checking
-  perf maps: Add reference count checking.
-  perf map: Add reference count checking
-
- tools/lib/perf/Makefile                       |   2 +-
- tools/lib/perf/cpumap.c                       |  94 +++---
- tools/lib/perf/include/internal/cpumap.h      |   4 +-
- tools/lib/perf/include/internal/rc_check.h    |  94 ++++++
- tools/perf/arch/s390/annotate/instructions.c  |   4 +-
- tools/perf/arch/x86/tests/dwarf-unwind.c      |   2 +-
- tools/perf/arch/x86/util/event.c              |  13 +-
- tools/perf/builtin-annotate.c                 |  11 +-
- tools/perf/builtin-buildid-list.c             |   4 +-
- tools/perf/builtin-inject.c                   |  12 +-
- tools/perf/builtin-kallsyms.c                 |   6 +-
- tools/perf/builtin-kmem.c                     |   4 +-
- tools/perf/builtin-lock.c                     |   4 +-
- tools/perf/builtin-mem.c                      |  10 +-
- tools/perf/builtin-report.c                   |  26 +-
- tools/perf/builtin-script.c                   |  27 +-
- tools/perf/builtin-top.c                      |  17 +-
- tools/perf/builtin-trace.c                    |   2 +-
- .../scripts/python/Perf-Trace-Util/Context.c  |  13 +-
- tools/perf/tests/code-reading.c               |  76 +++--
- tools/perf/tests/cpumap.c                     |   4 +-
- tools/perf/tests/hists_common.c               |   8 +-
- tools/perf/tests/hists_cumulate.c             |  14 +-
- tools/perf/tests/hists_filter.c               |  14 +-
- tools/perf/tests/hists_link.c                 |  18 +-
- tools/perf/tests/hists_output.c               |  12 +-
- tools/perf/tests/maps.c                       |  69 ++--
- tools/perf/tests/mmap-thread-lookup.c         |   3 +-
- tools/perf/tests/symbols.c                    |   7 +-
- tools/perf/tests/thread-maps-share.c          |  29 +-
- tools/perf/tests/vmlinux-kallsyms.c           |  54 +--
- tools/perf/ui/browsers/annotate.c             |   9 +-
- tools/perf/ui/browsers/hists.c                |  19 +-
- tools/perf/ui/browsers/map.c                  |   4 +-
- tools/perf/util/annotate.c                    |  40 ++-
- tools/perf/util/auxtrace.c                    |   2 +-
- tools/perf/util/block-info.c                  |   4 +-
- tools/perf/util/bpf-event.c                   |  10 +-
- tools/perf/util/bpf_counter.c                 |   6 +-
- tools/perf/util/bpf_lock_contention.c         |   6 +-
- tools/perf/util/build-id.c                    |   2 +-
- tools/perf/util/callchain.c                   |  24 +-
- tools/perf/util/cpumap.c                      |  40 ++-
- tools/perf/util/data-convert-json.c           |  10 +-
- tools/perf/util/db-export.c                   |  16 +-
- tools/perf/util/demangle-cxx.cpp              |   5 +-
- tools/perf/util/dlfilter.c                    |  28 +-
- tools/perf/util/dso.c                         |   8 +-
- tools/perf/util/dsos.c                        |   2 +-
- tools/perf/util/event.c                       |  29 +-
- tools/perf/util/evsel_fprintf.c               |   4 +-
- tools/perf/util/hist.c                        |  22 +-
- tools/perf/util/intel-pt.c                    |  63 ++--
- tools/perf/util/machine.c                     | 252 ++++++++------
- tools/perf/util/map.c                         | 217 ++++++------
- tools/perf/util/map.h                         |  74 +++-
- tools/perf/util/maps.c                        | 318 +++++++++++-------
- tools/perf/util/maps.h                        |  67 +++-
- tools/perf/util/namespaces.c                  | 132 +++++---
- tools/perf/util/namespaces.h                  |   3 +-
- tools/perf/util/pmu.c                         |   8 +-
- tools/perf/util/probe-event.c                 |  62 ++--
- .../util/scripting-engines/trace-event-perl.c |  10 +-
- .../scripting-engines/trace-event-python.c    |  26 +-
- tools/perf/util/sort.c                        |  67 ++--
- tools/perf/util/symbol-elf.c                  |  41 ++-
- tools/perf/util/symbol.c                      | 316 +++++++++++------
- tools/perf/util/symbol_fprintf.c              |   2 +-
- tools/perf/util/synthetic-events.c            |  34 +-
- tools/perf/util/thread-stack.c                |   4 +-
- tools/perf/util/thread.c                      |  39 +--
- tools/perf/util/unwind-libdw.c                |  20 +-
- tools/perf/util/unwind-libunwind-local.c      |  16 +-
- tools/perf/util/unwind-libunwind.c            |  33 +-
- tools/perf/util/vdso.c                        |   7 +-
- 75 files changed, 1696 insertions(+), 1062 deletions(-)
- create mode 100644 tools/lib/perf/include/internal/rc_check.h
-
+diff --git a/tools/perf/util/demangle-cxx.cpp b/tools/perf/util/demangle-cxx.cpp
+index 8708bcafd370..85b706641837 100644
+--- a/tools/perf/util/demangle-cxx.cpp
++++ b/tools/perf/util/demangle-cxx.cpp
+@@ -38,11 +38,10 @@ char *cxx_demangle_sym(const char *str, bool params __maybe_unused,
+ 
+         return cplus_demangle(str, flags);
+ #elif defined(HAVE_CXA_DEMANGLE_SUPPORT)
+-        size_t len = strlen(str);
+-        char *output = (char*)malloc(len);
++        char *output;
+         int status;
+ 
+-        output = abi::__cxa_demangle(str, output, &len, &status);
++        output = abi::__cxa_demangle(str, /*output_buffer=*/NULL, /*length=*/NULL, &status);
+         return output;
+ #else
+         return NULL;
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
