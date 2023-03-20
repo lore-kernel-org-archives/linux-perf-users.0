@@ -2,62 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5C5C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 17:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7759AC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 17:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbjCTR5a (ORCPT
+        id S230222AbjCTR6M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 13:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50594 "EHLO
+        Mon, 20 Mar 2023 13:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230212AbjCTR5B (ORCPT
+        with ESMTP id S229744AbjCTR5p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 13:57:01 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8783125E1E
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 10:51:56 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3e292a249b6so132371cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 10:51:56 -0700 (PDT)
+        Mon, 20 Mar 2023 13:57:45 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D94C3524D
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 10:52:38 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3e0965f70ecso201571cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Mar 2023 10:52:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679334636;
+        d=google.com; s=20210112; t=1679334671;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yoD1JKY0k161o4QHbzp4GglNNV3tuJfP9sIdaBe/tSQ=;
-        b=LuOXElhkL5uV0fqt/FiMZBnMP0RcQQ1EwDqAJ4PkZckn2UxZng/S/rmcHgZKAwLKrz
-         2pmile5FUYUJrxnXkOmRyqD1FMn+IaR7TmUgMchApZb6n3gteLagbDK1gA7cdAJOhtUP
-         33vxu5Dnvn0CzWPDePl7jV0rBZzoTsw9Ag++n0IKkVlWyLlHq/+O41VOV4z3ljQ8BtDb
-         GqyJlrNZsarrBULnUuSZ8Noy+jPMKmFqcVvT5cBcLFyDVNg4u/FlwJq8ft7vWUwqi1Dl
-         Z5/s22a9dsX+weBQMWhRWuTtsHtrPG3Mvj1ECudidhhQar1A9gg7gp7V8wIrUFdXGn0V
-         4LHw==
+        bh=N73sqeWtcmiMT11zk6Xguucktfja74ge8kCnKLo8Z3g=;
+        b=JoAClhnDEoJsOhMwe4R3A3SZCW9sDQ5iYxrpSGAHufIciA1FL1Fu8v4ZR0dItI3jqp
+         QO5eDZTh/yObIEY016SdvROxbKuPQyQsAHb5vVJmGRplmy1xQgVPD0UZGsu7H+/ZhEkk
+         ikytFEf9CmEHx2Kx++cL3z0HL07mH8uvUgtscoGH7kanoIxEU1VWWDJpRS2D7X2QnR8d
+         LcV6E9C0knWaKIVUrFNY/n0q13oEknUePQzGSq5crtVhtAhL2u5NlR83nfu+DMVnUeNk
+         cQbcEpnDACeiYR0nJCsuw1BQnY9mx/yZJmHsAdDJIEV8XeAgPYlDV8dQnP9K2SxH4ml8
+         7r3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679334636;
+        d=1e100.net; s=20210112; t=1679334671;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yoD1JKY0k161o4QHbzp4GglNNV3tuJfP9sIdaBe/tSQ=;
-        b=uq9Hfwqd2keP+uX0rH0omqMBOVjWWpc71Be2Rwxu7uKaKpFQtqis2JGU8ZSsCAzrC0
-         j8kXnQ0ZZro3Ne6sbuw/5DjzP6Bm3yLSBW53Ze0E0XDmvRlgLCLsE/nDEUeEr+VLWPvJ
-         bBSaQHswFqMEvthThk5tZXNiH16HW/fZf4PpkvDmK81gb5mir+39J3GDtmQwqMH+/gzx
-         BhOm2aYZv5VTGvMUbFhd9ImqpFVkFimjII/dwyAgNmTh46DyCwSoETs+RwDoGI2VuDOR
-         JzKwQliASmhtqSPb/69dYPkQ7uG6t437M9Y04gmwTdo1eQpAjdxhdMDGrzEXifv5EljV
-         oRLw==
-X-Gm-Message-State: AO0yUKWUsqMYM/rRhp9VtRj471WzuMd4Hlp8Rdc6zakIg6sThUGIv1U+
-        TglUeyuGPsA4gh0avUluEKFKhae+/hgxcU0WphPyXA==
-X-Google-Smtp-Source: AK7set8kHEVP+t6ZHXZFLaxn+nBauLfQe1PZ5kpaSUhxq1eSagWU8CZHLMeGMlCta7rcc0LYB6zlLiF1Y7styXAdznM=
-X-Received: by 2002:a05:622a:1ba3:b0:3e2:3de:371f with SMTP id
- bp35-20020a05622a1ba300b003e203de371fmr242217qtb.15.1679334636095; Mon, 20
- Mar 2023 10:50:36 -0700 (PDT)
+        bh=N73sqeWtcmiMT11zk6Xguucktfja74ge8kCnKLo8Z3g=;
+        b=6j1BfNFG2v0BuJ+0HYXqKcr2Q1t8l0/M8mERy2DXEJOnjYA30fvpxLWwnWkTi120Pj
+         DXh7JG2IedJaIVFvbf7yGeT7CCDqkwjYO24Sg3hmzhUuBZBuAl3mxKsMrD8EkUAwLFSr
+         dZLxcmJvKNRdlUcKoAT/A9iAfS6OXdHH/3BAgx+SYNoqdxrUWAaWxkSOy3Or28LUvgGw
+         yvQuFRI+3ti104lMF13SOMo+bWv+jVQD3HIMqh3ixit3eT8gc9vYrs8uNtf9P9B/Otuq
+         qCkkTQ+D+y7113svKGPBDCSghU+kZ+o0SwxfOJH2kMAIYyP4nYMf+haZor9CxE8wZx9q
+         FekQ==
+X-Gm-Message-State: AO0yUKUIn5RWRcwsxfAjZ3MHYiNdCYhkrk1oh9CU5T7dUtlJ3mbs8xZv
+        wGHAJnkroTKtK5RZooUmrV9zAtnTlv/5Q8g3z/JGZZNNeQqRfqiw2U4etA==
+X-Google-Smtp-Source: AK7set8xoH+ERmG9f0Rp3Mohcu4SaYNCUDnLF6OBvXBKzCJI6SY5u8RMK6lG77DVgaf4qy+IOQp7a6aRVcLjtVZZcLM=
+X-Received: by 2002:a05:622a:8:b0:3d4:1f4a:3b52 with SMTP id
+ x8-20020a05622a000800b003d41f4a3b52mr12922qtw.6.1679334670611; Mon, 20 Mar
+ 2023 10:51:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230320151509.1137462-1-james.clark@arm.com> <20230320151509.1137462-5-james.clark@arm.com>
-In-Reply-To: <20230320151509.1137462-5-james.clark@arm.com>
+References: <20230320151509.1137462-1-james.clark@arm.com>
+In-Reply-To: <20230320151509.1137462-1-james.clark@arm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 20 Mar 2023 10:50:24 -0700
-Message-ID: <CAP-5=fXan9Lvy-==HAdWxJ016StbzXY=jT=PC2oQz7VFGzthyQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] perf report: Add 'simd' sort field
+Date:   Mon, 20 Mar 2023 10:50:59 -0700
+Message-ID: <CAP-5=fUz_u8BODDn3OK5hh9xSbXbMZU0fiCJUdpoS3AFQGQ9GA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Enable display of partial and empty SVE predicates
+ from Arm SPE data
 To:     James Clark <james.clark@arm.com>
 Cc:     linux-perf-users@vger.kernel.org, Anshuman.Khandual@arm.com,
-        German Gomez <german.gomez@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -80,199 +80,59 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Mon, Mar 20, 2023 at 8:15=E2=80=AFAM James Clark <james.clark@arm.com> w=
 rote:
 >
-> From: German Gomez <german.gomez@arm.com>
+> Changes since v1:
+>  * Rebase onto perf/core because it no longer applied cleanly
 >
-> Add 'simd' sort field to visualize SIMD ops in perf-report.
+> ------------
 >
-> Rows are labeled with the SIMD isa, and the type of predicate (if any):
+> Hi,
 >
->   - [p] partial predicate
->   - [e] empty predicate (no elements in the vector being used)
+> I'm submitting this on behalf of German who moved on to work on other
+> things in Arm before he could finish it off.
 >
-> Example with Arm SPE and SVE (Scalable Vector Extension):
+> The predicate information is available on SPE samples from
+> Armv8.3 (FEAT_SPEv1p1), this could be useful info for profiling SVE
+> code as partial and empty predicates indicate that the full vector
+> width isn't being used. There is a good example in the last commit
+> message.
 >
->   #include <arm_sve.h>
->
->   double src[1025], dst[1025];
->
->   int main(void) {
->     svfloat64_t vc =3D svdup_f64(1);
->     for(;;)
->       for(int i =3D 0; i < 1025; i +=3D svcntd())
->       {
->         svbool_t pg =3D svwhilelt_b64(i, 1025);
->         svfloat64_t vsrc =3D svld1(pg, &src[i]);
->         svfloat64_t vdst =3D svadd_x(pg, vsrc, vc);
->         svst1(pg, &dst[i], vdst);
->       }
->     return 0;
->   }
->
->   ... compiled using "gcc-11 -march=3Darmv8-a+sve -O3"
->
-> Profiling on a platform that implements FEAT_SVE and FEAT_SPEv1p1:
->
->   $ perf record -e arm_spe_0// -- ./a.out
->   $ perf report --itrace=3Di1i -s overhead,pid,simd,sym
->
->   Overhead      Pid:Command   Simd     Symbol
->   ........  ................  .......  ......................
->
->     53.76%    10758:program            [.] main
->     46.14%    10758:program   [.] SVE  [.] main
->      0.09%    10758:program   [p] SVE  [.] main
->
-> The report shows 0.09% of the sampled SVE operations use partial
-> predicates due to src and dst arrays not being multiples of the vector
-> register lengths.
->
-> Signed-off-by: German Gomez <german.gomez@arm.com>
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/Documentation/perf-report.txt |  1 +
->  tools/perf/util/hist.c                   |  1 +
->  tools/perf/util/hist.h                   |  1 +
->  tools/perf/util/sort.c                   | 47 ++++++++++++++++++++++++
->  tools/perf/util/sort.h                   |  2 +
->  5 files changed, 52 insertions(+)
->
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Docume=
-ntation/perf-report.txt
-> index c242e8da6b1a..cfd502f7e6da 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -117,6 +117,7 @@ OPTIONS
->         - addr: (Full) virtual address of the sampled instruction
->         - retire_lat: On X86, this reports pipeline stall of this instruc=
-tion compared
->           to the previous instruction in cycles. And currently supported =
-only on X86
-> +       - simd: Flags describing a SIMD operation. "e" for empty Arm SVE =
-predicate. "p" for partial Arm SVE predicate
+> Though currently, there isn't a suitable field to store the info
+> on Perf samples, so this change also adds a new SIMD field.
+> This field could be used by other architectures, but currently there
+> is only one bit reserved to identify SVE. It's only added to
+> struct perf_sample on the userspace side, and isn't part of the kernel
+> ABI, so it doesn't survive a perf inject. Although this is the
+> same behavior for some other fields like branch flags, so I don't
+> think it should be an issue to do something similar here. Perhaps in
+> the future we could make sure everything that is synthesised from
+> auxtrace data also makes it back into the new Perf inject file without
+> being lost.
 
-nit: the line wrap looks off here.
+Series:
+Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
+> German Gomez (4):
+>   perf event: Add simd_flags field to perf_sample
+>   perf arm-spe: Refactor arm-spe to support operation packet type
+>   perf arm-spe: Add SVE flags to the SPE samples
+>   perf report: Add 'simd' sort field
 >
->         By default, comm, dso and symbol keys are used.
->         (i.e. --sort comm,dso,symbol)
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index 3670136a0074..0c11f50abfec 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -745,6 +745,7 @@ __hists__add_entry(struct hists *hists,
->                 .weight =3D sample->weight,
->                 .ins_lat =3D sample->ins_lat,
->                 .p_stage_cyc =3D sample->p_stage_cyc,
-> +               .simd_flags =3D sample->simd_flags,
->         }, *he =3D hists__findnew_entry(hists, &entry, al, sample_self);
+>  tools/perf/Documentation/perf-report.txt      |  1 +
+>  .../util/arm-spe-decoder/arm-spe-decoder.c    | 30 ++++++++++--
+>  .../util/arm-spe-decoder/arm-spe-decoder.h    | 47 +++++++++++++++----
+>  tools/perf/util/arm-spe.c                     | 28 +++++++++--
+>  tools/perf/util/hist.c                        |  1 +
+>  tools/perf/util/hist.h                        |  1 +
+>  tools/perf/util/sample.h                      | 13 +++++
+>  tools/perf/util/sort.c                        | 47 +++++++++++++++++++
+>  tools/perf/util/sort.h                        |  2 +
+>  9 files changed, 152 insertions(+), 18 deletions(-)
 >
->         if (!hists->has_callchains && he && he->callchain_size !=3D 0)
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index 86a677954279..afc9f1c7f4dc 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -81,6 +81,7 @@ enum hist_column {
->         HISTC_ADDR_FROM,
->         HISTC_ADDR_TO,
->         HISTC_ADDR,
-> +       HISTC_SIMD,
->         HISTC_NR_COLS, /* Last entry */
->  };
 >
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index 093a0c8b2e3d..e11e68ecf0a2 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -139,6 +139,52 @@ struct sort_entry sort_thread =3D {
->         .se_width_idx   =3D HISTC_THREAD,
->  };
->
-> +/* --sort simd */
-> +
-> +static int64_t
-> +sort__simd_cmp(struct hist_entry *left, struct hist_entry *right)
-> +{
-> +       if (left->simd_flags.arch !=3D right->simd_flags.arch)
-> +               return (int64_t) left->simd_flags.arch - right->simd_flag=
-s.arch;
-> +
-> +       return (int64_t) left->simd_flags.pred - right->simd_flags.pred;
-> +}
-> +
-> +static const char *hist_entry__get_simd_name(struct simd_flags *simd_fla=
-gs)
-> +{
-> +       u64 arch =3D simd_flags->arch;
-> +
-> +       if (arch & SIMD_OP_FLAGS_ARCH_SVE)
-> +               return "SVE";
-> +       else
-> +               return "n/a";
-> +}
-> +
-> +static int hist_entry__simd_snprintf(struct hist_entry *he, char *bf,
-> +                                    size_t size, unsigned int width __ma=
-ybe_unused)
-> +{
-> +       const char *name;
-> +
-> +       if (!he->simd_flags.arch)
-> +               return repsep_snprintf(bf, size, "");
-> +
-> +       name =3D hist_entry__get_simd_name(&he->simd_flags);
-> +
-> +       if (he->simd_flags.pred & SIMD_OP_FLAGS_PRED_EMPTY)
-> +               return repsep_snprintf(bf, size, "[e] %s", name);
-> +       else if (he->simd_flags.pred & SIMD_OP_FLAGS_PRED_PARTIAL)
-> +               return repsep_snprintf(bf, size, "[p] %s", name);
-> +
-> +       return repsep_snprintf(bf, size, "[.] %s", name);
-> +}
-> +
-> +struct sort_entry sort_simd =3D {
-> +       .se_header      =3D "Simd   ",
-> +       .se_cmp         =3D sort__simd_cmp,
-> +       .se_snprintf    =3D hist_entry__simd_snprintf,
-> +       .se_width_idx   =3D HISTC_SIMD,
-> +};
-> +
->  /* --sort comm */
->
->  /*
-> @@ -2142,6 +2188,7 @@ static struct sort_dimension common_sort_dimensions=
-[] =3D {
->         DIM(SORT_ADDR, "addr", sort_addr),
->         DIM(SORT_LOCAL_RETIRE_LAT, "local_retire_lat", sort_local_p_stage=
-_cyc),
->         DIM(SORT_GLOBAL_RETIRE_LAT, "retire_lat", sort_global_p_stage_cyc=
-),
-> +       DIM(SORT_SIMD, "simd", sort_simd)
->  };
->
->  #undef DIM
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index 22f437c3476f..ecfb7f1359d5 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -111,6 +111,7 @@ struct hist_entry {
->         u64                     p_stage_cyc;
->         u8                      cpumode;
->         u8                      depth;
-> +       struct simd_flags       simd_flags;
->
->         /* We are added by hists__add_dummy_entry. */
->         bool                    dummy;
-> @@ -241,6 +242,7 @@ enum sort_type {
->         SORT_ADDR,
->         SORT_LOCAL_RETIRE_LAT,
->         SORT_GLOBAL_RETIRE_LAT,
-> +       SORT_SIMD,
->
->         /* branch stack specific sort keys */
->         __SORT_BRANCH_STACK,
+> base-commit: 96d541699e5c50b1bc2d50c83cd7145994d5f071
 > --
 > 2.34.1
 >
