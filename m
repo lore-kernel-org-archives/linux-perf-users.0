@@ -2,189 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2718AC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 17:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF179C6FD20
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 19:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbjCURsW (ORCPT
+        id S229807AbjCUTDu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Mar 2023 13:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
+        Tue, 21 Mar 2023 15:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230035AbjCURsQ (ORCPT
+        with ESMTP id S229459AbjCUTDt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Mar 2023 13:48:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4E893FB;
-        Tue, 21 Mar 2023 10:48:09 -0700 (PDT)
+        Tue, 21 Mar 2023 15:03:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAAA5615D;
+        Tue, 21 Mar 2023 12:03:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A481E61D70;
-        Tue, 21 Mar 2023 17:48:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17C2C433EF;
-        Tue, 21 Mar 2023 17:48:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C9CDEB8197D;
+        Tue, 21 Mar 2023 19:02:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E993C433D2;
+        Tue, 21 Mar 2023 19:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679420888;
-        bh=XdBv7dMWKQWKxGOS239zoahEirm3umu1JUUI+nQGGoQ=;
+        s=k20201202; t=1679425366;
+        bh=DZpkA18Td+TB5rNUVUpYDY9F5hlRcbHEGl2DeB/6NyM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T6Cfh60uLTCqTDgwE6WCuaEtBG/0Idu8xTtckfw1rqfo3G+/vj/NkUIH+f2QbP0ld
-         LLJ4Oq/kXzTVcAzi5osGVtIkJET7Pe54+KZZFObAcN1MDkMgMAU0Vgml5XMeUHuvjk
-         CRj9FdJv5YFPGoCmhnPlemFgdmOt9jjo9GK81fMyeMldV/tQKkcW2QHb9qblF/itow
-         kkjjI7gP7RSn367adaoU/6oOl47C0WPlPCiKt3732PwcEiB0iJ/cst85w5hTv7KiNk
-         5fzwZ3Kx3gO0hSUityQeAmZpUBSjs553w531+dK56Rn8KTDQxcHbl8DI4Ma2oskT7p
-         tOrZVs8YceDfQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 505584052D; Tue, 21 Mar 2023 14:48:05 -0300 (-03)
-Date:   Tue, 21 Mar 2023 14:48:05 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        b=DpOA2WNAh8VlnTo7ntMdatWbklX1NH2ePrt1Ae0K/7iesieawSawMyYBoaoXWSGNd
+         3ElE4SXR79PC+C7ePlHAAIC0UAnnMl7K5p49j8iYhrT2tINajduL9uBgJdKYVCMV+w
+         kWq7rs0t+OyVKGPtJoo8k30E0cwyinciXm+gqmvnmNNCaqvElp5zPOXmxAfMeckKXA
+         v0xcETFrUNx25uEwMGHcGZS8SXXF6uZFPko3nNoRUw1lTnleWvthEAJbj5V4wH32QV
+         0PAFS+Mnq/EGsW3KveM1HbMXozjx2KYpSiGGzQh0h5b52WpriPpD1bGk3z5ctv/ve+
+         93dte4wlEe1Cw==
+Date:   Tue, 21 Mar 2023 19:02:40 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
         James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf kvm: Support refcnt in structure kvm_info
-Message-ID: <ZBnt1XhhJL/7lsdl@kernel.org>
-References: <20230320061619.29520-1-leo.yan@linaro.org>
- <20230320061619.29520-2-leo.yan@linaro.org>
- <ZBmqiKC1FSGI0/iE@kernel.org>
- <20230321142235.GD221467@leoy-yangtze.lan>
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
+Message-ID: <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZiGw5SLj3JFuo5Bg"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230321142235.GD221467@leoy-yangtze.lan>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+X-Cookie: Will it improve my CASH FLOW?
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 21, 2023 at 10:22:35PM +0800, Leo Yan escreveu:
-> On Tue, Mar 21, 2023 at 10:00:56AM -0300, Arnaldo Carvalho de Melo wrote:
-> 
-> [...]
-> 
-> > > +static inline void __kvm_info__zput(struct kvm_info **ki)
-> > > +{
-> > > +	kvm_info__put(*ki);
-> > > +	*ki = NULL;
-> > > +}
-> > > +
-> > > +#define kvm_info__zput(ki) __kvm_info__zput(&ki)
-> > > +
-> > > +static inline struct kvm_info *kvm_info__new(void)
-> > > +{
-> > > +	struct kvm_info *ki;
-> > > +
-> > > +	ki = zalloc(sizeof(*ki));
-> > > +	if (ki)
-> > > +		refcount_set(&ki->refcnt, 1);
-> > > +
-> > > +	return ki;
-> > > +}
-> > > +
-> > >  #endif /* HAVE_KVM_STAT_SUPPORT */
-> > >  
-> > >  extern int kvm_add_default_arch_event(int *argc, const char **argv);
-> > 
-> > I had to add this:
-> > 
-> > Provide a nop version of kvm_info__zput() to be used when
-> > HAVE_KVM_STAT_SUPPORT isn't defined as it is used unconditionally in
-> > hists__findnew_entry() and hist_entry__delete().
-> 
-> Thanks a lot, Arnaldo.
-> 
-> Just want to check, before I sent out this series I have run building
-> test with the command `make -C tools/perf build-test` and I didn't see
-> the building failure.  Do I need to run other testing?
 
-Yes, but I didn't manage yet to make them public in a way that you could
-use it easily :-\
+--ZiGw5SLj3JFuo5Bg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have a set of perf build containers and in some cases
-HAVE_KVM_STAT_SUPPORT isn't defined, thus I noticed the problem.
+On Wed, Mar 15, 2023 at 10:44:34AM +0530, Anshuman Khandual wrote:
+> This series enables perf branch stack sampling support on arm64 platform
+> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+> relevant register definitions could be accessed here.
+>=20
+> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
-Since you're working on kvm stat, maybe you could add a way to disable
-it from the make command line and then add it to tools/perf/tests/make?
+While looking at another feature I noticed that HFGITR_EL2 has two traps
+for BRBE instructions, nBRBINJ and nBRBIALL which trap BRB INJ and BRB
+IALL.  Even if we don't use those right now does it make sense to
+document a requirement for those traps to be disabled now in case we
+need them later, and do so during EL2 setup for KVM guests?  That could
+always be done incrementally.
 
-Here is an example of this for something that was opt-in:
+I've got a patch adding the definition of that register to sysreg which
+I should be sending shortly, no need to duplicate that effort.
 
-⬢[acme@toolbox perf-tools-next]$ git show 9300acc6fed8e957c8d60f6f8e4451b508feea2c
-commit 9300acc6fed8e957c8d60f6f8e4451b508feea2c
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Fri May 29 16:25:34 2020 -0300
+--ZiGw5SLj3JFuo5Bg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    perf build: Add a LIBPFM4=1 build test entry
+-----BEGIN PGP SIGNATURE-----
 
-    So that when one runs:
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQZ/08ACgkQJNaLcl1U
+h9A2Vwf+OlSvXdhyewDkyTQV0UhoX80wH9Aki8JnkTGnz29AiHDh9G1abuOJhkLZ
+ipMeXx43tHlF37e44zk90Xl1TsyPuX0mCOIGwdfqyZCO8MPNA3nehtCuvm2pLgVd
+ONOD6HZp9VM6sh3itx3EBI7Z37qrZ2MjO8VyYE0z6VHT2ZH3MJZaaUlqepBF2aP2
+n3VpRR9ZdUpZI1oSlZJa1a9o4JRXknDgHKYkuj7Lp9naeBOuoNzSUm/SYB9RxDXu
+FDU/RzYV6oCAfAEvb3H1Cr4SEpyK+TLcRGQ78JlFVZQOEAECtd8NjnxZebA9pRAK
+XGMS2wcFvKk/Zqzbr6qxNyBJliQJsw==
+=U6ZJ
+-----END PGP SIGNATURE-----
 
-      $ make -C tools/perf build-test
-
-    We make sure that recent changes don't break that opt-in build.
-
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Alexei Starovoitov <ast@kernel.org>
-    Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-    Cc: Andi Kleen <ak@linux.intel.com>
-    Cc: Andrii Nakryiko <andriin@fb.com>
-    Cc: Daniel Borkmann <daniel@iogearbox.net>
-    Cc: Florian Fainelli <f.fainelli@gmail.com>
-    Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Cc: Ian Rogers <irogers@google.com>
-    Cc: Igor Lubashev <ilubashe@akamai.com>
-    Cc: Jin Yao <yao.jin@linux.intel.com>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Jiwei Sun <jiwei.sun@windriver.com>
-    Cc: John Garry <john.garry@huawei.com>
-    Cc: Kan Liang <kan.liang@linux.intel.com>
-    Cc: Leo Yan <leo.yan@linaro.org>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Martin KaFai Lau <kafai@fb.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Stephane Eranian <eranian@google.com>
-    Cc: Thomas Gleixner <tglx@linutronix.de>
-    Cc: Yonghong Song <yhs@fb.com>
-    Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 8fe6c7911f46e7ef..9b651dfe0a6b8a91 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -90,6 +90,7 @@ make_with_babeltrace:= LIBBABELTRACE=1
- make_no_sdt        := NO_SDT=1
- make_no_syscall_tbl := NO_SYSCALL_TABLE=1
- make_with_clangllvm := LIBCLANGLLVM=1
-+make_with_libpfm4   := LIBPFM4=1
- make_tags           := tags
- make_cscope         := cscope
- make_help           := help
-@@ -152,6 +153,7 @@ run += make_no_sdt
- run += make_no_syscall_tbl
- run += make_with_babeltrace
- run += make_with_clangllvm
-+run += make_with_libpfm4
- run += make_help
- run += make_doc
- run += make_perf_o
-⬢[acme@toolbox perf-tools-next]$
-
-
-----------------------
-
-Look at tools/perf/Makefile.perf and try to add a NO_KVM_STAT=1 perhaps,
-and then add it to tools/perf/tests/make so that we catch problems like
-the one I found and fixed in this thread.
-
-
-Thanks,
-
-- Arnaldo
+--ZiGw5SLj3JFuo5Bg--
