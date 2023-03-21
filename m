@@ -2,110 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AF5C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 20 Mar 2023 22:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE6DC7619A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 06:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbjCTWhV (ORCPT
+        id S230202AbjCUGb6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 20 Mar 2023 18:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
+        Tue, 21 Mar 2023 02:31:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjCTWhU (ORCPT
+        with ESMTP id S230218AbjCUGbz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 20 Mar 2023 18:37:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B2FB26A9;
-        Mon, 20 Mar 2023 15:37:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 39F6AB810FA;
-        Mon, 20 Mar 2023 22:37:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC185C433D2;
-        Mon, 20 Mar 2023 22:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679351837;
-        bh=IBBEyGAISWsgD1ZP/NwygwfuZMDNyGdcymw3q6BDNug=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQFeSa+BaBuKwg+y09/XwdbpPHxQB8QvAnpuHxVhsb5RTnyBbCSeYFUvFhhs3sLpH
-         YFp059df0J3zM6gwIW9gQ+MnAgXhBAEuLJDm386ZmXj/v+nckV1fz0BwXK1oBz83Jn
-         i8RoBl/B/eLcQpzGRBsk4jaWerMdG+JwxNhZ08wFCHyKYi4h7GRGTNp4eRn039yQ6H
-         eaKejj6Wz7xpYfjoqOQXRiaXgTwAxV5BRJrbcGIK4nAD7TUU9kE3dEcv25pQuOV0Cy
-         GmbY3VOZhUA8cDvblqeIG5QJukSekY89ypmAWVdUawr/t5TSxkixZCAnx/JfayV6Hl
-         aQJDhbwVZA41w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6E6254052D; Mon, 20 Mar 2023 19:37:14 -0300 (-03)
-Date:   Mon, 20 Mar 2023 19:37:14 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] perf kvm: Fix memory leak
-Message-ID: <ZBjgGg3XumiJB/YG@kernel.org>
-References: <20230320061619.29520-1-leo.yan@linaro.org>
- <CAP-5=fVBZfTrtp6OUzop3HxL-Aw80FDC+7MPS6UEwDhhfkgk_Q@mail.gmail.com>
+        Tue, 21 Mar 2023 02:31:55 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC05C13D59;
+        Mon, 20 Mar 2023 23:31:47 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id BE2EC219FD;
+        Tue, 21 Mar 2023 06:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1679380304; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gPpSKZ08TiQ5CY24CMegu8MbGYAXhgPh9c17MzcAKiU=;
+        b=VnBHQuvYB2sfXkar8m/clGmf0fhDCH7Cs/M6YDKGABhx4D/7Jx4hYw0Dr3xk0Vw87wnTbB
+        MLXv+xaeBWM/IPrphny4h4Md+KIIwKulr9yg7VEDTS6lN3agrvSZiPXsPkBAfLpjFDte64
+        o9AA6Q9s3e80xEWHanA/qwmaXV0/1U8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1679380304;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gPpSKZ08TiQ5CY24CMegu8MbGYAXhgPh9c17MzcAKiU=;
+        b=BaARQpir7qpkJrcN/wGrCJYJ2Z0eOzizTgp83Se7bFaNQwawx0PRgHX+9ObMG8v/rzC+Nh
+        GfKrhI9J4ZU4nzCA==
+Received: from bernhard.suse.de (bernhard.suse.de [10.160.4.191])
+        by relay2.suse.de (Postfix) with ESMTP id A034D2C141;
+        Tue, 21 Mar 2023 06:31:44 +0000 (UTC)
+Received: by bernhard.suse.de (Postfix, from userid 16894)
+        id 8D3D6E061D; Tue, 21 Mar 2023 07:31:44 +0100 (CET)
+From:   "Bernhard M. Wiedemann" <bwiedemann@suse.de>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        linux-kernel@vger.kernel.org,
+        "Bernhard M. Wiedemann" <bwiedemann@suse.de>
+Subject: [PATCH] perf jevents: Sort list of input files
+Date:   Tue, 21 Mar 2023 07:30:32 +0100
+Message-Id: <20230321063032.19804-1-bwiedemann@suse.de>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <ZBjdIbF7BDphCH+k@kernel.org>
+References: <ZBjdIbF7BDphCH+k@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVBZfTrtp6OUzop3HxL-Aw80FDC+7MPS6UEwDhhfkgk_Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Mar 20, 2023 at 10:43:11AM -0700, Ian Rogers escreveu:
-> On Sun, Mar 19, 2023 at 11:16 PM Leo Yan <leo.yan@linaro.org> wrote:
-> >
-> > This patch seris is to address memory leak issues in perf kvm.
-> >
-> > The first patch introduces refcnt in structure kvm_info, so we can avoid
-> > memory leak for it.
-> >
-> > The second patch explicitly delete histograms entries before program
-> > exiting rather than relying on kernel releasing memory space.
-> >
-> 
-> Series:
-> Acked-by: Ian Rogers <irogers@google.com>
+Without this, pmu-events.c would be generated with variations in ordering
+depending on non-deterministic filesystem readdir order.
 
-I applied this, but the second patch may end up delaying tool exit by
-traversing data structures holding lots of objects to needless free
-them.
+I tested that pmu-events.c still has the same number of lines
+and that perf list output works.
 
-There are places in perf where we do it conditionally for that reason.
+This patch was done while working on reproducible builds for openSUSE,
+but also solves issues in Debian [1] and other distributions.
 
-At some point I want to try signalling we're exiting using some global
-variable and then making all memory free operations become nops.
+[1] https://tests.reproducible-builds.org/debian/rb-pkg/unstable/i386/linux.html
 
-- Arnaldo
+Signed-off-by: Bernhard M. Wiedemann <bwiedemann@suse.de>
+CC: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/jevents.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
- 
-> Thanks,
-> Ian
-> 
-> > Leo Yan (2):
-> >   perf kvm: Support refcnt in structure kvm_info
-> >   perf kvm: Delete histograms entries before exiting
-> >
-> >  tools/perf/builtin-kvm.c   |  6 ++++--
-> >  tools/perf/util/hist.c     |  5 +++++
-> >  tools/perf/util/kvm-stat.h | 37 +++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 46 insertions(+), 2 deletions(-)
-> >
-> > --
-> > 2.39.2
-> >
-
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 2bcd07ce609f..736ee0a75cf8 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -889,7 +889,7 @@ def main() -> None:
+   def ftw(path: str, parents: Sequence[str],
+           action: Callable[[Sequence[str], os.DirEntry], None]) -> None:
+     """Replicate the directory/file walking behavior of C's file tree walk."""
+-    for item in os.scandir(path):
++    for item in sorted(os.scandir(path), key=lambda e: e.name):
+       if _args.model != 'all' and item.is_dir():
+         # Check if the model matches one in _args.model.
+         if len(parents) == _args.model.split(',')[0].count('/'):
 -- 
+2.35.3
 
-- Arnaldo
