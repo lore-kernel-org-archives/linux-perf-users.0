@@ -2,206 +2,157 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A013C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 06:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAC7C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 07:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230490AbjCUG5V (ORCPT
+        id S229541AbjCUHdQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Mar 2023 02:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44272 "EHLO
+        Tue, 21 Mar 2023 03:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbjCUG5N (ORCPT
+        with ESMTP id S229941AbjCUHdN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Mar 2023 02:57:13 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 582D3279AE;
-        Mon, 20 Mar 2023 23:57:05 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8AxJMQ_VRlk6kYPAA--.11168S3;
-        Tue, 21 Mar 2023 14:57:03 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx8eQ+VRlkSE0IAA--.35439S2;
-        Tue, 21 Mar 2023 14:57:02 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] perf bench syscall: Add fork syscall benchmark
-Date:   Tue, 21 Mar 2023 14:57:01 +0800
-Message-Id: <1679381821-22736-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf8Cx8eQ+VRlkSE0IAA--.35439S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZFW7JFWktrWDAr1DKrW7Arb_yoWrtFW5pF
-        s7C3W8Ja1ruFWYvw13tr1qgF9xAwn2qr15K3Zakws8Zr47W343tr4xWFWagF17Ww4kta45
-        uF4kZrW8Wa1rXaUanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-        e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
-        aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
-        kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-        1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-        Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I
-        6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-        0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-        cSsGvfC2KfnxnUUI43ZEXa7IU8loGPUUUUU==
+        Tue, 21 Mar 2023 03:33:13 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E0249E1;
+        Tue, 21 Mar 2023 00:33:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1679383955; i=efault@gmx.de;
+        bh=/Ww3gjQGQZcTzAYxQxATulnJBi0QHya7TGHCCXfWKGA=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=Hz1vkhEKqEev6KJdcQmS695AcU3BHN+eyIyBfz2wMMfclDRWwt4QM4Nn2VCP0v8mP
+         4dIKKjlkWmwDBnZpbSRKwHWTF1z7Ky0VLT0TXOdrncGFc+jw9KK3Vg4HsVbu8zZ0sP
+         COVAsDwxBBDMXwM45wzObjoAXBuC8r5vZ7+LDQeg/GwpGWccUytUEr2xlbllesiBVj
+         sGozVEaC1ywRYH04kJLBpRxzeS6nPKzDZ6CPTuRFPBZ51W7Ys7CqieOmKBk//qcQSL
+         AKD4KKTXtqnTRT0YRtaoGsDTuxXdfaro8f1LKQcX8uK7IWIvNmx6FK2guoz+Z9V8I6
+         68gPlpccx5cSg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from homer.fritz.box ([185.221.149.138]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MGhyS-1pjUZ7004w-00Dm5W; Tue, 21
+ Mar 2023 08:32:35 +0100
+Message-ID: <a32fe0a9986451d8713fced841df7d4b941f14f1.camel@gmx.de>
+Subject: Re: [PATCH v3] perf sched: Fix sched latency analysis incorrect
+From:   Mike Galbraith <efault@gmx.de>
+To:     Chunxin Zang <zangchunxin@lixiang.com>, namhyung@kernel.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org
+Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jerry Zhou <zhouchunhua@lixiang.com>
+Date:   Tue, 21 Mar 2023 08:32:32 +0100
+In-Reply-To: <20230317063246.1128219-1-zangchunxin@lixiang.com>
+References: <20230317063246.1128219-1-zangchunxin@lixiang.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:V8GGcdSXjUpptc2+oP8VQLyOfg3Wjj6hobhXVazhAS9xcdFQkpM
+ lGPPprT1uX0gYzpT2rEcJV2SqX0rX4X+dcKOcTRLStPCOjllqMlD5WfNdeH0e8uMTIaEgOr
+ YbIZ0zCg485r+LA9g5e3OM5/0XQljSlZyga8xPHzuPjHXa22bs547NZb2BbZ/3WVZlfKTTj
+ R00JFDxpX11Wj3KbFMmwQ==
+UI-OutboundReport: notjunk:1;M01:P0:E6P9AvnU8BM=;cdC2BDuPxKpczD3tIeZUAWmv1Jl
+ XRwKM9N+loJck0EC54RaT9dJGyeFlrUaJZe5RGRx6l5/3T3C77yXoM1gkPkyOCXlewQiwmsw/
+ FPcZq+eV94lS3KG0OSOHnFCMJQVD2NpblQZdL7kgJAJKRqZ4nkEVNIthmJ8KpLmwUimjohRnV
+ LGBWJHsDgdKFLOJ8VNlNMJQAujuZZXSE3uPy25eg2oQAs2GT+mej7WvLx0IZGlPj2qmitOG0Y
+ A+G1WO3Hq/XN+VjrP1OPz6QHhkeYN/y/mo3XliX5NhH4Cb9/p6/h+3NjF89iDa6UmgeXE2u1j
+ rdu650zmihnWHdrRf8c0l17TZbc1utkXytRxL1MPShhko03TCh9afHiXdEkFBhNQQFbT0zzXK
+ le+XhhBBKm4dKgRpB23Idq7C8b12twajkoFlNgNq9AToOs04rXWXEBqnN0BCTL1qPlDrXszdx
+ fdR4rr0whQc3cRQTI2reepXTryaDw2qmGEVEAUghIEEpkxtIxKZRJd9DljndnqQYwjKNCj70Q
+ BeOviAPqgc6089LIbQa1vXYtmJCNhJxf/LP9NTmhuqRbPaBELoQ23XTh0/VipjW1iVQB1uBKo
+ YRy/l3zKOctW5TuNIkZ2P/Veb7rZxD8/lIOYLdNoKAjmp+m46LW94idy0rZQTALlquFS+KJlr
+ 5ZEIjIQcd5iY2deAwkBb9xFgRaW8ztloz9oH03XtUC106WPSQAPqptxrAEgZhqEYEnAH8kAY3
+ KR6i4P9yBL3Y1kGk+V4jZ0MPepHaNgHy0P5F+dwvTQ55iH16UHN50DsOwVUh3WBaA8vyLzWWg
+ vakh4iYL4K8m9hReRe91fI3szGeUXCyoPZOhwe9NZgeYxnZzDLM/7GleBxNbRjXQLXyWU4uML
+ f5dcIchWo8o+oNkf7iA/y5n4MPrIiKSWR2P7r6d2KJi5Jz9lh0KNZC+7bTq4MKCZB0s7WLJ2c
+ oHUXeTkUMd06XX+Lsdo0SgYHijk=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is a follow up patch for the execve bench which is actually
-fork + execve, it makes sense to add the fork syscall benchmark
-to compare the execve part precisely.
+On Fri, 2023-03-17 at 14:32 +0800, Chunxin Zang wrote:
+> 'perf sched latency' is incorrect to get process schedule latency
+> when it used 'sched:sched_wakeup' to analysis perf.data.
+>
+> Because 'perf record' prefer use 'sched:sched_waking' to
+> 'sched:sched_wakeup' since commit d566a9c2d482 ("perf sched: Prefer
+> sched_waking event when it exists"). It's very reasonable to
+> evaluate process schedule latency.
 
-Some archs have no __NR_fork definition which is used only as a
-check condition to call test_fork(), let us just define it as -1
-to avoid build error.
+Yeah, that makes a.. not so tiny difference.  Thanks.
+(off to flush large pile of.. not data)
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/arch/x86/include/uapi/asm/unistd_32.h |  4 ++--
- tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
- tools/perf/bench/bench.h                    |  1 +
- tools/perf/bench/syscall.c                  | 35 +++++++++++++++++++++++++++++
- tools/perf/builtin-bench.c                  |  1 +
- 5 files changed, 42 insertions(+), 2 deletions(-)
+su - mikeg -c 'google-chrome-stable https://www.youtube.com/watch?v=3Daqz-=
+KE-bpKQ > /dev/null 2>&1'&
+massive_intr 8 9999&
+# allow time to select display size/res
+sleep 10
+perf sched record -a -- cyclictest -Smqi 1234 -d 0&
+sleep 300
+killall cyclictest
+sleep 1
+killall massive_intr chrome
 
-diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
-index 2712d5e..b8ddfc4 100644
---- a/tools/arch/x86/include/uapi/asm/unistd_32.h
-+++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __NR_execve
--#define __NR_execve 11
-+#ifndef __NR_fork
-+#define __NR_fork 2
- #endif
- #ifndef __NR_getppid
- #define __NR_getppid 64
-diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
-index a6f7fe8..f70d2cad 100644
---- a/tools/arch/x86/include/uapi/asm/unistd_64.h
-+++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __NR_fork
-+#define __NR_fork 57
-+#endif
- #ifndef __NR_execve
- #define __NR_execve 59
- #endif
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index e438931..edfc257 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -23,6 +23,7 @@ int bench_sched_messaging(int argc, const char **argv);
- int bench_sched_pipe(int argc, const char **argv);
- int bench_syscall_basic(int argc, const char **argv);
- int bench_syscall_getpgid(int argc, const char **argv);
-+int bench_syscall_fork(int argc, const char **argv);
- int bench_syscall_execve(int argc, const char **argv);
- int bench_mem_memcpy(int argc, const char **argv);
- int bench_mem_memset(int argc, const char **argv);
-diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-index fe79f7f..ea4dfc07 100644
---- a/tools/perf/bench/syscall.c
-+++ b/tools/perf/bench/syscall.c
-@@ -18,6 +18,10 @@
- #include <unistd.h>
- #include <stdlib.h>
- 
-+#ifndef __NR_fork
-+#define __NR_fork -1
-+#endif
-+
- #define LOOPS_DEFAULT 10000000
- static	int loops = LOOPS_DEFAULT;
- 
-@@ -31,6 +35,23 @@ static const char * const bench_syscall_usage[] = {
- 	NULL
- };
- 
-+static void test_fork(void)
-+{
-+	pid_t pid = fork();
-+
-+	if (pid < 0) {
-+		fprintf(stderr, "fork failed\n");
-+		exit(1);
-+	} else if (pid == 0) {
-+		exit(0);
-+	} else {
-+		if (waitpid(pid, NULL, 0) < 0) {
-+			fprintf(stderr, "waitpid failed\n");
-+			exit(1);
-+		}
-+	}
-+}
-+
- static void test_execve(void)
- {
- 	const char *pathname = "/bin/true";
-@@ -71,6 +92,12 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
- 		case __NR_getpgid:
- 			getpgid(0);
- 			break;
-+		case __NR_fork:
-+			test_fork();
-+			/* Only loop 10000 times to save time */
-+			if (i == 10000)
-+				loops = 10000;
-+			break;
- 		case __NR_execve:
- 			test_execve();
- 			/* Only loop 10000 times to save time */
-@@ -92,6 +119,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
- 	case __NR_getpgid:
- 		name = "getpgid()";
- 		break;
-+	case __NR_fork:
-+		name = "fork()";
-+		break;
- 	case __NR_execve:
- 		name = "execve()";
- 		break;
-@@ -143,6 +173,11 @@ int bench_syscall_getpgid(int argc, const char **argv)
- 	return bench_syscall_common(argc, argv, __NR_getpgid);
- }
- 
-+int bench_syscall_fork(int argc, const char **argv)
-+{
-+	return bench_syscall_common(argc, argv, __NR_fork);
-+}
-+
- int bench_syscall_execve(int argc, const char **argv)
- {
- 	return bench_syscall_common(argc, argv, __NR_execve);
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index 814e9af..d0fcc3c 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -53,6 +53,7 @@ static struct bench sched_benchmarks[] = {
- static struct bench syscall_benchmarks[] = {
- 	{ "basic",	"Benchmark for basic getppid(2) calls",		bench_syscall_basic	},
- 	{ "getpgid",	"Benchmark for getpgid(2) calls",		bench_syscall_getpgid	},
-+	{ "fork",	"Benchmark for fork(2) calls",			bench_syscall_fork	},
- 	{ "execve",	"Benchmark for execve(2) calls",		bench_syscall_execve	},
- 	{ "all",	"Run all syscall benchmarks",			NULL			},
- 	{ NULL,		NULL,						NULL			},
--- 
-2.1.0
+cyclictest output
+T: 0 (10255) P: 0 I:1234 C: 194367 Min:      4 Act:   55 Avg:  484 Max:   =
+22776
+T: 1 (10256) P: 0 I:1234 C: 194346 Min:      6 Act:   57 Avg:  480 Max:   =
+18589
+T: 2 (10257) P: 0 I:1234 C: 194034 Min:      5 Act: 5214 Avg:  482 Max:   =
+18530
+T: 3 (10258) P: 0 I:1234 C: 192263 Min:      5 Act:   54 Avg:  513 Max:   =
+19385
+T: 4 (10259) P: 0 I:1234 C: 193350 Min:      6 Act:  728 Avg:  492 Max:   =
+15951
+T: 5 (10260) P: 0 I:1234 C: 196233 Min:      6 Act:   56 Avg:  469 Max:   =
+17905
+T: 6 (10261) P: 0 I:1234 C: 194181 Min:      5 Act:   67 Avg:  482 Max:   =
+17997
+T: 7 (10262) P: 0 I:1234 C: 196756 Min:      7 Act:  284 Avg:  468 Max:   =
+16287
 
+cyclictest bits of perf sched lat -p output, sorted ala cyclictest (local =
+hackletlet sums delay)
+ -------------------------------------------------------------------------=
+----------------------------------
+  Task                  |   Runtime ms  | Switches | Avg delay ms    | Max=
+ delay ms    | Sum delay ms     |
+ -------------------------------------------------------------------------=
+----------------------------------
+  cyclictest:10255      |   1280.359 ms |      294 | avg:   0.238 ms | max=
+:   4.929 ms | sum:   69.921 ms |
+  cyclictest:10256      |   1293.976 ms |      163 | avg:   0.463 ms | max=
+:   6.619 ms | sum:   75.497 ms |
+  cyclictest:10257      |   1259.701 ms |      206 | avg:   0.371 ms | max=
+:   5.659 ms | sum:   76.453 ms |
+  cyclictest:10258      |   1299.337 ms |      171 | avg:   0.440 ms | max=
+:   4.210 ms | sum:   75.267 ms |
+  cyclictest:10259      |   1436.543 ms |      181 | avg:   0.472 ms | max=
+:   8.466 ms | sum:   85.473 ms |
+  cyclictest:10260      |   1401.824 ms |      210 | avg:   0.386 ms | max=
+:   7.007 ms | sum:   81.036 ms |
+  cyclictest:10261      |   1336.621 ms |      190 | avg:   0.387 ms | max=
+:   4.244 ms | sum:   73.593 ms |
+  cyclictest:10262      |   1393.249 ms |      283 | avg:   0.268 ms | max=
+:   4.381 ms | sum:   75.778 ms |
++patchlet
+  cyclictest:10252      |    218.546 ms |    28657 | avg:   0.437 ms | max=
+:  12.616 ms | sum:12514.777 ms | <=3D=3D *poof*
+  cyclictest:10255      |   1280.359 ms |   194661 | avg:   0.431 ms | max=
+:  22.722 ms | sum:83954.384 ms |
+  cyclictest:10256      |   1293.976 ms |   194509 | avg:   0.427 ms | max=
+:  18.537 ms | sum:83115.895 ms |
+  cyclictest:10257      |   1259.701 ms |   194240 | avg:   0.429 ms | max=
+:  18.509 ms | sum:83408.424 ms |
+  cyclictest:10258      |   1299.337 ms |   192434 | avg:   0.460 ms | max=
+:  19.331 ms | sum:88555.775 ms |
+  cyclictest:10259      |   1436.543 ms |   193531 | avg:   0.439 ms | max=
+:  15.897 ms | sum:84989.121 ms |
+  cyclictest:10260      |   1401.824 ms |   196443 | avg:   0.417 ms | max=
+:  17.852 ms | sum:81818.898 ms |
+  cyclictest:10261      |   1336.621 ms |   194371 | avg:   0.429 ms | max=
+:  17.944 ms | sum:83443.732 ms |
+  cyclictest:10262      |   1393.249 ms |   197039 | avg:   0.415 ms | max=
+:  16.232 ms | sum:81752.473 ms |
+
+
+	-Mike
