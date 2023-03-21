@@ -2,102 +2,189 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEF8C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 17:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2718AC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 17:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbjCURrM (ORCPT
+        id S230175AbjCURsW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Mar 2023 13:47:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38460 "EHLO
+        Tue, 21 Mar 2023 13:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjCURrK (ORCPT
+        with ESMTP id S230035AbjCURsQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Mar 2023 13:47:10 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4AA729141;
-        Tue, 21 Mar 2023 10:46:41 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PgzXL6LT4z6J7GC;
-        Wed, 22 Mar 2023 01:45:22 +0800 (CST)
-Received: from localhost (10.126.169.70) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 21 Mar
- 2023 17:46:35 +0000
-Date:   Tue, 21 Mar 2023 17:46:32 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] cxl: CXL Performance Monitoring Unit driver
-Message-ID: <20230321174632.00001c5c@Huawei.com>
-In-Reply-To: <52abbd9a-3a63-3dde-c20f-99787225200e@linux.intel.com>
-References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
-        <20230303175022.10806-4-Jonathan.Cameron@huawei.com>
-        <b766b4ca-1255-3b33-864c-0e7f9ab00e15@linux.intel.com>
-        <20230306144124.00006b94@Huawei.com>
-        <52abbd9a-3a63-3dde-c20f-99787225200e@linux.intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Tue, 21 Mar 2023 13:48:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4E893FB;
+        Tue, 21 Mar 2023 10:48:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A481E61D70;
+        Tue, 21 Mar 2023 17:48:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17C2C433EF;
+        Tue, 21 Mar 2023 17:48:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679420888;
+        bh=XdBv7dMWKQWKxGOS239zoahEirm3umu1JUUI+nQGGoQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T6Cfh60uLTCqTDgwE6WCuaEtBG/0Idu8xTtckfw1rqfo3G+/vj/NkUIH+f2QbP0ld
+         LLJ4Oq/kXzTVcAzi5osGVtIkJET7Pe54+KZZFObAcN1MDkMgMAU0Vgml5XMeUHuvjk
+         CRj9FdJv5YFPGoCmhnPlemFgdmOt9jjo9GK81fMyeMldV/tQKkcW2QHb9qblF/itow
+         kkjjI7gP7RSn367adaoU/6oOl47C0WPlPCiKt3732PwcEiB0iJ/cst85w5hTv7KiNk
+         5fzwZ3Kx3gO0hSUityQeAmZpUBSjs553w531+dK56Rn8KTDQxcHbl8DI4Ma2oskT7p
+         tOrZVs8YceDfQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 505584052D; Tue, 21 Mar 2023 14:48:05 -0300 (-03)
+Date:   Tue, 21 Mar 2023 14:48:05 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf kvm: Support refcnt in structure kvm_info
+Message-ID: <ZBnt1XhhJL/7lsdl@kernel.org>
+References: <20230320061619.29520-1-leo.yan@linaro.org>
+ <20230320061619.29520-2-leo.yan@linaro.org>
+ <ZBmqiKC1FSGI0/iE@kernel.org>
+ <20230321142235.GD221467@leoy-yangtze.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.169.70]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230321142235.GD221467@leoy-yangtze.lan>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> >> So each fixed counter has a dedicated event cap reg.
-> >> All the configurable counters share the rest of the event cap regs.
-> >> Is my understanding correct?  
-> > 
-> > Yes.
-> >   
-> >>
-> >> To check the event cap, you have to go through the whole list, which
-> >> seems not efficient. Have you consisdered to use other structure, e.g.,
-> >> rb-tree to store the event capability information.  
-> > 
-> > Whilst this is a fairly short list for a given CPMU (max 32 elements),
-> > there is no harm in having something cleaner. 
-> > 
-> > However I'm struggling a bit on what that structure should be.
-> > There are two forms of indexing used.
-> > 1. VID, GID and MASK all match precisely - could use an xarray, but
-> >    the index created from these is too large, so I guess an RB tree.
-> > 2. VID, GID and subset of MASK (no constraints on mask combinations)
-> > 
-> > Can't index by just VID/GID as there may well be multiple entries.
-> > 
-> > Can't index by VID/GID/MASK as whilst that is either unique (or there is
-> > duplication we can ignore) there is no obvious way to search for
-> > a subset of mask.  Could have a red black tree with lists for the nodes
-> > but that's pretty ugly.
-> > 
-> > Any thoughts on what would work here?  
+Em Tue, Mar 21, 2023 at 10:22:35PM +0800, Leo Yan escreveu:
+> On Tue, Mar 21, 2023 at 10:00:56AM -0300, Arnaldo Carvalho de Melo wrote:
 > 
-> If it's a short list, I think it should be OK.
-> But I think we may want to split the list into a fixed counter list and
-> a configurable counter list. I don't see a reason to mix them in one
-> list. It should further reduce the list. I think we may further factor
-> out a wrapper e.g., cpmu_events_find_fixed_counter(vid,gid,mask),
-> cpmu_events_find_config_counter(vid,gid,mask).
+> [...]
+> 
+> > > +static inline void __kvm_info__zput(struct kvm_info **ki)
+> > > +{
+> > > +	kvm_info__put(*ki);
+> > > +	*ki = NULL;
+> > > +}
+> > > +
+> > > +#define kvm_info__zput(ki) __kvm_info__zput(&ki)
+> > > +
+> > > +static inline struct kvm_info *kvm_info__new(void)
+> > > +{
+> > > +	struct kvm_info *ki;
+> > > +
+> > > +	ki = zalloc(sizeof(*ki));
+> > > +	if (ki)
+> > > +		refcount_set(&ki->refcnt, 1);
+> > > +
+> > > +	return ki;
+> > > +}
+> > > +
+> > >  #endif /* HAVE_KVM_STAT_SUPPORT */
+> > >  
+> > >  extern int kvm_add_default_arch_event(int *argc, const char **argv);
+> > 
+> > I had to add this:
+> > 
+> > Provide a nop version of kvm_info__zput() to be used when
+> > HAVE_KVM_STAT_SUPPORT isn't defined as it is used unconditionally in
+> > hists__findnew_entry() and hist_entry__delete().
+> 
+> Thanks a lot, Arnaldo.
+> 
+> Just want to check, before I sent out this series I have run building
+> test with the command `make -C tools/perf build-test` and I didn't see
+> the building failure.  Do I need to run other testing?
 
-For this aspect, it turned out to be easier to factor out only the finding
-of the event as that code rather than going all the way to the counter
-(the last part only occurs in one location in current code anyway)
+Yes, but I didn't manage yet to make them public in a way that you could
+use it easily :-\
 
-That allowed the same util functions to be used both to establish
-visibility of the attrs and here without having to pass a nasty
-flag in to say whether we should look for an available counter or not.
+I have a set of perf build containers and in some cases
+HAVE_KVM_STAT_SUPPORT isn't defined, thus I noticed the problem.
+
+Since you're working on kvm stat, maybe you could add a way to disable
+it from the make command line and then add it to tools/perf/tests/make?
+
+Here is an example of this for something that was opt-in:
+
+⬢[acme@toolbox perf-tools-next]$ git show 9300acc6fed8e957c8d60f6f8e4451b508feea2c
+commit 9300acc6fed8e957c8d60f6f8e4451b508feea2c
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Fri May 29 16:25:34 2020 -0300
+
+    perf build: Add a LIBPFM4=1 build test entry
+
+    So that when one runs:
+
+      $ make -C tools/perf build-test
+
+    We make sure that recent changes don't break that opt-in build.
+
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Alexei Starovoitov <ast@kernel.org>
+    Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+    Cc: Andi Kleen <ak@linux.intel.com>
+    Cc: Andrii Nakryiko <andriin@fb.com>
+    Cc: Daniel Borkmann <daniel@iogearbox.net>
+    Cc: Florian Fainelli <f.fainelli@gmail.com>
+    Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Cc: Ian Rogers <irogers@google.com>
+    Cc: Igor Lubashev <ilubashe@akamai.com>
+    Cc: Jin Yao <yao.jin@linux.intel.com>
+    Cc: Jiri Olsa <jolsa@redhat.com>
+    Cc: Jiwei Sun <jiwei.sun@windriver.com>
+    Cc: John Garry <john.garry@huawei.com>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Leo Yan <leo.yan@linaro.org>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Martin KaFai Lau <kafai@fb.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Stephane Eranian <eranian@google.com>
+    Cc: Thomas Gleixner <tglx@linutronix.de>
+    Cc: Yonghong Song <yhs@fb.com>
+    Cc: yuzhoujian <yuzhoujian@didichuxing.com>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 8fe6c7911f46e7ef..9b651dfe0a6b8a91 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -90,6 +90,7 @@ make_with_babeltrace:= LIBBABELTRACE=1
+ make_no_sdt        := NO_SDT=1
+ make_no_syscall_tbl := NO_SYSCALL_TABLE=1
+ make_with_clangllvm := LIBCLANGLLVM=1
++make_with_libpfm4   := LIBPFM4=1
+ make_tags           := tags
+ make_cscope         := cscope
+ make_help           := help
+@@ -152,6 +153,7 @@ run += make_no_sdt
+ run += make_no_syscall_tbl
+ run += make_with_babeltrace
+ run += make_with_clangllvm
++run += make_with_libpfm4
+ run += make_help
+ run += make_doc
+ run += make_perf_o
+⬢[acme@toolbox perf-tools-next]$
+
+
+----------------------
+
+Look at tools/perf/Makefile.perf and try to add a NO_KVM_STAT=1 perhaps,
+and then add it to tools/perf/tests/make so that we catch problems like
+the one I found and fixed in this thread.
+
 
 Thanks,
 
-Jonathan
+- Arnaldo
