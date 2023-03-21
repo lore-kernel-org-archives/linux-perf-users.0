@@ -2,95 +2,134 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D31C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 14:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F74C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 16:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjCUOsW (ORCPT
+        id S230229AbjCUQpc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Mar 2023 10:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51268 "EHLO
+        Tue, 21 Mar 2023 12:45:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbjCUOsV (ORCPT
+        with ESMTP id S230302AbjCUQpV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Mar 2023 10:48:21 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B9213FB80;
-        Tue, 21 Mar 2023 07:48:19 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PgvZb3h7Mz6J6vG;
-        Tue, 21 Mar 2023 22:47:03 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 21 Mar
- 2023 14:48:14 +0000
-Date:   Tue, 21 Mar 2023 14:48:13 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <will@kernel.org>, <dan.j.williams@intel.com>,
-        <bwidawsk@kernel.org>, <ira.weiny@intel.com>,
-        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] cxl/pci: Find and register CXL PMU devices
-Message-ID: <20230321144813.00002c19@Huawei.com>
-In-Reply-To: <20230307023656.cyntxctzqgpam5u3@offworld>
-References: <20230303175022.10806-1-Jonathan.Cameron@huawei.com>
-        <20230303175022.10806-3-Jonathan.Cameron@huawei.com>
-        <20230307023656.cyntxctzqgpam5u3@offworld>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Tue, 21 Mar 2023 12:45:21 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE6113520;
+        Tue, 21 Mar 2023 09:45:10 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id c18so16642213ple.11;
+        Tue, 21 Mar 2023 09:45:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679417109;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PlarJ0OGF8pkEDqeJJSsl/9GBmK/xQa68WOfjnTxTjk=;
+        b=k2dHWrk4ZA7dyNnN5vp5tHWFuDNVcxzxToAO3J3ugpvZ0E10NmX+QZnq/zOW2tl+I/
+         MBMxavAdD9q8L85YzDAE1zObQtM56Zb1YSFKZmFBP6zRk19ym9kC5GvAsprt7ItIWAG/
+         P1U1KRitFyZl/acODJBOFxejxZCh9VcyqbL5Sf5Hxj0mETFG43mU9XTn36/B9NAIC8p5
+         sIPbGfdexpXAxLTKI6w2sStgztHlhV4+3gGO28i/yWLOpSrNuTiiJHahoVgzZLGBQrv5
+         ddU/Q7PwFbbXom3XSsaX+NOjIeFHnNylPhEdIxYElbjGwQqBuh32gLChhxwYEcUA/FGE
+         wUzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679417109;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PlarJ0OGF8pkEDqeJJSsl/9GBmK/xQa68WOfjnTxTjk=;
+        b=lU3eUs0t1ueIzDoqO8p2+i8Sd6iZlvzdLNQMJZdGnseVGUxf+4BjO6fs267vauZ4nk
+         LchLGbO4+x5wXAx6xyL+MfBBS70zpym+Qrt9Bgzt9V6LpDRof7oeamYRab3mbMQw4YC7
+         /UkUQHniiM6WRdc8B4AH5dGQdE4vJbH6llv2SCcL2FEx3EYiXZrEIcOC6AheHoIcnPF+
+         F7bjbIvq7TAoVizdZDhZK5EmCF2MYy5NY2fmdnX6q961V+qp0NQ5bmHFYAl4/s1jFydA
+         Oos68TlWAOf26R++Ps/C1XgYqbIw30EyOXzwc+XYA5IDTFJkiPMkDfToelon1KQdBB2J
+         OJKA==
+X-Gm-Message-State: AO0yUKU/HrDDMaFIRsBsn0dOTb7Ft59jkRmkl2hmW3AQDqb+AsOb/3iw
+        QVLgKedu9PcRW76kpmE7KHg=
+X-Google-Smtp-Source: AK7set/0xYNfpLT23Vcb8VnUON0ApbKO9wIPEff4ECW/aMWqnvsEFwzc7VGHpqSz8WKyA4OyIMzJAw==
+X-Received: by 2002:a17:90b:4b07:b0:234:889f:c35d with SMTP id lx7-20020a17090b4b0700b00234889fc35dmr606544pjb.3.1679417109058;
+        Tue, 21 Mar 2023 09:45:09 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id pc2-20020a17090b3b8200b00229b00cc8desm3475194pjb.0.2023.03.21.09.45.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Mar 2023 09:45:08 -0700 (PDT)
+Message-ID: <6f57ea15-08bf-38f3-5065-b3c5fe4863d0@gmail.com>
+Date:   Tue, 21 Mar 2023 09:44:57 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v4 0/8] perf: arm: Make PMUv3 driver available for aarch32
+Content-Language: en-US
+To:     Zaid Al-Bassam <zalbassam@google.com>,
+        Jesus Sanchez-Palencia <jesussanp@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu
+References: <20230317195027.3746949-1-zalbassam@google.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20230317195027.3746949-1-zalbassam@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 6 Mar 2023 18:36:56 -0800
-Davidlohr Bueso <dave@stgolabs.net> wrote:
-
-> On Fri, 03 Mar 2023, Jonathan Cameron wrote:
+On 3/17/23 12:50, Zaid Al-Bassam wrote:
+> Currently, PMUv3 driver is only available for ARMv8 aarch64 platforms,
+> ARMv8 platorms running in aarch32 mode dont have access to the driver.
+> This is, especially, a problem for ARMv8 platforms that only have
+> aarch32 support, like the Cortex-A32.
 > 
-> >+int devm_cxl_cpmu_add(struct device *parent, struct cxl_cpmu_regs *regs, int index)
-> >+{
-> >+	struct cxl_cpmu *cpmu;
-> >+	struct device *dev;
-> >+	int rc;
-> >+
-> >+	cpmu = kzalloc(sizeof(*cpmu), GFP_KERNEL);
-> >+	if (!cpmu)
-> >+		return -ENOMEM;
-> >+
-> >+	cpmu->base = regs->cpmu;
-> >+	dev = &cpmu->dev;
-> >+	device_initialize(dev);
-> >+	device_set_pm_not_required(dev);
-> >+	dev->parent = parent;
-> >+	dev->bus = &cxl_bus_type;
-> >+	dev->type = &cxl_cpmu_type;
-> >+	rc = ida_alloc(&cpmu_ida, GFP_KERNEL);
-> >+	if (rc < 0)
-> >+		goto err;  
+> Make the PMUv3 driver available to arm arch (ARMv8 aarch32) by moving
+> the PMUv3 driver from arm64 to drivers, that makes the driver common
+> to both arm and arm64 architectures, then add PMUv3 arm Support.
 > 
-> Probably better to do the ida_alloc after the cpmu allocation above, before
-> arming the dev.
+> The main work in this patchset was made a while back by Marc Zyngier
+> in [1]. Patchset version 1 [v1] rebases Marc's patches to the latest
+> kernel revision and adds additional patches to accommodate the changes
+> in the kernel since Marc wrote the patches.
+> 
+> version 2 [v2] of the patchset was created by Marc Zyngier and I
+> picked it up from [2].
+> 
+> Changes in v2:
+> - Flattened the nested switches in the arm_pmuv3.h for arm.
+> - Removed wrappers and added stubs for the PMU KVM functions for arm.
+> - Added PMU version abstractions.
+> 
+> Changes in v3:
+> - Removed the link tag from the commit messages.
+> - Fixed the license header in the arm_pmuv3.h files.
+> 
+> Changes in v4:
+> - Rebased to 6.3.0-rc2 (Clean rebase)
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=kvm-arm/pmuv3-32bit
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=arm/pmuv3
+> 
+> [v1] https://lore.kernel.org/all/20230126204444.2204061-1-zalbassam@google.com/
+> [v2] https://lore.kernel.org/all/20230210165500.2292608-1-zalbassam@google.com/
+> [v3] https://lore.kernel.org/all/20230213210319.1075872-1-zalbassam@google.com/
+> 
+> Thank you,
+> Zaid Al-Bassam
 
-Hi Davidlohr,
+Tested-by: Florian Fainelli <f.fainelli@gmail.com>
 
-There was a bug hiding here I think as the device_put() could cause the ida
-to be freed even though the ida_alloc() failed.
+on Cortex-A53 and Cortex-A72, thanks!
+-- 
+Florian
 
-Good you pointed out this oddity.
-
-Moving the ida_alloc earlier requires an explicit free of the cpmu
-but that's easy enough to locally to that if (rc < 0)
-
-Thanks,
-
-Jonathan
