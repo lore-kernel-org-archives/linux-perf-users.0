@@ -2,86 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E979C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32739C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 14:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbjCUNn2 (ORCPT
+        id S231241AbjCUOW5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Mar 2023 09:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39550 "EHLO
+        Tue, 21 Mar 2023 10:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbjCUNn1 (ORCPT
+        with ESMTP id S231351AbjCUOWy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Mar 2023 09:43:27 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A56293E9
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Mar 2023 06:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=I++tXunxEhQMFCH5VvRXdYwKlkMkRCWfnCq9Wki+U8g=; b=CbknfLdz1qC9+sMbCN2Lp9ASk8
-        acqX6s/EzHud5bPP0fwToVfcMDr/w1hzSMLuWY4kqZlJ/l3vo8LeBQYbHqn0B5pzDfR6xVZ2mLS9O
-        PL0XgaJg+jW4F4tG00fJdQzmc6P29Q/FImzr1aJzByWX4GOfPBip4tV+5gaeLN4vbgmJI4v+WE+QE
-        ybr3GruTgco2a5ub/YHboUyc2rtdv/grADr005XuxWEIb2LIeBL/npcLaZ2oybXcXIbbMFptHV4pv
-        VkP7TGFxzSVPk8PXKqxSj7TCRUVAaZN/OClk58JSDjcyXaxKs8yKKi+KJ9LX1TMPRSIBC5f89Pw3V
-        GdfpTFkA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pecGc-004Gcr-2x;
-        Tue, 21 Mar 2023 13:43:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2F42F3001D6;
-        Tue, 21 Mar 2023 14:43:09 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1904A240BB806; Tue, 21 Mar 2023 14:43:09 +0100 (CET)
-Date:   Tue, 21 Mar 2023 14:43:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     Breno Leitao <leitao@debian.org>, mingo@redhat.com,
-        acme@kernel.org, jolsa@kernel.org, namhyung@kernel.org,
-        thomas.lendacky@amd.com, linux-perf-users@vger.kernel.org,
-        x86@kernel.org, leit@fb.com
-Subject: Re: [PATCH] perf/x86/amd/core: always clear status for idx
-Message-ID: <20230321134309.GA2264331@hirez.programming.kicks-ass.net>
-References: <20230321113338.1669660-1-leitao@debian.org>
- <20230321124227.GL2234901@hirez.programming.kicks-ass.net>
- <ad31a4ea-8e91-dad0-7944-3893189b918b@amd.com>
+        Tue, 21 Mar 2023 10:22:54 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3A74FF3E
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Mar 2023 07:22:42 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id y35so7490493pgl.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Mar 2023 07:22:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679408562;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zK2oKikLMhsjpoZfnl9kq7jtqVSuiVQmn3GCed10h+c=;
+        b=SaLlnOexv4eAThvkdekCVUZbUl7mmWclkJm5i4VPUOcuiV8sDgFFFZAJ7Dcv83liaf
+         sVfmP2IHzpOGa4Vmfkn2+0MNveaCHR6b4nXs6285V23Vi2oBFlqady5SGwFm0psjaGOE
+         2Qe7JYp8I3C6M+/KXndjqTPMC4dQGk3ZHo4/U3U0OFjvn+Upz3euXrzpvr2wxcpgPfVh
+         i7vrPvqV2jCoD9/xHRv8TKQM0l8Gnv8Yr3yOpXkOMt3uOTQlJJKycsobnPHN9VxiR48f
+         q3zutwuvvLV+SD2vi55V8EG0bWZ6Jc8tIPk40jHvJpg4zbCrDXOX34UVLT6g4YuC0tx1
+         5BMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679408562;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zK2oKikLMhsjpoZfnl9kq7jtqVSuiVQmn3GCed10h+c=;
+        b=DJFNOLRKBw70gonbBqEaSK3f88PN1RbtL5cn5ksvcpeHfB9Tz13EGbLPSf3aVmyTHi
+         D0NSVRaM04cYDoRjB54rGWGK6OiRH4p+Ja5f9NoJYBWvFFlxfHxdkAgnk1nQUJGR118w
+         yJMBAXmmlGPogQpQdC0ufeL98YmUqebJ5HVl/qEQJcY+kO3pyyc3mJEgRvryajszySvV
+         puiKYBhjCrc073v5y23EDwznruJEF3iS01FnZPAcbf9RbnYHZwmFrbdFSd/96ALjHeCd
+         IlfUZhgCeKUpiptoNLGaF057erw8gxwLWS++t5beiU58gqPsw9wpvJ/IKNfK5Fgv09PH
+         vjKw==
+X-Gm-Message-State: AO0yUKXGsDu8K6m4MEA7gP/ymGosG4P+pY9l6kf+0O848wgsxxgzRGZ8
+        mteVLp2Ns5RvCRjDZkqrkYgnZg==
+X-Google-Smtp-Source: AK7set/1T5zRnc6NbUwdtyPcUSXfTLHVV+/+mx2Jhf5DoqgGoV0ZRF21wj6FDDc6X5zCtifrNJHVuw==
+X-Received: by 2002:a62:524f:0:b0:625:e728:4c5f with SMTP id g76-20020a62524f000000b00625e7284c5fmr2230069pfb.22.1679408561777;
+        Tue, 21 Mar 2023 07:22:41 -0700 (PDT)
+Received: from leoy-yangtze.lan (211-75-219-203.hinet-ip.hinet.net. [211.75.219.203])
+        by smtp.gmail.com with ESMTPSA id k23-20020aa790d7000000b0059442ec49a2sm8515706pfk.146.2023.03.21.07.22.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 07:22:41 -0700 (PDT)
+Date:   Tue, 21 Mar 2023 22:22:35 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf kvm: Support refcnt in structure kvm_info
+Message-ID: <20230321142235.GD221467@leoy-yangtze.lan>
+References: <20230320061619.29520-1-leo.yan@linaro.org>
+ <20230320061619.29520-2-leo.yan@linaro.org>
+ <ZBmqiKC1FSGI0/iE@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ad31a4ea-8e91-dad0-7944-3893189b918b@amd.com>
+In-Reply-To: <ZBmqiKC1FSGI0/iE@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 06:26:11PM +0530, Sandipan Das wrote:
-> On 3/21/2023 6:12 PM, Peter Zijlstra wrote:
-> > On Tue, Mar 21, 2023 at 04:33:38AM -0700, Breno Leitao wrote:
-> >> The variable 'status' (which contains the unhandled overflow bits) is
-> >> not being properly masked in some cases, displaying the following
-> >> warning:
-> >>
-> >>   WARNING: CPU: 156 PID: 475601 at arch/x86/events/amd/core.c:972 amd_pmu_v2_handle_irq+0x216/0x270
-> >>
-> >> This seems to be happening because the loop is being continued before
-> >> the status bit being unset, in case x86_perf_event_set_period()
-> >> returns 0. This is also causing an inconsistency because the "handled"
-> >> counter is incremented, but the status bit is not cleaned.
-> >>
-> >> Move the bit cleaning together above, together when the "handled"
-> >> counter is incremented.
-> >>
-> >> Signed-off-by: Breno Leitao <leitao@debian.org>
-> > 
-> > Can I get a Fixes: tag so I can consider it for perf/urgent ?
-> 
-> That would be
-> 
-> Fixes: 7685665c390d ("perf/x86/amd/core: Add PerfMonV2 overflow handling")
-> 
+On Tue, Mar 21, 2023 at 10:00:56AM -0300, Arnaldo Carvalho de Melo wrote:
 
-Cheers!
+[...]
+
+> > +static inline void __kvm_info__zput(struct kvm_info **ki)
+> > +{
+> > +	kvm_info__put(*ki);
+> > +	*ki = NULL;
+> > +}
+> > +
+> > +#define kvm_info__zput(ki) __kvm_info__zput(&ki)
+> > +
+> > +static inline struct kvm_info *kvm_info__new(void)
+> > +{
+> > +	struct kvm_info *ki;
+> > +
+> > +	ki = zalloc(sizeof(*ki));
+> > +	if (ki)
+> > +		refcount_set(&ki->refcnt, 1);
+> > +
+> > +	return ki;
+> > +}
+> > +
+> >  #endif /* HAVE_KVM_STAT_SUPPORT */
+> >  
+> >  extern int kvm_add_default_arch_event(int *argc, const char **argv);
+> 
+> I had to add this:
+> 
+> Provide a nop version of kvm_info__zput() to be used when
+> HAVE_KVM_STAT_SUPPORT isn't defined as it is used unconditionally in
+> hists__findnew_entry() and hist_entry__delete().
+
+Thanks a lot, Arnaldo.
+
+Just want to check, before I sent out this series I have run building
+test with the command `make -C tools/perf build-test` and I didn't see
+the building failure.  Do I need to run other testing?
+
+Thanks,
+Leo
