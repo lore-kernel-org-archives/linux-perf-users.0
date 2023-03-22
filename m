@@ -2,96 +2,187 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9821C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75077C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjCVTuv (ORCPT
+        id S229645AbjCVTx1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 15:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33508 "EHLO
+        Wed, 22 Mar 2023 15:53:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjCVTuv (ORCPT
+        with ESMTP id S229936AbjCVTxY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 15:50:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EF34ECE4;
-        Wed, 22 Mar 2023 12:50:50 -0700 (PDT)
+        Wed, 22 Mar 2023 15:53:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC933588;
+        Wed, 22 Mar 2023 12:53:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0BE7CB81DC6;
-        Wed, 22 Mar 2023 19:50:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5918AC433D2;
-        Wed, 22 Mar 2023 19:50:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AF2C2622B0;
+        Wed, 22 Mar 2023 19:53:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56EAC433EF;
+        Wed, 22 Mar 2023 19:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679514647;
-        bh=5v6hCla1ZU7x7GPUKTYMyc2K+buglnhEtB13j0YWNGY=;
+        s=k20201202; t=1679514802;
+        bh=EGfL4wE35fMS5oDaoUpz/hYODYp4mxJqoH76jji9RMc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=af0JDe+rbLx8wgW58K9HqfCcTpqOqvRNZRLyaljX6ljwWZSh2k/2Tn/lzWX9baZuJ
-         IPgUxB/dB4a1xsZeOpu7zkmPg6SvXwANhbYvCkg4vrT6jaUM89zItK5uhaVwZIOw4r
-         xDN0ZT6m/3Z6HZQE6Go8JUzOZAUwBw0Cg0ko9LJ1GQBKKv5sfK+qvBdFdA57a/Krks
-         JCqyez9SrP1Q/97++K5h3k+WsIF38sgoTctvhHNBJHHkZcexE9GvgJs6Flayzbg0Wq
-         GBIeGAdBbdi76qfjb8iZWoDjlkHqeU/qvrrqR7TCj+9BKVv1Yo7yJ3iUM+PxECuROP
-         by01zla384w7w==
+        b=ofPgkeX4sJ9kjTTldjKJui3kiZ1za7IA8Zq3EjhKjPyQhfJcMoGpCmVGoOAqd3Gbi
+         zTAX7t/jbnhnJlApGpEosA9WdhhaJ1ynxb44j/aaGuwkd6C9JLjmWX03TX/nkml8hz
+         LZzZ/KF/zKN8Qv/mrmMolP+MP1ko8sIg46We8B+qHzeFmaQP9igadP6LMo+QEPRp5S
+         g62QolZAHRs1pOdfOO1SejxzhICW5Vu/LM5L60nCvH0t3jEH5liPV3d6g8aNcqpG6b
+         XsmvU5aXystQf3ANqNaGwjoTXGxE7V7xp15rhF7L5TGYAz5tH1BpDD5zObq0vTISyD
+         eQRjck3nyJASA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE11F4052D; Wed, 22 Mar 2023 16:50:44 -0300 (-03)
-Date:   Wed, 22 Mar 2023 16:50:44 -0300
+        id 125334052D; Wed, 22 Mar 2023 16:53:19 -0300 (-03)
+Date:   Wed, 22 Mar 2023 16:53:19 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] perf build: Add warning for when vmlinux.h generation
- fails
-Message-ID: <ZBtcFHMsdUPGrPX4@kernel.org>
-References: <20230322183108.1380882-1-irogers@google.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@redhat.com, svens@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, hca@linux.ibm.com,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [Ping PATCH] perf/test: Fix wrong size for perf test Setup
+ struct perf_event_attr
+Message-ID: <ZBtcrxcljttJXyhM@kernel.org>
+References: <20230322094731.1768281-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230322183108.1380882-1-irogers@google.com>
+In-Reply-To: <20230322094731.1768281-1-tmricht@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 22, 2023 at 11:31:08AM -0700, Ian Rogers escreveu:
-> The warning advises on the NO_BPF_SKEL=1 option.
+Em Wed, Mar 22, 2023 at 10:47:31AM +0100, Thomas Richter escreveu:
+> The test case ./perf test 'Setup struct perf_event_attr' fails.
+> On s390 this output is observed:
 
-Looks ok, applying.
+Thanks, applied.
 
 - Arnaldo
+
  
-> Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.perf | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  # ./perf test -Fvvvv 17
+>  17: Setup struct perf_event_attr                                    :
+>  --- start ---
+>  running './tests/attr/test-stat-C0'
+>  Using CPUID IBM,8561,703,T01,3.6,002f
+>  .....
+>  Event event:base-stat
+>       fd = 1
+>       group_fd = -1
+>       flags = 0|8
+>       cpu = *
+>       type = 0
+>       size = 128     <<<--- wrong, specified in file base-stat
+>       config = 0
+>       sample_period = 0
+>       sample_type = 65536
+>       ...
+>  'PERF_TEST_ATTR=/tmp/tmpgw574wvg ./perf stat -o \
+> 	/tmp/tmpgw574wvg/perf.data -e cycles -C 0 kill >/dev/null \
+> 	2>&1 ret '1', expected '1'
+>   loading result events
+>     Event event-0-0-4
+>       fd = 4
+>       group_fd = -1
+>       cpu = 0
+>       pid = -1
+>       flags = 8
+>       type = 0
+>       size = 136     <<<--- actual size used in system call
+>       .....
+>   compare
+>     matching [event-0-0-4]
+>       to [event:base-stat]
+>       [cpu] 0 *
+>       [flags] 8 0|8
+>       [type] 0 0
+>       [size] 136 128
+>     ->FAIL
+>     match: [event-0-0-4] matches []
+>   expected size=136, got 128
+>   FAILED './tests/attr/test-stat-C0' - match failure
 > 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index ed6b6a070f79..48aba186ceb5 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1072,7 +1072,11 @@ VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
->  
->  $(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
->  ifeq ($(VMLINUX_H),)
-> -	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
-> +	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@ || \
-> +	(echo "Failure to generate vmlinux.h needed for the recommended BPF skeleton support." && \
-> +	echo "To disable this use the build option NO_BPF_SKEL=1." && \
-> +	echo "Alternatively point at a pre-generated vmlinux.h with VMLINUX_H=<path>." && \
-> +	false)
->  else
->  	$(Q)cp "$(VMLINUX_H)" $@
->  endif
+> This mismatch is caused by
+> commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
+> which enlarges the structure perf_event_attr by 8 bytes.
+> 
+> Fix this by adjusting the expected value of size.
+> 
+> Output after:
+>  # ./perf test -Fvvvv 17
+>  17: Setup struct perf_event_attr                                    :
+>  --- start ---
+>  running './tests/attr/test-stat-C0'
+>  Using CPUID IBM,8561,703,T01,3.6,002f
+>  ...
+>   matched
+>   compare
+>     matching [event-0-0-4]
+>       to [event:base-stat]
+>       [cpu] 0 *
+>       [flags] 8 0|8
+>       [type] 0 0
+>       [size] 136 136
+>       ....
+>    ->OK
+>    match: [event-0-0-4] matches ['event:base-stat']
+>  matched
+> 
+> Fixes: 09519ec3b19e ("perf: Add perf_event_attr::config3")
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/tests/attr/base-record       | 2 +-
+>  tools/perf/tests/attr/base-stat         | 2 +-
+>  tools/perf/tests/attr/system-wide-dummy | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
+> index 3ef07a12aa14..27c21271a16c 100644
+> --- a/tools/perf/tests/attr/base-record
+> +++ b/tools/perf/tests/attr/base-record
+> @@ -5,7 +5,7 @@ group_fd=-1
+>  flags=0|8
+>  cpu=*
+>  type=0|1
+> -size=128
+> +size=136
+>  config=0
+>  sample_period=*
+>  sample_type=263
+> diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
+> index 408164456530..a21fb65bc012 100644
+> --- a/tools/perf/tests/attr/base-stat
+> +++ b/tools/perf/tests/attr/base-stat
+> @@ -5,7 +5,7 @@ group_fd=-1
+>  flags=0|8
+>  cpu=*
+>  type=0
+> -size=128
+> +size=136
+>  config=0
+>  sample_period=0
+>  sample_type=65536
+> diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
+> index 8fec06eda5f9..2f3e3eb728eb 100644
+> --- a/tools/perf/tests/attr/system-wide-dummy
+> +++ b/tools/perf/tests/attr/system-wide-dummy
+> @@ -7,7 +7,7 @@ cpu=*
+>  pid=-1
+>  flags=8
+>  type=1
+> -size=128
+> +size=136
+>  config=9
+>  sample_period=4000
+>  sample_type=455
 > -- 
-> 2.40.0.rc1.284.g88254d51c5-goog
+> 2.39.1
 > 
 
 -- 
