@@ -2,117 +2,209 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02748C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 07:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66744C6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 09:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbjCVHgk (ORCPT
+        id S230413AbjCVJs6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 03:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41430 "EHLO
+        Wed, 22 Mar 2023 05:48:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbjCVHg2 (ORCPT
+        with ESMTP id S231158AbjCVJs3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 03:36:28 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3475C9C4;
-        Wed, 22 Mar 2023 00:36:25 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PhKvd3Gpbz17KpN;
-        Wed, 22 Mar 2023 15:33:17 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 22 Mar 2023 15:36:23 +0800
-Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
- perf throttle
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <eranian@google.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230227023508.102230-1-yangjihong1@huawei.com>
- <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
-Message-ID: <37d019af-191c-9955-2417-b7cfa5e5efa3@huawei.com>
-Date:   Wed, 22 Mar 2023 15:36:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Wed, 22 Mar 2023 05:48:29 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBE49755;
+        Wed, 22 Mar 2023 02:48:02 -0700 (PDT)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32M9OrKs025525;
+        Wed, 22 Mar 2023 09:47:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=7Ack44PB3zTTbzytb5hEniJhenc7E3k7ShJ83XU9AFs=;
+ b=cAGnV2rdW112EV2xjo0TNQO5aE3AMq39Ipo+MmBNhazIJcOZJsuvmzzgMTcNSDkkZqR4
+ pJAa8d4Dz+7B6ks3UpOLFXvblBqzW408iBVlnMKBR2c3jj5+9TDJ7fgJtc5JafsvV/tC
+ q02On1zEeprVQg+c4kDg1sARkFSloTtxHxWsmbDWOT40uVJvs7bknpgIkJTcr5GurmP5
+ Ib6R0iHUDavluucIRI5bH6ODDf5UulGmvRAR5EPRwbKSFaf0S2iXPV7N9qtZZGoQ/Svb
+ su8DhHtMtA+rM/+KjeSU/KWAZbtoIQU5TpiUbCAVoZKaOnxqWeZlknDPTYTo6ltDC0qI tA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pfy0y8ed6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Mar 2023 09:47:43 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32M9OmRU025302;
+        Wed, 22 Mar 2023 09:47:42 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pfy0y8ec7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Mar 2023 09:47:42 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32M2erQr001485;
+        Wed, 22 Mar 2023 09:47:40 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3pd4x6cs38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Mar 2023 09:47:40 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32M9la6p43188512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Mar 2023 09:47:36 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7F5C2004E;
+        Wed, 22 Mar 2023 09:47:36 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 629DA2004B;
+        Wed, 22 Mar 2023 09:47:36 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Mar 2023 09:47:36 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, acme@redhat.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [Ping PATCH] perf/test: Fix wrong size for perf test Setup struct perf_event_attr
+Date:   Wed, 22 Mar 2023 10:47:31 +0100
+Message-Id: <20230322094731.1768281-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-In-Reply-To: <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: oBv38gsgOCrgTPqOKrgCyAVsoBVza19j
+X-Proofpoint-ORIG-GUID: j1v-wpUGbGS7pVQuZlsQLFK087frg8wi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-22_06,2023-03-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ bulkscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 priorityscore=1501 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303150002 definitions=main-2303220070
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+The test case ./perf test 'Setup struct perf_event_attr' fails.
+On s390 this output is observed:
 
-PING.
+ # ./perf test -Fvvvv 17
+ 17: Setup struct perf_event_attr                                    :
+ --- start ---
+ running './tests/attr/test-stat-C0'
+ Using CPUID IBM,8561,703,T01,3.6,002f
+ .....
+ Event event:base-stat
+      fd = 1
+      group_fd = -1
+      flags = 0|8
+      cpu = *
+      type = 0
+      size = 128     <<<--- wrong, specified in file base-stat
+      config = 0
+      sample_period = 0
+      sample_type = 65536
+      ...
+ 'PERF_TEST_ATTR=/tmp/tmpgw574wvg ./perf stat -o \
+	/tmp/tmpgw574wvg/perf.data -e cycles -C 0 kill >/dev/null \
+	2>&1 ret '1', expected '1'
+  loading result events
+    Event event-0-0-4
+      fd = 4
+      group_fd = -1
+      cpu = 0
+      pid = -1
+      flags = 8
+      type = 0
+      size = 136     <<<--- actual size used in system call
+      .....
+  compare
+    matching [event-0-0-4]
+      to [event:base-stat]
+      [cpu] 0 *
+      [flags] 8 0|8
+      [type] 0 0
+      [size] 136 128
+    ->FAIL
+    match: [event-0-0-4] matches []
+  expected size=136, got 128
+  FAILED './tests/attr/test-stat-C0' - match failure
 
-This patch has not been responded.
-Please take time to check whether the fix solution is OK.
-Look forward to reviewing the patch. Thanks :)
+This mismatch is caused by
+commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
+which enlarges the structure perf_event_attr by 8 bytes.
 
-Thanks,
-Yang.
+Fix this by adjusting the expected value of size.
 
-On 2023/3/6 9:14, Yang Jihong wrote:
-> Hello,
-> 
-> PING.
-> 
-> Thanks,
-> Yang.
-> 
-> On 2023/2/27 10:35, Yang Jihong wrote:
->> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
->> introduces a change in throttling threshold judgment. Before this,
->> compare hwc->interrupts and max_samples_per_tick, then increase
->> hwc->interrupts by 1, but this commit reverses order of these two
->> behaviors, causing the semantics of max_samples_per_tick to change.
->> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
->> max_samples_per_tick, it should not be throttled, therefore, the judgment
->> condition should be changed to "hwc->interrupts > max_samples_per_tick".
->>
->> In fact, this may cause the hardlockup to fail, The minimum value of
->> max_samples_per_tick may be 1, in this case, the return value of
->> __perf_event_account_interrupt function is 1.
->> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
->> architecture as an example, see x86_pmu_handle_irq).
->>
->> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
->> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->> ---
->>
->> Changes since v2:
->>    - Add fixed commit.
->>
->> Changes since v1:
->>    - Modify commit title.
->>
->>   kernel/events/core.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index f79fd8b87f75..0540a8653906 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct perf_event 
->> *event, int throttle)
->>       } else {
->>           hwc->interrupts++;
->>           if (unlikely(throttle
->> -                 && hwc->interrupts >= max_samples_per_tick)) {
->> +                 && hwc->interrupts > max_samples_per_tick)) {
->>               __this_cpu_inc(perf_throttled_count);
->>               tick_dep_set_cpu(smp_processor_id(), 
->> TICK_DEP_BIT_PERF_EVENTS);
->>               hwc->interrupts = MAX_INTERRUPTS;
->>
-> 
-> .
+Output after:
+ # ./perf test -Fvvvv 17
+ 17: Setup struct perf_event_attr                                    :
+ --- start ---
+ running './tests/attr/test-stat-C0'
+ Using CPUID IBM,8561,703,T01,3.6,002f
+ ...
+  matched
+  compare
+    matching [event-0-0-4]
+      to [event:base-stat]
+      [cpu] 0 *
+      [flags] 8 0|8
+      [type] 0 0
+      [size] 136 136
+      ....
+   ->OK
+   match: [event-0-0-4] matches ['event:base-stat']
+ matched
+
+Fixes: 09519ec3b19e ("perf: Add perf_event_attr::config3")
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/tests/attr/base-record       | 2 +-
+ tools/perf/tests/attr/base-stat         | 2 +-
+ tools/perf/tests/attr/system-wide-dummy | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
+index 3ef07a12aa14..27c21271a16c 100644
+--- a/tools/perf/tests/attr/base-record
++++ b/tools/perf/tests/attr/base-record
+@@ -5,7 +5,7 @@ group_fd=-1
+ flags=0|8
+ cpu=*
+ type=0|1
+-size=128
++size=136
+ config=0
+ sample_period=*
+ sample_type=263
+diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
+index 408164456530..a21fb65bc012 100644
+--- a/tools/perf/tests/attr/base-stat
++++ b/tools/perf/tests/attr/base-stat
+@@ -5,7 +5,7 @@ group_fd=-1
+ flags=0|8
+ cpu=*
+ type=0
+-size=128
++size=136
+ config=0
+ sample_period=0
+ sample_type=65536
+diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
+index 8fec06eda5f9..2f3e3eb728eb 100644
+--- a/tools/perf/tests/attr/system-wide-dummy
++++ b/tools/perf/tests/attr/system-wide-dummy
+@@ -7,7 +7,7 @@ cpu=*
+ pid=-1
+ flags=8
+ type=1
+-size=128
++size=136
+ config=9
+ sample_period=4000
+ sample_type=455
+-- 
+2.39.1
+
