@@ -2,98 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF179C6FD20
-	for <linux-perf-users@archiver.kernel.org>; Tue, 21 Mar 2023 19:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02748C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 07:36:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229807AbjCUTDu (ORCPT
+        id S230008AbjCVHgk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 21 Mar 2023 15:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
+        Wed, 22 Mar 2023 03:36:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjCUTDt (ORCPT
+        with ESMTP id S229939AbjCVHg2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 21 Mar 2023 15:03:49 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAAA5615D;
-        Tue, 21 Mar 2023 12:03:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9CDEB8197D;
-        Tue, 21 Mar 2023 19:02:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E993C433D2;
-        Tue, 21 Mar 2023 19:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679425366;
-        bh=DZpkA18Td+TB5rNUVUpYDY9F5hlRcbHEGl2DeB/6NyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DpOA2WNAh8VlnTo7ntMdatWbklX1NH2ePrt1Ae0K/7iesieawSawMyYBoaoXWSGNd
-         3ElE4SXR79PC+C7ePlHAAIC0UAnnMl7K5p49j8iYhrT2tINajduL9uBgJdKYVCMV+w
-         kWq7rs0t+OyVKGPtJoo8k30E0cwyinciXm+gqmvnmNNCaqvElp5zPOXmxAfMeckKXA
-         v0xcETFrUNx25uEwMGHcGZS8SXXF6uZFPko3nNoRUw1lTnleWvthEAJbj5V4wH32QV
-         0PAFS+Mnq/EGsW3KveM1HbMXozjx2KYpSiGGzQh0h5b52WpriPpD1bGk3z5ctv/ve+
-         93dte4wlEe1Cw==
-Date:   Tue, 21 Mar 2023 19:02:40 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
-Message-ID: <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+        Wed, 22 Mar 2023 03:36:28 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3475C9C4;
+        Wed, 22 Mar 2023 00:36:25 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PhKvd3Gpbz17KpN;
+        Wed, 22 Mar 2023 15:33:17 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 22 Mar 2023 15:36:23 +0800
+Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
+ perf throttle
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <eranian@google.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230227023508.102230-1-yangjihong1@huawei.com>
+ <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
+Message-ID: <37d019af-191c-9955-2417-b7cfa5e5efa3@huawei.com>
+Date:   Wed, 22 Mar 2023 15:36:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZiGw5SLj3JFuo5Bg"
-Content-Disposition: inline
-In-Reply-To: <20230315051444.1683170-1-anshuman.khandual@arm.com>
-X-Cookie: Will it improve my CASH FLOW?
+In-Reply-To: <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
---ZiGw5SLj3JFuo5Bg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+PING.
 
-On Wed, Mar 15, 2023 at 10:44:34AM +0530, Anshuman Khandual wrote:
-> This series enables perf branch stack sampling support on arm64 platform
-> via a new arch feature called Branch Record Buffer Extension (BRBE). All
-> relevant register definitions could be accessed here.
->=20
-> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+This patch has not been responded.
+Please take time to check whether the fix solution is OK.
+Look forward to reviewing the patch. Thanks :)
 
-While looking at another feature I noticed that HFGITR_EL2 has two traps
-for BRBE instructions, nBRBINJ and nBRBIALL which trap BRB INJ and BRB
-IALL.  Even if we don't use those right now does it make sense to
-document a requirement for those traps to be disabled now in case we
-need them later, and do so during EL2 setup for KVM guests?  That could
-always be done incrementally.
+Thanks,
+Yang.
 
-I've got a patch adding the definition of that register to sysreg which
-I should be sending shortly, no need to duplicate that effort.
-
---ZiGw5SLj3JFuo5Bg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQZ/08ACgkQJNaLcl1U
-h9A2Vwf+OlSvXdhyewDkyTQV0UhoX80wH9Aki8JnkTGnz29AiHDh9G1abuOJhkLZ
-ipMeXx43tHlF37e44zk90Xl1TsyPuX0mCOIGwdfqyZCO8MPNA3nehtCuvm2pLgVd
-ONOD6HZp9VM6sh3itx3EBI7Z37qrZ2MjO8VyYE0z6VHT2ZH3MJZaaUlqepBF2aP2
-n3VpRR9ZdUpZI1oSlZJa1a9o4JRXknDgHKYkuj7Lp9naeBOuoNzSUm/SYB9RxDXu
-FDU/RzYV6oCAfAEvb3H1Cr4SEpyK+TLcRGQ78JlFVZQOEAECtd8NjnxZebA9pRAK
-XGMS2wcFvKk/Zqzbr6qxNyBJliQJsw==
-=U6ZJ
------END PGP SIGNATURE-----
-
---ZiGw5SLj3JFuo5Bg--
+On 2023/3/6 9:14, Yang Jihong wrote:
+> Hello,
+> 
+> PING.
+> 
+> Thanks,
+> Yang.
+> 
+> On 2023/2/27 10:35, Yang Jihong wrote:
+>> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
+>> introduces a change in throttling threshold judgment. Before this,
+>> compare hwc->interrupts and max_samples_per_tick, then increase
+>> hwc->interrupts by 1, but this commit reverses order of these two
+>> behaviors, causing the semantics of max_samples_per_tick to change.
+>> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
+>> max_samples_per_tick, it should not be throttled, therefore, the judgment
+>> condition should be changed to "hwc->interrupts > max_samples_per_tick".
+>>
+>> In fact, this may cause the hardlockup to fail, The minimum value of
+>> max_samples_per_tick may be 1, in this case, the return value of
+>> __perf_event_account_interrupt function is 1.
+>> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
+>> architecture as an example, see x86_pmu_handle_irq).
+>>
+>> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>
+>> Changes since v2:
+>>    - Add fixed commit.
+>>
+>> Changes since v1:
+>>    - Modify commit title.
+>>
+>>   kernel/events/core.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index f79fd8b87f75..0540a8653906 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct perf_event 
+>> *event, int throttle)
+>>       } else {
+>>           hwc->interrupts++;
+>>           if (unlikely(throttle
+>> -                 && hwc->interrupts >= max_samples_per_tick)) {
+>> +                 && hwc->interrupts > max_samples_per_tick)) {
+>>               __this_cpu_inc(perf_throttled_count);
+>>               tick_dep_set_cpu(smp_processor_id(), 
+>> TICK_DEP_BIT_PERF_EVENTS);
+>>               hwc->interrupts = MAX_INTERRUPTS;
+>>
+> 
+> .
