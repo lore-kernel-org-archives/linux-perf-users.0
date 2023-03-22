@@ -2,182 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B7EC6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 20:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5FAC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 22:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231285AbjCVU7j (ORCPT
+        id S229617AbjCVWiO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 16:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33326 "EHLO
+        Wed, 22 Mar 2023 18:38:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230478AbjCVU7j (ORCPT
+        with ESMTP id S229669AbjCVWiN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 16:59:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9203131;
-        Wed, 22 Mar 2023 13:59:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 788A262276;
-        Wed, 22 Mar 2023 20:59:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 749F1C433D2;
-        Wed, 22 Mar 2023 20:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679518776;
-        bh=87Afl5HnFSF4WgZ+2E0ys+G1g6P6k7cj2A7K/QdCgHY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qCH6pq7L+vFr2CaPWw+ssQd9utvA8fc/5RhttZ0oFWqVntcHd2RlMDRte+CowoGRn
-         O+Y4qSrVHd86VutZAXzZlQWlV0I25bg71lIPH0W6lxqXsKaN3E7SYLgSFZwNAeTABZ
-         V30UbRlxh+JQ7Fw+CB3GM02cul2GVaaw4K+SF4yA6U6Z9kMa4nC1MIsf24HmIK5HUH
-         8LMGsXJxAMxlEyQCqgEpHQUav9w2RTHTjWe9bpTCzR1Ga2JEQ9yjyezKg7VszN4c7e
-         B8d5r1EiRmGtV90ec96YCs6T9tPbvJfVURw2Hw2cIcbN8y2r8VLMTWB4Oxn7fsJh2G
-         WYN+b92cmLuBg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 82B164052D; Wed, 22 Mar 2023 17:59:33 -0300 (-03)
-Date:   Wed, 22 Mar 2023 17:59:33 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        sumanthk@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
-Message-ID: <ZBtsNTt6Fbp1Lg3t@kernel.org>
-References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
- <20230313080201.2440201-2-tmricht@linux.ibm.com>
- <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
- <ZA9sYL/re/aNVpo+@kernel.org>
- <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
- <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
- <ZBDo2GiuUTrHhd2L@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZBDo2GiuUTrHhd2L@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Wed, 22 Mar 2023 18:38:13 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F058A54
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 15:38:12 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 204-20020a250fd5000000b00b6d6655dc35so9497734ybp.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 15:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679524691;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rqcDRoMmYWeX5NDcnteKgJKe46jiDR0Hq2pE99Nt0ww=;
+        b=WNdHqK2ezirDAb0xAE0C9JaLRQFlmz/0jo1AbIqlHcKU+QbXbN7iPnnewB1hCAgQQl
+         YtqMFZHEYq9uNtHssT8nS7kIf7CboYGpQsYU7gDwFWhYUv4TCkg62g9yC20aotFbbGFq
+         qcXrJqwS/ELMb31NkeYdKBBNMImoN4uipAnd/x/H+wYSpnOAzsTacGAXtHn/WvRcszCO
+         Co9TlKo6S1Hm87ucMrK+YShgsULf1glVle8A7YVUzvwVlx9D7LV/0WiK9OradqC+BwZs
+         ozQHi/m8jB1UYrA2DyaRB9DSc791dUcOsUlJi0J0q2r43au1bKDaCOu95L553/JBn8lu
+         vPSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679524691;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rqcDRoMmYWeX5NDcnteKgJKe46jiDR0Hq2pE99Nt0ww=;
+        b=5IUczNb1dOnOjpER0c7UlbuaDnA3O129DjjEDKpPrFxAHOp8E4HjBnx3LShenzbAbH
+         mmoqE+SvgRrAFaE07cQZgWo29FM/SnMoPVgK3UjP14X5DLU6y0Dbs4b14/MjJKdfWEDk
+         DGEojxmdY+CYBFdluk7IXFQ73R0rTGp5eQvpI/Cd8LSKIaZYRAG4uMYf+iqkPcoXvKGd
+         WlsagW5yi8wPdvRfTy46hy8kT6aPuku4BowO0WnVQX7U1cVASX3XYG5IYDBD4WiCPCay
+         T+3Q7zie+Kw7+KevFGbTg7wCuO6+sh3k3FwfcE6jcO2PI5hbQzTXVK0jqdlDW/6y+ozz
+         naLA==
+X-Gm-Message-State: AAQBX9dxOp6YjUhMxerJ6NHcfMKoxBDgeWXUZp3T7oRt0vJGLJ/A9x/h
+        58uWLzGZ0bPbeRgB7QgPTFTobCMGJPYJ
+X-Google-Smtp-Source: AKy350bqzs2DPjWTDSqVSMPj5xs0NJwaS3gGgcdCAB0OMu8A9/js0MRcvymsbOdNeWS3WezH3mn0FqpXIKn6
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:6fe2:153b:3323:a17])
+ (user=irogers job=sendgmr) by 2002:a05:6902:70a:b0:b21:5fb4:c6e6 with SMTP id
+ k10-20020a056902070a00b00b215fb4c6e6mr841255ybt.11.1679524691640; Wed, 22 Mar
+ 2023 15:38:11 -0700 (PDT)
+Date:   Wed, 22 Mar 2023 15:38:01 -0700
+Message-Id: <20230322223801.1451827-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+Subject: [PATCH] perf vendor events: Sandybridge and version number minor updates
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 14, 2023 at 06:36:24PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Mar 14, 2023 at 09:34:46AM -0700, Ian Rogers escreveu:
-> > On Tue, Mar 14, 2023 at 1:20 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > >
-> > > On 3/13/23 19:33, Arnaldo Carvalho de Melo wrote:
-> > > > Em Mon, Mar 13, 2023 at 08:22:44AM -0700, Ian Rogers escreveu:
-> > > >> On Mon, Mar 13, 2023 at 1:30 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > > >>>
-> > > >>> Add metrics for s390 z16
-> > > >>> - Percentage sourced from Level 2 cache
-> > > >>> - Percentage sourced from Level 3 on same chip cache
-> > > >>> - Percentage sourced from Level 4 Local cache on same book
-> > > >>> - Percentage sourced from Level 4 Remote cache on different book
-> > > >>> - Percentage sourced from memory
-> > > >>>
-> > > >>> For details about the formulas see this documentation:
-> > > >>> https://www.ibm.com/support/pages/system/files/inline-files/CPU%20MF%20Formulas%20including%20z16%20-%20May%202022_1.pdf
-> > > >>>
-> > > >>> Outpuf after:
-> > > >>>  # ./perf stat -M l4rp -- dd if=/dev/zero of=/dev/null bs=10M count=10K
-> > > >>>  .... dd output deleted
-> > > >>>
-> > > >>>  Performance counter stats for 'dd if=/dev/zero of=/dev/null bs=10M count=10K':
-> > > >>>
-> > > >>>                  0      IDCW_OFF_DRAWER_CHIP_HIT         #     0.00 l4rp
-> > > >>>            431,866      L1I_DIR_WRITES
-> > > >>>              2,395      IDCW_OFF_DRAWER_IV
-> > > >>>                  0      ICW_OFF_DRAWER
-> > > >>>                  0      IDCW_OFF_DRAWER_DRAWER_HIT
-> > > >>>              1,437      DCW_OFF_DRAWER
-> > > >>>        425,960,793      L1D_DIR_WRITES
-> > > >>>
-> > > >>>       12.165030699 seconds time elapsed
-> > > >>>
-> > > >>>        0.001037000 seconds user
-> > > >>>       12.162140000 seconds sys
-> > > >>>
-> > > >>>  #
-> > > >>>
-> > > >>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > >>> Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
-> > > >>
-> > > >> Acked-by: Ian Rogers <irogers@google.com>
-> > > >
-> > > > Thanks, applied the first two patches, please address the review
-> > > > suggestions for patches 3-6 and resubmit only those.
-> > > >
-> > > > The patches will be in the public perf-tools-next branch later today.
-> > > >
-> > > > - Arnaldo
-> > > >
-> > >
-> > > I would really prefer the current implementation without using "ScaleUnit": "100%"
-> > > The reason is that these formulars are given to me from the s390 Performance team.
-> > > They want to use the exact same formulars on all platforms running on s390
-> > > which includes z/OS and z/VM. This way they are sure to get the same numbers.
-> > >
-> > > Hope this background info helps.
-> > 
-> > For the series:
-> > Acked-by: Ian Rogers <irogers@google.com>
-> 
-> Thanks, applied.
-> 
-> - Arnaldo
+Add BR_MISP_EXEC.INDIRECT to Sandybridge. Update version numbers based on:
+https://github.com/intel/perfmon/pull/62
+which didn't modify the generated perf json.
 
-While trying to cross build to s390 on:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/x86/mapfile.csv         | 14 +++++++-------
+ .../pmu-events/arch/x86/sandybridge/pipeline.json  |  8 ++++++++
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
-ubuntu:18.04
-
-using python3
- 
-
-   CC      /tmp/build/perf/tests/parse-events.o
-Exception processing pmu-events/arch/s390/cf_z16/extended.json
-Traceback (most recent call last):
-  File "pmu-events/jevents.py", line 997, in <module>
-    main()
-  File "pmu-events/jevents.py", line 979, in main
-    ftw(arch_path, [], preprocess_one_file)
-  File "pmu-events/jevents.py", line 935, in ftw
-    ftw(item.path, parents + [item.name], action)
-  File "pmu-events/jevents.py", line 933, in ftw
-    action(parents, item)
-  File "pmu-events/jevents.py", line 514, in preprocess_one_file
-    for event in read_json_events(item.path, topic):
-  File "pmu-events/jevents.py", line 388, in read_json_events
-    events = json.load(open(path), object_hook=JsonEvent)
-  File "/usr/lib/python3.6/json/__init__.py", line 296, in load
-    return loads(fp.read(),
-  File "/usr/lib/python3.6/encodings/ascii.py", line 26, in decode
-    return codecs.ascii_decode(input, self.errors)[0]
-UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 4271: ordinal not in range(128)
-
->  
-> > Using ScaleUnit won't change the result. A ScaleUnit of "100%" means
-> > scale the result up by multiplying by 100 and then apply the % after
-> > the value. Another nit is having metrics that place their units in the
-> > name, like _percent, is usually a sign the name can be better. Perhaps
-> > we can follow up with some clean up.
-> > 
-> > Thanks,
-> > Ian
-> > 
-> > > Thanks a lot.
-> > > --
-> > > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> > > --
-> > > Vorsitzender des Aufsichtsrats: Gregor Pillen
-> > > Geschäftsführung: David Faller
-> > > Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-> > >
-> 
-> -- 
-> 
-> - Arnaldo
-
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 9abebe50ae0d..41d755d570e6 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -2,26 +2,26 @@ Family-model,Version,Filename,EventType
+ GenuineIntel-6-(97|9A|B7|BA|BF),v1.19,alderlake,core
+ GenuineIntel-6-BE,v1.19,alderlaken,core
+ GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
+-GenuineIntel-6-(3D|47),v26,broadwell,core
+-GenuineIntel-6-56,v7,broadwellde,core
+-GenuineIntel-6-4F,v19,broadwellx,core
++GenuineIntel-6-(3D|47),v27,broadwell,core
++GenuineIntel-6-56,v9,broadwellde,core
++GenuineIntel-6-4F,v20,broadwellx,core
+ GenuineIntel-6-55-[56789ABCDEF],v1.17,cascadelakex,core
+ GenuineIntel-6-9[6C],v1.03,elkhartlake,core
+ GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1.01,goldmontplus,core
+ GenuineIntel-6-A[DE],v1.01,graniterapids,core
+-GenuineIntel-6-(3C|45|46),v32,haswell,core
+-GenuineIntel-6-3F,v26,haswellx,core
++GenuineIntel-6-(3C|45|46),v33,haswell,core
++GenuineIntel-6-3F,v27,haswellx,core
+ GenuineIntel-6-(7D|7E|A7),v1.17,icelake,core
+ GenuineIntel-6-6[AC],v1.19,icelakex,core
+ GenuineIntel-6-3A,v23,ivybridge,core
+ GenuineIntel-6-3E,v22,ivytown,core
+-GenuineIntel-6-2D,v22,jaketown,core
++GenuineIntel-6-2D,v23,jaketown,core
+ GenuineIntel-6-(57|85),v10,knightslanding,core
+ GenuineIntel-6-A[AC],v1.01,meteorlake,core
+ GenuineIntel-6-1[AEF],v3,nehalemep,core
+ GenuineIntel-6-2E,v3,nehalemex,core
+-GenuineIntel-6-2A,v18,sandybridge,core
++GenuineIntel-6-2A,v19,sandybridge,core
+ GenuineIntel-6-(8F|CF),v1.11,sapphirerapids,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v55,skylake,core
+diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+index 54454e5e262c..ecaf94ccc9c7 100644
+--- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+@@ -210,6 +210,14 @@
+         "SampleAfterValue": "200003",
+         "UMask": "0xc4"
+     },
++    {
++        "BriefDescription": "Speculative mispredicted indirect branches",
++        "EventCode": "0x89",
++        "EventName": "BR_MISP_EXEC.INDIRECT",
++        "PublicDescription": "Counts speculatively miss-predicted indirect branches at execution time. Counts for indirect near CALL or JMP instructions (RET excluded).",
++        "SampleAfterValue": "200003",
++        "UMask": "0xe4"
++    },
+     {
+         "BriefDescription": "Not taken speculative and retired mispredicted macro conditional branches.",
+         "EventCode": "0x89",
 -- 
+2.40.0.rc1.284.g88254d51c5-goog
 
-- Arnaldo
