@@ -2,190 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E79C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FBCC76196
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjCVTRP (ORCPT
+        id S229614AbjCVTon (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 15:17:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40868 "EHLO
+        Wed, 22 Mar 2023 15:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230025AbjCVTRO (ORCPT
+        with ESMTP id S230026AbjCVTo0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 15:17:14 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090AE60436;
-        Wed, 22 Mar 2023 12:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679512625; x=1711048625;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tx1Kcuf4QpLRjDayD+eITxUGYHkLN5dVzHW4VE152Xs=;
-  b=YW9agoSQznCtVYvxLTvUZIBCwqLE6DCamK08BqbPoo90D/+bOwyi8uy2
-   A9bW+v80epiB2jRgZdJQYvR/hhrQzbwrjN9GQ6x/1RsA8wJD14zj1ESc3
-   YQgtL3SGjEB50dxdkvuF4iLzESbxjU9mtXw0f5bDbM/VBHDbhhyzQy/8n
-   XqgAPE9vFJ+4kEJvHcyFdIH9mBgN+NsRCWl+ORJageF9geqIOPVlgAVzo
-   P6sS70c1oL0GUtN/n2QtBf9x8TgQISNm9d5SDzWNZghqab2pM6WF6BSTJ
-   JYutmp5aSSmt8i1o2uTyZLDtXfOHIH5Rv43rMVR6mcuQNxsdQ5BmNIy9I
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="404202562"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="404202562"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 12:17:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="927945513"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="927945513"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2023 12:17:03 -0700
-Received: from [10.209.109.162] (kliang2-mobl1.ccr.corp.intel.com [10.209.109.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 22 Mar 2023 15:44:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAFC2E0D8;
+        Wed, 22 Mar 2023 12:44:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 1F258580C35;
-        Wed, 22 Mar 2023 12:17:02 -0700 (PDT)
-Message-ID: <72b9cb37-dc6b-a802-2506-693c75180434@linux.intel.com>
-Date:   Wed, 22 Mar 2023 15:17:00 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 86BA7622AF;
+        Wed, 22 Mar 2023 19:44:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C18C4339B;
+        Wed, 22 Mar 2023 19:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679514264;
+        bh=v6wrCRpwTbs+zrgf9K0oaoTZYkFPhLyZviupJEf1tXI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=plL7QeiGkYaJ0K144eidjv+DgL5AyOb2UMgZXIgM8GpE8fWlN60RmyPAEnM94Bdvy
+         j7G+yZsXksKF//eOGBis30TdbueyeeEXd0kd872oVYjvc/aHaXKbYAqq7RnwQMZRpI
+         WUuCrQMcshiDkBmY5+nAzvcpVYNTew3AXLlFCmZ6XdSBSs9Y/cSYYLwRrVrhXJcrES
+         cz9Yp2lwfrQclyWeT3sNxzeI60NqJaEXwg9LVFC3n0ecTHTJPRHBaePidHNP/jjD0D
+         7mKahClgSBj8UWM+2892i7lUoTReyf30CBhYunHRzsYjpJNA4RtsMFnuvEDDuTqteH
+         pen58IO4Ug4Gg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B24044052D; Wed, 22 Mar 2023 16:44:20 -0300 (-03)
+Date:   Wed, 22 Mar 2023 16:44:20 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Subject: Re: [PATCH 0/1] perf report: append inlines to non-dwarf callchains
+Message-ID: <ZBtalEw0qKQFlVWR@kernel.org>
+References: <20230316133557.868731-1-asavkov@redhat.com>
+ <CAM9d7ciT7Wtmxt0_2ZVv4nbAb1KoeX_itTSAhz8B9T41-NeZYQ@mail.gmail.com>
+ <ZBQZoyJc7mhUrL8n@samus.usersys.redhat.com>
+ <CAM9d7ch9NjnaB5dB6fO7WKdwPd8M9DmNpdu4-V-8R+96ssxMvA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH] perf/core: Fix the same task check in
- perf_event_set_output
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-        nadav.amit@gmail.com,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        jolsa@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        mingo@redhat.com, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-References: <20220711180706.3418612-1-kan.liang@linux.intel.com>
- <be7e6a74-4863-d5eb-51ff-26aa2890f2bd@intel.com>
- <20230322134203.GB2357380@hirez.programming.kicks-ass.net>
- <c89fa4b3-f1f9-58f6-f14d-69e37dd4ab4c@intel.com>
-Content-Language: en-US
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <c89fa4b3-f1f9-58f6-f14d-69e37dd4ab4c@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7ch9NjnaB5dB6fO7WKdwPd8M9DmNpdu4-V-8R+96ssxMvA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2023-03-22 10:15 a.m., Adrian Hunter wrote:
-> On 22/03/23 15:42, Peter Zijlstra wrote:
->> On Wed, Mar 22, 2023 at 12:59:28PM +0200, Adrian Hunter wrote:
->>> On 11/07/22 21:07, kan.liang@linux.intel.com wrote:
->>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>
->>>> With the --per-thread option, perf record errors out when sampling with
->>>> a hardware event and a software event as below.
->>>>
->>>>  $ perf record -e cycles,dummy --per-thread ls
->>>>  failed to mmap with 22 (Invalid argument)
->>>>
->>>> The same task is sampled with the two events. The IOC_OUTPUT is invoked
->>>> to share the mmap memory of the task between the events. In the
->>>> perf_event_set_output(), the event->ctx is used to check whether the
->>>> two events are attached to the same task. However, a hardware event and
->>>> a software event are from different task context. The check always
->>>> fails.
->>>>
->>>> The task struct is stored in the event->hw.target for each per-thread
->>>> event. It can be used to determine whether two events are attached to
->>>> the same task.
->>>>
->>>> The patch can also fix another issue reported months ago.
->>>> https://lore.kernel.org/all/92645262-D319-4068-9C44-2409EF44888E@gmail.com/
->>>> The event->ctx is not ready when the perf_event_set_output() is invoked
->>>> in the perf_event_open(), while the event->hw.target has been assigned
->>>> at the moment.
->>>>
->>>> The problem should be a long time issue since commit c3f00c70276d
->>>> ("perf: Separate find_get_context() from event initialization"). The
->>>> event->hw.target doesn't exist at that time. Here, the patch which
->>>> introduces the event->hw.target is used by the Fixes tag.
->>>>
->>>> The problem should still exists between the broken patch and the
->>>> event->hw.target patch. This patch does not intend to fix that case.
->>>>
->>>> Fixes: 50f16a8bf9d7 ("perf: Remove type specific target pointers")
->>>> Reviewed-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>
->>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->>>
->>> Did this slip through the cracks, or is there more complexity
->>> to this case than just sharing the rb?
->>
->> Both; I very much missed it, but looking at it now, I'm not at all sure
->> it is correct prior to the whole context rewrite we did recently.
->>
->> So after the rewrite every cpu/task only has a single
->> perf_event_context, and your change below is actually an equivalence.
->>
-
-Right, they are equivalent after the rewrite. I cannot reproduce the
-"failed to mmap with 22 (Invalid argument)" issue with 6.2 and later
-anymore.
-
-But the issue reported by Nadav* can still be reproduced with the latest
-6.3-rc.*
-https://lore.kernel.org/all/92645262-D319-4068-9C44-2409EF44888E@gmail.com/
-Because the event->ctx is still not set when the perf_event_set_output()
-is invoked
-in the perf_event_open(). The rewrite doesn't change with it.
-
-
->> But prior to that a task could have multiple contexts. Now they got
->> co-scheduled most of the times and it will probably work, but I'm not
->> entirely sure.
->>
->> So how about we change the Fixes tag to something like:
->>
->> Fixes: c3f00c70276d ("perf: Separate find_get_context() from event initialization") # >= v6.2
->>
-
-Not sure if we want the # >= v6.2.
-
-For v6.2 and later, the patch can fixes Nadav's issue.
-
-For v6.1 and earlier, the patch fixes both Nadav's issue and the issue
-described in the description.
-
-I think I can send a V2 patch to make the history clear in the description.
-
-Thanks,
-Kan
-
->> And anybody that wants to back-port this further gets to either do the
->> full audit and/or keep the pieces.
->>
->> Hmm?
+Em Wed, Mar 22, 2023 at 11:18:49AM -0700, Namhyung Kim escreveu:
+> On Fri, Mar 17, 2023 at 12:41 AM Artem Savkov <asavkov@redhat.com> wrote:
+> >
+> > On Thu, Mar 16, 2023 at 02:26:18PM -0700, Namhyung Kim wrote:
+> > > Hello,
+> > >
+> > > On Thu, Mar 16, 2023 at 6:36 AM Artem Savkov <asavkov@redhat.com> wrote:
+> > > >
+> > > > In an email to Arnaldo Andrii Nakryiko suggested that perf can get
+> > > > information about inlined functions from dwarf when available and then
+> > > > add it to userspace stacktraces even in framepointer or lbr mode.
+> > > > Looking closer at perf it turned out all required bits and pieces are
+> > > > already there and inline information can be easily added to both
+> > > > framepointer and lbr callchains by adding an append_inlines() call to
+> > > > add_callchain_ip().
+> > >
+> > > Looks great!  Have you checked it with perf report -g callee ?
+> > > I'm not sure the ordering of inlined functions is maintained
+> > > properly.  Maybe you can use --no-children too to simplify
+> > > the output.
+> >
+> > Thanks for the suggestion. I actually have another test program with
+> > functions being numbered rather than (creatively) named, so it might be
+> > easier to use it to figure out ordering. Here's the code:
 > 
-> Seems reasonable to me.  Kan?
+> Yep, looks good.
 > 
->>
->>>> ---
->>>>  kernel/events/core.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index b4d62210c3e5..22df79d3f19d 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -12080,7 +12080,7 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
->>>>  	/*
->>>>  	 * If its not a per-cpu rb, it must be the same task.
->>>>  	 */
->>>> -	if (output_event->cpu == -1 && output_event->ctx != event->ctx)
->>>> +	if (output_event->cpu == -1 && output_event->hw.target != event->hw.target)
->>>>  		goto out;
->>>>  
->>>>  	/*
->>>
-> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+So, I'll apply this shorter patch instead, ok?
+
+- Arnaldo
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 803c9d1803dd26ef..abf6167f28217fe6 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -44,6 +44,7 @@
+ #include <linux/zalloc.h>
+ 
+ static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
++static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms, u64 ip);
+ 
+ static struct dso *machine__kernel_dso(struct machine *machine)
+ {
+@@ -2322,6 +2323,10 @@ static int add_callchain_ip(struct thread *thread,
+ 	ms.maps = al.maps;
+ 	ms.map = al.map;
+ 	ms.sym = al.sym;
++
++	if (append_inlines(cursor, &ms, ip) == 0)
++		return 0;
++
+ 	srcline = callchain_srcline(&ms, al.addr);
+ 	return callchain_cursor_append(cursor, ip, &ms,
+ 				       branch, flags, nr_loop_iter,
