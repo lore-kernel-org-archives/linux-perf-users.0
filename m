@@ -2,121 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FBCC76196
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1638EC6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbjCVTon (ORCPT
+        id S229626AbjCVTrV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 15:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
+        Wed, 22 Mar 2023 15:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230026AbjCVTo0 (ORCPT
+        with ESMTP id S229539AbjCVTrU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 15:44:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAFC2E0D8;
-        Wed, 22 Mar 2023 12:44:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 86BA7622AF;
-        Wed, 22 Mar 2023 19:44:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C18C4339B;
-        Wed, 22 Mar 2023 19:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679514264;
-        bh=v6wrCRpwTbs+zrgf9K0oaoTZYkFPhLyZviupJEf1tXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=plL7QeiGkYaJ0K144eidjv+DgL5AyOb2UMgZXIgM8GpE8fWlN60RmyPAEnM94Bdvy
-         j7G+yZsXksKF//eOGBis30TdbueyeeEXd0kd872oVYjvc/aHaXKbYAqq7RnwQMZRpI
-         WUuCrQMcshiDkBmY5+nAzvcpVYNTew3AXLlFCmZ6XdSBSs9Y/cSYYLwRrVrhXJcrES
-         cz9Yp2lwfrQclyWeT3sNxzeI60NqJaEXwg9LVFC3n0ecTHTJPRHBaePidHNP/jjD0D
-         7mKahClgSBj8UWM+2892i7lUoTReyf30CBhYunHRzsYjpJNA4RtsMFnuvEDDuTqteH
-         pen58IO4Ug4Gg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B24044052D; Wed, 22 Mar 2023 16:44:20 -0300 (-03)
-Date:   Wed, 22 Mar 2023 16:44:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: Re: [PATCH 0/1] perf report: append inlines to non-dwarf callchains
-Message-ID: <ZBtalEw0qKQFlVWR@kernel.org>
-References: <20230316133557.868731-1-asavkov@redhat.com>
- <CAM9d7ciT7Wtmxt0_2ZVv4nbAb1KoeX_itTSAhz8B9T41-NeZYQ@mail.gmail.com>
- <ZBQZoyJc7mhUrL8n@samus.usersys.redhat.com>
- <CAM9d7ch9NjnaB5dB6fO7WKdwPd8M9DmNpdu4-V-8R+96ssxMvA@mail.gmail.com>
+        Wed, 22 Mar 2023 15:47:20 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7725A4ECE9
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 12:47:19 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id m5so13450655uae.11
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 12:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679514438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=08wnh3quRZ6nomUsXV/e3UBTZE3XR+agqVP4qBteAYw=;
+        b=oNZ310hl+Q8w/39sMbzqdhg2jrH/AhIcxhCYOei7/P7aHZzP2OAI/tkt6B8Z2AqAGz
+         lqIzM3unu5Sc8k0p0htnh7GrfjtG1bv0EAvuoFFQ4lKqvIks9sCiaAY0ytEj5t2hYkJo
+         2W9yKBmIp1ONndVwISRfV0K+zz0zhRsPNghHGU8Usf6s/E/2F3z9XHZugwPQOzGFoKha
+         T0s88Ia7ub/86GvCOu2/o6D7lJsSoEvCMs4kctsfP5SrdGwwi/XRGWa5dhAVFGmR981i
+         +tXDvOCK+X62qYvO3zLImptgXok8lvUHBhk0cZeRqcSLj/5u1qb+4kTq8XFHCxxHW48o
+         n/gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679514438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=08wnh3quRZ6nomUsXV/e3UBTZE3XR+agqVP4qBteAYw=;
+        b=aeB6zWu7uO0jAOHdgtc8TpSWYCvMv4ksdKk9oVXsOe6IHugMt2erWBLS/WU0kBJCdp
+         A++mMCdfCadu5O1RKzPFkseXrdtNZUqDxXKG0PD5pEeAQ2UgRHw+lpox+zsRWf9lu39O
+         fO5Ayccbb+tudsVgLD9Om/rrvbJQqlK9caNWPZG3TQdeeZvdoh41KXvy5vabd+kQAPuU
+         27l1gFILcYloftGVjUD8w1OvIB4Ovg9dzwtKm1AslcIYoTwl5IY+qJW9Vq25RsGAhDgN
+         LE4mXG1z2TT9Ymdvcm4o3QPT5ZNQnZrE4U8KP3EAMz1bxLqsX9A9b+Y2G3W5WKUsop7b
+         bvkA==
+X-Gm-Message-State: AAQBX9cGt4qTPjITZ6fotBb0plmFurZdSZjw4mXfQWd3WTlvEBtSvP7G
+        wlAoBATqsfwywc43VjcWdnUIHBg7LGrLQcY+8xKhP0PdhqQlvg==
+X-Google-Smtp-Source: AKy350YH/RwIRzhUOLHjsA692J3PTgoEVLh1fW79IVY3Fj7uFEykjWu1hOzZIC+cL11T8QskfuLE/PZ/45eSNei/0j0=
+X-Received: by 2002:a05:6130:215:b0:68b:9eed:1c7d with SMTP id
+ s21-20020a056130021500b0068b9eed1c7dmr4556776uac.0.1679514438560; Wed, 22 Mar
+ 2023 12:47:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ch9NjnaB5dB6fO7WKdwPd8M9DmNpdu4-V-8R+96ssxMvA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <CAOBGo4z=LObbQ-KRRuH__pFsC=1r1jQ2r0e3TbCTeweA9YsDxA@mail.gmail.com>
+ <01A1CCF5-C9C0-484B-A1B7-08514CE5453F@gmail.com>
+In-Reply-To: <01A1CCF5-C9C0-484B-A1B7-08514CE5453F@gmail.com>
+From:   Travis Downs <travis.downs@gmail.com>
+Date:   Wed, 22 Mar 2023 16:46:42 -0300
+Message-ID: <CAOBGo4zGRSYrq1qCPneEdH8FcOO=4C8DXb49Rk0aaiOE2rk5ZA@mail.gmail.com>
+Subject: Re: Cross-arch analysis
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 22, 2023 at 11:18:49AM -0700, Namhyung Kim escreveu:
-> On Fri, Mar 17, 2023 at 12:41 AM Artem Savkov <asavkov@redhat.com> wrote:
-> >
-> > On Thu, Mar 16, 2023 at 02:26:18PM -0700, Namhyung Kim wrote:
-> > > Hello,
-> > >
-> > > On Thu, Mar 16, 2023 at 6:36 AM Artem Savkov <asavkov@redhat.com> wrote:
-> > > >
-> > > > In an email to Arnaldo Andrii Nakryiko suggested that perf can get
-> > > > information about inlined functions from dwarf when available and then
-> > > > add it to userspace stacktraces even in framepointer or lbr mode.
-> > > > Looking closer at perf it turned out all required bits and pieces are
-> > > > already there and inline information can be easily added to both
-> > > > framepointer and lbr callchains by adding an append_inlines() call to
-> > > > add_callchain_ip().
-> > >
-> > > Looks great!  Have you checked it with perf report -g callee ?
-> > > I'm not sure the ordering of inlined functions is maintained
-> > > properly.  Maybe you can use --no-children too to simplify
-> > > the output.
-> >
-> > Thanks for the suggestion. I actually have another test program with
-> > functions being numbered rather than (creatively) named, so it might be
-> > easier to use it to figure out ordering. Here's the code:
-> 
-> Yep, looks good.
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+Thanks for the quick reply Arnaldo!
 
-So, I'll apply this shorter patch instead, ok?
+As luck would have it, perf-achive.sh is apparently not
+packaged by Debian or Ubunutu (and the bugs have gone unanaswered) but
+it's straightforward
+to grab the script from elsewhere.
 
-- Arnaldo
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 803c9d1803dd26ef..abf6167f28217fe6 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -44,6 +44,7 @@
- #include <linux/zalloc.h>
- 
- static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
-+static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms, u64 ip);
- 
- static struct dso *machine__kernel_dso(struct machine *machine)
- {
-@@ -2322,6 +2323,10 @@ static int add_callchain_ip(struct thread *thread,
- 	ms.maps = al.maps;
- 	ms.map = al.map;
- 	ms.sym = al.sym;
-+
-+	if (append_inlines(cursor, &ms, ip) == 0)
-+		return 0;
-+
- 	srcline = callchain_srcline(&ms, al.addr);
- 	return callchain_cursor_append(cursor, ip, &ms,
- 				       branch, flags, nr_loop_iter,
+On Fri, Mar 17, 2023 at 10:28=E2=80=AFAM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+>
+>
+> On March 17, 2023 10:02:37 AM GMT-03:00, Travis Downs <travis.downs@gmail=
+.com> wrote:
+> >Can I run perf record against a binary running on say Arm64, then pull
+> >back the perf.data file
+> >to an x86 machine and run perf report there?
+>
+> Yes, and to gather DSOs with samples, use 'perf archive' or point 'perf r=
+eport' to a directory with the arm64 OS image using --symfs.
+>
+> - Arnaldo
