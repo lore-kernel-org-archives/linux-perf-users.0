@@ -2,189 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75077C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4696CC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbjCVTx1 (ORCPT
+        id S230018AbjCVT5n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 15:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37908 "EHLO
+        Wed, 22 Mar 2023 15:57:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229936AbjCVTxY (ORCPT
+        with ESMTP id S230352AbjCVT5S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 15:53:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC933588;
-        Wed, 22 Mar 2023 12:53:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AF2C2622B0;
-        Wed, 22 Mar 2023 19:53:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E56EAC433EF;
-        Wed, 22 Mar 2023 19:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679514802;
-        bh=EGfL4wE35fMS5oDaoUpz/hYODYp4mxJqoH76jji9RMc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ofPgkeX4sJ9kjTTldjKJui3kiZ1za7IA8Zq3EjhKjPyQhfJcMoGpCmVGoOAqd3Gbi
-         zTAX7t/jbnhnJlApGpEosA9WdhhaJ1ynxb44j/aaGuwkd6C9JLjmWX03TX/nkml8hz
-         LZzZ/KF/zKN8Qv/mrmMolP+MP1ko8sIg46We8B+qHzeFmaQP9igadP6LMo+QEPRp5S
-         g62QolZAHRs1pOdfOO1SejxzhICW5Vu/LM5L60nCvH0t3jEH5liPV3d6g8aNcqpG6b
-         XsmvU5aXystQf3ANqNaGwjoTXGxE7V7xp15rhF7L5TGYAz5tH1BpDD5zObq0vTISyD
-         eQRjck3nyJASA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 125334052D; Wed, 22 Mar 2023 16:53:19 -0300 (-03)
-Date:   Wed, 22 Mar 2023 16:53:19 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@redhat.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [Ping PATCH] perf/test: Fix wrong size for perf test Setup
- struct perf_event_attr
-Message-ID: <ZBtcrxcljttJXyhM@kernel.org>
-References: <20230322094731.1768281-1-tmricht@linux.ibm.com>
+        Wed, 22 Mar 2023 15:57:18 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1EC66782B
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 12:56:54 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id f23so8009563vsv.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 12:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679515014;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Z9APGl56Q1bnnaCXzrv2RdFT8dkqBopRXMfIiml7MUk=;
+        b=Gap7ivbdQPSrpg27Ty27d3XYLjybzIeab8YD6XryD+YlrZrcc9x1bDepPF67/YMJ1s
+         uNw/PxdHmCY65529iR9wLUtM0lHPnsivEetdCBTXIu9DKoaewAn9JkkWolu9VPNg/K5p
+         XawgL94LjYHiJOjkKv/QpzSXCus93Calh3gSwl7sjh1Q2IqNDY/Dh0GcWy8XfMWKawgo
+         saNf1O2rBtp+gnVU4TF9gtiBXQatAIuqlFT3JTky4jXhAv0+c2ZKxban+Nt0iKVuLz0O
+         saf99Abba9kbReI6dNJR3CxRXFyK1oR0xdrpjZ7Iy3SuBkKkdgjvHFL6pFeQSyo4i2q+
+         ZMdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679515014;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z9APGl56Q1bnnaCXzrv2RdFT8dkqBopRXMfIiml7MUk=;
+        b=qkboXpHzeW/MhysfvrX7BAMDLkyRYvMK+5LtYvzlVibZAp0+/l2y8llhEWAQKs6raU
+         a8CesyeeCl49T14s+GKJkddU7Vk+MOjYTw5Wn69rDqG+ChPiHW9c3WRTqpdnMMlLjOkf
+         vbrCZylwsmRtZHtgVsI+uaUfJMEd6govsb3mQV6ZpyU/W9rdu9RAVbSmShWDZP5lHSsv
+         oQgk2nXwICz/fzxg9UGggcVLisqcrQO8kHBvGY3FGoSv3jHMzWj4nhk1dVUPL/8EqXC/
+         eLGbS5DHxTxDaVeJiVsje8Itb7QZyKz809WsULtow7I3dDIcb+vZS2QAMPuq6IGiCXMx
+         Mwag==
+X-Gm-Message-State: AO0yUKUaEqE2oPDeycprLBc37IFfZ0o6H5pXhq9cg4g9/j6Hi7fn2hqz
+        Nw0C8155gKaPqgrmjj+d4NT7LfelGPcHbWjxN6ceI05PuQw=
+X-Google-Smtp-Source: AK7set8aQLRorDt2C2L8+WSV+8SRkdWRSi+7RXjm9pLQmPTB3KucRFQf9B0LQbMfOMPcsUBV5CJ7MI155FVUe+KNPv4=
+X-Received: by 2002:a67:d293:0:b0:425:cf00:e332 with SMTP id
+ z19-20020a67d293000000b00425cf00e332mr364146vsi.7.1679515013816; Wed, 22 Mar
+ 2023 12:56:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230322094731.1768281-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+From:   Travis Downs <travis.downs@gmail.com>
+Date:   Wed, 22 Mar 2023 16:56:17 -0300
+Message-ID: <CAOBGo4y0eMDDWDr2qzYDU-Ab-J1XFP9pcTvxmV6jo2+toqmtfQ@mail.gmail.com>
+Subject: Perf report wrong decoding of symbol addresses
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 22, 2023 at 10:47:31AM +0100, Thomas Richter escreveu:
-> The test case ./perf test 'Setup struct perf_event_attr' fails.
-> On s390 this output is observed:
+I have a project where `perf report` decodes the address -> symbols
+incorrectly in the presence
+of debug info. That is, if the debug info is not present, it does OK
+(but evidently a lot of information
+is missing, e.g. about inlined functions) but if debug info is present
+it just shows the wrong symbols
+for each sample.
 
-Thanks, applied.
+However, if annotate the symbol, the source/assembly listing is
+correct. So objdump is able to decode
+the addresses correctly. Similarly if I use addr2line by hand (both
+tools are from binutils 2.32) it gets it
+right.
 
-- Arnaldo
+So my questions:
 
- 
->  # ./perf test -Fvvvv 17
->  17: Setup struct perf_event_attr                                    :
->  --- start ---
->  running './tests/attr/test-stat-C0'
->  Using CPUID IBM,8561,703,T01,3.6,002f
->  .....
->  Event event:base-stat
->       fd = 1
->       group_fd = -1
->       flags = 0|8
->       cpu = *
->       type = 0
->       size = 128     <<<--- wrong, specified in file base-stat
->       config = 0
->       sample_period = 0
->       sample_type = 65536
->       ...
->  'PERF_TEST_ATTR=/tmp/tmpgw574wvg ./perf stat -o \
-> 	/tmp/tmpgw574wvg/perf.data -e cycles -C 0 kill >/dev/null \
-> 	2>&1 ret '1', expected '1'
->   loading result events
->     Event event-0-0-4
->       fd = 4
->       group_fd = -1
->       cpu = 0
->       pid = -1
->       flags = 8
->       type = 0
->       size = 136     <<<--- actual size used in system call
->       .....
->   compare
->     matching [event-0-0-4]
->       to [event:base-stat]
->       [cpu] 0 *
->       [flags] 8 0|8
->       [type] 0 0
->       [size] 136 128
->     ->FAIL
->     match: [event-0-0-4] matches []
->   expected size=136, got 128
->   FAILED './tests/attr/test-stat-C0' - match failure
-> 
-> This mismatch is caused by
-> commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
-> which enlarges the structure perf_event_attr by 8 bytes.
-> 
-> Fix this by adjusting the expected value of size.
-> 
-> Output after:
->  # ./perf test -Fvvvv 17
->  17: Setup struct perf_event_attr                                    :
->  --- start ---
->  running './tests/attr/test-stat-C0'
->  Using CPUID IBM,8561,703,T01,3.6,002f
->  ...
->   matched
->   compare
->     matching [event-0-0-4]
->       to [event:base-stat]
->       [cpu] 0 *
->       [flags] 8 0|8
->       [type] 0 0
->       [size] 136 136
->       ....
->    ->OK
->    match: [event-0-0-4] matches ['event:base-stat']
->  matched
-> 
-> Fixes: 09519ec3b19e ("perf: Add perf_event_attr::config3")
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/attr/base-record       | 2 +-
->  tools/perf/tests/attr/base-stat         | 2 +-
->  tools/perf/tests/attr/system-wide-dummy | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-> index 3ef07a12aa14..27c21271a16c 100644
-> --- a/tools/perf/tests/attr/base-record
-> +++ b/tools/perf/tests/attr/base-record
-> @@ -5,7 +5,7 @@ group_fd=-1
->  flags=0|8
->  cpu=*
->  type=0|1
-> -size=128
-> +size=136
->  config=0
->  sample_period=*
->  sample_type=263
-> diff --git a/tools/perf/tests/attr/base-stat b/tools/perf/tests/attr/base-stat
-> index 408164456530..a21fb65bc012 100644
-> --- a/tools/perf/tests/attr/base-stat
-> +++ b/tools/perf/tests/attr/base-stat
-> @@ -5,7 +5,7 @@ group_fd=-1
->  flags=0|8
->  cpu=*
->  type=0
-> -size=128
-> +size=136
->  config=0
->  sample_period=0
->  sample_type=65536
-> diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
-> index 8fec06eda5f9..2f3e3eb728eb 100644
-> --- a/tools/perf/tests/attr/system-wide-dummy
-> +++ b/tools/perf/tests/attr/system-wide-dummy
-> @@ -7,7 +7,7 @@ cpu=*
->  pid=-1
->  flags=8
->  type=1
-> -size=128
-> +size=136
->  config=9
->  sample_period=4000
->  sample_type=455
-> -- 
-> 2.39.1
-> 
+1) What library/external tool is perf using to display the report?
 
--- 
+2) Is there only one option, or can I recompile in some way to try a
+different one (e.g., IIRC some
+functionality in perf can use addr2line or an in-process alternative)?
 
-- Arnaldo
+FWIW, it's not weird to have struggles with decoding addresses for
+this particular project, it uses
+fairly new DWARF version and in the past also binutils (objdump,
+addr2line) would fail to decode
+it properly, though they've largely been fixed.
+
+Travis
