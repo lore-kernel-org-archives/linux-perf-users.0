@@ -2,87 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1638EC6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9821C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 22 Mar 2023 19:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbjCVTrV (ORCPT
+        id S229757AbjCVTuv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 15:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        Wed, 22 Mar 2023 15:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbjCVTrU (ORCPT
+        with ESMTP id S229534AbjCVTuv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 15:47:20 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7725A4ECE9
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 12:47:19 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id m5so13450655uae.11
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 12:47:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679514438;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=08wnh3quRZ6nomUsXV/e3UBTZE3XR+agqVP4qBteAYw=;
-        b=oNZ310hl+Q8w/39sMbzqdhg2jrH/AhIcxhCYOei7/P7aHZzP2OAI/tkt6B8Z2AqAGz
-         lqIzM3unu5Sc8k0p0htnh7GrfjtG1bv0EAvuoFFQ4lKqvIks9sCiaAY0ytEj5t2hYkJo
-         2W9yKBmIp1ONndVwISRfV0K+zz0zhRsPNghHGU8Usf6s/E/2F3z9XHZugwPQOzGFoKha
-         T0s88Ia7ub/86GvCOu2/o6D7lJsSoEvCMs4kctsfP5SrdGwwi/XRGWa5dhAVFGmR981i
-         +tXDvOCK+X62qYvO3zLImptgXok8lvUHBhk0cZeRqcSLj/5u1qb+4kTq8XFHCxxHW48o
-         n/gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679514438;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=08wnh3quRZ6nomUsXV/e3UBTZE3XR+agqVP4qBteAYw=;
-        b=aeB6zWu7uO0jAOHdgtc8TpSWYCvMv4ksdKk9oVXsOe6IHugMt2erWBLS/WU0kBJCdp
-         A++mMCdfCadu5O1RKzPFkseXrdtNZUqDxXKG0PD5pEeAQ2UgRHw+lpox+zsRWf9lu39O
-         fO5Ayccbb+tudsVgLD9Om/rrvbJQqlK9caNWPZG3TQdeeZvdoh41KXvy5vabd+kQAPuU
-         27l1gFILcYloftGVjUD8w1OvIB4Ovg9dzwtKm1AslcIYoTwl5IY+qJW9Vq25RsGAhDgN
-         LE4mXG1z2TT9Ymdvcm4o3QPT5ZNQnZrE4U8KP3EAMz1bxLqsX9A9b+Y2G3W5WKUsop7b
-         bvkA==
-X-Gm-Message-State: AAQBX9cGt4qTPjITZ6fotBb0plmFurZdSZjw4mXfQWd3WTlvEBtSvP7G
-        wlAoBATqsfwywc43VjcWdnUIHBg7LGrLQcY+8xKhP0PdhqQlvg==
-X-Google-Smtp-Source: AKy350YH/RwIRzhUOLHjsA692J3PTgoEVLh1fW79IVY3Fj7uFEykjWu1hOzZIC+cL11T8QskfuLE/PZ/45eSNei/0j0=
-X-Received: by 2002:a05:6130:215:b0:68b:9eed:1c7d with SMTP id
- s21-20020a056130021500b0068b9eed1c7dmr4556776uac.0.1679514438560; Wed, 22 Mar
- 2023 12:47:18 -0700 (PDT)
+        Wed, 22 Mar 2023 15:50:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EF34ECE4;
+        Wed, 22 Mar 2023 12:50:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0BE7CB81DC6;
+        Wed, 22 Mar 2023 19:50:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5918AC433D2;
+        Wed, 22 Mar 2023 19:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679514647;
+        bh=5v6hCla1ZU7x7GPUKTYMyc2K+buglnhEtB13j0YWNGY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=af0JDe+rbLx8wgW58K9HqfCcTpqOqvRNZRLyaljX6ljwWZSh2k/2Tn/lzWX9baZuJ
+         IPgUxB/dB4a1xsZeOpu7zkmPg6SvXwANhbYvCkg4vrT6jaUM89zItK5uhaVwZIOw4r
+         xDN0ZT6m/3Z6HZQE6Go8JUzOZAUwBw0Cg0ko9LJ1GQBKKv5sfK+qvBdFdA57a/Krks
+         JCqyez9SrP1Q/97++K5h3k+WsIF38sgoTctvhHNBJHHkZcexE9GvgJs6Flayzbg0Wq
+         GBIeGAdBbdi76qfjb8iZWoDjlkHqeU/qvrrqR7TCj+9BKVv1Yo7yJ3iUM+PxECuROP
+         by01zla384w7w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AE11F4052D; Wed, 22 Mar 2023 16:50:44 -0300 (-03)
+Date:   Wed, 22 Mar 2023 16:50:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] perf build: Add warning for when vmlinux.h generation
+ fails
+Message-ID: <ZBtcFHMsdUPGrPX4@kernel.org>
+References: <20230322183108.1380882-1-irogers@google.com>
 MIME-Version: 1.0
-References: <CAOBGo4z=LObbQ-KRRuH__pFsC=1r1jQ2r0e3TbCTeweA9YsDxA@mail.gmail.com>
- <01A1CCF5-C9C0-484B-A1B7-08514CE5453F@gmail.com>
-In-Reply-To: <01A1CCF5-C9C0-484B-A1B7-08514CE5453F@gmail.com>
-From:   Travis Downs <travis.downs@gmail.com>
-Date:   Wed, 22 Mar 2023 16:46:42 -0300
-Message-ID: <CAOBGo4zGRSYrq1qCPneEdH8FcOO=4C8DXb49Rk0aaiOE2rk5ZA@mail.gmail.com>
-Subject: Re: Cross-arch analysis
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230322183108.1380882-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for the quick reply Arnaldo!
+Em Wed, Mar 22, 2023 at 11:31:08AM -0700, Ian Rogers escreveu:
+> The warning advises on the NO_BPF_SKEL=1 option.
 
-As luck would have it, perf-achive.sh is apparently not
-packaged by Debian or Ubunutu (and the bugs have gone unanaswered) but
-it's straightforward
-to grab the script from elsewhere.
+Looks ok, applying.
 
-On Fri, Mar 17, 2023 at 10:28=E2=80=AFAM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
->
->
-> On March 17, 2023 10:02:37 AM GMT-03:00, Travis Downs <travis.downs@gmail=
-.com> wrote:
-> >Can I run perf record against a binary running on say Arm64, then pull
-> >back the perf.data file
-> >to an x86 machine and run perf report there?
->
-> Yes, and to gather DSOs with samples, use 'perf archive' or point 'perf r=
-eport' to a directory with the arm64 OS image using --symfs.
->
-> - Arnaldo
+- Arnaldo
+ 
+> Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/Makefile.perf | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index ed6b6a070f79..48aba186ceb5 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -1072,7 +1072,11 @@ VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
+>  
+>  $(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
+>  ifeq ($(VMLINUX_H),)
+> -	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
+> +	$(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@ || \
+> +	(echo "Failure to generate vmlinux.h needed for the recommended BPF skeleton support." && \
+> +	echo "To disable this use the build option NO_BPF_SKEL=1." && \
+> +	echo "Alternatively point at a pre-generated vmlinux.h with VMLINUX_H=<path>." && \
+> +	false)
+>  else
+>  	$(Q)cp "$(VMLINUX_H)" $@
+>  endif
+> -- 
+> 2.40.0.rc1.284.g88254d51c5-goog
+> 
+
+-- 
+
+- Arnaldo
