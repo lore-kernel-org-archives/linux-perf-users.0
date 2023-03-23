@@ -2,174 +2,254 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6244C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 20:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FDBC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 22:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbjCWUoO (ORCPT
+        id S231670AbjCWWeQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 16:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
+        Thu, 23 Mar 2023 18:34:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjCWUoN (ORCPT
+        with ESMTP id S231682AbjCWWeN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 16:44:13 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9CF411EA6;
-        Thu, 23 Mar 2023 13:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679604252; x=1711140252;
-  h=date:from:to:subject:message-id:references:in-reply-to:
-   mime-version;
-  bh=TwvQGeDSBQeAXA8L4wOQCkz1mON3bBgsp6uyks1emhE=;
-  b=kQJj8B+8z0l3B7o9UR4hGck27hljuXM8mzmsNz7ZvSxP7gZRItb43gIU
-   yke/C7yIU/ZQl+R6R4DcJYeJMAR1froSAkPse2aVhLg76P6ui98M5uWYH
-   KAjLvj16Pq+AwF/Z/QGCneJPP5XDzFGhnEdDvOArvzu/Jtq9S3qXb3Vzi
-   I+HCkNAS9tuMoz6317GlBg5/xhNxkbE6prbMxk2xAHNPnxFTwmCdwjRcr
-   LI45BxUyL2dz74f5/7e3VJtYYcJA2DzOWEA88X2doXa5TQA8XbHIl/SId
-   wMuKfF+w6t9uxMYKI1Vgemvb0DXFUv9X1QP2LKLEd9MjCm0sMp/jwgUnw
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="323482649"
-X-IronPort-AV: E=Sophos;i="5.98,285,1673942400"; 
-   d="scan'208";a="323482649"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 13:44:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="856624860"
-X-IronPort-AV: E=Sophos;i="5.98,285,1673942400"; 
-   d="scan'208";a="856624860"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2023 13:44:02 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 23 Mar 2023 13:44:02 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 23 Mar 2023 13:44:01 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Thu, 23 Mar 2023 13:44:01 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.47) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Thu, 23 Mar 2023 13:44:01 -0700
+        Thu, 23 Mar 2023 18:34:13 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2104.outbound.protection.outlook.com [40.107.94.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEB57EC2;
+        Thu, 23 Mar 2023 15:34:09 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kI06S49bAz9Z9xq672Iw53ln86w9AwOlgz/FhYyCLwS91etJKoBk7qp+Fz3XOspnuAd5XdEgZlSgGI3aRS8BTmy2DEgf3z3gWqmtMoYqcyNJSHI9McNtstVgOqy0qh5uk1JXIyj1V3FPItgZVWoYkC1veAqgZmewfrnMa3TzMlI+MzIoI0WdSQbMwwM2m2KKvNA/hqzACgmYpDEzBlZ129gkEsL2OMOW5LLMaU8a0MCoMns6BXuM6SfvtSjO58T5fw/9ag2oQyb/z/087LPiEwBHOFT/uAAfG/MqGOGMKQFgyxQFIYu091HqifxL6ZjqAej18/IzFwjmq2XPtALwmQ==
+ b=X/TQrlUNAViAjBrMrCvARq3clrHVMw8dNiF4cORL1UJZHAciilDR1i/R2P1XjU3Nk1+QGZcORKf9OmqYItzj7vnzaNAqmYwnPJ6gVUjf0RIn5/stMeB6qQmovtYwG7OS+f3fuDYfmZKRLVaD1zUZH8T5ctZSz9033begdm3ONJ/xX2PqbxGKaM+XivK/L32QUnIAhG4wiFWm3xfYZ0IVvt4Nw9X13FmK1YALMhR4pXlrkDw++JEKk93NBXUe2oB8uCfE1Ug2O4iqB3FJe5TZnvWbsjY998aC0JQESFD+WNaFjwcNVNR0uoXdD9QeyMIpfgpklcZzEiZSH8kGAFC1Xw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f4jrgIijdR3ntSbKzE4sm5/9uzagsvUZNPiLAl3iJHg=;
- b=HvV5y7EPBXkrJ0uFKitswSpE/eFDIL/k4Ptcq5aOBs2gaWaWBL2vQy2Kf+yPQrJKCKYORxNHC8MtxFX26uuBPi9SUp+Ffi1eYZxRwIdXlUTL2hSoTLgiIiP/vT7KE1lmCu+78TmxNKQDSBZe1B+A1rduJqIMFBEXWfZf9Wm3chPuF+zKj+qjxq9iF+dHyULGIfUyxSeRfGRDcUaBK4hHGjDmQ1z8Zpm1J2rolmRY2MlPscVeN8KFjfU4Lj26oETzimjJ+yX4dktVbm1CkWz2KXr/MWE38TQbHPVENYV+GckT11PlK2Y29+Gmuu0GfvAaaoL7bShQkM1mNMk1LsqqPw==
+ bh=iXqexM+tafJGlPbqYLkmvxpxjnvAbBLKhNMzoLBa8S4=;
+ b=Nsgwth5Mi6StX8wDIEXUlp3nvXf+QEIo5HH9k9txUfsTNgcRp+lrXIBjXA1dBUHh5GZoImek7+ZNsYDFGE8rWwpoFthQ5DPOd27p48J/b22nbv/LGG60f00EWCsFv362gIY/5frMEjhODGF25iQxNep5zGTnWlWL2mmzkm1IUqSLizK8fLUUcMW3V5KSPMQyLrgHnHSEEcerBHH5BSM5Dj8jLpgBXxssDGBoRXeuUGBeKKdtXSuACA/3ihJ2lDQcpu896R1zr2DSpdL0+KHAr1Q1OrV42Yes9wJiMVMefVLJqu6ZeP7kffuvDxk/TlcEbx34fb8IGO5ZgPMC7ZgpMQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iXqexM+tafJGlPbqYLkmvxpxjnvAbBLKhNMzoLBa8S4=;
+ b=qXE6Oim9MBLfLnhcms0Gs3uI0SZgWJ57IY4FH5UGPT5w0TI061nnx7znTnhBts9tzF3VbGeW4bLQBbHdsNMGY/SVsTY383kzLfbpTyTUeJr1SulIAn8kRJdVabRgYYsxuDvXWqYR/lyg7TdmXRk4Wl+hfANXG196OgFV9cVlGeE=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SA3PR11MB8120.namprd11.prod.outlook.com (2603:10b6:806:2f3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.38; Thu, 23 Mar
- 2023 20:43:54 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6178.038; Thu, 23 Mar 2023
- 20:43:54 +0000
-Date:   Thu, 23 Mar 2023 13:43:49 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Edward Baker" <edward.baker@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <perry.taylor@intel.com>, <caleb.biggers@intel.com>,
-        <samantha.alt@intel.com>, <weilin.wang@intel.com>
-Subject: Re: [PATCH v2 8/9] perf metrics: Add has_optane literal
-Message-ID: <641cba052d0f8_1b98bb294ab@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230323192028.135759-1-irogers@google.com>
- <20230323192028.135759-9-irogers@google.com>
- <44476adc-3797-504b-2b82-8ec670c691b6@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <44476adc-3797-504b-2b82-8ec670c691b6@linux.intel.com>
-X-ClientProxiedBy: BYAPR11CA0076.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::17) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
+ DM6PR01MB5258.prod.exchangelabs.com (2603:10b6:5:6d::28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6178.37; Thu, 23 Mar 2023 22:34:05 +0000
+Received: from DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::4ac8:7982:7ee7:cdb2]) by DM5PR0102MB3590.prod.exchangelabs.com
+ ([fe80::4ac8:7982:7ee7:cdb2%4]) with mapi id 15.20.6178.037; Thu, 23 Mar 2023
+ 22:34:04 +0000
+Date:   Thu, 23 Mar 2023 15:33:26 -0700 (PDT)
+From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+Subject: Re: [RESEND PATCH] driver/perf: arm-cmn: support ACPI probe
+In-Reply-To: <1679587838-80000-1-git-send-email-renyu.zj@linux.alibaba.com>
+Message-ID: <557691c9-2176-7e9b-1130-8091507dfdd4@os.amperecomputing.com>
+References: <1679587838-80000-1-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: CH2PR10CA0001.namprd10.prod.outlook.com
+ (2603:10b6:610:4c::11) To DM5PR0102MB3590.prod.exchangelabs.com
+ (2603:10b6:4:a4::25)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA3PR11MB8120:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86fea268-854b-47ac-eadd-08db2bdf50b7
+X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|DM6PR01MB5258:EE_
+X-MS-Office365-Filtering-Correlation-Id: c43bf53d-db28-48b4-033c-08db2beeb4fe
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: O362K+2pbeIiR5Vpw/ph7uTm3nwgqVk7LRLgCXKK6Cp0xiVv4V4gFtg9t9kpP8EQFM45yM8i52/c0NzKzUd/VRyVIM2PP9fNaMhzz7PJ2S1hXgOt+/dqH45agHlKtEAt36OemNdtuFEq7YNCBtwRQnre8ZC9LmnWLQfpBzLjuil7UL2g1VrEFWml8v5ojVJU0LK3Q8SiaJWI7pmrTuBEwGfz1Q2lLQ4UR2hkeBkfaalPCm8pWc6IbprhzYNODd5EjgVzn9CPbd3tjUtFsygawjB7gnxOiCE/VB60G00BM3B8klKKZtF0B7E7jIkLn0W/nH7bMcCNC9XdVlzZICzWVfqdg54bDedqvbZksh1gmcfkZh1nEzHlgSkltEOp2C27brVU0X2oiNwop8GCXulMdPpNeLCQ0YtYm5VIAj0xVUOMQzByYw6aCWv2cnHnrPdnHPWPHL6P7gF2jq/hZ56IR0KHVSNu7cmjkpqyrJUj4/MP33mM3vTcjjUXZsB/sQ9zFXtQrhonIs4y9hXYWbM3rsxSSJLipUK+/SnR9YCFr+wjwc7PkaVDC4Uz1kh9mIIYSaQ9N/R5HEUlY68xFj4AaEg/dvc1vO3QtAmJe3BZwqYHc+VYI3gf3tIj+wqDXVzIMaaebGXJDL7+Aw91PvogmjasmgqeMmmLeJ/X3d03i5+M4DHOs/t0nOnmvNUfowM8
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(376002)(346002)(366004)(136003)(39860400002)(451199018)(4744005)(2906002)(6636002)(110136005)(38100700002)(921005)(7416002)(86362001)(82960400001)(66556008)(41300700001)(66476007)(8676002)(8936002)(66946007)(5660300002)(186003)(26005)(316002)(6666004)(53546011)(6506007)(6486002)(478600001)(6512007)(9686003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: JMLFAaG95fdRFCwD2xOlgvlUkdflYKe0ce9jF3Fh+q8As0UaltQ6sOD9/L5dGyrlOBKAt9O9WNQtM5zXHzlA7QSslkcNyxAw6fbSDUrwe16d1WfAgevV2K993lBun3xGojuFBmjv9Xo0VgGvb6muSp/SGotybrWMAx3b4Ufd/0NJMTS4v1zLg75TXu27AI7C7c2ATg5KtVYFkwuotYKaFMPio2Ub5izTjW2FEIXJRHTyPFqhWSmgW2c2eeJN0dlQOcdHjJnYGPr6syMI2oaxNOC1rCTTMpnjRHhhklNOdGRhb1MxlBPC3QYS2z2GWiMT/RtbmXal0A9BWgCkRGNbjVE1MVBy3ZLkDhgmXjskDjxO5V8+4uCZ1KnAN6/opnYuXZ5BX0dyk5eza7UAwB35qDjCMB5vBX2dkAsZXAnTpILqbe/vRfm602Ny5USlDKRarB5EJhBvU1iftUu3F1vdIwyecLc2OQMYBrZkfswa+V4fXs/rw+7nLAp8WTFa9X3mUbsbaXDkcSE00LlgwelCVLfE3Rc/fSnbRWsZz3daSARL3ThCeieWxx1zqNfZcgnofkJkVRs96B6ZluLs876xf8v7WlW23/3c3ymwYi60I2jy+J/yB9lskorBa6HKQUeFA9FrNB29eN3saRjDkGtCnxLZ4hPAs57VOCKvtV5Dxxb8avgxXkiJrxvZHEH2ovL2xQs38r82HxgBgaOO/FJP0A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(39850400004)(366004)(136003)(376002)(396003)(451199018)(66476007)(66556008)(4326008)(6916009)(8676002)(66946007)(6666004)(316002)(54906003)(41300700001)(5660300002)(26005)(8936002)(6512007)(6506007)(52116002)(2616005)(186003)(478600001)(83380400001)(6486002)(86362001)(31696002)(38100700002)(38350700002)(2906002)(31686004);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XjBgpbPzlX21rpidoKllVANYQrD39GLqpcdaQcvjGX5MmYepZuW/hGBZVBmK?=
- =?us-ascii?Q?GW9LEou8acr3BGPT5fNFjmkH1/zDdGYBK6j0PXx3gTeq2CBdegxvF/0ZC7sO?=
- =?us-ascii?Q?jd81yJILRakjxdcts9X/dvoZNQbkMsVTqbFlhKR+RLmD0soJKVee4SyXvXoy?=
- =?us-ascii?Q?BhsyGG7yIwyrkxOKgLeH6IYhFvy/Bt38xDV3NsY29nM+YwQmox3aqlygqVcZ?=
- =?us-ascii?Q?lJgCtVYCpJfqI6H0p2fdDVrdmzZaCrCeQVSziva2+jvh5K3C7kphQ00gGFyH?=
- =?us-ascii?Q?ZLogDx3bH/UG8O7ZDV7Vk/XhSMkJ4wjwUIrM2kJbONa21aw8m7LxiX9FwlTS?=
- =?us-ascii?Q?Vdh0Lu/1S/APQx2E4Su/7DsTHX0wf0owuYP6Jr0lMPiTKJIFCb2b0HcwpXyN?=
- =?us-ascii?Q?l9KNwZOdp+9OAarzhdTEZVrkziejato+7RYkDPXKi5Dv93+RFoKBO4BrtgIg?=
- =?us-ascii?Q?MIvaFWbhZUyDHWRmo1EnT+40wPeBDSjUbQDyLwbOhke9L6UqVEg/h9XTspZn?=
- =?us-ascii?Q?znD4bpkkSXr/B/CAtt6l+W1IApHHItKsFku0nVXDTZcKYZs37LqKMsLNQdGC?=
- =?us-ascii?Q?n1iq5XQsJ4CmWV624a1ItDofyJidux/kUKtiWAQz6Jubcsr1MHTzg8xMFdTd?=
- =?us-ascii?Q?rf/WYvLZnMGObDbkVawy0vllO5WeXiykDdJRz27s/VAGav68MD+ajPtK0ZIe?=
- =?us-ascii?Q?z4cub9CWeO2nRrIZfyp1l0t7tVzgodHymj77IkvarHPLmfggHyWbifOFooDr?=
- =?us-ascii?Q?uUgK2W6Y+3slouyFb2QxgOZpa6zCy2fE1/dPe8sSaGoBnpS3az3d7e4IVsPg?=
- =?us-ascii?Q?VqKJOjcaBT1hOUHUGQWO51Rw/uc9s0+l/O3I8G0Kd0tYTqwDA/MHZVyGiK1R?=
- =?us-ascii?Q?FagSiTLtTgyrPDHZWbdL8r3xWvws8MZMx/+zPMSCLPgwqtXiWaLkEzds8nGR?=
- =?us-ascii?Q?DtxHL/H0kfTcyrSTwQYu5mw5/e3jeIFNASRzpKX16zVQSNEpqzXsYMw/M1dQ?=
- =?us-ascii?Q?U3no3r7ULt8aGxDkx9t7Auj6t9rBviA3qKchMYrM2Lp4ZiYAPWz9usApr0fn?=
- =?us-ascii?Q?jDxcOa/x6K54+91PYI2gptq2VJC/6+HYifswNk3yc8PKHlQUsBuYPqg8zMkL?=
- =?us-ascii?Q?1T6ChujIRyGZrI7Qs49Xlg/6tybN0mJL/kqkzDEYSYJ/5PvCcmqPKYQ5TYfl?=
- =?us-ascii?Q?JV9jxi3IPVgIZFMwQWSOuEGTMweV/9Z9J8OAau68bj8W4Veqv4/zx5JA2pZx?=
- =?us-ascii?Q?1I1AFYJ3NAyubj5pqY0QcpmWY7UGQD4I4ac+odfPdmNa8XoRAVyJuxJaHsd4?=
- =?us-ascii?Q?TLTk2dzjilN94uDNPfrESqkXMdGv2ZIVg+21PYq5yRU2I0PVAuQjKYqTMuif?=
- =?us-ascii?Q?9clMbFV+h9zSNsUO+CXy04YVbEBscKrawGJVmQ8SPyUt5q5jnQF9mNauNzOz?=
- =?us-ascii?Q?qzK287Lt8xzI5djU+guuSTSlJchOXmfy8X+WtdrbZJVeIFHSSPd0WefmE0fi?=
- =?us-ascii?Q?wBMIW7SdrwbKBhcyXW9pNdLnjhviBlgAfcyjdoR8QpdL2HztQmf0op8pz/Iv?=
- =?us-ascii?Q?+ccaRkYuCDoK7oFyOCeE5ujnnzgS1xkvoxcguTmvPEGF6UA0+/Lhhg6AKwzD?=
- =?us-ascii?Q?lw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86fea268-854b-47ac-eadd-08db2bdf50b7
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fJ+0KAa0fWM4YPEcfg9xHLEuSd4vKIvK70ove8CS16WOn+ruS++6kp98SJlU?=
+ =?us-ascii?Q?Tz2g6Y90Az6mm4vbbCQmZ4pcmpq4w4xckJ9db5oPkCmk3h1aFLG8DztrmOnb?=
+ =?us-ascii?Q?QiXkG4XgE9mE5Tn2BK47PSGQ84ggOO+C+DMtuh0c3lfUqWnQI4ZVNy+wWMAL?=
+ =?us-ascii?Q?jd/U01IW3egrQL6z7AyM5jgX8f4vJyHTIOU6eLf6k5n4JxZ1CaMehrUCTb8L?=
+ =?us-ascii?Q?2siRMrafZPYqdz11ogrEE8jSeyNixeB9eIltx2KPHKg4slnRy09PlPeJ3YCn?=
+ =?us-ascii?Q?s1oehlJ/6U3vf+W1bH8SX8xqkRMOm+XOn31FAbJx9970vW/s+rMt8jAGcX1w?=
+ =?us-ascii?Q?plX9CXfQqiwKPP0nONxAGLqqKCdl7syKtM3iLcSymsSt9hYmZZXfTpXlSc9t?=
+ =?us-ascii?Q?26tQ5ZONN30PnvzUysg+dRru3hhv/4d4UBHEw/dKYh1zdCTexS4/eWrXjlRR?=
+ =?us-ascii?Q?j1OrdqQY7+skCRgYIGNjmOMWKR2ycaI5rM7jejbHLFnpYoOhe74j/zJjwJgW?=
+ =?us-ascii?Q?UJHVh5LaNeAjCb456iWjS0SibXY1cMB97D7u38m+ndasDasXIX9glmIWw7Dd?=
+ =?us-ascii?Q?73O/Eh54lgrdyX8P1TsBkBU3gU/q6CqNI4ZFPdRQr6EdAoeig6MV9fyj5Zyp?=
+ =?us-ascii?Q?6umPfQbGWZbMQURN5HLQlH5fQCq/4fxdFTq1doa6DAxohBDYWqgkEIhQYq9R?=
+ =?us-ascii?Q?NnRopeHJNgoGzaNkQeF/sjfQwlkbcEqvOgWU2K8jLkE1PSn8G6YgPINyiyXw?=
+ =?us-ascii?Q?RbNxgjWE39lfXFS7Q2Hc7guhDFp1JoO5dDP27sBip+mds/6pxiq1DP7jATuo?=
+ =?us-ascii?Q?TBQ+MnYy/2OoiI8wIpETEf08fJ4HY0nt+cbtTmnVk61Qu+PEvVRBEeHIwcHg?=
+ =?us-ascii?Q?5dEmLcCwRwo8CXR0w17vMPY2KykxH3KObGAjbCKBL64WCunWdnlL3N8X+XOP?=
+ =?us-ascii?Q?SwRJSTF08D1a5vy6ViMzI9fZsZk2uJFYF4bwchZISgtiK+1EfbVrIBEDMIJi?=
+ =?us-ascii?Q?bVAYuPgBsOkrS3K9qQfcYrPx6eB/AGHzYQFB75q2IWi4U3oeFFQ7PDGD8dDX?=
+ =?us-ascii?Q?y2rq80s+M02r7cq++KxSYLfkb3eKKPIY3OEC8jd/yXMoVlExvPCSmqp5BXDl?=
+ =?us-ascii?Q?BV0vsjG1gZbbKm5ijJ1FLpN5vYhKx3pjb4HjkWziaZDlgFTWzdremYy8sVYp?=
+ =?us-ascii?Q?XvEN56sGFEn5Xnk4EoU6Ltp+tIwdFXdX+PZY6EaruzcztT1n8uY8UlJVUBA6?=
+ =?us-ascii?Q?vA8uo1ggFsEBNyYRKOSgNxER4oD36UqJIl41hVt/PUBn3rAo29C9lq4T80Tq?=
+ =?us-ascii?Q?wHY+0+b7HA+w4VlH7e+m6qVwuex9ENMHvDdo61J46i34AfiA6YZNp71TuJSA?=
+ =?us-ascii?Q?heezEKe8iJoRkLFtoOHf9qpANRgJ5KnYR1ho/0ak766AszCdILZHW8kHrC45?=
+ =?us-ascii?Q?wIF2eo7ypd2rCpqF68NJjKD3BIiuXCZ64FkniQuASPZPzOrFCC3wXsBWoOdU?=
+ =?us-ascii?Q?Y5HeWcdq0HfIGEKSowb814wBwxVuY75PyjiX+arQzAS8xzquyhmtfMphDN3+?=
+ =?us-ascii?Q?fB8mRDhMhH8wGHlaNTpyq50erGPy8C3TYQS0lvnnM9KBJ3uI8lyBUpwIzjht?=
+ =?us-ascii?Q?SkkN/UX8gVtO/UVeYE9seGk=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c43bf53d-db28-48b4-033c-08db2beeb4fe
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2023 20:43:53.6551
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2023 22:34:04.6032
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6LMK+T+uQcm3QC0JgW9mmxtXWT/Pb2TdI6MwwDnAMFTsnmQ5aopCnnCW5M1Z9c/CtCWyOLmocRRAuAiQg93JYyZ+DbWiLvkELPDjrAuOOgI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB8120
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: fGD3hpcHJrsRmw842Hr65KRf16cdXuwsR6qb7gQKBGfxhlfAEj0ecR8P4C455nYjxgE9Z+5ZX229odKHLmppm+gKI66gyuT2xBQ3ZOPX6r2/mbu9iiPsBRIKXZfNSyht
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB5258
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Liang, Kan wrote:
-> 
-> 
-> On 2023-03-23 3:20 p.m., Ian Rogers wrote:
-> > Add literal so that if optane memory isn't installed we can record
-> > fewer events.  
-> 
-> I think we call it pmem (Persistent Memory) everywhere in the Linux
-> code. Maybe we should use #has_pmem instead?
 
-That makes sense especially because has_optane implies more precision
-than the the check is performing. In general Optane is probably the
-widest deployed NVDIMM type, but this check will succeed with battery
-backed NVDIMMs and emulated PMEM in VMs which I think is perfectly ok
-for making a default event record decision.
+Hi Jing,
+
+On Thu, 23 Mar 2023, Jing Zhang wrote:
+> ACPI companion devices call insert_resource() in platform_device_add()
+> to claim the device resources. If the resources are claimed again before
+> ioremap(), and the addresses of multiple resources overlap, it will
+> return -BUSY, causing the driver to fail to load.
+>
+> For example, the CMN700 on my machine is set with two resources similar
+> to CMN600, and the overlap of resource addresses makes the CMN driver
+> unable to match my CMN700. The error log:
+
+I thought that the two address ranges were only needed for CMN-600?
+I guess, the specification doesn't explicitly forbid giving two ranges for 
+CMN700 although the example shows just one.
+
+>
+> [  12.016837] arm-cmn ARMHC700:00: can't request region for resource [mem 0x40000000-0x4fffffff]
+> [  12.028230] arm-cmn: probe of ARMHC700:00 failed with error -16
+> [  12.036832] arm-cmn ARMHC700:01: can't request region for resource [mem 0x40040000000-0x4004fffffff]
+> [  12.051289] arm-cmn: probe of ARMHC700:01 failed with error -16
+>
+> So let ACPI companion devices call arm_cmn_acpi_probe() and not claim
+> resource again. In addition, the arm_cmn_acpi_probe() and
+> arm_cmn_of_probe() functions are refactored to make them compatible
+> with both CMN600 and CMN-ANY.
+>
+> Fixes: 61ec1d875812 ("perf/arm-cmn: Demarcate CMN-600 specifics")
+> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> ---
+> drivers/perf/arm-cmn.c | 57 ++++++++++++++++++++++++++++++++------------------
+> 1 file changed, 37 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index 1deb61b..beb3b37 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -2206,7 +2206,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+> 	return 0;
+> }
+>
+> -static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+> +static int arm_cmn_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+> {
+> 	struct resource *cfg, *root;
+>
+> @@ -2214,12 +2214,21 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+> 	if (!cfg)
+> 		return -EINVAL;
+>
+> -	root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	if (!root)
+> -		return -EINVAL;
+> +	/* If ACPI defines more than one resource, such as cmn-600, then there may be
+> +	 * a deviation between ROOTNODEBASE and PERIPHBASE, and ROOTNODEBASE can
+> +	 * be obtained from the second resource. Otherwise, it can be considered that
+> +	 * ROOT NODE BASE is PERIPHBASE. This is compatible with cmn-600 and cmn-any.
+> +	 */
+> +	if (pdev->num_resources > 1) {
+> +		root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +		if (!root)
+> +			return -EINVAL;
+>
+> -	if (!resource_contains(cfg, root))
+> -		swap(cfg, root);
+> +		if (!resource_contains(cfg, root))
+> +			swap(cfg, root);
+> +	} else {
+> +		root = cfg;
+> +	}
+> 	/*
+> 	 * Note that devm_ioremap_resource() is dumb and won't let the platform
+> 	 * device claim cfg when the ACPI companion device has already claimed
+> @@ -2227,17 +2236,30 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+> 	 * appropriate name, we don't really need to do it again here anyway.
+> 	 */
+> 	cmn->base = devm_ioremap(cmn->dev, cfg->start, resource_size(cfg));
+> -	if (!cmn->base)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cmn->base))
+> +		return PTR_ERR(cmn->base);
+
+I believe, devm_ioremap() returns NULL in case of error
+
+Cheers, Ilkka
+
+
+>
+> 	return root->start - cfg->start;
+> }
+>
+> -static int arm_cmn600_of_probe(struct device_node *np)
+> +static int arm_cmn_of_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+> {
+> 	u32 rootnode;
+> +	int ret;
+> +
+> +	cmn->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(cmn->base))
+> +		return PTR_ERR(cmn->base);
+>
+> -	return of_property_read_u32(np, "arm,root-node", &rootnode) ?: rootnode;
+> +	/* If of_property_read_u32() return -EINVAL, it means that device tree has
+> +	 * not define root-node, and root-node will return 0, which is compatible
+> +	 * with cmn-600 and cmn-any.
+> +	 */
+> +	ret = of_property_read_u32(pdev->dev.of_node, "arm,root-node", &rootnode);
+> +	if (ret == -EINVAL)
+> +		return 0;
+> +
+> +	return rootnode;
+> }
+>
+> static int arm_cmn_probe(struct platform_device *pdev)
+> @@ -2255,16 +2277,11 @@ static int arm_cmn_probe(struct platform_device *pdev)
+> 	cmn->model = (unsigned long)device_get_match_data(cmn->dev);
+> 	platform_set_drvdata(pdev, cmn);
+>
+> -	if (cmn->model == CMN600 && has_acpi_companion(cmn->dev)) {
+> -		rootnode = arm_cmn600_acpi_probe(pdev, cmn);
+> -	} else {
+> -		rootnode = 0;
+> -		cmn->base = devm_platform_ioremap_resource(pdev, 0);
+> -		if (IS_ERR(cmn->base))
+> -			return PTR_ERR(cmn->base);
+> -		if (cmn->model == CMN600)
+> -			rootnode = arm_cmn600_of_probe(pdev->dev.of_node);
+> -	}
+> +	if (has_acpi_companion(cmn->dev))
+> +		rootnode = arm_cmn_acpi_probe(pdev, cmn);
+> +	else
+> +		rootnode = arm_cmn_of_probe(pdev, cmn);
+> +
+> 	if (rootnode < 0)
+> 		return rootnode;
+>
+> -- 
+> 1.8.3.1
+>
+>
