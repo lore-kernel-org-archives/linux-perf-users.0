@@ -2,104 +2,77 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7D6C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 00:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934C8C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 01:43:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbjCWAcn (ORCPT
+        id S229902AbjCWBnM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 20:32:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54756 "EHLO
+        Wed, 22 Mar 2023 21:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjCWAcm (ORCPT
+        with ESMTP id S229436AbjCWBnL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 20:32:42 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7151E1E9E6
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 17:32:40 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3ddbf70d790so158651cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 17:32:40 -0700 (PDT)
+        Wed, 22 Mar 2023 21:43:11 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E07D2D45
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 18:43:11 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3e0965f70ecso163381cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 18:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679531559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xu5Ppfnx6VYzPNfHOJ/hTuJbgt+v9oOxiqjAV0/VXEo=;
-        b=oQyWh7TMz0j+h1kSZ9MtD0miQOOG3pvt2rV45soCOagJOwPVWGOcagAdUbRFOe+r8X
-         auLP0OLKRn0JERMooxeDJj5xPWOIuaPsukhHR+iirxgh25rTIopdd4FQLpwVt4+l1Y5z
-         XwBM7KMa0h2pvCb1obd9pV0fhGGhvMln+h5EBOn9Z/nKbJZ8+XkX2+673wLEmNqL5Pv3
-         mVcsnqWtQKkC317kWzgQEYtNUHMXm5SGI2Vzlx3j31cdCQnFLYhU6TLaDOJ+RuWCVL6Q
-         cskS0m4OlgytatTtsJbi2xlBn5UOTq66FTYCd5vVENgp/VzPExdPjZew/FoGw82SvBYD
-         c3xA==
+        d=google.com; s=20210112; t=1679535790;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9LlKFIUnSiiyDV3W4CcAc2xVtnCFtBb9VdMUxb4jw44=;
+        b=SrlTMZmYgOWH2+lpIr/3B4bXeXk2h9EtYR6hMRGQPunkoAQiPnt777dvmzlY7q8vFu
+         cTqcdLypbh6S7gcResJEcj68suRCTCnSf3cN6r5PSgQnVjd/IZruAoURU6WrhfBpRrwo
+         3bbI34wK7oEr7BOA6n2r8XoZhLyPI0DvSNLm+fW5omdFGSwc5jKYkfqZD7okHOWUw2ZF
+         l6xQsKRWKlqYF1M9Th/1uoXJs0ngkk2WFZyx65S5wvHPPQRZ5uyaw7LY2WrAsgxGPGM8
+         DHXLLhc2FoQCDaSUiIdK0nvDZ/qE37ZCRTPK5ThEhcfCrRM7zORlxhlIT0crmm5KeLdb
+         QTaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679531559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xu5Ppfnx6VYzPNfHOJ/hTuJbgt+v9oOxiqjAV0/VXEo=;
-        b=KTnvQDHv33YhEk9d/kS7eo2IVdHYnTdxHWQV1wRiNHf6XJ2WYnvMlEkD5+6PYrjTim
-         KQpDm++b2dTxQMRKytleveDrKjJJAXOgQ8N2/wvKnNWzkEgxEpqNNGA+MFG6g1S/sAH0
-         2EGnf4ajSO40RJ+LLCsUH2cTjf7QURlde8tIS7L/BAXBniac1zziHs/MFDnQCcS2OCk/
-         yfmElj/F8SENI3T8o4M4/3xA35FRQOJZGDQF9fcxxcNJc/ngeMedWIlc83gBNM68V2AV
-         QRSUTJ49c1OnKYhkAoJDGOW3coHy+HoapDSJsvoJWz79BF/DMkM73z0aZLGtEbxfZids
-         qiYg==
-X-Gm-Message-State: AO0yUKXmxyqHoPoAwXLrfq7ZXXs6WTFIlkC7V/zkgCnyERRwANjx8Tz+
-        pWCtW6PTlElCk5lVIpgPwzCx8SWkIU2HL0tXzpWKxhOtpb+A88RWyHUPxw==
-X-Google-Smtp-Source: AK7set/8GCh3LMa0iFnY+bD3AxH0fIJRYMsDYgpwzhnRYZ2p7pkBmJ0cyz9dtf+KSfBFJNzGdgcsh6Pu3bi6ioPm5w4=
-X-Received: by 2002:a05:622a:1496:b0:3bf:d313:77dd with SMTP id
- t22-20020a05622a149600b003bfd31377ddmr165774qtx.14.1679531559474; Wed, 22 Mar
- 2023 17:32:39 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679535790;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9LlKFIUnSiiyDV3W4CcAc2xVtnCFtBb9VdMUxb4jw44=;
+        b=oIvTHlewE7txDlKAICvZ7kmsD6WMSWOfTkagP+o9BtOp8FmgR2YB02bY8O9HFmXgo8
+         ANValjEmm71ta7igBEVcaPw8ygrZl0FLCF4EqiOwt04ThMWiIfG3umMdBB02+F3Jh2Ot
+         G8A96pH5bT6MvSEAg+yPr+gB5k/AMlToAocGBfj2BeDdZxlhvmwTH6WSdMvWQPUMOL6b
+         LoH/Dk1o//4G69rjzdWUi1q3g2nTBUg3QNIZEqNwi8OywKkd4RilrDur0mGJ6M931T0e
+         6B/F6GYE2SB1OXdwqO2aASplVdi5Op3cAXenDYuSoKpLx6cAGWJpFkcCOHngGn3aJgeQ
+         oTQA==
+X-Gm-Message-State: AO0yUKX7CGemKNxAQCumCZU7xD6ogl0cbtfHovnySaAiVNqx4Vs3uWTN
+        Ryqpcqbu7VS9pSnoO2BdWTHxryy7NJivx4tbSW+B3xHpl8OwS5eIOKjVqQ==
+X-Google-Smtp-Source: AK7set9qTOJdeJ55DXen5M7F1pIehc7zwBpS5B15RCsnb+/+t7c3VOg5Ek4FkVqhdrSnXw21/2sKAB7P0o0g9Gsn19U=
+X-Received: by 2002:a05:622a:312:b0:3c0:4e06:764d with SMTP id
+ q18-20020a05622a031200b003c04e06764dmr742874qtw.16.1679535790114; Wed, 22 Mar
+ 2023 18:43:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAOBGo4z=LObbQ-KRRuH__pFsC=1r1jQ2r0e3TbCTeweA9YsDxA@mail.gmail.com>
- <01A1CCF5-C9C0-484B-A1B7-08514CE5453F@gmail.com> <CAOBGo4zGRSYrq1qCPneEdH8FcOO=4C8DXb49Rk0aaiOE2rk5ZA@mail.gmail.com>
-In-Reply-To: <CAOBGo4zGRSYrq1qCPneEdH8FcOO=4C8DXb49Rk0aaiOE2rk5ZA@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 22 Mar 2023 17:32:25 -0700
-Message-ID: <CAP-5=fVf8YPJGHDBa=LTHyGTbMGsX4XiSWyTo6Y77AMy7TfHrw@mail.gmail.com>
-Subject: Re: Cross-arch analysis
-To:     Travis Downs <travis.downs@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        linux-perf-users@vger.kernel.org
+Date:   Wed, 22 Mar 2023 18:42:55 -0700
+Message-ID: <CAP-5=fV_A0A8-BnfaWFoXX2a284UDp8JHvaBLC_FXPzW5GT+=Q@mail.gmail.com>
+Subject: Determining if optane memory is installed
+To:     nvdimm@lists.linux.dev
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 22, 2023 at 12:47=E2=80=AFPM Travis Downs <travis.downs@gmail.c=
-om> wrote:
->
-> Thanks for the quick reply Arnaldo!
->
-> As luck would have it, perf-achive.sh is apparently not
-> packaged by Debian or Ubunutu (and the bugs have gone unanaswered) but
-> it's straightforward
-> to grab the script from elsewhere.
+Hi nvdimm@,
 
-Fwiw, I see it on Debian:
-
-```
-$ dpkg -s linux-perf|grep Version
-Version: 5.19.11-1rodete1
-$ dpkg -L linux-perf|grep perf-archive
-/usr/lib/perf-core/perf-archive
-/usr/share/man/man1/perf-archive.1.gz
-```
+In the perf tool there are metrics for platforms like cascade lake
+where we're collecting data for optane memory [1] but if optane memory
+isn't installed then the counters will always read 0. Is there a
+relatively simple way of determining if Optane memory is installed?
+For example, the presence of a file in /sys/devices. I'd like to
+integrate detection of this and make the perf metrics more efficient
+for the case where Optane memory isn't installed.
 
 Thanks,
-Ian
+Ian Rogers
 
-> On Fri, Mar 17, 2023 at 10:28=E2=80=AFAM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> >
-> >
-> > On March 17, 2023 10:02:37 AM GMT-03:00, Travis Downs <travis.downs@gma=
-il.com> wrote:
-> > >Can I run perf record against a binary running on say Arm64, then pull
-> > >back the perf.data file
-> > >to an x86 machine and run perf report there?
-> >
-> > Yes, and to gather DSOs with samples, use 'perf archive' or point 'perf=
- report' to a directory with the arm64 OS image using --symfs.
-> >
-> > - Arnaldo
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json#n1134
