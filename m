@@ -2,77 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934C8C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 01:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64251C6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 02:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229902AbjCWBnM (ORCPT
+        id S229784AbjCWCki (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 21:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56030 "EHLO
+        Wed, 22 Mar 2023 22:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjCWBnL (ORCPT
+        with ESMTP id S229517AbjCWCkh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 21:43:11 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E07D2D45
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 18:43:11 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3e0965f70ecso163381cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 18:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679535790;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9LlKFIUnSiiyDV3W4CcAc2xVtnCFtBb9VdMUxb4jw44=;
-        b=SrlTMZmYgOWH2+lpIr/3B4bXeXk2h9EtYR6hMRGQPunkoAQiPnt777dvmzlY7q8vFu
-         cTqcdLypbh6S7gcResJEcj68suRCTCnSf3cN6r5PSgQnVjd/IZruAoURU6WrhfBpRrwo
-         3bbI34wK7oEr7BOA6n2r8XoZhLyPI0DvSNLm+fW5omdFGSwc5jKYkfqZD7okHOWUw2ZF
-         l6xQsKRWKlqYF1M9Th/1uoXJs0ngkk2WFZyx65S5wvHPPQRZ5uyaw7LY2WrAsgxGPGM8
-         DHXLLhc2FoQCDaSUiIdK0nvDZ/qE37ZCRTPK5ThEhcfCrRM7zORlxhlIT0crmm5KeLdb
-         QTaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679535790;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9LlKFIUnSiiyDV3W4CcAc2xVtnCFtBb9VdMUxb4jw44=;
-        b=oIvTHlewE7txDlKAICvZ7kmsD6WMSWOfTkagP+o9BtOp8FmgR2YB02bY8O9HFmXgo8
-         ANValjEmm71ta7igBEVcaPw8ygrZl0FLCF4EqiOwt04ThMWiIfG3umMdBB02+F3Jh2Ot
-         G8A96pH5bT6MvSEAg+yPr+gB5k/AMlToAocGBfj2BeDdZxlhvmwTH6WSdMvWQPUMOL6b
-         LoH/Dk1o//4G69rjzdWUi1q3g2nTBUg3QNIZEqNwi8OywKkd4RilrDur0mGJ6M931T0e
-         6B/F6GYE2SB1OXdwqO2aASplVdi5Op3cAXenDYuSoKpLx6cAGWJpFkcCOHngGn3aJgeQ
-         oTQA==
-X-Gm-Message-State: AO0yUKX7CGemKNxAQCumCZU7xD6ogl0cbtfHovnySaAiVNqx4Vs3uWTN
-        Ryqpcqbu7VS9pSnoO2BdWTHxryy7NJivx4tbSW+B3xHpl8OwS5eIOKjVqQ==
-X-Google-Smtp-Source: AK7set9qTOJdeJ55DXen5M7F1pIehc7zwBpS5B15RCsnb+/+t7c3VOg5Ek4FkVqhdrSnXw21/2sKAB7P0o0g9Gsn19U=
-X-Received: by 2002:a05:622a:312:b0:3c0:4e06:764d with SMTP id
- q18-20020a05622a031200b003c04e06764dmr742874qtw.16.1679535790114; Wed, 22 Mar
- 2023 18:43:10 -0700 (PDT)
+        Wed, 22 Mar 2023 22:40:37 -0400
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979D446B7
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 19:40:33 -0700 (PDT)
+X-ASG-Debug-ID: 1679539227-086e23383d19100001-i5rUwQ
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id QpwZbisuEymkhbcz (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 23 Mar 2023 10:40:27 +0800 (CST)
+X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Thu, 23 Mar
+ 2023 10:40:27 +0800
+Received: from silvia-OptiPlex-3010.zhaoxin.com (10.29.8.47) by
+ ZXBJMBX02.zhaoxin.com (10.29.252.6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Thu, 23 Mar 2023 10:40:26 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+From:   silviazhao <silviazhao-oc@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.29.252.6
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
+        <silviazhao@zhaoxin.com>, <cooperyan@zhaoxin.com>
+Subject: [PATCH 0/3] Add PMC support for Zhaoxin Yongfeng architecture
+Date:   Thu, 23 Mar 2023 10:40:23 +0800
+X-ASG-Orig-Subj: [PATCH 0/3] Add PMC support for Zhaoxin Yongfeng architecture
+Message-ID: <20230323024026.823-1-silviazhao-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 22 Mar 2023 18:42:55 -0700
-Message-ID: <CAP-5=fV_A0A8-BnfaWFoXX2a284UDp8JHvaBLC_FXPzW5GT+=Q@mail.gmail.com>
-Subject: Determining if optane memory is installed
-To:     nvdimm@lists.linux.dev
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "Taylor, Perry" <perry.taylor@intel.com>,
-        "Biggers, Caleb" <caleb.biggers@intel.com>,
-        "Alt, Samantha" <samantha.alt@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.29.8.47]
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX02.zhaoxin.com (10.29.252.6)
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1679539227
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 710
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0209
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.106421
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi nvdimm@,
+Add PMC support for Zhaoxin Yongfeng architecture.
+Dave Hansen suggested to use macros instead of open-coded model numbers.
+So create arch/x86/include/asm/zhaoxin-family.h to introduce macros for
+Zhaoxin family numbers.
+https://lkml.org/lkml/2023/3/16/841
 
-In the perf tool there are metrics for platforms like cascade lake
-where we're collecting data for optane memory [1] but if optane memory
-isn't installed then the counters will always read 0. Is there a
-relatively simple way of determining if Optane memory is installed?
-For example, the presence of a file in /sys/devices. I'd like to
-integrate detection of this and make the perf metrics more efficient
-for the case where Optane memory isn't installed.
+silviazhao (3):
+  x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
+  perf/x86/zhaoxin: Replace open-coded model number with macros
+  perf/x86/zhaoxin: Add Yongfeng support
 
-Thanks,
-Ian Rogers
+ arch/x86/events/zhaoxin/core.c        | 55 ++++++++++++++++++---------
+ arch/x86/include/asm/zhaoxin-family.h | 19 +++++++++
+ 2 files changed, 57 insertions(+), 17 deletions(-)
+ create mode 100644 arch/x86/include/asm/zhaoxin-family.h
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json#n1134
+-- 
+2.17.1
+
