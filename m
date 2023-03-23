@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28828C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 19:22:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD6AC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 19:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231775AbjCWTWN (ORCPT
+        id S231788AbjCWTWU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 15:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47676 "EHLO
+        Thu, 23 Mar 2023 15:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbjCWTVq (ORCPT
+        with ESMTP id S231604AbjCWTVr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 15:21:46 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7650D9000
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Mar 2023 12:21:28 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id b124-20020a253482000000b00b72947f6a54so5816439yba.14
-        for <linux-perf-users@vger.kernel.org>; Thu, 23 Mar 2023 12:21:28 -0700 (PDT)
+        Thu, 23 Mar 2023 15:21:47 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE6C1D919
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Mar 2023 12:21:35 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-541942bfdccso230526827b3.14
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Mar 2023 12:21:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679599287;
+        d=google.com; s=20210112; t=1679599294;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICoBRC5p7C47vzNPhCu4TQTxzhqKflbzynhlXLr/MKk=;
-        b=NTv4v6z3Ry7/x16aUR6VsSc2k8sA9zVbyAhVQTlCenK4TKyrTtLzcVCpKnXXpMYMvz
-         mnCi5FW6Ux9aGdiAkPcCiBPO4+hnZ4FncMdfsiCKN/qpAFzVrkRDXdsL2DgYYoOvBTJ+
-         5d+Yacn36i26RyuFzNCVISlOJXf4MCzBjg/H95LHGb5HfwiQplhxgCzA+3YAKjzwTVcC
-         KxdILpoPITXk1FkOALG7PUQAKKiH8bCcArW2Et3dbd/CtwpnZrnPDgURtyQng8zxIHWp
-         ktEMzP1HbudPxSO69jZzUQC+v2yrGNGQsS2uBYTaXmsD6t/brrNCuwsbHF3SBl9CwKMm
-         0izw==
+        bh=+twZgD2lANnEj4Ejgw/Tmpo0NzizDYZveDuYYTFvBkQ=;
+        b=DOLfyLdfXIIJboU8zkl6Uhv2DoOuJI7tOmholFicsh5wHtqPfHBoa4d/ksaQZ4UpZX
+         0Ev8jrFOmVtp7YhsQdV9BHyssb4h1LrsqfMVJDUD8lg9Oo+8pCZssHgEnNAjDxZhZ0wP
+         555bUqffvW2GDA+AXwxnpF/XJAB9zHUGgOTS9L9GKnqu8ZQhl1/hXf5lzv6TiXYKcs5v
+         qLOwjbPkhgcSb+9G5g3Sn6KV53JpIz/EnMJp5CUmlYfmgXbjtzGrK8IzLmmG158kQxjk
+         VWfqj+7HlJ9BIg0Jkp6HeprNltgm7EOSmmVdDc9NL08qGBUNIIB3zEqVuPrXsSRWYqbG
+         FKgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679599287;
+        d=1e100.net; s=20210112; t=1679599294;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICoBRC5p7C47vzNPhCu4TQTxzhqKflbzynhlXLr/MKk=;
-        b=wguJEdfeXYX/9Pqe2LcpRqZJt7ekFuAybJvkJ2KkXQ86KAE4eiHM1yfVsGiSi8brRv
-         PH2dQ/CCanko4DGmUVCH9Zo0eDZG5xplmR+oWnGGVROFuhUh5MOxmmD3fCjiw7wE8vQU
-         XjRBpLJPiU8cBVyati+UnHzr5Dd7I2+wp0PAvu581nbCSqGIMr+MZco/LcSoTN5s0oFH
-         kLx9Qd62GKMahDBJ7PfeBXGWcBKeJJV9JDPOulOrps57h5D3gMt/rheZCPAaIFV3t+65
-         98FM6EdNySIiTmuDOFTAR/QwAOTEgrpjdNCUsm4CdygJmz2MMXdHXRdta7+/XlksvBor
-         TSvw==
-X-Gm-Message-State: AAQBX9djGj61hEflx+gEdigstciANr6Y8be4y54+6khd1Py3bMy1lndy
-        kGAMRNeFhjovINz4tpObwJxyAVWMtv6a
-X-Google-Smtp-Source: AKy350aykOl/2HKkfyrVxLlykwiNwGTV+2qSc99jTYQOFCt6cgGio9japBskZHWTdyIz90vOL8VmY1WwhukS
+        bh=+twZgD2lANnEj4Ejgw/Tmpo0NzizDYZveDuYYTFvBkQ=;
+        b=wlvCqiKKLk+TkYaW24lceOMy2kvw8K+Ij65IalSqAV7Q4lXSLCe0bckfmp1xd8bV42
+         7b4iybUWw0B0DLDexQYnZnsBTBjcPqyfj8QwBX9fzrmw/zHroAbwBU4HFrVXGbDx+bsH
+         T+tISB/3UDVDEIltC8xlEDp4dg1jiGMdIawwXiMYtNasj9oIjqOWK7krh+dknFijjfcA
+         JXoCluJYMz+D519/Cnn4foyliRkRcN/dvhk52Y3k93YzsKSfrJoELNYz4vzxC0r7cwZi
+         vhmyg00U+zah5KI3SInPePVc0ETsNDMeNJxByY+SgcpxPpLicDkW0sGa9Kt9IA2PoHgl
+         yTQg==
+X-Gm-Message-State: AAQBX9dz4ruHL8BlPj1XjiuQvxBKx2Jwut8gV0Ln9O+AmlAXag9qrMkM
+        0uTVwx9JAErTyBspMG3Q0GLe7jw5S/QQ
+X-Google-Smtp-Source: AKy350YAsxyhvHlQHOGw0WgC47yvbSzbSDYgNoOHhjZ7NRm+hmzKEIv3YnQvdG7T6KSoQ5hl/QSBOAY1lj93
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e705:3a3d:46e5:fb50])
- (user=irogers job=sendgmr) by 2002:a05:6902:70a:b0:b21:5fb4:c6e6 with SMTP id
- k10-20020a056902070a00b00b215fb4c6e6mr2790224ybt.11.1679599287786; Thu, 23
- Mar 2023 12:21:27 -0700 (PDT)
-Date:   Thu, 23 Mar 2023 12:20:25 -0700
+ (user=irogers job=sendgmr) by 2002:a25:f407:0:b0:b6d:1483:bc18 with SMTP id
+ q7-20020a25f407000000b00b6d1483bc18mr2938380ybd.7.1679599294516; Thu, 23 Mar
+ 2023 12:21:34 -0700 (PDT)
+Date:   Thu, 23 Mar 2023 12:20:26 -0700
 In-Reply-To: <20230323192028.135759-1-irogers@google.com>
-Message-Id: <20230323192028.135759-7-irogers@google.com>
+Message-Id: <20230323192028.135759-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20230323192028.135759-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v2 6/9] perf vendor events: Jaketown v23 events
+Subject: [PATCH v2 7/9] perf vendor events: Sandybridge v19 events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -79,15 +79,28 @@ Adds BR_MISP_EXEC.INDIRECT event.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/jaketown/pipeline.json | 8 ++++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv            | 2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv               | 2 +-
+ tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json | 8 ++++++++
  2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-index 85c04fe7632a..d0edfdec9f01 100644
---- a/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/jaketown/pipeline.json
-@@ -202,6 +202,14 @@
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index e41c289fa427..41d755d570e6 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -21,7 +21,7 @@ GenuineIntel-6-(57|85),v10,knightslanding,core
+ GenuineIntel-6-A[AC],v1.01,meteorlake,core
+ GenuineIntel-6-1[AEF],v3,nehalemep,core
+ GenuineIntel-6-2E,v3,nehalemex,core
+-GenuineIntel-6-2A,v18,sandybridge,core
++GenuineIntel-6-2A,v19,sandybridge,core
+ GenuineIntel-6-(8F|CF),v1.11,sapphirerapids,core
+ GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
+ GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v55,skylake,core
+diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+index 54454e5e262c..ecaf94ccc9c7 100644
+--- a/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/sandybridge/pipeline.json
+@@ -210,6 +210,14 @@
          "SampleAfterValue": "200003",
          "UMask": "0xc4"
      },
@@ -102,19 +115,6 @@ index 85c04fe7632a..d0edfdec9f01 100644
      {
          "BriefDescription": "Not taken speculative and retired mispredicted macro conditional branches.",
          "EventCode": "0x89",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index e1a609401fff..e41c289fa427 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -16,7 +16,7 @@ GenuineIntel-6-(7D|7E|A7),v1.17,icelake,core
- GenuineIntel-6-6[AC],v1.19,icelakex,core
- GenuineIntel-6-3A,v23,ivybridge,core
- GenuineIntel-6-3E,v22,ivytown,core
--GenuineIntel-6-2D,v22,jaketown,core
-+GenuineIntel-6-2D,v23,jaketown,core
- GenuineIntel-6-(57|85),v10,knightslanding,core
- GenuineIntel-6-A[AC],v1.01,meteorlake,core
- GenuineIntel-6-1[AEF],v3,nehalemep,core
 -- 
 2.40.0.348.gf938b09366-goog
 
