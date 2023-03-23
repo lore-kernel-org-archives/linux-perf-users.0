@@ -2,144 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6830C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 10:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BA0C76195
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 12:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbjCWKG1 (ORCPT
+        id S231164AbjCWM0V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 06:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        Thu, 23 Mar 2023 08:26:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229642AbjCWKGZ (ORCPT
+        with ESMTP id S229739AbjCWM0T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 06:06:25 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088B311A;
-        Thu, 23 Mar 2023 03:06:25 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32N9KsHO030295;
-        Thu, 23 Mar 2023 10:06:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=YMCzFX0wFvPyV9Du8i5juA6LlfSqGiBnejH4z9vM26A=;
- b=ibl/rwpDu6CHODKSAFVcT2MfOqNGisHHhJE1m7uF1+94dVgblqq8J3qeAogmbXq2deYk
- yPofq+xwTY9dKbe6kcAS4FpiWjdFBthz4Bfi3n5NTRWhXoAT7l1rZXWc4l1n0rxbK1fh
- c7XvUK4+plTSekS/vuKKxeIU26GbkaEJ37Ir+Pg9fE1+nIFcpL2Aj40XMxJTuOWwLG0I
- 5HFLnTTwe4sKNCSq4rqnuVyk2taX60ykgbjvjxfaqiDLKskuk8Wcum1LSDnxqHLGVGKs
- 7NUP2ZqzcBHzQBOo6ohHRGw68PxpI0wSbgVwA0F816eWzLssuayOIQzDP0hUr0leHaun bQ== 
+        Thu, 23 Mar 2023 08:26:19 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7663C222D0;
+        Thu, 23 Mar 2023 05:25:46 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32NAxtnL039311;
+        Thu, 23 Mar 2023 12:25:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=YKKj8uSTfTNy3FC9gwGE33UBkRjRiJhaZH6f3Mi5Ue8=;
+ b=ATT+AovM1Vrj4P+oH+3cG1ifbYJA6bR0qX2YC3pFJ4gdk5YSpFoTpRStTzOV71X0MgTG
+ i3o7/eq9UjFNtCoxFn9A4q5Ug40Pns3b1gl8BvuIw8J/eGmrPCsp3ZRQ845QvsR6oeVg
+ DPRa9pMdUJXZYZzfsAaspVE4NJJEsr0NNNysEr4eVDNkIbdyeaoUSCbm+VAy40C6KbOe
+ UnKK+RuvxJoaxaP43nWIuJm07FtCFOriJIub9hmNeZKgMLYMTbm0zIwa5jZDrXL5KGhM
+ aFbA7OEkXonMniWvLzOD580JbNbFUYa1mQSMm0AGb59oG8/9iw7SBt39uHix1yCYpZk2 cA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pgm2b91y7-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pggv7gw62-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Mar 2023 10:06:22 +0000
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32N9q9kc024217;
-        Thu, 23 Mar 2023 10:06:21 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pgm2b91xd-1
+        Thu, 23 Mar 2023 12:25:42 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32N9mklK039023;
+        Thu, 23 Mar 2023 12:25:42 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pggv7gw5p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Mar 2023 10:06:21 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32N8kn84022299;
-        Thu, 23 Mar 2023 10:06:19 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pd4x6f6rq-1
+        Thu, 23 Mar 2023 12:25:42 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32MKkdLE007981;
+        Thu, 23 Mar 2023 12:25:40 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3pd4x6e5eu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Mar 2023 10:06:19 +0000
+        Thu, 23 Mar 2023 12:25:40 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32NA6FeA45941404
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32NCPaHA5374586
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Mar 2023 10:06:15 GMT
+        Thu, 23 Mar 2023 12:25:36 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE3F320065;
-        Thu, 23 Mar 2023 10:06:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BD7F72004B;
+        Thu, 23 Mar 2023 12:25:36 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B1FE20071;
-        Thu, 23 Mar 2023 10:06:15 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.90])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Thu, 23 Mar 2023 10:06:15 +0000 (GMT)
-Date:   Thu, 23 Mar 2023 11:06:15 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
-Message-ID: <ZBwkl77/I31AQk12@osiris>
-References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
- <20230313080201.2440201-2-tmricht@linux.ibm.com>
- <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
- <ZA9sYL/re/aNVpo+@kernel.org>
- <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
- <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
- <ZBDo2GiuUTrHhd2L@kernel.org>
- <ZBtsNTt6Fbp1Lg3t@kernel.org>
- <9632bc6c-276e-d0d6-b6d9-efe91fe3a1e2@linux.ibm.com>
+        by IMSVA (Postfix) with ESMTP id 9585920043;
+        Thu, 23 Mar 2023 12:25:36 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Mar 2023 12:25:36 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf list: Remove UTF-8 characters from json file
+Date:   Thu, 23 Mar 2023 13:25:32 +0100
+Message-Id: <20230323122532.2305847-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9632bc6c-276e-d0d6-b6d9-efe91fe3a1e2@linux.ibm.com>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: xkflmBt1FXyCFrLF4_WeGFxEVgEOtcLF
-X-Proofpoint-ORIG-GUID: 4pggtU434zgXYtdwaBcUmSDNu2tDufoA
+X-Proofpoint-ORIG-GUID: ud4Jq-4yK5woVA1t0jNU21yTwKkAi729
+X-Proofpoint-GUID: temaWm4rLug8amzPesd8Uepj0xjhA7dw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-22_21,2023-03-22_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
- phishscore=0 spamscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- bulkscore=0 impostorscore=0 malwarescore=0 mlxlogscore=773
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0
+ suspectscore=0 phishscore=0 clxscore=1015 malwarescore=0 mlxscore=0
  lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303150002 definitions=main-2303230075
+ engine=8.12.0-2303150002 definitions=main-2303230091
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 10:51:16AM +0100, Thomas Richter wrote:
-> On 3/22/23 21:59, Arnaldo Carvalho de Melo wrote:
-> > While trying to cross build to s390 on:
-> > 
-> > ubuntu:18.04
-> > 
-> > using python3
-> >  
-> > 
-> >    CC      /tmp/build/perf/tests/parse-events.o
-> > Exception processing pmu-events/arch/s390/cf_z16/extended.json
-> > Traceback (most recent call last):
-> >   File "pmu-events/jevents.py", line 997, in <module>
-> >     main()
-> >   File "pmu-events/jevents.py", line 979, in main
-> >     ftw(arch_path, [], preprocess_one_file)
-> >   File "pmu-events/jevents.py", line 935, in ftw
-> >     ftw(item.path, parents + [item.name], action)
-> >   File "pmu-events/jevents.py", line 933, in ftw
-> >     action(parents, item)
-> >   File "pmu-events/jevents.py", line 514, in preprocess_one_file
-> >     for event in read_json_events(item.path, topic):
-> >   File "pmu-events/jevents.py", line 388, in read_json_events
-> >     events = json.load(open(path), object_hook=JsonEvent)
-> >   File "/usr/lib/python3.6/json/__init__.py", line 296, in load
-> >     return loads(fp.read(),
-> >   File "/usr/lib/python3.6/encodings/ascii.py", line 26, in decode
-> >     return codecs.ascii_decode(input, self.errors)[0]
-> > UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 4271: ordinal not in range(128)
-> > 
-> >
-> 
-> Hmmm, this is very strange. After reading this mail I installed Ubuntu 18.04
-> on my s390 system. The build works fine, no errors at all.
-> 
-> 
-> # pmu-events/jevents.py s390 all pmu-events/arch pmu-events/pmu-events.c
-> # ll pmu-events/pmu-events.c
-> -rw-r--r-- 1 root root 317284 Mar 23 10:46 pmu-events/pmu-events.c
-> #
-> 
-> The file has the correct contents and the build works fine too.
-> # make 
+commit 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
+contains the verbal description for z16 extended counter set.
+However some entries of the public description contain
+UTF-8 characters which brakes the build on some distros.
 
-The file contains UTF-8 characters, which were already present before
-your patch. Guess you need to provide an addon patch which converts to
-plain ASCII.
+Fix this and remove the UTF-8 characters.
+
+Fixes: 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/pmu-events/arch/s390/cf_z16/extended.json | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/extended.json b/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
+index c306190fc06f..c2b10ec1c6e0 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
+@@ -95,28 +95,28 @@
+ 		"EventCode": "145",
+ 		"EventName": "DCW_REQ",
+ 		"BriefDescription": "Directory Write Level 1 Data Cache from Cache",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache."
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "146",
+ 		"EventName": "DCW_REQ_IV",
+ 		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Intervention",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache with intervention."
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache with intervention."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "147",
+ 		"EventName": "DCW_REQ_CHIP_HIT",
+ 		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Chip HP Hit",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache after using chip level horizontal persistence, Chip-HP hit."
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache after using chip level horizontal persistence, Chip-HP hit."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "148",
+ 		"EventName": "DCW_REQ_DRAWER_HIT",
+ 		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Drawer HP Hit",
+-		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache after using drawer level horizontal persistence, Drawer-HP hit."
++		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache after using drawer level horizontal persistence, Drawer-HP hit."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+@@ -284,7 +284,7 @@
+ 		"EventCode": "172",
+ 		"EventName": "ICW_REQ_DRAWER_HIT",
+ 		"BriefDescription": "Directory Write Level 1 Instruction Cache from Cache with Drawer HP Hit",
+-		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestor’s Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
++		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestors Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+-- 
+2.17.1
+
