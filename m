@@ -2,105 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B64C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 02:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14412C6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 03:20:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbjCWCuK (ORCPT
+        id S229543AbjCWDUR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 22:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40480 "EHLO
+        Wed, 22 Mar 2023 23:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjCWCuJ (ORCPT
+        with ESMTP id S229484AbjCWDUQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 22:50:09 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF9C1F5F7;
-        Wed, 22 Mar 2023 19:50:08 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id lr16-20020a17090b4b9000b0023f187954acso598222pjb.2;
-        Wed, 22 Mar 2023 19:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679539808; x=1682131808;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=a4keVKlJNdo1j4qFYE//r1eDE0ShQaX85E5D5pockwg=;
-        b=WlxaKMdUWP6NF61Enqgn/cZbbwYafq7NXQi9eUxKsSptIGlgpjqSHnPEFHCeawJuk9
-         X5gAh/gM5rAO0kYp2M09Zezh7woZMiofK14yeFb84H1r0Xt2XmgGYhegj3yOOyh4nUFk
-         3AwLAdYWC70mD5rSB9KykDG9n2d/jVyW+az2+jNJCOq2PcxakBGU7ELXtFfHURtHCbP+
-         LFWAdIZJJjrDhXBRPmD4z4+eyb6JSGzMD2p/lp7au5mK7vpdtQxeZfVmRAQhLsMzeINe
-         LrH9+sQvV325fqlDdaOmIs4N16W89Sp51neKpM/rAsJLGRyqWNsiCe9SesWq+CYHnaKw
-         YoYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679539808; x=1682131808;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a4keVKlJNdo1j4qFYE//r1eDE0ShQaX85E5D5pockwg=;
-        b=RbEYUxx1ONA3RHHY2MD9lNQ5xW6MBN2kpXlGKX0D4kJsdfmvbm1C7ImpM1le4Og6d7
-         r9AwrSYtcOhqOVzkEdqzMWjFv98kFWOm1Z/01xNDkcZmqXjPV9y8e9sJSSviCmESneTe
-         OrjSZq8wXJ4q0u7lQMQmvhSZuxDX4aXgLb3fonSIyV1TZ3mVrbKqz7zcEKbTfyit/ZXa
-         SqBQkTdf4uWYkPv9Bbz9uM0FtjHtvu35loxbNqy5X1iRR0uLu3fLGKj6whU0NDJe4Rdt
-         Xqxkkr/Q9M0cXb9ElkEcGckAqKV086aoUVxu2vE4v4KYkS4xFiwDT4FMF2DYJ+eDM7br
-         9Okg==
-X-Gm-Message-State: AO0yUKXPlj423v2dFS+sqMf7YIA+9X1UEsMNQz3gA7UxRDaurE8kYNuf
-        hEX9BYRJ0w9AN4cgmG+5xsI=
-X-Google-Smtp-Source: AK7set/ezdzcrTsE9YggmSOhJq3msvgSPLQjU+Vex3eUzm6YN+Mlj0bCQCBskj4eL0u/kirscVBfQQ==
-X-Received: by 2002:a17:902:da8b:b0:1a1:a273:1812 with SMTP id j11-20020a170902da8b00b001a1a2731812mr5420072plx.45.1679539807527;
-        Wed, 22 Mar 2023 19:50:07 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:44b0:9957:6acc:41b5:fbeb])
-        by smtp.gmail.com with ESMTPSA id ji17-20020a170903325100b00199023c688esm11274738plb.26.2023.03.22.19.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Mar 2023 19:50:07 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf hist: Improve srcfile sort key performance (really)
-Date:   Wed, 22 Mar 2023 19:50:05 -0700
-Message-Id: <20230323025005.191239-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+        Wed, 22 Mar 2023 23:20:16 -0400
+X-Greylist: delayed 608 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Mar 2023 20:20:15 PDT
+Received: from mailsrv.cs.umass.edu (mailsrv.cs.umass.edu [128.119.240.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1662D49F9
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 20:20:14 -0700 (PDT)
+Received: from [192.168.50.148] (c-24-62-201-179.hsd1.ma.comcast.net [24.62.201.179])
+        by mailsrv.cs.umass.edu (Postfix) with ESMTPSA id F28234029631;
+        Wed, 22 Mar 2023 23:10:04 -0400 (EDT)
+Message-ID: <95253bde-dcdd-d454-fa72-75b341b40fe0@cs.umass.edu>
+Date:   Wed, 22 Mar 2023 23:10:03 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Reply-To: moss@cs.umass.edu
+Subject: Re: Determining if optane memory is installed
+Content-Language: en-US
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Ian Rogers <irogers@google.com>, nvdimm@lists.linux.dev
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <CAP-5=fV_A0A8-BnfaWFoXX2a284UDp8JHvaBLC_FXPzW5GT+=Q@mail.gmail.com>
+ <641bbe1eced26_1b98bb29440@dwillia2-xfh.jf.intel.com.notmuch>
+From:   Eliot Moss <moss@cs.umass.edu>
+In-Reply-To: <641bbe1eced26_1b98bb29440@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The earlier commit f0cdde28fecc ("perf hist: Improve srcfile sort key
-performance") updated the srcfile logic but missed to change the ->cmp()
-callback which is called for every sample.  It should use the same logic
-like in the srcline to speed up the processing because it'd return the
-same information repeatedly for the same address.  The real processing
-will be done in sort__srcfile_collapse().
+On 3/22/2023 10:49 PM, Dan Williams wrote:
+> Ian Rogers wrote:
+>> Hi nvdimm@,
+>>
+>> In the perf tool there are metrics for platforms like cascade lake
+>> where we're collecting data for optane memory [1] but if optane memory
+>> isn't installed then the counters will always read 0. Is there a
+>> relatively simple way of determining if Optane memory is installed?
+>> For example, the presence of a file in /sys/devices. I'd like to
+>> integrate detection of this and make the perf metrics more efficient
+>> for the case where Optane memory isn't installed.
+> 
+> In simple terms the presence of an ACPI NFIT table is probably enough to
+> tell you that the platform has persistent memory of some form:
+> 
+>      test -e /sys/firmware/acpi/tables/NFIT
+> 
+> ...if you need precision to tell the difference between battery backed
+> NVDIMMs and Optane memory then you are looking for something like:
+> 
+>      ndctl list -D
+> 
+> ...which gathers NVDIMM device data from sysfs and spits it out in json
+> of the form:
+> 
+>      {
+>        "dev":"nmem0",
+>        "id":"cdab-0a-07e0-ffffffff",
+>        "handle":0,
+>        "phys_id":0,
+>        "security:":"disabled"
+>      }
+> 
+> ...where the id string follow the format defined here:
+> 
+> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/05_ACPI_Software_Programming_Model/ACPI_Software_Programming_Model.html#nvdimm-representation-format
+> 
+> ...and then you would need to know the id string of Optane devices vs
+> other NVDIMM vendors, which I think is overkill for what seems like a
+> simple case of hide counters that will never increment.
 
-Fixes: pf0cdde28fecc ("perf hist: Improve srcfile sort key performance")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/sort.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Cool!  My older machine with first gen Optane DC shows:
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index e11e68ecf0a2..2b5cc8e4aa6e 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -657,12 +657,7 @@ static char *hist_entry__get_srcfile(struct hist_entry *e)
- static int64_t
- sort__srcfile_cmp(struct hist_entry *left, struct hist_entry *right)
- {
--	if (!left->srcfile)
--		left->srcfile = hist_entry__get_srcfile(left);
--	if (!right->srcfile)
--		right->srcfile = hist_entry__get_srcfile(right);
--
--	return strcmp(right->srcfile, left->srcfile);
-+	return sort__srcline_cmp(left, right);
- }
- 
- static int64_t
--- 
-2.40.0.rc1.284.g88254d51c5-goog
+     "id":"8089-a2-1911-0000148d",
+     "id":"8089-a2-1911-00001546",
+     "id":"8089-a2-1911-0000173c",
+     "id":"8089-a2-1911-00001781",
+     "id":"8089-a2-1911-00001a7f",
+     "id":"8089-a2-1911-00001a8e",
+     "id":"8089-a2-1911-00001a9c",
+     "id":"8089-a2-1911-00001aba",
+     "id":"8089-a2-1911-00001b0a",
+     "id":"8089-a2-1911-00001b1f",
+     "id":"8089-a2-1911-00001b31",
+     "id":"8089-a2-1911-00001b33",
 
+My newer one with second gen shows:
+
+     "id":"8089-a2-2134-00000027",
+     "id":"8089-a2-2134-00000156",
+     "id":"8089-a2-2134-00000159",
+     "id":"8089-a2-2134-00000317",
+     "id":"8089-a2-2134-00000709",
+     "id":"8089-a2-2134-0000091e",
+     "id":"8089-a2-2134-00000935",
+     "id":"8089-a2-2134-00000981",
+
+Enjoy!  Eliot Moss
