@@ -2,114 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14412C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 03:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A64C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 04:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbjCWDUR (ORCPT
+        id S229496AbjCWEZ7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 23:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
+        Thu, 23 Mar 2023 00:25:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjCWDUQ (ORCPT
+        with ESMTP id S229461AbjCWEZ4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 23:20:16 -0400
-X-Greylist: delayed 608 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 22 Mar 2023 20:20:15 PDT
-Received: from mailsrv.cs.umass.edu (mailsrv.cs.umass.edu [128.119.240.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1662D49F9
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 20:20:14 -0700 (PDT)
-Received: from [192.168.50.148] (c-24-62-201-179.hsd1.ma.comcast.net [24.62.201.179])
-        by mailsrv.cs.umass.edu (Postfix) with ESMTPSA id F28234029631;
-        Wed, 22 Mar 2023 23:10:04 -0400 (EDT)
-Message-ID: <95253bde-dcdd-d454-fa72-75b341b40fe0@cs.umass.edu>
-Date:   Wed, 22 Mar 2023 23:10:03 -0400
+        Thu, 23 Mar 2023 00:25:56 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B873AD31;
+        Wed, 22 Mar 2023 21:25:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0106B4B3;
+        Wed, 22 Mar 2023 21:26:39 -0700 (PDT)
+Received: from [10.162.40.16] (a077893.blr.arm.com [10.162.40.16])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C720E3F766;
+        Wed, 22 Mar 2023 21:25:50 -0700 (PDT)
+Message-ID: <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
+Date:   Thu, 23 Mar 2023 09:55:47 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Reply-To: moss@cs.umass.edu
-Subject: Re: Determining if optane memory is installed
+Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
 Content-Language: en-US
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Ian Rogers <irogers@google.com>, nvdimm@lists.linux.dev
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        "Taylor, Perry" <perry.taylor@intel.com>,
-        "Biggers, Caleb" <caleb.biggers@intel.com>,
-        "Alt, Samantha" <samantha.alt@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <CAP-5=fV_A0A8-BnfaWFoXX2a284UDp8JHvaBLC_FXPzW5GT+=Q@mail.gmail.com>
- <641bbe1eced26_1b98bb29440@dwillia2-xfh.jf.intel.com.notmuch>
-From:   Eliot Moss <moss@cs.umass.edu>
-In-Reply-To: <641bbe1eced26_1b98bb29440@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+ <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/22/2023 10:49 PM, Dan Williams wrote:
-> Ian Rogers wrote:
->> Hi nvdimm@,
+Hello Mark,
+
+On 3/22/23 00:32, Mark Brown wrote:
+> On Wed, Mar 15, 2023 at 10:44:34AM +0530, Anshuman Khandual wrote:
+>> This series enables perf branch stack sampling support on arm64 platform
+>> via a new arch feature called Branch Record Buffer Extension (BRBE). All
+>> relevant register definitions could be accessed here.
 >>
->> In the perf tool there are metrics for platforms like cascade lake
->> where we're collecting data for optane memory [1] but if optane memory
->> isn't installed then the counters will always read 0. Is there a
->> relatively simple way of determining if Optane memory is installed?
->> For example, the presence of a file in /sys/devices. I'd like to
->> integrate detection of this and make the perf metrics more efficient
->> for the case where Optane memory isn't installed.
+>> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 > 
-> In simple terms the presence of an ACPI NFIT table is probably enough to
-> tell you that the platform has persistent memory of some form:
-> 
->      test -e /sys/firmware/acpi/tables/NFIT
-> 
-> ...if you need precision to tell the difference between battery backed
-> NVDIMMs and Optane memory then you are looking for something like:
-> 
->      ndctl list -D
-> 
-> ...which gathers NVDIMM device data from sysfs and spits it out in json
-> of the form:
-> 
->      {
->        "dev":"nmem0",
->        "id":"cdab-0a-07e0-ffffffff",
->        "handle":0,
->        "phys_id":0,
->        "security:":"disabled"
->      }
-> 
-> ...where the id string follow the format defined here:
-> 
-> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/05_ACPI_Software_Programming_Model/ACPI_Software_Programming_Model.html#nvdimm-representation-format
-> 
-> ...and then you would need to know the id string of Optane devices vs
-> other NVDIMM vendors, which I think is overkill for what seems like a
-> simple case of hide counters that will never increment.
+> While looking at another feature I noticed that HFGITR_EL2 has two traps
+> for BRBE instructions, nBRBINJ and nBRBIALL which trap BRB INJ and BRB
+> IALL.  Even if we don't use those right now does it make sense to
 
-Cool!  My older machine with first gen Optane DC shows:
+Right, current branch stack sampling experiments have been on EL2 host itself.
 
-     "id":"8089-a2-1911-0000148d",
-     "id":"8089-a2-1911-00001546",
-     "id":"8089-a2-1911-0000173c",
-     "id":"8089-a2-1911-00001781",
-     "id":"8089-a2-1911-00001a7f",
-     "id":"8089-a2-1911-00001a8e",
-     "id":"8089-a2-1911-00001a9c",
-     "id":"8089-a2-1911-00001aba",
-     "id":"8089-a2-1911-00001b0a",
-     "id":"8089-a2-1911-00001b1f",
-     "id":"8089-a2-1911-00001b31",
-     "id":"8089-a2-1911-00001b33",
+> document a requirement for those traps to be disabled now in case we
+> need them later, and do so during EL2 setup for KVM guests?  That could
+> always be done incrementally.
+Unlike all other instruction trap enable fields in SYS_HFGITR_EL2, these BRBE
+instructions ones are actually inverted in semantics i.e the particular fields
+need to be set for these traps to be disabled in EL2.
 
-My newer one with second gen shows:
+SYS_HFGITR_EL2.nBRBIALL
+SYS_HFGITR_EL2.nBRBINJ
 
-     "id":"8089-a2-2134-00000027",
-     "id":"8089-a2-2134-00000156",
-     "id":"8089-a2-2134-00000159",
-     "id":"8089-a2-2134-00000317",
-     "id":"8089-a2-2134-00000709",
-     "id":"8089-a2-2134-0000091e",
-     "id":"8089-a2-2134-00000935",
-     "id":"8089-a2-2134-00000981",
+By default entire SYS_HFGITR_EL2 is set as cleared during init and that would
+prevent a guest from using BRBE.
 
-Enjoy!  Eliot Moss
+init_kernel_el()
+	init_el2()
+		init_el2_state()
+			__init_el2_fgt()
+				........
+				msr_s   SYS_HFGITR_EL2, xzr
+				........
+
+I guess something like the following (untested) needs to be done, to enable
+BRBE in guests.
+
+diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+index 037724b19c5c..309708127a2a 100644
+--- a/arch/arm64/include/asm/el2_setup.h
++++ b/arch/arm64/include/asm/el2_setup.h
+@@ -161,6 +161,15 @@
+        msr_s   SYS_HFGWTR_EL2, x0
+        msr_s   SYS_HFGITR_EL2, xzr
+ 
++       mrs     x1, id_aa64dfr0_el1
++       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++       cbz     x1, .Lskip_brbe_\@
++       mov     x0, xzr
++       orr     x0, x0, #HFGITR_EL2_nBRBIALL
++       orr     x0, x0, #HFGITR_EL2_nBRBINJ
++       msr_s   SYS_HFGITR_EL2, x0
++
++.Lskip_brbe_\@:
+        mrs     x1, id_aa64pfr0_el1             // AMU traps UNDEF without AMU
+        ubfx    x1, x1, #ID_AA64PFR0_EL1_AMU_SHIFT, #4
+        cbz     x1, .Lskip_fgt_\@
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index b3bc03ee22bd..3b939c42f3b8 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -527,6 +527,9 @@
+ #define SYS_HFGITR_EL2                 sys_reg(3, 4, 1, 1, 6)
+ #define SYS_HACR_EL2                   sys_reg(3, 4, 1, 1, 7)
+ 
++#define        HFGITR_EL2_nBRBIALL             (BIT(56))
++#define HFGITR_EL2_nBRBINJ             (BIT(55))
++
+ #define SYS_TTBR0_EL2                  sys_reg(3, 4, 2, 0, 0)
+ #define SYS_TTBR1_EL2                  sys_reg(3, 4, 2, 0, 1)
+ #define SYS_TCR_EL2                    sys_reg(3, 4, 2, 0, 2)
+
+
+> 
+> I've got a patch adding the definition of that register to sysreg which
+> I should be sending shortly, no need to duplicate that effort.
+
+Sure, I assume you are moving the existing definition for SYS_HFGITR_EL2 along
+with all its fields from ../include/asm/sysreg.h to ../tools/sysreg. Right, it
+makes sense.
+
+- Anshuman
