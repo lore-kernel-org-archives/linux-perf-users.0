@@ -2,128 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A23C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 13:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388A0C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 16:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbjCWNII (ORCPT
+        id S231593AbjCWQLX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 09:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58466 "EHLO
+        Thu, 23 Mar 2023 12:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230418AbjCWNIF (ORCPT
+        with ESMTP id S229948AbjCWQLW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 09:08:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 377C02E83D;
-        Thu, 23 Mar 2023 06:07:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C5C97626B7;
-        Thu, 23 Mar 2023 13:07:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A79AC433EF;
-        Thu, 23 Mar 2023 13:07:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679576848;
-        bh=jeeYuf2cvJjDKCXLZ079Zr80fJiGBtLhCWrirRmqNdE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qO7Mo9F/AWK4Qvz+eFnk5PzTeirAuzkuS19kYhe3YTd86AWex8Db6YF6asZZyVBO3
-         x67p0g5xXUem3Bxev0O+B0jObOhzQiAlv7V3mCXfVxznXSmBes4JIuBY0ogXVgTBu+
-         CvIyWPPqN6IU2DObf55aWZL4XE2MjM4v8djjgehThgphquZPpAaxdikQFHWUmhn/P6
-         j1qW7g2KWAzgJWx6X5/XuDQr4NSeIsS/WtzmyzmMuFc09zeJjz9hkQW2CuymTBQSuD
-         xjJsJZLlM4I2bW+9hm34IlPyMUs8AMfk8EwWwgiK1I440TuLXgOMBe2ikqoH5MQBUl
-         ie8vmXR1fnrfg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 75EB04052D; Thu, 23 Mar 2023 10:07:25 -0300 (-03)
-Date:   Thu, 23 Mar 2023 10:07:25 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH] perf list: Remove UTF-8 characters from json file
-Message-ID: <ZBxPDagGB11SS8/D@kernel.org>
-References: <20230323122532.2305847-1-tmricht@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230323122532.2305847-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+        Thu, 23 Mar 2023 12:11:22 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B204A32CCF;
+        Thu, 23 Mar 2023 09:10:55 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VeUu73m_1679587840;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VeUu73m_1679587840)
+          by smtp.aliyun-inc.com;
+          Fri, 24 Mar 2023 00:10:53 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: [RESEND PATCH] driver/perf: arm-cmn: support ACPI probe
+Date:   Fri, 24 Mar 2023 00:10:38 +0800
+Message-Id: <1679587838-80000-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 23, 2023 at 01:25:32PM +0100, Thomas Richter escreveu:
-> commit 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
-> contains the verbal description for z16 extended counter set.
-> However some entries of the public description contain
-> UTF-8 characters which brakes the build on some distros.
-> 
-> Fix this and remove the UTF-8 characters.
+ACPI companion devices call insert_resource() in platform_device_add()
+to claim the device resources. If the resources are claimed again before
+ioremap(), and the addresses of multiple resources overlap, it will
+return -BUSY, causing the driver to fail to load.
 
-Thanks, tested and applied. Now its some power9 file failing...
+For example, the CMN700 on my machine is set with two resources similar
+to CMN600, and the overlap of resource addresses makes the CMN driver
+unable to match my CMN700. The error log:
 
-- Arnaldo
+[  12.016837] arm-cmn ARMHC700:00: can't request region for resource [mem 0x40000000-0x4fffffff]
+[  12.028230] arm-cmn: probe of ARMHC700:00 failed with error -16
+[  12.036832] arm-cmn ARMHC700:01: can't request region for resource [mem 0x40040000000-0x4004fffffff]
+[  12.051289] arm-cmn: probe of ARMHC700:01 failed with error -16
 
+So let ACPI companion devices call arm_cmn_acpi_probe() and not claim
+resource again. In addition, the arm_cmn_acpi_probe() and
+arm_cmn_of_probe() functions are refactored to make them compatible
+with both CMN600 and CMN-ANY.
+
+Fixes: 61ec1d875812 ("perf/arm-cmn: Demarcate CMN-600 specifics")
+Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+---
+ drivers/perf/arm-cmn.c | 57 ++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 37 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 1deb61b..beb3b37 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -2206,7 +2206,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+ 	return 0;
+ }
  
-> Fixes: 7f76b3113068 ("perf list: Add IBM z16 event description for s390")
-> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/pmu-events/arch/s390/cf_z16/extended.json | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/s390/cf_z16/extended.json b/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
-> index c306190fc06f..c2b10ec1c6e0 100644
-> --- a/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
-> +++ b/tools/perf/pmu-events/arch/s390/cf_z16/extended.json
-> @@ -95,28 +95,28 @@
->  		"EventCode": "145",
->  		"EventName": "DCW_REQ",
->  		"BriefDescription": "Directory Write Level 1 Data Cache from Cache",
-> -		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache."
-> +		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache."
->  	},
->  	{
->  		"Unit": "CPU-M-CF",
->  		"EventCode": "146",
->  		"EventName": "DCW_REQ_IV",
->  		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Intervention",
-> -		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache with intervention."
-> +		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache with intervention."
->  	},
->  	{
->  		"Unit": "CPU-M-CF",
->  		"EventCode": "147",
->  		"EventName": "DCW_REQ_CHIP_HIT",
->  		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Chip HP Hit",
-> -		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache after using chip level horizontal persistence, Chip-HP hit."
-> +		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache after using chip level horizontal persistence, Chip-HP hit."
->  	},
->  	{
->  		"Unit": "CPU-M-CF",
->  		"EventCode": "148",
->  		"EventName": "DCW_REQ_DRAWER_HIT",
->  		"BriefDescription": "Directory Write Level 1 Data Cache from Cache with Drawer HP Hit",
-> -		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestor’s Level-2 cache after using drawer level horizontal persistence, Drawer-HP hit."
-> +		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the requestors Level-2 cache after using drawer level horizontal persistence, Drawer-HP hit."
->  	},
->  	{
->  		"Unit": "CPU-M-CF",
-> @@ -284,7 +284,7 @@
->  		"EventCode": "172",
->  		"EventName": "ICW_REQ_DRAWER_HIT",
->  		"BriefDescription": "Directory Write Level 1 Instruction Cache from Cache with Drawer HP Hit",
-> -		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestor’s Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
-> +		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the requestors Level-2 cache using drawer level horizontal persistence, Drawer-HP hit."
->  	},
->  	{
->  		"Unit": "CPU-M-CF",
-> -- 
-> 2.17.1
-> 
-
+-static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
++static int arm_cmn_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+ {
+ 	struct resource *cfg, *root;
+ 
+@@ -2214,12 +2214,21 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+ 	if (!cfg)
+ 		return -EINVAL;
+ 
+-	root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!root)
+-		return -EINVAL;
++	/* If ACPI defines more than one resource, such as cmn-600, then there may be
++	 * a deviation between ROOTNODEBASE and PERIPHBASE, and ROOTNODEBASE can
++	 * be obtained from the second resource. Otherwise, it can be considered that
++	 * ROOT NODE BASE is PERIPHBASE. This is compatible with cmn-600 and cmn-any.
++	 */
++	if (pdev->num_resources > 1) {
++		root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++		if (!root)
++			return -EINVAL;
+ 
+-	if (!resource_contains(cfg, root))
+-		swap(cfg, root);
++		if (!resource_contains(cfg, root))
++			swap(cfg, root);
++	} else {
++		root = cfg;
++	}
+ 	/*
+ 	 * Note that devm_ioremap_resource() is dumb and won't let the platform
+ 	 * device claim cfg when the ACPI companion device has already claimed
+@@ -2227,17 +2236,30 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+ 	 * appropriate name, we don't really need to do it again here anyway.
+ 	 */
+ 	cmn->base = devm_ioremap(cmn->dev, cfg->start, resource_size(cfg));
+-	if (!cmn->base)
+-		return -ENOMEM;
++	if (IS_ERR(cmn->base))
++		return PTR_ERR(cmn->base);
+ 
+ 	return root->start - cfg->start;
+ }
+ 
+-static int arm_cmn600_of_probe(struct device_node *np)
++static int arm_cmn_of_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+ {
+ 	u32 rootnode;
++	int ret;
++
++	cmn->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(cmn->base))
++		return PTR_ERR(cmn->base);
+ 
+-	return of_property_read_u32(np, "arm,root-node", &rootnode) ?: rootnode;
++	/* If of_property_read_u32() return -EINVAL, it means that device tree has
++	 * not define root-node, and root-node will return 0, which is compatible
++	 * with cmn-600 and cmn-any.
++	 */
++	ret = of_property_read_u32(pdev->dev.of_node, "arm,root-node", &rootnode);
++	if (ret == -EINVAL)
++		return 0;
++
++	return rootnode;
+ }
+ 
+ static int arm_cmn_probe(struct platform_device *pdev)
+@@ -2255,16 +2277,11 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 	cmn->model = (unsigned long)device_get_match_data(cmn->dev);
+ 	platform_set_drvdata(pdev, cmn);
+ 
+-	if (cmn->model == CMN600 && has_acpi_companion(cmn->dev)) {
+-		rootnode = arm_cmn600_acpi_probe(pdev, cmn);
+-	} else {
+-		rootnode = 0;
+-		cmn->base = devm_platform_ioremap_resource(pdev, 0);
+-		if (IS_ERR(cmn->base))
+-			return PTR_ERR(cmn->base);
+-		if (cmn->model == CMN600)
+-			rootnode = arm_cmn600_of_probe(pdev->dev.of_node);
+-	}
++	if (has_acpi_companion(cmn->dev))
++		rootnode = arm_cmn_acpi_probe(pdev, cmn);
++	else
++		rootnode = arm_cmn_of_probe(pdev, cmn);
++
+ 	if (rootnode < 0)
+ 		return rootnode;
+ 
 -- 
+1.8.3.1
 
-- Arnaldo
