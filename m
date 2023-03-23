@@ -2,101 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5D6C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 12:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B89FC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 12:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbjCWMyK (ORCPT
+        id S229907AbjCWMyl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 08:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
+        Thu, 23 Mar 2023 08:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231960AbjCWMyJ (ORCPT
+        with ESMTP id S231355AbjCWMyi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 08:54:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C84853C13;
-        Thu, 23 Mar 2023 05:54:07 -0700 (PDT)
+        Thu, 23 Mar 2023 08:54:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E77D1C591;
+        Thu, 23 Mar 2023 05:54:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 75B75B820F7;
-        Thu, 23 Mar 2023 12:54:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF456C433D2;
-        Thu, 23 Mar 2023 12:54:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 95EC5626A9;
+        Thu, 23 Mar 2023 12:54:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D7AC433D2;
+        Thu, 23 Mar 2023 12:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679576045;
-        bh=74vUZPMQHOoEjR07bQmZxQ/fDJUK+fLucEjzk1+Z3zM=;
+        s=k20201202; t=1679576076;
+        bh=0f4sSDOGAezOQc/75NB+W0t39lJvoLyHm0ASgw6qym0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pvlOJwd1TMVHQC66g2ssOpeFbVXYCWhaVrsxtN7G8VlPcyhi91bPCQ7oiml8xpZoN
-         2QNaRENWK7lVVa3zeuAhCJHlMVEvnsoQyDaDTDk8wtMTdYmDJxr7Tki363Fx3P/cDd
-         EBNSOSKKQFTH8fFaBKtEkFwQCf4pkTQR0hL2jwfakZ6LURqn+Mupv3DS08eas4/x9E
-         JkfCbXxqTElxB9jKSnnXdACGyEHbOQsBmaH2pBy3yPcI7K0LutGNUGFZh9OKr95Idd
-         VP4Rt5xheGoORkuAq41AFqTKXSKjX2QhLDvSIQ+5iEItxLcZ176WMJfkeEGLwdk6OG
-         IbxRZ4VRc/GEg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 30EB34052D; Thu, 23 Mar 2023 09:54:02 -0300 (-03)
-Date:   Thu, 23 Mar 2023 09:54:02 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        b=Unq2gywwMnHGvYrOHmT+ZU30GrmwWJ4kiBSFA9zwR0lqDdrp7ihThHtdiX066JUpA
+         FAcjAYRqLEENCHVpqr92jXmxVM34dEHGRnJ8MfzWZ+bG+RC9an8FWkgwralxqyDx2i
+         GVcWVbjiGA4Hf68qkHcvMUis1aUMb/lW+zNNTEEY6Sl+Zk78DruL91qIJAK2QM/bD6
+         y/DHeAnRTVTnbwO5qEpXhZUB2vQdkfFBf6HoS2KpTOEz1QNRfuZ5as2XuNp6TytX/O
+         K5tCAM26muIQvm5X+ftxPWvt3reBJXjA+ZUr0E0/arSrVZ63S6sURWgxhrDwb8XzM4
+         Assqp0Pv+Z7DQ==
+Date:   Thu, 23 Mar 2023 12:54:29 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf hist: Improve srcfile sort key performance (really)
-Message-ID: <ZBxL6nfhW/gwixx8@kernel.org>
-References: <20230323025005.191239-1-namhyung@kernel.org>
+Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
+Message-ID: <4d93a3de-c86d-454b-8a43-b24e62ea3be7@sirena.org.uk>
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+ <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
+ <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IzzsaEzQhBiT5n2I"
 Content-Disposition: inline
-In-Reply-To: <20230323025005.191239-1-namhyung@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
+X-Cookie: A lie in time saves nine.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 22, 2023 at 07:50:05PM -0700, Namhyung Kim escreveu:
-> The earlier commit f0cdde28fecc ("perf hist: Improve srcfile sort key
-> performance") updated the srcfile logic but missed to change the ->cmp()
-> callback which is called for every sample.  It should use the same logic
-> like in the srcline to speed up the processing because it'd return the
-> same information repeatedly for the same address.  The real processing
-> will be done in sort__srcfile_collapse().
 
-Thanks, applied.
+--IzzsaEzQhBiT5n2I
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Arnaldo
+On Thu, Mar 23, 2023 at 09:55:47AM +0530, Anshuman Khandual wrote:
+> On 3/22/23 00:32, Mark Brown wrote:
 
- 
-> Fixes: pf0cdde28fecc ("perf hist: Improve srcfile sort key performance")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/sort.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index e11e68ecf0a2..2b5cc8e4aa6e 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -657,12 +657,7 @@ static char *hist_entry__get_srcfile(struct hist_entry *e)
->  static int64_t
->  sort__srcfile_cmp(struct hist_entry *left, struct hist_entry *right)
->  {
-> -	if (!left->srcfile)
-> -		left->srcfile = hist_entry__get_srcfile(left);
-> -	if (!right->srcfile)
-> -		right->srcfile = hist_entry__get_srcfile(right);
-> -
-> -	return strcmp(right->srcfile, left->srcfile);
-> +	return sort__srcline_cmp(left, right);
->  }
->  
->  static int64_t
-> -- 
-> 2.40.0.rc1.284.g88254d51c5-goog
-> 
+> > document a requirement for those traps to be disabled now in case we
+> > need them later, and do so during EL2 setup for KVM guests?  That could
+> > always be done incrementally.
 
--- 
+> Unlike all other instruction trap enable fields in SYS_HFGITR_EL2, these =
+BRBE
+> instructions ones are actually inverted in semantics i.e the particular f=
+ields
+> need to be set for these traps to be disabled in EL2.
 
-- Arnaldo
+Right, for backwards compatibility all newly added fields are trap by
+default.
+
+> SYS_HFGITR_EL2.nBRBIALL
+> SYS_HFGITR_EL2.nBRBINJ
+
+> By default entire SYS_HFGITR_EL2 is set as cleared during init and that w=
+ould
+> prevent a guest from using BRBE.
+
+It should prevent the host as well shouldn't it? =20
+
+> I guess something like the following (untested) needs to be done, to enab=
+le
+> BRBE in guests.
+
+> +       mrs     x1, id_aa64dfr0_el1
+> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+> +       cbz     x1, .Lskip_brbe_\@
+> +       mov     x0, xzr
+> +       orr     x0, x0, #HFGITR_EL2_nBRBIALL
+> +       orr     x0, x0, #HFGITR_EL2_nBRBINJ
+> +       msr_s   SYS_HFGITR_EL2, x0
+> +
+> +.Lskip_brbe_\@:
+
+Yes, looks roughly what I'd expect.
+
+> > I've got a patch adding the definition of that register to sysreg which
+> > I should be sending shortly, no need to duplicate that effort.
+
+> Sure, I assume you are moving the existing definition for SYS_HFGITR_EL2 =
+along
+> with all its fields from ../include/asm/sysreg.h to ../tools/sysreg. Righ=
+t, it
+> makes sense.
+
+No fields at the minute but yes, like the other conversions.
+
+--IzzsaEzQhBiT5n2I
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQcTAQACgkQJNaLcl1U
+h9CHFAf9EtWrB/2JoeaIi3pXQAESHQ74/qrx9W/Ih/WTQpX+J2Do4nqspRKm5LxU
+LUxsZP6nH6Tx1YN8gB/Lqa8icl8CI7mMxadWudTd2LhVsPpzOieJ+rEZcq7qKkSQ
+OQxffNJto/e06eqNVvD4gEagA0ZOVHDGmtOBMkaKJGcVri0oMFQCEHFGcGzMATT3
+rw0TOKRX7zEPhUCy42IBayzBddCWSXOHdPwJPLjFZmevGonhvQf1ujSRUeF+Zv6E
+PiFI+AN9WheqYT5cm4GsWE0bF3gRteR0y74TUy7iwEasSNTKWsf5izOcIagpAPmw
+AtW3a9hlhnnKR1kZQXW6ygRMnrsP6A==
+=YCOY
+-----END PGP SIGNATURE-----
+
+--IzzsaEzQhBiT5n2I--
