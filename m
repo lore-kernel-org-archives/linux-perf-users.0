@@ -2,22 +2,22 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64251C6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 02:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C89CC76196
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 02:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbjCWCki (ORCPT
+        id S230054AbjCWCkj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 22 Mar 2023 22:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
+        Wed, 22 Mar 2023 22:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjCWCkh (ORCPT
+        with ESMTP id S229863AbjCWCki (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 22 Mar 2023 22:40:37 -0400
+        Wed, 22 Mar 2023 22:40:38 -0400
 Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979D446B7
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 19:40:33 -0700 (PDT)
-X-ASG-Debug-ID: 1679539227-086e23383d19100001-i5rUwQ
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id QpwZbisuEymkhbcz (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 23 Mar 2023 10:40:27 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992962E826
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Mar 2023 19:40:34 -0700 (PDT)
+X-ASG-Debug-ID: 1679539227-086e23383d19100002-i5rUwQ
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id ayoFbDVMQOAafL9L (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 23 Mar 2023 10:40:28 +0800 (CST)
 X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
 X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
 Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX1.zhaoxin.com
@@ -39,11 +39,13 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
         <silviazhao@zhaoxin.com>, <cooperyan@zhaoxin.com>
-Subject: [PATCH 0/3] Add PMC support for Zhaoxin Yongfeng architecture
-Date:   Thu, 23 Mar 2023 10:40:23 +0800
-X-ASG-Orig-Subj: [PATCH 0/3] Add PMC support for Zhaoxin Yongfeng architecture
-Message-ID: <20230323024026.823-1-silviazhao-oc@zhaoxin.com>
+Subject: [PATCH 1/3] x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
+Date:   Thu, 23 Mar 2023 10:40:24 +0800
+X-ASG-Orig-Subj: [PATCH 1/3] x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
+Message-ID: <20230323024026.823-2-silviazhao-oc@zhaoxin.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20230323024026.823-1-silviazhao-oc@zhaoxin.com>
+References: <20230323024026.823-1-silviazhao-oc@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.29.8.47]
@@ -54,9 +56,9 @@ X-Barracuda-Start-Time: 1679539227
 X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
 X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
 X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 710
+X-Barracuda-Scan-Msg-Size: 1227
 X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0209
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
 X-Barracuda-Spam-Score: -2.02
 X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
 X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.106421
@@ -67,22 +69,41 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add PMC support for Zhaoxin Yongfeng architecture.
-Dave Hansen suggested to use macros instead of open-coded model numbers.
-So create arch/x86/include/asm/zhaoxin-family.h to introduce macros for
-Zhaoxin family numbers.
-https://lkml.org/lkml/2023/3/16/841
+Create zhaoxin-family.h to define Zhaoxin family numbers in one header
+file. So we can use the macros instead of open-coded model numbers in
+other files.
 
-silviazhao (3):
-  x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
-  perf/x86/zhaoxin: Replace open-coded model number with macros
-  perf/x86/zhaoxin: Add Yongfeng support
-
- arch/x86/events/zhaoxin/core.c        | 55 ++++++++++++++++++---------
- arch/x86/include/asm/zhaoxin-family.h | 19 +++++++++
- 2 files changed, 57 insertions(+), 17 deletions(-)
+Signed-off-by: silviazhao <silviazhao-oc@zhaoxin.com>
+---
+ arch/x86/include/asm/zhaoxin-family.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
  create mode 100644 arch/x86/include/asm/zhaoxin-family.h
 
+diff --git a/arch/x86/include/asm/zhaoxin-family.h b/arch/x86/include/asm/zhaoxin-family.h
+new file mode 100644
+index 000000000000..d54e0112207a
+--- /dev/null
++++ b/arch/x86/include/asm/zhaoxin-family.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_ZHAOXIN_FAMILY_H
++#define _ASM_X86_ZHAOXIN_FAMILY_H
++
++/*
++ * The defined symbol names have the following form:
++ *             ZHAOXIN_FAM7{OPTFAMILY}_{MICROARCH}
++ * where:
++ * OPTFAMILY   Describes the family of CPUs that this belongs to. Default
++ *             is assumed to be omitted.
++ * MICROARCH   Is the code name for the micro-architecture for this core.
++ */
++
++
++#define ZHAOXIN_FAM7_WUDAOKOU		0x1B
++#define ZHAOXIN_FAM7_LUJIAZUI		0x3B
++#define ZHAOXIN_FAM7_YONGFENG		0x5B
++
++#endif /* _ASM_X86_ZHAOXIN_FAMILY_H */
 -- 
 2.17.1
 
