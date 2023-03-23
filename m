@@ -2,135 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B89FC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 12:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324AEC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 12:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjCWMyl (ORCPT
+        id S229846AbjCWM7f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 08:54:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42634 "EHLO
+        Thu, 23 Mar 2023 08:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231355AbjCWMyi (ORCPT
+        with ESMTP id S229729AbjCWM7d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 08:54:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E77D1C591;
-        Thu, 23 Mar 2023 05:54:37 -0700 (PDT)
+        Thu, 23 Mar 2023 08:59:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02C42ED60;
+        Thu, 23 Mar 2023 05:59:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 95EC5626A9;
-        Thu, 23 Mar 2023 12:54:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D7AC433D2;
-        Thu, 23 Mar 2023 12:54:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 68DC2B820F7;
+        Thu, 23 Mar 2023 12:59:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00DDBC433D2;
+        Thu, 23 Mar 2023 12:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679576076;
-        bh=0f4sSDOGAezOQc/75NB+W0t39lJvoLyHm0ASgw6qym0=;
+        s=k20201202; t=1679576370;
+        bh=YOBJmsp7i1KWavj4jti1adesbNPKvG0aHPIRQJ341es=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Unq2gywwMnHGvYrOHmT+ZU30GrmwWJ4kiBSFA9zwR0lqDdrp7ihThHtdiX066JUpA
-         FAcjAYRqLEENCHVpqr92jXmxVM34dEHGRnJ8MfzWZ+bG+RC9an8FWkgwralxqyDx2i
-         GVcWVbjiGA4Hf68qkHcvMUis1aUMb/lW+zNNTEEY6Sl+Zk78DruL91qIJAK2QM/bD6
-         y/DHeAnRTVTnbwO5qEpXhZUB2vQdkfFBf6HoS2KpTOEz1QNRfuZ5as2XuNp6TytX/O
-         K5tCAM26muIQvm5X+ftxPWvt3reBJXjA+ZUr0E0/arSrVZ63S6sURWgxhrDwb8XzM4
-         Assqp0Pv+Z7DQ==
-Date:   Thu, 23 Mar 2023 12:54:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
-Message-ID: <4d93a3de-c86d-454b-8a43-b24e62ea3be7@sirena.org.uk>
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
- <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
- <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
+        b=FtRpihDZjj8YcJgKjX7fIpTyRbnyV4VbInU34L/Be6y2oJw4mlI0Xer2LWmTObvJ+
+         mV5cF1F2wQc1eUGVaxnMUoPBLM/ufAOE3c5eo2QB51a9l1KF5PkJIzJYxy6C2/iewN
+         MQKyG2kvqH+p9IxIMz3BJDUN99XUcogSFInpgL8iZnoS+ru9kA0n+PxX7rAc7wCmT5
+         Ktxczm2yE1eutPSei0MWh8TmeOfnexhfw1mJZCMpLKxBXOhGl2R/EUtFDETX4dcmXW
+         O5rluaav4wp2+KPGGj5nRCwmKKdhg+4C16p2GAS2DybK1ZoUFFU4XRsNxWHm29/Smj
+         qexajRgdCP71Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 72EEF4052D; Thu, 23 Mar 2023 09:59:27 -0300 (-03)
+Date:   Thu, 23 Mar 2023 09:59:27 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH 2/6] tools/perf/json: Add cache metrics for s390 z16
+Message-ID: <ZBxNLxmCh11Ig+Pk@kernel.org>
+References: <20230313080201.2440201-1-tmricht@linux.ibm.com>
+ <20230313080201.2440201-2-tmricht@linux.ibm.com>
+ <CAP-5=fW=xVYzkgQ4vUyzkiK-oQjUQ=hLwcLT6D8VjtVCXH5oSQ@mail.gmail.com>
+ <ZA9sYL/re/aNVpo+@kernel.org>
+ <1ee6884a-2d92-68d9-0917-3ae4f5390714@linux.ibm.com>
+ <CAP-5=fUtJsvAtrhe4xESoQc8U15WJ8BWREbH51OKoA218uJLzw@mail.gmail.com>
+ <ZBDo2GiuUTrHhd2L@kernel.org>
+ <ZBtsNTt6Fbp1Lg3t@kernel.org>
+ <9632bc6c-276e-d0d6-b6d9-efe91fe3a1e2@linux.ibm.com>
+ <ZBwkl77/I31AQk12@osiris>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IzzsaEzQhBiT5n2I"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
-X-Cookie: A lie in time saves nine.
+In-Reply-To: <ZBwkl77/I31AQk12@osiris>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Thu, Mar 23, 2023 at 11:06:15AM +0100, Heiko Carstens escreveu:
+> On Thu, Mar 23, 2023 at 10:51:16AM +0100, Thomas Richter wrote:
+> > On 3/22/23 21:59, Arnaldo Carvalho de Melo wrote:
+> > > While trying to cross build to s390 on:
+> > > 
+> > > ubuntu:18.04
+> > > 
+> > > using python3
+> > >  
+> > > 
+> > >    CC      /tmp/build/perf/tests/parse-events.o
+> > > Exception processing pmu-events/arch/s390/cf_z16/extended.json
+> > > Traceback (most recent call last):
+> > >   File "pmu-events/jevents.py", line 997, in <module>
+> > >     main()
+> > >   File "pmu-events/jevents.py", line 979, in main
+> > >     ftw(arch_path, [], preprocess_one_file)
+> > >   File "pmu-events/jevents.py", line 935, in ftw
+> > >     ftw(item.path, parents + [item.name], action)
+> > >   File "pmu-events/jevents.py", line 933, in ftw
+> > >     action(parents, item)
+> > >   File "pmu-events/jevents.py", line 514, in preprocess_one_file
+> > >     for event in read_json_events(item.path, topic):
+> > >   File "pmu-events/jevents.py", line 388, in read_json_events
+> > >     events = json.load(open(path), object_hook=JsonEvent)
+> > >   File "/usr/lib/python3.6/json/__init__.py", line 296, in load
+> > >     return loads(fp.read(),
+> > >   File "/usr/lib/python3.6/encodings/ascii.py", line 26, in decode
+> > >     return codecs.ascii_decode(input, self.errors)[0]
+> > > UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 4271: ordinal not in range(128)
+> > > 
+> > >
+> > 
+> > Hmmm, this is very strange. After reading this mail I installed Ubuntu 18.04
+> > on my s390 system. The build works fine, no errors at all.
+> > 
+> > 
+> > # pmu-events/jevents.py s390 all pmu-events/arch pmu-events/pmu-events.c
+> > # ll pmu-events/pmu-events.c
+> > -rw-r--r-- 1 root root 317284 Mar 23 10:46 pmu-events/pmu-events.c
+> > #
+> > 
+> > The file has the correct contents and the build works fine too.
+> > # make 
+> 
+> The file contains UTF-8 characters, which were already present before
+> your patch. Guess you need to provide an addon patch which converts to
+> plain ASCII.
 
---IzzsaEzQhBiT5n2I
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah, and in this s390 perf test build container in the past I didn't
+have the needed python3-dev package needed to build jevents.py, so it
+was being disabled and the problem was left unnoticed.
 
-On Thu, Mar 23, 2023 at 09:55:47AM +0530, Anshuman Khandual wrote:
-> On 3/22/23 00:32, Mark Brown wrote:
+Now that it is a opt-out feature, I installed python3-dev, jevents.py
+got built and then this failure surfaced.
 
-> > document a requirement for those traps to be disabled now in case we
-> > need them later, and do so during EL2 setup for KVM guests?  That could
-> > always be done incrementally.
-
-> Unlike all other instruction trap enable fields in SYS_HFGITR_EL2, these =
-BRBE
-> instructions ones are actually inverted in semantics i.e the particular f=
-ields
-> need to be set for these traps to be disabled in EL2.
-
-Right, for backwards compatibility all newly added fields are trap by
-default.
-
-> SYS_HFGITR_EL2.nBRBIALL
-> SYS_HFGITR_EL2.nBRBINJ
-
-> By default entire SYS_HFGITR_EL2 is set as cleared during init and that w=
-ould
-> prevent a guest from using BRBE.
-
-It should prevent the host as well shouldn't it? =20
-
-> I guess something like the following (untested) needs to be done, to enab=
-le
-> BRBE in guests.
-
-> +       mrs     x1, id_aa64dfr0_el1
-> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
-> +       cbz     x1, .Lskip_brbe_\@
-> +       mov     x0, xzr
-> +       orr     x0, x0, #HFGITR_EL2_nBRBIALL
-> +       orr     x0, x0, #HFGITR_EL2_nBRBINJ
-> +       msr_s   SYS_HFGITR_EL2, x0
-> +
-> +.Lskip_brbe_\@:
-
-Yes, looks roughly what I'd expect.
-
-> > I've got a patch adding the definition of that register to sysreg which
-> > I should be sending shortly, no need to duplicate that effort.
-
-> Sure, I assume you are moving the existing definition for SYS_HFGITR_EL2 =
-along
-> with all its fields from ../include/asm/sysreg.h to ../tools/sysreg. Righ=
-t, it
-> makes sense.
-
-No fields at the minute but yes, like the other conversions.
-
---IzzsaEzQhBiT5n2I
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQcTAQACgkQJNaLcl1U
-h9CHFAf9EtWrB/2JoeaIi3pXQAESHQ74/qrx9W/Ih/WTQpX+J2Do4nqspRKm5LxU
-LUxsZP6nH6Tx1YN8gB/Lqa8icl8CI7mMxadWudTd2LhVsPpzOieJ+rEZcq7qKkSQ
-OQxffNJto/e06eqNVvD4gEagA0ZOVHDGmtOBMkaKJGcVri0oMFQCEHFGcGzMATT3
-rw0TOKRX7zEPhUCy42IBayzBddCWSXOHdPwJPLjFZmevGonhvQf1ujSRUeF+Zv6E
-PiFI+AN9WheqYT5cm4GsWE0bF3gRteR0y74TUy7iwEasSNTKWsf5izOcIagpAPmw
-AtW3a9hlhnnKR1kZQXW6ygRMnrsP6A==
-=YCOY
------END PGP SIGNATURE-----
-
---IzzsaEzQhBiT5n2I--
+- Arnaldo
