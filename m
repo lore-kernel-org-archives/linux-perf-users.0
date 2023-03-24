@@ -2,175 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F31DCC6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 20:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F09C76195
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 21:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230011AbjCXUS0 (ORCPT
+        id S231127AbjCXVEZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 16:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
+        Fri, 24 Mar 2023 17:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229864AbjCXUS0 (ORCPT
+        with ESMTP id S229921AbjCXVEY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 16:18:26 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A4390;
-        Fri, 24 Mar 2023 13:18:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A0441B825FA;
-        Fri, 24 Mar 2023 20:18:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10C86C4339C;
-        Fri, 24 Mar 2023 20:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679689098;
-        bh=hP4byYZvNndNp7lGCCwVeD1cMtYskou/Yl3piA3t9PM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fllQcmU1+cMham8BwE6rd68KE6hkxhTZTJILRu9VMfA8zncpeoQqYr/qV9hQzQ7fJ
-         6mq4vIttklDpEzBcIUif8y0yQifF85W5uzb8FaXPPIWPY++DmfvDEm3R3MSBrbCuV0
-         SK2fr9x7yN0RF5guz/Tr1LDQ3F7ERaOI/8hqVaxqB0TMSNCw7iN0jGgOepfhYGebCC
-         Ugk3t2t/MLEtrwufnGrt5gHYgIYdVNubdIkqAQpfp/2qmWvRkaeS9SlLJeHCkI/10+
-         Y6Q2jfTNN+9DkmrO+sa+DFjZQBvQJ4STces+VJ0qYZhw2mF2uL3A6VZbz677clwXut
-         ZFkQlevXvCcnQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AACB94052D; Fri, 24 Mar 2023 17:18:15 -0300 (-03)
-Date:   Fri, 24 Mar 2023 17:18:15 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: Re: [PATCH] perf stat: Suppress warning when using cpum_cf events on
- s390
-Message-ID: <ZB4Fh71hRVPXW+Ne@kernel.org>
-References: <20230316074946.41110-1-tmricht@linux.ibm.com>
+        Fri, 24 Mar 2023 17:04:24 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57EFC166C1;
+        Fri, 24 Mar 2023 14:04:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679691863; x=1711227863;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Lrh8mfNbujVclko7AoZ5oMBIAjQ3E9uh/4Jho+AveiE=;
+  b=ktB3mKp7GHM8FtDdQEmQBqqE5DG+C8c/RWSAulIKI7UiErMPOwjhyYJU
+   xlhE5wtGtWZonikpGzWLwU4zCmcyWQTqLan4TiYpXXDY2ZGOJQnTa5pb/
+   IkgwaRpXpg4kX/QUpelD1DDftXNkTgVclmXHQxaE6q1ZPiIvmF3c7F0Uh
+   /Q3kfR+MvJrpESs4/wBayVFg6hAQR7PuRuyOWKbgPfH0vg7qG2RM6Wsch
+   5jHVc3VuA12gETTAQVgemaC76Icd/oYL7yWOrBnGfU5uUPg+w1CuaVkFN
+   hBelcL1YV4fTyab0YFiaSQQlJlv+orGAli/+5EgdKpXfbX3GSDbkEjtRR
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="338608054"
+X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
+   d="scan'208";a="338608054"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 14:01:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="793584347"
+X-IronPort-AV: E=Sophos;i="5.98,288,1673942400"; 
+   d="scan'208";a="793584347"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Mar 2023 14:01:33 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pfoXU-000Fee-2t;
+        Fri, 24 Mar 2023 21:01:32 +0000
+Date:   Sat, 25 Mar 2023 05:01:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        linux-cxl@vger.kernel.org, peterz@infradead.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        will@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v2 3/5] cxl/pci: Find and register CXL PMU devices
+Message-ID: <202303250419.FANh4fIC-lkp@intel.com>
+References: <20230324171313.18448-4-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230316074946.41110-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230324171313.18448-4-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 16, 2023 at 08:49:46AM +0100, Thomas Richter escreveu:
-> Running command perf stat -vv -e cpu_cycles -C0 -- true
-> displays this warning:
-> 
->  Attempting to add event pmu 'cpum_cf' with 'cpu_cycles,'
->  that may result in non-fatal errors
-> 
-> Make the PMU cpum_cf selectable and avoid this warning.
-> While at it also fix this warning for PMUs pai_crypto and pai_ext.
-> 
-> Output before:
- 
+Hi Jonathan,
 
-Thanks, applied.
+I love your patch! Yet something to improve:
 
-- Arnaldo
+[auto build test ERROR on acme/perf/core]
+[also build test ERROR on tip/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->  #  ./perf stat -vv -e cpu_cycles -C0 -- true
->  Using CPUID IBM,3931,704,A01,3.7,002f
->  Attempting to add event pmu 'cpum_cf' with 'cpu_cycles,'
->    that may result in non-fatal errors
->  After aliases, add event pmu 'cpum_cf' with 'event,'
->    that may result in non-fatal errors
->    cpu_cycles -> cpum_cf/event=0/
->  Control descriptor is not initialized
->  ------------------------------------------------------------
->  perf_event_attr:
->   type                             10
->   size                             128
->   config                           0x1001
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   exclude_guest                    1
->  ------------------------------------------------------------
->  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 3
->  cpu_cycles: 0: 290434 2479172 2479172:
->  cpu_cycles: 290434 2479172 2479172
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->            290,434      cpu_cycles
-> 
->        0.002465617 seconds time elapsed
->  #
-> 
-> Now the warning "Attempting to add event pmu 'cpum_cf' ..."
-> does not show up anymore.
-> 
-> Output after:
->  # ./perf stat -vv -e cpu_cycles -C0 -- true
->  Using CPUID IBM,3931,704,A01,3.7,002f
->  After aliases, add event pmu 'cpum_cf' with 'event,'
->    that may result in non-fatal errors
->    cpu_cycles -> cpum_cf/event=0/
->  Control descriptor is not initialized
->  ....
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->            357,023      cpu_cycles
-> 
->        0.002454995 seconds time elapsed
->  #
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/arch/s390/util/Build |  1 +
->  tools/perf/arch/s390/util/pmu.c | 23 +++++++++++++++++++++++
->  2 files changed, 24 insertions(+)
->  create mode 100644 tools/perf/arch/s390/util/pmu.c
-> 
-> diff --git a/tools/perf/arch/s390/util/Build b/tools/perf/arch/s390/util/Build
-> index db6884086997..fa66f15a14ec 100644
-> --- a/tools/perf/arch/s390/util/Build
-> +++ b/tools/perf/arch/s390/util/Build
-> @@ -6,5 +6,6 @@ perf-$(CONFIG_DWARF) += dwarf-regs.o
->  perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
->  
->  perf-y += machine.o
-> +perf-y += pmu.o
->  
->  perf-$(CONFIG_AUXTRACE) += auxtrace.o
-> diff --git a/tools/perf/arch/s390/util/pmu.c b/tools/perf/arch/s390/util/pmu.c
-> new file mode 100644
-> index 000000000000..11f03f32e3fd
-> --- /dev/null
-> +++ b/tools/perf/arch/s390/util/pmu.c
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright IBM Corp. 2023
-> + * Author(s): Thomas Richter <tmricht@linux.ibm.com>
-> + */
-> +
-> +#include <string.h>
-> +
-> +#include "../../../util/pmu.h"
-> +
-> +#define	S390_PMUPAI_CRYPTO	"pai_crypto"
-> +#define	S390_PMUPAI_EXT		"pai_ext"
-> +#define	S390_PMUCPUM_CF		"cpum_cf"
-> +
-> +struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu)
-> +{
-> +	if (!strcmp(pmu->name, S390_PMUPAI_CRYPTO) ||
-> +	    !strcmp(pmu->name, S390_PMUPAI_EXT) ||
-> +	    !strcmp(pmu->name, S390_PMUCPUM_CF))
-> +		pmu->selectable = true;
-> +	return NULL;
-> +}
-> -- 
-> 2.39.1
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+patch link:    https://lore.kernel.org/r/20230324171313.18448-4-Jonathan.Cameron%40huawei.com
+patch subject: [PATCH v2 3/5] cxl/pci: Find and register CXL PMU devices
+config: arm-randconfig-r023-20230322 (https://download.01.org/0day-ci/archive/20230325/202303250419.FANh4fIC-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 67409911353323ca5edf2049ef0df54132fa1ca7)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/ab99ab31e5c4aa9f68425f3505f22a790d64bfe9
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
+        git checkout ab99ab31e5c4aa9f68425f3505f22a790d64bfe9
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/cxl/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303250419.FANh4fIC-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/cxl/core/port.c:60:20: error: use of undeclared identifier 'cxl_cpmu_type'; did you mean 'cxl_bus_type'?
+           if (dev->type == &cxl_cpmu_type)
+                             ^~~~~~~~~~~~~
+                             cxl_bus_type
+   drivers/cxl/cxl.h:732:24: note: 'cxl_bus_type' declared here
+   extern struct bus_type cxl_bus_type;
+                          ^
+   1 error generated.
+
+
+vim +60 drivers/cxl/core/port.c
+
+    40	
+    41	static int cxl_device_id(const struct device *dev)
+    42	{
+    43		if (dev->type == &cxl_nvdimm_bridge_type)
+    44			return CXL_DEVICE_NVDIMM_BRIDGE;
+    45		if (dev->type == &cxl_nvdimm_type)
+    46			return CXL_DEVICE_NVDIMM;
+    47		if (dev->type == CXL_PMEM_REGION_TYPE())
+    48			return CXL_DEVICE_PMEM_REGION;
+    49		if (dev->type == CXL_DAX_REGION_TYPE())
+    50			return CXL_DEVICE_DAX_REGION;
+    51		if (is_cxl_port(dev)) {
+    52			if (is_cxl_root(to_cxl_port(dev)))
+    53				return CXL_DEVICE_ROOT;
+    54			return CXL_DEVICE_PORT;
+    55		}
+    56		if (is_cxl_memdev(dev))
+    57			return CXL_DEVICE_MEMORY_EXPANDER;
+    58		if (dev->type == CXL_REGION_TYPE())
+    59			return CXL_DEVICE_REGION;
+  > 60		if (dev->type == &cxl_cpmu_type)
+    61			return CXL_DEVICE_CPMU;
+    62		return 0;
+    63	}
+    64	
 
 -- 
-
-- Arnaldo
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
