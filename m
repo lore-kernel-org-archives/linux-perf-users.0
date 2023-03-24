@@ -2,98 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3B7C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 02:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B7DC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 03:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231183AbjCXCei (ORCPT
+        id S230316AbjCXDUr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 22:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47806 "EHLO
+        Thu, 23 Mar 2023 23:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjCXCei (ORCPT
+        with ESMTP id S229508AbjCXDUq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 22:34:38 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05ED11025B;
-        Thu, 23 Mar 2023 19:34:35 -0700 (PDT)
-Received: from dggpeml500019.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PjR6P3t9Fz17Mnv;
-        Fri, 24 Mar 2023 10:31:25 +0800 (CST)
-Received: from [10.67.101.98] (10.67.101.98) by dggpeml500019.china.huawei.com
- (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 24 Mar
- 2023 10:34:33 +0800
-Message-ID: <039a2fc2-48e2-fe3b-73c1-f7f658c7f22f@hisilicon.com>
-Date:   Fri, 24 Mar 2023 10:34:33 +0800
+        Thu, 23 Mar 2023 23:20:46 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AA50520D31;
+        Thu, 23 Mar 2023 20:20:40 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 382F912FC;
+        Thu, 23 Mar 2023 20:21:24 -0700 (PDT)
+Received: from [10.162.40.17] (unknown [10.162.40.17])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B32133F67D;
+        Thu, 23 Mar 2023 20:20:35 -0700 (PDT)
+Message-ID: <4665d03f-b801-679c-0b52-c426404284b9@arm.com>
+Date:   Fri, 24 Mar 2023 08:50:32 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH] perf stat: Support per-cluster aggregation
-To:     Yicong Yang <yangyicong@huawei.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <james.clark@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <Jonathan.Cameron@huawei.com>, <21cnbao@gmail.com>,
-        <tim.c.chen@intel.com>, <prime.zeng@hisilicon.com>,
-        <shenyang39@huawei.com>, <linuxarm@huawei.com>,
-        <yangyicong@hisilicon.com>
-References: <20230313085911.61359-1-yangyicong@huawei.com>
-From:   Jie Zhan <zhanjie9@hisilicon.com>
-In-Reply-To: <20230313085911.61359-1-yangyicong@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
+Content-Language: en-US
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+ <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
+ <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
+ <4d93a3de-c86d-454b-8a43-b24e62ea3be7@sirena.org.uk>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <4d93a3de-c86d-454b-8a43-b24e62ea3be7@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.98]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500019.china.huawei.com (7.185.36.137)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 13/03/2023 16:59, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
->
-> Some platforms have 'cluster' topology and CPUs in the cluster will
-> share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
-> cache (for Intel Jacobsville). Currently parsing and building cluster
-> topology have been supported since [1].
->
-> perf stat has already supported aggregation for other topologies like
-> die or socket, etc. It'll be useful to aggregate per-cluster to find
-> problems like L3T bandwidth contention or imbalance.
->
-> This patch adds support for "--per-cluster" option for per-cluster
-> aggregation. Also update the docs and related test. The output will
-> be like:
->
-> [root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
->
->   Performance counter stats for 'system wide':
->
-> S56-D0-CLS158    4      1,321,521,570      LLC-load
-> S56-D0-CLS594    4        794,211,453      LLC-load
-> S56-D0-CLS1030    4             41,623      LLC-load
-> S56-D0-CLS1466    4             41,646      LLC-load
-> S56-D0-CLS1902    4             16,863      LLC-load
-> S56-D0-CLS2338    4             15,721      LLC-load
-> S56-D0-CLS2774    4             22,671      LLC-load
-> [...]
->
-> [1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
->
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-An end user may have to check sysfs to figure out what CPUs those 
-cluster IDs account for.
+On 3/23/23 18:24, Mark Brown wrote:
+> On Thu, Mar 23, 2023 at 09:55:47AM +0530, Anshuman Khandual wrote:
+>> On 3/22/23 00:32, Mark Brown wrote:
+> 
+>>> document a requirement for those traps to be disabled now in case we
+>>> need them later, and do so during EL2 setup for KVM guests?  That could
+>>> always be done incrementally.
+> 
+>> Unlike all other instruction trap enable fields in SYS_HFGITR_EL2, these BRBE
+>> instructions ones are actually inverted in semantics i.e the particular fields
+>> need to be set for these traps to be disabled in EL2.
+> 
+> Right, for backwards compatibility all newly added fields are trap by
+> default.
 
-Any better method to show the mapping between CPUs and cluster IDs?
+Okay
 
-Perhaps adding a conditional cluster id (when there are clusters) in the 
-"--per-core" output may help.
+> 
+>> SYS_HFGITR_EL2.nBRBIALL
+>> SYS_HFGITR_EL2.nBRBINJ
+> 
+>> By default entire SYS_HFGITR_EL2 is set as cleared during init and that would
+>> prevent a guest from using BRBE.
+> 
+> It should prevent the host as well shouldn't it? 
 
-Apart form that, this works well on my aarch64.
+In a EL2 host environment, BRBE is being enabled either in EL2 (kernel/hv) or
+in EL0 (user space), it never gets enabled on EL1. Moreover BRBIALL/BRBINJ
+instructions are always executed while being inside EL2 (kernel/hv). Hence how
+could these instructions cause trap in EL2 ?
 
-Tested-by: Jie Zhan <zhanjie9@hisilicon.com>
+> 
+>> I guess something like the following (untested) needs to be done, to enable
+>> BRBE in guests.
+> 
+>> +       mrs     x1, id_aa64dfr0_el1
+>> +       ubfx    x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
+>> +       cbz     x1, .Lskip_brbe_\@
+>> +       mov     x0, xzr
+>> +       orr     x0, x0, #HFGITR_EL2_nBRBIALL
+>> +       orr     x0, x0, #HFGITR_EL2_nBRBINJ
+>> +       msr_s   SYS_HFGITR_EL2, x0
+>> +
+>> +.Lskip_brbe_\@:
+> 
+> Yes, looks roughly what I'd expect.
 
+I could send an stand alone patch after your latest series [1], which disables
+BRBINJ/BRBIALL instruction trap in EL2 to enable BRBE usage in the guest.
 
+https://lore.kernel.org/all/20230306-arm64-fgt-reg-gen-v3-2-decba93cbaab@kernel.org/T/
+
+> 
+>>> I've got a patch adding the definition of that register to sysreg which
+>>> I should be sending shortly, no need to duplicate that effort.
+> 
+>> Sure, I assume you are moving the existing definition for SYS_HFGITR_EL2 along
+>> with all its fields from ../include/asm/sysreg.h to ../tools/sysreg. Right, it
+>> makes sense.
+> 
+> No fields at the minute but yes, like the other conversions.
+
+Sure.
