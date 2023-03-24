@@ -2,93 +2,135 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70A3C76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 16:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2C4C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 17:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjCXQd6 (ORCPT
+        id S231153AbjCXROG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 12:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45556 "EHLO
+        Fri, 24 Mar 2023 13:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbjCXQd4 (ORCPT
+        with ESMTP id S230157AbjCXROF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 12:33:56 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 13DFCC65E;
-        Fri, 24 Mar 2023 09:33:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2C3A113E;
-        Fri, 24 Mar 2023 09:34:38 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.56.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17CBD3F6C4;
-        Fri, 24 Mar 2023 09:33:52 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 16:32:52 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [PATCH 01/10] locking/atomic: Add missing cast to try_cmpxchg()
- fallbacks
-Message-ID: <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
-References: <20230305205628.27385-1-ubizjak@gmail.com>
- <20230305205628.27385-2-ubizjak@gmail.com>
- <ZB2v+avNt52ac/+w@FVFF77S0Q05N>
- <CAFULd4ZCgxDYnyy--qdgKoAo_y7MbNSaQdbdBFefnFuMoM2OYw@mail.gmail.com>
- <ZB3MR8lGbnea9ui6@FVFF77S0Q05N>
+        Fri, 24 Mar 2023 13:14:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EF8172C;
+        Fri, 24 Mar 2023 10:13:34 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pjpf83N0yz6J7BP;
+        Sat, 25 Mar 2023 01:11:44 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 24 Mar 2023 17:13:06 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v2 0/5] CXL 3.0 Performance Monitoring Unit support
+Date:   Fri, 24 Mar 2023 17:13:08 +0000
+Message-ID: <20230324171313.18448-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZB3MR8lGbnea9ui6@FVFF77S0Q05N>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 24, 2023 at 04:14:22PM +0000, Mark Rutland wrote:
-> On Fri, Mar 24, 2023 at 04:43:32PM +0100, Uros Bizjak wrote:
-> > On Fri, Mar 24, 2023 at 3:13 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > On Sun, Mar 05, 2023 at 09:56:19PM +0100, Uros Bizjak wrote:
-> > > > Cast _oldp to the type of _ptr to avoid incompatible-pointer-types warning.
-> > >
-> > > Can you give an example of where we are passing an incompatible pointer?
-> > 
-> > An example is patch 10/10 from the series, which will fail without
-> > this fix when fallback code is used. We have:
-> > 
-> > -       } while (local_cmpxchg(&rb->head, offset, head) != offset);
-> > +       } while (!local_try_cmpxchg(&rb->head, &offset, head));
-> > 
-> > where rb->head is defined as:
-> > 
-> > typedef struct {
-> >    atomic_long_t a;
-> > } local_t;
-> > 
-> > while offset is defined as 'unsigned long'.
-> 
-> Ok, but that's because we're doing the wrong thing to start with.
-> 
-> Since local_t is defined in terms of atomic_long_t, we should define the
-> generic local_try_cmpxchg() in terms of atomic_long_try_cmpxchg(). We'll still
-> have a mismatch between 'long *' and 'unsigned long *', but then we can fix
-> that in the callsite:
-> 
-> 	while (!local_try_cmpxchg(&rb->head, &(long *)offset, head))
+Significant changes since v1:
+- New patch 2 - allow a PMU device to have a parent. This helps identify
+  the association of the CPMU with the CXL devices without needing to
+  rely on messy naming of the PMU.
+- Set the parent for each CPMU instance.
+- Add missing cpmu.h from patch 3.
+- Fix a bug due to bad ordering of ida allocation wrt to device_initialize()
+- Split the event list in two as handling for fixed and configurable
+  counters is different.  Add util functions to search each list.
+- Lots of other improvements in patch 4 called out in that patch description.
 
-Sorry, that should be:
-	
-	while (!local_try_cmpxchg(&rb->head, (long *)&offset, head))
+Thanks to all those who looked at it, and Kan Liang in particular for
+all the feedback on the main driver.
 
-The fundamenalthing I'm trying to say is that the
-atomic/atomic64/atomic_long/local/local64 APIs should be type-safe, and for
-their try_cmpxchg() implementations, the type signature should be:
+Updated cover letter.
 
-	${atomictype}_try_cmpxchg(${atomictype} *ptr, ${inttype} *old, ${inttype} new)
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
 
-Thanks,
-Mark.
+Notes.
+
+1) The QEMU model against which this was developed needs tidying up.
+   Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go. So whilst I believe
+   the driver should be fine for what it supports we may find issues
+   as those corners of what is allowed are explored.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+5) Patch 1 led to a discussion of how to handle the self describing
+   and extensible nature of the CPMU counters.  That is likely to involve
+   a description in the "caps" sysfs directory and perf tool code that is
+   aware of the different event combinations that make sense and can
+   establish which sets are available on a given device.
+   That is likely to take a while to converge on, so as the driver is useful
+   in the current state, I'm looking to upstream this first and deal with
+   the more complex handling later.
+6) There is a lot of other functionality that can be added in future
+   include allowing for simpler hardware implementations that may not
+   support the minimum level of features currently required by the driver
+   (freeze, overflow interrupts etc).
+
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
+
+Jonathan Cameron (5):
+  cxl: Add function to count regblocks of a given type.
+  perf: Allow a PMU to have a parent.
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver.
+
+ Documentation/admin-guide/perf/cxl.rst   |  65 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  12 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   3 +
+ drivers/cxl/core/cpmu.c                  |  72 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  50 +-
+ drivers/cxl/cpmu.c                       | 937 +++++++++++++++++++++++
+ drivers/cxl/cpmu.h                       |  56 ++
+ drivers/cxl/cxl.h                        |  17 +-
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  27 +-
+ include/linux/perf_event.h               |   1 +
+ kernel/events/core.c                     |   1 +
+ 17 files changed, 1243 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.h
+
+-- 
+2.37.2
+
