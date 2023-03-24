@@ -2,186 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4305C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 19:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BD6C6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 20:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjCXTzm (ORCPT
+        id S232012AbjCXUCr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 15:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
+        Fri, 24 Mar 2023 16:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231869AbjCXTzl (ORCPT
+        with ESMTP id S232002AbjCXUCr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 15:55:41 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D999F527F
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Mar 2023 12:55:39 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id t76-20020a635f4f000000b0050bea7a0577so1054724pgb.12
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Mar 2023 12:55:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679687739;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwAMwKNYK8mvB0QRTLrq3l6TIs49tvXgKprVbt/H0pM=;
-        b=d2sl3/FFKvcnXq41I2rP6U96012X/17lXLXaRpV24welFHhVHgGF4iUg+psc83Bh4z
-         xWFuJQhftV9bg9gMxd/aiJrX9zzLMT3YVOapSqjPu5aCpg2DXONIVUXCiwB097uSPhjS
-         O+kgbZhxRnNh0qEH6cIZN1QdXGO4hl0nn1KWX4/MfYyAHevoAsHsMaKi8EumqgXkxYp5
-         rrgtrGMXSy8cKyTjrreN1qY5XMfLFWZVJlLBFZtYfliCAnHuXzrRCIpWQjNbifOOWJAw
-         vR7R36m+DPOjkK6EQcGg+KvcYSTjiQcLIvAOaKbx2KJEqRia97GvI83oz+X3FpTZ5pK+
-         GU2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679687739;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwAMwKNYK8mvB0QRTLrq3l6TIs49tvXgKprVbt/H0pM=;
-        b=6ijhY0HeU9UNheMhzqxDpRt10txfdM9tSd+ZPA3mbhwsT2urZgbBN8LvQmUivnwf+6
-         H4VQvKLcwIKqtqrMeDvLbKOsQRjnhcBi4TVmTuzhTGJB14TFMoA6RlVoKpBQHfo39T3m
-         61d7HdKTmehIaskYhFJ16OTFO5jV31Ia0Ij7KxEGIqPMBeN4p/SJ+mrCVaBhb5EFwDdZ
-         q2cbZfq2MdtWNAyaMW99qNRehuI90n3Nj09EnKAi8/0DsWJnrd3oDr3kXtSDWuwxW8xX
-         zjMwXZrGEYomuXyvQ9C2z0/R+9ce83fnCk9Me/a4/AsiIKCOoAd9LIvbYuw0BA9MELD4
-         gocg==
-X-Gm-Message-State: AAQBX9f52LhXYoW8m+jE0WLKMCQ2E4ebLIXIb2FJYahnTZ/61eGFtjPK
-        Qk2Is3VnH1kx8lY4jlqbwI0SYt1NqLs=
-X-Google-Smtp-Source: AKy350apNVmfJIIACqmiTxH/P4JPeajcD53Kgthj47G59NwP6TNuqyKtWY4v3Wk3jkgFmz8PyWK1OhXZlG4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:e88e:b0:1a1:d366:b0bd with SMTP id
- w14-20020a170902e88e00b001a1d366b0bdmr1351931plg.9.1679687739366; Fri, 24 Mar
- 2023 12:55:39 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 12:55:37 -0700
-In-Reply-To: <20230206060545.628502-3-manali.shukla@amd.com>
-Mime-Version: 1.0
-References: <20230206060545.628502-1-manali.shukla@amd.com> <20230206060545.628502-3-manali.shukla@amd.com>
-Message-ID: <ZB4AOaLRwSB0ClIH@google.com>
-Subject: Re: [RFC PATCH kernel 2/2] KVM: SEV: PreventHostIBS enablement for
- SEV-ES and SNP guest
-From:   Sean Christopherson <seanjc@google.com>
-To:     Manali Shukla <manali.shukla@amd.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, pbonzini@redhat.com,
-        jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
-        babu.moger@amd.com, sandipan.das@amd.com, jmattson@google.com,
-        thomas.lendacky@amd.com, nikunj@amd.com, ravi.bangoria@amd.com,
-        eranian@google.com, irogers@google.com, kvm@vger.kernel.org,
-        x86@kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 24 Mar 2023 16:02:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A7F1BDA;
+        Fri, 24 Mar 2023 13:02:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D47B862AD3;
+        Fri, 24 Mar 2023 20:02:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1285FC433AC;
+        Fri, 24 Mar 2023 20:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679688165;
+        bh=o9LNgpUkQU5GtCzGEcr91MhmkAC63XUJuAMUwjp/kp8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RybertnxI51al/qFxNaY1jGjocQVObF4Abyb2mNrbas/YXOmzZEW5l8Nt0yZgDBPl
+         zjZZ0TUmPJhUG7wxu6zol09zNPXtig4p69kCFoH2hO5Cez90O2/ry2AL8wOdPrA9nL
+         F6Q7Z407WfOK+up8cwCQATBn4m3w8zc2f/X28dMRt1JZsAuLLlNirZncC9GhUcECRO
+         MCMM/vsc+HbGgyL4GgbZXl3eUGCzHrflv2Z/i67DVg3r68e+9Y3yQSEYt8yggLu7jy
+         +gmj0LoLwu3SXISKeGMlZY47pM5c+e5Gj9UYoneUt/wXKN4u/0fWk4d9UUeOBOiuOC
+         Ijhk0oWSFt88Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 904F04052D; Fri, 24 Mar 2023 17:02:42 -0300 (-03)
+Date:   Fri, 24 Mar 2023 17:02:42 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        perry.taylor@intel.com, caleb.biggers@intel.com,
+        samantha.alt@intel.com, weilin.wang@intel.com
+Subject: Re: [PATCH v3 0/9] Update Intel events and make nvdimm events dynamic
+Message-ID: <ZB4B4kD5t77T/E5T@kernel.org>
+References: <20230324072218.181880-1-irogers@google.com>
+ <acb7dcae-6365-b2cb-6147-589376116df0@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <acb7dcae-6365-b2cb-6147-589376116df0@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 06, 2023, Manali Shukla wrote:
-> Currently, the hypervisor is able to inspect instruction based samples
-> from a guest and gather execution information. SEV-ES and SNP guests
-> can disallow the use of instruction based sampling by hypervisor by
-> enabling the PreventHostIBS feature for the guest.  (More information
-> in Section 15.36.17 APM Volume 2)
+Em Fri, Mar 24, 2023 at 08:11:44AM -0400, Liang, Kan escreveu:
 > 
-> The MSR_AMD64_IBSFETCHCTL[IbsFetchEn] and MSR_AMD64_IBSOPCTL[IbsOpEn]
-> bits need to be disabled before VMRUN is called when PreventHostIBS
-> feature is enabled. If either of these bits are not 0, VMRUN will fail
-> with VMEXIT_INVALID error code.
 > 
-> Because of an IBS race condition when disabling IBS, KVM needs to
-> indicate when it is in a PreventHostIBS window. Activate the window
-> based on whether IBS is currently active or inactive.
+> On 2023-03-24 3:22 a.m., Ian Rogers wrote:
+> > Update events from:
+> > https://github.com/intel/perfmon/pull/62
+> > 
+> > Add new #has_pmem literal to allow memory metrics to be dynamic in how
+> > nvdimm events are enabled. Update CLX, ICX and SPR for this using this
+> > PR:
+> > https://github.com/intel/perfmon/pull/63
+> > 
+> > v3. Change has_optane to has_pmem as suggested by Kan Liang and Dan Williams.
+> > 
+> > Ian Rogers (9):
+> >   perf vendor events: Broadwell v27 events
+> >   perf vendor events: Broadwellde v9 events
+> >   perf vendor events: Broadwellx v20 events
+> >   perf vendor events: Haswell v33 events
+> >   perf vendor events: Haswellx v27 events
+> >   perf vendor events: Jaketown v23 events
+> >   perf vendor events: Sandybridge v19 events
+> >   perf metrics: Add has_pmem literal
+> >   perf vendor events: Update metrics to detect pmem at runtime
+> > 
 > 
-> Signed-off-by: Manali Shukla <manali.shukla@amd.com>
-> ---
->  arch/x86/include/asm/cpufeatures.h |  1 +
->  arch/x86/kvm/svm/sev.c             | 10 ++++++++
->  arch/x86/kvm/svm/svm.c             | 39 ++++++++++++++++++++++++++++--
->  arch/x86/kvm/svm/svm.h             |  1 +
->  4 files changed, 49 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 61012476d66e..1812e74f846a 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -425,6 +425,7 @@
->  #define X86_FEATURE_SEV_ES		(19*32+ 3) /* AMD Secure Encrypted Virtualization - Encrypted State */
->  #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
->  #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
-> +#define X86_FEATURE_PREVENT_HOST_IBS	(19*32+15) /* "" AMD prevent host ibs */
->  
->  /*
->   * BUG word(s)
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 86d6897f4806..b348b8931721 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -569,6 +569,12 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
->  	if (svm->vcpu.guest_debug || (svm->vmcb->save.dr7 & ~DR7_FIXED_1))
->  		return -EINVAL;
->  
-> +	if (sev_es_guest(svm->vcpu.kvm) &&
-> +	    guest_cpuid_has(&svm->vcpu, X86_FEATURE_PREVENT_HOST_IBS)) {
-> +		save->sev_features |= BIT(6);
-> +		svm->prevent_hostibs_enabled = true;
-> +	}
-> +
->  	/*
->  	 * SEV-ES will use a VMSA that is pointed to by the VMCB, not
->  	 * the traditional VMSA that is part of the VMCB. Copy the
-> @@ -2158,6 +2164,10 @@ void __init sev_set_cpu_caps(void)
->  		kvm_cpu_cap_clear(X86_FEATURE_SEV);
->  	if (!sev_es_enabled)
->  		kvm_cpu_cap_clear(X86_FEATURE_SEV_ES);
-> +
-> +	/* Enable PreventhostIBS feature for SEV-ES and higher guests */
-> +	if (sev_es_enabled)
-> +		kvm_cpu_cap_set(X86_FEATURE_PREVENT_HOST_IBS);
+> Thanks Ian. The patch series looks good to me.
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Uh, you can't just force a cap, there needs to be actual hardware support.  Just
-copy what was done for X86_FEATURE_SEV_ES.
+Thanks, applied.
 
+- Arnaldo
 
->  }
->  
->  void __init sev_hardware_setup(void)
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 9a194aa1a75a..47c1e0fff23e 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3914,10 +3914,39 @@ static noinstr void svm_vcpu_enter_exit(struct kvm_vcpu *vcpu, bool spec_ctrl_in
->  
->  	guest_state_enter_irqoff();
->  
-> -	if (sev_es_guest(vcpu->kvm))
-> +	if (sev_es_guest(vcpu->kvm)) {
-> +		bool ibs_fetch_active, ibs_op_active;
-> +		u64 ibs_fetch_ctl, ibs_op_ctl;
-> +
-> +		if (svm->prevent_hostibs_enabled) {
-> +			/*
-> +			 * With PreventHostIBS enabled, IBS profiling cannot
-> +			 * be active when VMRUN is executed. Disable IBS before
-> +			 * executing VMRUN and, because of a race condition,
-> +			 * enable the PreventHostIBS window if IBS profiling was
-> +			 * active.
+> 
+> Thanks,
+> Kan
+> 
+> >  .../pmu-events/arch/x86/broadwell/cache.json  | 296 +++++-----
+> >  .../arch/x86/broadwell/floating-point.json    |   7 +
+> >  .../arch/x86/broadwell/frontend.json          |  18 +-
+> >  .../pmu-events/arch/x86/broadwell/memory.json | 248 ++++-----
+> >  .../arch/x86/broadwell/pipeline.json          |  22 +-
+> >  .../arch/x86/broadwell/uncore-other.json      |   2 +-
+> >  .../arch/x86/broadwellde/cache.json           | 105 ++--
+> >  .../arch/x86/broadwellde/floating-point.json  |  45 +-
+> >  .../arch/x86/broadwellde/frontend.json        |  18 +-
+> >  .../arch/x86/broadwellde/memory.json          |  64 ++-
+> >  .../arch/x86/broadwellde/pipeline.json        |  79 +--
+> >  .../arch/x86/broadwellde/uncore-cache.json    |  72 +--
+> >  .../arch/x86/broadwellde/uncore-memory.json   | 256 ++++++++-
+> >  .../arch/x86/broadwellde/uncore-other.json    |  27 +-
+> >  .../arch/x86/broadwellde/uncore-power.json    |  10 +-
+> >  .../pmu-events/arch/x86/broadwellx/cache.json |  16 +-
+> >  .../arch/x86/broadwellx/frontend.json         |  18 +-
+> >  .../arch/x86/broadwellx/pipeline.json         |  20 +-
+> >  .../arch/x86/broadwellx/uncore-cache.json     | 156 ++----
+> >  .../x86/broadwellx/uncore-interconnect.json   |  84 +--
+> >  .../arch/x86/broadwellx/uncore-memory.json    | 522 +++++++++---------
+> >  .../arch/x86/broadwellx/uncore-other.json     |  44 +-
+> >  .../arch/x86/broadwellx/uncore-power.json     |  10 +-
+> >  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
+> >  .../pmu-events/arch/x86/haswell/cache.json    |  38 +-
+> >  .../pmu-events/arch/x86/haswell/memory.json   |  38 +-
+> >  .../pmu-events/arch/x86/haswell/pipeline.json |   8 +
+> >  .../pmu-events/arch/x86/haswellx/cache.json   |   2 +-
+> >  .../arch/x86/haswellx/pipeline.json           |   8 +
+> >  .../arch/x86/haswellx/uncore-cache.json       |  16 +-
+> >  .../arch/x86/haswellx/uncore-other.json       |   6 +-
+> >  .../arch/x86/icelakex/icx-metrics.json        |  10 +-
+> >  .../arch/x86/jaketown/pipeline.json           |   8 +
+> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
+> >  .../arch/x86/sandybridge/pipeline.json        |   8 +
+> >  .../arch/x86/sapphirerapids/spr-metrics.json  |  10 +-
+> >  tools/perf/util/expr.c                        |  19 +
+> >  37 files changed, 1323 insertions(+), 1011 deletions(-)
+> > 
 
-And the race can't be fixed because...?
+-- 
 
-> +			 */
-> +			ibs_fetch_active =
-> +				amd_disable_ibs_fetch(&ibs_fetch_ctl);
-> +			ibs_op_active =
-> +				amd_disable_ibs_op(&ibs_op_ctl);
-> +
-> +			amd_prevent_hostibs_window(ibs_fetch_active ||
-> +						   ibs_op_active);
-> +		}
-> +
->  		__svm_sev_es_vcpu_run(svm, spec_ctrl_intercepted);
-> -	else
-> +
-> +		if (svm->prevent_hostibs_enabled) {
-> +			if (ibs_fetch_active)
-> +				amd_restore_ibs_fetch(ibs_fetch_ctl);
-> +
-> +			if (ibs_op_active)
-> +				amd_restore_ibs_op(ibs_op_ctl);
-
-IIUC, this adds up to 2 RDMSRs and 4 WRMSRs to the VMRUN path.  Blech.  There's
-gotta be a better way to implement this.  Like PeterZ said, this is basically
-exclude_guest.
+- Arnaldo
