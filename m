@@ -2,112 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B8BC6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 11:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1681EC6FD20
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 12:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbjCXLky (ORCPT
+        id S230029AbjCXMLu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 07:40:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46214 "EHLO
+        Fri, 24 Mar 2023 08:11:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjCXLkx (ORCPT
+        with ESMTP id S230016AbjCXMLu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 07:40:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96FF44B4;
-        Fri, 24 Mar 2023 04:40:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 24 Mar 2023 08:11:50 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C80199;
+        Fri, 24 Mar 2023 05:11:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679659909; x=1711195909;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=OrmkHnEqDqvlgMUnTSJSjo/LeOztRtGPwf/gceCWb44=;
+  b=Zs4UOXmvqRbCij1xhtSBSb+ixGbPQh9rNa9Q/qTzBv7/J/+H333y2hZl
+   WoGbpfXCyD4LuPOfAMlDUYeBocTiHKwLxLPJEjv9s4JG0Yqc0cfoszxYc
+   CIm+UqOLK1ntY1OxpvAShCGZM8VmG5SUXJaK5whTX76hStpYVlX6RijAu
+   w5Pl07vleIipLQpJVsAv/w0XNNazWJsd1NqGPkTsgnchAGD7VhhPPHQnx
+   1/XaEhM0Z1NPav/TwValovzfdBI5CK6QotBcywAYVG7OR6ewANj1BOXMY
+   hviMBOgVwlQXVxPt32ub8m/CSYyjgef6Vk6YlmpSh5VUML3FAYadKlcLm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="319414760"
+X-IronPort-AV: E=Sophos;i="5.98,287,1673942400"; 
+   d="scan'208";a="319414760"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 05:11:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="751881732"
+X-IronPort-AV: E=Sophos;i="5.98,287,1673942400"; 
+   d="scan'208";a="751881732"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Mar 2023 05:11:46 -0700
+Received: from [10.255.231.167] (kliang2-mobl1.ccr.corp.intel.com [10.255.231.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7F730B82373;
-        Fri, 24 Mar 2023 11:40:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96249C433EF;
-        Fri, 24 Mar 2023 11:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679658050;
-        bh=H/gG4xxiGHu3PANQDrwb8iNhqg4/9SLJyoyf2hwU5vQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SiPJsKZtYODNVP+k0MB6uHofif2KteWcgogPU19byEjRYeBTpJhc0AcNSfhP37tsl
-         LYSSccsAIelsA6QRm7nmavrC874YuLW0gElNC3rdVJ74X5CHmGebp0VFanZLYkUkXu
-         HC/EMvLDy7Ghx3KKyWFi2b8MeOVjHo/ZsxSEX6ocNaJYe2xC93jDETttOQFadZREXN
-         Z3wdeoW+7N1mvB4zP1HztHpGnLzHE8BcHIdB3PIk/TRmW6ZKSbH5EkKtISqpaMFrV5
-         wOcQ5+2opo3VWsdqWyc+3yOZdrQoWAImb3ACrvWN2apfJ2GPYPc9NwQmbkA+UascfL
-         wc+eLTNQyX/EQ==
-Date:   Fri, 24 Mar 2023 11:40:46 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+        by linux.intel.com (Postfix) with ESMTPS id 68AEE580BBE;
+        Fri, 24 Mar 2023 05:11:44 -0700 (PDT)
+Message-ID: <acb7dcae-6365-b2cb-6147-589376116df0@linux.intel.com>
+Date:   Fri, 24 Mar 2023 08:11:44 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v3 0/9] Update Intel events and make nvdimm events dynamic
+To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
-Message-ID: <ZB2MPqqBjzyaMlrd@sirena.org.uk>
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
- <655ff114-99d2-4612-9167-cc8688f2b6b2@sirena.org.uk>
- <f7e24b0c-3e33-755a-65c9-2ee78d5a79ec@arm.com>
- <4d93a3de-c86d-454b-8a43-b24e62ea3be7@sirena.org.uk>
- <4665d03f-b801-679c-0b52-c426404284b9@arm.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PeOr3UW4D5MryUYv"
-Content-Disposition: inline
-In-Reply-To: <4665d03f-b801-679c-0b52-c426404284b9@arm.com>
-X-Cookie: Single tasking: Just Say No.
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        perry.taylor@intel.com, caleb.biggers@intel.com,
+        samantha.alt@intel.com, weilin.wang@intel.com
+References: <20230324072218.181880-1-irogers@google.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230324072218.181880-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
---PeOr3UW4D5MryUYv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 24, 2023 at 08:50:32AM +0530, Anshuman Khandual wrote:
-> On 3/23/23 18:24, Mark Brown wrote:
-> > On Thu, Mar 23, 2023 at 09:55:47AM +0530, Anshuman Khandual wrote:
+On 2023-03-24 3:22 a.m., Ian Rogers wrote:
+> Update events from:
+> https://github.com/intel/perfmon/pull/62
+> 
+> Add new #has_pmem literal to allow memory metrics to be dynamic in how
+> nvdimm events are enabled. Update CLX, ICX and SPR for this using this
+> PR:
+> https://github.com/intel/perfmon/pull/63
+> 
+> v3. Change has_optane to has_pmem as suggested by Kan Liang and Dan Williams.
+> 
+> Ian Rogers (9):
+>   perf vendor events: Broadwell v27 events
+>   perf vendor events: Broadwellde v9 events
+>   perf vendor events: Broadwellx v20 events
+>   perf vendor events: Haswell v33 events
+>   perf vendor events: Haswellx v27 events
+>   perf vendor events: Jaketown v23 events
+>   perf vendor events: Sandybridge v19 events
+>   perf metrics: Add has_pmem literal
+>   perf vendor events: Update metrics to detect pmem at runtime
+> 
 
-> >> By default entire SYS_HFGITR_EL2 is set as cleared during init and tha=
-t would
-> >> prevent a guest from using BRBE.
 
-> > It should prevent the host as well shouldn't it?=20
+Thanks Ian. The patch series looks good to me.
 
-> In a EL2 host environment, BRBE is being enabled either in EL2 (kernel/hv=
-) or
-> in EL0 (user space), it never gets enabled on EL1. Moreover BRBIALL/BRBINJ
-> instructions are always executed while being inside EL2 (kernel/hv). Henc=
-e how
-> could these instructions cause trap in EL2 ?
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-Ah, I see - I didn't realise this couldn't run at EL1.
+Thanks,
+Kan
 
-> > Yes, looks roughly what I'd expect.
-
-> I could send an stand alone patch after your latest series [1], which dis=
-ables
-> BRBINJ/BRBIALL instruction trap in EL2 to enable BRBE usage in the guest.
-
-Sounds resaonable enough to me.
-
---PeOr3UW4D5MryUYv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmQdjD4ACgkQJNaLcl1U
-h9CYxQf/XtDhR1m5Y8l+bIrYp2rDSKduJ4Pa9T6rzZYnk5wbwG7bDG78Q5TJdYMl
-oWAR04HbTMAshivaOT/UA6KE/6UJCnwgGggQqBRLA4HwSbffPvBb+0363lhssCX0
-yY9yQbUAiTNgSm8Pi7CBRhItGZwLvyPeftIGXJNwHghv1V7jsvuzVLfsUJsXxOyY
-5jkthhig/aqGol+mbUE7+vunnGAodLl+u0dOyt/lWsrc+ZSj0fQEpK7Hc8JVeQyQ
-x4cgYHYxZv0O/1avVMGyX2eC8+4grdq9bHECeNpwPbLAQq8SKTkzgk+nxhVzG/Xm
-wdPn2d5WAQ7DU2u8aLY4dEl+lJzYRQ==
-=zg2M
------END PGP SIGNATURE-----
-
---PeOr3UW4D5MryUYv--
+>  .../pmu-events/arch/x86/broadwell/cache.json  | 296 +++++-----
+>  .../arch/x86/broadwell/floating-point.json    |   7 +
+>  .../arch/x86/broadwell/frontend.json          |  18 +-
+>  .../pmu-events/arch/x86/broadwell/memory.json | 248 ++++-----
+>  .../arch/x86/broadwell/pipeline.json          |  22 +-
+>  .../arch/x86/broadwell/uncore-other.json      |   2 +-
+>  .../arch/x86/broadwellde/cache.json           | 105 ++--
+>  .../arch/x86/broadwellde/floating-point.json  |  45 +-
+>  .../arch/x86/broadwellde/frontend.json        |  18 +-
+>  .../arch/x86/broadwellde/memory.json          |  64 ++-
+>  .../arch/x86/broadwellde/pipeline.json        |  79 +--
+>  .../arch/x86/broadwellde/uncore-cache.json    |  72 +--
+>  .../arch/x86/broadwellde/uncore-memory.json   | 256 ++++++++-
+>  .../arch/x86/broadwellde/uncore-other.json    |  27 +-
+>  .../arch/x86/broadwellde/uncore-power.json    |  10 +-
+>  .../pmu-events/arch/x86/broadwellx/cache.json |  16 +-
+>  .../arch/x86/broadwellx/frontend.json         |  18 +-
+>  .../arch/x86/broadwellx/pipeline.json         |  20 +-
+>  .../arch/x86/broadwellx/uncore-cache.json     | 156 ++----
+>  .../x86/broadwellx/uncore-interconnect.json   |  84 +--
+>  .../arch/x86/broadwellx/uncore-memory.json    | 522 +++++++++---------
+>  .../arch/x86/broadwellx/uncore-other.json     |  44 +-
+>  .../arch/x86/broadwellx/uncore-power.json     |  10 +-
+>  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
+>  .../pmu-events/arch/x86/haswell/cache.json    |  38 +-
+>  .../pmu-events/arch/x86/haswell/memory.json   |  38 +-
+>  .../pmu-events/arch/x86/haswell/pipeline.json |   8 +
+>  .../pmu-events/arch/x86/haswellx/cache.json   |   2 +-
+>  .../arch/x86/haswellx/pipeline.json           |   8 +
+>  .../arch/x86/haswellx/uncore-cache.json       |  16 +-
+>  .../arch/x86/haswellx/uncore-other.json       |   6 +-
+>  .../arch/x86/icelakex/icx-metrics.json        |  10 +-
+>  .../arch/x86/jaketown/pipeline.json           |   8 +
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |  14 +-
+>  .../arch/x86/sandybridge/pipeline.json        |   8 +
+>  .../arch/x86/sapphirerapids/spr-metrics.json  |  10 +-
+>  tools/perf/util/expr.c                        |  19 +
+>  37 files changed, 1323 insertions(+), 1011 deletions(-)
+> 
