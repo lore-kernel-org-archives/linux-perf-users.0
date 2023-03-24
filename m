@@ -2,254 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FDBC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 23 Mar 2023 22:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900BC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 00:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231670AbjCWWeQ (ORCPT
+        id S230421AbjCXATc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 18:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47982 "EHLO
+        Thu, 23 Mar 2023 20:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231682AbjCWWeN (ORCPT
+        with ESMTP id S230375AbjCXATb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 18:34:13 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2104.outbound.protection.outlook.com [40.107.94.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEB57EC2;
-        Thu, 23 Mar 2023 15:34:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X/TQrlUNAViAjBrMrCvARq3clrHVMw8dNiF4cORL1UJZHAciilDR1i/R2P1XjU3Nk1+QGZcORKf9OmqYItzj7vnzaNAqmYwnPJ6gVUjf0RIn5/stMeB6qQmovtYwG7OS+f3fuDYfmZKRLVaD1zUZH8T5ctZSz9033begdm3ONJ/xX2PqbxGKaM+XivK/L32QUnIAhG4wiFWm3xfYZ0IVvt4Nw9X13FmK1YALMhR4pXlrkDw++JEKk93NBXUe2oB8uCfE1Ug2O4iqB3FJe5TZnvWbsjY998aC0JQESFD+WNaFjwcNVNR0uoXdD9QeyMIpfgpklcZzEiZSH8kGAFC1Xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iXqexM+tafJGlPbqYLkmvxpxjnvAbBLKhNMzoLBa8S4=;
- b=Nsgwth5Mi6StX8wDIEXUlp3nvXf+QEIo5HH9k9txUfsTNgcRp+lrXIBjXA1dBUHh5GZoImek7+ZNsYDFGE8rWwpoFthQ5DPOd27p48J/b22nbv/LGG60f00EWCsFv362gIY/5frMEjhODGF25iQxNep5zGTnWlWL2mmzkm1IUqSLizK8fLUUcMW3V5KSPMQyLrgHnHSEEcerBHH5BSM5Dj8jLpgBXxssDGBoRXeuUGBeKKdtXSuACA/3ihJ2lDQcpu896R1zr2DSpdL0+KHAr1Q1OrV42Yes9wJiMVMefVLJqu6ZeP7kffuvDxk/TlcEbx34fb8IGO5ZgPMC7ZgpMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+        Thu, 23 Mar 2023 20:19:31 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5B4193F7;
+        Thu, 23 Mar 2023 17:19:26 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so77346pjz.1;
+        Thu, 23 Mar 2023 17:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iXqexM+tafJGlPbqYLkmvxpxjnvAbBLKhNMzoLBa8S4=;
- b=qXE6Oim9MBLfLnhcms0Gs3uI0SZgWJ57IY4FH5UGPT5w0TI061nnx7znTnhBts9tzF3VbGeW4bLQBbHdsNMGY/SVsTY383kzLfbpTyTUeJr1SulIAn8kRJdVabRgYYsxuDvXWqYR/lyg7TdmXRk4Wl+hfANXG196OgFV9cVlGeE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM5PR0102MB3590.prod.exchangelabs.com (2603:10b6:4:a4::25) by
- DM6PR01MB5258.prod.exchangelabs.com (2603:10b6:5:6d::28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.37; Thu, 23 Mar 2023 22:34:05 +0000
-Received: from DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4ac8:7982:7ee7:cdb2]) by DM5PR0102MB3590.prod.exchangelabs.com
- ([fe80::4ac8:7982:7ee7:cdb2%4]) with mapi id 15.20.6178.037; Thu, 23 Mar 2023
- 22:34:04 +0000
-Date:   Thu, 23 Mar 2023 15:33:26 -0700 (PDT)
-From:   Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-Subject: Re: [RESEND PATCH] driver/perf: arm-cmn: support ACPI probe
-In-Reply-To: <1679587838-80000-1-git-send-email-renyu.zj@linux.alibaba.com>
-Message-ID: <557691c9-2176-7e9b-1130-8091507dfdd4@os.amperecomputing.com>
-References: <1679587838-80000-1-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Type: text/plain; format=flowed; charset=US-ASCII
-X-ClientProxiedBy: CH2PR10CA0001.namprd10.prod.outlook.com
- (2603:10b6:610:4c::11) To DM5PR0102MB3590.prod.exchangelabs.com
- (2603:10b6:4:a4::25)
+        d=gmail.com; s=20210112; t=1679617165; x=1682209165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=suA1jKhcCOcixXpCVcZ12id0ImQVSXHARQLzFn5G688=;
+        b=K8yiMNIxCIwbaoE1vowESnH4hmdNOEIlQEDou+HVvhwgdL7eFWV0JyW5TQ89hgccGB
+         whgyLfye3QllyjiS8MwJ4OyalsouO58WrU2EICYmFr1F/S8GZSMNt6a+BbWNsSc088QE
+         2faYgpmsKgx57c7bAri/bWZ/u2V+WjJ45qL4m/DPjJ1a/YyX97neS5AMnSerBo6bswbJ
+         Sfysmo08c9M/IsJ88ODIskzd+iQmB0HJ2U92auyyYB1Np/j0GKH6hrUChrH5YQcKAa5G
+         SlmIezxPiNVmSnWeg8oNGggiGMsZLCMfOaNWxQEQiYFKhDYC0DPJUF9ypT38wAVp4uPc
+         5ydQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679617165; x=1682209165;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=suA1jKhcCOcixXpCVcZ12id0ImQVSXHARQLzFn5G688=;
+        b=mlXKMLh79i78wlbA7XtHW/ZIxo/fH1A6nHP2AapWaTm0RUo3yGQkgHMdOmPMDFIWJj
+         DDCsDN+m7c1oVXR6MXrb29dP54hHalKRFrtZdYcXeTlHBADo/5vRcKqShVUiBrmRtTVE
+         e5I+z2966ayfepk0i+XECb2xV3qywWqD/ajakfgHmB4FOriGNC9YD3Y7r80QoY2K/fUx
+         yKq0C0Q4+bLVqTMxLXnYFY9U+zcCwdFPkLebqvY3aCGuOLH4KF4kF9qNlBVgFE+nelOc
+         Ho3KFoqPLRuBzEIsGcNHH5YQi/2XdmzZHsv2FnneAuuc9FLObDykPq1W/nvi/+BBljVT
+         bvkw==
+X-Gm-Message-State: AAQBX9e/kVCJ/7NhYbmrQfh2KhmdO1ZH/UKT2Vhw57AMNMghqnxBp8Bk
+        1xwm0QAfP72y8aonq6lJq3jIeMK/0iU=
+X-Google-Smtp-Source: AKy350ZAajLtafXS2eumPKcAZTQWHAgGg4qFsVyTIdctzYlBvd9M6SM/mLwWVQMYikGr/MYnVYpf2g==
+X-Received: by 2002:a17:903:32d1:b0:1a1:80ea:4352 with SMTP id i17-20020a17090332d100b001a180ea4352mr943126plr.0.1679617165387;
+        Thu, 23 Mar 2023 17:19:25 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:77d1:5545:2244:c784])
+        by smtp.gmail.com with ESMTPSA id m3-20020a63fd43000000b004facdf070d6sm12292278pgj.39.2023.03.23.17.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Mar 2023 17:19:24 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf lock contention: Fix msan issue in lock_contention_read()
+Date:   Thu, 23 Mar 2023 17:19:22 -0700
+Message-Id: <20230324001922.937634-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR0102MB3590:EE_|DM6PR01MB5258:EE_
-X-MS-Office365-Filtering-Correlation-Id: c43bf53d-db28-48b4-033c-08db2beeb4fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JMLFAaG95fdRFCwD2xOlgvlUkdflYKe0ce9jF3Fh+q8As0UaltQ6sOD9/L5dGyrlOBKAt9O9WNQtM5zXHzlA7QSslkcNyxAw6fbSDUrwe16d1WfAgevV2K993lBun3xGojuFBmjv9Xo0VgGvb6muSp/SGotybrWMAx3b4Ufd/0NJMTS4v1zLg75TXu27AI7C7c2ATg5KtVYFkwuotYKaFMPio2Ub5izTjW2FEIXJRHTyPFqhWSmgW2c2eeJN0dlQOcdHjJnYGPr6syMI2oaxNOC1rCTTMpnjRHhhklNOdGRhb1MxlBPC3QYS2z2GWiMT/RtbmXal0A9BWgCkRGNbjVE1MVBy3ZLkDhgmXjskDjxO5V8+4uCZ1KnAN6/opnYuXZ5BX0dyk5eza7UAwB35qDjCMB5vBX2dkAsZXAnTpILqbe/vRfm602Ny5USlDKRarB5EJhBvU1iftUu3F1vdIwyecLc2OQMYBrZkfswa+V4fXs/rw+7nLAp8WTFa9X3mUbsbaXDkcSE00LlgwelCVLfE3Rc/fSnbRWsZz3daSARL3ThCeieWxx1zqNfZcgnofkJkVRs96B6ZluLs876xf8v7WlW23/3c3ymwYi60I2jy+J/yB9lskorBa6HKQUeFA9FrNB29eN3saRjDkGtCnxLZ4hPAs57VOCKvtV5Dxxb8avgxXkiJrxvZHEH2ovL2xQs38r82HxgBgaOO/FJP0A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR0102MB3590.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(39850400004)(366004)(136003)(376002)(396003)(451199018)(66476007)(66556008)(4326008)(6916009)(8676002)(66946007)(6666004)(316002)(54906003)(41300700001)(5660300002)(26005)(8936002)(6512007)(6506007)(52116002)(2616005)(186003)(478600001)(83380400001)(6486002)(86362001)(31696002)(38100700002)(38350700002)(2906002)(31686004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fJ+0KAa0fWM4YPEcfg9xHLEuSd4vKIvK70ove8CS16WOn+ruS++6kp98SJlU?=
- =?us-ascii?Q?Tz2g6Y90Az6mm4vbbCQmZ4pcmpq4w4xckJ9db5oPkCmk3h1aFLG8DztrmOnb?=
- =?us-ascii?Q?QiXkG4XgE9mE5Tn2BK47PSGQ84ggOO+C+DMtuh0c3lfUqWnQI4ZVNy+wWMAL?=
- =?us-ascii?Q?jd/U01IW3egrQL6z7AyM5jgX8f4vJyHTIOU6eLf6k5n4JxZ1CaMehrUCTb8L?=
- =?us-ascii?Q?2siRMrafZPYqdz11ogrEE8jSeyNixeB9eIltx2KPHKg4slnRy09PlPeJ3YCn?=
- =?us-ascii?Q?s1oehlJ/6U3vf+W1bH8SX8xqkRMOm+XOn31FAbJx9970vW/s+rMt8jAGcX1w?=
- =?us-ascii?Q?plX9CXfQqiwKPP0nONxAGLqqKCdl7syKtM3iLcSymsSt9hYmZZXfTpXlSc9t?=
- =?us-ascii?Q?26tQ5ZONN30PnvzUysg+dRru3hhv/4d4UBHEw/dKYh1zdCTexS4/eWrXjlRR?=
- =?us-ascii?Q?j1OrdqQY7+skCRgYIGNjmOMWKR2ycaI5rM7jejbHLFnpYoOhe74j/zJjwJgW?=
- =?us-ascii?Q?UJHVh5LaNeAjCb456iWjS0SibXY1cMB97D7u38m+ndasDasXIX9glmIWw7Dd?=
- =?us-ascii?Q?73O/Eh54lgrdyX8P1TsBkBU3gU/q6CqNI4ZFPdRQr6EdAoeig6MV9fyj5Zyp?=
- =?us-ascii?Q?6umPfQbGWZbMQURN5HLQlH5fQCq/4fxdFTq1doa6DAxohBDYWqgkEIhQYq9R?=
- =?us-ascii?Q?NnRopeHJNgoGzaNkQeF/sjfQwlkbcEqvOgWU2K8jLkE1PSn8G6YgPINyiyXw?=
- =?us-ascii?Q?RbNxgjWE39lfXFS7Q2Hc7guhDFp1JoO5dDP27sBip+mds/6pxiq1DP7jATuo?=
- =?us-ascii?Q?TBQ+MnYy/2OoiI8wIpETEf08fJ4HY0nt+cbtTmnVk61Qu+PEvVRBEeHIwcHg?=
- =?us-ascii?Q?5dEmLcCwRwo8CXR0w17vMPY2KykxH3KObGAjbCKBL64WCunWdnlL3N8X+XOP?=
- =?us-ascii?Q?SwRJSTF08D1a5vy6ViMzI9fZsZk2uJFYF4bwchZISgtiK+1EfbVrIBEDMIJi?=
- =?us-ascii?Q?bVAYuPgBsOkrS3K9qQfcYrPx6eB/AGHzYQFB75q2IWi4U3oeFFQ7PDGD8dDX?=
- =?us-ascii?Q?y2rq80s+M02r7cq++KxSYLfkb3eKKPIY3OEC8jd/yXMoVlExvPCSmqp5BXDl?=
- =?us-ascii?Q?BV0vsjG1gZbbKm5ijJ1FLpN5vYhKx3pjb4HjkWziaZDlgFTWzdremYy8sVYp?=
- =?us-ascii?Q?XvEN56sGFEn5Xnk4EoU6Ltp+tIwdFXdX+PZY6EaruzcztT1n8uY8UlJVUBA6?=
- =?us-ascii?Q?vA8uo1ggFsEBNyYRKOSgNxER4oD36UqJIl41hVt/PUBn3rAo29C9lq4T80Tq?=
- =?us-ascii?Q?wHY+0+b7HA+w4VlH7e+m6qVwuex9ENMHvDdo61J46i34AfiA6YZNp71TuJSA?=
- =?us-ascii?Q?heezEKe8iJoRkLFtoOHf9qpANRgJ5KnYR1ho/0ak766AszCdILZHW8kHrC45?=
- =?us-ascii?Q?wIF2eo7ypd2rCpqF68NJjKD3BIiuXCZ64FkniQuASPZPzOrFCC3wXsBWoOdU?=
- =?us-ascii?Q?Y5HeWcdq0HfIGEKSowb814wBwxVuY75PyjiX+arQzAS8xzquyhmtfMphDN3+?=
- =?us-ascii?Q?fB8mRDhMhH8wGHlaNTpyq50erGPy8C3TYQS0lvnnM9KBJ3uI8lyBUpwIzjht?=
- =?us-ascii?Q?SkkN/UX8gVtO/UVeYE9seGk=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c43bf53d-db28-48b4-033c-08db2beeb4fe
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR0102MB3590.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2023 22:34:04.6032
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fGD3hpcHJrsRmw842Hr65KRf16cdXuwsR6qb7gQKBGfxhlfAEj0ecR8P4C455nYjxgE9Z+5ZX229odKHLmppm+gKI66gyuT2xBQ3ZOPX6r2/mbu9iiPsBRIKXZfNSyht
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB5258
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+I got a report of a msan failure like below:
 
-Hi Jing,
+  $ sudo perf lock con -ab -- sleep 1
+  ...
+  ==224416==WARNING: MemorySanitizer: use-of-uninitialized-value
+      #0 0x5651160d6c96 in lock_contention_read  util/bpf_lock_contention.c:290:8
+      #1 0x565115f90870 in __cmd_contention  builtin-lock.c:1919:3
+      #2 0x565115f90870 in cmd_lock  builtin-lock.c:2385:8
+      #3 0x565115f03a83 in run_builtin  perf.c:330:11
+      #4 0x565115f03756 in handle_internal_command  perf.c:384:8
+      #5 0x565115f02d53 in run_argv  perf.c:428:2
+      #6 0x565115f02d53 in main  perf.c:562:3
+      #7 0x7f43553bc632 in __libc_start_main
+      #8 0x565115e865a9 in _start
 
-On Thu, 23 Mar 2023, Jing Zhang wrote:
-> ACPI companion devices call insert_resource() in platform_device_add()
-> to claim the device resources. If the resources are claimed again before
-> ioremap(), and the addresses of multiple resources overlap, it will
-> return -BUSY, causing the driver to fail to load.
->
-> For example, the CMN700 on my machine is set with two resources similar
-> to CMN600, and the overlap of resource addresses makes the CMN driver
-> unable to match my CMN700. The error log:
+It was because the 'key' variable is not initialized.  Actually it'd be set
+by bpf_map_get_next_key() but msan didn't seem to understand it.  Let's make
+msan happy by initializing the variable.
 
-I thought that the two address ranges were only needed for CMN-600?
-I guess, the specification doesn't explicitly forbid giving two ranges for 
-CMN700 although the example shows just one.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_lock_contention.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
-> [  12.016837] arm-cmn ARMHC700:00: can't request region for resource [mem 0x40000000-0x4fffffff]
-> [  12.028230] arm-cmn: probe of ARMHC700:00 failed with error -16
-> [  12.036832] arm-cmn ARMHC700:01: can't request region for resource [mem 0x40040000000-0x4004fffffff]
-> [  12.051289] arm-cmn: probe of ARMHC700:01 failed with error -16
->
-> So let ACPI companion devices call arm_cmn_acpi_probe() and not claim
-> resource again. In addition, the arm_cmn_acpi_probe() and
-> arm_cmn_of_probe() functions are refactored to make them compatible
-> with both CMN600 and CMN-ANY.
->
-> Fixes: 61ec1d875812 ("perf/arm-cmn: Demarcate CMN-600 specifics")
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> ---
-> drivers/perf/arm-cmn.c | 57 ++++++++++++++++++++++++++++++++------------------
-> 1 file changed, 37 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 1deb61b..beb3b37 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -2206,7 +2206,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
-> 	return 0;
-> }
->
-> -static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
-> +static int arm_cmn_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
-> {
-> 	struct resource *cfg, *root;
->
-> @@ -2214,12 +2214,21 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
-> 	if (!cfg)
-> 		return -EINVAL;
->
-> -	root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -	if (!root)
-> -		return -EINVAL;
-> +	/* If ACPI defines more than one resource, such as cmn-600, then there may be
-> +	 * a deviation between ROOTNODEBASE and PERIPHBASE, and ROOTNODEBASE can
-> +	 * be obtained from the second resource. Otherwise, it can be considered that
-> +	 * ROOT NODE BASE is PERIPHBASE. This is compatible with cmn-600 and cmn-any.
-> +	 */
-> +	if (pdev->num_resources > 1) {
-> +		root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		if (!root)
-> +			return -EINVAL;
->
-> -	if (!resource_contains(cfg, root))
-> -		swap(cfg, root);
-> +		if (!resource_contains(cfg, root))
-> +			swap(cfg, root);
-> +	} else {
-> +		root = cfg;
-> +	}
-> 	/*
-> 	 * Note that devm_ioremap_resource() is dumb and won't let the platform
-> 	 * device claim cfg when the ACPI companion device has already claimed
-> @@ -2227,17 +2236,30 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
-> 	 * appropriate name, we don't really need to do it again here anyway.
-> 	 */
-> 	cmn->base = devm_ioremap(cmn->dev, cfg->start, resource_size(cfg));
-> -	if (!cmn->base)
-> -		return -ENOMEM;
-> +	if (IS_ERR(cmn->base))
-> +		return PTR_ERR(cmn->base);
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index 235fc7150545..5927bf0bd92b 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -249,7 +249,7 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+ int lock_contention_read(struct lock_contention *con)
+ {
+ 	int fd, stack, err = 0;
+-	struct contention_key *prev_key, key;
++	struct contention_key *prev_key, key = {};
+ 	struct contention_data data = {};
+ 	struct lock_stat *st = NULL;
+ 	struct machine *machine = con->machine;
+-- 
+2.40.0.348.gf938b09366-goog
 
-I believe, devm_ioremap() returns NULL in case of error
-
-Cheers, Ilkka
-
-
->
-> 	return root->start - cfg->start;
-> }
->
-> -static int arm_cmn600_of_probe(struct device_node *np)
-> +static int arm_cmn_of_probe(struct platform_device *pdev, struct arm_cmn *cmn)
-> {
-> 	u32 rootnode;
-> +	int ret;
-> +
-> +	cmn->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(cmn->base))
-> +		return PTR_ERR(cmn->base);
->
-> -	return of_property_read_u32(np, "arm,root-node", &rootnode) ?: rootnode;
-> +	/* If of_property_read_u32() return -EINVAL, it means that device tree has
-> +	 * not define root-node, and root-node will return 0, which is compatible
-> +	 * with cmn-600 and cmn-any.
-> +	 */
-> +	ret = of_property_read_u32(pdev->dev.of_node, "arm,root-node", &rootnode);
-> +	if (ret == -EINVAL)
-> +		return 0;
-> +
-> +	return rootnode;
-> }
->
-> static int arm_cmn_probe(struct platform_device *pdev)
-> @@ -2255,16 +2277,11 @@ static int arm_cmn_probe(struct platform_device *pdev)
-> 	cmn->model = (unsigned long)device_get_match_data(cmn->dev);
-> 	platform_set_drvdata(pdev, cmn);
->
-> -	if (cmn->model == CMN600 && has_acpi_companion(cmn->dev)) {
-> -		rootnode = arm_cmn600_acpi_probe(pdev, cmn);
-> -	} else {
-> -		rootnode = 0;
-> -		cmn->base = devm_platform_ioremap_resource(pdev, 0);
-> -		if (IS_ERR(cmn->base))
-> -			return PTR_ERR(cmn->base);
-> -		if (cmn->model == CMN600)
-> -			rootnode = arm_cmn600_of_probe(pdev->dev.of_node);
-> -	}
-> +	if (has_acpi_companion(cmn->dev))
-> +		rootnode = arm_cmn_acpi_probe(pdev, cmn);
-> +	else
-> +		rootnode = arm_cmn_of_probe(pdev, cmn);
-> +
-> 	if (rootnode < 0)
-> 		return rootnode;
->
-> -- 
-> 1.8.3.1
->
->
