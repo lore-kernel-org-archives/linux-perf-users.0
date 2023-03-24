@@ -2,111 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1900BC6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 00:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3B7C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 02:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230421AbjCXATc (ORCPT
+        id S231183AbjCXCei (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 23 Mar 2023 20:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
+        Thu, 23 Mar 2023 22:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbjCXATb (ORCPT
+        with ESMTP id S229508AbjCXCei (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 23 Mar 2023 20:19:31 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5B4193F7;
-        Thu, 23 Mar 2023 17:19:26 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so77346pjz.1;
-        Thu, 23 Mar 2023 17:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679617165; x=1682209165;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=suA1jKhcCOcixXpCVcZ12id0ImQVSXHARQLzFn5G688=;
-        b=K8yiMNIxCIwbaoE1vowESnH4hmdNOEIlQEDou+HVvhwgdL7eFWV0JyW5TQ89hgccGB
-         whgyLfye3QllyjiS8MwJ4OyalsouO58WrU2EICYmFr1F/S8GZSMNt6a+BbWNsSc088QE
-         2faYgpmsKgx57c7bAri/bWZ/u2V+WjJ45qL4m/DPjJ1a/YyX97neS5AMnSerBo6bswbJ
-         Sfysmo08c9M/IsJ88ODIskzd+iQmB0HJ2U92auyyYB1Np/j0GKH6hrUChrH5YQcKAa5G
-         SlmIezxPiNVmSnWeg8oNGggiGMsZLCMfOaNWxQEQiYFKhDYC0DPJUF9ypT38wAVp4uPc
-         5ydQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679617165; x=1682209165;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=suA1jKhcCOcixXpCVcZ12id0ImQVSXHARQLzFn5G688=;
-        b=mlXKMLh79i78wlbA7XtHW/ZIxo/fH1A6nHP2AapWaTm0RUo3yGQkgHMdOmPMDFIWJj
-         DDCsDN+m7c1oVXR6MXrb29dP54hHalKRFrtZdYcXeTlHBADo/5vRcKqShVUiBrmRtTVE
-         e5I+z2966ayfepk0i+XECb2xV3qywWqD/ajakfgHmB4FOriGNC9YD3Y7r80QoY2K/fUx
-         yKq0C0Q4+bLVqTMxLXnYFY9U+zcCwdFPkLebqvY3aCGuOLH4KF4kF9qNlBVgFE+nelOc
-         Ho3KFoqPLRuBzEIsGcNHH5YQi/2XdmzZHsv2FnneAuuc9FLObDykPq1W/nvi/+BBljVT
-         bvkw==
-X-Gm-Message-State: AAQBX9e/kVCJ/7NhYbmrQfh2KhmdO1ZH/UKT2Vhw57AMNMghqnxBp8Bk
-        1xwm0QAfP72y8aonq6lJq3jIeMK/0iU=
-X-Google-Smtp-Source: AKy350ZAajLtafXS2eumPKcAZTQWHAgGg4qFsVyTIdctzYlBvd9M6SM/mLwWVQMYikGr/MYnVYpf2g==
-X-Received: by 2002:a17:903:32d1:b0:1a1:80ea:4352 with SMTP id i17-20020a17090332d100b001a180ea4352mr943126plr.0.1679617165387;
-        Thu, 23 Mar 2023 17:19:25 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:77d1:5545:2244:c784])
-        by smtp.gmail.com with ESMTPSA id m3-20020a63fd43000000b004facdf070d6sm12292278pgj.39.2023.03.23.17.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Mar 2023 17:19:24 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf lock contention: Fix msan issue in lock_contention_read()
-Date:   Thu, 23 Mar 2023 17:19:22 -0700
-Message-Id: <20230324001922.937634-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+        Thu, 23 Mar 2023 22:34:38 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05ED11025B;
+        Thu, 23 Mar 2023 19:34:35 -0700 (PDT)
+Received: from dggpeml500019.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PjR6P3t9Fz17Mnv;
+        Fri, 24 Mar 2023 10:31:25 +0800 (CST)
+Received: from [10.67.101.98] (10.67.101.98) by dggpeml500019.china.huawei.com
+ (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 24 Mar
+ 2023 10:34:33 +0800
+Message-ID: <039a2fc2-48e2-fe3b-73c1-f7f658c7f22f@hisilicon.com>
+Date:   Fri, 24 Mar 2023 10:34:33 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH] perf stat: Support per-cluster aggregation
+To:     Yicong Yang <yangyicong@huawei.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <james.clark@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <Jonathan.Cameron@huawei.com>, <21cnbao@gmail.com>,
+        <tim.c.chen@intel.com>, <prime.zeng@hisilicon.com>,
+        <shenyang39@huawei.com>, <linuxarm@huawei.com>,
+        <yangyicong@hisilicon.com>
+References: <20230313085911.61359-1-yangyicong@huawei.com>
+From:   Jie Zhan <zhanjie9@hisilicon.com>
+In-Reply-To: <20230313085911.61359-1-yangyicong@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.98]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500019.china.huawei.com (7.185.36.137)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I got a report of a msan failure like below:
 
-  $ sudo perf lock con -ab -- sleep 1
-  ...
-  ==224416==WARNING: MemorySanitizer: use-of-uninitialized-value
-      #0 0x5651160d6c96 in lock_contention_read  util/bpf_lock_contention.c:290:8
-      #1 0x565115f90870 in __cmd_contention  builtin-lock.c:1919:3
-      #2 0x565115f90870 in cmd_lock  builtin-lock.c:2385:8
-      #3 0x565115f03a83 in run_builtin  perf.c:330:11
-      #4 0x565115f03756 in handle_internal_command  perf.c:384:8
-      #5 0x565115f02d53 in run_argv  perf.c:428:2
-      #6 0x565115f02d53 in main  perf.c:562:3
-      #7 0x7f43553bc632 in __libc_start_main
-      #8 0x565115e865a9 in _start
+On 13/03/2023 16:59, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+>
+> Some platforms have 'cluster' topology and CPUs in the cluster will
+> share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
+> cache (for Intel Jacobsville). Currently parsing and building cluster
+> topology have been supported since [1].
+>
+> perf stat has already supported aggregation for other topologies like
+> die or socket, etc. It'll be useful to aggregate per-cluster to find
+> problems like L3T bandwidth contention or imbalance.
+>
+> This patch adds support for "--per-cluster" option for per-cluster
+> aggregation. Also update the docs and related test. The output will
+> be like:
+>
+> [root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
+>
+>   Performance counter stats for 'system wide':
+>
+> S56-D0-CLS158    4      1,321,521,570      LLC-load
+> S56-D0-CLS594    4        794,211,453      LLC-load
+> S56-D0-CLS1030    4             41,623      LLC-load
+> S56-D0-CLS1466    4             41,646      LLC-load
+> S56-D0-CLS1902    4             16,863      LLC-load
+> S56-D0-CLS2338    4             15,721      LLC-load
+> S56-D0-CLS2774    4             22,671      LLC-load
+> [...]
+>
+> [1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
+>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-It was because the 'key' variable is not initialized.  Actually it'd be set
-by bpf_map_get_next_key() but msan didn't seem to understand it.  Let's make
-msan happy by initializing the variable.
+An end user may have to check sysfs to figure out what CPUs those 
+cluster IDs account for.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_lock_contention.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Any better method to show the mapping between CPUs and cluster IDs?
 
-diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
-index 235fc7150545..5927bf0bd92b 100644
---- a/tools/perf/util/bpf_lock_contention.c
-+++ b/tools/perf/util/bpf_lock_contention.c
-@@ -249,7 +249,7 @@ static const char *lock_contention_get_name(struct lock_contention *con,
- int lock_contention_read(struct lock_contention *con)
- {
- 	int fd, stack, err = 0;
--	struct contention_key *prev_key, key;
-+	struct contention_key *prev_key, key = {};
- 	struct contention_data data = {};
- 	struct lock_stat *st = NULL;
- 	struct machine *machine = con->machine;
--- 
-2.40.0.348.gf938b09366-goog
+Perhaps adding a conditional cluster id (when there are clusters) in the 
+"--per-core" output may help.
+
+Apart form that, this works well on my aarch64.
+
+Tested-by: Jie Zhan <zhanjie9@hisilicon.com>
+
 
