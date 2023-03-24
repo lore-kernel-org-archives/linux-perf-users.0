@@ -2,98 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B15C6FD20
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 13:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B3AC76196
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 14:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231730AbjCXN4x (ORCPT
+        id S231738AbjCXONU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 09:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
+        Fri, 24 Mar 2023 10:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbjCXN4x (ORCPT
+        with ESMTP id S231394AbjCXONT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 09:56:53 -0400
+        Fri, 24 Mar 2023 10:13:19 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0BCB612CF6;
-        Fri, 24 Mar 2023 06:56:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4EEC930E4;
+        Fri, 24 Mar 2023 07:13:18 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C7711FB;
-        Fri, 24 Mar 2023 06:57:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A1AF11FB;
+        Fri, 24 Mar 2023 07:14:02 -0700 (PDT)
 Received: from FVFF77S0Q05N (unknown [10.57.55.116])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 344073F71E;
-        Fri, 24 Mar 2023 06:56:48 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 13:56:42 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 367B43F71E;
+        Fri, 24 Mar 2023 07:13:16 -0700 (PDT)
+Date:   Fri, 24 Mar 2023 14:13:13 +0000
 From:   Mark Rutland <mark.rutland@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Zaid Al-Bassam <zalbassam@google.com>,
-        Will Deacon <will@kernel.org>,
-        Jesus Sanchez-Palencia <jesussanp@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+To:     Uros Bizjak <ubizjak@gmail.com>
+Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu,
-        "f.fainelli@gmail.comm Anshuman Khandual" <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v4 0/8] perf: arm: Make PMUv3 driver available for aarch32
-Message-ID: <ZB2sGrsbr58ttoWI@FVFF77S0Q05N>
-References: <20230317195027.3746949-1-zalbassam@google.com>
- <87v8iygyx2.wl-maz@kernel.org>
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH 01/10] locking/atomic: Add missing cast to try_cmpxchg()
+ fallbacks
+Message-ID: <ZB2v+avNt52ac/+w@FVFF77S0Q05N>
+References: <20230305205628.27385-1-ubizjak@gmail.com>
+ <20230305205628.27385-2-ubizjak@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87v8iygyx2.wl-maz@kernel.org>
+In-Reply-To: <20230305205628.27385-2-ubizjak@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Mar 18, 2023 at 10:02:33AM +0000, Marc Zyngier wrote:
-> On Fri, 17 Mar 2023 19:50:19 +0000,
-> Zaid Al-Bassam <zalbassam@google.com> wrote:
-> > 
-> > Currently, PMUv3 driver is only available for ARMv8 aarch64 platforms,
-> > ARMv8 platorms running in aarch32 mode dont have access to the driver.
-> > This is, especially, a problem for ARMv8 platforms that only have
-> > aarch32 support, like the Cortex-A32.
-> > 
-> > Make the PMUv3 driver available to arm arch (ARMv8 aarch32) by moving
-> > the PMUv3 driver from arm64 to drivers, that makes the driver common
-> > to both arm and arm64 architectures, then add PMUv3 arm Support.
-> > 
-> > The main work in this patchset was made a while back by Marc Zyngier
-> > in [1]. Patchset version 1 [v1] rebases Marc's patches to the latest
-> > kernel revision and adds additional patches to accommodate the changes
-> > in the kernel since Marc wrote the patches.
-> > 
-> > version 2 [v2] of the patchset was created by Marc Zyngier and I
-> > picked it up from [2].
-> 
-> The SoB chain is now a bit off as you picked it from my tree. Nothing
-> that we can't fix, but please be careful in the future. You also
-> failed to pick Florian's Tested-by: tags, which is worse. Please make
-> sure to pick these things as people reply to your series.
-> 
-> Will, Mark: any objection to the general shape of this series? I've
-> been using it again to test the 32bit PMU support in KVM, and would
-> rather see something merged while the architecture still has some
-> relevance.
+On Sun, Mar 05, 2023 at 09:56:19PM +0100, Uros Bizjak wrote:
+> Cast _oldp to the type of _ptr to avoid incompatible-pointer-types warning.
 
-I think the general shape looks fine, but this is going to conflict with
-Anshuman's BRBE series, so we'll need to figure out how to stage these w.r.t.
-one another.
+Can you give an example of where we are passing an incompatible pointer?
 
-Will, any preference between handling the merge manually or rebasing one atop
-the other? We'll presumably want to place the BRBE files under drivers/perf/ if
-we've moved the PMUv3 code there.
+That sounds indicative of a bug in the caller, but maybe I'm missing some
+reason this is necessary due to some indirection.
+
+> Fixes: 29f006fdefe6 ("asm-generic/atomic: Add try_cmpxchg() fallbacks")
+
+I'm not sure that this needs a fixes tag. Does anything go wrong today, or only
+later in this series?
 
 Thanks,
 Mark.
+
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> ---
+>  include/linux/atomic/atomic-arch-fallback.h | 18 +++++++++---------
+>  scripts/atomic/gen-atomic-fallback.sh       |  2 +-
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/atomic/atomic-arch-fallback.h b/include/linux/atomic/atomic-arch-fallback.h
+> index 77bc5522e61c..19debd501ee7 100644
+> --- a/include/linux/atomic/atomic-arch-fallback.h
+> +++ b/include/linux/atomic/atomic-arch-fallback.h
+> @@ -87,7 +87,7 @@
+>  #ifndef arch_try_cmpxchg
+>  #define arch_try_cmpxchg(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -98,7 +98,7 @@
+>  #ifndef arch_try_cmpxchg_acquire
+>  #define arch_try_cmpxchg_acquire(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg_acquire((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -109,7 +109,7 @@
+>  #ifndef arch_try_cmpxchg_release
+>  #define arch_try_cmpxchg_release(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg_release((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -120,7 +120,7 @@
+>  #ifndef arch_try_cmpxchg_relaxed
+>  #define arch_try_cmpxchg_relaxed(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg_relaxed((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -157,7 +157,7 @@
+>  #ifndef arch_try_cmpxchg64
+>  #define arch_try_cmpxchg64(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg64((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -168,7 +168,7 @@
+>  #ifndef arch_try_cmpxchg64_acquire
+>  #define arch_try_cmpxchg64_acquire(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg64_acquire((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -179,7 +179,7 @@
+>  #ifndef arch_try_cmpxchg64_release
+>  #define arch_try_cmpxchg64_release(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg64_release((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -190,7 +190,7 @@
+>  #ifndef arch_try_cmpxchg64_relaxed
+>  #define arch_try_cmpxchg64_relaxed(_ptr, _oldp, _new) \
+>  ({ \
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \
+>  	___r = arch_cmpxchg64_relaxed((_ptr), ___o, (_new)); \
+>  	if (unlikely(___r != ___o)) \
+>  		*___op = ___r; \
+> @@ -2456,4 +2456,4 @@ arch_atomic64_dec_if_positive(atomic64_t *v)
+>  #endif
+>  
+>  #endif /* _LINUX_ATOMIC_FALLBACK_H */
+> -// b5e87bdd5ede61470c29f7a7e4de781af3770f09
+> +// 1b4d4c82ae653389cd1538d5b07170267d9b3837
+> diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
+> index 3a07695e3c89..39f447161108 100755
+> --- a/scripts/atomic/gen-atomic-fallback.sh
+> +++ b/scripts/atomic/gen-atomic-fallback.sh
+> @@ -171,7 +171,7 @@ cat <<EOF
+>  #ifndef arch_try_${cmpxchg}${order}
+>  #define arch_try_${cmpxchg}${order}(_ptr, _oldp, _new) \\
+>  ({ \\
+> -	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \\
+> +	typeof(*(_ptr)) *___op = (typeof(_ptr))(_oldp), ___o = *___op, ___r; \\
+>  	___r = arch_${cmpxchg}${order}((_ptr), ___o, (_new)); \\
+>  	if (unlikely(___r != ___o)) \\
+>  		*___op = ___r; \\
+> -- 
+> 2.39.2
+> 
