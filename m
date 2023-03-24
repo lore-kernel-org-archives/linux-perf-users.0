@@ -2,135 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289C4C6FD20
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 12:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B15C6FD20
+	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 13:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbjCXMbL (ORCPT
+        id S231730AbjCXN4x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 08:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58074 "EHLO
+        Fri, 24 Mar 2023 09:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231687AbjCXMah (ORCPT
+        with ESMTP id S231215AbjCXN4x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 08:30:37 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8A3268E;
-        Fri, 24 Mar 2023 05:30:35 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PjhP66rcyz6J7fx;
-        Fri, 24 Mar 2023 20:30:02 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Fri, 24 Mar
- 2023 12:30:32 +0000
-Date:   Fri, 24 Mar 2023 12:30:31 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jie Zhan <zhanjie9@hisilicon.com>
-CC:     Yicong Yang <yangyicong@huawei.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <james.clark@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <21cnbao@gmail.com>, <tim.c.chen@intel.com>,
-        <prime.zeng@hisilicon.com>, <shenyang39@huawei.com>,
-        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: Re: [PATCH] perf stat: Support per-cluster aggregation
-Message-ID: <20230324123031.0000013c@Huawei.com>
-In-Reply-To: <20230324122422.00006a2b@Huawei.com>
-References: <20230313085911.61359-1-yangyicong@huawei.com>
-        <039a2fc2-48e2-fe3b-73c1-f7f658c7f22f@hisilicon.com>
-        <20230324122422.00006a2b@Huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Fri, 24 Mar 2023 09:56:53 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0BCB612CF6;
+        Fri, 24 Mar 2023 06:56:52 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C7711FB;
+        Fri, 24 Mar 2023 06:57:35 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.55.116])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 344073F71E;
+        Fri, 24 Mar 2023 06:56:48 -0700 (PDT)
+Date:   Fri, 24 Mar 2023 13:56:42 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Zaid Al-Bassam <zalbassam@google.com>,
+        Will Deacon <will@kernel.org>,
+        Jesus Sanchez-Palencia <jesussanp@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu,
+        "f.fainelli@gmail.comm Anshuman Khandual" <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v4 0/8] perf: arm: Make PMUv3 driver available for aarch32
+Message-ID: <ZB2sGrsbr58ttoWI@FVFF77S0Q05N>
+References: <20230317195027.3746949-1-zalbassam@google.com>
+ <87v8iygyx2.wl-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v8iygyx2.wl-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 24 Mar 2023 12:24:22 +0000
-Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+On Sat, Mar 18, 2023 at 10:02:33AM +0000, Marc Zyngier wrote:
+> On Fri, 17 Mar 2023 19:50:19 +0000,
+> Zaid Al-Bassam <zalbassam@google.com> wrote:
+> > 
+> > Currently, PMUv3 driver is only available for ARMv8 aarch64 platforms,
+> > ARMv8 platorms running in aarch32 mode dont have access to the driver.
+> > This is, especially, a problem for ARMv8 platforms that only have
+> > aarch32 support, like the Cortex-A32.
+> > 
+> > Make the PMUv3 driver available to arm arch (ARMv8 aarch32) by moving
+> > the PMUv3 driver from arm64 to drivers, that makes the driver common
+> > to both arm and arm64 architectures, then add PMUv3 arm Support.
+> > 
+> > The main work in this patchset was made a while back by Marc Zyngier
+> > in [1]. Patchset version 1 [v1] rebases Marc's patches to the latest
+> > kernel revision and adds additional patches to accommodate the changes
+> > in the kernel since Marc wrote the patches.
+> > 
+> > version 2 [v2] of the patchset was created by Marc Zyngier and I
+> > picked it up from [2].
+> 
+> The SoB chain is now a bit off as you picked it from my tree. Nothing
+> that we can't fix, but please be careful in the future. You also
+> failed to pick Florian's Tested-by: tags, which is worse. Please make
+> sure to pick these things as people reply to your series.
+> 
+> Will, Mark: any objection to the general shape of this series? I've
+> been using it again to test the 32bit PMU support in KVM, and would
+> rather see something merged while the architecture still has some
+> relevance.
 
-> On Fri, 24 Mar 2023 10:34:33 +0800
-> Jie Zhan <zhanjie9@hisilicon.com> wrote:
-> 
-> > On 13/03/2023 16:59, Yicong Yang wrote:  
-> > > From: Yicong Yang <yangyicong@hisilicon.com>
-> > >
-> > > Some platforms have 'cluster' topology and CPUs in the cluster will
-> > > share resources like L3 Cache Tag (for HiSilicon Kunpeng SoC) or L2
-> > > cache (for Intel Jacobsville). Currently parsing and building cluster
-> > > topology have been supported since [1].
-> > >
-> > > perf stat has already supported aggregation for other topologies like
-> > > die or socket, etc. It'll be useful to aggregate per-cluster to find
-> > > problems like L3T bandwidth contention or imbalance.
-> > >
-> > > This patch adds support for "--per-cluster" option for per-cluster
-> > > aggregation. Also update the docs and related test. The output will
-> > > be like:
-> > >
-> > > [root@localhost tmp]# perf stat -a -e LLC-load --per-cluster -- sleep 5
-> > >
-> > >   Performance counter stats for 'system wide':
-> > >
-> > > S56-D0-CLS158    4      1,321,521,570      LLC-load
-> > > S56-D0-CLS594    4        794,211,453      LLC-load
-> > > S56-D0-CLS1030    4             41,623      LLC-load
-> > > S56-D0-CLS1466    4             41,646      LLC-load
-> > > S56-D0-CLS1902    4             16,863      LLC-load
-> > > S56-D0-CLS2338    4             15,721      LLC-load
-> > > S56-D0-CLS2774    4             22,671      LLC-load
-> > > [...]
-> > >
-> > > [1] commit c5e22feffdd7 ("topology: Represent clusters of CPUs within a die")
-> > >
-> > > Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>    
-> > 
-> > An end user may have to check sysfs to figure out what CPUs those 
-> > cluster IDs account for.
-> > 
-> > Any better method to show the mapping between CPUs and cluster IDs?  
-> 
-> The cluster code is capable of using the ACPI_PPTT_ACPI_PROCESSOR_ID field
-> if valid for the cluster level of PPTT.
-> 
-> The numbers in the example above look like offsets into the PPTT table
-> so I think the PPTT table is missing that information.
-> 
-> Whilst not a great description anyway (it's just an index), the UUID
-> that would be in there can convey more info on which cluster this is.
-> 
-> 
-> > 
-> > Perhaps adding a conditional cluster id (when there are clusters) in the 
-> > "--per-core" output may help.  
-> 
-> That's an interesting idea.  You'd want to include the other levels
-> if doing that.  So whenever you do a --per-xxx it also provides the
-> cluster / die / node / socket etc as relevant 'above' the level of xxx
-> Fun is that node and die can flip which would make this tricky to do.
+I think the general shape looks fine, but this is going to conflict with
+Anshuman's BRBE series, so we'll need to figure out how to stage these w.r.t.
+one another.
 
-Ignore me on this.  I'd not looked at the patch closely when I wrote
-this.  Clearly a lot of this information is already provided - the
-suggestion was to consider adding cluster to that mix which makes
-sense to me.
+Will, any preference between handling the merge manually or rebasing one atop
+the other? We'll presumably want to place the BRBE files under drivers/perf/ if
+we've moved the PMUv3 code there.
 
-Jonathan
-
-> 
-> Jonathan
-> 
-> > 
-> > Apart form that, this works well on my aarch64.
-> > 
-> > Tested-by: Jie Zhan <zhanjie9@hisilicon.com>  
-> 
-> > 
-> >   
-> 
-
+Thanks,
+Mark.
