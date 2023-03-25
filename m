@@ -2,215 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E70FC6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Mar 2023 04:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20B5C6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Mar 2023 07:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231974AbjCYEb6 convert rfc822-to-8bit (ORCPT
+        id S231621AbjCYH3d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 25 Mar 2023 00:31:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42960 "EHLO
+        Sat, 25 Mar 2023 03:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232034AbjCYEbq (ORCPT
+        with ESMTP id S229486AbjCYH3d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Mar 2023 00:31:46 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BCED1815A;
-        Fri, 24 Mar 2023 21:31:38 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id bl9so1621648iob.8;
-        Fri, 24 Mar 2023 21:31:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679718697; x=1682310697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QshTmLJTyi9qX5SkDwCDlbE2dc7E+l9twlijdylPf7o=;
-        b=OnCYEvN1YI3GsOsk0XM62ikt1MBIBl6V8sEJQuUpvAkN7jpNiNwhxbn1TQW89y+VHh
-         /BdrE2zZWD0ZC35xgaAnVwM5PVZdYbX9gUNk0FXuym2A2NxcKwHKaIApMQdJfiR4Vf7V
-         ac+keFtxkN1lri9lDc62P5Ho1+njXsm2RPPVm6UM0lO3dOmvaRfMEOvqnrpGBqAIN5PQ
-         y2VZdPmKlDG7lGlPC+I/U6UlkwUFmIT6ase0iR0Iky4pHPpIj7E9nBmstxFa8OLrdnPH
-         wSoSFOT4pivMZ8QkM622OD7C9tOuQQROtax+HSgxGBVr6S89CYSTFSXDClvR9WDIyJH6
-         HHKw==
-X-Gm-Message-State: AO0yUKVZeFlDdQGlZqFdgYAqu5eh3seMAnIeJWNzjZf+Q6KMVmxpFrwS
-        3vcHC24U1akZLUgEYRbtxrlpb+DtWHUNgHHqnUM=
-X-Google-Smtp-Source: AK7set/a+tfEGjCk1N5v7IBtI1Fa/ix1K4irok/GjHIxTi9wNU/SfHsMc8CVp74dsAqB/u/cWAiiO2++qzfKweapa2s=
-X-Received: by 2002:a6b:6a14:0:b0:751:dcc3:3279 with SMTP id
- x20-20020a6b6a14000000b00751dcc33279mr3448370iog.14.1679718697147; Fri, 24
- Mar 2023 21:31:37 -0700 (PDT)
+        Sat, 25 Mar 2023 03:29:33 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEB340EE;
+        Sat, 25 Mar 2023 00:29:30 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VeZxngs_1679729366;
+Received: from 30.15.221.158(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VeZxngs_1679729366)
+          by smtp.aliyun-inc.com;
+          Sat, 25 Mar 2023 15:29:27 +0800
+Message-ID: <6325bd2b-21c5-236c-51cb-25da076d57a4@linux.alibaba.com>
+Date:   Sat, 25 Mar 2023 15:29:24 +0800
 MIME-Version: 1.0
-References: <1679381821-22736-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1679381821-22736-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 24 Mar 2023 21:31:25 -0700
-Message-ID: <CAM9d7chTUDnrwrOnOS-CDBjNnuyLcSx05agDS4S7DgJ2Sj_9vw@mail.gmail.com>
-Subject: Re: [PATCH] perf bench syscall: Add fork syscall benchmark
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [RESEND PATCH] driver/perf: arm-cmn: support ACPI probe
+To:     Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1679587838-80000-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <557691c9-2176-7e9b-1130-8091507dfdd4@os.amperecomputing.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <557691c9-2176-7e9b-1130-8091507dfdd4@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On Mon, Mar 20, 2023 at 11:57 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> This is a follow up patch for the execve bench which is actually
-> fork + execve, it makes sense to add the fork syscall benchmark
-> to compare the execve part precisely.
->
-> Some archs have no __NR_fork definition which is used only as a
-> check condition to call test_fork(), let us just define it as -1
-> to avoid build error.
->
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+在 2023/3/24 上午6:33, Ilkka Koskinen 写道:
+> 
+> Hi Jing,
+> 
+> On Thu, 23 Mar 2023, Jing Zhang wrote:
+>> ACPI companion devices call insert_resource() in platform_device_add()
+>> to claim the device resources. If the resources are claimed again before
+>> ioremap(), and the addresses of multiple resources overlap, it will
+>> return -BUSY, causing the driver to fail to load.
+>>
+>> For example, the CMN700 on my machine is set with two resources similar
+>> to CMN600, and the overlap of resource addresses makes the CMN driver
+>> unable to match my CMN700. The error log:
+> 
+> I thought that the two address ranges were only needed for CMN-600?
+> I guess, the specification doesn't explicitly forbid giving two ranges for CMN700 although the example shows just one.
+> 
+
+Hi Ilkka,
+
+Yes, on our platform, CMN700 is designed with two resources which describe PERIPHBASE and ROOTNODEBASE respectively.
+
+>>
+>> [  12.016837] arm-cmn ARMHC700:00: can't request region for resource [mem 0x40000000-0x4fffffff]
+>> [  12.028230] arm-cmn: probe of ARMHC700:00 failed with error -16
+>> [  12.036832] arm-cmn ARMHC700:01: can't request region for resource [mem 0x40040000000-0x4004fffffff]
+>> [  12.051289] arm-cmn: probe of ARMHC700:01 failed with error -16
+>>
+>> So let ACPI companion devices call arm_cmn_acpi_probe() and not claim
+>> resource again. In addition, the arm_cmn_acpi_probe() and
+>> arm_cmn_of_probe() functions are refactored to make them compatible
+>> with both CMN600 and CMN-ANY.
+>>
+>> Fixes: 61ec1d875812 ("perf/arm-cmn: Demarcate CMN-600 specifics")
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> ---
+>> drivers/perf/arm-cmn.c | 57 ++++++++++++++++++++++++++++++++------------------
+>> 1 file changed, 37 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+>> index 1deb61b..beb3b37 100644
+>> --- a/drivers/perf/arm-cmn.c
+>> +++ b/drivers/perf/arm-cmn.c
+>> @@ -2206,7 +2206,7 @@ static int arm_cmn_discover(struct arm_cmn *cmn, unsigned int rgn_offset)
+>>     return 0;
+>> }
+>>
+>> -static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+>> +static int arm_cmn_acpi_probe(struct platform_device *pdev, struct arm_cmn *cmn)
+>> {
+>>     struct resource *cfg, *root;
+>>
+>> @@ -2214,12 +2214,21 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+>>     if (!cfg)
+>>         return -EINVAL;
+>>
+>> -    root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> -    if (!root)
+>> -        return -EINVAL;
+>> +    /* If ACPI defines more than one resource, such as cmn-600, then there may be
+>> +     * a deviation between ROOTNODEBASE and PERIPHBASE, and ROOTNODEBASE can
+>> +     * be obtained from the second resource. Otherwise, it can be considered that
+>> +     * ROOT NODE BASE is PERIPHBASE. This is compatible with cmn-600 and cmn-any.
+>> +     */
+>> +    if (pdev->num_resources > 1) {
+>> +        root = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +        if (!root)
+>> +            return -EINVAL;
+>>
+>> -    if (!resource_contains(cfg, root))
+>> -        swap(cfg, root);
+>> +        if (!resource_contains(cfg, root))
+>> +            swap(cfg, root);
+>> +    } else {
+>> +        root = cfg;
+>> +    }
+>>     /*
+>>      * Note that devm_ioremap_resource() is dumb and won't let the platform
+>>      * device claim cfg when the ACPI companion device has already claimed
+>> @@ -2227,17 +2236,30 @@ static int arm_cmn600_acpi_probe(struct platform_device *pdev, struct arm_cmn *c
+>>      * appropriate name, we don't really need to do it again here anyway.
+>>      */
+>>     cmn->base = devm_ioremap(cmn->dev, cfg->start, resource_size(cfg));
+>> -    if (!cmn->base)
+>> -        return -ENOMEM;
+>> +    if (IS_ERR(cmn->base))
+>> +        return PTR_ERR(cmn->base);
+> 
+> I believe, devm_ioremap() returns NULL in case of error
+> 
+
+Yes, you are right.
+
 
 Thanks,
-Namhyung
-
-
-> ---
->  tools/arch/x86/include/uapi/asm/unistd_32.h |  4 ++--
->  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
->  tools/perf/bench/bench.h                    |  1 +
->  tools/perf/bench/syscall.c                  | 35 +++++++++++++++++++++++++++++
->  tools/perf/builtin-bench.c                  |  1 +
->  5 files changed, 42 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
-> index 2712d5e..b8ddfc4 100644
-> --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
-> +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
-> @@ -1,6 +1,6 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> -#ifndef __NR_execve
-> -#define __NR_execve 11
-> +#ifndef __NR_fork
-> +#define __NR_fork 2
->  #endif
->  #ifndef __NR_getppid
->  #define __NR_getppid 64
-> diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
-> index a6f7fe8..f70d2cad 100644
-> --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
-> +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
-> @@ -1,4 +1,7 @@
->  /* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __NR_fork
-> +#define __NR_fork 57
-> +#endif
->  #ifndef __NR_execve
->  #define __NR_execve 59
->  #endif
-> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-> index e438931..edfc257 100644
-> --- a/tools/perf/bench/bench.h
-> +++ b/tools/perf/bench/bench.h
-> @@ -23,6 +23,7 @@ int bench_sched_messaging(int argc, const char **argv);
->  int bench_sched_pipe(int argc, const char **argv);
->  int bench_syscall_basic(int argc, const char **argv);
->  int bench_syscall_getpgid(int argc, const char **argv);
-> +int bench_syscall_fork(int argc, const char **argv);
->  int bench_syscall_execve(int argc, const char **argv);
->  int bench_mem_memcpy(int argc, const char **argv);
->  int bench_mem_memset(int argc, const char **argv);
-> diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-> index fe79f7f..ea4dfc07 100644
-> --- a/tools/perf/bench/syscall.c
-> +++ b/tools/perf/bench/syscall.c
-> @@ -18,6 +18,10 @@
->  #include <unistd.h>
->  #include <stdlib.h>
->
-> +#ifndef __NR_fork
-> +#define __NR_fork -1
-> +#endif
-> +
->  #define LOOPS_DEFAULT 10000000
->  static int loops = LOOPS_DEFAULT;
->
-> @@ -31,6 +35,23 @@ static const char * const bench_syscall_usage[] = {
->         NULL
->  };
->
-> +static void test_fork(void)
-> +{
-> +       pid_t pid = fork();
-> +
-> +       if (pid < 0) {
-> +               fprintf(stderr, "fork failed\n");
-> +               exit(1);
-> +       } else if (pid == 0) {
-> +               exit(0);
-> +       } else {
-> +               if (waitpid(pid, NULL, 0) < 0) {
-> +                       fprintf(stderr, "waitpid failed\n");
-> +                       exit(1);
-> +               }
-> +       }
-> +}
-> +
->  static void test_execve(void)
->  {
->         const char *pathname = "/bin/true";
-> @@ -71,6 +92,12 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
->                 case __NR_getpgid:
->                         getpgid(0);
->                         break;
-> +               case __NR_fork:
-> +                       test_fork();
-> +                       /* Only loop 10000 times to save time */
-> +                       if (i == 10000)
-> +                               loops = 10000;
-> +                       break;
->                 case __NR_execve:
->                         test_execve();
->                         /* Only loop 10000 times to save time */
-> @@ -92,6 +119,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
->         case __NR_getpgid:
->                 name = "getpgid()";
->                 break;
-> +       case __NR_fork:
-> +               name = "fork()";
-> +               break;
->         case __NR_execve:
->                 name = "execve()";
->                 break;
-> @@ -143,6 +173,11 @@ int bench_syscall_getpgid(int argc, const char **argv)
->         return bench_syscall_common(argc, argv, __NR_getpgid);
->  }
->
-> +int bench_syscall_fork(int argc, const char **argv)
-> +{
-> +       return bench_syscall_common(argc, argv, __NR_fork);
-> +}
-> +
->  int bench_syscall_execve(int argc, const char **argv)
->  {
->         return bench_syscall_common(argc, argv, __NR_execve);
-> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> index 814e9af..d0fcc3c 100644
-> --- a/tools/perf/builtin-bench.c
-> +++ b/tools/perf/builtin-bench.c
-> @@ -53,6 +53,7 @@ static struct bench sched_benchmarks[] = {
->  static struct bench syscall_benchmarks[] = {
->         { "basic",      "Benchmark for basic getppid(2) calls",         bench_syscall_basic     },
->         { "getpgid",    "Benchmark for getpgid(2) calls",               bench_syscall_getpgid   },
-> +       { "fork",       "Benchmark for fork(2) calls",                  bench_syscall_fork      },
->         { "execve",     "Benchmark for execve(2) calls",                bench_syscall_execve    },
->         { "all",        "Run all syscall benchmarks",                   NULL                    },
->         { NULL,         NULL,                                           NULL                    },
-> --
-> 2.1.0
->
+Jing
