@@ -2,174 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC45C76195
-	for <linux-perf-users@archiver.kernel.org>; Fri, 24 Mar 2023 22:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE2EC6FD1C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Mar 2023 01:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232313AbjCXWFA (ORCPT
+        id S231860AbjCYBjk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 18:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33394 "EHLO
+        Fri, 24 Mar 2023 21:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232326AbjCXWEz (ORCPT
+        with ESMTP id S229623AbjCYBjj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 18:04:55 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7BA1F483;
-        Fri, 24 Mar 2023 15:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679695485; x=1711231485;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ZQpATWAgpEfOHRwSw8qlhWylXSqgSyK9oPTTEvQRcTA=;
-  b=lbmgLRR+LzYMHT7BH1lYPmtKbREJqhaEHWMGvhmED2q2NBIygQw5Jxx6
-   SDSGonwDldT1es6I0U72hRNhAgVGZt1cjZhsDiPTyNWqqj0VnGZq1XLwJ
-   Hk0VIoI/0RLRKJ8Vyzhg1vet63EFmSVPP7HzaEUzF6uh8rMKvbcZGp6n7
-   onBx3DfjB1s6nO5ekSQpMF/jsJhMqDuX/EHL+n3IUuDT4prBbHmjuO+fx
-   dMbGfE4Gi9Lfkagu8mZ8so/zp7kAPQJwtlfAeI641WuYK/gtRgLtjviaR
-   Bc1kClxLfgsZXUQrJf3k2ZvauympUf6hgEAkaylgyBFfHuGxJx+mFw7rI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="338616643"
-X-IronPort-AV: E=Sophos;i="5.98,289,1673942400"; 
-   d="scan'208";a="338616643"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2023 15:04:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10659"; a="806827965"
-X-IronPort-AV: E=Sophos;i="5.98,289,1673942400"; 
-   d="scan'208";a="806827965"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2023 15:04:40 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pfpWU-000Fh7-2n;
-        Fri, 24 Mar 2023 22:04:34 +0000
-Date:   Sat, 25 Mar 2023 06:03:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        linux-cxl@vger.kernel.org, peterz@infradead.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        will@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
-Message-ID: <202303250546.ijiFKIpM-lkp@intel.com>
-References: <20230324171313.18448-5-Jonathan.Cameron@huawei.com>
+        Fri, 24 Mar 2023 21:39:39 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE74C1ABCB;
+        Fri, 24 Mar 2023 18:39:37 -0700 (PDT)
+Received: by mail-io1-f50.google.com with SMTP id m22so1529097ioy.4;
+        Fri, 24 Mar 2023 18:39:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679708377; x=1682300377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ybmP8zFCYOKLUkKvZGEXOX0B0e1wfkcwTmJp+zX8qM8=;
+        b=ug3dEvNPQc31l1O9Sv4q2YYcaL5AA7qXpV9PDvxvRqVCj6JSDrlQJmUyx+dcpDVksq
+         iMIfuSO2De2N+tPqv9WOmOb1oo6rWd4jEdu0z5vKlLaZMvO/7BWqH9OSZ5tXES0x8gXA
+         HVVFTxyP+2/36o6ZTjWa9LcgWDKWlYND60rVe9+LyrWRMGAsL1QhO2WmDRtDqkpqyWND
+         0rzdj+uAsiuT2nAWGXIj8w5p/zMFKSZju3C1UNQHjKRLBnsUq3cL5hIreMW2P2HaT/4F
+         HDcVQUafUOIxiO6P7770hdvvmxuxfN4PBxR/hxqGJ+kaSh4eS8Y3ZLgPuecbZ1prJBBY
+         Ks4w==
+X-Gm-Message-State: AO0yUKWQo7cvP8Y6lHsiV6teblUT94kimmYIM3KZzVrVogC7u4YALCTP
+        b4Tp2T91lJt/7zYVHSR/vDeD9wCJ8MqvfEe36KEh0vAE
+X-Google-Smtp-Source: AK7set+7H4W86MOalG0+vU2zk//Qpwcui/nAxWzxThdWA7ydFF4O7OJOWIJRclYMvCqo5zh+0t1HwJFqsJt0fU3XbVM=
+X-Received: by 2002:a6b:5b17:0:b0:74d:1318:618c with SMTP id
+ v23-20020a6b5b17000000b0074d1318618cmr3621323ioh.10.1679708377033; Fri, 24
+ Mar 2023 18:39:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230324171313.18448-5-Jonathan.Cameron@huawei.com>
+References: <20230324032702.109964-1-yangjihong1@huawei.com>
+In-Reply-To: <20230324032702.109964-1-yangjihong1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 24 Mar 2023 18:39:25 -0700
+Message-ID: <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com>
+Subject: Re: [PATCH] perf ftrace: Make system wide the default target for
+ latency subcommand
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jonathan,
+Hello,
 
-I love your patch! Perhaps something to improve:
+On Thu, Mar 23, 2023 at 8:29 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> If no target is specified for 'latency' subcommand, the execution fails
+> because - 1 (invalid value) is written to set_ftrace_pid tracefs file.
+> Make system wide the default target, which is the same as the default
+> behavior of 'trace' subcommand.
 
-[auto build test WARNING on acme/perf/core]
-[also build test WARNING on tip/perf/core cxl/next cxl/pending linus/master v6.3-rc3 next-20230324]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I followed the convention to use -a for system-wide profiling.
+Not sure if it's ok to make it default, but I don't object. :)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-patch link:    https://lore.kernel.org/r/20230324171313.18448-5-Jonathan.Cameron%40huawei.com
-patch subject: [PATCH v2 4/5] cxl: CXL Performance Monitoring Unit driver
-config: i386-randconfig-a004 (https://download.01.org/0day-ci/archive/20230325/202303250546.ijiFKIpM-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/a04f0052a1fa10bda54569c8c7b3ab7fe60ca975
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jonathan-Cameron/cxl-Add-function-to-count-regblocks-of-a-given-type/20230325-011827
-        git checkout a04f0052a1fa10bda54569c8c7b3ab7fe60ca975
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/cxl/
+Thanks,
+Namhyung
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303250546.ijiFKIpM-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/cxl/cpmu.c:101:8: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           val = readq(base + CPMU_CAP_REG);
-                 ^
-   drivers/cxl/cpmu.c:559:3: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-                   writeq(0, base + CPMU_FREEZE_REG);
-                   ^
-   drivers/cxl/cpmu.c:578:3: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-                   writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
-                   ^
->> drivers/cxl/cpmu.c:578:10: warning: shift count is negative [-Wshift-count-negative]
-                   writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
-                          ^~~~~~~~~~~~~~
-   include/linux/bits.h:37:31: note: expanded from macro 'GENMASK'
-           (GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
-                                        ^~~~~~~~~~~~~~~
-   include/linux/bits.h:35:11: note: expanded from macro '__GENMASK'
-            (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-                    ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/cxl/cpmu.c:605:3: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-                   writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
-                   ^
-   drivers/cxl/cpmu.c:608:8: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
-                 ^
-   drivers/cxl/cpmu.c:630:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
-           ^
-   drivers/cxl/cpmu.c:648:9: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           return readq(base + CPMU_COUNTER_REG(event->hw.idx));
-                  ^
-   drivers/cxl/cpmu.c:689:8: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
-                 ^
-   drivers/cxl/cpmu.c:692:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
-           ^
-   drivers/cxl/cpmu.c:709:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(0, base + CPMU_EVENT_CAP_REG(idx));
-           ^
-   drivers/cxl/cpmu.c:761:15: error: implicit declaration of function 'readq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           overflowed = readq(base + CPMU_OVERFLOW_REG);
-                        ^
-   drivers/cxl/cpmu.c:780:2: error: implicit declaration of function 'writeq' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           writeq(overflowed, base + CPMU_OVERFLOW_REG);
-           ^
-   1 warning and 12 errors generated.
-
-
-vim +578 drivers/cxl/cpmu.c
-
-   564	
-   565	static void cpmu_pmu_disable(struct pmu *pmu)
-   566	{
-   567		struct cpmu_info *info = pmu_to_cpmu_info(pmu);
-   568		void __iomem *base = info->base;
-   569	
-   570		if (info->freeze_for_enable) {
-   571			/*
-   572			 * Whilst bits above number of counters are RsvdZ
-   573			 * they are unlikely to be repurposed given
-   574			 * number of counters is allowed to be 64 leaving
-   575			 * no reserved bits.  Hence this is only slightly
-   576			 * naughty.
-   577			 */
- > 578			writeq(GENMASK(63, 0), base + CPMU_FREEZE_REG);
-   579			return;
-   580		}
-   581	}
-   582	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+>
+> Before the fix:
+>
+>   # perf ftrace latency -T schedule
+>   failed to set ftrace pid
+>
+> After the fix:
+>
+>   # perf ftrace latency -T schedule
+>   ^C#   DURATION     |      COUNT | GRAPH                                          |
+>        0 - 1    us |          0 |                                                |
+>        1 - 2    us |          0 |                                                |
+>        2 - 4    us |          0 |                                                |
+>        4 - 8    us |       2828 | ####                                           |
+>        8 - 16   us |      23953 | ########################################       |
+>       16 - 32   us |        408 |                                                |
+>       32 - 64   us |        318 |                                                |
+>       64 - 128  us |          4 |                                                |
+>      128 - 256  us |          3 |                                                |
+>      256 - 512  us |          0 |                                                |
+>      512 - 1024 us |          1 |                                                |
+>        1 - 2    ms |          4 |                                                |
+>        2 - 4    ms |          0 |                                                |
+>        4 - 8    ms |          0 |                                                |
+>        8 - 16   ms |          0 |                                                |
+>       16 - 32   ms |          0 |                                                |
+>       32 - 64   ms |          0 |                                                |
+>       64 - 128  ms |          0 |                                                |
+>      128 - 256  ms |          4 |                                                |
+>      256 - 512  ms |          2 |                                                |
+>      512 - 1024 ms |          0 |                                                |
+>        1 - ...   s |          0 |                                                |
+>
+> Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index d7fe00f66b83..fb1b66ef2e16 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -1228,10 +1228,12 @@ int cmd_ftrace(int argc, const char **argv)
+>                 goto out_delete_filters;
+>         }
+>
+> +       /* Make system wide (-a) the default target. */
+> +       if (!argc && target__none(&ftrace.target))
+> +               ftrace.target.system_wide = true;
+> +
+>         switch (subcmd) {
+>         case PERF_FTRACE_TRACE:
+> -               if (!argc && target__none(&ftrace.target))
+> -                       ftrace.target.system_wide = true;
+>                 cmd_func = __cmd_ftrace;
+>                 break;
+>         case PERF_FTRACE_LATENCY:
+> --
+> 2.30.GIT
+>
