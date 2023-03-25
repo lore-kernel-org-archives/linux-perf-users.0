@@ -2,128 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E051EC6FD1F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Mar 2023 03:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD94C6FD1F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Mar 2023 03:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjCYDTI (ORCPT
+        id S230125AbjCYD3J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 24 Mar 2023 23:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54822 "EHLO
+        Fri, 24 Mar 2023 23:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjCYDTH (ORCPT
+        with ESMTP id S229578AbjCYD3H (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 24 Mar 2023 23:19:07 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B604BBDEF
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Mar 2023 20:19:06 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id d14so1578856ion.9
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Mar 2023 20:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679714346; x=1682306346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JLEvDX9LEMNNnvoz2PkzPHceAuTxd9uiyhqMMnTdWQc=;
-        b=luWEj+NDIEI8q137MKDZm3d8sh2CGvhMRwU9reujcm9gC1kwPjsG2m0acoEJ+OAEuZ
-         CEDrVG7gZvEeAqJpmgKLL81xpnkb/a3VxkhSTJNufLnfjKoW07wrvLKHvqHuODXTh0BF
-         8THuSAU2gKYq1f8w//UffcHMyxT+dOp7q7ET1wxQR1kLZemLT1b3KT04CRdvnKRN9Z4e
-         Qq7zWEUJnWb7QcPG5ivn54R9Gp/vwczJBSfBsxPFMMrUioPesyMts6KjAu3KlU58swYD
-         1BTtp1kofGCokyoDJnpRl/HVmwukY9c6EG2q1cPuQy66e+QOjD0HOJUcDZMsuXT2G7C+
-         5Ryg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679714346; x=1682306346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JLEvDX9LEMNNnvoz2PkzPHceAuTxd9uiyhqMMnTdWQc=;
-        b=FK2TmzvC3gX8W4KM6P0oEbh06PEbEiMCzcSfzd4PMR6bZiduYbQLf/fD+l0NCQvk8c
-         04nPFq1MWf77SS0SKO2NGcBI1qzvY9mF0LaqFpnPzXIjrUqa4WFQhLURm0s896qaIFq6
-         8LEch8HYDIu9IHDDFj13BteG5lVOLwYdR0UyuTAQqyezHHYOa4IUTiaDY6hClSf0vmBF
-         eudfexgMFwsqS/GEyeRazFJPGAVvTT1YYrAtbicpLMz1LwJNSmGG5f00oz4TyUo8joZc
-         9WlFcpGIlyyBWVn+4KWdAAcPTYY93YRuSiMY6o0uKeKuPDcXZeSPs6uh9KYv9yFiOU4h
-         PTyg==
-X-Gm-Message-State: AO0yUKUbmXI4XqQApXc00IlrXeQusLHRpRx0gtG6r98RvJyjbhO8iih4
-        n6VUN8KRjpOZsaeujuk1k6u85wODUJD5h245WkQjc/0l
-X-Google-Smtp-Source: AK7set+ISFAhexxzqrbNwbdkKXXTA8O5/XdN8djgsL75N6dA3YQaqOyTT4jEVMcmJ3xHJ+Tl6uUxiNPSLXL4v7fY4j0=
-X-Received: by 2002:a6b:720b:0:b0:74c:bc14:46a1 with SMTP id
- n11-20020a6b720b000000b0074cbc1446a1mr3785795ioc.4.1679714346003; Fri, 24 Mar
- 2023 20:19:06 -0700 (PDT)
+        Fri, 24 Mar 2023 23:29:07 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA6A212E;
+        Fri, 24 Mar 2023 20:29:06 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Pk4KC3wvxzrWd5;
+        Sat, 25 Mar 2023 11:27:59 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sat, 25 Mar 2023 11:29:02 +0800
+Subject: Re: [PATCH] perf ftrace: Make system wide the default target for
+ latency subcommand
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230324032702.109964-1-yangjihong1@huawei.com>
+ <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <b17b5edf-44bb-4734-c42a-8a498372ac8a@huawei.com>
+Date:   Sat, 25 Mar 2023 11:29:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <CAGKjw9KHDnVgRz5bstJYkq4t0-bT5fvkuQZbEB48d-8jo4Q00g@mail.gmail.com>
- <20230303193058.21274-1-patrice.duroux@gmail.com> <CAP-5=fV5h9AEf3V1taXA++frs=AAPeuPbd=Hb0koVjKfGpQNsw@mail.gmail.com>
- <CAP-5=fUy_mLJ2-z89dc0vro+1aqWFn-CrvqZA1Ji3etPXg+RTg@mail.gmail.com> <ZB4DdJ14nz84CTCl@kernel.org>
-In-Reply-To: <ZB4DdJ14nz84CTCl@kernel.org>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Fri, 24 Mar 2023 20:18:54 -0700
-Message-ID: <CAM9d7chpa1rv1P6=a2ESjKXytD3PnuS-Vcy2OeTWLxc0qNRpug@mail.gmail.com>
-Subject: Re: [PATCH 1/2] replace 2&>1 by 2>&1
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Patrice Duroux <patrice.duroux@gmail.com>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Fri, Mar 24, 2023 at 1:19=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Thu, Mar 23, 2023 at 11:03:49AM -0700, Ian Rogers escreveu:
-> > On Mon, Mar 6, 2023 at 1:46=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> > >
-> > > On Fri, Mar 3, 2023 at 11:31=E2=80=AFAM Patrice Duroux <patrice.durou=
-x@gmail.com> wrote:
-> > > >
-> > > > Signed-off-by: Patrice Duroux <patrice.duroux@gmail.com>
-> > >
-> > > Fixes: ade1d0307b2f ("perf offcpu: Update offcpu test for child proce=
-ss")
-> > > Acked-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks,
-> > > Ian
-> >
-> > Arnaldo, could we pick this up?
->
-> Yeah, but next time please write in the subject line that its a patch
-> for the perf tools :-)
+On 2023/3/25 9:39, Namhyung Kim wrote:
+> Hello,
+> 
+> On Thu, Mar 23, 2023 at 8:29 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> If no target is specified for 'latency' subcommand, the execution fails
+>> because - 1 (invalid value) is written to set_ftrace_pid tracefs file.
+>> Make system wide the default target, which is the same as the default
+>> behavior of 'trace' subcommand.
+> 
+> I followed the convention to use -a for system-wide profiling.
+> Not sure if it's ok to make it default, but I don't object. :)
+> 
+Thanks for the reply.
 
-Oops, it was me who messed this up.. sorry about that.
-At least now I know where the file named "1" is created. :)
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Yes, "perf ftrace latency" supports -a for system wide profiles.
+Because "perf ftrace trace" defaults to system wide when no target is 
+specified. Therefore, I sent the patch to check whether "latency" is 
+consistent with the behavior of the "trace". :)
 
 Thanks,
-Namhyung
+Yang.
 
-> >
-> > > > ---
-> > > >  tools/perf/tests/shell/record_offcpu.sh | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/t=
-ests/shell/record_offcpu.sh
-> > > > index e01973d4e0fb..f062ae9a95e1 100755
-> > > > --- a/tools/perf/tests/shell/record_offcpu.sh
-> > > > +++ b/tools/perf/tests/shell/record_offcpu.sh
-> > > > @@ -65,7 +65,7 @@ test_offcpu_child() {
-> > > >
-> > > >    # perf bench sched messaging creates 400 processes
-> > > >    if ! perf record --off-cpu -e dummy -o ${perfdata} -- \
-> > > > -    perf bench sched messaging -g 10 > /dev/null 2&>1
-> > > > +    perf bench sched messaging -g 10 > /dev/null 2>&1
-> > > >    then
-> > > >      echo "Child task off-cpu test [Failed record]"
-> > > >      err=3D1
-> > > > --
-> > > > 2.39.2
-> > > >
->
-> --
->
-> - Arnaldo
+> Thanks,
+> Namhyung
+> 
+>>
+>> Before the fix:
+>>
+>>    # perf ftrace latency -T schedule
+>>    failed to set ftrace pid
+>>
+>> After the fix:
+>>
+>>    # perf ftrace latency -T schedule
+>>    ^C#   DURATION     |      COUNT | GRAPH                                          |
+>>         0 - 1    us |          0 |                                                |
+>>         1 - 2    us |          0 |                                                |
+>>         2 - 4    us |          0 |                                                |
+>>         4 - 8    us |       2828 | ####                                           |
+>>         8 - 16   us |      23953 | ########################################       |
+>>        16 - 32   us |        408 |                                                |
+>>        32 - 64   us |        318 |                                                |
+>>        64 - 128  us |          4 |                                                |
+>>       128 - 256  us |          3 |                                                |
+>>       256 - 512  us |          0 |                                                |
+>>       512 - 1024 us |          1 |                                                |
+>>         1 - 2    ms |          4 |                                                |
+>>         2 - 4    ms |          0 |                                                |
+>>         4 - 8    ms |          0 |                                                |
+>>         8 - 16   ms |          0 |                                                |
+>>        16 - 32   ms |          0 |                                                |
+>>        32 - 64   ms |          0 |                                                |
+>>        64 - 128  ms |          0 |                                                |
+>>       128 - 256  ms |          4 |                                                |
+>>       256 - 512  ms |          2 |                                                |
+>>       512 - 1024 ms |          0 |                                                |
+>>         1 - ...   s |          0 |                                                |
+>>
+>> Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>   tools/perf/builtin-ftrace.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+>> index d7fe00f66b83..fb1b66ef2e16 100644
+>> --- a/tools/perf/builtin-ftrace.c
+>> +++ b/tools/perf/builtin-ftrace.c
+>> @@ -1228,10 +1228,12 @@ int cmd_ftrace(int argc, const char **argv)
+>>                  goto out_delete_filters;
+>>          }
+>>
+>> +       /* Make system wide (-a) the default target. */
+>> +       if (!argc && target__none(&ftrace.target))
+>> +               ftrace.target.system_wide = true;
+>> +
+>>          switch (subcmd) {
+>>          case PERF_FTRACE_TRACE:
+>> -               if (!argc && target__none(&ftrace.target))
+>> -                       ftrace.target.system_wide = true;
+>>                  cmd_func = __cmd_ftrace;
+>>                  break;
+>>          case PERF_FTRACE_LATENCY:
+>> --
+>> 2.30.GIT
+>>
+> .
+> 
