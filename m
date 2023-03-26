@@ -2,136 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A41C6FD1C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 25 Mar 2023 10:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45748C77B62
+	for <linux-perf-users@archiver.kernel.org>; Sun, 26 Mar 2023 19:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbjCYKWF (ORCPT
+        id S229866AbjCZT2x (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 25 Mar 2023 06:22:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
+        Sun, 26 Mar 2023 15:28:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjCYKWE (ORCPT
+        with ESMTP id S229506AbjCZT2x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 25 Mar 2023 06:22:04 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071E486AA;
-        Sat, 25 Mar 2023 03:22:01 -0700 (PDT)
-Received: from dggpeml500019.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PkFVQ576QzKncx;
-        Sat, 25 Mar 2023 18:21:34 +0800 (CST)
-Received: from [10.67.101.98] (10.67.101.98) by dggpeml500019.china.huawei.com
- (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Sat, 25 Mar
- 2023 18:21:59 +0800
-Message-ID: <cf1f8c1f-90cb-9319-91e0-a8f4339547e6@hisilicon.com>
-Date:   Sat, 25 Mar 2023 18:21:59 +0800
+        Sun, 26 Mar 2023 15:28:53 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BAF59D8;
+        Sun, 26 Mar 2023 12:28:51 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id p15so7940783ybl.9;
+        Sun, 26 Mar 2023 12:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679858930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GGoqSojZH/9f2pXTveP8tBPP8ZFTICSBZJCZUtmlG0c=;
+        b=FEL2vNbZzXmhtX5A4PbxmqoBt+gIItbE8G4MYObzwezMm3TC97WjPQxfbhRyXOoSHO
+         8Yw9GEmnNWgekRyg0KUO1b75OACsXLQks2WGUU60DwjG7U/rzuvrT2uz8fIGfnUFZ0Yd
+         5S1kTq1cBATn/X/z2Riua+kg0FAXGEOR0UR0H2EIkh0DIAi0zq4cTc34sS1wMT/dS43F
+         eLMeipcYrg9g42vt+rkBsCHXHtPYZd0bk+N4dCy1yJlw60Ds6o4OBEZSOore82OxtM1w
+         sMqt39uYl+lj/QN5XVgURyYMYF/8LkoZRzHWi7HmUDee+NJQMx0f8iMZbuS2P9V5x7JY
+         xrzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679858930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GGoqSojZH/9f2pXTveP8tBPP8ZFTICSBZJCZUtmlG0c=;
+        b=qIrS3PFzMNZIUH9UaQl2O7sjdAUvYGUemMIaSNeTNwIGQ76XgywWRIFq5lcBlxLsgb
+         QwK3bmtPisUzvN7iCwOPaHLXp1PK0XfVgjO4gJgSTtPAmqmNWiqQtBib+ZNJJxEgg6S/
+         P6dzlJ0WHgRjRqoTtfMM5mfE/OR0dxNsk0U4KWUY6d0RdG0SSWTe+Cx3hoYl+YZtu0HH
+         yqpD0/tOVlx1JxrDqoUelH5d7PJss+yK4joSB4QVEB97xooNdyl1WZJN/oBu1AWEYhD+
+         5sWe1Wm851WlkbVIdo0lJWl/eVoI2qcG3FsT3PQV5RCs/sDDlDIXDH4u8w/MiixihtWa
+         fpEw==
+X-Gm-Message-State: AAQBX9dd0L3SuEt7opuUaSUB7ENhbgVYNB2Gg0ZE3cyNOHrSC3Zowcvj
+        B4AokMu+DF0gjWcix6apXOpxJSDuP1hqJc20wHw=
+X-Google-Smtp-Source: AKy350ZqrMEue00ANUn1tgzuPk4ToglTa+Veyc3QywBb5Oe/4uEkJbhTQrUUveBrMI3bliRnRcuEQkdY+85XS6umWj4=
+X-Received: by 2002:a05:6902:120f:b0:b73:caa7:f05e with SMTP id
+ s15-20020a056902120f00b00b73caa7f05emr5706350ybu.2.1679858930371; Sun, 26 Mar
+ 2023 12:28:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [RFC PATCH v1 2/4] drivers/perf: hisi: Add driver support for
- HiSilicon PMCU
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <corbet@lwn.net>, <zhangshaokun@hisilicon.com>,
-        <shenyang39@huawei.com>, <hejunhao3@huawei.com>,
-        <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <suntao25@huawei.com>, <jiazhao4@hisilicon.com>,
-        <linuxarm@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
- <20230206065146.645505-3-zhanjie9@hisilicon.com>
- <20230317145232.00001c38@Huawei.com>
-From:   Jie Zhan <zhanjie9@hisilicon.com>
-In-Reply-To: <20230317145232.00001c38@Huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.98]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500019.china.huawei.com (7.185.36.137)
-X-CFilter-Loop: Reflected
+References: <20230305205628.27385-1-ubizjak@gmail.com> <20230305205628.27385-2-ubizjak@gmail.com>
+ <ZB2v+avNt52ac/+w@FVFF77S0Q05N> <CAFULd4ZCgxDYnyy--qdgKoAo_y7MbNSaQdbdBFefnFuMoM2OYw@mail.gmail.com>
+ <ZB3MR8lGbnea9ui6@FVFF77S0Q05N> <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
+In-Reply-To: <ZB3QtDYuWdpiD5qk@FVFF77S0Q05N>
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Sun, 26 Mar 2023 21:28:38 +0200
+Message-ID: <CAFULd4aFUF5k=QJD8tDp4qzm2iBF7=rNvp1SJWrg44X5hTFxtQ@mail.gmail.com>
+Subject: Re: [PATCH 01/10] locking/atomic: Add missing cast to try_cmpxchg() fallbacks
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 17/03/2023 22:52, Jonathan Cameron wrote:
-> On Mon, 6 Feb 2023 14:51:44 +0800
-> Jie Zhan <zhanjie9@hisilicon.com> wrote:
+On Fri, Mar 24, 2023 at 5:33=E2=80=AFPM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
 >
->> HiSilicon Performance Monitor Control Unit (PMCU) is a device that offloads
->> PMU accesses from CPUs, handling the configuration, event switching, and
->> counter reading of core PMUs on Kunpeng SoC. It facilitates fine-grained
->> and multi-PMU-event CPU profiling, in which scenario the current 'perf'
->> scheme may lose events or drop sampling frequency. With PMCU, users can
->> reliably obtain the data of up to 240 PMU events with the sample interval
->> of events down to 1ms, while the software overhead of accessing PMUs, as
->> well as its impact on target workloads, is reduced.
->>
->> This driver enables the usage of PMCU through the perf_event framework.
->> PMCU is registered as a PMU device and utilises the AUX buffer to dump data
->> directly. Users can start PMCU sampling through 'perf-record'. Event
->> numbers are passed by a sysfs interface.
->>
->> Signed-off-by: Jie Zhan <zhanjie9@hisilicon.com>
-> Hi Jie,
+> On Fri, Mar 24, 2023 at 04:14:22PM +0000, Mark Rutland wrote:
+> > On Fri, Mar 24, 2023 at 04:43:32PM +0100, Uros Bizjak wrote:
+> > > On Fri, Mar 24, 2023 at 3:13=E2=80=AFPM Mark Rutland <mark.rutland@ar=
+m.com> wrote:
+> > > >
+> > > > On Sun, Mar 05, 2023 at 09:56:19PM +0100, Uros Bizjak wrote:
+> > > > > Cast _oldp to the type of _ptr to avoid incompatible-pointer-type=
+s warning.
+> > > >
+> > > > Can you give an example of where we are passing an incompatible poi=
+nter?
+> > >
+> > > An example is patch 10/10 from the series, which will fail without
+> > > this fix when fallback code is used. We have:
+> > >
+> > > -       } while (local_cmpxchg(&rb->head, offset, head) !=3D offset);
+> > > +       } while (!local_try_cmpxchg(&rb->head, &offset, head));
+> > >
+> > > where rb->head is defined as:
+> > >
+> > > typedef struct {
+> > >    atomic_long_t a;
+> > > } local_t;
+> > >
+> > > while offset is defined as 'unsigned long'.
+> >
+> > Ok, but that's because we're doing the wrong thing to start with.
+> >
+> > Since local_t is defined in terms of atomic_long_t, we should define th=
+e
+> > generic local_try_cmpxchg() in terms of atomic_long_try_cmpxchg(). We'l=
+l still
+> > have a mismatch between 'long *' and 'unsigned long *', but then we can=
+ fix
+> > that in the callsite:
+> >
+> >       while (!local_try_cmpxchg(&rb->head, &(long *)offset, head))
 >
-> A few minor comments inline.
-> Whilst I looked at this internally, that was a while back so I've
-> found a few new things to point out in what I think is a pretty good/clean driver.
-> The main thing here is the RFC questions you've raised in the cover letter
-> of course - particularly the one around mediating who has the counters between
-> this and the normal PMU driver.
+> Sorry, that should be:
 >
-> Thanks,
+>         while (!local_try_cmpxchg(&rb->head, (long *)&offset, head))
+
+The fallbacks are a bit more complicated than above, and are different
+from atomic_try_cmpxchg.
+
+Please note in patch 2/10, the falbacks when arch_try_cmpxchg_local
+are not defined call arch_cmpxchg_local. Also in patch 2/10,
+try_cmpxchg_local is introduced, where it calls
+arch_try_cmpxchg_local. Targets (and generic code) simply define (e.g.
+:
+
+#define local_cmpxchg(l, o, n) \
+       (cmpxchg_local(&((l)->a.counter), (o), (n)))
++#define local_try_cmpxchg(l, po, n) \
++       (try_cmpxchg_local(&((l)->a.counter), (po), (n)))
+
+which is part of the local_t API. Targets should either define all
+these #defines, or none. There are no partial fallbacks as is the case
+with atomic_t.
+
+The core of the local_h API is in the local.h header. If the target
+doesn't define its own local.h header, then asm-generic/local.h is
+used that does exactly what you propose above regarding the usage of
+atomic functions.
+
+OTOH, when the target defines its own local.h, then the above
+target-dependent #define path applies. The target should define its
+own arch_try_cmpxchg_local, otherwise a "generic" target-dependent
+fallback that calls target arch_cmpxchg_local applies. In the case of
+x86, patch 9/10 enables new instruction by defining
+arch_try_cmpxchg_local.
+
+FYI, the patch sequence is carefully chosen so that x86 also exercises
+fallback code between different patches in the series.
+
+Targets are free to define local_t to whatever they like, but for some
+reason they all define it to:
+
+typedef struct {
+    atomic_long_t a;
+} local_t;
+
+so they have to dig the variable out of the struct like:
+
+#define local_cmpxchg(l, o, n) \
+     (cmpxchg_local(&((l)->a.counter), (o), (n)))
+
+Regarding the mismatch of 'long *' vs 'unsigned long *': x86
+target-specific code does for try_cmpxchg:
+
+#define __raw_try_cmpxchg(_ptr, _pold, _new, size, lock) \
+({ \
+bool success; \
+__typeof__(_ptr) _old =3D (__typeof__(_ptr))(_pold); \
+__typeof__(*(_ptr)) __old =3D *_old; \
+__typeof__(*(_ptr)) __new =3D (_new); \
+
+so, it *does* cast the "old" pointer to the type of "ptr". The generic
+code does *not*. This difference is dangerous, since the compilation
+of some code involving try_cmpxchg will compile OK for x86 but will
+break for other targets that use try_cmpxchg fallback templates (I was
+the unlucky one that tripped on this in the past). Please note that
+this problem is not specific to the proposed local_try_cmpxchg series,
+but affects the existing try_cmpxchg API.
+
+Also, I don't think that "fixing" callsites is the right thing to do.
+The generic code should follow x86 and cast the "old" pointer to the
+type of "ptr" inside the fallback.
+
+> The fundamenalthing I'm trying to say is that the
+> atomic/atomic64/atomic_long/local/local64 APIs should be type-safe, and f=
+or
+> their try_cmpxchg() implementations, the type signature should be:
 >
-> Jonathan
-Hi Jonathan,
+>         ${atomictype}_try_cmpxchg(${atomictype} *ptr, ${inttype} *old, ${=
+inttype} new)
 
-Many thanks for the review again.
+This conversion should be performed also for the cmpxchg family of
+functions, if desired at all. try_cmpxchg fallback is just cmpxchg
+with some extra code around.
 
-Happy to accept all the comments. I have updated the driver based on them.
-
-One reply below.
-
-Jie
-
-
-...
->> +static const struct attribute_group hisi_pmcu_format_attr_group = {
->> +	.name = "format",
->> +	.attrs = hisi_pmcu_format_attrs,
->> +};
->> +
->> +static ssize_t monitored_cpus_show(struct device *dev,
->> +				   struct device_attribute *attr, char *buf)
->> +{
->> +	struct hisi_pmcu *hisi_pmcu = to_hisi_pmcu(dev_get_drvdata(dev));
->> +
->> +	return sysfs_emit(buf, "%d-%d\n",
->> +			  cpumask_first(&hisi_pmcu->cpus),
->> +			  cpumask_last(&hisi_pmcu->cpus));
-> What does this do about offline CPUs?
-> Should it include them or not?
-PMCU takes care of offline CPUs as well, and the event counts from 
-offline CPUs
-should show as zeroes in the output.
-
-hisi_pmcu->cpus contains only the online CPUs monitored by the PMCU,
-so something should be improved with the "monitored_cpus" interface here.
-
-"monitored_cpus" should actually show alll the online/offline CPUs 
-monitored,
-or, if it is meant to show only online CPUs, it show be a comma 
-separated list
-representing the hisi_pmcu->cpus mask rather than a range that may ignore
-some offline CPUs in the middle.
-
-Will fix this in V2.
-
+Thanks,
+Uros.
