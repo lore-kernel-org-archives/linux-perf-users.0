@@ -2,24 +2,24 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C79C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 02:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798D5C7619A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 02:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231971AbjC0Cqc (ORCPT
+        id S232021AbjC0Cqf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 26 Mar 2023 22:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57472 "EHLO
+        Sun, 26 Mar 2023 22:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbjC0Cq3 (ORCPT
+        with ESMTP id S231960AbjC0Cqa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 26 Mar 2023 22:46:29 -0400
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A8444BD;
-        Sun, 26 Mar 2023 19:46:27 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VeeqFPR_1679885183;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VeeqFPR_1679885183)
+        Sun, 26 Mar 2023 22:46:30 -0400
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB5A44B5;
+        Sun, 26 Mar 2023 19:46:29 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VeeqFQ2_1679885185;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VeeqFQ2_1679885185)
           by smtp.aliyun-inc.com;
-          Mon, 27 Mar 2023 10:46:24 +0800
+          Mon, 27 Mar 2023 10:46:26 +0800
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Shuai Xue <xueshuai@linux.alibaba.com>,
         Zhuo Song <zhuo.song@linux.alibaba.com>,
         Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH RFC 1/4] driver/perf: Add identifier sysfs file for CMN
-Date:   Mon, 27 Mar 2023 10:46:09 +0800
-Message-Id: <1679885172-95021-2-git-send-email-renyu.zj@linux.alibaba.com>
+Subject: [PATCH RFC 3/4] driver/perf: Add identifier sysfs file for Yitian 710 DDR
+Date:   Mon, 27 Mar 2023 10:46:11 +0800
+Message-Id: <1679885172-95021-4-git-send-email-renyu.zj@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
 References: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
@@ -49,69 +49,53 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 To allow userspace to identify the specific implementation of the device,
 add an "identifier" sysfs file.
 
-The perf tool can match the arm CMN metric through the identifier.
+The perf tool can match the Yitian 710 DDR metric through the identifier.
 
 Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 ---
- drivers/perf/arm-cmn.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/perf/alibaba_uncore_drw_pmu.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index c968986..0c138ad 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -1168,10 +1168,53 @@ static ssize_t arm_cmn_cpumask_show(struct device *dev,
- 	.attrs = arm_cmn_cpumask_attrs,
+diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
+index a7689fe..6639a57 100644
+--- a/drivers/perf/alibaba_uncore_drw_pmu.c
++++ b/drivers/perf/alibaba_uncore_drw_pmu.c
+@@ -236,10 +236,37 @@ static ssize_t ali_drw_pmu_cpumask_show(struct device *dev,
+ 	.attrs = ali_drw_pmu_cpumask_attrs,
  };
  
-+static ssize_t arm_cmn_identifier_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
++static ssize_t ali_drw_pmu_identifier_show(struct device *dev,
++					struct device_attribute *attr,
++					char *page)
 +{
-+	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
-+	if (cmn->model == CMN700) {
-+		return sysfs_emit(buf, "%s\n", "CMN700");
-+	}
-+	else if (cmn->model == CMN650) {
-+		return sysfs_emit(buf, "%s\n", "CMN650");
-+	}
-+	else if (cmn->model == CMN600) {
-+		return sysfs_emit(buf, "%s\n", "CMN600");
-+	}
-+	else if (cmn->model == CI700) {
-+		return sysfs_emit(buf, "%s\n", "CI700");
-+	}
-+	return sysfs_emit(buf, "%s\n", "UNKNOWN");
++	return sysfs_emit(page, "%s\n", "ali_drw_yitian710");
 +}
 +
-+static umode_t arm_cmn_identifier_attr_visible(struct kobject *kobj,
-+		struct attribute *attr, int n)
++static umode_t ali_drw_pmu_identifier_attr_visible(struct kobject *kobj,
++						struct attribute *attr, int n)
 +{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
-+	if (cmn->model <= 0)
-+		return 0;
 +	return attr->mode;
-+};
++}
 +
-+static struct device_attribute arm_cmn_identifier_attr =
-+__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
++static struct device_attribute ali_drw_pmu_identifier_attr =
++	__ATTR(identifier, 0444, ali_drw_pmu_identifier_show, NULL);
 +
-+static struct attribute *arm_cmn_identifier_attrs[] = {
-+	&arm_cmn_identifier_attr.attr,
++static struct attribute *ali_drw_pmu_identifier_attrs[] = {
++	&ali_drw_pmu_identifier_attr.attr,
 +	NULL,
 +};
 +
-+static struct attribute_group arm_cmn_identifier_attr_group = {
-+	.attrs = arm_cmn_identifier_attrs,
-+	.is_visible = arm_cmn_identifier_attr_visible,
++static const struct attribute_group ali_drw_pmu_identifier_attr_group = {
++	.attrs = ali_drw_pmu_identifier_attrs,
++	.is_visible = ali_drw_pmu_identifier_attr_visible,
 +};
 +
- static const struct attribute_group *arm_cmn_attr_groups[] = {
- 	&arm_cmn_event_attrs_group,
- 	&arm_cmn_format_attrs_group,
- 	&arm_cmn_cpumask_attr_group,
-+	&arm_cmn_identifier_attr_group,
- 	NULL
+ static const struct attribute_group *ali_drw_pmu_attr_groups[] = {
+ 	&ali_drw_pmu_events_attr_group,
+ 	&ali_drw_pmu_cpumask_attr_group,
+ 	&ali_drw_pmu_format_group,
++	&ali_drw_pmu_identifier_attr_group,
+ 	NULL,
  };
  
 -- 
