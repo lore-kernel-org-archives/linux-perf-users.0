@@ -2,169 +2,340 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0128C7619A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 12:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA0C76195
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 13:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232727AbjC0M0D (ORCPT
+        id S229892AbjC0NJQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 08:26:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55272 "EHLO
+        Mon, 27 Mar 2023 09:09:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232661AbjC0M0B (ORCPT
+        with ESMTP id S229456AbjC0NJP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 08:26:01 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2310040E4
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 05:25:58 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5419fb7d6c7so85409647b3.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 05:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679919957;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=F7KwqhB1vW6BH51xVF/fdSxFumYyZJBQssq1TBoQEZ0=;
-        b=jCqIKrYQ++vHclnoR5Z3K24d2RWJsLIECqFtVTdzzcrDXBDreTS1wY/do4t4ygkj+t
-         VkKmmZ8uMaraSUPH6nOxeyiS0dd8WyRGl77HGeuXCH9grkd0W1TvaOX6sECVOkcW4SaR
-         rpNJ+jxSS/AiFxpvfttBf2AqYTSAw9y2Up4aHbAixoLmzK7M+iJtHUw1KhUv6tvi9f9g
-         s7WDDWFxbjrwu/utdcBqwr/TV9vcVAzjC3Yd2WYcIMA5Ry1L1Jr4XiJ7TUguvI0sTInW
-         el7KY4qA5XdTokqXBNAY9fUwqnZTY8b8CHwD7/TRfZI2lrikL3s2VJykV8utOYJUMu98
-         dkNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679919957;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F7KwqhB1vW6BH51xVF/fdSxFumYyZJBQssq1TBoQEZ0=;
-        b=6JHYq/VKoXdVGqfCB2FJ9Kbd/bs7RnKvfj5XLI0iDM4bvg87h5kutPqaT5aP4Tr/GD
-         aYhu2JIhMbNM9MGW2slxrhQQKMYjZIKt7EmYmYSP8VnL6ttJ3KM1SnjkfszK4aGY8rc7
-         8tnUEHQEGq+QSNxEpiqamFkrK92AqU8AIow0pnhba6Ju5ai99ry3jp6V9UtgfMgiYIVB
-         fWxcXknvMgTzSrJpm6AZuOGLwJf7wvok6ppqDOWtn3UaTZSAGZnaz5e9En4w5Erdei09
-         AwuXGey+ErgpetBrYoRI07PsgxXwlgY/9OqM14tXP8gFGZuF0KS88VNaYrFW5wP4xv/0
-         jdJw==
-X-Gm-Message-State: AAQBX9cf/jvvE2HR6Io7+Kb3D2MAlPuHbaAECr0dY7J9dENQLE68xp+E
-        HLzrJGbb4N5RcaboHJwLsrswBszGgcWXpjPilCnAyna/qmlb+7iya7ws1SrxiX7Ar4rCyIYlo1p
-        iY/FS/Ar/MdGoYies3kQl0JDlt5m+Cn8kTeQq1w0IloGwiW7tZJVeyHPu+iuwBGpdDiN/YnIUov
-        b12SEA+e7ZhZg5
-X-Google-Smtp-Source: AKy350bG5KKjQlAp39nyxZ43kANITFetPAQJjpaH4v1idSB6TScOvV9AiJiVJPYIh2UdvjCxwWmSvlrTJoa78dMLfw==
-X-Received: from peternewman0.zrh.corp.google.com ([2a00:79e0:9d:6:4a95:5d5f:79e2:4a49])
- (user=peternewman job=sendgmr) by 2002:a05:6902:70d:b0:b45:5cbe:48b3 with
- SMTP id k13-20020a056902070d00b00b455cbe48b3mr7254180ybt.0.1679919957281;
- Mon, 27 Mar 2023 05:25:57 -0700 (PDT)
-Date:   Mon, 27 Mar 2023 14:25:27 +0200
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Message-ID: <20230327122527.3913496-1-peternewman@google.com>
-Subject: [PATCH v4] arm64: pmuv3: dynamically map PERF_COUNT_HW_BRANCH_INSTRUCTIONS
-From:   Peter Newman <peternewman@google.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        will@kernel.org, catalin.marinas@arm.com, eranian@google.com,
-        Peter Newman <peternewman@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 27 Mar 2023 09:09:15 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFB5DF;
+        Mon, 27 Mar 2023 06:09:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WZSeSwqxs7ngYjYUjJBvWBI93nBZd84oX44u3RLC6Q6fG6E+CYHSLPebYusZ3qH9z+oTsjAXa7Gpwh3B26RwWzoUyGYvj4Gb4I3vaWSfojr0CZEhLOkRqua8+S9i5+nlBcNUJDqDdT+EbXBXpoHXnr/0hS0iOHCsz/d1cRrPeCVcqiluvJABVOuYPmU4Tjo4GYjZiyQ8DDVjbr6ZpjsIqHGGyppt52fcpYGIwTtDOSe9ebgDFaz8CfsSwosEgaB60MC3QjQGFpL01m+V5PXRTIsczwJxvcZ5rMwxNyHD0bybj3ep7yGXGvODTgUVh7up150BemiXBw3W328qajgCeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LXwSz+8trieUcjyZhu4nKh9ppzLgxoqpvpONf31AIaI=;
+ b=gKWTL2c5lwE9SH5j54YTNFK/0V0RkWXxgL6RDNjiYYCI5t1qOJwAajSibg5RbqpfX4DMzBKMIaRqOdiurFGI1hVEfqHU1Usvc4BCuSpOFvqRalYWnqgVaSpgTrINSTQ+WEJq3dLwNZ4Q1ALq1UIQ4zxE+ZEexJqs74p3AxuxNQez2aXHYvV783mrOezgUBcHvKxCqfK4WvL9RVNStYdkELPOFiqO4j8gc332KbHjWmajZNuzpKzO+hzHS4W9oMKeox1/VaWcnHBGa688neeZy8YIsWQ2o0AJNJz/jLokDKgenB5Wois6De0sPS2mwp99Rj6hvN3wyJnPJJpeXE+isg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LXwSz+8trieUcjyZhu4nKh9ppzLgxoqpvpONf31AIaI=;
+ b=zBNgp5gLCrrcN1VQrxJB7ZpJU0tyW1vCpvfMNjEryHn57S47s8Vt8Q1LB3tbDyXQWxtTxygscbT8TCG2fGXlrSj+AmSFQ7qOEW2qRp3zhXEEC8NgsoEHq6rasD4gNEq/tOZ7bgfVv2/C/OWhWR1SS7yTG0CXpdqhVhpos87LFxs=
+Received: from BN0PR04CA0187.namprd04.prod.outlook.com (2603:10b6:408:e9::12)
+ by PH0PR12MB8151.namprd12.prod.outlook.com (2603:10b6:510:299::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.30; Mon, 27 Mar
+ 2023 13:09:11 +0000
+Received: from BN8NAM11FT038.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e9:cafe::55) by BN0PR04CA0187.outlook.office365.com
+ (2603:10b6:408:e9::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.41 via Frontend
+ Transport; Mon, 27 Mar 2023 13:09:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT038.mail.protection.outlook.com (10.13.176.246) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6222.22 via Frontend Transport; Mon, 27 Mar 2023 13:09:10 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 27 Mar
+ 2023 08:09:04 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <peterz@infradead.org>, <namhyung@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <mingo@kernel.org>, <acme@kernel.org>,
+        <eranian@google.com>, <kan.liang@linux.intel.com>,
+        <jolsa@kernel.org>, <irogers@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH v2] perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops for data_src
+Date:   Mon, 27 Mar 2023 18:38:51 +0530
+Message-ID: <20230327130851.1565-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT038:EE_|PH0PR12MB8151:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1a191dcb-5cbc-43d6-c13f-08db2ec47485
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +0xlu4ECk8HzAAcRrIZnUgSHSmjPZbv9KJ62r2zGkcWf1no/OUUlyF7lHQSOt2gf3f0v+C7ATtW8zCN5st0bJ/2V7pXYERKQ221/koGTO3rZk0dhLXCq6dXnlLiyEyjvcdbpDuA6LGsA0zCKKwV2EXm0FIu7619rbka/TqtIsh4WSQI8eiH3G8/jGOFOHTuktRjm4bgnM6djUySBflMi4F6Z65wqknT8ZHNREqIXlNwXAg2RDY4h8Evp1BVgbcSOB0kGFAb/+9zmAmCq7qmlwRjgfU/S16fTkzLq1dcUuMFcMQs7webULvbMGN/MoCTU0AwkQi+Q/2RhPtlrHwZJwIAZnBMpzYHSr5y7aPHWvzIQMHkXVxLTV1X0oV9mHbMTlLP5sVPsw5x2ogI7BP8EL6zEFabniAf/suf/mxwVBuXlDWwhiJnKB77bAkP3UuxwpAxk4DkXDpZkcFJnWycnyEk6kxzBzniWpatR4dh0/wE5GFgSpsjqx5t6Zy29gie6Ul0bvPhZqPZBK4Z3Z4vTFrZ/Rd+Fv7p61qmfcTOazdnyvH64BpwflsI7aO9DYP7t8D7oOUBmZ7u0qHvzYjPCY2PnYOV6mb3JNFM0X18mp55Ms2cmuCsK6ihdncL+pehepwX1LY7iSn6yLHVpjVxZ8DKwlVriaFY4XXbVAw1PIjjC/h5QXlFacbwoS4XxNdVZq/U885N8C/VeaaCAF7TaH0sTCfG8u1Eq3eXYYec/CGw=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(39860400002)(376002)(346002)(451199021)(40470700004)(36840700001)(46966006)(1076003)(26005)(16526019)(40480700001)(41300700001)(6666004)(186003)(966005)(7696005)(83380400001)(426003)(336012)(2616005)(47076005)(478600001)(54906003)(110136005)(316002)(36860700001)(40460700003)(4326008)(44832011)(7416002)(2906002)(70206006)(70586007)(8676002)(81166007)(82740400003)(356005)(36756003)(86362001)(82310400005)(5660300002)(8936002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2023 13:09:10.6135
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a191dcb-5cbc-43d6-c13f-08db2ec47485
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT038.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8151
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Namhyung Kim <namhyung@kernel.org>
 
-The mapping of perf_events generic hardware events to actual PMU events on
-ARM PMUv3 may not always be correct. This is in particular true for the
-PERF_COUNT_HW_BRANCH_INSTRUCTIONS event. Although the mapping points to an
-architected event, it may not always be available. This can be seen with a
-simple:
+Kernel IBS driver wasn't using new PERF_MEM_* APIs due to few of its
+limitations. Mainly:
 
-$ perf stat -e branches sleep 0
- Performance counter stats for 'sleep 0':
+- mem_lvl_num doesn't allow setting multiple sources whereas old API
+  allows it. Setting multiple data sources is useful because IBS on
+  pre-zen4 uarch doesn't provide fine granular DataSrc details (there
+  is only one such DataSrc(2h) though).
+- perf mem sorting logic (sort__lvl_cmp()) ignores mem_lvl_num. perf
+  c2c (c2c_decode_stats()) does not use mem_lvl_num at all. perf mem
+  prints mem_lvl and mem_lvl_num both if both are set, which is ugly.
 
-   <not supported>      branches
+1st one can be handled by using ANY_CACHE with HOPS_0. 2nd one is
+purely perf tool specific issue and should be fixed separately.
 
-       0.001401081 seconds time elapsed
-
-Yet the hardware does have an event that could be used for branches.
-
-Dynamically check for a supported hardware event which can be used for
-PERF_COUNT_HW_BRANCH_INSTRUCTIONS at mapping time.
-
-And with that:
-
-$ perf stat -e branches sleep 0
-
- Performance counter stats for 'sleep 0':
-
-           166,739      branches
-
-       0.000832163 seconds time elapsed
-
-Based-on: https://lore.kernel.org/all/YvunKCJHSXKz%2FkZB@FVFF77S0Q05N
-Based-on-patch-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Peter Newman <peternewman@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
-v3->v4:
- - splice Mark's patch with Stephane's problem statement
-v2->v3:
- - removed prints per Will's suggestion
- 
-[v3] https://lore.kernel.org/all/20220816130221.885920-1-peternewman@google.com/
-[v2] https://lore.kernel.org/lkml/20220324181458.3216262-1-eranian@google.com/
+v1: https://lore.kernel.org/r/20230311000642.1270971-1-namhyung@kernel.org
+v1->v2:
+- In addition to setting new API fields, convert all individual field
+  assignments to compile time wrapper macros built using PERF_MEM_S().
+  Also convert DataSrc conditional code to array lookups.
 
- arch/arm64/kernel/perf_event.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+ arch/x86/events/amd/ibs.c | 155 +++++++++++++++++---------------------
+ 1 file changed, 68 insertions(+), 87 deletions(-)
 
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index dde06c0f97f3..ee63f8e719ea 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -45,7 +45,6 @@ static const unsigned armv8_pmuv3_perf_map[PERF_COUNT_HW_MAX] = {
- 	[PERF_COUNT_HW_INSTRUCTIONS]		= ARMV8_PMUV3_PERFCTR_INST_RETIRED,
- 	[PERF_COUNT_HW_CACHE_REFERENCES]	= ARMV8_PMUV3_PERFCTR_L1D_CACHE,
- 	[PERF_COUNT_HW_CACHE_MISSES]		= ARMV8_PMUV3_PERFCTR_L1D_CACHE_REFILL,
--	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED,
- 	[PERF_COUNT_HW_BRANCH_MISSES]		= ARMV8_PMUV3_PERFCTR_BR_MIS_PRED,
- 	[PERF_COUNT_HW_BUS_CYCLES]		= ARMV8_PMUV3_PERFCTR_BUS_CYCLES,
- 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= ARMV8_PMUV3_PERFCTR_STALL_FRONTEND,
-@@ -1048,6 +1047,28 @@ static void armv8pmu_reset(void *info)
- 	armv8pmu_pmcr_write(pmcr);
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 64582954b5f6..b46e0b725fe5 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -703,9 +703,41 @@ static u8 perf_ibs_data_src(union ibs_op_data2 *op_data2)
+ 	return op_data2->data_src_lo;
  }
  
-+static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
-+				      struct perf_event *event)
-+{
-+	if (event->attr.type == PERF_TYPE_HARDWARE &&
-+	    event->attr.config == PERF_COUNT_HW_BRANCH_INSTRUCTIONS) {
+-static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+-				 union ibs_op_data3 *op_data3,
+-				 struct perf_sample_data *data)
++#define	L(x)		(PERF_MEM_S(LVL, x) | PERF_MEM_S(LVL, HIT))
++#define	LN(x)		PERF_MEM_S(LVLNUM, x)
++#define	REM		PERF_MEM_S(REMOTE, REMOTE)
++#define	HOPS(x)		PERF_MEM_S(HOPS, x)
 +
-+		if (test_bit(ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED,
-+			     armpmu->pmceid_bitmap))
-+			return ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED;
++static u64 g_data_src[8] = {
++	[IBS_DATA_SRC_LOC_CACHE]	  = L(L3) | L(REM_CCE1) | LN(ANY_CACHE) | HOPS(0),
++	[IBS_DATA_SRC_DRAM]		  = L(LOC_RAM) | LN(RAM),
++	[IBS_DATA_SRC_REM_CACHE]	  = L(REM_CCE2) | LN(ANY_CACHE) | REM | HOPS(1),
++	[IBS_DATA_SRC_IO]		  = L(IO) | LN(IO),
++};
 +
-+		if (test_bit(ARMV8_PMUV3_PERFCTR_BR_RETIRED,
-+			     armpmu->pmceid_bitmap))
-+			return ARMV8_PMUV3_PERFCTR_BR_RETIRED;
++#define RMT_NODE_BITS			((1 << IBS_DATA_SRC_DRAM) | \
++					 (1 << IBS_DATA_SRC_IO))
++#define RMT_NODE_APPLICABLE(x)		(RMT_NODE_BITS & (1 << x))
 +
-+		return HW_OP_UNSUPPORTED;
-+	}
++static u64 g_zen4_data_src[32] = {
++	[IBS_DATA_SRC_EXT_LOC_CACHE]	  = L(L3) | LN(L3),
++	[IBS_DATA_SRC_EXT_NEAR_CCX_CACHE] = L(REM_CCE1) | LN(ANY_CACHE) | REM | HOPS(0),
++	[IBS_DATA_SRC_EXT_DRAM]		  = L(LOC_RAM) | LN(RAM),
++	[IBS_DATA_SRC_EXT_FAR_CCX_CACHE]  = L(REM_CCE2) | LN(ANY_CACHE) | REM | HOPS(1),
++	[IBS_DATA_SRC_EXT_PMEM]		  = LN(PMEM),
++	[IBS_DATA_SRC_EXT_IO]		  = L(IO) | LN(IO),
++	[IBS_DATA_SRC_EXT_EXT_MEM]	  = LN(CXL),
++};
 +
-+	return armpmu_map_event(event, &armv8_pmuv3_perf_map,
-+				&armv8_pmuv3_perf_cache_map,
-+				ARMV8_PMU_EVTYPE_EVENT);
-+}
++#define ZEN4_RMT_NODE_BITS		((1 << IBS_DATA_SRC_EXT_DRAM) | \
++					 (1 << IBS_DATA_SRC_EXT_PMEM) | \
++					 (1 << IBS_DATA_SRC_EXT_IO) |\
++					 (1 << IBS_DATA_SRC_EXT_EXT_MEM))
++#define ZEN4_RMT_NODE_APPLICABLE(x)	(RMT_NODE_BITS & (1 << x))
 +
- static int __armv8_pmuv3_map_event(struct perf_event *event,
- 				   const unsigned (*extra_event_map)
- 						  [PERF_COUNT_HW_MAX],
-@@ -1059,9 +1080,7 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
- 	int hw_event_id;
- 	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
++static __u64 perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
++				  union ibs_op_data3 *op_data3,
++				  struct perf_sample_data *data)
+ {
+ 	union perf_mem_data_src *data_src = &data->data_src;
+ 	u8 ibs_data_src = perf_ibs_data_src(op_data2);
+@@ -716,25 +748,19 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+ 	 * DcMiss, L2Miss, DataSrc, DcMissLat etc. are all invalid for Uncached
+ 	 * memory accesses. So, check DcUcMemAcc bit early.
+ 	 */
+-	if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO) {
+-		data_src->mem_lvl = PERF_MEM_LVL_UNC | PERF_MEM_LVL_HIT;
+-		return;
+-	}
++	if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO)
++		return L(UNC);
  
--	hw_event_id = armpmu_map_event(event, &armv8_pmuv3_perf_map,
--				       &armv8_pmuv3_perf_cache_map,
--				       ARMV8_PMU_EVTYPE_EVENT);
-+	hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
+ 	/* L1 Hit */
+-	if (op_data3->dc_miss == 0) {
+-		data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
+-		return;
+-	}
++	if (op_data3->dc_miss == 0)
++		return L(L1) | LN(L1);
+ 
+ 	/* L2 Hit */
+ 	if (op_data3->l2_miss == 0) {
+ 		/* Erratum #1293 */
+ 		if (boot_cpu_data.x86 != 0x19 || boot_cpu_data.x86_model > 0xF ||
+-		    !(op_data3->sw_pf || op_data3->dc_miss_no_mab_alloc)) {
+-			data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
+-			return;
+-		}
++		    !(op_data3->sw_pf || op_data3->dc_miss_no_mab_alloc))
++			return L(L2) | LN(L2);
+ 	}
  
  	/*
- 	 * CHAIN events only work when paired with an adjacent counter, and it
+@@ -744,82 +770,36 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+ 	if (data_src->mem_op != PERF_MEM_OP_LOAD)
+ 		goto check_mab;
+ 
+-	/* L3 Hit */
+ 	if (ibs_caps & IBS_CAPS_ZEN4) {
+-		if (ibs_data_src == IBS_DATA_SRC_EXT_LOC_CACHE) {
+-			data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
+-			return;
+-		}
+-	} else {
+-		if (ibs_data_src == IBS_DATA_SRC_LOC_CACHE) {
+-			data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_REM_CCE1 |
+-					    PERF_MEM_LVL_HIT;
+-			return;
+-		}
+-	}
++		u64 val = g_zen4_data_src[ibs_data_src];
+ 
+-	/* A peer cache in a near CCX */
+-	if (ibs_caps & IBS_CAPS_ZEN4 &&
+-	    ibs_data_src == IBS_DATA_SRC_EXT_NEAR_CCX_CACHE) {
+-		data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
+-		return;
+-	}
++		if (!val)
++			goto check_mab;
+ 
+-	/* A peer cache in a far CCX */
+-	if (ibs_caps & IBS_CAPS_ZEN4) {
+-		if (ibs_data_src == IBS_DATA_SRC_EXT_FAR_CCX_CACHE) {
+-			data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2 | PERF_MEM_LVL_HIT;
+-			return;
++		/* HOPS_1 because IBS doesn't provide remote socket detail */
++		if (op_data2->rmt_node && ZEN4_RMT_NODE_APPLICABLE(ibs_data_src)) {
++			if (ibs_data_src == IBS_DATA_SRC_EXT_DRAM)
++				val = L(REM_RAM1) | LN(RAM) | REM | HOPS(1);
++			else
++				val |= REM | HOPS(1);
+ 		}
+-	} else {
+-		if (ibs_data_src == IBS_DATA_SRC_REM_CACHE) {
+-			data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2 | PERF_MEM_LVL_HIT;
+-			return;
+-		}
+-	}
+ 
+-	/* DRAM */
+-	if (ibs_data_src == IBS_DATA_SRC_EXT_DRAM) {
+-		if (op_data2->rmt_node == 0)
+-			data_src->mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
+-		else
+-			data_src->mem_lvl = PERF_MEM_LVL_REM_RAM1 | PERF_MEM_LVL_HIT;
+-		return;
+-	}
++		return val;
++	} else {
++		u64 val = g_data_src[ibs_data_src];
+ 
+-	/* PMEM */
+-	if (ibs_caps & IBS_CAPS_ZEN4 && ibs_data_src == IBS_DATA_SRC_EXT_PMEM) {
+-		data_src->mem_lvl_num = PERF_MEM_LVLNUM_PMEM;
+-		if (op_data2->rmt_node) {
+-			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+-			/* IBS doesn't provide Remote socket detail */
+-			data_src->mem_hops = PERF_MEM_HOPS_1;
+-		}
+-		return;
+-	}
++		if (!val)
++			goto check_mab;
+ 
+-	/* Extension Memory */
+-	if (ibs_caps & IBS_CAPS_ZEN4 &&
+-	    ibs_data_src == IBS_DATA_SRC_EXT_EXT_MEM) {
+-		data_src->mem_lvl_num = PERF_MEM_LVLNUM_CXL;
+-		if (op_data2->rmt_node) {
+-			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+-			/* IBS doesn't provide Remote socket detail */
+-			data_src->mem_hops = PERF_MEM_HOPS_1;
++		/* HOPS_1 because IBS doesn't provide remote socket detail */
++		if (op_data2->rmt_node && RMT_NODE_APPLICABLE(ibs_data_src)) {
++			if (ibs_data_src == IBS_DATA_SRC_DRAM)
++				val = L(REM_RAM1) | LN(RAM) | REM | HOPS(1);
++			else
++				val |= REM | HOPS(1);
+ 		}
+-		return;
+-	}
+ 
+-	/* IO */
+-	if (ibs_data_src == IBS_DATA_SRC_EXT_IO) {
+-		data_src->mem_lvl = PERF_MEM_LVL_IO;
+-		data_src->mem_lvl_num = PERF_MEM_LVLNUM_IO;
+-		if (op_data2->rmt_node) {
+-			data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
+-			/* IBS doesn't provide Remote socket detail */
+-			data_src->mem_hops = PERF_MEM_HOPS_1;
+-		}
+-		return;
++		return val;
+ 	}
+ 
+ check_mab:
+@@ -830,12 +810,11 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+ 	 * DataSrc simultaneously. Prioritize DataSrc over MAB, i.e. set
+ 	 * MAB only when IBS fails to provide DataSrc.
+ 	 */
+-	if (op_data3->dc_miss_no_mab_alloc) {
+-		data_src->mem_lvl = PERF_MEM_LVL_LFB | PERF_MEM_LVL_HIT;
+-		return;
+-	}
++	if (op_data3->dc_miss_no_mab_alloc)
++		return L(LFB) | LN(LFB);
+ 
+ 	data_src->mem_lvl = PERF_MEM_LVL_NA;
++	return 0;
+ }
+ 
+ static bool perf_ibs_cache_hit_st_valid(void)
+@@ -925,7 +904,9 @@ static void perf_ibs_get_data_src(struct perf_ibs_data *ibs_data,
+ 				  union ibs_op_data2 *op_data2,
+ 				  union ibs_op_data3 *op_data3)
+ {
+-	perf_ibs_get_mem_lvl(op_data2, op_data3, data);
++	union perf_mem_data_src *data_src = &data->data_src;
++
++	data_src->val |= perf_ibs_get_mem_lvl(op_data2, op_data3, data);
+ 	perf_ibs_get_mem_snoop(op_data2, data);
+ 	perf_ibs_get_tlb_lvl(op_data3, data);
+ 	perf_ibs_get_mem_lock(op_data3, data);
 -- 
-2.40.0.348.gf938b09366-goog
+2.39.2
 
