@@ -2,117 +2,227 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BF1C77B61
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 09:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D66C76195
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 11:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233233AbjC0Jak (ORCPT
+        id S230178AbjC0Lcy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 05:30:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
+        Mon, 27 Mar 2023 07:32:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233097AbjC0Jai (ORCPT
+        with ESMTP id S229475AbjC0Lcx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 05:30:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7617D46AA;
-        Mon, 27 Mar 2023 02:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8DqjXeO1tc2m6wXJ4uu/hd4TZQ+nIIRzc4UwCMqvjG8=; b=ju+MEMZ16NRWnIDWX78+WhqTZD
-        ikrhVB7IopcJONyDZgU+z4k71dPM9zCprIgO9Yh6YW/iq+MBarJoh/04SRlg3RmPOLuA8DaaoZY4F
-        F8Z2boePxShTaCL+vLO/ogb7T0r0qjHF6PRAE3bn18c0iH1Lc6T1XWvk+1uOQggT65mD3k1/PnYkr
-        sHSgh4bFQu3XQgTnsNGV1nzKLrse91+KjHFkGmTsYep0WiKeiiAjAvOZ1FQJU/AR7XmJ1k1xh2itY
-        Ujh0eJBNbGzJQkLenUzehssEwGgfLXN4fqfc1sxeAcUHVYt0EZ2cH5ZbRwwMCEg5BSk/1bpaWeayX
-        rtGZ0RDA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pgjBC-007HH2-81; Mon, 27 Mar 2023 09:30:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 488B73001E5;
-        Mon, 27 Mar 2023 11:30:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E8DF82014D86B; Mon, 27 Mar 2023 11:30:16 +0200 (CEST)
-Date:   Mon, 27 Mar 2023 11:30:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Li <ashimida.1990@gmail.com>
-Cc:     Aaron Tomlin <atomlin@redhat.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        gcc-patches@gcc.gnu.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Mark Brown <broonie@kernel.org>,
+        Mon, 27 Mar 2023 07:32:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44447BD;
+        Mon, 27 Mar 2023 04:32:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CFB05611A8;
+        Mon, 27 Mar 2023 11:32:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D133DC433EF;
+        Mon, 27 Mar 2023 11:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679916771;
+        bh=xzeQeF7VDSQfdcn9lbYTzhWKS+0PyOIQvXJKv/d68Gk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TdX+KXEEIWmMG1tH70EnTTpYWpUdldoj4gv9jg3J7lO37Vgi6v0uVF+5/YLW+HyYS
+         3QPO8+DC1AT2tvbD1QwE3lXTmmJsc4ATvx181cnz+aJj7C0TcCOU9vmu0an5oYiAxo
+         SDnBIR9FrdqXoH6QO1fv2cnE1+uu/jsdwWirE3gKVUUoci+TWkL0ckJnBlN8E0CyJs
+         5PDiTATBqfh2mCrtEx6sr6dZcZUBvCGbojJGOgmGYLOFHofEHUHX4lQfzR/A5C/Q8j
+         OEBjW3W69854sv5W3sEX0QNtHIDqAKvnoeU1yVQJ6widVDSPKpQLv28c4L4oeMFeMe
+         tP2F9loYj8cqg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5861E4052D; Mon, 27 Mar 2023 08:32:48 -0300 (-03)
+Date:   Mon, 27 Mar 2023 08:32:48 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Roth <michael.roth@amd.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Song Liu <song@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>, Uros Bizjak <ubizjak@gmail.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        Yuntao Wang <ytcoode@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC/RFT,V2] CFI: Add support for gcc CFI in aarch64
-Message-ID: <20230327093016.GB4253@hirez.programming.kicks-ass.net>
-References: <20221219061758.23321-1-ashimida.1990@gmail.com>
- <20230325085416.95191-1-ashimida.1990@gmail.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH] perf bench syscall: Add fork syscall benchmark
+Message-ID: <ZCF+4NQzctwgqxhM@kernel.org>
+References: <1679381821-22736-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAM9d7chTUDnrwrOnOS-CDBjNnuyLcSx05agDS4S7DgJ2Sj_9vw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230325085416.95191-1-ashimida.1990@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chTUDnrwrOnOS-CDBjNnuyLcSx05agDS4S7DgJ2Sj_9vw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Mar 25, 2023 at 01:54:16AM -0700, Dan Li wrote:
-
-> In the compiler part[4], most of the content is the same as Sami's
-> implementation[3], except for some minor differences, mainly including:
+Em Fri, Mar 24, 2023 at 09:31:25PM -0700, Namhyung Kim escreveu:
+> Hello,
 > 
-> 1. The function typeid is calculated differently and it is difficult
-> to be consistent.
+> On Mon, Mar 20, 2023 at 11:57 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> >
+> > This is a follow up patch for the execve bench which is actually
+> > fork + execve, it makes sense to add the fork syscall benchmark
+> > to compare the execve part precisely.
+> >
+> > Some archs have no __NR_fork definition which is used only as a
+> > check condition to call test_fork(), let us just define it as -1
+> > to avoid build error.
+> >
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-This means there is an effective ABI break between the compilers, which
-is sad :-( Is there really nothing to be done about this?
+Thanks, applied.
+
+- Arnaldo
+
+ 
+> Thanks,
+> Namhyung
+> 
+> 
+> > ---
+> >  tools/arch/x86/include/uapi/asm/unistd_32.h |  4 ++--
+> >  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
+> >  tools/perf/bench/bench.h                    |  1 +
+> >  tools/perf/bench/syscall.c                  | 35 +++++++++++++++++++++++++++++
+> >  tools/perf/builtin-bench.c                  |  1 +
+> >  5 files changed, 42 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> > index 2712d5e..b8ddfc4 100644
+> > --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
+> > +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> > @@ -1,6 +1,6 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> > -#ifndef __NR_execve
+> > -#define __NR_execve 11
+> > +#ifndef __NR_fork
+> > +#define __NR_fork 2
+> >  #endif
+> >  #ifndef __NR_getppid
+> >  #define __NR_getppid 64
+> > diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> > index a6f7fe8..f70d2cad 100644
+> > --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
+> > +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> > @@ -1,4 +1,7 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef __NR_fork
+> > +#define __NR_fork 57
+> > +#endif
+> >  #ifndef __NR_execve
+> >  #define __NR_execve 59
+> >  #endif
+> > diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> > index e438931..edfc257 100644
+> > --- a/tools/perf/bench/bench.h
+> > +++ b/tools/perf/bench/bench.h
+> > @@ -23,6 +23,7 @@ int bench_sched_messaging(int argc, const char **argv);
+> >  int bench_sched_pipe(int argc, const char **argv);
+> >  int bench_syscall_basic(int argc, const char **argv);
+> >  int bench_syscall_getpgid(int argc, const char **argv);
+> > +int bench_syscall_fork(int argc, const char **argv);
+> >  int bench_syscall_execve(int argc, const char **argv);
+> >  int bench_mem_memcpy(int argc, const char **argv);
+> >  int bench_mem_memset(int argc, const char **argv);
+> > diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
+> > index fe79f7f..ea4dfc07 100644
+> > --- a/tools/perf/bench/syscall.c
+> > +++ b/tools/perf/bench/syscall.c
+> > @@ -18,6 +18,10 @@
+> >  #include <unistd.h>
+> >  #include <stdlib.h>
+> >
+> > +#ifndef __NR_fork
+> > +#define __NR_fork -1
+> > +#endif
+> > +
+> >  #define LOOPS_DEFAULT 10000000
+> >  static int loops = LOOPS_DEFAULT;
+> >
+> > @@ -31,6 +35,23 @@ static const char * const bench_syscall_usage[] = {
+> >         NULL
+> >  };
+> >
+> > +static void test_fork(void)
+> > +{
+> > +       pid_t pid = fork();
+> > +
+> > +       if (pid < 0) {
+> > +               fprintf(stderr, "fork failed\n");
+> > +               exit(1);
+> > +       } else if (pid == 0) {
+> > +               exit(0);
+> > +       } else {
+> > +               if (waitpid(pid, NULL, 0) < 0) {
+> > +                       fprintf(stderr, "waitpid failed\n");
+> > +                       exit(1);
+> > +               }
+> > +       }
+> > +}
+> > +
+> >  static void test_execve(void)
+> >  {
+> >         const char *pathname = "/bin/true";
+> > @@ -71,6 +92,12 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
+> >                 case __NR_getpgid:
+> >                         getpgid(0);
+> >                         break;
+> > +               case __NR_fork:
+> > +                       test_fork();
+> > +                       /* Only loop 10000 times to save time */
+> > +                       if (i == 10000)
+> > +                               loops = 10000;
+> > +                       break;
+> >                 case __NR_execve:
+> >                         test_execve();
+> >                         /* Only loop 10000 times to save time */
+> > @@ -92,6 +119,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
+> >         case __NR_getpgid:
+> >                 name = "getpgid()";
+> >                 break;
+> > +       case __NR_fork:
+> > +               name = "fork()";
+> > +               break;
+> >         case __NR_execve:
+> >                 name = "execve()";
+> >                 break;
+> > @@ -143,6 +173,11 @@ int bench_syscall_getpgid(int argc, const char **argv)
+> >         return bench_syscall_common(argc, argv, __NR_getpgid);
+> >  }
+> >
+> > +int bench_syscall_fork(int argc, const char **argv)
+> > +{
+> > +       return bench_syscall_common(argc, argv, __NR_fork);
+> > +}
+> > +
+> >  int bench_syscall_execve(int argc, const char **argv)
+> >  {
+> >         return bench_syscall_common(argc, argv, __NR_execve);
+> > diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> > index 814e9af..d0fcc3c 100644
+> > --- a/tools/perf/builtin-bench.c
+> > +++ b/tools/perf/builtin-bench.c
+> > @@ -53,6 +53,7 @@ static struct bench sched_benchmarks[] = {
+> >  static struct bench syscall_benchmarks[] = {
+> >         { "basic",      "Benchmark for basic getppid(2) calls",         bench_syscall_basic     },
+> >         { "getpgid",    "Benchmark for getpgid(2) calls",               bench_syscall_getpgid   },
+> > +       { "fork",       "Benchmark for fork(2) calls",                  bench_syscall_fork      },
+> >         { "execve",     "Benchmark for execve(2) calls",                bench_syscall_execve    },
+> >         { "all",        "Run all syscall benchmarks",                   NULL                    },
+> >         { NULL,         NULL,                                           NULL                    },
+> > --
+> > 2.1.0
+> >
+
+-- 
+
+- Arnaldo
