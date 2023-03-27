@@ -2,114 +2,118 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA6BC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 19:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC590C76195
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 21:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbjC0TBH convert rfc822-to-8bit (ORCPT
+        id S230161AbjC0VXN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 15:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51796 "EHLO
+        Mon, 27 Mar 2023 17:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjC0TBG (ORCPT
+        with ESMTP id S229535AbjC0VXM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 15:01:06 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC771BDA;
-        Mon, 27 Mar 2023 12:01:05 -0700 (PDT)
-Received: by mail-wm1-f48.google.com with SMTP id o32so5612024wms.1;
-        Mon, 27 Mar 2023 12:01:05 -0700 (PDT)
+        Mon, 27 Mar 2023 17:23:12 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AB1199C
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 14:23:11 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3e392e10cc4so809281cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 14:23:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679952190;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RjRoI5smDFcoeZZZLdNHqVEYnBY/pAEqR5TzMEq1Ja0=;
+        b=d0C1QJhxVGJvSRtxxrBiw882FquqwJ8ESdpihycnd/cED5wuPSWQLWj8zMGG2wFbS8
+         F4fGpRkYIfF+ylNbvVKnc0j8tPkHJ3Lm6PQO2fCnVydVqiNv3zjkvM9KEde2aDNccZJI
+         hEYYkHO1b7hkQbmrss5BAtu7KlOHxPS5RZ0TwPhuFF8EI8saj0rL5FNVPoXetDu6Okd4
+         iriTtRwgbfs9duYcF8OkKU4JDLTvQDQObG8OcKO5t6aw9HgV1fJq2Yk5/oYzf/Zuc0Cs
+         o62LZeYkkQlCQ/J+fszUWHB0HMnGtTuPzlkm2QbLnKpSqmsnqSLkJH+KxTPCUf0cpPQX
+         EYHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679943664; x=1682535664;
+        d=1e100.net; s=20210112; t=1679952190;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZiM66Pmcbjm8MSalv/BYcG+m8CKuGw0Q1Cn1XbjVjx8=;
-        b=vNcitDdTQ5QqAk8XzywxBMQzb8qadtK039hiTWFQGZYWTM07UU+d7ymA5GbJt2+JAO
-         iJXZpYos/RzzoTPpsRILVm54XaKaHoTuwjDuXl6ObBcXYabn9tf/YcRoDJ2SFicvMCoc
-         CHpoH7kE9JCWiugodMZWMNDzwtDiqaOVJymkpMOa4AzESPyjw1lW9ZYAUmWe5OI/hx0t
-         81fOYp3PjjzUc1Mh2A+l+IW8JZFIEC1ZZHN7GL+jdgKIvD4ZEm6zPIHyDHFEtEz9N2wo
-         UEFvMa8lI4TWUBEzDlQljRSaD1B9CnjDy2n/wrJxRnPKM7lx6bKguyDsM5zKROxlP4ZO
-         T+xQ==
-X-Gm-Message-State: AO0yUKWctup3qAUe4qyIy01wRKlOezV2oy7OSP0VToZObfvNbGl5iIOd
-        eej6CBdkMRdF/qOyVXfc8cnYEzttixHZFW8Qyn0=
-X-Google-Smtp-Source: AK7set/NrZJQbavoOjok5C5aY/T1ueJGr079K7zGe0yNKhUGF7TTi/zg5o/7FBlnrMPk/MSJzQr72XD78ZgzRPmkwvQ=
-X-Received: by 2002:a05:600c:4fcc:b0:3ee:136f:bcf4 with SMTP id
- o12-20020a05600c4fcc00b003ee136fbcf4mr13051166wmq.5.1679943663877; Mon, 27
- Mar 2023 12:01:03 -0700 (PDT)
+        bh=RjRoI5smDFcoeZZZLdNHqVEYnBY/pAEqR5TzMEq1Ja0=;
+        b=t/BR4T9ZlEcanEf44KEigookYjsQsW3pvYEWaNFv0hzXxGvKIek2wCOjzdVkJdARwE
+         rGvRdztGROra8TSoBkcM0eidVkbMq4nryUu1nnwIyjlVL8Z9Y13CkFzHKx0XFQIX36y3
+         gX9d/hVBTNbnnkVKCC7mk9z5ePSeFV3gVvP+tqjAZAMirLCSFJtIoqj3sCN1jQKZt1T8
+         fJeVz40KzNOx9GNBUKTMlrBcgOaHlAVU49GuBnmu5sdQiAcCPQz+03O4wZlsMzWNAFXH
+         B66Rstk80Ke/751SYiQzUNMzvmuu6Idk3sJ2Tw8mWiOM6hck/zcvyIT5vGsYOPiRgaYW
+         bHmQ==
+X-Gm-Message-State: AAQBX9eXXF8Cfqyu9KGb/KgLP8iNoKU1fI0qkA8NigIWEWZXZyxwhPw8
+        tc4PPZGvh4MBdOkItct4xcgk+n+dKJJYX8GWIhlMAQ==
+X-Google-Smtp-Source: AKy350YnG7dIX3ATo3pOzQrzA/7ZJe1GUpq+j/VnTHyhvOPL1K45I5s+ivw9P5fWw0reDB/db57jAbCiwV44HaQGbFk=
+X-Received: by 2002:ac8:7f14:0:b0:3d3:fd80:b06a with SMTP id
+ f20-20020ac87f14000000b003d3fd80b06amr89323qtk.13.1679952190034; Mon, 27 Mar
+ 2023 14:23:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230317063246.1128219-1-zangchunxin@lixiang.com>
-In-Reply-To: <20230317063246.1128219-1-zangchunxin@lixiang.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 27 Mar 2023 12:00:52 -0700
-Message-ID: <CAM9d7chc+eJvPMm3ZhcxcbYUjNzVvBG7N0DvVwMzmOOb+-xiMQ@mail.gmail.com>
-Subject: Re: [PATCH v3] perf sched: Fix sched latency analysis incorrect
-To:     Chunxin Zang <zangchunxin@lixiang.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jerry Zhou <zhouchunhua@lixiang.com>
+References: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
+ <Y7w2qshoCEjKKVlz@kernel.org> <CAP-5=fUeC2nhUhFN69+sL687csSsoi5=ZEkRH70vUy+kTiF52g@mail.gmail.com>
+ <CAP-5=fVaH0p4NkKiQSxaxZnT5zR=hbwSArO2n0L7tCNZwBumKQ@mail.gmail.com> <CAP-5=fXWDPzuFrrY+uKnfoa5gO9eEfGUsbCyXB8AS7Tz0ZX=jw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXWDPzuFrrY+uKnfoa5gO9eEfGUsbCyXB8AS7Tz0ZX=jw@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 27 Mar 2023 14:22:58 -0700
+Message-ID: <CAP-5=fVHK9VqMs=px3ZzKjinFG4t+oOZ8x2=65_jjds4DiSXLg@mail.gmail.com>
+Subject: Re: Google Summer-of-Code 2023
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        paranlee <p4ranlee@gmail.com>,
+        Madhu patel <patelmadhu06@gmail.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        Lukas Molleman <lukas.molleman@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 16, 2023 at 11:33 PM Chunxin Zang <zangchunxin@lixiang.com> wrote:
+On Mon, Mar 13, 2023 at 9:38=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> 'perf sched latency' is incorrect to get process schedule latency
-> when it used 'sched:sched_wakeup' to analysis perf.data.
+> On Wed, Feb 22, 2023 at 7:58=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > The Linux Foundation was selected as a GSoC organization for 2023!
+> > https://summerofcode.withgoogle.com/programs/2023/organizations/the-lin=
+ux-foundation
+> >
+> > This means we're looking for contributors until March 19th:
+> > https://developers.google.com/open-source/gsoc/timeline
 >
-> Because 'perf record' prefer use 'sched:sched_waking' to
-> 'sched:sched_wakeup' since commit d566a9c2d482 ("perf sched: Prefer
-> sched_waking event when it exists"). It's very reasonable to
-> evaluate process schedule latency.
+> A reminder of the GSoC timeline. Applications open in a week;
 >
-> Similarly, update sched latency/map/replay to use sched_waking events.
+> * February 22 - March 19
+> Potential GSoC contributors discuss application ideas with mentoring
+> organizations
+>
+> * March 20 - 18:00 UTC
+> GSoC contributor application period begins
+>
+> * April 4 - 18:00 UTC
+> GSoC contributor application deadline
+>
+> Thanks,
+> Ian
 
-Have you checked perf sched replay (add_sched_event_wakeup)?  I think
-it'd make unnecessary sched atoms for sched_wakeup.
-
-Can we check the wakeup and waking events and disable the wakeup
-if the waking is found like in perf_sched__timehist?
+A reminder that the application period closes in just over a week:
+https://developers.google.com/open-source/gsoc/timeline
+April 4 - 18:00 UTC
+GSoC contributor application deadline
 
 Thanks,
-Namhyung
+Ian
 
 
->
-> I used 'perf record -e "sched:* "' to record both wakeup and waking events,
-> and use fixed perf version to analysis them, the result is correct.
-> Because the function "latency_wakeup_event" will change atom->state to
-> THREAD_WAIT_CPU at waking event, and judge the 'atom->state !=
-> THREAD_SLEEPING' is false then returned at wakeup event.
->
-> Signed-off-by: Chunxin Zang <zangchunxin@lixiang.com>
-> Signed-off-by: Jerry Zhou <zhouchunhua@lixiang.com>
-> ---
->
->         changelogs in v3:
->         1) fix non-ASCII characters in commit log.
->
->         changelogs in v2:
->         1) fix email address disappearing in 'signed off by'
->
->  tools/perf/builtin-sched.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 86e18575c9be..1af4ec1ac824 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -1819,6 +1819,7 @@ static int perf_sched__read_events(struct perf_sched *sched)
->         const struct evsel_str_handler handlers[] = {
->                 { "sched:sched_switch",       process_sched_switch_event, },
->                 { "sched:sched_stat_runtime", process_sched_runtime_event, },
-> +               { "sched:sched_waking",       process_sched_wakeup_event, },
->                 { "sched:sched_wakeup",       process_sched_wakeup_event, },
->                 { "sched:sched_wakeup_new",   process_sched_wakeup_event, },
->                 { "sched:sched_migrate_task", process_sched_migrate_task_event, },
-> --
-> 2.25.1
->
-> 声明：这封邮件只允许文件接收者阅读，有很高的机密性要求。禁止其他人使用、打开、复制或转发里面的任何内容。如果本邮件错误地发给了你，请联系邮件发出者并删除这个文件。机密及法律的特权并不因为误发邮件而放弃或丧失。任何提出的观点或意见只属于作者的个人见解，并不一定代表本公司。
+> > Some project ideas are listed here:
+> > https://wiki.linuxfoundation.org/gsoc/2023-gsoc-perf
+> >
+> > Please help to share!
+> >
+> > Thanks,
+> > Ian
+> >
+> > (Resend in plain text because of LKML's HTML filters)
