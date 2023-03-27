@@ -2,158 +2,132 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6BC761A6
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 16:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E13C77B61
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 17:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232586AbjC0QwH (ORCPT
+        id S232594AbjC0REe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 12:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41536 "EHLO
+        Mon, 27 Mar 2023 13:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232572AbjC0QwF (ORCPT
+        with ESMTP id S232590AbjC0RDx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 12:52:05 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91DA72D50
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 09:51:46 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3e392e10cc4so762841cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 09:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679935903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G96YuHfNOixQOenDOjw+vw59nqvCVp4eZ2HJnETyrKc=;
-        b=cVGHWdwqfEkneKgtudrjbNGsEzADfbEvXHWqAAx79dx2qKsfAP/IyzzqWgWtGn2gBV
-         ILG7Eg+8PthAMvYprdbPqpKFTFEQBCu5B17F2PQ5cSnqrV6xUe+76UjbI3FbhfNKqosW
-         98dX0lM+nZ/7AXDnsjEkzSBp4MHMNhoaQ/a6Vt98XjcwYCC6EIwGxbszYQR61Hopo1wI
-         AAXXTBLhz3UndEl3VL6KZyZW06hAAx4U7B2lAcgJ25ZOY6CrVYRkv1Q5hthMyKqUHrRx
-         fSpy+YfwVicXOh6cGSZQjFdX9myoQ8GThtyHCaChkORSE+6WSJf7oRms6my6+6shLzM1
-         L34w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679935903;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G96YuHfNOixQOenDOjw+vw59nqvCVp4eZ2HJnETyrKc=;
-        b=SXeHIHZQPu7F5/7OI5hmtWV3pUNLU4rTRkcyKVAQ0YI8OOVZAmQlFBi88tHki/8CSL
-         3o7ZR8nsmDghD4qe3hwrfwkaIKX75i67yfQ/tYhLsoX5YfNOTqSO2ZUSJerqSakq9MUY
-         aSwyvt4T3MyJndhtlXywHiU88VgIyHUb+huEXh2tNw2lL4V9sPvYWQeHkGQyyKDnDvSq
-         mjPXa1MoA35OMKpbY6yEBWspH3op4YpzPHK49bUhVPV6q0A45he/oM86Inmf7ZDX5DJk
-         C4Yt1xZ7QN+UZKX9I2k/JPK883NA9C8pFscwc9XgCoTGOiXjurlbFXy1fIyUFRxVKLn9
-         c8Fg==
-X-Gm-Message-State: AAQBX9ctYzIvv/PEeaxmBIzA9Y9ABwzCOvD4uNxw+Qe780lV3k9Ha7Nq
-        MBl1JjypTrIwS5x5equaixmbl83sGuuJmSGTTGiHlg==
-X-Google-Smtp-Source: AKy350YFx7+Gb2GSAOSS4DCpVaJhpKird5zpu0naUCTffltRu3HaqJtagKWVFth5kFZsFyzmtvzoQnvwdnpqHv8ys+k=
-X-Received: by 2002:a05:622a:1820:b0:3d3:fd80:b06a with SMTP id
- t32-20020a05622a182000b003d3fd80b06amr518172qtc.13.1679935902975; Mon, 27 Mar
- 2023 09:51:42 -0700 (PDT)
+        Mon, 27 Mar 2023 13:03:53 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C14D10D4;
+        Mon, 27 Mar 2023 10:02:55 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PlfHc6mgPz6J83R;
+        Tue, 28 Mar 2023 01:02:04 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Mar 2023 18:02:39 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH v3 0/5] CXL 3.0 Performance Monitoring Unit support
+Date:   Mon, 27 Mar 2023 18:02:42 +0100
+Message-ID: <20230327170247.6968-1-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
-In-Reply-To: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 27 Mar 2023 09:51:31 -0700
-Message-ID: <CAP-5=fVitwxZwjkv0F98gHiYV9GBvmPq6LgcLTccQbogKmMhPA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/4] Add JSON metrics for arm CMN and Yitian710 DDR
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.122.247.231]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Mar 26, 2023 at 7:46=E2=80=AFPM Jing Zhang <renyu.zj@linux.alibaba.=
-com> wrote:
->
-> Hi all,
->
-> I add an identifier sysfs file for the yitian710 SoC DDR and arm CMN to
-> allow userspace to identify the specific implementation of the device,
-> so that the perf tool can match the corresponding uncore events and
-> metrics through the identifier. Then added several general CMN700 metrics
-> and yitian710 soc DDR metrics.
+v3: Build fixes. Called out in individual patches.
 
-Thanks!
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/oe-kbuild-all/202303250419.FANh4fIC-lkp@intel.com/
+Link: https://lore.kernel.org/oe-kbuild-all/202303250523.JdddC4Ld-lkp@intel.com/
+Link: https://lore.kernel.org/oe-kbuild-all/202303250546.ijiFKIpM-lkp@intel.com/
+etc
 
-> Since the eventid of cmn700 events is different from other events, it
-> can't be specified by "EventCode" or "ConfigCode", so in the cmn.json
-> file of cmn700, no "EventCode" and "ConfigCode" are added for these
-> events. For example, the eventid of "arm_cmn_0/hnf_sf_hit is/":
-> cat /sys/bus/event_source/devices/arm_cmn_0/events/hnf_sf_hit
-> type=3D0x5,eventid=3D0x6
+Thanks to all those who have looked at v1, and Kan Liang in particular for
+all the feedback on the main driver.
 
-This is done to add descriptions to the events? We can add encodings
-to jevents.py and the event parsing to handle the names eventid and
-type.
+Updated cover letter.
 
-> In addition, both cmn700 and ddr PMU can count the information in a die,
-> but the same SoC can also be configured with different numbers of dies,
-> so it is dificult to design a general expression to obtain metrics in
-> different dies. The current yitian710 ddr bandwidth metric describes the
-> sum of all dies bandwidth. I would like to ask you, is there any general
-> expression can obtain metrics for die? Add an option to specify die?
+The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+Unit definition. CXL components may have any number of these blocks. The
+definition is highly flexible, but that does bring complexity in the
+driver.
 
-So hopefully the logic for this is getting clearer in the
-perf-tools-next branch. When perf stat runs it will aggregate in a
-number of different ways, if you pass -A it will remove the
-aggregation, but you can also use --per-socket, per-die, .. The
-metrics take the individual counter values, say instructions and
-cycles and produce a metric like IPC. By default all the instruction
-counts are aggregated together, the cycles are aggregated together and
-then the metric produced on the two aggregated values. When -A or
---per-die are passed, the appropriate amount of aggregation should be
-done then the metric computed multiple times.
+Notes.
 
-Are you asking for a way in a metric to take counts from one die and
-use them in the other's metric? For example, reads on one die are
-writes on the other? This is possible as we have all the counts in the
-tool. I've thought about this in the context of some metrics we have
-for AMD, but there is no support for this in the tool currently.
+1) The QEMU model against which this was developed needs tidying up.
+   Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+   It's backed up behind other series that I plan to upstream first.
+2) There are quite a lot of corner cases that will need working through
+   with variants of the model, or I'll have to design a pathological
+   set of CPMUs to hit all the corner cases in one go. So whilst I believe
+   the driver should be fine for what it supports we may find issues
+   as those corners of what is allowed are explored.
+3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+   couldn't really figure out where else in the current structure we could
+   make it fit cleanly.
+4) Driver location. In past perf maintainers have requested perf drivers
+   for PCI etc be under drivers/perf. That would require moving some
+   CXL headers to be more generally visible, but is certainly possible
+   if there is agreement between CXL and perf maintainers on the correct
+   location.
+5) Patch 1 led to a discussion of how to handle the self describing
+   and extensible nature of the CPMU counters.  That is likely to involve
+   a description in the "caps" sysfs directory and perf tool code that is
+   aware of the different event combinations that make sense and can
+   establish which sets are available on a given device.
+   That is likely to take a while to converge on, so as the driver is useful
+   in the current state, I'm looking to upstream this first and deal with
+   the more complex handling later.
+6) There is a lot of other functionality that can be added in future
+   include allowing for simpler hardware implementations that may not
+   support the minimum level of features currently required by the driver
+   (freeze, overflow interrupts etc).
 
-Thanks,
-Ian
+CXL rev 3.0 specification available from https://www.computeexpresslink.org
 
-> Thanks,
-> Jing
->
-> Jing Zhang (4):
->   driver/perf: Add identifier sysfs file for CMN
->   perf vendor events: Add JSON metrics for cmn700
->   driver/perf: Add identifier sysfs file for Yitian 710 DDR
->   perf vendor events: Add JSON metrics for Yitian 710 DDR
->
->  drivers/perf/alibaba_uncore_drw_pmu.c              |  27 ++
->  drivers/perf/arm-cmn.c                             |  43 +++
->  .../pmu-events/arch/arm64/arm/cmn700/sys/cmn.json  | 188 +++++++++++
->  .../arch/arm64/arm/cmn700/sys/metrics.json         |  74 ++++
->  .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++=
-++++++
->  .../arm64/freescale/yitian710/sys/metrics.json     |  20 ++
->  tools/perf/pmu-events/jevents.py                   |   2 +
->  7 files changed, 727 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn700/sys/cmn.j=
-son
->  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn700/sys/metri=
-cs.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/=
-sys/ali_drw.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/=
-sys/metrics.json
->
-> --
-> 1.8.3.1
->
+Jonathan Cameron (5):
+  cxl: Add function to count regblocks of a given type
+  perf: Allow a PMU to have a parent
+  cxl/pci: Find and register CXL PMU devices
+  cxl: CXL Performance Monitoring Unit driver
+  docs: perf: Minimal introduction the the CXL PMU device and driver
+
+ Documentation/admin-guide/perf/cxl.rst   |  65 ++
+ Documentation/admin-guide/perf/index.rst |   1 +
+ drivers/cxl/Kconfig                      |  13 +
+ drivers/cxl/Makefile                     |   1 +
+ drivers/cxl/core/Makefile                |   1 +
+ drivers/cxl/core/core.h                  |   1 +
+ drivers/cxl/core/cpmu.c                  |  72 ++
+ drivers/cxl/core/pci.c                   |   2 +-
+ drivers/cxl/core/port.c                  |   4 +-
+ drivers/cxl/core/regs.c                  |  50 +-
+ drivers/cxl/cpmu.c                       | 939 +++++++++++++++++++++++
+ drivers/cxl/cpmu.h                       |  56 ++
+ drivers/cxl/cxl.h                        |  17 +-
+ drivers/cxl/cxlpci.h                     |   1 +
+ drivers/cxl/pci.c                        |  27 +-
+ include/linux/perf_event.h               |   1 +
+ kernel/events/core.c                     |   1 +
+ 17 files changed, 1244 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/cxl.rst
+ create mode 100644 drivers/cxl/core/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.c
+ create mode 100644 drivers/cxl/cpmu.h
+
+-- 
+2.37.2
+
