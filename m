@@ -2,107 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D1DC76195
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 14:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F13C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 14:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233062AbjC0O6u (ORCPT
+        id S233140AbjC0O7F convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 10:58:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38406 "EHLO
+        Mon, 27 Mar 2023 10:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233121AbjC0O6r (ORCPT
+        with ESMTP id S233125AbjC0O7D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 10:58:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEFB149E9;
-        Mon, 27 Mar 2023 07:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=cE0RQJv+FQscAn7Kg18zI4d5MgKmBRB/NIb1/jav8Js=; b=Qjf6fdufszYfPvYeyKk/7u11qa
-        9K6I5TfacvrDxJyo0Sf077teARpsMFYaxJmPUM+beCxy0yUkgEI6uV1jo79+LWq0LFetIKlSHsYrG
-        eLggNARQNmV+huipzexYXs2GdFhqoV8pOKRRcuxbFljiEFsP/k1EIaljZhsmIGah/2mj459hIMbas
-        jRpzXJvJSdIb8R/EhpVgnu9jDMNCfIubiUXgfFnXy7Mp707oebFYE2XDNvwOnBcgU5FUOYQ70FmLy
-        8GAJVbV/rJ2J+8t/QU5CAqhj8wcYXf+RQxG+qBqodbdaFhVhU5n5lYVORJ6cGqaraUNDl1+chJGdF
-        7rvddM+A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pgoIZ-007UFv-V7; Mon, 27 Mar 2023 14:58:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5454A3001E5;
-        Mon, 27 Mar 2023 16:58:13 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 17AE62111BE15; Mon, 27 Mar 2023 16:58:13 +0200 (CEST)
-Date:   Mon, 27 Mar 2023 16:58:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        kernel-janitors@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhouyi Zhou <zhouzhouyi@gmail.com>, x86@kernel.org,
-        cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH resent] perf/x86/amd/uncore: Fix exception handling in
- amd_uncore_cpu_up_prepare()
-Message-ID: <20230327145813.GA11425@hirez.programming.kicks-ass.net>
-References: <f9303bdc-b1a7-be5e-56c6-dfa8232b8b55@web.de>
- <ab860edf-79ca-2035-c5a3-d25be6fd9dac@web.de>
- <3a35fb28-5937-72f8-b2e8-b1d9899b5e43@web.de>
- <d691d740-c172-a5cb-e4f0-5bc5687c8464@intel.com>
+        Mon, 27 Mar 2023 10:59:03 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B877555BA;
+        Mon, 27 Mar 2023 07:58:56 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id n10-20020a05600c4f8a00b003ee93d2c914so7245868wmq.2;
+        Mon, 27 Mar 2023 07:58:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679929135; x=1682521135;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/w0DmVkKkN7hOPz99CWLwy97K2FhihScRkl+vR5X5lo=;
+        b=HDoxTVW39eaw+88ur6zRx51wHS7rb1/hwGtYAGzTQ84JWhTeLTng/pham0NoT9Txgm
+         qWaB887MGwnUG/Gs63769xfACghN9J+wknhvsF1fbQ843hb+IGAT7ovaa36zIbo4oOjl
+         xVPyprmB7Of8MCC04Pbx/Y7mGzY6qbxQZ6DrgWwiXWHLRdDujRQensYndfB9K9fsSw5l
+         D44l4TKs5pKMaRmpfS1wOo40DU9gQOsgsQNQDm7fvPtgJAMhG5vvjjOt5W2PEyunQFkd
+         MX695CCBTYHaqcTBphJaQF7/punUc1Gpr8e9s3Tg0VbBqzDx29W+9JWGG/3ql5lIxqdp
+         IZaA==
+X-Gm-Message-State: AO0yUKXjqaw9QHN7C0tOklGdR/rgOKUwkQ+7j1OGep9I8b6cj5/1o7yH
+        B9aZdT7SZz4t6F0FCbAEhAbzI+08jcv/R1a1bqM=
+X-Google-Smtp-Source: AK7set9kUIWF+oyAm9IvJDhDYyZYaMGIf8Xs+M0sh34kIaS6sHmLwXDUQfx4VVWUYtMfW1sRwDU1Dnd7rp/CNlc/SDg=
+X-Received: by 2002:a05:600c:241:b0:3ed:31cf:fe6e with SMTP id
+ 1-20020a05600c024100b003ed31cffe6emr8790299wmj.41.1679929135009; Mon, 27 Mar
+ 2023 07:58:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d691d740-c172-a5cb-e4f0-5bc5687c8464@intel.com>
+References: <20230324032702.109964-1-yangjihong1@huawei.com>
+ <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com> <ZCF/Oa+dK4Wc/7r7@kernel.org>
+In-Reply-To: <ZCF/Oa+dK4Wc/7r7@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 27 Mar 2023 07:58:43 -0700
+Message-ID: <CAM9d7cgHAkWQ+5yo9WuociTM_p8vghPPDT+Gtm4HAt_LqrzzTQ@mail.gmail.com>
+Subject: Re: [PATCH] perf ftrace: Make system wide the default target for
+ latency subcommand
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 12:11:54PM +0300, Adrian Hunter wrote:
-> On 25/03/23 16:15, Markus Elfring wrote:
-> > Date: Fri, 17 Mar 2023 13:13:14 +0100
-> > 
-> > The label “fail” was used to jump to another pointer check despite of
-> > the detail in the implementation of the function “amd_uncore_cpu_up_prepare”
-> > that it was determined already that the corresponding variable contained
-> > a null pointer (because of a failed function call in two cases).
-> > 
-> > 1. Thus return directly after a call of the function “amd_uncore_alloc”
-> >    failed in the first if branch.
-> > 
-> > 2. Use more appropriate labels instead.
-> > 
-> > 3. Reorder jump targets at the end.
-> > 
-> > 4. Delete a redundant check and kfree() call.
-> > 
-> > 5. Omit an explicit initialisation for the local variable “uncore_llc”.
-> > 
-> > 
-> > This issue was detected by using the Coccinelle software.
-> > 
-> > Fixes: 39621c5808f5dda75d03dc4b2d4d2b13a5a1c34b ("perf/x86/amd/uncore: Use dynamic events array")
-> > Fixes: 503d3291a937b726757c1f7c45fa02389d2f4324 ("perf/x86/amd: Try to fix some mem allocation failure handling")
-> 
-> Commit should be only the first 12 characters of the hash.
-> Refer:	https://docs.kernel.org/process/submitting-patches.html
-> 
-> But this is not a fix. Redundant calls to kfree do not break
-> anything.
-> 
-> Also avoid using the term "exception" since, in x86, exceptions are
-> hardware events.  Better to just call it "error handling".
+On Mon, Mar 27, 2023 at 4:34 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Mar 24, 2023 at 06:39:25PM -0700, Namhyung Kim escreveu:
+> > Hello,
+> >
+> > On Thu, Mar 23, 2023 at 8:29 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+> > >
+> > > If no target is specified for 'latency' subcommand, the execution fails
+> > > because - 1 (invalid value) is written to set_ftrace_pid tracefs file.
+> > > Make system wide the default target, which is the same as the default
+> > > behavior of 'trace' subcommand.
+> >
+> > I followed the convention to use -a for system-wide profiling.
+> > Not sure if it's ok to make it default, but I don't object. :)
+>
+> I'll make that an Acked-by, ok?
 
-Don't feed the trolls; Markus is a bot or other weird construct that's
-been banned from lkml.
+Sure.
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+
+> > >
+> > > Before the fix:
+> > >
+> > >   # perf ftrace latency -T schedule
+> > >   failed to set ftrace pid
+> > >
+> > > After the fix:
+> > >
+> > >   # perf ftrace latency -T schedule
+> > >   ^C#   DURATION     |      COUNT | GRAPH                                          |
+> > >        0 - 1    us |          0 |                                                |
+> > >        1 - 2    us |          0 |                                                |
+> > >        2 - 4    us |          0 |                                                |
+> > >        4 - 8    us |       2828 | ####                                           |
+> > >        8 - 16   us |      23953 | ########################################       |
+> > >       16 - 32   us |        408 |                                                |
+> > >       32 - 64   us |        318 |                                                |
+> > >       64 - 128  us |          4 |                                                |
+> > >      128 - 256  us |          3 |                                                |
+> > >      256 - 512  us |          0 |                                                |
+> > >      512 - 1024 us |          1 |                                                |
+> > >        1 - 2    ms |          4 |                                                |
+> > >        2 - 4    ms |          0 |                                                |
+> > >        4 - 8    ms |          0 |                                                |
+> > >        8 - 16   ms |          0 |                                                |
+> > >       16 - 32   ms |          0 |                                                |
+> > >       32 - 64   ms |          0 |                                                |
+> > >       64 - 128  ms |          0 |                                                |
+> > >      128 - 256  ms |          4 |                                                |
+> > >      256 - 512  ms |          2 |                                                |
+> > >      512 - 1024 ms |          0 |                                                |
+> > >        1 - ...   s |          0 |                                                |
+> > >
+> > > Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
+> > > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> > > ---
+> > >  tools/perf/builtin-ftrace.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > > index d7fe00f66b83..fb1b66ef2e16 100644
+> > > --- a/tools/perf/builtin-ftrace.c
+> > > +++ b/tools/perf/builtin-ftrace.c
+> > > @@ -1228,10 +1228,12 @@ int cmd_ftrace(int argc, const char **argv)
+> > >                 goto out_delete_filters;
+> > >         }
+> > >
+> > > +       /* Make system wide (-a) the default target. */
+> > > +       if (!argc && target__none(&ftrace.target))
+> > > +               ftrace.target.system_wide = true;
+> > > +
+> > >         switch (subcmd) {
+> > >         case PERF_FTRACE_TRACE:
+> > > -               if (!argc && target__none(&ftrace.target))
+> > > -                       ftrace.target.system_wide = true;
+> > >                 cmd_func = __cmd_ftrace;
+> > >                 break;
+> > >         case PERF_FTRACE_LATENCY:
+> > > --
+> > > 2.30.GIT
+> > >
+>
+> --
+>
+> - Arnaldo
