@@ -2,225 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D66C76195
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 11:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FD1C7619A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 11:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbjC0Lcy (ORCPT
+        id S232512AbjC0Lei (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 07:32:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
+        Mon, 27 Mar 2023 07:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjC0Lcx (ORCPT
+        with ESMTP id S232500AbjC0LeY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 07:32:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44447BD;
-        Mon, 27 Mar 2023 04:32:52 -0700 (PDT)
+        Mon, 27 Mar 2023 07:34:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A325A524E;
+        Mon, 27 Mar 2023 04:34:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CFB05611A8;
-        Mon, 27 Mar 2023 11:32:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D133DC433EF;
-        Mon, 27 Mar 2023 11:32:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5F9F611CD;
+        Mon, 27 Mar 2023 11:34:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A53CC433D2;
+        Mon, 27 Mar 2023 11:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679916771;
-        bh=xzeQeF7VDSQfdcn9lbYTzhWKS+0PyOIQvXJKv/d68Gk=;
+        s=k20201202; t=1679916859;
+        bh=SA/i1yJ7AzwsHKI1Lj57e8r058pyxPQCpM7WhIWzP2c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TdX+KXEEIWmMG1tH70EnTTpYWpUdldoj4gv9jg3J7lO37Vgi6v0uVF+5/YLW+HyYS
-         3QPO8+DC1AT2tvbD1QwE3lXTmmJsc4ATvx181cnz+aJj7C0TcCOU9vmu0an5oYiAxo
-         SDnBIR9FrdqXoH6QO1fv2cnE1+uu/jsdwWirE3gKVUUoci+TWkL0ckJnBlN8E0CyJs
-         5PDiTATBqfh2mCrtEx6sr6dZcZUBvCGbojJGOgmGYLOFHofEHUHX4lQfzR/A5C/Q8j
-         OEBjW3W69854sv5W3sEX0QNtHIDqAKvnoeU1yVQJ6widVDSPKpQLv28c4L4oeMFeMe
-         tP2F9loYj8cqg==
+        b=Rhdo5wtI+ZOCL2/2eK8ieaBA0nCxM0c4bWnqPfjSMhvxsv1tsGi9D8TSL2MB1wxIn
+         Mu+91hEhPooeQ8GdgSNngqVYrL7vSJBK4YFjcCwRdzx8vKlWclIWjdF5OKY1k+0FwL
+         EZEBAqmSF9VPZSS+dVKc/eFxOyL3YIG2b719o8H2aiBM9VXsgEF7yUxEuFi5qDOvKK
+         ViNkBLEBB1jOhyl5kBxSfIBQFeRl77NCFm9WK4bujbIHYtev8YmX+RYjnD1+4EDaaP
+         dpr36U9+5tFpOiuYMX5LcqvueyBxci+91mXsLNef6ECtDESnXBfNDUV/uRi+u4ucEV
+         cIfTsk6Y79Oqw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5861E4052D; Mon, 27 Mar 2023 08:32:48 -0300 (-03)
-Date:   Mon, 27 Mar 2023 08:32:48 -0300
+        id 0E83D4052D; Mon, 27 Mar 2023 08:34:17 -0300 (-03)
+Date:   Mon, 27 Mar 2023 08:34:17 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH] perf bench syscall: Add fork syscall benchmark
-Message-ID: <ZCF+4NQzctwgqxhM@kernel.org>
-References: <1679381821-22736-1-git-send-email-yangtiezhu@loongson.cn>
- <CAM9d7chTUDnrwrOnOS-CDBjNnuyLcSx05agDS4S7DgJ2Sj_9vw@mail.gmail.com>
+Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf ftrace: Make system wide the default target for
+ latency subcommand
+Message-ID: <ZCF/Oa+dK4Wc/7r7@kernel.org>
+References: <20230324032702.109964-1-yangjihong1@huawei.com>
+ <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7chTUDnrwrOnOS-CDBjNnuyLcSx05agDS4S7DgJ2Sj_9vw@mail.gmail.com>
+In-Reply-To: <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Mar 24, 2023 at 09:31:25PM -0700, Namhyung Kim escreveu:
+Em Fri, Mar 24, 2023 at 06:39:25PM -0700, Namhyung Kim escreveu:
 > Hello,
 > 
-> On Mon, Mar 20, 2023 at 11:57 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+> On Thu, Mar 23, 2023 at 8:29 PM Yang Jihong <yangjihong1@huawei.com> wrote:
 > >
-> > This is a follow up patch for the execve bench which is actually
-> > fork + execve, it makes sense to add the fork syscall benchmark
-> > to compare the execve part precisely.
-> >
-> > Some archs have no __NR_fork definition which is used only as a
-> > check condition to call test_fork(), let us just define it as -1
-> > to avoid build error.
-> >
-> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > If no target is specified for 'latency' subcommand, the execution fails
+> > because - 1 (invalid value) is written to set_ftrace_pid tracefs file.
+> > Make system wide the default target, which is the same as the default
+> > behavior of 'trace' subcommand.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> I followed the convention to use -a for system-wide profiling.
+> Not sure if it's ok to make it default, but I don't object. :)
 
-Thanks, applied.
+I'll make that an Acked-by, ok?
 
 - Arnaldo
-
  
 > Thanks,
 > Namhyung
 > 
-> 
+> >
+> > Before the fix:
+> >
+> >   # perf ftrace latency -T schedule
+> >   failed to set ftrace pid
+> >
+> > After the fix:
+> >
+> >   # perf ftrace latency -T schedule
+> >   ^C#   DURATION     |      COUNT | GRAPH                                          |
+> >        0 - 1    us |          0 |                                                |
+> >        1 - 2    us |          0 |                                                |
+> >        2 - 4    us |          0 |                                                |
+> >        4 - 8    us |       2828 | ####                                           |
+> >        8 - 16   us |      23953 | ########################################       |
+> >       16 - 32   us |        408 |                                                |
+> >       32 - 64   us |        318 |                                                |
+> >       64 - 128  us |          4 |                                                |
+> >      128 - 256  us |          3 |                                                |
+> >      256 - 512  us |          0 |                                                |
+> >      512 - 1024 us |          1 |                                                |
+> >        1 - 2    ms |          4 |                                                |
+> >        2 - 4    ms |          0 |                                                |
+> >        4 - 8    ms |          0 |                                                |
+> >        8 - 16   ms |          0 |                                                |
+> >       16 - 32   ms |          0 |                                                |
+> >       32 - 64   ms |          0 |                                                |
+> >       64 - 128  ms |          0 |                                                |
+> >      128 - 256  ms |          4 |                                                |
+> >      256 - 512  ms |          2 |                                                |
+> >      512 - 1024 ms |          0 |                                                |
+> >        1 - ...   s |          0 |                                                |
+> >
+> > Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
+> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 > > ---
-> >  tools/arch/x86/include/uapi/asm/unistd_32.h |  4 ++--
-> >  tools/arch/x86/include/uapi/asm/unistd_64.h |  3 +++
-> >  tools/perf/bench/bench.h                    |  1 +
-> >  tools/perf/bench/syscall.c                  | 35 +++++++++++++++++++++++++++++
-> >  tools/perf/builtin-bench.c                  |  1 +
-> >  5 files changed, 42 insertions(+), 2 deletions(-)
+> >  tools/perf/builtin-ftrace.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
-> > index 2712d5e..b8ddfc4 100644
-> > --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
-> > +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
-> > @@ -1,6 +1,6 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> > -#ifndef __NR_execve
-> > -#define __NR_execve 11
-> > +#ifndef __NR_fork
-> > +#define __NR_fork 2
-> >  #endif
-> >  #ifndef __NR_getppid
-> >  #define __NR_getppid 64
-> > diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
-> > index a6f7fe8..f70d2cad 100644
-> > --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
-> > +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
-> > @@ -1,4 +1,7 @@
-> >  /* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __NR_fork
-> > +#define __NR_fork 57
-> > +#endif
-> >  #ifndef __NR_execve
-> >  #define __NR_execve 59
-> >  #endif
-> > diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-> > index e438931..edfc257 100644
-> > --- a/tools/perf/bench/bench.h
-> > +++ b/tools/perf/bench/bench.h
-> > @@ -23,6 +23,7 @@ int bench_sched_messaging(int argc, const char **argv);
-> >  int bench_sched_pipe(int argc, const char **argv);
-> >  int bench_syscall_basic(int argc, const char **argv);
-> >  int bench_syscall_getpgid(int argc, const char **argv);
-> > +int bench_syscall_fork(int argc, const char **argv);
-> >  int bench_syscall_execve(int argc, const char **argv);
-> >  int bench_mem_memcpy(int argc, const char **argv);
-> >  int bench_mem_memset(int argc, const char **argv);
-> > diff --git a/tools/perf/bench/syscall.c b/tools/perf/bench/syscall.c
-> > index fe79f7f..ea4dfc07 100644
-> > --- a/tools/perf/bench/syscall.c
-> > +++ b/tools/perf/bench/syscall.c
-> > @@ -18,6 +18,10 @@
-> >  #include <unistd.h>
-> >  #include <stdlib.h>
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index d7fe00f66b83..fb1b66ef2e16 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -1228,10 +1228,12 @@ int cmd_ftrace(int argc, const char **argv)
+> >                 goto out_delete_filters;
+> >         }
 > >
-> > +#ifndef __NR_fork
-> > +#define __NR_fork -1
-> > +#endif
+> > +       /* Make system wide (-a) the default target. */
+> > +       if (!argc && target__none(&ftrace.target))
+> > +               ftrace.target.system_wide = true;
 > > +
-> >  #define LOOPS_DEFAULT 10000000
-> >  static int loops = LOOPS_DEFAULT;
-> >
-> > @@ -31,6 +35,23 @@ static const char * const bench_syscall_usage[] = {
-> >         NULL
-> >  };
-> >
-> > +static void test_fork(void)
-> > +{
-> > +       pid_t pid = fork();
-> > +
-> > +       if (pid < 0) {
-> > +               fprintf(stderr, "fork failed\n");
-> > +               exit(1);
-> > +       } else if (pid == 0) {
-> > +               exit(0);
-> > +       } else {
-> > +               if (waitpid(pid, NULL, 0) < 0) {
-> > +                       fprintf(stderr, "waitpid failed\n");
-> > +                       exit(1);
-> > +               }
-> > +       }
-> > +}
-> > +
-> >  static void test_execve(void)
-> >  {
-> >         const char *pathname = "/bin/true";
-> > @@ -71,6 +92,12 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
-> >                 case __NR_getpgid:
-> >                         getpgid(0);
-> >                         break;
-> > +               case __NR_fork:
-> > +                       test_fork();
-> > +                       /* Only loop 10000 times to save time */
-> > +                       if (i == 10000)
-> > +                               loops = 10000;
-> > +                       break;
-> >                 case __NR_execve:
-> >                         test_execve();
-> >                         /* Only loop 10000 times to save time */
-> > @@ -92,6 +119,9 @@ static int bench_syscall_common(int argc, const char **argv, int syscall)
-> >         case __NR_getpgid:
-> >                 name = "getpgid()";
+> >         switch (subcmd) {
+> >         case PERF_FTRACE_TRACE:
+> > -               if (!argc && target__none(&ftrace.target))
+> > -                       ftrace.target.system_wide = true;
+> >                 cmd_func = __cmd_ftrace;
 > >                 break;
-> > +       case __NR_fork:
-> > +               name = "fork()";
-> > +               break;
-> >         case __NR_execve:
-> >                 name = "execve()";
-> >                 break;
-> > @@ -143,6 +173,11 @@ int bench_syscall_getpgid(int argc, const char **argv)
-> >         return bench_syscall_common(argc, argv, __NR_getpgid);
-> >  }
-> >
-> > +int bench_syscall_fork(int argc, const char **argv)
-> > +{
-> > +       return bench_syscall_common(argc, argv, __NR_fork);
-> > +}
-> > +
-> >  int bench_syscall_execve(int argc, const char **argv)
-> >  {
-> >         return bench_syscall_common(argc, argv, __NR_execve);
-> > diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-> > index 814e9af..d0fcc3c 100644
-> > --- a/tools/perf/builtin-bench.c
-> > +++ b/tools/perf/builtin-bench.c
-> > @@ -53,6 +53,7 @@ static struct bench sched_benchmarks[] = {
-> >  static struct bench syscall_benchmarks[] = {
-> >         { "basic",      "Benchmark for basic getppid(2) calls",         bench_syscall_basic     },
-> >         { "getpgid",    "Benchmark for getpgid(2) calls",               bench_syscall_getpgid   },
-> > +       { "fork",       "Benchmark for fork(2) calls",                  bench_syscall_fork      },
-> >         { "execve",     "Benchmark for execve(2) calls",                bench_syscall_execve    },
-> >         { "all",        "Run all syscall benchmarks",                   NULL                    },
-> >         { NULL,         NULL,                                           NULL                    },
+> >         case PERF_FTRACE_LATENCY:
 > > --
-> > 2.1.0
+> > 2.30.GIT
 > >
 
 -- 
