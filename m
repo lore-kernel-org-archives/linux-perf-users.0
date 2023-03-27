@@ -2,149 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F13C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 14:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218DDC76195
+	for <linux-perf-users@archiver.kernel.org>; Mon, 27 Mar 2023 15:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233140AbjC0O7F convert rfc822-to-8bit (ORCPT
+        id S232816AbjC0PBw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 10:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38862 "EHLO
+        Mon, 27 Mar 2023 11:01:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233125AbjC0O7D (ORCPT
+        with ESMTP id S233194AbjC0PBv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 10:59:03 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B877555BA;
-        Mon, 27 Mar 2023 07:58:56 -0700 (PDT)
-Received: by mail-wm1-f41.google.com with SMTP id n10-20020a05600c4f8a00b003ee93d2c914so7245868wmq.2;
-        Mon, 27 Mar 2023 07:58:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679929135; x=1682521135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/w0DmVkKkN7hOPz99CWLwy97K2FhihScRkl+vR5X5lo=;
-        b=HDoxTVW39eaw+88ur6zRx51wHS7rb1/hwGtYAGzTQ84JWhTeLTng/pham0NoT9Txgm
-         qWaB887MGwnUG/Gs63769xfACghN9J+wknhvsF1fbQ843hb+IGAT7ovaa36zIbo4oOjl
-         xVPyprmB7Of8MCC04Pbx/Y7mGzY6qbxQZ6DrgWwiXWHLRdDujRQensYndfB9K9fsSw5l
-         D44l4TKs5pKMaRmpfS1wOo40DU9gQOsgsQNQDm7fvPtgJAMhG5vvjjOt5W2PEyunQFkd
-         MX695CCBTYHaqcTBphJaQF7/punUc1Gpr8e9s3Tg0VbBqzDx29W+9JWGG/3ql5lIxqdp
-         IZaA==
-X-Gm-Message-State: AO0yUKXjqaw9QHN7C0tOklGdR/rgOKUwkQ+7j1OGep9I8b6cj5/1o7yH
-        B9aZdT7SZz4t6F0FCbAEhAbzI+08jcv/R1a1bqM=
-X-Google-Smtp-Source: AK7set9kUIWF+oyAm9IvJDhDYyZYaMGIf8Xs+M0sh34kIaS6sHmLwXDUQfx4VVWUYtMfW1sRwDU1Dnd7rp/CNlc/SDg=
-X-Received: by 2002:a05:600c:241:b0:3ed:31cf:fe6e with SMTP id
- 1-20020a05600c024100b003ed31cffe6emr8790299wmj.41.1679929135009; Mon, 27 Mar
- 2023 07:58:55 -0700 (PDT)
+        Mon, 27 Mar 2023 11:01:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0D84C04;
+        Mon, 27 Mar 2023 08:01:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EAFFDB8160E;
+        Mon, 27 Mar 2023 15:01:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3465C433A0;
+        Mon, 27 Mar 2023 15:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679929306;
+        bh=r+dQg0PSqxF3VlUF2mJkLYbGDx+UxqX2Bes1Pj330fg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tRhqHa2RVftPiBnJK+wRC2nuNifGfnZOkN2+asNj5Q4o/ncjN39GMqkSk+7DAR9FR
+         hVyNMa7yh/l6/aREh5YbTK1/x+NEVGMibGi7NP8soas+vOzTwTsTnIIZzeTT9A+Ji3
+         c8DntpvW4ncJoqa7mZ9y6JthdOAy+pzLf3nr6R+jmS5o6M15YL5vmORj9ocyap4vjp
+         4Tb8XKxX1qH5dn2F6VjCaJCicZFO23DgP72p6BjbxBsQeqGPOMigiNkyiPM4WZuPne
+         Q5v8VjYi0d7SWFkKD+eyaga1OJ7rqre6LPfszesjnD5+lp0e1PRvmH5oRNWWkC57Ng
+         bH4BYAIp1yhJQ==
+From:   Will Deacon <will@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Zaid Al-Bassam <zalbassam@google.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jesus Sanchez-Palencia <jesussanp@google.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        Russell King <linux@armlinux.org.uk>,
+        linux-perf-users@vger.kernel.org,
+        James Morse <james.morse@arm.com>,
+        kvmarm@lists.cs.columbia.edu, kvmarm@lists.linux.dev,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 0/8] perf: arm: Make PMUv3 driver available for aarch32
+Date:   Mon, 27 Mar 2023 16:01:19 +0100
+Message-Id: <167992208038.2117465.2416051281544086020.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230317195027.3746949-1-zalbassam@google.com>
+References: <20230317195027.3746949-1-zalbassam@google.com>
 MIME-Version: 1.0
-References: <20230324032702.109964-1-yangjihong1@huawei.com>
- <CAM9d7ciGy2Mycm6etHDrt6tu331i-7DphHgBzde0_1=w67mvHg@mail.gmail.com> <ZCF/Oa+dK4Wc/7r7@kernel.org>
-In-Reply-To: <ZCF/Oa+dK4Wc/7r7@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 27 Mar 2023 07:58:43 -0700
-Message-ID: <CAM9d7cgHAkWQ+5yo9WuociTM_p8vghPPDT+Gtm4HAt_LqrzzTQ@mail.gmail.com>
-Subject: Re: [PATCH] perf ftrace: Make system wide the default target for
- latency subcommand
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 4:34 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Mar 24, 2023 at 06:39:25PM -0700, Namhyung Kim escreveu:
-> > Hello,
-> >
-> > On Thu, Mar 23, 2023 at 8:29 PM Yang Jihong <yangjihong1@huawei.com> wrote:
-> > >
-> > > If no target is specified for 'latency' subcommand, the execution fails
-> > > because - 1 (invalid value) is written to set_ftrace_pid tracefs file.
-> > > Make system wide the default target, which is the same as the default
-> > > behavior of 'trace' subcommand.
-> >
-> > I followed the convention to use -a for system-wide profiling.
-> > Not sure if it's ok to make it default, but I don't object. :)
->
-> I'll make that an Acked-by, ok?
+On Fri, 17 Mar 2023 15:50:19 -0400, Zaid Al-Bassam wrote:
+> Currently, PMUv3 driver is only available for ARMv8 aarch64 platforms,
+> ARMv8 platorms running in aarch32 mode dont have access to the driver.
+> This is, especially, a problem for ARMv8 platforms that only have
+> aarch32 support, like the Cortex-A32.
+> 
+> Make the PMUv3 driver available to arm arch (ARMv8 aarch32) by moving
+> the PMUv3 driver from arm64 to drivers, that makes the driver common
+> to both arm and arm64 architectures, then add PMUv3 arm Support.
+> 
+> [...]
 
-Sure.
+Applied to will (for-next/perf), thanks!
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+[1/8] arm64: perf: Move PMUv3 driver to drivers/perf
+      https://git.kernel.org/will/c/7755cec63ade
+[2/8] arm64: perf: Abstract system register accesses away
+      https://git.kernel.org/will/c/df29ddf4f04b
+[3/8] perf: pmuv3: Abstract PMU version checks
+      https://git.kernel.org/will/c/711432770f78
+[4/8] perf: pmuv3: Move inclusion of kvm_host.h to the arch-specific helper
+      https://git.kernel.org/will/c/11fba29a8a1f
+[5/8] perf: pmuv3: Change GENMASK to GENMASK_ULL
+      https://git.kernel.org/will/c/b3a070869f39
+[6/8] ARM: Make CONFIG_CPU_V7 valid for 32bit ARMv8 implementations
+      https://git.kernel.org/will/c/252309adc81f
+[7/8] ARM: perf: Allow the use of the PMUv3 driver on 32bit ARM
+      https://git.kernel.org/will/c/009d6dc87a56
+[8/8] ARM: mach-virt: Select PMUv3 driver by default
+      https://git.kernel.org/will/c/3b16f6268e66
 
-Thanks,
-Namhyung
+Cheers,
+-- 
+Will
 
-
-> > >
-> > > Before the fix:
-> > >
-> > >   # perf ftrace latency -T schedule
-> > >   failed to set ftrace pid
-> > >
-> > > After the fix:
-> > >
-> > >   # perf ftrace latency -T schedule
-> > >   ^C#   DURATION     |      COUNT | GRAPH                                          |
-> > >        0 - 1    us |          0 |                                                |
-> > >        1 - 2    us |          0 |                                                |
-> > >        2 - 4    us |          0 |                                                |
-> > >        4 - 8    us |       2828 | ####                                           |
-> > >        8 - 16   us |      23953 | ########################################       |
-> > >       16 - 32   us |        408 |                                                |
-> > >       32 - 64   us |        318 |                                                |
-> > >       64 - 128  us |          4 |                                                |
-> > >      128 - 256  us |          3 |                                                |
-> > >      256 - 512  us |          0 |                                                |
-> > >      512 - 1024 us |          1 |                                                |
-> > >        1 - 2    ms |          4 |                                                |
-> > >        2 - 4    ms |          0 |                                                |
-> > >        4 - 8    ms |          0 |                                                |
-> > >        8 - 16   ms |          0 |                                                |
-> > >       16 - 32   ms |          0 |                                                |
-> > >       32 - 64   ms |          0 |                                                |
-> > >       64 - 128  ms |          0 |                                                |
-> > >      128 - 256  ms |          4 |                                                |
-> > >      256 - 512  ms |          2 |                                                |
-> > >      512 - 1024 ms |          0 |                                                |
-> > >        1 - ...   s |          0 |                                                |
-> > >
-> > > Fixes: 53be50282269 ("perf ftrace: Add 'latency' subcommand")
-> > > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> > > ---
-> > >  tools/perf/builtin-ftrace.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> > > index d7fe00f66b83..fb1b66ef2e16 100644
-> > > --- a/tools/perf/builtin-ftrace.c
-> > > +++ b/tools/perf/builtin-ftrace.c
-> > > @@ -1228,10 +1228,12 @@ int cmd_ftrace(int argc, const char **argv)
-> > >                 goto out_delete_filters;
-> > >         }
-> > >
-> > > +       /* Make system wide (-a) the default target. */
-> > > +       if (!argc && target__none(&ftrace.target))
-> > > +               ftrace.target.system_wide = true;
-> > > +
-> > >         switch (subcmd) {
-> > >         case PERF_FTRACE_TRACE:
-> > > -               if (!argc && target__none(&ftrace.target))
-> > > -                       ftrace.target.system_wide = true;
-> > >                 cmd_func = __cmd_ftrace;
-> > >                 break;
-> > >         case PERF_FTRACE_LATENCY:
-> > > --
-> > > 2.30.GIT
-> > >
->
-> --
->
-> - Arnaldo
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
