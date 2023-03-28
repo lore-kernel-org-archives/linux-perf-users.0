@@ -2,105 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8BDC76195
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 00:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9AEC76195
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 01:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbjC1AxR (ORCPT
+        id S232224AbjC1BlO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 20:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44940 "EHLO
+        Mon, 27 Mar 2023 21:41:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjC1AxQ (ORCPT
+        with ESMTP id S229610AbjC1BlN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 20:53:16 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DE411A5;
-        Mon, 27 Mar 2023 17:53:16 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id ja10so10128256plb.5;
-        Mon, 27 Mar 2023 17:53:16 -0700 (PDT)
+        Mon, 27 Mar 2023 21:41:13 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C141FF2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 18:41:11 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-545d3b026a8so54951757b3.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 18:41:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679964795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8sV7N8LUyHkNioiD8M1h9rvVPbKL2byNtWw5W5Xmfpk=;
-        b=jV6hxQM96H8vWkkWVymtC8KSBBy09/mGteJIBvrTBHLyNct6Pqy/84aEqfEF9csOP9
-         fdCis1snMKiq1DbgEPWe1UqqW9O8WscgVJ4W+g7rzDm/GuGxigR8uaBP12mniaM8fz+a
-         TugBcB0qwGPJHjc9EmCdSx+dBft3Jc0V3H5JiPRRDJg7NKRAWea3dxjUmo3i11Dgk4uB
-         fAY8wq7C1hDU29dgquOzL5DJA96PC5W0qrWukEsM2Gr62ayfLPLtd63Arw7VDpNS1OpI
-         EL6fypWFJScOl+rEPMDLxI6BHhRuogGgYq15pJ5X9n6F+rnjbJ+521AoC+oMGg94WonL
-         96xw==
+        d=google.com; s=20210112; t=1679967670;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aw1R5c6S7HXa58dwvgrpM64BjFXPZraFszzosCRiAqw=;
+        b=c05M4jtyYHK6yLk4RsHmclGkBpHXTJCTSOHQgnFd/jLlrLXJn70Wc/z+eJRyffNCrA
+         N3n/GOv9bI55P1E6QOhMYeMU+gDpRE4SIcTr9eakvsMbxc/82Tykd/zCNm8ajSQpaPPF
+         E/13JdTBIR5GbPrxb1anVJJ9l331Vt9cRVb659lMyRuL6r2WT520cqszKKq4WHwF/+dj
+         7NcbBhmjQ3K7wVQhsAr5z77xSJAmuBXLG9XpMclkLJEsJADLPnZc22uGBbdL2mFbFSvd
+         QL5L/TY3riSrbtW7LfJATj2tZPPsJrcGhBb8VX6/LF6hFAvEB7g607c36KgSfgGWkXL/
+         t4sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679964795;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8sV7N8LUyHkNioiD8M1h9rvVPbKL2byNtWw5W5Xmfpk=;
-        b=BIXlJSZK3VCzqnLkbSnlcA3wONZ4vQTWtpQz0VVNVQvn8OEDSVpmm9JM2AMjdi2AMT
-         bmCxy0JjXHspUKWMlf5NC5V36r2ugkI2GSzYGMLzX4ddXQEpOBddgd8LL7r9XpTgvXad
-         Tn5/3abxxfeEL9asUP+2K3L7pgsWY13+QyTLc8XJ5EJddufoU/WzRkbOsGJJjlOxySfI
-         Kbt5G7JoZ1XeFrhDvQ5xfwSbvbKXly26fv+mAosMORAPTp0spRVM1o8iI1gWrptgNlyr
-         rhwY8JQXWahK6gOXMG0rK+T0BJ6BvpOO0j0QSZRZwe/B8ojo5gx8P0xTCxvqvyOzG8Gv
-         pcOw==
-X-Gm-Message-State: AAQBX9cIQhk3vDvSSF6Ej/ZNj7wwlG/DihR/ngP8Rgw7IwdC5nJXXI/S
-        XZZPyHUAmTME3poBM39t7GuhoF9j3z+FUvhjLwQ=
-X-Google-Smtp-Source: AKy350ZJVxAp3LNlRvxe5HntaBey69rZkupnsKcLPKAHqIzvAZ+BHMKHluvzaT3MoyNkj3xjRgMjIg5sjkLTPY1YRvg=
-X-Received: by 2002:a17:90a:5141:b0:23d:50d0:4ba4 with SMTP id
- k1-20020a17090a514100b0023d50d04ba4mr4175358pjm.3.1679964795626; Mon, 27 Mar
- 2023 17:53:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com> <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan> <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
- <20230313121420.GB2426758@leoy-yangtze.lan> <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
- <20230314003610.GD2426758@leoy-yangtze.lan>
-In-Reply-To: <20230314003610.GD2426758@leoy-yangtze.lan>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 27 Mar 2023 17:53:04 -0700
-Message-ID: <CAHbLzkqMZMB7sGLbJk82CpE9cssEU+WZYaXhVTVC-B40bY52jw@mail.gmail.com>
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com, yang@os.amperecomputing.com
+        d=1e100.net; s=20210112; t=1679967670;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aw1R5c6S7HXa58dwvgrpM64BjFXPZraFszzosCRiAqw=;
+        b=em7GQrAaGiSfdLSGORuOYqN5PotBkF6n2umk2WM7p8q/wDRLiH4yLczteLzqGzJp4r
+         LEra74zXVzZnZuo3OEumIBdFBh/mAi61zjsCIS19hqwI9nzZzT1Xs1EX+pqQ3qsWJCBR
+         mF9ZDp1OXgSBZfRwZoZwTozKXjsOWI9Rvxvr5puAVL8QJDGauFMD0ACECXbKxvJrExaF
+         MPCGPh909CLhqLDJsi4H7g0eCCK+iIk4o2FJP4fA+ozVMO6sWld7k8tdnjaC78yJfFTk
+         ekCd24DeUc6fOhiAVxCXXbiH5L78/eW0/q/zViQUfkfaIdv/kW9L0Jkj728QU2+6aLx8
+         YZdQ==
+X-Gm-Message-State: AAQBX9dFmMZ07ih7k1pfXBBDYge5GxwjFg/7dfPYqPO4Ek+wdoZpRsfN
+        8ITfDhc6eE/vADi9/M/VlfRIVtQtwjhl
+X-Google-Smtp-Source: AKy350Y0rOMqLtLagX9tq489iwyEP1VygEZbAsrGvCbDh8RQuFmfhf69wdPkH5xAnbrrYsIJRNwXl8RajUcD
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a544:20a5:5228:d98f])
+ (user=irogers job=sendgmr) by 2002:a05:6902:70d:b0:b45:5cbe:48b3 with SMTP id
+ k13-20020a056902070d00b00b455cbe48b3mr8845196ybt.0.1679967670518; Mon, 27 Mar
+ 2023 18:41:10 -0700 (PDT)
+Date:   Mon, 27 Mar 2023 18:40:52 -0700
+Message-Id: <20230328014058.870413-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+Subject: [PATCH v1 0/6] Simplify linking against tools/perf code
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Raul Silvera <rsilvera@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Chengdong Li <chengdongli@tencent.com>,
+        Denis Nikitin <denik@chromium.org>,
+        "=?UTF-8?q?Martin=20Li=C5=A1ka?=" <mliska@suse.cz>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo,
+When fuzzing something like parse-events, having the main function in
+perf.c alongside global variables like input_name means that
+input_name must be redeclared with the fuzzer function's
+main. However, as the fuzzer is using the tools/perf code as a library
+this causes backward linking reference that the linker may warn
+about. Reorganize perf.c and perf.h to avoid potential backward
+references, or so that the declaration/definition locations are more
+consistent.
 
-Just follow up on this one. Any update?
+Ian Rogers (6):
+  perf ui: Move window resize signal functions
+  perf usage: Move usage strings
+  perf header: Move perf_version_string declaration
+  perf version: Use regular verbose flag
+  perf util: Move input_name to util
+  perf util: Move perf_guest/host declarations
 
-Thanks,
-Yang
+ tools/perf/builtin-annotate.c     |  2 +-
+ tools/perf/builtin-buildid-list.c |  2 +-
+ tools/perf/builtin-c2c.c          |  2 +-
+ tools/perf/builtin-data.c         |  2 +-
+ tools/perf/builtin-diff.c         |  2 +-
+ tools/perf/builtin-evlist.c       |  2 +-
+ tools/perf/builtin-help.c         |  1 +
+ tools/perf/builtin-kmem.c         |  2 +-
+ tools/perf/builtin-kvm.c          |  1 +
+ tools/perf/builtin-kwork.c        |  2 +-
+ tools/perf/builtin-mem.c          |  2 +-
+ tools/perf/builtin-sched.c        |  2 +-
+ tools/perf/builtin-stat.c         |  2 +-
+ tools/perf/builtin-timechart.c    |  2 +-
+ tools/perf/builtin-version.c      |  7 +++----
+ tools/perf/builtin.h              |  3 ---
+ tools/perf/perf.c                 | 27 +--------------------------
+ tools/perf/perf.h                 |  9 ---------
+ tools/perf/ui/browsers/hists.c    |  2 +-
+ tools/perf/ui/hist.c              |  2 +-
+ tools/perf/ui/setup.c             | 19 +++++++++++++++++++
+ tools/perf/ui/tui/setup.c         |  1 -
+ tools/perf/ui/ui.h                |  3 +++
+ tools/perf/util/cs-etm.c          |  1 +
+ tools/perf/util/event.c           |  2 +-
+ tools/perf/util/evlist.c          |  1 +
+ tools/perf/util/header.h          |  2 ++
+ tools/perf/util/parse-events.c    |  2 +-
+ tools/perf/util/session.c         |  2 +-
+ tools/perf/util/top.c             |  2 +-
+ tools/perf/util/usage.c           |  6 ++++++
+ tools/perf/util/util.c            |  2 ++
+ tools/perf/util/util.h            |  8 ++++++++
+ 33 files changed, 66 insertions(+), 61 deletions(-)
 
-On Mon, Mar 13, 2023 at 5:36=E2=80=AFPM Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Mon, Mar 13, 2023 at 11:15:44AM -0700, Yang Shi wrote:
->
-> [...]
->
-> > > Just a quick summary, here we have two issues:
-> > >
-> > > - With command:
-> > >   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
-> > >   -- taskset --cpu-list 1 uname",
-> > >
-> > >   perf doesn't enable "text poke" attribution.
-> >
-> > No, it enables "text poke" and perf fails to decode coresight trace
-> > data too. It doesn't matter whether "--kcore" is after or before "-e
-> > cs/etm/@tmc_etf63/k".
->
-> Understand now.  Thanks for correction, if so we can ignore this one.
->
-> Leo
+-- 
+2.40.0.348.gf938b09366-goog
+
