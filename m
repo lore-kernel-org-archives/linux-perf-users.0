@@ -2,50 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E29C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 02:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF3DC76195
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 02:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbjC1CBO convert rfc822-to-8bit (ORCPT
+        id S232508AbjC1CEI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 22:01:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59896 "EHLO
+        Mon, 27 Mar 2023 22:04:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjC1CBN (ORCPT
+        with ESMTP id S232530AbjC1CEE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 22:01:13 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132EE213B;
-        Mon, 27 Mar 2023 19:01:10 -0700 (PDT)
-Received: by mail-wm1-f51.google.com with SMTP id d11-20020a05600c3acb00b003ef6e6754c5so2994764wms.5;
-        Mon, 27 Mar 2023 19:01:09 -0700 (PDT)
+        Mon, 27 Mar 2023 22:04:04 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 927A530DD;
+        Mon, 27 Mar 2023 19:03:57 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id n10-20020a05600c4f8a00b003ee93d2c914so8105590wmq.2;
+        Mon, 27 Mar 2023 19:03:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679968868; x=1682560868;
+        d=1e100.net; s=20210112; t=1679969036; x=1682561036;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NtdoywSg0sqxDkZWwUZLe9PwThZK6+X1Vn5yjVkPniA=;
-        b=q840BmdOmNMtI8DqpqCz6zSm4aiIWVNTdobEqXSp13Qcxqex1QLm6NmKvN5t50Pdrv
-         Va1bkkSzf4enrmdWC/2VLULvJDL+XOZrLe/pDmITsjvZhLPzQSssc7oTHUofs6jKmUVl
-         w0Q2zVqILSaPaG9rngP/651ZFCGd2JGoe+1uSUcwvwk51f8BsSLIidVDQwiJjrrZni6B
-         m7N0WWwMqW0/QbmVLyU5UqHXCCTdLlwfHwOoABw5gRbv68QHYLoF60DreDqaUaR8HkLe
-         PLzgWH7m0S6vIZS/dde0yenn5maE4lLEYGQnQnSXPP1oo11OG1N5mhK45rSnFkBTr6HE
-         Fd/w==
-X-Gm-Message-State: AO0yUKWPqN+KfW9I/M3hc29qvRepNM9gx8TN10KtH1AybgSP/hMnrsnZ
-        MKpraDqurtsdPhI9k4Q23RdWqBaYjiLglutTv30=
-X-Google-Smtp-Source: AK7set8Dgf5IkOqr80Zrge2p5LfFf7474+KGgg1W4Is5eNDeeskXjNFRpTG1P0L8KMpXGbz4l1NUUCouMbv6LNCatZA=
-X-Received: by 2002:a05:600c:2043:b0:3ee:4678:dde with SMTP id
- p3-20020a05600c204300b003ee46780ddemr10994112wmg.27.1679968868269; Mon, 27
- Mar 2023 19:01:08 -0700 (PDT)
+        bh=gInmUk9P3b9WKA+5yRilxNKeBceFmhgXL21P6JMAxkI=;
+        b=8ArlftfR/A5tr+rWiVRy1MnWBY09bERBPmaKqn6rFe8MsXy4B4nvFRI32JNbJPxOct
+         px7cCtNUNyt2HkW9vvrZVS+HhpuaEzMy2tOr864E3YSz9Nkga0WoPH95Eyd8uC+NdX1t
+         LoQfKQiYGO7VPuOx5e4WRfXKnnjfIhzohQlpduS1IH9ipYoDeL1egjPJzf43+41SgrAN
+         lq8ehXzt3yAWou5oiM9LsvgWJlvr5P8GybOnYHzn1szQ/wM8lUmuMh+eDXite01S8FPc
+         Wz0R7ico0W/2SSzySpO1mMj9bCjlOZyvraQVrhDmGn/pkfL8vczpam+sxz70mP7ZPuJp
+         j0Qg==
+X-Gm-Message-State: AO0yUKVSJzs8sy9T08aBekJZqJwVM6dtJPbU07M3n9ZXbHA7zBXb/Dpb
+        mdBAFnwJkWdhNvOUN7nedHx02wCqZyDkVHSnrWQ=
+X-Google-Smtp-Source: AK7set/AkfY3vKjeYkdkFvtTCzkZG2A3Fm1QMD6O70u77MMJYswx3QWErvKmHWFKRmcn7uGS5+ZvkZ1lqSwXrWisQGw=
+X-Received: by 2002:a1c:6a03:0:b0:3ed:dfd8:653d with SMTP id
+ f3-20020a1c6a03000000b003eddfd8653dmr11395008wmc.28.1679969035601; Mon, 27
+ Mar 2023 19:03:55 -0700 (PDT)
 MIME-Version: 1.0
 References: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
  <Y7w2qshoCEjKKVlz@kernel.org> <CAP-5=fUeC2nhUhFN69+sL687csSsoi5=ZEkRH70vUy+kTiF52g@mail.gmail.com>
  <CAP-5=fVaH0p4NkKiQSxaxZnT5zR=hbwSArO2n0L7tCNZwBumKQ@mail.gmail.com>
  <CAP-5=fXWDPzuFrrY+uKnfoa5gO9eEfGUsbCyXB8AS7Tz0ZX=jw@mail.gmail.com>
- <CAP-5=fVHK9VqMs=px3ZzKjinFG4t+oOZ8x2=65_jjds4DiSXLg@mail.gmail.com> <CAP-5=fUTAABzK2e_S3kFYV8jWCrHKfj10wPpTnthQjCLy7d2Gg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUTAABzK2e_S3kFYV8jWCrHKfj10wPpTnthQjCLy7d2Gg@mail.gmail.com>
+ <CAP-5=fVHK9VqMs=px3ZzKjinFG4t+oOZ8x2=65_jjds4DiSXLg@mail.gmail.com>
+ <CAP-5=fUTAABzK2e_S3kFYV8jWCrHKfj10wPpTnthQjCLy7d2Gg@mail.gmail.com> <CAM9d7cgdkzbzR+TjJo-gv1mNqCCxhyvWrXCFsVrpPHs19RNZYQ@mail.gmail.com>
+In-Reply-To: <CAM9d7cgdkzbzR+TjJo-gv1mNqCCxhyvWrXCFsVrpPHs19RNZYQ@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 27 Mar 2023 19:00:56 -0700
-Message-ID: <CAM9d7cgdkzbzR+TjJo-gv1mNqCCxhyvWrXCFsVrpPHs19RNZYQ@mail.gmail.com>
+Date:   Mon, 27 Mar 2023 19:03:44 -0700
+Message-ID: <CAM9d7ci_1Luc-VKPztNuw1seBA4akB8_2s4uJ5MaROuUtQUFWg@mail.gmail.com>
 Subject: Re: Google Summer-of-Code 2023
 To:     Ian Rogers <irogers@google.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -62,67 +63,71 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On Mon, Mar 27, 2023 at 3:01 PM Ian Rogers <irogers@google.com> wrote:
+On Mon, Mar 27, 2023 at 7:00 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On Mon, Mar 27, 2023 at 2:22 PM Ian Rogers <irogers@google.com> wrote:
+> Hello,
+>
+> On Mon, Mar 27, 2023 at 3:01 PM Ian Rogers <irogers@google.com> wrote:
 > >
-> > On Mon, Mar 13, 2023 at 9:38 AM Ian Rogers <irogers@google.com> wrote:
+> > On Mon, Mar 27, 2023 at 2:22 PM Ian Rogers <irogers@google.com> wrote:
 > > >
-> > > On Wed, Feb 22, 2023 at 7:58 PM Ian Rogers <irogers@google.com> wrote:
+> > > On Mon, Mar 13, 2023 at 9:38 AM Ian Rogers <irogers@google.com> wrote:
 > > > >
-> > > > The Linux Foundation was selected as a GSoC organization for 2023!
-> > > > https://summerofcode.withgoogle.com/programs/2023/organizations/the-linux-foundation
+> > > > On Wed, Feb 22, 2023 at 7:58 PM Ian Rogers <irogers@google.com> wrote:
+> > > > >
+> > > > > The Linux Foundation was selected as a GSoC organization for 2023!
+> > > > > https://summerofcode.withgoogle.com/programs/2023/organizations/the-linux-foundation
+> > > > >
+> > > > > This means we're looking for contributors until March 19th:
+> > > > > https://developers.google.com/open-source/gsoc/timeline
 > > > >
-> > > > This means we're looking for contributors until March 19th:
-> > > > https://developers.google.com/open-source/gsoc/timeline
+> > > > A reminder of the GSoC timeline. Applications open in a week;
+> > > >
+> > > > * February 22 - March 19
+> > > > Potential GSoC contributors discuss application ideas with mentoring
+> > > > organizations
+> > > >
+> > > > * March 20 - 18:00 UTC
+> > > > GSoC contributor application period begins
+> > > >
+> > > > * April 4 - 18:00 UTC
+> > > > GSoC contributor application deadline
+> > > >
+> > > > Thanks,
+> > > > Ian
 > > >
-> > > A reminder of the GSoC timeline. Applications open in a week;
-> > >
-> > > * February 22 - March 19
-> > > Potential GSoC contributors discuss application ideas with mentoring
-> > > organizations
-> > >
-> > > * March 20 - 18:00 UTC
-> > > GSoC contributor application period begins
-> > >
-> > > * April 4 - 18:00 UTC
+> > > A reminder that the application period closes in just over a week:
+> > > https://developers.google.com/open-source/gsoc/timeline
+> > > April 4 - 18:00 UTC
 > > > GSoC contributor application deadline
 > > >
 > > > Thanks,
 > > > Ian
 > >
-> > A reminder that the application period closes in just over a week:
-> > https://developers.google.com/open-source/gsoc/timeline
-> > April 4 - 18:00 UTC
-> > GSoC contributor application deadline
+> > If you are looking for ideas on how to write a good proposal, PSF has
+> > a collection of previously accepted proposals:
+> > https://blogs.python-gsoc.org/en/
 > >
-> > Thanks,
-> > Ian
+> > You can also see the final report of Riccardo Mancini:
+> > https://lore.kernel.org/lkml/3c4f8dd64d07373d876990ceb16e469b4029363f.camel@gmail.com/
 >
-> If you are looking for ideas on how to write a good proposal, PSF has
-> a collection of previously accepted proposals:
-> https://blogs.python-gsoc.org/en/
+> I have a proposal about the build without libtraceevent.
+> Now it disables many perf commands if it doesn't have the
+> library.  But part of sub-commands would work without it.
 >
-> You can also see the final report of Riccardo Mancini:
-> https://lore.kernel.org/lkml/3c4f8dd64d07373d876990ceb16e469b4029363f.camel@gmail.com/
+> For example, perf lock contention has two different modes
+> one is to use tracepoints (using the libtraceevent) and
+> the other is just use BPF.  The latter should work require
+> anything from the libtraceevent so we can enable such
+> usecase.
+>
+> Others like perf sched, kmem and so on might want to run
+> only record part like in a small embedded machine (without
+> libtraceevent).  Then we can copy the saved data to a host
+> and run the report or other sub-commands to analyze the
+> data (again, using libtraceevent).
 
-I have a proposal about the build without libtraceevent.
-Now it disables many perf commands if it doesn't have the
-library.  But part of sub-commands would work without it.
-
-For example, perf lock contention has two different modes
-one is to use tracepoints (using the libtraceevent) and
-the other is just use BPF.  The latter should work require
-anything from the libtraceevent so we can enable such
-usecase.
-
-Others like perf sched, kmem and so on might want to run
-only record part like in a small embedded machine (without
-libtraceevent).  Then we can copy the saved data to a host
-and run the report or other sub-commands to analyze the
-data (again, using libtraceevent).
+Please let me know, if anyone is interested. :)
 
 Thanks,
 Namhyung
