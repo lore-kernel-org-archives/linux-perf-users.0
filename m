@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F144C76195
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 01:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A1AC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 01:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232341AbjC1Blu (ORCPT
+        id S232307AbjC1BmA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 21:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
+        Mon, 27 Mar 2023 21:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232259AbjC1Blr (ORCPT
+        with ESMTP id S232324AbjC1Bl4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 21:41:47 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BB226B6
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 18:41:38 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-545dd1a1e31so51496817b3.22
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 18:41:38 -0700 (PDT)
+        Mon, 27 Mar 2023 21:41:56 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77542101
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 18:41:47 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5425c04765dso104524917b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 18:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679967698;
+        d=google.com; s=20210112; t=1679967707;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ywXshmLmOGjaY4x40OQowm4pf0YHZ4IGihkPimWY52w=;
-        b=JIUT89bxDoFZJcK7cHK+S1+2ScqvgAOhnR2/gdEVFiQdimTI5sLS7tYKXNHkd/wfDN
-         azXmzSdOQUWVdrRKq3glGBbqfUTMJgp3upM7zhI9j7lGO0yxmtPoCNSSNtPQLqymSWz2
-         T2wdW/dChQF7lXw1j3v8C91bMlhMgC/GDR02wPIC72YMBK97oVlj8gJJ993PQY9HUZXD
-         xBrCI0hI34wHicBN3nPn2WgbEL3cpxp/yS5uVkzuFgjxc+q8qGrDHWTiwCPoRMfcKCTR
-         qTolJZOMbCVlErTsFP/FapOPHvTVimqClVJkpZi9q3KRgPyFuhNJ8Baa+CVrTc4xcCzD
-         7rPg==
+        bh=2whu1qno1W8kHsCGkEHqnVJzukiPVbxiNAF9c06UxCw=;
+        b=dzIAs3yWxD9SpgkK4CCF49PQD8Zw4LTXKF4G+QesWtXDq5wdN44G9UzTYlL7lEjRUt
+         FcZaUmeLeh7UdjPykT4b0MCcZWMp+4dWk8y6AS0Gn61MYeW8uTdDc+9HNNM9YhCrG5k6
+         z6lEGiunAyGIVoM36gsdf2Yfsbz1wfwp6gQ+CxC6UQkSN/Wuo2SmJTmURn2Vq0DrDzLi
+         Xe5yXFnEpGBnoW0+NU+2i+qZHCVlfrGiWuZwvSzM/qd8fBjvIuNs2qMLEBelBE1DxeVr
+         Y8DyyJ5QWcOWHpDdVAlL7zpzsoX/2tPUoVDox+4rTAZBisx51TTtDUPATsagqJY4zrea
+         w/NA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679967698;
+        d=1e100.net; s=20210112; t=1679967707;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ywXshmLmOGjaY4x40OQowm4pf0YHZ4IGihkPimWY52w=;
-        b=7FIGPOkh1UUFqu11NYMXi/0hu05F2qln9PB5QUusoIpS/QGUtRq7Iv56LMoXq21eAF
-         XsYLNSQNCdvGDgmFAlNIQQ97xwnBeIKyk8dkOTIiIshc7jF8K6FZpIOKto6/tRnQpI0c
-         9JMQ2k3mz2r7sl1xfZtA6ugy3wXkvqd95VksnWNgH8YwCxDvJSa36pT7aBRHt5kVT4j4
-         AvqokvVO6X6kCFVHYFFXwCUBFG6C5Iz32gPF4NzaRH0Mv44h1g4iTGsOXaBMcG7Quqob
-         P1xVxPxsEikXzdJ2Hafixe6lya/KRSBaXLLNeMkfSmNGo9TVGTLjJX6BThDnb2b2H62p
-         wXdg==
-X-Gm-Message-State: AAQBX9d38c87dZvLgDjcJ4fOuJJhcqalifrYt7ot3URx9F+9yjM1Y0Ne
-        roaW5Wz4ZpoK/+RdQSKQJIGDfWdLfGIi
-X-Google-Smtp-Source: AKy350Y6n28wu/MafERlysbCqy15XbAzYFhuYCmhQpAiBUTzBQwlNMpFtw8jJBVCP+CeoUWRtORJUH377it4
+        bh=2whu1qno1W8kHsCGkEHqnVJzukiPVbxiNAF9c06UxCw=;
+        b=g4sP+oMjiuOmZ9/+6IYSZbj978zjUX6kXK6XX8+igSrQ5OV0IZOJrHstoLylS4lw/Z
+         hqWF32WAECmL5tiIIH7ohIlmMRVcKRqsBRIZBiI91WTG2Zp/plEUmpT9M/20SYgX6g9Y
+         FwcRWA7tjL0HtIs3mUSaz//nZY+VpcXgGeN0HPrXTlMihE9PUtdkPwmOrp098tYELCSZ
+         eLjeHpH3fH7XAyMss7dBBwzBsSeVQ0KbqRYJopSPlIv2Mv7fPULjChqEv27zQDwgB3Kn
+         cQ5w9QXCKH42alHmRJQ/bp5F9z48XRCWukv2m2RQS0pWvS9mJ2trdK/96oZAK7ZhqsY/
+         wuYQ==
+X-Gm-Message-State: AAQBX9cvhkJELizohmuMFYaBbHwBPWkorXZXL2zad3jr0HrVPBV111cY
+        8YLZZYh2I06aqzM/2p6EgTYk4Gn0u8yX
+X-Google-Smtp-Source: AKy350b1a/nh466GprtSUGyffhrOZ45C91uTo++lFce4psNXjIgoG3WvpR2OPr4gdCSrV/EcpF7e2bsmn/jG
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a544:20a5:5228:d98f])
- (user=irogers job=sendgmr) by 2002:a25:b909:0:b0:b39:b0d3:9a7f with SMTP id
- x9-20020a25b909000000b00b39b0d39a7fmr6562095ybj.7.1679967698066; Mon, 27 Mar
- 2023 18:41:38 -0700 (PDT)
-Date:   Mon, 27 Mar 2023 18:40:55 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1245:b0:b77:d2db:5fa4 with SMTP
+ id t5-20020a056902124500b00b77d2db5fa4mr8546242ybu.8.1679967707068; Mon, 27
+ Mar 2023 18:41:47 -0700 (PDT)
+Date:   Mon, 27 Mar 2023 18:40:56 -0700
 In-Reply-To: <20230328014058.870413-1-irogers@google.com>
-Message-Id: <20230328014058.870413-4-irogers@google.com>
+Message-Id: <20230328014058.870413-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230328014058.870413-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v1 3/6] perf header: Move perf_version_string declaration
+Subject: [PATCH v1 4/6] perf version: Use regular verbose flag
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -89,53 +89,69 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move to match the definition in header.c.
+Remove additional version_verbose flag by using the existing verbose
+variable.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-version.c | 2 +-
+ tools/perf/builtin-version.c | 5 ++---
+ tools/perf/perf.c            | 2 +-
  tools/perf/perf.h            | 1 -
- tools/perf/util/header.h     | 2 ++
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ 3 files changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index c5d03a11e565..4a43043ca8ef 100644
+index 4a43043ca8ef..1872c90a6667 100644
 --- a/tools/perf/builtin-version.c
 +++ b/tools/perf/builtin-version.c
-@@ -1,7 +1,7 @@
+@@ -1,6 +1,7 @@
  // SPDX-License-Identifier: GPL-2.0
  #include "builtin.h"
--#include "perf.h"
  #include "color.h"
-+#include "util/header.h"
++#include "util/debug.h"
+ #include "util/header.h"
  #include <tools/config.h>
  #include <stdbool.h>
- #include <stdio.h>
+@@ -8,8 +9,6 @@
+ #include <string.h>
+ #include <subcmd/parse-options.h>
+ 
+-int version_verbose;
+-
+ struct version {
+ 	bool	build_options;
+ };
+@@ -92,7 +91,7 @@ int cmd_version(int argc, const char **argv)
+ 
+ 	printf("perf version %s\n", perf_version_string);
+ 
+-	if (version.build_options || version_verbose == 1)
++	if (version.build_options || verbose > 0)
+ 		library_status();
+ 
+ 	return 0;
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 997bb9ea5ebc..441c354b8304 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -212,7 +212,7 @@ static int handle_options(const char ***argv, int *argc, int *envchanged)
+ 
+ 		if (!strcmp(cmd, "-vv")) {
+ 			(*argv)[0] = "version";
+-			version_verbose = 1;
++			verbose = 1;
+ 			break;
+ 		}
+ 
 diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-index e21a7e15a34c..20e9b93f8a39 100644
+index 20e9b93f8a39..989eb17ec474 100644
 --- a/tools/perf/perf.h
 +++ b/tools/perf/perf.h
-@@ -10,7 +10,6 @@
+@@ -18,5 +18,4 @@ enum perf_affinity {
+ 	PERF_AFFINITY_MAX
+ };
  
- extern const char *input_name;
- extern bool perf_host, perf_guest;
--extern const char perf_version_string[];
- 
- enum perf_affinity {
- 	PERF_AFFINITY_SYS = 0,
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index e3861ae62172..59eeb4a32ac5 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -115,6 +115,8 @@ struct perf_session;
- struct perf_tool;
- union perf_event;
- 
-+extern const char perf_version_string[];
-+
- int perf_session__read_header(struct perf_session *session, int repipe_fd);
- int perf_session__write_header(struct perf_session *session,
- 			       struct evlist *evlist,
+-extern int version_verbose;
+ #endif
 -- 
 2.40.0.348.gf938b09366-goog
 
