@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7E2C76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 23:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD32C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 23:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjC1X41 (ORCPT
+        id S229847AbjC1X4e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Mar 2023 19:56:27 -0400
+        Tue, 28 Mar 2023 19:56:34 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjC1X4Z (ORCPT
+        with ESMTP id S229755AbjC1X43 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Mar 2023 19:56:25 -0400
+        Tue, 28 Mar 2023 19:56:29 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1922685
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 16:56:00 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 204-20020a250fd5000000b00b6d6655dc35so13572418ybp.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 16:56:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1640930F6
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 16:56:11 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 204-20020a250fd5000000b00b6d6655dc35so13572707ybp.6
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 16:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680047760;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FqxML7xkN1lg5mLK3PMobUIZG+frNSAW+D2pze+pEWQ=;
-        b=MiMTpQr6+kNRUZmxlErxhLoP4NYq4RrGrVST1Sc3OVwcvCObBqd2kSgsQDG+bUmTEv
-         zRc3wc7zHC2U9nW8W09sAccj5mTFLeyFg19sIFCsLfcid2NfUi9CtYnOJz6WW8d+YP73
-         aNbh/DywCsGlwzC70wPA5lRUvXN+lZkbhcBQvc7w/cDjIyCbKdvTUJLQzDT53LbSL7Mp
-         msgjcpf+q2Yj4npPCuPyhnBYOkE1hvuu1GFd2M0/CJ6lVwlfBlkBxI5G7d8vuAINBgMn
-         az/7l7gylBmd1hogGLjlJnuS6Y9vV1EEjXFma1w5VIDYS8l8MS2XMl02t7+fLQmm1cL5
-         woIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680047760;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20210112; t=1680047769;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=FqxML7xkN1lg5mLK3PMobUIZG+frNSAW+D2pze+pEWQ=;
-        b=Z6gnWvIutZwJnqI6R8zpL6TFzgeLexmLaDruJYQodvPWM9CAdQDa21b054ZpFKCj4H
-         IVA65JJxxmphWKXFB/2J+7tt5C3zNlPTyI9RjmtVaz0Er/OTB5iKgflCGSkfluJ9sBMl
-         TgQNMyFGHtPq1rIQroZ9R2kkvW15S48V48Bnp5K1+HL7dLJ9eA1WbKFg+DmloaT3/VH5
-         6lbWOp12ATtgtp7SaFmIWI+fv0vDMJjbzqYlBlAdyqQkxwNXjFwCE+GBCkXZYRCibWu0
-         nggGNEY/md3GnVZ2KQnvaoSUkv5zNXtoGDlJ7tMbPJGcWvSsbHv3LPUqzU/zDOyyqx57
-         9rJw==
-X-Gm-Message-State: AAQBX9fcu4SH+7+UuWtPH367gdM1MORVK9P5doCmW+pAt+yXShgfmkGt
-        38vp12eXde50VUvo4YFELWGJd+Qf0DIv
-X-Google-Smtp-Source: AKy350ZZ9lVS00jsMGW8v4w4WleLMmPpByGkGSrq2CXRkk9qPGEztz5FAJobs50Rs8EBpLNwRbeAUJVOafcx
+        bh=QwhWDPXvx6cfkb5reLksh9jCAury04O7LzcSvRbB8Zs=;
+        b=Ltgu8Ff4auNliuT5UliaEkAuq9i2Tzu+5U2BQzip1AZokzyNRdwHBLrr0A1q1TCteh
+         6HA8rQWn2amyDpZCOcWkijg0aV3wa7oBLO7ki4rM6Xzr9cqFtUVrftkblee0rzPjMb+L
+         wJ4eW8t3SAEsbCXRcXZGpnQH05BULFCsjjs0PkcoeeHAo5P4f+L0tmwiyGtOxdqtUqwk
+         lRhAg5051knYmNhbu0rixPc04ElVILRM6fmL1sequabHkJhfYFow2m9eE4OC/NNGI7D5
+         M1zB/Iu+BE5dCWofkvweIXTenU0zYzPftguEROrDBdX8QE4rvu1TaHyUsk4TFKeXBN50
+         OHyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680047769;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QwhWDPXvx6cfkb5reLksh9jCAury04O7LzcSvRbB8Zs=;
+        b=b7XPbA6e87hwz0Lo24a53wuJAX7Aa4aj7smoku4r7pDDn1xhg2JnBkFRQjhjwHYTjm
+         ghGgwOVhkw9jUoCLJ34tsmh2eFo8sqw23EqCCklpN6aDq/Tjn0Z2RvmbnTSzqGFSmcOv
+         Dnv5KCRkB/vWNQO76swif8rBbdYEWzDvIHpGfBeFXiuzgHlI36okB8vu5kbvbWpusl1u
+         z8gMMmIY8Kt4mh6kk5EXMJmYbbuTyHJ+vaAAm+KRuzeGR7xJ2DdcEgpJmJ4RWXfJPl4g
+         WpXKgBabkjBHEy/4CN3O2+dD3kBQj8qNyAMU8QAZpyrZWo7LuR4ynVk12AkUo9rZkj1S
+         lbcg==
+X-Gm-Message-State: AAQBX9c5nzOA2ITqqMZoaNJ1Xg0llUwRD6vJ00ZS7D9cq72QkBRi3J4U
+        63C255d6SpTHqMMob/9uusCioYN8subt
+X-Google-Smtp-Source: AKy350bPHWqR7CBnjrbpMPu6sWr+4djUlu6CbJ9r9CJVXCNAz4PB6GrJeq1BsxI9gq7g43uy2Tw/VjdqKiJY
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:6519:f0d3:9540:5c31])
- (user=irogers job=sendgmr) by 2002:a25:a323:0:b0:b35:91cc:9e29 with SMTP id
- d32-20020a25a323000000b00b3591cc9e29mr229665ybi.5.1680047760022; Tue, 28 Mar
- 2023 16:56:00 -0700 (PDT)
-Date:   Tue, 28 Mar 2023 16:55:37 -0700
-Message-Id: <20230328235543.1082207-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:1003:b0:b1d:5061:98e3 with SMTP
+ id w3-20020a056902100300b00b1d506198e3mr11705976ybt.6.1680047769358; Tue, 28
+ Mar 2023 16:56:09 -0700 (PDT)
+Date:   Tue, 28 Mar 2023 16:55:38 -0700
+In-Reply-To: <20230328235543.1082207-1-irogers@google.com>
+Message-Id: <20230328235543.1082207-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230328235543.1082207-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v1 0/6] config file/command line for objdump & addr2line
+Subject: [PATCH v1 1/6] perf annotate: Delete session for debug builds
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,38 +79,42 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Allow objdump to be set as a perf config file variable. As previously
-objdump was set via the command line, the string was owned by
-argv. Now the string must be strdup-ed, so the corresponding logic
-needs changing with an annotation_options__init/exit.
+Use the debug build indicator as the guide to free the session. This
+implements a behavior described in a comment, which is consequentially
+removed.
 
-Add command line and config file options for addr2line, set in
-symbol_conf for convenience. This doesn't allow the setting of
-llvm-addr2line due to a bug, but could in the future.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-annotate.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-Ian Rogers (6):
-  perf annotate: Delete session for debug builds
-  perf report: Additional config warnings
-  perf annotate: Add init/exit to annotation_options remove default
-  perf annotate: Own objdump_path and disassembler_style strings
-  perf annotate: Allow objdump to be set in perfconfig
-  perf symbol: Add command line support for addr2line path
-
- tools/perf/Documentation/perf-annotate.txt |  3 ++
- tools/perf/Documentation/perf-config.txt   |  8 +++-
- tools/perf/Documentation/perf-report.txt   |  3 ++
- tools/perf/Documentation/perf-top.txt      |  6 +++
- tools/perf/arch/common.c                   |  4 +-
- tools/perf/arch/common.h                   |  2 +-
- tools/perf/builtin-annotate.c              | 42 +++++++++++++-------
- tools/perf/builtin-report.c                | 35 ++++++++++++++---
- tools/perf/builtin-top.c                   | 27 +++++++++++--
- tools/perf/util/annotate.c                 | 45 +++++++++++++++++-----
- tools/perf/util/annotate.h                 |  9 +++--
- tools/perf/util/srcline.c                  | 26 ++++++++-----
- tools/perf/util/symbol_conf.h              |  1 +
- 13 files changed, 163 insertions(+), 48 deletions(-)
-
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 4750fac7bf93..98d1b6379230 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -692,16 +692,12 @@ int cmd_annotate(int argc, const char **argv)
+ 
+ out_delete:
+ 	/*
+-	 * Speed up the exit process, for large files this can
+-	 * take quite a while.
+-	 *
+-	 * XXX Enable this when using valgrind or if we ever
+-	 * librarize this command.
+-	 *
+-	 * Also experiment with obstacks to see how much speed
+-	 * up we'll get here.
+-	 *
+-	 * perf_session__delete(session);
++	 * Speed up the exit process by only deleting for debug builds. For
++	 * large files this can save time.
+ 	 */
++#ifndef NDEBUG
++	perf_session__delete(annotate.session);
++#endif
++
+ 	return ret;
+ }
 -- 
 2.40.0.348.gf938b09366-goog
 
