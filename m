@@ -2,115 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DC6C76195
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 03:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E42C76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 06:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232536AbjC1DZH (ORCPT
+        id S229827AbjC1GBM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 27 Mar 2023 23:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34614 "EHLO
+        Tue, 28 Mar 2023 02:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbjC1DZE (ORCPT
+        with ESMTP id S230224AbjC1GBM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 27 Mar 2023 23:25:04 -0400
-Received: from s02.bc.larksuite.com (s02.bc.larksuite.com [209.127.230.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5719B1700
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 20:25:02 -0700 (PDT)
+        Tue, 28 Mar 2023 02:01:12 -0400
+Received: from s01.bc.larksuite.com (s01.bc.larksuite.com [209.127.230.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0B32685
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Mar 2023 23:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lixiang-com.20200927.dkim.feishu.cn; t=1679973899;
+ s=s1; d=lixiang-com.20200927.dkim.feishu.cn; t=1679983269;
   h=from:subject:mime-version:from:date:message-id:subject:to:cc:
  reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=S/0JvqQ/896ZXvv4o+sf22FyAmelTqBSn6S9KKmvODI=;
- b=L+sgePjoTrJGwPVtUUUq99nW57Z2p786leOvNkh+lYzxzAyNaP9e6jS//5kxW6SRqf+0QS
- jz4x2LqrZq1+BAXCCuQL6VyGfxMk5UHpxaze0aCl/ur/xk9N9CuW3/L8tgmZzy2vIynP1z
- 5gQtOrOdHEcYBCOvQRlnkxTqA6FnjR98+5r85J4X++BDcqkUUQLC3/+8KNoQvfKkexq6TM
- NnX/JQiRlyFwWS7ftZWWDyZ6zDKUBH4VwqupkodFTPDjZt7RBayLCT6b5kz+0ErtjpMOjv
- x89lTu9T6degMa3+JBY8dphb/bxp+FKKlv1bcVLGXabSf3HzVwEiFfgvctN6eg==
-To:     "Namhyung Kim" <namhyung@kernel.org>
-Cc:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+ bh=ls53ZYePWfC7pwGVwR7iobmp8L5r8Op+aABHrg1I2vc=;
+ b=1u4S2GFKYveNbYgJQuEnxnW+GnLDSghWUIJJWzsargu/YItTdhLkqK8PF+OREv3Uw1uX/p
+ EqX8j26aSAs+2eQBY7tbMCzqB5trNx/2NSjE4jrIFBLniJDBYbXL/R+EfIo0imgJv93/JF
+ OnDUxuDLaFAKhqRPedcA8QC9LJr6/wWfXAHm7YCDRO1ghTNouhbvJU0GWHAhqDFYcQLzN/
+ GTbLPQIpJBgvd5rfFAme/dl34sAMAVTCVtTlPxiq4krD1Xk8s91ZM1mW0Az5hmHNzc42Xw
+ TUSA0BZB/WDHwjMF6bpnJowz1JY8an9ZJnUmflLYMYguN5K0LraDDviMTeNX3Q==
+Subject: [PATCH v4] perf sched: Fix sched latency analysis incorrect
+Content-Type: multipart/alternative;
+ boundary=4e542576404a7eed609381af55c19df737de2c5232fc7d04e6424ca19eff
+Date:   Tue, 28 Mar 2023 14:00:57 +0800
+Message-Id: <20230328060038.2346935-1-zangchunxin@lixiang.com>
+Mime-Version: 1.0
+To:     <namhyung@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <acme@kernel.org>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Cc:     <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
         <jolsa@kernel.org>, <irogers@google.com>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Chunxin Zang" <zangchunxin@lixiang.com>,
         "Jerry Zhou" <zhouchunhua@lixiang.com>
-In-Reply-To: <CAM9d7chc+eJvPMm3ZhcxcbYUjNzVvBG7N0DvVwMzmOOb+-xiMQ@mail.gmail.com>
-Content-Type: multipart/alternative;
- boundary=a757cc52bbb56293671f39bb7197e7ba1cf8bede06d0abb4136c293638c0
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] perf sched: Fix sched latency analysis incorrect
-Date:   Tue, 28 Mar 2023 11:24:48 +0800
-Message-Id: <C84E377A-CBC1-49A7-A8EC-09F2503433D2@lixiang.com>
-Mime-Version: 1.0
-X-Mailer: Apple Mail (2.3731.400.51.1.1)
-References: <20230317063246.1128219-1-zangchunxin@lixiang.com> <CAM9d7chc+eJvPMm3ZhcxcbYUjNzVvBG7N0DvVwMzmOOb+-xiMQ@mail.gmail.com>
 From:   "Chunxin Zang" <zangchunxin@lixiang.com>
-X-Lms-Return-Path: <lba+264225dff+0cf98b+vger.kernel.org+zangchunxin@lixiang.com>
+X-Lms-Return-Path: <lba+264228299+e347b3+vger.kernel.org+zangchunxin@lixiang.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---a757cc52bbb56293671f39bb7197e7ba1cf8bede06d0abb4136c293638c0
-Content-Transfer-Encoding: base64
+--4e542576404a7eed609381af55c19df737de2c5232fc7d04e6424ca19eff
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
 
-PiBPbiBNYXIgMjgsIDIwMjMsIGF0IDAzOjAwLCBOYW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5l
-bC5vcmc+IHdyb3RlOg0KPiANCj4gT24gVGh1LCBNYXIgMTYsIDIwMjMgYXQgMTE6MzPigK9QTSBD
-aHVueGluIFphbmcgPHphbmdjaHVueGluQGxpeGlhbmcuY29tPiB3cm90ZToNCj4+IA0KPj4gJ3Bl
-cmYgc2NoZWQgbGF0ZW5jeScgaXMgaW5jb3JyZWN0IHRvIGdldCBwcm9jZXNzIHNjaGVkdWxlIGxh
-dGVuY3kNCj4+IHdoZW4gaXQgdXNlZCAnc2NoZWQ6c2NoZWRfd2FrZXVwJyB0byBhbmFseXNpcyBw
-ZXJmLmRhdGEuDQo+PiANCj4+IEJlY2F1c2UgJ3BlcmYgcmVjb3JkJyBwcmVmZXIgdXNlICdzY2hl
-ZDpzY2hlZF93YWtpbmcnIHRvDQo+PiAnc2NoZWQ6c2NoZWRfd2FrZXVwJyBzaW5jZSBjb21taXQg
-ZDU2NmE5YzJkNDgyICgicGVyZiBzY2hlZDogUHJlZmVyDQo+PiBzY2hlZF93YWtpbmcgZXZlbnQg
-d2hlbiBpdCBleGlzdHMiKS4gSXQncyB2ZXJ5IHJlYXNvbmFibGUgdG8NCj4+IGV2YWx1YXRlIHBy
-b2Nlc3Mgc2NoZWR1bGUgbGF0ZW5jeS4NCj4+IA0KPj4gU2ltaWxhcmx5LCB1cGRhdGUgc2NoZWQg
-bGF0ZW5jeS9tYXAvcmVwbGF5IHRvIHVzZSBzY2hlZF93YWtpbmcgZXZlbnRzLg0KPiANCj4gSGF2
-ZSB5b3UgY2hlY2tlZCBwZXJmIHNjaGVkIHJlcGxheSAoYWRkX3NjaGVkX2V2ZW50X3dha2V1cCk/
-ICBJIHRoaW5rDQo+IGl0J2QgbWFrZSB1bm5lY2Vzc2FyeSBzY2hlZCBhdG9tcyBmb3Igc2NoZWRf
-d2FrZXVwLg0KPiANCj4gQ2FuIHdlIGNoZWNrIHRoZSB3YWtldXAgYW5kIHdha2luZyBldmVudHMg
-YW5kIGRpc2FibGUgdGhlIHdha2V1cA0KPiBpZiB0aGUgd2FraW5nIGlzIGZvdW5kIGxpa2UgaW4g
-cGVyZl9zY2hlZF9fdGltZWhpc3Q/DQoNClRoYXQncyBhIGdvb2QgaWRlYSwgSSB3aWxsIGRvIHRo
-YXQgaW4gdjQgdmVyc2lvbi4NCg0KQmVzdCByZWdhcmRzDQpDaHVueGluDQoNCj4gDQo+IFRoYW5r
-cywNCj4gTmFtaHl1bmcNCj4gDQo+IA0KPj4gDQo+PiBJIHVzZWQgJ3BlcmYgcmVjb3JkIC1lICJz
-Y2hlZDoqICInIHRvIHJlY29yZCBib3RoIHdha2V1cCBhbmQgd2FraW5nIGV2ZW50cywNCj4+IGFu
-ZCB1c2UgZml4ZWQgcGVyZiB2ZXJzaW9uIHRvIGFuYWx5c2lzIHRoZW0sIHRoZSByZXN1bHQgaXMg
-Y29ycmVjdC4NCj4+IEJlY2F1c2UgdGhlIGZ1bmN0aW9uICJsYXRlbmN5X3dha2V1cF9ldmVudCIg
-d2lsbCBjaGFuZ2UgYXRvbS0+c3RhdGUgdG8NCj4+IFRIUkVBRF9XQUlUX0NQVSBhdCB3YWtpbmcg
-ZXZlbnQsIGFuZCBqdWRnZSB0aGUgJ2F0b20tPnN0YXRlICE9DQo+PiBUSFJFQURfU0xFRVBJTkcn
-IGlzIGZhbHNlIHRoZW4gcmV0dXJuZWQgYXQgd2FrZXVwIGV2ZW50Lg0KPj4gDQo+PiBTaWduZWQt
-b2ZmLWJ5OiBDaHVueGluIFphbmcgPHphbmdjaHVueGluQGxpeGlhbmcuY29tPg0KPj4gU2lnbmVk
-LW9mZi1ieTogSmVycnkgWmhvdSA8emhvdWNodW5odWFAbGl4aWFuZy5jb20+DQo+PiAtLS0NCj4+
-IA0KPj4gICAgICAgIGNoYW5nZWxvZ3MgaW4gdjM6DQo+PiAgICAgICAgMSkgZml4IG5vbi1BU0NJ
-SSBjaGFyYWN0ZXJzIGluIGNvbW1pdCBsb2cuDQo+PiANCj4+ICAgICAgICBjaGFuZ2Vsb2dzIGlu
-IHYyOg0KPj4gICAgICAgIDEpIGZpeCBlbWFpbCBhZGRyZXNzIGRpc2FwcGVhcmluZyBpbiAnc2ln
-bmVkIG9mZiBieScNCj4+IA0KPj4gdG9vbHMvcGVyZi9idWlsdGluLXNjaGVkLmMgfCAxICsNCj4+
-IDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPj4gDQo+PiBkaWZmIC0tZ2l0IGEvdG9v
-bHMvcGVyZi9idWlsdGluLXNjaGVkLmMgYi90b29scy9wZXJmL2J1aWx0aW4tc2NoZWQuYw0KPj4g
-aW5kZXggODZlMTg1NzVjOWJlLi4xYWY0ZWMxYWM4MjQgMTAwNjQ0DQo+PiAtLS0gYS90b29scy9w
-ZXJmL2J1aWx0aW4tc2NoZWQuYw0KPj4gKysrIGIvdG9vbHMvcGVyZi9idWlsdGluLXNjaGVkLmMN
-Cj4+IEBAIC0xODE5LDYgKzE4MTksNyBAQCBzdGF0aWMgaW50IHBlcmZfc2NoZWRfX3JlYWRfZXZl
-bnRzKHN0cnVjdCBwZXJmX3NjaGVkICpzY2hlZCkNCj4+ICAgICAgICBjb25zdCBzdHJ1Y3QgZXZz
-ZWxfc3RyX2hhbmRsZXIgaGFuZGxlcnNbXSA9IHsNCj4+ICAgICAgICAgICAgICAgIHsgInNjaGVk
-OnNjaGVkX3N3aXRjaCIsICAgICAgIHByb2Nlc3Nfc2NoZWRfc3dpdGNoX2V2ZW50LCB9LA0KPj4g
-ICAgICAgICAgICAgICAgeyAic2NoZWQ6c2NoZWRfc3RhdF9ydW50aW1lIiwgcHJvY2Vzc19zY2hl
-ZF9ydW50aW1lX2V2ZW50LCB9LA0KPj4gKyAgICAgICAgICAgICAgIHsgInNjaGVkOnNjaGVkX3dh
-a2luZyIsICAgICAgIHByb2Nlc3Nfc2NoZWRfd2FrZXVwX2V2ZW50LCB9LA0KPj4gICAgICAgICAg
-ICAgICAgeyAic2NoZWQ6c2NoZWRfd2FrZXVwIiwgICAgICAgcHJvY2Vzc19zY2hlZF93YWtldXBf
-ZXZlbnQsIH0sDQo+PiAgICAgICAgICAgICAgICB7ICJzY2hlZDpzY2hlZF93YWtldXBfbmV3Iiwg
-ICBwcm9jZXNzX3NjaGVkX3dha2V1cF9ldmVudCwgfSwNCj4+ICAgICAgICAgICAgICAgIHsgInNj
-aGVkOnNjaGVkX21pZ3JhdGVfdGFzayIsIHByb2Nlc3Nfc2NoZWRfbWlncmF0ZV90YXNrX2V2ZW50
-LCB9LA0KPj4gLS0NCj4+IDIuMjUuMQ0KPj4gDQo+PiDlo7DmmI7vvJrov5nlsIHpgq7ku7blj6rl
-hYHorrjmlofku7bmjqXmlLbogIXpmIXor7vvvIzmnInlvojpq5jnmoTmnLrlr4bmgKfopoHmsYLj
-gILnpoHmraLlhbbku5bkurrkvb/nlKjjgIHmiZPlvIDjgIHlpI3liLbmiJbovazlj5Hph4zpnaLn
-moTku7vkvZXlhoXlrrnjgILlpoLmnpzmnKzpgq7ku7bplJnor6/lnLDlj5Hnu5nkuobkvaDvvIzo
-r7fogZTns7vpgq7ku7blj5Hlh7rogIXlubbliKDpmaTov5nkuKrmlofku7bjgILmnLrlr4blj4rm
-s5XlvovnmoTnibnmnYPlubbkuI3lm6DkuLror6/lj5Hpgq7ku7bogIzmlL7lvIPmiJbkuKflpLHj
-gILku7vkvZXmj5Dlh7rnmoTop4LngrnmiJbmhI/op4Hlj6rlsZ7kuo7kvZzogIXnmoTkuKrkurro
-p4Hop6PvvIzlubbkuI3kuIDlrprku6PooajmnKzlhazlj7jjgIINCgrlo7DmmI7vvJrov5nlsIHp
-gq7ku7blj6rlhYHorrjmlofku7bmjqXmlLbogIXpmIXor7vvvIzmnInlvojpq5jnmoTmnLrlr4bm
-gKfopoHmsYLjgILnpoHmraLlhbbku5bkurrkvb/nlKjjgIHmiZPlvIDjgIHlpI3liLbmiJbovazl
-j5Hph4zpnaLnmoTku7vkvZXlhoXlrrnjgILlpoLmnpzmnKzpgq7ku7bplJnor6/lnLDlj5Hnu5nk
-uobkvaDvvIzor7fogZTns7vpgq7ku7blj5Hlh7rogIXlubbliKDpmaTov5nkuKrmlofku7bjgILm
-nLrlr4blj4rms5XlvovnmoTnibnmnYPlubbkuI3lm6DkuLror6/lj5Hpgq7ku7bogIzmlL7lvIPm
-iJbkuKflpLHjgILku7vkvZXmj5Dlh7rnmoTop4LngrnmiJbmhI/op4Hlj6rlsZ7kuo7kvZzogIXn
-moTkuKrkurrop4Hop6PvvIzlubbkuI3kuIDlrprku6PooajmnKzlhazlj7jjgII=
+'perf sched latency' is incorrect to get process schedule latency
+when it used 'sched:sched_wakeup' to analysis perf.data.
 
---a757cc52bbb56293671f39bb7197e7ba1cf8bede06d0abb4136c293638c0--
+Because 'perf record' prefer use 'sched:sched_waking' to
+'sched:sched_wakeup' since commit d566a9c2d482 ("perf sched: Prefer
+sched_waking event when it exists"). It's very reasonable to
+evaluate process schedule latency.
+
+Similarly, update sched latency/map/replay to use sched_waking events.
+
+Signed-off-by: Chunxin Zang <zangchunxin@lixiang.com>
+Signed-off-by: Jerry Zhou <zhouchunhua@lixiang.com>
+---
+
+	changelogs in v4:
+	1) disable to process wakeup event if wakingup event is found.
+
+	changelogs in v3:
+	1) fix non-ASCII characters in commit log.
+
+	changelogs in v2:
+	1) fix email address disappearing in 'signed off by'
+
+ tools/perf/builtin-sched.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 86e18575c9be..ec443df8e05c 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1516,6 +1516,14 @@ static int process_sched_wakeup_event(struct perf_to=
+ol *tool,
+ 	return 0;
+ }
+=20
++static int process_sched_wakeup_ignore(struct perf_tool *tool __maybe_unus=
+ed,
++				      struct evsel *evsel __maybe_unused,
++				      struct perf_sample *sample __maybe_unused,
++				      struct machine *machine __maybe_unused)
++{
++	return 0;
++}
++
+ union map_priv {
+ 	void	*ptr;
+ 	bool	 color;
+@@ -1816,10 +1824,11 @@ static int perf_sched__process_comm(struct perf_too=
+l *tool __maybe_unused,
+=20
+ static int perf_sched__read_events(struct perf_sched *sched)
+ {
+-	const struct evsel_str_handler handlers[] =3D {
++	struct evsel_str_handler handlers[] =3D {
+ 		{ "sched:sched_switch",	      process_sched_switch_event, },
+ 		{ "sched:sched_stat_runtime", process_sched_runtime_event, },
+ 		{ "sched:sched_wakeup",	      process_sched_wakeup_event, },
++		{ "sched:sched_waking",	      process_sched_wakeup_event, },
+ 		{ "sched:sched_wakeup_new",   process_sched_wakeup_event, },
+ 		{ "sched:sched_migrate_task", process_sched_migrate_task_event, },
+ 	};
+@@ -1839,6 +1848,10 @@ static int perf_sched__read_events(struct perf_sched=
+ *sched)
+=20
+ 	symbol__init(&session->header.env);
+=20
++	/* prefer sched_waking if it is captured */
++	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"=
+))
++		handlers[2].handler =3D process_sched_wakeup_ignore;
++
+ 	if (perf_session__set_tracepoints_handlers(session, handlers))
+ 		goto out_delete;
+=20
+--=20
+2.25.1
+
+=E5=A3=B0=E6=98=8E=EF=BC=9A=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E5=8F=AA=E5=
+=85=81=E8=AE=B8=E6=96=87=E4=BB=B6=E6=8E=A5=E6=94=B6=E8=80=85=E9=98=85=E8=AF=
+=BB=EF=BC=8C=E6=9C=89=E5=BE=88=E9=AB=98=E7=9A=84=E6=9C=BA=E5=AF=86=E6=80=A7=
+=E8=A6=81=E6=B1=82=E3=80=82=E7=A6=81=E6=AD=A2=E5=85=B6=E4=BB=96=E4=BA=BA=E4=
+=BD=BF=E7=94=A8=E3=80=81=E6=89=93=E5=BC=80=E3=80=81=E5=A4=8D=E5=88=B6=E6=88=
+=96=E8=BD=AC=E5=8F=91=E9=87=8C=E9=9D=A2=E7=9A=84=E4=BB=BB=E4=BD=95=E5=86=85=
+=E5=AE=B9=E3=80=82=E5=A6=82=E6=9E=9C=E6=9C=AC=E9=82=AE=E4=BB=B6=E9=94=99=E8=
+=AF=AF=E5=9C=B0=E5=8F=91=E7=BB=99=E4=BA=86=E4=BD=A0=EF=BC=8C=E8=AF=B7=E8=81=
+=94=E7=B3=BB=E9=82=AE=E4=BB=B6=E5=8F=91=E5=87=BA=E8=80=85=E5=B9=B6=E5=88=A0=
+=E9=99=A4=E8=BF=99=E4=B8=AA=E6=96=87=E4=BB=B6=E3=80=82=E6=9C=BA=E5=AF=86=E5=
+=8F=8A=E6=B3=95=E5=BE=8B=E7=9A=84=E7=89=B9=E6=9D=83=E5=B9=B6=E4=B8=8D=E5=9B=
+=A0=E4=B8=BA=E8=AF=AF=E5=8F=91=E9=82=AE=E4=BB=B6=E8=80=8C=E6=94=BE=E5=BC=83=
+=E6=88=96=E4=B8=A7=E5=A4=B1=E3=80=82=E4=BB=BB=E4=BD=95=E6=8F=90=E5=87=BA=E7=
+=9A=84=E8=A7=82=E7=82=B9=E6=88=96=E6=84=8F=E8=A7=81=E5=8F=AA=E5=B1=9E=E4=BA=
+=8E=E4=BD=9C=E8=80=85=E7=9A=84=E4=B8=AA=E4=BA=BA=E8=A7=81=E8=A7=A3=EF=BC=8C=
+=E5=B9=B6=E4=B8=8D=E4=B8=80=E5=AE=9A=E4=BB=A3=E8=A1=A8=E6=9C=AC=E5=85=AC=E5=
+=8F=B8=E3=80=82
+--4e542576404a7eed609381af55c19df737de2c5232fc7d04e6424ca19eff--
