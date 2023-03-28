@@ -2,183 +2,212 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7D6C76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 16:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5724CC76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 16:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbjC1QQf (ORCPT
+        id S232959AbjC1QWD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Mar 2023 12:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
+        Tue, 28 Mar 2023 12:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232782AbjC1QQe (ORCPT
+        with ESMTP id S232170AbjC1QWC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Mar 2023 12:16:34 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2112.outbound.protection.outlook.com [40.107.93.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6ACCE054;
-        Tue, 28 Mar 2023 09:16:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UK1bPSnqscx/xlHS5rzZA9uvxyoGK4qOXUOHvLdbRYkkYWCiQ4JEV7UjE/sc9gbfvPQjOBpoLUgx/YdHuQQmQ4FqP/l5u1IRfQbWl5P7AEhKs5U7GLyxvwF2cA5NJ3f3O7KAEKa+x7UInno94W7WwA5D7YLLOYhfDtQYWOQ0A2TwM/lJHS+m2YnGIGNB7f8zDCMd5DrHuv3AU1UQjSjZTJDlJpPjQDWpT1ODBCVttjoB2PSRqxiCPfKJ+sD4bbjyd+bkHvwvs7p1RTP9ONtgvjpEQmFHa4AaVMHQmHSRpPEl9Gj+tJBre7CTgdFSZ1Wk/OI08z0bBV4E28EyDdLegg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UEIDXiUOnYnvcchFb4TfKcW2SLBtwi46oN+ScGHw/0k=;
- b=kMmvS8M/2yzghxvZR6OnU4s+ck9mulv0Kk57C5ciUYzw7n/OZCp/Gcz0/19bUw2+/JXLvpQr5r2grtrdctb96FPSGSDo3nMut6R6Gnj8OMgg0y3huZM66r5a/vfh/cCdXbQYZWO2ampdKrk2H146FMueP70pD51Rx21mDO2ouxpkcM56cXgyUc5gQ1p5BODuGFqHE+Fp0LRQ1dhwX/Jx4mJiKRYNUdk/4cxuPjVTAEevd54nRJ7KAes9UyBGhFhJqO4Eq0Yrl9ZCFJRPQ4m5UO11o4sH3JjvjvBJRULK718s8ef4LyWQlYrVXCm5AIepcn3EcnHmC1CPcTs3lJJFSQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+        Tue, 28 Mar 2023 12:22:02 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEB010F1
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 09:22:01 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3e0965f70ecso135861cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 09:22:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UEIDXiUOnYnvcchFb4TfKcW2SLBtwi46oN+ScGHw/0k=;
- b=ZCfcUo/2VZ6MUd9lgmlnbh6rRizj9wclEMJcn3CYY878jQpRiDL2hlnwA18X1nhmmiBXv8SzraOkxaLccb/NLMoWR8WqNLobpxzWrLciSkGsGDTrrv1TECZtSyK3rhoXmWRI2nHara6LTxSEl5WnIU35FBwbardPH6bASMuE8mg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from BL3PR01MB7027.prod.exchangelabs.com (2603:10b6:208:35a::9) by
- BN0PR01MB6974.prod.exchangelabs.com (2603:10b6:408:16d::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6254.15; Tue, 28 Mar 2023 16:16:29 +0000
-Received: from BL3PR01MB7027.prod.exchangelabs.com
- ([fe80::ef17:958:5c42:3d26]) by BL3PR01MB7027.prod.exchangelabs.com
- ([fe80::ef17:958:5c42:3d26%3]) with mapi id 15.20.6254.018; Tue, 28 Mar 2023
- 16:16:28 +0000
-Message-ID: <fd5a6b16-9297-5b11-53d1-4ff3d5be1ddd@os.amperecomputing.com>
-Date:   Tue, 28 Mar 2023 09:16:23 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>, Yang Shi <shy828301@gmail.com>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
- <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan>
- <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
- <20230313121420.GB2426758@leoy-yangtze.lan>
- <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
- <20230314003610.GD2426758@leoy-yangtze.lan>
- <CAHbLzkqMZMB7sGLbJk82CpE9cssEU+WZYaXhVTVC-B40bY52jw@mail.gmail.com>
- <5a120a90-0b95-cfd0-beff-e9228a9d394b@arm.com>
-From:   Yang Shi <yang@os.amperecomputing.com>
-In-Reply-To: <5a120a90-0b95-cfd0-beff-e9228a9d394b@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH2PR14CA0052.namprd14.prod.outlook.com
- (2603:10b6:610:56::32) To BL3PR01MB7027.prod.exchangelabs.com
- (2603:10b6:208:35a::9)
+        d=google.com; s=20210112; t=1680020520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5oxn8nTbQaOTMetn/sNIvHJIXX3TzoHjySwpSLICeOg=;
+        b=nfF+dU3tfEyt04fh1/XwDi2B2Edck4nMMhV2zkib5BiB9kekOWz4/Jeq6D1cW8YziA
+         dE6JcI7mVUBxHO+1YpIXZn8AtWc+c6pOxXJhV9pvpTwg3ZZQzSsiTT5M/7m82FjZbzV1
+         N+fPFV7Cfb/S1AQFTBkK3/GxefvAkGbj6HQv4CaKOS+oJ79PDnYDvDu3oayGUixW7enB
+         bHOOdMXZg2SJ73wlWridRt5zinA9l24/I/lBwHUTwkeIxX1gNcorqhsfne8baCBYTwOj
+         a3JKIkyECZlD247/owu28BlfL+qOQTYpSCVYUF5I+nE6YkvoBLQlR01pVKbXP4H9Wt8I
+         Eecg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680020520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5oxn8nTbQaOTMetn/sNIvHJIXX3TzoHjySwpSLICeOg=;
+        b=hmd0hV3WOURP9Xig3reX6H8u9GpelNyEBs7cAuBw9BBTGdf+K+ZeUJKXIsgCeN6aHN
+         JcX7jO8Y3raXkUWUviZ8BtHR2a6IpksUPG+jatIhMQqIOfSYHCvMcTiRJUxrr7askK7x
+         fifmd+ZHXAMg90owAV3Luw2qPR029YHsBer11t8j7Tmt6g8fspL2810zsxa/qUiOjY9N
+         mWJqc10c/3rPCzNY4H9Mljb398xWNwq8ESW6tlB8sysfwcqNoxXlpuDeQxR/2bUTGAvv
+         T4TLYvI669KcKd9krl/w0rFr+ErhrI1yhzkVancsHXQ2EtGu7FxhVESd0FImkbJkB9jI
+         WUzQ==
+X-Gm-Message-State: AAQBX9eXbvUiAUk0KUfj2mbtAMPfGdfqH7DVeJcE9MBczcrUUYPzOMjU
+        fI/FIy9k1vUOA+cui7PQniRpb6nqtT7AFYixeJ9eOQ==
+X-Google-Smtp-Source: AKy350YyPtOQtBrbD3l/8Mh9YVfhMzfhYutuWTipioNOMVSceICp/9VY1tIWWQ6nvLUjxjm9X+9CPRKrRArLStwP74Q=
+X-Received: by 2002:ac8:58ca:0:b0:3db:1c01:9d95 with SMTP id
+ u10-20020ac858ca000000b003db1c019d95mr536602qta.4.1680020520530; Tue, 28 Mar
+ 2023 09:22:00 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR01MB7027:EE_|BN0PR01MB6974:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e107756-a76b-4fc1-1ead-08db2fa7c926
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1WJaOUPixyEhHvoMZG/fwEhepnI4eoHOESWMTmsVdVieFW03RN20bFn9QpKgIPCMLynAKJBdd5MgwZfPuknegRrMwzsmWtxIO4pxnNTDI81sBPKSHvflmZYnD6rsjCFmLJbzeo/NKG45O2FIatbW6+FjJghhM+qw+3FQ0ME+hTpuu6T7r2YqmiJatj3lM2uQUIDonq7kJ87mIzMcKW9vmHs4f/fCc3ph5grT3zAwKqbUodXHvpJYubBNZZOo1PVO60EjfiZHl0GJBtwAM17eOVQYNEbozShobA3+7RLrOURA1CuSrHpKGf5OAtTG/D5Mmnvqn5jvjkF0fp89fbTNzkifaOcc4tliqnGY6/bS/it2ShsQjCZ69u1QYEmBEvpwrrBLLQrpNtZaJPrvAeybNcZucHA/5iEehoNo4TcECI+WFSfFfS4bPqeKasFY/on2Ih6QScoldWmlk/vZ3TG4H/5WJ+pNUiIfekpyite9iaSv96/7lmnt32Mk8q+9ogsP6nFB1QRSHlrzMqE6Cz9RcH9RcB7EGMfb7l5bJ6diMiifbabDT49ya97lrbB+NVlUf8a6ZTyJdewyfO2FV7U4IbKY/Sy+aDdtfaOm2/5XkDsnsJoGYQhpG18WWaA/Ue0ywxmdBMBdC2/zcX47JPb7cA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR01MB7027.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(366004)(396003)(39850400004)(451199021)(38350700002)(38100700002)(31696002)(7416002)(86362001)(8936002)(53546011)(5660300002)(6666004)(6506007)(186003)(26005)(41300700001)(52116002)(66946007)(478600001)(316002)(31686004)(110136005)(8676002)(6512007)(4326008)(6486002)(66556008)(66476007)(54906003)(83380400001)(2906002)(2616005)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFdvODN0UTNwQ3kzbXlwSXF4TGlKcHNhMzA0ZGFkM1I3UE85NlhFTk9PNWVI?=
- =?utf-8?B?MGc1NmpURDI0SGxvaG85TTNkejcxR0hsbEFXdFV1Mml2Y0Z3aFYzcUpaTGNW?=
- =?utf-8?B?SS9MZnZnamJsVXhaaEhTcXpQY1ZHV0x0THZadktTZ2NHYXdFV0U1czhDMGYv?=
- =?utf-8?B?bVRHNWl1M2YvMVdvQjFTdHo0SzM5SEJpM3JnZWxtbU9ENExoL2ZhZzR0QWpK?=
- =?utf-8?B?UjdNYk5jcitFNnh5WHFNaWhlRWRWanJKVFRsaGxxc1NGdVVsMUhJSmFmbmlY?=
- =?utf-8?B?dTk2S2RKaVNtUmJuQytBc2k2RG1VR3IrdGt6U1pwMHNKRXlzZHNQTldaMlZu?=
- =?utf-8?B?MkpHcEV3SUZzRks3NGhkcVpSMU82eW52YzZBbjNPU2ZBcWk1dnhoVzM1TlA5?=
- =?utf-8?B?ZjQ5V2t0L1NMaVFSaEhvYllpajRwaCtGdEZvYStOR09SdUhGazNDYjMzNDdB?=
- =?utf-8?B?VCsrcUI4WFdLMzRIQ1ZLVHB5VklaWVdmcXNsMEhyb3VwTFpBdnNNUVh1MHhS?=
- =?utf-8?B?SURjVVZ2Q3NYZjBQMXFjYXNmVWFRNlNiY1NMdUZIN2p4NSt3VXJHZnR5MVlP?=
- =?utf-8?B?YTl1ai9neHpOdnNqRS9sQzQ1Y1NoZERTT1lqbFFWSGRCQ3lxS1VMU3ZESkMx?=
- =?utf-8?B?c3JTMGc3QW1WdHBPMVZ2RnRHM0xkZWJTWUFtSk1YT09ySHlhT01jU2xleElJ?=
- =?utf-8?B?ZVg0Zk80Wm5HM1pveWhxT1NqY0w2LzVybjloaTUrTk9Qb2VSL1QyVHZRRWY2?=
- =?utf-8?B?Z2Y2MjNRMUFJRVorZDRBa0NzUjhmazlUTHNqdUNyc29aaElGUHVFenA1K1lw?=
- =?utf-8?B?ZXlJaDl3aHM2S2lpUFZKc3Q5QzdQSU9DSHhOOWhNTU5rUGEyKzdGci9TWlZN?=
- =?utf-8?B?NzJlN2ZZSGsrVXV6YXBueW5SRGx3Q2VGMmVTVkIvbmd5ODJkOC9Jc0FDTDJB?=
- =?utf-8?B?VHJpTTRva3cwcjNXYTVhUE4wOTFteDl1M2ZFWGZTZGpkbHVaaHZHOXUwSXd4?=
- =?utf-8?B?NkI5UEU0eTBaZ0RUWXVuR3M5UE9PRkpGUmViUWJHSDVKTWtLQ016YkVJaWx4?=
- =?utf-8?B?TUVxeWVZV2ZNUkwyRmJvRWNUYUMwbjBiaGlZUlBCOFRFQ0ZMMXNqKzBxUjcx?=
- =?utf-8?B?TFNDWTlJeHNPU3ZMU3BmN2ZmMG4zYlpqdk9UMTJZRkhoV2ZBK01TbTVzaEo5?=
- =?utf-8?B?MEtBazZDd1A1bzdSQkR6STIyVlVTK1dlU29NZ3BLNDdvRXRWR2N1TGZTOGdh?=
- =?utf-8?B?RHRoYzQrUHFCaTNwejRtUWVNWTVudmw0T2RLNHYxUUh6dHRLZk9ZQjlGTUlr?=
- =?utf-8?B?TmthQ0NTajBFVjYzNWUvNGs2SXJ5TDJuOVhKcXJubzY4ck5BSW1KNzBFRFBG?=
- =?utf-8?B?OWc3QVRmckw4NTZiTm1GalFIRTltd3c0VEdZcExEMlZDVUF4R1BmL0FlNXpI?=
- =?utf-8?B?a0puOWo1OTh5K1dvOEF6cWd3cHFBVThwVVV3YUZCMk1BdzhMaUlTNm9KdnRj?=
- =?utf-8?B?K0M3bWt2OGNrc3NHZ1UveStsa09NSXR6eWVDM0g4aTNRUS83bzJQL1hUQmYw?=
- =?utf-8?B?MjdFRnozS0pJSGpVVVU2N1BHZ2pZeVlxSkxIMnRJODZWYkJrY0VITmNsK2Vp?=
- =?utf-8?B?M0s1TS8raFBhSU9sUUFTMlIyRGorYVRic3JCVjBkY2JJV012TmJENU9zN01s?=
- =?utf-8?B?dk4yTkpzOWl4WThoSk9zUFpXeFJhdDFoa09FenZGZXpWZ0JmMEc4c1JVYnky?=
- =?utf-8?B?eTJyd3ZyVHI0M3BsdVJjUEJSTDlvQ0k5eFIvMjFOUUEvdVRYTEtZMlF4NTAz?=
- =?utf-8?B?S1lIck1IODlMVGc5c2NQQ2Jhejh0ai9GemdLV2FRRGRjdmt4TjFMVW5xSWR6?=
- =?utf-8?B?YUxaUzNVcEw5RWtXaGtKTlhSenZUUm5PTnlseUFPMk02ZmZDMjVaOTVxbEtQ?=
- =?utf-8?B?YzJoQVhuYjJKcjE2M3VtUmM5YWdiSUhCY0NWLzVWYU5kaXViRUoreWdQZ25O?=
- =?utf-8?B?c2l3aUVFdXlsUEZlRW1ZRkREU0tPalVwdHN6OThycWlkY3F3WHpGWlZqTHR0?=
- =?utf-8?B?RUVVNEFMY2pkOVFKRFlEZ1B4WmMyNVE1Wk02SDFiUTVZd0xsMGFqY2k0K1Mw?=
- =?utf-8?B?a0VNc2FrYzJpOFlxd1ZsOEVCNndiaEFLSDB2RWZXbGtJenFXVTFuMzNFWmV1?=
- =?utf-8?Q?nFMXv/byvqiGdxlZEDDvqpE=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e107756-a76b-4fc1-1ead-08db2fa7c926
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR01MB7027.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2023 16:16:28.5879
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JKg33GcZ0rZ6EWU2vaUMGlXth9a6UXhn5OSzZxfR9Sgh+u2zoEPa6Qpw1BKAbG807y6UYyL20+1KB6HUnvjNLmwINmkaQhuD0CjM+uvnfqE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR01MB6974
+References: <20230328112908.113158-1-kjain@linux.ibm.com>
+In-Reply-To: <20230328112908.113158-1-kjain@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 28 Mar 2023 09:21:49 -0700
+Message-ID: <CAP-5=fXU4F=LvE883EVjq0bWHKJ-LT12pTr827jqwGfH1RTXdw@mail.gmail.com>
+Subject: Re: [PATCH] perf vendor events power9: Remove UTF-8 characters from
+ json files
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, sukadev@linux.vnet.ibm.com,
+        linux-kernel@vger.kernel.org, jolsa@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, disgoel@linux.ibm.com,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 3/28/23 1:59 AM, James Clark wrote:
+On Tue, Mar 28, 2023 at 4:30=E2=80=AFAM Kajol Jain <kjain@linux.ibm.com> wr=
+ote:
 >
-> On 28/03/2023 01:53, Yang Shi wrote:
->> Hi Leo,
->>
->> Just follow up on this one. Any update?
->>
-> Hi Yang,
+> Commit 3c22ba524304 ("perf vendor events powerpc: Update POWER9 events")
+> added and updated power9 pmu json events. However some of the json
+> events which are part of other.json and pipeline.json files,
+> contains UTF-8 characters in their brief description.
+> Having UTF-8 character could brakes the perf build on some distros.
+
+nit: s/bakes/break/
+
+> Fix this issue by removing the UTF-8 characters from other.json and
+> pipeline.json files.
 >
-> Sorry no update on this yet from me. I was just finishing off
-> "coresight: Fix CTI module refcount leak by making it a helper device"
-> which I hope to post in the next day or two and then I will start on this.
-
-Hi James,
-
-Thank you for the update.
-
+> Result without the fix patch:
+> [command]# file -i pmu-events/arch/powerpc/power9/*
+> pmu-events/arch/powerpc/power9/cache.json:          application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/floating-point.json: application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/frontend.json:       application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/marked.json:         application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/memory.json:         application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/metrics.json:        application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/nest_metrics.json:   application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/other.json:          application/json; cha=
+rset=3Dutf-8
+> pmu-events/arch/powerpc/power9/pipeline.json:       application/json; cha=
+rset=3Dutf-8
+> pmu-events/arch/powerpc/power9/pmc.json:            application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/translation.json:    application/json; cha=
+rset=3Dus-ascii
 >
-> James
+> Result with the fix patch:
 >
->> Thanks,
->> Yang
->>
->> On Mon, Mar 13, 2023 at 5:36 PM Leo Yan <leo.yan@linaro.org> wrote:
->>> On Mon, Mar 13, 2023 at 11:15:44AM -0700, Yang Shi wrote:
->>>
->>> [...]
->>>
->>>>> Just a quick summary, here we have two issues:
->>>>>
->>>>> - With command:
->>>>>    perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
->>>>>    -- taskset --cpu-list 1 uname",
->>>>>
->>>>>    perf doesn't enable "text poke" attribution.
->>>> No, it enables "text poke" and perf fails to decode coresight trace
->>>> data too. It doesn't matter whether "--kcore" is after or before "-e
->>>> cs/etm/@tmc_etf63/k".
->>> Understand now.  Thanks for correction, if so we can ignore this one.
->>>
->>> Leo
+> [command]# file -i pmu-events/arch/powerpc/power9/*
+> pmu-events/arch/powerpc/power9/cache.json:          application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/floating-point.json: application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/frontend.json:       application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/marked.json:         application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/memory.json:         application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/metrics.json:        application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/nest_metrics.json:   application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/other.json:          application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/pipeline.json:       application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/pmc.json:            application/json; cha=
+rset=3Dus-ascii
+> pmu-events/arch/powerpc/power9/translation.json:    application/json; cha=
+rset=3Dus-ascii
+>
+> Fixes: 3c22ba524304 ("perf vendor events powerpc: Update POWER9 events")
+> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.com>
+> Link: https://lore.kernel.org/lkml/ZBxP77deq7ikTxwG@kernel.org/
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 
+Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> ---
+>  tools/perf/pmu-events/arch/powerpc/power9/other.json    | 4 ++--
+>  tools/perf/pmu-events/arch/powerpc/power9/pipeline.json | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/other.json b/tools=
+/perf/pmu-events/arch/powerpc/power9/other.json
+> index 3f69422c21f9..f10bd554521a 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power9/other.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/other.json
+> @@ -1417,7 +1417,7 @@
+>    {
+>      "EventCode": "0x45054",
+>      "EventName": "PM_FMA_CMPL",
+> -    "BriefDescription": "two flops operation completed (fmadd, fnmadd, f=
+msub, fnmsub) Scalar instructions only. "
+> +    "BriefDescription": "two flops operation completed (fmadd, fnmadd, f=
+msub, fnmsub) Scalar instructions only."
+>    },
+>    {
+>      "EventCode": "0x201E8",
+> @@ -2017,7 +2017,7 @@
+>    {
+>      "EventCode": "0xC0BC",
+>      "EventName": "PM_LSU_FLUSH_OTHER",
+> -    "BriefDescription": "Other LSU flushes including: Sync (sync ack fro=
+m L2 caused search of LRQ for oldest snooped load, This will either signal =
+a Precise Flush of the oldest snooped loa or a Flush Next PPC); Data Valid =
+Flush Next (several cases of this, one example is store and reload are line=
+d up such that a store-hit-reload scenario exists and the CDF has already l=
+aunched and has gotten bad/stale data); Bad Data Valid Flush Next (might be=
+ a few cases of this, one example is a larxa (D$ hit) return data and dval =
+but can't allocate to LMQ (LMQ full or other reason). Already gave dval but=
+ can't watch it for snoop_hit_larx. Need to take the =E2=80=9Cbad dval=E2=
+=80=9D back and flush all younger ops)"
+> +    "BriefDescription": "Other LSU flushes including: Sync (sync ack fro=
+m L2 caused search of LRQ for oldest snooped load, This will either signal =
+a Precise Flush of the oldest snooped loa or a Flush Next PPC); Data Valid =
+Flush Next (several cases of this, one example is store and reload are line=
+d up such that a store-hit-reload scenario exists and the CDF has already l=
+aunched and has gotten bad/stale data); Bad Data Valid Flush Next (might be=
+ a few cases of this, one example is a larxa (D$ hit) return data and dval =
+but can't allocate to LMQ (LMQ full or other reason). Already gave dval but=
+ can't watch it for snoop_hit_larx. Need to take the 'bad dval' back and fl=
+ush all younger ops)"
+>    },
+>    {
+>      "EventCode": "0x5094",
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json b/to=
+ols/perf/pmu-events/arch/powerpc/power9/pipeline.json
+> index d0265f255de2..723bffa41c44 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
+> @@ -442,7 +442,7 @@
+>    {
+>      "EventCode": "0x4D052",
+>      "EventName": "PM_2FLOP_CMPL",
+> -    "BriefDescription": "DP vector version of fmul, fsub, fcmp, fsel, fa=
+bs, fnabs, fres ,fsqrte, fneg "
+> +    "BriefDescription": "DP vector version of fmul, fsub, fcmp, fsel, fa=
+bs, fnabs, fres ,fsqrte, fneg"
+>    },
+>    {
+>      "EventCode": "0x1F142",
+> --
+> 2.39.1
+>
