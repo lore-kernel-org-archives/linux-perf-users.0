@@ -2,140 +2,141 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C25FC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 23:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67DBC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 23:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231214AbjC2X06 convert rfc822-to-8bit (ORCPT
+        id S230301AbjC2XsI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 19:26:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36502 "EHLO
+        Wed, 29 Mar 2023 19:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjC2X05 (ORCPT
+        with ESMTP id S229703AbjC2XsH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 19:26:57 -0400
+        Wed, 29 Mar 2023 19:48:07 -0400
 Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B0F1BCD;
-        Wed, 29 Mar 2023 16:26:52 -0700 (PDT)
-Received: by mail-wm1-f45.google.com with SMTP id m6-20020a05600c3b0600b003ee6e324b19so10680585wms.1;
-        Wed, 29 Mar 2023 16:26:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6AA40D3;
+        Wed, 29 Mar 2023 16:48:06 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id o32so9855373wms.1;
+        Wed, 29 Mar 2023 16:48:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680132411; x=1682724411;
+        d=1e100.net; s=20210112; t=1680133685; x=1682725685;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XK678Ukzjb3nFvbqNIdWj4JdVI46X8Fv4m3Xr+xukQM=;
-        b=j97w50nTAsedMV5VKamHaVsNePVwKN7VwMF8YdSp06ZDOmsd1kT5UNL1hfbZ43kKmb
-         Mb0sl+EsjItYpC9GSsY26u76HU/SGa9QkAkU0umgk7UZNXp5FY9wVTVPHnIJ75H2eQjU
-         +iaVm/2C9yjhybZBIPWhVJVoYJpeMBb4vz2jNfC4IG2eOQVAMc3jK4BNGKGItTGjpc/o
-         0k+zq5ADbR00NsbgnBLImQaWp/TzxOsHyr+abQXWAgrKHdS2ziH1rk8aMjgnGwpg721N
-         IidLLY5LgY/IeBmqLH+5zMysB3jPSjWzK18bxQsaXzlpQu7ZBgX8P1nCsB6GSraNQ3Nf
-         FEZw==
-X-Gm-Message-State: AO0yUKUJF54SAU2Hr7fMYB0jmat8r/sNtd7h0o2WL/f1CQj+B7w8rLfR
-        n4SlgQyGiptyecq6c7HNEFgD8jouW7W2b0d38j8=
-X-Google-Smtp-Source: AK7set8gUEJPIOwAxcBoJMe1TIjsSIoK2LeJtrsQFxTLmv2CJ7QsCWtO344nFOyoQySbrV/SfZKVkSXb3rxoAg50Fbk=
-X-Received: by 2002:a7b:c4c6:0:b0:3ee:1afc:c15 with SMTP id
- g6-20020a7bc4c6000000b003ee1afc0c15mr16000818wmk.33.1680132410988; Wed, 29
- Mar 2023 16:26:50 -0700 (PDT)
+        bh=ctdAn3TPM+vvdeJtZGNCNvHS+kSCvbPyFtr6LjG6+Aw=;
+        b=EVzN7mFXUkO8Hz/p9NAEg/Zn5RVmhawQgf8z9kT/CJI9A3ZpPA5cdcwW7c6czEIW2Y
+         b71VCMsEZAoYfTpVhXfmMPPeaiT6YWfSK72QZkipqx/mwKgHuz5mdInOcg/TP7aAJpE2
+         GY94jQVfRCsX1iVlW2E58eR8kjcy3dZ91fXLheXvdq+lVIauMSgg3N20208+5dgDVxHn
+         vVBYPKOGeQVYMMPEuUJLONAteqZC+cJwb61mKlEg3HWNxMTKxnc0Y4vHEC35wScr9ojP
+         oGLML1f091/OxQJtyCouv1cQcvqy1f7H7PV7B5ai9FPBlFUnHkFYtS45PGi9GZL1+27e
+         vkBg==
+X-Gm-Message-State: AAQBX9cQvXzs5QSum5cPGT/1jrbMWuNbqIUsy1NwKAYCkooifTrmFfwj
+        lJ9RxwA31SVfeJPxD9neMPKLa7oesznoZ1O9/R4=
+X-Google-Smtp-Source: AKy350aJytfdzHPKv36QTRP+AsUSLLUPF0uZh8sH5X/cvbnwh0AJ6pZquc/una80jBbRVg+Lma2XRLoMK0ZywE2Q43o=
+X-Received: by 2002:a1c:7405:0:b0:3ef:62cd:1eb with SMTP id
+ p5-20020a1c7405000000b003ef62cd01ebmr12986698wmc.7.1680133685137; Wed, 29 Mar
+ 2023 16:48:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230328060038.2346935-1-zangchunxin@lixiang.com>
-In-Reply-To: <20230328060038.2346935-1-zangchunxin@lixiang.com>
+References: <20230327130851.1565-1-ravi.bangoria@amd.com> <CAM9d7ciQLXAcVwFJWeJDHwkwUQ-rnHvdetYsQn7w83kkOsFKWg@mail.gmail.com>
+ <00f1954f-cf55-d954-5dc6-0da95f8ea308@amd.com>
+In-Reply-To: <00f1954f-cf55-d954-5dc6-0da95f8ea308@amd.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 29 Mar 2023 16:26:38 -0700
-Message-ID: <CAM9d7ciEhoSLcYjWa81E1eXtq8HRSvQLQZzzFWqJvMjbW1_hjQ@mail.gmail.com>
-Subject: Re: [PATCH v4] perf sched: Fix sched latency analysis incorrect
-To:     Chunxin Zang <zangchunxin@lixiang.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jerry Zhou <zhouchunhua@lixiang.com>
+Date:   Wed, 29 Mar 2023 16:47:52 -0700
+Message-ID: <CAM9d7cgHL=aXffUtu7CSNdfsVnDoO1cEzBSSpdYVQh9ZrbL-zQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops
+ for data_src
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     peterz@infradead.org, mingo@kernel.org, acme@kernel.org,
+        eranian@google.com, kan.liang@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Wed, Mar 29, 2023 at 2:45 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+>
+> Hi Namhyung,
+>
+> >> @@ -716,25 +748,19 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+> >>          * DcMiss, L2Miss, DataSrc, DcMissLat etc. are all invalid for Uncached
+> >>          * memory accesses. So, check DcUcMemAcc bit early.
+> >>          */
+> >> -       if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO) {
+> >> -               data_src->mem_lvl = PERF_MEM_LVL_UNC | PERF_MEM_LVL_HIT;
+> >> -               return;
+> >> -       }
+> >> +       if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO)
+> >> +               return L(UNC);
+> >
+> > Hmm.. it seems we don't have PERF_MEM_LVLNUM_UNC.
+>
+> Right. Is it worth to introduce one?
 
-On Mon, Mar 27, 2023 at 11:01 PM Chunxin Zang <zangchunxin@lixiang.com> wrote:
->
-> 'perf sched latency' is incorrect to get process schedule latency
-> when it used 'sched:sched_wakeup' to analysis perf.data.
->
-> Because 'perf record' prefer use 'sched:sched_waking' to
-> 'sched:sched_wakeup' since commit d566a9c2d482 ("perf sched: Prefer
-> sched_waking event when it exists"). It's very reasonable to
-> evaluate process schedule latency.
->
-> Similarly, update sched latency/map/replay to use sched_waking events.
->
-> Signed-off-by: Chunxin Zang <zangchunxin@lixiang.com>
-> Signed-off-by: Jerry Zhou <zhouchunhua@lixiang.com>
+I think MEM_LVLNUM should express every memory level in MEM_LVL.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+>
+> On a side note, I came to know that IBS OpData2[RmtNode] is not applicable
+> when DataSrc=7 (I/O). So, I need to respin this patch with that change.
+>
+> [...]
+>
+> >>  check_mab:
+> >> @@ -830,12 +810,11 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
+> >>          * DataSrc simultaneously. Prioritize DataSrc over MAB, i.e. set
+> >>          * MAB only when IBS fails to provide DataSrc.
+> >>          */
+> >> -       if (op_data3->dc_miss_no_mab_alloc) {
+> >> -               data_src->mem_lvl = PERF_MEM_LVL_LFB | PERF_MEM_LVL_HIT;
+> >> -               return;
+> >> -       }
+> >> +       if (op_data3->dc_miss_no_mab_alloc)
+> >> +               return L(LFB) | LN(LFB);
+> >>
+> >>         data_src->mem_lvl = PERF_MEM_LVL_NA;
+> >> +       return 0;
+> >
+> > Wouldn't it be 'return L(NA) | LN(NA);' ?
+>
+> IBS has no instruction type filtering, i.e. it tags whatever instruction it
+> sees at overflow. When IBS tags non-load/store instruction, data_src->val is
+> set to PERF_MEM_NA, which does not initialize mem_lvl_num (Shall we change
+> that?). If I set both LVL_NA and LVL_NUM_NA for load/store with no DataSrc
+> info, perf mem output becomes funny:
+
+Probably worth changing PERF_MEM_NA.
+
+>
+>   $ sudo ./perf mem report -F sample,mem --stdio
+>   #      Samples  Memory access
+>   # ............  .......................................
+>   #
+>             1914  N/A                   <====== Non-LS
+>              905  L1 or L1 hit
+>               19  L3 or L3 hit
+>               16  L2 or L2 hit
+>                6  N/A or N/A hit        <====== LS with no DataSrc info
+>                6  Local RAM or RAM hit
+>                4  Remote node, same socket RAM hit
+>                3  Remote core, same node Any cache hit
+>                2  Remote node, same socket Any cache hit
+
+Maybe that's better to differentiate them :)
+
+>
+> Also, L(NA) is PERF_MEM_LVL_NA | PERF_MEM_LVL_HIT. If I just return L(NA),
+> perf tools shows it as "N/A hit".
+>
+> So, until tool code gets refactored, setting mem_lvl = NA here is hiding
+> tool's dumbness :(. Maybe I should refactor perf_mem__snp_scnprintf() as
+> part of this patchset.
+
+I think we can change the tool independently - preferring MEM_LVLNUM
+if present but you might want to add an option to override.
+Given IBS didn't set it so far, the output would remain mostly the same.
 
 Thanks,
 Namhyung
-
-
-> ---
->
->         changelogs in v4:
->         1) disable to process wakeup event if wakingup event is found.
->
->         changelogs in v3:
->         1) fix non-ASCII characters in commit log.
->
->         changelogs in v2:
->         1) fix email address disappearing in 'signed off by'
->
->  tools/perf/builtin-sched.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 86e18575c9be..ec443df8e05c 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -1516,6 +1516,14 @@ static int process_sched_wakeup_event(struct perf_tool *tool,
->         return 0;
->  }
->
-> +static int process_sched_wakeup_ignore(struct perf_tool *tool __maybe_unused,
-> +                                     struct evsel *evsel __maybe_unused,
-> +                                     struct perf_sample *sample __maybe_unused,
-> +                                     struct machine *machine __maybe_unused)
-> +{
-> +       return 0;
-> +}
-> +
->  union map_priv {
->         void    *ptr;
->         bool     color;
-> @@ -1816,10 +1824,11 @@ static int perf_sched__process_comm(struct perf_tool *tool __maybe_unused,
->
->  static int perf_sched__read_events(struct perf_sched *sched)
->  {
-> -       const struct evsel_str_handler handlers[] = {
-> +       struct evsel_str_handler handlers[] = {
->                 { "sched:sched_switch",       process_sched_switch_event, },
->                 { "sched:sched_stat_runtime", process_sched_runtime_event, },
->                 { "sched:sched_wakeup",       process_sched_wakeup_event, },
-> +               { "sched:sched_waking",       process_sched_wakeup_event, },
->                 { "sched:sched_wakeup_new",   process_sched_wakeup_event, },
->                 { "sched:sched_migrate_task", process_sched_migrate_task_event, },
->         };
-> @@ -1839,6 +1848,10 @@ static int perf_sched__read_events(struct perf_sched *sched)
->
->         symbol__init(&session->header.env);
->
-> +       /* prefer sched_waking if it is captured */
-> +       if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
-> +               handlers[2].handler = process_sched_wakeup_ignore;
-> +
->         if (perf_session__set_tracepoints_handlers(session, handlers))
->                 goto out_delete;
->
-> --
-> 2.25.1
->
-> 声明：这封邮件只允许文件接收者阅读，有很高的机密性要求。禁止其他人使用、打开、复制或转发里面的任何内容。如果本邮件错误地发给了你，请联系邮件发出者并删除这个文件。机密及法律的特权并不因为误发邮件而放弃或丧失。任何提出的观点或意见只属于作者的个人见解，并不一定代表本公司。
