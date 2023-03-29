@@ -2,145 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45962C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 16:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD63C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 16:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230341AbjC2QrU (ORCPT
+        id S229918AbjC2QzC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 12:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
+        Wed, 29 Mar 2023 12:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbjC2QrT (ORCPT
+        with ESMTP id S229693AbjC2QzB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 12:47:19 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BAF5260
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Mar 2023 09:47:17 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-536a4eba107so161706227b3.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Mar 2023 09:47:17 -0700 (PDT)
+        Wed, 29 Mar 2023 12:55:01 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 843304C33
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Mar 2023 09:54:54 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3e0965f70ecso343701cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Mar 2023 09:54:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680108436;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XhJ2KAFNUebvt6cQMDTLf5QYVLkhRGTjjjB4Lv8Q8Pw=;
-        b=Nwnor0fuwBFL6HswHVDb9zq4uqB8N0vyANtOGoursE/xCXttz4V6jsoxjL4SKGjtcU
-         vM08UOGTQy3ImsotSEpEn8ev+cnvKUAvL56SaS8B8FBrIaQIcJJDDjylIjDObxUSVj3m
-         /QZ2b+8/qsofV6UllwSgZtticUjx9NgZ0p3PXNaUQQJNdVnoAIr1IyMyMkDLhy+jZkvd
-         3nt/k1QOxZXpVzmtl9BOim/yPZvH5Vvs4toGP76nX15+oc8clHEikoh1Mn2zLLjO+KnC
-         Nb14v+ooTd2RMCQTcprG20lhhxICTFeqHyl2aaxr+1MLBrctSNDVouYcDHucWdrm7uP3
-         p9iw==
+        d=google.com; s=20210112; t=1680108893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6mmMTcKbNFZJ+ADW94MCmFYakixmyIY5T+sGgFQVqJY=;
+        b=EcvUtO42jTnqBkvpZAcPDRX1B/EBgeIHIvGlYQxBY9ZpicDaqou6cUmnVTgvVlrkuT
+         34nkDwRTApfZRQfmmpXskr3uYUE3mfpGxAAolVUJxfAP3MYo9aFBD2kDCVpUwe7mt+bY
+         agwP1g9K5cHbZldk8q82nVJkXZwLdLl+Yo+zmFryh42iqo2u61fy1gqnWYo1CW2vx7zG
+         V3pBuL3iZiTrxZSk1nCdqEAb2T8su9Pl5+fmoyj9INWPh5VgvnRRCJD3KS88j2HXTFuQ
+         vyGAUsDslmzrJwu765Hv54PjFJdloMIn+Iz0lRb96Oz9rEvgegkhtCA1ThQDmXg0wAeU
+         taEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680108436;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XhJ2KAFNUebvt6cQMDTLf5QYVLkhRGTjjjB4Lv8Q8Pw=;
-        b=wT5nAcJ8gF4BzB+mkRBvdIslWo0ZgtnSBuAf3jb+x597dlkLxn/LMX+DmFUBBcnqxZ
-         WyVbTaTSuIwrO1CnJO5+YH/jrZQpc2bMSnEWhrssdRJ+Hw71H1MD8W05D+1Gwf2monSc
-         tPfQB0/bKmFHC/KpUItiaof/7KB5baEhqrWm4XIcQR+QB5MnSU2Q0XuxztQmgp3TMWjS
-         HES9Nq0kFoHGD9oOlB3Qf0Fk7I0sXXyBhA1xJ8NhawzYLsqyXG3nNyaLFn8sNjcSgJGJ
-         O5cBVpRFrF20Y74qKK9XtnSk+paYF6hVovaqmHFJ0wE6LWxsXnMGvHvTVNw0AJ3VoqI5
-         i4iw==
-X-Gm-Message-State: AAQBX9cINQmWviY3pX3VOteZHDCrv5vrODvB0c+1MXW0lDUF4/wMtu2C
-        cviyNAWD7nG/EJP3IcW4YNpx54n1bfI=
-X-Google-Smtp-Source: AKy350aIOO/FRysptnp/XYsHQcm9j9T0hsEhp7XgPOREaWpwy9KrpbLjRF48BgXvySig/ZWmHz4PQEOOPoU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:b94:b0:541:698b:7bdb with SMTP id
- ck20-20020a05690c0b9400b00541698b7bdbmr1769126ywb.2.1680108436600; Wed, 29
- Mar 2023 09:47:16 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 09:47:15 -0700
-In-Reply-To: <38601264-1957-579f-f156-c782bb9826cc@amd.com>
-Mime-Version: 1.0
-References: <20230206060545.628502-1-manali.shukla@amd.com>
- <20230206060545.628502-3-manali.shukla@amd.com> <ZB4AOaLRwSB0ClIH@google.com> <38601264-1957-579f-f156-c782bb9826cc@amd.com>
-Message-ID: <ZCRrk0qsdv7rYqFq@google.com>
-Subject: Re: [RFC PATCH kernel 2/2] KVM: SEV: PreventHostIBS enablement for
- SEV-ES and SNP guest
-From:   Sean Christopherson <seanjc@google.com>
-To:     Manali Shukla <manali.shukla@amd.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        dave.hansen@linux.intel.com, pbonzini@redhat.com,
-        jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
-        babu.moger@amd.com, sandipan.das@amd.com, jmattson@google.com,
-        thomas.lendacky@amd.com, nikunj@amd.com, ravi.bangoria@amd.com,
-        eranian@google.com, irogers@google.com, kvm@vger.kernel.org,
-        x86@kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+        d=1e100.net; s=20210112; t=1680108893;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6mmMTcKbNFZJ+ADW94MCmFYakixmyIY5T+sGgFQVqJY=;
+        b=llOLTILUvgTWJhv2ijP/ZSQTF8FjBRftU5wtZ6t69EunSaFargmRoPzRbAxrAwFCUL
+         t4ZwjxutCu4/INnTsGvjbZwRvclHISXXOR2Ho7ocVfrK4vnzmtMwN6uj6vI+x5rwhQXT
+         WubSg0Sy7DjGczwAjn1vTQC7TE+sLJFFVaLlWUfjH0C15/7YG+dcMO5ATHTvNz+5606f
+         dBnRv72BIj5sZvsaTIxXBGe+PG/IjOfPH+GE5YKO4bu35o+plATbe6eGCnjiEAOqM5QR
+         ZIQBO/9oi+x8M71iLrSqswRKa1LyyxbEtqac9zAtlby+UqbRTSjhXmwSCQmLkdJWvQU8
+         Ugcw==
+X-Gm-Message-State: AAQBX9fuuj3l6iMGUXbqC8VANuWplcY0v7A4AYpQWwXPW4ViUY8ZEgpl
+        GNNZslieWaWPtUltDgqZZSADDyvswLWplI+5qAY9XOzY08pqdBJO6mRCiQ==
+X-Google-Smtp-Source: AKy350aZEuGOkGAUo3/PlvmvlZZ+e7ire4m+tofzP4fSUzLBgqwscgupalCGJKg/ccutDUs+9sYPCXIF0zSlFtAKH3c=
+X-Received: by 2002:ac8:5916:0:b0:3e3:86d0:4f02 with SMTP id
+ 22-20020ac85916000000b003e386d04f02mr368594qty.11.1680108893525; Wed, 29 Mar
+ 2023 09:54:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <202303222158.8975b36d-oliver.sang@intel.com> <CAP-5=fV3x_=6JqVsX8Z_+5bz67de_5JcWX-1B=So18wpMK3r=A@mail.gmail.com>
+ <ZCPX5bYv0zK+/a6u@xsang-OptiPlex-9020>
+In-Reply-To: <ZCPX5bYv0zK+/a6u@xsang-OptiPlex-9020>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 29 Mar 2023 09:54:39 -0700
+Message-ID: <CAP-5=fVV-3jYnJsrLZjqoJz3DzmT4b5t==Y3joC0NHgpz-qp-w@mail.gmail.com>
+Subject: Re: [acme:tmp.perf-tools-next] [perf build] a980755beb: perf-sanity-tests.perf.make.fail
+To:     Oliver Sang <oliver.sang@intel.com>
+Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andres Freund <andres@anarazel.de>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Stephane Eranian <eranian@google.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Tom Rix <trix@redhat.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 29, 2023, Manali Shukla wrote:
-> On 3/25/2023 1:25 AM, Sean Christopherson wrote:
-> > On Mon, Feb 06, 2023, Manali Shukla wrote:
-> >> -	if (sev_es_guest(vcpu->kvm))
-> >> +	if (sev_es_guest(vcpu->kvm)) {
-> >> +		bool ibs_fetch_active, ibs_op_active;
-> >> +		u64 ibs_fetch_ctl, ibs_op_ctl;
-> >> +
-> >> +		if (svm->prevent_hostibs_enabled) {
-> >> +			/*
-> >> +			 * With PreventHostIBS enabled, IBS profiling cannot
-> >> +			 * be active when VMRUN is executed. Disable IBS before
-> >> +			 * executing VMRUN and, because of a race condition,
-> >> +			 * enable the PreventHostIBS window if IBS profiling was
-> >> +			 * active.
-> > 
-> > And the race can't be fixed because...?
-> 
-> Race can not be fixed because VALID and ENABLE bit for IBS_FETCH_CTL and IBS_OP_CTL
-> are contained in their same resepective MSRs. Due to this reason following scenario can
-> be generated:
-> Read IBS_FETCH_CTL (IbsFetchEn bit is 1 and IBSFetchVal bit is 0)
-> Write IBS_FETCH_CTL (IbsFetchEn is 0 now)
-> Imagine in between Read and Write, IBSFetchVal changes to 1. Write to IBS_FETCH_CTL will
-> clear the IBSFetchVal bit. When STGI is executed after VMEXIT, the NMI is taken and check for
-> valid mask will fail and generate Dazed and Confused NMI messages.
-> Please refer to cover letter for more details.
+On Tue, Mar 28, 2023 at 11:17=E2=80=AFPM Oliver Sang <oliver.sang@intel.com=
+> wrote:
+>
+> hi Ian,
+>
+> On Wed, Mar 22, 2023 at 09:03:28AM -0700, Ian Rogers wrote:
+> > On Wed, Mar 22, 2023 at 7:20=E2=80=AFAM kernel test robot <oliver.sang@=
+intel.com> wrote:
+> > >
+> > >
+> > > Greeting,
+> > >
+> > > FYI, we noticed perf-sanity-tests.perf.make.fail due to commit (built=
+ with gcc-11):
+> > >
+> > > commit: a980755beb5aca9002e1c95ba519b83a44242b5b ("perf build: Make B=
+UILD_BPF_SKEL default, rename to NO_BPF_SKEL")
+> > > https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git tmp.perf-=
+tools-next
+> > >
+> > > in testcase: perf-sanity-tests
+> > > version: perf-x86_64-e8d018dd0257-1_20230320
+> > > with following parameters:
+> > >
+> > >         perf_compiler: clang
+> > >
+> > > [   98.290078][  T246] make perf failed
+> >
+> > Hi Oliver,
+> >
+> > Could we add NO_BPF_SKEL=3D1 to the build flags? The idea with changing
+> > the default is that is what most users want and so we want the BPF
+> > skeleton to be opt-out rather than opt-in.
+>
+> Thanks a lot for guidance!
+>
+> I added NO_BPF_SKEL=3D1 then make perf can pass upon this commit.
+> I also tried to add BUILD_BPF_SKEL=3D1 while make perf for parent, it wil=
+l fail.
+>
+> since you said in commit message
+> "BPF skeleton support is now key to a number of perf features."
+> we will start to fix make issue.
+>
+> Thanks!
 
-I understand the race, I'm asking why this series doesn't fix the race.  Effectively
-suppressing potentially unexpected NMIs because PreventHostIBS was enable is ugly.
+This is great Oliver, many thanks!
+Ian
 
-> >> +			 */
-> >> +			ibs_fetch_active =
-> >> +				amd_disable_ibs_fetch(&ibs_fetch_ctl);
-> >> +			ibs_op_active =
-> >> +				amd_disable_ibs_op(&ibs_op_ctl);
-> >> +
-> >> +			amd_prevent_hostibs_window(ibs_fetch_active ||
-> >> +						   ibs_op_active);
-> >> +		}
-> >> +
-> >>  		__svm_sev_es_vcpu_run(svm, spec_ctrl_intercepted);
-> >> -	else
-> >> +
-> >> +		if (svm->prevent_hostibs_enabled) {
-> >> +			if (ibs_fetch_active)
-> >> +				amd_restore_ibs_fetch(ibs_fetch_ctl);
-> >> +
-> >> +			if (ibs_op_active)
-> >> +				amd_restore_ibs_op(ibs_op_ctl);
-> > 
-> > IIUC, this adds up to 2 RDMSRs and 4 WRMSRs to the VMRUN path.  Blech.  There's
-> > gotta be a better way to implement this.  
-> 
-> I will try to find a better way to implement this.
-> 
-> > Like PeterZ said, this is basically
-> > exclude_guest.
-> 
-> As I mentioned before, exclude_guest lets the profiler decide whether it wants to trace the guest
-> data or not, whereas PreventHostIBS lets the owner of the guest decide whether host can trace guest's
-> data or not.
-
-PreventHostIBS is purely an enforcement, it does not actually do anything to
-disable tracing of the guest.  What PeterZ and I are complaining about is that
-instead of integrating this feature with exclude_guest, e.g. finding a way to
-make guest tracing mutually exclusive with KVM_RUN so that PreventHostIBS can be
-contexted switched according, this series instead backdoors into perf to forcefully
-disable tracing.
-
-In other words, please try to create a sane contract between userspace, perf, and
-KVM, e.g. disallow tracing a guest with PreventHostIBS at some level instead of
-silently toggling tracing around VMRUN.
+> >
+> > Thanks,
+> > Ian
+> >
+> > >
+> > > To reproduce:
+> > >
+> > >         git clone https://github.com/intel/lkp-tests.git
+> > >         cd lkp-tests
+> > >         sudo bin/lkp install job.yaml           # job file is attache=
+d in this email
+> > >         bin/lkp split-job --compatible job.yaml # generate the yaml f=
+ile for lkp run
+> > >         sudo bin/lkp run generated-yaml-file
+> > >
+> > >         # if come across any failure that blocks the test,
+> > >         # please remove ~/.lkp and /lkp dir to run from a clean state=
+.
+> > >
+> > >
+> > >
+> > > --
+> > > 0-DAY CI Kernel Test Service
+> > > https://github.com/intel/lkp-tests
+> > >
+> > >
+> >
