@@ -2,124 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1124C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 12:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC195C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 12:39:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbjC2MDQ (ORCPT
+        id S229878AbjC2MjU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 08:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
+        Wed, 29 Mar 2023 08:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjC2MDQ (ORCPT
+        with ESMTP id S229891AbjC2MjS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 08:03:16 -0400
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D78268B;
-        Wed, 29 Mar 2023 05:03:13 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0VewkIyt_1680091388;
-Received: from 30.221.149.47(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VewkIyt_1680091388)
-          by smtp.aliyun-inc.com;
-          Wed, 29 Mar 2023 20:03:09 +0800
-Message-ID: <e60d5073-b7bb-f475-8ce5-fa04ac0926f5@linux.alibaba.com>
-Date:   Wed, 29 Mar 2023 20:03:08 +0800
+        Wed, 29 Mar 2023 08:39:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4798349D5;
+        Wed, 29 Mar 2023 05:39:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B8DB61CDE;
+        Wed, 29 Mar 2023 12:39:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEFA7C433D2;
+        Wed, 29 Mar 2023 12:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680093554;
+        bh=nPaKhtIYesO46HY2QS1NeA6vtt1FAYgHFmEMunGB8IE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tOJi7qd9K7GS61grFmdjpnUmvE60jk9jOEHxXY7plG60Ga0ttExs7A9F4uSKCfjDn
+         mBmstFF6nPRyJqXSBf3yHErX2GRBgop2790JHtF0baZAWH1OW8r1a1/OaxMvIflghJ
+         6nx2ShjisVX3H1nzOa+WU3zl9B5pMj//k5KSI5PRRlO4l2+cs3HWtKK2mr8MY1YHDl
+         hYNpfosRRegx8KtOmB0nr/Hc70s6IKbg3ylHXDSTIzBOdSSzyPyiZHXpfPs2Vplmy+
+         hBhqXvxLR123ovROgatKxdRVgyja5UJry23gRzWHL4VVQHysWQql5ud6theqG+ExfN
+         3S09HmFNhHsSg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 53DAC4052D; Wed, 29 Mar 2023 09:39:11 -0300 (-03)
+Date:   Wed, 29 Mar 2023 09:39:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/3] perf tools: Address fixes
+Message-ID: <ZCQxbxVmUtiCi09I@kernel.org>
+References: <20230316194156.8320-1-adrian.hunter@intel.com>
+ <1e2d77df-da40-0a06-0401-e15af96fe811@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH RFC 3/4] driver/perf: Add identifier sysfs file for Yitian
- 710 DDR
-To:     Shuai Xue <xueshuai@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1679885172-95021-4-git-send-email-renyu.zj@linux.alibaba.com>
- <7060f009-2964-30af-3d12-2bb3e21b6c1e@linux.alibaba.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <7060f009-2964-30af-3d12-2bb3e21b6c1e@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1e2d77df-da40-0a06-0401-e15af96fe811@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/3/29 下午3:55, Shuai Xue 写道:
+Em Wed, Mar 29, 2023 at 08:07:42AM +0300, Adrian Hunter escreveu:
+> On 16/03/23 21:41, Adrian Hunter wrote:
+> > Hi
+> > 
+> > Here are 3 small fixes resulting from a report from a
+> > kernel test robot:
+> > 
+> > https://lore.kernel.org/oe-lkp/202303061424.6ad43294-yujie.liu@intel.com
+> > 
+> > Issues were revealed due to the use of build
+> > option:
+> > 
+> > 	EXTRA_CFLAGS="-fsanitize=undefined -fsanitize=address"
+> > 
+> > 
+> > Adrian Hunter (3):
+> >       perf symbols: Fix use-after-free in get_plt_got_name()
+> >       perf symbols: Fix unaligned access in get_x86_64_plt_disp()
+> >       perf tools: Avoid warning in do_realloc_array_as_needed()
+> > 
+> >  tools/perf/util/symbol-elf.c | 10 ++++++++--
+> >  tools/perf/util/util.c       |  3 ++-
+> >  2 files changed, 10 insertions(+), 3 deletions(-)
 > 
-> 
-> On 2023/3/27 AM10:46, Jing Zhang wrote:
->> To allow userspace to identify the specific implementation of the device,
->> add an "identifier" sysfs file.
->>
->> The perf tool can match the Yitian 710 DDR metric through the identifier.
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>  drivers/perf/alibaba_uncore_drw_pmu.c | 27 +++++++++++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>
->> diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
->> index a7689fe..6639a57 100644
->> --- a/drivers/perf/alibaba_uncore_drw_pmu.c
->> +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
->> @@ -236,10 +236,37 @@ static ssize_t ali_drw_pmu_cpumask_show(struct device *dev,
->>  	.attrs = ali_drw_pmu_cpumask_attrs,
->>  };
->>  
->> +static ssize_t ali_drw_pmu_identifier_show(struct device *dev,
->> +					struct device_attribute *attr,
->> +					char *page)
->> +{
->> +	return sysfs_emit(page, "%s\n", "ali_drw_yitian710");
-> 
-> Is it possible to rename identifier as "ali_drw_pmu"? I don't think we need only
-> limit alibaba_uncore_drw_pmu to Yitian710 SoC here.
-> 
+> These seem to be still outstanding.
 
-Ok, I will rename it as "ali_drw_pmu".
+Thanks for the reminder, applied.
 
-Thanks,
-Jing
+- Arnaldo
 
-> Thank you.
-> Shuai
-> 
->> +}
->> +
->> +static umode_t ali_drw_pmu_identifier_attr_visible(struct kobject *kobj,
->> +						struct attribute *attr, int n)
->> +{
->> +	return attr->mode;
->> +}
->> +
->> +static struct device_attribute ali_drw_pmu_identifier_attr =
->> +	__ATTR(identifier, 0444, ali_drw_pmu_identifier_show, NULL);
->> +
->> +static struct attribute *ali_drw_pmu_identifier_attrs[] = {
->> +	&ali_drw_pmu_identifier_attr.attr,
->> +	NULL,
->> +};
->> +
->> +static const struct attribute_group ali_drw_pmu_identifier_attr_group = {
->> +	.attrs = ali_drw_pmu_identifier_attrs,
->> +	.is_visible = ali_drw_pmu_identifier_attr_visible,
->> +};
->> +
->>  static const struct attribute_group *ali_drw_pmu_attr_groups[] = {
->>  	&ali_drw_pmu_events_attr_group,
->>  	&ali_drw_pmu_cpumask_attr_group,
->>  	&ali_drw_pmu_format_group,
->> +	&ali_drw_pmu_identifier_attr_group,
->>  	NULL,
->>  };
->>  
