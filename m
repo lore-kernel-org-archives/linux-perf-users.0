@@ -2,182 +2,196 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A9DC761AF
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 17:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD58C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 17:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjC2RoR (ORCPT
+        id S229579AbjC2Rrw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 13:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37046 "EHLO
+        Wed, 29 Mar 2023 13:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjC2RoQ (ORCPT
+        with ESMTP id S229530AbjC2Rrw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 13:44:16 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1CE259ED;
-        Wed, 29 Mar 2023 10:44:12 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id r84so10913655oih.11;
-        Wed, 29 Mar 2023 10:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680111852;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=50QTP45WY6pvn3yZ3i6RkBzEDvZP2fVH5iPA1Ib3bVk=;
-        b=ZXeaZOMY8TwVzWjeXC0/zMJ528ILJgW7jupdBIe5PH1RR9vJ+0zf/X4WGjjKBaEx4L
-         mZUoZimDHjb80cjWS1arXe8sOH5Qp9OfVtdZnJeS4IfL+oeHzEZjxs6KbgVxYiULFa0H
-         xnakT1vGRPpyxkrqzpaPI70SMz20/X4dsR2ZMJlnjoVQKw3txigMz41IWyeyOjWdJLTc
-         0bZmU2/RIC0I5VpG8kfe3aPj9Td4cTssRvJ4zjnK73prjMy1k5v8GHiEda8hvVBTX+MH
-         pTTISSqmU0OXct4TZ1p+xYGCzTXOtqcMeT/f+4cRFh0R2UAAXwLp91SezMt62StL/TTp
-         nQog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680111852;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=50QTP45WY6pvn3yZ3i6RkBzEDvZP2fVH5iPA1Ib3bVk=;
-        b=FX50TNuIVyccFx/EBBrkf4SNPdHTu53z0tfObIBgd8qwRnD/wzCUFJrOQn3EMFMHDi
-         rql3MA+57vZxzAEz09xkHWynMp37sFIBMsSV79odMlkA+zlIsoVgjpI/oLebXMSUJS7D
-         vEaxKXgNWtkeGpHviPFghFyHAeU0SyEyv/OzuQrpmIMe0fAYA1kn6i4mrNzz/Q5ifEN0
-         uOrmAufG+eznnKtwbTzbe20UCyI8wW8jKVDQPOX+qqQAsn8kPHtCxhrutdgO/Q22+gbr
-         6PfRPBBz5d03FcLs9gL6HPAcpKC/T44g4NIJN5v3GTBE5Phso64RzsF8P7eP6xxrghOe
-         5gJA==
-X-Gm-Message-State: AO0yUKWOQx53PelCSfOFPztm37shuVaIx71xugO1SdjYVDh/+5nuu6YK
-        XSt7KvU92ibGrHTCUxeVXpU=
-X-Google-Smtp-Source: AK7set8NQrCxkB7VeBc2tVbXE4aVV2EPvvcPR/7ZRJ31RYAO+pmyLcPndKg3Qx+5zhcKTuqVEy1zLg==
-X-Received: by 2002:aca:1810:0:b0:386:d2fc:989a with SMTP id h16-20020aca1810000000b00386d2fc989amr8346264oih.54.1680111852268;
-        Wed, 29 Mar 2023 10:44:12 -0700 (PDT)
-Received: from [127.0.0.1] (177-57-192-121.3g.claro.net.br. [177.57.192.121])
-        by smtp.gmail.com with ESMTPSA id x127-20020a4a4185000000b0053d9be4be68sm6127740ooa.19.2023.03.29.10.44.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Mar 2023 10:44:11 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 14:44:06 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Ian Rogers <irogers@google.com>,
-        Oliver Sang <oliver.sang@intel.com>
-CC:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andres Freund <andres@anarazel.de>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Wed, 29 Mar 2023 13:47:52 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B71E6525E;
+        Wed, 29 Mar 2023 10:47:50 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7E4A2F4;
+        Wed, 29 Mar 2023 10:48:34 -0700 (PDT)
+Received: from [10.57.56.187] (unknown [10.57.56.187])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBC5A3F6C4;
+        Wed, 29 Mar 2023 10:47:47 -0700 (PDT)
+Message-ID: <091d5b8d-6ea7-e6ff-3421-63612797ac60@arm.com>
+Date:   Wed, 29 Mar 2023 18:47:41 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH RFC 1/4] driver/perf: Add identifier sysfs file for CMN
+Content-Language: en-GB
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Stephane Eranian <eranian@google.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Tom Rix <trix@redhat.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5Bacme=3Atmp=2Eperf-tools-next=5D_=5Bperf_build=5D_?= =?US-ASCII?Q?a980755beb=3A_perf-sanity-tests=2Eperf=2Emake=2Efail?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP-5=fVV-3jYnJsrLZjqoJz3DzmT4b5t==Y3joC0NHgpz-qp-w@mail.gmail.com>
-References: <202303222158.8975b36d-oliver.sang@intel.com> <CAP-5=fV3x_=6JqVsX8Z_+5bz67de_5JcWX-1B=So18wpMK3r=A@mail.gmail.com> <ZCPX5bYv0zK+/a6u@xsang-OptiPlex-9020> <CAP-5=fVV-3jYnJsrLZjqoJz3DzmT4b5t==Y3joC0NHgpz-qp-w@mail.gmail.com>
-Message-ID: <2F03A3D5-0441-4CCB-A64A-E17B1D6295A9@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1679885172-95021-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <72246c5e-6ba5-098b-a979-e90738cc7509@oracle.com>
+ <8ba831ae-4568-32af-3fd1-fd51a7c13dcd@linux.alibaba.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <8ba831ae-4568-32af-3fd1-fd51a7c13dcd@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On March 29, 2023 1:54:39 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom> =
-wrote:
->On Tue, Mar 28, 2023 at 11:17=E2=80=AFPM Oliver Sang <oliver=2Esang@intel=
-=2Ecom> wrote:
+On 2023-03-29 12:53, Jing Zhang wrote:
+> 
+> 
+> 在 2023/3/27 下午3:55, John Garry 写道:
+>> On 27/03/2023 03:46, Jing Zhang wrote:
+>>> To allow userspace to identify the specific implementation of the device,
+>>> add an "identifier" sysfs file.
+>>>
+>>> The perf tool can match the arm CMN metric through the identifier.
+>>>
+>>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>>> ---
+>>>    drivers/perf/arm-cmn.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 43 insertions(+)
+>>>
+>>> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+>>> index c968986..0c138ad 100644
+>>> --- a/drivers/perf/arm-cmn.c
+>>> +++ b/drivers/perf/arm-cmn.c
+>>> @@ -1168,10 +1168,53 @@ static ssize_t arm_cmn_cpumask_show(struct device *dev,
+>>>        .attrs = arm_cmn_cpumask_attrs,
+>>>    };
+>>>    +static ssize_t arm_cmn_identifier_show(struct device *dev,
+>>> +        struct device_attribute *attr, char *buf)
+>>> +{
+>>> +    struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+>>> +    if (cmn->model == CMN700) {
+>>> +        return sysfs_emit(buf, "%s\n", "CMN700");
 >>
->> hi Ian,
+>> Is it possible to have a pointer to this string in struct arm_cmn, such that we don't have to do this model to identifier lookup here? If-else chains like this are not scalable.
 >>
->> On Wed, Mar 22, 2023 at 09:03:28AM -0700, Ian Rogers wrote:
->> > On Wed, Mar 22, 2023 at 7:20=E2=80=AFAM kernel test robot <oliver=2Es=
-ang@intel=2Ecom> wrote:
->> > >
->> > >
->> > > Greeting,
->> > >
->> > > FYI, we noticed perf-sanity-tests=2Eperf=2Emake=2Efail due to commi=
-t (built with gcc-11):
->> > >
->> > > commit: a980755beb5aca9002e1c95ba519b83a44242b5b ("perf build: Make=
- BUILD_BPF_SKEL default, rename to NO_BPF_SKEL")
->> > > https://git=2Ekernel=2Eorg/cgit/linux/kernel/git/acme/linux=2Egit t=
-mp=2Eperf-tools-next
->> > >
->> > > in testcase: perf-sanity-tests
->> > > version: perf-x86_64-e8d018dd0257-1_20230320
->> > > with following parameters:
->> > >
->> > >         perf_compiler: clang
->> > >
->> > > [   98=2E290078][  T246] make perf failed
->> >
->> > Hi Oliver,
->> >
->> > Could we add NO_BPF_SKEL=3D1 to the build flags? The idea with changi=
-ng
->> > the default is that is what most users want and so we want the BPF
->> > skeleton to be opt-out rather than opt-in=2E
+> Will do.
+> 
+>> BTW, does this HW have some HW identifier register, like iidr? I think that using that may be preferable.
 >>
->> Thanks a lot for guidance!
+> 
+> I didn't find the relevant identifier register.
+> 
+> Do Illka and Robin know that there is such a register that can identify different CMN versions? Looking forward to your suggestions.
+
+In principle the "part number" fields from CFGM_PERIPH_ID_0/1 are 
+supposed to identify the model, but for various reasons I'm suspicious 
+of that being unreliable (not least that no actual values are 
+documented, only "configuration-dependent"). That's why I went down the 
+route of making sure we have explicit ACPI/DT identifiers for every model.
+
+However, the model alone seems either too specific or not specific 
+enough for a jevents identifier. The defined metrics are pretty trivial 
+and should have no real reason not to be common to *any* CMN PMU where 
+the underlying events are present. On the other hand, if we want to get 
+down to the level of specific events in JSON then we'd need to consider 
+the revision as well, since there are several events which only exist on 
+certain revisions of a given model (but often are also common to later 
+models).
+
+This actually foreshadows a question I was planning to bring up in the 
+context of another driver I'm working on - for this one I would rather 
+like to try using jevents rather than have to maintain another sprawl of 
+event tables in a driver, but it's still going to have the same thing of 
+wanting model/revision matching along the lines of what 
+arm_cmn_event_attr_is_visible() is doing for CMN events. AFAICS this 
+would need jevents to grow a rather more flexible way of encoding and 
+matching identifiers, since having dozens of almost-identical copies of 
+event definitions for every exact identifier value is clearly 
+unworkable. Does anyone happen to have any thoughts or preferences 
+around how that might be approached?
+
+>>> +    }
+>>> +    else if (cmn->model == CMN650) {
+>>> +        return sysfs_emit(buf, "%s\n", "CMN650");
 >>
->> I added NO_BPF_SKEL=3D1 then make perf can pass upon this commit=2E
->> I also tried to add BUILD_BPF_SKEL=3D1 while make perf for parent, it w=
-ill fail=2E
+>> I'd use lowercase names
 >>
->> since you said in commit message
->> "BPF skeleton support is now key to a number of perf features=2E"
->> we will start to fix make issue=2E
+> Ok.
+> 
+>>> +    }
+>>> +    else if (cmn->model == CMN600) {
+>>> +        return sysfs_emit(buf, "%s\n", "CMN600");
+>>> +    }
+>>> +    else if (cmn->model == CI700) {
+>>> +        return sysfs_emit(buf, "%s\n", "CI700");
+>>> +    }
+>>> +    return sysfs_emit(buf, "%s\n", "UNKNOWN");
+>>
+>> can we have a "is_visble" attr to just no show this when unknown?
 
-
-So, does that mean that you guys will not use NO_BPF_SKEL=3D1 and instead =
-will try to have what is needed to build with the default: with BPF skel an=
-d the features enabled by them?
-
-If that is the case: great!
-
-- Arnaldo=20
+No need - it will never be unknown unless someone goes out of their way 
+to break the probing code and/or match_data.
 
 >>
->> Thanks!
->
->This is great Oliver, many thanks!
->Ian
->
->> >
->> > Thanks,
->> > Ian
->> >
->> > >
->> > > To reproduce:
->> > >
->> > >         git clone https://github=2Ecom/intel/lkp-tests=2Egit
->> > >         cd lkp-tests
->> > >         sudo bin/lkp install job=2Eyaml           # job file is att=
-ached in this email
->> > >         bin/lkp split-job --compatible job=2Eyaml # generate the ya=
-ml file for lkp run
->> > >         sudo bin/lkp run generated-yaml-file
->> > >
->> > >         # if come across any failure that blocks the test,
->> > >         # please remove ~/=2Elkp and /lkp dir to run from a clean s=
-tate=2E
->> > >
->> > >
->> > >
->> > > --
->> > > 0-DAY CI Kernel Test Service
->> > > https://github=2Ecom/intel/lkp-tests
->> > >
->> > >
->> >
+> 
+> Ok.
+> 
+>>> +}
+>>> +
+>>> +static umode_t arm_cmn_identifier_attr_visible(struct kobject *kobj,
+>>> +        struct attribute *attr, int n)
+>>> +{
+>>> +    struct device *dev = kobj_to_dev(kobj);
+>>> +    struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+>>> +    if (cmn->model <= 0)
+>>> +        return 0;
+>>> +    return attr->mode;
+>>> +};
+
+As above, "cmn->model <= 0" can never be true.
+
+Thanks,
+Robin.
+
+>>> +
+>>> +static struct device_attribute arm_cmn_identifier_attr =
+>>> +__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
+>>> +
+>>> +static struct attribute *arm_cmn_identifier_attrs[] = {
+>>> +    &arm_cmn_identifier_attr.attr,
+>>> +    NULL,
+>>
+>> nit: no need for trailing ',' on a sentinel
+>>
+> 
+> Ok, Will do.
+> 
+>>> +};
+>>> +
+>>> +static struct attribute_group arm_cmn_identifier_attr_group = {
+>>> +    .attrs = arm_cmn_identifier_attrs,
+>>> +    .is_visible = arm_cmn_identifier_attr_visible,
+>>> +};
+>>> +
+>>>    static const struct attribute_group *arm_cmn_attr_groups[] = {
+>>>        &arm_cmn_event_attrs_group,
+>>>        &arm_cmn_format_attrs_group,
+>>>        &arm_cmn_cpumask_attr_group,
+>>> +    &arm_cmn_identifier_attr_group,
+>>>        NULL
+>>>    };
+>>>    
