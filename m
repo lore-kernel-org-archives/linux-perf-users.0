@@ -2,93 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF03EC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 11:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BF1C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 11:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbjC2LSm (ORCPT
+        id S229475AbjC2LyN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 07:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48970 "EHLO
+        Wed, 29 Mar 2023 07:54:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229747AbjC2LSl (ORCPT
+        with ESMTP id S229949AbjC2LyJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 07:18:41 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 07F664213;
-        Wed, 29 Mar 2023 04:18:32 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB1C01FB;
-        Wed, 29 Mar 2023 04:19:15 -0700 (PDT)
-Received: from [10.57.56.86] (unknown [10.57.56.86])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 281783F73F;
-        Wed, 29 Mar 2023 04:18:29 -0700 (PDT)
-Message-ID: <0ada81b0-42d7-a9fe-41ff-9476b4b68ee0@arm.com>
-Date:   Wed, 29 Mar 2023 12:18:27 +0100
+        Wed, 29 Mar 2023 07:54:09 -0400
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4A84203;
+        Wed, 29 Mar 2023 04:54:03 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VewpsNi_1680090837;
+Received: from 30.221.149.47(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VewpsNi_1680090837)
+          by smtp.aliyun-inc.com;
+          Wed, 29 Mar 2023 19:53:58 +0800
+Message-ID: <8ba831ae-4568-32af-3fd1-fd51a7c13dcd@linux.alibaba.com>
+Date:   Wed, 29 Mar 2023 19:53:56 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH v8 0/3] perf: cs-etm: Update perf to handle new Coresight
- Trace ID
-To:     Mike Leach <mike.leach@linaro.org>,
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH RFC 1/4] driver/perf: Add identifier sysfs file for CMN
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org, acme@kernel.org
-Cc:     leo.yan@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org, john.garry@huawei.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, gankulkarni@os.amperecomputing.com,
-        darren@os.amperecomputing.com
-References: <20230329111422.3693-1-mike.leach@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20230329111422.3693-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1679885172-95021-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <72246c5e-6ba5-098b-a979-e90738cc7509@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <72246c5e-6ba5-098b-a979-e90738cc7509@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Arnaldo,
-
-On 29/03/2023 12:14, Mike Leach wrote:
-> The original method for allocating trace source ID values to sources was
-> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> The STM was allocated ID 0x1.
-> 
-> This mechanism is broken for systems with more than 47 cores.
-> 
-> The kernel related patches the provide a fixed Trace ID allocation mechanism
-> are now upstreamed.
-> 
-> This patchset updates the perf code to handle the changes to the trace ID
-> notification mechanism that now uses the PERF_RECORD_AUX_OUTPUT_HW_ID
-> packet to set Trace ID in the perf ETM decoders.
-> 
-> Applies to perf/core
-> 
-> Changes since v7:
-> Split from original patchset [1] to be sent separately as kernel related
-> patches are now upstream.
-
-Please could you pull this in ? This is critical for enabling the 
-CoreSight perf support on systems with > 47 cores. The kernel changes
-are already in.
-
-Suzuki
 
 
+在 2023/3/27 下午3:55, John Garry 写道:
+> On 27/03/2023 03:46, Jing Zhang wrote:
+>> To allow userspace to identify the specific implementation of the device,
+>> add an "identifier" sysfs file.
+>>
+>> The perf tool can match the arm CMN metric through the identifier.
+>>
+>> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+>> ---
+>>   drivers/perf/arm-cmn.c | 43 +++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 43 insertions(+)
+>>
+>> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+>> index c968986..0c138ad 100644
+>> --- a/drivers/perf/arm-cmn.c
+>> +++ b/drivers/perf/arm-cmn.c
+>> @@ -1168,10 +1168,53 @@ static ssize_t arm_cmn_cpumask_show(struct device *dev,
+>>       .attrs = arm_cmn_cpumask_attrs,
+>>   };
+>>   +static ssize_t arm_cmn_identifier_show(struct device *dev,
+>> +        struct device_attribute *attr, char *buf)
+>> +{
+>> +    struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+>> +    if (cmn->model == CMN700) {
+>> +        return sysfs_emit(buf, "%s\n", "CMN700");
 > 
-> [1] https://lore.kernel.org/linux-arm-kernel/20230116124928.5440-1-mike.leach@linaro.org/
+> Is it possible to have a pointer to this string in struct arm_cmn, such that we don't have to do this model to identifier lookup here? If-else chains like this are not scalable.
 > 
-> Mike Leach (3):
->    perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->    perf: cs-etm: Update record event to use new Trace ID protocol
->    perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
-> 
->   tools/include/linux/coresight-pmu.h           |  47 ++-
->   tools/perf/arch/arm/util/cs-etm.c             |  21 +-
->   .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
->   tools/perf/util/cs-etm.c                      | 326 +++++++++++++++---
->   tools/perf/util/cs-etm.h                      |  14 +-
->   5 files changed, 350 insertions(+), 65 deletions(-)
+Will do.
+
+> BTW, does this HW have some HW identifier register, like iidr? I think that using that may be preferable.
 > 
 
+I didn't find the relevant identifier register.
+
+Do Illka and Robin know that there is such a register that can identify different CMN versions? Looking forward to your suggestions.
+
+
+>> +    }
+>> +    else if (cmn->model == CMN650) {
+>> +        return sysfs_emit(buf, "%s\n", "CMN650");
+> 
+> I'd use lowercase names
+> 
+Ok.
+
+>> +    }
+>> +    else if (cmn->model == CMN600) {
+>> +        return sysfs_emit(buf, "%s\n", "CMN600");
+>> +    }
+>> +    else if (cmn->model == CI700) {
+>> +        return sysfs_emit(buf, "%s\n", "CI700");
+>> +    }
+>> +    return sysfs_emit(buf, "%s\n", "UNKNOWN");
+> 
+> can we have a "is_visble" attr to just no show this when unknown?
+> 
+
+Ok.
+
+>> +}
+>> +
+>> +static umode_t arm_cmn_identifier_attr_visible(struct kobject *kobj,
+>> +        struct attribute *attr, int n)
+>> +{
+>> +    struct device *dev = kobj_to_dev(kobj);
+>> +    struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+>> +    if (cmn->model <= 0)
+>> +        return 0;
+>> +    return attr->mode;
+>> +};
+>> +
+>> +static struct device_attribute arm_cmn_identifier_attr =
+>> +__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
+>> +
+>> +static struct attribute *arm_cmn_identifier_attrs[] = {
+>> +    &arm_cmn_identifier_attr.attr,
+>> +    NULL,
+> 
+> nit: no need for trailing ',' on a sentinel
+> 
+
+Ok, Will do.
+
+>> +};
+>> +
+>> +static struct attribute_group arm_cmn_identifier_attr_group = {
+>> +    .attrs = arm_cmn_identifier_attrs,
+>> +    .is_visible = arm_cmn_identifier_attr_visible,
+>> +};
+>> +
+>>   static const struct attribute_group *arm_cmn_attr_groups[] = {
+>>       &arm_cmn_event_attrs_group,
+>>       &arm_cmn_format_attrs_group,
+>>       &arm_cmn_cpumask_attr_group,
+>> +    &arm_cmn_identifier_attr_group,
+>>       NULL
+>>   };
+>>   
