@@ -2,88 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329B5C74A5B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 05:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE4AC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 05:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbjC2FHv (ORCPT
+        id S229759AbjC2Ffe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 01:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46750 "EHLO
+        Wed, 29 Mar 2023 01:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbjC2FHu (ORCPT
+        with ESMTP id S229738AbjC2Ffb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 01:07:50 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE9E2D48;
-        Tue, 28 Mar 2023 22:07:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680066470; x=1711602470;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=JbHYbDttf7D+bkYuSV1T3QbU8EbIEeJfBKFc3jJbZjU=;
-  b=K7Fh9d/8wypf2E+xoDJKKrc66gHV681EHZT5zSbd9d3P7QeIoT05Xpz3
-   QSy1+oiE3aQ5b20zybs3bBICsY6FxHyDJdZ/AZv05RQZ7xyWE2u/w0XUm
-   XdqQ10KKWstN2iG8scfffNFO8AlhX/pcB49RCHd5I/9YEeX2amzhQFQiL
-   6PsQO/8OGBCn8ZDH0TNDVBemtwbu6Td3lhVJ1iTenK6Ou3sVLdRBya6nc
-   Am4O4dR1d2NcPANm2ZF0Oq6ibt1k8N207yDr7Bk5QuNAWm9h1fIclRnfx
-   JexEvOcqx03qj/6JiKG+RB/Mra4YfWtahIeT9OWsTuUl4l/RSQfcY7G4e
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="321178332"
-X-IronPort-AV: E=Sophos;i="5.98,299,1673942400"; 
-   d="scan'208";a="321178332"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 22:07:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10663"; a="827738096"
-X-IronPort-AV: E=Sophos;i="5.98,299,1673942400"; 
-   d="scan'208";a="827738096"
-Received: from tsennhau-mobl6.gar.corp.intel.com (HELO [10.0.2.15]) ([10.252.49.63])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 22:07:44 -0700
-Message-ID: <1e2d77df-da40-0a06-0401-e15af96fe811@intel.com>
-Date:   Wed, 29 Mar 2023 08:07:42 +0300
+        Wed, 29 Mar 2023 01:35:31 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FBD63A85
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 22:35:21 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3e392e10cc4so246501cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 22:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680068120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YJ4VxHw3gziyai/ZHT9juicLaUWs3flel3m1iMnqLzY=;
+        b=IpAS+ZmGTIoLmfVp5XUzebFqVZujsLlpp1ScMKuJhSbrLYvrl1zaUFwl+LqNZQKHm9
+         u+FTJhJyd4nVtFRd/bNbg+phyF0MQWoGO5pVeEATw4nwVlAvCU5p9JwlKn6Bo1RUe3U/
+         dr2B+k/Q8n1wyGB8aj4TNbSsW9E9WO4XSBKSPyL9Ej5IZhHouFT75h5qI7eRsdC2/FBK
+         swrlAeafdZOQZttSIFxW3Tfn+3x6Jqsq1NMZMW5+Xc1aEjusucUWBzS+fUFhQGbXUdDB
+         brSu4MWD8pM5fURKrNWqrIhuzQcZukfYbQhVJV2afrQ65lUU41JJFb8KpbiMYCHAgdGC
+         kCqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680068120;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YJ4VxHw3gziyai/ZHT9juicLaUWs3flel3m1iMnqLzY=;
+        b=o3WgRfeg9I8kyptfjF/MpcMag6FD8jnRTAQWzDrrMPXBmIIPDzSVctln49MEimAaw4
+         5/yXCzt8qEf9SHWZQSN2f9eVaHZKOabu1iU/PybuCFz6GNoAiKh0AM2TqXlYNEaRTWu7
+         D2phScinjepYBJshK/JWTS6EebL/M6FzBOzvtoycVYQwky0dz6H8Nf9RnEVcczP81j7q
+         QzMHKjYsJfQ/wh12Qg5sDCTAkB58t20dvgxLH6UntNTC5+fheaK6QkBZg0S0Gyf6kqCW
+         3mdFo9OYYHV6edrftlVghuA6VwFD0ahlEUz2bEiGDWaRF5PyTbSW0BKpcBwT86U1S5CY
+         ZLkw==
+X-Gm-Message-State: AAQBX9fdHq1l1IMkGowrqdio+XtuJM5w8JBCZCGFd3QE0dlY4CKAZbFg
+        H+hfeZQulH+Sqam6zTXshl1kc7nc9nmD85cfIgxzcQ==
+X-Google-Smtp-Source: AKy350ZJxLwvpg9Ap30DXxDFqoQBG9JMH4wrgkDhKQ4F8ERTQyVtE+QpOJzLu825EVk26ftbY0ud9wjO1VNT7NF4Gps=
+X-Received: by 2002:ac8:7d0a:0:b0:3bf:b62a:508b with SMTP id
+ g10-20020ac87d0a000000b003bfb62a508bmr284915qtb.12.1680068120187; Tue, 28 Mar
+ 2023 22:35:20 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH 0/3] perf tools: Address fixes
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230316194156.8320-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230316194156.8320-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230328234413.1081014-1-irogers@google.com> <67d81a70-1adc-dad4-4592-5e7d67e6c926@intel.com>
+In-Reply-To: <67d81a70-1adc-dad4-4592-5e7d67e6c926@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 28 Mar 2023 22:35:07 -0700
+Message-ID: <CAP-5=fXhc-nwVp=HKmycmryYSY6sBrDKGnQ+Ogt+86sHfsT82Q@mail.gmail.com>
+Subject: Re: [PATCH v1] perf symbol: Avoid use after free
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 16/03/23 21:41, Adrian Hunter wrote:
-> Hi
-> 
-> Here are 3 small fixes resulting from a report from a
-> kernel test robot:
-> 
-> https://lore.kernel.org/oe-lkp/202303061424.6ad43294-yujie.liu@intel.com
-> 
-> Issues were revealed due to the use of build
-> option:
-> 
-> 	EXTRA_CFLAGS="-fsanitize=undefined -fsanitize=address"
-> 
-> 
-> Adrian Hunter (3):
->       perf symbols: Fix use-after-free in get_plt_got_name()
->       perf symbols: Fix unaligned access in get_x86_64_plt_disp()
->       perf tools: Avoid warning in do_realloc_array_as_needed()
-> 
->  tools/perf/util/symbol-elf.c | 10 ++++++++--
->  tools/perf/util/util.c       |  3 ++-
->  2 files changed, 10 insertions(+), 3 deletions(-)
+On Tue, Mar 28, 2023 at 9:52=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> On 29/03/23 02:44, Ian Rogers wrote:
+> > If demangling succeeds then sym_name is set to the demangled string
+> > that is freed. Rather than test if sym_name is empty and possibly
+> > use-after-free on the return path, expand out the alternatives.
+>
+> Looks the same as:
+>
+> https://lore.kernel.org/linux-perf-users/20230316194156.8320-2-adrian.hun=
+ter@intel.com/
 
-These seem to be still outstanding.
+Sorry for missing that. In the case it returns false, this avoids an
+unnecessary snprintf.
 
+Thanks,
+Ian
+
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/symbol-elf.c | 18 ++++++++++--------
+> >  1 file changed, 10 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.=
+c
+> > index c0a2de42c51b..b7e3e492bff3 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -577,15 +577,17 @@ static bool get_plt_got_name(GElf_Shdr *shdr, siz=
+e_t i,
+> >       /* Get the associated symbol */
+> >       gelf_getsym(di->dynsym_data, vr->sym_idx, &sym);
+> >       sym_name =3D elf_sym__name(&sym, di->dynstr_data);
+> > -     demangled =3D demangle_sym(di->dso, 0, sym_name);
+> > -     if (demangled !=3D NULL)
+> > -             sym_name =3D demangled;
+> > -
+> > -     snprintf(buf, buf_sz, "%s@plt", sym_name);
+> > -
+> > -     free(demangled);
+> > +     if (*sym_name =3D=3D '\0')
+> > +             return false;
+> >
+> > -     return *sym_name;
+> > +     demangled =3D demangle_sym(di->dso, 0, sym_name);
+> > +     if (demangled !=3D NULL) {
+> > +             snprintf(buf, buf_sz, "%s@plt", demangled);
+> > +             free(demangled);
+> > +     } else {
+> > +             snprintf(buf, buf_sz, "%s@plt", sym_name);
+> > +     }
+> > +     return true;
+> >  }
+> >
+> >  static int dso__synthesize_plt_got_symbols(struct dso *dso, Elf *elf,
+>
