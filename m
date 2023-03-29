@@ -2,115 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B770C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 07:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D610C77B6F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 08:55:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjC2H4H (ORCPT
+        id S231469AbjC2Izx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 03:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
+        Wed, 29 Mar 2023 04:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230118AbjC2H4F (ORCPT
+        with ESMTP id S231358AbjC2IzX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 03:56:05 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B4119B;
-        Wed, 29 Mar 2023 00:56:03 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0Vew.zTT_1680076558;
-Received: from 30.240.113.3(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vew.zTT_1680076558)
-          by smtp.aliyun-inc.com;
-          Wed, 29 Mar 2023 15:55:59 +0800
-Message-ID: <7060f009-2964-30af-3d12-2bb3e21b6c1e@linux.alibaba.com>
-Date:   Wed, 29 Mar 2023 15:55:57 +0800
+        Wed, 29 Mar 2023 04:55:23 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DFF4C0D;
+        Wed, 29 Mar 2023 01:55:08 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PmgN42vb1z6J7wy;
+        Wed, 29 Mar 2023 16:54:28 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Wed, 29 Mar
+ 2023 09:55:05 +0100
+Date:   Wed, 29 Mar 2023 09:55:04 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Subject: Re: [PATCH v2 2/5] perf: Allow a PMU to have a parent.
+Message-ID: <20230329095504.0000411f@Huawei.com>
+In-Reply-To: <ZCLI9A40PJsyqAmq@kroah.com>
+References: <20230324171313.18448-1-Jonathan.Cameron@huawei.com>
+        <20230324171313.18448-3-Jonathan.Cameron@huawei.com>
+        <f8123e7c-36a6-a302-1101-e778622dc997@linux.intel.com>
+        <20230328115444.000036ea@Huawei.com>
+        <ZCLI9A40PJsyqAmq@kroah.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH RFC 3/4] driver/perf: Add identifier sysfs file for Yitian
- 710 DDR
-Content-Language: en-US
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1679885172-95021-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1679885172-95021-4-git-send-email-renyu.zj@linux.alibaba.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <1679885172-95021-4-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 28 Mar 2023 13:01:08 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-
-On 2023/3/27 AM10:46, Jing Zhang wrote:
-> To allow userspace to identify the specific implementation of the device,
-> add an "identifier" sysfs file.
+> On Tue, Mar 28, 2023 at 11:54:44AM +0100, Jonathan Cameron wrote:
+> > On Mon, 27 Mar 2023 13:04:08 -0400
+> > "Liang, Kan" <kan.liang@linux.intel.com> wrote:
+> >   
+> > > On 2023-03-24 1:13 p.m., Jonathan Cameron wrote:  
+> > > > Some PMUs have well defined parents such as PCI devices.
+> > > > As the device_initialize() and device_add() are all within
+> > > > pmu_dev_alloc() which is called from perf_pmu_register()
+> > > > there is no opportunity to set the parent from within a driver.
+> > > > 
+> > > > Add a struct device *parent field to struct pmu and use that
+> > > > to set the parent.    
+> > > 
+> > > Why we want a PMU parent? Maybe I missed it. I don't see that the parent
+> > > is used anywhere.  
+> > 
+> > This allows you to identify the association between PMU and the hardware related
+> > device that is providing it by looking at the directory structure in sysfs rather
+> > than putting them directly under /sys/devices.
+> > 
+> > ls -l /sys/bus/event_sources/devices/
+> > 
+> > ... armv8_pmuv3_0 -> ../../../devices/arm8_pmuv3_0
+> > ... breakpoint -> ../../../devices/breakpoint
+> > ... cpmu0 -> ../../../devices/pci0000:0c/0000:0c:00.0/0000:0d:00.0/cpmu0/cpmu0
+> > etc
+> > 
+> > (the first cpmu0 is the parent registered as a child of the PCI EP and used for
+> >  driver binding).  So it's of use to userspace rather than in the kernel driver
+> > itself.
+> > 
+> > Note that almost nothing is normally in the top level /sys/devices other than
+> > event_sources - because nearly all other struct device instances created by
+> > subsystems have parents assigned.
+> > 
+> > On my system
+> > 
+> > ls /sys/devices
+> > 
+> > armv8_pmuv3_0	LNXSYSTEM:00	pci0000:0c	pnp0		system		uprobe
+> > breakpoint	pci0000:00	platform	software	tracepoint	virtual
+> > 
+> > +CC Greg KH for input on whether / why this make sense.  
 > 
-> The perf tool can match the Yitian 710 DDR metric through the identifier.
+> That doesn't make sense, nothing should be in /sys/devices/ EXCEPT the
+> root device of busses.  Everything else is wrong and should have their
+> code fixed up (i.e. "breakpoint", "software", etc.)
+
+Thanks Greg.
+
+I was thinking to cycle back round to that once I'd got agreement on 'some' devices,
+but great to have clarity from the start that these should all have
+parents.
+
+For a few cases the parent is not immediately obvious but we'll figure it out.
+
+Jonathan
+
+
 > 
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> ---
->  drivers/perf/alibaba_uncore_drw_pmu.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+> thanks,
 > 
-> diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
-> index a7689fe..6639a57 100644
-> --- a/drivers/perf/alibaba_uncore_drw_pmu.c
-> +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
-> @@ -236,10 +236,37 @@ static ssize_t ali_drw_pmu_cpumask_show(struct device *dev,
->  	.attrs = ali_drw_pmu_cpumask_attrs,
->  };
->  
-> +static ssize_t ali_drw_pmu_identifier_show(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *page)
-> +{
-> +	return sysfs_emit(page, "%s\n", "ali_drw_yitian710");
+> greg k-h
 
-Is it possible to rename identifier as "ali_drw_pmu"? I don't think we need only
-limit alibaba_uncore_drw_pmu to Yitian710 SoC here.
-
-Thank you.
-Shuai
-
-> +}
-> +
-> +static umode_t ali_drw_pmu_identifier_attr_visible(struct kobject *kobj,
-> +						struct attribute *attr, int n)
-> +{
-> +	return attr->mode;
-> +}
-> +
-> +static struct device_attribute ali_drw_pmu_identifier_attr =
-> +	__ATTR(identifier, 0444, ali_drw_pmu_identifier_show, NULL);
-> +
-> +static struct attribute *ali_drw_pmu_identifier_attrs[] = {
-> +	&ali_drw_pmu_identifier_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group ali_drw_pmu_identifier_attr_group = {
-> +	.attrs = ali_drw_pmu_identifier_attrs,
-> +	.is_visible = ali_drw_pmu_identifier_attr_visible,
-> +};
-> +
->  static const struct attribute_group *ali_drw_pmu_attr_groups[] = {
->  	&ali_drw_pmu_events_attr_group,
->  	&ali_drw_pmu_cpumask_attr_group,
->  	&ali_drw_pmu_format_group,
-> +	&ali_drw_pmu_identifier_attr_group,
->  	NULL,
->  };
->  
