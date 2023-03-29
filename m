@@ -2,59 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976FAC761A6
-	for <linux-perf-users@archiver.kernel.org>; Tue, 28 Mar 2023 23:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB81C74A5B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 03:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbjC1X5R (ORCPT
+        id S229675AbjC2DwP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 28 Mar 2023 19:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38448 "EHLO
+        Tue, 28 Mar 2023 23:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbjC1X5H (ORCPT
+        with ESMTP id S229642AbjC2DwO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 28 Mar 2023 19:57:07 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2336B359F
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 16:56:51 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id g5-20020a25a485000000b009419f64f6afso13625507ybi.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 28 Mar 2023 16:56:50 -0700 (PDT)
+        Tue, 28 Mar 2023 23:52:14 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E61D2D4D;
+        Tue, 28 Mar 2023 20:52:13 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id iw3so13701995plb.6;
+        Tue, 28 Mar 2023 20:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680047810;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yDSsTwYxjnBxXL6ZIXaxMuMGjJVcQd1t2sonbT61qik=;
-        b=tThQWf8o7mRKmLU99+Ys5G/hVG6Iaa7NDOQLCLqAGn8IfHeEaE11bpjPdJS7YsIfkU
-         CLMiMvT2BDI9uvuHq3azBFNQnfXxHPh4D4Y3/wUsJS6GV/NX1i6fquhAtPd5fhd+mik+
-         UzCL0oAPwDe0mPgJh8j1vCarXeKr5B3V4mc4mc+DZ6uKTibz6f4kl18DVM6ZM1bdJA0D
-         XFe2O94KaSatm7cP1HwWSbiyqt1ex9ukllKv8kbOJ4T4g+mh6W2+NFv2+hrgWMMEtoIL
-         RiOiq2d8sN9dk6njWW4ARKk6MzYuSekvPOqhOlpIkLhwDF9sTohFuTMI8ZbZvLatvZ4u
-         t+1Q==
+        d=gmail.com; s=20210112; t=1680061933;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pay3hwuHUUvDk/k43PBkEAY7fdDECNHycaAxPTjELlc=;
+        b=MGWLkajRda3Cqk6mMMIOaQhYUEgKSMhRTVjJwqqcMRnvH48zClJm0NYufJpOHXdHZA
+         V6bf4XQ/BwPJ9q7So/W4CxdNVI4oMc2zCZnUuPJjHADIwl2Cfrt4ZHJifOF0ePWoZaag
+         QAqUEQPfMR/bV5j9160nNzX96cCucs9U91fj3DtGSK9kNIiG2bDO9jtCjg+toWrBT3Z7
+         qqc5l5E9jY3f3JZQ6TaIY+syRAbnTxuDm8W6Lu8F+Soq0xJ9r/5+WxQRLUpyhqN2iyT0
+         OKmB9/+I92cIfdHluvqCPrcFiKz7DE7fqQWDEt+KsXwio5Y/yZEGNN4yJ4qJ4vMoOXn8
+         vvmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680047810;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yDSsTwYxjnBxXL6ZIXaxMuMGjJVcQd1t2sonbT61qik=;
-        b=Ld84gvCQXDBpIYcjcRFVAxPUp5D/SY5ga4TCnLQaKv7DS9JryoyVF6tLzm08U7FBbP
-         WT57Ua6opddSun5AHpXLSu4DaL8qUfuruP55JchFKJfDDDvrQa7CGb3OyI0kP6a6ZW0i
-         OU5v2CABlWp+wsL8QgEdTXnw/9PqFX0f6c0b2Xj0pBjDM+EBsGf2z0iIEqSLmNucnkhT
-         Jyha5YyFhs4mf5ZeX/lOifWSZs5MR/nlhufvGOcV4/EnVk39RM3L+pEBSrDixYHpMqIc
-         sxjuxx8831r0kKS8puxdeZg7zg2LeGEe2ZDwoSQ2hr3xgzK9+8CVZomJV69Zq6MiosUf
-         36TA==
-X-Gm-Message-State: AAQBX9e6QjHqFzclMQAufpY/s8nEHe5X++g90LFtuVfwCp5L22MlAVNw
-        qIIBU10Fkcbw+V49FyzPWfs+FHdapX+M
-X-Google-Smtp-Source: AKy350bYz2fZS10JwFEhD+dS2mleic5+6OtWAf1qE64PpR5ZyQ91NbiL9aiv3PLYfWuM+xr1e6CSOBj5tdXO
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:6519:f0d3:9540:5c31])
- (user=irogers job=sendgmr) by 2002:a05:6902:1003:b0:b1d:5061:98e3 with SMTP
- id w3-20020a056902100300b00b1d506198e3mr11707003ybt.6.1680047810713; Tue, 28
- Mar 2023 16:56:50 -0700 (PDT)
-Date:   Tue, 28 Mar 2023 16:55:43 -0700
-In-Reply-To: <20230328235543.1082207-1-irogers@google.com>
-Message-Id: <20230328235543.1082207-7-irogers@google.com>
-Mime-Version: 1.0
-References: <20230328235543.1082207-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v1 6/6] perf symbol: Add command line support for addr2line path
-From:   Ian Rogers <irogers@google.com>
+        d=1e100.net; s=20210112; t=1680061933;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pay3hwuHUUvDk/k43PBkEAY7fdDECNHycaAxPTjELlc=;
+        b=7ttNFH+DOR14fn9n72pORb2FxHYTJnisTHViNSTZ/+e/gCiLtlS94ymqAt92kKZyY0
+         0QmCw07D1Sf4aOh/SLjhGRj+/FxYhJSI11zDxFfra5KrMYQFgpu27Q8VlFCEnKweG6Cd
+         VnYpG1dPP+viQn+m6zHoV9AZHgYNQMYIxWlaGlUdK8/qw1MUcTj4c8MdaIatN0fAtIRZ
+         q1zN6LFVLjcUiopd7zwMKrdQudCcURoLZHiVi21KGrCI0PEIXibz0jlqaWLnKdYUXG/x
+         6+a0bJSHxGostvgJxqV5sFqrxRGIR+1WxEsdiRqNre5rApLfco2cskhOSzqfnFqjI3As
+         HgUw==
+X-Gm-Message-State: AO0yUKWw8YxV3T+xXv/H8ORFi2tdMxvSQY7hPdCQRNPYx5AUF/ZXkwpv
+        iH4lK5ahWHyTlP+YEocTKuQ=
+X-Google-Smtp-Source: AKy350YXRZNFBA+X1w+E9+u2tOYjZnmh6LcHSZEZ51RxTTTubmDsoEwK1JYdci0WNGdUOeAa0eQBHA==
+X-Received: by 2002:a17:90a:351:b0:23b:355f:b26c with SMTP id 17-20020a17090a035100b0023b355fb26cmr19825370pjf.23.1680061932648;
+        Tue, 28 Mar 2023 20:52:12 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.10])
+        by smtp.googlemail.com with ESMTPSA id e91-20020a17090a6fe400b0023f786a64ebsm311300pjk.57.2023.03.28.20.52.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Mar 2023 20:52:12 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -63,307 +59,47 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, James Clark <james.clark@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Andres Freund <andres@anarazel.de>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ze Gao <zegao2021@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf sched: sync task state macros with kernel
+Date:   Wed, 29 Mar 2023 11:52:02 +0800
+Message-Id: <20230329035203.6194-1-zegao2021@gmail.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Allow addr2line to be set either on the command line or via the
-perfconfig file. This doesn't currently work with llvm-addr2line as
-the addr2line code emits two things:
-1) the address to decode,
-2) a bogus ',' value.
-The expectation is the bogus value will generate:
-??
-??:0
-that terminates the addr2line reading. However, the output from
-llvm-addr2line is a single line with just the input ',' locking up the
-addr2line reading that is expecting a second line.
+commit 8ef9925b02c2 ("sched/debug: Add explicit TASK_PARKED printing")
+changes some task state macros, this patch makes perf-sched in sync
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Fixes: 8ef9925b02c2 ("sched/debug: Add explicit TASK_PARKED printing")
+Signed-off-by: Ze Gao <zegao2021@gmail.com>
 ---
- tools/perf/Documentation/perf-annotate.txt |  3 +++
- tools/perf/Documentation/perf-config.txt   |  3 +++
- tools/perf/Documentation/perf-report.txt   |  3 +++
- tools/perf/Documentation/perf-top.txt      |  6 +++++
- tools/perf/builtin-annotate.c              |  9 +++++++-
- tools/perf/builtin-report.c                |  9 +++++++-
- tools/perf/builtin-top.c                   | 10 +++++++--
- tools/perf/util/annotate.c                 |  6 +++++
- tools/perf/util/srcline.c                  | 26 +++++++++++++---------
- tools/perf/util/symbol_conf.h              |  1 +
- 10 files changed, 62 insertions(+), 14 deletions(-)
+ tools/perf/builtin-sched.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-index 980fe2c29275..fe168e8165c8 100644
---- a/tools/perf/Documentation/perf-annotate.txt
-+++ b/tools/perf/Documentation/perf-annotate.txt
-@@ -116,6 +116,9 @@ include::itrace.txt[]
- -M::
- --disassembler-style=:: Set disassembler style for objdump.
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 86e18575c9be..c715593d88c4 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -105,10 +105,10 @@ struct sched_atom {
+ #define EXIT_ZOMBIE		32
+ #define EXIT_TRACE		(EXIT_ZOMBIE | EXIT_DEAD)
+ /* in tsk->state again */
+-#define TASK_DEAD		64
+-#define TASK_WAKEKILL		128
+-#define TASK_WAKING		256
+-#define TASK_PARKED		512
++#define TASK_PARKED		64
++#define TASK_DEAD		128
++#define TASK_WAKEKILL		256
++#define TASK_WAKING		512
  
-+--addr2line=<path>::
-+        Path to addr2line binary.
-+
- --objdump=<path>::
-         Path to objdump binary.
- 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 697f7f924545..e56ae54805a8 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -250,6 +250,9 @@ annotate.*::
- 	These are in control of addresses, jump function, source code
- 	in lines of assembly code from a specific program.
- 
-+	annotate.addr2line::
-+		addr2line binary to use for file names and line numbers.
-+
- 	annotate.objdump::
- 		objdump binary to use for disassembly and annotations.
- 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index cfd502f7e6da..af068b4f1e5a 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -381,6 +381,9 @@ OPTIONS
- 	This allows to examine the path the program took to each sample.
- 	The data collection must have used -b (or -j) and -g.
- 
-+--addr2line=<path>::
-+        Path to addr2line binary.
-+
- --objdump=<path>::
-         Path to objdump binary.
- 
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index c60e615b7183..619cc8143ad5 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -161,6 +161,12 @@ Default is to monitor all CPUS.
- -M::
- --disassembler-style=:: Set disassembler style for objdump.
- 
-+--addr2line=<path>::
-+        Path to addr2line binary.
-+
-+--objdump=<path>::
-+        Path to objdump binary.
-+
- --prefix=PREFIX::
- --prefix-strip=N::
-         Remove first N entries from source file path names in executables
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index d781639b644f..ec276db3e5dd 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -516,7 +516,7 @@ int cmd_annotate(int argc, const char **argv)
- 	struct itrace_synth_opts itrace_synth_opts = {
- 		.set = 0,
- 	};
--	const char *disassembler_style = NULL, *objdump_path = NULL;
-+	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
- 	struct option options[] = {
- 	OPT_STRING('i', "input", &input_name, "file",
- 		    "input file name"),
-@@ -569,6 +569,8 @@ int cmd_annotate(int argc, const char **argv)
- 		    "Strip first N entries of source file path name in programs (with --prefix)"),
- 	OPT_STRING(0, "objdump", &objdump_path, "path",
- 		   "objdump binary to use for disassembly and annotations"),
-+	OPT_STRING(0, "addr2line", &addr2line_path, "path",
-+		   "addr2line binary to use for line numbers"),
- 	OPT_BOOLEAN(0, "demangle", &symbol_conf.demangle,
- 		    "Enable symbol demangling"),
- 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
-@@ -628,6 +630,11 @@ int cmd_annotate(int argc, const char **argv)
- 		if (!annotate.opts.objdump_path)
- 			return -ENOMEM;
- 	}
-+	if (addr2line_path) {
-+		symbol_conf.addr2line_path = strdup(addr2line_path);
-+		if (!symbol_conf.addr2line_path)
-+			return -ENOMEM;
-+	}
- 
- 	if (annotate_check_args(&annotate.opts) < 0)
- 		return -EINVAL;
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 15b0cf649e1a..4011abc03d0d 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1226,7 +1226,7 @@ int cmd_report(int argc, const char **argv)
- 	};
- 	char *sort_order_help = sort_help("sort by key(s):");
- 	char *field_order_help = sort_help("output field(s): overhead period sample ");
--	const char *disassembler_style = NULL, *objdump_path = NULL;
-+	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
- 	const struct option options[] = {
- 	OPT_STRING('i', "input", &input_name, "file",
- 		    "input file name"),
-@@ -1344,6 +1344,8 @@ int cmd_report(int argc, const char **argv)
- 		    "add last branch records to call history"),
- 	OPT_STRING(0, "objdump", &objdump_path, "path",
- 		   "objdump binary to use for disassembly and annotations"),
-+	OPT_STRING(0, "addr2line", &addr2line_path, "path",
-+		   "addr2line binary to use for line numbers"),
- 	OPT_BOOLEAN(0, "demangle", &symbol_conf.demangle,
- 		    "Disable symbol demangling"),
- 	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
-@@ -1430,6 +1432,11 @@ int cmd_report(int argc, const char **argv)
- 		if (!report.annotation_opts.objdump_path)
- 			return -ENOMEM;
- 	}
-+	if (addr2line_path) {
-+		symbol_conf.addr2line_path = strdup(addr2line_path);
-+		if (!symbol_conf.addr2line_path)
-+			return -ENOMEM;
-+	}
- 
- 	if (annotate_check_args(&report.annotation_opts) < 0) {
- 		ret = -EINVAL;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 57a273cd03de..82c6c065830d 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1439,7 +1439,7 @@ int cmd_top(int argc, const char **argv)
- 	};
- 	struct record_opts *opts = &top.record_opts;
- 	struct target *target = &opts->target;
--	const char *disassembler_style = NULL, *objdump_path = NULL;
-+	const char *disassembler_style = NULL, *objdump_path = NULL, *addr2line_path = NULL;
- 	const struct option options[] = {
- 	OPT_CALLBACK('e', "event", &top.evlist, "event",
- 		     "event selector. use 'perf list' to list available events",
-@@ -1527,6 +1527,8 @@ int cmd_top(int argc, const char **argv)
- 	OPT_BOOLEAN(0, "no-bpf-event", &top.record_opts.no_bpf_event, "do not record bpf events"),
- 	OPT_STRING(0, "objdump", &objdump_path, "path",
- 		    "objdump binary to use for disassembly and annotations"),
-+	OPT_STRING(0, "addr2line", &addr2line_path, "path",
-+		   "addr2line binary to use for line numbers"),
- 	OPT_STRING('M', "disassembler-style", &disassembler_style, "disassembler style",
- 		   "Specify disassembler style (e.g. -M intel for intel syntax)"),
- 	OPT_STRING(0, "prefix", &top.annotation_opts.prefix, "prefix",
-@@ -1629,7 +1631,11 @@ int cmd_top(int argc, const char **argv)
- 		if (!top.annotation_opts.objdump_path)
- 			return -ENOMEM;
- 	}
--
-+	if (addr2line_path) {
-+		symbol_conf.addr2line_path = strdup(addr2line_path);
-+		if (!symbol_conf.addr2line_path)
-+			return -ENOMEM;
-+	}
- 
- 	status = symbol__validate_sym_arguments();
- 	if (status)
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 3eaa9b2df6c4..3e5df90e11f8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -3217,6 +3217,12 @@ static int annotation__config(const char *var, const char *value, void *data)
- 			pr_err("Not enough memory for annotate.objdump\n");
- 			return -1;
- 		}
-+	} else if (!strcmp(var, "annotate.addr2line")) {
-+		symbol_conf.addr2line_path = strdup(value);
-+		if (!symbol_conf.addr2line_path) {
-+			pr_err("Not enough memory for annotate.addr2line\n");
-+			return -1;
-+		}
- 	} else if (!strcmp(var, "annotate.demangle")) {
- 		symbol_conf.demangle = perf_config_bool("demangle", value);
- 	} else if (!strcmp(var, "annotate.demangle_kernel")) {
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 33321867416b..f0a96a834e4b 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -414,9 +414,14 @@ static void addr2line_subprocess_cleanup(struct a2l_subprocess *a2l)
- 	free(a2l);
- }
- 
--static struct a2l_subprocess *addr2line_subprocess_init(const char *path)
--{
--	const char *argv[] = { "addr2line", "-e", path, "-i", "-f", NULL };
-+static struct a2l_subprocess *addr2line_subprocess_init(const char *addr2line_path,
-+							const char *binary_path)
-+{
-+	const char *argv[] = {
-+		addr2line_path ?: "addr2line",
-+		"-e", binary_path,
-+		"-i", "-f", NULL
-+	};
- 	struct a2l_subprocess *a2l = zalloc(sizeof(*a2l));
- 	int start_command_status = 0;
- 
-@@ -436,21 +441,22 @@ static struct a2l_subprocess *addr2line_subprocess_init(const char *path)
- 	a2l->addr2line.argv = NULL; /* it's not used after start_command; avoid dangling pointers */
- 
- 	if (start_command_status != 0) {
--		pr_warning("could not start addr2line for %s: start_command return code %d\n",
--			   path,
--			   start_command_status);
-+		pr_warning("could not start addr2line (%s) for %s: start_command return code %d\n",
-+			addr2line_path, binary_path, start_command_status);
- 		goto out;
- 	}
- 
- 	a2l->to_child = fdopen(a2l->addr2line.in, "w");
- 	if (a2l->to_child == NULL) {
--		pr_warning("could not open write-stream to addr2line of %s\n", path);
-+		pr_warning("could not open write-stream to addr2line (%s) of %s\n",
-+			addr2line_path, binary_path);
- 		goto out;
- 	}
- 
- 	a2l->from_child = fdopen(a2l->addr2line.out, "r");
- 	if (a2l->from_child == NULL) {
--		pr_warning("could not open read-stream from addr2line of %s\n", path);
-+		pr_warning("could not open read-stream from addr2line (%s) of %s\n",
-+			addr2line_path, binary_path);
- 		goto out;
- 	}
- 
-@@ -490,7 +496,6 @@ static int read_addr2line_record(struct a2l_subprocess *a2l,
- 
- 	if (getline(&line, &line_len, a2l->from_child) < 0 || !line_len)
- 		goto error;
--
- 	if (function != NULL)
- 		*function = strdup(strim(line));
- 
-@@ -553,7 +558,8 @@ static int addr2line(const char *dso_name, u64 addr,
- 		if (!filename__has_section(dso_name, ".debug_line"))
- 			goto out;
- 
--		dso->a2l = addr2line_subprocess_init(dso_name);
-+		dso->a2l = addr2line_subprocess_init(symbol_conf.addr2line_path,
-+						     dso_name);
- 		a2l = dso->a2l;
- 	}
- 
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index bc3d046fbb63..5accd8e69ad2 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -61,6 +61,7 @@ struct symbol_conf {
- 			*sym_list_str,
- 			*col_width_list_str,
- 			*bt_stop_list_str;
-+	char		*addr2line_path;
- 	unsigned long	time_quantum;
-        struct strlist	*dso_list,
- 			*comm_list,
+ enum thread_state {
+ 	THREAD_SLEEPING = 0,
 -- 
-2.40.0.348.gf938b09366-goog
+2.39.2
 
