@@ -2,314 +2,70 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38BAC74A5B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 07:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7E1C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 07:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbjC2HFj convert rfc822-to-8bit (ORCPT
+        id S229875AbjC2HMC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 03:05:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36614 "EHLO
+        Wed, 29 Mar 2023 03:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjC2HFi (ORCPT
+        with ESMTP id S229836AbjC2HMC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 03:05:38 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA5526BA;
-        Wed, 29 Mar 2023 00:05:35 -0700 (PDT)
-Received: by mail-wm1-f48.google.com with SMTP id l15-20020a05600c4f0f00b003ef6d684102so5470996wmq.3;
-        Wed, 29 Mar 2023 00:05:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680073533; x=1682665533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=omucdmTQdQSGX7qU7S+u0yn8Tw4QFFaw0IiuFA06/I4=;
-        b=fuG63mjGPtjpBgGxIjKSr48+qlzV+ZZLhNZH5JcIIWKj4ViB2/Tg/GwO6lzWDcGC57
-         bVyjxkhLw7K7Ja3pI57BQd6bAMFgSJ/S1VvWUScI4Xht3jOF1flyfAIyfeEw2fpG3yo1
-         4D6HFwjAhElKyY4NLouZyU3cJnrhhtO0OaQJGuQ6lNyA4HBq0ZXbeU7N95DsMr34FLNh
-         FKbGRlfWD9+SlW6GNo1u0kCuYV8Q0CHXHIShOCBfXrd04jpGlx+m1P0FMRTz2NTacTG9
-         M2sVVz7aCbxf9qFEmS0RLkqFUb55HOHsbXK/1cBvQd6yLNBnx5JUnKRa0eF2r/kIBu+R
-         eXYA==
-X-Gm-Message-State: AO0yUKWB1P2Fd4GTIsTAuai4KNb6IZei1jf/+1vlNxfncFD+TCr0u0JT
-        T+yluYbqNFyl325NKAcRgukEQdlb0y9X6pKmU7Ketvtn
-X-Google-Smtp-Source: AK7set/vANdIRRDsYUX4u4IBqzr0DYi+8+DNNcXGtzYiMzf48KJDvVpXzhqE/XavauWojosLeYkUjP1YaFYv0T19afk=
-X-Received: by 2002:a05:600c:ad5:b0:3ee:5519:fae1 with SMTP id
- c21-20020a05600c0ad500b003ee5519fae1mr14261836wmr.12.1680073533193; Wed, 29
- Mar 2023 00:05:33 -0700 (PDT)
+        Wed, 29 Mar 2023 03:12:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6108410E9;
+        Wed, 29 Mar 2023 00:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xVyFzFa0vGHrAzoK/jz4xD2Vhr+N1UszQJF5RqXCysQ=; b=awGwm7B+Dc9X2afPy1X0UCXbbo
+        5sZnI1VtVkFg4EIYH77zi++z/viS3LLYdpu1Q37QTVpcjGmiWce91wzD7MhXpt4Xd2O1YIeuYySX5
+        G4JmYxR62dK2oNvMU/xHazezdryNooAHnrYiYenCI7rEPQH68Dlt7/pA3Qs+JjF4CxaKXDmO0nlF9
+        ruNXUi2gSZPNeGaRDG3CGsdGv89+Z5a9bgKFo2RVzXdyS2d7RQoJdbHyKbO8jyI59qiA3n0LRAtXa
+        ovsBaIEILxQTf2scnFYoeYoegBKqXgvt5/Nh35/+XcHVmoBezgE/6+wLrHMRlZ82GZpb7APpmscZ1
+        6Yo2g5aA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1phPyF-009Byc-Pi; Wed, 29 Mar 2023 07:11:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DD7A23000E6;
+        Wed, 29 Mar 2023 09:11:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C11F8201D9955; Wed, 29 Mar 2023 09:11:46 +0200 (CEST)
+Date:   Wed, 29 Mar 2023 09:11:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf sched: sync task state macros with kernel
+Message-ID: <20230329071146.GD7701@hirez.programming.kicks-ass.net>
+References: <20230329035203.6194-1-zegao2021@gmail.com>
 MIME-Version: 1.0
-References: <20230327130851.1565-1-ravi.bangoria@amd.com>
-In-Reply-To: <20230327130851.1565-1-ravi.bangoria@amd.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 29 Mar 2023 00:05:21 -0700
-Message-ID: <CAM9d7ciQLXAcVwFJWeJDHwkwUQ-rnHvdetYsQn7w83kkOsFKWg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops
- for data_src
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     peterz@infradead.org, mingo@kernel.org, acme@kernel.org,
-        eranian@google.com, kan.liang@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230329035203.6194-1-zegao2021@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ravi,
+On Wed, Mar 29, 2023 at 11:52:02AM +0800, Ze Gao wrote:
+> commit 8ef9925b02c2 ("sched/debug: Add explicit TASK_PARKED printing")
+> changes some task state macros, this patch makes perf-sched in sync
+> 
 
-On Mon, Mar 27, 2023 at 6:09 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->
-> From: Namhyung Kim <namhyung@kernel.org>
->
-> Kernel IBS driver wasn't using new PERF_MEM_* APIs due to few of its
-> limitations. Mainly:
->
-> - mem_lvl_num doesn't allow setting multiple sources whereas old API
->   allows it. Setting multiple data sources is useful because IBS on
->   pre-zen4 uarch doesn't provide fine granular DataSrc details (there
->   is only one such DataSrc(2h) though).
-> - perf mem sorting logic (sort__lvl_cmp()) ignores mem_lvl_num. perf
->   c2c (c2c_decode_stats()) does not use mem_lvl_num at all. perf mem
->   prints mem_lvl and mem_lvl_num both if both are set, which is ugly.
->
-> 1st one can be handled by using ANY_CACHE with HOPS_0. 2nd one is
-> purely perf tool specific issue and should be fixed separately.
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
-> v1: https://lore.kernel.org/r/20230311000642.1270971-1-namhyung@kernel.org
-> v1->v2:
-> - In addition to setting new API fields, convert all individual field
->   assignments to compile time wrapper macros built using PERF_MEM_S().
->   Also convert DataSrc conditional code to array lookups.
->
->  arch/x86/events/amd/ibs.c | 155 +++++++++++++++++---------------------
->  1 file changed, 68 insertions(+), 87 deletions(-)
->
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 64582954b5f6..b46e0b725fe5 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -703,9 +703,41 @@ static u8 perf_ibs_data_src(union ibs_op_data2 *op_data2)
->         return op_data2->data_src_lo;
->  }
->
-> -static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
-> -                                union ibs_op_data3 *op_data3,
-> -                                struct perf_sample_data *data)
-> +#define        L(x)            (PERF_MEM_S(LVL, x) | PERF_MEM_S(LVL, HIT))
-> +#define        LN(x)           PERF_MEM_S(LVLNUM, x)
-> +#define        REM             PERF_MEM_S(REMOTE, REMOTE)
-> +#define        HOPS(x)         PERF_MEM_S(HOPS, x)
-> +
-> +static u64 g_data_src[8] = {
-> +       [IBS_DATA_SRC_LOC_CACHE]          = L(L3) | L(REM_CCE1) | LN(ANY_CACHE) | HOPS(0),
-> +       [IBS_DATA_SRC_DRAM]               = L(LOC_RAM) | LN(RAM),
-> +       [IBS_DATA_SRC_REM_CACHE]          = L(REM_CCE2) | LN(ANY_CACHE) | REM | HOPS(1),
-> +       [IBS_DATA_SRC_IO]                 = L(IO) | LN(IO),
-> +};
-> +
-> +#define RMT_NODE_BITS                  ((1 << IBS_DATA_SRC_DRAM) | \
-> +                                        (1 << IBS_DATA_SRC_IO))
-> +#define RMT_NODE_APPLICABLE(x)         (RMT_NODE_BITS & (1 << x))
-> +
-> +static u64 g_zen4_data_src[32] = {
-> +       [IBS_DATA_SRC_EXT_LOC_CACHE]      = L(L3) | LN(L3),
-> +       [IBS_DATA_SRC_EXT_NEAR_CCX_CACHE] = L(REM_CCE1) | LN(ANY_CACHE) | REM | HOPS(0),
-> +       [IBS_DATA_SRC_EXT_DRAM]           = L(LOC_RAM) | LN(RAM),
-> +       [IBS_DATA_SRC_EXT_FAR_CCX_CACHE]  = L(REM_CCE2) | LN(ANY_CACHE) | REM | HOPS(1),
-> +       [IBS_DATA_SRC_EXT_PMEM]           = LN(PMEM),
-> +       [IBS_DATA_SRC_EXT_IO]             = L(IO) | LN(IO),
-> +       [IBS_DATA_SRC_EXT_EXT_MEM]        = LN(CXL),
-> +};
-> +
-> +#define ZEN4_RMT_NODE_BITS             ((1 << IBS_DATA_SRC_EXT_DRAM) | \
-> +                                        (1 << IBS_DATA_SRC_EXT_PMEM) | \
-> +                                        (1 << IBS_DATA_SRC_EXT_IO) |\
-> +                                        (1 << IBS_DATA_SRC_EXT_EXT_MEM))
-> +#define ZEN4_RMT_NODE_APPLICABLE(x)    (RMT_NODE_BITS & (1 << x))
-> +
-> +static __u64 perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
-> +                                 union ibs_op_data3 *op_data3,
-> +                                 struct perf_sample_data *data)
->  {
->         union perf_mem_data_src *data_src = &data->data_src;
->         u8 ibs_data_src = perf_ibs_data_src(op_data2);
-> @@ -716,25 +748,19 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
->          * DcMiss, L2Miss, DataSrc, DcMissLat etc. are all invalid for Uncached
->          * memory accesses. So, check DcUcMemAcc bit early.
->          */
-> -       if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO) {
-> -               data_src->mem_lvl = PERF_MEM_LVL_UNC | PERF_MEM_LVL_HIT;
-> -               return;
-> -       }
-> +       if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO)
-> +               return L(UNC);
+Why does perf care? Where do we export raw state values?
 
-Hmm.. it seems we don't have PERF_MEM_LVLNUM_UNC.
-
->
->         /* L1 Hit */
-> -       if (op_data3->dc_miss == 0) {
-> -               data_src->mem_lvl = PERF_MEM_LVL_L1 | PERF_MEM_LVL_HIT;
-> -               return;
-> -       }
-> +       if (op_data3->dc_miss == 0)
-> +               return L(L1) | LN(L1);
->
->         /* L2 Hit */
->         if (op_data3->l2_miss == 0) {
->                 /* Erratum #1293 */
->                 if (boot_cpu_data.x86 != 0x19 || boot_cpu_data.x86_model > 0xF ||
-> -                   !(op_data3->sw_pf || op_data3->dc_miss_no_mab_alloc)) {
-> -                       data_src->mem_lvl = PERF_MEM_LVL_L2 | PERF_MEM_LVL_HIT;
-> -                       return;
-> -               }
-> +                   !(op_data3->sw_pf || op_data3->dc_miss_no_mab_alloc))
-> +                       return L(L2) | LN(L2);
->         }
->
->         /*
-> @@ -744,82 +770,36 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
->         if (data_src->mem_op != PERF_MEM_OP_LOAD)
->                 goto check_mab;
->
-> -       /* L3 Hit */
->         if (ibs_caps & IBS_CAPS_ZEN4) {
-> -               if (ibs_data_src == IBS_DATA_SRC_EXT_LOC_CACHE) {
-> -                       data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_HIT;
-> -                       return;
-> -               }
-> -       } else {
-> -               if (ibs_data_src == IBS_DATA_SRC_LOC_CACHE) {
-> -                       data_src->mem_lvl = PERF_MEM_LVL_L3 | PERF_MEM_LVL_REM_CCE1 |
-> -                                           PERF_MEM_LVL_HIT;
-> -                       return;
-> -               }
-> -       }
-> +               u64 val = g_zen4_data_src[ibs_data_src];
->
-> -       /* A peer cache in a near CCX */
-> -       if (ibs_caps & IBS_CAPS_ZEN4 &&
-> -           ibs_data_src == IBS_DATA_SRC_EXT_NEAR_CCX_CACHE) {
-> -               data_src->mem_lvl = PERF_MEM_LVL_REM_CCE1 | PERF_MEM_LVL_HIT;
-> -               return;
-> -       }
-> +               if (!val)
-> +                       goto check_mab;
->
-> -       /* A peer cache in a far CCX */
-> -       if (ibs_caps & IBS_CAPS_ZEN4) {
-> -               if (ibs_data_src == IBS_DATA_SRC_EXT_FAR_CCX_CACHE) {
-> -                       data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2 | PERF_MEM_LVL_HIT;
-> -                       return;
-> +               /* HOPS_1 because IBS doesn't provide remote socket detail */
-> +               if (op_data2->rmt_node && ZEN4_RMT_NODE_APPLICABLE(ibs_data_src)) {
-> +                       if (ibs_data_src == IBS_DATA_SRC_EXT_DRAM)
-> +                               val = L(REM_RAM1) | LN(RAM) | REM | HOPS(1);
-> +                       else
-> +                               val |= REM | HOPS(1);
->                 }
-> -       } else {
-> -               if (ibs_data_src == IBS_DATA_SRC_REM_CACHE) {
-> -                       data_src->mem_lvl = PERF_MEM_LVL_REM_CCE2 | PERF_MEM_LVL_HIT;
-> -                       return;
-> -               }
-> -       }
->
-> -       /* DRAM */
-> -       if (ibs_data_src == IBS_DATA_SRC_EXT_DRAM) {
-> -               if (op_data2->rmt_node == 0)
-> -                       data_src->mem_lvl = PERF_MEM_LVL_LOC_RAM | PERF_MEM_LVL_HIT;
-> -               else
-> -                       data_src->mem_lvl = PERF_MEM_LVL_REM_RAM1 | PERF_MEM_LVL_HIT;
-> -               return;
-> -       }
-> +               return val;
-> +       } else {
-> +               u64 val = g_data_src[ibs_data_src];
->
-> -       /* PMEM */
-> -       if (ibs_caps & IBS_CAPS_ZEN4 && ibs_data_src == IBS_DATA_SRC_EXT_PMEM) {
-> -               data_src->mem_lvl_num = PERF_MEM_LVLNUM_PMEM;
-> -               if (op_data2->rmt_node) {
-> -                       data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> -                       /* IBS doesn't provide Remote socket detail */
-> -                       data_src->mem_hops = PERF_MEM_HOPS_1;
-> -               }
-> -               return;
-> -       }
-> +               if (!val)
-> +                       goto check_mab;
->
-> -       /* Extension Memory */
-> -       if (ibs_caps & IBS_CAPS_ZEN4 &&
-> -           ibs_data_src == IBS_DATA_SRC_EXT_EXT_MEM) {
-> -               data_src->mem_lvl_num = PERF_MEM_LVLNUM_CXL;
-> -               if (op_data2->rmt_node) {
-> -                       data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> -                       /* IBS doesn't provide Remote socket detail */
-> -                       data_src->mem_hops = PERF_MEM_HOPS_1;
-> +               /* HOPS_1 because IBS doesn't provide remote socket detail */
-> +               if (op_data2->rmt_node && RMT_NODE_APPLICABLE(ibs_data_src)) {
-> +                       if (ibs_data_src == IBS_DATA_SRC_DRAM)
-> +                               val = L(REM_RAM1) | LN(RAM) | REM | HOPS(1);
-> +                       else
-> +                               val |= REM | HOPS(1);
->                 }
-> -               return;
-> -       }
->
-> -       /* IO */
-> -       if (ibs_data_src == IBS_DATA_SRC_EXT_IO) {
-> -               data_src->mem_lvl = PERF_MEM_LVL_IO;
-> -               data_src->mem_lvl_num = PERF_MEM_LVLNUM_IO;
-> -               if (op_data2->rmt_node) {
-> -                       data_src->mem_remote = PERF_MEM_REMOTE_REMOTE;
-> -                       /* IBS doesn't provide Remote socket detail */
-> -                       data_src->mem_hops = PERF_MEM_HOPS_1;
-> -               }
-> -               return;
-> +               return val;
->         }
->
->  check_mab:
-> @@ -830,12 +810,11 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
->          * DataSrc simultaneously. Prioritize DataSrc over MAB, i.e. set
->          * MAB only when IBS fails to provide DataSrc.
->          */
-> -       if (op_data3->dc_miss_no_mab_alloc) {
-> -               data_src->mem_lvl = PERF_MEM_LVL_LFB | PERF_MEM_LVL_HIT;
-> -               return;
-> -       }
-> +       if (op_data3->dc_miss_no_mab_alloc)
-> +               return L(LFB) | LN(LFB);
->
->         data_src->mem_lvl = PERF_MEM_LVL_NA;
-> +       return 0;
-
-Wouldn't it be 'return L(NA) | LN(NA);' ?
-
-Thanks,
-Namhyung
-
-
->  }
->
->  static bool perf_ibs_cache_hit_st_valid(void)
-> @@ -925,7 +904,9 @@ static void perf_ibs_get_data_src(struct perf_ibs_data *ibs_data,
->                                   union ibs_op_data2 *op_data2,
->                                   union ibs_op_data3 *op_data3)
->  {
-> -       perf_ibs_get_mem_lvl(op_data2, op_data3, data);
-> +       union perf_mem_data_src *data_src = &data->data_src;
-> +
-> +       data_src->val |= perf_ibs_get_mem_lvl(op_data2, op_data3, data);
->         perf_ibs_get_mem_snoop(op_data2, data);
->         perf_ibs_get_tlb_lvl(op_data3, data);
->         perf_ibs_get_mem_lock(op_data3, data);
-> --
-> 2.39.2
->
+That is, I really don't like this being ABI...
