@@ -2,123 +2,76 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ABFC6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 13:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC49DC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 13:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230316AbjC2NUt (ORCPT
+        id S230272AbjC2NW6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 09:20:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
+        Wed, 29 Mar 2023 09:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230237AbjC2NU0 (ORCPT
+        with ESMTP id S230264AbjC2NW4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 09:20:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE1935598;
-        Wed, 29 Mar 2023 06:20:19 -0700 (PDT)
+        Wed, 29 Mar 2023 09:22:56 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D5049EC;
+        Wed, 29 Mar 2023 06:22:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4CE7861D1E;
-        Wed, 29 Mar 2023 13:20:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C577C433D2;
-        Wed, 29 Mar 2023 13:20:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0275CB8232E;
+        Wed, 29 Mar 2023 13:22:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76026C433D2;
+        Wed, 29 Mar 2023 13:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680096018;
-        bh=Vp7Tk9FZto6rCmf812cmUkq4T6NxSn9CdcRG6uBna6Y=;
+        s=k20201202; t=1680096160;
+        bh=hf4DJ6f1B1ev4lIyxfuaOwJVWhFkylozyMz3i1aYje8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IPx1XTCJhoNO96hDi+jLdysiRWDplquD4sU4MIQ8fKqJiKaYpNwXU2HwTFzzubRW+
-         ZrrFDHqCBLPAem8lJd7TNN3wbHYNJsbrRHw3tE4/C4lbXLaWKjYlvN+uIsa46jEG4Y
-         Pw7wEr4MJE7sXLiN0SBA1A86QzWC1JHBtSOa93ZHY7lva2afGbwDMTWgmUWsyROQrx
-         9+d299HDPbTpo+JQRpr6J97CPXN4bIuzYOS8kxdv9NaTxTtaRNyLDJZ8yBPLzdI+Xh
-         ih86RP5992Z5ewvhn1eotK+nwJM0YJbcYdaqPLzkWwv37IEHzIx4ZKi0WyLoXVo/oX
-         UZt8EdHH4oslg==
+        b=Bjuv3yORuUe8fx2ZC8SCcfiRd7zejOiFkJ/BSQai9IPYqBIAMEsmNbcZ9hlh2Ctnl
+         TvwghIwDifE4ieG9lNo0tcrTQjM+ap2Cm8szs3WCkJVXtZodASoeRD27yf8lsHKpKY
+         z1MNMdC7nnhx2oVik+fom9dkqq9EOrB/3Y5F9ced2nunZYGc+lv+MbBeCDS8JF1dEb
+         yQKanf6DbRQtf0efbpLYPF7DP/aWz/VdvaqmswQ9buFGGbD8+aXWsjBjS6+B9wn3mR
+         fClNaKvs7ueeg/7ihMQeMlo+/gEilUufpuE1TiCqShbOWC2+BGR8fjitJezaY8XTSM
+         A3CkZrPhsktAA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5F5A84052D; Wed, 29 Mar 2023 10:20:16 -0300 (-03)
-Date:   Wed, 29 Mar 2023 10:20:16 -0300
+        id 91AE04052D; Wed, 29 Mar 2023 10:22:38 -0300 (-03)
+Date:   Wed, 29 Mar 2023 10:22:38 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, James Clark <james.clark@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Andres Freund <andres@anarazel.de>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v1 0/6] config file/command line for objdump & addr2line
-Message-ID: <ZCQ7EG1+/emX0ZZW@kernel.org>
-References: <20230328235543.1082207-1-irogers@google.com>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
+        leo.yan@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        will@kernel.org, john.garry@huawei.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, gankulkarni@os.amperecomputing.com,
+        darren@os.amperecomputing.com, James Clark <james.clark@arm.com>
+Subject: Re: [PATCH v8 1/3] perf: cs-etm: Move mapping of Trace ID and cpu
+ into helper function
+Message-ID: <ZCQ7nhrISA+jCfnI@kernel.org>
+References: <20230329111422.3693-1-mike.leach@linaro.org>
+ <20230329111422.3693-2-mike.leach@linaro.org>
+ <ZCQx5HlPnxCIFaNQ@kernel.org>
+ <ZCQyNnk/vfHZkSda@kernel.org>
+ <CAJ9a7VhhoGoOVL4sqcgpDYnZzzce_2=-wupK8K178tzZnoqrPA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230328235543.1082207-1-irogers@google.com>
+In-Reply-To: <CAJ9a7VhhoGoOVL4sqcgpDYnZzzce_2=-wupK8K178tzZnoqrPA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Mar 28, 2023 at 04:55:37PM -0700, Ian Rogers escreveu:
-> Allow objdump to be set as a perf config file variable. As previously
-> objdump was set via the command line, the string was owned by
-> argv. Now the string must be strdup-ed, so the corresponding logic
-> needs changing with an annotation_options__init/exit.
-
-ui/gtk/annotate.c: In function ‘symbol__gtk_annotate’:
-ui/gtk/annotate.c:177:44: error: ‘annotation__default_options’ undeclared (first use in this function); did you mean ‘annotation_options’?
-  177 |         err = symbol__annotate(ms, evsel, &annotation__default_options, NULL);
-      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                                            annotation_options
-ui/gtk/annotate.c:177:44: note: each undeclared identifier is reported only once for each function it appears in
-make[6]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: ui/gtk/annotate.o] Error 1
-make[6]: *** Waiting for unfinished jobs....
-
-
-I'll fix this later...
-
-- Arnaldo
- 
-> Add command line and config file options for addr2line, set in
-> symbol_conf for convenience. This doesn't allow the setting of
-> llvm-addr2line due to a bug, but could in the future.
+Em Wed, Mar 29, 2023 at 01:59:10PM +0100, Mike Leach escreveu:
+> Sorry - my error.
 > 
-> Ian Rogers (6):
->   perf annotate: Delete session for debug builds
->   perf report: Additional config warnings
->   perf annotate: Add init/exit to annotation_options remove default
->   perf annotate: Own objdump_path and disassembler_style strings
->   perf annotate: Allow objdump to be set in perfconfig
->   perf symbol: Add command line support for addr2line path
+> The same change is made in patch 3/3 of this set.
 > 
->  tools/perf/Documentation/perf-annotate.txt |  3 ++
->  tools/perf/Documentation/perf-config.txt   |  8 +++-
->  tools/perf/Documentation/perf-report.txt   |  3 ++
->  tools/perf/Documentation/perf-top.txt      |  6 +++
->  tools/perf/arch/common.c                   |  4 +-
->  tools/perf/arch/common.h                   |  2 +-
->  tools/perf/builtin-annotate.c              | 42 +++++++++++++-------
->  tools/perf/builtin-report.c                | 35 ++++++++++++++---
->  tools/perf/builtin-top.c                   | 27 +++++++++++--
->  tools/perf/util/annotate.c                 | 45 +++++++++++++++++-----
->  tools/perf/util/annotate.h                 |  9 +++--
->  tools/perf/util/srcline.c                  | 26 ++++++++-----
->  tools/perf/util/symbol_conf.h              |  1 +
->  13 files changed, 163 insertions(+), 48 deletions(-)
-> 
-> -- 
-> 2.40.0.348.gf938b09366-goog
-> 
+> Looks like I didn't do a patch by patch build check when I was testing yesterday
 
--- 
+np, its fixed now and pushed to tmp.perf-tools-next, please check, will
+go to perf-tools-next later today after passing thru my set of container
+build tests.
 
 - Arnaldo
