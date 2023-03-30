@@ -2,139 +2,92 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13D8C761A6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 11:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0A3C761A6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 13:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231423AbjC3LY1 (ORCPT
+        id S231552AbjC3NHW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 07:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
+        Thu, 30 Mar 2023 09:07:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231570AbjC3LY0 (ORCPT
+        with ESMTP id S231474AbjC3NHV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 07:24:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 543BB9ED4;
-        Thu, 30 Mar 2023 04:24:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A7D6C61FF9;
-        Thu, 30 Mar 2023 11:24:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8BABC4339B;
-        Thu, 30 Mar 2023 11:24:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680175456;
-        bh=xFvfkDhlD42bbhG0/jmteNSsxN7TAyt6/qTM1+Zrp4Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AhDEVRDKsT0plQhsp+zjgwto8GumsWvEMq4PGtlbWZaLJRcR+QMecqf7zrZk1cBer
-         ArUUBYmcABR6qGwsvOmSh95C/sASEPyqvbQliNh30X1pXcaHWLQp3pwxgMbmMiclu4
-         dLBVKFikm6lTMrJZ4tn4byNbaYMszWu2QJDqnKRviROJg7r6ZNmslle4HMgaNQjPKn
-         D6n7yh9NCwZD4XR2hKt9qvKGVDYKOL559qYQTM5Ceyh2+2Tp99TnTIFl5H2CNdY4Gj
-         tOfWSSA4GmtCF95FoUxQaCWW7s7LAa0afiC1a0zXKK5YVsCPx4oBsUeywZkR/tNPXx
-         uWRZLDCCOLX9w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BBEE74052D; Thu, 30 Mar 2023 08:24:13 -0300 (-03)
-Date:   Thu, 30 Mar 2023 08:24:13 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 30 Mar 2023 09:07:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB9DB8;
+        Thu, 30 Mar 2023 06:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=msbl6O2CGPkUkUvjCW+nOGY6ckr9evNZQggsspXa+z8=; b=PQVyAxFY2wxeQDB6gMz26HUZML
+        uwaGBn5Hm6KT8k53QozhTJxJbrK+0Wqu/CgzV6iojDrt1kJ8iSi8SKxa7YSUpbpyjQG7oOWSr3rbn
+        phjKltE3xQmunowptbzUtymHd+92aKKUteqpXtZnKuzykc4cNcpAtZm3kl5nwcRD1XpsbCzRwLMe/
+        gYi6VAnrq+/yVKs0+57kzARfQtyglhUN1KcPISot+pKTisRjmqAFRoORSa8aAj928KKhvAlg8Qy/F
+        rLY5bDnYJTkdF881SWv6nCQvlodChMKrBITrjY/mtn3DLbZkzzlgCslvGPkwTrAPrh+FECYEjaCLt
+        OOlOuQEA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1phrzb-00AQbG-Bo; Thu, 30 Mar 2023 13:07:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6622A300230;
+        Thu, 30 Mar 2023 15:07:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1EA692065CD4A; Thu, 30 Mar 2023 15:07:02 +0200 (CEST)
+Date:   Thu, 30 Mar 2023 15:07:02 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, James Clark <james.clark@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
         Kan Liang <kan.liang@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Andres Freund <andres@anarazel.de>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH v1 1/6] perf annotate: Delete session for debug builds
-Message-ID: <ZCVxXTc0kyRAQ+XA@kernel.org>
-References: <20230328235543.1082207-1-irogers@google.com>
- <20230328235543.1082207-2-irogers@google.com>
- <ZCQ4nERbit/f6yhh@kernel.org>
- <ZCQ6kqhODsxSCXdP@kernel.org>
- <CAM9d7cjSEx_=UTMpDHMwGb=5H6Yf8UdHTMt1xO=4CVToh60oSA@mail.gmail.com>
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhang Tinghao <tinghao.zhang@intel.com>,
+        Zhuocheng Ding <zhuocheng.ding@intel.com>
+Subject: Re: [PATCH] perf/x86/intel: Define bit macros for FixCntrCtl MSR
+Message-ID: <20230330130702.GF124812@hirez.programming.kicks-ass.net>
+References: <20230330012846.2927220-1-dapeng1.mi@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjSEx_=UTMpDHMwGb=5H6Yf8UdHTMt1xO=4CVToh60oSA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230330012846.2927220-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Mar 29, 2023 at 05:13:17PM -0700, Namhyung Kim escreveu:
-> On Wed, Mar 29, 2023 at 6:18 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Wed, Mar 29, 2023 at 10:09:48AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Tue, Mar 28, 2023 at 04:55:38PM -0700, Ian Rogers escreveu:
-> > > > Use the debug build indicator as the guide to free the session. This
-> > > > implements a behavior described in a comment, which is consequentially
-> > > > removed.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/builtin-annotate.c | 16 ++++++----------
-> > > >  1 file changed, 6 insertions(+), 10 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> > > > index 4750fac7bf93..98d1b6379230 100644
-> > > > --- a/tools/perf/builtin-annotate.c
-> > > > +++ b/tools/perf/builtin-annotate.c
-> > > > @@ -692,16 +692,12 @@ int cmd_annotate(int argc, const char **argv)
-> > > >
-> > > >  out_delete:
-> > > >     /*
-> > > > -    * Speed up the exit process, for large files this can
-> > > > -    * take quite a while.
-> > > > -    *
-> > > > -    * XXX Enable this when using valgrind or if we ever
-> > > > -    * librarize this command.
-> > > > -    *
-> > > > -    * Also experiment with obstacks to see how much speed
-> > > > -    * up we'll get here.
-> > > > -    *
-> > > > -    * perf_session__delete(session);
-> > > > +    * Speed up the exit process by only deleting for debug builds. For
-> > > > +    * large files this can save time.
-> > > >      */
-> > > > +#ifndef NDEBUG
-> > > > +   perf_session__delete(annotate.session);
-> > > > +#endif
-> > >
-> > > So now, but default, we will call this, as we don't have this defined
-> > > only if DEBUG=1 is set, right?
-> > >
-> > > ⬢[acme@toolbox perf-tools-next]$ find tools/perf/ -type f | xargs grep NDEBUG
-> > > tools/perf/util/mutex.c:#ifndef NDEBUG
-> > > ⬢[acme@toolbox perf-tools-next]$
-> >
-> > We can discuss this later, applied the series with just that zfree()
-> > change to annotation_options__exit().
+On Thu, Mar 30, 2023 at 09:28:46AM +0800, Dapeng Mi wrote:
+> Define bit macros for FixCntrCtl MSR and replace the bit hardcoding
+> with these bit macros. This would make code be more human-readable.
 > 
-> I don't think it's just an issue in the perf annotate.  Maybe we can
-> do the same for perf report and so on.
+> Perf commands 'perf stat -e "instructions,cycles,ref-cycles"' and
+> 'perf record -e "instructions,cycles,ref-cycles"' pass.
+> 
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/intel/core.c      | 18 +++++++++---------
+>  arch/x86/include/asm/perf_event.h | 10 ++++++++++
+>  2 files changed, 19 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 070cc4ef2672..b7c0bb78ed59 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -2451,7 +2451,7 @@ static void intel_pmu_disable_fixed(struct perf_event *event)
+>  
+>  	intel_clear_masks(event, idx);
+>  
+> -	mask = 0xfULL << ((idx - INTEL_PMC_IDX_FIXED) * 4);
+> +	mask = intel_fixed_bits(idx - INTEL_PMC_IDX_FIXED, INTEL_FIXED_BITS_MASK);
+>  	cpuc->fixed_ctrl_val &= ~mask;
 
-Yes, I thought at some point of setting some flag, perf_exiting, and
-then we would stop releasing memory, zfree comes to mind, but then we
-would still be traversing data structures, taking locks, etc.
-
-And we can't just exit() as we may need to flush caches, etc.
-
-IIRC this specific case appeared in profiles, so was commented out.
- 
-> Anyway we could define NDEBUG=1 for release builds from now on.
-
-Yes, we should do it.
-
-- Arnaldo
+So maybe it's me, but I find the original far easier to read :/ That new
+things I need to look up every single identifier before I can tell wth
+it does.
