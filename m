@@ -2,165 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9268BC761A6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 16:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F3DC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 18:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230285AbjC3Q74 (ORCPT
+        id S231468AbjC3Siw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 12:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47900 "EHLO
+        Thu, 30 Mar 2023 14:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232063AbjC3Q7r (ORCPT
+        with ESMTP id S229535AbjC3Siv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 12:59:47 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4390D50E
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 09:59:24 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3e0965f70ecso532191cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 09:59:24 -0700 (PDT)
+        Thu, 30 Mar 2023 14:38:51 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A44CDEE
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 11:38:43 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id j11-20020a25230b000000b00b6871c296bdso19425373ybj.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 11:38:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680195562;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K7akp0Ej3ybKTtSvJmlVCO91f+z9Y4B731b6732Wg8Y=;
-        b=kj8zI+ocoSj82Je2zA1JoXvjC2y0OvYJkSAoLrdeg8HrwyJ6I5YZVj/yjENQUYAtHQ
-         ehTSTFDKnH2VBA5wUGZTxh9uOgN03WLqbWJTaKq+oq/rXgj+xw2JLn41QSDiCZmPsxgo
-         +Qau9sjscmvkVy3C8hlQJlourjG728IMl2I5QBdEKLMWg6MPxywQ4cRTAEbLGJOAuVNm
-         P42bRwImN32orsZKDwrqwGG4o2xLyfdFhf7N2j75D4f8Kzv9IAV34c7UYgBmBxKHRmfQ
-         ICt3CY0I3p6LnJwWIR26tybK90sQnMcXEmZz2p/Y7nmfMk0X+dtDmoqq12WtJ8E65GzG
-         hyKw==
+        d=google.com; s=20210112; t=1680201522;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hC7xphE3EtBy91WzkYCkbXWPSl9bqB8/LM63NgI7+lQ=;
+        b=Rp86VjhTtbp93iE09qhyXe9tIWluG5P6cBEYlVqOaJnneDY20hKvd3bQaqaRnb4TOL
+         vmzH/sXmFtdZxG2M+9Q++0uTit2Mu/bapyOpXpvkHUd+T0NMcTR94f5F6zm6UFge1eYR
+         zUX6tYNfN9U12320yxDfWC//CYcw2oPGZWNGk4P3J27RPb2yTdhvemlTV5nlKXCR/jmI
+         4ZXoeUYtFG843IZ/A9KeKUzFjGiYPwMhRj/WE4mOOa5QoN6KlzN9laV2rd5XJqPqSpYT
+         HJdt1H2p6wVIk0W7+oHoK0Ev1GsjHNwHltRk5tRznUJzQb3sumyAOCQOQNsgxj/7L1Q4
+         hy+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680195562;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K7akp0Ej3ybKTtSvJmlVCO91f+z9Y4B731b6732Wg8Y=;
-        b=elhy2DlZyBpY8WcZ6eXmea/6vySKBehTg5MhPDPRqmS5gPQaESr8jBKd9gEjOT/WcH
-         OMvoM982otCnDqsrtQDtrpz3XpsdSIzVuCto97KzXdvwdtLM+2Xc1woN9yWsogN3mwPb
-         /kH1GqYMrsK9H5VQ3tHdXJgSyEpAqNCGNynrbfdd1TbvEScysmVdoybGrW0GLoqjlpDe
-         OunTbsZFnGM6CIDIV3hKm8l4Zq8QvU3Y/cCNcORT4c15/e/i3qchbO9I7HaKX/jV6uYw
-         fII91n3YYebfEiBPZ/AyizQE+gy5hNtWi3kNMrH/bUk2DOfeIm06uDq8ZJe3xSCSItld
-         ZU/A==
-X-Gm-Message-State: AAQBX9fSYhvs+GsSxZe9475RbsXnCnVRaWsq36BYVmfwrBts/nF17g3D
-        AIpJtYJGUn2UUmAesB7/+8yrtAYjnoSkAUtW1CugUg==
-X-Google-Smtp-Source: AKy350YmGF+RklGr0Q9QWyeuDfLojVGr4FVRoQSQ0Mlc6cG6w5SKVlN9G+P0VVnFT0LTzmOcP7YDX0QA2529VJmwK5g=
-X-Received: by 2002:a05:622a:1309:b0:3b9:f660:be05 with SMTP id
- v9-20020a05622a130900b003b9f660be05mr327826qtk.18.1680195562424; Thu, 30 Mar
- 2023 09:59:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230328235543.1082207-1-irogers@google.com> <20230328235543.1082207-2-irogers@google.com>
- <ZCQ4nERbit/f6yhh@kernel.org> <ZCQ6kqhODsxSCXdP@kernel.org>
- <CAM9d7cjSEx_=UTMpDHMwGb=5H6Yf8UdHTMt1xO=4CVToh60oSA@mail.gmail.com> <ZCVxXTc0kyRAQ+XA@kernel.org>
-In-Reply-To: <ZCVxXTc0kyRAQ+XA@kernel.org>
+        d=1e100.net; s=20210112; t=1680201522;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hC7xphE3EtBy91WzkYCkbXWPSl9bqB8/LM63NgI7+lQ=;
+        b=5dK7SXpzyuKO3Lndm0fypyV/lZzKzKdZiDMa9yCft9UjxLPQQGXAVmF7yMfIl3R/eH
+         1X+1RCO+PGQ4ElVsGzUCOWKYGeqQ5kRVwD6YBKuv/WJfHdfMUE9mMhZPiPg0WSFoDEWD
+         JF5MeGqxle+B7LSGUyXVALUzbpm68GQS/pLHF0/oqHMLGtfikmjlvNLIK9AGSBUH4bes
+         hQIV29e4Gk/IHVAwRfKv37FTZFajQ1tJha5gX3L7vadHiP4L3rboGO0i6dxmlYf3wyJG
+         CW8mdiNB7XKRCMifowCi5pCNIRHUuCU1lwDq7N7bllFBXgf2J4ByHpi7ZptHyelCTU8R
+         NsoQ==
+X-Gm-Message-State: AAQBX9eVvCY+ezOBECdTTXyJQHr+thUH0c42WBO2wOJUjwWMDNEx0EZO
+        tdW/HuDiINLQWg9tnGvH3PehTKV5JB/U
+X-Google-Smtp-Source: AKy350abJFHAnAEKlC7Gh5kAzxSv64hHJ7ElsSSCg9WwTxhyjA3AqRNnx1ijXVWK301wTZltcyPsg2EuInve
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:11ea:eb75:e48c:2c04])
+ (user=irogers job=sendgmr) by 2002:a81:af18:0:b0:541:7f7b:a2ff with SMTP id
+ n24-20020a81af18000000b005417f7ba2ffmr12145934ywh.8.1680201522628; Thu, 30
+ Mar 2023 11:38:42 -0700 (PDT)
+Date:   Thu, 30 Mar 2023 11:38:25 -0700
+Message-Id: <20230330183827.1412303-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+Subject: [PATCH v1 1/3] perf bench: Avoid NDEBUG warning
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 30 Mar 2023 09:59:08 -0700
-Message-ID: <CAP-5=fWZpfo62iN3YWWKm_VZZqMFCyddyg_JQTGe7j6nV+DbmQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/6] perf annotate: Delete session for debug builds
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, James Clark <james.clark@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Andres Freund <andres@anarazel.de>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 4:24=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, Mar 29, 2023 at 05:13:17PM -0700, Namhyung Kim escreveu:
-> > On Wed, Mar 29, 2023 at 6:18=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > Em Wed, Mar 29, 2023 at 10:09:48AM -0300, Arnaldo Carvalho de Melo es=
-creveu:
-> > > > Em Tue, Mar 28, 2023 at 04:55:38PM -0700, Ian Rogers escreveu:
-> > > > > Use the debug build indicator as the guide to free the session. T=
-his
-> > > > > implements a behavior described in a comment, which is consequent=
-ially
-> > > > > removed.
-> > > > >
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > ---
-> > > > >  tools/perf/builtin-annotate.c | 16 ++++++----------
-> > > > >  1 file changed, 6 insertions(+), 10 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-a=
-nnotate.c
-> > > > > index 4750fac7bf93..98d1b6379230 100644
-> > > > > --- a/tools/perf/builtin-annotate.c
-> > > > > +++ b/tools/perf/builtin-annotate.c
-> > > > > @@ -692,16 +692,12 @@ int cmd_annotate(int argc, const char **arg=
-v)
-> > > > >
-> > > > >  out_delete:
-> > > > >     /*
-> > > > > -    * Speed up the exit process, for large files this can
-> > > > > -    * take quite a while.
-> > > > > -    *
-> > > > > -    * XXX Enable this when using valgrind or if we ever
-> > > > > -    * librarize this command.
-> > > > > -    *
-> > > > > -    * Also experiment with obstacks to see how much speed
-> > > > > -    * up we'll get here.
-> > > > > -    *
-> > > > > -    * perf_session__delete(session);
-> > > > > +    * Speed up the exit process by only deleting for debug build=
-s. For
-> > > > > +    * large files this can save time.
-> > > > >      */
-> > > > > +#ifndef NDEBUG
-> > > > > +   perf_session__delete(annotate.session);
-> > > > > +#endif
-> > > >
-> > > > So now, but default, we will call this, as we don't have this defin=
-ed
-> > > > only if DEBUG=3D1 is set, right?
-> > > >
-> > > > =E2=AC=A2[acme@toolbox perf-tools-next]$ find tools/perf/ -type f |=
- xargs grep NDEBUG
-> > > > tools/perf/util/mutex.c:#ifndef NDEBUG
-> > > > =E2=AC=A2[acme@toolbox perf-tools-next]$
-> > >
-> > > We can discuss this later, applied the series with just that zfree()
-> > > change to annotation_options__exit().
-> >
-> > I don't think it's just an issue in the perf annotate.  Maybe we can
-> > do the same for perf report and so on.
->
-> Yes, I thought at some point of setting some flag, perf_exiting, and
-> then we would stop releasing memory, zfree comes to mind, but then we
-> would still be traversing data structures, taking locks, etc.
->
-> And we can't just exit() as we may need to flush caches, etc.
->
-> IIRC this specific case appeared in profiles, so was commented out.
->
-> > Anyway we could define NDEBUG=3D1 for release builds from now on.
->
-> Yes, we should do it.
+With NDEBUG set the asserts are compiled out. This yields
+"unused-but-set-variable" variables. Move these variables behind
+NDEBUG to avoid the warning.
 
-I'll send out a patch. Just a heads up that this will also disable
-asserts for non-debug builds.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/bench/find-bit-bench.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index d103c3136983..7e25b0e413f6 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -61,7 +61,6 @@ static int do_for_each_set_bit(unsigned int num_bits)
+ 	double time_average, time_stddev;
+ 	unsigned int bit, i, j;
+ 	unsigned int set_bits, skip;
+-	unsigned int old;
+ 
+ 	init_stats(&fb_time_stats);
+ 	init_stats(&tb_time_stats);
+@@ -73,7 +72,10 @@ static int do_for_each_set_bit(unsigned int num_bits)
+ 			__set_bit(i, to_test);
+ 
+ 		for (i = 0; i < outer_iterations; i++) {
+-			old = accumulator;
++#ifndef NDEBUG
++			unsigned int old = accumulator;
++#endif
++
+ 			gettimeofday(&start, NULL);
+ 			for (j = 0; j < inner_iterations; j++) {
+ 				for_each_set_bit(bit, to_test, num_bits)
+@@ -85,7 +87,9 @@ static int do_for_each_set_bit(unsigned int num_bits)
+ 			runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+ 			update_stats(&fb_time_stats, runtime_us);
+ 
++#ifndef NDEBUG
+ 			old = accumulator;
++#endif
+ 			gettimeofday(&start, NULL);
+ 			for (j = 0; j < inner_iterations; j++) {
+ 				for (bit = 0; bit < num_bits; bit++) {
+-- 
+2.40.0.348.gf938b09366-goog
 
-> - Arnaldo
