@@ -2,146 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F20C7619A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 19:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F7C77B6E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 21:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231383AbjC3Tyj (ORCPT
+        id S229643AbjC3VLw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 15:54:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
+        Thu, 30 Mar 2023 17:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231315AbjC3Tyi (ORCPT
+        with ESMTP id S230092AbjC3VLm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 15:54:38 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9150B49E3;
-        Thu, 30 Mar 2023 12:54:37 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id x15so18325008pjk.2;
-        Thu, 30 Mar 2023 12:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680206077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OzYl34qHqlnYZZkPFK+yoEyv37qx/dlfpjxFYKlTm4s=;
-        b=mq2rnwbci+RMgKDXaruFkc1XWydlzWeaZrArIDHiTdsDMtz7bv5e8qx9R9c23p8EL9
-         j74PfI7MfW0o4RfbePiuH53k+4iu3YyZQgUnhZAG9DncY9dkcWMLVC4XpDci7HOJ50Ds
-         hxlH4mW72qYfOgHq66jZWGkG3foK4PBNKccmsWNVkYTbLOcs5COijXeRcBRvp3L9/na/
-         A10gv0aZFVz63PoE2AFhoPIvQqYfwjHSv1XPdahkTNqO+DdN1oA0NTth0DKzTSwxxxPf
-         aqrU1zxYG8DO1960GuDUxfSUk875+12vTMipWq5SwhnM8AKdKU75yarkfM9Zbqtyclqv
-         Dn+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680206077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OzYl34qHqlnYZZkPFK+yoEyv37qx/dlfpjxFYKlTm4s=;
-        b=73Mhj/EUs9+cKo14eobaqtVqH11vJ1A5q6bWb2fWX93jaLTNv6t5Sa+aWsaAaPG6UV
-         UH6L/O+R/bO2F+D1TvHstIvTBFvRJh/LQSZucsvGFct3GKhHF9kvQiX7bSbGEk7CHH76
-         pEJYpS95iEPL7X0KgIoI6fa3mKk64Kahg+y4x2dRj7n5r4OO7Mkp9IZ3BwxJ5cz0hkQX
-         fVykHWgdRwC4MQT4aknSEdGGysVeK+JaSKbhfjiQCm620npHGThlACymTcVxK67gMJJR
-         TVC1B5lzHun0bJh4jSxtYdFeyN5XBkE85y2RaALWSsCHw22HhzhlI5HetcHnlUrDNyw3
-         +WQg==
-X-Gm-Message-State: AAQBX9clU6HRpNCgso3a9j8ICkWBuaYTiUcqMikO3zQR2cGvlWHxHaXA
-        UXVFyE4KSiGiaGnEjOCRsHAK3KrceHH6H/LZpbCX6/RzokA=
-X-Google-Smtp-Source: AKy350YzaTd8+e6WYf59Mb6Fe994sEGAJxtHMrPxE167lASMPrx+SMG6JBujSvRBxAgTI3CzFSoZbWFksrs4YRewKc8=
-X-Received: by 2002:a17:903:2615:b0:1a0:561c:7276 with SMTP id
- jd21-20020a170903261500b001a0561c7276mr8652529plb.1.1680206077050; Thu, 30
- Mar 2023 12:54:37 -0700 (PDT)
+        Thu, 30 Mar 2023 17:11:42 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27333DBE6;
+        Thu, 30 Mar 2023 14:11:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CF8FAB82A37;
+        Thu, 30 Mar 2023 21:11:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C56BC433D2;
+        Thu, 30 Mar 2023 21:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680210698;
+        bh=0BNxiRvexGip6Q6l3mbtrFq0KLDE7GfQjeWE5qFYM1w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pRvJlCRpnS0i7CK1rEcQGoZXvWyFiqO/w0pRmO9u+sBxxxvvRYp1eRy45g9AinDoR
+         MiMq7Qz/lDTARGEjkGplwNq/yJP4oLjsCnKBFS+X/Of45kHNr/ds9ogW5TfmrGVthD
+         uj3t2bpZB8pcVL7rXjj8tUG/gUdwbY/9IRb8F53PuTgQ/32AKfMW5Zz+/MJae9v0aO
+         hysXx+8nm1Ir/XIRhYdHHKEcwCI+Rb5fIZUk67a8BYoFV4m27WPD/GBczaxmUaR+2Q
+         pG/jOnypA/BuD7v5q5aNQhFl/jTvXCYbz3Gu1PrGSXAqOBw42P0uLIs1eAd+HAxgrQ
+         e8Mi29fCuVHeQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D1FC44052D; Thu, 30 Mar 2023 18:11:35 -0300 (-03)
+Date:   Thu, 30 Mar 2023 18:11:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] perf bench: Avoid NDEBUG warning
+Message-ID: <ZCX7B/7ikbbie/FD@kernel.org>
+References: <20230330183827.1412303-1-irogers@google.com>
 MIME-Version: 1.0
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com> <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan> <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
- <20230313121420.GB2426758@leoy-yangtze.lan> <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
- <20230314003610.GD2426758@leoy-yangtze.lan> <6dcf83ad-bfbc-7e59-7c86-bed334bd09e8@arm.com>
- <5dc10954-d1ad-e8f8-deff-fd237df48ecb@arm.com>
-In-Reply-To: <5dc10954-d1ad-e8f8-deff-fd237df48ecb@arm.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 30 Mar 2023 12:54:25 -0700
-Message-ID: <CAHbLzkqrEQoK_NDfHVO8tdBT1Lycpia5dcAVuiJBeDdx+jtzaQ@mail.gmail.com>
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-To:     James Clark <james.clark@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230330183827.1412303-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 3:36=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
->
->
-> On 29/03/2023 17:11, James Clark wrote:
-> >
-> >
-> > On 14/03/2023 00:36, Leo Yan wrote:
-> >> On Mon, Mar 13, 2023 at 11:15:44AM -0700, Yang Shi wrote:
-> >>
-> >> [...]
-> >>
-> >>>> Just a quick summary, here we have two issues:
-> >>>>
-> >>>> - With command:
-> >>>>   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
-> >>>>   -- taskset --cpu-list 1 uname",
-> >>>>
-> >>>>   perf doesn't enable "text poke" attribution.
-> >>>
-> >>> No, it enables "text poke" and perf fails to decode coresight trace
-> >>> data too. It doesn't matter whether "--kcore" is after or before "-e
-> >>> cs/etm/@tmc_etf63/k".
-> >>
-> >> Understand now.  Thanks for correction, if so we can ignore this one.
-> >>
-> >> Leo
-> >
-> > To me it looks like it's only --per-thread and --kcore together that
-> > cause the issue. I can't see if that was mentioned previously in this
-> > thread.
-> >
-> > If it is --per-thread that's causing the issue then I think I have an
-> > idea why it might be. There are some assumptions and different paths
-> > taken in decoding in that mode that aren't correct. It causes some othe=
-r
-> > issues to do with ordering and timestamps as well and I wanted to fix i=
-t
-> > previously. I wouldn't say that the text-poke change has caused a
-> > regression, as decoding in this mode was always a bit buggy.
-> >
-> > Maybe this is another reason to fix it properly.
->
-> Hi Yang,
->
-> I found a temporary workaround to the issue. Whenever you use
-> --per-thread mode, force timeless mode when decoding with --itrace=3DZ an=
-d
-> it works the same as it did before. For example:
->
->   perf report --itrace=3DZi1000i
->
-> The reason is that the new text poke event was added with timestamps
-> enabled. The Coresight decoder slightly incorrectly assumed that no
-> timestamps =3D=3D per-thread mode so when it sees the new event it goes i=
-nto
-> the wrong decode mode.
->
-> The assumption was never really correct so I will make a proper fix. But
-> in the mean time the workaround should be fine.
+Em Thu, Mar 30, 2023 at 11:38:25AM -0700, Ian Rogers escreveu:
+> With NDEBUG set the asserts are compiled out. This yields
+> "unused-but-set-variable" variables. Move these variables behind
+> NDEBUG to avoid the warning.
 
-Hi James,
+Thanks, applied.
 
-Thanks for figuring out the workaround. I tested both (using "-C"
-instead of "--per-thread" for record or using "--itrace=3DZ" for report)
-works. I think the workaround is fine before we have a proper fix.
+- Arnaldo
 
->
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/bench/find-bit-bench.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+> index d103c3136983..7e25b0e413f6 100644
+> --- a/tools/perf/bench/find-bit-bench.c
+> +++ b/tools/perf/bench/find-bit-bench.c
+> @@ -61,7 +61,6 @@ static int do_for_each_set_bit(unsigned int num_bits)
+>  	double time_average, time_stddev;
+>  	unsigned int bit, i, j;
+>  	unsigned int set_bits, skip;
+> -	unsigned int old;
+>  
+>  	init_stats(&fb_time_stats);
+>  	init_stats(&tb_time_stats);
+> @@ -73,7 +72,10 @@ static int do_for_each_set_bit(unsigned int num_bits)
+>  			__set_bit(i, to_test);
+>  
+>  		for (i = 0; i < outer_iterations; i++) {
+> -			old = accumulator;
+> +#ifndef NDEBUG
+> +			unsigned int old = accumulator;
+> +#endif
+> +
+>  			gettimeofday(&start, NULL);
+>  			for (j = 0; j < inner_iterations; j++) {
+>  				for_each_set_bit(bit, to_test, num_bits)
+> @@ -85,7 +87,9 @@ static int do_for_each_set_bit(unsigned int num_bits)
+>  			runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+>  			update_stats(&fb_time_stats, runtime_us);
+>  
+> +#ifndef NDEBUG
+>  			old = accumulator;
+> +#endif
+>  			gettimeofday(&start, NULL);
+>  			for (j = 0; j < inner_iterations; j++) {
+>  				for (bit = 0; bit < num_bits; bit++) {
+> -- 
+> 2.40.0.348.gf938b09366-goog
+> 
+
+-- 
+
+- Arnaldo
