@@ -2,116 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553F7C77B6E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 21:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653D6C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 21:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbjC3VLw (ORCPT
+        id S229524AbjC3VO3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 17:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38736 "EHLO
+        Thu, 30 Mar 2023 17:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbjC3VLm (ORCPT
+        with ESMTP id S229629AbjC3VOH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 17:11:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27333DBE6;
-        Thu, 30 Mar 2023 14:11:41 -0700 (PDT)
+        Thu, 30 Mar 2023 17:14:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C9BEB4E;
+        Thu, 30 Mar 2023 14:14:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CF8FAB82A37;
-        Thu, 30 Mar 2023 21:11:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C56BC433D2;
-        Thu, 30 Mar 2023 21:11:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6FDDD621B7;
+        Thu, 30 Mar 2023 21:14:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA92C433D2;
+        Thu, 30 Mar 2023 21:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680210698;
-        bh=0BNxiRvexGip6Q6l3mbtrFq0KLDE7GfQjeWE5qFYM1w=;
+        s=k20201202; t=1680210845;
+        bh=GcxczfKCOzk1wzFLbVwJqOmXiY+ZjF6l30aoRYvQEDM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pRvJlCRpnS0i7CK1rEcQGoZXvWyFiqO/w0pRmO9u+sBxxxvvRYp1eRy45g9AinDoR
-         MiMq7Qz/lDTARGEjkGplwNq/yJP4oLjsCnKBFS+X/Of45kHNr/ds9ogW5TfmrGVthD
-         uj3t2bpZB8pcVL7rXjj8tUG/gUdwbY/9IRb8F53PuTgQ/32AKfMW5Zz+/MJae9v0aO
-         hysXx+8nm1Ir/XIRhYdHHKEcwCI+Rb5fIZUk67a8BYoFV4m27WPD/GBczaxmUaR+2Q
-         pG/jOnypA/BuD7v5q5aNQhFl/jTvXCYbz3Gu1PrGSXAqOBw42P0uLIs1eAd+HAxgrQ
-         e8Mi29fCuVHeQ==
+        b=DviBhQLcr/5HilNkLxJwAre3PfRXOJ46spNwWMcaD5dfEy1zqoQy7wtBp+CkaQBhS
+         2fj3bE2zZc8Fee+OsYABDm8Vb2z1w6glFq4skWKoyV76SXGbATGZUp2DCnQsvd4hDa
+         Wsvrd5G8Y8K6tYljXoCzeBVQFXoUpRijiSBsaLPrkU6EK8tMTzWXJgSuM+qRxMkNkd
+         AwpB/6Cxm1p6earFhx85nmZQTtT7oam1sK8dfM3OsXcDpnWcI73lKgKb1Zqj3E/YF2
+         fztc6PAPYVqVtiB6/HoENK+2mHQwsNCo9F9jnqM35vVL2dY0dVYnBqFJiZZGJi2z9P
+         zETiFUHBznR8A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1FC44052D; Thu, 30 Mar 2023 18:11:35 -0300 (-03)
-Date:   Thu, 30 Mar 2023 18:11:35 -0300
+        id 637B14052D; Thu, 30 Mar 2023 18:14:03 -0300 (-03)
+Date:   Thu, 30 Mar 2023 18:14:03 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] perf bench: Avoid NDEBUG warning
-Message-ID: <ZCX7B/7ikbbie/FD@kernel.org>
-References: <20230330183827.1412303-1-irogers@google.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/2] perf top: Add --branch-history option
+Message-ID: <ZCX7m2bsyk0SwAdy@kernel.org>
+References: <20230330131833.12864-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230330183827.1412303-1-irogers@google.com>
+In-Reply-To: <20230330131833.12864-1-adrian.hunter@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 30, 2023 at 11:38:25AM -0700, Ian Rogers escreveu:
-> With NDEBUG set the asserts are compiled out. This yields
-> "unused-but-set-variable" variables. Move these variables behind
-> NDEBUG to avoid the warning.
+Em Thu, Mar 30, 2023 at 04:18:31PM +0300, Adrian Hunter escreveu:
+> Hi
+> 
+> Here are small patches related to option --branch-history.
+> 
+> Note, currently --branch-history is broken due to patch
+> "perf report: append inlines to non-dwarf callchains" so
+> that needs to be reverted / fixed beforehand.
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/bench/find-bit-bench.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
-> index d103c3136983..7e25b0e413f6 100644
-> --- a/tools/perf/bench/find-bit-bench.c
-> +++ b/tools/perf/bench/find-bit-bench.c
-> @@ -61,7 +61,6 @@ static int do_for_each_set_bit(unsigned int num_bits)
->  	double time_average, time_stddev;
->  	unsigned int bit, i, j;
->  	unsigned int set_bits, skip;
-> -	unsigned int old;
->  
->  	init_stats(&fb_time_stats);
->  	init_stats(&tb_time_stats);
-> @@ -73,7 +72,10 @@ static int do_for_each_set_bit(unsigned int num_bits)
->  			__set_bit(i, to_test);
->  
->  		for (i = 0; i < outer_iterations; i++) {
-> -			old = accumulator;
-> +#ifndef NDEBUG
-> +			unsigned int old = accumulator;
-> +#endif
-> +
->  			gettimeofday(&start, NULL);
->  			for (j = 0; j < inner_iterations; j++) {
->  				for_each_set_bit(bit, to_test, num_bits)
-> @@ -85,7 +87,9 @@ static int do_for_each_set_bit(unsigned int num_bits)
->  			runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
->  			update_stats(&fb_time_stats, runtime_us);
->  
-> +#ifndef NDEBUG
->  			old = accumulator;
-> +#endif
->  			gettimeofday(&start, NULL);
->  			for (j = 0; j < inner_iterations; j++) {
->  				for (bit = 0; bit < num_bits; bit++) {
-> -- 
-> 2.40.0.348.gf938b09366-goog
+> Adrian Hunter (2):
+>       perf top: Add --branch-history option
+>       perf symbol: Remove unused branch_callstack
 > 
+>  tools/perf/Documentation/perf-top.txt |  4 ++++
+>  tools/perf/builtin-top.c              | 17 +++++++++++++++++
+>  tools/perf/util/symbol_conf.h         |  1 -
+>  3 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> 
+> Regards
+> Adrian
 
 -- 
 
