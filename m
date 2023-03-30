@@ -2,95 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECFDC761A6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 10:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377DFC761A6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 10:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjC3Kem (ORCPT
+        id S229608AbjC3KhG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 06:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
+        Thu, 30 Mar 2023 06:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229807AbjC3Kel (ORCPT
+        with ESMTP id S230015AbjC3KhF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 06:34:41 -0400
+        Thu, 30 Mar 2023 06:37:05 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B40CB211C;
-        Thu, 30 Mar 2023 03:34:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CC867ED9;
+        Thu, 30 Mar 2023 03:36:57 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 488202F4;
-        Thu, 30 Mar 2023 03:35:15 -0700 (PDT)
-Received: from [10.57.54.254] (unknown [10.57.54.254])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FED43F663;
-        Thu, 30 Mar 2023 03:34:29 -0700 (PDT)
-Message-ID: <3b95e362-300a-12af-0d55-76672c60be9f@arm.com>
-Date:   Thu, 30 Mar 2023 11:34:22 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B11DD2F4;
+        Thu, 30 Mar 2023 03:37:41 -0700 (PDT)
+Received: from [10.57.21.28] (unknown [10.57.21.28])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97BFD3F663;
+        Thu, 30 Mar 2023 03:36:55 -0700 (PDT)
+Message-ID: <5dc10954-d1ad-e8f8-deff-fd237df48ecb@arm.com>
+Date:   Thu, 30 Mar 2023 11:36:54 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] perf/arm-cmn: fix regitster offset of
- CMN_MXP__CONNECT_INFO_P2-5
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Ruidong Tian <tianruidong@linux.alibaba.com>
-References: <1680169620-26012-1-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Language: en-GB
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <1680169620-26012-1-git-send-email-renyu.zj@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [BUG] perf: No samples found when using kcore + coresight
+From:   James Clark <james.clark@arm.com>
+To:     Leo Yan <leo.yan@linaro.org>, Yang Shi <shy828301@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        coresight@lists.linaro.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
+        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
+        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
+        suzuki.poulose@arm.com
+References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
+ <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
+ <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
+ <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
+ <20230309113851.GF19253@leoy-yangtze.lan>
+ <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
+ <20230313121420.GB2426758@leoy-yangtze.lan>
+ <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
+ <20230314003610.GD2426758@leoy-yangtze.lan>
+ <6dcf83ad-bfbc-7e59-7c86-bed334bd09e8@arm.com>
+Content-Language: en-US
+In-Reply-To: <6dcf83ad-bfbc-7e59-7c86-bed334bd09e8@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2023-03-30 10:47, Jing Zhang wrote:
-> In the CMN700 specification, it is described that the address offset
-> of the mxp_device_connect_info_p0-5 register is 16'h8 + #{8*index}.
-> Therefore, the address offset of the CMN_MXP__CONNECT_INFO_P2-5 macro
-> defined in the code is wrong, which causes the cmn700 topology map
-> incorrect printed in debugfs.
-> 
-> So correct the address offset value to make the cmn700 topology map
-> correct in debugfs.
-> 
-> Fixes: 60d1504070c2 ("perf/arm-cmn: Support new IP features")
 
-Ugh, these offsets are correct for CI-700, so strictly that commit is 
-fine. What I failed to notice is that CMN-700 shuffled the 
-mesh_port_connect_info registers out of the way, so it's commit 
-23760a014417 which should have added more handling for this difference.
 
-Thanks,
-Robin.
-
-> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-> Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
-> ---
->   drivers/perf/arm-cmn.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+On 29/03/2023 17:11, James Clark wrote:
 > 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 1deb61b..e9f844b 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -59,10 +59,10 @@
->   /* XPs also have some local topology info which has uses too */
->   #define CMN_MXP__CONNECT_INFO_P0	0x0008
->   #define CMN_MXP__CONNECT_INFO_P1	0x0010
-> -#define CMN_MXP__CONNECT_INFO_P2	0x0028
-> -#define CMN_MXP__CONNECT_INFO_P3	0x0030
-> -#define CMN_MXP__CONNECT_INFO_P4	0x0038
-> -#define CMN_MXP__CONNECT_INFO_P5	0x0040
-> +#define CMN_MXP__CONNECT_INFO_P2	0x0018
-> +#define CMN_MXP__CONNECT_INFO_P3	0x0020
-> +#define CMN_MXP__CONNECT_INFO_P4	0x0028
-> +#define CMN_MXP__CONNECT_INFO_P5	0x0030
->   #define CMN__CONNECT_INFO_DEVICE_TYPE	GENMASK_ULL(4, 0)
->   
->   /* PMU registers occupy the 3rd 4KB page of each node's region */
+> 
+> On 14/03/2023 00:36, Leo Yan wrote:
+>> On Mon, Mar 13, 2023 at 11:15:44AM -0700, Yang Shi wrote:
+>>
+>> [...]
+>>
+>>>> Just a quick summary, here we have two issues:
+>>>>
+>>>> - With command:
+>>>>   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
+>>>>   -- taskset --cpu-list 1 uname",
+>>>>
+>>>>   perf doesn't enable "text poke" attribution.
+>>>
+>>> No, it enables "text poke" and perf fails to decode coresight trace
+>>> data too. It doesn't matter whether "--kcore" is after or before "-e
+>>> cs/etm/@tmc_etf63/k".
+>>
+>> Understand now.  Thanks for correction, if so we can ignore this one.
+>>
+>> Leo
+> 
+> To me it looks like it's only --per-thread and --kcore together that
+> cause the issue. I can't see if that was mentioned previously in this
+> thread.
+> 
+> If it is --per-thread that's causing the issue then I think I have an
+> idea why it might be. There are some assumptions and different paths
+> taken in decoding in that mode that aren't correct. It causes some other
+> issues to do with ordering and timestamps as well and I wanted to fix it
+> previously. I wouldn't say that the text-poke change has caused a
+> regression, as decoding in this mode was always a bit buggy.
+> 
+> Maybe this is another reason to fix it properly.
+
+Hi Yang,
+
+I found a temporary workaround to the issue. Whenever you use
+--per-thread mode, force timeless mode when decoding with --itrace=Z and
+it works the same as it did before. For example:
+
+  perf report --itrace=Zi1000i
+
+The reason is that the new text poke event was added with timestamps
+enabled. The Coresight decoder slightly incorrectly assumed that no
+timestamps == per-thread mode so when it sees the new event it goes into
+the wrong decode mode.
+
+The assumption was never really correct so I will make a proper fix. But
+in the mean time the workaround should be fine.
+
