@@ -2,86 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653D6C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 21:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81169C761AF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 21:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjC3VO3 (ORCPT
+        id S229760AbjC3VQd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 17:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
+        Thu, 30 Mar 2023 17:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjC3VOH (ORCPT
+        with ESMTP id S229974AbjC3VQT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 17:14:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C9BEB4E;
-        Thu, 30 Mar 2023 14:14:06 -0700 (PDT)
+        Thu, 30 Mar 2023 17:16:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2544C19A6;
+        Thu, 30 Mar 2023 14:16:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6FDDD621B7;
-        Thu, 30 Mar 2023 21:14:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA92C433D2;
-        Thu, 30 Mar 2023 21:14:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BDED8621AE;
+        Thu, 30 Mar 2023 21:16:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1023C433EF;
+        Thu, 30 Mar 2023 21:16:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680210845;
-        bh=GcxczfKCOzk1wzFLbVwJqOmXiY+ZjF6l30aoRYvQEDM=;
+        s=k20201202; t=1680210978;
+        bh=ooDK8+6y9Kfl0/zn/9ZI2cFoW7WtHh5MrFLIEToNiIo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DviBhQLcr/5HilNkLxJwAre3PfRXOJ46spNwWMcaD5dfEy1zqoQy7wtBp+CkaQBhS
-         2fj3bE2zZc8Fee+OsYABDm8Vb2z1w6glFq4skWKoyV76SXGbATGZUp2DCnQsvd4hDa
-         Wsvrd5G8Y8K6tYljXoCzeBVQFXoUpRijiSBsaLPrkU6EK8tMTzWXJgSuM+qRxMkNkd
-         AwpB/6Cxm1p6earFhx85nmZQTtT7oam1sK8dfM3OsXcDpnWcI73lKgKb1Zqj3E/YF2
-         fztc6PAPYVqVtiB6/HoENK+2mHQwsNCo9F9jnqM35vVL2dY0dVYnBqFJiZZGJi2z9P
-         zETiFUHBznR8A==
+        b=uNYvhDsrd/8GYB4SrpR4BA1Vfz2wk8PiEsL9XRLUpzDFfMoMls1tgud9ukrx0azHj
+         JvzJkEnzphOTnxtfBRgaQ5PIfQzkq/JDRnTAO8zTdvrgLmuf3krSiosoGpIeVKBnZ7
+         Gqa04fN9aWWXGsZbWYJuQyeVdE1qfsMOWgKBsLKGhjDGGEbEa0QaifrwktZmC3JTh3
+         PboJCO8b6NNrcngCMt00P8DTIZvFB+BDNUlKoCaFBY+iiOSa7v34nuzNjqSW4Cu8U1
+         gmR7v3tj3XO2IV1pLRQO5cZEa0duPe2Qd9bPP63wJB7YpmSY/zBzsW5cWBkyffMQlh
+         1K2ObDSWMGRnQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 637B14052D; Thu, 30 Mar 2023 18:14:03 -0300 (-03)
-Date:   Thu, 30 Mar 2023 18:14:03 -0300
+        id A6B004052D; Thu, 30 Mar 2023 18:16:15 -0300 (-03)
+Date:   Thu, 30 Mar 2023 18:16:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+To:     James Clark <james.clark@arm.com>
+Cc:     Andreas Herrmann <aherrmann@suse.de>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/2] perf top: Add --branch-history option
-Message-ID: <ZCX7m2bsyk0SwAdy@kernel.org>
-References: <20230330131833.12864-1-adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf bench numa: Fix for loop in do_work
+Message-ID: <ZCX8H9LsUOd+tL6A@kernel.org>
+References: <20230330074202.14052-1-aherrmann@suse.de>
+ <b2a9b1eb-e8a4-31c2-db33-5fa8ecc862da@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230330131833.12864-1-adrian.hunter@intel.com>
+In-Reply-To: <b2a9b1eb-e8a4-31c2-db33-5fa8ecc862da@arm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 30, 2023 at 04:18:31PM +0300, Adrian Hunter escreveu:
-> Hi
+Em Thu, Mar 30, 2023 at 09:31:31AM +0100, James Clark escreveu:
 > 
-> Here are small patches related to option --branch-history.
 > 
-> Note, currently --branch-history is broken due to patch
-> "perf report: append inlines to non-dwarf callchains" so
-> that needs to be reverted / fixed beforehand.
+> On 30/03/2023 08:42, Andreas Herrmann wrote:
+> > j is of type int and start/end are of type long. Thus j might become
+> > negative and cause segfault in access_data(). Fix it by using long for
+> > j as well.
+ 
+> > Signed-off-by: Andreas Herrmann <aherrmann@suse.de>
+> > ---
+> >  tools/perf/bench/numa.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > Example of segfault (with 6.3.0-rc4) is:
+> > 
+> > # ./perf bench numa mem -d -m -p 2 -t 12 -P 25425
+> > ...
+> >  threads initialized in 6.052135 seconds.
+> >  #
+> > perf: bench/numa.c:1654: __bench_numa: Assertion `!(!(((wait_stat) & 0x7f) == 0))' failed.
+> > Aborted (core dumped)
+> > # dmesg | grep segfault
+> > [78812.711311] thread 1/3[43215]: segfault at 7f07936c9ec0 ip 00000000004ab6d0 sp 00007f0acb1f9cb0 error 4
+> > [78812.711309] thread 1/9[43221]: segfault at 7f08bda71a70 ip 00000000004ab6d0 sp 00007f0ac81f3cb0 error 4
+> > [78812.711316] thread 1/4[43216]: segfault at 7f07ccf76a08 ip 00000000004ab6d0 sp 00007f0aca9f8cb0 error 4
+> > [78812.711325] thread 1/2[43214]: segfault at 7f08be2f44b0 ip 00000000004ab6d0 sp 00007f0acb9facb0 error 4
+> > [78812.711328] thread 1/8[43220]: segfault at 7f06d3096b20 ip 00000000004ab6d0 sp 00007f0ac89f4cb0 error 4
+> > [78812.711345] thread 1/6[43218]: segfault at 7f0774b46a18 ip 00000000004ab6d0 sp 00007f0ac99f6cb0 error 4 in perf[400000+caa000] likely on CPU 6 (core 8, socket 0)
+> > [78812.711366] thread 0/0[43224]: segfault at 7f08a936b130 ip 00000000004ab6d0 sp 00007f0acc9fccb0 error 4 in perf[400000+caa000] likely on CPU 1 (core 1, socket 0)
+> > 
+> > diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+> > index 9717c6c17433..1fbd7c947abc 100644
+> > --- a/tools/perf/bench/numa.c
+> > +++ b/tools/perf/bench/numa.c
+> > @@ -847,7 +847,7 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
+> >  
+> >  	if (g->p.data_rand_walk) {
+> >  		u32 lfsr = nr + loop + val;
+> > -		int j;
+> > +		long j;
+> >  
+> >  		for (i = 0; i < words/1024; i++) {
+> >  			long start, end;
+> 
+> Reviewed-by: James Clark <james.clark@arm.com>
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> 
-> Adrian Hunter (2):
->       perf top: Add --branch-history option
->       perf symbol: Remove unused branch_callstack
-> 
->  tools/perf/Documentation/perf-top.txt |  4 ++++
->  tools/perf/builtin-top.c              | 17 +++++++++++++++++
->  tools/perf/util/symbol_conf.h         |  1 -
->  3 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> 
-> Regards
-> Adrian
-
--- 
-
-- Arnaldo
