@@ -2,141 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67DBC6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 29 Mar 2023 23:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE1AC74A5B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 00:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230301AbjC2XsI convert rfc822-to-8bit (ORCPT
+        id S231218AbjC3ANl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 29 Mar 2023 19:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49914 "EHLO
+        Wed, 29 Mar 2023 20:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbjC2XsH (ORCPT
+        with ESMTP id S229500AbjC3ANj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 29 Mar 2023 19:48:07 -0400
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6AA40D3;
-        Wed, 29 Mar 2023 16:48:06 -0700 (PDT)
-Received: by mail-wm1-f45.google.com with SMTP id o32so9855373wms.1;
-        Wed, 29 Mar 2023 16:48:06 -0700 (PDT)
+        Wed, 29 Mar 2023 20:13:39 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B78259D0;
+        Wed, 29 Mar 2023 17:13:30 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id bg13-20020a05600c3c8d00b003ef90adc168so2950019wmb.5;
+        Wed, 29 Mar 2023 17:13:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680133685; x=1682725685;
+        d=1e100.net; s=20210112; t=1680135209; x=1682727209;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ctdAn3TPM+vvdeJtZGNCNvHS+kSCvbPyFtr6LjG6+Aw=;
-        b=EVzN7mFXUkO8Hz/p9NAEg/Zn5RVmhawQgf8z9kT/CJI9A3ZpPA5cdcwW7c6czEIW2Y
-         b71VCMsEZAoYfTpVhXfmMPPeaiT6YWfSK72QZkipqx/mwKgHuz5mdInOcg/TP7aAJpE2
-         GY94jQVfRCsX1iVlW2E58eR8kjcy3dZ91fXLheXvdq+lVIauMSgg3N20208+5dgDVxHn
-         vVBYPKOGeQVYMMPEuUJLONAteqZC+cJwb61mKlEg3HWNxMTKxnc0Y4vHEC35wScr9ojP
-         oGLML1f091/OxQJtyCouv1cQcvqy1f7H7PV7B5ai9FPBlFUnHkFYtS45PGi9GZL1+27e
-         vkBg==
-X-Gm-Message-State: AAQBX9cQvXzs5QSum5cPGT/1jrbMWuNbqIUsy1NwKAYCkooifTrmFfwj
-        lJ9RxwA31SVfeJPxD9neMPKLa7oesznoZ1O9/R4=
-X-Google-Smtp-Source: AKy350aJytfdzHPKv36QTRP+AsUSLLUPF0uZh8sH5X/cvbnwh0AJ6pZquc/una80jBbRVg+Lma2XRLoMK0ZywE2Q43o=
-X-Received: by 2002:a1c:7405:0:b0:3ef:62cd:1eb with SMTP id
- p5-20020a1c7405000000b003ef62cd01ebmr12986698wmc.7.1680133685137; Wed, 29 Mar
- 2023 16:48:05 -0700 (PDT)
+        bh=2MbJUhmfp2/sjO2bCujmzTffPzek7PDtiEwqtyllI5s=;
+        b=NgJh1Lh8+YqvKQ05GQYt4TL4YhRX6tSC4xyScv6DEuPFup30FLCCPTJ1YawMGuTged
+         z2WFf7yXn9swA6Y5Iog++XHj+Rdr3NylWPkWpxXDcKw9dJOYdnWhs4m9U4d/w/fbqjqB
+         px1lb03fK9MruDiZMqQzNvy+J6v05VD84Ei18+h4NpxHqoPxG3EClgbhyw+kkF8TiL7l
+         fkJ1c95lhOwfq8eHlD9I1bxoWEA5bLlBeC+VKsbDjxr0vOiGiiPKrFtbJ1SDuLu1zowV
+         u4k0Wx+nTQ5gEuZKctL5J4ZWHg/TiswUMGQt+JHkOmxej+SsQJ5ujuqHkag4MbG5YxmT
+         lOAw==
+X-Gm-Message-State: AO0yUKULpPzA2btmDD9Ys1jHSnsDoytmDEFdOlWLA8CO0cHnawQTC3mu
+        PXykoWW9M0jE9+CwIntuTl7zLSCmiWxr8BcaDVs=
+X-Google-Smtp-Source: AK7set+xUSucWKhr/d8qUx5lNEsNTPJQ/xRt2amK24OOt3jck3xt0Sn8BYbJfoO4e7g7n3olRvv7l+WhLCiaf/aBZxE=
+X-Received: by 2002:a1c:4b07:0:b0:3eb:29fe:f911 with SMTP id
+ y7-20020a1c4b07000000b003eb29fef911mr16334958wma.13.1680135208723; Wed, 29
+ Mar 2023 17:13:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230327130851.1565-1-ravi.bangoria@amd.com> <CAM9d7ciQLXAcVwFJWeJDHwkwUQ-rnHvdetYsQn7w83kkOsFKWg@mail.gmail.com>
- <00f1954f-cf55-d954-5dc6-0da95f8ea308@amd.com>
-In-Reply-To: <00f1954f-cf55-d954-5dc6-0da95f8ea308@amd.com>
+References: <20230328235543.1082207-1-irogers@google.com> <20230328235543.1082207-2-irogers@google.com>
+ <ZCQ4nERbit/f6yhh@kernel.org> <ZCQ6kqhODsxSCXdP@kernel.org>
+In-Reply-To: <ZCQ6kqhODsxSCXdP@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 29 Mar 2023 16:47:52 -0700
-Message-ID: <CAM9d7cgHL=aXffUtu7CSNdfsVnDoO1cEzBSSpdYVQh9ZrbL-zQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops
- for data_src
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     peterz@infradead.org, mingo@kernel.org, acme@kernel.org,
-        eranian@google.com, kan.liang@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
-        ananth.narayan@amd.com, santosh.shukla@amd.com
+Date:   Wed, 29 Mar 2023 17:13:17 -0700
+Message-ID: <CAM9d7cjSEx_=UTMpDHMwGb=5H6Yf8UdHTMt1xO=4CVToh60oSA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/6] perf annotate: Delete session for debug builds
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, James Clark <james.clark@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Andres Freund <andres@anarazel.de>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 2:45 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+On Wed, Mar 29, 2023 at 6:18 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Hi Namhyung,
->
-> >> @@ -716,25 +748,19 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
-> >>          * DcMiss, L2Miss, DataSrc, DcMissLat etc. are all invalid for Uncached
-> >>          * memory accesses. So, check DcUcMemAcc bit early.
-> >>          */
-> >> -       if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO) {
-> >> -               data_src->mem_lvl = PERF_MEM_LVL_UNC | PERF_MEM_LVL_HIT;
-> >> -               return;
-> >> -       }
-> >> +       if (op_data3->dc_uc_mem_acc && ibs_data_src != IBS_DATA_SRC_EXT_IO)
-> >> +               return L(UNC);
+> Em Wed, Mar 29, 2023 at 10:09:48AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Tue, Mar 28, 2023 at 04:55:38PM -0700, Ian Rogers escreveu:
+> > > Use the debug build indicator as the guide to free the session. This
+> > > implements a behavior described in a comment, which is consequentially
+> > > removed.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/builtin-annotate.c | 16 ++++++----------
+> > >  1 file changed, 6 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> > > index 4750fac7bf93..98d1b6379230 100644
+> > > --- a/tools/perf/builtin-annotate.c
+> > > +++ b/tools/perf/builtin-annotate.c
+> > > @@ -692,16 +692,12 @@ int cmd_annotate(int argc, const char **argv)
+> > >
+> > >  out_delete:
+> > >     /*
+> > > -    * Speed up the exit process, for large files this can
+> > > -    * take quite a while.
+> > > -    *
+> > > -    * XXX Enable this when using valgrind or if we ever
+> > > -    * librarize this command.
+> > > -    *
+> > > -    * Also experiment with obstacks to see how much speed
+> > > -    * up we'll get here.
+> > > -    *
+> > > -    * perf_session__delete(session);
+> > > +    * Speed up the exit process by only deleting for debug builds. For
+> > > +    * large files this can save time.
+> > >      */
+> > > +#ifndef NDEBUG
+> > > +   perf_session__delete(annotate.session);
+> > > +#endif
 > >
-> > Hmm.. it seems we don't have PERF_MEM_LVLNUM_UNC.
->
-> Right. Is it worth to introduce one?
-
-I think MEM_LVLNUM should express every memory level in MEM_LVL.
-
->
-> On a side note, I came to know that IBS OpData2[RmtNode] is not applicable
-> when DataSrc=7 (I/O). So, I need to respin this patch with that change.
->
-> [...]
->
-> >>  check_mab:
-> >> @@ -830,12 +810,11 @@ static void perf_ibs_get_mem_lvl(union ibs_op_data2 *op_data2,
-> >>          * DataSrc simultaneously. Prioritize DataSrc over MAB, i.e. set
-> >>          * MAB only when IBS fails to provide DataSrc.
-> >>          */
-> >> -       if (op_data3->dc_miss_no_mab_alloc) {
-> >> -               data_src->mem_lvl = PERF_MEM_LVL_LFB | PERF_MEM_LVL_HIT;
-> >> -               return;
-> >> -       }
-> >> +       if (op_data3->dc_miss_no_mab_alloc)
-> >> +               return L(LFB) | LN(LFB);
-> >>
-> >>         data_src->mem_lvl = PERF_MEM_LVL_NA;
-> >> +       return 0;
+> > So now, but default, we will call this, as we don't have this defined
+> > only if DEBUG=1 is set, right?
 > >
-> > Wouldn't it be 'return L(NA) | LN(NA);' ?
+> > ⬢[acme@toolbox perf-tools-next]$ find tools/perf/ -type f | xargs grep NDEBUG
+> > tools/perf/util/mutex.c:#ifndef NDEBUG
+> > ⬢[acme@toolbox perf-tools-next]$
 >
-> IBS has no instruction type filtering, i.e. it tags whatever instruction it
-> sees at overflow. When IBS tags non-load/store instruction, data_src->val is
-> set to PERF_MEM_NA, which does not initialize mem_lvl_num (Shall we change
-> that?). If I set both LVL_NA and LVL_NUM_NA for load/store with no DataSrc
-> info, perf mem output becomes funny:
+> We can discuss this later, applied the series with just that zfree()
+> change to annotation_options__exit().
 
-Probably worth changing PERF_MEM_NA.
+I don't think it's just an issue in the perf annotate.  Maybe we can
+do the same for perf report and so on.
 
->
->   $ sudo ./perf mem report -F sample,mem --stdio
->   #      Samples  Memory access
->   # ............  .......................................
->   #
->             1914  N/A                   <====== Non-LS
->              905  L1 or L1 hit
->               19  L3 or L3 hit
->               16  L2 or L2 hit
->                6  N/A or N/A hit        <====== LS with no DataSrc info
->                6  Local RAM or RAM hit
->                4  Remote node, same socket RAM hit
->                3  Remote core, same node Any cache hit
->                2  Remote node, same socket Any cache hit
-
-Maybe that's better to differentiate them :)
-
->
-> Also, L(NA) is PERF_MEM_LVL_NA | PERF_MEM_LVL_HIT. If I just return L(NA),
-> perf tools shows it as "N/A hit".
->
-> So, until tool code gets refactored, setting mem_lvl = NA here is hiding
-> tool's dumbness :(. Maybe I should refactor perf_mem__snp_scnprintf() as
-> part of this patchset.
-
-I think we can change the tool independently - preferring MEM_LVLNUM
-if present but you might want to add an option to override.
-Given IBS didn't set it so far, the output would remain mostly the same.
+Anyway we could define NDEBUG=1 for release builds from now on.
 
 Thanks,
 Namhyung
