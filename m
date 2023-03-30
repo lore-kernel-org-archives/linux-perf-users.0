@@ -2,112 +2,213 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377DFC761A6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 10:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C2BC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 30 Mar 2023 10:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbjC3KhG (ORCPT
+        id S230345AbjC3Knw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 30 Mar 2023 06:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
+        Thu, 30 Mar 2023 06:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbjC3KhF (ORCPT
+        with ESMTP id S231178AbjC3Knl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 30 Mar 2023 06:37:05 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4CC867ED9;
-        Thu, 30 Mar 2023 03:36:57 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B11DD2F4;
-        Thu, 30 Mar 2023 03:37:41 -0700 (PDT)
-Received: from [10.57.21.28] (unknown [10.57.21.28])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97BFD3F663;
-        Thu, 30 Mar 2023 03:36:55 -0700 (PDT)
-Message-ID: <5dc10954-d1ad-e8f8-deff-fd237df48ecb@arm.com>
-Date:   Thu, 30 Mar 2023 11:36:54 +0100
-MIME-Version: 1.0
+        Thu, 30 Mar 2023 06:43:41 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521449754;
+        Thu, 30 Mar 2023 03:43:36 -0700 (PDT)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32U97oCQ006972;
+        Thu, 30 Mar 2023 10:43:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=zo/GCQB0mH1y9ZA9mG4P9nPARAyBB6418qpnlyoAZOc=;
+ b=oYlWHu21vyAr+wF1ls8i6liE98oxdrbmfvgI+np4tplbq2dxvNGyDHEB7R7CmstWPoHy
+ AMCIiIZXk4a1mjlbf7QZ5kl7RVPH7wvfIKRsFaHa6l6ryvk41nsQH1TsndQLb+6gf9En
+ CWUDqWRE4OawQv/TYZe91yBayBqMrsw6Y9wO7IHgOXkNmCQjyyzF2wWfnWwPl7W2w/Qg
+ kzEkACZ23v4L9+GfCt3MViNdeg59/NY5944CMAxUmf3wmZPDft3fnaBG5CrlD1dwFbvE
+ 9g2JPJdg/Tz0P6i+O4Y0DXaqZlAeni6JYbmpWacSgQimsCWFj9IzEcwbChP6musPgkzz iA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pmp2xvv6y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Mar 2023 10:43:22 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32UAhMso028180;
+        Thu, 30 Mar 2023 10:43:22 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pmp2xvv6h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Mar 2023 10:43:22 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32TKpn9C010293;
+        Thu, 30 Mar 2023 10:43:19 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3phrk6nrw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Mar 2023 10:43:19 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32UAhGW612452498
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Mar 2023 10:43:16 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E67D82004B;
+        Thu, 30 Mar 2023 10:43:15 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E17F20040;
+        Thu, 30 Mar 2023 10:43:11 +0000 (GMT)
+Received: from [9.43.72.95] (unknown [9.43.72.95])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Mar 2023 10:43:10 +0000 (GMT)
+Message-ID: <22e4e2e2-df06-f6a9-cb68-c295db064a80@linux.ibm.com>
+Date:   Thu, 30 Mar 2023 16:13:09 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [BUG] perf: No samples found when using kcore + coresight
-From:   James Clark <james.clark@arm.com>
-To:     Leo Yan <leo.yan@linaro.org>, Yang Shi <shy828301@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        coresight@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mathieu.poirier@linaro.org, adrian.hunter@intel.com,
-        Jiri Olsa <jolsa@kernel.org>, acme@redhat.com,
-        mike.leach@linaro.org, Will Deacon <will@kernel.org>,
-        suzuki.poulose@arm.com
-References: <CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com>
- <8ca2b07e-674e-afb6-ff12-87504f51f252@arm.com>
- <CAHbLzkpf4RUZugKdn-uXC5m3RpAQH5aDmRXdsxPZi0Cbf-yiyw@mail.gmail.com>
- <CAHbLzkq_7aXcys1cpgGFsfMDDDKMsT3e7zdNW=0jAkw7kBtJ0Q@mail.gmail.com>
- <20230309113851.GF19253@leoy-yangtze.lan>
- <CAHbLzkpvLHnyL5J5kB_ke3CWVq2=MOEdEQsGex56+Esfgqh1=g@mail.gmail.com>
- <20230313121420.GB2426758@leoy-yangtze.lan>
- <CAHbLzkpZjrd401DEKnnCNMdra0f6kGRe1Nh_rTovNTmyD8aBpg@mail.gmail.com>
- <20230314003610.GD2426758@leoy-yangtze.lan>
- <6dcf83ad-bfbc-7e59-7c86-bed334bd09e8@arm.com>
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] perf vendor events power9: Remove UTF-8 characters from
+ json files
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        disgoel@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.com>
+References: <20230328112908.113158-1-kjain@linux.ibm.com>
+ <CAP-5=fXU4F=LvE883EVjq0bWHKJ-LT12pTr827jqwGfH1RTXdw@mail.gmail.com>
+ <ZCQ7+/9Yj5SDYsDn@kernel.org>
 Content-Language: en-US
-In-Reply-To: <6dcf83ad-bfbc-7e59-7c86-bed334bd09e8@arm.com>
+From:   kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <ZCQ7+/9Yj5SDYsDn@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JIOGJO1L7_q__-zUpqPPvjwZu-vY-N16
+X-Proofpoint-GUID: I-i3c4fi6A-SUDzfGhwdeS-TZbTUkK0K
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-30_04,2023-03-30_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2303300086
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 29/03/2023 17:11, James Clark wrote:
-> 
-> 
-> On 14/03/2023 00:36, Leo Yan wrote:
->> On Mon, Mar 13, 2023 at 11:15:44AM -0700, Yang Shi wrote:
->>
->> [...]
->>
->>>> Just a quick summary, here we have two issues:
->>>>
->>>> - With command:
->>>>   perf record -e cs_etm/@tmc_etf63/k --kcore --per-thread \
->>>>   -- taskset --cpu-list 1 uname",
->>>>
->>>>   perf doesn't enable "text poke" attribution.
+On 3/29/23 18:54, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Mar 28, 2023 at 09:21:49AM -0700, Ian Rogers escreveu:
+>> On Tue, Mar 28, 2023 at 4:30 AM Kajol Jain <kjain@linux.ibm.com> wrote:
 >>>
->>> No, it enables "text poke" and perf fails to decode coresight trace
->>> data too. It doesn't matter whether "--kcore" is after or before "-e
->>> cs/etm/@tmc_etf63/k".
+>>> Commit 3c22ba524304 ("perf vendor events powerpc: Update POWER9 events")
+>>> added and updated power9 pmu json events. However some of the json
+>>> events which are part of other.json and pipeline.json files,
+>>> contains UTF-8 characters in their brief description.
+>>> Having UTF-8 character could brakes the perf build on some distros.
 >>
->> Understand now.  Thanks for correction, if so we can ignore this one.
+>> nit: s/bakes/break/
+> 
+> I'll fix that later, thans.
+>  
+>>> Fix this issue by removing the UTF-8 characters from other.json and
+>>> pipeline.json files.
+>>>
+>>> Result without the fix patch:
+> 
+> [perfbuilder@five ~]$ cat dm.log/summary 
+>    1    23.25 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+>    2    24.56 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+>    3    25.06 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+> BUILD_TARBALL_HEAD=9da5ab1d38cd17fb47cbe5a1f95bca63e6ca9796
+> 
+
+Thanks Ian and Arnaldo for reviewing it.
+
+Thanks,
+Kajol Jain
+
+>>> [command]# file -i pmu-events/arch/powerpc/power9/*
+>>> pmu-events/arch/powerpc/power9/cache.json:          application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/floating-point.json: application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/frontend.json:       application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/marked.json:         application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/memory.json:         application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/metrics.json:        application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/nest_metrics.json:   application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/other.json:          application/json; charset=utf-8
+>>> pmu-events/arch/powerpc/power9/pipeline.json:       application/json; charset=utf-8
+>>> pmu-events/arch/powerpc/power9/pmc.json:            application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/translation.json:    application/json; charset=us-ascii
+>>>
+>>> Result with the fix patch:
+>>>
+>>> [command]# file -i pmu-events/arch/powerpc/power9/*
+>>> pmu-events/arch/powerpc/power9/cache.json:          application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/floating-point.json: application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/frontend.json:       application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/marked.json:         application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/memory.json:         application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/metrics.json:        application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/nest_metrics.json:   application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/other.json:          application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/pipeline.json:       application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/pmc.json:            application/json; charset=us-ascii
+>>> pmu-events/arch/powerpc/power9/translation.json:    application/json; charset=us-ascii
+>>>
+>>> Fixes: 3c22ba524304 ("perf vendor events powerpc: Update POWER9 events")
+>>> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.com>
+>>> Link: https://lore.kernel.org/lkml/ZBxP77deq7ikTxwG@kernel.org/
+>>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 >>
->> Leo
+>> Acked-by: Ian Rogers <irogers@google.com>
+>>
+>> Thanks,
+>> Ian
+>>
+>>> ---
+>>>  tools/perf/pmu-events/arch/powerpc/power9/other.json    | 4 ++--
+>>>  tools/perf/pmu-events/arch/powerpc/power9/pipeline.json | 2 +-
+>>>  2 files changed, 3 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/other.json b/tools/perf/pmu-events/arch/powerpc/power9/other.json
+>>> index 3f69422c21f9..f10bd554521a 100644
+>>> --- a/tools/perf/pmu-events/arch/powerpc/power9/other.json
+>>> +++ b/tools/perf/pmu-events/arch/powerpc/power9/other.json
+>>> @@ -1417,7 +1417,7 @@
+>>>    {
+>>>      "EventCode": "0x45054",
+>>>      "EventName": "PM_FMA_CMPL",
+>>> -    "BriefDescription": "two flops operation completed (fmadd, fnmadd, fmsub, fnmsub) Scalar instructions only. "
+>>> +    "BriefDescription": "two flops operation completed (fmadd, fnmadd, fmsub, fnmsub) Scalar instructions only."
+>>>    },
+>>>    {
+>>>      "EventCode": "0x201E8",
+>>> @@ -2017,7 +2017,7 @@
+>>>    {
+>>>      "EventCode": "0xC0BC",
+>>>      "EventName": "PM_LSU_FLUSH_OTHER",
+>>> -    "BriefDescription": "Other LSU flushes including: Sync (sync ack from L2 caused search of LRQ for oldest snooped load, This will either signal a Precise Flush of the oldest snooped loa or a Flush Next PPC); Data Valid Flush Next (several cases of this, one example is store and reload are lined up such that a store-hit-reload scenario exists and the CDF has already launched and has gotten bad/stale data); Bad Data Valid Flush Next (might be a few cases of this, one example is a larxa (D$ hit) return data and dval but can't allocate to LMQ (LMQ full or other reason). Already gave dval but can't watch it for snoop_hit_larx. Need to take the “bad dval” back and flush all younger ops)"
+>>> +    "BriefDescription": "Other LSU flushes including: Sync (sync ack from L2 caused search of LRQ for oldest snooped load, This will either signal a Precise Flush of the oldest snooped loa or a Flush Next PPC); Data Valid Flush Next (several cases of this, one example is store and reload are lined up such that a store-hit-reload scenario exists and the CDF has already launched and has gotten bad/stale data); Bad Data Valid Flush Next (might be a few cases of this, one example is a larxa (D$ hit) return data and dval but can't allocate to LMQ (LMQ full or other reason). Already gave dval but can't watch it for snoop_hit_larx. Need to take the 'bad dval' back and flush all younger ops)"
+>>>    },
+>>>    {
+>>>      "EventCode": "0x5094",
+>>> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json b/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
+>>> index d0265f255de2..723bffa41c44 100644
+>>> --- a/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
+>>> +++ b/tools/perf/pmu-events/arch/powerpc/power9/pipeline.json
+>>> @@ -442,7 +442,7 @@
+>>>    {
+>>>      "EventCode": "0x4D052",
+>>>      "EventName": "PM_2FLOP_CMPL",
+>>> -    "BriefDescription": "DP vector version of fmul, fsub, fcmp, fsel, fabs, fnabs, fres ,fsqrte, fneg "
+>>> +    "BriefDescription": "DP vector version of fmul, fsub, fcmp, fsel, fabs, fnabs, fres ,fsqrte, fneg"
+>>>    },
+>>>    {
+>>>      "EventCode": "0x1F142",
+>>> --
+>>> 2.39.1
+>>>
 > 
-> To me it looks like it's only --per-thread and --kcore together that
-> cause the issue. I can't see if that was mentioned previously in this
-> thread.
-> 
-> If it is --per-thread that's causing the issue then I think I have an
-> idea why it might be. There are some assumptions and different paths
-> taken in decoding in that mode that aren't correct. It causes some other
-> issues to do with ordering and timestamps as well and I wanted to fix it
-> previously. I wouldn't say that the text-poke change has caused a
-> regression, as decoding in this mode was always a bit buggy.
-> 
-> Maybe this is another reason to fix it properly.
-
-Hi Yang,
-
-I found a temporary workaround to the issue. Whenever you use
---per-thread mode, force timeless mode when decoding with --itrace=Z and
-it works the same as it did before. For example:
-
-  perf report --itrace=Zi1000i
-
-The reason is that the new text poke event was added with timestamps
-enabled. The Coresight decoder slightly incorrectly assumed that no
-timestamps == per-thread mode so when it sees the new event it goes into
-the wrong decode mode.
-
-The assumption was never really correct so I will make a proper fix. But
-in the mean time the workaround should be fine.
-
