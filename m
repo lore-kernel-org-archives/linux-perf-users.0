@@ -2,261 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E20C76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 09:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F6AC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 11:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjCaJn4 (ORCPT
+        id S229894AbjCaLqt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 05:43:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36826 "EHLO
+        Fri, 31 Mar 2023 07:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230242AbjCaJny (ORCPT
+        with ESMTP id S231751AbjCaLqp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 05:43:54 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F000849EF;
-        Fri, 31 Mar 2023 02:43:25 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PnwLW6lPWzKq6D;
-        Fri, 31 Mar 2023 17:42:27 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 31 Mar 2023 17:42:58 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        Fri, 31 Mar 2023 07:46:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55ADB1EA11;
+        Fri, 31 Mar 2023 04:46:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B5C6E62836;
+        Fri, 31 Mar 2023 11:46:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C31C433D2;
+        Fri, 31 Mar 2023 11:46:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680263199;
+        bh=R9Yumhm1RMDdrtlrXq9zoIJGJBh/7IIt4c1jg6vLDdI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KHmvMrQUdq35+Ksi/AkM2SThIklUFlK5p9qKwCS61ubSQHKh4R6m0Z6OP4J/Lz5ZX
+         p+QTPGGTULCt0NQj4CHMRSqV40/HeSdl3JBCZRlAyC4qvM7ogUxSrr4/W0Vvw3zaj0
+         fXpcPNl09E3SLDnPykpwAVc2qSDS72iVmAj5CuFja6DzQ1wus+6KbIvFufwgZAK415
+         LiG2GvefKZv5D604ixLQg2XD/gs9gHRyS3mfcQqyuQpvaAIpxiHmSS50GxdrKc7o+Q
+         J7LkxA/ngsTV6QljR6XXhQy/U1MT4413HJ4k4DpsbbLIAEGwp/xuYoDlbNC+lPetWe
+         x+4WTVELtTVeg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 51F8C4052D; Fri, 31 Mar 2023 08:46:36 -0300 (-03)
+Date:   Fri, 31 Mar 2023 08:46:36 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH] perf: script: add new output field 'dsoip'
-Date:   Fri, 31 Mar 2023 16:44:18 +0800
-Message-ID: <20230331084418.3910903-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v1 1/4] tools api: Add io__getline
+Message-ID: <ZCbIHBDwcZ1IX8z8@kernel.org>
+References: <20230331004844.1592789-1-irogers@google.com>
+ <20230331004844.1592789-2-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230331004844.1592789-2-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The goal of this change is to achieve consistent output for address. Before
-this, the raw ip is printed for non-callchain and binary offset for
-callchain. Mostly what we expect is the raw ip.
+Em Thu, Mar 30, 2023 at 05:48:41PM -0700, Ian Rogers escreveu:
+> Reads a line to allocated memory up to a newline following the getline
+> API.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/api/io.h        | 40 +++++++++++++++++++++++++++++++++++++++
+>  tools/perf/tests/api-io.c | 36 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 76 insertions(+)
+> 
+> diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> index 777c20f6b604..d874e8fa8b07 100644
+> --- a/tools/lib/api/io.h
+> +++ b/tools/lib/api/io.h
+> @@ -7,7 +7,9 @@
+>  #ifndef __API_IO__
+>  #define __API_IO__
+>  
+> +#include <errno.h>
+>  #include <stdlib.h>
+> +#include <string.h>
+>  #include <unistd.h>
+>  
+>  struct io {
+> @@ -112,4 +114,42 @@ static inline int io__get_dec(struct io *io, __u64 *dec)
+>  	}
+>  }
+>  
+> +/* Read up to and including the first newline following the pattern of getline. */
+> +static inline ssize_t io__getline(char **line_out, size_t *line_len_out, struct io *io)
 
-This patch does two changes:
-  - Always print raw ip for symbols.
-  - Add a new 'dsoip' field if we really need the binary offset, and the
-    offset is appended to dso name.
+Can we have io be the first arg? To be consistent with the other
+functons here and elsewhere in perf.
 
-Default output now:
-$ perf script
-       perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-       perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-       perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-       perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-       perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown])
-       perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown])
-       perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown])
-       perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown])
-              ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown])
-              ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so)
-              ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so)
-              ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so)
-              ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls)
-              ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls)
-              ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown])
+- Arnaldo
 
-Display 'dsoip' field:
-$ perf script -F +dsoip
-       perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown]+0x0)
-       perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown]+0x0)
-              ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown]+0x0)
-              ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so+0xe8c7)
-              ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so+0xbd0d0)
-              ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so+0x94594)
-              ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls+0x1227c)
-              ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls+0x10202)
-              ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown]+0x0)
+> +{
+> +	char buf[128];
+> +	int buf_pos = 0;
+> +	char *line = NULL;
+> +	size_t line_len = 0;
+> +	int ch = 0;
+> +
+> +	/* TODO: reuse previously allocated memory. */
+> +	free(*line_out);
+> +	while (ch != '\n') {
+> +		ch = io__get_char(io);
+> +
+> +		if (ch < 0)
+> +			break;
+> +
+> +		if (buf_pos == sizeof(buf)) {
+> +			line = realloc(line, line_len + sizeof(buf));
+> +			if (!line)
+> +				return -ENOMEM;
+> +			memcpy(&line[line_len], buf, sizeof(buf));
+> +			line_len += sizeof(buf);
+> +			buf_pos = 0;
+> +		}
+> +		buf[buf_pos++] = (char)ch;
+> +	}
+> +	line = realloc(line, line_len + buf_pos + 1);
+> +	if (!line)
+> +		return -ENOMEM;
+> +	memcpy(&line[line_len], buf, buf_pos);
+> +	line[line_len + buf_pos] = '\0';
+> +	line_len += buf_pos;
+> +	*line_out = line;
+> +	*line_len_out = line_len;
+> +	return line_len;
+> +}
+> +
+>  #endif /* __API_IO__ */
+> diff --git a/tools/perf/tests/api-io.c b/tools/perf/tests/api-io.c
+> index e91cf2c127f1..0ff39cdfcb01 100644
+> --- a/tools/perf/tests/api-io.c
+> +++ b/tools/perf/tests/api-io.c
+> @@ -289,6 +289,40 @@ static int test_get_dec(void)
+>  	return ret;
+>  }
+>  
+> +static int test_get_line(void)
+> +{
+> +	char path[PATH_MAX];
+> +	struct io io;
+> +	char test_string[1024];
+> +	char *line = NULL;
+> +	size_t i, line_len = 0;
+> +	size_t buf_size = 128;
+> +	int ret = 0;
+> +
+> +	for (i = 0; i < 512; i++)
+> +		test_string[i] = 'a';
+> +	test_string[512] = '\n';
+> +	for (i = 513; i < 1023; i++)
+> +		test_string[i] = 'b';
+> +	test_string[1023] = '\0';
+> +
+> +	if (setup_test(path, test_string, buf_size, &io))
+> +		return -1;
+> +
+> +	EXPECT_EQUAL((int)io__getline(&line, &line_len, &io), 513);
+> +	EXPECT_EQUAL((int)strlen(line), 513);
+> +	for (i = 0; i < 512; i++)
+> +		EXPECT_EQUAL(line[i], 'a');
+> +	EXPECT_EQUAL(line[512], '\n');
+> +	EXPECT_EQUAL((int)io__getline(&line, &line_len, &io), 510);
+> +	for (i = 0; i < 510; i++)
+> +		EXPECT_EQUAL(line[i], 'b');
+> +
+> +	free(line);
+> +	cleanup_test(path, &io);
+> +	return ret;
+> +}
+> +
+>  static int test__api_io(struct test_suite *test __maybe_unused,
+>  			int subtest __maybe_unused)
+>  {
+> @@ -300,6 +334,8 @@ static int test__api_io(struct test_suite *test __maybe_unused,
+>  		ret = TEST_FAIL;
+>  	if (test_get_dec())
+>  		ret = TEST_FAIL;
+> +	if (test_get_line())
+> +		ret = TEST_FAIL;
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.40.0.348.gf938b09366-goog
+> 
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-script.txt |  2 +-
- tools/perf/builtin-script.c              |  5 +++++
- tools/perf/util/evsel_fprintf.c          | 26 ++++++++++++------------
- tools/perf/util/evsel_fprintf.h          | 13 ++++++------
- 4 files changed, 26 insertions(+), 20 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 777a0d8ba7d1..ef392785f776 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -130,7 +130,7 @@ OPTIONS
- -F::
- --fields::
-         Comma separated list of fields to print. Options are:
--        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
-+        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoip, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a792214d1af8..a181decf7922 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -133,6 +133,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_VCPU            = 1ULL << 38,
- 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
-+	PERF_OUTPUT_DSOIP           = 1ULL << 41,
- };
- 
- struct perf_script {
-@@ -174,6 +175,7 @@ struct output_option {
- 	{.str = "ip",    .field = PERF_OUTPUT_IP},
- 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
- 	{.str = "dso",   .field = PERF_OUTPUT_DSO},
-+	{.str = "dsoip", .field = PERF_OUTPUT_DSOIP},
- 	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
- 	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
- 	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
-@@ -574,6 +576,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
- 	if (PRINT_FIELD(DSO))
- 		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
- 
-+	if (PRINT_FIELD(DSOIP))
-+		output[type].print_ip_opts |= EVSEL__PRINT_DSOIP;
-+
- 	if (PRINT_FIELD(SYMOFFSET))
- 		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
- 
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index bd22c4932d10..fd1791fab051 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
-@@ -133,7 +134,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 		while (1) {
- 			struct symbol *sym;
- 			struct map *map;
--			u64 addr = 0;
-+			u64 dso_ip = 0;
- 
- 			node = callchain_cursor_current(cursor);
- 			if (!node)
-@@ -141,6 +142,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 
- 			sym = node->ms.sym;
- 			map = node->ms.map;
-+			if (map)
-+				dso_ip = map->map_ip(map, node->ip);
- 
- 			if (sym && sym->ignore && print_skip_ignored)
- 				goto next;
-@@ -150,20 +153,12 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			if (print_arrow && !first)
- 				printed += fprintf(fp, " <-");
- 
--			if (map)
--				addr = map->map_ip(map, node->ip);
--
--			if (print_ip) {
--				/* Show binary offset for userspace addr */
--				if (map && !map->dso->kernel)
--					printed += fprintf(fp, "%c%16" PRIx64, s, addr);
--				else
--					printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
--			}
-+			if (print_ip)
-+				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
- 
- 			if (print_sym) {
- 				printed += fprintf(fp, " ");
--				node_al.addr = addr;
-+				node_al.addr = dso_ip;
- 				node_al.map  = map;
- 
- 				if (print_symoffset) {
-@@ -179,11 +174,13 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			if (print_dso && (!sym || !sym->inlined)) {
- 				printed += fprintf(fp, " (");
- 				printed += map__fprintf_dsoname(map, fp);
-+				if (print_dsoip)
-+					printed += fprintf(fp, "+0x%lx", (map && map->dso) ? dso_ip : 0);
- 				printed += fprintf(fp, ")");
- 			}
- 
- 			if (print_srcline)
--				printed += map__fprintf_srcline(map, addr, "\n  ", fp);
-+				printed += map__fprintf_srcline(map, dso_ip, "\n  ", fp);
- 
- 			if (sym && sym->inlined)
- 				printed += fprintf(fp, " (inlined)");
-@@ -214,6 +211,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
- 	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
-@@ -242,6 +240,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 		if (print_dso) {
- 			printed += fprintf(fp, " (");
- 			printed += map__fprintf_dsoname(al->map, fp);
-+			if (print_dsoip)
-+				printed += fprintf(fp, "+0x%lx", (al->map && al->map->dso) ? al->addr : 0);
- 			printed += fprintf(fp, ")");
- 		}
- 
-diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
-index 3093d096c29f..3f282c5840da 100644
---- a/tools/perf/util/evsel_fprintf.h
-+++ b/tools/perf/util/evsel_fprintf.h
-@@ -20,12 +20,13 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
- #define EVSEL__PRINT_IP			(1<<0)
- #define EVSEL__PRINT_SYM		(1<<1)
- #define EVSEL__PRINT_DSO		(1<<2)
--#define EVSEL__PRINT_SYMOFFSET		(1<<3)
--#define EVSEL__PRINT_ONELINE		(1<<4)
--#define EVSEL__PRINT_SRCLINE		(1<<5)
--#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
--#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
--#define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
-+#define EVSEL__PRINT_DSOIP		(1<<3)
-+#define EVSEL__PRINT_SYMOFFSET		(1<<4)
-+#define EVSEL__PRINT_ONELINE		(1<<5)
-+#define EVSEL__PRINT_SRCLINE		(1<<6)
-+#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<7)
-+#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<8)
-+#define EVSEL__PRINT_SKIP_IGNORED	(1<<9)
- 
- struct addr_location;
- struct perf_event_attr;
 -- 
-2.25.1
 
+- Arnaldo
