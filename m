@@ -2,134 +2,153 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FE7C76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 05:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7888DC76196
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 05:50:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbjCaFey (ORCPT
+        id S229458AbjCaFui (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 01:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
+        Fri, 31 Mar 2023 01:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjCaFex (ORCPT
+        with ESMTP id S230034AbjCaFuf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 01:34:53 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A4D83C8;
-        Thu, 30 Mar 2023 22:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680240891; x=1711776891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dFJBTEI0i8alvBIKkAgPGcwUbxekbkcw2MQoL9eKAOk=;
-  b=N3apkt2cChnko4CQGHD/Xj69cXSh+Zaz2/PeNZP/Sky6T4zpWIf95iL7
-   BhQHcoTwk3E4Q3M/fLLrBRWrfv2pOHHoIT9mSxojsnxDUoRcuVFpU2mcq
-   NWXmQg7ryorx9X2PTOIL5wC1hyJDYyK/3bewd2ErL8DfJMjfKH1FE3gXl
-   Cn3dvL/+2NuybmIhbgwsbtpSiIgIiTikDwZHXvm7mV4sefU/4Fj3FnW1q
-   NV4ez/xctQ1HyjFzWjYULa2TcBnMN7T+l3L1rFMvlndc5rqCnyJuTxStK
-   GrpDFitXhN5TAv+hwKwfMTOO18XAI8FEjnaba2W2hgLDbOvjeYWmDZeku
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="406372370"
-X-IronPort-AV: E=Sophos;i="5.98,306,1673942400"; 
-   d="scan'208";a="406372370"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 22:34:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="635168694"
-X-IronPort-AV: E=Sophos;i="5.98,306,1673942400"; 
-   d="scan'208";a="635168694"
-Received: from dmi-pnp-i7.sh.intel.com (HELO localhost) ([10.239.159.155])
-  by orsmga003.jf.intel.com with ESMTP; 30 Mar 2023 22:34:47 -0700
-Date:   Fri, 31 Mar 2023 13:40:11 +0800
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Tinghao <tinghao.zhang@intel.com>,
-        Zhuocheng Ding <zhuocheng.ding@intel.com>
-Subject: Re: [PATCH] perf/x86/intel: Define bit macros for FixCntrCtl MSR
-Message-ID: <ZCZyOyvfNgKsYVLy@dmi-pnp-i7>
-References: <20230330012846.2927220-1-dapeng1.mi@linux.intel.com>
- <20230330130702.GF124812@hirez.programming.kicks-ass.net>
- <2bba1909-dac8-321f-e685-a793f1a4e170@linux.intel.com>
+        Fri, 31 Mar 2023 01:50:35 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458DD12CDE
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 22:50:33 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id ix20so20298992plb.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 22:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680241833;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IzgUwKsTXlcKR3IZP1bVNxBagrJvGQ4VZm8bOrKutDM=;
+        b=xaAE32ETbzPfQ38td8hI3jF6TeQaETDeGClpg3d7IlaSPGhI7kqCo/7S40gHEWyMq8
+         m0x2nzdeKrfSyZnb8HgwWhKo4rNRxYcO11zByLfWIf7vmGp8vgvw2W2OD6cJC+KEjL31
+         rQPHiFQgUDPP+C7IpOD0w1C7z1/QmeO4GHbab/QwlT+jteRwg6dqqWq6qdMrhFxH+LmA
+         8HScU9P8tF3BCrHaKQJmf+kqUGqMEfRFBJ917ag4S5QxlEIVFOoPR8P26c0wRawjZNrr
+         BrZ0zI+7RhpmR98rWxu84x9znPNDae0LfHxNnJfO5suyA26h/Zzct9kVeQT0Fpy+0xBL
+         ynEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680241833;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IzgUwKsTXlcKR3IZP1bVNxBagrJvGQ4VZm8bOrKutDM=;
+        b=U+VVOtze/dOTnOlRfONrxllfFFSVWfOxP+zeb/VCmSuHx3+a1so2XuKhahi9TXdEfu
+         A+KH05kqTFOxjl6uNbyo1mbPSSoHI36qM2D9MUD1/zHFaKWDSEVSIQ8qt335g2bGo0dc
+         hN5Ay/oaC8xmnE9s1O/3Oyr6fDRr2b5eT8mBv9qhq6dN83w1RAw+mei5ZmHthDrwLJVd
+         t0BD8EO8wUyQmP9ZGq2QP9WXPMc8FgZySw2zPS29ze6FlI/FMT0rawfrTiahtchuzWkm
+         qp4gyfFnl2tRMym2SZkDZuf0VyfUnp0N+5EAAKkPMepG9vvcsq2PYwggp+4bbS3MHhC3
+         X/VA==
+X-Gm-Message-State: AAQBX9ce5aDCyoA6q4GjLdXQ+L9XX0eo5YIhtWHS+ESbqOulfGWeMxs+
+        wZJmM3JpJGh2frJX2DQS2wfUEzAEAQxc3Ei69T87GQ==
+X-Google-Smtp-Source: AKy350aJ2MdnJe836h4peLGe+7yJUEWRJ/iVZhGH4oxEsAv3J7nFUhrtHqK96PUMTfwbcGDndhEhvnUdJ+STEIW6aYA=
+X-Received: by 2002:a17:903:41d1:b0:1a0:5402:b17f with SMTP id
+ u17-20020a17090341d100b001a05402b17fmr9406603ple.6.1680241832638; Thu, 30 Mar
+ 2023 22:50:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2bba1909-dac8-321f-e685-a793f1a4e170@linux.intel.com>
+References: <20230329111422.3693-1-mike.leach@linaro.org> <20230329111422.3693-2-mike.leach@linaro.org>
+ <ZCQx5HlPnxCIFaNQ@kernel.org> <ZCQyNnk/vfHZkSda@kernel.org>
+ <CAJ9a7VhhoGoOVL4sqcgpDYnZzzce_2=-wupK8K178tzZnoqrPA@mail.gmail.com>
+ <ZCQ7nhrISA+jCfnI@kernel.org> <CAJ9a7VhJRnRe0A43=_X463432LvjL=S5buVgeq6rB8K8nDZb6A@mail.gmail.com>
+ <ZCSRU8zvjjBHhq+x@kernel.org> <ZCS4XJaWg7NvaWb7@kernel.org>
+ <20230330031307.GD252145@leoy-yangtze.lan> <20c28979-53a7-19eb-16fd-4d8535454d4e@arm.com>
+In-Reply-To: <20c28979-53a7-19eb-16fd-4d8535454d4e@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Fri, 31 Mar 2023 06:50:21 +0100
+Message-ID: <CAJ9a7VjxHkf4SsmmoRhPBeS=68igtOrwSsgJdcTy+9JWT1sBCA@mail.gmail.com>
+Subject: Re: [PATCH v8 1/3] perf: cs-etm: Move mapping of Trace ID and cpu
+ into helper function
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, will@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, gankulkarni@os.amperecomputing.com,
+        darren@os.amperecomputing.com, James Clark <james.clark@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 10:46:01AM -0400, Liang, Kan wrote:
-> Date: Thu, 30 Mar 2023 10:46:01 -0400
-> From: "Liang, Kan" <kan.liang@linux.intel.com>
-> Subject: Re: [PATCH] perf/x86/intel: Define bit macros for FixCntrCtl MSR
-> 
-> 
-> 
-> On 2023-03-30 9:07 a.m., Peter Zijlstra wrote:
-> > On Thu, Mar 30, 2023 at 09:28:46AM +0800, Dapeng Mi wrote:
-> >> Define bit macros for FixCntrCtl MSR and replace the bit hardcoding
-> >> with these bit macros. This would make code be more human-readable.
-> >>
-> >> Perf commands 'perf stat -e "instructions,cycles,ref-cycles"' and
-> >> 'perf record -e "instructions,cycles,ref-cycles"' pass.
-> >>
-> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> >> ---
-> >>  arch/x86/events/intel/core.c      | 18 +++++++++---------
-> >>  arch/x86/include/asm/perf_event.h | 10 ++++++++++
-> >>  2 files changed, 19 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> >> index 070cc4ef2672..b7c0bb78ed59 100644
-> >> --- a/arch/x86/events/intel/core.c
-> >> +++ b/arch/x86/events/intel/core.c
-> >> @@ -2451,7 +2451,7 @@ static void intel_pmu_disable_fixed(struct perf_event *event)
-> >>  
-> >>  	intel_clear_masks(event, idx);
-> >>  
-> >> -	mask = 0xfULL << ((idx - INTEL_PMC_IDX_FIXED) * 4);
-> >> +	mask = intel_fixed_bits(idx - INTEL_PMC_IDX_FIXED, INTEL_FIXED_BITS_MASK);
-> >>  	cpuc->fixed_ctrl_val &= ~mask;
-> > 
-> > So maybe it's me, but I find the original far easier to read :/ That new
-> > things I need to look up every single identifier before I can tell wth
-> > it does.
-> 
-> The intel_fixed_bits() tries to replace the duplicate "bit << (idx *
-> 4);". I think it should be a good improvement. Maybe we should rename it
-> to intel_shift_fixed_bits_by_idx(). Is it better?
-> 
-> If not, I think at least we should use some macros to replace the magic
-> number.
-> 
-> Thanks,
-> Kan
+Hi
 
-Comparing previous magic numbers, the following macros can help developers
-to know the meaning of the piece of code rapidly and don't need to
-check the hardware specs and get its meaning, and developers could more
-easily confirm his code logic is correct and don't confirm with spec
-again.
+On Thu, 30 Mar 2023 at 11:55, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>
+> On 30/03/2023 04:13, Leo Yan wrote:
+> > On Wed, Mar 29, 2023 at 07:14:52PM -0300, Arnaldo Carvalho de Melo wrote:
+> >
+> > [...]
+> >
+> >>> Not here, I'll check after a call:
+> >>>
+> >>>    50     9.90 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
+> >>>      arch/arm/util/cs-etm.c: In function 'cs_etm_save_ete_header':
+> >>>      arch/arm/util/cs-etm.c:720:29: error: implicit declaration of function 'coresight_get_trace_id' [-Werror=implicit-function-declaration]
+> >>>        data[CS_ETE_TRCTRACEIDR] = coresight_get_trace_id(cpu);
+> >>>                                   ^~~~~~~~~~~~~~~~~~~~~~
+> >>
+> >> This function was removed in:
+> >>
+> >> Author: Mike Leach <mike.leach@linaro.org>
+> >> Date:   Wed Mar 29 12:14:21 2023 +0100
+> >>
+> >>      perf cs-etm: Update record event to use new Trace ID protocol
+> >>
+> >>      Trace IDs are now dynamically allocated.
+> >>
+> >> I'm removing this series from perf-tools-next, please address this issue
+> >> and send a v9.
+> >
+> > I can reproduce this building failure.  I am curious for how to verify
+> > building for patch wise, the link [1] gives me some hints and below
+> > command works for me:
+> >
+> >    $ git rebase -i --exec "make -C tools/perf clean && \
+> >      make -C tools/perf VF=1 DEBUG=1 CORESIGHT=1 && \
+> >      make -C tools/perf clean && \
+> >      make -C tools/perf VF=1 DEBUG=1" HEAD~3
+>
 
-+#define INTEL_FIXED_0_KERNEL				(1ULL << 0)
-+#define INTEL_FIXED_0_USER				(1ULL << 1)
-+#define INTEL_FIXED_0_ANYTHREAD			(1ULL << 2)
-+#define INTEL_FIXED_0_ENABLE_PMI			(1ULL << 3)
+Thanks Leo. However, I've now written a python script that given a
+patch directory will run:
 
-As for the macro intel_fixed_bits, it indeed hides some details, but it
-make the code looks cleaner and developer can use it more easily and don't
-worry about the details. Like what Kan said, maybe we can get a new name to
-make it be more understandably. 
+foreach patch in dir
+     git am patch
+     build
+
+so that can work directly on patches before they are sent - or when
+they are received in future.
+
+> Looks like perf-tools-next has some changes that has not reflected
+> elsewhere. The ts_source patches are queued there, which is causing
+> the above build failure.
+
+> Mike,
+>
+> Are you able to rebase your patches on perf-tools-next branch ?
+>
+perf/core and perf-tools-next are both on the same commit.
+v9 tested against perf/core
+
+Mike
+
+> Kind regards
+> Suzuki
+>
+> >
+> > Thanks,
+> > Leo
+> >
+> > [1] https://stackoverflow.com/questions/26983700/git-run-shell-command-for-each-commit
+>
+
+
 -- 
-Thanks,
-Dapeng Mi
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
