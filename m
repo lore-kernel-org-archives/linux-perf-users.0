@@ -2,112 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69426C76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 11:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D015C76196
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 11:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230359AbjCaLv4 (ORCPT
+        id S229939AbjCaLy5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 07:51:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
+        Fri, 31 Mar 2023 07:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbjCaLvz (ORCPT
+        with ESMTP id S229629AbjCaLy4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 07:51:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657074498;
-        Fri, 31 Mar 2023 04:51:51 -0700 (PDT)
+        Fri, 31 Mar 2023 07:54:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F27712CD2;
+        Fri, 31 Mar 2023 04:54:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C6C26B82EBD;
-        Fri, 31 Mar 2023 11:51:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B530C433EF;
-        Fri, 31 Mar 2023 11:51:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 205EA6280F;
+        Fri, 31 Mar 2023 11:54:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57965C433D2;
+        Fri, 31 Mar 2023 11:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680263508;
-        bh=pq99YNVP8zVp0i8YVWlsVcO4uXm1s1osVaX3cFcttDw=;
+        s=k20201202; t=1680263694;
+        bh=Z9WDinB4HAD4+ej+KHX2YQpkyN011VRo+nzW6UoXFGY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BpmZAHXRodN9zRVrQWbbG4q6Abz1UCVruj+lRiS61YGxPCJjfDrLwvydp6Ll+TgLi
-         G+j4ctbgm8pVRVBlpAGHwnvvjqDgErCLZJiKfje0o0TWkcXbaXYHioxzNh/dQs8abo
-         yPiTpIQ2qBTngaA6q6vpuf+94w9R7y4m4QN7zLY6PX7mHh5zVIwhY9NQ29E9D4hNe/
-         kzWhmWXWIkflbCpocnZ2IDNVudl50PzyyoyngmXZeSnGujInBYaH6oLJaJZ1SY8iWl
-         mOmW5DoGwyv8HMf6vHOHdyiWcBag1zOFDcctG//61LRUIuVFTJX8dG9xuZUTGpgk01
-         770f9Y2ff6GUg==
+        b=Oo1TrPYNGd8nHLWdOKsxsdNiwQa797E7PgKK3FmyPSd1LXbaYpp3Xto3iulKgVwPe
+         3jy64DZST+DnbkVEBw8E87rxAjNz6z7Led9a5LTxbY72frLGtam+PnQOe6Zy95yapz
+         1H3gpV970ra9/gpWH3XZpF+Nqc5HTwlU+5GLVe+okoQP2Y1zhVO01cmdDHxlFW5PEc
+         2GNY/ZxAkSJWIUBKA9hfICq3RmhjxtAdhOekxSJYO7SKURCpChrWQ+OJjS+KIK+B0V
+         2jeBhyzygyzlGqhtchgb3OM9kCmtGvoH/b9Kig15UuTAgAKgEnLm29ujfN+cI1SUsa
+         u4S4paNcUiR0w==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 747764052D; Fri, 31 Mar 2023 08:51:45 -0300 (-03)
-Date:   Fri, 31 Mar 2023 08:51:45 -0300
+        id EBA324052D; Fri, 31 Mar 2023 08:54:51 -0300 (-03)
+Date:   Fri, 31 Mar 2023 08:54:51 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
-        leo.yan@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, gankulkarni@os.amperecomputing.com,
-        darren@os.amperecomputing.com
-Subject: Re: [PATCH v9 0/3] perf: cs-etm: Update perf to handle new Coresight
- Trace ID
-Message-ID: <ZCbJUWw7TkUCWWuc@kernel.org>
-References: <20230331055645.26918-1-mike.leach@linaro.org>
+To:     K Prateek Nayak <kprateek.nayak@amd.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, ravi.bangoria@amd.com, sandipan.das@amd.com,
+        ananth.narayan@amd.com, gautham.shenoy@amd.com, eranian@google.com
+Subject: Re: [RFC PATCH 1/4] perf: Read cache instance ID when building cache
+ topology
+Message-ID: <ZCbKCwJDf3PrjSLH@kernel.org>
+References: <20230331045117.1266-1-kprateek.nayak@amd.com>
+ <20230331045117.1266-2-kprateek.nayak@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230331055645.26918-1-mike.leach@linaro.org>
+In-Reply-To: <20230331045117.1266-2-kprateek.nayak@amd.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Mar 31, 2023 at 06:56:42AM +0100, Mike Leach escreveu:
-> The original method for allocating trace source ID values to sources was
-> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
-> The STM was allocated ID 0x1.
-> 
-> This mechanism is broken for systems with more than 47 cores.
-> 
-> The kernel related patches the provide a fixed Trace ID allocation mechanism
-> are now upstreamed.
-> 
-> This patchset updates the perf code to handle the changes to the trace ID
-> notification mechanism that now uses the PERF_RECORD_AUX_OUTPUT_HW_ID
-> packet to set Trace ID in the perf ETM decoders.
-> 
-> Applies and test oo perf/core
+Em Fri, Mar 31, 2023 at 10:21:14AM +0530, K Prateek Nayak escreveu:
+> CPU cache level data currently stores cache level, type, line size,
+> associativity, sets, total cache size, and the CPUs sharing the cache.
+> Also read and store the cache instance ID from
+> "/sys/devices/system/cpu/cpuX/cache/indexY/id" in the cache level data.
+> Use instance ID as well when comparing cache levels.
 
-I'm keeping perf/core with the same contents as perf-tools-next, please
-use perf-tools-next as in the future I'll stop using the old perf/core
-name.
+And if a new perf tool is used in an older kernel without this new 'id'
+file?
 
-Applied, testing.
+Please check if the file exists, if it doesn't don't fail, just
+initialize with a zero, this way the latest perf will be usable in older
+kernels.
 
 - Arnaldo
  
-> Changes since v8:
-> 1. Fix build issues
-> 2. Fix implicit function problem
+> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> ---
+>  tools/perf/util/env.h    | 1 +
+>  tools/perf/util/header.c | 7 +++++++
+>  2 files changed, 8 insertions(+)
 > 
-> Changes since v7:
-> Split from original patchset [1] to be sent separately as kernel related
-> patches are now upstream.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20230116124928.5440-1-mike.leach@linaro.org/
-> 
-> Mike Leach (3):
->   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
->   perf: cs-etm: Update record event to use new Trace ID protocol
->   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
-> 
->  tools/include/linux/coresight-pmu.h           |  47 ++-
->  tools/perf/arch/arm/util/cs-etm.c             |  27 +-
->  tools/perf/util/cs-etm-base.c                 |   3 +-
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
->  tools/perf/util/cs-etm.c                      | 326 +++++++++++++++---
->  tools/perf/util/cs-etm.h                      |  14 +-
->  6 files changed, 356 insertions(+), 68 deletions(-)
-> 
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 4566c51f2fd9..d761bfae76af 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -17,6 +17,7 @@ struct cpu_topology_map {
+>  
+>  struct cpu_cache_level {
+>  	u32	level;
+> +	u32	id;
+>  	u32	line_size;
+>  	u32	sets;
+>  	u32	ways;
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 404d816ca124..5c3f5d260612 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1131,6 +1131,9 @@ static bool cpu_cache_level__cmp(struct cpu_cache_level *a, struct cpu_cache_lev
+>  	if (a->level != b->level)
+>  		return false;
+>  
+> +	if (a->id != b->id)
+> +		return false;
+> +
+>  	if (a->line_size != b->line_size)
+>  		return false;
+>  
+> @@ -1168,6 +1171,10 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+>  	if (sysfs__read_int(file, (int *) &cache->level))
+>  		return -1;
+>  
+> +	scnprintf(file, PATH_MAX, "%s/id", path);
+> +	if (sysfs__read_int(file, (int *) &cache->id))
+> +		return -1;
+> +
+>  	scnprintf(file, PATH_MAX, "%s/coherency_line_size", path);
+>  	if (sysfs__read_int(file, (int *) &cache->line_size))
+>  		return -1;
 > -- 
-> 2.17.1
+> 2.34.1
 > 
 
 -- 
