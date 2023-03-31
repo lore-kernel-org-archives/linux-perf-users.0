@@ -2,153 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7888DC76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 05:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3B7C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 05:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbjCaFui (ORCPT
+        id S229894AbjCaF4w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 01:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
+        Fri, 31 Mar 2023 01:56:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbjCaFuf (ORCPT
+        with ESMTP id S229517AbjCaF4v (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 01:50:35 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458DD12CDE
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 22:50:33 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id ix20so20298992plb.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 22:50:33 -0700 (PDT)
+        Fri, 31 Mar 2023 01:56:51 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8A57C16D
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 22:56:50 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id v6-20020a05600c470600b003f034269c96so2895660wmo.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 30 Mar 2023 22:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680241833;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IzgUwKsTXlcKR3IZP1bVNxBagrJvGQ4VZm8bOrKutDM=;
-        b=xaAE32ETbzPfQ38td8hI3jF6TeQaETDeGClpg3d7IlaSPGhI7kqCo/7S40gHEWyMq8
-         m0x2nzdeKrfSyZnb8HgwWhKo4rNRxYcO11zByLfWIf7vmGp8vgvw2W2OD6cJC+KEjL31
-         rQPHiFQgUDPP+C7IpOD0w1C7z1/QmeO4GHbab/QwlT+jteRwg6dqqWq6qdMrhFxH+LmA
-         8HScU9P8tF3BCrHaKQJmf+kqUGqMEfRFBJ917ag4S5QxlEIVFOoPR8P26c0wRawjZNrr
-         BrZ0zI+7RhpmR98rWxu84x9znPNDae0LfHxNnJfO5suyA26h/Zzct9kVeQT0Fpy+0xBL
-         ynEw==
+        d=linaro.org; s=google; t=1680242209;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s/jH0xPqB6+Pn+vISLE52np45zk9fgumfQUoqdD2YAc=;
+        b=UslLcl/w9lPYagwyWUN6K+ZQJdTl/H20JiW1rJDfE1uogo/kwa9HTd52sgBvP8WdkK
+         e9GLPmNGdRvA1ZxTWkOIjlrTy4TApoyzZfvrB7U4f4KLgrAUGLOwT+zZxmK6AebnG8We
+         FhYoLzAku62Oh1fG1h8aBSN05+PKhftIhzp0X69uvDujRqmNRp2KPA3GZ8/FK/JQqa2n
+         ZH7UB/XZe1S36MpkGHKXNWJVj2ztBr5t2nUXV5akoQ8ny6ea6CgAGXXCE9rQKou0ZKME
+         zZcp2njq5UUblK1PsBOIYMiF3x43BJdHhfdoHNEUTK7n2MZQ0DPMOLka7YDePvesIIrl
+         NaLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680241833;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IzgUwKsTXlcKR3IZP1bVNxBagrJvGQ4VZm8bOrKutDM=;
-        b=U+VVOtze/dOTnOlRfONrxllfFFSVWfOxP+zeb/VCmSuHx3+a1so2XuKhahi9TXdEfu
-         A+KH05kqTFOxjl6uNbyo1mbPSSoHI36qM2D9MUD1/zHFaKWDSEVSIQ8qt335g2bGo0dc
-         hN5Ay/oaC8xmnE9s1O/3Oyr6fDRr2b5eT8mBv9qhq6dN83w1RAw+mei5ZmHthDrwLJVd
-         t0BD8EO8wUyQmP9ZGq2QP9WXPMc8FgZySw2zPS29ze6FlI/FMT0rawfrTiahtchuzWkm
-         qp4gyfFnl2tRMym2SZkDZuf0VyfUnp0N+5EAAKkPMepG9vvcsq2PYwggp+4bbS3MHhC3
-         X/VA==
-X-Gm-Message-State: AAQBX9ce5aDCyoA6q4GjLdXQ+L9XX0eo5YIhtWHS+ESbqOulfGWeMxs+
-        wZJmM3JpJGh2frJX2DQS2wfUEzAEAQxc3Ei69T87GQ==
-X-Google-Smtp-Source: AKy350aJ2MdnJe836h4peLGe+7yJUEWRJ/iVZhGH4oxEsAv3J7nFUhrtHqK96PUMTfwbcGDndhEhvnUdJ+STEIW6aYA=
-X-Received: by 2002:a17:903:41d1:b0:1a0:5402:b17f with SMTP id
- u17-20020a17090341d100b001a05402b17fmr9406603ple.6.1680241832638; Thu, 30 Mar
- 2023 22:50:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230329111422.3693-1-mike.leach@linaro.org> <20230329111422.3693-2-mike.leach@linaro.org>
- <ZCQx5HlPnxCIFaNQ@kernel.org> <ZCQyNnk/vfHZkSda@kernel.org>
- <CAJ9a7VhhoGoOVL4sqcgpDYnZzzce_2=-wupK8K178tzZnoqrPA@mail.gmail.com>
- <ZCQ7nhrISA+jCfnI@kernel.org> <CAJ9a7VhJRnRe0A43=_X463432LvjL=S5buVgeq6rB8K8nDZb6A@mail.gmail.com>
- <ZCSRU8zvjjBHhq+x@kernel.org> <ZCS4XJaWg7NvaWb7@kernel.org>
- <20230330031307.GD252145@leoy-yangtze.lan> <20c28979-53a7-19eb-16fd-4d8535454d4e@arm.com>
-In-Reply-To: <20c28979-53a7-19eb-16fd-4d8535454d4e@arm.com>
+        d=1e100.net; s=20210112; t=1680242209;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s/jH0xPqB6+Pn+vISLE52np45zk9fgumfQUoqdD2YAc=;
+        b=N/Za8Et6p29AEN53cchMsOgIvsAtZsB/VpDUCotTXlDDZH45NdSTCPlViLQ00ufDgs
+         a/vYIJ8xlMdTwYKiNlLrg/TfCXIqEYu8gZ3k1CgfMDr/2SAlVyWwPHlorauxo+TR4+nO
+         p2Ggy1MnMT2Oh74U+ubr4v5cAczlnMC1/e+nh1TNFt2kn7NP4ebIoaa9XKuaaMeMnBik
+         Tst3OoTs43HgFmxnlKCbKVH1fkKl4IvRxSIZgkk654Fvyr7gQcKVledBKbUOu4Gv2Sku
+         wUEaKzdPUObW4DgB1Otm9ChPDlSjoGekV4tOWdq5cnbyPOdhBUa/+dYmxtTR+GUMmKjv
+         pHVg==
+X-Gm-Message-State: AO0yUKW2yM2+dimU+Huc6f8kAnSMnSIIQE2WsRMilVEtw/tEC2wqhoGw
+        qRWU5KKjv4ec+kKcmLDdX38djrvrzQ7OfwOP3BU=
+X-Google-Smtp-Source: AK7set9P5+8EdigmsCScfkL39tpuIF6bb7WS1jmhE+FKALWhub/tvT57wsJPsrCo7mbn5hxwgHU2SQ==
+X-Received: by 2002:a7b:cb93:0:b0:3ee:814b:9c39 with SMTP id m19-20020a7bcb93000000b003ee814b9c39mr19104518wmi.18.1680242209130;
+        Thu, 30 Mar 2023 22:56:49 -0700 (PDT)
+Received: from linaro.org ([2a00:23c5:680a:d01:24d4:5fa:d4b2:7c14])
+        by smtp.gmail.com with ESMTPSA id iz5-20020a05600c554500b003ef67ac3846sm8464055wmb.24.2023.03.30.22.56.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Mar 2023 22:56:48 -0700 (PDT)
 From:   Mike Leach <mike.leach@linaro.org>
-Date:   Fri, 31 Mar 2023 06:50:21 +0100
-Message-ID: <CAJ9a7VjxHkf4SsmmoRhPBeS=68igtOrwSsgJdcTy+9JWT1sBCA@mail.gmail.com>
-Subject: Re: [PATCH v8 1/3] perf: cs-etm: Move mapping of Trace ID and cpu
- into helper function
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org,
+To:     linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, acme@kernel.org
+Cc:     suzuki.poulose@arm.com, leo.yan@linaro.org, peterz@infradead.org,
         mingo@redhat.com, will@kernel.org, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org, gankulkarni@os.amperecomputing.com,
-        darren@os.amperecomputing.com, James Clark <james.clark@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        darren@os.amperecomputing.com, Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH v9 0/3] perf: cs-etm: Update perf to handle new Coresight Trace ID
+Date:   Fri, 31 Mar 2023 06:56:42 +0100
+Message-Id: <20230331055645.26918-1-mike.leach@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi
+The original method for allocating trace source ID values to sources was
+to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+The STM was allocated ID 0x1.
 
-On Thu, 30 Mar 2023 at 11:55, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> On 30/03/2023 04:13, Leo Yan wrote:
-> > On Wed, Mar 29, 2023 at 07:14:52PM -0300, Arnaldo Carvalho de Melo wrote:
-> >
-> > [...]
-> >
-> >>> Not here, I'll check after a call:
-> >>>
-> >>>    50     9.90 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04)
-> >>>      arch/arm/util/cs-etm.c: In function 'cs_etm_save_ete_header':
-> >>>      arch/arm/util/cs-etm.c:720:29: error: implicit declaration of function 'coresight_get_trace_id' [-Werror=implicit-function-declaration]
-> >>>        data[CS_ETE_TRCTRACEIDR] = coresight_get_trace_id(cpu);
-> >>>                                   ^~~~~~~~~~~~~~~~~~~~~~
-> >>
-> >> This function was removed in:
-> >>
-> >> Author: Mike Leach <mike.leach@linaro.org>
-> >> Date:   Wed Mar 29 12:14:21 2023 +0100
-> >>
-> >>      perf cs-etm: Update record event to use new Trace ID protocol
-> >>
-> >>      Trace IDs are now dynamically allocated.
-> >>
-> >> I'm removing this series from perf-tools-next, please address this issue
-> >> and send a v9.
-> >
-> > I can reproduce this building failure.  I am curious for how to verify
-> > building for patch wise, the link [1] gives me some hints and below
-> > command works for me:
-> >
-> >    $ git rebase -i --exec "make -C tools/perf clean && \
-> >      make -C tools/perf VF=1 DEBUG=1 CORESIGHT=1 && \
-> >      make -C tools/perf clean && \
-> >      make -C tools/perf VF=1 DEBUG=1" HEAD~3
->
+This mechanism is broken for systems with more than 47 cores.
 
-Thanks Leo. However, I've now written a python script that given a
-patch directory will run:
+The kernel related patches the provide a fixed Trace ID allocation mechanism
+are now upstreamed.
 
-foreach patch in dir
-     git am patch
-     build
+This patchset updates the perf code to handle the changes to the trace ID
+notification mechanism that now uses the PERF_RECORD_AUX_OUTPUT_HW_ID
+packet to set Trace ID in the perf ETM decoders.
 
-so that can work directly on patches before they are sent - or when
-they are received in future.
+Applies and test oo perf/core
 
-> Looks like perf-tools-next has some changes that has not reflected
-> elsewhere. The ts_source patches are queued there, which is causing
-> the above build failure.
+Changes since v8:
+1. Fix build issues
+2. Fix implicit function problem
 
-> Mike,
->
-> Are you able to rebase your patches on perf-tools-next branch ?
->
-perf/core and perf-tools-next are both on the same commit.
-v9 tested against perf/core
+Changes since v7:
+Split from original patchset [1] to be sent separately as kernel related
+patches are now upstream.
 
-Mike
+[1] https://lore.kernel.org/linux-arm-kernel/20230116124928.5440-1-mike.leach@linaro.org/
 
-> Kind regards
-> Suzuki
->
-> >
-> > Thanks,
-> > Leo
-> >
-> > [1] https://stackoverflow.com/questions/26983700/git-run-shell-command-for-each-commit
->
+Mike Leach (3):
+  perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+  perf: cs-etm: Update record event to use new Trace ID protocol
+  perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
 
+ tools/include/linux/coresight-pmu.h           |  47 ++-
+ tools/perf/arch/arm/util/cs-etm.c             |  27 +-
+ tools/perf/util/cs-etm-base.c                 |   3 +-
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+ tools/perf/util/cs-etm.c                      | 326 +++++++++++++++---
+ tools/perf/util/cs-etm.h                      |  14 +-
+ 6 files changed, 356 insertions(+), 68 deletions(-)
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.17.1
+
