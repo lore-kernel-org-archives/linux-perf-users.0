@@ -2,183 +2,261 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E13DC76196
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 09:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E20C76196
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 09:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232220AbjCaJ3G (ORCPT
+        id S229629AbjCaJn4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 05:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57374 "EHLO
+        Fri, 31 Mar 2023 05:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231661AbjCaJ2q (ORCPT
+        with ESMTP id S230242AbjCaJny (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 05:28:46 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A5E7D1FD2C;
-        Fri, 31 Mar 2023 02:28:19 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FE8E2F4;
-        Fri, 31 Mar 2023 02:28:08 -0700 (PDT)
-Received: from [192.168.1.158] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EC813F6C4;
-        Fri, 31 Mar 2023 02:27:21 -0700 (PDT)
-Message-ID: <8daa6988-a0ec-bd92-5a7b-0dca39fbc3b0@arm.com>
-Date:   Fri, 31 Mar 2023 10:27:12 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v1 09/13] perf symbol: Add abi::__cxa_demangle C++
- demangling support
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 31 Mar 2023 05:43:54 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F000849EF;
+        Fri, 31 Mar 2023 02:43:25 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PnwLW6lPWzKq6D;
+        Fri, 31 Mar 2023 17:42:27 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 31 Mar 2023 17:42:58 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Andres Freund <andres@anarazel.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Pavithra Gurushankar <gpavithrasha@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        llvm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20230311065753.3012826-1-irogers@google.com>
- <20230311065753.3012826-10-irogers@google.com>
- <f8298af8-4d29-5cbd-cb5f-d33b3fdd641c@arm.com>
- <CAP-5=fV3HPjXqHm1m-HB3rJU=emV16bUby1Xt-5x4+zjdPRnsg@mail.gmail.com>
- <CAP-5=fWYHyJbZicrsj6UnOBVTFX8NheL+GPGQbC8NMQv2G1WcA@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fWYHyJbZicrsj6UnOBVTFX8NheL+GPGQbC8NMQv2G1WcA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH] perf: script: add new output field 'dsoip'
+Date:   Fri, 31 Mar 2023 16:44:18 +0800
+Message-ID: <20230331084418.3910903-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The goal of this change is to achieve consistent output for address. Before
+this, the raw ip is printed for non-callchain and binary offset for
+callchain. Mostly what we expect is the raw ip.
 
+This patch does two changes:
+  - Always print raw ip for symbols.
+  - Add a new 'dsoip' field if we really need the binary offset, and the
+    offset is appended to dso name.
 
-On 30/03/2023 20:03, Ian Rogers wrote:
-> On Thu, Mar 30, 2023 at 9:50 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Thu, Mar 30, 2023 at 7:08 AM James Clark <james.clark@arm.com> wrote:
->>>
->>>
->>>
->>> On 11/03/2023 06:57, Ian Rogers wrote:
->>>> Refactor C++ demangling out of symbol-elf into its own files similar
->>>> to other languages. Add abi::__cxa_demangle support. As the other
->>>> demanglers are not shippable with distributions, this brings back C++
->>>> demangling in a common case. It isn't perfect as the support for
->>>> optionally demangling arguments and modifiers isn't present.
->>>>
->>>> Signed-off-by: Ian Rogers <irogers@google.com>
->>>> ---
->>>>  tools/perf/Makefile.config       | 29 +++++++++---------
->>>>  tools/perf/util/Build            |  1 +
->>>>  tools/perf/util/demangle-cxx.cpp | 50 ++++++++++++++++++++++++++++++++
->>>>  tools/perf/util/demangle-cxx.h   | 16 ++++++++++
->>>>  tools/perf/util/symbol-elf.c     | 37 +++++------------------
->>>>  5 files changed, 88 insertions(+), 45 deletions(-)
->>>>  create mode 100644 tools/perf/util/demangle-cxx.cpp
->>>>  create mode 100644 tools/perf/util/demangle-cxx.h
->>>>
->>>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
->>>> index 5756498248e0..fdeca45cf15f 100644
->>>> --- a/tools/perf/Makefile.config
->>>> +++ b/tools/perf/Makefile.config
->>>> @@ -906,6 +906,7 @@ ifdef BUILD_NONDISTRO
->>>>    endif
->>>>
->>>>    CFLAGS += -DHAVE_LIBBFD_SUPPORT
->>>> +  CXXFLAGS += -DHAVE_LIBBFD_SUPPORT
->>>>    ifeq ($(feature-libbfd-buildid), 1)
->>>>      CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
->>>>    else
->>>> @@ -913,26 +914,24 @@ ifdef BUILD_NONDISTRO
->>>>    endif
->>>>  endif
->>>>
->>>> -ifdef NO_DEMANGLE
->>>> -  CFLAGS += -DNO_DEMANGLE
->>>> -else
->>>> +ifndef NO_DEMANGLE
->>>> +  $(call feature_check,cxa-demangle)
->>>> +  ifeq ($(feature-cxa-demangle), 1)
->>>> +    EXTLIBS += -lstdc++
->>>
->>> Hi Ian,
->>>
->>> I think cross compilation for arm on x86 isn't working after this change
->>> (at least on Ubuntu).
->>>
->>> Even with all of the arm64 libstdc++ stuff installed, you can only link
->>> to it using g++, but the perf build tries to link to it using gcc. Not
->>> sure it's some quirk with the search paths on Ubuntu or something else:
->>>
->>>   $ aarch64-linux-gnu-gcc -lstdc++
->>>
->>>    /usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-
->>> gnu/bin/ld: cannot find -lstdc++: No such file or directory
->>>   collect2: error: ld returned 1 exit status
->>>
->>> g++ gets further:
->>>
->>>   $ aarch64-linux-gnu-g++ -lstdc++
->>>
->>>   ...
->>>   (.text+0x20): undefined reference to `main'
->>> collect2: error: ld returned 1 exit status
->>>
->>> At the end of the perf build it looks like something similar is
->>> happening (with all the non interesting bits deleted):
->>>
->>>    $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
->>> NO_BPF_SKEL=1 V=1
->>>
->>>   aarch64-linux-gnu-gcc ... -o perf
->>>
->>> /usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-gnu/bin/ld:
->>> cannot find -lstdc++: No such file or directory
->>>
->>> If I build with NO_DEMANGLE=1 then the build works, but I think it would
->>> at be best to autodetect rather than have to do this. Or maybe even link
->>> at the end with g++ if we're going to use libstdc++?
->>
->> Hi James,
->>
->> sorry for the problems you are having, I'll see if I can get a repo. I
->> did add a feature test with this change in the same set:
->> https://lore.kernel.org/lkml/20230311065753.3012826-9-irogers@google.com/
->> So it should be feature testing and only enabling when
->> HAVE_CXA_DEMANGLE_SUPPORT is present. Obviously something is up, so
->> I'll have a think about it.
->>
->> Thanks,
->> Ian
-> 
-> Sorry to say I couldn't repro on Debian:
-> 
-> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-> NO_LIBELF=1 NO_LIBTRACEEVENT=1
+Default output now:
+$ perf script
+       perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
+       perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
+       perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
+       perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
+       perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown])
+       perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown])
+       perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown])
+       perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown])
+              ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown])
+              ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so)
+              ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so)
+              ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so)
+              ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls)
+              ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls)
+              ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown])
 
-If you have NO_LIBELF=1 it sets NO_DEMANGLE=1 automatically so it skips
-the c++ linking step. If you run with V=1 you can see that it doesn't
-have -lstdc++ on the last link line.
+Display 'dsoip' field:
+$ perf script -F +dsoip
+       perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown]+0x0)
+       perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown]+0x0)
+              ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown]+0x0)
+              ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so+0xe8c7)
+              ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so+0xbd0d0)
+              ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so+0x94594)
+              ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls+0x1227c)
+              ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls+0x10202)
+              ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown]+0x0)
 
-But, having said that, I went to make a full reproducer in docker but it
-actually worked. Turns out that the issue was on my end. I'd used
-update-alternatives for a different compiler version and looks like I
-had half of one gcc and half of another g++. Completely my fault, sorry
-for the noise!
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/Documentation/perf-script.txt |  2 +-
+ tools/perf/builtin-script.c              |  5 +++++
+ tools/perf/util/evsel_fprintf.c          | 26 ++++++++++++------------
+ tools/perf/util/evsel_fprintf.h          | 13 ++++++------
+ 4 files changed, 26 insertions(+), 20 deletions(-)
 
-James
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 777a0d8ba7d1..ef392785f776 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -130,7 +130,7 @@ OPTIONS
+ -F::
+ --fields::
+         Comma separated list of fields to print. Options are:
+-        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
++        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoip, addr, symoff,
+         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
+         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index a792214d1af8..a181decf7922 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -133,6 +133,7 @@ enum perf_output_field {
+ 	PERF_OUTPUT_VCPU            = 1ULL << 38,
+ 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
+ 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
++	PERF_OUTPUT_DSOIP           = 1ULL << 41,
+ };
+ 
+ struct perf_script {
+@@ -174,6 +175,7 @@ struct output_option {
+ 	{.str = "ip",    .field = PERF_OUTPUT_IP},
+ 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
+ 	{.str = "dso",   .field = PERF_OUTPUT_DSO},
++	{.str = "dsoip", .field = PERF_OUTPUT_DSOIP},
+ 	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
+ 	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
+ 	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
+@@ -574,6 +576,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
+ 	if (PRINT_FIELD(DSO))
+ 		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
+ 
++	if (PRINT_FIELD(DSOIP))
++		output[type].print_ip_opts |= EVSEL__PRINT_DSOIP;
++
+ 	if (PRINT_FIELD(SYMOFFSET))
+ 		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
+ 
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index bd22c4932d10..fd1791fab051 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 	int print_ip = print_opts & EVSEL__PRINT_IP;
+ 	int print_sym = print_opts & EVSEL__PRINT_SYM;
+ 	int print_dso = print_opts & EVSEL__PRINT_DSO;
++	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
+ 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
+ 	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
+ 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
+@@ -133,7 +134,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 		while (1) {
+ 			struct symbol *sym;
+ 			struct map *map;
+-			u64 addr = 0;
++			u64 dso_ip = 0;
+ 
+ 			node = callchain_cursor_current(cursor);
+ 			if (!node)
+@@ -141,6 +142,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 
+ 			sym = node->ms.sym;
+ 			map = node->ms.map;
++			if (map)
++				dso_ip = map->map_ip(map, node->ip);
+ 
+ 			if (sym && sym->ignore && print_skip_ignored)
+ 				goto next;
+@@ -150,20 +153,12 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 			if (print_arrow && !first)
+ 				printed += fprintf(fp, " <-");
+ 
+-			if (map)
+-				addr = map->map_ip(map, node->ip);
+-
+-			if (print_ip) {
+-				/* Show binary offset for userspace addr */
+-				if (map && !map->dso->kernel)
+-					printed += fprintf(fp, "%c%16" PRIx64, s, addr);
+-				else
+-					printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+-			}
++			if (print_ip)
++				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+ 
+ 			if (print_sym) {
+ 				printed += fprintf(fp, " ");
+-				node_al.addr = addr;
++				node_al.addr = dso_ip;
+ 				node_al.map  = map;
+ 
+ 				if (print_symoffset) {
+@@ -179,11 +174,13 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 			if (print_dso && (!sym || !sym->inlined)) {
+ 				printed += fprintf(fp, " (");
+ 				printed += map__fprintf_dsoname(map, fp);
++				if (print_dsoip)
++					printed += fprintf(fp, "+0x%lx", (map && map->dso) ? dso_ip : 0);
+ 				printed += fprintf(fp, ")");
+ 			}
+ 
+ 			if (print_srcline)
+-				printed += map__fprintf_srcline(map, addr, "\n  ", fp);
++				printed += map__fprintf_srcline(map, dso_ip, "\n  ", fp);
+ 
+ 			if (sym && sym->inlined)
+ 				printed += fprintf(fp, " (inlined)");
+@@ -214,6 +211,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
+ 	int print_ip = print_opts & EVSEL__PRINT_IP;
+ 	int print_sym = print_opts & EVSEL__PRINT_SYM;
+ 	int print_dso = print_opts & EVSEL__PRINT_DSO;
++	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
+ 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
+ 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
+ 	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
+@@ -242,6 +240,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
+ 		if (print_dso) {
+ 			printed += fprintf(fp, " (");
+ 			printed += map__fprintf_dsoname(al->map, fp);
++			if (print_dsoip)
++				printed += fprintf(fp, "+0x%lx", (al->map && al->map->dso) ? al->addr : 0);
+ 			printed += fprintf(fp, ")");
+ 		}
+ 
+diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
+index 3093d096c29f..3f282c5840da 100644
+--- a/tools/perf/util/evsel_fprintf.h
++++ b/tools/perf/util/evsel_fprintf.h
+@@ -20,12 +20,13 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
+ #define EVSEL__PRINT_IP			(1<<0)
+ #define EVSEL__PRINT_SYM		(1<<1)
+ #define EVSEL__PRINT_DSO		(1<<2)
+-#define EVSEL__PRINT_SYMOFFSET		(1<<3)
+-#define EVSEL__PRINT_ONELINE		(1<<4)
+-#define EVSEL__PRINT_SRCLINE		(1<<5)
+-#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
+-#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
+-#define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
++#define EVSEL__PRINT_DSOIP		(1<<3)
++#define EVSEL__PRINT_SYMOFFSET		(1<<4)
++#define EVSEL__PRINT_ONELINE		(1<<5)
++#define EVSEL__PRINT_SRCLINE		(1<<6)
++#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<7)
++#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<8)
++#define EVSEL__PRINT_SKIP_IGNORED	(1<<9)
+ 
+ struct addr_location;
+ struct perf_event_attr;
+-- 
+2.25.1
+
