@@ -2,195 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F6AC6FD18
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 11:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69426C76196
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 11:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjCaLqt (ORCPT
+        id S230359AbjCaLv4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 07:46:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
+        Fri, 31 Mar 2023 07:51:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231751AbjCaLqp (ORCPT
+        with ESMTP id S230185AbjCaLvz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 07:46:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55ADB1EA11;
-        Fri, 31 Mar 2023 04:46:40 -0700 (PDT)
+        Fri, 31 Mar 2023 07:51:55 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657074498;
+        Fri, 31 Mar 2023 04:51:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B5C6E62836;
-        Fri, 31 Mar 2023 11:46:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C31C433D2;
-        Fri, 31 Mar 2023 11:46:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6C26B82EBD;
+        Fri, 31 Mar 2023 11:51:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B530C433EF;
+        Fri, 31 Mar 2023 11:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680263199;
-        bh=R9Yumhm1RMDdrtlrXq9zoIJGJBh/7IIt4c1jg6vLDdI=;
+        s=k20201202; t=1680263508;
+        bh=pq99YNVP8zVp0i8YVWlsVcO4uXm1s1osVaX3cFcttDw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KHmvMrQUdq35+Ksi/AkM2SThIklUFlK5p9qKwCS61ubSQHKh4R6m0Z6OP4J/Lz5ZX
-         p+QTPGGTULCt0NQj4CHMRSqV40/HeSdl3JBCZRlAyC4qvM7ogUxSrr4/W0Vvw3zaj0
-         fXpcPNl09E3SLDnPykpwAVc2qSDS72iVmAj5CuFja6DzQ1wus+6KbIvFufwgZAK415
-         LiG2GvefKZv5D604ixLQg2XD/gs9gHRyS3mfcQqyuQpvaAIpxiHmSS50GxdrKc7o+Q
-         J7LkxA/ngsTV6QljR6XXhQy/U1MT4413HJ4k4DpsbbLIAEGwp/xuYoDlbNC+lPetWe
-         x+4WTVELtTVeg==
+        b=BpmZAHXRodN9zRVrQWbbG4q6Abz1UCVruj+lRiS61YGxPCJjfDrLwvydp6Ll+TgLi
+         G+j4ctbgm8pVRVBlpAGHwnvvjqDgErCLZJiKfje0o0TWkcXbaXYHioxzNh/dQs8abo
+         yPiTpIQ2qBTngaA6q6vpuf+94w9R7y4m4QN7zLY6PX7mHh5zVIwhY9NQ29E9D4hNe/
+         kzWhmWXWIkflbCpocnZ2IDNVudl50PzyyoyngmXZeSnGujInBYaH6oLJaJZ1SY8iWl
+         mOmW5DoGwyv8HMf6vHOHdyiWcBag1zOFDcctG//61LRUIuVFTJX8dG9xuZUTGpgk01
+         770f9Y2ff6GUg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 51F8C4052D; Fri, 31 Mar 2023 08:46:36 -0300 (-03)
-Date:   Fri, 31 Mar 2023 08:46:36 -0300
+        id 747764052D; Fri, 31 Mar 2023 08:51:45 -0300 (-03)
+Date:   Fri, 31 Mar 2023 08:51:45 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v1 1/4] tools api: Add io__getline
-Message-ID: <ZCbIHBDwcZ1IX8z8@kernel.org>
-References: <20230331004844.1592789-1-irogers@google.com>
- <20230331004844.1592789-2-irogers@google.com>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+        linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
+        leo.yan@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        will@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, gankulkarni@os.amperecomputing.com,
+        darren@os.amperecomputing.com
+Subject: Re: [PATCH v9 0/3] perf: cs-etm: Update perf to handle new Coresight
+ Trace ID
+Message-ID: <ZCbJUWw7TkUCWWuc@kernel.org>
+References: <20230331055645.26918-1-mike.leach@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230331004844.1592789-2-irogers@google.com>
+In-Reply-To: <20230331055645.26918-1-mike.leach@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Mar 30, 2023 at 05:48:41PM -0700, Ian Rogers escreveu:
-> Reads a line to allocated memory up to a newline following the getline
-> API.
+Em Fri, Mar 31, 2023 at 06:56:42AM +0100, Mike Leach escreveu:
+> The original method for allocating trace source ID values to sources was
+> to use a fixed algorithm for CPU based sources of (cpu_num * 2 + 0x10).
+> The STM was allocated ID 0x1.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/api/io.h        | 40 +++++++++++++++++++++++++++++++++++++++
->  tools/perf/tests/api-io.c | 36 +++++++++++++++++++++++++++++++++++
->  2 files changed, 76 insertions(+)
+> This mechanism is broken for systems with more than 47 cores.
 > 
-> diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> index 777c20f6b604..d874e8fa8b07 100644
-> --- a/tools/lib/api/io.h
-> +++ b/tools/lib/api/io.h
-> @@ -7,7 +7,9 @@
->  #ifndef __API_IO__
->  #define __API_IO__
->  
-> +#include <errno.h>
->  #include <stdlib.h>
-> +#include <string.h>
->  #include <unistd.h>
->  
->  struct io {
-> @@ -112,4 +114,42 @@ static inline int io__get_dec(struct io *io, __u64 *dec)
->  	}
->  }
->  
-> +/* Read up to and including the first newline following the pattern of getline. */
-> +static inline ssize_t io__getline(char **line_out, size_t *line_len_out, struct io *io)
+> The kernel related patches the provide a fixed Trace ID allocation mechanism
+> are now upstreamed.
+> 
+> This patchset updates the perf code to handle the changes to the trace ID
+> notification mechanism that now uses the PERF_RECORD_AUX_OUTPUT_HW_ID
+> packet to set Trace ID in the perf ETM decoders.
+> 
+> Applies and test oo perf/core
 
-Can we have io be the first arg? To be consistent with the other
-functons here and elsewhere in perf.
+I'm keeping perf/core with the same contents as perf-tools-next, please
+use perf-tools-next as in the future I'll stop using the old perf/core
+name.
+
+Applied, testing.
 
 - Arnaldo
-
-> +{
-> +	char buf[128];
-> +	int buf_pos = 0;
-> +	char *line = NULL;
-> +	size_t line_len = 0;
-> +	int ch = 0;
-> +
-> +	/* TODO: reuse previously allocated memory. */
-> +	free(*line_out);
-> +	while (ch != '\n') {
-> +		ch = io__get_char(io);
-> +
-> +		if (ch < 0)
-> +			break;
-> +
-> +		if (buf_pos == sizeof(buf)) {
-> +			line = realloc(line, line_len + sizeof(buf));
-> +			if (!line)
-> +				return -ENOMEM;
-> +			memcpy(&line[line_len], buf, sizeof(buf));
-> +			line_len += sizeof(buf);
-> +			buf_pos = 0;
-> +		}
-> +		buf[buf_pos++] = (char)ch;
-> +	}
-> +	line = realloc(line, line_len + buf_pos + 1);
-> +	if (!line)
-> +		return -ENOMEM;
-> +	memcpy(&line[line_len], buf, buf_pos);
-> +	line[line_len + buf_pos] = '\0';
-> +	line_len += buf_pos;
-> +	*line_out = line;
-> +	*line_len_out = line_len;
-> +	return line_len;
-> +}
-> +
->  #endif /* __API_IO__ */
-> diff --git a/tools/perf/tests/api-io.c b/tools/perf/tests/api-io.c
-> index e91cf2c127f1..0ff39cdfcb01 100644
-> --- a/tools/perf/tests/api-io.c
-> +++ b/tools/perf/tests/api-io.c
-> @@ -289,6 +289,40 @@ static int test_get_dec(void)
->  	return ret;
->  }
->  
-> +static int test_get_line(void)
-> +{
-> +	char path[PATH_MAX];
-> +	struct io io;
-> +	char test_string[1024];
-> +	char *line = NULL;
-> +	size_t i, line_len = 0;
-> +	size_t buf_size = 128;
-> +	int ret = 0;
-> +
-> +	for (i = 0; i < 512; i++)
-> +		test_string[i] = 'a';
-> +	test_string[512] = '\n';
-> +	for (i = 513; i < 1023; i++)
-> +		test_string[i] = 'b';
-> +	test_string[1023] = '\0';
-> +
-> +	if (setup_test(path, test_string, buf_size, &io))
-> +		return -1;
-> +
-> +	EXPECT_EQUAL((int)io__getline(&line, &line_len, &io), 513);
-> +	EXPECT_EQUAL((int)strlen(line), 513);
-> +	for (i = 0; i < 512; i++)
-> +		EXPECT_EQUAL(line[i], 'a');
-> +	EXPECT_EQUAL(line[512], '\n');
-> +	EXPECT_EQUAL((int)io__getline(&line, &line_len, &io), 510);
-> +	for (i = 0; i < 510; i++)
-> +		EXPECT_EQUAL(line[i], 'b');
-> +
-> +	free(line);
-> +	cleanup_test(path, &io);
-> +	return ret;
-> +}
-> +
->  static int test__api_io(struct test_suite *test __maybe_unused,
->  			int subtest __maybe_unused)
->  {
-> @@ -300,6 +334,8 @@ static int test__api_io(struct test_suite *test __maybe_unused,
->  		ret = TEST_FAIL;
->  	if (test_get_dec())
->  		ret = TEST_FAIL;
-> +	if (test_get_line())
-> +		ret = TEST_FAIL;
->  	return ret;
->  }
->  
+ 
+> Changes since v8:
+> 1. Fix build issues
+> 2. Fix implicit function problem
+> 
+> Changes since v7:
+> Split from original patchset [1] to be sent separately as kernel related
+> patches are now upstream.
+> 
+> [1] https://lore.kernel.org/linux-arm-kernel/20230116124928.5440-1-mike.leach@linaro.org/
+> 
+> Mike Leach (3):
+>   perf: cs-etm: Move mapping of Trace ID and cpu into helper function
+>   perf: cs-etm: Update record event to use new Trace ID protocol
+>   perf: cs-etm: Handle PERF_RECORD_AUX_OUTPUT_HW_ID packet
+> 
+>  tools/include/linux/coresight-pmu.h           |  47 ++-
+>  tools/perf/arch/arm/util/cs-etm.c             |  27 +-
+>  tools/perf/util/cs-etm-base.c                 |   3 +-
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |   7 +
+>  tools/perf/util/cs-etm.c                      | 326 +++++++++++++++---
+>  tools/perf/util/cs-etm.h                      |  14 +-
+>  6 files changed, 356 insertions(+), 68 deletions(-)
+> 
 > -- 
-> 2.40.0.348.gf938b09366-goog
+> 2.17.1
 > 
 
 -- 
