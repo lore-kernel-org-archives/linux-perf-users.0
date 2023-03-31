@@ -2,35 +2,63 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B658C77B60
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 18:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B319C77B6C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 20:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231950AbjCaSgp (ORCPT
+        id S233145AbjCaU2B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 14:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42546 "EHLO
+        Fri, 31 Mar 2023 16:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231159AbjCaSgo (ORCPT
+        with ESMTP id S229529AbjCaU2A (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 14:36:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFD51CBA0;
-        Fri, 31 Mar 2023 11:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=YE7GfOrERWcu2MD4hsCVsKkg8asC+YWQG3+Pv6uwbqk=; b=uEqp76fQYC/dZmRiYmKKO0zAom
-        ZoB3UFNy+UtNl5yJRIrqU/CTlfpVSM+gJ7zG/HAQIPWEJKwiQZp9pVmGtTigRksP0GieeeGZa5Xd+
-        HCDdjUd8/Wpi0h5ogPOJYaVs9rCqika3mc+IAnnS4JggKcEso9vLel1P3BD3jTBu4lZJsmnoaxqhr
-        UiKc4Zy8F9bFcGyS0KOp7N/uzpEcu9BMY20AwDyBb7iRwvwqd294PwuxZkNc1AeDT3zidgzxhYbl6
-        sXNyqw9Z0s1kSTtkYMbGBS/3WhW2jrgyMQEUtJSVcZ9uuH/76BKCypqP1kwXRA9aZ6NiYJKUcVe7w
-        ow6TpxuQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1piJbx-00BfMF-56; Fri, 31 Mar 2023 18:36:29 +0000
-Date:   Fri, 31 Mar 2023 19:36:29 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+        Fri, 31 Mar 2023 16:28:00 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78314B76C;
+        Fri, 31 Mar 2023 13:27:59 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id t10so94193103edd.12;
+        Fri, 31 Mar 2023 13:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680294478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GK0MF0uNmzEytcPCm/B24vsna4+KtlPH2hXHihrk2Pg=;
+        b=a/Ja9f9xnk268bxONMh+OrG/q2neNdI+XZOeSE0+gdJLLPyDUH7YsRtBloLv7Tx9Lx
+         2djuie1urUE8cShkZloYXQjcgj99w0IxdWx6FkeISv+u+Ha1n6hUOk15wyK8p2snyqcw
+         fikUhuKOMKa5WgA4BaKYp70euRK7kdjWxVyAuwEhLiJEmNv2fqZfD1RoTUCY5TwE9A29
+         gfgkovrzvAvyS1CDUPEG43I6Hwngd15jU5eDD3DKPe1rlro5tvYt5jUY5Nam5MQYpvGL
+         fROJ3HiGFUgcXzuoeFBPXAkV9d0ZdoTjeE77LprD3k1S96+wHJssIUgoAyqS4y268JCP
+         8uJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680294478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GK0MF0uNmzEytcPCm/B24vsna4+KtlPH2hXHihrk2Pg=;
+        b=R2oiH3muFMo63MgBWfPi60L7pHdgyZoj2nPKQpZjljWaanAQYGXfWdViAu0/JmvMq7
+         40TS8OojVXvrmHgHw03xYl5UceByIDx5xzjqA09+hpP6qifiHje2ZjJr/WecR695ZVdg
+         9Ij6iTYB5l0IexHqWLgsC1c5tUh1w2w1Tnacyg2GG5/odexM8pcmz8wDjQ/1/byM47aR
+         QmXg2JgNOR74Hca/VQPsiJ3w0G79JRH/X8EWWdoku9uE+oLKMUmN+/0YJcw5ywrMv7Y4
+         GF5er0LV79u3WphQzhird8IiLwReymku8THaQHysByRPw9ro4dFWiB1oKgRrJpHhJqYJ
+         Tn0A==
+X-Gm-Message-State: AAQBX9dv2aGL6HeC+yoNLVP8B2faIhTa/Q8VlaiNhK8ap4vFgfMGfhqU
+        Bh3S4YdTb0G/NCfjNEartVTz2gwUntyCg5WwO1U=
+X-Google-Smtp-Source: AKy350aujevccavshd57e5DTjfc6arS/wKqQ78BHDMvmLt/9c+KO7t8cHimGhGNrYQFNiE3Yn8wTcaUYy+D9jbsyOvQ=
+X-Received: by 2002:a50:d58c:0:b0:502:719e:e7e9 with SMTP id
+ v12-20020a50d58c000000b00502719ee7e9mr3286257edi.1.1680294477852; Fri, 31 Mar
+ 2023 13:27:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230316170149.4106586-1-jolsa@kernel.org> <ZBNTMZjEoETU9d8N@casper.infradead.org>
+ <ZBV3beyxYhKv/kMp@krava> <ZBXV3crf/wX5D9lo@casper.infradead.org>
+ <ZBsihOYrMCILT2cI@kernel.org> <CAEf4BzakHh3qm2JBsWE8qnMmZMeM7w5vZGneKAsLM_vktPbc9g@mail.gmail.com>
+ <ZCcoLcncAVeKOZRL@casper.infradead.org>
+In-Reply-To: <ZCcoLcncAVeKOZRL@casper.infradead.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 31 Mar 2023 13:27:45 -0700
+Message-ID: <CAEf4Bzbb-NfyXjvkPSGq_akSD4zwvwiVETaJuo2Gu_T+_6bStA@mail.gmail.com>
+Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
+To:     Matthew Wilcox <willy@infradead.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <olsajiri@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -50,38 +78,41 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Namhyung Kim <namhyung@gmail.com>,
         Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
-Message-ID: <ZCcoLcncAVeKOZRL@casper.infradead.org>
-References: <20230316170149.4106586-1-jolsa@kernel.org>
- <ZBNTMZjEoETU9d8N@casper.infradead.org>
- <ZBV3beyxYhKv/kMp@krava>
- <ZBXV3crf/wX5D9lo@casper.infradead.org>
- <ZBsihOYrMCILT2cI@kernel.org>
- <CAEf4BzakHh3qm2JBsWE8qnMmZMeM7w5vZGneKAsLM_vktPbc9g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzakHh3qm2JBsWE8qnMmZMeM7w5vZGneKAsLM_vktPbc9g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 11:19:45AM -0700, Andrii Nakryiko wrote:
-> On Wed, Mar 22, 2023 at 8:45 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> > Having said that, it seems there will be no extra memory overhead at
-> > least for a fedora:36 x86_64 kernel:
-> 
-> Makes sense to me as well. Whatever the solution, as long as it's
-> usable from NMI contexts would be fine for the purposes of fetching
-> build ID. It would be good to hear from folks that are opposing adding
-> a pointer field to struct file whether they prefer this way instead?
+On Fri, Mar 31, 2023 at 11:36=E2=80=AFAM Matthew Wilcox <willy@infradead.or=
+g> wrote:
+>
+> On Fri, Mar 31, 2023 at 11:19:45AM -0700, Andrii Nakryiko wrote:
+> > On Wed, Mar 22, 2023 at 8:45=E2=80=AFAM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > > Having said that, it seems there will be no extra memory overhead at
+> > > least for a fedora:36 x86_64 kernel:
+> >
+> > Makes sense to me as well. Whatever the solution, as long as it's
+> > usable from NMI contexts would be fine for the purposes of fetching
+> > build ID. It would be good to hear from folks that are opposing adding
+> > a pointer field to struct file whether they prefer this way instead?
+>
+> Still no.  While it may not take up any room right now, this will
+> surely not be the last thing added to struct file.  When something
+> which is genuinely useful needs to be added, that person should
+> not have to sort out your mess first,
 
-Still no.  While it may not take up any room right now, this will
-surely not be the last thing added to struct file.  When something
-which is genuinely useful needs to be added, that person should
-not have to sort out your mess first,
+So I assume you are talking about adding a pointer field to the struct
+file, right? What about the alternative proposed by Arnaldo to have a
+struct exec_file that extends a struct file?
 
-NAK now, NAK tomorrow, NAK forever.  Al told you how you could do it
-without trampling on core data structures.
+>
+> NAK now, NAK tomorrow, NAK forever.  Al told you how you could do it
+> without trampling on core data structures.
+
+As I replied to Al, any solution that will have a lookup table on the
+side isn't compatible with usage from NMI context due to locking. And
+lots of tracing use cases are based on perf counters which are handled
+in NMI context. And that's besides all the complexities with
+right-sizing hash maps (if hashmaps are to be used).
