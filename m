@@ -2,117 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B319C77B6C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 20:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CDAC761A6
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 20:29:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233145AbjCaU2B (ORCPT
+        id S232190AbjCaU3z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 16:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42966 "EHLO
+        Fri, 31 Mar 2023 16:29:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjCaU2A (ORCPT
+        with ESMTP id S229529AbjCaU3x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 16:28:00 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78314B76C;
-        Fri, 31 Mar 2023 13:27:59 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id t10so94193103edd.12;
-        Fri, 31 Mar 2023 13:27:59 -0700 (PDT)
+        Fri, 31 Mar 2023 16:29:53 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8721BB76E;
+        Fri, 31 Mar 2023 13:29:52 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id e15-20020a17090ac20f00b0023d1b009f52so26666938pjt.2;
+        Fri, 31 Mar 2023 13:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680294478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GK0MF0uNmzEytcPCm/B24vsna4+KtlPH2hXHihrk2Pg=;
-        b=a/Ja9f9xnk268bxONMh+OrG/q2neNdI+XZOeSE0+gdJLLPyDUH7YsRtBloLv7Tx9Lx
-         2djuie1urUE8cShkZloYXQjcgj99w0IxdWx6FkeISv+u+Ha1n6hUOk15wyK8p2snyqcw
-         fikUhuKOMKa5WgA4BaKYp70euRK7kdjWxVyAuwEhLiJEmNv2fqZfD1RoTUCY5TwE9A29
-         gfgkovrzvAvyS1CDUPEG43I6Hwngd15jU5eDD3DKPe1rlro5tvYt5jUY5Nam5MQYpvGL
-         fROJ3HiGFUgcXzuoeFBPXAkV9d0ZdoTjeE77LprD3k1S96+wHJssIUgoAyqS4y268JCP
-         8uJw==
+        d=gmail.com; s=20210112; t=1680294592; x=1682886592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=EM4VZff1q+6h3vaykd1WLHQlMObm8C8qOyNRp5sdWMA=;
+        b=WCRyLmo7uPfZViqaH0L7lGJ+YbXI5HyzZ2r6/Y2oi98sbgCf6eQwEBFQcsybQ+Tl8c
+         V1d4XIchh9l43w25NOWoONUSenF0lHRGt1te+NvTdqgvhsagC86TwQwaQy+PyfayIDpa
+         ARUy66BIMF025vVABrqUmFC/ALEuHiiTNNeYDNhNF+HQ1m3WdeEpw6T7scbBn5U09p3i
+         J7+FYnwcMe6gll77jxjen01FCBqX4KIibVH807N4q0nDLTYkFplVgNiX4fjGEljy9AAa
+         ezJRTkqgaGVqZbGEhNUWiuRL+54lj/QfR5aZp8IIaJMD0W6y7lim7TbC49YhvYZlo3Ln
+         mv8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680294478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GK0MF0uNmzEytcPCm/B24vsna4+KtlPH2hXHihrk2Pg=;
-        b=R2oiH3muFMo63MgBWfPi60L7pHdgyZoj2nPKQpZjljWaanAQYGXfWdViAu0/JmvMq7
-         40TS8OojVXvrmHgHw03xYl5UceByIDx5xzjqA09+hpP6qifiHje2ZjJr/WecR695ZVdg
-         9Ij6iTYB5l0IexHqWLgsC1c5tUh1w2w1Tnacyg2GG5/odexM8pcmz8wDjQ/1/byM47aR
-         QmXg2JgNOR74Hca/VQPsiJ3w0G79JRH/X8EWWdoku9uE+oLKMUmN+/0YJcw5ywrMv7Y4
-         GF5er0LV79u3WphQzhird8IiLwReymku8THaQHysByRPw9ro4dFWiB1oKgRrJpHhJqYJ
-         Tn0A==
-X-Gm-Message-State: AAQBX9dv2aGL6HeC+yoNLVP8B2faIhTa/Q8VlaiNhK8ap4vFgfMGfhqU
-        Bh3S4YdTb0G/NCfjNEartVTz2gwUntyCg5WwO1U=
-X-Google-Smtp-Source: AKy350aujevccavshd57e5DTjfc6arS/wKqQ78BHDMvmLt/9c+KO7t8cHimGhGNrYQFNiE3Yn8wTcaUYy+D9jbsyOvQ=
-X-Received: by 2002:a50:d58c:0:b0:502:719e:e7e9 with SMTP id
- v12-20020a50d58c000000b00502719ee7e9mr3286257edi.1.1680294477852; Fri, 31 Mar
- 2023 13:27:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230316170149.4106586-1-jolsa@kernel.org> <ZBNTMZjEoETU9d8N@casper.infradead.org>
- <ZBV3beyxYhKv/kMp@krava> <ZBXV3crf/wX5D9lo@casper.infradead.org>
- <ZBsihOYrMCILT2cI@kernel.org> <CAEf4BzakHh3qm2JBsWE8qnMmZMeM7w5vZGneKAsLM_vktPbc9g@mail.gmail.com>
- <ZCcoLcncAVeKOZRL@casper.infradead.org>
-In-Reply-To: <ZCcoLcncAVeKOZRL@casper.infradead.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 31 Mar 2023 13:27:45 -0700
-Message-ID: <CAEf4Bzbb-NfyXjvkPSGq_akSD4zwvwiVETaJuo2Gu_T+_6bStA@mail.gmail.com>
-Subject: Re: [PATCHv3 bpf-next 0/9] mm/bpf/perf: Store build id in file object
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        d=1e100.net; s=20210112; t=1680294592; x=1682886592;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EM4VZff1q+6h3vaykd1WLHQlMObm8C8qOyNRp5sdWMA=;
+        b=LB3dXIIXNmmluNRvsvsplRfNTN/KIMKB5jPtpYH7Fe0sn2xdVIbWKs2wJlXndI4J6a
+         g1ceVGnQPaQGjVSj9ePUnAFOFhPu5Vlwh+XY540gVtS+uADYGDEKJvoOXa5znC8tUL5F
+         rYGwzSAlPo5o5zu3NSmfmptMPeKbqskN3bW1/sYK1maVTfqK0YXeACWkkEsjRDHlQTJV
+         rHGE5XuOJYpj8YOsiOwUmMop2cz4J6N7GsKCmrWGmsrirC7HdLabLzP6ZQW6ygEs+83E
+         +m3ebdOIvbN6cYarvY0ORYzZe/DUXKQitzRQN5UWKcVlakWGZAa46790ioIIq4teQxD4
+         Dq7Q==
+X-Gm-Message-State: AAQBX9eyJxZHCkPk0GtEy/khHoCa6SKHYFVQi67dvIk4xvlXVH3OtAdL
+        fOG7RGv77XuuvO2z2OGuCdU=
+X-Google-Smtp-Source: AKy350a0hkv5Sk3dyUFuLyV1+BV3PdFVTOayILfVN3QyjN+ruH8ofDTi9Ow+wQUxI9rSK85vlku+vw==
+X-Received: by 2002:a17:903:22c4:b0:1a2:8924:224a with SMTP id y4-20020a17090322c400b001a28924224amr10763591plg.25.1680294591631;
+        Fri, 31 Mar 2023 13:29:51 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6780:44b0:5cfb:ad2c:e6f5:d42f])
+        by smtp.gmail.com with ESMTPSA id t14-20020a1709028c8e00b001a1dc2be791sm1916803plo.259.2023.03.31.13.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Mar 2023 13:29:51 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, bpf@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Namhyung Kim <namhyung@gmail.com>,
-        Dave Chinner <david@fromorbit.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: [PATCHSET 0/9] perf tools: Update pmu scan using openat() (v1)
+Date:   Fri, 31 Mar 2023 13:29:40 -0700
+Message-Id: <20230331202949.810326-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 11:36=E2=80=AFAM Matthew Wilcox <willy@infradead.or=
-g> wrote:
->
-> On Fri, Mar 31, 2023 at 11:19:45AM -0700, Andrii Nakryiko wrote:
-> > On Wed, Mar 22, 2023 at 8:45=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > > Having said that, it seems there will be no extra memory overhead at
-> > > least for a fedora:36 x86_64 kernel:
-> >
-> > Makes sense to me as well. Whatever the solution, as long as it's
-> > usable from NMI contexts would be fine for the purposes of fetching
-> > build ID. It would be good to hear from folks that are opposing adding
-> > a pointer field to struct file whether they prefer this way instead?
->
-> Still no.  While it may not take up any room right now, this will
-> surely not be the last thing added to struct file.  When something
-> which is genuinely useful needs to be added, that person should
-> not have to sort out your mess first,
+Hello,
 
-So I assume you are talking about adding a pointer field to the struct
-file, right? What about the alternative proposed by Arnaldo to have a
-struct exec_file that extends a struct file?
+This patchset changes PMU info scanning on sysfs using openat()
+basically.  I got reports of occasional contention on the
+opening files in sysfs.  While the root cause was a separate
+issue, I discovered some inefficiencies in the perf code.
 
->
-> NAK now, NAK tomorrow, NAK forever.  Al told you how you could do it
-> without trampling on core data structures.
+To scan PMUs, it roughly does something like below:
 
-As I replied to Al, any solution that will have a lookup table on the
-side isn't compatible with usage from NMI context due to locking. And
-lots of tracing use cases are based on perf counters which are handled
-in NMI context. And that's besides all the complexities with
-right-sizing hash maps (if hashmaps are to be used).
+  dir = opendir("/sys/bus/event_source/devices");
+  while (dentry = readdir(dir)) {
+    char buf[PATH_MAX];
+
+    snprintf(buf, sizeof(buf), "%s/%s",
+             "/sys/bus/event_source/devices", dentry->d_name);
+    fd = open(buf, O_RDONLY);
+    ...
+  }
+
+But this is not good since it needs to copy the string to build the
+absolute pathname, and it makes redundant pathname walk (from the /sys)
+in the kernel unnecessarily.  We can use openat(2) to open the file in
+the given directory.
+
+Add a couple of new helper to return the file descriptor of PMU
+directory so that it can use it with relative paths.
+
+ * perf_pmu__event_source_devices_fd()
+   - returns a fd for the PMU root ("/sys/bus/event_source/devices")
+
+ * perf_pmu__pathname_fd()
+   - returns a fd for "<pmu>/<file>" under the PMU root
+
+Now the above code can be converted something like below:
+
+  dirfd = perf_pmu__event_source_devices_fd();
+  dir = fdopendir(dirfd);
+  while (dentry = readdir(dir)) {
+    fd = openat(dirfd, dentry->d_name, O_RDONLY);
+    ...
+  }
+
+I added a benchmark for pmu-scan and it showed a slight speedup
+in the normal case too.
+
+  $ ./perf.old bench internals pmu-scan
+  # Running 'internals/pmu-scan' benchmark:
+  Computing performance of sysfs PMU event scan for 100 times
+    Average PMU scanning took: 6670.970 usec (+- 13.022 usec)
+
+  $ ./perf.new bench internals pmu-scan
+  # Running 'internals/pmu-scan' benchmark:
+  Computing performance of sysfs PMU event scan for 100 times
+    Average PMU scanning took: 6296.980 usec (+- 14.891 usec)
+
+The 5~6% of improvement might be small but it may have bigger impact
+when the system is contended.
+
+You can get the code from 'perf/pmu-scan-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+Namhyung Kim (9):
+  perf list: Use relative path for tracepoint scan
+  perf tools: Fix a asan issue in parse_events_multi_pmu_add()
+  perf pmu: Add perf_pmu__destroy() function
+  perf bench: Add pmu-scan benchmark
+  perf pmu: Use relative path for sysfs scan
+  perf pmu: Use relative path in perf_pmu__caps_parse()
+  perf pmu: Use relative path in setup_pmu_alias_list()
+  perf pmu: Add perf_pmu__{open,scan}_file_at()
+  perf intel-pt: Use perf_pmu__scan_file_at() if possible
+
+ tools/perf/arch/x86/util/intel-pt.c |  52 ++++--
+ tools/perf/arch/x86/util/pmu.c      |  13 +-
+ tools/perf/bench/Build              |   1 +
+ tools/perf/bench/bench.h            |   1 +
+ tools/perf/bench/pmu-scan.c         | 184 ++++++++++++++++++
+ tools/perf/builtin-bench.c          |   1 +
+ tools/perf/tests/pmu.c              |   9 +-
+ tools/perf/util/parse-events.c      |   2 +-
+ tools/perf/util/pmu.c               | 278 ++++++++++++++++++++--------
+ tools/perf/util/pmu.h               |  12 +-
+ tools/perf/util/print-events.c      |  26 ++-
+ 11 files changed, 466 insertions(+), 113 deletions(-)
+ create mode 100644 tools/perf/bench/pmu-scan.c
+
+
+base-commit: 417c6adfb155f906f0441cc1034827f6e2b3c372
+-- 
+2.40.0.348.gf938b09366-goog
+
