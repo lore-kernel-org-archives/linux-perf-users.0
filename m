@@ -2,146 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A011C77B60
-	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 08:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E13DC76196
+	for <linux-perf-users@archiver.kernel.org>; Fri, 31 Mar 2023 09:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231468AbjCaIx0 (ORCPT
+        id S232220AbjCaJ3G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 04:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60302 "EHLO
+        Fri, 31 Mar 2023 05:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231250AbjCaIxZ (ORCPT
+        with ESMTP id S231661AbjCaJ2q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 04:53:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC735B9D
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Mar 2023 01:52:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680252755;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NvLw4mvzyoe66j5YooKZQUM0RLq2l1MwiNMdbPsqMr8=;
-        b=QuXGKX5Tpepi/JqY4eZM7xHIW9eu2cawDpGcTq7yke4S6iOK4nWlb2dqlKAALe4R1L+0f3
-        KfHudHLNn5KmjKq7xEvP0Ffx1jhoAzUhJF7CQ4ct4N7p9NFntZlw11aqRqiO8WMZF2c/z2
-        HH885rynjsRFgFBlXHJoQ06kLz8vFRg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-278-ku1Ytj2hPFuhoEakXWNdcg-1; Fri, 31 Mar 2023 04:52:29 -0400
-X-MC-Unique: ku1Ytj2hPFuhoEakXWNdcg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7326A855300;
-        Fri, 31 Mar 2023 08:52:28 +0000 (UTC)
-Received: from samus.usersys.redhat.com (unknown [10.43.17.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 626D14042AC5;
-        Fri, 31 Mar 2023 08:52:26 +0000 (UTC)
-Date:   Fri, 31 Mar 2023 10:52:24 +0200
-From:   Artem Savkov <asavkov@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
+        Fri, 31 Mar 2023 05:28:46 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A5E7D1FD2C;
+        Fri, 31 Mar 2023 02:28:19 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FE8E2F4;
+        Fri, 31 Mar 2023 02:28:08 -0700 (PDT)
+Received: from [192.168.1.158] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EC813F6C4;
+        Fri, 31 Mar 2023 02:27:21 -0700 (PDT)
+Message-ID: <8daa6988-a0ec-bd92-5a7b-0dca39fbc3b0@arm.com>
+Date:   Fri, 31 Mar 2023 10:27:12 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1 09/13] perf symbol: Add abi::__cxa_demangle C++
+ demangling support
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Milian Wolff <milian.wolff@kdab.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: Re: [PATCH 0/1] perf report: append inlines to non-dwarf callchains
-Message-ID: <20230331085224.GA688995@samus.usersys.redhat.com>
-References: <20230316133557.868731-1-asavkov@redhat.com>
- <CAM9d7ciT7Wtmxt0_2ZVv4nbAb1KoeX_itTSAhz8B9T41-NeZYQ@mail.gmail.com>
- <ZBQZoyJc7mhUrL8n@samus.usersys.redhat.com>
- <CAM9d7ch9NjnaB5dB6fO7WKdwPd8M9DmNpdu4-V-8R+96ssxMvA@mail.gmail.com>
- <ZBtalEw0qKQFlVWR@kernel.org>
- <8f7077e8-bcce-a13f-48d3-92a3cb80b02a@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Andres Freund <andres@anarazel.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Pavithra Gurushankar <gpavithrasha@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        llvm@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20230311065753.3012826-1-irogers@google.com>
+ <20230311065753.3012826-10-irogers@google.com>
+ <f8298af8-4d29-5cbd-cb5f-d33b3fdd641c@arm.com>
+ <CAP-5=fV3HPjXqHm1m-HB3rJU=emV16bUby1Xt-5x4+zjdPRnsg@mail.gmail.com>
+ <CAP-5=fWYHyJbZicrsj6UnOBVTFX8NheL+GPGQbC8NMQv2G1WcA@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fWYHyJbZicrsj6UnOBVTFX8NheL+GPGQbC8NMQv2G1WcA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f7077e8-bcce-a13f-48d3-92a3cb80b02a@intel.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 08:06:20AM +0300, Adrian Hunter wrote:
-> On 22/03/23 21:44, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Mar 22, 2023 at 11:18:49AM -0700, Namhyung Kim escreveu:
-> >> On Fri, Mar 17, 2023 at 12:41 AM Artem Savkov <asavkov@redhat.com> wrote:
-> >>>
-> >>> On Thu, Mar 16, 2023 at 02:26:18PM -0700, Namhyung Kim wrote:
-> >>>> Hello,
-> >>>>
-> >>>> On Thu, Mar 16, 2023 at 6:36 AM Artem Savkov <asavkov@redhat.com> wrote:
-> >>>>>
-> >>>>> In an email to Arnaldo Andrii Nakryiko suggested that perf can get
-> >>>>> information about inlined functions from dwarf when available and then
-> >>>>> add it to userspace stacktraces even in framepointer or lbr mode.
-> >>>>> Looking closer at perf it turned out all required bits and pieces are
-> >>>>> already there and inline information can be easily added to both
-> >>>>> framepointer and lbr callchains by adding an append_inlines() call to
-> >>>>> add_callchain_ip().
-> >>>>
-> >>>> Looks great!  Have you checked it with perf report -g callee ?
-> >>>> I'm not sure the ordering of inlined functions is maintained
-> >>>> properly.  Maybe you can use --no-children too to simplify
-> >>>> the output.
-> >>>
-> >>> Thanks for the suggestion. I actually have another test program with
-> >>> functions being numbered rather than (creatively) named, so it might be
-> >>> easier to use it to figure out ordering. Here's the code:
-> >>
-> >> Yep, looks good.
-> >>
-> >> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > So, I'll apply this shorter patch instead, ok?
-> > 
-> > - Arnaldo
-> > 
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 803c9d1803dd26ef..abf6167f28217fe6 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -44,6 +44,7 @@
-> >  #include <linux/zalloc.h>
-> >  
-> >  static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
-> > +static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms, u64 ip);
-> >  
-> >  static struct dso *machine__kernel_dso(struct machine *machine)
-> >  {
-> > @@ -2322,6 +2323,10 @@ static int add_callchain_ip(struct thread *thread,
-> >  	ms.maps = al.maps;
-> >  	ms.map = al.map;
-> >  	ms.sym = al.sym;
-> > +
-> > +	if (append_inlines(cursor, &ms, ip) == 0)
-> > +		return 0;
-> > +
-> >  	srcline = callchain_srcline(&ms, al.addr);
-> >  	return callchain_cursor_append(cursor, ip, &ms,
-> >  				       branch, flags, nr_loop_iter,
-> 
-> This seems to be breaking --branch-history.  I am not sure
-> append_inlines() makes sense for branches.  Maybe this should be:
-> 
-> 	if (!branch && !append_inlines(cursor, &ms, ip))
-> 		return 0;
-> 
 
-Right. So when cllchain_cursor is appended through append_inlines it
-always discards branch information, even for the non-inlined function.
-So adding !branch makes sense to me. Does anyone else see any problems
-with that?
 
--- 
- Artem
+On 30/03/2023 20:03, Ian Rogers wrote:
+> On Thu, Mar 30, 2023 at 9:50 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Thu, Mar 30, 2023 at 7:08 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>>
+>>>
+>>> On 11/03/2023 06:57, Ian Rogers wrote:
+>>>> Refactor C++ demangling out of symbol-elf into its own files similar
+>>>> to other languages. Add abi::__cxa_demangle support. As the other
+>>>> demanglers are not shippable with distributions, this brings back C++
+>>>> demangling in a common case. It isn't perfect as the support for
+>>>> optionally demangling arguments and modifiers isn't present.
+>>>>
+>>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>>> ---
+>>>>  tools/perf/Makefile.config       | 29 +++++++++---------
+>>>>  tools/perf/util/Build            |  1 +
+>>>>  tools/perf/util/demangle-cxx.cpp | 50 ++++++++++++++++++++++++++++++++
+>>>>  tools/perf/util/demangle-cxx.h   | 16 ++++++++++
+>>>>  tools/perf/util/symbol-elf.c     | 37 +++++------------------
+>>>>  5 files changed, 88 insertions(+), 45 deletions(-)
+>>>>  create mode 100644 tools/perf/util/demangle-cxx.cpp
+>>>>  create mode 100644 tools/perf/util/demangle-cxx.h
+>>>>
+>>>> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+>>>> index 5756498248e0..fdeca45cf15f 100644
+>>>> --- a/tools/perf/Makefile.config
+>>>> +++ b/tools/perf/Makefile.config
+>>>> @@ -906,6 +906,7 @@ ifdef BUILD_NONDISTRO
+>>>>    endif
+>>>>
+>>>>    CFLAGS += -DHAVE_LIBBFD_SUPPORT
+>>>> +  CXXFLAGS += -DHAVE_LIBBFD_SUPPORT
+>>>>    ifeq ($(feature-libbfd-buildid), 1)
+>>>>      CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
+>>>>    else
+>>>> @@ -913,26 +914,24 @@ ifdef BUILD_NONDISTRO
+>>>>    endif
+>>>>  endif
+>>>>
+>>>> -ifdef NO_DEMANGLE
+>>>> -  CFLAGS += -DNO_DEMANGLE
+>>>> -else
+>>>> +ifndef NO_DEMANGLE
+>>>> +  $(call feature_check,cxa-demangle)
+>>>> +  ifeq ($(feature-cxa-demangle), 1)
+>>>> +    EXTLIBS += -lstdc++
+>>>
+>>> Hi Ian,
+>>>
+>>> I think cross compilation for arm on x86 isn't working after this change
+>>> (at least on Ubuntu).
+>>>
+>>> Even with all of the arm64 libstdc++ stuff installed, you can only link
+>>> to it using g++, but the perf build tries to link to it using gcc. Not
+>>> sure it's some quirk with the search paths on Ubuntu or something else:
+>>>
+>>>   $ aarch64-linux-gnu-gcc -lstdc++
+>>>
+>>>    /usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-
+>>> gnu/bin/ld: cannot find -lstdc++: No such file or directory
+>>>   collect2: error: ld returned 1 exit status
+>>>
+>>> g++ gets further:
+>>>
+>>>   $ aarch64-linux-gnu-g++ -lstdc++
+>>>
+>>>   ...
+>>>   (.text+0x20): undefined reference to `main'
+>>> collect2: error: ld returned 1 exit status
+>>>
+>>> At the end of the perf build it looks like something similar is
+>>> happening (with all the non interesting bits deleted):
+>>>
+>>>    $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
+>>> NO_BPF_SKEL=1 V=1
+>>>
+>>>   aarch64-linux-gnu-gcc ... -o perf
+>>>
+>>> /usr/lib/gcc-cross/aarch64-linux-gnu/12/../../../../aarch64-linux-gnu/bin/ld:
+>>> cannot find -lstdc++: No such file or directory
+>>>
+>>> If I build with NO_DEMANGLE=1 then the build works, but I think it would
+>>> at be best to autodetect rather than have to do this. Or maybe even link
+>>> at the end with g++ if we're going to use libstdc++?
+>>
+>> Hi James,
+>>
+>> sorry for the problems you are having, I'll see if I can get a repo. I
+>> did add a feature test with this change in the same set:
+>> https://lore.kernel.org/lkml/20230311065753.3012826-9-irogers@google.com/
+>> So it should be feature testing and only enabling when
+>> HAVE_CXA_DEMANGLE_SUPPORT is present. Obviously something is up, so
+>> I'll have a think about it.
+>>
+>> Thanks,
+>> Ian
+> 
+> Sorry to say I couldn't repro on Debian:
+> 
+> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
+> NO_LIBELF=1 NO_LIBTRACEEVENT=1
 
+If you have NO_LIBELF=1 it sets NO_DEMANGLE=1 automatically so it skips
+the c++ linking step. If you run with V=1 you can see that it doesn't
+have -lstdc++ on the last link line.
+
+But, having said that, I went to make a full reproducer in docker but it
+actually worked. Turns out that the issue was on my end. I'd used
+update-alternatives for a different compiler version and looks like I
+had half of one gcc and half of another g++. Completely my fault, sorry
+for the noise!
+
+James
