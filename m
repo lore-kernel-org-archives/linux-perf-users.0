@@ -2,157 +2,225 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0190C7619A
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 02:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34C5C761A6
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 04:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjDCCnt (ORCPT
+        id S231172AbjDCEvM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 2 Apr 2023 22:43:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
+        Mon, 3 Apr 2023 00:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231159AbjDCCns (ORCPT
+        with ESMTP id S229670AbjDCEvK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 2 Apr 2023 22:43:48 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2044.outbound.protection.outlook.com [40.107.93.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC1AAF32;
-        Sun,  2 Apr 2023 19:43:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SpO485TY/rzyQgMlod91Stx6mZ2FnHYwIgFedoDolgpVTe15dC0mFwaczggQD9uhbI4bpeUYaZblXZruM6ZKe6Z3lfThepZ5So14isYFWM67Ksd4pVVhC6fB3STaF2JqeTgh8CKHgaVH3Rc+boysrzndc1zgBRNfCQ8mxfTQjXzmPC9+y245bDcqGgrX4sNJecCgBSsPpvuOiU8uLb3RZtGR58vaj/UbNQFs8VIo6DE8kF8vffTPPrmrRdl2RvU47V0vhqNXrqK7HIgIoMXnGZCS3k2vuP+UvVmCiFiaGkQ9drUH8HvLvFxxF4Nl5ohJkPFlmUpZKucBtvwSFMVsOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MuvtyXjllqPSMIwD54SP3BYNvDs4ze78uQ8DuukkwaU=;
- b=Wq5u1+4RNI6uRJtZCmbxn0hbuoQg5ws7Y/HVCB3NFib8DJr7aX3elIO78T3l7L+qb4NkULaun6mmczJCYZD+jA4FtFh9yQcBrTr488X1WLjTfy63pdfvHEclebiidixeFCydXvd6r2+SULH8dD+RCd9xQgomQrQM/KMhK4nD5pNzJO7nJLAgWROJP4vCDRHDX7qvD13bDhAy6vXc52Zo8YWA4IC3EjBmnhoS002xeQIVbCT4X4+xJ0d2uDx+yKCvBVPFVLv9PXUaxCtP6jCHeZ7prUtrWnV/PGXnhA8VC6yJLOSOK9JyPDsbcm3lHPu/eVrTnHYfNtvv+SU/8wshNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MuvtyXjllqPSMIwD54SP3BYNvDs4ze78uQ8DuukkwaU=;
- b=zDQPQ1UFabg4SQqTd7TheSGMlcvgNzOxVw+/oBbHt/4AzbrX8OawGOCU7ZHy9nb3nwDBQg8pwp4XaSQda55S8CGMEYmOTxacis/lTMpPwVCYGwxXdDH0aCyuPNFZbk+kaIXy/r50kF6OY4c8esf+A8NECj6pizclNjyQMfw8tqU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
- by DS0PR12MB6415.namprd12.prod.outlook.com (2603:10b6:8:cc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Mon, 3 Apr
- 2023 02:43:44 +0000
-Received: from MW2PR12MB2379.namprd12.prod.outlook.com
- ([fe80::42cb:32d6:2502:4cbd]) by MW2PR12MB2379.namprd12.prod.outlook.com
- ([fe80::42cb:32d6:2502:4cbd%3]) with mapi id 15.20.6254.033; Mon, 3 Apr 2023
- 02:43:44 +0000
-Message-ID: <ea3ddf8e-1809-1211-7ac4-d7175dbb4e08@amd.com>
-Date:   Mon, 3 Apr 2023 08:13:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [RFC PATCH 1/4] perf: Read cache instance ID when building cache
- topology
+        Mon, 3 Apr 2023 00:51:10 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F61CB775;
+        Sun,  2 Apr 2023 21:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680497468; x=1712033468;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wktO4jGj6Olw+xf9VLolWIuo0fOfy/aVqpJj2kX8sZA=;
+  b=nvJ35yr3A9LdL2JwI90nqf5NiD2tY68Eofi83kmNXqC/VePhkyeJOioh
+   vsG2XpKv6dbjkK9YEVly7GV778k15Jd3t/QrdtPneRY/vl7zKpoQKJd4m
+   mQrrfhhZn38+F9I9BzVS7PXnq8fjF2Cs6TjLinhZMpq4X15bjZocoTEED
+   wvPSYVlUPIM/m90ayxAsIIHB+jIsBE48WvdFGuSCDxraGVKrF9KSDm7On
+   XbZ17NRGVvTPsoYRvUN96bXHQ4Q9r3BzQmO//6iapqReAdzncEAxvOa3Q
+   yBDIE4i2cZYZfaZkw5Ld5flJ/vBvkB3lI30EDdId78r8Z9w9O8Zdnenov
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10668"; a="343499588"
+X-IronPort-AV: E=Sophos;i="5.98,314,1673942400"; 
+   d="scan'208";a="343499588"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2023 21:51:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10668"; a="688368267"
+X-IronPort-AV: E=Sophos;i="5.98,314,1673942400"; 
+   d="scan'208";a="688368267"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.40.243])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2023 21:51:04 -0700
+Message-ID: <eb1c058c-f84f-ae94-ced6-92f22b6d9b69@intel.com>
+Date:   Mon, 3 Apr 2023 07:51:01 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.1
+Subject: Re: [PATCH 9/9] perf intel-pt: Use perf_pmu__scan_file_at() if
+ possible
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+References: <20230331202949.810326-1-namhyung@kernel.org>
+ <20230331202949.810326-10-namhyung@kernel.org>
 Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, ravi.bangoria@amd.com, sandipan.das@amd.com,
-        ananth.narayan@amd.com, gautham.shenoy@amd.com, eranian@google.com
-References: <20230331045117.1266-1-kprateek.nayak@amd.com>
- <20230331045117.1266-2-kprateek.nayak@amd.com> <ZCbKCwJDf3PrjSLH@kernel.org>
-From:   K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <ZCbKCwJDf3PrjSLH@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230331202949.810326-10-namhyung@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0055.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::30) To MW2PR12MB2379.namprd12.prod.outlook.com
- (2603:10b6:907:9::24)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|DS0PR12MB6415:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9a4e8b6d-cd6e-4a2e-0097-08db33ed3dd8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hJ/Nxrp1YZ/zCjqULJVreoNqF/2hSRMzo30lOfr9uJUb09k0Qd70YvY6I4M+rKKmQscpAKwg0tlecNcyFvO1ufErHBVKXQB83nPe1til3lUAQ6kgCQaeoxcg8ovvy47ANzJcuJUgS1zyJL/cjalHMMQGWIxYfYQB7DrilAkR6toDSpnyF/bMYJ5ruj8Y4FMGrH/tIfAR7xRZzfSOaxyzEIjfLP06oA+8Z/zht2obvYZM8ex86IxS/rfPKhMIQkIyvBi1aCI7NGNaRRafYBGxHR3eebHlmGgSFDfEhnu1cmTxVd32RaCNkdqbVzmYQB+PMYC+1B2n6tMLG4iX+GLhD8zLKxbylxfuyAbUVw96Cv4fqBJerVgf3jbikRuGEDQNm0w2n0JStsL2mJaOexdQwWzZHNF4dloLNHKPoSMs57vI71TSi4tKi9u5Vu6ZlKfhDU1OUvKge3o/vYuFAJ23IjU5GATSV2MYBkhZSmwNB/FoHkX67P/HB+5Rc750HxTIJnF/4fjeSc7UqEhrisw8rz+mGQBExXKu2w4l2muSeirT0m1I198v7UmS20Pwrw+gHZjUmjGxqnhFTm8OTiAAtiTf7UKR5TQUUCHV1JNT4spKXfGHPpffnHl+8ueRIITUWMpHE9SqAkoLDvrUVO+XsA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(136003)(366004)(346002)(451199021)(6666004)(36756003)(2906002)(4744005)(6486002)(31686004)(41300700001)(6916009)(4326008)(6512007)(6506007)(26005)(186003)(66476007)(66556008)(66946007)(8936002)(8676002)(7416002)(5660300002)(316002)(478600001)(2616005)(53546011)(86362001)(38100700002)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NEY5akgrWEp5bExTVTBCZmh3Ync1MDhoWU9jeVArYmU3UDNhU3RmUm1tbWxL?=
- =?utf-8?B?TVBzMlNha2lHd2lySTUyS3lVUS8vdmRVYjV3UGxPSGVYODNNUjlMNHI0dk5R?=
- =?utf-8?B?ZzBWWExaR0hNN0ZKUXlTdjV2aElMWFJrS0FreDV2bmlCbnY3V0ZmMFNveGh0?=
- =?utf-8?B?Q1AzOWJsVDByVlVhYXYwU3NUS2tlaW1MZVNETFZUenhFeHlLY254OVZ2THVx?=
- =?utf-8?B?SEVlbHZUZ3JYL0V0bEFRbGpuQ21JUGFzaXpjMnlRakFiUGhlTG1GWnkvV01K?=
- =?utf-8?B?RDFCRnhXRVo3c3E2aEM5SkowY0NnblBINFQydVpRUGc2aW1zcXd4SHlBYjhx?=
- =?utf-8?B?Y0J0TExJN0daQnN0S3puMXFWRHhhK3lhNmQvZjJwR21aZ21GL2IyVEpRcVRD?=
- =?utf-8?B?eDd0U2oxVUZGdnlkdi9UV3FaS2VCZFkyaDNmcEN5MTExSlRjZGRZaXJkNEVG?=
- =?utf-8?B?Z2hlZmhNeFRQcE92N0M2Y0hzQy9lQ3ZFak1FU1JCa0kwMEswa2hVeDRJNkNk?=
- =?utf-8?B?SlV0bFpKTkpSRUpPaVBUb2c4alJBdHplR3lxL3V0VXlMWWNLanRCdFNLMHZG?=
- =?utf-8?B?aGpXQnovQ1RIR2FjSUpFclc4dGg4Z3grYml3MGs4NFE1QXc2eTltWFkzTWdj?=
- =?utf-8?B?TUszR0NYREV3QmVWUVlOZmVvY0xicjVsakVpWGhhVUNaazFaYkRHU2hCSXA4?=
- =?utf-8?B?RmxMSmxzVnpiWWdyODM4QnBSMjkxWE1YLzlheHhOWWZNMmVXanNhcmE1UVgw?=
- =?utf-8?B?dkZiSWx6bFA0TXRPMVZxK1JNK2FORVdkS0trdDNSTUF0T3BwQ2ZpTHBJd0d4?=
- =?utf-8?B?SHN2ek9pYjRrblRqSC9JQy9CazB3T3RKTzdnb1RJR3FMdzdZYWRvK2VEeXJa?=
- =?utf-8?B?d0hJZEZ2ekN5RlZvbXpPbjJTY2pEZDRESC9NTDJ6NGF4QmJER2J1MVNSQ2Zo?=
- =?utf-8?B?T3phVm9YMTBLTnA4SEZwRlJlNXpGRkMrZkwwN2xZRjR4ZjRUYUhoMHBtT0lr?=
- =?utf-8?B?R3l4WWQ2V05BT1ZLNXo2NjhCek9zekFTWXk5RUtubnFIZDJWcXdOOFNubksy?=
- =?utf-8?B?cDVSRlBEQ25VeUpTQmRETE9WT1pnb3JmcGNUOXlDSjBQNkFvcE5Ga2RIb3lv?=
- =?utf-8?B?UXR3TmlSUjFPZEJ2YjVvZXJ4b053R1psckRnc2hQTys0SzhvM0RjTEFhZDNs?=
- =?utf-8?B?VmprL2luK1hXcmx5WE5lcUt3T0dPMkJ0V0cvRjJwMmZ2cGhBQ3JNa3I4QWdQ?=
- =?utf-8?B?L1A2TFRWSUhlTlBHTytnOUdIR2FvSkRZRXdHUUFTSUxRY0pscUlEQWIvY3Zr?=
- =?utf-8?B?Z3RLYWlzNGxKNTVKbFB6Njd2ZU14SW95M0xWQWJ2clFxV2Y5bnNQYTM2TWE5?=
- =?utf-8?B?MTh3Wlh6UVdSWEdhbjRtMGhkYk4rTUhNTlBYZm81ZWp3Ti8rN1VBNjVMUUwx?=
- =?utf-8?B?N3JXWTVLdzNObm41M2FJN0lYNE8wemQvUjhpcVVWQXAxajRhSExiZ2ZWTnZr?=
- =?utf-8?B?djVLU09LL01JdUN4cVJOSFB0TFFQOE9rZk5BNFVvQk5SbXAvcWlROWR1bmM1?=
- =?utf-8?B?WW5IR1UwcUpwcC9OUm10RHZjSUEvd1E5cTQwT2lRdUxXTzVNcURDbDJrUzUw?=
- =?utf-8?B?WDZqOVAya1pGUUd0U3duOFJVQkJMY0wwMVB6c1I1aWIvbmNVT0tLelc2aXRN?=
- =?utf-8?B?U0hYYWNuZ2RxZWRDUGdpY1JDYXRPWDE3QTIxSHIzQ3JVd2dKR1UwZnhGNGx1?=
- =?utf-8?B?QVIxY29jdkNYZkZ5WFlrVVYreG9GNEZTZFpYdEhiRC9CL0VianMwYWtiVjlr?=
- =?utf-8?B?T3o4eVZadTBONnhyWXdCKytuUHg4OG1zL3RObEZicjJiNlF4VGI4eElNUzlo?=
- =?utf-8?B?SHl3cVRobXNZQWgyR2FJZGxqQ3A5UWRkazdqTUV1RWJKa3djaTJQWkhIZjQ2?=
- =?utf-8?B?cDQzc1grbTlPZjVpWWJMV3Rwd0cxVHRJZlFIRktPTlphaWdidjhvM2Qva3FR?=
- =?utf-8?B?UlcyeFNVZEp2ZUZ1NUdmTEt3b0xGVkNzUWh1eG1tYUFIdVFqLzlFaGxjbjVu?=
- =?utf-8?B?Z2dsOG9adXBBajF1eHlFVDJEYjNPMnZTaCtSQ2FwajFNZ2o3ZTM3M1o3N0k2?=
- =?utf-8?Q?AaTZJtCdXH2wkaT4+bOP75nAg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a4e8b6d-cd6e-4a2e-0097-08db33ed3dd8
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2023 02:43:44.5178
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1i6P9DVBq6kpx5NM749hQgJO8R7geuLOsNQGwb0KHSIqIrx6Wk9MWLAa0fDwVa1pqr+4UYH2Qpx01nZA6p45+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6415
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Arnaldo,
-
-Thank you for taking a look at the series.
-
-On 3/31/2023 5:24 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Mar 31, 2023 at 10:21:14AM +0530, K Prateek Nayak escreveu:
->> CPU cache level data currently stores cache level, type, line size,
->> associativity, sets, total cache size, and the CPUs sharing the cache.
->> Also read and store the cache instance ID from
->> "/sys/devices/system/cpu/cpuX/cache/indexY/id" in the cache level data.
->> Use instance ID as well when comparing cache levels.
+On 31/03/23 23:29, Namhyung Kim wrote:
+> Intel-PT calls perf_pmu__scan_file() a lot, let's use relative address
+> when it accesses multiple files at one place.
 > 
-> And if a new perf tool is used in an older kernel without this new 'id'
-> file?
-> 
-> Please check if the file exists, if it doesn't don't fail, just
-> initialize with a zero, this way the latest perf will be usable in older
-> kernels.
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-That makes sense. I'll handle this case as you suggested in the next
-version.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
+> ---
+>  tools/perf/arch/x86/util/intel-pt.c | 52 ++++++++++++++++++-----------
+>  1 file changed, 32 insertions(+), 20 deletions(-)
 > 
-> - Arnaldo
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> index 1e39a034cee9..2cff11de9d8a 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -194,16 +194,19 @@ static u64 intel_pt_default_config(struct perf_pmu *intel_pt_pmu)
+>  	int pos = 0;
+>  	u64 config;
+>  	char c;
+> +	int dirfd;
+> +
+> +	dirfd = perf_pmu__event_source_devices_fd();
 >  
->> [..snip..]
-> 
+>  	pos += scnprintf(buf + pos, sizeof(buf) - pos, "tsc");
+>  
+> -	if (perf_pmu__scan_file(intel_pt_pmu, "caps/mtc", "%d",
+> -				&mtc) != 1)
+> +	if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "caps/mtc", "%d",
+> +				   &mtc) != 1)
+>  		mtc = 1;
+>  
+>  	if (mtc) {
+> -		if (perf_pmu__scan_file(intel_pt_pmu, "caps/mtc_periods", "%x",
+> -					&mtc_periods) != 1)
+> +		if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "caps/mtc_periods", "%x",
+> +					   &mtc_periods) != 1)
+>  			mtc_periods = 0;
+>  		if (mtc_periods) {
+>  			mtc_period = intel_pt_pick_bit(mtc_periods, 3);
+> @@ -212,13 +215,13 @@ static u64 intel_pt_default_config(struct perf_pmu *intel_pt_pmu)
+>  		}
+>  	}
+>  
+> -	if (perf_pmu__scan_file(intel_pt_pmu, "caps/psb_cyc", "%d",
+> -				&psb_cyc) != 1)
+> +	if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "caps/psb_cyc", "%d",
+> +				   &psb_cyc) != 1)
+>  		psb_cyc = 1;
+>  
+>  	if (psb_cyc && mtc_periods) {
+> -		if (perf_pmu__scan_file(intel_pt_pmu, "caps/psb_periods", "%x",
+> -					&psb_periods) != 1)
+> +		if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "caps/psb_periods", "%x",
+> +					   &psb_periods) != 1)
+>  			psb_periods = 0;
+>  		if (psb_periods) {
+>  			psb_period = intel_pt_pick_bit(psb_periods, 3);
+> @@ -227,8 +230,8 @@ static u64 intel_pt_default_config(struct perf_pmu *intel_pt_pmu)
+>  		}
+>  	}
+>  
+> -	if (perf_pmu__scan_file(intel_pt_pmu, "format/pt", "%c", &c) == 1 &&
+> -	    perf_pmu__scan_file(intel_pt_pmu, "format/branch", "%c", &c) == 1)
+> +	if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "format/pt", "%c", &c) == 1 &&
+> +	    perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "format/branch", "%c", &c) == 1)
+>  		pos += scnprintf(buf + pos, sizeof(buf) - pos, ",pt,branch");
+>  
+>  	pr_debug2("%s default config: %s\n", intel_pt_pmu->name, buf);
+> @@ -236,6 +239,7 @@ static u64 intel_pt_default_config(struct perf_pmu *intel_pt_pmu)
+>  	intel_pt_parse_terms(intel_pt_pmu->name, &intel_pt_pmu->format, buf,
+>  			     &config);
+>  
+> +	close(dirfd);
+>  	return config;
+>  }
+>  
+> @@ -488,7 +492,7 @@ static void intel_pt_valid_str(char *str, size_t len, u64 valid)
+>  	}
+>  }
+>  
+> -static int intel_pt_val_config_term(struct perf_pmu *intel_pt_pmu,
+> +static int intel_pt_val_config_term(struct perf_pmu *intel_pt_pmu, int dirfd,
+>  				    const char *caps, const char *name,
+>  				    const char *supported, u64 config)
+>  {
+> @@ -498,11 +502,11 @@ static int intel_pt_val_config_term(struct perf_pmu *intel_pt_pmu,
+>  	u64 bits;
+>  	int ok;
+>  
+> -	if (perf_pmu__scan_file(intel_pt_pmu, caps, "%llx", &valid) != 1)
+> +	if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, caps, "%llx", &valid) != 1)
+>  		valid = 0;
+>  
+>  	if (supported &&
+> -	    perf_pmu__scan_file(intel_pt_pmu, supported, "%d", &ok) == 1 && !ok)
+> +	    perf_pmu__scan_file_at(intel_pt_pmu, dirfd, supported, "%d", &ok) == 1 && !ok)
+>  		valid = 0;
+>  
+>  	valid |= 1;
+> @@ -531,37 +535,45 @@ static int intel_pt_val_config_term(struct perf_pmu *intel_pt_pmu,
+>  static int intel_pt_validate_config(struct perf_pmu *intel_pt_pmu,
+>  				    struct evsel *evsel)
+>  {
+> -	int err;
+> +	int err, dirfd;
+>  	char c;
+>  
+>  	if (!evsel)
+>  		return 0;
+>  
+> +	dirfd = perf_pmu__event_source_devices_fd();
+> +	if (dirfd < 0)
+> +		return dirfd;
+> +
+>  	/*
+>  	 * If supported, force pass-through config term (pt=1) even if user
+>  	 * sets pt=0, which avoids senseless kernel errors.
+>  	 */
+> -	if (perf_pmu__scan_file(intel_pt_pmu, "format/pt", "%c", &c) == 1 &&
+> +	if (perf_pmu__scan_file_at(intel_pt_pmu, dirfd, "format/pt", "%c", &c) == 1 &&
+>  	    !(evsel->core.attr.config & 1)) {
+>  		pr_warning("pt=0 doesn't make sense, forcing pt=1\n");
+>  		evsel->core.attr.config |= 1;
+>  	}
+>  
+> -	err = intel_pt_val_config_term(intel_pt_pmu, "caps/cycle_thresholds",
+> +	err = intel_pt_val_config_term(intel_pt_pmu, dirfd, "caps/cycle_thresholds",
+>  				       "cyc_thresh", "caps/psb_cyc",
+>  				       evsel->core.attr.config);
+>  	if (err)
+> -		return err;
+> +		goto out;
+>  
+> -	err = intel_pt_val_config_term(intel_pt_pmu, "caps/mtc_periods",
+> +	err = intel_pt_val_config_term(intel_pt_pmu, dirfd, "caps/mtc_periods",
+>  				       "mtc_period", "caps/mtc",
+>  				       evsel->core.attr.config);
+>  	if (err)
+> -		return err;
+> +		goto out;
+>  
+> -	return intel_pt_val_config_term(intel_pt_pmu, "caps/psb_periods",
+> +	err = intel_pt_val_config_term(intel_pt_pmu, dirfd, "caps/psb_periods",
+>  					"psb_period", "caps/psb_cyc",
+>  					evsel->core.attr.config);
+> +
+> +out:
+> +	close(dirfd);
+> +	return err;
+>  }
+>  
+>  static void intel_pt_config_sample_mode(struct perf_pmu *intel_pt_pmu,
 
- 
---
-Thanks and Regards,
-Prateek
