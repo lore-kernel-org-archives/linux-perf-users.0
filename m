@@ -2,250 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31792C76188
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 21:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F97C76188
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 21:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233215AbjDCVuS (ORCPT
+        id S229473AbjDCV7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 17:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
+        Mon, 3 Apr 2023 17:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233317AbjDCVuQ (ORCPT
+        with ESMTP id S231636AbjDCV7P (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 17:50:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E96410C6;
-        Mon,  3 Apr 2023 14:50:14 -0700 (PDT)
+        Mon, 3 Apr 2023 17:59:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5039E26A3;
+        Mon,  3 Apr 2023 14:59:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 34F1E62CF7;
-        Mon,  3 Apr 2023 21:50:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42BF3C433D2;
-        Mon,  3 Apr 2023 21:50:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E9BC262D1C;
+        Mon,  3 Apr 2023 21:59:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D0BC4339B;
+        Mon,  3 Apr 2023 21:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680558613;
-        bh=OSiOZaIDM3s8SRNRyS9uWT5KNGK2XwwUBGAiTL9ji90=;
+        s=k20201202; t=1680559153;
+        bh=zgA6EyZzT8cJ+mkAi174ezLK/5e3y5TnYY1lxyMqOCo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ppV3PPfeyFChi/GlMSiDKWwDXPmFjgr43VjD1mY7PF2LLSy8YlwwIfI00IZDNMMGS
-         xJQ5LiRpKNERGS96AQ87s4MR6DR+U5xk5ZMzd8Ut6uGzrvxm++ps1eqmamX5W4bz2i
-         uKOkiQajx7lF86kdMRw/gGdbEewOklTZgG39uMocTdBiDbM8HNqgiOOTePjIFbF+dp
-         AXhQ9cMXp2inMNmosrIYwN1kf2WyVyY6S6KgJzAivv7esXzm6bN3Yq7J5xWxCKTa4q
-         CpKllid610dc6Ct8ai3m+Hz6ZAyqrfK8hUhjsay4AYwJbDF6DEMZfIc1NZUyvZarey
-         bKmHXaUnqaIbA==
+        b=JrrBDQ1cVXWyXonJ6p6LUvENGBY3VAJGwKVnuTAJ1wWbwT559nlb4ueI3YQJOwyhb
+         esgJLDHQEr56mQDNKaPSQGbyP1ZJnFeGcI6BfBPNfOi+Hu0eGYkunhl9gvQ4AEN5dZ
+         JCztSFeABGafEtX0DS+GWfrxFY8nfjytOoWWFdSgURrfYZ99o6if5tdiIjlDMpt/IX
+         i3ODIGEcZztJIxfJZWW8SkXa/p3G3ow5Ndiby9WMvup4Q1tKZm5l3aZjdfjEdWTXK3
+         GxGaWEqCN2i10e7N62i0D3Odx9DtZ5Mj11dxPpacOjYzbs98Y6ZF4hwIWSGqU5+NTb
+         fj42C0hy/VlUw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CD35C4052D; Mon,  3 Apr 2023 18:50:10 -0300 (-03)
-Date:   Mon, 3 Apr 2023 18:50:10 -0300
+        id 908A24052D; Mon,  3 Apr 2023 18:59:10 -0300 (-03)
+Date:   Mon, 3 Apr 2023 18:59:10 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Brian Robbins <brianrob@linux.microsoft.com>,
-        Yuan Can <yuancan@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf jit: Fix a few memory leaks
-Message-ID: <ZCtKEuFCPGvHX1FI@kernel.org>
-References: <20230403203545.1872196-1-irogers@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH 1/9] perf list: Use relative path for tracepoint scan
+Message-ID: <ZCtMLkNL80EkPvB1@kernel.org>
+References: <20230331202949.810326-1-namhyung@kernel.org>
+ <20230331202949.810326-2-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230403203545.1872196-1-irogers@google.com>
+In-Reply-To: <20230331202949.810326-2-namhyung@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 03, 2023 at 01:35:45PM -0700, Ian Rogers escreveu:
-> As reported by leak sanitizer.
+Em Fri, Mar 31, 2023 at 01:29:41PM -0700, Namhyung Kim escreveu:
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/print-events.c | 26 ++++++++++++++++++++------
+>  1 file changed, 20 insertions(+), 6 deletions(-)
 
-Thanks, applied.
+Add to add this to fix on Alma Linux 8, and scandirat isn't being found
+on musl libc (Alpine Linux), probably we'll need some scaffolding...
 
 - Arnaldo
 
+
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index 26a7e017c9284c01..28aa0b9300253d0a 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -6,6 +6,7 @@
+ #include <string.h>
+ #include <fcntl.h>
+ #include <sys/param.h>
++#include <unistd.h>
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/genelf_debug.c | 45 +++++++++++++++++++++-------------
->  tools/perf/util/jitdump.c      |  7 +++++-
->  2 files changed, 34 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
-> index dd40683bd4c0..8786c366566e 100644
-> --- a/tools/perf/util/genelf_debug.c
-> +++ b/tools/perf/util/genelf_debug.c
-> @@ -87,6 +87,12 @@ buffer_ext_init(struct buffer_ext *be)
->  	be->max_sz = 0;
->  }
+ #include <api/fs/tracing_path.h>
+ #include <linux/stddef.h>
+ 
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+> index 62e9ea7dcf40..26a7e017c928 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -4,6 +4,7 @@
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> +#include <fcntl.h>
+>  #include <sys/param.h>
 >  
-> +static void
-> +buffer_ext_exit(struct buffer_ext *be)
-> +{
-> +	free(be->data);
-> +}
-> +
->  static inline size_t
->  buffer_ext_size(struct buffer_ext *be)
+>  #include <api/fs/tracing_path.h>
+> @@ -59,12 +60,20 @@ static const struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
+>  void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state)
 >  {
-> @@ -487,28 +493,28 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	Elf_Scn *scn;
->  	Elf_Shdr *shdr;
->  	struct buffer_ext dl, di, da;
-> -	int ret;
-> +	int ret = -1;
->  
->  	buffer_ext_init(&dl);
->  	buffer_ext_init(&di);
->  	buffer_ext_init(&da);
->  
-> -	ret = jit_process_debug_info(code_addr, debug, nr_debug_entries, &dl, &da, &di);
-> -	if (ret)
-> -		return -1;
-> +	if (jit_process_debug_info(code_addr, debug, nr_debug_entries, &dl, &da, &di))
-> +		goto out;
+>  	struct dirent **sys_namelist = NULL;
+> +	char *events_path = get_tracing_file("events");
+>  	int sys_items = tracing_events__scandir_alphasort(&sys_namelist);
+> +	int events_fd = open(events_path, O_PATH);
 > +
->  	/*
->  	 * setup .debug_line section
->  	 */
->  	scn = elf_newscn(e);
->  	if (!scn) {
->  		warnx("cannot create section");
-> -		return -1;
-> +		goto out;
+> +	put_tracing_file(events_path);
+> +	if (events_fd < 0) {
+> +		printf("Error: failed to open tracing events directory\n");
+> +		return;
+> +	}
+>  
+>  	for (int i = 0; i < sys_items; i++) {
+>  		struct dirent *sys_dirent = sys_namelist[i];
+>  		struct dirent **evt_namelist = NULL;
+> -		char *dir_path;
+> +		int dir_fd;
+>  		int evt_items;
+>  
+>  		if (sys_dirent->d_type != DT_DIR ||
+> @@ -72,22 +81,26 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
+>  		    !strcmp(sys_dirent->d_name, ".."))
+>  			continue;
+>  
+> -		dir_path = get_events_file(sys_dirent->d_name);
+> -		if (!dir_path)
+> +		dir_fd = openat(events_fd, sys_dirent->d_name, O_PATH);
+> +		if (dir_fd < 0)
+>  			continue;
+>  
+> -		evt_items = scandir(dir_path, &evt_namelist, NULL, alphasort);
+> +		evt_items = scandirat(events_fd, sys_dirent->d_name, &evt_namelist, NULL, alphasort);
+>  		for (int j = 0; j < evt_items; j++) {
+>  			struct dirent *evt_dirent = evt_namelist[j];
+>  			char evt_path[MAXPATHLEN];
+> +			int evt_fd;
+>  
+>  			if (evt_dirent->d_type != DT_DIR ||
+>  			    !strcmp(evt_dirent->d_name, ".") ||
+>  			    !strcmp(evt_dirent->d_name, ".."))
+>  				continue;
+>  
+> -			if (tp_event_has_id(dir_path, evt_dirent) != 0)
+> +			snprintf(evt_path, sizeof(evt_path), "%s/id", evt_dirent->d_name);
+> +			evt_fd = openat(dir_fd, evt_path, O_RDONLY);
+> +			if (evt_fd < 0)
+>  				continue;
+> +			close(evt_fd);
+>  
+>  			snprintf(evt_path, MAXPATHLEN, "%s:%s",
+>  				 sys_dirent->d_name, evt_dirent->d_name);
+> @@ -103,10 +116,11 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
+>  					/*long_desc=*/NULL,
+>  					/*encoding_desc=*/NULL);
+>  		}
+> -		free(dir_path);
+> +		close(dir_fd);
+>  		free(evt_namelist);
 >  	}
->  
->  	d = elf_newdata(scn);
->  	if (!d) {
->  		warnx("cannot get new data");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	d->d_align = 1;
-> @@ -521,7 +527,7 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	shdr = elf_getshdr(scn);
->  	if (!shdr) {
->  		warnx("cannot get section header");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	shdr->sh_name = 52; /* .debug_line */
-> @@ -536,13 +542,13 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	scn = elf_newscn(e);
->  	if (!scn) {
->  		warnx("cannot create section");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	d = elf_newdata(scn);
->  	if (!d) {
->  		warnx("cannot get new data");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	d->d_align = 1;
-> @@ -555,7 +561,7 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	shdr = elf_getshdr(scn);
->  	if (!shdr) {
->  		warnx("cannot get section header");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	shdr->sh_name = 64; /* .debug_info */
-> @@ -570,13 +576,13 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	scn = elf_newscn(e);
->  	if (!scn) {
->  		warnx("cannot create section");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	d = elf_newdata(scn);
->  	if (!d) {
->  		warnx("cannot get new data");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	d->d_align = 1;
-> @@ -589,7 +595,7 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	shdr = elf_getshdr(scn);
->  	if (!shdr) {
->  		warnx("cannot get section header");
-> -		return -1;
-> +		goto out;
->  	}
->  
->  	shdr->sh_name = 76; /* .debug_info */
-> @@ -601,9 +607,14 @@ jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_entries
->  	/*
->  	 * now we update the ELF image with all the sections
->  	 */
-> -	if (elf_update(e, ELF_C_WRITE) < 0) {
-> +	if (elf_update(e, ELF_C_WRITE) < 0)
->  		warnx("elf_update debug failed");
-> -		return -1;
-> -	}
-> -	return 0;
-> +	else
-> +		ret = 0;
-> +
-> +out:
-> +	buffer_ext_exit(&dl);
-> +	buffer_ext_exit(&di);
-> +	buffer_ext_exit(&da);
-> +	return ret;
->  }
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index 0e033278fa12..28e49502db5e 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -235,9 +235,11 @@ jit_open(struct jit_buf_desc *jd, const char *name)
->  	 */
->  	strcpy(jd->dir, name);
->  	dirname(jd->dir);
-> +	free(buf);
->  
->  	return 0;
->  error:
-> +	free(buf);
->  	funlockfile(jd->in);
->  	fclose(jd->in);
->  	return retval;
-> @@ -523,7 +525,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
->  
->  	ret = perf_event__process_mmap2(tool, event, &sample, jd->machine);
->  	if (ret)
-> -		return ret;
-> +		goto out;
->  
->  	ret = jit_inject_event(jd, event);
->  	/*
-> @@ -532,6 +534,8 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
->  	if (!ret)
->  		build_id__mark_dso_hit(tool, event, &sample, NULL, jd->machine);
->  
-> +out:
-> +	free(event);
->  	return ret;
+>  	free(sys_namelist);
+> +	close(events_fd);
 >  }
 >  
-> @@ -874,6 +878,7 @@ jit_process(struct perf_session *session,
->  	}
->  
->  	nsinfo__put(jd.nsi);
-> +	free(jd.buf);
->  
->  	return ret;
->  }
+>  void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
 > -- 
 > 2.40.0.348.gf938b09366-goog
 > 
