@@ -2,145 +2,230 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FB1C76196
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 15:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ED2C76188
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 17:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232696AbjDCP5m (ORCPT
+        id S231624AbjDCRUr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 11:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47012 "EHLO
+        Mon, 3 Apr 2023 13:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233082AbjDCP5b (ORCPT
+        with ESMTP id S232744AbjDCRUp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 11:57:31 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7F73C24
-        for <linux-perf-users@vger.kernel.org>; Mon,  3 Apr 2023 08:57:02 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3e392e10cc4so1211611cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Apr 2023 08:57:01 -0700 (PDT)
+        Mon, 3 Apr 2023 13:20:45 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D250CF9
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Apr 2023 10:20:41 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id c2-20020a62f842000000b0062d93664ad5so9596099pfm.19
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Apr 2023 10:20:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680537420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RL7+7L2nykApN9Uu3qr1Vlz4J5VLm0XSe5hWatHC2UA=;
-        b=RvusrN5Grx0iSSZ1EitY9Ozul7j3yF2w2pelTCj9ingDDaNXluye819rbmn54bduOy
-         mb9J+2MPN30EHgXolrhZyxSskXx18K9q8K/YqVWTU6zXe80O+3TJ7exICT3C9bvUemLx
-         1gg96EkQl5bJdaUikm2d3iAqpDk7TZ5BGU03x7CzPMzrE4M3fzkdAazrb9KvqcscI3MT
-         soymh5l0VN9Elo5iEVyP+ovOoq0QHQPldydzgb2D9+D6SyIMKh5oZToeoXYg7npzaF5G
-         DnFCTOyEkHH655GjFWG4pYCN6R0p52LEBZQjdAYVC6wfYXE453OO5h/aISmK3M7k6SjF
-         i/pw==
+        d=google.com; s=20210112; t=1680542441;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vx2EyZDMjlrb24p+eE6gF383dd6AN/BW3JHvFyB6a7M=;
+        b=tdC69fVTXHytRukvvYKb1yfECkl50VkcLqMKdSEOj0E/YOjzox6qloC0ctcwe6mOpT
+         VWoiyEMml1zo42mGmvWLjgxaXBrFM4yD9ZcidQUO+AzqxrENFRN/1G3dkckWRX1fR1qe
+         DN28rP8gQRfeiRY0g+8/vlAHKINLYeT1Prj7DWWpSl7duX9i5eV+R62x20jwedk7qDG2
+         QbQbMe2P6xY8XI77FEe+EAYpCAVl0ZlnQnf7DXe1Tdlpg3+xg/EAWuBzVtKTGC2NNR0N
+         Fy9gtmbwzfCDMyE5xwmm9oDf6qCAey1xIdRrNYnsGMqmUD3rb5eJrbtPZib/vvETo2th
+         W39Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680537420;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RL7+7L2nykApN9Uu3qr1Vlz4J5VLm0XSe5hWatHC2UA=;
-        b=vwG4uZmIvNGTYlrFrCfWEgjoqXh6X/SuLvlZdcENzK4VDAD9JgDWZtz5CgLKB6q3ZB
-         0CtEmHx+Inhm27mrA9gXCy70XLnABdnnoibmosOyT5K5F8O5fzBm1LrLrnvTxo3ZE+Ud
-         PZ0ebNkN3sT4I/fFI2NkWq8FMivbwX9RKQFcIhmUWijMIfr1IHLxECQUYUpAx+zpKw8K
-         LcaONb6/99fjQL44DsC6dc+ra0bNQZoFli5S7K+EGogvW72YZi3HAzVIsOtHKkLeGVRz
-         QTzsXpQZnNX9SeYyPPM/4BGiRDX9uvLSUj7PACz7z/sWKd4svPvCCuLvHpT5vNx045Vv
-         d4qg==
-X-Gm-Message-State: AAQBX9dodcmhKMtc7B17JL3BzefKy0L6TO6f2M9QgFn32CsVBwdBQYJd
-        ocKscb/qiG4inkSyY561oEW2pE/gCy0wWpmA9gRPF0b/JiqByd3Kysc=
-X-Google-Smtp-Source: AKy350ap9pELEFkSHtmBKd6EJjD2gLVI9H1B0gyBQzpEjTNYD0Z/tjQrI1rxRpI/cJb66ymxQwqn8yZnd0JVjy9HOj4=
-X-Received: by 2002:a05:622a:c:b0:3b9:f696:c759 with SMTP id
- x12-20020a05622a000c00b003b9f696c759mr638521qtw.10.1680537420407; Mon, 03 Apr
- 2023 08:57:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAP-5=fWxF6in4vQyGuh=0kpAYEXAYZN_KobXCY=TX2oxssZ+HQ@mail.gmail.com>
- <Y7w2qshoCEjKKVlz@kernel.org> <CAP-5=fUeC2nhUhFN69+sL687csSsoi5=ZEkRH70vUy+kTiF52g@mail.gmail.com>
- <CAP-5=fVaH0p4NkKiQSxaxZnT5zR=hbwSArO2n0L7tCNZwBumKQ@mail.gmail.com>
- <CAP-5=fXWDPzuFrrY+uKnfoa5gO9eEfGUsbCyXB8AS7Tz0ZX=jw@mail.gmail.com>
- <CAP-5=fVHK9VqMs=px3ZzKjinFG4t+oOZ8x2=65_jjds4DiSXLg@mail.gmail.com> <CAP-5=fUTAABzK2e_S3kFYV8jWCrHKfj10wPpTnthQjCLy7d2Gg@mail.gmail.com>
-In-Reply-To: <CAP-5=fUTAABzK2e_S3kFYV8jWCrHKfj10wPpTnthQjCLy7d2Gg@mail.gmail.com>
+        d=1e100.net; s=20210112; t=1680542441;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vx2EyZDMjlrb24p+eE6gF383dd6AN/BW3JHvFyB6a7M=;
+        b=xnTuE12eIvcLq+8lIaslV2RwIkQe07PswSL7WsmSMRzmBkJr4rGpo98bxCAhrCFFEc
+         8HxfpHGOgXcBYPIZqYLPeR634VFUJpF3UWpdHInW/op/ZAye1urWlPFWHk3UJesUENMY
+         W4qQyvSPKjO/QHJMA8ps7mEg7UCMS14W3oGpWxEfEI0u0YQebdSsQ30bc8pplOglnug1
+         CQDjgFT81LqylvcqnPNQDYE4Q18XnTITl15kg7P93EydWJbB8RduhcnMZYe3HdGgQhGR
+         tfbib8ByOIgFX440PQVn6gJ7npkXdsqNdFwLI6cSuFj1T2W2yKbAV21LlwrH4OgrKO0b
+         TsiQ==
+X-Gm-Message-State: AAQBX9cLM1sRVH6ADPihwp6N1kIcqcLLLG3DbOXMr4SgIxsR3xn31ghC
+        hYmFx6Br5m7YRGBV8HQGtJtlAIejOSnh
+X-Google-Smtp-Source: AKy350aS27RBMmT0lgRBP5b00cEYuDyFtR8unUb+blHuPGKBr5whFKcmWPyOfMF5jmU3rSq4Y6dTfNjBvb/i
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9dc:a977:817d:341])
+ (user=irogers job=sendgmr) by 2002:a17:903:2615:b0:1a0:561c:7276 with SMTP id
+ jd21-20020a170903261500b001a0561c7276mr12856737plb.1.1680542441383; Mon, 03
+ Apr 2023 10:20:41 -0700 (PDT)
+Date:   Mon,  3 Apr 2023 10:20:31 -0700
+Message-Id: <20230403172031.1759781-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+Subject: [PATCH v1] perf pmu: Make parser reentrant
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 3 Apr 2023 08:56:47 -0700
-Message-ID: <CAP-5=fXdgbJNms5Hy5tw_UxwAeaxn2QCtCphFc4nosEcA92tVw@mail.gmail.com>
-Subject: Re: Google Summer-of-Code 2023
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        paranlee <p4ranlee@gmail.com>,
-        Madhu patel <patelmadhu06@gmail.com>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        Lukas Molleman <lukas.molleman@gmail.com>,
-        n2 h9 <n2h9z4@gmail.com>, can.kucukaslan@ug.bilkent.edu.tr
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 3:00=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Mon, Mar 27, 2023 at 2:22=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Mon, Mar 13, 2023 at 9:38=E2=80=AFAM Ian Rogers <irogers@google.com>=
- wrote:
-> > >
-> > > On Wed, Feb 22, 2023 at 7:58=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > The Linux Foundation was selected as a GSoC organization for 2023!
-> > > > https://summerofcode.withgoogle.com/programs/2023/organizations/the=
--linux-foundation
-> > > >
-> > > > This means we're looking for contributors until March 19th:
-> > > > https://developers.google.com/open-source/gsoc/timeline
-> > >
-> > > A reminder of the GSoC timeline. Applications open in a week;
-> > >
-> > > * February 22 - March 19
-> > > Potential GSoC contributors discuss application ideas with mentoring
-> > > organizations
-> > >
-> > > * March 20 - 18:00 UTC
-> > > GSoC contributor application period begins
-> > >
-> > > * April 4 - 18:00 UTC
-> > > GSoC contributor application deadline
-> > >
-> > > Thanks,
-> > > Ian
-> >
-> > A reminder that the application period closes in just over a week:
-> > https://developers.google.com/open-source/gsoc/timeline
-> > April 4 - 18:00 UTC
-> > GSoC contributor application deadline
-> >
-> > Thanks,
-> > Ian
->
-> If you are looking for ideas on how to write a good proposal, PSF has
-> a collection of previously accepted proposals:
-> https://blogs.python-gsoc.org/en/
->
-> You can also see the final report of Riccardo Mancini:
-> https://lore.kernel.org/lkml/3c4f8dd64d07373d876990ceb16e469b4029363f.cam=
-el@gmail.com/
->
-> Thanks,
-> Ian
+By default bison uses global state for compatibility with yacc. Make
+the parser reentrant so that it may be used in asynchronous and
+multithreaded situations.
 
-A reminder that the GSoC application deadline is tomorrow.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmu.c | 17 ++++++++++++-----
+ tools/perf/util/pmu.h |  2 +-
+ tools/perf/util/pmu.l | 17 ++++++++++++-----
+ tools/perf/util/pmu.y |  5 ++++-
+ 4 files changed, 29 insertions(+), 12 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index e3aae731bd6f..8ef2532428a4 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -24,6 +24,8 @@
+ #include "evsel.h"
+ #include "pmu.h"
+ #include "pmus.h"
++#include "pmu-bison.h"
++#include "pmu-flex.h"
+ #include "parse-events.h"
+ #include "print-events.h"
+ #include "header.h"
+@@ -57,9 +59,6 @@ struct perf_pmu_format {
+ 	struct list_head list;
+ };
+ 
+-int perf_pmu_parse(struct list_head *list, char *name);
+-extern FILE *perf_pmu_in;
+-
+ static bool hybrid_scanned;
+ 
+ /*
+@@ -79,6 +78,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
+ 	while (!ret && (evt_ent = readdir(format_dir))) {
+ 		char path[PATH_MAX];
+ 		char *name = evt_ent->d_name;
++		void *scanner;
+ 		FILE *file;
+ 
+ 		if (!strcmp(name, ".") || !strcmp(name, ".."))
+@@ -91,8 +91,15 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
+ 		if (!file)
+ 			break;
+ 
+-		perf_pmu_in = file;
+-		ret = perf_pmu_parse(head, name);
++		ret = perf_pmu_lex_init(&scanner);
++		if (ret) {
++			fclose(file);
++			break;
++		}
++
++		perf_pmu_set_in(file, scanner);
++		ret = perf_pmu_parse(head, name, scanner);
++		perf_pmu_lex_destroy(scanner);
+ 		fclose(file);
+ 	}
+ 
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 24cf69ab32cd..52c37081c880 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -206,7 +206,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
+ 			  struct perf_pmu_info *info);
+ struct list_head *perf_pmu__alias(struct perf_pmu *pmu,
+ 				  struct list_head *head_terms);
+-void perf_pmu_error(struct list_head *list, char *name, char const *msg);
++void perf_pmu_error(struct list_head *list, char *name, void *scanner, char const *msg);
+ 
+ int perf_pmu__new_format(struct list_head *list, char *name,
+ 			 int config, unsigned long *bits);
+diff --git a/tools/perf/util/pmu.l b/tools/perf/util/pmu.l
+index 58b4926cfaca..67b247be693b 100644
+--- a/tools/perf/util/pmu.l
++++ b/tools/perf/util/pmu.l
+@@ -1,4 +1,6 @@
+ %option prefix="perf_pmu_"
++%option reentrant
++%option bison-bridge
+ 
+ %{
+ #include <stdlib.h>
+@@ -6,16 +8,21 @@
+ #include "pmu.h"
+ #include "pmu-bison.h"
+ 
+-static int value(int base)
++char *perf_pmu_get_text(yyscan_t yyscanner);
++YYSTYPE *perf_pmu_get_lval(yyscan_t yyscanner);
++
++static int value(yyscan_t scanner, int base)
+ {
++	YYSTYPE *yylval = perf_pmu_get_lval(scanner);
++	char *text = perf_pmu_get_text(scanner);
+ 	long num;
+ 
+ 	errno = 0;
+-	num = strtoul(perf_pmu_text, NULL, base);
++	num = strtoul(text, NULL, base);
+ 	if (errno)
+ 		return PP_ERROR;
+ 
+-	perf_pmu_lval.num = num;
++	yylval->num = num;
+ 	return PP_VALUE;
+ }
+ 
+@@ -25,7 +32,7 @@ num_dec         [0-9]+
+ 
+ %%
+ 
+-{num_dec}	{ return value(10); }
++{num_dec}	{ return value(yyscanner, 10); }
+ config		{ return PP_CONFIG; }
+ -		{ return '-'; }
+ :		{ return ':'; }
+@@ -35,7 +42,7 @@ config		{ return PP_CONFIG; }
+ 
+ %%
+ 
+-int perf_pmu_wrap(void)
++int perf_pmu_wrap(void *scanner __maybe_unused)
+ {
+ 	return 1;
+ }
+diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
+index e675d79a0274..dff4e892ac4d 100644
+--- a/tools/perf/util/pmu.y
++++ b/tools/perf/util/pmu.y
+@@ -1,6 +1,8 @@
+-
++%define api.pure full
+ %parse-param {struct list_head *format}
+ %parse-param {char *name}
++%parse-param {void *scanner}
++%lex-param {void* scanner}
+ 
+ %{
+ 
+@@ -78,6 +80,7 @@ PP_VALUE
+ 
+ void perf_pmu_error(struct list_head *list __maybe_unused,
+ 		    char *name __maybe_unused,
++		    void *scanner __maybe_unused,
+ 		    char const *msg __maybe_unused)
+ {
+ }
+-- 
+2.40.0.348.gf938b09366-goog
 
->
->
-> >
-> > > > Some project ideas are listed here:
-> > > > https://wiki.linuxfoundation.org/gsoc/2023-gsoc-perf
-> > > >
-> > > > Please help to share!
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > (Resend in plain text because of LKML's HTML filters)
