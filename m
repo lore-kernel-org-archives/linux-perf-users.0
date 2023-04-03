@@ -2,214 +2,157 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90570C761A6
-	for <linux-perf-users@archiver.kernel.org>; Sat,  1 Apr 2023 00:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0190C7619A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 02:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233186AbjDAA3s convert rfc822-to-8bit (ORCPT
+        id S231167AbjDCCnt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 31 Mar 2023 20:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
+        Sun, 2 Apr 2023 22:43:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233509AbjDAA3r (ORCPT
+        with ESMTP id S231159AbjDCCns (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 31 Mar 2023 20:29:47 -0400
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD29B1D852;
-        Fri, 31 Mar 2023 17:29:46 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id s23so17279541uae.5;
-        Fri, 31 Mar 2023 17:29:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680308986; x=1682900986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OBlyoCG5LrraHZ99yJ0ZxyQWhF4R6c4+6bmaGeRq1gw=;
-        b=SMnyPz1pjMV8PG6aQU2i2rI2ASiL1ZLNfSg73RNExKF1/LcxDHBR42kuoy/K6Yne+F
-         0Ar0cnORV446hFV3jVpfwzDZXAzrlS74E/r7uagWjz0nu1I2Fn+5M7ZvSZiYh6GWb6nT
-         VqkdICrhQ3GB9GeRZOxb9W4vhkFinM5SDgXsOef5A2jcSYdrAaZMz/ZDRbXNHXFkUgPj
-         Q36XkfQZnRX75/3K8pfwXR01OvLHCQeQ+3dgIrg9t0ZCCJW8SgiLUYMkCJv5I1K66xq+
-         8jbaxl/W8MSi04wfDYRFEBSq+nkgquznVcR7LFlcWAMzL7dpkQb6ikU8RrgC6Fq5do27
-         en1A==
-X-Gm-Message-State: AAQBX9eb3jbLBj+5gdcC6txdqS67FisWUxKzdeYLVBHX4rmO/6p34t5Z
-        g1VAZk1LzFu6NVLsHko/0DwOUwqMzkiRLfAfvYE=
-X-Google-Smtp-Source: AKy350b+UdbtNsbeWTDuQqjj0QTeUrVOfKAec9umZoelcs51P97qffJSP5Eyk5kH+sVF/2qMlW+KV9vHGDkcD3E4/z8=
-X-Received: by 2002:a1f:2d11:0:b0:410:329:baaf with SMTP id
- t17-20020a1f2d11000000b004100329baafmr9888056vkt.16.1680308985712; Fri, 31
- Mar 2023 17:29:45 -0700 (PDT)
+        Sun, 2 Apr 2023 22:43:48 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2044.outbound.protection.outlook.com [40.107.93.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC1AAF32;
+        Sun,  2 Apr 2023 19:43:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SpO485TY/rzyQgMlod91Stx6mZ2FnHYwIgFedoDolgpVTe15dC0mFwaczggQD9uhbI4bpeUYaZblXZruM6ZKe6Z3lfThepZ5So14isYFWM67Ksd4pVVhC6fB3STaF2JqeTgh8CKHgaVH3Rc+boysrzndc1zgBRNfCQ8mxfTQjXzmPC9+y245bDcqGgrX4sNJecCgBSsPpvuOiU8uLb3RZtGR58vaj/UbNQFs8VIo6DE8kF8vffTPPrmrRdl2RvU47V0vhqNXrqK7HIgIoMXnGZCS3k2vuP+UvVmCiFiaGkQ9drUH8HvLvFxxF4Nl5ohJkPFlmUpZKucBtvwSFMVsOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MuvtyXjllqPSMIwD54SP3BYNvDs4ze78uQ8DuukkwaU=;
+ b=Wq5u1+4RNI6uRJtZCmbxn0hbuoQg5ws7Y/HVCB3NFib8DJr7aX3elIO78T3l7L+qb4NkULaun6mmczJCYZD+jA4FtFh9yQcBrTr488X1WLjTfy63pdfvHEclebiidixeFCydXvd6r2+SULH8dD+RCd9xQgomQrQM/KMhK4nD5pNzJO7nJLAgWROJP4vCDRHDX7qvD13bDhAy6vXc52Zo8YWA4IC3EjBmnhoS002xeQIVbCT4X4+xJ0d2uDx+yKCvBVPFVLv9PXUaxCtP6jCHeZ7prUtrWnV/PGXnhA8VC6yJLOSOK9JyPDsbcm3lHPu/eVrTnHYfNtvv+SU/8wshNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MuvtyXjllqPSMIwD54SP3BYNvDs4ze78uQ8DuukkwaU=;
+ b=zDQPQ1UFabg4SQqTd7TheSGMlcvgNzOxVw+/oBbHt/4AzbrX8OawGOCU7ZHy9nb3nwDBQg8pwp4XaSQda55S8CGMEYmOTxacis/lTMpPwVCYGwxXdDH0aCyuPNFZbk+kaIXy/r50kF6OY4c8esf+A8NECj6pizclNjyQMfw8tqU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
+ by DS0PR12MB6415.namprd12.prod.outlook.com (2603:10b6:8:cc::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Mon, 3 Apr
+ 2023 02:43:44 +0000
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::42cb:32d6:2502:4cbd]) by MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::42cb:32d6:2502:4cbd%3]) with mapi id 15.20.6254.033; Mon, 3 Apr 2023
+ 02:43:44 +0000
+Message-ID: <ea3ddf8e-1809-1211-7ac4-d7175dbb4e08@amd.com>
+Date:   Mon, 3 Apr 2023 08:13:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [RFC PATCH 1/4] perf: Read cache instance ID when building cache
+ topology
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, ravi.bangoria@amd.com, sandipan.das@amd.com,
+        ananth.narayan@amd.com, gautham.shenoy@amd.com, eranian@google.com
+References: <20230331045117.1266-1-kprateek.nayak@amd.com>
+ <20230331045117.1266-2-kprateek.nayak@amd.com> <ZCbKCwJDf3PrjSLH@kernel.org>
+From:   K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <ZCbKCwJDf3PrjSLH@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0055.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:22::30) To MW2PR12MB2379.namprd12.prod.outlook.com
+ (2603:10b6:907:9::24)
 MIME-Version: 1.0
-References: <20230331004844.1592789-1-irogers@google.com> <20230331004844.1592789-4-irogers@google.com>
-In-Reply-To: <20230331004844.1592789-4-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 31 Mar 2023 17:29:34 -0700
-Message-ID: <CAM9d7cgRw0mHykCAwZvNP8oAXYUPzEXXaMwvg_krBnyPgrF-3w@mail.gmail.com>
-Subject: Re: [PATCH v1 3/4] perf srcline: Support for llvm-addr2line
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|DS0PR12MB6415:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a4e8b6d-cd6e-4a2e-0097-08db33ed3dd8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hJ/Nxrp1YZ/zCjqULJVreoNqF/2hSRMzo30lOfr9uJUb09k0Qd70YvY6I4M+rKKmQscpAKwg0tlecNcyFvO1ufErHBVKXQB83nPe1til3lUAQ6kgCQaeoxcg8ovvy47ANzJcuJUgS1zyJL/cjalHMMQGWIxYfYQB7DrilAkR6toDSpnyF/bMYJ5ruj8Y4FMGrH/tIfAR7xRZzfSOaxyzEIjfLP06oA+8Z/zht2obvYZM8ex86IxS/rfPKhMIQkIyvBi1aCI7NGNaRRafYBGxHR3eebHlmGgSFDfEhnu1cmTxVd32RaCNkdqbVzmYQB+PMYC+1B2n6tMLG4iX+GLhD8zLKxbylxfuyAbUVw96Cv4fqBJerVgf3jbikRuGEDQNm0w2n0JStsL2mJaOexdQwWzZHNF4dloLNHKPoSMs57vI71TSi4tKi9u5Vu6ZlKfhDU1OUvKge3o/vYuFAJ23IjU5GATSV2MYBkhZSmwNB/FoHkX67P/HB+5Rc750HxTIJnF/4fjeSc7UqEhrisw8rz+mGQBExXKu2w4l2muSeirT0m1I198v7UmS20Pwrw+gHZjUmjGxqnhFTm8OTiAAtiTf7UKR5TQUUCHV1JNT4spKXfGHPpffnHl+8ueRIITUWMpHE9SqAkoLDvrUVO+XsA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(136003)(366004)(346002)(451199021)(6666004)(36756003)(2906002)(4744005)(6486002)(31686004)(41300700001)(6916009)(4326008)(6512007)(6506007)(26005)(186003)(66476007)(66556008)(66946007)(8936002)(8676002)(7416002)(5660300002)(316002)(478600001)(2616005)(53546011)(86362001)(38100700002)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NEY5akgrWEp5bExTVTBCZmh3Ync1MDhoWU9jeVArYmU3UDNhU3RmUm1tbWxL?=
+ =?utf-8?B?TVBzMlNha2lHd2lySTUyS3lVUS8vdmRVYjV3UGxPSGVYODNNUjlMNHI0dk5R?=
+ =?utf-8?B?ZzBWWExaR0hNN0ZKUXlTdjV2aElMWFJrS0FreDV2bmlCbnY3V0ZmMFNveGh0?=
+ =?utf-8?B?Q1AzOWJsVDByVlVhYXYwU3NUS2tlaW1MZVNETFZUenhFeHlLY254OVZ2THVx?=
+ =?utf-8?B?SEVlbHZUZ3JYL0V0bEFRbGpuQ21JUGFzaXpjMnlRakFiUGhlTG1GWnkvV01K?=
+ =?utf-8?B?RDFCRnhXRVo3c3E2aEM5SkowY0NnblBINFQydVpRUGc2aW1zcXd4SHlBYjhx?=
+ =?utf-8?B?Y0J0TExJN0daQnN0S3puMXFWRHhhK3lhNmQvZjJwR21aZ21GL2IyVEpRcVRD?=
+ =?utf-8?B?eDd0U2oxVUZGdnlkdi9UV3FaS2VCZFkyaDNmcEN5MTExSlRjZGRZaXJkNEVG?=
+ =?utf-8?B?Z2hlZmhNeFRQcE92N0M2Y0hzQy9lQ3ZFak1FU1JCa0kwMEswa2hVeDRJNkNk?=
+ =?utf-8?B?SlV0bFpKTkpSRUpPaVBUb2c4alJBdHplR3lxL3V0VXlMWWNLanRCdFNLMHZG?=
+ =?utf-8?B?aGpXQnovQ1RIR2FjSUpFclc4dGg4Z3grYml3MGs4NFE1QXc2eTltWFkzTWdj?=
+ =?utf-8?B?TUszR0NYREV3QmVWUVlOZmVvY0xicjVsakVpWGhhVUNaazFaYkRHU2hCSXA4?=
+ =?utf-8?B?RmxMSmxzVnpiWWdyODM4QnBSMjkxWE1YLzlheHhOWWZNMmVXanNhcmE1UVgw?=
+ =?utf-8?B?dkZiSWx6bFA0TXRPMVZxK1JNK2FORVdkS0trdDNSTUF0T3BwQ2ZpTHBJd0d4?=
+ =?utf-8?B?SHN2ek9pYjRrblRqSC9JQy9CazB3T3RKTzdnb1RJR3FMdzdZYWRvK2VEeXJa?=
+ =?utf-8?B?d0hJZEZ2ekN5RlZvbXpPbjJTY2pEZDRESC9NTDJ6NGF4QmJER2J1MVNSQ2Zo?=
+ =?utf-8?B?T3phVm9YMTBLTnA4SEZwRlJlNXpGRkMrZkwwN2xZRjR4ZjRUYUhoMHBtT0lr?=
+ =?utf-8?B?R3l4WWQ2V05BT1ZLNXo2NjhCek9zekFTWXk5RUtubnFIZDJWcXdOOFNubksy?=
+ =?utf-8?B?cDVSRlBEQ25VeUpTQmRETE9WT1pnb3JmcGNUOXlDSjBQNkFvcE5Ga2RIb3lv?=
+ =?utf-8?B?UXR3TmlSUjFPZEJ2YjVvZXJ4b053R1psckRnc2hQTys0SzhvM0RjTEFhZDNs?=
+ =?utf-8?B?VmprL2luK1hXcmx5WE5lcUt3T0dPMkJ0V0cvRjJwMmZ2cGhBQ3JNa3I4QWdQ?=
+ =?utf-8?B?L1A2TFRWSUhlTlBHTytnOUdIR2FvSkRZRXdHUUFTSUxRY0pscUlEQWIvY3Zr?=
+ =?utf-8?B?Z3RLYWlzNGxKNTVKbFB6Njd2ZU14SW95M0xWQWJ2clFxV2Y5bnNQYTM2TWE5?=
+ =?utf-8?B?MTh3Wlh6UVdSWEdhbjRtMGhkYk4rTUhNTlBYZm81ZWp3Ti8rN1VBNjVMUUwx?=
+ =?utf-8?B?N3JXWTVLdzNObm41M2FJN0lYNE8wemQvUjhpcVVWQXAxajRhSExiZ2ZWTnZr?=
+ =?utf-8?B?djVLU09LL01JdUN4cVJOSFB0TFFQOE9rZk5BNFVvQk5SbXAvcWlROWR1bmM1?=
+ =?utf-8?B?WW5IR1UwcUpwcC9OUm10RHZjSUEvd1E5cTQwT2lRdUxXTzVNcURDbDJrUzUw?=
+ =?utf-8?B?WDZqOVAya1pGUUd0U3duOFJVQkJMY0wwMVB6c1I1aWIvbmNVT0tLelc2aXRN?=
+ =?utf-8?B?U0hYYWNuZ2RxZWRDUGdpY1JDYXRPWDE3QTIxSHIzQ3JVd2dKR1UwZnhGNGx1?=
+ =?utf-8?B?QVIxY29jdkNYZkZ5WFlrVVYreG9GNEZTZFpYdEhiRC9CL0VianMwYWtiVjlr?=
+ =?utf-8?B?T3o4eVZadTBONnhyWXdCKytuUHg4OG1zL3RObEZicjJiNlF4VGI4eElNUzlo?=
+ =?utf-8?B?SHl3cVRobXNZQWgyR2FJZGxqQ3A5UWRkazdqTUV1RWJKa3djaTJQWkhIZjQ2?=
+ =?utf-8?B?cDQzc1grbTlPZjVpWWJMV3Rwd0cxVHRJZlFIRktPTlphaWdidjhvM2Qva3FR?=
+ =?utf-8?B?UlcyeFNVZEp2ZUZ1NUdmTEt3b0xGVkNzUWh1eG1tYUFIdVFqLzlFaGxjbjVu?=
+ =?utf-8?B?Z2dsOG9adXBBajF1eHlFVDJEYjNPMnZTaCtSQ2FwajFNZ2o3ZTM3M1o3N0k2?=
+ =?utf-8?Q?AaTZJtCdXH2wkaT4+bOP75nAg?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a4e8b6d-cd6e-4a2e-0097-08db33ed3dd8
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2023 02:43:44.5178
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1i6P9DVBq6kpx5NM749hQgJO8R7geuLOsNQGwb0KHSIqIrx6Wk9MWLAa0fDwVa1pqr+4UYH2Qpx01nZA6p45+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6415
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 5:49 PM Ian Rogers <irogers@google.com> wrote:
->
-> The sentinel value differs for llvm-addr2line. Configure this once and
-> then detect when reading records.
+Hello Arnaldo,
 
-Thanks for fixing this!
+Thank you for taking a look at the series.
 
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/srcline.c | 65 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 62 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> index 2da86e57215d..423ddf3967b0 100644
-> --- a/tools/perf/util/srcline.c
-> +++ b/tools/perf/util/srcline.c
-> @@ -435,7 +435,50 @@ static struct child_process *addr2line_subprocess_init(const char *addr2line_pat
->         return a2l;
->  }
->
-> +enum a2l_style {
-> +       BROKEN,
-> +       GNU_BINUTILS,
-> +       LLVM,
-> +};
-> +
-> +static enum a2l_style addr2line_configure(struct child_process *a2l)
-> +{
-> +       static bool cached;
-> +       static enum a2l_style style;
-> +
-> +       if (!cached) {
-> +               char buf[128];
-> +               struct io io;
-> +               int ch;
-> +
-> +               if (write(a2l->in, ",\n", 2) != 2)
-> +                       return BROKEN;
-> +
-> +               io__init(&io, a2l->out, buf, sizeof(buf));
-> +               ch = io__get_char(&io);
-> +               if (ch == ',') {
-> +                       style = LLVM;
-> +                       cached = true;
-> +               } else if (ch == '?') {
-> +                       style = GNU_BINUTILS;
-> +                       cached = true;
-> +               } else {
-> +                       style = BROKEN;
-> +               }
-> +               do {
-> +                       ch = io__get_char(&io);
-> +               } while (ch > 0 && ch != '\n');
+On 3/31/2023 5:24 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Mar 31, 2023 at 10:21:14AM +0530, K Prateek Nayak escreveu:
+>> CPU cache level data currently stores cache level, type, line size,
+>> associativity, sets, total cache size, and the CPUs sharing the cache.
+>> Also read and store the cache instance ID from
+>> "/sys/devices/system/cpu/cpuX/cache/indexY/id" in the cache level data.
+>> Use instance ID as well when comparing cache levels.
+> 
+> And if a new perf tool is used in an older kernel without this new 'id'
+> file?
+> 
+> Please check if the file exists, if it doesn't don't fail, just
+> initialize with a zero, this way the latest perf will be usable in older
+> kernels.
 
-Maybe better to io__getline() ?
+That makes sense. I'll handle this case as you suggested in the next
+version.
 
-> +               if (style == GNU_BINUTILS) {
-> +                       do {
-> +                               ch = io__get_char(&io);
-> +                       } while (ch > 0 && ch != '\n');
-> +               }
-> +       }
-> +       return style;
-> +}
-> +
->  static int read_addr2line_record(struct io *io,
-> +                                enum a2l_style style,
->                                  char **function,
->                                  char **filename,
->                                  unsigned int *line_nr)
-> @@ -462,6 +505,12 @@ static int read_addr2line_record(struct io *io,
->
->         if (io__getline(&line, &line_len, io) < 0 || !line_len)
->                 goto error;
-> +
-> +       if (style == LLVM && line_len == 2 && line[0] == ',') {
-> +               zfree(&line);
-> +               return 0;
-> +       }
-> +
->         if (function != NULL)
->                 *function = strdup(strim(line));
->
-> @@ -471,7 +520,8 @@ static int read_addr2line_record(struct io *io,
->         if (io__getline(&line, &line_len, io) < 0 || !line_len)
->                 goto error;
->
-> -       if (filename_split(line, line_nr == NULL ? &dummy_line_nr : line_nr) == 0) {
-> +       if (filename_split(line, line_nr == NULL ? &dummy_line_nr : line_nr) == 0 &&
-> +           style == GNU_BINUTILS) {
->                 ret = 0;
->                 goto error;
->         }
-> @@ -523,6 +573,7 @@ static int addr2line(const char *dso_name, u64 addr,
->         char buf[128];
->         ssize_t written;
->         struct io io;
-> +       enum a2l_style a2l_style;
->
->         if (!a2l) {
->                 if (!filename__has_section(dso_name, ".debug_line"))
-> @@ -538,6 +589,12 @@ static int addr2line(const char *dso_name, u64 addr,
->                         pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
->                 goto out;
->         }
-> +       a2l_style = addr2line_configure(a2l);
-> +       if (a2l_style == BROKEN) {
-> +               if (!symbol_conf.disable_add2line_warn)
-> +                       pr_warning("%s: addr2line configuration failed\n", __func__);
-> +               goto out;
-> +       }
->
->         /*
->          * Send our request and then *deliberately* send something that can't be interpreted as
+> 
+> - Arnaldo
+>  
+>> [..snip..]
+> 
 
-Can you please update the comment about the LLVM behavior?
-
-Thanks,
-Namhyung
-
-
-> @@ -557,7 +614,8 @@ static int addr2line(const char *dso_name, u64 addr,
->         }
->         io__init(&io, a2l->out, buf, sizeof(buf));
->
-> -       switch (read_addr2line_record(&io, &record_function, &record_filename, &record_line_nr)) {
-> +       switch (read_addr2line_record(&io, a2l_style,
-> +                                     &record_function, &record_filename, &record_line_nr)) {
->         case -1:
->                 if (!symbol_conf.disable_add2line_warn)
->                         pr_warning("%s %s: could not read first record\n", __func__, dso_name);
-> @@ -567,7 +625,7 @@ static int addr2line(const char *dso_name, u64 addr,
->                  * The first record was invalid, so return failure, but first read another
->                  * record, since we asked a junk question and have to clear the answer out.
->                  */
-> -               switch (read_addr2line_record(&io, NULL, NULL, NULL)) {
-> +               switch (read_addr2line_record(&io, a2l_style, NULL, NULL, NULL)) {
->                 case -1:
->                         if (!symbol_conf.disable_add2line_warn)
->                                 pr_warning("%s %s: could not read delimiter record\n",
-> @@ -606,6 +664,7 @@ static int addr2line(const char *dso_name, u64 addr,
->
->         /* We have to read the records even if we don't care about the inline info. */
->         while ((record_status = read_addr2line_record(&io,
-> +                                                     a2l_style,
->                                                       &record_function,
->                                                       &record_filename,
->                                                       &record_line_nr)) == 1) {
-> --
-> 2.40.0.348.gf938b09366-goog
->
+ 
+--
+Thanks and Regards,
+Prateek
