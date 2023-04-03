@@ -2,109 +2,71 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10811C761AF
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 20:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D28C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 20:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232206AbjDCU0F (ORCPT
+        id S233446AbjDCU0w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 16:26:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37518 "EHLO
+        Mon, 3 Apr 2023 16:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231644AbjDCUZf (ORCPT
+        with ESMTP id S233436AbjDCU0B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 16:25:35 -0400
+        Mon, 3 Apr 2023 16:26:01 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE9840CA;
-        Mon,  3 Apr 2023 13:25:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEB94687;
+        Mon,  3 Apr 2023 13:25:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E14E4629D4;
-        Mon,  3 Apr 2023 20:24:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26506C433D2;
-        Mon,  3 Apr 2023 20:24:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 951AC62A7A;
+        Mon,  3 Apr 2023 20:25:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC006C433A0;
+        Mon,  3 Apr 2023 20:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680553473;
-        bh=91QBxRuG+rj/36B4hBwkQ8h+oBWnHyLVhu12FWCCONI=;
+        s=k20201202; t=1680553503;
+        bh=dRX05bqC+b/gPVRZPnCE6TBdgcL3wnJnZIX1Z+syodI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W8kTGH71sFwl+OsC3I+KiR8KOyeDixAklpjrmMugAQY+ZBJgijHwKWMUIYtgr0u+P
-         BNg00hOMiVhMwTmR69saevYaagHb53+pNAjIb9ODIUlXUMi9M3STHcppcMb1g5Lw1k
-         oASkMWJTeiEh5rsXT47CoNhdAEPznp/LpPR2kMjpFxn1zKckghXiXyP3IxGLt0pi9E
-         GnhhL8QqsG/B8eVBLfU3x5JvLADMEUezqw5G7wi408LLXA+xfKPkYI6RysPeRexFit
-         hhNCnHVK25coCZlojbza13BYO9FvF8RyD7LYeMi4xv23AGf2R0WMQBtm1UlPRMmyNy
-         56AWn0taghhkQ==
+        b=CJOLT8iKtHB/vEuVrSJ0Xg0JMA6dc1geO6bNdaaPhmwQto614HtT7wBGXCt7mTKDs
+         cOseonfo8v94fFzqY73EsTO8OpG7OdIfMKpP5s1IrQUtB+jpB9heHDIVLTTlDxWu1N
+         kaNSdqEy9eeQBluDsfaac0xzJhfCvGQ6JbH8E0B1e81Ua2q9dF1BwQlRlwcKGDSQuV
+         YUNVp8d3ipoR9pYk1SIsBU5NDhgnT88XsS9t2kibMuqauWxWwG9NiX/rqPao0WJZ1v
+         Mf+/VEyob1h66VXSfvk+ZzcWT7/V1L3NXBjSp2PePTbqwO+O7KRggYYI1EXSbSR1Ds
+         LJRPDW8DollgA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A4CA34052D; Mon,  3 Apr 2023 17:24:30 -0300 (-03)
-Date:   Mon, 3 Apr 2023 17:24:30 -0300
+        id 718224052D; Mon,  3 Apr 2023 17:25:00 -0300 (-03)
+Date:   Mon, 3 Apr 2023 17:25:00 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 0/4] Support for llvm-addr2line
-Message-ID: <ZCs1/skb2XqDYrYF@kernel.org>
-References: <20230403184033.1836023-1-irogers@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCHSET 0/9] perf tools: Update pmu scan using openat() (v1)
+Message-ID: <ZCs2HO0m8lPjyGgH@kernel.org>
+References: <20230331202949.810326-1-namhyung@kernel.org>
+ <CAP-5=fWC1v+vsi-qmYXy8VMKXOsscYobucwS3GZw=gycdnAc3w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230403184033.1836023-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWC1v+vsi-qmYXy8VMKXOsscYobucwS3GZw=gycdnAc3w@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 03, 2023 at 11:40:29AM -0700, Ian Rogers escreveu:
-> The addr2line command is started and then addresses piped to it. In
-> order to determine the end of a addr2lines output a ',' it output with
-> an expectation to get '??\n??:0\n' as a reply. llvm-addr2line differs
-> in that ',' generates a reply of ','.
+Em Mon, Apr 03, 2023 at 10:28:28AM -0700, Ian Rogers escreveu:
+> On Fri, Mar 31, 2023 at 1:29 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > 
-> The approach detects and then caches the addr2line style. When records
-> are read the sentinel is detected appropriately.
-> 
-> Comparing the output there is a little more inline data on my machine
-> with llvm-addr2line:
-> $ sudo perf record -a -g sleep 1
-> $ sudo perf report --addr2line=addr2line > a.txt
-> $ sudo perf report --addr2line=llvm-addr2line > b.txt
-> $ wc -l a.txt b.txt
->   12386 a.txt
->   12477 b.txt
-> 
-> Some other small changes, switching to the api/io code to avoid file
-> streams wrapping the command's stdin/stdout. Ignore SIGPIPE for when
-> addr2line exits and writes fail.
-> 
-> v2. Address review comments from Arnaldo and Namhyung, fixing a
->     realloc error path, argument ordering and a comment.
+> Some nice stack size savings too. The reentrant fix was pre-existing. Series:
+> Acked-by: Ian Rogers <irogers@google.com>
 
-Added to local repo, build testing, will be in tmp.perf-tools-next soon.
+Thanks, applied.
 
 - Arnaldo
- 
-> Ian Rogers (4):
->   tools api: Add io__getline
->   perf srcline: Simplify addr2line subprocess
->   perf srcline: Support for llvm-addr2line
->   perf srcline: Avoid addr2line SIGPIPEs
-> 
->  tools/lib/api/io.h        |  45 ++++++++++
->  tools/perf/tests/api-io.c |  36 ++++++++
->  tools/perf/util/srcline.c | 171 +++++++++++++++++++++++---------------
->  3 files changed, 184 insertions(+), 68 deletions(-)
-> 
-> -- 
-> 2.40.0.348.gf938b09366-goog
-> 
 
--- 
-
-- Arnaldo
