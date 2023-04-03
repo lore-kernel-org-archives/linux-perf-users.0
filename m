@@ -2,315 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E2EC76196
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 08:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22173C77B60
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 09:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231573AbjDCIy6 (ORCPT
+        id S231972AbjDCJQx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 04:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47626 "EHLO
+        Mon, 3 Apr 2023 05:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbjDCIy6 (ORCPT
+        with ESMTP id S231736AbjDCJQk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 04:54:58 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B808C2101;
-        Mon,  3 Apr 2023 01:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680512096; x=1712048096;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=OgVZFnwUeClEFYscei6sBPeRulTSAIUExuFlXZd8o24=;
-  b=MY/YR0jscimVWdkKLtCmeVRV2Kj3ldWsGRDkv5CMYoD1wutRK6s12mXx
-   O14RKzsO/1ZV7SKWKs+mhFRDgF1dTf/XNTLRLmoL+3sicyaTaTdZUFWSt
-   cC9IiffjH4bcfJD9nHF2N4dgupatzLJKnFSUr/xcQfwC8kVwn/1Fbk8of
-   P/uz3hKXt08uHumZhvCF3IZDJBRkQwUtNOR7W8Y88U4FsvtJGJsW4Sb5p
-   cMTNFRLGe2nIALVlYbOiaBnLOzwdII8RwFuHhVhowWonEDYFfAJkXgkqr
-   w16Gjg5hjXQ+l7TmcPaqzKy+j9fRdQwDZUc+mqG8MvKPWv7V4NYWUQj41
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10668"; a="330416989"
-X-IronPort-AV: E=Sophos;i="5.98,314,1673942400"; 
-   d="scan'208";a="330416989"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2023 01:54:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10668"; a="860114101"
-X-IronPort-AV: E=Sophos;i="5.98,314,1673942400"; 
-   d="scan'208";a="860114101"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.40.243])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2023 01:54:51 -0700
-Message-ID: <3ae7d0d9-32c2-3a5f-4f5a-4ba974ebef2b@intel.com>
-Date:   Mon, 3 Apr 2023 11:54:48 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.1
-Subject: Re: [PATCH] perf: script: add new output field 'dsoip'
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Changbin Du <changbin.du@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hui Wang <hw.huiwang@huawei.com>
-References: <20230331084418.3910903-1-changbin.du@huawei.com>
- <f2eb0299-05cf-72f5-4bb1-c09ebb0a55a1@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <f2eb0299-05cf-72f5-4bb1-c09ebb0a55a1@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Apr 2023 05:16:40 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D851610A8E
+        for <linux-perf-users@vger.kernel.org>; Mon,  3 Apr 2023 02:16:13 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id z4-20020a25bb04000000b00b392ae70300so28390855ybg.21
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Apr 2023 02:16:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680513371;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oOBOcidFD52mr0nHF1MZQO6G+xL8UJJoT29DA6+kD5M=;
+        b=U+awEBpsQrO+YcypjIJ44XmrE+Z/5jhRdtWiOZu5SPfWo4nxy4kRiW0ppUZKcHmBFc
+         U7wUdiQ2EkiGOMqyrcE5WNHN55LXhRVjlS67UQxgmnYrU/s4erPOIAVSsNJzQm7uG4Va
+         RFTXD7fT9KQJ5butgxHOwZKepOAtbp+sVf7EITVC8q7KXGgEfkW8Epfq0q6KlRHwHzZ1
+         8gAL/4c2HgyDtOT42vytqGik3ldKOAT3vnKxoiumX9oLbwJhtuSjycc8JDu0N2HcQ5KV
+         rvxzgiieAcPoNgj0roKhXT0tdcH2pqgC8OjKBzNSeLBkUB0KwKq17C/O80Z4xO5HEC6D
+         4Hhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680513371;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oOBOcidFD52mr0nHF1MZQO6G+xL8UJJoT29DA6+kD5M=;
+        b=74dVNlTgGAr6McW4e+LZ7jc1z72z0gmjYae3696ix5HmHEtz9PPZRKPsRVeHwPwGek
+         cim3BGmUfwecPIyDw5SlwQmewroii0mM7J4igdPtnh9A3uz/Cjr0G9KVkepb2iQAGJEG
+         1BwBh6as65O41SC5t+fUP5lD/GMAXNk3CYVBn8xUVjxcGvAmEH8Yar/gyupcq0kf8RUZ
+         OEY4e0uEBZ0gWyX1WPZv9i5EQN/r1kD1xaDYWtY7NtRGGK8NuUG2F1sN1B4x5J90RERm
+         dCtY//QwM/XZftuFAGQ6RheaFPISOpzmQbOZkWwDMt/jdTUHxWk5gfaVil2ecJG+7s0T
+         /93g==
+X-Gm-Message-State: AAQBX9c79S3XY4y1jIAa1c+k8z+zDZCLyjeJ7MJKtIBAVB+nU1cqOExO
+        QWdwGYbW9atM85868cQShTqKZSFAaBPW41QPfA==
+X-Google-Smtp-Source: AKy350asH3jkh9RPehWVzkcrZy5ko5YNd2dBWf3ur6JlNEb8PyxtVSj9rcv/YcPQHLdIMMH23U8d1HYmSTnb07Z3uw==
+X-Received: from peternewman0.zrh.corp.google.com ([2a00:79e0:9d:6:326b:2eb7:dac2:a97e])
+ (user=peternewman job=sendgmr) by 2002:a81:af23:0:b0:541:8c77:93b1 with SMTP
+ id n35-20020a81af23000000b005418c7793b1mr16834275ywh.8.1680513371147; Mon, 03
+ Apr 2023 02:16:11 -0700 (PDT)
+Date:   Mon,  3 Apr 2023 11:15:47 +0200
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.423.gd6c402a77b-goog
+Message-ID: <20230403091547.441550-1-peternewman@google.com>
+Subject: [PATCH v5] arm64: pmuv3: dynamically map PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+From:   Peter Newman <peternewman@google.com>
+To:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     acme@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
+        eranian@google.com, irogers@google.com, jolsa@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        will@kernel.org, Peter Newman <peternewman@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/04/23 08:28, Adrian Hunter wrote:
-> On 31/03/23 11:44, Changbin Du wrote:
->> The goal of this change is to achieve consistent output for address. Before
->> this, the raw ip is printed for non-callchain and binary offset for
->> callchain. Mostly what we expect is the raw ip.
->>
->> This patch does two changes:
->>   - Always print raw ip for symbols.
->>   - Add a new 'dsoip' field if we really need the binary offset, and the
-> 
-> IP stands for instruction pointer, which is always a memory address,
-> so 'dsoip' does not seem like a good name.  What about 'dso_offset'?
-> 
->>     offset is appended to dso name.
->>
->> Default output now:
->> $ perf script
->>        perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
->>        perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
->>        perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
->>        perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
->>        perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown])
->>        perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown])
->>        perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown])
->>        perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown])
->>               ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown])
->>               ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so)
->>               ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so)
->>               ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so)
->>               ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls)
->>               ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls)
->>               ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown])
->>
->> Display 'dsoip' field:
->> $ perf script -F +dsoip
->>        perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown]+0x0)
->>        perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown]+0x0)
->>               ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown]+0x0)
->>               ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so+0xe8c7)
->>               ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so+0xbd0d0)
->>               ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so+0x94594)
->>               ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls+0x1227c)
->>               ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls+0x10202)
->>               ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown]+0x0)
->>
->> Signed-off-by: Changbin Du <changbin.du@huawei.com>
->> ---
->>  tools/perf/Documentation/perf-script.txt |  2 +-
->>  tools/perf/builtin-script.c              |  5 +++++
->>  tools/perf/util/evsel_fprintf.c          | 26 ++++++++++++------------
->>  tools/perf/util/evsel_fprintf.h          | 13 ++++++------
->>  4 files changed, 26 insertions(+), 20 deletions(-)
->>
->> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
->> index 777a0d8ba7d1..ef392785f776 100644
->> --- a/tools/perf/Documentation/perf-script.txt
->> +++ b/tools/perf/Documentation/perf-script.txt
->> @@ -130,7 +130,7 @@ OPTIONS
->>  -F::
->>  --fields::
->>          Comma separated list of fields to print. Options are:
->> -        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
->> +        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoip, addr, symoff,
->>          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
->>          brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
->>          phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
->> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->> index a792214d1af8..a181decf7922 100644
->> --- a/tools/perf/builtin-script.c
->> +++ b/tools/perf/builtin-script.c
->> @@ -133,6 +133,7 @@ enum perf_output_field {
->>  	PERF_OUTPUT_VCPU            = 1ULL << 38,
->>  	PERF_OUTPUT_CGROUP          = 1ULL << 39,
->>  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
->> +	PERF_OUTPUT_DSOIP           = 1ULL << 41,
->>  };
->>  
->>  struct perf_script {
->> @@ -174,6 +175,7 @@ struct output_option {
->>  	{.str = "ip",    .field = PERF_OUTPUT_IP},
->>  	{.str = "sym",   .field = PERF_OUTPUT_SYM},
->>  	{.str = "dso",   .field = PERF_OUTPUT_DSO},
->> +	{.str = "dsoip", .field = PERF_OUTPUT_DSOIP},
->>  	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
->>  	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
->>  	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
->> @@ -574,6 +576,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
->>  	if (PRINT_FIELD(DSO))
->>  		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
->>  
->> +	if (PRINT_FIELD(DSOIP))
->> +		output[type].print_ip_opts |= EVSEL__PRINT_DSOIP;
->> +
->>  	if (PRINT_FIELD(SYMOFFSET))
->>  		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
->>  
->> diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
->> index bd22c4932d10..fd1791fab051 100644
->> --- a/tools/perf/util/evsel_fprintf.c
->> +++ b/tools/perf/util/evsel_fprintf.c
->> @@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
->>  	int print_ip = print_opts & EVSEL__PRINT_IP;
->>  	int print_sym = print_opts & EVSEL__PRINT_SYM;
->>  	int print_dso = print_opts & EVSEL__PRINT_DSO;
->> +	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
->>  	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
->>  	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
->>  	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
->> @@ -133,7 +134,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
->>  		while (1) {
->>  			struct symbol *sym;
->>  			struct map *map;
->> -			u64 addr = 0;
->> +			u64 dso_ip = 0;
-> 
-> Renaming 'addr' just makes the patch more complicated.
-> Just leave it as 'addr'
-> 
->>  
->>  			node = callchain_cursor_current(cursor);
->>  			if (!node)
->> @@ -141,6 +142,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
->>  
->>  			sym = node->ms.sym;
->>  			map = node->ms.map;
->> +			if (map)
->> +				dso_ip = map->map_ip(map, node->ip);
-> 
-> There does not seem to be any reason to move these lines of code.
-> 
->>  
->>  			if (sym && sym->ignore && print_skip_ignored)
->>  				goto next;
->> @@ -150,20 +153,12 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
->>  			if (print_arrow && !first)
->>  				printed += fprintf(fp, " <-");
->>  
->> -			if (map)
->> -				addr = map->map_ip(map, node->ip);
->> -
->> -			if (print_ip) {
->> -				/* Show binary offset for userspace addr */
->> -				if (map && !map->dso->kernel)
-> 
-> I would have expected to keep existing functionality unchanged i.e.
-> 
-> -				if (map && !map->dso->kernel)
-> +				if (!print_dsoip && map && !map->dso->kernel)
-> 
->> -					printed += fprintf(fp, "%c%16" PRIx64, s, addr);
->> -				else
->> -					printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
->> -			}
->> +			if (print_ip)
->> +				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
->>  
->>  			if (print_sym) {
->>  				printed += fprintf(fp, " ");
->> -				node_al.addr = addr;
->> +				node_al.addr = dso_ip;
->>  				node_al.map  = map;
->>  
->>  				if (print_symoffset) {
->> @@ -179,11 +174,13 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
->>  			if (print_dso && (!sym || !sym->inlined)) {
->>  				printed += fprintf(fp, " (");
->>  				printed += map__fprintf_dsoname(map, fp);
->> +				if (print_dsoip)
-> 
-> Better to avoid '[unknown]+0x0' i.e.
-> 
-> 				if (print_dsoip && map && map->dso)
-> 
->> +					printed += fprintf(fp, "+0x%lx", (map && map->dso) ? dso_ip : 0);
->>  				printed += fprintf(fp, ")");
->>  			}
->>  
->>  			if (print_srcline)
->> -				printed += map__fprintf_srcline(map, addr, "\n  ", fp);
->> +				printed += map__fprintf_srcline(map, dso_ip, "\n  ", fp);
->>  
->>  			if (sym && sym->inlined)
->>  				printed += fprintf(fp, " (inlined)");
->> @@ -214,6 +211,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
->>  	int print_ip = print_opts & EVSEL__PRINT_IP;
->>  	int print_sym = print_opts & EVSEL__PRINT_SYM;
->>  	int print_dso = print_opts & EVSEL__PRINT_DSO;
->> +	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
->>  	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
->>  	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
->>  	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
->> @@ -242,6 +240,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
->>  		if (print_dso) {
->>  			printed += fprintf(fp, " (");
->>  			printed += map__fprintf_dsoname(al->map, fp);
->> +			if (print_dsoip)
-> 
-> Better to avoid '[unknown]+0x0' i.e.
-> 
-> 				if (print_dsoip && al->map && al->map->dso)
-> 
-> 
->> +				printed += fprintf(fp, "+0x%lx", (al->map && al->map->dso) ? al->addr : 0);
->>  			printed += fprintf(fp, ")");
->>  		}
->>  
->> diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
->> index 3093d096c29f..3f282c5840da 100644
->> --- a/tools/perf/util/evsel_fprintf.h
->> +++ b/tools/perf/util/evsel_fprintf.h
->> @@ -20,12 +20,13 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
->>  #define EVSEL__PRINT_IP			(1<<0)
->>  #define EVSEL__PRINT_SYM		(1<<1)
->>  #define EVSEL__PRINT_DSO		(1<<2)
->> -#define EVSEL__PRINT_SYMOFFSET		(1<<3)
->> -#define EVSEL__PRINT_ONELINE		(1<<4)
->> -#define EVSEL__PRINT_SRCLINE		(1<<5)
->> -#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
->> -#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
->> -#define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
->> +#define EVSEL__PRINT_DSOIP		(1<<3)
->> +#define EVSEL__PRINT_SYMOFFSET		(1<<4)
->> +#define EVSEL__PRINT_ONELINE		(1<<5)
->> +#define EVSEL__PRINT_SRCLINE		(1<<6)
->> +#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<7)
->> +#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<8)
->> +#define EVSEL__PRINT_SKIP_IGNORED	(1<<9)
+From: Stephane Eranian <eranian@google.com>
 
-Also, do these really need to be renumbered?  Why not just
-put:
+The mapping of perf_events generic hardware events to actual PMU events on
+ARM PMUv3 may not always be correct. This is in particular true for the
+PERF_COUNT_HW_BRANCH_INSTRUCTIONS event. Although the mapping points to an
+architected event, it may not always be available. This can be seen with a
+simple:
 
-#define EVSEL__PRINT_DSOIP			(1<<9)
+$ perf stat -e branches sleep 0
+ Performance counter stats for 'sleep 0':
 
->>  
->>  struct addr_location;
->>  struct perf_event_attr;
-> 
+   <not supported>      branches
+
+       0.001401081 seconds time elapsed
+
+Yet the hardware does have an event that could be used for branches.
+
+Dynamically check for a supported hardware event which can be used for
+PERF_COUNT_HW_BRANCH_INSTRUCTIONS at mapping time.
+
+And with that:
+
+$ perf stat -e branches sleep 0
+
+ Performance counter stats for 'sleep 0':
+
+           166,739      branches
+
+       0.000832163 seconds time elapsed
+
+Co-Developed-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Co-Developed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Co-Developed-by: Peter Newman <peternewman@google.com>
+Signed-off-by: Peter Newman <peternewman@google.com>
+Link: https://lore.kernel.org/all/YvunKCJHSXKz%2FkZB@FVFF77S0Q05N
+---
+v4->v5:
+ - update changelog tags
+v3->v4:
+ - splice Mark's patch with Stephane's problem statement
+v2->v3:
+ - removed prints per Will's suggestion
+ 
+[v4] https://lore.kernel.org/lkml/20230327122527.3913496-1-peternewman@google.com/
+[v3] https://lore.kernel.org/all/20220816130221.885920-1-peternewman@google.com/
+[v2] https://lore.kernel.org/lkml/20220324181458.3216262-1-eranian@google.com/
+
+ arch/arm64/kernel/perf_event.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index dde06c0f97f3..ee63f8e719ea 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -45,7 +45,6 @@ static const unsigned armv8_pmuv3_perf_map[PERF_COUNT_HW_MAX] = {
+ 	[PERF_COUNT_HW_INSTRUCTIONS]		= ARMV8_PMUV3_PERFCTR_INST_RETIRED,
+ 	[PERF_COUNT_HW_CACHE_REFERENCES]	= ARMV8_PMUV3_PERFCTR_L1D_CACHE,
+ 	[PERF_COUNT_HW_CACHE_MISSES]		= ARMV8_PMUV3_PERFCTR_L1D_CACHE_REFILL,
+-	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED,
+ 	[PERF_COUNT_HW_BRANCH_MISSES]		= ARMV8_PMUV3_PERFCTR_BR_MIS_PRED,
+ 	[PERF_COUNT_HW_BUS_CYCLES]		= ARMV8_PMUV3_PERFCTR_BUS_CYCLES,
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= ARMV8_PMUV3_PERFCTR_STALL_FRONTEND,
+@@ -1048,6 +1047,28 @@ static void armv8pmu_reset(void *info)
+ 	armv8pmu_pmcr_write(pmcr);
+ }
+ 
++static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
++				      struct perf_event *event)
++{
++	if (event->attr.type == PERF_TYPE_HARDWARE &&
++	    event->attr.config == PERF_COUNT_HW_BRANCH_INSTRUCTIONS) {
++
++		if (test_bit(ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED,
++			     armpmu->pmceid_bitmap))
++			return ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED;
++
++		if (test_bit(ARMV8_PMUV3_PERFCTR_BR_RETIRED,
++			     armpmu->pmceid_bitmap))
++			return ARMV8_PMUV3_PERFCTR_BR_RETIRED;
++
++		return HW_OP_UNSUPPORTED;
++	}
++
++	return armpmu_map_event(event, &armv8_pmuv3_perf_map,
++				&armv8_pmuv3_perf_cache_map,
++				ARMV8_PMU_EVTYPE_EVENT);
++}
++
+ static int __armv8_pmuv3_map_event(struct perf_event *event,
+ 				   const unsigned (*extra_event_map)
+ 						  [PERF_COUNT_HW_MAX],
+@@ -1059,9 +1080,7 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+ 	int hw_event_id;
+ 	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
+ 
+-	hw_event_id = armpmu_map_event(event, &armv8_pmuv3_perf_map,
+-				       &armv8_pmuv3_perf_cache_map,
+-				       ARMV8_PMU_EVTYPE_EVENT);
++	hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
+ 
+ 	/*
+ 	 * CHAIN events only work when paired with an adjacent counter, and it
+
+base-commit: 7e364e56293bb98cae1b55fd835f5991c4e96e7d
+-- 
+2.40.0.423.gd6c402a77b-goog
 
