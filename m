@@ -2,174 +2,80 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A161C761A6
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 17:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6D3C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 18:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232770AbjDCRt1 (ORCPT
+        id S232117AbjDCS0k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 13:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
+        Mon, 3 Apr 2023 14:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232750AbjDCRtK (ORCPT
+        with ESMTP id S231643AbjDCS0j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 13:49:10 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB242107;
-        Mon,  3 Apr 2023 10:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680544107; x=1712080107;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=v25kyqtNN8d8QRdIbwVdDGXVyNuQYtW+0hay97cNYhQ=;
-  b=h5b+QuOkGA51RwLHIDSBz9KN83UfhQdGo37sgq7fl2tV8QuhKSduVy5I
-   bkzdNRXo0zzKGbrjRZxtyvgIDfr1+oNNwfwzXxtDrxxoTn74bTMy+sVv8
-   QU+G41wCt9UID/3KHGPGmvE7cOzCAP5sPWn+rQ5fnhToOSthwyrsd2RP+
-   XpYt6BsPU+BS2MYQ5f/+pm1nq2Re5AmMmKwdpJV/cI9O+FUJ0YrCcs/Kl
-   HNM41rUlSp9xeETrJCciGhgtla7r5Un5LsH33zyw7FexME+vJ8ZCSYPcs
-   BZMk8XZbXyBYz7l5lOEtEghA74aRMRYZtk3rVDNcl7vUihJdjBLRHPKX8
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="339465232"
-X-IronPort-AV: E=Sophos;i="5.98,315,1673942400"; 
-   d="scan'208";a="339465232"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2023 10:45:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="1015804705"
-X-IronPort-AV: E=Sophos;i="5.98,315,1673942400"; 
-   d="scan'208";a="1015804705"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Apr 2023 10:45:55 -0700
-Received: from [10.212.177.123] (kliang2-mobl1.ccr.corp.intel.com [10.212.177.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 3 Apr 2023 14:26:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DDE170A;
+        Mon,  3 Apr 2023 11:26:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 07CD45804D9;
-        Mon,  3 Apr 2023 10:45:53 -0700 (PDT)
-Message-ID: <bf9ef54d-65da-ce59-3b47-f3dc29a5e052@linux.intel.com>
-Date:   Mon, 3 Apr 2023 13:45:52 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 52AAD625BD;
+        Mon,  3 Apr 2023 18:26:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E35DC433D2;
+        Mon,  3 Apr 2023 18:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680546397;
+        bh=9cTbP+OwoBmN9lO7JnS56Gimu901xUlOBcJBWXc836g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h5r4/M7Vm7P7FUqKuVcFelGPTC8sFySfyH5iBCpaUzJ2L4I+y6RbVwW+++vwx7l7r
+         A/DimKxXuLS8iBKzRW7vBMh0tViOSXMfSz1i1qbq9kldUMOsE8Pqi4nEo+rq6YpkaR
+         dglxEiC90tvw1WZDm3DYpWNdU85NT1q1XI+PW6OUIUH4+9GABf06kkCHICtBcGh6/3
+         sfEvu9t3B2HsM/+LAFEdRgKMwrulib1fP2ImcW3nkeABf9e4O6UvYtma4T7qH2fwhb
+         LSjovmMIIw9SO+2vHWfzKlTwynDwx88d0B81fCQXLDW9xSAOuBsbcMbbKp2/uRPrhG
+         xPTNcl5LD18SQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0C8004052D; Mon,  3 Apr 2023 15:26:35 -0300 (-03)
+Date:   Mon, 3 Apr 2023 15:26:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/2] perf intel-pt: Two small fixes for stable
+Message-ID: <ZCsaW/uqxR2cN6b3@kernel.org>
+References: <20230403154831.8651-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v4 5/5] docs: perf: Minimal introduction the the CXL PMU
- device and driver
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-cxl@vger.kernel.org, peterz@infradead.org
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        will@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
- <20230330164556.31533-6-Jonathan.Cameron@huawei.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230330164556.31533-6-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230403154831.8651-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2023-03-30 12:45 p.m., Jonathan Cameron wrote:
-> Very basic introduction to the device and the current driver support
-> provided. I expect to expand on this in future versions of this patch
-> set.
+Em Mon, Apr 03, 2023 at 06:48:29PM +0300, Adrian Hunter escreveu:
+> Hi
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Here are 2 small fixes for stable.
 > 
-> --
-> v4: No change
-> ---
->  Documentation/admin-guide/perf/cxl.rst   | 65 ++++++++++++++++++++++++
->  Documentation/admin-guide/perf/index.rst |  1 +
->  2 files changed, 66 insertions(+)
 > 
-> diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-> new file mode 100644
-> index 000000000000..46235dff4b21
-> --- /dev/null
-> +++ b/Documentation/admin-guide/perf/cxl.rst
-> @@ -0,0 +1,65 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================================
-> +CXL Performance Monitoring Unit (CPMU)
-> +======================================
-> +
-> +The CXL rev 3.0 specification provides a definition of CXL Performance
-> +Monitoring Unit in section 13.2: Performance Monitoring.
-> +
-> +CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-> +any number of CPMU instances. CPMU capabilities are fully discoverable from
-> +the devices. The specification provides event definitions for all CXL protocol
-> +message types and a set of additional events for things commonly counted on
-> +CXL devices (e.g. DRAM events).
-> +
-> +CPMU driver
-> +===========
-> +
-> +The CPMU driver register a perf PMU with the name cpmu<id> on the CXL bus.
-> +
-> +    /sys/bus/cxl/device/cpmu<id>
-> +
-> +The associated PMU is registered as
-> +
-> +   /sys/bus/event_sources/devices/cpmu<id>
-> +
-> +In common with other CXL bus devices, the id has no specific meaning and the
-> +relationship to specific CXL device should be established via the device parent
-> +of the device on the CXL bus.
-> +
-> +PMU driver provides description of available events and filter options in sysfs.
-> +
-> +The "format" directory describes all formats of the config (event vendor id,
-> +group id and mask) config1 (threshold, filter enables) and config2 (filter
-> +parameters) fields of the perf_event_attr structure.  The "events" directory
-> +describes all documented events show in perf list.
-> +
-> +The events shown in perf list are the most fine grained events with a single
-> +bit of the event mask set. More general events may be enable by setting
-> +multiple mask bits in config. For example, all Device to Host Read Requests
-> +may be captured on a single counter by setting the bits for all of
-> +
-> +* d2h_req_rdcurr
-> +* d2h_req_rdown
-> +* d2h_req_rdshared
-> +* d2h_req_rdany
-> +* d2h_req_rdownnodata
-> +
-> +Example of usage::
-> +
-> +  $#perf list
-> +  cpmu0/clock_ticks/                                 [Kernel PMU event]
-> +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-> +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-> +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-> +  -----------------------------------------------------------
-> +
-> +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/
-> +
-> +Vendor specific events may also be available and if so can be used via
-> +
-> +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
-> +
-> +The driver does not support sampling. So "perf record" and attaching to
-> +a task are unsupported.
+> Adrian Hunter (2):
+>       perf auxtrace: Fix address filter entire kernel size
+>       perf intel-pt: Fix CYC timestamps after standalone CBR
 
-The PMU only supports system-wide counting. That's the reason it doesn't
-support per-task profiling. Not because of missing sampling.
+Thanks, applied.
 
-Thanks,
-Kan
-> diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-> index 9de64a40adab..f60be04e4e33 100644
-> --- a/Documentation/admin-guide/perf/index.rst
-> +++ b/Documentation/admin-guide/perf/index.rst
-> @@ -21,3 +21,4 @@ Performance monitor support
->     alibaba_pmu
->     nvidia-pmu
->     meson-ddr-pmu
-> +   cxl
+- Arnaldo
+
+ 
+>  tools/perf/util/auxtrace.c                          | 5 ++++-
+>  tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 2 ++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> 
+> Regards
+> Adrian
+
+-- 
+
+- Arnaldo
