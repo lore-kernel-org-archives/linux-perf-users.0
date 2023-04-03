@@ -2,168 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D984CC761A6
-	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 07:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDA0C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon,  3 Apr 2023 07:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231406AbjDCHYY (ORCPT
+        id S231654AbjDCHpM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 03:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52352 "EHLO
+        Mon, 3 Apr 2023 03:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229659AbjDCHYY (ORCPT
+        with ESMTP id S229670AbjDCHpG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 03:24:24 -0400
+        Mon, 3 Apr 2023 03:45:06 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 32D98769D;
-        Mon,  3 Apr 2023 00:24:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 68B0461AE;
+        Mon,  3 Apr 2023 00:45:05 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1665BFEC;
-        Mon,  3 Apr 2023 00:25:06 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F195FEC;
+        Mon,  3 Apr 2023 00:45:49 -0700 (PDT)
 Received: from FVFF77S0Q05N (unknown [10.57.57.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB463F6C4;
-        Mon,  3 Apr 2023 00:24:18 -0700 (PDT)
-Date:   Mon, 3 Apr 2023 08:24:13 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F55C3F6C4;
+        Mon,  3 Apr 2023 00:45:03 -0700 (PDT)
+Date:   Mon, 3 Apr 2023 08:45:00 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Newman <peternewman@google.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        will@kernel.org, catalin.marinas@arm.com, eranian@google.com
-Subject: Re: [PATCH v4] arm64: pmuv3: dynamically map
- PERF_COUNT_HW_BRANCH_INSTRUCTIONS
-Message-ID: <ZCp/HX4YQLyOp0TE@FVFF77S0Q05N>
-References: <20230327122527.3913496-1-peternewman@google.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Ruidong Tian <tianruidong@linux.alibaba.com>
+Subject: Re: [PATCH] perf/arm-cmn: fix regitster offset of
+ CMN_MXP__CONNECT_INFO_P2-5
+Message-ID: <ZCqD/HlIRgewdnwA@FVFF77S0Q05N>
+References: <1680169620-26012-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <3b95e362-300a-12af-0d55-76672c60be9f@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230327122527.3913496-1-peternewman@google.com>
+In-Reply-To: <3b95e362-300a-12af-0d55-76672c60be9f@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 02:25:27PM +0200, Peter Newman wrote:
-> From: Stephane Eranian <eranian@google.com>
+On Thu, Mar 30, 2023 at 11:34:22AM +0100, Robin Murphy wrote:
+> On 2023-03-30 10:47, Jing Zhang wrote:
+> > In the CMN700 specification, it is described that the address offset
+> > of the mxp_device_connect_info_p0-5 register is 16'h8 + #{8*index}.
+> > Therefore, the address offset of the CMN_MXP__CONNECT_INFO_P2-5 macro
+> > defined in the code is wrong, which causes the cmn700 topology map
+> > incorrect printed in debugfs.
+> > 
+> > So correct the address offset value to make the cmn700 topology map
+> > correct in debugfs.
+> > 
+> > Fixes: 60d1504070c2 ("perf/arm-cmn: Support new IP features")
 > 
-> The mapping of perf_events generic hardware events to actual PMU events on
-> ARM PMUv3 may not always be correct. This is in particular true for the
-> PERF_COUNT_HW_BRANCH_INSTRUCTIONS event. Although the mapping points to an
-> architected event, it may not always be available. This can be seen with a
-> simple:
-> 
-> $ perf stat -e branches sleep 0
->  Performance counter stats for 'sleep 0':
-> 
->    <not supported>      branches
-> 
->        0.001401081 seconds time elapsed
-> 
-> Yet the hardware does have an event that could be used for branches.
-> 
-> Dynamically check for a supported hardware event which can be used for
-> PERF_COUNT_HW_BRANCH_INSTRUCTIONS at mapping time.
-> 
-> And with that:
-> 
-> $ perf stat -e branches sleep 0
-> 
->  Performance counter stats for 'sleep 0':
-> 
->            166,739      branches
-> 
->        0.000832163 seconds time elapsed
-> 
-> Based-on: https://lore.kernel.org/all/YvunKCJHSXKz%2FkZB@FVFF77S0Q05N
-> Based-on-patch-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Peter Newman <peternewman@google.com>
+> Ugh, these offsets are correct for CI-700, so strictly that commit is fine.
+> What I failed to notice is that CMN-700 shuffled the mesh_port_connect_info
+> registers out of the way, so it's commit 23760a014417 which should have
+> added more handling for this difference.
 
-Thanks for reworking the patch; the patch itself and commit message look good
-to me.
+I'm assuming that means that this patch breaks !CMN-700 ?
 
-I'd like to keep my S-o-b here for the code itself; could we please make the
-tags:
-
-  Co-Developed-by: Stephane Eranian <eranian@google.com>
-  Signed-off-by: Stephane Eranian <eranian@google.com>
-  Co-Developed-by: Mark Rutland <mark.rutland@arm.com>
-  Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-  Co-Developed-by: Peter Newman <peternewman@google.com>
-  Signed-off-by: Peter Newman <peternewman@google.com>
-  Link: https://lore.kernel.org/all/YvunKCJHSXKz%2FkZB@FVFF77S0Q05N
-
-That follow the conventions documented in:
-
-  https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+i.e. a more substantial fix is necessary, and it's not just a matter of
+changing the Fixes tag.
 
 Thanks,
 Mark.
 
-> ---
-> v3->v4:
->  - splice Mark's patch with Stephane's problem statement
-> v2->v3:
->  - removed prints per Will's suggestion
->  
-> [v3] https://lore.kernel.org/all/20220816130221.885920-1-peternewman@google.com/
-> [v2] https://lore.kernel.org/lkml/20220324181458.3216262-1-eranian@google.com/
 > 
->  arch/arm64/kernel/perf_event.c | 27 +++++++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
+> Thanks,
+> Robin.
 > 
-> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-> index dde06c0f97f3..ee63f8e719ea 100644
-> --- a/arch/arm64/kernel/perf_event.c
-> +++ b/arch/arm64/kernel/perf_event.c
-> @@ -45,7 +45,6 @@ static const unsigned armv8_pmuv3_perf_map[PERF_COUNT_HW_MAX] = {
->  	[PERF_COUNT_HW_INSTRUCTIONS]		= ARMV8_PMUV3_PERFCTR_INST_RETIRED,
->  	[PERF_COUNT_HW_CACHE_REFERENCES]	= ARMV8_PMUV3_PERFCTR_L1D_CACHE,
->  	[PERF_COUNT_HW_CACHE_MISSES]		= ARMV8_PMUV3_PERFCTR_L1D_CACHE_REFILL,
-> -	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED,
->  	[PERF_COUNT_HW_BRANCH_MISSES]		= ARMV8_PMUV3_PERFCTR_BR_MIS_PRED,
->  	[PERF_COUNT_HW_BUS_CYCLES]		= ARMV8_PMUV3_PERFCTR_BUS_CYCLES,
->  	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= ARMV8_PMUV3_PERFCTR_STALL_FRONTEND,
-> @@ -1048,6 +1047,28 @@ static void armv8pmu_reset(void *info)
->  	armv8pmu_pmcr_write(pmcr);
->  }
->  
-> +static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
-> +				      struct perf_event *event)
-> +{
-> +	if (event->attr.type == PERF_TYPE_HARDWARE &&
-> +	    event->attr.config == PERF_COUNT_HW_BRANCH_INSTRUCTIONS) {
-> +
-> +		if (test_bit(ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED,
-> +			     armpmu->pmceid_bitmap))
-> +			return ARMV8_PMUV3_PERFCTR_PC_WRITE_RETIRED;
-> +
-> +		if (test_bit(ARMV8_PMUV3_PERFCTR_BR_RETIRED,
-> +			     armpmu->pmceid_bitmap))
-> +			return ARMV8_PMUV3_PERFCTR_BR_RETIRED;
-> +
-> +		return HW_OP_UNSUPPORTED;
-> +	}
-> +
-> +	return armpmu_map_event(event, &armv8_pmuv3_perf_map,
-> +				&armv8_pmuv3_perf_cache_map,
-> +				ARMV8_PMU_EVTYPE_EVENT);
-> +}
-> +
->  static int __armv8_pmuv3_map_event(struct perf_event *event,
->  				   const unsigned (*extra_event_map)
->  						  [PERF_COUNT_HW_MAX],
-> @@ -1059,9 +1080,7 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
->  	int hw_event_id;
->  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
->  
-> -	hw_event_id = armpmu_map_event(event, &armv8_pmuv3_perf_map,
-> -				       &armv8_pmuv3_perf_cache_map,
-> -				       ARMV8_PMU_EVTYPE_EVENT);
-> +	hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
->  
->  	/*
->  	 * CHAIN events only work when paired with an adjacent counter, and it
-> -- 
-> 2.40.0.348.gf938b09366-goog
-> 
+> > Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> > Signed-off-by: Ruidong Tian <tianruidong@linux.alibaba.com>
+> > ---
+> >   drivers/perf/arm-cmn.c | 8 ++++----
+> >   1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> > index 1deb61b..e9f844b 100644
+> > --- a/drivers/perf/arm-cmn.c
+> > +++ b/drivers/perf/arm-cmn.c
+> > @@ -59,10 +59,10 @@
+> >   /* XPs also have some local topology info which has uses too */
+> >   #define CMN_MXP__CONNECT_INFO_P0	0x0008
+> >   #define CMN_MXP__CONNECT_INFO_P1	0x0010
+> > -#define CMN_MXP__CONNECT_INFO_P2	0x0028
+> > -#define CMN_MXP__CONNECT_INFO_P3	0x0030
+> > -#define CMN_MXP__CONNECT_INFO_P4	0x0038
+> > -#define CMN_MXP__CONNECT_INFO_P5	0x0040
+> > +#define CMN_MXP__CONNECT_INFO_P2	0x0018
+> > +#define CMN_MXP__CONNECT_INFO_P3	0x0020
+> > +#define CMN_MXP__CONNECT_INFO_P4	0x0028
+> > +#define CMN_MXP__CONNECT_INFO_P5	0x0030
+> >   #define CMN__CONNECT_INFO_DEVICE_TYPE	GENMASK_ULL(4, 0)
+> >   /* PMU registers occupy the 3rd 4KB page of each node's region */
