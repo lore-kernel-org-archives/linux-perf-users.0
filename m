@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEF9C761A6
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 21:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DACC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 21:01:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236467AbjDDVBj (ORCPT
+        id S235349AbjDDVBq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 17:01:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
+        Tue, 4 Apr 2023 17:01:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236464AbjDDVBS (ORCPT
+        with ESMTP id S236432AbjDDVBW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 17:01:18 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F09C49D6
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 14:00:53 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id s4-20020a170902ea0400b001a1f4137086so19911995plg.14
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 14:00:53 -0700 (PDT)
+        Tue, 4 Apr 2023 17:01:22 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78D9E59F6
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 14:01:09 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e186-20020a2537c3000000b00b72501acf50so33602108yba.20
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 14:01:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680642053;
+        d=google.com; s=20210112; t=1680642068;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NTqMk+i14kBQhNGj+iB54TJvhWHGHEix7VEoIVCjH+o=;
-        b=Tx2occNBIdX5b7jB2iYgPuGXZMCwpyVHbaJ/5KSlG31iWgB6Bf44aFnemB3efGLfQo
-         Qu/XebiD6J0z/u/5DH6AiyMAQjvdsy0Ht/iRgS1nWDnheB6it7ID+TgMu9nS9fwBlmuE
-         R55ElxXGRjWYiu0HgXDbZBnj2LTJHYyLpH01JaOClsV3lbDbk6+fJ+g4IOABHOr+Dtdp
-         fSrI3x3ZkvnMOvZOW+z/9Zitrp5Q/+9t6Ef6ycYBnt4HbHgyCORtRU/xgpCU3Od6S2LI
-         6jxbx1N0Wg1NfRyoa2aiWHFZs7DjjVmEjLY3aqUpyXmhVkTYsGOcB6ykmUxLjah147Sh
-         pdgA==
+        bh=wj0zFnOGjLX2H2pqmjaN/TPZtFXQJuNwPwp/XDMzHTQ=;
+        b=hiCSSAyFc3Fefg1mJbZzl8j/FKOnlkPpEXx19zp0ly1BZRc/R9T9iunS1w2QWke9uR
+         QegPENGF+aNbgBtFN5ccAzQM/H0SdPUksuLqsb4DXGeJH2NO4BffynfHt5I7WGX53yxM
+         hhpFZYh+qirjfk5ZMbSMkqb6Xq8esuRteAXydbB0K20KolVT/d2OmlATTGe5JYHHdn/4
+         54kTcBj5o8fmek12N512sLdcRv4VAuhqwLbkkWCOxlczXiAiaqLjCJ3OCAM+/5Jd/AmL
+         kQjdOuHqtVhq7/jRQ+1174d9KAvTWHbakVY49PeYYr0bXEatiy6a9mL2CN0N+PyIR4D/
+         ZOeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680642053;
+        d=1e100.net; s=20210112; t=1680642068;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NTqMk+i14kBQhNGj+iB54TJvhWHGHEix7VEoIVCjH+o=;
-        b=PYsw5ZOBPTiZcWQp5gLRuD6SqOra1QCmIY4FRKY58FSderadgEMEfsbFPTCJMXoyc0
-         VFjj7FvKKpw1AcIvJeYdJimBBrZARDMz2/XXiHdfPj+vHeOUPmGV/qEnOCI+QkEUWHUx
-         iBlR/kxynr3GGal+/0VKxsvWCmXLp8yVL5pZpGA/y7ICpiqThRTt13fXwUe0MGwKRYxG
-         /lpPM3JuueYtfKwFFOJZVy0SeDOdBAYUCWxt7LCM9bdNUagpBoRkYGYOLSgWMUkc0CpX
-         IL0VkXARGhCOey9T9cni3xvbN0Rj+fag7U/ugTznml4oEp5UKCd/G59pFaH7aJGyp7w9
-         9OBg==
-X-Gm-Message-State: AAQBX9cM8+zLrSWHDhg5LIwddNljLV/sS1VHr/IxMIOff7AbIEZk2gU3
-        orArXqtumMifnBmVkKsKaQOneoNUEhQs
-X-Google-Smtp-Source: AKy350aR0+LCtC7ZuR8nlLRzzmcVh7BiTaSdHPR/2Gd7nqq8LjSUSQ+L/dAo7u9PoJOktgluHYd9eNRO6Dth
+        bh=wj0zFnOGjLX2H2pqmjaN/TPZtFXQJuNwPwp/XDMzHTQ=;
+        b=BkcVMPYb+K9zrzyZsvvUkpge9cese6MMlYr7RtrCsugFvk/FOo8TGcwty9yaAJCz5c
+         Wbs5ldZjRix0MPZ8Jt13xH4J9zhLOdsPXAvFxyJ/Bb1t+XtS/XTKT+aVKeMUFIOr1Vgg
+         5GtLlp21XrVjwnMiduPthbRf6sJrFGMPboagfnRty7DRNmSNoY8m6j3+S5mdxrlhDXVB
+         rUEDJJGdBbC25uuYGHmc5IuRQ5QKbeaq6Fd5dlyTVhpoNPcT1AwcT7GoFLFP4CkLT3fs
+         2rlqWDO+ozIl7pk8HquQxO+Dg+kk1KOZFDdlyY1cCZHJhuDm1pD34mQXzlwWumMSraoT
+         lbFg==
+X-Gm-Message-State: AAQBX9en9wtBvoL38QWVJeIFNbtVHKqvIGQELhFlqKbWrBrqW7q1oNiG
+        suWE9Tf10mSTZfuxdqmsZn3XULMs8v3Y
+X-Google-Smtp-Source: AKy350ZcdHcdBTuvh0rSINk4xC5JyX/qIlqlYqW7u1+yruF7GiLKgVxMIlN1SDDSU7PcYPl1n2916BVQDBnD
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a051:e074:d6f:dc29])
- (user=irogers job=sendgmr) by 2002:aa7:8891:0:b0:623:129f:6269 with SMTP id
- z17-20020aa78891000000b00623129f6269mr2094653pfe.1.1680642052919; Tue, 04 Apr
- 2023 14:00:52 -0700 (PDT)
-Date:   Tue,  4 Apr 2023 13:59:46 -0700
+ (user=irogers job=sendgmr) by 2002:a25:74d7:0:b0:b6d:1483:bc0f with SMTP id
+ p206-20020a2574d7000000b00b6d1483bc0fmr2366307ybc.9.1680642068274; Tue, 04
+ Apr 2023 14:01:08 -0700 (PDT)
+Date:   Tue,  4 Apr 2023 13:59:48 -0700
 In-Reply-To: <20230404205954.2245628-1-irogers@google.com>
-Message-Id: <20230404205954.2245628-5-irogers@google.com>
+Message-Id: <20230404205954.2245628-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20230404205954.2245628-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v6 04/12] perf map: Add accessors for pgoff and reloc
+Subject: [PATCH v6 06/12] perf maps: Modify maps_by_name to hold a reference
+ to a map
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,260 +96,166 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Later changes will add reference count checking for struct map. Add
-accessors so that the reference count check is only necessary in one
-place.
+To make it clearer about the ownership of a reference count split the
+by-name case from the regular start-address sorted tree. Put the
+reference count when maps_by_name is freed, which requires moving a
+decrement to nr_maps in maps__remove. Add two missing map puts in
+maps__fixup_overlappings in the event maps__insert fails.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/event.c    |  2 +-
- tools/perf/builtin-report.c         |  2 +-
- tools/perf/tests/vmlinux-kallsyms.c |  4 ++--
- tools/perf/util/machine.c           |  4 ++--
- tools/perf/util/map.c               | 14 +++++++-------
- tools/perf/util/map.h               | 10 ++++++++++
- tools/perf/util/probe-event.c       |  8 ++++----
- tools/perf/util/symbol.c            |  6 +++---
- tools/perf/util/unwind-libdw.c      |  6 +++---
- 9 files changed, 33 insertions(+), 23 deletions(-)
+ tools/perf/util/maps.c   | 30 ++++++++++++++++--------------
+ tools/perf/util/symbol.c | 21 +++++++++++++++++----
+ 2 files changed, 33 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
-index 3b2475707756..5741ffe47312 100644
---- a/tools/perf/arch/x86/util/event.c
-+++ b/tools/perf/arch/x86/util/event.c
-@@ -61,7 +61,7 @@ int perf_event__synthesize_extra_kmaps(struct perf_tool *tool,
- 
- 		event->mmap.start = map__start(map);
- 		event->mmap.len   = map__size(map);
--		event->mmap.pgoff = map->pgoff;
-+		event->mmap.pgoff = map__pgoff(map);
- 		event->mmap.pid   = machine->pid;
- 
- 		strlcpy(event->mmap.filename, kmap->name, PATH_MAX);
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index c066452219c8..92c6797e7cba 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -857,7 +857,7 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
- 				   prot & PROT_WRITE ? 'w' : '-',
- 				   prot & PROT_EXEC ? 'x' : '-',
- 				   map__flags(map) ? 's' : 'p',
--				   map->pgoff,
-+				   map__pgoff(map),
- 				   dso->id.ino, dso->name);
- 	}
- 
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 7db102868bc2..af511233c764 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -335,10 +335,10 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 			}
- 
- 			pr_info("WARN: %" PRIx64 "-%" PRIx64 " %" PRIx64 " %s in kallsyms as",
--				map__start(map), map__end(map), map->pgoff, dso->name);
-+				map__start(map), map__end(map), map__pgoff(map), dso->name);
- 			if (mem_end != map__end(pair))
- 				pr_info(":\nWARN: *%" PRIx64 "-%" PRIx64 " %" PRIx64,
--					map__start(pair), map__end(pair), pair->pgoff);
-+					map__start(pair), map__end(pair), map__pgoff(pair));
- 			pr_info(" %s\n", dso->name);
- 			pair->priv = 1;
- 		}
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index d29ec4a04488..1ea6f6c06bbb 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1277,9 +1277,9 @@ int machine__map_x86_64_entry_trampolines(struct machine *machine,
- 		if (!kmap || !is_entry_trampoline(kmap->name))
- 			continue;
- 
--		dest_map = maps__find(kmaps, map->pgoff);
-+		dest_map = maps__find(kmaps, map__pgoff(map));
- 		if (dest_map != map)
--			map->pgoff = map__map_ip(dest_map, map->pgoff);
-+			map->pgoff = map__map_ip(dest_map, map__pgoff(map));
- 		found = true;
- 	}
- 	if (found || machine->trampolines_mapped)
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 816bffbbf344..1fe367e2cf19 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -421,7 +421,7 @@ size_t map__fprintf(struct map *map, FILE *fp)
- 	const struct dso *dso = map__dso(map);
- 
- 	return fprintf(fp, " %" PRIx64 "-%" PRIx64 " %" PRIx64 " %s\n",
--		       map__start(map), map__end(map), map->pgoff, dso->name);
-+		       map__start(map), map__end(map), map__pgoff(map), dso->name);
- }
- 
- size_t map__fprintf_dsoname(struct map *map, FILE *fp)
-@@ -510,7 +510,7 @@ u64 map__rip_2objdump(struct map *map, u64 rip)
- 		return rip;
- 
- 	if (dso->rel)
--		return rip - map->pgoff;
-+		return rip - map__pgoff(map);
- 
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 0eee27e24c33..5afed53ea0b4 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -26,6 +26,9 @@ static void __maps__free_maps_by_name(struct maps *maps)
  	/*
- 	 * kernel modules also have DSO_TYPE_USER in dso->kernel,
-@@ -519,7 +519,7 @@ u64 map__rip_2objdump(struct map *map, u64 rip)
- 	if (dso->kernel == DSO_SPACE__USER)
- 		return rip + dso->text_offset;
- 
--	return map__unmap_ip(map, rip) - map->reloc;
-+	return map__unmap_ip(map, rip) - map__reloc(map);
- }
- 
- /**
-@@ -542,7 +542,7 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
- 		return map__unmap_ip(map, ip);
- 
- 	if (dso->rel)
--		return map__unmap_ip(map, ip + map->pgoff);
-+		return map__unmap_ip(map, ip + map__pgoff(map));
- 
- 	/*
- 	 * kernel modules also have DSO_TYPE_USER in dso->kernel,
-@@ -551,7 +551,7 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
- 	if (dso->kernel == DSO_SPACE__USER)
- 		return map__unmap_ip(map, ip - dso->text_offset);
- 
--	return ip + map->reloc;
-+	return ip + map__reloc(map);
- }
- 
- bool map__contains_symbol(const struct map *map, const struct symbol *sym)
-@@ -592,12 +592,12 @@ struct maps *map__kmaps(struct map *map)
- 
- u64 map__dso_map_ip(const struct map *map, u64 ip)
- {
--	return ip - map__start(map) + map->pgoff;
-+	return ip - map__start(map) + map__pgoff(map);
- }
- 
- u64 map__dso_unmap_ip(const struct map *map, u64 ip)
- {
--	return ip + map__start(map) - map->pgoff;
-+	return ip + map__start(map) - map__pgoff(map);
- }
- 
- u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip)
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index fd440c9c279e..102485699aa8 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -72,6 +72,16 @@ static inline u64 map__end(const struct map *map)
- 	return map->end;
- }
- 
-+static inline u64 map__pgoff(const struct map *map)
-+{
-+	return map->pgoff;
-+}
+ 	 * Free everything to try to do it from the rbtree in the next search
+ 	 */
++	for (unsigned int i = 0; i < maps__nr_maps(maps); i++)
++		map__put(maps__maps_by_name(maps)[i]);
 +
-+static inline u64 map__reloc(const struct map *map)
-+{
-+	return map->reloc;
-+}
-+
- static inline u32 map__flags(const struct map *map)
- {
- 	return map->flags;
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index bb44a3798df8..6e2110d605fb 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -135,14 +135,14 @@ static int kernel_get_symbol_address_by_name(const char *name, u64 *addr,
- 	/* ref_reloc_sym is just a label. Need a special fix*/
- 	reloc_sym = kernel_get_ref_reloc_sym(&map);
- 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
--		*addr = (!map->reloc || reloc) ? reloc_sym->addr :
-+		*addr = (!map__reloc(map) || reloc) ? reloc_sym->addr :
- 			reloc_sym->unrelocated_addr;
- 	else {
- 		sym = machine__find_kernel_symbol_by_name(host_machine, name, &map);
- 		if (!sym)
- 			return -ENOENT;
- 		*addr = map__unmap_ip(map, sym->start) -
--			((reloc) ? 0 : map->reloc) -
-+			((reloc) ? 0 : map__reloc(map)) -
- 			((reladdr) ? map__start(map) : 0);
- 	}
+ 	zfree(&maps->maps_by_name);
+ 	maps->nr_maps_allocated = 0;
+ }
+@@ -42,7 +45,7 @@ static int __maps__insert(struct maps *maps, struct map *map)
+ 		return -ENOMEM;
+ 
+ 	RB_CLEAR_NODE(&new_rb_node->rb_node);
+-	new_rb_node->map = map;
++	new_rb_node->map = map__get(map);
+ 
+ 	while (*p != NULL) {
+ 		parent = *p;
+@@ -55,7 +58,6 @@ static int __maps__insert(struct maps *maps, struct map *map)
+ 
+ 	rb_link_node(&new_rb_node->rb_node, parent, p);
+ 	rb_insert_color(&new_rb_node->rb_node, maps__entries(maps));
+-	map__get(map);
  	return 0;
-@@ -400,7 +400,7 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
- 					   "Consider identifying the final function used at run time and set the probe directly on that.\n",
- 					   pp->function);
- 		} else
--			address = map__unmap_ip(map, sym->start) - map->reloc;
-+			address = map__unmap_ip(map, sym->start) - map__reloc(map);
- 		break;
+ }
+ 
+@@ -100,7 +102,7 @@ int maps__insert(struct maps *maps, struct map *map)
+ 			maps->maps_by_name = maps_by_name;
+ 			maps->nr_maps_allocated = nr_allocate;
+ 		}
+-		maps__maps_by_name(maps)[maps__nr_maps(maps) - 1] = map;
++		maps__maps_by_name(maps)[maps__nr_maps(maps) - 1] = map__get(map);
+ 		__maps__sort_by_name(maps);
  	}
- 	if (!address) {
-@@ -866,7 +866,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
- 			free(tevs[i].point.symbol);
- 		tevs[i].point.symbol = tmp;
- 		tevs[i].point.offset = tevs[i].point.address -
--			(map->reloc ? reloc_sym->unrelocated_addr :
-+			(map__reloc(map) ? reloc_sym->unrelocated_addr :
- 				      reloc_sym->addr);
+  out:
+@@ -126,9 +128,9 @@ void maps__remove(struct maps *maps, struct map *map)
+ 	rb_node = maps__find_node(maps, map);
+ 	assert(rb_node->map == map);
+ 	__maps__remove(maps, rb_node);
+-	--maps->nr_maps;
+ 	if (maps__maps_by_name(maps))
+ 		__maps__free_maps_by_name(maps);
++	--maps->nr_maps;
+ 	up_write(maps__lock(maps));
+ }
+ 
+@@ -136,6 +138,9 @@ static void __maps__purge(struct maps *maps)
+ {
+ 	struct map_rb_node *pos, *next;
+ 
++	if (maps__maps_by_name(maps))
++		__maps__free_maps_by_name(maps);
++
+ 	maps__for_each_entry_safe(maps, pos, next) {
+ 		rb_erase_init(&pos->rb_node,  maps__entries(maps));
+ 		map__put(pos->map);
+@@ -293,7 +298,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
  	}
- 	return skipped;
+ 
+ 	next = first;
+-	while (next) {
++	while (next && !err) {
+ 		struct map_rb_node *pos = rb_entry(next, struct map_rb_node, rb_node);
+ 		next = rb_next(&pos->rb_node);
+ 
+@@ -331,8 +336,10 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
+ 
+ 			before->end = map__start(map);
+ 			err = __maps__insert(maps, before);
+-			if (err)
++			if (err) {
++				map__put(before);
+ 				goto put_map;
++			}
+ 
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(before, fp);
+@@ -352,22 +359,17 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
+ 			assert(map__map_ip(pos->map, map__end(map)) ==
+ 				map__map_ip(after, map__end(map)));
+ 			err = __maps__insert(maps, after);
+-			if (err)
++			if (err) {
++				map__put(after);
+ 				goto put_map;
+-
++			}
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(after, fp);
+ 			map__put(after);
+ 		}
+ put_map:
+ 		map__put(pos->map);
+-
+-		if (err)
+-			goto out;
+ 	}
+-
+-	err = 0;
+-out:
+ 	up_write(maps__lock(maps));
+ 	return err;
+ }
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 5c075d77a792..7282119c2990 100644
+index 7282119c2990..91ebf93e0c20 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -810,11 +810,11 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
- 			continue;
- 		}
- 		curr_map_dso = map__dso(curr_map);
--		pos->start -= map__start(curr_map) - curr_map->pgoff;
-+		pos->start -= map__start(curr_map) - map__pgoff(curr_map);
- 		if (pos->end > map__end(curr_map))
- 			pos->end = map__end(curr_map);
- 		if (pos->end)
--			pos->end -= map__start(curr_map) - curr_map->pgoff;
-+			pos->end -= map__start(curr_map) - map__pgoff(curr_map);
- 		symbols__insert(&curr_map_dso->symbols, pos);
- 		++count;
- 	}
-@@ -1459,7 +1459,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 		if (new_map == replacement_map) {
- 			map->start	= map__start(new_map);
- 			map->end	= map__end(new_map);
--			map->pgoff	= new_map->pgoff;
-+			map->pgoff	= map__pgoff(new_map);
- 			map->map_ip	= new_map->map_ip;
- 			map->unmap_ip	= new_map->unmap_ip;
- 			/* Ensure maps are correctly ordered */
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 538320e4260c..9565f9906e5d 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -62,19 +62,19 @@ static int __report_module(struct addr_location *al, u64 ip,
- 		Dwarf_Addr s;
+@@ -2053,10 +2053,23 @@ int dso__load(struct dso *dso, struct map *map)
  
- 		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
--		if (s != map__start(al->map) - al->map->pgoff)
-+		if (s != map__start(al->map) - map__pgoff(al->map))
- 			mod = 0;
- 	}
+ static int map__strcmp(const void *a, const void *b)
+ {
+-	const struct dso *dso_a = map__dso(*(const struct map **)a);
+-	const struct dso *dso_b = map__dso(*(const struct map **)b);
++	const struct map *map_a = *(const struct map **)a;
++	const struct map *map_b = *(const struct map **)b;
++	const struct dso *dso_a = map__dso(map_a);
++	const struct dso *dso_b = map__dso(map_b);
++	int ret = strcmp(dso_a->short_name, dso_b->short_name);
  
- 	if (!mod)
- 		mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
--				      map__start(al->map) - al->map->pgoff, false);
-+				      map__start(al->map) - map__pgoff(al->map), false);
- 	if (!mod) {
- 		char filename[PATH_MAX];
+-	return strcmp(dso_a->short_name, dso_b->short_name);
++	if (ret == 0 && map_a != map_b) {
++		/*
++		 * Ensure distinct but name equal maps have an order in part to
++		 * aid reference counting.
++		 */
++		ret = (int)map__start(map_a) - (int)map__start(map_b);
++		if (ret == 0)
++			ret = (int)((intptr_t)map_a - (intptr_t)map_b);
++	}
++
++	return ret;
+ }
  
- 		if (dso__build_id_filename(dso, filename, sizeof(filename), false))
- 			mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
--					      map__start(al->map) - al->map->pgoff, false);
-+					      map__start(al->map) - map__pgoff(al->map), false);
- 	}
+ static int map__strcmp_name(const void *name, const void *b)
+@@ -2088,7 +2101,7 @@ static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
+ 	maps->nr_maps_allocated = maps__nr_maps(maps);
  
- 	if (mod) {
+ 	maps__for_each_entry(maps, rb_node)
+-		maps_by_name[i++] = rb_node->map;
++		maps_by_name[i++] = map__get(rb_node->map);
+ 
+ 	__maps__sort_by_name(maps);
+ 
 -- 
 2.40.0.348.gf938b09366-goog
 
