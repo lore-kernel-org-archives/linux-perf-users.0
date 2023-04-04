@@ -2,81 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4D3C761A6
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 12:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985F2C761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 12:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234948AbjDDMj7 (ORCPT
+        id S234701AbjDDMtZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 08:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58408 "EHLO
+        Tue, 4 Apr 2023 08:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235060AbjDDMj4 (ORCPT
+        with ESMTP id S234316AbjDDMtZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 08:39:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0732D42;
-        Tue,  4 Apr 2023 05:39:32 -0700 (PDT)
+        Tue, 4 Apr 2023 08:49:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB65740E5;
+        Tue,  4 Apr 2023 05:49:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 562176314D;
-        Tue,  4 Apr 2023 12:39:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88C4FC4339B;
-        Tue,  4 Apr 2023 12:39:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B504463355;
+        Tue,  4 Apr 2023 12:48:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E394DC433EF;
+        Tue,  4 Apr 2023 12:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680611950;
-        bh=a4AitIhE2YMaf2uGBiw5XqIWZjiX7Lf1oP9sgnwjTXY=;
+        s=k20201202; t=1680612520;
+        bh=QZz3P49jyyA9udOBPFdz1yXkOaOGxvzwkSwnnEX36hM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FSysgeUp0CAWy+7LsPKT7bVD4e7zKQkALNr6zVEZ7/lNInr0PXDkFteRzZM9txcAu
-         ZKgevhbCCz6uvaUy1wJPXvhU/68rH/cnv7dZQQ4paIyeaHJUUPS7IL+7GszP29sAUd
-         T5Mk15BDYb9bG7eqLZ4uBxiAaCRBsYzazLntvXxo07XMyzWlz6FyG2Jwww7TtAXqno
-         SWpWYwOkdcv6Xx0KANpihWxhKfgdZoJaqi6zYb6zX4iwNT1hEkBmzc/8wN/18hmMBp
-         cdqjVRCKDlEtGDGhPLiWwrlUZkUlsvJnJAfv/QA8/+9F3qByYd4FnSUJi7oqwE1FQZ
-         +gK8Iba2k69IQ==
+        b=FtpBHWdfABhDi3H8J8jaAWh5K0OQJA7hBi41/EBFBG/nwG6oqUX8zuR8tzBacmmUA
+         1J7DEN2RC/5wT4TENsfme4zGNw2YMXXC6GMYu94EP7cEil2RA8s5G5ajbMEMLpQUEp
+         8S2+vGwZJDfWYbSJ/1ZemzVLiagEv2g9TP5eST3uRQ3eL7qWXzisAlrQ3hSiFO9bsi
+         PRGf+xbRASJMr7HsGKiiUleo5du+3EhAoKyKB7kgspiU5lUlWltodfg4F5jDIyn6bE
+         /7QhB9HhILqj6kNDyfv0adqKyu4dspPyeg5EE69HCZ19BUpTNRjP6EaBe8jye/MgZj
+         /c7lGeYJGZzrg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3B9904052D; Tue,  4 Apr 2023 09:39:08 -0300 (-03)
-Date:   Tue, 4 Apr 2023 09:39:08 -0300
+        id 778664052D; Tue,  4 Apr 2023 09:48:37 -0300 (-03)
+Date:   Tue, 4 Apr 2023 09:48:37 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf pmu: Make parser reentrant
-Message-ID: <ZCwabKeceQUqgtAd@kernel.org>
-References: <20230403172031.1759781-1-irogers@google.com>
- <ZCvT+OvZKQqsw8mh@krava>
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 0/4] Support for llvm-addr2line
+Message-ID: <ZCwcpfqmcB6ofIvi@kernel.org>
+References: <20230403184033.1836023-1-irogers@google.com>
+ <ZCs1/skb2XqDYrYF@kernel.org>
+ <CAM9d7chDz9dNpB+vywLMNxyc9p=wLaJp4qUYwfu6y88tEDYLLw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZCvT+OvZKQqsw8mh@krava>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7chDz9dNpB+vywLMNxyc9p=wLaJp4qUYwfu6y88tEDYLLw@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 04, 2023 at 09:38:32AM +0200, Jiri Olsa escreveu:
-> On Mon, Apr 03, 2023 at 10:20:31AM -0700, Ian Rogers wrote:
-> > By default bison uses global state for compatibility with yacc. Make
-> > the parser reentrant so that it may be used in asynchronous and
-> > multithreaded situations.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+Em Mon, Apr 03, 2023 at 10:18:47PM -0700, Namhyung Kim escreveu:
+> Hi,
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> On Mon, Apr 3, 2023 at 1:24 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > Em Mon, Apr 03, 2023 at 11:40:29AM -0700, Ian Rogers escreveu:
+> > > The addr2line command is started and then addresses piped to it. In
+> > > order to determine the end of a addr2lines output a ',' it output with
+> > > an expectation to get '??\n??:0\n' as a reply. llvm-addr2line differs
+> > > in that ',' generates a reply of ','.
+> > >
+> > > The approach detects and then caches the addr2line style. When records
+> > > are read the sentinel is detected appropriately.
+> > >
+> > > Comparing the output there is a little more inline data on my machine
+> > > with llvm-addr2line:
+> > > $ sudo perf record -a -g sleep 1
+> > > $ sudo perf report --addr2line=addr2line > a.txt
+> > > $ sudo perf report --addr2line=llvm-addr2line > b.txt
+> > > $ wc -l a.txt b.txt
+> > >   12386 a.txt
+> > >   12477 b.txt
+> > >
+> > > Some other small changes, switching to the api/io code to avoid file
+> > > streams wrapping the command's stdin/stdout. Ignore SIGPIPE for when
+> > > addr2line exits and writes fail.
+> > >
+> > > v2. Address review comments from Arnaldo and Namhyung, fixing a
+> > >     realloc error path, argument ordering and a comment.
+> >
+> > Added to local repo, build testing, will be in tmp.perf-tools-next soon.
+> >
+> > - Arnaldo
+> >
+> > > Ian Rogers (4):
+> > >   tools api: Add io__getline
+> > >   perf srcline: Simplify addr2line subprocess
+> > >   perf srcline: Support for llvm-addr2line
+> > >   perf srcline: Avoid addr2line SIGPIPEs
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-So this clashed with Namhyung's recent series, please update it using
-what is in tmp.perf-tools-next.
+Thanks, added to those patches.
 
 - Arnaldo
+
