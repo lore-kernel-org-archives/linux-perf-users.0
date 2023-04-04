@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C23AC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 19:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2432C761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 19:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231750AbjDDTXF (ORCPT
+        id S236230AbjDDTxY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 15:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50004 "EHLO
+        Tue, 4 Apr 2023 15:53:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbjDDTXE (ORCPT
+        with ESMTP id S236231AbjDDTxQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 15:23:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15B81BC;
-        Tue,  4 Apr 2023 12:23:02 -0700 (PDT)
+        Tue, 4 Apr 2023 15:53:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A26602134;
+        Tue,  4 Apr 2023 12:53:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 84ECA63909;
-        Tue,  4 Apr 2023 19:23:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84365C433EF;
-        Tue,  4 Apr 2023 19:23:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DA0A1637AD;
+        Tue,  4 Apr 2023 19:53:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80E7C433D2;
+        Tue,  4 Apr 2023 19:53:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680636181;
-        bh=BDA0BXthgaRe2Q0dikER4WlJack9+LTyGvCkahUOjd0=;
+        s=k20201202; t=1680637993;
+        bh=09d8yU2orqxQBC3UmwiGu3trtnx5ka9Mhc2NEbv7Z7Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U5sQVitpvdfgcbFhyMC6whPbkHEtdAdP+SLmCqAlGhmBZ3mfJRsUXadZxQsFyd6iB
-         d/GQWtI0QkXgwa4lBOtUBZtPcMF4l2VQO0O+jhCGLeav5Hb4YzwDBHYaIJpXxkACHF
-         V94bpSgSm/43x8g9pNzYQW6Q1ImrOnLiFv/zIlmZfWJ/ufLJAP3eQpaNBNEhXpQnMQ
-         0vNcgYI8AES17cLe32sNkunvv5+XDKDBqhHMLEBg6EYdLk4+Rc+SKDXDq1wR03VHME
-         gZpsmCxBuBxjxDZmyFQJ8LCSYBfO0wgDuhg8uIk0JR5sopS9b4z8DdJNWLcfwnxOu9
-         DthpYBlCDS8rA==
+        b=WBMSKcU5SQ3BDgpm5ESjVb0+EkS/bDPvmloCUkNMB0B9s+DBgTjQ3VMpT0o0U3wzN
+         5muxNcJJG2DvsW7Ed6cGMygN9iQSP/LhMoT6mxQxIC+JIVVhEreNypxfOiY39oCHl+
+         Zmto/L7/hsr2HcLTbccHEAc4sUblyfZ3cfXDfG4uOan1X+knbyH6injyL/w7zUrK3z
+         gZur0OH9JTQDPusOgNI+BnStS9eciqjE19yJYFetwJwNkQamOdAq0JAqrFvyjTB/X9
+         DsK3dMx1d8p18OUm50gNPU1qt3ZtqXm+QVibfwc/if0+oj2qV6rCeKz3cNvlTI8+XC
+         3zf7LSScZ14vg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 150C44052D; Tue,  4 Apr 2023 16:22:59 -0300 (-03)
-Date:   Tue, 4 Apr 2023 16:22:59 -0300
+        id 6308A4052D; Tue,  4 Apr 2023 16:53:10 -0300 (-03)
+Date:   Tue, 4 Apr 2023 16:53:10 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
@@ -73,15 +73,16 @@ Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Hao Luo <haoluo@google.com>,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-Message-ID: <ZCx5EyhgwZNWomfD@kernel.org>
+Message-ID: <ZCyAJiEGui9JmULO@kernel.org>
 References: <20230320212248.1175731-1-irogers@google.com>
  <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
  <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
  <CAP-5=fUvCYHLaecCKMnFwMEcbqj=UcfgHSKAtmYEtk+sJT26nQ@mail.gmail.com>
+ <ZCx5EyhgwZNWomfD@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUvCYHLaecCKMnFwMEcbqj=UcfgHSKAtmYEtk+sJT26nQ@mail.gmail.com>
+In-Reply-To: <ZCx5EyhgwZNWomfD@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -89,226 +90,131 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Applied to:
 
-perf map: Add accessor for dso
+perf map: Add accessor for start and end
 
-
+diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
+index ccfa87055c4a3b9d..566fb6c0eae737c6 100644
+--- a/tools/perf/arch/arm/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
+@@ -33,7 +33,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 		return -1;
+ 	}
+ 
+-	stack_size = map->end - sp;
++	stack_size = map__end(map) - sp;
+ 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
+ 
+ 	memcpy(buf, (void *) sp, stack_size);
+diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+index 46147a483049615d..90a7ef293ce76879 100644
+--- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+@@ -33,7 +33,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 		return -1;
+ 	}
+ 
+-	stack_size = map->end - sp;
++	stack_size = map__end(map) - sp;
+ 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
+ 
+ 	memcpy(buf, (void *) sp, stack_size);
+diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+index c9cb4b059392f6cf..32fffb593fbf0236 100644
+--- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
++++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+@@ -33,7 +33,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 		return -1;
+ 	}
+ 
+-	stack_size = map->end - sp;
++	stack_size = map__end(map) - sp;
+ 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
+ 
+ 	memcpy(buf, (void *) sp, stack_size);
 diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-index 20cd6244863b1a09..fe0e4530673c6661 100644
+index fe0e4530673c6661..b7223feec770dc33 100644
 --- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
 +++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-@@ -255,7 +255,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
- 	thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
- 
- 	if (al.map)
--		dso = al.map->dso;
-+		dso = map__dso(al.map);
- 
- 	if (!dso) {
- 		pr_debug("%" PRIx64 " dso is NULL\n", ip);
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index 0856b32f9e08a1f5..9f99fc88dbff9056 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -104,7 +104,7 @@ void arch__fix_tev_from_maps(struct perf_probe_event *pev,
- 
- 	lep_offset = PPC64_LOCAL_ENTRY_OFFSET(sym->arch_sym);
- 
--	if (map->dso->symtab_type == DSO_BINARY_TYPE__KALLSYMS)
-+	if (map__dso(map)->symtab_type == DSO_BINARY_TYPE__KALLSYMS)
- 		tev->point.offset += PPC64LE_LEP_OFFSET;
- 	else if (lep_offset) {
- 		if (pev->uprobes)
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index a1c021a6d3c1f0f1..2effac77ca8c6742 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -165,6 +165,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
- 				struct annotation_options *options,
- 				struct hist_browser_timer *hbt)
- {
-+	struct dso *dso = map__dso(ms->map);
- 	struct symbol *sym = ms->sym;
- 	GtkWidget *window;
- 	GtkWidget *notebook;
-@@ -172,13 +173,13 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	GtkWidget *tab_label;
- 	int err;
- 
--	if (ms->map->dso->annotate_warned)
-+	if (dso->annotate_warned)
- 		return -1;
- 
- 	err = symbol__annotate(ms, evsel, options, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
--		ms->map->dso->annotate_warned = true;
-+		dso->annotate_warned = true;
- 		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
- 		ui__error("Couldn't annotate %s: %s\n", sym->name, msg);
- 		return -1;
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 94e2d02009eb9f72..528a7fb066cfc9ec 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -865,6 +865,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	struct thread *thread;
- 	struct machine *machine;
- 	struct addr_location al;
-+	struct dso *dso;
- 	struct cs_etm_traceid_queue *tidq;
- 
- 	if (!etmq)
-@@ -883,27 +884,29 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 		thread = etmq->etm->unknown_thread;
+@@ -262,7 +262,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
+ 		return skip_slot;
  	}
  
--	if (!thread__find_map(thread, cpumode, address, &al) || !al.map->dso)
-+	dso = map__dso(al.map);
-+
-+	if (!thread__find_map(thread, cpumode, address, &al) || !dso)
- 		return 0;
+-	rc = check_return_addr(dso, al.map->start, ip);
++	rc = check_return_addr(dso, map__start(al.map), ip);
  
--	if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR &&
--	    dso__data_status_seen(al.map->dso, DSO_DATA_STATUS_SEEN_ITRACE))
-+	if (dso->data.status == DSO_DATA_STATUS_ERROR &&
-+	    dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE))
- 		return 0;
- 
- 	offset = al.map->map_ip(al.map, address);
- 
- 	map__load(al.map);
- 
--	len = dso__data_read_offset(al.map->dso, machine, offset, buffer, size);
-+	len = dso__data_read_offset(dso, machine, offset, buffer, size);
- 
- 	if (len <= 0) {
- 		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
- 				 "              Enable CONFIG_PROC_KCORE or use option '-k /path/to/vmlinux' for kernel symbols.\n");
--		if (!al.map->dso->auxtrace_warned) {
-+		if (!dso->auxtrace_warned) {
- 			pr_err("CS ETM Trace: Debug data not found for address %#"PRIx64" in %s\n",
- 				    address,
--				    al.map->dso->long_name ? al.map->dso->long_name : "Unknown");
--			al.map->dso->auxtrace_warned = true;
-+				    dso->long_name ? dso->long_name : "Unknown");
-+			dso->auxtrace_warned = true;
+ 	pr_debug("[DSO %s, sym %s, ip 0x%" PRIx64 "] rc %d\n",
+ 				dso->long_name, al.sym->name, ip, rc);
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 7852b97da10aa336..1cc6f338728f5499 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -903,7 +903,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
  		}
- 		return 0;
- 	}
+ 
+ 		map->start = event->ksymbol.addr;
+-		map->end = map__start(map) + event->ksymbol.len;
++		map__end(map) = map__start(map) + event->ksymbol.len;
+ 		err = maps__insert(machine__kernel_maps(machine), map);
+ 		map__put(map);
+ 		if (err)
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 1fd57db7222678ad..21010a2b8e16cc2e 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -339,7 +339,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
+ 			map__put(before);
+ 		}
+ 
+-		if (map->end < map__end(pos->map)) {
++		if (map__end(map) < map__end(pos->map)) {
+ 			struct map *after = map__clone(pos->map);
+ 
+ 			if (after == NULL) {
 diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index c487a249b33c62d4..108f7b1697a73465 100644
+index 108f7b1697a73465..1c13f43e7d22c84c 100644
 --- a/tools/perf/util/unwind-libunwind-local.c
 +++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -328,7 +328,7 @@ static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
+@@ -327,9 +327,10 @@ static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
+ 
  	maps__for_each_entry(ui->thread->maps, map_node) {
  		struct map *map = map_node->map;
++		u64 start = map__start(map);
  
--		if (map->dso == dso && map->start < base_addr)
-+		if (map__dso(map) == dso && map->start < base_addr)
- 			base_addr = map->start;
+-		if (map__dso(map) == dso && map->start < base_addr)
+-			base_addr = map->start;
++		if (map__dso(map) == dso && start < base_addr)
++			base_addr = start;
  	}
  	base_addr -= dso->data.elf_base_addr;
-@@ -424,19 +424,23 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
- {
- 	struct unwind_info *ui = arg;
- 	struct map *map;
-+	struct dso *dso;
- 	unw_dyn_info_t di;
- 	u64 table_data, segbase, fde_count;
- 	int ret = -EINVAL;
- 
- 	map = find_map(ip, ui);
--	if (!map || !map->dso)
-+	if (!map)
- 		return -EINVAL;
- 
--	pr_debug("unwind: find_proc_info dso %s\n", map->dso->name);
-+	dso = map__dso(map);
-+	if (!dso)
-+		return -EINVAL;
-+
-+	pr_debug("unwind: find_proc_info dso %s\n", dso->name);
- 
- 	/* Check the .eh_frame section for unwinding info */
--	if (!read_unwind_spec_eh_frame(map->dso, ui,
--				       &table_data, &segbase, &fde_count)) {
-+	if (!read_unwind_spec_eh_frame(dso, ui, &table_data, &segbase, &fde_count)) {
+ 	/* Address of .eh_frame_hdr */
+@@ -443,8 +444,8 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
+ 	if (!read_unwind_spec_eh_frame(dso, ui, &table_data, &segbase, &fde_count)) {
  		memset(&di, 0, sizeof(di));
  		di.format   = UNW_INFO_FORMAT_REMOTE_TABLE;
- 		di.start_ip = map->start;
-@@ -452,16 +456,16 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
- #ifndef NO_LIBUNWIND_DEBUG_FRAME
- 	/* Check the .debug_frame section for unwinding info */
- 	if (ret < 0 &&
--	    !read_unwind_spec_debug_frame(map->dso, ui->machine, &segbase)) {
--		int fd = dso__data_get_fd(map->dso, ui->machine);
--		int is_exec = elf_is_exec(fd, map->dso->name);
-+	    !read_unwind_spec_debug_frame(dso, ui->machine, &segbase)) {
-+		int fd = dso__data_get_fd(dso, ui->machine);
-+		int is_exec = elf_is_exec(fd, dso->name);
- 		unw_word_t base = is_exec ? 0 : map->start;
+-		di.start_ip = map->start;
+-		di.end_ip   = map->end;
++		di.start_ip = map__start(map);
++		di.end_ip   = map__end(map);
+ 		di.u.rti.segbase    = segbase;
+ 		di.u.rti.table_data = table_data;
+ 		di.u.rti.table_len  = fde_count * sizeof(struct table_entry)
+@@ -459,7 +460,8 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
+ 	    !read_unwind_spec_debug_frame(dso, ui->machine, &segbase)) {
+ 		int fd = dso__data_get_fd(dso, ui->machine);
+ 		int is_exec = elf_is_exec(fd, dso->name);
+-		unw_word_t base = is_exec ? 0 : map->start;
++		u64 start = map__start(map);
++		unw_word_t base = is_exec ? 0 : start;
  		const char *symfile;
  
  		if (fd >= 0)
--			dso__data_put_fd(map->dso);
-+			dso__data_put_fd(dso);
- 
--		symfile = map->dso->symsrc_filename ?: map->dso->name;
-+		symfile = dso->symsrc_filename ?: dso->name;
+@@ -468,8 +470,7 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
+ 		symfile = dso->symsrc_filename ?: dso->name;
  
  		memset(&di, 0, sizeof(di));
- 		if (dwarf_find_debug_frame(0, &di, ip, base, symfile,
-@@ -513,6 +517,7 @@ static int access_dso_mem(struct unwind_info *ui, unw_word_t addr,
- 			  unw_word_t *data)
- {
- 	struct map *map;
-+	struct dso *dso;
- 	ssize_t size;
- 
- 	map = find_map(addr, ui);
-@@ -521,10 +526,12 @@ static int access_dso_mem(struct unwind_info *ui, unw_word_t addr,
- 		return -1;
+-		if (dwarf_find_debug_frame(0, &di, ip, base, symfile,
+-					   map->start, map->end))
++		if (dwarf_find_debug_frame(0, &di, ip, base, symfile, start, map__end(map)))
+ 			return dwarf_search_unwind_table(as, ip, &di, pi,
+ 							 need_unwind_info, arg);
  	}
- 
--	if (!map->dso)
-+	dso = map__dso(map);
-+
-+	if (!dso)
- 		return -1;
- 
--	size = dso__data_read_addr(map->dso, map, ui->machine,
-+	size = dso__data_read_addr(dso, map, ui->machine,
- 				   addr, (u8 *) data, sizeof(*data));
- 
- 	return !(size == sizeof(*data));
-diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
-index 42528ade513e4975..4378daaafcd3b875 100644
---- a/tools/perf/util/unwind-libunwind.c
-+++ b/tools/perf/util/unwind-libunwind.c
-@@ -22,6 +22,7 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
- 	const char *arch;
- 	enum dso_type dso_type;
- 	struct unwind_libunwind_ops *ops = local_unwind_libunwind_ops;
-+	struct dso *dso = map__dso(map);
- 	struct machine *machine;
- 	int err;
- 
-@@ -29,8 +30,7 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
- 		return 0;
- 
- 	if (maps__addr_space(maps)) {
--		pr_debug("unwind: thread map already set, dso=%s\n",
--			 map->dso->name);
-+		pr_debug("unwind: thread map already set, dso=%s\n", dso->name);
- 		if (initialized)
- 			*initialized = true;
- 		return 0;
-@@ -41,7 +41,7 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
- 	if (!machine->env || !machine->env->arch)
- 		goto out_register;
- 
--	dso_type = dso__type(map->dso, machine);
-+	dso_type = dso__type(dso, machine);
- 	if (dso_type == DSO__TYPE_UNKNOWN)
- 		return 0;
- 
