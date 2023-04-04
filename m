@@ -2,118 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE106C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 17:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18296C761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 17:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235957AbjDDRTP (ORCPT
+        id S236203AbjDDR3a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 13:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44904 "EHLO
+        Tue, 4 Apr 2023 13:29:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235943AbjDDRTL (ORCPT
+        with ESMTP id S232492AbjDDR3O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 13:19:11 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB271992
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 10:19:09 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id f66-20020a255145000000b00b714602d43fso33151802ybb.10
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 10:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680628748;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nGBT7J3oxLrG5QlbQBZ8ar3G9Xp4yDpuulB1s81czW0=;
-        b=LiBYzhWDYHduL8RDjlTCgCej44cBeYg5yDH294/Bm6SOX/UwkJHyFMjHqHLQckj9tJ
-         ajqbzPP4APlekP8ORSlTD8dGfj0xIUk9L+F0SMG05QeUa+KdEwpI9dwxtimwR6M/K8tp
-         Bmu7GomNrjrKWfWKsfLce6YKwRztSfrzoJzzYnNmkur0xzXZ6/AO6JDeguhsrXcAUV0Y
-         H2FjPNiXFkJDTPv/fxBh8tNLSqc+iiiKJypLr2qPu4DGP6hhVr1y4lATuJDS0bu55RTP
-         d+iBTQcLAbRWN75bXasqq+bpqIzRVvlv6k6PNlrMwy35zwoZW3x5hCDFCV0JArAa89/Q
-         3CEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680628748;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nGBT7J3oxLrG5QlbQBZ8ar3G9Xp4yDpuulB1s81czW0=;
-        b=wORbJtDNDowVuAyTQQjJ9bSgAXj6bPWjWfnbD3L7sdJCR+g19B3eXg/yHxQa5xYYRU
-         DPs/pnk5Dfqgiu+YqxcCcpWC7PJkOlEW0BL1KIS4DoCNtalo7xiWlFczcZT03qczCmb6
-         PA6q3sSF+CTocxHsy306NInsjELl/XvE74g2gEYepWCekkjnaWsSQNBPo2H0GKUSlmPX
-         WykBnNTw3tFodu/2ugywaftIt3gKpjNf+Wu+IF79tl+gixZT7ggOINR4pCBxd/lLu+3S
-         FoIpu7Ihzi7dvrYT79hGXNjXSdHapWmazMKtMVDcAlg8ZyOluTkM412pJT6JCEi/1B+e
-         ruxA==
-X-Gm-Message-State: AAQBX9frJG5eHLlyswKegnkSL0FNGBGDNd0nwSb0a/QiFC9G70ZN/cxa
-        +S5G4xTk8QTEUDKnnrX5hMUPcxwwH6P7
-X-Google-Smtp-Source: AKy350bgvTjKs5YgA/5EtiXu6Vb2/j9rN2qxfJT/xXdB7KcDKJSGeK6tv3dXeWjYQNUekPpAn3Hx8uC9b7Ye
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a051:e074:d6f:dc29])
- (user=irogers job=sendgmr) by 2002:a81:b309:0:b0:545:7b92:2890 with SMTP id
- r9-20020a81b309000000b005457b922890mr1981501ywh.7.1680628748706; Tue, 04 Apr
- 2023 10:19:08 -0700 (PDT)
-Date:   Tue,  4 Apr 2023 10:19:05 -0700
-Message-Id: <20230404171905.415910-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v1] perf list: Allow listing of just libpfm4 events
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 4 Apr 2023 13:29:14 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37CB47A91;
+        Tue,  4 Apr 2023 10:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680629252; x=1712165252;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tDN5YPkV/esR+g1oRg0BfEw5XkDORzws27KDzqyGeIA=;
+  b=PLgrHNC39H2v0fH8yu3tDqqhWtnbTuJ1z++nN+Xjj+WcgPgllh76Hn4p
+   TIOl0LUfLnL7F7Cx6UsBp6wTxMGgauMFvNLXFqRVfDWm0jpjC7eUhD43n
+   q+wpzaZSEUI+ta+wuO2cBN5q0bsMdbdPA/IhhN/uGwFd/xajxVoyhAgxY
+   lcRjEvp/yqlsJ8qyRgUGJ+JcWKgi2txUyQnEah4ReQeM03KSup4E8fYjH
+   JDUi3Vn6zQYpzTBAdiV/q1U57567ZqnUM1j2Fa6xoE59D8qlHR01ymIxJ
+   QORsu4SP9qDH0z7CAE0oPHHI48Il5pbSwfen0V8KPV1pu3Egt956gYFAm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="343960865"
+X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
+   d="scan'208";a="343960865"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 10:25:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="688976704"
+X-IronPort-AV: E=Sophos;i="5.98,318,1673942400"; 
+   d="scan'208";a="688976704"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.33.86])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 10:25:46 -0700
+Message-ID: <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
+Date:   Tue, 4 Apr 2023 20:25:41 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.1
+Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Hao Luo <haoluo@google.com>
+Cc:     Stephane Eranian <eranian@google.com>
+References: <20230320212248.1175731-1-irogers@google.com>
+ <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If libpfm4 is supported then add 'perf list pfm' to list just the
-libpfm4 events.
+On 4/04/23 18:58, Ian Rogers wrote:
+> Ping. It would be nice to have this landed or at least the first 10
+> patches that refactor the map API and are the bulk of the
+> lines-of-code changed. Having those landed would make it easier to
+> rebase in the future, but I also think the whole series is ready to
+> go.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-list.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+I was wondering if the handling of dynamic data like struct map makes
+any sense at present.  Perhaps someone can reassure me.
 
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 76e1d31a68ee..a60fe91d4b40 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -15,6 +15,7 @@
- #include "util/pmu-hybrid.h"
- #include "util/debug.h"
- #include "util/metricgroup.h"
-+#include "util/pfm.h"
- #include "util/string2.h"
- #include "util/strlist.h"
- #include "util/strbuf.h"
-@@ -452,7 +453,11 @@ int cmd_list(int argc, const char **argv)
- 		OPT_END()
- 	};
- 	const char * const list_usage[] = {
-+#ifdef HAVE_LIBPFM
-+		"perf list [<options>] [hw|sw|cache|tracepoint|pmu|sdt|metric|metricgroup|event_glob|pfm]",
-+#else
- 		"perf list [<options>] [hw|sw|cache|tracepoint|pmu|sdt|metric|metricgroup|event_glob]",
-+#endif
- 		NULL
- 	};
- 
-@@ -529,7 +534,12 @@ int cmd_list(int argc, const char **argv)
- 			default_ps.metricgroups = true;
- 			default_ps.metrics = false;
- 			metricgroup__print(&print_cb, ps);
--		} else if ((sep = strchr(argv[i], ':')) != NULL) {
-+		}
-+#ifdef HAVE_LIBPFM
-+		else if (strcmp(argv[i], "pfm") == 0)
-+			print_libpfm_events(&print_cb, ps);
-+#endif
-+		else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			char *old_pmu_glob = default_ps.pmu_glob;
- 
- 			default_ps.event_glob = strdup(argv[i]);
--- 
-2.40.0.577.gac1e443424-goog
+A struct map can be updated when an MMAP event is processed.  So it
+seems like anything racing with event processing is already broken, and
+reference counting / locking cannot help - unless there is also
+copy-on-write (which there isn't at present)?
+
+For struct maps, referencing it while simultaneously processing
+events seems to make even less sense?
 
