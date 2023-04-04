@@ -2,136 +2,171 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DB2C761A6
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 17:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612B9C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 18:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234198AbjDDRgI (ORCPT
+        id S236366AbjDDS1g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 13:36:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
+        Tue, 4 Apr 2023 14:27:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235832AbjDDRgG (ORCPT
+        with ESMTP id S236370AbjDDS1S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 13:36:06 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55B435259
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 10:35:42 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3e0965f70ecso147071cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 10:35:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680629741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IcdTIvf1ol3LOKzrQoRhCMtc6+U0OZw7eVy/3P4JBok=;
-        b=HpHCjIi2abLI3b7CjtQLNY3/4JDrR8/bMlkvvpuCp3TS/Bd671GsM4/z4LppQsdhHz
-         Lb+tsYVM2v7Q9EubDqOK3jLJCRPNbVVKIhUgP/1U9RjGgffd9uud/llg3NTQgQBY4lD6
-         1MKPUOaQjieI1pqInfYb3evmz64Hgt19Q9juC03REmYu0dwF7aKoRd/I6rMAhyY2PSN3
-         PmQLI/H29tI7I+h90M3X30hdrhVX7fv00DlycG1PT51nN0gfAxeSwL3Ri1v7VZts08JJ
-         c4SLSVdHNGy7N/O+p22ixzorAsEhuz95AOa3cqxWDhjo058Aw+ozSIkAvfaFe5RsHuhP
-         sgDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680629741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IcdTIvf1ol3LOKzrQoRhCMtc6+U0OZw7eVy/3P4JBok=;
-        b=rnbHozHGzFjxQQhRETfITxS7ct2+otE7KmMNNBzZBVj7/8sufToLwid2JWpWB/oP6Y
-         Yf/IEFpvl/0KloURtJNuGXF2XEcNCgjrDSBi0iCU17kvsxMykr3Uw+StkoRg+yHJt9JP
-         ZoMV6q6urjSmrxBN6eyKpCG+/PXFuJydyukjv9Eorp1G067c2BA9aI3xJbX8SjWo2LRv
-         31bJ7fqb8gd20hELcno41hyNUmZC7TFPiBqNbL5YA+mq0ayZavsjg9BtI2SgTzpuIcqt
-         RC216dctiHNXA1tDdeRTjTxtEiSu7xy25KILhnyFKuMtXTQosX8ztCD40bPS3lzWmYlP
-         Tz5Q==
-X-Gm-Message-State: AAQBX9cha9U+RKRUhXhnuPmpoAknhu6mVBL3ztZyM+4kwsNiJEEqDy1s
-        QBvaRwtGd/i4B4dvTYYfTZNYY5iAAoR6K6Q8n/byXg==
-X-Google-Smtp-Source: AKy350YCvemBsrW0G/0og46bba+S5pe6mMWOlg/kbyy3/gd2ZKrX0ESS7v+XyJsScmMXcOhYhiZ3/vxbPTyTxcUAn5w=
-X-Received: by 2002:a05:622a:1a8e:b0:3d3:3cc:6f70 with SMTP id
- s14-20020a05622a1a8e00b003d303cc6f70mr400595qtc.17.1680629740578; Tue, 04 Apr
- 2023 10:35:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230320212248.1175731-1-irogers@google.com> <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
- <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
-In-Reply-To: <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 4 Apr 2023 10:35:27 -0700
-Message-ID: <CAP-5=fUvCYHLaecCKMnFwMEcbqj=UcfgHSKAtmYEtk+sJT26nQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Apr 2023 14:27:18 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE387DB1;
+        Tue,  4 Apr 2023 11:24:29 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 005E63200A4B;
+        Tue,  4 Apr 2023 14:24:00 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 04 Apr 2023 14:24:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1680632640; x=1680719040; bh=07
+        WV5NgL8vMYW4YUKKfLXg4CjXG2oD6eDnOlB5kaoU8=; b=JGa8FIHroy2kuC8LiN
+        uVI9eJvX/WnAlMxVCM2boz1XZBjtb+I+3BkYSY6z0K9ZqvrN2EA1ZWNeF8YmXgWa
+        V7ZoERoi5MO+DUwPlLn1Ucw2hvFf0D5TtT53BZ0kh45sgI2LoK7wv3R/nXR5UjSH
+        9b3bKT6JkJPnOLbyM+m0a/KGQhxcNPNjqMHQGl7VSdmWk1qEBf+n7L3Qpm/GVOpz
+        K000UDXHngCAGdnTsUdGte5U6Tb3GMl/EXgg4hYcXrSrCRE9DLEVQsrJY/0Pa6x3
+        r/iwJCSRda8Dpxgi/lNU/+J5VtrdQIcn3rb2atd+66ob8yVvPYkPxDeXBdcsDUMy
+        mxyg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1680632640; x=1680719040; bh=07WV5NgL8vMYW
+        4YUKKfLXg4CjXG2oD6eDnOlB5kaoU8=; b=Ll7gcFmwspK8PWje88pzP5XHBF30k
+        nszHo2aD9dKsbNo8i5fVt078Tqxr0/hBAmgIe+ajQ96C1nYT4iTAgVt5ROfY1LoC
+        8A9lSJNqLU32vWDzOFa+jbE96Bw4RK/0ETwVf4AUECmBYYd+JjLnhSxv/eQ/IGb3
+        sSyIXHjQYMKNRvy7PcwPSCZZEKQC5c/w2hx1x2dcSGMflcyX44XlS+G6JOjPy91Z
+        yh4tKJ8a17uCiAWZdkc1gnJO2Jnw0pXtO2Ck+gMPHPB9EBuow1R6bHQqbPponcbM
+        J3qTjK6zuv6j33MDk9klBTqg0SBR4ecSvIQUTrkUq/D/LNfrunXSlZhtQ==
+X-ME-Sender: <xms:P2ssZMkSZECcK0tljlLZGMSwvrCJAmIjFEmwPAZDEf5RqMXHXs6JsA>
+    <xme:P2ssZL2xvjoogo9s5uizDg9v6kC0-vA97NKuQqBvmRgcYMdo72P8RR8WDtleRILbc
+    yQ_UFrDgAp-rcrbV0E>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeiledguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:P2ssZKrTfQ5011WxEv1wwyCNED72NYIKp9vQ0ityoTuUhxw04WDIjg>
+    <xmx:P2ssZIlHWQmNQEH1q8fjYjrbwibOboOyWzq-LbLbJKFwA2Zy_d-_yQ>
+    <xmx:P2ssZK1P2C1CLK1diOl2BG_1LABkLUlrLHxernQyk6vxtoI3gzRE0w>
+    <xmx:QGssZJ6_WY4opnWQsUKwdQXrPhNk7dDMrf3uywEiqxUk01M4F-l7RA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 7E323B60089; Tue,  4 Apr 2023 14:23:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-334-g8c072af647-fm-20230330.001-g8c072af6
+Mime-Version: 1.0
+Message-Id: <2b04a64a-80fe-4ff3-b78b-2f999c8be9f6@app.fastmail.com>
+In-Reply-To: <20230324172657.GE309305@hu-bjorande-lv.qualcomm.com>
+References: <20230126163008.3676950-1-andersson@kernel.org>
+ <cdcff86c-77fe-4c5d-b8e8-58b815b9e969@app.fastmail.com>
+ <20230130222412.t2tkkhqfep2orxf2@builder.lan>
+ <9b680581-0956-4188-9af9-af06b625c001@app.fastmail.com>
+ <20230324172657.GE309305@hu-bjorande-lv.qualcomm.com>
+Date:   Tue, 04 Apr 2023 20:23:39 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Bjorn Andersson" <quic_bjorande@quicinc.com>
+Cc:     "Bjorn Andersson" <andersson@kernel.org>, arm <arm@kernel.org>,
+        soc@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Andy Gross" <agross@kernel.org>,
+        "Olof Johansson" <olof@lixom.net>,
+        "Kevin Hilman" <khilman@baylibre.com>,
+        "Konrad Dybcio" <konrad.dybcio@linaro.org>,
+        "Stephan Gerhold" <stephan@gerhold.net>,
+        "Souradeep Chowdhury" <quic_schowdhu@quicinc.com>,
+        "AngeloGioacchino Del Regno" 
+        <angelogioacchino.delregno@collabora.com>,
+        "Bagas Sanjaya" <bagasdotme@gmail.com>,
+        "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Guru Das Srinagesh" <quic_gurus@quicinc.com>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        "Dawei Li" <set_pte_at@outlook.com>,
+        "Loic Poulain" <loic.poulain@linaro.org>,
+        "Melody Olvera" <quic_molvera@quicinc.com>,
+        "Naman Jain" <quic_namajain@quicinc.com>,
+        "Neil Armstrong" <neil.armstrong@linaro.org>,
+        "Yang Li" <yang.lee@linux.alibaba.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        coresight@lists.linaro.org,
+        "Mathieu Poirier" <mathieu.poirier@linaro.org>,
+        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+        "Mike Leach" <mike.leach@linaro.org>,
+        "Leo Yan" <leo.yan@linaro.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Jiri Olsa" <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        "John Garry" <john.g.garry@oracle.com>,
+        "Will Deacon" <will@kernel.org>,
+        "James Clark" <james.clark@arm.com>
+Subject: Re: [GIT PULL] Qualcomm driver updates for v6.3
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 10:26=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
+On Fri, Mar 24, 2023, at 18:26, Bjorn Andersson wrote:
+> On Wed, Feb 15, 2023 at 04:05:36PM +0100, Arnd Bergmann wrote:
+>> On Mon, Jan 30, 2023, at 23:24, Bjorn Andersson wrote:
 >
-> On 4/04/23 18:58, Ian Rogers wrote:
-> > Ping. It would be nice to have this landed or at least the first 10
-> > patches that refactor the map API and are the bulk of the
-> > lines-of-code changed. Having those landed would make it easier to
-> > rebase in the future, but I also think the whole series is ready to
-> > go.
+> Iiuc pstore provides a place to store system state for analysis after a
+> reboot, but DCC provides essentially register dumps on demand - with the
+> system reset being a special case trigger.
 >
-> I was wondering if the handling of dynamic data like struct map makes
-> any sense at present.  Perhaps someone can reassure me.
+> So I think it would look neat to expose the DCC data alongside other
+> pstore data (except for the mentioned issues with ramoops not working on
+> most Qualcomm devices), but when the reboot happens DCC captures data in
+> the DCC SRAM, not in the pstore (whatever backing might be used). So
+> post boot, something would need to get the DCC data into the pstore.
 >
-> A struct map can be updated when an MMAP event is processed.  So it
-> seems like anything racing with event processing is already broken, and
-> reference counting / locking cannot help - unless there is also
-> copy-on-write (which there isn't at present)?
->
-> For struct maps, referencing it while simultaneously processing
-> events seems to make even less sense?
+> To me this sounds in conflict with the pstore design.
 
-Agreed. The point of this work isn't to reimplement the maps/map APIs
-but to add a layer of reference count checking. A refactor to change
-the implementation without reference counts can delete the reference
-count checking and I think that is great! I'm trying to get the code
-base, in its current shape, to be more correct guided by sanitizers.
-Unfortunately the sanitizers come from a C++ RAII world where
-maintaining reference counts is somewhat trivial, we have to work
-harder as done here.
+Sorry for the late reply.
 
-A similar thing to refactoring maps is changing symbol. The rb_node
-there accounts for 3*8 bytes of pointer, but is just to sort the
-symbol by address. A sorted array would suffice as well complexity
-wise, freeing 16-bytes per symbol, and is already done for symbols
-sorted by name.
+The case I was thinking of is making the DCC SRAM a pstore backend
+that might be shared with other pstore users, in place of the
+other targets like PSTORE_RAM, PSTORE_BLK, EFI_VARS_PSTORE and
+the powerpc64 nvram. This might be a bad idea for other reasons of
+course, e.g. if it's impossible to have more than one pstore
+backend active and the SRAM is too small to contain the data
+that would otherwise be store here, or if it's not persistent
+enough.
 
-Thanks,
-Ian
+> Further more, with the reboot trigger being the special case, we'd need
+> to amend the pstore state in runtime to capture the case where the user
+> requested the DCC to capture the state.
+>
+>
+> One idea that I was looking at was to trigger a devcoredump as a way to
+> get the data out of the kernel, instead of a new device node. But it
+> doesn't seem to fit very well with existing use cases, and I haven't
+> used DCC sufficiently - given that it doesn't exist upstream...
+
+You are probably right, but I'm curious about DEV_COREDUMP, as I
+haven't actually seen that before, and I can't seem to find any
+documentation about what its intention is, though I can see a number
+of in-kernel users.
+
+> We made significant changes to the control interface through the review
+> process, I think we have something that looks reasonable now, but I
+> picked the patches under the premise that it's unstable and in debugfs,
+> and exposing the tool to users could lead to more interest in
+> polishing it.
+
+Ok
+ 
+        Arnd
