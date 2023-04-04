@@ -2,334 +2,250 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFFAC7618D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 02:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE6BC761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 03:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232271AbjDDC0g (ORCPT
+        id S229881AbjDDDzq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 3 Apr 2023 22:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
+        Mon, 3 Apr 2023 23:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232267AbjDDC0f (ORCPT
+        with ESMTP id S229619AbjDDDzo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 3 Apr 2023 22:26:35 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12B81FFA;
-        Mon,  3 Apr 2023 19:26:27 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PrBPF2cf3zSkNg;
-        Tue,  4 Apr 2023 10:22:41 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
- (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 4 Apr
- 2023 10:26:24 +0800
-Date:   Tue, 4 Apr 2023 10:26:08 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-CC:     Changbin Du <changbin.du@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>
-Subject: Re: [PATCH] perf: script: add new output field 'dsoip'
-Message-ID: <20230404022608.nkffyujwwoywfxcc@M910t>
-References: <20230331084418.3910903-1-changbin.du@huawei.com>
- <f2eb0299-05cf-72f5-4bb1-c09ebb0a55a1@intel.com>
-MIME-Version: 1.0
+        Mon, 3 Apr 2023 23:55:44 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C70F170F;
+        Mon,  3 Apr 2023 20:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680580543; x=1712116543;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=LyID76HGoNqNd8xACzi89PezDlIj83IvxrCZE6DMe8M=;
+  b=E5AARRTKs+a5PDKoKuGKun58jejl7QHWrghSF5pTi0RnJmjKMPncZsMg
+   SIjYaNL6PGaRCVSNiVDk4KENq/6I0V3YuqeBJf4FZuj+TGDov4DEmm8zB
+   2G4wLQJYsboyR2bRpZiDYfH1P4kP9FSHPpWGv/R22n/8qodQwAVX613Jp
+   vSONjPAM5yIXksV06rsmBtdug0QI2HnBZh9lt+ViRo73Ll4rsQ9fZi2MT
+   +ej6NmWy8s/mUQuldARQqnevLvXzuSkMCmF1yDv+Yqqx6Yk32FxhkZUc6
+   rX3KTfRjb6KRRxuFiasfHKNbd5GsHeiI/w08snFMpaM2QdXwFX0UHdUHV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="321736869"
+X-IronPort-AV: E=Sophos;i="5.98,316,1673942400"; 
+   d="scan'208";a="321736869"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2023 20:55:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10669"; a="716504107"
+X-IronPort-AV: E=Sophos;i="5.98,316,1673942400"; 
+   d="scan'208";a="716504107"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga008.jf.intel.com with ESMTP; 03 Apr 2023 20:55:42 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 3 Apr 2023 20:55:42 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 3 Apr 2023 20:55:41 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Mon, 3 Apr 2023 20:55:41 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Mon, 3 Apr 2023 20:55:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bBjJZcAvfmiWny/y6HD/AlYptc6nXWz0TDr5dhBENLf6UtIcsGTHVUIPo5JBQDxrWKJIQ9wOlSsgKA+/GRqssexleiMhRrDep5T5RHY79nTnnrjpqFEUybFfRBIipHror2cGaLvDWVYqfTH2vCsCi4JUndQSN6FV0jpw1ee1DyrR3hO3HvQvWAMmPrKDYkGlqemTw2EB+hZ5/TgWMSQHIfrk/NWXNp/+F3gSPctFNRsPoCY+dlzapBtnS7n7GY+kVy3LRBenIWv+JclNOQy9UCIpp5bWlTFmEn/JkC5UzafcB10Vhr46BBybuYZcyYf2fVuu1YRLl9Ywl6BPNiOOWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zIlbVuGu6ZGVwaacey3b/snzy2YCZV11PsJad4W99Cs=;
+ b=GenV+x65REEeMNTNoJdy+HUEtdQh2OxAU1Ey/fZX9ZQES3Bf+ULYadahvIFHEK+MPyBK0uhU65mCxWlXCXj48o8pOZlt4OzvN1LYOHyUmR1IiVbLYOvWNOM4gSdLxjdL0C1p5zeWl7Hq00D5KnDWTrGgqeMQkAjlEDCrHgGiRc47W25yQqr40C6SBMPhB2DBWKW7eC9zL3jJImkcIwG8gSQkW8qvlVAxeW34jx5JPQLCveFHM4O7/xYd1OjzyKbMqdaqQIj9xAtoKZx8guC8gLETA0lMrP+SYnhjrYHWipDnKGIMhAA1G7/li5DrT3YpADvNqSo3oKZ2/NBs6bb3Og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DM4PR11MB5439.namprd11.prod.outlook.com (2603:10b6:5:39b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Tue, 4 Apr
+ 2023 03:55:39 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6254.033; Tue, 4 Apr 2023
+ 03:55:39 +0000
+Date:   Mon, 3 Apr 2023 20:55:35 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: RE: [PATCH v4 0/5] CXL 3.0 Performance Monitoring Unit support
+Message-ID: <642b9fb7d6986_29cc2945e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <f2eb0299-05cf-72f5-4bb1-c09ebb0a55a1@intel.com>
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+X-ClientProxiedBy: SJ0PR13CA0043.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::18) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB5439:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1904b57f-77b6-4e4d-9275-08db34c073e5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lo2ZG01KMTgvfP5H4cGeFyWuK5alIhjYkOn5JFK5Elr+MrWkMDnihk8CzUSdLDd6fghbPVEqhlNRcjXD8CILQWFEZu0sbhwvy2O21bKWl2k6ZJdFUGWNcL/6fAwCjgW/2Xi1afBwN3MzyoHNzcKDpS5VO5mGDUP+Q1mCOyyGDB2I7o80OlQjziDV8d7hZkd5C0H8uSxESAfRQEiiSUBMARtD/qfpuZVKyPX2AjcknGQHLb0jzbmEBp7BQckporZM7Zqe7zHMRXmlCz/NxM2lRmZJr6NGWMs2x67z5E7yi8fyOQ2WZ4lWahoziNkIJrIlawY0/xl9psSdIERdJvk/vglTSyP/Tj+J21UXGIpTdBeUkZ8blfqjobnaQBwf6c2d3/ely7WS0GncdwGM3rXsICU+TC6zAUSz79gRCMxKa9hB0Ve/meJu1vLV/bsuFLolwQzHCxsBJWOk8bCo29uQHtuK6aUdNmDXIXgFeEfCnafDVQTYze41bxOFQw9CjpQEXoDI65UXLD5LyQHWtaaopjV+euXoIUjTPBpOMkzRPQ8YF/9w1mRKcMpibvQXe0MViHr7rjhccJm5Z25oaDoyqA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(376002)(39860400002)(136003)(366004)(451199021)(38100700002)(5660300002)(7416002)(83380400001)(54906003)(110136005)(6506007)(316002)(6486002)(186003)(478600001)(6666004)(966005)(86362001)(26005)(6512007)(82960400001)(9686003)(4326008)(8676002)(41300700001)(66946007)(8936002)(66476007)(66556008)(66899021)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?01Y4LHe7E5IauOTfKwr7snJvGvc4b5iSlX3DOXXNwBY7AOSmC3fFrbhmPU3r?=
+ =?us-ascii?Q?R1WECNcDJ6+orQnusteUqryO/q9wYEf/H0QIJpWsF7YrhHzvXN72v4mSPVbW?=
+ =?us-ascii?Q?z5hleBIL3cuM6nRm3sjHLeNTlBW2UOcx8cbXKD5kWBnK3QAl2wuis9g0h+Iz?=
+ =?us-ascii?Q?7fN6LoHLu7W6VAwBhQFLm0xHnJNB9J33lA1CNR/cMP+dcaVHN0X1sX4MJTan?=
+ =?us-ascii?Q?BYeJ3siWAn+dwltq/jM17hLBS3yoc/qpqjOe0F9LXbMqeZHbGiFiY6Cj+Zv7?=
+ =?us-ascii?Q?3n2ayBQ2kR1TbqIMhtnyOn8qBtOW4fCLGsOZ8mjH5A9odDZ6exxBkAXOl+kV?=
+ =?us-ascii?Q?62lOJIqa9Xhn50jPPKmen0w9eGfwzi/bb+UcEZN0Lnyylr90fKzwa8Sjiwry?=
+ =?us-ascii?Q?gV6CrSYGuCnX7zBtwpj9A57TLPpAt53PR+Q4eAMyHx41jT1zcdw+TUklLK+H?=
+ =?us-ascii?Q?EyImDxw8AziAfM+sjEN4HT1yOLT8bpbjW2JywkbOiRe7HaNgYknUvFdEx1WI?=
+ =?us-ascii?Q?X2OD9k5KTT7kfNPVWFVJ3Gt03F6VzeY4nmIAPTv0SLKg3qFx349x5ggCYbkm?=
+ =?us-ascii?Q?v9QZ3dltiYxLp1aIUTaekerTc99piT05zGxzrLHGPS2DcLZVrY9T6JhPE08Y?=
+ =?us-ascii?Q?M2bbpGmkfDamoiXL7JzY9RotucuTBSRJt7AkRAaOaXWrnNI37lMmEi4Btvl6?=
+ =?us-ascii?Q?3bCXPNXhuer38lOeWgtmLF7arXnhAepOaF3CZnlap/MhC39OKxnQ1KGICpym?=
+ =?us-ascii?Q?NVD1dpVU7RW6mkP1JZUNJpUNRwdvFQC14R3zNmvq13CH82gEcmCc29VWqZyP?=
+ =?us-ascii?Q?kFWftGcUzG+Z7E8QrsYRY0BiOHrtukasCRtsjXpaQ5YwnDdE4Heeah58qjVa?=
+ =?us-ascii?Q?S0sE6ZDu5tpr7zTfsO9ENxeJzG+n2uld7SSkX2IIqGE/K9j7gNoMaJzkdRxF?=
+ =?us-ascii?Q?TivxNnb/fgUJyiy7XSXwImeK6KSZN+I8pJJXdobnNjjlSqKxKiV4w8H0+ZSU?=
+ =?us-ascii?Q?EZlTZUzaX+nDF+1gQgUr+EF6LMUSP8qnRBGt1BU1yUfAxH+2dmAWvtQMXxJm?=
+ =?us-ascii?Q?6FTn0dRpnuEcSpHTMO6iCHN4mSlnV8B27Js3clDK9Ge9GGZAEkFVMk70NVaB?=
+ =?us-ascii?Q?6Lmzh8hrgcU+pvAIlwMr3/7z7XMUteJ9FB/xcjVr2kEOo3z+UhWwr5A5zAXw?=
+ =?us-ascii?Q?P0x44paqrvTDRfbBnWQWLTcv1utXGDUapzFCaMyVul+MRaJk2AtfpWNBVpeO?=
+ =?us-ascii?Q?luOw7c1YD0alTceB1FxynhzPQavJYLJjXX2rvlzOd6Y8uxncvfqCvgHJGAED?=
+ =?us-ascii?Q?42tZ1/uvERstqUlUTsfF1orxFg58yXU3yCz9isrWbK+CP76AcLMH83t+3ydd?=
+ =?us-ascii?Q?OQVxNvrhORxDo/QLYlo0u7VaWDfcz6tBLu3ekhly4IGJd+eqKQnNUXA2XCr1?=
+ =?us-ascii?Q?EfJZy2JetKqpuhyGXfdox+F1X9QaGUDgro/uEmmP9scBo+2+YuddqrmlI/3K?=
+ =?us-ascii?Q?oUYedEKmti141fkgyzCESjyW5tVN1l9507XdLhFfxBnule7jzY1BT7XtG5VK?=
+ =?us-ascii?Q?KlB2jsJpYmne8an4dxb4DKXI1R56VYSsH32/jZLO0vFFGVjkSWmP2ljBhtua?=
+ =?us-ascii?Q?LQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1904b57f-77b6-4e4d-9275-08db34c073e5
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 03:55:38.7628
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: epFiaNWwxa6tMS3k5dQhNS9kr/Rzi59hNQbvt/g2hYrkBAY1yvXHwlgoKsnpXS9+I5SQRhf/D7LVoU1iZasiw8XiqgUc6Pp7DeB11xhOz+0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5439
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 03, 2023 at 08:28:23AM +0300, Adrian Hunter wrote:
-> On 31/03/23 11:44, Changbin Du wrote:
-> > The goal of this change is to achieve consistent output for address. Before
-> > this, the raw ip is printed for non-callchain and binary offset for
-> > callchain. Mostly what we expect is the raw ip.
-> > 
-> > This patch does two changes:
-> >   - Always print raw ip for symbols.
-> >   - Add a new 'dsoip' field if we really need the binary offset, and the
+Jonathan Cameron wrote:
+> Changes since v3: Kan Liang gave feedback on v2 incorporated here.
+> - All updates in patch 4, see details there.
 > 
-> IP stands for instruction pointer, which is always a memory address,
-> so 'dsoip' does not seem like a good name.  What about 'dso_offset'?
->
-This name is inherited from the comments of map::map_ip. Actually now we have
-three terms: dos ip, binary offset and dso offset. I also prefer to
-'dso_offset'.
+> Updated cover letter.
+> 
+> The CXL rev 3.0 specification introduces a CXL Performance Monitoring
+> Unit definition. CXL components may have any number of these blocks. The
+> definition is highly flexible, but that does bring complexity in the
+> driver.
+> 
+> Notes.
+> 
+> 1) The QEMU model against which this was developed needs tidying up.
+>    Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
+>    It's backed up behind other series that I plan to upstream first.
+> 2) There are quite a lot of corner cases that will need working through
+>    with variants of the model, or I'll have to design a pathological
+>    set of CPMUs to hit all the corner cases in one go. So whilst I believe
+>    the driver should be fine for what it supports we may find issues
+>    as those corners of what is allowed are explored.
+> 3) I'm not sure it makes sense to hang this of the cxl/pci driver but
+>    couldn't really figure out where else in the current structure we could
+>    make it fit cleanly.
+> 4) Driver location. In past perf maintainers have requested perf drivers
+>    for PCI etc be under drivers/perf. That would require moving some
+>    CXL headers to be more generally visible, but is certainly possible
+>    if there is agreement between CXL and perf maintainers on the correct
+>    location.
 
-> >     offset is appended to dso name.
-> > 
-> > Default output now:
-> > $ perf script
-> >        perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown])
-> >        perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown])
-> >               ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown])
-> >               ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so)
-> >               ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so)
-> >               ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so)
-> >               ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls)
-> >               ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls)
-> >               ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown])
-> > 
-> > Display 'dsoip' field:
-> > $ perf script -F +dsoip
-> >        perf-exec 171459 5380927.621499:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621524:          1 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621527:          2 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621530:         17 cycles:  ffffffff8c66e1b8 [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621533:        194 cycles:  ffffffff8c66e1bf [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621536:       2153 cycles:  ffffffff8c6375fe [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621540:      23135 cycles:  ffffffff8d001ac4 [unknown] ([unknown]+0x0)
-> >        perf-exec 171459 5380927.621555:     224703 cycles:  ffffffff8c7a5153 [unknown] ([unknown]+0x0)
-> >               ls 171459 5380927.621686:     587397 cycles:  ffffffff8c7c43de [unknown] ([unknown]+0x0)
-> >               ls 171459 5380927.622016:     653693 cycles:      7fe1e47278c7 _dl_map_object_deps+0x307 (/lib/x86_64-linux-gnu/ld-2.27.so+0xe8c7)
-> >               ls 171459 5380927.622382:     633896 cycles:      7fe1e41bd0d0 __wmemchr_ifunc+0x0 (/lib/x86_64-linux-gnu/libc-2.27.so+0xbd0d0)
-> >               ls 171459 5380927.622737:     608856 cycles:      7fe1e4194594 _int_malloc+0x264 (/lib/x86_64-linux-gnu/libc-2.27.so+0x94594)
-> >               ls 171459 5380927.623078:     586376 cycles:      55ff5293d27c [unknown] (/bin/ls+0x1227c)
-> >               ls 171459 5380927.623405:     566812 cycles:      55ff5293b202 [unknown] (/bin/ls+0x10202)
-> >               ls 171459 5380927.623723:     549960 cycles:  ffffffff8c82b138 [unknown] ([unknown]+0x0)
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > ---
-> >  tools/perf/Documentation/perf-script.txt |  2 +-
-> >  tools/perf/builtin-script.c              |  5 +++++
-> >  tools/perf/util/evsel_fprintf.c          | 26 ++++++++++++------------
-> >  tools/perf/util/evsel_fprintf.h          | 13 ++++++------
-> >  4 files changed, 26 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> > index 777a0d8ba7d1..ef392785f776 100644
-> > --- a/tools/perf/Documentation/perf-script.txt
-> > +++ b/tools/perf/Documentation/perf-script.txt
-> > @@ -130,7 +130,7 @@ OPTIONS
-> >  -F::
-> >  --fields::
-> >          Comma separated list of fields to print. Options are:
-> > -        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
-> > +        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoip, addr, symoff,
-> >          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-> >          brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-> >          phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index a792214d1af8..a181decf7922 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -133,6 +133,7 @@ enum perf_output_field {
-> >  	PERF_OUTPUT_VCPU            = 1ULL << 38,
-> >  	PERF_OUTPUT_CGROUP          = 1ULL << 39,
-> >  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
-> > +	PERF_OUTPUT_DSOIP           = 1ULL << 41,
-> >  };
-> >  
-> >  struct perf_script {
-> > @@ -174,6 +175,7 @@ struct output_option {
-> >  	{.str = "ip",    .field = PERF_OUTPUT_IP},
-> >  	{.str = "sym",   .field = PERF_OUTPUT_SYM},
-> >  	{.str = "dso",   .field = PERF_OUTPUT_DSO},
-> > +	{.str = "dsoip", .field = PERF_OUTPUT_DSOIP},
-> >  	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
-> >  	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
-> >  	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
-> > @@ -574,6 +576,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
-> >  	if (PRINT_FIELD(DSO))
-> >  		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
-> >  
-> > +	if (PRINT_FIELD(DSOIP))
-> > +		output[type].print_ip_opts |= EVSEL__PRINT_DSOIP;
-> > +
-> >  	if (PRINT_FIELD(SYMOFFSET))
-> >  		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
-> >  
-> > diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-> > index bd22c4932d10..fd1791fab051 100644
-> > --- a/tools/perf/util/evsel_fprintf.c
-> > +++ b/tools/perf/util/evsel_fprintf.c
-> > @@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
-> >  	int print_ip = print_opts & EVSEL__PRINT_IP;
-> >  	int print_sym = print_opts & EVSEL__PRINT_SYM;
-> >  	int print_dso = print_opts & EVSEL__PRINT_DSO;
-> > +	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
-> >  	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
-> >  	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
-> >  	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
-> > @@ -133,7 +134,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
-> >  		while (1) {
-> >  			struct symbol *sym;
-> >  			struct map *map;
-> > -			u64 addr = 0;
-> > +			u64 dso_ip = 0;
-> 
-> Renaming 'addr' just makes the patch more complicated.
-> Just leave it as 'addr'
->
-Just to make the variable name reflect its real content. It's not a memory
-address, right?
+I am ok the bulk of the logic living under drivers/perf/
 
-> >  
-> >  			node = callchain_cursor_current(cursor);
-> >  			if (!node)
-> > @@ -141,6 +142,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
-> >  
-> >  			sym = node->ms.sym;
-> >  			map = node->ms.map;
-> > +			if (map)
-> > +				dso_ip = map->map_ip(map, node->ip);
-> 
-> There does not seem to be any reason to move these lines of code.
-> 
-yes. I cound undo this. (just a clean up to not place addr calculation betwwen
-printings)
+Are drivers/perf/ folks ok with a:
 
-> >  
-> >  			if (sym && sym->ignore && print_skip_ignored)
-> >  				goto next;
-> > @@ -150,20 +153,12 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
-> >  			if (print_arrow && !first)
-> >  				printed += fprintf(fp, " <-");
-> >  
-> > -			if (map)
-> > -				addr = map->map_ip(map, node->ip);
-> > -
-> > -			if (print_ip) {
-> > -				/* Show binary offset for userspace addr */
-> > -				if (map && !map->dso->kernel)
-> 
-> I would have expected to keep existing functionality unchanged i.e.
-> 
-But the goal is to make printed address consistent. See below difference.
+CFLAGS_cxl.o := -I$(srctree)/drivers/cxl/
 
-$ perf script
-...
-ls 1341034 2739463.008343:    2162417 cycles:
-	ffffffff992a917d [unknown] ([unknown])
-        ffffffff992a9b0a [unknown] ([unknown])
-        ffffffff992efa3d [unknown] ([unknown])
-        ffffffff992f10c9 [unknown] ([unknown])
-        ffffffff992f47cc [unknown] ([unknown])
-        ffffffff992f4ab8 [unknown] ([unknown])
-        ffffffff9909daa2 [unknown] ([unknown])
-        ffffffff99d657a7 [unknown] ([unknown])
-        ffffffff99e00b67 [unknown] ([unknown])
-                   235d3 memset+0x53 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)  # dso offset
-                    a61b _dl_map_object+0x1bb (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+...or similar in their Makefile, because I don't think this by itself is
+a reason to push CXL headers to include/.
 
-$ perf script  -G
-	      ...
-              ls 1341034 2739463.008876:    2053304 cycles:  ffffffffc1596923 [unknown] ([unknown])
-              ls 1341034 2739463.009381:    1917049 cycles:      14def8e149e6 __strcoll_l+0xd96 (/usr/lib/x86_64-linux-gnu/libc-2.31.so) # raw ip
+I say this without having looked at the code yet and whether this driver
+will need new exports from the cxl/core etc.
 
+> 5) Patch 1 led to a discussion of how to handle the self describing
+>    and extensible nature of the CPMU counters.  That is likely to involve
+>    a description in the "caps" sysfs directory and perf tool code that is
+>    aware of the different event combinations that make sense and can
+>    establish which sets are available on a given device.
+>    That is likely to take a while to converge on, so as the driver is useful
+>    in the current state, I'm looking to upstream this first and deal with
+>    the more complex handling later.
 
-> -				if (map && !map->dso->kernel)
-> +				if (!print_dsoip && map && !map->dso->kernel)
-> 
-> > -					printed += fprintf(fp, "%c%16" PRIx64, s, addr);
-> > -				else
-> > -					printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
-> > -			}
-> > +			if (print_ip)
-> > +				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
-> >  
-> >  			if (print_sym) {
-> >  				printed += fprintf(fp, " ");
-> > -				node_al.addr = addr;
-> > +				node_al.addr = dso_ip;
-> >  				node_al.map  = map;
-> >  
-> >  				if (print_symoffset) {
-> > @@ -179,11 +174,13 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
-> >  			if (print_dso && (!sym || !sym->inlined)) {
-> >  				printed += fprintf(fp, " (");
-> >  				printed += map__fprintf_dsoname(map, fp);
-> > +				if (print_dsoip)
-> 
-> Better to avoid '[unknown]+0x0' i.e.
-> 
-> 				if (print_dsoip && map && map->dso)
-> 
-This is also to keep output consistent which is frendly for parsers (FlameGraph
-generator for example).
+What's "this" in this last sentence, a canned set of base counters?
 
-> > +					printed += fprintf(fp, "+0x%lx", (map && map->dso) ? dso_ip : 0);
-> >  				printed += fprintf(fp, ")");
-> >  			}
-> >  
-> >  			if (print_srcline)
-> > -				printed += map__fprintf_srcline(map, addr, "\n  ", fp);
-> > +				printed += map__fprintf_srcline(map, dso_ip, "\n  ", fp);
-> >  
-> >  			if (sym && sym->inlined)
-> >  				printed += fprintf(fp, " (inlined)");
-> > @@ -214,6 +211,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
-> >  	int print_ip = print_opts & EVSEL__PRINT_IP;
-> >  	int print_sym = print_opts & EVSEL__PRINT_SYM;
-> >  	int print_dso = print_opts & EVSEL__PRINT_DSO;
-> > +	int print_dsoip = print_opts & EVSEL__PRINT_DSOIP;
-> >  	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
-> >  	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
-> >  	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
-> > @@ -242,6 +240,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
-> >  		if (print_dso) {
-> >  			printed += fprintf(fp, " (");
-> >  			printed += map__fprintf_dsoname(al->map, fp);
-> > +			if (print_dsoip)
-> 
-> Better to avoid '[unknown]+0x0' i.e.
-> 
-> 				if (print_dsoip && al->map && al->map->dso)
-> 
-> 
-Ditto.
+> 6) There is a lot of other functionality that can be added in future
+>    include allowing for simpler hardware implementations that may not
+>    support the minimum level of features currently required by the driver
+>    (freeze, overflow interrupts etc).
 
-> > +				printed += fprintf(fp, "+0x%lx", (al->map && al->map->dso) ? al->addr : 0);
-> >  			printed += fprintf(fp, ")");
-> >  		}
-> >  
-> > diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
-> > index 3093d096c29f..3f282c5840da 100644
-> > --- a/tools/perf/util/evsel_fprintf.h
-> > +++ b/tools/perf/util/evsel_fprintf.h
-> > @@ -20,12 +20,13 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
-> >  #define EVSEL__PRINT_IP			(1<<0)
-> >  #define EVSEL__PRINT_SYM		(1<<1)
-> >  #define EVSEL__PRINT_DSO		(1<<2)
-> > -#define EVSEL__PRINT_SYMOFFSET		(1<<3)
-> > -#define EVSEL__PRINT_ONELINE		(1<<4)
-> > -#define EVSEL__PRINT_SRCLINE		(1<<5)
-> > -#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
-> > -#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
-> > -#define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
-> > +#define EVSEL__PRINT_DSOIP		(1<<3)
-> > +#define EVSEL__PRINT_SYMOFFSET		(1<<4)
-> > +#define EVSEL__PRINT_ONELINE		(1<<5)
-> > +#define EVSEL__PRINT_SRCLINE		(1<<6)
-> > +#define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<7)
-> > +#define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<8)
-> > +#define EVSEL__PRINT_SKIP_IGNORED	(1<<9)
-> >  
-> >  struct addr_location;
-> >  struct perf_event_attr;
-> 
-> 
+Curious if the the minimal set determined by the specification, like the
+minimal features a CXL Memory Expander device must implement, or by what
+you decided was fit to be emulated in QEMU?
 
--- 
-Cheers,
-Changbin Du
+> 
+> CXL rev 3.0 specification available from https://www.computeexpresslink.org
+> 
+> 
+> Jonathan Cameron (5):
+>   cxl: Add function to count regblocks of a given type
+>   perf: Allow a PMU to have a parent
+>   cxl/pci: Find and register CXL PMU devices
+>   cxl: CXL Performance Monitoring Unit driver
+>   docs: perf: Minimal introduction the the CXL PMU device and driver
+> 
+>  Documentation/admin-guide/perf/cxl.rst   |  65 ++
+>  Documentation/admin-guide/perf/index.rst |   1 +
+>  drivers/cxl/Kconfig                      |  13 +
+>  drivers/cxl/Makefile                     |   1 +
+>  drivers/cxl/core/Makefile                |   1 +
+>  drivers/cxl/core/core.h                  |   1 +
+>  drivers/cxl/core/cpmu.c                  |  72 ++
+>  drivers/cxl/core/pci.c                   |   2 +-
+>  drivers/cxl/core/port.c                  |   4 +-
+>  drivers/cxl/core/regs.c                  |  50 +-
+>  drivers/cxl/cpmu.c                       | 940 +++++++++++++++++++++++
+>  drivers/cxl/cpmu.h                       |  56 ++
+>  drivers/cxl/cxl.h                        |  17 +-
+>  drivers/cxl/cxlpci.h                     |   1 +
+>  drivers/cxl/pci.c                        |  27 +-
+>  include/linux/perf_event.h               |   1 +
+>  kernel/events/core.c                     |   1 +
+>  17 files changed, 1245 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/admin-guide/perf/cxl.rst
+>  create mode 100644 drivers/cxl/core/cpmu.c
+>  create mode 100644 drivers/cxl/cpmu.c
+>  create mode 100644 drivers/cxl/cpmu.h
+> 
+> -- 
+> 2.37.2
+> 
