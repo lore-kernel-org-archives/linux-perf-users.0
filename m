@@ -2,162 +2,245 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B95FC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 17:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59820C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 17:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231668AbjDDRHv (ORCPT
+        id S232011AbjDDRMD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 13:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54260 "EHLO
+        Tue, 4 Apr 2023 13:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234497AbjDDRHt (ORCPT
+        with ESMTP id S231750AbjDDRMC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 13:07:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482225242;
-        Tue,  4 Apr 2023 10:07:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D7BAC6275B;
-        Tue,  4 Apr 2023 17:07:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FD6C433EF;
-        Tue,  4 Apr 2023 17:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680628049;
-        bh=uAg/6YfJ9exiCMZhWLLr52NpllDeXhgQ29NBfLIH7Fw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CuUcKWxVUI3Zs81EX5tsuObCl1OSJZ9QIr6BKpnNGnoyavdTwYhAtJvBw196yAIsM
-         JCvhE/t7sy4Bkula8ACdYp87iJTzGu5UyrUb/VWjw6t1vXfJbefoILjkzV1NBQZRqC
-         OmYKU54WJYuIwJYZ05Np0Y5t7FQd/Rty8kxALbGfPl4eIR+ub4VEYarPod1xEV4ytv
-         hMAxNVF0HiDg03OBG2ZwHASCsCS78rEVtJmsEZ8bB7fXW4glcAvH+9CyqNU2Z0YwTL
-         z11rYUdUoTEj7S9pCqHzG321Yg9GurscsPEA1yg5jQv5dVF4Oq00ZcGkGeQfF2O/Og
-         04vfOyPidyAqA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B98BD4052D; Tue,  4 Apr 2023 14:07:26 -0300 (-03)
-Date:   Tue, 4 Apr 2023 14:07:26 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 4 Apr 2023 13:12:02 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC41B5
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 10:12:01 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54629ed836aso192694477b3.10
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 10:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680628320;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GOgT1sPETj0q8HMl3FDDjzVshKnjlllm3myIaWYsAM8=;
+        b=BYBxqbK2pUllPRrLNmM5XjfLeYeLPgW9BpbWzuu/eplCiVAJTvhoifRPPnINbdOBXM
+         Bv0dQ0LKJep9TBIEjwA+CRf2ut3voBdXAsH4shFzn/MzH3yYH9e7/dAPIT/N97sAdwLM
+         3Hp4ln4eViOtBxKwuKRME+2OS2auQy1vlG9Im6bBgrCv12DwEUW+hzYuMZySqf3Vg2vG
+         BQy35vV0su10XaBfNSVWyqaRLEFXujrxqcSdBls47E7shPzwX0T+VwRL41+Y49EcOre6
+         dtYd4WiFMxTyPmmw9PupmLtJqcRQXpS+7kxgvFhiMVDUndVsn7Psmute16dqIbenB1lP
+         zBMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680628320;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GOgT1sPETj0q8HMl3FDDjzVshKnjlllm3myIaWYsAM8=;
+        b=WvOWjAYO74MUej9lDhWg5QKOUI4+rthtLrMqPQt+S77tujci4JKF5k3cWrsANVv3w7
+         L8UwWPTVnRkZMA4OQX3dilug+iwqPkVSKHtmkxrgwapbD0D/jduPQjiVSVx87mi1OO+m
+         2+Ocb7f7OcIZl4m6Zb5S8JBLalxdMK28h2n4t0OyVNkqlSBzz3tkofashsW2gGXvXNfA
+         QFkxWnKNnvfGHmULChoTFt5BDZjDvNXZ7kcyDG5Zv/ExJ/5xPmDBuLaZmwUFX2oVGujd
+         GRKFC0tvDJvOFyt7NYegvViWgP7Wo4oepq7lXJklWrsQ8CdEjBDZrAv655QZOtIT+XFi
+         uggQ==
+X-Gm-Message-State: AAQBX9diFYch0VZWIWKpbN3UD0nuC45sO5bkFaBy3pR0/iGzGh1SPM2L
+        fXs9OME3G3/RmkMA1FemBI65fpSDWbz0
+X-Google-Smtp-Source: AKy350aHB55zg30TbIzYb6EGEfJlq5BclAuDczTKHnBOT8GBOsqGlnfxujWMcePnaQu6BAgTrHIPniAeG1fp
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a051:e074:d6f:dc29])
+ (user=irogers job=sendgmr) by 2002:a25:d406:0:b0:b7d:4c96:de0 with SMTP id
+ m6-20020a25d406000000b00b7d4c960de0mr2002396ybf.5.1680628320495; Tue, 04 Apr
+ 2023 10:12:00 -0700 (PDT)
+Date:   Tue,  4 Apr 2023 10:11:44 -0700
+Message-Id: <20230404171146.2018616-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+Subject: [PATCH v1 1/3] perf test: Write CSV output to a file
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Claire Jensen <cjense@google.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-Message-ID: <ZCxZTkoQT1Doh//q@kernel.org>
-References: <20230320212248.1175731-1-irogers@google.com>
- <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
- <ZCxYLAMrdNyiLVvr@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZCxYLAMrdNyiLVvr@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 04, 2023 at 02:02:36PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Apr 04, 2023 at 08:58:55AM -0700, Ian Rogers escreveu:
-> > Ping. It would be nice to have this landed or at least the first 10
-> > patches that refactor the map API and are the bulk of the
-> > lines-of-code changed. Having those landed would make it easier to
-> > rebase in the future, but I also think the whole series is ready to
-> > go.
-> 
-> I'm trying to get it to compile:
-> 
->   CC      /tmp/build/perf-tools-next/util/bpf-event.o
-> In file included from util/machine.h:7,
->                  from util/session.h:8,
->                  from util/unwind-libunwind-local.c:35:
-> util/unwind-libunwind-local.c: In function ‘read_unwind_spec_eh_frame’:
-> util/maps.h:29:18: error: assignment to ‘struct map *’ from incompatible pointer type ‘struct map_rb_node *’ [-Werror=incompatible-pointer-types]
->    29 |         for (map = maps__first(maps); map; map = map_rb_node__next(map))
->       |                  ^
-> util/unwind-libunwind-local.c:328:9: note: in expansion of macro ‘maps__for_each_entry’
-> 
-> ⬢[acme@toolbox perf-tools-next]$ git log --oneline -1
-> 51a0f26e88c893ac (HEAD) perf maps: Remove rb_node from struct map
-> ⬢[acme@toolbox perf-tools-next]$
-> 
-> I'm also making some changes to reduce the number of patch lines and
-> conserve the project 'git blame' usefulness, not changing the logic in
-> your patches.
+Write the CSV output to a file, then sanity check this output. This
+avoids problems with debug/warning/error output corrupting the file
+format.
 
-The fix for the above problem demonstrate the changes I made to this
-patch, see the
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/stat+csv_output.sh | 58 ++++++++++++++++-------
+ 1 file changed, 42 insertions(+), 16 deletions(-)
 
-  struct map *map = map_node->map;
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index 324fc9e6edd7..929c83977fa9 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -9,6 +9,20 @@ set -e
+ skip_test=0
+ csv_sep=@
+ 
++stat_output=$(mktemp /tmp/__perf_test.stat_output.XXXXX.csv)
++
++cleanup() {
++  rm -f "${stat_output}"
++
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
+ function commachecker()
+ {
+ 	local -i cnt=0
+@@ -30,9 +44,11 @@ function commachecker()
+ 
+ 	while read line
+ 	do
+-		# Check for lines beginning with Failed
+-		x=${line:0:6}
+-		[ "$x" = "Failed" ] && continue
++		# Ignore initial "started on" comment.
++		x=${line:0:1}
++		[ "$x" = "#" ] && continue
++		# Ignore initial blank line.
++		[ "$line" = "" ] && continue
+ 
+ 		# Count the number of commas
+ 		x=$(echo $line | tr -d -c $csv_sep)
+@@ -42,7 +58,7 @@ function commachecker()
+ 			echo "wrong number of fields. expected $exp in $line" 1>&2
+ 			exit 1;
+ 		}
+-	done
++	done < "${stat_output}"
+ 	return 0
+ }
+ 
+@@ -55,7 +71,8 @@ function ParanoidAndNotRoot()
+ check_no_args()
+ {
+ 	echo -n "Checking CSV output: no args "
+-	perf stat -x$csv_sep true 2>&1 | commachecker --no-args
++	perf stat -x$csv_sep -o "${stat_output}" true
++        commachecker --no-args
+ 	echo "[Success]"
+ }
+ 
+@@ -67,27 +84,29 @@ check_system_wide()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x$csv_sep -a true 2>&1 | commachecker --system-wide
++	perf stat -x$csv_sep -a -o "${stat_output}" true
++        commachecker --system-wide
+ 	echo "[Success]"
+ }
+ 
+ check_system_wide_no_aggr()
+ {
+-	echo -n "Checking CSV output: system wide "
++	echo -n "Checking CSV output: system wide no aggregation "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	echo -n "Checking CSV output: system wide no aggregation "
+-	perf stat -x$csv_sep -A -a --no-merge true 2>&1 | commachecker --system-wide-no-aggr
++	perf stat -x$csv_sep -A -a --no-merge -o "${stat_output}" true
++        commachecker --system-wide-no-aggr
+ 	echo "[Success]"
+ }
+ 
+ check_interval()
+ {
+ 	echo -n "Checking CSV output: interval "
+-	perf stat -x$csv_sep -I 1000 true 2>&1 | commachecker --interval
++	perf stat -x$csv_sep -I 1000 -o "${stat_output}" true
++        commachecker --interval
+ 	echo "[Success]"
+ }
+ 
+@@ -95,7 +114,8 @@ check_interval()
+ check_event()
+ {
+ 	echo -n "Checking CSV output: event "
+-	perf stat -x$csv_sep -e cpu-clock true 2>&1 | commachecker --event
++	perf stat -x$csv_sep -e cpu-clock -o "${stat_output}" true
++        commachecker --event
+ 	echo "[Success]"
+ }
+ 
+@@ -107,7 +127,8 @@ check_per_core()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x$csv_sep --per-core -a true 2>&1 | commachecker --per-core
++	perf stat -x$csv_sep --per-core -a -o "${stat_output}" true
++        commachecker --per-core
+ 	echo "[Success]"
+ }
+ 
+@@ -119,7 +140,8 @@ check_per_thread()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x$csv_sep --per-thread -a true 2>&1 | commachecker --per-thread
++	perf stat -x$csv_sep --per-thread -a -o "${stat_output}" true
++        commachecker --per-thread
+ 	echo "[Success]"
+ }
+ 
+@@ -131,7 +153,8 @@ check_per_die()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x$csv_sep --per-die -a true 2>&1 | commachecker --per-die
++	perf stat -x$csv_sep --per-die -a -o "${stat_output}" true
++        commachecker --per-die
+ 	echo "[Success]"
+ }
+ 
+@@ -143,7 +166,8 @@ check_per_node()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x$csv_sep --per-node -a true 2>&1 | commachecker --per-node
++	perf stat -x$csv_sep --per-node -a -o "${stat_output}" true
++        commachecker --per-node
+ 	echo "[Success]"
+ }
+ 
+@@ -155,7 +179,8 @@ check_per_socket()
+ 		echo "[Skip] paranoid and not root"
+ 		return
+ 	fi
+-	perf stat -x$csv_sep --per-socket -a true 2>&1 | commachecker --per-socket
++	perf stat -x$csv_sep --per-socket -a -o "${stat_output}" true
++        commachecker --per-socket
+ 	echo "[Success]"
+ }
+ 
+@@ -202,4 +227,5 @@ then
+ else
+ 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
+ fi
++cleanup
+ exit 0
+-- 
+2.40.0.348.gf938b09366-goog
 
-Line, to avoid touching the logic right after it.
-
-Now I'm working on this other error:
-
-  CC      /tmp/build/perf-tools-next/util/jitdump.o
-  CC      /tmp/build/perf-tools-next/util/bpf-event.o
-util/unwind-libunwind.c: In function ‘unwind__get_entries’:
-util/unwind-libunwind.c:95:24: error: too few arguments to function ‘ops->get_entries’
-   95 |                 return ops->get_entries(cb, arg, thread, data, max_stack);
-      |                        ^~~
-util/unwind-libunwind.c:90:31: error: unused parameter ‘best_effort’ [-Werror=unused-parameter]
-   90 |                          bool best_effort)
-      |                               ^
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/unwind-libunwind.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  LD      /tmp/build/perf-tools-next/ui/browsers/perf-in.o
-  LD      /tmp/build/perf-tools-next/ui/perf-in.o
-  LD      /tmp/build/perf-tools-next/util/scripting-engines/perf-in.o
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: util] Error 2
-make[2]: *** [Makefile.perf:676: /tmp/build/perf-tools-next/perf-in.o] Error 2
-make[1]: *** [Makefile.perf:236: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-
- Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf-tools-next -C tools/perf install-bin':
-
-      162599516548      cycles:u
-      194726899066      instructions:u                   #    1.20  insn per cycle
-
-       4.991056085 seconds time elapsed
-
-      39.350659000 seconds user
-       8.413527000 seconds sys
-
-
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -1
-a95f2d0f62bfd750 (HEAD) perf maps: Add functions to access maps
-⬢[acme@toolbox perf-tools-next]$
-
-- Arnaldo
