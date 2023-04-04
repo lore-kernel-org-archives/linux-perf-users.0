@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5147CC761A6
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 18:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C959CC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 18:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233583AbjDDSlo (ORCPT
+        id S229881AbjDDSyg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 14:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
+        Tue, 4 Apr 2023 14:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233127AbjDDSln (ORCPT
+        with ESMTP id S235913AbjDDSye (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 14:41:43 -0400
+        Tue, 4 Apr 2023 14:54:34 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2695C1A5;
-        Tue,  4 Apr 2023 11:41:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFD3170F;
+        Tue,  4 Apr 2023 11:54:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 942BC637BE;
-        Tue,  4 Apr 2023 18:41:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BD1C433D2;
-        Tue,  4 Apr 2023 18:41:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1441363845;
+        Tue,  4 Apr 2023 18:54:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B78BC433EF;
+        Tue,  4 Apr 2023 18:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680633701;
-        bh=7luwlHtlnPj1uap2yRPChFSIZj7fVyDCho++E+4oG/8=;
+        s=k20201202; t=1680634472;
+        bh=2JKZvifvZo0iG/71MaLcykWMpX1Lo94xFJ1Wx7m52is=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FJbade/wyfQPHX7+dG09Nr7o4cK+NNKZTwXF0rGdPJnNiiDj+hnhJN/6Zio11mcIF
-         euzqd8Z6WnfVOA57HVz4q8Avii+2uRIdGFrFNM10Qx0BCcdpu4bm0DwEfru8fa8RW5
-         LfLjRjgXwzcR4QCB00YQupUgmg/dL0H2ONlz+dsPJJ+h9tLG/S4VnfnBysEe9Dtzq8
-         wcqPJa4fJBVsu3GlQ8VXULP8PMtMVLZnKqFFtvmdxG2OWiHGYNNNOExNj821J2dt9C
-         y7JEZtHdgGW7CXhC0bNcGi7d0o+yCWQHGG+M+ea58dBmzRXEvp8YKJ+kS9FoEQDR8r
-         TWMAjG3LlQjJw==
+        b=LaGRNGMwDPas+wlQ1CR8kS2KjdEfpD/cSbkPlqyDEr4PjyVriLIwZM/Iz/mF4/ah4
+         Jb5jl+oeSFEtJDUI692YwC7tBXkiqYPWjsrVdAwq/PuuxOKXFNW/EJEylL1b2slpoX
+         p2mnLUyc9+2ulXNrbnptcFdCY7/VZ0m31JPuBqOcFumHO/KDpA12mvXKmrWdzwozz4
+         jjS2iIrD5Nk935172fOZYNbK/YpOFpvr52XL7jsHXaQljPSwKNMZnWCMBcgiMtnsrj
+         omdESzIq2PciJ3Rd/RF77zhaK2A60Dm2OqndTrNtIbA+OM7B+sNWj8n7sxyIGRT+Nv
+         0jO1s2R7W2kRw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5333A4052D; Tue,  4 Apr 2023 15:41:38 -0300 (-03)
-Date:   Tue, 4 Apr 2023 15:41:38 -0300
+        id EFAD84052D; Tue,  4 Apr 2023 15:54:29 -0300 (-03)
+Date:   Tue, 4 Apr 2023 15:54:29 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -73,54 +73,60 @@ Cc:     Ian Rogers <irogers@google.com>,
         Hao Luo <haoluo@google.com>,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-Message-ID: <ZCxvYpeoemPHUmJ4@kernel.org>
+Message-ID: <ZCxyZcnd9/4zjbQZ@kernel.org>
 References: <20230320212248.1175731-1-irogers@google.com>
  <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
  <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
+ <ZCxvYpeoemPHUmJ4@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
+In-Reply-To: <ZCxvYpeoemPHUmJ4@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 04, 2023 at 08:25:41PM +0300, Adrian Hunter escreveu:
-> On 4/04/23 18:58, Ian Rogers wrote:
-> > Ping. It would be nice to have this landed or at least the first 10
-> > patches that refactor the map API and are the bulk of the
-> > lines-of-code changed. Having those landed would make it easier to
-> > rebase in the future, but I also think the whole series is ready to
-> > go.
+Em Tue, Apr 04, 2023 at 03:41:38PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Apr 04, 2023 at 08:25:41PM +0300, Adrian Hunter escreveu:
+> > On 4/04/23 18:58, Ian Rogers wrote:
+> > > Ping. It would be nice to have this landed or at least the first 10
+> > > patches that refactor the map API and are the bulk of the
+> > > lines-of-code changed. Having those landed would make it easier to
+> > > rebase in the future, but I also think the whole series is ready to
+> > > go.
+> > 
+> > I was wondering if the handling of dynamic data like struct map makes
+> > any sense at present.  Perhaps someone can reassure me.
+> > 
+> > A struct map can be updated when an MMAP event is processed.  So it
 > 
-> I was wondering if the handling of dynamic data like struct map makes
-> any sense at present.  Perhaps someone can reassure me.
+> Yes, it can, and the update is made via a new PERF_RECORD_MMAP, right?
 > 
-> A struct map can be updated when an MMAP event is processed.  So it
+> So:
+> 
+> 	perf_event__process_mmap()
+> 	  machine__process_mmap2_event()
+> 	    map__new() + thread__insert_map(thread, map)
+> 	    	maps__fixup_overlappings()
+> 			maps__insert(thread->maps, map);
+> 
+> Ok, from this point on new samples on ] map->start .. map->end ] will
+> grab a refcount to this new map in its hist_entry, right?
+> 
+> When we want to sort by dso we will look at hist_entry->map->dso, etc.
 
-Yes, it can, and the update is made via a new PERF_RECORD_MMAP, right?
+And in 'perf top' we go decaying hist entries, when we delete the
+hist_entry, drop the reference count to things it holds, that will then
+be finally deleted when no more hist_entries point to it.
 
-So:
-
-	perf_event__process_mmap()
-	  machine__process_mmap2_event()
-	    map__new() + thread__insert_map(thread, map)
-	    	maps__fixup_overlappings()
-			maps__insert(thread->maps, map);
-
-Ok, from this point on new samples on ] map->start .. map->end ] will
-grab a refcount to this new map in its hist_entry, right?
-
-When we want to sort by dso we will look at hist_entry->map->dso, etc.
-
-> seems like anything racing with event processing is already broken, and
-> reference counting / locking cannot help - unless there is also
-> copy-on-write (which there isn't at present)?
-
-> For struct maps, referencing it while simultaneously processing
-> events seems to make even less sense?
-
-Can you elaborate some more?
+> > seems like anything racing with event processing is already broken, and
+> > reference counting / locking cannot help - unless there is also
+> > copy-on-write (which there isn't at present)?
+> 
+> > For struct maps, referencing it while simultaneously processing
+> > events seems to make even less sense?
+> 
+> Can you elaborate some more?
 
 - Arnaldo
