@@ -2,311 +2,253 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3E7C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 15:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5180C761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 16:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232549AbjDDP7M (ORCPT
+        id S232340AbjDDQss (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 11:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34526 "EHLO
+        Tue, 4 Apr 2023 12:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232138AbjDDP7L (ORCPT
+        with ESMTP id S229379AbjDDQss (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 11:59:11 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C7D1717
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 08:59:09 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3e632769c5eso128161cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 08:59:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680623948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zDZ65pFrAxmH6gRCgCBJhhbNiIkyQr4CGpMtcIgVVNM=;
-        b=VJU7f4U9RlOT6WI79vtHn7EKR0+uTVfcr2hzuQUD0wojCWN6czq2OoKIGhlTGh53uZ
-         q/Vm6L6WIrImmRMe5jQH4K9ZZGDk3RKySWeePeFrA1wcK8QK7a6qckQbZPEO5cZVfsJp
-         tzLvcS6XtPgny7hQqMkKM9cjtDk7cLpDir+AcOYbkhgB9HP6wzBZlrmQXB4h2/9RjQ/O
-         29huhYR9TwU8AMcup+Mb2X74vKb38z4Z6+2eHap/6yRt6WspWhbFVc8usLNXLEECJI1p
-         Ja+8vJPyRLixts0W4hxsimcdlnV/1kd1MM+uCW5aih+Cnj7Iu9q//WDIE+5cGwYB53Gh
-         777w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680623948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zDZ65pFrAxmH6gRCgCBJhhbNiIkyQr4CGpMtcIgVVNM=;
-        b=Q0ois8EZBCrZXJui1ZQ71mqwcegBRkaWCrrXs8R3ENNWEpk/JGsy8jtV9ymycJvZ4+
-         5GU1vJLkBtyXAKq1+iRuohfxsTS2KOkR/nV3rS2/5GzEhTe/W/Lhy5G8IEeTWwrP0kUi
-         uNjRGqRA8f6StaGx2Ovpqs9dUQdvxItigqdMFc+0AdE0TaI7qnmEtZUvfKDdM38hLY3V
-         DpA4umDf22KsqcJ/ZRd/6hpoiJ2kkwloN42TEu5hyiS7tmEJVJ/mS7u7r5PSb4BH57HW
-         +NsaI5KHG7fMnbyjUqRM04NkA+6avWzB1FcJc5u2l2HLMQhvNRhYVcadnwEmTO8eOIjC
-         QkfA==
-X-Gm-Message-State: AAQBX9f+nP01zXBKN8JVvmzQ5NKG398P8llTj3PYPhDHGKiFRWnzkXEG
-        cy8o6qWhsJ78qooBNaMNvYeL3m5ukvcy4dVrNorNew==
-X-Google-Smtp-Source: AKy350bKPf2fMfBfyvLHsC1fiiY1myZI566TtOoW0tNNeA+PsFZLiXn2z4vpmkLfRZw9wa0DGuBa0OQqvz12pxyWyzI=
-X-Received: by 2002:ac8:5a87:0:b0:3e0:c2dd:fd29 with SMTP id
- c7-20020ac85a87000000b003e0c2ddfd29mr317078qtc.4.1680623948352; Tue, 04 Apr
- 2023 08:59:08 -0700 (PDT)
+        Tue, 4 Apr 2023 12:48:48 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1D61A1;
+        Tue,  4 Apr 2023 09:48:45 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PrYbc5y35z67T1b;
+        Wed,  5 Apr 2023 00:47:56 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 4 Apr
+ 2023 17:48:42 +0100
+Date:   Tue, 4 Apr 2023 17:48:41 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Davidlohr Bueso" <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v4 4/5] cxl: CXL Performance Monitoring Unit driver
+Message-ID: <20230404174841.000045a7@Huawei.com>
+In-Reply-To: <bcae8e21-0afc-9fc6-7f90-07afca412223@linux.intel.com>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+        <20230330164556.31533-5-Jonathan.Cameron@huawei.com>
+        <bcae8e21-0afc-9fc6-7f90-07afca412223@linux.intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <20230320212248.1175731-1-irogers@google.com>
-In-Reply-To: <20230320212248.1175731-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 4 Apr 2023 08:58:55 -0700
-Message-ID: <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, Hao Luo <haoluo@google.com>
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ping. It would be nice to have this landed or at least the first 10
-patches that refactor the map API and are the bulk of the
-lines-of-code changed. Having those landed would make it easier to
-rebase in the future, but I also think the whole series is ready to
-go.
+On Mon, 3 Apr 2023 13:32:06 -0400
+"Liang, Kan" <kan.liang@linux.intel.com> wrote:
 
-Thanks,
-Ian
+> On 2023-03-30 12:45 p.m., Jonathan Cameron wrote:
+> > CXL rev 3.0 introduces a standard performance monitoring hardware
+> > block to CXL. Instances are discovered using CXL Register Locator DVSEC
+> > entries. Each CXL component may have multiple PMUs.
+> > 
+> > This initial driver supports on a subset of types of counter.
+> > It support counters that are either fixed or configurable, but requires
+> > that they support the ability to freeze and write value whilst frozen.
+> > 
+> > Development done with QEMU model which will be posted shortly.
+> >   
+> 
+> So the patch series is only tested with QEMU. Is there a real hardware
+> which supports the CXL PMON?
 
-On Mon, Mar 20, 2023 at 2:23=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> The perf tool has a class of memory problems where reference counts
-> are used incorrectly. Memory/address sanitizers and valgrind don't
-> provide useful ways to debug these problems, you see a memory leak
-> where the only pertinent information is the original allocation
-> site. What would be more useful is knowing where a get fails to have a
-> corresponding put, where there are double puts, etc.
->
-> This work was motivated by the roll-back of:
-> https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers=
-@google.com/
-> where fixing a missed put resulted in a use-after-free in a different
-> context. There was a sense in fixing the issue that a game of
-> wac-a-mole had been embarked upon in adding missed gets and puts.
->
-> The basic approach of the change is to add a level of indirection at
-> the get and put calls. Get allocates a level of indirection that, if
-> no corresponding put is called, becomes a memory leak (and associated
-> stack trace) that leak sanitizer can report. Similarly if two puts are
-> called for the same get, then a double free can be detected by address
-> sanitizer. This can also detect the use after put, which should also
-> yield a segv without a sanitizer.
->
-> Adding reference count checking to cpu map was done as a proof of
-> concept, it yielded little other than a location where the use of get
-> could be cleaner by using its result. Reference count checking on
-> nsinfo identified a double free of the indirection layer and the
-> related threads, thereby identifying a data race as discussed here:
->  https://lore.kernel.org/linux-perf-users/CAP-5=3DfWZH20L4kv-BwVtGLwR=3DE=
-m3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
-> Accordingly the dso->lock was extended and use to cover the race.
->
-> The v3 version addresses problems in v2, in particular using macros to
-> avoid #ifdefs. The v3 version applies the reference count checking
-> approach to two more data structures, maps and map. While maps was
-> straightforward, struct map showed a problem where reference counted
-> thing can be on lists and rb-trees that are oblivious to the
-> reference count. To sanitize this, struct map is changed so that it is
-> referenced by either a list or rb-tree node and not part of it. This
-> simplifies the reference count and the patches have caught and fixed a
-> number of missed or mismatched reference counts relating to struct
-> map.
->
-> The patches are arranged so that API refactors and bug fixes appear
-> first, then the reference count checker itself appears. This allows
-> for the refactor and fixes to be applied upstream first, as has
-> already happened with cpumap.
->
-> A wider discussion of the approach is on the mailing list:
->  https://lore.kernel.org/linux-perf-users/YffqnynWcc5oFkI5@kernel.org/T/#=
-mf25ccd7a2e03de92cec29d36e2999a8ab5ec7f88
-> Comparing it to a past approach:
->  https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.lo=
-caldomain/
-> and to ref_tracker:
->  https://lwn.net/Articles/877603/
->
-> v5. rebase removing 5 merged changes. Add map_list_node__new to the
->     1st patch (perf map: Move map list node into symbol) as suggested
->     by Arnaldo. Remove unnecessary map__puts from patch 12 (perf map:
->     Changes to reference counting) as suggested by Adrian. A summary
->     of the sizes of the remaining patches is:
-> 74fd7ffafdd0 perf map: Add reference count checking
->  12 files changed, 136 insertions(+), 114 deletions(-)
-> 4719196db8d3 perf maps: Add reference count checking.
->  8 files changed, 64 insertions(+), 56 deletions(-)
-> 03943e7594cf perf namespaces: Add reference count checking
->  7 files changed, 83 insertions(+), 62 deletions(-)
-> 0bb382cc52d7 perf cpumap: Add reference count checking
->  6 files changed, 81 insertions(+), 71 deletions(-)
-> ef39f550c40d libperf: Add reference count checking macros.
->  1 file changed, 94 insertions(+)
-> d9ac37c750e0 perf map: Changes to reference counting
->  11 files changed, 112 insertions(+), 44 deletions(-)
-> 476014bc9b55 perf maps: Modify maps_by_name to hold a reference to a map
->  2 files changed, 33 insertions(+), 18 deletions(-)
-> 91384676fddd perf test: Add extra diagnostics to maps test
->  1 file changed, 36 insertions(+), 15 deletions(-)
-> fdc30434f826 perf map: Add accessors for pgoff and reloc
->  9 files changed, 33 insertions(+), 23 deletions(-)
-> 368fe015adb2 perf map: Add accessors for prot, priv and flags
->  6 files changed, 28 insertions(+), 12 deletions(-)
-> 2c6a8169826a perf map: Add helper for map_ip and unmap_ip
->  23 files changed, 80 insertions(+), 65 deletions(-)
-> 929e59d49f4b perf map: Rename map_ip and unmap_ip
->  6 files changed, 13 insertions(+), 13 deletions(-)
-> 4a38194aaaf5 perf map: Add accessor for start and end
->  24 files changed, 114 insertions(+), 103 deletions(-)
-> 02b63e5c415e perf map: Add accessor for dso
->  48 files changed, 404 insertions(+), 293 deletions(-)
-> 9324af6ccf42 perf maps: Add functions to access maps
->  20 files changed, 175 insertions(+), 111 deletions(-)
-> 5c590d36a308 perf maps: Remove rb_node from struct map
->  16 files changed, 291 insertions(+), 184 deletions(-)
-> af1d142eb777 perf map: Move map list node into symbol
->  2 files changed, 63 insertions(+), 35 deletions(-)
->
-> v4. rebases on to acme's perf-tools-next, fixes more issues with
->     map/maps and breaks apart the accessor functions to reduce
->     individual patch sizes. The accessor functions are mechanical
->     changes where the single biggest one is refactoring use of
->     map->dso to be map__dso(map).
->
-> The v3 change is available here:
-> https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.com/
->
-> Ian Rogers (17):
->   perf map: Move map list node into symbol
->   perf maps: Remove rb_node from struct map
->   perf maps: Add functions to access maps
->   perf map: Add accessor for dso
->   perf map: Add accessor for start and end
->   perf map: Rename map_ip and unmap_ip
->   perf map: Add helper for map_ip and unmap_ip
->   perf map: Add accessors for prot, priv and flags
->   perf map: Add accessors for pgoff and reloc
->   perf test: Add extra diagnostics to maps test
->   perf maps: Modify maps_by_name to hold a reference to a map
->   perf map: Changes to reference counting
->   libperf: Add reference count checking macros.
->   perf cpumap: Add reference count checking
->   perf namespaces: Add reference count checking
->   perf maps: Add reference count checking.
->   perf map: Add reference count checking
->
->  tools/lib/perf/Makefile                       |   2 +-
->  tools/lib/perf/cpumap.c                       |  94 ++---
->  tools/lib/perf/include/internal/cpumap.h      |   4 +-
->  tools/lib/perf/include/internal/rc_check.h    |  94 +++++
->  tools/perf/arch/s390/annotate/instructions.c  |   4 +-
->  tools/perf/arch/x86/tests/dwarf-unwind.c      |   2 +-
->  tools/perf/arch/x86/util/event.c              |  13 +-
->  tools/perf/builtin-annotate.c                 |  11 +-
->  tools/perf/builtin-buildid-list.c             |   4 +-
->  tools/perf/builtin-inject.c                   |  12 +-
->  tools/perf/builtin-kallsyms.c                 |   6 +-
->  tools/perf/builtin-kmem.c                     |   4 +-
->  tools/perf/builtin-lock.c                     |   4 +-
->  tools/perf/builtin-mem.c                      |  10 +-
->  tools/perf/builtin-report.c                   |  26 +-
->  tools/perf/builtin-script.c                   |  27 +-
->  tools/perf/builtin-top.c                      |  17 +-
->  tools/perf/builtin-trace.c                    |   2 +-
->  .../scripts/python/Perf-Trace-Util/Context.c  |  13 +-
->  tools/perf/tests/code-reading.c               |  37 +-
->  tools/perf/tests/cpumap.c                     |   4 +-
->  tools/perf/tests/hists_common.c               |   8 +-
->  tools/perf/tests/hists_cumulate.c             |  14 +-
->  tools/perf/tests/hists_filter.c               |  14 +-
->  tools/perf/tests/hists_link.c                 |  18 +-
->  tools/perf/tests/hists_output.c               |  12 +-
->  tools/perf/tests/maps.c                       |  69 ++--
->  tools/perf/tests/mmap-thread-lookup.c         |   3 +-
->  tools/perf/tests/symbols.c                    |   6 +-
->  tools/perf/tests/thread-maps-share.c          |  29 +-
->  tools/perf/tests/vmlinux-kallsyms.c           |  54 +--
->  tools/perf/ui/browsers/annotate.c             |   9 +-
->  tools/perf/ui/browsers/hists.c                |  19 +-
->  tools/perf/ui/browsers/map.c                  |   4 +-
->  tools/perf/util/annotate.c                    |  40 ++-
->  tools/perf/util/auxtrace.c                    |   2 +-
->  tools/perf/util/block-info.c                  |   4 +-
->  tools/perf/util/bpf-event.c                   |  10 +-
->  tools/perf/util/bpf_lock_contention.c         |   6 +-
->  tools/perf/util/build-id.c                    |   2 +-
->  tools/perf/util/callchain.c                   |  24 +-
->  tools/perf/util/cpumap.c                      |  40 ++-
->  tools/perf/util/data-convert-json.c           |  10 +-
->  tools/perf/util/db-export.c                   |  16 +-
->  tools/perf/util/dlfilter.c                    |  28 +-
->  tools/perf/util/dso.c                         |   8 +-
->  tools/perf/util/dsos.c                        |   2 +-
->  tools/perf/util/event.c                       |  27 +-
->  tools/perf/util/evsel_fprintf.c               |   4 +-
->  tools/perf/util/hist.c                        |  22 +-
->  tools/perf/util/intel-pt.c                    |  63 ++--
->  tools/perf/util/machine.c                     | 252 ++++++++------
->  tools/perf/util/map.c                         | 217 ++++++------
->  tools/perf/util/map.h                         |  74 +++-
->  tools/perf/util/maps.c                        | 318 ++++++++++-------
->  tools/perf/util/maps.h                        |  67 +++-
->  tools/perf/util/namespaces.c                  | 132 +++++---
->  tools/perf/util/namespaces.h                  |   3 +-
->  tools/perf/util/pmu.c                         |   8 +-
->  tools/perf/util/probe-event.c                 |  62 ++--
->  .../util/scripting-engines/trace-event-perl.c |  10 +-
->  .../scripting-engines/trace-event-python.c    |  26 +-
->  tools/perf/util/sort.c                        |  67 ++--
->  tools/perf/util/symbol-elf.c                  |  41 ++-
->  tools/perf/util/symbol.c                      | 320 +++++++++++-------
->  tools/perf/util/symbol_fprintf.c              |   2 +-
->  tools/perf/util/synthetic-events.c            |  34 +-
->  tools/perf/util/thread-stack.c                |   4 +-
->  tools/perf/util/thread.c                      |  39 +--
->  tools/perf/util/unwind-libdw.c                |  20 +-
->  tools/perf/util/unwind-libunwind-local.c      |  16 +-
->  tools/perf/util/unwind-libunwind.c            |  33 +-
->  tools/perf/util/vdso.c                        |   7 +-
->  73 files changed, 1665 insertions(+), 1044 deletions(-)
->  create mode 100644 tools/lib/perf/include/internal/rc_check.h
->
-> --
-> 2.40.0.rc1.284.g88254d51c5-goog
->
+In common with a lot of CXL stuff (and in general new standards based
+architecture features), nothing that anyone is willing to talk about
+except in general terms at this stage (this is a CXL 3.0 feature so
+pretty recent).  Much of the existing kernel CXL support has been written
+against emulation of one type or another (and we've shaken out a lot of
+bugs that aren't yet seen with real hardware. Switches are very
+rare for example - I've not yet registered PMUs for those, but that's
+on the todo list after we get this merged). 
+
+For this particular feature it's likely that initial devices will only
+exercise some parts of the driver support. It's much easier to poke
+the interesting corner cases with emulation given how extreme the
+design space allowed by the CPMU specification is. To that end there
+are a lot more features to add to this driver once we have a basic version
+in place. One example is that we've had a request for fixed free running counter
+support combined with vendor defined events as that's particularly useful
+for debugging of new devices.
+
+Note that there is still work to be done on the emulation to make it
+easier to vary what is being emulated as right now I end up hacking it
+to hit particular interesting cases and that's not going to be great
+for CI testing this.
+
+> 
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+
+> > +
+> > +#define CPMU_ATTR_CONFIG_MASK_MSK	GENMASK_ULL(63, 48)  
+> 
+> (31, 0)?
+
+Indeed. You'd have thought that having them right next
+to the definition would have made that obvious when I messed
+up the cut and paste. *sigh*
+
+> 
+> > +#define CPMU_ATTR_CONFIG_GID_MSK	GENMASK_ULL(47, 32)
+> > +#define CPMU_ATTR_CONFIG_VID_MSK	GENMASK_ULL(63, 48)
+> > +#define CPMU_ATTR_CONFIG1_THRESHOLD_MSK	GENMASK_ULL(15, 0)
+> > +#define CPMU_ATTR_CONFIG1_INVERT_MSK	BIT(16)
+> > +#define CPMU_ATTR_CONFIG1_EDGE_MSK	BIT(17)
+> > +#define CPMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
+> > +#define CPMU_ATTR_CONFIG2_HDM_MSK	GENMASK(15, 0)
+
+> > +static void cpmu_event_start(struct perf_event *event, int flags)
+> > +{
+> > +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> > +	struct hw_perf_event *hwc = &event->hw;
+> > +	void __iomem *base = info->base;
+> > +	u64 cfg;
+> > +
+> > +	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+> > +		return;
+> > +
+> > +	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
+> > +	hwc->state = 0;
+> > +
+> > +	/*
+> > +	 * Currently only hdm filter control is implemnted, this code will
+> > +	 * want generalizing when more filters are added.
+> > +	 */
+> > +	if (info->filter_hdm) {
+> > +		if (cpmu_config1_hdm_filter_en(event))
+> > +			cfg = cpmu_config2_get_hdm_decoder(event);
+> > +		else
+> > +			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
+> > +		writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
+> > +	}
+> > +
+> > +	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));  
+> 
+> I don't think we need the previous value. Just overwrite it.
+
+Some bits are hwinit or RO.  Whilst we can probably get away with just writing
+random garbage (zeros) to those bits, but I'd prefer to write their
+value back to them.
+
+> 
+> 
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EDGE, cpmu_config1_get_edge(event) ? 1 : 0);
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INVERT, cpmu_config1_get_invert(event) ? 1 : 0);
+> > +
+> > +	/* Fixed purpose counters have next two fields RO */
+> > +	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+> > +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, hwc->event_base);
+> > +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENTS_MSK, cpmu_config_get_mask(event));
+> > +	}
+> > +	cfg &= ~CPMU_COUNTER_CFG_THRESHOLD_MSK;
+> > +	/*
+> > +	 * For events that generate only 1 count per clock the CXL 3.0 spec
+> > +	 * states the threshold shall be set to 1 but if set to 0 it will
+> > +	 * count the raw value anwyay?
+> > +	 * There is no definition of what events will count multiple per cycle
+> > +	 * and hence to which non 1 values of threshold can apply.
+> > +	 * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
+> > +	 */
+> > +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_THRESHOLD_MSK,
+> > +			  cpmu_config1_get_threshold(event));
+> > +	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> > +
+> > +	local64_set(&hwc->prev_count, 0);
+> > +	writeq(0, base + CPMU_COUNTER_REG(hwc->idx));  
+> 
+> The counter is reset twice. The other is in add()->cpmu_reset_counter().
+> I think you can remove the one in add().
+
+After some tracing I think you are correct. This seems to be always called immediately
+after add anyway so no point in doing it twice.
+
+> 
+> > +
+> > +	perf_event_update_userpage(event);
+> > +}
+> > +
+...
+
+
+> > +
+> > +/*
+> > + * Reset ensures no possibility of any information leaking to wrong
+> > + * counter. Note that all fields written during start()
+> > + */
+> > +static void cpmu_reset_counter(struct cpmu_info *info, int idx)
+> > +{
+> > +	void __iomem *base = info->base;
+> > +
+> > +	/* Much of this register is read only */
+> > +	writeq(0, base + CPMU_EVENT_CAP_REG(idx));  
+> 
+> 
+> CPMU_COUNTER_CFG_REG?
+> 
+> I don't think we need to reset the config here, since it will be rewrite
+> in cpmu_event_start().
+
+You are correct.  The above write is clearly a noop as that's a read only register
+and as you have observed cpmu_event_start() writes almost all the bits that
+are not HWInit. I'll make it write the remaining one as well.
+
+As above this whole function can then go away.
+
+
+
+> 
+> 
+> > +	/* Filters are not per counter, so no reset here */
+> > +	writeq(0, base + CPMU_COUNTER_REG(idx));
+> > +}
+
+
+> > +	info->pmu = (struct pmu) {
+> > +		.name = dev_name(dev),
+> > +		.parent = dev,  
+> 
+> I don't see the PMU parent is used anywhere.
+> Please remove this and drop the Patch 2 from this series.
+
+No.  As per the discussion of v4, without this the driver is incorrectly
+resulting in the device being listed in /sys/devices rather than
+/sys/bus/devices/pcie0000:0c/0000:0c:00.0/0000:0d:00.0/cpmu0/cpmu0
+
+I do not want to introduce more ABI that will then need fixing up later.
+
+This issue is common with a lot of other drivers hence the series
+https://lore.kernel.org/all/20230404134225.13408-1-Jonathan.Cameron@huawei.com/
+to correct it for all drivers that should have a simple parent set.
+
+> 
+> If there will be other followup patches, please add the PMU parent
+> support there.
+> 
+> Thanks,
+> Kan
+
+Thanks again for looking at this so quickly.
+
+Jonathan
+
