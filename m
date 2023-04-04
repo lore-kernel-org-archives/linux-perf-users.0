@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649D0C6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 21:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEF9C761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 21:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236455AbjDDVBS (ORCPT
+        id S236467AbjDDVBj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 17:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38658 "EHLO
+        Tue, 4 Apr 2023 17:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236433AbjDDVBP (ORCPT
+        with ESMTP id S236464AbjDDVBS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 17:01:15 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7156A4EDA
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 14:00:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id x15-20020a25accf000000b00b3b4535c48dso33171711ybd.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 14:00:46 -0700 (PDT)
+        Tue, 4 Apr 2023 17:01:18 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F09C49D6
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 14:00:53 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id s4-20020a170902ea0400b001a1f4137086so19911995plg.14
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 14:00:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680642044;
+        d=google.com; s=20210112; t=1680642053;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M2robLIprEBFAsbqlI5uLA2rGb41LEGoQT3g1ZHVZHs=;
-        b=URkoMiY57JFr4bg6vTKUNXBlX2RRhIqlneaow3/vn6vUyAjUFLY4w88vTUIHXl85Gs
-         Bx6ODF+dQUmyhOK/LCXPZ/fIufkfpC/xmBnjWSIQyg8wrDyVYVwJW77ehUn8q3B6krba
-         ZzvVEn095I0LwwniwjZb3IvS8fp0ITRipwh3nz+OcMA439mLyAqYRB9UZjqawqPF2NE1
-         TJuiHdUYwsu2LGUCCsWNo56DSy+uOvjWT9yEjvVHThwiWsbFbkLerfXygtUUvaEl6KzM
-         NTy4HWUgBto4IZ2IQaZP25k3AnNkCPAlXNhuq6qKFtI1TSA4cbf2AC/tjbDIM3y4tPlm
-         BVvQ==
+        bh=NTqMk+i14kBQhNGj+iB54TJvhWHGHEix7VEoIVCjH+o=;
+        b=Tx2occNBIdX5b7jB2iYgPuGXZMCwpyVHbaJ/5KSlG31iWgB6Bf44aFnemB3efGLfQo
+         Qu/XebiD6J0z/u/5DH6AiyMAQjvdsy0Ht/iRgS1nWDnheB6it7ID+TgMu9nS9fwBlmuE
+         R55ElxXGRjWYiu0HgXDbZBnj2LTJHYyLpH01JaOClsV3lbDbk6+fJ+g4IOABHOr+Dtdp
+         fSrI3x3ZkvnMOvZOW+z/9Zitrp5Q/+9t6Ef6ycYBnt4HbHgyCORtRU/xgpCU3Od6S2LI
+         6jxbx1N0Wg1NfRyoa2aiWHFZs7DjjVmEjLY3aqUpyXmhVkTYsGOcB6ykmUxLjah147Sh
+         pdgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680642044;
+        d=1e100.net; s=20210112; t=1680642053;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M2robLIprEBFAsbqlI5uLA2rGb41LEGoQT3g1ZHVZHs=;
-        b=xuNx7mZvniZNNexJy09z19YxgOYV6ND2+LIJxFlsRV2V2VX4Oy8m3XsfuCLjvha0H+
-         GDQhU7gwB1UVw5p+vriWkb4ajopA593ayCp9fThDb/RoBHPuH0NZcZQoIKTP0kpLJKVN
-         vB34Zldgsj1ZrdIXmFlK/I0RzjjdeqWW+PMtzTdtcLj11BKURWp5pkQsVj1BMoRZgDUe
-         dsoKkrozcoI4uMf4czxL90/NjVctFy/HY0V5aBBYglytiUGwLMfQ+mqRCrtTt3GnU2mG
-         JQk0qGeCOe7pCU6tGv5asny9RIx2h7ss+mQ2VSEVb/KRZJ/YHSNT1qvDChHYz1jpy6uw
-         e2sA==
-X-Gm-Message-State: AAQBX9clsYSwgl4+O6xExEvREdWfUww5U9pgAUo/uXm0PoiGo4vnK2rf
-        7FfSlKT/ibXf7zW1ISvKwl5ysfcqa+Ph
-X-Google-Smtp-Source: AKy350YVIX8GdcOOPZrvfbcZ8BboepzC9grVMGll3G3XLDl2zD70sKHDEHKTRdE62F1zraCcGvjPdROByb2P
+        bh=NTqMk+i14kBQhNGj+iB54TJvhWHGHEix7VEoIVCjH+o=;
+        b=PYsw5ZOBPTiZcWQp5gLRuD6SqOra1QCmIY4FRKY58FSderadgEMEfsbFPTCJMXoyc0
+         VFjj7FvKKpw1AcIvJeYdJimBBrZARDMz2/XXiHdfPj+vHeOUPmGV/qEnOCI+QkEUWHUx
+         iBlR/kxynr3GGal+/0VKxsvWCmXLp8yVL5pZpGA/y7ICpiqThRTt13fXwUe0MGwKRYxG
+         /lpPM3JuueYtfKwFFOJZVy0SeDOdBAYUCWxt7LCM9bdNUagpBoRkYGYOLSgWMUkc0CpX
+         IL0VkXARGhCOey9T9cni3xvbN0Rj+fag7U/ugTznml4oEp5UKCd/G59pFaH7aJGyp7w9
+         9OBg==
+X-Gm-Message-State: AAQBX9cM8+zLrSWHDhg5LIwddNljLV/sS1VHr/IxMIOff7AbIEZk2gU3
+        orArXqtumMifnBmVkKsKaQOneoNUEhQs
+X-Google-Smtp-Source: AKy350aR0+LCtC7ZuR8nlLRzzmcVh7BiTaSdHPR/2Gd7nqq8LjSUSQ+L/dAo7u9PoJOktgluHYd9eNRO6Dth
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a051:e074:d6f:dc29])
- (user=irogers job=sendgmr) by 2002:a05:6902:90b:b0:b81:a13:50c3 with SMTP id
- bu11-20020a056902090b00b00b810a1350c3mr448032ybb.2.1680642044451; Tue, 04 Apr
- 2023 14:00:44 -0700 (PDT)
-Date:   Tue,  4 Apr 2023 13:59:45 -0700
+ (user=irogers job=sendgmr) by 2002:aa7:8891:0:b0:623:129f:6269 with SMTP id
+ z17-20020aa78891000000b00623129f6269mr2094653pfe.1.1680642052919; Tue, 04 Apr
+ 2023 14:00:52 -0700 (PDT)
+Date:   Tue,  4 Apr 2023 13:59:46 -0700
 In-Reply-To: <20230404205954.2245628-1-irogers@google.com>
-Message-Id: <20230404205954.2245628-4-irogers@google.com>
+Message-Id: <20230404205954.2245628-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230404205954.2245628-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v6 03/12] perf map: Add accessors for prot, priv and flags
+Subject: [PATCH v6 04/12] perf map: Add accessors for pgoff and reloc
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -95,150 +95,260 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Later changes will add reference count checking for struct map. Add an
-accessor so that the reference count check is only necessary in one
+Later changes will add reference count checking for struct map. Add
+accessors so that the reference count check is only necessary in one
 place.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c         |  2 +-
- tools/perf/builtin-report.c         |  9 +++++----
+ tools/perf/arch/x86/util/event.c    |  2 +-
+ tools/perf/builtin-report.c         |  2 +-
  tools/perf/tests/vmlinux-kallsyms.c |  4 ++--
- tools/perf/util/map.h               | 15 +++++++++++++++
- tools/perf/util/sort.c              |  6 +++---
- tools/perf/util/symbol.c            |  4 ++--
- 6 files changed, 28 insertions(+), 12 deletions(-)
+ tools/perf/util/machine.c           |  4 ++--
+ tools/perf/util/map.c               | 14 +++++++-------
+ tools/perf/util/map.h               | 10 ++++++++++
+ tools/perf/util/probe-event.c       |  8 ++++----
+ tools/perf/util/symbol.c            |  6 +++---
+ tools/perf/util/unwind-libdw.c      |  6 +++---
+ 9 files changed, 33 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 8f6909dd8a54..fd2b38458a5d 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -758,7 +758,7 @@ int perf_event__inject_buildid(struct perf_tool *tool, union perf_event *event,
- 		if (!dso->hit) {
- 			dso->hit = 1;
- 			dso__inject_build_id(dso, tool, machine,
--					     sample->cpumode, al.map->flags);
-+					     sample->cpumode, map__flags(al.map));
- 		}
- 	}
+diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
+index 3b2475707756..5741ffe47312 100644
+--- a/tools/perf/arch/x86/util/event.c
++++ b/tools/perf/arch/x86/util/event.c
+@@ -61,7 +61,7 @@ int perf_event__synthesize_extra_kmaps(struct perf_tool *tool,
  
+ 		event->mmap.start = map__start(map);
+ 		event->mmap.len   = map__size(map);
+-		event->mmap.pgoff = map->pgoff;
++		event->mmap.pgoff = map__pgoff(map);
+ 		event->mmap.pid   = machine->pid;
+ 
+ 		strlcpy(event->mmap.filename, kmap->name, PATH_MAX);
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 2a6e2cee5e0d..c066452219c8 100644
+index c066452219c8..92c6797e7cba 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -849,13 +849,14 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
- 	maps__for_each_entry(maps, rb_node) {
- 		struct map *map = rb_node->map;
- 		const struct dso *dso = map__dso(map);
-+		u32 prot = map__prot(map);
- 
- 		printed += fprintf(fp, "%*s  %" PRIx64 "-%" PRIx64 " %c%c%c%c %08" PRIx64 " %" PRIu64 " %s\n",
- 				   indent, "", map__start(map), map__end(map),
--				   map->prot & PROT_READ ? 'r' : '-',
--				   map->prot & PROT_WRITE ? 'w' : '-',
--				   map->prot & PROT_EXEC ? 'x' : '-',
--				   map->flags & MAP_SHARED ? 's' : 'p',
-+				   prot & PROT_READ ? 'r' : '-',
-+				   prot & PROT_WRITE ? 'w' : '-',
-+				   prot & PROT_EXEC ? 'x' : '-',
-+				   map__flags(map) ? 's' : 'p',
- 				   map->pgoff,
+@@ -857,7 +857,7 @@ static size_t maps__fprintf_task(struct maps *maps, int indent, FILE *fp)
+ 				   prot & PROT_WRITE ? 'w' : '-',
+ 				   prot & PROT_EXEC ? 'x' : '-',
+ 				   map__flags(map) ? 's' : 'p',
+-				   map->pgoff,
++				   map__pgoff(map),
  				   dso->id.ino, dso->name);
  	}
+ 
 diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 05a322ea3f9f..7db102868bc2 100644
+index 7db102868bc2..af511233c764 100644
 --- a/tools/perf/tests/vmlinux-kallsyms.c
 +++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -323,7 +323,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 		mem_end = map__unmap_ip(vmlinux_map, map__end(map));
+@@ -335,10 +335,10 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
+ 			}
  
- 		pair = maps__find(kallsyms.kmaps, mem_start);
--		if (pair == NULL || pair->priv)
-+		if (pair == NULL || map__priv(pair))
+ 			pr_info("WARN: %" PRIx64 "-%" PRIx64 " %" PRIx64 " %s in kallsyms as",
+-				map__start(map), map__end(map), map->pgoff, dso->name);
++				map__start(map), map__end(map), map__pgoff(map), dso->name);
+ 			if (mem_end != map__end(pair))
+ 				pr_info(":\nWARN: *%" PRIx64 "-%" PRIx64 " %" PRIx64,
+-					map__start(pair), map__end(pair), pair->pgoff);
++					map__start(pair), map__end(pair), map__pgoff(pair));
+ 			pr_info(" %s\n", dso->name);
+ 			pair->priv = 1;
+ 		}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index d29ec4a04488..1ea6f6c06bbb 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1277,9 +1277,9 @@ int machine__map_x86_64_entry_trampolines(struct machine *machine,
+ 		if (!kmap || !is_entry_trampoline(kmap->name))
  			continue;
  
- 		if (map__start(pair) == mem_start) {
-@@ -351,7 +351,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 	maps__for_each_entry(maps, rb_node) {
- 		struct map *map = rb_node->map;
+-		dest_map = maps__find(kmaps, map->pgoff);
++		dest_map = maps__find(kmaps, map__pgoff(map));
+ 		if (dest_map != map)
+-			map->pgoff = map__map_ip(dest_map, map->pgoff);
++			map->pgoff = map__map_ip(dest_map, map__pgoff(map));
+ 		found = true;
+ 	}
+ 	if (found || machine->trampolines_mapped)
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 816bffbbf344..1fe367e2cf19 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -421,7 +421,7 @@ size_t map__fprintf(struct map *map, FILE *fp)
+ 	const struct dso *dso = map__dso(map);
  
--		if (!map->priv) {
-+		if (!map__priv(map)) {
- 			if (!header_printed) {
- 				pr_info("WARN: Maps only in kallsyms:\n");
- 				header_printed = true;
+ 	return fprintf(fp, " %" PRIx64 "-%" PRIx64 " %" PRIx64 " %s\n",
+-		       map__start(map), map__end(map), map->pgoff, dso->name);
++		       map__start(map), map__end(map), map__pgoff(map), dso->name);
+ }
+ 
+ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+@@ -510,7 +510,7 @@ u64 map__rip_2objdump(struct map *map, u64 rip)
+ 		return rip;
+ 
+ 	if (dso->rel)
+-		return rip - map->pgoff;
++		return rip - map__pgoff(map);
+ 
+ 	/*
+ 	 * kernel modules also have DSO_TYPE_USER in dso->kernel,
+@@ -519,7 +519,7 @@ u64 map__rip_2objdump(struct map *map, u64 rip)
+ 	if (dso->kernel == DSO_SPACE__USER)
+ 		return rip + dso->text_offset;
+ 
+-	return map__unmap_ip(map, rip) - map->reloc;
++	return map__unmap_ip(map, rip) - map__reloc(map);
+ }
+ 
+ /**
+@@ -542,7 +542,7 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
+ 		return map__unmap_ip(map, ip);
+ 
+ 	if (dso->rel)
+-		return map__unmap_ip(map, ip + map->pgoff);
++		return map__unmap_ip(map, ip + map__pgoff(map));
+ 
+ 	/*
+ 	 * kernel modules also have DSO_TYPE_USER in dso->kernel,
+@@ -551,7 +551,7 @@ u64 map__objdump_2mem(struct map *map, u64 ip)
+ 	if (dso->kernel == DSO_SPACE__USER)
+ 		return map__unmap_ip(map, ip - dso->text_offset);
+ 
+-	return ip + map->reloc;
++	return ip + map__reloc(map);
+ }
+ 
+ bool map__contains_symbol(const struct map *map, const struct symbol *sym)
+@@ -592,12 +592,12 @@ struct maps *map__kmaps(struct map *map)
+ 
+ u64 map__dso_map_ip(const struct map *map, u64 ip)
+ {
+-	return ip - map__start(map) + map->pgoff;
++	return ip - map__start(map) + map__pgoff(map);
+ }
+ 
+ u64 map__dso_unmap_ip(const struct map *map, u64 ip)
+ {
+-	return ip + map__start(map) - map->pgoff;
++	return ip + map__start(map) - map__pgoff(map);
+ }
+ 
+ u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip)
 diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 9118eba71032..fd440c9c279e 100644
+index fd440c9c279e..102485699aa8 100644
 --- a/tools/perf/util/map.h
 +++ b/tools/perf/util/map.h
-@@ -72,6 +72,21 @@ static inline u64 map__end(const struct map *map)
+@@ -72,6 +72,16 @@ static inline u64 map__end(const struct map *map)
  	return map->end;
  }
  
-+static inline u32 map__flags(const struct map *map)
++static inline u64 map__pgoff(const struct map *map)
 +{
-+	return map->flags;
++	return map->pgoff;
 +}
 +
-+static inline u32 map__prot(const struct map *map)
++static inline u64 map__reloc(const struct map *map)
 +{
-+	return map->prot;
++	return map->reloc;
 +}
 +
-+static inline bool map__priv(const struct map *map)
-+{
-+	return map->priv;
-+}
-+
- static inline size_t map__size(const struct map *map)
+ static inline u32 map__flags(const struct map *map)
  {
- 	return map__end(map) - map__start(map);
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 87a3ba584af5..80c9960c37e5 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -1540,7 +1540,7 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
- 	 */
- 
- 	if ((left->cpumode != PERF_RECORD_MISC_KERNEL) &&
--	    (!(l_map->flags & MAP_SHARED)) && !l_dso->id.maj && !l_dso->id.min &&
-+	    (!(map__flags(l_map) & MAP_SHARED)) && !l_dso->id.maj && !l_dso->id.min &&
- 	    !l_dso->id.ino && !l_dso->id.ino_generation) {
- 		/* userspace anonymous */
- 
-@@ -1576,8 +1576,8 @@ static int hist_entry__dcacheline_snprintf(struct hist_entry *he, char *bf,
- 
- 		/* print [s] for shared data mmaps */
- 		if ((he->cpumode != PERF_RECORD_MISC_KERNEL) &&
--		     map && !(map->prot & PROT_EXEC) &&
--		    (map->flags & MAP_SHARED) &&
-+		     map && !(map__prot(map) & PROT_EXEC) &&
-+		     (map__flags(map) & MAP_SHARED) &&
- 		    (dso->id.maj || dso->id.min || dso->id.ino || dso->id.ino_generation))
- 			level = 's';
- 		else if (!map)
+ 	return map->flags;
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index bb44a3798df8..6e2110d605fb 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -135,14 +135,14 @@ static int kernel_get_symbol_address_by_name(const char *name, u64 *addr,
+ 	/* ref_reloc_sym is just a label. Need a special fix*/
+ 	reloc_sym = kernel_get_ref_reloc_sym(&map);
+ 	if (reloc_sym && strcmp(name, reloc_sym->name) == 0)
+-		*addr = (!map->reloc || reloc) ? reloc_sym->addr :
++		*addr = (!map__reloc(map) || reloc) ? reloc_sym->addr :
+ 			reloc_sym->unrelocated_addr;
+ 	else {
+ 		sym = machine__find_kernel_symbol_by_name(host_machine, name, &map);
+ 		if (!sym)
+ 			return -ENOENT;
+ 		*addr = map__unmap_ip(map, sym->start) -
+-			((reloc) ? 0 : map->reloc) -
++			((reloc) ? 0 : map__reloc(map)) -
+ 			((reladdr) ? map__start(map) : 0);
+ 	}
+ 	return 0;
+@@ -400,7 +400,7 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
+ 					   "Consider identifying the final function used at run time and set the probe directly on that.\n",
+ 					   pp->function);
+ 		} else
+-			address = map__unmap_ip(map, sym->start) - map->reloc;
++			address = map__unmap_ip(map, sym->start) - map__reloc(map);
+ 		break;
+ 	}
+ 	if (!address) {
+@@ -866,7 +866,7 @@ post_process_kernel_probe_trace_events(struct probe_trace_event *tevs,
+ 			free(tevs[i].point.symbol);
+ 		tevs[i].point.symbol = tmp;
+ 		tevs[i].point.offset = tevs[i].point.address -
+-			(map->reloc ? reloc_sym->unrelocated_addr :
++			(map__reloc(map) ? reloc_sym->unrelocated_addr :
+ 				      reloc_sym->addr);
+ 	}
+ 	return skipped;
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 9ba49c1ef6ef..5c075d77a792 100644
+index 5c075d77a792..7282119c2990 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -1396,7 +1396,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+@@ -810,11 +810,11 @@ static int maps__split_kallsyms_for_kcore(struct maps *kmaps, struct dso *dso)
+ 			continue;
+ 		}
+ 		curr_map_dso = map__dso(curr_map);
+-		pos->start -= map__start(curr_map) - curr_map->pgoff;
++		pos->start -= map__start(curr_map) - map__pgoff(curr_map);
+ 		if (pos->end > map__end(curr_map))
+ 			pos->end = map__end(curr_map);
+ 		if (pos->end)
+-			pos->end -= map__start(curr_map) - curr_map->pgoff;
++			pos->end -= map__start(curr_map) - map__pgoff(curr_map);
+ 		symbols__insert(&curr_map_dso->symbols, pos);
+ 		++count;
+ 	}
+@@ -1459,7 +1459,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 		if (new_map == replacement_map) {
+ 			map->start	= map__start(new_map);
+ 			map->end	= map__end(new_map);
+-			map->pgoff	= new_map->pgoff;
++			map->pgoff	= map__pgoff(new_map);
+ 			map->map_ip	= new_map->map_ip;
+ 			map->unmap_ip	= new_map->unmap_ip;
+ 			/* Ensure maps are correctly ordered */
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 538320e4260c..9565f9906e5d 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -62,19 +62,19 @@ static int __report_module(struct addr_location *al, u64 ip,
+ 		Dwarf_Addr s;
+ 
+ 		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
+-		if (s != map__start(al->map) - al->map->pgoff)
++		if (s != map__start(al->map) - map__pgoff(al->map))
+ 			mod = 0;
  	}
  
- 	/* Read new maps into temporary lists */
--	err = file__read_maps(fd, map->prot & PROT_EXEC, kcore_mapfn, &md,
-+	err = file__read_maps(fd, map__prot(map) & PROT_EXEC, kcore_mapfn, &md,
- 			      &is_64_bit);
- 	if (err)
- 		goto out_err;
-@@ -1509,7 +1509,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	if (!mod)
+ 		mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
+-				      map__start(al->map) - al->map->pgoff, false);
++				      map__start(al->map) - map__pgoff(al->map), false);
+ 	if (!mod) {
+ 		char filename[PATH_MAX];
  
- 	close(fd);
+ 		if (dso__build_id_filename(dso, filename, sizeof(filename), false))
+ 			mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
+-					      map__start(al->map) - al->map->pgoff, false);
++					      map__start(al->map) - map__pgoff(al->map), false);
+ 	}
  
--	if (map->prot & PROT_EXEC)
-+	if (map__prot(map) & PROT_EXEC)
- 		pr_debug("Using %s for kernel object code\n", kcore_filename);
- 	else
- 		pr_debug("Using %s for kernel data\n", kcore_filename);
+ 	if (mod) {
 -- 
 2.40.0.348.gf938b09366-goog
 
