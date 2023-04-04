@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2432C761A6
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 19:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF0DC761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 19:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236230AbjDDTxY (ORCPT
+        id S235521AbjDDTyt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 15:53:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47162 "EHLO
+        Tue, 4 Apr 2023 15:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236231AbjDDTxQ (ORCPT
+        with ESMTP id S231691AbjDDTyp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 15:53:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A26602134;
-        Tue,  4 Apr 2023 12:53:14 -0700 (PDT)
+        Tue, 4 Apr 2023 15:54:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823891A8;
+        Tue,  4 Apr 2023 12:54:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DA0A1637AD;
-        Tue,  4 Apr 2023 19:53:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80E7C433D2;
-        Tue,  4 Apr 2023 19:53:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 78E23636DD;
+        Tue,  4 Apr 2023 19:54:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAE09C4339B;
+        Tue,  4 Apr 2023 19:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680637993;
-        bh=09d8yU2orqxQBC3UmwiGu3trtnx5ka9Mhc2NEbv7Z7Y=;
+        s=k20201202; t=1680638082;
+        bh=7/s9n05OHIGD/qOsNeyGERi0KHyb10bjvH7QNbEWhjw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WBMSKcU5SQ3BDgpm5ESjVb0+EkS/bDPvmloCUkNMB0B9s+DBgTjQ3VMpT0o0U3wzN
-         5muxNcJJG2DvsW7Ed6cGMygN9iQSP/LhMoT6mxQxIC+JIVVhEreNypxfOiY39oCHl+
-         Zmto/L7/hsr2HcLTbccHEAc4sUblyfZ3cfXDfG4uOan1X+knbyH6injyL/w7zUrK3z
-         gZur0OH9JTQDPusOgNI+BnStS9eciqjE19yJYFetwJwNkQamOdAq0JAqrFvyjTB/X9
-         DsK3dMx1d8p18OUm50gNPU1qt3ZtqXm+QVibfwc/if0+oj2qV6rCeKz3cNvlTI8+XC
-         3zf7LSScZ14vg==
+        b=YvWargS25YyRSp1HopTogmNtHQOOl8CdaNycdknJyhRG9cu7Qn0aN4HWlj+WkObDp
+         Mxd21mOr9rXmKOsuue5bC0GFhKLkzA0XQ1PAy5ttJFsc8/NR64dSl1sAPcAnVhIPD+
+         kWEgc37/XtTIN9v7TB0WzAD2ZgJx7s3qQbT/69GqzVt3XIPLKxahWQgi3ULEWJrbhC
+         dMaEVX2j32DydBagRLZlCFPwe2wHIPzQoMjAN82qZVKjHMIaAp4QomdPWphli+95nB
+         5i/NLFVJltg3ZZpha9H4n/Indo1UyfCPvBDmISu+xIYNjsxToDE8uPzTE/nLiVv37e
+         tqa2lUNlDJrDA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6308A4052D; Tue,  4 Apr 2023 16:53:10 -0300 (-03)
-Date:   Tue, 4 Apr 2023 16:53:10 -0300
+        id 1D02B4052D; Tue,  4 Apr 2023 16:54:40 -0300 (-03)
+Date:   Tue, 4 Apr 2023 16:54:40 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Adrian Hunter <adrian.hunter@intel.com>,
@@ -73,148 +73,37 @@ Cc:     Adrian Hunter <adrian.hunter@intel.com>,
         Hao Luo <haoluo@google.com>,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-Message-ID: <ZCyAJiEGui9JmULO@kernel.org>
+Message-ID: <ZCyAgASMBfMtFGLq@kernel.org>
 References: <20230320212248.1175731-1-irogers@google.com>
  <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
  <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
  <CAP-5=fUvCYHLaecCKMnFwMEcbqj=UcfgHSKAtmYEtk+sJT26nQ@mail.gmail.com>
  <ZCx5EyhgwZNWomfD@kernel.org>
+ <ZCyAJiEGui9JmULO@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZCx5EyhgwZNWomfD@kernel.org>
+In-Reply-To: <ZCyAJiEGui9JmULO@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Applied to:
+Em Tue, Apr 04, 2023 at 04:53:10PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Applied to:
+> 
+> perf map: Add accessor for start and end
 
-perf map: Add accessor for start and end
+> +++ b/tools/perf/util/machine.c
+> @@ -903,7 +903,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+>  		}
+>  
+>  		map->start = event->ksymbol.addr;
+> -		map->end = map__start(map) + event->ksymbol.len;
+> +		map__end(map) = map__start(map) + event->ksymbol.len;
 
-diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
-index ccfa87055c4a3b9d..566fb6c0eae737c6 100644
---- a/tools/perf/arch/arm/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
-@@ -33,7 +33,7 @@ static int sample_ustack(struct perf_sample *sample,
- 		return -1;
- 	}
- 
--	stack_size = map->end - sp;
-+	stack_size = map__end(map) - sp;
- 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
- 
- 	memcpy(buf, (void *) sp, stack_size);
-diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-index 46147a483049615d..90a7ef293ce76879 100644
---- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-@@ -33,7 +33,7 @@ static int sample_ustack(struct perf_sample *sample,
- 		return -1;
- 	}
- 
--	stack_size = map->end - sp;
-+	stack_size = map__end(map) - sp;
- 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
- 
- 	memcpy(buf, (void *) sp, stack_size);
-diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-index c9cb4b059392f6cf..32fffb593fbf0236 100644
---- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-@@ -33,7 +33,7 @@ static int sample_ustack(struct perf_sample *sample,
- 		return -1;
- 	}
- 
--	stack_size = map->end - sp;
-+	stack_size = map__end(map) - sp;
- 	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
- 
- 	memcpy(buf, (void *) sp, stack_size);
-diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-index fe0e4530673c6661..b7223feec770dc33 100644
---- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-+++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-@@ -262,7 +262,7 @@ int arch_skip_callchain_idx(struct thread *thread, struct ip_callchain *chain)
- 		return skip_slot;
- 	}
- 
--	rc = check_return_addr(dso, al.map->start, ip);
-+	rc = check_return_addr(dso, map__start(al.map), ip);
- 
- 	pr_debug("[DSO %s, sym %s, ip 0x%" PRIx64 "] rc %d\n",
- 				dso->long_name, al.sym->name, ip, rc);
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 7852b97da10aa336..1cc6f338728f5499 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -903,7 +903,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 		}
- 
- 		map->start = event->ksymbol.addr;
--		map->end = map__start(map) + event->ksymbol.len;
-+		map__end(map) = map__start(map) + event->ksymbol.len;
- 		err = maps__insert(machine__kernel_maps(machine), map);
- 		map__put(map);
- 		if (err)
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 1fd57db7222678ad..21010a2b8e16cc2e 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -339,7 +339,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 			map__put(before);
- 		}
- 
--		if (map->end < map__end(pos->map)) {
-+		if (map__end(map) < map__end(pos->map)) {
- 			struct map *after = map__clone(pos->map);
- 
- 			if (after == NULL) {
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 108f7b1697a73465..1c13f43e7d22c84c 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -327,9 +327,10 @@ static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
- 
- 	maps__for_each_entry(ui->thread->maps, map_node) {
- 		struct map *map = map_node->map;
-+		u64 start = map__start(map);
- 
--		if (map__dso(map) == dso && map->start < base_addr)
--			base_addr = map->start;
-+		if (map__dso(map) == dso && start < base_addr)
-+			base_addr = start;
- 	}
- 	base_addr -= dso->data.elf_base_addr;
- 	/* Address of .eh_frame_hdr */
-@@ -443,8 +444,8 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
- 	if (!read_unwind_spec_eh_frame(dso, ui, &table_data, &segbase, &fde_count)) {
- 		memset(&di, 0, sizeof(di));
- 		di.format   = UNW_INFO_FORMAT_REMOTE_TABLE;
--		di.start_ip = map->start;
--		di.end_ip   = map->end;
-+		di.start_ip = map__start(map);
-+		di.end_ip   = map__end(map);
- 		di.u.rti.segbase    = segbase;
- 		di.u.rti.table_data = table_data;
- 		di.u.rti.table_len  = fde_count * sizeof(struct table_entry)
-@@ -459,7 +460,8 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
- 	    !read_unwind_spec_debug_frame(dso, ui->machine, &segbase)) {
- 		int fd = dso__data_get_fd(dso, ui->machine);
- 		int is_exec = elf_is_exec(fd, dso->name);
--		unw_word_t base = is_exec ? 0 : map->start;
-+		u64 start = map__start(map);
-+		unw_word_t base = is_exec ? 0 : start;
- 		const char *symfile;
- 
- 		if (fd >= 0)
-@@ -468,8 +470,7 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
- 		symfile = dso->symsrc_filename ?: dso->name;
- 
- 		memset(&di, 0, sizeof(di));
--		if (dwarf_find_debug_frame(0, &di, ip, base, symfile,
--					   map->start, map->end))
-+		if (dwarf_find_debug_frame(0, &di, ip, base, symfile, start, map__end(map)))
- 			return dwarf_search_unwind_table(as, ip, &di, pi,
- 							 need_unwind_info, arg);
- 	}
+Ditch this one, duh.
+
+>  		err = maps__insert(machine__kernel_maps(machine), map);
+>  		map__put(map);
+>  		if (err)
