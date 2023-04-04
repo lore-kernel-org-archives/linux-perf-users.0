@@ -2,120 +2,146 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D0FC7618D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 05:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A99C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 05:47:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233233AbjDDFTA convert rfc822-to-8bit (ORCPT
+        id S233000AbjDDFrv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 01:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51712 "EHLO
+        Tue, 4 Apr 2023 01:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233035AbjDDFTA (ORCPT
+        with ESMTP id S229693AbjDDFrv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 01:19:00 -0400
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51BF71BF8;
-        Mon,  3 Apr 2023 22:18:59 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id g16so3288367iom.11;
-        Mon, 03 Apr 2023 22:18:59 -0700 (PDT)
+        Tue, 4 Apr 2023 01:47:51 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF8610E7;
+        Mon,  3 Apr 2023 22:47:50 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id o12so13877930iow.6;
+        Mon, 03 Apr 2023 22:47:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680585538; x=1683177538;
+        d=1e100.net; s=20210112; t=1680587269; x=1683179269;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n+z2DtIXlnX8JchPJicDuk6IiWR6KVUfDtLG8QXJzFo=;
-        b=aoUKVeqpk6YbPAVSDNSEnPcoe8h9qnzh+2F8xnXiiMag5e6MSLYh9Rt0r9Pe9OoR4O
-         m1tXg3WRC6mrJLTsa9BrN9OC8ntmfcAFXyxcW4I32Gjob7L1xW8+KjcId92dh9LvYIVW
-         c+1lkHdO6ENDk66bd6IjBGbToXh5qZD4pNgWZj0UJRgM9B28xp1Y0KSWDRmDMopyR+yg
-         Odz6/u6MsJgEfl0Ujmoz1lii/hl1rsrH7nJEsGk8SVhffCxXP6WmFBoWfjnamKJiz4pR
-         KmwtuKMafg+IsH/UhXg3N9btTz9Z/FB5D2ctHmRu1qxJ0xshklwpEeEW+KiM4vBs0MAP
-         ipyg==
-X-Gm-Message-State: AAQBX9dN1zRoMSWJGIWXC1HD5bMTS0CMBXnhlm/qoZVV50VYdIkKkKBV
-        +Yl8hXsQj4chNVJsm29HGuFBnMWe2ynVyYgnHbQ=
-X-Google-Smtp-Source: AKy350bBvTyWsO4MYoAA2TbNVAjasEfvOmD1ErXgo3dwhUR1n6WX/4f4etHN0Prhw4chjc8ELJOPyhM4X69infy65mU=
-X-Received: by 2002:a6b:7e03:0:b0:753:568:358e with SMTP id
- i3-20020a6b7e03000000b007530568358emr1416961iom.20.1680585538552; Mon, 03 Apr
- 2023 22:18:58 -0700 (PDT)
+        bh=xNz+tor2PT8Dbq65kqmNewapvxNXvpyZu0fSYT9vvkg=;
+        b=03+CVV3UY2YlwmhI/hhAUsTfD2ZWja/ela+A+pzl86tZusXGDb8LTC7x3PvTrhayX9
+         0FaJUP/9PYuagfpjsy/argEdz8NkOI0BJm0xyti8sPmAjQGwtIvKU4D4j8PfvlrCbJMs
+         tkBNlVRQvwtyFMv0shwXINRBoTEssQ0Qaqh4hs/nEpkz48fBtv+1FzcT/db12df6tyKo
+         MvskOyhrzuVB62gmP/mcXzRyxS81i9rAbU7UKI2rwoYPSqlB2lrjPX7IBO3TY0P9F50N
+         wjR36zPXhSIUhmmtPhL569x9iP+oHqjyAHqS4BYnZ7dIbX7h4vuz+LPmuE2aRaqf0V9j
+         qJgQ==
+X-Gm-Message-State: AAQBX9fgQ5+/LVg0Jl0E+VhXRvsJd/9tPXC3WjYSPhKJxxm0P7+ek/yv
+        /e/jMvUiHm2MhUi+Z+GJGWQvi3LCVh+LGgmDNPQ=
+X-Google-Smtp-Source: AKy350bYd8OQ4OgcesTf2t3y16sqqc7o75Oy1CdW1IDubFekOL0QL3zle3DhKo76y8/vwrZU3V0TN3byJcR/6nwiysE=
+X-Received: by 2002:a5d:9f15:0:b0:760:932:b2fd with SMTP id
+ q21-20020a5d9f15000000b007600932b2fdmr1441378iot.12.1680587269125; Mon, 03
+ Apr 2023 22:47:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230403184033.1836023-1-irogers@google.com> <ZCs1/skb2XqDYrYF@kernel.org>
-In-Reply-To: <ZCs1/skb2XqDYrYF@kernel.org>
+References: <20230316133557.868731-1-asavkov@redhat.com> <CAM9d7ciT7Wtmxt0_2ZVv4nbAb1KoeX_itTSAhz8B9T41-NeZYQ@mail.gmail.com>
+ <ZBQZoyJc7mhUrL8n@samus.usersys.redhat.com> <CAM9d7ch9NjnaB5dB6fO7WKdwPd8M9DmNpdu4-V-8R+96ssxMvA@mail.gmail.com>
+ <ZBtalEw0qKQFlVWR@kernel.org> <8f7077e8-bcce-a13f-48d3-92a3cb80b02a@intel.com>
+ <20230331085224.GA688995@samus.usersys.redhat.com> <ZCs3WX4klUpe+aso@kernel.org>
+In-Reply-To: <ZCs3WX4klUpe+aso@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 3 Apr 2023 22:18:47 -0700
-Message-ID: <CAM9d7chDz9dNpB+vywLMNxyc9p=wLaJp4qUYwfu6y88tEDYLLw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] Support for llvm-addr2line
+Date:   Mon, 3 Apr 2023 22:47:37 -0700
+Message-ID: <CAM9d7cgOA97n10FPz0Bwjtmfon1En+CN2K7CYL3fQ6nrjBqF9Q@mail.gmail.com>
+Subject: Re: [PATCH 0/1] perf report: append inlines to non-dwarf callchains
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+Cc:     Artem Savkov <asavkov@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, llvm@lists.linux.dev
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Milian Wolff <milian.wolff@kdab.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On Mon, Apr 3, 2023 at 1:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> Em Fri, Mar 31, 2023 at 10:52:24AM +0200, Artem Savkov escreveu:
+> > On Thu, Mar 30, 2023 at 08:06:20AM +0300, Adrian Hunter wrote:
+> > > On 22/03/23 21:44, Arnaldo Carvalho de Melo wrote:
+> > > > Em Wed, Mar 22, 2023 at 11:18:49AM -0700, Namhyung Kim escreveu:
+> > > >> On Fri, Mar 17, 2023 at 12:41 AM Artem Savkov <asavkov@redhat.com> wrote:
+> > > >>>
+> > > >>> On Thu, Mar 16, 2023 at 02:26:18PM -0700, Namhyung Kim wrote:
+> > > >>>> Hello,
+> > > >>>>
+> > > >>>> On Thu, Mar 16, 2023 at 6:36 AM Artem Savkov <asavkov@redhat.com> wrote:
+> > > >>>>>
+> > > >>>>> In an email to Arnaldo Andrii Nakryiko suggested that perf can get
+> > > >>>>> information about inlined functions from dwarf when available and then
+> > > >>>>> add it to userspace stacktraces even in framepointer or lbr mode.
+> > > >>>>> Looking closer at perf it turned out all required bits and pieces are
+> > > >>>>> already there and inline information can be easily added to both
+> > > >>>>> framepointer and lbr callchains by adding an append_inlines() call to
+> > > >>>>> add_callchain_ip().
+> > > >>>>
+> > > >>>> Looks great!  Have you checked it with perf report -g callee ?
+> > > >>>> I'm not sure the ordering of inlined functions is maintained
+> > > >>>> properly.  Maybe you can use --no-children too to simplify
+> > > >>>> the output.
+> > > >>>
+> > > >>> Thanks for the suggestion. I actually have another test program with
+> > > >>> functions being numbered rather than (creatively) named, so it might be
+> > > >>> easier to use it to figure out ordering. Here's the code:
+> > > >>
+> > > >> Yep, looks good.
+> > > >>
+> > > >> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > > >
+> > > > So, I'll apply this shorter patch instead, ok?
+> > > >
+> > > > - Arnaldo
+> > > >
+> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > > index 803c9d1803dd26ef..abf6167f28217fe6 100644
+> > > > --- a/tools/perf/util/machine.c
+> > > > +++ b/tools/perf/util/machine.c
+> > > > @@ -44,6 +44,7 @@
+> > > >  #include <linux/zalloc.h>
+> > > >
+> > > >  static void __machine__remove_thread(struct machine *machine, struct thread *th, bool lock);
+> > > > +static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms, u64 ip);
+> > > >
+> > > >  static struct dso *machine__kernel_dso(struct machine *machine)
+> > > >  {
+> > > > @@ -2322,6 +2323,10 @@ static int add_callchain_ip(struct thread *thread,
+> > > >   ms.maps = al.maps;
+> > > >   ms.map = al.map;
+> > > >   ms.sym = al.sym;
+> > > > +
+> > > > + if (append_inlines(cursor, &ms, ip) == 0)
+> > > > +         return 0;
+> > > > +
+> > > >   srcline = callchain_srcline(&ms, al.addr);
+> > > >   return callchain_cursor_append(cursor, ip, &ms,
+> > > >                                  branch, flags, nr_loop_iter,
+> > >
+> > > This seems to be breaking --branch-history.  I am not sure
+> > > append_inlines() makes sense for branches.  Maybe this should be:
+> > >
+> > >     if (!branch && !append_inlines(cursor, &ms, ip))
+> > >             return 0;
+> > >
+> >
+> > Right. So when cllchain_cursor is appended through append_inlines it
+> > always discards branch information, even for the non-inlined function.
+> > So adding !branch makes sense to me. Does anyone else see any problems
+> > with that?
+>
+> I'm no expert in this specific area, so for now till we get to a
+> conclusion on this, I'll follow Andi's suggestion and revert this patch.
 
-On Mon, Apr 3, 2023 at 1:24 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> Em Mon, Apr 03, 2023 at 11:40:29AM -0700, Ian Rogers escreveu:
-> > The addr2line command is started and then addresses piped to it. In
-> > order to determine the end of a addr2lines output a ',' it output with
-> > an expectation to get '??\n??:0\n' as a reply. llvm-addr2line differs
-> > in that ',' generates a reply of ','.
-> >
-> > The approach detects and then caches the addr2line style. When records
-> > are read the sentinel is detected appropriately.
-> >
-> > Comparing the output there is a little more inline data on my machine
-> > with llvm-addr2line:
-> > $ sudo perf record -a -g sleep 1
-> > $ sudo perf report --addr2line=addr2line > a.txt
-> > $ sudo perf report --addr2line=llvm-addr2line > b.txt
-> > $ wc -l a.txt b.txt
-> >   12386 a.txt
-> >   12477 b.txt
-> >
-> > Some other small changes, switching to the api/io code to avoid file
-> > streams wrapping the command's stdin/stdout. Ignore SIGPIPE for when
-> > addr2line exits and writes fail.
-> >
-> > v2. Address review comments from Arnaldo and Namhyung, fixing a
-> >     realloc error path, argument ordering and a comment.
->
-> Added to local repo, build testing, will be in tmp.perf-tools-next soon.
->
-> - Arnaldo
->
-> > Ian Rogers (4):
-> >   tools api: Add io__getline
-> >   perf srcline: Simplify addr2line subprocess
-> >   perf srcline: Support for llvm-addr2line
-> >   perf srcline: Avoid addr2line SIGPIPEs
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I think we can simply apply Adrian's patch above.
 
 Thanks,
 Namhyung
-
-
-> >
-> >  tools/lib/api/io.h        |  45 ++++++++++
-> >  tools/perf/tests/api-io.c |  36 ++++++++
-> >  tools/perf/util/srcline.c | 171 +++++++++++++++++++++++---------------
-> >  3 files changed, 184 insertions(+), 68 deletions(-)
-> >
-> > --
-> > 2.40.0.348.gf938b09366-goog
-> >
->
-> --
->
-> - Arnaldo
