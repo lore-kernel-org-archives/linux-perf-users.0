@@ -2,217 +2,311 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B541CC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 14:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3E7C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 15:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235003AbjDDOKu (ORCPT
+        id S232549AbjDDP7M (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 10:10:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60160 "EHLO
+        Tue, 4 Apr 2023 11:59:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235330AbjDDOKs (ORCPT
+        with ESMTP id S232138AbjDDP7L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 10:10:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7B219AE;
-        Tue,  4 Apr 2023 07:10:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5173C6316E;
-        Tue,  4 Apr 2023 14:10:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B28DC4339B;
-        Tue,  4 Apr 2023 14:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680617446;
-        bh=iSUrnQZaTWpAsPyP1ToiK9VLwAFedGHXJSWMqN81fOI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CQQn/99t/7NoGILbPCUwdDk3mm0kbhtHqhI6QeW71IHT50dbWnZCvzJpILXYguVdZ
-         QFB3stN+E2ku9saCUVJRuW/cTKdhP9U37PkbI6ScSYUSANy0ZgcRpwhYnlfaD217GT
-         XLRNCWAfziP+HXYQgLqXbZwA52dr/ZRFdFLrzlRYVHqM02XoePini9/DY1Bv9Z2XRP
-         +o4MMm6bRU+nWfdIIe/mgzp/IC6fdImReV9NHoYmrvbqV3gcYw10iO2sMnrHOp7Ig/
-         00xc/CbHnrEIzCQ3+mNwvK+Biu+Nqs12R97eblJuR3YQNQUMpeqEwnLLFxFwy63vJY
-         KzOpjWzrzaP0w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A5DCC4052D; Tue,  4 Apr 2023 11:10:43 -0300 (-03)
-Date:   Tue, 4 Apr 2023 11:10:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 1/9] perf list: Use relative path for tracepoint scan
-Message-ID: <ZCwv4z5Dh/dHUMG6@kernel.org>
-References: <20230331202949.810326-1-namhyung@kernel.org>
- <20230331202949.810326-2-namhyung@kernel.org>
- <ZCtMLkNL80EkPvB1@kernel.org>
+        Tue, 4 Apr 2023 11:59:11 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C7D1717
+        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 08:59:09 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3e632769c5eso128161cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 08:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680623948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zDZ65pFrAxmH6gRCgCBJhhbNiIkyQr4CGpMtcIgVVNM=;
+        b=VJU7f4U9RlOT6WI79vtHn7EKR0+uTVfcr2hzuQUD0wojCWN6czq2OoKIGhlTGh53uZ
+         q/Vm6L6WIrImmRMe5jQH4K9ZZGDk3RKySWeePeFrA1wcK8QK7a6qckQbZPEO5cZVfsJp
+         tzLvcS6XtPgny7hQqMkKM9cjtDk7cLpDir+AcOYbkhgB9HP6wzBZlrmQXB4h2/9RjQ/O
+         29huhYR9TwU8AMcup+Mb2X74vKb38z4Z6+2eHap/6yRt6WspWhbFVc8usLNXLEECJI1p
+         Ja+8vJPyRLixts0W4hxsimcdlnV/1kd1MM+uCW5aih+Cnj7Iu9q//WDIE+5cGwYB53Gh
+         777w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680623948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zDZ65pFrAxmH6gRCgCBJhhbNiIkyQr4CGpMtcIgVVNM=;
+        b=Q0ois8EZBCrZXJui1ZQ71mqwcegBRkaWCrrXs8R3ENNWEpk/JGsy8jtV9ymycJvZ4+
+         5GU1vJLkBtyXAKq1+iRuohfxsTS2KOkR/nV3rS2/5GzEhTe/W/Lhy5G8IEeTWwrP0kUi
+         uNjRGqRA8f6StaGx2Ovpqs9dUQdvxItigqdMFc+0AdE0TaI7qnmEtZUvfKDdM38hLY3V
+         DpA4umDf22KsqcJ/ZRd/6hpoiJ2kkwloN42TEu5hyiS7tmEJVJ/mS7u7r5PSb4BH57HW
+         +NsaI5KHG7fMnbyjUqRM04NkA+6avWzB1FcJc5u2l2HLMQhvNRhYVcadnwEmTO8eOIjC
+         QkfA==
+X-Gm-Message-State: AAQBX9f+nP01zXBKN8JVvmzQ5NKG398P8llTj3PYPhDHGKiFRWnzkXEG
+        cy8o6qWhsJ78qooBNaMNvYeL3m5ukvcy4dVrNorNew==
+X-Google-Smtp-Source: AKy350bKPf2fMfBfyvLHsC1fiiY1myZI566TtOoW0tNNeA+PsFZLiXn2z4vpmkLfRZw9wa0DGuBa0OQqvz12pxyWyzI=
+X-Received: by 2002:ac8:5a87:0:b0:3e0:c2dd:fd29 with SMTP id
+ c7-20020ac85a87000000b003e0c2ddfd29mr317078qtc.4.1680623948352; Tue, 04 Apr
+ 2023 08:59:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZCtMLkNL80EkPvB1@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20230320212248.1175731-1-irogers@google.com>
+In-Reply-To: <20230320212248.1175731-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 4 Apr 2023 08:58:55 -0700
+Message-ID: <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Hao Luo <haoluo@google.com>
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 03, 2023 at 06:59:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, Mar 31, 2023 at 01:29:41PM -0700, Namhyung Kim escreveu:
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/print-events.c | 26 ++++++++++++++++++++------
-> >  1 file changed, 20 insertions(+), 6 deletions(-)
-> 
-> Add to add this to fix on Alma Linux 8, and scandirat isn't being found
-> on musl libc (Alpine Linux), probably we'll need some scaffolding...
+Ping. It would be nice to have this landed or at least the first 10
+patches that refactor the map API and are the bulk of the
+lines-of-code changed. Having those landed would make it easier to
+rebase in the future, but I also think the whole series is ready to
+go.
 
-About scandirat I'm adding the feature test below and this patch to the
-patch that starts using scandirat():
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 28aa0b9300253d0a..386b1ab0b60e1d93 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -58,11 +58,9 @@ static const struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
- /*
-  * Print the events from <debugfs_mount_point>/tracing/events
-  */
--void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state)
-+void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unused, void *print_state __maybe_unused)
- {
--	struct dirent **sys_namelist = NULL;
- 	char *events_path = get_tracing_file("events");
--	int sys_items = tracing_events__scandir_alphasort(&sys_namelist);
- 	int events_fd = open(events_path, O_PATH);
- 
- 	put_tracing_file(events_path);
-@@ -71,6 +69,11 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
- 		return;
- 	}
- 
-+#ifdef HAVE_SCANDIRAT_SUPPORT
-+{
-+	struct dirent **sys_namelist = NULL;
-+	int sys_items = tracing_events__scandir_alphasort(&sys_namelist);
-+
- 	for (int i = 0; i < sys_items; i++) {
- 		struct dirent *sys_dirent = sys_namelist[i];
- 		struct dirent **evt_namelist = NULL;
-@@ -120,7 +123,13 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
- 		close(dir_fd);
- 		free(evt_namelist);
- 	}
-+
- 	free(sys_namelist);
-+}
-+#else
-+	printf("\nWARNING: Your libc doesn't have the scandir function, please ask its maintainers to implement it.\n"
-+	       "         As a rough fallback, please do 'ls %s' to see the available tracepoint events.\n", events_path);
-+#endif
- 	close(events_fd);
- }
- 
-
-From b25f9de2f944a550b063322b7210f4392e622a5e Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Tue, 4 Apr 2023 11:05:57 -0300
-Subject: [PATCH 1/1] tools build: Add a feature test for scandirat(), that is
- not implemented so far in musl and uclibc
-
-We use it just when listing tracepoint events, and for root, so just
-emit a warning about it to get users to ask the library maintainers to
-implement it, as suggested in this systemd ticket:
-
- https://github.com/systemd/casync/issues/129
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/build/Makefile.feature   | 1 +
- tools/build/feature/Makefile   | 4 ++++
- tools/build/feature/test-all.c | 5 +++++
- tools/perf/Makefile.config     | 4 ++++
- 4 files changed, 14 insertions(+)
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 214622d7537cc56b..934e2777a2dbcd90 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -64,6 +64,7 @@ FEATURE_TESTS_BASIC :=                  \
-         lzma                            \
-         get_cpuid                       \
-         bpf                             \
-+        scandirat			\
-         sched_getcpu			\
-         sdt				\
-         setns				\
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 0a3b9281f8b08000..0f0aa9b7d7b5e43c 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -65,6 +65,7 @@ FILES=                                          \
-          test-gettid.bin			\
-          test-jvmti.bin				\
-          test-jvmti-cmlr.bin			\
-+         test-scandirat.bin			\
-          test-sched_getcpu.bin			\
-          test-setns.bin				\
-          test-libopencsd.bin			\
-@@ -129,6 +130,9 @@ $(OUTPUT)test-get_current_dir_name.bin:
- $(OUTPUT)test-glibc.bin:
- 	$(BUILD)
- 
-+$(OUTPUT)test-scandirat.bin:
-+	$(BUILD)
-+
- $(OUTPUT)test-sched_getcpu.bin:
- 	$(BUILD)
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 957c02c7b163b579..6f4bf386a3b5c4b0 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -114,6 +114,10 @@
- # include "test-pthread-barrier.c"
- #undef main
- 
-+#define main main_test_scandirat
-+# include "test-scandirat.c"
-+#undef main
-+
- #define main main_test_sched_getcpu
- # include "test-sched_getcpu.c"
- #undef main
-@@ -206,6 +210,7 @@ int main(int argc, char *argv[])
- 	main_test_get_cpuid();
- 	main_test_bpf();
- 	main_test_libcrypto();
-+	main_test_scandirat();
- 	main_test_sched_getcpu();
- 	main_test_sdt();
- 	main_test_setns();
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index dd203f0a2b7e64e1..16bea51f0bcd95ea 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -478,6 +478,10 @@ ifdef NO_DWARF
-   NO_LIBDW_DWARF_UNWIND := 1
- endif
- 
-+ifeq ($(feature-scandirat), 1)
-+  CFLAGS += -DHAVE_SCANDIRAT_SUPPORT
-+endif
-+
- ifeq ($(feature-sched_getcpu), 1)
-   CFLAGS += -DHAVE_SCHED_GETCPU_SUPPORT
- endif
--- 
-2.39.2
-
+On Mon, Mar 20, 2023 at 2:23=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> The perf tool has a class of memory problems where reference counts
+> are used incorrectly. Memory/address sanitizers and valgrind don't
+> provide useful ways to debug these problems, you see a memory leak
+> where the only pertinent information is the original allocation
+> site. What would be more useful is knowing where a get fails to have a
+> corresponding put, where there are double puts, etc.
+>
+> This work was motivated by the roll-back of:
+> https://lore.kernel.org/linux-perf-users/20211118193714.2293728-1-irogers=
+@google.com/
+> where fixing a missed put resulted in a use-after-free in a different
+> context. There was a sense in fixing the issue that a game of
+> wac-a-mole had been embarked upon in adding missed gets and puts.
+>
+> The basic approach of the change is to add a level of indirection at
+> the get and put calls. Get allocates a level of indirection that, if
+> no corresponding put is called, becomes a memory leak (and associated
+> stack trace) that leak sanitizer can report. Similarly if two puts are
+> called for the same get, then a double free can be detected by address
+> sanitizer. This can also detect the use after put, which should also
+> yield a segv without a sanitizer.
+>
+> Adding reference count checking to cpu map was done as a proof of
+> concept, it yielded little other than a location where the use of get
+> could be cleaner by using its result. Reference count checking on
+> nsinfo identified a double free of the indirection layer and the
+> related threads, thereby identifying a data race as discussed here:
+>  https://lore.kernel.org/linux-perf-users/CAP-5=3DfWZH20L4kv-BwVtGLwR=3DE=
+m3AOOT+Q4QGivvQuYn5AsPRg@mail.gmail.com/
+> Accordingly the dso->lock was extended and use to cover the race.
+>
+> The v3 version addresses problems in v2, in particular using macros to
+> avoid #ifdefs. The v3 version applies the reference count checking
+> approach to two more data structures, maps and map. While maps was
+> straightforward, struct map showed a problem where reference counted
+> thing can be on lists and rb-trees that are oblivious to the
+> reference count. To sanitize this, struct map is changed so that it is
+> referenced by either a list or rb-tree node and not part of it. This
+> simplifies the reference count and the patches have caught and fixed a
+> number of missed or mismatched reference counts relating to struct
+> map.
+>
+> The patches are arranged so that API refactors and bug fixes appear
+> first, then the reference count checker itself appears. This allows
+> for the refactor and fixes to be applied upstream first, as has
+> already happened with cpumap.
+>
+> A wider discussion of the approach is on the mailing list:
+>  https://lore.kernel.org/linux-perf-users/YffqnynWcc5oFkI5@kernel.org/T/#=
+mf25ccd7a2e03de92cec29d36e2999a8ab5ec7f88
+> Comparing it to a past approach:
+>  https://lore.kernel.org/all/20151209021047.10245.8918.stgit@localhost.lo=
+caldomain/
+> and to ref_tracker:
+>  https://lwn.net/Articles/877603/
+>
+> v5. rebase removing 5 merged changes. Add map_list_node__new to the
+>     1st patch (perf map: Move map list node into symbol) as suggested
+>     by Arnaldo. Remove unnecessary map__puts from patch 12 (perf map:
+>     Changes to reference counting) as suggested by Adrian. A summary
+>     of the sizes of the remaining patches is:
+> 74fd7ffafdd0 perf map: Add reference count checking
+>  12 files changed, 136 insertions(+), 114 deletions(-)
+> 4719196db8d3 perf maps: Add reference count checking.
+>  8 files changed, 64 insertions(+), 56 deletions(-)
+> 03943e7594cf perf namespaces: Add reference count checking
+>  7 files changed, 83 insertions(+), 62 deletions(-)
+> 0bb382cc52d7 perf cpumap: Add reference count checking
+>  6 files changed, 81 insertions(+), 71 deletions(-)
+> ef39f550c40d libperf: Add reference count checking macros.
+>  1 file changed, 94 insertions(+)
+> d9ac37c750e0 perf map: Changes to reference counting
+>  11 files changed, 112 insertions(+), 44 deletions(-)
+> 476014bc9b55 perf maps: Modify maps_by_name to hold a reference to a map
+>  2 files changed, 33 insertions(+), 18 deletions(-)
+> 91384676fddd perf test: Add extra diagnostics to maps test
+>  1 file changed, 36 insertions(+), 15 deletions(-)
+> fdc30434f826 perf map: Add accessors for pgoff and reloc
+>  9 files changed, 33 insertions(+), 23 deletions(-)
+> 368fe015adb2 perf map: Add accessors for prot, priv and flags
+>  6 files changed, 28 insertions(+), 12 deletions(-)
+> 2c6a8169826a perf map: Add helper for map_ip and unmap_ip
+>  23 files changed, 80 insertions(+), 65 deletions(-)
+> 929e59d49f4b perf map: Rename map_ip and unmap_ip
+>  6 files changed, 13 insertions(+), 13 deletions(-)
+> 4a38194aaaf5 perf map: Add accessor for start and end
+>  24 files changed, 114 insertions(+), 103 deletions(-)
+> 02b63e5c415e perf map: Add accessor for dso
+>  48 files changed, 404 insertions(+), 293 deletions(-)
+> 9324af6ccf42 perf maps: Add functions to access maps
+>  20 files changed, 175 insertions(+), 111 deletions(-)
+> 5c590d36a308 perf maps: Remove rb_node from struct map
+>  16 files changed, 291 insertions(+), 184 deletions(-)
+> af1d142eb777 perf map: Move map list node into symbol
+>  2 files changed, 63 insertions(+), 35 deletions(-)
+>
+> v4. rebases on to acme's perf-tools-next, fixes more issues with
+>     map/maps and breaks apart the accessor functions to reduce
+>     individual patch sizes. The accessor functions are mechanical
+>     changes where the single biggest one is refactoring use of
+>     map->dso to be map__dso(map).
+>
+> The v3 change is available here:
+> https://lore.kernel.org/lkml/20220211103415.2737789-1-irogers@google.com/
+>
+> Ian Rogers (17):
+>   perf map: Move map list node into symbol
+>   perf maps: Remove rb_node from struct map
+>   perf maps: Add functions to access maps
+>   perf map: Add accessor for dso
+>   perf map: Add accessor for start and end
+>   perf map: Rename map_ip and unmap_ip
+>   perf map: Add helper for map_ip and unmap_ip
+>   perf map: Add accessors for prot, priv and flags
+>   perf map: Add accessors for pgoff and reloc
+>   perf test: Add extra diagnostics to maps test
+>   perf maps: Modify maps_by_name to hold a reference to a map
+>   perf map: Changes to reference counting
+>   libperf: Add reference count checking macros.
+>   perf cpumap: Add reference count checking
+>   perf namespaces: Add reference count checking
+>   perf maps: Add reference count checking.
+>   perf map: Add reference count checking
+>
+>  tools/lib/perf/Makefile                       |   2 +-
+>  tools/lib/perf/cpumap.c                       |  94 ++---
+>  tools/lib/perf/include/internal/cpumap.h      |   4 +-
+>  tools/lib/perf/include/internal/rc_check.h    |  94 +++++
+>  tools/perf/arch/s390/annotate/instructions.c  |   4 +-
+>  tools/perf/arch/x86/tests/dwarf-unwind.c      |   2 +-
+>  tools/perf/arch/x86/util/event.c              |  13 +-
+>  tools/perf/builtin-annotate.c                 |  11 +-
+>  tools/perf/builtin-buildid-list.c             |   4 +-
+>  tools/perf/builtin-inject.c                   |  12 +-
+>  tools/perf/builtin-kallsyms.c                 |   6 +-
+>  tools/perf/builtin-kmem.c                     |   4 +-
+>  tools/perf/builtin-lock.c                     |   4 +-
+>  tools/perf/builtin-mem.c                      |  10 +-
+>  tools/perf/builtin-report.c                   |  26 +-
+>  tools/perf/builtin-script.c                   |  27 +-
+>  tools/perf/builtin-top.c                      |  17 +-
+>  tools/perf/builtin-trace.c                    |   2 +-
+>  .../scripts/python/Perf-Trace-Util/Context.c  |  13 +-
+>  tools/perf/tests/code-reading.c               |  37 +-
+>  tools/perf/tests/cpumap.c                     |   4 +-
+>  tools/perf/tests/hists_common.c               |   8 +-
+>  tools/perf/tests/hists_cumulate.c             |  14 +-
+>  tools/perf/tests/hists_filter.c               |  14 +-
+>  tools/perf/tests/hists_link.c                 |  18 +-
+>  tools/perf/tests/hists_output.c               |  12 +-
+>  tools/perf/tests/maps.c                       |  69 ++--
+>  tools/perf/tests/mmap-thread-lookup.c         |   3 +-
+>  tools/perf/tests/symbols.c                    |   6 +-
+>  tools/perf/tests/thread-maps-share.c          |  29 +-
+>  tools/perf/tests/vmlinux-kallsyms.c           |  54 +--
+>  tools/perf/ui/browsers/annotate.c             |   9 +-
+>  tools/perf/ui/browsers/hists.c                |  19 +-
+>  tools/perf/ui/browsers/map.c                  |   4 +-
+>  tools/perf/util/annotate.c                    |  40 ++-
+>  tools/perf/util/auxtrace.c                    |   2 +-
+>  tools/perf/util/block-info.c                  |   4 +-
+>  tools/perf/util/bpf-event.c                   |  10 +-
+>  tools/perf/util/bpf_lock_contention.c         |   6 +-
+>  tools/perf/util/build-id.c                    |   2 +-
+>  tools/perf/util/callchain.c                   |  24 +-
+>  tools/perf/util/cpumap.c                      |  40 ++-
+>  tools/perf/util/data-convert-json.c           |  10 +-
+>  tools/perf/util/db-export.c                   |  16 +-
+>  tools/perf/util/dlfilter.c                    |  28 +-
+>  tools/perf/util/dso.c                         |   8 +-
+>  tools/perf/util/dsos.c                        |   2 +-
+>  tools/perf/util/event.c                       |  27 +-
+>  tools/perf/util/evsel_fprintf.c               |   4 +-
+>  tools/perf/util/hist.c                        |  22 +-
+>  tools/perf/util/intel-pt.c                    |  63 ++--
+>  tools/perf/util/machine.c                     | 252 ++++++++------
+>  tools/perf/util/map.c                         | 217 ++++++------
+>  tools/perf/util/map.h                         |  74 +++-
+>  tools/perf/util/maps.c                        | 318 ++++++++++-------
+>  tools/perf/util/maps.h                        |  67 +++-
+>  tools/perf/util/namespaces.c                  | 132 +++++---
+>  tools/perf/util/namespaces.h                  |   3 +-
+>  tools/perf/util/pmu.c                         |   8 +-
+>  tools/perf/util/probe-event.c                 |  62 ++--
+>  .../util/scripting-engines/trace-event-perl.c |  10 +-
+>  .../scripting-engines/trace-event-python.c    |  26 +-
+>  tools/perf/util/sort.c                        |  67 ++--
+>  tools/perf/util/symbol-elf.c                  |  41 ++-
+>  tools/perf/util/symbol.c                      | 320 +++++++++++-------
+>  tools/perf/util/symbol_fprintf.c              |   2 +-
+>  tools/perf/util/synthetic-events.c            |  34 +-
+>  tools/perf/util/thread-stack.c                |   4 +-
+>  tools/perf/util/thread.c                      |  39 +--
+>  tools/perf/util/unwind-libdw.c                |  20 +-
+>  tools/perf/util/unwind-libunwind-local.c      |  16 +-
+>  tools/perf/util/unwind-libunwind.c            |  33 +-
+>  tools/perf/util/vdso.c                        |   7 +-
+>  73 files changed, 1665 insertions(+), 1044 deletions(-)
+>  create mode 100644 tools/lib/perf/include/internal/rc_check.h
+>
+> --
+> 2.40.0.rc1.284.g88254d51c5-goog
+>
