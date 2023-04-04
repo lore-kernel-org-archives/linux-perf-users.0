@@ -2,853 +2,1281 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EB6C77B60
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 21:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50246C761A6
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 21:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235377AbjDDVDB (ORCPT
+        id S236361AbjDDVyW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 17:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38604 "EHLO
+        Tue, 4 Apr 2023 17:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235918AbjDDVCa (ORCPT
+        with ESMTP id S236386AbjDDVyV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 17:02:30 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B37F4C05
-        for <linux-perf-users@vger.kernel.org>; Tue,  4 Apr 2023 14:02:01 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5463f2d3223so162823427b3.14
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Apr 2023 14:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680642119;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5NovpSUg3Y8a/tr5KBGhz5Gi3sSPAFEbgdtSFDoXvB4=;
-        b=krhi9cW5/6yrh3web6LOTAH1lGbx72Mpe8mi7FqV5X+kaHtufqzWAM7PD8CUphO5EI
-         kUiaG6SAsMqTDS1rdTa8dJhKD6sBG52hn0K4NEqcnQY0y0Iy7t8XZNEkSrYkt7BlJDFn
-         AbXqlKh+7ZM3qgX2FsFpnP00XccH3WZkv4z4xO30Cj4wxH8KVSfmRSL7B7eUNQMLOszX
-         pKhztv7c+RV1bX5sSI4/KqKBWFHmIfHd4t9WugwPo2Ytrc00Syo79KM0SBpFuMNN/avO
-         G7s5lVpYrME17gqThpMda8FAvBneYDsJztfU3C7GEUDful6ICAbxTf4S0S8GJhixpmIU
-         pNbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680642119;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5NovpSUg3Y8a/tr5KBGhz5Gi3sSPAFEbgdtSFDoXvB4=;
-        b=BisXNKnU+VEzMk0p5kSL871jI/25hNsN+lIPQPF2qv66UmpulFAHVEpzYpia5tnAl7
-         6cD5guxoj7E1ngtvORGUWBSDhGG9BQ1Q13/Y2fPRh0EwfYIOcvh5+GZTm3iZSBHy0yqI
-         Tya44rtU7IOkWO6YRSsryiJFKvjN6glCqVwhnWyUJfvLw/ghirE1zIKs1B6U3U1htnS4
-         9SOPhzgxQx6YBT1f+2UG5tp+jHyLGylTEub49YAhEDgFpbc+Uvel97CDrLQU9GX6SeKw
-         UtxWXe7fxXdTKrOBjSG9JTTFvZCpWMaR4tpnQzZJw9r8aANKPJ8VC6T82sQZu5s01gsm
-         hY8Q==
-X-Gm-Message-State: AAQBX9fMLae7bUxIn9FseQe3dsLAJve+aPXGuqqSEZj5kGds2/bORgQI
-        yIpGwdZme1ogFHwv3D2AcBZvQf1QPRkn
-X-Google-Smtp-Source: AKy350YsHCLimEQiTEjBGoKYgRTVSiWFDDMWVK2jAHZa56rHZUBFzbApwTuc8o6bW9Qc3OTVv122JEVYXYYv
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a051:e074:d6f:dc29])
- (user=irogers job=sendgmr) by 2002:a25:d2c7:0:b0:98e:6280:74ca with SMTP id
- j190-20020a25d2c7000000b0098e628074camr2716389ybg.1.1680642118920; Tue, 04
- Apr 2023 14:01:58 -0700 (PDT)
-Date:   Tue,  4 Apr 2023 13:59:54 -0700
-In-Reply-To: <20230404205954.2245628-1-irogers@google.com>
-Message-Id: <20230404205954.2245628-13-irogers@google.com>
-Mime-Version: 1.0
-References: <20230404205954.2245628-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v6 12/12] perf map: Add reference count checking
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
+        Tue, 4 Apr 2023 17:54:21 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C2CE4697;
+        Tue,  4 Apr 2023 14:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680645240; x=1712181240;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=F9t1+tbzk6par4wqkNyNppc2RVBreQpTGu+zv8XLOgo=;
+  b=JqrLSB6S5tvjALHTp3JxdsxnkxaBuLquYP9q40KKjCOYogcxLWO8JEJE
+   khLQ2975JV5TbTWrw9h52sAzQjH1rG7dBFjlADSouRaAdL4C5q6g93WlB
+   l52SQKJNmapFzTvnmRrS+Qmtkt/QvWGdyKDfnY/5vjcAlqnEkp8p2WhMW
+   z3iQb7zY1ghXrRpmZp5i3VsD3a36LHRQPOtNQZxvbmyhau+ydLRoonYCV
+   4R45/70I9a5uhBzCa5a/yHhiTbFtMXSeDP2Xg9EQ1pUMveOiLY5SJmZXT
+   /den0UrwdW2CJ6ubc0+MW85X+5UKhA7t2Fic8tFd8BGSvZ8+H/xDVBihg
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="407392222"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="407392222"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2023 14:53:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="775818275"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="775818275"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Apr 2023 14:53:58 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 4 Apr 2023 14:53:58 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 4 Apr 2023 14:53:57 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Tue, 4 Apr 2023 14:53:57 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.109)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Tue, 4 Apr 2023 14:53:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Am1cmHqB2Y4JihUKtG6yk8GKE6G8a95zwUS8WJevB/YtVMN0A6Cp+NKRaqlvXigEq8k2apV27soVKdWHeO6eNGUpt30zhMbMwxIIbY12DV+nal7yLgoKAWc62P1bZT/re2GSfL/82fUZm36IiXpG/HCjwG3cx+kinJDEHLEpNNPkb8WsMgtM0fVKhYrkn9H2t9BfYi2SSzvd+LuMUN2MVCUkG+/WbAPZC4vkw8DBjj5QGBYcE/ayuOoTjxgK4Evb+Mvwu/9V3j9g/d3Xrp8Ad3yV4FhRY28u9LYQxwMnIFU211GAADW48TmofjIiSgAzsDv4EUVomIBvEuCuoyzfTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Tx4Zc9C9fRcvmXwmxQm8n+PewvQQGLJDkGm+jzDRono=;
+ b=YZYpIzy8AuKOC8LNSNPEMjiqzvzoWvCkGvn+dACCe81C4ZB1MFSzAB4M/8Y0jB8nyQFOKFeCtXBabqcy9JIu0b/8rgrX7/AK2rgfeCw02bdcGm1qWu8FxfaK/nWayInRGPdHSRUWq2TrIRF4eXVSzupxo01tt6YFHqLiaPgOmqRaubYMLff2PXlL7oLmeTaeCdten7QJq14ToIEI8ze6F8QbqOXbvQqIg2p+ZBdWIho6CDwCok/Yr/Bs1Kw4WLwo6gYsF1fViVcX3fyUlQHtmOsxrO3sQjNBKVmv0kUx/WUcKS41+KcsiadroA1f3pPTw0nlQNqM2WdytFURdnVN8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ0PR11MB5598.namprd11.prod.outlook.com (2603:10b6:a03:304::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35; Tue, 4 Apr
+ 2023 21:53:54 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6254.033; Tue, 4 Apr 2023
+ 21:53:54 +0000
+Date:   Tue, 4 Apr 2023 14:53:50 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <will@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, Hao Luo <haoluo@google.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Dave Jiang <dave.jiang@intel.com>
+Subject: RE: [PATCH v4 4/5] cxl: CXL Performance Monitoring Unit driver
+Message-ID: <642c9c6e1f9df_21a829451@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+ <20230330164556.31533-5-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230330164556.31533-5-Jonathan.Cameron@huawei.com>
+X-ClientProxiedBy: MW4PR04CA0245.namprd04.prod.outlook.com
+ (2603:10b6:303:88::10) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ0PR11MB5598:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1bf8958c-d49e-4cdb-b270-08db355714fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qoHXu+HCxudEl2hv0jBaUP4L0aQN5qHDQIFZtGcfDhwvK+dwtXWEcnw+3BldHX4xq5PXfQNXuJaA0i5jr08SK6PWKIhAkLNuyti3jFHsi2zruTXxgrSIWooQ2rwWBaVE4Y36RPxse2U7ozgwFnMTNdTfoHbKIKMhfZNGFu0+sYcuOY+KqxoCu8yerHkRJSVI3JqRD721B7EZHLZ8+/f+4/8+zulGgwkIyCmnojjpiUNaiAvolHgVlF71pupYF0/5vURudAljE6J+UjgGOMeDumoGR5G4yuCbs97UUlOTQ8oe8lbULxefd0orp/w/5swT4rwcKGhnyJsdmc//2Vz/+e+qMNmFCjgr/yHpokERWjpwBH4JO/Pv+pwgTJ6ReVBhQ/cwfmVbHF/TWRocw0MNWDPbbRFr4fgFTeHNFqpBr4tZSdcIyOs20ce7E5voY68y49+EnPvoBykxsVSqS0yBZf7ixIk8uzvGak8ypx4q2mT88kbDb+BryIzybea3Q27BmqZ6nKyKcQHoS9KzYZea6tDRICNHntbIHmFrATGWIKOcJKJS8ZRa46G6+e6MlbFpTZ1CZnyEH7wYB1RFNuuFPuOwIy4djwkOZt9hyDrYt8I1vc6J7VUPgMBZMSERamQg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(346002)(376002)(39860400002)(366004)(451199021)(66476007)(6486002)(6666004)(478600001)(83380400001)(38100700002)(86362001)(82960400001)(110136005)(2906002)(7416002)(316002)(54906003)(186003)(6512007)(9686003)(6506007)(26005)(30864003)(5660300002)(8676002)(8936002)(66556008)(66946007)(4326008)(41300700001)(33290500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?IYBJfPBw6mVutwJQM6GeRMLC/QsOL8FKJOJ7JoeuqLaYgU43fhJTyeR63B9S?=
+ =?us-ascii?Q?BEmRLWiND76tjtof9BgQ1SIES/5mi0UUevfIzl02Fx/WxZCbz/0bKrn80hwD?=
+ =?us-ascii?Q?8EDQs5O5BiG5ywvJ3BR0pttcvJ/pgiWIWgHDzPyHRt22PIjc8Zl3f4YVxZSC?=
+ =?us-ascii?Q?5cdX2VyvzLVg9PNl7wE6gDmhUo1a0mgdGty+UrlQSFt5hjHSODo+cU53qvTx?=
+ =?us-ascii?Q?ixUJdE1mIqfT00Zb9GCvpdYi7hykUZzOttpkqqkjiQVXKCaa2It3ZEg0X4Zv?=
+ =?us-ascii?Q?ZVEwuxvzuC9em82XKaLfyCSb3sZzSaNQO2bEzvXcpD5yJyx4FexqOmro4U8U?=
+ =?us-ascii?Q?SCecOMapaYmf24xAPZuzFvtMovt1fBV0V83ASQWPCMRWkJKAbFfeie8hJGrc?=
+ =?us-ascii?Q?CWp3yjfUalK2lkGmG8QIdFlZXk0BSWD4wnLpgrI8+bhFFM5QyO5wPK3vtj3C?=
+ =?us-ascii?Q?vpmtnUkia6C1RBHvTRIB68Qq12JvUhBhhW9tmjSUExOL3+KQMCRcfPyFXeW2?=
+ =?us-ascii?Q?19s+4fJyIzIKm8l/fx1GEAGbQcs3MbKvowstuFw1IgvayTjxa2TbYqgxQGcp?=
+ =?us-ascii?Q?fqcwQd82kMmpxRI6GCAyvWYShJP1HKftVVCTLW+Q4458+gwG5dZw/Q2feIVz?=
+ =?us-ascii?Q?BGF0BNOpo/TVBCbM+Y2mSPXGzesH6ZkacOhqxxJFfpq310RNzuQbF6URBfUC?=
+ =?us-ascii?Q?o/5LVT7mMqi6mF4yO4TK6yg+52TEtOjlcFh88HeaNX+kxd3dR/Fps3rUkRsa?=
+ =?us-ascii?Q?71jEm6CUVFzBcl2Lo/1bLwEyH8EmtiePHYICtO8r4bfq+hlyKHBo+ONAB8E0?=
+ =?us-ascii?Q?Qw8EupOUlIeFKEyhchFNm3W5piXJKcJ3PHXwOe7wECcG7WQDYgATFduM4d6p?=
+ =?us-ascii?Q?ubmk2zVCUdoBwJJxf6uo12cK5olVpiE36KINZW3W0Emj54lAQSeXp1x+mg6t?=
+ =?us-ascii?Q?VoUdNBnF22ULdYhOQAzF/ysn6ekzE/sv0f2fHHEi9ed9+JkLH2pZ3LZDgiS+?=
+ =?us-ascii?Q?zoeUejnMd3s1cztTmFCjg1bxYIym9lmhLkaZxXxGJiWV2PyGVhtXxz+gYDBo?=
+ =?us-ascii?Q?VQtHfXm7O6xmeqS6Drgw6ECXAjpnepXKYuBI4g241sTEFcxQvf/aXnP9d4v4?=
+ =?us-ascii?Q?GZ16H1UhI4GWM38iTojlNzkSPeApgHk1oawgJXCd1UghQpVikDU55yBEKxEA?=
+ =?us-ascii?Q?/gzhhoBxDdHv2QlLdGPNIQ621wcz/Wd83DZfcOSg4D43Ya9ZVTfzqjK8JcUu?=
+ =?us-ascii?Q?QvCnkA3VHfn1qw3UHny9Jg22RYN5kbQOEwQjeEsO3Iv3kmkbTPSME5vXdc7y?=
+ =?us-ascii?Q?+uQM8sw6w/rFXH9XiPPs3s6NJbBshgQd0177VdDlr6/4Kp0cQXtk+QDKB4Td?=
+ =?us-ascii?Q?O+tWPKBO2JFrq820VgAfwLuVmJ9WFbhiLv3GAEjnUoDdjl6mjPPj4mh7sTMo?=
+ =?us-ascii?Q?XuchKE5NlVAIHPrqFlUYQenSrA9NplhrjuszknPf2yCjv8RllC2HvYGuTpD+?=
+ =?us-ascii?Q?TNNoK7pyhthQcgPSpc0jmeHuW5WKGbeFFjHa7/mVv9Hvsvg9rY+7Cp67KpD/?=
+ =?us-ascii?Q?GR4/Hd2MIp5OV9s1oek7HFjpgAzdVahUYYF8YlxGsQTsnCtx5wz4xaLWbw3V?=
+ =?us-ascii?Q?iA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bf8958c-d49e-4cdb-b270-08db355714fc
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2023 21:53:53.8865
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J/nh5tUx1ULaWw5QXfs1KR5p0Rv9IEWBC733u2r8i+mdozVGPpbf8pXfL7w/FuRkAfH3PyVm3dGmA53cBSRuYFw+kPy9xn4VBc+azjDs6qo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5598
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-There's no strict get/put policy with map that leads to leaks or use
-after free. Reference count checking identifies correct pairing of gets
-and puts.
+Jonathan Cameron wrote:
+> CXL rev 3.0 introduces a standard performance monitoring hardware
+> block to CXL. Instances are discovered using CXL Register Locator DVSEC
+> entries. Each CXL component may have multiple PMUs.
+> 
+> This initial driver supports on a subset of types of counter.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/s390/annotate/instructions.c |  5 +-
- tools/perf/builtin-top.c                     |  4 +-
- tools/perf/tests/hists_link.c                |  2 +-
- tools/perf/tests/maps.c                      | 20 +++---
- tools/perf/tests/vmlinux-kallsyms.c          |  4 +-
- tools/perf/util/annotate.c                   | 10 +--
- tools/perf/util/machine.c                    | 25 +++----
- tools/perf/util/map.c                        | 69 +++++++++++---------
- tools/perf/util/map.h                        | 32 +++++----
- tools/perf/util/maps.c                       | 11 ++--
- tools/perf/util/symbol-elf.c                 | 26 ++++----
- tools/perf/util/symbol.c                     | 40 +++++++-----
- 12 files changed, 135 insertions(+), 113 deletions(-)
+s/on//?
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index 6548933e8dc0..9953d510f7c1 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -39,8 +39,9 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
- 
- 	if (maps__find_ams(ms->maps, &target) == 0 &&
--	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) ==
--	    ops->target.addr)
-+	    map__rip_2objdump(target.ms.map,
-+			      RC_CHK_ACCESS(map)->map_ip(target.ms.map, target.addr)
-+			     ) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
- 	return 0;
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index b803af4329d1..c0b3a98674df 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -191,7 +191,7 @@ static void ui__warn_map_erange(struct map *map, struct symbol *sym, u64 ip)
- 	if (use_browser <= 0)
- 		sleep(5);
- 
--	map->erange_warned = true;
-+	RC_CHK_ACCESS(map)->erange_warned = true;
- }
- 
- static void perf_top__record_precise_ip(struct perf_top *top,
-@@ -225,7 +225,7 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 		 */
- 		mutex_unlock(&he->hists->lock);
- 
--		if (err == -ERANGE && !he->ms.map->erange_warned)
-+		if (err == -ERANGE && !RC_CHK_ACCESS(he->ms.map)->erange_warned)
- 			ui__warn_map_erange(he->ms.map, sym, ip);
- 		else if (err == -ENOMEM) {
- 			pr_err("Not enough memory for annotating '%s' symbol!\n",
-diff --git a/tools/perf/tests/hists_link.c b/tools/perf/tests/hists_link.c
-index 64ce8097889c..141e2972e34f 100644
---- a/tools/perf/tests/hists_link.c
-+++ b/tools/perf/tests/hists_link.c
-@@ -145,7 +145,7 @@ static int find_sample(struct sample *samples, size_t nr_samples,
- {
- 	while (nr_samples--) {
- 		if (samples->thread == t &&
--		    samples->map == m &&
-+		    RC_CHK_ACCESS(samples->map) == RC_CHK_ACCESS(m) &&
- 		    samples->sym == s)
- 			return 1;
- 		samples++;
-diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-index 1c7293476aca..b8dab6278bca 100644
---- a/tools/perf/tests/maps.c
-+++ b/tools/perf/tests/maps.c
-@@ -30,7 +30,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
- 			if (map__start(map) != merged[i].start ||
- 			    map__end(map) != merged[i].end ||
- 			    strcmp(map__dso(map)->name, merged[i].name) ||
--			    refcount_read(&map->refcnt) != 1) {
-+			    refcount_read(&RC_CHK_ACCESS(map)->refcnt) != 1) {
- 				failed = true;
- 			}
- 			i++;
-@@ -50,7 +50,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
- 				map__start(map),
- 				map__end(map),
- 				map__dso(map)->name,
--				refcount_read(&map->refcnt));
-+				refcount_read(&RC_CHK_ACCESS(map)->refcnt));
- 		}
- 	}
- 	return failed ? TEST_FAIL : TEST_OK;
-@@ -95,8 +95,8 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
- 		map = dso__new_map(bpf_progs[i].name);
- 		TEST_ASSERT_VAL("failed to create map", map);
- 
--		map->start = bpf_progs[i].start;
--		map->end   = bpf_progs[i].end;
-+		RC_CHK_ACCESS(map)->start = bpf_progs[i].start;
-+		RC_CHK_ACCESS(map)->end   = bpf_progs[i].end;
- 		TEST_ASSERT_VAL("failed to insert map", maps__insert(maps, map) == 0);
- 		map__put(map);
- 	}
-@@ -111,16 +111,16 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
- 	TEST_ASSERT_VAL("failed to create map", map_kcore3);
- 
- 	/* kcore1 map overlaps over all bpf maps */
--	map_kcore1->start = 100;
--	map_kcore1->end   = 1000;
-+	RC_CHK_ACCESS(map_kcore1)->start = 100;
-+	RC_CHK_ACCESS(map_kcore1)->end   = 1000;
- 
- 	/* kcore2 map hides behind bpf_prog_2 */
--	map_kcore2->start = 550;
--	map_kcore2->end   = 570;
-+	RC_CHK_ACCESS(map_kcore2)->start = 550;
-+	RC_CHK_ACCESS(map_kcore2)->end   = 570;
- 
- 	/* kcore3 map hides behind bpf_prog_3, kcore1 and adds new map */
--	map_kcore3->start = 880;
--	map_kcore3->end   = 1100;
-+	RC_CHK_ACCESS(map_kcore3)->start = 880;
-+	RC_CHK_ACCESS(map_kcore3)->end   = 1100;
- 
- 	ret = maps__merge_in(maps, map_kcore1);
- 	TEST_ASSERT_VAL("failed to merge map", !ret);
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index af511233c764..a087b24463ff 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -304,7 +304,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 								dso->short_name :
- 								dso->name));
- 		if (pair) {
--			pair->priv = 1;
-+			RC_CHK_ACCESS(pair)->priv = 1;
- 		} else {
- 			if (!header_printed) {
- 				pr_info("WARN: Maps only in vmlinux:\n");
-@@ -340,7 +340,7 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 				pr_info(":\nWARN: *%" PRIx64 "-%" PRIx64 " %" PRIx64,
- 					map__start(pair), map__end(pair), map__pgoff(pair));
- 			pr_info(" %s\n", dso->name);
--			pair->priv = 1;
-+			RC_CHK_ACCESS(pair)->priv = 1;
- 		}
- 	}
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 733051122959..248ada119c91 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -272,8 +272,9 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
- 
- 	if (maps__find_ams(ms->maps, &target) == 0 &&
--	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) ==
--	    ops->target.addr)
-+	    map__rip_2objdump(target.ms.map,
-+			      RC_CHK_ACCESS(map)->map_ip(target.ms.map, target.addr)
-+			      ) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
- 	return 0;
-@@ -401,8 +402,9 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- 	 * the symbol searching and disassembly should be done.
- 	 */
- 	if (maps__find_ams(ms->maps, &target) == 0 &&
--	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) ==
--	    ops->target.addr)
-+	    map__rip_2objdump(target.ms.map,
-+			      RC_CHK_ACCESS(map)->map_ip(target.ms.map, target.addr)
-+			      ) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
- 	if (!ops->target.outside) {
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2d9ce6966238..9a472ee52129 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -910,8 +910,8 @@ static int machine__process_ksymbol_register(struct machine *machine,
- 			dso__set_loaded(dso);
- 		}
- 
--		map->start = event->ksymbol.addr;
--		map->end = map__start(map) + event->ksymbol.len;
-+		RC_CHK_ACCESS(map)->start = event->ksymbol.addr;
-+		RC_CHK_ACCESS(map)->end = map__start(map) + event->ksymbol.len;
- 		err = maps__insert(machine__kernel_maps(machine), map);
- 		if (err) {
- 			err = -ENOMEM;
-@@ -953,7 +953,7 @@ static int machine__process_ksymbol_unregister(struct machine *machine,
- 	if (!map)
- 		return 0;
- 
--	if (map != machine->vmlinux_map)
-+	if (RC_CHK_ACCESS(map) != RC_CHK_ACCESS(machine->vmlinux_map))
- 		maps__remove(machine__kernel_maps(machine), map);
- 	else {
- 		struct dso *dso = map__dso(map);
-@@ -1218,8 +1218,8 @@ int machine__create_extra_kernel_map(struct machine *machine,
- 	if (!map)
- 		return -ENOMEM;
- 
--	map->end   = xm->end;
--	map->pgoff = xm->pgoff;
-+	RC_CHK_ACCESS(map)->end   = xm->end;
-+	RC_CHK_ACCESS(map)->pgoff = xm->pgoff;
- 
- 	kmap = map__kmap(map);
- 
-@@ -1291,7 +1291,7 @@ int machine__map_x86_64_entry_trampolines(struct machine *machine,
- 
- 		dest_map = maps__find(kmaps, map__pgoff(map));
- 		if (dest_map != map)
--			map->pgoff = map__map_ip(dest_map, map__pgoff(map));
-+			RC_CHK_ACCESS(map)->pgoff = map__map_ip(dest_map, map__pgoff(map));
- 		found = true;
- 	}
- 	if (found || machine->trampolines_mapped)
-@@ -1342,7 +1342,8 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
- 	if (machine->vmlinux_map == NULL)
- 		return -ENOMEM;
- 
--	machine->vmlinux_map->map_ip = machine->vmlinux_map->unmap_ip = identity__map_ip;
-+	RC_CHK_ACCESS(machine->vmlinux_map)->map_ip = identity__map_ip;
-+	RC_CHK_ACCESS(machine->vmlinux_map)->unmap_ip = identity__map_ip;
- 	return maps__insert(machine__kernel_maps(machine), machine->vmlinux_map);
- }
- 
-@@ -1623,7 +1624,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
- 	map = machine__addnew_module_map(machine, start, name);
- 	if (map == NULL)
- 		return -1;
--	map->end = start + size;
-+	RC_CHK_ACCESS(map)->end = start + size;
- 
- 	dso__kernel_module_get_build_id(map__dso(map), machine->root_dir);
- 	map__put(map);
-@@ -1659,14 +1660,14 @@ static int machine__create_modules(struct machine *machine)
- static void machine__set_kernel_mmap(struct machine *machine,
- 				     u64 start, u64 end)
- {
--	machine->vmlinux_map->start = start;
--	machine->vmlinux_map->end   = end;
-+	RC_CHK_ACCESS(machine->vmlinux_map)->start = start;
-+	RC_CHK_ACCESS(machine->vmlinux_map)->end   = end;
- 	/*
- 	 * Be a bit paranoid here, some perf.data file came with
- 	 * a zero sized synthesized MMAP event for the kernel.
- 	 */
- 	if (start == 0 && end == 0)
--		machine->vmlinux_map->end = ~0ULL;
-+		RC_CHK_ACCESS(machine->vmlinux_map)->end = ~0ULL;
- }
- 
- static int machine__update_kernel_mmap(struct machine *machine,
-@@ -1810,7 +1811,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 		if (map == NULL)
- 			goto out_problem;
- 
--		map->end = map__start(map) + xm->end - xm->start;
-+		RC_CHK_ACCESS(map)->end = map__start(map) + xm->end - xm->start;
- 
- 		if (build_id__is_defined(bid))
- 			dso__set_build_id(map__dso(map), bid);
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index acbc37359e06..9ac5c909ea9e 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -104,15 +104,15 @@ static inline bool replace_android_lib(const char *filename, char *newfilename)
- 
- void map__init(struct map *map, u64 start, u64 end, u64 pgoff, struct dso *dso)
- {
--	map->start    = start;
--	map->end      = end;
--	map->pgoff    = pgoff;
--	map->reloc    = 0;
--	map->dso      = dso__get(dso);
--	map->map_ip   = map__dso_map_ip;
--	map->unmap_ip = map__dso_unmap_ip;
--	map->erange_warned = false;
--	refcount_set(&map->refcnt, 1);
-+	RC_CHK_ACCESS(map)->start    = start;
-+	RC_CHK_ACCESS(map)->end      = end;
-+	RC_CHK_ACCESS(map)->pgoff    = pgoff;
-+	RC_CHK_ACCESS(map)->reloc    = 0;
-+	RC_CHK_ACCESS(map)->dso      = dso__get(dso);
-+	RC_CHK_ACCESS(map)->map_ip   = map__dso_map_ip;
-+	RC_CHK_ACCESS(map)->unmap_ip = map__dso_unmap_ip;
-+	RC_CHK_ACCESS(map)->erange_warned = false;
-+	refcount_set(&RC_CHK_ACCESS(map)->refcnt, 1);
- }
- 
- struct map *map__new(struct machine *machine, u64 start, u64 len,
-@@ -120,11 +120,13 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		     u32 prot, u32 flags, struct build_id *bid,
- 		     char *filename, struct thread *thread)
- {
--	struct map *map = malloc(sizeof(*map));
-+	struct map *res;
-+	RC_STRUCT(map) *map;
- 	struct nsinfo *nsi = NULL;
- 	struct nsinfo *nnsi;
- 
--	if (map != NULL) {
-+	map = malloc(sizeof(*map));
-+	if (ADD_RC_CHK(res, map)) {
- 		char newfilename[PATH_MAX];
- 		struct dso *dso, *header_bid_dso;
- 		int anon, no_dso, vdso, android;
-@@ -167,7 +169,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		if (dso == NULL)
- 			goto out_delete;
- 
--		map__init(map, start, start + len, pgoff, dso);
-+		map__init(res, start, start + len, pgoff, dso);
- 
- 		if (anon || no_dso) {
- 			map->map_ip = map->unmap_ip = identity__map_ip;
-@@ -204,10 +206,10 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		}
- 		dso__put(dso);
- 	}
--	return map;
-+	return res;
- out_delete:
- 	nsinfo__put(nsi);
--	free(map);
-+	RC_CHK_FREE(res);
- 	return NULL;
- }
- 
-@@ -218,16 +220,18 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
-  */
- struct map *map__new2(u64 start, struct dso *dso)
- {
--	struct map *map = calloc(1, (sizeof(*map) +
--				     (dso->kernel ? sizeof(struct kmap) : 0)));
--	if (map != NULL) {
-+	struct map *res;
-+	RC_STRUCT(map) *map;
-+
-+	map = calloc(1, sizeof(*map) + (dso->kernel ? sizeof(struct kmap) : 0));
-+	if (ADD_RC_CHK(res, map)) {
- 		/*
- 		 * ->end will be filled after we load all the symbols
- 		 */
--		map__init(map, start, 0, 0, dso);
-+		map__init(res, start, 0, 0, dso);
- 	}
- 
--	return map;
-+	return res;
- }
- 
- bool __map__is_kernel(const struct map *map)
-@@ -292,20 +296,22 @@ bool map__has_symbols(const struct map *map)
- 
- static void map__exit(struct map *map)
- {
--	BUG_ON(refcount_read(&map->refcnt) != 0);
--	dso__zput(map->dso);
-+	BUG_ON(refcount_read(&RC_CHK_ACCESS(map)->refcnt) != 0);
-+	dso__zput(RC_CHK_ACCESS(map)->dso);
- }
- 
- void map__delete(struct map *map)
- {
- 	map__exit(map);
--	free(map);
-+	RC_CHK_FREE(map);
- }
- 
- void map__put(struct map *map)
- {
--	if (map && refcount_dec_and_test(&map->refcnt))
-+	if (map && refcount_dec_and_test(&RC_CHK_ACCESS(map)->refcnt))
- 		map__delete(map);
-+	else
-+		RC_CHK_PUT(map);
- }
- 
- void map__fixup_start(struct map *map)
-@@ -317,7 +323,7 @@ void map__fixup_start(struct map *map)
- 	if (nd != NULL) {
- 		struct symbol *sym = rb_entry(nd, struct symbol, rb_node);
- 
--		map->start = sym->start;
-+		RC_CHK_ACCESS(map)->start = sym->start;
- 	}
- }
- 
-@@ -329,7 +335,7 @@ void map__fixup_end(struct map *map)
- 
- 	if (nd != NULL) {
- 		struct symbol *sym = rb_entry(nd, struct symbol, rb_node);
--		map->end = sym->end;
-+		RC_CHK_ACCESS(map)->end = sym->end;
- 	}
- }
- 
-@@ -400,20 +406,21 @@ struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
- 
- struct map *map__clone(struct map *from)
- {
--	size_t size = sizeof(struct map);
--	struct map *map;
-+	struct map *res;
-+	RC_STRUCT(map) *map;
-+	size_t size = sizeof(RC_STRUCT(map));
- 	struct dso *dso = map__dso(from);
- 
- 	if (dso && dso->kernel)
- 		size += sizeof(struct kmap);
- 
--	map = memdup(from, size);
--	if (map != NULL) {
-+	map = memdup(RC_CHK_ACCESS(from), size);
-+	if (ADD_RC_CHK(res, map)) {
- 		refcount_set(&map->refcnt, 1);
- 		map->dso = dso__get(dso);
- 	}
- 
--	return map;
-+	return res;
- }
- 
- size_t map__fprintf(struct map *map, FILE *fp)
-@@ -567,7 +574,7 @@ struct kmap *__map__kmap(struct map *map)
- 
- 	if (!dso || !dso->kernel)
- 		return NULL;
--	return (struct kmap *)(map + 1);
-+	return (struct kmap *)(&RC_CHK_ACCESS(map)[1]);
- }
- 
- struct kmap *map__kmap(struct map *map)
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 102485699aa8..55d047e818e7 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -10,12 +10,13 @@
- #include <string.h>
- #include <stdbool.h>
- #include <linux/types.h>
-+#include <internal/rc_check.h>
- 
- struct dso;
- struct maps;
- struct machine;
- 
--struct map {
-+DECLARE_RC_STRUCT(map) {
- 	u64			start;
- 	u64			end;
- 	bool			erange_warned:1;
-@@ -49,52 +50,52 @@ u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip);
- 
- static inline struct dso *map__dso(const struct map *map)
- {
--	return map->dso;
-+	return RC_CHK_ACCESS(map)->dso;
- }
- 
- static inline u64 map__map_ip(const struct map *map, u64 ip)
- {
--	return map->map_ip(map, ip);
-+	return RC_CHK_ACCESS(map)->map_ip(map, ip);
- }
- 
- static inline u64 map__unmap_ip(const struct map *map, u64 ip)
- {
--	return map->unmap_ip(map, ip);
-+	return RC_CHK_ACCESS(map)->unmap_ip(map, ip);
- }
- 
- static inline u64 map__start(const struct map *map)
- {
--	return map->start;
-+	return RC_CHK_ACCESS(map)->start;
- }
- 
- static inline u64 map__end(const struct map *map)
- {
--	return map->end;
-+	return RC_CHK_ACCESS(map)->end;
- }
- 
- static inline u64 map__pgoff(const struct map *map)
- {
--	return map->pgoff;
-+	return RC_CHK_ACCESS(map)->pgoff;
- }
- 
- static inline u64 map__reloc(const struct map *map)
- {
--	return map->reloc;
-+	return RC_CHK_ACCESS(map)->reloc;
- }
- 
- static inline u32 map__flags(const struct map *map)
- {
--	return map->flags;
-+	return RC_CHK_ACCESS(map)->flags;
- }
- 
- static inline u32 map__prot(const struct map *map)
- {
--	return map->prot;
-+	return RC_CHK_ACCESS(map)->prot;
- }
- 
- static inline bool map__priv(const struct map *map)
- {
--	return map->priv;
-+	return RC_CHK_ACCESS(map)->priv;
- }
- 
- static inline size_t map__size(const struct map *map)
-@@ -153,9 +154,12 @@ struct map *map__clone(struct map *map);
- 
- static inline struct map *map__get(struct map *map)
- {
--	if (map)
--		refcount_inc(&map->refcnt);
--	return map;
-+	struct map *result;
-+
-+	if (RC_CHK_GET(result, map))
-+		refcount_inc(&RC_CHK_ACCESS(map)->refcnt);
-+
-+	return result;
- }
- 
- void map__put(struct map *map);
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 567952587247..a33ae321c65a 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -126,7 +126,7 @@ void maps__remove(struct maps *maps, struct map *map)
- 		RC_CHK_ACCESS(maps)->last_search_by_name = NULL;
- 
- 	rb_node = maps__find_node(maps, map);
--	assert(rb_node->map == map);
-+	assert(rb_node->RC_CHK_ACCESS(map) == RC_CHK_ACCESS(map));
- 	__maps__remove(maps, rb_node);
- 	if (maps__maps_by_name(maps))
- 		__maps__free_maps_by_name(maps);
-@@ -339,7 +339,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 				goto put_map;
- 			}
- 
--			before->end = map__start(map);
-+			RC_CHK_ACCESS(before)->end = map__start(map);
- 			err = __maps__insert(maps, before);
- 			if (err) {
- 				map__put(before);
-@@ -359,8 +359,9 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
- 				goto put_map;
- 			}
- 
--			after->start = map__end(map);
--			after->pgoff += map__end(map) - map__start(pos->map);
-+			RC_CHK_ACCESS(after)->start = map__end(map);
-+			RC_CHK_ACCESS(after)->pgoff +=
-+				map__end(map) - map__start(pos->map);
- 			assert(map__map_ip(pos->map, map__end(map)) ==
- 				map__map_ip(after, map__end(map)));
- 			err = __maps__insert(maps, after);
-@@ -420,7 +421,7 @@ struct map_rb_node *maps__find_node(struct maps *maps, struct map *map)
- 	struct map_rb_node *rb_node;
- 
- 	maps__for_each_entry(maps, rb_node) {
--		if (rb_node->map == map)
-+		if (rb_node->RC_CHK_ACCESS(map) == RC_CHK_ACCESS(map))
- 			return rb_node;
- 	}
- 	return NULL;
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index c55981116f68..302599073b5d 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1354,11 +1354,11 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		 */
- 		if (*remap_kernel && dso->kernel && !kmodule) {
- 			*remap_kernel = false;
--			map->start = shdr->sh_addr + ref_reloc(kmap);
--			map->end = map__start(map) + shdr->sh_size;
--			map->pgoff = shdr->sh_offset;
--			map->map_ip = map__dso_map_ip;
--			map->unmap_ip = map__dso_unmap_ip;
-+			RC_CHK_ACCESS(map)->start = shdr->sh_addr + ref_reloc(kmap);
-+			RC_CHK_ACCESS(map)->end = map__start(map) + shdr->sh_size;
-+			RC_CHK_ACCESS(map)->pgoff = shdr->sh_offset;
-+			RC_CHK_ACCESS(map)->map_ip = map__dso_map_ip;
-+			RC_CHK_ACCESS(map)->unmap_ip = map__dso_unmap_ip;
- 			/* Ensure maps are correctly ordered */
- 			if (kmaps) {
- 				int err;
-@@ -1379,7 +1379,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		 */
- 		if (*remap_kernel && kmodule) {
- 			*remap_kernel = false;
--			map->pgoff = shdr->sh_offset;
-+			RC_CHK_ACCESS(map)->pgoff = shdr->sh_offset;
- 		}
- 
- 		*curr_mapp = map;
-@@ -1414,11 +1414,13 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 			map__kmap(curr_map)->kmaps = kmaps;
- 
- 		if (adjust_kernel_syms) {
--			curr_map->start  = shdr->sh_addr + ref_reloc(kmap);
--			curr_map->end	 = map__start(curr_map) + shdr->sh_size;
--			curr_map->pgoff	 = shdr->sh_offset;
-+			RC_CHK_ACCESS(curr_map)->start  = shdr->sh_addr + ref_reloc(kmap);
-+			RC_CHK_ACCESS(curr_map)->end	= map__start(curr_map) +
-+							  shdr->sh_size;
-+			RC_CHK_ACCESS(curr_map)->pgoff	= shdr->sh_offset;
- 		} else {
--			curr_map->map_ip = curr_map->unmap_ip = identity__map_ip;
-+			RC_CHK_ACCESS(curr_map)->map_ip = identity__map_ip;
-+			RC_CHK_ACCESS(curr_map)->unmap_ip = identity__map_ip;
- 		}
- 		curr_dso->symtab_type = dso->symtab_type;
- 		if (maps__insert(kmaps, curr_map))
-@@ -1525,7 +1527,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 			if (strcmp(elf_name, kmap->ref_reloc_sym->name))
- 				continue;
- 			kmap->ref_reloc_sym->unrelocated_addr = sym.st_value;
--			map->reloc = kmap->ref_reloc_sym->addr -
-+			RC_CHK_ACCESS(map)->reloc = kmap->ref_reloc_sym->addr -
- 				     kmap->ref_reloc_sym->unrelocated_addr;
- 			break;
- 		}
-@@ -1536,7 +1538,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	 * attempted to prelink vdso to its virtual address.
- 	 */
- 	if (dso__is_vdso(dso))
--		map->reloc = map__start(map) - dso->text_offset;
-+		RC_CHK_ACCESS(map)->reloc = map__start(map) - dso->text_offset;
- 
- 	dso->adjust_symbols = runtime_ss->adjust_symbols || ref_reloc(kmap);
- 	/*
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 6993b51b9416..42458582621b 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -279,7 +279,7 @@ void maps__fixup_end(struct maps *maps)
- 
- 	maps__for_each_entry(maps, curr) {
- 		if (prev != NULL && !map__end(prev->map))
--			prev->map->end = map__start(curr->map);
-+			RC_CHK_ACCESS(prev->map)->end = map__start(curr->map);
- 
- 		prev = curr;
- 	}
-@@ -289,7 +289,7 @@ void maps__fixup_end(struct maps *maps)
- 	 * last map final address.
- 	 */
- 	if (curr && !map__end(curr->map))
--		curr->map->end = ~0ULL;
-+		RC_CHK_ACCESS(curr->map)->end = ~0ULL;
- 
- 	up_write(maps__lock(maps));
- }
-@@ -865,7 +865,7 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 			*module++ = '\0';
- 			curr_map_dso = map__dso(curr_map);
- 			if (strcmp(curr_map_dso->short_name, module)) {
--				if (curr_map != initial_map &&
-+				if (RC_CHK_ACCESS(curr_map) != RC_CHK_ACCESS(initial_map) &&
- 				    dso->kernel == DSO_SPACE__KERNEL_GUEST &&
- 				    machine__is_default_guest(machine)) {
- 					/*
-@@ -944,7 +944,8 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				return -1;
- 			}
- 
--			curr_map->map_ip = curr_map->unmap_ip = identity__map_ip;
-+			RC_CHK_ACCESS(curr_map)->map_ip = identity__map_ip;
-+			RC_CHK_ACCESS(curr_map)->unmap_ip = identity__map_ip;
- 			if (maps__insert(kmaps, curr_map)) {
- 				dso__put(ndso);
- 				return -1;
-@@ -1250,8 +1251,8 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
- 		return -ENOMEM;
- 	}
- 
--	list_node->map->end = map__start(list_node->map) + len;
--	list_node->map->pgoff = pgoff;
-+	list_node->RC_CHK_ACCESS(map)->end = map__start(list_node->map) + len;
-+	list_node->RC_CHK_ACCESS(map)->pgoff = pgoff;
- 
- 	list_add(&list_node->node, &md->maps);
- 
-@@ -1286,7 +1287,7 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 				 * |new......|     -> |new..|
- 				 *       |old....| ->       |old....|
- 				 */
--				new_map->end = map__start(old_map);
-+				RC_CHK_ACCESS(new_map)->end = map__start(old_map);
- 			} else {
- 				/*
- 				 * |new.............| -> |new..|       |new..|
-@@ -1306,10 +1307,12 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 					goto out;
- 				}
- 
--				m->map->end = map__start(old_map);
-+
-+				RC_CHK_ACCESS(m->map)->end = map__start(old_map);
- 				list_add_tail(&m->node, &merged);
--				new_map->pgoff += map__end(old_map) - map__start(new_map);
--				new_map->start = map__end(old_map);
-+				RC_CHK_ACCESS(new_map)->pgoff +=
-+					map__end(old_map) - map__start(new_map);
-+				RC_CHK_ACCESS(new_map)->start = map__end(old_map);
- 			}
- 		} else {
- 			/*
-@@ -1329,8 +1332,9 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map)
- 				 *      |new......| ->         |new...|
- 				 * |old....|        -> |old....|
- 				 */
--				new_map->pgoff += map__end(old_map) - map__start(new_map);
--				new_map->start = map__end(old_map);
-+				RC_CHK_ACCESS(new_map)->pgoff +=
-+					map__end(old_map) - map__start(new_map);
-+				RC_CHK_ACCESS(new_map)->start = map__end(old_map);
- 			}
- 		}
- 	}
-@@ -1456,12 +1460,12 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 
- 		list_del_init(&new_node->node);
- 
--		if (new_map == replacement_map) {
--			map->start	= map__start(new_map);
--			map->end	= map__end(new_map);
--			map->pgoff	= map__pgoff(new_map);
--			map->map_ip	= new_map->map_ip;
--			map->unmap_ip	= new_map->unmap_ip;
-+		if (RC_CHK_ACCESS(new_map) == RC_CHK_ACCESS(replacement_map)) {
-+			RC_CHK_ACCESS(map)->start	= map__start(new_map);
-+			RC_CHK_ACCESS(map)->end		= map__end(new_map);
-+			RC_CHK_ACCESS(map)->pgoff	= map__pgoff(new_map);
-+			RC_CHK_ACCESS(map)->map_ip	= RC_CHK_ACCESS(new_map)->map_ip;
-+			RC_CHK_ACCESS(map)->unmap_ip	= RC_CHK_ACCESS(new_map)->unmap_ip;
- 			/* Ensure maps are correctly ordered */
- 			map__get(map);
- 			maps__remove(kmaps, map);
--- 
-2.40.0.348.gf938b09366-goog
+> It support counters that are either fixed or configurable, but requires
 
+s/support/supports/
+
+> that they support the ability to freeze and write value whilst frozen.
+> 
+> Development done with QEMU model which will be posted shortly.
+
+Per the comment on the cover letter is there a sense that set of
+counters supported in QEMU and this patchset are representative of a
+"common" set even if that is by convention and not specification? Just
+trying to get a sense of how many real world CXL PMU instances this
+might cover.
+
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+One thing I would have liked to see is a sample perf command line and
+output.
+
+One concern I have is how usable DPA based perf events is going to be
+for end users. Is there a concept of a synthetic event that can turn
+data gathered from all the devices in an interleave set into HPA
+relative data? Or do you expect that is the responsibility of the perf
+tool to grow that support in userspace?
+
+> 
+> ---
+> v4:
+> - Add defines for masks used for config, config1 etc and reorder
+>   code so those can be next to the attrs.  Note that one of the
+>   bits was wrong showing the advantage of bring all this info
+>   into one place.
+> - Use enabled counter bitmap rather than pointer array to make the
+>   fixed counter handling look more like the variable counter handling.
+> - Drop PERF_EF_RELOAD handling that did nothing.
+> - Simplify code as nothing special to do if the counting is already
+>   up to date (no harm in setting the already set flag).
+> ---
+>  drivers/cxl/Kconfig  |  13 +
+>  drivers/cxl/Makefile |   1 +
+>  drivers/cxl/cpmu.c   | 940 +++++++++++++++++++++++++++++++++++++++++++
+
+Yeah, this is a bunch of code and ABI that is more relevant to drivers/perf/
+than drivers/cxl/, so this wants to move to drivers/perf/cxl.c.
+
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index ff4e78117b31..0be514b00b8f 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -139,4 +139,17 @@ config CXL_REGION_INVALIDATION_TEST
+>  	  If unsure, or if this kernel is meant for production environments,
+>  	  say N.
+>  
+> +config CXL_CPMU
+> +	tristate "CXL Performance Monitoring Unit"
+> +	default CXL_BUS
+> +	depends on PERF_EVENTS
+> +	help
+> +	  Support performance monitoring as defined in CXL rev 3.0
+> +	  section 13.2: Performance Monitoring. CXL components may have
+> +	  one or more CXL Performance Monitoring Units (CPMUs).
+> +
+> +	  Say 'y/m' to enable a driver that will attach to performance
+> +	  monitoring units and provide standard perf based interfaces.
+> +
+> +	  If unsure say 'm'.
+>  endif
+
+...and this wants to move to drivers/perf/Kconfig as well.
+
+It's similar to "CONFIG_DEV_DAX_CXL" as an external to drivers/cxl/
+cxl-driver.
+
+> diff --git a/drivers/cxl/Makefile b/drivers/cxl/Makefile
+> index db321f48ba52..024bb739554b 100644
+> --- a/drivers/cxl/Makefile
+> +++ b/drivers/cxl/Makefile
+> @@ -5,6 +5,7 @@ obj-$(CONFIG_CXL_MEM) += cxl_mem.o
+>  obj-$(CONFIG_CXL_ACPI) += cxl_acpi.o
+>  obj-$(CONFIG_CXL_PMEM) += cxl_pmem.o
+>  obj-$(CONFIG_CXL_PORT) += cxl_port.o
+> +obj-$(CONFIG_CXL_CPMU) += cpmu.o
+>  
+>  cxl_mem-y := mem.o
+>  cxl_pci-y := pci.o
+> diff --git a/drivers/cxl/cpmu.c b/drivers/cxl/cpmu.c
+> new file mode 100644
+> index 000000000000..e6821771a4f6
+> --- /dev/null
+> +++ b/drivers/cxl/cpmu.c
+> @@ -0,0 +1,940 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +/*
+> + * Copyright(c) 2023 Huawei
+> + *
+> + * The CXL 3.0 specification includes a standard Performance Monitoring Unit,
+> + * called the CXL PMU, or CPMU. In order to allow a high degree of
+> + * implementation flexibility the specification provides a wide range of
+> + * options all of which are self describing.
+> + *
+> + * Details in CXL rev 3.0 section 8.2.7 CPMU Register Interface
+> + *
+> + * TODO
+> + * o Discoverability of counters. Allow perftool to provide summed counters
+> + *   and vendor defined counters.
+> + * o Support free running counters - copy the Intel uncore PMU handling for these.
+> + * o CPMUs which do not support freeze.
+
+Wouldn't this be driven by the arrival of hardware? I.e. is there 
+> + * o Add filter validation in cpmu_event_init() so problems are detected earlier.
+> + * o Reject configurations that the hardware is ignoring
+> + *   (e.g. invert when not invertible)
+> + * o Support CPMUs with no interrupts using an HRTIMER.
+
+Is it worthwhile to maintain the TODO list in the code? I just fear this
+getting stale over time.
+
+> + */
+> +
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/perf_event.h>
+> +#include <linux/bitops.h>
+> +#include <linux/device.h>
+> +#include <linux/bits.h>
+> +#include <linux/list.h>
+> +#include <linux/bug.h>
+> +#include <linux/pci.h>
+> +
+> +#include "cpmu.h"
+> +#include "cxlpci.h"
+> +#include "cxl.h"
+> +
+> +/* CXL rev 3.0 Table 13-5 Events under CXL Vendor ID */
+> +#define CPMU_GID_CLOCK_TICKS		0x00
+> +#define CPMU_GID_D2H_REQ		0x0010
+> +#define CPMU_GID_D2H_RSP		0x0011
+> +#define CPMU_GID_H2D_REQ		0x0012
+> +#define CPMU_GID_H2D_RSP		0x0013
+> +#define CPMU_GID_CACHE_DATA		0x0014
+> +#define CPMU_GID_M2S_REQ		0x0020
+> +#define CPMU_GID_M2S_RWD		0x0021
+> +#define CPMU_GID_M2S_BIRSP		0x0022
+> +#define CPMU_GID_S2M_BISNP		0x0023
+> +#define CPMU_GID_S2M_NDR		0x0024
+> +#define CPMU_GID_S2M_DRS		0x0025
+> +#define CPMU_GID_DDR			0x8000
+
+Last note about the naming quibble, I notice that CPMU exists in other
+places in the kernel, but CXL_PMU does not, so there is a small
+grep'ability win as well.
+
+> +
+> +static int cpmu_cpuhp_state_num;
+> +
+> +struct cpmu_event {
+> +	u16 vid;
+> +	u16 gid;
+> +	u32 msk;
+> +	union {
+> +		int counter_idx; /* fixed counters */
+> +		int event_idx; /* configurable counters */
+> +	};
+> +	struct list_head node;
+> +};
+> +
+> +#define CPMU_MAX_COUNTERS 64
+> +struct cpmu_info {
+> +	struct pmu pmu;
+> +	void __iomem *base;
+> +	struct perf_event **hw_events;
+> +	struct list_head events_configurable;
+> +	struct list_head events_fixed;
+
+Linked lists? Didn't xarray kill the linked list?
+
+> +	DECLARE_BITMAP(used_counter_bm, CPMU_MAX_COUNTERS);
+> +	DECLARE_BITMAP(conf_counter_bm, CPMU_MAX_COUNTERS);
+> +	u16 counter_width;
+> +	u8 num_counters;
+> +	u8 num_event_capabilities;
+> +	int on_cpu;
+> +	struct hlist_node node;
+> +	bool freeze_for_enable;
+> +	bool filter_hdm;
+> +	int irq;
+> +};
+> +
+> +#define pmu_to_cpmu_info(_pmu) container_of(_pmu, struct cpmu_info, pmu)
+> +
+> +/*
+> + * All CPMU counters are discoverable via the Event Capabilities Registers.
+> + * Each Event Capability register contains a a VID / GroupID.
+> + * A counter may then count any combination (by summing) of events in
+> + * that group which are in the Supported Events Bitmask.
+> + * However, there are some complexities to the scheme.
+> + *  - Fixed function counters refer to an Event Capabilities register.
+> + *    That event capability register is not then used for Configurable
+> + *    counters.
+> + */
+> +static int cpmu_parse_caps(struct device *dev, struct cpmu_info *info)
+> +{
+> +	DECLARE_BITMAP(fixed_counter_event_cap_bm, 32) = {0};
+
+An 'unsigned long' is always at least 32-bits, and:
+
+unsigned long fixed_counter_event_cap_bm = 0;
+
+...would not have interrupted my reading of the code.
+
+> +	void __iomem *base = info->base;
+> +	u64 val, eval;
+> +	int i;
+> +
+> +	val = readq(base + CPMU_CAP_REG);
+> +	info->freeze_for_enable = FIELD_GET(CPMU_CAP_WRITEABLE_WHEN_FROZEN, val) &
+> +		FIELD_GET(CPMU_CAP_FREEZE, val);
+
+Why does 'struct cpmu_info' need to carry the freeze_for_enable flag if
+its only used to gate loading the driver?
+
+When / if support for "freeze_for_enable == false" arrives then I can
+see 'struct cpmu_info' having a need to cache it.
+
+> +	if (!info->freeze_for_enable) {
+> +		dev_err(dev, "Driver does not support CPMUs that do not support freeze for enable\n");
+
+Perhaps just:
+
+"Counters not writable while frozen."
+
+...will suffice, no need to mention what the driver supports, that's
+implied.
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	info->num_counters = FIELD_GET(CPMU_CAP_NUM_COUNTERS_MSK, val) + 1;
+> +	info->counter_width = FIELD_GET(CPMU_CAP_COUNTER_WIDTH_MSK, val);
+> +	info->num_event_capabilities = FIELD_GET(CPMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
+> +
+> +	info->filter_hdm = FIELD_GET(CPMU_CAP_FILTERS_SUP_MSK, val) & CPMU_FILTER_HDM;
+> +	if (FIELD_GET(CPMU_CAP_INT, val))
+> +		info->irq = FIELD_GET(CPMU_CAP_MSI_N_MSK, val);
+> +	else
+> +		info->irq = -1;
+> +
+> +	/* First handle fixed function counters; note if configurable counters found */
+> +	for (i = 0; i < info->num_counters; i++) {
+> +		struct cpmu_event *cpmu_ev;
+> +		u32 events_msk;
+> +		u8 group_idx;
+> +
+> +		val = readq(base + CPMU_COUNTER_CFG_REG(i));
+> +
+> +		if (FIELD_GET(CPMU_COUNTER_CFG_TYPE_MSK, val) ==
+> +			CPMU_COUNTER_CFG_TYPE_CONFIGURABLE) {
+> +			set_bit(i, info->conf_counter_bm);
+> +		}
+> +
+> +		if (FIELD_GET(CPMU_COUNTER_CFG_TYPE_MSK, val) !=
+> +		    CPMU_COUNTER_CFG_TYPE_FIXED_FUN)
+> +			continue;
+> +
+> +		/* In this case we know which fields are const */
+> +		group_idx = FIELD_GET(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, val);
+> +		events_msk = FIELD_GET(CPMU_COUNTER_CFG_EVENTS_MSK, val);
+> +		eval = readq(base + CPMU_EVENT_CAP_REG(group_idx));
+> +		cpmu_ev = devm_kzalloc(dev, sizeof(*cpmu_ev), GFP_KERNEL);
+> +		if (!cpmu_ev)
+> +			return -ENOMEM;
+> +
+> +		cpmu_ev->vid = FIELD_GET(CPMU_EVENT_CAP_VENDOR_ID_MSK, eval);
+> +		cpmu_ev->gid = FIELD_GET(CPMU_EVENT_CAP_GROUP_ID_MSK, eval);
+> +		/* For a fixed purpose counter use the events mask from the counter CFG */
+> +		cpmu_ev->msk = events_msk;
+> +		cpmu_ev->counter_idx = i;
+> +		/* This list add is never unwound as all entries deleted on remove */
+> +		list_add(&cpmu_ev->node, &info->events_fixed);
+> +		/*
+> +		 * Configurable counters must not use an Event Capability registers that
+> +		 * is in use for a Fixed counter
+> +		 */
+> +		set_bit(group_idx, fixed_counter_event_cap_bm);
+> +	}
+> +
+> +	if (!bitmap_empty(info->conf_counter_bm, CPMU_MAX_COUNTERS)) {
+> +		struct cpmu_event *cpmu_ev;
+> +		int j;
+> +		/* Walk event capabilities unused by fixed counters */
+> +		for_each_clear_bit(j, fixed_counter_event_cap_bm,
+> +				   info->num_event_capabilities) {
+> +			cpmu_ev = devm_kzalloc(dev, sizeof(*cpmu_ev), GFP_KERNEL);
+> +			if (!cpmu_ev)
+> +				return -ENOMEM;
+> +
+> +			eval = readq(base + CPMU_EVENT_CAP_REG(j));
+> +			cpmu_ev->vid = FIELD_GET(CPMU_EVENT_CAP_VENDOR_ID_MSK, eval);
+> +			cpmu_ev->gid = FIELD_GET(CPMU_EVENT_CAP_GROUP_ID_MSK, eval);
+> +			cpmu_ev->msk = FIELD_GET(CPMU_EVENT_CAP_SUPPORTED_EVENTS_MSK, eval);
+> +			cpmu_ev->event_idx = j;
+> +			list_add(&cpmu_ev->node, &info->events_configurable);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t cpmu_format_sysfs_show(struct device *dev,
+> +				      struct device_attribute *attr, char *buf)
+> +{
+> +	struct dev_ext_attribute *eattr;
+> +
+> +	eattr = container_of(attr, struct dev_ext_attribute, attr);
+> +
+> +	return sysfs_emit(buf, "%s\n", (char *)eattr->var);
+> +}
+> +
+> +#define CPMU_FORMAT_ATTR(_name, _format)\
+> +	(&((struct dev_ext_attribute[]) {				\
+> +		{							\
+> +			.attr = __ATTR(_name, 0444,			\
+> +				       cpmu_format_sysfs_show, NULL),	\
+> +			.var = (void *)_format				\
+> +		}							  \
+> +		})[0].attr.attr)
+> +
+> +enum {
+> +	cpmu_mask_attr,
+> +	cpmu_gid_attr,
+> +	cpmu_vid_attr,
+> +	cpmu_threshold_attr,
+> +	cpmu_invert_attr,
+> +	cpmu_edge_attr,
+> +	cpmu_hdm_filter_en_attr,
+> +	cpmu_hdm_attr,
+> +};
+> +
+> +static struct attribute *cpmu_format_attr[] = {
+> +	[cpmu_mask_attr] = CPMU_FORMAT_ATTR(mask, "config:0-31"),
+> +	[cpmu_gid_attr] = CPMU_FORMAT_ATTR(gid, "config:32-47"),
+> +	[cpmu_vid_attr] = CPMU_FORMAT_ATTR(vid, "config:48-63"),
+> +	[cpmu_threshold_attr] = CPMU_FORMAT_ATTR(threshold, "config1:0-15"),
+> +	[cpmu_invert_attr] = CPMU_FORMAT_ATTR(invert, "config1:16"),
+> +	[cpmu_edge_attr] = CPMU_FORMAT_ATTR(edge, "config1:17"),
+> +	[cpmu_hdm_filter_en_attr] = CPMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
+> +	[cpmu_hdm_attr] = CPMU_FORMAT_ATTR(hdm, "config2:0-15"),
+> +	NULL
+> +};
+
+Most of this is brand new ABI to me, so I leave it to perf folks to
+check for correctness.
+
+> +
+> +#define CPMU_ATTR_CONFIG_MASK_MSK	GENMASK_ULL(63, 48)
+> +#define CPMU_ATTR_CONFIG_GID_MSK	GENMASK_ULL(47, 32)
+> +#define CPMU_ATTR_CONFIG_VID_MSK	GENMASK_ULL(63, 48)
+> +#define CPMU_ATTR_CONFIG1_THRESHOLD_MSK	GENMASK_ULL(15, 0)
+> +#define CPMU_ATTR_CONFIG1_INVERT_MSK	BIT(16)
+> +#define CPMU_ATTR_CONFIG1_EDGE_MSK	BIT(17)
+> +#define CPMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
+> +#define CPMU_ATTR_CONFIG2_HDM_MSK	GENMASK(15, 0)
+> +
+> +static umode_t cpmu_format_is_visible(struct kobject *kobj, struct attribute *attr, int a)
+> +{
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cpmu_info *info = dev_get_drvdata(dev);
+> +
+> +	/*
+> +	 * Filter capability at the CPMU level, so hide the attributes if the particular
+> +	 * filter is not supported.
+> +	 */
+> +	if (attr == cpmu_format_attr[cpmu_hdm_filter_en_attr] ||
+> +	    attr == cpmu_format_attr[cpmu_hdm_attr]) {
+> +		if (info->filter_hdm)
+> +			return 0444;
+> +		else
+> +			return 0;
+> +	} else {
+> +		return 0444;
+> +	}
+> +}
+
+Maybe simplify to:
+
+        if (!info->filter_hdm &&
+            (attr == cpmu_format_attr[cpmu_hdm_filter_en_attr] ||
+             attr == cpmu_format_attr[cpmu_hdm_attr]))
+                return 0;
+        return attr->mode;
+
+> +
+> +static const struct attribute_group cpmu_format_group = {
+> +	.name = "format",
+> +	.attrs = cpmu_format_attr,
+> +	.is_visible = cpmu_format_is_visible,
+> +};
+> +
+> +static u32 cpmu_config_get_mask(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG_MASK_MSK, event->attr.config);
+> +}
+> +
+> +static u16 cpmu_config_get_gid(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG_GID_MSK, event->attr.config);
+> +}
+> +
+> +static u16 cpmu_config_get_vid(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG_VID_MSK, event->attr.config);
+> +}
+> +
+> +static u8 cpmu_config1_get_threshold(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG1_THRESHOLD_MSK, event->attr.config1);
+> +}
+> +
+> +static bool cpmu_config1_get_invert(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG1_INVERT_MSK, event->attr.config1);
+> +}
+> +
+> +static bool cpmu_config1_get_edge(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG1_EDGE_MSK, event->attr.config1);
+> +}
+> +
+> +/*
+> + * CPMU specification allows for 8 filters, each with a 16 bit value...
+> + * So we need to find 8x16bits to store it in.
+> + * As the value used for disable is 0xffff, a separate enable switch
+> + * is needed.
+> + */
+> +
+> +static bool cpmu_config1_hdm_filter_en(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG1_FILTER_EN_MSK, event->attr.config1);
+> +}
+> +
+> +static u16 cpmu_config2_get_hdm_decoder(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CPMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
+> +}
+> +
+> +static ssize_t cpmu_event_sysfs_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	struct perf_pmu_events_attr *pmu_attr =
+> +		container_of(attr, struct perf_pmu_events_attr, attr);
+> +
+> +	return sysfs_emit(buf, "config=%#llx\n", pmu_attr->id);
+> +}
+> +
+> +#define CPMU_PMU_EVENT_ATTR(_name, _vid, _gid, _msk)			\
+> +	PMU_EVENT_ATTR_ID(_name, cpmu_event_sysfs_show,			\
+> +			  ((u64)(_vid) << 48) | ((u64)(_gid) << 32) | (u64)(_msk))
+> +
+> +/* For CXL spec defined events */
+> +#define CPMU_PMU_EVENT_CXL_ATTR(_name, _gid, _msk) \
+> +	CPMU_PMU_EVENT_ATTR(_name, PCI_DVSEC_VENDOR_ID_CXL, _gid, _msk)
+> +
+> +static struct attribute *cpmu_event_attrs[] = {
+> +	CPMU_PMU_EVENT_CXL_ATTR(clock_ticks,			CPMU_GID_CLOCK_TICKS, BIT(0)),
+> +	/* CXL rev 3.0 Table 3-17 - Device to Host Requests */
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_rdcurr,			CPMU_GID_D2H_REQ, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_rdown,			CPMU_GID_D2H_REQ, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_rdshared,		CPMU_GID_D2H_REQ, BIT(3)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_rdany,			CPMU_GID_D2H_REQ, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_rdownnodata,		CPMU_GID_D2H_REQ, BIT(5)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_itomwr,			CPMU_GID_D2H_REQ, BIT(6)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_wrcurr,			CPMU_GID_D2H_REQ, BIT(7)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_clflush,		CPMU_GID_D2H_REQ, BIT(8)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_cleanevict,		CPMU_GID_D2H_REQ, BIT(9)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_dirtyevict,		CPMU_GID_D2H_REQ, BIT(10)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_cleanevictnodata,	CPMU_GID_D2H_REQ, BIT(11)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_wowrinv,		CPMU_GID_D2H_REQ, BIT(12)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_wowrinvf,		CPMU_GID_D2H_REQ, BIT(13)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_wrinv,			CPMU_GID_D2H_REQ, BIT(14)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_req_cacheflushed,		CPMU_GID_D2H_REQ, BIT(16)),
+> +	/* CXL rev 3.0 Table 3-20 - D2H Repsonse Encodings */
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspihiti,		CPMU_GID_D2H_RSP, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspvhitv,		CPMU_GID_D2H_RSP, BIT(6)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspihitse,		CPMU_GID_D2H_RSP, BIT(5)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspshitse,		CPMU_GID_D2H_RSP, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspsfwdm,		CPMU_GID_D2H_RSP, BIT(7)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspifwdm,		CPMU_GID_D2H_RSP, BIT(15)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(d2h_rsp_rspvfwdv,		CPMU_GID_D2H_RSP, BIT(22)),
+> +	/* CXL rev 3.0 Table 3-21 - CXL.cache - Mapping of H2D Requests to D2H Responses */
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_req_snpdata,		CPMU_GID_H2D_REQ, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_req_snpinv,			CPMU_GID_H2D_REQ, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_req_snpcur,			CPMU_GID_H2D_REQ, BIT(3)),
+> +	/* CXL rev 3.0 Table 3-22 - H2D Response Opcode Encodings */
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_writepull,		CPMU_GID_H2D_RSP, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_go,			CPMU_GID_H2D_RSP, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_gowritepull,		CPMU_GID_H2D_RSP, BIT(5)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_extcmp,			CPMU_GID_H2D_RSP, BIT(6)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_gowritepulldrop,	CPMU_GID_H2D_RSP, BIT(8)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_fastgowritepull,	CPMU_GID_H2D_RSP, BIT(13)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(h2d_rsp_goerrwritepull,		CPMU_GID_H2D_RSP, BIT(15)),
+> +	/* CXL rev 3.0 Table 13-5 directly lists these */
+> +	CPMU_PMU_EVENT_CXL_ATTR(cachedata_d2h_data,		CPMU_GID_CACHE_DATA, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(cachedata_h2d_data,		CPMU_GID_CACHE_DATA, BIT(1)),
+> +	/* CXL rev 3.0 Table 3-29 M2S Req Memory Opcodes */
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_meminv,			CPMU_GID_M2S_REQ, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_memrd,			CPMU_GID_M2S_REQ, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_memrddata,		CPMU_GID_M2S_REQ, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_memrdfwd,		CPMU_GID_M2S_REQ, BIT(3)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CPMU_GID_M2S_REQ, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CPMU_GID_M2S_REQ, BIT(8)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CPMU_GID_M2S_REQ, BIT(9)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CPMU_GID_M2S_REQ, BIT(10)),
+> +	/* CXL rev 3.0 Table 3-35 M2S RwD Memory Opcodes */
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_rwd_memwr,			CPMU_GID_M2S_RWD, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptl,		CPMU_GID_M2S_RWD, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_rwd_biconflict,		CPMU_GID_M2S_RWD, BIT(4)),
+> +	/* CXL rev 3.0 Table 3-38 M2S BIRsp Memory Opcodes */
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_birsp_i,			CPMU_GID_M2S_BIRSP, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_birsp_s,			CPMU_GID_M2S_BIRSP, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_birsp_e,			CPMU_GID_M2S_BIRSP, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_birsp_iblk,			CPMU_GID_M2S_BIRSP, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_birsp_sblk,			CPMU_GID_M2S_BIRSP, BIT(5)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(m2s_birsp_eblk,			CPMU_GID_M2S_BIRSP, BIT(6)),
+> +	/* CXL rev 3.0 Table 3-40 S2M BISnp Opcodes */
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_bisnp_cur,			CPMU_GID_S2M_BISNP, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_bisnp_data,			CPMU_GID_S2M_BISNP, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_bisnp_inv,			CPMU_GID_S2M_BISNP, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CPMU_GID_S2M_BISNP, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CPMU_GID_S2M_BISNP, BIT(5)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CPMU_GID_S2M_BISNP, BIT(6)),
+> +	/* CXL rev 3.0 Table 3-43 S2M NDR Opcopdes */
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CPMU_GID_S2M_NDR, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CPMU_GID_S2M_NDR, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CPMU_GID_S2M_NDR, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CPMU_GID_S2M_NDR, BIT(3)),
+> +	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,		CPMU_GID_S2M_DRS, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,		CPMU_GID_S2M_DRS, BIT(1)),
+> +	/* CXL rev 3.0 Table 13-5 directly lists these */
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_act,			CPMU_GID_DDR, BIT(0)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_pre,			CPMU_GID_DDR, BIT(1)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_casrd,			CPMU_GID_DDR, BIT(2)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_caswr,			CPMU_GID_DDR, BIT(3)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_refresh,			CPMU_GID_DDR, BIT(4)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_selfrefreshent,		CPMU_GID_DDR, BIT(5)),
+> +	CPMU_PMU_EVENT_CXL_ATTR(ddr_rfm,			CPMU_GID_DDR, BIT(6)),
+> +	NULL
+> +};
+> +
+> +static struct cpmu_event *cpmu_find_fixed_counter_event(struct cpmu_info *info,
+> +							int vid, int gid, int msk)
+> +{
+> +	struct cpmu_event *cpmu_ev;
+> +
+> +	list_for_each_entry(cpmu_ev, &info->events_fixed, node) {
+> +		if (vid != cpmu_ev->vid || gid != cpmu_ev->gid)
+> +			continue;
+> +
+> +		/* Precise match for fixed counter */
+> +		if (msk == cpmu_ev->msk)
+> +			return cpmu_ev;
+
+It looks like the lookup parameters fit in 64-bits which if using an
+xarray could do a direct lookup (assuming this driver 'depends on 64BIT'
+which is not unreasonable).
+
+> +	}
+> +
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +
+> +static struct cpmu_event *cpmu_find_config_counter_event(struct cpmu_info *info,
+> +							 int vid, int gid, int msk)
+> +{
+> +	struct cpmu_event *cpmu_ev;
+> +
+> +	list_for_each_entry(cpmu_ev, &info->events_configurable, node) {
+> +		if (vid != cpmu_ev->vid || gid != cpmu_ev->gid)
+> +			continue;
+> +
+> +		/* Request mask must be subset of supported */
+> +		if (msk & ~cpmu_ev->msk)
+> +			continue;
+> +
+> +		return cpmu_ev;
+> +	}
+> +
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +
+> +static umode_t cpmu_event_is_visible(struct kobject *kobj, struct attribute *attr, int a)
+> +{
+> +	struct device_attribute *dev_attr = container_of(attr, struct device_attribute, attr);
+> +	struct perf_pmu_events_attr *pmu_attr =
+> +		container_of(dev_attr, struct perf_pmu_events_attr, attr);
+> +	struct device *dev = kobj_to_dev(kobj);
+> +	struct cpmu_info *info = dev_get_drvdata(dev);
+> +	int vid = FIELD_GET(CPMU_ATTR_CONFIG_VID_MSK, pmu_attr->id);
+> +	int gid = FIELD_GET(CPMU_ATTR_CONFIG_GID_MSK, pmu_attr->id);
+> +	int msk = FIELD_GET(CPMU_ATTR_CONFIG_MASK_MSK, pmu_attr->id);
+> +
+> +	if (!IS_ERR(cpmu_find_fixed_counter_event(info, vid, gid, msk)))
+> +		return attr->mode;
+> +
+> +	if (!IS_ERR(cpmu_find_config_counter_event(info, vid, gid, msk)))
+> +		return attr->mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct attribute_group cpmu_events = {
+> +	.name = "events",
+> +	.attrs = cpmu_event_attrs,
+> +	.is_visible = cpmu_event_is_visible,
+> +};
+> +
+> +static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+> +			    char *buf)
+> +{
+> +	struct cpmu_info *info = dev_get_drvdata(dev);
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
+> +}
+> +static DEVICE_ATTR_RO(cpumask);
+> +
+> +static struct attribute *cpmu_cpumask_attrs[] = {
+> +	&dev_attr_cpumask.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group cpmu_cpumask_group = {
+> +	.attrs = cpmu_cpumask_attrs,
+> +};
+> +
+> +static const struct attribute_group *cpmu_attr_groups[] = {
+> +	&cpmu_events,
+> +	&cpmu_format_group,
+> +	&cpmu_cpumask_group,
+> +	NULL
+> +};
+> +
+> +/* If counter_idx == NULL, don't try to allocate a counter. */
+> +static int cpmu_get_event_idx(struct perf_event *event, int *counter_idx, int *event_idx)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	DECLARE_BITMAP(configurable_and_free, CPMU_MAX_COUNTERS);
+> +	struct cpmu_event *cpmu_ev;
+> +	u32 mask;
+> +	u16 gid, vid;
+> +	int i;
+> +
+> +	vid = cpmu_config_get_vid(event);
+> +	gid = cpmu_config_get_gid(event);
+> +	mask = cpmu_config_get_mask(event);
+> +
+> +	cpmu_ev = cpmu_find_fixed_counter_event(info, vid, gid, mask);
+> +	if (!IS_ERR(cpmu_ev)) {
+> +		if (!counter_idx)
+> +			return 0;
+> +		if (!test_bit(cpmu_ev->counter_idx, info->used_counter_bm)) {
+> +			*counter_idx = cpmu_ev->counter_idx;
+> +			return 0;
+> +		}
+> +		/* Fixed counter is in use, but maybe a configurable one? */
+> +	}
+> +
+> +	cpmu_ev = cpmu_find_config_counter_event(info, vid, gid, mask);
+> +	if (!IS_ERR(cpmu_ev)) {
+> +		if (!counter_idx)
+> +			return 0;
+> +
+> +		bitmap_andnot(configurable_and_free, info->conf_counter_bm,
+> +			info->used_counter_bm, CPMU_MAX_COUNTERS);
+> +
+> +		i = find_first_bit(configurable_and_free, CPMU_MAX_COUNTERS);
+> +		if (i == CPMU_MAX_COUNTERS)
+> +			return -EINVAL;
+> +
+> +		*counter_idx = i;
+> +		return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int cpmu_event_init(struct perf_event *event)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +
+> +	event->cpu = info->on_cpu;
+> +	/* Top level type sanity check - is this a Hardware Event being requested */
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+> +		return -EOPNOTSUPP;
+> +	/* TODO: Validation of any filter */
+> +
+> +	/*
+> +	 * Verify that it is possible to count what was requested. Either must
+> +	 * be a fixed counter that is a precise match or a configurable counter
+> +	 * where this is a subset.
+> +	 */
+> +	return cpmu_get_event_idx(event, NULL, NULL);
+> +}
+> +
+> +static void cpmu_pmu_enable(struct pmu *pmu)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(pmu);
+> +	void __iomem *base = info->base;
+> +
+> +	/* We don't have a global enable, but we 'might' have a global freeze which we can use */
+> +	if (info->freeze_for_enable) {
+> +		/* Can assume frozen at this stage */
+> +		writeq(0, base + CPMU_FREEZE_REG);
+> +
+> +		return;
+> +	}
+> +}
+> +
+> +static void cpmu_pmu_disable(struct pmu *pmu)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(pmu);
+> +	void __iomem *base = info->base;
+> +
+> +	if (info->freeze_for_enable) {
+> +		/*
+> +		 * Whilst bits above number of counters are RsvdZ
+> +		 * they are unlikely to be repurposed given
+> +		 * number of counters is allowed to be 64 leaving
+> +		 * no reserved bits.  Hence this is only slightly
+> +		 * naughty.
+> +		 */
+> +		writeq(GENMASK_ULL(63, 0), base + CPMU_FREEZE_REG);
+> +		return;
+> +	}
+> +}
+
+These can be swapped out for versions that do nothing in the
+freeze_for_enable == false case when that support arrives, otherwise
+these can be simplified because the check was resolved at init time.
+
+> +
+> +static void cpmu_event_start(struct perf_event *event, int flags)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	void __iomem *base = info->base;
+> +	u64 cfg;
+> +
+> +	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+> +		return;
+> +
+> +	WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
+
+Maybe a comment about why these warns will likely never fire in practice?
+
+> +	hwc->state = 0;
+> +
+> +	/*
+> +	 * Currently only hdm filter control is implemnted, this code will
+> +	 * want generalizing when more filters are added.
+> +	 */
+> +	if (info->filter_hdm) {
+> +		if (cpmu_config1_hdm_filter_en(event))
+> +			cfg = cpmu_config2_get_hdm_decoder(event);
+> +		else
+> +			cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
+> +		writeq(cfg, base + CPMU_FILTER_CFG_REG(hwc->idx, 0));
+> +	}
+> +
+> +	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+> +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1);
+> +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EDGE, cpmu_config1_get_edge(event) ? 1 : 0);
+> +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_INVERT, cpmu_config1_get_invert(event) ? 1 : 0);
+> +
+> +	/* Fixed purpose counters have next two fields RO */
+> +	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+> +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK, hwc->event_base);
+> +		cfg |= FIELD_PREP(CPMU_COUNTER_CFG_EVENTS_MSK, cpmu_config_get_mask(event));
+> +	}
+> +	cfg &= ~CPMU_COUNTER_CFG_THRESHOLD_MSK;
+> +	/*
+> +	 * For events that generate only 1 count per clock the CXL 3.0 spec
+> +	 * states the threshold shall be set to 1 but if set to 0 it will
+> +	 * count the raw value anwyay?
+> +	 * There is no definition of what events will count multiple per cycle
+> +	 * and hence to which non 1 values of threshold can apply.
+> +	 * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
+> +	 */
+> +	cfg |= FIELD_PREP(CPMU_COUNTER_CFG_THRESHOLD_MSK,
+> +			  cpmu_config1_get_threshold(event));
+> +	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> +
+> +	local64_set(&hwc->prev_count, 0);
+> +	writeq(0, base + CPMU_COUNTER_REG(hwc->idx));
+> +
+> +	perf_event_update_userpage(event);
+> +}
+> +
+> +static u64 cpmu_read_counter(struct perf_event *event)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	void __iomem *base = info->base;
+> +
+> +	return readq(base + CPMU_COUNTER_REG(event->hw.idx));
+> +}
+> +
+> +static void __cpmu_read(struct perf_event *event, bool overflow)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	u64 new_cnt, prev_cnt, delta;
+> +
+> +	do {
+> +		prev_cnt = local64_read(&hwc->prev_count);
+> +		new_cnt = cpmu_read_counter(event);
+> +	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) != prev_cnt);
+> +
+> +	/*
+> +	 * If we know an overflow occur then take that into account.
+> +	 * Note counter is not reset as that would lose events
+> +	 */
+> +	delta = (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0);
+> +	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
+> +		delta += (1UL << info->counter_width);
+> +
+> +	local64_add(delta, &event->count);
+> +}
+> +
+> +static void cpmu_read(struct perf_event *event)
+> +{
+> +	__cpmu_read(event, false);
+> +}
+> +
+> +static void cpmu_event_stop(struct perf_event *event, int flags)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	void __iomem *base = info->base;
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	u64 cfg;
+> +
+> +	cpmu_read(event);
+> +	WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+> +	hwc->state |= PERF_HES_STOPPED;
+> +
+> +	cfg = readq(base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> +	cfg &= ~(FIELD_PREP(CPMU_COUNTER_CFG_INT_ON_OVRFLW, 1) |
+> +		 FIELD_PREP(CPMU_COUNTER_CFG_ENABLE, 1));
+> +	writeq(cfg, base + CPMU_COUNTER_CFG_REG(hwc->idx));
+> +
+> +	hwc->state |= PERF_HES_UPTODATE;
+> +}
+> +
+> +/*
+> + * Reset ensures no possibility of any information leaking to wrong
+> + * counter. Note that all fields written during start()
+> + */
+> +static void cpmu_reset_counter(struct cpmu_info *info, int idx)
+> +{
+> +	void __iomem *base = info->base;
+> +
+> +	/* Much of this register is read only */
+> +	writeq(0, base + CPMU_EVENT_CAP_REG(idx));
+> +	/* Filters are not per counter, so no reset here */
+> +	writeq(0, base + CPMU_COUNTER_REG(idx));
+> +}
+> +
+> +static int cpmu_event_add(struct perf_event *event, int flags)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	int idx, rc;
+> +	int event_idx = 0;
+> +
+> +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +
+> +	rc = cpmu_get_event_idx(event, &idx, &event_idx);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	hwc->idx = idx;
+> +
+> +	/* Only set for configurable counters */
+> +	hwc->event_base = event_idx;
+> +	info->hw_events[idx] = event;
+> +	set_bit(idx, info->used_counter_bm);
+> +
+> +	cpmu_reset_counter(info, idx);
+> +
+> +	if (flags & PERF_EF_START)
+> +		cpmu_event_start(event, PERF_EF_RELOAD);
+> +
+> +	return 0;
+> +}
+> +
+> +static void cpmu_event_del(struct perf_event *event, int flags)
+> +{
+> +	struct cpmu_info *info = pmu_to_cpmu_info(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +
+> +	cpmu_event_stop(event, PERF_EF_UPDATE);
+> +	clear_bit(hwc->idx, info->used_counter_bm);
+> +	info->hw_events[hwc->idx] = NULL;
+> +	perf_event_update_userpage(event);
+> +}
+> +
+> +static irqreturn_t cpmu_irq(int irq, void *data)
+> +{
+> +	struct cpmu_info *info = data;
+> +	void __iomem *base = info->base;
+> +	u64 overflowed;
+> +	DECLARE_BITMAP(overflowedbm, 64);
+> +	int i;
+> +
+> +	overflowed = readq(base + CPMU_OVERFLOW_REG);
+> +
+> +	/* Interrupt may be shared, so maybe it isn't ours */
+> +	if (!overflowed)
+> +		return IRQ_NONE;
+> +
+> +	bitmap_from_arr64(overflowedbm, &overflowed, 64);
+> +	for_each_set_bit(i, overflowedbm, info->num_counters) {
+> +		struct perf_event *event = info->hw_events[i];
+> +
+> +		if (!event) {
+> +			dev_dbg(info->pmu.dev,
+> +				"overflow but on non enabled counter %d\n", i);
+> +			continue;
+> +		}
+> +
+> +		__cpmu_read(event, true);
+> +	}
+> +
+> +	writeq(overflowed, base + CPMU_OVERFLOW_REG);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int cxl_cpmu_probe(struct device *dev)
+> +{
+> +	struct cxl_cpmu *cpmu = to_cxl_cpmu(dev);
+> +	struct pci_dev *pdev = to_pci_dev(dev->parent);
+> +	struct cpmu_info *info;
+> +	char *irq_name;
+> +	int rc, irq;
+> +
+> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	INIT_LIST_HEAD(&info->events_fixed);
+> +	INIT_LIST_HEAD(&info->events_configurable);
+> +
+> +	info->base = cpmu->base;
+> +
+> +	info->on_cpu = -1;
+> +	rc = cpmu_parse_caps(dev, info);
+> +	if (rc)
+> +		return rc;
+> +
+> +	info->hw_events = devm_kcalloc(dev, sizeof(*info->hw_events),
+> +				       info->num_counters, GFP_KERNEL);
+> +	if (!info->hw_events)
+> +		return -ENOMEM;
+> +
+> +	info->pmu = (struct pmu) {
+> +		.name = dev_name(dev),
+> +		.parent = dev,
+> +		.module = THIS_MODULE,
+> +		.event_init = cpmu_event_init,
+> +		.pmu_enable = cpmu_pmu_enable,
+> +		.pmu_disable = cpmu_pmu_disable,
+> +		.add = cpmu_event_add,
+> +		.del = cpmu_event_del,
+> +		.start = cpmu_event_start,
+> +		.stop = cpmu_event_stop,
+> +		.read = cpmu_read,
+> +		.task_ctx_nr = perf_invalid_context,
+> +		.attr_groups = cpmu_attr_groups,
+> +		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+> +	};
+> +
+> +	if (info->irq <= 0)
+> +		return -EINVAL;
+> +
+> +	rc = pci_irq_vector(pdev, info->irq);
+> +	if (rc < 0)
+> +		return rc;
+> +	irq = rc;
+> +
+> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "%s_overflow\n", dev_name(dev));
+> +	if (!irq_name)
+> +		return -ENOMEM;
+> +
+> +	rc = devm_request_irq(dev, irq, cpmu_irq, IRQF_SHARED, irq_name, info);
+
+This also wants IRQF_ONESHOT, see:
+
+5a84711fd734 cxl/pci: Fix irq oneshot expectations
+
+
+> +	if (rc)
+> +		return rc;
+> +	info->irq = irq;
+> +
+> +	rc = cpuhp_state_add_instance(cpmu_cpuhp_state_num, &info->node);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = perf_pmu_register(&info->pmu, info->pmu.name, -1);
+> +	if (rc)
+> +		return rc;
+> +
+> +	dev_set_drvdata(dev, info);
+
+Is it really the case that drvdata can be set after the pmu is already
+registered and live, or maybe just getting lucky with accessing the ABI
+after probe returns?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_cpmu_remove(struct device *dev)
+> +{
+> +	struct cpmu_info *info = dev_get_drvdata(dev);
+> +
+> +	perf_pmu_unregister(&info->pmu);
+> +	cpuhp_state_remove_instance_nocalls(cpmu_cpuhp_state_num, &info->node);
+
+How about add devm_add_action_or_reset() calls for these and delete
+cxl_cpmu_remove()?
+
+> +}
+> +
+> +static struct cxl_driver cxl_cpmu_driver = {
+> +	.name = "cxl_cpmu",
+> +	.probe = cxl_cpmu_probe,
+> +	.remove = cxl_cpmu_remove,
+> +	.id = CXL_DEVICE_CPMU,
+> +};
+> +
+> +static int cpmu_online_cpu(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct cpmu_info *info = hlist_entry_safe(node, struct cpmu_info, node);
+> +
+> +	if (info->on_cpu != -1)
+> +		return 0;
+> +
+> +	info->on_cpu = cpu;
+> +	WARN_ON(irq_set_affinity(info->irq, cpumask_of(cpu)));
+
+Is this really a kernel crashable scenario for folks that have
+panic_on_warn() set? If it's a "should never" happen type situation then
+maybe a comment, otherwise pr_warn().
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int cpmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
+> +{
+> +	struct cpmu_info *info = hlist_entry_safe(node, struct cpmu_info, node);
+> +	unsigned int target;
+> +
+> +	if (info->on_cpu != cpu)
+> +		return 0;
+> +
+> +	info->on_cpu = -1;
+> +	target = cpumask_first(cpu_online_mask);
+> +	if (target >= nr_cpu_ids) {
+> +		dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
+> +		return 0;
+> +	}
+> +
+> +	perf_pmu_migrate_context(&info->pmu, cpu, target);
+> +	info->on_cpu = target;
+> +	WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
+> +
+> +	return 0;
+> +}
+> +
+> +static __init int cxl_cpmu_init(void)
+> +{
+> +	int rc;
+> +
+> +	rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+> +				     "AP_PERF_CPMU_ONLINE",
+> +				     cpmu_online_cpu, cpmu_offline_cpu);
+> +	if (rc < 0)
+> +		return rc;
+> +	cpmu_cpuhp_state_num = rc;
+> +
+> +	rc = cxl_driver_register(&cxl_cpmu_driver);
+> +	if (rc)
+> +		cpuhp_remove_multi_state(cpmu_cpuhp_state_num);
+> +
+> +	return rc;
+> +}
+> +
+> +static __exit void cxl_cpmu_exit(void)
+> +{
+> +	cxl_driver_unregister(&cxl_cpmu_driver);
+> +	cpuhp_remove_multi_state(cpmu_cpuhp_state_num);
+> +}
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS(CXL);
+> +module_init(cxl_cpmu_init);
+> +module_exit(cxl_cpmu_exit);
+> +MODULE_ALIAS_CXL(CXL_DEVICE_CPMU);
+> -- 
+> 2.37.2
+> 
+
+This looks good to me, I'd be happy to take it through the CXL tree when
+it finalizes with perf folks acks, just let me know.
