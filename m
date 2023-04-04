@@ -2,50 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9743BC6FD1D
-	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 22:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20513C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  4 Apr 2023 22:20:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236260AbjDDWIp convert rfc822-to-8bit (ORCPT
+        id S231657AbjDDWUI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 4 Apr 2023 18:08:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43420 "EHLO
+        Tue, 4 Apr 2023 18:20:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236064AbjDDWIo (ORCPT
+        with ESMTP id S229973AbjDDWUH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 4 Apr 2023 18:08:44 -0400
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4EE3AB5;
-        Tue,  4 Apr 2023 15:08:43 -0700 (PDT)
-Received: by mail-io1-f47.google.com with SMTP id d20so4300151ioe.4;
-        Tue, 04 Apr 2023 15:08:43 -0700 (PDT)
+        Tue, 4 Apr 2023 18:20:07 -0400
+Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CFD1980;
+        Tue,  4 Apr 2023 15:20:06 -0700 (PDT)
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-17683b570b8so36306758fac.13;
+        Tue, 04 Apr 2023 15:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680646806;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y7XQ1d48lXRoj3hPgE3MCp/Us7AzkBz2FlHIdv2umS8=;
+        b=dzoEwbLu+/V6H1H3nlbQVUpvtcdjz1w5ltLXx3FgxcT+JYmr6Fdt0wWtF9YqJVy1sR
+         BNCsOrBobSNOthemZlr2tKrCO/LF60iYJfeJWDqUzHdwQgnK8Aajm3QjghBFiOS3O8pB
+         eE9EswdDAnYeJ2l7yP9HyAAQgWHvpEXrWvnwIzC8mmSTBq8Y3bG6aS6NMLglsnNOqdZq
+         2KC5WZc7OIR0xftERgodTYKbUbuuVIHMkY+EFGKYqwXY8ZdJ2fgdq5CyVuemqW92s9Ml
+         9WW54IaoiozgM1kRwDo2b/+VNT/VQ/DoYlswIHYwbOlHLSdIdZ7z42T3MjcljxAZyKKC
+         FSyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680646123; x=1683238123;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=054HY85hcXUQ0vW1Dd9l+klk6M1F7TJ4aI6jE4CGzQ8=;
-        b=XAgLzDmuy4aaUhBhAvN1lMzfPuFHW2+FUfKJwvU+FhvPsTGyRGJE92C8xdDW8uj9Ne
-         W3IpN06dT8eREdIKpba5zqdIJRisIH6IJ8vZtC2wOy6Vzy8h3fUsYJt7GX2tQxZt9u6/
-         raF/OKpL4GUHYCVHtSwg9jY2PK5X76YyQLgjjZ7B4QBp7HA8MzlLQ+GY6gBmi+fS448H
-         /KgMugh7GlqXNFvGJ55GSKwP11QHyqlsMsZ8jDm22gnw8ZRioosEvuSRiEa17OscOMBb
-         Lj4KSDyQiv1n0U0Vz+S2My0QgZ8AmoPMJAuZHudXnoEXCtfVtoHsIt93KxXyyh71MHLT
-         liJA==
-X-Gm-Message-State: AAQBX9eh2Iu3v0wSdrHf3H09nHi37w0NIB8nD7UVFO0N1PFjoVsXlty7
-        Q2DNqQhOkdpPACx6/gr3c5KQeWedp3UgH6kb4+M=
-X-Google-Smtp-Source: AKy350aikxDNcHZAuFTL7MJqBNQpDyfSTfuNGiUfxuRXqz6ynkguCnTvYDdDm20xAo299u4lfrrjQnipOf/pYRmLgPY=
-X-Received: by 2002:a5d:9719:0:b0:75a:e94e:151e with SMTP id
- h25-20020a5d9719000000b0075ae94e151emr3223239iol.15.1680646122887; Tue, 04
- Apr 2023 15:08:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230331202949.810326-1-namhyung@kernel.org> <20230331202949.810326-2-namhyung@kernel.org>
- <ZCtMLkNL80EkPvB1@kernel.org> <ZCwv4z5Dh/dHUMG6@kernel.org>
-In-Reply-To: <ZCwv4z5Dh/dHUMG6@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 4 Apr 2023 15:08:31 -0700
-Message-ID: <CAM9d7cgdioP9-yiCmvaDz6Nf1iN5qZZJ0rwBT0HYKsrDa=ubKQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] perf list: Use relative path for tracepoint scan
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        d=1e100.net; s=20210112; t=1680646806;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y7XQ1d48lXRoj3hPgE3MCp/Us7AzkBz2FlHIdv2umS8=;
+        b=Z+XJ/1/uuS9k0cE85R2Glx/6euK8EqjxbnXNEtqEEdJQlsglf5GMFxO4NLZyKdnW7g
+         ZHjFXT++YnWLCY8BfbVOAhnZDH2Xohqk4JuAInGxcQ+SwEibOt6Lh3D76efwSdyqk/mX
+         h6MaeinPaqJGQKyU7gKwiipDgC0Eygrpg6h6pzUaEGKWd0xXD2pG1c8R/elQW/f9yc7w
+         Q3xZwKjcSfPXHy3wp82RHyVd38CRnc0erhTtZR0Iu8bsgVlUaer21oRcO471tiHsD19s
+         xE0qUETT/JJA7+heFy7f8kjfMjD8J4PnJlKtQXHUdVK1bkpJirbYCmSc3zr2Ywl1qyKy
+         n/OQ==
+X-Gm-Message-State: AAQBX9fll1dTzK+6Ntu7KqrF3UISg/ql5lV8TPbI7N++J1pwcNr/mx1+
+        sABZdzV0ExImO84TvpZHhT4=
+X-Google-Smtp-Source: AKy350YBAXOVJxvRcF2p1+IPgveULXaHEk33NpLb6b1FGMewG0bEKG7MYatddKg7j5KqY/qyRj1J9Q==
+X-Received: by 2002:a05:6870:15ca:b0:17a:a59a:e931 with SMTP id k10-20020a05687015ca00b0017aa59ae931mr2531877oad.11.1680646805912;
+        Tue, 04 Apr 2023 15:20:05 -0700 (PDT)
+Received: from [127.0.0.1] (189-94-27-10.3g.claro.net.br. [189.94.27.10])
+        by smtp.gmail.com with ESMTPSA id bd27-20020a056871b31b00b00177be9585desm2879498oac.1.2023.04.04.15.20.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Apr 2023 15:20:05 -0700 (PDT)
+Date:   Tue, 04 Apr 2023 19:19:59 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -53,179 +63,36 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org,
         Kan Liang <kan.liang@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Subject: Re: [PATCH 1/9] perf list: Use relative path for tracepoint scan
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAM9d7cgdioP9-yiCmvaDz6Nf1iN5qZZJ0rwBT0HYKsrDa=ubKQ@mail.gmail.com>
+References: <20230331202949.810326-1-namhyung@kernel.org> <20230331202949.810326-2-namhyung@kernel.org> <ZCtMLkNL80EkPvB1@kernel.org> <ZCwv4z5Dh/dHUMG6@kernel.org> <CAM9d7cgdioP9-yiCmvaDz6Nf1iN5qZZJ0rwBT0HYKsrDa=ubKQ@mail.gmail.com>
+Message-ID: <8CCDAD7F-6C59-4C29-96CA-0C903D77593A@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
-
-On Tue, Apr 4, 2023 at 7:10 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> Em Mon, Apr 03, 2023 at 06:59:10PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Mar 31, 2023 at 01:29:41PM -0700, Namhyung Kim escreveu:
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/print-events.c | 26 ++++++++++++++++++++------
-> > >  1 file changed, 20 insertions(+), 6 deletions(-)
-> >
-> > Add to add this to fix on Alma Linux 8, and scandirat isn't being found
-> > on musl libc (Alpine Linux), probably we'll need some scaffolding...
->
-> About scandirat I'm adding the feature test below and this patch to the
-> patch that starts using scandirat():
-
-Thanks for doing this!
-
->
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-> index 28aa0b9300253d0a..386b1ab0b60e1d93 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -58,11 +58,9 @@ static const struct event_symbol event_symbols_tool[PERF_TOOL_MAX] = {
->  /*
->   * Print the events from <debugfs_mount_point>/tracing/events
->   */
-> -void print_tracepoint_events(const struct print_callbacks *print_cb, void *print_state)
-> +void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unused, void *print_state __maybe_unused)
->  {
-> -       struct dirent **sys_namelist = NULL;
->         char *events_path = get_tracing_file("events");
-> -       int sys_items = tracing_events__scandir_alphasort(&sys_namelist);
->         int events_fd = open(events_path, O_PATH);
->
->         put_tracing_file(events_path);
-> @@ -71,6 +69,11 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
->                 return;
->         }
->
-> +#ifdef HAVE_SCANDIRAT_SUPPORT
-> +{
-> +       struct dirent **sys_namelist = NULL;
-> +       int sys_items = tracing_events__scandir_alphasort(&sys_namelist);
-> +
->         for (int i = 0; i < sys_items; i++) {
->                 struct dirent *sys_dirent = sys_namelist[i];
->                 struct dirent **evt_namelist = NULL;
-> @@ -120,7 +123,13 @@ void print_tracepoint_events(const struct print_callbacks *print_cb, void *print
->                 close(dir_fd);
->                 free(evt_namelist);
->         }
-> +
->         free(sys_namelist);
-> +}
-> +#else
-> +       printf("\nWARNING: Your libc doesn't have the scandir function, please ask its maintainers to implement it.\n"
-> +              "         As a rough fallback, please do 'ls %s' to see the available tracepoint events.\n", events_path);
-> +#endif
->         close(events_fd);
->  }
->
->
-> From b25f9de2f944a550b063322b7210f4392e622a5e Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Tue, 4 Apr 2023 11:05:57 -0300
-> Subject: [PATCH 1/1] tools build: Add a feature test for scandirat(), that is
->  not implemented so far in musl and uclibc
->
-> We use it just when listing tracepoint events, and for root, so just
-> emit a warning about it to get users to ask the library maintainers to
-> implement it, as suggested in this systemd ticket:
->
->  https://github.com/systemd/casync/issues/129
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/build/Makefile.feature   | 1 +
->  tools/build/feature/Makefile   | 4 ++++
->  tools/build/feature/test-all.c | 5 +++++
->  tools/perf/Makefile.config     | 4 ++++
-
-Maybe you forgot to add the tools/build/feature/test-scandirat.c :)
-
-Thanks,
-Namhyung
 
 
->  4 files changed, 14 insertions(+)
+On April 4, 2023 7:08:31 PM GMT-03:00, Namhyung Kim <namhyung@kernel=2Eorg=
+> wrote:
+
+>> ---
+>>  tools/build/Makefile=2Efeature   | 1 +
+>>  tools/build/feature/Makefile   | 4 ++++
+>>  tools/build/feature/test-all=2Ec | 5 +++++
+>>  tools/perf/Makefile=2Econfig     | 4 ++++
 >
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 214622d7537cc56b..934e2777a2dbcd90 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -64,6 +64,7 @@ FEATURE_TESTS_BASIC :=                  \
->          lzma                            \
->          get_cpuid                       \
->          bpf                             \
-> +        scandirat                      \
->          sched_getcpu                   \
->          sdt                            \
->          setns                          \
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 0a3b9281f8b08000..0f0aa9b7d7b5e43c 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -65,6 +65,7 @@ FILES=                                          \
->           test-gettid.bin                       \
->           test-jvmti.bin                                \
->           test-jvmti-cmlr.bin                   \
-> +         test-scandirat.bin                    \
->           test-sched_getcpu.bin                 \
->           test-setns.bin                                \
->           test-libopencsd.bin                   \
-> @@ -129,6 +130,9 @@ $(OUTPUT)test-get_current_dir_name.bin:
->  $(OUTPUT)test-glibc.bin:
->         $(BUILD)
->
-> +$(OUTPUT)test-scandirat.bin:
-> +       $(BUILD)
-> +
->  $(OUTPUT)test-sched_getcpu.bin:
->         $(BUILD)
->
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> index 957c02c7b163b579..6f4bf386a3b5c4b0 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -114,6 +114,10 @@
->  # include "test-pthread-barrier.c"
->  #undef main
->
-> +#define main main_test_scandirat
-> +# include "test-scandirat.c"
-> +#undef main
-> +
->  #define main main_test_sched_getcpu
->  # include "test-sched_getcpu.c"
->  #undef main
-> @@ -206,6 +210,7 @@ int main(int argc, char *argv[])
->         main_test_get_cpuid();
->         main_test_bpf();
->         main_test_libcrypto();
-> +       main_test_scandirat();
->         main_test_sched_getcpu();
->         main_test_sdt();
->         main_test_setns();
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index dd203f0a2b7e64e1..16bea51f0bcd95ea 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -478,6 +478,10 @@ ifdef NO_DWARF
->    NO_LIBDW_DWARF_UNWIND := 1
->  endif
->
-> +ifeq ($(feature-scandirat), 1)
-> +  CFLAGS += -DHAVE_SCANDIRAT_SUPPORT
-> +endif
-> +
->  ifeq ($(feature-sched_getcpu), 1)
->    CFLAGS += -DHAVE_SCHED_GETCPU_SUPPORT
->  endif
-> --
-> 2.39.2
->
+>Maybe you forgot to add the tools/build/feature/test-scandirat=2Ec :)
+
+
+Yeah , I noticed that and fixed it:
+
+https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/acme/linux=2Egit/tree/=
+tools/build/feature/test-scandirat=2Ec?h=3Dtmp=2Eperf-tools-next
+
+- Arnaldo=20
