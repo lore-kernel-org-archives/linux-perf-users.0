@@ -2,242 +2,189 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88684C7619A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 13:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD475C76188
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 14:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238108AbjDENcY (ORCPT
+        id S238290AbjDEOSN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 09:32:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44396 "EHLO
+        Wed, 5 Apr 2023 10:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237960AbjDENcX (ORCPT
+        with ESMTP id S237646AbjDEOSM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 09:32:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23DCE30F3;
-        Wed,  5 Apr 2023 06:32:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A4B5263464;
-        Wed,  5 Apr 2023 13:32:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F9BC433D2;
-        Wed,  5 Apr 2023 13:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680701541;
-        bh=8gpA/Rvh21p/iw/rCJ5Qr5AALGcAkWnFLISmc8zPn94=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XQclYq7Too0Qb9D3cPbAgVw/b9smZym7wLH96xvlIeF1KZyKOhLPFLIAGQoFABhng
-         qeSkfFZ8Mat2ZechaULNFcmS1r0jrDYzJGm7qrsgQaLX7fC4hQ1LdCS4DNplQReCyY
-         ly4M7zPP7Prb6t2uoItH4SF//rhAtiOm3N6it8p3vCystVyM4FFCZiABz+mL0zeJaU
-         yBvzJyO0MU4dTeD2C9u3/ZtB/md12t+OF+KyhCGuwOrIToyo1cnjkiKTnphmfPmSZi
-         TOyG46p7wS/pygjF0vNmnkTSC9SOnR9oVhLTFsrgEzTBN/SFwMSyCmLqMUWgbO24Uk
-         HR5LkuIeCgJOg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id DE2404052D; Wed,  5 Apr 2023 10:32:17 -0300 (-03)
-Date:   Wed, 5 Apr 2023 10:32:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 5 Apr 2023 10:18:12 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A216F5FE8;
+        Wed,  5 Apr 2023 07:17:48 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id ew6so141374835edb.7;
+        Wed, 05 Apr 2023 07:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680704266;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gimnYVeRT5Ual27rDuwguD8QOIPyBqLLZeCy9UtpDHk=;
+        b=i7Lwf1d+h99qQcQRPi1brnjQQkNsqbi82jDBwp2udTnqAeJTWtBLGDIA01yNQL6row
+         ZgAoRWmGc+pF1uK7WnxxeRSty5vZbEXha74ihCXAp2M2hQWG3h4MQXSDq83PmjITTlEY
+         1TEsdgXlIIHXegoxT+tvvL144fO9uavFxIsYm4xR+oWaHG/67Mbe3vXI2VQIx6RTBLau
+         SUT61wOC+HjiaqVLtSkcGmdHyZ7effqqHEvmQaoyQ8ziHXviInyJiv5WpPRW5492RHM9
+         tJ8EeAt4z9bcihE2b48t8jL5ajgHXKDZvGizKjCBFNbS9COTmew+128z7S+VL4vkDCxO
+         yPrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680704266;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gimnYVeRT5Ual27rDuwguD8QOIPyBqLLZeCy9UtpDHk=;
+        b=CRzLy1uA4IQJFXBY20GEAR5uz1SlSBHhMivRJEwE298xyjo8VpL5dLa7hxj37YTz9E
+         s9fBn3Okh0fKj0g/kpEhMjsr4UbBjQBky/ug3/Up5NrfYRs87TNxztxuHHiSxdjGWENR
+         N6c3NHhrimh7vN3L03C3YeK0vXYA2y/fzPjtJHLkyBpmLxPvECPas9uZKFpQFFkD0ATQ
+         eQoqP2KRIDr7Rljskcf8NNf/4WTM1yIwpYgqd37hgHWnc/p+P7VJ48EOpni1P4x3W9Em
+         DT/AaXxNBNHYo7LXgcBbUzyXtjLOQeQ6RyXXiyze7rgqKXXVw8Znh+0a2S2gREZ9dUKM
+         b/NQ==
+X-Gm-Message-State: AAQBX9cRZ0CaVookE/iJPN5ifNeTXjrnJbOE/oOikY18u+l4V9R9w+0b
+        W7J0B2msYCA2VuTmn7dUsZ8hCzaWMqCRhM2R
+X-Google-Smtp-Source: AKy350ZLwW17aF+39vghcTuhCDYFbM0+I7GCNro7zTtnC9fuZakgWqGvzxqPQ4Er/diScFgX88yB5w==
+X-Received: by 2002:a17:907:5c7:b0:928:796d:71e8 with SMTP id wg7-20020a17090705c700b00928796d71e8mr3874454ejb.3.1680704265983;
+        Wed, 05 Apr 2023 07:17:45 -0700 (PDT)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id g6-20020a170906348600b009334219656dsm7381246ejb.56.2023.04.05.07.17.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 07:17:45 -0700 (PDT)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Uros Bizjak <ubizjak@gmail.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v6 01/12] perf map: Rename map_ip and unmap_ip
-Message-ID: <ZC14YdPV+Az3A7/G@kernel.org>
-References: <20230404205954.2245628-1-irogers@google.com>
- <20230404205954.2245628-2-irogers@google.com>
- <ZC12sgYsbvF/C28z@kernel.org>
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>
+Subject: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
+Date:   Wed,  5 Apr 2023 16:17:05 +0200
+Message-Id: <20230405141710.3551-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZC12sgYsbvF/C28z@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 05, 2023 at 10:25:06AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Apr 04, 2023 at 01:59:43PM -0700, Ian Rogers escreveu:
-> > Add dso to match comment. This avoids a naming conflict with later
-> > added accessor functions for variables in struct map.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-kmem.c    | 2 +-
-> >  tools/perf/builtin-script.c  | 4 ++--
-> >  tools/perf/util/machine.c    | 4 ++--
-> >  tools/perf/util/map.c        | 8 ++++----
-> >  tools/perf/util/map.h        | 4 ++--
-> >  tools/perf/util/symbol-elf.c | 4 ++--
-> >  6 files changed, 13 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-> > index f3029742b800..4d4b770a401c 100644
-> > --- a/tools/perf/builtin-kmem.c
-> > +++ b/tools/perf/builtin-kmem.c
-> > @@ -423,7 +423,7 @@ static u64 find_callsite(struct evsel *evsel, struct perf_sample *sample)
-> >  		if (!caller) {
-> >  			/* found */
-> >  			if (node->ms.map)
-> > -				addr = map__unmap_ip(node->ms.map, node->ip);
-> > +				addr = map__dso_unmap_ip(node->ms.map, node->ip);
-> 
-> As we chatted, I think this is a good opportunity to make this more
-> clear, perhaps rename map__unmap_ip() to map__addr_offset_to_virt() and
-> map__map_ip() to map__addr_virt_to_offset()?
+Add generic and target specific support for local{,64}_try_cmpxchg
+and wire up support for all targets that use local_t infrastructure.
 
-Maybe prefix both with __, i.e. __map__addr_offset_to_virt() and __map__addr_virt_to_offset(), since
-then you need to wrap map->unmap_ip() to
-map__map__addr_offset_to_virt(), that in some cases will map to
-__map__addr_offset_to_virt(), modulo in identity maps, like with the
-kernel where we use identify__map_ip().
+The patch enables x86 targets to emit special instruction for
+local_try_cmpxchg and also local64_try_cmpxchg for x86_64.
 
-- Arnaldo
- 
-> - Arnaldo
-> 
-> >  			else
-> >  				addr = node->ip;
-> >  
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 1d078106abc4..af0a69c7f41f 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -1012,11 +1012,11 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
-> >  
-> >  		if (thread__find_map_fb(thread, sample->cpumode, from, &alf) &&
-> >  		    !map__dso(alf.map)->adjust_symbols)
-> > -			from = map__map_ip(alf.map, from);
-> > +			from = map__dso_map_ip(alf.map, from);
-> >  
-> >  		if (thread__find_map_fb(thread, sample->cpumode, to, &alt) &&
-> >  		    !map__dso(alt.map)->adjust_symbols)
-> > -			to = map__map_ip(alt.map, to);
-> > +			to = map__dso_map_ip(alt.map, to);
-> >  
-> >  		printed += fprintf(fp, " 0x%"PRIx64, from);
-> >  		if (PRINT_FIELD(DSO)) {
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 7852b97da10a..9d24980a0a93 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -3058,7 +3058,7 @@ static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms
-> >  	if (!symbol_conf.inline_name || !map || !sym)
-> >  		return ret;
-> >  
-> > -	addr = map__map_ip(map, ip);
-> > +	addr = map__dso_map_ip(map, ip);
-> >  	addr = map__rip_2objdump(map, addr);
-> >  	dso = map__dso(map);
-> >  
-> > @@ -3103,7 +3103,7 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
-> >  	 * its corresponding binary.
-> >  	 */
-> >  	if (entry->ms.map)
-> > -		addr = map__map_ip(entry->ms.map, entry->ip);
-> > +		addr = map__dso_map_ip(entry->ms.map, entry->ip);
-> >  
-> >  	srcline = callchain_srcline(&entry->ms, addr);
-> >  	return callchain_cursor_append(cursor, entry->ip, &entry->ms,
-> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > index 416fc449bde8..d97a6d20626f 100644
-> > --- a/tools/perf/util/map.c
-> > +++ b/tools/perf/util/map.c
-> > @@ -109,8 +109,8 @@ void map__init(struct map *map, u64 start, u64 end, u64 pgoff, struct dso *dso)
-> >  	map->pgoff    = pgoff;
-> >  	map->reloc    = 0;
-> >  	map->dso      = dso__get(dso);
-> > -	map->map_ip   = map__map_ip;
-> > -	map->unmap_ip = map__unmap_ip;
-> > +	map->map_ip   = map__dso_map_ip;
-> > +	map->unmap_ip = map__dso_unmap_ip;
-> >  	map->erange_warned = false;
-> >  	refcount_set(&map->refcnt, 1);
-> >  }
-> > @@ -590,12 +590,12 @@ struct maps *map__kmaps(struct map *map)
-> >  	return kmap->kmaps;
-> >  }
-> >  
-> > -u64 map__map_ip(const struct map *map, u64 ip)
-> > +u64 map__dso_map_ip(const struct map *map, u64 ip)
-> >  {
-> >  	return ip - map__start(map) + map->pgoff;
-> >  }
-> >  
-> > -u64 map__unmap_ip(const struct map *map, u64 ip)
-> > +u64 map__dso_unmap_ip(const struct map *map, u64 ip)
-> >  {
-> >  	return ip + map__start(map) - map->pgoff;
-> >  }
-> > diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> > index 16646b94fa3a..9b0a84e46e48 100644
-> > --- a/tools/perf/util/map.h
-> > +++ b/tools/perf/util/map.h
-> > @@ -41,9 +41,9 @@ struct kmap *map__kmap(struct map *map);
-> >  struct maps *map__kmaps(struct map *map);
-> >  
-> >  /* ip -> dso rip */
-> > -u64 map__map_ip(const struct map *map, u64 ip);
-> > +u64 map__dso_map_ip(const struct map *map, u64 ip);
-> >  /* dso rip -> ip */
-> > -u64 map__unmap_ip(const struct map *map, u64 ip);
-> > +u64 map__dso_unmap_ip(const struct map *map, u64 ip);
-> >  /* Returns ip */
-> >  u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip);
-> >  
-> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> > index e715869eab8a..c55981116f68 100644
-> > --- a/tools/perf/util/symbol-elf.c
-> > +++ b/tools/perf/util/symbol-elf.c
-> > @@ -1357,8 +1357,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
-> >  			map->start = shdr->sh_addr + ref_reloc(kmap);
-> >  			map->end = map__start(map) + shdr->sh_size;
-> >  			map->pgoff = shdr->sh_offset;
-> > -			map->map_ip = map__map_ip;
-> > -			map->unmap_ip = map__unmap_ip;
-> > +			map->map_ip = map__dso_map_ip;
-> > +			map->unmap_ip = map__dso_unmap_ip;
-> >  			/* Ensure maps are correctly ordered */
-> >  			if (kmaps) {
-> >  				int err;
-> > -- 
-> > 2.40.0.348.gf938b09366-goog
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+The last patch changes __perf_output_begin in events/ring_buffer
+to use new locking primitive and improves code from
+
+     4b3:	48 8b 82 e8 00 00 00 	mov    0xe8(%rdx),%rax
+     4ba:	48 8b b8 08 04 00 00 	mov    0x408(%rax),%rdi
+     4c1:	8b 42 1c             	mov    0x1c(%rdx),%eax
+     4c4:	48 8b 4a 28          	mov    0x28(%rdx),%rcx
+     4c8:	85 c0                	test   %eax,%eax
+     ...
+     4ef:	48 89 c8             	mov    %rcx,%rax
+     4f2:	48 0f b1 7a 28       	cmpxchg %rdi,0x28(%rdx)
+     4f7:	48 39 c1             	cmp    %rax,%rcx
+     4fa:	75 b7                	jne    4b3 <...>
+
+to
+
+     4b2:	48 8b 4a 28          	mov    0x28(%rdx),%rcx
+     4b6:	48 8b 82 e8 00 00 00 	mov    0xe8(%rdx),%rax
+     4bd:	48 8b b0 08 04 00 00 	mov    0x408(%rax),%rsi
+     4c4:	8b 42 1c             	mov    0x1c(%rdx),%eax
+     4c7:	85 c0                	test   %eax,%eax
+     ...
+     4d4:	48 89 c8             	mov    %rcx,%rax
+     4d7:	48 0f b1 72 28       	cmpxchg %rsi,0x28(%rdx)
+     4dc:	0f 85 d0 00 00 00    	jne    5b2 <...>
+     ...
+     5b2:	48 89 c1             	mov    %rax,%rcx
+     5b5:	e9 fc fe ff ff       	jmp    4b6 <...>
+
+Please note that in addition to removed compare, the load from
+0x28(%rdx) gets moved out of the loop and the code is rearranged
+according to likely/unlikely tags in the source.
+---
+v2:
+
+Implement target specific support for local_try_cmpxchg and
+local_cmpxchg using typed C wrappers that call their _local
+counterpart and provide additional checking of their input
+arguments.
+
+Cc: Richard Henderson <richard.henderson@linaro.org>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Xuerui <kernel@xen0n.name>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jun Yi <yijun@loongson.cn>
+
+Uros Bizjak (5):
+  locking/atomic: Add generic try_cmpxchg{,64}_local support
+  locking/generic: Wire up local{,64}_try_cmpxchg
+  locking/arch: Wire up local_try_cmpxchg
+  locking/x86: Define arch_try_cmpxchg_local
+  events: Illustrate the transition to local{,64}_try_cmpxchg
+
+ arch/alpha/include/asm/local.h              | 12 +++++++++--
+ arch/loongarch/include/asm/local.h          | 13 +++++++++--
+ arch/mips/include/asm/local.h               | 13 +++++++++--
+ arch/powerpc/include/asm/local.h            | 11 ++++++++++
+ arch/x86/events/core.c                      |  9 ++++----
+ arch/x86/include/asm/cmpxchg.h              |  6 ++++++
+ arch/x86/include/asm/local.h                | 13 +++++++++--
+ include/asm-generic/local.h                 |  1 +
+ include/asm-generic/local64.h               | 12 ++++++++++-
+ include/linux/atomic/atomic-arch-fallback.h | 24 ++++++++++++++++++++-
+ include/linux/atomic/atomic-instrumented.h  | 20 ++++++++++++++++-
+ kernel/events/ring_buffer.c                 |  5 +++--
+ scripts/atomic/gen-atomic-fallback.sh       |  4 ++++
+ scripts/atomic/gen-atomic-instrumented.sh   |  2 +-
+ 14 files changed, 126 insertions(+), 19 deletions(-)
 
 -- 
+2.39.2
 
-- Arnaldo
