@@ -2,120 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1469FC761A6
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 10:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2AFC77B72
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 11:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237301AbjDEKsN (ORCPT
+        id S237934AbjDELs4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 06:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        Wed, 5 Apr 2023 07:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236955AbjDEKsN (ORCPT
+        with ESMTP id S237514AbjDELsy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 06:48:13 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7F74EED;
-        Wed,  5 Apr 2023 03:48:11 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ps1Wh1tT8z6J749;
-        Wed,  5 Apr 2023 18:46:08 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 5 Apr
- 2023 11:48:07 +0100
-Date:   Wed, 5 Apr 2023 11:48:05 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>, <linuxarm@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v4 3/5] cxl/pci: Find and register CXL PMU devices
-Message-ID: <20230405114805.000014ef@Huawei.com>
-In-Reply-To: <642c77ad5f0d_21a8294fe@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
-        <20230330164556.31533-4-Jonathan.Cameron@huawei.com>
-        <642c77ad5f0d_21a8294fe@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Wed, 5 Apr 2023 07:48:54 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906C93C3E;
+        Wed,  5 Apr 2023 04:48:50 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id ix20so34174922plb.3;
+        Wed, 05 Apr 2023 04:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680695330;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WTsmdblHPYajB+3qczYhTQWyrb6fly5Dk4QPH+tzONA=;
+        b=gB7rd4W7Gl5XVMiDYxgFsOVckNNSwU82k/ZjQkQT/QUsholqIcv8o2EFrO2eChuzqJ
+         /E1Nom6E9OqVZjG1oCeeXIpyYlMTX83oUbH+vrAMBiljmxwpY1NMErmGtwM/4kR1FfAf
+         hbb9rumIaGK3o0a+t85nZ9QLJzQAsq6NOQbKus/TppZZYT7cDoYxhqijELG68+PKgXwa
+         AW3rV864e3GUeXTY8t245RZh1MUTn2PaCC0EPwp9Ewm661bd+y79Rq+2tRDeDmVVuB2D
+         aodRwaRPoLayJHjaBUnU95IZjyqTIp4kVX3Wtfm5NE0FJUdRCcMjEXw7XvCpkJDPa2te
+         dhgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680695330;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WTsmdblHPYajB+3qczYhTQWyrb6fly5Dk4QPH+tzONA=;
+        b=X36ryk20NJO3lwOhPpbCitcIGKzvtrHh19hlMIG2B2zNnKiwWtS/gLI2E7Z1xK14fj
+         vXJWIOqjZqgZD3dKAsdSRXOm53CAuNrp7eLBu5LPOtql2XclQkoylkA6AdiMubKVqViN
+         k+TdcPVazEobBRFn3UR/k8J0W+/0+VuyJzXoF4GPDLPReXsiyIXt4zDyJZDV/hZ3H7zm
+         j8Be7QFCcGWF39ksznwhkGFW9a3wUAsm1k4zukR8zW4bcdcfi0MBjy/Ub0hnc03duUCT
+         2jdqwfya9zUi0Rhgpxf0JQ1oq3yHB3BhvxE4raYHym+lmXcAJratac6t3Wq8S7wJC+NM
+         eV0w==
+X-Gm-Message-State: AAQBX9d1PYC006AsQQTmuZ/1a50m7NxIEqBDCNmDwopRXPOYhr9z8tr1
+        5hkn6osg1qD/Wf5qArlS+/k=
+X-Google-Smtp-Source: AKy350bcdEP3B4h5AyJ/RqXHOvANV432V+AKzzoYSsJ3l0S4OxqL2NCwOgdI7rMZqe9lklSr4+t97g==
+X-Received: by 2002:a17:90b:1e49:b0:23f:ef7:7897 with SMTP id pi9-20020a17090b1e4900b0023f0ef77897mr6177640pjb.49.1680695330032;
+        Wed, 05 Apr 2023 04:48:50 -0700 (PDT)
+Received: from localhost ([103.152.220.91])
+        by smtp.gmail.com with ESMTPSA id ha15-20020a17090af3cf00b00233acae2ce6sm1212364pjb.23.2023.04.05.04.48.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Apr 2023 04:48:49 -0700 (PDT)
+Date:   Wed, 5 Apr 2023 04:48:46 -0700
+From:   Dan Li <ashimida.1990@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Aaron Tomlin <atomlin@redhat.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        gcc-patches@gcc.gnu.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Marco Elver <elver@google.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Roth <michael.roth@amd.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Song Liu <song@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Rix <trix@redhat.com>, Uros Bizjak <ubizjak@gmail.com>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        Yuntao Wang <ytcoode@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-modules@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [RFC/RFT,V2] CFI: Add support for gcc CFI in aarch64
+Message-ID: <20230405114846.udm4yf3xc6wdyexz@ubuntu>
+References: <20221219061758.23321-1-ashimida.1990@gmail.com>
+ <20230325085416.95191-1-ashimida.1990@gmail.com>
+ <20230327093016.GB4253@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230327093016.GB4253@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 4 Apr 2023 12:17:01 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
-
-> Jonathan Cameron wrote:
-> > CXL PMU devices can be found from entries in the Register
-> > Locator DVSEC.
+On 03/27, Peter Zijlstra wrote:
+> On Sat, Mar 25, 2023 at 01:54:16AM -0700, Dan Li wrote:
+> 
+> > In the compiler part[4], most of the content is the same as Sami's
+> > implementation[3], except for some minor differences, mainly including:
 > > 
-> > In order to register the minimum number of IRQ vectors necessary
-> > to support all CPMUs found, separate the registration into two
-> > steps.  First find the devices, and query the IRQs used and then
-> > register the devices. Between these two steps, request the
-> > IRQ vectors necessary and enable bus master support.  
+> > 1. The function typeid is calculated differently and it is difficult
+> > to be consistent.
 > 
-> It's not clear why this patch is talking about irq vectors and bus
-> mastering when there is no irq query/setup logic in this patch?
-> 
+> This means there is an effective ABI break between the compilers, which
+> is sad :-( Is there really nothing to be done about this?
 
-> > Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
-> > follow a similar pattern the number of vectors necessary is known
-> > before any parts of the driver stack rely on their availability.  
-> 
-> With the new pci_msix_alloc_irq_at() it's not clear that this 2 step
-> approach is required, right?
+Hi Peter,
 
-Stale description. Will drop all that garbage.
+I'm not so sure right now. According to Sami's tip, I need to learn more about
+related patches. I'll make it ABI compatible in the next version if possible :)
 
-> 
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > ---
-> > v4:
-> > - No change.
-> > ---
-> >  drivers/cxl/core/Makefile |  1 +
-> >  drivers/cxl/core/core.h   |  1 +
-> >  drivers/cxl/core/cpmu.c   | 72 +++++++++++++++++++++++++++++++++++++++  
-> 
-> A quibble with the naming, I prefer:
-> 
-> drivers/cxl/core/pmu.c
-> 
-> ...since "cxl" is in the directory path. Also, usages of cpmu
-> already have a cxl in their symbol names, so just s/cpmu/pmu/ throught.
-> The usage of CPMU_ for register macros would seem be more clear, or at
-> least more consistent, as CXL_PMU_ like the other register offset
-> definitions in cxlpci.h.
-
-Makes sense. I'll leave the register defs as
-CPMU_XXX to keep them compact but use the pmu naming for pretty much everything else.
-
-> 
-> >  drivers/cxl/core/port.c   |  2 ++
-> >  drivers/cxl/core/regs.c   | 16 +++++++++
-> >  drivers/cxl/cpmu.h        | 56 ++++++++++++++++++++++++++++++  
-> 
-> drivers/cxl/pmu.h
-> 
-> >  drivers/cxl/cxl.h         | 14 ++++++++
-> >  drivers/cxl/cxlpci.h      |  1 +
-> >  drivers/cxl/pci.c         | 25 +++++++++++++-
-> >  9 files changed, 187 insertions(+), 1 deletion(-)  
-> 
-> Other than those minor issues above, this looks good to me, with those
-> fixed up.
-> 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 Thanks,
-
+Dan
