@@ -2,258 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40058C7619A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 07:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7DFC7619A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 08:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236931AbjDEHZZ (ORCPT
+        id S237034AbjDEIsI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 03:25:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40956 "EHLO
+        Wed, 5 Apr 2023 04:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbjDEHZY (ORCPT
+        with ESMTP id S237340AbjDEIrr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 03:25:24 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D0440D3;
-        Wed,  5 Apr 2023 00:25:22 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-947c7d38ef5so28260166b.1;
-        Wed, 05 Apr 2023 00:25:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680679521;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VkhKh/PwqyfN4KxHXS1N4qLbgG5mAMhKeb6DJtL6PA0=;
-        b=f6w6dW5S62Y6/g84bNlb+xW3TJAo77lcb03/NyOTtfhgk8odVQjeo2ScGhHiaHl46k
-         xSzvrN3VtFOC+B0MnMj6V3S9G2N1ASolj+qY8aNHFSnmS+VDzgECtALScbnTDalDIYoH
-         WhH/B1eU39dyTCNmhaSvu9s75X1iL25hOlEJHyptU30qGeIcbkEGdAKrlEHJsZaI93AC
-         ahVPdRoX7t2mxH3YEzmhhoXW3SWArcmmGstfcMaGLLZyDVJ51/uH62vAKsE7caJr1SVA
-         MWzeZWRp/kThgZKuzSJi29JPLIZa8AvY1urOq7bB+CWD8BqptrHoGiWX6d6sYHXFyp5H
-         prQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680679521;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VkhKh/PwqyfN4KxHXS1N4qLbgG5mAMhKeb6DJtL6PA0=;
-        b=nn8YJRzIju1X0HKWVTiwAuqR6YPk81Fda+Bm0+9taolQhl13Q4kRer+rKrVWmw7jL8
-         EVXWVjFP0oYpWZXFZdZKHbpFforeROEe16BWTYhsH3vMb2iF55b2wvVknnc0nGrpPuDy
-         8Bp0BGZLbRYF+v31jA3OpXUqdAAzvS5X9ttwOUMnGzLutFCJikD+nP1emk4yBDydf0AD
-         256HNyjuv5KYj8b5TCXnRlPTxM2mytM9liWfzMIM/Qlr4c0AwITvH7heso8576O6fniw
-         uSqol1eKcxMukOWizFx0aybwLbXDKzM/wDyeBLjwIrVtCU8yLXZhwJw10RkK3Kzp1FS9
-         7yrQ==
-X-Gm-Message-State: AAQBX9dXVc1Ukid2MTLN5/8csvDXO7YcR7HuR4hGUMOe+g1cizA8s3et
-        XhL9PyTgdPrm+NzvcAhEUGE=
-X-Google-Smtp-Source: AKy350Zh2H1E62n2QX24xYNhYPrIr5LzXqq6QOgkPWBkjS72GtfNnD3d2nr1yjF0qFcF8zSBkHrfFA==
-X-Received: by 2002:aa7:d69a:0:b0:4fe:9689:96bb with SMTP id d26-20020aa7d69a000000b004fe968996bbmr1366142edr.35.1680679521016;
-        Wed, 05 Apr 2023 00:25:21 -0700 (PDT)
-Received: from krava ([83.240.62.56])
-        by smtp.gmail.com with ESMTPSA id r6-20020a05640251c600b004fd219242a5sm6794770edd.7.2023.04.05.00.25.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 00:25:20 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 5 Apr 2023 09:25:18 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 5 Apr 2023 04:47:47 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F2530EB;
+        Wed,  5 Apr 2023 01:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680684459; x=1712220459;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MvwRRhIwLuHgZL/huyU37wgkap5Vu4qIMoqOb0hhff0=;
+  b=aUN96IqEaufVin4sej3VnnrSvn7WHkbeeyE8Q763vmjftyf/+YRosjvE
+   BPAs/FGC7rAdMhOLxNqIvUsFHme7xGUw5XkomwamYEYhGv0lY9hTXGR2a
+   tk2/UgC/DE4pqHo+qlqJSxx9/cUj6oCe9AsDM+fK3zEAvJeouOddKJRQq
+   SZZV5zv/xjhGJID92dti/QklD/jA6bB08PjuFDpRAMbFSthXSl1l2s/yh
+   Le9QS2eA1h9ujIeqpeAtBNF2trcdV9UgSG4AvhGBkrZWtOKoGTsSzOi6G
+   R1CbZuc/cRXkSD2JjyScnQzFqG27CImo9zy6t34DbcdKEtXKSgvu6Yq6f
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="344979359"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="344979359"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 01:47:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="797837097"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="797837097"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.88])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 01:47:30 -0700
+Message-ID: <527b8bcb-d462-5fff-5310-703b55902a61@intel.com>
+Date:   Wed, 5 Apr 2023 11:47:26 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.1
+Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
         James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         German Gomez <german.gomez@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf pmu: Make parser reentrant
-Message-ID: <ZC0iXid4NraoXSCU@krava>
-References: <20230404133630.1985739-1-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230404133630.1985739-1-irogers@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Stephane Eranian <eranian@google.com>
+References: <20230320212248.1175731-1-irogers@google.com>
+ <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
+ <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
+ <ZCxvYpeoemPHUmJ4@kernel.org> <ZCxyZcnd9/4zjbQZ@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <ZCxyZcnd9/4zjbQZ@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 06:36:30AM -0700, Ian Rogers wrote:
-> By default bison uses global state for compatibility with yacc. Make
-> the parser reentrant so that it may be used in asynchronous and
-> multithreaded situations.
+On 4/04/23 21:54, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Apr 04, 2023 at 03:41:38PM -0300, Arnaldo Carvalho de Melo escreveu:
+>> Em Tue, Apr 04, 2023 at 08:25:41PM +0300, Adrian Hunter escreveu:
+>>> On 4/04/23 18:58, Ian Rogers wrote:
+>>>> Ping. It would be nice to have this landed or at least the first 10
+>>>> patches that refactor the map API and are the bulk of the
+>>>> lines-of-code changed. Having those landed would make it easier to
+>>>> rebase in the future, but I also think the whole series is ready to
+>>>> go.
+>>>
+>>> I was wondering if the handling of dynamic data like struct map makes
+>>> any sense at present.  Perhaps someone can reassure me.
+>>>
+>>> A struct map can be updated when an MMAP event is processed.  So it
+>>
+>> Yes, it can, and the update is made via a new PERF_RECORD_MMAP, right?
+>>
+>> So:
+>>
+>> 	perf_event__process_mmap()
+>> 	  machine__process_mmap2_event()
+>> 	    map__new() + thread__insert_map(thread, map)
+>> 	    	maps__fixup_overlappings()
+>> 			maps__insert(thread->maps, map);
+>>
+>> Ok, from this point on new samples on ] map->start .. map->end ] will
+>> grab a refcount to this new map in its hist_entry, right?
+>>
+>> When we want to sort by dso we will look at hist_entry->map->dso, etc.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-hum I can't apply this version on Arnaldo's perf/core:
-
-patching file tools/perf/util/pmu.c
-Hunk #2 succeeded at 59 with fuzz 1.
-Hunk #3 FAILED at 80.
-Hunk #4 FAILED at 90.
-2 out of 4 hunks FAILED -- saving rejects to file tools/perf/util/pmu.c.rej
-patching file tools/perf/util/pmu.h
-patching file tools/perf/util/pmu.l
-patching file tools/perf/util/pmu.y
-
-jirka
-
-
-> ---
->  tools/perf/util/pmu.c | 24 ++++++++++++++++++------
->  tools/perf/util/pmu.h |  2 +-
->  tools/perf/util/pmu.l | 17 ++++++++++++-----
->  tools/perf/util/pmu.y |  5 ++++-
->  4 files changed, 35 insertions(+), 13 deletions(-)
+> And in 'perf top' we go decaying hist entries, when we delete the
+> hist_entry, drop the reference count to things it holds, that will then
+> be finally deleted when no more hist_entries point to it.
 > 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 78a407b42ad1..f603cdabf797 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -24,6 +24,8 @@
->  #include "evsel.h"
->  #include "pmu.h"
->  #include "pmus.h"
-> +#include "pmu-bison.h"
-> +#include "pmu-flex.h"
->  #include "parse-events.h"
->  #include "print-events.h"
->  #include "header.h"
-> @@ -57,9 +59,6 @@ struct perf_pmu_format {
->  	struct list_head list;
->  };
->  
-> -int perf_pmu_parse(struct list_head *list, char *name);
-> -extern FILE *perf_pmu_in;
-> -
->  static bool hybrid_scanned;
->  
->  static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name);
-> @@ -81,6 +80,8 @@ int perf_pmu__format_parse(int dirfd, struct list_head *head)
->  	while (!ret && (evt_ent = readdir(format_dir))) {
->  		char *name = evt_ent->d_name;
->  		int fd;
-> +		void *scanner;
-> +		FILE *file;
->  
->  		if (!strcmp(name, ".") || !strcmp(name, ".."))
->  			continue;
-> @@ -91,9 +92,20 @@ int perf_pmu__format_parse(int dirfd, struct list_head *head)
->  		if (fd < 0)
->  			break;
->  
-> -		perf_pmu_in = fdopen(fd, "r");
-> -		ret = perf_pmu_parse(head, name);
-> -		fclose(perf_pmu_in);
-> +		file = fdopen(fd, "r");
-> +		if (!file)
-> +			break;
-> +
-> +		ret = perf_pmu_lex_init(&scanner);
-> +		if (ret) {
-> +			fclose(file);
-> +			break;
-> +		}
-> +
-> +		perf_pmu_set_in(file, scanner);
-> +		ret = perf_pmu_parse(head, name, scanner);
-> +		perf_pmu_lex_destroy(scanner);
-> +		fclose(file);
->  	}
->  
->  	closedir(format_dir);
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 32c3a75bca0e..d53618c65c92 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -206,7 +206,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
->  			  struct perf_pmu_info *info);
->  struct list_head *perf_pmu__alias(struct perf_pmu *pmu,
->  				  struct list_head *head_terms);
-> -void perf_pmu_error(struct list_head *list, char *name, char const *msg);
-> +void perf_pmu_error(struct list_head *list, char *name, void *scanner, char const *msg);
->  
->  int perf_pmu__new_format(struct list_head *list, char *name,
->  			 int config, unsigned long *bits);
-> diff --git a/tools/perf/util/pmu.l b/tools/perf/util/pmu.l
-> index 58b4926cfaca..67b247be693b 100644
-> --- a/tools/perf/util/pmu.l
-> +++ b/tools/perf/util/pmu.l
-> @@ -1,4 +1,6 @@
->  %option prefix="perf_pmu_"
-> +%option reentrant
-> +%option bison-bridge
->  
->  %{
->  #include <stdlib.h>
-> @@ -6,16 +8,21 @@
->  #include "pmu.h"
->  #include "pmu-bison.h"
->  
-> -static int value(int base)
-> +char *perf_pmu_get_text(yyscan_t yyscanner);
-> +YYSTYPE *perf_pmu_get_lval(yyscan_t yyscanner);
-> +
-> +static int value(yyscan_t scanner, int base)
->  {
-> +	YYSTYPE *yylval = perf_pmu_get_lval(scanner);
-> +	char *text = perf_pmu_get_text(scanner);
->  	long num;
->  
->  	errno = 0;
-> -	num = strtoul(perf_pmu_text, NULL, base);
-> +	num = strtoul(text, NULL, base);
->  	if (errno)
->  		return PP_ERROR;
->  
-> -	perf_pmu_lval.num = num;
-> +	yylval->num = num;
->  	return PP_VALUE;
->  }
->  
-> @@ -25,7 +32,7 @@ num_dec         [0-9]+
->  
->  %%
->  
-> -{num_dec}	{ return value(10); }
-> +{num_dec}	{ return value(yyscanner, 10); }
->  config		{ return PP_CONFIG; }
->  -		{ return '-'; }
->  :		{ return ':'; }
-> @@ -35,7 +42,7 @@ config		{ return PP_CONFIG; }
->  
->  %%
->  
-> -int perf_pmu_wrap(void)
-> +int perf_pmu_wrap(void *scanner __maybe_unused)
->  {
->  	return 1;
->  }
-> diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-> index e675d79a0274..dff4e892ac4d 100644
-> --- a/tools/perf/util/pmu.y
-> +++ b/tools/perf/util/pmu.y
-> @@ -1,6 +1,8 @@
-> -
-> +%define api.pure full
->  %parse-param {struct list_head *format}
->  %parse-param {char *name}
-> +%parse-param {void *scanner}
-> +%lex-param {void* scanner}
->  
->  %{
->  
-> @@ -78,6 +80,7 @@ PP_VALUE
->  
->  void perf_pmu_error(struct list_head *list __maybe_unused,
->  		    char *name __maybe_unused,
-> +		    void *scanner __maybe_unused,
->  		    char const *msg __maybe_unused)
->  {
->  }
-> -- 
-> 2.40.0.348.gf938b09366-goog
-> 
+>>> seems like anything racing with event processing is already broken, and
+>>> reference counting / locking cannot help - unless there is also
+>>> copy-on-write (which there isn't at present)?
+
+So I checked, and struct map *is* copy-on-write in
+maps__fixup_overlappings(), so that should not be a problem.
+
+>>
+>>> For struct maps, referencing it while simultaneously processing
+>>> events seems to make even less sense?
+>>
+>> Can you elaborate some more?
+
+Only that the maps are not necessarily stable e.g. the map that you
+need has been replaced in the meantime.
+
+But upon investigation, the only user at the moment is
+maps__find_ams().  If we kept the removed maps (we used to),
+it might be possible to make maps__find_ams() work correctly
+in any case.
+
