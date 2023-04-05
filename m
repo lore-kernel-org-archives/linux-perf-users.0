@@ -2,155 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D165C77B6C
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 11:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3929AC76188
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 13:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237974AbjDELtk (ORCPT
+        id S238167AbjDENVA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 07:49:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37460 "EHLO
+        Wed, 5 Apr 2023 09:21:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237936AbjDELti (ORCPT
+        with ESMTP id S237944AbjDENU6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 07:49:38 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A997C40DA;
-        Wed,  5 Apr 2023 04:49:27 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id kq3so34131824plb.13;
-        Wed, 05 Apr 2023 04:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680695367;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w1BOAPHjvwBZc8su+MgbgVVdFrkx9EshhGySuq8Rik0=;
-        b=Bt3SQPjIlscA+YIQGeFDeWCjFaY/IR7cWnrRvQAR6vJkLhPdBaa1HtFhU5RDFhLPFS
-         FgPhiqGgarOmcstcwvnrj1unU+Oq0zSOgn/hF9ZmgnSuicgEVf7yUrvwF2Nq+uPydIXo
-         Z8ar3S5OvmK/sytW1z6tji3TXij9oF89N6PEFZSldNA9UB6Bi35y85z74Ao5P1ZbjIFL
-         eQxx4+xBUmbD8ii8AbLRXjF51uAXluK/BR6Ntz8wilstrllzXtlmFTgB9vsFqdg3w6w0
-         I5bdIMV+HtJ64KrfmNnKPZfNjlb1mQhWlImR42Pv0HEKYXXOOla/rObROI06I5Abhv+8
-         Ii9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680695367;
-        h=user-agent:in-reply-to:content-transfer-encoding
-         :content-disposition:mime-version:references:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w1BOAPHjvwBZc8su+MgbgVVdFrkx9EshhGySuq8Rik0=;
-        b=E4eTsd4+WeA6t3lbd8ndnE8ahemrcirlqookLyJswMdD5r6LSphnLG4gvcav7WIvo8
-         /89fHYh3T4ovoKtqM4l+C4sSoWFfjG5cmeLME02S5oDmSOe18vDYORzhNhxxVpklTN7Z
-         Lo5CSw4dikmi2yOIjm+QdUH7OgqbhqcIfTmqj4V34BVkKlQdFnfaAgvNlWYgEUEwtjFk
-         CZIwpmAiq+dqG7qaSgNEl8R5acBFNI0QpLIt3M/XgyT8rJdDBSbA1tsjdI2Df/k/u+Eq
-         vkS/m66kZsP6fZq0Yehv9xTGxnFWgp3B2QnlLPV1p/GAWevZby/K4pNzI7ggKnPp0qng
-         xQMA==
-X-Gm-Message-State: AAQBX9e3Kea3G06bCyKgbjUzbBCMSS/x1ysa9+Uoio0WcCj4tJC/dZNj
-        jI+byGJQROAJblXJ0ARBR3U=
-X-Google-Smtp-Source: AKy350bSLOSqLBm8ShGZT00MxdAH6lu+lyUWEYbCEe4/MMf46RL/sqlXgZqYxCwRurEr1EetQSWcYQ==
-X-Received: by 2002:a17:902:e494:b0:19c:a866:6a76 with SMTP id i20-20020a170902e49400b0019ca8666a76mr5179345ple.42.1680695367063;
-        Wed, 05 Apr 2023 04:49:27 -0700 (PDT)
-Received: from localhost ([103.152.220.91])
-        by smtp.gmail.com with ESMTPSA id g8-20020a170902868800b0019cbabf127dsm9938617plo.182.2023.04.05.04.49.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Apr 2023 04:49:26 -0700 (PDT)
-Date:   Wed, 5 Apr 2023 04:49:24 -0700
-From:   Dan Li <ashimida.1990@gmail.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        gcc-patches@gcc.gnu.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Mark Brown <broonie@kernel.org>,
+        Wed, 5 Apr 2023 09:20:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B951FFD;
+        Wed,  5 Apr 2023 06:20:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BEDAE63761;
+        Wed,  5 Apr 2023 13:20:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E66BDC4339B;
+        Wed,  5 Apr 2023 13:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680700856;
+        bh=QIhxJxgeabElsKbsT4Kwv+/L8XzSVixHmAIIkwb8yxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XtnsDQmkv7UQzCCCuyXer91QTOIhbSTDFLrx9ooPRpxwbbQhM7JipVUkO9NwLwM7p
+         +AZ/a8LK7zPC5dPZ2WA1kHPC/OqJOuC28VeYmEenGeyMUAcFKdQ+8cdxGy9naL5bUn
+         C75sfNFcEleIG7pv6b08Ja5/v4TcVY9mFuC1nHVEVb6mORPA2u/gD2mtB2icD3DSL2
+         u6RbnHVIdjEy+YdV3ZTLr3DgDVMm8bBf9U/PsKuvg8EJ5hrLtPa6bftzBWQMsW0VTY
+         x5apGxE56qwrWZug4wb3u7mzh4Elk2ymvnIq8GRqM61FEtuXg5GSKpr0/4UrJNX0qF
+         yvzcLTruJUDfw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3D31A4052D; Wed,  5 Apr 2023 10:20:53 -0300 (-03)
+Date:   Wed, 5 Apr 2023 10:20:53 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Roth <michael.roth@amd.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Miguel Ojeda <ojeda@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Song Liu <song@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>, Uros Bizjak <ubizjak@gmail.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        Yuntao Wang <ytcoode@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC/RFT,V2] CFI: Add support for gcc CFI in aarch64
-Message-ID: <20230405114924.v7p76tzwmecquz2q@ubuntu>
-References: <20221219061758.23321-1-ashimida.1990@gmail.com>
- <20230325085416.95191-1-ashimida.1990@gmail.com>
- <20230327093016.GB4253@hirez.programming.kicks-ass.net>
- <CABCJKueH6ohH27xCPz9a_ndRR26Na_mo=MGF3eqjwV2=gJy+wQ@mail.gmail.com>
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
+Message-ID: <ZC11tTdXuJR/M8o+@kernel.org>
+References: <20230320212248.1175731-1-irogers@google.com>
+ <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
+ <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
+ <ZCxvYpeoemPHUmJ4@kernel.org>
+ <ZCxyZcnd9/4zjbQZ@kernel.org>
+ <527b8bcb-d462-5fff-5310-703b55902a61@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABCJKueH6ohH27xCPz9a_ndRR26Na_mo=MGF3eqjwV2=gJy+wQ@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <527b8bcb-d462-5fff-5310-703b55902a61@intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 03/27, Sami Tolvanen wrote:
-> On Mon, Mar 27, 2023 at 2:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Sat, Mar 25, 2023 at 01:54:16AM -0700, Dan Li wrote:
-> >
-> > > In the compiler part[4], most of the content is the same as Sami's
-> > > implementation[3], except for some minor differences, mainly including:
-> > >
-> > > 1. The function typeid is calculated differently and it is difficult
-> > > to be consistent.
-> >
-> > This means there is an effective ABI break between the compilers, which
-> > is sad :-( Is there really nothing to be done about this?
-> 
-> I agree, this would be unfortunate, and would also be a compatibility
-> issue with rustc where there's ongoing work to support
-> clang-compatible CFI type hashes:
-> 
-> https://github.com/rust-lang/rust/pull/105452
-> 
-> Sami
+Em Wed, Apr 05, 2023 at 11:47:26AM +0300, Adrian Hunter escreveu:
+> On 4/04/23 21:54, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Apr 04, 2023 at 03:41:38PM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> Em Tue, Apr 04, 2023 at 08:25:41PM +0300, Adrian Hunter escreveu:
+> >>> On 4/04/23 18:58, Ian Rogers wrote:
+> >>>> Ping. It would be nice to have this landed or at least the first 10
+> >>>> patches that refactor the map API and are the bulk of the
+> >>>> lines-of-code changed. Having those landed would make it easier to
+> >>>> rebase in the future, but I also think the whole series is ready to
+> >>>> go.
+> >>>
+> >>> I was wondering if the handling of dynamic data like struct map makes
+> >>> any sense at present.  Perhaps someone can reassure me.
+> >>>
+> >>> A struct map can be updated when an MMAP event is processed.  So it
+> >>
+> >> Yes, it can, and the update is made via a new PERF_RECORD_MMAP, right?
+> >>
+> >> So:
+> >>
+> >> 	perf_event__process_mmap()
+> >> 	  machine__process_mmap2_event()
+> >> 	    map__new() + thread__insert_map(thread, map)
+> >> 	    	maps__fixup_overlappings()
+> >> 			maps__insert(thread->maps, map);
+> >>
+> >> Ok, from this point on new samples on ] map->start .. map->end ] will
+> >> grab a refcount to this new map in its hist_entry, right?
+> >>
+> >> When we want to sort by dso we will look at hist_entry->map->dso, etc.
+> > 
+> > And in 'perf top' we go decaying hist entries, when we delete the
+> > hist_entry, drop the reference count to things it holds, that will then
+> > be finally deleted when no more hist_entries point to it.
+> > 
+> >>> seems like anything racing with event processing is already broken, and
+> >>> reference counting / locking cannot help - unless there is also
+> >>> copy-on-write (which there isn't at present)?
+ 
+> So I checked, and struct map *is* copy-on-write in
+> maps__fixup_overlappings(), so that should not be a problem.
+ 
+> >>> For struct maps, referencing it while simultaneously processing
+> >>> events seems to make even less sense?
 
-Hi Sami,
+> >> Can you elaborate some more?
+ 
+> Only that the maps are not necessarily stable e.g. the map that you
+> need has been replaced in the meantime.
 
-Thanks for the info, I need to learn about it :)
-Is there anything else that needs to be improved?
+Well, it may be sliced in several or shrunk by new ones overlapping it,
+but it if completely disappears, say a new map starts before the one
+disappearing and ends after it, then it remains with reference counts if
+there are hist_entries (or other data structure) pointing to them,
+right?
+ 
+> But upon investigation, the only user at the moment is
+> maps__find_ams().  If we kept the removed maps (we used to),
+> it might be possible to make maps__find_ams() work correctly
+> in any case.
 
-Thanks,
-Dan
+Humm, I think I see what you mean, maps__find_ams() is called when we
+are annotating a symbol, not when we're processing a sample, so it may
+be the case that at the time of annotation the executable that is being
+found (its parsing the target IP of a 'call' assembly instruction) was
+replaced, is that the case?
+
+- Arnaldo
