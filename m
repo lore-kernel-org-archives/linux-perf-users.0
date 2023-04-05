@@ -2,273 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25729C761AF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 09:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1469FC761A6
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 10:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237272AbjDEJjf (ORCPT
+        id S237301AbjDEKsN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 05:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46758 "EHLO
+        Wed, 5 Apr 2023 06:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237250AbjDEJje (ORCPT
+        with ESMTP id S236955AbjDEKsN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 05:39:34 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3476B4C25;
-        Wed,  5 Apr 2023 02:39:31 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id bl22so12215261oib.11;
-        Wed, 05 Apr 2023 02:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680687570;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4wIC1CpZVOaE4w0vpqchy3vQi+52X2p+A7NNpUhaHjs=;
-        b=f9pIAWwvJ1/ZkSjsLBZOYKNN/SvlUJHhIWEYf5hHOmqMKyYatIzDxQ3wF8pmu91t9V
-         KufMBg9Ia2jbxgfRuwcybi2grHwm718EOdRg+4uuSCv6RKoVflaU/Y1VW/N1BVFKV3IJ
-         5X3x7yBuNkEc99R9L/xY8zpvpx8AZ7b5d0yHJ6pob4J2MAck2mefPm/EfWR62r8Y2LeJ
-         enNQ6K0TAW9V/BZIgAfqfdkKNTTxamM4rUi96e3ugY9/wcX3JNNqM7p3LogtCz8FeQQg
-         J5/FrQJXXf21MNKcExwuTMz3E16S3BAzdnZlAMryofKJ6GAY6k1K7dMVUAy6D1uBc3we
-         kZXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680687570;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4wIC1CpZVOaE4w0vpqchy3vQi+52X2p+A7NNpUhaHjs=;
-        b=V8kZhMuZnc7/KxirIZ/HyQo23EFwusrc9xauD7SZJYYeyn9nzkUA9uHdP9hZ25yAkO
-         wSXj9AMJFAZwMcrNgKOrWzo3QVjTn5q/F/yDmgOodQ3rQYJ5hGeZz0Ak/MgVHGO5NCtK
-         Vjzk9D/xbS1jDYFllSeJ2WcCibIxnHyjlTHsNIhvSjRZq4zg1/KcHgng/VuHwPmpkuf7
-         M1WRGLhURV7Hi4fo9nZhEhZE8yq5FEGliP2z0XYgUznPXUJ/MGgnTDd1GuvFTObabfw0
-         jPOIW46uRjeUiHGPJEnf1XsTHmVq/ccErP1ClALc7gRaHxjzM5PJ+SdOBC4apZkmctKw
-         nj0w==
-X-Gm-Message-State: AAQBX9fieMDT0jH+hJGTuMq56M6tHama3Btj/FJ4L+Kzm70yqQ4y89lt
-        Lgfhgp0mcM9HkyZgNV4PFIs=
-X-Google-Smtp-Source: AKy350YqOjXrLkIwek0UaobV9xTERoDvJ14GktHnbC9wXPlhyohk7kyGIyCXP1MGYDBJyDpo2659HQ==
-X-Received: by 2002:aca:1206:0:b0:386:ed63:c511 with SMTP id 6-20020aca1206000000b00386ed63c511mr2416172ois.24.1680687570365;
-        Wed, 05 Apr 2023 02:39:30 -0700 (PDT)
-Received: from [127.0.0.1] ([187.19.238.117])
-        by smtp.gmail.com with ESMTPSA id p188-20020acaf1c5000000b0038b2f07dd50sm3348114oih.7.2023.04.05.02.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 02:39:28 -0700 (PDT)
-Date:   Wed, 05 Apr 2023 06:39:22 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf pmu: Make parser reentrant
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ZC0iXid4NraoXSCU@krava>
-References: <20230404133630.1985739-1-irogers@google.com> <ZC0iXid4NraoXSCU@krava>
-Message-ID: <A34997A8-302E-4577-82B0-F53AD954BC0A@gmail.com>
+        Wed, 5 Apr 2023 06:48:13 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7F74EED;
+        Wed,  5 Apr 2023 03:48:11 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ps1Wh1tT8z6J749;
+        Wed,  5 Apr 2023 18:46:08 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 5 Apr
+ 2023 11:48:07 +0100
+Date:   Wed, 5 Apr 2023 11:48:05 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>, <linuxarm@huawei.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v4 3/5] cxl/pci: Find and register CXL PMU devices
+Message-ID: <20230405114805.000014ef@Huawei.com>
+In-Reply-To: <642c77ad5f0d_21a8294fe@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+        <20230330164556.31533-4-Jonathan.Cameron@huawei.com>
+        <642c77ad5f0d_21a8294fe@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 4 Apr 2023 12:17:01 -0700
+Dan Williams <dan.j.williams@intel.com> wrote:
 
+> Jonathan Cameron wrote:
+> > CXL PMU devices can be found from entries in the Register
+> > Locator DVSEC.
+> > 
+> > In order to register the minimum number of IRQ vectors necessary
+> > to support all CPMUs found, separate the registration into two
+> > steps.  First find the devices, and query the IRQs used and then
+> > register the devices. Between these two steps, request the
+> > IRQ vectors necessary and enable bus master support.  
+> 
+> It's not clear why this patch is talking about irq vectors and bus
+> mastering when there is no irq query/setup logic in this patch?
+> 
 
-On April 5, 2023 4:25:18 AM GMT-03:00, Jiri Olsa <olsajiri@gmail=2Ecom> wr=
-ote:
->On Tue, Apr 04, 2023 at 06:36:30AM -0700, Ian Rogers wrote:
->> By default bison uses global state for compatibility with yacc=2E Make
->> the parser reentrant so that it may be used in asynchronous and
->> multithreaded situations=2E
->>=20
->> Signed-off-by: Ian Rogers <irogers@google=2Ecom>
->
->hum I can't apply this version on Arnaldo's perf/core:
+> > Future IRQ users for CXL type 3 devices (e.g. DOEs) will need to
+> > follow a similar pattern the number of vectors necessary is known
+> > before any parts of the driver stack rely on their availability.  
+> 
+> With the new pci_msix_alloc_irq_at() it's not clear that this 2 step
+> approach is required, right?
 
-Try on tmp=2Eperf-tools-next
+Stale description. Will drop all that garbage.
 
->
->patching file tools/perf/util/pmu=2Ec
->Hunk #2 succeeded at 59 with fuzz 1=2E
->Hunk #3 FAILED at 80=2E
->Hunk #4 FAILED at 90=2E
->2 out of 4 hunks FAILED -- saving rejects to file tools/perf/util/pmu=2Ec=
-=2Erej
->patching file tools/perf/util/pmu=2Eh
->patching file tools/perf/util/pmu=2El
->patching file tools/perf/util/pmu=2Ey
->
->jirka
->
->
->> ---
->>  tools/perf/util/pmu=2Ec | 24 ++++++++++++++++++------
->>  tools/perf/util/pmu=2Eh |  2 +-
->>  tools/perf/util/pmu=2El | 17 ++++++++++++-----
->>  tools/perf/util/pmu=2Ey |  5 ++++-
->>  4 files changed, 35 insertions(+), 13 deletions(-)
->>=20
->> diff --git a/tools/perf/util/pmu=2Ec b/tools/perf/util/pmu=2Ec
->> index 78a407b42ad1=2E=2Ef603cdabf797 100644
->> --- a/tools/perf/util/pmu=2Ec
->> +++ b/tools/perf/util/pmu=2Ec
->> @@ -24,6 +24,8 @@
->>  #include "evsel=2Eh"
->>  #include "pmu=2Eh"
->>  #include "pmus=2Eh"
->> +#include "pmu-bison=2Eh"
->> +#include "pmu-flex=2Eh"
->>  #include "parse-events=2Eh"
->>  #include "print-events=2Eh"
->>  #include "header=2Eh"
->> @@ -57,9 +59,6 @@ struct perf_pmu_format {
->>  	struct list_head list;
->>  };
->> =20
->> -int perf_pmu_parse(struct list_head *list, char *name);
->> -extern FILE *perf_pmu_in;
->> -
->>  static bool hybrid_scanned;
->> =20
->>  static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name);
->> @@ -81,6 +80,8 @@ int perf_pmu__format_parse(int dirfd, struct list_hea=
-d *head)
->>  	while (!ret && (evt_ent =3D readdir(format_dir))) {
->>  		char *name =3D evt_ent->d_name;
->>  		int fd;
->> +		void *scanner;
->> +		FILE *file;
->> =20
->>  		if (!strcmp(name, "=2E") || !strcmp(name, "=2E=2E"))
->>  			continue;
->> @@ -91,9 +92,20 @@ int perf_pmu__format_parse(int dirfd, struct list_he=
-ad *head)
->>  		if (fd < 0)
->>  			break;
->> =20
->> -		perf_pmu_in =3D fdopen(fd, "r");
->> -		ret =3D perf_pmu_parse(head, name);
->> -		fclose(perf_pmu_in);
->> +		file =3D fdopen(fd, "r");
->> +		if (!file)
->> +			break;
->> +
->> +		ret =3D perf_pmu_lex_init(&scanner);
->> +		if (ret) {
->> +			fclose(file);
->> +			break;
->> +		}
->> +
->> +		perf_pmu_set_in(file, scanner);
->> +		ret =3D perf_pmu_parse(head, name, scanner);
->> +		perf_pmu_lex_destroy(scanner);
->> +		fclose(file);
->>  	}
->> =20
->>  	closedir(format_dir);
->> diff --git a/tools/perf/util/pmu=2Eh b/tools/perf/util/pmu=2Eh
->> index 32c3a75bca0e=2E=2Ed53618c65c92 100644
->> --- a/tools/perf/util/pmu=2Eh
->> +++ b/tools/perf/util/pmu=2Eh
->> @@ -206,7 +206,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, str=
-uct list_head *head_terms,
->>  			  struct perf_pmu_info *info);
->>  struct list_head *perf_pmu__alias(struct perf_pmu *pmu,
->>  				  struct list_head *head_terms);
->> -void perf_pmu_error(struct list_head *list, char *name, char const *ms=
-g);
->> +void perf_pmu_error(struct list_head *list, char *name, void *scanner,=
- char const *msg);
->> =20
->>  int perf_pmu__new_format(struct list_head *list, char *name,
->>  			 int config, unsigned long *bits);
->> diff --git a/tools/perf/util/pmu=2El b/tools/perf/util/pmu=2El
->> index 58b4926cfaca=2E=2E67b247be693b 100644
->> --- a/tools/perf/util/pmu=2El
->> +++ b/tools/perf/util/pmu=2El
->> @@ -1,4 +1,6 @@
->>  %option prefix=3D"perf_pmu_"
->> +%option reentrant
->> +%option bison-bridge
->> =20
->>  %{
->>  #include <stdlib=2Eh>
->> @@ -6,16 +8,21 @@
->>  #include "pmu=2Eh"
->>  #include "pmu-bison=2Eh"
->> =20
->> -static int value(int base)
->> +char *perf_pmu_get_text(yyscan_t yyscanner);
->> +YYSTYPE *perf_pmu_get_lval(yyscan_t yyscanner);
->> +
->> +static int value(yyscan_t scanner, int base)
->>  {
->> +	YYSTYPE *yylval =3D perf_pmu_get_lval(scanner);
->> +	char *text =3D perf_pmu_get_text(scanner);
->>  	long num;
->> =20
->>  	errno =3D 0;
->> -	num =3D strtoul(perf_pmu_text, NULL, base);
->> +	num =3D strtoul(text, NULL, base);
->>  	if (errno)
->>  		return PP_ERROR;
->> =20
->> -	perf_pmu_lval=2Enum =3D num;
->> +	yylval->num =3D num;
->>  	return PP_VALUE;
->>  }
->> =20
->> @@ -25,7 +32,7 @@ num_dec         [0-9]+
->> =20
->>  %%
->> =20
->> -{num_dec}	{ return value(10); }
->> +{num_dec}	{ return value(yyscanner, 10); }
->>  config		{ return PP_CONFIG; }
->>  -		{ return '-'; }
->>  :		{ return ':'; }
->> @@ -35,7 +42,7 @@ config		{ return PP_CONFIG; }
->> =20
->>  %%
->> =20
->> -int perf_pmu_wrap(void)
->> +int perf_pmu_wrap(void *scanner __maybe_unused)
->>  {
->>  	return 1;
->>  }
->> diff --git a/tools/perf/util/pmu=2Ey b/tools/perf/util/pmu=2Ey
->> index e675d79a0274=2E=2Edff4e892ac4d 100644
->> --- a/tools/perf/util/pmu=2Ey
->> +++ b/tools/perf/util/pmu=2Ey
->> @@ -1,6 +1,8 @@
->> -
->> +%define api=2Epure full
->>  %parse-param {struct list_head *format}
->>  %parse-param {char *name}
->> +%parse-param {void *scanner}
->> +%lex-param {void* scanner}
->> =20
->>  %{
->> =20
->> @@ -78,6 +80,7 @@ PP_VALUE
->> =20
->>  void perf_pmu_error(struct list_head *list __maybe_unused,
->>  		    char *name __maybe_unused,
->> +		    void *scanner __maybe_unused,
->>  		    char const *msg __maybe_unused)
->>  {
->>  }
->> --=20
->> 2=2E40=2E0=2E348=2Egf938b09366-goog
->>=20
+> 
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> > v4:
+> > - No change.
+> > ---
+> >  drivers/cxl/core/Makefile |  1 +
+> >  drivers/cxl/core/core.h   |  1 +
+> >  drivers/cxl/core/cpmu.c   | 72 +++++++++++++++++++++++++++++++++++++++  
+> 
+> A quibble with the naming, I prefer:
+> 
+> drivers/cxl/core/pmu.c
+> 
+> ...since "cxl" is in the directory path. Also, usages of cpmu
+> already have a cxl in their symbol names, so just s/cpmu/pmu/ throught.
+> The usage of CPMU_ for register macros would seem be more clear, or at
+> least more consistent, as CXL_PMU_ like the other register offset
+> definitions in cxlpci.h.
+
+Makes sense. I'll leave the register defs as
+CPMU_XXX to keep them compact but use the pmu naming for pretty much everything else.
+
+> 
+> >  drivers/cxl/core/port.c   |  2 ++
+> >  drivers/cxl/core/regs.c   | 16 +++++++++
+> >  drivers/cxl/cpmu.h        | 56 ++++++++++++++++++++++++++++++  
+> 
+> drivers/cxl/pmu.h
+> 
+> >  drivers/cxl/cxl.h         | 14 ++++++++
+> >  drivers/cxl/cxlpci.h      |  1 +
+> >  drivers/cxl/pci.c         | 25 +++++++++++++-
+> >  9 files changed, 187 insertions(+), 1 deletion(-)  
+> 
+> Other than those minor issues above, this looks good to me, with those
+> fixed up.
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Thanks,
+
