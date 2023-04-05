@@ -2,44 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3929AC76188
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 13:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CBEC7619A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 13:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238167AbjDENVA (ORCPT
+        id S238058AbjDENZR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 09:21:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
+        Wed, 5 Apr 2023 09:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237944AbjDENU6 (ORCPT
+        with ESMTP id S238074AbjDENZQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 09:20:58 -0400
+        Wed, 5 Apr 2023 09:25:16 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30B951FFD;
-        Wed,  5 Apr 2023 06:20:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D525F46B0;
+        Wed,  5 Apr 2023 06:25:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BEDAE63761;
-        Wed,  5 Apr 2023 13:20:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E66BDC4339B;
-        Wed,  5 Apr 2023 13:20:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 54E9062665;
+        Wed,  5 Apr 2023 13:25:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5922EC433EF;
+        Wed,  5 Apr 2023 13:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680700856;
-        bh=QIhxJxgeabElsKbsT4Kwv+/L8XzSVixHmAIIkwb8yxs=;
+        s=k20201202; t=1680701109;
+        bh=9/CRT5dAHqbJL43zAPLWpSF2r6dXnm7Bj54C26pxSPc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XtnsDQmkv7UQzCCCuyXer91QTOIhbSTDFLrx9ooPRpxwbbQhM7JipVUkO9NwLwM7p
-         +AZ/a8LK7zPC5dPZ2WA1kHPC/OqJOuC28VeYmEenGeyMUAcFKdQ+8cdxGy9naL5bUn
-         C75sfNFcEleIG7pv6b08Ja5/v4TcVY9mFuC1nHVEVb6mORPA2u/gD2mtB2icD3DSL2
-         u6RbnHVIdjEy+YdV3ZTLr3DgDVMm8bBf9U/PsKuvg8EJ5hrLtPa6bftzBWQMsW0VTY
-         x5apGxE56qwrWZug4wb3u7mzh4Elk2ymvnIq8GRqM61FEtuXg5GSKpr0/4UrJNX0qF
-         yvzcLTruJUDfw==
+        b=L9CjF6TEK3BJ+x68a4Zs+oo11fSzT5nGAvSicFKiVDHI+4/N8KaZQq3g3M4Q5I0iW
+         DgVgauloSnDA6KXu3x6RW0+8c+z2NzmZQlJCKN3n+x3VreRLgYHiqNxwA9bG9oj/Yt
+         ubS7eVn+eq6bMWA6H+Y6EO/4OIxkKLULO7NGEw8uIl8Ceusq77zyf3euCVSnAGPfeg
+         uHJTq07xbmvxPcb9UlGanPu1D4UaPChyp4GXqfoFANhrvFQ64crZypHD5uRvhqWQxZ
+         VQe+Wco5p3sPsWfcq2AU84ya9CGuBhMeNlcN+46ccuqb3cd8kLBS8iHl0WHIcdv/SB
+         YRwA20A4XfiXw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3D31A4052D; Wed,  5 Apr 2023 10:20:53 -0300 (-03)
-Date:   Wed, 5 Apr 2023 10:20:53 -0300
+        id E6E3B4052D; Wed,  5 Apr 2023 10:25:06 -0300 (-03)
+Date:   Wed, 5 Apr 2023 10:25:06 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -54,6 +53,7 @@ Cc:     Ian Rogers <irogers@google.com>,
         Yury Norov <yury.norov@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -72,88 +72,158 @@ Cc:     Ian Rogers <irogers@google.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         Hao Luo <haoluo@google.com>,
         Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
-Message-ID: <ZC11tTdXuJR/M8o+@kernel.org>
-References: <20230320212248.1175731-1-irogers@google.com>
- <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
- <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
- <ZCxvYpeoemPHUmJ4@kernel.org>
- <ZCxyZcnd9/4zjbQZ@kernel.org>
- <527b8bcb-d462-5fff-5310-703b55902a61@intel.com>
+Subject: Re: [PATCH v6 01/12] perf map: Rename map_ip and unmap_ip
+Message-ID: <ZC12sgYsbvF/C28z@kernel.org>
+References: <20230404205954.2245628-1-irogers@google.com>
+ <20230404205954.2245628-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <527b8bcb-d462-5fff-5310-703b55902a61@intel.com>
+In-Reply-To: <20230404205954.2245628-2-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 05, 2023 at 11:47:26AM +0300, Adrian Hunter escreveu:
-> On 4/04/23 21:54, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Apr 04, 2023 at 03:41:38PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Tue, Apr 04, 2023 at 08:25:41PM +0300, Adrian Hunter escreveu:
-> >>> On 4/04/23 18:58, Ian Rogers wrote:
-> >>>> Ping. It would be nice to have this landed or at least the first 10
-> >>>> patches that refactor the map API and are the bulk of the
-> >>>> lines-of-code changed. Having those landed would make it easier to
-> >>>> rebase in the future, but I also think the whole series is ready to
-> >>>> go.
-> >>>
-> >>> I was wondering if the handling of dynamic data like struct map makes
-> >>> any sense at present.  Perhaps someone can reassure me.
-> >>>
-> >>> A struct map can be updated when an MMAP event is processed.  So it
-> >>
-> >> Yes, it can, and the update is made via a new PERF_RECORD_MMAP, right?
-> >>
-> >> So:
-> >>
-> >> 	perf_event__process_mmap()
-> >> 	  machine__process_mmap2_event()
-> >> 	    map__new() + thread__insert_map(thread, map)
-> >> 	    	maps__fixup_overlappings()
-> >> 			maps__insert(thread->maps, map);
-> >>
-> >> Ok, from this point on new samples on ] map->start .. map->end ] will
-> >> grab a refcount to this new map in its hist_entry, right?
-> >>
-> >> When we want to sort by dso we will look at hist_entry->map->dso, etc.
-> > 
-> > And in 'perf top' we go decaying hist entries, when we delete the
-> > hist_entry, drop the reference count to things it holds, that will then
-> > be finally deleted when no more hist_entries point to it.
-> > 
-> >>> seems like anything racing with event processing is already broken, and
-> >>> reference counting / locking cannot help - unless there is also
-> >>> copy-on-write (which there isn't at present)?
- 
-> So I checked, and struct map *is* copy-on-write in
-> maps__fixup_overlappings(), so that should not be a problem.
- 
-> >>> For struct maps, referencing it while simultaneously processing
-> >>> events seems to make even less sense?
+Em Tue, Apr 04, 2023 at 01:59:43PM -0700, Ian Rogers escreveu:
+> Add dso to match comment. This avoids a naming conflict with later
+> added accessor functions for variables in struct map.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-kmem.c    | 2 +-
+>  tools/perf/builtin-script.c  | 4 ++--
+>  tools/perf/util/machine.c    | 4 ++--
+>  tools/perf/util/map.c        | 8 ++++----
+>  tools/perf/util/map.h        | 4 ++--
+>  tools/perf/util/symbol-elf.c | 4 ++--
+>  6 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index f3029742b800..4d4b770a401c 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -423,7 +423,7 @@ static u64 find_callsite(struct evsel *evsel, struct perf_sample *sample)
+>  		if (!caller) {
+>  			/* found */
+>  			if (node->ms.map)
+> -				addr = map__unmap_ip(node->ms.map, node->ip);
+> +				addr = map__dso_unmap_ip(node->ms.map, node->ip);
 
-> >> Can you elaborate some more?
- 
-> Only that the maps are not necessarily stable e.g. the map that you
-> need has been replaced in the meantime.
+As we chatted, I think this is a good opportunity to make this more
+clear, perhaps rename map__unmap_ip() to map__addr_offset_to_virt() and
+map__map_ip() to map__addr_virt_to_offset()?
 
-Well, it may be sliced in several or shrunk by new ones overlapping it,
-but it if completely disappears, say a new map starts before the one
-disappearing and ends after it, then it remains with reference counts if
-there are hist_entries (or other data structure) pointing to them,
-right?
- 
-> But upon investigation, the only user at the moment is
-> maps__find_ams().  If we kept the removed maps (we used to),
-> it might be possible to make maps__find_ams() work correctly
-> in any case.
+- Arnaldo
 
-Humm, I think I see what you mean, maps__find_ams() is called when we
-are annotating a symbol, not when we're processing a sample, so it may
-be the case that at the time of annotation the executable that is being
-found (its parsing the target IP of a 'call' assembly instruction) was
-replaced, is that the case?
+>  			else
+>  				addr = node->ip;
+>  
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 1d078106abc4..af0a69c7f41f 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1012,11 +1012,11 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+>  
+>  		if (thread__find_map_fb(thread, sample->cpumode, from, &alf) &&
+>  		    !map__dso(alf.map)->adjust_symbols)
+> -			from = map__map_ip(alf.map, from);
+> +			from = map__dso_map_ip(alf.map, from);
+>  
+>  		if (thread__find_map_fb(thread, sample->cpumode, to, &alt) &&
+>  		    !map__dso(alt.map)->adjust_symbols)
+> -			to = map__map_ip(alt.map, to);
+> +			to = map__dso_map_ip(alt.map, to);
+>  
+>  		printed += fprintf(fp, " 0x%"PRIx64, from);
+>  		if (PRINT_FIELD(DSO)) {
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 7852b97da10a..9d24980a0a93 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -3058,7 +3058,7 @@ static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms
+>  	if (!symbol_conf.inline_name || !map || !sym)
+>  		return ret;
+>  
+> -	addr = map__map_ip(map, ip);
+> +	addr = map__dso_map_ip(map, ip);
+>  	addr = map__rip_2objdump(map, addr);
+>  	dso = map__dso(map);
+>  
+> @@ -3103,7 +3103,7 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
+>  	 * its corresponding binary.
+>  	 */
+>  	if (entry->ms.map)
+> -		addr = map__map_ip(entry->ms.map, entry->ip);
+> +		addr = map__dso_map_ip(entry->ms.map, entry->ip);
+>  
+>  	srcline = callchain_srcline(&entry->ms, addr);
+>  	return callchain_cursor_append(cursor, entry->ip, &entry->ms,
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 416fc449bde8..d97a6d20626f 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -109,8 +109,8 @@ void map__init(struct map *map, u64 start, u64 end, u64 pgoff, struct dso *dso)
+>  	map->pgoff    = pgoff;
+>  	map->reloc    = 0;
+>  	map->dso      = dso__get(dso);
+> -	map->map_ip   = map__map_ip;
+> -	map->unmap_ip = map__unmap_ip;
+> +	map->map_ip   = map__dso_map_ip;
+> +	map->unmap_ip = map__dso_unmap_ip;
+>  	map->erange_warned = false;
+>  	refcount_set(&map->refcnt, 1);
+>  }
+> @@ -590,12 +590,12 @@ struct maps *map__kmaps(struct map *map)
+>  	return kmap->kmaps;
+>  }
+>  
+> -u64 map__map_ip(const struct map *map, u64 ip)
+> +u64 map__dso_map_ip(const struct map *map, u64 ip)
+>  {
+>  	return ip - map__start(map) + map->pgoff;
+>  }
+>  
+> -u64 map__unmap_ip(const struct map *map, u64 ip)
+> +u64 map__dso_unmap_ip(const struct map *map, u64 ip)
+>  {
+>  	return ip + map__start(map) - map->pgoff;
+>  }
+> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+> index 16646b94fa3a..9b0a84e46e48 100644
+> --- a/tools/perf/util/map.h
+> +++ b/tools/perf/util/map.h
+> @@ -41,9 +41,9 @@ struct kmap *map__kmap(struct map *map);
+>  struct maps *map__kmaps(struct map *map);
+>  
+>  /* ip -> dso rip */
+> -u64 map__map_ip(const struct map *map, u64 ip);
+> +u64 map__dso_map_ip(const struct map *map, u64 ip);
+>  /* dso rip -> ip */
+> -u64 map__unmap_ip(const struct map *map, u64 ip);
+> +u64 map__dso_unmap_ip(const struct map *map, u64 ip);
+>  /* Returns ip */
+>  u64 identity__map_ip(const struct map *map __maybe_unused, u64 ip);
+>  
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index e715869eab8a..c55981116f68 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1357,8 +1357,8 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+>  			map->start = shdr->sh_addr + ref_reloc(kmap);
+>  			map->end = map__start(map) + shdr->sh_size;
+>  			map->pgoff = shdr->sh_offset;
+> -			map->map_ip = map__map_ip;
+> -			map->unmap_ip = map__unmap_ip;
+> +			map->map_ip = map__dso_map_ip;
+> +			map->unmap_ip = map__dso_unmap_ip;
+>  			/* Ensure maps are correctly ordered */
+>  			if (kmaps) {
+>  				int err;
+> -- 
+> 2.40.0.348.gf938b09366-goog
+> 
+
+-- 
 
 - Arnaldo
