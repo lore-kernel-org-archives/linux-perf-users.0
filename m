@@ -2,169 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD58FC7619A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 16:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CED8C7619A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 Apr 2023 16:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232305AbjDEQ0J (ORCPT
+        id S232736AbjDEQhZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 Apr 2023 12:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33758 "EHLO
+        Wed, 5 Apr 2023 12:37:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjDEQ0I (ORCPT
+        with ESMTP id S232558AbjDEQhX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 Apr 2023 12:26:08 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D9ACA;
-        Wed,  5 Apr 2023 09:26:05 -0700 (PDT)
+        Wed, 5 Apr 2023 12:37:23 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CCC4C1F;
+        Wed,  5 Apr 2023 09:37:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680711965; x=1712247965;
+  t=1680712643; x=1712248643;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=OBPArDpGTZjCLqy9R4ICyoG2JGVamWpModrhzwKQTJE=;
-  b=eQEZrZKM4DS0aZKPJ5TE/Hch5M/Q8kA/g5vhMnfUej1ou9egQueYeSgd
-   tSM4Vei2GeyuyFyF8AXNwIaou4pisOg2kCQx3Auh+gQVJC6hbzSE8ygqk
-   rQ08vjOz9mS3A5tx3DH7ZC6ClSvzsKWTO7DBHDH9SVzXbZ7Ldf+GXeZVt
-   cQsfkUcXXCFRnUKtqolcQe/QOp1ED2sG+/vfH3rQrweHDzWo46zXIHlQY
-   YkZOsaIWO0iAG4jgcq4rUy/LmxEHvobwUffv6lsoh9bXchEMc4H+x/Ov0
-   S++BfuEdkOfZD5F3E2Utxhb+yCVuaEBhqLLTVvAYX8XYxLvDHY8Gg8MGI
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="428787799"
+  bh=0xErBa/ZTd4QuIygEuCmz4Ddp7YfQ0AoZ3dVIG2ez3Y=;
+  b=dqLPk3bQ9PiFQn0zDY+AcZjtRALJZLymqJ4MJ4H9QMKAMOhpd8WOcXId
+   k8Hf8+rgp+Z9K7SytT0q1mK5gw1d8TiO59HJfrKBwaf3Ffu/xBXejZc5M
+   1CMxxfS8HdphHR60dFj3ZWKdWUEOaBFZ8wF/LRaiaTsD5QU7PzZzVwNxv
+   ZqCUYGItOeP3xk/3Ed6MvLguxuRN9XP+gDmYljboI1X1P5bjtsN5QuS9g
+   mz1Vde2rXtnqNox+BC5E/d4/hW4YoMlhq311JQWEDB6ZvqP3Cb+hd0T2x
+   xI4aUSmEvHngGnTNoQVFY+0+jF/VkgQCEE4xCX3DM1kEDdkimHQX98SoS
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="339995929"
 X-IronPort-AV: E=Sophos;i="5.98,321,1673942400"; 
-   d="scan'208";a="428787799"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 09:25:41 -0700
+   d="scan'208";a="339995929"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 09:37:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="686806956"
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="932891908"
 X-IronPort-AV: E=Sophos;i="5.98,321,1673942400"; 
-   d="scan'208";a="686806956"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.42.88])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 09:25:32 -0700
-Message-ID: <2aaba740-35e4-4a68-2676-63d47898378c@intel.com>
-Date:   Wed, 5 Apr 2023 19:25:27 +0300
+   d="scan'208";a="932891908"
+Received: from kyunghyu-mobl2.amr.corp.intel.com (HELO [10.209.6.69]) ([10.209.6.69])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 09:37:05 -0700
+Message-ID: <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+Date:   Wed, 5 Apr 2023 09:37:04 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.1
-Subject: Re: [PATCH v5 00/17] Reference count checker and related fixes
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
 Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+To:     Uros Bizjak <ubizjak@gmail.com>, linux-alpha@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Stephane Eranian <eranian@google.com>
-References: <20230320212248.1175731-1-irogers@google.com>
- <CAP-5=fX4=pUmcFpRZ5xFds1awSr7HSo1F9rH4=D7NJXW9OXXVQ@mail.gmail.com>
- <7443d427-783b-44b6-85e6-5e667bb83a94@intel.com>
- <ZCxvYpeoemPHUmJ4@kernel.org> <ZCxyZcnd9/4zjbQZ@kernel.org>
- <527b8bcb-d462-5fff-5310-703b55902a61@intel.com>
- <ZC11tTdXuJR/M8o+@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZC11tTdXuJR/M8o+@kernel.org>
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>
+References: <20230405141710.3551-1-ubizjak@gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20230405141710.3551-1-ubizjak@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 5/04/23 16:20, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Apr 05, 2023 at 11:47:26AM +0300, Adrian Hunter escreveu:
->> On 4/04/23 21:54, Arnaldo Carvalho de Melo wrote:
->>> Em Tue, Apr 04, 2023 at 03:41:38PM -0300, Arnaldo Carvalho de Melo escreveu:
->>>> Em Tue, Apr 04, 2023 at 08:25:41PM +0300, Adrian Hunter escreveu:
->>>>> On 4/04/23 18:58, Ian Rogers wrote:
->>>>>> Ping. It would be nice to have this landed or at least the first 10
->>>>>> patches that refactor the map API and are the bulk of the
->>>>>> lines-of-code changed. Having those landed would make it easier to
->>>>>> rebase in the future, but I also think the whole series is ready to
->>>>>> go.
->>>>>
->>>>> I was wondering if the handling of dynamic data like struct map makes
->>>>> any sense at present.  Perhaps someone can reassure me.
->>>>>
->>>>> A struct map can be updated when an MMAP event is processed.  So it
->>>>
->>>> Yes, it can, and the update is made via a new PERF_RECORD_MMAP, right?
->>>>
->>>> So:
->>>>
->>>> 	perf_event__process_mmap()
->>>> 	  machine__process_mmap2_event()
->>>> 	    map__new() + thread__insert_map(thread, map)
->>>> 	    	maps__fixup_overlappings()
->>>> 			maps__insert(thread->maps, map);
->>>>
->>>> Ok, from this point on new samples on ] map->start .. map->end ] will
->>>> grab a refcount to this new map in its hist_entry, right?
->>>>
->>>> When we want to sort by dso we will look at hist_entry->map->dso, etc.
->>>
->>> And in 'perf top' we go decaying hist entries, when we delete the
->>> hist_entry, drop the reference count to things it holds, that will then
->>> be finally deleted when no more hist_entries point to it.
->>>
->>>>> seems like anything racing with event processing is already broken, and
->>>>> reference counting / locking cannot help - unless there is also
->>>>> copy-on-write (which there isn't at present)?
->  
->> So I checked, and struct map *is* copy-on-write in
->> maps__fixup_overlappings(), so that should not be a problem.
->  
->>>>> For struct maps, referencing it while simultaneously processing
->>>>> events seems to make even less sense?
-> 
->>>> Can you elaborate some more?
->  
->> Only that the maps are not necessarily stable e.g. the map that you
->> need has been replaced in the meantime.
-> 
-> Well, it may be sliced in several or shrunk by new ones overlapping it,
-> but it if completely disappears, say a new map starts before the one
-> disappearing and ends after it, then it remains with reference counts if
-> there are hist_entries (or other data structure) pointing to them,
-> right?
->  
->> But upon investigation, the only user at the moment is
->> maps__find_ams().  If we kept the removed maps (we used to),
->> it might be possible to make maps__find_ams() work correctly
->> in any case.
-> 
-> Humm, I think I see what you mean, maps__find_ams() is called when we
-> are annotating a symbol, not when we're processing a sample, so it may
-> be the case that at the time of annotation the executable that is being
-> found (its parsing the target IP of a 'call' assembly instruction) was
-> replaced, is that the case?
+On 4/5/23 07:17, Uros Bizjak wrote:
+> Add generic and target specific support for local{,64}_try_cmpxchg
+> and wire up support for all targets that use local_t infrastructure.
 
-Yes, that is the possibility
+I feel like I'm missing some context.
 
+What are the actual end user visible effects of this series?  Is there a
+measurable decrease in perf overhead?  Why go to all this trouble for
+perf?  Who else will use local_try_cmpxchg()?
+
+I'm all for improving things, and perf is an important user.  But, if
+the goal here is improving performance, it would be nice to see at least
+a stab at quantifying the performance delta.
