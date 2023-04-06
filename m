@@ -2,132 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AE1C77B6C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B31C77B6C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbjDFVcu (ORCPT
+        id S231316AbjDFVdZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 17:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57140 "EHLO
+        Thu, 6 Apr 2023 17:33:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232090AbjDFVcq (ORCPT
+        with ESMTP id S236642AbjDFVdY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 17:32:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F387E6592;
-        Thu,  6 Apr 2023 14:32:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C7AE64747;
-        Thu,  6 Apr 2023 21:32:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EDCC433EF;
-        Thu,  6 Apr 2023 21:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680816764;
-        bh=JWuq+EziBNQxuwPJXYAtOnOgUwjkYUyWSc39WtNgEFw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qppF1q6r9aR6HLEsvTcAlCsgprvWP519wYwjKuG2GWbxGMFLRj/7zy92kPTDl2gRO
-         kwxHtOxjdlpXSobYFijhv8VmzYeImgbfYyCTW0RkKwOC+Ue1oHwn4heNGTF+qlWDDE
-         aOjR0Z3rOSNyd7X4UbS6fBw04g0DAWkeEKUBB4mpbDo/+8isblmNqWGzrTZRj8gxH7
-         Qi/zs4eXhzQn5AM9pyOnuv1hYQuVNmKKyt54uRZxJc4kzHWwq3hrVf9F/W9HwyhTUl
-         GD6TQoL7rlCIz9bzPo4rXA4ldJQ20u1igcDIoPAJm0lVvieehpeBjsolMZPzLBRM1x
-         EMaqZ9YAbin2w==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5A0E74052D; Thu,  6 Apr 2023 18:32:42 -0300 (-03)
-Date:   Thu, 6 Apr 2023 18:32:42 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        "linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>,
+        Thu, 6 Apr 2023 17:33:24 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E954900C
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Apr 2023 14:33:19 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3e390e23f83so528051cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Apr 2023 14:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680816798;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IObMk8A+yB7kzQzd06qcvUQD4B00Pzu5PtnbgiCc0Qc=;
+        b=rfBYLWluQ0/Pd7dFpjwZXmRk6uGk/xeFl3oqLaePqw0xeERch2oiY4AxHT9EJaZ+Jc
+         O2rdydCfeZvAvtDwiWqxVd3/d/p0jeE4MPlQfO1ys6QZYNdkjk0BoGwyaiXbuLfrzOpw
+         hVz0mhcXBPMnkBJyP/9ttJOIr7Mq0Xa3/ladg15pyMqEcH14NjzwzXsgPW7giOlNLX3H
+         n+lVKYjoIidbNWXSHuRgz/yB8zRV60SnGZaT2P2Jc7NJ/lvAbVwxwTihErJQddtq4Mwu
+         in+uqz8l9G9gPh72cka0drTL5o7FJC9HEME2XPBvqESwcdMnMdvOTqYzlaUpeUfZUzUV
+         ecDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680816798;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IObMk8A+yB7kzQzd06qcvUQD4B00Pzu5PtnbgiCc0Qc=;
+        b=wsb+UGe/4XCHFk4A7JlAKa3wVw42FbjzYIunzr+euhtzD6lfg0fWNc7Iu0uutvDDXB
+         E8P+7PZCt7ufB6zN+z9CqLuksjGGnp36QTj0w3lGknT1SExcReVZul4DnoCbK4HoUcbw
+         x2wKkj34D+Om7l91YZjHj9rOfTdULfS2zXWPo/arQk80d6yCwGUF7IJHdmGFedl8CE4z
+         7HvLIIv4HLI4GMd18MWMgyIBCeQlIMnf45LbVAefmZvVSt2s6rbW2iCPfUSTgu2T7k7W
+         b0R1rZ6zw10Wwc0GTKbXJy1KqgthOLEOgO+m1HS0G5P5Ot/uRIXAmRZDwyRDcrOWhQo6
+         Y8qQ==
+X-Gm-Message-State: AAQBX9dgSyDK0tidWNAySgraEPSuEIY9+FB7+a3aXNu+DR2OXKg9x1fV
+        E+7ahoQ0IBUAy3+vgYv2AOHDDIKQf1aoOq54uWKYpg==
+X-Google-Smtp-Source: AKy350bIgdrkwnd6flj3ApzpuX9+RTf+JBOiuXuCCaLVjYUzp6sOfzzSf5eGUkHLXfL+yiLEoDUFxhrrGiyBNDn8G9E=
+X-Received: by 2002:ac8:5bd2:0:b0:3bd:17d6:e04c with SMTP id
+ b18-20020ac85bd2000000b003bd17d6e04cmr138867qtb.2.1680816798405; Thu, 06 Apr
+ 2023 14:33:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230406065224.2553640-1-irogers@google.com> <20230406065224.2553640-2-irogers@google.com>
+ <ZC81CTH/VayirB5z@kernel.org>
+In-Reply-To: <ZC81CTH/VayirB5z@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 6 Apr 2023 14:33:07 -0700
+Message-ID: <CAP-5=fXeuhYBDvRmu6vQLQFfW=0qBTH9EGmMrFb1sfGsJhGLFg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] perf pmu: Fix a few potential fd leaks
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Subject: Re: [PATCH] tools: Rename __fallthrough to fallthrough
-Message-ID: <ZC86emOOKlgysuwW@kernel.org>
-References: <20221125154947.2163498-1-Liam.Howlett@oracle.com>
- <CANiq72ntFXb+ZhBqgBAMu2n8wcgJLZRZC1rmBVvL5m+K1Nhw2w@mail.gmail.com>
- <20230406195830.ieiozetmk7qjllol@revolver>
- <CANiq72=C4OCcbX4C-ap3YTm5Ni6RdskQ67rt4iWs0_1hTe1rkw@mail.gmail.com>
- <ZC81Z4p8WnYtVwFT@kernel.org>
- <ZC86NOtaBPi1lhtI@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZC86NOtaBPi1lhtI@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 06, 2023 at 06:31:32PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Apr 06, 2023 at 06:11:03PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, Apr 06, 2023 at 10:02:57PM +0200, Miguel Ojeda escreveu:
-> > > On Thu, Apr 6, 2023 at 9:58 PM Liam R. Howlett <Liam.Howlett@oracle.com> wrote:
-> > > >
-> > > > Any chance of this being accepted?  I'm looking to use this in the radix
-> > > > test suite and would rather not duplicate code.
-> > > 
-> > > That would be up to the `tools/perf/` maintainers.
-> > 
-> > Thanks, applied,
-> 
-> So, I noticed some missing conversions, fixed that, but then when trying
-> to test build it with:
-> 
-> 	make -C tools/perf build-test
-> 
-> I stumbled on this:
-> 
->              make_with_gtk2: cd . && make GTK2=1 -j32  DESTDIR=/tmp/tmp.5AP8tPJgiT
-> cd . && make GTK2=1 -j32 DESTDIR=/tmp/tmp.5AP8tPJgiT
->   BUILD:   Doing 'make -j32' parallel build
->   HOSTCC  fixdep.o
->   HOSTLD  fixdep-in.o
-> <SNIP>
->   CC      trace/beauty/ioctl.o
-> In file included from /usr/lib64/glib-2.0/include/glibconfig.h:9,
->                  from /usr/include/glib-2.0/glib/gtypes.h:34,
->                  from /usr/include/glib-2.0/glib/galloca.h:34,
->                  from /usr/include/glib-2.0/glib.h:32,
->                  from /usr/include/glib-2.0/gobject/gbinding.h:30,
->                  from /usr/include/glib-2.0/glib-object.h:24,
->                  from /usr/include/glib-2.0/gio/gioenums.h:30,
->                  from /usr/include/glib-2.0/gio/giotypes.h:30,
->                  from /usr/include/glib-2.0/gio/gio.h:28,
->                  from /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h:30,
->                  from /usr/include/gtk-2.0/gdk/gdk.h:32,
->                  from /usr/include/gtk-2.0/gtk/gtk.h:32,
->                  from ui/gtk/gtk.h:8,
->                  from ui/gtk/helpline.c:6:
-> /usr/include/glib-2.0/glib/gmacros.h:637:28: error: missing ')' after "__has_attribute"
->   637 | #if g_macro__has_attribute(fallthrough)
->       |                            ^~~~~~~~~~~
+On Thu, Apr 6, 2023 at 2:09=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> Em Wed, Apr 05, 2023 at 11:52:24PM -0700, Ian Rogers escreveu:
+> > Ensure fd is closed on error paths.
+>
+> Was this reported by Jiri?
 
-I'm now trying with:
+Jiri's one was in the code I modified, whereas these were from
+Namhyung's previous openat change. It is the same issue, I'm agnostic
+on whether it needs a tag or not.
 
-diff --git a/tools/perf/ui/gtk/browser.c b/tools/perf/ui/gtk/browser.c
-index 8f3e43d148a8560b..d2dadf3873fbdf41 100644
---- a/tools/perf/ui/gtk/browser.c
-+++ b/tools/perf/ui/gtk/browser.c
-@@ -1,9 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "gtk.h"
- #include "../evsel.h"
- #include "../sort.h"
- #include "../hist.h"
- #include "../helpline.h"
--#include "gtk.h"
- 
- #include <signal.h>
- 
+Thanks,
+Ian
+
+> - Arnaldo
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/pmu.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> > index 96ef317bac41..9eedbfc9e863 100644
+> > --- a/tools/perf/util/pmu.c
+> > +++ b/tools/perf/util/pmu.c
+> > @@ -494,9 +494,13 @@ static int pmu_aliases_parse(int dirfd, struct lis=
+t_head *head)
+> >                       continue;
+> >
+> >               fd =3D openat(dirfd, name, O_RDONLY);
+> > +             if (fd =3D=3D -1) {
+> > +                     pr_debug("Cannot open %s\n", name);
+> > +                     continue;
+> > +             }
+> >               file =3D fdopen(fd, "r");
+> >               if (!file) {
+> > -                     pr_debug("Cannot open %s\n", name);
+> > +                     close(fd);
+> >                       continue;
+> >               }
+> >
+> > @@ -1882,9 +1886,13 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+> >                       continue;
+> >
+> >               fd =3D openat(caps_fd, name, O_RDONLY);
+> > +             if (fd =3D=3D -1)
+> > +                     continue;
+> >               file =3D fdopen(fd, "r");
+> > -             if (!file)
+> > +             if (!file) {
+> > +                     close(fd);
+> >                       continue;
+> > +             }
+> >
+> >               if (!fgets(value, sizeof(value), file) ||
+> >                   (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
+> > --
+> > 2.40.0.348.gf938b09366-goog
+> >
+>
+> --
+>
+> - Arnaldo
