@@ -2,110 +2,193 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6A5C76196
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 15:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE8FC761A6
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 16:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjDFPLH (ORCPT
+        id S238183AbjDFQeC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 11:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
+        Thu, 6 Apr 2023 12:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230049AbjDFPLG (ORCPT
+        with ESMTP id S229728AbjDFQeC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 11:11:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCE84C20;
-        Thu,  6 Apr 2023 08:11:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 48D7C62965;
-        Thu,  6 Apr 2023 15:10:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1761CC433EF;
-        Thu,  6 Apr 2023 15:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680793829;
-        bh=0UD7lBi4KhWPJ7V/3+hujN1yIN9Kh2kmwkcgc5o2o2g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rU3B19bLjMSfWSQKyVVBLd+GFum7QNWMNPJ+WV9uSc2cGuKr8vtOGRqp9WWRBSU/m
-         Cm0Kkt0IJNae7kKhDULiEk3qKePAN60hPzRG3DmMywm4q+5i/4Wak2haSeJby/+G4B
-         fQkj+uN1jddMGrmbMSeCRJSnFjjFWIhH4nTs58G6lk0mNnrAcJUqULhSa4kncIlWar
-         PkUMwlnTdbkLcBsORvzKfi00k7MKQCVkaPhkDjnkyxDkudMV0ANVYDZ2g19OH878r0
-         WJkwPR/9ZMv3oY2KpwKMk7gAS10M2V8EGLHVq3hU3Dnx/aY7o8VySRs6LCOSL6Jjrv
-         uTqXx58lk8Qsg==
-Date:   Thu, 6 Apr 2023 16:10:23 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Peter Newman <peternewman@google.com>
-Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
-        eranian@google.com, irogers@google.com, jolsa@kernel.org,
-        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org
-Subject: Re: [PATCH v5] arm64: pmuv3: dynamically map
- PERF_COUNT_HW_BRANCH_INSTRUCTIONS
-Message-ID: <20230406151022.GB11802@willie-the-truck>
-References: <20230403091547.441550-1-peternewman@google.com>
+        Thu, 6 Apr 2023 12:34:02 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6499766;
+        Thu,  6 Apr 2023 09:33:53 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Psn9T5WxSz67MmR;
+        Fri,  7 Apr 2023 00:33:01 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 6 Apr
+ 2023 17:33:50 +0100
+Date:   Thu, 6 Apr 2023 17:33:49 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>, <linuxarm@huawei.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v4 5/5] docs: perf: Minimal introduction the the CXL PMU
+ device and driver
+Message-ID: <20230406173349.00007503@Huawei.com>
+In-Reply-To: <642ca39865e8b_21a8294d9@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
+        <20230330164556.31533-6-Jonathan.Cameron@huawei.com>
+        <642ca39865e8b_21a8294d9@dwillia2-xfh.jf.intel.com.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230403091547.441550-1-peternewman@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
 
-On Mon, Apr 03, 2023 at 11:15:47AM +0200, Peter Newman wrote:
-> From: Stephane Eranian <eranian@google.com>
 > 
-> The mapping of perf_events generic hardware events to actual PMU events on
-> ARM PMUv3 may not always be correct. This is in particular true for the
-> PERF_COUNT_HW_BRANCH_INSTRUCTIONS event. Although the mapping points to an
-> architected event, it may not always be available. This can be seen with a
-> simple:
+> > +
+> > +    /sys/bus/cxl/device/cpmu<id>
+> > +
+> > +The associated PMU is registered as
+> > +
+> > +   /sys/bus/event_sources/devices/cpmu<id>
+> > +
+> > +In common with other CXL bus devices, the id has no specific meaning and the
+> > +relationship to specific CXL device should be established via the device parent
+> > +of the device on the CXL bus.  
 > 
-> $ perf stat -e branches sleep 0
->  Performance counter stats for 'sleep 0':
+> So I went to go add some text about how to identify PMUs in a persistent
+> manner from one boot to the next. For CXL memdevs this is done by the
+> 'serial' attribute which is always stable regardless of the device init
+> order. That's harder to get to from the pmu device because it may be
+> associated with a device that does not have a memdev.
 > 
->    <not supported>      branches
-> 
->        0.001401081 seconds time elapsed
-> 
-> Yet the hardware does have an event that could be used for branches.
-> 
-> Dynamically check for a supported hardware event which can be used for
-> PERF_COUNT_HW_BRANCH_INSTRUCTIONS at mapping time.
-> 
-> And with that:
-> 
-> $ perf stat -e branches sleep 0
-> 
->  Performance counter stats for 'sleep 0':
-> 
->            166,739      branches
-> 
->        0.000832163 seconds time elapsed
-> 
-> Co-Developed-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> Co-Developed-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Co-Developed-by: Peter Newman <peternewman@google.com>
-> Signed-off-by: Peter Newman <peternewman@google.com>
-> Link: https://lore.kernel.org/all/YvunKCJHSXKz%2FkZB@FVFF77S0Q05N
-> ---
-> v4->v5:
->  - update changelog tags
+> I think it's also going to be frustrating for userspace to see
+> randomized pmu ids across devices since that probing will happen in
+> parallel. So how about:
 
-Thanks, this looks good to me.
+Solving this in general for perf PMU drivers was what the parent device thing
+was about.  There is an argument that enabling any other path to get to
+this association is both unnecessary and just possibly unwise.
 
-Please can you rebase it on my for-next/perf branch so that I can queue it
-up? More of the PMU code has moved out into drivers/perf/.
+The nice advantage of just using an IDA and relying on parentage for the
+association was that I could avoid naming questions for all the other
+places these might turn in a CXL topology. The Lazy / efficient option ;)
 
-Cheers,
+You can now see exactly which PCI device a given instance is associated with.
+Custom ABI is going to be harder for anyone to use than that.
 
-Will
+I suppose we can potentially enable both paths - but it's not quite
+as straight forwards as you suggest.
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-next/perf
+> 
+> 1/ Add serial as an attribute for each PMU to export
+
+Where does it come from? We only have one source of serial number per device.
+That's no where near enough to work out where a PMU is. 
+
+> 2/ Change the device name format to be "pmuX.Y" where X can just reuse
+
+Could use something a little more detailed cxl bus, but the one registered and use
+to address this in bus/event_sources needs to be cxl specific so a cxl_ prefix
+is needed I think
+
+Given we need to namespace what the ids refer to, I'm currently going with
+pmu_memX.Y pmu_dspX.Y.Z pmu_uspX.Y
+on the cxl bus and
+cxl_pmu_memX.Y cxl_pmu_dspX.Y.Z cxl_pmu_uspX.Y on even sources bus.
+(Z needed because dsp index from 0 for each usp)
+We can figure out what to do about other CXL EPs later and for now at least
+there is no way to hand a CPMU instance off a host bridge (nothing in CEDT
+to tell you where to find it).
+
+I've had a fun day hacking PMUs onto the other emulated CXL devices to test
+this. 
+There is a can of worms I'll avoid for this series by just sticking to type3
+device PMUs for now.
+
+  I have no idea yet how we handle the interrupts safely for ports as those
+  interrupts are in control the pcie port driver not the CXL dport one.
+  At somepoint I'll send out an RFC about that if no one gets to it before
+  me.  For now I've hacked portdrv to always allocate max vectors and am ignoring the
+  lovely back traces due to thing getting torn down in the wrong order on shutdown.
+  For upstream ports I've hacked portdrv to pretend it knows there is something to handle.
+  As a starting point I think we'll need to teach portdrv enough about CXL
+  to be able to tell if it should provide interrupt services..
+
+Hence I'll keep the code to register the other PMUs for a future patch set
+and just make sure the code is structured to enable that in this series.
+
+
+> the memdev id for endpoints and be another value for switches, and Y is
+> guaranteed to be 0-based and in hardware discovery order.
+
+Also need to change registration order as PMUs were registered before the
+memdev, but that's easy enough to do.
+
+> 
+> ...with that, someone can write a udev script that can persistently
+> identify PMU[Y] on device[serial] each boot.
+
+> 
+> That also cleans up a /sys/bus/cxl/devices listing to make it clear
+> which pmu instances belong together.
+>  
+> > +
+> > +PMU driver provides description of available events and filter options in sysfs.
+> > +
+> > +The "format" directory describes all formats of the config (event vendor id,
+> > +group id and mask) config1 (threshold, filter enables) and config2 (filter
+> > +parameters) fields of the perf_event_attr structure.  The "events" directory
+> > +describes all documented events show in perf list.
+> > +
+> > +The events shown in perf list are the most fine grained events with a single
+> > +bit of the event mask set. More general events may be enable by setting
+> > +multiple mask bits in config. For example, all Device to Host Read Requests
+> > +may be captured on a single counter by setting the bits for all of
+> > +
+> > +* d2h_req_rdcurr
+> > +* d2h_req_rdown
+> > +* d2h_req_rdshared
+> > +* d2h_req_rdany
+> > +* d2h_req_rdownnodata
+> > +
+> > +Example of usage::
+> > +
+> > +  $#perf list
+> > +  cpmu0/clock_ticks/                                 [Kernel PMU event]
+> > +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
+> > +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
+> > +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
+> > +  -----------------------------------------------------------
+> > +
+> > +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/  
+> 
+> Ah here's the examples I was looking for in the last patch, nice.
+> 
+> > +
+> > +Vendor specific events may also be available and if so can be used via
+> > +
+> > +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
+> > +
+> > +The driver does not support sampling. So "perf record" and attaching to
+> > +a task are unsupported.  
+> 
+> Is this a common restriction for CPU-external pmus, or do you see
+> sampling support required to get this upstream?
+
+It's a common restriction. Whilst we could potentially implement sampling
+based on the presence of a suitable clock_ticks event it don't see it
+as a requirement initially.
+
+Jonathan
+
+
