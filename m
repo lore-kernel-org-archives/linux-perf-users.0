@@ -2,123 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59A2C76196
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 06:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE01C76196
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 08:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233235AbjDFGwy (ORCPT
+        id S235933AbjDFI0L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 02:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55516 "EHLO
+        Thu, 6 Apr 2023 04:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235622AbjDFGww (ORCPT
+        with ESMTP id S235895AbjDFI0J (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 02:52:52 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F87D93F7
-        for <linux-perf-users@vger.kernel.org>; Wed,  5 Apr 2023 23:52:48 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-536a4eba107so383492827b3.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Apr 2023 23:52:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680763967;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hz2UPK4m45H+1eNN7MZgSequAvZQRYw5qeG2C4U++jk=;
-        b=JxgoYm9UaTnNWuZkXDXX1g4D5/7zh5yHMr4HPxAMthnTd8D5SBZzzwPDE+HfqEk058
-         5wEGGsjfB4wrShPwguhXbZmGiFu4sFReXYGOI7bqs3H+wslYTM6G8/vlwibP589vhr2n
-         xbyCz5xeyw/7ASmTNfLYcXjRTtWc7zuvrPrlBJ4xi4VnLLBFtKZqez8kVBsZi9hjFzTv
-         Dpl6VmL6EgtW13Ki8uSWD3QHcnaTvisYMm7ZYID9MGlgDLHcadl774eOcyL7LViWtBiv
-         V4dbwl4yK8QJavb0G7Tr2P/VEvuq2CBB1gw8j8vnGYqkVgR+AQoY+SU0BXTc++3M+mbp
-         FHww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680763967;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hz2UPK4m45H+1eNN7MZgSequAvZQRYw5qeG2C4U++jk=;
-        b=yB9/vILRbX68NA6179s6MdyEXt4F9gf3eA5DILqz7be7G6AkeTUq0dOeowX0bEklkC
-         TdFy3OilyvMxsr1Ei0YJaR94IXaNt0LKJr105TpKBXMBXUY5jAYZJA7QSjIHQYIIvun+
-         /JiCeVeOYkC0K7vwnED+CEz9g29gg1H/ooyFj9WLhRz/fXSddU3mYu9ZkaqpyC2IfYA6
-         3wo9sKsGrts7MzNptfkn9vUSpUHOv62pCLVWYVLH1ZFHHOjLVsGXiZZgyJo748tW7C8l
-         65gWfZHCYJDDtaH1OZmXHXOFx8edLp0pv9evdOnYNr8GyS6mm6YiBvz0P3zrp0mmE6j6
-         Omtw==
-X-Gm-Message-State: AAQBX9e/FG0Qt59J7Cr2ANEpYVM1nSp0pxkShAARkOdOK0oeTCRzJI5d
-        3EOk2RXoetNn3aaqLSmsG+kY9gma1VP6
-X-Google-Smtp-Source: AKy350ZN+bpSdH/jgcCOg5dClBkm0s9eVVLb9BjDZSxUljOR/Wj0s8JlpiFEeW1BY9w/pUlxwP7EunrjT9MI
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:713a:ed0b:3d14:a4da])
- (user=irogers job=sendgmr) by 2002:a05:6902:909:b0:a27:3ecc:ffe7 with SMTP id
- bu9-20020a056902090900b00a273eccffe7mr1473850ybb.3.1680763967198; Wed, 05 Apr
- 2023 23:52:47 -0700 (PDT)
-Date:   Wed,  5 Apr 2023 23:52:24 -0700
-In-Reply-To: <20230406065224.2553640-1-irogers@google.com>
-Message-Id: <20230406065224.2553640-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230406065224.2553640-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-Subject: [PATCH v3 2/2] perf pmu: Fix a few potential fd leaks
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 6 Apr 2023 04:26:09 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A3A7A9D
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Apr 2023 01:26:02 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-83-D1tdxv4cNzaW0ds0adK_fQ-1; Thu, 06 Apr 2023 09:25:59 +0100
+X-MC-Unique: D1tdxv4cNzaW0ds0adK_fQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 6 Apr
+ 2023 09:25:57 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 6 Apr 2023 09:25:57 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Dave Hansen' <dave.hansen@intel.com>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>
+Subject: RE: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
+Thread-Topic: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
+Thread-Index: AQHZZ9zo4aQfYkHe8kGrF8tSkNZCGa8d8QYA
+Date:   Thu, 6 Apr 2023 08:25:57 +0000
+Message-ID: <5c10520ac747430cb421badcb293c706@AcuMS.aculab.com>
+References: <20230405141710.3551-1-ubizjak@gmail.com>
+ <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+In-Reply-To: <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ensure fd is closed on error paths.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 96ef317bac41..9eedbfc9e863 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -494,9 +494,13 @@ static int pmu_aliases_parse(int dirfd, struct list_head *head)
- 			continue;
- 
- 		fd = openat(dirfd, name, O_RDONLY);
-+		if (fd == -1) {
-+			pr_debug("Cannot open %s\n", name);
-+			continue;
-+		}
- 		file = fdopen(fd, "r");
- 		if (!file) {
--			pr_debug("Cannot open %s\n", name);
-+			close(fd);
- 			continue;
- 		}
- 
-@@ -1882,9 +1886,13 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
- 			continue;
- 
- 		fd = openat(caps_fd, name, O_RDONLY);
-+		if (fd == -1)
-+			continue;
- 		file = fdopen(fd, "r");
--		if (!file)
-+		if (!file) {
-+			close(fd);
- 			continue;
-+		}
- 
- 		if (!fgets(value, sizeof(value), file) ||
- 		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
--- 
-2.40.0.348.gf938b09366-goog
+RnJvbTogRGF2ZSBIYW5zZW4NCj4gU2VudDogMDUgQXByaWwgMjAyMyAxNzozNw0KPiANCj4gT24g
+NC81LzIzIDA3OjE3LCBVcm9zIEJpemphayB3cm90ZToNCj4gPiBBZGQgZ2VuZXJpYyBhbmQgdGFy
+Z2V0IHNwZWNpZmljIHN1cHBvcnQgZm9yIGxvY2Fseyw2NH1fdHJ5X2NtcHhjaGcNCj4gPiBhbmQg
+d2lyZSB1cCBzdXBwb3J0IGZvciBhbGwgdGFyZ2V0cyB0aGF0IHVzZSBsb2NhbF90IGluZnJhc3Ry
+dWN0dXJlLg0KPiANCj4gSSBmZWVsIGxpa2UgSSdtIG1pc3Npbmcgc29tZSBjb250ZXh0Lg0KPiAN
+Cj4gV2hhdCBhcmUgdGhlIGFjdHVhbCBlbmQgdXNlciB2aXNpYmxlIGVmZmVjdHMgb2YgdGhpcyBz
+ZXJpZXM/ICBJcyB0aGVyZSBhDQo+IG1lYXN1cmFibGUgZGVjcmVhc2UgaW4gcGVyZiBvdmVyaGVh
+ZD8gIFdoeSBnbyB0byBhbGwgdGhpcyB0cm91YmxlIGZvcg0KPiBwZXJmPyAgV2hvIGVsc2Ugd2ls
+bCB1c2UgbG9jYWxfdHJ5X2NtcHhjaGcoKT8NCg0KSSdtIGFzc3VtaW5nIHRoZSBsb2NhbF94eHgg
+b3BlcmF0aW9ucyBvbmx5IGhhdmUgdG8gYmUgc2F2ZSB3cnQgaW50ZXJydXB0cz8NCk9uIHg4NiBp
+dCBpcyBwb3NzaWJsZSB0aGF0IGFuIGFsdGVybmF0ZSBpbnN0cnVjdGlvbiBzZXF1ZW5jZQ0KdGhh
+dCBkb2Vzbid0IHVzZSBhIGxvY2tlZCBpbnN0cnVjdGlvbiBtYXkgYWN0dWFsbHkgYmUgZmFzdGVy
+IQ0KDQpBbHRob3VnaCwgbWF5YmUsIGFueSBraW5kIG9mIGxvY2tlZCBjbXB4Y2hnIGp1c3QgbmVl
+ZHMgdG8gZW5zdXJlDQp0aGUgY2FjaGUgbGluZSBpc24ndCAnc3RvbGVuJywgc28gYXBhcnQgZnJv
+bSBwb3NzaWJsZSBzbGlnaHQNCmRlbGF5cyBvbiBhbm90aGVyIGNwdSB0aGF0IGdldHMgYSBjYWNo
+ZSBtaXNzIGZvciB0aGUgbGluZSBpbg0KYWxsIG1ha2VzIGxpdHRsZSBkaWZmZXJlbmNlLg0KVGhl
+IGNhY2hlIGxpbmUgbWlzcyBjb3N0cyBhIGxvdCBhbnl3YXksIGxpbmUgYm91bmNpbmcgbW9yZQ0K
+YW5kIGlzIGJlc3QgYXZvaWRlZC4NClNvIGlzIHRoZXJlIGFjdHVhbGx5IG11Y2ggb2YgYSBiZW5l
+Zml0IGF0IGFsbD8NCg0KQ2xlYXJseSB0aGUgdHJ5X2NtcHhjaGcgaGVscCAtIGJ1dCB0aGF0IGlz
+IGEgZGlmZmVyZW50IGlzc3VlLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExh
+a2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQs
+IFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
