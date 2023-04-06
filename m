@@ -2,193 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE8FC761A6
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 16:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBB1C76196
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 18:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238183AbjDFQeC (ORCPT
+        id S240487AbjDFSro (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 12:34:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47352 "EHLO
+        Thu, 6 Apr 2023 14:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229728AbjDFQeC (ORCPT
+        with ESMTP id S229891AbjDFSra (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 12:34:02 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6499766;
-        Thu,  6 Apr 2023 09:33:53 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Psn9T5WxSz67MmR;
-        Fri,  7 Apr 2023 00:33:01 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 6 Apr
- 2023 17:33:50 +0100
-Date:   Thu, 6 Apr 2023 17:33:49 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>, <linuxarm@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v4 5/5] docs: perf: Minimal introduction the the CXL PMU
- device and driver
-Message-ID: <20230406173349.00007503@Huawei.com>
-In-Reply-To: <642ca39865e8b_21a8294d9@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
-        <20230330164556.31533-6-Jonathan.Cameron@huawei.com>
-        <642ca39865e8b_21a8294d9@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+        Thu, 6 Apr 2023 14:47:30 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DF6BB99
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Apr 2023 11:46:56 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54c23fab905so8679237b3.14
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Apr 2023 11:46:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680806815;
+        h=content-transfer-encoding:to:from:subject:mime-version:message-id
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgbBef+rgcSx3D3j+g4z4teFI/QK+Um57kHM0es9MZw=;
+        b=EryOl5EMERMfEO1w6B54WypRukMWHpiG4caNtol/REm0LzYQaM6tLPJTl5OCTCfN4e
+         1Ia1/dh9EHbQ8mCabb2LFL7WnqV/eTAOGSjhIwv4GsPRUK/G0MW26vszEz+151VMDDKd
+         p5CWBx6TF5pSbSD/iysCRCQQ9hxnVsvpL2bqMOVU/ezBxO+Z4mg+TrvzwEMTZeqkk3GW
+         M7ESge8DywwNHDvd9541JqMuL9LEzX6dcyJe5wdBtuRTiBKChoOK1pzxBra3MvVf9XZN
+         qOdiOP/87xSezWmbt1MprqLtKdWjllKB1LFU4RovYD58jvEUZfyT/8W2AVuxkeyx9pOt
+         +1JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680806815;
+        h=content-transfer-encoding:to:from:subject:mime-version:message-id
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bgbBef+rgcSx3D3j+g4z4teFI/QK+Um57kHM0es9MZw=;
+        b=ILTY9jLSyRBImeONxsZPTH7ykf9cc1zmqyKcY/bDPDs6KrUnvLOfTkz2TLLknWHOyb
+         Iui0j3Z+I4jmpGYMwE5Lj/H3NZh/Yy56krXzluTmRy5jpcTPhHiSRSrswlkzMIO0zbwA
+         ZaJ0Qm2Isu62gLW7l0r08JmTQ0yyW/2XLzCGqjeWFt+SNorm9nl0H9Sm6FAOTVkxXrZh
+         lkF1CaS+8IrCWZWthIo2L3kiCWBLNKS+uMUXgUxxEaf54LLorVUx0FVUlbbgxHtDyblM
+         C5CPT21W2X2KqKxsu16O7NTXuQ8nemPNLCEy2isYOmsDUK2klX0A1wWo9vbI+P88Dt7A
+         XSUw==
+X-Gm-Message-State: AAQBX9eFaouk88E2kY25ZQfczQ6Ft04bg8yyETLcM+/y4dKbSRf50vbn
+        Ed5z8EKkvoNpHVK80zsT6n5CcktHWDu9
+X-Google-Smtp-Source: AKy350ZPxRIWgQpSFolIb05xhQVaJFwanIhAtjpLiDp/LTXrl43O66Kx/umQ4ok1pLk2BDvNywu9s7ld5+8h
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:939d:185a:97bb:59ee])
+ (user=irogers job=sendgmr) by 2002:a05:6902:909:b0:a27:3ecc:ffe7 with SMTP id
+ bu9-20020a056902090900b00a273eccffe7mr2782013ybb.3.1680806815269; Thu, 06 Apr
+ 2023 11:46:55 -0700 (PDT)
+Date:   Thu,  6 Apr 2023 11:46:34 -0700
+Message-Id: <20230406184638.2632300-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH v1 1/5] perf vendor events intel: Update free running
+ alderlake events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Fix the PMU name, event code and umask.
 
-> 
-> > +
-> > +    /sys/bus/cxl/device/cpmu<id>
-> > +
-> > +The associated PMU is registered as
-> > +
-> > +   /sys/bus/event_sources/devices/cpmu<id>
-> > +
-> > +In common with other CXL bus devices, the id has no specific meaning and the
-> > +relationship to specific CXL device should be established via the device parent
-> > +of the device on the CXL bus.  
-> 
-> So I went to go add some text about how to identify PMUs in a persistent
-> manner from one boot to the next. For CXL memdevs this is done by the
-> 'serial' attribute which is always stable regardless of the device init
-> order. That's harder to get to from the pmu device because it may be
-> associated with a device that does not have a memdev.
-> 
-> I think it's also going to be frustrating for userspace to see
-> randomized pmu ids across devices since that probing will happen in
-> parallel. So how about:
+These updates were generated by:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+with this PR:
+https://github.com/intel/perfmon/pull/66
 
-Solving this in general for perf PMU drivers was what the parent device thing
-was about.  There is an argument that enabling any other path to get to
-this association is both unnecessary and just possibly unwise.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../arch/x86/alderlake/uncore-memory.json        | 16 ++++++++++++----
+ .../arch/x86/alderlaken/uncore-memory.json       | 16 ++++++++++++----
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
-The nice advantage of just using an IDA and relying on parentage for the
-association was that I could avoid naming questions for all the other
-places these might turn in a CXL topology. The Lazy / efficient option ;)
-
-You can now see exactly which PCI device a given instance is associated with.
-Custom ABI is going to be harder for anyone to use than that.
-
-I suppose we can potentially enable both paths - but it's not quite
-as straight forwards as you suggest.
-
-> 
-> 1/ Add serial as an attribute for each PMU to export
-
-Where does it come from? We only have one source of serial number per device.
-That's no where near enough to work out where a PMU is. 
-
-> 2/ Change the device name format to be "pmuX.Y" where X can just reuse
-
-Could use something a little more detailed cxl bus, but the one registered and use
-to address this in bus/event_sources needs to be cxl specific so a cxl_ prefix
-is needed I think
-
-Given we need to namespace what the ids refer to, I'm currently going with
-pmu_memX.Y pmu_dspX.Y.Z pmu_uspX.Y
-on the cxl bus and
-cxl_pmu_memX.Y cxl_pmu_dspX.Y.Z cxl_pmu_uspX.Y on even sources bus.
-(Z needed because dsp index from 0 for each usp)
-We can figure out what to do about other CXL EPs later and for now at least
-there is no way to hand a CPMU instance off a host bridge (nothing in CEDT
-to tell you where to find it).
-
-I've had a fun day hacking PMUs onto the other emulated CXL devices to test
-this. 
-There is a can of worms I'll avoid for this series by just sticking to type3
-device PMUs for now.
-
-  I have no idea yet how we handle the interrupts safely for ports as those
-  interrupts are in control the pcie port driver not the CXL dport one.
-  At somepoint I'll send out an RFC about that if no one gets to it before
-  me.  For now I've hacked portdrv to always allocate max vectors and am ignoring the
-  lovely back traces due to thing getting torn down in the wrong order on shutdown.
-  For upstream ports I've hacked portdrv to pretend it knows there is something to handle.
-  As a starting point I think we'll need to teach portdrv enough about CXL
-  to be able to tell if it should provide interrupt services..
-
-Hence I'll keep the code to register the other PMUs for a future patch set
-and just make sure the code is structured to enable that in this series.
-
-
-> the memdev id for endpoints and be another value for switches, and Y is
-> guaranteed to be 0-based and in hardware discovery order.
-
-Also need to change registration order as PMUs were registered before the
-memdev, but that's easy enough to do.
-
-> 
-> ...with that, someone can write a udev script that can persistently
-> identify PMU[Y] on device[serial] each boot.
-
-> 
-> That also cleans up a /sys/bus/cxl/devices listing to make it clear
-> which pmu instances belong together.
->  
-> > +
-> > +PMU driver provides description of available events and filter options in sysfs.
-> > +
-> > +The "format" directory describes all formats of the config (event vendor id,
-> > +group id and mask) config1 (threshold, filter enables) and config2 (filter
-> > +parameters) fields of the perf_event_attr structure.  The "events" directory
-> > +describes all documented events show in perf list.
-> > +
-> > +The events shown in perf list are the most fine grained events with a single
-> > +bit of the event mask set. More general events may be enable by setting
-> > +multiple mask bits in config. For example, all Device to Host Read Requests
-> > +may be captured on a single counter by setting the bits for all of
-> > +
-> > +* d2h_req_rdcurr
-> > +* d2h_req_rdown
-> > +* d2h_req_rdshared
-> > +* d2h_req_rdany
-> > +* d2h_req_rdownnodata
-> > +
-> > +Example of usage::
-> > +
-> > +  $#perf list
-> > +  cpmu0/clock_ticks/                                 [Kernel PMU event]
-> > +  cpmu0/d2h_req_itomwr/                              [Kernel PMU event]
-> > +  cpmu0/d2h_req_rdany/                               [Kernel PMU event]
-> > +  cpmu0/d2h_req_rdcurr/                              [Kernel PMU event]
-> > +  -----------------------------------------------------------
-> > +
-> > +  $# perf stat -e cpmu0/clock_ticks/ -e cpmu0/d2h_req_itowrm/  
-> 
-> Ah here's the examples I was looking for in the last patch, nice.
-> 
-> > +
-> > +Vendor specific events may also be available and if so can be used via
-> > +
-> > +  $# perf stat -e cpmu0/vid=VID,gid=GID,mask=MASK/
-> > +
-> > +The driver does not support sampling. So "perf record" and attaching to
-> > +a task are unsupported.  
-> 
-> Is this a common restriction for CPU-external pmus, or do you see
-> sampling support required to get this upstream?
-
-It's a common restriction. Whilst we could potentially implement sampling
-based on the presence of a suitable clock_ticks event it don't see it
-as a requirement initially.
-
-Jonathan
-
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json b/=
+tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+index 2ccd9cf96957..ea25bb411f89 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+@@ -1,29 +1,37 @@
+ [
+     {
+         "BriefDescription": "Counts every 64B read  request entering the M=
+emory Controller 0 to DRAM (sum of all channels).",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+         "PublicDescription": "Counts every 64B read request entering the M=
+emory Controller 0 to DRAM (sum of all channels).",
+-        "Unit": "iMC"
++        "UMask": "0x20",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "Counts every 64B write request entering the M=
+emory Controller 0 to DRAM (sum of all channels). Each write request counts=
+ as a new request incrementing this counter. However, same cache line write=
+ requests (both full and partial) are combined to a single 64 byte data tra=
+nsfer to DRAM.",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+-        "Unit": "iMC"
++        "UMask": "0x30",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "Counts every 64B read request entering the Me=
+mory Controller 1 to DRAM (sum of all channels).",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+         "PublicDescription": "Counts every 64B read entering the Memory Co=
+ntroller 1 to DRAM (sum of all channels).",
+-        "Unit": "iMC"
++        "UMask": "0x20",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "Counts every 64B write request entering the M=
+emory Controller 1 to DRAM (sum of all channels). Each write request counts=
+ as a new request incrementing this counter. However, same cache line write=
+ requests (both full and partial) are combined to a single 64 byte data tra=
+nsfer to DRAM.",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+-        "Unit": "iMC"
++        "UMask": "0x30",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "ACT command for a read request sent to DRAM",
+diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json b=
+/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+index 2ccd9cf96957..ea25bb411f89 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+@@ -1,29 +1,37 @@
+ [
+     {
+         "BriefDescription": "Counts every 64B read  request entering the M=
+emory Controller 0 to DRAM (sum of all channels).",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+         "PublicDescription": "Counts every 64B read request entering the M=
+emory Controller 0 to DRAM (sum of all channels).",
+-        "Unit": "iMC"
++        "UMask": "0x20",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "Counts every 64B write request entering the M=
+emory Controller 0 to DRAM (sum of all channels). Each write request counts=
+ as a new request incrementing this counter. However, same cache line write=
+ requests (both full and partial) are combined to a single 64 byte data tra=
+nsfer to DRAM.",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+-        "Unit": "iMC"
++        "UMask": "0x30",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "Counts every 64B read request entering the Me=
+mory Controller 1 to DRAM (sum of all channels).",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+         "PublicDescription": "Counts every 64B read entering the Memory Co=
+ntroller 1 to DRAM (sum of all channels).",
+-        "Unit": "iMC"
++        "UMask": "0x20",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "Counts every 64B write request entering the M=
+emory Controller 1 to DRAM (sum of all channels). Each write request counts=
+ as a new request incrementing this counter. However, same cache line write=
+ requests (both full and partial) are combined to a single 64 byte data tra=
+nsfer to DRAM.",
++        "EventCode": "0xff",
+         "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+-        "Unit": "iMC"
++        "UMask": "0x30",
++        "Unit": "imc_free_running"
+     },
+     {
+         "BriefDescription": "ACT command for a read request sent to DRAM",
+--=20
+2.40.0.577.gac1e443424-goog
 
