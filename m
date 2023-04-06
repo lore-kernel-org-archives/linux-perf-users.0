@@ -2,119 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8ABC76196
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 20:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3F5C7618D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:06:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237830AbjDFUTl convert rfc822-to-8bit (ORCPT
+        id S229972AbjDFVGQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 16:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54448 "EHLO
+        Thu, 6 Apr 2023 17:06:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbjDFUTk (ORCPT
+        with ESMTP id S229518AbjDFVGQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 16:19:40 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46FC7290;
-        Thu,  6 Apr 2023 13:19:39 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id y85so17886978iof.13;
-        Thu, 06 Apr 2023 13:19:39 -0700 (PDT)
+        Thu, 6 Apr 2023 17:06:16 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F087683;
+        Thu,  6 Apr 2023 14:06:15 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id fy10-20020a17090b020a00b0023b4bcf0727so41898369pjb.0;
+        Thu, 06 Apr 2023 14:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680815174; x=1683407174;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=77xFIxaHotOoGijURFHYGuwuVpW5zvnZZQ6buk6G1sQ=;
+        b=lZKJfU1kGC8tlys7kHkPZW7ZXdM/pljaH268fj8z+3ntZ7vZ+4Y2LWbAwWf7L26Y4p
+         dU7McUVlbs5XKMflYZ1wq49QjxELaTbhHGiRlGNqd890KFWX88JXG+rmIWtyU6fyZY3Y
+         97AHn58UIy7kj9LCnP6atw+8lMnde4EwcNdep7hvPrPmzxicVPjkx+jCMIKsh8X7eifV
+         LAdroGr5W9t5v0HMNtVgGtu8GuKMMlj78nvbKnGQXVAZV8RkID2jFQ4VLBL4l7zF8S51
+         OIg4UuAwEFUZ86t9U+vpc7JNNyhWLJwtIJ6MDUVGtadTUbkkmQ/qANRMZXtaOeZaZEUn
+         Fgmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680812379; x=1683404379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nESQtirJO8CnkmAWwnoB9wxgSmn5LL1wtbLJ271b460=;
-        b=HAxnov6VD9KKKw73bkCs6iO05nF1ORU+iYTcA1lhEcos/aFLsBthdUfiLjCF2yDsRS
-         Sehm96d8/ViCbXerOYUtCd1O069flz3CCAyizPeXxND9POnWr11HaCRW5ZLluusrcy7y
-         ZuUl/B4cyUhTCHeDmB/XdDPnGzC3VIwNI4ybWFDsFrN4hVu4HOMOaksS9znbkdakG50l
-         fWSXXWQ6+pA6+IxR+UWzuG9hbwY9SfKjMGmLGZDYXS1bvqqXL583nvkfV3Hj/5Y/qPCj
-         2OzxwuxYwslS3dA034uRIbBGLim0j5a4c8nEa5KD2B9iTEf0/vIjMbKTVK1lUx1PvYZJ
-         nhQQ==
-X-Gm-Message-State: AAQBX9fGx/TIYUaE2nMFxg5TYIoPXvOD3rfOlu9naSIbg1JkwPvl+X/n
-        j+ucJZtC4toSBBtvPNxn1hRAWiJWkzHSys4muwE=
-X-Google-Smtp-Source: AKy350ai3CtZYHn2GaFYLBDkXcXK6r139tun33xwvHVzEV/Kvs3TE/BVNbiWZyixfD6wr6rj3qHn9dyWLDvsXJf6+1A=
-X-Received: by 2002:a6b:6f0b:0:b0:75c:9437:6374 with SMTP id
- k11-20020a6b6f0b000000b0075c94376374mr60475ioc.4.1680812378848; Thu, 06 Apr
- 2023 13:19:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230406065224.2553640-1-irogers@google.com> <20230406065224.2553640-2-irogers@google.com>
-In-Reply-To: <20230406065224.2553640-2-irogers@google.com>
+        d=1e100.net; s=20210112; t=1680815174; x=1683407174;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=77xFIxaHotOoGijURFHYGuwuVpW5zvnZZQ6buk6G1sQ=;
+        b=1U9koKF1wnxQLUgCS6/ZKBL/WEyvdiE0yx1kNdDvH7wCkchX5BlLYxL9TH5q/km3tt
+         o2CrwJcUvKbPAVmn9KbR65xIkSH9umwRG660qPihOMWydOW6OaErNBtXoCi7dY8QJuFq
+         yYbjsQLNmG0PUBnTR9EqnvOoJkjkNww5HWl7fUP4ZVfAaZqXbpFebF2xgtKOlz/WYoVZ
+         XofLTbhWr4Sto3lod1/Tgf62eXQNI2iS5DJaNC35vMe+tKrqA1w7R/bpRv089Rh58yNc
+         a3aFP6ZY7RF0YTGuMKxyqPS5pH8SPQg90bAmQmfeN3E5IAiUlVTgMMLScpsRg3LmtHy2
+         zkEQ==
+X-Gm-Message-State: AAQBX9fOlnfQfrzcDEibEk3RpggKP870/QZ/ir0b9amLDYsIMcOH5tLw
+        uZHn+ekixP65/wgXXLwOGi+NcoHMDF4=
+X-Google-Smtp-Source: AKy350aald8y8/pqPcS4eFE0Qpvib0HFsmE+sr4A25zNdS190jIldlbWnINsi9MwB8NzzxUgcGUHFg==
+X-Received: by 2002:a17:902:da81:b0:1a5:206:4c90 with SMTP id j1-20020a170902da8100b001a502064c90mr610780plx.30.1680815174473;
+        Thu, 06 Apr 2023 14:06:14 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:3301:38fe:e39e:3d51])
+        by smtp.gmail.com with ESMTPSA id g5-20020a170902868500b001a0667822c8sm1777837plo.94.2023.04.06.14.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Apr 2023 14:06:14 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 6 Apr 2023 13:19:26 -0700
-Message-ID: <CAM9d7chYiGavgXtWOgzQhhts3ytpePz2QVhB3Zag7yN2Ah_L8A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] perf pmu: Fix a few potential fd leaks
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCHSET 0/7] perf lock contention: Improve performance if map is full (v1)
+Date:   Thu,  6 Apr 2023 14:06:04 -0700
+Message-Id: <20230406210611.1622492-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 5, 2023 at 11:53 PM Ian Rogers <irogers@google.com> wrote:
->
-> Ensure fd is closed on error paths.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hello,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I got a report that the overhead of perf lock contention is too big in
+some cases.  It was running the task aggregation mode (-t) at the moment
+and there were lots of tasks contending each other.
+
+It turned out that the hash map update is a problem.  The result is saved
+in the lock_stat hash map which is pre-allocated.  The BPF program never
+deletes data in the map, but just adds.  But if the map is full, (try to)
+update the map becomes a very heavy operation - since it needs to check
+every CPU's freelist to get a new node to save the result.  But we know
+it'd fail when the map is full.  No need to update then.
+
+I've checked it on my 64 CPU machine with this.
+
+    $ perf bench sched messaging -g 1000
+    # Running 'sched/messaging' benchmark:
+    # 20 sender and receiver processes per group
+    # 1000 groups == 40000 processes run
+
+         Total time: 2.825 [sec]
+
+And I used the task mode, so that it can guarantee the map is full.
+The default map entry size is 16K and this workload has 40K tasks.
+
+Before:
+    $ sudo ./perf lock con -abt -E3 -- perf bench sched messaging -g 1000
+    # Running 'sched/messaging' benchmark:
+    # 20 sender and receiver processes per group
+    # 1000 groups == 40000 processes run
+
+         Total time: 11.299 [sec]
+     contended   total wait     max wait     avg wait          pid   comm
+
+         19284      3.51 s       3.70 ms    181.91 us      1305863   sched-messaging
+           243     84.09 ms    466.67 us    346.04 us      1336608   sched-messaging
+           177     66.35 ms     12.08 ms    374.88 us      1220416   node
+
+After:
+    $ sudo ./perf lock con -abt -E3 -- perf bench sched messaging -g 1000
+    # Running 'sched/messaging' benchmark:
+    # 20 sender and receiver processes per group
+    # 1000 groups == 40000 processes run
+
+         Total time: 3.044 [sec]
+     contended   total wait     max wait     avg wait          pid   comm
+
+         18743    591.92 ms    442.96 us     31.58 us      1431454   sched-messaging
+            51    210.64 ms    207.45 ms      4.13 ms      1468724   sched-messaging
+            81     68.61 ms     65.79 ms    847.07 us      1463183   sched-messaging
+
+    === output for debug ===
+
+    bad: 1164137, total: 2253341
+    bad rate: 51.66 %
+    histogram of failure reasons
+           task: 0
+          stack: 0
+           time: 0
+           data: 1164137
+
+The first few patches are small cleanups and fixes.  You can get the code
+from 'perf/lock-map-v1' branch in
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/util/pmu.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 96ef317bac41..9eedbfc9e863 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -494,9 +494,13 @@ static int pmu_aliases_parse(int dirfd, struct list_head *head)
->                         continue;
->
->                 fd = openat(dirfd, name, O_RDONLY);
-> +               if (fd == -1) {
-> +                       pr_debug("Cannot open %s\n", name);
-> +                       continue;
-> +               }
->                 file = fdopen(fd, "r");
->                 if (!file) {
-> -                       pr_debug("Cannot open %s\n", name);
-> +                       close(fd);
->                         continue;
->                 }
->
-> @@ -1882,9 +1886,13 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
->                         continue;
->
->                 fd = openat(caps_fd, name, O_RDONLY);
-> +               if (fd == -1)
-> +                       continue;
->                 file = fdopen(fd, "r");
-> -               if (!file)
-> +               if (!file) {
-> +                       close(fd);
->                         continue;
-> +               }
->
->                 if (!fgets(value, sizeof(value), file) ||
->                     (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
-> --
-> 2.40.0.348.gf938b09366-goog
->
+Namhyung Kim (7):
+  perf lock contention: Simplify parse_lock_type()
+  perf lock contention: Use -M for --map-nr-entries
+  perf lock contention: Update default map size to 16384
+  perf lock contention: Add data failure stat
+  perf lock contention: Update total/bad stats for hidden entries
+  perf lock contention: Revise needs_callstack() condition
+  perf lock contention: Do not try to update if hash map is full
+
+ tools/perf/Documentation/perf-lock.txt        |  4 +-
+ tools/perf/builtin-lock.c                     | 64 ++++++++-----------
+ tools/perf/util/bpf_lock_contention.c         |  7 +-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 29 +++++++--
+ tools/perf/util/bpf_skel/lock_data.h          |  3 +
+ tools/perf/util/lock-contention.h             |  2 +
+ 6 files changed, 60 insertions(+), 49 deletions(-)
+
+
+base-commit: e5116f46d44b72ede59a6923829f68a8b8f84e76
+-- 
+2.40.0.577.gac1e443424-goog
+
