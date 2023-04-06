@@ -2,217 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA90C7618D
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D949C7618D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239811AbjDFVGq (ORCPT
+        id S239041AbjDFVJk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 17:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37034 "EHLO
+        Thu, 6 Apr 2023 17:09:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237801AbjDFVGd (ORCPT
+        with ESMTP id S238341AbjDFVJe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 17:06:33 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779E39753;
-        Thu,  6 Apr 2023 14:06:23 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id v9so2339243pjk.0;
-        Thu, 06 Apr 2023 14:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680815182; x=1683407182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7I+ZTLBAAWmNlN+JBk4TipMBC8vuk1wOji+jyAsKtTA=;
-        b=g4JIygxRKGw+RQeL1AkR1lDj7TucctKNv+PWq71gm17icpuIeT3xmoTuugrHOLcNr0
-         ORQKJuJ2IVmfYcVCXque1deeq+sB83xaNjsybbNsXrMaGS8MT5otHkBuREnwaW3Y2BPp
-         IEYNGklF4PxLGGX26J+uBP+kmBL5dbuxPTudwSIDknQ0AFQrgzl9UKVP8+xdx23dCTo7
-         2Z6etn1aXcN6VKa8s1Sw1XMy/aQZE6lp/tWtioVC3FOx5JoS+nhGVJZepj3hhskselX0
-         Zs4WbVQz24EsYhJXDzcjngDMH3hqMGXGNwItuHOaVg6eTgkhu6zHcUleKquXWZ7+NOqJ
-         vHYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680815182; x=1683407182;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7I+ZTLBAAWmNlN+JBk4TipMBC8vuk1wOji+jyAsKtTA=;
-        b=SPSjbwSpKUSkkAvJoCHSLmgCfV72gPBXWX8o1ZQUbscxf7LIp4MpPZZ0kr7aBZPUfu
-         iFyDthWqyWYxwvpiWBV91c8S3hKHfQaxnTQnyi+JpXk7xYv/D/JpNJv0/mop9puF/x8+
-         88OwTkXwZb67Aq4clgILA+Mz4gcC/XQ92ph/h5DtbGTQ1ZP9SPt9/+LguYOfvKd9MFTX
-         qxX2WaXMDSDOguihiQBu/j9kl80WWBYGkAnC/W7iJVvCHwHN9DX+5KCtXaFrmpprYFF1
-         +4Ktr5Kq5YtNJlbz8ntrjYoXQ0Xsp6pVeRNcIWvGz4Mn8bSe5Tv+nSzqy0/rSrpruZLo
-         MW5A==
-X-Gm-Message-State: AAQBX9c96CYVtNcIytT9ChVWetMs7Ph77rORX/160MMUQCljM64clDJ6
-        DrBMjccMjvhXrYo7Mr6/Cug=
-X-Google-Smtp-Source: AKy350b/GP3jdpKFEr7S9KLbbSe9aStLqLmug61iMLgZK620loW/KsTQWHA0VyNjlF5dIGCgY0lrDQ==
-X-Received: by 2002:a17:903:64c:b0:1a4:fcc9:ec61 with SMTP id kh12-20020a170903064c00b001a4fcc9ec61mr479341plb.5.1680815182514;
-        Thu, 06 Apr 2023 14:06:22 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:3301:38fe:e39e:3d51])
-        by smtp.gmail.com with ESMTPSA id g5-20020a170902868500b001a0667822c8sm1777837plo.94.2023.04.06.14.06.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 14:06:22 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+        Thu, 6 Apr 2023 17:09:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E2DA277;
+        Thu,  6 Apr 2023 14:09:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E7AC8646B6;
+        Thu,  6 Apr 2023 21:09:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D06C433EF;
+        Thu,  6 Apr 2023 21:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680815372;
+        bh=V73X3zvMa9mX4eCZmR/vnJEvOTmLrZEgknm1JtpSEVs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N75fWbfkjf2gsk/xhd1aFBCHQuVhOAIpqMmBceeHsPiKJoWyfqBAUEmm49JSsazJ+
+         u8z6pMW+oGkVtWRjhKyKKzWC/ex+NIRvJRBEUcGdZwurMaTcodHvs2Pr9yk4I9YG5C
+         LkwzdIeVQ2VEB+KgXHVe64J2IwdZvZiZWYLYdAfEakD3lzI0zdKGJSXIYLC6GmEorV
+         iGFcNlaEHEGATO5iRF7ghyW/CrhH1CsNbznnhES4c5MM7xFHta61N54+LJsm11Ld/4
+         iIbfSZw5djNdFr8GSjgiycIa4MXvQKCNv1iVJR3gmDHvlEf5uXJyu/ucTpQTgI/77K
+         tn2n9yfEV/8uw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 748954052D; Thu,  6 Apr 2023 18:09:29 -0300 (-03)
+Date:   Thu, 6 Apr 2023 18:09:29 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 7/7] perf lock contention: Do not try to update if hash map is full
-Date:   Thu,  6 Apr 2023 14:06:11 -0700
-Message-Id: <20230406210611.1622492-8-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-In-Reply-To: <20230406210611.1622492-1-namhyung@kernel.org>
-References: <20230406210611.1622492-1-namhyung@kernel.org>
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        German Gomez <german.gomez@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] perf pmu: Fix a few potential fd leaks
+Message-ID: <ZC81CTH/VayirB5z@kernel.org>
+References: <20230406065224.2553640-1-irogers@google.com>
+ <20230406065224.2553640-2-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230406065224.2553640-2-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It doesn't delete data in the task_data and lock_stat maps.  The data
-is kept there until it's consumed by userspace at the end.  But it calls
-bpf_map_update_elem() again and again, and the data will be discarded if
-the map is full.  This is not good.
+Em Wed, Apr 05, 2023 at 11:52:24PM -0700, Ian Rogers escreveu:
+> Ensure fd is closed on error paths.
 
-Worse, in the bpf_map_update_elem(), it keeps trying to get a new node
-even if the map was full.  I guess it makes sense if it deletes some node
-like in the tstamp map (that's why I didn't make the change there).
+Was this reported by Jiri?
 
-In a pre-allocated hash map, that means it'd iterate all CPU to check the
-freelist.  And it has a bad performance impact on large machines.
-
-I've checked it on my 64 CPU machine with this.
-
-  $ perf bench sched messaging -g 1000
-  # Running 'sched/messaging' benchmark:
-  # 20 sender and receiver processes per group
-  # 1000 groups == 40000 processes run
-
-       Total time: 2.825 [sec]
-
-And I used the task mode, so that it can guarantee the map is full.
-The default map entry size is 16K and this workload has 40K tasks.
-
-Before:
-  $ sudo ./perf lock con -abt -E3 -- perf bench sched messaging -g 1000
-  # Running 'sched/messaging' benchmark:
-  # 20 sender and receiver processes per group
-  # 1000 groups == 40000 processes run
-
-       Total time: 11.299 [sec]
-   contended   total wait     max wait     avg wait          pid   comm
-
-       19284      3.51 s       3.70 ms    181.91 us      1305863   sched-messaging
-         243     84.09 ms    466.67 us    346.04 us      1336608   sched-messaging
-         177     66.35 ms     12.08 ms    374.88 us      1220416   node
-
-For some reason, it didn't report the data failures.  But you can see the
-total time in the workload is increased a lot (2.8 -> 11.3).  If it fails
-early when the map is full, it goes back to normal.
-
-After:
-  $ sudo ./perf lock con -abt -E3 -- perf bench sched messaging -g 1000
-  # Running 'sched/messaging' benchmark:
-  # 20 sender and receiver processes per group
-  # 1000 groups == 40000 processes run
-
-       Total time: 3.044 [sec]
-   contended   total wait     max wait     avg wait          pid   comm
-
-       18743    591.92 ms    442.96 us     31.58 us      1431454   sched-messaging
-          51    210.64 ms    207.45 ms      4.13 ms      1468724   sched-messaging
-          81     68.61 ms     65.79 ms    847.07 us      1463183   sched-messaging
-
-  === output for debug ===
-
-  bad: 1164137, total: 2253341
-  bad rate: 51.66 %
-  histogram of failure reasons
-         task: 0
-        stack: 0
-         time: 0
-         data: 1164137
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- .../perf/util/bpf_skel/lock_contention.bpf.c  | 22 ++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index cb87c98e5340..23f6e63544ed 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -4,6 +4,7 @@
- #include <bpf/bpf_helpers.h>
- #include <bpf/bpf_tracing.h>
- #include <bpf/bpf_core_read.h>
-+#include <asm-generic/errno-base.h>
+- Arnaldo
  
- #include "lock_data.h"
- 
-@@ -126,6 +127,9 @@ int stack_fail;
- int time_fail;
- int data_fail;
- 
-+int task_map_full;
-+int data_map_full;
-+
- static inline int can_record(u64 *ctx)
- {
- 	if (has_cpu) {
-@@ -177,11 +181,12 @@ static inline int update_task_data(struct task_struct *task)
- 		return -1;
- 
- 	p = bpf_map_lookup_elem(&task_data, &pid);
--	if (p == NULL) {
-+	if (p == NULL && !task_map_full) {
- 		struct contention_task_data data = {};
- 
- 		BPF_CORE_READ_STR_INTO(&data.comm, task, comm);
--		bpf_map_update_elem(&task_data, &pid, &data, BPF_NOEXIST);
-+		if (bpf_map_update_elem(&task_data, &pid, &data, BPF_NOEXIST) == -E2BIG)
-+			task_map_full = 1;
- 	}
- 
- 	return 0;
-@@ -370,6 +375,12 @@ int contention_end(u64 *ctx)
- 
- 	data = bpf_map_lookup_elem(&lock_stat, &key);
- 	if (!data) {
-+		if (data_map_full) {
-+			bpf_map_delete_elem(&tstamp, &pid);
-+			__sync_fetch_and_add(&data_fail, 1);
-+			return 0;
-+		}
-+
- 		struct contention_data first = {
- 			.total_time = duration,
- 			.max_time = duration,
-@@ -377,12 +388,17 @@ int contention_end(u64 *ctx)
- 			.count = 1,
- 			.flags = pelem->flags,
- 		};
-+		int err;
- 
- 		if (aggr_mode == LOCK_AGGR_ADDR)
- 			first.flags |= check_lock_type(pelem->lock, pelem->flags);
- 
--		if (bpf_map_update_elem(&lock_stat, &key, &first, BPF_NOEXIST) < 0)
-+		err = bpf_map_update_elem(&lock_stat, &key, &first, BPF_NOEXIST);
-+		if (err < 0) {
-+			if (err == -E2BIG)
-+				data_map_full = 1;
- 			__sync_fetch_and_add(&data_fail, 1);
-+		}
- 		bpf_map_delete_elem(&tstamp, &pid);
- 		return 0;
- 	}
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 96ef317bac41..9eedbfc9e863 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -494,9 +494,13 @@ static int pmu_aliases_parse(int dirfd, struct list_head *head)
+>  			continue;
+>  
+>  		fd = openat(dirfd, name, O_RDONLY);
+> +		if (fd == -1) {
+> +			pr_debug("Cannot open %s\n", name);
+> +			continue;
+> +		}
+>  		file = fdopen(fd, "r");
+>  		if (!file) {
+> -			pr_debug("Cannot open %s\n", name);
+> +			close(fd);
+>  			continue;
+>  		}
+>  
+> @@ -1882,9 +1886,13 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>  			continue;
+>  
+>  		fd = openat(caps_fd, name, O_RDONLY);
+> +		if (fd == -1)
+> +			continue;
+>  		file = fdopen(fd, "r");
+> -		if (!file)
+> +		if (!file) {
+> +			close(fd);
+>  			continue;
+> +		}
+>  
+>  		if (!fgets(value, sizeof(value), file) ||
+>  		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
+> -- 
+> 2.40.0.348.gf938b09366-goog
+> 
+
 -- 
-2.40.0.577.gac1e443424-goog
 
+- Arnaldo
