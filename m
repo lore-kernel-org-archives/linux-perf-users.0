@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9920BC77B6C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51F6C77B6C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237881AbjDFVl6 (ORCPT
+        id S232026AbjDFVmg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 17:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35368 "EHLO
+        Thu, 6 Apr 2023 17:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231924AbjDFVl5 (ORCPT
+        with ESMTP id S230448AbjDFVmf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 17:41:57 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C78E86A6;
-        Thu,  6 Apr 2023 14:41:56 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id m6-20020a05600c3b0600b003ee6e324b19so24415979wms.1;
-        Thu, 06 Apr 2023 14:41:56 -0700 (PDT)
+        Thu, 6 Apr 2023 17:42:35 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155C49029;
+        Thu,  6 Apr 2023 14:42:32 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id m2so40834484wrh.6;
+        Thu, 06 Apr 2023 14:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680817315; x=1683409315;
+        d=gmail.com; s=20210112; t=1680817350; x=1683409350;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=12/NsLYM3w+hYEV/hYhYVp4yChlBWZXqD12DXOr1omk=;
-        b=kbC+57eAmTDzG16/gFqBedU1gTreFSq5CkaY3rgS9Cw4/qHZNhHrjz1THQ2561HOYo
-         dugwUtKFTqH4OOqUEIZHLC7hA6kWNpEcZ1eoR4X4TjqXVoneXUsGOreMcJg3OwbJdGmv
-         Ytd2VHmnCeSQeK3Nqb/GRm1au7YdajeLLs3RMPNddVZWQNu2RIkQ4caZ5szpwcCr6ZUW
-         HIWDHMuIiEQDxUliFbVPt/un7RM8nlHp1JgjMDU4mTHskK7COJBYAcf7r69j++vyQFbY
-         5N7IZJf4/pYGf/2fb+YOKeY5iPlVAmN5SkRcR0ZuC198sy/6EdY93WUQSiVR2QKcy7id
-         dCow==
+        bh=YmAu+Uynfyl2HTmX/Q8qoyobCvJeFzfJPZN+FX4esik=;
+        b=cOh4P+3XioEFEwZ/Sv4XHjBuLYa1omvgmcyQzgKGX9rmW5is55JtGospHy46sFbY/f
+         J8lyrHgIt7x5ioFB5Zll1skobtaprqIVfmBXFmNe3iRApbX0Az43ymew24b+xlJ+8qV3
+         Uz4InzSVVuw7BxK9URqtN3FFwsKCnHOX3ziVGU0jWEtODqzOyi5LDQD5R60R0kWzIiZo
+         26DRfSQeqQLiR3q1JMtDWQGgtlEsh42fNTj68eWDSzknH2T3aW4oz7lPlT0fKXK9zvLH
+         +V8zFu9UfIayWgVmnEBH788J/4nZi1/3mz3bAiT0zCdXOGRCTTeF/k8k4xtOsGxeWTU+
+         DsDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680817315; x=1683409315;
+        d=1e100.net; s=20210112; t=1680817350; x=1683409350;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=12/NsLYM3w+hYEV/hYhYVp4yChlBWZXqD12DXOr1omk=;
-        b=D73D2NsUwMwrs1so2mdrjBXpE+4AUDhcq8BkNICAOTb5O8IIXVOO1MMoJXgkljTfN3
-         0ljyaTZmP9IepC+qPz7qvf7YYXT6yEn0cO3mQRr3DPZ5Xw6UM1kiL71DoS0oon2C3ENc
-         cYHPRvBy8Ma79b9NtS+Jd1aCRdwsJoPn5ReHTrQWLiqhNIW3PPgGdRQAXgI1PxBg4HCD
-         E3MfcQn6veyT+nQXdYwyXttH6138Cur0zD4Pjt+hg+lFEgBMFUzZ4YGvOOz5NsdvjbZQ
-         hZcqnv9d508O5QkmBUgzr8fDdCxUQUgBIcvDVEYAlnToI6a1onBmqZTivq2uKyNT0fxo
-         pw/Q==
-X-Gm-Message-State: AAQBX9dcwbvA8YnQgfCUHeCU7MRJ6nZg+jXTAL9KeWTSMUXurVDNDP88
-        GKN6r45WXqd6dEVib9t/L3k=
-X-Google-Smtp-Source: AKy350bpssoHLia6IhF7lZ+isx/e3ZRv9rqCbUtWcDAaBodYNs8j07GNWsSOBjPmmAtN+z7KICZdSg==
-X-Received: by 2002:a7b:c41a:0:b0:3f0:4428:94fa with SMTP id k26-20020a7bc41a000000b003f0442894famr8069688wmi.26.1680817314874;
-        Thu, 06 Apr 2023 14:41:54 -0700 (PDT)
+        bh=YmAu+Uynfyl2HTmX/Q8qoyobCvJeFzfJPZN+FX4esik=;
+        b=CzMY7nU0SE3zizf2Tp9ZUojnkweuvMLaW/2E3mer/bC0J1YEcFgWuj/zTcIv//VmXS
+         E+0pO2QQEPHeSAJSEaMoJpVlYaBGQ771ujW0IEq/EEtbA/ZRoEUbOjm8xWs6TsGo5JTZ
+         5tB3o47T1zxWpy7W2VqB84umpR53XOZBaFVpYo0zysbFrOIjqu6Q5c+D3ZG1hu6BPjlZ
+         5KO/Q1LoLCtduDDGqjUgY2HSPGwvTObiI1EW9lwxF9T6VnaVzE2+PIOmRTvqYyugIvje
+         954/bN3biRSSQcXpCohRPf1A/R2l3LMU4Y1BWkZCOHZ5A6kxcK8qR+SjN4j1Ieeh26b5
+         C7VA==
+X-Gm-Message-State: AAQBX9eEAzWRkRab8YIbhyD5D+GTEXMJk58cEYlxYpsnOuEmYpiy270A
+        OqKJkr0TbmIvVKzn2ywdGA0=
+X-Google-Smtp-Source: AKy350bTEv1JH6qN02QBBTBoEpTWXajbX6DL7tR2g6TVkpb2r8EoK5A5ePR1alwE5gKTJG7VrPlyYg==
+X-Received: by 2002:a5d:6809:0:b0:2d2:22eb:824a with SMTP id w9-20020a5d6809000000b002d222eb824amr8252943wru.34.1680817350321;
+        Thu, 06 Apr 2023 14:42:30 -0700 (PDT)
 Received: from krava (85-160-61-129.reb.o2.cz. [85.160.61.129])
-        by smtp.gmail.com with ESMTPSA id s14-20020a1cf20e000000b003f04785699asm2580386wmc.43.2023.04.06.14.41.52
+        by smtp.gmail.com with ESMTPSA id u16-20020adff890000000b002ef72575473sm1251064wrp.117.2023.04.06.14.42.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 14:41:54 -0700 (PDT)
+        Thu, 06 Apr 2023 14:42:30 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 6 Apr 2023 22:41:50 +0100
+Date:   Thu, 6 Apr 2023 22:42:25 +0100
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -70,182 +70,68 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jing Zhang <renyu.zj@linux.alibaba.com>,
         Gaosheng Cui <cuigaosheng1@huawei.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] perf pmu: Make parser reentrant
-Message-ID: <ZC88niOWJ+b4ka4q@krava>
+Subject: Re: [PATCH v3 2/2] perf pmu: Fix a few potential fd leaks
+Message-ID: <ZC88waWWdSDKIuyI@krava>
 References: <20230406065224.2553640-1-irogers@google.com>
+ <20230406065224.2553640-2-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230406065224.2553640-1-irogers@google.com>
+In-Reply-To: <20230406065224.2553640-2-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 11:52:23PM -0700, Ian Rogers wrote:
-> By default bison uses global state for compatibility with yacc. Make
-> the parser reentrant so that it may be used in asynchronous and
-> multithreaded situations.
+On Wed, Apr 05, 2023 at 11:52:24PM -0700, Ian Rogers wrote:
+> Ensure fd is closed on error paths.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
+nice catch
+
 Acked-by: Jiri Olsa <jolsa@kernel.org>
 
+thanks,
 jirka
 
 > ---
->  tools/perf/util/pmu.c | 26 ++++++++++++++++++++------
->  tools/perf/util/pmu.h |  2 +-
->  tools/perf/util/pmu.l | 17 ++++++++++++-----
->  tools/perf/util/pmu.y |  5 ++++-
->  4 files changed, 37 insertions(+), 13 deletions(-)
+>  tools/perf/util/pmu.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 78a407b42ad1..96ef317bac41 100644
+> index 96ef317bac41..9eedbfc9e863 100644
 > --- a/tools/perf/util/pmu.c
 > +++ b/tools/perf/util/pmu.c
-> @@ -24,6 +24,8 @@
->  #include "evsel.h"
->  #include "pmu.h"
->  #include "pmus.h"
-> +#include "pmu-bison.h"
-> +#include "pmu-flex.h"
->  #include "parse-events.h"
->  #include "print-events.h"
->  #include "header.h"
-> @@ -57,9 +59,6 @@ struct perf_pmu_format {
->  	struct list_head list;
->  };
->  
-> -int perf_pmu_parse(struct list_head *list, char *name);
-> -extern FILE *perf_pmu_in;
-> -
->  static bool hybrid_scanned;
->  
->  static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name);
-> @@ -81,6 +80,8 @@ int perf_pmu__format_parse(int dirfd, struct list_head *head)
->  	while (!ret && (evt_ent = readdir(format_dir))) {
->  		char *name = evt_ent->d_name;
->  		int fd;
-> +		void *scanner;
-> +		FILE *file;
->  
->  		if (!strcmp(name, ".") || !strcmp(name, ".."))
+> @@ -494,9 +494,13 @@ static int pmu_aliases_parse(int dirfd, struct list_head *head)
 >  			continue;
-> @@ -91,9 +92,22 @@ int perf_pmu__format_parse(int dirfd, struct list_head *head)
->  		if (fd < 0)
->  			break;
 >  
-> -		perf_pmu_in = fdopen(fd, "r");
-> -		ret = perf_pmu_parse(head, name);
-> -		fclose(perf_pmu_in);
-> +		file = fdopen(fd, "r");
+>  		fd = openat(dirfd, name, O_RDONLY);
+> +		if (fd == -1) {
+> +			pr_debug("Cannot open %s\n", name);
+> +			continue;
+> +		}
+>  		file = fdopen(fd, "r");
+>  		if (!file) {
+> -			pr_debug("Cannot open %s\n", name);
+> +			close(fd);
+>  			continue;
+>  		}
+>  
+> @@ -1882,9 +1886,13 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>  			continue;
+>  
+>  		fd = openat(caps_fd, name, O_RDONLY);
+> +		if (fd == -1)
+> +			continue;
+>  		file = fdopen(fd, "r");
+> -		if (!file)
 > +		if (!file) {
 > +			close(fd);
-> +			break;
+>  			continue;
 > +		}
-> +
-> +		ret = perf_pmu_lex_init(&scanner);
-> +		if (ret) {
-> +			fclose(file);
-> +			break;
-> +		}
-> +
-> +		perf_pmu_set_in(file, scanner);
-> +		ret = perf_pmu_parse(head, name, scanner);
-> +		perf_pmu_lex_destroy(scanner);
-> +		fclose(file);
->  	}
 >  
->  	closedir(format_dir);
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 32c3a75bca0e..d53618c65c92 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -206,7 +206,7 @@ int perf_pmu__check_alias(struct perf_pmu *pmu, struct list_head *head_terms,
->  			  struct perf_pmu_info *info);
->  struct list_head *perf_pmu__alias(struct perf_pmu *pmu,
->  				  struct list_head *head_terms);
-> -void perf_pmu_error(struct list_head *list, char *name, char const *msg);
-> +void perf_pmu_error(struct list_head *list, char *name, void *scanner, char const *msg);
->  
->  int perf_pmu__new_format(struct list_head *list, char *name,
->  			 int config, unsigned long *bits);
-> diff --git a/tools/perf/util/pmu.l b/tools/perf/util/pmu.l
-> index 58b4926cfaca..67b247be693b 100644
-> --- a/tools/perf/util/pmu.l
-> +++ b/tools/perf/util/pmu.l
-> @@ -1,4 +1,6 @@
->  %option prefix="perf_pmu_"
-> +%option reentrant
-> +%option bison-bridge
->  
->  %{
->  #include <stdlib.h>
-> @@ -6,16 +8,21 @@
->  #include "pmu.h"
->  #include "pmu-bison.h"
->  
-> -static int value(int base)
-> +char *perf_pmu_get_text(yyscan_t yyscanner);
-> +YYSTYPE *perf_pmu_get_lval(yyscan_t yyscanner);
-> +
-> +static int value(yyscan_t scanner, int base)
->  {
-> +	YYSTYPE *yylval = perf_pmu_get_lval(scanner);
-> +	char *text = perf_pmu_get_text(scanner);
->  	long num;
->  
->  	errno = 0;
-> -	num = strtoul(perf_pmu_text, NULL, base);
-> +	num = strtoul(text, NULL, base);
->  	if (errno)
->  		return PP_ERROR;
->  
-> -	perf_pmu_lval.num = num;
-> +	yylval->num = num;
->  	return PP_VALUE;
->  }
->  
-> @@ -25,7 +32,7 @@ num_dec         [0-9]+
->  
->  %%
->  
-> -{num_dec}	{ return value(10); }
-> +{num_dec}	{ return value(yyscanner, 10); }
->  config		{ return PP_CONFIG; }
->  -		{ return '-'; }
->  :		{ return ':'; }
-> @@ -35,7 +42,7 @@ config		{ return PP_CONFIG; }
->  
->  %%
->  
-> -int perf_pmu_wrap(void)
-> +int perf_pmu_wrap(void *scanner __maybe_unused)
->  {
->  	return 1;
->  }
-> diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-> index e675d79a0274..dff4e892ac4d 100644
-> --- a/tools/perf/util/pmu.y
-> +++ b/tools/perf/util/pmu.y
-> @@ -1,6 +1,8 @@
-> -
-> +%define api.pure full
->  %parse-param {struct list_head *format}
->  %parse-param {char *name}
-> +%parse-param {void *scanner}
-> +%lex-param {void* scanner}
->  
->  %{
->  
-> @@ -78,6 +80,7 @@ PP_VALUE
->  
->  void perf_pmu_error(struct list_head *list __maybe_unused,
->  		    char *name __maybe_unused,
-> +		    void *scanner __maybe_unused,
->  		    char const *msg __maybe_unused)
->  {
->  }
+>  		if (!fgets(value, sizeof(value), file) ||
+>  		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
 > -- 
 > 2.40.0.348.gf938b09366-goog
 > 
