@@ -2,136 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51F6C77B6C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 21:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1356CC76196
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 23:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232026AbjDFVmg (ORCPT
+        id S229892AbjDFXx7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 17:42:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
+        Thu, 6 Apr 2023 19:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230448AbjDFVmf (ORCPT
+        with ESMTP id S229500AbjDFXx6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 17:42:35 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155C49029;
-        Thu,  6 Apr 2023 14:42:32 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id m2so40834484wrh.6;
-        Thu, 06 Apr 2023 14:42:32 -0700 (PDT)
+        Thu, 6 Apr 2023 19:53:58 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BE461B1
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Apr 2023 16:53:57 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id j11-20020a25230b000000b00b6871c296bdso40111934ybj.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Apr 2023 16:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680817350; x=1683409350;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YmAu+Uynfyl2HTmX/Q8qoyobCvJeFzfJPZN+FX4esik=;
-        b=cOh4P+3XioEFEwZ/Sv4XHjBuLYa1omvgmcyQzgKGX9rmW5is55JtGospHy46sFbY/f
-         J8lyrHgIt7x5ioFB5Zll1skobtaprqIVfmBXFmNe3iRApbX0Az43ymew24b+xlJ+8qV3
-         Uz4InzSVVuw7BxK9URqtN3FFwsKCnHOX3ziVGU0jWEtODqzOyi5LDQD5R60R0kWzIiZo
-         26DRfSQeqQLiR3q1JMtDWQGgtlEsh42fNTj68eWDSzknH2T3aW4oz7lPlT0fKXK9zvLH
-         +V8zFu9UfIayWgVmnEBH788J/4nZi1/3mz3bAiT0zCdXOGRCTTeF/k8k4xtOsGxeWTU+
-         DsDg==
+        d=google.com; s=20210112; t=1680825237;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FLvfuP/ppd0j0/1co5enb/ElBXDAvYlZqA+xyY4YSI0=;
+        b=MolppwmDeQulqB6WA5Ouco2p4R1r5C2to0lWGjzVHcaM482Z9Z2qbmq3XwcAINxepf
+         FyaqSU8m0jBggXmE0PEFmg75/745IQSTW1x/JZl1X1ca+BqygoxccjIiUW5sJaTul+pI
+         Mr0R69EuJ4DyWwUh7RaKz85Am1dmQyO2HLljVgHDBs8P6NKJW5Uuy1N1FM9hRmTGpzTz
+         5gGbn9h3PSS/32c1fW3inLlYvfwkJYwaWgfzyWMjmHeCzY3jWWdoYvlrrgzbh0mVui5o
+         6xykRwQ7cs6rwi8Yop99ZSCdQBP5Gegw4HU80Uz6m54r9pMMNqepTAzGCewBzg/pTnAi
+         B8yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680817350; x=1683409350;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YmAu+Uynfyl2HTmX/Q8qoyobCvJeFzfJPZN+FX4esik=;
-        b=CzMY7nU0SE3zizf2Tp9ZUojnkweuvMLaW/2E3mer/bC0J1YEcFgWuj/zTcIv//VmXS
-         E+0pO2QQEPHeSAJSEaMoJpVlYaBGQ771ujW0IEq/EEtbA/ZRoEUbOjm8xWs6TsGo5JTZ
-         5tB3o47T1zxWpy7W2VqB84umpR53XOZBaFVpYo0zysbFrOIjqu6Q5c+D3ZG1hu6BPjlZ
-         5KO/Q1LoLCtduDDGqjUgY2HSPGwvTObiI1EW9lwxF9T6VnaVzE2+PIOmRTvqYyugIvje
-         954/bN3biRSSQcXpCohRPf1A/R2l3LMU4Y1BWkZCOHZ5A6kxcK8qR+SjN4j1Ieeh26b5
-         C7VA==
-X-Gm-Message-State: AAQBX9eEAzWRkRab8YIbhyD5D+GTEXMJk58cEYlxYpsnOuEmYpiy270A
-        OqKJkr0TbmIvVKzn2ywdGA0=
-X-Google-Smtp-Source: AKy350bTEv1JH6qN02QBBTBoEpTWXajbX6DL7tR2g6TVkpb2r8EoK5A5ePR1alwE5gKTJG7VrPlyYg==
-X-Received: by 2002:a5d:6809:0:b0:2d2:22eb:824a with SMTP id w9-20020a5d6809000000b002d222eb824amr8252943wru.34.1680817350321;
-        Thu, 06 Apr 2023 14:42:30 -0700 (PDT)
-Received: from krava (85-160-61-129.reb.o2.cz. [85.160.61.129])
-        by smtp.gmail.com with ESMTPSA id u16-20020adff890000000b002ef72575473sm1251064wrp.117.2023.04.06.14.42.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 14:42:30 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 6 Apr 2023 22:42:25 +0100
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20210112; t=1680825237;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FLvfuP/ppd0j0/1co5enb/ElBXDAvYlZqA+xyY4YSI0=;
+        b=VJLawMqQFe8n/JsNhgvF5bQpWYdop2q+jSaCWOxH7Us2pnaAvik8XvSWNsY/gGC1/K
+         uBjLrtitoy0wggkO4vxp1uqO8MUNpC/6e7nqCsXfM0s0aRoVFurQD0pgdFH6dzdUZdzp
+         8D/RiskQKQ0m0CcjE3cmnYpfIcjQby+kVQlwNDaeGFUdx9t/6VT4GW3KQ1tBaGGmF7Su
+         gTMxvsSUgrO1+P+yxzHfpmSsv6SSTQuMZg/jGEC6FZyUgEBiKr4qEeZnN9mQimIKwifn
+         rhuc6A8WSkZfqVxsbAhFOq8XzKO9HVxH5Hk+d8KdbwRmo43aStQR0LqjiMwjY7+09lFK
+         nPfQ==
+X-Gm-Message-State: AAQBX9ePGhHEbxlk2w9raPMECuqh6Xoo7vFZhOR4OVPvCAd64ZIu5st+
+        TAXM9NnBTlpj7tshGNdGnGigdkMn1280
+X-Google-Smtp-Source: AKy350bEziOXF5P1ia/8qPKeLmnd9NJTDiichJKVjV8ga2NYjwK5cvlXgdbsiEmKYbN+0fsk9G4RfaSJi+v4
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:939d:185a:97bb:59ee])
+ (user=irogers job=sendgmr) by 2002:a81:b1c4:0:b0:52e:ac97:115f with SMTP id
+ p187-20020a81b1c4000000b0052eac97115fmr123710ywh.5.1680825236846; Thu, 06 Apr
+ 2023 16:53:56 -0700 (PDT)
+Date:   Thu,  6 Apr 2023 16:52:54 -0700
+Message-Id: <20230406235256.2768773-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH v1 1/3] perf pmu: Fewer const casts
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
+        James Clark <james.clark@arm.com>,
         Sean Christopherson <seanjc@google.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        German Gomez <german.gomez@arm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Rob Herring <robh@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] perf pmu: Fix a few potential fd leaks
-Message-ID: <ZC88waWWdSDKIuyI@krava>
-References: <20230406065224.2553640-1-irogers@google.com>
- <20230406065224.2553640-2-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230406065224.2553640-2-irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 11:52:24PM -0700, Ian Rogers wrote:
-> Ensure fd is closed on error paths.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+struct pmu_event has const char*s, only unit needs to be non-const for
+the sake of passing as an out argument to strtod. Reduce the const
+casts from 4 down to 1.
 
-nice catch
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 78a407b42ad1..63a33fcfd42d 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -338,16 +338,16 @@ static int __perf_pmu__new_alias(struct list_head *list, int dirfd, char *name,
+ 	struct perf_pmu_alias *alias;
+ 	int ret;
+ 	char newval[256];
+-	char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
++	const char *long_desc = NULL, *topic = NULL, *unit = NULL, *pmu_name = NULL;
+ 	bool deprecated = false, perpkg = false;
+ 
+ 	if (pe) {
+-		long_desc = (char *)pe->long_desc;
+-		topic = (char *)pe->topic;
+-		unit = (char *)pe->unit;
++		long_desc = pe->long_desc;
++		topic = pe->topic;
++		unit = pe->unit;
+ 		perpkg = pe->perpkg;
+ 		deprecated = pe->deprecated;
+-		pmu_name = (char *)pe->pmu;
++		pmu_name = pe->pmu;
+ 	}
+ 
+ 	alias = malloc(sizeof(*alias));
+@@ -405,7 +405,7 @@ static int __perf_pmu__new_alias(struct list_head *list, int dirfd, char *name,
+ 				desc ? strdup(desc) : NULL;
+ 	alias->topic = topic ? strdup(topic) : NULL;
+ 	if (unit) {
+-		if (perf_pmu__convert_scale(unit, &unit, &alias->scale) < 0)
++		if (perf_pmu__convert_scale(unit, (char **)&unit, &alias->scale) < 0)
+ 			return -1;
+ 		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
+ 	}
+-- 
+2.40.0.577.gac1e443424-goog
 
-thanks,
-jirka
-
-> ---
->  tools/perf/util/pmu.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 96ef317bac41..9eedbfc9e863 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -494,9 +494,13 @@ static int pmu_aliases_parse(int dirfd, struct list_head *head)
->  			continue;
->  
->  		fd = openat(dirfd, name, O_RDONLY);
-> +		if (fd == -1) {
-> +			pr_debug("Cannot open %s\n", name);
-> +			continue;
-> +		}
->  		file = fdopen(fd, "r");
->  		if (!file) {
-> -			pr_debug("Cannot open %s\n", name);
-> +			close(fd);
->  			continue;
->  		}
->  
-> @@ -1882,9 +1886,13 @@ int perf_pmu__caps_parse(struct perf_pmu *pmu)
->  			continue;
->  
->  		fd = openat(caps_fd, name, O_RDONLY);
-> +		if (fd == -1)
-> +			continue;
->  		file = fdopen(fd, "r");
-> -		if (!file)
-> +		if (!file) {
-> +			close(fd);
->  			continue;
-> +		}
->  
->  		if (!fgets(value, sizeof(value), file) ||
->  		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
-> -- 
-> 2.40.0.348.gf938b09366-goog
-> 
