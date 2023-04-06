@@ -2,87 +2,191 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11F4C77B6C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5703FC7618D
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 20:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236525AbjDFUDL (ORCPT
+        id S236156AbjDFUNP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 16:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38742 "EHLO
+        Thu, 6 Apr 2023 16:13:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjDFUDK (ORCPT
+        with ESMTP id S229512AbjDFUNO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 16:03:10 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41AE83D0;
-        Thu,  6 Apr 2023 13:03:09 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-536af432ee5so761150177b3.0;
-        Thu, 06 Apr 2023 13:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680811389; x=1683403389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lFrdCeDCOJkHQGDyFu7yRUwnrgoVUUx7k0c1Neje6RM=;
-        b=fkVai4FnC0lB+EnDg9FQsFrd/PbAgdmTtU6AOiIa8YwIAlVMTCf0R3kWHL9ZGmsE40
-         IwBT6ePo/Rz23Sr8X0MftHYStPGTuXDN6BiWGM0qB3QPD+xedt6G9QHbExJlEH6AgrQP
-         kR37B350cFN4uLxmlRpeGNV9g/h0DhphVVUZ5zFl4VROMjbqbcKRX3vox69dHOKkwCto
-         rlj3IyC9KTiyekNYFcRSTOGGRwgBzIKpuudtjNArayKwSOHjPAjN5B0e7fyQ7K/0AJBA
-         q0tx5DE4PetsJdBUwvgyXmCuAclVdiVhLisQ2kfLxUnzFSruzelRAUA4GPghTSdCbFYK
-         zy6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680811389; x=1683403389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lFrdCeDCOJkHQGDyFu7yRUwnrgoVUUx7k0c1Neje6RM=;
-        b=Jcfa4HVVygrg0yqHrcsBRZIDvIP9XVtwRqrrp3UpX4H7zXDeL7Q4BTsLSku66XQBXS
-         d+m4YsXDt5h0xGM9WYYQpPrfPx1N6J/jtlXLGmMNbgw8TLTTHibCJxtLO+hLrbazqjzm
-         CeJNPqAtndy39qyxO0eQw5QkZfCbZFeP6YUoDk+yndzLPrpPxmEP4oQ+wz2AZ/XrGUxJ
-         kXwaHic/vVszpv93jQu3IUUaYcEHf7k7KOBt5EBnT+mHRp47ANPhECCuHbyqqeuiHI0T
-         g84tQBTsfTyGDVrfg1vMdtV3NJZwHRYDZYBic/NXW9Xx/od5pxTjvpfSqSu9eWab0Nyy
-         ws+g==
-X-Gm-Message-State: AAQBX9dPdbESWkZRJ/isSTGrGahHf+fmhSEvLc/7CYQ9sIR4n5ePA3/X
-        c5YItUu2P6FJUMeYy4kOjKy7Pn9vPBPUAmt3XFk=
-X-Google-Smtp-Source: AKy350aANX+UTxPTPh2+zIsCbbdQdpecQ1XqZIGaIBnAYEiVmox+pwYQ2BDIID4Tc/Vw0OZ3VsJGHNzZDnE+tHV9BAg=
-X-Received: by 2002:a81:c509:0:b0:52e:e095:d840 with SMTP id
- k9-20020a81c509000000b0052ee095d840mr6802785ywi.0.1680811388797; Thu, 06 Apr
- 2023 13:03:08 -0700 (PDT)
+        Thu, 6 Apr 2023 16:13:14 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68331BD7;
+        Thu,  6 Apr 2023 13:13:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680811993; x=1712347993;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=y0M+s4y3ovbRkX8N3nikmS35mC/chKhbtKAptSGAwX8=;
+  b=cI8aJuERLUxWO2guaS/giORrnfMpi2s60/4Dzk2n6PWURWtsnC9VNu4N
+   +i8oPIyGDnBtAm12p+gLA2h5x/aNaFwiQQl94IE9nDODeCy6gUjv4KJ+D
+   sEXICmrlNwFfcGcJ/jpakelXkoLuoZ8eSbUABzSBNGr08lSLjSSHUoTZ9
+   dLuLY6YYTjjhWavdoOaH3LoDjKs439E4sye9BAAkom8+xgY/pZWZXVDNr
+   E7KAuqhTTQu7HqDJg2aSD0kUfkdsqdK84Vt/ihYARV2OWkFkLC7V3be6c
+   M7NTU3ZWeFl/JpdhvdO6ZXkTYNL0FPaaq0noOcwQq7/70g+rVOhuShAQT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="370667298"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="370667298"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 13:13:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="756456180"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="756456180"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 06 Apr 2023 13:13:12 -0700
+Received: from [10.251.27.208] (kliang2-mobl1.ccr.corp.intel.com [10.251.27.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 40D1D58068A;
+        Thu,  6 Apr 2023 13:13:11 -0700 (PDT)
+Message-ID: <8d207ba3-c31e-ccb6-258a-4171df136c9f@linux.intel.com>
+Date:   Thu, 6 Apr 2023 16:13:10 -0400
 MIME-Version: 1.0
-References: <20221125154947.2163498-1-Liam.Howlett@oracle.com>
- <CANiq72ntFXb+ZhBqgBAMu2n8wcgJLZRZC1rmBVvL5m+K1Nhw2w@mail.gmail.com> <20230406195830.ieiozetmk7qjllol@revolver>
-In-Reply-To: <20230406195830.ieiozetmk7qjllol@revolver>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 6 Apr 2023 22:02:57 +0200
-Message-ID: <CANiq72=C4OCcbX4C-ap3YTm5Ni6RdskQ67rt4iWs0_1hTe1rkw@mail.gmail.com>
-Subject: Re: [PATCH] tools: Rename __fallthrough to fallthrough
-To:     "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        "linux-sparse@vger.kernel.org" <linux-sparse@vger.kernel.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v1 1/5] perf vendor events intel: Update free running
+ alderlake events
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20230406184638.2632300-1-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230406184638.2632300-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 6, 2023 at 9:58=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> Any chance of this being accepted?  I'm looking to use this in the radix
-> test suite and would rather not duplicate code.
 
-That would be up to the `tools/perf/` maintainers.
 
-Cheers,
-Miguel
+On 2023-04-06 2:46 p.m., Ian Rogers wrote:
+> Fix the PMU name, event code and umask.
+> 
+> These updates were generated by:
+> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> with this PR:
+> https://github.com/intel/perfmon/pull/66
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  .../arch/x86/alderlake/uncore-memory.json        | 16 ++++++++++++----
+>  .../arch/x86/alderlaken/uncore-memory.json       | 16 ++++++++++++----
+>  2 files changed, 24 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+> index 2ccd9cf96957..ea25bb411f89 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+> @@ -1,29 +1,37 @@
+>  [
+>      {
+>          "BriefDescription": "Counts every 64B read  request entering the Memory Controller 0 to DRAM (sum of all channels).",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+>          "PublicDescription": "Counts every 64B read request entering the Memory Controller 0 to DRAM (sum of all channels).",
+> -        "Unit": "iMC"
+> +        "UMask": "0x20",
+> +        "Unit": "imc_free_running"
+
+The imc_free_running will give the counter value for both imc0 and imc1.
+
+I think we need "Unit": "imc_free_running_0" here. But I'm not sure if
+the perf tool can handle it.
+
+Thanks,
+Kan
+
+>      },
+>      {
+>          "BriefDescription": "Counts every 64B write request entering the Memory Controller 0 to DRAM (sum of all channels). Each write request counts as a new request incrementing this counter. However, same cache line write requests (both full and partial) are combined to a single 64 byte data transfer to DRAM.",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+> -        "Unit": "iMC"
+> +        "UMask": "0x30",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "Counts every 64B read request entering the Memory Controller 1 to DRAM (sum of all channels).",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+>          "PublicDescription": "Counts every 64B read entering the Memory Controller 1 to DRAM (sum of all channels).",
+> -        "Unit": "iMC"
+> +        "UMask": "0x20",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "Counts every 64B write request entering the Memory Controller 1 to DRAM (sum of all channels). Each write request counts as a new request incrementing this counter. However, same cache line write requests (both full and partial) are combined to a single 64 byte data transfer to DRAM.",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+> -        "Unit": "iMC"
+> +        "UMask": "0x30",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "ACT command for a read request sent to DRAM",
+> diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+> index 2ccd9cf96957..ea25bb411f89 100644
+> --- a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+> +++ b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+> @@ -1,29 +1,37 @@
+>  [
+>      {
+>          "BriefDescription": "Counts every 64B read  request entering the Memory Controller 0 to DRAM (sum of all channels).",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+>          "PublicDescription": "Counts every 64B read request entering the Memory Controller 0 to DRAM (sum of all channels).",
+> -        "Unit": "iMC"
+> +        "UMask": "0x20",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "Counts every 64B write request entering the Memory Controller 0 to DRAM (sum of all channels). Each write request counts as a new request incrementing this counter. However, same cache line write requests (both full and partial) are combined to a single 64 byte data transfer to DRAM.",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+> -        "Unit": "iMC"
+> +        "UMask": "0x30",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "Counts every 64B read request entering the Memory Controller 1 to DRAM (sum of all channels).",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+>          "PublicDescription": "Counts every 64B read entering the Memory Controller 1 to DRAM (sum of all channels).",
+> -        "Unit": "iMC"
+> +        "UMask": "0x20",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "Counts every 64B write request entering the Memory Controller 1 to DRAM (sum of all channels). Each write request counts as a new request incrementing this counter. However, same cache line write requests (both full and partial) are combined to a single 64 byte data transfer to DRAM.",
+> +        "EventCode": "0xff",
+>          "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+>          "PerPkg": "1",
+> -        "Unit": "iMC"
+> +        "UMask": "0x30",
+> +        "Unit": "imc_free_running"
+>      },
+>      {
+>          "BriefDescription": "ACT command for a read request sent to DRAM",
