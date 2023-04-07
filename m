@@ -2,140 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5223DC76196
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 11:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5EEC6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 21:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240720AbjDGL1E (ORCPT
+        id S229598AbjDGVV5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Apr 2023 07:27:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46412 "EHLO
+        Fri, 7 Apr 2023 17:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240118AbjDGL1D (ORCPT
+        with ESMTP id S229667AbjDGVV4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Apr 2023 07:27:03 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 150FC61B0;
-        Fri,  7 Apr 2023 04:26:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RH+svxe74n/y7kKondXAfZq7np3SSWFwAsyf5LMEVeEjbT1VeVDgVKqCWwtdbCgeH2X8qScXD7nG7GULGb2lk/pCxr1Duz+uGsoXNcV65oLx5u28bY0LxxP8ajf6AW/vLuxcWa21Uwq7jyA7bziFNvL/ioJ0dc2/2AJt9Xc7VszkrfdRuq6Ez7uF0nVoP/jW6aVkDxs+m0D2i8vhMevz30ovn3PSz374u461+sb2MmDWQNHLNCCMK4rDkJnxQfI3VQiFvmoBXYXS24ApWheD7cv/nEvA/fiNShIgWmOJp8nMly9TBLFkiJAbuYee0AbHBkKgW8+rbewW0XWHpY4rCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7OB9U1d/zkV9tn3HzRN0vhF/uHyfA40rdlvgDdSUhTs=;
- b=N3vH72ijNVnjJ4ivKpps35oxFCvyCZOTb81O0jHao9+NfLuDX2iDAxfb3jc8ZiCAiND/ihSJ4a/prdVEk7WUQ9CKPTLsNAS0ibacnY3T7vCS5OkVxap6ATknXAyVJ5/euUM273saTDbhAVmBvwXbUvJHJU12FRznny6dZBLP9cUY0oE1nYjRX7r2H09oi0lIlwTOopknR7bS7dcQ4QAAVJRjQ1F0oHz75ounC/ooBMTo+X7OOCAonEwrQccmWpwSrPcFWzkzq8dUAhhQL1MnNI+W1LqsOCw3fA4oS3Olp+d+wM1YmAf+u83TSbeWUDQAAXXDjAPtJGbgRA4OfoMo+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7OB9U1d/zkV9tn3HzRN0vhF/uHyfA40rdlvgDdSUhTs=;
- b=V2iM4MKPW15MLzrQjvzBwG0uLCG6jv0BZoNPEas9wZ/14PktqhyEHKBrJyu5XLi8SaDGB2SIF1X7CjBKyri4cGDpLO5zX2Pl1f3SGlsrZtyF34QnnJUo81x1OfcJfHyMdgBIRCBFpWCyHta45a4fsi7C63NJCE+oOCRPHZvIPqg=
-Received: from MW4PR04CA0154.namprd04.prod.outlook.com (2603:10b6:303:85::9)
- by DM6PR12MB4514.namprd12.prod.outlook.com (2603:10b6:5:2a7::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.31; Fri, 7 Apr
- 2023 11:26:20 +0000
-Received: from CO1NAM11FT115.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:85:cafe::6a) by MW4PR04CA0154.outlook.office365.com
- (2603:10b6:303:85::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.31 via Frontend
- Transport; Fri, 7 Apr 2023 11:26:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT115.mail.protection.outlook.com (10.13.174.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6298.19 via Frontend Transport; Fri, 7 Apr 2023 11:26:19 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 7 Apr
- 2023 06:26:13 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <peterz@infradead.org>, <namhyung@kernel.org>, <acme@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <mingo@kernel.org>, <eranian@google.com>,
-        <kan.liang@linux.intel.com>, <jolsa@kernel.org>,
-        <irogers@google.com>, <adrian.hunter@intel.com>,
-        <leo.yan@linaro.org>, <kjain@linux.ibm.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
-        <santosh.shukla@amd.com>
-Subject: [PATCH v3 9/9] perf script ibs: Change bit description according to latest PPR
-Date:   Fri, 7 Apr 2023 16:54:59 +0530
-Message-ID: <20230407112459.548-10-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230407112459.548-1-ravi.bangoria@amd.com>
-References: <20230407112459.548-1-ravi.bangoria@amd.com>
+        Fri, 7 Apr 2023 17:21:56 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F148B752;
+        Fri,  7 Apr 2023 14:21:55 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id p91so13321206uap.1;
+        Fri, 07 Apr 2023 14:21:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680902514; x=1683494514;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+chuPFNNrrKiFi5g5/MT+Goo0tel/zcQRxopfzjdJDA=;
+        b=zL4ZSsGGWeOe+fcJKPolHCa8ZVclWa6MbxpIxCKEc7LZZjbHyl2SdiAwzJq/9mEASM
+         i2JRd4wZgD8G3X/rGtBZRcR48GcVynuxaI2hDrRRJlujlcj3P0xl0WU2l0TnF2EkXLRT
+         CgT5VUfdN17pE1DbIYJXC2Xp1Nt330/1Va7izodHgBggW/xA8J3VyAM+PUOODn/NpKbN
+         O2PUqx3YjS65h0tvSHRd5yoGZJch/+3SVdK0wkiwFgl//qU7YPX3STxMwUSYCbDjzDEl
+         AQu9UY4uSFGC3MlPqEyZief63Jxjn2UrmCOMDRQPSwKapsZqlqsF3QFCkQUQDZ+Z64ey
+         xMHQ==
+X-Gm-Message-State: AAQBX9f5bh0/DYfhT4+bW+kPyWnS1i8OFjZlv4GH/dIZrykfRQNmJY4V
+        pVHzrP9WTbBulovz0Ag4xFeqUCbGsEtnOMtKq2g=
+X-Google-Smtp-Source: AKy350Z85M+JNyYExxdEQuOQYgEw6rJYfNjgo/0JNjhyYmukBarkvWbGysp4Aa8xsP4U0w3MkH+mlhrew1Wb8LZDcEo=
+X-Received: by 2002:a1f:28d8:0:b0:43c:5b5a:6c22 with SMTP id
+ o207-20020a1f28d8000000b0043c5b5a6c22mr53578vko.13.1680902514324; Fri, 07 Apr
+ 2023 14:21:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT115:EE_|DM6PR12MB4514:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6836474b-08bf-439a-d685-08db375ae8c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DT/nd3FyOQR33RoqG2MibU5tDdLeGjV1mKOnNaYHiBztMDCFie00xUN9fvoaRHbT6sPwJnVp8yS5OWLtfoOvQC/TWV3uqr3CNXr080+5zQCe83OhhU8LuoodQYc6RzQX+bWeyuNWL7DAbAQH4ZA8Pj7/D/xMF37JZzyvuQkse0yLtLeUnH08Rh6iKZ4pNHKq03g4++yyFj/oixGRK5JXsyIf2k7gMZdKw6tmx9jDQsStnBFX1yvgPaPNh4qDRog+r6uJUAPNfx+uKbRfD7JAH1fNl3xWCoMkPmdgaUOMBuDUxn3UP7PTXq5jb1YgUnu8yB03sMfSuleWSfk+/BEFBHRJJERjuRfogYI7pF91VmZgnTUZqMD0Ql5U7u8/TAFEhwibaM/nkd8v9Lk0dDru4jRSd6AZ9nVmlGHpYVL+dTA3KFiGEsTVNhUDLxU48v8jBdQWJOsoTjXXlZyBnRvBVY2B+08RLskibJkJiSbvKEf0QmOOeOq+nMmD+uYKyM8Rs4gcAgqkHcqq6boCFyq3oAP71AJxTb9kzyID2NUn0pdTQaH6KZX8bVj1aYznj8326NRaLx9Lp8p6LJIa0Ar1eQxbt+9+DgDkIATzG8EOkTSjsQVeypy5IKYOsjdDzgPnVlT55NGso9gru2XVjxp7gs5SOdwhFM26AHPaUoTW22CqkLeGuMdDP+kNRj1Hum4HX8BOS49YmtRlqKlGlNI5SqABEklHw/V5vUCrkkZAzW8=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(396003)(346002)(451199021)(36840700001)(40470700004)(46966006)(40460700003)(426003)(336012)(2616005)(186003)(16526019)(1076003)(83380400001)(26005)(6666004)(2906002)(70586007)(70206006)(54906003)(41300700001)(8676002)(4326008)(316002)(7416002)(5660300002)(478600001)(7696005)(44832011)(40480700001)(8936002)(110136005)(81166007)(356005)(82740400003)(36860700001)(82310400005)(86362001)(36756003)(47076005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2023 11:26:19.3424
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6836474b-08bf-439a-d685-08db375ae8c6
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT115.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4514
+References: <CAM9d7cjrkWdg18wTA_tRch8oN0YUEy3ZJ2mhrYtk23iLqd1XPw@mail.gmail.com>
+ <20230406025329.1888-1-laihangliang1@huawei.com>
+In-Reply-To: <20230406025329.1888-1-laihangliang1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 7 Apr 2023 14:21:43 -0700
+Message-ID: <CAM9d7cgK-P5KuDy7hkAR4j7oB4ydE6Mw3KexqgwPPhJF6MKtXQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf top: expand the range of multithreaded phase
+To:     Hangliang Lai <laihangliang1@huawei.com>
+Cc:     acme@kernel.org, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, brauner@kernel.org,
+        hewenliang4@huawei.com, irogers@google.com, jolsa@kernel.org,
+        linfeilong@huawei.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, liuwenyu7@huawei.com,
+        mark.rutland@arm.com, mingo@redhat.com, yeyunfeng@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Some of the IBS_OP_DATA2 bit descriptions were stale (taken from old
-version of PPR). Change it according to latest PPR.
+Hello,
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/util/amd-sample-raw.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+On Wed, Apr 5, 2023 at 7:54 PM Hangliang Lai <laihangliang1@huawei.com> wrote:
+>
+> In __cmd_top, perf_set_multithreaded is used to enable pthread_rwlock, thus
+> donw_read and down_write can work to handle concurrency problems. Then top
+> use perf_set_singlethreaded and switch to single threaded phase, assuming
+> that no thread concurrency will happen later.
+> However, a UAF problem could occur in perf top in single threaded phase,
+> The concurrent procedure is like this:
+> display_thread                              process_thread
+> --------------                              --------------
+> thread__comm_len
+>   -> thread__comm_str
+>     -> __thread__comm_str(thread)
+>                                             thread__delete
+>                                              -> comm__free
+>                                               -> comm_str__put
+>                                                -> zfree(&cs->str)
+>     -> thread->comm_len = strlen(comm);
+> Since in single thread phase, perf_singlethreaded is true, down_read and
+> down_write can not work to avoid concurrency problems.
+> This patch put perf_set_singlethreaded to the function tail to expand the
+> multithreaded phase range, make display_thread and process_thread run
+> safe.
+>
+> Signed-off-by: Hangliang Lai  <laihangliang1@huawei.com>
+> Reviewed-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> ---
+> v1 -> v2
+>  - Since perf top is always multi-threaded, remove top->nr_threads_synthesize judgment.
 
-diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-index b0e70ce9d87a..6a6ddba76c75 100644
---- a/tools/perf/util/amd-sample-raw.c
-+++ b/tools/perf/util/amd-sample-raw.c
-@@ -105,17 +105,17 @@ static void pr_ibs_op_data2_extended(union ibs_op_data2 reg)
- 	static const char * const data_src_str[] = {
- 		"",
- 		" DataSrc 1=Local L3 or other L1/L2 in CCX",
--		" DataSrc 2=A peer cache in a near CCX",
--		" DataSrc 3=Data returned from DRAM",
-+		" DataSrc 2=Another CCX cache in the same NUMA node",
-+		" DataSrc 3=DRAM",
- 		" DataSrc 4=(reserved)",
--		" DataSrc 5=A peer cache in a far CCX",
--		" DataSrc 6=DRAM address map with \"long latency\" bit set",
--		" DataSrc 7=Data returned from MMIO/Config/PCI/APIC",
--		" DataSrc 8=Extension Memory (S-Link, GenZ, etc)",
-+		" DataSrc 5=Another CCX cache in a different NUMA node",
-+		" DataSrc 6=Long-latency DIMM",
-+		" DataSrc 7=MMIO/Config/PCI/APIC",
-+		" DataSrc 8=Extension Memory",
- 		" DataSrc 9=(reserved)",
- 		" DataSrc 10=(reserved)",
- 		" DataSrc 11=(reserved)",
--		" DataSrc 12=Peer Agent Memory",
-+		" DataSrc 12=Coherent Memory of a different processor type",
- 		/* 13 to 31 are reserved. Avoid printing them. */
- 	};
- 	int data_src = (reg.data_src_hi << 3) | reg.data_src_lo;
--- 
-2.34.1
+Not always, the synthesis can run in a single thread.
 
+>
+>  tools/perf/builtin-top.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index d4b5b02bab73..a18db1ee87fa 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1242,8 +1242,7 @@ static int __cmd_top(struct perf_top *top)
+>         if (perf_session__register_idle_thread(top->session) < 0)
+>                 return ret;
+>
+> -       if (top->nr_threads_synthesize > 1)
+> -               perf_set_multithreaded();
+> +       perf_set_multithreaded();
+
+I think this part should be kept as is.
+
+>
+>         init_process_thread(top);
+>
+> @@ -1273,9 +1272,6 @@ static int __cmd_top(struct perf_top *top)
+>                                     top->evlist->core.threads, true, false,
+>                                     top->nr_threads_synthesize);
+>
+> -       if (top->nr_threads_synthesize > 1)
+> -               perf_set_singlethreaded();
+
+Here you can make it multi-threaded unconditionally.
+
+Thanks,
+Namhyung
+
+> -
+>         if (perf_hpp_list.socket) {
+>                 ret = perf_env__read_cpu_topology_map(&perf_env);
+>                 if (ret < 0) {
+> @@ -1352,6 +1348,9 @@ static int __cmd_top(struct perf_top *top)
+>  out_join_thread:
+>         cond_signal(&top->qe.cond);
+>         pthread_join(thread_process, NULL);
+> +
+> +       perf_set_singlethreaded();
+> +
+>         return ret;
+>  }
+>
+> --
+> 2.33.0
+>
