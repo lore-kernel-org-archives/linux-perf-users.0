@@ -2,215 +2,226 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D034C76196
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 Apr 2023 23:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E74C76196
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 00:06:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbjDFXyS (ORCPT
+        id S230251AbjDGAGs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 19:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51050 "EHLO
+        Thu, 6 Apr 2023 20:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231171AbjDFXyQ (ORCPT
+        with ESMTP id S230126AbjDGAGr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 19:54:16 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C090583F6
-        for <linux-perf-users@vger.kernel.org>; Thu,  6 Apr 2023 16:54:13 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54c23fab905so16164107b3.14
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Apr 2023 16:54:13 -0700 (PDT)
+        Thu, 6 Apr 2023 20:06:47 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168F84C17
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 Apr 2023 17:06:46 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3e392e10cc4so546841cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 Apr 2023 17:06:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680825252;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H6P8DEdnqlAjDS13bckAJnWyKK1GSCIBz/LMGwih+20=;
-        b=W313JjATJDEdFIwneOWSc/FxfuW3JjuWTxSlzz7qCRYiA0eeEgn7lMwAOxjoFJs9Xt
-         UdK1gUe9Fg1xfurIhFTCoKsD7Aq/h6OBpNNu3QAsO2IrP1T+4FMr+ZkSfE+uUz8xLWS4
-         PoXxhD10zqoLwRN1EdDZTdIEcVL7czoj7i3cR2J9A1o5Ss61TyEPXbpUUV1+YSd8sBEJ
-         iqlCYx091j4WriVxVzgAY9XKUtZaIKge1XJoFZFTzfUIkNYlBKSAAhwdOV/TYhGPdQjW
-         Tsx+zLbXDFZI11oOKuj7LOJtiN8YBkY+s7yGU1Cttn8lEHnT43TxayfOvcIRQqDCwG5d
-         9obw==
+        d=google.com; s=20210112; t=1680826005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mzfan2LpwNYK3DMBT0xJH8CIBF798omm0VUxkHpk/fE=;
+        b=mm4yJMjoW1SGBwSfKP1UC/z0xkarQgZjxq2LZcGjVorZIPpguuwTovTAFYSP3WksUQ
+         N9JBieXnk1IZjvE6VEp+EamL1e0ZNrsC5Wh9IE/FkMOvybS5Ym+05bRQOG9L7L3cBfzR
+         /T6XoEfi9aI4mkc0VNZoO4j/tgI0qyuXBv30X96AjoYK0EV6p4AE7THUIDSwi9TAIi6K
+         sOo5V38JogBKqVcYLG1yk/u/zC2Uano4f4FZ70RoE6hZ026Qbm8PD3P2HGUmz8TNT/a0
+         T4tRndNp7NHQcDB3XDHWRkXrUcmzo7dWUoEm0TMexO6cOXop8b/pV25bAkkJvVtXQCcO
+         Z71Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680825252;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H6P8DEdnqlAjDS13bckAJnWyKK1GSCIBz/LMGwih+20=;
-        b=bMl72VCnr3miQUqlKXYwEYjMf9urVc+54rGoa/a8hfmd6803Mks0BlC8YJmO/6RbLo
-         x2zga+w/Yms7G0vZE36jaKOBsJRQ8H3JFMamNMOBZG1bG05sdzIMLl9DBX6N3TzQuNcJ
-         39JD8yTtxGeptmrjwyaJVz8OgKfrkFeEcrd8Oh3ow+nA5s/PVVHjE0y3y0NjCcBCGCzy
-         82bVUTNR2rVT0XwHzd16TP3uuyElq7RqV+fNj38b3HeBYnsZGQsBQ0KfTKxBFR9tP6ap
-         n/ig10FhoP0ymC78h4X4ZQ4RPfcd/RCDzaBDMrgNMzi4TzPutFk39nsWagISpyVhaO0Y
-         0YQA==
-X-Gm-Message-State: AAQBX9cKSlXhHr8TbqYRxn+u+CbO2hO/URT8zUcoF0JGIzPJKrIyz8dK
-        dc9wclL7Jlu3UV9ZXVhFmokU4ECIfN3a
-X-Google-Smtp-Source: AKy350ZUk5q2a1NYVrJlCfXNOzpQcmg4VR6E4uqsxkp/fC3yKmj52iJD2CxhLVeuWQ43I8VDAsotDmIJR1r2
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:939d:185a:97bb:59ee])
- (user=irogers job=sendgmr) by 2002:a81:b724:0:b0:54c:2785:4281 with SMTP id
- v36-20020a81b724000000b0054c27854281mr34487ywh.6.1680825252828; Thu, 06 Apr
- 2023 16:54:12 -0700 (PDT)
-Date:   Thu,  6 Apr 2023 16:52:56 -0700
-In-Reply-To: <20230406235256.2768773-1-irogers@google.com>
-Message-Id: <20230406235256.2768773-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20230406235256.2768773-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v1 3/3] perf pmu: Sort and remove duplicates using json PMU name
+        d=1e100.net; s=20210112; t=1680826005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mzfan2LpwNYK3DMBT0xJH8CIBF798omm0VUxkHpk/fE=;
+        b=lpHENjbCrryA0CcYoZbj4cFa+6oi3vSxEQIyAZUiVjVDt3d/mC+38cE+mT+PkkPNas
+         bNAbWM2Yun921tA19Be6XivGO5PKKw2m4AxLBsxz4bbZHZ/qHB3ZxNZeUXDtjFmaT5xg
+         ZVicgEgxs+T+yFZx6csPSVVfrto3TbaJf98yAPB5K31/Q7wo+AVLecSGKmTuc7AsL73f
+         nInfMYW1y0c0cztXJa6e4i9RBHKqbf0qhOV+1VBIT7NGKzqJLWOR5tm5aqBG0pZXQTWJ
+         38JdggDky9zN7mwrx99cJbG9jk47z45tMYuK1/83SRc5f6zI3BkNpuhctl2P7aS6MW22
+         uNqw==
+X-Gm-Message-State: AAQBX9cF3Zx3I4qetjaZmJ186bGEKn41roPg77T98Nk5T0yVmEBGLlsl
+        /sJPch+1D60J7GJ5W4yUlRlMUnpFOD1HOg+c7NG9kg==
+X-Google-Smtp-Source: AKy350Zvo3l1UZgKMwCvHAg6NquVljxHd5L3H9xYFZLgrWrtH2SL8TjoKRRCjEqr1rJyb4cFWOAOTOIuV7vZKJGEO7c=
+X-Received: by 2002:a05:622a:18a2:b0:3b9:f696:c754 with SMTP id
+ v34-20020a05622a18a200b003b9f696c754mr68876qtc.5.1680826004965; Thu, 06 Apr
+ 2023 17:06:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230406184638.2632300-1-irogers@google.com> <8d207ba3-c31e-ccb6-258a-4171df136c9f@linux.intel.com>
+In-Reply-To: <8d207ba3-c31e-ccb6-258a-4171df136c9f@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Thu, 6 Apr 2023 17:06:33 -0700
+Message-ID: <CAP-5=fWcBPz6XM0PeRaQk+_fKFzqrvL_ESA4g9p6-sjysSrCyA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] perf vendor events intel: Update free running
+ alderlake events
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-We may have a lot of copies of a particular uncore PMU, such as
-uncore_cha_0 to uncore_cha_59 on Intel sapphirerapids. The json events
-may match each of PMUs and so the events are copied to it. In perf
-list this means we see the same json event 60 times as events on
-different PMUs don't have duplicates removed. There are 284 uncore_cha
-events on sapphirerapids. Rather than use the PMU's name to sort and
-remove duplicates, use the json PMU name. This reduces the 60 copies
-back down to 1 and has the side effect of speeding things like the
-"perf all PMU test" shell test.
+On Thu, Apr 6, 2023 at 1:13=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.co=
+m> wrote:
+>
+>
+>
+> On 2023-04-06 2:46 p.m., Ian Rogers wrote:
+> > Fix the PMU name, event code and umask.
+> >
+> > These updates were generated by:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> > with this PR:
+> > https://github.com/intel/perfmon/pull/66
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  .../arch/x86/alderlake/uncore-memory.json        | 16 ++++++++++++----
+> >  .../arch/x86/alderlaken/uncore-memory.json       | 16 ++++++++++++----
+> >  2 files changed, 24 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.jso=
+n b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+> > index 2ccd9cf96957..ea25bb411f89 100644
+> > --- a/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+> > +++ b/tools/perf/pmu-events/arch/x86/alderlake/uncore-memory.json
+> > @@ -1,29 +1,37 @@
+> >  [
+> >      {
+> >          "BriefDescription": "Counts every 64B read  request entering t=
+he Memory Controller 0 to DRAM (sum of all channels).",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> >          "PublicDescription": "Counts every 64B read request entering t=
+he Memory Controller 0 to DRAM (sum of all channels).",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x20",
+> > +        "Unit": "imc_free_running"
+>
+> The imc_free_running will give the counter value for both imc0 and imc1.
+>
+> I think we need "Unit": "imc_free_running_0" here. But I'm not sure if
+> the perf tool can handle it.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 47 ++++++++++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+Thanks Kan, it can handle it so I'll update in v2.
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 00714f560643..03da1cdfa869 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1556,7 +1556,7 @@ static int cmp_sevent(const void *a, const void *b)
- {
- 	const struct sevent *as = a;
- 	const struct sevent *bs = b;
--	const char *a_pmu_name, *b_pmu_name;
-+	const char *a_pmu_name = NULL, *b_pmu_name = NULL;
- 	const char *a_name = "//", *a_desc = NULL, *a_topic = "";
- 	const char *b_name = "//", *b_desc = NULL, *b_topic = "";
- 	int ret;
-@@ -1565,11 +1565,13 @@ static int cmp_sevent(const void *a, const void *b)
- 		a_name = as->event->name;
- 		a_desc = as->event->desc;
- 		a_topic = as->event->topic ?: "";
-+		a_pmu_name = as->event->pmu_name;
- 	}
- 	if (bs->event) {
- 		b_name = bs->event->name;
- 		b_desc = bs->event->desc;
- 		b_topic = bs->event->topic ?: "";
-+		b_pmu_name = bs->event->pmu_name;
- 	}
- 	/* Put extra events last. */
- 	if (!!a_desc != !!b_desc)
-@@ -1585,11 +1587,13 @@ static int cmp_sevent(const void *a, const void *b)
- 		return as->is_cpu ? -1 : 1;
- 
- 	/* Order by PMU name. */
--	a_pmu_name = as->pmu->name ?: "";
--	b_pmu_name = bs->pmu->name ?: "";
--	ret = strcmp(a_pmu_name, b_pmu_name);
--	if (ret)
--		return ret;
-+	if (as->pmu != bs->pmu) {
-+		a_pmu_name = a_pmu_name ?: (as->pmu->name ?: "");
-+		b_pmu_name = b_pmu_name ?: (bs->pmu->name ?: "");
-+		ret = strcmp(a_pmu_name, b_pmu_name);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	/* Order by event name. */
- 	return strcmp(a_name, b_name);
-@@ -1603,17 +1607,26 @@ bool is_pmu_core(const char *name)
- static bool pmu_alias_is_duplicate(struct sevent *alias_a,
- 				   struct sevent *alias_b)
- {
--	const char *a_pmu_name, *b_pmu_name;
--	const char *a_name = alias_a->event ? alias_a->event->name : "//";
--	const char *b_name = alias_b->event ? alias_b->event->name : "//";
-+	const char *a_pmu_name = NULL, *b_pmu_name = NULL;
-+	const char *a_name = "//", *b_name = "//";
-+
-+
-+	if (alias_a->event) {
-+		a_name = alias_a->event->name;
-+		a_pmu_name = alias_a->event->pmu_name;
-+	}
-+	if (alias_b->event) {
-+		b_name = alias_b->event->name;
-+		b_pmu_name = alias_b->event->pmu_name;
-+	}
- 
- 	/* Different names -> never duplicates */
- 	if (strcmp(a_name, b_name))
- 		return false;
- 
- 	/* Don't remove duplicates for different PMUs */
--	a_pmu_name = alias_a->pmu->name ?: "";
--	b_pmu_name = alias_b->pmu->name ?: "";
-+	a_pmu_name = a_pmu_name ?: (alias_a->pmu->name ?: "");
-+	b_pmu_name = b_pmu_name ?: (alias_b->pmu->name ?: "");
- 	return strcmp(a_pmu_name, b_pmu_name) == 0;
- }
- 
-@@ -1662,7 +1675,8 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 	for (j = 0; j < len; j++) {
- 		const char *name, *alias = NULL, *scale_unit = NULL,
- 			*desc = NULL, *long_desc = NULL,
--			*encoding_desc = NULL, *topic = NULL;
-+			*encoding_desc = NULL, *topic = NULL,
-+			*pmu_name = NULL;
- 		bool deprecated = false;
- 		size_t buf_used;
- 
-@@ -1672,7 +1686,8 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 
- 		if (!aliases[j].event) {
- 			/* A selectable event. */
--			buf_used = snprintf(buf, sizeof(buf), "%s//", aliases[j].pmu->name) + 1;
-+			pmu_name = aliases[j].pmu->name;
-+			buf_used = snprintf(buf, sizeof(buf), "%s//", pmu_name) + 1;
- 			name = buf;
- 		} else {
- 			if (aliases[j].event->desc) {
-@@ -1687,6 +1702,7 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 				}
- 				buf_used = strlen(buf) + 1;
- 			}
-+			pmu_name = aliases[j].event->pmu_name ?: (aliases[j].pmu->name ?: "");
- 			if (strlen(aliases[j].event->unit) || aliases[j].event->scale != 1.0) {
- 				scale_unit = buf + buf_used;
- 				buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
-@@ -1698,12 +1714,11 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
- 			topic = aliases[j].event->topic;
- 			encoding_desc = buf + buf_used;
- 			buf_used += snprintf(buf + buf_used, sizeof(buf) - buf_used,
--					"%s/%s/", aliases[j].pmu->name,
--					aliases[j].event->str) + 1;
-+					"%s/%s/", pmu_name, aliases[j].event->str) + 1;
- 			deprecated = aliases[j].event->deprecated;
- 		}
- 		print_cb->print_event(print_state,
--				aliases[j].pmu->name,
-+				pmu_name,
- 				topic,
- 				name,
- 				alias,
--- 
-2.40.0.577.gac1e443424-goog
+Ian
 
+> Thanks,
+> Kan
+>
+> >      },
+> >      {
+> >          "BriefDescription": "Counts every 64B write request entering t=
+he Memory Controller 0 to DRAM (sum of all channels). Each write request co=
+unts as a new request incrementing this counter. However, same cache line w=
+rite requests (both full and partial) are combined to a single 64 byte data=
+ transfer to DRAM.",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x30",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "Counts every 64B read request entering th=
+e Memory Controller 1 to DRAM (sum of all channels).",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> >          "PublicDescription": "Counts every 64B read entering the Memor=
+y Controller 1 to DRAM (sum of all channels).",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x20",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "Counts every 64B write request entering t=
+he Memory Controller 1 to DRAM (sum of all channels). Each write request co=
+unts as a new request incrementing this counter. However, same cache line w=
+rite requests (both full and partial) are combined to a single 64 byte data=
+ transfer to DRAM.",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x30",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "ACT command for a read request sent to DR=
+AM",
+> > diff --git a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.js=
+on b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+> > index 2ccd9cf96957..ea25bb411f89 100644
+> > --- a/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+> > +++ b/tools/perf/pmu-events/arch/x86/alderlaken/uncore-memory.json
+> > @@ -1,29 +1,37 @@
+> >  [
+> >      {
+> >          "BriefDescription": "Counts every 64B read  request entering t=
+he Memory Controller 0 to DRAM (sum of all channels).",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> >          "PublicDescription": "Counts every 64B read request entering t=
+he Memory Controller 0 to DRAM (sum of all channels).",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x20",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "Counts every 64B write request entering t=
+he Memory Controller 0 to DRAM (sum of all channels). Each write request co=
+unts as a new request incrementing this counter. However, same cache line w=
+rite requests (both full and partial) are combined to a single 64 byte data=
+ transfer to DRAM.",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x30",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "Counts every 64B read request entering th=
+e Memory Controller 1 to DRAM (sum of all channels).",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> >          "PublicDescription": "Counts every 64B read entering the Memor=
+y Controller 1 to DRAM (sum of all channels).",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x20",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "Counts every 64B write request entering t=
+he Memory Controller 1 to DRAM (sum of all channels). Each write request co=
+unts as a new request incrementing this counter. However, same cache line w=
+rite requests (both full and partial) are combined to a single 64 byte data=
+ transfer to DRAM.",
+> > +        "EventCode": "0xff",
+> >          "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+> >          "PerPkg": "1",
+> > -        "Unit": "iMC"
+> > +        "UMask": "0x30",
+> > +        "Unit": "imc_free_running"
+> >      },
+> >      {
+> >          "BriefDescription": "ACT command for a read request sent to DR=
+AM",
