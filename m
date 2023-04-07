@@ -2,182 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9605DC77B72
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 05:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245AFC76196
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 10:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232222AbjDGFwm (ORCPT
+        id S232001AbjDGK1X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 7 Apr 2023 01:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
+        Fri, 7 Apr 2023 06:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232214AbjDGFwl (ORCPT
+        with ESMTP id S230309AbjDGK1W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 7 Apr 2023 01:52:41 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6E59768;
-        Thu,  6 Apr 2023 22:52:40 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Pt6sC2zpyzKx2X;
-        Fri,  7 Apr 2023 13:50:07 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 7 Apr 2023 13:52:36 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v2 2/2] perf: script: add new output field 'dsoff' to print dso offset
-Date:   Fri, 7 Apr 2023 13:52:12 +0800
-Message-ID: <20230407055212.2701635-3-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230407055212.2701635-1-changbin.du@huawei.com>
-References: <20230407055212.2701635-1-changbin.du@huawei.com>
+        Fri, 7 Apr 2023 06:27:22 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD084C05;
+        Fri,  7 Apr 2023 03:27:20 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id i9so41964924wrp.3;
+        Fri, 07 Apr 2023 03:27:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680863239; x=1683455239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=45fvxnSeFr51avGPKhwK3t5ZbAaRZOEhoU45v/9aioU=;
+        b=MKcGhh/vH4fCViGjtz0AXhqBvfvPy7AEoeDFIFVPmcjIHWR1cvgdVq/fJPeQUT70lM
+         oCDAkQFjbGUVAylsz45DVubpYZ/7qcmcFIpP++L5z/D0xcc3zQYZk7YJt4kc6SJw+JUt
+         Naa62qBmlYGFgws9x6k9owJc2zCfZ03ZuZwLN863fhphOWvPeOSbK3A7uwc1cHA98A1c
+         1WrL7Q2r5YyyQwjf+itRmN9Ij78bb+ufTOzayTZNfaHe4nVkl0l11Q1h/ZnHfWWkndAl
+         4xYj0gNqAHKTqoqUuOiHRkbo6eWgtDr3dIwrv8ISoJjWBIntJ4NXX20Gu6C4lzEKd2Yj
+         dL3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680863239; x=1683455239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=45fvxnSeFr51avGPKhwK3t5ZbAaRZOEhoU45v/9aioU=;
+        b=1LlQrK7HsuqXRzS8RmOiR8zwyKn3YHM0p5IDzpYCZJnLSssFEp8xJLDoHw1NSpqrW1
+         QFZL+SCvKOtYmaDDpuWM3KnanWHafPxFKwFiifGeBKSOtULKkVl8hcgd+N5DU4zD+FgC
+         3/ZopxQ4Cmnry0XR7eDOibY3L+mFT+DRt3l380xfrWV5rbmSkfzSkemRTH5Ur2Pifi2u
+         3iikLfJ39YkqNWriYT4GXyG6xsm6LiQd9S+dzlxyJ03jd1LRikbF5xXomem1Livi3LEj
+         zbwq+WbaEFPhxjaaeMQMY371EYXX7yQiKp4Q1ko65rCV58+m0Ulk5ofxkspMiJ/bNuqX
+         D7fQ==
+X-Gm-Message-State: AAQBX9cp2RaHvVOAQAkRrk+FQ8cNDIZrfxJLZK74vkmKlMUryBAUvO31
+        pgt25wy1W1EMTTgPDyGi+q4=
+X-Google-Smtp-Source: AKy350ZWeNWeTOaqH2zeUNWN2Xpa/uoOpT0bCwwEy7k+6VIJiD7TGUKi7oRxrUlrYcfTRUW26QhYZA==
+X-Received: by 2002:a5d:6607:0:b0:2cd:f2c6:5d37 with SMTP id n7-20020a5d6607000000b002cdf2c65d37mr935048wru.5.1680863238663;
+        Fri, 07 Apr 2023 03:27:18 -0700 (PDT)
+Received: from krava (cpc137424-wilm3-2-0-cust276.1-4.cable.virginm.net. [82.23.5.21])
+        by smtp.gmail.com with ESMTPSA id n5-20020adfe345000000b002efb139ce72sm1149970wrj.36.2023.04.07.03.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 03:27:18 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Fri, 7 Apr 2023 11:27:15 +0100
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH bpf-next] tools headers: Remove s390 ptrace.h in
+ check-headers.sh
+Message-ID: <ZC/wA2NoO7yI/xNm@krava>
+References: <1680834090-2322-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1680834090-2322-1-git-send-email-yangtiezhu@loongson.cn>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This adds a new 'dsoff' field to print dso offset for resolved symbols,
-and the offset is appended to dso name.
+On Fri, Apr 07, 2023 at 10:21:30AM +0800, Tiezhu Yang wrote:
+> After commit 1f265d2aea0d ("selftests/bpf: Remove not used headers"),
+> tools/arch/s390/include/uapi/asm/ptrace.h has been removed, so remove
+> it in check-headers.sh too, otherwise we can see the following build
+> warning:
+> 
+>   diff: tools/arch/s390/include/uapi/asm/ptrace.h: No such file or directory
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/oe-kbuild-all/202304050029.38NdbQPf-lkp@intel.com/
+> Fixes: 1f265d2aea0d ("selftests/bpf: Remove not used headers")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Default output:
-$ perf script
-       ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1)
+not sure this should go through Arnaldo's tree instead,
+either way is fine with me
 
-Display 'dsoff' field:
-$ perf script -F +dsoff
-       ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so+0x1c4b5)
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1+0x68d0)
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff992a6db0 [unknown] ([unknown])
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-script.txt | 2 +-
- tools/perf/builtin-script.c              | 5 +++++
- tools/perf/util/evsel_fprintf.c          | 6 ++++++
- tools/perf/util/evsel_fprintf.h          | 1 +
- 4 files changed, 13 insertions(+), 1 deletion(-)
+jirka
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 777a0d8ba7d1..ff9a52e44688 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -130,7 +130,7 @@ OPTIONS
- -F::
- --fields::
-         Comma separated list of fields to print. Options are:
--        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
-+        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a792214d1af8..ccc409893c4b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -133,6 +133,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_VCPU            = 1ULL << 38,
- 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
-+	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- };
- 
- struct perf_script {
-@@ -174,6 +175,7 @@ struct output_option {
- 	{.str = "ip",    .field = PERF_OUTPUT_IP},
- 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
- 	{.str = "dso",   .field = PERF_OUTPUT_DSO},
-+	{.str = "dsoff", .field = PERF_OUTPUT_DSOFF},
- 	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
- 	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
- 	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
-@@ -574,6 +576,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
- 	if (PRINT_FIELD(DSO))
- 		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
- 
-+	if (PRINT_FIELD(DSOFF))
-+		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
-+
- 	if (PRINT_FIELD(SYMOFFSET))
- 		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
- 
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index 1fb8044d402e..ae8333772c76 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
-@@ -174,6 +175,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			if (print_dso && (!sym || !sym->inlined)) {
- 				printed += fprintf(fp, " (");
- 				printed += map__fprintf_dsoname(map, fp);
-+				if (print_dsoff && map && map->dso)
-+					printed += fprintf(fp, "+0x%lx", addr);
- 				printed += fprintf(fp, ")");
- 			}
- 
-@@ -209,6 +212,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
- 	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
-@@ -237,6 +241,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 		if (print_dso) {
- 			printed += fprintf(fp, " (");
- 			printed += map__fprintf_dsoname(al->map, fp);
-+			if (print_dsoff && al->map && al->map->dso)
-+				printed += fprintf(fp, "+0x%lx", al->addr);
- 			printed += fprintf(fp, ")");
- 		}
- 
-diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
-index 3093d096c29f..c8a9fac2f2dd 100644
---- a/tools/perf/util/evsel_fprintf.h
-+++ b/tools/perf/util/evsel_fprintf.h
-@@ -26,6 +26,7 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
- #define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
- #define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
- #define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
-+#define EVSEL__PRINT_DSOFF		(1<<9)
- 
- struct addr_location;
- struct perf_event_attr;
--- 
-2.25.1
-
+> ---
+> 
+> commit 1f265d2aea0d ("selftests/bpf: Remove not used headers") is in
+> bpf-next tree, so I prefer this patch can be applied to bpf-next tree.
+> 
+>  tools/perf/check-headers.sh | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index eacca9a..e4a8b53 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -52,7 +52,6 @@ arch/x86/include/uapi/asm/vmx.h
+>  arch/powerpc/include/uapi/asm/kvm.h
+>  arch/s390/include/uapi/asm/kvm.h
+>  arch/s390/include/uapi/asm/kvm_perf.h
+> -arch/s390/include/uapi/asm/ptrace.h
+>  arch/s390/include/uapi/asm/sie.h
+>  arch/arm/include/uapi/asm/kvm.h
+>  arch/arm64/include/uapi/asm/kvm.h
+> -- 
+> 2.1.0
+> 
