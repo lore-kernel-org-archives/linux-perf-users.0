@@ -2,91 +2,78 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BADBC761A6
-	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 02:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B43C6FD1D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  7 Apr 2023 05:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240564AbjDGCVo (ORCPT
+        id S231903AbjDGFwk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 Apr 2023 22:21:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        Fri, 7 Apr 2023 01:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239628AbjDGCVn (ORCPT
+        with ESMTP id S229506AbjDGFwj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 Apr 2023 22:21:43 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3223376BF;
-        Thu,  6 Apr 2023 19:21:40 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Bxedkzfi9kaKoXAA--.36673S3;
-        Fri, 07 Apr 2023 10:21:39 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxbb4vfi9ki8MXAA--.48021S2;
-        Fri, 07 Apr 2023 10:21:35 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: [PATCH bpf-next] tools headers: Remove s390 ptrace.h in check-headers.sh
-Date:   Fri,  7 Apr 2023 10:21:30 +0800
-Message-Id: <1680834090-2322-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf8Bxbb4vfi9ki8MXAA--.48021S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7tr13WF15tw4rWFWrury7GFg_yoW8Gr1fp3
-        ZxCFs5Ww45Gr1FyF4UJanrXrWDJ3y8uFyYq347Kryjyrsa9F1kArWSkFn0krnIqFWDtF9x
-        WFy3Kry5J3WkXaUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWl
-        n4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
-        Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-        O2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-        WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-        Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-        WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
-        JbIYCTnIWIevJa73UjIFyTuYvjxUxhiSDUUUU
+        Fri, 7 Apr 2023 01:52:39 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 580559768;
+        Thu,  6 Apr 2023 22:52:37 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Pt6r24q8KznYFL;
+        Fri,  7 Apr 2023 13:49:06 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 7 Apr 2023 13:52:33 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH v2 0/2] perf script: Have consistent output for symbol address
+Date:   Fri, 7 Apr 2023 13:52:10 +0800
+Message-ID: <20230407055212.2701635-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-After commit 1f265d2aea0d ("selftests/bpf: Remove not used headers"),
-tools/arch/s390/include/uapi/asm/ptrace.h has been removed, so remove
-it in check-headers.sh too, otherwise we can see the following build
-warning:
+The goal of this change is to achieve consistent output for symbol address.
+Before this, the raw ip is printed for non-callchain and dso offset for
+callchain. Mostly what we expect is the raw ip.
 
-  diff: tools/arch/s390/include/uapi/asm/ptrace.h: No such file or directory
+This patch does two changes:
+  - Always print raw ip for resolved symbols.
+  - Add a new 'dsoff' field if we really need the dso offset, and the
+    offset is appended to dso name.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/oe-kbuild-all/202304050029.38NdbQPf-lkp@intel.com/
-Fixes: 1f265d2aea0d ("selftests/bpf: Remove not used headers")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+v2:
+  o split into two patches.
+  o do not print offset for unresolved symbols.
 
-commit 1f265d2aea0d ("selftests/bpf: Remove not used headers") is in
-bpf-next tree, so I prefer this patch can be applied to bpf-next tree.
+Changbin Du (2):
+  perf script: print raw ip instead of binary offset for callchain
+  perf: script: add new output field 'dsoff' to print dso offset
 
- tools/perf/check-headers.sh | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/Documentation/perf-script.txt |  2 +-
+ tools/perf/builtin-script.c              |  5 +++++
+ tools/perf/util/evsel_fprintf.c          | 15 ++++++++-------
+ tools/perf/util/evsel_fprintf.h          |  1 +
+ 4 files changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index eacca9a..e4a8b53 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -52,7 +52,6 @@ arch/x86/include/uapi/asm/vmx.h
- arch/powerpc/include/uapi/asm/kvm.h
- arch/s390/include/uapi/asm/kvm.h
- arch/s390/include/uapi/asm/kvm_perf.h
--arch/s390/include/uapi/asm/ptrace.h
- arch/s390/include/uapi/asm/sie.h
- arch/arm/include/uapi/asm/kvm.h
- arch/arm64/include/uapi/asm/kvm.h
 -- 
-2.1.0
+2.25.1
 
