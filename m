@@ -2,58 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCDFC77B71
-	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Apr 2023 05:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794EAC77B61
+	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Apr 2023 05:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbjDHFpo (ORCPT
+        id S229935AbjDHFwP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Apr 2023 01:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57108 "EHLO
+        Sat, 8 Apr 2023 01:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229866AbjDHFpl (ORCPT
+        with ESMTP id S229665AbjDHFwO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Apr 2023 01:45:41 -0400
+        Sat, 8 Apr 2023 01:52:14 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B0AEF95
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Apr 2023 22:45:36 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 67-20020a250146000000b00b714602d43fso546223ybb.10
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Apr 2023 22:45:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B69D529
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Apr 2023 22:52:12 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e199-20020a2550d0000000b00b8db8a4530dso2896524ybb.5
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Apr 2023 22:52:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680932736;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GDcV3jJAEkDWKL53VhxAD/1zHUw0qGpFJOT1XTjqbho=;
-        b=TuxH/c6dK3cKaVf4R/DMtEzVdMjdMc+MHphlLwfoa/h6eeyccMX7DPnW8PO5Ydu2r+
-         VPjqhVqdPFSre1ZjYor/uEOpPZUvnOdqeUNl9vtMFUa72OrJ8/pegm3z9v1a8jWiKCqj
-         PnuBxFek1q27W9ofEIHTknHe83Nv9u8nREejjrVU1/USIQGajVQlhw4YIYC/hW3JIfhs
-         1f8GHYbk3N8N0W2InEK4tACxgMTHCFRJZ8nEQbF99ytWPyzdFizwcVQw0BpTlUKc8+/R
-         YNtBmCgfkpHiYmR+IKfgYW+O8aSqv6lbABR2/j1gqbVwcx9C9kd09qr4URaucYeSse9V
-         /5aw==
+        d=google.com; s=20210112; t=1680933132;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PaCuvDcWhP2cDa4Q6QNDOLtZbZ3fUX/ydwsiXo8AOEQ=;
+        b=ghgDlhmdSf6EDth7OpctKVg9Yoh/tWaSiBhrYQowh9CR2mGkgYU4wXv/JxQMz+2UAs
+         k2Iy4NThdkqwxSfTl7Md3HV/bPw3onn85xQI6OYPoJ3+pdLl3HOB95QIoZSGKnBPoLR1
+         7ASdrjtPr77+nOaXcInGpEoKonO52742HQoL3ExF9xHpa6N7HqK0ZaLIG8QqF3e71Eu9
+         QCPJXi5gmrXPhlQOrR9hxlzXeorK1/ZsLGpSTH/TpVgj1FPaBKrXlCGcqXlMAiSITqiI
+         0M/d+q3EOhjhyuiUurzSzlLz11xfyl8yly8AvBRomw0oi1dkalAd9Xvo7+tOn7uS/yBB
+         zvMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680932736;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GDcV3jJAEkDWKL53VhxAD/1zHUw0qGpFJOT1XTjqbho=;
-        b=Sx8U1EfGiw42eAUTd0T7McnY07OfHRXqBh+nWiA7aPq75ogsA3AjlO3DIWz/71mqNB
-         QOrfraVuhvFL0DT3+wFA9rwTL6yYBPfQUlrnKezdJov5bHhwlT+wle9TB22KEQ/VdI78
-         1o+ZzTJjYPjykX3iAzWOyJuhhSjyIh/TarlquGyEIerxrW7yutHpF+ujOuQXDE4KPXrs
-         cY/31ielTsOfN377WcPwPg5h1Lm5EbiQ+2iN9Z8pt2YU4yFgKiPi+hZxnOyUvmd3sPnx
-         laE3Fv5ZrjEBYrsQXNB0uqkvuSMr0W98WvXCEDSex53Awrm5L7Xj0v9r6iQntQhoBG9B
-         +5rQ==
-X-Gm-Message-State: AAQBX9f8TLIKtRiVMTr3dbPZQ4aqhet0Cpciv14sYsTp3CiPGRw9mHtb
-        Dku3nAVz8BF5hGTPPI9cwlZ8dgdn3V26
-X-Google-Smtp-Source: AKy350bPlEzEvMR7Lx/aXHf6yrIoEnl/tBSl7gD7KG9Cf8E9zTU0p33sq0AtgXsTzxqSU+xfMborpStdqQMV
+        d=1e100.net; s=20210112; t=1680933132;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PaCuvDcWhP2cDa4Q6QNDOLtZbZ3fUX/ydwsiXo8AOEQ=;
+        b=4ZyBP+1BUVnXxbAopX5fEl5yG/MQ1TFAVxN9rZzZQKeIF8327nspsPDWyL9rBClBPF
+         7ecNtmYIsJgHd35aZQRJZ3nv9UtxoW2ygyiTxUctT92my9cyMbfSkH/MtgCsDUaJUYl/
+         70tg3XvyGo7T7g70ty9BA9x2WVrBIuldYFhwQSxW3iCK4Mfh6da5XB3CzSbnc2rtbIy6
+         Wz2VRHbnvTjxsE2P7trCRVtxAVI5sgPx96prBfQHS+NwyEU3vy+j4bfNTO6XZGAioqaP
+         rTJEMYUaMmE8suj2kWKybqStx6hYUgSpghg2iL/mK258LzFJVLDtf/M8fMMllZiJLpXp
+         +Rkw==
+X-Gm-Message-State: AAQBX9fpyYCRRD6amq6KmZ3kXWxfrV1lo+oiAqOFj5lgxbTOhGXXrIlV
+        cLu7cE+XyzMiypWO0OBeEVPwYTiOjkJb
+X-Google-Smtp-Source: AKy350YOn6EDZcM6g2K/kJ64r7qb7nb1g6AqbF0ZKf3EWu7T9j29NGNrPc5tNzDCHvyOPDHJbuy1IbcWjKVf
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b240:9cdf:7861:b23e])
- (user=irogers job=sendgmr) by 2002:a81:ae51:0:b0:54c:1ab:6aaf with SMTP id
- g17-20020a81ae51000000b0054c01ab6aafmr2188740ywk.5.1680932736234; Fri, 07 Apr
- 2023 22:45:36 -0700 (PDT)
-Date:   Fri,  7 Apr 2023 22:44:56 -0700
-In-Reply-To: <20230408054456.3001367-1-irogers@google.com>
-Message-Id: <20230408054456.3001367-4-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:af5d:0:b0:52e:e095:d840 with SMTP id
+ x29-20020a81af5d000000b0052ee095d840mr2334348ywj.0.1680933132008; Fri, 07 Apr
+ 2023 22:52:12 -0700 (PDT)
+Date:   Fri,  7 Apr 2023 22:52:07 -0700
+Message-Id: <20230408055208.1283832-1-irogers@google.com>
 Mime-Version: 1.0
-References: <20230408054456.3001367-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v2 3/3] perf test: Write Json output to a file
+Subject: [PATCH v1 1/2] perf lock contention: Support pre-5.14 kernels
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -64,177 +62,57 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Write the Json output to a file, then sanity check this output. This
-avoids problems with debug/warning/error output corrupting the file
-format.
+struct rq's variable __lock was renamed from lock in 5.14.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../tests/shell/lib/perf_json_output_lint.py  |  3 +-
- tools/perf/tests/shell/stat+json_output.sh    | 48 ++++++++++++++-----
- 2 files changed, 38 insertions(+), 13 deletions(-)
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index 97598d14e532..61f3059ca54b 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -17,9 +17,10 @@ ap.add_argument('--per-thread', action='store_true')
- ap.add_argument('--per-die', action='store_true')
- ap.add_argument('--per-node', action='store_true')
- ap.add_argument('--per-socket', action='store_true')
-+ap.add_argument('--file', type=argparse.FileType('r'), default=sys.stdin)
- args = ap.parse_args()
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 23f6e63544ed..8911e2a077d8 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -418,6 +418,14 @@ int contention_end(u64 *ctx)
  
--Lines = sys.stdin.readlines()
-+Lines = args.file.readlines()
+ extern struct rq runqueues __ksym;
  
- def isfloat(num):
-   try:
-diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
-index 2c4212c641ed..f3e4967cc72e 100755
---- a/tools/perf/tests/shell/stat+json_output.sh
-+++ b/tools/perf/tests/shell/stat+json_output.sh
-@@ -23,6 +23,20 @@ then
- 	fi
- fi
- 
-+stat_output=$(mktemp /tmp/__perf_test.stat_output.json.XXXXX)
++struct rq__old {
++	raw_spinlock_t lock;
++} __attribute__((preserve_access_index));
 +
-+cleanup() {
-+  rm -f "${stat_output}"
++struct rq__new {
++	raw_spinlock_t __lock;
++} __attribute__((preserve_access_index));
 +
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
- # Return true if perf_event_paranoid is > $1 and not running as root.
- function ParanoidAndNotRoot()
+ SEC("raw_tp/bpf_test_finish")
+ int BPF_PROG(collect_lock_syms)
  {
-@@ -32,7 +46,8 @@ function ParanoidAndNotRoot()
- check_no_args()
- {
- 	echo -n "Checking json output: no args "
--	perf stat -j true 2>&1 | $PYTHON $pythonchecker --no-args
-+	perf stat -j -o "${stat_output}" true
-+	$PYTHON $pythonchecker --no-args --file "${stat_output}"
- 	echo "[Success]"
- }
+@@ -426,11 +434,16 @@ int BPF_PROG(collect_lock_syms)
  
-@@ -44,27 +59,29 @@ check_system_wide()
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	perf stat -j -a true 2>&1 | $PYTHON $pythonchecker --system-wide
-+	perf stat -j -a -o "${stat_output}" true
-+	$PYTHON $pythonchecker --system-wide --file "${stat_output}"
- 	echo "[Success]"
- }
+ 	for (int i = 0; i < MAX_CPUS; i++) {
+ 		struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
++		struct rq__new *rq_new = (void *)rq;
++		struct rq__old *rq_old = (void *)rq;
  
- check_system_wide_no_aggr()
- {
--	echo -n "Checking json output: system wide "
-+	echo -n "Checking json output: system wide no aggregation "
- 	if ParanoidAndNotRoot 0
- 	then
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	echo -n "Checking json output: system wide no aggregation "
--	perf stat -j -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
-+	perf stat -j -A -a --no-merge -o "${stat_output}" true
-+	$PYTHON $pythonchecker --system-wide-no-aggr --file "${stat_output}"
- 	echo "[Success]"
- }
+ 		if (rq == NULL)
+ 			break;
  
- check_interval()
- {
- 	echo -n "Checking json output: interval "
--	perf stat -j -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
-+	perf stat -j -I 1000 -o "${stat_output}" true
-+	$PYTHON $pythonchecker --interval --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -72,7 +89,8 @@ check_interval()
- check_event()
- {
- 	echo -n "Checking json output: event "
--	perf stat -j -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
-+	perf stat -j -e cpu-clock -o "${stat_output}" true
-+	$PYTHON $pythonchecker --event --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -84,7 +102,8 @@ check_per_core()
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	perf stat -j --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
-+	perf stat -j --per-core -a -o "${stat_output}" true
-+	$PYTHON $pythonchecker --per-core --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -96,7 +115,8 @@ check_per_thread()
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	perf stat -j --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
-+	perf stat -j --per-thread -a -o "${stat_output}" true
-+	$PYTHON $pythonchecker --per-thread --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -108,7 +128,8 @@ check_per_die()
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	perf stat -j --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
-+	perf stat -j --per-die -a -o "${stat_output}" true
-+	$PYTHON $pythonchecker --per-die --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -120,7 +141,8 @@ check_per_node()
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	perf stat -j --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
-+	perf stat -j --per-node -a -o "${stat_output}" true
-+	$PYTHON $pythonchecker --per-node --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -132,7 +154,8 @@ check_per_socket()
- 		echo "[Skip] paranoia and not root"
- 		return
- 	fi
--	perf stat -j --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
-+	perf stat -j --per-socket -a -o "${stat_output}" true
-+	$PYTHON $pythonchecker --per-socket --file "${stat_output}"
- 	echo "[Success]"
- }
- 
-@@ -179,4 +202,5 @@ then
- else
- 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
- fi
-+cleanup
- exit 0
+-		lock_addr = (__u64)&rq->__lock;
++		if (bpf_core_field_exists(rq_new->__lock))
++			lock_addr = (__u64)&rq_new->__lock;
++		else
++			lock_addr = (__u64)&rq_old->lock;
+ 		lock_flag = LOCK_CLASS_RQLOCK;
+ 		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+ 	}
 -- 
 2.40.0.577.gac1e443424-goog
 
